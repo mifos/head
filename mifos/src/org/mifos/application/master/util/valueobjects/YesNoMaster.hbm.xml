@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.master.util.valueobjects.YesNoMaster" table="YES_NO_MASTER">
+        <id name="yesNoMasterID" column="YES_NO_MASTER_ID" type="short">
+            <generator class="native"/>
+        </id>
+ 
+ 
+        <property name="lookUpId" column="LOOKUP_ID" />
+    </class>
+    <query name="product.getyesnomaster"><![CDATA[select new org.mifos.application.productdefinition.util.valueobjects.MasterObject(ynm.yesNoMasterID,lookupvalue.lookUpValue) from org.mifos.application.master.util.valueobjects.YesNoMaster ynm,org.mifos.application.master.util.valueobjects.LookUpValueLocale lookupvalue where ynm.lookUpId=lookupvalue.lookUpId and lookupvalue.localeId=:localeId]]></query>
+</hibernate-mapping>

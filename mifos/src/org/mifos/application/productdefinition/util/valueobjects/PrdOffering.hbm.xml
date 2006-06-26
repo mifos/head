@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+    <class name="org.mifos.application.productdefinition.util.valueobjects.PrdOffering" table="PRD_OFFERING">
+        <id name="prdOfferingId" column="PRD_OFFERING_ID" type="short">
+            <generator class="native"/>
+        </id>
+ 		<version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null"/>
+        <property name="globalPrdOfferingNum" column="GLOBAL_PRD_OFFERING_NUM" type="string"  not-null="true" update="false"/>
+        <property name="startDate" column="START_DATE" type="date" not-null="true"/>
+        <property name="endDate" column="END_DATE" type="date"   />
+        <property name="glcodeId" column="GLCODE_ID" type="short" />
+        <property name="prdOfferingName" column="PRD_OFFERING_NAME" type="string" />
+        <property name="prdOfferingShortName" column="PRD_OFFERING_SHORT_NAME" type="string"  not-null="true" />
+        <property name="description" column="DESCRIPTION" type="string"  not-null="true" />
+        <property name="createdDate" column="CREATED_DATE" type="date" update="false"/>
+        <property name="createdBy" column="CREATED_BY" type="integer" update="false"/>
+        <property name="updatedDate" column="UPDATED_DATE" type="date" />
+        <property name="updatedBy" column="UPDATED_BY" type="integer"   />
+ 
+        <many-to-one name="office" column="OFFICE_ID" class="org.mifos.application.office.util.valueobjects.Office" />
+        <many-to-one name="prdCategory" column="PRD_CATEGORY_ID" class="org.mifos.application.productdefinition.util.valueobjects.ProductCategory" cascade="none"/>
+        <many-to-one name="prdStatus" column="OFFERING_STATUS_ID" class="org.mifos.application.productdefinition.util.valueobjects.PrdStatus" />
+        <many-to-one name="prdType" column="PRD_TYPE_ID" class="org.mifos.application.productdefinition.util.valueobjects.ProductType" />
+        <many-to-one name="prdApplicableMaster" column="PRD_APPLICABLE_MASTER_ID" class="org.mifos.application.master.util.valueobjects.PrdApplicableMaster"  not-null="true" />
+        
+	    <joined-subclass name="org.mifos.application.productdefinition.util.valueobjects.LoanOffering" table="LOAN_OFFERING">
+	      <key column="PRD_OFFERING_ID"/>
+	        <property name="minLoanAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			 <column name="MIN_LOAN_AMOUNT_CURRENCY_ID" /> 
+			 <column name="MIN_LOAN_AMOUNT" />
+			</property>
+			<property name="maxLoanAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			 <column name="MAX_LOAN_AMNT_CURRENCY_ID" /> 
+			 <column name="MAX_LOAN_AMNT" />
+			</property>
+			<property name="defaultLoanAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			 <column name="DEFAULT_LOAN_AMOUNT_CURRENCY_ID" /> 
+			 <column name="DEFAULT_LOAN_AMOUNT" />
+			</property>
+		<!-- 	<property name="minLoanAmount" column="MIN_LOAN_AMOUNT" type="double"  not-null="true" />
+	        <property name="maxLoanAmount" column="MAX_LOAN_AMNT" type="double"  not-null="true" />
+	        <property name="defaultLoanAmount" column="DEFAULT_LOAN_AMOUNT" type="double"   />-->
+	        <property name="maxInterestRate" column="MAX_INTEREST_RATE" type="double"  not-null="true" />
+	        <property name="minInterestRate" column="MIN_INTEREST_RATE" type="double"  not-null="true" />
+	        <property name="defInterestRate" column="DEF_INTEREST_RATE" type="double"  not-null="true" />
+	     <!--    <property name="currencyId" column="CURRENCY_ID" type="short"  />-->
+	        <property name="maxNoInstallments" column="MAX_NO_INSTALLMENTS" type="short"  not-null="true" />
+	        <property name="minNoInstallments" column="MIN_NO_INSTALLMENTS" type="short"  not-null="true" />
+	        <property name="defNoInstallments" column="DEF_NO_INSTALLMENTS" type="short"  not-null="true"/>
+	        <property name="penaltyGrace" column="PENALTY_GRACE" type="short"  not-null="true" />
+	        <property name="loanCounterFlag" column="LOAN_COUNTER_FLAG" type="short"/>
+	        <property name="intDedDisbursementFlag" column="INT_DED_DISBURSEMENT_FLAG" type="short"  />
+	        <property name="prinDueLastInstFlag" column="PRIN_DUE_LAST_INST_FLAG" type="short"   />
+	        <property name="gracePeriodDuration" column="GRACE_PERIOD_DURATION" type="short"   />
+	        <property name="penaltyRate" column="PENALTY_RATE" type="double"   />
+	 
+	 
+			
+			<many-to-one name="principalGLCode" column="PRINCIPAL_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity"  lazy="true" insert="true" update="false" />
+			<many-to-one name="interestGLCode" column="INTEREST_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity"  lazy="true" insert="true" update="false" />
+			<many-to-one name="penaltyGLCode" column="PENALTIES_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity"  lazy="true" insert="true" update="false" />
+			
+		
+			
+	        <many-to-one name="gracePeriodType" column="GRACEPERIOD_TYPE_ID" class="org.mifos.application.productdefinition.util.valueobjects.GracePeriodType" cascade="none"/>
+	        <many-to-one name="interestTypes" column="INTEREST_TYPE_ID" class="org.mifos.application.master.util.valueobjects.InterestTypes"  not-null="true" />
+	        <many-to-one name="penalty" column="PENALTY_ID" class="org.mifos.application.penalty.util.valueobjects.Penalty" />
+	        <many-to-one name="interestCalcRule" column="INTEREST_CALC_RULE_ID" class="org.mifos.application.master.util.valueobjects.InterestCalcRule"  />
+	        
+	        
+	        <!--Mapping of loan offering to its associated funds-->
+	        <set name="loanOffeingFundSet"  cascade="all,delete-orphan" inverse="true" table="LOAN_OFFERING_FUND">
+				<key column="PRD_OFFERING_ID"  />
+				<one-to-many class="org.mifos.application.productdefinition.util.valueobjects.LoanOfferingFund" />
+			</set>
+		
+			 <set name="prdOfferingFeesSet"  cascade="all,delete-orphan" inverse="true" table="PRD_OFFERING_FEES">
+				<key column="PRD_OFFERING_ID"  />
+				<one-to-many class="org.mifos.application.productdefinition.util.valueobjects.PrdOfferingFees" />
+			</set>
+			<one-to-one name="prdOfferingMeeting" class="org.mifos.application.productdefinition.util.valueobjects.PrdOfferingMeeting" cascade="all"  property-ref="prdOffering"/>
+			
+	    </joined-subclass>
+	    
+	    <!-- joined-subclass name="org.mifos.application.productdefinition.InsuranceOffering" table="INSURANCE_OFFERING">
+	      <key column="prdOfferingId"/>
+	    </joined-subclass-->
+	    
+	    <joined-subclass name="org.mifos.application.productdefinition.util.valueobjects.SavingsOffering" table="SAVINGS_OFFERING">
+	      <key column="PRD_OFFERING_ID"/>
+	      	<property name="recommendedAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			 <column name="RECOMMENDED_AMOUNT_CURRENCY_ID" /> 
+			 <column name="RECOMMENDED_AMOUNT" />
+			</property>
+			<property name="maxAmntWithdrawl" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			 <column name="MAX_AMNT_WITHDRAWL_CURRENCY_ID" /> 
+			 <column name="MAX_AMNT_WITHDRAWL" />
+			</property>
+			<property name="minAmntForInt" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			 <column name="MIN_AMNT_FOR_INT_CURRENCY_ID" /> 
+			 <column name="MIN_AMNT_FOR_INT" />
+			</property>
+<!--		<property name="recommendedAmount" column="RECOMMENDED_AMOUNT" type="double" />
+	        <property name="maxAmntWithdrawl" column="MAX_AMNT_WITHDRAWL" type="double" />
+	        <property name="minAmntForInt" column="MIN_AMNT_FOR_INT" type="double" /> -->
+   	        <property name="interestRate" column="INTEREST_RATE" type="double"  not-null="true" />
+	        <!-- property name="currencyId" column="CURRENCY_ID" /-->
+
+	        <many-to-one name="recommendedAmntUnit" column="RECOMMENDED_AMNT_UNIT_ID" class="org.mifos.application.master.util.valueobjects.RecommendedAmntUnit" cascade="none"/>
+	        <many-to-one name="savingsType" column="SAVINGS_TYPE_ID" class="org.mifos.application.master.util.valueobjects.SavingsType" not-null="true"/>
+	        <many-to-one name="interestCalcType" column="INTEREST_CALCULATION_TYPE_ID" class="org.mifos.application.master.util.valueobjects.InterestCalcType" not-null="true"/>
+	        
+	        <many-to-one name="depositGLCode" column="DEPOSIT_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity"  lazy="true" insert="true" update="false" />
+			<many-to-one name="interestGLCode" column="INTEREST_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity"  lazy="true" insert="true" update="false" />
+	        
+	        <set name="prdOfferingMeetingSet"  cascade="all" inverse="true" table="PRD_OFFERING_MEETING" lazy="false">
+				<key column="PRD_OFFERING_ID"  />
+				<one-to-many class="org.mifos.application.productdefinition.util.valueobjects.PrdOfferingMeeting" />
+			</set>
+	    </joined-subclass>
+        
+    </class>
+    
+    <query name="product.createduplnamecount"><![CDATA[select count(*) from org.mifos.application.productdefinition.util.valueobjects.PrdOffering po where po.prdOfferingName=:prdOfferingName]]></query>
+    <query name="product.updateduplnamecount"><![CDATA[select count(*) from org.mifos.application.productdefinition.util.valueobjects.PrdOffering po where po.prdOfferingName=:prdOfferingName and po.prdOfferingId != (:prdOfferingId)]]></query>
+    <query name="product.createduplshortnamecount"><![CDATA[select count(*) from org.mifos.application.productdefinition.util.valueobjects.PrdOffering po where po.prdOfferingShortName=:prdOfferingShortName]]></query>
+    <query name="product.updateduplshortnamecount"><![CDATA[select count(*) from org.mifos.application.productdefinition.util.valueobjects.PrdOffering po where po.prdOfferingShortName=:prdOfferingShortName and po.prdOfferingId != (:prdOfferingId)]]></query>
+    <query name="product.searchloanproducts"><![CDATA[from org.mifos.application.productdefinition.util.valueobjects.LoanOffering lo order by lo.prdOfferingName]]></query>
+    <query name="product.searchsavingsproducts"><![CDATA[from org.mifos.application.productdefinition.util.valueobjects.SavingsOffering so order by so.prdOfferingName]]></query>
+    <query name="product.maxloanprdid"><![CDATA[select max(lo.prdOfferingId) from org.mifos.application.productdefinition.util.valueobjects.PrdOffering lo]]></query>    
+    <query name="product.maxsavingsprdid"><![CDATA[select max(so.prdOfferingId) from org.mifos.application.productdefinition.util.valueobjects.PrdOffering so]]></query>
+    <query name="product.loanfees"><![CDATA[from org.mifos.application.fees.util.valueobjects.Fees fees where fees.categoryId=:loanCategoryId and fees.status=:feeStatus]]></query>
+    <query name="product.savingsrecurrencetypes"><![CDATA[from org.mifos.application.meeting.util.valueobjects.RecurrenceType recType where recType.recurrenceId=2 or recType.recurrenceId=3 order by recType.recurrenceName]]></query>
+    
+</hibernate-mapping>

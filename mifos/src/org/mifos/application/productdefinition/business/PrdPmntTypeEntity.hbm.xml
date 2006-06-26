@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.productdefinition.business.PrdPmntTypeEntity" table="PRD_PMNT_TYPE">
+        <id name="prdPmntTypeId" column="PRD_PMNT_TYPE_ID" type="short">
+            <generator class="native"/>
+        </id>
+ 		<version name="versionNo" column="VERSION_NO" type="integer" />
+        <property name="withdrawDepositFlag" column="WITHDRAW_DEPOSIT_FLAG" type="short"  not-null="true" />
+        <property name="status" column="STATUS" type="short"  not-null="true" />
+        <many-to-one name="prdType" column="PRD_TYPE_ID" class="org.mifos.application.productdefinition.business.ProductTypeEntity"  not-null="true" />
+        <many-to-one name="paymentType" column="PAYMENT_TYPE_ID" class="org.mifos.application.master.business.PaymentTypeEntity"  not-null="true" />
+    </class>
+    
+</hibernate-mapping>

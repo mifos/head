@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+  
+<hibernate-mapping > 
+  <class name="org.mifos.application.reports.business.ReportsParams" table="report_parameter" >
+     <id name="parameterId" column="parameter_id" type="int">
+         <generator class="native" />
+     </id>
+    	<property name="name" column="name" type="string" />
+    	<property name="classname" column="classname" type="string" />
+		<property name="data" column="data" type="string" />
+		<property name="description" column="description" type="string" />
+		<property name="type" column="type" type="string" />
+      	<many-to-one name="reportsDataSource" column="datasource_id" class="org.mifos.application.reports.business.ReportsDataSource" />   
+
+	</class> 
+     
+<query name="getAllReportParams">
+   	       <![CDATA[ from ReportsParams]]>
+    </query> 
+    <query name="findInUseDataSource">
+   	       <![CDATA[ from ReportsParams where datasource_id=:dataSourceId]]>
+    </query> 
+    <query name="viewParameter">
+   	       <![CDATA[ from ReportsParams where parameter_id=:parameterId]]>
+    </query> 
+
+</hibernate-mapping> 

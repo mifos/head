@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+  
+<hibernate-mapping > 
+  <class name="org.mifos.application.master.business.LanguageEntity" table="LANGUAGE" >
+    <id column="LANG_ID" name="languageId" type="java.lang.Short" > 
+		<generator class="native"></generator>
+    </id>
+	<property column="LANG_NAME"  name="languageName"  type="java.lang.String"/>
+	<property column="LANG_SHORT_NAME"  name="languageShortName"  type="java.lang.String"/>
+	<property name="lookUpId" column="LOOKUP_ID"  type="integer"/>
+  </class> 
+</hibernate-mapping>  

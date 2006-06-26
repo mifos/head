@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.customer.util.valueobjects.CustomerState" table="CUSTOMER_STATE">
+        <id name="statusId" column="STATUS_ID" type="short">
+            <generator class="native"/>
+        </id>
+ 
+        <property name="description" column="DESCRIPTION" type="string"  not-null="true" />
+ 
+        <many-to-one name="lookUpEntity" column="STATUS_LOOKUP_NAME" class="org.mifos.application.master.util.valueobjects.LookUpEntity" />
+ 
+        <many-to-one name="customerLevel" column="LEVEL_ID" class="org.mifos.application.customer.util.valueobjects.CustomerLevel"  not-null="true" />
+ 
+        <set name="customerChecklistSet" inverse="true">
+            <key column="CUSTOMER_STATUS_ID"/>
+            <one-to-many class="org.mifos.application.checklist.util.valueobjects.CustomerCheckList"/>
+        </set>
+    </class>
+    
+</hibernate-mapping>

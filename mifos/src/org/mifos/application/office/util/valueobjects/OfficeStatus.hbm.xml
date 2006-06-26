@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.office.util.valueobjects.OfficeStatus" table="OFFICE_STATUS">
+        <id name="statusId" column="STATUS_ID" type="short">
+            <generator class="native"/>
+        </id>
+	
+        		<property name="lookUpId" column="LOOKUP_ID"  />
+			
+	
+		        <set name="lookUpValueLocale" >
+			          <key column ="LOOKUP_ID"
+			           property-ref="lookUpId"/>
+			          
+			          <one-to-many  class="org.mifos.application.master.util.valueobjects.LookUpValueLocale" />
+	        	</set>
+		
+    </class>
+
+         <query name="getofficestatus">
+	        	 <![CDATA[select new org.mifos.application.master.util.valueobjects.OfficeStatusMaster(status.statusId ,lookUp.lookUpValue) from org.mifos.application.office.util.valueobjects.OfficeStatus status,org.mifos.application.master.util.valueobjects.LookUpValueLocale lookUp where status.lookUpId = lookUp.lookUpId and lookUp.localeId=:localeId ]]>
+	        	   
+          </query>
+
+</hibernate-mapping>

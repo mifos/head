@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.accounts.business.AccountCheckListEntity" table="PRD_CHECKLIST">
+        <id name="accountChecklistId" column="PRD_CHECKLIST_ID" type="integer">
+            <generator class="native"/>
+        </id>
+    <many-to-one name="checkList"  column="CHECKLIST_ID" class="org.mifos.application.checklist.util.valueobjects.CheckList"  unique="true" insert="true" update="true"/>
+  	<property name="accountStatusId" column="ACCOUNT_STATUS" type="short" not-null="true" />
+  	<many-to-one name="accountType" column="PRD_TYPE_ID" class="org.mifos.application.master.util.valueobjects.AccountType" type="short" not-null="true" />
+    </class>
+</hibernate-mapping>

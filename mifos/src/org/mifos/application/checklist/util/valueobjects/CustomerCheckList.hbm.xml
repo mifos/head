@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.checklist.util.valueobjects.CustomerCheckList" table="CUSTOMER_CHECKLIST">
+        <id name="checklistId" column="CHECKLIST_ID" type="short">
+            <generator class="foreign">
+            	<param name="property">checkList</param>
+            </generator>
+        </id>        
+ 
+        <property name="levelId" column="LEVEL_ID" type="short"  not-null="true" />
+ 
+        <many-to-one name="customerState" column="CUSTOMER_STATUS_ID" class="org.mifos.application.customer.util.valueobjects.CustomerState"  not-null="true"  />
+        
+       <one-to-one name="checkList"  class="org.mifos.application.checklist.util.valueobjects.CheckList"  constrained="true" cascade="none"/>
+    </class>
+    
+</hibernate-mapping>

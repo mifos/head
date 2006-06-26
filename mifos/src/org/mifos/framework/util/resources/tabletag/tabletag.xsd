@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.aditi.com" xmlns="http://www.aditi.com"
+	elementFormDefault="qualified ">
+
+	<!-- user defined Simple types  -->
+	<xs:simpleType name="valuetype">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="string" />
+			<xs:enumeration value="key" />
+			<xs:enumeration value="method" />
+			<xs:enumeration value="date" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="columntype">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="link"/>
+			<xs:enumeration value="text"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!--Table tag definition -->
+	<xs:element name="table">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="path" maxOccurs="unbounded" />
+				<xs:element ref="pagerequirements" maxOccurs="1"/>
+				<xs:element ref="row" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="class" type="xs:string" />
+			<xs:attribute name="resourcebundle" type="xs:string" />
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="path">
+		<xs:complexType>
+			<xs:attribute name="key" type="xs:string"/>
+			<xs:attribute name="action" type="xs:string"/>			
+			<xs:attribute name="forwardkey" type="xs:string"/>			
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="pagerequirements">
+		<xs:complexType>
+			<xs:attribute name="numbersrequired" type="xs:boolean" default="true"/>
+			<xs:attribute name="headingrequired" type="xs:boolean" default="true"/>
+			<xs:attribute name="bluelinerequired" type="xs:boolean" default="true"/>
+			<xs:attribute name="valignnumbers" type="xs:boolean" default="true"/>
+			<xs:attribute name="blanklinerequired" type="xs:boolean" default="false"/>
+			<xs:attribute name="topbluelinerequired" type="xs:boolean" default="true"/>
+			<xs:attribute name="bottombluelinerequired" type="xs:boolean" default="false"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="row">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="column" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="tdrequired" type="xs:boolean"
+				default="false" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="column">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="displayname" maxOccurs="1" />
+				<xs:element ref="parameters" maxOccurs="1" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="label" type="xs:string" use="required"/>
+			<xs:attribute name="labeltype" type="valuetype" use="required"/>
+			<xs:attribute name="type" type="columntype" use="required"/>
+			<xs:attribute name="action" type="xs:string" />
+			<xs:attribute name="boldlabel" type="xs:boolean"
+				default="false" />
+			<xs:attribute name="image" type="xs:boolean" default="false"/>
+			<xs:attribute name="islinkoptional" type="xs:boolean" use="optional" default="false"/> 
+			<xs:attribute name="checkoptionallinkrequired" type="xs:string" use="optional"/>
+			<xs:attribute name="styleClass" type="xs:string" use="optional" default="fontnormalbold"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="displayname">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="fragment-name" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="bold" type="xs:boolean" default="false"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="fragment-name">
+		<xs:complexType>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="type" type="valuetype" use="required" />
+			<xs:attribute name="bold" type="xs:boolean" default="false"/>
+			<xs:attribute name="italic" type="xs:boolean" default="false"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="parameters">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="parameter" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="parameter">
+		<xs:complexType>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="value" type="xs:string" use="required"/>
+			<xs:attribute name="valuetype" type="valuetype" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>

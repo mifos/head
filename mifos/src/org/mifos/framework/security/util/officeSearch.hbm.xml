@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+ <class name="org.mifos.framework.security.util.OfficeSearch" table="OFFICE">
+     <id name="officeId" type="short" column="OFFICE_ID">
+      <generator class="native"/>
+    </id>
+   <property name="searchId" type="string" column="SEARCH_ID" />
+   <property name="parentOfficeId" type="short" column="PARENT_OFFICE_ID" />
+ </class>
+ 
+    <query name="getOfficeSearch">
+            <![CDATA[FROM OfficeSearch WHERE search_id LIKE :pattern]]>
+    </query>
+    <query name="getOfficeSearchList">
+            <![CDATA[from OfficeSearch]]>
+    </query>
+ 
+</hibernate-mapping>
+    

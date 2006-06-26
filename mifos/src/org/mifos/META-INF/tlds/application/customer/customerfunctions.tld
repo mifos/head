@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+  version="2.0">
+    
+  <description>JSTL 1.1 functions library</description>
+  <display-name>JSTL functions</display-name>
+  <tlib-version>1.1</tlib-version>
+  <short-name>customerfn</short-name>
+  <uri>/customer/customerfunctions</uri>
+  
+   <function>
+    <description>
+     This takes a collection of customerpositions and returns the , separated position names for a client as a String
+    </description>
+    <name>getClientPositions</name>
+    <function-class>org.mifos.application.customer.struts.uihelpers.CustomerUIHelperFn</function-class>
+    <function-signature>java.lang.String getClientPositions(java.lang.Object,java.lang.Object)</function-signature>
+    <example>
+      &lt;c:out value="${fn:getClientPositions(object,object)}">
+    </example>
+  </function>
+  
+   
+  </taglib>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<table class="org.mifos.xyz" name="client" resourcebundle="resource"
+		xmlns="http://www.aditi.com" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:schemaLocation="http://www.aditi.com tabletag.xsd ">
+  <path key="" forwardkey="" action=""/> 
+  <pagerequirements numbersrequired="true" bluelinerequired="true" headingrequired="true" blanklinerequired="false" valignnumbers="true"/>
+  <row tdrequired="false">
+    <column label="Group" labeltype="key" boldlabel="false" type="link" action="/client">
+      <displayname bold="true">
+        <fragment-name name="name" type="method"/>
+        <fragment-name name=": ID " type="string"/>
+        <fragment-name name="id" type="method"/>
+      </displayname>
+      <parameters>
+        <parameter name="id" value="id" valuetype="method"/>
+      </parameters>
+    </column>
+  </row> 
+  
+  <row tdrequired="true">
+  	<column label="status" labeltype="key" boldlabel="true" type="text" image="true">
+  		<displayname>
+  			<fragment-name name="status" type="method"/>
+  		</displayname>
+  	</column>
+  	<column label="loanofficer" labeltype="key" boldlabel="true" type="text">
+  		<displayname>
+  			<fragment-name name="loanofficer" type="method"/>
+  			<fragment-name name="Name" type="string"/>
+  		</displayname>
+  	</column>
+  </row>
+  
+  <row>
+  	<column label="Savings" labeltype="key" boldlabel="true" type="link" action="/savings">
+  		<displayname>
+  			<fragment-name name="Account # " type="string"/>
+  			<fragment-name name="savings" type="method"/>
+  		</displayname>
+  		<parameters>
+  			<parameter name="savingsid" value="savings" valuetype="method"/>
+  			<parameter name="method" value="get" valuetype="string"/>
+  		</parameters>
+  	</column>
+  </row>
+  
+  <row>
+  	<column label="Loan" labeltype="key" boldlabel="true" type="link" action="/loan">
+  		<displayname>
+  			<fragment-name name="Account # " type="string"/>
+  			<fragment-name name="loan" type="method"/>
+  		</displayname>
+  		<parameters>
+  			<parameter name="loanid" value="loan" valuetype="method"/>
+  			<parameter name="method" value="get" valuetype="string"/>
+  		</parameters>
+  	</column>
+  </row>
+  
+<row>
+	<column label="alsosee" labeltype="key" boldlabel="true" type="link" action="/branch">
+		<displayname>
+			<fragment-name name="branch" type="method"/>
+		</displayname>
+		<parameters>
+			<parameter name="branchid" value="branch" valuetype="method"/>
+		</parameters>
+	</column>
+	<column label="/" labeltype="string" boldlabel="true" type="link" action="/center">
+		<displayname>
+			<fragment-name name="center" type="method"/>
+		</displayname>
+		<parameters>
+			<parameter name="centerid" value="center" valuetype="method"/>
+		</parameters>
+	</column>
+	<column label="/" labeltype="string" boldlabel="true" type="link" action="/group">
+		<displayname>
+			<fragment-name name="group" type="method" />
+		</displayname>
+		<parameters>
+			<parameter name="groupid" value="group" valuetype="method"/>
+		</parameters>
+	</column>
+</row>
+  
+</table>

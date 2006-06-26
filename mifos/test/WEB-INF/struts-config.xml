@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : struts-config.xml
+    Created on : August 22, 2005
+    Author     : ashishsmital
+    Description:
+        Purpose of the document is to test MifosBaseAction class.
+        It does so by creating product category.
+-->
+
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+"http://jakarta.apache.org/struts/dtdt/struts-config_1_2.dtd">
+
+
+<struts-config>
+
+	
+	<display-name></display-name>
+	<description></description>
+	<form-beans>
+    <!-- Product Category, This action form is to test creation of MifosBaseAction -->
+	    <form-bean name="mifosproddefactionform"
+			type="org.mifos.framework.struts.actionforms.PrdCategoryTestActionForm">
+		</form-bean>
+		
+		<!-- FundsActionForm Action Form  -->
+		<form-bean name="FundActionForm" type="org.mifos.application.fund.struts.actionforms.FundActionForm"/>
+		
+		<form-bean name="reportsActionForm"
+				type="org.mifos.application.reports.struts.actionforms.ReportsActionForm" />
+	</form-beans>	
+	
+	<!-- CheckListForm Action Form  -->
+		<form-bean name="CheckListForm"
+			type="org.mifos.application.checklist.struts.actionforms.CheckListActionForm" />
+		<!--  end -->
+		
+    <global-exceptions>
+		<exception type="org.mifos.framework.exceptions.SystemException"
+			handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+			key="exception.framework.SystemException" scope="request"
+			path="/pages/framework/jsp/error.jsp" />
+		<exception
+			type="org.mifos.framework.exceptions.ApplicationException"
+			handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+			key="exception.framework.ApplicationException" scope="request" />
+	</global-exceptions>
+    
+    <global-forwards>
+         <forward
+            name="welcome"
+            path="/mifoslogin.do?method=load"/>
+    </global-forwards>
+    <action-mappings>
+        
+       
+ 				
+ 		<!-- CheckList Action -->
+		<action path="/checkListAction"
+			type="org.mifos.application.checklist.struts.action.CheckListAction"
+			parameter="method" scope="session" name="CheckListForm"
+			validate="true" input="/checkListAction.do?method=validate">
+			<forward name="preview_failure"
+				path="/pages/application/checklist/jsp/addNewChecklists.jsp" />
+			<forward name="preview_create_failure"
+				path="/pages/application/checklist/jsp/addNewChecklists.jsp" />
+			<forward name="preview_manage_failure"
+				path="/pages/application/checklist/jsp/manageCheckList.jsp" />
+			<forward name="manage_failure"
+				path="/pages/application/checklist/jsp/manageCheckList.jsp" />
+			<forward name="preview_success"
+				path="/pages/application/checklist/jsp/addNewChecklistsPreview.jsp" />
+			<forward name="load_success"
+				path="/pages/application/checklist/jsp/addNewChecklists.jsp" />
+			<forward name="previous_success"
+				path="/pages/application/checklist/jsp/addNewChecklists.jsp" />
+			<forward name="loadParent_success"
+				path="/pages/application/checklist/jsp/addNewChecklists.jsp" />
+			<forward name="loadParent_failure"
+				path="/pages/application/checklist/jsp/addNewChecklists.jsp" />
+			<forward name="create_success"
+				path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="forward_view"
+				path="/pages/application/checklist/jsp/ViewEditChecklists.jsp" />
+			<forward name="get_success"
+				path="/pages/application/checklist/jsp/checklistDetails.jsp" />
+			<forward name="manage_success"
+				path="/pages/application/checklist/jsp/manageCheckList.jsp" />
+			<forward name="manage_preview"
+				path="/pages/application/checklist/jsp/managePreview.jsp" />
+			<forward name="update_success"
+				path="/checkListAction.do?method=get" />
+		</action>
+		<!-- Ends-->
+		
+		
+		
+		
+		
+		
+		<!-- MifosBaseAction action -->
+        <action path="/mifosproddefaction"  type="org.mifos.framework.struts.action.MifosTestBaseAction" 
+      		name="mifosproddefactionform" 
+       		parameter="method"	
+       		validate="false"
+       		input="/feesAction.do?method=validate"
+       		scope="session">
+       		
+       		<forward name="load_success" path="/pages/application/productdefinition/jsp/CreateCategory.jsp" />
+       		<forward name="create_success" path="/pages/application/productdefinition/jsp/CreateCategoryConfirm.jsp" />
+       		<forward name="update_success" path="/pages/application/productdefinition/jsp/ProductDetails.jsp" />
+       		
+ 		</action>
+
+		<action path="/fundAction"
+		type="org.mifos.application.fund.struts.action.FundAction"
+		parameter="method"
+		scope="session"
+		name="FundActionForm"
+		validate="true"
+		input="/fundAction.do?method=validate"
+		>		
+		<forward name="load_success" path="/pages/application/fund/jsp/DefineFunds.jsp" />
+		<forward name="load_failure" path="/pages/application/fund/jsp/DefineFunds.jsp" />
+		<forward name="previewCreate_success" path="/pages/application/fund/jsp/DefineFundsPreview.jsp" />
+		<forward name="previewCreate_failure" path="/pages/application/fund/jsp/DefineFunds.jsp" />
+		<forward name="previewEdit_success" path="/pages/application/fund/jsp/PreviewFund.jsp" />
+		<forward name="previewEdit_failure" path="/pages/application/fund/jsp/EditFunds.jsp" />
+		
+		<forward name="previousCreate_success" path="/pages/application/fund/jsp/DefineFunds.jsp" />
+		<forward name="previousCreate_failure" path="/pages/application/fund/jsp/DefineFundsPreview.jsp" />
+		<forward name="previousEdit_success" path="/pages/application/fund/jsp/EditFunds.jsp" />
+		<forward name="previousEdit_failure" path="/pages/application/fund/jsp/PreviewFund.jsp" />
+		<forward name="create_success" path="/pages/application/admin/jsp/admin.jsp" />
+		<forward name="create_failure" path="/pages/application/fund/jsp/DefineFundsPreview.jsp" />
+		<forward name="search_success" path="/pages/application/fund/jsp/VIewFunds.jsp" />
+    	<forward name="search_failure" path="/pages/application/admin/jsp/admin.jsp" />
+    	<forward name="manage_success" path="/pages/application/fund/jsp/EditFunds.jsp" />
+    	<forward name="manage_failure" path="/pages/application/fund/jsp/VIewFunds.jsp" />
+		<forward name="update_success" path="/fundAction.do?method=search" />
+		<forward name="update_failure" path="/pages/application/fund/jsp/PreviewFund.jsp" />	
+		</action>
+		
+		
+		<!--  Reports Action -->
+		<action path="/reportsAction"
+			type="org.mifos.application.reports.struts.action.ReportsAction"
+			name="reportsActionForm" parameter="method"
+			input="/reportsAction.do?method=validate"
+			validate="false">
+			<forward name="load_success" path="/pages/application/reports/jsp/reports.jsp" />			
+		</action>
+
+    </action-mappings>
+    
+    <controller nocache="true" processorClass="org.mifos.framework.struts.action.MifosRequestProcessor"></controller>
+    <message-resources key="UIResources" parameter="org.mifos.framework.util.resources.UIResources"
+    	factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+    
+    <message-resources key="LoggerResources" parameter="org.mifos.framework.util.resources.loggerresources.LoggerStatements"
+    	factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>	
+    	
+    	
+	<!-- ImageResources-->    	
+	<message-resources key="ImageResources" parameter="org.mifos.framework.util.resources.ImageResources"
+    	factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+	
+    <message-resources key="loanUIResources" parameter="org.mifos.application.loan.util.resources.LoanUIResources"
+    	factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+    <message-resources key="ExceptionResources" parameter="org.mifos.framework.util.resources.ExceptionResources"
+    	factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+
+		
+    <!-- fees resources -->
+	<message-resources key="FeesUIResources" parameter="org.mifos.application.fees.util.resources.FeesUIResources"/>
+	
+	 <!-- CheckList resources -->
+	<message-resources key="checklistUIResources"
+		parameter="org.mifos.application.checklist.util.resources.CheckListUIResources" />
+	 
+    
+    <plug-in className="org.mifos.framework.struts.plugin.InitializerPlugin"/>
+    <plug-in className="org.apache.struts.tiles.TilesPlugin" >
+	  <set-property property="definitions-config" value="/WEB-INF/tiles-defs.xml" />
+	  <set-property property="definitions-debug" value="2" />
+	  <set-property property="definitions-parser-details" value="2" />
+	  <set-property property="definitions-parser-validate" value="true" />
+	</plug-in>
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+  		<set-property property="pathnames"
+   			value="/WEB-INF/validation.xml,/WEB-INF/validator-rules.xml"/>
+  		<set-property property="stopOnFirstError" value="false"/>
+  </plug-in>
+	
+
+    
+</struts-config>

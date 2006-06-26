@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.meeting.business.MeetingDetailsEntity" table="RECURRENCE_DETAIL">
+        <id name="detailsId" column="DETAILS_ID" type="integer">
+            <generator class="native"/>
+        </id>
+		<version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null"/>
+		 <many-to-one name="meeting" column="MEETING_ID"  class="org.mifos.application.meeting.business.MeetingBO"  insert="true" update="true" unique="true" lazy="false" />
+ 		<many-to-one name="recurrenceType" column="RECURRENCE_ID"  class="org.mifos.application.meeting.business.RecurrenceTypeEntity" insert="true" update="true"  unique="true" lazy="false" cascade="none"/>
+ 		<one-to-one name="meetingRecurrence"   class="org.mifos.application.meeting.business.MeetingRecurrenceEntity"   lazy="false" cascade="all" property-ref="meetingDetails"/>
+        <property name="recurAfter" column="RECUR_AFTER" type="short" />
+ 
+    </class>
+</hibernate-mapping>

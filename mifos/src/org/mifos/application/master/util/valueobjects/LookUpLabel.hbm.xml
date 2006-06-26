@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+  
+<hibernate-mapping > 
+  <class name="org.mifos.application.master.util.valueobjects.LookUpLabel" table="LOOKUP_LABEL" >
+     <id name="entityId" column="ENTITY_ID" >
+            <generator class="foreign">
+            	<param name="property">lookUpEntity</param>
+            </generator>
+        </id>
+    <property column="ENTITY_NAME"  name="labelName"  type="java.lang.String"/>
+    <property column="LOCALE_ID"  name="localeId" />
+        
+     <many-to-one name="locale" column="LOCALE_ID" class="org.mifos.application.master.util.valueobjects.SupportedLocales"  unique="true" lazy="true" insert="false" update="false"/>    
+     <one-to-one name="lookUpEntity"  class="org.mifos.application.master.util.valueobjects.LookUpEntity"  lazy="true" />    
+
+
+
+  </class> 
+
+
+  
+</hibernate-mapping> 

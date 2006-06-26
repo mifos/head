@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.accounts.util.valueobjects.FeesTrxnDetail" table="FEE_TRXN_DETAIL" mutable="false">
+        <id name="feesTrxnId" column="FEE_TRXN_DETAIL_ID" type="integer">
+            <generator class="native"/>
+        </id>
+	    <many-to-one name="accountTrxn" column="ACCOUNT_TRXN_ID" class="org.mifos.application.accounts.util.valueobjects.AccountTrxn" not-null="true"/>
+		<!-- <property name="feeAmount" column="FEE_AMOUNT" type="double" not-null="true"/>-->
+		<property name="feeAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+		 <column name="FEE_AMOUNT_CURRENCY_ID" /> 
+		 <column name="FEE_AMOUNT" />
+		</property>
+		<many-to-one name="accountFees" column="ACCOUNT_FEE_ID" class="org.mifos.application.accounts.util.valueobjects.AccountFees" not-null="true"/>    	    	              
+		
+     </class>
+</hibernate-mapping>

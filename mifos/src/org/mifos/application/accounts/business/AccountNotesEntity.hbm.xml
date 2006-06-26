@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.accounts.business.AccountNotesEntity" table="ACCOUNT_NOTES">
+        <id name="commentId" column="ACCOUNT_NOTES_ID" type="integer">
+            <generator class="native"/>
+        </id>
+        <property name="commentDate" column="COMMENT_DATE" type="date" />
+        <property name="comment" column="NOTE" type="string" />
+        <many-to-one  name="personnel" column="OFFICER_ID" class="org.mifos.application.personnel.business.PersonnelBO" insert="true" update="false" unique="true" lazy="true"/>
+        <many-to-one  name="account" column="ACCOUNT_ID" class="org.mifos.application.accounts.business.AccountBO" insert="true" update="false" unique="true" lazy="true"/>
+    </class>
+</hibernate-mapping>

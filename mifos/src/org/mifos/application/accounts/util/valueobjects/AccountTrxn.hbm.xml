@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.accounts.util.valueobjects.AccountTrxn" table="ACCOUNT_TRXN">
+        <id name="accountTrxnId" column="ACCOUNT_TRXN_ID" type="integer">
+            <generator class="native"/>
+        </id>
+        <property name="accountId" column="ACCOUNT_ID" type="integer" />
+        <property name="personnelId" column="PERSONNEL_ID" type="short" />
+        <many-to-one name="accountPayment" column="PAYMENT_ID" class="org.mifos.application.accounts.util.valueobjects.AccountPayment" lazy="true" insert="true" update="false"/>
+        <many-to-one name="accountAction" column="ACCOUNT_ACTION_ID" class="org.mifos.application.master.util.valueobjects.AccountAction"  cascade="none" update="false" insert="true"/>  
+        <many-to-one name="currency" column="CURRENCY_ID" class="org.mifos.application.master.util.valueobjects.Currency" lazy="true" cascade="none" insert="true" update="false"/>
+        <property name="customerId" column="CUSTOMER_ID" type="integer" />
+        <!--relatedTrxn        -->
+        <property name="amount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+		 <column name="AMOUNT_CURRENCY_ID" /> 
+		 <column name="AMOUNT" />
+		</property>
+    	<property name="dueDate" column="DUE_DATE" type="date"/>
+    	<property name="comments" column="COMMENTS" type="string"/>
+    	<property name="actionDate" column="ACTION_DATE" type="date"/>
+    	<property name="createdDate" column="CREATED_DATE" type="date"/>
+		<set name="loanDetails" inverse="true" cascade="all">   	
+			<key column="ACCOUNT_TRXN_ID"/>
+			<one-to-many class="org.mifos.application.accounts.util.valueobjects.LoanTrxnDetail"/>
+		</set>
+		<set name="feeDetails" inverse="true" cascade="all">   	
+			<key column="ACCOUNT_TRXN_ID"/>
+			<one-to-many class="org.mifos.application.accounts.util.valueobjects.FeesTrxnDetail"/>
+		</set>
+	    	              
+     </class>
+     
+     <!-- The following query is to  obtain the recent account activity for a given account id-->
+	<query name="accountTrxn.recentAccountActivity">
+		<![CDATA[ select new org.mifos.application.accounts.loan.util.valueobjects.RecentAccountActivity 
+					(accTrxn.actionDate,accTrxn.comments,accTrxn.amount,personnel.displayName)
+					from org.mifos.application.accounts.util.valueobjects.AccountTrxn as accTrxn, 
+					org.mifos.application.personnel.util.valueobjects.Personnel as personnel
+					where accTrxn.accountId =:accountId	 
+					and accTrxn.personnelId=personnel.personnelId 
+					order by accTrxn.accountTrxnId desc]]>
+	</query>
+	
+	<!-- The following query returns the total amount for the max paymentid for a given accountnid -->
+	<query name="accountTrxn.AccountTrxnsTotalAmount">
+		<![CDATA[select sum(accTrxn.amount) from org.mifos.application.accounts.util.valueobjects.AccountTrxn as accTrxn
+					where accTrxn.accountId=:accountId and accTrxn.accountPayment.paymentId=:paymentId]]>
+	</query>
+
+	<!-- The following query returns the accounttrxns for a given accountnid  and paymentid-->
+	<query name="accountTrxn.AccountTrxns">
+		<![CDATA[from org.mifos.application.accounts.util.valueobjects.AccountTrxn as accTrxn
+					where accTrxn.accountId=:accountId and accTrxn.accountPayment.paymentId=:paymentId]]>
+	</query>
+	
+	
+</hibernate-mapping>

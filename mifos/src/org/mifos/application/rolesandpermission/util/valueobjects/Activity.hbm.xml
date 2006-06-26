@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+ <class name="org.mifos.application.rolesandpermission.util.valueobjects.Activity" table="ACTIVITY">
+  <id name="id" type="short" column="ACTIVITY_ID" >
+    <generator class="native" /> 
+  </id>
+    <property name="parent" type="short" column="PARENT_ID"   /> 
+	<many-to-one name="activityNameLookupValues" column="ACTIVITY_NAME_LOOKUP_ID" class="org.mifos.application.master.util.valueobjects.LookUpValue" cascade="none" update="false" unique="true" insert="true"  /> 
+	<many-to-one name="descriptionLookupValues" column="DESCRIPTION_LOOKUP_ID" class="org.mifos.application.master.util.valueobjects.LookUpValue" cascade="none" update="false" unique="true" insert="true"  />  
+ </class>
+     <query name="getActivities">
+            <![CDATA[ from Activity]]>
+    </query>
+ 
+</hibernate-mapping>
+    

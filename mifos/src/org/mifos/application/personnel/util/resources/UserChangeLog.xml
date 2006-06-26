@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<tableInfo>
+  <headerDetails headerStyle="drawtablehd"/> 
+  <row totWidth="100" bottomLineRequired="true">
+	<column label="Date" value="mfiDate" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="15" />
+    </column>
+	<column label="Field" value="fieldName" valueType="method" columnType="text">
+	     <columnDetails  rowStyle="drawtablerow" colWidth="27"/>
+    </column>
+	<column label="Old Value"    value="oldValue"  valueType="method"   columnType="text"> 
+	    <columnDetails   rowStyle="drawtablerow" colWidth="20"/>
+    </column>
+    <column label="New Value"    value="newValue"  valueType="method"   columnType="text"> 
+	    <columnDetails   rowStyle="drawtablerow" colWidth="19"/>
+    </column>
+    <column label="User"  value="userName"  valueType="method"   columnType="text"> 
+	    <columnDetails   rowStyle="drawtablerow" colWidth="19"/>
+    </column>
+  </row>
+
+  
+</tableInfo>
+   
+   
+   

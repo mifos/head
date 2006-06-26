@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee   http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	<description>This is an open source project on micro-finance</description>
+	<display-name>MiFosApplication</display-name>
+	<filter>
+   <filter-name>loginfilter</filter-name>
+   <filter-class>org.mifos.framework.security.util.LoginFilter</filter-class>
+   </filter>
+   <filter-mapping>
+   <filter-name>loginfilter</filter-name>
+   <url-pattern>*.do</url-pattern>
+   </filter-mapping>
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+    <servlet>
+        <servlet-name>Controller</servlet-name>
+        <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+        <init-param>
+            <param-name>config</param-name>
+            <param-value>/WEB-INF/struts-config.xml</param-value>
+        </init-param>
+        <init-param>
+            <param-name>DSN</param-name>
+            <param-value>MifosDatasource</param-value>
+        </init-param>
+        <init-param>
+      <param-name>convertNull</param-name>
+      <param-value>true</param-value>
+    </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Controller</servlet-name>
+        <url-pattern>*.do</url-pattern>
+    </servlet-mapping>
+    <welcome-file-list>
+  <welcome-file>/pages/application/login/jsp/index.jsp</welcome-file>
+  </welcome-file-list>
+  <listener>
+  	<listener-class>org.mifos.application.login.util.helpers.MifosSessionListener</listener-class>
+  </listener>
+  <listener>
+  	<listener-class>org.mifos.application.login.util.helpers.MifosSessionAttributeListener</listener-class>
+  </listener>
+    <!-- Struts Tag Library Descriptors -->
+  <taglib>
+    <taglib-uri>/tags/struts-bean</taglib-uri>
+    <taglib-location>/WEB-INF/tlds/struts-bean.tld</taglib-location>
+  </taglib>
+
+  <taglib>
+    <taglib-uri>/tags/struts-html</taglib-uri>
+    <taglib-location>/WEB-INF/tlds/struts-html.tld</taglib-location>
+  </taglib>
+
+  <taglib>
+    <taglib-uri>/tags/struts-logic</taglib-uri>
+    <taglib-location>/WEB-INF/tlds/struts-logic.tld</taglib-location>
+  </taglib>
+
+  <taglib>
+    <taglib-uri>/tags/struts-nested</taglib-uri>
+    <taglib-location>/WEB-INF/tlds/struts-nested.tld</taglib-location>
+  </taglib>
+
+  <taglib>
+    <taglib-uri>/tags/struts-tiles</taglib-uri>
+    <taglib-location>/WEB-INF/tlds/struts-tiles.tld</taglib-location>
+  </taglib>
+  
+  <taglib>
+    <taglib-uri>/tags/struts-html-el</taglib-uri>
+    <taglib-location>/WEB-INF/tlds/struts-html-el.tld</taglib-location>
+  </taglib>
+
+  <taglib>
+    <taglib-uri>/tags/custom-menu</taglib-uri>
+    <taglib-location>/WEB-INF/tlds/custom-menu.tld</taglib-location>
+  </taglib>
+  
+  <taglib>
+    <taglib-uri>/tags/mifos-html</taglib-uri>
+    <taglib-location>/WEB-INF/tlds/mifos-html.tld</taglib-location>
+  </taglib>
+  
+  <taglib>
+    <taglib-uri>/tags/struts-bean-el</taglib-uri>
+    <taglib-location>/WEB-INF/tlds/struts-bean-el.tld</taglib-location>
+  </taglib>
+  <taglib>
+    <taglib-uri>/tags/c</taglib-uri>
+    <taglib-location>/WEB-INF/tlds/c.tld</taglib-location>
+  </taglib>
+  <taglib>
+    <taglib-uri>/tags/date</taglib-uri>
+    <taglib-location>/WEB-INF/tlds/my-customtags.tld</taglib-location>
+  </taglib>
+  <taglib>
+    <taglib-uri>/mifos/customtags</taglib-uri>
+    <taglib-location>/WEB-INF/tlds/mifos-customtags.tld</taglib-location>
+  </taglib>
+  <taglib>
+    <taglib-uri>/mifos/mifostabletag</taglib-uri>
+    <taglib-location>/WEB-INF/tlds/tabletag.tld</taglib-location>
+  </taglib>
+  <taglib>
+    <taglib-uri>/mifos/officetags</taglib-uri>
+    <taglib-location>/WEB-INF/tlds/application/office/officetags.tld</taglib-location>
+  </taglib>
+  
+  <!-- For M2 -->
+  <taglib>
+    <taglib-uri>/mifos/custom-tags</taglib-uri>
+    <taglib-location>/WEB-INF/tlds/customtags.tld</taglib-location>
+  </taglib>
+</web-app>    

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.accounts.business.AccountStateEntity" table="ACCOUNT_STATE" >
+    	<id name="id" column="ACCOUNT_STATE_ID" type="short">
+            <generator class="native"/>
+        </id>
+        <property name="optional" column="CURRENTLY_IN_USE" type="short" />
+        <many-to-one name="lookUpValue" column="LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" 
+    			cascade="none" update="false" unique="true"/>
+		<many-to-one name="prdType" column="PRD_TYPE_ID" class="org.mifos.application.productdefinition.util.valueobjects.ProductType"
+				cascade="none" update="false" unique="true"/>
+		
+		<set name="flagSet" table="ACCOUNT_STATE_FLAG" >
+			<key column="STATUS_ID"/>
+			<one-to-many class="org.mifos.application.accounts.business.AccountStateFlagEntity"/>
+		</set>
+    </class>
+	 
+	 <!--Gets all possible states-->
+    <query name="accounts.retrieveAllAccountStates">
+    	<![CDATA[from org.mifos.application.accounts.business.AccountStateEntity accountStateEntity 
+    	where  accountStateEntity.prdType.productTypeID = :prdTypeId]]>
+    </query>
+    <query name="accounts.getStates">
+		<![CDATA[from org.mifos.application.accounts.business.AccountStateEntity accountStateEntity where accountStateEntity.optional=:OPTIONAL_FLAG]]>
+	</query>
+</hibernate-mapping>

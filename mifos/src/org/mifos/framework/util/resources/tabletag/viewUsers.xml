@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<table class="org.mifos.xyz" name="viewUsers" resourcebundle="resource"
+		xmlns="http://www.aditi.com" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:schemaLocation="http://www.aditi.com tabletag.xsd ">
+<path key="viewUsers" forwardkey="search_success" action="PersonnelAction.do"/> 
+<pagerequirements numbersrequired="true" bluelinerequired="true" headingrequired="false" valignnumbers="false" blanklinerequired="false"/>  
+<row>
+	<column label="" labeltype="string" boldlabel="false" type="text" >
+		<displayname>
+			<fragment-name name="officeName" type="method"/>
+		</displayname>
+	</column>
+	<column label="/" labeltype="string" boldlabel="true" type="link" action="PersonnelAction.do">
+		<displayname bold="true">
+			<fragment-name name="personnelName" type="method" bold="true"/>
+		</displayname>
+		<parameters>
+			<parameter name="globalPersonnelNum" value="globalPersonnelNum" valuetype="method"/>
+			<parameter name="method" value="get" valuetype="string"/>
+		</parameters>
+	</column>
+</row>
+</table>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="org.mifos.application.accounts.financial.business.COABO"
+		table="COA">
+		<id name="categoryId" column="COA_ID">
+			<generator class="native" />
+		</id>
+
+		<property name="categoryName" column="COA_NAME" />
+		<many-to-one name="associatedGlcode" column="GLCODE_ID"
+			class="org.mifos.application.accounts.financial.business.GLCodeEntity"
+			outer-join="true" cascade="none" update="false" insert="false"
+			unique="true" />
+		<many-to-one name="coaHierarchy" column="COA_ID"
+			class="org.mifos.application.accounts.financial.business.COAHierarchyEntity"
+			lazy="false" cascade="none" update="false" insert="false"
+			unique="true" />
+		<set name="subCategory" cascade="none" inverse="true"
+			table="COAHIERARCHY" lazy="false" outer-join="true">
+			<key column="PARENT_COAID" />
+
+			<many-to-many
+				class="org.mifos.application.accounts.financial.business.COAHierarchyEntity"
+				column="COA_ID" outer-join="true" />
+		</set>
+
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.checklist.util.valueobjects.CheckList" table="CHECKLIST">
+        <id name="checklistId" column="CHECKLIST_ID" type="short">
+            <generator class="native"/>
+        </id>
+ 
+        <property name="checklistName" column="CHECKLIST_NAME" type="string" />
+        <property name="checklistStatus" column="CHECKLIST_STATUS" type="short"  not-null="true" />
+        <property name="createdBy" column="CREATED_BY" type="short" />
+        <property name="createdDate" column="CREATED_DATE" type="date" />
+        <property name="updatedBy" column="UPDATED_BY" type="short" />
+        <property name="updatedDate" column="UPDATED_DATE" type="date" />
+ 
+        <many-to-one name="supportedLocales" column="LOCALE_ID" class="org.mifos.application.master.util.valueobjects.SupportedLocales"  not-null="true" />
+ 		
+ 		<one-to-one name="customerChecklist"  class="org.mifos.application.checklist.util.valueobjects.CustomerCheckList" cascade="all" lazy="false" />
+ 		<one-to-one name="accountCheckList"  class="org.mifos.application.accounts.util.valueobjects.AccountCheckList" cascade="all" lazy="false" />
+        <set name="checklistDetailSet" inverse="true" table="CHECKLIST_DETAIL" cascade="all" order-by="DETAIL_ID asc">
+            <key column="CHECKLIST_ID"/>
+            <one-to-many class="org.mifos.application.checklist.util.valueobjects.CheckListDetail"/>
+        </set>
+    </class>
+       <query name="masterdata.checklist">
+    	       <![CDATA[select new org.mifos.application.checklist.util.valueobjects.CheckListMaster(checkList.checklistId ,checkList.checklistDetailSet.detailText) from org.mifos.application.checklist.util.valueobjects.CheckList  checkList where checkList.customerChecklist.customerState.statusId=:status and checkList.customerChecklist.levelId =:level]]>
+          </query>
+          
+       <query name="masterdata.customer_loadMasterdata">
+    	      <![CDATA[select new org.mifos.application.checklist.util.valueobjects.CheckListMaster(cl.levelId,ll.labelName) from org.mifos.application.customer.util.valueobjects.CustomerLevel as cl,org.mifos.application.master.util.valueobjects.LookUpLabel as ll where cl.lookUpEntity.entityId=ll.lookUpEntity.entityId and ll.localeId=:localeId ]]>
+       </query>
+       
+       <query name="masterdata.product_loadMasterdata">
+    	      <![CDATA[select new org.mifos.application.checklist.util.valueobjects.CheckListMaster(pt.productTypeID,lvl.lookUpValue) from org.mifos.application.productdefinition.util.valueobjects.ProductType as pt,org.mifos.application.master.util.valueobjects.LookUpValueLocale as lvl where pt.lookUpValue.lookUpId=lvl.lookUpId and lvl.localeId=:localeId ]]>
+       </query>   
+        
+       <query name="masterdata.customer_checkListMaster_getCheckListMasterdata">
+    	      <![CDATA[select new org.mifos.application.checklist.util.valueobjects.CheckListSearchMaster(cl.checklistId,cl.checklistName,lvl.lookUpValue,ac.accountStatusId,ac.accountTypeId,cl.checklistStatus)  from org.mifos.application.accounts.util.valueobjects.AccountCheckList as ac ,org.mifos.application.master.util.valueobjects.AccountState as accountState,org.mifos.application.master.util.valueobjects.LookUpValueLocale as lvl ,org.mifos.application.checklist.util.valueobjects.CheckList as cl where  ac.checkList.checklistId=cl.checklistId and  ac.accountStatusId =accountState.accountStateId and  accountState.prdTypeId = ac.accountTypeId and accountState.lookUpId=lvl.lookUpId and lvl.localeId=:localeId order by cl.checklistName]]>
+       </query> 
+       
+       <query name="masterdata.product_checkListMaster_getCheckListMasterdata">
+    	      <![CDATA[select new org.mifos.application.checklist.util.valueobjects.CheckListMaster(pt.productTypeID,lvl.lookUpValue) from org.mifos.application.productdefinition.util.valueobjects.ProductType as pt,org.mifos.application.master.util.valueobjects.LookUpValueLocale as lvl where pt.lookUpValue.lookUpId=lvl.lookUpId and lvl.localeId=:localeId ]]>
+       </query>
+       
+       <query name="masterdata.customer_checkListDetails_getCheckListMasterdata">
+    	      <![CDATA[select new org.mifos.application.checklist.util.valueobjects.CheckListMaster(cl.levelId,ll.labelName) from org.mifos.application.customer.util.valueobjects.CustomerLevel as cl,org.mifos.application.master.util.valueobjects.LookUpLabel as ll where cl.lookUpEntity.entityId=ll.lookUpEntity.entityId and ll.localeId=:localeId  ]]>
+       </query>
+       
+       <query name="masterdata.checkList_getCheckListMasterdata">
+    	      <![CDATA[select new org.mifos.application.checklist.util.valueobjects.CheckListSearchMaster(cl.checklistId,cl.checklistName,lookup.lookUpValue,ccl.levelId,cl.checklistStatus)  from org.mifos.application.checklist.util.valueobjects.CustomerCheckList as ccl ,org.mifos.application.master.util.valueobjects.Status as status,org.mifos.application.checklist.util.valueobjects.CheckList as cl,org.mifos.application.master.util.valueobjects.LookUpValueLocale as lookup where  ccl.checkList.checklistId=cl.checklistId and  ccl.customerState.statusId =status.statusId and  status.levelId = ccl.levelId and lookup.localeId=:localeId and status.lookUpId=lookup.lookUpId order by cl.checklistName ]]>
+       </query>
+       
+       <query name="productStatusList">
+    	      <![CDATA[select new org.mifos.application.master.util.valueobjects.StatusMaster(accountState.accountStateId,lvl.lookUpValue) from org.mifos.application.master.util.valueobjects.AccountState as accountState ,org.mifos.application.master.util.valueobjects.LookUpValueLocale as lvl where accountState.prdTypeId=:levelId and accountState.lookUpId=lvl.lookUpId and lvl.localeId=:localeId and accountState.accountStateId not in (1,4,5,6,11,12,13,17,20,21) ]]>
+       </query>
+       
+       <query name="masterdata.productList_get">
+    	      <![CDATA[select new org.mifos.application.checklist.util.valueobjects.CheckListMaster(cl.levelId,ll.labelName) from org.mifos.application.customer.util.valueobjects.CustomerLevel as cl,org.mifos.application.master.util.valueobjects.LookUpLabel as ll where cl.lookUpEntity.entityId=ll.lookUpEntity.entityId and ll.localeId=:localeId ]]>
+       </query>  
+       
+       <query name="masterdata.prdList_get">
+    	      <![CDATA[select new org.mifos.application.checklist.util.valueobjects.CheckListMaster(pt.productTypeID,lvl.lookUpValue) from org.mifos.application.productdefinition.util.valueobjects.ProductType as pt,org.mifos.application.master.util.valueobjects.LookUpValueLocale as lvl where pt.lookUpValue.lookUpId=lvl.lookUpId and lvl.localeId=:localeId ]]>
+       </query> 
+       
+       <query name="customer.validateState">
+    	      <![CDATA[select count(*) from	org.mifos.application.checklist.util.valueobjects.CustomerCheckList as ccl where ccl.levelId=:lvlId and ccl.customerState.statusId=:stsId ]]>
+       </query>
+       
+        <query name="product.validateState">
+    	      <![CDATA[select count(*) from org.mifos.application.accounts.util.valueobjects.AccountCheckList as acChecklist where acChecklist.accountTypeId=:lvlId and acChecklist.accountStatusId=:stsId and acChecklist.checkList.checklistId is not null ]]>
+       </query>
+       <query name="checklist.createdBy">
+    	      <![CDATA[select personnel.userName from org.mifos.application.personnel.util.valueobjects.Personnel as personnel  where personnel.personnelId=:PERSONNEL_ID ]]>
+       </query>  
+       <query name="customerstatuslist_withoutpending_approval">
+    	      <![CDATA[select new org.mifos.application.master.util.valueobjects.StatusMaster(status.statusId ,lookUp.lookUpValue) from org.mifos.application.master.util.valueobjects.Status  status,org.mifos.application.master.util.valueobjects.LookUpValueLocale lookUp where status.lookUpId = lookUp.lookUpId and lookUp.localeId=:localeId and status.levelId=:levelId and status.statusId not in (2,8) ]]>
+       </query>
+       <query name="productstatuslist_withoutpending_approval">
+    	      <![CDATA[select new org.mifos.application.master.util.valueobjects.StatusMaster(accountState.accountStateId,lvl.lookUpValue) from org.mifos.application.master.util.valueobjects.AccountState as accountState ,org.mifos.application.master.util.valueobjects.LookUpValueLocale as lvl where accountState.prdTypeId=:levelId and accountState.lookUpId=lvl.lookUpId and lvl.localeId=:localeId and accountState.accountStateId not in (1,2,4,5,6,11,12,13,14,17) ]]>
+       </query>
+</hibernate-mapping>

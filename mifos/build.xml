@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="mifos" default="dist" basedir=".">
+
+	<property environment="env"/>
+	<property name="build.compiler" value="modern"/>
+	<property name="java.home" value="${env.JAVA_HOME}"/>
+	<property name="conf.dir" value="${basedir}/conf"/>
+	<property file="${conf.dir}/build.properties"/>
+	<property name="lib.dir" value="${basedir}/lib"/>
+	<property name="src.dir" value="${basedir}/src"/>
+	<property name="test.dir" value="${basedir}/test"/>
+	<property name="sql.dir" value="${basedir}/sql"/>
+	<property name="build.dir" value="${basedir}/build"/>
+	<property name="dist.dir" value="${basedir}/dist"/>
+	<property name="doc.dir" value="${basedir}/docs"/>
+
+	<!--Helper path for building, copying resources etc-->
+	<property name="build.src.dir" value="${build.dir}/src_pkg"/>
+	<property name="build.test.dir" value="${build.dir}/test_pkg"/>
+	<property name="build.web-inf" value="${build.src.dir}/WEB-INF"/>
+	<property name="build.classes" value="${build.web-inf}/classes"/>
+	<property name="test.classes" value="${build.test.dir}/classes"/>
+
+	<property name="db.driver" value="com.mysql.jdbc.Driver"/>
+
+	<path id="class.path">
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar"/>
+		</fileset>
+		<pathelement location="${build.classes}"/>
+	</path>
+	<path id="cobertura.classpath">
+		<fileset dir="${env.COBERTURA_HOME}">
+			<include name="cobertura.jar" />
+			<include name="lib/**/*.jar" />
+		</fileset>
+	</path>
+
+	<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
+	<taskdef  name="junit" classpathref="class.path" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
+
+	<!--<echo level="debug">CLASSPATH - ${java.class.path}</echo>-->
+
+	<target name="init">
+		<tstamp>
+			<format property="BUILD_ID" pattern="MMM-dd-yyyy hh:mm aa z" locale="en"/>
+		</tstamp>
+		<echo message="Build started at - ${BUILD_ID}"/>
+	</target>
+
+	<target name="check_config">
+		<fail message="JAVA_HOME not set. Please set JAVA_HOME" unless="env.JAVA_HOME"/>
+		<fail message="JBOSS_HOME not set. Please set JBOSS_HOME" unless="env.JBOSS_HOME"/>
+		<fail message="COBERTURA_HOME not set. Please set COBERTURA_HOME" unless="env.COBERTURA_HOME"/>
+		<!--check the jre version-->
+	</target>
+
+	<target name="make_dir">
+		<mkdir dir="${doc.dir}"/>
+		<mkdir dir="${dist.dir}"/>
+		<mkdir dir="${build.classes}"/>
+		<mkdir dir="${build.web-inf}"/>
+		<mkdir dir="${test.classes}"/>
+		<mkdir dir="${build.classes}/conf"/>
+		<mkdir dir="${test.classes}/conf"/>
+	</target>
+
+	<target name="checkout" depends="check_config" description="Gets the latest version from the source control">
+		<cvspass cvsRoot=":pserver:${cvs.uname}@${cvs.host}:/MIFOSCVS" password="${cvs.passwd}" />
+		<cvs cvsRoot=":pserver:${cvs.uname}@${cvs.host}:/MIFOSCVS" 
+		package="MIFOSCVS/DevSpace/WorkSpace"  dest="../../.." />
+	</target>
+
+	<target name="clean_src_classes" description="Cleans the source classes">
+		<delete>
+			<fileset dir="${build.classes}" includes="**/*.class"/>
+		</delete>
+	</target>
+
+	<target name="clean_test_classes" description="Cleans the test classes">
+		<delete>
+			<fileset dir="${test.classes}" includes="**/*.class"/>
+		</delete>
+	</target>
+
+	<target name="clean" description="Cleans the temp build directory">
+		<delete dir="${build.dir}"/>
+	</target>
+
+	<target name="clean_all" depends="clean">
+		<delete dir="${dist.dir}"/>
+		<delete dir="${docs.dir}/api"/>
+		<!--<delete dir="${src.dir}"/>
+		<delete dir="${test.dir}"/>
+		<delete dir="${sql.dir}"/>-->
+	</target>
+
+	<target name="compile" depends="init,make_dir" description="Compiles the source files">
+		<javac srcdir="${src.dir}" 
+		       destdir="${build.classes}" 
+		       debug="${debug.flag}"
+		       deprecation="on"
+		       includes="**/*.java"
+		       excludes="${global.exclude}">
+			<classpath refid="class.path"/>
+		</javac>
+	</target>
+
+	<target name="compile_test" depends="compile" description="Compiles the test files">
+		<javac srcdir="${test.dir}" 
+		       destdir="${test.classes}" 
+		       debug="${debug.flag}"
+		       deprecation="on"
+		       includes="**/*.java"
+		       excludes="${global.exclude}">
+			<classpath>
+				<path refid="class.path"/>
+				<pathelement location="${build.classes}"/>
+			</classpath>
+
+		</javac>
+	</target>
+
+	<target name="copy_files">
+		<copy todir="${build.web-inf}/lib">
+			<fileset dir="lib">
+				<exclude name="javax.servlet.jar, jsp-api.jar, strutstest-2.1.3.jar, junit.jar, cobertura.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="${build.web-inf}">
+			<fileset dir="${src.dir}/org/mifos/META-INF">
+				<exclude name="web.xml"/>
+			</fileset>
+		</copy>
+		<copy todir="${build.src.dir}/pages">
+			<fileset dir="${src.dir}/org/mifos/doc-root"/>
+		</copy>
+		<copy todir="${build.classes}/org/mifos/application">
+			<fileset dir="${src.dir}/org/mifos/application">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+		<copy todir="${build.classes}/org/mifos/framework">
+			<fileset dir="${src.dir}/org/mifos/framework">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+		<copy todir="${build.classes}/conf">
+			<fileset dir="${conf.dir}">
+				<include name="hibernate.properties"/>
+			</fileset>
+		</copy>
+		<!--copy file="lib/mysql-connector-java-3.1.7-bin.jar" todir="${env.JBOSS_HOME}/server/${webapplication.name}/lib/"/-->
+	</target>
+
+	<target name="copy_test_files">
+		<copy todir="${test.classes}">
+			<fileset dir="${test.dir}">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+		<copy todir="${test.classes}/org/mifos/WEB-INF">
+			<fileset dir="${src.dir}/org/mifos/META-INF">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+		<copy todir="${test.classes}/conf">
+			<fileset dir="${conf.dir}">
+				<include name="HibernateTest.properties"/>
+			</fileset>
+		</copy>
+
+	</target>
+
+	<target name="run_test" depends="compile,copy_files,compile_test,copy_test_files,build_test_db" description="Runs the current test without source and test recompilation. Does not initiate clean build">
+		<junit printsummary="on" fork="true" maxmemory="200M" failureproperty="tests.failure">
+			<classpath>
+				<path refid="class.path"/>
+				<pathelement location="${build.classes}"/>
+				<pathelement location="${test.classes}"/>
+			</classpath>
+
+			<formatter type="xml" />
+			<batchtest todir="${dist.dir}" >
+				<fileset dir="${test.classes}">
+					<include name="**/ApplicationTestSuite.class" />
+				</fileset>
+			</batchtest>
+		</junit>
+		<fail if="tests.failure" message="Unit tests failed - Report is available at ${dist.dir}"/>
+
+	</target>
+
+	<target name="war">
+		<delete file="${dist.dir}/${webapplication.name}.war"/>
+		<war destfile="${dist.dir}/${webapplication.name}.war" webxml="${src.dir}/org/mifos/META-INF/web.xml">
+			<fileset dir="${build.src.dir}/"/>
+		</war>
+	</target>
+
+	<target name="dist" depends="compile,copy_files,compile_test,copy_test_files,run_test,war,deploy" description="Compiles, runs test, builds a distributable war and places in the dist directory. Copies to the jboss server in use. Does not rebuild the production database"/>
+
+	<target name="dist_ddl" depends="compile,copy_files,compile_test,copy_test_files,run_test,war,deploy,build_db" description="Compiles, runs test, builds a distributable war and places in the dist directory. Copies to the jboss server in use. Rebuilds the production database"/>
+
+	<!--<target name="test_dist" depends="compile" description="Compiles, runs test cass and prepares the final war for distribution">
+	</target>-->
+
+	<target name="clean_build" depends="check_config,clean_all,checkout,dist_ddl" description="Initates a clean build, cleaning all directories and getting a fresh copy from source control"/>
+
+	<target name="build_db" description="Builds the application database">
+		<sql driver="${db.driver}" url="jdbc:mysql://${db.ip}:${db.port}/" userid="${db.user}" password="${db.pwd}"
+		     classpath="./lib/mysql-connector-java-3.1.7-bin.jar">
+			<transaction>
+				Drop database if exists ${db.name};
+				create database ${db.name};			
+				use ${db.name};
+			</transaction>
+			<transaction src="./sql/mifosdroptables.sql" />
+			<transaction src="./sql/mifosdbcreationscript.sql" />
+			<transaction src="./sql/mifosmasterdata.sql" />
+		</sql>
+	</target>
+
+	<target name="build_test_db">
+		<sql driver="${db.driver}" url="jdbc:mysql://${testdb.ip}:${testdb.port}/" userid="${testdb.user}" password="${testdb.pwd}"
+		     classpath="./lib/mysql-connector-java-3.1.7-bin.jar">
+			<!--transaction src="./create.sql"/-->
+			<transaction>
+				Drop database if exists ${testdb.name};
+				create database ${testdb.name};
+				use ${testdb.name};
+			</transaction>
+			<transaction src="./sql/mifosdroptables.sql" />
+			<transaction src="./sql/mifosdbcreationscript.sql" />
+			<transaction src="./sql/mifosmasterdata.sql" />
+			<transaction src="./sql/testdbinsertionscript.sql" />
+		</sql>
+	</target>
+
+	<target name="instrument" depends="compile,copy_files,compile_test,copy_test_files,build_test_db">
+		<delete file="${dist.dir}/mifos_cobertura.ser" />
+		<property name="instrumented.dir" value="${build.dir}/instrumented"/>
+		<cobertura-instrument todir="${instrumented.dir}" datafile="${dist.dir}/mifos_cobertura.ser">
+			<ignore regex="org.apache.log4j.*" />
+			<fileset dir="${build.classes}">
+				<include name="**/*.class" />
+				<exclude name="**/*Test.class" />
+			</fileset>
+		</cobertura-instrument>
+	</target>
+
+	<target name="coverage" depends="instrument" description="Compiles source, test, runs test cases and generates a coverage report">
+		<junit printsummary="on" fork="true" maxmemory="200M" failureproperty="tests.instrument.failure">
+
+			<sysproperty key="net.sourceforge.cobertura.datafile" file="${dist.dir}/mifos_cobertura.ser" />
+
+			<classpath location="${instrumented.dir}" />
+			<classpath location="${build.classes}" />
+			<classpath location="${test.classes}" />
+			<classpath refid="class.path" />
+			<classpath refid="cobertura.classpath" />
+
+			<formatter type="xml" />
+			<batchtest todir="${dist.dir}" >
+				<fileset dir="${test.classes}">
+					<include name="**/ApplicationTestSuite.class" />
+				</fileset>
+			</batchtest>
+		</junit>
+
+		<cobertura-report format="html" destdir="${dist.dir}/code_coverage" datafile="${dist.dir}/mifos_cobertura.ser">
+			<fileset dir="${src.dir}">
+				<include name="**/*.java" />
+			</fileset>
+		</cobertura-report>
+		<fail if="tests.instrument.failure" message="Unit tests failed - Report is available at ${dist.dir}"/>
+	</target>
+
+	<target name="deploy">
+		<echo message="Deploying application ${webapplication.name}.war to JBoss server ${jboss.server.name}"/>
+		<copy file="${dist.dir}/${webapplication.name}.war" todir="${env.JBOSS_HOME}/server/${jboss.server.name}/deploy/"/>
+		<copy file="${conf.dir}/mysql-ds.xml" todir="${env.JBOSS_HOME}/server/${jboss.server.name}/deploy/"/>
+	</target>
+
+	<target name="all" depends="clean_all,checkout,coverage,war,deploy,build_db,javadoc,email" description="Cleans the directory structure, gets latest, compiles, makes war, runs coverage test, builds db and sends an email of status"/>
+
+	<target name="email">
+		<mail mailhost="${mail.server}" mailport="${mail.port}" subject="CVS Build successful on ${BUILD_ID}" encoding="plain">
+			<from address="${from.address}"/>
+			<to address="${to.address}"/>
+			<message> Use this link after 10 minutes to access: ${application.url}.	Use this link for the coverage report \\aditi292\buildtest\MIFOSCVS\DevSpace\WorkSpace\coveragereport</message>
+			<!--<fileset dir="." >
+   			<include name="build.log" />
+  			</fileset>-->
+		</mail>
+	</target>
+
+	<target name="javadoc">
+		<mkdir dir="${doc.dir}/api"/>
+		<javadoc packagenames="org.*"
+			 sourcepath="${src.dir}" 
+			 destdir="${doc.dir}/api"
+			 author="true" version="true" use="true">
+			<classpath refid="class.path"/>
+		</javadoc>
+	</target>
+
+	<!--<target name="src-zip" depends="compile" description="Creates source distribution">
+		<delete>
+			<fileset dir="${dist.dir}" includes="mifos-src.zip" />
+		</delete>
+		<zip basedir="${basedir}" destfile="${dist.dir}/mifos-src.zip" whenempty="fail">
+			<fileset dir="${basedir}">
+				<include name="**/*.*" />
+				<exclude name="${dist.dir}/**/*"/>
+				<exclude name="${build.dir}/**/*"/>
+				<exclude name="${docs.dir}/**/*"/>
+			</fileset>
+		</zip>
+	</target>-->
+	
+</project>

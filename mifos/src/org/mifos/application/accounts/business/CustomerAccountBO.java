@@ -1,0 +1,219 @@
+/**
+
+ * CustomerAccountBO.java    version: xxx
+
+ 
+
+ * Copyright © 2005-2006 Grameen Foundation USA
+
+ * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+
+ * All rights reserved.
+
+ 
+
+ * Apache License 
+ * Copyright (c) 2005-2006 Grameen Foundation USA 
+ * 
+
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ *
+
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the 
+
+ * License. 
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
+
+ * and how it is applied. 
+
+ *
+
+ */
+
+package org.mifos.application.accounts.business;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.mifos.application.accounts.exceptions.AccountException;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountPaymentData;
+import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
+import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
+import org.mifos.framework.components.scheduler.SchedulerException;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
+
+/**
+ * @author ashishsm
+ * 
+ */
+public class CustomerAccountBO extends AccountBO {
+	
+	Set<CustomerActivityEntity> customerActivitDetails=null;
+	
+	public CustomerAccountBO() {
+		super();
+		customerActivitDetails=new HashSet<CustomerActivityEntity>(); 
+	}
+	
+	public Set<CustomerActivityEntity> getCustomerActivitDetails() {
+		return customerActivitDetails;
+	}
+
+
+	private void setCustomerActivitDetails(
+			Set<CustomerActivityEntity> customerActivitDetails) {
+		this.customerActivitDetails = customerActivitDetails;
+	}
+	
+	public void addCustomerActivity(CustomerActivityEntity customerActivityEntity){
+		customerActivityEntity.setCustomerAccount(this);
+		customerActivitDetails.add(customerActivityEntity);
+	}
+
+
+
+	protected AccountPaymentEntity makePayment(PaymentData paymentData)
+			throws AccountException, SystemException {
+		AccountPaymentEntity accountPayment = new AccountPaymentEntity();
+		accountPayment.setPaymentDetails(paymentData.getTotalAmount(),
+				paymentData.getRecieptNum(), paymentData.getRecieptDate(),
+				paymentData.getPaymentTypeId());
+		for (AccountPaymentData accountPaymentData : paymentData
+				.getAccountPayments()) {
+			AccountActionDateEntity accountAction = getAccountActionDate(accountPaymentData
+					.getInstallmentId());
+			if (accountAction.getPaymentStatus().equals(
+					AccountConstants.PAYMENT_PAID))
+				throw new AccountException("errors.update",
+						new String[] { getGlobalAccountNum() });
+			CustomerAccountPaymentData customerAccountPaymentData = (CustomerAccountPaymentData) accountPaymentData;
+			accountAction.setPaymentDetails(customerAccountPaymentData,
+					new java.sql.Date(paymentData.getTransactionDate()
+							.getTime()));
+
+			CustomerTrxnDetailEntity accountTrxn = new CustomerTrxnDetailEntity();
+			accountTrxn.setAccount(this);
+			accountTrxn.setPaymentDetails(accountAction,
+					customerAccountPaymentData, paymentData.getPersonnelId(),
+					paymentData.getTransactionDate());
+			accountPayment.addAcountTrxn(accountTrxn);
+		}
+		return accountPayment;
+	}
+
+	public boolean isAdjustPossibleOnLastTrxn() {
+		if (!(getCustomer().isCustomerActive())) {
+			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+					"State is not active hence adjustment is not possible");
+			return false;
+		}
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+				"Total payments on this account is  "
+						+ getAccountPayments().size());
+		if (null == getLastPmnt() && getLastPmntAmnt() == 0) {
+
+			return false;
+		}
+
+		for (AccountTrxnEntity accntTrxn : getLastPmnt().getAccountTrxns()) {
+			if (accntTrxn.getAccountActionEntity().getId().equals(
+					AccountConstants.ACTION_CUSTOMER_ADJUSTMENT))
+				return false;
+		}
+
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+				"Adjustment is not possible ");
+		return true;
+	}
+
+	protected void updateInstallmentAfterAdjustment(
+			List<AccountTrxnEntity> reversedTrxns) {
+		for (AccountTrxnEntity accntTrxn : reversedTrxns) {
+			CustomerTrxnDetailEntity custTrxn = (CustomerTrxnDetailEntity) accntTrxn;
+			AccountActionDateEntity accntActionDate = getAccountActionDate(custTrxn
+					.getInstallmentId());
+			accntActionDate.setPaymentStatus(AccountConstants.PAYMENT_UNPAID);
+			accntActionDate.setPaymentDate(null);
+			accntActionDate.setMiscFeePaid(accntActionDate.getMiscFeePaid()
+					.add(custTrxn.getMiscFeeAmount()));
+			accntActionDate.setMiscPenaltyPaid(accntActionDate
+					.getMiscPenaltyPaid().add(custTrxn.getMiscPenaltyAmount()));
+			if (null != accntActionDate.getAccountFeesActionDetails()
+					&& accntActionDate.getAccountFeesActionDetails().size() > 0) {
+				for (AccountFeesActionDetailEntity accntFeesAction : accntActionDate
+						.getAccountFeesActionDetails()) {
+					Money feeAmntAdjusted = custTrxn.getFeesTrxn(
+							accntFeesAction.getAccountFee().getAccountFeeId())
+							.getFeeAmount();
+					accntFeesAction.setFeeAmountPaid(accntFeesAction
+							.getFeeAmountPaid().add(feeAmntAdjusted));
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void waiveAmountDue() throws ServiceException{
+		List<AccountActionDateEntity> accountActionDateList =getApplicableIdsForDueInstallments();
+		AccountActionDateEntity accountActionDateEntity = accountActionDateList.get(accountActionDateList.size()-1);
+		Money chargeWaived=accountActionDateEntity.waiveCharges();
+		if(chargeWaived!=null && chargeWaived.getAmountDoubleValue()>0.0){
+			CustomerActivityEntity customerActivityEntity=new CustomerActivityEntity();
+			customerActivityEntity.buildCustomerActivity(chargeWaived,"Amnt waived",userContext.getId());
+			addCustomerActivity(customerActivityEntity);
+		}
+		getAccountPersistenceService().update(this);
+	}
+	
+	@Override
+	public void waiveAmountOverDue() throws ServiceException{
+	   	Money chargeWaived=new Money();
+		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
+		accountActionDateList.remove(accountActionDateList.size()-1);
+		for(AccountActionDateEntity accountActionDateEntity : accountActionDateList){
+			chargeWaived =  chargeWaived.add(accountActionDateEntity.waiveCharges());
+		}
+		if(chargeWaived!=null && chargeWaived.getAmountDoubleValue()>0.0){
+			CustomerActivityEntity customerActivityEntity=new CustomerActivityEntity();
+			customerActivityEntity.buildCustomerActivity(chargeWaived,"Amnt waived",userContext.getId());
+			addCustomerActivity(customerActivityEntity);
+		}
+		getAccountPersistenceService().update(this);
+	}
+	
+	public void applyPeriodicFees(long timeInMills) throws RepaymentScheduleException, SchedulerException, PersistenceException, ServiceException{
+		Date date = DateUtils.getDateWithoutTimeStamp(timeInMills);
+		Set<AccountActionDateEntity> accountActionDateSet = getAccountActionDates();		
+		for (AccountActionDateEntity accountActionDate : accountActionDateSet) {			
+			if(date.equals(accountActionDate.getActionDate())){
+				List<AccountFeesEntity> periodicFeeList = getPeriodicFeeList();
+				for (AccountFeesEntity accountFeesEntity : periodicFeeList) {
+					if(accountFeesEntity.isApplicable(timeInMills) == true){
+						accountFeesEntity.setLastAppliedDate(new Date(timeInMills));
+						accountActionDate.applyPeriodicFees(accountFeesEntity.getFees().getFeeId());						
+						getAccountPersistenceService().save(this);				
+					}					
+				}
+				break;
+			}
+		}			
+	}
+
+}

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="org.mifos.application.collectionsheet.business.CollSheetLnDetailsEntity" table="COLL_SHEET_LOAN_DETAILS">
+		<id name="loanDetailsId" column="LOAN_DETAILS_ID" type="long">
+			<generator class="native"/>
+		</id>
+		<property name="accountId" column="ACCNT_ID" type="integer"/>
+		
+		<property name="totalPrincipalDue" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+			<column name="TOTAL_PRIN_DUE_CURRENCY" />	
+			<column name="TOTAL_PRIN_DUE" />
+		</property>
+	
+		<property name="originalLoanAmnt" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+			<column name="ORIG_LOAN_AMNT_CURRENCY" />
+			<column name="ORIG_LOAN_AMNT" />
+		</property>
+		
+		<property name="amntToCloseLoan" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+			<column name="AMNT_TO_CLOSE_LOAN_CURRENCY" />
+			<column name="AMNT_TO_CLOSE_LOAN" />
+		</property>
+		<property name="currentInstallmentNo" column="CURRENT_INSTALLMENT_NO" type="short"/>
+		
+		<property name="principalDue" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+			<column name="PRINCIPAL_DUE_CURRENCY" />	
+			<column name="PRINCIPAL_DUE" />
+		</property>
+		
+		<property name="interestDue" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+			<column name="INTEREST_DUE_CURRENCY" />
+			<column name="INTEREST_DUE" />
+		</property>
+		
+		<property name="feesDue" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+			<column name="FEES_DUE_CURRENCY" />	
+			<column name="FEES_DUE" />
+		</property>
+		
+		<property name="penaltyDue" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+			<column name="PENALTY_DUE_CURRENCY" />	
+			<column name="PENALTY_DUE" />
+		</property>
+		
+		<property name="totalScheduledAmntDue" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+			<column name="TOTAL_SCHEDULED_AMNT_DUE_CURRENCY" />	
+			<column name="TOTAL_SCHEDULED_AMNT_DUE" />
+		</property>
+		
+		<property name="principalOverDue" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+			<column name="PRINCIPAL_OVERDUE_CURRENCY" />	
+			<column name="PRINCIPAL_OVERDUE" />
+			
+		</property>
+		
+		<property name="interestOverDue" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+			<column name="INTEREST_OVERDUE_CURRENCY" />	
+			<column name="INTEREST_OVERDUE" />
+			
+		</property>
+		
+		<property name="feesOverDue" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+			<column name="FEES_OVERDUE_CURRENCY" />	
+			<column name="FEES_OVERDUE" />
+			
+		</property>
+		
+		<property name="penaltyOverDue" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+			<column name="PENALTY_OVERDUE_CURRENCY" />
+			<column name="PENALTY_OVERDUE" />
+				
+		</property>
+		
+		<property name="totalAmntOverDue" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+			<column name="TOTAL_AMNT_OVERDUE_CURRENCY" />
+			<column name="TOTAL_AMNT_OVERDUE" />
+				
+		</property>
+	
+		<property name="totalAmntDue" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+			<column name="TOTAL_AMNT_DUE_CURRENCY" />	
+			<column name="TOTAL_AMNT_DUE" />
+			
+		</property>
+
+		<property name="amntToBeDisbursed" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+			<column name="AMNT_TOBE_DISBURSED_CURRENCY" />	
+			<column name="AMNT_TOBE_DISBURSED" />
+			
+		</property>
+		<property name="totalNoOfInstallments" column="TOTAL_NO_OF_INSTALLMENTS" type="short"/>
+		<many-to-one name="collectionSheetCustomer" column="COLL_SHEET_CUST_ID" class="org.mifos.application.collectionsheet.business.CollSheetCustBO" unique="true" />
+		
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,267 @@
+ALTER TABLE  CUSTOMER DROP KEY CUST_SEARCH_IDX;
+
+
+
+ALTER TABLE ACCOUNT_TRXN ADD COLUMN INSTALLMENT_ID SMALLINT NULL;
+ALTER TABLE ACCOUNT_TRXN ADD COLUMN RELATED_TRXN_ID INTEGER NULL;
+
+
+UPDATE ACCOUNT_TRXN SET INSTALLMENT_ID = (SELECT INSTALLMENT_ID FROM LOAN_TRXN_DETAIL WHERE LOAN_TRXN_DETAIL.ACCOUNT_TRXN_ID = ACCOUNT_TRXN.ACCOUNT_TRXN_ID);
+
+UPDATE ACCOUNT_TRXN SET RELATED_TRXN_ID = (SELECT RELATED_TRXN_ID FROM LOAN_TRXN_DETAIL WHERE LOAN_TRXN_DETAIL.ACCOUNT_TRXN_ID = ACCOUNT_TRXN.ACCOUNT_TRXN_ID);
+
+ALTER TABLE FEES ADD COLUMN FEE_AMOUNT DECIMAL(10,3) NULL;
+ALTER TABLE FEES ADD COLUMN FEE_AMOUNT_CURRENCY_ID SMALLINT NULL;
+ALTER TABLE FEES ADD COLUMN RATE DECIMAL(16,5) NULL;
+ALTER TABLE FEES ADD FOREIGN KEY(FEE_AMOUNT_CURRENCY_ID) REFERENCES CURRENCY(CURRENCY_ID);
+
+
+ALTER TABLE LOAN_TRXN_DETAIL DROP COLUMN INSTALLMENT_ID ;
+ALTER TABLE LOAN_TRXN_DETAIL DROP COLUMN RELATED_TRXN_ID;
+ALTER TABLE LOAN_TRXN_DETAIL ADD  FOREIGN KEY(MISC_FEE_AMOUNT_CURRENCY_ID) REFERENCES CURRENCY(CURRENCY_ID);
+
+
+CREATE TABLE CUSTOMER_TRXN_DETAIL
+ (
+
+ACCOUNT_TRXN_ID INTEGER NOT NULL,
+   TOTAL_AMOUNT DECIMAL(10, 3) NULL,
+   TOTAL_AMOUNT_CURRENCY_ID SMALLINT NULL,
+   MISC_FEE_AMOUNT DECIMAL(10, 3) NULL,
+   MISC_FEE_AMOUNT_CURRENCY_ID SMALLINT NULL,
+   MISC_PENALTY_AMOUNT DECIMAL(10, 3) NULL,
+   MISC_PENALTY_AMOUNT_CURRENCY_ID SMALLINT NULL,
+   PRIMARY KEY(ACCOUNT_TRXN_ID),
+   FOREIGN KEY(TOTAL_AMOUNT_CURRENCY_ID)
+   REFERENCES CURRENCY(CURRENCY_ID)
+       ON DELETE NO ACTION
+       ON UPDATE NO ACTION,
+   FOREIGN KEY(MISC_PENALTY_AMOUNT_CURRENCY_ID)
+     REFERENCES CURRENCY(CURRENCY_ID)
+       ON DELETE NO ACTION
+       ON UPDATE NO ACTION,
+   FOREIGN KEY(MISC_FEE_AMOUNT_CURRENCY_ID)
+     REFERENCES CURRENCY(CURRENCY_ID)
+       ON DELETE NO ACTION
+       ON UPDATE NO ACTION,
+   FOREIGN KEY(ACCOUNT_TRXN_ID)
+     REFERENCES ACCOUNT_TRXN(ACCOUNT_TRXN_ID)
+       ON DELETE NO ACTION
+       ON UPDATE NO ACTION 
+)
+  TYPE=InnoDB;  
+
+
+
+ALTER TABLE  COLL_SHEET_SAVINGS_DETAILS MODIFY COLUMN COLL_SHEET_CUST_ID INT NULL;
+ALTER TABLE  COLL_SHEET_SAVINGS_DETAILS MODIFY COLUMN ACCNT_BALANCE DECIMAL(10,3)   NULL;
+ALTER TABLE  COLL_SHEET_SAVINGS_DETAILS MODIFY COLUMN RECOMMENDED_AMNT_DUE DECIMAL(10,3)   NULL;
+ALTER TABLE  COLL_SHEET_SAVINGS_DETAILS MODIFY COLUMN TOTAL_SAVINGS_AMNT_DUE DECIMAL(10,3)   NULL;
+
+
+ALTER TABLE COLL_SHEET_LOAN_DETAILS MODIFY COLUMN CURRENT_INSTALLMENT_NO SMALLINT NULL;
+ALTER TABLE COLL_SHEET_LOAN_DETAILS MODIFY COLUMN PRINCIPAL_DUE DECIMAL(10,3)  NULL;
+ALTER TABLE COLL_SHEET_LOAN_DETAILS MODIFY COLUMN INTEREST_DUE DECIMAL(10,3)   NULL;
+ALTER TABLE COLL_SHEET_LOAN_DETAILS MODIFY COLUMN FEES_DUE DECIMAL(10,3)  NULL;
+ALTER TABLE COLL_SHEET_LOAN_DETAILS MODIFY COLUMN PENALTY_DUE DECIMAL(10,3) NULL;
+ALTER TABLE COLL_SHEET_LOAN_DETAILS MODIFY COLUMN TOTAL_SCHEDULED_AMNT_DUE DECIMAL(10,3) NULL;
+ALTER TABLE COLL_SHEET_LOAN_DETAILS MODIFY COLUMN PRINCIPAL_OVERDUE DECIMAL(10,3)  NULL;
+ALTER TABLE COLL_SHEET_LOAN_DETAILS MODIFY COLUMN INTEREST_OVERDUE DECIMAL(10,3)  NULL;
+ALTER TABLE COLL_SHEET_LOAN_DETAILS MODIFY COLUMN FEES_OVERDUE DECIMAL(10,3)  NULL;
+ALTER TABLE COLL_SHEET_LOAN_DETAILS MODIFY COLUMN PENALTY_OVERDUE DECIMAL(10,3)  NULL;
+ALTER TABLE COLL_SHEET_LOAN_DETAILS MODIFY COLUMN TOTAL_AMNT_OVERDUE DECIMAL(10,3)  NULL;
+ALTER TABLE COLL_SHEET_LOAN_DETAILS MODIFY COLUMN TOTAL_AMNT_DUE DECIMAL(10,3)   NULL;
+ALTER TABLE COLL_SHEET_LOAN_DETAILS MODIFY COLUMN AMNT_TOBE_DISBURSED DECIMAL(10,3) NULL;
+
+
+
+
+
+
+
+
+
+INSERT INTO LOOKUP_VALUE 
+	VALUES(362,69,'');
+INSERT INTO LOOKUP_VALUE 
+	VALUES(363,76,'');
+INSERT INTO LOOKUP_VALUE 
+	VALUES(364,69,''); 
+INSERT INTO LOOKUP_VALUE 
+	VALUES(365,76,''); 
+INSERT INTO LOOKUP_VALUE 
+	VALUES(366,69,''); 
+INSERT INTO LOOKUP_VALUE
+	VALUES(367,76,'');
+INSERT INTO LOOKUP_VALUE 
+	VALUES(368,76,''); 
+INSERT INTO LOOKUP_VALUE 
+	VALUES(369,76,''); 
+INSERT INTO LOOKUP_VALUE 
+	VALUES(370,76,''); 
+
+INSERT INTO LOOKUP_VALUE_LOCALE  
+	VALUES(700,1,362,'Customer Account Repayment'); 
+INSERT INTO LOOKUP_VALUE_LOCALE  
+	VALUES(701,1,363,'Customer Account Fees Posting');
+INSERT INTO LOOKUP_VALUE_LOCALE
+	VALUES(702,1,364,'Customer Adjustment'); 
+INSERT INTO LOOKUP_VALUE_LOCALE 
+	VALUES(703,1,365,'Customer Adjustment'); 
+INSERT INTO LOOKUP_VALUE_LOCALE 
+	VALUES(704,1,366,'Savings Adjustment');  
+INSERT INTO LOOKUP_VALUE_LOCALE 
+	VALUES(705,1,367,'Mandatory Deposit Adjustment'); 
+INSERT INTO LOOKUP_VALUE_LOCALE 
+	VALUES(706,1,368,'Voluntory Deposit Adjustment'); 
+INSERT INTO LOOKUP_VALUE_LOCALE 
+	VALUES(707,1,369,'Mandatory Withdrawal Adjustment'); 
+INSERT INTO LOOKUP_VALUE_LOCALE 
+	VALUES(708,1,370,'Voluntory Withdrawal Adjustment');
+
+
+INSERT INTO ACCOUNT_ACTION(ACCOUNT_ACTION_ID,LOOKUP_ID) 
+	VALUES(12,362); 
+INSERT INTO ACCOUNT_ACTION(ACCOUNT_ACTION_ID,LOOKUP_ID) 
+	VALUES(13,364); 
+INSERT INTO ACCOUNT_ACTION(ACCOUNT_ACTION_ID,LOOKUP_ID) 
+	VALUES(14,366);
+
+
+INSERT INTO FINANCIAL_ACTION 
+	VALUES(16,363);
+INSERT INTO FINANCIAL_ACTION 
+	VALUES(17,365); 
+INSERT INTO FINANCIAL_ACTION 
+	VALUES(18,367);
+INSERT INTO FINANCIAL_ACTION 
+	VALUES(19,368); 
+INSERT INTO FINANCIAL_ACTION 
+	VALUES(20,369); 
+INSERT INTO FINANCIAL_ACTION 
+	VALUES(21,370);
+
+
+
+INSERT INTO ACTIVITY(ACTIVITY_ID,ACTIVITY_NAME,DESCRIPTION,PARENT_ID)
+	VALUES(180,"Can change state to pending approval","Can change state to pending approval",136);
+INSERT INTO ACTIVITY(ACTIVITY_ID,ACTIVITY_NAME,DESCRIPTION,PARENT_ID)
+	VALUES(181,"Can change state to cancel","Can change state to cancel",136);
+INSERT INTO ACTIVITY(ACTIVITY_ID,ACTIVITY_NAME,DESCRIPTION,PARENT_ID)
+	VALUES(182,"Can change state to approved","Can change state to approved",136);
+INSERT INTO ACTIVITY(ACTIVITY_ID,ACTIVITY_NAME,DESCRIPTION,PARENT_ID)
+	VALUES(183,"Can change state to inactive","Can change state to inactive",136);
+INSERT INTO ACTIVITY(ACTIVITY_ID,ACTIVITY_NAME,DESCRIPTION,PARENT_ID)
+	VALUES(184,"Can blacklist saving account","Can blacklist saving account",136);
+INSERT INTO ACTIVITY(ACTIVITY_ID,ACTIVITY_NAME,DESCRIPTION,PARENT_ID)
+	VALUES(185,"Can create new saving account in submit for approval state","Can create new saving  	account in submit for approval state",136);
+
+
+
+
+INSERT INTO ROLES_ACTIVITY(ACTIVITY_ID,ROLE_ID,VERSION_NO)
+	VALUES(180,1,1);
+INSERT INTO ROLES_ACTIVITY(ACTIVITY_ID,ROLE_ID,VERSION_NO)
+	VALUES(181,1,1);
+INSERT INTO ROLES_ACTIVITY(ACTIVITY_ID,ROLE_ID,VERSION_NO)
+	VALUES(182,1,1);
+INSERT INTO ROLES_ACTIVITY(ACTIVITY_ID,ROLE_ID,VERSION_NO)
+	VALUES(183,1,1);
+INSERT INTO ROLES_ACTIVITY(ACTIVITY_ID,ROLE_ID,VERSION_NO)
+	VALUES(184,1,1);
+INSERT INTO ROLES_ACTIVITY(ACTIVITY_ID,ROLE_ID,VERSION_NO)
+	VALUES(185,1,1);
+
+
+
+
+Delete from ROLES_ACTIVITY where ACTIVITY_ID = 123;
+Delete from ROLES_ACTIVITY where ACTIVITY_ID = 124;
+Delete from ROLES_ACTIVITY where ACTIVITY_ID = 125;
+Delete from ROLES_ACTIVITY where ACTIVITY_ID = 130;
+Delete from ROLES_ACTIVITY where ACTIVITY_ID = 133;
+Delete from ROLES_ACTIVITY where ACTIVITY_ID = 134;
+
+
+
+Delete from ACTIVITY where ACTIVITY_ID = 124;
+Delete from ACTIVITY where ACTIVITY_ID = 133;
+Delete from ACTIVITY where ACTIVITY_ID = 134;
+Delete from ACTIVITY where ACTIVITY_ID = 123;
+Delete from ACTIVITY where ACTIVITY_ID = 125;
+Delete from ACTIVITY where ACTIVITY_ID = 130;
+
+
+
+
+
+
+
+
+
+Update ACTIVITY set Description = "Can create new client in save for later state" where ACTIVITY_ID = 35;
+Update ACTIVITY set Description = "Can create new client in submit for approval state" where ACTIVITY_ID = 36;
+Update ACTIVITY set Description = "Can change state to partial application" where ACTIVITY_ID = 37;
+Update ACTIVITY set ACTIVITY_NAME = "Can change state to partial application" where ACTIVITY_ID = 37;
+Update ACTIVITY set Description = "Can change state to Approved" where ACTIVITY_ID = 38;
+Update ACTIVITY set Description = "Can change state to Cancelled" where ACTIVITY_ID = 39;
+Update ACTIVITY set Description = "Can change state to On Hold" where ACTIVITY_ID = 40;
+Update ACTIVITY set Description = "Can change state to Closed" where ACTIVITY_ID = 41;
+Update ACTIVITY set Description = "Can change state to pending for approval" where ACTIVITY_ID = 42;
+Update ACTIVITY set ACTIVITY_NAME = "Can change state to pending for approval" where ACTIVITY_ID = 42;
+Update ACTIVITY set Description = "Can edit meeting schedule" where ACTIVITY_ID = 52;
+Update ACTIVITY set Description = "Can add/edit historical data" where ACTIVITY_ID = 53;
+Update ACTIVITY set Description = "Can Blacklist a client" where ACTIVITY_ID = 55;
+Update ACTIVITY set Description = "Can create new group in save for later state" where ACTIVITY_ID = 57;
+Update ACTIVITY set Description = "Can create new group in submit for approval state" where ACTIVITY_ID = 58;
+Update ACTIVITY set Description = "Can change state to Save for later" where ACTIVITY_ID = 59;
+Update ACTIVITY set Description = "Can change state to Approved" where ACTIVITY_ID = 60;
+Update ACTIVITY set Description = "Can change state to Cancelled" where ACTIVITY_ID = 61;
+Update ACTIVITY set Description = "Can change state to On Hold" where ACTIVITY_ID = 62;
+Update ACTIVITY set Description = "Can change state to Closed" where ACTIVITY_ID = 63;
+Update ACTIVITY set Description = "Can change state to pending for approval" where ACTIVITY_ID = 64;
+Update ACTIVITY set ACTIVITY_NAME = "Can change state to pending for approval" where ACTIVITY_ID = 64;
+Update ACTIVITY set Description = "Can edit meeting schedule" where ACTIVITY_ID = 74;
+Update ACTIVITY set Description = "Can add/edit historical data" where ACTIVITY_ID = 75;
+Update ACTIVITY set Description = "Can Blacklist a group" where ACTIVITY_ID = 77;
+Update ACTIVITY set Description = "Can modify center information" where ACTIVITY_ID = 80;
+Update ACTIVITY set ACTIVITY_NAME = "Can modify center information" where ACTIVITY_ID = 80;
+Update ACTIVITY set Description = "Can edit center status" where ACTIVITY_ID = 81;
+Update ACTIVITY set ACTIVITY_NAME = "Can edit center status" where ACTIVITY_ID = 81;
+Update ACTIVITY set Description = "Can create new loan account in Save for later state" where ACTIVITY_ID = 101;
+Update ACTIVITY set Description = "Can create new loan account in Submit for approval state" where ACTIVITY_ID = 102;
+Update ACTIVITY set Description = "Can change state to partial application" where ACTIVITY_ID = 103;
+Update ACTIVITY set ACTIVITY_NAME = "Can change state to partial application" where ACTIVITY_ID = 103;
+Update ACTIVITY set Description = "Can change state to Approved" where ACTIVITY_ID = 104;
+Update ACTIVITY set Description = "Can change state to Cancelled" where ACTIVITY_ID = 105;
+Update ACTIVITY set Description = "Can change state to Disbursed to LO" where ACTIVITY_ID = 106;
+Update ACTIVITY set Description = "Can change state to Active in good standing" where ACTIVITY_ID = 107;
+Update ACTIVITY set Description = "Can change state to pending approval" where ACTIVITY_ID = 108;
+Update ACTIVITY set ACTIVITY_NAME = "Can change state to pending approval" where ACTIVITY_ID = 108;
+Update ACTIVITY set Description = "Can change state to Closed- Written off" where ACTIVITY_ID = 109;
+Update ACTIVITY set Description = "Can change state to Closed-rescheduled" where ACTIVITY_ID = 110;
+Update ACTIVITY set Description = "Can change state to Closed-Obligation met" where ACTIVITY_ID = 111;
+Update ACTIVITY set Description = "Can change state to bad standing" where ACTIVITY_ID = 112;
+Update ACTIVITY set ACTIVITY_NAME = "Can change state to bad standing" where ACTIVITY_ID = 112;
+Update ACTIVITY set Description = "Can remove fee types attached to the account" where ACTIVITY_ID = 120;
+Update ACTIVITY set Description = "Can specify meeting schedule" where ACTIVITY_ID = 121;
+Update ACTIVITY set PARENT_ID = 34 where ACTIVITY_ID = 121;
+Update ACTIVITY set ACTIVITY_NAME = "Can specify meeting schedule" where ACTIVITY_ID = 121;
+Update ACTIVITY set Description = "Can specify meeting schedule" where ACTIVITY_ID = 122;
+Update ACTIVITY set ACTIVITY_NAME = "Can specify meeting schedule" where ACTIVITY_ID = 122;
+
+Update ACTIVITY set Description = "Can edit meeting schedule" where ACTIVITY_ID = 127;
+Update ACTIVITY set PARENT_ID = 78 where ACTIVITY_ID = 127;
+Update ACTIVITY set ACTIVITY_NAME = "Can edit meeting schedule" where ACTIVITY_ID = 127;
+Update ACTIVITY set Description = "Can specify meeting schedule" where ACTIVITY_ID = 128;
+Update ACTIVITY set PARENT_ID = 78 where ACTIVITY_ID = 128;
+Update ACTIVITY set ACTIVITY_NAME = "Can specify meeting schedule" where ACTIVITY_ID = 128;
+
+Update ACTIVITY set Description = "Can create new saving account in Save for later state" where ACTIVITY_ID = 137;
+Update ACTIVITY set Description = "Can change state to partial application" where ACTIVITY_ID = 140;
+
+
+
+
+
+

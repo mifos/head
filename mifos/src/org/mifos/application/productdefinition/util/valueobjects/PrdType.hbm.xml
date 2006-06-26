@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.productdefinition.util.valueobjects.ProductType" table="PRD_TYPE">
+        <id name="productTypeID" column="PRD_TYPE_ID" type="short">
+            <generator class="native"/>
+        </id>
+         <version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null"/>
+
+        <property name="latenessDays" column="LATENESS_DAYS" type="short"  not-null="false" />
+        <property name="dormancyDays" column="DORMANCY_DAYS" type="short"  not-null="false" />
+
+        <many-to-one name="lookUpValue" column="PRD_TYPE_LOOKUP_ID" class="org.mifos.application.master.util.valueobjects.LookUpValue" cascade="none" update="false"/>
+        
+     </class>
+     <query name="product.searchprdconf"><![CDATA[from org.mifos.application.productdefinition.util.valueobjects.ProductType pt where pt.productTypeID in (:loanId,:savingsId)]]></query>
+     <!-- query name="product.masterprdtypes"><![CDATA[SELECT new org.mifos.application.productdefinition.util.valueobjects.ProductType(pt.productTypeID,lv.lookUpValue,pt.versionNo) FROM org.mifos.application.productdefinition.util.valueobjects.ProductType as pt,org.mifos.application.master.util.valueobjects.LookUpValueLocale lv where lv.entity_id=p.prd_type_lookup_id and lv.locale_id=1]]></query-->
+     <query name="product.prdtype"><![CDATA[select new org.mifos.application.productdefinition.util.valueobjects.MasterObject(pt.productTypeID,lookupvalue.lookUpValue,pt.versionNo) from org.mifos.application.productdefinition.util.valueobjects.ProductType pt,org.mifos.application.master.util.valueobjects.LookUpValueLocale lookupvalue where pt.lookUpValue.lookUpId=lookupvalue.lookUpId and lookupvalue.localeId=:localeId]]></query>
+</hibernate-mapping>

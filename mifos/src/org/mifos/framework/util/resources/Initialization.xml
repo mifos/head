@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+
+<Initialization>
+	<parameter type="Delegator">
+		<name>Delegator</name>
+		<value>org.mifos.framework.business.handlers.Delegator</value>
+	</parameter>
+	<parameter type="BusinessProcessorImplementation">
+		<name>BusinessProcessorImplementation</name>
+		<value>MifosPlainJava</value>
+	</parameter>
+	<parameter type="Algorithm">
+		<name>Algorithm</name>
+		<value>DESede</value>
+		
+	</parameter>
+</Initialization>

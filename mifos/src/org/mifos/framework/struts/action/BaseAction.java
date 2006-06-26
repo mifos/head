@@ -1,0 +1,101 @@
+package org.mifos.framework.struts.action;
+
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.actions.DispatchAction;
+import org.hibernate.HibernateException;
+import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.service.BusinessService;
+import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.IllegalStateException;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.ValueObjectUtil;
+
+public abstract class BaseAction extends DispatchAction {
+
+	protected abstract BusinessService getService()throws ServiceException;
+
+	public ActionForward execute(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		preExecute(form, request);
+		ActionForward forward = super.execute(mapping, form, request, response);
+		postExecute(request);
+		return forward;
+	}
+
+	protected void preExecute(ActionForm actionForm, HttpServletRequest request)
+			throws SystemException {
+		UserContext userContext = (UserContext) request.getSession().getAttribute(Constants.USER_CONTEXT_KEY);
+		Locale locale = getLocale(userContext);
+		BusinessObject object = getBusinessObjectFromSession(request);
+		if(!skipActionFormToBusinessObjectConversion((String)request.getParameter("method")))
+			ValueObjectUtil.populateBusinessObject(actionForm, object, locale);
+	}
+
+	protected void postExecute(HttpServletRequest request) throws ApplicationException {
+		// do cleanup here
+		
+		if(startSession()) {
+			try {
+				HibernateUtil.commitTransaction();
+			}catch(HibernateException he) {
+				HibernateUtil.rollbackTransaction();
+				throw new ApplicationException(he);
+			}catch(IllegalStateException ise) {
+				HibernateUtil.rollbackTransaction();
+				throw new ApplicationException(ise);
+			}
+		}
+	}
+
+	protected boolean isNewBizRequired(HttpServletRequest request) throws ServiceException{
+		if (request.getSession().getAttribute(Constants.BUSINESS_KEY) != null ){
+			if(getService().getBusinessObject(null)== null || ((getService().getBusinessObject(null)!= null && !(request.getSession().getAttribute(Constants.BUSINESS_KEY)).getClass().getName().equalsIgnoreCase(getService().getBusinessObject(null).getClass().getName())))){
+				return true;
+			}
+			return false;
+		}		
+		return true;
+	}
+
+	private BusinessObject getBusinessObjectFromSession(
+			HttpServletRequest request) throws ServiceException{
+		BusinessObject object = null;
+		if (isNewBizRequired(request)) {
+			UserContext userContext = (UserContext) request.getSession().getAttribute("UserContext");
+			object = getService().getBusinessObject(userContext);
+			request.getSession().setAttribute(Constants.BUSINESS_KEY, object);
+		} else
+			object = (BusinessObject) request.getSession().getAttribute(Constants.BUSINESS_KEY);
+		return object;
+	}
+
+	private Locale getLocale(UserContext userContext) {
+		Locale locale = null;
+		if (userContext != null)
+			locale = userContext.getPereferedLocale();
+		else
+			locale = Configuration.getInstance().getSystemConfig().getMFILocale();
+		return locale;
+	}
+	
+	protected boolean startSession() {
+		return true;
+	}
+
+	protected boolean skipActionFormToBusinessObjectConversion(String method)  {
+		return false;
+	}
+}// :~

@@ -1,0 +1,79 @@
+/**
+
+* CheckListConstants  version: 1.0
+
+
+
+* Copyright © 2005-2006 Grameen Foundation USA
+
+* 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+
+* All rights reserved.
+
+
+
+* Apache License 
+* Copyright (c) 2005-2006 Grameen Foundation USA 
+* 
+
+* Licensed under the Apache License, Version 2.0 (the "License"); you may
+* not use this file except in compliance with the License. You may obtain
+* a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+*
+
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and limitations under the 
+
+* License. 
+* 
+* See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
+
+* and how it is applied. 
+
+*
+
+*/
+package org.mifos.application.checklist.util.resources;
+
+/**
+ * @author imtiyazmb
+ *
+ */
+public interface CheckListConstants {
+
+	//custom methods 
+	public final String LOADPARENT="loadParent";
+	public final String LOADALL="loadall";		
+	public final String FORWARDLOADPARENTSUCESS="loadParent_success";
+	public final String LISTOFSTATUSES="list";
+	public final String FORWARDONLOADALL="forward_view";
+	public static final String CATAGORY="catagory";
+	public final String GETPARENT="preLoad";
+	public static final String MANDATORY="errors.mandatory";
+	public static final String MANDATORY_ITEM="errors.mandatory_item";
+	public static final String ITEM="Item";
+	public static final String TYPE="Type";
+	public static final String ITEM_LENGTH="errors.itemlength";
+	public static final String CATEGORYEXCEPTION="exceptions.application.checklist.Statusalreadydefined";
+	public static final String STATUS="status";
+	public static final String ITEM_SIZE="250";
+	public static final String LOCALEID="1";
+	public String CUSTOMER_LOADMASTERDATA="masterdata.customer_loadMasterdata";
+	public String PRODUCT_LOADMASTERDATA="masterdata.product_loadMasterdata";
+	public String CUSTOMER_CHECKLISTMASTER_GETCHECKLISTMASTERDATA="masterdata.customer_checkListMaster_getCheckListMasterdata";
+	public String PRODUCT_CHECKLISTMASTER_GETCHECKLISTMASTERDATA="masterdata.product_checkListMaster_getCheckListMasterdata";
+	public String CUSTOMER_CHECKLISTDETAILS_GETCHECKLISTMASTERDATA="masterdata.customer_checkListDetails_getCheckListMasterdata";
+	public String CHECKLIST_GETCHELISTMASTERDATA="masterdata.checkList_getCheckListMasterdata";
+	public String PRODUCTSTATUSLIST="productStatusList";
+	public String PRODUCTLIST_GET="masterdata.productList_get";
+	public String PRDLIST_GET="masterdata.prdList_get";
+	public String CUSTOMER_VALIDATESTATE="customer.validateState";
+	public String PRODUCT_VALIDATESTATE="product.validateState";
+	public String CREATEDBY="checklist.createdBy";
+	public String CUSTOMERSTATUSLIST_WITHOUTPENDING_APPROVAL = "customerstatuslist_withoutpending_approval";
+	public String PRODUCTSTATUSLIST_WITHOUTPENDING_APPROVAL = "productstatuslist_withoutpending_approval";
+	public String PENDINGAPPROVAL="Application Pending Approval";
+	
+}

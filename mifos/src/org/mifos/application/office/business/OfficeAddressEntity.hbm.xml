@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.office.business.OfficeAddressEntity" table="OFFICE_ADDRESS">
+        <id name="officeAdressId" column="OFFICE_ADDRESS_ID" type="short">
+            <generator class="native"/>
+        </id>
+        <component name="address" class="org.mifos.framework.business.util.Address">
+	        <property name="line1" column="ADDRESS_1" type="string"  />
+	        <property name="line2" column="ADDRESS_2" type="string"   />
+   	       <property name="line3" column="ADDRESS_3" type="string"  />
+	        <property name="city" column="CITY" type="string"   />
+	        <property name="state" column="STATE" type="string"   />
+	        <property name="country" column="COUNTRY" type="string"  />
+	        <property name="zip" column="ZIP" type="string"   />
+     		<property name="phoneNumber" column="TELEPHONE" type="string"  />
+        </component>
+    
+    <many-to-one name="office" column="OFFICE_ID" class="org.mifos.application.office.business.OfficeBO"   />
+    
+    </class>
+
+</hibernate-mapping>

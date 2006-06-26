@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.master.util.valueobjects.InterestCalcRule" table="INTEREST_CALC_RULE">
+        <id name="interestCalcRuleId" column="INTEREST_CALC_RULE_ID" type="short">
+            <generator class="native"/>
+        </id>
+ 
+ 		<property name="lookUpId" column="LOOKUP_ID" type="integer" />
+        <!--<many-to-one name="lookUpValue" column="LOOKUP_ID" class="org.mifos.application.master.util.valueobjects.LookUpValue"  not-null="true" />-->
+    </class>
+    <!--<query name="product.getinterestcaclrules"><![CDATA[select new org.mifos.application.productdefinition.util.valueobjects.MasterObject(icr.interestCalcRuleId,lookupvalue.lookUpValue) from org.mifos.application.master.util.valueobjects.InterestCalcRule icr,org.mifos.application.master.util.valueobjects.LookUpValueLocale lookupvalue where icr.lookUpValue.lookUpId=lookupvalue.lookUpId and lookupvalue.localeId=:localeId]]></query>-->
+    
+    <query name="product.getinterestcaclrules"><![CDATA[select new org.mifos.application.productdefinition.util.valueobjects.MasterObject(icr.interestCalcRuleId,lookupvalue.lookUpValue) from org.mifos.application.master.util.valueobjects.InterestCalcRule icr,org.mifos.application.master.util.valueobjects.LookUpValueLocale lookupvalue where icr.lookUpId=lookupvalue.lookUpId and lookupvalue.localeId=:localeId]]></query>
+</hibernate-mapping>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+  
+<hibernate-mapping > 
+  <class name="org.mifos.application.customer.client.business.CustomerPictureEntity" table="CUSTOMER_PICTURE" >
+    <id column="PICTURE_ID" name="pictureId" type="integer" > 
+		<generator class="native"></generator>
+    </id>    
+	<property column="CUSTOMER_ID"  name="customerId"  type="integer"/>
+	<property column="PICTURE"  name="picture"  type="blob"/>
+  </class> 
+</hibernate-mapping>  

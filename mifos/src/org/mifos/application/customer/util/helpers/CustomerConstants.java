@@ -1,0 +1,208 @@
+/**
+
+ * CustomerConstants.java    version: 1.0
+
+
+
+ * Copyright © 2005-2006 Grameen Foundation USA
+
+ * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+
+ * All rights reserved.
+
+
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
+
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the
+
+ * License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
+
+ * and how it is applied.
+
+ *
+
+ */
+package org.mifos.application.customer.util.helpers;
+/**
+ * @author navitas
+ *
+ */
+public interface CustomerConstants {
+	public static final String CUSTOMER_NOTE_ACTION="CustomerNoteAction";
+	public static final String CUSTOMER_HISTORICAL_DATA_ACTION="CustomerHistoricalDataAction";
+	public static final String CUSTOMER_HISTORICAL_DATA_VO="CustomerHistoricalDataVO";
+	public static final String CUSTOMER_NOTE_VO="CustomerNoteVO";
+	public static final String PERSONNEL_NAME="personnelName";
+	public static final String GLOBAL_CUST_NUM="globalCustNum";
+	public static final String BLANK=" ";
+	public static final short CLIENT_LEVEL_ID=1;	
+	public static final short GROUP_LEVEL_ID=2;
+	/**Level id of the center*/
+	public static final short CENTER_LEVEL_ID=3;
+	/**Customer status id's*/
+	public static final short LOAN_OFFICER_ACTIVE_STATE = 1;
+	public static final short LOAN_OFFICER_INACTIVE_STATE = 2;
+	public static final short ACTIVE_STATE = 13;
+	public static final short INACTIVE_STATE = 14;
+	public static final short CENTER_ACTIVE_STATE = 13;
+	public static final short CENTER_INACTIVE_STATE = 14;
+	public static final String OLD_STATUS = "oldStatus";
+	public static final String NEW_STATUS = "newStatus";
+	public static final String NEW_FLAG = "newFlag";
+	public static final String IS_TRAINED = "isTrained";
+	public static final short TRAINED_NO = 2;
+	public static final String TRAINED_DATE = "trainedDate";
+	
+	public static final short All_CATEGORY_ID =1;
+	public static final short DATE_FIELD_TYPE = 3;
+	
+	/**Exceptions*/
+	public static final String UNKNOWN_EXCEPTION="error.unknownexception";
+	public static final String CUSTOMER_NOT_FOUND="error.customernotfound";
+	public static final String LOAN_OFFICER_REQUIRED_EXCEPTION = "LoanOfficerRequiredException";
+	public static final String NAME_REQUIRED_EXCEPTION = "NameRequiredException";
+	public static final String LOAN_OFFICER_BLANK_EXCEPTION = "LoanOfficerBlankException";
+	public static final String FORMEDBY_LOANOFFICER_BLANK_EXCEPTION = "FormedByLoanOfficerBlankException";
+	public static final String STATUS_REQUIRED_EXCEPTION = "StatusRequiredException";
+	public static final String GET_OFFICE_HOMEPAGE = "getOfficeHomePage";
+	
+	public static final String DUPLICATE_FEE_EXCEPTION = "DuplicateFeeException";
+	public static final String DUPLICATE_GOVT_ID_EXCEPTION = "DuplicateGovtIdException";
+	public static final String CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION = "Customer.LoanOfficerInactive";
+	public static final String CUSTOMER_STATUS_NOTES_EXCEPTION = "Customer.StatusNotesRequired";
+	public static final String CUSTOMER_BRANCH_INACTIVE_EXCEPTION = "Customer.BranchInactive";
+	public static final String CUSTOMER_FEE_INACTIVE_EXCEPTION = "Customer.FeesInactive";
+	public static final String CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION = "Customer.DuplicateCustomerName";
+	public static final String CUSTOMER_INVALID_VERSION_EXCEPTION = "Customer.InvalidVersion";
+	public static final String MEETING_REQUIRED_EXCEPTION = "Customer.MeetingRequired";
+	public static final String CREATE_FAILED_EXCEPTION = "Customer.CreateFailed";
+	public static final String UPDATE_FAILED_EXCEPTION = "Customer.UpdateFailed";
+	public static final String CLIENT_HAS_ACTIVE_LOAN_EXCEPTION = "Client.ActiveLoanPresent";
+	public static final String CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION = "Customer.ActiveAccountsPresent";
+	public static final String INCOMPLETE_CHECKLIST_EXCEPTION = "Customer.IncompleteChecklist";
+	/**Action method names*/
+	public static final String METHOD_CANCEL = "cancel";
+	public static final String METHOD_GET = "get";
+	public static final String METHOD_SEARCH_NEXT = "searchNext";
+	public static final String METHOD_SEARCH_PREV = "searchPrev";
+	public static final String METHOD_LOAD = "load";
+	public static final String METHOD_LOAD_SEARCH = "loadSearch";
+	public static final String METHOD_SEARCH = "search";
+	public static final String METHOD_MANAGE = "manage";
+	public static final String METHOD_PREVIOUS = "previous";
+	public static final String METHOD_LOAD_STATUS = "loadStatus";
+	public static final String METHOD_UPDATE_STATUS = "updateStatus";
+	public static final String METHOD_CREATE =  "create";
+	public static final String METHOD_UPDATE = "update";
+	public static final String METHOD_NEXT= "next";
+	public static final String METHOD_PREVIEW = "preview";
+	public static final String METHOD = "method";
+	public static final String METHOD_LOAD_ADJUSTMENT = "loadAdjustment";
+	public static final String METHOD_PREVIEW_ADJUSTMENT = "previewAdjustment";
+	public static final String METHOD_APPLY_ADJUSTMENT = "applyAdjustment";
+	public static final String METHOD_LOAD_ADJUSTMENT_SUCCESS = "loadAdjustment_success";
+	public static final String METHOD_PREVIEW_ADJUSTMENT_SUCCESS = "previewAdjustment_success";
+	public static final String METHOD_APPLY_ADJUSTMENT_SUCCESS = "applyAdjustment_success";
+	public static final String METHOD_GET_DETAILS="getDetails";
+	public static final String GET_SUCCESS="get_success";
+	public static final String NOTES_SEARCH="NotesSearch";
+	public static final String CLIENT_DETAILS_PAGE="client_details_page";
+	public static final String GROUP_DETAILS_PAGE="group_details_page";
+	public static final String CENTER_DETAILS_PAGE="center_details_page";
+	public static final String VIEW_CLIENT_CHARGES="ViewClientCharges";
+	public static final String VIEW_GROUP_CHARGES="ViewGroupCharges";
+	public static final String VIEW_CENTER_CHARGES="ViewCenterCharges";
+	public static final String APPLY_ADJUSTMENT_CLIENT_SUCCESS="applyAdjustment_client_success";
+	public static final String APPLY_ADJUSTMENT_GROUP_SUCCESS="applyAdjustment_group_success";
+	public static final String APPLY_ADJUSTMENT_CENTER_SUCCESS="applyAdjustment_center_success";
+	public static final String CANCELADJ_CLIENT_SUCCESS="canceladj_client_success";
+	public static final String CANCELADJ_GROUP_SUCCESS="canceladj_group_success";
+	public static final String CANCELADJ_CENTER_SUCCESS="canceladj_center_success";
+	
+	public static final String SEARCH_FAILURE = "search_failure";
+	public static final String SEARCH_FAILURE_TRANSFER = "search_failure_transfer";
+	public static final String CURRENT_CUSTOMER_STATUS = "currentStatus";
+	public static final String CUSTOMER_SEARCH_INPUT = "customerSearchInput";
+	public static final String YES_SMALL = "yes";
+	public static final String NO_SMALL = "no";
+	public static final String CLIENT_HAS_ACTIVE_LOAN = "Client.HasActiveLoan";
+	
+	public static final String LINK_VALUES="linkValues";
+	public static final String LOAD_SUCCESS="load_success";
+	public static final String IS_HISTORICAL_DATA_PRESENT="isHistoricalDataPresent";
+	public static final String YES="Yes";
+	public static final String NO="No";
+	public static final String FORMEDBY_LOAN_OFFICER_LIST = "formedByLoanOfficers";
+	public static final String GROUP_HIERARCHY_REQUIRED = "groupHierarchyRequired";
+	public static final String PENDING_APPROVAL_DEFINED = "pendingApprovalDefined";
+	public static final String CONFIGURATION_LSM = "configurationLSM" ;
+	/**Request Parameters names*/
+	String LOAN_OFFICER_LIST ="loanOfficers";
+	String STATUS_LIST ="statusList";
+	String FEES_LIST ="feesList";
+	String ADMIN_FEES_LIST ="adminFeesList";
+	String COLLECTION_SHEET_TYPES ="collectionSheetTypes";
+	String CHECKLISTS ="checkLists";
+	String POSITIONS ="positions";
+	String CUSTOM_FIELDS_LIST ="customFields";
+	
+	public static final short CLIENT_PARTIAL = 1;
+	public static final short CLIENT_PENDING = 2;
+	public static final short CLIENT_APPROVED = 3;
+	public static final short CLIENT_ONHOLD = 4;	
+	public static final short CLIENT_CANCELLED = 5;
+	public static final short CLIENT_CLOSED = 6;
+	
+	public static final short COMMENT_LENGTH = 500;
+	public static final String DEFAULT_ADDRESS_NAME = "Address";
+	
+	public static final short ACTIVE_HIERARCHY=1;
+	public static final short INACTIVE_HIERARCHY=0;
+	
+	public static final String LOAN_CYCLE_NUMBER = "Loan cycle number";
+	public static final String NUMBER_OF_MISSED_PAYMENTS = "Number of missed payments";
+	public static final String TOTAL_NUMBER_OF_PAYMENTS = "Total number of payments";
+	
+	//meetings
+	public static final short CUSTOMER_MEETING_TYPE = 4;
+	public static final String TOTAL_FEE_DUE = "totalFeeDue";
+	
+	//get to the home page
+	public String GETHOMEPAGE = "getHomePage";
+	public String LOADALLBRANCHES = "loadAllBranches";
+	public String GETHOMEPAGE_SUCCESS = "getHomePage_success";
+	public static final String INVALID_FEE_AMNT = "errors.invalidfeeamt";
+	public static final String INVALID_NUMBER = "errors.invalidNumber";
+	public static final short CENTER_ENTITY_TYPE =20;
+	public static final short GROUP_ACTIVE_STATE = 9;
+	public static final String ERROR_CUSTOMFIELD_REQUIRED = "errors.requiredCustomField";
+	public static final String ERROR_MANDATORY_CHECKBOX = "errors.mandatorycheckbox";
+	public static final String ERROR_MANDATORY_TEXT_AREA = "errors.mandatorytextarea";
+	public static final String ERROR_ADJUSTMENT_NOTE_TOO_BIG = "errors.adjustmentNoteTooBig";
+	
+	public static final String ERROR_STATE_CHANGE_EXCEPTION = "Customer.StateChangeException";
+	public static final String CUSTOMER_ACTIVE_LOAN_ACCOUNTS = "CustomerActiveLoanAccounts";
+	public static final String CUSTOMER_ACTIVE_SAVINGS_ACCOUNTS = "CustomerActiveSavingsAccounts";
+//	number of meetings attended and missed
+	public String CUSTOMERPERFORMANCE = "customerPerformance";
+	public String CUSTOMERPERFORMANCEHISTORY = "customerPerformanceHistory";
+	public String CUSTOMERPERFORMANCEHISTORYVIEW = "customerPerformanceHistoryView";
+	public static final String CURRENT_CLIENT_NAME = "currentClientName";
+	public static final String CURRENT_DOB = "currentDOB";
+	public static final String CURRENT_GOVT_ID = "currentGovtId"; 
+	public static final String CLIENTRECENTACCACTIVITYLIST="customerAccountActivityList";
+	
+}

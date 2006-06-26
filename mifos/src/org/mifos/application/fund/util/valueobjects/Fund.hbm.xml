@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.fund.util.valueobjects.Fund" table="FUND">
+        <id name="fundId" column="FUND_ID" type="short">
+            <generator class="native"/>
+        </id>
+ 
+        <property name="fundName" column="FUND_NAME" type="string" />
+        <property name="versionNo" column="VERSION_NO" type="integer" />
+ 
+	<!-- This has been commented as right now we are not dealing with gl codes.-->
+        <many-to-one name="glCode" column="GLCODE_ID" class="org.mifos.application.master.util.valueobjects.GLCode"   unique="true" lazy="false" insert="true" update="true"/>
+ 
+    </class>
+    <query name="product.srcfund"><![CDATA[from org.mifos.application.fund.util.valueobjects.Fund fund]]></query>
+    <query name="fund.doesFundNameExist"><![CDATA[from org.mifos.application.fund.util.valueobjects.Fund fund where fund.fundName = :fundname]]></query>
+</hibernate-mapping>

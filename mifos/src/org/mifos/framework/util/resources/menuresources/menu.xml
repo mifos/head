@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<mifosmenu>
+	<topmenutab name="Home">
+		<leftmenulabel>
+		label.quickstart
+		</leftmenulabel>
+			<menugroup>
+				<displayname> 
+					<namefragment>label.manage</namefragment> 
+					<namefragment>label.clients</namefragment> 
+				</displayname>
+				<menuitem>
+					<displayname> 
+						<namefragment>label.createnew</namefragment> 
+						<namefragment>Group</namefragment> 
+					</displayname>
+					<linkvalue>GroupAction.do?method=hierarchyCheck&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
+				</menuitem>
+				<menuitem>
+					<displayname> 
+						<namefragment>label.createnew</namefragment> 
+						<namefragment>Client</namefragment> 
+					</displayname>
+					<linkvalue>clientCreationAction.do?method=preLoad&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
+				</menuitem>
+			</menugroup>
+			<menugroup>
+				<displayname> 
+						<namefragment>label.manage</namefragment> 
+						<namefragment>label.accounts</namefragment> 
+				</displayname>
+				<menuitem>
+					<displayname> 
+						<namefragment>label.opennew</namefragment> 
+						<namefragment>Loan</namefragment> 
+						<namefragment>label.account</namefragment> 
+					</displayname>
+					<linkvalue> AccountsSearchAction.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=loan	</linkvalue>
+				</menuitem>
+				<menuitem>
+					<displayname> 
+						<namefragment>label.opennew</namefragment> 
+						<namefragment>Savings</namefragment>
+						<namefragment>label.account</namefragment> 
+					</displayname>
+					<linkvalue>AccountsSearchAction.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=savings</linkvalue>
+				</menuitem>
+				<menuitem>
+					<displayname> 
+						<namefragment>label.print</namefragment> 
+						
+						<namefragment>label.collectionsheets</namefragment> 
+					</displayname>
+					<linkvalue>	#	</linkvalue>
+				</menuitem>
+				<menuitem>
+					<displayname> 
+						<namefragment>label.enter</namefragment> 
+						<namefragment>label.collectionsheet</namefragment> 
+						<namefragment>label.data</namefragment>
+					</displayname>
+					<linkvalue>bulkentryaction.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
+				</menuitem>
+				
+				
+			</menugroup>
+	</topmenutab>
+	<topmenutab name="Clients &amp; Accounts">
+		<leftmenulabel>Client</leftmenulabel>
+			<menugroup>
+				<displayname> 
+						<namefragment>label.manage</namefragment> 
+						<namefragment>label.collectionsheets</namefragment>
+				</displayname>
+				<menuitem>
+					<displayname> 
+						<namefragment>label.print</namefragment> 
+						<namefragment>label.collectionsheets</namefragment> 
+					</displayname>
+					<linkvalue>#</linkvalue>
+				</menuitem>
+				<menuitem>
+					<displayname> 
+						<namefragment>label.enter</namefragment> 
+						<namefragment>label.collectionsheet</namefragment> 
+						<namefragment>label.data</namefragment>
+					</displayname>
+					<linkvalue>bulkentryaction.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
+				</menuitem>
+			</menugroup>
+			<menugroup>
+				<displayname> 
+						<namefragment>label.createnew</namefragment> 
+						<namefragment>label.clients</namefragment>
+
+				</displayname>
+				<menuitem keyForHidden="isCenterHierarchyExists">
+					<displayname> 
+						<namefragment>label.createnew</namefragment> 
+						<namefragment>Center</namefragment>
+					</displayname>
+					<linkvalue>centerAction.do?method=chooseOffice&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
+				</menuitem>
+
+				<menuitem>
+					<displayname> 
+						<namefragment>label.createnew</namefragment> 
+						<namefragment>Group</namefragment>
+					</displayname>
+					<linkvalue>GroupAction.do?method=hierarchyCheck&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
+				</menuitem>
+				<menuitem>
+					<displayname> 
+						<namefragment>label.createnew</namefragment> 
+						<namefragment>Client</namefragment>
+					</displayname>
+					<linkvalue> clientCreationAction.do?method=preLoad&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
+				</menuitem>
+						
+			</menugroup>
+			<menugroup>
+				<displayname> 
+						<namefragment>label.createnew</namefragment> 
+						<namefragment>label.accounts</namefragment>
+				</displayname>
+				<menuitem>
+					<displayname> 
+						<namefragment>label.create</namefragment> 
+						<namefragment>Savings</namefragment>
+						<namefragment>label.account</namefragment>  
+					</displayname>
+					<linkvalue>AccountsSearchAction.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=savings</linkvalue>
+				</menuitem>
+					
+				<menuitem>
+					<displayname> 
+						<namefragment>label.create</namefragment> 
+						<namefragment>Loan</namefragment>
+						<namefragment>label.account</namefragment>  
+					</displayname>
+					<linkvalue>	AccountsSearchAction.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=loan</linkvalue>
+				</menuitem>		
+			</menugroup>
+	</topmenutab>
+</mifosmenu>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

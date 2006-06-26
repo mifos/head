@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.program.util.valueobjects.Program" table="PROGRAM">
+        <id name="programId" column="PROGRAM_ID" type="short" unsaved-value="-1">
+            <generator class="native"/>
+        </id>
+ 	<property name="glcodeId" column="GLCODE_ID" type="short" />
+        <property name="confidentiality" column="CONFIDENTIALITY" type="short"  />
+        <property name="endDate" column="END_DATE" type="date" />
+        <property name="startDate" column="START_DATE" type="date" />
+        <property name="lookUpId" column="LOOKUP_ID" type="date" />
+        <set name="lookUpValueLocale" >
+          <key column ="LOOKUP_ID"
+          property-ref="lookUpId"/>
+          <one-to-many class="org.mifos.application.master.util.valueobjects.LookUpValueLocale"/>
+        </set>
+         
+        
+    </class>
+        
+         <query name="masterdata.programs">
+	        	   <![CDATA[select new org.mifos.application.program.util.valueobjects.ProgramMaster(program.programId ,lookUp.lookUpValue) from org.mifos.application.program.util.valueobjects.Program  program , org.mifos.application.master.util.valueobjects.LookUpValueLocale lookUp where program.lookUpId = lookUp.lookUpId and lookUp.localeId=:localeId]]>
+          </query>
+
+</hibernate-mapping>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.productdefinition.business.PrdStatusEntity" table="PRD_STATUS">
+        <id name="offeringStatusId" column="OFFERING_STATUS_ID" type="short">
+            <generator class="native"/>
+        </id>
+        <version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null"/>
+        <property name="status" column="CURRENTLY_IN_USE" type="short"  not-null="true" />
+        <many-to-one name="prdType" column="PRD_TYPE_ID" class="org.mifos.application.productdefinition.business.ProductTypeEntity"  not-null="true" />
+        <many-to-one name="prdStateId" column="PRD_STATE_ID" class="org.mifos.application.productdefinition.business.PrdStateEntity"  not-null="true" />        
+    </class>
+</hibernate-mapping>

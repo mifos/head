@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.personnel.util.valueobjects.PersonnelRole" table="PERSONNEL_ROLE">
+        <id name="personnelRoleId" column="PERSONNEL_ROLE_ID" type="integer" unsaved-value="-1" >
+                <generator class="native"/>
+        </id>
+       	<!-- <property name="personnelId" column="PERSONNEL_ID" type="short"/>-->
+     	<many-to-one name="personnel" column="PERSONNEL_ID" class="org.mifos.application.personnel.util.valueobjects.Personnel"  unique="true" />
+        <many-to-one  name="role"  column="ROLE_ID" class="org.mifos.application.rolesandpermission.util.valueobjects.Role" lazy="false" unique="true" />
+		
+      
+    </class>
+
+   <query name="getRoleWithId">
+   <![CDATA[select count(*) from org.mifos.application.personnel.util.valueobjects.PersonnelRole personnelRole where personnelRole.role.id=:roleId ]]>
+   
+   </query>
+</hibernate-mapping>

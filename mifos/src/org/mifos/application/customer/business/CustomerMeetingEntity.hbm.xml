@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.customer.business.CustomerMeetingEntity" table="CUSTOMER_MEETING">
+        <id name="custMeetingId" column="CUSTOMER_MEETING_ID" type="integer">
+            <generator class="native"/>
+        </id>
+	<many-to-one name="meeting" column="MEETING_ID"  class="org.mifos.application.meeting.business.MeetingBO" insert="true" update="true"   unique="true" lazy="false" cascade="none" />
+ 	<many-to-one name="customer" column="CUSTOMER_ID"  class="org.mifos.application.customer.business.CustomerBO" insert="true" update="true"  unique="true" lazy="true" cascade="none"/>
+    </class>
+</hibernate-mapping>

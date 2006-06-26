@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+	<class name="org.mifos.application.accounts.loan.business.LoanSummaryEntity"
+		table="LOAN_SUMMARY">
+		<id name="accountId" column="ACCOUNT_ID" type="integer">
+			<generator class="foreign">
+				<param name="property">loan</param>
+			</generator>
+		</id>
+
+		<property name="originalPrincipal" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+		 <column name="ORIG_PRINCIPAL_CURRENCY_ID" /> 
+		 <column name="ORIG_PRINCIPAL" />
+		</property>
+		<property name="originalInterest" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+		 <column name="ORIG_INTEREST_CURRENCY_ID" /> 
+		 <column name="ORIG_INTEREST" />
+		</property>
+		<property name="originalFees" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+		 <column name="ORIG_FEES_CURRENCY_ID" /> 
+		 <column name="ORIG_FEES" />
+		</property>
+		<property name="originalPenalty" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+		 <column name="ORIG_PENALTY_CURRENCY_ID" /> 
+		 <column name="ORIG_PENALTY" />
+		</property>
+		<property name="principalPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+		 <column name="PRINCIPAL_PAID_CURRENCY_ID" /> 
+		 <column name="PRINCIPAL_PAID" />
+		</property>
+		<property name="interestPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+		 <column name="INTEREST_PAID_CURRENCY_ID" /> 
+		 <column name="INTEREST_PAID" />
+		</property>
+		<property name="feesPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+		 <column name="FEES_PAID_CURRENCY_ID" /> 
+		 <column name="FEES_PAID" />
+		</property>
+		<property name="penaltyPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+		 <column name="PENALTY_PAID_CURRENCY_ID" /> 
+		 <column name="PENALTY_PAID" />
+		</property>
+		<one-to-one name="loan"
+			class="org.mifos.application.accounts.loan.business.LoanBO" lazy="true" />
+
+
+	</class>
+
+</hibernate-mapping>

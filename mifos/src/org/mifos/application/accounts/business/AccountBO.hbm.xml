@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+
+	<class name="org.mifos.application.accounts.business.AccountBO"
+		table="ACCOUNT">
+		<id name="accountId" column="ACCOUNT_ID" type="integer">
+			<generator class="native" />
+		</id>
+		<version name="versionNo" column="VERSION_NO" type="integer"
+			unsaved-value="null" />
+
+		<property name="globalAccountNum" column="GLOBAL_ACCOUNT_NUM"/>
+		<property name="createdBy" column="CREATED_BY" not-null="true"
+			update="false" />
+		<property name="createdDate" column="CREATED_DATE"
+			not-null="true" update="false" />
+		<property name="updatedBy" column="UPDATED_BY" />
+		<property name="updatedDate" column="UPDATED_DATE" />
+		<property name="closedDate" column="CLOSED_DATE" />
+
+		<many-to-one name="customer" column="CUSTOMER_ID"
+			class="org.mifos.application.customer.business.CustomerBO"
+			cascade="none" update="false" insert="true" unique="true" />
+		<many-to-one name="office" column="OFFICE_ID"
+			class="org.mifos.application.office.business.OfficeBO" cascade="none"
+			update="false" insert="true" unique="true" />
+		<many-to-one name="accountState" column="ACCOUNT_STATE_ID"
+			class="org.mifos.application.accounts.business.AccountStateEntity"
+			cascade="none" update="true" insert="true" unique="true" />
+		<many-to-one name="accountType" column="ACCOUNT_TYPE_ID"
+			class="org.mifos.application.master.util.valueobjects.AccountType"
+			cascade="none" update="false" insert="true" unique="true" />
+		<many-to-one name="personnel" column="PERSONNEL_ID"
+			class="org.mifos.application.personnel.business.PersonnelBO"
+			cascade="none" update="false" insert="true" unique="true" />
+
+		<set name="accountNotes" cascade="all" inverse="true"
+			table="ACCOUNT_NOTES" lazy="true">
+			<key column="ACCOUNT_ID" />
+			<many-to-many
+				class="org.mifos.application.accounts.business.AccountNotesEntity"
+				column="ACCOUNT_NOTES_ID" />
+		</set>
+		<set name="accountFees" cascade="all" inverse="true"
+			table="ACCOUNT_FEES">
+			<key column="ACCOUNT_ID" />
+			<many-to-many
+				class="org.mifos.application.accounts.business.AccountFeesEntity"
+				column="ACCOUNT_FEE_ID" />
+		</set>
+		<set name="accountActionDates" cascade="all" inverse="true"
+			table="ACCOUNT_ACTIONS_DATE" lazy="true" order-by="INSTALLMENT_ID asc">
+			<key column="ACCOUNT_ID" />
+			<one-to-many
+				class="org.mifos.application.accounts.business.AccountActionDateEntity" />
+		</set>
+		<set name="accountPayments" cascade="all" inverse="true"
+			table="ACCOUNT_PAYMENT" lazy="true" order-by="PAYMENT_ID desc">
+			<key column="ACCOUNT_ID" />
+			<one-to-many
+				class="org.mifos.application.accounts.business.AccountPaymentEntity" />
+		</set>
+		<!-- <set name="accountCustomFields" outer-join="true" table="ACCOUNT_CUSTOM_FIELD">
+			<key column="ACCOUNT_ID" />
+			<composite-element	class="org.mifos.application.accounts.business.AccountCustomFieldEntity">
+				<property name="fieldId" column="FIELD_ID" not-null="true" />
+				<property name="fieldValue" column="FIELD_VALUE" />
+			</composite-element>
+		</set>-->
+		<set name="accountCustomFields" cascade="all" inverse="true" lazy="true" >
+			<key column="ACCOUNT_ID" />
+			<one-to-many class="org.mifos.application.accounts.business.AccountCustomFieldEntity" />
+		</set>
+		<set name="accountStatusChangeHistory" cascade="all" inverse="true"
+			table="ACCOUNT_STATUS_CHANGE_HISTORY" lazy="true" >
+			<key column="ACCOUNT_ID" />
+			<one-to-many
+				class="org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity" />
+		</set>
+	    <set name="accountFlags" cascade="all" lazy="true" >
+	        <key column="ACCOUNT_ID" not-null="true"/>
+	        <one-to-many class="org.mifos.application.accounts.business.AccountFlagMapping"/>
+	    </set>
+		<!-- This is for loan account-->
+		<joined-subclass
+			name="org.mifos.application.accounts.loan.business.LoanBO"
+			table="LOAN_ACCOUNT">
+			<key column="ACCOUNT_ID" />
+
+			<property name="businessActivityId"
+				column="BUSINESS_ACTIVITIES_ID" />
+			<property name="groupFlag" column="GROUP_FLAG" />
+			<property name="loanAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			 <column name="LOAN_AMOUNT_CURRENCY_ID" /> 
+			 <column name="LOAN_AMOUNT" />
+			</property>
+			<property name="loanBalance" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			 <column name="LOAN_BALANCE_CURRENCY_ID" /> 
+			 <column name="LOAN_BALANCE" />
+			</property>
+			<property name="interestRateAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			 <column name="INTEREST_RATE_CURRENCY_ID" /> 
+			 <column name="INTEREST_RATE_AMOUNT" />
+			</property>
+			
+			<property name="noOfInstallments"
+				column="NO_OF_INSTALLMENTS" not-null="true" />
+			<property name="disbursementDate"
+				column="DISBURSEMENT_DATE" />
+			<property name="collateralNote" column="COLLATERAL_NOTE" />
+			<property name="gracePeriodDuration"
+				column="GRACE_PERIOD_DURATION" />
+			<property name="intrestAtDisbursement"
+				column="INTEREST_AT_DISB" />
+			<property name="gracePeriodPenalty"
+				column="GRACE_PERIOD_PENALTY" update="false" />
+
+			<many-to-one name="loanOffering" column="PRD_OFFERING_ID"
+				class="org.mifos.application.productdefinition.business.LoanOfferingBO"
+				unique="true" lazy="true" cascade="none" insert="true"
+				update="false" />
+			<many-to-one name="fund" column="FUND_ID"
+				class="org.mifos.application.fund.util.valueobjects.Fund"
+				cascade="none" insert="true" update="false" unique="true" />
+			<many-to-one name="loanMeeting" column="MEETING_ID"
+				class="org.mifos.application.meeting.business.MeetingBO"
+				unique="true" insert="true" cascade="all" update="false" />
+			<many-to-one name="collateralType"
+				column="COLLATERAL_TYPE_ID"
+				class="org.mifos.application.master.util.valueobjects.CollateralType"
+				unique="true" lazy="true" cascade="none" insert="true"
+				update="false" />
+			<many-to-one name="gracePeriodType"
+				column="GRACE_PERIOD_TYPE_ID"
+				class="org.mifos.application.productdefinition.util.valueobjects.GracePeriodType"
+				unique="true" lazy="true" cascade="none" insert="true"
+				update="false" />
+			<many-to-one name="interestType" column="INTEREST_TYPE_ID"
+				class="org.mifos.application.master.util.valueobjects.InterestTypes"
+				cascade="none" update="false" insert="true" unique="true" />
+			<one-to-one name="loanSummary"
+				class="org.mifos.application.accounts.loan.business.LoanSummaryEntity"
+				cascade="all" lazy="true" />
+			<set name="loanActivityDetails" cascade="all" inverse="true"
+				table="LOAN_ACTIVITY_DETAILS" lazy="true" order-by="ID desc">
+				<key column="ACCOUNT_ID" />
+				<one-to-many
+					class="org.mifos.application.accounts.loan.business.LoanActivityEntity" />
+			</set>
+		</joined-subclass>
+		<!-- This is for savings account-->
+		<joined-subclass name="org.mifos.application.accounts.savings.business.SavingsBO" table="SAVINGS_ACCOUNT">
+			<key column="ACCOUNT_ID"/>
+			<property name="recommendedAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			 <column name="RECOMMENDED_AMOUNT_CURRENCY_ID" /> 
+			 <column name="RECOMMENDED_AMOUNT" />
+			</property>
+			<property name="savingsBalance" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			 <column name="SAVINGS_BALANCE_CURRENCY_ID" /> 
+			 <column name="SAVINGS_BALANCE" />
+			</property>
+			<property name="interestToBePosted" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			 <column name="INT_TO_BE_POSTED_CURRENCY_ID" /> 
+			 <column name="INT_TO_BE_POSTED" />
+			</property>
+			<property name="minAmntForInt" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+				<column name="MIN_AMNT_FOR_INT_CURRENCY_ID" />
+				<column name="MIN_AMNT_FOR_INT" />
+			</property>
+			<property name="interestRate" column="INTEREST_RATE" />
+			<property name="activationDate" column="ACTIVATION_DATE" />
+			<property name="lastIntCalcDate" column="LAST_INT_CALC_DATE" />
+			<property name="lastIntPostDate" column="LAST_INT_POST_DATE" />
+			<property name="nextIntCalcDate" column="NEXT_INT_CALC_DATE" />
+			<property name="nextIntPostDate" column="NEXT_INT_POST_DATE" />
+			<property name="interIntCalcDate" column="INTER_INT_CALC_DATE" />
+			
+			<many-to-one name="timePerForInstcalc" column="TIME_PER_FOR_INT_CALC" class="org.mifos.application.meeting.business.MeetingBO" cascade="all" insert="true" update="true" unique="true" />
+			<many-to-one name="freqOfPostIntcalc" column="FREQ_FOR_INT_POST" class="org.mifos.application.meeting.business.MeetingBO" cascade="all" insert="true" update="true" unique="true" />
+			<many-to-one name="interestCalcType" column="INTEREST_CALCULATION_TYPE_ID" class="org.mifos.application.master.util.valueobjects.InterestCalcType" />
+			<many-to-one name="recommendedAmntUnit" column="RECOMMENDED_AMNT_UNIT_ID" class="org.mifos.application.master.util.valueobjects.RecommendedAmntUnit" insert="true" update="false" cascade="none"/>
+	        <many-to-one name="savingsType" column="SAVINGS_TYPE_ID" class="org.mifos.application.master.util.valueobjects.SavingsType" insert="true" update="false" cascade="none"/>			
+			<many-to-one name="savingsOffering" column="PRD_OFFERING_ID"
+				class="org.mifos.application.productdefinition.business.SavingsOfferingBO"
+				unique="true" cascade="none" insert="true" update="false" />
+			<one-to-one name="savingsPerformance"	class="org.mifos.application.accounts.savings.business.SavingsPerformanceEntity" cascade="all" lazy="false" />
+			<set name="savingsActivityDetails" cascade="all" inverse="true"
+				table="SAVINGS_ACTIVITY_DETAILS" lazy="true" order-by="ID desc">
+				<key column="ACCOUNT_ID" />
+				<one-to-many
+					class="org.mifos.application.accounts.savings.business.SavingsActivityEntity" />
+			</set>
+		</joined-subclass>
+		<!-- This is for customer account-->
+		<joined-subclass name="org.mifos.application.accounts.business.CustomerAccountBO" table="CUSTOMER_ACCOUNT">
+			<key column="ACCOUNT_ID"/>
+			<set name="customerActivitDetails" cascade="all" inverse="true"
+				table="CUSTOMER_ACCOUNT_ACTIVITY" lazy="true" order-by="CUSTOMER_ACCOUNT_ACTIVITY_ID desc">
+				<key column="ACCOUNT_ID" />
+				<one-to-many
+					class="org.mifos.application.accounts.business.CustomerActivityEntity" />
+			</set>
+		</joined-subclass>
+	</class>
+	<!--Finds by global account num-->
+	<query name="accounts.findByCustomerId">
+		<![CDATA[select new org.mifos.application.accounts.business.LoanAccountView
+		(loanAccount.accountId,loanAccount.loanOffering.prdOfferingShortName,
+		loanAccount.accountType.accountTypeId,loanAccount.loanOffering.prdOfferingId,
+		loanAccount.accountState.id,loanAccount.intrestAtDisbursement,
+		loanAccount.loanAmount) 
+		from org.mifos.application.accounts.loan.business.LoanBO loanAccount 
+		where loanAccount.customer.customerId = :CUSTOMER_ID 
+		and ((loanAccount.accountState.id in (5,9)) 
+		or (loanAccount.accountState.id in (3,4) 
+		and  loanAccount.disbursementDate <= :DISBURSEMENT_DATE)) order by loanAccount.accountId]]>
+	</query>
+	<query name="accounts.getPrdofferingsForloans">
+		<![CDATA[select  distinct loanAccount.loanOffering from org.mifos.application.accounts.loan.business.LoanBO loanAccount where loanAccount.customer.searchId = :CUSTOMER_SEARCH_ID and (loanAccount.accountState.id in (5,9) or (loanAccount.accountState.id in (3,4) and  loanAccount.disbursementDate <= :DISBURSEMENT_DATE))]]>
+	</query>
+	<query name="accounts.getFeeAmountAtDisbursement">
+		<![CDATA[  from org.mifos.application.accounts.business.AccountFeesEntity afe where afe.account.accountId = :ACCOUNT_ID and  afe.fees.feeFrequency.feePayment.feePaymentId = 2]]>
+	</query>
+
+	<query name="accounts.getAccountTrxnsForAccountId">
+		<![CDATA[from org.mifos.application.accounts.business.AccountActionDateEntity accountTrxn where accountTrxn.account.accountId = :ACCOUNT_ID and accountTrxn.actionDate <= :ACTION_DATE and accountTrxn.paymentStatus = :PAYMENT_STATUS ]]>
+	</query>
+	<query name="accounts.getLastMeetingDateforCustomer">																		  
+		<![CDATA[from org.mifos.application.accounts.business.AccountActionDateEntity accountTrxn where accountTrxn.customer.customerId = :CUSTOMER_ID and accountTrxn.actionDate <= :ACTION_DATE  order by accountTrxn.actionDate desc]]>
+	</query>
+	
+	<query name="accounts.getApplicableSavingsProductOfferings">								  
+		<![CDATA[select new org.mifos.application.productdefinition.util.helpers.PrdOfferingView(prdOffering.prdOfferingId,prdOffering.prdOfferingName,prdOffering.globalPrdOfferingNum) 
+						from org.mifos.application.productdefinition.business.PrdOfferingBO prdOffering
+						where prdOffering.prdType.productTypeID = :prdTypeId and prdOffering.prdStatus = :prdStatus
+						and prdOffering.prdApplicableMaster.prdApplicableMasterId = :prdApplicableMaster order by prdOffering.prdOfferingName
+		]]>
+	</query>
+	<!-- The following query is to  obtain the max account id in the system-->
+	<query name="accounts.getMaxAccountId">
+		<![CDATA[select max(account.accountId)	from AccountBO account 	]]>
+	</query>
+	<query name="accounts.findSavingsAccountByCustomerId">
+		<![CDATA[select new org.mifos.application.accounts.business.SavingsAccountView(savingsAccount.accountId,savingsAccount.accountType.accountTypeId,savingsAccount.savingsOffering) from org.mifos.application.accounts.savings.business.SavingsBO savingsAccount where savingsAccount.customer.customerId = :CUSTOMER_ID and savingsAccount.accountState.id = 16  order by savingsAccount.accountId]]>
+	</query>
+	
+	<query name="accounts.getAccountActionsForMandSavingsAccount">
+		<![CDATA[from org.mifos.application.accounts.business.AccountActionDateEntity accountTrxn where accountTrxn.account.accountId = :ACCOUNT_ID and accountTrxn.actionDate <= :ACTION_DATE and accountTrxn.paymentStatus = :PAYMENT_STATUS and accountTrxn.customer.customerId = :CUSTOMER_ID ]]>
+	</query>
+	<query name="accounts.getAccountActionsForVolSavingsAccount">
+		<![CDATA[from org.mifos.application.accounts.business.AccountActionDateEntity accountTrxn where accountTrxn.account.accountId = :ACCOUNT_ID and accountTrxn.paymentStatus = :PAYMENT_STATUS and accountTrxn.customer.customerId = :CUSTOMER_ID and accountTrxn.installmentId=
+		(select max(actionDate.installmentId) from org.mifos.application.accounts.business.AccountActionDateEntity actionDate where actionDate.account.accountId = :ACCOUNT_ID and actionDate.customer.customerId = :CUSTOMER_ID and actionDate.actionDate <= :ACTION_DATE)]]>
+	</query>
+	<query name="accounts.findBySystemId">
+		<![CDATA[from org.mifos.application.accounts.business.AccountBO account where account.globalAccountNum = :globalAccountNumber ]]>
+	</query>
+	<query name="accounts.updateSchedule">
+	<![CDATA[update AccountActionDateEntity actionDate set actionDate.deposit=:amount where actionDate.account.accountId=:accountId ]]>
+	</query>
+
+	<query name="accounts.retrieveLastTrxn">
+		<![CDATA[from org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity savingsTrxn where  savingsTrxn.accountTrxnId = (select max(savingsTrxn1.accountTrxnId) from org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity savingsTrxn1 where savingsTrxn1.account.accountId=:accountId and savingsTrxn1.actionDate < :date)]]>
+	</query>
+	
+	<query name="accounts.retrieveFirstTrxn">
+		<![CDATA[from org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity savingsTrxn where  savingsTrxn.accountTrxnId = (select min(savingsTrxn1.accountTrxnId) from org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity savingsTrxn1 where savingsTrxn1.account.accountId=:accountId)]]>
+	</query>
+	
+	<query name="accounts.retrieveSavingsAccounts">
+		<![CDATA[from org.mifos.application.accounts.savings.business.SavingsBO savings where savings.savingsOffering.prdOfferingId=:prdOfferingId and savings.accountState.id in (16,18) ]]>
+	</query>
+
+	<query name="accounts.retrieveSavingsAccountsForCustomer">
+		<![CDATA[from org.mifos.application.accounts.savings.business.SavingsBO savings where savings.customer.customerId=:customerId and savings.accountState.id in (16,18) ]]>
+	</query>
+	<!-- Get the closed savings accounts	-->
+	<query name="accounts.viewallsavingsclosedaccounts">
+		<![CDATA[from org.mifos.application.accounts.business.AccountBO account where account.customer.customerId=:customerId
+					and account.accountType.accountTypeId=2 and account.accountState.id in(15,17) ]]>
+	</query>
+	<query name="accounts.getCustomerAccountActionDates">
+		<![CDATA[from org.mifos.application.accounts.business.AccountActionDateEntity accountActionDates where accountActionDates.account.accountId = :ACCOUNT_ID and accountActionDates.actionDate <= :ACTION_DATE and accountActionDates.paymentStatus = :PAYMENT_STATUS]]>
+	</query>
+	
+		<!-- Get the Loan accounts	that are in arrears-->
+	<query name="accounts.GetLoanArrears">
+		<![CDATA[select account from org.mifos.application.accounts.business.AccountBO account
+			join  account.accountActionDates as actiondate
+			where account.accountType.accountTypeId=:ACCOUNTTYPE_ID
+			and account.accountState.id in (:LOANAPPROVED,:LOANACTIVEINGOODSTAND)
+			and actiondate.actionDate < :CHECKDATE
+			and actiondate.paymentStatus=:PAYMENTSTATUS 
+			group by account.accountId]]>
+    </query>
+   	<query name="accounts.retrieveSavingsAccountsIntCalc">
+   			<![CDATA[select savings.accountId from org.mifos.application.accounts.savings.business.SavingsBO savings
+			where  savings.nextIntCalcDate <= :currentDate and savings.accountState.id in (16,18)) ]]>
+    </query>
+   	<query name="accounts.retrieveSavingsAccountsIntPost">
+   			<![CDATA[select savings.accountId from org.mifos.application.accounts.savings.business.SavingsBO savings
+			where  savings.nextIntPostDate < :currentDate and savings.accountState.id in (16,18)) ]]>
+    </query>
+    
+</hibernate-mapping>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.master.business.SupportedModesEntity" table="SUPPORTED_MODES">
+        <id name="modeId" column="MODE_ID" type="short">
+            <generator class="native"/>
+        </id>
+    <many-to-one name="transactionTypeEntity"  column="TRANSACTION_ID" class="org.mifos.application.master.business.TransactionTypeEntity"  not-null="true" lazy="true"/>
+  	<many-to-one name="paymentTypeEntity"  column="PAYMENT_TYPE_ID" class="org.mifos.application.master.business.PaymentTypeEntity"  not-null="true" lazy="true"/>
+  	</class>
+    
+</hibernate-mapping>

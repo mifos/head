@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.productdefinition.util.valueobjects.PrdState" table="PRD_STATE">
+        <id name="prdStateId" column="PRD_STATE_ID" type="short">
+            <generator class="native"/>
+        </id>
+        <many-to-one name="lookUpValue" column="PRD_STATE_LOOKUP_ID" class="org.mifos.application.master.util.valueobjects.LookUpValue" />
+    </class>
+    
+</hibernate-mapping>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.productdefinition.business.ProductCategoryBO" table="PRD_CATEGORY">
+        <id name="productCategoryID" column="PRD_CATEGORY_ID" type="short">
+            <generator class="native"/>
+        </id>
+        <version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null"/>
+ 
+        <property name="productCategoryName" column="PRD_CATEGORY_NAME" type="string" />
+        <property name="globalPrdOfferingNum" column="GLOBAL_PRD_OFFERING_NUM" type="string"  not-null="true" />
+        <property name="createdDate" column="CREATED_DATE" type="date" update="false"/>
+        <property name="createdBy" column="CREATED_BY" type="short" update="false"/>
+        <property name="updatedBy" column="UPDATED_BY" type="short"   />
+        <property name="updatedDate" column="UDPATED_DATE" type="date" />
+        <property name="productCategoryDesc" column="DESCRIPTION" type="string" />
+        <many-to-one name="productType" column="PRD_TYPE_ID" class="org.mifos.application.productdefinition.business.ProductTypeEntity" cascade="none" not-null="true"/>
+        <many-to-one name="prdCategoryStatus" column="STATE" class="org.mifos.application.master.util.valueobjects.PrdCategoryStatus" cascade="none" not-null="true"/>
+        <many-to-one name="office" column="OFFICE_ID" class="org.mifos.application.office.business.OfficeBO" />
+    </class>
+</hibernate-mapping>

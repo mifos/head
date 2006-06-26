@@ -1,0 +1,1957 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE form-validation PUBLIC
+          "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1.3//EN"
+          "http://jakarta.apache.org/commons/dtds/validator_1_1_3.dtd">
+
+<form-validation>
+	<global></global>
+	<formset>
+
+		<!-- Login  form -->
+		<form name="/mifoslogin">
+		<!-- bug id 23818 changed from validwhen to required-->
+			<field property="userName" depends="required">
+				<msg name="required" key="errors.mandatory"
+					bundle="LoginUIResources" />
+				<arg key="login.username" bundle="LoginUIResources" />
+			</field>
+			<field property="password" depends="validwhen">
+				<msg name="validwhen" key="errors.mandatory"
+					bundle="LoginUIResources" />
+				<arg key="login.password" bundle="LoginUIResources" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>
+						((input != null) or (*this* != null))
+					</var-value>
+				</var>
+			</field>
+			<field property="oldPassword" depends="validwhen">
+				<msg name="validwhen" key="errors.mandatory"
+					bundle="LoginUIResources" />
+				<arg key="login.oldpassword" bundle="LoginUIResources" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>((input == null) or (*this* != null))</var-value>
+				</var>
+			</field>
+			<!-- bug id 27222 added required attribute-->
+			<field property="newPassword"
+				depends="required,minlength,maxlength,mask,validwhen">
+				<msg name="required" key="errors.mandatory"
+					bundle="LoginUIResources" />
+				<msg name="validwhen" key="errors.newconfpassword"
+					bundle="LoginUIResources" />
+				<msg name="maxlength" key="errors.maximumlength"
+					bundle="LoginUIResources" />
+				<msg name="minlength" key="errors.minimumlength"
+					bundle="LoginUIResources" />
+				<msg name="mask" key="errors.spacemask"
+					bundle="LoginUIResources" />
+				<arg0 key="login.newpassword" />
+				<arg1 name="minlength" key="${var:minlength}"
+					resource="false" />
+				<arg1 name="maxlength" key="${var:maxlength}"
+					resource="false" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>((input == null) or ((*this* != null) and (*this*==confirmPassword)))</var-value>
+				</var>
+				<var>
+					<var-name>minlength</var-name>
+					<var-value>6</var-value>
+				</var>
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>20</var-value>
+				</var>
+				<var>
+					<var-name>mask</var-name>
+					<var-value>^[^ ]*$</var-value>
+				</var>
+			</field>
+		</form>
+		<!-- Roles and permission Form -->
+		<form name="/manageRolesAndPermission">
+			<field property="name" depends="required,mask,maxlength">
+				<msg name="mask" key="roleandpermission.rolename.maskmsg" bundle="RolesAndPermissionResources"/>
+				<msg name="required" key="roleandpermission.rolename.required" bundle="RolesAndPermissionResources"/>
+				<msg name="maxlength" key="roleandpermission.rolename.required" bundle="RolesAndPermissionResources" />
+				
+				<arg0 key="roleandpermission.rolename.displayname" resource="RolesAndPermissionResources" />
+				<arg1 name="maxlength" key="${var:maxlength}"
+					resource="false" />
+				<var>
+					<var-name>mask</var-name>
+					<var-value>^[^`'"]*$</var-value>
+				</var>
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>50</var-value>
+				</var>
+			</field>
+		</form>
+
+		<!-- office Form -->
+
+		<form name="/OfficeAction">
+			<field property="officeName"
+				depends="required,maxlength">
+
+				<msg name="required" key="office.mandatory_textbox"
+					bundle="OfficeResources" />
+				<arg0 key="office.officeName" />
+				<arg1 name="maxlength" key="${var:maxlength}"
+					resource="false" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>200</var-value>
+				</var>
+			</field>
+			<field property="shortName"
+				depends="required,mask,maxlength,minlength">
+				<msg name="required" key="office.mandatory_textbox"
+					bundle="OfficeResources" />
+
+				<msg name="mask" key="office.officeName.maskmsg"
+					bundle="OfficeResources" />
+				<msg name="minlength" key="errors.office.shortname.minlength"
+					bundle="OfficeResources" />
+
+				<arg0 key="office.officeShortName" />
+				<arg1 name="maxlength" key="${var:maxlength}"
+					resource="false" />
+				<arg2 name="minlength" key="${var:minlength}"
+					resource="false" />
+
+				<var>
+					<var-name>mask</var-name>
+					<var-value>^[^ ]*$</var-value>
+				</var>
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>4</var-value>
+				</var>
+				<var>
+					<var-name>minlength</var-name>
+					<!-- bugid 26506 -->
+					<var-value>1</var-value>
+				</var>
+
+			</field>
+			<field property="formOfficeType" depends="required">
+				<msg name="required"
+					key="office.mandatory_selectbox" bundle="OfficeResources" />
+
+				<arg0 key="office.officeType" />
+			</field>
+			<field property="formParentOffice" depends="validwhen">
+				<msg name="validwhen"
+					key="office.mandatory_selectbox" bundle="OfficeResources" />
+
+				<arg0 key="office.parentOffice" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>
+						((formOfficeType == 1) or (*this* != null))
+					</var-value>
+				</var>
+
+
+			</field>
+		<!-- 	<field property="address.address1" depends="required">
+				<msg name="required"
+					key="office.address.address1.requiredmsg" bundle="OfficeResources" />
+
+				<arg0 key="office.address.address1.requiredmsg" />
+
+			</field>
+			<field property="address.city" depends="required">
+				<msg name="required"
+					key="office.address.city.requiredmsg" bundle="OfficeResources" />
+
+				<arg0 key="office.address.city.requiredmsg" />
+
+			</field>
+			<field property="address.state" depends="required">
+				<msg name="required"
+					key="office.address.state.requiredmsg" bundle="OfficeResources" />
+
+				<arg0 key="office.address.state.requiredmsg" />
+
+			</field>
+			<field property="address.country" depends="required">
+				<msg name="required"
+					key="office.address.country.requiredmsg" bundle="OfficeResources" />
+
+				<arg0 key="office.address.country.requiredmsg" />
+
+			</field>
+			<field property="address.postalCode" depends="required">
+				<msg name="required"
+					key="office.address.postalCode.requiredmsg"
+					bundle="OfficeResources" />
+
+				<arg0 key="office.address.postalCode.requiredmsg" />
+
+			</field> -->
+
+
+		</form>
+
+		<!-- meeting form -->
+		<form name="/MeetingAction">
+			<field property="frequency" depends="required">
+				<msg name="required"
+					key="meeting.frequency.requiredmsg"
+					bundle="MeetingResources" />
+			</field>
+
+			 <field property="recurWeek" depends="validwhen">
+				<msg name="validwhen" key="meeting.reurweek.requiredmsg"
+					bundle="MeetingResources" />
+					<var>
+					<var-name>test</var-name>
+					<var-value>
+						((frequency != 1) or ((*this* != null) and (weekDay != null)))
+					</var-value>
+				</var>
+			</field>
+			 <!-- field property="weekDay" depends="validwhen">
+				<msg name="validwhen" key="meeting.weekDay.requiredmsg"
+					bundle="MeetingResources" />
+
+					<var>
+					<var-name>test</var-name>
+					<var-value>
+						((frequency != 1) or (*this* != null) )
+					</var-value>
+				</var>
+			</field-->	
+			 <field property="monthType" depends="validwhen">
+				<msg name="validwhen" key="meeting.monthType.requiredmsg"
+					bundle="MeetingResources" />
+					<var>
+					<var-name>test</var-name>
+					<var-value>
+						((frequency != 2) or (*this* != null) )
+					</var-value>
+				</var>
+			</field>		
+			 <field property="monthDay" depends="validwhen">
+				<msg name="validwhen" key="meeting.monthDay.requiredmsg"
+					bundle="MeetingResources" />
+
+					
+				<arg0 key="meeting.labelDays"/>
+					<var>
+					<var-name>test</var-name>
+					<var-value>
+						(((frequency != 2) or (monthType != 1)) or ((*this* != null) and (monthMonth != null)))
+					</var-value>
+				</var>
+			</field>							
+			 <!-- field property="monthMonth" depends="validwhen">
+				<msg name="validwhen" key="meeting.monthMonth.required"
+					bundle="MeetingResources" />
+					<var>
+					<var-name>test</var-name>
+					<var-value>
+						(((frequency != 2) or (monthType != 1)) or (*this* != null)  )
+					</var-value>
+				</var>
+			</field-->		
+			 <field property="monthRank" depends="validwhen">
+				<msg name="validwhen" key="meeting.monthRank.requiredmsg"
+					bundle="MeetingResources" />
+					<var>
+					<var-name>test</var-name>
+					<var-value>
+						(((frequency != 2) or (monthType != 2)) or (((*this* != null) and (monthWeek != null)) and (monthMonthRank != null)))
+					</var-value>
+				</var>
+			</field>		
+			 <!-- field property="monthWeek" depends="validwhen">
+				<msg name="validwhen" key="meeting.monthWeek.requiredmsg"
+					bundle="MeetingResources" />
+					<var>
+					<var-name>test</var-name>
+					<var-value>
+						( ((frequency != 2) or (monthType != 2)) or (*this* != null)  )
+					</var-value>
+				</var>
+			</field>		
+			 <field property="monthMonthRank" depends="validwhen">
+				<msg name="validwhen" key="meeting.monthMonthRank.requiredmsg"
+					bundle="MeetingResources" />
+					<var>
+					<var-name>test</var-name>
+					<var-value>
+						( ((frequency != 2) or (monthType != 2)) or (*this* != null)  )
+					</var-value>
+				</var>
+			</field-->
+		<field property="meetingPlace" depends="required">
+				<msg name="required"
+					key="meeting.meetingPlace.requiredmsg"
+					bundle="MeetingResources" />
+			</field>
+			
+					
+		</form>
+		<!-- meeting form -->
+
+		<!-- office Form -->
+		<!-- product definition-->
+		<form name="/mifosproddefaction">
+			<field property="productType.productTypeID"
+				depends="required">
+				<msg name="required" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg key="product.producttype" />
+			</field>
+			<field property="productCategoryName"
+				depends="required,maxlength">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<msg name="maxlength" key="errors.maximumlength"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.categoryname" />
+				<arg1 name="maxlength" key="${var:maxlength}"
+					resource="false" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>100</var-value>
+				</var>
+			</field>
+			<field property="productCategoryDesc" depends="maxlength">
+				<msg name="maxlength" key="errors.maximumlength"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.categorydesc" />
+				<arg1 name="maxlength" key="${var:maxlength}"
+					resource="false" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>500</var-value>
+				</var>
+			</field>
+			<field property="prdCategoryStatus.prdCategoryStatusId"
+				depends="required">
+				<msg name="required" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.status" />
+			</field>
+		</form>
+		<!-- Loan product-->
+		
+		<form name="/loanprdaction">
+		<!--bug id 25506 removed mask -->
+		    <field property="prdOfferingName"
+				depends="required,maxlength">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<msg name="maxlength" key="errors.maximumlength"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.prodinstname" />
+				<arg1 name="maxlength" key="${var:maxlength}"
+					resource="false" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>50</var-value>
+				</var>
+			</field>
+			<!--bug id 26409. added mask to not allow space -->
+			<field property="prdOfferingShortName"
+				depends="required,maxlength,mask">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<msg name="maxlength" key="errors.maximumlength"
+					bundle="ProductDefUIResources" />
+				<msg name="mask" key="errors.shortnamemask"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.shortname" />
+				<arg1 name="maxlength" key="${var:maxlength}"
+					resource="false" />
+				<var>
+					<var-name>mask</var-name>
+					<var-value>^[^ ]*$</var-value>
+				</var>
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>4</var-value>
+				</var>
+			</field>
+			<field property="description" depends="maxlength">
+				<msg name="maxlength" key="errors.maximumlength"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.categorydesc" />
+				<arg1 name="maxlength" key="${var:maxlength}"
+					resource="false" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>200</var-value>
+				</var>
+			</field>
+			<field property="prdCategory.productCategoryID"
+				depends="required">
+				<msg name="required" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.prodcat" />
+			</field>
+			<field property="startDate" depends="required">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.startdate" />
+			</field>
+			<field property="prdApplicableMaster.prdApplicableMasterId"
+				depends="required">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.applfor" />
+			</field>
+			<field property="minLoanAmountDoubleValue" depends="required,double,decimalFormat">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<msg name="double" key="errors.double"
+					bundle="ProductDefUIResources" />
+				<msg name="decimalFormat" key="errors.decimalFormat"
+					bundle="ProductDefUIResources" />
+				<arg key="product.minloanamt" />
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(10,3)</var-value>
+			    </var>
+			</field>
+			<field  property="maxLoanAmountDoubleValue" depends="required,double,decimalFormat">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<msg name="validwhen" key="errors.maxMin"
+					bundle="ProductDefUIResources" />
+				<msg name="double" key="errors.double"
+					bundle="ProductDefUIResources" />
+				<msg name="decimalFormat" key="errors.decimalFormat"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.maxloanamt" />
+				<arg1 key="product.minloanamt" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>(*this* >=minLoanAmount)</var-value>
+				</var>
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(10,3)</var-value>
+			    </var>
+			</field>
+			<field property="defaultLoanAmountDoubleValue"
+				depends="double,decimalFormat">
+				<msg name="validwhen" key="errors.defMinMax"
+					bundle="ProductDefUIResources" />
+				<msg name="double" key="errors.double"
+					bundle="ProductDefUIResources" />
+				<msg name="decimalFormat" key="errors.decimalFormat"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.defamt" />
+				<arg1 key="product.minloanamt" />
+				<arg2 key="product.maxloanamt" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>((*this* ==null) or ((*this* >= minLoanAmount) and (maxLoanAmount >=*this* )))</var-value>
+				</var>
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(10,3)</var-value>
+			    </var>
+			</field>
+			<field property="prdStatus.offeringStatusId"
+				depends="required">
+				<msg name="required" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.chgStatus" />
+			</field>
+			<field property="interestTypes.interestTypeId"
+				depends="required">
+				<msg name="required" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.intratetype" />
+			</field>
+			<field property="maxInterestRate"
+				depends="required,double,decimalFormat">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<msg name="validwhen" key="errors.maxMin"
+					bundle="ProductDefUIResources" />
+				<msg name="double" key="errors.double"
+					bundle="ProductDefUIResources" />
+				<msg name="decimalFormat" key="errors.decimalFormat"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.maxintrate" />
+				<arg1 key="product.minintrate" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>(*this* >=minInterestRate)</var-value>
+				</var>
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(3,0)</var-value>
+			    </var>
+			</field>
+			<field property="minInterestRate"
+				depends="required,double,decimalFormat">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<msg name="double" key="errors.double"
+					bundle="ProductDefUIResources" />
+				<msg name="decimalFormat" key="errors.decimalFormat"
+					bundle="ProductDefUIResources" />
+				<arg key="product.minintrate" />
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(3,0)</var-value>
+			    </var>
+			</field>
+			<field property="defInterestRate"
+				depends="required,double,decimalFormat">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<msg name="validwhen" key="errors.defMinMax"
+					bundle="ProductDefUIResources" />
+				<msg name="double" key="errors.double"
+					bundle="ProductDefUIResources" />
+				<msg name="decimalFormat" key="errors.decimalFormat"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.defintrate" />
+				<arg1 key="product.minintrate" />
+				<arg2 key="product.maxintrate" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>((*this* >= minInterestRate) and (maxInterestRate >=*this* ))</var-value>
+				</var>
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(3,0)</var-value>
+			    </var>
+			</field>
+			<field property="interestCalcRule.interestCalcRuleId"
+				depends="validwhen">
+				<msg name="validwhen" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.intratecalcpymt" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>((interestTypes.interestTypeId != 2) or (*this* != null))</var-value>
+				</var>
+			</field>
+			<field property="freqOfInstallments" depends="required">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<arg key="product.freqofinst" />
+			</field>
+			<field property="recurWeekDay" depends="validwhen">
+				<msg name="validwhen" key="errors.greaterthanzero"
+					bundle="ProductDefUIResources" />
+				<arg key="product.weeks" />
+				<!--bug id 25677 changed this != null to this>0 -->
+				<var>
+					<var-name>test</var-name>
+					<var-value>((freqOfInstallments != 1) or (*this* > 0))</var-value>
+				</var>
+			</field>
+			<field property="recurMonthDay" depends="validwhen">
+				<msg name="validwhen" key="errors.greaterthanzero"
+					bundle="ProductDefUIResources" />
+				<arg key="product.months" />
+				<!--bug id 25677 changed this != null to this>0 -->
+				<var>
+					<var-name>test</var-name>
+					<var-value>((freqOfInstallments != 2) or (*this* > 0 ))</var-value>
+				</var>
+			</field>
+			<field property="maxNoInstallments"
+				depends="required,validwhen,integer,decimalFormat">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<msg name="validwhen" key="errors.maxMin"
+					bundle="ProductDefUIResources" />
+				<msg name="integer" key="errors.integer"
+					bundle="ProductDefUIResources" />
+				<msg name="decimalFormat" key="errors.decimalFormat"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.maxinst" />
+				<arg1 key="product.mininst" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>(*this* >=minNoInstallments)</var-value>
+				</var>
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(4,0)</var-value>
+			    </var>
+			</field>
+			<!--bug id 25794  added valid when validation-->
+			<field property="minNoInstallments"
+				depends="required,validwhen,integer,decimalFormat">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<msg name="validwhen" key="errors.greaterthanzero"
+					bundle="ProductDefUIResources" />
+				<msg name="integer" key="errors.integer"
+					bundle="ProductDefUIResources" />
+				<msg name="decimalFormat" key="errors.decimalFormat"
+					bundle="ProductDefUIResources" />
+				<arg key="product.mininst" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>(*this* > 0)</var-value>
+				</var>
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(4,0)</var-value>
+			    </var>
+			</field>
+			<field property="defNoInstallments"
+				depends="required,validwhen,integer,decimalFormat">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<msg name="validwhen" key="errors.defMinMax"
+					bundle="ProductDefUIResources" />
+				<msg name="integer" key="errors.integer"
+					bundle="ProductDefUIResources" />
+				<msg name="decimalFormat" key="errors.decimalFormat"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.definst" />
+				<arg1 key="product.mininst" />
+				<arg2 key="product.maxinst" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>((*this* >= minNoInstallments) and (maxNoInstallments >=*this* ))</var-value>
+				</var>
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(4,0)</var-value>
+			    </var>
+			</field>
+			<field property="gracePeriodDuration" depends="validwhen,integer">
+				<msg name="validwhen" key="errors.graceperioddur"
+					bundle="ProductDefUIResources" />
+				<msg name="integer" key="errors.integer"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.graceperdur" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>(((gracePeriodType.gracePeriodTypeId == null) or (gracePeriodType.gracePeriodTypeId==1)) or ((*this* !=null) and (maxNoInstallments >=*this* )))</var-value>
+				</var>
+			</field>
+			<!-- 	<field property="penalty.penaltyID" depends="required">
+				<msg name="required" key="errors.mandatory"  bundle="ProductDefUIResources"/>
+				<arg0 key="product.penaltytype"/>
+				</field>-->
+			<field property="penaltyRate" depends="validwhen,double">
+				<msg name="validwhen" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<msg name="double" key="errors.double"
+					bundle="ProductDefUIResources" />
+				<arg key="product.penaltyrate" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>((penalty.penaltyID == null) or (*this* > 0))</var-value>
+				</var>
+			</field>
+			<field property="penaltyGrace" depends="validwhen,integer,decimalFormat">
+				<msg name="validwhen" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<msg name="integer" key="errors.integer"
+					bundle="ProductDefUIResources" />
+				<msg name="decimalFormat" key="errors.decimalFormat"
+					bundle="ProductDefUIResources" />
+				<arg key="product.gracepenalty" />
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(4,0)</var-value>
+			    </var>
+			    <var>
+					<var-name>test</var-name>
+					<var-value>((penalty.penaltyID == null) or (*this* != null))</var-value>
+				</var>
+			</field>
+			<field property="interestGLCode.glcodeId"
+				depends="required">
+				<msg name="required" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.GlcodeInterest" />
+			</field>
+			<field property="principalGLCode.glcodeId"
+				depends="required">
+				<msg name="required" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.GlcodePrincipal" />
+			</field>
+			<field property="penaltyGLCode.glcodeId"
+				depends="required">
+				<msg name="required" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.GlcodePenalties" />
+			</field>
+		</form>
+		
+		<!-- Savings product-->
+		<form name="/savingsprdaction">
+		<!--bug id 25506 removed mask -->
+			<field property="prdOfferingName"
+				depends="required,maxlength">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<msg name="maxlength" key="errors.maximumlength"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.prodinstname" />
+				<arg1 name="maxlength" key="${var:maxlength}"
+					resource="false" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>50</var-value>
+				</var>
+			</field>
+			<!--bug id 26409. added mask to not allow space -->
+			<field property="prdOfferingShortName"
+				depends="required,maxlength,mask">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<msg name="maxlength" key="errors.maximumlength"
+					bundle="ProductDefUIResources" />
+				<msg name="mask" key="errors.shortnamemask"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.shortname" />
+				<arg1 name="maxlength" key="${var:maxlength}"
+					resource="false" />
+				<var>
+					<var-name>mask</var-name>
+					<var-value>^[^ ]*$</var-value>
+				</var>
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>4</var-value>
+				</var>
+			</field>
+			<field property="description" depends="maxlength">
+				<msg name="maxlength" key="errors.maximumlength"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.categorydesc" />
+				<arg1 name="maxlength" key="${var:maxlength}"
+					resource="false" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>200</var-value>
+				</var>
+			</field>
+			<field property="prdCategory.productCategoryID"
+				depends="required">
+				<msg name="required" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.prodcat" />
+			</field>
+			<field property="startDate" depends="required">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.startdate" />
+			</field>
+			<field property="prdApplicableMaster.prdApplicableMasterId"
+				depends="required">
+				<msg name="required" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.applfor" />
+			</field>
+			<field property="savingsType.savingsTypeId"
+				depends="required">
+				<msg name="required" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.typeofdep" />
+			</field>
+			<field property="recommendedAmountDoubleValue" depends="double,decimalFormat">
+				<msg name="validwhen" key="errors.greaterthanzero"
+					bundle="ProductDefUIResources" />
+				<msg name="double" key="errors.double"
+					bundle="ProductDefUIResources" />
+				<msg name="decimalFormat" key="errors.decimalFormat"
+					bundle="ProductDefUIResources" />
+				<arg key="product.mandamntdep" />
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(10,3)</var-value>
+			    </var>
+			</field>
+			<field property="recommendedAmntUnit.recommendedAmntUnitId"
+				depends="validwhen">
+				<msg name="validwhen" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg key="product.recamtappl" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>((recommendedAmount == null) or ((*this* !=null)
+						or ((prdApplicableMaster.prdApplicableMasterId
+						!= 2) and (recommendedAmount != null))))</var-value>
+				</var>
+			</field>
+			<field property="maxAmntWithdrawlDoubleValue" depends="double,decimalFormat">
+				<msg name="double" key="errors.double"  bundle="ProductDefUIResources"/>
+				<msg name="decimalFormat" key="errors.decimalFormat"
+					bundle="ProductDefUIResources" />
+				<arg key="product.maxamtwid"/>
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(10,3)</var-value>
+			    </var>
+				</field>
+			<field property="prdStatus.offeringStatusId"
+				depends="required">
+				<msg name="required" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.chgStatus" />
+			</field>
+			<field property="interestRate" depends="required,double">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<msg name="double" key="errors.double"
+					bundle="ProductDefUIResources" />
+				<arg key="product.intrate" />
+			</field>
+			<field property="interestCalcType.interestCalculationTypeID"
+				depends="required">
+				<msg name="required" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.balusedforinstcalcrule" />
+			</field>
+			<field property="timeForInterestCacl" depends="required,integer,validwhen">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<msg name="validwhen" key="errors.greaterthanzero"
+					bundle="ProductDefUIResources" />
+				<msg name="integer" key="errors.integer"
+					bundle="ProductDefUIResources" />
+				<arg key="product.timeperinstcalc" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>(*this* > 0)</var-value>
+				</var>
+			</field>
+			<!--bug id 25527  added maxValue -->
+			<field property="freqOfInterest" depends="required,integer,validwhen">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<msg name="validwhen" key="errors.greaterthanzero"
+					bundle="ProductDefUIResources" />
+				<msg name="integer" key="errors.integer"
+					bundle="ProductDefUIResources" />
+				<arg key="product.freqinstpostacc" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>(*this* > 0)</var-value>
+				</var>
+			</field>
+			<field property="minAmntForIntDoubleValue" depends="double,decimalFormat">
+				<msg name="double" key="errors.double"  bundle="ProductDefUIResources"/>
+				<msg name="decimalFormat" key="errors.decimalFormat"
+					bundle="ProductDefUIResources" />
+				<arg key="product.minbalinstcalc"/>
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(10,3)</var-value>
+			    </var>
+			</field>
+			<field property="depositGLCode.glcodeId"
+				depends="required">
+				<msg name="required" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.glcodedep" />
+			</field>
+			<field property="interestGLCode.glcodeId"
+				depends="required">
+				<msg name="required" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.glcodeint" />
+			</field>
+		</form>
+		<!--  Center Action form -->
+		<form name="/centerAction">
+
+			<!-- Display Name -->
+			<!--<field property="displayName"
+				depends="required , maxlength">
+				<msg name="required" key="errors.required"
+					bundle="CenterUIResources" />
+				<arg0 key="Center.NameRequired" />
+				<arg1 name="maxlength" key="${var:maxlength}"
+					resource="false" />
+
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>200</var-value>
+				</var>
+
+			</field> -->
+			<!-- <field property="externalId" depends="validwhen">
+				<msg name="validwhen" key="errors.required"  bundle="CenterUIResources"/>
+				<arg0 key="Center.ExternalId"/>
+				<var>
+				<var-name>test</var-name>
+				<var-value>((hidden_externalId == null) or (*this* != null))</var-value>
+				</var>
+				
+				</field>  -->
+			<!-- For admin fee amounts-->
+			<field property="AdminFeeList" depends="decimalFormatCollection">
+				<msg name="decimalFormatCollection" key="errors.decimalFormat"	bundle="CustomerUIResources" />
+				<arg0 key="Customer.adminFeeAmount"/>
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(10,3)</var-value>
+			    </var>
+			    <var>
+				    <var-name>fieldName</var-name>
+				    <var-value>RateOrAmountDoubleValue</var-value>
+			    </var>
+			</field>
+			<!-- For additional fees amounts-->
+			<field property="SelectedFeeList" depends="decimalFormatCollection">
+				<msg name="decimalFormatCollection" key="errors.decimalFormat"	bundle="CustomerUIResources" />
+				<arg0 key="Customer.additionalFeeAmount"/>
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(10,3)</var-value>
+			    </var>
+			    <var>
+				    <var-name>fieldName</var-name>
+				    <var-value>RateOrAmountDoubleValue</var-value>
+			    </var>
+			</field>
+
+
+
+		</form>
+		<!--  Center Action form -->
+		<form name="/clientStatusAction">
+
+			<!-- Display Name -->
+			<field property="statusId"
+				depends="required ">
+				<msg name="required" key="errors.requiredSelect"
+					bundle="ClientUIResources" />
+				<arg0 key="client.Status" />
+				
+			</field>
+			<!-- Location of meeting -->
+			<field property="customerNote.comment"
+				depends="required ">
+				<msg name="required" key="errors.required"
+					bundle="ClientUIResources" />
+				<arg0 key="client.Note" />
+				
+			</field> 
+		</form>
+		
+		<!-- Loan Account -->
+		<form name="/loanAction"> 
+			<field property="selectedPrdOfferingId" depends="required">
+	         	<msg name="required" key="errors.selectAnyValue"  
+	         		bundle="loanUIResources"/>
+				<arg0 key="loan.instance_name" />
+			</field>
+			<field property="noOfInstallments"
+				depends="required,integer">
+				<msg name="required" key="errors.mandatory_textbox"
+					bundle="loanUIResources" />
+				<msg name="integer" key="errors.integer"
+					bundle="loanUIResources" />
+				<arg0 key="loan.definst" />
+			</field>
+		  	
+			<field property="interestRateAmount"
+				depends="required,double">
+				<msg name="required" key="errors.mandatory_textbox"
+					bundle="loanUIResources" />
+				<msg name="double" key="errors.double"
+					bundle="loanUIResources" />
+				<arg0 key="loan.interest_rate" />
+			</field>
+
+			
+			<field property="collateralNote" depends="maxlength">
+				<msg name="maxlength" key="errors.maximumlength"
+					bundle="loanUIResources" />
+				<arg0 key="loan.collateral_notes" />
+				<arg1 name="maxlength" key="${var:maxlength}"
+					resource="false" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>200</var-value>
+				</var>
+			</field>
+			
+			<field property="gracePeriodDuration" depends="validwhen">
+				<msg name="validwhen" key="errors.gracePeriod"  bundle="loanUIResources"/>
+	         	<var>
+					<var-name>test</var-name>
+					<var-value>((intrestAtDisbursement==1) or ((intrestAtDisbursement==0) and (noOfInstallments > *this*)))</var-value>
+				</var>
+			</field>
+			
+			<field property="disbursementDate" depends="required">
+				<msg name="required" key="errors.mandatory"
+					bundle="loanUIResources" />
+				<arg0 key="loan.date" />
+			</field>
+		</form>
+		
+		<!-- Account Notes Action-->
+		<form name="/AccountNotesAction">
+        	<!-- Comment -->
+         	<field property="comment" depends="required,maxlength">
+	         	<msg name="required" key="errors.mandatory"  bundle="accountsUIResources"/>
+	         	<msg  name="maxlength"  key="errors.maximumlength" bundle="accountsUIResources"/>
+				<arg0 key="Account.NoteLabel" />
+				<arg1 name="maxlength" key="${var:maxlength}" resource="false" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>500</var-value>
+				</var>
+			</field>
+		</form>
+		<!-- Personnel Notes Action Ends-->
+
+		<!-- Account apply charges Action-->
+		<form name="/AccountsApplyChargesAction">
+        	<!-- Comment -->
+         	<field property="chargeType" depends="required">
+	         	<msg name="required" key="errors.mandatory"  bundle="accountsUIResources"/>
+	         	<arg0 key="account.chargetype" />
+			</field>
+			<field property="chargeAmount" depends="required,validwhen,decimalFormat">
+	         	<msg name="required" key="errors.mandatory"  bundle="accountsUIResources"/>
+	         	<arg0 key="account.amount" />
+	            <msg name="validwhen" key="account.amount_zero"
+					bundle="accountsUIResources" />
+	         	<msg name="decimalFormat" key="errors.decimalFormat"
+					bundle="accountsUIResources" />	
+	         	<var>
+					<var-name>test</var-name>
+					<var-value>(*this* > 0)</var-value>
+				</var>
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(10,3)</var-value>
+			    </var>
+	         	
+	         	
+			</field>
+			
+		</form>
+		<!-- Personnel Notes Action Ends-->
+		
+		<!-- Account Trxn -->
+		<form name="/accountTrxn">
+			<field property="paymentType.paymentTypeId" depends="required">
+		         	<msg name="required" key="errors.selectAnyValue"  
+		         		bundle="loanUIResources"/>
+					<arg0 key="loan.mode_of_payment" />
+			</field>
+			<field property="paymentDate" depends="required">
+				<msg name="required" key="errors.mandatory"
+					bundle="loanUIResources" />
+				<arg0 key="loan.paymentDate" />
+			</field>
+			<field property="amount" depends="required">
+				<msg name="required" key="errors.mandatory"
+					bundle="loanUIResources" />
+				<arg0 key="loan.amount" />
+			</field>
+		</form>
+		
+		<!-- Group Action -->
+		<form name="/GroupAction">
+        	<!-- Group Name -->
+   
+         	<field property="displayName" depends="maxlength">
+         <!-- 	<msg name="required" key="errors.mandatory"  bundle="GroupUIResources"/>-->
+         	<msg  name="maxlength"  key="errors.maxlength" bundle="GroupUIResources"/>
+			<arg0 key="Group.groupnameMsg" />
+			<arg1 key="${var:maxlength}" resource="false"/>
+ 		   		<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>200</var-value>
+				</var> 
+			</field>
+			<!--Address line1
+			<field property="customerAddressDetail.line1" depends="maxlength">
+         	<msg  name="maxlength"  key="errors.maxlength" bundle="GroupUIResources"/>
+			<arg0 key="Group.address1Msg" />
+			<arg1 key="${var:maxlength}" resource="false"/>
+ 		   		<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>200</var-value>
+				</var> 
+	
+			</field>
+
+			
+			<field property="customerAddressDetail.line2" depends="maxlength">
+         	<msg  name="maxlength"  key="errors.maxlength" bundle="GroupUIResources"/>
+			<arg0 key="Group.address2Msg" />
+			<arg1 key="${var:maxlength}" resource="false"/>
+ 		   		<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>200</var-value>
+				</var> 
+	
+			</field>
+			
+			<field property="customerAddressDetail.line3" depends="maxlength">
+         	<msg  name="maxlength"  key="errors.maxlength" bundle="GroupUIResources"/>
+			<arg0 key="Group.address3Msg" />
+			<arg1 key="${var:maxlength}" resource="false"/>
+ 		   		<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>200</var-value>
+				</var> 
+	
+			</field>
+			
+			<field property="customerAddressDetail.city" depends="maxlength">
+         	<msg  name="maxlength"  key="errors.maxlength" bundle="GroupUIResources"/>
+			<arg0 key="Group.cityMsg" />
+			<arg1 key="${var:maxlength}" resource="false"/>
+ 		   		<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>100</var-value>
+				</var> 
+				
+			</field>
+
+			
+			<field property="customerAddressDetail.state" depends="maxlength">
+         	<msg  name="maxlength"  key="errors.maxlength" bundle="GroupUIResources"/>
+			<arg0 key="Group.stateMsg" />
+			<arg1 key="${var:maxlength}" resource="false"/>
+ 		   		<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>100</var-value>
+				</var> 
+		
+			</field> -->
+
+			<!--Address Country-->
+			<field property="customerAddressDetail.country" depends="maxlength">
+         	<msg  name="maxlength"  key="errors.maxlength" bundle="GroupUIResources"/>
+			<arg0 key="Group.countryMsg" />
+			<arg1 key="${var:maxlength}" resource="false"/>
+ 		   		<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>100</var-value>
+				</var> 
+			
+			</field>
+			
+			<!--Address ZIP
+			<field property="customerAddressDetail.zip" depends="maxlength">
+         	<msg name="required" key="errors.mandatory"  bundle="GroupUIResources"/>
+			<arg0 key="Group.postalcodeMsg" />
+			<arg1 key="${var:maxlength}" resource="false"/>
+ 		   		<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>20</var-value>
+				</var> 
+			
+			</field>-->
+			<!-- For admin fee amounts-->
+			<field property="AdminFeeList" depends="decimalFormatCollection">
+				<msg name="decimalFormatCollection" key="errors.decimalFormat"	bundle="CustomerUIResources" />
+				<arg0 key="Customer.adminFeeAmount"/>
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(10,3)</var-value>
+			    </var>
+			    <var>
+				    <var-name>fieldName</var-name>
+				    <var-value>RateOrAmountDoubleValue</var-value>
+			    </var>
+			</field>
+			<!-- For additional fees amounts-->
+			<field property="SelectedFeeList" depends="decimalFormatCollection">
+				<msg name="decimalFormatCollection" key="errors.decimalFormat"	bundle="CustomerUIResources" />
+				<arg0 key="Customer.additionalFeeAmount"/>
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(10,3)</var-value>
+			    </var>
+			    <var>
+				    <var-name>fieldName</var-name>
+				    <var-value>RateOrAmountDoubleValue</var-value>
+			    </var>
+			</field>
+			
+		<!-- <field property="externalId" depends="validwhen,maxlength">
+ 			   <msg name="validwhen" key="errors.required"  bundle="GroupUIResources"/>
+ 			   <msg  name="maxlength"  key="errors.maxlength" bundle="GroupUIResources"/>
+ 		   		<arg0 key="Group.externalidMsg"/>
+ 		   		<arg1 key="${var:maxlength}" resource="false"/>
+				<var>
+					<var-name>test</var-name>
+	 		 		<var-value>((hidden_externalId == null) or (*this* != null))</var-value>
+ 		 		</var>
+		   	 </field>  -->
+			
+	   	</form> 
+		<!-- Group Action Ends-->
+
+		<!-- Customer Notes Action-->
+		<form name="/CustomerNoteAction">
+        	<!-- Comment -->
+         	<field property="comment" depends="required,maxlength">
+	         	<msg name="required" key="errors.mandatory"  bundle="CustomerUIResources"/>
+	         	<msg  name="maxlength"  key="errors.maxlength" bundle="CustomerUIResources"/>
+				<arg0 key="label.noteMsg" />
+				<arg1 key="${var:maxlength}" resource="false"/>
+				<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>500</var-value>
+				</var>
+			</field>
+		</form>
+		<!-- Customer Notes Action Ends-->
+
+		<!-- Customer Historical Data Action-->
+		<form name="/CustomerHistoricalDataAction">
+        	<!-- Comment -->
+         	<field property="productName" depends="maxlength">
+	         	<msg  name="maxlength"  key="errors.maxlength" bundle="CustomerUIResources"/>
+				<arg0 key="label.productnameLabel" />
+				<arg1 key="${var:maxlength}" resource="false"/>
+				<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>100</var-value>
+				</var>
+			</field>
+			<field property="loanAmountDoubleValue" depends="decimalFormat">
+				<msg name="decimalFormat" key="errors.decimalFormat" bundle="CustomerUIResources" />	
+				<arg0 key="label.amountofloanLabel"/>
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(10,3)</var-value>
+			    </var>
+				
+			</field>
+			<field property="totalAmountPaidDoubleValue" depends="decimalFormat">
+				<msg name="decimalFormat" key="errors.decimalFormat" bundle="CustomerUIResources" />	
+				<arg0 key="label.totalamountpaidLabel"/>
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(10,3)</var-value>
+			    </var>
+				
+			</field>
+			<field property="interestPaidDoubleValue" depends="decimalFormat">
+				<msg name="decimalFormat" key="errors.decimalFormat" bundle="CustomerUIResources" />	
+				<arg0 key="label.interestpaidLabel"/>
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(10,3)</var-value>
+			    </var>
+			</field>
+			<field property="notes" depends="maxlength">
+	         	<msg  name="maxlength"  key="errors.maxlength" bundle="CustomerUIResources"/>
+				<arg0 key="label.noteMsg" />
+				<arg1 key="${var:maxlength}" resource="false"/>
+				<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>500</var-value>
+				</var>
+			</field>
+		</form>
+		<!-- Customer Historical Data Ends-->
+		<!-- Personnel Action-->
+		<form name="/PersonnelAction">
+        	<!-- First Name -->
+         	<field property="personnelDetails.firstName" depends="required,maxlength">
+	         	<msg name="required" key="errors.mandatory"  bundle="PersonnelUIResources"/>
+	         	<msg  name="maxlength"  key="errors.maxlength" bundle="PersonnelUIResources"/>
+				<arg0 key="Personnel.FirstNameLabel" />
+				<arg1 key="${var:maxlength}" resource="false"/>
+				<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>100</var-value>
+				</var>
+				
+			</field>
+			<!-- Middle Name -->
+			<field property="personnelDetails.middleName" depends="maxlength">
+	         	<msg  name="maxlength"  key="errors.maxlength" bundle="PersonnelUIResources"/>
+				<arg0 key="Personnel.MiddleNameLabel" />
+				<arg1 key="${var:maxlength}" resource="false"/>
+				<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>100</var-value>
+				</var>
+			</field>
+			<!-- Second Last Name -->
+			<field property="personnelDetails.secondLastName" depends="maxlength">
+	         	<msg  name="maxlength"  key="errors.maxlength" bundle="PersonnelUIResources"/>
+				<arg0 key="Personnel.SecondLastNameLabel" />
+				<arg1 key="${var:maxlength}" resource="false"/>
+				<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>100</var-value>
+				</var>
+			</field>
+			<!-- Last Name -->
+         	<field property="personnelDetails.lastName" depends="required,maxlength">
+	         	<msg name="required" key="errors.mandatory"  bundle="PersonnelUIResources"/>
+	         	<msg  name="maxlength"  key="errors.maxlength" bundle="PersonnelUIResources"/>
+				<arg0 key="Personnel.LastNameLabel" />
+				<arg1 key="${var:maxlength}" resource="false"/>
+				<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>100</var-value>
+				</var>
+			</field>
+			
+			<!-- Govt. Id Number -->
+			<field property="personnelDetails.governmentIdNumber" depends="maxlength">
+			<!-- 	<msg name="required" key="errors.mandatory"  bundle="PersonnelUIResources"/>-->
+	         	<msg  name="maxlength"  key="errors.maxlength" bundle="PersonnelUIResources"/>
+				<arg0 key="Personnel.GovtIdNumLabel" />
+				<arg1 key="${var:maxlength}" resource="false"/>
+				<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>50</var-value>
+				</var>
+			</field>
+			
+			<!-- E-Mail -->
+         	<field property="emailId" depends="email,maxlength">
+	         	<msg name="email" key="errors.validvalue"  bundle="PersonnelUIResources"/>
+	         	<msg  name="maxlength"  key="errors.maxlength" bundle="PersonnelUIResources"/>
+				<arg0 key="Personnel.EmailLabel" />
+				<arg1 name="email" key="Personnel.EmailAddress" />
+				<arg1 name="maxlength" key="${var:maxlength}" resource="false"/>
+				<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>200</var-value>
+				</var>
+			</field>
+			
+			<!-- DOB -->
+			<field property="dob" depends="validwhen">
+	         	<msg name="validwhen" key="errors.mandatory"  bundle="PersonnelUIResources"/>
+				<arg0 key="Personnel.DOBLabel" />
+				<var>
+	         		<var-name>test</var-name>
+          		 	<var-value>((input != "CreateUser") or (*this* != null))</var-value>
+		        </var>
+			</field>
+			<!-- Gender -->
+			<field property="personnelDetails.gender" depends="required">
+	         	<msg name="required" key="errors.mandatorySelect"  bundle="PersonnelUIResources"/>
+				<arg0 key="Personnel.GenderLabel" />
+			</field>
+			
+			<!-- Address 1 -->
+         	<field property="personnelDetails.address1" depends="maxlength">
+	         <!-- 	<msg name="required" key="errors.mandatory"  bundle="PersonnelUIResources"/>-->
+	         	<msg  name="maxlength"  key="errors.maxlength" bundle="PersonnelUIResources"/>
+				<arg0 key="Personnel.Address1Label" />
+				<arg1 key="${var:maxlength}" resource="false"/>
+				<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>200</var-value>
+				</var>
+			</field>
+			
+			<!-- Address 2 -->
+         	<field property="personnelDetails.address2" depends="maxlength">
+	         	<msg  name="maxlength"  key="errors.maxlength" bundle="PersonnelUIResources"/>
+				<arg0 key="Personnel.Address2Label" />
+				<arg1 key="${var:maxlength}" resource="false"/>
+				<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>200</var-value>
+				</var>
+			</field>
+
+			<!-- Address 3 -->
+         	<field property="personnelDetails.address3" depends="maxlength">
+	         	<msg  name="maxlength"  key="errors.maxlength" bundle="PersonnelUIResources"/>
+				<arg0 key="Personnel.Address3Label" />
+				<arg1 key="${var:maxlength}" resource="false"/>
+				<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>200</var-value>
+				</var>
+			</field>
+
+			<!-- City -->
+         	<field property="personnelDetails.city" depends="maxlength">
+	         <!--	<msg name="required" key="errors.mandatory"  bundle="PersonnelUIResources"/>-->
+	         	<msg  name="maxlength"  key="errors.maxlength" bundle="PersonnelUIResources"/>
+				<arg0 key="Personnel.CityLabel" />
+				<arg1 key="${var:maxlength}" resource="false"/>
+				<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>100</var-value>
+				</var>
+			</field>			
+
+			<!-- State -->
+         	<field property="personnelDetails.state" depends="maxlength">
+	      <!--   	<msg name="required" key="errors.mandatory"  bundle="PersonnelUIResources"/>-->
+	         	<msg  name="maxlength"  key="errors.maxlength" bundle="PersonnelUIResources"/>
+				<arg0 key="Personnel.StateLabel" />
+				<arg1 key="${var:maxlength}" resource="false"/>
+				<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>100</var-value>
+				</var>
+			</field>			
+
+			<!-- Country -->
+         	<field property="personnelDetails.country" depends="maxlength">
+	        <!-- 	<msg name="required" key="errors.mandatory"  bundle="PersonnelUIResources"/>-->
+	         	<msg  name="maxlength"  key="errors.maxlength" bundle="PersonnelUIResources"/>
+				<arg0 key="Personnel.CountryLabel" />
+				<arg1 key="${var:maxlength}" resource="false"/>
+				<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>100</var-value>
+				</var>
+			</field>	
+					
+			<!-- Postal Code -->
+         	<field property="personnelDetails.postalCode" depends="maxlength">
+	        <!-- 	<msg name="required" key="errors.mandatory"  bundle="PersonnelUIResources"/>-->
+	         	<msg  name="maxlength"  key="errors.maxlength" bundle="PersonnelUIResources"/>
+				<arg0 key="Personnel.PostalCodeLabel" />
+				<arg1 key="${var:maxlength}" resource="false"/>
+				<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>20</var-value>
+				</var>
+			</field>
+
+			<!-- Telephone -->
+         	<field property="personnelDetails.telephone" depends="maxlength">
+	         	<msg  name="maxlength"  key="errors.maxlength" bundle="PersonnelUIResources"/>
+				<arg0 key="Personnel.TelephoneLabel" />
+				<arg1 key="${var:maxlength}" resource="false"/>
+				<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>20</var-value>
+				</var>
+			</field>
+			<!-- Office -->
+			<field property="office.officeId" depends="validwhen">
+	         	<msg name="validwhen" key="errors.mandatorySelect"  bundle="PersonnelUIResources"/>
+				<arg0 key="Personnel.OfficeLabel" />
+				<var>
+	         		<var-name>test</var-name>
+          		 	<var-value>((input != "ManageUser") or (*this* !=null) )</var-value>
+		        </var>
+			</field>
+			<!-- User Hierarchy -->
+			<field property="level.levelId" depends="required">
+	         	<msg name="required" key="errors.mandatorySelect"  bundle="PersonnelUIResources"/>
+				<arg0 key="Personnel.UserHierarchyLabel" />
+			</field>
+			
+			<!-- User Name -->
+         	<field property="userName" depends="required,maxlength,mask">
+	         	<msg name="required" key="errors.mandatory"  bundle="PersonnelUIResources"/>
+	         	<msg  name="maxlength"  key="errors.maxlength" bundle="PersonnelUIResources"/>
+	         	<msg name="mask" key="errors.spacesmask"	bundle="PersonnelUIResources" />
+				<arg0 key="Personnel.UserNameLabel" />
+				<arg1 key="${var:maxlength}" resource="false"/>
+				<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>20</var-value>
+				</var>
+				<var>
+					<var-name>mask</var-name>
+					<var-value>^[^ ]*$</var-value>
+				</var>
+			</field>
+			
+			<!-- Password -->
+         	<field property="password" depends="minlength,maxlength,mask,validwhen">
+	         	<msg name="validwhen" key="errors.validpassword"  bundle="PersonnelUIResources"/>
+	         	<msg name="minlength" key="errors.minlength"  bundle="PersonnelUIResources"/>
+	         	<msg  name="maxlength"  key="errors.maxlength" bundle="PersonnelUIResources"/>
+	         	<msg name="mask" key="errors.spacesmask"	bundle="PersonnelUIResources" />
+	         	
+				<arg0 key="Personnel.PasswordLabel" />
+				<arg1 name="minlength" key="${var:minlength}" resource="false"/>
+				<arg1 name="maxlength" key="${var:maxlength}" resource="false"/>
+				<var>
+  				 	<var-name>minlength</var-name>
+			 		<var-value>6</var-value>
+				</var>
+				<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>20</var-value>
+				</var>
+				<var>
+					<var-name>mask</var-name>
+					<var-value>^[^ ]*$</var-value>
+				</var>
+				<var>
+	         		<var-name>test</var-name>
+          		 	<var-value>((((input == "CreateUser") and ((*this* != null) and (*this*==passwordRepeat))) or((input == "ManageUser") and (*this*==passwordRepeat))) or (input=="updateSettings"))</var-value>
+		        </var>
+			</field>
+			
+		</form>
+		<!-- Personnel Action Ends-->
+		
+		<!-- Personnel Notes Action-->
+		<form name="/PersonnelNotesAction">
+        	<!-- Comment -->
+         	<field property="comment" depends="required,maxlength">
+	         	<msg name="required" key="errors.mandatory"  bundle="PersonnelUIResources"/>
+	         	<msg  name="maxlength"  key="errors.maxlength" bundle="PersonnelUIResources"/>
+				<arg0 key="Personnel.NoteLabel" />
+				<arg1 key="${var:maxlength}" resource="false"/>
+				<var>
+  				 	<var-name>maxlength</var-name>
+			 		<var-value>500</var-value>
+				</var>
+			</field>
+		</form>
+		<!-- Personnel Notes Action Ends-->
+        
+
+		<!-- Fees Action Starts -->
+		<form name="/feesAction">
+			<field property="feeName" depends="required,maxlength">
+				<msg name="required" key="errors.mandatory_textbox"  bundle="FeesUIResources"/>
+				<msg name="maxlength" key="errors.maximumlength" bundle="FeesUIResources" />
+				<arg0 key="Fees.mandatory_feename"/>
+				<arg1 name="maxlength" key="${var:maxlength}" resource="false" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>50</var-value>
+				</var>
+			</field>
+			<field property="categoryId" depends="required">
+				<msg name="required" key="errors.mandatory_feescategory"  bundle="FeesUIResources"/>				
+			</field>
+			<field property="status" depends="required">
+				<msg name="required" key="errors.mandatory_selectbox"  bundle="FeesUIResources"/>
+				<arg key="Fees.mandatory_status"/>
+			</field>
+					
+			
+			
+			<field property="loanPaymentId" depends="validwhen">
+				<msg name="validwhen"
+					key="error.ontimeandpaymentid"
+					bundle="FeesUIResources" />
+					<var>
+					<var-name>test</var-name>
+					<var-value>(((*this*!=null) or (otherPaymentId!=null)) or (feeFrequency.feeFrequencyTypeId!=2))</var-value>
+				</var>
+			</field>
+			<field property="frequency" depends="validwhen">
+				<msg name="validwhen"
+					key="error.periodicandfrequency"
+					bundle="FeesUIResources" />
+					<var>
+					<var-name>test</var-name>
+					<var-value>
+					((*this*!=null) or (feeFrequency.feeFrequencyTypeId!=1))
+					</var-value>
+				</var>
+			</field>
+			
+			 
+			 <field property="recurWeekDay" depends="validwhen">
+				<msg name="validwhen" key="error.reurweek"
+					bundle="FeesUIResources" />
+					<var>
+					<var-name>test</var-name>
+					<var-value>
+						(((frequency != 1) or (*this* != null)) or (feeFrequency.feeFrequencyTypeId!=1))
+					</var-value>
+				</var>
+			</field>
+
+			<field property="recurMonthDay" depends="validwhen">
+				<msg name="validwhen" key="error.reurmonth"
+					bundle="FeesUIResources" />
+					<var>
+					<var-name>test</var-name>
+					<var-value>
+						(((frequency != 2) or (*this* != null)) or (feeFrequency.feeFrequencyTypeId!=1))
+					</var-value>
+				</var>
+			</field>
+			
+			<field property="rate"
+				depends="decimalFormat">
+				<msg name="decimalFormat" key="errors.rateGreaterThen999"
+					bundle="FeesUIResources" />	
+				<arg0 key="Fees.error.rate" />
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(3,0)</var-value>
+			    </var>
+			</field>
+			
+			<field property="amount"
+				depends="decimalFormat">
+				<msg name="decimalFormat" key="errors.amountGreaterThan"
+					bundle="FeesUIResources" />	
+				<arg0 key="Fees.error.amount" />
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(13,4)</var-value>
+			    </var>
+			</field>
+			
+			
+			<field property="glCodeEntity.glcodeId" depends="required">
+				<msg name="required" key="errors.mandatory_selectbox"  bundle="FeesUIResources"/>
+				<arg key="Fees.mandatory_glCode"/>
+			</field>
+			
+					
+		</form>	
+		<!-- Fees Action Ends -->		
+		<!-- Fee Action Starts -->
+		<form name="/feeaction">
+			<field property="feeName" depends="required,maxlength">
+				<msg name="required" key="errors.mandatory_textbox"  bundle="FeesUIResources"/>
+				<msg name="maxlength" key="errors.maximumlength" bundle="FeesUIResources" />
+				<arg0 key="Fees.mandatory_feename"/>
+				<arg1 name="maxlength" key="${var:maxlength}" resource="false" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>50</var-value>
+				</var>
+			</field>
+			<field property="categoryType.categoryId" depends="required">
+				<msg name="required" key="errors.mandatory_feescategory"  bundle="FeesUIResources"/>				
+			</field>
+			<field property="feeFrequency.feeFrequencyType.feeFrequencyTypeId" depends="required">
+				<msg name="required" key="errors.mandatory_selectbox"  bundle="FeesUIResources"/>
+				<arg key="Fees.mandatory_frequency"/>				
+			</field>
+			<field property="loanCharge" depends="validwhen">
+				<msg name="validwhen"
+					key="error.ontimeandpaymentid"
+					bundle="FeesUIResources" />
+					<var>
+					<var-name>test</var-name>
+					<var-value>(((*this*!=null) or (customerCharge!=null)) or (feeFrequency.feeFrequencyType.feeFrequencyTypeId!=2))</var-value>
+				</var>
+			</field>
+			<field property="feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId" depends="validwhen">
+				<msg name="validwhen"
+					key="error.periodicandfrequency"
+					bundle="FeesUIResources" />
+					<var>
+					<var-name>test</var-name>
+					<var-value>
+					((*this*!=null) or (feeFrequency.feeFrequencyType.feeFrequencyTypeId!=1))
+					</var-value>
+				</var>
+			</field>
+			
+			 
+			 <field property="weekRecurAfter" depends="validwhen">
+				<msg name="validwhen" key="error.reurweek"
+					bundle="FeesUIResources" />
+					<var>
+					<var-name>test</var-name>
+					<var-value>
+						(((feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId != 1) or (*this* != null)) or (feeFrequency.feeFrequencyType.feeFrequencyTypeId!=1))
+					</var-value>
+				</var>
+			</field>
+
+			<field property="monthRecurAfter" depends="validwhen">
+				<msg name="validwhen" key="error.reurmonth"
+					bundle="FeesUIResources" />
+					<var>
+					<var-name>test</var-name>
+					<var-value>
+						(((feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId != 2) or (*this* != null)) or (feeFrequency.feeFrequencyType.feeFrequencyTypeId!=1))
+					</var-value>
+				</var>
+			</field>
+			
+			<field property="rate"
+				depends="decimalFormat">
+				<msg name="decimalFormat" key="errors.rateGreaterThen999"
+					bundle="FeesUIResources" />	
+				<arg0 key="Fees.error.rate" />
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(3,0)</var-value>
+			    </var>
+			</field>
+			
+			<field property="amount"
+				depends="decimalFormat">
+				<msg name="decimalFormat" key="errors.amountGreaterThan"
+					bundle="FeesUIResources" />	
+				<arg0 key="Fees.error.amount" />
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(13,4)</var-value>
+			    </var>
+			</field>
+			
+			
+			<field property="glCodeEntity.glcodeId" depends="required">
+				<msg name="required" key="errors.mandatory_selectbox"  bundle="FeesUIResources"/>
+				<arg key="Fees.mandatory_glCode"/>
+			</field>
+			
+					
+		</form>	
+		<!-- Fee Action Ends -->		
+		
+		<!--  Client creation Action form -->
+      <form name="/clientCreationAction">
+         
+		<!-- Names -->
+           <field  property="customerNameDetail[0].salutation" depends="required">
+              <msg name="required" key="errors.requiredSelect"  bundle="ClientUIResources"/>
+              <arg key="client.SalutationValue"/>
+            </field>
+            <field  property="customerNameDetail[0].firstName" depends="required">
+              <msg name="required" key="errors.required"  bundle="ClientUIResources"/>
+              <arg key="client.FirstNameValue"/>
+            </field>
+            <field  property="customerNameDetail[0].lastName" depends="required">
+              <msg name="required" key="errors.required"  bundle="ClientUIResources"/>
+              <arg key="client.LastNameValue"/>
+            </field>
+            <field  property="dateOfBirth" depends="required">
+              <msg name="required" key="errors.required"  bundle="ClientUIResources"/>
+              <arg key="client.DateOfBirthValue"/>
+            </field>
+            <!-- gender-->
+	      	  <field property="customerDetail.gender" depends="required">
+	 		   <msg name="required" key="errors.requiredSelect"  bundle="ClientUIResources"/>
+	 		   <arg0 key="client.GenderValue"/>
+			  </field> 
+            <field  property="customerNameDetail[1].nameType" depends="required">
+              <msg name="required" key="errors.requiredSelect"  bundle="ClientUIResources"/>
+              <arg key="client.SpouseNameTypeValue"/>
+            </field>
+            <field  property="customerNameDetail[1].firstName" depends="required">
+              <msg name="required" key="errors.required"  bundle="ClientUIResources"/>
+              <arg key="client.SpouseFirstNameValue"/>
+            </field>
+            <field  property="customerNameDetail[1].lastName" depends="required">
+              <msg name="required" key="errors.required"  bundle="ClientUIResources"/>
+              <arg key="client.SpouseLastNameValue"/>
+            </field>
+
+          	<!-- <field property="customerAddressDetail.line1" depends="required , maxlength">
+	 		   <msg name="required" key="errors.required"  bundle="ClientUIResources"/>
+	 		   <msg  name="maxlength"  key="errors.maxlength" bundle="ClientUIResources"/>
+	 		    <arg0 key="client.Line1Value"/>
+				<arg0 name="maxlength" key="${var:maxlength}" resource="false"/>
+	  		 	<var>
+	  			 <var-name>maxlength</var-name>
+				 <var-value>200</var-value>
+				</var>
+						
+      	 	</field> 
+      	 	
+      	 	<field property="customerAddressDetail.city" depends="required , maxlength">
+	 		   <msg name="required" key="errors.required"  bundle="ClientUIResources"/>
+	 		   <msg  name="maxlength"  key="errors.maxlength" bundle="ClientUIResources"/>
+	 		    <arg0 key="client.CityValue"/>
+				<arg0 name="maxlength" key="${var:maxlength}" resource="false"/>
+	  		 	<var>
+	  			 <var-name>maxlength</var-name>
+				 <var-value>200</var-value>
+				</var>
+						
+      	 	</field> 
+      	 	<field property="customerAddressDetail.state" depends="required , maxlength">
+	 		   <msg name="required" key="errors.required"  bundle="ClientUIResources"/>
+	 		   <msg  name="maxlength"  key="errors.maxlength" bundle="ClientUIResources"/>
+	 		    <arg0 key="client.StateValue"/>
+				<arg0 name="maxlength" key="${var:maxlength}" resource="false"/>
+	  		 	<var>
+	  			 <var-name>maxlength</var-name>
+				 <var-value>200</var-value>
+				</var>
+						
+      	 	</field> 
+      	 	<field property="customerAddressDetail.country" depends="required , maxlength">
+	 		   <msg name="required" key="errors.required"  bundle="ClientUIResources"/>
+	 		   <msg  name="maxlength"  key="errors.maxlength" bundle="ClientUIResources"/>
+	 		    <arg0 key="client.CountryValue"/>
+				<arg0 name="maxlength" key="${var:maxlength}" resource="false"/>
+	  		 	<var>
+	  			 <var-name>maxlength</var-name>
+				 <var-value>200</var-value>
+				</var>
+						
+      	 	</field> 
+      	 	<field property="customerAddressDetail.zip" depends="required , maxlength">
+	 		   <msg name="required" key="errors.required"  bundle="ClientUIResources"/>
+	 		   <msg  name="maxlength"  key="errors.maxlength" bundle="ClientUIResources"/>
+	 		    <arg0 key="client.ZipValue"/>
+				<arg0 name="maxlength" key="${var:maxlength}" resource="false"/>
+	  		 	<var>
+	  			 <var-name>maxlength</var-name>
+				 <var-value>200</var-value>
+				</var>
+						
+      	 	</field> -->
+          
+          
+         <!--  <field property="governmentId" depends="required , mask , maxlength">
+ 		  	<msg name="required" key="errors.required"  bundle="ClientUIResources"/>
+ 		  	<msg  name="mask"  key="errors.maskmsg" bundle="ClientUIResources"/>
+			<arg0 key="client.GovernmentIdValue" />
+			<arg1 name="maxlength" key="${var:maxlength}" resource="false"/>
+  		 	
+  		 	<var>
+	       		 <var-name>mask</var-name>
+	        	 <var-value>^[a-z[:blank:]A-Z-0-9_-]*$</var-value>
+    		</var>
+			
+			<var>
+	  			 <var-name>maxlength</var-name>
+				 <var-value>50</var-value>
+			</var> 
+			
+		</field> -->
+      	  <!-- For admin fee amounts-->
+			<field property="AdminFeeList" depends="decimalFormatCollection">
+				<msg name="decimalFormatCollection" key="errors.decimalFormat"	bundle="CustomerUIResources" />
+				<arg0 key="Customer.adminFeeAmount"/>
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(10,3)</var-value>
+			    </var>
+			    <var>
+				    <var-name>fieldName</var-name>
+				    <var-value>RateOrAmountDoubleValue</var-value>
+			    </var>
+			</field>
+			<!-- For additional fees amounts-->
+			<field property="SelectedFeeList" depends="decimalFormatCollection">
+				<msg name="decimalFormatCollection" key="errors.decimalFormat"	bundle="CustomerUIResources" />
+				<arg0 key="Customer.additionalFeeAmount"/>
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(10,3)</var-value>
+			    </var>
+			    <var>
+				    <var-name>fieldName</var-name>
+				    <var-value>RateOrAmountDoubleValue</var-value>
+			    </var>
+			</field>
+       </form> 
+       
+        <!-- CheckList Action Form -->
+        
+       <form name="/checkListAction">
+       <field property="checklistName" depends="required,maxlength">
+       		<msg name="required" key="errors.mandatory_textbox"
+					bundle="checklistUIResources" />
+			<msg name="maxlength" key="errors.maximumlength"
+					bundle="checklistUIResources" />
+			<arg0 key="checklist.checklistName"/>
+			<arg1 name="maxlength" key="${var:maxlength}"
+					resource="false" />
+			<var>
+				<var-name>maxlength</var-name>
+				<var-value>50</var-value>
+			</var>
+		</field>       
+       
+       <field property="type" depends="required">
+       		<msg name="required" key="errors.mandatory_selectbox"
+					bundle="checklistUIResources" />
+       <arg0 key="checklist.checklistType"/>
+       </field>
+       
+       <field property="status" depends="required">
+       		<msg name="required" key="errors.mandatory_selectbox"
+					bundle="checklistUIResources" />
+       <arg0 key="checklist.display_status"/>
+       </field>
+        
+      
+           
+       </form>
+       
+       <!-- Fund Action Form -->
+        
+       <form name="/fundAction">
+       
+       <field property="fundName" depends="required">
+       		<msg name="required" key="errors.mandatory_textbox"	bundle="fundUIResources" />
+       <arg0 key="funds.fund_name"/>
+       </field>	    
+       
+       <field property="glCode.glCodeId" depends="required">
+       		<msg name="required" key="errors.mandatory_selectbox"	bundle="fundUIResources" />
+       <arg0 key="funds.fund_glcode"/>
+       </field>	
+           
+       </form>
+	  <form name="/savingsAction">  
+       <field property="selectedPrdOfferingId" depends="validwhen">
+			<msg name="validwhen" key="errors.mandatoryselect"	bundle="SavingsUIResources" />
+			<arg0 key="Savings.productInstance" />
+			<var>
+				    <var-name>test</var-name>
+				    <var-value>((*this* != null) or ((input!="getPrdOfferings") and (input!="preview")))</var-value>
+			</var>
+	   </field>
+	   <field property="recommendedAmntDoubleValue" depends="decimalFormat">
+			<msg name="decimalFormat" key="errors.decimalFormat" bundle="SavingsUIResources" />
+				<arg key="Savings.recommendedAmntDoubleValue" />
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(10,3)</var-value>
+			    </var>
+	   </field>
+	</form>
+	
+	<form name="/savingsClosureAction">  
+		<field property="paymentTypeId" depends="required">
+			<msg name="required" key="errors.mandatoryselect"	bundle="SavingsUIResources" />
+			<arg0 key="Savings.modeOfPayment" />
+		</field>
+		<field property="customerId" depends="required">
+			<msg name="required" key="errors.mandatory" bundle="SavingsUIResources" />
+			<arg key="Savings.clientName"  />
+	   </field>
+	   <field property="notes" depends="required">
+			<msg name="required" key="errors.mandatory" bundle="SavingsUIResources" />
+			<arg key="Savings.notes"  />
+	   </field>
+	</form>
+	
+	<!-- Repay Loan -->
+	<form name="/repayLoanAction">  
+		<field property="paymentTypeId" depends="required">
+			<msg name="required" key="errors.mandatory"	bundle="loanUIResources" />
+			<arg0 key="loan.mode_of_payment" />
+		</field>
+	</form>
+	
+	<form name="/savingsApplyAdjustmentAction">  
+	   <field property="note" depends="required">
+			<msg name="required" key="errors.mandatory" bundle="SavingsUIResources" />
+			<arg key="Savings.notes"  />
+	   </field>
+	</form>
+	</formset>
+</form-validation>

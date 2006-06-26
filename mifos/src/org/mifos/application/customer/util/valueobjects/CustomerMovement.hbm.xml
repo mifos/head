@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.customer.util.valueobjects.CustomerMovement" table="CUSTOMER_MOVEMENT">
+  		<id name="customerMovementId" column="CUSTOMER_MOVEMENT_ID" type="integer" unsaved-value="-1">
+            <generator class="native"/>
+        </id>
+        <property name="status" column="STATUS" type="short" />
+        <property name="startDate" column="START_DATE" type="date" />
+        <property name="endDate" column="END_DATE" type="date"  />
+        <property name="updatedDate" column="UPDATED_DATE" type="date" />
+ 
+        <many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.application.customer.util.valueobjects.Customer" />
+ 
+        <many-to-one name="office" column="OFFICE_ID" class="org.mifos.application.office.util.valueobjects.Office"  not-null="true" />
+ 
+        <many-to-one name="personnel" column="PERSONNEL_ID" class="org.mifos.application.personnel.util.valueobjects.Personnel"  />
+ 
+       
+    </class>
+    <query name="getCustomerMovement">
+	        <![CDATA[from org.mifos.application.customer.util.valueobjects.CustomerMovement customerMovement where customerMovement.customer.customerId =:customerId and customerMovement.status =:status]]>
+   </query> 
+</hibernate-mapping>

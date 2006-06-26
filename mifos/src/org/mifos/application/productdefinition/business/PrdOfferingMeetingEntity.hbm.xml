@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity" table="PRD_OFFERING_MEETING">
+        <id name="prdOfferingMeetingId" column="PRD_OFFERING_MEETING_ID" >
+            <generator class="native"/>
+        </id>
+ 		<property name="meetingType" column="PRD_OFFERING_MEETING_TYPE_ID" />
+
+ 		<many-to-one name="prdOffering" column="PRD_OFFERING_ID" class="org.mifos.application.productdefinition.business.PrdOfferingBO" cascade="none" insert="true" update="true" unique="true"/>
+        <many-to-one name="meeting"  column="PRD_MEETING_ID" class="org.mifos.application.meeting.business.MeetingBO" cascade="all" insert="true" update="true" unique="true"/>
+    </class>
+    
+</hibernate-mapping>

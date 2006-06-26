@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.accounts.util.valueobjects.LoanTrxnDetail" table="LOAN_TRXN_DETAIL" mutable="false">
+        <id name="accountTrxnId" column="ACCOUNT_TRXN_ID" type="integer">
+            <generator class="foreign">
+            	<param name="property">accountTrxn</param>
+            </generator>
+        </id>
+        <one-to-one name="accountTrxn"  class="org.mifos.application.accounts.util.valueobjects.AccountTrxn" />
+        <property name="installmentId" column="INSTALLMENT_ID" type="short" />
+        <property name="principalAmount" column="PRINCIPAL_AMOUNT" type="double" not-null="false"/>
+        <property name="interestAmount" column="INTEREST_AMOUNT" type="double" not-null="false"/>
+        <property name="relatedTrxnId" column="RELATED_TRXN_ID" type="integer" not-null="false"/>
+        <property name="penaltyAmount" column="PENALTY_AMOUNT" type="double" not-null="false"/>
+        
+     </class>
+</hibernate-mapping>

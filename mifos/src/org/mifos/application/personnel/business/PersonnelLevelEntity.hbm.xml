@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.personnel.business.PersonnelLevelEntity" table="PERSONNEL_LEVEL">
+        <id name="levelId" column="LEVEL_ID" type="short">
+            <generator class="native"/>
+        </id>
+ 		
+        <property name="interactionFlag" column="INTERACTION_FLAG" type="short" />
+         <property name="lookUpId" column="LEVEL_NAME_ID" />
+       <!--  <many-to-one name="lookUpEntity" column="LEVEL_NAME_ID"  class="org.mifos.application.master.util.valueobjects.LookUpEntity"  cascade="save-update" unique="true"  lazy="false"/>-->
+
+        <many-to-one name="parent" column="PARENT_LEVEL_ID" class="org.mifos.application.personnel.business.PersonnelLevelEntity" lazy="false"/>
+        
+    </class>
+      
+</hibernate-mapping>

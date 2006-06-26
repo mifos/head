@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<tableInfo>
+  <headerDetails  headerStyle="drawtablerowbold"/> 
+  <row totWidth="100">
+	<column label="Installment" value="installment" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="10"/>
+    </column>
+	<column label="Due Date" value="dueDateInUserLocale" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="22"/>
+    </column>
+    <column label="Principal" value="principal" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="17"/>
+    </column>
+    <column label="Interest" value="interest" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="17"/>
+    </column>
+    <column label="Fees" value="fees" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="17"/>
+    </column>
+    <column label="Total" value="total" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="17"/>
+    </column>
+  </row>
+
+  
+</tableInfo>

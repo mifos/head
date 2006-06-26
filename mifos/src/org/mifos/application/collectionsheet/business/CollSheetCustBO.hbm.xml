@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="org.mifos.application.collectionsheet.business.CollSheetCustBO" table="COLL_SHEET_CUSTOMER">
+		<id name="collSheetCustId" column="COLL_SHEET_CUST_ID" type="long">
+			<generator class="native"/>
+		</id>
+		
+		<property name="custId" column="CUST_ID" type="integer"/>
+		<property name="custDisplayName" column="CUST_DISPLAY_NAME" type="string"/>
+		<property name="custAccntFee" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+			<column name="CUST_ACCNT_FEE_CURRENCY" />	
+			<column name="CUST_ACCNT_FEE" />
+		</property>	
+		<property name="custAccntPenalty" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+			<column name="CUST__ACCNT_PENALTY_CURRENCY" />	
+			<column name="CUST__ACCNT_PENALTY" />
+		</property>	
+		<property name="custLevel" column="CUST_LEVEL" type="short"/>
+		<property name="custAccntId" column="CUST_ACCNT_ID" type="integer"/>
+		<property name="totalDueSavingsLoan" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+			<column name="TOTAL_DUE_SAVINGS_LOAN_CURRENCY" />	
+			<column name="TOTAL_DUE_SAVINGS_LOAN" />
+		</property>	
+		
+		<property name="custOfficeId" column="CUST_OFFICE_ID" type="short"/>
+		<property name="searchId" column="SEARCH_ID" type="string"/>
+		<property name="collectiveLoanAmntDue" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+			<column name="COLLECTIVE_LN_AMNT_DUE_CURRENCY" />	
+			<column name="COLLECTIVE_LN_AMNT_DUE" />
+		</property>	
+		
+		<property name="collectiveLoanDisbursal" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+			<column name="COLLECTIVE_LN_DISBURSAL_CURRENCY" />	
+			<column name="COLLECTIVE_LN_DISBURSAL" />
+		</property>	
+		
+		<property name="collectiveSavingsAmntDue" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+			<column name="COLLECTIVE_SAVINGS_DUE_CURRENCY" />	
+			<column name="COLLECTIVE_SAVINGS_DUE" />
+		</property>	
+		
+		<property name="collectiveAccntCharges" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+			<column name="COLLECTIVE_ACCNT_CHARGES_CURRENCY" />	
+			<column name="COLLECTIVE_ACCNT_CHARGES" />
+		</property>	
+		
+		<!--<property name="collectiveTotalCollection" column="COLLECTIVE_TOTAL_COLLECTION" type="double"/>-->
+		<property name="collectiveNetCashIn" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+			<column name="COLLECTIVE_NET_CASH_IN_CURRENCY" />	
+			<column name="COLLECTIVE_NET_CASH_IN" />
+		</property>	
+		
+		<property name="parentCustomerId" column="PARENT_CUSTOMER_ID" type="integer"/>
+		<property name="loanOfficerId" column="LOAN_OFFICER_ID" type="short"/>
+		<many-to-one name="collectionSheet" column="COLL_SHEET_ID" class="org.mifos.application.collectionsheet.business.CollectionSheetBO" unique="true" />
+		<set name="collectionSheetLoanDetails"   cascade="all"  table="COLL_SHEET_LOAN_DETAILS" inverse="true">
+			<key column="COLL_SHEET_CUST_ID"  />
+			<one-to-many class="org.mifos.application.collectionsheet.business.CollSheetLnDetailsEntity" />
+		</set>
+		
+		<set name="collSheetSavingsDetails"   cascade="all"  table="COLL_SHEET_SAVINGS_DETAILS" inverse="true">
+			<key column="COLL_SHEET_CUST_ID"  />
+			<one-to-many class="org.mifos.application.collectionsheet.business.CollSheetSavingsDetailsEntity" />
+		</set>
+		
+	</class>
+	<!--This query returns rows from AccountActionDate where
+	    date is the same as that passed and status of the customer
+	    is either active or hold. and it has active accounts.-->
+	<query name="CollectionSheetCustomer.customersWithSpecifiedMeetingDate">
+		<![CDATA[ from org.mifos.application.accounts.business.AccountActionDateEntity accountActionDate
+					where accountActionDate.account.customer.customerStatus.statusId in (3,4,9,10,13)
+					and (accountActionDate.actionDate= :meeting_date and accountActionDate.account.accountState.id in (5,11,16))
+						
+						
+		]]>
+	</query>
+	<!--This query would get accounts which have disbursal date same as that of meeting date passed.-->
+	<query name="CollectionSheetCustomer.customersWithSpecifiedDisbursalDate">
+		<![CDATA[ from org.mifos.application.accounts.loan.business.LoanBO loan
+					where loan.customer.customerStatus.statusId in (3,4,9,10,13)
+					and (loan.disbursementDate= :meeting_date and loan.accountState.id in (3,4))
+						
+						
+		]]>
+	</query>
+	
+	
+</hibernate-mapping>

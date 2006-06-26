@@ -1,0 +1,273 @@
+<?xml version='1.0' encoding='utf-8'?>
+<dependencies>
+	<dependency type="client_ClientSearchAcion">
+		<valueobject></valueobject>
+		<businessprocessor>org.mifos.application.client.business.handlers.ClientSearchBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.client.dao.ClientSearchDAO</dao>
+	</dependency>
+	<dependency type="CenterAction">
+		<valueobject>org.mifos.application.customer.center.util.valueobjects.Center</valueobject>
+		<businessprocessor>org.mifos.application.customer.center.business.handlers.CenterBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.customer.center.dao.CenterDAO</dao>
+	</dependency>
+	<!--Group-->
+	<dependency type="GroupAction">
+		<valueobject>org.mifos.application.customer.group.util.valueobjects.Group</valueobject>
+		<businessprocessor>org.mifos.application.customer.group.business.handlers.GroupBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.customer.group.dao.GroupDAO</dao>
+	</dependency>
+	
+	<!--Client Creation-->
+	<dependency type="ClientCreationAction">
+		<valueobject>org.mifos.application.customer.client.util.valueobjects.Client</valueobject>
+		<businessprocessor>org.mifos.application.customer.client.business.handlers.ClientCreationBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.customer.client.dao.ClientCreationDAO</dao>
+	</dependency>
+	
+	<!--Client Status Change-->
+	<dependency type="ClientStatusAction">
+		<valueobject>org.mifos.application.customer.client.util.valueobjects.EditClientStatus</valueobject>
+		<businessprocessor>org.mifos.application.customer.client.business.handlers.EditClientStatusBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.customer.client.dao.EditClientStatusDAO</dao>
+	</dependency>
+	<!--Client TRansfer Change-->
+	<dependency type="ClientTransferAction">
+		<valueobject>org.mifos.application.customer.client.util.valueobjects.EditGrpMembership</valueobject>
+		<businessprocessor>org.mifos.application.customer.client.business.handlers.EditGrpMembershipBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.customer.client.dao.EditGrpMembershipDAO</dao>
+	</dependency>
+	<!--Customer Search  Creation-->
+	<dependency type="CustomerSearchAction">
+		<valueobject>org.mifos.application.customer.util.valueobjects.CustomerSearch</valueobject>
+		<businessprocessor>org.mifos.application.customer.business.handlers.CustomerSearchBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.customer.dao.CustomerSearchDAO</dao>
+	</dependency>
+	
+	<!--CustomerNote-->
+	<dependency type="CustomerNoteAction">
+		<valueobject>org.mifos.application.customer.util.valueobjects.CustomerNote</valueobject>
+		<businessprocessor>org.mifos.application.customer.business.handlers.CustomerNoteBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.customer.dao.CustomerNoteDAO</dao>
+	</dependency>
+	
+	<!--CustomerHistoricalData-->
+	<dependency type="CustomerHistoricalDataAction">
+		<valueobject>org.mifos.application.customer.util.valueobjects.CustomerHistoricalData</valueobject>
+		<businessprocessor>org.mifos.application.customer.business.handlers.CustomerHistoricalDataBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.customer.dao.CustomerHistoricalDataDAO</dao>
+	</dependency>
+	
+	<!--Personnel-->
+	<dependency type="PersonnelAction">
+		<valueobject>org.mifos.application.personnel.util.valueobjects.Personnel</valueobject>
+		<businessprocessor>org.mifos.application.personnel.business.handlers.PersonnelBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.personnel.dao.PersonnelDAO</dao>
+	</dependency>
+	
+	<!--PersonnelNotes-->
+	<dependency type="PersonnelNotesAction">
+		<valueobject>org.mifos.application.personnel.util.valueobjects.PersonnelNotes</valueobject>
+		<businessprocessor>org.mifos.application.personnel.business.handlers.PersonnelNotesBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.personnel.dao.PersonnelNotesDAO</dao>
+	</dependency>
+	
+	<!--Configuration-->
+	<dependency type="ConfigurationAction">
+		<valueobject></valueobject>
+		<businessprocessor></businessprocessor>
+		<dao>org.mifos.application.configuration.dao.ConfigurationDAO</dao>
+	</dependency>
+	
+	<!--Login-->
+	<dependency type="MifosLogin">
+		<valueobject>org.mifos.application.login.util.valueobjects.MifosLoginValueObject</valueobject>
+		<businessprocessor>org.mifos.application.login.business.handlers.MifosLoginBusinessProcessor</businessprocessor>
+		<dao></dao>
+	</dependency>
+	
+	<!--Logout-->	
+	<dependency type="MifosLogout">
+		<valueobject></valueobject>
+		<businessprocessor></businessprocessor>
+		<dao></dao>
+	</dependency>
+	<!-- Roles -->
+	<dependency type="ManageRolesAndPermission" >
+		<valueobject>org.mifos.application.rolesandpermission.util.valueobjects.Role</valueobject>
+		<businessprocessor>org.mifos.application.rolesandpermission.business.handlers.RolesandPermissionBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.rolesandpermission.dao.RolesandPermissionDAO</dao>
+	</dependency>
+	
+	<!-- office -->
+	<dependency type="Office" >
+		<valueobject>org.mifos.application.office.util.valueobjects.Office</valueobject>
+		<businessprocessor>org.mifos.application.office.business.handlers.OfficeBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.office.dao.OfficeDAO</dao>
+	</dependency>
+	
+	
+	<!-- officeHierarchy -->
+	<dependency type="OfficeHierarchy" >
+		<valueobject>org.mifos.application.office.util.valueobjects.OfficeHirerchyList</valueobject>
+		<businessprocessor>org.mifos.application.office.business.handlers.OfficeHierarchyBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.office.dao.OfficeDAO</dao>
+	</dependency>
+	<!-- officeHierarchy -->
+	<!-- Meeting -->
+	<dependency type="Meeting" >
+		<valueobject>org.mifos.application.meeting.util.valueobjects.Meeting</valueobject>
+		<businessprocessor>org.mifos.application.meeting.business.handlers.MeetingBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.meeting.dao.MeetingDAO</dao>
+	</dependency>
+	<!-- Meeting -->
+   <!-- AccountsApplyCharges -->
+	<dependency type="AccountsApplyCharges" >
+		<valueobject>org.mifos.application.accounts.util.valueobjects.AccountsApplyCharges</valueobject>
+		<businessprocessor>org.mifos.application.accounts.business.handler.AccountsApplyChargesBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.accounts.dao.AccountsApplyChargesDAO</dao>
+	</dependency>
+	
+	<!-- AccountsSearch -->
+	<dependency type="AccountsSearch" >
+		<valueobject>org.mifos.application.accounts.util.valueobjects.AccountSearch</valueobject>
+		<businessprocessor>org.mifos.application.accounts.business.handler.AccountsSearchBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.accounts.dao.AccountsSearchDAO</dao>
+	</dependency>
+	<!-- AccountsSearch -->
+	
+	<!--AccountNotes--> 
+	<dependency type="AccountNotesAction">
+		<valueobject>org.mifos.application.accounts.util.valueobjects.AccountNotes</valueobject>
+		<businessprocessor>org.mifos.application.accounts.business.handler.AccountNotesBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.accounts.dao.AccountNotesDAO</dao>
+	</dependency>
+ 	<!--AccountNotes--> 
+
+	<!--Loan Status Change--> 
+	<dependency type="LoanStatusAction">
+		<valueobject>org.mifos.application.accounts.loan.util.valueobjects.EditLoanStatus</valueobject>
+		<businessprocessor>org.mifos.application.accounts.loan.business.handlers.EditLoanStatusBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.accounts.loan.dao.EditLoanStatusDAO</dao>
+	</dependency>
+
+ 	<!--Loan Status Change--> 
+	
+	<dependency type="Admin" >
+		<valueobject>org.mifos.application.office.util.valueobjects.OfficeHirerchyList</valueobject>
+		<businessprocessor>org.mifos.application.admin.business.handler.AdminBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.admin.dao.AdminDAO</dao>
+	</dependency>
+	
+	
+	
+	<dependency type="ProductCategory">
+		<valueobject>org.mifos.application.productdefinition.util.valueobjects.ProductCategory</valueobject>
+		<businessprocessor>org.mifos.application.productdefinition.business.handlers.ProductCategoryBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.productdefinition.dao.ProductCategoryDAO</dao>
+	</dependency>
+	<dependency type="ProductConfiguration">
+		<valueobject>org.mifos.application.productdefinition.util.valueobjects.ProductType</valueobject>
+		<businessprocessor>org.mifos.application.productdefinition.business.handlers.PrdConfigurationBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.productdefinition.dao.PrdConfigurationDAO</dao>
+	</dependency>
+	<dependency type="LoanProduct">
+		<valueobject>org.mifos.application.productdefinition.util.valueobjects.LoanOffering</valueobject>
+		<businessprocessor>org.mifos.application.productdefinition.business.handlers.LoanProductBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.productdefinition.dao.LoanProductDAO</dao>
+	</dependency>
+	<dependency type="SavingsProduct">
+		<valueobject>org.mifos.application.productdefinition.util.valueobjects.SavingsOffering</valueobject>
+		<businessprocessor>org.mifos.application.productdefinition.business.handlers.SavingsProductBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.productdefinition.dao.SavingsProductDAO</dao>
+	</dependency>
+	<dependency type="PaymentTypes">
+		<valueobject>org.mifos.application.productdefinition.util.valueobjects.PrdPmntType</valueobject>
+		<businessprocessor></businessprocessor>
+		<dao></dao>
+	</dependency>
+	<dependency type="AccountProcess">
+		<valueobject>org.mifos.application.productdefinition.util.valueobjects.AccountProcessFlow</valueobject>
+		<businessprocessor></businessprocessor>
+		<dao></dao>
+	</dependency>
+	
+	
+	<!--Loan Account-->	
+	<dependency type="loanAccounts">
+		<valueobject>org.mifos.application.accounts.loan.util.valueobjects.Loan</valueobject>
+		<businessprocessor>org.mifos.application.accounts.loan.business.handlers.LoanBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.accounts.loan.dao.LoanDAO</dao>
+	</dependency>
+	
+	<!--Fees-->	
+	<dependency type="Fees">
+		<valueobject>org.mifos.application.fees.util.valueobjects.Fees</valueobject>
+		<businessprocessor>org.mifos.application.fees.business.handlers.FeesBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.fees.dao.FeesDAO</dao>
+	</dependency>
+	
+	<!--CheckList-->	
+	<dependency type="CheckList">
+		<valueobject>org.mifos.application.checklist.util.valueobjects.CheckList</valueobject>
+		<businessprocessor>org.mifos.application.checklist.business.handlers.CheckListBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.checklist.dao.CheckListDAO</dao>
+	</dependency>
+
+	<!--Closed Account Search-->	
+	<dependency type="ClosedAccSearch">
+		<valueobject>org.mifos.application.accounts.util.valueobjects.ClosedAccSearch</valueobject>
+		<businessprocessor>org.mifos.application.accounts.business.handler.ClosedAccSearchBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.accounts.dao.ClosedAccSearchDAO</dao>
+	</dependency>
+
+	<!--Account Transactions-->
+	<dependency type="AccountTrxn">
+		<valueobject>org.mifos.application.accounts.util.valueobjects.AccountPayment</valueobject>
+		<businessprocessor>org.mifos.application.accounts.business.handler.AccountTrxnBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.accounts.dao.AccountTrxnDAO</dao>
+	</dependency>
+	
+	<!--Funds-->	
+	<dependency type="funds">
+		<valueobject>org.mifos.application.fund.util.valueobjects.Fund</valueobject>
+		<businessprocessor>org.mifos.application.fund.business.handlers.FundBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.fund.dao.FundDAO</dao>
+	</dependency>
+	
+	<!--Loan Disbursal-->	
+	<dependency type="loanDisbursment">
+		<valueobject>org.mifos.application.accounts.loan.util.valueobjects.LoanDisbursment</valueobject>
+		<businessprocessor>org.mifos.application.accounts.loan.business.handlers.LoanBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.accounts.loan.dao.LoanDAO</dao>
+	</dependency>
+	
+	<!--Loan Adjustment-->	
+	<dependency type="applyAdjustment">
+		<valueobject>org.mifos.application.accounts.loan.util.valueobjects.Adjustment</valueobject>
+		<businessprocessor>org.mifos.application.accounts.loan.business.handlers.LoanBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.accounts.loan.dao.LoanDAO</dao>
+	</dependency>
+	
+	<!--Repay Loan-->	
+	<dependency type="earlyRepayment">
+		<valueobject>org.mifos.application.accounts.util.valueobjects.AccountPayment</valueobject>
+		<businessprocessor>org.mifos.application.accounts.loan.business.handlers.LoanBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.accounts.loan.dao.LoanDAO</dao>
+	</dependency>
+	
+
+	<!--Bulk Entry-->	
+	<dependency type="BulkEntryAction">
+		<valueobject>org.mifos.application.bulkentry.util.valueobjects.BulkEntry</valueobject>
+		<businessprocessor>org.mifos.application.bulkentry.business.handlers.BulkEntryBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.bulkentry.dao.BulkEntryDAO</dao>
+	</dependency>
+	
+	<!--Reports-->	
+	<dependency type="reportsAction">
+		<valueobject>org.mifos.application.reports.util.valueobjects.Reports</valueobject>
+		<businessprocessor>org.mifos.application.reports.business.handlers.ReportsBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.reports.dao.ReportsDAO</dao>
+	</dependency>
+
+</dependencies>

@@ -1,0 +1,36 @@
+package org.mifos.framework.struts.tags;
+
+import javax.servlet.jsp.JspException;
+
+import org.apache.struts.taglib.TagUtils;
+import org.apache.strutsel.taglib.html.ELTextareaTag;
+import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
+import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
+
+public class MifosTextareaTag extends ELTextareaTag {
+	
+	private FieldConfigItf fieldConfigItf=FieldConfigImplementer.getInstance();
+	
+	private String keyhm=null;
+
+	public String getKeyhm() {
+		return keyhm;
+	}
+
+	public void setKeyhm(String keyhm) {
+		this.keyhm = keyhm;
+	}
+
+	@Override
+	public int doStartTag() throws JspException {
+		if(fieldConfigItf.isFieldHidden(getKeyhm()))
+			return EVAL_PAGE;
+		else if (!fieldConfigItf.isFieldHidden(getKeyhm()) && fieldConfigItf.isFieldManadatory(getKeyhm()) ){
+			StringBuffer inputsForhidden=new StringBuffer();
+			inputsForhidden.append("<input type=\"hidden\"  name=\""+getKeyhm()+"\" value=\""+getPropertyExpr()+"\"/>");
+		    TagUtils.getInstance().write(this.pageContext,inputsForhidden.toString());
+		}
+		return super.doStartTag();
+	}
+	
+}

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+
+    <!-- user defined Simple types  -->
+	<xs:simpleType name="valueType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="text" />
+			<xs:enumeration value="method" />
+		</xs:restriction>
+	</xs:simpleType>
+
+   	<xs:simpleType name="columnType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="link"/>
+			<xs:enumeration value="text"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+ 	
+
+	<!--Table tag definition -->
+	<xs:element name="tableInfo">
+		<xs:complexType>
+			<xs:sequence>
+			    <xs:element ref="headerDetails" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="row" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="headerDetails">
+		<xs:complexType>
+			<xs:attribute name="headerStyle" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	
+
+	<xs:element name="row">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="column" minOccurs="1" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="totWidth" type="xs:positiveInteger" use="required"/>
+			<xs:attribute name="bottomLineRequired" type="xs:boolean" default="false"/>
+		</xs:complexType>
+	</xs:element>
+
+
+	<xs:element name="column">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="columnDetails" minOccurs="1" maxOccurs="1" />
+				<xs:element ref="linkDetails" minOccurs="0" maxOccurs="1" />
+			</xs:sequence>
+
+			<xs:attribute name="label" type="xs:string" use="required"/>
+			<xs:attribute name="value" type="xs:string" use="required"/>
+			<xs:attribute name="valueType" type="valueType" use="required"/>
+			<xs:attribute name="columnType" type="columnType" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	
+	
+	<xs:element name="columnDetails">
+		<xs:complexType>
+			<xs:attribute name="rowStyle" type="xs:string" use="required"/>
+			<xs:attribute name="colWidth" type="xs:positiveInteger" use="required"/>
+			<xs:attribute name="align" type="xs:string" default="left"/>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="linkDetails">
+	    <xs:complexType>
+	    	<xs:sequence>
+			<xs:element ref="actionParam" minOccurs="1" maxOccurs="unbounded" />
+		</xs:sequence>
+			<xs:attribute name="action" type="xs:string" use="required"/>
+	    </xs:complexType>
+	</xs:element>
+
+
+
+	<xs:element name="actionParam">
+		<xs:complexType>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="value" type="xs:string" use="required"/>
+			<xs:attribute name="valueType" type="valueType" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+
+</xs:schema>
+

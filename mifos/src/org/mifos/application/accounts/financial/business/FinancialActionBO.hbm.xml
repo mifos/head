@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+    <class name="org.mifos.application.accounts.financial.business.FinancialActionBO" table="FINANCIAL_ACTION">
+        <id name="id" column="FIN_ACTION_ID" >
+            <generator class="native"/>
+        </id>
+        <many-to-one name="lookUpValue" column="LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false"/>
+    </class>
+             <query name="GETALLFINANCIALACTION">
+    		<![CDATA[
+    		    from  org.mifos.application.accounts.financial.business.FinancialActionBO 
+    		]]>
+      </query>
+</hibernate-mapping>

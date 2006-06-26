@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.accounts.util.valueobjects.AccountCheckList" table="PRD_CHECKLIST">
+        <id name="checklistId" column="CHECKLIST_ID" type="short">
+            <generator class="foreign">
+            	<param name="property">checkList</param>
+            </generator>
+        </id>
+    
+  	<property name="accountTypeId" column="PRD_TYPE_ID"  type="short"/>
+  	<property name="accountStatusId" column="ACCOUNT_STATUS" type="short" not-null="true" />
+  	
+  	 <one-to-one name="checkList"  class="org.mifos.application.checklist.util.valueobjects.CheckList" constrained="true" cascade="none"/>
+    </class>
+        
+     <query name="account.checklist">
+   	       <![CDATA[select new org.mifos.application.checklist.util.valueobjects.CheckListMaster(checkList.checklistId ,checkListDetail.detailText) from org.mifos.application.checklist.util.valueobjects.CheckList  checkList, org.mifos.application.checklist.util.valueobjects.CheckListDetail checkListDetail, org.mifos.application.accounts.util.valueobjects.AccountCheckList  accountCheckList where checkList.checklistStatus=:checklistStatus and accountCheckList.accountStatusId=:accountStatus and accountCheckList.accountTypeId=:accountTypeId and accountCheckList.checkList.checklistId=checkList.checklistId and checkList.checklistId=checkListDetail.checkList.checklistId]]>
+     </query>
+	
+</hibernate-mapping>

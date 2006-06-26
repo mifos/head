@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.accounts.savings.business.SavingsPerformanceEntity" table="SAVINGS_PERFORMANCE">
+        <id name="accountId" column="ACCOUNT_ID" type="integer">
+			<generator class="foreign">
+				<param name="property">savings</param>
+			</generator>
+		</id>
+		<property name="totalDeposits" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			 <column name="TOTAL_DEPOSITS_CURRENCY_ID" /> 
+			 <column name="TOTAL_DEPOSITS" />
+		</property>
+		<property name="totalWithdrawals" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			 <column name="TOTAL_WITHDRAWALS_CURRENCY_ID" /> 
+			 <column name="TOTAL_WITHDRAWALS" />
+		</property>
+		<property name="totalInterstEarned" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			 <column name="TOTAL_INTEREST_EARNED_CURRENCY_ID" /> 
+			 <column name="TOTAL_INTEREST_EARNED" />
+		</property>			
+		<property name="missedDeposits" column="MISSED_DEPOSITS"  />
+   
+    <one-to-one name="savings" class="org.mifos.application.accounts.savings.business.SavingsBO" lazy="false" />
+     </class>
+</hibernate-mapping>

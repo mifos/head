@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class
+		name="org.mifos.application.accounts.financial.business.COAHierarchyEntity"
+		table="COAHIERARCHY">
+		<id name="categoryId" column="COA_ID">
+			<generator class="foreign">
+				<param name="property">COA</param>
+			</generator>
+		</id>
+
+		<one-to-one name="coa"
+			class="org.mifos.application.accounts.financial.business.COABO"
+			outer-join="true" />
+		<many-to-one name="parentCategory" column="PARENT_COAID"
+			class="org.mifos.application.accounts.financial.business.COAHierarchyEntity"
+			outer-join="true" cascade="none" update="false" insert="false"
+			unique="true" />
+
+	</class>
+</hibernate-mapping>

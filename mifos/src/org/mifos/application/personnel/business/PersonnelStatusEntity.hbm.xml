@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.personnel.business.PersonnelStatusEntity" table="PERSONNEL_STATUS">
+        <id name="personnelStatusId" column="PERSONNEL_STATUS_ID"  unsaved-value="-1">
+            <generator class="native"/>
+        </id>
+        
+  	<property name="lookUpId" column="LOOKUP_ID"  />
+ 	
+        <set name="lookUpValueLocale" >
+          <key column ="LOOKUP_ID"
+           property-ref="lookUpId"/>
+          <one-to-many  class="org.mifos.application.master.util.valueobjects.LookUpValueLocale" />
+        </set>
+         
+        
+    </class>
+
+</hibernate-mapping>

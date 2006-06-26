@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+	<class
+		name="org.mifos.application.accounts.business.AccountFeesEntity"
+		table="ACCOUNT_FEES">
+		<id name="accountFeeId" column="ACCOUNT_FEE_ID"
+			type="integer">
+			<generator class="native" />
+		</id>
+		<version name="versionNo" column="VERSION_NO" type="integer"
+			unsaved-value="null" />
+		<property name="feeAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+		 <column name="FEE_AMNT_CURRENCY_ID" /> 
+		 <column name="FEE_AMNT" />
+		</property>
+		<property name="accountFeeAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+		 <column name="ACCOUNT_FEE_AMNT_CURRENCY_ID" /> 
+		 <column name="ACCOUNT_FEE_AMNT" />
+		</property>
+		<property name="feeStatus" column="FEE_STATUS" type="short" />
+		<property name="statusChangeDate" column="STATUS_CHANGE_DATE" type="date" />
+		<property name="lastAppliedDate" column="LAST_APPLIED_DATE" />
+		<many-to-one name="account" column="ACCOUNT_ID"
+			class="org.mifos.application.accounts.business.AccountBO"
+			not-null="true" lazy="false" />
+		<many-to-one name="fees" column="FEE_ID"
+			class="org.mifos.application.fees.business.FeesBO"
+			not-null="true" unique="true" lazy="true" />
+
+	</class>
+</hibernate-mapping>

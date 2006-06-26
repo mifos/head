@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="org.mifos.application.collectionsheet.business.CollectionSheetBO" table="COLL_SHEET">
+		<id name="collSheetID" column="COLL_SHEET_ID" type="integer">
+			<generator class="native"/>
+		</id>
+		
+		<property name="collSheetDate" column="COLL_SHEET_DATE" type="date"/>
+		<property name="statusFlag" column="STATUS_FLAG" type="short"/>
+		<property name="runDate" column="RUN_DATE" type="date"/>
+		
+		<set name="collectionSheetCustomers"   cascade="all"  table="COLL_SHEET_CUSTOMER" inverse="true">
+			<key column="COLL_SHEET_ID"  />
+			
+			<one-to-many class="org.mifos.application.collectionsheet.business.CollSheetCustBO" />
+		</set>
+		
+	</class>
+	
+	
+</hibernate-mapping>

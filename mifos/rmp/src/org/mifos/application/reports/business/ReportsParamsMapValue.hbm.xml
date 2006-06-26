@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+  
+<hibernate-mapping > 
+  <class name="org.mifos.application.reports.business.ReportsParamsMapValue" table="report_parameter_map">
+<id name="mapId" column="map_id" type="int">
+         <generator class="native" />
+     </id>
+<property name="reportId" column="report_id" type="int" />
+<property name="parameterId" column="parameter_id" type="int" />
+     
+    </class> 
+</hibernate-mapping> 

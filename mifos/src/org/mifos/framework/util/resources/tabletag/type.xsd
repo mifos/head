@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.aditi.com" xmlns="http://www.aditi.com"
+	elementFormDefault="qualified ">
+	
+	<xs:element name="files">
+		<xs:complexType>
+			<xs:sequence>		
+				<xs:element ref="filename" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="class" type="xs:string" />
+			<xs:attribute name="resourcebundle" type="xs:string" />
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="filename">
+		<xs:complexType>
+			<xs:sequence>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" />
+			<xs:attribute name="path" type="xs:string" />
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

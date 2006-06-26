@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.master.util.valueobjects.InterestCalcType" table="INTEREST_CALCULATION_TYPES">
+        <id name="interestCalculationTypeID" column="INTEREST_CALCULATION_TYPE_ID" type="short">
+            <generator class="native"/>
+        </id>
+ 
+ 
+        <property name="lookUpId" column="INTEREST_CALCULATION_LOOKUP_ID"  />
+    </class>
+        <query name="product.getintcalctypes"><![CDATA[select new org.mifos.application.productdefinition.util.valueobjects.MasterObject(ict.interestCalculationTypeID,lookupvalue.lookUpValue) from org.mifos.application.master.util.valueobjects.InterestCalcType ict,org.mifos.application.master.util.valueobjects.LookUpValueLocale lookupvalue where ict.lookUpId=lookupvalue.lookUpId and lookupvalue.localeId=:localeId]]></query>
+</hibernate-mapping>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<!-- definition of simple elements -->
+
+<xs:element name="namefragment" type="xs:string"/>
+<xs:element name="linkvalue" type="xs:string"/>
+<xs:element name="leftmenulabel" type="xs:string"/>
+<xs:attribute name="name" type="xs:string"/>
+<xs:attribute name="keyForHidden" type="xs:string"/>
+
+<!-- definition of complex elements -->
+<xs:element name="displayname">
+ <xs:complexType>
+ <xs:sequence>
+   <xs:element ref="namefragment" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
+</xs:element>
+
+<xs:element name="menuitem">
+ <xs:complexType>
+   <xs:sequence>
+     <xs:element ref="displayname"/>
+     <xs:element ref="linkvalue"/>
+   </xs:sequence>
+   <xs:attribute ref="keyForHidden" use="optional"/>
+ </xs:complexType>
+</xs:element>
+
+<xs:element name="menugroup">
+ <xs:complexType>
+   <xs:sequence>
+     <xs:element ref="displayname"/>
+     <xs:element ref="menuitem" maxOccurs="unbounded"/>
+   </xs:sequence>
+ </xs:complexType>
+</xs:element>
+
+<xs:element name="topmenutab">
+ <xs:complexType>
+   <xs:sequence>
+     <xs:element ref="leftmenulabel"/>
+     <xs:element ref="menugroup" maxOccurs="unbounded"/>
+   </xs:sequence>
+  <xs:attribute ref="name" use="required"/>
+ </xs:complexType>
+</xs:element>
+
+<xs:element name="mifosmenu">
+ <xs:complexType>
+   <xs:sequence>
+     <xs:element ref="topmenutab" maxOccurs="unbounded"/>
+   </xs:sequence>
+</xs:complexType>
+</xs:element>
+</xs:schema>

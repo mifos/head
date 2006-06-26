@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='utf-8'?>
+<dependencies>
+	<dependency type="FrameworkTestPath">
+		<valueobject>org.mifos.application.fees.util.valueobjects.Fees</valueobject>
+		<businessprocessor>org.mifos.framework.business.handlers.MifosBusinessProcessor</businessprocessor>
+		<dao>org.mifos.framework.dao.DAO</dao>
+	</dependency>
+	<!--This mapping is used to test MifosBaseAction, which is done by creating a product category object.-->
+	<dependency type="FrameworkActionTestPath">
+		<valueobject>org.mifos.application.productdefinition.util.valueobjects.ProductCategory</valueobject>
+		<businessprocessor>org.mifos.framework.business.handlers.MifosBusinessProcessor</businessprocessor>
+		<dao>org.mifos.framework.dao.DAO</dao>
+	</dependency>
+    
+    <!--Funds 	
+	<dependency type="funds">
+		<valueobject>org.mifos.application.fund.util.valueobjects.Fund</valueobject>
+		<businessprocessor>org.mifos.application.fund.business.handlers.MockFundBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.fund.dao.MockFundDAO</dao>
+	</dependency> -->
+	
+	 <!--Funds-->	
+	<dependency type="funds">
+		<valueobject>org.mifos.application.fund.util.valueobjects.Fund</valueobject>
+		<businessprocessor>org.mifos.application.fund.business.handlers.FundBusinessProcessor</businessprocessor>
+		<dao>org.mifos.application.fund.dao.FundDAO</dao>
+	</dependency>
+	
+</dependencies>

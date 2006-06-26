@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+ <class name="org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity" table="FIELD_CONFIGURATION">
+     <id name="fieldConfigId" column="FIELD_CONFIG_ID">
+	      <generator class="native"/>
+     </id>
+    <property name="fieldName" column="FIELD_NAME" />
+    <many-to-one  class="org.mifos.framework.struts.plugin.valueObjects.EntityMaster" name="entityMaster" column="ENTITY_ID" />
+    <property name="mandatoryFlag" column="MANDATORY_FLAG"/>
+    <property name="hiddenFlag" column="HIDDEN_FLAG"/>
+    <many-to-one  class="org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity" name="parentFieldConfig" column="PARENT_FIELD_CONFIG_ID" />
+ </class>
+ <query name="getFieldList">
+         <![CDATA[from org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity fce where 
+         			fce.entityMaster=:entityId]]>
+ </query>
+</hibernate-mapping>
+ 

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.personnel.util.valueobjects.PersonnelMovement" table="PERSONNEL_MOVEMENT">
+        <id name="personnelMovementId" column="PERSONNEL_MOVEMENT_ID" type="short">
+            <generator class="native"/>
+        </id>
+		<version name="versionNo" column="VERSION_NO" type="short" unsaved-value="negative"/>
+        <property name="personnelId" column="PERSONNEL_ID" type="short" />
+        <property name="officeId" column="OFFICE_ID" type="short" />
+        <property name="startDate" column="START_DATE" type="date" />                                        
+        <property name="endDate" column="END_DATE" type="date" />                                        
+        <property name="createdBy" column="CREATED_BY" type="short" />                                     
+        <property name="createdDate" column="CREATED_DATE" type="date" />       
+    </class>
+</hibernate-mapping>

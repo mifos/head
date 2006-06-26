@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.meeting.util.valueobjects.WeekDays" table="WEEK_DAYS_MASTER">
+        <id name="weekDayId" column="WEEK_DAYS_MASTER_ID" type="short">
+            <generator class="native"/>
+        </id>
+          <property name="lookUpId" column="LOOKUP_ID" type="short"/>
+          <property name="workingDay" column="WORKING_DAY" />
+         <set name="lookUpValueLocale" >
+		          <key column ="LOOKUP_ID"
+		           property-ref="lookUpId"/>
+		          
+		          <one-to-many  class="org.mifos.application.master.util.valueobjects.LookUpValueLocale" />
+        	</set>
+        
+    </class>
+    <query name="getWorkingWeekDays"><![CDATA[select new org.mifos.application.master.util.valueobjects.LookUpMaster(wd.weekDayId,lvl.lookUpId,lvl.lookUpValue)from org.mifos.application.meeting.util.valueobjects.WeekDays wd,org.mifos.application.master.util.valueobjects.LookUpValueLocale lvl where wd.workingDay=1 and  wd.lookUpId = lvl.lookUpId and lvl.localeId=:localeId]]></query>
+</hibernate-mapping>

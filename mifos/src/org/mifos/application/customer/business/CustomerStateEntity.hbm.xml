@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.customer.business.CustomerStateEntity" table="CUSTOMER_STATE">
+        <id name="statusId" column="STATUS_ID" type="short">
+            <generator class="native"/>
+        </id>
+        <property name="optional" column="CURRENTLY_IN_USE" type="short" />
+       <property name="description" column="DESCRIPTION" type="string"  not-null="true" />
+        <many-to-one name="lookUpEntity" column="STATUS_LOOKUP_ID" class="org.mifos.application.master.util.valueobjects.LookUpEntity" />
+        <many-to-one name="customerLevel" column="LEVEL_ID" class="org.mifos.application.customer.business.CustomerLevelEntity"  not-null="true" />
+        <set name="customerChecklistSet" inverse="true">
+            <key column="CUSTOMER_STATUS_ID"/>
+            <one-to-many class="org.mifos.application.checklist.util.valueobjects.CustomerCheckList"/>
+        </set>
+    </class>
+    <query name="customer.getStates">
+		<![CDATA[from org.mifos.application.customer.business.CustomerStateEntity customerState where customerState.optional=:OPTIONAL_FLAG]]>
+	</query>
+</hibernate-mapping>

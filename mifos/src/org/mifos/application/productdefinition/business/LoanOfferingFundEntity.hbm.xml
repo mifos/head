@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.productdefinition.business.LoanOfferingFundEntity" table="LOAN_OFFERING_FUND">
+        <id name="loanOfferingFundId" column="LOAN_OFFERING_FUND_ID">
+            <generator class="native"/>
+        </id>
+
+        <many-to-one name="loanOffering" column="PRD_OFFERING_ID" class="org.mifos.application.productdefinition.business.LoanOfferingBO" cascade="none" insert="true" update="true" unique="true"/>
+        <many-to-one name="fund" column="FUND_ID" class="org.mifos.application.fund.util.valueobjects.Fund" cascade="none" insert="true" update="true" unique="true"/>        
+    </class>
+</hibernate-mapping>

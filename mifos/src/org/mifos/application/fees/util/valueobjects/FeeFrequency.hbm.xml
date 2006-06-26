@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping >
+
+    <class name="org.mifos.application.fees.util.valueobjects.FeeFrequency" table="FEE_FREQUENCY">
+        <id name="feeFrequencyId" column="FEE_FREQUENCY_ID" unsaved-value="null">
+            <generator class="native"/>
+        </id>
+ 
+        <property name="feeFrequencyTypeId" column="FEE_FREQUENCYTYPE_ID"  />
+        <property name="feePaymentId" column="Frequency_Payment_ID"  />
+        
+        <many-to-one name="feeMeetingFrequency" column="FREQUENCY_MEETING_ID" class="org.mifos.application.meeting.util.valueobjects.Meeting" cascade="all" insert="true" update="true" lazy="false"/>
+        <many-to-one name="fee" column="FEE_ID" class="org.mifos.application.fees.util.valueobjects.Fees" />
+ 
+    </class>
+    
+</hibernate-mapping>

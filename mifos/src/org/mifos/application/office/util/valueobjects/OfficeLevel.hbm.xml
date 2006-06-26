@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+	<class
+		name="org.mifos.application.office.util.valueobjects.OfficeLevel"
+		table="OFFICE_LEVEL">
+		<id name="levelId" column="LEVEL_ID" type="short">
+			<generator class="native" />
+		</id>
+
+		<property name="interactionFlag" column="INTERACTION_FLAG"
+			type="short">
+		</property>
+	
+		<property name="configured" column="CONFIGURED" type="short"></property>
+		
+		<property name="lookUpId" column="LEVEL_NAME_ID"  />
+		
+		<many-to-one name="parent"
+			class="org.mifos.application.office.util.valueobjects.OfficeLevel"
+			column="PARENT_LEVEL_ID" unique="true" cascade="all">
+		</many-to-one>
+		
+		<one-to-one name="child"  class="org.mifos.application.office.util.valueobjects.OfficeLevel"  cascade="none" lazy="true" property-ref="parent" />
+	
+
+	        <set name="lookUpValueLocale" >
+		          <key column ="LOOKUP_ID"
+		           property-ref="lookUpId"/>
+		          
+		          <one-to-many  class="org.mifos.application.master.util.valueobjects.LookUpValueLocale" />
+        	</set>
+		
+	
+	</class>
+         <query name="getallofficelevel">
+	        	<![CDATA[select new org.mifos.application.master.util.valueobjects.OfficeLevelMaster(level.levelId ,lookUp.lookUpValue) from org.mifos.application.office.util.valueobjects.OfficeLevel  level,org.mifos.application.master.util.valueobjects.LookUpValueLocale lookUp where level.lookUpId = lookUp.lookUpId and lookUp.localeId=:localeId ]]>
+          </query>
+
+
+         <query name="getofficelevel">
+	        	<![CDATA[select new org.mifos.application.master.util.valueobjects.OfficeLevelMaster(level.levelId ,lookUp.lookUpValue) from org.mifos.application.office.util.valueobjects.OfficeLevel  level,org.mifos.application.master.util.valueobjects.LookUpValueLocale lookUp where level.lookUpId = lookUp.lookUpId and lookUp.localeId=:localeId and level.configured=1]]>
+          </query>
+
+         <query name="getParentOffice">
+	        	<![CDATA[select new org.mifos.application.office.util.valueobjects.ParentOffice(office.officeId ,office.officeName,office.level.levelId,lookUp.lookUpValue) from org.mifos.application.office.util.valueobjects.Office office,org.mifos.application.master.util.valueobjects.LookUpValueLocale lookUp where  office.level.lookUpId = lookUp.lookUpId and lookUp.localeId=:localeId and office.level.levelId in (select levelB.levelId from OfficeLevel levelA, OfficeLevel levelB where levelA.parent.levelId=levelB.levelId and levelA.levelId <= :levelId)]]>
+          </query>
+         <query name="getParentOfficeActive">
+	        	<![CDATA[select new org.mifos.application.office.util.valueobjects.ParentOffice(office.officeId ,office.officeName,office.level.levelId,lookUp.lookUpValue) from org.mifos.application.office.util.valueobjects.Office office,org.mifos.application.master.util.valueobjects.LookUpValueLocale lookUp where  office.level.lookUpId = lookUp.lookUpId and lookUp.localeId=:localeId and office.level.levelId in (select levelB.levelId from OfficeLevel levelA, OfficeLevel levelB where levelA.parent.levelId=levelB.levelId and levelA.levelId <= :levelId) and office.status.statusId=:statusId]]>
+          </query>
+          
+          <query name="getHeadOffice">
+	  	       <![CDATA[from org.mifos.application.office.util.valueobjects.OfficeLevel  level where level.parent = null ]]>
+	  </query>
+         <query name="getlevel">
+	        	<![CDATA[select new org.mifos.application.master.util.valueobjects.OfficeLevelMaster(level.levelId ,lookUp.lookUpValue) from org.mifos.application.office.util.valueobjects.OfficeLevel level,org.mifos.application.master.util.valueobjects.LookUpValueLocale lookUp  where level.lookUpId = lookUp.lookUpId and lookUp.localeId=:localeId and  level.levelId =:levelId]]>
+          </query>
+ 
+		 <query name="getLevelchildrenActive">
+	        	<![CDATA[select new org.mifos.application.master.util.valueobjects.OfficeLevelChildren(office.officeId, office.officeName) from org.mifos.application.office.util.valueobjects.Office office  where office.level.levelId=:levelId and office.status.statusId=:statusId and office.searchId like :searchId order by office.officeName]]>
+          </query>
+		 <query name="getLevelchildren">
+	        	<![CDATA[select new org.mifos.application.master.util.valueobjects.OfficeLevelChildren(office.officeId, office.officeName,office.status.statusId) from org.mifos.application.office.util.valueobjects.Office office  where office.level.levelId=:levelId order by office.officeName]]>
+          </query>
+       
+	        <query name="getLevels">
+	        	<![CDATA[from org.mifos.application.office.util.valueobjects.OfficeLevel ]]>
+          </query>
+	        <query name="isLevelConfigured">
+	        	<![CDATA[select count(*)  from org.mifos.application.office.util.valueobjects.OfficeLevel level where level.configured=1 and level.levelId=:levelId ]]>
+          </query>
+   	
+
+
+
+</hibernate-mapping>

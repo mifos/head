@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.framework.components.cronjobs.valueobjects.Task" table="SCHEDULED_TASKS">
+        <id name="id" column="TASKID" type="integer" unsaved-value="null">
+            <generator class="native"/>
+        </id> 
+        <property name="task" column="TASKNAME" type="string" />
+        <property name="time" column="TIME" type="timestamp" />
+        <property name="description" column="DESCRIPTION" type="string" />
+     </class>
+    
+</hibernate-mapping>

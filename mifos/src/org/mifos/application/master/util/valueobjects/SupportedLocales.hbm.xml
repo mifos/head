@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+    
+    
+<hibernate-mapping > 
+  <class name="org.mifos.application.master.util.valueobjects.SupportedLocales" table="SUPPORTED_LOCALE" >
+    <id column="LOCALE_ID" name="localeId" type="java.lang.Short" > 
+		<generator class="native"></generator>
+    </id>
+	<property column="LOCALE_NAME"  name="localeName"  type="java.lang.String"/>
+	<property column="DEFAULT_LOCALE"  name="defaultLocale"  type="java.lang.Short"/>
+	<many-to-one name="country" column="COUNTRY_ID"  class="org.mifos.application.master.util.valueobjects.Country" cascade="save-update" unique="true" lazy="false"/>
+	<many-to-one name="language" column="LANG_ID"   class="org.mifos.application.master.util.valueobjects.Language" cascade="save-update" unique="true" lazy="false"/>
+  </class> 
+  <query name="masterdata.supportedlocales">
+	  <![CDATA[from  org.mifos.application.master.util.valueobjects.SupportedLocales locales]]>
+  </query>
+</hibernate-mapping>  
+ 

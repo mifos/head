@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<scheduler-tasks>
+	<scheduler>
+		<task-class-name>ProductStatus</task-class-name>
+		<initial-time>24:00:00</initial-time>
+		<delay-time>86400</delay-time>		
+	</scheduler>
+	<scheduler>
+		<task-class-name>CollectionSheetTask</task-class-name>
+		<initial-time>24:00:00</initial-time>
+		<delay-time>86400</delay-time>		
+	</scheduler>
+	<scheduler>
+		<task-class-name>LoanArrearsTask</task-class-name>
+		<initial-time>24:00:00</initial-time>
+		<delay-time>86400</delay-time>		
+	</scheduler>
+	<scheduler>
+		<task-class-name>SavingsIntCalcTask</task-class-name>
+		<initial-time>24:00:00</initial-time>
+		<delay-time>86400</delay-time>		
+	</scheduler>
+	<scheduler>
+		<task-class-name>SavingsIntPostingTask</task-class-name>
+		<initial-time>03:00:00</initial-time>
+		<delay-time>86400</delay-time>		
+	</scheduler>
+	<scheduler>
+		<task-class-name>ApplyCustomerFeeTask</task-class-name>
+		<initial-time>24:00:00</initial-time>
+		<delay-time>86400</delay-time>		
+	</scheduler>
+</scheduler-tasks>

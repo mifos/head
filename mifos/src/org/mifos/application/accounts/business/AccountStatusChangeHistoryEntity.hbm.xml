@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity" table="ACCOUNT_STATUS_CHANGE_HISTORY">
+        <id name="accountStatusChangeId" column="ACCOUNT_STATUS_CHANGE_ID"  unsaved-value="-1">
+            <generator class="native"/>
+        </id>
+        
+ 	
+ 	<property name="createdDate" column="CHANGED_DATE"  type="date"/>
+	<many-to-one name="account" column="ACCOUNT_ID"
+			class="org.mifos.application.accounts.business.AccountBO"
+			cascade="none" update="false" insert="true" unique="true" />
+	<many-to-one name="oldStatus" column="OLD_STATUS"
+			class="org.mifos.application.accounts.business.AccountStateEntity"
+			cascade="none" update="false" insert="true" unique="true" />
+	<many-to-one name="newStatus" column="NEW_STATUS"
+			class="org.mifos.application.accounts.business.AccountStateEntity"
+			cascade="none" update="false" insert="true" unique="true" />
+	<property name="createdBy" column="CHANGED_BY"/>
+
+    </class>
+ 	<query name="accounts.getLastLoanAmount">
+		<![CDATA[select loan.loanAmount from org.mifos.application.accounts.loan.business.LoanBO as loan,
+		org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity as history 
+		where loan.accountId = history.account.accountId and history.accountStatusChangeId = ( select max(completeStatusHistory.accountStatusChangeId) from org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity as completeStatusHistory,org.mifos.application.accounts.loan.business.LoanBO as completeLoanObject where completeLoanObject.accountId=completeStatusHistory.account.accountId and completeLoanObject.customer.customerId=:CUSTOMERID and completeStatusHistory.newStatus=6) ]]>
+	</query>
+</hibernate-mapping>

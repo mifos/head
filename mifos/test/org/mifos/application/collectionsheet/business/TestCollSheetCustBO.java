@@ -1,0 +1,195 @@
+/**
+ 
+ * TestCollSheetCustBO.java    version: 1.0
+ 
+ 
+ 
+ * Copyright © 2005-2006 Grameen Foundation USA
+ 
+ * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+ 
+ * All rights reserved.
+ 
+ 
+ 
+ * Apache License 
+ * Copyright (c) 2005-2006 Grameen Foundation USA 
+ * 
+ 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ *
+ 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the 
+ 
+ * License. 
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
+ 
+ * and how it is applied. 
+ 
+ *
+ 
+ */
+package org.mifos.application.collectionsheet.business;
+
+
+
+import java.util.Date;
+import java.util.Set;
+
+import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
+import org.mifos.application.accounts.business.CustomerAccountBO;
+import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.util.valueobjects.CustomerAccount;
+import org.mifos.application.collectionsheet.business.CollSheetCustBO;
+import org.mifos.application.collectionsheet.business.CollSheetLnDetailsEntity;
+import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.exceptions.HibernateStartUpException;
+import org.mifos.framework.exceptions.LoggerConfigurationException;
+import org.mifos.framework.hibernate.HibernateStartUp;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.util.helpers.TestObjectFactory;
+
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
+/**
+ * @author ashishsm
+ *
+ */
+public class TestCollSheetCustBO extends TestCase{
+	
+	
+	
+	@Override
+	protected void tearDown() throws Exception {
+		HibernateUtil.closeSession();
+		super.tearDown();
+	}
+	
+	protected void setUp()throws Exception{
+		HibernateUtil.getSessionTL();
+	}
+
+
+	public void testPopulateCustomerDetails(){
+
+		CollSheetCustBO collSheetCustBO = new CollSheetCustBO();
+		MeetingBO meeting = TestObjectFactory.getMeetingHelper(1,1,4,2);
+		TestObjectFactory.createMeeting(meeting);
+		CustomerBO centerBO = TestObjectFactory.createCenter("ash",Short.valueOf("1"),"1.1",meeting, new Date(System.currentTimeMillis()));
+		CustomerBO groupBO = TestObjectFactory.createClient("ashGrp",Short.valueOf("1"),"1.1.1",centerBO, new Date(System.currentTimeMillis()));
+		collSheetCustBO.populateCustomerDetails(groupBO);
+		assertEquals(collSheetCustBO.getSearchId(),"1.1.1");
+		assertEquals(collSheetCustBO.getParentCustomerId(),centerBO.getCustomerId());
+		
+		TestObjectFactory.cleanUp(groupBO);
+		TestObjectFactory.cleanUp(centerBO);
+		
+	}
+	
+	public void testPopulateAccountDetails() {
+		CollSheetCustBO collSheetCustBO = new CollSheetCustBO();
+		
+		AccountFeesActionDetailEntity accntFeesActionDetailEntity = new AccountFeesActionDetailEntity();
+		accntFeesActionDetailEntity.setFeeAmount(TestObjectFactory.getMoneyForMFICurrency(5));
+		accntFeesActionDetailEntity.setFeeAmountPaid(TestObjectFactory.getMoneyForMFICurrency(3));
+		
+		AccountActionDateEntity accountActionDate = new AccountActionDateEntity();
+		accountActionDate.addAccountFeesAction(accntFeesActionDetailEntity);
+		
+		
+		LoanBO loan = new LoanBO();
+		loan.setAccountId(Integer.valueOf("1"));
+		
+		accountActionDate.setAccount(loan);
+		accountActionDate.setPenalty(TestObjectFactory.getMoneyForMFICurrency(10));
+		accountActionDate.setMiscPenalty(TestObjectFactory.getMoneyForMFICurrency(3));
+		accountActionDate.setPenaltyPaid(TestObjectFactory.getMoneyForMFICurrency(5));
+		accountActionDate.setMiscFee(TestObjectFactory.getMoneyForMFICurrency(5));
+		accountActionDate.setMiscFeePaid(TestObjectFactory.getMoneyForMFICurrency(5));
+		
+		collSheetCustBO.populateAccountDetails(accountActionDate);
+		
+		assertEquals(collSheetCustBO.getCustAccntId(),Integer.valueOf("1"));
+		assertEquals(collSheetCustBO.getCustAccntPenalty(),TestObjectFactory.getMoneyForMFICurrency(8));
+		assertEquals(collSheetCustBO.getCustAccntFee(),TestObjectFactory.getMoneyForMFICurrency(2));
+	}
+	
+	public void testAddCollectionSheetLoanDetail() {
+		CollSheetLnDetailsEntity collectionSheetLoanDetail = new CollSheetLnDetailsEntity();
+		collectionSheetLoanDetail.setAccountId(Integer.valueOf("1"));
+		collectionSheetLoanDetail.setPrincipalDue(TestObjectFactory.getMoneyForMFICurrency(20));
+		collectionSheetLoanDetail.setInterestDue(TestObjectFactory.getMoneyForMFICurrency(10));
+		collectionSheetLoanDetail.setInterestOverDue(TestObjectFactory.getMoneyForMFICurrency(5));
+		collectionSheetLoanDetail.setAmntToBeDisbursed(TestObjectFactory.getMoneyForMFICurrency(15));
+		collectionSheetLoanDetail.setFeesDue(TestObjectFactory.getMoneyForMFICurrency(0));
+		collectionSheetLoanDetail.setPenaltyDue(TestObjectFactory.getMoneyForMFICurrency(0));
+		
+		
+		CollSheetCustBO collSheetCustBO = new CollSheetCustBO();
+		collSheetCustBO.addCollectionSheetLoanDetail(collectionSheetLoanDetail);
+		
+		assertEquals(collSheetCustBO.getCollectiveLoanAmntDue(),TestObjectFactory.getMoneyForMFICurrency(35));
+		assertEquals(collSheetCustBO.getCollectiveLoanDisbursal(),TestObjectFactory.getMoneyForMFICurrency(15));
+		assertEquals(collSheetCustBO.getCollectionSheetLoanDetails().size(),1);
+		
+	}
+	
+	public void testGetLoanDetailsForAccntId() {
+		
+		
+		CollSheetLnDetailsEntity collectionSheetLoanDetail = new CollSheetLnDetailsEntity(); 
+		collectionSheetLoanDetail.setAccountId(Integer.valueOf("1"));
+		
+		CollSheetCustBO collSheetCustBO = new CollSheetCustBO();
+		collSheetCustBO.addCollectionSheetLoanDetail(collectionSheetLoanDetail);
+		assertEquals(collSheetCustBO.getLoanDetailsForAccntId(Integer.valueOf("1")).getAccountId(),Integer.valueOf("1"));
+		
+	}
+	
+	public void testGetLoanDetailsForAccntIdForNull() {
+		
+		CollSheetCustBO collSheetCustBO = new CollSheetCustBO();
+		assertNull(collSheetCustBO.getLoanDetailsForAccntId(Integer.valueOf("1")));
+		
+	}
+	
+	
+	public void testAddCollectiveTotalsForChild() {
+		CollSheetCustBO collSheetCustBO = new CollSheetCustBO();
+		collSheetCustBO.setCollectiveAccntCharges(TestObjectFactory.getMoneyForMFICurrency(5));
+		collSheetCustBO.setCollectiveLoanAmntDue(TestObjectFactory.getMoneyForMFICurrency(5)) ;
+		collSheetCustBO.setCollectiveLoanDisbursal(TestObjectFactory.getMoneyForMFICurrency(5));
+		collSheetCustBO.setCollectiveNetCashIn(TestObjectFactory.getMoneyForMFICurrency(5)) ;
+		collSheetCustBO.setCollectiveSavingsAmntDue(TestObjectFactory.getMoneyForMFICurrency(5)) ;
+		collSheetCustBO.setCollectiveTotalCollection(TestObjectFactory.getMoneyForMFICurrency(5)) ;
+		
+		CollSheetCustBO collSheetCustObj = new CollSheetCustBO();
+		collSheetCustObj.setCollectiveAccntCharges(TestObjectFactory.getMoneyForMFICurrency(5));
+		collSheetCustObj.setCollectiveLoanAmntDue(TestObjectFactory.getMoneyForMFICurrency(5)) ;
+		collSheetCustObj.setCollectiveLoanDisbursal(TestObjectFactory.getMoneyForMFICurrency(5));
+		collSheetCustObj.setCollectiveNetCashIn(TestObjectFactory.getMoneyForMFICurrency(5)) ;
+		collSheetCustObj.setCollectiveSavingsAmntDue(TestObjectFactory.getMoneyForMFICurrency(5)) ;
+		collSheetCustObj.setCollectiveTotalCollection(TestObjectFactory.getMoneyForMFICurrency(5)) ;
+		
+		collSheetCustObj.addCollectiveTotalsForChild(collSheetCustBO);
+		assertEquals(collSheetCustObj.getCollectiveAccntCharges(),TestObjectFactory.getMoneyForMFICurrency(10));
+		assertEquals(collSheetCustObj.getCollectiveAccntCharges(),TestObjectFactory.getMoneyForMFICurrency(10));
+		assertEquals(collSheetCustObj.getCollectiveAccntCharges(),TestObjectFactory.getMoneyForMFICurrency(10));
+		
+	}
+	
+	
+	
+	
+}

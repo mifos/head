@@ -1,0 +1,6 @@
+<!ELEMENT Initialization (parameter?)>
+<!ELEMENT parameter (name,value)>
+<!--<!ATTLIST parameter type #PCDATA >-->
+<!ELEMENT name (#CDATA)>
+<!ELEMENT value #CDATA>
+			

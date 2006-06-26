@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.penalty.util.valueobjects.Penalty" table="PENALTY">
+        <id name="penaltyID" column="PENALTY_ID" type="short">
+            <generator class="native"/>
+        </id>
+ 
+        <property name="penaltyType" column="PENALTY_TYPE" type="string" />
+ 
+        <many-to-one name="productType" column="CATEGORY_ID" class="org.mifos.application.productdefinition.util.valueobjects.ProductType" />
+    </class>
+     <query name="product.getpenaltytypes"><![CDATA[from org.mifos.application.penalty.util.valueobjects.Penalty pen]]></query>
+</hibernate-mapping>

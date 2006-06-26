@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<table class="org.mifos.xyz" name="group" resourcebundle="resource"
+		xmlns="http://www.aditi.com" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:schemaLocation="http://www.aditi.com tabletag.xsd ">
+<path key="GroupList" forwardkey="search_success" action="GroupAction.do"/> 
+<pagerequirements numbersrequired="true" bluelinerequired="true" headingrequired="false" valignnumbers="false" blanklinerequired="false"/>  
+<row>
+	<column label="" labeltype="string" boldlabel="false" type="text" >
+		<displayname>
+			<fragment-name name="officeName" type="method"/>
+		</displayname>
+	</column>
+	<column label="/" labeltype="string" boldlabel="false" type="text" >
+		<displayname>
+			<fragment-name name="centerName" type="method"/>
+		</displayname>
+	</column>
+	<column label="/" labeltype="string" boldlabel="true" type="link" action="clientTransferAction.do" >
+		<displayname bold="true">
+			<fragment-name name="groupName" type="method"/>
+		</displayname>
+		<parameters>
+			<parameter name="parentGroupId" value="groupId" valuetype="method"/>
+			<parameter name="parentGroupName" value="groupName" valuetype="method"/>
+			<parameter name="method" value="confirmGroupTransfer" valuetype="string"/>
+		</parameters>
+	</column>
+</row>
+  
+</table>

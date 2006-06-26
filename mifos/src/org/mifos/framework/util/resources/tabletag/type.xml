@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files class="org.mifos.xyz" name="client" resourcebundle="resource"
+		xmlns="http://www.aditi.com" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:schemaLocation="http://www.aditi.com type.xsd ">
+		<filename name="1" path="org/mifos/framework/util/resources/tabletag/CustomerClient.xml" />
+		<filename name="2" path="org/mifos/framework/util/resources/tabletag/CustomerGroup.xml" />
+		<filename name="3" path="org/mifos/framework/util/resources/tabletag/CustomerCenter.xml" />		
+		<filename name="4" path="org/mifos/framework/util/resources/tabletag/LoanAccount.xml" />
+		<filename name="5" path="org/mifos/framework/util/resources/tabletag/LoanAccountGroup.xml" />		
+		<filename name="6" path="org/mifos/framework/util/resources/tabletag/ClientSavingAccount.xml" />
+		<filename name="7" path="org/mifos/framework/util/resources/tabletag/GroupSavingAccount.xml" />
+		<filename name="8" path="org/mifos/framework/util/resources/tabletag/CenterSavingAccount.xml" />
+</files>

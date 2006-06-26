@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.productdefinition.util.valueobjects.GracePeriodType" table="GRACE_PERIOD_TYPE">
+        <id name="gracePeriodTypeId" column="GRACE_PERIOD_TYPE_ID" type="short">
+            <generator class="native"/>
+        </id>
+ 		<property name="lookUpId" column="LOOKUP_ID" type="integer" />
+ 
+        <!--<many-to-one name="lookUpValue" column="LOOKUP_ID" class="org.mifos.application.master.util.valueobjects.LookUpValue"  not-null="true" />-->
+    </class>
+    <!--<query name="product.getgraceperiodtype"><![CDATA[select new org.mifos.application.productdefinition.util.valueobjects.MasterObject(gpt.gracePeriodTypeId,lookupvalue.lookUpValue) from org.mifos.application.productdefinition.util.valueobjects.GracePeriodType gpt,org.mifos.application.master.util.valueobjects.LookUpValueLocale lookupvalue where gpt.lookUpValue.lookUpId=lookupvalue.lookUpId and lookupvalue.localeId=:localeId]]></query>-->
+    
+    <query name="product.getgraceperiodtype"><![CDATA[select new org.mifos.application.productdefinition.util.valueobjects.MasterObject(gpt.gracePeriodTypeId,lookupvalue.lookUpValue) from org.mifos.application.productdefinition.util.valueobjects.GracePeriodType gpt,org.mifos.application.master.util.valueobjects.LookUpValueLocale lookupvalue where gpt.lookUpId=lookupvalue.lookUpId and lookupvalue.localeId=:localeId]]></query>
+</hibernate-mapping>

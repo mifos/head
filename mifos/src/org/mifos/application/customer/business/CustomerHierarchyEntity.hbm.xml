@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.customer.business.CustomerHierarchyEntity" table="CUSTOMER_HIERARCHY">
+        <id name="hierarchyId" column="HIERARCHY_ID" type="integer">
+            <generator class="native"/>
+        </id>
+ 
+        
+        <property name="status" column="STATUS" type="short" />
+        <property name="createdDate" column="START_DATE" type="date" />
+        <property name="endDate" column="END_DATE" type="date"   />
+        <property name="updatedBy" column="UPDATED_BY" type="short" />
+        <property name="updatedDate" column="UPDATED_DATE" type="date" />
+        <many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" unique="true" />
+         <many-to-one name="parentCustomer" column="PARENT_ID" class="org.mifos.application.customer.business.CustomerBO" unique="true"/>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+  
+<hibernate-mapping > 
+  <class name="org.mifos.application.reports.business.ReportsDataSource" table="report_datasource" >
+     <id name="datasourceId" column="datasource_id" type="int">
+         <generator class="native" />
+     </id>
+    	<property name="name" column="name" type="string" />
+    	<property name="driver" column="driver" type="string" />
+	<property name="url" column="url" type="string" />
+	<property name="username" column="username" type="string" />
+	<property name="password" column="password" type="string" />
+    </class> 
+     <query name="getAllReportDataSource">
+   	       <![CDATA[ from ReportsDataSource ]]>
+    </query> 
+    <query name="viewDataSource">
+   	       <![CDATA[ from ReportsDataSource where datasource_id=:dataSourceId]]>
+    </query>
+
+</hibernate-mapping> 
