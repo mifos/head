@@ -111,6 +111,8 @@ public class ClosedAccSearchBusinessProcessor extends MifosBusinessProcessor {
 		ClosedAccSearch closedAccSearch=(ClosedAccSearch)context.getValueObject();
 		if(null != closedAccSearch) {
 			Integer accountId=closedAccSearch.getAccountId();
+			Integer customerId=closedAccSearch.getCustomerId();
+
 			
 			ClosedAccSearchDAO closedAccSearchDAO=(ClosedAccSearchDAO)getDAO(context.getPath());
 			List<ClientUpcomingFeecahrges> upcomingFeecahrgesList=closedAccSearchDAO.getClientUpcomingFeeCharges(accountId);
@@ -122,7 +124,7 @@ public class ClosedAccSearchBusinessProcessor extends MifosBusinessProcessor {
 			String upcomingChargesDate=closedAccSearchDAO.getUpcomingChargesDate(accountId);
 			
 			CustomerBusinessService customerService=(CustomerBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Customer);
-			context.addAttribute(new SearchResults(ClosedAccSearchConstants.CLIENTRECENTACCACTIVITYLIST,customerService.getRecentActivityView(accountId)));
+			context.addAttribute(new SearchResults(ClosedAccSearchConstants.CLIENTRECENTACCACTIVITYLIST,customerService.getRecentActivityView(customerId)));
 			
 			context.addAttribute(new SearchResults(ClosedAccSearchConstants.CLIENTUPCOMINGFEECHARGESLIST,upcomingFeecahrgesList));
 			context.addAttribute(new SearchResults(ClosedAccSearchConstants.RECURRENCEFEESCHARGESLIST,RecurenceFeecahrgesList));

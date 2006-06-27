@@ -544,7 +544,8 @@
 <html-el:hidden property="globalAccountNum" value="${requestScope.centerVO.customerAccount.globalAccountNum}"/> 
 <html-el:hidden property="accountId" value="${requestScope.centerVO.customerAccount.accountId}"/> 
 <html-el:hidden property="accountType" value="${requestScope.centerVO.customerAccount.accountTypeId}"/> 
-<html-el:hidden property="input" value="ViewCenterCharges"/> 
+<html-el:hidden property="input" value="ViewCenterCharges"/>
+<html-el:hidden property="customerId" value="${requestScope.centerVO.customerId}"/> 
 </html-el:form>
 </tiles:put>
 </tiles:insert>
