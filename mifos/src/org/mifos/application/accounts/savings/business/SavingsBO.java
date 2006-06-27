@@ -1408,33 +1408,27 @@ public class SavingsBO extends AccountBO {
 			Integer count) {
 		List<SavingsRecentActivityView> accountActivityList = new ArrayList<SavingsRecentActivityView>();
 		int activitiesAdded = 0;
-		for (AccountPaymentEntity accountPaymentEntity : getAccountPayments()) {
-			for (AccountTrxnEntity accountTrxnEntity : accountPaymentEntity
-					.getAccountTrxns()) {
-				if (count == null || activitiesAdded < count.intValue()) {
-					accountActivityList
-							.add(createSavingsRecentActivityView(accountTrxnEntity));
-					activitiesAdded++;
-				}
+		for ( SavingsActivityEntity activity : getSavingsActivityDetails())
+		{
+			if (count == null || activitiesAdded < count.intValue()) {
+				accountActivityList
+						.add(createSavingsRecentActivityView(activity));
+				activitiesAdded++;
 			}
 		}
 		return accountActivityList;
 	}
 
 	private SavingsRecentActivityView createSavingsRecentActivityView(
-			AccountTrxnEntity accountTrxnEntity) {
+			SavingsActivityEntity savingActivity) {
 		SavingsRecentActivityView savingsRecentActivityView = new SavingsRecentActivityView();
-		savingsRecentActivityView.setAccountTrxnId(accountTrxnEntity
-				.getAccountTrxnId());
-		savingsRecentActivityView.setActionDate(accountTrxnEntity
-				.getActionDate());
+		savingsRecentActivityView.setAccountTrxnId(savingActivity.getId());
+		savingsRecentActivityView.setActionDate(savingActivity.getTrxnCreatedDate());
 		savingsRecentActivityView.setAmount(removeSign(
-				accountTrxnEntity.getAmount()).toString());
-		savingsRecentActivityView.setActivity(accountTrxnEntity
-				.getAccountActionEntity().getName(userContext.getLocaleId()));
+				savingActivity.getAmount()).toString());
+		savingsRecentActivityView.setActivity(savingActivity.getActivity().getName(userContext.getLocaleId()));
 		savingsRecentActivityView.setRunningBalance(String
-				.valueOf(((SavingsTrxnDetailEntity) accountTrxnEntity)
-						.getBalance().getAmountDoubleValue()));
+				.valueOf(savingActivity.getBalanceAmount().getAmountDoubleValue()));
 		return savingsRecentActivityView;
 	}
 
