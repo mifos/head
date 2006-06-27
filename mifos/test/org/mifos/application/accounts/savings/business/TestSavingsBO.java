@@ -539,6 +539,7 @@ public class TestSavingsBO extends TestCase {
 
 		savings.withdraw(paymentData);
 		assertEquals(0.0, savings.getSavingsBalance().getAmountDoubleValue());
+		assertEquals(1, savings.getSavingsActivityDetails().size());
 		savings.getAccountPayments().clear();
 	}
 
@@ -577,6 +578,7 @@ public class TestSavingsBO extends TestCase {
 		paymentData.addAccountPaymentData(savingsPaymentData);
 		savings.applyPayment(paymentData);
 		assertEquals(100.0, savings.getSavingsBalance().getAmountDoubleValue());
+		assertEquals(1, savings.getSavingsActivityDetails().size());
 		savings.getAccountPayments().clear();
 		client1 = new CustomerPersistenceService().getCustomer(client1
 				.getCustomerId());

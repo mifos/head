@@ -776,6 +776,10 @@ public class SavingsBO extends AccountBO {
 					totalAmount, paymentData.getPersonnelId(), customer,
 					transactionDate);
 			accountPayment.addAcountTrxn(accountTrxn);
+			addSavingsActivityDetails(buildSavingsActivity(totalAmount,
+					getSavingsBalance(),
+					AccountConstants.ACTION_SAVINGS_DEPOSIT, paymentData
+							.getPersonnelId()));
 			return accountPayment;
 		}
 		for (AccountPaymentData accountPaymentData : accountPayments) {
@@ -818,12 +822,15 @@ public class SavingsBO extends AccountBO {
 				accountPayment.addAcountTrxn(accountTrxn);
 			}
 		}
-		if (enteredAmount.getAmountDoubleValue() > 0) {
+		if (enteredAmount.getAmountDoubleValue() > 0.0) {
 			SavingsTrxnDetailEntity accountTrxn = buildUnscheduledDeposit(
 					enteredAmount, paymentData.getPersonnelId(), customer,
 					transactionDate);
 			accountPayment.addAcountTrxn(accountTrxn);
 		}
+		addSavingsActivityDetails(buildSavingsActivity(totalAmount,
+				getSavingsBalance(), AccountConstants.ACTION_SAVINGS_DEPOSIT,
+				paymentData.getPersonnelId()));
 		return accountPayment;
 	}
 
@@ -874,6 +881,10 @@ public class SavingsBO extends AccountBO {
 				.getPersonnelId(), transactionDate);
 		accountPayment.addAcountTrxn(accountTrxnBO);
 		addAccountPayment(accountPayment);
+		addSavingsActivityDetails(buildSavingsActivity(totalAmount,
+				getSavingsBalance(),
+				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, accountPaymentData
+						.getPersonnelId()));
 		try {
 			buildFinancialEntries(accountPayment.getAccountTrxns());
 			getDBService().update(this);
@@ -1488,9 +1499,9 @@ public class SavingsBO extends AccountBO {
 	}
 
 	public void waiveAmountDue() throws ServiceException, AccountException {
-		addSavingsActivityDetails(buildSavingsActivityForWaive(
+		addSavingsActivityDetails(buildSavingsActivity(
 				getTotalAmountDueForNextInstallment(), getSavingsBalance(),
-				AccountConstants.ACTION_WAIVEOFFDUE));
+				AccountConstants.ACTION_WAIVEOFFDUE, getUserContext().getId()));
 		List<AccountActionDateEntity> nextInstallments = getNextInstallment();
 		for (AccountActionDateEntity accountActionDate : nextInstallments) {
 			accountActionDate.waiveDepositDue();
@@ -1504,9 +1515,10 @@ public class SavingsBO extends AccountBO {
 	}
 
 	public void waiveAmountOverDue() throws ServiceException, AccountException {
-		addSavingsActivityDetails(buildSavingsActivityForWaive(
+		addSavingsActivityDetails(buildSavingsActivity(
 				getTotalAmountInArrears(), getSavingsBalance(),
-				AccountConstants.ACTION_WAIVEOFFOVERDUE));
+				AccountConstants.ACTION_WAIVEOFFOVERDUE, getUserContext()
+						.getId()));
 		List<AccountActionDateEntity> installmentsInArrears = getDetailsOfInstallmentsInArrears();
 		for (AccountActionDateEntity accountActionDate : installmentsInArrears) {
 			accountActionDate.waiveDepositDue();
@@ -1518,8 +1530,8 @@ public class SavingsBO extends AccountBO {
 		}
 	}
 
-	private SavingsActivityEntity buildSavingsActivityForWaive(Money amount,
-			Money balanceAmount, short acccountActionId)
+	private SavingsActivityEntity buildSavingsActivity(Money amount,
+			Money balanceAmount, short acccountActionId, Short personnelId)
 			throws ServiceException {
 		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
 				.getInstance().getPersistenceService(
@@ -1527,7 +1539,7 @@ public class SavingsBO extends AccountBO {
 		AccountActionEntity accountAction = (AccountActionEntity) masterPersistenceService
 				.findById(AccountActionEntity.class, acccountActionId);
 		PersonnelBO personnel = new PersonnelPersistenceService()
-				.getPersonnel(getUserContext().getId());
+				.getPersonnel(personnelId);
 		return new SavingsActivityEntity(personnel, accountAction, amount,
 				balanceAmount);
 	}

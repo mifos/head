@@ -205,7 +205,7 @@ public class TestBulkEntryBusinessService extends TestCase {
 				.getAccount(clientSavingsAccount.getAccountId());
 		assertEquals("The balance for account", clientSavingsAccount
 				.getSavingsBalance().getAmountDoubleValue(), 100.0);
-
+		assertEquals(1, clientSavingsAccount.getSavingsActivityDetails().size());
 	}
 
 	public void testSuccessfulSavingsAccountWithdrawal()
@@ -224,6 +224,7 @@ public class TestBulkEntryBusinessService extends TestCase {
 				.getAccount(clientSavingsAccount.getAccountId());
 		assertEquals("The balance for account", clientSavingsAccount
 				.getSavingsBalance().getAmountDoubleValue(), 0.0);
+		assertEquals(2, clientSavingsAccount.getSavingsActivityDetails().size());
 	}
 
 	public void testGetFeeAmountAtDisbursement() {

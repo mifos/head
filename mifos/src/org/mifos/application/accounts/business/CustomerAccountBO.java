@@ -49,6 +49,8 @@ import org.mifos.application.accounts.util.helpers.AccountPaymentData;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
+import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
@@ -64,30 +66,28 @@ import org.mifos.framework.util.helpers.Money;
  * 
  */
 public class CustomerAccountBO extends AccountBO {
-	
-	Set<CustomerActivityEntity> customerActivitDetails=null;
-	
+
+	Set<CustomerActivityEntity> customerActivitDetails = null;
+
 	public CustomerAccountBO() {
 		super();
-		customerActivitDetails=new HashSet<CustomerActivityEntity>(); 
+		customerActivitDetails = new HashSet<CustomerActivityEntity>();
 	}
-	
+
 	public Set<CustomerActivityEntity> getCustomerActivitDetails() {
 		return customerActivitDetails;
 	}
-
 
 	private void setCustomerActivitDetails(
 			Set<CustomerActivityEntity> customerActivitDetails) {
 		this.customerActivitDetails = customerActivitDetails;
 	}
-	
-	public void addCustomerActivity(CustomerActivityEntity customerActivityEntity){
+
+	public void addCustomerActivity(
+			CustomerActivityEntity customerActivityEntity) {
 		customerActivityEntity.setCustomerAccount(this);
 		customerActivitDetails.add(customerActivityEntity);
 	}
-
-
 
 	protected AccountPaymentEntity makePayment(PaymentData paymentData)
 			throws AccountException, SystemException {
@@ -114,6 +114,9 @@ public class CustomerAccountBO extends AccountBO {
 					customerAccountPaymentData, paymentData.getPersonnelId(),
 					paymentData.getTransactionDate());
 			accountPayment.addAcountTrxn(accountTrxn);
+			addCustomerActivity(buildCustomerActivity(paymentData
+					.getTotalAmount(), "Payment rcvd.", paymentData
+					.getPersonnelId()));
 		}
 		return accountPayment;
 	}
@@ -168,52 +171,63 @@ public class CustomerAccountBO extends AccountBO {
 			}
 		}
 	}
-	
+
 	@Override
-	public void waiveAmountDue() throws ServiceException{
-		List<AccountActionDateEntity> accountActionDateList =getApplicableIdsForDueInstallments();
-		AccountActionDateEntity accountActionDateEntity = accountActionDateList.get(accountActionDateList.size()-1);
-		Money chargeWaived=accountActionDateEntity.waiveCharges();
-		if(chargeWaived!=null && chargeWaived.getAmountDoubleValue()>0.0){
-			CustomerActivityEntity customerActivityEntity=new CustomerActivityEntity();
-			customerActivityEntity.buildCustomerActivity(chargeWaived,"Amnt waived",userContext.getId());
-			addCustomerActivity(customerActivityEntity);
-		}
-		getAccountPersistenceService().update(this);
-	}
-	
-	@Override
-	public void waiveAmountOverDue() throws ServiceException{
-	   	Money chargeWaived=new Money();
+	public void waiveAmountDue() throws ServiceException {
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
-		accountActionDateList.remove(accountActionDateList.size()-1);
-		for(AccountActionDateEntity accountActionDateEntity : accountActionDateList){
-			chargeWaived =  chargeWaived.add(accountActionDateEntity.waiveCharges());
-		}
-		if(chargeWaived!=null && chargeWaived.getAmountDoubleValue()>0.0){
-			CustomerActivityEntity customerActivityEntity=new CustomerActivityEntity();
-			customerActivityEntity.buildCustomerActivity(chargeWaived,"Amnt waived",userContext.getId());
-			addCustomerActivity(customerActivityEntity);
+		AccountActionDateEntity accountActionDateEntity = accountActionDateList
+				.get(accountActionDateList.size() - 1);
+		Money chargeWaived = accountActionDateEntity.waiveCharges();
+		if (chargeWaived != null && chargeWaived.getAmountDoubleValue() > 0.0) {
+			addCustomerActivity(buildCustomerActivity(chargeWaived,
+					"Amnt waived", userContext.getId()));
 		}
 		getAccountPersistenceService().update(this);
 	}
-	
-	public void applyPeriodicFees(long timeInMills) throws RepaymentScheduleException, SchedulerException, PersistenceException, ServiceException{
+
+	@Override
+	public void waiveAmountOverDue() throws ServiceException {
+		Money chargeWaived = new Money();
+		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
+		accountActionDateList.remove(accountActionDateList.size() - 1);
+		for (AccountActionDateEntity accountActionDateEntity : accountActionDateList) {
+			chargeWaived = chargeWaived.add(accountActionDateEntity
+					.waiveCharges());
+		}
+		if (chargeWaived != null && chargeWaived.getAmountDoubleValue() > 0.0) {
+			addCustomerActivity(buildCustomerActivity(chargeWaived,
+					"Amnt waived", userContext.getId()));
+		}
+		getAccountPersistenceService().update(this);
+	}
+
+	public void applyPeriodicFees(long timeInMills)
+			throws RepaymentScheduleException, SchedulerException,
+			PersistenceException, ServiceException {
 		Date date = DateUtils.getDateWithoutTimeStamp(timeInMills);
-		Set<AccountActionDateEntity> accountActionDateSet = getAccountActionDates();		
-		for (AccountActionDateEntity accountActionDate : accountActionDateSet) {			
-			if(date.equals(accountActionDate.getActionDate())){
+		Set<AccountActionDateEntity> accountActionDateSet = getAccountActionDates();
+		for (AccountActionDateEntity accountActionDate : accountActionDateSet) {
+			if (date.equals(accountActionDate.getActionDate())) {
 				List<AccountFeesEntity> periodicFeeList = getPeriodicFeeList();
 				for (AccountFeesEntity accountFeesEntity : periodicFeeList) {
-					if(accountFeesEntity.isApplicable(timeInMills) == true){
-						accountFeesEntity.setLastAppliedDate(new Date(timeInMills));
-						accountActionDate.applyPeriodicFees(accountFeesEntity.getFees().getFeeId());						
-						getAccountPersistenceService().save(this);				
-					}					
+					if (accountFeesEntity.isApplicable(timeInMills) == true) {
+						accountFeesEntity.setLastAppliedDate(new Date(
+								timeInMills));
+						accountActionDate.applyPeriodicFees(accountFeesEntity
+								.getFees().getFeeId());
+						getAccountPersistenceService().save(this);
+					}
 				}
 				break;
 			}
-		}			
+		}
+	}
+
+	private CustomerActivityEntity buildCustomerActivity(Money amount,
+			String description, Short personnelId) {
+		PersonnelBO personnel = new PersonnelPersistenceService()
+				.getPersonnel(personnelId);
+		return new CustomerActivityEntity(personnel, description, amount);
 	}
 
 }
