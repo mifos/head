@@ -41,10 +41,6 @@ import org.mifos.application.fees.business.FeesBO;
 import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.framework.persistence.service.PersistenceService;
 
-/**
- * @author rajenders
- *
- */
 public class FeePersistenceService extends PersistenceService{
 	
 	private FeePersistence feePersistence= new FeePersistence();
