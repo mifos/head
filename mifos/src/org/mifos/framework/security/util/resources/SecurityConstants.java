@@ -39,226 +39,345 @@ package org.mifos.framework.security.util.resources;
 
 /**
  * This inteface will hold all the constants used related to the security
+ * 
  * @author rajenders
- *
+ * 
  */
 public interface SecurityConstants {
-	public final  String NOSUCHALGORITHM="security.error.noSuchAlgorithm";
-	public final  String NOSUCHPADDING="security.error.noSuchPadding";
-	public final  String ENCODINGNOTSUPPORTED="security.error.encodingNotSupported";
-	public final  String PBEWITHMD5ANDDES="PBEWithMD5AndDES";
-	public final  String DESEDE="DESede";
-	public final  String DES="DES";
-	public final  String INITIALIZATIONFAILED="security.error.iniFailed";
-	public final  String	GENERALERROR="security.error.generalError";
-	public final  int MAXTRIES=5;	
-	public final  String	ONE="1";	
-	public final  String PATTERN="pattern";
-	public final  String ID="ID";
-	public final String OFFICECHANGEEVENT="OfficeChange";
-	
-	
-	public final  String  SECURITY_PARAM="security_param"; 
-	//Activity not allowd key
-	
-	public final  String  KEY_ACTIVITY_NOT_ALLOWED="error.activity.not.allowed";	
-	
-	
-	
-	
-	
-	//activity related mappeings 
-	public final short  VIEW=0;
-	public final short  SEARCH=0;
-	
-	
-	//funds 
-	public final short  FUNDS_CREATE_FUNDS=3;	
-	public final short  FUNDS_EDIT_FUNDS=4;	
-	
-	//fees
-	public final short  FEES_CREATE_FEES=6;
-	public final short  FEES_EDIT_FEES=7;
-	
-	//checklist
-	public final short CHECKLIST_CREATE_CHECKLIST=9;
-	public final short CHECKLIST_EDIT_CHECKLIST=10;
-	
-	//Miscellaneous
-	public final short DEFINE_NEW_DATA_FIELDS=12;	
-	public final short EDIT_DATA_FIELDS=12;	
-	
-	//Office related activities 
-	public final short  OFFICE_CREATE_OFFICE=15;	
-	public final short  OFFICE_EDIT_OFFICE=16;	
-	
-	
-	//User management
-	public final short  PERSONNEL_CREATE_PERSONNEL=19;
-	public final short  PERSONNEL_EDIT_PERSONNEL=20;
-	public final short  PERSONNEL_UNLOCK_PERSONNEL=21;
-	public final short  ROLES_CREATE_ROLES=23;
-	public final short  ROLES_EDIT_ROLES=24;
-	public final short  ROLES_DELETE_ROLES=25;	
-	
-	
-	//Client attributes management
-	public final short EDIT_CLIENTNAME_HIERARCHY_GROUPLOANALLOWED=28;
-	public final short CREATE_ADMINISTRATIVEFEEFOR_CLIENTS_GROUPS_CENTERS=30;	
-	public final short CONFIGURE_HIDE_UNHIDE_DATAFIELDS_FOR_GROUP_CENTER=32;
-	
-	//Client management
-    public final short CLIENT_ADD_NOTE_TO_CLIENT=48;
+	public final String NOSUCHALGORITHM = "security.error.noSuchAlgorithm";
 
-    public final short CIENT_CREATE_NEW_CLIENT_IN_SAVE_FOR_LATER_STATE=35;
-    public final short CIENT_CREATE_NEW_CLIENT_IN_SUBMIT_FOR_APPROVAL_STATE=36;    
-    public final short CIENT_CHANGE_STATE_TO_SAVE_FOR_LATER_AND_SUBMIT_FOR_APPROVAL_STATE=37;
-    public final short CIENT_CHANGE_STATE_TO_APPROVAD=38;
-    public final short CIENT_CHANGE_STATE_TO_CANCELLED=39;
-    public final short CIENT_CHANGE_STATE_TO_ON_HOLD=40;
-    public final short CIENT_CHANGE_STATE_TO_ON_CLOSED=41;
-    public final short CIENT_APPLY_CHARGES_TO_CLIENT_ACCOUNT=42;
-    public final short CIENT_MAKE_PAYMENT_TO_CLIENT_ACCOUNT=43;
-    public final short CIENT_MAKE_ADJUSTMENT_ENTRIES_TO_CLIENT_ACCOUNT=44;
-    public final short CIENT_WAIVE_PANALTY=45;
-    public final short CIENT_WAIVE_FEE_INSTALLMENT=46;
-    public final short CIENT_REMOVE_FEE_TYPE_FROM_CLIENT_ACCOUNT=47;
-    public final short CIENT_ADD_NOTES_TO_ACCOUNT=48;
-    public final short CIENT_EDIT_PERSONNEL_ANDMFI_INFORMATION=49;
-    public final short CIENT_CHANGE_GROUP_MEMBERSHIP=50;
-    public final short CIENT_TRANSFER_THE_CLIENT=51;
-    public final short CIENT_EDIT_MEETINGSCHEDULE=52;
-    public final short CIENT_ADD_EDIT_HISTORICAL_DATA=53;
-    public final short CIENT_EDIT_FEE_TYPE_ATTACHED_TO_ACCOUNT=54;
-    public final short CIENT_BLACKLIST_A_CLIENT=55;
-    
-	
-    //Group management
-    public final short GROUP_ADD_NOTE_TO_GROUP=70;
-    public final short GROUP_CREATE_NEW_GROUP_IN_SAVE_FOR_LATER_STATE=57;
-    public final short GROUP_CREATE_NEW_GROUP_IN_SUBMIT_FOR_APPROVAL_STATE=58;
-    public final short GROUP_CHANGE_STATE_TO_SAVE_FOR_LATER_AND_SUBMIT_FOR_APPROVAL_STATE=59;
-    public final short GROUP_CHANGE_STATE_TO_APPROVAD=60;
-    public final short GROUP_CHANGE_STATE_TO_CANCELLED=61;
-    public final short GROUP_CHANGE_STATE_TO_ON_HOLD=62;
-    public final short GROUP_CHANGE_STATE_TO_ON_CLOSED=63;
-    public final short GROUP_APPLY_CHARGES_TO_GROUP_ACCOUNT=64;
-    public final short GROUP_MAKE_PAYMENT_TO_GROUP_ACCOUNT=65;
-    public final short GROUP_MAKE_ADJUSTMENT_ENTRIES_TO_GROUP_ACCOUNT=66;
-    public final short GROUP_WAIVE_PANALTY=67;
-    public final short GROUP_WAIVE_FEE_INSTALLMENT=68;
-    public final short GROUP_REMOVE_FEE_TYPE_FROM_GROUP_ACCOUNT=69;
-    public final short GROUP_ADD_NOTES_TO_ACCOUNT=70;
-    public final short GROUP_EDIT_GROUP=71;
-    public final short GROUP_CHANGE_CENTER_MEMBERSHIP=72;
-    public final short GROUP_TRANSFER_THE_GROUP=73;
-    public final short GROUP_EDIT_MEETING_SCHEDULE=74;
-    public final short GROUP_ADD_EDIT_HISTORICAL_DATA=75;
-    public final short GROUP_EDIT_FEE_TYPE_ATTACHED_TO_ACCOUNT=76;
-    public final short GROUP_BLACKLIST_A_GROUP=77;
-        
-    //Center
-    public final short CENTER_ADD_NOTE_TO_CENTER=87;
+	public final String NOSUCHPADDING = "security.error.noSuchPadding";
 
-    public final short CENTER_CREATE_NEW_CENTER=79;
-    public final short CENTER_MODIFY_CENTER_INFORMATION_AND_CHANGE_CENTER_STATUS=80;
-    public final short CENTER_MAKE_PAYMENTS_TO_CENTER_ACCOUNT=82;    
-    public final short CENTER_MAKE_ADJUSTMENT_ENTRIES_TO_CENTER_ACCOUNT=83;	
-    public final short CENTER_WAIVE_PANALTY=84;	
-    public final short CENTER_WAIVE_FEE_INSTALLMENT=85;
-    public final short CENTER_REMOVE_FEE_TYPE_FROM_CENTER_ACCOUNT=86;
-    public final short CENTER_ADD_NOTES_TO_ACCOUNT=87;
-    public final short CENTER_EDIT_FEE_TYPE_ATTACHED_TO_ACCOUNT=88;
+	public final String ENCODINGNOTSUPPORTED = "security.error.encodingNotSupported";
 
-    public final short CENTER_EDIT_STATUS=81;
-    public final short CENTER_EDIT_CENTER_STATUS=186;
+	public final String PBEWITHMD5ANDDES = "PBEWithMD5AndDES";
 
-    
-    //Product definition
-    public final short DEFINE_NEW_PRODUCT_CATEGORIES=91;
-    public final short EDIT_PRODUCT_CATEGORIES=92;
-    
-    //loan product
-    public final short DEFINE_NEW_LOAN_PRODUCT_INSTANCE=94;
-    public final short EDIT_LOAN_PRODUCT=95;
-    
-    //saving product
-    public final short DEFINE_NEW_SAVING_PRODUCT_INSTANCE=97;
-    public final short EDIT_SAVING_PRODUCT=98;
-    
-    
-    //Loan management
-    public final short LOAN_CREATE_LOAN_ACCOUNT_IN_SAVE_FOR_LATER_STATE=101;
-    public final short LOAN_CREATE_LOAN_ACCOUNT_IN_SUBMIT_FOR_APPROVAL_STATE=102;
-    public final short LOAN_CHANGE_STATE_TO_SAVE_FOR_LATER_AND_SUBMIT_FOR_APPROVAL=103;    
-    public final short LOAN_CHANGE_STATE_TO_APPROVAD=104;
-    public final short LOAN_CHANGE_STATE_TO_CANCELLED=105;
-    public final short LOAN_CHANGE_STATE_TO_DISBURSED_TO_LOAN_OFFICER=106;
-    public final short LOAN_CHANGE_STATE_TO_ACTIVE_IN_GOOD_STANDING=107;
-    public final short LOAN_CHANGE_STATE_TO_IN_ARREARS=108;
-    public final short LOAN_CHANGE_STATE_TO_CLOSED_WRITTEN_OFF=109;    
-    public final short LOAN_CHANGE_STATE_TO_CLOSED_RESCHEDULE=110;    
-    public final short LOAN_CHANGE_STATE_TO_CLOSED_OBLIGATION_MET=111;
-    public final short LOAN_MODIFY_THE_DEFAULTS_AMOUNT=112;
+	public final String DESEDE = "DESede";
 
-    //savings
-    public  final short SAVINGS_APPLY_ADJUSTMENT=186;
-    
-    //Loan Transactions
-    public final short LOAN_CAN_ADD_NOTES_TO_LOAN=179;
+	public final String DES = "DES";
 
-    public final short LOAN_APPLY_FEE_MISC_CHARGES_TO_ACCOUNT=114;
-    public final short LOAN_MAKE_PAYMENT_TO_ACCOUNT=115;
-    public final short LOAN_MAKE_ADJUSTMENT_ENTRY_TO_ACCOUNT=116;
-    public final short LOAN_EDIT_ACCOUNT_INFORMATION=117;
-    public final short LOAN_WAIVE_PANELTY=118;
-    public final short LOAN_WAIVE_FEE_INSTALLMENT=119;
-    public final short LOAN_REMOVE_FEE_TYPE_ATTACHED_TO_ACCOUNT=120;
-    
-    public final short GROUP_UPDATE_STATUS=121;
-    public final short GROUP_CREATE_GROUP=122;
-    public final short CUSTOMER_ADD_NOTES_TO_CENTER_GROUP_CLIENT=123;
-    public final short CUSTOMER_ADD_HISTORICAL_DATA_TO_CENTER_GROUP_CLIENT=124;
-    public final short CLIENT_CREATE_CLIENT=125;
-    public final short CLIENT_UPDATE_CLIENT=126;
-    public final short CLIENT_UPDATE_STATUS=127;    
-    public final short LOAN_CREATE_LOAN=128;    
-    public final short LOAN_UPDATE_LOAN=129;
-    public final short LOAN_UPDATE_LOAN_STATUS=130;
-    public final short APPLY_CHARGES_TO_CLIENT_GROUP_CENTERS_LOANS=131;   
-    public final short APPLY_PAYMENT_TO_CLIENT_GROUP_CENTERS_LOANS=132;   
-    
-    public final short MEETING_UPDATE_MEETING=133; 
-    public final short MEETING_CREATE_MEETING=134; 
-    
-    public final short MEETING_CREATE_CLIENT_MEETING=121; 
-    public final short MEETING_UPDATE_CLIENT_MEETING=52; 
-    public final short MEETING_CREATE_GROUP_MEETING=122; 
-    public final short MEETING_UPDATE_GROUP_MEETING=74; 
-    public final short MEETING_CREATE_CENTER_MEETING=128; 
-    public final short MEETING_UPDATE_CENTER_MEETING=127; 
-    
-    
-    public final short PERSONNEL_EDIT_SELF_INFO=135;
-    
-    public final short SAVINGS_CREATE_SAVINGS=137;
-    public final short SAVINGS_UPDATE_SAVINGS=138;
-    public final short SAVINGS_CLOSE_SAVINGS_ACCOUNT=139;
-    public final short SAVINGS_CHANGE_STATUS=140;
-    
-    public final short ADMINISTER_REPORTS=142;
-    public final short CLIENTSDETAILVIEW=152;
-    public final short CLIENTSPRODUCTHISTORY=153;    
-    public final short BRANCHPERFORMANCE=164;
-    public final short AREAPERFORMANCE=165;    
-    public final short COLLECTIONSHEET=159;    
-    public final short LOANDISTRIBUTION=172;
-    public final short BRANCHDISBURSEMENT=173;    
-    public final short STAFFWISEREPORT=160;
-    public final short BRANCHWISEREPORT=161;   
-    public final short ANALYSIS=176;
-    public final short KENDRA_MEETING=177; 
-    
-    public final short LOAN_CAN_REPAY_LOAN=178;
-    
+	public final String INITIALIZATIONFAILED = "security.error.iniFailed";
+
+	public final String GENERALERROR = "security.error.generalError";
+
+	public final int MAXTRIES = 5;
+
+	public final String ONE = "1";
+
+	public final String PATTERN = "pattern";
+
+	public final String ID = "ID";
+
+	public final String OFFICECHANGEEVENT = "OfficeChange";
+
+	public final String SECURITY_PARAM = "security_param";
+
+	// Activity not allowd key
+
+	public final String KEY_ACTIVITY_NOT_ALLOWED = "error.activity.not.allowed";
+
+	// activity related mappeings
+	public final short VIEW = 0;
+
+	public final short SEARCH = 0;
+
+	// funds
+	public final short FUNDS_CREATE_FUNDS = 3;
+
+	public final short FUNDS_EDIT_FUNDS = 4;
+
+	// fees
+	public final short FEES_CREATE_FEES = 6;
+
+	public final short FEES_EDIT_FEES = 7;
+
+	// checklist
+	public final short CHECKLIST_CREATE_CHECKLIST = 9;
+
+	public final short CHECKLIST_EDIT_CHECKLIST = 10;
+
+	// Miscellaneous
+	public final short DEFINE_NEW_DATA_FIELDS = 12;
+
+	public final short EDIT_DATA_FIELDS = 12;
+
+	// Office related activities
+	public final short OFFICE_CREATE_OFFICE = 15;
+
+	public final short OFFICE_EDIT_OFFICE = 16;
+
+	// User management
+	public final short PERSONNEL_CREATE_PERSONNEL = 19;
+
+	public final short PERSONNEL_EDIT_PERSONNEL = 20;
+
+	public final short PERSONNEL_UNLOCK_PERSONNEL = 21;
+
+	public final short ROLES_CREATE_ROLES = 23;
+
+	public final short ROLES_EDIT_ROLES = 24;
+
+	public final short ROLES_DELETE_ROLES = 25;
+
+	// Client attributes management
+	public final short EDIT_CLIENTNAME_HIERARCHY_GROUPLOANALLOWED = 28;
+
+	public final short CREATE_ADMINISTRATIVEFEEFOR_CLIENTS_GROUPS_CENTERS = 30;
+
+	public final short CONFIGURE_HIDE_UNHIDE_DATAFIELDS_FOR_GROUP_CENTER = 32;
+
+	// Client management
+	public final short CLIENT_ADD_NOTE_TO_CLIENT = 48;
+
+	public final short CIENT_CREATE_NEW_CLIENT_IN_SAVE_FOR_LATER_STATE = 35;
+
+	public final short CIENT_CREATE_NEW_CLIENT_IN_SUBMIT_FOR_APPROVAL_STATE = 36;
+
+	public final short CIENT_CHANGE_STATE_TO_SAVE_FOR_LATER_AND_SUBMIT_FOR_APPROVAL_STATE = 37;
+
+	public final short CIENT_CHANGE_STATE_TO_APPROVAD = 38;
+
+	public final short CIENT_CHANGE_STATE_TO_CANCELLED = 39;
+
+	public final short CIENT_CHANGE_STATE_TO_ON_HOLD = 40;
+
+	public final short CIENT_CHANGE_STATE_TO_ON_CLOSED = 41;
+
+	public final short CIENT_APPLY_CHARGES_TO_CLIENT_ACCOUNT = 42;
+
+	public final short CIENT_MAKE_PAYMENT_TO_CLIENT_ACCOUNT = 43;
+
+	public final short CIENT_MAKE_ADJUSTMENT_ENTRIES_TO_CLIENT_ACCOUNT = 44;
+
+	public final short CIENT_WAIVE_PANALTY = 45;
+
+	public final short CIENT_WAIVE_FEE_INSTALLMENT = 46;
+
+	public final short CIENT_REMOVE_FEE_TYPE_FROM_CLIENT_ACCOUNT = 47;
+
+	public final short CIENT_ADD_NOTES_TO_ACCOUNT = 48;
+
+	public final short CIENT_EDIT_PERSONNEL_ANDMFI_INFORMATION = 49;
+
+	public final short CIENT_CHANGE_GROUP_MEMBERSHIP = 50;
+
+	public final short CIENT_TRANSFER_THE_CLIENT = 51;
+
+	public final short CIENT_EDIT_MEETINGSCHEDULE = 52;
+
+	public final short CIENT_ADD_EDIT_HISTORICAL_DATA = 53;
+
+	public final short CIENT_EDIT_FEE_TYPE_ATTACHED_TO_ACCOUNT = 54;
+
+	public final short CIENT_BLACKLIST_A_CLIENT = 55;
+
+	// Group management
+	public final short GROUP_ADD_NOTE_TO_GROUP = 70;
+
+	public final short GROUP_CREATE_NEW_GROUP_IN_SAVE_FOR_LATER_STATE = 57;
+
+	public final short GROUP_CREATE_NEW_GROUP_IN_SUBMIT_FOR_APPROVAL_STATE = 58;
+
+	public final short GROUP_CHANGE_STATE_TO_SAVE_FOR_LATER_AND_SUBMIT_FOR_APPROVAL_STATE = 59;
+
+	public final short GROUP_CHANGE_STATE_TO_APPROVAD = 60;
+
+	public final short GROUP_CHANGE_STATE_TO_CANCELLED = 61;
+
+	public final short GROUP_CHANGE_STATE_TO_ON_HOLD = 62;
+
+	public final short GROUP_CHANGE_STATE_TO_ON_CLOSED = 63;
+
+	public final short GROUP_APPLY_CHARGES_TO_GROUP_ACCOUNT = 64;
+
+	public final short GROUP_MAKE_PAYMENT_TO_GROUP_ACCOUNT = 65;
+
+	public final short GROUP_MAKE_ADJUSTMENT_ENTRIES_TO_GROUP_ACCOUNT = 66;
+
+	public final short GROUP_WAIVE_PANALTY = 67;
+
+	public final short GROUP_WAIVE_FEE_INSTALLMENT = 68;
+
+	public final short GROUP_REMOVE_FEE_TYPE_FROM_GROUP_ACCOUNT = 69;
+
+	public final short GROUP_ADD_NOTES_TO_ACCOUNT = 70;
+
+	public final short GROUP_EDIT_GROUP = 71;
+
+	public final short GROUP_CHANGE_CENTER_MEMBERSHIP = 72;
+
+	public final short GROUP_TRANSFER_THE_GROUP = 73;
+
+	public final short GROUP_EDIT_MEETING_SCHEDULE = 74;
+
+	public final short GROUP_ADD_EDIT_HISTORICAL_DATA = 75;
+
+	public final short GROUP_EDIT_FEE_TYPE_ATTACHED_TO_ACCOUNT = 76;
+
+	public final short GROUP_BLACKLIST_A_GROUP = 77;
+
+	// Center
+	public final short CENTER_ADD_NOTE_TO_CENTER = 87;
+
+	public final short CENTER_CREATE_NEW_CENTER = 79;
+
+	public final short CENTER_MODIFY_CENTER_INFORMATION_AND_CHANGE_CENTER_STATUS = 80;
+
+	public final short CENTER_MAKE_PAYMENTS_TO_CENTER_ACCOUNT = 82;
+
+	public final short CENTER_MAKE_ADJUSTMENT_ENTRIES_TO_CENTER_ACCOUNT = 83;
+
+	public final short CENTER_WAIVE_PANALTY = 84;
+
+	public final short CENTER_WAIVE_FEE_INSTALLMENT = 85;
+
+	public final short CENTER_REMOVE_FEE_TYPE_FROM_CENTER_ACCOUNT = 86;
+
+	public final short CENTER_ADD_NOTES_TO_ACCOUNT = 87;
+
+	public final short CENTER_EDIT_FEE_TYPE_ATTACHED_TO_ACCOUNT = 88;
+
+	public final short CENTER_EDIT_STATUS = 81;
+
+	public final short CENTER_EDIT_CENTER_STATUS = 186;
+
+	// Product definition
+	public final short DEFINE_NEW_PRODUCT_CATEGORIES = 91;
+
+	public final short EDIT_PRODUCT_CATEGORIES = 92;
+
+	// loan product
+	public final short DEFINE_NEW_LOAN_PRODUCT_INSTANCE = 94;
+
+	public final short EDIT_LOAN_PRODUCT = 95;
+
+	// saving product
+	public final short DEFINE_NEW_SAVING_PRODUCT_INSTANCE = 97;
+
+	public final short EDIT_SAVING_PRODUCT = 98;
+
+	// Loan management
+	public final short LOAN_CREATE_LOAN_ACCOUNT_IN_SAVE_FOR_LATER_STATE = 101;
+
+	public final short LOAN_CREATE_LOAN_ACCOUNT_IN_SUBMIT_FOR_APPROVAL_STATE = 102;
+
+	public final short LOAN_CHANGE_STATE_TO_SAVE_FOR_LATER_AND_SUBMIT_FOR_APPROVAL = 103;
+
+	public final short LOAN_CHANGE_STATE_TO_APPROVAD = 104;
+
+	public final short LOAN_CHANGE_STATE_TO_CANCELLED = 105;
+
+	public final short LOAN_CHANGE_STATE_TO_DISBURSED_TO_LOAN_OFFICER = 106;
+
+	public final short LOAN_CHANGE_STATE_TO_ACTIVE_IN_GOOD_STANDING = 107;
+
+	public final short LOAN_CHANGE_STATE_TO_IN_ARREARS = 108;
+
+	public final short LOAN_CHANGE_STATE_TO_CLOSED_WRITTEN_OFF = 109;
+
+	public final short LOAN_CHANGE_STATE_TO_CLOSED_RESCHEDULE = 110;
+
+	public final short LOAN_CHANGE_STATE_TO_CLOSED_OBLIGATION_MET = 111;
+
+	public final short LOAN_MODIFY_THE_DEFAULTS_AMOUNT = 112;
+
+	// savings
+	public final short SAVINGS_APPLY_ADJUSTMENT = 186;
+
+	// Loan Transactions
+	public final short LOAN_CAN_ADD_NOTES_TO_LOAN = 179;
+
+	public final short LOAN_APPLY_FEE_MISC_CHARGES_TO_ACCOUNT = 114;
+
+	public final short LOAN_MAKE_PAYMENT_TO_ACCOUNT = 115;
+
+	public final short LOAN_MAKE_ADJUSTMENT_ENTRY_TO_ACCOUNT = 116;
+
+	public final short LOAN_EDIT_ACCOUNT_INFORMATION = 117;
+
+	public final short LOAN_WAIVE_PANELTY = 118;
+
+	public final short LOAN_WAIVE_FEE_INSTALLMENT = 119;
+
+	public final short LOAN_REMOVE_FEE_TYPE_ATTACHED_TO_ACCOUNT = 120;
+
+	public final short GROUP_UPDATE_STATUS = 121;
+
+	public final short GROUP_CREATE_GROUP = 122;
+
+	public final short CUSTOMER_ADD_NOTES_TO_CENTER_GROUP_CLIENT = 123;
+
+	public final short CUSTOMER_ADD_HISTORICAL_DATA_TO_CENTER_GROUP_CLIENT = 124;
+
+	public final short CLIENT_CREATE_CLIENT = 125;
+
+	public final short CLIENT_UPDATE_CLIENT = 126;
+
+	public final short CLIENT_UPDATE_STATUS = 127;
+
+	public final short LOAN_CREATE_LOAN = 128;
+
+	public final short LOAN_UPDATE_LOAN = 129;
+
+	public final short LOAN_UPDATE_LOAN_STATUS = 130;
+
+	public final short APPLY_CHARGES_TO_CLIENT_GROUP_CENTERS_LOANS = 131;
+
+	public final short APPLY_PAYMENT_TO_CLIENT_GROUP_CENTERS_LOANS = 132;
+
+	public final short MEETING_UPDATE_MEETING = 133;
+
+	public final short MEETING_CREATE_MEETING = 134;
+
+	public final short MEETING_CREATE_CLIENT_MEETING = 121;
+
+	public final short MEETING_UPDATE_CLIENT_MEETING = 52;
+
+	public final short MEETING_CREATE_GROUP_MEETING = 122;
+
+	public final short MEETING_UPDATE_GROUP_MEETING = 74;
+
+	public final short MEETING_CREATE_CENTER_MEETING = 128;
+
+	public final short MEETING_UPDATE_CENTER_MEETING = 127;
+
+	public final short PERSONNEL_EDIT_SELF_INFO = 135;
+
+	public final short SAVINGS_CREATE_SAVINGS = 137;
+
+	public final short SAVINGS_UPDATE_SAVINGS = 138;
+
+	public final short SAVINGS_CLOSE_SAVINGS_ACCOUNT = 139;
+
+	public final short SAVINGS_CHANGE_STATUS = 140;
+
+	public final short ADMINISTER_REPORTS = 142;
+
+	public final short CLIENTSDETAILVIEW = 152;
+
+	public final short CLIENTSPRODUCTHISTORY = 153;
+
+	public final short BRANCHPERFORMANCE = 164;
+
+	public final short AREAPERFORMANCE = 165;
+
+	public final short COLLECTIONSHEET = 159;
+
+	public final short LOANDISTRIBUTION = 172;
+
+	public final short BRANCHDISBURSEMENT = 173;
+
+	public final short STAFFWISEREPORT = 160;
+
+	public final short BRANCHWISEREPORT = 161;
+
+	public final short ANALYSIS = 176;
+
+	public final short KENDRA_MEETING = 177;
+
+	public final short LOAN_CAN_REPAY_LOAN = 178;
+
+	public final short SAVINGS_CANWAIVE_DUEAMOUNT = 187;
+
+	public final short SAVINGS_CANWAIVE_OVERDUEAMOUNT = 188;
 }

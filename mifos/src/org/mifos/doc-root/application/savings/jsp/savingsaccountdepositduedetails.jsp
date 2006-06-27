@@ -72,6 +72,7 @@
 								</td>
 							</tr>
 						</table>
+						<font class="fontnormalRedBold"><html-el:errors bundle="SavingsUIResources" /></font>
 						<table width="60%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td bgcolor="#F0D4A5" style="padding-left:10px; padding-bottom:3px;">
