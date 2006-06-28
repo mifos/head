@@ -13,13 +13,17 @@ import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
@@ -65,14 +69,20 @@ public class AccountAppAction extends BaseAction {
 			return false;
 	}
 
-	public ActionForward removeFees(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) throws Exception{
-		Integer accountId=Integer.valueOf((String)request.getParameter("accountId"));
-		Short feeId=Short.valueOf((String)request.getParameter("feeId"));
-		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
+	public ActionForward removeFees(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws SystemException, ApplicationException{
+		Integer accountId=Integer.valueOf((String)request.getParameter("accountId"));		
+		Short feeId=Short.valueOf((String)request.getParameter("feeId"));		
+		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());		
 		accountBusinessService.removeFees(accountId,feeId,uc.getId());
-		
-		return mapping.findForward("remove_success");
+		String fromPage = request.getParameter(CenterConstants.FROM_PAGE);
+		StringBuilder forward = new StringBuilder();
+		forward = forward.append(AccountConstants.REMOVE+"_"+fromPage +"_"+AccountConstants.CHARGES);		
+		if( fromPage != null ){
+			return mapping.findForward(forward.toString());
+		}
+		else{
+			return mapping.findForward(AccountConstants.REMOVE_SUCCESS);
+		}
 	}
 	
 	public ActionForward getTrxnHistory(ActionMapping mapping, ActionForm form,

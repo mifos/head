@@ -165,7 +165,7 @@
                 </td>
               </tr>
             </table>
-<mifoscustom:mifostabletag moduleName="customer/client" scope="request" source="RecentAcctActivityList" xmlFileName="ClientRecentActivity.xml" passLocale="true"/>            
+			<mifoscustom:mifostabletag moduleName="customer/client" scope="request" source="RecentAcctActivityList" xmlFileName="ClientRecentActivity.xml" passLocale="true"/>            
             <br>
             <table width="96%" border="0" cellpadding="3" cellspacing="0">
               <tr>
@@ -176,8 +176,12 @@
               <c:forEach items="${requestScope.RecurrenceFeesChargesList}" var="recurrenceFees">
              <tr class="fontnormal">
                 <td width="15%"><c:out value="${recurrenceFees.feeName}"/>:</td>
+                
                 <td width="30%"><c:out value="${recurrenceFees.amount}"/>&nbsp;&nbsp;(<c:out value="${recurrenceFees.meeting.simpleMeetingSchedule}"/>)</td>
-                <td width="55%"><a href="#"><mifos:mifoslabel  name="Group.remove"/></a></td>
+                <td width="55%">
+				<html-el:link href="accountAppAction.do?method=removeFees&feeId=${recurrenceFees.feeId}&accountId=${recurrenceFees.accountId}&fromPage=group"> 
+                <mifos:mifoslabel  name="Group.remove"/>
+                </html-el:link></td>
               </tr>
             </c:forEach>
             </table><br></td>

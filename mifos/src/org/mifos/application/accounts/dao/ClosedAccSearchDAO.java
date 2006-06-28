@@ -50,6 +50,7 @@ import org.mifos.application.accounts.util.helpers.ClosedAccSearchConstants;
 import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
 import org.mifos.application.accounts.util.valueobjects.ClientUpcomingFeecahrges;
 import org.mifos.application.customer.client.util.valueobjects.ClientChangeLog;
+import org.mifos.application.fees.util.helpers.FeesConstants;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.framework.components.audit.util.valueobjects.AuditLog;
 import org.mifos.framework.components.audit.util.valueobjects.AuditLogRecord;
@@ -149,12 +150,13 @@ public class ClosedAccSearchDAO extends DAO {
 		}
 	}
 	
-	public List<ClientUpcomingFeecahrges> getRecurrenceFeeCharges(Integer accountId)  throws SystemException,ApplicationException {
+	public List<ClientUpcomingFeecahrges> getRecurrenceFeeCharges(Integer accountId)  throws SystemException,ApplicationException {		
 		Session session = null;
 		try {
 			session = HibernateUtil.getSession();
 			Query query = session.getNamedQuery(NamedQueryConstants.GETRECURRENCEFEESCHARGES);
 			query.setInteger(ClosedAccSearchConstants.ACCOUNTID,accountId);
+			query.setShort(FeesConstants.INACTIVE,Short.valueOf(FeesConstants.FEES_INACTIVE));
 			List<ClientUpcomingFeecahrges> clientUpcomingFeecahrgesList = query.list();
 			for(ClientUpcomingFeecahrges clientUpcomingFeecahrges:clientUpcomingFeecahrgesList) {
 				clientUpcomingFeecahrges.getMeeting().getSimpleMeetingSchedule();

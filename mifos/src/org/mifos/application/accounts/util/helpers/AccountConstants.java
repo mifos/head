@@ -171,5 +171,9 @@ public interface AccountConstants {
 	public final String MISC_PENALTY_APPLIED = "Misc penalty applied";
 	public final String MISC_FEES_APPLIED = "Misc fees applied";
 	public final String LAST_PAYMENT_ACTION="lastPaymentAction";
+	
+	public final String REMOVE_SUCCESS="remove_success";
+	public final String REMOVE="remove";
+	public final String CHARGES="charges";
 }
 

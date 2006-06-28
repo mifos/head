@@ -1518,6 +1518,9 @@
 		validate="true"
 		input="/accountAppAction.do?method=validate"
 		>
+		<forward name="remove_group_charges" path="/closedaccsearchaction.do?method=search" />
+		<forward name="remove_center_charges" path="/closedaccsearchaction.do?method=search" />
+		<forward name="remove_client_charges" path="/closedaccsearchaction.do?method=search" />		
 		<forward name="remove_success" path="/loanAction.do?method=get" />
 		<forward name="getTransactionHistory_success" path="/pages/application/accounts/jsp/viewtrxnhistory.jsp" />
 	</action>

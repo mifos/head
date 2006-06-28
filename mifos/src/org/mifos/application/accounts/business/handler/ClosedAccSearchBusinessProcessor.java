@@ -57,6 +57,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Money;
@@ -112,20 +113,15 @@ public class ClosedAccSearchBusinessProcessor extends MifosBusinessProcessor {
 		if(null != closedAccSearch) {
 			Integer accountId=closedAccSearch.getAccountId();
 			Integer customerId=closedAccSearch.getCustomerId();
-
-			
 			ClosedAccSearchDAO closedAccSearchDAO=(ClosedAccSearchDAO)getDAO(context.getPath());
 			List<ClientUpcomingFeecahrges> upcomingFeecahrgesList=closedAccSearchDAO.getClientUpcomingFeeCharges(accountId);
-			List<ClientUpcomingFeecahrges> RecurenceFeecahrgesList=closedAccSearchDAO.getRecurrenceFeeCharges(accountId);
-			
-			
+			List<ClientUpcomingFeecahrges> RecurenceFeecahrgesList=closedAccSearchDAO.getRecurrenceFeeCharges(accountId);			
 			Money clientFeeChargeDue=closedAccSearchDAO.getClientFeeCahrgesDue(accountId);
 			Money clientFeeChargeOverDue=closedAccSearchDAO.getClientFeeCahrgesOverDue(accountId);
-			String upcomingChargesDate=closedAccSearchDAO.getUpcomingChargesDate(accountId);
-			
+			String upcomingChargesDate=closedAccSearchDAO.getUpcomingChargesDate(accountId);			
+			HibernateUtil.closeSession();
 			CustomerBusinessService customerService=(CustomerBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Customer);
-			context.addAttribute(new SearchResults(ClosedAccSearchConstants.CLIENTRECENTACCACTIVITYLIST,customerService.getRecentActivityView(customerId)));
-			
+			context.addAttribute(new SearchResults(ClosedAccSearchConstants.CLIENTRECENTACCACTIVITYLIST,customerService.getRecentActivityView(customerId)));			
 			context.addAttribute(new SearchResults(ClosedAccSearchConstants.CLIENTUPCOMINGFEECHARGESLIST,upcomingFeecahrgesList));
 			context.addAttribute(new SearchResults(ClosedAccSearchConstants.RECURRENCEFEESCHARGESLIST,RecurenceFeecahrgesList));
 			context.addBusinessResults(ClosedAccSearchConstants.CLIENTFEECHARGEDUE,clientFeeChargeDue);

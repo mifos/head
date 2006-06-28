@@ -49,6 +49,7 @@ import org.mifos.application.accounts.util.helpers.AccountPaymentData;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
+import org.mifos.application.fees.business.FeesBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -228,6 +229,14 @@ public class CustomerAccountBO extends AccountBO {
 		PersonnelBO personnel = new PersonnelPersistenceService()
 				.getPersonnel(personnelId);
 		return new CustomerActivityEntity(personnel, description, amount);
+	}
+	
+	public void updateAccountActivity(Money totalFeeAmount,Short personnelId,Short feeId){
+		PersonnelBO personnel = new PersonnelPersistenceService().getPersonnel(personnelId);				
+		FeesBO feesBO = getAccountFeesObject(feeId);
+		String description = feesBO.getFeeName()+ " " + AccountConstants.FEES_REMOVED;				
+		CustomerActivityEntity customerActivityEntity = new CustomerActivityEntity(personnel,description,totalFeeAmount);
+		this.addCustomerActivity(customerActivityEntity);
 	}
 
 }

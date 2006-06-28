@@ -393,6 +393,7 @@ public class AccountBO extends BusinessObject {
 				accountFeesEntity.changeFeesStatus(
 						AccountConstants.INACTIVE_FEES, new Date(System
 								.currentTimeMillis()));
+				accountFeesEntity.setLastAppliedDate(null);
 			}
 		}
 	}
@@ -519,9 +520,19 @@ public class AccountBO extends BusinessObject {
 		return null;
 	}
 
-	public void removeFees(Short feeId, Short personnelId)
-			throws SystemException, ApplicationException {
+	public void removeFees(Short feeId, Short personnelId) throws SystemException, ApplicationException {
+		List<Short> installmentIdList = getAccountPersistenceService().getNextInstallmentList(this.getAccountId());
+		Money totalFeeAmount = new Money();
+		if (installmentIdList != null && installmentIdList.size() != 0 && isFeeActive(feeId)) {
+			totalFeeAmount = updateAccountActionDateEntity(installmentIdList, feeId);
+			updateAccountFeesEntity(feeId);
+			updateTotalFeeAmount(totalFeeAmount);
+			updateAccountActivity(totalFeeAmount,personnelId,feeId);
+		}
+
 	}
+	
+	public void updateAccountActivity(Money totalFeeAmount,Short personnelId,Short feeId){}
 
 	public void adjustPmnt(String adjustmentComment)
 			throws ApplicationException, SystemException {

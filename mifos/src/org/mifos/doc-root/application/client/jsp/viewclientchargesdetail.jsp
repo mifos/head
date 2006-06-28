@@ -164,7 +164,7 @@
             <table width="96%" border="0" cellpadding="3" cellspacing="0">
               <tr>
                 <td width="28%" class="headingorange">
-<mifos:mifoslabel  name="client.recaccact" bundle="ClientUIResources"/>                
+				<mifos:mifoslabel  name="client.recaccact" bundle="ClientUIResources"/>                
                 </td>
                 <td width="72%" align="right" class="fontnormal">
                 <html-el:link href="customerAction.do?method=getAllActivity&type=Client&globalCustNum=${sessionScope.linkValues.globalCustNum}&prdOfferingName=${sessionScope.linkValues.customerName}&input=ViewClientCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&securityParamInput=Client">
@@ -185,7 +185,11 @@
              <tr class="fontnormal">
                 <td width="15%"><c:out value="${recurrenceFees.feeName}"/>:</td>
                 <td width="30%"><c:out value="${recurrenceFees.amount}"/>&nbsp;&nbsp;(<c:out value="${recurrenceFees.meeting.simpleMeetingSchedule}"/>)</td>
-                <td width="55%"><a href="#">Remove</a></td>
+                <td width="55%">
+                <html-el:link href="accountAppAction.do?method=removeFees&feeId=${recurrenceFees.feeId}&accountId=${recurrenceFees.accountId}&fromPage=client"> 
+                <mifos:mifoslabel name="client.remove" bundle="ClientUIResources"/>                  
+                </html-el:link>
+                </td>
               </tr>
             </c:forEach>
             </table><br></td>

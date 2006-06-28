@@ -1109,51 +1109,23 @@ public class LoanBO extends AccountBO {
 		return nextAccountAction;
 	}
 
-	public void removeFees(Short feeId, Short personnelId)
-			throws SystemException, ApplicationException {
-		try {
-			List<Short> installmentIdList = getAccountPersistenceService()
-					.getNextInstallmentList(this.getAccountId());
-			Money totalFeeAmount = new Money();
-			if (installmentIdList != null && installmentIdList.size() != 0
-					&& isFeeActive(feeId)) {
-				totalFeeAmount = updateAccountActionDateEntity(
-						installmentIdList, feeId);
-				updateAccountFeesEntity(feeId);
-				updateTotalFeeAmount(totalFeeAmount);
-
-				PersonnelBO personnel = new PersonnelPersistenceService()
-						.getPersonnel(personnelId);
-				LoanSummaryEntity loanSummaryEntity = ((LoanBO) this)
-						.getLoanSummary();
-				LoanActivityEntity loanActivity = new LoanActivityEntity();
-				loanActivity.setComments(getAccountFeesObject(feeId)
-						.getFeeName()
-						+ " " + AccountConstants.FEES_REMOVED);
-				loanActivity.setPersonnel(personnel);
-				loanActivity.setPrincipal(new Money());
-				loanActivity.setInterest(new Money());
-				loanActivity.setFee(totalFeeAmount);
-				loanActivity.setFeeOutstanding(loanSummaryEntity
-						.getOriginalFees().subtract(
-								loanSummaryEntity.getFeesPaid()));
-				loanActivity.setPenaltyOutstanding(loanSummaryEntity
-						.getOriginalPenalty().subtract(
-								loanSummaryEntity.getPenaltyPaid()));
-				loanActivity.setInterestOutstanding(loanSummaryEntity
-						.getOriginalInterest().subtract(
-								loanSummaryEntity.getInterestPaid()));
-				loanActivity.setPrincipalOutstanding(loanSummaryEntity
-						.getOriginalPrincipal().subtract(
-								loanSummaryEntity.getPrincipalPaid()));
-				this.addLoanActivity(loanActivity);
-			}
-
-		} catch (ServiceException e) {
-			throw new ApplicationException(e);
-		}
+	
+	public void updateAccountActivity(Money totalFeeAmount,Short personnelId,Short feeId){
+		PersonnelBO personnel = new PersonnelPersistenceService().getPersonnel(personnelId);
+		LoanSummaryEntity loanSummaryEntity = ((LoanBO) this).getLoanSummary();
+		LoanActivityEntity loanActivity = new LoanActivityEntity();
+		loanActivity.setComments(getAccountFeesObject(feeId).getFeeName()+ " " + AccountConstants.FEES_REMOVED);
+		loanActivity.setPersonnel(personnel);
+		loanActivity.setPrincipal(new Money());
+		loanActivity.setInterest(new Money());
+		loanActivity.setFee(totalFeeAmount);
+		loanActivity.setFeeOutstanding(loanSummaryEntity.getOriginalFees().subtract(loanSummaryEntity.getFeesPaid()));
+		loanActivity.setPenaltyOutstanding(loanSummaryEntity.getOriginalPenalty().subtract(loanSummaryEntity.getPenaltyPaid()));
+		loanActivity.setInterestOutstanding(loanSummaryEntity.getOriginalInterest().subtract(loanSummaryEntity.getInterestPaid()));
+		loanActivity.setPrincipalOutstanding(loanSummaryEntity.getOriginalPrincipal().subtract(loanSummaryEntity.getPrincipalPaid()));
+		this.addLoanActivity(loanActivity);
 	}
-
+	
 	private Money removeSign(Money amount) {
 		if (amount != null && amount.getAmountDoubleValue() < 0)
 			return amount.negate();

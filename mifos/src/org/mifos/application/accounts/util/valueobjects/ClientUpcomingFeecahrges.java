@@ -24,10 +24,12 @@ public class ClientUpcomingFeecahrges extends ValueObject {
 		this.amount=amount;
 	}
 	
-	public ClientUpcomingFeecahrges(String feeName,Money amount,Meeting meeting) {
+	public ClientUpcomingFeecahrges(String feeName,Money amount,Meeting meeting,Short feeId,Integer accountId ) {
 		this.feeName=feeName;
 		this.amount=amount;
 		this.meeting=meeting;
+		this.feeId=feeId;
+		this.accountId=accountId;
 	}
 	/**
 	 * 
@@ -39,8 +41,28 @@ public class ClientUpcomingFeecahrges extends ValueObject {
 	private Money amount;
 	
 	private Meeting meeting;
+	
+	private Short feeId;
+	
+	private Integer accountId;
 
 	
+	public Integer getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(Integer accountId) {
+		this.accountId = accountId;
+	}
+
+	public Short getFeeId() {
+		return feeId;
+	}
+
+	public void setFeeId(Short feeId) {
+		this.feeId = feeId;
+	}
+
 	/**
 	 * @return Returns the meetingId.
 	 */

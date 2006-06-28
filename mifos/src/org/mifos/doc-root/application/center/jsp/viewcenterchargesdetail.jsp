@@ -162,16 +162,21 @@
             <br>
             <table width="96%" border="0" cellpadding="3" cellspacing="0">
               <tr>
-                <td width="35%" class="headingorange"><mifos:mifoslabel  name="Center.RecurringAccountFees" bundle="CenterUIResources"/></td>
+                <td width="35%" class="headingorange">
+                <mifos:mifoslabel  name="Center.RecurringAccountFees" bundle="CenterUIResources"/></td>
                 </tr>
             </table>
-            <table width="96%" border="0" cellpadding="3" cellspacing="0">
+            <table width="96%" border="0" cellpadding="3" cellspacing="0">            
               <c:forEach items="${requestScope.RecurrenceFeesChargesList}" var="recurrenceFees">
              <tr class="fontnormal">
                 <td width="15%"><c:out value="${recurrenceFees.feeName}"/>:</td>
                 <td width="30%"><c:out value="${recurrenceFees.amount}"/>
                 &nbsp;&nbsp;(<c:out value="${recurrenceFees.meeting.simpleMeetingSchedule}"/>)</td>
-                <td width="55%"><a href="#">Remove</a></td>
+                <td width="55%">               
+               <html-el:link href="accountAppAction.do?method=removeFees&feeId=${recurrenceFees.feeId}&accountId=${recurrenceFees.accountId}&fromPage=center"> 
+				<mifos:mifoslabel name="Center.remove" bundle="CenterUIResources"/></td>
+                </html-el:link>
+                </td>
               </tr>
             </c:forEach>
             </table><br></td>

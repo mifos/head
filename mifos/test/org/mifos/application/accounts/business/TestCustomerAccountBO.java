@@ -12,9 +12,11 @@ import junit.framework.TestCase;
 
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
+import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
+import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
 import org.mifos.application.customer.group.business.GroupBO;
@@ -22,20 +24,26 @@ import org.mifos.application.fees.business.FeesBO;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
 import org.mifos.framework.components.scheduler.SchedulerException;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.HibernateStartUp;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.security.authorization.AuthorizationManager;
+import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestCustomerAccountBO extends TestCase {
-
+		
 	private BulkEntryBusinessService bulkEntryBusinessService;
 
 	protected CustomerAccountBO customerAccountBO = null;
@@ -451,6 +459,46 @@ public class TestCustomerAccountBO extends TestCase {
 		HibernateUtil.closeSession();
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
+	}
+	
+	public void testRemoveFees() throws NumberFormatException, SystemException, ApplicationException {
+		createInitialObjects();	
+		CustomerAccountBO customerAccountBO = group.getCustomerAccount();
+		for(AccountFeesEntity accountFeesEntity : customerAccountBO.getAccountFees()){	
+			FeesBO feesBO = accountFeesEntity.getFees();			
+			customerAccountBO.removeFees(feesBO.getFeeId(),Short.valueOf("1"));			
+		}
+		TestObjectFactory.updateObject(customerAccountBO);
+		group =  (CustomerBO) TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		customerAccountBO = group.getCustomerAccount();
+		Set<CustomerActivityEntity> customerActivitySet = customerAccountBO.getCustomerActivitDetails();		
+		for(CustomerActivityEntity customerActivityEntity : customerActivitySet){
+			assertEquals(1,customerActivityEntity.getPersonnel().getPersonnelId().intValue());
+			assertEquals("Mainatnence Fee removed",customerActivityEntity.getDescription());			
+		}
+		for(AccountFeesEntity accountFeesEntity : group.getCustomerAccount().getAccountFees()){			
+			assertEquals(2,accountFeesEntity.getFeeStatus().intValue());
+		}		
+	}
+	
+	public void testUpdateAccountActivity() throws NumberFormatException, SystemException, ApplicationException{
+		createInitialObjects();	
+		CustomerAccountBO customerAccountBO = group.getCustomerAccount();
+		Short feeId = null;
+		for(AccountFeesEntity accountFeesEntity : customerAccountBO.getAccountFees()){
+			FeesBO feesBO = accountFeesEntity.getFees();
+			feeId = feesBO.getFeeId();						
+		}
+		customerAccountBO.updateAccountActivity(new Money("222"),Short.valueOf("1"),feeId);
+		TestObjectFactory.updateObject(customerAccountBO);
+		group =  (CustomerBO) TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());		
+		customerAccountBO = group.getCustomerAccount();
+		Set<CustomerActivityEntity> customerActivitySet = customerAccountBO.getCustomerActivitDetails();		
+		for(CustomerActivityEntity customerActivityEntity : customerActivitySet){
+			assertEquals(1,customerActivityEntity.getPersonnel().getPersonnelId().intValue());
+			assertEquals("Mainatnence Fee removed",customerActivityEntity.getDescription());
+			assertEquals("222.0",customerActivityEntity.getAmount().toString());		
+		}
 	}
 
 }

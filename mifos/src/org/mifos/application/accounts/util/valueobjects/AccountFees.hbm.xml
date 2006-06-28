@@ -55,10 +55,10 @@
       </query>
       <query name="Client.GetRecurrenceFeesDetails">
 		<![CDATA[select new org.mifos.application.accounts.util.valueobjects.ClientUpcomingFeecahrges(
-			feeDetail.fees.feeName,feeDetail.accountFeeAmount,feeDetail.fees.feeFrequency.feeMeetingFrequency)
+			feeDetail.fees.feeName,feeDetail.accountFeeAmount,feeDetail.fees.feeFrequency.feeMeetingFrequency,feeDetail.fees.feeId,feeDetail.account.accountId)
 			from org.mifos.application.accounts.util.valueobjects.AccountFees feeDetail
 			where feeDetail.account.accountId=:accountId
-			and feeDetail.fees.feeFrequency.feeMeetingFrequency.meetingId != null]]>
+			and feeDetail.fees.feeFrequency.feeMeetingFrequency.meetingId != null and feeDetail.feeStatus != :FEES_INACTIVE]]>
       </query>
       <query name="Client.GetUpcomingChargesDate">
 		<![CDATA[select min(accountAct.actionDate) 

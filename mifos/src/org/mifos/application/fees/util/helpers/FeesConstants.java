@@ -133,5 +133,6 @@ public interface FeesConstants {
 	public static final String STATUSLIST="StatusList";
 	
 	public static final String FEES_INACTIVE="2";
+	public static final String INACTIVE="FEES_INACTIVE";
 	
 }
