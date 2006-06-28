@@ -18,7 +18,6 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -33,6 +32,10 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 public class SavingsTestHelper {
 	
 	public AccountPaymentEntity createAccountPayment(Money amount, Date paymentDate, PersonnelBO createdBy){
+		return createAccountPayment(null, amount, paymentDate, createdBy);
+	}
+
+	public AccountPaymentEntity createAccountPayment(Integer paymentId, Money amount, Date paymentDate, PersonnelBO createdBy){
 		AccountPaymentEntity payment = new AccountPaymentEntity();
 		payment.setAmount(amount);
 		payment.setCreatedBy(createdBy.getPersonnelId());
@@ -41,9 +44,10 @@ public class SavingsTestHelper {
 		PaymentTypeEntity paymentType=new PaymentTypeEntity();
 		paymentType.setId(Short.valueOf("1"));
 		payment.setPaymentType(paymentType);
+		payment.setPaymentId(paymentId);
 		return payment;
 	}
-
+	
 	public AccountPaymentEntity createAccountPaymentToPersist(Money amount, Money balance,  Date trxnDate, Short accountAction, SavingsBO savingsObj,PersonnelBO createdBy, CustomerBO customer)throws Exception{
 		AccountPaymentEntity payment =createAccountPayment(balance, new Date(),createdBy);
 		payment.addAcountTrxn(createAccountTrxn(null,amount, balance, trxnDate, trxnDate, null, accountAction,savingsObj, createdBy, customer));

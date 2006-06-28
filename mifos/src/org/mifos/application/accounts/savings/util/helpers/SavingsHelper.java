@@ -90,9 +90,14 @@ public class SavingsHelper {
 		return (currentScheduleDate==null)? getFirstDate(scheduler, accountActivationDate) : scheduler.getNextScheduleDateAfterRecurrence(currentScheduleDate);
 	}
 	
-	public Date getPrevScheduleDate(Date currentScheduleDate, MeetingBO meeting)throws SchedulerException{
+	public Date getPrevScheduleDate(Date accountActivationDate, Date currentScheduleDate, MeetingBO meeting)throws SchedulerException{
 		SchedulerIntf scheduler = getScheduler(meeting);
-		return scheduler.getPrevScheduleDateAfterRecurrence(currentScheduleDate);
+		Date prevScheduleDate = scheduler.getPrevScheduleDateAfterRecurrence(currentScheduleDate);
+		return (prevScheduleDate!=null && getDate(accountActivationDate).compareTo(prevScheduleDate)>0) ? null: prevScheduleDate;
+	}
+	
+	private Date getDate(Date date){
+		return new Date(date.getTime());
 	}
 	
 	private Date getFirstDate(SchedulerIntf scheduler, Date accountActivationDate)throws SchedulerException{

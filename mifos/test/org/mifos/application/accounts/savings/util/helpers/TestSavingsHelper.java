@@ -185,11 +185,11 @@ public class TestSavingsHelper extends TestCase{
 		//Date accountActivationDate = df.parse("05/04/2006");
 		MeetingBO meeting = TestObjectFactory.getMeeting(MeetingConstants.MONTHLY,"1",MeetingConstants.INTEREST_CALC_FREQ);
 		
-		resultDate=helper.getPrevScheduleDate(df.parse("01/07/2006"), meeting);
+		resultDate=helper.getPrevScheduleDate(df.parse("01/04/2006"), df.parse("01/07/2006"), meeting);
 		date = df.parse("01/06/2006");
 		assertEquals(date,resultDate);
 		
-		resultDate=helper.getPrevScheduleDate(df.parse("01/01/2007"), meeting);
+		resultDate=helper.getPrevScheduleDate(df.parse("01/04/2006"), df.parse("01/01/2007"), meeting);
 		date = df.parse("01/12/2006");
 		assertEquals(date,resultDate);
 	}
@@ -198,14 +198,14 @@ public class TestSavingsHelper extends TestCase{
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		Date date;
 		Date resultDate;
-	//	Date accountActivationDate = df.parse("25/01/2006");
+		//Date accountActivationDate = df.parse("25/01/2006");
 		MeetingBO meeting = TestObjectFactory.getMeeting(MeetingConstants.MONTHLY,"3",MeetingConstants.INTEREST_CALC_FREQ);
 		
-		resultDate=helper.getPrevScheduleDate(df.parse("01/07/2006"), meeting);
+		resultDate=helper.getPrevScheduleDate(df.parse("01/04/2006"), df.parse("01/07/2006"), meeting);
 		date = df.parse("01/04/2006");
 		assertEquals(date,resultDate);
 		
-		resultDate=helper.getPrevScheduleDate(df.parse("01/04/2006"), meeting);
+		resultDate=helper.getPrevScheduleDate(df.parse("01/04/2006"), df.parse("01/04/2006"), meeting);
 		assertNull(resultDate);
 	}
 
@@ -213,17 +213,18 @@ public class TestSavingsHelper extends TestCase{
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		Date date;
 		Date resultDate;
-//		Date accountActivationDate = df.parse("05/07/2006");
+		//	Date accountActivationDate = df.parse("05/07/2006");
 		MeetingBO meeting = TestObjectFactory.getMeeting(MeetingConstants.MONTHLY,"1",MeetingConstants.INTEREST_POST_FREQ);
 
-		resultDate=helper.getPrevScheduleDate(df.parse("31/01/2007"), meeting);
+		resultDate=helper.getPrevScheduleDate(df.parse("01/07/2006"),df.parse("31/01/2007"), meeting);
 		date = df.parse("31/12/2006");
 		assertEquals(date,resultDate);
 		
-		resultDate=helper.getPrevScheduleDate(df.parse("28/02/2007"), meeting);
+		resultDate=helper.getPrevScheduleDate(df.parse("01/07/2006"),df.parse("28/02/2007"), meeting);
 		date = df.parse("31/01/2007");
 		assertEquals(date,resultDate);
 	}
+	
 	
 	public void testPrevInterestPostingDateWithRecurOnEveryFourMonths()throws Exception{
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -232,11 +233,11 @@ public class TestSavingsHelper extends TestCase{
 		//Date accountActivationDate = df.parse("25/12/2007");
 		MeetingBO meeting = TestObjectFactory.getMeeting(MeetingConstants.MONTHLY,"4",MeetingConstants.INTEREST_POST_FREQ);
 	
-		resultDate=helper.getPrevScheduleDate(df.parse("31/05/2008"), meeting);
+		resultDate=helper.getPrevScheduleDate(df.parse("01/07/2006"),df.parse("31/05/2008"), meeting);
 		date = df.parse("31/01/2008");
 		assertEquals(date,resultDate);
 		
-		resultDate=helper.getPrevScheduleDate(df.parse("31/01/2009"), meeting);
+		resultDate=helper.getPrevScheduleDate(df.parse("01/07/2006"),df.parse("31/01/2009"), meeting);
 		date = df.parse("30/09/2008");
 		assertEquals(date,resultDate);
 	}
