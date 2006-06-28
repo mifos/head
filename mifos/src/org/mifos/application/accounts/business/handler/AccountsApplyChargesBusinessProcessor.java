@@ -49,6 +49,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.mifos.application.accounts.business.CustomerAccountBO;
+import org.mifos.application.accounts.business.CustomerActivityEntity;
 import org.mifos.application.accounts.dao.AccountsApplyChargesDAO;
 import org.mifos.application.accounts.exceptions.AccountsApplyChargesException;
 import org.mifos.application.accounts.loan.business.util.helpers.LoanHeaderObject;
@@ -57,6 +59,7 @@ import org.mifos.application.accounts.loan.util.helpers.LoanHelpers;
 import org.mifos.application.accounts.loan.util.valueobjects.Loan;
 import org.mifos.application.accounts.loan.util.valueobjects.LoanActivity;
 import org.mifos.application.accounts.loan.util.valueobjects.LoanSummary;
+import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.valueobjects.Account;
@@ -64,6 +67,7 @@ import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.accounts.util.valueobjects.AccountFeesActionDetail;
 import org.mifos.application.accounts.util.valueobjects.AccountsApplyCharges;
+import org.mifos.application.accounts.util.valueobjects.CustomerAccount;
 import org.mifos.application.customer.dao.CustomerUtilDAO;
 import org.mifos.application.customer.util.valueobjects.Customer;
 import org.mifos.application.customer.util.valueobjects.CustomerMaster;
@@ -73,6 +77,7 @@ import org.mifos.application.fees.util.helpers.FeesConstants;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.office.util.valueobjects.Office;
+import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.framework.business.handlers.MifosBusinessProcessor;
 import org.mifos.framework.business.util.helpers.HeaderObject;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -222,8 +227,25 @@ public class AccountsApplyChargesBusinessProcessor extends
 										loanSummary.getPrincipalPaid()));
 						handleRoundingOfInstallments(account,accountActionDateList);
 					}
+					
+					
+					CustomerActivityEntity customerActivityEntity=null;
+					if(account instanceof CustomerAccount){
+						if(feeId.equals(AccountConstants.MISC_PENALTY)){
+							customerActivityEntity=new CustomerActivityEntity(new PersonnelPersistenceService().getPersonnel(context.getUserContext().getId()),
+									AccountConstants.MISC_PENALTY_APPLIED,
+									new Money(String.valueOf(aac.getChargeAmount())));
+							customerActivityEntity.setCustomerAccount((CustomerAccountBO)new AccountPersistanceService().getAccount(accountId));
+						}else{
+							customerActivityEntity=new CustomerActivityEntity(new PersonnelPersistenceService().getPersonnel(context.getUserContext().getId()),
+									AccountConstants.MISC_FEES_APPLIED,
+									new Money(String.valueOf(aac.getChargeAmount())));
+							customerActivityEntity.setCustomerAccount((CustomerAccountBO)new AccountPersistanceService().getAccount(accountId));
+						}
+					}
+
 					aacdao.saveAccountActionDateList(accountActionDateList,
-							null, loanSummary, loanActivity);
+							null, loanSummary, loanActivity,customerActivityEntity);
 				}
 
 			} else {
@@ -284,6 +306,7 @@ public class AccountsApplyChargesBusinessProcessor extends
 						throw new AccountsApplyChargesException(
 								AccountConstants.UNEXPECTEDERROR);
 					}
+					accountFee.setLastAppliedDate(accountActionDateList.get(0).getActionDate());
 					accountFee.setAccount(account);
 					accountFeeSet = new HashSet<AccountFees>();
 					accountFeeSet.add(accountFee);
@@ -298,6 +321,7 @@ public class AccountsApplyChargesBusinessProcessor extends
 									.currentTimeMillis()));
 							accountFee = accountFees;
 							accountFee.setFeeAmount(aac.getChargeAmount());
+							accountFee.setLastAppliedDate(accountActionDateList.get(0).getActionDate());
 							accountFeeSet = new HashSet<AccountFees>();
 							accountFeeSet.add(accountFees);
 						}
@@ -396,9 +420,17 @@ public class AccountsApplyChargesBusinessProcessor extends
 									loanSummary.getPrincipalPaid()));
 					loanActivity.setPersonnelId(context.getUserContext().getId());
 				}
+				
+				CustomerActivityEntity customerActivityEntity=null;
+				if(account instanceof CustomerAccount){
+					customerActivityEntity=new CustomerActivityEntity(new PersonnelPersistenceService().getPersonnel(context.getUserContext().getId()),
+							fee.getFeeName()+" "+AccountConstants.FEES_APPLIED,
+							new Money(String.valueOf(aac.getChargeAmount())));
+					customerActivityEntity.setCustomerAccount((CustomerAccountBO)new AccountPersistanceService().getAccount(accountId));
+				}
 				// save the list
 				aacdao.saveAccountActionDateList(accountActionDateList,
-						accountFee, loanSummary, loanActivity);
+						accountFee, loanSummary, loanActivity,customerActivityEntity);
 			}
 		} catch (ApplicationException ae) {
 			throw ae;

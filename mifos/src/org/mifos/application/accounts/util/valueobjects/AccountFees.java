@@ -81,7 +81,8 @@ public class AccountFees extends ValueObject{
 	private Double feeAmount;
 	private Short feeStatus;
 	private Date  statusChangeDate;
-
+	private Date lastAppliedDate;
+	
 	/**
 	 * This field is not persisted in the database , this is purely used for UI purposes.
 	 * It determines if the fee should be removed as it is populated when the user selects 
@@ -262,4 +263,14 @@ public class AccountFees extends ValueObject{
 	public void setStatusChangeDate(Date statusChangeDate) {
 		this.statusChangeDate = statusChangeDate;
 	}
+	
+	public Date getLastAppliedDate() {
+		return lastAppliedDate;
+	}
+	
+	public void setLastAppliedDate(Date lastAppliedDate) {
+		this.lastAppliedDate = lastAppliedDate;
+	}
+	
+	
 }

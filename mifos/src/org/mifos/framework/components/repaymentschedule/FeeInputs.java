@@ -47,7 +47,15 @@ public class FeeInputs
 	private Money loanInterest = new Money();
 	private Date feeStartDate = null;
 	private Money feeAmount = new Money();
+	private int meetingToConsider;
+	
+	public int getMeetingToConsider() {
+		return meetingToConsider;
+	}
 
+	public void setMeetingToConsider(int meetingToConsider) {
+		this.meetingToConsider = meetingToConsider;
+	}
 
 	public void setFeeAmount(Money feeAmount)
 	{

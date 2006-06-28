@@ -147,6 +147,7 @@ public class RepaymentScheduleHelper
 		feeInputs.setLoanAmount(repaymentScheduleInputs.getPrincipal());
 		feeInputs.setLoanInterest(repaymentScheduleInputs.getLoanInterest());
 		feeInputs.setFeeStartDate(repaymentScheduleInputs.getFeeStartDate());
+		feeInputs.setMeetingToConsider(repaymentScheduleInputs.getMeetingToConsider());
 
 		return feeInputs;
 
@@ -255,6 +256,7 @@ public class RepaymentScheduleHelper
 			accountFeesActionDetail.setFeeId(new Short(accountFeeInstallment.getFeeId()));
 			accountFeesActionDetail.setFeeAmount(accountFeeInstallment.getAccountFeeAmount());
 			accountFeesActionDetail.setAccountFee(accountFeeInstallment.getAccountFee());
+			accountFeeInstallment.getAccountFee().setLastAppliedDate(accountActionDate.getActionDate());
 			accountFeesActionDetailSet.add(accountFeesActionDetail);
 			if(accountActionDate.getAccountFeesActionDetail()!=null && accountActionDate.getAccountFeesActionDetail().size()>0)
 				accountFeesActionDetailSet.addAll(accountActionDate.getAccountFeesActionDetail());
@@ -378,6 +380,7 @@ public class RepaymentScheduleHelper
 			accountFeesActionDetailEntity.setFee(getFeesBO(new Short(accountFeeInstallment.getFeeId())));
 			accountFeesActionDetailEntity.setFeeAmount(accountFeeInstallment.getAccountFeeAmount());
 			accountFeesActionDetailEntity.setAccountFee(getAccountFeesEntity(accountFeeInstallment.getAccountFee().getAccountFeeId()));
+			accountFeeInstallment.getAccountFee().setLastAppliedDate(accountActionDate.getActionDate());
 			accountActionDate.addAccountFeesAction(accountFeesActionDetailEntity);
 
 		}

@@ -49,6 +49,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.accounts.business.CustomerActivityEntity;
 import org.mifos.application.accounts.exceptions.AccountsApplyChargesException;
 import org.mifos.application.accounts.loan.util.valueobjects.Loan;
 import org.mifos.application.accounts.loan.util.valueobjects.LoanActivity;
@@ -340,8 +341,8 @@ public class AccountsApplyChargesDAO extends DAO {
 	}
 
 	public void saveAccountActionDateList(List accountActionDateList,
-			AccountFees accountFee, LoanSummary loanSummary,LoanActivity accountNonTrxn)
-			throws SystemException, ApplicationException {
+			AccountFees accountFee, LoanSummary loanSummary,LoanActivity accountNonTrxn,
+			CustomerActivityEntity customerActivityEntity)throws SystemException, ApplicationException {
 		Session session = null;
 		Transaction transaction = null;
 
@@ -366,6 +367,10 @@ public class AccountsApplyChargesDAO extends DAO {
 			
 			if(accountNonTrxn!=null)
 				session.save(accountNonTrxn);
+			
+			if(customerActivityEntity !=null)
+				session.save(customerActivityEntity);
+			
 			
 			transaction.commit();
 

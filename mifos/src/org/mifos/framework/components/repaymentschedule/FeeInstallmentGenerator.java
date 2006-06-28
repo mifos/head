@@ -213,6 +213,9 @@ public class FeeInstallmentGenerator implements FeeInstallmentGeneratorIfc
 						installmentId = getApplicableRepaymentInstallment(feeDate);
                         
 						buildFeeInstallment(installmentId,accountFeeAmount , accountFees);
+						
+						if(feeInputs.getMeetingToConsider()== RepaymentScheduleConstansts.MEETING_CUSTOMER)
+							break;
 
 					}
        //Settig the meetingStartDate back to what was passed.		

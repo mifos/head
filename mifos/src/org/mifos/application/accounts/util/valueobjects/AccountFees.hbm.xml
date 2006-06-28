@@ -15,6 +15,7 @@
         <property name="feeAmount" column="FEE_AMNT" type="double"/>
         <property name="statusChangeDate" column="STATUS_CHANGE_DATE" type="date" />
 		<property name="feeStatus" column="FEE_STATUS" type="short" />
+		<property name="lastAppliedDate" column="LAST_APPLIED_DATE" />
 		
 		<!--<property name="feeAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
 		 <column name="FEE_AMNT_CURRENCY_ID" /> 
