@@ -149,27 +149,35 @@ public class CustomerAccountBO extends AccountBO {
 
 	protected void updateInstallmentAfterAdjustment(
 			List<AccountTrxnEntity> reversedTrxns) {
-		for (AccountTrxnEntity accntTrxn : reversedTrxns) {
-			CustomerTrxnDetailEntity custTrxn = (CustomerTrxnDetailEntity) accntTrxn;
-			AccountActionDateEntity accntActionDate = getAccountActionDate(custTrxn
-					.getInstallmentId());
-			accntActionDate.setPaymentStatus(AccountConstants.PAYMENT_UNPAID);
-			accntActionDate.setPaymentDate(null);
-			accntActionDate.setMiscFeePaid(accntActionDate.getMiscFeePaid()
-					.add(custTrxn.getMiscFeeAmount()));
-			accntActionDate.setMiscPenaltyPaid(accntActionDate
-					.getMiscPenaltyPaid().add(custTrxn.getMiscPenaltyAmount()));
-			if (null != accntActionDate.getAccountFeesActionDetails()
-					&& accntActionDate.getAccountFeesActionDetails().size() > 0) {
-				for (AccountFeesActionDetailEntity accntFeesAction : accntActionDate
-						.getAccountFeesActionDetails()) {
-					Money feeAmntAdjusted = custTrxn.getFeesTrxn(
-							accntFeesAction.getAccountFee().getAccountFeeId())
-							.getFeeAmount();
-					accntFeesAction.setFeeAmountPaid(accntFeesAction
-							.getFeeAmountPaid().add(feeAmntAdjusted));
+		if (null != reversedTrxns && reversedTrxns.size() > 0) {
+			Money totalAmountAdj=new Money();
+			for (AccountTrxnEntity accntTrxn : reversedTrxns) {
+				CustomerTrxnDetailEntity custTrxn = (CustomerTrxnDetailEntity) accntTrxn;
+				AccountActionDateEntity accntActionDate = getAccountActionDate(custTrxn
+						.getInstallmentId());
+				accntActionDate.setPaymentStatus(AccountConstants.PAYMENT_UNPAID);
+				accntActionDate.setPaymentDate(null);
+				accntActionDate.setMiscFeePaid(accntActionDate.getMiscFeePaid()
+						.add(custTrxn.getMiscFeeAmount()));
+				totalAmountAdj=totalAmountAdj.add(removeSign(custTrxn.getMiscFeeAmount()));
+				accntActionDate.setMiscPenaltyPaid(accntActionDate
+						.getMiscPenaltyPaid().add(custTrxn.getMiscPenaltyAmount()));
+				totalAmountAdj=totalAmountAdj.add(removeSign(custTrxn.getMiscPenaltyAmount()));
+				if (null != accntActionDate.getAccountFeesActionDetails()
+						&& accntActionDate.getAccountFeesActionDetails().size() > 0) {
+					for (AccountFeesActionDetailEntity accntFeesAction : accntActionDate
+							.getAccountFeesActionDetails()) {
+						Money feeAmntAdjusted = custTrxn.getFeesTrxn(
+								accntFeesAction.getAccountFee().getAccountFeeId())
+								.getFeeAmount();
+						accntFeesAction.setFeeAmountPaid(accntFeesAction
+								.getFeeAmountPaid().add(feeAmntAdjusted));
+						totalAmountAdj=totalAmountAdj.add(removeSign(feeAmntAdjusted));
+					}
 				}
 			}
+			addCustomerActivity(buildCustomerActivity(totalAmountAdj,
+					"Amnt Adjusted", userContext.getId()));
 		}
 	}
 
@@ -231,12 +239,8 @@ public class CustomerAccountBO extends AccountBO {
 		return new CustomerActivityEntity(personnel, description, amount);
 	}
 	
-	public void updateAccountActivity(Money totalFeeAmount,Short personnelId,Short feeId){
-		PersonnelBO personnel = new PersonnelPersistenceService().getPersonnel(personnelId);				
-		FeesBO feesBO = getAccountFeesObject(feeId);
-		String description = feesBO.getFeeName()+ " " + AccountConstants.FEES_REMOVED;				
-		CustomerActivityEntity customerActivityEntity = new CustomerActivityEntity(personnel,description,totalFeeAmount);
-		this.addCustomerActivity(customerActivityEntity);
+	public void updateAccountActivity(Money totalAmount,Short personnelId,String description){
+		this.addCustomerActivity(buildCustomerActivity(totalAmount,description,personnelId));
 	}
 
 }

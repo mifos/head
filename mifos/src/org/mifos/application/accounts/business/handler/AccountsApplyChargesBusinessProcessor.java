@@ -358,7 +358,6 @@ public class AccountsApplyChargesBusinessProcessor extends
 						accountFeeSet, account, feeStartDate);
 				List<FeeInstallment> feeInstallment = repaymentSchedule
 						.getRepaymentFeeInstallment();
-				Money disbursalFeeAmount = new Money();
 				if (account instanceof Loan
 						&& ((Loan) account).getIntrestAtDisbursement().equals(
 								LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT)
@@ -376,20 +375,18 @@ public class AccountsApplyChargesBusinessProcessor extends
 									accountActionDateList, feeInstallment),
 							accountFee.getFees());
 				}
-				if (account instanceof Loan ) {
-					for (AccountActionDate accountActionDate : accountActionDateList) {
-						disbursalFeeAmount = disbursalFeeAmount.add(accountActionDate.getTotalFeesAmount());
+				
+				Money feeAmount = new Money();
+				if (account instanceof Loan){
+					if(!fee.getFeeFrequency().getFeeFrequencyTypeId()
+								.equals(FeesConstants.ONETIME)){ 
+						for (AccountActionDate accountActionDate : accountActionDateList) {
+							feeAmount = feeAmount.add(accountActionDate.getTotalFeesAmountForId(accountFee.getFees().getFeeId()));
+						}
+					}else{
+						feeAmount = accountFee.getAccountFeeAmount();
 					}
 				}
-				if (account instanceof Loan
-						&& (!((Loan) account).getIntrestAtDisbursement().equals(
-								LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT))
-						&& fee.getFeeFrequency().getFeeFrequencyTypeId()
-								.equals(FeesConstants.ONETIME)
-						&& fee.getFeeFrequency().getFeePaymentId().equals(
-								FeesConstants.TIME_OF_DISBURSMENT)) {
-					disbursalFeeAmount = accountFee.getAccountFeeAmount();
-				} 
 				
 				/* save the loan summary also */
 				LoanSummary loanSummary = null;
@@ -406,7 +403,7 @@ public class AccountsApplyChargesBusinessProcessor extends
 					loanActivity.setComments(fee.getFeeName()+" "+AccountConstants.FEES_APPLIED);
 					loanActivity.setPrincipal(new Money());
 					loanActivity.setInterest(new Money());
-					loanActivity.setFee(disbursalFeeAmount);
+					loanActivity.setFee(feeAmount);
 					loanActivity.setFeeOutstanding(loanSummary.getOriginalFees()
 							.subtract(loanSummary.getFeesPaid()));
 					loanActivity.setInterestOutstanding(loanSummary

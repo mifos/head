@@ -72,6 +72,7 @@ public class CustomerApplyAdjustmentAction extends BaseAction {
 		}
 		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
 		customerBO.setUserContext(uc);
+		customerBO.getCustomerAccount().setUserContext(uc);
 		try {
 		customerBO.adjustPmnt(applyAdjustmentActionForm.getAdjustmentNote());
 		}catch(ApplicationException ae) {

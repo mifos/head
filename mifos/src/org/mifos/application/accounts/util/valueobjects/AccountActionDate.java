@@ -297,6 +297,16 @@ public class AccountActionDate extends ValueObject
 		return amount;
 	}
 	
+	public Money getTotalFeesAmountForId(Short feeId){
+		Money amount = new Money();
+		if(getAccountFeesActionDetail()!= null  && getAccountFeesActionDetail().size()!=0){
+			for(AccountFeesActionDetail feeDetail : getAccountFeesActionDetail())
+				if(feeId.equals(feeDetail.getFeeId()))
+					amount = amount.add(feeDetail.getFeeAmount());
+		}
+		return amount;
+	}
+	
 	public Money getTotalAmountWithMisc(){
 		return getPrincipal().add(getInterest()).add(getPenalty()).add(getTotalFeesAmount()).add(getMiscFee()).add(getMiscPenalty());
 	}

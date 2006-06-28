@@ -1110,15 +1110,15 @@ public class LoanBO extends AccountBO {
 	}
 
 	
-	public void updateAccountActivity(Money totalFeeAmount,Short personnelId,Short feeId){
+	public void updateAccountActivity(Money totalAmount,Short personnelId,String description){
 		PersonnelBO personnel = new PersonnelPersistenceService().getPersonnel(personnelId);
 		LoanSummaryEntity loanSummaryEntity = ((LoanBO) this).getLoanSummary();
 		LoanActivityEntity loanActivity = new LoanActivityEntity();
-		loanActivity.setComments(getAccountFeesObject(feeId).getFeeName()+ " " + AccountConstants.FEES_REMOVED);
+		loanActivity.setComments(description);
 		loanActivity.setPersonnel(personnel);
 		loanActivity.setPrincipal(new Money());
 		loanActivity.setInterest(new Money());
-		loanActivity.setFee(totalFeeAmount);
+		loanActivity.setFee(totalAmount);
 		loanActivity.setFeeOutstanding(loanSummaryEntity.getOriginalFees().subtract(loanSummaryEntity.getFeesPaid()));
 		loanActivity.setPenaltyOutstanding(loanSummaryEntity.getOriginalPenalty().subtract(loanSummaryEntity.getPenaltyPaid()));
 		loanActivity.setInterestOutstanding(loanSummaryEntity.getOriginalInterest().subtract(loanSummaryEntity.getInterestPaid()));
@@ -1126,13 +1126,6 @@ public class LoanBO extends AccountBO {
 		this.addLoanActivity(loanActivity);
 	}
 	
-	private Money removeSign(Money amount) {
-		if (amount != null && amount.getAmountDoubleValue() < 0)
-			return amount.negate();
-		else
-			return amount;
-	}
-
 	private void initAccFeeIntDeductedAtDisbursal(
 			AccountFeesEntity accountFeesEntity, Set<AccountFees> accountFeesSet) {
 		addFee(accountFeesEntity, accountFeesSet);

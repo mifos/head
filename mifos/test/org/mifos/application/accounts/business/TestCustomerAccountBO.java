@@ -190,6 +190,7 @@ public class TestCustomerAccountBO extends TestCase {
 		customerAccountBO = (CustomerAccountBO) TestObjectFactory.getObject(
 				CustomerAccountBO.class, customerAccountBO.getAccountId());
 		client = customerAccountBO.getCustomer();
+		customerAccountBO.setUserContext(userContext);
 		customerAccountBO.adjustPmnt("payment adjusted");
 		TestObjectFactory.updateObject(customerAccountBO);
 		assertFalse(
@@ -205,6 +206,7 @@ public class TestCustomerAccountBO extends TestCase {
 		customerAccountBO = (CustomerAccountBO) TestObjectFactory.getObject(
 				CustomerAccountBO.class, customerAccountBO.getAccountId());
 		client = customerAccountBO.getCustomer();
+		customerAccountBO.setUserContext(userContext);
 		List<AccountTrxnEntity> reversedTrxns = customerAccountBO.getLastPmnt()
 				.reversalAdjustment("payment adjustment done");
 		customerAccountBO.updateInstallmentAfterAdjustment(reversedTrxns);
@@ -217,6 +219,9 @@ public class TestCustomerAccountBO extends TestCase {
 			assertEquals("Misc Penalty Adjusted", accntActionDate
 					.getMiscPenaltyPaid().getAmountDoubleValue(), 0.0);
 		}
+		for(CustomerActivityEntity customerActivityEntity : customerAccountBO.getCustomerActivitDetails()){
+			assertEquals("Amnt Adjusted",customerActivityEntity.getDescription());
+		}
 
 	}
 
@@ -227,7 +232,7 @@ public class TestCustomerAccountBO extends TestCase {
 		customerAccountBO = (CustomerAccountBO) TestObjectFactory.getObject(
 				CustomerAccountBO.class, customerAccountBO.getAccountId());
 		client = customerAccountBO.getCustomer();
-
+		customerAccountBO.setUserContext(userContext);
 		customerAccountBO.adjustPmnt("payment adjusted");
 		TestObjectFactory.updateObject(customerAccountBO);
 		int countFinTrxns = 0;
@@ -489,7 +494,7 @@ public class TestCustomerAccountBO extends TestCase {
 			FeesBO feesBO = accountFeesEntity.getFees();
 			feeId = feesBO.getFeeId();						
 		}
-		customerAccountBO.updateAccountActivity(new Money("222"),Short.valueOf("1"),feeId);
+		customerAccountBO.updateAccountActivity(new Money("222"),Short.valueOf("1"),"Mainatnence Fee removed");
 		TestObjectFactory.updateObject(customerAccountBO);
 		group =  (CustomerBO) TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());		
 		customerAccountBO = group.getCustomerAccount();
@@ -500,5 +505,4 @@ public class TestCustomerAccountBO extends TestCase {
 			assertEquals("222.0",customerActivityEntity.getAmount().toString());		
 		}
 	}
-
 }

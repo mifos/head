@@ -1531,10 +1531,6 @@ public class SavingsBO extends AccountBO {
 		return savingsRecentActivityView;
 	}
 
-	private Money removeSign(Money amount) {
-		return (amount.getAmountDoubleValue() < 0) ? amount.negate() : amount;
-	}
-
 	public Money getTotalAmountInArrears() {
 		Money totalAmount = new Money();
 		List<AccountActionDateEntity> previousDueInstallments = getDetailsOfInstallmentsInArrears();

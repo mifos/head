@@ -527,12 +527,14 @@ public class AccountBO extends BusinessObject {
 			totalFeeAmount = updateAccountActionDateEntity(installmentIdList, feeId);
 			updateAccountFeesEntity(feeId);
 			updateTotalFeeAmount(totalFeeAmount);
-			updateAccountActivity(totalFeeAmount,personnelId,feeId);
+			FeesBO feesBO = getAccountFeesObject(feeId);
+			String description = feesBO.getFeeName()+ " " + AccountConstants.FEES_REMOVED;
+			updateAccountActivity(totalFeeAmount,personnelId,description);
 		}
 
 	}
 	
-	public void updateAccountActivity(Money totalFeeAmount,Short personnelId,Short feeId){}
+	public void updateAccountActivity(Money totalFeeAmount,Short personnelId,String description){}
 
 	public void adjustPmnt(String adjustmentComment)
 			throws ApplicationException, SystemException {
@@ -657,12 +659,13 @@ public class AccountBO extends BusinessObject {
 		return trxnHistory;
 	}
 
-	private Double removeSign(Money amount) {
-		if (amount.getAmountDoubleValue() < 0)
-			return amount.negate().getAmountDoubleValue();
+	public Money removeSign(Money amount) {
+		if (amount!=null && amount.getAmountDoubleValue() < 0)
+			return amount.negate();
 		else
-			return amount.getAmountDoubleValue();
+			return amount;
 	}
+	
 	private void setFinancialEntries(FinancialTransactionBO financialTrxn,
 			TransactionHistoryView transactionHistory) {
 		String debit = "-", credit = "-", notes = "-";
