@@ -3074,4 +3074,110 @@ public class TestSavingsBO extends TestCase {
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
 	}
+	
+	public void testInterestAdjustment_LastPaymentBefore_InterestCalc_has_MultipleTrxns() throws Exception {
+		createInitialObjects();
+		savingsOffering = createSavingsOfferingForIntCalc("prd1", ProductDefinitionConstants.MANDATORY, Short.valueOf("2"), MeetingConstants.MONTHLY, Short.valueOf("1"));
+		savings = helper.createSavingsAccount(savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,userContext);
+		savings.setActivationDate(helper.getDate("20/02/2006"));
+		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
+		
+		Money depositMoney = new Money(currency, "2000.0");
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+				depositMoney,depositMoney,
+				helper.getDate("25/02/2006"),AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy, group);
+		savings.addAccountPayment(payment);
+		savings.setSavingsBalance(depositMoney);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		
+		depositMoney = new Money(currency, "5000.0");
+
+		// Adding 1 account payment of Rs 5000. With three transactions of (2000 + 2000 + 1000).
+		Date paymentDate = helper.getDate("27/02/2006");
+		Money recommendedAmnt = new Money(currency,"2000");
+		
+		AccountPaymentEntity payment2 = helper.createAccountPayment(depositMoney, paymentDate, createdBy);
+		Money balanceAmount = new Money(currency, "4000.0");
+		SavingsTrxnDetailEntity trxn1 = helper.createAccountTrxn(Short.valueOf("1"), recommendedAmnt, balanceAmount, paymentDate,
+				null, null,	AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,group);
+
+		balanceAmount = new Money(currency, "6000.0");
+		SavingsTrxnDetailEntity trxn2 = helper.createAccountTrxn(Short.valueOf("2"), recommendedAmnt, balanceAmount, paymentDate,
+				null, null,AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,group);
+
+		balanceAmount = new Money(currency, "7000.0");
+		SavingsTrxnDetailEntity trxn3 = helper.createAccountTrxn(null,new Money(currency, "1000.0"), balanceAmount, paymentDate, null,
+				null, AccountConstants.ACTION_SAVINGS_DEPOSIT, savings,	createdBy, group);
+
+		payment2.addAcountTrxn(trxn1);
+		payment2.addAcountTrxn(trxn2);
+		payment2.addAcountTrxn(trxn3);
+		savings.addAccountPayment(payment2);
+		
+		savings.setSavingsBalance(balanceAmount);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		depositMoney = new Money(currency, "1200.0");
+		balanceAmount = new Money(currency,"8200.0");
+		AccountPaymentEntity payment3 = helper.createAccountPaymentToPersist(depositMoney,balanceAmount,
+				helper.getDate("15/03/2006"),AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy, group);
+		savings.addAccountPayment(payment3);
+		savings.setSavingsBalance(balanceAmount);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();		
+		
+		savings = savingsService.findById(savings.getAccountId());
+		assertEquals(balanceAmount,savings.getSavingsBalance());
+		
+		Money oldInterest = savings.calculateInterestForAdjustment(helper.getDate("15/03/2006"),null);
+		assertEquals(0.0, oldInterest.getAmountDoubleValue());
+		
+		savings.updateInterestAccrued();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		savings = savingsService.findById(savings.getAccountId());
+		//from 25/02 - 27/02 = 2000*2 + from 27/02 - 01/03 = 7000*2 = 18000  Therefore avg bal 18000/4 = 4500
+		//Interest 4500*.12*4/365 = 5.91
+		assertEquals(5.9, savings.getInterestToBePosted().getAmountDoubleValue());
+		
+		savings.updateInterestAccrued();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		savings = savingsService.findById(savings.getAccountId());
+		
+		//principal = (7000* 14(days)+ 8200*17(days))/31 = 7658.1
+		//Interest = 7658.1*.12*31/365 = 78.0
+		oldInterest = savings.calculateInterestForAdjustment(helper.getDate("15/03/2006"),null);
+		assertEquals(78.0, oldInterest.getAmountDoubleValue());
+		//78.0 + 5.9  = 83.9
+		assertEquals(83.9, savings.getInterestToBePosted().getAmountDoubleValue());
+
+		savings.setUserContext(userContext);
+		Money amountAdjustedTo = new Money(currency, "2000");
+		
+		try {
+			savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
+		} catch (ApplicationException ae) {
+			assertTrue(false);
+		}
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		savings = savingsService.findById(savings.getAccountId());		
+		
+		assertEquals(new Money(currency, "9000"),savings.getSavingsBalance());
+		//principal = (7000* 14(days)+ 9000*17(days))/31 = 8096.8
+		//Interest = 8096.8*.12*31/365 = 82.5
+		// Total Interest = 82.5 + 5.9 = 88.4
+		assertEquals(88.4, savings.getInterestToBePosted().getAmountDoubleValue());
+		
+		group = savings.getCustomer();
+		center = group.getParentCustomer();
+	}
 }
