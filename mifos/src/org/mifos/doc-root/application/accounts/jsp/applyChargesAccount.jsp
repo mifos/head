@@ -121,7 +121,7 @@
 			}
 
 	</script>
-		<html-el:form method="post" action="AccountsApplyChargesAction.do?method=create">
+		<html-el:form method="post" action="AccountsApplyChargesAction.do?method=create" onsubmit="fun_submit()">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt">
@@ -231,7 +231,7 @@
 
 
 							<td align="center"><html-el:submit styleClass="buttn"
-								style="width:65px;" onclick="javascript:fun_submit()">
+								style="width:65px;">
 								<mifos:mifoslabel name="accounts.submit"></mifos:mifoslabel>
 							</html-el:submit> &nbsp; <html-el:cancel styleClass="cancelbuttn"
 								style="width:65px;" onclick="javascript:fun_cancel(this.form)">
