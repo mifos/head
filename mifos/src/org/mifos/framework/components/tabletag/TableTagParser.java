@@ -110,21 +110,16 @@ public class TableTagParser {
 			table.setPageRequirements(createPageRequirements(tableNode));
 			table.setRow(createRow(tableNode));
 			
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-			throw new TableTagParseException(e);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new TableTagParseException(e);
-		} catch (SAXParseException e) {
-			e.printStackTrace();
-			throw new TableTagParseException(e);
-		} catch (SAXException e) {
-			e.printStackTrace();
-			throw new TableTagParseException(e);
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-			throw new TableTagParseException(e);
+		} catch (ParserConfigurationException pce) {
+			throw new TableTagParseException(pce);
+		} catch (IOException ioe) {
+			throw new TableTagParseException(ioe);
+		} catch (SAXParseException saxpe) {
+			throw new TableTagParseException(saxpe);
+		} catch (SAXException saxe) {
+			throw new TableTagParseException(saxe);
+		} catch (URISyntaxException urise) {
+			throw new TableTagParseException(urise);
 		}
 		return table;
 	}

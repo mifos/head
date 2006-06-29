@@ -23,16 +23,13 @@
  *
  */
 package org.mifos.framework.components.logger;
-import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import org.apache.log4j.LogManager;
 import org.mifos.framework.exceptions.LoggerConfigurationException;
 import org.mifos.framework.exceptions.ResourceBundleNotFoundException;
 import org.mifos.framework.util.helpers.ResourceLoader;
@@ -55,20 +52,20 @@ public class MifosLogManager {
 	 * @throws  LoggerConfigurationException
 	 */
 	public static void configure(String fileName)throws LoggerConfigurationException{
-		readConfiguration(fileName);
-
 		//Initialises a logger with the name com.mifos which acts as the ancestor for all the other loggers
 		try {
+			readConfiguration(fileName);
 			MifosLogger logger = new MifosLogger(LoggerConstants.ROOTLOGGER , getResourceBundle(LoggerConstants.LOGGERRESOURCEBUNDLE));
 			loggerRepository=new HashMap<String, MifosLogger>(20);
 			loggerRepository.put(LoggerConstants.ROOTLOGGER, logger);
 
-		} catch (ResourceBundleNotFoundException rbnfe) {
-			rbnfe.printStackTrace();
+		}catch (ResourceBundleNotFoundException rbnfe) {
 			throw new LoggerConfigurationException(rbnfe);
+		}catch(URISyntaxException urise){
+			throw new LoggerConfigurationException(urise);
+		}catch(MalformedURLException mfue){
+			throw new LoggerConfigurationException(mfue);
 		}
-
-
 	}
 
 	/**
@@ -77,11 +74,9 @@ public class MifosLogManager {
 	 * @return  An instance of the MifosLogger
 	 */
 	public static MifosLogger getLogger(String name){
-
-		MifosLogger logger=null;
-		logger= getLoggerHelper(name,null);
-		return logger;
+		return getLogger(name,null);
 	}//end-method getLogger
+	
 	/**
 	 * Function to obtain an instance of the mifos logger. This calls a helper method to create the logger
 	 * A resource bundle can aslo be associated with this logger
@@ -90,10 +85,7 @@ public class MifosLogManager {
 	 * @return An instance of the MifosLogger
 	 */
 	public static MifosLogger getLogger(String name, String resourceBundleName){
-		MifosLogger logger=null;
-		logger= getLoggerHelper(name,resourceBundleName);
-
-		return logger;
+		return getLoggerHelper(name,resourceBundleName);
 	}//end-method getLogger
 
 	/**
@@ -126,8 +118,8 @@ public class MifosLogManager {
 						if(resourceBundleName!=null)
 							try {
 								logger = new MifosLogger(name , getResourceBundle(resourceBundleName));
-							} catch (ResourceBundleNotFoundException e) {
-								e.printStackTrace();
+							} catch (ResourceBundleNotFoundException rbnfe) {
+								rbnfe.printStackTrace();
 							}
 						else
 							logger = new MifosLogger(name);
@@ -160,22 +152,16 @@ public class MifosLogManager {
 	 * with the logger
 	 */
 
-	public static void readConfiguration(String fileName){
-
-		MifosDOMConfigurator mdc = new MifosDOMConfigurator();
+	public static void readConfiguration(String fileName)throws MalformedURLException,URISyntaxException{
 		URL url = null;
-
 			try {
 				url = ResourceLoader.getURI(fileName).toURL();
-			} catch (MalformedURLException e) {
-
-				e.printStackTrace();
-			} catch (URISyntaxException e) {
-
-				e.printStackTrace();
+			} catch (MalformedURLException mfue) {
+				throw mfue;
+			} catch (URISyntaxException urise) {
+				throw urise;
 			}
 			//url = MifosLogManager.class.getClassLoader().getResource(fileName);
-			//// System.out.println("The path is " + url.getPath());
 
 		MifosDOMConfigurator.configureAndWatch(url.getPath(),LoggerConstants.DELAY);
 

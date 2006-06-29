@@ -16,6 +16,10 @@ public class TableTagException extends ApplicationException {
 	public TableTagException(String key) {
 	}
 
+	public TableTagException(Throwable th) {
+		super(th);
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.mifos.framework.exceptions.ApplicationException#getKey()
 	 */

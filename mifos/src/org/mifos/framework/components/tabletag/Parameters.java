@@ -157,14 +157,12 @@ public class Parameters {
 										 .append("=")
 										 .append(URLEncoder.encode((stringArray[i]==null?collValue:stringArray[i]),"UTF-8"))
 										 .append((i==(param.length-1))?"":"&");
-						} catch (UnsupportedEncodingException e) {
-							e.printStackTrace();
-							throw new TableTagException("Problem in URL Encoding(given charset is not supported)");
+						} catch (UnsupportedEncodingException uee) {
+							throw new TableTagException(uee);
 							
 						}
 					}
 					paramString[k] = stringbuilder.toString();
-					System.out.println("***********************"+paramString[k]);
 				} else {
 					paramString[k] = null;
 				}
@@ -180,9 +178,8 @@ public class Parameters {
 							   .append("=")
 							   .append(URLEncoder.encode((stringArray[i]!=null ?stringArray[i]:""),"UTF-8"))
 							   .append((i==(param.length-1))?"":"&");
-						} catch (UnsupportedEncodingException e) {
-							e.printStackTrace();
-							throw new TableTagException("Problem in URL Encoding(given charset is not supported)");
+						} catch (UnsupportedEncodingException uee) {
+							throw new TableTagException(uee);
 						}
 					}
 				paramString[0] = str.toString();

@@ -62,7 +62,6 @@ public class ResourceBundleFactory {
     		 resourceBundle =  ResourceBundle.getBundle(loggerName,mfiLocale);
     	 }
     	 catch(MissingResourceException mre){
-    		 mre.printStackTrace();
     		 throw new ResourceBundleNotFoundException(mre);
     	 }
          return resourceBundle;

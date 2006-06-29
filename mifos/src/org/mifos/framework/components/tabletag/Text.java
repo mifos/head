@@ -85,7 +85,7 @@ public class Text {
 	}
 	
 	//to get Image
-	private static String getImage(Object obj, String name) {
+	private static String getImage(Object obj, String name) throws TableTagException{
 		StringBuilder stringbuilder = new StringBuilder();
 		Method method = null;
 		Object customerType = null;
@@ -94,14 +94,14 @@ public class Text {
 		try {
 			method = obj.getClass().getDeclaredMethod("getCustomerType",(Class[]) null);
 			customerType = (Object) method.invoke(obj, (Object[]) null);
-		}  catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+		} catch (NoSuchMethodException nsme) {
+			throw new TableTagException(nsme.getMessage());
+		} catch (IllegalArgumentException iae) {
+			throw new TableTagException(iae);
+		} catch (IllegalAccessException iae) {
+			throw new TableTagException(iae);
+		} catch (InvocationTargetException ite) {
+			throw new TableTagException(ite);
 		}
 		
 		ResourceBundle resource = ResourceBundle.getBundle(TableTagConstants.PROPERTIESFILE);		

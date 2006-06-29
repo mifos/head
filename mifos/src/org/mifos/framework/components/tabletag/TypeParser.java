@@ -64,21 +64,16 @@ public class TypeParser {
 			Node fileNode = document.getFirstChild();
 			file=new Files();
 			file.setFileName(createFileName(fileNode));
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-			throw new TableTagTypeParserException(e);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new TableTagTypeParserException(e);
-		} catch (SAXParseException e) {
-			e.printStackTrace();
-			throw new TableTagTypeParserException(e);
-		} catch (SAXException e) {
-			e.printStackTrace();
-			throw new TableTagTypeParserException(e);
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-			throw new TableTagTypeParserException(e);
+		} catch (ParserConfigurationException pce) {
+			throw new TableTagTypeParserException(pce);
+		} catch (IOException ioe) {
+			throw new TableTagTypeParserException(ioe);
+		} catch (SAXParseException saxpe) {
+			throw new TableTagTypeParserException(saxpe);
+		} catch (SAXException saxe) {
+			throw new TableTagTypeParserException(saxe);
+		} catch (URISyntaxException urise) {
+			throw new TableTagTypeParserException(urise);
 		}
 		return file;
 	}

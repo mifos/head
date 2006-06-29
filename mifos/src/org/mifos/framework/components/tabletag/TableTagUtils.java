@@ -97,11 +97,11 @@ public class TableTagUtils {
 			try {
 				labelValue =LabelTagUtils.getInstance().getLabel(pageContext,"Resources",LabelTagUtils.getInstance().getUserPreferredLocaleObject(pageContext),label,null);
 				
-			} catch (MissingResourceException e) {
-				throw new TableTagException(e.getMessage());
+			} catch (MissingResourceException mre) {
+				throw new TableTagException(mre);
 			}
 			catch (JspException je) {
-				throw new TableTagException(je.getMessage());
+				throw new TableTagException(je);
 			}
 
 		} else if ("string".equalsIgnoreCase(labelType)) {
@@ -114,21 +114,16 @@ public class TableTagUtils {
 						(Class[]) null);
 				labelValue = (Object) getList.invoke(obj, (Object[]) null);
 				
-			} catch (SecurityException e) {
-				e.printStackTrace();
-				throw new TableTagException(e.getMessage());
-			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
-				throw new TableTagException(e.getMessage());
-			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
-				throw new TableTagException(e.getMessage());
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-				throw new TableTagException(e.getMessage());
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-				throw new TableTagException(e.getMessage());
+			} catch (SecurityException se) {
+				throw new TableTagException(se);
+			} catch (NoSuchMethodException nsme) {
+				throw new TableTagException(nsme);
+			} catch (IllegalArgumentException iae) {
+				throw new TableTagException(iae);
+			} catch (IllegalAccessException iae) {
+				throw new TableTagException(iae);
+			} catch (InvocationTargetException ite) {
+				throw new TableTagException(ite);
 			}
 			
 		}else if ("date".equalsIgnoreCase(labelType)) {
@@ -140,21 +135,16 @@ public class TableTagUtils {
 				labelValue = (Object) getList.invoke(obj, (Object[]) null);
 				if(null != labelValue) 
 					labelValue=DateHelper.getUserLocaleDate(locale,labelValue.toString());
-			} catch (SecurityException e) {
-				e.printStackTrace();
-				throw new TableTagException(e.getMessage());
-			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
-				throw new TableTagException(e.getMessage());
-			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
-				throw new TableTagException(e.getMessage());
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-				throw new TableTagException(e.getMessage());
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-				throw new TableTagException(e.getMessage());
+			} catch (SecurityException se) {
+				throw new TableTagException(se);
+			} catch (NoSuchMethodException nsme) {
+				throw new TableTagException(nsme);
+			} catch (IllegalArgumentException iae) {
+				throw new TableTagException(iae);
+			} catch (IllegalAccessException iae) {
+				throw new TableTagException(iae);
+			} catch (InvocationTargetException ite) {
+				throw new TableTagException(ite);
 			}
 		}
 		return labelValue;

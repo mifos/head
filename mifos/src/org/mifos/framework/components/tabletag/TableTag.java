@@ -58,12 +58,10 @@ import org.mifos.framework.exceptions.TableTagException;
 import org.mifos.framework.exceptions.TableTagParseException;
 import org.mifos.framework.exceptions.TableTagTypeParserException;
 import org.mifos.framework.hibernate.helper.QueryResult;
-import org.mifos.framework.components.tabletag.TableTagConstants;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Cache;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FileCacheRep;
-import org.mifos.framework.util.helpers.LabelTagUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.valueobjects.Context;
 
@@ -300,18 +298,16 @@ public class TableTag extends BodyTagSupport {
 				return super.doStartTag();
 			}
 			getTableData(list);
-		} catch (TableTagException e) {
-			e.printStackTrace();
-		} catch (TableTagParseException e) {
-			e.printStackTrace();
-		} catch (TableTagTypeParserException e) {
-			e.printStackTrace();
-		} catch (JspException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (HibernateSearchException e) {
-			e.printStackTrace();
+		} catch (TableTagException tte) {
+			new JspException(tte);
+		} catch (TableTagParseException ttpe) {
+			new JspException(ttpe);
+		} catch (TableTagTypeParserException tttpe) {
+			new JspException(tttpe);
+		}  catch (IOException ioe) {
+			new JspException(ioe);
+		} catch (HibernateSearchException hse) {
+			new JspException(hse);
 		}
 		return super.doStartTag();
 
