@@ -131,7 +131,7 @@
 <mifos:mifoslabel name="client.amtdue" bundle="ClientUIResources"/>:
 <c:out value='${requestScope.Context.businessResults["ClientFeeChargeDue"]}'/>
                   </span>
-                  <html-el:link href="customerAction.do?method=waiveChargeDue&type=Client&accountId=${param.accountId}">
+                  <html-el:link href="customerAction.do?method=waiveChargeDue&type=Client&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}">
 	              	<mifos:mifoslabel name="client.waive" bundle="ClientUIResources"/>
 	              </html-el:link>
 	              <br>
@@ -139,7 +139,7 @@
 <mifos:mifoslabel name="client.amtoverdue" bundle="ClientUIResources"/>: 
 <c:out value='${requestScope.Context.businessResults["ClientFeeChargeOverDue"]}'/>
 						</span>
-				  <html-el:link href="customerAction.do?method=waiveChargeOverDue&type=Client&accountId=${param.accountId}">
+				  <html-el:link href="customerAction.do?method=waiveChargeOverDue&type=Client&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}">
 	              	<mifos:mifoslabel name="client.waive" bundle="ClientUIResources"/>
 	              </html-el:link></td>
               </tr>

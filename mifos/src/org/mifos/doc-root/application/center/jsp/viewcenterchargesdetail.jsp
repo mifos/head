@@ -118,14 +118,14 @@
 						<mifos:mifoslabel name="Center.AmountDue" bundle="CenterUIResources"/>:
 						<c:out value='${requestScope.Context.businessResults["ClientFeeChargeDue"]}'/>
                     </span>
-                  <html-el:link href="customerAction.do?method=waiveChargeDue&type=Center&accountId=${param.accountId}">
+                  <html-el:link href="customerAction.do?method=waiveChargeDue&type=Center&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}">
 	              	<mifos:mifoslabel name="client.waive" bundle="ClientUIResources"/>
 	              </html-el:link><br>
                     <span class="fontnormalbold">
 						<mifos:mifoslabel name="Center.AmountOverdue" bundle="CenterUIResources"/>: 
 						<c:out value='${requestScope.Context.businessResults["ClientFeeChargeOverDue"]}'/>
 					</span>
-				  <html-el:link href="customerAction.do?method=waiveChargeOverDue&type=Center&accountId=${param.accountId}">
+				  <html-el:link href="customerAction.do?method=waiveChargeOverDue&type=Center&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}">
 					<mifos:mifoslabel name="client.waive" bundle="ClientUIResources"/>
 	              </html-el:link>
 				</td>
@@ -139,7 +139,7 @@
 					(<c:out value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,requestScope.Context.businessResults["UpcomingChargesDate"])}' />)
                  </td>
                 <td width="70%" align="right" class="fontnormal">
-                    <html-el:link href="accountAppAction.do?method=getTrxnHistory&input=ViewCenterCharges&globalAccountNum=${param.globalAccountNum}&accountId=${param.accountId}&accountType=${param.accountType}&prdOfferingName=${param.prdOfferingName}&headingInput=ViewCenterCharges&searchInput=ClientChargesDetails">
+                    <html-el:link href="accountAppAction.do?method=getTrxnHistory&input=ViewCenterCharges&globalAccountNum=${param.globalAccountNum}&accountId=${param.accountId}&accountType=${param.accountType}&prdOfferingName=${sessionScope.linkValues.customerName}&headingInput=ViewCenterCharges&searchInput=ClientChargesDetails">
                     	<mifos:mifoslabel name="Center.TransactionHistory" />
 					</html-el:link>
  				</td>
