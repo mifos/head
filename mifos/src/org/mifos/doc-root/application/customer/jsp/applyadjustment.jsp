@@ -233,9 +233,11 @@
 			<br>
 			<html-el:hidden property="method" value="${requestScope.method}" />
 			<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />
+			<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}" />
 			<html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}" />
 			<html-el:hidden property="input" value="${param.input}" />
 			<html-el:hidden property="accountId" value="${param.accountId}" />
+			<html-el:hidden property="accountType" value="${param.accountType}" /> 
 			<html-el:hidden property="securityParamInput" value="${param.securityParamInput}" />
 			<mifos:SecurityParam property="${param.securityParamInput}" />
 		</html-el:form>
