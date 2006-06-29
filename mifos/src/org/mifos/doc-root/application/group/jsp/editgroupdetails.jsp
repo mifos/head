@@ -163,7 +163,7 @@
 												<mifos:mifosalphanumtext property="externalId" keyhm="Group.ExternalId" value="${requestScope.GroupVO.externalId}" />
 											</td>
 											<td width="72%" class="fontnormal8pt">
-												<mifos:mifoslabel keyhm="Group.ExternalId" name="${ConfigurationConstants.EXTERNALID}" />
+												<mifos:mifoslabel keyhm="Group.ExternalId" name="Center.ExternalIdInfo" />
 											</td>
 										</tr>
 									</table>

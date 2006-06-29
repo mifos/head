@@ -462,7 +462,7 @@ function meetingpopup(){
                <tr id="Group.ExternalId">
                 <td class="fontnormalbold">  
                 <span class="fontnormal">                 
-                  <mifos:mifoslabel name="${ConfigurationConstants.EXTERNALID}" keyhm="Group.ExternalId" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
+                  <mifos:mifoslabel name="${ConfigurationConstants.EXTERNALID}" isColonRequired="Yes" keyhm="Group.ExternalId" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
                    <c:out value="${requestScope.GroupVO.externalId}"/>
                    <br>
               </td>
