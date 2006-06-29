@@ -48,181 +48,165 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestFeesBO extends TestCase {
 
-	public TestFeesBO() {
-		super();
-	}
-
-	public TestFeesBO(String names) {
-		super(names);
-	}
-
 	public void testCreateOneTimeFees() throws NumberFormatException, Exception {
-		FeesBO fees = buildOneTimeFees("Customer One Time", Double
-				.valueOf("100"), FeesConstants.UPFRONT, Short
-				.valueOf(FeesConstants.CLIENT), false);
-		fees.save(FeesConstants.NO);
+		FeesBO fee = buildOneTimeFees("Customer One Time", 100.0,
+				FeesConstants.UPFRONT, Short.valueOf(FeesConstants.CLIENT),
+				false);
+		fee.save(false);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		fees = (FeesBO) TestObjectFactory.getObject(FeesBO.class, fees
-				.getFeeId());
-		assertEquals("The fee name entered :", fees.getFeeName(),
+		fee = (FeesBO) TestObjectFactory
+				.getObject(FeesBO.class, fee.getFeeId());
+		assertEquals("The fee name entered :", fee.getFeeName(),
 				"Customer One Time");
-		assertEquals("The category entered :", fees.getCategoryType()
+		assertEquals("The category entered :", fee.getCategoryType()
 				.getCategoryId(), Short.valueOf(FeesConstants.CLIENT));
-		assertEquals("The amount entered :", fees.getRateOrAmount(), Double
-				.valueOf("100"));
-		assertEquals("The fee amount entered :",
-				fees.getFeeAmount().toString(), "100.0");
-		assertEquals("The rate entered :", fees.getRate(), null);
-		assertEquals("The frequency of the fees :", fees.getFeeFrequency()
+		assertEquals("The amount entered :", fee.getRateOrAmount(), 100.0);
+		assertEquals("The fee amount entered :", fee.getFeeAmount().toString(),
+				"100.0");
+		assertEquals("The rate entered :", fee.getRate(), null);
+		assertEquals("The frequency of the fees :", fee.getFeeFrequency()
 				.getFeeFrequencyType().getFeeFrequencyTypeId(),
 				FeesConstants.ONETIME);
-		assertEquals("The size of the fee level is :", fees.getFeeLevels()
+		assertEquals("The size of the fee level is :", fee.getFeeLevels()
 				.size(), 0);
 	}
 
 	public void testCreateOneTimeAdminFees() throws NumberFormatException,
 			Exception {
-		FeesBO fees = buildOneTimeFees("Customer One Time Admin Fee", Double
-				.valueOf("25"), FeesConstants.UPFRONT, Short
-				.valueOf(FeesConstants.CLIENT), false);
-		fees.save(FeesConstants.YES);
+		FeesBO fee = buildOneTimeFees("Customer One Time Admin Fee", 25.0,
+				FeesConstants.UPFRONT, Short.valueOf(FeesConstants.CLIENT),
+				false);
+		fee.save(true);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		fees = (FeesBO) TestObjectFactory.getObject(FeesBO.class, fees
-				.getFeeId());
-		assertEquals("The fee name entered :", fees.getFeeName(),
+		fee = (FeesBO) TestObjectFactory
+				.getObject(FeesBO.class, fee.getFeeId());
+		assertEquals("The fee name entered :", fee.getFeeName(),
 				"Customer One Time Admin Fee");
-		assertEquals("The category entered :", fees.getCategoryType()
+		assertEquals("The category entered :", fee.getCategoryType()
 				.getCategoryId(), Short.valueOf(FeesConstants.CLIENT));
-		assertEquals("The amount entered :", fees.getRateOrAmount(), Double
-				.valueOf("25"));
-		assertEquals("The fee amount entered :",
-				fees.getFeeAmount().toString(), "25.0");
-		assertEquals("The rate entered :", fees.getRate(), null);
-		assertEquals("The frequency of the fees :", fees.getFeeFrequency()
+		assertEquals("The amount entered :", fee.getRateOrAmount(), 25.0);
+		assertEquals("The fee amount entered :", fee.getFeeAmount().toString(),
+				"25.0");
+		assertEquals("The rate entered :", fee.getRate(), null);
+		assertEquals("The frequency of the fees :", fee.getFeeFrequency()
 				.getFeeFrequencyType().getFeeFrequencyTypeId(),
 				FeesConstants.ONETIME);
-		assertEquals("The size of the fee level is :", fees.getFeeLevels()
+		assertEquals("The size of the fee level is :", fee.getFeeLevels()
 				.size(), 1);
 	}
 
 	public void testSuccessfulCreatePeriodicFee() throws NumberFormatException,
 			Exception {
-		FeesBO fees = buildPeriodicFees("Customer Periodic Fee", Double
-				.valueOf("25"), 1, 2,
+		FeesBO fee = buildPeriodicFees("Customer Periodic Fee", 25.0, 1, 2,
 				Short.valueOf(FeesConstants.ALLCUSTOMERS), false);
-		fees.save(FeesConstants.YES);
+		fee.save(true);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		fees = (FeesBO) TestObjectFactory.getObject(FeesBO.class, fees
-				.getFeeId());
-		assertEquals("The fee name entered :", fees.getFeeName(),
+		fee = (FeesBO) TestObjectFactory
+				.getObject(FeesBO.class, fee.getFeeId());
+		assertEquals("The fee name entered :", fee.getFeeName(),
 				"Customer Periodic Fee");
-		assertEquals("The category entered :", fees.getCategoryType()
+		assertEquals("The category entered :", fee.getCategoryType()
 				.getCategoryId(), Short.valueOf(FeesConstants.ALLCUSTOMERS));
-		assertEquals("The amount entered :", fees.getRateOrAmount(), Double
-				.valueOf("25"));
-		assertEquals("The fee amount entered :",
-				fees.getFeeAmount().toString(), "25.0");
-		assertEquals("The rate entered :", fees.getRate(), null);
-		assertEquals("The frequency of the fees :", fees.getFeeFrequency()
+		assertEquals("The amount entered :", fee.getRateOrAmount(), 25.0);
+		assertEquals("The fee amount entered :", fee.getFeeAmount().toString(),
+				"25.0");
+		assertEquals("The rate entered :", fee.getRate(), null);
+		assertEquals("The frequency of the fees :", fee.getFeeFrequency()
 				.getFeeFrequencyType().getFeeFrequencyTypeId(),
 				FeesConstants.PERIODIC);
-		assertEquals("The size of the fee level is :", fees.getFeeLevels()
+		assertEquals("The size of the fee level is :", fee.getFeeLevels()
 				.size(), 3);
 
 	}
 
 	public void testSuccessfulCreatePeriodicFeeWithFormula()
 			throws NumberFormatException, Exception {
-		FeesBO fees = buildPeriodicFees("Loan Periodic Fee", Double
-				.valueOf("20"), 1, 2, Short.valueOf(FeesConstants.LOAN), true);
-		fees.save(FeesConstants.NO);
+		FeesBO fee = buildPeriodicFees("Loan Periodic Fee", 20.0, 1, 2, Short
+				.valueOf(FeesConstants.LOAN), true);
+		fee.save(false);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		fees = (FeesBO) TestObjectFactory.getObject(FeesBO.class, fees
-				.getFeeId());
-		assertEquals("The fee name entered :", fees.getFeeName(),
+		fee = (FeesBO) TestObjectFactory
+				.getObject(FeesBO.class, fee.getFeeId());
+		assertEquals("The fee name entered :", fee.getFeeName(),
 				"Loan Periodic Fee");
-		assertEquals("The category entered :", fees.getCategoryType()
+		assertEquals("The category entered :", fee.getCategoryType()
 				.getCategoryId(), Short.valueOf(FeesConstants.LOAN));
-		assertEquals("The rate entered :", fees.getRateOrAmount(), Double
-				.valueOf("20"));
-		assertEquals("The rate entered :", fees.getRate(), Double.valueOf("20"));
-		assertEquals("The rate flag should be 1:", fees.getRateFlatFlag(),
-				Short.valueOf("1"));
-		assertEquals("The formula id should be 1:", fees.getFeeFormula()
+		assertEquals("The rate entered :", fee.getRateOrAmount(), 20.0);
+		assertEquals("The rate entered :", fee.getRate(), 20.0);
+		assertEquals("The rate flag should be 1:", fee.getRateFlatFlag(), Short
+				.valueOf("1"));
+		assertEquals("The formula id should be 1:", fee.getFeeFormula()
 				.getFeeFormulaId(), Short.valueOf("1"));
-		assertEquals("The frequency of the fees :", fees.getFeeFrequency()
+		assertEquals("The frequency of the fees :", fee.getFeeFrequency()
 				.getFeeFrequencyType().getFeeFrequencyTypeId(),
 				FeesConstants.PERIODIC);
 	}
 
 	public void testSuccessfulUpdateWithRate() throws NumberFormatException,
 			Exception {
-		FeesBO fees = buildPeriodicFees("Loan Periodic Fee", Double
-				.valueOf("20"), 1, 2, Short.valueOf(FeesConstants.LOAN), true);
-		fees.save(FeesConstants.NO);
+		FeesBO fee = buildPeriodicFees("Loan Periodic Fee", 20.0, 1, 2, Short
+				.valueOf(FeesConstants.LOAN), true);
+		fee.save(false);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		fees = (FeesBO) TestObjectFactory.getObject(FeesBO.class, fees
-				.getFeeId());
-		assertEquals("The status of the fees should be active :", fees
+		fee = (FeesBO) TestObjectFactory
+				.getObject(FeesBO.class, fee.getFeeId());
+		assertEquals("The status of the fees should be active :", fee
 				.getFeeStatus().getStatusId(), FeesConstants.STATUS_ACTIVE);
-		assertEquals("The rate of the fees:", fees.getRate(), Double
-				.valueOf("20"));
+		assertEquals("The rate of the fees:", fee.getRate(), 20.0);
 
 		UserContext userContext = TestObjectFactory.getUserContext();
-		fees.setUserContext(userContext);
-		fees.setFeeStatus(new FeeStatusEntity(FeesConstants.STATUS_INACTIVE));
-		fees.setRate(Double.valueOf("25"));
-		fees.setRateOrAmount(Double.valueOf("25"));
-		fees.update();
+		fee.setUserContext(userContext);
+		fee.modifyStatus(FeesConstants.STATUS_INACTIVE);
+		fee.setRate(25.0);
+		fee.setRateOrAmount(25.0);
+		fee.update();
 
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		fees = (FeesBO) TestObjectFactory.getObject(FeesBO.class, fees
-				.getFeeId());
-		assertEquals("The status of the fees should be inactive :", fees
+		fee = (FeesBO) TestObjectFactory
+				.getObject(FeesBO.class, fee.getFeeId());
+		assertEquals("The status of the fees should be inactive :", fee
 				.getFeeStatus().getStatusId(), FeesConstants.STATUS_INACTIVE);
-		assertEquals("The rate of the fees:", fees.getRate(), Double
-				.valueOf("25"));
+		assertEquals("The rate of the fees:", fee.getRate(), 25.0);
 
 	}
 
 	public void testSuccessfulUpdateWithAmount() throws NumberFormatException,
 			Exception {
-		FeesBO fees = buildPeriodicFees("Customer Periodic Fee", Double
-				.valueOf("25"), 1, 2,
+		FeesBO fee = buildPeriodicFees("Customer Periodic Fee", 25.0, 1, 2,
 				Short.valueOf(FeesConstants.ALLCUSTOMERS), false);
-		fees.save(FeesConstants.YES);
+		fee.save(true);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		fees = (FeesBO) TestObjectFactory.getObject(FeesBO.class, fees
-				.getFeeId());
-		assertEquals("The status of the fees should be active :", fees
+		fee = (FeesBO) TestObjectFactory
+				.getObject(FeesBO.class, fee.getFeeId());
+		assertEquals("The status of the fees should be active :", fee
 				.getFeeStatus().getStatusId(), FeesConstants.STATUS_ACTIVE);
-		assertEquals("The amount of the fees:", fees.getFeeAmount().toString(),
+		assertEquals("The amount of the fees:", fee.getFeeAmount().toString(),
 				"25.0");
 
 		UserContext userContext = TestObjectFactory.getUserContext();
-		fees.setUserContext(userContext);
-		fees.setFeeStatus(new FeeStatusEntity(FeesConstants.STATUS_INACTIVE));
-		fees.setAmount("50");
-		fees.setRateOrAmount(Double.valueOf("50"));
-		fees.update();
+		fee.setUserContext(userContext);
+		fee.modifyStatus(FeesConstants.STATUS_INACTIVE);
+		fee.setAmount("50");
+		fee.setRateOrAmount(50.0);
+		fee.update();
 
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		fees = (FeesBO) TestObjectFactory.getObject(FeesBO.class, fees
-				.getFeeId());
-		assertEquals("The status of the fees should be inactive :", fees
+		fee = (FeesBO) TestObjectFactory
+				.getObject(FeesBO.class, fee.getFeeId());
+		assertEquals("The status of the fees should be inactive :", fee
 				.getFeeStatus().getStatusId(), FeesConstants.STATUS_INACTIVE);
-		assertEquals("The amount of the fees:", fees.getFeeAmount().toString(),
+		assertEquals("The amount of the fees:", fee.getFeeAmount().toString(),
 				"50.0");
 
 	}
@@ -230,62 +214,44 @@ public class TestFeesBO extends TestCase {
 	private FeesBO buildPeriodicFees(String feeName, Double feeRateOrAmnt,
 			int frequency, int recurAfter, Short feeCategory, boolean rateFlag)
 			throws Exception {
-		FeesBO fees = new FeesBO(TestObjectFactory.getUserContext());
-		fees.setFeeName(feeName);
-		FeeFrequencyEntity feeFrequency = new FeeFrequencyEntity();
-		fees.setFeeFrequency(feeFrequency);
-		fees.getFeeFrequency().getFeeFrequencyType().setFeeFrequencyTypeId(
+		FeesBO fee = buildFees(feeName, feeCategory, rateFlag, feeRateOrAmnt);
+		fee.getFeeFrequency().getFeeFrequencyType().setFeeFrequencyTypeId(
 				FeesConstants.PERIODIC);
 		MeetingBO feeMeetingFrequency = TestObjectFactory.getMeetingHelper(
 				frequency, recurAfter, 5);
-		fees.getFeeFrequency().setFeeMeetingFrequency(feeMeetingFrequency);
-		CategoryTypeEntity categoryType = new CategoryTypeEntity();
-		fees.setCategoryType(categoryType);
-		fees.getCategoryType().setCategoryId(feeCategory);
-		fees.setRateFlat(rateFlag);
-		if (rateFlag) {
-			fees.setRate(feeRateOrAmnt);
-			fees.setAmount("");
-			FeeFormulaEntity feeFormulaEntity = new FeeFormulaEntity();
-			fees.setFeeFormula(feeFormulaEntity);
-			fees.getFeeFormula().setFeeFormulaId(Short.valueOf("1"));
-		} else
-			fees.setAmount(String.valueOf(feeRateOrAmnt));
-		fees.setRateOrAmount(feeRateOrAmnt);
-		GLCodeEntity glCodeFee = (GLCodeEntity) HibernateUtil.getSessionTL()
-				.get(GLCodeEntity.class, Short.valueOf("24"));
-		fees.setGlCodeEntity(glCodeFee);
-
-		return fees;
+		fee.getFeeFrequency().setFeeMeetingFrequency(feeMeetingFrequency);
+		return fee;
 	}
 
 	private FeesBO buildOneTimeFees(String feeName, Double feeRateOrAmnt,
 			Short timeOfCharge, Short feeCategory, boolean rateFlag)
 			throws Exception {
-		FeesBO fees = new FeesBO(TestObjectFactory.getUserContext());
-		FeeFrequencyEntity feeFrequency = new FeeFrequencyEntity();
-		fees.setFeeFrequency(feeFrequency);
-		fees.setFeeName(feeName);
-		fees.getFeeFrequency().getFeeFrequencyType().setFeeFrequencyTypeId(
+		FeesBO fee = buildFees(feeName, feeCategory, rateFlag, feeRateOrAmnt);
+		fee.getFeeFrequency().getFeeFrequencyType().setFeeFrequencyTypeId(
 				FeesConstants.ONETIME);
-		fees.getFeeFrequency().getFeePayment().setFeePaymentId(timeOfCharge);
-		CategoryTypeEntity categoryType = new CategoryTypeEntity();
-		fees.setCategoryType(categoryType);
-		fees.getCategoryType().setCategoryId(feeCategory);
-		fees.setRateFlat(rateFlag);
+		fee.getFeeFrequency().getFeePayment().setFeePaymentId(timeOfCharge);
+		return fee;
+	}
+
+	private FeesBO buildFees(String feeName, Short feeCategory,
+			boolean rateFlag, Double feeRateOrAmnt) throws Exception {
+		FeesBO fee = new FeesBO(TestObjectFactory.getUserContext());
+		fee.setFeeName(feeName);
+		fee.setFeeFrequency(new FeeFrequencyEntity());
+		fee.setCategoryType(new CategoryTypeEntity());
+		fee.getCategoryType().setCategoryId(feeCategory);
+		fee.setRateOrAmount(feeRateOrAmnt);
+		fee.setRateFlat(rateFlag);
 		if (rateFlag) {
-			fees.setRate(feeRateOrAmnt);
-			fees.setAmount("");
-			FeeFormulaEntity feeFormulaEntity = new FeeFormulaEntity();
-			fees.setFeeFormula(feeFormulaEntity);
-			fees.getFeeFormula().setFeeFormulaId(Short.valueOf("1"));
+			fee.setRate(feeRateOrAmnt);
+			fee.setAmount("");
+			fee.setFeeFormula(new FeeFormulaEntity());
+			fee.getFeeFormula().setFeeFormulaId(Short.valueOf("1"));
 		} else
-			fees.setAmount(String.valueOf(feeRateOrAmnt));
-		fees.setRateOrAmount(feeRateOrAmnt);
-		GLCodeEntity glCodeEntity = (GLCodeEntity) HibernateUtil.getSessionTL()
-				.get(GLCodeEntity.class, Short.valueOf("7"));
-		fees.setGlCodeEntity(glCodeEntity);
-		return fees;
+			fee.setAmount(String.valueOf(feeRateOrAmnt));
+		fee.setGlCodeEntity((GLCodeEntity) HibernateUtil.getSessionTL().get(
+				GLCodeEntity.class, Short.valueOf("7")));
+		return fee;
 	}
 
 }

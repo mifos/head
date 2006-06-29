@@ -153,7 +153,10 @@ public class FeeAction extends BaseAction {
 		FeesBO fees = (FeesBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
 		FeeActionForm feeActionForm = (FeeActionForm) form;
-		fees.save(feeActionForm.getAdminCheck());
+		boolean adminCheck = feeActionForm.getAdminCheck() != null
+				&& feeActionForm.getAdminCheck().equals(
+						FeesConstants.ADMINCHECK);
+		fees.save(adminCheck);
 		return mapping.findForward(FeesConstants.CREATESUCCESS);
 	}
 
@@ -196,7 +199,7 @@ public class FeeAction extends BaseAction {
 		FeeActionForm feeActionForm = (FeeActionForm) form;
 		FeesBO fees = (FeesBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
-		fees.setFeeStatus(feeActionForm.getFeeStatus());
+		fees.modifyStatus(feeActionForm.getFeeStatus().getStatusId());
 		if (fees.getRate() == null) {
 			fees.setAmount(feeActionForm.getAmount());
 			fees.setRateOrAmount(Double.valueOf(feeActionForm.getAmount()));

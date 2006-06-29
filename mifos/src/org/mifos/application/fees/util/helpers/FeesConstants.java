@@ -76,6 +76,7 @@ public interface FeesConstants {
 	//Default Admin
 	public static final String YES="Yes";
 	public static final String NO="No";
+	public static final String ADMINCHECK="1";
 	
 	
 	//Admin level for different categories

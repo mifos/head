@@ -76,7 +76,6 @@
 													</tr>
 												</table>
 											</td>
-
 											<td width="73%" align="right">
 												<table border="0" cellspacing="0" cellpadding="0">
 													<tr>
@@ -148,7 +147,7 @@
 												<mifos:mifoslabel name="Fees.defaultfees" />
 											</td>
 											<td valign="top">
-												<html-el:checkbox property="adminCheck" value="Yes" />
+												<html-el:checkbox property="adminCheck" value="1" />
 											</td>
 										</tr>
 										<tr class="fontnormal">
@@ -172,7 +171,6 @@
 												&nbsp;
 											</td>
 											<td valign="top">
-
 												<div id="timeofchargeDiv">
 													<mifos:mifoslabel name="Fees.selecttimeofcharge" />
 													<br>
@@ -186,9 +184,7 @@
 															<html-el:options property="id" labelProperty="lookUpValue" collection="CustomerTimeOfCharges" />
 														</mifos:select>
 													</div>
-
 												</div>
-
 												<div id="scheduleDIV">
 													<table width="90%" border="0" cellpadding="3" cellspacing="0">
 														<tr class="fontnormal">
@@ -221,7 +217,7 @@
 																		<tr class="fontnormal">
 																			<td colspan="4">
 																				<mifos:mifoslabel name="Fees.labelRecurEvery" />
-																				<mifos:mifosnumbertext property="weekRecurAfter" size="3"/>
+																				<mifos:mifosnumbertext property="weekRecurAfter" size="3" />
 																				<mifos:mifoslabel name="Fees.labelWeeks" />
 																			</td>
 																		</tr>
@@ -287,7 +283,6 @@
 																<img src="pages/framework/images/trans.gif" width="5" height="1">
 															</td>
 														</tr>
-
 														<tr class="fontnormal">
 															<td width="16%">
 																<mifos:mifosdecimalinput property="rate" size="3" decimalFmt="10.5"></mifos:mifosdecimalinput>

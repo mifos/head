@@ -700,7 +700,7 @@ public class TestObjectFactory {
 
 		savingsOffering.setTimePerForInstcalc(timeForIntCalc);
 		savingsOffering.setFreqOfPostIntcalc(timeForIntPost);
-		
+
 		PrdStatusEntity prdStatus = new PrdStatusEntity();
 
 		PersonnelBO personnel = getPersonnel(new Short("1"));
@@ -815,7 +815,7 @@ public class TestObjectFactory {
 			e1.printStackTrace();
 		}
 		SavingsBO savings = new SavingsBO(userContext);
-		
+
 		savings.setCustomer(customer);
 		savings.setAccountState(new AccountStateEntity(
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION));
@@ -969,7 +969,12 @@ public class TestObjectFactory {
 	 */
 	public static FeesBO createPeriodicFees(String feeName, Double feeAmnt,
 			int frequency, int recurAfter, int feeCategory) {
-		FeesBO fees = new FeesBO();
+		FeesBO fees = null;
+		try {
+			fees = new FeesBO(TestObjectFactory.getUserContext());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		fees.setFeeName(feeName);
 
 		FeeFrequencyEntity feeFrequency = new FeeFrequencyEntity();
@@ -1010,7 +1015,13 @@ public class TestObjectFactory {
 	 */
 	public static FeesBO createOneTimeFees(String feeName, Double feeAmnt,
 			short timeOfCharge, int feeCategory) {
-		FeesBO fees = new FeesBO();
+		FeesBO fees = null;
+		try {
+			fees = new FeesBO(TestObjectFactory.getUserContext());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		fees.setFeeName(feeName);
 
 		FeeFrequencyEntity feeFrequency = new FeeFrequencyEntity();
@@ -1176,7 +1187,6 @@ public class TestObjectFactory {
 			session.delete(account);
 			session.delete(savings.getTimePerForInstcalc());
 			session.delete(savings.getFreqOfPostIntcalc());
-			
 
 			for (PrdOfferingMeetingEntity prdOfferingMeeting : savings
 					.getSavingsOffering().getPrdOfferingMeetings()) {

@@ -2,14 +2,12 @@ package org.mifos.framework.business;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
 import org.mifos.framework.security.util.UserContext;
 
 public abstract class BusinessObject extends PersistentObject{
@@ -60,6 +58,16 @@ public abstract class BusinessObject extends PersistentObject{
 			}
 		}
 		return hiddenFieldList;
+	}
+	
+	protected void setCreateDetails() {
+		setCreatedDate(new Date());
+		setCreatedBy(userContext.getId());
+	}
+	
+	protected void setUpdateDetails() {
+		setUpdatedDate(new Date());
+		setUpdatedBy(userContext.getId());
 	}
 		
 }

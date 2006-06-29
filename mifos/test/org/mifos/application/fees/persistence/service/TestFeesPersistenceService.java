@@ -36,7 +36,6 @@
 
  */
 
-
 package org.mifos.application.fees.persistence.service;
 
 import java.util.Date;
@@ -54,14 +53,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestFeesPersistenceService extends TestCase {
-
-	public TestFeesPersistenceService() {
-		super();
-	}
-
-	public TestFeesPersistenceService(String names) {
-		super(names);
-	}
 
 	public void testSave() throws Exception {
 
@@ -124,7 +115,7 @@ public class TestFeesPersistenceService extends TestCase {
 
 		fees.setCreatedDate(new Date());
 		fees.setCreatedBy(userContext.getId());
-		fees.setFeeStatus(new FeeStatusEntity(FeesConstants.STATUS_ACTIVE));
+		fees.modifyStatus(FeesConstants.STATUS_ACTIVE);
 		fees.setOffice(TestObjectFactory.getOffice(userContext.getBranchId()));
 		fees.getFeeFrequency().buildFeeFrequency();
 		return fees;

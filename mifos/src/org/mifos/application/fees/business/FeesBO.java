@@ -38,7 +38,6 @@
 
 package org.mifos.application.fees.business;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -87,15 +86,13 @@ public class FeesBO extends BusinessObject {
 	@Deprecated
 	private Double rateOrAmount;
 
-	private FeePersistenceService feePersistenceService;
-
-	public FeesBO() {
+	protected FeesBO() {
 		feeLevels = new HashSet<FeeLevelEntity>();
 	}
 
 	public FeesBO(UserContext userContext) {
+		this();
 		this.userContext = userContext;
-		feeLevels = new HashSet<FeeLevelEntity>();
 	}
 
 	public Short getFeeId() {
@@ -206,8 +203,12 @@ public class FeesBO extends BusinessObject {
 		return feeStatus;
 	}
 
-	public void setFeeStatus(FeeStatusEntity status) {
+	private void setFeeStatus(FeeStatusEntity status) {
 		this.feeStatus = status;
+	}
+
+	public void modifyStatus(Short status) {
+		setFeeStatus(new FeeStatusEntity(status));
 	}
 
 	public Money getFeeAmount() {
@@ -230,9 +231,8 @@ public class FeesBO extends BusinessObject {
 		this.rate = rate;
 	}
 
-	private void buildFeeLevels(String adminCheck) {
-		if (null != adminCheck
-				&& adminCheck.equalsIgnoreCase(FeesConstants.YES)) {
+	private void buildFeeLevels(boolean adminCheck) {
+		if (adminCheck) {
 			String categoryId = categoryType.getCategoryId().toString();
 			if (categoryId.equals(FeesConstants.CLIENT))
 				addFeeLevel(createFeeLevel(FeesConstants.LEVEL_ID_CLIENT));
@@ -256,18 +256,13 @@ public class FeesBO extends BusinessObject {
 
 	private FeePersistenceService getFeePersistenceService()
 			throws ServiceException {
-		if (feePersistenceService == null) {
-			feePersistenceService = (FeePersistenceService) ServiceFactory
-					.getInstance().getPersistenceService(
-							PersistenceServiceName.Fees);
-		}
-		return feePersistenceService;
+		return (FeePersistenceService) ServiceFactory.getInstance()
+				.getPersistenceService(PersistenceServiceName.Fees);
 	}
 
-	public void save(String adminCheck) throws ServiceException {
-		setCreatedDate(new Date());
-		setCreatedBy(userContext.getId());
-		setFeeStatus(new FeeStatusEntity(FeesConstants.STATUS_ACTIVE));
+	public void save(boolean adminCheck) throws ServiceException {
+		setCreateDetails();
+		modifyStatus(FeesConstants.STATUS_ACTIVE);
 		setOffice(new OfficePersistenceService().getHeadOffice());
 		feeFrequency.buildFeeFrequency();
 		buildFeeLevels(adminCheck);
@@ -275,8 +270,7 @@ public class FeesBO extends BusinessObject {
 	}
 
 	public void update() throws ServiceException {
-		setUpdatedDate(new Date());
-		setUpdatedBy(userContext.getId());
+		setUpdateDetails();
 		getFeePersistenceService().save(this);
 	}
 

@@ -239,7 +239,7 @@ public class TestFeeAction extends MockStrutsTestCase {
 		addRequestParameter("categoryType.categoryId",
 				FeesConstants.ALLCUSTOMERS);
 		addRequestParameter("amount", "100");
-		addRequestParameter("adminCheck", "Yes");
+		addRequestParameter("adminCheck", "1");
 		addRequestParameter("feeName", "Customer One time Admin Fee");
 		addRequestParameter("feeFrequency.feeFrequencyType.feeFrequencyTypeId",
 				FeesConstants.ONETIME.toString());
@@ -281,7 +281,7 @@ public class TestFeeAction extends MockStrutsTestCase {
 		addRequestParameter("categoryType.categoryId",
 				FeesConstants.ALLCUSTOMERS);
 		addRequestParameter("amount", "100");
-		addRequestParameter("adminCheck", "Yes");
+		addRequestParameter("adminCheck", "1");
 		addRequestParameter("feeName", "Customer Periodic Fee");
 		addRequestParameter("feeFrequency.feeFrequencyType.feeFrequencyTypeId",
 				FeesConstants.PERIODIC.toString());
@@ -328,7 +328,7 @@ public class TestFeeAction extends MockStrutsTestCase {
 		addRequestParameter("amount", "");
 		addRequestParameter("feeFormula.feeFormulaId", "1");
 		addRequestParameter("feeName", "Loan Periodic Fee");
-		addRequestParameter("adminCheck", "No");
+		addRequestParameter("adminCheck", "0");
 		addRequestParameter("feeFrequency.feeFrequencyType.feeFrequencyTypeId",
 				FeesConstants.PERIODIC.toString());
 		addRequestParameter(

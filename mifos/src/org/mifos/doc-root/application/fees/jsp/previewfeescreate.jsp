@@ -44,9 +44,6 @@
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
-
-
-
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
 		<script src="pages/framework/js/CommonUtilities.js"></script>
@@ -147,7 +144,7 @@
 													<c:when test="${sessionScope.BusinessKey.categoryType.categoryId!=FeesConstants.LOAN}">
 														<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.defaultFees" /> </span>
 														<c:choose>
-															<c:when test="${sessionScope.feeactionform.adminCheck=='Yes'}">
+															<c:when test="${sessionScope.feeactionform.adminCheck==FeesConstants.ADMINCHECK}">
 																<mifos:mifoslabel name="Fees.DefaultFeeYes" />
 																<br>
 															</c:when>
@@ -191,14 +188,8 @@
 														</c:forEach>
 													</c:otherwise>
 												</c:choose>
-
 												<br>
-
-
 												<br>
-
-
-
 												<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.feecalculation" /> </span>
 												<br>
 												<c:choose>
@@ -273,7 +264,6 @@
 				</tr>
 			</table>
 			<br>
-
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>
