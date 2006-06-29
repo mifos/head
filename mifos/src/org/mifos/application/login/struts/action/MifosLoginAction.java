@@ -49,15 +49,18 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.login.struts.actionforms.MifosLoginActionForm;
 import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
-
+import org.mifos.framework.exceptions.DoubleSubmitException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.MifosBaseAction;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.framework.util.valueobjects.Context;
 
@@ -105,11 +108,27 @@ public class MifosLoginAction extends MifosBaseAction {
 	 * @param response
 	 * @return ActionForward
 	 */
-	public ActionForward customUpdate(ActionMapping mapping, ActionForm form,
+	/*public ActionForward customUpdate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		loginLogger.debug("Inside get method of MifosLoginAction");
 		//check if the inputScreen is Login, if it is login screen forward to Home Page
+		return mapping.findForward(getUpdateForward(((MifosLoginActionForm) form).getInput()));
+	}*/
+	
+	public ActionForward update(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) throws ApplicationException, SystemException {
+		if(isTokenValid(request)){
+			Context context = (Context) request.getAttribute(Constants.CONTEXT);
+			if(null==context) {
+				throw new ApplicationException(LoginConstants.KEYINVALIDUSER);
+			}
+			context.setBusinessAction(MethodNameConstants.UPDATE);
+			delegate(context, request);
+			resetToken(request);
+		}else 
+			throw new DoubleSubmitException(ExceptionConstants.DOUBLESUBMITEXCEPTION);
+		
 		return mapping.findForward(getUpdateForward(((MifosLoginActionForm) form).getInput()));
 	}
 	
