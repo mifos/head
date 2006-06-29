@@ -179,7 +179,7 @@
                 
                 <td width="30%"><c:out value="${recurrenceFees.amount}"/>&nbsp;&nbsp;(<c:out value="${recurrenceFees.meeting.simpleMeetingSchedule}"/>)</td>
                 <td width="55%">
-				<html-el:link href="accountAppAction.do?method=removeFees&feeId=${recurrenceFees.feeId}&accountId=${recurrenceFees.accountId}&fromPage=group"> 
+				<html-el:link href="accountAppAction.do?method=removeFees&feeId=${recurrenceFees.feeId}&accountId=${recurrenceFees.accountId}&fromPage=group&globalAccountNum=${param.globalAccountNum}"> 
                 <mifos:mifoslabel  name="Group.remove"/>
                 </html-el:link></td>
               </tr>

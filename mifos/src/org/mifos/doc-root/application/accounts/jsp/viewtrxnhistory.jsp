@@ -118,14 +118,14 @@
 					<html-el:button property="returnToAccountDetailsbutton"
 					       onclick="javascript:ViewLoanDetails(this.form)"
 						     styleClass="buttn" style="width:165px;">
-								<mifos:mifoslabel name="${ConfigurationConstants.LOAN}"/>  <mifos:mifoslabel name="accounts.acc_details" bundle="accountsUIResources"/>
+								<mifos:mifoslabel name="accounts.returndetails" />
 						</html-el:button>
 					</c:when>
 					<c:otherwise>
 					   <html-el:button property="returnToAccountDetailsbutton"
 					       onclick="javascript:ViewDetails()"
 						     styleClass="buttn" style="width:165px;">
-								<c:if test="${param.input == 'ViewCenterCharges'}"><mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/></c:if><c:if test="${param.input == 'ViewGroupCharges'}"><mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/></c:if><c:if test="${param.input == 'ViewClientCharges'}"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/></c:if> <mifos:mifoslabel name="Center.Charges" bundle="CenterUIResources"/>
+								<mifos:mifoslabel name="accounts.backtocharges" />
 						</html-el:button>
 					</c:otherwise>	
 					</c:choose>	
