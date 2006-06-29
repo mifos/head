@@ -846,6 +846,7 @@
 				value="${requestScope.clientVO.customerAccount.accountTypeId}" />
 			<html-el:hidden property="input" value="ViewClientCharges" />
 			<html-el:hidden property="customerId" value="${requestScope.clientVO.customerId}"/>
+			<html-el:hidden property="statusId" value="${requestScope.clientVO.statusId}"/> 
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

@@ -135,7 +135,7 @@
           </td>
         </tr>
       </table>
-  
+<html-el:hidden property="statusId" value="${param.statusId}"/>  
 </html-el:form>
 <html-el:form  action="closedaccsearchaction.do?method=search">
 <html-el:hidden property="searchNode(search_name)" value="${param.searchInput}"/>
@@ -144,6 +144,7 @@
 <html-el:hidden property="accountId" value="${param.accountId}"/> 
 <html-el:hidden property="accountType" value="${param.accountType}"/> 
 <html-el:hidden property="input" value="${param.input}"/> 
+<html-el:hidden property="statusId" value="${param.statusId}"/>
 </html-el:form>
 </tiles:put>
 </tiles:insert>        

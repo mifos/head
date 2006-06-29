@@ -239,6 +239,7 @@
 			<html-el:hidden property="accountId" value="${param.accountId}" />
 			<html-el:hidden property="accountType" value="${param.accountType}" /> 
 			<html-el:hidden property="securityParamInput" value="${param.securityParamInput}" />
+			<html-el:hidden property="statusId" value="${param.statusId}"/> 
 			<mifos:SecurityParam property="${param.securityParamInput}" />
 		</html-el:form>
 

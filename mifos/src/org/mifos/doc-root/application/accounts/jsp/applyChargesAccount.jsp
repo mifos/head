@@ -249,7 +249,8 @@
 <html-el:hidden property="accountId" value="${param.accountId}"/> 
 <html-el:hidden property="accountType" value="${param.accountType}"/> 	
 <html-el:hidden property="input" value="${param.input}"/> 		
-<html-el:hidden property="chargeAmount" value="0"/> 
+<html-el:hidden property="chargeAmount" value="0"/>
+<html-el:hidden property="statusId" value="${param.statusId}"/>  
 </html-el:form>
 
 <html-el:form  action="closedaccsearchaction.do?method=search">
@@ -259,6 +260,7 @@
 <html-el:hidden property="accountId" value="${param.accountId}"/> 
 <html-el:hidden property="accountType" value="${param.accountType}"/> 
 <html-el:hidden property="input" value="${param.input}"/> 
+<html-el:hidden property="statusId" value="${param.statusId}"/> 
 </html-el:form>
 
 	</tiles:put>

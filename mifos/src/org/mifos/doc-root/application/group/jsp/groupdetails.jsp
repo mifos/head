@@ -801,6 +801,7 @@ function meetingpopup(){
 <html-el:hidden property="accountType" value="${requestScope.GroupVO.customerAccount.accountTypeId}"/> 
 <html-el:hidden property="customerId" value="${requestScope.GroupVO.customerId}"/> 
 <html-el:hidden property="input" value="ViewGroupCharges"/> 
+<html-el:hidden property="statusId" value="${requestScope.GroupVO.statusId}"/> 
 </html-el:form>
 </tiles:put>
 </tiles:insert>
