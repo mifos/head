@@ -59,7 +59,7 @@ public class TestAccountActionEntity extends TestCase {
 		for (Iterator iter = accountFeeSet.iterator(); iter.hasNext();) {
 			AccountFeesEntity accountFeesEntity = (AccountFeesEntity) iter.next();
 			accountFeesEntity.setLastAppliedDate(lastAppliedFeeDate);
-			assertEquals(true,accountFeesEntity.isApplicable(System.currentTimeMillis()));			
+			assertEquals(true,accountFeesEntity.isApplicable(new Date(System.currentTimeMillis())));			
 		}
 	}
 }

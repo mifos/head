@@ -12,11 +12,9 @@ import junit.framework.TestCase;
 
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
-import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
-import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
 import org.mifos.application.customer.group.business.GroupBO;
@@ -24,25 +22,20 @@ import org.mifos.application.fees.business.FeesBO;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
 import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.HibernateStartUp;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.authorization.AuthorizationManager;
-import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestCustomerAccountBO extends TestCase {
+public class TestCustomerAccountBO extends TestCase {	
 		
 	private BulkEntryBusinessService bulkEntryBusinessService;
 
@@ -420,50 +413,41 @@ public class TestCustomerAccountBO extends TestCase {
 	public void testApplyPeriodicFees() throws RepaymentScheduleException,
 			SchedulerException, PersistenceException, ServiceException {
 		createInitialObjects();
-		FeesBO periodicFees = TestObjectFactory.createPeriodicFees(
-				"Periodic Fee", 100.0, 1, 1, 5);
+		FeesBO periodicFees = TestObjectFactory.createPeriodicFees("Periodic Fee", 100.0, 1, 1, 5);
 		AccountFeesEntity accountFeesEntity = new AccountFeesEntity();
 		accountFeesEntity.setAccount(group.getCustomerAccount());
-		accountFeesEntity.setAccountFeeAmount(new Money(periodicFees
-				.getRateOrAmount().toString()));
-		accountFeesEntity.setFeeAmount(new Money(periodicFees.getRateOrAmount()
-				.toString()));
+		accountFeesEntity.setAccountFeeAmount(new Money(periodicFees.getRateOrAmount().toString()));
+		accountFeesEntity.setFeeAmount(new Money(periodicFees.getRateOrAmount().toString()));
 		accountFeesEntity.setFees(periodicFees);
-		accountFeesEntity.setLastAppliedDate(new Date(System
-				.currentTimeMillis()));
+		accountFeesEntity.setLastAppliedDate(new Date(System.currentTimeMillis()));
+		
 		group.getCustomerAccount().addAccountFees(accountFeesEntity);
+		
 		TestObjectFactory.updateObject(group);
 		TestObjectFactory.flushandCloseSession();
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
-				.getCustomerId());
-		AccountActionDateEntity accountActionDateEntity = (AccountActionDateEntity) group
-				.getCustomerAccount().getAccountActionDates().toArray()[0];
-		Set<AccountFeesActionDetailEntity> feeDetailsSet = accountActionDateEntity
-				.getAccountFeesActionDetails();
+		
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		
+		AccountActionDateEntity accountActionDateEntity = (AccountActionDateEntity) group.getCustomerAccount().getAccountActionDates().toArray()[0];
+		
+		Set<AccountFeesActionDetailEntity> feeDetailsSet = accountActionDateEntity.getAccountFeesActionDetails();
+		
 		List<Integer> feeList = new ArrayList<Integer>();
 		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : feeDetailsSet) {
-			feeList.add(accountFeesActionDetailEntity
-					.getAccountFeesActionDetailId());
+			feeList.add(accountFeesActionDetailEntity.getAccountFeesActionDetailId());
 		}
-		group.getCustomerAccount()
-				.applyPeriodicFees(System.currentTimeMillis());
+		group.getCustomerAccount().applyPeriodicFees(new Date(System.currentTimeMillis()));
 		TestObjectFactory.flushandCloseSession();
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
-				.getCustomerId());
-		AccountActionDateEntity firstInstallment = (AccountActionDateEntity) group
-				.getCustomerAccount().getAccountActionDates().toArray()[0];
-		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : firstInstallment
-				.getAccountFeesActionDetails()) {
-			if (!feeList.contains(accountFeesActionDetailEntity
-					.getAccountFeesActionDetailId())) {
-				assertEquals("Periodic Fee", accountFeesActionDetailEntity
-						.getFee().getFeeName());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		AccountActionDateEntity firstInstallment = (AccountActionDateEntity) group.getCustomerAccount().getAccountActionDates().toArray()[0];
+		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : firstInstallment.getAccountFeesActionDetails()) {
+			if (!feeList.contains(accountFeesActionDetailEntity.getAccountFeesActionDetailId())) {
+				assertEquals("Periodic Fee", accountFeesActionDetailEntity.getFee().getFeeName());
 				break;
 			}
 		}
 		HibernateUtil.closeSession();
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
-				.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
 	}
 	
 	public void testRemoveFees() throws NumberFormatException, SystemException, ApplicationException {

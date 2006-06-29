@@ -16,7 +16,7 @@ import org.mifos.framework.exceptions.PersistenceException;
  * @author krishankg
  *
  */
-public class TestAccountPersistence extends TestAccount {		
+public class TestAccountPersistence extends TestAccount {			
 	
 	private AccountPersistence accountPersistence=new AccountPersistence();
 	
@@ -83,7 +83,7 @@ public class TestAccountPersistence extends TestAccount {
 	}
 	
 	public void testGetAccountsWithTodaysInstallment() throws PersistenceException {				
-		assertEquals(3,accountPersistence.getAccountsWithTodaysInstallment().size());		
+		assertEquals(2,accountPersistence.getAccountsWithTodaysInstallment().size());		
 	}
 
 }

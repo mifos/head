@@ -205,4 +205,6 @@ public interface CustomerConstants {
 	public static final String CURRENT_GOVT_ID = "currentGovtId"; 
 	public static final String CLIENTRECENTACCACTIVITYLIST="customerAccountActivityList";
 	
+	public static final short CUSTOMER_TYPE_ID = 3;
+	public static final short GROUP_ONHOLD = 3;
 }

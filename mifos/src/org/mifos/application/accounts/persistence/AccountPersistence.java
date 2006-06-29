@@ -16,6 +16,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -141,10 +142,13 @@ public class AccountPersistence extends Persistence {
 	
 	public List<Integer> getAccountsWithTodaysInstallment() throws PersistenceException{				
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
-		Date currentDate = new Date(System.currentTimeMillis());		
+		Date currentDate = new Date(System.currentTimeMillis());
+		queryParameters.put("CUSTOMER_TYPE_ID",CustomerConstants.CUSTOMER_TYPE_ID);
 		queryParameters.put("ACTIVE_CENTER_STATE",CustomerConstants.CENTER_ACTIVE_STATE);
 		queryParameters.put("ACTIVE_GROUP_STATE",CustomerConstants.GROUP_ACTIVE_STATE);
-		queryParameters.put("ACTIVE_CLIENT_STATE",CustomerConstants.CLIENT_APPROVED);		
+		queryParameters.put("ACTIVE_CLIENT_STATE",CustomerConstants.CLIENT_APPROVED);
+		queryParameters.put("ONHOLD_CLIENT_STATE",CustomerConstants.CLIENT_ONHOLD);
+		queryParameters.put("ONHOLD_GROUP_STATE",GroupConstants.HOLD);
 		queryParameters.put("CURRENT_DATE",currentDate);
 		queryParameters.put("PAYMENT_UNPAID",AccountConstants.PAYMENT_UNPAID);		
 		return executeNamedQuery(NamedQueryConstants.GET_TODAYS_UNPAID_INSTALLMENT_FOR_ACTIVE_CUSTOMERS,queryParameters);			

@@ -59,7 +59,6 @@ import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
 /**
@@ -210,21 +209,19 @@ public class CustomerAccountBO extends AccountBO {
 		getAccountPersistenceService().update(this);
 	}
 
-	public void applyPeriodicFees(long timeInMills)
-			throws RepaymentScheduleException, SchedulerException,
-			PersistenceException, ServiceException {
-		Date date = DateUtils.getDateWithoutTimeStamp(timeInMills);
-		Set<AccountActionDateEntity> accountActionDateSet = getAccountActionDates();
-		for (AccountActionDateEntity accountActionDate : accountActionDateSet) {
-			if (date.equals(accountActionDate.getActionDate())) {
-				List<AccountFeesEntity> periodicFeeList = getPeriodicFeeList();
-				for (AccountFeesEntity accountFeesEntity : periodicFeeList) {
-					if (accountFeesEntity.isApplicable(timeInMills) == true) {
-						accountFeesEntity.setLastAppliedDate(new Date(
-								timeInMills));
-						accountActionDate.applyPeriodicFees(accountFeesEntity
-								.getFees().getFeeId());
-						getAccountPersistenceService().save(this);
+	public void applyPeriodicFees(Date date) throws RepaymentScheduleException, SchedulerException, PersistenceException, ServiceException {		
+		Set<AccountActionDateEntity> accountActionDateSet = getAccountActionDates();		
+		for (AccountActionDateEntity accountActionDate : accountActionDateSet) {		
+			if (date.equals(accountActionDate.getActionDate())) {				
+				List<AccountFeesEntity> periodicFeeList = getPeriodicFeeList();		
+				for (AccountFeesEntity accountFeesEntity : periodicFeeList) {		
+					if (accountFeesEntity.isApplicable(date) == true) {
+						accountFeesEntity.setLastAppliedDate(date);
+						accountActionDate.applyPeriodicFees(accountFeesEntity.getFees().getFeeId());						
+						FeesBO feesBO = getAccountFeesObject(accountFeesEntity.getFees().getFeeId());
+						String description = feesBO.getFeeName()+ " " + AccountConstants.FEES_APPLIED;		
+						updateAccountActivity(feesBO.getFeeAmount(),null,description);						
+						getAccountPersistenceService().save(this);						
 					}
 				}
 				break;
@@ -234,8 +231,11 @@ public class CustomerAccountBO extends AccountBO {
 
 	private CustomerActivityEntity buildCustomerActivity(Money amount,
 			String description, Short personnelId) {
-		PersonnelBO personnel = new PersonnelPersistenceService()
+		PersonnelBO personnel =null;
+		if(personnelId!=null){
+			personnel = new PersonnelPersistenceService()
 				.getPersonnel(personnelId);
+		}
 		return new CustomerActivityEntity(personnel, description, amount);
 	}
 	

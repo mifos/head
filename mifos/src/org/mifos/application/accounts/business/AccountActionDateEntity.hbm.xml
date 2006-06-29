@@ -94,7 +94,7 @@
     </query>
     
     <query name="getTodaysUnpaidInstallmentForActiveCustomers">
-		<![CDATA[select accountActionDateEntity.account.accountId from org.mifos.application.accounts.business.AccountActionDateEntity accountActionDateEntity where accountActionDateEntity.customer.customerStatus.statusId in (:ACTIVE_CENTER_STATE, :ACTIVE_GROUP_STATE, :ACTIVE_CLIENT_STATE) and accountActionDateEntity.actionDate=:CURRENT_DATE and accountActionDateEntity.paymentStatus=:PAYMENT_UNPAID ]]>
+		<![CDATA[select accountActionDateEntity.account.accountId from org.mifos.application.accounts.business.AccountActionDateEntity accountActionDateEntity where accountActionDateEntity.account.accountType.accountTypeId=:CUSTOMER_TYPE_ID and accountActionDateEntity.customer.customerStatus.statusId in (:ACTIVE_CENTER_STATE, :ACTIVE_GROUP_STATE, :ACTIVE_CLIENT_STATE, :ONHOLD_CLIENT_STATE, :ONHOLD_GROUP_STATE) and accountActionDateEntity.actionDate=:CURRENT_DATE and accountActionDateEntity.paymentStatus=:PAYMENT_UNPAID ]]>
 	</query>
 
 </hibernate-mapping>

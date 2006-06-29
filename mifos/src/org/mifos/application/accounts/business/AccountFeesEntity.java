@@ -41,7 +41,6 @@ package org.mifos.application.accounts.business;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
 
 import org.mifos.application.fees.business.FeesBO;
@@ -189,9 +188,9 @@ public class AccountFeesEntity extends PersistentObject {
 		return false;
 	}
 	
-	public boolean isApplicable(long timeInMills) throws RepaymentScheduleException, SchedulerException {		
+	public boolean isApplicable(Date date) throws RepaymentScheduleException, SchedulerException {		
 		boolean isApplicable = false;			
-		SchedulerIntf schedulerIntf;					
+		SchedulerIntf schedulerIntf;		
 		if(getLastAppliedDate()!=null){
 			MeetingBO meetingBO = getAccount().getCustomer().getCustomerMeeting().getMeeting();
 			Calendar meetingStartDate = new GregorianCalendar();
@@ -199,8 +198,8 @@ public class AccountFeesEntity extends PersistentObject {
 			meetingBO.setMeetingStartDate(meetingStartDate);
 			meetingBO.getMeetingDetails().setRecurAfter(getFees().getFeeFrequency().getFeeMeetingFrequency().getMeetingDetails().getRecurAfter());
 			schedulerIntf = MeetingScheduleHelper.getSchedulerObject(meetingBO);			
-			List<Date> applDates=schedulerIntf.getAllDates(new Date(timeInMills));				
-			isApplicable = applDates.size()>0 ? true : false;		
+			List<Date> applDates=schedulerIntf.getAllDates(date);
+			isApplicable = applDates.size()>0 ? true : false;	
 		}					
 		return isApplicable;			
 	}
