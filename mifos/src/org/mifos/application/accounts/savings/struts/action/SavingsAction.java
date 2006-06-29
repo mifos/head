@@ -453,8 +453,8 @@ public class SavingsAction extends AccountAppAction {
 					savingsTransactionHistoryView
 							.setPostedDate(financialTransactionBO
 									.getPostedDate());
-					savingsTransactionHistoryView.setPostedBy(accountTrxnEntity
-							.getPersonnel().getDisplayName());
+					if(accountTrxnEntity.getPersonnel()!=null)
+						savingsTransactionHistoryView.setPostedBy(accountTrxnEntity.getPersonnel().getDisplayName());
 					if (financialTransactionBO.getNotes() != null
 							&& !financialTransactionBO.getNotes().equals(""))
 						savingsTransactionHistoryView

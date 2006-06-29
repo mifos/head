@@ -49,7 +49,7 @@ public class SavingsTestHelper {
 	}
 	
 	public AccountPaymentEntity createAccountPaymentToPersist(Money amount, Money balance,  Date trxnDate, Short accountAction, SavingsBO savingsObj,PersonnelBO createdBy, CustomerBO customer)throws Exception{
-		AccountPaymentEntity payment =createAccountPayment(balance, new Date(),createdBy);
+		AccountPaymentEntity payment =createAccountPayment(amount, new Date(),createdBy);
 		payment.addAcountTrxn(createAccountTrxn(null,amount, balance, trxnDate, trxnDate, null, accountAction,savingsObj, createdBy, customer));
 		return payment;
 	}

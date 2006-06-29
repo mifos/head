@@ -312,8 +312,7 @@ public class SavingsBO extends AccountBO {
 		return savingsActivityDetails;
 	}
 
-	private void setSavingsActivityDetails(
-			Set<SavingsActivityEntity> savingsActivityDetails) {
+	private void setSavingsActivityDetails(Set<SavingsActivityEntity> savingsActivityDetails) {
 		this.savingsActivityDetails = savingsActivityDetails;
 	}
 
@@ -479,8 +478,7 @@ public class SavingsBO extends AccountBO {
 			PaymentTypeEntity paymentType = (PaymentTypeEntity) HibernateUtil
 					.getSession().get(PaymentTypeEntity.class,
 							SavingsConstants.DEFAULT_PAYMENT_TYPE);
-			makeEntriesForInterestPosting(interestPosted, paymentType,
-					getCustomer(), null);
+			makeEntriesForInterestPosting(interestPosted, paymentType,getCustomer(), null);
 			getDBService().update(this);
 			logger.info("In SavingsBO::postInterest(), accountId: "	+ getAccountId()+ 
 					", Interest Of Amount: "+ interestPosted+" successfully");
@@ -551,18 +549,9 @@ public class SavingsBO extends AccountBO {
 		AccountStateEntity accountState = this.getAccountState();
 		this.setAccountState(getDBService().getAccountStatusObject(
 				AccountStates.SAVINGS_ACC_CLOSED));
-		if (getInterestToBePosted() != null
-				&& getInterestToBePosted().getAmountDoubleValue() > 0) {
-			AccountPaymentEntity interestPayment = helper.createAccountPayment(
-					getInterestToBePosted(), payment.getPaymentType(),
-					loggedInUser);
-			interestPayment.addAcountTrxn(helper.createAccountPaymentTrxn(
-					interestPayment, payment.getAmount(),
-					AccountConstants.ACTION_SAVINGS_INTEREST_POSTING, customer,
-					loggedInUser));
-			this.addAccountPayment(interestPayment);
-			buildFinancialEntries(interestPayment.getAccountTrxns());
-		}
+		if (getInterestToBePosted() != null	&& getInterestToBePosted().getAmountDoubleValue() > 0) 
+			makeEntriesForInterestPosting(getInterestToBePosted(), payment.getPaymentType(),customer,loggedInUser);
+		
 		if (payment.getAmount().getAmountDoubleValue() > 0) {
 			payment.addAcountTrxn(helper.createAccountPaymentTrxn(payment,
 					new Money(), AccountConstants.ACTION_SAVINGS_WITHDRAWAL,
@@ -603,6 +592,10 @@ public class SavingsBO extends AccountBO {
 				AccountConstants.ACTION_SAVINGS_INTEREST_POSTING, customer,
 				loggedInUser));
 		this.addAccountPayment(interestPayment);
+		if(userContext==null)
+			addSavingsActivityDetails(buildSavingsActivity(interestAmt, getSavingsBalance(),AccountConstants.ACTION_SAVINGS_INTEREST_POSTING, null));
+		else
+			addSavingsActivityDetails(buildSavingsActivity(interestAmt, getSavingsBalance(),AccountConstants.ACTION_SAVINGS_INTEREST_POSTING, userContext.getId()));
 		buildFinancialEntries(interestPayment.getAccountTrxns());
 	}
 
@@ -808,7 +801,7 @@ public class SavingsBO extends AccountBO {
 					accountPaymentData.getInstallmentId(), customer
 							.getCustomerId());
 			if (accountAction != null
-					&& enteredAmount.getAmountDoubleValue() > 0.0) {
+					&& enteredAmount.getAmountDoubleValue() >= 0.0) {
 				if (accountAction.getPaymentStatus().equals(
 						AccountConstants.PAYMENT_PAID))
 					throw new AccountException("errors.update",
@@ -1126,8 +1119,8 @@ public class SavingsBO extends AccountBO {
 					AccountConstants.ACTION_SAVINGS_WITHDRAWAL))
 				adjustForWithdrawal(accntTrxn);
 		}
-		logger.debug("transaction count before adding reversal transactions: "
-				+ lastPayment.getAccountTrxns().size());
+		addSavingsActivityDetails(buildSavingsActivity(lastPayment.getAmount(),getSavingsBalance(),AccountConstants.ACTION_SAVINGS_ADJUSTMENT,userContext.getId()));
+		logger.debug("transaction count before adding reversal transactions: "	+ lastPayment.getAccountTrxns().size());
 		List<AccountTrxnEntity> newlyAddedTrxns = lastPayment
 				.reversalAdjustment(adjustmentComment);
 		for (AccountTrxnEntity accountTrxn : newlyAddedTrxns) {
@@ -1157,7 +1150,9 @@ public class SavingsBO extends AccountBO {
 			}
 			this.addAccountPayment(newAccountPayment);
 			buildFinancialEntries(newAccountPayment.getAccountTrxns());
+			addSavingsActivityDetails(buildSavingsActivity(amountAdjustedTo,getSavingsBalance(), lastPayment.getActionType(),userContext.getId()));
 		}
+		
 		return newAccountPayment;
 	}
 
@@ -1627,8 +1622,9 @@ public class SavingsBO extends AccountBO {
 						PersistenceServiceName.MasterDataService);
 		AccountActionEntity accountAction = (AccountActionEntity) masterPersistenceService
 				.findById(AccountActionEntity.class, acccountActionId);
-		PersonnelBO personnel = new PersonnelPersistenceService()
-				.getPersonnel(personnelId);
+		PersonnelBO personnel = null;
+		if(personnelId!=null)
+			personnel = new PersonnelPersistenceService().getPersonnel(personnelId);
 		return new SavingsActivityEntity(personnel, accountAction, amount,
 				balanceAmount);
 	}

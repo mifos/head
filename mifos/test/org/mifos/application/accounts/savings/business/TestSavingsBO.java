@@ -973,6 +973,11 @@ public class TestSavingsBO extends TestCase {
 		assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns()
 				.size());
 		assertEquals(savings.getSavingsBalance(), new Money(currency, "1400.0"));
+		assertEquals(Integer.valueOf("1").intValue(),savings.getSavingsActivityDetails().size());
+		for(SavingsActivityEntity activity: savings.getSavingsActivityDetails()){
+			assertEquals(new Money(currency, "1000.0"),activity.getAmount());
+			assertEquals(new Money(currency, "1400.0"),activity.getBalanceAmount());
+		}
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
 	}
@@ -1019,6 +1024,16 @@ public class TestSavingsBO extends TestCase {
 		assertEquals(savings.getSavingsBalance(), new Money(currency, "5000.0"));
 		assertEquals(amountAdjustedTo, savings.getLastPmnt().getAmount());
 
+		assertEquals(Integer.valueOf("2").intValue(),savings.getSavingsActivityDetails().size());
+		for(SavingsActivityEntity activity: savings.getSavingsActivityDetails()){
+			if(activity.getActivity().getId().equals(AccountConstants.ACTION_SAVINGS_ADJUSTMENT)){
+				assertEquals(new Money(currency, "1000.0"),activity.getAmount());
+				assertEquals(new Money(currency, "5500.0"),activity.getBalanceAmount());
+			}else{
+				assertEquals(new Money(currency, "500.0"),activity.getAmount());
+				assertEquals(new Money(currency, "5000.0"),activity.getBalanceAmount());
+			}
+		}
 		Hibernate.initialize(savings.getAccountActionDates());
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
@@ -1112,7 +1127,16 @@ public class TestSavingsBO extends TestCase {
 		assertEquals(new Money(), payment.getAmount());
 		assertEquals(new Money(currency, "5500.0"), savings.getSavingsBalance());
 		assertEquals(amountAdjustedTo, savings.getLastPmnt().getAmount());
-
+		
+		for(SavingsActivityEntity activity: savings.getSavingsActivityDetails()){
+			if(activity.getActivity().getId().equals(AccountConstants.ACTION_SAVINGS_ADJUSTMENT)){
+				assertEquals(new Money(currency, "1000.0"),activity.getAmount());
+				assertEquals(new Money(currency, "3500.0"),activity.getBalanceAmount());
+			}else{
+				assertEquals(new Money(currency, "2000.0"),activity.getAmount());
+				assertEquals(new Money(currency, "5500.0"),activity.getBalanceAmount());
+			}
+		}
 		Hibernate.initialize(savings.getAccountActionDates());
 		group = savings.getCustomer();
 		center = group.getParentCustomer();

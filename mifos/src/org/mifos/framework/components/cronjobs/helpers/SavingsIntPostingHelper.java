@@ -17,10 +17,13 @@ public class SavingsIntPostingHelper extends TaskHelper{
 			SavingsPersistence persistence = new SavingsPersistence();
 			List<Integer> accountList=persistence.retreiveAccountsPendingForIntPosting(cal.getTime());
 			HibernateUtil.closeSession();
+			System.out.println("----------size: "+ accountList.size());
 			for(Integer accountId: accountList){
 				try{
 					SavingsBO savings = persistence.findById(accountId);
+					System.out.println("--------before: "+ savings.getInterestToBePosted());
 					savings.postInterest();
+					System.out.println("--------after: "+ savings.getInterestToBePosted());
 					HibernateUtil.commitTransaction();
 					HibernateUtil.closeSession();
 				}catch(Exception e){
