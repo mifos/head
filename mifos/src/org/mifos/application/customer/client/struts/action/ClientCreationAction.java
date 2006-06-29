@@ -56,6 +56,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.accounts.util.valueobjects.CustomerAccount;
+import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.center.util.helpers.ValidateMethods;
@@ -79,6 +80,7 @@ import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.master.util.valueobjects.EntityMaster;
 import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
+import org.mifos.application.office.persistence.service.OfficePersistenceService;
 import org.mifos.application.office.util.valueobjects.Office;
 import org.mifos.application.personnel.util.valueobjects.Personnel;
 import org.mifos.application.personnel.util.valueobjects.PersonnelMaster;
@@ -268,6 +270,8 @@ public class ClientCreationAction extends MifosWizardAction {
 			HttpServletRequest request,
 			HttpServletResponse response)throws Exception {
 		this.clearActionForm(form);
+		boolean isCenterHeirarchyExists = Configuration.getInstance().getCustomerConfig(new OfficePersistenceService().getHeadOffice().getOfficeId()).isCenterHierarchyExists();
+		SessionUtils.setAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,isCenterHeirarchyExists ? Constants.YES : Constants.NO,request.getSession());
 		return null;
 	}
 	

@@ -240,7 +240,7 @@
 										<br>
 									</logic:messagesPresent>
 									<!-- Displaying the selected office name -->
-									<table width="93%" border="0" cellspacing="0" cellpadding="3">
+									<table width="93%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
 											<td class="fontnormal"><span class="fontnormalbold"> <mifos:mifoslabel
 												name="${ConfigurationConstants.BRANCHOFFICE}" /> <mifos:mifoslabel
@@ -253,22 +253,44 @@
 												name="client.LoanOfficer" bundle="ClientUIResources"></mifos:mifoslabel></span>
 											<span class="fontnormal"> <c:out
 												value="${requestScope.clientVO.parentCustomer.personnel.displayName}" />
-											<br>
 											</span> <html-el:hidden property="loanOfficerId"
 												value="${requestScope.clientVO.parentCustomer.personnel.personnelId}" />
+											</td></tr>
+											<c:choose>
+												<c:when test="${sessionScope.isCenterHeirarchyExists==Constants.YES}">
+												<tr>
+											<td>
+													<span class="fontnormalbold">
+														<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
+														<mifos:mifoslabel name="client.Centers" bundle="ClientUIResources" />
+													</span>
+													<span class="fontnormal">
+														<c:out value="${requestScope.clientVO.parentCustomer.parentCustomer.displayName}" />
+													</span></tr>
+										<tr>
+											<td>
+													<span class="fontnormalbold">
+														<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
+														<mifos:mifoslabel name="client.Centers" bundle="ClientUIResources" />
+													</span>
+													<span class="fontnormal">
+														<c:out value="${requestScope.clientVO.parentCustomer.displayName}" />
+													</span></td></tr>
+												</c:when>
+												<c:otherwise><tr>
+											<td>
+													<span class="fontnormalbold">
+														<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
+														<mifos:mifoslabel name="client.Centers" bundle="ClientUIResources" />
+													</span>
+													<span class="fontnormal">
+														<c:out value="${requestScope.clientVO.parentCustomer.displayName}" />
+													</span></td></tr>
+												</c:otherwise>
+											</c:choose>
+											<tr>
+											<td class="fontnormal">	
 											<span class="fontnormalbold"><mifos:mifoslabel
-												name="${ConfigurationConstants.CENTER}" /> <mifos:mifoslabel
-												name="client.Centers" bundle="ClientUIResources"></mifos:mifoslabel></span>
-											<span class="fontnormal"> <c:out
-												value="${requestScope.clientVO.parentCustomer.parentCustomer.displayName}" />
-											<br>
-											</span> <span class="fontnormalbold"><mifos:mifoslabel
-												name="${ConfigurationConstants.GROUP}" /> <mifos:mifoslabel
-												name="client.Centers" bundle="ClientUIResources"></mifos:mifoslabel></span>
-											<span class="fontnormal"> <c:out
-												value="${requestScope.clientVO.parentCustomer.displayName}" />
-											<br>
-											</span> <span class="fontnormalbold"><mifos:mifoslabel
 												name="client.MeetingSchedule" bundle="ClientUIResources"></mifos:mifoslabel></span>
 											<span class="fontnormal"> <c:out
 												value="${requestScope.clientVO.customerMeeting.meeting.meetingSchedule}" />
