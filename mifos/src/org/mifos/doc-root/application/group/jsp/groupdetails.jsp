@@ -154,11 +154,13 @@ function meetingpopup(){
  <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/><mifos:mifoslabel name="Group.s"  bundle="GroupUIResources"/>
  <mifos:mifoslabel name="Group.assigned1"  bundle="GroupUIResources"></mifos:mifoslabel>  
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ <c:if test="${requestScope.GroupVO.statusId != 11 and requestScope.GroupVO.statusId != 12}">
 <span class="fontnormal">
 	  <a href="clientCreationAction.do?method=load&isClientUnderGrp=1&parentGroupId=${requestScope.GroupVO.customerId}&recordOfficeId=${requestScope.GroupVO.office.officeId}&recordLoanOfficerId=${requestScope.GroupVO.personnel.personnelId}">
 	  <mifos:mifoslabel name="Group.Add"  bundle="GroupUIResources" />
 	  <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></a>
 </span>
+</c:if>
 <br>
 <span class="fontnormal">
  <mifos:mifoslabel name="Group.groupdetailMsg1"  bundle="GroupUIResources"></mifos:mifoslabel>

@@ -127,11 +127,13 @@
 	                  <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/><mifos:mifoslabel name="Center.s" bundle="CenterUIResources" />
 	                  <mifos:mifoslabel name="Center.Assigned" bundle="CenterUIResources" />
 	                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	                  <span class="fontnormal">
-	                  	  <a href="GroupAction.do?method=load&centerSystemId=<c:out value="${requestScope.centerVO.globalCustNum}"/>&parentOfficeId=${requestScope.centerVO.office.officeId}&recordOfficeId=${requestScope.centerVO.office.officeId}&recordLoanOfficerId=${requestScope.centerVO.personnel.personnelId}">
-	                  	  <mifos:mifoslabel name="Center.Add"  bundle="CenterUIResources" />
-	                  	  <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"  /></a>
-					  </span>
+	                  <c:if test="${statusID != 14}">
+		                  <span class="fontnormal">
+		                  	  <a href="GroupAction.do?method=load&centerSystemId=<c:out value="${requestScope.centerVO.globalCustNum}"/>&parentOfficeId=${requestScope.centerVO.office.officeId}&recordOfficeId=${requestScope.centerVO.office.officeId}&recordLoanOfficerId=${requestScope.centerVO.personnel.personnelId}">
+		                  	  <mifos:mifoslabel name="Center.Add"  bundle="CenterUIResources" />
+		                  	  <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"  /></a>
+						  </span>
+					  </c:if>
 	                  <br>
 	                  <span class="fontnormal">
 	                  <mifos:mifoslabel name="Center.GroupsLink1" bundle="CenterUIResources"></mifos:mifoslabel>
