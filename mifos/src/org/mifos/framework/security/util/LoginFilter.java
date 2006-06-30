@@ -39,6 +39,7 @@
 package org.mifos.framework.security.util;
 
 import java.io.IOException;
+import java.util.Random;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -130,6 +131,7 @@ public class LoginFilter implements Filter {
 					return;
 
 				} else {
+					((HttpServletRequest) req).getSession(false).setAttribute("randomNUm", new Random().nextLong());
 					fch.doFilter(req, res);
 				}
 

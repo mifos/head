@@ -63,7 +63,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import servletunit.struts.MockStrutsTestCase;
 
 public class TestFeeAction extends MockStrutsTestCase {
-
 	public TestFeeAction() {
 		super();
 	}
@@ -201,6 +200,9 @@ public class TestFeeAction extends MockStrutsTestCase {
 
 	public void testSuccessfulCreateOneTimeFee() {
 		setRequestPathInfo("/feeaction.do");
+		addRequestParameter("method", "load");
+		actionPerform();
+		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("categoryType.categoryId", FeeCategory.ALLCUSTOMERS
 				.getValue());
@@ -213,9 +215,9 @@ public class TestFeeAction extends MockStrutsTestCase {
 		addRequestParameter("glCodeEntity.glcodeId", "1");
 		actionPerform();
 		verifyNoActionErrors();
-
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "create");
+		addRequestParameter("org.apache.struts.taglib.html.TOKEN",(String)request.getSession().getAttribute("org.apache.struts.action.TOKEN"));
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.create_success.toString());
@@ -240,6 +242,10 @@ public class TestFeeAction extends MockStrutsTestCase {
 
 	public void testSuccessfulCreateOneTimeAdminFee() {
 		setRequestPathInfo("/feeaction.do");
+		addRequestParameter("method", "load");
+		actionPerform();
+		
+		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("categoryType.categoryId", FeeCategory.ALLCUSTOMERS
 				.getValue());
@@ -256,6 +262,7 @@ public class TestFeeAction extends MockStrutsTestCase {
 
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "create");
+		addRequestParameter("org.apache.struts.taglib.html.TOKEN",(String)request.getSession().getAttribute("org.apache.struts.action.TOKEN"));
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.create_success.toString());
@@ -280,6 +287,10 @@ public class TestFeeAction extends MockStrutsTestCase {
 
 	public void testSuccessfulCreatePeriodicFee() {
 		setRequestPathInfo("/feeaction.do");
+		addRequestParameter("method", "load");
+		actionPerform();
+		
+		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("categoryType.categoryId", FeeCategory.ALLCUSTOMERS
 				.getValue());
@@ -298,6 +309,7 @@ public class TestFeeAction extends MockStrutsTestCase {
 
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "create");
+		addRequestParameter("org.apache.struts.taglib.html.TOKEN",(String)request.getSession().getAttribute("org.apache.struts.action.TOKEN"));
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.create_success.toString());
@@ -322,6 +334,10 @@ public class TestFeeAction extends MockStrutsTestCase {
 
 	public void testSuccessfulCreatePeriodicFeeWithFormula() {
 		setRequestPathInfo("/feeaction.do");
+		addRequestParameter("method", "load");
+		actionPerform();
+		
+		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("categoryType.categoryId", FeeCategory.LOAN
 				.getValue());
@@ -342,6 +358,7 @@ public class TestFeeAction extends MockStrutsTestCase {
 
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "create");
+		addRequestParameter("org.apache.struts.taglib.html.TOKEN",(String)request.getSession().getAttribute("org.apache.struts.action.TOKEN"));
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.create_success.toString());

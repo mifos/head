@@ -181,6 +181,7 @@
 								</td>
 							</tr>
 							<html-el:hidden property="method" value="update" />
+							<html-el:hidden property="input" value="previewEditFees" />
 							<html-el:hidden property="feeIdTemp" value="${sessionScope.BusinessKey.feeId}" />
 						</table>
 						<br>

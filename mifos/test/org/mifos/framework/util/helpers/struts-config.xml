@@ -1655,7 +1655,7 @@
   		
 	</action-mappings>
 
-	<controller nocache="true"
+	<controller nocache="false"
 		processorClass="org.mifos.framework.struts.action.MifosRequestProcessor">
 	</controller>
 	<message-resources key="UIResources"

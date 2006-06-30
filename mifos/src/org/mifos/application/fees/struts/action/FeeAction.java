@@ -72,6 +72,7 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class FeeAction extends BaseAction {
 
@@ -89,6 +90,7 @@ public class FeeAction extends BaseAction {
 		return !method.equals(Methods.preview.toString());
 	}
 
+	@TransactionDemarcate(saveToken = true)
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -116,6 +118,7 @@ public class FeeAction extends BaseAction {
 		return mapping.findForward(ActionForwards.previous_success.toString());
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -132,12 +135,17 @@ public class FeeAction extends BaseAction {
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		String forward = null;
 		String input = request.getParameter("input");
-		if (input == null)
-			return mapping.findForward(ActionForwards.preview_failure
-					.toString());
-		return mapping.findForward(ActionForwards.editpreview_failure
-				.toString());
+		if (input == null || "".equals(input.trim()))
+			forward = ActionForwards.preview_failure.toString();
+		else if (input.equals("previewFees"))
+			forward = ActionForwards.preview_success.toString();
+		else if (input.equals("previewEditFees"))
+			forward = ActionForwards.editpreview_success.toString();
+		else
+			forward = ActionForwards.editpreview_failure.toString();
+		return mapping.findForward(forward);
 	}
 
 	public ActionForward manage(ActionMapping mapping, ActionForm form,

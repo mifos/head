@@ -122,7 +122,7 @@
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<tr>
 											<td class="fontnormal">
-												<font class="fontnormalRedBold"><html-el:errors /> </font>
+												<font class="fontnormalRedBold"><html-el:errors bundle="FeesUIResources" /> </font>
 											</td>
 										</tr>
 										<tr>
@@ -252,7 +252,7 @@
 											</td>
 										</tr>
 										<html-el:hidden property="method" value="create" />
-										<html-el:hidden property="input" value="" />
+										<html-el:hidden property="input" value="previewFees" />
 									</table>
 									<br>
 								</td>

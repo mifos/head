@@ -1,5 +1,6 @@
 package org.mifos.framework.struts.action;
 
+import java.lang.reflect.Method;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,73 +13,135 @@ import org.apache.struts.actions.DispatchAction;
 import org.hibernate.HibernateException;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
+import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.IllegalStateException;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.ExceptionConstants;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.framework.util.helpers.ValueObjectUtil;
 
 public abstract class BaseAction extends DispatchAction {
 
-	protected abstract BusinessService getService()throws ServiceException;
+	protected abstract BusinessService getService() throws ServiceException;
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		preExecute(form, request);
+		TransactionDemarcate annotation = getTransaction(form, request);
+		preExecute(form, request, annotation);
 		ActionForward forward = super.execute(mapping, form, request, response);
-		postExecute(request);
+		postExecute(request, annotation);
 		return forward;
 	}
 
-	protected void preExecute(ActionForm actionForm, HttpServletRequest request)
-			throws SystemException {
-		UserContext userContext = (UserContext) request.getSession().getAttribute(Constants.USER_CONTEXT_KEY);
+	protected void preExecute(ActionForm actionForm,
+			HttpServletRequest request, TransactionDemarcate annotation)
+			throws SystemException, ApplicationException {
+		preHandleTransaction(request, annotation);
+		UserContext userContext = (UserContext) request.getSession()
+				.getAttribute(Constants.USER_CONTEXT_KEY);
 		Locale locale = getLocale(userContext);
 		BusinessObject object = getBusinessObjectFromSession(request);
-		if(!skipActionFormToBusinessObjectConversion((String)request.getParameter("method")))
+		if (!skipActionFormToBusinessObjectConversion((String) request
+				.getParameter("method")))
 			ValueObjectUtil.populateBusinessObject(actionForm, object, locale);
 	}
 
-	protected void postExecute(HttpServletRequest request) throws ApplicationException {
-		// do cleanup here
-		
-		if(startSession()) {
-			try {
-				HibernateUtil.commitTransaction();
-			}catch(HibernateException he) {
-				HibernateUtil.rollbackTransaction();
-				throw new ApplicationException(he);
-			}catch(IllegalStateException ise) {
-				HibernateUtil.rollbackTransaction();
-				throw new ApplicationException(ise);
+	protected TransactionDemarcate getTransaction(ActionForm actionForm,
+			HttpServletRequest request) {
+		TransactionDemarcate annotation = null;
+		try {
+			String methodName = request
+					.getParameter(MethodNameConstants.METHOD);
+			Method methodToExecute = this.clazz
+					.getMethod(methodName, new Class[] { ActionMapping.class,
+							ActionForm.class, HttpServletRequest.class,
+							HttpServletResponse.class });
+			annotation = methodToExecute
+					.getAnnotation(TransactionDemarcate.class);
+		} catch (NoSuchMethodException nsme) {
+			nsme.printStackTrace();
+		}
+		return annotation;
+	}
+
+	protected void preHandleTransaction(HttpServletRequest request,
+			TransactionDemarcate annotation) throws PageExpiredException {
+		if (null != annotation && annotation.saveToken()) {
+			resetToken(request);
+			saveToken(request);
+		} else if (null != annotation && annotation.validateAndResetToken()) {
+			if (!isTokenValid(request)) {
+				throw new PageExpiredException(
+						ExceptionConstants.PAGEEXPIREDEXCEPTION);
 			}
+		}
+
+	}
+
+	protected void postHandleTransaction(HttpServletRequest request,
+			TransactionDemarcate annotation) throws SystemException,
+			ApplicationException {
+		if (null != annotation && annotation.validateAndResetToken()) {
+			resetToken(request);
 		}
 	}
 
-	protected boolean isNewBizRequired(HttpServletRequest request) throws ServiceException{
-		if (request.getSession().getAttribute(Constants.BUSINESS_KEY) != null ){
-			if(getService().getBusinessObject(null)== null || ((getService().getBusinessObject(null)!= null && !(request.getSession().getAttribute(Constants.BUSINESS_KEY)).getClass().getName().equalsIgnoreCase(getService().getBusinessObject(null).getClass().getName())))){
+	protected void postExecute(HttpServletRequest request,
+			TransactionDemarcate annotation) throws ApplicationException,
+			SystemException {
+		// do cleanup here
+
+		if (startSession()) {
+			try {
+				HibernateUtil.commitTransaction();
+				postHandleTransaction(request, annotation);
+			} catch (HibernateException he) {
+				HibernateUtil.rollbackTransaction();
+				throw new ApplicationException(he);
+			} catch (IllegalStateException ise) {
+				HibernateUtil.rollbackTransaction();
+				throw new ApplicationException(ise);
+			}
+		}else {
+			postHandleTransaction(request, annotation);
+		}
+	}
+
+	protected boolean isNewBizRequired(HttpServletRequest request)
+			throws ServiceException {
+		if (request.getSession().getAttribute(Constants.BUSINESS_KEY) != null) {
+			if (getService().getBusinessObject(null) == null
+					|| ((getService().getBusinessObject(null) != null && !(request
+							.getSession().getAttribute(Constants.BUSINESS_KEY))
+							.getClass().getName().equalsIgnoreCase(
+									getService().getBusinessObject(null)
+											.getClass().getName())))) {
 				return true;
 			}
 			return false;
-		}		
+		}
 		return true;
 	}
 
 	private BusinessObject getBusinessObjectFromSession(
-			HttpServletRequest request) throws ServiceException{
+			HttpServletRequest request) throws ServiceException {
 		BusinessObject object = null;
 		if (isNewBizRequired(request)) {
-			UserContext userContext = (UserContext) request.getSession().getAttribute("UserContext");
+			UserContext userContext = (UserContext) request.getSession()
+					.getAttribute("UserContext");
 			object = getService().getBusinessObject(userContext);
 			request.getSession().setAttribute(Constants.BUSINESS_KEY, object);
 		} else
-			object = (BusinessObject) request.getSession().getAttribute(Constants.BUSINESS_KEY);
+			object = (BusinessObject) request.getSession().getAttribute(
+					Constants.BUSINESS_KEY);
 		return object;
 	}
 
@@ -87,15 +150,16 @@ public abstract class BaseAction extends DispatchAction {
 		if (userContext != null)
 			locale = userContext.getPereferedLocale();
 		else
-			locale = Configuration.getInstance().getSystemConfig().getMFILocale();
+			locale = Configuration.getInstance().getSystemConfig()
+					.getMFILocale();
 		return locale;
 	}
-	
+
 	protected boolean startSession() {
 		return true;
 	}
 
-	protected boolean skipActionFormToBusinessObjectConversion(String method)  {
+	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return false;
 	}
 }// :~
