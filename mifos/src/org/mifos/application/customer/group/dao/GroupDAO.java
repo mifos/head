@@ -39,21 +39,28 @@
 package org.mifos.application.customer.group.dao;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.StaleObjectStateException;
 import org.hibernate.StaleStateException;
 import org.hibernate.Transaction;
+import org.hibernate.engine.HibernateIterator;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.IDGenerator;
 import org.mifos.application.accounts.util.valueobjects.Account;
+import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
+import org.mifos.application.accounts.util.valueobjects.AccountFees;
+import org.mifos.application.accounts.util.valueobjects.AccountFeesActionDetail;
 import org.mifos.application.accounts.util.valueobjects.CustomerAccount;
 import org.mifos.application.configuration.business.ConfigurationIntf;
 import org.mifos.application.configuration.business.MifosConfiguration;
@@ -188,9 +195,10 @@ public class GroupDAO extends DAO {
 		String gCustNum=IdGenerator.generateSystemIdForCustomer(groupVO.getOffice().getGlobalOfficeNum(),groupVO.getCustomerId());
 		groupVO.setGlobalCustNum(gCustNum);
 		
+		helper.saveMeetingDetails(groupVO,session, context.getUserContext());
 		//update group
 		session.update(groupVO);
-		helper.saveMeetingDetails(groupVO,session, context.getUserContext());
+		
 
 		tx.commit();
 	  } catch(StaleStateException sse){
@@ -532,8 +540,6 @@ public class GroupDAO extends DAO {
 		CustomerNote customerNote = groupVO.getCustomerNote();
 		//make associations null that need not be updated
 		makeCustomerAssociationsNullForUpdate(oldCustomer);
-		//set meeting to null
-		oldCustomer.setCustomerMeeting(null);
 		  try {
 			//session = getHibernateSession();
 			//for change log
@@ -548,6 +554,21 @@ public class GroupDAO extends DAO {
 			
 			oldCustomer.setStatusId(newStatus);
 			
+			CustomerHelper helper=null;
+			if(!Configuration.getInstance().getCustomerConfig(oldCustomer.getOffice().getOfficeId()).isCenterHierarchyExists() && groupVO.getStatusId().shortValue()==GroupConstants.ACTIVE && oldCustomer.getCustomerActivationDate()==null){
+					helper=new CustomerHelper();
+					helper.saveMeetingDetails(oldCustomer,session, context.getUserContext());
+			}
+			
+			//check if group is being active for the first time
+			if(groupVO.getStatusId().shortValue()==GroupConstants.ACTIVE && oldCustomer.getCustomerActivationDate()==null){
+				oldCustomer.setCustomerActivationDate(helper.getCurrentDate());
+				CustomerUtilDAO.applyFees(oldCustomer,session);
+			}
+			
+//			set meeting to null
+			oldCustomer.setCustomerMeeting(null);
+	
 			session.update(oldCustomer);
 			customerNoteDAO.addNotes(session,customerNote);
 			
@@ -559,8 +580,9 @@ public class GroupDAO extends DAO {
 			if(oldStatus==GroupConstants.PENDING_APPROVAL && newStatus==GroupConstants.PARTIAL_APPLICATION)
 				updateAllGroupClientsToPartialApplication(session,groupVO.getSearchId(),oldCustomer.getOffice().getOfficeId());
 				
-//			if(newStatus==GroupConstants.CLOSED)
-//				updateParentHierarchyForClients(session, groupVO);
+
+			
+			
 			tx.commit();
 		  }catch(StaleObjectStateException sose){
 		   		tx.rollback();
@@ -855,8 +877,9 @@ public class GroupDAO extends DAO {
 			group.getOffice().getGlobalOfficeNum();
 			
 			//retrieve customer meeting
-			if(group.getCustomerMeeting()!=null)
+			if(group.getCustomerMeeting()!=null){
 				group.getCustomerMeeting().getMeeting().getMeetingPlace();
+			}
 			
 			if(group.getCustomerAccounts()!=null){
 				Iterator accountsIterator  = group.getCustomerAccounts().iterator();
@@ -865,6 +888,27 @@ public class GroupDAO extends DAO {
 					if(account.getAccountTypeId().shortValue()== new Short(AccountTypes.CUSTOMERACCOUNT).shortValue()){
 						group.setCustomerAccount((CustomerAccount)account);
 						break;
+					}
+				}
+			}
+			
+			Account custAccount = group.getCustomerAccount();
+			if(custAccount!=null){
+				
+				Set<AccountActionDate> accntActDates=custAccount.getAccountActionDateSet();
+				if(accntActDates!=null){
+					Hibernate.initialize(accntActDates);
+					for(AccountActionDate accountActionDate :  accntActDates){
+						accountActionDate.getActionDate();
+					}
+				}
+				
+				Set<AccountFees> accntFees=custAccount.getAccountFeesSet();
+				if(accntFees!=null){
+					Hibernate.initialize(accntFees);
+					for(AccountFees accountFees :  accntFees){
+						accountFees.getAccountId();
+						accountFees.getAccountFeeAmount();
 					}
 				}
 			}
@@ -1036,8 +1080,8 @@ public class GroupDAO extends DAO {
 	  customer.setCustomerAddressDetail(null);
 	  customer.setCustomerHistoricalData(null);
 	  customer.setCustomerPositions(null);
-	  customer.setCustomerAccount(null);
 	  customer.setCustomerHistoricalData(null);
 	}
 	
+		
 }

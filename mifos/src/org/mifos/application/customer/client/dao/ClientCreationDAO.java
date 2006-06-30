@@ -44,6 +44,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -56,6 +57,8 @@ import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.IDGenerator;
 import org.mifos.application.accounts.util.valueobjects.Account;
+import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
+import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.accounts.util.valueobjects.CustomerAccount;
 import org.mifos.application.configuration.business.ConfigurationIntf;
 import org.mifos.application.configuration.business.MifosConfiguration;
@@ -74,6 +77,7 @@ import org.mifos.application.customer.util.valueobjects.Customer;
 import org.mifos.application.customer.util.valueobjects.CustomerHierarchy;
 import org.mifos.application.meeting.util.valueobjects.MeetingType;
 import org.mifos.application.office.dao.OfficeDAO;
+import org.mifos.application.personnel.dao.PersonnelDAO;
 import org.mifos.application.personnel.util.valueobjects.Personnel;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
@@ -222,10 +226,11 @@ public class ClientCreationDAO extends DAO {
 			//the office global number and the current customerId of the client
 			String gCustNum=IdGenerator.generateSystemIdForCustomer(vo.getOffice().getGlobalOfficeNum(),vo.getCustomerId());
 			vo.setGlobalCustNum(gCustNum);
+			
+			new CustomerHelper().saveMeetingDetails(vo,session, context.getUserContext());
 			//update client
 			session.update(vo);
 			session.flush();
-			new CustomerHelper().saveMeetingDetails(vo,session, context.getUserContext());
 			if (null!=cust && null != customerHierarchy){
 				//parent.setCustomerHistoricalData(null);
 				makeAssociationsNull(cust);
@@ -442,6 +447,29 @@ public class ClientCreationDAO extends DAO {
 					}
 				}
 			}
+			
+			Account custAccount = client.getCustomerAccount();
+			if(custAccount!=null){
+				
+				Set<AccountActionDate> accntActDates=custAccount.getAccountActionDateSet();
+				if(accntActDates!=null){
+					Hibernate.initialize(accntActDates);
+					for(AccountActionDate accountActionDate :  accntActDates){
+						System.out.println("******1**********addddid : " +  accountActionDate.getActionDateId());
+						accountActionDate.getActionDate();
+					}
+				}
+				
+				Set<AccountFees> accntFees=custAccount.getAccountFeesSet();
+				if(accntFees!=null){
+					Hibernate.initialize(accntFees);
+					for(AccountFees accountFees :  accntFees){
+						System.out.println("*********2*******acfeeinid : " +  accountFees.getAccountFeeId());
+						accountFees.getAccountId();
+						accountFees.getAccountFeeAmount();
+					}
+				}
+			}
 			//get the account details
 			//client.getCustomerAccount();
 			//getaccount fees
@@ -520,6 +548,29 @@ public class ClientCreationDAO extends DAO {
 					if(account.getAccountTypeId().shortValue()== new Short(AccountTypes.CUSTOMERACCOUNT).shortValue()){
 						client.setCustomerAccount((CustomerAccount)account);
 						break;
+					}
+				}
+			}
+			
+			Account custAccount = client.getCustomerAccount();
+			if(custAccount!=null){
+				
+				Set<AccountActionDate> accntActDates=custAccount.getAccountActionDateSet();
+				if(accntActDates!=null){
+					Hibernate.initialize(accntActDates);
+					for(AccountActionDate accountActionDate :  accntActDates){
+						System.out.println("******1**********addddid : " +  accountActionDate.getActionDateId());
+						accountActionDate.getActionDate();
+					}
+				}
+				
+				Set<AccountFees> accntFees=custAccount.getAccountFeesSet();
+				if(accntFees!=null){
+					Hibernate.initialize(accntFees);
+					for(AccountFees accountFees :  accntFees){
+						System.out.println("*********2*******acfeeinid : " +  accountFees.getAccountFeeId());
+						accountFees.getAccountId();
+						accountFees.getAccountFeeAmount();
 					}
 				}
 			}

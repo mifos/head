@@ -858,10 +858,7 @@ public class GroupBusinessProcessor extends MifosBusinessProcessor {
 			//validate group status
 			if(oldCustomer.getStatusId().shortValue()!=groupVO.getStatusId().shortValue())
 				validateStatus(oldCustomer, groupVO, context.getUserContext());
-			//check if group is being active for the first time
-			if(groupVO.getStatusId().shortValue()==GroupConstants.ACTIVE && oldCustomer.getCustomerActivationDate()==null){
-				oldCustomer.setCustomerActivationDate(helper.getCurrentDate());
-			}
+		
 			//set updated by and updated date
 			groupVO.setUpdatedBy(context.getUserContext().getId());
 			groupVO.setUpdatedDate(helper.getCurrentDate());

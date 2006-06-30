@@ -39,8 +39,12 @@
 package org.mifos.application.customer.dao;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -50,6 +54,11 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanSummaryEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
+import org.mifos.application.accounts.util.valueobjects.AccountFees;
+import org.mifos.application.accounts.util.valueobjects.AccountFeesActionDetail;
+import org.mifos.application.accounts.util.valueobjects.CustomerAccount;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.valueobjects.CustomFieldDefinition;
@@ -76,6 +85,7 @@ import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSystemException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.valueobjects.ReturnType;
 import org.mifos.framework.util.valueobjects.SearchResults;
@@ -788,12 +798,11 @@ public class CustomerUtilDAO extends DAO {
 						"After retrieving the customer with customerId :"
 								+ customerId);
 				customerLevel = customer.getCustomerLevel().getLevelId();
-				CustomerMaster customermaster = new CustomerMaster(customer
-						.getCustomerId(), customer.getDisplayName(), customer
-						.getGlobalCustNum(), customer.getStatusId(),
-						customerLevel, customer.getVersionNo(), customer
-								.getOffice().getOfficeId(), customer
-								.getPersonnel().getPersonnelId());
+				CustomerMaster customermaster =null;
+				if(customer.getPersonnel()!=null)
+					customermaster = new CustomerMaster(customer.getCustomerId(),customer.getDisplayName(),customer.getGlobalCustNum(),customer.getStatusId(),customerLevel,customer.getVersionNo(),customer.getOffice().getOfficeId(),customer.getPersonnel().getPersonnelId());
+				else
+					customermaster = new CustomerMaster(customer.getCustomerId(),customer.getDisplayName(),customer.getGlobalCustNum(),customer.getStatusId(),customerLevel,customer.getVersionNo(),customer.getOffice().getOfficeId(),null);
 				customerMasterList.add(customermaster);
 				MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER).debug(
 						"After adding the customer master to list for  customer with customerId :"
@@ -993,4 +1002,44 @@ public class CustomerUtilDAO extends DAO {
 				HibernateUtil.closeSession(session);
 		}
 	}
+	
+	public static void applyFees(Customer customer,Session session) throws SystemException, CustomerException{
+		
+		try{
+			CustomerAccount  account =customer.getCustomerAccount();
+			List<AccountActionDate> accountActionDateList=new ArrayList<AccountActionDate> (account.getAccountActionDateSet());
+			Collections.sort(accountActionDateList, new Comparator<AccountActionDate>() {
+				public int compare(AccountActionDate act1, AccountActionDate act2) {
+					return act1.getActionDate().compareTo(act2.getActionDate());
+				}
+			});
+			java.util.Date date = DateUtils.getCurrentDateWithoutTimeStamp();
+			Set<AccountFees> accountFeesSet = account.getAccountFeesSet();
+			if(accountFeesSet!=null && !accountFeesSet.isEmpty() ){
+				AccountActionDate accActionDate=null;
+				for(AccountActionDate accountActionDate :  accountActionDateList){
+					if(DateUtils.getDateWithoutTimeStamp(accountActionDate.getActionDate().getTime()).compareTo(date)>0){
+						accActionDate=accountActionDate;
+						break;
+					}
+				}
+				Set<AccountFeesActionDetail> accountFeesActionDetailSet=new HashSet<AccountFeesActionDetail>();
+				for(AccountFees accountFees :  accountFeesSet){
+					AccountFeesActionDetail accountFeesActionDetail = new AccountFeesActionDetail();
+					accountFeesActionDetail.setInstallmentId(accActionDate.getInstallmentId());
+					accountFeesActionDetail.setAccountFee(accountFees);
+					accountFeesActionDetail.setFeeId(accountFees.getFees().getFeeId());
+					accountFeesActionDetail.setFeeAmount(accountFees.getAccountFeeAmount());
+					accountFeesActionDetail.setAccountFeeDetailId(accActionDate);
+					accountFeesActionDetailSet.add(accountFeesActionDetail);
+					accountFees.setLastAppliedDate(accActionDate.getActionDate());
+				}
+				accActionDate.setAccountFeesActionDetail(accountFeesActionDetailSet);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			throw new CustomerException(e);
+		}
+	}
+
 }

@@ -67,6 +67,8 @@ import org.mifos.application.accounts.util.valueobjects.AccountFeesActionDetail;
 import org.mifos.application.accounts.util.valueobjects.AccountsApplyCharges;
 import org.mifos.application.accounts.util.valueobjects.CustomerAccount;
 import org.mifos.application.customer.dao.CustomerUtilDAO;
+import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.valueobjects.Customer;
 import org.mifos.application.customer.util.valueobjects.CustomerMaster;
 import org.mifos.application.customer.util.valueobjects.CustomerMeeting;
@@ -154,16 +156,19 @@ public class AccountsApplyChargesBusinessProcessor extends
 			FeesDAO feedao = new FeesDAO();
 			Short feeId = aac.getChargeType();
 
-			if (null == feeId) {
+			Integer accountId = aac.getAccountId();
+			
+			if (null == feeId || accountId==null) {
 				throw new AccountsApplyChargesException(
 						AccountConstants.UNEXPECTEDERROR);
 			}
+			
+			Account account = aacdao.getAccount(accountId);
 
 			// Checking if user has selected misc fee or penalty.
 			if (feeId.equals(AccountConstants.MISC_FEES)
 					|| feeId.equals(AccountConstants.MISC_PENALTY)) {
 
-				Integer accountId = aac.getAccountId();
 
 				// Getting the accountActionDate object for next installment
 				AccountActionDate accountActionDate = aacdao
@@ -173,7 +178,6 @@ public class AccountsApplyChargesBusinessProcessor extends
 							AccountConstants.NOMOREINSTALLMENTS);
 				}
 
-				Account account = aacdao.getAccount(accountId);
 
 				if (accountActionDate != null) {
 					if (feeId.equals(AccountConstants.MISC_PENALTY)) {
@@ -293,8 +297,6 @@ public class AccountsApplyChargesBusinessProcessor extends
 							AccountConstants.UNEXPECTEDERROR);
 				}
 
-				Integer accountId = aac.getAccountId();
-				Account account = aacdao.getAccount(accountId);
 				List<AccountActionDate> accountActionDateList = null;
 				if (fee.getFeeFrequency().getFeeFrequencyTypeId().equals(
 						FeeFrequencyType.ONETIME.getValue())
@@ -316,7 +318,7 @@ public class AccountsApplyChargesBusinessProcessor extends
 					accountActionDateList = aacdao
 							.getAccountActionDate(accountId);
 				}
-				if (null == accountActionDateList)
+				if (null == accountActionDateList || accountActionDateList.isEmpty())
 					throw new AccountsApplyChargesException(
 							AccountConstants.NOMOREINSTALLMENTS);
 
@@ -324,24 +326,14 @@ public class AccountsApplyChargesBusinessProcessor extends
 				Set<AccountFees> accountFeeSet = null;
 				if (!checkForFeesInAccountFeesForGivenAccount(account, feeId)) {
 					accountFee = new AccountFees();
-
-					if (null != accountId) {
-
-						accountFee.setFees(fee);
-
-						accountFee.setAccountFeeAmount(new Money(Configuration
+					accountFee.setFees(fee);
+					accountFee.setAccountFeeAmount(new Money(Configuration
 								.getInstance().getSystemConfig().getCurrency(),
 								aac.getChargeAmount()));
-						accountFee.setFeeAmount(aac.getChargeAmount());
-						accountFee.setFeeStatus(FeeStatus.ACTIVE.getValue());
-						accountFee.setStatusChangeDate(new Date(System
+					accountFee.setFeeAmount(aac.getChargeAmount());
+					accountFee.setFeeStatus(FeeStatus.ACTIVE.getValue());
+					accountFee.setStatusChangeDate(new Date(System
 								.currentTimeMillis()));
-
-					} else {
-
-						throw new AccountsApplyChargesException(
-								AccountConstants.UNEXPECTEDERROR);
-					}
 					accountFee.setLastAppliedDate(accountActionDateList.get(0)
 							.getActionDate());
 					accountFee.setAccount(account);
@@ -464,18 +456,7 @@ public class AccountsApplyChargesBusinessProcessor extends
 							.getId());
 				}
 
-				CustomerActivityEntity customerActivityEntity = null;
-				if (account instanceof CustomerAccount) {
-					customerActivityEntity = new CustomerActivityEntity(
-							new PersonnelPersistenceService()
-									.getPersonnel(context.getUserContext()
-											.getId()), fee.getFeeName() + " "
-									+ AccountConstants.FEES_APPLIED, new Money(
-									String.valueOf(aac.getChargeAmount())));
-					customerActivityEntity
-							.setCustomerAccount((CustomerAccountBO) new AccountPersistanceService()
-									.getAccount(accountId));
-				}
+				CustomerActivityEntity customerActivityEntity=updateCustomerDetails(account,accountActionDateList,fee,aac.getChargeAmount(),context.getUserContext().getId(),accountFee);
 				// save the list
 				aacdao.saveAccountActionDateList(accountActionDateList,
 						accountFee, loanSummary, loanActivity,
@@ -752,6 +733,29 @@ public class AccountsApplyChargesBusinessProcessor extends
 				: false;
 		LoanHelpers.roundAccountActionsDate(isInterestDeductedAtDisbursment,
 				isPrincipalDueInLastInstallment, accountActionDateList);
+	}
+	
+	private CustomerActivityEntity updateCustomerDetails(Account account,List<AccountActionDate> accountActionDateList,Fees fee,Double amount,Short personnelId,AccountFees accountFees) {
+		CustomerActivityEntity customerActivityEntity=null;
+		if(account instanceof CustomerAccount){
+			Short state=account.getCustomer().getStatusId();
+			if(state.equals(CustomerConstants.CENTER_ACTIVE_STATE) || 
+					state.equals(CustomerConstants.GROUP_ACTIVE_STATE) || 
+					state.equals(GroupConstants.HOLD) || 
+					state.equals(CustomerConstants.CLIENT_APPROVED) || 
+					state.equals(CustomerConstants.CLIENT_ONHOLD)){
+				customerActivityEntity=new CustomerActivityEntity(new PersonnelPersistenceService().getPersonnel(personnelId),
+						fee.getFeeName()+" "+AccountConstants.FEES_APPLIED,
+						new Money(String.valueOf(amount)));
+				customerActivityEntity.setCustomerAccount((CustomerAccountBO)new AccountPersistanceService().getAccount(account.getAccountId()));
+			}
+			else{
+				for(AccountActionDate accountActionDate : accountActionDateList)
+					accountActionDate.setAccountFeesActionDetail(null);
+				accountFees.setLastAppliedDate(null);
+			}
+		}
+		return customerActivityEntity;
 	}
 
 }

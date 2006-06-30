@@ -52,6 +52,7 @@ import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
+import org.mifos.application.accounts.util.valueobjects.AccountFeesActionDetail;
 import org.mifos.application.accounts.util.valueobjects.CustomerAccount;
 import org.mifos.application.configuration.business.ConfigurationIntf;
 import org.mifos.application.configuration.business.MifosConfiguration;
@@ -600,23 +601,15 @@ public class CustomerHelper {
 		return isValueNull;
 	}
 
-	//Added by mohammedn
 	public void saveMeetingDetails(Customer customer,Session session, UserContext userContext) throws ApplicationException,SystemException {
-
-		//Customer customer = (Customer)context.getValueObject();
 		Meeting meeting =null ;
 		Set<AccountFees> accountFeesSet=new HashSet();
 		CustomerMeeting customerMeeting =null;
 		customerMeeting = customer.getCustomerMeeting();
 		// only if customer meeting is not null get the meeting from customer meeting
 		// this could be null if customer does not have a customer meeting.
-		if(null != customerMeeting){
-			meeting = customerMeeting.getMeeting();
-		//	Session session = null;
-			//Transaction trxn = null;
+		if(null != customerMeeting &&  customer.getPersonnel()!=null){
 			try {
-				//session = HibernateUtil.getSession();
-				//trxn = session.beginTransaction();
 				CustomerAccount customerAccount=customer.getCustomerAccount();
 				if(null != customerAccount) {
 				accountFeesSet=customerAccount.getAccountFeesSet();
@@ -653,19 +646,35 @@ public class CustomerHelper {
 			repaymentScheduler.setRepaymentScheduleInputs(repaymntScheduleInputs);
 			RepaymentSchedule repaymentSchedule = repaymentScheduler.getRepaymentSchedule();
 			Set<AccountActionDate> accntActionDateSet = RepaymentScheduleHelper.getActionDateValueObject(repaymentSchedule);
-			//context.addAttribute(new SearchResults("AccountActionDate",accntActionDateSet));
 	        //this will insert records in account action date which is noting but installments.
 			if(null != accntActionDateSet && ! accntActionDateSet.isEmpty()){
 				// iterate over account action date set and set the relation ship.
-				for(AccountActionDate accountActionDate : accntActionDateSet){
-					accountActionDate.setAccount(customer.getCustomerAccount());
-					accountActionDate.setCustomerId(customer.getCustomerId());
-					accountActionDate.setCurrencyId(Short.valueOf("1"));
-					session.save(accountActionDate);
+				Short state=customer.getStatusId();
+				if(state.equals(CustomerConstants.CENTER_ACTIVE_STATE) || 
+						state.equals(CustomerConstants.GROUP_ACTIVE_STATE) || 
+						state.equals(GroupConstants.HOLD) || 
+						state.equals(CustomerConstants.CLIENT_APPROVED) || 
+						state.equals(CustomerConstants.CLIENT_ONHOLD)){
+					for(AccountActionDate accountActionDate : accntActionDateSet){
+						accountActionDate.setAccount(customer.getCustomerAccount());
+						accountActionDate.setCustomerId(customer.getCustomerId());
+						accountActionDate.setCurrencyId(Short.valueOf("1"));
+					}
+				}else{
+					for(AccountFees accountFees :  accountFeesSet){
+						accountFees.setLastAppliedDate(null);
+					}
+					Iterator<AccountActionDate> accActionDateItr=accntActionDateSet.iterator();
+					while(accActionDateItr.hasNext()){
+						AccountActionDate accountActionDate=accActionDateItr.next();
+						accountActionDate.setAccount(customer.getCustomerAccount());
+						accountActionDate.setCustomerId(customer.getCustomerId());
+						accountActionDate.setCurrencyId(Short.valueOf("1"));
+						accountActionDate.setAccountFeesActionDetail(null);
+					}
 				}
+				customer.getCustomerAccount().setAccountActionDateSet(accntActionDateSet);
 			}
-			//trxn.commit();
-
 			}catch (Exception hpe) {
 				String messageArgumentKey =null;
 				if(customer instanceof Client)messageArgumentKey=ConfigurationConstants.CLIENT;

@@ -316,9 +316,10 @@ public class CenterDAO extends DAO {
 				String gCustNum=IdGenerator.generateSystemIdForCustomer(center.getOffice().getGlobalOfficeNum(),center.getCustomerId());
 				center.setGlobalCustNum(gCustNum);
 				//update center
+				new CustomerHelper().saveMeetingDetails(center,session, context.getUserContext());
 				session.update(center);
 				session.flush();
-				new CustomerHelper().saveMeetingDetails(center,session, context.getUserContext());
+				
 				trxn.commit();
 			} catch (HibernateProcessException hpe) {
 				trxn.rollback();

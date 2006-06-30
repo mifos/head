@@ -64,6 +64,7 @@ import org.mifos.application.customer.util.valueobjects.CustomerNote;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.audit.util.helpers.LogInfo;
 import org.mifos.framework.components.audit.util.helpers.LogValueMap;
+import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -121,8 +122,15 @@ public class EditClientStatusDAO extends DAO {
 			tx = session.beginTransaction();
 			//sets the old client with the new status id  and updates the client
 			client.setStatusId(newStatus);
-			if (client.getStatusId() == CustomerConstants.CLIENT_APPROVED)
+			CustomerHelper helper=new CustomerHelper();
+			if(client.getParentCustomer()==null && client.getStatusId().shortValue()==CustomerConstants.CLIENT_APPROVED && client.getCustomerActivationDate()==null)
+				helper.saveMeetingDetails(client,session, context.getUserContext());
+			
+			if(client.getStatusId() == CustomerConstants.CLIENT_APPROVED && client.getCustomerActivationDate()==null){
+				CustomerUtilDAO.applyFees(client,session);
 				client.setCustomerActivationDate(new Date(new java.util.Date().getTime()));
+			}
+			
 			session.update(client);
 			
 			//calls the addNotes in customerNoteDAO passing the current session

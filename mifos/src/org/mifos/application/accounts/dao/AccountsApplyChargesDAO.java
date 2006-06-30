@@ -489,10 +489,7 @@ public class AccountsApplyChargesDAO extends DAO {
 						reccurenceType = rt.getRecurrenceId();
 					}
 				}
-			} else {
-				throw new AccountsApplyChargesException(
-						AccountConstants.KEYNOMEETING);
-			}
+			} 
 		}
 		if (account instanceof CustomerAccount) {
 			Meeting meeting = null;
@@ -518,15 +515,7 @@ public class AccountsApplyChargesDAO extends DAO {
 								reccurenceType = rt.getRecurrenceId();
 							}
 						}
-					} else {
-						throw new AccountsApplyChargesException(
-								AccountConstants.KEYNOMEETING);
 					}
-				} else {
-
-					throw new AccountsApplyChargesException(
-							AccountConstants.KEYNOMEETING);
-
 				}
 			}
 		}
