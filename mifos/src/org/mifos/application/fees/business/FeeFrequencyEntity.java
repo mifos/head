@@ -38,8 +38,8 @@
 
 package org.mifos.application.fees.business;
 
-import org.mifos.application.fees.util.helpers.FeesConstants;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.framework.business.PersistentObject;
 
 public class FeeFrequencyEntity extends PersistentObject {
@@ -60,11 +60,19 @@ public class FeeFrequencyEntity extends PersistentObject {
 		feeMeetingFrequency = new MeetingBO();
 	}
 
+	private void setFeeFrequencyId(Short feeFrequencyId) {
+		this.feeFrequencyId = feeFrequencyId;
+	}
+
+	private Short getFeeFrequencyId() {
+		return feeFrequencyId;
+	}
+
 	public void setFee(FeesBO fee) {
 		this.fee = fee;
 	}
 
-	public FeesBO getFee() {
+	private FeesBO getFee() {
 		return fee;
 	}
 
@@ -74,14 +82,6 @@ public class FeeFrequencyEntity extends PersistentObject {
 
 	public MeetingBO getFeeMeetingFrequency() {
 		return feeMeetingFrequency;
-	}
-
-	public void setFeeFrequencyId(Short feeFrequencyId) {
-		this.feeFrequencyId = feeFrequencyId;
-	}
-
-	public Short getFeeFrequencyId() {
-		return feeFrequencyId;
 	}
 
 	public FeeFrequencyTypeEntity getFeeFrequencyType() {
@@ -104,17 +104,25 @@ public class FeeFrequencyEntity extends PersistentObject {
 		if (isPeriodic()) {
 			setFeePayment(null);
 			feeMeetingFrequency.getMeetingType().setMeetingTypeId(
-					FeesConstants.FEEMEETING);
+					MeetingType.FEEMEETING.getValue());
 			feeMeetingFrequency.setMeetingPlace("");
-		} else
+		} else {
 			setFeeMeetingFrequency(null);
+		}
 	}
 
 	public boolean isPeriodic() {
-		if (feeFrequencyType.getFeeFrequencyTypeId().equals(
-				FeesConstants.PERIODIC))
-			return true;
-		return false;
+		return getFeeFrequencyType().isPeriodic();
+
+	}
+
+	public boolean isOneTime() {
+		return getFeeFrequencyType().isOneTime();
+
+	}
+
+	public boolean isTimeOfDisbursement() {
+		return isOneTime() && getFeePayment().isTimeOfDisbursement();
 	}
 
 }

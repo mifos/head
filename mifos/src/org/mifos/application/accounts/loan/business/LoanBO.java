@@ -77,7 +77,7 @@ import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
-import org.mifos.application.fees.util.helpers.FeesConstants;
+import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
@@ -765,12 +765,7 @@ public class LoanBO extends AccountBO {
 		accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
 		Money totalPayment = new Money();
 		for (AccountFeesEntity accountFeesEntity : accountFees) {
-			if (accountFeesEntity.getFees().getFeeFrequency()
-					.getFeeFrequencyType().getFeeFrequencyTypeId().equals(
-							FeesConstants.ONETIME)
-					&& accountFeesEntity.getFees().getFeeFrequency()
-							.getFeePayment().getFeePaymentId().equals(
-									FeesConstants.TIME_OF_DISBURSMENT)) {
+			if (accountFeesEntity.isTimeOfDisbursement()) {
 				totalPayment = totalPayment.add(accountFeesEntity
 						.getAccountFeeAmount());
 				FeesTrxnDetailEntity feesTrxnDetailEntity = new FeesTrxnDetailEntity();
@@ -840,7 +835,7 @@ public class LoanBO extends AccountBO {
 	private void initializeMeetings(Fees fees) {
 
 		if (fees.getFeeFrequency().getFeeFrequencyTypeId().equals(
-				FeesConstants.PERIODIC)) {
+				FeeFrequencyType.PERIODIC.getValue())) {
 			Meeting meeting = fees.getFeeFrequency().getFeeMeetingFrequency();
 			meeting.getMeetingType().getMeetingPurpose();
 		}
@@ -914,7 +909,6 @@ public class LoanBO extends AccountBO {
 		return amount;
 	}
 
-	
 	public void makeEarlyRepayment(Money totalAmount, String receiptNumber,
 			Date recieptDate, String paymentTypeId, Short personnelId)
 			throws ServiceException, AccountException {
@@ -1039,7 +1033,8 @@ public class LoanBO extends AccountBO {
 			if (entityNew.getInstallmentId().equals(Short.valueOf("1"))) {
 				entityNew.setMiscFee(entityExisting.getMiscFee());
 				entityNew.setMiscPenalty(entityExisting.getMiscPenalty());
-				if(null == this.intrestAtDisbursement || this.intrestAtDisbursement != 1)
+				if (null == this.intrestAtDisbursement
+						|| this.intrestAtDisbursement != 1)
 					reAssociateTimeOfDisbursalFee(entityNew);
 			}
 		}
@@ -1085,10 +1080,9 @@ public class LoanBO extends AccountBO {
 		List<AccountActionDateEntity> installmentsToBePaid = new ArrayList<AccountActionDateEntity>();
 		installmentsToBePaid.add(firstInstallment);
 
-		PaymentData paymentData = getLoanAccountPaymentData(
-				firstInstallment.getTotalDueWithFees(), installmentsToBePaid,
-				personnelId, recieptNum, paymentTypeId, receiptDate,
-				transactionDate);
+		PaymentData paymentData = getLoanAccountPaymentData(firstInstallment
+				.getTotalDueWithFees(), installmentsToBePaid, personnelId,
+				recieptNum, paymentTypeId, receiptDate, transactionDate);
 
 		return makePayment(paymentData);
 
@@ -1109,9 +1103,10 @@ public class LoanBO extends AccountBO {
 		return nextAccountAction;
 	}
 
-	
-	public void updateAccountActivity(Money totalAmount,Short personnelId,String description){
-		PersonnelBO personnel = new PersonnelPersistenceService().getPersonnel(personnelId);
+	public void updateAccountActivity(Money totalAmount, Short personnelId,
+			String description) {
+		PersonnelBO personnel = new PersonnelPersistenceService()
+				.getPersonnel(personnelId);
 		LoanSummaryEntity loanSummaryEntity = ((LoanBO) this).getLoanSummary();
 		LoanActivityEntity loanActivity = new LoanActivityEntity();
 		loanActivity.setComments(description);
@@ -1119,13 +1114,20 @@ public class LoanBO extends AccountBO {
 		loanActivity.setPrincipal(new Money());
 		loanActivity.setInterest(new Money());
 		loanActivity.setFee(totalAmount);
-		loanActivity.setFeeOutstanding(loanSummaryEntity.getOriginalFees().subtract(loanSummaryEntity.getFeesPaid()));
-		loanActivity.setPenaltyOutstanding(loanSummaryEntity.getOriginalPenalty().subtract(loanSummaryEntity.getPenaltyPaid()));
-		loanActivity.setInterestOutstanding(loanSummaryEntity.getOriginalInterest().subtract(loanSummaryEntity.getInterestPaid()));
-		loanActivity.setPrincipalOutstanding(loanSummaryEntity.getOriginalPrincipal().subtract(loanSummaryEntity.getPrincipalPaid()));
+		loanActivity.setFeeOutstanding(loanSummaryEntity.getOriginalFees()
+				.subtract(loanSummaryEntity.getFeesPaid()));
+		loanActivity.setPenaltyOutstanding(loanSummaryEntity
+				.getOriginalPenalty().subtract(
+						loanSummaryEntity.getPenaltyPaid()));
+		loanActivity.setInterestOutstanding(loanSummaryEntity
+				.getOriginalInterest().subtract(
+						loanSummaryEntity.getInterestPaid()));
+		loanActivity.setPrincipalOutstanding(loanSummaryEntity
+				.getOriginalPrincipal().subtract(
+						loanSummaryEntity.getPrincipalPaid()));
 		this.addLoanActivity(loanActivity);
 	}
-	
+
 	private void initAccFeeIntDeductedAtDisbursal(
 			AccountFeesEntity accountFeesEntity, Set<AccountFees> accountFeesSet) {
 		addFee(accountFeesEntity, accountFeesSet);
@@ -1134,11 +1136,7 @@ public class LoanBO extends AccountBO {
 
 	private void initAccFeeIntNotDeductedAtDisbursal(
 			AccountFeesEntity accountFeesEntity, Set<AccountFees> accountFeesSet) {
-		if (!(accountFeesEntity.getFees().getFeeFrequency()
-				.getFeeFrequencyType().getFeeFrequencyTypeId().equals(
-						FeesConstants.ONETIME) && accountFeesEntity.getFees()
-				.getFeeFrequency().getFeePayment().getFeePaymentId().equals(
-						FeesConstants.TIME_OF_DISBURSMENT)))
+		if (!accountFeesEntity.isTimeOfDisbursement())
 			addFee(accountFeesEntity, accountFeesSet);
 
 	}
@@ -1175,8 +1173,10 @@ public class LoanBO extends AccountBO {
 						.getPersonnelId());
 		this.addAccountStatusChangeHistory(historyEntity);
 		this.setAccountState(stateEntity);
-		String systemDate = DateHelper.getCurrentDate(Configuration.getInstance().getSystemConfig().getMFILocale());
-		Date currrentDate = DateHelper.getLocaleDate(Configuration.getInstance().getSystemConfig().getMFILocale(), systemDate);
+		String systemDate = DateHelper.getCurrentDate(Configuration
+				.getInstance().getSystemConfig().getMFILocale());
+		Date currrentDate = DateHelper.getLocaleDate(Configuration
+				.getInstance().getSystemConfig().getMFILocale(), systemDate);
 		this.setUpdatedDate(currrentDate);
 		loanPersistance.createOrUpdate(this);
 	}
@@ -1187,67 +1187,74 @@ public class LoanBO extends AccountBO {
 				.shortValue()) ? true : false;
 
 	}
-	
-	public  boolean isLastInstallment(Short installmentId){
-		Set<AccountActionDateEntity> accountActionDateSet=getAccountActionDates();
-		List<Object> objectList=Arrays.asList(accountActionDateSet.toArray());
-		AccountActionDateEntity accountActionDateEntity=(AccountActionDateEntity)objectList.get(objectList.size()-1);
-		if(installmentId.equals(accountActionDateEntity.getInstallmentId()))
+
+	public boolean isLastInstallment(Short installmentId) {
+		Set<AccountActionDateEntity> accountActionDateSet = getAccountActionDates();
+		List<Object> objectList = Arrays.asList(accountActionDateSet.toArray());
+		AccountActionDateEntity accountActionDateEntity = (AccountActionDateEntity) objectList
+				.get(objectList.size() - 1);
+		if (installmentId.equals(accountActionDateEntity.getInstallmentId()))
 			return true;
 		return false;
 	}
-	
-	private Money getMiscFee(){
-		Money miscFee=new Money();
-		for(AccountActionDateEntity accountActionDateEntity : getAccountActionDates()){
-			if(accountActionDateEntity.getMiscFee()!=null){
-				miscFee=miscFee.add(accountActionDateEntity.getMiscFee());
+
+	private Money getMiscFee() {
+		Money miscFee = new Money();
+		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
+			if (accountActionDateEntity.getMiscFee() != null) {
+				miscFee = miscFee.add(accountActionDateEntity.getMiscFee());
 			}
 		}
 		return miscFee;
 	}
-	
-	private Money getMiscPenalty(){
-		Money miscPenalty=new Money();
-		for(AccountActionDateEntity accountActionDateEntity : getAccountActionDates()){
-			if(accountActionDateEntity.getMiscPenalty()!=null){
-				miscPenalty=miscPenalty.add(accountActionDateEntity.getMiscPenalty());
+
+	private Money getMiscPenalty() {
+		Money miscPenalty = new Money();
+		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
+			if (accountActionDateEntity.getMiscPenalty() != null) {
+				miscPenalty = miscPenalty.add(accountActionDateEntity
+						.getMiscPenalty());
 			}
 		}
 		return miscPenalty;
 	}
-	
-	public void writeOff(String comment) throws ServiceException, SecurityException, PersistenceException, FinancialException {
+
+	public void writeOff(String comment) throws ServiceException,
+			SecurityException, PersistenceException, FinancialException {
 		Short personnelId = this.getUserContext().getId();
 		Short statusId = Short.valueOf(AccountStates.LOANACC_WRITTENOFF);
 		this.setUpdatedBy(personnelId);
 		this.setUpdatedDate(new Date(System.currentTimeMillis()));
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity();
-		accountPaymentEntity.setPaymentDetails(getEarlyClosureAmount(),null, null, Short.valueOf("1"));
+		accountPaymentEntity.setPaymentDetails(getEarlyClosureAmount(), null,
+				null, Short.valueOf("1"));
 		this.addAccountPayment(accountPaymentEntity);
-		
+
 		for (AccountActionDateEntity accountActionDateEntity : getListOfUnpaidInstallments()) {
-				LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity();
-				accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
-				loanTrxnDetailEntity.setAccount(this);
-				loanTrxnDetailEntity.setLoanTrxnDetailsForWriteOff(accountActionDateEntity,personnelId);
+			LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity();
+			accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
+			loanTrxnDetailEntity.setAccount(this);
+			loanTrxnDetailEntity.setLoanTrxnDetailsForWriteOff(
+					accountActionDateEntity, personnelId);
 		}
-		addLoanActivity(buildLoanActivity(accountPaymentEntity.getAccountTrxns(), personnelId, "Loan Written Off"));
+		addLoanActivity(buildLoanActivity(accountPaymentEntity
+				.getAccountTrxns(), personnelId, "Loan Written Off"));
 		buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
-		changeStatus(statusId,null,comment);
+		changeStatus(statusId, null, comment);
 		getAccountPersistenceService().update(this);
 	}
-	
+
 	private List<AccountActionDateEntity> getListOfUnpaidInstallments() {
 		List<AccountActionDateEntity> unpaidInstallmentList = new ArrayList<AccountActionDateEntity>();
-			for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
-				if (accountActionDateEntity.getPaymentStatus().equals(AccountConstants.PAYMENT_UNPAID)) {
-					unpaidInstallmentList.add(accountActionDateEntity);
-				}
+		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
+			if (accountActionDateEntity.getPaymentStatus().equals(
+					AccountConstants.PAYMENT_UNPAID)) {
+				unpaidInstallmentList.add(accountActionDateEntity);
 			}
-			return unpaidInstallmentList;
+		}
+		return unpaidInstallmentList;
 	}
-	
+
 	private void changeStatus(Short newStatusId, Short flagId, String comment)
 			throws SecurityException, ServiceException, PersistenceException {
 		if (null != getCustomer().getPersonnel().getPersonnelId())
@@ -1266,8 +1273,9 @@ public class LoanBO extends AccountBO {
 				.findById(AccountStateEntity.class, newStatusId);
 		accountStateEntity.setLocaleId(this.getUserContext().getLocaleId());
 		AccountStateFlagEntity accountStateFlagEntity = null;
-		if(flagId != null) {
-			accountStateFlagEntity = (AccountStateFlagEntity) masterPersistenceService.findById(AccountStateFlagEntity.class, flagId);
+		if (flagId != null) {
+			accountStateFlagEntity = (AccountStateFlagEntity) masterPersistenceService
+					.findById(AccountStateFlagEntity.class, flagId);
 		}
 		AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(
 				this.getAccountState(), accountStateEntity, this.getPersonnel()
@@ -1311,7 +1319,7 @@ public class LoanBO extends AccountBO {
 				null != flagSelected ? flagSelected.shortValue() : 0,
 				userContext, recordOfficeId, recordLoanOfficerId);
 	}
-	
+
 	private Money getEarlyClosureAmount() {
 		Money amount = new Money();
 		for (AccountActionDateEntity accountActionDateEntity : getListOfUnpaidInstallments()) {

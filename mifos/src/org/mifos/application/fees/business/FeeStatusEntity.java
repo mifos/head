@@ -39,15 +39,10 @@ package org.mifos.application.fees.business;
 
 import java.util.Set;
 
+import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.master.util.valueobjects.LookUpValueLocale;
 import org.mifos.framework.business.PersistentObject;
 
-/**
- * This class represent the office status
- * 
- * @author rajenders
- * 
- */
 public class FeeStatusEntity extends PersistentObject {
 
 	private Short statusId;
@@ -57,7 +52,6 @@ public class FeeStatusEntity extends PersistentObject {
 	private Set<LookUpValueLocale> lookUpValueLocale;
 
 	public FeeStatusEntity() {
-
 	}
 
 	public FeeStatusEntity(Short statusId) {
@@ -88,4 +82,7 @@ public class FeeStatusEntity extends PersistentObject {
 		this.statusId = statusId;
 	}
 
+	public boolean isActive() {
+		return getStatusId().equals(FeeStatus.ACTIVE.getValue());
+	}
 }

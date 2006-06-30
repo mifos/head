@@ -1,4 +1,6 @@
-/* FeesConstants.java    version: xxx
+/**
+ * 
+ *  FeesConstants.java    version: xxx
 
 
 
@@ -38,7 +40,7 @@
 package org.mifos.application.fees.util.helpers;
 
 public interface FeesConstants {
-	
+
 	//Constants being used in to name the collection in masterdatareterival
 	public static final String LOCALEID="localeId";
 	public static final String CATAGORY="catagory"; 
@@ -51,20 +53,28 @@ public interface FeesConstants {
 	public static final String FEEPAYMENT="FeePayment";
 	public static final String FEESTATUS="FeeStatus";
 	
-	//Status  
-	public static  final Short STATUS_ACTIVE=1;
-	public static  final Short STATUS_INACTIVE=2;
+	//Fees valueobject name
+	public static final String FEES="fees";
+	//Default Admin
+	public static final String YES="Yes";
+	public static final String NO="No";
+	public static final String ADMINCHECK="1";
 	
-	//Used in RateFlatFlag
-	public static final String AMOUNT="0";
-	public static final String RATE="1";
+	
+	
+	/*	
+	//PaymentId 
+	public static final Short UPFRONT=1;
+	public static final Short TIME_OF_DISBURSMENT=2;
+	public static final Short TIME_OF_FIRSTLOANREPAYMENT=3;
+
+	//Meeting Type
+	public static final Short WEEKLY=1;
+	public static final Short MONTHLY=2;
 	
 	//Fee frequency
 	public static final Short PERIODIC=1;
 	public static final Short ONETIME=2;
-	
-	//Fees valueobject name
-	public static final String FEES="fees";
 	
 	//Fees CategoryTypes
 	public static final String ALLCUSTOMERS="1";
@@ -73,28 +83,41 @@ public interface FeesConstants {
 	public static final String CENTER="4";
 	public static final String LOAN="5";
 	
-	//Default Admin
-	public static final String YES="Yes";
-	public static final String NO="No";
-	public static final String ADMINCHECK="1";
-	
+	//Status  
+	public static  final Short STATUS_ACTIVE=1;
+	public static  final Short STATUS_INACTIVE=2;
 	
 	//Admin level for different categories
 	public static final Short LEVEL_ID_CLIENT=1;
 	public static final Short LEVEL_ID_GRUOP=2;
 	public static final Short LEVEL_ID_CENTER=3;
 	
-	//PaymentId 
-	public static final Short UPFRONT=1;
-	public static final Short TIME_OF_DISBURSMENT=2;
-	public static final Short TIME_OF_FIRSTLOANREPAYMENT=3;
+	//methods
+	public static final String METHOD="method";
+	public static final String PREVIEW_METHOD="preview";
+	public static final String EDITPREVIEW_METHOD="editPreview";
 	
-	//Meeting Type
-	public static final Short WEEKLY=1;
-	public static final Short MONTHLY=2;
-	public static final Short FEEMEETING=5;
+	//M2 style conversion
+	public static final String LOADSUCCESS="load_success";
+	public static final String PREVIEWSUCCESS="preview_success";
+	public static final String PREVIEWFAILURE="preview_failure";
+	public static final String EDITPREVIEWFAILURE="editpreview_failure";
+	public static final String PREVIOUSSUCCESS="previous_success";
+	public static final String CREATESUCCESS="create_success";
+	public static final String MANAGESUCCESS="manage_success";
+	public static final String EDITPREVIEWSUCCESS="editpreview_success";
+	public static final String EDITPREVIOUSSUCCESS="editprevious_success";
+	public static final String UPDATESUCCESS="update_success";
 	
+	//	public static final String FEES_INACTIVE="2";
+	 
+	//public static final Short FEEMEETING=5; 
+	  
+	 //Used in RateFlatFlag
+	public static final String AMOUNT="0";
+	public static final String RATE="1"; 
 	
+*/
 	//Constansts used in Action Forwards
 	public static final String VIEWFEES="viewFees";
 	public static final String CREATEFEES="createFees";
@@ -110,21 +133,6 @@ public interface FeesConstants {
 	public static final String VERSIONNOMATCHINGPROBLEM="error.versionnodonotmatch";
 	public static final String AMOUNTCANNOTBEZERO="error.amountCannotBeNull";
 
-	
-	//M2 style conversion
-	public static final String METHOD="method";
-	public static final String PREVIEW_METHOD="preview";
-	public static final String EDITPREVIEW_METHOD="editPreview";
-	public static final String LOADSUCCESS="load_success";
-	public static final String PREVIEWSUCCESS="preview_success";
-	public static final String PREVIEWFAILURE="preview_failure";
-	public static final String EDITPREVIEWFAILURE="editpreview_failure";
-	public static final String PREVIOUSSUCCESS="previous_success";
-	public static final String CREATESUCCESS="create_success";
-	public static final String MANAGESUCCESS="manage_success";
-	public static final String EDITPREVIEWSUCCESS="editpreview_success";
-	public static final String EDITPREVIOUSSUCCESS="editprevious_success";
-	public static final String UPDATESUCCESS="update_success";
 	public static final String GLCODE_LIST="glCodeList";
 	public static final String PAYMENTID="paymentId";
 	public static final String LOANTIMEOFCHARGES="LoanTimeOfCharges";
@@ -133,7 +141,6 @@ public interface FeesConstants {
 	public static final String FORMULALIST="FormulaList";
 	public static final String STATUSLIST="StatusList";
 	
-	public static final String FEES_INACTIVE="2";
 	public static final String INACTIVE="FEES_INACTIVE";
-	
+
 }

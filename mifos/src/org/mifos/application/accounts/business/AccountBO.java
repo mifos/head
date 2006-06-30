@@ -761,7 +761,7 @@ public class AccountBO extends BusinessObject {
 	protected List<AccountFeesEntity> getPeriodicFeeList(){	
 		List<AccountFeesEntity> periodicFeeList = new ArrayList<AccountFeesEntity>();		
 		for(AccountFeesEntity accountFee: getAccountFees()){				
-			if(accountFee.getFees().getFeeFrequency().getFeeFrequencyType().getFeeFrequencyTypeId().equals(FeesConstants.PERIODIC)){
+			if(accountFee.getFees().isPeriodic()){
 				periodicFeeList.add(accountFee);
 			}
 		}		

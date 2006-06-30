@@ -416,8 +416,8 @@ public class TestCustomerAccountBO extends TestCase {
 		FeesBO periodicFees = TestObjectFactory.createPeriodicFees("Periodic Fee", 100.0, 1, 1, 5);
 		AccountFeesEntity accountFeesEntity = new AccountFeesEntity();
 		accountFeesEntity.setAccount(group.getCustomerAccount());
-		accountFeesEntity.setAccountFeeAmount(new Money(periodicFees.getRateOrAmount().toString()));
-		accountFeesEntity.setFeeAmount(new Money(periodicFees.getRateOrAmount().toString()));
+		accountFeesEntity.setAccountFeeAmount(periodicFees.getFeeAmount());
+		accountFeesEntity.setFeeAmount(periodicFees.getFeeAmount());
 		accountFeesEntity.setFees(periodicFees);
 		accountFeesEntity.setLastAppliedDate(new Date(System.currentTimeMillis()));
 		

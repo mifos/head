@@ -46,6 +46,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.fees.struts.actionforms.FeesActionForm;
 import org.mifos.application.fees.util.helpers.FeesConstants;
+import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.struts.action.MifosBaseAction;
@@ -55,7 +56,7 @@ import org.mifos.framework.util.valueobjects.Context;
 
 /**
  * @author ashishsm
- *
+ * 
  */
 public class FeesAction extends MifosBaseAction {
 
@@ -68,120 +69,97 @@ public class FeesAction extends MifosBaseAction {
 		return "Fees";
 	}
 
+	public ActionForward customLoad(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		request.getSession().setAttribute("FeesActionForm", null);
+		return mapping.findForward(FeesConstants.CREATEFEES);
+	}
 
+	public ActionForward customGet(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 
-	public ActionForward customLoad(ActionMapping mapping,
-			ActionForm form,
-			HttpServletRequest request,
-			HttpServletResponse response)throws Exception {
-			request.getSession().setAttribute("FeesActionForm", null);
+		Context context = (Context) request.getAttribute(Constants.CONTEXT);
+		context.addBusinessResults("feesId", request.getParameter("feeIdTemp"));
+		return mapping.findForward(FeesConstants.FEEDETAILS);
+	}
+
+	public ActionForward customPreview(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
+		String input = request.getParameter("input");
+		Context context = (Context) request.getAttribute(Constants.CONTEXT);
+		Fees fees = (Fees) context.getValueObject();
+		FeesActionForm feesActionForm = (FeesActionForm) form;
+
+		if (feesActionForm.getRateFlatFalg().equals(
+				RateAmountFlag.AMOUNT.getValue().toString())) {
+			Money amount = new Money(Configuration.getInstance()
+					.getSystemConfig().getCurrency(), fees.getRateOrAmount());
+			feesActionForm.setAmount(String.valueOf(amount
+					.getAmountDoubleValue()));
+			fees.setRateOrAmount(amount.getAmountDoubleValue());
+		}
+
+		if (input.equalsIgnoreCase(FeesConstants.EDITFEEDETAILS)) {
+			return mapping.findForward(FeesConstants.PREVIEWFEEDETAILS);
+		} else {
+			return mapping.findForward(FeesConstants.CREATEFEESPREVIEW);
+		}
+	}
+
+	public ActionForward customCreate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
+		return mapping.findForward(FeesConstants.CREATEFEESCONFIRMATION);
+
+	}
+
+	public ActionForward customPrevious(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		String input = request.getParameter("input");
+		if (input.equalsIgnoreCase(FeesConstants.PREVIEWFEEDETAILS)) {
+			return mapping.findForward(FeesConstants.EDITFEEDETAILS);
+		} else {
 			return mapping.findForward(FeesConstants.CREATEFEES);
-	}
-
-	public ActionForward customGet(ActionMapping mapping,
-			ActionForm form,
-			HttpServletRequest request,
-			HttpServletResponse response)throws Exception{
-
-		    Context context = (Context)request.getAttribute(Constants.CONTEXT);
-			context.addBusinessResults("feesId",request.getParameter("feeIdTemp"));
-			return mapping.findForward(FeesConstants.FEEDETAILS);
-	}
-
-
-	public ActionForward customPreview(ActionMapping mapping,
-			ActionForm form,
-			HttpServletRequest request,
-			HttpServletResponse response)throws Exception {
-
-			String input = request.getParameter("input");
-			Context context=(Context)request.getAttribute(Constants.CONTEXT);
-			Fees fees=(Fees)context.getValueObject();
-			FeesActionForm feesActionForm= (FeesActionForm)form;
-			
-			if(feesActionForm.getRateFlatFalg().equals(FeesConstants.AMOUNT)){
-				Money amount=new Money(Configuration.getInstance().getSystemConfig().getCurrency(),fees.getRateOrAmount());
-				feesActionForm.setAmount(String.valueOf(amount.getAmountDoubleValue()));
-				fees.setRateOrAmount(amount.getAmountDoubleValue());
-			}
-
-			if(input.equalsIgnoreCase(FeesConstants.EDITFEEDETAILS)){
-				return mapping.findForward(FeesConstants.PREVIEWFEEDETAILS);
-			}
-			else{
-				return mapping.findForward(FeesConstants.CREATEFEESPREVIEW);
-			}
-	}
-
-	public ActionForward customCreate(ActionMapping mapping,
-			ActionForm form,
-			HttpServletRequest request,
-			HttpServletResponse response)throws Exception {
-
-			return mapping.findForward(FeesConstants.CREATEFEESCONFIRMATION);
-
+		}
 
 	}
 
+	public ActionForward cancel(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(FeesConstants.ADMIN);
+	}
 
-	public ActionForward customPrevious(ActionMapping mapping,
-			ActionForm form,
-			HttpServletRequest request,
-			HttpServletResponse response)throws Exception {
-			String input = request.getParameter("input");
-			if(input.equalsIgnoreCase(FeesConstants.PREVIEWFEEDETAILS)){
-				return mapping.findForward(FeesConstants.EDITFEEDETAILS);
-			}else{
-				return mapping.findForward(FeesConstants.CREATEFEES);
-			}
+	public ActionForward customManage(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
+		return mapping.findForward(FeesConstants.EDITFEEDETAILS);
 
 	}
 
-    
-    public ActionForward cancel(ActionMapping mapping,
-			ActionForm form,
-			HttpServletRequest request,
-			HttpServletResponse response)throws Exception {
-			return mapping.findForward(FeesConstants.ADMIN);
-	}
-
-
-    public ActionForward customManage(ActionMapping mapping,
-			ActionForm form,
-			HttpServletRequest request,
-			HttpServletResponse response)throws Exception {
-
-    		return mapping.findForward(FeesConstants.EDITFEEDETAILS);
+	public ActionForward customSearch(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(FeesConstants.VIEWEDITFEES);
 
 	}
 
-
-    public ActionForward customSearch(ActionMapping mapping,
-			ActionForm form,
-			HttpServletRequest request,
-			HttpServletResponse response)throws Exception {
-    	return mapping.findForward(FeesConstants.VIEWEDITFEES);
-
+	public ActionForward customValidate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		String input = request.getParameter("input");
+		if (input.equalsIgnoreCase(FeesConstants.EDITFEEDETAILS)) {
+			return mapping.findForward(FeesConstants.EDITFEEDETAILS);
+		} else {
+			return mapping.findForward(FeesConstants.CREATEFEES);
+		}
 	}
-
-
-
-
-	public ActionForward customValidate(ActionMapping mapping,
-			ActionForm form,
-			HttpServletRequest request,
-			HttpServletResponse response)throws Exception {
-			String input = request.getParameter("input");
-			if(input.equalsIgnoreCase(FeesConstants.EDITFEEDETAILS)){
-				return mapping.findForward(FeesConstants.EDITFEEDETAILS);
-			}
-			else
-			{
-				return mapping.findForward(FeesConstants.CREATEFEES);
-			}
-	}
-
-
-
 
 }

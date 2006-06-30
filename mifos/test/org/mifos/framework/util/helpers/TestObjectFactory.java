@@ -93,6 +93,8 @@ import org.mifos.application.fees.business.FeeFrequencyEntity;
 import org.mifos.application.fees.business.FeeFrequencyTypeEntity;
 import org.mifos.application.fees.business.FeePaymentEntity;
 import org.mifos.application.fees.business.FeesBO;
+import org.mifos.application.fees.util.helpers.FeeStatus;
+import org.mifos.application.fees.util.helpers.FeesConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.master.util.valueobjects.InterestCalcRule;
@@ -108,6 +110,7 @@ import org.mifos.application.meeting.business.MeetingTypeEntity;
 import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.persistence.service.OfficePersistenceService;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity;
@@ -976,7 +979,10 @@ public class TestObjectFactory {
 			e.printStackTrace();
 		}
 		fees.setFeeName(feeName);
-
+		fees.setCreatedDate(new Date(System.currentTimeMillis()));
+		fees.setCreatedBy(fees.getUserContext().getId());
+		fees.modifyStatus(FeeStatus.ACTIVE);
+		fees.setOffice(new OfficePersistenceService().getHeadOffice());
 		FeeFrequencyEntity feeFrequency = new FeeFrequencyEntity();
 		MeetingBO feeMeetingFrequency = getMeetingHelper(frequency, recurAfter,
 				5);
@@ -993,7 +999,7 @@ public class TestObjectFactory {
 		fees.setCategoryType(categoryTypeEntity);
 
 		fees.setRateFlat(false);
-		fees.setRateOrAmount(feeAmnt);
+		fees.setAmount(feeAmnt.toString());
 		GLCodeEntity glCodeFee = (GLCodeEntity) HibernateUtil.getSessionTL()
 				.get(GLCodeEntity.class, Short.valueOf("24"));
 		fees.setGlCodeEntity(glCodeFee);
@@ -1023,7 +1029,10 @@ public class TestObjectFactory {
 		}
 
 		fees.setFeeName(feeName);
-
+		fees.setCreatedDate(new Date(System.currentTimeMillis()));
+		fees.setCreatedBy(fees.getUserContext().getId());
+		fees.modifyStatus(FeeStatus.ACTIVE);
+		fees.setOffice(new OfficePersistenceService().getHeadOffice());
 		FeeFrequencyEntity feeFrequency = new FeeFrequencyEntity();
 		feeFrequency.setFee(fees);
 		FeeFrequencyTypeEntity feeFrequencyTypeEntity = new FeeFrequencyTypeEntity();
@@ -1040,7 +1049,7 @@ public class TestObjectFactory {
 		fees.setCategoryType(categoryTypeEntity);
 
 		fees.setRateFlat(false);
-		fees.setRateOrAmount(feeAmnt);
+		fees.setAmount(feeAmnt.toString());
 		fees.getFeeFrequency().setFeeMeetingFrequency(null);
 		GLCodeEntity glCodeEntity = (GLCodeEntity) HibernateUtil.getSessionTL()
 				.get(GLCodeEntity.class, Short.valueOf("7"));

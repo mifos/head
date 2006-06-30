@@ -64,6 +64,7 @@ import org.mifos.application.customer.util.valueobjects.CustomerAddressDetail;
 import org.mifos.application.customer.util.valueobjects.CustomerCustomField;
 import org.mifos.application.customer.util.valueobjects.CustomerNote;
 import org.mifos.application.customer.util.valueobjects.CustomerPosition;
+import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeesConstants;
 import org.mifos.application.fees.util.valueobjects.FeeMaster;
 import org.mifos.application.login.util.helpers.LoginConstants;
@@ -1003,7 +1004,7 @@ public class GroupActionForm extends MifosSearchActionForm{
 							   break;
 						   }
 					   }
-					   if(feeFrequencyType!=null  && feeFrequencyType.equals(FeesConstants.PERIODIC)){
+					   if(feeFrequencyType!=null  && feeFrequencyType.equals(FeeFrequencyType.PERIODIC.getValue())){
 						   i++;
 						   if(i>=2) {
 							   if (errors==null)

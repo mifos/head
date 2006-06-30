@@ -60,6 +60,7 @@ import org.mifos.application.customer.util.valueobjects.CustomerCustomField;
 import org.mifos.application.customer.util.valueobjects.CustomerMeeting;
 import org.mifos.application.customer.util.valueobjects.CustomerNote;
 import org.mifos.application.customer.util.valueobjects.CustomerPosition;
+import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeesConstants;
 import org.mifos.application.fees.util.valueobjects.FeeMaster;
 import org.mifos.application.office.util.valueobjects.Office;
@@ -761,7 +762,7 @@ public class CenterActionForm extends  MifosSearchActionForm {
 							   break;
 						   }
 					   }
-					   if(feeFrequencyType!=null  && feeFrequencyType.equals(FeesConstants.PERIODIC)){
+					   if(feeFrequencyType!=null  && feeFrequencyType.equals(FeeFrequencyType.PERIODIC.getValue())){
 						   i++;
 						   if(i>=2) {
 							   errors.add(CustomerConstants.DUPLICATE_FEE_EXCEPTION,new ActionMessage(CustomerConstants.DUPLICATE_FEE_EXCEPTION));

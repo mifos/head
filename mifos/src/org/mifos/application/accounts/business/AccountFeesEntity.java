@@ -44,7 +44,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.mifos.application.fees.business.FeesBO;
-import org.mifos.application.fees.util.helpers.FeesConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.components.repaymentschedule.MeetingScheduleHelper;
@@ -73,11 +72,11 @@ public class AccountFeesEntity extends PersistentObject {
 	private Money accountFeeAmount;
 
 	private Money feeAmount;
-	
+
 	private Short feeStatus;
-	
-	private Date  statusChangeDate;
-	
+
+	private Date statusChangeDate;
+
 	private Date lastAppliedDate;
 
 	public AccountBO getAccount() {
@@ -88,8 +87,6 @@ public class AccountFeesEntity extends PersistentObject {
 		this.account = account;
 	}
 
-	
-
 	public Integer getAccountFeeId() {
 		return accountFeeId;
 	}
@@ -97,8 +94,6 @@ public class AccountFeesEntity extends PersistentObject {
 	public void setAccountFeeId(Integer accountFeeId) {
 		this.accountFeeId = accountFeeId;
 	}
-
-	
 
 	/**
 	 * @return Returns the accountFeeAmount.
@@ -108,7 +103,8 @@ public class AccountFeesEntity extends PersistentObject {
 	}
 
 	/**
-	 * @param accountFeeAmount The accountFeeAmount to set.
+	 * @param accountFeeAmount
+	 *            The accountFeeAmount to set.
 	 */
 	public void setAccountFeeAmount(Money accountFeeAmount) {
 		this.accountFeeAmount = accountFeeAmount;
@@ -122,7 +118,8 @@ public class AccountFeesEntity extends PersistentObject {
 	}
 
 	/**
-	 * @param feeAmount The feeAmount to set.
+	 * @param feeAmount
+	 *            The feeAmount to set.
 	 */
 	public void setFeeAmount(Money feeAmount) {
 		this.feeAmount = feeAmount;
@@ -144,7 +141,8 @@ public class AccountFeesEntity extends PersistentObject {
 	}
 
 	/**
-	 * @param feeStatus The feeStatus to set.
+	 * @param feeStatus
+	 *            The feeStatus to set.
 	 */
 	public void setFeeStatus(Short feeStatus) {
 		this.feeStatus = feeStatus;
@@ -158,11 +156,12 @@ public class AccountFeesEntity extends PersistentObject {
 	}
 
 	/**
-	 * @param statusChangeDate The statusChangeDate to set.
+	 * @param statusChangeDate
+	 *            The statusChangeDate to set.
 	 */
 	public void setStatusChangeDate(Date statusChangeDate) {
 		this.statusChangeDate = statusChangeDate;
-	}	
+	}
 
 	public Date getLastAppliedDate() {
 		return lastAppliedDate;
@@ -172,36 +171,33 @@ public class AccountFeesEntity extends PersistentObject {
 		this.lastAppliedDate = lastAppliedDate;
 	}
 
-	public void changeFeesStatus(Short status,Date changeDate){
+	public void changeFeesStatus(Short status, Date changeDate) {
 		this.setFeeStatus(status);
 		this.setStatusChangeDate(changeDate);
 	}
-	
+
 	public boolean isTimeOfDisbursement() {
-		if (getFees().getFeeFrequency()
-				.getFeeFrequencyType().getFeeFrequencyTypeId().equals(
-						FeesConstants.ONETIME)
-				&& getFees().getFeeFrequency()
-						.getFeePayment().getFeePaymentId().equals(
-								FeesConstants.TIME_OF_DISBURSMENT))
-			return true;
-		return false;
+		return getFees().isTimeOfDisbursement();
 	}
-	
-	public boolean isApplicable(Date date) throws RepaymentScheduleException, SchedulerException {		
-		boolean isApplicable = false;			
-		SchedulerIntf schedulerIntf;		
-		if(getLastAppliedDate()!=null){
-			MeetingBO meetingBO = getAccount().getCustomer().getCustomerMeeting().getMeeting();
+
+	public boolean isApplicable(Date date) throws RepaymentScheduleException,
+			SchedulerException {
+		boolean isApplicable = false;
+		SchedulerIntf schedulerIntf;
+		if (getLastAppliedDate() != null) {
+			MeetingBO meetingBO = getAccount().getCustomer()
+					.getCustomerMeeting().getMeeting();
 			Calendar meetingStartDate = new GregorianCalendar();
 			meetingStartDate.setTime(getLastAppliedDate());
 			meetingBO.setMeetingStartDate(meetingStartDate);
-			meetingBO.getMeetingDetails().setRecurAfter(getFees().getFeeFrequency().getFeeMeetingFrequency().getMeetingDetails().getRecurAfter());
-			schedulerIntf = MeetingScheduleHelper.getSchedulerObject(meetingBO);			
-			List<Date> applDates=schedulerIntf.getAllDates(date);
-			isApplicable = applDates.size()>0 ? true : false;	
-		}					
-		return isApplicable;			
+			meetingBO.getMeetingDetails().setRecurAfter(
+					getFees().getFeeFrequency().getFeeMeetingFrequency()
+							.getMeetingDetails().getRecurAfter());
+			schedulerIntf = MeetingScheduleHelper.getSchedulerObject(meetingBO);
+			List<Date> applDates = schedulerIntf.getAllDates(date);
+			isApplicable = applDates.size() > 0 ? true : false;
+		}
+		return isApplicable;
 	}
-	
+
 }

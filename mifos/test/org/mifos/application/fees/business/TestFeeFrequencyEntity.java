@@ -1,8 +1,8 @@
 package org.mifos.application.fees.business;
 
-import org.mifos.application.fees.util.helpers.FeesConstants;
-
 import junit.framework.TestCase;
+
+import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 
 public class TestFeeFrequencyEntity extends TestCase {
 
@@ -17,7 +17,7 @@ public class TestFeeFrequencyEntity extends TestCase {
 	public void testBuildFrequencyForOneTimeFees() {
 		FeeFrequencyEntity feeFrequencyEntity = new FeeFrequencyEntity();
 		feeFrequencyEntity.getFeeFrequencyType().setFeeFrequencyTypeId(
-				FeesConstants.ONETIME);
+				FeeFrequencyType.ONETIME.getValue());
 		assertNotNull("The fee meeting should not be null", feeFrequencyEntity
 				.getFeeMeetingFrequency());
 		feeFrequencyEntity.buildFeeFrequency();
@@ -29,7 +29,7 @@ public class TestFeeFrequencyEntity extends TestCase {
 	public void testBuildFrequencyForPeriodicFees() {
 		FeeFrequencyEntity feeFrequencyEntity = new FeeFrequencyEntity();
 		feeFrequencyEntity.getFeeFrequencyType().setFeeFrequencyTypeId(
-				FeesConstants.PERIODIC);
+				FeeFrequencyType.PERIODIC.getValue());
 		assertNotNull("The fee payment should not be null", feeFrequencyEntity
 				.getFeePayment());
 		feeFrequencyEntity.buildFeeFrequency();

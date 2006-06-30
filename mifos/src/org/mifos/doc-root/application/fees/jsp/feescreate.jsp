@@ -156,12 +156,12 @@
 											</td>
 											<td valign="top">
 
-												<html-el:radio property="feeFrequency.feeFrequencyType.feeFrequencyTypeId" value="${FeesConstants.PERIODIC}" onclick="onPageLoad();">
+												<html-el:radio property="feeFrequency.feeFrequencyType.feeFrequencyTypeId" value="${FeeFrequencyType.PERIODIC.value}" onclick="onPageLoad();">
 													<mifos:mifoslabel name="Fees.periodic" />
 												</html-el:radio>
 
 												<br>
-												<html-el:radio property="feeFrequency.feeFrequencyType.feeFrequencyTypeId" value="${FeesConstants.ONETIME}" onclick="onPageLoad();">
+												<html-el:radio property="feeFrequency.feeFrequencyType.feeFrequencyTypeId" value="${FeeFrequencyType.ONETIME.value}" onclick="onPageLoad();">
 													<mifos:mifoslabel name="Fees.onetime" />
 												</html-el:radio>
 											</td>
@@ -193,13 +193,13 @@
 																	<tr class="fontnormal">
 
 																		<td width="49%">
-																			<html-el:radio property="feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId" value="${FeesConstants.WEEKLY}" onclick="onPageLoad();">
+																			<html-el:radio property="feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId" value="${MeetingFrequency.WEEKLY.value}" onclick="onPageLoad();">
 																				<mifos:mifoslabel name="Fees.weekly" />
 																			</html-el:radio>
 																		</td>
 
 																		<td width="49%">
-																			<html-el:radio property="feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId" value="${FeesConstants.MONTHLY}" onclick="onPageLoad();">
+																			<html-el:radio property="feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId" value="${MeetingFrequency.MONTHLY.value}" onclick="onPageLoad();">
 																				<mifos:mifoslabel name="Fees.monthly" />
 																			</html-el:radio>
 																		</td>
@@ -326,7 +326,7 @@
 											</td>
 										</tr>
 									</table>
-									<html-el:hidden property="loanCategoryId" value="${FeesConstants.LOAN}" />
+									<html-el:hidden property="loanCategoryId" value="${FeeCategory.LOAN.value}" />
 									<script>
 										onPageLoad();
 									</script>

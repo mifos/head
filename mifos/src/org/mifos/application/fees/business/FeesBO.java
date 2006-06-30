@@ -43,7 +43,10 @@ import java.util.Set;
 
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.fees.persistence.service.FeePersistenceService;
-import org.mifos.application.fees.util.helpers.FeesConstants;
+import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.fees.util.helpers.FeeLevel;
+import org.mifos.application.fees.util.helpers.FeeStatus;
+import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.service.OfficePersistenceService;
 import org.mifos.framework.business.BusinessObject;
@@ -80,7 +83,6 @@ public class FeesBO extends BusinessObject {
 
 	private FeeStatusEntity feeStatus;
 
-	@Deprecated
 	private Short rateFlatFlag;
 
 	@Deprecated
@@ -104,7 +106,7 @@ public class FeesBO extends BusinessObject {
 	}
 
 	public String getGlobalFeeNum() {
-		return this.globalFeeNum;
+		return globalFeeNum;
 	}
 
 	public void setGlobalFeeNum(String globalFeeNum) {
@@ -112,8 +114,7 @@ public class FeesBO extends BusinessObject {
 	}
 
 	public String getFeeName() {
-
-		return this.feeName;
+		return feeName;
 	}
 
 	public void setFeeName(String feeName) {
@@ -138,28 +139,31 @@ public class FeesBO extends BusinessObject {
 		this.office = office;
 	}
 
-	public Double getRateOrAmount() {
+	@Deprecated
+	private Double getRateOrAmount() {
 		return rateOrAmount;
 	}
 
-	public void setRateOrAmount(Double rateOrAmount) {
+	@Deprecated
+	private void setRateOrAmount(Double rateOrAmount) {
 		this.rateOrAmount = rateOrAmount;
 	}
 
-	public Short getRateFlatFlag() {
+	private Short getRateFlatFlag() {
 		return rateFlatFlag;
 	}
 
-	public void setRateFlatFlag(Short rateFlatFlag) {
+	private void setRateFlatFlag(Short rateFlatFlag) {
 		this.rateFlatFlag = rateFlatFlag;
 	}
 
 	public boolean isRateFlat() {
-		return this.rateFlatFlag > 0;
+		return this.rateFlatFlag > RateAmountFlag.AMOUNT.getValue();
 	}
 
 	public void setRateFlat(boolean rateFlatFlag) {
-		this.rateFlatFlag = (short) (rateFlatFlag ? 1 : 0);
+		this.rateFlatFlag = (rateFlatFlag ? RateAmountFlag.RATE.getValue()
+				: RateAmountFlag.AMOUNT.getValue());
 	}
 
 	public CategoryTypeEntity getCategoryType() {
@@ -207,8 +211,8 @@ public class FeesBO extends BusinessObject {
 		this.feeStatus = status;
 	}
 
-	public void modifyStatus(Short status) {
-		setFeeStatus(new FeeStatusEntity(status));
+	public void modifyStatus(FeeStatus status) {
+		setFeeStatus(new FeeStatusEntity(status.getValue()));
 	}
 
 	public Money getFeeAmount() {
@@ -234,23 +238,23 @@ public class FeesBO extends BusinessObject {
 	private void buildFeeLevels(boolean adminCheck) {
 		if (adminCheck) {
 			String categoryId = categoryType.getCategoryId().toString();
-			if (categoryId.equals(FeesConstants.CLIENT))
-				addFeeLevel(createFeeLevel(FeesConstants.LEVEL_ID_CLIENT));
-			else if (categoryId.equals(FeesConstants.GROUP))
-				addFeeLevel(createFeeLevel(FeesConstants.LEVEL_ID_GRUOP));
-			else if (categoryId.equals(FeesConstants.CENTER))
-				addFeeLevel(createFeeLevel(FeesConstants.LEVEL_ID_CENTER));
-			else if (categoryId.equals(FeesConstants.ALLCUSTOMERS)) {
-				addFeeLevel(createFeeLevel(FeesConstants.LEVEL_ID_CLIENT));
-				addFeeLevel(createFeeLevel(FeesConstants.LEVEL_ID_GRUOP));
-				addFeeLevel(createFeeLevel(FeesConstants.LEVEL_ID_CENTER));
+			if (categoryId.equals(FeeCategory.CLIENT.getValue()))
+				addFeeLevel(createFeeLevel(FeeLevel.CLIENTLEVEL));
+			else if (categoryId.equals(FeeCategory.GROUP.getValue()))
+				addFeeLevel(createFeeLevel(FeeLevel.GROUPLEVEL));
+			else if (categoryId.equals(FeeCategory.CENTER.getValue()))
+				addFeeLevel(createFeeLevel(FeeLevel.CENTERLEVEL));
+			else if (categoryId.equals(FeeCategory.ALLCUSTOMERS.getValue())) {
+				addFeeLevel(createFeeLevel(FeeLevel.CLIENTLEVEL));
+				addFeeLevel(createFeeLevel(FeeLevel.GROUPLEVEL));
+				addFeeLevel(createFeeLevel(FeeLevel.CENTERLEVEL));
 			}
 		}
 	}
 
-	private FeeLevelEntity createFeeLevel(Short feeLevelId) {
+	private FeeLevelEntity createFeeLevel(FeeLevel feeLevel) {
 		FeeLevelEntity level = new FeeLevelEntity();
-		level.setLevelId(feeLevelId);
+		level.setLevelId(feeLevel.getValue());
 		return level;
 	}
 
@@ -260,17 +264,27 @@ public class FeesBO extends BusinessObject {
 				.getPersistenceService(PersistenceServiceName.Fees);
 	}
 
+	private void setRateOrAmount() {
+		if (rate != null)
+			setRateOrAmount(rate);
+		else
+			setRateOrAmount(feeAmount.getAmountDoubleValue());
+	}
+
 	public void save(boolean adminCheck) throws ServiceException {
 		setCreateDetails();
-		modifyStatus(FeesConstants.STATUS_ACTIVE);
+		modifyStatus(FeeStatus.ACTIVE);
 		setOffice(new OfficePersistenceService().getHeadOffice());
 		feeFrequency.buildFeeFrequency();
 		buildFeeLevels(adminCheck);
+		setRateOrAmount();
+		setRateFlat(rate != null);
 		getFeePersistenceService().save(this);
 	}
 
 	public void update() throws ServiceException {
 		setUpdateDetails();
+		setRateOrAmount();
 		getFeePersistenceService().save(this);
 	}
 
@@ -278,4 +292,25 @@ public class FeesBO extends BusinessObject {
 	public Short getEntityID() {
 		return EntityMasterConstants.Fees;
 	}
+
+	public boolean isPeriodic() {
+		return getFeeFrequency().isPeriodic();
+	}
+
+	public boolean isOneTime() {
+		return getFeeFrequency().isOneTime();
+	}
+
+	public boolean isTimeOfDisbursement() {
+		return getFeeFrequency().isTimeOfDisbursement();
+	}
+
+	public boolean isAdminFee() {
+		return getFeeLevels() != null && getFeeLevels().size() > 0;
+	}
+	
+	public boolean isActive() {
+		return getFeeStatus().isActive();
+	}
+
 }

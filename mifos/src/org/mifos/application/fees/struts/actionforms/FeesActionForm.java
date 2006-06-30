@@ -48,17 +48,22 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
+import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeesConstants;
+import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.fees.util.valueobjects.FeeFrequency;
 import org.mifos.application.fees.util.valueobjects.FeeLevel;
+import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
+import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.framework.struts.actionforms.MifosActionForm;
 import org.mifos.framework.util.helpers.Constants;
 
 /**
  * @author ashishsm
- *
+ * 
  */
 public class FeesActionForm extends MifosActionForm {
 
@@ -134,7 +139,7 @@ public class FeesActionForm extends MifosActionForm {
 
 	private String officeId;
 
-	private  GLCodeEntity glCodeEntity;
+	private GLCodeEntity glCodeEntity;
 
 	private String rateOrAmount;
 
@@ -160,16 +165,13 @@ public class FeesActionForm extends MifosActionForm {
 
 	private String recurWeekDay;
 
-
 	private String loanPaymentId;
-	
+
 	private String otherPaymentId;
 
-	
-    private Set<FeeLevel> feeLevelSet;
+	private Set<FeeLevel> feeLevelSet;
 
-    
-    private String adminCheck;
+	private String adminCheck;
 
 	public String getPercentOf() {
 		return percentOf;
@@ -181,7 +183,7 @@ public class FeesActionForm extends MifosActionForm {
 
 	public FeesActionForm() {
 		this.feeFrequency = new FeeFrequency();
-		this.glCodeEntity=new GLCodeEntity();
+		this.glCodeEntity = new GLCodeEntity();
 	}
 
 	public String getAmount() {
@@ -468,10 +470,11 @@ public class FeesActionForm extends MifosActionForm {
 
 	public String getRateFlatFalg() {
 		if (rate != null && !"".equals(rate.trim())) {
-			this.rateFlatFalg = FeesConstants.RATE;
+			this.rateFlatFalg = RateAmountFlag.RATE.getValue().toString();
+			;
 		}
 		if (amount != null && !"".equals(amount.trim())) {
-			this.rateFlatFalg = FeesConstants.AMOUNT;
+			this.rateFlatFalg = RateAmountFlag.AMOUNT.getValue().toString();
 		}
 		return this.rateFlatFalg;
 	}
@@ -493,15 +496,22 @@ public class FeesActionForm extends MifosActionForm {
 			feeFrequency.setFeeFrequencyTypeId(new Short(getTypeId()));
 		if (this.feeFrequency.getFeeFrequencyTypeId() != null
 				&& this.feeFrequency.getFeeFrequencyTypeId().equals(
-						FeesConstants.PERIODIC) && frequency != null) {
+						FeeFrequencyType.PERIODIC.getValue())
+				&& frequency != null) {
 			this.feeFrequency.setFeeMeetingFrequency(getMeeting());
 			this.feeFrequency.setFeePaymentId(null);
-		} else if(this.feeFrequency.getFeeFrequencyTypeId() != null	&& this.feeFrequency.getFeeFrequencyTypeId().equals(
-						FeesConstants.ONETIME)) {
-			if(categoryId!=null && categoryId.equals(FeesConstants.LOAN) && loanPaymentId!=null && !loanPaymentId.equals("")){
+		} else if (this.feeFrequency.getFeeFrequencyTypeId() != null
+				&& this.feeFrequency.getFeeFrequencyTypeId().equals(
+						FeeFrequencyType.ONETIME.getValue())) {
+			if (categoryId != null
+					&& categoryId.equals(FeeCategory.LOAN.getValue())
+					&& loanPaymentId != null && !loanPaymentId.equals("")) {
 				this.feeFrequency.setFeePaymentId(Short.valueOf(loanPaymentId));
-			}else if(categoryId!=null && !categoryId.equals(FeesConstants.LOAN) && otherPaymentId!=null && !otherPaymentId.equals("")){
-				this.feeFrequency.setFeePaymentId(Short.valueOf(otherPaymentId));
+			} else if (categoryId != null
+					&& !categoryId.equals(FeeCategory.LOAN.getValue())
+					&& otherPaymentId != null && !otherPaymentId.equals("")) {
+				this.feeFrequency
+						.setFeePaymentId(Short.valueOf(otherPaymentId));
 			}
 			this.feeFrequency.setFeeMeetingFrequency(null);
 		}
@@ -512,16 +522,17 @@ public class FeesActionForm extends MifosActionForm {
 	public Meeting getMeeting() {
 
 		Meeting meeting = null;
-		if (Short.valueOf(frequency).equals(FeesConstants.WEEKLY)) {
+		if (Short.valueOf(frequency).equals(MeetingFrequency.WEEKLY.getValue())) {
 			meeting = MeetingHelper.geMeeting(frequency, recurWeekDay,
-					FeesConstants.FEEMEETING);
+					MeetingType.FEEMEETING.getValue());
 			meeting.setMeetingPlace("");
-			recurMonthDay="";
-		} else if (Short.valueOf(frequency).equals(FeesConstants.MONTHLY)) {
+			recurMonthDay = "";
+		} else if (Short.valueOf(frequency).equals(
+				MeetingFrequency.MONTHLY.getValue())) {
 			meeting = MeetingHelper.geMeeting(frequency, recurMonthDay,
-					FeesConstants.FEEMEETING);
+					MeetingType.FEEMEETING.getValue());
 			meeting.setMeetingPlace("");
-			recurWeekDay="";
+			recurWeekDay = "";
 		}
 		return meeting;
 	}
@@ -583,7 +594,7 @@ public class FeesActionForm extends MifosActionForm {
 				&& "preview".equals(methodCalled)
 				&& (request.getParameter("input"))
 						.equals(FeesConstants.CREATEFEES)
-				&& (FeesConstants.LOAN).equals(categoryId)) {
+				&& (FeeCategory.LOAN.getValue()).equals(categoryId)) {
 			if (("".equals(rate.trim()) && "".equals(amount.trim()))
 					|| (!"".equals(rate.trim()) && !"".equals(amount.trim()))) {
 				errors.add("RateOrAmount", new ActionMessage(
@@ -602,7 +613,7 @@ public class FeesActionForm extends MifosActionForm {
 				&& "preview".equals(methodCalled)
 				&& (request.getParameter("input"))
 						.equals(FeesConstants.CREATEFEES)
-				&& !FeesConstants.LOAN.equals(categoryId)) {
+				&& !FeeCategory.LOAN.getValue().equals(categoryId)) {
 			if (amount == null || "".equals(amount.trim())) {
 				errors.add("amount", new ActionMessage("errors.enter"));
 				return errors;
@@ -614,7 +625,8 @@ public class FeesActionForm extends MifosActionForm {
 				&& "preview".equals(methodCalled)
 				&& (request.getParameter("input"))
 						.equals(FeesConstants.EDITFEEDETAILS)
-				&& (FeesConstants.AMOUNT).equals(rateFlatFalg)) {
+				&& (RateAmountFlag.AMOUNT.getValue().toString())
+						.equals(rateFlatFalg)) {
 			if (amount == null || "".equals(amount.trim())) {
 				errors.add("amount", new ActionMessage("errors.enter"));
 				return errors;
@@ -625,7 +637,8 @@ public class FeesActionForm extends MifosActionForm {
 				&& "preview".equals(methodCalled)
 				&& (request.getParameter("input"))
 						.equals(FeesConstants.EDITFEEDETAILS)
-				&& (FeesConstants.RATE).equals(rateFlatFalg)) {
+				&& (RateAmountFlag.RATE.getValue().toString())
+						.equals(rateFlatFalg)) {
 			if ((!formulaId.equals("") && "".equals(rate.trim()))
 					|| (!"".equals(rate.trim()) && formulaId.equals(""))
 					|| ("".equals(rate.trim()) && formulaId.equals(""))) {
@@ -702,39 +715,52 @@ public class FeesActionForm extends MifosActionForm {
 	}
 
 	public Set<FeeLevel> getFeeLevelSet() {
-		Set<FeeLevel> feeLevelSet=null;
-		if( null!=adminCheck && adminCheck.equalsIgnoreCase(FeesConstants.YES)){
-        	if(categoryId.equals(FeesConstants.CLIENT)){
-        		feeLevelSet=new HashSet<FeeLevel>();
-        		FeeLevel level=new FeeLevel();
-        		level.setLevelId(FeesConstants.LEVEL_ID_CLIENT);
-        		feeLevelSet.add(level);
-        	} else if(categoryId.equals(FeesConstants.GROUP)){
-        		feeLevelSet=new HashSet<FeeLevel>();
-        		FeeLevel level=new FeeLevel();
-        		level.setLevelId(FeesConstants.LEVEL_ID_GRUOP);
-        		feeLevelSet.add(level);
-        	} else if(categoryId.equals(FeesConstants.CENTER)){
-        		feeLevelSet=new HashSet<FeeLevel>();
-        		FeeLevel level=new FeeLevel();
-        		level.setLevelId(FeesConstants.LEVEL_ID_CENTER);
-        		feeLevelSet.add(level);
-        	} else if(categoryId.equals(FeesConstants.ALLCUSTOMERS)){
-        		feeLevelSet=new HashSet<FeeLevel>();
-        		FeeLevel level=new FeeLevel();
-        		level.setLevelId(FeesConstants.LEVEL_ID_CLIENT);
-        		feeLevelSet.add(level);
-        		level=new FeeLevel();
-        		level.setLevelId(FeesConstants.LEVEL_ID_GRUOP);
-        		feeLevelSet.add(level);
-        		level=new FeeLevel();
-        		level.setLevelId(FeesConstants.LEVEL_ID_CENTER);
-        		feeLevelSet.add(level);
-        	}
-        }else{
-        	return null;
-        }
-			return feeLevelSet;
+		Set<FeeLevel> feeLevelSet = null;
+		if (null != adminCheck
+				&& adminCheck.equalsIgnoreCase(FeesConstants.YES)) {
+			if (categoryId.equals(FeeCategory.CLIENT.getValue())) {
+				feeLevelSet = new HashSet<FeeLevel>();
+				FeeLevel level = new FeeLevel();
+				level
+						.setLevelId(org.mifos.application.fees.util.helpers.FeeLevel.CLIENTLEVEL
+								.getValue());
+				feeLevelSet.add(level);
+			} else if (categoryId.equals(FeeCategory.GROUP.getValue())) {
+				feeLevelSet = new HashSet<FeeLevel>();
+				FeeLevel level = new FeeLevel();
+				level
+						.setLevelId(org.mifos.application.fees.util.helpers.FeeLevel.GROUPLEVEL
+								.getValue());
+				feeLevelSet.add(level);
+			} else if (categoryId.equals(FeeCategory.CENTER.getValue())) {
+				feeLevelSet = new HashSet<FeeLevel>();
+				FeeLevel level = new FeeLevel();
+				level
+						.setLevelId(org.mifos.application.fees.util.helpers.FeeLevel.CENTERLEVEL
+								.getValue());
+				feeLevelSet.add(level);
+			} else if (categoryId.equals(FeeCategory.ALLCUSTOMERS.getValue())) {
+				feeLevelSet = new HashSet<FeeLevel>();
+				FeeLevel level = new FeeLevel();
+				level
+						.setLevelId(org.mifos.application.fees.util.helpers.FeeLevel.CLIENTLEVEL
+								.getValue());
+				feeLevelSet.add(level);
+				level = new FeeLevel();
+				level
+						.setLevelId(org.mifos.application.fees.util.helpers.FeeLevel.GROUPLEVEL
+								.getValue());
+				feeLevelSet.add(level);
+				level = new FeeLevel();
+				level
+						.setLevelId(org.mifos.application.fees.util.helpers.FeeLevel.CENTERLEVEL
+								.getValue());
+				feeLevelSet.add(level);
+			}
+		} else {
+			return null;
+		}
+		return feeLevelSet;
 	}
 
 	public void setFeeLevelSet(Set<FeeLevel> feeLevelSet) {
@@ -743,7 +769,8 @@ public class FeesActionForm extends MifosActionForm {
 	}
 
 	public String getAdminCheck() {
-		if( null==adminCheck && null!=categoryId && !categoryId.equals(FeesConstants.LOAN)){
+		if (null == adminCheck && null != categoryId
+				&& !categoryId.equals(FeeCategory.LOAN.getValue())) {
 			return FeesConstants.NO;
 		}
 		return adminCheck;
@@ -753,11 +780,11 @@ public class FeesActionForm extends MifosActionForm {
 		this.adminCheck = adminCheck;
 	}
 
-
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		super.reset(mapping, request);
-		if(request.getParameter("method") !=null && request.getParameter("method").equals("preview")) {
-			adminCheck=null;
+		if (request.getParameter("method") != null
+				&& request.getParameter("method").equals("preview")) {
+			adminCheck = null;
 		}
 	}
 
@@ -769,11 +796,11 @@ public class FeesActionForm extends MifosActionForm {
 	}
 
 	/**
-	 * @param glCodeEntity The glCodeEntity to set.
+	 * @param glCodeEntity
+	 *            The glCodeEntity to set.
 	 */
 	public void setGlCodeEntity(GLCodeEntity glCodeEntity) {
 		this.glCodeEntity = glCodeEntity;
 	}
 
-	
 }

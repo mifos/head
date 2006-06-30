@@ -50,6 +50,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
+import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeesConstants;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.fund.util.valueobjects.Fund;
@@ -1055,7 +1056,7 @@ public class LoanProductActionForm extends MifosSearchActionForm {
 				for (PrdOfferingFees prdOfferingFee : loanOfferingFeesSet) {
 					if (prdOfferingFee.getFees().getFeeFrequency()
 							.getFeeFrequencyTypeId().equals(
-									FeesConstants.PERIODIC)) {
+									FeeFrequencyType.PERIODIC.getValue())) {
 						if (!prdOfferingFee.getFees().getFeeFrequency()
 								.getFeeMeetingFrequency().getMeetingDetails()
 								.getRecurrenceType().getRecurrenceId().equals(

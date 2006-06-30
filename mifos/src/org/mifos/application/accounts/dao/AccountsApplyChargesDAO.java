@@ -38,7 +38,6 @@
 package org.mifos.application.accounts.dao;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -56,20 +55,19 @@ import org.mifos.application.accounts.loan.util.valueobjects.LoanActivity;
 import org.mifos.application.accounts.loan.util.valueobjects.LoanSummary;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.valueobjects.Account;
 import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
 import org.mifos.application.accounts.util.valueobjects.AccountApplyChargesMaster;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.accounts.util.valueobjects.AccountFeesActionDetail;
-import org.mifos.application.accounts.util.valueobjects.AccountStatusChangeHistory;
-import org.mifos.application.accounts.util.valueobjects.AccountTrxn;
 import org.mifos.application.accounts.util.valueobjects.AccountsApplyCharges;
 import org.mifos.application.accounts.util.valueobjects.CustomerAccount;
 import org.mifos.application.customer.util.valueobjects.Customer;
 import org.mifos.application.customer.util.valueobjects.CustomerMeeting;
+import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.fees.util.helpers.FeeFrequencyType;
+import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.FeesConstants;
-import org.mifos.application.fees.util.valueobjects.FeeFrequency;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.meeting.util.valueobjects.MeetingDetails;
@@ -98,8 +96,8 @@ public class AccountsApplyChargesDAO extends DAO {
 			ApplicationException {
 		Session session = null;
 		Transaction transaction = null;
-		List<AccountApplyChargesMaster> accountApplyChargesMasterList=new ArrayList<AccountApplyChargesMaster>();
-		List<Fees> feeList=null; 
+		List<AccountApplyChargesMaster> accountApplyChargesMasterList = new ArrayList<AccountApplyChargesMaster>();
+		List<Fees> feeList = null;
 		try {
 			session = HibernateUtil.getSession();
 			transaction = session.beginTransaction();
@@ -110,28 +108,29 @@ public class AccountsApplyChargesDAO extends DAO {
 			// if account is loan type, query has to be different
 			StringBuilder queryString = new StringBuilder();
 
-			queryString.append("from org.mifos.application.fees.util.valueobjects.Fees as fees where fees.status=1 ");
+			queryString
+					.append("from org.mifos.application.fees.util.valueobjects.Fees as fees where fees.status=1 ");
 
 			if (comingFrom.equals(AccountConstants.APPLYLOANCHARGES)) {
 				queryString.append(" and fees.categoryId ="
-						+ FeesConstants.LOAN);
+						+ FeeCategory.LOAN.getValue());
 			} else if (comingFrom.equals(AccountConstants.VIEWCENTERCHARGES)) {
 				queryString.append(" and ( fees.categoryId ="
-						+ FeesConstants.CENTER);
+						+ FeeCategory.CENTER.getValue());
 				queryString.append(" or fees.categoryId ="
-						+ FeesConstants.ALLCUSTOMERS);
+						+ FeeCategory.ALLCUSTOMERS.getValue());
 				queryString.append(" )");
 			} else if (comingFrom.equals(AccountConstants.VIEWGROUPCHARGES)) {
 				queryString.append(" and ( fees.categoryId ="
-						+ FeesConstants.GROUP);
+						+ FeeCategory.GROUP.getValue());
 				queryString.append(" or fees.categoryId ="
-						+ FeesConstants.ALLCUSTOMERS);
+						+ FeeCategory.ALLCUSTOMERS.getValue());
 				queryString.append(" )");
 			} else if (comingFrom.equals(AccountConstants.VIEWCLIENTCHARGES)) {
 				queryString.append(" and ( fees.categoryId ="
-						+ FeesConstants.CLIENT);
+						+ FeeCategory.CLIENT.getValue());
 				queryString.append(" or fees.categoryId ="
-						+ FeesConstants.ALLCUSTOMERS);
+						+ FeeCategory.ALLCUSTOMERS.getValue());
 				queryString.append(" )");
 			}
 
@@ -141,51 +140,62 @@ public class AccountsApplyChargesDAO extends DAO {
 					.append(" and fees.feeId not in ( select af.fees.feeId from AccountFees af where af.account.accountId=:accountId and af.fees.feeFrequency.feeFrequencyTypeId=:feeFrequencyTypeId and (af.feeStatus=null or af.feeStatus=1))");
 			feeList = session.createQuery(queryString.toString()).setInteger(
 					"accountId", accountId).setShort("feeFrequencyTypeId",
-					FeesConstants.PERIODIC).list();
-			
-			if(feeList!=null){
-				
-				for(Fees fees:feeList){
-					AccountApplyChargesMaster accountApplyChargesMaster=new AccountApplyChargesMaster();
-					populateFeeDetailsInAccountApplyChargeMaster(accountApplyChargesMaster,fees);
-					accountApplyChargesMasterList.add(accountApplyChargesMaster);
+					FeeFrequencyType.PERIODIC.getValue()).list();
+
+			if (feeList != null) {
+
+				for (Fees fees : feeList) {
+					AccountApplyChargesMaster accountApplyChargesMaster = new AccountApplyChargesMaster();
+					populateFeeDetailsInAccountApplyChargeMaster(
+							accountApplyChargesMaster, fees);
+					accountApplyChargesMasterList
+							.add(accountApplyChargesMaster);
 				}
-			
-				Account account=(Account)session.get(Account.class,accountId);
-				
-				//Check for same recurrenceType
-				accountApplyChargesMasterList=checkForRecurranceType(accountApplyChargesMasterList,account);
-				
-				boolean currentDateGreaterThenFirstInstallmentDate = isCurrentDateGreaterThenFirstInstallmentDate(account,session);
-				//Filtering fees that are time of disbursment type when account type is loan
-				filteringTimeOfDisbursmentFees(accountApplyChargesMasterList,account,currentDateGreaterThenFirstInstallmentDate);
-				//Filtering fees that are time of disbursment type when account type is loan
-				filteringTimeOfFirstRepaymentFees(accountApplyChargesMasterList,account,currentDateGreaterThenFirstInstallmentDate);
-							
+
+				Account account = (Account) session.get(Account.class,
+						accountId);
+
+				// Check for same recurrenceType
+				accountApplyChargesMasterList = checkForRecurranceType(
+						accountApplyChargesMasterList, account);
+
+				boolean currentDateGreaterThenFirstInstallmentDate = isCurrentDateGreaterThenFirstInstallmentDate(
+						account, session);
+				// Filtering fees that are time of disbursment type when account
+				// type is loan
+				filteringTimeOfDisbursmentFees(accountApplyChargesMasterList,
+						account, currentDateGreaterThenFirstInstallmentDate);
+				// Filtering fees that are time of disbursment type when account
+				// type is loan
+				filteringTimeOfFirstRepaymentFees(
+						accountApplyChargesMasterList, account,
+						currentDateGreaterThenFirstInstallmentDate);
+
 			}
-			
-			//Adding misc penalty and misc fees to the accountApplyChargesMasterList
+
+			// Adding misc penalty and misc fees to the
+			// accountApplyChargesMasterList
 			addMiscFeeAndPenalty(accountApplyChargesMasterList);
-			
+
 			transaction.commit();
-		}catch (HibernateProcessException e){
+		} catch (HibernateProcessException e) {
 			transaction.rollback();
-			throw  new SystemException(e);
-		}catch (HibernateException he){
-			transaction.rollback(); 
-			throw new ApplicationException(he); 
-		}
-		 finally {
+			throw new SystemException(e);
+		} catch (HibernateException he) {
+			transaction.rollback();
+			throw new ApplicationException(he);
+		} finally {
 			HibernateUtil.closeSession(session);
 		}
 
-		OfficeHelper.saveInContext("FeeMaster", accountApplyChargesMasterList, context);
+		OfficeHelper.saveInContext("FeeMaster", accountApplyChargesMasterList,
+				context);
 	}
 
 	public void loadFormulaMaster(Context context) throws SystemException,
 			ApplicationException {
 		MasterDataRetriever masterDataRetriever = new MasterDataRetriever();
-		
+
 		context
 				.addAttribute(masterDataRetriever.retrieveMasterData(
 						FeesConstants.FEEFORMULA, context.getUserContext()
@@ -207,17 +217,18 @@ public class AccountsApplyChargesDAO extends DAO {
 					.createQuery("from org.mifos.application.accounts.util.valueobjects.Account as acc where acc.accountId=?");
 			query.setInteger(0, accountId);
 			account = (Account) query.uniqueResult();
-			Set<AccountFees> accountFeesSet=account.getAccountFeesSet();
-			
-			if(accountFeesSet!=null){
-				for(AccountFees accountFees : accountFeesSet){
-					Meeting meeting=accountFees.getFees().getFeeFrequency().getFeeMeetingFrequency();
-					if(meeting !=null){
+			Set<AccountFees> accountFeesSet = account.getAccountFeesSet();
+
+			if (accountFeesSet != null) {
+				for (AccountFees accountFees : accountFeesSet) {
+					Meeting meeting = accountFees.getFees().getFeeFrequency()
+							.getFeeMeetingFrequency();
+					if (meeting != null) {
 						meeting.getMeetingStartDate();
 					}
 				}
 			}
-			
+
 			if (account instanceof Loan) {
 				Loan loan = (Loan) account;
 				loan.getLoanOffering().getPrinDueLastInstFlag();
@@ -308,7 +319,8 @@ public class AccountsApplyChargesDAO extends DAO {
 			accountActionDateList = session
 					.createQuery(
 							" from org.mifos.application.accounts.util.valueobjects.AccountActionDate as aad  where aad.actionDate>=current_date and aad.paymentStatus=:paymentStatus and aad.account.accountId=:accountId order by aad.installmentId")
-					.setShort("paymentStatus",AccountConstants.PAYMENT_UNPAID).setInteger("accountId", accountId).list();
+					.setShort("paymentStatus", AccountConstants.PAYMENT_UNPAID)
+					.setInteger("accountId", accountId).list();
 
 			transaction.commit();
 
@@ -325,24 +337,28 @@ public class AccountsApplyChargesDAO extends DAO {
 
 		return accountActionDateList;
 	}
-	
-	
-	public Boolean doesLastPaidInstallmentFallsOnCurrentDate(Integer accountId,Short paymentStatus)
-	throws SystemException, ApplicationException {
+
+	public Boolean doesLastPaidInstallmentFallsOnCurrentDate(Integer accountId,
+			Short paymentStatus) throws SystemException, ApplicationException {
 		HashMap queryParameters = new HashMap();
 		queryParameters.put("accountId", accountId);
 		queryParameters.put("paymentStatus", paymentStatus);
-		List queryResult = executeNamedQuery(NamedQueryConstants.GET_LASTPAIDINSTALLMNENT_ON_CURRENTDATE, queryParameters);
-		if(null != queryResult && queryResult.size()>0){
-			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("After executing the query . "   );
+		List queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_LASTPAIDINSTALLMNENT_ON_CURRENTDATE,
+				queryParameters);
+		if (null != queryResult && queryResult.size() > 0) {
+			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+					"After executing the query . ");
 			return true;
 		}
 		return false;
 	}
 
 	public void saveAccountActionDateList(List accountActionDateList,
-			AccountFees accountFee, LoanSummary loanSummary,LoanActivity accountNonTrxn,
-			CustomerActivityEntity customerActivityEntity)throws SystemException, ApplicationException {
+			AccountFees accountFee, LoanSummary loanSummary,
+			LoanActivity accountNonTrxn,
+			CustomerActivityEntity customerActivityEntity)
+			throws SystemException, ApplicationException {
 		Session session = null;
 		Transaction transaction = null;
 
@@ -350,9 +366,9 @@ public class AccountsApplyChargesDAO extends DAO {
 			session = HibernateUtil.getSession();
 			transaction = session.beginTransaction();
 
-			if(accountFee!=null)
+			if (accountFee != null)
 				session.saveOrUpdate(accountFee);
-			
+
 			int count = accountActionDateList.size();
 			AccountActionDate accountActionDate = null;
 
@@ -364,14 +380,13 @@ public class AccountsApplyChargesDAO extends DAO {
 
 			if (null != loanSummary)
 				session.update(loanSummary);
-			
-			if(accountNonTrxn!=null)
+
+			if (accountNonTrxn != null)
 				session.save(accountNonTrxn);
-			
-			if(customerActivityEntity !=null)
+
+			if (customerActivityEntity != null)
 				session.save(customerActivityEntity);
-			
-			
+
 			transaction.commit();
 
 		} catch (HibernateProcessException e) {
@@ -385,10 +400,10 @@ public class AccountsApplyChargesDAO extends DAO {
 			HibernateUtil.closeSession(session);
 		}
 	}
-	
-	
+
 	/**
 	 * This method adds misc fees and misc penalty to the list
+	 * 
 	 * @param feeList
 	 * @throws SystemException
 	 * @throws ApplicationException
@@ -407,56 +422,60 @@ public class AccountsApplyChargesDAO extends DAO {
 		accountApplyChargesMaster.setFeeName("Misc Penalty");
 		feeList.add(accountApplyChargesMaster);
 	}
-	
-	
+
 	/**
-	 * This method fetched an array of accountActionDate objects for next installments for a given accountid 
+	 * This method fetched an array of accountActionDate objects for next
+	 * installments for a given accountid
+	 * 
 	 * @param accountId
 	 * @return
 	 * @throws ApplicationException
 	 * @throws SystemException
 	 */
-	public AccountActionDate getNextInstallmentDetail(Integer accountId) throws ApplicationException, SystemException{
-		
+	public AccountActionDate getNextInstallmentDetail(Integer accountId)
+			throws ApplicationException, SystemException {
+
 		AccountActionDate acct = null;
 
-		Session session=null;
-		Transaction transaction=null;
-		try{
+		Session session = null;
+		Transaction transaction = null;
+		try {
 			session = HibernateUtil.getSession();
 			transaction = session.beginTransaction();
-			Query query = session.getNamedQuery(NamedQueryConstants.RETRIEVE_NEXT_INTALLMENT);
-			query.setInteger("accountId",accountId);
-			Integer id = (Integer)query.uniqueResult();
-			if(id!=null && id!=0){
-				acct = (AccountActionDate)session.get(AccountActionDate.class, id);
-				//get the associated fees details as well
+			Query query = session
+					.getNamedQuery(NamedQueryConstants.RETRIEVE_NEXT_INTALLMENT);
+			query.setInteger("accountId", accountId);
+			Integer id = (Integer) query.uniqueResult();
+			if (id != null && id != 0) {
+				acct = (AccountActionDate) session.get(AccountActionDate.class,
+						id);
+				// get the associated fees details as well
 				acct.getAccountFeesActionDetail();
-				for(AccountFeesActionDetail feeDetail : acct.getAccountFeesActionDetail())
+				for (AccountFeesActionDetail feeDetail : acct
+						.getAccountFeesActionDetail())
 					feeDetail.getAccountFee().getFees().getFeeName();
 			}
 			transaction.commit();
-		}catch(HibernateProcessException hbe){
+		} catch (HibernateProcessException hbe) {
 			hbe.printStackTrace();
 			transaction.rollback();
 			throw new ApplicationException(hbe);
-		}finally{
+		} finally {
 			HibernateUtil.closeSession(session);
 		}
 
 		return acct;
 	}
 
-	
 	public Short getReccurenceType(Account account) throws SystemException,
-	ApplicationException {
-		Short reccurenceType=null;
+			ApplicationException {
+		Short reccurenceType = null;
 		if (account instanceof Loan) {
 			Loan loan = (Loan) account;
 			Meeting meeting = loan.getLoanMeeting();
 			loan.getLoanSummary();
 			if (null != meeting) {
-	
+
 				MeetingDetails md = meeting.getMeetingDetails();
 				md.getRecurAfter();
 				if (null != md) {
@@ -464,10 +483,10 @@ public class AccountsApplyChargesDAO extends DAO {
 					if (null != mr) {
 						mr.getRankOfDays();
 					}
-	
+
 					RecurrenceType rt = md.getRecurrenceType();
 					if (null != rt) {
-						reccurenceType=rt.getRecurrenceId();
+						reccurenceType = rt.getRecurrenceId();
 					}
 				}
 			} else {
@@ -481,23 +500,22 @@ public class AccountsApplyChargesDAO extends DAO {
 			Customer customer = account.getCustomer();
 			if (null != customer) {
 				CustomerMeeting cm = customer.getCustomerMeeting();
-	
+
 				if (null != cm) {
 					meeting = cm.getMeeting();
 					if (null != meeting) {
-	
+
 						MeetingDetails md = meeting.getMeetingDetails();
 						md.getRecurAfter();
 						if (null != md) {
-							MeetingRecurrence mr = md
-									.getMeetingRecurrence();
+							MeetingRecurrence mr = md.getMeetingRecurrence();
 							if (null != mr) {
 								mr.getRankOfDays();
 							}
-	
+
 							RecurrenceType rt = md.getRecurrenceType();
 							if (null != rt) {
-								reccurenceType=rt.getRecurrenceId();
+								reccurenceType = rt.getRecurrenceId();
 							}
 						}
 					} else {
@@ -505,10 +523,10 @@ public class AccountsApplyChargesDAO extends DAO {
 								AccountConstants.KEYNOMEETING);
 					}
 				} else {
-	
+
 					throw new AccountsApplyChargesException(
 							AccountConstants.KEYNOMEETING);
-	
+
 				}
 			}
 		}
@@ -516,92 +534,98 @@ public class AccountsApplyChargesDAO extends DAO {
 	}
 
 	/*
-	 * This method populates accountApplyChargesMaster with recurrence type, periodicity and payment type.
+	 * This method populates accountApplyChargesMaster with recurrence type,
+	 * periodicity and payment type.
 	 */
-	private void populateFeeDetailsInAccountApplyChargeMaster(AccountApplyChargesMaster accountApplyChargesMaster,Fees fees) throws SystemException{
+	private void populateFeeDetailsInAccountApplyChargeMaster(
+			AccountApplyChargesMaster accountApplyChargesMaster, Fees fees)
+			throws SystemException {
 		accountApplyChargesMaster.setFeeId(fees.getFeeId());
 		accountApplyChargesMaster.setFeeName(fees.getFeeName());
 		accountApplyChargesMaster.setRateOrAmount(fees.getRateOrAmount());
 		accountApplyChargesMaster.setRateFlatFalg(fees.getRateFlatFalg());
 		accountApplyChargesMaster.setFormulaId(fees.getFormulaId());
-		Meeting meeting=fees.getFeeFrequency().getFeeMeetingFrequency();
-		if(meeting !=null){
-			accountApplyChargesMaster.setRecurrenceTypeId(meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
-			accountApplyChargesMaster.setPeriodicity(meeting.getFeeMeetingSchedule().toString());
+		Meeting meeting = fees.getFeeFrequency().getFeeMeetingFrequency();
+		if (meeting != null) {
+			accountApplyChargesMaster.setRecurrenceTypeId(meeting
+					.getMeetingDetails().getRecurrenceType().getRecurrenceId());
+			accountApplyChargesMaster.setPeriodicity(meeting
+					.getFeeMeetingSchedule().toString());
 		}
-		Short paymentType=fees.getFeeFrequency().getFeePaymentId();
-		if(paymentType!=null){
+		Short paymentType = fees.getFeeFrequency().getFeePaymentId();
+		if (paymentType != null) {
 			accountApplyChargesMaster.setPaymentType(paymentType);
 		}
 	}
-	
+
 	/*
-	 * This method checks the recurrence type of fees and account and filters feeList.
+	 * This method checks the recurrence type of fees and account and filters
+	 * feeList.
 	 */
-	private List<AccountApplyChargesMaster> checkForRecurranceType(List<AccountApplyChargesMaster> feeList,Account account) throws SystemException,ApplicationException{
-		Short accountReccurenceTypeId=getReccurenceType(account);
-		List<AccountApplyChargesMaster> chargeFeeList=new ArrayList<AccountApplyChargesMaster>();
-		for(AccountApplyChargesMaster accountApplyChargesMaster : feeList){
-			Short feesReccurenceTypeId=accountApplyChargesMaster.getRecurrenceTypeId();
-			if(feesReccurenceTypeId==null){
+	private List<AccountApplyChargesMaster> checkForRecurranceType(
+			List<AccountApplyChargesMaster> feeList, Account account)
+			throws SystemException, ApplicationException {
+		Short accountReccurenceTypeId = getReccurenceType(account);
+		List<AccountApplyChargesMaster> chargeFeeList = new ArrayList<AccountApplyChargesMaster>();
+		for (AccountApplyChargesMaster accountApplyChargesMaster : feeList) {
+			Short feesReccurenceTypeId = accountApplyChargesMaster
+					.getRecurrenceTypeId();
+			if (feesReccurenceTypeId == null) {
 				chargeFeeList.add(accountApplyChargesMaster);
-			}else if(feesReccurenceTypeId!=null && feesReccurenceTypeId.equals(accountReccurenceTypeId)){
+			} else if (feesReccurenceTypeId != null
+					&& feesReccurenceTypeId.equals(accountReccurenceTypeId)) {
 				chargeFeeList.add(accountApplyChargesMaster);
 			}
 		}
 		return chargeFeeList;
 	}
-	
+
 	/*
-	 * Checks whether current date is greater than account's first installment date. 
+	 * Checks whether current date is greater than account's first installment
+	 * date.
 	 */
-	private boolean isCurrentDateGreaterThenFirstInstallmentDate(Account account,Session session) throws ApplicationException{
-		Short id=null;
-		Query query=null;
+	private boolean isCurrentDateGreaterThenFirstInstallmentDate(
+			Account account, Session session) throws ApplicationException {
+		Short id = null;
+		Query query = null;
 		try {
-			query = session.getNamedQuery(NamedQueryConstants.ACCOUNT_ISCURRENTDATEGREATERTHENFIRSTINSTALLMENTDATE);
-			query.setInteger("accountId",account.getAccountId());
-			id = (Short)query.uniqueResult();
+			query = session
+					.getNamedQuery(NamedQueryConstants.ACCOUNT_ISCURRENTDATEGREATERTHENFIRSTINSTALLMENTDATE);
+			query.setInteger("accountId", account.getAccountId());
+			id = (Short) query.uniqueResult();
 		} catch (HibernateException e) {
 			throw new AccountsApplyChargesException(e);
 		}
-		return (id!=null ? true : false);
+		return (id != null ? true : false);
 	}
+
 	/*
 	 * Filters fees that are time of disbursment type when account type is loan
 	 */
-	private void filteringTimeOfDisbursmentFees(List<AccountApplyChargesMaster> feeList,Account account,boolean currentDateGreaterThenFirstInstallmentDate) throws SystemException,ApplicationException{
-		if(account.getAccountTypeId().equals(AccountConstants.LOAN_TYPE)){
-			Iterator<AccountApplyChargesMaster> accountApplyChargesMasterList=feeList.iterator();
-			while(accountApplyChargesMasterList.hasNext()){
-				AccountApplyChargesMaster accountApplyChargesMaster=accountApplyChargesMasterList.next();
-				Short paymentType=accountApplyChargesMaster.getPaymentType();
-				if(paymentType!=null && paymentType.equals(FeesConstants.TIME_OF_DISBURSMENT)){
-					Short accountState=account.getAccountStateId();
-					if((accountState.equals(AccountStates.LOANACC_PARTIALAPPLICATION) 
-							|| accountState.equals(AccountStates.LOANACC_PENDINGAPPROVAL)
-							|| accountState.equals(AccountStates.LOANACC_APPROVED)
-							|| accountState.equals(AccountStates.LOANACC_DBTOLOANOFFICER))){
+	private void filteringTimeOfDisbursmentFees(
+			List<AccountApplyChargesMaster> feeList, Account account,
+			boolean currentDateGreaterThenFirstInstallmentDate)
+			throws SystemException, ApplicationException {
+		if (account.getAccountTypeId().equals(AccountConstants.LOAN_TYPE)) {
+			Iterator<AccountApplyChargesMaster> accountApplyChargesMasterList = feeList
+					.iterator();
+			while (accountApplyChargesMasterList.hasNext()) {
+				AccountApplyChargesMaster accountApplyChargesMaster = accountApplyChargesMasterList
+						.next();
+				Short paymentType = accountApplyChargesMaster.getPaymentType();
+				if (paymentType != null
+						&& paymentType.equals(FeePayment.TIME_OF_DISBURSMENT
+								.getValue())) {
+					Short accountState = account.getAccountStateId();
+					if ((accountState
+							.equals(AccountStates.LOANACC_PARTIALAPPLICATION)
+							|| accountState
+									.equals(AccountStates.LOANACC_PENDINGAPPROVAL)
+							|| accountState
+									.equals(AccountStates.LOANACC_APPROVED) || accountState
+							.equals(AccountStates.LOANACC_DBTOLOANOFFICER))) {
 						continue;
-					}else{
-						accountApplyChargesMasterList.remove();
-					}
-				}
-			}
-		}
-	}
-	
-	/*
-	 * Filters fees that are time of disbursment type when account type is loan
-	 */
-	private void filteringTimeOfFirstRepaymentFees(List<AccountApplyChargesMaster> feeList,Account account,boolean currentDateGreaterThenFirstInstallmentDate) throws SystemException,ApplicationException{
-		if(account.getAccountTypeId().equals(AccountConstants.LOAN_TYPE)){
-			Iterator<AccountApplyChargesMaster> accountApplyChargesMasterList=feeList.iterator();
-			while(accountApplyChargesMasterList.hasNext()){
-				AccountApplyChargesMaster accountApplyChargesMaster=accountApplyChargesMasterList.next();
-				Short paymentType=accountApplyChargesMaster.getPaymentType();
-				if(paymentType!=null && paymentType.equals(FeesConstants.TIME_OF_FIRSTLOANREPAYMENT)){
-					if(currentDateGreaterThenFirstInstallmentDate){
+					} else {
 						accountApplyChargesMasterList.remove();
 					}
 				}
@@ -609,5 +633,30 @@ public class AccountsApplyChargesDAO extends DAO {
 		}
 	}
 
-		
+	/*
+	 * Filters fees that are time of disbursment type when account type is loan
+	 */
+	private void filteringTimeOfFirstRepaymentFees(
+			List<AccountApplyChargesMaster> feeList, Account account,
+			boolean currentDateGreaterThenFirstInstallmentDate)
+			throws SystemException, ApplicationException {
+		if (account.getAccountTypeId().equals(AccountConstants.LOAN_TYPE)) {
+			Iterator<AccountApplyChargesMaster> accountApplyChargesMasterList = feeList
+					.iterator();
+			while (accountApplyChargesMasterList.hasNext()) {
+				AccountApplyChargesMaster accountApplyChargesMaster = accountApplyChargesMasterList
+						.next();
+				Short paymentType = accountApplyChargesMaster.getPaymentType();
+				if (paymentType != null
+						&& paymentType
+								.equals(FeePayment.TIME_OF_FIRSTLOANREPAYMENT
+										.getValue())) {
+					if (currentDateGreaterThenFirstInstallmentDate) {
+						accountApplyChargesMasterList.remove();
+					}
+				}
+			}
+		}
+	}
+
 }

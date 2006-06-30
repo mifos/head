@@ -49,7 +49,10 @@ import org.mifos.application.fees.business.CategoryTypeEntity;
 import org.mifos.application.fees.business.FeeFormulaEntity;
 import org.mifos.application.fees.business.FeeFrequencyEntity;
 import org.mifos.application.fees.business.FeeStatusEntity;
-import org.mifos.application.fees.util.helpers.FeesConstants;
+import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.fees.util.helpers.FeeFrequencyType;
+import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.util.helpers.Methods;
 
 public class FeeActionForm extends ValidatorActionForm {
 
@@ -78,12 +81,6 @@ public class FeeActionForm extends ValidatorActionForm {
 	private String monthRecurAfter;
 
 	private FeeStatusEntity feeStatus;
-
-	@Deprecated
-	private String rateFlatFlag;
-
-	@Deprecated
-	private String rateOrAmount;
 
 	public FeeActionForm() {
 		super();
@@ -130,7 +127,7 @@ public class FeeActionForm extends ValidatorActionForm {
 		Short frequencyTypeId = feeFrequency.getFeeFrequencyType()
 				.getFeeFrequencyTypeId();
 		if (frequencyTypeId != null) {
-			if (frequencyTypeId.equals(FeesConstants.PERIODIC))
+			if (frequencyTypeId.equals(FeeFrequencyType.PERIODIC.getValue()))
 				buildPeriodicFeeFrequency();
 			else if (categoryType.getCategoryId() != null)
 				buildOneTimeFeeFrequency(isCategoryLoan());
@@ -164,34 +161,6 @@ public class FeeActionForm extends ValidatorActionForm {
 
 	public void setRate(String rate) {
 		this.rate = rate;
-	}
-
-	public String getRateFlatFlag() {
-		if (rate != null && !"".equals(rate.trim())) {
-			rateFlatFlag = FeesConstants.RATE;
-		}
-		if (amount != null && !"".equals(amount.trim())) {
-			rateFlatFlag = FeesConstants.AMOUNT;
-		}
-		return rateFlatFlag;
-	}
-
-	public void setRateFlatFlag(String rateFlatFlag) {
-		this.rateFlatFlag = rateFlatFlag;
-	}
-
-	public String getRateOrAmount() {
-		if (rate != null && !"".equals(rate.trim())) {
-			rateOrAmount = rate;
-		}
-		if (amount != null && !"".equals(amount.trim())) {
-			rateOrAmount = amount;
-		}
-		return rateOrAmount;
-	}
-
-	public void setRateOrAmount(String rateOrAmount) {
-		this.rateOrAmount = rateOrAmount;
 	}
 
 	public String getCustomerCharge() {
@@ -237,8 +206,8 @@ public class FeeActionForm extends ValidatorActionForm {
 	@Override
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		super.reset(mapping, request);
-		String method = request.getParameter(FeesConstants.METHOD);
-		if (method != null && method.equals(FeesConstants.PREVIEW_METHOD)) {
+		String method = request.getParameter(Methods.method.toString());
+		if (method != null && method.equals(Methods.preview.toString())) {
 			adminCheck = null;
 			loanCharge = null;
 			customerCharge = null;
@@ -251,11 +220,11 @@ public class FeeActionForm extends ValidatorActionForm {
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();
-		String methodCalled = request.getParameter(FeesConstants.METHOD);
+		String methodCalled = request.getParameter(Methods.method.toString());
 		if (null != methodCalled
-				&& methodCalled.equals(FeesConstants.PREVIEW_METHOD)) {
+				&& methodCalled.equals(Methods.preview.toString())) {
 			errors.add(super.validate(mapping, request));
-			if (Short.valueOf(FeesConstants.LOAN).equals(
+			if (Short.valueOf(FeeCategory.LOAN.getValue()).equals(
 					categoryType.getCategoryId())) {
 				if (("".equals(rate.trim()) && "".equals(amount.trim()))
 						|| (!"".equals(rate.trim()) && !""
@@ -277,7 +246,7 @@ public class FeeActionForm extends ValidatorActionForm {
 		}
 		if (null != methodCalled
 				&& methodCalled
-						.equalsIgnoreCase(FeesConstants.EDITPREVIEW_METHOD)) {
+						.equalsIgnoreCase(Methods.editPreview.toString())) {
 			if (rate == null && "".equals(amount.trim()))
 				errors.add("amount", new ActionMessage("errors.enter"));
 			if (amount == null && "".equals(rate.trim()))
@@ -295,12 +264,12 @@ public class FeeActionForm extends ValidatorActionForm {
 		Short recurrencId = feeFrequency.getFeeMeetingFrequency()
 				.getMeetingDetails().getRecurrenceType().getRecurrenceId();
 		if (recurrencId != null) {
-			if (recurrencId.equals(FeesConstants.WEEKLY)
+			if (recurrencId.equals(MeetingFrequency.WEEKLY.getValue())
 					&& getWeekRecurAfter() != null
 					&& !"".equals(getWeekRecurAfter().trim()))
 				feeFrequency.getFeeMeetingFrequency().getMeetingDetails()
 						.setRecurAfter(Short.valueOf(getWeekRecurAfter()));
-			else if (recurrencId.equals(FeesConstants.MONTHLY)
+			else if (recurrencId.equals(MeetingFrequency.MONTHLY.getValue())
 					&& getMonthRecurAfter() != null
 					&& !"".equals(getMonthRecurAfter().trim()))
 				feeFrequency.getFeeMeetingFrequency().getMeetingDetails()
@@ -321,6 +290,6 @@ public class FeeActionForm extends ValidatorActionForm {
 
 	private boolean isCategoryLoan() {
 		return categoryType.getCategoryId().equals(
-				Short.valueOf(FeesConstants.LOAN));
+				Short.valueOf(FeeCategory.LOAN.getValue()));
 	}
 }

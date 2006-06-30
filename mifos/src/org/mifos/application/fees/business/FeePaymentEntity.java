@@ -38,23 +38,13 @@
 
 package org.mifos.application.fees.business;
 
-import org.mifos.application.master.util.valueobjects.LookUpEntity;
+import java.util.Set;
+
+import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.master.util.valueobjects.LookUpValueLocale;
 import org.mifos.framework.business.PersistentObject;
-import org.mifos.framework.util.valueobjects.ValueObject;
-import java.util.*;
 
-/**
- * @author ashishsm
- *
- */
-/**
- * A class that represents a row in the 'fee_payment' table.
- * This class may be customized as it is never re-generated
- * after being created.
- */
 public class FeePaymentEntity extends PersistentObject {
-	
 
 	private Short feePaymentId;
 
@@ -69,20 +59,16 @@ public class FeePaymentEntity extends PersistentObject {
 		return feePaymentId;
 	}
 
-	
 	public void setFeePaymentId(Short feePaymentId) {
-
 		this.feePaymentId = feePaymentId;
 	}
 
 	public void setLookUpValueLocale(Set<LookUpValueLocale> lookUpValueLocale) {
-
 		this.lookUpValueLocale = lookUpValueLocale;
 	}
 
 	public Set<LookUpValueLocale> getLookUpValueLocale() {
 		return lookUpValueLocale;
-
 	}
 
 	public Integer getLookUpId() {
@@ -91,6 +77,11 @@ public class FeePaymentEntity extends PersistentObject {
 
 	public void setLookUpId(Integer lookUpId) {
 		this.lookUpId = lookUpId;
+	}
+
+	public boolean isTimeOfDisbursement() {
+		return getFeePaymentId().equals(
+				FeePayment.TIME_OF_DISBURSMENT.getValue());
 	}
 
 }

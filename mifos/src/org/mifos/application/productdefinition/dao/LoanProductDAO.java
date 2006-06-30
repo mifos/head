@@ -57,6 +57,7 @@ import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionCache;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
+import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeesConstants;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.fund.util.valueobjects.Fund;
@@ -362,7 +363,7 @@ public class LoanProductDAO extends PrdOfferingDAO {
 			List<Fees> prdFees = (List<Fees>) query.list();
 			for (Fees fees : prdFees) {
 				if (fees.getFeeFrequency().getFeeFrequencyTypeId().equals(
-						FeesConstants.PERIODIC)) {
+						FeeFrequencyType.PERIODIC.getValue())) {
 					fees.getFeeFrequency().getFeeMeetingFrequency()
 							.getMeetingDetails().getRecurrenceType()
 							.getRecurrenceId();
@@ -504,7 +505,7 @@ public class LoanProductDAO extends PrdOfferingDAO {
 					Fees fees = prdOfferingFees.getFees();
 					fees.getFeeName();
 					if (fees.getFeeFrequency().getFeeFrequencyTypeId().equals(
-							FeesConstants.PERIODIC)) {
+							FeeFrequencyType.PERIODIC.getValue())) {
 						fees.getFeeFrequency().getFeeMeetingFrequency()
 								.getMeetingDetails().getRecurrenceType()
 								.getRecurrenceId();

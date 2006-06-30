@@ -45,9 +45,11 @@ import junit.framework.TestCase;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.fees.business.CategoryTypeEntity;
 import org.mifos.application.fees.business.FeeFrequencyEntity;
-import org.mifos.application.fees.business.FeeStatusEntity;
 import org.mifos.application.fees.business.FeesBO;
-import org.mifos.application.fees.util.helpers.FeesConstants;
+import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.fees.util.helpers.FeeFrequencyType;
+import org.mifos.application.fees.util.helpers.FeePayment;
+import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -66,14 +68,9 @@ public class TestFeesPersistenceService extends TestCase {
 		assertEquals("The fee name entered :", fees.getFeeName(),
 				"One time fees");
 		assertEquals("The category entered :", fees.getCategoryType()
-				.getCategoryId(), Short.valueOf(FeesConstants.CLIENT));
-		assertEquals("The amount entered :", fees.getRateOrAmount(), Double
-				.valueOf("100"));
-		assertEquals("The rate flag should be 1:", fees.getRateFlatFlag(),
-				Short.valueOf("0"));
-		assertEquals("The frequency of the fees :", fees.getFeeFrequency()
-				.getFeeFrequencyType().getFeeFrequencyTypeId(),
-				FeesConstants.ONETIME);
+				.getCategoryId(), Short.valueOf(FeeCategory.CLIENT.getValue()));
+		assertEquals("The rate flag should be 1:", fees.isRateFlat(), false);
+		assertEquals("The frequency of the fees :", fees.isOneTime(), true);
 	}
 
 	public void testGetFees() {
@@ -84,38 +81,32 @@ public class TestFeesPersistenceService extends TestCase {
 		assertEquals("The fee name entered :", fees.getFeeName(),
 				"One Time Fee");
 		assertEquals("The category entered :", fees.getCategoryType()
-				.getCategoryId(), Short.valueOf(FeesConstants.ALLCUSTOMERS));
-		assertEquals("The amount entered :", fees.getRateOrAmount(), Double
-				.valueOf("100"));
-		assertEquals("The frequency of the fees :", fees.getFeeFrequency()
-				.getFeeFrequencyType().getFeeFrequencyTypeId(),
-				FeesConstants.ONETIME);
+				.getCategoryId(), Short.valueOf(FeeCategory.ALLCUSTOMERS
+				.getValue()));
+		assertEquals("The frequency of the fees :", fees.isOneTime(), true);
 	}
 
 	private FeesBO buildFees() throws Exception {
 		UserContext userContext = TestObjectFactory.getUserContext();
 		FeesBO fees = new FeesBO(userContext);
-		FeeFrequencyEntity feeFrequency = new FeeFrequencyEntity();
-		fees.setFeeFrequency(feeFrequency);
 		fees.setFeeName("One time fees");
+
+		fees.setFeeFrequency(new FeeFrequencyEntity());
+		fees.setCategoryType(new CategoryTypeEntity());
 		fees.getFeeFrequency().getFeeFrequencyType().setFeeFrequencyTypeId(
-				FeesConstants.ONETIME);
+				FeeFrequencyType.ONETIME.getValue());
 		fees.getFeeFrequency().getFeePayment().setFeePaymentId(
-				FeesConstants.UPFRONT);
-		CategoryTypeEntity categoryType = new CategoryTypeEntity();
-		fees.setCategoryType(categoryType);
+				FeePayment.UPFRONT.getValue());
 		fees.getCategoryType().setCategoryId(
-				Short.valueOf(FeesConstants.CLIENT));
+				Short.valueOf(FeeCategory.CLIENT.getValue()));
 		fees.setRateFlat(false);
 		fees.setAmount("100.0");
-		fees.setRateOrAmount(Double.valueOf(100));
-		GLCodeEntity glCodeEntity = (GLCodeEntity) HibernateUtil.getSessionTL()
-				.get(GLCodeEntity.class, Short.valueOf("7"));
-		fees.setGlCodeEntity(glCodeEntity);
+		fees.setGlCodeEntity((GLCodeEntity) HibernateUtil.getSessionTL().get(
+				GLCodeEntity.class, Short.valueOf("7")));
 
 		fees.setCreatedDate(new Date());
 		fees.setCreatedBy(userContext.getId());
-		fees.modifyStatus(FeesConstants.STATUS_ACTIVE);
+		fees.modifyStatus(FeeStatus.ACTIVE);
 		fees.setOffice(TestObjectFactory.getOffice(userContext.getBranchId()));
 		fees.getFeeFrequency().buildFeeFrequency();
 		return fees;

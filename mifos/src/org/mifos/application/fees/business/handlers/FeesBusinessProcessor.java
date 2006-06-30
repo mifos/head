@@ -43,6 +43,8 @@ package org.mifos.application.fees.business.handlers;
 import java.util.Date;
 
 import org.mifos.application.fees.dao.FeesDAO;
+import org.mifos.application.fees.util.helpers.FeeFrequencyType;
+import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.fees.util.helpers.FeesConstants;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.framework.business.handlers.MifosBusinessProcessor;
@@ -132,7 +134,7 @@ public class FeesBusinessProcessor extends MifosBusinessProcessor {
 		fees.setUpdatedDate(null);
 		fees.setUpdatedOfficeId(null);
 		fees.setGlobalFeeNum(null);
-		fees.setStatus(new Short(FeesConstants.STATUS_ACTIVE));
+		fees.setStatus(new Short(FeeStatus.ACTIVE.getValue()));
 		fees.setOfficeId(null);
 		if(null!=fees.getFormulaId() && fees.getFormulaId()==0){
 			fees.setFormulaId(null);
@@ -141,9 +143,9 @@ public class FeesBusinessProcessor extends MifosBusinessProcessor {
 	
 	public void previousInitial(Context context)throws SystemException,ApplicationException{
 		Fees fees=(Fees)context.getValueObject();
-		if(fees.getFeeFrequency().getFeeFrequencyTypeId()==FeesConstants.ONETIME){
+		if(fees.getFeeFrequency().getFeeFrequencyTypeId()==FeeFrequencyType.ONETIME.getValue()){
 			fees.getFeeFrequency().setFeeMeetingFrequency(null);  
-		}else if(fees.getFeeFrequency().getFeeFrequencyTypeId()==FeesConstants.PERIODIC){
+		}else if(fees.getFeeFrequency().getFeeFrequencyTypeId()==FeeFrequencyType.PERIODIC.getValue()){
 			fees.getFeeFrequency().setFeePaymentId(null);
 		}
 	}

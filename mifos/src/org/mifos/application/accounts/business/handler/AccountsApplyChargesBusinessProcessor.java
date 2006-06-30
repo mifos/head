@@ -40,8 +40,6 @@ package org.mifos.application.accounts.business.handler;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
@@ -73,7 +71,9 @@ import org.mifos.application.customer.util.valueobjects.Customer;
 import org.mifos.application.customer.util.valueobjects.CustomerMaster;
 import org.mifos.application.customer.util.valueobjects.CustomerMeeting;
 import org.mifos.application.fees.dao.FeesDAO;
-import org.mifos.application.fees.util.helpers.FeesConstants;
+import org.mifos.application.fees.util.helpers.FeeFrequencyType;
+import org.mifos.application.fees.util.helpers.FeePayment;
+import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.office.util.valueobjects.Office;
@@ -143,7 +143,7 @@ public class AccountsApplyChargesBusinessProcessor extends
 	 * @see org.mifos.framework.business.handlers.MifosBusinessProcessor#create(org.mifos.framework.util.valueobjects.Context)
 	 */
 	@Override
-	//TODO needs refactored to segrate loan and customer fee handling.
+	// TODO needs refactored to segrate loan and customer fee handling.
 	public void create(Context context) throws SystemException,
 			ApplicationException {
 		try {
@@ -175,42 +175,64 @@ public class AccountsApplyChargesBusinessProcessor extends
 
 				Account account = aacdao.getAccount(accountId);
 
-				
-
 				if (accountActionDate != null) {
 					if (feeId.equals(AccountConstants.MISC_PENALTY)) {
 						accountActionDate.setMiscPenalty(accountActionDate
-								.getMiscPenalty().add(new Money(Configuration.getInstance().getSystemConfig().getCurrency(),aac.getChargeAmount())));
+								.getMiscPenalty().add(
+										new Money(Configuration.getInstance()
+												.getSystemConfig()
+												.getCurrency(), aac
+												.getChargeAmount())));
 					} else {
 						accountActionDate.setMiscFee(accountActionDate
-								.getMiscFee().add(new Money(Configuration.getInstance().getSystemConfig().getCurrency(),aac.getChargeAmount())));
+								.getMiscFee().add(
+										new Money(Configuration.getInstance()
+												.getSystemConfig()
+												.getCurrency(), aac
+												.getChargeAmount())));
 					}
 
 					accountActionDate.setAccountFeesActionDetail(null);
 					List<AccountActionDate> accountActionDateList = new ArrayList<AccountActionDate>();
 					accountActionDateList.add(accountActionDate);
-					
-					LoanSummary loanSummary=null;
-					LoanActivity loanActivity=null;
-					if(account instanceof Loan){
-						Loan loan = (Loan)account;
+
+					LoanSummary loanSummary = null;
+					LoanActivity loanActivity = null;
+					if (account instanceof Loan) {
+						Loan loan = (Loan) account;
 						loanSummary = loan.getLoanSummary();
-						loanActivity= new LoanActivity();
-						
-						if(feeId.equals(AccountConstants.MISC_PENALTY)){
+						loanActivity = new LoanActivity();
+
+						if (feeId.equals(AccountConstants.MISC_PENALTY)) {
 							loanSummary.setOriginalPenalty(loanSummary
-									.getOriginalPenalty()
-									.add(new Money(Configuration.getInstance().getSystemConfig().getCurrency(),aac.getChargeAmount())));
-							loanActivity.setComments(AccountConstants.MISC_PENALTY_APPLIED);
-							loanActivity.setPenalty(new Money(Configuration.getInstance().getSystemConfig().getCurrency(),aac.getChargeAmount()));
-						}else{
+									.getOriginalPenalty().add(
+											new Money(Configuration
+													.getInstance()
+													.getSystemConfig()
+													.getCurrency(), aac
+													.getChargeAmount())));
+							loanActivity
+									.setComments(AccountConstants.MISC_PENALTY_APPLIED);
+							loanActivity.setPenalty(new Money(Configuration
+									.getInstance().getSystemConfig()
+									.getCurrency(), aac.getChargeAmount()));
+						} else {
 							loanSummary.setOriginalFees(loanSummary
-									.getOriginalFees().add(new Money(Configuration.getInstance().getSystemConfig().getCurrency(),aac.getChargeAmount())));
-							loanActivity.setComments(AccountConstants.MISC_FEES_APPLIED);
-							loanActivity.setFee(new Money(Configuration.getInstance().getSystemConfig().getCurrency(),aac.getChargeAmount()));
+									.getOriginalFees().add(
+											new Money(Configuration
+													.getInstance()
+													.getSystemConfig()
+													.getCurrency(), aac
+													.getChargeAmount())));
+							loanActivity
+									.setComments(AccountConstants.MISC_FEES_APPLIED);
+							loanActivity.setFee(new Money(Configuration
+									.getInstance().getSystemConfig()
+									.getCurrency(), aac.getChargeAmount()));
 						}
 						loanActivity.setAccount(account);
-						loanActivity.setPersonnelId(context.getUserContext().getId());
+						loanActivity.setPersonnelId(context.getUserContext()
+								.getId());
 						loanActivity.setPrincipal(new Money());
 						loanActivity.setInterest(new Money());
 						loanActivity.setFeeOutstanding(loanSummary
@@ -225,27 +247,40 @@ public class AccountsApplyChargesBusinessProcessor extends
 						loanActivity.setPrincipalOutstanding(loanSummary
 								.getOriginalPrincipal().subtract(
 										loanSummary.getPrincipalPaid()));
-						handleRoundingOfInstallments(account,accountActionDateList);
+						handleRoundingOfInstallments(account,
+								accountActionDateList);
 					}
-					
-					
-					CustomerActivityEntity customerActivityEntity=null;
-					if(account instanceof CustomerAccount){
-						if(feeId.equals(AccountConstants.MISC_PENALTY)){
-							customerActivityEntity=new CustomerActivityEntity(new PersonnelPersistenceService().getPersonnel(context.getUserContext().getId()),
+
+					CustomerActivityEntity customerActivityEntity = null;
+					if (account instanceof CustomerAccount) {
+						if (feeId.equals(AccountConstants.MISC_PENALTY)) {
+							customerActivityEntity = new CustomerActivityEntity(
+									new PersonnelPersistenceService()
+											.getPersonnel(context
+													.getUserContext().getId()),
 									AccountConstants.MISC_PENALTY_APPLIED,
-									new Money(String.valueOf(aac.getChargeAmount())));
-							customerActivityEntity.setCustomerAccount((CustomerAccountBO)new AccountPersistanceService().getAccount(accountId));
-						}else{
-							customerActivityEntity=new CustomerActivityEntity(new PersonnelPersistenceService().getPersonnel(context.getUserContext().getId()),
+									new Money(String.valueOf(aac
+											.getChargeAmount())));
+							customerActivityEntity
+									.setCustomerAccount((CustomerAccountBO) new AccountPersistanceService()
+											.getAccount(accountId));
+						} else {
+							customerActivityEntity = new CustomerActivityEntity(
+									new PersonnelPersistenceService()
+											.getPersonnel(context
+													.getUserContext().getId()),
 									AccountConstants.MISC_FEES_APPLIED,
-									new Money(String.valueOf(aac.getChargeAmount())));
-							customerActivityEntity.setCustomerAccount((CustomerAccountBO)new AccountPersistanceService().getAccount(accountId));
+									new Money(String.valueOf(aac
+											.getChargeAmount())));
+							customerActivityEntity
+									.setCustomerAccount((CustomerAccountBO) new AccountPersistanceService()
+											.getAccount(accountId));
 						}
 					}
 
 					aacdao.saveAccountActionDateList(accountActionDateList,
-							null, loanSummary, loanActivity,customerActivityEntity);
+							null, loanSummary, loanActivity,
+							customerActivityEntity);
 				}
 
 			} else {
@@ -262,13 +297,12 @@ public class AccountsApplyChargesBusinessProcessor extends
 				Account account = aacdao.getAccount(accountId);
 				List<AccountActionDate> accountActionDateList = null;
 				if (fee.getFeeFrequency().getFeeFrequencyTypeId().equals(
-						FeesConstants.ONETIME)
+						FeeFrequencyType.ONETIME.getValue())
 						&& (fee.getFeeFrequency().getFeePaymentId().equals(
-								FeesConstants.TIME_OF_DISBURSMENT) || fee
-								.getFeeFrequency()
-								.getFeePaymentId()
-								.equals(
-										FeesConstants.TIME_OF_FIRSTLOANREPAYMENT))) {
+								FeePayment.TIME_OF_DISBURSMENT.getValue()) || fee
+								.getFeeFrequency().getFeePaymentId().equals(
+										FeePayment.TIME_OF_FIRSTLOANREPAYMENT
+												.getValue()))) {
 					accountActionDateList = new ArrayList<AccountActionDate>();
 					for (AccountActionDate accountActionDate : account
 							.getAccountActionDateSet()) {
@@ -295,9 +329,11 @@ public class AccountsApplyChargesBusinessProcessor extends
 
 						accountFee.setFees(fee);
 
-						accountFee.setAccountFeeAmount(new Money(Configuration.getInstance().getSystemConfig().getCurrency(),aac.getChargeAmount()));
+						accountFee.setAccountFeeAmount(new Money(Configuration
+								.getInstance().getSystemConfig().getCurrency(),
+								aac.getChargeAmount()));
 						accountFee.setFeeAmount(aac.getChargeAmount());
-						accountFee.setFeeStatus(FeesConstants.STATUS_ACTIVE);
+						accountFee.setFeeStatus(FeeStatus.ACTIVE.getValue());
 						accountFee.setStatusChangeDate(new Date(System
 								.currentTimeMillis()));
 
@@ -306,7 +342,8 @@ public class AccountsApplyChargesBusinessProcessor extends
 						throw new AccountsApplyChargesException(
 								AccountConstants.UNEXPECTEDERROR);
 					}
-					accountFee.setLastAppliedDate(accountActionDateList.get(0).getActionDate());
+					accountFee.setLastAppliedDate(accountActionDateList.get(0)
+							.getActionDate());
 					accountFee.setAccount(account);
 					accountFeeSet = new HashSet<AccountFees>();
 					accountFeeSet.add(accountFee);
@@ -315,13 +352,14 @@ public class AccountsApplyChargesBusinessProcessor extends
 							.getAccountFeesSet();
 					for (AccountFees accountFees : accountFeeSetFromAccount) {
 						if (accountFees.getFees().getFeeId().equals(feeId)) {
-							accountFees
-									.setFeeStatus(FeesConstants.STATUS_ACTIVE);
+							accountFees.setFeeStatus(FeeStatus.ACTIVE
+									.getValue());
 							accountFees.setStatusChangeDate(new Date(System
 									.currentTimeMillis()));
 							accountFee = accountFees;
 							accountFee.setFeeAmount(aac.getChargeAmount());
-							accountFee.setLastAppliedDate(accountActionDateList.get(0).getActionDate());
+							accountFee.setLastAppliedDate(accountActionDateList
+									.get(0).getActionDate());
 							accountFeeSet = new HashSet<AccountFees>();
 							accountFeeSet.add(accountFees);
 						}
@@ -329,21 +367,24 @@ public class AccountsApplyChargesBusinessProcessor extends
 				}
 				Date feeStartDate = new Date(System.currentTimeMillis());
 				if (fee.getFeeFrequency().getFeeFrequencyTypeId().equals(
-						FeesConstants.ONETIME)
+						FeeFrequencyType.ONETIME.getValue())
 						&& (fee.getFeeFrequency().getFeePaymentId().equals(
-								FeesConstants.TIME_OF_DISBURSMENT) || fee
-								.getFeeFrequency()
-								.getFeePaymentId()
-								.equals(
-										FeesConstants.TIME_OF_FIRSTLOANREPAYMENT))) {
+								FeePayment.TIME_OF_DISBURSMENT.getValue()) || fee
+								.getFeeFrequency().getFeePaymentId().equals(
+										FeePayment.TIME_OF_FIRSTLOANREPAYMENT
+												.getValue()))) {
 					feeStartDate = ((Loan) account).getDisbursementDate();
 				} else {
 					if (doesFeeInstallmentStartDateNeedToBeChanged(
-							accountActionDateList, fee) || aacdao.doesLastPaidInstallmentFallsOnCurrentDate(accountId,AccountConstants.PAYMENT_PAID)) {
+							accountActionDateList, fee)
+							|| aacdao
+									.doesLastPaidInstallmentFallsOnCurrentDate(
+											accountId,
+											AccountConstants.PAYMENT_PAID)) {
 						Calendar feeDate = new GregorianCalendar();
 						feeDate.setTime(feeStartDate);
 						Calendar calendarTypeNewDate = new GregorianCalendar(
-								feeDate.get(Calendar.YEAR) , feeDate
+								feeDate.get(Calendar.YEAR), feeDate
 										.get(Calendar.MONTH), (feeDate
 										.get(Calendar.DATE) + 1));
 						feeStartDate = calendarTypeNewDate.getTime();
@@ -362,50 +403,54 @@ public class AccountsApplyChargesBusinessProcessor extends
 						&& ((Loan) account).getIntrestAtDisbursement().equals(
 								LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT)
 						&& fee.getFeeFrequency().getFeeFrequencyTypeId()
-								.equals(FeesConstants.ONETIME)
+								.equals(FeeFrequencyType.ONETIME.getValue())
 						&& fee.getFeeFrequency().getFeePaymentId().equals(
-								FeesConstants.TIME_OF_DISBURSMENT)) {
+								FeePayment.TIME_OF_DISBURSMENT.getValue())) {
 					accountActionDateList = RepaymentScheduleHelper
 							.getAccountActionFee(accountActionDateList,
 									feeInstallment);
-					
+
 				} else {
 					accountActionDateList = removeTimeOfDisbursmentFees(
 							RepaymentScheduleHelper.getAccountActionFee(
 									accountActionDateList, feeInstallment),
 							accountFee.getFees());
 				}
-				
+
 				Money feeAmount = new Money();
-				if (account instanceof Loan){
-					if(!fee.getFeeFrequency().getFeeFrequencyTypeId()
-								.equals(FeesConstants.ONETIME)){ 
+				if (account instanceof Loan) {
+					if (!fee.getFeeFrequency().getFeeFrequencyTypeId().equals(
+							FeeFrequencyType.ONETIME.getValue())) {
 						for (AccountActionDate accountActionDate : accountActionDateList) {
-							feeAmount = feeAmount.add(accountActionDate.getTotalFeesAmountForId(accountFee.getFees().getFeeId()));
+							feeAmount = feeAmount.add(accountActionDate
+									.getTotalFeesAmountForId(accountFee
+											.getFees().getFeeId()));
 						}
-					}else{
+					} else {
 						feeAmount = accountFee.getAccountFeeAmount();
 					}
 				}
-				
+
 				/* save the loan summary also */
 				LoanSummary loanSummary = null;
-				LoanActivity loanActivity=null; 
+				LoanActivity loanActivity = null;
 				if (account instanceof Loan) {
-					handleRoundingOfInstallments(account,accountActionDateList);
+					handleRoundingOfInstallments(account, accountActionDateList);
 					Loan loan = (Loan) account;
 					loanSummary = loan.getLoanSummary();
 					loanSummary.setOriginalFees(loanSummary.getOriginalFees()
 							.add(repaymentSchedule.getFees()));
-				
+
 					loanActivity = new LoanActivity();
 					loanActivity.setAccount(account);
-					loanActivity.setComments(fee.getFeeName()+" "+AccountConstants.FEES_APPLIED);
+					loanActivity.setComments(fee.getFeeName() + " "
+							+ AccountConstants.FEES_APPLIED);
 					loanActivity.setPrincipal(new Money());
 					loanActivity.setInterest(new Money());
 					loanActivity.setFee(feeAmount);
-					loanActivity.setFeeOutstanding(loanSummary.getOriginalFees()
-							.subtract(loanSummary.getFeesPaid()));
+					loanActivity.setFeeOutstanding(loanSummary
+							.getOriginalFees().subtract(
+									loanSummary.getFeesPaid()));
 					loanActivity.setInterestOutstanding(loanSummary
 							.getOriginalInterest().subtract(
 									loanSummary.getInterestPaid()));
@@ -415,19 +460,26 @@ public class AccountsApplyChargesBusinessProcessor extends
 					loanActivity.setPrincipalOutstanding(loanSummary
 							.getOriginalPrincipal().subtract(
 									loanSummary.getPrincipalPaid()));
-					loanActivity.setPersonnelId(context.getUserContext().getId());
+					loanActivity.setPersonnelId(context.getUserContext()
+							.getId());
 				}
-				
-				CustomerActivityEntity customerActivityEntity=null;
-				if(account instanceof CustomerAccount){
-					customerActivityEntity=new CustomerActivityEntity(new PersonnelPersistenceService().getPersonnel(context.getUserContext().getId()),
-							fee.getFeeName()+" "+AccountConstants.FEES_APPLIED,
-							new Money(String.valueOf(aac.getChargeAmount())));
-					customerActivityEntity.setCustomerAccount((CustomerAccountBO)new AccountPersistanceService().getAccount(accountId));
+
+				CustomerActivityEntity customerActivityEntity = null;
+				if (account instanceof CustomerAccount) {
+					customerActivityEntity = new CustomerActivityEntity(
+							new PersonnelPersistenceService()
+									.getPersonnel(context.getUserContext()
+											.getId()), fee.getFeeName() + " "
+									+ AccountConstants.FEES_APPLIED, new Money(
+									String.valueOf(aac.getChargeAmount())));
+					customerActivityEntity
+							.setCustomerAccount((CustomerAccountBO) new AccountPersistanceService()
+									.getAccount(accountId));
 				}
 				// save the list
 				aacdao.saveAccountActionDateList(accountActionDateList,
-						accountFee, loanSummary, loanActivity,customerActivityEntity);
+						accountFee, loanSummary, loanActivity,
+						customerActivityEntity);
 			}
 		} catch (ApplicationException ae) {
 			throw ae;
@@ -515,7 +567,9 @@ public class AccountsApplyChargesBusinessProcessor extends
 				.getIntrestAtDisbursement().equals(
 						LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT) ? true
 				: false);
-		inputs.setIsPrincipalInLastPayment(loan.getLoanOffering().getPrinDueLastInstFlag().equals(Short.valueOf("1"))?true:false);
+		inputs.setIsPrincipalInLastPayment(loan.getLoanOffering()
+				.getPrinDueLastInstFlag().equals(Short.valueOf("1")) ? true
+				: false);
 		inputs.setRepaymentFrequency(meeting);
 		inputs.setNoOfInstallments(loan.getNoOfInstallments());
 		inputs.setPrincipal(loan.getLoanAmount());
@@ -604,7 +658,7 @@ public class AccountsApplyChargesBusinessProcessor extends
 				Fees fees = accountFees.getFees();
 				if (fees.getFeeId().equals(feeId)
 						&& !fees.getFeeFrequency().getFeeFrequencyTypeId()
-								.equals(FeesConstants.ONETIME)) {
+								.equals(FeeFrequencyType.ONETIME.getValue())) {
 					flag = true;
 					break;
 				}
@@ -619,9 +673,11 @@ public class AccountsApplyChargesBusinessProcessor extends
 	private List<AccountActionDate> removeTimeOfDisbursmentFees(
 			List<AccountActionDate> accountActionDateList, Fees fees) {
 		Short paymentType = fees.getFeeFrequency().getFeePaymentId();
-		if (null != accountActionDateList && !accountActionDateList.isEmpty()
+		if (null != accountActionDateList
+				&& !accountActionDateList.isEmpty()
 				&& paymentType != null
-				&& paymentType.equals(FeesConstants.TIME_OF_DISBURSMENT)) {
+				&& paymentType
+						.equals(FeePayment.TIME_OF_DISBURSMENT.getValue())) {
 			for (AccountActionDate accountActionDate : accountActionDateList) {
 				Set<AccountFeesActionDetail> accountFeesActionDetailSet = accountActionDate
 						.getAccountFeesActionDetail();
@@ -664,29 +720,38 @@ public class AccountsApplyChargesBusinessProcessor extends
 		}
 		return false;
 	}
-	
-	private AccountActionDate getLastInstallment(Set<AccountActionDate> accountActionDates){
-		AccountActionDate lastInstallment=null;
-		for(AccountActionDate accountActionDate :  accountActionDates){
-			lastInstallment=accountActionDate;
+
+	private AccountActionDate getLastInstallment(
+			Set<AccountActionDate> accountActionDates) {
+		AccountActionDate lastInstallment = null;
+		for (AccountActionDate accountActionDate : accountActionDates) {
+			lastInstallment = accountActionDate;
 		}
 		return lastInstallment;
 	}
-	
-	private void handleRoundingOfInstallments(Account account,List<AccountActionDate> accountActionDateList){
-		Loan loan=(Loan)account;
-		Set<AccountActionDate> accountActionDateSet=loan.getAccountActionDateSet();
-		AccountActionDate lastInstallment=getLastInstallment(accountActionDateSet);
-		boolean flag=true;
-		for(AccountActionDate accountActionDate :  accountActionDateList){
-			if(accountActionDate.equals(lastInstallment))
-				flag=false;
+
+	private void handleRoundingOfInstallments(Account account,
+			List<AccountActionDate> accountActionDateList) {
+		Loan loan = (Loan) account;
+		Set<AccountActionDate> accountActionDateSet = loan
+				.getAccountActionDateSet();
+		AccountActionDate lastInstallment = getLastInstallment(accountActionDateSet);
+		boolean flag = true;
+		for (AccountActionDate accountActionDate : accountActionDateList) {
+			if (accountActionDate.equals(lastInstallment))
+				flag = false;
 		}
-		if(flag)
+		if (flag)
 			accountActionDateList.add(lastInstallment);
-		Boolean isInterestDeductedAtDisbursment =loan.getIntrestAtDisbursement().equals(LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT) ? true: false;
-		Boolean isPrincipalDueInLastInstallment= loan.getLoanOffering().getPrinDueLastInstFlag().equals(Short.valueOf("1"))?true:false;
-		LoanHelpers.roundAccountActionsDate(isInterestDeductedAtDisbursment,isPrincipalDueInLastInstallment,accountActionDateList);
+		Boolean isInterestDeductedAtDisbursment = loan
+				.getIntrestAtDisbursement().equals(
+						LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT) ? true
+				: false;
+		Boolean isPrincipalDueInLastInstallment = loan.getLoanOffering()
+				.getPrinDueLastInstFlag().equals(Short.valueOf("1")) ? true
+				: false;
+		LoanHelpers.roundAccountActionsDate(isInterestDeductedAtDisbursment,
+				isPrincipalDueInLastInstallment, accountActionDateList);
 	}
 
 }
