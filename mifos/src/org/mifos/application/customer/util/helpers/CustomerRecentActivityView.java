@@ -25,7 +25,7 @@ public class CustomerRecentActivityView extends View {
 	
 	private Money amount;
 	
-	private String postedBy;
+	private String postedBy="-";
 	
 	private Locale locale=null;
 	

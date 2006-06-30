@@ -137,7 +137,8 @@ public class CustomerBusinessService extends BusinessService{
 		customerRecentActivityView.setActivityDate(customerActivityEntity.getCreatedDate());
 		customerRecentActivityView.setDescription(customerActivityEntity.getDescription());
 		customerRecentActivityView.setAmount(removeSign(customerActivityEntity.getAmount()));
-		customerRecentActivityView.setPostedBy(customerActivityEntity.getPersonnel().getDisplayName());
+		if(customerActivityEntity.getPersonnel()!=null)
+			customerRecentActivityView.setPostedBy(customerActivityEntity.getPersonnel().getDisplayName());
 		return customerRecentActivityView;
 	}
 

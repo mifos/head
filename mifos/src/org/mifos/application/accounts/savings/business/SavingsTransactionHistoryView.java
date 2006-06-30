@@ -5,7 +5,6 @@ import java.util.Locale;
 
 import org.mifos.framework.business.View;
 import org.mifos.framework.struts.tags.DateHelper;
-import org.mifos.framework.util.helpers.Money;
 
 public class SavingsTransactionHistoryView extends View {
 
@@ -20,12 +19,9 @@ public class SavingsTransactionHistoryView extends View {
 	private String balance;
 	private String clientName = "-";
 	private Date postedDate;
-	private String postedBy;
+	private String postedBy="-";
 	private String notes = "-";
 	private Locale locale=null;
-	private String userPrefferedTransactionDate=null;
-	private String userPrefferedPostedDate=null;
-	
 	
 	public String getNotes() {
 		return notes;
