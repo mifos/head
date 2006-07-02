@@ -5,7 +5,7 @@
 
 
 
-* Copyright © 2005-2006 Grameen Foundation USA
+* Copyright (c) 2005-2006 Grameen Foundation USA
 
 * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
 
