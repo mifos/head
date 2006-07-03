@@ -770,7 +770,14 @@ public class ActivityMapper {
 
 		activityMap.put("/customerAction-getAllActivity",
 				SecurityConstants.VIEW);
+		
 
+		// mapping for accountPayment
+		activityMap.put("/applyPaymentAction-load-loan",	SecurityConstants.LOAN_MAKE_PAYMENT_TO_ACCOUNT);
+		activityMap.put("/applyPaymentAction-preview",	SecurityConstants.VIEW);
+		activityMap.put("/applyPaymentAction-previous",SecurityConstants.VIEW);
+		activityMap.put("/applyPaymentAction-applyPayment",SecurityConstants.VIEW);
+		activityMap.put("/applyPaymentAction-cancel",SecurityConstants.VIEW);
 	}
 
 	private static ActivityMapper instance = new ActivityMapper();

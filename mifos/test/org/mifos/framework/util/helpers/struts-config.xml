@@ -199,6 +199,9 @@
 		<!-- Apply Adjustment action form for customer -->				
 		<form-bean name="custApplyAdjustmentActionForm"
 				type="org.mifos.application.customer.struts.actionforms.CustomerApplyAdjustmentActionForm" />
+		<!-- Apply Payment Action Form for account -->
+		<form-bean name="applyPaymentActionForm" type="org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActionForm" />
+				
 	</form-beans>
 	<global-exceptions>
 		<exception type="org.mifos.framework.exceptions.SystemException"
@@ -1652,7 +1655,13 @@
        		<forward name="viewGroupActivity" 	path="/pages/application/group/jsp/viewGroupActivity.jsp"/>
        		<forward name="viewCenterActivity" 	path="/pages/application/center/jsp/viewCenterActivity.jsp"/>
   		</action>
-  		
+  		<action path="/applyPaymentAction" type="org.mifos.application.accounts.struts.action.AccountApplyPaymentAction" name="applyPaymentActionForm" parameter="method" 
+			input="/applyPaymentAction.do?method=validate" scope="session" validate="true">
+			<forward name="load_success" path="/pages/application/account/jsp/applypayment.jsp" />
+			<forward name="preview_success" path="/pages/application/account/jsp/reviewapplypayment.jsp" />
+			<forward name="previous_success" path="/pages/application/account/jsp/applypayment.jsp"/>
+			<forward name="loan_detail_page" path="/loanAction.do?method=get" />
+		</action>
 	</action-mappings>
 
 	<controller nocache="true"

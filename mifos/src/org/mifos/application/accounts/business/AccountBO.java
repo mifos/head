@@ -39,11 +39,9 @@
 package org.mifos.application.accounts.business;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -59,7 +57,6 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.fees.business.FeesBO;
-import org.mifos.application.fees.util.helpers.FeesConstants;
 import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -774,6 +771,10 @@ public class AccountBO extends BusinessObject {
 				return accountFeesEntity;
 			}
 		}
+		return null;
+	}
+	
+	public Money getTotalAmountDue(){
 		return null;
 	}
 }
