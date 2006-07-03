@@ -63,13 +63,10 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import servletunit.struts.MockStrutsTestCase;
 
 public class TestFeeAction extends MockStrutsTestCase {
-	public TestFeeAction() {
-		super();
-	}
 
-	public TestFeeAction(String names) {
-		super(names);
-	}
+	private final Short formulaId = (short) 1;
+
+	private final String glCodeId = "7";
 
 	@Override
 	protected void setUp() throws Exception {
@@ -182,7 +179,7 @@ public class TestFeeAction extends MockStrutsTestCase {
 				FeeFrequencyType.ONETIME.getValue().toString());
 		addRequestParameter("customerCharge", FeePayment.UPFRONT.getValue()
 				.toString());
-		addRequestParameter("glCodeEntity.glcodeId", "1");
+		addRequestParameter("glCodeEntity.glcodeId", glCodeId);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -191,11 +188,9 @@ public class TestFeeAction extends MockStrutsTestCase {
 		HttpSession session = request.getSession();
 		FeesBO fees = (FeesBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, session);
-		assertEquals("The category entered :", fees.getCategoryType()
-				.getCategoryId(), Short.valueOf(FeeCategory.ALLCUSTOMERS
-				.getValue()));
-		assertEquals("The fee name entered :", fees.getFeeName(),
-				"Customer One time");
+		assertEquals(Short.valueOf(FeeCategory.ALLCUSTOMERS.getValue()), fees
+				.getCategoryType().getCategoryId());
+		assertEquals("Customer One time", fees.getFeeName());
 	}
 
 	public void testSuccessfulCreateOneTimeFee() {
@@ -212,12 +207,14 @@ public class TestFeeAction extends MockStrutsTestCase {
 				FeeFrequencyType.ONETIME.getValue().toString());
 		addRequestParameter("customerCharge", FeePayment.UPFRONT.getValue()
 				.toString());
-		addRequestParameter("glCodeEntity.glcodeId", "1");
+		addRequestParameter("glCodeEntity.glcodeId", glCodeId);
 		actionPerform();
 		verifyNoActionErrors();
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "create");
-		addRequestParameter("org.apache.struts.taglib.html.TOKEN",(String)request.getSession().getAttribute("org.apache.struts.action.TOKEN"));
+		addRequestParameter("org.apache.struts.taglib.html.TOKEN",
+				(String) request.getSession().getAttribute(
+						"org.apache.struts.action.TOKEN"));
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.create_success.toString());
@@ -227,24 +224,21 @@ public class TestFeeAction extends MockStrutsTestCase {
 				session);
 		fee = (FeesBO) TestObjectFactory
 				.getObject(FeesBO.class, fee.getFeeId());
-		assertEquals("The fee name entered :", fee.getFeeName(),
-				"Customer One time");
-		assertEquals("The category entered :", fee.getCategoryType()
-				.getCategoryId(), Short.valueOf(FeeCategory.ALLCUSTOMERS
-				.getValue()));
-		assertEquals("The fee amount entered :", fee.getFeeAmount().toString(),
-				"100.0");
-		assertEquals("The rate entered :", fee.getRate(), null);
-		assertEquals("The frequency of the fees :", fee.isOneTime(), true);
-		assertEquals("The size of the fee level is :", fee.isAdminFee(), false);
-		assertEquals(fee.isActive(), true);
+		assertEquals("Customer One time", fee.getFeeName());
+		assertEquals(Short.valueOf(FeeCategory.ALLCUSTOMERS.getValue()), fee
+				.getCategoryType().getCategoryId());
+		assertEquals("100.0", fee.getFeeAmount().toString());
+		assertNull(fee.getRate());
+		assertTrue(fee.isOneTime());
+		assertFalse(fee.isAdminFee());
+		assertTrue(fee.isActive());
 	}
 
 	public void testSuccessfulCreateOneTimeAdminFee() {
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "load");
 		actionPerform();
-		
+
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("categoryType.categoryId", FeeCategory.ALLCUSTOMERS
@@ -256,13 +250,15 @@ public class TestFeeAction extends MockStrutsTestCase {
 				FeeFrequencyType.ONETIME.getValue().toString());
 		addRequestParameter("customerCharge", FeePayment.UPFRONT.getValue()
 				.toString());
-		addRequestParameter("glCodeEntity.glcodeId", "1");
+		addRequestParameter("glCodeEntity.glcodeId", glCodeId);
 		actionPerform();
 		verifyNoActionErrors();
 
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "create");
-		addRequestParameter("org.apache.struts.taglib.html.TOKEN",(String)request.getSession().getAttribute("org.apache.struts.action.TOKEN"));
+		addRequestParameter("org.apache.struts.taglib.html.TOKEN",
+				(String) request.getSession().getAttribute(
+						"org.apache.struts.action.TOKEN"));
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.create_success.toString());
@@ -272,24 +268,21 @@ public class TestFeeAction extends MockStrutsTestCase {
 				session);
 		fee = (FeesBO) TestObjectFactory
 				.getObject(FeesBO.class, fee.getFeeId());
-		assertEquals("The fee name entered :", fee.getFeeName(),
-				"Customer One time Admin Fee");
-		assertEquals("The category entered :", fee.getCategoryType()
-				.getCategoryId(), Short.valueOf(FeeCategory.ALLCUSTOMERS
-				.getValue()));
-		assertEquals("The fee amount entered :", fee.getFeeAmount().toString(),
-				"100.0");
-		assertEquals("The rate entered :", fee.getRate(), null);
-		assertEquals("The frequency of the fees :", fee.isOneTime(), true);
-		assertEquals("The size of the fee level is :", fee.isAdminFee(), true);
-		assertEquals(fee.isActive(), true);
+		assertEquals("Customer One time Admin Fee", fee.getFeeName());
+		assertEquals(Short.valueOf(FeeCategory.ALLCUSTOMERS.getValue()), fee
+				.getCategoryType().getCategoryId());
+		assertEquals("100.0", fee.getFeeAmount().toString());
+		assertNull(fee.getRate());
+		assertTrue(fee.isOneTime());
+		assertTrue(fee.isAdminFee());
+		assertTrue(fee.isActive());
 	}
 
 	public void testSuccessfulCreatePeriodicFee() {
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "load");
 		actionPerform();
-		
+
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("categoryType.categoryId", FeeCategory.ALLCUSTOMERS
@@ -303,13 +296,15 @@ public class TestFeeAction extends MockStrutsTestCase {
 				"feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId",
 				MeetingFrequency.WEEKLY.getValue().toString());
 		addRequestParameter("weekRecurAfter", "2");
-		addRequestParameter("glCodeEntity.glcodeId", "1");
+		addRequestParameter("glCodeEntity.glcodeId", glCodeId);
 		actionPerform();
 		verifyNoActionErrors();
 
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "create");
-		addRequestParameter("org.apache.struts.taglib.html.TOKEN",(String)request.getSession().getAttribute("org.apache.struts.action.TOKEN"));
+		addRequestParameter("org.apache.struts.taglib.html.TOKEN",
+				(String) request.getSession().getAttribute(
+						"org.apache.struts.action.TOKEN"));
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.create_success.toString());
@@ -319,31 +314,28 @@ public class TestFeeAction extends MockStrutsTestCase {
 				session);
 		fee = (FeesBO) TestObjectFactory
 				.getObject(FeesBO.class, fee.getFeeId());
-		assertEquals("The fee name entered :", fee.getFeeName(),
-				"Customer Periodic Fee");
-		assertEquals("The category entered :", fee.getCategoryType()
-				.getCategoryId(), Short.valueOf(FeeCategory.ALLCUSTOMERS
-				.getValue()));
-		assertEquals("The fees amount entered :",
-				fee.getFeeAmount().toString(), "100.0");
-		assertEquals("The rate entered :", fee.getRate(), null);
-		assertEquals("The frequency of the fees :", fee.isPeriodic(), true);
-		assertEquals("The size of the fee level is :", fee.isAdminFee(), true);
-		assertEquals(fee.isActive(), true);
+		assertEquals("Customer Periodic Fee", fee.getFeeName());
+		assertEquals(Short.valueOf(FeeCategory.ALLCUSTOMERS.getValue()), fee
+				.getCategoryType().getCategoryId());
+		assertEquals("100.0", fee.getFeeAmount().toString());
+		assertNull(fee.getRate());
+		assertTrue(fee.isPeriodic());
+		assertTrue(fee.isAdminFee());
+		assertTrue(fee.isActive());
 	}
 
 	public void testSuccessfulCreatePeriodicFeeWithFormula() {
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "load");
 		actionPerform();
-		
+
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("categoryType.categoryId", FeeCategory.LOAN
 				.getValue());
 		addRequestParameter("rate", "23");
 		addRequestParameter("amount", "");
-		addRequestParameter("feeFormula.feeFormulaId", "1");
+		addRequestParameter("feeFormula.feeFormulaId", formulaId.toString());
 		addRequestParameter("feeName", "Loan Periodic Fee");
 		addRequestParameter("adminCheck", "0");
 		addRequestParameter("feeFrequency.feeFrequencyType.feeFrequencyTypeId",
@@ -352,13 +344,15 @@ public class TestFeeAction extends MockStrutsTestCase {
 				"feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId",
 				MeetingFrequency.WEEKLY.getValue().toString());
 		addRequestParameter("weekRecurAfter", "2");
-		addRequestParameter("glCodeEntity.glcodeId", "1");
+		addRequestParameter("glCodeEntity.glcodeId", glCodeId);
 		actionPerform();
 		verifyNoActionErrors();
 
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "create");
-		addRequestParameter("org.apache.struts.taglib.html.TOKEN",(String)request.getSession().getAttribute("org.apache.struts.action.TOKEN"));
+		addRequestParameter("org.apache.struts.taglib.html.TOKEN",
+				(String) request.getSession().getAttribute(
+						"org.apache.struts.action.TOKEN"));
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.create_success.toString());
@@ -368,16 +362,14 @@ public class TestFeeAction extends MockStrutsTestCase {
 				session);
 		fee = (FeesBO) TestObjectFactory
 				.getObject(FeesBO.class, fee.getFeeId());
-		assertEquals("The fee name entered :", fee.getFeeName(),
-				"Loan Periodic Fee");
-		assertEquals("The category entered :", fee.getCategoryType()
-				.getCategoryId(), Short.valueOf(FeeCategory.LOAN.getValue()));
-		assertEquals("The rate entered :", fee.getRate(), Double.valueOf("23"));
-		assertEquals("The rate flag should be 1:", fee.isRateFlat(), true);
-		assertEquals("The formula id should be 1:", fee.getFeeFormula()
-				.getFeeFormulaId(), Short.valueOf("1"));
-		assertEquals("The frequency of the fees :", fee.isPeriodic(), true);
-		assertEquals(fee.isActive(), true);
+		assertEquals("Loan Periodic Fee", fee.getFeeName());
+		assertEquals(Short.valueOf(FeeCategory.LOAN.getValue()), fee
+				.getCategoryType().getCategoryId());
+		assertEquals(23.0, fee.getRate());
+		assertTrue(fee.isRateFlat());
+		assertEquals(fee.getFeeFormula().getFeeFormulaId(), formulaId);
+		assertTrue(fee.isPeriodic());
+		assertTrue(fee.isActive());
 	}
 
 	public void testManage() {
@@ -394,13 +386,11 @@ public class TestFeeAction extends MockStrutsTestCase {
 		HttpSession session = request.getSession();
 		fee = (FeesBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,
 				request.getSession());
-		assertEquals("The fee name entered :", fee.getFeeName(), "One Time Fee");
-		assertEquals("The category entered :", fee.getCategoryType()
-				.getCategoryId(), Short.valueOf(FeeCategory.ALLCUSTOMERS
-				.getValue()));
-		assertEquals("The frequency of the fees :", fee.getFeeFrequency()
-				.getFeeFrequencyType().getFeeFrequencyTypeId(),
-				FeeFrequencyType.ONETIME.getValue());
+		assertEquals("One Time Fee", fee.getFeeName());
+		assertEquals(Short.valueOf(FeeCategory.ALLCUSTOMERS.getValue()), fee
+				.getCategoryType().getCategoryId());
+		assertEquals(FeeFrequencyType.ONETIME.getValue(), fee.getFeeFrequency()
+				.getFeeFrequencyType().getFeeFrequencyTypeId());
 		assertEquals("The size of master data for status",
 				((List<LookUpMaster>) session
 						.getAttribute(FeesConstants.STATUSLIST)).size(), 2);
@@ -458,8 +448,8 @@ public class TestFeeAction extends MockStrutsTestCase {
 		HttpSession session = request.getSession();
 		fee = (FeesBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,
 				request.getSession());
-		assertEquals("The status should be inactive :", fee.isActive(), false);
-		assertEquals("The amount is :", fee.getFeeAmount().toString(), "100.0");
+		assertFalse(fee.isActive());
+		assertEquals("100.0", fee.getFeeAmount().toString());
 	}
 
 	public void testSuccessfulUpdate() {
@@ -485,8 +475,8 @@ public class TestFeeAction extends MockStrutsTestCase {
 
 		fee = (FeesBO) TestObjectFactory
 				.getObject(FeesBO.class, fee.getFeeId());
-		assertEquals("The status should be inactive :", fee.isActive(), false);
-		assertEquals("The amount is :", fee.getFeeAmount().toString(), "100.0");
+		assertFalse(fee.isActive());
+		assertEquals("100.0", fee.getFeeAmount().toString());
 	}
 
 }

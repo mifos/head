@@ -56,6 +56,8 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestFeesPersistenceService extends TestCase {
 
+	private final Short glCodeId = (short) 7;
+
 	public void testSave() throws Exception {
 
 		FeesBO fees = buildFees();
@@ -65,12 +67,11 @@ public class TestFeesPersistenceService extends TestCase {
 
 		fees = (FeesBO) TestObjectFactory.getObject(FeesBO.class, fees
 				.getFeeId());
-		assertEquals("The fee name entered :", fees.getFeeName(),
-				"One time fees");
-		assertEquals("The category entered :", fees.getCategoryType()
-				.getCategoryId(), Short.valueOf(FeeCategory.CLIENT.getValue()));
-		assertEquals("The rate flag should be 1:", fees.isRateFlat(), false);
-		assertEquals("The frequency of the fees :", fees.isOneTime(), true);
+		assertEquals("One time fees", fees.getFeeName());
+		assertEquals(Short.valueOf(FeeCategory.CLIENT.getValue()), fees
+				.getCategoryType().getCategoryId());
+		assertFalse(fees.isRateFlat());
+		assertTrue(fees.isOneTime());
 	}
 
 	public void testGetFees() {
@@ -78,12 +79,10 @@ public class TestFeesPersistenceService extends TestCase {
 				100.0, Short.valueOf("1"), 1);
 		fees = new FeePersistenceService().getFees(fees.getFeeId());
 
-		assertEquals("The fee name entered :", fees.getFeeName(),
-				"One Time Fee");
-		assertEquals("The category entered :", fees.getCategoryType()
-				.getCategoryId(), Short.valueOf(FeeCategory.ALLCUSTOMERS
-				.getValue()));
-		assertEquals("The frequency of the fees :", fees.isOneTime(), true);
+		assertEquals("One Time Fee", fees.getFeeName());
+		assertEquals(Short.valueOf(FeeCategory.ALLCUSTOMERS.getValue()), fees
+				.getCategoryType().getCategoryId());
+		assertTrue(fees.isOneTime());
 	}
 
 	private FeesBO buildFees() throws Exception {
