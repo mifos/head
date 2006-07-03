@@ -554,11 +554,10 @@ public class GroupDAO extends DAO {
 			
 			oldCustomer.setStatusId(newStatus);
 			
-			CustomerHelper helper=null;
-			if(!Configuration.getInstance().getCustomerConfig(oldCustomer.getOffice().getOfficeId()).isCenterHierarchyExists() && groupVO.getStatusId().shortValue()==GroupConstants.ACTIVE && oldCustomer.getCustomerActivationDate()==null){
-					helper=new CustomerHelper();
+			CustomerHelper helper=helper=new CustomerHelper();
+			if(!Configuration.getInstance().getCustomerConfig(oldCustomer.getOffice().getOfficeId()).isCenterHierarchyExists() && groupVO.getStatusId().shortValue()==GroupConstants.ACTIVE && oldCustomer.getCustomerActivationDate()==null)
 					helper.saveMeetingDetails(oldCustomer,session, context.getUserContext());
-			}
+			
 			
 			//check if group is being active for the first time
 			if(groupVO.getStatusId().shortValue()==GroupConstants.ACTIVE && oldCustomer.getCustomerActivationDate()==null){

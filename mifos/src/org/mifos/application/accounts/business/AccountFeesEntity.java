@@ -41,6 +41,7 @@ package org.mifos.application.accounts.business;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 
 import org.mifos.application.fees.business.FeesBO;
@@ -50,6 +51,7 @@ import org.mifos.framework.components.repaymentschedule.MeetingScheduleHelper;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
 import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
 /**
@@ -189,13 +191,31 @@ public class AccountFeesEntity extends PersistentObject {
 					.getCustomerMeeting().getMeeting();
 			Calendar meetingStartDate = new GregorianCalendar();
 			meetingStartDate.setTime(getLastAppliedDate());
+			Calendar customerMeetingStartDate = meetingBO.getMeetingStartDate();
+			Short recurAfter = meetingBO.getMeetingDetails().getRecurAfter();
 			meetingBO.setMeetingStartDate(meetingStartDate);
 			meetingBO.getMeetingDetails().setRecurAfter(
 					getFees().getFeeFrequency().getFeeMeetingFrequency()
 							.getMeetingDetails().getRecurAfter());
 			schedulerIntf = MeetingScheduleHelper.getSchedulerObject(meetingBO);
 			List<Date> applDates = schedulerIntf.getAllDates(date);
-			isApplicable = applDates.size() > 0 ? true : false;
+			if (applDates != null && !applDates.isEmpty()) {
+				Iterator<Date> itr = applDates.iterator();
+				while (itr.hasNext()) {
+					Date appliedDate = itr.next();
+					if (DateUtils
+							.getDateWithoutTimeStamp(appliedDate.getTime())
+							.compareTo(
+									DateUtils
+											.getDateWithoutTimeStamp(getLastAppliedDate()
+													.getTime())) == 0) {
+						itr.remove();
+					}
+				}
+				isApplicable = applDates.size() > 0 ? true : false;
+			}
+			meetingBO.setMeetingStartDate(customerMeetingStartDate);
+			meetingBO.getMeetingDetails().setRecurAfter(recurAfter);
 		}
 		return isApplicable;
 	}

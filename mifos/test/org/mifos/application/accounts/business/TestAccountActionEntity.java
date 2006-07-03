@@ -45,21 +45,4 @@ public class TestAccountActionEntity extends TestCase {
 		return (AccountActionEntity)session.get(AccountActionEntity.class,id);
 	}
 	
-	public void testIsApplicable() throws RepaymentScheduleException, SchedulerException{
-		accountPersistence = new AccountPersistence();
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1,1,4,2));
-        center=TestObjectFactory.createCenter("Center",Short.valueOf("13"),"1.1",meeting,new Date(System.currentTimeMillis()));
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(new Date(System.currentTimeMillis()));
-        calendar.add(calendar.WEEK_OF_MONTH,-1);
-        Date lastAppliedFeeDate = new Date(calendar.getTimeInMillis());
-        group=TestObjectFactory.createGroup("Group",Short.valueOf("9"),"1.1.1",center,new Date(System.currentTimeMillis()));       		
-		Set<AccountFeesEntity> accountFeeSet = group.getCustomerAccount().getAccountFees();
-		assertEquals(1,accountFeeSet.size());
-		for (Iterator iter = accountFeeSet.iterator(); iter.hasNext();) {
-			AccountFeesEntity accountFeesEntity = (AccountFeesEntity) iter.next();
-			accountFeesEntity.setLastAppliedDate(lastAppliedFeeDate);
-			assertEquals(true,accountFeesEntity.isApplicable(new Date(System.currentTimeMillis())));			
-		}
-	}
 }

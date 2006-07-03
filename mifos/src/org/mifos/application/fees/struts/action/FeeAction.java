@@ -107,7 +107,10 @@ public class FeeAction extends BaseAction {
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-
+		FeesBO fees = (FeesBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request.getSession());
+		FeeActionForm feeActionForm = (FeeActionForm) form;
+		fees.setRateFlat(feeActionForm.getRate() != null && !"".equals(feeActionForm.getRate()));
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 

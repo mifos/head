@@ -191,6 +191,7 @@ public class TestFeeAction extends MockStrutsTestCase {
 		assertEquals(Short.valueOf(FeeCategory.ALLCUSTOMERS.getValue()), fees
 				.getCategoryType().getCategoryId());
 		assertEquals("Customer One time", fees.getFeeName());
+		assertFalse(fees.isRateFlat());
 	}
 
 	public void testSuccessfulCreateOneTimeFee() {
