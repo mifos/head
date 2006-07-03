@@ -639,7 +639,7 @@ public class CustomerHelper {
 			repaymntScheduleInputs.setMeetingToConsider(RepaymentScheduleConstansts.MEETING_CUSTOMER);
 			// set the loan disburesment date onto the repayment frequency
 			repaymntScheduleInputs.setRepaymentFrequency(meeting);
-			if(accountFeesSet!=null)
+			if(accountFeesSet!=null && !accountFeesSet.isEmpty())
 				repaymntScheduleInputs.setAccountFee(accountFeesSet);
 			else
 				repaymntScheduleInputs.setAccountFee(new HashSet());
@@ -662,9 +662,10 @@ public class CustomerHelper {
 						accountActionDate.setCurrencyId(Short.valueOf("1"));
 					}
 				}else{
-					for(AccountFees accountFees :  accountFeesSet){
-						accountFees.setLastAppliedDate(null);
-					}
+					if(accountFeesSet!=null && !accountFeesSet.isEmpty())
+						for(AccountFees accountFees :  accountFeesSet){
+							accountFees.setLastAppliedDate(null);
+						}
 					Iterator<AccountActionDate> accActionDateItr=accntActionDateSet.iterator();
 					while(accActionDateItr.hasNext()){
 						AccountActionDate accountActionDate=accActionDateItr.next();
