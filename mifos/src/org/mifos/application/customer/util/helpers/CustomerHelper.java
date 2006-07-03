@@ -609,6 +609,7 @@ public class CustomerHelper {
 		// only if customer meeting is not null get the meeting from customer meeting
 		// this could be null if customer does not have a customer meeting.
 		if(null != customerMeeting &&  customer.getPersonnel()!=null){
+			meeting = customerMeeting.getMeeting();
 			try {
 				CustomerAccount customerAccount=customer.getCustomerAccount();
 				if(null != customerAccount) {
