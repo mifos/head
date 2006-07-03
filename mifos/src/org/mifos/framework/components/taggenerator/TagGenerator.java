@@ -52,7 +52,7 @@ public abstract class TagGenerator {
 	}	
 	
 	public static String createHeaderLinks(BusinessObject bo, boolean selfLinkRequired){
-		TagGenerator generator= TagGeneratorFactory.getInstance().getGenerator(bo.getClass().getName());
+		TagGenerator generator= TagGeneratorFactory.getInstance().getGenerator(bo);
 		return generator.build(bo, selfLinkRequired).toString();
 	}
 	

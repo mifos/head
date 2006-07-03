@@ -40,6 +40,14 @@ package org.mifos.framework.components.taggenerator;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.mifos.application.accounts.business.CustomerAccountBO;
+import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.office.business.OfficeBO;
+import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
 
 public class TagGeneratorFactory {
@@ -56,9 +64,6 @@ public class TagGeneratorFactory {
 
 	private TagGeneratorFactory() {
 		generatorNames
-				.put("org.mifos.application.customer.business.CustomerBO",
-						"org.mifos.framework.components.taggenerator.CustomerTagGenerator");
-		generatorNames
 				.put("org.mifos.application.customer.client.business.ClientBO",
 						"org.mifos.framework.components.taggenerator.CustomerTagGenerator");
 		generatorNames
@@ -71,20 +76,24 @@ public class TagGeneratorFactory {
 				.put("org.mifos.application.office.business.OfficeBO",
 						"org.mifos.framework.components.taggenerator.OfficeTagGenerator");
 		generatorNames
-				.put("org.mifos.application.accounts.business.AccountBO",
-						"org.mifos.framework.components.taggenerator.AccountTagGenerator");
-		generatorNames
 				.put("org.mifos.application.accounts.savings.business.SavingsBO",
 						"org.mifos.framework.components.taggenerator.AccountTagGenerator");
+		generatorNames
+				.put("org.mifos.application.accounts.loan.business.LoanBO",
+					"org.mifos.framework.components.taggenerator.AccountTagGenerator");
+		generatorNames
+				.put("org.mifos.application.accounts.business.CustomerAccountBO",
+					"org.mifos.framework.components.taggenerator.AccountTagGenerator");
+
 	}
 
 	public static TagGeneratorFactory getInstance() {
 		return instance;
 	}
 	
-	public TagGenerator getGenerator(String name){
+	public TagGenerator getGenerator(BusinessObject bo){
 		try{
-			return (TagGenerator)Class.forName(getGeneratorNames().get(name)).newInstance();
+			return (TagGenerator)Class.forName(getGeneratorNames().get(getClassName(bo))).newInstance();
 		}catch(ClassNotFoundException cnfe){
 			throw new FrameworkRuntimeException(cnfe);
 		}catch(IllegalAccessException iae){
@@ -93,4 +102,23 @@ public class TagGeneratorFactory {
 			throw new FrameworkRuntimeException(ie);
 		}
 	}
+	
+	private String getClassName(BusinessObject bo){
+		if(bo instanceof CenterBO)
+			return "org.mifos.application.customer.center.business.CenterBO";
+		if(bo instanceof GroupBO)
+			return "org.mifos.application.customer.group.business.GroupBO";
+		if(bo instanceof ClientBO)
+			return "org.mifos.application.customer.client.business.ClientBO";
+		if(bo instanceof SavingsBO)
+			return "org.mifos.application.accounts.savings.business.SavingsBO";
+		if(bo instanceof LoanBO)
+			return "org.mifos.application.accounts.loan.business.LoanBO";
+		if(bo instanceof CustomerAccountBO)
+			return "org.mifos.application.accounts.business.CustomerAccountBO";
+		if(bo instanceof OfficeBO)
+			return "org.mifos.application.office.business.OfficeBO";
+		return null;
+	}
+	
 }

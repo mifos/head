@@ -72,6 +72,21 @@ public class TestTagGenerator extends TestCase{
 		assertEquals(true,createdLink.contains("savingsAction"));
 	}
 
+	public void testTagGeneratorFactory(){
+		createInitialObjectsForSavings();
+		TagGenerator tagGenerator = TagGeneratorFactory.getInstance().getGenerator(center);
+		if(tagGenerator instanceof CustomerTagGenerator)
+			assertTrue(true);
+		
+		tagGenerator = TagGeneratorFactory.getInstance().getGenerator(group);
+		if(tagGenerator instanceof CustomerTagGenerator)
+			assertTrue(true);
+		
+		tagGenerator = TagGeneratorFactory.getInstance().getGenerator(savings);
+		if(tagGenerator instanceof AccountTagGenerator)
+			assertTrue(true);
+	}
+	
 	private void createInitialObjectsForSavings(){
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test", Short.valueOf("13"), "1.1", meeting, new Date(System.currentTimeMillis()));
@@ -79,5 +94,5 @@ public class TestTagGenerator extends TestCase{
 		SavingsTestHelper helper = new SavingsTestHelper();
 		savingsOffering=helper.createSavingsOffering();
 		savings = helper.createSavingsAccount("000100000000017",savingsOffering, group,AccountStates.SAVINGS_ACC_APPROVED, userContext);
-	}
+	}	
 }
