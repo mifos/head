@@ -11,6 +11,7 @@
             <generator class="native"/>
         </id>
 
+	<property name="updatedFlag"  column="UPDATED_FLAG"/>
  	<many-to-one name="meeting" column="MEETING_ID"  class="org.mifos.application.meeting.util.valueobjects.Meeting" insert="true" update="true"   unique="true" lazy="false" cascade="none" />
  	<many-to-one name="customer" column="CUSTOMER_ID"  class="org.mifos.application.customer.util.valueobjects.Customer" insert="true" update="true"  unique="true" lazy="true" cascade="none"/>
               

@@ -80,6 +80,7 @@ import org.mifos.application.office.dao.OfficeDAO;
 import org.mifos.application.office.util.valueobjects.Office;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.valueobjects.Personnel;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.audit.util.helpers.LogInfo;
 import org.mifos.framework.components.audit.util.helpers.LogValueMap;
@@ -308,6 +309,7 @@ public class CenterDAO extends DAO {
 
 				//save meeting only if user has selected any
 				if(center.getCustomerMeeting()!=null && center.getCustomerMeeting().getMeeting()!=null){
+					center.getCustomerMeeting().setUpdatedFlag(YesNoFlag.NO.getValue());
 					session.save(center.getCustomerMeeting().getMeeting());
 				}
 				session.save(center);

@@ -9,6 +9,7 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerMeetingEntity;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.business.CustomerStateEntity;
 import org.mifos.application.customer.business.CustomerView;
@@ -117,5 +118,9 @@ public class CustomerPersistenceService extends PersistenceService {
 	
 	public List<CustomerStateEntity> getCustomerStates(Short optionalFlag)throws PersistenceException{
 		return serviceImpl.getCustomerStates(optionalFlag);
+	}
+	
+	public List<Integer> getCustomersWithUpdatedMeetings() throws PersistenceException{
+		return serviceImpl.getCustomersWithUpdatedMeetings();
 	}
 }

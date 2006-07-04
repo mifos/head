@@ -9,9 +9,12 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerMeetingEntity;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -24,6 +27,8 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.scheduler.Constants;
 import org.mifos.framework.components.scheduler.ScheduleDataIntf;
 import org.mifos.framework.components.scheduler.ScheduleInputsIntf;
@@ -32,8 +37,12 @@ import org.mifos.framework.components.scheduler.SchedulerFactory;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.HibernateStartUp;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.security.authorization.AuthorizationManager;
+import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestCustomerPersistenceService extends TestCase {
@@ -294,4 +303,21 @@ public class TestCustomerPersistenceService extends TestCase {
 	public void testCustomerStatesInUse() throws Exception{
 		assertEquals(Integer.valueOf(14).intValue(),customerPersistenceService.getCustomerStates(Short.valueOf("1")).size());
 	}
+	
+	public void testGetCustomersWithUpdatedMeetings() throws Exception{
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active_test", Short
+				.valueOf("13"), "1.4", meeting, new Date(System
+				.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE, "1.4.1", center, new Date(System
+				.currentTimeMillis()));
+		group.getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
+		TestObjectFactory.updateObject(group);
+		List<Integer> customerIds = customerPersistenceService.getCustomersWithUpdatedMeetings();
+		assertEquals(1,customerIds.size());
+		
+	}
+	
+	
 }

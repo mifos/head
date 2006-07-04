@@ -23,11 +23,13 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.scheduler.Constants;
 import org.mifos.framework.components.scheduler.ScheduleDataIntf;
 import org.mifos.framework.components.scheduler.ScheduleInputsIntf;
@@ -375,5 +377,20 @@ public class TestCustomerPersistence extends TestCase {
 	}
 	public void testCustomerStatesInUse() throws Exception{
 		assertEquals(Integer.valueOf(14).intValue(),customerPersistence.getCustomerStates(Short.valueOf("1")).size());
+	}
+	
+	public void testGetCustomersWithUpdatedMeetings() throws Exception{
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active_test", Short
+				.valueOf("13"), "1.4", meeting, new Date(System
+				.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE, "1.4.1", center, new Date(System
+				.currentTimeMillis()));
+		group.getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
+		TestObjectFactory.updateObject(group);
+		List<Integer> customerIds = customerPersistence.getCustomersWithUpdatedMeetings();
+		assertEquals(1,customerIds.size());
+		
 	}
 }

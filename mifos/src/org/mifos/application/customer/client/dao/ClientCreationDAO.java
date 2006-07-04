@@ -79,6 +79,7 @@ import org.mifos.application.meeting.util.valueobjects.MeetingType;
 import org.mifos.application.office.dao.OfficeDAO;
 import org.mifos.application.personnel.dao.PersonnelDAO;
 import org.mifos.application.personnel.util.valueobjects.Personnel;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.audit.util.helpers.LogInfo;
@@ -212,6 +213,10 @@ public class ClientCreationDAO extends DAO {
 		try {
 			session = HibernateUtil.getSession();
 			trxn = session.beginTransaction();
+			
+			if(vo.getCustomerMeeting()!=null && vo.getCustomerMeeting().getMeeting()!=null){
+				vo.getCustomerMeeting().setUpdatedFlag(YesNoFlag.NO.getValue());
+			}
 			//save meeting only if user has selected any
 			logger.debug("GET CUSTMER MEETING WITH VALUE IN DAO " + vo.getCustomerMeeting());
 			if(vo.getCustomerMeeting()!=null && vo.getCustomerMeeting().getMeeting()!=null && vo.getGroupFlag()!=Constants.YES){

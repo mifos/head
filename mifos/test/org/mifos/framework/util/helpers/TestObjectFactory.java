@@ -120,6 +120,7 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.valueobjects.GracePeriodType;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
@@ -285,6 +286,7 @@ public class TestObjectFactory {
 		CustomerMeetingEntity customerMeetingEntity = new CustomerMeetingEntity();
 		customerMeetingEntity.setMeeting(meeting);
 		customerMeetingEntity.setCustomer(center);
+		customerMeetingEntity.setUpdatedFlag(YesNoFlag.NO.getValue());
 		center.setCustomerMeeting(customerMeetingEntity);
 
 		center.addCustomerAccount(getCustAccountsHelper(personnel
@@ -358,6 +360,7 @@ public class TestObjectFactory {
 		customerMeetingEntity.setMeeting(parentCustomer.getCustomerMeeting()
 				.getMeeting());
 		customerMeetingEntity.setCustomer(group);
+		customerMeetingEntity.setUpdatedFlag(YesNoFlag.NO.getValue());
 		group.setCustomerMeeting(customerMeetingEntity);
 
 		group.addCustomerAccount(getCustAccountsHelper(personnel
@@ -423,6 +426,7 @@ public class TestObjectFactory {
 		customerMeetingEntity.setMeeting(parentCustomer.getCustomerMeeting()
 				.getMeeting());
 		customerMeetingEntity.setCustomer(client);
+		customerMeetingEntity.setUpdatedFlag(YesNoFlag.NO.getValue());
 		client.setCustomerMeeting(customerMeetingEntity);
 
 		client.addCustomerAccount(getCustAccountsHelper(personnel

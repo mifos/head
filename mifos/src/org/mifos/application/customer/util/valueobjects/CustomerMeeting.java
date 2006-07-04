@@ -69,6 +69,8 @@ public class CustomerMeeting extends ValueObject {
 	 * @return Returns the custMeetingId.
 	 */
 	
+	private Short updatedFlag;
+	
 	public Integer getCustMeetingId() {
 		return custMeetingId;
 	}
@@ -117,6 +119,14 @@ public class CustomerMeeting extends ValueObject {
 	public void setMeeting(Meeting meeting) {
 		this.meeting = meeting;
 	}
-	
 
+	public Short getUpdatedFlag() {
+		return updatedFlag;
+	}
+
+	public void setUpdatedFlag(Short updatedFlag) {
+		this.updatedFlag = updatedFlag;
+	}
+	
+	
 }

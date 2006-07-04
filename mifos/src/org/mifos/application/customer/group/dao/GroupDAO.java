@@ -88,6 +88,7 @@ import org.mifos.application.customer.util.valueobjects.CustomerMovement;
 import org.mifos.application.customer.util.valueobjects.CustomerNote;
 import org.mifos.application.office.dao.OfficeDAO;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.audit.util.helpers.LogInfo;
 import org.mifos.framework.components.audit.util.helpers.LogValueMap;
@@ -167,7 +168,8 @@ public class GroupDAO extends DAO {
 		//set searchid for the group
 		groupVO.setSearchId(new GroupHelper().getSearchId(parent,groupVO.getOffice().getOfficeId()));
 		  
-  	    
+		if(groupVO.getCustomerMeeting()!=null && groupVO.getCustomerMeeting().getMeeting()!=null)
+			groupVO.getCustomerMeeting().setUpdatedFlag(YesNoFlag.NO.getValue());
 		
 		if (null!=parent && null != customerHierarchy){
 			//parent.setCustomerHistoricalData(null);

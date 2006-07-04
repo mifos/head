@@ -14,6 +14,7 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerMeetingEntity;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.business.CustomerStateEntity;
 import org.mifos.application.customer.business.CustomerView;
@@ -22,6 +23,7 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
@@ -278,6 +280,18 @@ public class CustomerPersistence extends Persistence {
 		List<CustomerStateEntity> queryResult=null;
 		try{
 			queryResult = executeNamedQuery(NamedQueryConstants.GET_CUSTOMER_STATES, queryParameters);
+		}catch(HibernateException he){
+			throw new PersistenceException(he);
+		}
+		return queryResult;
+	}
+	
+	public List<Integer> getCustomersWithUpdatedMeetings() throws PersistenceException{
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("updated",YesNoFlag.YES.getValue());
+		List<Integer> queryResult=null;
+		try{
+			queryResult = executeNamedQuery(NamedQueryConstants.GET_UPDATED_CUSTOMER_MEETINGS, queryParameters);
 		}catch(HibernateException he){
 			throw new PersistenceException(he);
 		}

@@ -53,6 +53,8 @@ public class CustomerMeetingEntity extends PersistentObject {
 	private MeetingBO meeting;
 
 	private CustomerBO customer;
+	
+	private Short updatedFlag;
 
 	public Integer getCustMeetingId() {
 		return custMeetingId;
@@ -77,4 +79,13 @@ public class CustomerMeetingEntity extends PersistentObject {
 	public void setMeeting(MeetingBO meeting) {
 		this.meeting = meeting;
 	}
+
+	public Short getUpdatedFlag() {
+		return updatedFlag;
+	}
+
+	public void setUpdatedFlag(Short updatedFlag) {
+		this.updatedFlag = updatedFlag;
+	}
+	
 }

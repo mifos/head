@@ -61,6 +61,7 @@ import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.meeting.util.valueobjects.MeetingDetails;
 import org.mifos.application.meeting.util.valueobjects.MeetingType;
 import org.mifos.application.meeting.util.valueobjects.RecurrenceType;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.audit.util.helpers.LogInfo;
 import org.mifos.framework.components.audit.util.helpers.LogValueMap;
@@ -515,6 +516,7 @@ public class MeetingDAO extends DAO {
 		CustomerMeeting cm = new CustomerMeeting();
 		cm.setMeeting(meeting);
 		cm.setCustomer(customer);
+		cm.setUpdatedFlag(YesNoFlag.NO.getValue());
 		session.save(cm);
 	}
 	/**
