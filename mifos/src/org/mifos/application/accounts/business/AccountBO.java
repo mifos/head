@@ -777,4 +777,8 @@ public class AccountBO extends BusinessObject {
 	public Money getTotalAmountDue(){
 		return null;
 	}
+	
+	public List<AccountActionDateEntity> getTotalInstallmentsDue(){
+		 return null;
+	}
 }

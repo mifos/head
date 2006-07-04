@@ -118,12 +118,10 @@ public abstract class BaseAction extends DispatchAction {
 	protected boolean isNewBizRequired(HttpServletRequest request)
 			throws ServiceException {
 		if (request.getSession().getAttribute(Constants.BUSINESS_KEY) != null) {
-			if (getService().getBusinessObject(null) == null
-					|| ((getService().getBusinessObject(null) != null && !(request
-							.getSession().getAttribute(Constants.BUSINESS_KEY))
-							.getClass().getName().equalsIgnoreCase(
-									getService().getBusinessObject(null)
-											.getClass().getName())))) {
+			if (getService().getBusinessObject(null) != null && 
+					!(request.getSession().getAttribute(Constants.BUSINESS_KEY)
+							.getClass().getName().equalsIgnoreCase(getService().getBusinessObject(null)
+											.getClass().getName()))) {
 				return true;
 			}
 			return false;

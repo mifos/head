@@ -37,7 +37,7 @@
  */
 package org.mifos.application.accounts.struts.action;
 
-import java.util.List;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,21 +45,26 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActionForm;
-import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.application.accounts.util.helpers.LoanPaymentData;
+import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 
 public class AccountApplyPaymentAction extends BaseAction{
@@ -83,8 +88,9 @@ public class AccountApplyPaymentAction extends BaseAction{
 		AccountApplyPaymentActionForm actionForm =(AccountApplyPaymentActionForm)form;
 		clearActionForm(actionForm);
 		AccountBO account = getAccountBusinessService().getAccount(Integer.valueOf(actionForm.getAccountId()));
+		account.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, account, request.getSession());
-		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,	getMasterDataService().retrievePaymentTypes(uc.getLocaleId()),request.getSession());
+		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,	getMasterDataService().getSupportedPaymentModes(uc.getLocaleId(),TrxnTypes.loan_repayment.getValue()),request.getSession());
 		actionForm.setAmount(account.getTotalAmountDue());
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
@@ -97,8 +103,27 @@ public class AccountApplyPaymentAction extends BaseAction{
 		return mapping.findForward(ActionForwards.previous_success.toString());
 	}
 	
+	public ActionForward applyPayment(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws Exception{
+		AccountBO account = (AccountBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request.getSession());
+		AccountApplyPaymentActionForm actionForm =(AccountApplyPaymentActionForm)form;
+		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
+		Date trxnDate = new Date(DateHelper.getLocaleDate(uc.getPereferedLocale(),actionForm.getTransactionDate()).getTime());
+		Date receiptDate = new Date(DateHelper.getLocaleDate(uc.getPereferedLocale(),actionForm.getReceiptDate()).getTime());
+		account.applyPayment(createPaymentData(account.getTotalAmountDue(),trxnDate,actionForm.getReceiptId(),receiptDate, Short.valueOf(actionForm.getPaymentTypeId()), uc.getId(),account));
+		return mapping.findForward(getForward(((AccountApplyPaymentActionForm)form).getInput()));
+	}
+	
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws Exception{
 		return mapping.findForward(getForward(((AccountApplyPaymentActionForm)form).getInput()));
+	}
+	
+	private PaymentData createPaymentData(Money amount, Date trxnDate, String receiptId, Date receiptDate, Short paymentTypeId, Short userId, AccountBO account){
+		PaymentData paymentData = new PaymentData(amount, userId, paymentTypeId, trxnDate);
+		for(AccountActionDateEntity installment: account.getTotalInstallmentsDue()){
+			LoanPaymentData loanPaymentData = new LoanPaymentData(installment);
+			paymentData.addAccountPaymentData(loanPaymentData);
+		}
+		return paymentData;
 	}
 	
 	private void clearActionForm(AccountApplyPaymentActionForm actionForm){
@@ -114,14 +139,6 @@ public class AccountApplyPaymentAction extends BaseAction{
 		return null;
 	}
 	
-	private PaymentTypeEntity getPaymentType(HttpServletRequest request, Short paymentTypeId){
-		List<PaymentTypeEntity> paymentTypeList  = (List<PaymentTypeEntity>)SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE,request.getSession());
-		for(PaymentTypeEntity paymentType: paymentTypeList){
-			if(paymentType.getId().equals(paymentTypeId))
-				return paymentType;
-		}
-		return null;
-	}
 	
 	private AccountBusinessService getAccountBusinessService()throws ServiceException{
 		if(accountBusinessService==null)

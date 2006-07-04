@@ -883,7 +883,17 @@ public class LoanBO extends AccountBO {
 						.getTotalDueWithFees());
 		return totalAmount;
 	}
-
+	
+	@Override
+	public List<AccountActionDateEntity> getTotalInstallmentsDue(){
+		 List<AccountActionDateEntity> dueInstallments = getDetailsOfInstallmentsInArrears();
+		 AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
+		 if(nextInstallment!=null && nextInstallment.getPaymentStatus().equals(AccountConstants.PAYMENT_UNPAID))
+			 dueInstallments.add(nextInstallment);
+		 return dueInstallments;
+	}
+	
+	@Override
 	public Money getTotalAmountDue() {
 		Money totalAmount = getTotalAmountInArrears();
 		AccountActionDateEntity nextAccountAction = getDetailsOfNextInstallment();

@@ -44,7 +44,9 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActionForm;
+import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -54,6 +56,7 @@ import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -104,6 +107,7 @@ public class TestApplyPaymentAction extends MockStrutsTestCase{
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
+	
 	public void testApplyPaymentLoad(){
 		accountBO = createLoanAccount();
 		setRequestPathInfo("/applyPaymentAction");
@@ -123,6 +127,24 @@ public class TestApplyPaymentAction extends MockStrutsTestCase{
 		addRequestParameter("method", "preview");
 		actionPerform();
 		verifyForward(Constants.PREVIEW_SUCCESS);
+	}
+	
+	public void testApplyPaymentForLoan()throws Exception{
+		accountBO = createLoanAccount();
+		accountBO.setAccountState(new AccountStateEntity(AccountStates.LOANACC_BADSTANDING));
+		request.getSession().setAttribute(Constants.BUSINESS_KEY,accountBO);
+		setRequestPathInfo("/applyPaymentAction");
+		addRequestParameter("input","loan");
+		addRequestParameter("method", "applyPayment");
+		addRequestParameter("receiptId","101");
+		addRequestParameter("receiptDate","03/07/2006");
+		addRequestParameter("transactionDate","03/07/2006");
+		addRequestParameter("paymentTypeId","1");
+		actionPerform();
+		verifyForward("loan_detail_page");
+		assertEquals(new Money(), accountBO.getTotalAmountDue());
+		assertEquals(0, accountBO.getTotalInstallmentsDue().size());
+		assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, accountBO.getAccountState().getId().shortValue());
 	}
 	
 	public void testApplyPaymentPrevious(){
