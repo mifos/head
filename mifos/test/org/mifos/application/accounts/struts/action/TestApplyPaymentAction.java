@@ -120,7 +120,7 @@ public class TestApplyPaymentAction extends MockStrutsTestCase{
 		verifyNoActionErrors();
 		assertNotNull(request.getSession().getAttribute(MasterConstants.PAYMENT_TYPE));
 		AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm)request.getSession().getAttribute("applyPaymentActionForm");
-		assertEquals(actionForm.getAmount(),accountBO.getTotalAmountDue());
+		assertEquals(actionForm.getAmount(),accountBO.getTotalPaymentDue());
 	}
 	
 	public void testApplyPaymentPreview(){
@@ -151,7 +151,7 @@ public class TestApplyPaymentAction extends MockStrutsTestCase{
 		addRequestParameter("paymentTypeId","1");
 		actionPerform();
 		verifyForward("loan_detail_page");
-		assertEquals(new Money(), accountBO.getTotalAmountDue());
+		assertEquals(new Money(), accountBO.getTotalPaymentDue());
 		assertEquals(0, accountBO.getTotalInstallmentsDue().size());
 		assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, accountBO.getAccountState().getId().shortValue());
 	}

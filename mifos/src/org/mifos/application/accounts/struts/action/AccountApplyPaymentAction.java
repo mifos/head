@@ -92,7 +92,7 @@ public class AccountApplyPaymentAction extends BaseAction{
 		account.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, account, request.getSession());
 		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,	getMasterDataService().getSupportedPaymentModes(uc.getLocaleId(),TrxnTypes.loan_repayment.getValue()),request.getSession());
-		actionForm.setAmount(account.getTotalAmountDue());
+		actionForm.setAmount(account.getTotalPaymentDue());
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 	
@@ -110,7 +110,7 @@ public class AccountApplyPaymentAction extends BaseAction{
 		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
 		Date trxnDate = new Date(DateHelper.getLocaleDate(uc.getPereferedLocale(),actionForm.getTransactionDate()).getTime());
 		Date receiptDate = new Date(DateHelper.getLocaleDate(uc.getPereferedLocale(),actionForm.getReceiptDate()).getTime());
-		account.applyPayment(createPaymentData(account.getTotalAmountDue(),trxnDate,actionForm.getReceiptId(),receiptDate, Short.valueOf(actionForm.getPaymentTypeId()), uc.getId(),account));
+		account.applyPayment(createPaymentData(account.getTotalPaymentDue(),trxnDate,actionForm.getReceiptId(),receiptDate, Short.valueOf(actionForm.getPaymentTypeId()), uc.getId(),account));
 		return mapping.findForward(getForward(((AccountApplyPaymentActionForm)form).getInput()));
 	}
 	

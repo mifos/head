@@ -775,10 +775,41 @@ public class AccountBO extends BusinessObject {
 	}
 	
 	public Money getTotalAmountDue(){
+		Money totalAmt  = getTotalAmountInArrears();
+		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
+		if(nextInstallment!=null && nextInstallment.getPaymentStatus().equals(AccountConstants.PAYMENT_UNPAID))
+			totalAmt =totalAmt.add(getDueAmount(nextInstallment));
+		return totalAmt;
+	}
+	
+	public Money getTotalPaymentDue(){
+		Money totalAmt  = getTotalAmountInArrears();
+		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
+		if(nextInstallment!=null && nextInstallment.getPaymentStatus().equals(AccountConstants.PAYMENT_UNPAID)
+				&&DateUtils.getDateWithoutTimeStamp(nextInstallment.getActionDate().getTime()).equals(DateUtils.getCurrentDateWithoutTimeStamp()))
+			totalAmt =totalAmt.add(getDueAmount(nextInstallment));
+		return totalAmt;
+	}
+	
+	public Money getTotalAmountInArrears() {
+		List<AccountActionDateEntity> installmentsInArrears = getDetailsOfInstallmentsInArrears();
+		Money totalAmount = new Money();
+		if (installmentsInArrears != null && installmentsInArrears.size() > 0)
+			for (AccountActionDateEntity accountAction : installmentsInArrears)
+				totalAmount = totalAmount.add(getDueAmount(accountAction));
+		return totalAmount;
+	}
+	
+	protected Money getDueAmount(AccountActionDateEntity installment){
 		return null;
 	}
 	
 	public List<AccountActionDateEntity> getTotalInstallmentsDue(){
-		 return null;
+		 List<AccountActionDateEntity> dueInstallments = getDetailsOfInstallmentsInArrears();
+		 AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
+		 if(nextInstallment!=null && nextInstallment.getPaymentStatus().equals(AccountConstants.PAYMENT_UNPAID)
+				 &&DateUtils.getDateWithoutTimeStamp(nextInstallment.getActionDate().getTime()).equals(DateUtils.getCurrentDateWithoutTimeStamp()))
+			 dueInstallments.add(nextInstallment);
+		 return dueInstallments;
 	}
 }

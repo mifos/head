@@ -1527,22 +1527,9 @@ public class SavingsBO extends AccountBO {
 		return savingsRecentActivityView;
 	}
 
-	public Money getTotalAmountInArrears() {
-		Money totalAmount = new Money();
-		List<AccountActionDateEntity> previousDueInstallments = getDetailsOfInstallmentsInArrears();
-		if (previousDueInstallments != null
-				&& previousDueInstallments.size() > 0)
-			for (AccountActionDateEntity accountAction : previousDueInstallments)
-				totalAmount = totalAmount.add(accountAction
-						.getTotalDepositDue());
-		return totalAmount;
+	protected Money getDueAmount(AccountActionDateEntity installment){
+		return installment.getTotalDepositDue();
 	}
-
-	public Money getTotalAmountDue() {
-		return getTotalAmountInArrears().add(
-				getTotalAmountDueForNextInstallment());
-	}
-
 	public Money getTotalAmountDueForInstallment(Short installmentId) {
 		Money totalAmount = new Money();
 		if (null != getAccountActionDates()

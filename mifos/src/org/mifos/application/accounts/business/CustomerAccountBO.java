@@ -243,4 +243,9 @@ public class CustomerAccountBO extends AccountBO {
 		this.addCustomerActivity(buildCustomerActivity(totalAmount,description,personnelId));
 	}
 
+	protected Money getDueAmount(AccountActionDateEntity installment){
+		return installment.getTotalDueWithFees();
+	}
+
+
 }

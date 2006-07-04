@@ -873,38 +873,10 @@ public class LoanBO extends AccountBO {
 		}
 		return paymentData;
 	}
-
-	public Money getTotalAmountInArrears() {
-		Money totalAmount = new Money();
-		List<AccountActionDateEntity> installmentsInArrears = getDetailsOfInstallmentsInArrears();
-		if (installmentsInArrears != null && installmentsInArrears.size() > 0)
-			for (AccountActionDateEntity accountAction : installmentsInArrears)
-				totalAmount = totalAmount.add(accountAction
-						.getTotalDueWithFees());
-		return totalAmount;
+	protected Money getDueAmount(AccountActionDateEntity installment){
+		return installment.getTotalDueWithFees();
 	}
-	
-	@Override
-	public List<AccountActionDateEntity> getTotalInstallmentsDue(){
-		 List<AccountActionDateEntity> dueInstallments = getDetailsOfInstallmentsInArrears();
-		 AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
-		 if(nextInstallment!=null && nextInstallment.getPaymentStatus().equals(AccountConstants.PAYMENT_UNPAID))
-			 dueInstallments.add(nextInstallment);
-		 return dueInstallments;
-	}
-	
-	@Override
-	public Money getTotalAmountDue() {
-		Money totalAmount = getTotalAmountInArrears();
-		AccountActionDateEntity nextAccountAction = getDetailsOfNextInstallment();
-		if (nextAccountAction != null
-				&& nextAccountAction.getPaymentStatus().equals(
-						AccountConstants.PAYMENT_UNPAID))
-			totalAmount = totalAmount.add(nextAccountAction
-					.getTotalDueWithFees());
-		return totalAmount;
-	}
-
+		
 	public Money getTotalEarlyRepayAmount() {
 		Money amount = new Money();
 		List<AccountActionDateEntity> dueInstallmentsList = getApplicableIdsForDueInstallments();
