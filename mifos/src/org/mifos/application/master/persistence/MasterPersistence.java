@@ -1,10 +1,8 @@
 package org.mifos.application.master.persistence;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -108,9 +106,13 @@ public EntityMaster getLookUpEntity(String entityName,Short localeId) throws App
 		return null;
 	}
 	
-	public List<PaymentTypeEntity> getPaymentTypes(Short transactionId){	
+	public List<PaymentTypeEntity> getSupportedPaymentModes(Short localeId, Short transactionTypeId){	
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();		
-		queryParameters.put("TRANSACTION_ID", transactionId);		
-		return ((TransactionTypeEntity) executeNamedQuery(NamedQueryConstants.GET_PAYMENT_TYPES,queryParameters).get(0)). getApplicablePaymentTypes();		
+		queryParameters.put("TRANSACTION_ID", transactionTypeId);		
+		List<PaymentTypeEntity> paymentTypes = ((TransactionTypeEntity) executeNamedQuery(NamedQueryConstants.GET_PAYMENT_TYPES,queryParameters).get(0)). getApplicablePaymentTypes();
+		for(PaymentTypeEntity paymentType:paymentTypes){
+			paymentType.setLocaleId(localeId);
+		}
+		return paymentTypes;
 	}
 }

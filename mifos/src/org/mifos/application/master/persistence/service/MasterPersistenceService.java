@@ -47,4 +47,8 @@ public class MasterPersistenceService extends PersistenceService {
 	public List<PaymentTypeEntity> retrievePaymentTypes(Short localeId)throws PersistenceException{
 		return serviceImpl.retrievePaymentTypes(localeId);
 	}
+	
+	public List<PaymentTypeEntity> getSupportedPaymentModes(Short localeId, Short trxnTypeId)throws PersistenceException{
+		return serviceImpl.getSupportedPaymentModes(localeId, trxnTypeId);
+	}	
 }

@@ -95,4 +95,9 @@ public class MasterDataService extends BusinessService {
 	public List<PaymentTypeEntity> retrievePaymentTypes(Short localeId)throws SystemException{
 		return masterPersistenceService.retrievePaymentTypes(localeId);
 	}
+	
+	public List<PaymentTypeEntity> getSupportedPaymentModes(Short localeId, Short transactionTypeId)throws SystemException{
+		return masterPersistenceService.getSupportedPaymentModes(localeId, transactionTypeId);
+	}
+
 }

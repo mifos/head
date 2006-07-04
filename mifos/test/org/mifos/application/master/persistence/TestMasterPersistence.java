@@ -42,9 +42,9 @@ public class TestMasterPersistence extends TestCase {
 		assertEquals(TestConstants.PAYMENTTYPES_NUMBER,paymentTypeList.size());
 	}
 	
-	public void testGetPaymentTypes(){
+	public void testGetSupportedPaymentModes()throws Exception{
 		MasterPersistence masterPersistence = new MasterPersistence();				
-		List<PaymentTypeEntity> paymentTypeList = masterPersistence.getPaymentTypes(Short.valueOf("1"));
-		assertEquals(1,paymentTypeList.size());
+		List<PaymentTypeEntity> paymentTypeList = masterPersistence.getSupportedPaymentModes(Short.valueOf("1"),Short.valueOf("1"));
+		assertEquals(TestConstants.PAYMENTTYPES_NUMBER,paymentTypeList.size());
 	}
 }

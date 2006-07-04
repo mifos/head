@@ -106,4 +106,9 @@ public class TestMasterBusinessService extends TestCase {
 		List<PaymentTypeEntity> paymentTypeList = masterService.retrievePaymentTypes(Short.valueOf("1"));
 		assertEquals(TestConstants.PAYMENTTYPES_NUMBER,paymentTypeList.size());
 	}
+	
+	public void testGetSupportedPaymentModes()throws Exception{
+		List<PaymentTypeEntity> paymentTypeList = masterService.getSupportedPaymentModes(Short.valueOf("1"),Short.valueOf("1"));
+		assertEquals(TestConstants.PAYMENTTYPES_NUMBER,paymentTypeList.size());
+	}
 }

@@ -39,4 +39,9 @@ public class TestMasterPersistenceService extends TestCase {
 		List<PaymentTypeEntity> paymentTypeList = masterPersistenceService.retrievePaymentTypes(Short.valueOf("1"));
 		assertEquals(TestConstants.PAYMENTTYPES_NUMBER,paymentTypeList.size());
 	}
+	
+	public void testGetSupportedPaymentModes()throws Exception{
+		List<PaymentTypeEntity> paymentTypeList = masterPersistenceService.getSupportedPaymentModes(Short.valueOf("1"),Short.valueOf("1"));
+		assertEquals(TestConstants.PAYMENTTYPES_NUMBER,paymentTypeList.size());
+	}
 }
