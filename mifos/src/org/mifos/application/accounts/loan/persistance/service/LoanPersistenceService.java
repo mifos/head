@@ -8,6 +8,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.LoanAccountView;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -41,6 +42,10 @@ public class LoanPersistenceService extends PersistenceService {
 	public List<LoanBO> getLoanAccountsInArrears(Short latenessDays) throws PersistenceException{
 		return serviceImpl.getLoanAccountsInArrears(latenessDays);
 				
+	}	
+
+	public LoanBO getAccount(Integer accountId) {		
+		return serviceImpl.getAccount(accountId);
 	}
 	
 }

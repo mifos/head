@@ -1,10 +1,12 @@
 package org.mifos.application.accounts.loan.business.service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.business.ViewInstallmentDetails;
 import org.mifos.application.accounts.exceptions.AccountExceptionConstants;
 import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
@@ -91,6 +93,32 @@ public class LoanBusinessService extends BusinessService {
 			return amount.negate();
 		else
 			return amount;
+	}
+	
+	public LoanBO getAccount(Integer accountId) throws Exception{			
+		loanPersistenceService=(LoanPersistenceService)ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.Loan);	
+		return loanPersistenceService.getAccount(accountId);
+
+	}
+	
+	public ViewInstallmentDetails getUpcomingInstallmentDetails(AccountActionDateEntity upcomingInstallment){
+		return new ViewInstallmentDetails(upcomingInstallment.getPrincipal(),
+				upcomingInstallment.getInterest(), upcomingInstallment
+						.getTotalFees(), upcomingInstallment.getTotalPenalty());
+	}
+	
+	public ViewInstallmentDetails getOverDueInstallmentDetails(List<AccountActionDateEntity> overDueInstallmentList){		
+		Money principalDue = new Money();
+		Money interestDue = new Money();
+		Money feesDue = new Money();
+		Money penaltyDue = new Money();		
+		for(AccountActionDateEntity installment : overDueInstallmentList){
+			principalDue = principalDue.add(installment.getPrincipalDue());			
+			interestDue = interestDue.add(installment.getInterestDue());
+			feesDue = feesDue.add(installment.getTotalFeeDue());
+			penaltyDue = penaltyDue.add(installment.getPenaltyDue());			
+		}
+		return new ViewInstallmentDetails(principalDue, interestDue, feesDue, penaltyDue);
 	}
 	
 }

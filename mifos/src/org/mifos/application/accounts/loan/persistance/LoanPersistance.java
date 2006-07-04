@@ -145,4 +145,8 @@ public class LoanPersistance extends Persistence {
 				}
 					
 		}
+		
+		public LoanBO getAccount(Integer accountId) {
+			return (LoanBO)HibernateUtil.getSessionTL().get(LoanBO.class, accountId);
+		}
 }
