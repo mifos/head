@@ -844,9 +844,9 @@
 		</action>
 		<action path="/applyPaymentAction" type="org.mifos.application.accounts.struts.action.AccountApplyPaymentAction" name="applyPaymentActionForm" parameter="method" 
 			input="/applyPaymentAction.do?method=validate" scope="session" validate="true">
-			<forward name="load_success" path="/pages/application/account/jsp/applypayment.jsp" />
-			<forward name="preview_success" path="/pages/application/account/jsp/reviewapplypayment.jsp" />
-			<forward name="previous_success" path="/pages/application/account/jsp/applypayment.jsp"/>
+			<forward name="load_success" path="/pages/application/accounts/jsp/applypayment.jsp" />
+			<forward name="preview_success" path="/pages/application/accounts/jsp/reviewapplypayment.jsp" />
+			<forward name="previous_success" path="/pages/application/accounts/jsp/applypayment.jsp"/>
 			<forward name="loan_detail_page" path="/loanAction.do?method=get" />
 		</action>
 	</action-mappings>

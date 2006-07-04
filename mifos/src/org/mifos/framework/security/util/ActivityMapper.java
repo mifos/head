@@ -774,6 +774,9 @@ public class ActivityMapper {
 
 		// mapping for accountPayment
 		activityMap.put("/applyPaymentAction-load-loan",	SecurityConstants.LOAN_MAKE_PAYMENT_TO_ACCOUNT);
+		activityMap.put("/applyPaymentAction-load-Center",	SecurityConstants.CENTER_MAKE_PAYMENTS_TO_CENTER_ACCOUNT);
+		activityMap.put("/applyPaymentAction-load-Group",	SecurityConstants.GROUP_MAKE_PAYMENT_TO_GROUP_ACCOUNT);
+		activityMap.put("/applyPaymentAction-load-Client",	SecurityConstants.CIENT_MAKE_PAYMENT_TO_CLIENT_ACCOUNT);
 		activityMap.put("/applyPaymentAction-preview",	SecurityConstants.VIEW);
 		activityMap.put("/applyPaymentAction-previous",SecurityConstants.VIEW);
 		activityMap.put("/applyPaymentAction-applyPayment",SecurityConstants.VIEW);

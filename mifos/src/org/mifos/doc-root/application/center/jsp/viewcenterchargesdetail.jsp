@@ -96,6 +96,10 @@
 	                	<span class="fontnormalbold">
 	                	<mifos:mifoslabel name="Center.ApplyTransaction" bundle="CenterUIResources"/></span>
 	                	&nbsp;&nbsp;&nbsp;&nbsp;
+	                	<html-el:link href="applyPaymentAction.do?method=load&statusId=${param.statusId}&globalCustNum=${sessionScope.linkValues.globalCustNum}&prdOfferingName=${sessionScope.linkValues.customerName}&input=ViewCenterCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&securityParamInput=Center">
+	                    	<mifos:mifoslabel name="accounts.apply_payment" />
+	                    </html-el:link>
+	                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	                    <html-el:link href="custApplyAdjustment.do?method=loadAdjustment&statusId=${param.statusId}&globalCustNum=${sessionScope.linkValues.globalCustNum}&prdOfferingName=${sessionScope.linkValues.customerName}&input=ViewCenterCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&securityParamInput=Center">
 	                    	<mifos:mifoslabel name="Center.ApplyAdjustment" bundle="CenterUIResources"/>
 	                    </html-el:link>
