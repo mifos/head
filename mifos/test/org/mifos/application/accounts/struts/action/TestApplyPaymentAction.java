@@ -38,6 +38,7 @@
 package org.mifos.application.accounts.struts.action;
 
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
@@ -124,6 +125,12 @@ public class TestApplyPaymentAction extends MockStrutsTestCase{
 	
 	public void testApplyPaymentPreview(){
 		setRequestPathInfo("/applyPaymentAction");
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
+				addRequestParameter("receiptDate",sdf.format(new Date()));
+		addRequestParameter("transactionDate",sdf.format(new Date()));
+		addRequestParameter("paymentTypeId","1");
+
 		addRequestParameter("method", "preview");
 		actionPerform();
 		verifyForward(Constants.PREVIEW_SUCCESS);
@@ -137,8 +144,10 @@ public class TestApplyPaymentAction extends MockStrutsTestCase{
 		addRequestParameter("input","loan");
 		addRequestParameter("method", "applyPayment");
 		addRequestParameter("receiptId","101");
-		addRequestParameter("receiptDate","03/07/2006");
-		addRequestParameter("transactionDate","03/07/2006");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
+		
+		addRequestParameter("receiptDate",sdf.format(new Date()));
+		addRequestParameter("transactionDate",sdf.format(new Date()));
 		addRequestParameter("paymentTypeId","1");
 		actionPerform();
 		verifyForward("loan_detail_page");

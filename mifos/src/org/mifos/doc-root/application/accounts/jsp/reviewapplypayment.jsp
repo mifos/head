@@ -91,9 +91,15 @@ function goToPreview(form){
 			<table width="96%" border="0" cellpadding="3" cellspacing="0">
 				<tr>
 					<td width="100%" colspan="2" class="headingorange"><span
-						class="heading"><c:out  value="${param.prdOfferingName}"/>#<c:out value="${param.globalAccountNum}" /> - </span> <mifos:mifoslabel
+						class="heading"><c:out value="${param.prdOfferingName}" />#<c:out
+						value="${param.globalAccountNum}" /> - </span> <mifos:mifoslabel
 						name="accounts.reviewtransaction" /></td>
 				</tr>
+				<tr>
+					<td><font class="fontnormalRedBold"> <html-el:errors
+						bundle="PersonnelUIResources" /> </font></td>
+				</tr>
+
 				<tr>
 					<td colspan="2" class="fontnormal"><mifos:mifoslabel
 						name="accounts.edittrans" /></td>
@@ -109,37 +115,48 @@ function goToPreview(form){
 					<td align="right" class="fontnormalbold"><mifos:mifoslabel
 						name="accounts.date_of_trxn" /><mifos:mifoslabel
 						name="accounts.colon" /></td>
-					<td class="fontnormal"><c:out value="${applyPaymentActionForm.transactionDate}" /></td>
+					<td class="fontnormal"><c:out
+						value="${applyPaymentActionForm.transactionDate}" /></td>
 				</tr>
 				<tr>
 					<td width="22%" align="right" class="fontnormalbold"><mifos:mifoslabel
 						name="accounts.amount" /> <mifos:mifoslabel name="accounts.colon" /></td>
-					<td width="78%" class="fontnormal"><c:out value="${applyPaymentActionForm.amount}" /></td>
+					<td width="78%" class="fontnormal"><c:out
+						value="${applyPaymentActionForm.amount}" /></td>
 				</tr>
 				<tr>
 					<td align="right" class="fontnormalbold"><mifos:mifoslabel
 						name="accounts.mode_of_payment" mandatory="yes" /> <mifos:mifoslabel
 						name="accounts.colon" /></td>
-					<td class="fontnormal">Cash</td>
+					<td class="fontnormal"><c:forEach var="payment"
+						items="${sessionScope.PaymentType}">
+						<c:if
+							test="${payment.id == sessionScope.applyPaymentActionForm.paymentTypeId}">
+							<c:out value="${payment.name}" />
+						</c:if>
+					</c:forEach></td>
 				</tr>
 				<tr>
 					<td align="right" class="fontnormalbold"><mifos:mifoslabel
 						name="accounts.receiptid" /> <mifos:mifoslabel
 						name="accounts.colon" /></td>
-					<td class="fontnormal"><c:out value="${applyPaymentActionForm.receiptId}" /></td>
+					<td class="fontnormal"><c:out
+						value="${applyPaymentActionForm.receiptId}" /></td>
 				</tr>
 				<tr>
 					<td align="right" class="fontnormalbold"><mifos:mifoslabel
 						name="accounts.receiptdate" /> <mifos:mifoslabel
 						name="accounts.colon" /></td>
-					<td class="fontnormal"><c:out value="${applyPaymentActionForm.receiptDate}" /></td>
+					<td class="fontnormal"><c:out
+						value="${applyPaymentActionForm.receiptDate}" /></td>
 				</tr>
 				<tr>
 					<td height="3" colspan="2" align="center">&nbsp;</td>
 				</tr>
 				<tr>
-					<td height="3" colspan="2"><html-el:button property="Cancel" styleClass="buttn"
-						style="width:65px;" onclick="goToPreview(this.form)">
+					<td height="3" colspan="2"><html-el:button property="Cancel"
+						styleClass="buttn" style="width:65px;"
+						onclick="goToPreview(this.form)">
 						<mifos:mifoslabel name="accounts.edittrxn"></mifos:mifoslabel>
 					</html-el:button></td>
 				</tr>
@@ -152,30 +169,37 @@ function goToPreview(form){
 			</table>
 			<table width="96%" border="0" cellspacing="0" cellpadding="1">
 				<tr>
-					<td align="center"><html-el:submit  styleClass="buttn" property="Preview">
+					<td align="center"><html-el:submit styleClass="buttn"
+						property="Preview">
 						<mifos:mifoslabel name="accounts.submit">
 						</mifos:mifoslabel>
-					</html-el:submit> &nbsp; <html-el:button property="Cancel" styleClass="buttn"
-						style="width:65px;" onclick="ViewDetails()">
+					</html-el:submit> &nbsp; <html-el:button property="Cancel"
+						styleClass="buttn" style="width:65px;" onclick="ViewDetails()">
 						<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
 					</html-el:button></td>
 				</tr>
 			</table>
 			<html-el:hidden property="statusId" value="${param.statusId}" />
 			<html-el:hidden property="method" value="" />
-			<html-el:hidden property="searchNode(search_name)"	value="${param.searchInput}" />
-			<html-el:hidden property="prdOfferingName" 	value="${param.prdOfferingName}" />
-			<html-el:hidden property="globalAccountNum"	value="${param.globalAccountNum}" />
+			<html-el:hidden property="searchNode(search_name)"
+				value="${param.searchInput}" />
+			<html-el:hidden property="prdOfferingName"
+				value="${param.prdOfferingName}" />
+			<html-el:hidden property="globalAccountNum"
+				value="${param.globalAccountNum}" />
 			<html-el:hidden property="accountId" value="${param.accountId}" />
 			<html-el:hidden property="accountType" value="${param.accountType}" />
 			<html-el:hidden property="input" value="${param.input}" />
 			<html-el:hidden property="statusId" value="${param.statusId}" />
-			
+
 		</html-el:form>
 		<html-el:form action="closedaccsearchaction.do?method=search">
-			<html-el:hidden property="searchNode(search_name)"	value="${param.searchInput}" />
-			<html-el:hidden property="prdOfferingName" 	value="${param.prdOfferingName}" />
-			<html-el:hidden property="globalAccountNum"	value="${param.globalAccountNum}" />
+			<html-el:hidden property="searchNode(search_name)"
+				value="${param.searchInput}" />
+			<html-el:hidden property="prdOfferingName"
+				value="${param.prdOfferingName}" />
+			<html-el:hidden property="globalAccountNum"
+				value="${param.globalAccountNum}" />
 			<html-el:hidden property="accountId" value="${param.accountId}" />
 			<html-el:hidden property="accountType" value="${param.accountType}" />
 			<html-el:hidden property="input" value="${param.input}" />

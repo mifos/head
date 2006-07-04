@@ -58,6 +58,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
@@ -150,5 +151,16 @@ public class AccountApplyPaymentAction extends BaseAction{
 		if(masterDataService==null)
 			masterDataService =(MasterDataService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.MasterDataService);
 		return masterDataService;
+	}
+	
+	public ActionForward validate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		String method = (String) request.getAttribute("methodCalled");
+		String forward = null;
+		if (method != null) {
+			forward=method+"_failure";
+		}
+		return mapping.findForward(forward);
 	}
 }

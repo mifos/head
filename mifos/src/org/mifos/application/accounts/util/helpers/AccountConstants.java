@@ -175,5 +175,8 @@ public interface AccountConstants {
 	public final String REMOVE_SUCCESS="remove_success";
 	public final String REMOVE="remove";
 	public final String CHARGES="charges";
+	
+	public final String ERROR_MANDATORY="errors.mandatory";
+	public final String ERROR_FUTUREDATE="errors.futuredate";
 }
 

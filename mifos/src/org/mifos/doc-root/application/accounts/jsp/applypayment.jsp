@@ -53,14 +53,15 @@
 	}
 
 </SCRIPT>
-<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
-		<html-el:form method="post" action="/applyPaymentAction.do?method=preview" onsubmit="return (validateMyForm(transactionDate,transactionDateFormat,transactionDateYY) && validateMyForm(receiptDate,receiptDateFormat,receiptDateYY))" focus="personnelDetails.firstName">
+		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
+		<html-el:form method="post"
+			action="/applyPaymentAction.do?method=preview"
+			onsubmit="return (validateMyForm(transactionDate,transactionDateFormat,transactionDateYY) && validateMyForm(receiptDate,receiptDateFormat,receiptDateYY))"
+			focus="personnelDetails.firstName">
 
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt"> 
-					
-					<customtags:headerLink />
+					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink />
 
 					<c:choose>
 						<c:when test="${param.input == 'LoanDetails'}">
@@ -93,9 +94,13 @@
 						class="paddingL15T15">
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
-							<td width="70%" class="headingorange"><span class="heading">
-							<c:out value="${param.prdOfferingName}"/> - </span><mifos:mifoslabel
+							<td width="70%" class="headingorange"><span class="heading"> <c:out
+								value="${param.prdOfferingName}" /> - </span><mifos:mifoslabel
 								name="accounts.apply_payment" /></td>
+						</tr>
+						<tr>
+							<td><font class="fontnormalRedBold"> <html-el:errors
+								bundle="PersonnelUIResources" /> </font></td>
 						</tr>
 					</table>
 					<br>
@@ -107,49 +112,40 @@
 							</td>
 						</tr>
 						<tr>
-							<td align="right" class="fontnormal"><mifos:mifoslabel mandatory="yes"
-								name="accounts.date_of_trxn" /></td>
-							<td class="fontnormal">
-							<date:datetag property="transactionDate" name="applyPaymentActionForm"/>
-							</td>
+							<td align="right" class="fontnormal"><mifos:mifoslabel
+								mandatory="yes" name="accounts.date_of_trxn" /></td>
+							<td class="fontnormal"><date:datetag property="transactionDate" /></td>
 						</tr>
 						<tr>
-							<td width="24%" align="right" class="fontnormal"><mifos:mifoslabel mandatory="yes"
-								name="accounts.amount" /> <mifos:mifoslabel
+							<td width="24%" align="right" class="fontnormal"><mifos:mifoslabel
+								mandatory="yes" name="accounts.amount" /> <mifos:mifoslabel
 								name="accounts.colon" /></td>
-							<td width="76%">
-							<mifos:mifosdecimalinput property="amount" name="applyPaymentActionForm"/>
-							</td>
+							<td width="76%"><mifos:mifosdecimalinput property="amount"
+								name="applyPaymentActionForm" /></td>
 						</tr>
 						<tr>
-							<td align="right" class="fontnormal">
-							 <mifos:mifoslabel 	name="accounts.mode_of_payment" mandatory="yes"/>
-								<mifos:mifoslabel
-								name="accounts.colon" />
-								</td>
-								
-							<td class="fontnormal"><select name="select2"
-								style="width:136px;">
-								<option selected>Select
-								<option>Cash
-								<option>Check
-								<option>Voucher
-							</select></td>
+							<td align="right" class="fontnormal"><mifos:mifoslabel
+								name="accounts.mode_of_payment" mandatory="yes" /> <mifos:mifoslabel
+								name="accounts.colon" /></td>
+
+							<td class="fontnormal"><mifos:select name="applyPaymentActionForm"
+								property="paymentTypeId">
+								<html-el:options collection="PaymentType" property="id"
+									labelProperty="name"></html-el:options>
+							</mifos:select></td>
 						</tr>
 						<tr>
-							<td align="right" class="fontnormal"><mifos:mifoslabel 	name="accounts.receiptid" />
-							<mifos:mifoslabel 	name="accounts.colon" /></td>
-							<td class="fontnormal">
-							<mifos:mifosalphanumtext property="receiptId" name="applyPaymentActionForm"/> 
-							
-							</td>
+							<td align="right" class="fontnormal"><mifos:mifoslabel
+								name="accounts.receiptid" /> <mifos:mifoslabel
+								name="accounts.colon" /></td>
+							<td class="fontnormal"><mifos:mifosalphanumtext
+								property="receiptId" name="applyPaymentActionForm" /></td>
 						</tr>
 						<tr>
-							<td align="right" class="fontnormal"><mifos:mifoslabel 	name="accounts.receiptdate" />
-							<mifos:mifoslabel 	name="accounts.colon" /></td>
-							<td class="fontnormal">
-							<date:datetag property="receiptDate" name="applyPaymentActionForm"/>
-							</td>
+							<td align="right" class="fontnormal"><mifos:mifoslabel
+								name="accounts.receiptdate" /> <mifos:mifoslabel
+								name="accounts.colon" /></td>
+							<td class="fontnormal"><date:datetag property="receiptDate" /></td>
 						</tr>
 					</table>
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
@@ -160,33 +156,39 @@
 							<td align="center">&nbsp;</td>
 						</tr>
 						<tr>
-							<td align="center">
-
-
-							<html-el:submit styleClass="buttn" property="Preview"><mifos:mifoslabel name="accounts.reviewtransaction"> </mifos:mifoslabel></html-el:submit>
-								 &nbsp; 
-								
-						   <html-el:button styleClass="buttn" property="Cancel" style="width:65px;" onclick="ViewDetails()"><mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel> </html-el:button>
-								</td>
+							<td align="center"><html-el:submit styleClass="buttn"
+								property="Preview">
+								<mifos:mifoslabel name="accounts.reviewtransaction">
+								</mifos:mifoslabel>
+							</html-el:submit> &nbsp; <html-el:button styleClass="buttn"
+								property="Cancel" style="width:65px;" onclick="ViewDetails()">
+								<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
+							</html-el:button></td>
 						</tr>
 					</table>
 					</td>
 				</tr>
 			</table>
 			<html-el:hidden property="statusId" value="${param.statusId}" />
-			<html-el:hidden property="searchNode(search_name)"	value="${param.searchInput}" />
-			<html-el:hidden property="prdOfferingName"	value="${param.prdOfferingName}" />
-			<html-el:hidden property="globalAccountNum"	value="${param.globalAccountNum}" />
+			<html-el:hidden property="searchNode(search_name)"
+				value="${param.searchInput}" />
+			<html-el:hidden property="prdOfferingName"
+				value="${param.prdOfferingName}" />
+			<html-el:hidden property="globalAccountNum"
+				value="${param.globalAccountNum}" />
 			<html-el:hidden property="accountId" value="${param.accountId}" />
 			<html-el:hidden property="accountType" value="${param.accountType}" />
 			<html-el:hidden property="input" value="${param.input}" />
 			<html-el:hidden property="statusId" value="${param.statusId}" />
-			
+
 		</html-el:form>
 		<html-el:form action="closedaccsearchaction.do?method=search">
-			<html-el:hidden property="searchNode(search_name)"	value="${param.searchInput}" />
-			<html-el:hidden property="prdOfferingName"	value="${param.prdOfferingName}" />
-			<html-el:hidden property="globalAccountNum"	value="${param.globalAccountNum}" />
+			<html-el:hidden property="searchNode(search_name)"
+				value="${param.searchInput}" />
+			<html-el:hidden property="prdOfferingName"
+				value="${param.prdOfferingName}" />
+			<html-el:hidden property="globalAccountNum"
+				value="${param.globalAccountNum}" />
 			<html-el:hidden property="accountId" value="${param.accountId}" />
 			<html-el:hidden property="accountType" value="${param.accountType}" />
 			<html-el:hidden property="input" value="${param.input}" />
