@@ -2,7 +2,7 @@ package org.mifos.framework.components.cronjob.helpers;
 
 import java.sql.Date;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -15,7 +15,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestDuplicateClientHelper extends TestCase{
+public class TestDuplicateClientHelper extends MifosTestCase{
 
 	CenterBO center;
 	

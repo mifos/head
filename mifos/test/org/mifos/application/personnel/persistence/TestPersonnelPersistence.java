@@ -2,7 +2,7 @@ package org.mifos.application.personnel.persistence;
 
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
@@ -10,7 +10,7 @@ import org.mifos.application.personnel.persistence.service.PersonnelPersistenceS
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
-public class TestPersonnelPersistence extends TestCase  {
+public class TestPersonnelPersistence extends MifosTestCase  {
 
 	PersonnelPersistence persistence;
 	

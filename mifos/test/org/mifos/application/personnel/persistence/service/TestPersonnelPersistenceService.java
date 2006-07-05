@@ -2,13 +2,13 @@ package org.mifos.application.personnel.persistence.service;
 
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
-public class TestPersonnelPersistenceService extends TestCase {
+public class TestPersonnelPersistenceService extends MifosTestCase {
 	
 	PersonnelPersistenceService persistenceService = null;
 	

@@ -18,12 +18,12 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import servletunit.struts.MockStrutsTestCase;
+import org.mifos.framework.MifosMockStrutsTestCase;
 
 import java.net.URISyntaxException;
 import java.util.*;
 
-public class TestRepayLoanAction extends MockStrutsTestCase {
+public class TestRepayLoanAction extends MifosMockStrutsTestCase {
 
 	protected AccountBO accountBO = null;
 

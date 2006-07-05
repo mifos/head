@@ -4,7 +4,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.customer.business.CustomerBO;
@@ -18,7 +18,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestAccountPaymentEntity extends TestCase {
+public class TestAccountPaymentEntity extends MifosTestCase {
 
 	private AccountBO accountBO = null;
 	private CustomerBO center=null;

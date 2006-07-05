@@ -8,9 +8,9 @@ import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.framework.components.configuration.business.ConfigEntity;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
-public class TestConfigurationPersistence extends TestCase {
+public class TestConfigurationPersistence extends MifosTestCase {
 
 	private ConfigurationPersistence configurationPersistence;
 	

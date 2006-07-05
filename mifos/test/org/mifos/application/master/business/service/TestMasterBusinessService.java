@@ -3,7 +3,7 @@ package org.mifos.application.master.business.service;
 import java.sql.Date;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.customer.business.CustomerBO;
@@ -22,7 +22,7 @@ import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.util.helpers.TestConstants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestMasterBusinessService extends TestCase {
+public class TestMasterBusinessService extends MifosTestCase {
 
 	MasterDataService masterService;
 

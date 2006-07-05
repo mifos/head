@@ -8,7 +8,7 @@ import junit.framework.*;
 import junit.textui.TestRunner;
 
 
-public class FrameworkTestSuite extends TestCase
+public class FrameworkTestSuite extends MifosTestCase
 {
 	public static void main (String[] args)
 	{

@@ -4,7 +4,7 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
@@ -23,7 +23,7 @@ import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestLoanArrearsHelper extends TestCase{
+public class TestLoanArrearsHelper extends MifosTestCase{
 	
 	private LoanArrearsHelper loanArrearHelper;
 	

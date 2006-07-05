@@ -2,11 +2,11 @@ package org.mifos.application.configuration;
 
 import org.mifos.application.configuration.persistence.ConfigurationPersistence;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 
 
-public class TestConfigurationPersistence extends TestCase {
+public class TestConfigurationPersistence extends MifosTestCase {
 	
 	ConfigurationPersistence configurationPersistence ;
 	

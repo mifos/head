@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -27,7 +27,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestLoanBusinessService extends TestCase {
+public class TestLoanBusinessService extends MifosTestCase {
 		
 	protected AccountBO accountBO = null;
 

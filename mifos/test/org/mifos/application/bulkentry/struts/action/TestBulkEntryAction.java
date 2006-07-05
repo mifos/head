@@ -73,6 +73,7 @@ import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.scheduler.ScheduleDataIntf;
 import org.mifos.framework.components.scheduler.ScheduleInputsIntf;
@@ -88,9 +89,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-import servletunit.struts.MockStrutsTestCase;
-
-public class TestBulkEntryAction extends MockStrutsTestCase {
+public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	UserContext userContext;
 
 	CustomerBO center;
@@ -110,13 +109,6 @@ public class TestBulkEntryAction extends MockStrutsTestCase {
 	private SavingsBO groupSavingsAccount;
 
 	private SavingsBO clientSavingsAccount;
-
-	public TestBulkEntryAction() {
-	}
-
-	public TestBulkEntryAction(String name) {
-		super(name);
-	}
 
 	public void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(centerSavingsAccount);
@@ -632,8 +624,7 @@ public class TestBulkEntryAction extends MockStrutsTestCase {
 										"org.mifos.application.productdefinition.util.valueobjects.PaymentType",
 										"paymentTypeId").getLookUpMaster());
 		request.getSession().setAttribute(
-				BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
-				Constants.YES);
+				BulkEntryConstants.ISCENTERHEIRARCHYEXISTS, Constants.YES);
 
 		setMasterListInSession(center.getCustomerId());
 		setRequestPathInfo("/bulkentryaction.do");
@@ -703,8 +694,7 @@ public class TestBulkEntryAction extends MockStrutsTestCase {
 		request.getSession().setAttribute(BulkEntryConstants.BULKENTRY,
 				bulkEntry);
 		request.getSession().setAttribute(
-				BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
-				Constants.YES);
+				BulkEntryConstants.ISCENTERHEIRARCHYEXISTS, Constants.YES);
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "get");
 		actionPerform();
@@ -750,7 +740,7 @@ public class TestBulkEntryAction extends MockStrutsTestCase {
 		}
 		return dates.get(dates.size() - 1);
 	}
-	
+
 	public void testFailurePreviewForEmptyAmount() {
 		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
 		request.getSession().setAttribute(BulkEntryConstants.BULKENTRY,
@@ -770,7 +760,7 @@ public class TestBulkEntryAction extends MockStrutsTestCase {
 		verifyActionErrors(new String[] { "errors.invalidamount",
 				"errors.invalidamount" });
 	}
-	
+
 	public void testFailurePreviewForCharAmount() {
 		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
 		request.getSession().setAttribute(BulkEntryConstants.BULKENTRY,
@@ -790,5 +780,5 @@ public class TestBulkEntryAction extends MockStrutsTestCase {
 		verifyActionErrors(new String[] { "errors.invalidamount",
 				"errors.invalidamount" });
 	}
-	
+
 }

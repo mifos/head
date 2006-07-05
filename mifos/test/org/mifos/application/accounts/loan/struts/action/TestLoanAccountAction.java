@@ -11,6 +11,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -18,14 +19,15 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-import servletunit.struts.MockStrutsTestCase;
+public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 
-public class TestLoanAccountAction extends MockStrutsTestCase {	
-	
 	private UserContext userContext;
-	protected AccountBO accountBO=null;
-	protected CustomerBO center=null;
-	protected CustomerBO group=null;
+
+	protected AccountBO accountBO = null;
+
+	protected CustomerBO center = null;
+
+	protected CustomerBO group = null;
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -68,48 +70,54 @@ public class TestLoanAccountAction extends MockStrutsTestCase {
 	}
 
 	public void testGetAllActivity() {
-		try{
-		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(Short.valueOf("3"),startDate,1);
-		LoanBO loan=(LoanBO)accountBO;
-		setRequestPathInfo("/loanAccountAction.do");
-		addRequestParameter("method", "getAllActivity");
-		addRequestParameter("globalAccountNum","99999999999");
-		actionPerform();
-		verifyForward("getAllActivity_success");
-		assertEquals(loan.getGlobalAccountNum(),"99999999999");
-		}catch(Exception e) {
+		try {
+			Date startDate = new Date(System.currentTimeMillis());
+			accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
+			LoanBO loan = (LoanBO) accountBO;
+			setRequestPathInfo("/loanAccountAction.do");
+			addRequestParameter("method", "getAllActivity");
+			addRequestParameter("globalAccountNum", "99999999999");
+			actionPerform();
+			verifyForward("getAllActivity_success");
+			assertEquals(loan.getGlobalAccountNum(), "99999999999");
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	private AccountBO getLoanAccount(Short accountSate,Date startDate,int disbursalType) {
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1,1,4,2));
-        center=TestObjectFactory.createCenter("Center",Short.valueOf("13"),"1.1",meeting,new Date(System.currentTimeMillis()));
-        group=TestObjectFactory.createGroup("Group",Short.valueOf("9"),"1.1.1",center,new Date(System.currentTimeMillis()));
+
+	private AccountBO getLoanAccount(Short accountSate, Date startDate,
+			int disbursalType) {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), meeting);
-		return TestObjectFactory.createLoanAccountWithDisbursement("99999999999", group,
-				accountSate, startDate, loanOffering,disbursalType);
+		return TestObjectFactory.createLoanAccountWithDisbursement(
+				"99999999999", group, accountSate, startDate, loanOffering,
+				disbursalType);
 
 	}
-	
-	public void testGetInstallmentDetails(){
-		try{
+
+	public void testGetInstallmentDetails() {
+		try {
 			Date startDate = new Date(System.currentTimeMillis());
-			accountBO = getLoanAccount(Short.valueOf("3"),startDate,1);
-			LoanBO loan=(LoanBO)accountBO;
+			accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
+			LoanBO loan = (LoanBO) accountBO;
 			setRequestPathInfo("/loanAccountAction.do");
 			addRequestParameter("method", "getInstallmentDetails");
-			addRequestParameter("accountId",String.valueOf(loan.getAccountId()));
+			addRequestParameter("accountId", String
+					.valueOf(loan.getAccountId()));
 			actionPerform();
-			verifyForward("viewInstmentDetails_success");			
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
+			verifyForward("viewInstmentDetails_success");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

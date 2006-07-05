@@ -1,18 +1,9 @@
 package org.mifos.application.fees.business;
 
-import junit.framework.TestCase;
-
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
+import org.mifos.framework.MifosTestCase;
 
-public class TestFeeFrequencyEntity extends TestCase {
-
-	public TestFeeFrequencyEntity() {
-		super();
-	}
-
-	public TestFeeFrequencyEntity(String names) {
-		super(names);
-	}
+public class TestFeeFrequencyEntity extends MifosTestCase {
 
 	public void testBuildFrequencyForOneTimeFees() {
 		FeeFrequencyEntity feeFrequencyEntity = new FeeFrequencyEntity();

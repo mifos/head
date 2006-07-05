@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -22,7 +22,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestLoanPersistenceService extends TestCase {
+public class TestLoanPersistenceService extends MifosTestCase {
 	
 	LoanPersistenceService loanPersistenceService;
 

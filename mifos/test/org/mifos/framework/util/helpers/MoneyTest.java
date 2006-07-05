@@ -39,12 +39,12 @@ package org.mifos.framework.util.helpers;
 
 import java.math.BigDecimal;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 /**
  * This class is used to test Money class.
  */
-public class MoneyTest extends TestCase {
+public class MoneyTest extends MifosTestCase {
 	
 	
 	public MoneyTest(){

@@ -7,7 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -27,7 +27,7 @@ import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.plugin.valueObjects.EntityMaster;
 import org.mifos.framework.util.helpers.FilePaths;
 
-public class TestFieldConfigImplementer extends TestCase{
+public class TestFieldConfigImplementer extends MifosTestCase{
 	
 	private static FieldConfigurationPersistenceService fieldConfigurationPersistenceService=new FieldConfigurationPersistenceService();
 	

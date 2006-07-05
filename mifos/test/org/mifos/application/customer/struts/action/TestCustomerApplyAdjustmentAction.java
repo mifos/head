@@ -29,9 +29,9 @@ import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-import servletunit.struts.MockStrutsTestCase;
+import org.mifos.framework.MifosMockStrutsTestCase;
 
-public class TestCustomerApplyAdjustmentAction extends MockStrutsTestCase {
+public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	private AccountBO accountBO = null;
 	
 	private UserContext userContext;

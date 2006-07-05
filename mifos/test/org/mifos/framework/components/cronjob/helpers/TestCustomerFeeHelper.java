@@ -6,7 +6,7 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.Set;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
@@ -26,7 +26,7 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestCustomerFeeHelper extends TestCase{	
+public class TestCustomerFeeHelper extends MifosTestCase{	
 	
 	private CustomerBO center;	
 	

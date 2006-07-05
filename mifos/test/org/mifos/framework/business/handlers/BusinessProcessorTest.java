@@ -40,7 +40,7 @@ package org.mifos.framework.business.handlers;
 
 import java.io.File;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -61,7 +61,7 @@ import org.mifos.framework.util.valueobjects.ValueObject;
  *  This class is the test class for framework BusinessProcessor. This test class checks the BusinessProcessor functionality of Create , Update , Delete
  */
 
-public class BusinessProcessorTest extends TestCase
+public class BusinessProcessorTest extends MifosTestCase
 {
 	 private BusinessProcessor businessProcessor = null;
 	 private ValueObject valueObject = null;

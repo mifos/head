@@ -1,6 +1,6 @@
 package org.mifos.application.accounts.financial.util.helpers;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.accounts.financial.business.COABO;
 import org.mifos.application.accounts.financial.business.FinancialActionBO;
@@ -15,7 +15,7 @@ import org.mifos.framework.hibernate.HibernateStartUp;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.FilePaths;
 
-public class TestFinancialInitializer extends TestCase {
+public class TestFinancialInitializer extends MifosTestCase {
 	
 
 

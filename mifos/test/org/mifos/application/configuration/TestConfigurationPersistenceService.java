@@ -37,11 +37,11 @@
  */
 package org.mifos.application.configuration;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.configuration.persistence.service.ConfigurationPersistenceService;
 
-public class TestConfigurationPersistenceService extends TestCase {
+public class TestConfigurationPersistenceService extends MifosTestCase {
 
 	ConfigurationPersistenceService configurationPersistenceService;
 

@@ -40,7 +40,7 @@ package org.mifos.application.collectionsheet.business;
 
 import java.util.Date;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
@@ -56,7 +56,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestCollSheetSavingsDetailsEntity extends TestCase {
+public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 	private CustomerBO group;
 	private CustomerBO center;
 	private CustomerBO client1;

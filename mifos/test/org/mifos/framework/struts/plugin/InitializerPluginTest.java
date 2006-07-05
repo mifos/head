@@ -56,7 +56,7 @@ import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.StringToMoneyConverter;
 import org.mifos.framework.util.helpers.ValueObjectFactory;
 
-import servletunit.struts.MockStrutsTestCase;
+import org.mifos.framework.MifosMockStrutsTestCase;
 
 /**
  * This class is used to test methods of InitializerPlugin.
@@ -65,7 +65,7 @@ import servletunit.struts.MockStrutsTestCase;
  * @author ashishsm
  *
  */
-public class InitializerPluginTest extends MockStrutsTestCase {
+public class InitializerPluginTest extends MifosMockStrutsTestCase {
 
 	public InitializerPluginTest(){
 		try {
@@ -87,7 +87,7 @@ public class InitializerPluginTest extends MockStrutsTestCase {
 	 * This sets the web.xml,struts-config.xml and prepares the userContext
 	 * and activityContext and sets them in the session.
 	 *
-	 * @see junit.framework.TestCase#setUp()
+	 * @see junit.framework.MifosTestCase#setUp()
 	 */
 	public void setUp()throws Exception{
 		super.setUp();

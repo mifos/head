@@ -60,13 +60,13 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 /**
  * @author ashishsm
  *
  */
-public class TestCollSheetCustBO extends TestCase{
+public class TestCollSheetCustBO extends MifosTestCase{
 	
 	
 	

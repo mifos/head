@@ -38,9 +38,9 @@
 
 package org.mifos.application.master.business;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
-public class TestMifosCurrency extends TestCase {
+public class TestMifosCurrency extends MifosTestCase {
 
 	public void testEqualsOnCurrencyId(){
 		MifosCurrency currency1 = new MifosCurrency(Short.valueOf("1") ,"Dollar","$",Short.valueOf("1"),Float.valueOf("1"),Short.valueOf("1"),Short.valueOf("3"));

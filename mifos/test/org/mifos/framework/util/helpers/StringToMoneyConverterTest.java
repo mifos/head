@@ -43,14 +43,14 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.HibernateStartUp;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 /**
  * This class is used to test StringToMoneyConverter.
  * @author ashishsm
  *
  */
-public class StringToMoneyConverterTest extends TestCase {
+public class StringToMoneyConverterTest extends MifosTestCase {
 	
 	
 	public StringToMoneyConverterTest(){

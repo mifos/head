@@ -79,14 +79,14 @@ import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 
-import servletunit.struts.MockStrutsTestCase;
+import org.mifos.framework.MifosMockStrutsTestCase;
 
 /**
  * This class tests methods of ApplyAdjustment action class.
  * @author ashishsm
  *
  */
-public class TestApplyAdjustmentAction extends MockStrutsTestCase {
+public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	private CenterBO center;
 	private GroupBO group;
 	private LoanBO loan;
@@ -105,7 +105,7 @@ public class TestApplyAdjustmentAction extends MockStrutsTestCase {
 	 * This sets the web.xml,struts-config.xml and prepares the userContext
 	 * and activityContext and sets them in the session.
 	 *
-	 * @see junit.framework.TestCase#setUp()
+	 * @see junit.framework.MifosTestCase#setUp()
 	 */
 	public void setUp()throws Exception{
 		super.setUp();

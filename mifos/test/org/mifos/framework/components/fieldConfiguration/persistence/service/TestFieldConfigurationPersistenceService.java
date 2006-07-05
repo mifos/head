@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
@@ -20,7 +20,7 @@ import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.struts.plugin.valueObjects.EntityMaster;
 import org.mifos.framework.util.helpers.FilePaths;
 
-public class TestFieldConfigurationPersistenceService extends TestCase{
+public class TestFieldConfigurationPersistenceService extends MifosTestCase{
 	
 	private static FieldConfigurationPersistenceService fieldConfigurationPersistenceService = new FieldConfigurationPersistenceService();
 

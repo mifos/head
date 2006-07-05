@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountStateEntity;
@@ -43,7 +43,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestCustomerPersistence extends TestCase {
+public class TestCustomerPersistence extends MifosTestCase {
 
 	private MeetingBO meeting;
 

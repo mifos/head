@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -21,7 +21,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestLoanTrxnDetailEntity extends TestCase {
+public class TestLoanTrxnDetailEntity extends MifosTestCase {
 	
 private BulkEntryPersistance bulkEntryPersistance;
 

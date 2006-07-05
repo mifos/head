@@ -13,10 +13,10 @@ import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 
-public class TestFieldConfigurationHelper extends TestCase {
+public class TestFieldConfigurationHelper extends MifosTestCase {
 	
 	public void testGetConfiguredFieldName() throws Exception{
 		String fieldName=FieldConfigurationHelper.getConfiguredFieldName("Center.Address3",TestObjectFactory.getUserContext().getPereferedLocale());

@@ -15,9 +15,9 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
-public class TestTagGenerator extends TestCase{
+public class TestTagGenerator extends MifosTestCase{
 	private CustomerBO group;
 	private CustomerBO center;
 	private SavingsBO savings;

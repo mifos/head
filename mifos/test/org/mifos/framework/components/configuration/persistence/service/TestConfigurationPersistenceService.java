@@ -2,7 +2,7 @@ package org.mifos.framework.components.configuration.persistence.service;
 
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.SupportedLocalesEntity;
@@ -10,7 +10,7 @@ import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.framework.components.configuration.business.ConfigEntity;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
-public class TestConfigurationPersistenceService extends TestCase {
+public class TestConfigurationPersistenceService extends MifosTestCase {
 
 	private ConfigurationPersistenceService configurationPersistenceService;
 	

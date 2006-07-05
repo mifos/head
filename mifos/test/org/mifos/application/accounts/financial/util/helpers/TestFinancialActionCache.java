@@ -10,9 +10,9 @@ import org.mifos.framework.hibernate.HibernateStartUp;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.FilePaths;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
-public class TestFinancialActionCache extends TestCase {
+public class TestFinancialActionCache extends MifosTestCase {
 	
 
 	public void testFinancialActionCache() throws FinancialException

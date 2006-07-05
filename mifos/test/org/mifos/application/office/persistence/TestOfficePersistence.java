@@ -2,14 +2,14 @@ package org.mifos.application.office.persistence;
 
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.authorization.HierarchyManager;
 
-public class TestOfficePersistence extends TestCase {
+public class TestOfficePersistence extends MifosTestCase {
 	private OfficePersistence officePersistence = new OfficePersistence();
 	public void setUp() throws Exception {
 		HierarchyManager.getInstance().init();

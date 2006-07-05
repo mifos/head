@@ -61,9 +61,9 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-import servletunit.struts.MockStrutsTestCase;
+import org.mifos.framework.MifosMockStrutsTestCase;
 
-public class TestApplyPaymentAction extends MockStrutsTestCase{
+public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 	protected AccountBO accountBO;
 	private CustomerBO center;
 	private CustomerBO group;

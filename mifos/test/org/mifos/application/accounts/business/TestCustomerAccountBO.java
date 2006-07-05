@@ -8,8 +8,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
@@ -21,6 +19,7 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.fees.business.FeesBO;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
 import org.mifos.framework.components.scheduler.SchedulerException;
@@ -35,8 +34,8 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestCustomerAccountBO extends TestCase {	
-		
+public class TestCustomerAccountBO extends MifosTestCase {
+
 	private BulkEntryBusinessService bulkEntryBusinessService;
 
 	protected CustomerAccountBO customerAccountBO = null;
@@ -48,14 +47,6 @@ public class TestCustomerAccountBO extends TestCase {
 	private CustomerBO client = null;
 
 	private UserContext userContext;
-
-	public TestCustomerAccountBO() {
-		super();
-	}
-
-	public TestCustomerAccountBO(String name) {
-		super(name);
-	}
 
 	@Override
 	protected void setUp() throws Exception {
@@ -212,8 +203,10 @@ public class TestCustomerAccountBO extends TestCase {
 			assertEquals("Misc Penalty Adjusted", accntActionDate
 					.getMiscPenaltyPaid().getAmountDoubleValue(), 0.0);
 		}
-		for(CustomerActivityEntity customerActivityEntity : customerAccountBO.getCustomerActivitDetails()){
-			assertEquals("Amnt Adjusted",customerActivityEntity.getDescription());
+		for (CustomerActivityEntity customerActivityEntity : customerAccountBO
+				.getCustomerActivitDetails()) {
+			assertEquals("Amnt Adjusted", customerActivityEntity
+					.getDescription());
 		}
 
 	}
@@ -413,80 +406,107 @@ public class TestCustomerAccountBO extends TestCase {
 	public void testApplyPeriodicFees() throws RepaymentScheduleException,
 			SchedulerException, PersistenceException, ServiceException {
 		createInitialObjects();
-		FeesBO periodicFees = TestObjectFactory.createPeriodicFees("Periodic Fee", 100.0, 1, 1, 5);
+		FeesBO periodicFees = TestObjectFactory.createPeriodicFees(
+				"Periodic Fee", 100.0, 1, 1, 5);
 		AccountFeesEntity accountFeesEntity = new AccountFeesEntity();
 		accountFeesEntity.setAccount(group.getCustomerAccount());
 		accountFeesEntity.setAccountFeeAmount(periodicFees.getFeeAmount());
 		accountFeesEntity.setFeeAmount(periodicFees.getFeeAmount());
 		accountFeesEntity.setFees(periodicFees);
-		accountFeesEntity.setLastAppliedDate(new Date(System.currentTimeMillis()));
-		
+		accountFeesEntity.setLastAppliedDate(new Date(System
+				.currentTimeMillis()));
+
 		group.getCustomerAccount().addAccountFees(accountFeesEntity);
-		
+
 		TestObjectFactory.updateObject(group);
 		TestObjectFactory.flushandCloseSession();
-		
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
-		
-		AccountActionDateEntity accountActionDateEntity = (AccountActionDateEntity) group.getCustomerAccount().getAccountActionDates().toArray()[0];
-		
-		Set<AccountFeesActionDetailEntity> feeDetailsSet = accountActionDateEntity.getAccountFeesActionDetails();
-		
+
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+
+		AccountActionDateEntity accountActionDateEntity = (AccountActionDateEntity) group
+				.getCustomerAccount().getAccountActionDates().toArray()[0];
+
+		Set<AccountFeesActionDetailEntity> feeDetailsSet = accountActionDateEntity
+				.getAccountFeesActionDetails();
+
 		List<Integer> feeList = new ArrayList<Integer>();
 		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : feeDetailsSet) {
-			feeList.add(accountFeesActionDetailEntity.getAccountFeesActionDetailId());
+			feeList.add(accountFeesActionDetailEntity
+					.getAccountFeesActionDetailId());
 		}
-		group.getCustomerAccount().applyPeriodicFees(new Date(System.currentTimeMillis()));
+		group.getCustomerAccount().applyPeriodicFees(
+				new Date(System.currentTimeMillis()));
 		TestObjectFactory.flushandCloseSession();
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
-		AccountActionDateEntity firstInstallment = (AccountActionDateEntity) group.getCustomerAccount().getAccountActionDates().toArray()[0];
-		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : firstInstallment.getAccountFeesActionDetails()) {
-			if (!feeList.contains(accountFeesActionDetailEntity.getAccountFeesActionDetailId())) {
-				assertEquals("Periodic Fee", accountFeesActionDetailEntity.getFee().getFeeName());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		AccountActionDateEntity firstInstallment = (AccountActionDateEntity) group
+				.getCustomerAccount().getAccountActionDates().toArray()[0];
+		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : firstInstallment
+				.getAccountFeesActionDetails()) {
+			if (!feeList.contains(accountFeesActionDetailEntity
+					.getAccountFeesActionDetailId())) {
+				assertEquals("Periodic Fee", accountFeesActionDetailEntity
+						.getFee().getFeeName());
 				break;
 			}
 		}
 		HibernateUtil.closeSession();
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
 	}
-	
-	public void testRemoveFees() throws NumberFormatException, SystemException, ApplicationException {
-		createInitialObjects();	
+
+	public void testRemoveFees() throws NumberFormatException, SystemException,
+			ApplicationException {
+		createInitialObjects();
 		CustomerAccountBO customerAccountBO = group.getCustomerAccount();
-		for(AccountFeesEntity accountFeesEntity : customerAccountBO.getAccountFees()){	
-			FeesBO feesBO = accountFeesEntity.getFees();			
-			customerAccountBO.removeFees(feesBO.getFeeId(),Short.valueOf("1"));			
+		for (AccountFeesEntity accountFeesEntity : customerAccountBO
+				.getAccountFees()) {
+			FeesBO feesBO = accountFeesEntity.getFees();
+			customerAccountBO.removeFees(feesBO.getFeeId(), Short.valueOf("1"));
 		}
 		TestObjectFactory.updateObject(customerAccountBO);
-		group =  (CustomerBO) TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		group = (CustomerBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
 		customerAccountBO = group.getCustomerAccount();
-		Set<CustomerActivityEntity> customerActivitySet = customerAccountBO.getCustomerActivitDetails();		
-		for(CustomerActivityEntity customerActivityEntity : customerActivitySet){
-			assertEquals(1,customerActivityEntity.getPersonnel().getPersonnelId().intValue());
-			assertEquals("Mainatnence Fee removed",customerActivityEntity.getDescription());			
+		Set<CustomerActivityEntity> customerActivitySet = customerAccountBO
+				.getCustomerActivitDetails();
+		for (CustomerActivityEntity customerActivityEntity : customerActivitySet) {
+			assertEquals(1, customerActivityEntity.getPersonnel()
+					.getPersonnelId().intValue());
+			assertEquals("Mainatnence Fee removed", customerActivityEntity
+					.getDescription());
 		}
-		for(AccountFeesEntity accountFeesEntity : group.getCustomerAccount().getAccountFees()){			
-			assertEquals(2,accountFeesEntity.getFeeStatus().intValue());
-		}		
+		for (AccountFeesEntity accountFeesEntity : group.getCustomerAccount()
+				.getAccountFees()) {
+			assertEquals(2, accountFeesEntity.getFeeStatus().intValue());
+		}
 	}
-	
-	public void testUpdateAccountActivity() throws NumberFormatException, SystemException, ApplicationException{
-		createInitialObjects();	
+
+	public void testUpdateAccountActivity() throws NumberFormatException,
+			SystemException, ApplicationException {
+		createInitialObjects();
 		CustomerAccountBO customerAccountBO = group.getCustomerAccount();
 		Short feeId = null;
-		for(AccountFeesEntity accountFeesEntity : customerAccountBO.getAccountFees()){
+		for (AccountFeesEntity accountFeesEntity : customerAccountBO
+				.getAccountFees()) {
 			FeesBO feesBO = accountFeesEntity.getFees();
-			feeId = feesBO.getFeeId();						
+			feeId = feesBO.getFeeId();
 		}
-		customerAccountBO.updateAccountActivity(new Money("222"),Short.valueOf("1"),"Mainatnence Fee removed");
+		customerAccountBO.updateAccountActivity(new Money("222"), Short
+				.valueOf("1"), "Mainatnence Fee removed");
 		TestObjectFactory.updateObject(customerAccountBO);
-		group =  (CustomerBO) TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());		
+		group = (CustomerBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
 		customerAccountBO = group.getCustomerAccount();
-		Set<CustomerActivityEntity> customerActivitySet = customerAccountBO.getCustomerActivitDetails();		
-		for(CustomerActivityEntity customerActivityEntity : customerActivitySet){
-			assertEquals(1,customerActivityEntity.getPersonnel().getPersonnelId().intValue());
-			assertEquals("Mainatnence Fee removed",customerActivityEntity.getDescription());
-			assertEquals("222.0",customerActivityEntity.getAmount().toString());		
+		Set<CustomerActivityEntity> customerActivitySet = customerAccountBO
+				.getCustomerActivitDetails();
+		for (CustomerActivityEntity customerActivityEntity : customerActivitySet) {
+			assertEquals(1, customerActivityEntity.getPersonnel()
+					.getPersonnelId().intValue());
+			assertEquals("Mainatnence Fee removed", customerActivityEntity
+					.getDescription());
+			assertEquals("222.0", customerActivityEntity.getAmount().toString());
 		}
 	}
 }

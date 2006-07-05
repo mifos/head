@@ -38,9 +38,9 @@
 
 package org.mifos.framework.components.configuration.util.helpers;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 //TODO:File To be removed from repository 
-public class TestSystemConfig extends TestCase {
+public class TestSystemConfig extends MifosTestCase {
 
 	public void testGetCurrency() throws Exception{
 //		SystemConfig systemConfig = SystemConfig.getInstance();

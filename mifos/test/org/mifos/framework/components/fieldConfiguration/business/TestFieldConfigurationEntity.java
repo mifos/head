@@ -1,6 +1,6 @@
 package org.mifos.framework.components.fieldConfiguration.business;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.configuration.business.MifosConfiguration;
@@ -14,7 +14,7 @@ import org.mifos.framework.util.helpers.FilePaths;
 
 
 
-public class TestFieldConfigurationEntity extends TestCase{
+public class TestFieldConfigurationEntity extends MifosTestCase{
 
 	public void testGetFieldConfigurationEntity(){
 		FieldConfigurationEntity fieldConfigurationEntity=(FieldConfigurationEntity)HibernateUtil.getSessionTL().get(FieldConfigurationEntity.class,Integer.valueOf("1"));

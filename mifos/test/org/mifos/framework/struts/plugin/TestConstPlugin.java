@@ -5,9 +5,9 @@ import java.util.Map;
 
 import org.mifos.framework.util.helpers.ResourceLoader;
 
-import servletunit.struts.MockStrutsTestCase;
+import org.mifos.framework.MifosMockStrutsTestCase;
 
-public class TestConstPlugin extends MockStrutsTestCase{
+public class TestConstPlugin extends MifosMockStrutsTestCase{
 	public void setUp()throws Exception{
 		super.setUp();
 		try {

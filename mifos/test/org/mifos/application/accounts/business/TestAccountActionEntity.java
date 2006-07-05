@@ -6,7 +6,7 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.Set;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.hibernate.Session;
 import org.mifos.application.accounts.persistence.AccountPersistence;
@@ -17,7 +17,7 @@ import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestAccountActionEntity extends TestCase {	
+public class TestAccountActionEntity extends MifosTestCase {	
 	
 	private Session session;
 	private AccountActionEntity accountActionEntity;

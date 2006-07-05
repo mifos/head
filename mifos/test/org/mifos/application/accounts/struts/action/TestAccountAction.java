@@ -27,13 +27,13 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-import servletunit.struts.MockStrutsTestCase;
+import org.mifos.framework.MifosMockStrutsTestCase;
 
 /**
  * @author krishankg
  *
  */
-public class TestAccountAction extends MockStrutsTestCase {
+public class TestAccountAction extends MifosMockStrutsTestCase {
 
 	protected AccountBO accountBO = null;
 

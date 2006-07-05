@@ -3,7 +3,7 @@ package org.mifos.application.customer.business;
 import java.sql.Date;
 import java.sql.Timestamp;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
@@ -23,7 +23,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestCustomerTrxnDetailEntity extends TestCase {
+public class TestCustomerTrxnDetailEntity extends MifosTestCase {
 
 	private AccountBO accountBO = null;
 	private CustomerBO center=null;

@@ -23,7 +23,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 /**
  * @author krishankg

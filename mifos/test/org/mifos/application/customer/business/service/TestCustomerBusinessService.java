@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
@@ -33,7 +33,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
  * @author ashishsm
  *
  */
-public class TestCustomerBusinessService extends TestCase {
+public class TestCustomerBusinessService extends MifosTestCase {
 	private CenterBO center =null;
 	private GroupBO group = null;
 	private LoanBO loan = null;

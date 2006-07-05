@@ -2,13 +2,13 @@ package org.mifos.application.configuration;
 
 import java.util.Map;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.configuration.util.helpers.LabelKey;
 
-public class TestConfiguration extends TestCase {
+public class TestConfiguration extends MifosTestCase {
 	
 	MifosConfiguration configuration ;
 	

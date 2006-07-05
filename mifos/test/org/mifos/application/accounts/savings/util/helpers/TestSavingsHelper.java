@@ -7,9 +7,9 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
-public class TestSavingsHelper extends TestCase{
+public class TestSavingsHelper extends MifosTestCase{
 	SavingsHelper helper = new SavingsHelper(); 
 	
 	public void testCalculateDays()throws Exception{

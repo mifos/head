@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
@@ -42,7 +42,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestFinancialBusinessService extends TestCase {	
+public class TestFinancialBusinessService extends MifosTestCase {	
 	protected LoanBO loan = null;
 	protected SavingsBO savings;
 	protected SavingsOfferingBO savingsOffering;

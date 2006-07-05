@@ -1,6 +1,6 @@
 package org.mifos.application.accounts.financial.util.helpers;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.hibernate.Hibernate;
 import org.mifos.application.accounts.financial.business.COABO;
@@ -11,7 +11,7 @@ import org.mifos.application.accounts.financial.util.helpers.CategoryConstants;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestConstants;
 
-public class TestCOACache extends TestCase {
+public class TestCOACache extends MifosTestCase {
 
 	public void testCOACache() throws FinancialException {
 

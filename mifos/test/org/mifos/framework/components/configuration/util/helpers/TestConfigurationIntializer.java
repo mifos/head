@@ -1,6 +1,6 @@
 package org.mifos.framework.components.configuration.util.helpers;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
@@ -13,7 +13,7 @@ import org.mifos.framework.components.configuration.util.helpers.ConfigurationIn
 import org.mifos.framework.components.configuration.util.helpers.OfficeConfigConstants;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
-public class TestConfigurationIntializer extends TestCase{
+public class TestConfigurationIntializer extends MifosTestCase{
 	private ConfigurationInitializer configInitializer;
 	
 	protected void setUp() throws Exception {

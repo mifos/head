@@ -8,9 +8,9 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.valueobjects.Context;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
-public class TestApplyChangesDAO extends TestCase {
+public class TestApplyChangesDAO extends MifosTestCase {
 	
 	
 	public void testLoadFeeMasterData(){

@@ -2,7 +2,7 @@ package org.mifos.application.accounts;
 
 import java.util.Date;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
@@ -12,7 +12,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestAccount extends TestCase {
+public class TestAccount extends MifosTestCase {
 	protected AccountBO accountBO=null;
 	protected CustomerBO center=null;
 	protected CustomerBO group=null;

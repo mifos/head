@@ -2,7 +2,7 @@ package org.mifos.application.master.persistence;
 
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -11,7 +11,7 @@ import org.mifos.application.master.util.valueobjects.LookUpMaster;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestConstants;
 
-public class TestMasterPersistence extends TestCase {
+public class TestMasterPersistence extends MifosTestCase {
 	
 	@Override
 	protected void setUp() throws Exception {

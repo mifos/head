@@ -3,7 +3,7 @@ package org.mifos.application.productdefinition.persistence;
 import java.util.Date;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.accounts.savings.business.SavingsBO;
@@ -27,7 +27,7 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestProductDefinitionPersistence extends TestCase{
+public class TestProductDefinitionPersistence extends MifosTestCase{
 	private SavingsPrdPersistence dbService = new SavingsPrdPersistence();
 	private LoansPrdPersistence dbServiceLoans = new LoansPrdPersistence();
 	private CustomerBO group;

@@ -37,7 +37,7 @@
  */
 package org.mifos.application.fees.business;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
@@ -56,7 +56,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestFeesBO extends TestCase {
+public class TestFeesBO extends MifosTestCase {
 
 	private final Short formulaId = (short) 1;
 

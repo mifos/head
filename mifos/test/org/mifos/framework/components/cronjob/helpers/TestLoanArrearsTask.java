@@ -21,9 +21,9 @@ import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
-public class TestLoanArrearsTask extends TestCase{
+public class TestLoanArrearsTask extends MifosTestCase{
 	
 	private LoanArrearsTask loanArrearTask;
 	

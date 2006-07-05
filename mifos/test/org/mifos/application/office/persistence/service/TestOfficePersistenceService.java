@@ -2,7 +2,7 @@ package org.mifos.application.office.persistence.service;
 
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.persistence.OfficePersistence;
@@ -11,7 +11,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 
-public class TestOfficePersistenceService extends TestCase {
+public class TestOfficePersistenceService extends MifosTestCase {
 	OfficePersistenceService dbService;
 
 	public void setUp() throws Exception {

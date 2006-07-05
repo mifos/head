@@ -7,9 +7,9 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.framework.util.valueobjects.Context;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
-public class TestAccountsApplyChargesBusinessProcessor extends TestCase {
+public class TestAccountsApplyChargesBusinessProcessor extends MifosTestCase {
 
 	public void testLoadFeeMasterData() throws Exception{
 		AccountsApplyChargesBusinessProcessor accountsApplyChargesBusinessProcessor=new AccountsApplyChargesBusinessProcessor();

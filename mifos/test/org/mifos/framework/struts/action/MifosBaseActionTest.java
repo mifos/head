@@ -67,7 +67,7 @@ import org.mifos.framework.util.helpers.ValueObjectFactory;
 import org.mifos.framework.util.valueobjects.Context;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-import servletunit.struts.MockStrutsTestCase;
+import org.mifos.framework.MifosMockStrutsTestCase;
 
 
 /**
@@ -77,7 +77,7 @@ import servletunit.struts.MockStrutsTestCase;
  * @author ashishsm
  *
  */
-public class MifosBaseActionTest extends MockStrutsTestCase {
+public class MifosBaseActionTest extends MifosMockStrutsTestCase {
 
 	/**
 	 * This initializes the logger for uses with in the test code.
@@ -102,7 +102,7 @@ public class MifosBaseActionTest extends MockStrutsTestCase {
 	/**
 	 * This sets the web.xml,struts-config.xml and prepares the userContext and activityContext and sets them in the session.
 	 *
-	 * @see junit.framework.TestCase#setUp()
+	 * @see junit.framework.MifosTestCase#setUp()
 	 */
 	public void setUp()throws Exception{
 		super.setUp();

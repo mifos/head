@@ -41,26 +41,17 @@ import java.sql.Date;
 
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.persistence.service.SavingsPrdPersistenceService;
+import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-import junit.framework.TestCase;
-
-public class TestSavingsOfferingBO extends TestCase {
+public class TestSavingsOfferingBO extends MifosTestCase {
 
 	private Date currentDate;
-	
+
 	private SavingsOfferingBO savingsOffering;
-	
+
 	private SavingsPrdPersistenceService prdPersistenceService;
-
-	public TestSavingsOfferingBO() {
-		super();
-	}
-
-	public TestSavingsOfferingBO(String name) {
-		super(name);
-	}
 
 	@Override
 	protected void setUp() throws Exception {
@@ -75,11 +66,15 @@ public class TestSavingsOfferingBO extends TestCase {
 		TestObjectFactory.removeObject(savingsOffering);
 	}
 
-	public void testGetTimePerForIntCalcAndFreqPost() throws PersistenceException {
+	public void testGetTimePerForIntCalcAndFreqPost()
+			throws PersistenceException {
 		savingsOffering = createSavingsOfferingBO();
-		savingsOffering = prdPersistenceService.getSavingsProduct(savingsOffering.getPrdOfferingId());
-		assertNotNull("The time period for Int calc should not be null",savingsOffering.getTimePerForInstcalc());
-		assertNotNull("The freq for Int post should not be null",savingsOffering.getFreqOfPostIntcalc());
+		savingsOffering = prdPersistenceService
+				.getSavingsProduct(savingsOffering.getPrdOfferingId());
+		assertNotNull("The time period for Int calc should not be null",
+				savingsOffering.getTimePerForInstcalc());
+		assertNotNull("The freq for Int post should not be null",
+				savingsOffering.getFreqOfPostIntcalc());
 	}
 
 	private SavingsOfferingBO createSavingsOfferingBO() {
@@ -87,10 +82,10 @@ public class TestSavingsOfferingBO extends TestCase {
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		return TestObjectFactory
-				.createSavingsOffering("CustSavings", (short) 1, currentDate,
-						(short) 2, 300.0, (short) 1, 1.2, 200.0, 200.0,
-						(short) 2, (short) 1, meetingIntCalc, meetingIntPost);
+		return TestObjectFactory.createSavingsOffering("CustSavings",
+				(short) 1, currentDate, (short) 2, 300.0, (short) 1, 1.2,
+				200.0, 200.0, (short) 2, (short) 1, meetingIntCalc,
+				meetingIntPost);
 	}
 
 }

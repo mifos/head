@@ -3,7 +3,7 @@ package org.mifos.application.accounts.financial.business;
 import java.util.Iterator;
 import java.util.Set;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.financial.util.helpers.CategoryConstants;
@@ -12,7 +12,7 @@ import org.mifos.application.accounts.financial.util.helpers.FinancialActionCons
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.framework.util.helpers.TestConstants;
 
-public class TestFinancialBO extends TestCase {
+public class TestFinancialBO extends MifosTestCase {
 
 	@Override
 	protected void setUp() throws Exception {

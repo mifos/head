@@ -3,12 +3,12 @@ package org.mifos.framework.components.scheduler;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.meeting.util.resources.MeetingConstants;
 
-public class TestScheduler extends TestCase{
+public class TestScheduler extends MifosTestCase{
 	private SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 	private SavingsTestHelper helper = new SavingsTestHelper();
 	

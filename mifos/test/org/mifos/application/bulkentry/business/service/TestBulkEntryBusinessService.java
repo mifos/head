@@ -4,8 +4,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.business.CustomerAccountView;
@@ -23,13 +21,14 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestBulkEntryBusinessService extends TestCase {
+public class TestBulkEntryBusinessService extends MifosTestCase {
 	private BulkEntryBusinessService bulkEntryBusinessService;
 
 	private CustomerBO center;
@@ -49,13 +48,6 @@ public class TestBulkEntryBusinessService extends TestCase {
 	private AccountPersistanceService accountPersistanceService;
 
 	Date currentDate;
-
-	public TestBulkEntryBusinessService() {
-	}
-
-	public TestBulkEntryBusinessService(String name) {
-		super(name);
-	}
 
 	@Override
 	protected void setUp() throws Exception {

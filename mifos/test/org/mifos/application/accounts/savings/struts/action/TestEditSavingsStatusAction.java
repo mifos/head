@@ -30,9 +30,9 @@ import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-import servletunit.struts.MockStrutsTestCase;
+import org.mifos.framework.MifosMockStrutsTestCase;
 
-public class TestEditSavingsStatusAction extends MockStrutsTestCase {
+public class TestEditSavingsStatusAction extends MifosMockStrutsTestCase {
 	private AccountStateEntity accountStateEntity;
 
 	private SavingsBO savingsBO;

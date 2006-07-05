@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.hibernate.Session;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
@@ -45,7 +45,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
  * @author ashishsm
  * 
  */
-public class TestCollSheetBO extends TestCase {
+public class TestCollSheetBO extends MifosTestCase {
 	
 
 	protected AccountBO accountBO=null;

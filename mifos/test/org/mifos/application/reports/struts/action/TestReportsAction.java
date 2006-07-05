@@ -1,30 +1,24 @@
 package org.mifos.application.reports.struts.action;
 
-import org.mifos.framework.security.util.ActivityContext;
-import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.ResourceLoader;
-import servletunit.struts.MockStrutsTestCase;
-
 import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-public class TestReportsAction extends MockStrutsTestCase {
-	private UserContext userContext ;
-	
-	public TestReportsAction() {
-	}
+import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.security.util.ActivityContext;
+import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.ResourceLoader;
 
-	public TestReportsAction(String name) {
-		super(name);
-	}
+public class TestReportsAction extends MifosMockStrutsTestCase {
+	private UserContext userContext;
+
 	protected void setUp() throws Exception {
 		super.setUp();
 		try {
-			setServletConfigFile(ResourceLoader.getURI(
-					"WEB-INF/web.xml").getPath());
+			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
+					.getPath());
 			setConfigFile(ResourceLoader.getURI(
 					"org/mifos/framework/util/helpers/struts-config.xml")
 					.getPath());
@@ -49,14 +43,14 @@ public class TestReportsAction extends MockStrutsTestCase {
 				.getBranchId().shortValue(), userContext.getId().shortValue());
 		request.getSession(false).setAttribute("ActivityContext", ac);
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		
+
 	}
-	
-	public void testVerifyForwardOfReport(){
+
+	public void testVerifyForwardOfReport() {
 		addRequestParameter("viewPath", "report_designer");
 		setRequestPathInfo("/reportsAction.do");
-		addRequestParameter("method","getReportPage");
-        actionPerform();
+		addRequestParameter("method", "getReportPage");
+		actionPerform();
 		verifyForwardPath("/pages/application/reports/jsp/report_designer.jsp");
 	}
 }

@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
@@ -24,7 +24,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestSavingsIntPostingHelper extends TestCase {
+public class TestSavingsIntPostingHelper extends MifosTestCase {
 	private UserContext userContext;
 	private CustomerBO group;
 	private CustomerBO center;

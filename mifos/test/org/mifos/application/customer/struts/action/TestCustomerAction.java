@@ -23,9 +23,9 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-import servletunit.struts.MockStrutsTestCase;
+import org.mifos.framework.MifosMockStrutsTestCase;
 
-public class TestCustomerAction extends MockStrutsTestCase {
+public class TestCustomerAction extends MifosMockStrutsTestCase {
 	
 	private UserContext userContext;
 	

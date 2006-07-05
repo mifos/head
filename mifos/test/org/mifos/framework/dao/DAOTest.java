@@ -38,7 +38,7 @@
 
 package org.mifos.framework.dao;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -59,7 +59,7 @@ import org.mifos.framework.util.valueobjects.ValueObject;
  *  This class is the test class for framework DAO. This test class checks the DAO functionality of Create , Update , Delete
  */
 
-public class DAOTest extends TestCase
+public class DAOTest extends MifosTestCase
 {
 	 private DAO dao = null;
 	 private ValueObject valueObject = null;

@@ -19,9 +19,9 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
-public class TestAccountFeesActionDetailEntity extends TestCase {
+public class TestAccountFeesActionDetailEntity extends MifosTestCase {
 
 	protected AccountBO accountBO=null;
 	protected CustomerBO center=null;

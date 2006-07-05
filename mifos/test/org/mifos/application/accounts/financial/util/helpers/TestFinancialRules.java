@@ -1,13 +1,13 @@
 package org.mifos.application.accounts.financial.util.helpers;
 
-import junit.framework.TestCase;
+import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.financial.util.helpers.CategoryConstants;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.application.accounts.financial.util.helpers.FinancialRules;
 
-public class TestFinancialRules extends TestCase {
+public class TestFinancialRules extends MifosTestCase {
 
 	public void testGetCategoryAssociatedToActionBankbalanceSucess()
 			throws FinancialException {
