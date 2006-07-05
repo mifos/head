@@ -848,6 +848,8 @@
 			<forward name="preview_success" path="/pages/application/accounts/jsp/reviewapplypayment.jsp" />
 			<forward name="preview_failure" path="/pages/application/accounts/jsp/applypayment.jsp" />
 			<forward name="previous_success" path="/pages/application/accounts/jsp/applypayment.jsp"/>
+			<forward name="applyPayment_success" path="/closedaccsearchaction.do?method=search"/>
+			<forward name="applyPayment_failure" path="/pages/application/accounts/jsp/reviewapplypayment.jsp"/>
 			<forward name="loan_detail_page" path="/loanAction.do?method=get" />
 		</action>
 		<action path="/loanAccountAction" type="org.mifos.application.accounts.loan.struts.action.LoanAccountAction" parameter="method" scope="session">

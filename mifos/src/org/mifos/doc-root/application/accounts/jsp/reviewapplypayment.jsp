@@ -42,6 +42,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/tags/date" prefix="date"%>
+<%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
+<%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<SCRIPT>
@@ -57,7 +59,7 @@ function goToPreview(form){
 
 }
 </SCRIPT>
-		<html-el:form method="post" action="/applyPaymentAction.do?">
+		<html-el:form method="post" action="/applyPaymentAction.do?method=applyPayment">
 
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -71,7 +73,7 @@ function goToPreview(form){
 							</html-el:link>
 						</c:when>
 						<c:otherwise>
-							<html-el:link href="javascript:ViewDetails()"> /
+							<html-el:link href="javascript:ViewDetails()">
 	          	<c:if test="${param.input == 'ViewCenterCharges'}">
 									<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
 								</c:if>
@@ -155,7 +157,7 @@ function goToPreview(form){
 				</tr>
 				<tr>
 					<td height="3" colspan="2"><html-el:button property="Cancel"
-						styleClass="buttn" style="width:65px;"
+						styleClass="insidebuttn" style="width:115px;"
 						onclick="goToPreview(this.form)">
 						<mifos:mifoslabel name="accounts.edittrxn"></mifos:mifoslabel>
 					</html-el:button></td>
@@ -173,10 +175,22 @@ function goToPreview(form){
 						property="Preview">
 						<mifos:mifoslabel name="accounts.submit">
 						</mifos:mifoslabel>
-					</html-el:submit> &nbsp; <html-el:button property="Cancel"
-						styleClass="buttn" style="width:65px;" onclick="ViewDetails()">
-						<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
-					</html-el:button></td>
+					</html-el:submit> &nbsp; <c:choose>
+								<c:when test="${param.input == 'loan'}">
+									<html-el:button styleClass="cancelbuttn" property="Cancel"
+										style="width:65px;" onclick="ViewLoanDetails(this.form)">
+										<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
+									</html-el:button>
+
+								</c:when>
+								<c:otherwise>
+									<html-el:button styleClass="cancelbuttn" property="Cancel"
+										style="width:65px;" onclick="ViewDetails()">
+										<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
+									</html-el:button>
+
+								</c:otherwise>
+							</c:choose></td>
 				</tr>
 			</table>
 			<html-el:hidden property="statusId" value="${param.statusId}" />

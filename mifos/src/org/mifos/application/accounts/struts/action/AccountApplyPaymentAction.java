@@ -47,9 +47,13 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
+import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActionForm;
+import org.mifos.application.accounts.util.helpers.AccountPaymentData;
+import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.master.business.service.MasterDataService;
@@ -105,8 +109,10 @@ public class AccountApplyPaymentAction extends BaseAction{
 	}
 	
 	public ActionForward applyPayment(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws Exception{
-		AccountBO account = (AccountBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request.getSession());
+		AccountBO Savedaccount = (AccountBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request.getSession());
 		AccountApplyPaymentActionForm actionForm =(AccountApplyPaymentActionForm)form;
+		AccountBO account = getAccountBusinessService().getAccount(Integer.valueOf(actionForm.getAccountId()));
+		account.setVersionNo(Savedaccount.getVersionNo());
 		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
 		Date trxnDate = new Date(DateHelper.getLocaleDate(uc.getPereferedLocale(),actionForm.getTransactionDate()).getTime());
 		Date receiptDate = new Date(DateHelper.getLocaleDate(uc.getPereferedLocale(),actionForm.getReceiptDate()).getTime());
@@ -121,8 +127,14 @@ public class AccountApplyPaymentAction extends BaseAction{
 	private PaymentData createPaymentData(Money amount, Date trxnDate, String receiptId, Date receiptDate, Short paymentTypeId, Short userId, AccountBO account){
 		PaymentData paymentData = new PaymentData(amount, userId, paymentTypeId, trxnDate);
 		for(AccountActionDateEntity installment: account.getTotalInstallmentsDue()){
-			LoanPaymentData loanPaymentData = new LoanPaymentData(installment);
-			paymentData.addAccountPaymentData(loanPaymentData);
+			AccountPaymentData accountPaymentData =null; 
+			if(account instanceof LoanBO){
+				accountPaymentData = new LoanPaymentData(installment);
+			}
+			else if ( account instanceof CustomerAccountBO){
+				accountPaymentData = new CustomerAccountPaymentData(installment);
+			}
+			paymentData.addAccountPaymentData(accountPaymentData);
 		}
 		return paymentData;
 	}
@@ -137,7 +149,9 @@ public class AccountApplyPaymentAction extends BaseAction{
 		if(input.equals("loan")){
 			return ActionForwards.loan_detail_page.toString();
 		}
-		return null;
+		else{
+			return "applyPayment_success";
+		}
 	}
 	
 	

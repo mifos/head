@@ -66,7 +66,15 @@ public class AccountApplyPaymentActionForm extends ValidatorActionForm{
 	private String paymentTypeId;
 	private String globalAccountNum;
 	private String accountId;
-	
+	private String prdOfferingName;
+
+	public String getPrdOfferingName() {
+		return prdOfferingName;
+	}
+
+	public void setPrdOfferingName(String prdOfferingName) {
+		this.prdOfferingName = prdOfferingName;
+	}
 
 	public Money getAmount() {
 		return amount;

@@ -143,6 +143,7 @@ public class TestApplyPaymentAction extends MockStrutsTestCase{
 		setRequestPathInfo("/applyPaymentAction");
 		addRequestParameter("input","loan");
 		addRequestParameter("method", "applyPayment");
+		addRequestParameter("accountId",accountBO.getAccountId().toString());
 		addRequestParameter("receiptId","101");
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
 		

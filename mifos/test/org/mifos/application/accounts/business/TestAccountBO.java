@@ -5,6 +5,8 @@ package org.mifos.application.accounts.business;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -18,6 +20,7 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.fees.business.FeesBO;
+import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
@@ -275,6 +278,19 @@ public class TestAccountBO extends TestAccount {
 		TestObjectFactory.flushandCloseSession();
 		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
 		assertEquals(1,accountBO.getPeriodicFeeList().size());		
+		
+	}
+	
+	public void testIsTrxnDateValid() throws Exception{
+		
+		Calendar calendar = new GregorianCalendar();
+		
+		calendar.roll(Calendar.DAY_OF_MONTH,10);
+		java.util.Date  trxnDate = new Date(calendar.getTimeInMillis());
+		if(Configuration.getInstance().getAccountConfig(Short.valueOf("3")).isBackDatedTxnAllowed())
+			assertTrue(accountBO.isTrxnDateValid(trxnDate));
+		else 
+			assertFalse(accountBO.isTrxnDateValid(trxnDate));
 		
 	}
 }

@@ -42,6 +42,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/tags/date" prefix="date"%>
+<%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
+<%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<SCRIPT>
@@ -49,9 +51,15 @@
 		closedaccsearchactionform.submit();
 	}
 	function ViewLoanDetails(form){
+		form.action="/loanAction.do";
+		form.method.value="get";
 		form.submit();
 	}
-
+	function ViewLoanDetails(form){
+		form.action="/loanAction.do";
+		form.method.value="get";
+		form.submit();
+	}
 </SCRIPT>
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<html-el:form method="post"
@@ -64,15 +72,15 @@
 					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink />
 
 					<c:choose>
-						<c:when test="${param.input == 'LoanDetails'}">
+						<c:when test="${param.input == 'loan'}">
 							<html-el:link
 								action="loanAction.do?globalAccountNum=${param.globalAccountNum}&method=get"> /
 	          	  			  <c:out value="${param.prdOfferingName}"></c:out>
 							</html-el:link>
 						</c:when>
 						<c:otherwise>
-							<html-el:link href="javascript:ViewDetails()"> /
-	          					<c:if test="${param.input == 'ViewCenterCharges'}">
+							<html-el:link href="javascript:ViewDetails()">
+								<c:if test="${param.input == 'ViewCenterCharges'}">
 									<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
 								</c:if>
 								<c:if test="${param.input == 'ViewGroupCharges'}">
@@ -121,15 +129,15 @@
 								mandatory="yes" name="accounts.amount" /> <mifos:mifoslabel
 								name="accounts.colon" /></td>
 							<td width="76%"><mifos:mifosdecimalinput property="amount"
-								name="applyPaymentActionForm" /></td>
+								disabled="true" name="applyPaymentActionForm" /></td>
 						</tr>
 						<tr>
 							<td align="right" class="fontnormal"><mifos:mifoslabel
 								name="accounts.mode_of_payment" mandatory="yes" /> <mifos:mifoslabel
 								name="accounts.colon" /></td>
 
-							<td class="fontnormal"><mifos:select name="applyPaymentActionForm"
-								property="paymentTypeId">
+							<td class="fontnormal"><mifos:select
+								name="applyPaymentActionForm" property="paymentTypeId">
 								<html-el:options collection="PaymentType" property="id"
 									labelProperty="name"></html-el:options>
 							</mifos:select></td>
@@ -156,14 +164,37 @@
 							<td align="center">&nbsp;</td>
 						</tr>
 						<tr>
-							<td align="center"><html-el:submit styleClass="buttn"
-								property="Preview">
-								<mifos:mifoslabel name="accounts.reviewtransaction">
-								</mifos:mifoslabel>
-							</html-el:submit> &nbsp; <html-el:button styleClass="buttn"
-								property="Cancel" style="width:65px;" onclick="ViewDetails()">
-								<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
-							</html-el:button></td>
+							<td align="center"><c:choose>
+								<c:when
+									test="${applyPaymentActionForm.amount == '0.0'||applyPaymentActionForm.amount=='0'}">
+									<html-el:submit styleClass="buttn" disabled="true"
+										property="Preview">
+										<mifos:mifoslabel name="accounts.reviewtransaction">
+										</mifos:mifoslabel>
+									</html-el:submit>
+								</c:when>
+								<c:otherwise>
+									<html-el:submit styleClass="buttn" property="Preview">
+										<mifos:mifoslabel name="accounts.reviewtransaction">
+										</mifos:mifoslabel>
+									</html-el:submit>
+								</c:otherwise>
+							</c:choose> &nbsp; <c:choose>
+								<c:when test="${param.input == 'loan'}">
+									<html-el:button styleClass="cancelbuttn" property="Cancel"
+										style="width:65px;" onclick="ViewLoanDetails(this.form)">
+										<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
+									</html-el:button>
+
+								</c:when>
+								<c:otherwise>
+									<html-el:button styleClass="cancelbuttn" property="Cancel"
+										style="width:65px;" onclick="ViewDetails()">
+										<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
+									</html-el:button>
+
+								</c:otherwise>
+							</c:choose></td>
 						</tr>
 					</table>
 					</td>

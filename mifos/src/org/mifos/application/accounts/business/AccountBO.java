@@ -56,12 +56,14 @@ import org.mifos.application.accounts.persistence.service.AccountPersistanceServ
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
 import org.mifos.application.fees.business.FeesBO;
 import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -812,4 +814,17 @@ public class AccountBO extends BusinessObject {
 			 dueInstallments.add(nextInstallment);
 		 return dueInstallments;
 	}
+	public boolean isTrxnDateValid(Date trxnDate)throws ApplicationException, SystemException{
+		
+		if(Configuration.getInstance().getAccountConfig(getOffice().getOfficeId()).isBackDatedTxnAllowed()){
+			Date lastMeetingDate = DateUtils.getDateWithoutTimeStamp(getCustomerDBService().getLastMeetingDateForCustomer(getCustomer().getCustomerId()).getTime());
+			return trxnDate.compareTo(lastMeetingDate)>=0 ? true :false;
+		}
+		return trxnDate.equals(DateUtils.getCurrentDateWithoutTimeStamp());
+	}
+	
+	private CustomerPersistenceService getCustomerDBService() throws ServiceException {
+		return (CustomerPersistenceService) ServiceFactory.getInstance()
+		.getPersistenceService(PersistenceServiceName.Customer);
+	}	
 }
