@@ -11,19 +11,18 @@ import java.util.Set;
 
 import org.mifos.application.accounts.TestAccount;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.TransactionHistoryView;
-import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.savings.business.service.SavingsBusinessService;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentData;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-
-import org.mifos.framework.MifosTestCase;
 
 /**
  * @author krishankg
@@ -90,4 +89,11 @@ public class TestAccountService extends TestAccount {
 				.getAccountId());
 
  }
+ 
+ 	public void testGetAccountAction()throws Exception{
+	 	AccountBusinessService service = (AccountBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Accounts);
+		AccountActionEntity accountaction = service.getAccountAction(AccountConstants.ACTION_SAVINGS_DEPOSIT, Short.valueOf("1"));
+		assertNotNull(accountaction);
+		assertEquals(Short.valueOf("1"),accountaction.getLocaleId());
+	}
 }
