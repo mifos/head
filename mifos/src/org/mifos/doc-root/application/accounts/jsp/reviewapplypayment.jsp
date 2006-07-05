@@ -51,13 +51,13 @@
 		closedaccsearchactionform.submit();
 	}
 	function ViewLoanDetails(form){
+		form.action="loanAction.do?method=get";
 		form.submit();
 	}
-function goToPreview(form){
-	form.method.value="previous";
-	form.submit()
-
-}
+	function goToPrevious(form){
+		form.action="applyPaymentAction.do?method=previous";
+		form.submit()
+	}
 </SCRIPT>
 		<html-el:form method="post" action="/applyPaymentAction.do?method=applyPayment">
 
@@ -90,6 +90,7 @@ function goToPreview(form){
 					</c:choose> </span></td>
 				</tr>
 			</table>
+			<br>
 			<table width="96%" border="0" cellpadding="3" cellspacing="0">
 				<tr>
 					<td width="100%" colspan="2" class="headingorange"><span
@@ -99,7 +100,7 @@ function goToPreview(form){
 				</tr>
 				<tr>
 					<td><font class="fontnormalRedBold"> <html-el:errors
-						bundle="PersonnelUIResources" /> </font></td>
+						bundle="accountsUIResources" /> </font></td>
 				</tr>
 
 				<tr>
@@ -158,7 +159,7 @@ function goToPreview(form){
 				<tr>
 					<td height="3" colspan="2"><html-el:button property="Cancel"
 						styleClass="insidebuttn" style="width:115px;"
-						onclick="goToPreview(this.form)">
+						onclick="goToPrevious(this.form)">
 						<mifos:mifoslabel name="accounts.edittrxn"></mifos:mifoslabel>
 					</html-el:button></td>
 				</tr>
@@ -194,7 +195,6 @@ function goToPreview(form){
 				</tr>
 			</table>
 			<html-el:hidden property="statusId" value="${param.statusId}" />
-			<html-el:hidden property="method" value="" />
 			<html-el:hidden property="searchNode(search_name)"
 				value="${param.searchInput}" />
 			<html-el:hidden property="prdOfferingName"

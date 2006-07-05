@@ -38,6 +38,7 @@
 package org.mifos.application.accounts.struts.action;
 
 import java.util.Date;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,6 +50,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActionForm;
@@ -62,7 +64,6 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
@@ -92,6 +93,7 @@ public class AccountApplyPaymentAction extends BaseAction{
 		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
 		AccountApplyPaymentActionForm actionForm =(AccountApplyPaymentActionForm)form;
 		clearActionForm(actionForm);
+		actionForm.setTransactionDate(DateHelper.getCurrentDate(uc.getPereferedLocale()));
 		AccountBO account = getAccountBusinessService().getAccount(Integer.valueOf(actionForm.getAccountId()));
 		account.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, account, request.getSession());
@@ -109,15 +111,26 @@ public class AccountApplyPaymentAction extends BaseAction{
 	}
 	
 	public ActionForward applyPayment(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws Exception{
-		AccountBO Savedaccount = (AccountBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request.getSession());
+		AccountBO savedAccount = (AccountBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request.getSession());
 		AccountApplyPaymentActionForm actionForm =(AccountApplyPaymentActionForm)form;
 		AccountBO account = getAccountBusinessService().getAccount(Integer.valueOf(actionForm.getAccountId()));
-		account.setVersionNo(Savedaccount.getVersionNo());
 		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
-		Date trxnDate = new Date(DateHelper.getLocaleDate(uc.getPereferedLocale(),actionForm.getTransactionDate()).getTime());
-		Date receiptDate = new Date(DateHelper.getLocaleDate(uc.getPereferedLocale(),actionForm.getReceiptDate()).getTime());
+		
+		Date trxnDate = getDateFromString(actionForm.getTransactionDate(),uc.getPereferedLocale());
+		Date receiptDate = getDateFromString(actionForm.getReceiptDate(),uc.getPereferedLocale());
+
+		if(!account.isTrxnDateValid(trxnDate)) throw new AccountException("errors.invalidTxndate");
+		
+		account.setVersionNo(savedAccount.getVersionNo());
 		account.applyPayment(createPaymentData(account.getTotalPaymentDue(),trxnDate,actionForm.getReceiptId(),receiptDate, Short.valueOf(actionForm.getPaymentTypeId()), uc.getId(),account));
 		return mapping.findForward(getForward(((AccountApplyPaymentActionForm)form).getInput()));
+	}
+	
+	private Date getDateFromString(String strDate, Locale locale){
+		Date date = null;
+		if(strDate!=null && strDate!="")
+			date = new Date(DateHelper.getLocaleDate(locale,strDate).getTime());
+		return date;
 	}
 	
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -146,12 +159,10 @@ public class AccountApplyPaymentAction extends BaseAction{
 	}
 	
 	private String getForward(String input){
-		if(input.equals("loan")){
+		if(input.equals("loan"))
 			return ActionForwards.loan_detail_page.toString();
-		}
-		else{
+		else
 			return "applyPayment_success";
-		}
 	}
 	
 	

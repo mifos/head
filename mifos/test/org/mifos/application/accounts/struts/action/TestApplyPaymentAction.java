@@ -52,16 +52,16 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import org.mifos.framework.MifosMockStrutsTestCase;
 
 public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 	protected AccountBO accountBO;
@@ -98,7 +98,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 				.getBranchId().shortValue(), userContext.getId().shortValue());
 		request.getSession(false).setAttribute("ActivityContext", ac);
 		request.getSession().setAttribute(Constants.USER_CONTEXT_KEY, userContext);
-		request.getSession().setAttribute(SecurityConstants.SECURITY_PARAM,"loan");
+		request.getSession().setAttribute(SecurityConstants.SECURITY_PARAM,"Loan");
 	}
 	
 	public void tearDown()throws Exception{
@@ -145,10 +145,10 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		addRequestParameter("method", "applyPayment");
 		addRequestParameter("accountId",accountBO.getAccountId().toString());
 		addRequestParameter("receiptId","101");
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
-		
-		addRequestParameter("receiptDate",sdf.format(new Date()));
-		addRequestParameter("transactionDate",sdf.format(new Date()));
+
+		String currentDate = DateHelper.getCurrentDate(userContext.getPereferedLocale());
+		addRequestParameter("receiptDate",currentDate);
+		addRequestParameter("transactionDate",currentDate);
 		addRequestParameter("paymentTypeId","1");
 		actionPerform();
 		verifyForward("loan_detail_page");
@@ -157,6 +157,26 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, accountBO.getAccountState().getId().shortValue());
 	}
 	
+	public void testApplyPaymentForLoanWhenReceiptDateisNull()throws Exception{
+		accountBO = createLoanAccount();
+		accountBO.setAccountState(new AccountStateEntity(AccountStates.LOANACC_BADSTANDING));
+		request.getSession().setAttribute(Constants.BUSINESS_KEY,accountBO);
+		setRequestPathInfo("/applyPaymentAction");
+		addRequestParameter("input","loan");
+		addRequestParameter("method", "applyPayment");
+		addRequestParameter("accountId",accountBO.getAccountId().toString());
+		addRequestParameter("receiptId","101");
+		String currentDate = DateHelper.getCurrentDate(userContext.getPereferedLocale());
+		addRequestParameter("receiptDate","");
+		addRequestParameter("transactionDate",currentDate);
+
+		addRequestParameter("paymentTypeId","1");
+		actionPerform();
+		verifyForward("loan_detail_page");
+		assertEquals(new Money(), accountBO.getTotalPaymentDue());
+		assertEquals(0, accountBO.getTotalInstallmentsDue().size());
+		assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, accountBO.getAccountState().getId().shortValue());
+	}
 	public void testApplyPaymentPrevious(){
 		setRequestPathInfo("/applyPaymentAction");
 		addRequestParameter("method", "previous");

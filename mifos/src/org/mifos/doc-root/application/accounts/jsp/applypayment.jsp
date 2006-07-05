@@ -50,14 +50,9 @@
 	function ViewDetails(){
 		closedaccsearchactionform.submit();
 	}
+	
 	function ViewLoanDetails(form){
-		form.action="/loanAction.do";
-		form.method.value="get";
-		form.submit();
-	}
-	function ViewLoanDetails(form){
-		form.action="/loanAction.do";
-		form.method.value="get";
+		form.action="loanAction.do?method=get";
 		form.submit();
 	}
 </SCRIPT>
@@ -104,15 +99,16 @@
 						<tr>
 							<td width="70%" class="headingorange"><span class="heading"> <c:out
 								value="${param.prdOfferingName}" /> - </span><mifos:mifoslabel
-								name="accounts.apply_payment" /></td>
-						</tr>
-						<tr>
-							<td><font class="fontnormalRedBold"> <html-el:errors
-								bundle="PersonnelUIResources" /> </font></td>
+								name="accounts.apply_payment" />
+								</td>
 						</tr>
 					</table>
 					<br>
 					<table width="95%" border="0" cellspacing="0" cellpadding="3">
+						<tr>
+							<td colspan="2"><font class="fontnormalRedBold"> <html-el:errors
+								bundle="accountsUIResources" /> </font></td>
+						</tr>
 						<tr>
 							<td colspan="2" class="fontnormal"><mifos:mifoslabel
 								name="accounts.asterisk" /><br>
@@ -121,7 +117,7 @@
 						</tr>
 						<tr>
 							<td align="right" class="fontnormal"><mifos:mifoslabel
-								mandatory="yes" name="accounts.date_of_trxn" /></td>
+								mandatory="yes" isColonRequired="Yes" name="accounts.date_of_trxn" /></td>
 							<td class="fontnormal"><date:datetag property="transactionDate" /></td>
 						</tr>
 						<tr>
@@ -168,13 +164,13 @@
 								<c:when
 									test="${applyPaymentActionForm.amount == '0.0'||applyPaymentActionForm.amount=='0'}">
 									<html-el:submit styleClass="buttn" disabled="true"
-										property="Preview">
+										style="width:130px;" property="Preview">
 										<mifos:mifoslabel name="accounts.reviewtransaction">
 										</mifos:mifoslabel>
 									</html-el:submit>
 								</c:when>
 								<c:otherwise>
-									<html-el:submit styleClass="buttn" property="Preview">
+									<html-el:submit styleClass="buttn" style="width:130px;" property="Preview">
 										<mifos:mifoslabel name="accounts.reviewtransaction">
 										</mifos:mifoslabel>
 									</html-el:submit>

@@ -465,10 +465,14 @@
 							<td class="paddingL10"><c:choose>
 								<c:when
 									test="${requestScope.loan.accountStateId=='5' || requestScope.loan.accountStateId=='7' || requestScope.loan.accountStateId=='8' || requestScope.loan.accountStateId=='9'}">
-									<span class="fontnormal8pt"> <!--<html-el:link href="accountTrxn.do?method=load&input=reviewTransactionPage&prdOfferingName=${requestScope.loan.loanOffering.prdOfferingName}&globalAccountNum=${requestScope.loan.globalAccountNum}&accountId=${requestScope.loan.accountId}&accountType=${requestScope.loan.accountTypeId}
+									<span class="fontnormal8pt"> 
+										<c:if test="${(requestScope.loan.accountStateId=='5' || requestScope.loan.accountStateId=='9')}">
+											<html-el:link href="applyPaymentAction.do?method=load&input=loan&prdOfferingName=${requestScope.loan.loanOffering.prdOfferingName}&globalAccountNum=${requestScope.loan.globalAccountNum}&accountId=${requestScope.loan.accountId}&accountType=${requestScope.loan.accountTypeId}
 																	&recordOfficeId=${requestScope.loan.officeId}&recordLoanOfficerId=${requestScope.loan.personnelId}">
 												<mifos:mifoslabel name="loan.apply_payment" />
-											</html-el:link><br>--> <html-el:link
+											</html-el:link><br> 
+										</c:if>
+									 <html-el:link
 										href="AccountsApplyChargesAction.do?method=load&input=reviewTransactionPage&accountId=${requestScope.loan.accountId}&globalAccountNum=${requestScope.loan.globalAccountNum}&prdOfferingName=${requestScope.loan.loanOffering.prdOfferingName}">
 										<mifos:mifoslabel name="loan.apply_charges" />
 									</html-el:link><br>

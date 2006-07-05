@@ -40,6 +40,7 @@ package org.mifos.application.accounts.struts.actionforms;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -51,7 +52,6 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
-import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
@@ -91,26 +91,32 @@ public class AccountApplyPaymentActionForm extends ValidatorActionForm{
 	@Override
 	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
 		String methodCalled= request.getParameter(MethodNameConstants.METHOD);
+		ActionErrors errors = null;
+		ResourceBundle resources = ResourceBundle.getBundle ("org.mifos.application.accounts.util.resources.accountsUIResources", getUserLocale(request));
 		 
-		 ActionErrors errors = new ActionErrors();
 		if(methodCalled!=null&& methodCalled.equals("preview")){
-			ActionErrors errors2 = validateDate(this.transactionDate,"transation date",request);
+			errors = new ActionErrors();
+			ActionErrors errors2 = validateDate(this.transactionDate,resources.getString("accounts.date_of_trxn"),request);
 			if( null!=errors2 &&!errors2.isEmpty())
 				errors.add(errors2);
 			if( this.paymentTypeId==null||this.paymentTypeId.equals("")){
-				errors.add(AccountConstants.ERROR_MANDATORY,new ActionMessage(AccountConstants.ERROR_MANDATORY,"mode of payment"));
+				errors.add(AccountConstants.ERROR_MANDATORY,new ActionMessage(AccountConstants.ERROR_MANDATORY,resources.getString("accounts.mode_of_payment")));
 			}
-			errors2 = validateDate(this.receiptDate,"receipt date",request);
-			if( null!=errors2 &&!errors2.isEmpty())
-				errors.add(errors2);
-			else errors=null;
+			if(this.receiptDate!=null && !this.receiptDate.equals("")){
+				errors2 = validateDate(this.receiptDate,resources.getString("accounts.receiptdate"),request);
+				if( null!=errors2 &&!errors2.isEmpty())
+					errors.add(errors2);
+			}
 		}
-		
+		if (null != errors && !errors.isEmpty()) {
+			request.setAttribute(Globals.ERROR_KEY, errors);
+			request.setAttribute("methodCalled", methodCalled);
+		}
 		return errors;
 	}
+	
 	private ActionErrors validateDate(String date ,String fieldName,HttpServletRequest request){
-		String method = request.getParameter("method");
-		ActionErrors errors =new ActionErrors();
+		ActionErrors errors =null;
 		java.sql.Date sqlDate=null;
 		if( date!=null&&!date.equals("")){
 			sqlDate=DateHelper.getLocaleDate(getUserLocale(request),date);
@@ -121,16 +127,13 @@ public class AccountApplyPaymentActionForm extends ValidatorActionForm{
 			currentCalendar = new GregorianCalendar(year,month,day);
 			java.sql.Date currentDate=new java.sql.Date(currentCalendar.getTimeInMillis());
 			if(currentDate.compareTo(sqlDate) < 0 ) {
+				errors = new ActionErrors();
 				errors.add(AccountConstants.ERROR_FUTUREDATE,new ActionMessage(AccountConstants.ERROR_FUTUREDATE,fieldName));
 			}
 		}
 		else
-		{
+		{	errors = new ActionErrors();
 			errors.add(AccountConstants.ERROR_MANDATORY,new ActionMessage(AccountConstants.ERROR_MANDATORY,fieldName));
-		}
-		if (null != errors && !errors.isEmpty()) {
-			request.setAttribute(Globals.ERROR_KEY, errors);
-			request.setAttribute("methodCalled", method);
 		}
 		return errors;
 	}

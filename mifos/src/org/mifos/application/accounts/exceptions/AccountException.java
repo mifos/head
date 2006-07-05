@@ -11,4 +11,9 @@ public class AccountException extends ApplicationException {
 	public AccountException(String key, Throwable cause) {
 		super(key, cause);
 	}
+
+	public AccountException(String key) {
+		super(key);
+		
+	}
 }
