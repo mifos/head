@@ -21,7 +21,8 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import servletunit.struts.MockStrutsTestCase;
 
 
-public class TestLoanActivityAction extends MockStrutsTestCase {
+public class TestLoanActivityAction extends MockStrutsTestCase {	
+	
 	private UserContext userContext;
 	protected AccountBO accountBO=null;
 	protected CustomerBO center=null;
@@ -66,22 +67,6 @@ public class TestLoanActivityAction extends MockStrutsTestCase {
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
-
-	public void testGetAllActivity() {
-		try{
-		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(Short.valueOf("3"),startDate,1);
-		LoanBO loan=(LoanBO)accountBO;
-		setRequestPathInfo("/loanActivityAction.do");
-		addRequestParameter("method", "getAllActivity");
-		addRequestParameter("globalAccountNum","99999999999");
-		actionPerform();
-		verifyForward("getAllActivity_success");
-		assertEquals(loan.getGlobalAccountNum(),"99999999999");
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
 	
 	private AccountBO getLoanAccount(Short accountSate,Date startDate,int disbursalType) {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1,1,4,2));
@@ -95,6 +80,21 @@ public class TestLoanActivityAction extends MockStrutsTestCase {
 		return TestObjectFactory.createLoanAccountWithDisbursement("99999999999", group,
 				accountSate, startDate, loanOffering,disbursalType);
 
+	}
+	public void testGetAllActivity() {
+		try{
+		Date startDate = new Date(System.currentTimeMillis());
+		accountBO = getLoanAccount(Short.valueOf("3"),startDate,1);
+		LoanBO loan=(LoanBO)accountBO;
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "getAllActivity");
+		addRequestParameter("globalAccountNum","99999999999");
+		actionPerform();
+		verifyForward("getAllActivity_success");
+		assertEquals(loan.getGlobalAccountNum(),"99999999999");
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -77,13 +77,6 @@ public class LoanActivityAction extends AccountAppAction {
 	
 	protected BusinessService getService() {
 		return loanService;
-	}
-	
-	public ActionForward getAllActivity(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
-		logger.debug("In LoanActivityAction::getAllActivity()");
-		String globalAccountNum=request.getParameter("globalAccountNum");
-		SessionUtils.setAttribute(LoanConstants.LOAN_ALL_ACTIVITY_VIEW,loanService.getAllActivityView(globalAccountNum,((UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession())).getLocaleId()),request.getSession());
-		return mapping.findForward(MethodNameConstants.GETALLACTIVITY_SUCCESS);
-	}
+	}	
 
 }

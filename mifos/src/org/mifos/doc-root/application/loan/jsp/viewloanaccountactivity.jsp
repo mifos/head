@@ -47,7 +47,7 @@
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<html-el:form method="post" action="/loanActivityAction.do" >
+	<html-el:form method="post" action="/loanAction.do" >
 	<SCRIPT SRC="pages/application/loan/js/LoanAccountActivity.js"></SCRIPT>
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>

@@ -1662,6 +1662,10 @@
 			<forward name="previous_success" path="/pages/application/account/jsp/applypayment.jsp"/>
 			<forward name="loan_detail_page" path="/loanAction.do?method=get" />
 		</action>
+		<action path="/loanAccountAction" type="org.mifos.application.accounts.loan.struts.action.LoanAccountAction" parameter="method" scope="session">
+			<forward name="viewInstmentDetails_success" path="/pages/application/loan/jsp/nextPayment_loanAccount.jsp" />
+			<forward name="getAllActivity_success" path="/pages/application/loan/jsp/viewloanaccountactivity.jsp" />
+		</action>
 	</action-mappings>
 
 	<controller nocache="true"

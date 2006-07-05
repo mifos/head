@@ -537,7 +537,7 @@ public class ActivityMapper {
 		activityMap.put("/loanAction-create", SecurityConstants.VIEW);
 
 		// mapping for loanActivity
-		activityMap.put("/loanActivityAction-getAllActivity",
+		activityMap.put("/loanAccountAction-getAllActivity",
 				SecurityConstants.VIEW);
 
 		// mapping for account status
@@ -565,6 +565,8 @@ public class ActivityMapper {
 				SecurityConstants.APPLY_PAYMENT_TO_CLIENT_GROUP_CENTERS_LOANS);
 		activityMap.put("/accountTrxn-preview", SecurityConstants.VIEW);
 		activityMap.put("/accountTrxn-getInstallmentHistory",
+				SecurityConstants.VIEW);
+		activityMap.put("/loanAccountAction-getInstallmentDetails",
 				SecurityConstants.VIEW);
 		activityMap.put("/accountTrxn-previous", SecurityConstants.VIEW);
 

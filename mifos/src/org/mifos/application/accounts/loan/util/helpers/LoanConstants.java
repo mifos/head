@@ -74,6 +74,10 @@ public interface LoanConstants {
 	public final String REPAYMENTSCHEDULEINSTALLMENTS = "repaymentScheduleInstallments";
 	public final String RECENTACCOUNTACTIVITIES = "recentAccountActivities";
 	public final String LOAN_ALL_ACTIVITY_VIEW = "loanAllActivityView";
+	public final String VIEW_UPCOMING_INSTALLMENT_DETAILS = "viewUpcomingInstallmentDetails";
+	public final String VIEW_OVERDUE_INSTALLMENT_DETAILS = "viewOverDueInstallmentDetails";
+	public final String TOTAL_AMOUNT_OVERDUE = "totalAmountOverDue";
+	public final String CURRENT_DATE = "currentDate";
 	public final String FEEFORMULALIST = "feeFormulaList"; 
 		
 	//account status

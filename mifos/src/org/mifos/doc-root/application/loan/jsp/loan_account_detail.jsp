@@ -184,6 +184,25 @@
 							</tr>
 						</table>
 					</c:if>
+					
+					
+					  <table width="96%" border="0" cellpadding="3" cellspacing="0">
+		                <tr>		                
+		                  <td width="42%" align="right" class="fontnormal">
+		                  <span class="fontnormal">
+		                  	<html-el:link href="loanAccountAction.do?method=getInstallmentDetails&accountId=${requestScope.loan.accountId}&accountName=${requestScope.loan.loanOffering.prdOfferingName}&globalAccountNum=${requestScope.loan.globalAccountNum}
+															&accountType=${requestScope.loan.accountTypeId}
+															&accountStateId=${requestScope.loan.accountStateId}
+															&recordOfficeId=${requestScope.loan.officeId}
+															&recordLoanOfficerId=${requestScope.loan.personnelId}"> 
+								<mifos:mifoslabel name="loan.view_installment_details" />								
+							</html-el:link>
+						</span>
+			              </td>
+		                </tr>		               
+		              </table>
+		              
+		              
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr class="drawtablerow">
 							<td width="24%">&nbsp;</td>
@@ -250,7 +269,7 @@
 							<td width="35%" class="headingorange"><mifos:mifoslabel
 								name="loan.recentActivity" /></td>
 							<td width="65%" align="right" class="fontnormal">&nbsp; <html-el:link
-								href="loanActivityAction.do?method=getAllActivity&
+								href="loanAccountAction.do?method=getAllActivity&
 										accountId=${requestScope.loan.accountId}
 										&prdOfferingName=${requestScope.loan.loanOffering.prdOfferingName}&
 										accountStateId=${requestScope.loan.accountStateId}&
