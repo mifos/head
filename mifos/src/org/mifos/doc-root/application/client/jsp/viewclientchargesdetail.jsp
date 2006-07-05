@@ -111,6 +111,11 @@
 	                <span class="fontnormalbold">
 	                	<mifos:mifoslabel name="Center.ApplyTransaction" bundle="CenterUIResources"/>
 	                </span>
+	               	&nbsp;&nbsp;&nbsp;&nbsp;
+	                	<html-el:link href="applyPaymentAction.do?method=load&statusId=${param.statusId}&globalCustNum=${sessionScope.linkValues.globalCustNum}&prdOfferingName=${sessionScope.linkValues.customerName}&input=ViewClientCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&securityParamInput=Center">
+	                    	<mifos:mifoslabel name="accounts.apply_payment" />
+	                    </html-el:link>
+	                
 	                <c:if test="${param.statusId == 3 || param.statusId == 4}">
 	                &nbsp;&nbsp;&nbsp;&nbsp;
 		                <html-el:link href="custApplyAdjustment.do?method=loadAdjustment&statusId=${param.statusId}&globalCustNum=${sessionScope.linkValues.globalCustNum}&prdOfferingName=${sessionScope.linkValues.customerName}&input=ViewClientCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&securityParamInput=Client">

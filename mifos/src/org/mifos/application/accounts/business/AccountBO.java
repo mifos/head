@@ -638,7 +638,6 @@ public class AccountBO extends BusinessObject {
 	public List<TransactionHistoryView> getTransactionHistoryView() {
 
 		List<TransactionHistoryView> trxnHistory = new ArrayList<TransactionHistoryView>();
-		try {
 			for (AccountPaymentEntity accountPayment : getAccountPayments()) {
 				for (AccountTrxnEntity accountTrxn : accountPayment
 						.getAccountTrxns()) {
@@ -651,9 +650,6 @@ public class AccountBO extends BusinessObject {
 					}
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
 		return trxnHistory;
 	}
