@@ -215,13 +215,20 @@ public class CustomerBusinessService extends BusinessService{
 		List<CustomerBO> clients =getChildList(centerChildren , CenterConstants.CLIENT_LEVEL_ID );
 		List<AccountBO> loanList = getAccountsForCustomer(searchId,officeId,Short.valueOf(AccountTypes.LOANACCOUNT));
 		List<AccountBO> savingsList = getAccountsForCustomer(searchId,officeId,Short.valueOf(AccountTypes.SAVINGSACCOUNT));
-		
+		int clientSize = 0;
+		int groupSize = 0;
+		if(clients !=null)
+			clientSize = clients.size();
+		if(groups !=null)
+			groupSize = groups.size();
+		Money portfolioAtRisk = null;
 		Money totalOutstandingLoan = getTotalOutstandingLoan(loanList);
-		Money portfolioAtRisk = getPortfolioAtRisk(loanList).divide(totalOutstandingLoan);
+		if(totalOutstandingLoan.getAmountDoubleValue() != 0)
+			portfolioAtRisk = getPortfolioAtRisk(loanList).divide(totalOutstandingLoan);
 		Money totalSavings = getTotalSavings(savingsList);
 		
 		CenterPerformanceHistory centerPerformanceHistory = new CenterPerformanceHistory();
-		centerPerformanceHistory.setPerformanceHistoryDetails(groups.size(),clients.size(),totalOutstandingLoan,totalSavings,portfolioAtRisk);
+		centerPerformanceHistory.setPerformanceHistoryDetails(groupSize,clientSize,totalOutstandingLoan,totalSavings,portfolioAtRisk);
 		return centerPerformanceHistory;
 	}
 	
