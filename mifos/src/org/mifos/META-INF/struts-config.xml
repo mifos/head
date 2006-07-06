@@ -525,6 +525,7 @@
 			<forward name="ViewGroupCharges" path="/closedaccsearchaction.do?method=search" />
 			<forward name="ViewCenterCharges" path="/closedaccsearchaction.do?method=search" />
 			<forward name="ViewClientCharges" path="/closedaccsearchaction.do?method=search" />
+			<forward name="loan_details_page" path="/loanAction.do?method=get" />			
 		</action>
 		<!-- AccountNotes action -->
 		<action path="/AccountNotesAction" type="org.mifos.application.accounts.struts.action.AccountNotesAction" name="accountNotesActionForm" parameter="method" validate="true" input="/AccountNotesAction.do?method=validate" scope="session">
@@ -855,6 +856,9 @@
 		<action path="/loanAccountAction" type="org.mifos.application.accounts.loan.struts.action.LoanAccountAction" parameter="method" scope="session">
 			<forward name="viewInstmentDetails_success" path="/pages/application/loan/jsp/nextPayment_loanAccount.jsp" />
 			<forward name="getAllActivity_success" path="/pages/application/loan/jsp/viewloanaccountactivity.jsp" />
+			<forward name="waiveChargesDue_Success" path="/loanAccountAction.do?method=forwardWaiveCharge"></forward>
+			<forward name="waiveChargesOverDue_Success" path="/loanAccountAction.do?method=forwardWaiveCharge"></forward>
+			<forward name="waiveLoanAccountCharges_Success" path="/loanAccountAction.do?method=getInstallmentDetails"/>			
 		</action>
 	</action-mappings>
 

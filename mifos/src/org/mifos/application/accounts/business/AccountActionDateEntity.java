@@ -452,6 +452,21 @@ public class AccountActionDateEntity extends PersistentObject {
 		deposit = deposit.subtract(depositDue);
 		setPaymentStatus(AccountConstants.PAYMENT_PAID);
 	}
+	public Money waiveFeeCharges(){
+		Money chargeWaived=new Money();
+		chargeWaived=chargeWaived.add(getMiscFee());
+		setMiscFee(new Money());		
+		for(AccountFeesActionDetailEntity accountFeesActionDetailEntity :  getAccountFeesActionDetails()){
+			chargeWaived=chargeWaived.add(accountFeesActionDetailEntity.waiveCharges());
+		}
+		return chargeWaived;
+	}
+	public Money waivePenaltyCharges(){
+		Money chargeWaived=new Money();		
+		chargeWaived=chargeWaived.add(getMiscPenalty());
+		setMiscPenalty(new Money());		
+		return chargeWaived;
+	}
 	
 	public void applyPeriodicFees(Short feeId){
 		AccountFeesActionDetailEntity accountFeesActionDetailEntity = new AccountFeesActionDetailEntity();

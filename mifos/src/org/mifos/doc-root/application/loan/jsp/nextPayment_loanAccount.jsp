@@ -24,7 +24,7 @@
 					<span class="fontnormal8pt">
 						<mifoscustom:getLoanHeader loanHeader='${sessionScope.header_get}'/>
 						<html-el:link action="loanAction.do?method=get&globalAccountNum=${param.globalAccountNum}">
-							<c:out value="${param.accountName}" />
+							<c:out value="${param.prdOfferingName}" />
 						</html-el:link></span>
 					</td>
 				</tr>
@@ -38,7 +38,7 @@
 						<tr>
 							<td width="70%" class="headingorange">
 							<span class="heading">
-								<c:out value="${param.accountName}"/>&nbsp;#
+								<c:out value="${param.prdOfferingName}"/>&nbsp;#
 								<c:out value="${param.globalAccountNum}"/> -
 							</span>
 							<mifos:mifoslabel name="loan.next_install_details" bundle="loanUIResources" /></td>
@@ -54,10 +54,10 @@
 							<html-el:link href="#">
 								<mifos:mifoslabel name="loan.apply_payment"	bundle="loanUIResources" />
 							</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							<html-el:link href="applyAdjustment.do?method=loadAdjustment&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.accountName}">
+							<html-el:link href="applyAdjustment.do?method=loadAdjustment&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}">
 								<mifos:mifoslabel name="loan.apply_adjustment"	bundle="loanUIResources" />
 							</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							<html-el:link href="AccountsApplyChargesAction.do?method=load&input=reviewTransactionPage&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.accountName}">
+							<html-el:link href="AccountsApplyChargesAction.do?method=load&input=installmentDetailsPage&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}">
 								<mifos:mifoslabel name="loan.apply_charges" bundle="loanUIResources" />
 							</html-el:link>
 							</td>
@@ -74,6 +74,14 @@
 							<td width="13%" align="right">&nbsp;</td>
 						</tr>
 						<tr>
+			                <td class="drawtablerowbold">
+			                <mifos:mifoslabel name="loan.original_installment" />
+			                </td>
+			                <td align="right" class="drawtablerow">&nbsp;</td>
+			                <td align="right" class="drawtablerow">&nbsp;</td>
+			              </tr>
+			              
+						<tr>
 							<td class="drawtablerow">
 								<mifos:mifoslabel name="loan.principal"	bundle="loanUIResources" />
 							</td>
@@ -82,16 +90,20 @@
 							</td>
 							<td align="right" class="drawtablerow">&nbsp;</td>
 						</tr>
+						 
 						<tr>
-							<td class="drawtablerow"><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></td>
+							<td class="drawtablerow">
+							<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" />
+							</td>
 							<td align="right" class="drawtablerow"><c:out value='${sessionScope.viewUpcomingInstallmentDetails.interest}'/></td>
 							<td align="right" class="drawtablerow">&nbsp;</td>
 						</tr>
 						<tr>
 							<td class="drawtablerow"><mifos:mifoslabel name="loan.fees"	bundle="loanUIResources" /></td>
 							<td align="right" class="drawtablerow"><c:out value='${sessionScope.viewUpcomingInstallmentDetails.fees}'/></td>
-							<td align="right" class="drawtablerow">
-							<html-el:link href='loanAction.do?method=waive&accountId=${requestScope.Context.businessResults["InstallmentDetails"].accountId}&installmentId=${requestScope.Context.businessResults["InstallmentDetails"].nextInstallmentId}&type=fees&installmentType=current'>
+							<td align="right" class="drawtablerow">	
+													 
+							<html-el:link href="loanAccountAction.do?method=waiveChargeDue&prdOfferingName=${param.prdOfferingName}&accountId=${param.accountId}&WaiveType=fees&type=LoanAccount&globalAccountNum=${param.globalAccountNum}">
 								<mifos:mifoslabel name="loan.waive" bundle="loanUIResources" />
 							</html-el:link></td>
 						</tr>
@@ -99,7 +111,7 @@
 							<td class="drawtablerow"><mifos:mifoslabel name="loan.penalty" bundle="loanUIResources" /></td>
 							<td align="right" class="drawtablerow"><c:out value='${sessionScope.viewUpcomingInstallmentDetails.penalty}'/></td>
 							<td align="right" class="drawtablerow">
-							<html-el:link href='loanAction.do?method=waive&accountId=${requestScope.Context.businessResults["InstallmentDetails"].accountId}&installmentId=${requestScope.Context.businessResults["InstallmentDetails"].nextInstallmentId}&type=penalty&installmentType=current'>
+							<html-el:link href="loanAccountAction.do?method=waiveChargeDue&accountId=${param.accountId}&WaiveType=penalty&type=LoanAccount&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}">
 								<mifos:mifoslabel name="loan.waive" bundle="loanUIResources" />
 							</html-el:link></td>
 						</tr>
@@ -140,7 +152,7 @@
 							<mifos:mifoslabel name="loan.fees" bundle="loanUIResources" /></td>
 							<td align="right" class="drawtablerow"><c:out value='${sessionScope.viewOverDueInstallmentDetails.fees}'/></td>
 							<td align="right" class="drawtablerow">
-							<html-el:link href='loanAction.do?method=waive&accountId=${requestScope.Context.businessResults["InstallmentDetails"].accountId}&installmentId=${requestScope.Context.businessResults["InstallmentDetails"].nextInstallmentId}&type=fees&installmentType=overdue'>
+							<html-el:link href="loanAccountAction.do?method=waiveChargeOverDue&accountId=${param.accountId}&WaiveType=fees&type=LoanAccount&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}">
 								<mifos:mifoslabel name="loan.waive" bundle="loanUIResources" />
 							</html-el:link></td>
 						</tr>
@@ -148,7 +160,8 @@
 							<td class="drawtablerow">
 							<mifos:mifoslabel name="loan.penalty" bundle="loanUIResources" /></td>
 							<td align="right" class="drawtablerow"><c:out value='${sessionScope.viewOverDueInstallmentDetails.penalty}'/></td>
-							<td align="right" class="drawtablerow"><html-el:link href='loanAction.do?method=waive&accountId=${requestScope.Context.businessResults["InstallmentDetails"].accountId}&installmentId=${requestScope.Context.businessResults["InstallmentDetails"].nextInstallmentId}&type=penalty&installmentType=overdue'>
+							<td align="right" class="drawtablerow">
+							<html-el:link href="loanAccountAction.do?method=waiveChargeOverDue&accountId=${param.accountId}&WaiveType=penalty&type=LoanAccount&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}">
 								<mifos:mifoslabel name="loan.waive" bundle="loanUIResources" />
 							</html-el:link></td>
 						</tr>
@@ -193,6 +206,10 @@
 				</tr>
 			</table>
 			</td>
+			<html-el:hidden property="accountId" value="${param.accountId}"/>
+			<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}"/>			
+			<html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}"/>									
+			
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

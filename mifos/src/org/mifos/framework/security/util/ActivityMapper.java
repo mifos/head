@@ -773,7 +773,18 @@ public class ActivityMapper {
 		activityMap.put("/customerAction-getAllActivity",
 				SecurityConstants.VIEW);
 		
-
+		activityMap.put("/loanAccountAction-waiveChargeDue",
+				SecurityConstants.LOAN_WAIVE_FEE_INSTALLMENT);		
+		activityMap.put("/loanAccountAction-waiveChargeDue",
+				SecurityConstants.LOAN_WAIVE_PANELTY);	
+		activityMap.put("/loanAccountAction-forwardWaiveCharge",
+				SecurityConstants.VIEW);
+		activityMap.put("/loanAccountAction-waiveChargeOverDue",
+				SecurityConstants.LOAN_WAIVE_FEE_INSTALLMENT);		
+		activityMap.put("/loanAccountAction-waiveChargeOverDue",
+				SecurityConstants.LOAN_WAIVE_PANELTY);	
+				
+		
 		// mapping for accountPayment
 		activityMap.put("/applyPaymentAction-load-Loan",	SecurityConstants.LOAN_MAKE_PAYMENT_TO_ACCOUNT);
 		activityMap.put("/applyPaymentAction-load-Center",	SecurityConstants.CENTER_MAKE_PAYMENTS_TO_CENTER_ACCOUNT);

@@ -12,8 +12,10 @@ import org.mifos.framework.MifosTestCase;
 import org.hibernate.Session;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
+import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.business.LoanTrxnDetailEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
@@ -24,7 +26,9 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -34,6 +38,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -853,5 +858,75 @@ public class TestLoanBO extends MifosTestCase {
 		}
 		assertEquals(accountBO.getAccountState().getId(), new Short(AccountStates.LOANACC_WRITTENOFF));
 	}
-
+	public void testWaiveFeeChargeDue() throws Exception {
+		accountBO = getLoanAccount();		
+		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
+		TestObjectFactory.flushandCloseSession();
+		LoanBO loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
+		UserContext userContext = TestObjectFactory.getUserContext();
+		loanBO.setUserContext(userContext);		
+		loanBO.waiveAmountDue(WaiveEnum.FEES);
+		TestObjectFactory.flushandCloseSession();
+		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
+		for (AccountActionDateEntity accountActionDateEntity : loanBO.getAccountActionDates()) {
+			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
+					.getAccountFeesActionDetails()) {
+				if (accountActionDateEntity.getInstallmentId().equals(
+						Short.valueOf("1"))){
+					assertEquals(new Money(), accountFeesActionDetailEntity
+							.getFeeAmount());					
+				}
+				else
+					assertEquals(new Money("100"),
+							accountFeesActionDetailEntity.getFeeAmount());
+			}
+		}		
+	}
+	
+	public void testWaiveFeeChargeOverDue() throws Exception {
+		accountBO = getLoanAccount();		
+		LoanBO loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
+		Calendar calendar = new GregorianCalendar();
+        calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
+        calendar.add(calendar.WEEK_OF_MONTH,-1);
+        java.sql.Date lastWeekDate = new java.sql.Date(calendar.getTimeInMillis());
+        
+        Calendar date = new GregorianCalendar();
+        date.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
+        date.add(date.WEEK_OF_MONTH,-2);
+        java.sql.Date twoWeeksBeforeDate = new java.sql.Date(date.getTimeInMillis());
+        
+        
+		for(AccountActionDateEntity installment : accountBO.getAccountActionDates()){
+			if(installment.getInstallmentId().intValue()==1){
+				installment.setActionDate(lastWeekDate);
+			}
+			else if(installment.getInstallmentId().intValue()==2){
+				installment.setActionDate(twoWeeksBeforeDate);
+			}
+		}
+		TestObjectFactory.updateObject(accountBO);
+		TestObjectFactory.flushandCloseSession();
+		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
+		UserContext userContext = TestObjectFactory.getUserContext();
+		loanBO.setUserContext(userContext);		
+		loanBO.waiveAmountOverDue(WaiveEnum.FEES);
+		TestObjectFactory.flushandCloseSession();
+		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
+		for (AccountActionDateEntity accountActionDateEntity : loanBO.getAccountActionDates()) {
+			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
+					.getAccountFeesActionDetails()) {
+				if (accountActionDateEntity.getInstallmentId().equals(
+						Short.valueOf("1")) || accountActionDateEntity.getInstallmentId().equals(
+								Short.valueOf("2"))){					
+					assertEquals(new Money(), accountFeesActionDetailEntity
+							.getFeeAmount());					
+				}
+				else
+					assertEquals(new Money("100"),
+							accountFeesActionDetailEntity.getFeeAmount());
+			}
+		}		
+	}
+	
 }

@@ -54,6 +54,7 @@ import org.mifos.application.accounts.financial.business.service.FinancialBusine
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
@@ -369,7 +370,10 @@ public class AccountBO extends BusinessObject {
 
 	protected void updateTotalFeeAmount(Money totalFeeAmount) {
 	}
-
+	
+	public void updateTotalPenaltyAmount(Money totalPenaltyAmount) {		
+	}
+	
 	public Money updateAccountActionDateEntity(List<Short> intallmentIdList,
 			Short feeId) {
 		Money totalFeeAmount = new Money();
@@ -707,10 +711,10 @@ public class AccountBO extends BusinessObject {
 		return accountTrxnList;
 	}
 
-	public void waiveAmountDue() throws ServiceException,AccountException {
+	public void waiveAmountDue(WaiveEnum chargeType) throws ServiceException,AccountException {
 	}
 
-	public void waiveAmountOverDue() throws ServiceException,AccountException {
+	public void waiveAmountOverDue(WaiveEnum chargeType) throws ServiceException,AccountException {
 	}
 
 	public Date getNextMeetingDate() {

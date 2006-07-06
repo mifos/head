@@ -19,6 +19,7 @@ import org.mifos.application.accounts.persistence.service.AccountPersistanceServ
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
+import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.business.CenterPerformanceHistory;
@@ -126,7 +127,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		assertEquals(0, customerActivityViewList.size());
 		UserContext uc = TestObjectFactory.getUserContext();
 		center.getCustomerAccount().setUserContext(uc);
-		center.getCustomerAccount().waiveAmountDue();
+		center.getCustomerAccount().waiveAmountDue(WaiveEnum.ALL);
 		TestObjectFactory.flushandCloseSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
@@ -148,7 +149,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		assertEquals(0, customerActivityViewList.size());
 		UserContext uc = TestObjectFactory.getUserContext();
 		center.getCustomerAccount().setUserContext(uc);
-		center.getCustomerAccount().waiveAmountDue();
+		center.getCustomerAccount().waiveAmountDue(WaiveEnum.ALL);
 		TestObjectFactory.flushandCloseSession();
 
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
@@ -167,7 +168,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		}
 		TestObjectFactory.updateObject(center);
 		center.getCustomerAccount().setUserContext(uc);
-		center.getCustomerAccount().waiveAmountDue();
+		center.getCustomerAccount().waiveAmountDue(WaiveEnum.ALL);
 		TestObjectFactory.flushandCloseSession();
 
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
@@ -186,7 +187,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		}
 		TestObjectFactory.updateObject(center);
 		center.getCustomerAccount().setUserContext(uc);
-		center.getCustomerAccount().waiveAmountDue();
+		center.getCustomerAccount().waiveAmountDue(WaiveEnum.ALL);
 		TestObjectFactory.flushandCloseSession();
 
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
@@ -204,7 +205,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		}
 		TestObjectFactory.updateObject(center);
 		center.getCustomerAccount().setUserContext(uc);
-		center.getCustomerAccount().waiveAmountDue();
+		center.getCustomerAccount().waiveAmountDue(WaiveEnum.ALL);
 		TestObjectFactory.flushandCloseSession();
 
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center

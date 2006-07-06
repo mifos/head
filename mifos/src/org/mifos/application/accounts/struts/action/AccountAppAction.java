@@ -9,16 +9,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
-import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
-import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -95,13 +93,13 @@ public class AccountAppAction extends BaseAction {
 		return mapping.findForward("getTransactionHistory_success");
 	}
 	
-	public ActionForward waiveChargeDue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
+	public ActionForward waiveChargeDue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {		
 		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
 		Integer accountId=Integer.valueOf((String)request.getParameter("accountId"));
 		AccountBusinessService accountBusinessService =(AccountBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Accounts);
 		AccountBO account = accountBusinessService.getAccount(accountId);
-		account.setUserContext(uc);
-		account.waiveAmountDue();
+		account.setUserContext(uc);		
+		account.waiveAmountDue(getWaiveType(request.getParameter(AccountConstants.WAIVE_TYPE)));		
 		return mapping.findForward("waiveChargesDue_Success");
 	}
 	
@@ -111,8 +109,19 @@ public class AccountAppAction extends BaseAction {
 		AccountBusinessService accountBusinessService =(AccountBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Accounts);
 		AccountBO account = accountBusinessService.getAccount(accountId);
 		account.setUserContext(uc);
-		account.waiveAmountOverDue();
+		account.waiveAmountOverDue(getWaiveType(request.getParameter(AccountConstants.WAIVE_TYPE)));
 		return mapping.findForward("waiveChargesOverDue_Success");
 	}
-
+	
+	private WaiveEnum getWaiveType(String waiveType){		
+		if(waiveType != null){			
+			if(waiveType.equalsIgnoreCase(WaiveEnum.PENALTY.toString())){
+				return WaiveEnum.PENALTY;
+			}
+			if(waiveType.equalsIgnoreCase(WaiveEnum.FEES.toString())){
+				return WaiveEnum.FEES;
+			}			
+		}
+		return WaiveEnum.ALL;
+	}
 }

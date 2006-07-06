@@ -46,6 +46,7 @@ import java.util.Set;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
+import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
@@ -181,7 +182,7 @@ public class CustomerAccountBO extends AccountBO {
 	}
 
 	@Override
-	public void waiveAmountDue() throws ServiceException {
+	public void waiveAmountDue(WaiveEnum chargeType) throws ServiceException {
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
 		AccountActionDateEntity accountActionDateEntity = accountActionDateList
 				.get(accountActionDateList.size() - 1);
@@ -194,7 +195,7 @@ public class CustomerAccountBO extends AccountBO {
 	}
 
 	@Override
-	public void waiveAmountOverDue() throws ServiceException {
+	public void waiveAmountOverDue(WaiveEnum chargeType) throws ServiceException {
 		Money chargeWaived = new Money();
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
 		accountActionDateList.remove(accountActionDateList.size() - 1);

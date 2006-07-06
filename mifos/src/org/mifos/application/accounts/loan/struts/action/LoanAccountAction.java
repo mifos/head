@@ -34,7 +34,7 @@ public class LoanAccountAction extends AccountAppAction {
 		return true;
 	}
 	
-	public LoanAccountAction()throws ServiceException {
+	public LoanAccountAction() throws ServiceException {
 		loanBusinessService = (LoanBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Loan);
 	}
 	
@@ -60,5 +60,10 @@ public class LoanAccountAction extends AccountAppAction {
 		SessionUtils.setAttribute(LoanConstants.LOAN_ALL_ACTIVITY_VIEW,loanBusinessService.getAllActivityView(globalAccountNum,((UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession())).getLocaleId()),request.getSession());
 		return mapping.findForward(MethodNameConstants.GETALLACTIVITY_SUCCESS);
 	}
+	
+	public ActionForward forwardWaiveCharge(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {		
+		String type = request.getParameter("type");
+		return mapping.findForward("waive"+type+"Charges_Success");
+	}	
 	
 }

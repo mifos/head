@@ -73,6 +73,7 @@ import org.mifos.application.accounts.persistence.service.AccountPersistanceServ
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
 import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -499,10 +500,15 @@ public class LoanBO extends AccountBO {
 		return totalOverDueAmounts;
 	}
 
-	public void updateTotalFeeAmount(Money totalFeeAmount) {
+	public void updateTotalFeeAmount(Money totalFeeAmount) {		
 		LoanSummaryEntity loanSummaryEntity = this.getLoanSummary();
 		loanSummaryEntity.setOriginalFees(loanSummaryEntity.getOriginalFees()
 				.subtract(totalFeeAmount));
+	}
+	
+	public void updateTotalPenaltyAmount(Money totalPenaltyAmount) {
+		LoanSummaryEntity loanSummaryEntity = this.getLoanSummary();
+		loanSummaryEntity.setOriginalPenalty(loanSummaryEntity.getOriginalPenalty().subtract(totalPenaltyAmount));
 	}
 
 	public boolean isAdjustPossibleOnLastTrxn() {
@@ -1308,5 +1314,76 @@ public class LoanBO extends AccountBO {
 			amount = amount.add(accountActionDateEntity.getPrincipal());
 		}
 		return amount;
+	}
+	
+	@Override
+	public void waiveAmountDue(WaiveEnum chargeType) throws ServiceException {				
+		if(chargeType.equals(WaiveEnum.FEES)){					
+			waiveFeeAmountDue();
+		}
+		else if(chargeType.equals(WaiveEnum.PENALTY)){			
+			waivePenaltyAmountDue();
+		}		
+	}
+
+	@Override
+	public void waiveAmountOverDue(WaiveEnum chargeType) throws ServiceException {		
+		if(chargeType.equals(WaiveEnum.FEES)){
+			waiveFeeAmountOverDue();
+		}
+		else if(chargeType.equals(WaiveEnum.PENALTY)){
+			waivePenaltyAmountOverDue();
+		}			
+	}
+	
+	public void waiveFeeAmountDue() throws ServiceException{
+		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
+		AccountActionDateEntity accountActionDateEntity = accountActionDateList
+				.get(accountActionDateList.size() - 1);
+		Money chargeWaived = accountActionDateEntity.waiveFeeCharges();
+		if (chargeWaived != null && chargeWaived.getAmountDoubleValue() > 0.0) {
+			updateAccountActivity(chargeWaived, userContext.getId(), "Amnt "+chargeWaived+" waived" );
+			updateTotalFeeAmount(chargeWaived);			
+		}		
+		getAccountPersistenceService().update(this);
+	}
+	
+	public void waivePenaltyAmountDue() throws ServiceException{
+		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
+		AccountActionDateEntity accountActionDateEntity = accountActionDateList
+				.get(accountActionDateList.size() - 1);
+		Money chargeWaived = accountActionDateEntity.waivePenaltyCharges();
+		if (chargeWaived != null && chargeWaived.getAmountDoubleValue() > 0.0) {
+			updateAccountActivity(chargeWaived, userContext.getId(), "Amnt "+chargeWaived+" waived" );			
+			updateTotalPenaltyAmount(chargeWaived);
+		}
+		getAccountPersistenceService().update(this);
+	}
+	
+	public void waiveFeeAmountOverDue() throws ServiceException{
+		Money chargeWaived = new Money();
+		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
+		accountActionDateList.remove(accountActionDateList.size() - 1);
+		for (AccountActionDateEntity accountActionDateEntity : accountActionDateList) {
+			chargeWaived = chargeWaived.add(accountActionDateEntity.waiveFeeCharges());
+		}
+		if (chargeWaived != null && chargeWaived.getAmountDoubleValue() > 0.0) {
+			updateAccountActivity(chargeWaived, userContext.getId(), "Amnt "+chargeWaived+" waived" );
+			updateTotalFeeAmount(chargeWaived);	
+		}
+		getAccountPersistenceService().update(this);
+	}
+	public void waivePenaltyAmountOverDue() throws ServiceException{
+		Money chargeWaived = new Money();
+		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
+		accountActionDateList.remove(accountActionDateList.size() - 1);
+		for (AccountActionDateEntity accountActionDateEntity : accountActionDateList) {
+			chargeWaived = chargeWaived.add(accountActionDateEntity.waivePenaltyCharges());
+		}
+		if (chargeWaived != null && chargeWaived.getAmountDoubleValue() > 0.0) {
+			updateAccountActivity(chargeWaived, userContext.getId(), "Amnt "+chargeWaived+" waived" );	
+			updateTotalPenaltyAmount(chargeWaived);
+		}
+		getAccountPersistenceService().update(this);
 	}
 }

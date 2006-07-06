@@ -11,6 +11,7 @@ import java.util.Set;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
 import org.mifos.application.customer.business.CustomerBO;
@@ -253,7 +254,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		userContext = TestObjectFactory.getUserContext();
 		CustomerAccountBO customerAccountBO = group.getCustomerAccount();
 		customerAccountBO.setUserContext(userContext);
-		customerAccountBO.waiveAmountDue();
+		customerAccountBO.waiveAmountDue(WaiveEnum.ALL);
 		for (AccountActionDateEntity accountActionDateEntity : customerAccountBO
 				.getAccountActionDates()) {
 			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
@@ -291,7 +292,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 			}
 		}
-		customerAccountBO.waiveAmountOverDue();
+		customerAccountBO.waiveAmountOverDue(WaiveEnum.ALL);
 		for (AccountActionDateEntity accountActionDateEntity : customerAccountBO
 				.getAccountActionDates()) {
 			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity

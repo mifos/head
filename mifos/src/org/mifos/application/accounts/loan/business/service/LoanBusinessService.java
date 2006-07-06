@@ -115,7 +115,7 @@ public class LoanBusinessService extends BusinessService {
 		for(AccountActionDateEntity installment : overDueInstallmentList){
 			principalDue = principalDue.add(installment.getPrincipalDue());			
 			interestDue = interestDue.add(installment.getInterestDue());
-			feesDue = feesDue.add(installment.getTotalFeeDue());
+			feesDue = feesDue.add(installment.getTotalFees());
 			penaltyDue = penaltyDue.add(installment.getPenaltyDue());			
 		}
 		return new ViewInstallmentDetails(principalDue, interestDue, feesDue, penaltyDue);

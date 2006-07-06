@@ -113,7 +113,6 @@ public class AccountsApplyChargesAction extends MifosBaseAction {
 		String forward = null;
 		AccountsApplyChargesActionForm actionForm = (AccountsApplyChargesActionForm) form;
 		String inputPage = actionForm.getInput();
-
 		if (inputPage != null) {
 			if (inputPage.equals("reviewTransactionPage")) {
 				forward = MethodNameConstants.CANCEL_LOAN_SUCCESS;
@@ -124,7 +123,10 @@ public class AccountsApplyChargesAction extends MifosBaseAction {
 				forward = CenterConstants.CENTER_CHARGES_DETAILS_PAGE;
 			} else if (inputPage.equals("ViewClientCharges")) {
 				forward = "ViewClientCharges";
-			}
+			} else if (inputPage.equals("installmentDetailsPage")) {				
+				forward = AccountConstants.LOAN_DETAILS_PAGE;
+			} 
+			
 		}
 		return mapping.findForward(forward);
 	}
@@ -148,7 +150,7 @@ public class AccountsApplyChargesAction extends MifosBaseAction {
 			throws Exception {
 		String forward = null;
 		AccountsApplyChargesActionForm actionForm = (AccountsApplyChargesActionForm) form;
-		String inputPage = actionForm.getInput();
+		String inputPage = actionForm.getInput();		
 		if (inputPage != null) {
 			if (inputPage.equals("reviewTransactionPage")) {
 				forward = MethodNameConstants.CREATE_LOAN_SUCCESS;
@@ -159,6 +161,8 @@ public class AccountsApplyChargesAction extends MifosBaseAction {
 				forward = CenterConstants.CENTER_CHARGES_DETAILS_PAGE;
 			} else if (inputPage.equals("ViewClientCharges")) {
 				forward = "ViewClientCharges";
+			} else if (inputPage.equals("installmentDetailsPage")) {				
+				forward = AccountConstants.LOAN_DETAILS_PAGE;
 			}
 		}
 		return mapping.findForward(forward);

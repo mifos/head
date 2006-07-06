@@ -190,7 +190,7 @@
 		                <tr>		                
 		                  <td width="42%" align="right" class="fontnormal">
 		                  <span class="fontnormal">
-		                  	<html-el:link href="loanAccountAction.do?method=getInstallmentDetails&accountId=${requestScope.loan.accountId}&accountName=${requestScope.loan.loanOffering.prdOfferingName}&globalAccountNum=${requestScope.loan.globalAccountNum}
+		                  	<html-el:link href="loanAccountAction.do?method=getInstallmentDetails&accountId=${requestScope.loan.accountId}&prdOfferingName=${requestScope.loan.loanOffering.prdOfferingName}&globalAccountNum=${requestScope.loan.globalAccountNum}
 															&accountType=${requestScope.loan.accountTypeId}
 															&accountStateId=${requestScope.loan.accountStateId}
 															&recordOfficeId=${requestScope.loan.officeId}

@@ -178,5 +178,8 @@ public interface AccountConstants {
 	
 	public final String ERROR_MANDATORY="errors.mandatory";
 	public final String ERROR_FUTUREDATE="errors.futuredate";
+	
+	public final String WAIVE_TYPE="WaiveType";	
+	
 }
 
