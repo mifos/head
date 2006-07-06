@@ -8,6 +8,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.HibernateException;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
@@ -15,8 +16,11 @@ import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
+import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.fees.business.FeesBO;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -24,6 +28,8 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
 import org.mifos.framework.components.scheduler.SchedulerException;
+import org.mifos.framework.components.scheduler.SchedulerIntf;
+import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -31,6 +37,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -508,6 +515,52 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			assertEquals("Mainatnence Fee removed", customerActivityEntity
 					.getDescription());
 			assertEquals("222.0", customerActivityEntity.getAmount().toString());
+		}
+	}
+	
+	public void testRegenerateFutureInstallments() throws SchedulerException, HibernateException, ServiceException{
+		createCenter();
+		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+		AccountActionDateEntity accountActionDateEntity =center.getCustomerAccount().getDetailsOfNextInstallment();
+		MeetingBO meeting = center.getCustomerMeeting().getMeeting();
+		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
+		meeting.setMeetingStartDate(DateUtils.getCalendarDate(accountActionDateEntity.getActionDate().getTime()));
+		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
+		List<java.util.Date> meetingDates = scheduler.getAllDates();
+		meetingDates.remove(0);
+		center.getCustomerAccount().regenerateFutureInstallments(meetingDates,(short)(accountActionDateEntity.getInstallmentId().intValue()+1));
+		HibernateUtil.getTransaction().commit();
+		HibernateUtil.closeSession();
+		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+		for(AccountActionDateEntity actionDateEntity : center.getCustomerAccount().getAccountActionDates()){
+			if(actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()));
+			else if(actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
+				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
+		}
+	}
+	
+	public void testRegenerateFutureInstallmentsWithAccountClosed() throws SchedulerException, HibernateException, ServiceException{
+		createInitialObjects();
+		AccountActionDateEntity accountActionDateEntity =center.getCustomerAccount().getDetailsOfNextInstallment();
+		MeetingBO meeting = center.getCustomerMeeting().getMeeting();
+		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
+		meeting.setMeetingStartDate(DateUtils.getCalendarDate(accountActionDateEntity.getActionDate().getTime()));
+		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
+		List<java.util.Date> meetingDates = scheduler.getAllDates();
+		meetingDates.remove(0);
+		CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity();
+		customerStatusEntity.setStatusId(GroupConstants.CLOSED);
+		group.setCustomerStatus(customerStatusEntity);
+		group.getCustomerAccount().regenerateFutureInstallments(meetingDates,(short)(accountActionDateEntity.getInstallmentId().intValue()+1));
+		HibernateUtil.getTransaction().commit();
+		HibernateUtil.closeSession();
+		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+		for(AccountActionDateEntity actionDateEntity : center.getCustomerAccount().getAccountActionDates()){
+			if(actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+				assertNotSame(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()));
+			else if(actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
+				assertNotSame(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
 		}
 	}
 }

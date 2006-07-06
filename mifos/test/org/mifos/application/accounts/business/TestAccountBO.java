@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.HibernateException;
 import org.mifos.application.accounts.TestAccount;
 import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -19,10 +20,18 @@ import org.mifos.application.accounts.persistence.service.AccountPersistanceServ
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.fees.business.FeesBO;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.components.scheduler.SchedulerException;
+import org.mifos.framework.components.scheduler.SchedulerIntf;
+import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -291,6 +300,47 @@ public class TestAccountBO extends TestAccount {
 			assertTrue(accountBO.isTrxnDateValid(trxnDate));
 		else 
 			assertFalse(accountBO.isTrxnDateValid(trxnDate));
+		
+	}
+	
+	public void testHandleChangeInMeetingSchedule() throws SchedulerException, ServiceException, HibernateException, PersistenceException{
+		TestObjectFactory.flushandCloseSession();
+		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
+		MeetingBO meeting = center.getCustomerMeeting().getMeeting();
+		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
+		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
+		List<java.util.Date> meetingDates = scheduler.getAllDates();
+		TestObjectFactory.updateObject(center);
+		center.getCustomerAccount().handleChangeInMeetingSchedule();
+		accountBO.handleChangeInMeetingSchedule();
+		HibernateUtil.getTransaction().commit();
+		HibernateUtil.closeSession();
+		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
+		for(AccountActionDateEntity actionDateEntity : center.getCustomerAccount().getAccountActionDates()){
+			if(actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
+			else if(actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
+				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),DateUtils.getDateWithoutTimeStamp(meetingDates.get(2).getTime()));
+		}
+		for(AccountActionDateEntity actionDateEntity : accountBO.getAccountActionDates()){
+			if(actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
+			else if(actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
+				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),DateUtils.getDateWithoutTimeStamp(meetingDates.get(2).getTime()));
+		}
+	
+	}
+	
+	public void testDeleteFutureInstallments() throws HibernateException, ServiceException{
+		TestObjectFactory.flushandCloseSession();
+		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
+		accountBO.deleteFutureInstallments();
+		HibernateUtil.getTransaction().commit();
+		HibernateUtil.closeSession();
+		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
+		assertEquals(1,accountBO.getAccountActionDates().size());
 		
 	}
 }

@@ -46,6 +46,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.HibernateException;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.exceptions.AccountExceptionConstants;
 import org.mifos.application.accounts.exceptions.IDGenerationException;
@@ -60,6 +61,7 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
 import org.mifos.application.fees.business.FeesBO;
 import org.mifos.application.master.util.valueobjects.AccountType;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.BusinessObject;
@@ -67,6 +69,9 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.scheduler.SchedulerException;
+import org.mifos.framework.components.scheduler.SchedulerIntf;
+import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -594,27 +599,16 @@ public class AccountBO extends BusinessObject {
 
 	protected List<AccountActionDateEntity> getApplicableIdsForFutureInstallments() {
 		List<AccountActionDateEntity> futureActionDateList = new ArrayList<AccountActionDateEntity>();
-		if (isCurrentDateEquallToInstallmentDate()) {
-			for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
-				if (accountActionDateEntity.getPaymentStatus().equals(
-						AccountConstants.PAYMENT_UNPAID)) {
-					if (accountActionDateEntity
-							.compareDate(DateUtils.getCurrentDateWithoutTimeStamp()) > 0) {
+		AccountActionDateEntity accountActionDate=null;
+		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
+			if (accountActionDateEntity.getPaymentStatus().equals(
+					AccountConstants.PAYMENT_UNPAID)) {
+				if (accountActionDateEntity
+						.compareDate(DateUtils.getCurrentDateWithoutTimeStamp()) >= 0) {
+					if (accountActionDate==null){
+						accountActionDate=accountActionDateEntity;
+					}else if(!accountActionDate.getInstallmentId().equals((accountActionDateEntity.getInstallmentId())))
 						futureActionDateList.add(accountActionDateEntity);
-					}
-				}
-			}
-		} else {
-			Boolean flag = true;
-			for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
-				if (accountActionDateEntity.getPaymentStatus().equals(
-						AccountConstants.PAYMENT_UNPAID)) {
-					if (accountActionDateEntity
-							.compareDate(DateUtils.getCurrentDateWithoutTimeStamp()) > 0) {
-						if (flag == false)
-							futureActionDateList.add(accountActionDateEntity);
-						flag = false;
-					}
 				}
 			}
 		}
@@ -814,6 +808,7 @@ public class AccountBO extends BusinessObject {
 			 dueInstallments.add(nextInstallment);
 		 return dueInstallments;
 	}
+	
 	public boolean isTrxnDateValid(Date trxnDate)throws ApplicationException, SystemException{
 		
 		if(Configuration.getInstance().getAccountConfig(getOffice().getOfficeId()).isBackDatedTxnAllowed()){
@@ -827,4 +822,25 @@ public class AccountBO extends BusinessObject {
 		return (CustomerPersistenceService) ServiceFactory.getInstance()
 		.getPersistenceService(PersistenceServiceName.Customer);
 	}	
+	
+	public void handleChangeInMeetingSchedule() throws SchedulerException, ServiceException, HibernateException, PersistenceException{
+		AccountActionDateEntity accountActionDateEntity =getDetailsOfNextInstallment();
+		MeetingBO meeting = getCustomer().getCustomerMeeting().getMeeting();
+		meeting.setMeetingStartDate(DateUtils.getCalendarDate(accountActionDateEntity.getActionDate().getTime()));
+		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
+		List<Date> meetingDates = scheduler.getAllDates();
+		meetingDates.remove(0);
+		regenerateFutureInstallments(meetingDates,(short)(accountActionDateEntity.getInstallmentId().intValue()+1));
+		getAccountPersistenceService().update(this);
+	}
+	
+	protected void regenerateFutureInstallments(List<Date> meetingDates,Short nextIntallmentId)throws HibernateException, ServiceException, PersistenceException {}
+	
+	protected void deleteFutureInstallments() throws HibernateException, ServiceException{
+		List<AccountActionDateEntity> futureInstllments = getApplicableIdsForFutureInstallments();
+		for(AccountActionDateEntity accountActionDateEntity : futureInstllments){
+			accountActionDates.remove(accountActionDateEntity);
+			getAccountPersistenceService().delete(accountActionDateEntity);
+		}
+	}
 }

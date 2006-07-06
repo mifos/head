@@ -9,11 +9,13 @@ import java.util.Set;
 
 import org.mifos.framework.MifosTestCase;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
+import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
@@ -33,6 +35,9 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
+import org.mifos.framework.components.scheduler.SchedulerException;
+import org.mifos.framework.components.scheduler.SchedulerIntf;
+import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -927,6 +932,52 @@ public class TestLoanBO extends MifosTestCase {
 							accountFeesActionDetailEntity.getFeeAmount());
 			}
 		}		
+	}
+	
+public void testRegenerateFutureInstallments() throws SchedulerException, HibernateException, ServiceException{
+		accountBO = getLoanAccount();
+		TestObjectFactory.flushandCloseSession();
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());
+		AccountActionDateEntity accountActionDateEntity =accountBO.getDetailsOfNextInstallment();
+		MeetingBO meeting = center.getCustomerMeeting().getMeeting();
+		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
+		meeting.setMeetingStartDate(DateUtils.getCalendarDate(accountActionDateEntity.getActionDate().getTime()));
+		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
+		List<java.util.Date> meetingDates = scheduler.getAllDates();
+		meetingDates.remove(0);
+		((LoanBO)accountBO).regenerateFutureInstallments(meetingDates,(short)(accountActionDateEntity.getInstallmentId().intValue()+1));
+		TestObjectFactory.flushandCloseSession();
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());
+		for(AccountActionDateEntity actionDateEntity : accountBO.getAccountActionDates()){
+			if(actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()));
+			else if(actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
+				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
+		}
+	}
+	
+	public void testRegenerateFutureInstallmentsWithCancelState() throws SchedulerException, HibernateException, ServiceException{
+		accountBO = getLoanAccount();
+		TestObjectFactory.flushandCloseSession();
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());
+		AccountActionDateEntity accountActionDateEntity =accountBO.getDetailsOfNextInstallment();
+		MeetingBO meeting = center.getCustomerMeeting().getMeeting();
+		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
+		meeting.setMeetingStartDate(DateUtils.getCalendarDate(accountActionDateEntity.getActionDate().getTime()));
+		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
+		List<java.util.Date> meetingDates = scheduler.getAllDates();
+		meetingDates.remove(0);
+		AccountStateEntity accountStateEntity=new AccountStateEntity(AccountStates.SAVINGS_ACC_CANCEL);
+		accountBO.setAccountState(accountStateEntity);
+		((LoanBO)accountBO).regenerateFutureInstallments(meetingDates,(short)(accountActionDateEntity.getInstallmentId().intValue()+1));
+		TestObjectFactory.flushandCloseSession();
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());
+		for(AccountActionDateEntity actionDateEntity : accountBO.getAccountActionDates()){
+			if(actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+				assertNotSame(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()));
+			else if(actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
+				assertNotSame(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
+		}
 	}
 	
 }

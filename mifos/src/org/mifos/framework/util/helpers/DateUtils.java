@@ -65,5 +65,11 @@ public class DateUtils {
 		dateCalendar = new GregorianCalendar(year, month, day);
 		return new Date(dateCalendar.getTimeInMillis());
 	}
+	
+	public static Calendar getCalendarDate(long timeInMills) {
+		Calendar dateCalendar = new GregorianCalendar();
+		dateCalendar.setTimeInMillis(timeInMills);
+		return dateCalendar;
+	}
 
 }

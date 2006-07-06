@@ -3,6 +3,7 @@ package org.mifos.application.accounts.persistence.service;
 import java.sql.Date;
 import java.util.List;
 
+import org.hibernate.HibernateException;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -37,6 +38,10 @@ public class AccountPersistanceService extends PersistenceService {
 	
 	public void save(AccountBO accountBO)  throws PersistenceException{
 		accountPersistence.createOrUpdate(accountBO);
+	}
+	
+	public void delete(Object object)throws HibernateException {
+		accountPersistence.delete(object);
 	}
 	
 	/**

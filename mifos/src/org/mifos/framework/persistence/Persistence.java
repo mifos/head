@@ -39,6 +39,12 @@ public abstract class Persistence {
 		return object;
 	}
 	
+	public void delete(Object object)throws HibernateException {
+		Session session=HibernateUtil.getSessionTL();
+		HibernateUtil.startTransaction();
+		session.delete(object);
+	}
+	
 	/**
 	 * This method takes the name of a named query to be executed as well as a list of parameters that the query uses.
 	 * It assumes the session is open.

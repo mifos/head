@@ -1386,4 +1386,22 @@ public class LoanBO extends AccountBO {
 		}
 		getAccountPersistenceService().update(this);
 	}
+	
+	
+	@Override
+	protected void regenerateFutureInstallments(List<Date> meetingDates,Short nextIntallmentId) {
+		if (!this.getAccountState().getId().equals(
+				AccountStates.LOANACC_OBLIGATIONSMET)
+				&& !this.getAccountState().getId().equals(
+						AccountStates.LOANACC_WRITTENOFF)
+				&& !this.getAccountState().getId().equals(
+						AccountStates.LOANACC_CANCEL)) {
+			int count = 0;
+			List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForFutureInstallments();
+			for (AccountActionDateEntity accountActionDateEntity : accountActionDateList) {
+				accountActionDateEntity.setActionDate(new java.sql.Date(
+						meetingDates.get(count++).getTime()));
+			}
+		}
+	}
 }

@@ -43,13 +43,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.HibernateException;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountHelper;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
+import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.fees.business.FeesBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
@@ -248,5 +252,22 @@ public class CustomerAccountBO extends AccountBO {
 		return installment.getTotalDueWithFees();
 	}
 
+	@Override
+	protected void regenerateFutureInstallments(List<Date> meetingDates,Short nextIntallmentId) throws HibernateException, ServiceException {
+		if (!this.getCustomer().getCustomerStatus().getStatusId().equals(
+				ClientConstants.STATUS_CANCELLED)
+				&& !this.getCustomer().getCustomerStatus().getStatusId()
+						.equals(ClientConstants.STATUS_CLOSED)
+				&& !this.getCustomer().getCustomerStatus().getStatusId()
+						.equals(GroupConstants.CANCELLED)
+				&& !this.getCustomer().getCustomerStatus().getStatusId()
+						.equals(GroupConstants.CLOSED)) {
+			deleteFutureInstallments();
+			for (Date date : meetingDates) {
+				addAccountActionDate(AccountHelper.createEmptyInstallment(date,
+						getCustomer(), nextIntallmentId++));
+			}
+		}
+	}
 
 }

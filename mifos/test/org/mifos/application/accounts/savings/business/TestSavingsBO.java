@@ -4,10 +4,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
 import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
@@ -19,6 +21,7 @@ import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStateFlagEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
+import org.mifos.application.accounts.exceptions.IDGenerationException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.savings.persistence.service.SavingsPersistenceService;
@@ -42,12 +45,16 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.components.scheduler.SchedulerException;
+import org.mifos.framework.components.scheduler.SchedulerIntf;
+import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SecurityException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -104,9 +111,39 @@ public class TestSavingsBO extends MifosTestCase {
 		TestObjectFactory.cleanUp(client1);
 		TestObjectFactory.cleanUp(client2);
 		HibernateUtil.closeSession();
-		super.tearDown();
 	}
 
+	
+	private SavingsBO createSavingAccount() throws IDGenerationException, SchedulerException, SystemException, ApplicationException{
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active_test", Short
+				.valueOf("13"), "1.1", meeting, new Date(System
+				.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group_Active_test", Short
+				.valueOf("9"), "1.1.1", center, new Date(System
+				.currentTimeMillis()));
+		savingsOffering = helper.createSavingsOffering();
+		
+		SavingsBO savings = new SavingsBO(userContext);
+		savings.setRecommendedAmount(new Money(currency, "500.0"));
+		savings.setSavingsOffering(savingsOffering);
+		savings.setAccountState(new AccountStateEntity(
+				AccountStates.SAVINGS_ACC_APPROVED));
+		savings.setCustomer(group);
+
+		Set<AccountCustomFieldEntity> customFields = new HashSet<AccountCustomFieldEntity>();
+		AccountCustomFieldEntity field = new AccountCustomFieldEntity();
+		field.setFieldId(new Short("1"));
+		field.setFieldValue("13");
+		customFields.add(field);
+		savings.setAccountCustomFieldSet(customFields);
+
+		savings.save();
+		HibernateUtil.getTransaction().commit();
+		return savings;
+	}
+	
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -3466,4 +3503,96 @@ public class TestSavingsBO extends MifosTestCase {
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
 	}
+	
+	
+	public void testRegenerateFutureInstallments() throws HibernateException, IDGenerationException, SystemException, ApplicationException{
+		savings= getSavingAccount();
+		TestObjectFactory.flushandCloseSession();
+		savings=(SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
+		AccountActionDateEntity accountActionDateEntity =savings.getDetailsOfNextInstallment();
+		MeetingBO meeting = savings.getCustomer().getCustomerMeeting().getMeeting();
+		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("1"));
+		meeting.setMeetingStartDate(DateUtils.getCalendarDate(accountActionDateEntity.getActionDate().getTime()));
+		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
+		List<java.util.Date> meetingDates = scheduler.getAllDates();
+		meetingDates.remove(0);
+		savings.regenerateFutureInstallments(meetingDates,(short)(accountActionDateEntity.getInstallmentId().intValue()+1));
+		HibernateUtil.commitTransaction();
+		TestObjectFactory.flushandCloseSession();
+		savings=(SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
+		client1=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client1.getCustomerId());
+		client2=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client2.getCustomerId());
+		for(AccountActionDateEntity actionDateEntity : savings.getAccountActionDates()){
+			if(actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+				assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()),DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+			else if(actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
+				assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()),DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+		}
+	}
+	
+	public void testRegenerateFutureInstallmentsWithCancelState() throws HibernateException, IDGenerationException, SystemException, ApplicationException{
+		savings= getSavingAccount();
+		TestObjectFactory.flushandCloseSession();
+		savings=(SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
+		AccountActionDateEntity accountActionDateEntity =savings.getDetailsOfNextInstallment();
+		MeetingBO meeting = savings.getCustomer().getCustomerMeeting().getMeeting();
+		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("1"));
+		meeting.setMeetingStartDate(DateUtils.getCalendarDate(accountActionDateEntity.getActionDate().getTime()));
+		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
+		List<java.util.Date> meetingDates = scheduler.getAllDates();
+		meetingDates.remove(0);
+		AccountStateEntity accountStateEntity=new AccountStateEntity(AccountStates.SAVINGS_ACC_CANCEL);
+		savings.setAccountState(accountStateEntity);
+		savings.regenerateFutureInstallments(meetingDates,(short)(accountActionDateEntity.getInstallmentId().intValue()+1));
+		HibernateUtil.commitTransaction();
+		TestObjectFactory.flushandCloseSession();
+		savings=(SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
+		client1=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client1.getCustomerId());
+		client2=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client2.getCustomerId());
+		for(AccountActionDateEntity actionDateEntity : savings.getAccountActionDates()){
+			if(actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+				assertNotSame(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()),DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+			else if(actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
+				assertNotSame(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()),DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+		}
+	}
+	
+	private SavingsBO getSavingAccount() throws IDGenerationException, SchedulerException, SystemException, ApplicationException{
+		MeetingBO meeting = TestObjectFactory.getMeetingHelper(2,2,4);
+		meeting.setMeetingStartDate(Calendar.getInstance());
+		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(new Short("1"));
+		TestObjectFactory.createMeeting(meeting);
+		center = TestObjectFactory.createCenter("Center_Active_test", Short.valueOf("13"), "1.1", meeting,new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group1", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		client1 = TestObjectFactory.createClient("client1",
+				ClientConstants.STATUS_ACTIVE, "1.1.1.1", group, new Date(
+						System.currentTimeMillis()));
+		client2 = TestObjectFactory.createClient("client2",
+				ClientConstants.STATUS_ACTIVE, "1.1.1.2", group, new Date(
+						System.currentTimeMillis()));
+		MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		savingsOffering =  TestObjectFactory.createSavingsOffering("SavingPrd1",Short.valueOf("2"),new Date(System.currentTimeMillis()),
+				Short.valueOf("1"),300.0,Short.valueOf("1"),24.0,200.0,200.0,Short.valueOf("2"),Short.valueOf("1"),meetingIntCalc,meetingIntPost);
+		SavingsBO savings = new SavingsBO(userContext);
+		savings.setSavingsOffering(savingsOffering);
+		savings.setCustomer(group);
+		savings.setAccountState(new AccountStateEntity(
+				AccountStates.SAVINGS_ACC_APPROVED));
+		savings.setRecommendedAmount(savingsOffering.getRecommendedAmount());
+
+		Set<AccountCustomFieldEntity> customFields = new HashSet<AccountCustomFieldEntity>();
+		AccountCustomFieldEntity field = new AccountCustomFieldEntity();
+		field.setFieldId(new Short("1"));
+		field.setFieldValue("13");
+		customFields.add(field);
+		savings.setAccountCustomFieldSet(customFields);
+
+		savings.save();
+		HibernateUtil.getTransaction().commit();
+
+		return savings;
+	}
+	
 }

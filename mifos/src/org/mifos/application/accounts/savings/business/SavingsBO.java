@@ -46,6 +46,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.HibernateException;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -1616,6 +1617,44 @@ public class SavingsBO extends AccountBO {
 			personnel = new PersonnelPersistenceService().getPersonnel(personnelId);
 		return new SavingsActivityEntity(personnel, accountAction, amount,
 				balanceAmount);
+	}
+	
+	
+	@Override
+	public void regenerateFutureInstallments(List<Date> meetingDates,Short nextIntallmentId) throws HibernateException, ServiceException, PersistenceException {
+		if (!this.getAccountState().getId().equals(
+				AccountStates.SAVINGS_ACC_CANCEL)
+				&& !this.getAccountState().getId().equals(
+						AccountStates.SAVINGS_ACC_CLOSED)) {
+			deleteFutureInstallments();
+			if (getCustomer().getCustomerLevel().getLevelId().equals(
+					CustomerConstants.CLIENT_LEVEL_ID)
+					|| (getCustomer().getCustomerLevel().getLevelId().equals(
+							CustomerConstants.GROUP_LEVEL_ID) && getRecommendedAmntUnit()
+							.getRecommendedAmntUnitId().shortValue() == ProductDefinitionConstants.COMPLETEGROUP)) {
+				for (Date date : meetingDates) {
+					AccountActionDateEntity actionDate = helper
+							.createActionDateObject(getCustomer(), date, null,
+									getRecommendedAmount());
+					actionDate.setInstallmentId(nextIntallmentId++);
+					addAccountActionDate(actionDate);
+				}
+			} else {
+				List<CustomerBO> children = getCustomer().getChildren(
+						CustomerConstants.CLIENT_LEVEL_ID);
+				for (Date date : meetingDates) {
+					Short installmentId = new Short(nextIntallmentId++);
+					for (CustomerBO customer : children) {
+						AccountActionDateEntity actionDate = helper
+								.createActionDateObject(customer, date, null,
+										getRecommendedAmount());
+						actionDate.setInstallmentId(installmentId);
+						addAccountActionDate(actionDate);
+					}
+				}
+			}
+		}
+		
 	}
 
 }
