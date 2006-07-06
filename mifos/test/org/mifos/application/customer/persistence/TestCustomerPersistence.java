@@ -178,8 +178,6 @@ public class TestCustomerPersistence extends MifosTestCase {
 		SchedulerIntf scheduler;
 		ScheduleInputsIntf scheduleInputs;
 		scheduler = SchedulerFactory.getScheduler();
-		System.out.println("meeting start date: "
-				+ meeting.getMeetingStartDate());
 		try {
 			scheduleData = SchedulerFactory.getScheduleData(Constants.WEEK);
 			scheduleInputs = SchedulerFactory.getScheduleInputs();
@@ -193,7 +191,6 @@ public class TestCustomerPersistence extends MifosTestCase {
 			scheduler.setScheduleInputs(scheduleInputs);
 			dates = scheduler.getAllDates(new java.util.Date(System
 					.currentTimeMillis()));
-			System.out.println("dates size: " + dates.size());
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 		}
@@ -514,8 +511,10 @@ public class TestCustomerPersistence extends MifosTestCase {
 		ClientBO client3 = TestObjectFactory.createClient("client3",ClientConstants.STATUS_CANCELLED,"1.5.1",group1,new Date(System
 				.currentTimeMillis()));
 		
-		List<CustomerBO> customerList = customerPersistence.getAllChildrenForParent("1.4",Short.valueOf("3"),CustomerConstants.CENTER_LEVEL_ID);
-		assertEquals(3,customerList.size());
+		List<CustomerBO> customerList1 = customerPersistence.getAllChildrenForParent("1.4",Short.valueOf("3"),CustomerConstants.CENTER_LEVEL_ID);
+		assertEquals(3,customerList1.size());
+		List<CustomerBO> customerList2 = customerPersistence.getAllChildrenForParent("1.4",Short.valueOf("3"),CustomerConstants.GROUP_LEVEL_ID);
+		assertEquals(2,customerList2.size());
 		
 		TestObjectFactory.cleanUp(client3);
 		TestObjectFactory.cleanUp(client2);

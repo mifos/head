@@ -317,7 +317,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		HibernateUtil.getTransaction().commit();
 	}
 	
-	public void testGetCenterPerformanceHistory() throws AccountException, SystemException {		
+	public void testGetCenterPerformanceHistory() throws AccountException, SystemException {
 		Money totalLoan = new Money();
 		Money totalSavings = new Money();
 		Money totalPortfolioAtRisk = new Money();
@@ -346,24 +346,22 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		AccountBO account4 = getSavingsAccountWithBalance(group1, meeting);
 		AccountBO account5 = getSavingsAccountWithBalance(group, meeting);
 		AccountBO account6 = getSavingsAccountWithBalance(center1, meeting);
+		
 		AccountBO account7 = getLoanAccount(client,meeting);
 		changeFirstInstallmentDateToPastDate(account7);
 		AccountBO account8 = getLoanAccount(client2,meeting);
 		changeFirstInstallmentDateToPastDate(account8);
-		AccountBO account9 = getLoanAccount(client3,meeting);
+		AccountBO account9 = getLoanAccount(client,meeting);
 		changeFirstInstallmentDateToPastDate(account9);
-		AccountBO account10 = getLoanAccount(group1,meeting);
-		changeFirstInstallmentDateToPastDate(account10);
+		AccountBO account10 = getLoanAccount(group,meeting);
 		
 		CenterPerformanceHistory centerPerformanceHistory = service.getCenterPerformanceHistory("1.4",Short.valueOf("3"));
-		
 		totalLoan = centerPerformanceHistory.getTotalOutstandingPortfolio();
 		totalSavings = centerPerformanceHistory.getTotalSavings();
 		totalPortfolioAtRisk = centerPerformanceHistory.getPortfolioAtRisk();
-		
-		assertEquals(new Money("1200.0"),totalLoan);
+		assertEquals(new Money("2400.0"),totalLoan);
 		assertEquals(new Money("400.0"),totalSavings);
-		assertEquals(new Money("200.0"),totalPortfolioAtRisk);
+		assertEquals(new Money("0.1"),totalPortfolioAtRisk);
 		
 		account1 = (AccountBO) (HibernateUtil.getSessionTL().get(AccountBO.class,new Integer(account1.getAccountId())));
 		account2 = (AccountBO) (HibernateUtil.getSessionTL().get(AccountBO.class,new Integer(account2.getAccountId())));

@@ -56,6 +56,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.accounts.util.valueobjects.CustomerAccount;
+import org.mifos.application.customer.business.service.CustomerBusinessService;
+import org.mifos.application.customer.center.business.CenterPerformanceHistory;
 import org.mifos.application.customer.center.struts.actionforms.CenterActionForm;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.center.util.helpers.PathConstants;
@@ -88,6 +90,7 @@ import org.mifos.framework.struts.action.MifosSearchAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.framework.util.valueobjects.Context;
 import org.mifos.framework.util.valueobjects.SearchResults;
@@ -490,8 +493,13 @@ public class CenterAction extends MifosSearchAction{
 	public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
 	  	ActionForward forward =super.get(mapping,form,request,response);
 	    Context context=(Context)request.getAttribute(Constants.CONTEXT);
+	    String centerId = ((Center)context.getValueObject()).getGlobalCustNum();
+	    String searchString = ((Center)context.getValueObject()).getSearchId();
+	    Short officeId = ((Center)context.getValueObject()).getOffice().getOfficeId();
+	    CenterPerformanceHistory centerPerformanceHistory = new CustomerBusinessService().getCenterPerformanceHistory(searchString,officeId);
 	    HttpSession session = request.getSession();
 	    session.setAttribute(CustomerConstants.LINK_VALUES,(LinkParameters)context.getBusinessResults(CustomerConstants.LINK_VALUES));
+	    SessionUtils.setAttribute(CenterConstants.PERFORMANCE_HISTORY,centerPerformanceHistory,session);
 	    return forward;
 	}
 

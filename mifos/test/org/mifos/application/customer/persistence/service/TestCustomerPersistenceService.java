@@ -383,8 +383,10 @@ public class TestCustomerPersistenceService extends MifosTestCase {
 		ClientBO client3 = TestObjectFactory.createClient("client3",ClientConstants.STATUS_CANCELLED,"1.5.1",group1,new Date(System
 				.currentTimeMillis()));
 		
-		List<CustomerBO> customerList = customerPersistenceService.getAllChildrenForParent("1.4",Short.valueOf("3"),CustomerConstants.CENTER_LEVEL_ID);
-		assertEquals(3,customerList.size());
+		List<CustomerBO> customerList1 = customerPersistenceService.getAllChildrenForParent("1.4",Short.valueOf("3"),CustomerConstants.CENTER_LEVEL_ID);
+		assertEquals(3,customerList1.size());
+		List<CustomerBO> customerList2 = customerPersistenceService.getAllChildrenForParent("1.4",Short.valueOf("3"),CustomerConstants.GROUP_LEVEL_ID);
+		assertEquals(2,customerList2.size());
 		
 		TestObjectFactory.cleanUp(client3);
 		TestObjectFactory.cleanUp(client2);

@@ -46,7 +46,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.mifos.application.accounts.dao.ClosedAccSearchDAO;
-import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.configuration.business.ConfigurationIntf;
@@ -68,16 +67,13 @@ import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.exceptions.CustomerStateChangeException;
 import org.mifos.application.customer.group.util.helpers.CenterSearchInput;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
-import org.mifos.application.customer.group.util.helpers.GroupHelper;
 import org.mifos.application.customer.group.util.helpers.LinkParameters;
-import org.mifos.application.customer.group.util.valueobjects.Group;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerHelper;
 import org.mifos.application.customer.util.valueobjects.Customer;
 import org.mifos.application.customer.util.valueobjects.CustomerMaster;
 import org.mifos.application.customer.util.valueobjects.CustomerNote;
 import org.mifos.application.customer.util.valueobjects.CustomerPosition;
-import org.mifos.application.customer.util.valueobjects.PerformanceHistory;
 import org.mifos.application.meeting.util.valueobjects.MeetingType;
 import org.mifos.application.personnel.util.valueobjects.Personnel;
 import org.mifos.framework.business.handlers.MifosBusinessProcessor;
@@ -342,13 +338,7 @@ public class CenterBusinessProcessor extends MifosBusinessProcessor {
 			while(i.hasNext()){
 				logger.debug("Position name and customer: "+i.next().getCustomerName());
 			}
-			//setting the performance object
-			PerformanceHistory performanceHistory = getPerformanceHistory(groups.size() , clients.size());
-			SearchResults searchResults = getResultObject(CenterConstants.PERFORMANCE_HISTORY , performanceHistory);
-			/*SearchResults searchResults = new SearchResults();
-			searchResults.setResultName(CenterConstants.PERFORMANCE_HISTORY);
-			searchResults.setValue(performanceHistory);*/
-			context.addAttribute(searchResults);
+			
 			CustomerUtilDAO customerUtilDAO = new CustomerUtilDAO();
 			CustomerHelper customerHelper = new CustomerHelper();
 			short localeId=context.getUserContext().getLocaleId();
@@ -395,18 +385,6 @@ public class CenterBusinessProcessor extends MifosBusinessProcessor {
 		return linkParams;
 	}
 	
-	/**
-	 * This method sets the values for the performance history object. Currently only the list of clients and list of groups will be shown
-	 * @param numberOfGroups The number of groups belonging to the center irrespective of the status of the groups
-	 * @param numberOfClients The number of clients belonging to the center irrespective of the status of the clients
-	 * @return
-	 */
-	private PerformanceHistory getPerformanceHistory(int numberOfGroups, int numberOfClients) {
-		PerformanceHistory performanceHistory = new PerformanceHistory();
-		performanceHistory.setNumberOfClients(numberOfClients);
-		performanceHistory.setNumberOfGroups(numberOfGroups);
-		return performanceHistory;
-	}
 	/**
 	 * This method is called when the center details have to be edited. In addition to the list of loan officers and
 	 * custom fields that are loaded, the list of mfi titles and the list of clients under the center are also retrieved,

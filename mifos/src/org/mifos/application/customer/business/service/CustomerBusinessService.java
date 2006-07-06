@@ -217,15 +217,11 @@ public class CustomerBusinessService extends BusinessService{
 		List<AccountBO> savingsList = getAccountsForCustomer(searchId,officeId,Short.valueOf(AccountTypes.SAVINGSACCOUNT));
 		
 		Money totalOutstandingLoan = getTotalOutstandingLoan(loanList);
-		Money portfolioAtRisk = getPortfolioAtRisk(loanList);
+		Money portfolioAtRisk = getPortfolioAtRisk(loanList).divide(totalOutstandingLoan);
 		Money totalSavings = getTotalSavings(savingsList);
 		
 		CenterPerformanceHistory centerPerformanceHistory = new CenterPerformanceHistory();
-		centerPerformanceHistory.setNumberOfClients(clients.size());
-		centerPerformanceHistory.setNumberOfGroups(groups.size());
-		centerPerformanceHistory.setTotalOutstandingPortfolio(totalOutstandingLoan);
-		centerPerformanceHistory.setPortfolioAtRisk(portfolioAtRisk);
-		centerPerformanceHistory.setTotalSavings(totalSavings);
+		centerPerformanceHistory.setPerformanceHistoryDetails(groups.size(),clients.size(),totalOutstandingLoan,totalSavings,portfolioAtRisk);
 		return centerPerformanceHistory;
 	}
 	
