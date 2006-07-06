@@ -53,6 +53,7 @@ import org.mifos.application.fees.util.helpers.FeesConstants;
 import org.mifos.application.master.util.valueobjects.LookUpMaster;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -60,13 +61,11 @@ import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-import org.mifos.framework.MifosMockStrutsTestCase;
-
 public class TestFeeAction extends MifosMockStrutsTestCase {
 
-	private final Short formulaId = (short) 1;
+	private final static Short FORMULA_ID = 1;
 
-	private final String glCodeId = "7";
+	private final static String GLOCDE_ID = "7";
 
 	@Override
 	protected void setUp() throws Exception {
@@ -179,7 +178,7 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 				FeeFrequencyType.ONETIME.getValue().toString());
 		addRequestParameter("customerCharge", FeePayment.UPFRONT.getValue()
 				.toString());
-		addRequestParameter("glCodeEntity.glcodeId", glCodeId);
+		addRequestParameter("glCodeEntity.glcodeId", GLOCDE_ID);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -208,7 +207,7 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 				FeeFrequencyType.ONETIME.getValue().toString());
 		addRequestParameter("customerCharge", FeePayment.UPFRONT.getValue()
 				.toString());
-		addRequestParameter("glCodeEntity.glcodeId", glCodeId);
+		addRequestParameter("glCodeEntity.glcodeId", GLOCDE_ID);
 		actionPerform();
 		verifyNoActionErrors();
 		setRequestPathInfo("/feeaction.do");
@@ -251,7 +250,7 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 				FeeFrequencyType.ONETIME.getValue().toString());
 		addRequestParameter("customerCharge", FeePayment.UPFRONT.getValue()
 				.toString());
-		addRequestParameter("glCodeEntity.glcodeId", glCodeId);
+		addRequestParameter("glCodeEntity.glcodeId", GLOCDE_ID);
 		actionPerform();
 		verifyNoActionErrors();
 
@@ -297,7 +296,7 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 				"feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId",
 				MeetingFrequency.WEEKLY.getValue().toString());
 		addRequestParameter("weekRecurAfter", "2");
-		addRequestParameter("glCodeEntity.glcodeId", glCodeId);
+		addRequestParameter("glCodeEntity.glcodeId", GLOCDE_ID);
 		actionPerform();
 		verifyNoActionErrors();
 
@@ -336,7 +335,7 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 				.getValue());
 		addRequestParameter("rate", "23");
 		addRequestParameter("amount", "");
-		addRequestParameter("feeFormula.feeFormulaId", formulaId.toString());
+		addRequestParameter("feeFormula.feeFormulaId", FORMULA_ID.toString());
 		addRequestParameter("feeName", "Loan Periodic Fee");
 		addRequestParameter("adminCheck", "0");
 		addRequestParameter("feeFrequency.feeFrequencyType.feeFrequencyTypeId",
@@ -345,7 +344,7 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 				"feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId",
 				MeetingFrequency.WEEKLY.getValue().toString());
 		addRequestParameter("weekRecurAfter", "2");
-		addRequestParameter("glCodeEntity.glcodeId", glCodeId);
+		addRequestParameter("glCodeEntity.glcodeId", GLOCDE_ID);
 		actionPerform();
 		verifyNoActionErrors();
 
@@ -368,7 +367,7 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 				.getCategoryType().getCategoryId());
 		assertEquals(23.0, fee.getRate());
 		assertTrue(fee.isRateFlat());
-		assertEquals(fee.getFeeFormula().getFeeFormulaId(), formulaId);
+		assertEquals(fee.getFeeFormula().getFeeFormulaId(), FORMULA_ID);
 		assertTrue(fee.isPeriodic());
 		assertTrue(fee.isActive());
 	}

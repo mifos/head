@@ -41,7 +41,9 @@ package org.mifos.application.fees.business;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.HibernateException;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
+import org.mifos.application.fees.exceptions.FeeException;
 import org.mifos.application.fees.persistence.service.FeePersistenceService;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeLevel;
@@ -235,8 +237,10 @@ public class FeesBO extends BusinessObject {
 		this.rate = rate;
 	}
 
-	private void buildFeeLevels(boolean adminCheck) {
+	private void buildFeeLevels(boolean adminCheck) throws FeeException {
 		if (adminCheck) {
+			if (categoryType.getCategoryId() == null)
+				throw new FeeException("errors.invalidcategory");
 			String categoryId = categoryType.getCategoryId().toString();
 			if (categoryId.equals(FeeCategory.CLIENT.getValue()))
 				addFeeLevel(createFeeLevel(FeeLevel.CLIENTLEVEL));
@@ -271,21 +275,31 @@ public class FeesBO extends BusinessObject {
 			setRateOrAmount(feeAmount.getAmountDoubleValue());
 	}
 
-	public void save(boolean adminCheck) throws ServiceException {
+	public void save(boolean adminCheck) throws ServiceException, FeeException {
+		if (feeFrequency == null)
+			throw new FeeException("errors.invalidfeefrequency");
+		feeFrequency.buildFeeFrequency();
 		setCreateDetails();
 		modifyStatus(FeeStatus.ACTIVE);
 		setOffice(new OfficePersistenceService().getHeadOffice());
-		feeFrequency.buildFeeFrequency();
 		buildFeeLevels(adminCheck);
 		setRateOrAmount();
 		setRateFlat(rate != null);
-		getFeePersistenceService().save(this);
+		try {
+			getFeePersistenceService().save(this);
+		} catch (HibernateException he) {
+			throw new FeeException("errors.feecreate", he);
+		}
 	}
 
-	public void update() throws ServiceException {
+	public void update() throws ServiceException, FeeException {
 		setUpdateDetails();
 		setRateOrAmount();
-		getFeePersistenceService().save(this);
+		try {
+			getFeePersistenceService().save(this);
+		} catch (HibernateException he) {
+			throw new FeeException("errors.feecreate", he);
+		}
 	}
 
 	@Override
@@ -308,7 +322,7 @@ public class FeesBO extends BusinessObject {
 	public boolean isAdminFee() {
 		return getFeeLevels() != null && getFeeLevels().size() > 0;
 	}
-	
+
 	public boolean isActive() {
 		return getFeeStatus().isActive();
 	}

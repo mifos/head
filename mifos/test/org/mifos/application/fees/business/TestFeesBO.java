@@ -1,6 +1,6 @@
 /**
 
- * TestFeesBO.java    version: xxx
+ * FeeBOTest.java    version: xxx
 
 
 
@@ -37,30 +37,91 @@
  */
 package org.mifos.application.fees.business;
 
-import org.mifos.framework.MifosTestCase;
-
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
-import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
-import org.mifos.application.configuration.business.MifosConfiguration;
+import org.mifos.application.fees.exceptions.FeeException;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.hibernate.HibernateStartUp;
+import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.authorization.AuthorizationManager;
-import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestFeesBO extends MifosTestCase {
 
-	private final Short formulaId = (short) 1;
+	private final static Short FORMULA_ID =  1;
 
-	private final Short glCodeId = (short) 7;
+	private final static Short GLCODE_ID =  7;
+
+	public void testCreateEmptyFee() throws NumberFormatException, Exception {
+		FeesBO fee = new FeesBO(TestObjectFactory.getUserContext());
+		try {
+			fee.save(false);
+			assertFalse("The fees is created without any valid data", true);
+		} catch (FeeException e) {
+			assertTrue("The fees is not created without any valid data", true);
+		}
+
+		HibernateUtil.closeSession();
+	}
+
+	public void testCreateWithoutFeeName() throws NumberFormatException,
+			Exception {
+		FeesBO fee = buildOneTimeFees(null, 100.0, FeePayment.UPFRONT,
+				FeeCategory.CLIENT, false);
+		try {
+			fee.save(false);
+			assertFalse("The fees is created without fee name", true);
+		} catch (FeeException e) {
+			assertTrue("The fees is not created without fee name", true);
+		}
+
+		HibernateUtil.closeSession();
+	}
+
+	public void testCreateWithoutFeeCategory() throws NumberFormatException,
+			Exception {
+		FeesBO fee = buildOneTimeFees("One Time Fee", 100.0,
+				FeePayment.UPFRONT, null, false);
+		try {
+			fee.save(false);
+			assertFalse("The fees is created without fee category", true);
+		} catch (FeeException e) {
+			assertTrue("The fees is not created without fee category", true);
+		}
+
+		HibernateUtil.closeSession();
+	}
+
+	public void testCreateAdminWithoutFeeCategory()
+			throws NumberFormatException, Exception {
+		FeesBO fee = buildOneTimeFees("One Time Fee", 100.0,
+				FeePayment.UPFRONT, null, false);
+		try {
+			fee.save(true);
+			assertFalse("The fees is created without fee category", true);
+		} catch (FeeException e) {
+			assertTrue("The fees is not created without fee category", true);
+		}
+
+		HibernateUtil.closeSession();
+	}
+
+	public void testCreateWithoutFeeFrequencyType()
+			throws NumberFormatException, Exception {
+		FeesBO fee = buildFees("One Time Fee", FeeCategory.CLIENT, false, 100.0);
+		try {
+			fee.save(false);
+			assertFalse("The fees is created without fee frequency type", true);
+		} catch (FeeException e) {
+			assertTrue("The fees is not created without fee frequency type",
+					true);
+		}
+
+		HibernateUtil.closeSession();
+	}
 
 	public void testCreateOneTimeFees() throws NumberFormatException, Exception {
 		FeesBO fee = buildOneTimeFees("Customer One Time", 100.0,
@@ -132,7 +193,7 @@ public class TestFeesBO extends MifosTestCase {
 				.getCategoryType().getCategoryId());
 		assertEquals(20.0, fee.getRate());
 		assertTrue(fee.isRateFlat());
-		assertEquals(formulaId, fee.getFeeFormula().getFeeFormulaId());
+		assertEquals(FORMULA_ID, fee.getFeeFormula().getFeeFormulaId());
 		assertTrue(fee.isPeriodic());
 		assertFalse(fee.isAdminFee());
 		assertTrue(fee.isActive());
@@ -164,7 +225,6 @@ public class TestFeesBO extends MifosTestCase {
 				.getObject(FeesBO.class, fee.getFeeId());
 		assertFalse(fee.isActive());
 		assertEquals(25.0, fee.getRate());
-
 	}
 
 	public void testSuccessfulUpdateWithAmount() throws NumberFormatException,
@@ -191,7 +251,6 @@ public class TestFeesBO extends MifosTestCase {
 				.getObject(FeesBO.class, fee.getFeeId());
 		assertFalse(fee.isActive());
 		assertEquals("50.0", fee.getFeeAmount().toString());
-
 	}
 
 	private FeesBO buildPeriodicFees(String feeName, Double feeRateOrAmnt,
@@ -223,18 +282,19 @@ public class TestFeesBO extends MifosTestCase {
 		fee.setFeeName(feeName);
 		fee.setFeeFrequency(new FeeFrequencyEntity());
 		fee.setCategoryType(new CategoryTypeEntity());
-		fee.getCategoryType().setCategoryId(
-				Short.valueOf(feeCategory.getValue()));
+		if (feeCategory != null)
+			fee.getCategoryType().setCategoryId(
+					Short.valueOf(feeCategory.getValue()));
 		fee.setRateFlat(rateFlag);
 		if (rateFlag) {
 			fee.setRate(feeRateOrAmnt);
 			fee.setAmount("");
 			fee.setFeeFormula(new FeeFormulaEntity());
-			fee.getFeeFormula().setFeeFormulaId(formulaId);
+			fee.getFeeFormula().setFeeFormulaId(FORMULA_ID);
 		} else
 			fee.setAmount(String.valueOf(feeRateOrAmnt));
 		fee.setGlCodeEntity((GLCodeEntity) HibernateUtil.getSessionTL().get(
-				GLCodeEntity.class, glCodeId));
+				GLCodeEntity.class, GLCODE_ID));
 		return fee;
 	}
 

@@ -53,6 +53,7 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class FeeActionForm extends ValidatorActionForm {
 
@@ -221,43 +222,64 @@ public class FeeActionForm extends ValidatorActionForm {
 			HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();
 		String methodCalled = request.getParameter(Methods.method.toString());
-		if (null != methodCalled
-				&& methodCalled.equals(Methods.preview.toString())) {
-			errors.add(super.validate(mapping, request));
-			if (Short.valueOf(FeeCategory.LOAN.getValue()).equals(
-					categoryType.getCategoryId())) {
-				if (("".equals(rate.trim()) && "".equals(amount.trim()))
-						|| (!"".equals(rate.trim()) && !""
-								.equals(amount.trim()))) {
-					errors.add("RateOrAmount", new ActionMessage(
-							"errors.amountOrRate"));
-				}
-				if ((feeFormula.getFeeFormulaId() != null && "".equals(rate
-						.trim()))
-						|| (!"".equals(rate.trim())
-								&& feeFormula.getFeeFormulaId() == null && ""
-								.equals(amount.trim()))) {
-					errors.add("RateAndFormula", new ActionMessage(
-							"errors.rateAndFormulaId"));
-				}
-			} else if (amount == null || "".equals(amount.trim())) {
-				errors.add("amount", new ActionMessage("errors.enter"));
+		if (null != methodCalled) {
+			if (methodCalled.equals(Methods.preview.toString())) {
+				errors.add(super.validate(mapping, request));
+				validateForPreview(errors);
+			} else if (methodCalled.equalsIgnoreCase(Methods.editPreview
+					.toString())) {
+				validateForEditPreview(errors);
 			}
 		}
-		if (null != methodCalled
-				&& methodCalled
-						.equalsIgnoreCase(Methods.editPreview.toString())) {
-			if (rate == null && "".equals(amount.trim()))
-				errors.add("amount", new ActionMessage("errors.enter"));
-			if (amount == null && "".equals(rate.trim()))
-				errors.add("RateAndFormula", new ActionMessage(
-						"errors.rateAndFormulaId"));
-			if (getFeeStatus().getStatusId() == null)
-				errors.add("amount", new ActionMessage("errors.select",
-						"Status"));
-		}
-
 		return errors;
+	}
+
+	private void validateForPreview(ActionErrors errors) {
+		if (isCategoryLoan()) {
+			validateForPreviewLoanCategory(errors);
+		} else if (!StringUtils.isNullAndEmptySafe(amount)) {
+			addError(errors, "amount", "errors.enter");
+		}
+	}
+
+	private void validateForPreviewLoanCategory(ActionErrors errors) {
+		if (isBothRateAndAmountEmpty() || isBothRateAndAmountNotEmpty())
+			addError(errors, "RateOrAmount", "errors.amountOrRate");
+		if (isRateEmptyAndFormulaNotNull() || isRateNotEmptyAndFormulaNull())
+			addError(errors, "RateAndFormula", "errors.rateAndFormulaId");
+	}
+
+	private void validateForEditPreview(ActionErrors errors) {
+		if (rate == null && "".equals(amount.trim()))
+			addError(errors, "amount", "errors.enter");
+		if (amount == null && "".equals(rate.trim()))
+			addError(errors, "RateAndFormula", "errors.rateAndFormulaId");
+		if (getFeeStatus().getStatusId() == null)
+			addError(errors, "amount", "errors.select", "Status");
+	}
+
+	private boolean isBothRateAndAmountEmpty() {
+		return (StringUtils.isEmpty(rate) && StringUtils.isEmpty(amount));
+	}
+
+	private boolean isBothRateAndAmountNotEmpty() {
+		return (!StringUtils.isEmpty(rate) && !StringUtils.isEmpty(amount));
+	}
+
+	private boolean isRateEmptyAndFormulaNotNull() {
+		return (feeFormula.getFeeFormulaId() != null && StringUtils
+				.isEmpty(rate));
+	}
+
+	private boolean isRateNotEmptyAndFormulaNull() {
+		return (!StringUtils.isEmpty(rate)
+				&& feeFormula.getFeeFormulaId() == null && StringUtils
+				.isEmpty(amount));
+	}
+
+	private void addError(ActionErrors errors, String property, String key,
+			String... arg) {
+		errors.add(property, new ActionMessage(key, arg));
 	}
 
 	private void buildPeriodicFeeFrequency() {
@@ -265,13 +287,11 @@ public class FeeActionForm extends ValidatorActionForm {
 				.getMeetingDetails().getRecurrenceType().getRecurrenceId();
 		if (recurrencId != null) {
 			if (recurrencId.equals(MeetingFrequency.WEEKLY.getValue())
-					&& getWeekRecurAfter() != null
-					&& !"".equals(getWeekRecurAfter().trim()))
+					&& StringUtils.isNullAndEmptySafe(getWeekRecurAfter()))
 				feeFrequency.getFeeMeetingFrequency().getMeetingDetails()
 						.setRecurAfter(Short.valueOf(getWeekRecurAfter()));
 			else if (recurrencId.equals(MeetingFrequency.MONTHLY.getValue())
-					&& getMonthRecurAfter() != null
-					&& !"".equals(getMonthRecurAfter().trim()))
+					&& StringUtils.isNullAndEmptySafe(getMonthRecurAfter()))
 				feeFrequency.getFeeMeetingFrequency().getMeetingDetails()
 						.setRecurAfter(Short.valueOf(getMonthRecurAfter()));
 
@@ -279,17 +299,16 @@ public class FeeActionForm extends ValidatorActionForm {
 	}
 
 	private void buildOneTimeFeeFrequency(boolean isCategoryLoan) {
-		if (loanCharge != null && !loanCharge.equals("") && isCategoryLoan)
+		if (StringUtils.isNullAndEmptySafe(loanCharge) && isCategoryLoan)
 			feeFrequency.getFeePayment().setFeePaymentId(
 					Short.valueOf(loanCharge));
-		else if (customerCharge != null && !customerCharge.equals("")
-				&& !isCategoryLoan)
+		else if (StringUtils.isNullAndEmptySafe(customerCharge))
 			feeFrequency.getFeePayment().setFeePaymentId(
 					Short.valueOf(customerCharge));
 	}
 
 	private boolean isCategoryLoan() {
-		return categoryType.getCategoryId().equals(
-				Short.valueOf(FeeCategory.LOAN.getValue()));
+		return Short.valueOf(FeeCategory.LOAN.getValue()).equals(
+				categoryType.getCategoryId());
 	}
 }

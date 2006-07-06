@@ -38,6 +38,7 @@
 
 package org.mifos.application.fees.business;
 
+import org.mifos.application.fees.exceptions.FeeException;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.framework.business.PersistentObject;
@@ -100,7 +101,9 @@ public class FeeFrequencyEntity extends PersistentObject {
 		this.feePayment = feePayment;
 	}
 
-	public void buildFeeFrequency() {
+	public void buildFeeFrequency() throws FeeException {
+		if (getFeeFrequencyType().getFeeFrequencyTypeId() == null)
+			throw new FeeException("errors.invalidfreqtype");
 		if (isPeriodic()) {
 			setFeePayment(null);
 			feeMeetingFrequency.getMeetingType().setMeetingTypeId(

@@ -41,47 +41,43 @@ package org.mifos.framework.util.helpers;
 import java.util.Arrays;
 
 /**
- * This class has got utility functions for string which would be required through out the project.
- * @author ashishsm
- *
+ * This class has got utility functions for string which would be required
+ * through out the project.
+ * 
  */
 public class StringUtils {
-
-	/**
-	 * 
-	 */
 	public StringUtils() {
-		super();
-		
 	}
-	
-	/**
-	 * This method returns a padded string with the specified padding char.
-	 * @param stringToBePadded - the string which is to be padded.
-	 * @param paddingChar - the char with which the string is to be padded.
-	 * @param finalLengthOfString - the expected final length of string.
-	 * @return - returns the final padded string .
-	 */
-	public static String lpad(String stringToBePadded,char paddingChar,int finalLengthOfString){
-		StringBuilder elevenDigitNumber = new StringBuilder();
-		// get the current length of the stringToBePadded
+
+	public static String lpad(String stringToBePadded, char paddingChar,
+			int finalLengthOfString) {
 		int currentLength = stringToBePadded.length();
-		// convert the current number to an array of characters
-		char [] runningNumberArray = stringToBePadded.toCharArray();
-		// form a new array which holds eleven digits
-		char[] totalArray = new char [finalLengthOfString];
-		if(currentLength < finalLengthOfString){
-			// padd the array with the padding character.
-			Arrays.fill(totalArray, 0, finalLengthOfString-currentLength, paddingChar);
-			
+		char[] runningNumberArray = stringToBePadded.toCharArray();
+		char[] totalArray = new char[finalLengthOfString];
+		if (currentLength < finalLengthOfString) {
+			Arrays.fill(totalArray, 0, finalLengthOfString - currentLength,
+					paddingChar);
 		}
-		// fill the remaining part of the array with the character
-		// array of the account running number.
-		for(int index = 0 ; index< currentLength ; index ++){
-			Arrays.fill(totalArray, finalLengthOfString-currentLength+index, finalLengthOfString-currentLength+index+1, runningNumberArray[index]);
+		for (int index = 0; index < currentLength; index++) {
+			Arrays.fill(totalArray,
+					finalLengthOfString - currentLength + index,
+					finalLengthOfString - currentLength + index + 1,
+					runningNumberArray[index]);
 		}
-		
+
 		return String.valueOf(totalArray);
+	}
+
+	public static boolean isNullAndEmptySafe(String stringToBeChecked) {
+		return isNullSafe(stringToBeChecked) && !isEmpty(stringToBeChecked);
+	}
+
+	public static boolean isNullSafe(String stringToBeChecked) {
+		return stringToBeChecked != null;
+	}
+
+	public static boolean isEmpty(String stringToBeChecked) {
+		return "".equals(stringToBeChecked.trim());
 	}
 
 }

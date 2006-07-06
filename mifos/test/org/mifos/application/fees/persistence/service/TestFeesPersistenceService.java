@@ -40,8 +40,6 @@ package org.mifos.application.fees.persistence.service;
 
 import java.util.Date;
 
-import org.mifos.framework.MifosTestCase;
-
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.fees.business.CategoryTypeEntity;
 import org.mifos.application.fees.business.FeeFrequencyEntity;
@@ -50,13 +48,12 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.FeeStatus;
+import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestFeesPersistenceService extends MifosTestCase {
-
-	private final Short glCodeId = (short) 7;
 
 	public void testSave() throws Exception {
 
