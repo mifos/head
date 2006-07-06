@@ -6,10 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerMeetingEntity;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.business.CustomerStateEntity;
 import org.mifos.application.customer.business.CustomerView;
@@ -122,5 +121,13 @@ public class CustomerPersistenceService extends PersistenceService {
 	
 	public List<Integer> getCustomersWithUpdatedMeetings() throws PersistenceException{
 		return serviceImpl.getCustomersWithUpdatedMeetings();
+	}
+	
+	public List<AccountBO> retrieveAccountsUnderCustomer(String searchId, Short officeId, Short accountTypeId)throws PersistenceException{
+		return serviceImpl.retrieveAccountsUnderCustomer(searchId,officeId,accountTypeId);
+	}
+	
+	public List<CustomerBO> getAllChildrenForParent(String searchId, Short officeId,Short customerLevelId) throws PersistenceException {
+		return serviceImpl.getAllChildrenForParent(searchId, officeId,customerLevelId);
 	}
 }

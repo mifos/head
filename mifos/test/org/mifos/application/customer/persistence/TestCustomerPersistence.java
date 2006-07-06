@@ -6,8 +6,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.mifos.framework.MifosTestCase;
-
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
@@ -19,17 +17,18 @@ import org.mifos.application.bulkentry.exceptions.BulkEntryAccountUpdateExceptio
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.business.CustomerView;
+import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
-import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.scheduler.Constants;
 import org.mifos.framework.components.scheduler.ScheduleDataIntf;
 import org.mifos.framework.components.scheduler.ScheduleInputsIntf;
@@ -392,5 +391,135 @@ public class TestCustomerPersistence extends MifosTestCase {
 		List<Integer> customerIds = customerPersistence.getCustomersWithUpdatedMeetings();
 		assertEquals(1,customerIds.size());
 		
+	}
+	
+	private AccountBO getSavingsAccount(CustomerBO customer, MeetingBO meeting) {
+		Date startDate = new Date(System.currentTimeMillis());
+		MeetingBO meetingIntCalc = TestObjectFactory
+				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		MeetingBO meetingIntPost = TestObjectFactory
+				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		SavingsOfferingBO savingsOffering = TestObjectFactory
+		.createSavingsOffering("SavingPrd1", Short.valueOf("2"),
+				new Date(System.currentTimeMillis()), Short
+						.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
+				200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),
+				meetingIntCalc, meetingIntPost);
+		return TestObjectFactory.createSavingsAccount("432434", customer,
+				Short.valueOf("16"), startDate, savingsOffering);
+
+	}
+	
+	public void testRetrieveAllLoanAccountUnderCustomer() throws PersistenceException {
+		CustomerPersistence customerPersistence = new CustomerPersistence();
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active_test", Short
+				.valueOf("13"), "1.4", meeting, new Date(System
+				.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE, "1.4.1", center, new Date(System
+				.currentTimeMillis()));
+		CenterBO center1 = TestObjectFactory.createCenter("Center_Active_test1", Short
+				.valueOf("13"), "1.5", meeting, new Date(System
+				.currentTimeMillis()));
+		GroupBO group1 = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE, "1.5.1", center1, new Date(System
+				.currentTimeMillis()));
+		client = TestObjectFactory.createClient("client1",ClientConstants.STATUS_ACTIVE,"1.4.1.1",group,new Date(System
+				.currentTimeMillis()));
+		ClientBO client2 = TestObjectFactory.createClient("client2",ClientConstants.STATUS_CLOSED,"1.4.1.2",group,new Date(System
+				.currentTimeMillis()));
+		ClientBO client3 = TestObjectFactory.createClient("client3",ClientConstants.STATUS_CANCELLED,"1.5.1",group1,new Date(System
+				.currentTimeMillis()));
+		account = getLoanAccount(group, meeting);
+		AccountBO account1 = getLoanAccount(client, meeting);
+		AccountBO account2 = getLoanAccount(client2, meeting);
+		AccountBO account3 = getLoanAccount(client3, meeting);
+		AccountBO account4 = getLoanAccount(group1, meeting);
+		
+		List<AccountBO> loans = customerPersistence.retrieveAccountsUnderCustomer("1.4",Short.valueOf("3"),Short.valueOf("1"));
+		assertEquals(3,loans.size());
+
+		TestObjectFactory.cleanUp(account4);
+		TestObjectFactory.cleanUp(account3);
+		TestObjectFactory.cleanUp(account2);
+		TestObjectFactory.cleanUp(account1);
+		TestObjectFactory.cleanUp(client3);
+		TestObjectFactory.cleanUp(client2);
+		TestObjectFactory.cleanUp(group1);
+		TestObjectFactory.cleanUp(center1);
+	}
+	
+	public void testRetrieveAllSavingsAccountUnderCustomer() throws PersistenceException {
+		CustomerPersistence customerPersistence = new CustomerPersistence();
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active_test", Short
+				.valueOf("13"), "1.4", meeting, new Date(System
+				.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE, "1.4.1", center, new Date(System
+				.currentTimeMillis()));
+		CenterBO center1 = TestObjectFactory.createCenter("Center_Active_test1", Short
+				.valueOf("13"), "1.5", meeting, new Date(System
+				.currentTimeMillis()));
+		GroupBO group1 = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE, "1.5.1", center1, new Date(System
+				.currentTimeMillis()));
+		client = TestObjectFactory.createClient("client1",ClientConstants.STATUS_ACTIVE,"1.4.1.1",group,new Date(System
+				.currentTimeMillis()));
+		ClientBO client2 = TestObjectFactory.createClient("client2",ClientConstants.STATUS_CLOSED,"1.4.1.2",group,new Date(System
+				.currentTimeMillis()));
+		ClientBO client3 = TestObjectFactory.createClient("client3",ClientConstants.STATUS_CANCELLED,"1.5.1",group1,new Date(System
+				.currentTimeMillis()));
+		account = getSavingsAccount(center, meeting);
+		AccountBO account1 = getSavingsAccount(client, meeting);
+		AccountBO account2 = getSavingsAccount(client2, meeting);
+		AccountBO account3 = getSavingsAccount(client3, meeting);
+		AccountBO account4 = getSavingsAccount(group1, meeting);
+		AccountBO account5 = getSavingsAccount(group, meeting);
+		AccountBO account6 = getSavingsAccount(center1, meeting);
+		
+		List<AccountBO> savings = customerPersistence.retrieveAccountsUnderCustomer("1.4",Short.valueOf("3"),Short.valueOf("2"));
+		assertEquals(4,savings.size());
+		
+		
+		TestObjectFactory.cleanUp(account3);
+		TestObjectFactory.cleanUp(account2);
+		TestObjectFactory.cleanUp(account1);
+		TestObjectFactory.cleanUp(client3);
+		TestObjectFactory.cleanUp(client2);
+		TestObjectFactory.cleanUp(account4);
+		TestObjectFactory.cleanUp(account5);
+		TestObjectFactory.cleanUp(group1);
+		TestObjectFactory.cleanUp(account6);
+		TestObjectFactory.cleanUp(center1);
+	}
+	
+	public void testGetAllChildrenForParent() throws NumberFormatException, PersistenceException {
+		CustomerPersistence customerPersistence = new CustomerPersistence();
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active_test", Short
+				.valueOf("13"), "1.4", meeting, new Date(System
+				.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE, "1.4.1", center, new Date(System
+				.currentTimeMillis()));
+		CenterBO center1 = TestObjectFactory.createCenter("Center_Active_test1", Short
+				.valueOf("13"), "1.5", meeting, new Date(System
+				.currentTimeMillis()));
+		GroupBO group1 = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE, "1.5.1", center1, new Date(System
+				.currentTimeMillis()));
+		client = TestObjectFactory.createClient("client1",ClientConstants.STATUS_ACTIVE,"1.4.1.1",group,new Date(System
+				.currentTimeMillis()));
+		ClientBO client2 = TestObjectFactory.createClient("client2",ClientConstants.STATUS_CLOSED,"1.4.1.2",group,new Date(System
+				.currentTimeMillis()));
+		ClientBO client3 = TestObjectFactory.createClient("client3",ClientConstants.STATUS_CANCELLED,"1.5.1",group1,new Date(System
+				.currentTimeMillis()));
+		
+		List<CustomerBO> customerList = customerPersistence.getAllChildrenForParent("1.4",Short.valueOf("3"),CustomerConstants.CENTER_LEVEL_ID);
+		assertEquals(3,customerList.size());
+		
+		TestObjectFactory.cleanUp(client3);
+		TestObjectFactory.cleanUp(client2);
+		TestObjectFactory.cleanUp(group1);
+		TestObjectFactory.cleanUp(center1);
 	}
 }

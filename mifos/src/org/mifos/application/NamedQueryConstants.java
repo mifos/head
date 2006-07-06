@@ -317,6 +317,7 @@ public interface NamedQueryConstants {
 	public String GET_PARENTCUSTOMERS_FOR_LOANOFFICER="Customer.getParentCustomersForLoanOfficer";
 	public String GET_ACTIVE_CHILDREN_FORPARENT="Customer.getActiveChildrenForParent";
 	public String GET_CHILDREN="Customer.getChildren";
+	public String GET_ALL_CHILDREN="Customer.getAllChildren";
 	
 	/*Office Queries*/
 	public String OFFICE_GET_SEARCHID="office.getOfficeSearchId";
@@ -335,6 +336,7 @@ public interface NamedQueryConstants {
 	public String RETRIEVE_ACCCOUNTS_FOR_INT_CALC="accounts.retrieveSavingsAccountsIntCalc";
 	public String RETRIEVE_ACCCOUNTS_FOR_INT_POST="accounts.retrieveSavingsAccountsIntPost";
 	public String RETRIEVE_SAVINGS_ACCCOUNT_FOR_CUSTOMER="accounts.retrieveSavingsAccountsForCustomer";
+	public String RETRIEVE_ACCCOUNTS_FOR_CUSTOMER="accounts.retrieveAccountsForCustomer";
 	
 	//accounts
 	public String GET_MAX_ACCOUNT_ID="accounts.getMaxAccountId";

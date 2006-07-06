@@ -188,5 +188,8 @@
 	</query>
 	<query name="customer.findClientSystemId">
 		<![CDATA[from org.mifos.application.customer.client.business.ClientBO as client where client.globalCustNum = :globalCustNum ]]>
-	</query>		
+	</query>	
+	<query name="Customer.getAllChildren">
+		<![CDATA[from org.mifos.application.customer.business.CustomerBO as customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerLevel.levelId != :LEVEL_ID ]]>
+	</query>	
 </hibernate-mapping>

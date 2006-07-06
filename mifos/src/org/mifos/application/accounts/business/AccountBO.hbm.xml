@@ -304,4 +304,8 @@
 			where  savings.nextIntPostDate < :currentDate and savings.accountState.id in (16,18)) ]]>
     </query>
     
+    <query name="accounts.retrieveAccountsForCustomer">
+		<![CDATA[from org.mifos.application.accounts.business.AccountBO account where account.accountType.accountTypeId = :ACCOUNT_TYPE_ID and account.customer.searchId like :SEARCH_STRING and account.customer.office.officeId = :OFFICE_ID)]]>
+	</query>
+    
 </hibernate-mapping>

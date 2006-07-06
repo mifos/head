@@ -38,18 +38,23 @@
 package org.mifos.application.customer.business.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 
+import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.CustomerActivityEntity;
-import org.mifos.application.accounts.loan.business.LoanActivityEntity;
-import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.util.valueobjects.RecentAccountActivity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
+import org.mifos.application.customer.center.business.CenterPerformanceHistory;
+import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerRecentActivityView;
 import org.mifos.application.customer.util.helpers.LoanCycleCounter;
 import org.mifos.framework.business.BusinessObject;
@@ -148,6 +153,80 @@ public class CustomerBusinessService extends BusinessService{
 			return amount.negate();
 		else
 			return amount;
+	}
+	
+	private List<AccountBO> getAccountsForCustomer(String searchId, Short officeId, Short accountTypeId) throws PersistenceException, ServiceException {
+		return getDBService().retrieveAccountsUnderCustomer(searchId,officeId,accountTypeId);
+	}
+	
+	private Money getTotalOutstandingLoan(List<AccountBO> accountList) throws PersistenceException, ServiceException {
+		Money total = new Money();
+		for(AccountBO accountBO : accountList) {
+			LoanBO loanBO = (LoanBO) accountBO;
+			for(AccountActionDateEntity accountActionDateEntity : loanBO.getAccountActionDates()) {
+				total = total.add(accountActionDateEntity.getPrincipal());
+			}
+		}
+		return total;
+	}
+	
+	private Money getPortfolioAtRisk(List<AccountBO> accountList) throws PersistenceException, ServiceException {
+		Money amount = new Money();
+		for(AccountBO accountBO : accountList) {
+			LoanBO loanBO = (LoanBO) accountBO;
+			for(AccountActionDateEntity accountActionDateEntity : loanBO.getAccountActionDates()) {
+				Calendar actionDate=new GregorianCalendar();
+				actionDate.setTime(accountActionDateEntity.getActionDate());
+				long diffInTermsOfDay = (Calendar.getInstance().getTimeInMillis()-actionDate.getTimeInMillis())/(24*60*60*1000);
+				if(diffInTermsOfDay>30) {
+					amount = amount.add(accountActionDateEntity.getPrincipalDue());
+				}
+			}
+		}
+		return amount;
+	}
+	
+	private Money getTotalSavings(List<AccountBO> accountList) throws PersistenceException, ServiceException {
+		Money total = new Money();
+		for(AccountBO accountBO : accountList) {
+			SavingsBO savingsBO = (SavingsBO) accountBO;
+			total = total.add(savingsBO.getSavingsBalance());
+		}
+		return total;
+	}
+	
+	private List<CustomerBO> getCustomer(String searchId, Short officeId, Short customerLevelId) throws PersistenceException, ServiceException {
+		return getDBService().getAllChildrenForParent(searchId,officeId,customerLevelId);
+	}
+	
+	private List<CustomerBO> getChildList(List<CustomerBO> centerChildren , short childLevelId){
+		List<CustomerBO> children = new ArrayList<CustomerBO>();
+		for(int i=0;i<centerChildren.size();i++){
+			CustomerBO customer = centerChildren.get(i);
+			if( customer.getCustomerLevel().getLevelId().shortValue() == childLevelId )
+				children.add(customer);
+		}
+		return children;
+	}
+	
+	public CenterPerformanceHistory getCenterPerformanceHistory(String searchId, Short officeId) throws PersistenceException, ServiceException {
+		List<CustomerBO> centerChildren = getCustomer(searchId,officeId,CustomerConstants.CENTER_LEVEL_ID);
+		List<CustomerBO> groups =getChildList(centerChildren , CustomerConstants.GROUP_LEVEL_ID );
+		List<CustomerBO> clients =getChildList(centerChildren , CenterConstants.CLIENT_LEVEL_ID );
+		List<AccountBO> loanList = getAccountsForCustomer(searchId,officeId,Short.valueOf(AccountTypes.LOANACCOUNT));
+		List<AccountBO> savingsList = getAccountsForCustomer(searchId,officeId,Short.valueOf(AccountTypes.SAVINGSACCOUNT));
+		
+		Money totalOutstandingLoan = getTotalOutstandingLoan(loanList);
+		Money portfolioAtRisk = getPortfolioAtRisk(loanList);
+		Money totalSavings = getTotalSavings(savingsList);
+		
+		CenterPerformanceHistory centerPerformanceHistory = new CenterPerformanceHistory();
+		centerPerformanceHistory.setNumberOfClients(clients.size());
+		centerPerformanceHistory.setNumberOfGroups(groups.size());
+		centerPerformanceHistory.setTotalOutstandingPortfolio(totalOutstandingLoan);
+		centerPerformanceHistory.setPortfolioAtRisk(portfolioAtRisk);
+		centerPerformanceHistory.setTotalSavings(totalSavings);
+		return centerPerformanceHistory;
 	}
 	
 }

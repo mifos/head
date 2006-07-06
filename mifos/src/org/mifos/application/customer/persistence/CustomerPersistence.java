@@ -12,9 +12,9 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerMeetingEntity;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.business.CustomerStateEntity;
 import org.mifos.application.customer.business.CustomerView;
@@ -296,5 +296,31 @@ public class CustomerPersistence extends Persistence {
 			throw new PersistenceException(he);
 		}
 		return queryResult;
+	}
+	
+	public List<AccountBO> retrieveAccountsUnderCustomer(String searchId,Short officeId, Short accountTypeId) throws PersistenceException {
+		try{
+			Map<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("SEARCH_STRING", searchId + "%");
+			queryParameters.put("OFFICE_ID", officeId);
+			queryParameters.put("ACCOUNT_TYPE_ID", accountTypeId);
+			return (List<AccountBO>) executeNamedQuery(NamedQueryConstants.RETRIEVE_ACCCOUNTS_FOR_CUSTOMER,queryParameters);
+		}catch(HibernateException he){
+			throw new PersistenceException(he);
+		}
+	}
+	
+	public List<CustomerBO> getAllChildrenForParent(String searchId,Short officeId,Short customerLevelId) throws PersistenceException {
+		try {
+			Map<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("SEARCH_STRING", searchId + ".%");
+			queryParameters.put("OFFICE_ID", officeId);
+			queryParameters.put("LEVEL_ID", customerLevelId);
+			List<CustomerBO> queryResult = executeNamedQuery(
+					NamedQueryConstants.GET_ALL_CHILDREN, queryParameters);
+			return queryResult;
+		} catch (HibernateException he) {
+			throw new PersistenceException(he);
+		}
 	}
 }
