@@ -711,10 +711,10 @@ public class AccountBO extends BusinessObject {
 		return accountTrxnList;
 	}
 
-	public void waiveAmountDue(WaiveEnum chargeType) throws ServiceException,AccountException {
+	public void waiveAmountDue(WaiveEnum waiveType) throws ServiceException,AccountException {
 	}
 
-	public void waiveAmountOverDue(WaiveEnum chargeType) throws ServiceException,AccountException {
+	public void waiveAmountOverDue(WaiveEnum waiveType) throws ServiceException,AccountException {
 	}
 
 	public Date getNextMeetingDate() {

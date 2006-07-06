@@ -68,6 +68,7 @@ import org.mifos.application.accounts.util.helpers.AccountPaymentData;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.exception.StateChangeException;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
@@ -1570,7 +1571,7 @@ public class SavingsBO extends AccountBO {
 		return nextInstallment;
 	}
 
-	public void waiveAmountDue() throws ServiceException, AccountException {
+	public void waiveAmountDue(WaiveEnum waiveType) throws ServiceException, AccountException {
 		addSavingsActivityDetails(buildSavingsActivity(
 				getTotalAmountDueForNextInstallment(), getSavingsBalance(),
 				AccountConstants.ACTION_WAIVEOFFDUE, getUserContext().getId()));

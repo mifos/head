@@ -64,6 +64,7 @@ import org.mifos.application.accounts.savings.struts.actionforms.SavingsActionFo
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.struts.action.AccountAppAction;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -526,7 +527,7 @@ public class SavingsAction extends AccountAppAction {
 		savings = savingsService.findBySystemId(((SavingsActionForm) form)
 				.getGlobalAccountNum());
 		savings.setUserContext(uc);
-		savings.waiveAmountDue();
+		savings.waiveAmountDue(WaiveEnum.ALL);
 		return mapping.findForward("waiveAmount_success");
 	}
 

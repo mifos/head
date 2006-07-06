@@ -27,6 +27,7 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
+import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
@@ -1955,7 +1956,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = getSavingsAccount();
 		assertEquals(savings.getTotalAmountDueForNextInstallment()
 				.getAmountDoubleValue(), 200.0);
-		savings.waiveAmountDue();
+		savings.waiveAmountDue(WaiveEnum.ALL);
 		savings = (SavingsBO) saveAndFetch(savings);
 		assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(),
 				0.0);
@@ -1972,7 +1973,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = (SavingsBO) saveAndFetch(savings);
 		assertEquals(savings.getTotalAmountDueForNextInstallment()
 				.getAmountDoubleValue(), 180.0);
-		savings.waiveAmountDue();
+		savings.waiveAmountDue(WaiveEnum.ALL);
 		savings = (SavingsBO) saveAndFetch(savings);
 		assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(),
 				0.0);

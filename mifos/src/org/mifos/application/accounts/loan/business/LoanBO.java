@@ -1317,21 +1317,21 @@ public class LoanBO extends AccountBO {
 	}
 	
 	@Override
-	public void waiveAmountDue(WaiveEnum chargeType) throws ServiceException {				
-		if(chargeType.equals(WaiveEnum.FEES)){					
+	public void waiveAmountDue(WaiveEnum waiveType) throws ServiceException {				
+		if(waiveType.equals(WaiveEnum.FEES)){					
 			waiveFeeAmountDue();
 		}
-		else if(chargeType.equals(WaiveEnum.PENALTY)){			
+		else if(waiveType.equals(WaiveEnum.PENALTY)){			
 			waivePenaltyAmountDue();
 		}		
 	}
 
 	@Override
-	public void waiveAmountOverDue(WaiveEnum chargeType) throws ServiceException {		
-		if(chargeType.equals(WaiveEnum.FEES)){
+	public void waiveAmountOverDue(WaiveEnum waiveType) throws ServiceException {		
+		if(waiveType.equals(WaiveEnum.FEES)){
 			waiveFeeAmountOverDue();
 		}
-		else if(chargeType.equals(WaiveEnum.PENALTY)){
+		else if(waiveType.equals(WaiveEnum.PENALTY)){
 			waivePenaltyAmountOverDue();
 		}			
 	}
