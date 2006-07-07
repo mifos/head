@@ -99,6 +99,8 @@
 		<form-bean name="custApplyAdjustmentActionForm" type="org.mifos.application.customer.struts.actionforms.CustomerApplyAdjustmentActionForm" />
 		<!-- Apply Payment Action Form for account -->
 		<form-bean name="applyPaymentActionForm" type="org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActionForm" />
+		<!-- Action Form deposit and withdrawal in savings account -->
+		<form-bean name="savingsDepositWithdrawalForm" type="org.mifos.application.accounts.savings.struts.actionforms.SavingsDepositWithdrawalActionForm" />
 	</form-beans>
 
 	<global-exceptions>
@@ -861,6 +863,15 @@
 			<forward name="waiveChargesDue_Success" path="/loanAccountAction.do?method=forwardWaiveCharge"></forward>
 			<forward name="waiveChargesOverDue_Success" path="/loanAccountAction.do?method=forwardWaiveCharge"></forward>
 			<forward name="waiveLoanAccountCharges_Success" path="/loanAccountAction.do?method=getInstallmentDetails"/>			
+		</action>
+		<action path="/savingsDepositWithdrawalAction" type="org.mifos.application.accounts.savings.struts.action.SavingsDepositWithdrawalAction" name="savingsDepositWithdrawalForm" parameter="method" 
+			input="/savingsDepositWithdrawalAction.do?method=validate" scope="session" validate="true">
+			<forward name="load_success" path="/pages/application/savings/jsp/applypayment_savingsaccount.jsp" />
+			<forward name="preview_success" path="/pages/application/savings/jsp/review_transaction_savings.jsp" />
+			<forward name="preview_failure" path="/pages/application/savings/jsp/applypayment_savingsaccount.jsp" />
+			<forward name="previous_success" path="/pages/application/savings/jsp/applypayment_savingsaccount.jsp"/>
+			<forward name="account_details_page" path="/savingsAction.do?method=get"/>
+			<forward name="makePayment_failure" path="/pages/application/savings/jsp/review_transaction_savings.jsp"/>
 		</action>
 	</action-mappings>
 

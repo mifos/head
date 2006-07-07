@@ -186,6 +186,7 @@
       </table>
       <html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}"/>
       <html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}"/>
+      <html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}"/>
 </html-el:form>
 </tiles:put>
 </tiles:insert>        

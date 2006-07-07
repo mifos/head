@@ -12,6 +12,7 @@ import org.mifos.application.accounts.savings.struts.action.TestEditSavingsStatu
 import org.mifos.application.accounts.savings.struts.action.TestSavingsAction;
 import org.mifos.application.accounts.savings.struts.action.TestSavingsApplyAdjustmentAction;
 import org.mifos.application.accounts.savings.struts.action.TestSavingsClosureAction;
+import org.mifos.application.accounts.savings.struts.action.TestSavingsDepositWithdrawalAction;
 import org.mifos.application.accounts.savings.util.helpers.TestSavingsHelper;
 import org.mifos.framework.MifosTestSuite;
 
@@ -33,6 +34,7 @@ public class SavingsTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(TestSavingsStateMachine.class);
 		testSuite.addTestSuite(TestEditSavingsStatusAction.class);
 		testSuite.addTestSuite(TestSavingsApplyAdjustmentAction.class);
+		testSuite.addTestSuite(TestSavingsDepositWithdrawalAction.class);
 		return testSuite;
 	}
 	

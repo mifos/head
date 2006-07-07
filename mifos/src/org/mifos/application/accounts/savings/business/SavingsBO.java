@@ -111,6 +111,7 @@ import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 
@@ -626,8 +627,8 @@ public class SavingsBO extends AccountBO {
 			minBal = adjustedTrxn.getBalance();
 	
 		for (int i = 0; i < accountTrxnList.size(); i++) {
-			if (accountTrxnList.get(i).getActionDate().compareTo(fromDate) >= 0
-					&& accountTrxnList.get(i).getActionDate().compareTo(toDate) < 0) {
+			if ((accountTrxnList.get(i).getActionDate()).compareTo(fromDate) >= 0
+					&& DateUtils.getDateWithoutTimeStamp(accountTrxnList.get(i).getActionDate().getTime()).compareTo(DateUtils.getDateWithoutTimeStamp(toDate.getTime())) < 0) {
 				Money lastTrxnAmt = getLastTrxnBalance(accountTrxnList, i);
 				i = getLastTrxnIndexForDay(accountTrxnList, i);
 					
@@ -660,7 +661,7 @@ public class SavingsBO extends AccountBO {
 		Money totalBalance = new Money();
 		for (int i = 0; i < accountTrxnList.size(); i++) {
 			if (accountTrxnList.get(i).getActionDate().compareTo(fromDate) >= 0
-					&& accountTrxnList.get(i).getActionDate().compareTo(toDate) < 0) {
+					&& DateUtils.getDateWithoutTimeStamp(accountTrxnList.get(i).getActionDate().getTime()).compareTo(DateUtils.getDateWithoutTimeStamp(toDate.getTime())) < 0) {
 				Money lastTrxnAmt = getLastTrxnBalance(accountTrxnList, i);
 				i = getLastTrxnIndexForDay(accountTrxnList, i);
 				SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) accountTrxnList.get(i);
@@ -1657,4 +1658,38 @@ public class SavingsBO extends AccountBO {
 		
 	}
 
+	@Override
+	public Money getTotalPaymentDue(){
+		return isMandatory()? super.getTotalPaymentDue() : getTotalPaymentDueForVolAccount();
+	}
+	
+	@Override
+	public List<AccountActionDateEntity> getTotalInstallmentsDue(){
+		return isMandatory()? super.getTotalInstallmentsDue() : getInstallmentDueForVolAccount();
+	}
+	
+	private List<AccountActionDateEntity> getInstallmentDueForVolAccount(){
+		List<AccountActionDateEntity> dueInstallment = new ArrayList<AccountActionDateEntity>();
+	
+		AccountActionDateEntity installment = getDetailsOfNextInstallment();
+		if(installment!=null && installment.getPaymentStatus().equals(AccountConstants.PAYMENT_UNPAID)
+				&&DateUtils.getDateWithoutTimeStamp(installment.getActionDate().getTime()).equals(DateUtils.getCurrentDateWithoutTimeStamp()))
+			dueInstallment.add(installment);
+		else{
+			List<AccountActionDateEntity> installments = getDetailsOfInstallmentsInArrears();
+			if (installments!=null && installments.size()>0)
+				dueInstallment.add(installments.get(installments.size()-1));
+		}
+		
+		return dueInstallment;
+	}
+	
+	private Money getTotalPaymentDueForVolAccount(){
+		List<AccountActionDateEntity> dueInstallments = getInstallmentDueForVolAccount();
+		Money dueAmount = new Money();
+		if (dueInstallments!=null && dueInstallments.size()>0)
+			dueAmount  = getDueAmount(dueInstallments.get(0));
+		return dueAmount;	
+	}
+	
 }

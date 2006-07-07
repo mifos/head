@@ -244,15 +244,18 @@
 							</tr>
 							<tr>
 								<td class="paddingL10">
-									<span class="fontnormal8pt"> <%--
-              <html-el:link  href="#">
-              	<mifos:mifoslabel name="Savings.makeDepositWithdrawl"/>
-              </html-el:link><br>--%> <c:if test="${sessionScope.BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_APPROVED || sessionScope.BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_INACTIVE}">
-											<html-el:link href="savingsApplyAdjustmentAction.do?method=load">
-												<mifos:mifoslabel name="Savings.applyAdjustment" />
-											</html-el:link>
-											<br>
-										</c:if> <c:if test="${sessionScope.BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_APPROVED || sessionScope.BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_INACTIVE}">
+									<span class="fontnormal8pt"> 
+				<c:if test="${sessionScope.BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_APPROVED || sessionScope.BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_INACTIVE}">
+		           <html-el:link  href="savingsDepositWithdrawalAction.do?method=load">
+		          	    <mifos:mifoslabel name="Savings.makeDepositWithdrawl"/>
+		           </html-el:link><br>
+           
+					<html-el:link href="savingsApplyAdjustmentAction.do?method=load">
+						<mifos:mifoslabel name="Savings.applyAdjustment" />
+					</html-el:link>
+					<br>
+				</c:if>
+				<c:if test="${sessionScope.BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_APPROVED || sessionScope.BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_INACTIVE}">
 											<html-el:link href="savingsClosureAction.do?method=load">
 												<mifos:mifoslabel name="Savings.closeAccount" />
 											</html-el:link>

@@ -139,6 +139,8 @@ public class AccountApplyPaymentAction extends BaseAction{
 	
 	private PaymentData createPaymentData(Money amount, Date trxnDate, String receiptId, Date receiptDate, Short paymentTypeId, Short userId, AccountBO account){
 		PaymentData paymentData = new PaymentData(amount, userId, paymentTypeId, trxnDate);
+		paymentData.setRecieptDate(receiptDate);
+		paymentData.setRecieptNum(receiptId);
 		for(AccountActionDateEntity installment: account.getTotalInstallmentsDue()){
 			AccountPaymentData accountPaymentData =null; 
 			if(account instanceof LoanBO){

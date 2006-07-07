@@ -283,7 +283,7 @@ public interface SecurityConstants {
 
 	// savings
 	public final short SAVINGS_APPLY_ADJUSTMENT = 186;
-
+	
 	// Loan Transactions
 	public final short LOAN_CAN_ADD_NOTES_TO_LOAN = 179;
 
@@ -382,4 +382,6 @@ public interface SecurityConstants {
 	public final short SAVINGS_CANWAIVE_OVERDUEAMOUNT = 188;
 	
 	public final short LOAN_CAN_DISBURSE_LOAN = 189;
+	
+	public final short SAVINGS_CAN_MAKE_DEPOSIT_WITHDRAWAL = 190;
 }

@@ -393,11 +393,15 @@ public class TestSavingsBO extends MifosTestCase {
 				group);
 		savings.addAccountPayment(payment);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		savings = savingsService.findById(savings.getAccountId());
 		savings.getSavingsOffering().setMinAmntForInt(new Money("0"));
 		double intAmount = savings.calculateInterestForClosure(
 				helper.getDate("30/05/2006")).getAmountDoubleValue();
 		assertEquals(Double.valueOf("6.6"), intAmount);
+		group = savings.getCustomer();
+		center = group.getParentCustomer();
 	}
 
 	public void testCalculateInterestForClosureWithMinValueForIntCalc()
@@ -425,11 +429,14 @@ public class TestSavingsBO extends MifosTestCase {
 				group);
 		savings.addAccountPayment(payment);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
-
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		savings = savingsService.findById(savings.getAccountId());
 		double intAmount = savings.calculateInterestForClosure(
 				helper.getDate("30/05/2006")).getAmountDoubleValue();
 		assertEquals(Double.valueOf("0"), intAmount);
+		group = savings.getCustomer();
+		center = group.getParentCustomer();
 	}
 
 	public void testCalculateInterestForClosure() throws Exception {
@@ -3595,4 +3602,49 @@ public class TestSavingsBO extends MifosTestCase {
 		return savings;
 	}
 	
+	public void testGetTotalPaymentDueForVol()throws Exception{
+		createObjectToCheckForTotalInstallmentDue();
+		savings = savingsService.findById(savings.getAccountId());
+		Money recommendedAmnt = new Money(currency, "500.0");
+		Money paymentDue = savings.getTotalPaymentDue();
+		assertEquals(recommendedAmnt,paymentDue);
+		group = savings.getCustomer();
+		center = group.getParentCustomer();
+	}
+	
+	public void testGetTotalInstallmentDueForVol()throws Exception{
+		createObjectToCheckForTotalInstallmentDue();
+		savings = savingsService.findById(savings.getAccountId());
+		List<AccountActionDateEntity> dueInstallment = savings.getTotalInstallmentsDue();
+		assertEquals(1, dueInstallment.size());
+		assertEquals(Short.valueOf("2"), dueInstallment.get(0).getInstallmentId());
+		group = savings.getCustomer();
+		center = group.getParentCustomer();
+	}
+
+	private void createObjectToCheckForTotalInstallmentDue()throws Exception{
+		createInitialObjects();
+		savingsOffering = helper.createSavingsOffering();
+		savings = helper.createSavingsAccount(savingsOffering,group,AccountStates.SAVINGS_ACC_PENDINGAPPROVAL,userContext);
+		Calendar cal1 = Calendar.getInstance();
+		Calendar cal2 = Calendar.getInstance();
+		cal2.setLenient(true);
+		cal2.set(Calendar.DAY_OF_MONTH,cal1.get(Calendar.DAY_OF_MONTH)-1);
+		
+		Date paymentDate = helper.getDate("09/05/2006");
+		Money recommendedAmnt = new Money(currency, "500.0");
+		AccountActionDateEntity actionDate1 = helper.createAccountActionDate(
+				Short.valueOf("1"), cal2.getTime(), paymentDate,
+				savings.getCustomer(), recommendedAmnt, new Money(),
+				AccountConstants.PAYMENT_UNPAID);
+		AccountActionDateEntity actionDate2 = helper.createAccountActionDate(
+				Short.valueOf("2"), new Date(), paymentDate,
+				savings.getCustomer(), recommendedAmnt, new Money(),
+				AccountConstants.PAYMENT_UNPAID);
+		savings.addAccountActionDate(actionDate1);
+		savings.addAccountActionDate(actionDate2);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+	}
 }

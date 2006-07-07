@@ -800,6 +800,13 @@ public class ActivityMapper {
 		activityMap.put("/loanDisbursmentAction-preview",	SecurityConstants.VIEW);
 		activityMap.put("/loanDisbursmentAction-previous",SecurityConstants.VIEW);
 		activityMap.put("/loanDisbursmentAction-update",SecurityConstants.VIEW);
+		
+		//mapping for savings deposit/withdrawal
+		activityMap.put("/savingsDepositWithdrawalAction-load",	SecurityConstants.SAVINGS_CAN_MAKE_DEPOSIT_WITHDRAWAL);
+		activityMap.put("/savingsDepositWithdrawalAction-reLoad",	SecurityConstants.SAVINGS_CAN_MAKE_DEPOSIT_WITHDRAWAL);
+		activityMap.put("/savingsDepositWithdrawalAction-preview",	SecurityConstants.VIEW);
+		activityMap.put("/savingsDepositWithdrawalAction-previous",SecurityConstants.VIEW);
+		activityMap.put("/savingsDepositWithdrawalAction-makePayment",SecurityConstants.VIEW);
 	}
 
 	private static ActivityMapper instance = new ActivityMapper();

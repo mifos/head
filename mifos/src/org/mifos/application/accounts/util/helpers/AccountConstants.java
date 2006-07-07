@@ -79,7 +79,7 @@ public interface AccountConstants {
 	public static final String LOAN_DETAILS_PAGE="loan_details_page";
 	public static final String NOTES="notes";
 	public static final String STATUS="status";
-	
+	public static final String TRXN_TYPES="trxnTypes";
 	public static final int NOTES_COUNT=3;
 	public static final String METHOD_CANCEL="cancel";
 	public static final String METHOD_SEARCH_NEXT="searchNext";
@@ -178,7 +178,7 @@ public interface AccountConstants {
 	
 	public final String ERROR_MANDATORY="errors.mandatory";
 	public final String ERROR_FUTUREDATE="errors.futuredate";
-	
+	public final String ERROR_INVALID_TRXN="errors.invalidTxndate";
 	public final String WAIVE_TYPE="WaiveType";	
 	
 }
