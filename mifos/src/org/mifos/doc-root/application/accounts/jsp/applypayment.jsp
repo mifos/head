@@ -60,7 +60,7 @@
 		<html-el:form method="post"
 			action="/applyPaymentAction.do?method=preview"
 			onsubmit="return (validateMyForm(transactionDate,transactionDateFormat,transactionDateYY) && validateMyForm(receiptDate,receiptDateFormat,receiptDateYY))"
-			focus="personnelDetails.firstName">
+			focus="paymentTypeId">
 
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
