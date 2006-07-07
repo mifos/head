@@ -812,8 +812,16 @@ public class AccountBO extends BusinessObject {
 	public boolean isTrxnDateValid(Date trxnDate)throws ApplicationException, SystemException{
 		
 		if(Configuration.getInstance().getAccountConfig(getOffice().getOfficeId()).isBackDatedTxnAllowed()){
-			Date lastMeetingDate = DateUtils.getDateWithoutTimeStamp(getCustomerDBService().getLastMeetingDateForCustomer(getCustomer().getCustomerId()).getTime());
-			return trxnDate.compareTo(lastMeetingDate)>=0 ? true :false;
+			Date meetingDate =getCustomerDBService().getLastMeetingDateForCustomer(getCustomer().getCustomerId());
+			Date lastMeetingDate =null;
+			if (meetingDate!=null)
+			{
+				 lastMeetingDate = DateUtils.getDateWithoutTimeStamp(meetingDate.getTime());
+				 return trxnDate.compareTo(lastMeetingDate)>=0 ? true :false;
+			}
+			else
+				return false;
+			
 		}
 		return trxnDate.equals(DateUtils.getCurrentDateWithoutTimeStamp());
 	}
