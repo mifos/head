@@ -139,6 +139,11 @@
 					<mifos:mifoslabel name="client.waive" bundle="ClientUIResources"/>
 	              </html-el:link>
 	              </c:if>
+	              <BR>
+	              <span class="fontnormalbold">
+	               <mifos:mifoslabel name="accounts.total" isColonRequired="Yes"></mifos:mifoslabel>
+	               <c:out value='${requestScope.Context.businessResults["ClientFeeChargeOverDue"].amountDoubleValue + requestScope.Context.businessResults["ClientFeeChargeDue"].amountDoubleValue}'></c:out>
+	              </span>
 				</td>
               </tr>
             </table>
