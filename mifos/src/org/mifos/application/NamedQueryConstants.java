@@ -318,7 +318,7 @@ public interface NamedQueryConstants {
 	public String GET_ACTIVE_CHILDREN_FORPARENT="Customer.getActiveChildrenForParent";
 	public String GET_CHILDREN="Customer.getChildren";
 	public String GET_ALL_CHILDREN="Customer.getAllChildren";
-	
+	public String GET_CHILDREN_FOR_PARENT="Customer.getChildrenForParent";
 	/*Office Queries*/
 	public String OFFICE_GET_SEARCHID="office.getOfficeSearchId";
 	public String OFFICE_GET_HEADOFFICE="office.getHeadOffice";

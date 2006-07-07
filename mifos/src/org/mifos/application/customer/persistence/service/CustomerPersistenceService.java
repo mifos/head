@@ -38,7 +38,13 @@ public class CustomerPersistenceService extends PersistenceService {
 			ApplicationException {
 		return serviceImpl.getChildrenForParent(customerId, searchId, officeId);
 	}
-
+	
+	public List<Integer> getChildrenForParent(
+			String searchId, Short officeId) throws SystemException,
+			ApplicationException {
+		return serviceImpl.getChildrenForParent(searchId, officeId);
+	}
+	
 	public List<PrdOfferingBO> getLoanProductsAsOfMeetingDate(Date meetingDate,
 			String searchId, Short personnelId) throws SystemException,
 			ApplicationException {

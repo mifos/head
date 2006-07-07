@@ -64,6 +64,7 @@ import org.mifos.application.customer.util.valueobjects.CustomerPosition;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.office.util.valueobjects.Office;
 import org.mifos.application.personnel.util.valueobjects.Personnel;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.audit.util.helpers.LogInfo;
 import org.mifos.framework.components.audit.util.helpers.LogValueMap;
@@ -153,6 +154,7 @@ public class EditGrpMembershipDAO extends DAO {
 		if(parent.getCustomerMeeting() !=null){
 			logger.debug("CLIENT PARENT MEETING: "+ parent.getCustomerMeeting().getMeeting());
 			client.getCustomerMeeting().setMeeting(parent.getCustomerMeeting().getMeeting());
+			client.getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
 		}
 		try {
 			  LogValueMap  objectMap = new LogValueMap();

@@ -332,7 +332,8 @@ public class GroupDAO extends DAO {
 		logger.debug("new parent for group is :"+parent.getCustomerId());
 		//update Meeting for group
 		oldCustomer.getCustomerMeeting().setMeeting(parent.getCustomerMeeting().getMeeting());
-				
+		oldCustomer.getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
+		
 		//update searchId
 		oldCustomer.setSearchId(new GroupHelper().getSearchId(parent,oldCustomer.getOffice().getOfficeId()));
 

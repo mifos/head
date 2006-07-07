@@ -342,10 +342,14 @@ public class MeetingDAO extends DAO {
 			session = HibernateUtil.getSessionWithInterceptor(getLogInfo(context));
 			transaction = session.beginTransaction();
 			
+			
 			if (null != meetingId) {
 
 				meetingLogger.info("Updating the meeting with id="+meetingId);
 				meeting = (Meeting) session.get(Meeting.class,meetingId);
+				
+				Customer customer =(Customer) context.getBusinessResults("Customer");
+				updateMeetingForCustomer(customer,meeting,session);
 
 				if (null != meeting) {
 
@@ -564,4 +568,11 @@ public class MeetingDAO extends DAO {
 		  
 		return logInfo;
 	}
+	
+	
+	private void updateMeetingForCustomer(Customer customer, Meeting meeting, Session session){
+		customer.getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
+		session.update(customer);
+	}
+	
 }

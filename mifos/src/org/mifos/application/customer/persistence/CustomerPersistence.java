@@ -52,6 +52,18 @@ public class CustomerPersistence extends Persistence {
 		return queryResult;
 
 	}
+	
+	public List<Integer> getChildrenForParent(String searchId, Short officeId) throws SystemException,
+			ApplicationException {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("SEARCH_STRING", searchId + ".%");
+		queryParameters.put("OFFICE_ID", officeId);
+		List<Integer> queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_CHILDREN_FOR_PARENT,
+				queryParameters);
+		return queryResult;
+
+	}
 
 	public List<CustomerView> getActiveParentList(Short personnelId,
 			Short customerLevelId, Short officeId) {
