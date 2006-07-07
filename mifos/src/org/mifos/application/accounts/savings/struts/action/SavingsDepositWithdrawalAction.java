@@ -41,6 +41,7 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 
 public class SavingsDepositWithdrawalAction extends BaseAction{
@@ -61,6 +62,8 @@ public class SavingsDepositWithdrawalAction extends BaseAction{
 		SavingsBO savings =(SavingsBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request.getSession());
 		logger.debug("In SavingsDepositWithdrawalAction::load(), accountId: "+ savings.getAccountId());
 		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
+		SavingsDepositWithdrawalActionForm actionForm = (SavingsDepositWithdrawalActionForm)form;
+		clearActionForm(actionForm);
 		
 		List<AccountActionEntity> trxnTypes = new ArrayList<AccountActionEntity>();
 		trxnTypes.add(getAccountsService().getAccountAction(AccountConstants.ACTION_SAVINGS_DEPOSIT, uc.getLocaleId()));
@@ -75,7 +78,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction{
 			SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST,null,request.getSession());
 		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,new ArrayList<PaymentTypeEntity>(),request.getSession());
 		
-		SavingsDepositWithdrawalActionForm actionForm = (SavingsDepositWithdrawalActionForm)form;
+		
 		actionForm.setTrxnDate(DateHelper.getCurrentDate(uc.getPereferedLocale()));
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
@@ -85,15 +88,16 @@ public class SavingsDepositWithdrawalAction extends BaseAction{
 		logger.debug("In SavingsDepositWithdrawalAction::reload(), accountId: "+ savings.getAccountId());
 		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
 		SavingsDepositWithdrawalActionForm actionForm = (SavingsDepositWithdrawalActionForm)form;
-
 		if(actionForm.getTrxnTypeId()!=null && actionForm.getTrxnTypeId()!=""){
 			Short trxnTypeId = Short.valueOf(actionForm.getTrxnTypeId());
 			if(trxnTypeId.equals(AccountConstants.ACTION_SAVINGS_DEPOSIT)){
 				SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,	getMasterDataService().getSupportedPaymentModes(uc.getLocaleId(),TrxnTypes.savings_deposit.getValue()),request.getSession());
 				actionForm.setAmount(savings.getTotalPaymentDue());
 			}
-			else
+			else{
+				actionForm.setAmount(new Money());
 				SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,	getMasterDataService().getSupportedPaymentModes(uc.getLocaleId(),TrxnTypes.savings_withdrawal.getValue()),request.getSession());
+			}
 		}
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
@@ -118,7 +122,6 @@ public class SavingsDepositWithdrawalAction extends BaseAction{
 		SavingsDepositWithdrawalActionForm actionForm = (SavingsDepositWithdrawalActionForm)form;
 		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
 		
-		System.out.println("---actionForm.getAmount(): "+ actionForm.getAmount());
 		Date trxnDate = getDateFromString(actionForm.getTrxnDate(),uc.getPereferedLocale());
 		
 		if(!savings.isTrxnDateValid(trxnDate)) throw new AccountException(AccountConstants.ERROR_INVALID_TRXN);
@@ -130,6 +133,14 @@ public class SavingsDepositWithdrawalAction extends BaseAction{
 				savings.withdraw(createPaymentData(actionForm,uc));
 		
 		return mapping.findForward(ActionForwards.account_details_page.toString());
+	}
+	
+	private void clearActionForm(SavingsDepositWithdrawalActionForm actionForm){
+		actionForm.setReceiptDate(null);
+		actionForm.setReceiptId(null);
+		actionForm.setPaymentTypeId(null);
+		actionForm.setTrxnTypeId(null);
+		actionForm.setAmount(new Money());
 	}
 	
 	private PaymentData createPaymentData(SavingsDepositWithdrawalActionForm actionForm, UserContext uc){
