@@ -209,26 +209,36 @@ public class CustomerBusinessService extends BusinessService{
 		return children;
 	}
 	
-	public CenterPerformanceHistory getCenterPerformanceHistory(String searchId, Short officeId) throws PersistenceException, ServiceException {
-		List<CustomerBO> centerChildren = getCustomer(searchId,officeId,CustomerConstants.CENTER_LEVEL_ID);
-		List<CustomerBO> groups =getChildList(centerChildren , CustomerConstants.GROUP_LEVEL_ID );
-		List<CustomerBO> clients =getChildList(centerChildren , CenterConstants.CLIENT_LEVEL_ID );
-		List<AccountBO> loanList = getAccountsForCustomer(searchId,officeId,Short.valueOf(AccountTypes.LOANACCOUNT));
-		List<AccountBO> savingsList = getAccountsForCustomer(searchId,officeId,Short.valueOf(AccountTypes.SAVINGSACCOUNT));
+	public CenterPerformanceHistory getCenterPerformanceHistory(
+			String searchId, Short officeId) throws PersistenceException,
+			ServiceException {
+		List<CustomerBO> centerChildren = getCustomer(searchId, officeId,
+				CustomerConstants.CENTER_LEVEL_ID);
+		List<CustomerBO> groups = getChildList(centerChildren,
+				CustomerConstants.GROUP_LEVEL_ID);
+		List<CustomerBO> clients = getChildList(centerChildren,
+				CenterConstants.CLIENT_LEVEL_ID);
+		List<AccountBO> loanList = getAccountsForCustomer(searchId, officeId,
+				Short.valueOf(AccountTypes.LOANACCOUNT));
+		List<AccountBO> savingsList = getAccountsForCustomer(searchId,
+				officeId, Short.valueOf(AccountTypes.SAVINGSACCOUNT));
 		int clientSize = 0;
 		int groupSize = 0;
-		if(clients !=null)
+		if (clients != null)
 			clientSize = clients.size();
-		if(groups !=null)
+		if (groups != null)
 			groupSize = groups.size();
-		Money portfolioAtRisk = null;
+		Money portfolioAtRisk = new Money();
 		Money totalOutstandingLoan = getTotalOutstandingLoan(loanList);
-		if(totalOutstandingLoan.getAmountDoubleValue() != 0)
-			portfolioAtRisk = getPortfolioAtRisk(loanList).divide(totalOutstandingLoan);
+		if (totalOutstandingLoan.getAmountDoubleValue() != 0)
+			portfolioAtRisk = getPortfolioAtRisk(loanList).divide(
+					totalOutstandingLoan);
 		Money totalSavings = getTotalSavings(savingsList);
-		
+
 		CenterPerformanceHistory centerPerformanceHistory = new CenterPerformanceHistory();
-		centerPerformanceHistory.setPerformanceHistoryDetails(groupSize,clientSize,totalOutstandingLoan,totalSavings,portfolioAtRisk);
+		centerPerformanceHistory
+				.setPerformanceHistoryDetails(groupSize, clientSize,
+						totalOutstandingLoan, totalSavings, portfolioAtRisk);
 		return centerPerformanceHistory;
 	}
 	

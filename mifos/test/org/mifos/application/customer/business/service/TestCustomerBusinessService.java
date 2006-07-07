@@ -360,6 +360,8 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		totalLoan = centerPerformanceHistory.getTotalOutstandingPortfolio();
 		totalSavings = centerPerformanceHistory.getTotalSavings();
 		totalPortfolioAtRisk = centerPerformanceHistory.getPortfolioAtRisk();
+		assertEquals(1,centerPerformanceHistory.getNumberOfGroups().intValue());
+		assertEquals(2,centerPerformanceHistory.getNumberOfClients().intValue());
 		assertEquals(new Money("2400.0"),totalLoan);
 		assertEquals(new Money("400.0"),totalSavings);
 		assertEquals(new Money("0.1"),totalPortfolioAtRisk);

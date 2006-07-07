@@ -301,7 +301,8 @@ public class CustomerPersistence extends Persistence {
 	public List<AccountBO> retrieveAccountsUnderCustomer(String searchId,Short officeId, Short accountTypeId) throws PersistenceException {
 		try{
 			Map<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("SEARCH_STRING", searchId + "%");
+			queryParameters.put("SEARCH_STRING1", searchId);
+			queryParameters.put("SEARCH_STRING2", searchId + ".%");
 			queryParameters.put("OFFICE_ID", officeId);
 			queryParameters.put("ACCOUNT_TYPE_ID", accountTypeId);
 			return (List<AccountBO>) executeNamedQuery(NamedQueryConstants.RETRIEVE_ACCCOUNTS_FOR_CUSTOMER,queryParameters);

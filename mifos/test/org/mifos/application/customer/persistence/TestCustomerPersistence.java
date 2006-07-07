@@ -433,8 +433,12 @@ public class TestCustomerPersistence extends MifosTestCase {
 		AccountBO account3 = getLoanAccount(client3, meeting);
 		AccountBO account4 = getLoanAccount(group1, meeting);
 		
-		List<AccountBO> loans = customerPersistence.retrieveAccountsUnderCustomer("1.4",Short.valueOf("3"),Short.valueOf("1"));
-		assertEquals(3,loans.size());
+		List<AccountBO> loansForCenter = customerPersistence.retrieveAccountsUnderCustomer("1.4",Short.valueOf("3"),Short.valueOf("1"));
+		assertEquals(3,loansForCenter.size());
+		List<AccountBO> loansForGroup = customerPersistence.retrieveAccountsUnderCustomer("1.4.1",Short.valueOf("3"),Short.valueOf("1"));
+		assertEquals(3,loansForGroup.size());
+		List<AccountBO> loansForClient = customerPersistence.retrieveAccountsUnderCustomer("1.4.1.1",Short.valueOf("3"),Short.valueOf("1"));
+		assertEquals(1,loansForClient.size());
 
 		TestObjectFactory.cleanUp(account4);
 		TestObjectFactory.cleanUp(account3);
@@ -474,8 +478,12 @@ public class TestCustomerPersistence extends MifosTestCase {
 		AccountBO account5 = getSavingsAccount(group, meeting);
 		AccountBO account6 = getSavingsAccount(center1, meeting);
 		
-		List<AccountBO> savings = customerPersistence.retrieveAccountsUnderCustomer("1.4",Short.valueOf("3"),Short.valueOf("2"));
-		assertEquals(4,savings.size());
+		List<AccountBO> savingsForCenter = customerPersistence.retrieveAccountsUnderCustomer("1.4",Short.valueOf("3"),Short.valueOf("2"));
+		assertEquals(4,savingsForCenter.size());
+		List<AccountBO> savingsForGroup = customerPersistence.retrieveAccountsUnderCustomer("1.4.1",Short.valueOf("3"),Short.valueOf("2"));
+		assertEquals(3,savingsForGroup.size());
+		List<AccountBO> savingsForClient = customerPersistence.retrieveAccountsUnderCustomer("1.4.1.1",Short.valueOf("3"),Short.valueOf("2"));
+		assertEquals(1,savingsForClient.size());
 		
 		
 		TestObjectFactory.cleanUp(account3);

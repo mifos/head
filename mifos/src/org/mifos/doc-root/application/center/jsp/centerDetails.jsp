@@ -470,30 +470,31 @@
 	              <tr>
 	                <td class="paddingL10"><span class="fontnormal8pt">
 	                <mifos:mifoslabel name="Group.hashof" bundle="GroupUIResources"/>
-	                <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/><mifos:mifoslabel name="Center.s" bundle="CenterUIResources"/>
-	                <mifos:mifoslabel name="label.colon" bundle="CustomerUIResources"/>
+	                <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/><mifos:mifoslabel name="Center.s" bundle="CenterUIResources" isColonRequired="yes"/>
 	                 <c:out value="${sessionScope.performanceHistory.numberOfClients}"/></span></td>
 	              </tr>
 	              <tr>
 	                <td class="paddingL10"><span class="fontnormal8pt">
 	                <mifos:mifoslabel name="Group.hashof" bundle="GroupUIResources"/>
-	                <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/><mifos:mifoslabel name="Center.s" bundle="CenterUIResources"/>
-	                <mifos:mifoslabel name="label.colon" bundle="CustomerUIResources"/>
+	                <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/><mifos:mifoslabel name="Center.s" bundle="CenterUIResources" isColonRequired="yes"/>
 	                 <c:out value="${sessionScope.performanceHistory.numberOfGroups}"/></span></td>
 	              </tr>
 	              <tr>
 	                <td class="paddingL10"><span class="fontnormal8pt">
-	                <mifos:mifoslabel name="Center.TotalLoanPortfolio" bundle="CenterUIResources"/>
+	                <mifos:mifoslabel name="Center.Total" bundle="CenterUIResources"/>
+	                <mifos:mifoslabel name="${ConfigurationConstants.LOAN}"/>
+	                <mifos:mifoslabel name="Center.portfolio" bundle="CenterUIResources"  isColonRequired="yes"/>
 	                 <c:out value="${sessionScope.performanceHistory.totalOutstandingPortfolio}"/></span></td>
 	              </tr>
 	              <tr>
 	                <td class="paddingL10"><span class="fontnormal8pt">
-	                <mifos:mifoslabel name="Center.PortfolioAtRisk" bundle="CenterUIResources"/>
+	                <mifos:mifoslabel name="Center.PortfolioAtRisk" bundle="CenterUIResources" isColonRequired="yes"/>
 	                 <c:out value="${sessionScope.performanceHistory.portfolioAtRisk}"/></span></td>
 	              </tr>
 	              <tr>
 	                <td class="paddingL10"><span class="fontnormal8pt">
-	                <mifos:mifoslabel name="Center.TotalSavings" bundle="CenterUIResources"/>
+	                <mifos:mifoslabel name="Center.Total" bundle="CenterUIResources"/>
+	                <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" isColonRequired="yes"/>
 	                 <c:out value="${sessionScope.performanceHistory.totalSavings}"/></span></td>
 	              </tr>
 	              
