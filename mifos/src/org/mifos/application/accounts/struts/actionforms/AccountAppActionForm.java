@@ -33,15 +33,6 @@ public class AccountAppActionForm extends ValidatorActionForm{
 	private String searchInput;
 	private String prdOfferingName;
 	private String headingInput;
-	private String accountType;
-	
-	public String getAccountType() {
-		return accountType;
-	}
-
-	public void setAccountType(String accountType) {
-		this.accountType = accountType;
-	}
 
 	public String getHeadingInput() {
 		return headingInput;
