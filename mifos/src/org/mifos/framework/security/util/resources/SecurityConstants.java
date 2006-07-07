@@ -380,4 +380,6 @@ public interface SecurityConstants {
 	public final short SAVINGS_CANWAIVE_DUEAMOUNT = 187;
 
 	public final short SAVINGS_CANWAIVE_OVERDUEAMOUNT = 188;
+	
+	public final short LOAN_CAN_DISBURSE_LOAN = 189;
 }

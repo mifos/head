@@ -1482,21 +1482,17 @@
 
 		<!-- Loan Disbursment-->
 
-		<action path="/loanDisbursmentAction"
-			type="org.mifos.application.accounts.loan.struts.action.LoanDisbursmentAction"
-			parameter="method" scope="session" name="loanDisbursmentActionForm"
-			validate="true" input="/loanDisbursmentAction.do?method=validate">
-			<forward name="load_success"
-				path="/pages/application/loan/jsp/DisburseLoan.jsp" />
-			<forward name="preview_success"
-				path="/pages/application/loan/jsp/Review_loanDisbursment.jsp" />
-			<forward name="previous_success"
-				path="/pages/application/loan/jsp/DisburseLoan.jsp" />
-			<forward name="update_success"
-				path="/loanAction.do?method=get" />
+		<!-- Loan Disbursment-->
+		<action path="/loanDisbursmentAction" type="org.mifos.application.accounts.loan.struts.action.LoanDisbursmentAction" parameter="method" scope="session" name="loanDisbursmentActionForm" validate="true"
+			input="/loanDisbursmentAction.do?method=validate">
+			<forward name="load_success" path="/pages/application/loan/jsp/DisburseLoan.jsp" />
+			<forward name="preview_success" path="/pages/application/loan/jsp/Review_loanDisbursment.jsp" />
+			<forward name="preview_failure" path="/pages/application/loan/jsp/DisburseLoan.jsp" />
+			<forward name="previous_success" path="/pages/application/loan/jsp/DisburseLoan.jsp" />
+			<forward name="update_success" path="/loanAction.do?method=get" />
+			<forward name="update_failure" path="/pages/application/loan/jsp/Review_loanDisbursment.jsp" />
 		</action>
-
-		
+	
 
 		
 		<!-- Repay Loan-->

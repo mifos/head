@@ -501,8 +501,9 @@
 									</html-el:link><br>
 									</span>
 								</c:when>
-							</c:choose> <%--c:choose>
-								<c:when test="${requestScope.loan.accountStateId=='3' || requestScope.loan.accountStateId=='4'}">
+							</c:choose> 
+							<c:choose>
+								<c:when test="${requestScope.loan.accountStateId==3 || requestScope.loan.accountStateId==4}">
 									<tr>
 										<td class="paddingL10"><span class="fontnormal8pt">
 											<html-el:link href="loanDisbursmentAction.do?method=load&accountId=${requestScope.loan.accountId}&globalAccountNum=${requestScope.loan.globalAccountNum}&prdOfferingName=${requestScope.loan.loanOffering.prdOfferingName}"> 
@@ -512,7 +513,8 @@
 										</td>
 									</tr>
 								</c:when>
-							</c:choose--%> <c:choose>
+							</c:choose> 
+							<c:choose>
 								<c:when
 									test="${ requestScope.loan.accountStateId=='9' || requestScope.loan.accountStateId=='5'}">
 									<span class="fontnormal8pt"> <html-el:link

@@ -587,7 +587,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	public void disburseLoan(String recieptNum, Date transactionDate,
-			Short paymentTypeId, Short personnelId, Date receiptDate)
+			Short paymentTypeId, Short personnelId, Date receiptDate,Short rcvdPaymentTypeId)
 			throws AccountException, SystemException,
 			RepaymentScheduleException, FinancialException {
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity();
@@ -621,12 +621,12 @@ public class LoanBO extends AccountBO {
 		if (null != this.intrestAtDisbursement
 				&& this.intrestAtDisbursement == 1) {
 			accountPaymentEntity = payInterestAtDisbursement(recieptNum,
-					transactionDate, paymentTypeId, personnelId, receiptDate);
+					transactionDate, rcvdPaymentTypeId, personnelId, receiptDate);
 		} else {
 			if (loanPersistance.getFeeAmountAtDisbursement(this.getAccountId(),
 					transactionDate) > 0.0)
 				accountPaymentEntity = insertOnlyFeeAtDisbursement(recieptNum,
-						transactionDate, paymentTypeId, personnelId);
+						transactionDate, rcvdPaymentTypeId, personnelId);
 		}
 
 		if (null == accountPaymentEntity) {
@@ -1403,5 +1403,17 @@ public class LoanBO extends AccountBO {
 						meetingDates.get(count++).getTime()));
 			}
 		}
+	}
+	
+	public Money getAmountTobePaidAtdisburtail(Date disbursalDate){
+		
+		if ( this.intrestAtDisbursement !=null && this.intrestAtDisbursement.intValue()==1){
+			return       getDueAmount( getAccountActionDate(Short.valueOf("1")));
+		}
+		else
+		{
+			return  new Money(loanPersistance.getFeeAmountAtDisbursement(this.getAccountId(),disbursalDate).toString());
+		}
+		
 	}
 }

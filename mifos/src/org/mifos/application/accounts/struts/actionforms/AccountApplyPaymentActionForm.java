@@ -115,7 +115,7 @@ public class AccountApplyPaymentActionForm extends ValidatorActionForm{
 		return errors;
 	}
 	
-	private ActionErrors validateDate(String date ,String fieldName,HttpServletRequest request){
+	protected ActionErrors validateDate(String date ,String fieldName,HttpServletRequest request){
 		ActionErrors errors =null;
 		java.sql.Date sqlDate=null;
 		if( date!=null&&!date.equals("")){
@@ -201,5 +201,11 @@ public class AccountApplyPaymentActionForm extends ValidatorActionForm{
 
 	public void setGlobalAccountNum(String globalAccountNum) {
 		this.globalAccountNum = globalAccountNum;
+	}
+	protected void clear(){
+		this.amount=null;
+		this.paymentTypeId=null;
+		this.receiptDate=null;
+		this.receiptId=null;
 	}
 }

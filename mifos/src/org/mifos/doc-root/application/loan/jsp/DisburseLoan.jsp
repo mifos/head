@@ -44,6 +44,7 @@
 <%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
+<%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
@@ -57,17 +58,17 @@
 					}
 	</script>
 	<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
-		<html-el:form  action="loanDisbursmentAction.do?method=preview&globalAccountNum=${param.globalAccountNum}" 
-				onsubmit="return (validateMyForm(disbursmentDate,disbursmentDateFormat,disbursmentDateYY) && validateMyForm(receiptDate,receiptDateFormat,receiptDateYY))"	focus="disbursmentDate">
+		<html-el:form  action="loanDisbursmentAction.do?method=preview&globalAccountNum=${loanDisbursmentActionForm.globalAccountNum}" 
+				onsubmit="return (validateMyForm(transactionDate,transactionDateFormat,transactionDateYY) && validateMyForm(receiptDate,receiptDateFormat,receiptDateYY))">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">  
 				<tr>
 					<td class="bluetablehead05">
 						<span class="fontnormal8pt">
-							<mifoscustom:getLoanHeader loanHeader='${sessionScope.header_get}'/>
+							<customtags:headerLink />
 						</span>
 						<span class="fontnormal8pt">
-							<html-el:link href="loanAction.do?method=get&globalAccountNum=${param.globalAccountNum}">
-									<c:out value="${param.prdOfferingName}" />
+							<html-el:link href="loanAction.do?method=get&globalAccountNum=${loanDisbursmentActionForm.globalAccountNum}">
+									<c:out value="${loanDisbursmentActionForm.prdOfferingName}" />
 							</html-el:link>
 						</span>
 					</td>
@@ -80,8 +81,8 @@
 						<tr>
 							<td width="70%" class="headingorange">
 								<span class="heading">
-										<c:out value="${param.prdOfferingName}" />&nbsp;#&nbsp;
-										<c:out value="${param.globalAccountNum}" />
+										<c:out value="${loanDisbursmentActionForm.prdOfferingName}" />&nbsp;#&nbsp;
+										<c:out value="${loanDisbursmentActionForm.globalAccountNum}" />
 									&nbsp;-&nbsp;
 								</span> 
 								<mifos:mifoslabel name="loan.repay" /><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
@@ -89,10 +90,7 @@
 						</tr>
 						<tr>
                 			<td class="fontnormal"> 
-                				<span class="mandatorytext">
-                					<font color="#FF0000">*</font>
-                				</span>
-                				<mifos:mifoslabel name="loan.asterisk" />
+                				<mifos:mifoslabel mandatory="Yes" name="loan.asterisk" />
                 			</td>
               			</tr>
 					</table>
@@ -100,7 +98,7 @@
 					<table width="95%" border="0" cellspacing="0" cellpadding="3">
 						
 								<font class="fontnormalRedBold">
-									<html-el:errors bundle="LoanUIResources" /> 
+									<html-el:errors bundle="loanUIResources" /> 
 								</font>
 						<tr>
 							<td colspan="2" align="right" class="fontnormal"><img src="pages/framework/images/trans.gif" width="10" height="2"></td>
@@ -110,7 +108,7 @@
                 				<mifos:mifoslabel name="loan.dateofdisb/payment" mandatory="true"/>:&nbsp;
                 			</td>
                 			<td class="fontnormal">
-                				<date:datetag property="disbursmentDate" name="LoanDisbursment"/>
+                				<date:datetag property="transactionDate" />
                 			</td>
               			</tr> 
               			<tr>
@@ -126,7 +124,7 @@
 			                	<mifos:mifoslabel name="loan.receiptdate" />:&nbsp;
 			                </td>
 			                <td class="fontnormal">
-								<date:datetag property="receiptDate" name="LoanDisbursment"/>
+								<date:datetag property="receiptDate" />
 							</td>
 			            </tr>
 			            <tr>
@@ -139,7 +137,7 @@
 			                	<mifos:mifoslabel name="${ConfigurationConstants.LOAN}"  /><mifos:mifoslabel name="loan.amt"  />:&nbsp;
 							</td>
 			                <td width="71%">
-			                	<mifos:mifosdecimalinput  property="loanAmount" name="LoanDisbursment" />
+			                	<mifos:mifosdecimalinput  property="loanAmount" name="loanDisbursmentActionForm" disabled="true" />
                 			</td>
               			</tr>
               			<tr>
@@ -147,9 +145,9 @@
 	              				<mifos:mifoslabel name="loan.mode_of_payment" mandatory="yes" />:&nbsp;
 	                  		</td>
 	                  		<td>
-	                  		    <c:set var="paymentModeList" scope="request" value="${requestScope.paymentType.lookUpMaster}" />
-								<mifos:select property="disbursmentModeOfPayment" style="width:136px;">
-									<html-el:options collection="paymentModeList" property="id" labelProperty="lookUpValue" />
+	                  		    
+								<mifos:select property="paymentTypeId" style="width:136px;">
+									<html-el:options collection="PaymentType" property="id" labelProperty="name" />
 								</mifos:select>
 							</td>
                   		</tr>
@@ -170,7 +168,7 @@
 		                		<mifos:mifoslabel name="loan.amount" />:&nbsp;
 		                	</td>
 		                	<td width="71%">
-		                		<mifos:mifosdecimalinput property="interestAmount"  name="LoanDisbursment" />
+		                		<mifos:mifosdecimalinput property="amount"  name="loanDisbursmentActionForm" disabled="true"/>
 		                	</td>
 		                </tr>
                   		<tr>
@@ -179,7 +177,7 @@
 	                  		</td>
 	                  		<td>
 								<mifos:select property="paymentModeOfPayment" style="width:136px;">
-									<html-el:options collection="paymentModeList" property="id" labelProperty="lookUpValue" />
+									<html-el:options collection="PaymentType" property="id" labelProperty="name" />
 								</mifos:select>
 							</td>
                   		</tr>
@@ -207,9 +205,9 @@
 				</tr>
 			</table>
 			<br>
-				<html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}"/> 
-				<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}"/> 
-				<html-el:hidden property="accountId" value="${param.accountId}"/>
+				<html-el:hidden property="prdOfferingName" value="${loanDisbursmentActionForm.prdOfferingName}"/> 
+				<html-el:hidden property="globalAccountNum" value="${loanDisbursmentActionForm.globalAccountNum}"/> 
+				<html-el:hidden property="accountId" value="${loanDisbursmentActionForm.accountId}"/>
 				<html-el:hidden property="method" value=""/>
 </html-el:form>
 

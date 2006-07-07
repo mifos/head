@@ -793,6 +793,13 @@ public class ActivityMapper {
 		activityMap.put("/applyPaymentAction-preview",	SecurityConstants.VIEW);
 		activityMap.put("/applyPaymentAction-previous",SecurityConstants.VIEW);
 		activityMap.put("/applyPaymentAction-applyPayment",SecurityConstants.VIEW);
+		
+		
+		//mapping fro loan disbursal 
+		activityMap.put("/loanDisbursmentAction-load",	SecurityConstants.LOAN_CAN_DISBURSE_LOAN);
+		activityMap.put("/loanDisbursmentAction-preview",	SecurityConstants.VIEW);
+		activityMap.put("/loanDisbursmentAction-previous",SecurityConstants.VIEW);
+		activityMap.put("/loanDisbursmentAction-update",SecurityConstants.VIEW);
 	}
 
 	private static ActivityMapper instance = new ActivityMapper();

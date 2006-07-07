@@ -226,7 +226,7 @@ public class TestLoanBO extends MifosTestCase {
 		// disburse loan
 
 		((LoanBO) accountBO).disburseLoan("1234", startDate,
-				Short.valueOf("1"), personnelId, startDate);
+				Short.valueOf("1"), personnelId, startDate, Short.valueOf("1"));
 		Session session = HibernateUtil.getSessionTL();
 		HibernateUtil.startTransaction();
 		session.save(accountBO);
@@ -294,7 +294,7 @@ public class TestLoanBO extends MifosTestCase {
 		// disburse loan
 
 		((LoanBO) accountBO).disburseLoan("1234", startDate,
-				Short.valueOf("1"), personnelId, startDate);
+				Short.valueOf("1"), personnelId, startDate, Short.valueOf("1"));
 		Session session = HibernateUtil.getSessionTL();
 		HibernateUtil.startTransaction();
 		session.save(accountBO);
@@ -330,7 +330,7 @@ public class TestLoanBO extends MifosTestCase {
 				.size();
 		Short personnelId = accountBO.getPersonnel().getPersonnelId();
 		((LoanBO) accountBO).disburseLoan("1234", startDate,
-				Short.valueOf("1"), personnelId, startDate);
+				Short.valueOf("1"), personnelId, startDate, Short.valueOf("1"));
 		Session session = HibernateUtil.getSessionTL();
 		HibernateUtil.startTransaction();
 		session.save(accountBO);
@@ -393,7 +393,7 @@ public class TestLoanBO extends MifosTestCase {
 		Date disbursalDate = new Date(disbDate.getTimeInMillis());
 		try {
 			((LoanBO) accountBO).disburseLoan("1234", disbursalDate, Short
-					.valueOf("1"), personnelId, startDate);
+					.valueOf("1"), personnelId, startDate, Short.valueOf("1"));
 
 			assertEquals(true, false);
 		} catch (RepaymentScheduleException rse) {
@@ -434,7 +434,7 @@ public class TestLoanBO extends MifosTestCase {
 						.get(Calendar.DATE), 0, 0);
 		try {
 			((LoanBO) accountBO).disburseLoan("1234", cal.getTime(), Short
-					.valueOf("1"), personnelId, startDate);
+					.valueOf("1"), personnelId, startDate, Short.valueOf("1"));
 			Session session = HibernateUtil.getSessionTL();
 			HibernateUtil.startTransaction();
 			((LoanBO) accountBO).setLoanMeeting(null);
@@ -725,6 +725,35 @@ public class TestLoanBO extends MifosTestCase {
 
 	}
 
+	
+	public void testWtiteOff() throws Exception {
+		accountBO = getLoanAccount();
+		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.closeSession();
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
+		LoanBO loanBO = (LoanBO) accountBO;
+		UserContext uc = TestObjectFactory.getUserContext();
+		loanBO.setUserContext(uc);
+		loanBO.writeOff("Loan Written Off");
+		HibernateUtil.commitTransaction();
+		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.closeSession();
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
+		LoanBO loan = (LoanBO) accountBO;
+		for(LoanActivityEntity loanActivityEntity : loan.getLoanActivityDetails()) {
+			assertEquals(loanActivityEntity.getComments(),"Loan Written Off");
+			break;
+		}
+		assertEquals(accountBO.getAccountState().getId(), new Short(AccountStates.LOANACC_WRITTENOFF));
+	}
+
+	public void testGetAmountTobePaidAtdisburtail(){
+
+		Date startDate = new Date(System.currentTimeMillis());
+		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 2);
+		assertEquals(new Money("52"),((LoanBO)accountBO).getAmountTobePaidAtdisburtail(startDate));
+
+	}
 	private AccountBO saveAndFetch(AccountBO account) {
 		accountPersistanceService.updateAccount(account);
 		return accountPersistanceService.getAccount(account.getAccountId());
@@ -841,27 +870,6 @@ public class TestLoanBO extends MifosTestCase {
 		TestObjectPersistence testObjectPersistence=new TestObjectPersistence();
 		testObjectPersistence.update(accountBO);
 		return (LoanBO)testObjectPersistence.getObject(LoanBO.class,accountBO.getAccountId());
-	}
-	
-	public void testWtiteOff() throws Exception {
-		accountBO = getLoanAccount();
-		HibernateUtil.getSessionTL().flush();
-		HibernateUtil.closeSession();
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
-		LoanBO loanBO = (LoanBO) accountBO;
-		UserContext uc = TestObjectFactory.getUserContext();
-		loanBO.setUserContext(uc);
-		loanBO.writeOff("Loan Written Off");
-		HibernateUtil.commitTransaction();
-		HibernateUtil.getSessionTL().flush();
-		HibernateUtil.closeSession();
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
-		LoanBO loan = (LoanBO) accountBO;
-		for(LoanActivityEntity loanActivityEntity : loan.getLoanActivityDetails()) {
-			assertEquals(loanActivityEntity.getComments(),"Loan Written Off");
-			break;
-		}
-		assertEquals(accountBO.getAccountState().getId(), new Short(AccountStates.LOANACC_WRITTENOFF));
 	}
 	public void testWaiveFeeChargeDue() throws Exception {
 		accountBO = getLoanAccount();		

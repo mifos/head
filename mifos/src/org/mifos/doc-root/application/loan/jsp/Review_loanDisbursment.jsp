@@ -44,7 +44,7 @@
 <%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
 <%@ taglib uri="/tags/date" prefix="date" %>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
-
+<%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 
@@ -69,11 +69,11 @@
 					<tr>
 						<td class="bluetablehead05">
 							<span class="fontnormal8pt">
-								<mifoscustom:getLoanHeader loanHeader='${sessionScope.header_get}'/>
+								<customtags:headerLink />
 							</span>
 							<span class="fontnormal8pt">
-								<html-el:link href="loanAction.do?method=get&globalAccountNum=${param.globalAccountNum}">
-											<c:out value="${param.prdOfferingName}" />
+								<html-el:link href="loanAction.do?method=get&globalAccountNum=${loanDisbursmentActionForm.globalAccountNum}">
+											<c:out value="${loanDisbursmentActionForm.prdOfferingName}" />
 								</html-el:link>
 							</span>
 						</td>
@@ -91,8 +91,8 @@
 							<tr>
 								<td width="100%" colspan="2" class="headingorange"><span
 									class="heading">
-										<c:out value="${param.prdOfferingName}" />&nbsp;#&nbsp;
-										<c:out value="${param.globalAccountNum}" />
+										<c:out value="${loanDisbursmentActionForm.prdOfferingName}" />&nbsp;#&nbsp;
+										<c:out value="${loanDisbursmentActionForm.globalAccountNum}" />
 									&nbsp;-&nbsp;
 									</span><mifos:mifoslabel
 									name="loan.reviewtransaction"  /></td>
@@ -117,7 +117,7 @@
 								<td align="right" class="fontnormalbold"><mifos:mifoslabel
 									name="loan.dateofdisb/payment"  />:&nbsp;</td>
 								<td class="fontnormal">
-									<c:out value="${requestScope.LoanDisbursment.disbursmentDate}" />
+									<c:out value="${loanDisbursmentActionForm.transactionDate}" />
 								</td>
 							</tr>
 							<tr>
@@ -125,7 +125,7 @@
 									<mifos:mifoslabel name="loan.receiptId"  />:&nbsp;
 								</td>
 								<td class="fontnormal">
-									<c:out value="${requestScope.LoanDisbursment.receiptId}" />
+									<c:out value="${loanDisbursmentActionForm.receiptId}" />
 								</td>
 							</tr>
 							<tr>
@@ -133,7 +133,7 @@
 									<mifos:mifoslabel name="loan.receiptdate"  />:&nbsp;
 								</td>
 								<td class="fontnormal">
-									<c:out value="${requestScope.LoanDisbursment.receiptDate}" />
+									<c:out value="${loanDisbursmentActionForm.receiptDate}" />
 								</td>
 				            </tr>
 				            <tr>
@@ -151,16 +151,16 @@
 				                	<mifos:mifoslabel name="${ConfigurationConstants.LOAN}"  /><mifos:mifoslabel name="loan.amt"  />:&nbsp;
 								</td>
 				                <td width="72%" class="fontnormal">
-				                	<c:out value="${requestScope.LoanDisbursment.loanAmount}" />
+				                	<c:out value="${loanDisbursmentActionForm.loanAmount}" />
 	                			</td>
 	              			</tr>
 	              			<tr>
 								<td align="right" class="fontnormalbold"><mifos:mifoslabel
 									name="loan.mode_of_payment"  />:&nbsp;</td>
 								<td class="fontnormal">
-									<c:forEach var="code" items="${requestScope.paymentType.lookUpMaster}">
+									<c:forEach var="code" items="${sessionScope.PaymentType}">
 										<c:if test="${code.id == LoanDisbursment.disbursmentModeOfPayment}">
-											<c:out value="${code.lookUpValue}"></c:out>
+											<c:out value="${code.name}"></c:out>
 										</c:if>
 									</c:forEach>
 								</td>
@@ -182,7 +182,7 @@
 									<mifos:mifoslabel name="loan.amount"  />:&nbsp;
 								</td>
 								<td width="72%" class="fontnormal">
-									<c:out value="${requestScope.LoanDisbursment.interestAmount}" />
+									<c:out value="${loanDisbursmentActionForm.amount}" />
 								</td>
 							</tr>
 							<tr>
@@ -190,12 +190,11 @@
 									name="loan.mode_of_payment"  />:&nbsp;</td>
 								<td class="fontnormal">
 									
-									<c:forEach var="code" items="${requestScope.paymentType.lookUpMaster}">
-										<c:if test="${code.id == LoanDisbursment.paymentModeOfPayment}">
-											<c:out value="${code.lookUpValue}"></c:out>
+									<c:forEach var="code" items="${sessionScope.PaymentType}">
+										<c:if test="${code.id == LoanDisbursment.disbursmentModeOfPayment}">
+											<c:out value="${code.name}"></c:out>
 										</c:if>
 									</c:forEach>
-									
 									
 									
 								</td>
@@ -239,9 +238,9 @@
 					</tr>
 				</table>
 				<br>
-		<html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}"/> 
-		<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}"/> 
-		<html-el:hidden property="accountId" value="${param.accountId}"/>
+		<html-el:hidden property="prdOfferingName" value="${loanDisbursmentActionForm.prdOfferingName}"/> 
+		<html-el:hidden property="globalAccountNum" value="${loanDisbursmentActionForm.globalAccountNum}"/> 
+		<html-el:hidden property="accountId" value="${loanDisbursmentActionForm.accountId}"/>
 		<html-el:hidden property="method" value=""/>
 		
 </html-el:form>
