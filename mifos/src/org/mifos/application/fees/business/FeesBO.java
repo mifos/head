@@ -44,7 +44,7 @@ import java.util.Set;
 import org.hibernate.HibernateException;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.fees.exceptions.FeeException;
-import org.mifos.application.fees.persistence.service.FeePersistenceService;
+import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeLevel;
 import org.mifos.application.fees.util.helpers.FeeStatus;
@@ -52,12 +52,10 @@ import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.service.OfficePersistenceService;
 import org.mifos.framework.business.BusinessObject;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 
 public class FeesBO extends BusinessObject {
 
@@ -159,12 +157,12 @@ public class FeesBO extends BusinessObject {
 		this.rateFlatFlag = rateFlatFlag;
 	}
 
-	public boolean isRateFlat() {
+	public boolean isRateFee() {
 		return this.rateFlatFlag > RateAmountFlag.AMOUNT.getValue();
 	}
 
-	public void setRateFlat(boolean rateFlatFlag) {
-		this.rateFlatFlag = (rateFlatFlag ? RateAmountFlag.RATE.getValue()
+	public void setRateFee(boolean rateFee) {
+		this.rateFlatFlag = (rateFee ? RateAmountFlag.RATE.getValue()
 				: RateAmountFlag.AMOUNT.getValue());
 	}
 
@@ -262,12 +260,6 @@ public class FeesBO extends BusinessObject {
 		return level;
 	}
 
-	private FeePersistenceService getFeePersistenceService()
-			throws ServiceException {
-		return (FeePersistenceService) ServiceFactory.getInstance()
-				.getPersistenceService(PersistenceServiceName.Fees);
-	}
-
 	private void setRateOrAmount() {
 		if (rate != null)
 			setRateOrAmount(rate);
@@ -284,9 +276,9 @@ public class FeesBO extends BusinessObject {
 		setOffice(new OfficePersistenceService().getHeadOffice());
 		buildFeeLevels(adminCheck);
 		setRateOrAmount();
-		setRateFlat(rate != null);
+		setRateFee(rate != null);
 		try {
-			getFeePersistenceService().save(this);
+			new FeePersistence().createOrUpdate(this);
 		} catch (HibernateException he) {
 			throw new FeeException("errors.feecreate", he);
 		}
@@ -296,7 +288,7 @@ public class FeesBO extends BusinessObject {
 		setUpdateDetails();
 		setRateOrAmount();
 		try {
-			getFeePersistenceService().save(this);
+			new FeePersistence().createOrUpdate(this);
 		} catch (HibernateException he) {
 			throw new FeeException("errors.feecreate", he);
 		}

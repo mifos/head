@@ -190,7 +190,7 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		assertEquals(Short.valueOf(FeeCategory.ALLCUSTOMERS.getValue()), fees
 				.getCategoryType().getCategoryId());
 		assertEquals("Customer One time", fees.getFeeName());
-		assertFalse(fees.isRateFlat());
+		assertFalse(fees.isRateFee());
 	}
 
 	public void testSuccessfulCreateOneTimeFee() {
@@ -366,7 +366,7 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		assertEquals(Short.valueOf(FeeCategory.LOAN.getValue()), fee
 				.getCategoryType().getCategoryId());
 		assertEquals(23.0, fee.getRate());
-		assertTrue(fee.isRateFlat());
+		assertTrue(fee.isRateFee());
 		assertEquals(fee.getFeeFormula().getFeeFormulaId(), FORMULA_ID);
 		assertTrue(fee.isPeriodic());
 		assertTrue(fee.isActive());

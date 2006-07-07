@@ -94,7 +94,6 @@ import org.mifos.application.fees.business.FeeFrequencyTypeEntity;
 import org.mifos.application.fees.business.FeePaymentEntity;
 import org.mifos.application.fees.business.FeesBO;
 import org.mifos.application.fees.util.helpers.FeeStatus;
-import org.mifos.application.fees.util.helpers.FeesConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.master.util.valueobjects.InterestCalcRule;
@@ -1002,7 +1001,7 @@ public class TestObjectFactory {
 				.toString(feeCategory)));
 		fees.setCategoryType(categoryTypeEntity);
 
-		fees.setRateFlat(false);
+		fees.setRateFee(false);
 		fees.setAmount(feeAmnt.toString());
 		GLCodeEntity glCodeFee = (GLCodeEntity) HibernateUtil.getSessionTL()
 				.get(GLCodeEntity.class, Short.valueOf("24"));
@@ -1052,7 +1051,7 @@ public class TestObjectFactory {
 				.toString(feeCategory)));
 		fees.setCategoryType(categoryTypeEntity);
 
-		fees.setRateFlat(false);
+		fees.setRateFee(false);
 		fees.setAmount(feeAmnt.toString());
 		fees.getFeeFrequency().setFeeMeetingFrequency(null);
 		GLCodeEntity glCodeEntity = (GLCodeEntity) HibernateUtil.getSessionTL()

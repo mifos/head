@@ -193,7 +193,7 @@
 												<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.feecalculation" /> </span>
 												<br>
 												<c:choose>
-													<c:when test="${sessionScope.BusinessKey.categoryType.categoryId==FeeCategory.LOAN.value && sessionScope.BusinessKey.rateFlat==true}">
+													<c:when test="${sessionScope.BusinessKey.categoryType.categoryId==FeeCategory.LOAN.value && sessionScope.BusinessKey.rateFee==true}">
 														<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.amountcalculatedas" /> </span>
 														<c:out value="${sessionScope.BusinessKey.rate}" />
 													</c:when>
@@ -202,7 +202,7 @@
 														<c:out value="${sessionScope.BusinessKey.feeAmount}" />
 													</c:otherwise>
 												</c:choose>
-												<c:if test="${sessionScope.BusinessKey.rateFlat==true}">
+												<c:if test="${sessionScope.BusinessKey.rateFee==true}">
 													<mifos:mifoslabel name="Fees.ofa" />
 													<c:forEach var="code" items="${sessionScope.FormulaList}">
 														<c:if test="${code.id == sessionScope.BusinessKey.feeFormula.feeFormulaId}">

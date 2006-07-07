@@ -51,9 +51,9 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestFeesBO extends MifosTestCase {
 
-	private final static Short FORMULA_ID =  1;
+	private final static Short FORMULA_ID = 1;
 
-	private final static Short GLCODE_ID =  7;
+	private final static Short GLCODE_ID = 7;
 
 	public void testCreateEmptyFee() throws NumberFormatException, Exception {
 		FeesBO fee = new FeesBO(TestObjectFactory.getUserContext());
@@ -192,7 +192,7 @@ public class TestFeesBO extends MifosTestCase {
 		assertEquals(Short.valueOf(FeeCategory.LOAN.getValue()), fee
 				.getCategoryType().getCategoryId());
 		assertEquals(20.0, fee.getRate());
-		assertTrue(fee.isRateFlat());
+		assertTrue(fee.isRateFee());
 		assertEquals(FORMULA_ID, fee.getFeeFormula().getFeeFormulaId());
 		assertTrue(fee.isPeriodic());
 		assertFalse(fee.isAdminFee());
@@ -255,8 +255,8 @@ public class TestFeesBO extends MifosTestCase {
 
 	private FeesBO buildPeriodicFees(String feeName, Double feeRateOrAmnt,
 			int frequency, int recurAfter, FeeCategory feeCategory,
-			boolean rateFlag) throws Exception {
-		FeesBO fee = buildFees(feeName, feeCategory, rateFlag, feeRateOrAmnt);
+			boolean isRateFee) throws Exception {
+		FeesBO fee = buildFees(feeName, feeCategory, isRateFee, feeRateOrAmnt);
 		fee.getFeeFrequency().getFeeFrequencyType().setFeeFrequencyTypeId(
 				FeeFrequencyType.PERIODIC.getValue());
 		MeetingBO feeMeetingFrequency = TestObjectFactory.getMeetingHelper(
@@ -266,9 +266,9 @@ public class TestFeesBO extends MifosTestCase {
 	}
 
 	private FeesBO buildOneTimeFees(String feeName, Double feeRateOrAmnt,
-			FeePayment timeOfCharge, FeeCategory feeCategory, boolean rateFlag)
+			FeePayment timeOfCharge, FeeCategory feeCategory, boolean isRateFee)
 			throws Exception {
-		FeesBO fee = buildFees(feeName, feeCategory, rateFlag, feeRateOrAmnt);
+		FeesBO fee = buildFees(feeName, feeCategory, isRateFee, feeRateOrAmnt);
 		fee.getFeeFrequency().getFeeFrequencyType().setFeeFrequencyTypeId(
 				FeeFrequencyType.ONETIME.getValue());
 		fee.getFeeFrequency().getFeePayment().setFeePaymentId(
@@ -277,7 +277,7 @@ public class TestFeesBO extends MifosTestCase {
 	}
 
 	private FeesBO buildFees(String feeName, FeeCategory feeCategory,
-			boolean rateFlag, Double feeRateOrAmnt) throws Exception {
+			boolean isRateFee, Double feeRateOrAmnt) throws Exception {
 		FeesBO fee = new FeesBO(TestObjectFactory.getUserContext());
 		fee.setFeeName(feeName);
 		fee.setFeeFrequency(new FeeFrequencyEntity());
@@ -285,8 +285,8 @@ public class TestFeesBO extends MifosTestCase {
 		if (feeCategory != null)
 			fee.getCategoryType().setCategoryId(
 					Short.valueOf(feeCategory.getValue()));
-		fee.setRateFlat(rateFlag);
-		if (rateFlag) {
+		fee.setRateFee(isRateFee);
+		if (isRateFee) {
 			fee.setRate(feeRateOrAmnt);
 			fee.setAmount("");
 			fee.setFeeFormula(new FeeFormulaEntity());

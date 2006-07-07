@@ -110,7 +110,7 @@ public class FeeAction extends BaseAction {
 		FeesBO fees = (FeesBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
 		FeeActionForm feeActionForm = (FeeActionForm) form;
-		fees.setRateFlat(feeActionForm.getRate() != null && !"".equals(feeActionForm.getRate()));
+		fees.setRateFee(feeActionForm.getRate() != null && !"".equals(feeActionForm.getRate()));
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 
