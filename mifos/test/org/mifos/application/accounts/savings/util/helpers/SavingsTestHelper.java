@@ -90,14 +90,14 @@ public class SavingsTestHelper {
 	}
 	
 	public SavingsOfferingBO createSavingsOffering(){
-		return createSavingsOffering("SavingPrd1", Short.valueOf("1"));
+		return createSavingsOffering("SavingPrd1", Short.valueOf("1"),Short.valueOf("2"));
 	}
 	
-	public SavingsOfferingBO createSavingsOffering(String offeringName, Short interestCalcType){
+	public SavingsOfferingBO createSavingsOffering(String offeringName, Short interestCalcType, Short savingsTypeId){
 		MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		return TestObjectFactory.createSavingsOffering(offeringName,Short.valueOf("2"),new Date(System.currentTimeMillis()),
-				Short.valueOf("2"),300.0,Short.valueOf("1"),24.0,200.0,200.0,Short.valueOf("2"),interestCalcType,meetingIntCalc,meetingIntPost);
+				Short.valueOf("2"),300.0,Short.valueOf("1"),24.0,200.0,200.0,savingsTypeId, interestCalcType,meetingIntCalc,meetingIntPost);
 	}
 	
 	public SavingsBO createSavingsAccount(String globalAccountNum,SavingsOfferingBO savingsOffering, CustomerBO customer, short accountStateId, UserContext userContext){

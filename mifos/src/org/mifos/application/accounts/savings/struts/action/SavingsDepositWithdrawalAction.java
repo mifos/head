@@ -36,6 +36,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
@@ -92,7 +93,8 @@ public class SavingsDepositWithdrawalAction extends BaseAction{
 			Short trxnTypeId = Short.valueOf(actionForm.getTrxnTypeId());
 			if(trxnTypeId.equals(AccountConstants.ACTION_SAVINGS_DEPOSIT)){
 				SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,	getMasterDataService().getSupportedPaymentModes(uc.getLocaleId(),TrxnTypes.savings_deposit.getValue()),request.getSession());
-				actionForm.setAmount(savings.getTotalPaymentDue());
+				if(actionForm.getCustomerId()!=null && actionForm.getCustomerId()!="")
+					actionForm.setAmount(savings.getTotalPaymentDue(Integer.valueOf(actionForm.getCustomerId())));
 			}
 			else{
 				actionForm.setAmount(new Money());
@@ -132,6 +134,8 @@ public class SavingsDepositWithdrawalAction extends BaseAction{
 		}else if(trxnTypeId.equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL))
 				savings.withdraw(createPaymentData(actionForm,uc));
 		
+		HibernateUtil.commitTransaction();
+		HibernateUtil.getSessionTL().evict(savings);
 		return mapping.findForward(ActionForwards.account_details_page.toString());
 	}
 	
@@ -140,6 +144,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction{
 		actionForm.setReceiptId(null);
 		actionForm.setPaymentTypeId(null);
 		actionForm.setTrxnTypeId(null);
+		actionForm.setCustomerId(null);
 		actionForm.setAmount(new Money());
 	}
 	
@@ -155,7 +160,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction{
 	
 	private PaymentData createPaymentDataForDeposit(SavingsDepositWithdrawalActionForm actionForm, UserContext uc, SavingsBO savings){
 		PaymentData paymentData = createPaymentData(actionForm,uc);
-		for(AccountActionDateEntity installment: savings.getTotalInstallmentsDue()){
+		for(AccountActionDateEntity installment: savings.getTotalInstallmentsDue(Integer.valueOf(actionForm.getCustomerId()))){
 			AccountPaymentData accountPaymentData = new SavingsPaymentData(installment); 
 			paymentData.addAccountPaymentData(accountPaymentData);
 		}

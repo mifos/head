@@ -2238,19 +2238,6 @@ public class TestSavingsBO extends MifosTestCase {
 		assertEquals(helper.getDate("01/04/2006"), savings.getNextIntCalcDate());
 	}
 
-	// private SavingsOfferingBO createSavingsOfferingForIntCalc(String
-	// offeringName, Short interestCalcType, Short recurAfterIntCalc)throws
-	// Exception{
-	// MeetingBO meetingIntCalc =
-	// TestObjectFactory.createMeeting(helper.getMeeting("3",recurAfterIntCalc,Short.valueOf("2")));
-	// MeetingBO meetingIntPost =
-	// TestObjectFactory.createMeeting(helper.getMeeting("2",Short.valueOf("1"),Short.valueOf("3")));
-	// return
-	// TestObjectFactory.createSavingsOffering(offeringName,Short.valueOf("2"),new
-	// Date(System.currentTimeMillis()),
-	// Short.valueOf("2"),300.0,Short.valueOf("1"),12.0,200.0,200.0,Short.valueOf("2"),interestCalcType,meetingIntCalc,meetingIntPost);
-	// }
-
 	private SavingsOfferingBO createSavingsOfferingForIntCalc(
 			String offeringName, Short savingsType, Short interestCalcType,
 			String freqeuncyIntCalc, Short recurAfterIntCalc) throws Exception {
@@ -3603,28 +3590,48 @@ public class TestSavingsBO extends MifosTestCase {
 	}
 	
 	public void testGetTotalPaymentDueForVol()throws Exception{
-		createObjectToCheckForTotalInstallmentDue();
+		createObjectToCheckForTotalInstallmentDue(Short.valueOf("2"));
 		savings = savingsService.findById(savings.getAccountId());
 		Money recommendedAmnt = new Money(currency, "500.0");
-		Money paymentDue = savings.getTotalPaymentDue();
+		Money paymentDue = savings.getTotalPaymentDue(group.getCustomerId());
 		assertEquals(recommendedAmnt,paymentDue);
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
 	}
 	
 	public void testGetTotalInstallmentDueForVol()throws Exception{
-		createObjectToCheckForTotalInstallmentDue();
+		createObjectToCheckForTotalInstallmentDue(Short.valueOf("2"));
 		savings = savingsService.findById(savings.getAccountId());
-		List<AccountActionDateEntity> dueInstallment = savings.getTotalInstallmentsDue();
+		List<AccountActionDateEntity> dueInstallment = savings.getTotalInstallmentsDue(group.getCustomerId());
 		assertEquals(1, dueInstallment.size());
 		assertEquals(Short.valueOf("2"), dueInstallment.get(0).getInstallmentId());
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
 	}
 
-	private void createObjectToCheckForTotalInstallmentDue()throws Exception{
+	
+	public void testGetTotalPaymentDueForMan()throws Exception{
+		createObjectToCheckForTotalInstallmentDue(Short.valueOf("1"));
+		savings = savingsService.findById(savings.getAccountId());
+		Money amount = new Money(currency, "1000.0");
+		Money paymentDue = savings.getTotalPaymentDue(group.getCustomerId());
+		assertEquals(amount,paymentDue);
+		group = savings.getCustomer();
+		center = group.getParentCustomer();
+	}
+	
+	public void testGetTotalInstallmentDueForMan()throws Exception{
+		createObjectToCheckForTotalInstallmentDue(Short.valueOf("1"));
+		savings = savingsService.findById(savings.getAccountId());
+		List<AccountActionDateEntity> dueInstallment = savings.getTotalInstallmentsDue(group.getCustomerId());
+		assertEquals(2, dueInstallment.size());
+		group = savings.getCustomer();
+		center = group.getParentCustomer();
+	}
+	
+	private void createObjectToCheckForTotalInstallmentDue(Short savingsTypeId)throws Exception{
 		createInitialObjects();
-		savingsOffering = helper.createSavingsOffering();
+		savingsOffering = helper.createSavingsOffering("prd1",Short.valueOf("1"),savingsTypeId);
 		savings = helper.createSavingsAccount(savingsOffering,group,AccountStates.SAVINGS_ACC_PENDINGAPPROVAL,userContext);
 		Calendar cal1 = Calendar.getInstance();
 		Calendar cal2 = Calendar.getInstance();

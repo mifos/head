@@ -1658,34 +1658,50 @@ public class SavingsBO extends AccountBO {
 		
 	}
 
-	@Override
-	public Money getTotalPaymentDue(){
-		return isMandatory()? super.getTotalPaymentDue() : getTotalPaymentDueForVolAccount();
+	public Money getTotalPaymentDue(Integer customerId){
+		return isMandatory()? getTotalPaymentDueForManAccount(customerId) : getTotalPaymentDueForVolAccount(customerId);
 	}
 	
-	@Override
-	public List<AccountActionDateEntity> getTotalInstallmentsDue(){
-		return isMandatory()? super.getTotalInstallmentsDue() : getInstallmentDueForVolAccount();
+	public List<AccountActionDateEntity> getTotalInstallmentsDue(Integer customerId){
+		return isMandatory()? getInstallmentsDueForManAccount(customerId) : getInstallmentDueForVolAccount(customerId);
 	}
 	
-	private List<AccountActionDateEntity> getInstallmentDueForVolAccount(){
-		List<AccountActionDateEntity> dueInstallment = new ArrayList<AccountActionDateEntity>();
-	
-		AccountActionDateEntity installment = getDetailsOfNextInstallment();
-		if(installment!=null && installment.getPaymentStatus().equals(AccountConstants.PAYMENT_UNPAID)
-				&&DateUtils.getDateWithoutTimeStamp(installment.getActionDate().getTime()).equals(DateUtils.getCurrentDateWithoutTimeStamp()))
-			dueInstallment.add(installment);
-		else{
-			List<AccountActionDateEntity> installments = getDetailsOfInstallmentsInArrears();
-			if (installments!=null && installments.size()>0)
-				dueInstallment.add(installments.get(installments.size()-1));
+	private List<AccountActionDateEntity> getInstallmentsDueForManAccount(Integer customerId){
+		List<AccountActionDateEntity> dueInstallements = new ArrayList<AccountActionDateEntity>();
+		Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
+		if (getAccountActionDates() != null	&& getAccountActionDates().size() > 0) {
+			for (AccountActionDateEntity accountAction : getAccountActionDates()) {
+				if (accountAction.getActionDate().compareTo(currentDate) <= 0
+						&& accountAction.getPaymentStatus().equals(AccountConstants.PAYMENT_UNPAID)
+						&& accountAction.getCustomer().getCustomerId().equals(customerId))
+					dueInstallements.add(accountAction);
+			}
 		}
-		
-		return dueInstallment;
+		return dueInstallements;
 	}
 	
-	private Money getTotalPaymentDueForVolAccount(){
-		List<AccountActionDateEntity> dueInstallments = getInstallmentDueForVolAccount();
+	private List<AccountActionDateEntity> getInstallmentDueForVolAccount(Integer customerId){
+		List<AccountActionDateEntity> dueInstallments = new ArrayList<AccountActionDateEntity>();
+		List<AccountActionDateEntity> installments = getInstallmentsDueForManAccount(customerId);
+		if (installments!=null && installments.size()>0)
+			dueInstallments.add(installments.get(installments.size()-1));
+		return dueInstallments;
+		
+	}
+	
+	private Money getTotalPaymentDueForManAccount(Integer customerId){
+		List<AccountActionDateEntity> dueInstallments = getInstallmentsDueForManAccount(customerId);
+		Money dueAmount = new Money();
+		if (dueInstallments!=null && dueInstallments.size()>0){
+			for(AccountActionDateEntity installment: dueInstallments){
+				dueAmount  = dueAmount.add(getDueAmount(installment));
+			}
+		}
+		return dueAmount;
+	}
+	
+	private Money getTotalPaymentDueForVolAccount(Integer customerId){
+		List<AccountActionDateEntity> dueInstallments = getInstallmentDueForVolAccount(customerId);
 		Money dueAmount = new Money();
 		if (dueInstallments!=null && dueInstallments.size()>0)
 			dueAmount  = getDueAmount(dueInstallments.get(0));

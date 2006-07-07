@@ -100,6 +100,32 @@
 		    	      <font class="fontnormalRedBold"><html-el:errors	bundle="SavingsUIResources" /></font>
 			      </td>
 			  </tr>
+			  <c:if test="${!empty clientList}">
+	              <tr>
+	                <td align="right" class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>
+	                <mifos:mifoslabel name="Savings.clientName" isColonRequired="yes"/></td>
+	                <td class="fontnormal">
+		                <c:forEach var="client" items="${sessionScope.clientList}">
+		                	<c:if test="${client.customerId == sessionScope.savingsDepositWithdrawalForm.customerId}">
+		                		<c:out value ="${client.displayName}"/>
+		                	</c:if>
+		                </c:forEach>
+	                	<c:if test="${sessionScope.BusinessKey.customer.customerId == sessionScope.savingsDepositWithdrawalForm.customerId}">
+	                		<mifos:mifoslabel name="Savings.nonSpecified" />
+	                	</c:if>
+	                </td>
+	              </tr>
+              </c:if>
+              
+              <tr>
+                <td align="right" class="fontnormalbold">
+                	<mifos:mifoslabel name="Savings.dateOfTrxn"  isColonRequired="Yes"/> 
+                </td>
+                <td class="fontnormal">
+                	<c:out value="${sessionScope.savingsDepositWithdrawalForm.trxnDate}"/>
+                </td>
+              </tr>
+              
               <tr>
                 <td align="right" class="fontnormalbold">
                 	<mifos:mifoslabel name="Savings.paymentType" isColonRequired="Yes"/>
@@ -120,14 +146,7 @@
 	                <c:out value="${sessionScope.savingsDepositWithdrawalForm.amount}"/>
                 </td>
               </tr>
-              <tr>
-                <td align="right" class="fontnormalbold">
-                	<mifos:mifoslabel name="Savings.dateOfTrxn"  isColonRequired="Yes"/> 
-                </td>
-                <td class="fontnormal">
-                	<c:out value="${sessionScope.savingsDepositWithdrawalForm.trxnDate}"/>
-                </td>
-              </tr>
+              
               <tr>
                 <td align="right" class="fontnormalbold">
                	 <mifos:mifoslabel name="Savings.modeOfPayment" isColonRequired="Yes"/>
@@ -156,22 +175,7 @@
                 	<c:out value="${sessionScope.savingsDepositWithdrawalForm.receiptDate}"/>
                 </td>
               </tr>
-              <c:if test="${!empty clientList}">
-	              <tr>
-	                <td align="right" class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>
-	                <mifos:mifoslabel name="Savings.clientName" isColonRequired="yes"/></td>
-	                <td class="fontnormal">
-		                <c:forEach var="client" items="${sessionScope.clientList}">
-		                	<c:if test="${client.customerId == sessionScope.savingsDepositWithdrawalForm.customerId}">
-		                		<c:out value ="${client.displayName}"/>
-		                	</c:if>
-		                </c:forEach>
-	                	<c:if test="${sessionScope.BusinessKey.customer.customerId == sessionScope.savingsDepositWithdrawalForm.customerId}">
-	                		<mifos:mifoslabel name="Savings.nonSpecified" />
-	                	</c:if>
-	                </td>
-	              </tr>
-              </c:if>
+              
               <tr>
                 <td height="3" colspan="2" align="center">&nbsp;</td>
               </tr>
