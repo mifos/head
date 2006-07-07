@@ -122,18 +122,23 @@
                 <td class="fontnormal">
                 	<span class="fontnormalbold">
 						<mifos:mifoslabel name="Center.AmountDue" bundle="CenterUIResources"/>:
-						<c:out value='${requestScope.Context.businessResults["ClientFeeChargeDue"]}'/>
+						<c:out value='${requestScope.Context.businessResults["ClientFeeChargeDue"].amountDoubleValue}'/>
                     </span>
+ 					<c:if test='${requestScope.Context.businessResults["ClientFeeChargeDue"].amountDoubleValue != 0.0}'>
                   <html-el:link href="customerAction.do?method=waiveChargeDue&statusId=${param.statusId}&type=Center&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}">
 	              	<mifos:mifoslabel name="client.waive" bundle="ClientUIResources"/>
-	              </html-el:link><br>
+	              </html-el:link>
+	              </c:if>
+	              <br>
                     <span class="fontnormalbold">
 						<mifos:mifoslabel name="Center.AmountOverdue" bundle="CenterUIResources"/>: 
-						<c:out value='${requestScope.Context.businessResults["ClientFeeChargeOverDue"]}'/>
+						<c:out value='${requestScope.Context.businessResults["ClientFeeChargeOverDue"].amountDoubleValue}'/>
 					</span>
+					<c:if test='${requestScope.Context.businessResults["ClientFeeChargeOverDue"].amountDoubleValue != 0.0}'>
 				  <html-el:link href="customerAction.do?method=waiveChargeOverDue&statusId=${param.statusId}&type=Center&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}">
 					<mifos:mifoslabel name="client.waive" bundle="ClientUIResources"/>
 	              </html-el:link>
+	              </c:if>
 				</td>
               </tr>
             </table>

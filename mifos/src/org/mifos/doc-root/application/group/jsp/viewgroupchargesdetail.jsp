@@ -128,21 +128,26 @@
                 </td>
               </tr>
               <tr>
-                <td class="fontnormal"><span class="fontnormalbold">
-<mifos:mifoslabel name="client.amtdue" bundle="ClientUIResources"/>:
-<c:out value='${requestScope.Context.businessResults["ClientFeeChargeDue"]}'/>
+                <td class="fontnormal">
+                <span class="fontnormalbold">
+					<mifos:mifoslabel name="client.amtdue" bundle="ClientUIResources"/>:
+					<c:out value='${requestScope.Context.businessResults["ClientFeeChargeDue"].amountDoubleValue}'/>
                     </span>
-                  <html-el:link href="customerAction.do?method=waiveChargeDue&statusId=${param.statusId}&type=Group&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}">
-	              	<mifos:mifoslabel name="client.waive" bundle="ClientUIResources"/>
-	              </html-el:link>
+                    <c:if test='${requestScope.Context.businessResults["ClientFeeChargeDue"].amountDoubleValue != 0.0}'>
+    	                  <html-el:link href="customerAction.do?method=waiveChargeDue&statusId=${param.statusId}&type=Group&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}">
+		              	<mifos:mifoslabel name="client.waive" bundle="ClientUIResources"/>
+	    		          </html-el:link>
+	    		    </c:if>
 	              <br>
                           <span class="fontnormalbold">
 <mifos:mifoslabel name="client.amtoverdue" bundle="ClientUIResources"/>: 
-<c:out value='${requestScope.Context.businessResults["ClientFeeChargeOverDue"]}'/>
+<c:out value='${requestScope.Context.businessResults["ClientFeeChargeOverDue"].amountDoubleValue}'/>
 						</span>
+						<c:if  test='${requestScope.Context.businessResults["ClientFeeChargeOverDue"].amountDoubleValue != 0.0}'>
                  <html-el:link href="customerAction.do?method=waiveChargeOverDue&statusId=${param.statusId}&type=Group&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}">
 					<mifos:mifoslabel name="client.waive" bundle="ClientUIResources"/>
 	              </html-el:link>
+	              </c:if>
 						</td>
               </tr>
             </table>

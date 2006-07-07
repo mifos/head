@@ -100,20 +100,26 @@
 						</tr>
 						<tr>
 							<td class="drawtablerow"><mifos:mifoslabel name="loan.fees"	bundle="loanUIResources" /></td>
-							<td align="right" class="drawtablerow"><c:out value='${sessionScope.viewUpcomingInstallmentDetails.fees}'/></td>
-							<td align="right" class="drawtablerow">	
-													 
+							<td align="right" class="drawtablerow">
+							<c:out value='${sessionScope.viewUpcomingInstallmentDetails.fees.amount}'/></td>
+							<td align="right" class="drawtablerow">	&nbsp;
+							<c:if test='${sessionScope.viewUpcomingInstallmentDetails.fees.amountDoubleValue != 0.0 }'>						 
 							<html-el:link href="loanAccountAction.do?method=waiveChargeDue&prdOfferingName=${param.prdOfferingName}&accountId=${param.accountId}&WaiveType=fees&type=LoanAccount&globalAccountNum=${param.globalAccountNum}">
 								<mifos:mifoslabel name="loan.waive" bundle="loanUIResources" />
-							</html-el:link></td>
+							</html-el:link>
+							</c:if>
+							</td>
 						</tr>
 						<tr>
 							<td class="drawtablerow"><mifos:mifoslabel name="loan.penalty" bundle="loanUIResources" /></td>
 							<td align="right" class="drawtablerow"><c:out value='${sessionScope.viewUpcomingInstallmentDetails.penalty}'/></td>
-							<td align="right" class="drawtablerow">
+							<td align="right" class="drawtablerow">&nbsp;
+							<c:if test='${sessionScope.viewUpcomingInstallmentDetails.penalty.amountDoubleValue != 0.0 }'>						 
 							<html-el:link href="loanAccountAction.do?method=waiveChargeDue&accountId=${param.accountId}&WaiveType=penalty&type=LoanAccount&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}">
 								<mifos:mifoslabel name="loan.waive" bundle="loanUIResources" />
-							</html-el:link></td>
+							</html-el:link>
+							</c:if>
+							</td>
 						</tr>
 						<tr>
 							<td class="drawtablerow">
@@ -151,19 +157,25 @@
 							<td class="drawtablerow">
 							<mifos:mifoslabel name="loan.fees" bundle="loanUIResources" /></td>
 							<td align="right" class="drawtablerow"><c:out value='${sessionScope.viewOverDueInstallmentDetails.fees}'/></td>
-							<td align="right" class="drawtablerow">
+							<td align="right" class="drawtablerow">&nbsp;
+							<c:if test='${sessionScope.viewOverDueInstallmentDetails.fees.amountDoubleValue != 0.0 }'>	
 							<html-el:link href="loanAccountAction.do?method=waiveChargeOverDue&accountId=${param.accountId}&WaiveType=fees&type=LoanAccount&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}">
 								<mifos:mifoslabel name="loan.waive" bundle="loanUIResources" />
-							</html-el:link></td>
+							</html-el:link>
+							</c:if>
+							</td>
 						</tr>
 						<tr>
 							<td class="drawtablerow">
 							<mifos:mifoslabel name="loan.penalty" bundle="loanUIResources" /></td>
 							<td align="right" class="drawtablerow"><c:out value='${sessionScope.viewOverDueInstallmentDetails.penalty}'/></td>
-							<td align="right" class="drawtablerow">
+							<td align="right" class="drawtablerow">&nbsp;
+							<c:if test='${sessionScope.viewOverDueInstallmentDetails.penalty.amountDoubleValue != 0.0 }'>
 							<html-el:link href="loanAccountAction.do?method=waiveChargeOverDue&accountId=${param.accountId}&WaiveType=penalty&type=LoanAccount&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}">
 								<mifos:mifoslabel name="loan.waive" bundle="loanUIResources" />
-							</html-el:link></td>
+							</html-el:link>
+							</c:if>
+							</td>
 						</tr>
 						
 						<tr>

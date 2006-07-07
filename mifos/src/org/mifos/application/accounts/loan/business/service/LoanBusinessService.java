@@ -102,9 +102,11 @@ public class LoanBusinessService extends BusinessService {
 	}
 	
 	public ViewInstallmentDetails getUpcomingInstallmentDetails(AccountActionDateEntity upcomingInstallment){
+		if(upcomingInstallment != null)
 		return new ViewInstallmentDetails(upcomingInstallment.getPrincipal(),
 				upcomingInstallment.getInterest(), upcomingInstallment
 						.getTotalFees(), upcomingInstallment.getTotalPenalty());
+		return null;
 	}
 	
 	public ViewInstallmentDetails getOverDueInstallmentDetails(List<AccountActionDateEntity> overDueInstallmentList){		
