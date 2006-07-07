@@ -47,6 +47,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestFeesBO extends MifosTestCase {
@@ -134,7 +135,7 @@ public class TestFeesBO extends MifosTestCase {
 		assertEquals("Customer One Time", fee.getFeeName());
 		assertEquals(Short.valueOf(FeeCategory.CLIENT.getValue()), fee
 				.getCategoryType().getCategoryId());
-		assertEquals("100.0", fee.getFeeAmount().toString());
+		assertEquals(new Money("100.0"), fee.getFeeAmount());
 		assertNull(fee.getRate());
 		assertTrue(fee.isOneTime());
 		assertFalse(fee.isAdminFee());
@@ -153,7 +154,7 @@ public class TestFeesBO extends MifosTestCase {
 		assertEquals("Customer One Time Admin Fee", fee.getFeeName());
 		assertEquals(Short.valueOf(FeeCategory.CLIENT.getValue()), fee
 				.getCategoryType().getCategoryId());
-		assertEquals("25.0", fee.getFeeAmount().toString());
+		assertEquals(new Money("25.0"), fee.getFeeAmount());
 		assertNull(fee.getRate());
 		assertTrue(fee.isOneTime());
 		assertTrue(fee.isAdminFee());
@@ -172,7 +173,7 @@ public class TestFeesBO extends MifosTestCase {
 		assertEquals("Customer Periodic Fee", fee.getFeeName());
 		assertEquals(Short.valueOf(FeeCategory.ALLCUSTOMERS.getValue()), fee
 				.getCategoryType().getCategoryId());
-		assertEquals("25.0", fee.getFeeAmount().toString());
+		assertEquals(new Money("25.0"), fee.getFeeAmount());
 		assertNull(fee.getRate());
 		assertTrue(fee.isPeriodic());
 		assertTrue(fee.isAdminFee());
@@ -237,7 +238,7 @@ public class TestFeesBO extends MifosTestCase {
 		fee = (FeesBO) TestObjectFactory
 				.getObject(FeesBO.class, fee.getFeeId());
 		assertTrue(fee.isActive());
-		assertEquals("25.0", fee.getFeeAmount().toString());
+		assertEquals(new Money("25.0"), fee.getFeeAmount());
 
 		fee.setUserContext(TestObjectFactory.getUserContext());
 		fee.modifyStatus(FeeStatus.INACTIVE);
@@ -250,7 +251,7 @@ public class TestFeesBO extends MifosTestCase {
 		fee = (FeesBO) TestObjectFactory
 				.getObject(FeesBO.class, fee.getFeeId());
 		assertFalse(fee.isActive());
-		assertEquals("50.0", fee.getFeeAmount().toString());
+		assertEquals(new Money("50.0"), fee.getFeeAmount());
 	}
 
 	private FeesBO buildPeriodicFees(String feeName, Double feeRateOrAmnt,

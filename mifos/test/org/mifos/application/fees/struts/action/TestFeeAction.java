@@ -57,6 +57,7 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -227,7 +228,7 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		assertEquals("Customer One time", fee.getFeeName());
 		assertEquals(Short.valueOf(FeeCategory.ALLCUSTOMERS.getValue()), fee
 				.getCategoryType().getCategoryId());
-		assertEquals("100.0", fee.getFeeAmount().toString());
+		assertEquals(new Money("100.0"), fee.getFeeAmount());
 		assertNull(fee.getRate());
 		assertTrue(fee.isOneTime());
 		assertFalse(fee.isAdminFee());
@@ -271,7 +272,7 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		assertEquals("Customer One time Admin Fee", fee.getFeeName());
 		assertEquals(Short.valueOf(FeeCategory.ALLCUSTOMERS.getValue()), fee
 				.getCategoryType().getCategoryId());
-		assertEquals("100.0", fee.getFeeAmount().toString());
+		assertEquals(new Money("100.0"), fee.getFeeAmount());
 		assertNull(fee.getRate());
 		assertTrue(fee.isOneTime());
 		assertTrue(fee.isAdminFee());
@@ -317,7 +318,7 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		assertEquals("Customer Periodic Fee", fee.getFeeName());
 		assertEquals(Short.valueOf(FeeCategory.ALLCUSTOMERS.getValue()), fee
 				.getCategoryType().getCategoryId());
-		assertEquals("100.0", fee.getFeeAmount().toString());
+		assertEquals(new Money("100.0"), fee.getFeeAmount());
 		assertNull(fee.getRate());
 		assertTrue(fee.isPeriodic());
 		assertTrue(fee.isAdminFee());
@@ -449,7 +450,7 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		fee = (FeesBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,
 				request.getSession());
 		assertFalse(fee.isActive());
-		assertEquals("100.0", fee.getFeeAmount().toString());
+		assertEquals(new Money("100.0"), fee.getFeeAmount());
 	}
 
 	public void testSuccessfulUpdate() {
@@ -476,7 +477,7 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		fee = (FeesBO) TestObjectFactory
 				.getObject(FeesBO.class, fee.getFeeId());
 		assertFalse(fee.isActive());
-		assertEquals("100.0", fee.getFeeAmount().toString());
+		assertEquals(new Money("100.0"), fee.getFeeAmount());
 	}
 
 }
