@@ -6,7 +6,7 @@
 <html-el:html locale="true">
 <head>
 <title><tiles:getAsString name="title" /></title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 <tiles:importAttribute name="mifoscss" scope="request" />
 <link href='<%=request.getAttribute("mifoscss")%>' rel="stylesheet"

@@ -86,19 +86,10 @@ public class LoginFilter implements Filter {
 	public void doFilter(ServletRequest req, ServletResponse res,
 			FilterChain fch) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
+		request.setCharacterEncoding("UTF-8");
 		String complUri = request.getRequestURI();
 		int index=complUri.lastIndexOf("/");
 		String uri=complUri.substring(index+1);
-/*		if (request.getSession(false) == null) {
-			MifosLogManager.getLogger(LoggerConstants.LOGINLOGGER).info(
-					"Inside Filter session is null");
-			ActionMessage error = new ActionMessage(LoginConstants.SESSIONTIMEOUT);
-			request.setAttribute(Globals.ERROR_KEY, error);
-			if(!uri.equalsIgnoreCase("mifoslogin.do")) {
-				((HttpServletResponse)res).sendRedirect(request.getContextPath()+LoginConstants.LOGINPAGEURI);
-			}
-			return;
-		}*/
 		try {
 			if (uri == null
 					|| uri.equalsIgnoreCase(LoginConstants.LOGINPAGEURI)
