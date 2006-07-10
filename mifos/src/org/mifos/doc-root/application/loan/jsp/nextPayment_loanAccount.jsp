@@ -51,15 +51,17 @@
 							<span class="fontnormalbold">
 								<mifos:mifoslabel name="loan.apply_trans" bundle="loanUIResources" />
 							</span>&nbsp;&nbsp;&nbsp;&nbsp; 
+							<c:if test="${param.accountStateId==AccountStates.LOANACC_ACTIVEINGOODSTANDING || param.accountStateId==AccountStates.LOANACC_BADSTANDING}">
 							<html-el:link href="#">
 								<mifos:mifoslabel name="loan.apply_payment"	bundle="loanUIResources" />
 							</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<html-el:link href="applyAdjustment.do?method=loadAdjustment&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}">
 								<mifos:mifoslabel name="loan.apply_adjustment"	bundle="loanUIResources" />
 							</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</c:if>
 							<html-el:link href="AccountsApplyChargesAction.do?method=load&input=installmentDetailsPage&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}">
 								<mifos:mifoslabel name="loan.apply_charges" bundle="loanUIResources" />
-							</html-el:link>
+							</html-el:link>							
 							</td>
 						</tr>
 					</table>
