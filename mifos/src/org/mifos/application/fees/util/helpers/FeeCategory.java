@@ -38,15 +38,17 @@
 package org.mifos.application.fees.util.helpers;
 
 public enum FeeCategory {
-	ALLCUSTOMERS("1"), CLIENT("2"), GROUP("3"), CENTER("4"), LOAN("5");
+	ALLCUSTOMERS((short) 1), CLIENT((short) 2), GROUP((short) 3), CENTER(
+			(short) 4), LOAN((short) 5);
 
-	String value;
+	Short value;
 
-	FeeCategory(String value) {
+	FeeCategory(Short value) {
 		this.value = value;
 	}
 
-	public String getValue() {
+	public Short getValue() {
 		return value;
 	}
+
 }

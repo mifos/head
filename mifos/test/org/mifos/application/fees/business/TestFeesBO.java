@@ -133,8 +133,8 @@ public class TestFeesBO extends MifosTestCase {
 		fee = (FeesBO) TestObjectFactory
 				.getObject(FeesBO.class, fee.getFeeId());
 		assertEquals("Customer One Time", fee.getFeeName());
-		assertEquals(Short.valueOf(FeeCategory.CLIENT.getValue()), fee
-				.getCategoryType().getCategoryId());
+		assertEquals(FeeCategory.CLIENT.getValue(), fee.getCategoryType()
+				.getCategoryId());
 		assertEquals(new Money("100.0"), fee.getFeeAmount());
 		assertNull(fee.getRate());
 		assertTrue(fee.isOneTime());
@@ -152,8 +152,8 @@ public class TestFeesBO extends MifosTestCase {
 		fee = (FeesBO) TestObjectFactory
 				.getObject(FeesBO.class, fee.getFeeId());
 		assertEquals("Customer One Time Admin Fee", fee.getFeeName());
-		assertEquals(Short.valueOf(FeeCategory.CLIENT.getValue()), fee
-				.getCategoryType().getCategoryId());
+		assertEquals(FeeCategory.CLIENT.getValue(), fee.getCategoryType()
+				.getCategoryId());
 		assertEquals(new Money("25.0"), fee.getFeeAmount());
 		assertNull(fee.getRate());
 		assertTrue(fee.isOneTime());
@@ -171,8 +171,8 @@ public class TestFeesBO extends MifosTestCase {
 		fee = (FeesBO) TestObjectFactory
 				.getObject(FeesBO.class, fee.getFeeId());
 		assertEquals("Customer Periodic Fee", fee.getFeeName());
-		assertEquals(Short.valueOf(FeeCategory.ALLCUSTOMERS.getValue()), fee
-				.getCategoryType().getCategoryId());
+		assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType()
+				.getCategoryId());
 		assertEquals(new Money("25.0"), fee.getFeeAmount());
 		assertNull(fee.getRate());
 		assertTrue(fee.isPeriodic());
@@ -190,8 +190,8 @@ public class TestFeesBO extends MifosTestCase {
 		fee = (FeesBO) TestObjectFactory
 				.getObject(FeesBO.class, fee.getFeeId());
 		assertEquals("Loan Periodic Fee", fee.getFeeName());
-		assertEquals(Short.valueOf(FeeCategory.LOAN.getValue()), fee
-				.getCategoryType().getCategoryId());
+		assertEquals(FeeCategory.LOAN.getValue(), fee.getCategoryType()
+				.getCategoryId());
 		assertEquals(20.0, fee.getRate());
 		assertTrue(fee.isRateFee());
 		assertEquals(FORMULA_ID, fee.getFeeFormula().getFeeFormulaId());
@@ -284,8 +284,7 @@ public class TestFeesBO extends MifosTestCase {
 		fee.setFeeFrequency(new FeeFrequencyEntity());
 		fee.setCategoryType(new CategoryTypeEntity());
 		if (feeCategory != null)
-			fee.getCategoryType().setCategoryId(
-					Short.valueOf(feeCategory.getValue()));
+			fee.getCategoryType().setCategoryId(feeCategory.getValue());
 		fee.setRateFee(isRateFee);
 		if (isRateFee) {
 			fee.setRate(feeRateOrAmnt);

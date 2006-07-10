@@ -140,7 +140,7 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("categoryType.categoryId", FeeCategory.LOAN
-				.getValue());
+				.getValue().toString());
 		addRequestParameter("feeFrequency.feeFrequencyType.feeFrequencyTypeId",
 				FeeFrequencyType.ONETIME.getValue().toString());
 		addRequestParameter("amount", "");
@@ -156,7 +156,7 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("categoryType.categoryId", FeeCategory.LOAN
-				.getValue());
+				.getValue().toString());
 		addRequestParameter("feeFrequency.feeFrequencyType.feeFrequencyTypeId",
 				FeeFrequencyType.ONETIME.getValue().toString());
 		addRequestParameter("amount", "");
@@ -172,7 +172,7 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("categoryType.categoryId", FeeCategory.ALLCUSTOMERS
-				.getValue());
+				.getValue().toString());
 		addRequestParameter("amount", "100");
 		addRequestParameter("feeName", "Customer One time");
 		addRequestParameter("feeFrequency.feeFrequencyType.feeFrequencyTypeId",
@@ -188,7 +188,7 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		HttpSession session = request.getSession();
 		FeesBO fees = (FeesBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, session);
-		assertEquals(Short.valueOf(FeeCategory.ALLCUSTOMERS.getValue()), fees
+		assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fees
 				.getCategoryType().getCategoryId());
 		assertEquals("Customer One time", fees.getFeeName());
 		assertFalse(fees.isRateFee());
@@ -201,7 +201,7 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("categoryType.categoryId", FeeCategory.ALLCUSTOMERS
-				.getValue());
+				.getValue().toString());
 		addRequestParameter("amount", "100");
 		addRequestParameter("feeName", "Customer One time");
 		addRequestParameter("feeFrequency.feeFrequencyType.feeFrequencyTypeId",
@@ -226,8 +226,8 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		fee = (FeesBO) TestObjectFactory
 				.getObject(FeesBO.class, fee.getFeeId());
 		assertEquals("Customer One time", fee.getFeeName());
-		assertEquals(Short.valueOf(FeeCategory.ALLCUSTOMERS.getValue()), fee
-				.getCategoryType().getCategoryId());
+		assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType()
+				.getCategoryId());
 		assertEquals(new Money("100.0"), fee.getFeeAmount());
 		assertNull(fee.getRate());
 		assertTrue(fee.isOneTime());
@@ -243,7 +243,7 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("categoryType.categoryId", FeeCategory.ALLCUSTOMERS
-				.getValue());
+				.getValue().toString());
 		addRequestParameter("amount", "100");
 		addRequestParameter("adminCheck", "1");
 		addRequestParameter("feeName", "Customer One time Admin Fee");
@@ -270,8 +270,8 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		fee = (FeesBO) TestObjectFactory
 				.getObject(FeesBO.class, fee.getFeeId());
 		assertEquals("Customer One time Admin Fee", fee.getFeeName());
-		assertEquals(Short.valueOf(FeeCategory.ALLCUSTOMERS.getValue()), fee
-				.getCategoryType().getCategoryId());
+		assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType()
+				.getCategoryId());
 		assertEquals(new Money("100.0"), fee.getFeeAmount());
 		assertNull(fee.getRate());
 		assertTrue(fee.isOneTime());
@@ -287,7 +287,7 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("categoryType.categoryId", FeeCategory.ALLCUSTOMERS
-				.getValue());
+				.getValue().toString());
 		addRequestParameter("amount", "100");
 		addRequestParameter("adminCheck", "1");
 		addRequestParameter("feeName", "Customer Periodic Fee");
@@ -316,8 +316,8 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		fee = (FeesBO) TestObjectFactory
 				.getObject(FeesBO.class, fee.getFeeId());
 		assertEquals("Customer Periodic Fee", fee.getFeeName());
-		assertEquals(Short.valueOf(FeeCategory.ALLCUSTOMERS.getValue()), fee
-				.getCategoryType().getCategoryId());
+		assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType()
+				.getCategoryId());
 		assertEquals(new Money("100.0"), fee.getFeeAmount());
 		assertNull(fee.getRate());
 		assertTrue(fee.isPeriodic());
@@ -333,7 +333,7 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("categoryType.categoryId", FeeCategory.LOAN
-				.getValue());
+				.getValue().toString());
 		addRequestParameter("rate", "23");
 		addRequestParameter("amount", "");
 		addRequestParameter("feeFormula.feeFormulaId", FORMULA_ID.toString());
@@ -364,8 +364,8 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		fee = (FeesBO) TestObjectFactory
 				.getObject(FeesBO.class, fee.getFeeId());
 		assertEquals("Loan Periodic Fee", fee.getFeeName());
-		assertEquals(Short.valueOf(FeeCategory.LOAN.getValue()), fee
-				.getCategoryType().getCategoryId());
+		assertEquals(FeeCategory.LOAN.getValue(), fee.getCategoryType()
+				.getCategoryId());
 		assertEquals(23.0, fee.getRate());
 		assertTrue(fee.isRateFee());
 		assertEquals(fee.getFeeFormula().getFeeFormulaId(), FORMULA_ID);
@@ -388,8 +388,8 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		fee = (FeesBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,
 				request.getSession());
 		assertEquals("One Time Fee", fee.getFeeName());
-		assertEquals(Short.valueOf(FeeCategory.ALLCUSTOMERS.getValue()), fee
-				.getCategoryType().getCategoryId());
+		assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType()
+				.getCategoryId());
 		assertEquals(FeeFrequencyType.ONETIME.getValue(), fee.getFeeFrequency()
 				.getFeeFrequencyType().getFeeFrequencyTypeId());
 		assertEquals("The size of master data for status",

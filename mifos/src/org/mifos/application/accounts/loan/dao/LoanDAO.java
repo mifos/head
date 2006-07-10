@@ -234,8 +234,8 @@ public class LoanDAO extends AccountsDAO {
 			session = HibernateUtil.getSession();
 			HashMap queryParameters = new HashMap();
 			queryParameters.put("localeId", localeId);
-			queryParameters.put(LoanConstants.CATEGORYID, Short
-					.valueOf(FeeCategory.LOAN.getValue()));
+			queryParameters.put(LoanConstants.CATEGORYID, FeeCategory.LOAN
+					.getValue());
 			feeForumulaList = executeNamedQuery(
 					NamedQueryConstants.GET_FEES_WITH_FORMULA_FOR_LOAN,
 					queryParameters);

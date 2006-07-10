@@ -239,7 +239,7 @@ public class FeesBO extends BusinessObject {
 		if (adminCheck) {
 			if (categoryType.getCategoryId() == null)
 				throw new FeeException("errors.invalidcategory");
-			String categoryId = categoryType.getCategoryId().toString();
+			Short categoryId = categoryType.getCategoryId();
 			if (categoryId.equals(FeeCategory.CLIENT.getValue()))
 				addFeeLevel(createFeeLevel(FeeLevel.CLIENTLEVEL));
 			else if (categoryId.equals(FeeCategory.GROUP.getValue()))

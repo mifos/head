@@ -504,12 +504,14 @@ public class FeesActionForm extends MifosActionForm {
 				&& this.feeFrequency.getFeeFrequencyTypeId().equals(
 						FeeFrequencyType.ONETIME.getValue())) {
 			if (categoryId != null
-					&& categoryId.equals(FeeCategory.LOAN.getValue())
+					&& categoryId
+							.equals(FeeCategory.LOAN.getValue().toString())
 					&& loanPaymentId != null && !loanPaymentId.equals("")) {
 				this.feeFrequency.setFeePaymentId(Short.valueOf(loanPaymentId));
 			} else if (categoryId != null
-					&& !categoryId.equals(FeeCategory.LOAN.getValue())
-					&& otherPaymentId != null && !otherPaymentId.equals("")) {
+					&& !categoryId.equals(FeeCategory.LOAN.getValue()
+							.toString()) && otherPaymentId != null
+					&& !otherPaymentId.equals("")) {
 				this.feeFrequency
 						.setFeePaymentId(Short.valueOf(otherPaymentId));
 			}
@@ -594,7 +596,7 @@ public class FeesActionForm extends MifosActionForm {
 				&& "preview".equals(methodCalled)
 				&& (request.getParameter("input"))
 						.equals(FeesConstants.CREATEFEES)
-				&& (FeeCategory.LOAN.getValue()).equals(categoryId)) {
+				&& (FeeCategory.LOAN.getValue().toString()).equals(categoryId)) {
 			if (("".equals(rate.trim()) && "".equals(amount.trim()))
 					|| (!"".equals(rate.trim()) && !"".equals(amount.trim()))) {
 				errors.add("RateOrAmount", new ActionMessage(
@@ -613,7 +615,7 @@ public class FeesActionForm extends MifosActionForm {
 				&& "preview".equals(methodCalled)
 				&& (request.getParameter("input"))
 						.equals(FeesConstants.CREATEFEES)
-				&& !FeeCategory.LOAN.getValue().equals(categoryId)) {
+				&& !FeeCategory.LOAN.getValue().toString().equals(categoryId)) {
 			if (amount == null || "".equals(amount.trim())) {
 				errors.add("amount", new ActionMessage("errors.enter"));
 				return errors;
@@ -718,28 +720,31 @@ public class FeesActionForm extends MifosActionForm {
 		Set<FeeLevel> feeLevelSet = null;
 		if (null != adminCheck
 				&& adminCheck.equalsIgnoreCase(FeesConstants.YES)) {
-			if (categoryId.equals(FeeCategory.CLIENT.getValue())) {
+			if (categoryId.equals(FeeCategory.CLIENT.getValue().toString())) {
 				feeLevelSet = new HashSet<FeeLevel>();
 				FeeLevel level = new FeeLevel();
 				level
 						.setLevelId(org.mifos.application.fees.util.helpers.FeeLevel.CLIENTLEVEL
 								.getValue());
 				feeLevelSet.add(level);
-			} else if (categoryId.equals(FeeCategory.GROUP.getValue())) {
+			} else if (categoryId.equals(FeeCategory.GROUP.getValue()
+					.toString())) {
 				feeLevelSet = new HashSet<FeeLevel>();
 				FeeLevel level = new FeeLevel();
 				level
 						.setLevelId(org.mifos.application.fees.util.helpers.FeeLevel.GROUPLEVEL
 								.getValue());
 				feeLevelSet.add(level);
-			} else if (categoryId.equals(FeeCategory.CENTER.getValue())) {
+			} else if (categoryId.equals(FeeCategory.CENTER.getValue()
+					.toString())) {
 				feeLevelSet = new HashSet<FeeLevel>();
 				FeeLevel level = new FeeLevel();
 				level
 						.setLevelId(org.mifos.application.fees.util.helpers.FeeLevel.CENTERLEVEL
 								.getValue());
 				feeLevelSet.add(level);
-			} else if (categoryId.equals(FeeCategory.ALLCUSTOMERS.getValue())) {
+			} else if (categoryId.equals(FeeCategory.ALLCUSTOMERS.getValue()
+					.toString())) {
 				feeLevelSet = new HashSet<FeeLevel>();
 				FeeLevel level = new FeeLevel();
 				level
@@ -770,7 +775,7 @@ public class FeesActionForm extends MifosActionForm {
 
 	public String getAdminCheck() {
 		if (null == adminCheck && null != categoryId
-				&& !categoryId.equals(FeeCategory.LOAN.getValue())) {
+				&& !categoryId.equals(FeeCategory.LOAN.getValue().toString())) {
 			return FeesConstants.NO;
 		}
 		return adminCheck;

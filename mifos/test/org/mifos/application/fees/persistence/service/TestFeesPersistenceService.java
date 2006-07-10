@@ -65,8 +65,8 @@ public class TestFeesPersistenceService extends MifosTestCase {
 		fees = (FeesBO) TestObjectFactory.getObject(FeesBO.class, fees
 				.getFeeId());
 		assertEquals("One time fees", fees.getFeeName());
-		assertEquals(Short.valueOf(FeeCategory.CLIENT.getValue()), fees
-				.getCategoryType().getCategoryId());
+		assertEquals(FeeCategory.CLIENT.getValue(), fees.getCategoryType()
+				.getCategoryId());
 		assertFalse(fees.isRateFee());
 		assertTrue(fees.isOneTime());
 	}
@@ -77,7 +77,7 @@ public class TestFeesPersistenceService extends MifosTestCase {
 		fees = new FeePersistenceService().getFees(fees.getFeeId());
 
 		assertEquals("One Time Fee", fees.getFeeName());
-		assertEquals(Short.valueOf(FeeCategory.ALLCUSTOMERS.getValue()), fees
+		assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fees
 				.getCategoryType().getCategoryId());
 		assertTrue(fees.isOneTime());
 	}
@@ -93,8 +93,7 @@ public class TestFeesPersistenceService extends MifosTestCase {
 				FeeFrequencyType.ONETIME.getValue());
 		fees.getFeeFrequency().getFeePayment().setFeePaymentId(
 				FeePayment.UPFRONT.getValue());
-		fees.getCategoryType().setCategoryId(
-				Short.valueOf(FeeCategory.CLIENT.getValue()));
+		fees.getCategoryType().setCategoryId(FeeCategory.CLIENT.getValue());
 		fees.setRateFee(false);
 		fees.setAmount("100.0");
 		fees.setGlCodeEntity((GLCodeEntity) HibernateUtil.getSessionTL().get(

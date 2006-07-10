@@ -308,7 +308,7 @@ public class FeeActionForm extends ValidatorActionForm {
 	}
 
 	private boolean isCategoryLoan() {
-		return Short.valueOf(FeeCategory.LOAN.getValue()).equals(
+		return FeeCategory.LOAN.getValue().equals(
 				categoryType.getCategoryId());
 	}
 }
