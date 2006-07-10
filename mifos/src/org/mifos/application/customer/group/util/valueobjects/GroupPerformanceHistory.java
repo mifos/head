@@ -84,16 +84,4 @@ public class GroupPerformanceHistory extends ValueObject {
 	public void setGroup(Group group) {
 		this.group = group;
 	}
-
-	public void setPerformanceHistoryDetails(Integer numberOfClients,
-			Money lastGroupLoanAmount, Money avgLoanForMember,
-			Money totalOutstandingPortfolio, Money totalSavings,
-			Money portfolioAtRisk) {
-		this.clientCount = numberOfClients;
-		this.lastGroupLoanAmount = lastGroupLoanAmount;
-		this.avgLoanForMember = avgLoanForMember;
-		this.totalOutstandingPortfolio = totalOutstandingPortfolio;
-		this.totalSavings = totalSavings;
-		this.portfolioAtRisk = portfolioAtRisk;
-	}
 }

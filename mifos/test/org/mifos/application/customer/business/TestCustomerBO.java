@@ -77,7 +77,12 @@ public class TestCustomerBO extends MifosTestCase {
 	public void testGroupPerfObject() throws PersistenceException {
 		createInitialObjects();
 		GroupPerformanceHistoryEntity groupPerformanceHistory = new GroupPerformanceHistoryEntity();
-		groupPerformanceHistory.setPerformanceHistoryDetails(Integer.valueOf("1"),new Money("100"),new Money("200"),new Money("300"),new Money("400"),new Money("500"));
+		groupPerformanceHistory.setClientCount(Integer.valueOf("1"));
+		groupPerformanceHistory.setAvgLoanForMember(new Money("200"));
+		groupPerformanceHistory.setLastGroupLoanAmount(new Money("100"));
+		groupPerformanceHistory.setTotalOutstandingPortfolio(new Money("100"));
+		groupPerformanceHistory.setTotalSavings(new Money("100"));
+		groupPerformanceHistory.setPortfolioAtRisk(new Money("100"));
 		groupPerformanceHistory.setGroup(group);
 		group.setGroupPerformanceHistory(groupPerformanceHistory);
 		TestObjectFactory.updateObject(group);
@@ -90,7 +95,11 @@ public class TestCustomerBO extends MifosTestCase {
 	public void testClientPerfObject() throws PersistenceException {
 		createInitialObjects();
 		ClientPerformanceHistoryEntity clientPerformanceHistory = new ClientPerformanceHistoryEntity();
-		clientPerformanceHistory.setPerformanceHistoryDetails(Integer.valueOf("1"),Integer.valueOf("1"),new Money("100"),new Money("200"),new Money("300"));
+		clientPerformanceHistory.setLoanCycleNumber(Integer.valueOf("1"));
+		clientPerformanceHistory.setLastLoanAmount(new Money("100"));
+		clientPerformanceHistory.setDelinquentPortfolio(new Money("200"));
+		clientPerformanceHistory.setNoOfActiveLoans(Integer.valueOf("1"));
+		clientPerformanceHistory.setTotalSavings(new Money("300"));
 		clientPerformanceHistory.setClient(client);
 		client.setClientPerformanceHistory(clientPerformanceHistory);
 		TestObjectFactory.updateObject(client);
@@ -105,7 +114,10 @@ public class TestCustomerBO extends MifosTestCase {
 		createInitialObjects();
 		accountBO = getLoanAccount(client,meeting);
 		LoanPerformanceHistoryEntity loanPerformanceHistory = new LoanPerformanceHistoryEntity();
-		loanPerformanceHistory.setPerformanceHistoryDetails(Integer.valueOf("1"),Integer.valueOf("1"),Integer.valueOf("1"),currentDate);
+		loanPerformanceHistory.setDaysInArrears(Integer.valueOf("1"));
+		loanPerformanceHistory.setNoOfMissedPayments(Integer.valueOf("2"));
+		loanPerformanceHistory.setNoOfPayments(Integer.valueOf("3"));
+		loanPerformanceHistory.setLoanMaturityDate(currentDate);
 		LoanBO loanBO = (LoanBO)accountBO;
 		loanPerformanceHistory.setLoan(loanBO);
 		loanBO.setLoanPerformanceHistory(loanPerformanceHistory);
@@ -113,10 +125,10 @@ public class TestCustomerBO extends MifosTestCase {
 		
 		loanBO = (LoanBO) new AccountPersistanceService().getAccount(loanBO.getAccountId());
 		assertEquals(loanBO.getAccountId(),loanBO.getLoanPerformanceHistory().getAccountId());
-		assertEquals(Integer.valueOf("1"),loanBO.getLoanPerformanceHistory().getDays_in_arrears());
-		assertEquals(Integer.valueOf("1"),loanBO.getLoanPerformanceHistory().getNo_of_missed_payments());
-		assertEquals(Integer.valueOf("1"),loanBO.getLoanPerformanceHistory().getNo_of_payments());
-		assertEquals(currentDate,loanBO.getLoanPerformanceHistory().getLoan_maturity_date());
+		assertEquals(Integer.valueOf("1"),loanBO.getLoanPerformanceHistory().getDaysInArrears());
+		assertEquals(Integer.valueOf("2"),loanBO.getLoanPerformanceHistory().getNoOfMissedPayments());
+		assertEquals(Integer.valueOf("3"),loanBO.getLoanPerformanceHistory().getNoOfPayments());
+		assertEquals(currentDate,loanBO.getLoanPerformanceHistory().getLoanMaturityDate());
 	}
 
 }

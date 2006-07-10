@@ -84,16 +84,4 @@ public class GroupPerformanceHistoryEntity extends PersistentObject {
 	public void setGroup(GroupBO group) {
 		this.group = group;
 	}
-
-	public void setPerformanceHistoryDetails(Integer numberOfClients,
-			Money lastGroupLoanAmount, Money avgLoanForMember,
-			Money totalOutstandingPortfolio, Money totalSavings,
-			Money portfolioAtRisk) {
-		this.clientCount = numberOfClients;
-		this.lastGroupLoanAmount = lastGroupLoanAmount;
-		this.avgLoanForMember = avgLoanForMember;
-		this.totalOutstandingPortfolio = totalOutstandingPortfolio;
-		this.totalSavings = totalSavings;
-		this.portfolioAtRisk = portfolioAtRisk;
-	}
 }

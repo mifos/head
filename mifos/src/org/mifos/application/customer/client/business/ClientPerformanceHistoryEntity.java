@@ -74,14 +74,4 @@ public class ClientPerformanceHistoryEntity extends PersistentObject {
 	public void setClient(ClientBO client) {
 		this.client = client;
 	}
-
-	public void setPerformanceHistoryDetails(Integer loanCycleNumber,
-			Integer noOfActiveLoans, Money lastLoanAmount,
-			Money delinquentPortfolio, Money totalSavings) {
-		this.loanCycleNumber = loanCycleNumber;
-		this.noOfActiveLoans = noOfActiveLoans;
-		this.lastLoanAmount = lastLoanAmount;
-		this.delinquentPortfolio = delinquentPortfolio;
-		this.totalSavings = totalSavings;
-	}
 }

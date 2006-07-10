@@ -74,14 +74,4 @@ public class ClientPerformanceHistory extends ValueObject {
 	public void setClient(Client client) {
 		this.client = client;
 	}
-
-	public void setPerformanceHistoryDetails(Integer loanCycleNumber,
-			Integer noOfActiveLoans, Money lastLoanAmount,
-			Money delinquentPortfolio, Money totalSavings) {
-		this.loanCycleNumber = loanCycleNumber;
-		this.noOfActiveLoans = noOfActiveLoans;
-		this.lastLoanAmount = lastLoanAmount;
-		this.delinquentPortfolio = delinquentPortfolio;
-		this.totalSavings = totalSavings;
-	}
 }

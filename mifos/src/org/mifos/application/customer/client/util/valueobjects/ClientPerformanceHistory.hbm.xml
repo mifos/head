@@ -15,9 +15,18 @@
         
         <property name="loanCycleNumber" column="LOAN_CYCLE_COUNTER" />
         <property name="noOfActiveLoans" column="TOTAL_ACTIVE_LOANS" />
-		<property name="lastLoanAmount" column="LAST_LOAN_AMNT" />
-		<property name="delinquentPortfolio" column="DELINQUINT_PORTFOLIO"    />
-		<property name="totalSavings" column="TOTAL_SAVINGS_AMNT"  />      
+		<property name="lastLoanAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+	        <column name="LAST_LOAN_AMNT_CURRENCY_ID" /> 
+			<column name="LAST_LOAN_AMNT" />
+		</property>
+		<property name="delinquentPortfolio" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+	        <column name="DELINQUINT_PORTFOLIO_CURRENCY_ID" /> 
+			<column name="DELINQUINT_PORTFOLIO" />
+		</property>
+		<property name="totalSavings" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+	        <column name="TOTAL_SAVINGS_AMNT_CURRENCY_ID" /> 
+			<column name="TOTAL_SAVINGS_AMNT" />
+		</property>      
         <one-to-one name="client"
 			class="org.mifos.application.customer.client.util.valueobjects.Client" lazy="true" />
     </class>    

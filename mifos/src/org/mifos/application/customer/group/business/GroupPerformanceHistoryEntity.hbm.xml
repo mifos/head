@@ -12,13 +12,26 @@
 	            <param name="property">group</param>
 	        </generator>    
         </id>
-        
-        <property name="clientCount" column="NO_OF_CLIENTS" />
-        <property name="lastGroupLoanAmount" column="LAST_GROUP_LOAN_AMNT_DISB" />
-		<property name="avgLoanForMember" column="AVG_LOAN_SIZE" />
-		<property name="totalOutstandingPortfolio" column="TOTAL_OUTSTAND_LOAN_AMNT"    />
-		<property name="totalSavings" column="TOTAL_SAVINGS_AMNT"  />
-		<property name="portfolioAtRisk" column="PORTFOLIO_AT_RISK"  />        
+        <property name="lastGroupLoanAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+	        <column name="LAST_GROUP_LOAN_AMNT_DISB_CURRENCY_ID" /> 
+			<column name="LAST_GROUP_LOAN_AMNT_DISB" />
+		</property>
+		<property name="avgLoanForMember" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+	        <column name="AVG_LOAN_SIZE_CURRENCY_ID" /> 
+			<column name="AVG_LOAN_SIZE" />
+		</property>
+		<property name="totalOutstandingPortfolio" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+	        <column name="TOTAL_OUTSTAND_LOAN_AMNT_CURRENCY_ID" /> 
+			<column name="TOTAL_OUTSTAND_LOAN_AMNT" />
+		</property>
+		<property name="totalSavings" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+	        <column name="TOTAL_SAVINGS_AMNT_CURRENCY_ID" /> 
+			<column name="TOTAL_SAVINGS_AMNT" />
+		</property>
+		<property name="portfolioAtRisk" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+	        <column name="PORTFOLIO_AT_RISK_CURRENCY_ID" /> 
+			<column name="PORTFOLIO_AT_RISK" />
+		</property>        
         <one-to-one name="group"
 			class="org.mifos.application.customer.group.business.GroupBO" lazy="true" />
     </class>    

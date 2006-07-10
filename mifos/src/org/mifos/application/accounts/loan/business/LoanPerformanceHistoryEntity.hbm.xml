@@ -13,10 +13,10 @@
 	        </generator>    
         </id>
         
-        <property name="no_of_payments" column="NO_OF_PAYMENTS" />
-        <property name="no_of_missed_payments" column="NO_OF_MISSED_PAYMENTS" />
-		<property name="days_in_arrears" column="DAYS_IN_ARREARS" />
-		<property name="loan_maturity_date" column="LOAN_MATURITY_DATE" type="date"/>
+        <property name="noOfPayments" column="NO_OF_PAYMENTS" />
+        <property name="noOfMissedPayments" column="NO_OF_MISSED_PAYMENTS" />
+		<property name="daysInArrears" column="DAYS_IN_ARREARS" />
+		<property name="loanMaturityDate" column="LOAN_MATURITY_DATE" type="date"/>
         <one-to-one name="loan" class="org.mifos.application.accounts.loan.business.LoanBO" lazy="true" />
     </class>    
     
