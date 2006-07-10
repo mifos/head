@@ -296,6 +296,13 @@
 	
 	<mapping resource="org/mifos/application/accounts/savings/business/SavingsActivityEntity.hbm.xml" />
 	
+	<!-- Mapping files for performace history-->
+	<mapping resource="org/mifos/application/accounts/loan/business/LoanPerformanceHistoryEntity.hbm.xml" />
+	<mapping resource="org/mifos/application/accounts/loan/util/valueobjects/LoanPerformanceHistory.hbm.xml" />
+	<mapping resource="org/mifos/application/customer/group/business/GroupPerformanceHistoryEntity.hbm.xml" />
+	<mapping resource="org/mifos/application/customer/group/util/valueobjects/GroupPerformanceHistory.hbm.xml" />
+	<mapping resource="org/mifos/application/customer/client/business/ClientPerformanceHistoryEntity.hbm.xml" />
+	<mapping resource="org/mifos/application/customer/client/util/valueobjects/ClientPerformanceHistory.hbm.xml" />
 </session-factory>
 
 </hibernate-configuration>  

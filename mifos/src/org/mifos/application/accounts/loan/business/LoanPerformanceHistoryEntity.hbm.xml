@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.accounts.loan.business.LoanPerformanceHistoryEntity" table="LOAN_PERF_HISTORY">
+        <id name="accountId" column="ACCOUNT_ID" type="integer">
+            <generator class="foreign">
+	            <param name="property">loan</param>
+	        </generator>    
+        </id>
+        
+        <property name="no_of_payments" column="NO_OF_PAYMENTS" />
+        <property name="no_of_missed_payments" column="NO_OF_MISSED_PAYMENTS" />
+		<property name="days_in_arrears" column="DAYS_IN_ARREARS" />
+		<property name="loan_maturity_date" column="LOAN_MATURITY_DATE" type="date"/>
+        <one-to-one name="loan" class="org.mifos.application.accounts.loan.business.LoanBO" lazy="true" />
+    </class>    
+    
+</hibernate-mapping>

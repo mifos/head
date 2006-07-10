@@ -122,6 +122,7 @@ public class Loan extends Account{
 	private Set<WaiveOffHistory> waiveOffHistorySet;
 	
 	private Set<LoanActivity> loanActivitySet=null;
+	private LoanPerformanceHistory loanPerformanceHistory;
 	
 	/**
 	 * @param prdOffering The prdOffering to set.
@@ -554,6 +555,13 @@ public class Loan extends Account{
 	}
 	public void setLoanActivitySet(Set<LoanActivity> loanActivitySet) {
 		this.loanActivitySet = loanActivitySet;
+	}
+	public LoanPerformanceHistory getLoanPerformanceHistory() {
+		return loanPerformanceHistory;
+	}
+	public void setLoanPerformanceHistory(
+			LoanPerformanceHistory loanPerformanceHistory) {
+		this.loanPerformanceHistory = loanPerformanceHistory;
 	}
 
 	

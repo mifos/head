@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.customer.group.util.valueobjects.GroupPerformanceHistory" table="GROUP_PERF_HISTORY">
+        <id name="customerId" column="CUSTOMER_ID" type="integer">
+            <generator class="foreign">
+	            <param name="property">group</param>
+	        </generator>    
+        </id>
+        
+        <property name="clientCount" column="NO_OF_CLIENTS" />
+        <property name="lastGroupLoanAmount" column="LAST_GROUP_LOAN_AMNT_DISB" />
+		<property name="avgLoanForMember" column="AVG_LOAN_SIZE" />
+		<property name="totalOutstandingPortfolio" column="TOTAL_OUTSTAND_LOAN_AMNT"    />
+		<property name="totalSavings" column="TOTAL_SAVINGS_AMNT"  />
+		<property name="portfolioAtRisk" column="PORTFOLIO_AT_RISK"  />        
+        <one-to-one name="group"
+			class="org.mifos.application.customer.group.util.valueobjects.Group" lazy="true" />
+    </class>    
+    
+</hibernate-mapping>

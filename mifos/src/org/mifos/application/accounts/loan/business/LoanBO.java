@@ -74,10 +74,10 @@ import org.mifos.application.accounts.persistence.service.AccountPersistanceServ
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.valueobjects.Fees;
@@ -178,6 +178,8 @@ public class LoanBO extends AccountBO {
 	private String stateSelected;
 
 	private LoanOfferingBO loanOffering;
+	
+	private LoanPerformanceHistoryEntity loanPerformanceHistory;
 
 	public Set<LoanActivityEntity> loanActivityDetails;
 
@@ -363,6 +365,15 @@ public class LoanBO extends AccountBO {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public LoanPerformanceHistoryEntity getLoanPerformanceHistory() {
+		return loanPerformanceHistory;
+	}
+
+	public void setLoanPerformanceHistory(
+			LoanPerformanceHistoryEntity loanPerformanceHistory) {
+		this.loanPerformanceHistory = loanPerformanceHistory;
 	}
 
 	public Set<LoanActivityEntity> getLoanActivityDetails() {

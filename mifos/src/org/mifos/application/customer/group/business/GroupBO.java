@@ -48,6 +48,8 @@ import org.mifos.framework.security.util.UserContext;
  * @author navitas
  */
 public class GroupBO extends CustomerBO {
+	
+	private GroupPerformanceHistoryEntity groupPerformanceHistory;
 
 	public GroupBO(){}
 	
@@ -59,6 +61,15 @@ public class GroupBO extends CustomerBO {
 		if(getCustomerStatus().getStatusId().equals(GroupConstants.ACTIVE))
 			return true;
 		return false;
+	}
+
+	public GroupPerformanceHistoryEntity getGroupPerformanceHistory() {
+		return groupPerformanceHistory;
+	}
+
+	public void setGroupPerformanceHistory(
+			GroupPerformanceHistoryEntity groupPerformanceHistory) {
+		this.groupPerformanceHistory = groupPerformanceHistory;
 	}
 
 }

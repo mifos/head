@@ -1,9 +1,8 @@
 package org.mifos.application.customer.client.util.valueobjects;
 
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
-import java.io.InputStream;
-import java.sql.Date;
 
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.util.valueobjects.Customer;
@@ -34,6 +33,8 @@ public class Client extends Customer {
 	private Set customerNameDetailSet;
 	
 	private short flagId;
+	
+	private ClientPerformanceHistory clientPerformanceHistory;
 	/**
 	 * Method which returns the flagId	
 	 * @return Returns the flagId.
@@ -138,6 +139,15 @@ public class Client extends Customer {
 	 */
 	public void setParentGroupId(int parentGroupId) {
 		this.parentGroupId = parentGroupId;
+	}
+
+	public ClientPerformanceHistory getClientPerformanceHistory() {
+		return clientPerformanceHistory;
+	}
+
+	public void setClientPerformanceHistory(
+			ClientPerformanceHistory clientPerformanceHistory) {
+		this.clientPerformanceHistory = clientPerformanceHistory;
 	}
 	
 

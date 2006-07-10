@@ -38,8 +38,6 @@
 
 package org.mifos.application.customer.group.util.valueobjects;
 
-import java.util.Set;
-
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.valueobjects.Customer;
 
@@ -59,6 +57,8 @@ public class Group extends Customer {
 	/**Denotes the programs assigned to the group
 	private Set customerProgram;
 	*/
+	
+	private GroupPerformanceHistory groupPerformanceHistory;
 	/** Constructor for the Group */
 	public Group(){
 	}
@@ -120,6 +120,15 @@ public class Group extends Customer {
 	public Customer getParentCustomer()
 	{
 	   return parentCustomer;	
+	}
+
+	public GroupPerformanceHistory getGroupPerformanceHistory() {
+		return groupPerformanceHistory;
+	}
+
+	public void setGroupPerformanceHistory(
+			GroupPerformanceHistory groupPerformanceHistory) {
+		this.groupPerformanceHistory = groupPerformanceHistory;
 	}
 	
 }

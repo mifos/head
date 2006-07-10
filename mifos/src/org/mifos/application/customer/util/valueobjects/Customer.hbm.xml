@@ -97,13 +97,14 @@
 						<many-to-one name="program" column="PROGRAM_ID" class="org.mifos.application.program.util.valueobjects.Program" unique="true"  lazy="true"></many-to-one>
 					</composite-element>
 		</set> -->
+		<one-to-one name="groupPerformanceHistory" class="org.mifos.application.customer.group.util.valueobjects.GroupPerformanceHistory" cascade="all" lazy="true"/>
 	</subclass>
 	<subclass name="org.mifos.application.customer.client.util.valueobjects.Client" discriminator-value="CLIENT">
 		<set name="customerNameDetailSet" cascade="all">
 			<key column="CUSTOMER_ID"/>
 			<one-to-many class="org.mifos.application.customer.util.valueobjects.CustomerNameDetail"/>
 		</set>
-		
+		<one-to-one name="clientPerformanceHistory" class="org.mifos.application.customer.client.util.valueobjects.ClientPerformanceHistory" cascade="all" lazy="true"/>
 	</subclass>
 
     </class>

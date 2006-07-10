@@ -26,9 +26,11 @@ public class ClientBO extends CustomerBO {
 	private Set<ClientAttendanceBO> clientAttendances;
 
 	private Date dateOfBirth;
-	
+
 	private String governmentId;
-	
+
+	private ClientPerformanceHistoryEntity clientPerformanceHistory;
+
 	public ClientBO() {
 		this.customerNameDetailSet = new HashSet();
 		clientAttendances = new HashSet<ClientAttendanceBO>();
@@ -66,7 +68,7 @@ public class ClientBO extends CustomerBO {
 	private void setClientAttendances(Set<ClientAttendanceBO> clientAttendances) {
 		this.clientAttendances = clientAttendances;
 	}
-	
+
 	public Date getDateOfBirth() {
 		return this.dateOfBirth;
 	}
@@ -82,7 +84,16 @@ public class ClientBO extends CustomerBO {
 	public void setGovernmentId(String governmentId) {
 		this.governmentId = governmentId;
 	}
-	
+
+	public ClientPerformanceHistoryEntity getClientPerformanceHistory() {
+		return clientPerformanceHistory;
+	}
+
+	public void setClientPerformanceHistory(
+			ClientPerformanceHistoryEntity clientPerformanceHistory) {
+		this.clientPerformanceHistory = clientPerformanceHistory;
+	}
+
 	public void addClientAttendance(ClientAttendanceBO clientAttendance) {
 		clientAttendance.setCustomer(this);
 		clientAttendances.add(clientAttendance);

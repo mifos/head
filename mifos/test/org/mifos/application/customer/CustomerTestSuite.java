@@ -3,6 +3,7 @@ package org.mifos.application.customer;
 import junit.framework.Test;
 import junit.textui.TestRunner;
 
+import org.mifos.application.customer.business.TestCustomerBO;
 import org.mifos.application.customer.business.TestCustomerTrxnDetailEntity;
 import org.mifos.application.customer.business.service.TestCustomerBusinessService;
 import org.mifos.application.customer.client.business.TestClientBO;
@@ -39,6 +40,7 @@ public class CustomerTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(TestCustomerApplyAdjustmentAction.class);
 		testSuite.addTestSuite(TestCustomerAction.class);
 		testSuite.addTestSuite(TestClientBO.class);
+		testSuite.addTestSuite(TestCustomerBO.class);
 		return testSuite;
 		
 	}

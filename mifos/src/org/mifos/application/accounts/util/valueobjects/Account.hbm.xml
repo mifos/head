@@ -81,7 +81,7 @@
  			<many-to-one name="currency" column="CURRENCY_ID" class="org.mifos.application.master.util.valueobjects.Currency" cascade="none" insert="true" update="false" unique="true" />
       		<many-to-one name="fund" column="FUND_ID" class="org.mifos.application.fund.util.valueobjects.Fund" cascade="none" insert="true" update="false" unique="true" />
          	<many-to-one name="loanMeeting" column="MEETING_ID" class="org.mifos.application.meeting.util.valueobjects.Meeting" unique="true" insert="true" cascade="all" update="false"/>
-         	
+         	<one-to-one name="loanPerformanceHistory" class="org.mifos.application.accounts.loan.util.valueobjects.LoanPerformanceHistory" cascade="all" lazy="true"/>
          	
          	<set name="waiveOffHistorySet"  cascade="all" table="WAIVE_OFF_HISTORY">
 				<key column="ACCOUNT_ID"  />

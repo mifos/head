@@ -999,7 +999,7 @@ public class GroupBusinessProcessor extends MifosBusinessProcessor {
 		if(clients!=null)
 			clientSize = clients.size();
 		logger.debug("no of clients under group are: "+clientSize);
-		context.addAttribute(getResultObject(GroupConstants.GROUP_PERFORMANCE_VO,groupDAO.getPerformanceHistory(clientSize)));
+		//context.addAttribute(getResultObject(GroupConstants.GROUP_PERFORMANCE_VO,groupDAO.getPerformanceHistory(clientSize)));
 	//	context.addAttribute(this.getResultObject(GroupConstants.CUSTOMER_PROGRAMS, new GroupHelper().loadCustomerPrograms(group,localeId)));
 		context.addAttribute(new GroupHelper().getPositionsMaster(localeId));
 		context.addAttribute(this.getResultObject(GroupConstants.CUSTOMER_POSITIONS, new GroupHelper().loadCustomerPositions(group,localeId,(List)(context.getSearchResultBasedOnName(GroupConstants.POSITIONS).getValue()))));

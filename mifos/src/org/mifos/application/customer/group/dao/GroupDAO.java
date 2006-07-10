@@ -799,7 +799,7 @@ public class GroupDAO extends DAO {
 	 * created when group is created for the first time.
 	 * @return an instance of GroupPerformanceHistory
 	 */	
-  	public GroupPerformanceHistory getPerformanceHistory(int clientSize){
+  	/*public GroupPerformanceHistory getPerformanceHistory(int clientSize){
 		GroupPerformanceHistory perf = new GroupPerformanceHistory();
 		perf.setClientCount(clientSize);
 		//TODO: values to be replaced by actual values
@@ -808,7 +808,7 @@ public class GroupDAO extends DAO {
 		perf.setTotalSavings(new Double(0.0));
 		perf.setPortfolioAtRisk(new Double(0.0));
 		return perf;
-  	}
+  	}*/
  
 	/**feature removed:
 	 * This method is the helper method to create customer program relationship.

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.customer.client.util.valueobjects.ClientPerformanceHistory" table="CLIENT_PERF_HISTORY">
+        <id name="customerId" column="CUSTOMER_ID" type="integer">
+            <generator class="foreign">
+	            <param name="property">client</param>
+	        </generator>    
+        </id>
+        
+        <property name="loanCycleNumber" column="LOAN_CYCLE_COUNTER" />
+        <property name="noOfActiveLoans" column="TOTAL_ACTIVE_LOANS" />
+		<property name="lastLoanAmount" column="LAST_LOAN_AMNT" />
+		<property name="delinquentPortfolio" column="DELINQUINT_PORTFOLIO"    />
+		<property name="totalSavings" column="TOTAL_SAVINGS_AMNT"  />      
+        <one-to-one name="client"
+			class="org.mifos.application.customer.client.util.valueobjects.Client" lazy="true" />
+    </class>    
+    
+</hibernate-mapping>
