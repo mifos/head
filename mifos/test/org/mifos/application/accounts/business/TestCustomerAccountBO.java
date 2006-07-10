@@ -528,7 +528,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
 		List<java.util.Date> meetingDates = scheduler.getAllDates();
 		meetingDates.remove(0);
-		center.getCustomerAccount().regenerateFutureInstallments(meetingDates,(short)(accountActionDateEntity.getInstallmentId().intValue()+1));
+		center.getCustomerAccount().regenerateFutureInstallments((short)(accountActionDateEntity.getInstallmentId().intValue()+1));
 		HibernateUtil.getTransaction().commit();
 		HibernateUtil.closeSession();
 		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
@@ -540,27 +540,58 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		}
 	}
 	
-	public void testRegenerateFutureInstallmentsWithAccountClosed() throws SchedulerException, HibernateException, ServiceException{
+	public void testRegenerateFutureInstallmentsForGroup() throws SchedulerException, HibernateException, ServiceException{
 		createInitialObjects();
-		AccountActionDateEntity accountActionDateEntity =center.getCustomerAccount().getDetailsOfNextInstallment();
+		TestObjectFactory.flushandCloseSession();
+		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
 		MeetingBO meeting = center.getCustomerMeeting().getMeeting();
 		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
-		meeting.setMeetingStartDate(DateUtils.getCalendarDate(accountActionDateEntity.getActionDate().getTime()));
 		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
 		List<java.util.Date> meetingDates = scheduler.getAllDates();
-		meetingDates.remove(0);
+		group.getCustomerAccount().regenerateFutureInstallments((short)2);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		for(AccountActionDateEntity actionDateEntity : group.getCustomerAccount().getAccountActionDates()){
+			if(actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
+			else if(actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
+				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),DateUtils.getDateWithoutTimeStamp(meetingDates.get(2).getTime()));
+		}
+	}
+	
+	
+	public void testRegenerateFutureInstallmentsWithAccountClosed() throws SchedulerException, HibernateException, ServiceException{
+		createInitialObjects();
+		TestObjectFactory.flushandCloseSession();
+		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		Date installment2ndDate=null;
+		Date installment3ndDate=null;
+		for(AccountActionDateEntity actionDateEntity : group.getCustomerAccount().getAccountActionDates()){
+			if(actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+				installment2ndDate = actionDateEntity.getActionDate();
+			else if(actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
+				installment3ndDate=actionDateEntity.getActionDate();
+		}
+		MeetingBO meeting = center.getCustomerMeeting().getMeeting();
+		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
 		CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity();
 		customerStatusEntity.setStatusId(GroupConstants.CLOSED);
 		group.setCustomerStatus(customerStatusEntity);
-		group.getCustomerAccount().regenerateFutureInstallments(meetingDates,(short)(accountActionDateEntity.getInstallmentId().intValue()+1));
-		HibernateUtil.getTransaction().commit();
+		group.getCustomerAccount().regenerateFutureInstallments((short)2);
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
-		for(AccountActionDateEntity actionDateEntity : center.getCustomerAccount().getAccountActionDates()){
+		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+	
+		for(AccountActionDateEntity actionDateEntity : group.getCustomerAccount().getAccountActionDates()){
 			if(actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-				assertNotSame(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()));
+				assertEquals(DateUtils.getDateWithoutTimeStamp(installment2ndDate.getTime()),DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
 			else if(actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
-				assertNotSame(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
+				assertEquals(DateUtils.getDateWithoutTimeStamp(installment3ndDate.getTime()),DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
 		}
 	}
 }

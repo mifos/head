@@ -61,6 +61,8 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
 import org.mifos.framework.components.scheduler.SchedulerException;
+import org.mifos.framework.components.scheduler.SchedulerIntf;
+import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -253,7 +255,7 @@ public class CustomerAccountBO extends AccountBO {
 	}
 
 	@Override
-	protected void regenerateFutureInstallments(List<Date> meetingDates,Short nextIntallmentId) throws HibernateException, ServiceException {
+	protected void regenerateFutureInstallments(Short nextIntallmentId) throws HibernateException, ServiceException, SchedulerException {
 		if (!this.getCustomer().getCustomerStatus().getStatusId().equals(
 				ClientConstants.STATUS_CANCELLED)
 				&& !this.getCustomer().getCustomerStatus().getStatusId()
@@ -262,6 +264,9 @@ public class CustomerAccountBO extends AccountBO {
 						.equals(GroupConstants.CANCELLED)
 				&& !this.getCustomer().getCustomerStatus().getStatusId()
 						.equals(GroupConstants.CLOSED)) {
+			SchedulerIntf scheduler = SchedulerHelper.getScheduler(getCustomer().getCustomerMeeting().getMeeting());
+			List<Date> meetingDates= scheduler.getAllDates();
+			meetingDates.remove(0);
 			deleteFutureInstallments();
 			for (Date date : meetingDates) {
 				addAccountActionDate(AccountHelper.createEmptyInstallment(date,

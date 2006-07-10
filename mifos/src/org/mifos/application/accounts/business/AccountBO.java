@@ -39,6 +39,7 @@
 package org.mifos.application.accounts.business;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -53,6 +54,7 @@ import org.mifos.application.accounts.exceptions.IDGenerationException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
+import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
@@ -597,7 +599,7 @@ public class AccountBO extends BusinessObject {
 		return dueActionDateList;
 	}
 
-	protected List<AccountActionDateEntity> getApplicableIdsForFutureInstallments() {
+	public List<AccountActionDateEntity> getApplicableIdsForFutureInstallments() {
 		List<AccountActionDateEntity> futureActionDateList = new ArrayList<AccountActionDateEntity>();
 		AccountActionDateEntity accountActionDate=null;
 		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
@@ -833,16 +835,17 @@ public class AccountBO extends BusinessObject {
 	
 	public void handleChangeInMeetingSchedule() throws SchedulerException, ServiceException, HibernateException, PersistenceException{
 		AccountActionDateEntity accountActionDateEntity =getDetailsOfNextInstallment();
-		MeetingBO meeting = getCustomer().getCustomerMeeting().getMeeting();
-		meeting.setMeetingStartDate(DateUtils.getCalendarDate(accountActionDateEntity.getActionDate().getTime()));
-		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
-		List<Date> meetingDates = scheduler.getAllDates();
-		meetingDates.remove(0);
-		regenerateFutureInstallments(meetingDates,(short)(accountActionDateEntity.getInstallmentId().intValue()+1));
-		getAccountPersistenceService().update(this);
+		if(accountActionDateEntity!=null){
+			MeetingBO meeting = getCustomer().getCustomerMeeting().getMeeting();
+			Calendar meetingStartDate= meeting.getMeetingStartDate();
+			meeting.setMeetingStartDate(DateUtils.getCalendarDate(accountActionDateEntity.getActionDate().getTime()));
+			regenerateFutureInstallments((short)(accountActionDateEntity.getInstallmentId().intValue()+1));
+			meeting.setMeetingStartDate(meetingStartDate);
+			getAccountPersistenceService().update(this);
+		}
 	}
 	
-	protected void regenerateFutureInstallments(List<Date> meetingDates,Short nextIntallmentId)throws HibernateException, ServiceException, PersistenceException {}
+	protected void regenerateFutureInstallments(Short nextIntallmentId)throws HibernateException, ServiceException, PersistenceException ,SchedulerException{}
 	
 	protected void deleteFutureInstallments() throws HibernateException, ServiceException{
 		List<AccountActionDateEntity> futureInstllments = getApplicableIdsForFutureInstallments();

@@ -460,7 +460,6 @@ public class ClientCreationDAO extends DAO {
 				if(accntActDates!=null){
 					Hibernate.initialize(accntActDates);
 					for(AccountActionDate accountActionDate :  accntActDates){
-						System.out.println("******1**********addddid : " +  accountActionDate.getActionDateId());
 						accountActionDate.getActionDate();
 					}
 				}
@@ -469,7 +468,6 @@ public class ClientCreationDAO extends DAO {
 				if(accntFees!=null){
 					Hibernate.initialize(accntFees);
 					for(AccountFees accountFees :  accntFees){
-						System.out.println("*********2*******acfeeinid : " +  accountFees.getAccountFeeId());
 						accountFees.getAccountId();
 						accountFees.getAccountFeeAmount();
 					}

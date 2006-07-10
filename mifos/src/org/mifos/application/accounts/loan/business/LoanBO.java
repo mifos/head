@@ -41,6 +41,7 @@ package org.mifos.application.accounts.loan.business;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -100,6 +101,9 @@ import org.mifos.framework.components.repaymentschedule.RepaymentScheduleFactory
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleHelper;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleIfc;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleInputsIfc;
+import org.mifos.framework.components.scheduler.SchedulerException;
+import org.mifos.framework.components.scheduler.SchedulerIntf;
+import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -110,6 +114,7 @@ import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.tags.DateHelper;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 
@@ -1389,13 +1394,16 @@ public class LoanBO extends AccountBO {
 	
 	
 	@Override
-	protected void regenerateFutureInstallments(List<Date> meetingDates,Short nextIntallmentId) {
+	protected void regenerateFutureInstallments(Short nextIntallmentId) throws PersistenceException, SchedulerException {
 		if (!this.getAccountState().getId().equals(
 				AccountStates.LOANACC_OBLIGATIONSMET)
 				&& !this.getAccountState().getId().equals(
 						AccountStates.LOANACC_WRITTENOFF)
 				&& !this.getAccountState().getId().equals(
 						AccountStates.LOANACC_CANCEL)) {
+			SchedulerIntf scheduler = SchedulerHelper.getScheduler(getCustomer().getCustomerMeeting().getMeeting());
+			List<Date> meetingDates= scheduler.getAllDates(getApplicableIdsForFutureInstallments().size()+1);
+			meetingDates.remove(0);
 			int count = 0;
 			List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForFutureInstallments();
 			for (AccountActionDateEntity accountActionDateEntity : accountActionDateList) {

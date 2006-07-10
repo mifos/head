@@ -1624,11 +1624,14 @@ public class SavingsBO extends AccountBO {
 	
 	
 	@Override
-	public void regenerateFutureInstallments(List<Date> meetingDates,Short nextIntallmentId) throws HibernateException, ServiceException, PersistenceException {
+	public void regenerateFutureInstallments(Short nextIntallmentId) throws HibernateException, ServiceException, PersistenceException, SchedulerException {
 		if (!this.getAccountState().getId().equals(
 				AccountStates.SAVINGS_ACC_CANCEL)
 				&& !this.getAccountState().getId().equals(
 						AccountStates.SAVINGS_ACC_CLOSED)) {
+			SchedulerIntf scheduler = SchedulerHelper.getScheduler(getCustomer().getCustomerMeeting().getMeeting());
+			List<Date> meetingDates= scheduler.getAllDates();
+			meetingDates.remove(0);
 			deleteFutureInstallments();
 			if (getCustomer().getCustomerLevel().getLevelId().equals(
 					CustomerConstants.CLIENT_LEVEL_ID)

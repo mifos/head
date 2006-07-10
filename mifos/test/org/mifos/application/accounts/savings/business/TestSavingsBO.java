@@ -3505,12 +3505,12 @@ public class TestSavingsBO extends MifosTestCase {
 		savings=(SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
 		AccountActionDateEntity accountActionDateEntity =savings.getDetailsOfNextInstallment();
 		MeetingBO meeting = savings.getCustomer().getCustomerMeeting().getMeeting();
-		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("1"));
+		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
 		meeting.setMeetingStartDate(DateUtils.getCalendarDate(accountActionDateEntity.getActionDate().getTime()));
 		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
 		List<java.util.Date> meetingDates = scheduler.getAllDates();
 		meetingDates.remove(0);
-		savings.regenerateFutureInstallments(meetingDates,(short)(accountActionDateEntity.getInstallmentId().intValue()+1));
+		savings.regenerateFutureInstallments((short)(accountActionDateEntity.getInstallmentId().intValue()+1));
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		savings=(SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
@@ -3528,16 +3528,24 @@ public class TestSavingsBO extends MifosTestCase {
 		savings= getSavingAccount();
 		TestObjectFactory.flushandCloseSession();
 		savings=(SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
+		java.sql.Date intallment2ndDate=null;
+		java.sql.Date intallment3ndDate=null;
+		for(AccountActionDateEntity actionDateEntity :  savings.getAccountActionDates()){
+			if(actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+				intallment2ndDate=actionDateEntity.getActionDate();
+			else if(actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
+				intallment3ndDate=actionDateEntity.getActionDate();
+		}
 		AccountActionDateEntity accountActionDateEntity =savings.getDetailsOfNextInstallment();
 		MeetingBO meeting = savings.getCustomer().getCustomerMeeting().getMeeting();
-		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("1"));
+		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
 		meeting.setMeetingStartDate(DateUtils.getCalendarDate(accountActionDateEntity.getActionDate().getTime()));
 		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
 		List<java.util.Date> meetingDates = scheduler.getAllDates();
 		meetingDates.remove(0);
 		AccountStateEntity accountStateEntity=new AccountStateEntity(AccountStates.SAVINGS_ACC_CANCEL);
 		savings.setAccountState(accountStateEntity);
-		savings.regenerateFutureInstallments(meetingDates,(short)(accountActionDateEntity.getInstallmentId().intValue()+1));
+		savings.regenerateFutureInstallments((short)(accountActionDateEntity.getInstallmentId().intValue()+1));
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		savings=(SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
@@ -3545,17 +3553,15 @@ public class TestSavingsBO extends MifosTestCase {
 		client2=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client2.getCustomerId());
 		for(AccountActionDateEntity actionDateEntity : savings.getAccountActionDates()){
 			if(actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-				assertNotSame(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()),DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+				assertEquals(intallment2ndDate,DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
 			else if(actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
-				assertNotSame(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()),DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+				assertEquals(intallment3ndDate,DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
 		}
 	}
 	
 	private SavingsBO getSavingAccount() throws IDGenerationException, SchedulerException, SystemException, ApplicationException{
-		MeetingBO meeting = TestObjectFactory.getMeetingHelper(2,2,4);
-		meeting.setMeetingStartDate(Calendar.getInstance());
-		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(new Short("1"));
-		TestObjectFactory.createMeeting(meeting);
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test", Short.valueOf("13"), "1.1", meeting,new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group1", Short.valueOf("9"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
