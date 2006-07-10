@@ -194,7 +194,8 @@
 															&accountType=${requestScope.loan.accountTypeId}
 															&accountStateId=${requestScope.loan.accountStateId}
 															&recordOfficeId=${requestScope.loan.officeId}
-															&recordLoanOfficerId=${requestScope.loan.personnelId}"> 
+															&recordLoanOfficerId=${requestScope.loan.personnelId}
+															&lastPaymentAction=${requestScope.Context.businessResults['lastPaymentAction']}"> 
 								<mifos:mifoslabel name="loan.view_installment_details" />								
 							</html-el:link>
 						</span>

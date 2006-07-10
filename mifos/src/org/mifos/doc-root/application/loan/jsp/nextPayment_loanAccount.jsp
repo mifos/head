@@ -26,6 +26,7 @@
 						<html-el:link action="loanAction.do?method=get&globalAccountNum=${param.globalAccountNum}">
 							<c:out value="${param.prdOfferingName}" />
 						</html-el:link></span>
+						<html-el:errors bundle="loanUIResources" />
 					</td>
 				</tr>
 			</table>
@@ -50,11 +51,17 @@
 							<td bgcolor="#F0D4A5" style="padding-left:10px; padding-bottom:3px;">
 							<span class="fontnormalbold">
 								<mifos:mifoslabel name="loan.apply_trans" bundle="loanUIResources" />
-							</span>&nbsp;&nbsp;&nbsp;&nbsp; 
-							<c:if test="${param.accountStateId==AccountStates.LOANACC_ACTIVEINGOODSTANDING || param.accountStateId==AccountStates.LOANACC_BADSTANDING}">
-							<html-el:link href="#">
-								<mifos:mifoslabel name="loan.apply_payment"	bundle="loanUIResources" />
+							</span>&nbsp;&nbsp;&nbsp;&nbsp; 							
+							<c:if test="${param.accountStateId==5 || param.accountStateId==9}">
+							<html-el:link href="applyPaymentAction.do?method=load&input=loan&
+							prdOfferingName=${param.prdOfferingName}&globalAccountNum=${param.globalAccountNum}&
+							accountId=${param.accountId}&accountType=${param.accountType}
+							&recordOfficeId=${param.recordOfficeId}&
+							recordLoanOfficerId=${param.recordLoanOfficerId}">
+							<mifos:mifoslabel name="loan.apply_payment" />
 							</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</c:if>
+							<c:if test="${param.lastPaymentAction != 10 && (param.accountStateId==5 || param.accountStateId==9)}">							
 							<html-el:link href="applyAdjustment.do?method=loadAdjustment&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}">
 								<mifos:mifoslabel name="loan.apply_adjustment"	bundle="loanUIResources" />
 							</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -220,9 +227,12 @@
 				</tr>
 			</table>
 			</td>
+			<mifos:SecurityParam property="Loan" />
 			<html-el:hidden property="accountId" value="${param.accountId}"/>
 			<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}"/>			
-			<html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}"/>									
+			<html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}"/>
+			<html-el:hidden property="accountType" value="${param.accountType}" />													
+			<html-el:hidden property="currentStatusId" value="${param.accountStateId}" />							
 			
 		</html-el:form>
 	</tiles:put>
