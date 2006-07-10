@@ -20,7 +20,7 @@
 			 <column name="TOTAL_WITHDRAWALS_CURRENCY_ID" /> 
 			 <column name="TOTAL_WITHDRAWALS" />
 		</property>
-		<property name="totalInterstEarned" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+		<property name="totalInterestEarned" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
 			 <column name="TOTAL_INTEREST_EARNED_CURRENCY_ID" /> 
 			 <column name="TOTAL_INTEREST_EARNED" />
 		</property>			

@@ -43,6 +43,7 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
+<%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
@@ -277,32 +278,40 @@
 									<span class="fontnormalbold"> <mifos:mifoslabel name="Savings.performanceHistory" /> </span>
 								</td>
 							</tr>
-							<%--    <tr>
+							 <tr>
                 <td class="paddingL10"><img src="pages/framework/images/trans.gif" width="10" height="2"></td>
               </tr>
               <tr>
                 <td class="paddingL10">
                 <span class="fontnormal8pt">
-               		<mifos:mifoslabel name="Savings.dateAccountOpened"/>: </span></td>
-              </tr>
+               		<mifos:mifoslabel name="Savings.dateAccountOpened"/>: <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.createdDate)}" />
+					 </span></td>
+			  </tr>
               <tr>
                 <td class="paddingL10">
                 <span class="fontnormal8pt">
                 	<mifos:mifoslabel name="Savings.totalDeposits"/>:
+                	<c:out value="${sessionScope.BusinessKey.savingsPerformance.totalDeposits}" />
+                	
                 </span></td>
               </tr>
               <tr>
                 <td class="paddingL10">
                 <span class="fontnormal8pt">
-                <mifos:mifoslabel name="Savings.totalInterestEarned"/>: </span></td>
+                <mifos:mifoslabel name="Savings.totalInterestEarned"/>: <c:out value="${sessionScope.BusinessKey.savingsPerformance.totalInterestEarned}" /></span></td>
               </tr>
               <tr>
                 <td class="paddingL10">
                 <span class="fontnormal8pt">
-                <mifos:mifoslabel name="Savings.totalWithdrawls"/>: </span></td>
-              </tr>  --%>
+                <mifos:mifoslabel name="Savings.totalWithdrawls"/>:<c:out value="${sessionScope.BusinessKey.savingsPerformance.totalWithdrawals}" /> </span></td>
+              </tr>  
+               <tr>
+                <td class="paddingL10">
+                <span class="fontnormal8pt">
+                <mifos:mifoslabel name="Savings.missedDeposits"/>:<c:out value="${sessionScope.BusinessKey.savingsPerformance.missedDeposits}" /> </span></td>
+  			  </tr>  
 						</table>
-						<table width="95%" border="0" cellspacing="0" cellpadding="0">
+						<!-- <table width="95%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
 								<td>
 									<img src="pages/framework/images/trans.gif" width="7" height="8">

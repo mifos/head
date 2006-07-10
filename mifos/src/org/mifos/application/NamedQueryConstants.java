@@ -337,7 +337,7 @@ public interface NamedQueryConstants {
 	public String RETRIEVE_ACCCOUNTS_FOR_INT_POST="accounts.retrieveSavingsAccountsIntPost";
 	public String RETRIEVE_SAVINGS_ACCCOUNT_FOR_CUSTOMER="accounts.retrieveSavingsAccountsForCustomer";
 	public String RETRIEVE_ACCCOUNTS_FOR_CUSTOMER="accounts.retrieveAccountsForCustomer";
-	
+	public String GET_MISSED_DEPOSITS_COUNT="accounts.countOfMissedDeposits";
 	//accounts
 	public String GET_MAX_ACCOUNT_ID="accounts.getMaxAccountId";
 	public String FIND_ACCOUNT_BY_SYSTEM_ID="accounts.findBySystemId";

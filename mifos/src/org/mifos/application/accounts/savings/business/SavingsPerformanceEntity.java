@@ -6,9 +6,10 @@ public class SavingsPerformanceEntity extends PersistentObject {
 	private Integer accountId;
     private Money totalDeposits;
     private Money totalWithdrawals;
-    private Money totalInterstEarned;
+    private Money totalInterestEarned;
     private Integer missedDeposits;
     private SavingsBO savings;
+    
     
     public SavingsBO getSavings() {
 		return savings;
@@ -19,7 +20,8 @@ public class SavingsPerformanceEntity extends PersistentObject {
 	}
 
 	public SavingsPerformanceEntity(){
-    }
+       
+	}
 
 	public Integer getMissedDeposits() {
 		return missedDeposits;
@@ -37,12 +39,12 @@ public class SavingsPerformanceEntity extends PersistentObject {
 		this.totalDeposits = totalDeposits;
 	}
 
-	public Money getTotalInterstEarned() {
-		return totalInterstEarned;
+	public Money getTotalInterestEarned() {
+		return totalInterestEarned;
 	}
 
-	public void setTotalInterstEarned(Money totalInterstEarned) {
-		this.totalInterstEarned = totalInterstEarned;
+	public void setTotalInterestEarned(Money totalInterstEarned) {
+		this.totalInterestEarned = totalInterstEarned;
 	}
 
 	public Money getTotalWithdrawals() {
@@ -62,10 +64,22 @@ public class SavingsPerformanceEntity extends PersistentObject {
 	}
 	
 	public void setPaymentDetails(Money totalAmount) {
+		if(totalDeposits==null)
+			totalDeposits = new Money();
 		totalDeposits = totalDeposits.add(totalAmount);
 	}
 
 	public void setWithdrawDetails(Money totalAmount) {
+		if(totalWithdrawals==null)
+			totalWithdrawals = new Money();
 		totalWithdrawals = totalWithdrawals.add(totalAmount);
 	}
+	
+	public void setTotalInterestDetails(Money totalAmount) {
+		if(totalInterestEarned==null)
+			totalInterestEarned = new Money();
+		totalInterestEarned = totalInterestEarned.add(totalAmount);
+	}
+
+	
 }

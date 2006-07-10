@@ -1,6 +1,8 @@
 package org.mifos.application.accounts.savings.persistence;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -8,9 +10,12 @@ import java.util.Set;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.SavingsAccountView;
+import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
@@ -60,6 +65,8 @@ public class TestSavingsPersistence extends MifosTestCase {
 	private SavingsOfferingBO savingsOffering2;
 
 	private AccountCheckListBO accountCheckList;
+	
+	
 
 	@Override
 	protected void setUp() throws Exception {
@@ -433,4 +440,45 @@ public class TestSavingsPersistence extends MifosTestCase {
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
 	}
+	public void testGetMissedDeposits() throws Exception {
+		SavingsTestHelper helper = new SavingsTestHelper();
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		savingsOffering = helper.createSavingsOffering("SavingPrd1", Short.valueOf("1"),Short.valueOf("1"));;
+		savings = TestObjectFactory.createSavingsAccount("43245434", group,
+				Short.valueOf("16"), new Date(System.currentTimeMillis()),
+				savingsOffering);
+
+
+		AccountActionDateEntity accountActionDateEntity = savings
+				.getAccountActionDate((short) 1);
+		accountActionDateEntity.setActionDate(offSetCurrentDate(7));
+		
+		savings.update();
+		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.closeSession();
+
+		savings = savingsPersistence.findById(savings.getAccountId());
+		savings.setUserContext(userContext);
+		HibernateUtil.getSessionTL().flush();
+		Calendar currentDateCalendar = new GregorianCalendar();
+		java.sql.Date currentDate = new java.sql.Date(currentDateCalendar.getTimeInMillis());
+		
+		assertEquals(savingsPersistence.getMissedDeposits(currentDate), 1);
+	}
+	
+	private java.sql.Date offSetCurrentDate(int noOfDays) {
+		Calendar currentDateCalendar = new GregorianCalendar();
+		int year = currentDateCalendar.get(Calendar.YEAR);
+		int month = currentDateCalendar.get(Calendar.MONTH);
+		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
+		currentDateCalendar = new GregorianCalendar(year, month, day - noOfDays);
+		return new java.sql.Date(currentDateCalendar.getTimeInMillis());
+	}
+	
+
 }

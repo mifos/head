@@ -52,6 +52,8 @@ import org.mifos.application.accounts.business.SavingsAccountView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.checklist.util.valueobjects.CheckListMaster;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerLevelEntity;
@@ -272,6 +274,32 @@ public class SavingsPersistence extends Persistence {
 			queryParameters.put("currentDate", currentDate);
 			List<Integer> queryResult = executeNamedQuery(NamedQueryConstants.RETRIEVE_ACCCOUNTS_FOR_INT_POST, queryParameters);
 			return queryResult;
+		}catch (HibernateException he) {
+			throw new PersistenceException(he);
+		}
+	}
+
+	public int getMissedDeposits( Date currentDate) throws PersistenceException {
+	try 	
+	{		
+			Integer count =0;
+			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+			//queryParameters.put("accountId", accountId);
+			queryParameters.put("ACCOUNT_TYPE_ID", AccountTypes.SAVINGSACCOUNT );
+			queryParameters.put("ACTIVE", AccountStates.SAVINGS_ACC_APPROVED );
+			queryParameters.put("CHECKDATE", currentDate);
+			queryParameters.put("PAYMENTSTATUS", AccountConstants.PAYMENT_UNPAID);
+			
+			List queryResult=executeNamedQuery(NamedQueryConstants.GET_MISSED_DEPOSITS_COUNT,queryParameters);
+			
+			if(null!=queryResult && queryResult.size()>0){
+				Object obj = queryResult.get(0);
+				if(obj!=null)
+					count = (Integer)obj;
+			}		
+			
+			return count.intValue();
+			
 		}catch (HibernateException he) {
 			throw new PersistenceException(he);
 		}

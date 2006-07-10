@@ -111,6 +111,7 @@ import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
@@ -482,6 +483,7 @@ public class SavingsBO extends AccountBO {
 					.getSession().get(PaymentTypeEntity.class,
 							SavingsConstants.DEFAULT_PAYMENT_TYPE);
 			makeEntriesForInterestPosting(interestPosted, paymentType,getCustomer(), null);
+			getSavingsPerformance().setTotalInterestDetails(interestPosted);
 			getDBService().update(this);
 			logger.info("In SavingsBO::postInterest(), accountId: "	+ getAccountId()+ 
 					", Interest Of Amount: "+ interestPosted+" successfully");
@@ -828,8 +830,8 @@ public class SavingsBO extends AccountBO {
 						&& depositAmount.getAmountDoubleValue() > 0.0)
 					paymentStatus = AccountConstants.PAYMENT_PAID;
 				savingsBalance = savingsBalance.add(depositAmount);
-				// TODO uncomment when savingsperformance is implemented
-				// savingsPerformance.setPaymentDetails(depositAmount);
+				
+				savingsPerformance.setPaymentDetails(depositAmount);
 				accountAction.setPaymentDetails(depositAmount, paymentStatus,
 						new java.sql.Date(transactionDate.getTime()));
 				SavingsTrxnDetailEntity accountTrxn = new SavingsTrxnDetailEntity();
@@ -861,8 +863,8 @@ public class SavingsBO extends AccountBO {
 		accountTrxn.setAccount(this);
 		accountTrxn.setPaymentDetails(depositAmount, new java.sql.Date(System
 				.currentTimeMillis()), customer, personnelId, transactionDate);
-		// TODO uncomment when savingsperformance is implemented
-		// savingsPerformance.setPaymentDetails(depositAmount);
+		
+		savingsPerformance.setPaymentDetails(depositAmount);
 		return accountTrxn;
 	}
 
@@ -883,8 +885,8 @@ public class SavingsBO extends AccountBO {
 					new String[] { getGlobalAccountNum() });
 		}
 		savingsBalance = savingsBalance.subtract(totalAmount);
-		// TODO uncomment when savingsperformance is implemented
-		// savingsPerformance.setWithdrawDetails(totalAmount);
+		
+		savingsPerformance.setWithdrawDetails(totalAmount);
 
 		CustomerBO customer = new CustomerPersistenceService()
 				.getCustomer(accountPaymentData.getCustomerId());
@@ -1205,7 +1207,7 @@ public class SavingsBO extends AccountBO {
 						.getCustomer(), getPersonnelDBService().getPersonnel(
 						userContext.getId()), oldSavingsAccntTrxn.getDueDate(),
 				oldSavingsAccntTrxn.getActionDate());
-		// getSavingsPerformance().setTotalWithdrawals(getSavingsPerformance().getTotalWithdrawals().add(accountTrxn.getWithdrawlAmount()));
+		getSavingsPerformance().setTotalWithdrawals(getSavingsPerformance().getTotalWithdrawals().add(accountTrxn.getWithdrawlAmount()));
 		newTrxns.add(accountTrxn);
 		return newTrxns;
 	}
@@ -1250,7 +1252,7 @@ public class SavingsBO extends AccountBO {
 					customer, getPersonnelDBService().getPersonnel(
 							userContext.getId()),
 					accountAction.getActionDate(), oldTrxnDate);
-			// getSavingsPerformance().setTotalDeposits(getSavingsPerformance().getTotalDeposits().add(accountTrxn.getDepositAmount()));
+			getSavingsPerformance().setTotalDeposits(getSavingsPerformance().getTotalDeposits().add(accountTrxn.getDepositAmount()));
 			newTrxns.add(accountTrxn);
 		}
 		// add trxn for excess amount
@@ -1264,7 +1266,7 @@ public class SavingsBO extends AccountBO {
 					accountTrxn.getDepositAmount(), getSavingsBalance(),
 					customer, getPersonnelDBService().getPersonnel(
 							userContext.getId()), null, oldTrxnDate);
-			// getSavingsPerformance().setTotalDeposits(getSavingsPerformance().getTotalDeposits().add(accountTrxn.getDepositAmount()));
+			getSavingsPerformance().setTotalDeposits(getSavingsPerformance().getTotalDeposits().add(accountTrxn.getDepositAmount()));
 			newTrxns.add(accountTrxn);
 		}
 
@@ -1315,7 +1317,7 @@ public class SavingsBO extends AccountBO {
 							getPersonnelDBService().getPersonnel(
 									userContext.getId()), accountAction
 									.getActionDate(), oldTrxnDate);
-					// getSavingsPerformance().setTotalDeposits(getSavingsPerformance().getTotalDeposits().add(accountTrxn.getDepositAmount()));
+					getSavingsPerformance().setTotalDeposits(getSavingsPerformance().getTotalDeposits().add(accountTrxn.getDepositAmount()));
 					break;
 				}
 			}
@@ -1334,7 +1336,7 @@ public class SavingsBO extends AccountBO {
 					accountTrxn.getDepositAmount(), getSavingsBalance(),
 					customer, getPersonnelDBService().getPersonnel(
 							userContext.getId()), null, oldTrxnDate);
-			// getSavingsPerformance().setTotalDeposits(getSavingsPerformance().getTotalDeposits().add(accountTrxn.getDepositAmount()));
+			getSavingsPerformance().setTotalDeposits(getSavingsPerformance().getTotalDeposits().add(accountTrxn.getDepositAmount()));
 			newTrxns.add(accountTrxn);
 		}
 		return newTrxns;
@@ -1353,14 +1355,14 @@ public class SavingsBO extends AccountBO {
 			accntActionDate.setPaymentStatus(AccountConstants.PAYMENT_UNPAID);
 			accntActionDate.setPaymentDate(null);
 		}
-		// getSavingsPerformance().setTotalDeposits(getSavingsPerformance().getTotalDeposits().subtract(savingsTrxn.getDepositAmount()));
+		getSavingsPerformance().setTotalDeposits(getSavingsPerformance().getTotalDeposits().subtract(savingsTrxn.getDepositAmount()));
 	}
 
 	private void adjustForWithdrawal(AccountTrxnEntity accntTrxn) {
 		SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) accntTrxn;
 		setSavingsBalance(getSavingsBalance().add(
 				savingsTrxn.getWithdrawlAmount()));
-		// getSavingsPerformance().setTotalWithdrawals(getSavingsPerformance().getTotalWithdrawals().subtract(savingsTrxn.getWithdrawlAmount()));
+		getSavingsPerformance().setTotalWithdrawals(getSavingsPerformance().getTotalWithdrawals().subtract(savingsTrxn.getWithdrawlAmount()));
 	}
 
 	protected boolean isAdjustPossibleOnLastTrxn(Money amountAdjustedTo) {
@@ -1706,6 +1708,14 @@ public class SavingsBO extends AccountBO {
 		if (dueInstallments!=null && dueInstallments.size()>0)
 			dueAmount  = getDueAmount(dueInstallments.get(0));
 		return dueAmount;	
+	}
+	public void getSavingPerformanceHistory()throws HibernateException, ServiceException, PersistenceException {
+		String systemDate = DateHelper.getCurrentDate(Configuration
+				.getInstance().getSystemConfig().getMFILocale());
+		java.sql.Date currentDate = DateHelper.getLocaleDate(Configuration
+				.getInstance().getSystemConfig().getMFILocale(), systemDate);
+		
+		savingsPerformance.setMissedDeposits(getDBService().getMissedDeposits(currentDate));
 	}
 	
 }

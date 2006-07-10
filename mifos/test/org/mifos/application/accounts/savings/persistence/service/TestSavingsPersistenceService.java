@@ -1,6 +1,8 @@
 package org.mifos.application.accounts.savings.persistence.service;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -8,19 +10,26 @@ import java.util.Set;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.SavingsAccountView;
+import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.checklist.business.AccountCheckListBO;
 import org.mifos.application.checklist.business.CheckListDetailEntity;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -33,6 +42,7 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestConstants;
@@ -44,6 +54,7 @@ public class TestSavingsPersistenceService extends MifosTestCase {
 
 	private SavingsPersistenceService dbService;
 
+	private CustomerBO client;
 	private CustomerBO group;
 
 	private CustomerBO center;
@@ -59,7 +70,9 @@ public class TestSavingsPersistenceService extends MifosTestCase {
 	private SavingsOfferingBO savingsOffering3;
 
 	private AccountCheckListBO accountCheckList;
-
+	private MifosCurrency currency = Configuration.getInstance()
+	.getSystemConfig().getCurrency();
+	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -82,6 +95,7 @@ public class TestSavingsPersistenceService extends MifosTestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(savings);
+		//TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		TestObjectFactory.cleanUp(accountCheckList);
@@ -330,4 +344,47 @@ public class TestSavingsPersistenceService extends MifosTestCase {
 		HibernateUtil.closeSession();
 
 	}
+	
+	public void testGetMissedDeposits() throws Exception {
+		SavingsTestHelper helper = new SavingsTestHelper();
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		savingsOffering = helper.createSavingsOffering("SavingPrd1", Short.valueOf("1"),Short.valueOf("1"));;
+		savings = TestObjectFactory.createSavingsAccount("43245434", group,
+				Short.valueOf("16"), new Date(System.currentTimeMillis()),
+				savingsOffering);
+
+
+		AccountActionDateEntity accountActionDateEntity = savings
+				.getAccountActionDate((short) 1);
+		accountActionDateEntity.setActionDate(offSetCurrentDate(7));
+		
+		Calendar currentDateCalendar = new GregorianCalendar();
+		java.sql.Date currentDate = new java.sql.Date(currentDateCalendar.getTimeInMillis());
+		savings.update();
+		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.closeSession();
+
+		savings = dbService.findById(savings.getAccountId());
+		savings.setUserContext(userContext);
+		HibernateUtil.getSessionTL().flush();
+		assertEquals(dbService.getMissedDeposits(currentDate), 1);
+	}
+	
+	private java.sql.Date offSetCurrentDate(int noOfDays) {
+		Calendar currentDateCalendar = new GregorianCalendar();
+		int year = currentDateCalendar.get(Calendar.YEAR);
+		int month = currentDateCalendar.get(Calendar.MONTH);
+		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
+		currentDateCalendar = new GregorianCalendar(year, month, day - noOfDays);
+		return new java.sql.Date(currentDateCalendar.getTimeInMillis());
+	}
+	
+
+	
 }
+
