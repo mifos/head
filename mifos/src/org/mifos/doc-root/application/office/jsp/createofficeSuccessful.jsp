@@ -91,12 +91,10 @@ function goToCancelPage(){
 
 									 
 									
-									
-									<a href="/Mifos/OfficeAction.do?method=get&officeId=<c:out value='${requestScope.OfficeVo.officeId}'/>" >
+									<html-el:link action="/OfficeAction.do?method=get&officeId=${requestScope.OfficeVo.officeId}">
 									 <mifos:mifoslabel
 										name="office.labelViewOfficeDetails" bundle="OfficeResources"></mifos:mifoslabel>
-										
-									</a>
+									</html-el:link>
 									<!-- <html-el:link action="/OfficeAction.do?method=get"><mifos:mifoslabel
 										name="office.labelViewOfficeDetails" bundle="OfficeResources"></mifos:mifoslabel></html-el:link>
 										-->
