@@ -8,8 +8,6 @@ import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
-//import test.HibernateUtil; 
-
 public abstract class TrxnObjectBuilder {
 	
 	protected Session session = null; 
@@ -18,8 +16,6 @@ public abstract class TrxnObjectBuilder {
 		try {
 			session = HibernateUtil.getSession();
 		} catch (HibernateProcessException e) {
-			//TODO remove the print stack
-			e.printStackTrace();
 			throw new SystemException(e);
 		}
 	}	
@@ -35,6 +31,6 @@ public abstract class TrxnObjectBuilder {
 		return pmnt;
 	}
 	
-	public abstract AccountPayment buildSpecific(AccountActionDate date, short personnelId);
+	public abstract AccountPayment buildSpecific(AccountActionDate date, short personnelId) throws ApplicationException;
 
 }

@@ -16,7 +16,7 @@ public class FieldConfigurationHelper {
 			PropertyResourceBundle propertyString = (PropertyResourceBundle)PropertyResourceBundle.getBundle(FieldConfigurationConstant.FIELD_CONF_PROPERTYFILE,locale);
 			return propertyString.getString(fieldName);
 		}catch(Exception e){
-			e.printStackTrace();
+			//Let the user see null in UI
 		}
 		return fieldName;
 	}
@@ -28,7 +28,7 @@ public class FieldConfigurationHelper {
 			if(labelName!=null)
 				return labelName;
 			}catch(ConfigurationException ce){
-				ce.printStackTrace();
+					//Let the user see null in UI
 			}
 		return null;
 	}

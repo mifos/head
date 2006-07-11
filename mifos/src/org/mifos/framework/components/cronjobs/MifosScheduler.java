@@ -75,21 +75,14 @@ public class MifosScheduler extends Timer {
 	 * This method schedules a specified task to run at a specified time afer a specified delay
 	 */
 	public void schedule(MifosTask task, Date initial, long delay) {
-		try{
 			timer.schedule(task,initial,delay);
-		}catch(IllegalArgumentException iAE){
-			iAE.printStackTrace();
-		}catch(IllegalStateException iSE){
-			iSE.printStackTrace();
-		}
 	}
 
 
 	/**
 	 * This method reads all the task from a xml file and registers them with the MifosScheduler"
 	 */
-	public void registerTasks() {
-		try {
+	public void registerTasks() throws Exception{
 			MifosTask mifosTask;
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
@@ -120,7 +113,6 @@ public class MifosScheduler extends Timer {
 					}
 				}
 
-				try {
 					mifosTask= (MifosTask) Class.forName("org.mifos.framework.components.cronjobs.helpers.".concat(taskName)).newInstance();
 	                mifosTask.name=taskName;
 
@@ -133,29 +125,7 @@ public class MifosScheduler extends Timer {
 	                	schedule(mifosTask,parseInitialTime(initialTime));
 	                }
 
-				}catch(IllegalArgumentException iIAE ){
-					iIAE.printStackTrace();
-				}catch (ClassNotFoundException cnfe) {
-					cnfe.printStackTrace();
-				} catch (InstantiationException ise) {
-					ise.printStackTrace();
-				} catch (IllegalAccessException iae) {
-					iae.printStackTrace();
-				}catch(Exception e){
-					e.printStackTrace();
-				}
 			}
-		} catch (SAXException se) {
-			se.printStackTrace();
-		} catch (ParserConfigurationException pce) {
-			pce.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (URISyntaxException use) {
-			use.printStackTrace();
-		} catch (Exception e){
-			e.printStackTrace();
-		}
 
 	}
 
@@ -166,13 +136,7 @@ public class MifosScheduler extends Timer {
 	 *  a few input params as well.
 	 */
 	public void schedule(MifosTask task, Date initial) {
-		try{
 			timer.schedule(task,initial);
-		}catch(IllegalArgumentException iAE){
-			iAE.printStackTrace();
-		}catch(IllegalStateException iSE){
-			iSE.printStackTrace();
-		}
 	}
 
 	/**

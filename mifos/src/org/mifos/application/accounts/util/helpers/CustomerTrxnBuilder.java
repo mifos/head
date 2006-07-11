@@ -11,23 +11,18 @@ import org.mifos.application.accounts.util.valueobjects.AccountTrxn;
 import org.mifos.application.accounts.util.valueobjects.FeesTrxnDetail;
 import org.mifos.application.master.util.valueobjects.AccountAction;
 import org.mifos.application.master.util.valueobjects.Currency;
+import org.mifos.framework.exceptions.ApplicationException;
 
 public class CustomerTrxnBuilder extends TrxnObjectBuilder{
 
-	public AccountPayment buildSpecific(AccountActionDate date, short personnelId) {
+	public AccountPayment buildSpecific(AccountActionDate date, short personnelId)throws ApplicationException {
 		AccountPayment pmnt =  new AccountPayment();
 		try{
 			//TODO change this to get mifos currency from system config
 			Currency currency = (Currency)session.get(org.mifos.application.master.util.valueobjects.Currency.class, new Short((short)1));
-			//PaymentType pmntType = (PaymentType)session.get(PaymentType.class, paymentType);
-			
-			
 			pmnt.setAccountId(date.getAccountId());
 			pmnt.setAmount(date.getTotalAmount());
-			//pmnt.setPaymentDate(paymentDate);	
 			pmnt.setCurrency(currency);
-			//pmnt.setPaymentType(pmntType);
-					
 			//loan trxn is always either loan repayement or a fee repayment	
 			//first get the loan repayment details
 			AccountAction action = (AccountAction)session.get(AccountAction.class, AccountConstants.ACTION_FEE_REPAYMENT);		
@@ -56,7 +51,8 @@ public class CustomerTrxnBuilder extends TrxnObjectBuilder{
 				}
 			}
 		}catch(Exception e){
-			e.printStackTrace();
+
+				throw new ApplicationException(e);
 		}
 		
 		return pmnt;

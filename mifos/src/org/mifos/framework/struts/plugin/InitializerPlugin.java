@@ -391,7 +391,7 @@ public class InitializerPlugin implements PlugIn {
 	public void destroy() {
 	}
 
-	private void configureAuditLogValues() throws SystemException {
+	private void configureAuditLogValues() throws SystemException, ApplicationException {
 		AuditConfigurtion auditConfigurtion = new AuditConfigurtion();
 		auditConfigurtion.createEntityValueMap();
 	}

@@ -55,6 +55,9 @@ import org.mifos.application.master.util.valueobjects.LookUpMaster;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.dao.helpers.MasterDataRetriever;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.HibernateProcessException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.valueobjects.SearchResults;
 
@@ -101,20 +104,13 @@ public class AuditConfigurtion {
 	
 	
 	private void getResourceBundle(){
-		try{
+		
 			columnNames =	(PropertyResourceBundle)PropertyResourceBundle.getBundle("org/mifos/framework/util/resources/audit/ColumnMappingBundle");
 			locale =Configuration.getInstance().getSystemConfig().getMFILocale();
-		}catch(NullPointerException  npe){
-			npe.printStackTrace(); 
-		}catch(MissingResourceException mre){
-			mre.printStackTrace(); 
-		}catch(ClassCastException  cce){
-			cce.printStackTrace(); 
-		}
 	}
 	
 	
-	public void createEntityValueMap(){
+	public void createEntityValueMap() throws SystemException, ApplicationException{
 		getResourceBundle();
 		ColumnPropertyMapping columnPropertyMapping =XMLParser.getInstance().parser();
 		EntityType[] entityTypes = columnPropertyMapping.getEntityTypes();
@@ -144,7 +140,7 @@ public class AuditConfigurtion {
 		return columnPropertyMap;
 	}
 	
-	private Map<String,Map> createPropertyNames(PropertyName[] propertyNames){
+	private Map<String,Map> createPropertyNames(PropertyName[] propertyNames) throws  SystemException, ApplicationException{
 		propertyMap=new HashMap<String,Map>();
 		for(int i=0;i<propertyNames.length;i++){
 			if(propertyNames[i].getLookUp().equalsIgnoreCase(XMLConstants.YES))
@@ -158,7 +154,7 @@ public class AuditConfigurtion {
 	}
 	
 	
-	private Map<String,String> createValueMap(EntityName entityName){
+	private Map<String,String> createValueMap(EntityName entityName) throws  SystemException, ApplicationException{
 		valueMap=new HashMap<String,String>();
 		if(entityName.getClassPath()==null && entityName.getPkColumn()==null){
 			fetchMasterData(entityName.getName(),Short.valueOf("1"));
@@ -169,14 +165,12 @@ public class AuditConfigurtion {
 	}
 	
 	
-	private void fetchMasterData(String entityName,Short localeId){
+	private void fetchMasterData(String entityName,Short localeId) throws SystemException, ApplicationException{
 		
 		MasterDataRetriever masterDataRetriever=null;
 		SearchResults obj=null;
 		EntityMaster entityMaster =null;
 		List<LookUpMaster> lookUpMasterData=null;
-		
-		try{
 			masterDataRetriever=new MasterDataRetriever();
 			obj=masterDataRetriever.retrieveMasterData(entityName,localeId,"test");
 			entityMaster=(EntityMaster)obj.getValue();
@@ -184,9 +178,6 @@ public class AuditConfigurtion {
 			for(LookUpMaster lookUpMaster:lookUpMasterData) {
 				addToValueMap(lookUpMaster.getLookUpId().toString(),lookUpMaster.getLookUpValue());
 			}
-		}catch(Exception e){
-			e.printStackTrace(); 
-		}
     }
 	
 	
