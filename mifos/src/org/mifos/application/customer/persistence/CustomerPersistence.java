@@ -336,4 +336,16 @@ public class CustomerPersistence extends Persistence {
 			throw new PersistenceException(he);
 		}
 	}
+	
+	public List<Integer> getCustomers(Short customerLevelId) throws PersistenceException {
+		try {
+			Map<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("LEVEL_ID", customerLevelId);
+			List<Integer> queryResult = executeNamedQuery(
+					NamedQueryConstants.GET_ALL_CUSTOMERS, queryParameters);
+			return queryResult;
+		} catch (HibernateException he) {
+			throw new PersistenceException(he);
+		}
+	}
 }

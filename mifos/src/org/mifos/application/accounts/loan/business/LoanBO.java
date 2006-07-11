@@ -44,6 +44,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -1434,5 +1435,31 @@ public class LoanBO extends AccountBO {
 			return  new Money(loanPersistance.getFeeAmountAtDisbursement(this.getAccountId(),disbursalDate).toString());
 		}
 		
+	}
+	
+	public Boolean hasPortfolioAtRisk(){
+		List<AccountActionDateEntity> accountActionDateList = getDetailsOfInstallmentsInArrears();
+		for (AccountActionDateEntity accountActionDateEntity : accountActionDateList ) {
+			Calendar actionDate = new GregorianCalendar();
+			actionDate.setTime(accountActionDateEntity.getActionDate());
+			long diffInTermsOfDay = (Calendar.getInstance()
+					.getTimeInMillis() - actionDate.getTimeInMillis())
+					/ (24 * 60 * 60 * 1000);
+			if (diffInTermsOfDay > 30) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
+	public Money getRemainingPrincipalAmount(){
+		return loanSummary.getOriginalPrincipal().subtract(loanSummary.getPrincipalPaid());
+	}
+	
+	public Boolean isAccountActive(){
+		return (getAccountState().getId().equals(
+				AccountStates.LOANACC_ACTIVEINGOODSTANDING) || getAccountState()
+				.getId().equals(AccountStates.LOANACC_BADSTANDING)) ? true : false;
 	}
 }

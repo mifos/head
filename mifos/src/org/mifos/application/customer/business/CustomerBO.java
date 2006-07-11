@@ -47,6 +47,8 @@ import java.util.TreeSet;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.CustomerAccountBO;
+import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
 import org.mifos.application.office.business.OfficeBO;
@@ -59,6 +61,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 
 /**
@@ -529,5 +532,19 @@ public class CustomerBO extends BusinessObject {
 	@Override
 	public Short getEntityID() {
 		return EntityMasterConstants.Customer;
+	}
+	
+	public void generatePortfolioAtRisk()throws PersistenceException, ServiceException{}
+	
+	public Money getBalanceForAccountsAtRisk(){
+		for(AccountBO account : getAccounts()){
+			if(account.getAccountType().getAccountTypeId().equals(AccountConstants.LOAN_TYPE)
+					&& ((LoanBO)account).isAccountActive()){
+				LoanBO loan=(LoanBO)account;
+				if(loan.hasPortfolioAtRisk())
+					return loan.getRemainingPrincipalAmount();
+			}
+		}
+		return new Money();
 	}
 }

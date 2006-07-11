@@ -1,7 +1,10 @@
 package org.mifos.application.customer.business;
 
 import java.sql.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
+import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanPerformanceHistoryEntity;
@@ -131,4 +134,36 @@ public class TestCustomerBO extends MifosTestCase {
 		assertEquals(currentDate,loanBO.getLoanPerformanceHistory().getLoanMaturityDate());
 	}
 
+	
+
+	public void testGetBalanceForAccountsAtRisk() throws PersistenceException {
+		createInitialObjects();
+		accountBO = getLoanAccount(group,meeting);
+		TestObjectFactory.flushandCloseSession();
+		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		client=(ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
+		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
+		assertEquals(new Money(),group.getBalanceForAccountsAtRisk());
+		changeFirstInstallmentDate(accountBO,31);
+		assertEquals(new Money("300"),group.getBalanceForAccountsAtRisk());
+		TestObjectFactory.flushandCloseSession();
+		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		client=(ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
+		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
+	}
+	
+	private void changeFirstInstallmentDate(AccountBO accountBO,int numberOfDays) {
+		Calendar currentDateCalendar = new GregorianCalendar();
+		int year = currentDateCalendar.get(Calendar.YEAR);
+		int month = currentDateCalendar.get(Calendar.MONTH);
+		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
+		currentDateCalendar = new GregorianCalendar(year, month, day - numberOfDays);
+		for (AccountActionDateEntity accountActionDateEntity : accountBO
+				.getAccountActionDates()) {
+			accountActionDateEntity.setActionDate(new java.sql.Date(
+					currentDateCalendar.getTimeInMillis()));
+			break;
+		}
+	}
 }

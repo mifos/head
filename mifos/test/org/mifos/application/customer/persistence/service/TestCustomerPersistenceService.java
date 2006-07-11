@@ -430,4 +430,33 @@ public class TestCustomerPersistenceService extends MifosTestCase {
 		TestObjectFactory.cleanUp(group1);
 		TestObjectFactory.cleanUp(center1);
 	}
+	
+	public void testGetCustomer() throws NumberFormatException, SystemException, ApplicationException {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active_test", Short
+				.valueOf("13"), "1.4", meeting, new Date(System
+				.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE, "1.4.1", center, new Date(System
+				.currentTimeMillis()));
+		CenterBO center1 = TestObjectFactory.createCenter("Center_Active_test1", Short
+				.valueOf("13"), "1.5", meeting, new Date(System
+				.currentTimeMillis()));
+		GroupBO group1 = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE, "1.5.1", center1, new Date(System
+				.currentTimeMillis()));
+		client = TestObjectFactory.createClient("client1",ClientConstants.STATUS_ACTIVE,"1.4.1.1",group,new Date(System
+				.currentTimeMillis()));
+		ClientBO client2 = TestObjectFactory.createClient("client2",ClientConstants.STATUS_CLOSED,"1.4.1.2",group,new Date(System
+				.currentTimeMillis()));
+		ClientBO client3 = TestObjectFactory.createClient("client3",ClientConstants.STATUS_CANCELLED,"1.5.1",group1,new Date(System
+				.currentTimeMillis()));
+		List<Integer> customerIds = customerPersistenceService.getCustomers(Short.valueOf("3"));
+		assertEquals(2,customerIds.size());
+			
+		TestObjectFactory.cleanUp(client3);
+		TestObjectFactory.cleanUp(client2);
+		TestObjectFactory.cleanUp(group1);
+		TestObjectFactory.cleanUp(center1);
+	}
+
 }

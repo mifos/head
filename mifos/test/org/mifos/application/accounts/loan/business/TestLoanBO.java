@@ -998,5 +998,86 @@ public class TestLoanBO extends MifosTestCase {
 		}
 	}
 	
+	public void testHasPortfolioAtRisk(){
+		accountBO = getLoanAccount();
+		assertFalse(((LoanBO)accountBO).hasPortfolioAtRisk());
+		changeFirstInstallmentDate(accountBO,31);
+		assertTrue(((LoanBO)accountBO).hasPortfolioAtRisk());
+	}
+	
+	
+	private void changeFirstInstallmentDate(AccountBO accountBO,int numberOfDays) {
+		Calendar currentDateCalendar = new GregorianCalendar();
+		int year = currentDateCalendar.get(Calendar.YEAR);
+		int month = currentDateCalendar.get(Calendar.MONTH);
+		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
+		currentDateCalendar = new GregorianCalendar(year, month, day - numberOfDays);
+		for (AccountActionDateEntity accountActionDateEntity : accountBO
+				.getAccountActionDates()) {
+			accountActionDateEntity.setActionDate(new java.sql.Date(
+					currentDateCalendar.getTimeInMillis()));
+			break;
+		}
+	}
+	
+	public void testGetRemainingPrincipalAmount() throws AccountException, SystemException{
+		accountBO = getLoanAccount();	
+		Date currentDate = new Date(System.currentTimeMillis());
+		LoanBO loan = (LoanBO) accountBO;
+		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
+		accntActionDates.addAll(loan.getAccountActionDates());
+		PaymentData paymentData = TestObjectFactory
+				.getLoanAccountPaymentData(accntActionDates, TestObjectFactory
+						.getMoneyForMFICurrency(212 * 6), null, Short
+						.valueOf("1"), "receiptNum", Short.valueOf("1"),
+						currentDate,currentDate);
+		loan.applyPayment(paymentData);
+
+		TestObjectFactory.updateObject(loan);
+		TestObjectFactory.flushandCloseSession();
+		assertEquals(
+				"The amount returned for the payment should have been 1272",
+				1272.0, loan.getLastPmntAmnt());
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				loan.getAccountId());
+		loan=(LoanBO)accountBO;
+		loan.getLoanSummary().getOriginalPrincipal().subtract(loan.getLoanSummary().getPrincipalPaid());
+		assertEquals(loan.getRemainingPrincipalAmount(),loan.getLoanSummary().getOriginalPrincipal().subtract(loan.getLoanSummary().getPrincipalPaid()));
+	}
+	
+	public void testIsAccountActive() throws AccountException, SystemException, NumberFormatException, RepaymentScheduleException, FinancialException{
+		Date startDate = new Date(System.currentTimeMillis());
+		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 3);
+		assertFalse(((LoanBO) accountBO).isAccountActive());
+		Short personnelId = accountBO.getPersonnel().getPersonnelId();
+		// disburse loan
+
+		((LoanBO) accountBO).disburseLoan("1234", startDate,
+				Short.valueOf("1"), personnelId, startDate, Short.valueOf("1"));
+		Session session = HibernateUtil.getSessionTL();
+		HibernateUtil.startTransaction();
+		session.save(accountBO);
+		HibernateUtil.getTransaction().commit();
+		((LoanBO) accountBO).setLoanMeeting(null);
+		Set<AccountPaymentEntity> accountpayments = accountBO
+				.getAccountPayments();
+		assertEquals(1, accountpayments.size());
+		for (AccountPaymentEntity entity : accountpayments) {
+
+			assertEquals("1234", entity.getReceiptNumber());
+			// asssert loan trxns
+			Set<AccountTrxnEntity> accountTrxns = entity.getAccountTrxns();
+			assertEquals(1, accountTrxns.size());
+			for (AccountTrxnEntity accountTrxn : accountTrxns) {
+				if (accountTrxn.getAccountActionEntity().getId() == AccountConstants.ACTION_DISBURSAL)
+					assertEquals(300.0, accountTrxn.getAmount()
+							.getAmountDoubleValue());
+				assertEquals(accountBO.getAccountId(), accountTrxn.getAccount()
+						.getAccountId());
+
+			}
+		}
+		assertTrue(((LoanBO) accountBO).isAccountActive());
+	}
 
 }

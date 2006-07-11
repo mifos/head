@@ -136,4 +136,8 @@ public class CustomerPersistenceService extends PersistenceService {
 	public List<CustomerBO> getAllChildrenForParent(String searchId, Short officeId,Short customerLevelId) throws PersistenceException {
 		return serviceImpl.getAllChildrenForParent(searchId, officeId,customerLevelId);
 	}
+	
+	public List<Integer> getCustomers(Short levelId) throws PersistenceException {
+		return serviceImpl.getCustomers(levelId);
+	}
 }

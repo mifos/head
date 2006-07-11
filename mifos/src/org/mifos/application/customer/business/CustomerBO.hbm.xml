@@ -196,5 +196,8 @@
 	</query>	
 	<query name="Customer.getAllChildren">
 		<![CDATA[from org.mifos.application.customer.business.CustomerBO as customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerLevel.levelId < :LEVEL_ID ]]>
+	</query>
+	<query name="Customer.getAllCustomers">
+		<![CDATA[select customer.customerId from org.mifos.application.customer.business.CustomerBO as customer where customer.customerLevel.levelId =:LEVEL_ID ]]>
 	</query>	
 </hibernate-mapping>

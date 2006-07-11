@@ -20,6 +20,21 @@ public class GroupPerformanceHistoryEntity extends PersistentObject {
 	private Money portfolioAtRisk;
 
 	private GroupBO group;
+	
+	public GroupPerformanceHistoryEntity(){}
+	
+	public GroupPerformanceHistoryEntity(GroupBO group, Integer clientCount,
+			Money lastGroupLoanAmount, Money avgLoanForMember,
+			Money totalOutstandingPortfolio, Money totalSavings,
+			Money portfolioAtRisk) {
+		this.group=group;
+		this.portfolioAtRisk=portfolioAtRisk;
+		this.totalOutstandingPortfolio=totalOutstandingPortfolio;
+		this.totalSavings=totalSavings;
+		this.avgLoanForMember=avgLoanForMember;
+		this.lastGroupLoanAmount=lastGroupLoanAmount;
+		this.clientCount=clientCount;
+	}
 
 	
 

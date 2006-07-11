@@ -38,9 +38,19 @@
 
 package org.mifos.application.customer.group.business;
 
+import java.util.List;
+
+import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.Money;
 
 /**
  * This class denotes the Group (row in customer table) object and all attributes associated with it.
@@ -71,5 +81,19 @@ public class GroupBO extends CustomerBO {
 			GroupPerformanceHistoryEntity groupPerformanceHistory) {
 		this.groupPerformanceHistory = groupPerformanceHistory;
 	}
-
+	
+	public void generatePortfolioAtRisk() throws PersistenceException, ServiceException{
+		Money amount=getBalanceForAccountsAtRisk();
+		List<CustomerBO> clients = getDBService().getAllChildrenForParent(
+					getSearchId(), getOffice().getOfficeId(),
+					CustomerConstants.GROUP_LEVEL_ID);
+		if(clients!=null && !clients.isEmpty()){
+			for(CustomerBO client : clients){
+				amount=amount.add(client.getBalanceForAccountsAtRisk());
+			}
+		}
+		if(getGroupPerformanceHistory().getTotalOutstandingPortfolio().getAmountDoubleValue()!=0.0)
+			getGroupPerformanceHistory().setPortfolioAtRisk(amount.divide(getGroupPerformanceHistory().getTotalOutstandingPortfolio()));
+		getDBService().update(this);
+	}
 }
