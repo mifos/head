@@ -1303,6 +1303,7 @@ public class ClientCreationActionForm extends MifosActionForm {
 											FieldConfigurationHelper.getLocalSpecificFieldNames(fieldConfigurationEntity.getLabel(),locale)));
 						
 						}
+						getCustomerPicture().reset();
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
