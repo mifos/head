@@ -592,8 +592,7 @@
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
 									<td colspan="2" class="fontnormalbold"><mifos:mifoslabel keyhm="Client.Address" isManadatoryIndicationNotRequired="yes"
-										name="client.AddressHeading" bundle="ClientUIResources"></mifos:mifoslabel><br>
-									<br>
+										name="client.AddressHeading" bundle="ClientUIResources"></mifos:mifoslabel>									
 									</td>
 								</tr>
 								<!-- Line 1 of address -->

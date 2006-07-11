@@ -177,13 +177,16 @@
 										disabled="true" /></td>
 								</tr>
 								<tr class="fontnormal">
-									<td align="right" class="fontnormal"><mifos:mifoslabel keyhm="Client.TrainedDate"
+									<td align="right" class="fontnormal">
+									<mifos:mifoslabel keyhm="Client.TrainedDate"
 										name="client.TrainedOnDate" bundle="ClientUIResources"></mifos:mifoslabel>
 									</td>
 									<td><c:out
 										value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,requestScope.clientVO.trainedDate)}" />
 									<html-el:hidden property="trainedDate"
 										value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,requestScope.clientVO.trainedDate)}" />
+									<html-el:hidden property="trainedDateFormat" value=""/>
+									<html-el:hidden property="trainedDateYY" value=""/>
 									</td>
 								</tr>
 							</c:when>
@@ -195,10 +198,12 @@
 									<td width="75%"><mifos:checkbox keyhm="Client.Trained" property="trained" value="1" /></td>
 								</tr>
 								<tr class="fontnormal">
-									<td align="right" class="fontnormal"><mifos:mifoslabel keyhm="Client.TrainedDate"
-										name="client.TrainedOnDate" bundle="ClientUIResources"></mifos:mifoslabel>
+									<td align="right" class="fontnormal">
+									<mifos:mifoslabel keyhm="Client.TrainedDate" name="client.TrainedOnDate" bundle="ClientUIResources"></mifos:mifoslabel>
+									
 									</td>
-									<td><date:datetag keyhm="Client.TrainedDate" property="trainedDate" name="clientVO" /></td>
+									<td>
+									<date:datetag keyhm="Client.TrainedDate" property="trainedDate" /></td>
 								</tr>
 							</c:otherwise>
 						</c:choose>
