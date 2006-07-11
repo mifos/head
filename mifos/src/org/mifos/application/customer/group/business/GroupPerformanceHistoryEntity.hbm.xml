@@ -7,11 +7,10 @@
 <hibernate-mapping>
 
     <class name="org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity" table="GROUP_PERF_HISTORY">
-        <id name="customerId" column="CUSTOMER_ID" type="integer">
-            <generator class="foreign">
-	            <param name="property">group</param>
-	        </generator>    
+        <id name="id" column="ID" type="integer">
+            <generator class="native"/>
         </id>
+        
         <property name="lastGroupLoanAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
 	        <column name="LAST_GROUP_LOAN_AMNT_DISB_CURRENCY_ID" /> 
 			<column name="LAST_GROUP_LOAN_AMNT_DISB" />
@@ -32,8 +31,8 @@
 	        <column name="PORTFOLIO_AT_RISK_CURRENCY_ID" /> 
 			<column name="PORTFOLIO_AT_RISK" />
 		</property>        
-        <one-to-one name="group"
-			class="org.mifos.application.customer.group.business.GroupBO" lazy="true" />
+        <many-to-one name="group" column="CUSTOMER_ID"
+			class="org.mifos.application.customer.group.business.GroupBO" lazy="true" unique="true"/>
     </class>    
     
 </hibernate-mapping>

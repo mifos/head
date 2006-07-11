@@ -7,17 +7,15 @@
 <hibernate-mapping>
 
     <class name="org.mifos.application.accounts.loan.util.valueobjects.LoanPerformanceHistory" table="LOAN_PERF_HISTORY">
-        <id name="accountId" column="ACCOUNT_ID" type="integer">
-            <generator class="foreign">
-	            <param name="property">loan</param>
-	        </generator>    
-        </id>
+	   <id name="id" column="ID" type="integer">
+            <generator class="native"/>
+	   </id>
         
         <property name="noOfPayments" column="NO_OF_PAYMENTS" />
         <property name="noOfMissedPayments" column="NO_OF_MISSED_PAYMENTS" />
 		<property name="daysInArrears" column="DAYS_IN_ARREARS" />
 		<property name="loanMaturityDate" column="LOAN_MATURITY_DATE" type="date"/>
-        <one-to-one name="loan" class="org.mifos.application.accounts.loan.util.valueobjects.Loan" lazy="true" />
+        <many-to-one name="loan" column="ACCOUNT_ID" class="org.mifos.application.accounts.loan.util.valueobjects.Loan" lazy="true"  unique="true"/>
     </class>    
     
 </hibernate-mapping>

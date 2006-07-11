@@ -1,11 +1,12 @@
 package org.mifos.application.customer.client.business;
 
+
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.util.helpers.Money;
 
 public class ClientPerformanceHistoryEntity extends PersistentObject {
 
-	private Integer customerId;
+	private Integer id;
 
 	private Integer loanCycleNumber;
 
@@ -18,13 +19,24 @@ public class ClientPerformanceHistoryEntity extends PersistentObject {
 	private Money totalSavings;
 
 	private ClientBO client;
-
-	public Integer getCustomerId() {
-		return customerId;
+	
+	public ClientPerformanceHistoryEntity() {}
+	
+	public ClientPerformanceHistoryEntity(Integer loanCycleNumber,Integer noOfActiveLoans,Money lastLoanAmount,Money delinquentPortfolio,Money totalSavings) {
+		this.loanCycleNumber = loanCycleNumber;
+		this.noOfActiveLoans = noOfActiveLoans;
+		this.lastLoanAmount = lastLoanAmount;
+		this.delinquentPortfolio = delinquentPortfolio;
+		this.totalSavings = totalSavings;
 	}
 
-	public void setCustomerId(Integer customerId) {
-		this.customerId = customerId;
+	
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public Money getDelinquentPortfolio() {

@@ -146,7 +146,7 @@
 				cascade="all" lazy="true" />
 			<one-to-one name="loanPerformanceHistory" 
 				class="org.mifos.application.accounts.loan.business.LoanPerformanceHistoryEntity" 
-				cascade="all" lazy="true"/>
+				cascade="all" lazy="true" property-ref="loan"/>
 			<set name="loanActivityDetails" cascade="all" inverse="true"
 				table="LOAN_ACTIVITY_DETAILS" lazy="true" order-by="ID desc">
 				<key column="ACCOUNT_ID" />

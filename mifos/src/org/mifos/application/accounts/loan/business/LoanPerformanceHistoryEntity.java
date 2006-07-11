@@ -6,7 +6,7 @@ import org.mifos.framework.business.PersistentObject;
 
 public class LoanPerformanceHistoryEntity extends PersistentObject {
 
-	private Integer accountId;
+	private Integer id;
 
 	private Integer noOfPayments;
 
@@ -24,13 +24,19 @@ public class LoanPerformanceHistoryEntity extends PersistentObject {
 		this.daysInArrears = 0;
 	}
 
-	public Integer getAccountId() {
-		return accountId;
+	
+
+	public Integer getId() {
+		return id;
 	}
 
-	public void setAccountId(Integer accountId) {
-		this.accountId = accountId;
+
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
+
+
 
 	public Integer getDaysInArrears() {
 		return daysInArrears;

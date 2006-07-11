@@ -7,10 +7,8 @@
 <hibernate-mapping>
 
     <class name="org.mifos.application.customer.group.util.valueobjects.GroupPerformanceHistory" table="GROUP_PERF_HISTORY">
-        <id name="customerId" column="CUSTOMER_ID" type="integer">
-            <generator class="foreign">
-	            <param name="property">group</param>
-	        </generator>    
+        <id name="id" column="ID" type="integer">
+            <generator class="native"/>
         </id>
         
         <property name="clientCount" column="NO_OF_CLIENTS" />
@@ -34,8 +32,7 @@
 	        <column name="PORTFOLIO_AT_RISK_CURRENCY_ID" /> 
 			<column name="PORTFOLIO_AT_RISK" />
 		</property>        
-        <one-to-one name="group"
-			class="org.mifos.application.customer.group.util.valueobjects.Group" lazy="true" />
+        <many-to-one name="group" column="CUSTOMER_ID"	class="org.mifos.application.customer.group.util.valueobjects.Group" lazy="true" unique="true" />
     </class>    
     
 </hibernate-mapping>

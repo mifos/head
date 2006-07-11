@@ -6,7 +6,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
 public class LoanPerformanceHistory extends ValueObject {
-	private Integer accountId;
+	private Integer id;
 
 	private Integer noOfPayments;
 
@@ -16,7 +16,7 @@ public class LoanPerformanceHistory extends ValueObject {
 
 	private Date loanMaturityDate;
 
-	private LoanBO loan;
+	private Loan loan;
 	
 	public LoanPerformanceHistory() {
 		this.noOfPayments = 0;
@@ -24,13 +24,16 @@ public class LoanPerformanceHistory extends ValueObject {
 		this.daysInArrears = 0;
 	}
 
-	public Integer getAccountId() {
-		return accountId;
+
+	public Integer getId() {
+		return id;
 	}
 
-	public void setAccountId(Integer accountId) {
-		this.accountId = accountId;
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
+
 
 	public Integer getDaysInArrears() {
 		return daysInArrears;
@@ -64,11 +67,11 @@ public class LoanPerformanceHistory extends ValueObject {
 		this.noOfPayments = noOfPayments;
 	}
 
-	public LoanBO getLoan() {
+	public Loan getLoan() {
 		return loan;
 	}
 
-	public void setLoan(LoanBO loan) {
+	public void setLoan(Loan loan) {
 		this.loan = loan;
 	}
 }

@@ -113,7 +113,7 @@
 		<subclass
 			name="org.mifos.application.customer.group.business.GroupBO"
 			discriminator-value="GROUP">
-			<one-to-one name="groupPerformanceHistory" class="org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity" cascade="all" lazy="true"/>
+			<one-to-one name="groupPerformanceHistory" class="org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity" cascade="all" lazy="true" property-ref="group"/>
 		</subclass>
 		<subclass
 			name="org.mifos.application.customer.client.business.ClientBO"
@@ -130,7 +130,7 @@
 				<one-to-many
 					class="org.mifos.application.customer.client.business.ClientAttendanceBO" />
 			</set>
-			<one-to-one name="clientPerformanceHistory" class="org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity" cascade="all" lazy="true"/>
+			<one-to-one name="clientPerformanceHistory" class="org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity" cascade="all" lazy="true" property-ref="client"/>
 		</subclass>
 
 	</class>

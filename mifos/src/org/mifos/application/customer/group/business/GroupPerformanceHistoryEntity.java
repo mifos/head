@@ -5,7 +5,7 @@ import org.mifos.framework.util.helpers.Money;
 
 public class GroupPerformanceHistoryEntity extends PersistentObject {
 
-	private Integer customerId;
+	private Integer id;
 
 	private Integer clientCount;
 
@@ -21,12 +21,14 @@ public class GroupPerformanceHistoryEntity extends PersistentObject {
 
 	private GroupBO group;
 
-	public Integer getCustomerId() {
-		return customerId;
+	
+
+	public Integer getId() {
+		return id;
 	}
 
-	public void setCustomerId(Integer customerId) {
-		this.customerId = customerId;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public Money getAvgLoanForMember() {

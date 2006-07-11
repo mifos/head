@@ -5,7 +5,7 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 public class ClientPerformanceHistory extends ValueObject {
 
-	private Integer customerId;
+	private Integer id;
 
 	private Integer loanCycleNumber;
 
@@ -18,13 +18,23 @@ public class ClientPerformanceHistory extends ValueObject {
 	private Money totalSavings;
 
 	private Client client;
-
-	public Integer getCustomerId() {
-		return customerId;
+	
+	public ClientPerformanceHistory() {}
+	
+	public ClientPerformanceHistory(Integer loanCycleNumber,Integer noOfActiveLoans,Money lastLoanAmount,Money delinquentPortfolio,Money totalSavings) {
+		this.loanCycleNumber = loanCycleNumber;
+		this.noOfActiveLoans = noOfActiveLoans;
+		this.lastLoanAmount = lastLoanAmount;
+		this.delinquentPortfolio = delinquentPortfolio;
+		this.totalSavings = totalSavings;
 	}
 
-	public void setCustomerId(Integer customerId) {
-		this.customerId = customerId;
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public Money getDelinquentPortfolio() {
