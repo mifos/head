@@ -279,12 +279,12 @@ public class SavingsPersistence extends Persistence {
 		}
 	}
 
-	public int getMissedDeposits( Date currentDate) throws PersistenceException {
+	public int getMissedDeposits(Integer accountId , Date currentDate) throws PersistenceException {
 	try 	
 	{		
 			Integer count =0;
 			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-			//queryParameters.put("accountId", accountId);
+			queryParameters.put("ACCOUNT_ID", accountId);
 			queryParameters.put("ACCOUNT_TYPE_ID", AccountTypes.SAVINGSACCOUNT );
 			queryParameters.put("ACTIVE", AccountStates.SAVINGS_ACC_APPROVED );
 			queryParameters.put("CHECKDATE", currentDate);
@@ -303,5 +303,29 @@ public class SavingsPersistence extends Persistence {
 		}catch (HibernateException he) {
 			throw new PersistenceException(he);
 		}
+	}
+
+	public int getMissedDepositsPaidAfterDueDate(Integer accountId) throws PersistenceException {
+		try 	
+		{		
+				Integer count =0;
+				HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+				queryParameters.put("ACCOUNT_ID", accountId);
+				queryParameters.put("ACCOUNT_TYPE_ID", AccountTypes.SAVINGSACCOUNT );
+				queryParameters.put("ACTIVE", AccountStates.SAVINGS_ACC_APPROVED );
+				queryParameters.put("PAYMENTSTATUS", AccountConstants.PAYMENT_PAID);
+				
+				List queryResult=executeNamedQuery(NamedQueryConstants.GET_MISSED_DEPOSITS_PAID_AFTER_DUEDATE,queryParameters);
+				
+				if(null!=queryResult && queryResult.size()>0){
+					Object obj = queryResult.get(0);
+					if(obj!=null)
+						count = (Integer)obj;
+				}		
+				return count.intValue();
+				
+			}catch (HibernateException he) {
+				throw new PersistenceException(he);
+			}
 	}
 }

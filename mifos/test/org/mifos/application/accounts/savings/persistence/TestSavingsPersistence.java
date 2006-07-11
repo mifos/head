@@ -468,7 +468,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 		Calendar currentDateCalendar = new GregorianCalendar();
 		java.sql.Date currentDate = new java.sql.Date(currentDateCalendar.getTimeInMillis());
 		
-		assertEquals(savingsPersistence.getMissedDeposits(currentDate), 1);
+		assertEquals(savingsPersistence.getMissedDeposits(savings.getAccountId(), currentDate), 1);
 	}
 	
 	private java.sql.Date offSetCurrentDate(int noOfDays) {
@@ -479,6 +479,35 @@ public class TestSavingsPersistence extends MifosTestCase {
 		currentDateCalendar = new GregorianCalendar(year, month, day - noOfDays);
 		return new java.sql.Date(currentDateCalendar.getTimeInMillis());
 	}
-	
+	public void testGetMissedDepositsPaidAfterDueDate() throws Exception {
+		SavingsTestHelper helper = new SavingsTestHelper();
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		savingsOffering = helper.createSavingsOffering("SavingPrd1", Short.valueOf("1"),Short.valueOf("1"));;
+		savings = TestObjectFactory.createSavingsAccount("43245434", group,
+				Short.valueOf("16"), new Date(System.currentTimeMillis()),
+				savingsOffering);
+
+
+		AccountActionDateEntity accountActionDateEntity = savings
+				.getAccountActionDate((short) 1);
+		accountActionDateEntity.setActionDate(offSetCurrentDate(7));
+		accountActionDateEntity.setPaymentStatus(AccountConstants.PAYMENT_PAID);
+		Calendar currentDateCalendar = new GregorianCalendar();
+		java.sql.Date currentDate = new java.sql.Date(currentDateCalendar.getTimeInMillis());
+
+		accountActionDateEntity.setPaymentDate(currentDate);
+		savings.update();
+		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.closeSession();
+		savings = savingsPersistence.findById(savings.getAccountId());
+		savings.setUserContext(userContext);
+		HibernateUtil.getSessionTL().flush();
+		assertEquals(savingsPersistence.getMissedDepositsPaidAfterDueDate(savings.getAccountId()),1);
+	}
 
 }

@@ -158,9 +158,13 @@ public class SavingsPersistenceService extends PersistenceService {
 		return serviceImpl.getAccountStateFlag(flagId);
 	}
 
-	public int getMissedDeposits(Date currentDate ) throws PersistenceException {
-		return serviceImpl.getMissedDeposits(currentDate);
+	public int getMissedDeposits(Integer accountId , Date currentDate ) throws PersistenceException {
+		return serviceImpl.getMissedDeposits(accountId ,currentDate);
 		
+	}
+
+	public int getMissedDepositsPaidAfterDueDate(Integer accountId) throws PersistenceException {
+		return serviceImpl.getMissedDepositsPaidAfterDueDate(accountId );
 	}
 
 }

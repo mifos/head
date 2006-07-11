@@ -1717,8 +1717,8 @@ public class SavingsBO extends AccountBO {
 				.getInstance().getSystemConfig().getMFILocale());
 		java.sql.Date currentDate = DateHelper.getLocaleDate(Configuration
 				.getInstance().getSystemConfig().getMFILocale(), systemDate);
-		
-		savingsPerformance.setMissedDeposits(getDBService().getMissedDeposits(currentDate));
+		getSavingsPerformance().addMissedDeposits( getDBService().getMissedDeposits(getAccountId() ,currentDate));
+		getSavingsPerformance().addMissedDeposits( getDBService().getMissedDepositsPaidAfterDueDate(getAccountId()));
 	}
 	
 }

@@ -80,6 +80,13 @@ public class SavingsPerformanceEntity extends PersistentObject {
 			totalInterestEarned = new Money();
 		totalInterestEarned = totalInterestEarned.add(totalAmount);
 	}
+	
+	public void addMissedDeposits(int missedDeposits) {
+		if(this.missedDeposits == null){
+			this.missedDeposits = new Integer(0);
+		}
+		this.missedDeposits = this.missedDeposits + missedDeposits;
+	}
 
 	
 }

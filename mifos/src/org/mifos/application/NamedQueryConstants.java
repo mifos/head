@@ -423,4 +423,6 @@ public interface NamedQueryConstants {
 	public String GET_PAYMENT_TYPES="getPaymentTypes";
 	public String GET_TODAYS_UNPAID_INSTALLMENT_FOR_ACTIVE_CUSTOMERS="getTodaysUnpaidInstallmentForActiveCustomers";
 	public String GET_UPDATED_CUSTOMER_MEETINGS="getUpdatedMeetings";
+	public String GET_MISSED_DEPOSITS_PAID_AFTER_DUEDATE="accounts.countOfMissedDepositsPaidAfterDueDate";
+	
 }

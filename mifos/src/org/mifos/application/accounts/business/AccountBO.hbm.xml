@@ -311,12 +311,21 @@
 		<![CDATA[from org.mifos.application.accounts.business.AccountBO account where account.accountType.accountTypeId = :ACCOUNT_TYPE_ID and (account.customer.searchId like :SEARCH_STRING1 or account.customer.searchId like :SEARCH_STRING2) and account.customer.office.officeId = :OFFICE_ID)]]>
 	</query>
 	<query name="accounts.countOfMissedDeposits">
-		<![CDATA[select count(*) from org.mifos.application.accounts.business.AccountBO account
-			join  account.accountActionDates as actiondate
-			where account.accountType.accountTypeId=:ACCOUNT_TYPE_ID
-			and account.accountState.id =:ACTIVE
-			and actiondate.actionDate < :CHECKDATE
-			and actiondate.paymentStatus=:PAYMENTSTATUS 
+		<![CDATA[select count(*) from org.mifos.application.accounts.business.AccountActionDateEntity actionDate
+			where actionDate.account.accountId = :ACCOUNT_ID and
+			actionDate.account.accountType.accountTypeId=:ACCOUNT_TYPE_ID
+			and actionDate.account.accountState.id =:ACTIVE
+			and actionDate.actionDate < :CHECKDATE
+			and actionDate.paymentStatus=:PAYMENTSTATUS 
+			]]>
+	</query>
+	<query name="accounts.countOfMissedDepositsPaidAfterDueDate">
+		<![CDATA[select count(*) from org.mifos.application.accounts.business.AccountActionDateEntity actionDate
+			where actionDate.account.accountId = :ACCOUNT_ID and
+			actionDate.account.accountType.accountTypeId=:ACCOUNT_TYPE_ID
+			and actionDate.account.accountState.id =:ACTIVE
+			and actionDate.paymentDate > actionDate.actionDate
+			and actionDate.paymentStatus=:PAYMENTSTATUS 
 			]]>
 	</query>
     
