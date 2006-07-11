@@ -76,8 +76,13 @@
 						<table width="60%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td bgcolor="#F0D4A5" style="padding-left:10px; padding-bottom:3px;">
-									<span class="fontnormalbold"><mifos:mifoslabel name="Savings.applytrans" />:</span>&nbsp;&nbsp;&nbsp;&nbsp; <a href="#"><mifos:mifoslabel name="Savings.makeDepositWithdrawl" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#"><mifos:mifoslabel
-											name="Savings.applyAdjustment" /></a>
+									<span class="fontnormalbold"><mifos:mifoslabel name="Savings.applytrans" />:</span>&nbsp;&nbsp;&nbsp;&nbsp; 
+									<html-el:link  href="savingsDepositWithdrawalAction.do?method=load">
+										<mifos:mifoslabel name="Savings.makeDepositWithdrawl" />
+									</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+									<html-el:link href="savingsApplyAdjustmentAction.do?method=load">
+										<mifos:mifoslabel name="Savings.applyAdjustment" />
+									</html-el:link>
 								</td>
 							</tr>
 						</table>

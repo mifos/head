@@ -1114,7 +1114,7 @@ public class SavingsBO extends AccountBO {
 		return oldInterest;
 	}
 	
-	private void adjustExistingPayment(Money amountAdjustedTo, String adjustmentComment) throws SystemException, ApplicationException {
+	protected void adjustExistingPayment(Money amountAdjustedTo, String adjustmentComment) throws SystemException, ApplicationException {
 		AccountPaymentEntity lastPayment = getLastPmnt();
 		lastPayment.setUserContext(getUserContext());
 		for (AccountTrxnEntity accntTrxn : lastPayment.getAccountTrxns()) {
@@ -1136,7 +1136,7 @@ public class SavingsBO extends AccountBO {
 		buildFinancialEntries(new HashSet<AccountTrxnEntity>(newlyAddedTrxns));
 	}
 
-	private AccountPaymentEntity  createAdjustmentPayment(Money amountAdjustedTo, String adjustmentComment) throws SystemException, FinancialException {
+	protected AccountPaymentEntity  createAdjustmentPayment(Money amountAdjustedTo, String adjustmentComment) throws SystemException, FinancialException {
 		AccountPaymentEntity lastPayment = getLastPmnt();
 		AccountPaymentEntity newAccountPayment = null;
 
@@ -1235,12 +1235,12 @@ public class SavingsBO extends AccountBO {
 					.getAmountDoubleValue()) {
 				accountTrxn.setDepositAmount(accountAction.getDeposit());
 				newAmount = newAmount.subtract(accountAction.getDeposit());
-				accountAction.setDepositPaid(accountTrxn.getDepositAmount());
+				accountAction.setDepositPaid(accountAction.getDepositPaid().add(accountTrxn.getDepositAmount()));
 				accountAction.setPaymentStatus(AccountConstants.PAYMENT_PAID);
 			} else {
 				accountTrxn.setDepositAmount(newAmount);
 				newAmount = newAmount.subtract(newAmount);
-				accountAction.setDepositPaid(accountTrxn.getDepositAmount());
+				accountAction.setDepositPaid(accountAction.getDepositPaid().add(accountTrxn.getDepositAmount()));
 				accountAction.setPaymentStatus(AccountConstants.PAYMENT_UNPAID);
 			}
 			accountAction.setPaymentDate(new java.sql.Date(new Date().getTime()));
@@ -1298,14 +1298,17 @@ public class SavingsBO extends AccountBO {
 							oldSavingsAccntTrxn.getCustomer().getCustomerId());
 					if (accountAction.getDeposit().getAmountDoubleValue() <= newAmount
 							.getAmountDoubleValue()) {
-						accountTrxn
-								.setDepositAmount(accountAction.getDeposit());
-						newAmount = newAmount.subtract(accountAction
-								.getDeposit());
+						accountTrxn.setDepositAmount(accountAction.getDeposit());
+						newAmount = newAmount.subtract(accountAction.getDeposit());
+						accountAction.setDepositPaid(accountAction.getDepositPaid().add(accountTrxn.getDepositAmount()));
+						accountAction.setPaymentStatus(AccountConstants.PAYMENT_PAID);
 					} else if (newAmount.getAmountDoubleValue() != 0) {
 						accountTrxn.setDepositAmount(newAmount);
 						newAmount = newAmount.subtract(newAmount);
+						accountAction.setDepositPaid(accountAction.getDepositPaid().add(accountTrxn.getDepositAmount()));
+						accountAction.setPaymentStatus(AccountConstants.PAYMENT_UNPAID);
 					}
+					accountAction.setPaymentDate(new java.sql.Date(new Date().getTime()));
 					accountTrxn.setInstallmentId(oldAccntTrxn
 							.getInstallmentId());
 					setSavingsBalance(getSavingsBalance().add(

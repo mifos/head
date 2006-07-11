@@ -1413,7 +1413,7 @@ public class TestSavingsBO extends MifosTestCase {
 	public void testAdjustPmnt_LastPaymentDepositMandatory_PaidPartialDueAmount()
 			throws Exception {
 		createInitialObjects();
-		savingsOffering = helper.createSavingsOffering();
+		savingsOffering = helper.createSavingsOffering("prd1",Short.valueOf("1"),ProductDefinitionConstants.MANDATORY);
 		savings = helper.createSavingsAccount("000100000000017",
 				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
 				userContext);
@@ -1456,11 +1456,8 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.addAccountPayment(payment);
 
 		savings.setSavingsBalance(balanceAmount);
-		SavingsType savingsType = new SavingsType();
-		savingsType.setSavingsTypeId(ProductDefinitionConstants.MANDATORY);
-		savings.getSavingsOffering().setSavingsType(savingsType);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
 		savings = savingsService.findById(savings.getAccountId());
@@ -1469,7 +1466,6 @@ public class TestSavingsBO extends MifosTestCase {
 
 		assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns()
 				.size());
-
 		// Adjust last deposit of 700 to 1000.
 		Money amountAdjustedTo = new Money(currency, "1000.0");
 		savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
@@ -1478,6 +1474,9 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		savings = savingsService.findById(savings.getAccountId());
 
+		for(AccountActionDateEntity action: savings.getAccountActionDates())
+			assertEquals(recommendedAmnt,action.getDepositPaid());
+		
 		AccountPaymentEntity newPayment = savings.getLastPmnt();
 
 		assertEquals(Integer.valueOf(2).intValue(), savings
