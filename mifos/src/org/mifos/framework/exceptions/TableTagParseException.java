@@ -40,7 +40,7 @@ package org.mifos.framework.exceptions;
  * @author mohammedn
  *
  */
-public class TableTagParseException  extends SystemException {
+public class TableTagParseException  extends ApplicationException {
 
 	/**
 	 * 
@@ -52,8 +52,23 @@ public class TableTagParseException  extends SystemException {
 		// TODO Auto-generated constructor stub
 	}
 
-	public TableTagParseException(Object[] values, Throwable cause) {
-		super(values, cause);
+	public TableTagParseException(String key, Object[] values) {
+		super(key, values);
+		// TODO Auto-generated constructor stub
+	}
+
+	public TableTagParseException(String key, Throwable cause, Object[] values) {
+		super(key, cause, values);
+		// TODO Auto-generated constructor stub
+	}
+
+	public TableTagParseException(String key, Throwable cause) {
+		super(key, cause);
+		// TODO Auto-generated constructor stub
+	}
+
+	public TableTagParseException(String key) {
+		super(key);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -68,7 +83,7 @@ public class TableTagParseException  extends SystemException {
 	}
 	
 	public String getKey(){
-		return "exception.framework.SystemException.TableTagParseException";
+		return "exception.framework.TableTagParseException";
 	}
 
 

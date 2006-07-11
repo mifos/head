@@ -401,7 +401,7 @@ public class TableTag extends BodyTagSupport {
 			// return getTableObject(object,xmlName,className).getTable(object);
 			return xmlPath;
 		} else
-			throw new JspException("xml file not found in properties file");
+			throw new JspException(resource.getString(TableTagConstants.NOXMLFILE_ERROR));
 	}
 
 	/**
@@ -413,7 +413,9 @@ public class TableTag extends BodyTagSupport {
 	private String getAction(Table table) throws JspException {
 
 		String action=(String) SessionUtils.getAttribute("action",pageContext.getSession());
-		String forwardkey =(String) SessionUtils.getAttribute("forwardkey",pageContext.getSession());		
+		String forwardkey =(String) SessionUtils.getAttribute("forwardkey",pageContext.getSession());	
+		ResourceBundle resource = ResourceBundle
+		.getBundle(TableTagConstants.PROPERTIESFILE);
 		if(null==action || null==forwardkey) {
 			Path pathVar = table.findPath(key);
 			action = pathVar.getAction();
@@ -422,12 +424,12 @@ public class TableTag extends BodyTagSupport {
 				SessionUtils.setRemovableAttribute("action", action,TableTagConstants.PATH, pageContext
 						.getSession());
 			} else
-				throw new JspException("action not found");
+				throw new JspException(resource.getString( TableTagConstants.NOACTION_ERROR));
 			if (forwardkey != null) {
 				SessionUtils.setRemovableAttribute("forwardkey", forwardkey,TableTagConstants.PATH, pageContext
 						.getSession());
 			} else
-				throw new JspException("forward key not found");
+				throw new JspException(resource.getString( TableTagConstants.NOFWDKEY_ERROR));
 		}
 
 		return action;
@@ -461,18 +463,22 @@ public class TableTag extends BodyTagSupport {
 	private void getTableData(List list) throws TableTagException, TableTagParseException,
 			JspException, TableTagTypeParserException, IOException {
 		Locale locale = getLocale();
+		ResourceBundle resource = ResourceBundle
+		.getBundle(TableTagConstants.PROPERTIESFILE);
 		if (type.equalsIgnoreCase("single")) {
 			getSingleData(list,locale);
 		} else if (type.equalsIgnoreCase("multiple")) {
 			getMultipleData(list,locale);
 		} else
-			throw new TableTagException("type entered is wrong");
+			throw new TableTagException(resource.getString(TableTagConstants.WRONGTYPE_ERROR));
 	}
 
 	private void getSingleData(List list,Locale locale) throws TableTagParseException, TableTagException,
 			JspException, IOException {
 		String xmlFilePath = getSingleFile();
 		Table table = helperCache(xmlFilePath, name);
+		ResourceBundle resource = ResourceBundle
+		.getBundle(TableTagConstants.PROPERTIESFILE);
 		if (table != null) {
 			StringBuilder result = new StringBuilder();
 			JspWriter out = pageContext.getOut();
@@ -482,24 +488,24 @@ public class TableTag extends BodyTagSupport {
 			out.write(result.toString());
 			displayData(list, table,locale);
 		} else
-			throw new JspException("table not found");
+			throw new JspException(resource.getString(TableTagConstants.TABLENOTFOUND_ERROR));
 	}
 
 	private void getMultipleData(List list,Locale locale) throws TableTagTypeParserException,
 			TableTagParseException, TableTagException, JspException,IOException {
 		StringBuilder result = new StringBuilder();
 		JspWriter out = pageContext.getOut();
-		// System.out.println("Current in getMultipleData before  createstart------------------------------"+current);
 		createStartTable(result,true,false);
+		ResourceBundle resource = ResourceBundle
+		.getBundle(TableTagConstants.PROPERTIESFILE);
 		out.write(result.toString());
-		// System.out.println("Current in getMultipleData------------------------------"+current);
 		int number = ((current - 1) * pageSize);
 		for (Object object:list) {
 			Table table = helperMultipleData(object,locale);
 			if (table != null) {
 				displayDataMultiple(object, table,++number,locale);
 			} else
-				throw new JspException("table not found");
+				throw new JspException(resource.getString(TableTagConstants.TABLENOTFOUND_ERROR));
 		}
 		result = new StringBuilder();
 		createEndTable(result,false);
@@ -585,9 +591,6 @@ public class TableTag extends BodyTagSupport {
 	private List getList() throws HibernateSearchException, JspException {
 		Cache cache = (Cache)SessionUtils.getAttribute(TableTagConstants.TABLECACHE, pageContext.getSession());
 		Integer currentValue=(Integer)SessionUtils.getAttribute("current", pageContext.getSession());
-		// System.out.println("currentValue---------------------------------------------------------"+currentValue);
-		// System.out.println("current in getList--------------------------------------------------------"+current);
-		
 		List list = null;
 		if (cache == null) {
 			list=getCacheNullList();
@@ -599,8 +602,6 @@ public class TableTag extends BodyTagSupport {
 			current = Integer.valueOf(currentValue);
 
 			String meth=(String)SessionUtils.getAttribute("meth", pageContext.getSession());
-			// System.out.println("current---------------------------------------------------------"+current);
-			// System.out.println("meth---------------------------------------------------------"+meth);
 			list = meth==null?cache.getList(current, "next"):cache.getList(current, meth);
 			size=cache.getSize();
 		}

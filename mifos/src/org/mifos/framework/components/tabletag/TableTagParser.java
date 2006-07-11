@@ -146,7 +146,7 @@ public class TableTagParser {
 		NodeList pathNodeList = ((Element) table)
 				.getElementsByTagName(TableTagConstants.PATH);
 		if (pathNodeList.getLength() == 0) {
-			throw new TableTagParseException();
+			throw new TableTagParseException(TableTagConstants.UNEXPECTED_ERROR);
 		}
 		Path path[] = new Path[pathNodeList.getLength()];
 		for (int i = 0; i < pathNodeList.getLength(); i++) {
@@ -199,7 +199,7 @@ public class TableTagParser {
 		NodeList columnNodeList = ((Element) row)
 				.getElementsByTagName(TableTagConstants.COLUMN);
 		if (columnNodeList.getLength() == 0) {
-			throw new TableTagParseException();
+			throw new TableTagParseException(TableTagConstants.UNEXPECTED_ERROR);
 		}
 		Column column[] = new Column[columnNodeList.getLength()];
 		for (int i = 0; i < columnNodeList.getLength(); i++) {
@@ -210,7 +210,7 @@ public class TableTagParser {
 			column[i].setParameters(createParameters(columnNodeList.item(i)));
 			if ("link".equals(column[i].getType())) {
 				if (null == column[i].getAction()) {
-					throw new TableTagParseException();
+					throw new TableTagParseException(TableTagConstants.UNEXPECTED_ERROR);
 				}
 			}
 		}

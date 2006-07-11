@@ -112,4 +112,10 @@ public interface TableTagConstants {
 	public static final String PROPERTIESFILE = "org.mifos.framework.components.tabletag.Resources";
 	
 	public static final String STYLECLASS = "styleClass";
+	public static final String UNEXPECTED_ERROR ="errors.unexpected";
+	public static final String NOXMLFILE_ERROR ="error.noxmlfile";
+	public static final String NOACTION_ERROR ="error.noaction";
+	public static final String NOFWDKEY_ERROR ="error.fwdkey";
+	public static final String WRONGTYPE_ERROR ="error.wrongtype";
+	public static final String TABLENOTFOUND_ERROR ="error.tablenotfound";
 }
