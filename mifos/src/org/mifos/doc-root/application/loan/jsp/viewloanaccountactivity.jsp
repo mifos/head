@@ -74,6 +74,11 @@
                 	<c:out value="${loanfn:getCurrrentDate(sessionScope.UserContext.pereferedLocale)}" />
                 </td>
               </tr>
+              <tr><td>
+	              <font class="fontnormalRedBold">
+	              	<html-el:errors bundle="accountsUIResources" />
+	              </font></td>
+              </tr>
             </table>
             <c:if test="${param.accountStateId != 6 and param.accountStateId != 7 and param.accountStateId !=8 and param.accountStateId !=10}">
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -94,6 +99,10 @@
 								<c:if test="${param.lastPaymentAction != '10'}">
 								<c:choose>
 									<c:when test="${param.accountStateId=='5' || param.accountStateId=='9'}">
+									<html-el:link href="applyPaymentAction.do?method=load&input=loan&prdOfferingName=${param.prdOfferingName}&globalAccountNum=${param.globalAccountNum}&accountId=${param.accountId}&accountType=${param.accountTypeId}
+															&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}&accountStateId=${param.accountStateId}">
+										<mifos:mifoslabel name="loan.apply_payment" />
+									</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										<html-el:link href="applyAdjustment.do?method=loadAdjustment&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}"> 
 											<mifos:mifoslabel name="loan.apply_adjustment" />
 										</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -128,8 +137,12 @@
       <html-el:hidden property="accountId" value="${param.accountId}"/>
       <html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}"/>
       <html-el:hidden property="accountStateId" value="${param.accountStateId}"/>
+	  <html-el:hidden property="accountTypeId" value="${param.accountTypeId}"/>
+	  <html-el:hidden property="recordOfficeId" value="${param.recordOfficeId}"/>
+	  <html-el:hidden property="recordLoanOfficerId" value="${param.recordLoanOfficerId}"/>
       <html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}"/>
       <html-el:hidden property="input" value="reviewTransactionPage"/>
+	<mifos:SecurityParam property="Loan" />
 </html-el:form>
 </tiles:put>
 </tiles:insert>        

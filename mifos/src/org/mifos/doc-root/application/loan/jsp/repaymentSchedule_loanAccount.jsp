@@ -67,19 +67,12 @@
 								<span class="fontnormalbold">
 									<mifos:mifoslabel name="loan.apply_trans" />
 								</span>&nbsp;&nbsp;&nbsp;&nbsp;
-								<!--<c:choose>
-									<c:when test="${param.accountStateId<=2}">
-										<html-el:link href="accountTrxn.do?method=load&input=reviewTransactionPage&prdOfferingName=${param.accountName}&globalAccountNum=${param.globalAccountNum}&accountId=${param.accountId}&accountType=${param.accountType}" 
-														onclick="return false;"> 
-											<mifos:mifoslabel name="loan.apply_payment" />
-										</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									</c:when>
-									<c:otherwise>
-										<html-el:link href="accountTrxn.do?method=load&input=reviewTransactionPage&prdOfferingName=${param.accountName}&globalAccountNum=${param.globalAccountNum}&accountId=${param.accountId}&accountType=${param.accountType}">
-											<mifos:mifoslabel name="loan.apply_payment" />
-										</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									</c:otherwise>
-								</c:choose>-->
+								<c:if test="${(param.accountStateId=='5' || param.accountStateId=='9')}">
+									<html-el:link href="applyPaymentAction.do?method=load&input=loan&prdOfferingName=${param.accountName}&globalAccountNum=${param.globalAccountNum}&accountId=${param.accountId}&accountType=${param.accountTypeId}
+															&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}&accountStateId=${param.accountStateId}">
+										<mifos:mifoslabel name="loan.apply_payment" />
+									</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								</c:if>
 								<c:if test="${param.lastPaymentAction != '10'}">
 									<c:choose>
 										<c:when test="${param.accountStateId=='5' || param.accountStateId=='9'}">
@@ -121,9 +114,14 @@
 					</td>
 				</tr>
 			</table>
+						<mifos:SecurityParam property="Loan" />
 		</html-el:form>
 		<html-el:hidden property="input" value="reviewTransactionPage"/>
 		<html-el:hidden property="accountId" value="${param.accountId}"/>
+		<html-el:hidden property="accountStateId" value="${param.accountStateId}"/>
+		<html-el:hidden property="accountTypeId" value="${param.accountTypeId}"/>
+		<html-el:hidden property="recordOfficeId" value="${param.recordOfficeId}"/>
+		<html-el:hidden property="recordLoanOfficerId" value="${param.recordLoanOfficerId}"/>
 		<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}"/>
 		<html-el:hidden property="prdOfferingName" value="${param.accountName}"/>
 	</tiles:put>
