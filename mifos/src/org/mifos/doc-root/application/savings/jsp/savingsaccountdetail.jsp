@@ -305,13 +305,15 @@
                 <span class="fontnormal8pt">
                 <mifos:mifoslabel name="Savings.totalWithdrawls"/>:<c:out value="${sessionScope.BusinessKey.savingsPerformance.totalWithdrawals}" /> </span></td>
               </tr>  
-               <tr>
-                <td class="paddingL10">
-                <span class="fontnormal8pt">
-                <mifos:mifoslabel name="Savings.missedDeposits"/>:<c:out value="${sessionScope.BusinessKey.savingsPerformance.missedDeposits}" /> </span></td>
-  			  </tr>  
+               <c:if test="${sessionScope.BusinessKey.savingsOffering.savingsType.savingsTypeId == SavingsConstants.SAVINGS_MANDATORY}">
+                   <tr>
+	                <td class="paddingL10">
+	                <span class="fontnormal8pt">
+	                <mifos:mifoslabel name="Savings.missedDeposits"/>:<c:out value="${sessionScope.BusinessKey.savingsPerformance.missedDeposits}" /> </span></td>
+	  			  </tr>  
+	  			</c:if>  
 						</table>
-						<!-- <table width="95%" border="0" cellspacing="0" cellpadding="0">
+						<table width="95%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
 								<td>
 									<img src="pages/framework/images/trans.gif" width="7" height="8">
@@ -324,12 +326,12 @@
 									<span class="fontnormalbold"><mifos:mifoslabel name="Savings.recentNotes" /></span>
 								</td>
 							</tr>
-							<%--     <tr>
+							     <tr>
                   <td class="paddingL10"><img src="pages/framework/images/trans.gif" width="10" height="2"></td>
                 </tr>
               <tr>
                   <td class="paddingL10">
-                  		<c:choose>
+                  		<%--<c:choose>
               				<c:when test="${!empty requestScope.notes}">
 								<c:forEach var="note" items="${requestScope.notes}">
 									<span class="fontnormal8ptbold"> <c:out value="${note.commentDate}"/>:</span>
@@ -338,15 +340,15 @@
 											<c:out value="${note.officer.displayName}"/></em><br><br>
 			                	     </span>
 			                	</c:forEach>
-			                </c:when>
-             				<c:otherwise>
+			                </c:when>--%>
+             			<%--	<c:otherwise>--%>
 	         					<span class="fontnormal"> 
 	              	 				<mifos:mifoslabel name="accounts.NoNotesAvailable" />
 	         					</span>
-	     					</c:otherwise>
-	 					</c:choose>
+	     				<%--	</c:otherwise>
+	 					</c:choose>--%>
                   </td>
-                </tr> --%>
+                </tr> 
 							<%--  <tr> 
                 	<td align="right" class="paddingleft05">
 						<span class="fontnormal8pt">
