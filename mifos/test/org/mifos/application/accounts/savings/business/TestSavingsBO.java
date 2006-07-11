@@ -16,6 +16,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountCustomFieldEntity;
+import org.mifos.application.accounts.business.AccountNotesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStateFlagEntity;
@@ -25,6 +26,7 @@ import org.mifos.application.accounts.exceptions.IDGenerationException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.savings.persistence.service.SavingsPersistenceService;
+import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -35,6 +37,7 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.valueobjects.InterestCalcType;
 import org.mifos.application.master.util.valueobjects.SavingsType;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -608,14 +611,14 @@ public class TestSavingsBO extends MifosTestCase {
 				"1.1.1.1", group, new Date(System.currentTimeMillis()));
 		savingsOffering = helper.createSavingsOffering();
 		savings = TestObjectFactory.createSavingsAccount("43245434", client1,
-				Short.valueOf("16"), new Date(System.currentTimeMillis()),
+				AccountStates.SAVINGS_ACC_INACTIVE, new Date(System.currentTimeMillis()),
 				savingsOffering);
 
 		HibernateUtil.closeSession();
 		savings = (SavingsBO) (new AccountPersistanceService()
 				.getAccount(savings.getAccountId()));
 		savings.setSavingsBalance(new Money());
-
+		
 		Money enteredAmount = new Money(currency, "100.0");
 		PaymentData paymentData = new PaymentData(enteredAmount, Short
 				.valueOf("1"), Short.valueOf("1"), new Date(System
@@ -630,6 +633,7 @@ public class TestSavingsBO extends MifosTestCase {
 				accountActionDate);
 		paymentData.addAccountPaymentData(savingsPaymentData);
 		savings.applyPayment(paymentData);
+		assertEquals(AccountStates.SAVINGS_ACC_APPROVED,savings.getAccountState().getId().shortValue());
 		assertEquals(100.0, savings.getSavingsBalance().getAmountDoubleValue());
 		assertEquals(1, savings.getSavingsActivityDetails().size());
 		savings.getAccountPayments().clear();
@@ -1754,7 +1758,7 @@ public class TestSavingsBO extends MifosTestCase {
 	 * amount to be paid for next installment)
 	 * 
 	 */
-	public void testGetTotalAmountInArrearsForCurrentDateMeeting()
+  public void testGetTotalAmountInArrearsForCurrentDateMeeting()
 			throws Exception {
 		savings = getSavingsAccount();
 		assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(),
@@ -1865,6 +1869,17 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = (SavingsBO) saveAndFetch(savings);
 
 		assertEquals(savings.getTotalAmountDue().getAmountDoubleValue(), 600.0);
+	}
+
+	public void testGetTotalAmountDueForCenter()throws Exception {
+		savings = getSavingsAccountForCenter();
+		Money dueAmount = new Money();
+		for(AccountActionDateEntity actionDate: savings.getAccountActionDates()){
+			dueAmount = dueAmount.add(actionDate.getDeposit());
+			break;
+		}
+		dueAmount = dueAmount.add(dueAmount);
+		assertEquals(dueAmount, savings.getTotalAmountDue());
 	}
 
 	public void testGetTotalAmountDueForNextInstallmentForCurrentDateMeeting()
@@ -3658,5 +3673,55 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
+	}
+	
+	public void testCloseAccount() throws Exception{
+		createInitialObjects();
+		savingsOffering = helper.createSavingsOffering();
+		savings = helper.createSavingsAccount("000X00000000017",  savingsOffering,
+				group, AccountStates.SAVINGS_ACC_APPROVED,userContext);
+		savings.setSavingsBalance(new Money(currency,"500"));
+		Money interestAmount = new Money(currency, "40");
+		savings.setInterestToBePosted(interestAmount);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		savings = savingsService.findById(savings.getAccountId());
+		savings.setUserContext(userContext);
+		AccountPaymentEntity payment = new AccountPaymentEntity();
+		payment.setPaymentDate(new Date(new SavingsHelper().getCurrentDate()
+				.getTime()));
+		payment.setAmount(new Money(Configuration.getInstance()
+				.getSystemConfig().getCurrency(), "540"));
+		PaymentTypeEntity paymentType = new PaymentTypeEntity();
+		paymentType.setId(Short.valueOf("1"));
+		payment.setPaymentType(paymentType);
+		AccountNotesEntity notes = new AccountNotesEntity();
+		notes.setComment("closing account");
+		savings.closeAccount(payment, notes, group);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		savings = savingsService.findById(savings.getAccountId());
+		assertEquals(2,savings.getSavingsActivityDetails().size());
+		for(SavingsActivityEntity activity: savings.getSavingsActivityDetails()){
+			if(activity.getActivity().getId().equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL))
+				assertEquals(new Money(currency,"540"), activity.getAmount());
+			else if(activity.getActivity().getId().equals(AccountConstants.ACTION_SAVINGS_INTEREST_POSTING))
+				assertEquals(interestAmount, activity.getAmount());			
+		}
+		group = savings.getCustomer();
+		center = group.getParentCustomer();
+	}
+	
+	private SavingsBO getSavingsAccountForCenter()throws Exception {
+		createInitialObjects();
+		client1 = TestObjectFactory.createClient("client1",
+				ClientConstants.STATUS_ACTIVE, "1.1.1.1", group, new Date(
+						System.currentTimeMillis()));
+		client2 = TestObjectFactory.createClient("client2",
+				ClientConstants.STATUS_ACTIVE, "1.1.1.2", group, new Date(
+						System.currentTimeMillis()));
+		savingsOffering = helper.createSavingsOffering();
+		return helper.createSavingsAccount(savingsOffering,center,AccountStates.SAVINGS_ACC_APPROVED,userContext);
 	}
 }

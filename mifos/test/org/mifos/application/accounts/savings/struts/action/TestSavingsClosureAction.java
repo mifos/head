@@ -28,6 +28,7 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
@@ -140,9 +141,11 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
 				request.getSession());
 		addRequestParameter("receiptId", "101");
-		addRequestParameter("receiptDate", "12/05/2005");
+		String currentDate = DateHelper.getCurrentDate(userContext.getPereferedLocale());
+		addRequestParameter("receiptDate",currentDate);
 		addRequestParameter("paymentTypeId", "1");
 		addRequestParameter("customerId", "1");
+		addRequestParameter("notes", "notes");
 		setRequestPathInfo("/savingsClosureAction.do");
 		addRequestParameter("method", "preview");
 		actionPerform();

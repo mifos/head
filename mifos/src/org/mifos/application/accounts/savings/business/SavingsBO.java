@@ -556,9 +556,11 @@ public class SavingsBO extends AccountBO {
 		AccountStateEntity accountState = this.getAccountState();
 		this.setAccountState(getDBService().getAccountStatusObject(
 				AccountStates.SAVINGS_ACC_CLOSED));
+		
+		setInterestToBePosted(payment.getAmount().subtract(getSavingsBalance()));
+		
 		if (getInterestToBePosted() != null	&& getInterestToBePosted().getAmountDoubleValue() > 0) 
 			makeEntriesForInterestPosting(getInterestToBePosted(), payment.getPaymentType(),customer,loggedInUser);
-		
 		if (payment.getAmount().getAmountDoubleValue() > 0) {
 			payment.addAcountTrxn(helper.createAccountPaymentTrxn(payment,
 					new Money(), AccountConstants.ACTION_SAVINGS_WITHDRAWAL,
@@ -566,6 +568,7 @@ public class SavingsBO extends AccountBO {
 			payment.setCreatedDate(helper.getCurrentDate());
 			payment.setPaymentDate(helper.getCurrentDate());
 			this.addAccountPayment(payment);
+			addSavingsActivityDetails(buildSavingsActivity(payment.getAmount(), new Money(),AccountConstants.ACTION_SAVINGS_WITHDRAWAL, userContext.getId()));
 			buildFinancialEntries(payment.getAccountTrxns());
 		}
 		notes.setCommentDate(new java.sql.Date(helper.getCurrentDate()
@@ -600,9 +603,9 @@ public class SavingsBO extends AccountBO {
 				loggedInUser));
 		this.addAccountPayment(interestPayment);
 		if(userContext==null)
-			addSavingsActivityDetails(buildSavingsActivity(interestAmt, getSavingsBalance(),AccountConstants.ACTION_SAVINGS_INTEREST_POSTING, null));
+			addSavingsActivityDetails(buildSavingsActivity(interestAmt, getSavingsBalance().add(interestAmt),AccountConstants.ACTION_SAVINGS_INTEREST_POSTING, null));
 		else
-			addSavingsActivityDetails(buildSavingsActivity(interestAmt, getSavingsBalance(),AccountConstants.ACTION_SAVINGS_INTEREST_POSTING, userContext.getId()));
+			addSavingsActivityDetails(buildSavingsActivity(interestAmt, getSavingsBalance().add(interestAmt),AccountConstants.ACTION_SAVINGS_INTEREST_POSTING, userContext.getId()));
 		buildFinancialEntries(interestPayment.getAccountTrxns());
 	}
 
@@ -852,6 +855,8 @@ public class SavingsBO extends AccountBO {
 		addSavingsActivityDetails(buildSavingsActivity(totalAmount,
 				getSavingsBalance(), AccountConstants.ACTION_SAVINGS_DEPOSIT,
 				paymentData.getPersonnelId()));
+		if(this.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_INACTIVE))
+			this.setAccountState(getDBService().getAccountStatusObject(AccountStates.SAVINGS_ACC_APPROVED));
 		return accountPayment;
 	}
 
@@ -908,6 +913,8 @@ public class SavingsBO extends AccountBO {
 						.getPersonnelId()));
 		try {
 			buildFinancialEntries(accountPayment.getAccountTrxns());
+			if(this.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_INACTIVE))
+				this.setAccountState(getDBService().getAccountStatusObject(AccountStates.SAVINGS_ACC_APPROVED));
 			getDBService().update(this);
 		} catch (FinancialException fe) {
 			throw new AccountException("errors.update", fe);
@@ -1538,6 +1545,12 @@ public class SavingsBO extends AccountBO {
 	protected Money getDueAmount(AccountActionDateEntity installment){
 		return installment.getTotalDepositDue();
 	}
+	
+	public Money getTotalAmountDue() {
+		return getTotalAmountInArrears().add(
+				getTotalAmountDueForNextInstallment());
+	}
+	
 	public Money getTotalAmountDueForInstallment(Short installmentId) {
 		Money totalAmount = new Money();
 		if (null != getAccountActionDates()

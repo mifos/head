@@ -1924,21 +1924,6 @@
 	   </field>
 	</form>
 	
-	<form name="/savingsClosureAction">  
-		<field property="paymentTypeId" depends="required">
-			<msg name="required" key="errors.mandatoryselect"	bundle="SavingsUIResources" />
-			<arg0 key="Savings.modeOfPayment" />
-		</field>
-		<field property="customerId" depends="required">
-			<msg name="required" key="errors.mandatory" bundle="SavingsUIResources" />
-			<arg key="Savings.clientName"  />
-	   </field>
-	   <field property="notes" depends="required">
-			<msg name="required" key="errors.mandatory" bundle="SavingsUIResources" />
-			<arg key="Savings.notes"  />
-	   </field>
-	</form>
-	
 	<!-- Repay Loan -->
 	<form name="/repayLoanAction">  
 		<field property="paymentTypeId" depends="required">

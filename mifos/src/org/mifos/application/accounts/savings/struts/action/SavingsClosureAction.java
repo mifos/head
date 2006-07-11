@@ -69,6 +69,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
@@ -112,14 +113,10 @@ public class SavingsClosureAction extends BaseAction {
 		Hibernate.initialize(savings.getCustomer().getPersonnel());
 		Hibernate.initialize(savings.getAccountNotes());
 		Hibernate.initialize(savings.getAccountStatusChangeHistory());
+		Hibernate.initialize(savings.getSavingsActivityDetails());
 		initialize(savings.getSavingsOffering().getDepositGLCode());
 		initialize(savings.getSavingsOffering().getInterestGLCode());
-		
-		
-		
-				
-				
-				
+
 		savings.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,savings,request.getSession());
 		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,	masterDataService.retrievePaymentTypes(uc.getLocaleId()),request.getSession());
@@ -174,6 +171,8 @@ public class SavingsClosureAction extends BaseAction {
 		savings.closeAccount(payment,notes,customer);
 		request.getSession().removeAttribute(SavingsConstants.CLIENT_LIST);
 		request.getSession().removeAttribute(SavingsConstants.ACCOUNT_PAYMENT);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.getSessionTL().evict(savings);
 		return mapping.findForward("close_success");
 	}
 
