@@ -60,10 +60,13 @@ import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.center.util.helpers.ValidateMethods;
+import org.mifos.application.customer.center.util.valueobjects.Center;
 import org.mifos.application.customer.client.struts.actionforms.ClientCreationActionForm;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.client.util.valueobjects.Client;
+import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.group.util.helpers.LinkParameters;
+import org.mifos.application.customer.group.util.valueobjects.Group;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerHelper;
 import org.mifos.application.customer.util.helpers.PathConstants;
@@ -88,7 +91,12 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SecurityException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.security.util.ActivityMapper;
+import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.MifosWizardAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
@@ -152,7 +160,37 @@ public class ClientCreationAction extends MifosWizardAction {
 		methodHashMap.put(CustomerConstants.METHOD_GET_DETAILS, CustomerConstants.METHOD_GET_DETAILS);
 		return methodHashMap;
 	}
-
+	
+	protected void handleTransaction(ActionForm actionForm,HttpServletRequest request)throws SystemException,ApplicationException{
+		String method = request.getParameter("method");
+		if(method.equals("create")){
+			Context context = ((Context)SessionUtils.getContext(getPath(), request.getSession()));
+			ClientCreationActionForm clientActionForm = (ClientCreationActionForm)actionForm;
+			Client client = (Client)context.getValueObject();
+			Short clientStatus = Short.valueOf(clientActionForm.getStatusId());
+			if(clientActionForm.getIsClientUnderGrp() == Constants.YES){
+				SearchResults obj = context.getSearchResultBasedOnName("ParentGroup");
+				Group group = (Group)obj.getValue();
+				checkPermissionForCreate(clientStatus,context.getUserContext(),null,group.getOffice().getOfficeId(),group.getPersonnel().getPersonnelId());
+			}else{
+				if(client.getPersonnel()!=null)
+					checkPermissionForCreate(clientStatus,context.getUserContext(),null,client.getOffice().getOfficeId(),client.getPersonnel().getPersonnelId());
+				else
+					checkPermissionForCreate(clientStatus,context.getUserContext(),null,client.getOffice().getOfficeId(),context.getUserContext().getId());
+			}
+		}
+		super.handleTransaction(actionForm,request);
+	}
+	
+	private boolean isPermissionAllowed(Short newState,UserContext userContext,Short flagSelected,Short recordOfficeId,Short recordLoanOfficerId,boolean saveFlag){
+		if(saveFlag)return ActivityMapper.getInstance().isSavePermittedForCustomer(newState.shortValue(),userContext,recordOfficeId,recordLoanOfficerId);
+		else return ActivityMapper.getInstance().isStateChangePermittedForCustomer(newState.shortValue(),null!=flagSelected?flagSelected.shortValue():0,userContext,recordOfficeId,recordLoanOfficerId);
+	}
+	
+	private void checkPermissionForCreate(Short newState,UserContext userContext,Short flagSelected,Short recordOfficeId,Short recordLoanOfficerId) throws SecurityException{
+		if(!isPermissionAllowed(newState,userContext,flagSelected,recordOfficeId,recordLoanOfficerId,true))
+			  throw new SecurityException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED); 	 
+	}	
 	/**
 	 * No need to override.
 	 * @param mapping
