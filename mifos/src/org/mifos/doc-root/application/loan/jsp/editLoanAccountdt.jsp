@@ -232,7 +232,7 @@
 						<c:if test="${requestScope.loan.accountStateId != 1 || requestScope.loan.accountStateId != 2}">
 								<html-el:hidden value="${requestScope.loan.loanAmount}" property="loanAmount"/>
 								<html-el:hidden value="${requestScope.loan.interestRateAmount}" property="interestRateAmount"/>
-								<html-el:hidden value="${requestScope.loan.loanOffering.maxNoInstallments}" property="noOfInstallments"/>
+								<html-el:hidden value="${requestScope.loan.loanOffering.defNoInstallments}" property="noOfInstallments"/>
 								<html-el:hidden value="${requestScope.loan.businessActivityId}" property="businessActivityId"/>
 								<html-el:hidden value="${requestScope.loan.gracePeriodDuration}" property="gracePeriodDuration"/>
 							</c:if>
