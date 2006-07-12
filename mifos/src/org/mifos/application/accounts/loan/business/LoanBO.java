@@ -1462,4 +1462,35 @@ public class LoanBO extends AccountBO {
 				AccountStates.LOANACC_ACTIVEINGOODSTANDING) || getAccountState()
 				.getId().equals(AccountStates.LOANACC_BADSTANDING)) ? true : false;
 	}
+	
+	public Integer getMissedPaymentCount(){
+		Integer noOfMissedPayments=0;
+		List<AccountActionDateEntity> accountActionDateList = getDetailsOfInstallmentsInArrears();
+		if(!accountActionDateList.isEmpty())
+			noOfMissedPayments=+accountActionDateList.size();
+		noOfMissedPayments=noOfMissedPayments+getNoOfBackDatedPayments();
+		return noOfMissedPayments;
+	}
+	
+	private Integer getNoOfBackDatedPayments(){
+		int noOfMissedPayments=0;
+		Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
+		for(AccountPaymentEntity accountPaymentEntity : getAccountPayments()){
+			Set<AccountTrxnEntity> accountTrxnEntityList = accountPaymentEntity.getAccountTrxns();
+				for(AccountTrxnEntity accountTrxnEntity : accountTrxnEntityList){
+					if (accountTrxnEntity.getAccountActionEntity().getId()
+										.equals(AccountConstants.ACTION_LOAN_REPAYMENT)
+							&& DateUtils.getDateWithoutTimeStamp(
+												accountTrxnEntity.getActionDate().getTime())
+										.compareTo(DateUtils.getDateWithoutTimeStamp(
+												accountTrxnEntity.getDueDate().getTime())) > 0) {
+						
+							noOfMissedPayments++;
+							break;
+					}
+				}
+			}
+		return noOfMissedPayments;
+	}
+
 }

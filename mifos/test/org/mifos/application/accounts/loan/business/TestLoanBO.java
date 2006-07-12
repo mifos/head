@@ -1079,5 +1079,56 @@ public class TestLoanBO extends MifosTestCase {
 		}
 		assertTrue(((LoanBO) accountBO).isAccountActive());
 	}
+	
+	
+	public void testGetNoOfBackDatedPayments() throws AccountException,	SystemException {
+		accountBO = getLoanAccount();
+		AccountStateEntity accountStateEntity = new AccountStateEntity(AccountStates.LOANACC_BADSTANDING);
+		accountBO.setAccountState(accountStateEntity);
+		changeInstallmentDate(accountBO,14,Short.valueOf("1"));
+		changeInstallmentDate(accountBO,14,Short.valueOf("2"));
+		TestObjectFactory.updateObject(accountBO);
+		TestObjectFactory.flushandCloseSession();
+		
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+		
+		Date startDate = new Date(System.currentTimeMillis());
+		PaymentData paymentData = new PaymentData(new Money(Configuration
+				.getInstance().getSystemConfig().getCurrency(), "100.0"), Short
+				.valueOf("1"), Short.valueOf("1"), startDate);
+		paymentData.setRecieptDate(startDate);
+		paymentData.setRecieptNum("5435345");
+		AccountActionDateEntity actionDate = accountBO
+				.getAccountActionDate(Short.valueOf("1"));
+		LoanPaymentData loanPaymentData = new LoanPaymentData(actionDate);
+		paymentData.addAccountPaymentData(loanPaymentData);
+
+		accountBO.applyPayment(paymentData);
+		TestObjectFactory.flushandCloseSession();
+		
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+		
+		assertEquals(Integer.valueOf("2"),((LoanBO)accountBO).getMissedPaymentCount());
+	}
+	
+	
+	private void changeInstallmentDate(AccountBO accountBO,int numberOfDays,Short installmentId) {
+		for (AccountActionDateEntity accountActionDateEntity : accountBO
+				.getAccountActionDates()) {
+			if(accountActionDateEntity.getInstallmentId().equals(installmentId)){
+				Calendar dateCalendar = new GregorianCalendar();
+				dateCalendar.setTimeInMillis(accountActionDateEntity.getActionDate().getTime());
+				int year = dateCalendar.get(Calendar.YEAR);
+				int month = dateCalendar.get(Calendar.MONTH);
+				int day = dateCalendar.get(Calendar.DAY_OF_MONTH);
+				dateCalendar = new GregorianCalendar(year, month, day - numberOfDays);
+				accountActionDateEntity.setActionDate(new java.sql.Date(
+						dateCalendar.getTimeInMillis()));
+				break;
+			}
+		}
+	}
 
 }
