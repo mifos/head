@@ -58,13 +58,14 @@ import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.accounts.util.valueobjects.CustomerAccount;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.center.util.helpers.ValidateMethods;
-import org.mifos.application.customer.center.util.valueobjects.Center;
+import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.client.struts.actionforms.ClientCreationActionForm;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.client.util.valueobjects.Client;
-import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.group.util.helpers.LinkParameters;
 import org.mifos.application.customer.group.util.valueobjects.Group;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -643,6 +644,10 @@ public class ClientCreationAction extends MifosWizardAction {
 		else
 			session.setAttribute(CustomerConstants.CONFIGURATION_LSM, CustomerConstants.NO);
 	    SessionUtils.setAttribute("noPictureOnGet",context.getBusinessResults("noPictureOnGet") ,request.getSession());
+	    Integer customerId = ((Client)context.getValueObject()).getCustomerId();
+	    ClientBO clientBO = (ClientBO) new CustomerBusinessService().getCustomer(customerId);
+	    ClientPerformanceHistoryEntity clientPerfHistoryEntity = clientBO.getPerformanceHistory();
+	    SessionUtils.setAttribute(ClientConstants.CLIENTPERFORMANCEHISTORY,clientPerfHistoryEntity,session);
 	    return forward;
 
 	}

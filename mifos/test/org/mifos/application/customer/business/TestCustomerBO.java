@@ -101,7 +101,6 @@ public class TestCustomerBO extends MifosTestCase {
 		ClientPerformanceHistoryEntity clientPerformanceHistory = new ClientPerformanceHistoryEntity();
 		clientPerformanceHistory.setLoanCycleNumber(Integer.valueOf("1"));
 		clientPerformanceHistory.setLastLoanAmount(new Money("100"));
-		clientPerformanceHistory.setDelinquentPortfolio(new Money("200"));
 		clientPerformanceHistory.setNoOfActiveLoans(Integer.valueOf("1"));
 		clientPerformanceHistory.setTotalSavings(new Money("300"));
 		clientPerformanceHistory.setClient(client);
@@ -111,6 +110,7 @@ public class TestCustomerBO extends MifosTestCase {
 		assertEquals(client.getCustomerId(),client.getPerformanceHistory().getClient().getCustomerId());
 		assertEquals(Integer.valueOf("1"),client.getPerformanceHistory().getLoanCycleNumber());
 		assertEquals(new Money("100"),client.getPerformanceHistory().getLastLoanAmount());
+		assertEquals(new Money("0"),client.getPerformanceHistory().getDelinquentPortfolioAmount());
 	}
 	
 	public void testLoanPerfObject() throws PersistenceException {
@@ -168,15 +168,7 @@ public class TestCustomerBO extends MifosTestCase {
 		}
 	}
 	
-	public void testGetDelinquentPortfolioAmount() {
-		createInitialObjects();
-		accountBO = getLoanAccount(client,meeting);
-		LoanSummaryEntity loanSummary = ((LoanBO)accountBO).getLoanSummary();
-		loanSummary.setPrincipalPaid(loanSummary.getPrincipalPaid().add(new Money("100")));
-		TestObjectFactory.updateObject(accountBO);
-		TestObjectFactory.flushandCloseSession();
-		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
-		
+	private void setActionDateToPastDate() {
 		Calendar calendar = new GregorianCalendar();
         calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
         calendar.add(calendar.WEEK_OF_MONTH,-1);
@@ -196,6 +188,17 @@ public class TestCustomerBO extends MifosTestCase {
 				installment.setActionDate(twoWeeksBeforeDate);
 			}
 		}
+	}
+	
+	public void testGetDelinquentPortfolioAmount() {
+		createInitialObjects();
+		accountBO = getLoanAccount(client,meeting);
+		LoanSummaryEntity loanSummary = ((LoanBO)accountBO).getLoanSummary();
+		loanSummary.setPrincipalPaid(loanSummary.getPrincipalPaid().add(new Money("100")));
+		TestObjectFactory.updateObject(accountBO);
+		TestObjectFactory.flushandCloseSession();
+		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
+		setActionDateToPastDate();
 		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();
 		client=(ClientBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());

@@ -39,11 +39,15 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory{
 		this.id = id;
 	}
 
-	public Money getDelinquentPortfolio() {
+	private Money getDelinquentPortfolio() {
 		return delinquentPortfolio;
 	}
+	
+	public Money getDelinquentPortfolioAmount() {
+		return getClient().getDelinquentPortfolioAmount();
+	}
 
-	public void setDelinquentPortfolio(Money delinquentPortfolio) {
+	private void setDelinquentPortfolio(Money delinquentPortfolio) {
 		this.delinquentPortfolio = delinquentPortfolio;
 	}
 

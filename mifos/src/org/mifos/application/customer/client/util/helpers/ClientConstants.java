@@ -181,7 +181,7 @@ public interface ClientConstants {
 	
 	public static final String INVALID_CLIENT_STATUS_EXCEPTION ="GroupStatusException";
 	
-	
+	public String CLIENTPERFORMANCEHISTORY = "ClientPerformanceHistory";
 	
 	
 

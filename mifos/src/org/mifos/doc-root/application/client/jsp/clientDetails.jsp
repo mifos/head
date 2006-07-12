@@ -729,52 +729,35 @@
 							<td class="paddingL10"><img
 								src="pages/framework/images/trans.gif" width="10" height="2"></td>
 						</tr>
-
+						<tr>
+							<td class="paddingL10"><span class="fontnormal8pt"><mifos:mifoslabel
+								name="${ConfigurationConstants.LOAN}" /><mifos:mifoslabel
+								name="client.CycleNo" bundle="ClientUIResources"/> <c:out
+								value="${sessionScope.ClientPerformanceHistory.loanCycleNumber}" /></span></td>
+						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
 								name="client.LastLoanAmount" bundle="ClientUIResources" /> <mifos:mifoslabel
-								name="${ConfigurationConstants.LOAN}" />: <c:choose>
-								<c:when
-									test='${requestScope.Context.businessResults["customerPerformanceHistoryView"].lastLoanAmount != null}'>
-									<c:out
-										value='${requestScope.Context.businessResults["customerPerformanceHistoryView"].lastLoanAmount}' />
-								</c:when>
-								<c:otherwise>
-									<c:out value='0.0' />
-								</c:otherwise>
-							</c:choose> </span></td>
+								name="${ConfigurationConstants.LOAN}" isColonRequired="yes"/> <c:out
+								value="${sessionScope.ClientPerformanceHistory.lastLoanAmount}" /></span></td>
 						</tr>
-
 						<tr>
-							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
-								name="client.MeetingsAttended" bundle="ClientUIResources" /> <c:out
-								value='${requestScope.Context.businessResults["customerPerformance"].meetingsAttended}' />
-							</span></td>
+							<td class="paddingL10"><span class="fontnormal8pt"><mifos:mifoslabel
+								name="client.NoOfActive" bundle="ClientUIResources"/> <mifos:mifoslabel
+								name="${ConfigurationConstants.LOAN}" isColonRequired="yes" /> <c:out
+								value="${sessionScope.ClientPerformanceHistory.noOfActiveLoans}" /></span></td>
+						</tr>
+						<tr>
+							<td class="paddingL10"><span class="fontnormal8pt"><mifos:mifoslabel
+								name="client.DeliquentPortfolio" bundle="ClientUIResources"/> <c:out
+								value="${sessionScope.ClientPerformanceHistory.delinquentPortfolio}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
-								name="client.MeetingsMissed" bundle="ClientUIResources" /> <c:out
-								value='${requestScope.Context.businessResults["customerPerformanceHistory"].meetingsMissed}' />
-							</span></td>
+								name="client.Total" bundle="ClientUIResources" /> <mifos:mifoslabel
+								name="${ConfigurationConstants.SAVINGS}" isColonRequired="yes"/> <c:out
+								value="${sessionScope.ClientPerformanceHistory.totalSavings}" /></span></td>
 						</tr>
-
-
-						<tr>
-							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
-								name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
-								name="label.loancyclecounter" bundle="CustomerUIResources"></mifos:mifoslabel>
-							-</span></td>
-						</tr>
-						<c:forEach
-							items='${sessionScope.ClientCreationAction_Context.businessResults["loanCycleCounter"]}'
-							var="loanCycleCounter">
-							<tr>
-								<td class="paddingL10"><span class="fontnormal8pt">&nbsp;&nbsp;&nbsp;<c:out
-									value="${loanCycleCounter.offeringName}" />: <c:out
-									value="${loanCycleCounter.counter}" /></span></td>
-							</tr>
-						</c:forEach>
-
 					</table>
 					<table width="95%" border="0" cellspacing="0" cellpadding="0">
 						<tr>
