@@ -141,4 +141,5 @@ public interface LoanConstants {
 	public static final String PAY_FEES_PENALTY_INTEREST="payFeesPenaltyAndInterest";
 	
 	public static final String STATUS_CHANGE_NOT_ALLOWED="error.statuschangenotallowed";
+	public static final String FUTUREDISBURSALDATE="FutureDate";
 }

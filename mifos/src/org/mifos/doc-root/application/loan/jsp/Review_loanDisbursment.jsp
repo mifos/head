@@ -76,8 +76,7 @@
 
 			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
-				<font class="fontnormalRedBold"> <html-el:errors
-					bundle="loanUIResources" /> </font>
+				
 				<tr>
 					<td width="70%" height="24" align="left" valign="top"
 						class="paddingL15T15">
@@ -93,6 +92,12 @@
 						<tr>
 							<td colspan="2" class="fontnormal"><mifos:mifoslabel
 								name="loan.edittrans" /></td>
+						</tr>
+						<tr>
+						  <td>
+						   <font class="fontnormalRedBold"> <html-el:errors
+							bundle="loanUIResources" /> </font>
+						  </td>
 						</tr>
 						<tr>
 							<td colspan="2" class="blueline"><img

@@ -18,6 +18,7 @@ import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanDisbursmentActionForm;
+import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActionForm;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -45,6 +46,10 @@ public class LoanDisbursmentAction extends BaseAction {
 		Date currentDate=new Date(System.currentTimeMillis());
 		loanDisbursmentActionForm.setTransactionDate(DateHelper.getCurrentDate(uc.getPereferedLocale()));
 		LoanBO  loan =  ((LoanBusinessService)getService()).getAccount(Integer.valueOf(loanDisbursmentActionForm.getAccountId()));
+		if ( loan.getDisbursementDate().after(currentDate))
+			SessionUtils.setAttribute(LoanConstants.FUTUREDISBURSALDATE,new Boolean(true), request.getSession());
+		else
+			SessionUtils.setAttribute(LoanConstants.FUTUREDISBURSALDATE,new Boolean(false), request.getSession());
 		loan.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request.getSession());
 		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,	getMasterDataService().getSupportedPaymentModes(uc.getLocaleId(),TrxnTypes.loan_repayment.getValue()),request.getSession());

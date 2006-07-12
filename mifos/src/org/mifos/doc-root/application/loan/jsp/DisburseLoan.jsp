@@ -48,8 +48,8 @@
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	
-	<script>
+
+		<script>
 			function fun_return(form)
 					{
 						form.action="loanAction.do";
@@ -57,130 +57,117 @@
 						form.submit();
 					}
 	</script>
-	<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
-		<html-el:form  action="loanDisbursmentAction.do?method=preview&globalAccountNum=${loanDisbursmentActionForm.globalAccountNum}" 
-				onsubmit="return (validateMyForm(transactionDate,transactionDateFormat,transactionDateYY) && validateMyForm(receiptDate,receiptDateFormat,receiptDateYY))">
-			<table width="95%" border="0" cellpadding="0" cellspacing="0">  
+		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
+		<html-el:form
+			action="loanDisbursmentAction.do?method=preview&globalAccountNum=${loanDisbursmentActionForm.globalAccountNum}"
+			onsubmit="return (validateMyForm(transactionDate,transactionDateFormat,transactionDateYY) && validateMyForm(receiptDate,receiptDateFormat,receiptDateYY))">
+			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05">
-						<span class="fontnormal8pt">
-							<customtags:headerLink />
-						</span>
-						<span class="fontnormal8pt">
-							<html-el:link href="loanAction.do?method=get&globalAccountNum=${loanDisbursmentActionForm.globalAccountNum}">
-									<c:out value="${loanDisbursmentActionForm.prdOfferingName}" />
-							</html-el:link>
-						</span>
-					</td>
+					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink />
+					</span> <span class="fontnormal8pt"> <html-el:link
+						href="loanAction.do?method=get&globalAccountNum=${loanDisbursmentActionForm.globalAccountNum}">
+						<c:out value="${loanDisbursmentActionForm.prdOfferingName}" />
+					</html-el:link> </span></td>
 				</tr>
 			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td width="70%" height="24" align="left" valign="top" class="paddingL15T15">
+					<td width="70%" height="24" align="left" valign="top"
+						class="paddingL15T15">
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
-							<td width="70%" class="headingorange">
-								<span class="heading">
-										<c:out value="${loanDisbursmentActionForm.prdOfferingName}" />&nbsp;#&nbsp;
-										<c:out value="${loanDisbursmentActionForm.globalAccountNum}" />
-									&nbsp;-&nbsp;
-								</span> 
-								<mifos:mifoslabel name="loan.repay" /><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
-							</td>
+							<td width="70%" class="headingorange"><span class="heading"> <c:out
+								value="${loanDisbursmentActionForm.prdOfferingName}" />&nbsp;#&nbsp;
+							<c:out value="${loanDisbursmentActionForm.globalAccountNum}" />
+							&nbsp;-&nbsp; </span> <mifos:mifoslabel name="loan.repay" /><mifos:mifoslabel
+								name="${ConfigurationConstants.LOAN}" /></td>
 						</tr>
 						<tr>
-                			<td class="fontnormal"> 
-                				<mifos:mifoslabel mandatory="Yes" name="loan.asterisk" />
-                			</td>
-              			</tr>
+							<td class="fontnormal"><mifos:mifoslabel mandatory="Yes"
+								name="loan.asterisk" /></td>
+						</tr>
 					</table>
 					<br>
 					<table width="95%" border="0" cellspacing="0" cellpadding="3">
-						
-								<font class="fontnormalRedBold">
-									<html-el:errors bundle="loanUIResources" /> 
-								</font>
+
+						<font class="fontnormalRedBold"> <html-el:errors
+							bundle="loanUIResources" /> </font>
 						<tr>
-							<td colspan="2" align="right" class="fontnormal"><img src="pages/framework/images/trans.gif" width="10" height="2"></td>
+							<td colspan="2" align="right" class="fontnormal"><img
+								src="pages/framework/images/trans.gif" width="10" height="2"></td>
 						</tr>
 						<tr>
-                			<td align="right" class="fontnormal">
-                				<mifos:mifoslabel name="loan.dateofdisb/payment" mandatory="true"/>:&nbsp;
-                			</td>
-                			<td class="fontnormal">
-                				<date:datetag property="transactionDate" />
-                			</td>
-              			</tr> 
-              			<tr>
-			                <td align="right" class="fontnormal">
-			                	<mifos:mifoslabel name="loan.receiptId" />:&nbsp;
-			                </td>
-			                <td class="fontnormal">
-								<mifos:mifosalphanumtext property="receiptId" />
+							<td align="right" class="fontnormal"><mifos:mifoslabel
+								name="loan.dateofdisb/payment" mandatory="true" />:&nbsp;</td>
+							<td class="fontnormal"><date:datetag property="transactionDate" />
 							</td>
-              			</tr>
-              			<tr>
-			                <td align="right" class="fontnormal">
-			                	<mifos:mifoslabel name="loan.receiptdate" />:&nbsp;
-			                </td>
-			                <td class="fontnormal">
-								<date:datetag property="receiptDate" />
-							</td>
-			            </tr>
-			            <tr>
-                			<td colspan="2" class="fontnormalbold">
-                				<mifos:mifoslabel name="loan.disbdetails"  />
-                			</td>
-                		</tr>
-                		<tr>
-			                <td width="29%" align="right" class="fontnormal">
-			                	<mifos:mifoslabel name="${ConfigurationConstants.LOAN}"  /><mifos:mifoslabel name="loan.amt"  />:&nbsp;
-							</td>
-			                <td width="71%">
-			                	<mifos:mifosdecimalinput  property="loanAmount" name="loanDisbursmentActionForm" disabled="true" />
-                			</td>
-              			</tr>
-              			<tr>
-	              			<td align="right" class="fontnormal">
-	              				<mifos:mifoslabel name="loan.mode_of_payment" mandatory="yes" />:&nbsp;
-	                  		</td>
-	                  		<td>
-	                  		    
-								<mifos:select property="paymentTypeId" style="width:136px;">
-									<html-el:options collection="PaymentType" property="id" labelProperty="name" />
-								</mifos:select>
-							</td>
-                  		</tr>
-                  	</table>
-                  	<table width="95%" border="0" cellspacing="0" cellpadding="3">
-		                <tr>
-		                	<td colspan="2" align="right" class="fontnormal">
-		                		<img src="pages/framework/images/trans.gif" width="10" height="2">
-		                	</td>
-		                </tr>
-		                <tr>
-		                	<td colspan="2" class="fontnormalbold">
-		                		<mifos:mifoslabel name="loan.paymentdetails" />
-		                	</td>
-		                </tr>
-		                <tr>
-		                	<td width="29%" align="right" class="fontnormal">
-		                		<mifos:mifoslabel name="loan.amount" />:&nbsp;
-		                	</td>
-		                	<td width="71%">
-		                		<mifos:mifosdecimalinput property="amount"  name="loanDisbursmentActionForm" disabled="true"/>
-		                	</td>
-		                </tr>
-                  		<tr>
-	              			<td align="right" class="fontnormal">
-	              				<mifos:mifoslabel name="loan.mode_of_payment" mandatory="yes" />:&nbsp;
-	                  		</td>
-	                  		<td>
-								<mifos:select property="paymentModeOfPayment" style="width:136px;">
-									<html-el:options collection="PaymentType" property="id" labelProperty="name" />
-								</mifos:select>
-							</td>
-                  		</tr>
+						</tr>
+						<tr>
+							<td align="right" class="fontnormal"><mifos:mifoslabel
+								name="loan.receiptId" />:&nbsp;</td>
+							<td class="fontnormal"><mifos:mifosalphanumtext
+								property="receiptId" /></td>
+						</tr>
+						<tr>
+							<td align="right" class="fontnormal"><mifos:mifoslabel
+								name="loan.receiptdate" />:&nbsp;</td>
+							<td class="fontnormal"><date:datetag property="receiptDate" /></td>
+						</tr>
+						<tr>
+							<td colspan="2" class="fontnormalbold"><mifos:mifoslabel
+								name="loan.disbdetails" /></td>
+						</tr>
+						<tr>
+							<td width="29%" align="right" class="fontnormal"><mifos:mifoslabel
+								name="${ConfigurationConstants.LOAN}" /><mifos:mifoslabel
+								name="loan.amt" />:&nbsp;</td>
+							<td width="71%"><mifos:mifosdecimalinput property="loanAmount"
+								name="loanDisbursmentActionForm" disabled="true" /></td>
+						</tr>
+						<tr>
+							<td align="right" class="fontnormal"><mifos:mifoslabel
+								name="loan.mode_of_payment" mandatory="yes" />:&nbsp;</td>
+							<td><mifos:select property="paymentTypeId" style="width:136px;">
+								<html-el:options collection="PaymentType" property="id"
+									labelProperty="name" />
+							</mifos:select></td>
+						</tr>
+					</table>
+					<table width="95%" border="0" cellspacing="0" cellpadding="3">
+						<tr>
+							<td colspan="2" align="right" class="fontnormal"><img
+								src="pages/framework/images/trans.gif" width="10" height="2"></td>
+						</tr>
+						<tr>
+							<td colspan="2" class="fontnormalbold"><mifos:mifoslabel
+								name="loan.paymentdetails" /></td>
+						</tr>
+						<tr>
+							<td width="29%" align="right" class="fontnormal"><mifos:mifoslabel
+								name="loan.amount" />:&nbsp;</td>
+							<td width="71%"><mifos:mifosdecimalinput property="amount"
+								name="loanDisbursmentActionForm" disabled="true" /></td>
+						</tr>
+						<tr>
+							<td align="right" class="fontnormal"><mifos:mifoslabel
+								name="loan.mode_of_payment" mandatory="yes" />:&nbsp;</td>
+							<td><c:choose>
+								<c:when test="${loanDisbursmentActionForm.amount.amountDoubleValue == 0.0}">
+									<mifos:select property="paymentModeOfPayment"
+										style="width:136px;" disabled="true">
+										<html-el:options collection="PaymentType" property="id"
+											labelProperty="name" />
+									</mifos:select>
+								</c:when>
+								<c:otherwise>
+									<mifos:select property="paymentModeOfPayment"
+										style="width:136px;">
+										<html-el:options collection="PaymentType" property="id"
+											labelProperty="name" />
+									</mifos:select>
+								</c:otherwise>
+							</c:choose></td>
+						</tr>
 					</table>
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
@@ -191,25 +178,39 @@
 						</tr>
 						<tr>
 							<td align="center">
-								<html-el:submit styleClass="buttn" style="width:130px;" >
+							
+							<c:choose>
+							<c:when test="${FutureDate == true}">
+								<html-el:submit  styleClass="buttn" style="width:130px;" disabled="true" >
 									<mifos:mifoslabel name="loan.reviewtransaction" />
-								</html-el:submit> &nbsp;
-								<html-el:button property="cancelButton" styleClass="cancelbuttn" style="width:65px;" 
-									onclick="javascript:fun_return(this.form)">
-									<mifos:mifoslabel name="loan.cancel" />
-								</html-el:button>
-							</td>
+								</html-el:submit>
+
+							</c:when> 
+							
+							<c:otherwise>
+								<html-el:submit styleClass="buttn" style="width:130px;">
+									<mifos:mifoslabel name="loan.reviewtransaction" />
+								</html-el:submit>
+							</c:otherwise> 
+							</c:choose> &nbsp; <html-el:button
+								property="cancelButton" styleClass="cancelbuttn"
+								style="width:65px;" onclick="javascript:fun_return(this.form)">
+								<mifos:mifoslabel name="loan.cancel" />
+							</html-el:button></td>
 						</tr>
 					</table>
 					</td>
 				</tr>
 			</table>
 			<br>
-				<html-el:hidden property="prdOfferingName" value="${loanDisbursmentActionForm.prdOfferingName}"/> 
-				<html-el:hidden property="globalAccountNum" value="${loanDisbursmentActionForm.globalAccountNum}"/> 
-				<html-el:hidden property="accountId" value="${loanDisbursmentActionForm.accountId}"/>
-				<html-el:hidden property="method" value=""/>
-</html-el:form>
+			<html-el:hidden property="prdOfferingName"
+				value="${loanDisbursmentActionForm.prdOfferingName}" />
+			<html-el:hidden property="globalAccountNum"
+				value="${loanDisbursmentActionForm.globalAccountNum}" />
+			<html-el:hidden property="accountId"
+				value="${loanDisbursmentActionForm.accountId}" />
+			<html-el:hidden property="method" value="" />
+		</html-el:form>
 
 	</tiles:put>
 </tiles:insert>
