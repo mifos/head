@@ -77,6 +77,7 @@ machine:
 9. Stopping Mifos
 10. Securing Mifos
 
+If you only want to deploy Mifos without doing the build, then these instructions will be overkill. 
 
 Detailed Instructions
 ---------------------
@@ -92,16 +93,154 @@ Detailed Instructions
        JUnit 3.8.1
 
 Note that Apache Ant 1.6.5 and Cobertura are both available in the CVS 
-in the softwares\ directory.
+in the softwares\ directory.  Note that Java, mySQL, and JBOSS are required for the deployment. 
 
 2. Install the prerequisite software.
 
    Follow the instructions provided with each package. 
 
 
+Note: Try not to install the packages in non-standard locations, and on *nix and OS X, try to avoid install directories with spaces, for obvious reasons. /opt (on *nix and OS X) and C:\ (on Windows) are probably safe places.
 
-Install Instructions for Windows 
-See wiki page http://wiki.java.net/bin/view/Javatools/InstallMifos for notes on getting up and running on windows.  
+See wiki page http://wiki.java.net/bin/view/Javatools/WindowsUsingCygwin for notes on getting up and running on windows with cygwin.  
+
+
+JBoss and MySQL on Windows choose "Program Files" as the default location on Windows; this does not seem to cause problems. MySQL may require a custom installation in order to choose a non-standard location.
+
+You have been warned.
+
+3. Set up the Environment.
+
+   The following environment variables need to be defined to your
+   shell, system environment, or IDE, so that Ant and JBoss will be
+   able to locate the necessary resources at build and run time:
+
+   
+JAVA_HOME	The location of your JDK install
+JBOSS_HOME	The location of your JBoss install
+ANT_HOME	The location of your Ant install
+COBERTURA_HOME	The location of your Cobertural install
+PATH	Ensure that JAVA_HOME/bin, JBOSS_HOME/bin, and ANT_HOME/bin are in your path or visible to your IDE, if you choose to build and debug in something like Eclipse or NetBeans.
+
+
+   It's often convenient to have these set from a script.
+
+4. Create a Mifos server instance under JBoss
+
+   We will use the 'default' configuration that comes with the JBoss
+   distribution as our template. Make a copy of
+   $JBOSS_HOME/server/default and its contents to
+   $JBOSS_HOME/server/Mifos. On *nix:
+
+       cp -pr $JBOSS_HOME/server/default $JBOSS_HOME/server/Mifos
+
+   Be sure that a full copy of default is made, and not a symbolic
+   link, as this can have undesirable consequences. On Windows,
+   perform a copy operation of $JBOSS_HOME/server/default in Windows
+   Explorer, renaming it to $JBOSS_HOME/server/Mifos.
+
+   Next, copy the MySQL driver and create the datasource configuration
+   required for JBoss. The file lib/mysql-connector-java-3.1.7-bin.jar 
+   (which lives under DevSpace/Workspace) should be copied to 
+   $JBOSS_HOME/server/Mifos/lib.
+
+   Create a file called $JBOSS_HOME/server/Mifos/deploy/mysql-ds.xml
+   with the following content:
+
+        <?xml version="1.0" encoding="UTF-8"?>
+        <datasources>
+          <local-tx-datasource>
+            <jndi-name>MifosDatasource</jndi-name>
+            <connection-url>
+                 jdbc:mysql://localhost:3306/mifos
+            </connection-url>
+            <driver-class>com.mysql.jdbc.Driver</driver-class>
+            <user-name>mifos</user-name>
+            <password>mifos</password>
+            <exception-sorter-class-name>
+         org.jboss.resource.adapter.jdbc.vendor.MySQLExceptionSorter
+            </exception-sorter-class-name>
+            <metadata>
+              <type-mapping>mySQL</type-mapping>
+            </metadata>
+          </local-tx-datasource>
+        </datasources>
+
+
+   The mifos database user password can be changed as necessary. Be
+   sure to change the password used in Step 5. below.
+
+5. Install the mifos database
+
+   You can use the ant target 'build_db' to install the mifos
+   database. You can also perform the steps manually:
+
+       Start a mysql session: 
+
+           mysql -u root -p
+
+       Execute the following sequence of commands in the mysql client:
+
+           drop database if exists mifos
+           create database mifos
+           grant all privileges on mifos.* to mifos identified by 'mifos'  
+           \. sql/mifosdbcreationscript.sql
+           \. sql/mifosmasterdata.sql 
+
+if you issue the above one by one, you need to issue 
+mySQL> use mifos ;
+
+6. Build the software
+
+   Invoke the build:
+
+       ant
+
+   or invoke ant from your IDE. The default build target will produce
+   a runnable Mifos war.  To see a list of useful build targets we've
+   pre-defined, invoke ant with the -p switch.
+
+  if ant fail at "build_test_db" task, verify that  "testdb.user" 
+  and "testdb.pwd" is  correctly specified in "build.properties" 
+  under "conf" folder of mifos as per your Mysql environment
+
+
+Note: if you get an error from ant that it cannot create the junit task in the run_test target, you may need to follow this tip.
+
+7. Deploy Mifos
+
+   copy dist/Mifos.war to $JBOSS_HOME/server/Mifos/deploy
+
+8. Start Mifos
+
+   Start JBoss, specifying 'Mifos' as the server configuration. For
+   example:
+
+       $JBOSS_HOME/bin/run.sh -c Mifos
+
+or, on Windows:
+       $JBOSS_HOME/bin/run.bat  –c Mifos
+
+Now, time to try it out!  You should be able to go to:
+      http://localhost:8080/Mifos
+
+9. Stopping Mifos
+
+   Stop JBoss as described in the JBoss documentation, with CTRL-C at
+   the console, or using the shutdown scripts provided with the JBoss
+   distribution.
+
+10. Securing Mifos
+
+   The default install of JBoss exposes a JMX management
+   console. Consult the JBoss documentation for steps on how to secure
+   the management facility.
+
+(twong)
+
+
+
+
 
 
 ---------------
