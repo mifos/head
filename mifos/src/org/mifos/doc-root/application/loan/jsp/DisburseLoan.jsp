@@ -105,7 +105,7 @@
 						<tr>
 							<td align="right" class="fontnormal"><mifos:mifoslabel
 								name="loan.receiptId" />:&nbsp;</td>
-							<td class="fontnormal"><mifos:mifosalphanumtext
+							<td class="fontnormal"><mifos:mifosalphanumtext maxlength="25"
 								property="receiptId" /></td>
 						</tr>
 						<tr>

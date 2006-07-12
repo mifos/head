@@ -143,7 +143,7 @@
 								name="accounts.receiptid" /> <mifos:mifoslabel
 								name="accounts.colon" /></td>
 							<td class="fontnormal"><mifos:mifosalphanumtext
-								property="receiptId" name="applyPaymentActionForm" /></td>
+								property="receiptId" name="applyPaymentActionForm" maxlength="25"/></td>
 						</tr>
 						<tr>
 							<td align="right" class="fontnormal"><mifos:mifoslabel
