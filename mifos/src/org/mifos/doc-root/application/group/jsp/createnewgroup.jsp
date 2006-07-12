@@ -373,9 +373,7 @@
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<tr>
 											<td colspan="2" class="fontnormalbold">
-												<mifos:mifoslabel name="Group.address" bundle="GroupUIResources"></mifos:mifoslabel>
-												<br>
-												<br>
+												<mifos:mifoslabel keyhm="Group.Address" name="Group.address" bundle="GroupUIResources"></mifos:mifoslabel>											
 											</td>
 										</tr>
 										<tr class="fontnormal">

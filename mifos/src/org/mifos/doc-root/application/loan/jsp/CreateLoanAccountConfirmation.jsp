@@ -99,10 +99,10 @@
 									<td width="2%"><img src="pages/framework/images/trans.gif"
 										width="15" height="10"></td>
 									<td width="98%"><span class="fontnormal"><html-el:link href="savingsAction.do?method=getPrdOfferings&customerId=${requestScope.loan.customer.customerId}">
-										<mifos:mifoslabel name="loan.open_new"/><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/><mifos:mifoslabel name="accounts.account"/>
+										<mifos:mifoslabel name="loan.open_new"/><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>&nbsp;<mifos:mifoslabel name="accounts.account"/>
 									</html-el:link> <br>
 									<html-el:link href="loanAction.do?method=getPrdOfferings">
-										<mifos:mifoslabel name="loan.open_new"/><mifos:mifoslabel name="${ConfigurationConstants.LOAN}"/><mifos:mifoslabel name="accounts.account"/>									</html-el:link></span></td>
+										<mifos:mifoslabel name="loan.open_new"/><mifos:mifoslabel name="${ConfigurationConstants.LOAN}"/>&nbsp;<mifos:mifoslabel name="accounts.account"/>									</html-el:link></span></td>
 								</tr>
 							</table>
 							</td>
