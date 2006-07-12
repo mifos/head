@@ -129,8 +129,8 @@ public class TestCustomerBO extends MifosTestCase {
 		
 		loanBO = (LoanBO) new AccountPersistanceService().getAccount(loanBO.getAccountId());
 		assertEquals(loanBO.getAccountId(),loanBO.getPerformanceHistory().getLoan().getAccountId());
-		assertEquals(Integer.valueOf("1"),loanBO.getPerformanceHistory().getDaysInArrears());
-		assertEquals(Integer.valueOf("2"),loanBO.getPerformanceHistory().getNoOfMissedPayments());
+		assertEquals(Integer.valueOf("0"),loanBO.getPerformanceHistory().getDaysInArrears());
+		assertEquals(Integer.valueOf("0"),loanBO.getPerformanceHistory().getNoOfMissedPayments());
 		assertEquals(Integer.valueOf("3"),loanBO.getPerformanceHistory().getNoOfPayments());
 		assertEquals(currentDate,loanBO.getPerformanceHistory().getLoanMaturityDate());
 	}

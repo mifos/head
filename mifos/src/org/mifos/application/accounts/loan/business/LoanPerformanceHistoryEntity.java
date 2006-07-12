@@ -39,7 +39,7 @@ public class LoanPerformanceHistoryEntity extends PersistentObject {
 
 
 	public Integer getDaysInArrears() {
-		return daysInArrears;
+		return getLoan().getDaysInArrears();
 	}
 
 	public void setDaysInArrears(Integer daysInArrears) {
@@ -55,7 +55,7 @@ public class LoanPerformanceHistoryEntity extends PersistentObject {
 	}
 
 	public Integer getNoOfMissedPayments() {
-		return noOfMissedPayments;
+		return getLoan().getMissedPaymentCount();
 	}
 
 	public void setNoOfMissedPayments(Integer noOfMissedPayments) {

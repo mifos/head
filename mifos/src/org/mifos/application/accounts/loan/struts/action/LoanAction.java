@@ -8,13 +8,19 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.accounts.loan.business.LoanPerformanceHistoryEntity;
+import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanActionForm;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.valueobjects.Loan;
+import org.mifos.application.accounts.loan.util.valueobjects.LoanPerfHistory;
 import org.mifos.application.accounts.loan.util.valueobjects.Waive;
 import org.mifos.application.accounts.struts.action.AccountAction;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PathConstants;
+import org.mifos.application.customer.center.util.helpers.CenterConstants;
+import org.mifos.application.customer.group.util.helpers.LinkParameters;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.valueobjects.CustomerMaster;
 import org.mifos.framework.business.util.helpers.HeaderObject;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
@@ -283,7 +289,9 @@ public class LoanAction extends AccountAction{
 		// It is being set as attribute and not as removable attribute because we want it to
 		// be accessed even when the action changes.
 		SessionUtils.setAttribute("header_get", headerObject, request.getSession());
-
+		LoanPerformanceHistoryEntity loanPerformanceHistory = new LoanPerformanceHistoryEntity();
+		loanPerformanceHistory = new LoanBusinessService().findBySystemId(((Loan)context.getValueObject()).getGlobalAccountNum()).getPerformanceHistory();
+	    SessionUtils.setAttribute(CenterConstants.PERFORMANCE_HISTORY,loanPerformanceHistory,request.getSession());
 		return forward;
 
 	}

@@ -1499,7 +1499,7 @@ public class LoanBO extends AccountBO {
 					/ (24 * 60 * 60 * 1000);
 			return Integer.valueOf(new Long(diffInTermsOfDay).toString());
 		}
-		return null;
+		return 0;
 	}
 	
 	public Boolean isAccountActive(){

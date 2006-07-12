@@ -539,6 +539,22 @@
 							<td class="bluetablehead05"><span class="fontnormalbold"> <mifos:mifoslabel
 								name="loan.performance_history" /> </span></td>
 						</tr>
+						<tr>
+		                <td class="paddingL10"><span class="fontnormal8pt"><mifos:mifoslabel
+								name="loan.of_payments" /> <c:out value="${sessionScope.performanceHistory.noOfPayments}" /></span></td>
+		              	</tr>
+		             	 <tr>
+		                <td class="paddingL10"><span class="fontnormal8pt"><mifos:mifoslabel
+								name="loan.missed_payments" /> <c:out value="${sessionScope.performanceHistory.noOfMissedPayments}" /></span></td>
+		              	</tr>
+		              	<tr>
+		                <td class="paddingL10"><span class="fontnormal8pt"><mifos:mifoslabel
+								name="loan.days_arrears" /><c:out value="${sessionScope.performanceHistory.daysInArrears}" /> </span></td>
+		              	</tr>
+		              	<tr>
+		                <td class="paddingL10"><span class="fontnormal8pt"><mifos:mifoslabel
+		                	name="loan.maturity_date" /><c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.performanceHistory.loanMaturityDate)}" />  </span></td>
+		              	</tr>
 					</table>
 					<table width="95%" border="0" cellspacing="0" cellpadding="0">
 						<tr>
