@@ -1,7 +1,7 @@
 ### Contents ### 
 
 * Getting started on the project 
-* Mifos Installation
+* Mifos Build and Install
 * Developer Notes 
 
 
@@ -12,13 +12,15 @@ This is the README file for Mifos, the universal Open Source platform for Microf
 
 
 Getting Started with Mifos 
-The file InstallMifos provides detailed instructions for building and installing the Mifos software. 
+Mifos Build and Install (below) provides detailed instructions for building and installing the Mifos software. 
 
 
 Developer Resources 
 1. Code Repository 
 
-Access to the code repository is via cvs pserver anonymous, see MIFOSCVSCheckout 
+Access to the code repository is via SVN at 
+svn checkout https://mifos.dev.java.net/svn/mifos/trunk mifos --username guest 
+password is blank for anonymous access. 
 
 2. Mailing List 
 
@@ -35,6 +37,10 @@ http://mifos.dev.java.net
 The Project Wiki can be found at 
 
 http://wiki.java.net/bin/view/Javatools/MIFOS 
+
+Fisheye view of the code checked in with comments (RSS feed) is found at http://fisheye5.cenqua.com/changelog/mifos 
+
+Issue tracking is https://mifos.dev.java.net/servlets/ProjectIssues 
 
 4. Coding Standards (TBD) 
 
@@ -55,7 +61,7 @@ James Dailey (grameentechie AT sourceforge.net)
 Mifos Installation
 ------------------
 
-Mifos is currently provided as a source distribution, via CVS or as
+Mifos is currently provided as a source distribution, via SVN or as
 code snapshots, both available via java.net.
 
 Overview
@@ -92,7 +98,7 @@ Detailed Instructions
        Cobertura 1.7
        JUnit 3.8.1
 
-Note that Apache Ant 1.6.5 and Cobertura are both available in the CVS 
+Note that Apache Ant 1.6.5 and Cobertura are both available in the SVN 
 in the softwares\ directory.  Note that Java, mySQL, and JBOSS are required for the deployment. 
 
 2. Install the prerequisite software.
@@ -137,7 +143,8 @@ PATH	Ensure that JAVA_HOME/bin, JBOSS_HOME/bin, and ANT_HOME/bin are in your pat
    Be sure that a full copy of default is made, and not a symbolic
    link, as this can have undesirable consequences. On Windows,
    perform a copy operation of $JBOSS_HOME/server/default in Windows
-   Explorer, renaming it to $JBOSS_HOME/server/Mifos.
+   Explorer, renaming it to $JBOSS_HOME/server/Mifos.  Also, you do need 
+   a full copy of the default and not the "all" or "minimal". 
 
    Next, copy the MySQL driver and create the datasource configuration
    required for JBoss. The file lib/mysql-connector-java-3.1.7-bin.jar 
@@ -187,8 +194,12 @@ PATH	Ensure that JAVA_HOME/bin, JBOSS_HOME/bin, and ANT_HOME/bin are in your pat
            \. sql/mifosdbcreationscript.sql
            \. sql/mifosmasterdata.sql 
 
-if you issue the above one by one, you need to issue 
-mySQL> use mifos ;
+note: if you issue the above commands one by one, you need to issue this command: 
+mySQL> use mifos ;  
+
+
+Important Note:  If you are changing the passwords for the database access in your installation of mysql, you must currently change these in the build.properties, hibernate.properties files as well, prior to doing the build. 
+
 
 6. Build the software
 
@@ -205,7 +216,10 @@ mySQL> use mifos ;
   under "conf" folder of mifos as per your Mysql environment
 
 
-Note: if you get an error from ant that it cannot create the junit task in the run_test target, you may need to follow this tip.
+Note: if you get an error from ant that it cannot create the junit task in the run_test target, you may need to follow this tip.  Use only these targets: 
+
+Ant clean copy_files compile war; 
+
 
 7. Deploy Mifos
 
@@ -224,6 +238,7 @@ or, on Windows:
 Now, time to try it out!  You should be able to go to:
       http://localhost:8080/Mifos
 
+
 9. Stopping Mifos
 
    Stop JBoss as described in the JBoss documentation, with CTRL-C at
@@ -235,9 +250,6 @@ Now, time to try it out!  You should be able to go to:
    The default install of JBoss exposes a JMX management
    console. Consult the JBoss documentation for steps on how to secure
    the management facility.
-
-(twong)
-
 
 
 
