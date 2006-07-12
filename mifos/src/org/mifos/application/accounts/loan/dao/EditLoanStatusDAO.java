@@ -55,8 +55,8 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.valueobjects.Account;
 import org.mifos.application.accounts.util.valueobjects.AccountFlagDetail;
 import org.mifos.application.accounts.util.valueobjects.AccountStatusChangeHistory;
-import org.mifos.application.checklist.util.valueobjects.CheckListMaster;
-import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.client.util.valueobjects.Client;
+import org.mifos.application.customer.client.util.valueobjects.ClientPerformanceHistory;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.util.valueobjects.AccountState;
 import org.mifos.application.master.util.valueobjects.FlagMaster;
@@ -103,6 +103,9 @@ public class EditLoanStatusDAO extends DAO{
 		    session.save(history);
 		    
 		    //add row in account status change history
+		    
+		    updateCustomerHistory(session,loan,loanStatus);
+		    
 		    tx.commit();
 	   	}catch(StaleObjectStateException sose){
 	   		tx.rollback();
@@ -112,6 +115,21 @@ public class EditLoanStatusDAO extends DAO{
 	   		tx.rollback();
 	   		throw hpe;
 	   	}
+	}
+	
+	
+	private void updateCustomerHistory(Session session,Account loan,EditLoanStatus loanStatus){
+		if(loan.getCustomer().getCustomerLevel().getLevelId().equals(CustomerConstants.CLIENT_LEVEL_ID)){
+			Client client=(Client)session.get(Client.class,loan.getCustomer().getCustomerId());
+			if(loanStatus.getNewStatusId().equals(Short.valueOf(AccountStates.LOANACC_WRITTENOFF)) || loanStatus.getNewStatusId().equals(Short.valueOf(AccountStates.LOANACC_RESCHEDULED)) || loanStatus.getNewStatusId().equals(Short.valueOf(AccountStates.LOANACC_CANCEL))) {
+				ClientPerformanceHistory clientPerfHistory = client.getPerformanceHistory();
+				clientPerfHistory.setLoanCycleNumber(clientPerfHistory.getLoanCycleNumber()-1);
+				if(loanStatus.getNewStatusId().equals(Short.valueOf(AccountStates.LOANACC_WRITTENOFF)) || loanStatus.getNewStatusId().equals(Short.valueOf(AccountStates.LOANACC_RESCHEDULED))) {
+					clientPerfHistory.setNoOfActiveLoans(clientPerfHistory.getNoOfActiveLoans()-1);
+				}
+				session.update(clientPerfHistory);
+			}
+		}
 	}
 
 	/**

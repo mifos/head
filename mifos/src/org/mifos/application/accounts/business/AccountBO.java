@@ -54,11 +54,10 @@ import org.mifos.application.accounts.exceptions.IDGenerationException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
-import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
 import org.mifos.application.fees.business.FeesBO;
@@ -72,8 +71,6 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.scheduler.SchedulerException;
-import org.mifos.framework.components.scheduler.SchedulerIntf;
-import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -853,5 +850,14 @@ public class AccountBO extends BusinessObject {
 			accountActionDates.remove(accountActionDateEntity);
 			getAccountPersistenceService().delete(accountActionDateEntity);
 		}
+	}
+	
+	public Money getTotalPrincipalAmountInArrears(){
+		Money amount=new Money();
+		List<AccountActionDateEntity> actionDateList=getDetailsOfInstallmentsInArrears();
+		for(AccountActionDateEntity accountActionDateEntity : actionDateList){
+			amount=amount.add(accountActionDateEntity.getPrincipal());
+		}
+		return amount;
 	}
 }

@@ -909,4 +909,11 @@ public class Customer extends ValueObject {
 		this.customerFormedByPersonnel = customerFormedByPersonnel;
 	}
 	
+	public CustomerPerformanceHistory getCustomerPerformanceHistory() {
+		return getPerformanceHistory();
+	}
+	protected CustomerPerformanceHistory getPerformanceHistory() {
+		return null;
+	}
+	
 }

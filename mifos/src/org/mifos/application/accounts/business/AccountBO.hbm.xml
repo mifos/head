@@ -144,7 +144,7 @@
 			<one-to-one name="loanSummary"
 				class="org.mifos.application.accounts.loan.business.LoanSummaryEntity"
 				cascade="all" lazy="true" />
-			<one-to-one name="loanPerformanceHistory" 
+			<one-to-one name="performanceHistory" 
 				class="org.mifos.application.accounts.loan.business.LoanPerformanceHistoryEntity" 
 				cascade="all" lazy="true" property-ref="loan"/>
 			<set name="loanActivityDetails" cascade="all" inverse="true"

@@ -7,8 +7,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.framework.MifosTestCase;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
@@ -17,7 +15,6 @@ import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
-import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.business.LoanTrxnDetailEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
@@ -30,9 +27,12 @@ import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
+import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
 import org.mifos.framework.components.scheduler.SchedulerException;
@@ -55,6 +55,8 @@ public class TestLoanBO extends MifosTestCase {
 
 	protected CustomerBO group = null;
 
+	private CustomerBO client = null;
+
 	private AccountPersistanceService accountPersistanceService;
 
 	@Override
@@ -72,6 +74,7 @@ public class TestLoanBO extends MifosTestCase {
 		center = (CustomerBO) HibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
 		TestObjectFactory.cleanUp(accountBO);
+		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 
@@ -220,9 +223,10 @@ public class TestLoanBO extends MifosTestCase {
 			throws AccountException, SystemException,
 			RepaymentScheduleException, FinancialException {
 		Date startDate = new Date(System.currentTimeMillis());
-		Money miscFee=new Money("20");
-		Money miscPenalty=new Money("50");
-		accountBO = getLoanAccountWithMiscFeeAndPenalty(Short.valueOf("3"), startDate, 1,miscFee,miscPenalty);
+		Money miscFee = new Money("20");
+		Money miscPenalty = new Money("50");
+		accountBO = getLoanAccountWithMiscFeeAndPenalty(Short.valueOf("3"),
+				startDate, 1, miscFee, miscPenalty);
 		Short personnelId = accountBO.getPersonnel().getPersonnelId();
 		// disburse loan
 
@@ -232,15 +236,18 @@ public class TestLoanBO extends MifosTestCase {
 		HibernateUtil.startTransaction();
 		session.save(accountBO);
 		HibernateUtil.getTransaction().commit();
-		
-		for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
-			if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))){
-				assertEquals(miscPenalty,accountActionDateEntity.getMiscPenalty());
-				assertEquals(miscFee,accountActionDateEntity.getMiscFee());
+
+		for (AccountActionDateEntity accountActionDateEntity : accountBO
+				.getAccountActionDates()) {
+			if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("1"))) {
+				assertEquals(miscPenalty, accountActionDateEntity
+						.getMiscPenalty());
+				assertEquals(miscFee, accountActionDateEntity.getMiscFee());
 				break;
 			}
 		}
-		
+
 		Set<AccountPaymentEntity> accountpayments = accountBO
 				.getAccountPayments();
 		assertEquals(1, accountpayments.size());
@@ -726,12 +733,12 @@ public class TestLoanBO extends MifosTestCase {
 
 	}
 
-	
 	public void testWtiteOff() throws Exception {
 		accountBO = getLoanAccount();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+				AccountBO.class, accountBO.getAccountId());
 		LoanBO loanBO = (LoanBO) accountBO;
 		UserContext uc = TestObjectFactory.getUserContext();
 		loanBO.setUserContext(uc);
@@ -739,22 +746,27 @@ public class TestLoanBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+				AccountBO.class, accountBO.getAccountId());
 		LoanBO loan = (LoanBO) accountBO;
-		for(LoanActivityEntity loanActivityEntity : loan.getLoanActivityDetails()) {
-			assertEquals(loanActivityEntity.getComments(),"Loan Written Off");
+		for (LoanActivityEntity loanActivityEntity : loan
+				.getLoanActivityDetails()) {
+			assertEquals(loanActivityEntity.getComments(), "Loan Written Off");
 			break;
 		}
-		assertEquals(accountBO.getAccountState().getId(), new Short(AccountStates.LOANACC_WRITTENOFF));
+		assertEquals(accountBO.getAccountState().getId(), new Short(
+				AccountStates.LOANACC_WRITTENOFF));
 	}
 
-	public void testGetAmountTobePaidAtdisburtail(){
+	public void testGetAmountTobePaidAtdisburtail() {
 
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 2);
-		assertEquals(new Money("52"),((LoanBO)accountBO).getAmountTobePaidAtdisburtail(startDate));
+		assertEquals(new Money("52"), ((LoanBO) accountBO)
+				.getAmountTobePaidAtdisburtail(startDate));
 
 	}
+
 	private AccountBO saveAndFetch(AccountBO account) {
 		accountPersistanceService.updateAccount(account);
 		return accountPersistanceService.getAccount(account.getAccountId());
@@ -846,172 +858,226 @@ public class TestLoanBO extends MifosTestCase {
 				.getAccountActionDate(Short.valueOf("1"));
 		LoanPaymentData loanPaymentData = new LoanPaymentData(actionDate);
 		paymentData.addAccountPaymentData(loanPaymentData);
-
 		accountBO.applyPayment(paymentData);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
 		return (AccountBO) TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 	}
-	
-	
-	
-	private AccountBO getLoanAccountWithMiscFeeAndPenalty(Short accountSate, Date startDate,
-			int disbursalType,Money miscFee,Money miscPenalty) {
-		accountBO=getLoanAccount(accountSate,startDate,disbursalType);
-		for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
-			if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))){
+
+	private AccountBO getLoanAccountWithMiscFeeAndPenalty(Short accountSate,
+			Date startDate, int disbursalType, Money miscFee, Money miscPenalty) {
+		accountBO = getLoanAccount(accountSate, startDate, disbursalType);
+		for (AccountActionDateEntity accountActionDateEntity : accountBO
+				.getAccountActionDates()) {
+			if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("1"))) {
 				accountActionDateEntity.setMiscFee(miscFee);
 				accountActionDateEntity.setMiscPenalty(miscPenalty);
 				break;
 			}
 		}
-		LoanSummaryEntity loanSummaryEntity =((LoanBO)accountBO).getLoanSummary();
-		loanSummaryEntity.setOriginalFees(loanSummaryEntity.getOriginalFees().add(miscFee));
-		loanSummaryEntity.setOriginalPenalty(loanSummaryEntity.getOriginalPenalty().add(miscPenalty));
-		TestObjectPersistence testObjectPersistence=new TestObjectPersistence();
+		LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
+				.getLoanSummary();
+		loanSummaryEntity.setOriginalFees(loanSummaryEntity.getOriginalFees()
+				.add(miscFee));
+		loanSummaryEntity.setOriginalPenalty(loanSummaryEntity
+				.getOriginalPenalty().add(miscPenalty));
+		TestObjectPersistence testObjectPersistence = new TestObjectPersistence();
 		testObjectPersistence.update(accountBO);
-		return (LoanBO)testObjectPersistence.getObject(LoanBO.class,accountBO.getAccountId());
+		return (LoanBO) testObjectPersistence.getObject(LoanBO.class, accountBO
+				.getAccountId());
 	}
-	
+
 	public void testWaiveFeeChargeDue() throws Exception {
-		accountBO = getLoanAccount();		
-		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
+		accountBO = getLoanAccount();
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
 		TestObjectFactory.flushandCloseSession();
-		LoanBO loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
+		LoanBO loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+				accountBO.getAccountId());
 		UserContext userContext = TestObjectFactory.getUserContext();
-		loanBO.setUserContext(userContext);		
+		loanBO.setUserContext(userContext);
 		loanBO.waiveAmountDue(WaiveEnum.FEES);
 		TestObjectFactory.flushandCloseSession();
-		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
-		for (AccountActionDateEntity accountActionDateEntity : loanBO.getAccountActionDates()) {
+		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class, accountBO
+				.getAccountId());
+		for (AccountActionDateEntity accountActionDateEntity : loanBO
+				.getAccountActionDates()) {
 			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
 					.getAccountFeesActionDetails()) {
 				if (accountActionDateEntity.getInstallmentId().equals(
-						Short.valueOf("1"))){
+						Short.valueOf("1"))) {
 					assertEquals(new Money(), accountFeesActionDetailEntity
-							.getFeeAmount());					
-				}
-				else
+							.getFeeAmount());
+				} else
 					assertEquals(new Money("100"),
 							accountFeesActionDetailEntity.getFeeAmount());
 			}
-		}		
+		}
 	}
-	
+
 	public void testWaiveFeeChargeOverDue() throws Exception {
-		accountBO = getLoanAccount();		
-		LoanBO loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
+		accountBO = getLoanAccount();
+		LoanBO loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+				accountBO.getAccountId());
 		Calendar calendar = new GregorianCalendar();
-        calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
-        calendar.add(calendar.WEEK_OF_MONTH,-1);
-        java.sql.Date lastWeekDate = new java.sql.Date(calendar.getTimeInMillis());
-        
-        Calendar date = new GregorianCalendar();
-        date.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
-        date.add(date.WEEK_OF_MONTH,-2);
-        java.sql.Date twoWeeksBeforeDate = new java.sql.Date(date.getTimeInMillis());
-        
-        
-		for(AccountActionDateEntity installment : accountBO.getAccountActionDates()){
-			if(installment.getInstallmentId().intValue()==1){
+		calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
+		calendar.add(calendar.WEEK_OF_MONTH, -1);
+		java.sql.Date lastWeekDate = new java.sql.Date(calendar
+				.getTimeInMillis());
+
+		Calendar date = new GregorianCalendar();
+		date.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
+		date.add(date.WEEK_OF_MONTH, -2);
+		java.sql.Date twoWeeksBeforeDate = new java.sql.Date(date
+				.getTimeInMillis());
+
+		for (AccountActionDateEntity installment : accountBO
+				.getAccountActionDates()) {
+			if (installment.getInstallmentId().intValue() == 1) {
 				installment.setActionDate(lastWeekDate);
-			}
-			else if(installment.getInstallmentId().intValue()==2){
+			} else if (installment.getInstallmentId().intValue() == 2) {
 				installment.setActionDate(twoWeeksBeforeDate);
 			}
 		}
 		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();
-		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
+		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class, accountBO
+				.getAccountId());
 		UserContext userContext = TestObjectFactory.getUserContext();
-		loanBO.setUserContext(userContext);		
+		loanBO.setUserContext(userContext);
 		loanBO.waiveAmountOverDue(WaiveEnum.FEES);
 		TestObjectFactory.flushandCloseSession();
-		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
-		for (AccountActionDateEntity accountActionDateEntity : loanBO.getAccountActionDates()) {
+		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class, accountBO
+				.getAccountId());
+		for (AccountActionDateEntity accountActionDateEntity : loanBO
+				.getAccountActionDates()) {
 			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
 					.getAccountFeesActionDetails()) {
 				if (accountActionDateEntity.getInstallmentId().equals(
-						Short.valueOf("1")) || accountActionDateEntity.getInstallmentId().equals(
-								Short.valueOf("2"))){					
+						Short.valueOf("1"))
+						|| accountActionDateEntity.getInstallmentId().equals(
+								Short.valueOf("2"))) {
 					assertEquals(new Money(), accountFeesActionDetailEntity
-							.getFeeAmount());					
-				}
-				else
+							.getFeeAmount());
+				} else
 					assertEquals(new Money("100"),
 							accountFeesActionDetailEntity.getFeeAmount());
 			}
-		}		
+		}
 	}
-	
-	public void testRegenerateFutureInstallments() throws SchedulerException, HibernateException, ServiceException, PersistenceException{
+
+	public void testRegenerateFutureInstallments() throws SchedulerException,
+			HibernateException, ServiceException, PersistenceException {
 		accountBO = getLoanAccount();
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(LoanBO.class, accountBO.getAccountId());
-		AccountActionDateEntity accountActionDateEntity =accountBO.getDetailsOfNextInstallment();
-		MeetingBO meeting = accountBO.getCustomer().getCustomerMeeting().getMeeting();
+		accountBO = (AccountBO) TestObjectFactory.getObject(LoanBO.class,
+				accountBO.getAccountId());
+		AccountActionDateEntity accountActionDateEntity = accountBO
+				.getDetailsOfNextInstallment();
+		MeetingBO meeting = accountBO.getCustomer().getCustomerMeeting()
+				.getMeeting();
 		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
-		meeting.setMeetingStartDate(DateUtils.getCalendarDate(accountActionDateEntity.getActionDate().getTime()));
+		meeting.setMeetingStartDate(DateUtils
+				.getCalendarDate(accountActionDateEntity.getActionDate()
+						.getTime()));
 		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
-		List<java.util.Date> meetingDates = scheduler.getAllDates(accountBO.getApplicableIdsForFutureInstallments().size()+1);
-		((LoanBO)accountBO).regenerateFutureInstallments((short)(accountActionDateEntity.getInstallmentId().intValue()+1));
+		List<java.util.Date> meetingDates = scheduler.getAllDates(accountBO
+				.getApplicableIdsForFutureInstallments().size() + 1);
+		((LoanBO) accountBO)
+				.regenerateFutureInstallments((short) (accountActionDateEntity
+						.getInstallmentId().intValue() + 1));
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());
-		for(AccountActionDateEntity actionDateEntity : accountBO.getAccountActionDates()){
-			if(actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-				assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()),DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
-			else if(actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
-				assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(2).getTime()),DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class,
+				accountBO.getAccountId());
+		for (AccountActionDateEntity actionDateEntity : accountBO
+				.getAccountActionDates()) {
+			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+				assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
+						.get(1).getTime()), DateUtils
+						.getDateWithoutTimeStamp(actionDateEntity
+								.getActionDate().getTime()));
+			else if (actionDateEntity.getInstallmentId().equals(
+					Short.valueOf("3")))
+				assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
+						.get(2).getTime()), DateUtils
+						.getDateWithoutTimeStamp(actionDateEntity
+								.getActionDate().getTime()));
 		}
 	}
-	
-	public void testRegenerateFutureInstallmentsWithCancelState() throws SchedulerException, HibernateException, ServiceException, PersistenceException{
+
+	public void testRegenerateFutureInstallmentsWithCancelState()
+			throws SchedulerException, HibernateException, ServiceException,
+			PersistenceException {
 		accountBO = getLoanAccount();
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(LoanBO.class, accountBO.getAccountId());
-		java.sql.Date intallment2ndDate=null;
-		java.sql.Date intallment3ndDate=null;
-		for(AccountActionDateEntity actionDateEntity :  accountBO.getAccountActionDates()){
-			if(actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-				intallment2ndDate=actionDateEntity.getActionDate();
-			else if(actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
-				intallment3ndDate=actionDateEntity.getActionDate();
+		accountBO = (AccountBO) TestObjectFactory.getObject(LoanBO.class,
+				accountBO.getAccountId());
+		java.sql.Date intallment2ndDate = null;
+		java.sql.Date intallment3ndDate = null;
+		for (AccountActionDateEntity actionDateEntity : accountBO
+				.getAccountActionDates()) {
+			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+				intallment2ndDate = actionDateEntity.getActionDate();
+			else if (actionDateEntity.getInstallmentId().equals(
+					Short.valueOf("3")))
+				intallment3ndDate = actionDateEntity.getActionDate();
 		}
-		AccountActionDateEntity accountActionDateEntity =accountBO.getDetailsOfNextInstallment();
-		MeetingBO meeting = accountBO.getCustomer().getCustomerMeeting().getMeeting();
+		AccountActionDateEntity accountActionDateEntity = accountBO
+				.getDetailsOfNextInstallment();
+		MeetingBO meeting = accountBO.getCustomer().getCustomerMeeting()
+				.getMeeting();
 		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
-		meeting.setMeetingStartDate(DateUtils.getCalendarDate(accountActionDateEntity.getActionDate().getTime()));
+		meeting.setMeetingStartDate(DateUtils
+				.getCalendarDate(accountActionDateEntity.getActionDate()
+						.getTime()));
 		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
-		List<java.util.Date> meetingDates = scheduler.getAllDates(accountBO.getApplicableIdsForFutureInstallments().size()+1);
-		AccountStateEntity accountStateEntity=new AccountStateEntity(AccountStates.LOANACC_CANCEL);
+		List<java.util.Date> meetingDates = scheduler.getAllDates(accountBO
+				.getApplicableIdsForFutureInstallments().size() + 1);
+		AccountStateEntity accountStateEntity = new AccountStateEntity(
+				AccountStates.LOANACC_CANCEL);
 		accountBO.setAccountState(accountStateEntity);
-		((LoanBO)accountBO).regenerateFutureInstallments((short)(accountActionDateEntity.getInstallmentId().intValue()+1));
+		((LoanBO) accountBO)
+				.regenerateFutureInstallments((short) (accountActionDateEntity
+						.getInstallmentId().intValue() + 1));
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());
-		for(AccountActionDateEntity actionDateEntity : accountBO.getAccountActionDates()){
-			if(actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-				assertEquals(DateUtils.getDateWithoutTimeStamp(intallment2ndDate.getTime()),DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
-			else if(actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
-				assertEquals(DateUtils.getDateWithoutTimeStamp(intallment3ndDate.getTime()),DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class,
+				accountBO.getAccountId());
+		for (AccountActionDateEntity actionDateEntity : accountBO
+				.getAccountActionDates()) {
+			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+				assertEquals(DateUtils
+						.getDateWithoutTimeStamp(intallment2ndDate.getTime()),
+						DateUtils.getDateWithoutTimeStamp(actionDateEntity
+								.getActionDate().getTime()));
+			else if (actionDateEntity.getInstallmentId().equals(
+					Short.valueOf("3")))
+				assertEquals(DateUtils
+						.getDateWithoutTimeStamp(intallment3ndDate.getTime()),
+						DateUtils.getDateWithoutTimeStamp(actionDateEntity
+								.getActionDate().getTime()));
 		}
 	}
-	
-	public void testHasPortfolioAtRisk(){
+
+	public void testHasPortfolioAtRisk() {
 		accountBO = getLoanAccount();
-		assertFalse(((LoanBO)accountBO).hasPortfolioAtRisk());
-		changeFirstInstallmentDate(accountBO,31);
-		assertTrue(((LoanBO)accountBO).hasPortfolioAtRisk());
+		assertFalse(((LoanBO) accountBO).hasPortfolioAtRisk());
+		changeFirstInstallmentDate(accountBO, 31);
+		assertTrue(((LoanBO) accountBO).hasPortfolioAtRisk());
 	}
-	
-	
-	private void changeFirstInstallmentDate(AccountBO accountBO,int numberOfDays) {
+
+	private void changeFirstInstallmentDate(AccountBO accountBO,
+			int numberOfDays) {
 		Calendar currentDateCalendar = new GregorianCalendar();
 		int year = currentDateCalendar.get(Calendar.YEAR);
 		int month = currentDateCalendar.get(Calendar.MONTH);
 		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-		currentDateCalendar = new GregorianCalendar(year, month, day - numberOfDays);
+		currentDateCalendar = new GregorianCalendar(year, month, day
+				- numberOfDays);
 		for (AccountActionDateEntity accountActionDateEntity : accountBO
 				.getAccountActionDates()) {
 			accountActionDateEntity.setActionDate(new java.sql.Date(
@@ -1019,18 +1085,19 @@ public class TestLoanBO extends MifosTestCase {
 			break;
 		}
 	}
-	
-	public void testGetRemainingPrincipalAmount() throws AccountException, SystemException{
-		accountBO = getLoanAccount();	
+
+	public void testGetRemainingPrincipalAmount() throws AccountException,
+			SystemException {
+		accountBO = getLoanAccount();
 		Date currentDate = new Date(System.currentTimeMillis());
 		LoanBO loan = (LoanBO) accountBO;
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
 		accntActionDates.addAll(loan.getAccountActionDates());
-		PaymentData paymentData = TestObjectFactory
-				.getLoanAccountPaymentData(accntActionDates, TestObjectFactory
+		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
+				accntActionDates, TestObjectFactory
 						.getMoneyForMFICurrency(212 * 6), null, Short
 						.valueOf("1"), "receiptNum", Short.valueOf("1"),
-						currentDate,currentDate);
+				currentDate, currentDate);
 		loan.applyPayment(paymentData);
 
 		TestObjectFactory.updateObject(loan);
@@ -1040,12 +1107,17 @@ public class TestLoanBO extends MifosTestCase {
 				1272.0, loan.getLastPmntAmnt());
 		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
 				loan.getAccountId());
-		loan=(LoanBO)accountBO;
-		loan.getLoanSummary().getOriginalPrincipal().subtract(loan.getLoanSummary().getPrincipalPaid());
-		assertEquals(loan.getRemainingPrincipalAmount(),loan.getLoanSummary().getOriginalPrincipal().subtract(loan.getLoanSummary().getPrincipalPaid()));
+		loan = (LoanBO) accountBO;
+		loan.getLoanSummary().getOriginalPrincipal().subtract(
+				loan.getLoanSummary().getPrincipalPaid());
+		assertEquals(loan.getRemainingPrincipalAmount(), loan.getLoanSummary()
+				.getOriginalPrincipal().subtract(
+						loan.getLoanSummary().getPrincipalPaid()));
 	}
-	
-	public void testIsAccountActive() throws AccountException, SystemException, NumberFormatException, RepaymentScheduleException, FinancialException{
+
+	public void testIsAccountActive() throws AccountException, SystemException,
+			NumberFormatException, RepaymentScheduleException,
+			FinancialException {
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 3);
 		assertFalse(((LoanBO) accountBO).isAccountActive());
@@ -1129,6 +1201,197 @@ public class TestLoanBO extends MifosTestCase {
 				break;
 			}
 		}
+	}
+	
+	private AccountBO getLoanAccountWithPerformanceHistory() {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		client = TestObjectFactory.createClient("Client",
+				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
+						System.currentTimeMillis()));
+		ClientPerformanceHistoryEntity clientPerfHistory = new ClientPerformanceHistoryEntity(1,0,new Money(),new Money(),new Money());
+		((ClientBO) client).setPerformanceHistory(clientPerfHistory);
+		TestObjectFactory.updateObject(client);
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"),
+				new Date(System.currentTimeMillis()), Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), meeting);
+		accountBO = TestObjectFactory.createLoanAccount("42423142341", client, Short
+				.valueOf("3"), new Date(System.currentTimeMillis()),
+				loanOffering);
+		LoanPerformanceHistoryEntity loanPerfHistory = new LoanPerformanceHistoryEntity();
+		((LoanBO)accountBO).setPerformanceHistory(loanPerfHistory);
+		TestObjectFactory.updateObject(accountBO);
+		return accountBO;
+	}
+	
+	private AccountBO getLoanAccountWithPerformanceHistory(Short accountSate, Date startDate,
+			int disbursalType) {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		client = TestObjectFactory.createClient("Client",
+				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
+						System.currentTimeMillis()));
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), meeting);
+		ClientPerformanceHistoryEntity clientPerfHistory = new ClientPerformanceHistoryEntity(1,0,new Money(),new Money(),new Money());
+		((ClientBO) client).setPerformanceHistory(clientPerfHistory);
+		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(
+				"99999999999", client, accountSate, startDate, loanOffering,
+				disbursalType);
+		LoanPerformanceHistoryEntity loanPerfHistory = new LoanPerformanceHistoryEntity();
+		((LoanBO)accountBO).setPerformanceHistory(loanPerfHistory);
+		return accountBO;
+
+	}
+	
+	private AccountActionDateEntity getLastInstallmentAccountAction(LoanBO loanBO) {
+		AccountActionDateEntity nextAccountAction = null;
+		if (loanBO.getAccountActionDates() != null
+				&& loanBO.getAccountActionDates().size() > 0) {
+			for (AccountActionDateEntity accountAction : loanBO.getAccountActionDates()) {
+				if (null == nextAccountAction)
+					nextAccountAction = accountAction;
+				else if (nextAccountAction.getInstallmentId() < accountAction
+						.getInstallmentId())
+					nextAccountAction = accountAction;
+			}
+		}
+		return nextAccountAction;
+	}
+
+	public void testGetTotalRepayAmountForCustomerPerfHistory() throws Exception {
+			accountBO = getLoanAccountWithPerformanceHistory();
+			HibernateUtil.getSessionTL().flush();
+			HibernateUtil.closeSession();
+			client=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
+			accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+					AccountBO.class, accountBO.getAccountId());
+	
+			changeFirstInstallmentDate(accountBO);
+			LoanBO loanBO = (LoanBO) accountBO;
+			UserContext uc = TestObjectFactory.getUserContext();
+			Money totalRepaymentAmount = loanBO.getTotalEarlyRepayAmount();
+			Integer noOfActiveLoans = ((ClientPerformanceHistoryEntity) ((LoanBO)accountBO).getCustomer().getCustomerPerformanceHistory()).getNoOfActiveLoans();
+			LoanPerformanceHistoryEntity loanPerfHistory = ((LoanBO)accountBO).getPerformanceHistory();
+			Integer noOfPayments = loanPerfHistory.getNoOfPayments();
+			loanBO.makeEarlyRepayment(loanBO.getTotalEarlyRepayAmount(), null,null, "1", uc.getId());
+			HibernateUtil.getSessionTL().flush();
+			HibernateUtil.closeSession();
+			client=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
+			accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+					AccountBO.class, accountBO.getAccountId());
+			loanPerfHistory = ((LoanBO)accountBO).getPerformanceHistory();
+			assertEquals(noOfPayments+1,loanPerfHistory.getNoOfPayments().intValue());
+			
+			ClientPerformanceHistoryEntity clientPerfHistory =(ClientPerformanceHistoryEntity) ((LoanBO)accountBO).getCustomer().getCustomerPerformanceHistory();
+			assertEquals(Integer.valueOf(1),clientPerfHistory.getLoanCycleNumber());
+			assertEquals(noOfActiveLoans-1,clientPerfHistory.getNoOfActiveLoans().intValue());
+			assertEquals(totalRepaymentAmount,clientPerfHistory.getLastLoanAmount());
+	}
+	
+	public void testWtiteOffForCustomerPerfHistory() throws Exception {
+		accountBO = getLoanAccountWithPerformanceHistory();
+		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.closeSession();
+		client=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+				AccountBO.class, accountBO.getAccountId());
+		LoanBO loanBO = (LoanBO) accountBO;
+		UserContext uc = TestObjectFactory.getUserContext();
+		loanBO.setUserContext(uc);
+		ClientPerformanceHistoryEntity clientPerfHistory =(ClientPerformanceHistoryEntity) ((LoanBO)accountBO).getCustomer().getCustomerPerformanceHistory();
+		Integer noOfActiveLoans = clientPerfHistory.getNoOfActiveLoans();
+		Integer loanCycleNumber = clientPerfHistory.getLoanCycleNumber();
+		loanBO.writeOff("Loan Written Off");
+		HibernateUtil.commitTransaction();
+		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.closeSession();
+		client=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+				AccountBO.class, accountBO.getAccountId());
+		LoanBO loan = (LoanBO) accountBO;
+		clientPerfHistory =(ClientPerformanceHistoryEntity) ((LoanBO)accountBO).getCustomer().getCustomerPerformanceHistory();
+		assertEquals(loanCycleNumber-1,clientPerfHistory.getLoanCycleNumber().intValue());
+		assertEquals(noOfActiveLoans-1,clientPerfHistory.getNoOfActiveLoans().intValue());
+	}
+	
+	public void testDisbursalLoanForCustomerPerfHistory()throws AccountException, SystemException,RepaymentScheduleException, FinancialException {
+		Date startDate = new Date(System.currentTimeMillis());
+		accountBO = getLoanAccountWithPerformanceHistory(Short.valueOf("3"), startDate, 3);
+		Short personnelId = accountBO.getPersonnel().getPersonnelId();
+		ClientPerformanceHistoryEntity clientPerfHistory =(ClientPerformanceHistoryEntity) ((LoanBO)accountBO).getCustomer().getCustomerPerformanceHistory();
+		Integer noOfActiveLoans = clientPerfHistory.getNoOfActiveLoans();
+		((LoanBO) accountBO).disburseLoan("1234", startDate,
+				Short.valueOf("1"), personnelId, startDate, Short.valueOf("1"));
+		HibernateUtil.commitTransaction();
+		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.closeSession();
+		client=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+				AccountBO.class, accountBO.getAccountId());
+		LoanBO loan = (LoanBO) accountBO;
+		assertEquals(noOfActiveLoans+1,clientPerfHistory.getNoOfActiveLoans().intValue());
+		LoanPerformanceHistoryEntity loanPerfHistory = loan.getPerformanceHistory();
+		assertEquals(getLastInstallmentAccountAction(loan).getActionDate(),loanPerfHistory.getLoanMaturityDate());
+	}
+	
+	public void testHandleArrearsForCustomerPerfHistory() throws AccountException,SystemException {
+		accountBO = getLoanAccountWithPerformanceHistory();
+		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.closeSession();
+		client=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+		ClientPerformanceHistoryEntity clientPerfHistory =(ClientPerformanceHistoryEntity) ((LoanBO)accountBO).getCustomer().getCustomerPerformanceHistory();
+		Integer noOfActiveLoans = clientPerfHistory.getNoOfActiveLoans();
+		((LoanBO) accountBO).handleArrears();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.closeSession();
+		client=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+				AccountBO.class, accountBO.getAccountId());
+		LoanBO loan = (LoanBO) accountBO;
+		clientPerfHistory =(ClientPerformanceHistoryEntity) ((LoanBO)accountBO).getCustomer().getCustomerPerformanceHistory();
+		assertEquals(noOfActiveLoans+1,clientPerfHistory.getNoOfActiveLoans().intValue());
+	}
+	
+	public void testMakePaymentForCustomerPerfHistory() throws AccountException, SystemException {
+		accountBO = getLoanAccountWithPerformanceHistory();
+		AccountStateEntity accountStateEntity = new AccountStateEntity(AccountStates.LOANACC_BADSTANDING);
+		accountBO.setAccountState(accountStateEntity);
+		TestObjectFactory.updateObject(accountBO);
+		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.closeSession();
+		client=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+		ClientPerformanceHistoryEntity clientPerfHistory =(ClientPerformanceHistoryEntity) ((LoanBO)accountBO).getCustomer().getCustomerPerformanceHistory();
+		Integer noOfActiveLoans = clientPerfHistory.getNoOfActiveLoans();
+		LoanPerformanceHistoryEntity loanPerfHistory = ((LoanBO)accountBO).getPerformanceHistory();
+		Integer noOfPayments = loanPerfHistory.getNoOfPayments();
+		accountBO = applyPaymentandRetrieveAccount();
+		LoanBO loan = (LoanBO) accountBO;
+		client=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
+		clientPerfHistory =(ClientPerformanceHistoryEntity) loan.getCustomer().getCustomerPerformanceHistory();
+		assertEquals(noOfActiveLoans-1,clientPerfHistory.getNoOfActiveLoans().intValue());
+		assertEquals(noOfPayments+1,loan.getPerformanceHistory().getNoOfPayments().intValue());
+		
+		
 	}
 
 }

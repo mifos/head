@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.mifos.application.accounts.business;
 
 import java.sql.Date;
@@ -35,10 +32,6 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-/**
- * @author krishankg
- * 
- */
 public class TestAccountBO extends TestAccount {
 	
 	public TestAccountBO() {
@@ -343,5 +336,31 @@ public class TestAccountBO extends TestAccount {
 		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
 		assertEquals(1,accountBO.getAccountActionDates().size());
 		
+	}
+	
+	public void testGetTotalPrincipalAmountInArrears() {
+		Calendar calendar = new GregorianCalendar();
+        calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
+        calendar.add(calendar.WEEK_OF_MONTH,-1);
+        java.sql.Date lastWeekDate = new java.sql.Date(calendar.getTimeInMillis());        
+        
+        Calendar date = new GregorianCalendar();
+        date.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
+        date.add(date.WEEK_OF_MONTH,-2);
+        java.sql.Date twoWeeksBeforeDate = new java.sql.Date(date.getTimeInMillis());
+        
+        
+		for(AccountActionDateEntity installment : accountBO.getAccountActionDates()){
+			if(installment.getInstallmentId().intValue()==1){
+				installment.setActionDate(lastWeekDate);
+			}
+			else if(installment.getInstallmentId().intValue()==2){
+				installment.setActionDate(twoWeeksBeforeDate);
+			}
+		}
+		TestObjectFactory.updateObject(accountBO);
+		TestObjectFactory.flushandCloseSession();
+		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
+		assertEquals(new Money("200"),((LoanBO)accountBO).getTotalPrincipalAmountInArrears());
 	}
 }

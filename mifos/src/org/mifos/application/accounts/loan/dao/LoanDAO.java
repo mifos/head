@@ -19,6 +19,7 @@ import org.mifos.application.accounts.loan.exceptions.LoanExceptionConstants;
 import org.mifos.application.accounts.loan.exceptions.LoanUpdationException;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.valueobjects.Loan;
+import org.mifos.application.accounts.loan.util.valueobjects.LoanPerformanceHistory;
 import org.mifos.application.accounts.loan.util.valueobjects.RecentAccountActivity;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -29,6 +30,7 @@ import org.mifos.application.accounts.util.valueobjects.AccountFlagDetail;
 import org.mifos.application.accounts.util.valueobjects.AccountPayment;
 import org.mifos.application.accounts.util.valueobjects.AccountStatusChangeHistory;
 import org.mifos.application.accounts.util.valueobjects.AccountTrxn;
+import org.mifos.application.customer.client.util.valueobjects.ClientPerformanceHistory;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.valueobjects.Customer;
 import org.mifos.application.customer.util.valueobjects.CustomerMaster;
@@ -342,6 +344,11 @@ public class LoanDAO extends AccountsDAO {
 					.get(0);
 			loan.setAccountFlagDetail(accountFlagDetail);
 		}
+		/*loan.getCustomer().getDisplayName();
+		if(loan.getCustomer().getCustomerLevel().equals(CustomerConstants.CLIENT_LEVEL_ID))
+			((Client)loan.getCustomer()).getClientPerformanceHistory().getNoOfActiveLoans();
+		else if(loan.getCustomer().getCustomerLevel().equals(CustomerConstants.GROUP_LEVEL_ID))
+			((Group)loan.getCustomer()).getGroupPerformanceHistory().getAvgLoanForMember();*/
 		Hibernate.initialize(loan.getAccountActionDateSet());
 
 	}
@@ -488,7 +495,8 @@ public class LoanDAO extends AccountsDAO {
 		try {
 			session = getHibernateSession();
 			tx = session.beginTransaction();
-
+			if(loan.getCustomer().getCustomerLevel().getLevelId().equals(Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID)))
+				session.update((ClientPerformanceHistory)loan.getCustomer().getCustomerPerformanceHistory());
 			session.save(loan);
 			session.flush();
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
@@ -520,6 +528,10 @@ public class LoanDAO extends AccountsDAO {
 							.debug(
 									"After saving a record of account action dates. ");
 				}
+				
+				LoanPerformanceHistory loanPerformanceHistory=new LoanPerformanceHistory();
+				loan.setPerformanceHistory(loanPerformanceHistory);
+				loanPerformanceHistory.setLoanMaturityDate(new Date(getLastActionDate(accntActionDateSet).getActionDate().getTime()));
 			}
 			tx.commit();
 
@@ -726,6 +738,9 @@ public class LoanDAO extends AccountsDAO {
 							.debug(
 									"After saving a record of account action dates. ");
 				}
+				
+				List<AccountActionDate> accountActionList =new ArrayList<AccountActionDate>(accntActionDateSet);
+				loan.getPerformanceHistory().setLoanMaturityDate(new Date(getLastActionDate(accntActionDateSet).getActionDate().getTime()));
 			}
 		}
 		session.flush();
@@ -829,5 +844,30 @@ public class LoanDAO extends AccountsDAO {
 			HibernateUtil.closeSession(session);
 		}
 		return null;
+	}
+	
+	public Customer getCustomer(Integer customerId) throws SystemException {
+		Session session = null;
+		Customer customer = null;
+		try {
+			session = HibernateUtil.getSessionTL();
+			customer = (Customer) session.get(Customer.class,customerId);
+		}catch (HibernateException he) {
+			throw new SystemException(ExceptionConstants.SYSTEMEXCEPTION, he);
+		} finally {
+			HibernateUtil.closeSession(session);
+		}
+		return customer;
+	}
+	
+	public AccountActionDate getLastActionDate(Set<AccountActionDate> actionDateSet){
+		AccountActionDate acctActionDate=null;
+		for(AccountActionDate accountActionDate : actionDateSet){
+			if(acctActionDate==null)
+				acctActionDate=accountActionDate;
+			else if(acctActionDate.getInstallmentId().compareTo(accountActionDate.getInstallmentId())<0)
+				acctActionDate=accountActionDate;
+		}
+		return acctActionDate;
 	}
 }

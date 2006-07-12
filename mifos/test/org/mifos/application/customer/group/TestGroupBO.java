@@ -3,7 +3,6 @@ package org.mifos.application.customer.group;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
@@ -11,22 +10,16 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
-import org.mifos.application.customer.client.util.valueobjects.ClientPerformanceHistory;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.scheduler.SchedulerException;
-import org.mifos.framework.components.scheduler.SchedulerIntf;
-import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -71,7 +64,7 @@ public class TestGroupBO extends MifosTestCase {
 				(GroupBO) group, 0, new Money(), new Money(), new Money(),
 				new Money(), new Money());
 		groupPerformanceHistoryEntity.setTotalOutstandingPortfolio(((LoanBO)account1).getLoanSummary().getOriginalPrincipal().add(((LoanBO)account2).getLoanSummary().getOriginalPrincipal()));
-		((GroupBO)group).setGroupPerformanceHistory(groupPerformanceHistoryEntity);
+		((GroupBO)group).setPerformanceHistory(groupPerformanceHistoryEntity);
 		TestObjectFactory.updateObject(group);
 		TestObjectFactory.flushandCloseSession();
 		group=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
@@ -87,7 +80,7 @@ public class TestGroupBO extends MifosTestCase {
 			}
 		}
 		group.generatePortfolioAtRisk();
-		assertEquals(new Money("1"),((GroupBO)group).getGroupPerformanceHistory().getPortfolioAtRisk());
+		assertEquals(new Money("1"),((GroupBO)group).getPerformanceHistory().getPortfolioAtRisk());
 		TestObjectFactory.flushandCloseSession();
 		center=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
 		group=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());

@@ -547,4 +547,26 @@ public class CustomerBO extends BusinessObject {
 		}
 		return new Money();
 	}
+
+	public Money getDelinquentPortfolioAmount(){
+		Money amountOverDue=new Money();
+		Money totalOutStandingAmount=new Money();
+		for(AccountBO accountBO : getAccounts()){
+			if(accountBO.getAccountType().getAccountTypeId().equals(AccountConstants.LOAN_TYPE)){
+				amountOverDue=amountOverDue.add(accountBO.getTotalPrincipalAmountInArrears());
+				totalOutStandingAmount=totalOutStandingAmount.add(((LoanBO)accountBO).getRemainingPrincipalAmount());
+			}
+		}
+		if(totalOutStandingAmount.getAmountDoubleValue()!=0.0)
+			return amountOverDue.divide(totalOutStandingAmount);
+		return new Money();
+	}
+	
+	
+	public CustomerPerformanceHistory getCustomerPerformanceHistory(){
+		return getPerformanceHistory();
+	}
+	protected CustomerPerformanceHistory getPerformanceHistory() {
+		return null;
+	}
 }

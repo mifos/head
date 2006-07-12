@@ -1,10 +1,10 @@
 package org.mifos.application.customer.client.business;
 
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.application.customer.business.CustomerPerformanceHistory;
 import org.mifos.framework.util.helpers.Money;
 
-public class ClientPerformanceHistoryEntity extends PersistentObject {
+public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory{
 
 	private Integer id;
 
@@ -86,4 +86,6 @@ public class ClientPerformanceHistoryEntity extends PersistentObject {
 	public void setClient(ClientBO client) {
 		this.client = client;
 	}
+	
+
 }

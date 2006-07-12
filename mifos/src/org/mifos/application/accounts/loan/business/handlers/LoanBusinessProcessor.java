@@ -32,13 +32,14 @@ import org.mifos.application.accounts.util.helpers.PathConstants;
 import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.accounts.util.valueobjects.AccountStatusChangeHistory;
+import org.mifos.application.customer.client.util.valueobjects.ClientPerformanceHistory;
 import org.mifos.application.customer.dao.CustomerUtilDAO;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.valueobjects.Customer;
 import org.mifos.application.customer.util.valueobjects.CustomerMaster;
 import org.mifos.application.customer.util.valueobjects.CustomerMeeting;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeePayment;
-import org.mifos.application.fees.util.helpers.FeesConstants;
 import org.mifos.application.fees.util.valueobjects.FeeMaster;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -234,9 +235,10 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 	 * This method prepares the loan object for saving with all its associations
 	 * 
 	 * @param context
+	 * @throws SystemException 
 	 */
 	private void prepareLoanForSaving(Context context)
-			throws ApplicationException {
+			throws ApplicationException, SystemException {
 		Loan loan = (Loan) context.getValueObject();
 
 		// MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("prd
@@ -252,11 +254,10 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 		// create and set the customer object this will have just the id and the
 		// version number for saving
 		// this object will not be saved.
-		Customer customer = new Customer();
 		CustomerMaster customerMaster = (CustomerMaster) context
 				.getBusinessResults(AccountConstants.CUSTOMERMASTER);
-		customer.setCustomerId(customerMaster.getCustomerId());
-		customer.setVersionNo(customerMaster.getVersionNo());
+		LoanDAO loanDAO = (LoanDAO) getDAO(PathConstants.LOANACCOUNTSPATH);
+		Customer customer = loanDAO.getCustomer(customerMaster.getCustomerId());
 		loan.setCustomer(customer);
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"customer id set is " + loan.getCustomer().getCustomerId()
@@ -328,7 +329,13 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 		// we need the customer loan officerId for recordLoanOfficeis
 
 		// checkPermissionForCreate(loan.getAccountStateId(),context.getUserContext(),null,loan.getOfficeId(),context.getUserContext().getId());
-
+		
+		//performance history
+		if(loan.getCustomer().getCustomerLevel().getLevelId().equals(Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))) {
+			ClientPerformanceHistory clientPerfHistory = (ClientPerformanceHistory)loan.getCustomer().getCustomerPerformanceHistory();
+			clientPerfHistory.setLoanCycleNumber(clientPerfHistory.getLoanCycleNumber()+1);
+		}
+		
 		RepaymentSchedule repaymentSchedule = (RepaymentSchedule) context
 				.getBusinessResults(LoanConstants.REPAYMENTSCHEDULE);
 		// set the values in the loan Summary

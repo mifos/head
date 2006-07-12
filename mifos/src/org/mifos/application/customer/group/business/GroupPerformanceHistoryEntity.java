@@ -1,9 +1,10 @@
 package org.mifos.application.customer.group.business;
 
+import org.mifos.application.customer.business.CustomerPerformanceHistory;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.util.helpers.Money;
 
-public class GroupPerformanceHistoryEntity extends PersistentObject {
+public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
 	private Integer id;
 

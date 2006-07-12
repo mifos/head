@@ -1,9 +1,10 @@
 package org.mifos.application.customer.client.util.valueobjects;
 
+import org.mifos.application.customer.util.valueobjects.CustomerPerformanceHistory;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-public class ClientPerformanceHistory extends ValueObject {
+public class ClientPerformanceHistory extends CustomerPerformanceHistory {
 
 	private Integer id;
 

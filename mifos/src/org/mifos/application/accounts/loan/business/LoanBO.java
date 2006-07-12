@@ -80,6 +80,8 @@ import org.mifos.application.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
+import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.fund.util.valueobjects.Fund;
@@ -180,7 +182,7 @@ public class LoanBO extends AccountBO {
 
 	private LoanOfferingBO loanOffering;
 	
-	private LoanPerformanceHistoryEntity loanPerformanceHistory;
+	private LoanPerformanceHistoryEntity performanceHistory;
 
 	public Set<LoanActivityEntity> loanActivityDetails;
 
@@ -368,13 +370,15 @@ public class LoanBO extends AccountBO {
 		this.status = status;
 	}
 
-	public LoanPerformanceHistoryEntity getLoanPerformanceHistory() {
-		return loanPerformanceHistory;
+	public LoanPerformanceHistoryEntity getPerformanceHistory() {
+		return performanceHistory;
 	}
 
-	public void setLoanPerformanceHistory(
-			LoanPerformanceHistoryEntity loanPerformanceHistory) {
-		this.loanPerformanceHistory = loanPerformanceHistory;
+	public void setPerformanceHistory(
+			LoanPerformanceHistoryEntity performanceHistory) {
+		if(performanceHistory != null)
+			performanceHistory.setLoan(this);
+		this.performanceHistory = performanceHistory;
 	}
 
 	public Set<LoanActivityEntity> getLoanActivityDetails() {
@@ -416,6 +420,9 @@ public class LoanBO extends AccountBO {
 						.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
 								accountState, this.getAccountState(),
 								paymentData.getPersonnelId()));
+				
+				//Client performance entry
+				updateCustomerHistoryOnLastInstlPayment(paymentData.getTotalAmount());
 			}
 			if (getAccountState().getId().shortValue() == AccountStates.LOANACC_BADSTANDING) {
 				AccountStateEntity accountState = this.getAccountState();
@@ -425,6 +432,9 @@ public class LoanBO extends AccountBO {
 						.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
 								accountState, this.getAccountState(),
 								paymentData.getPersonnelId()));
+				
+				//Client performance entry
+				updateCustomerHistoryOnPayment();
 			}
 			LoanPaymentData loanPaymentData = (LoanPaymentData) accountPaymentData;
 			accountAction.setPaymentDetails(loanPaymentData, new java.sql.Date(
@@ -444,6 +454,9 @@ public class LoanBO extends AccountBO {
 							.getPenaltyPaid().add(
 									loanPaymentData.getMiscPenaltyPaid()),
 					totalFees.add(loanPaymentData.getMiscFeePaid()));
+			
+			if(getPerformanceHistory()!=null)
+				getPerformanceHistory().setNoOfPayments(getPerformanceHistory().getNoOfPayments()+1);
 
 		}
 		addLoanActivity(buildLoanActivity(accountPayment.getAccountTrxns(),
@@ -656,6 +669,12 @@ public class LoanBO extends AccountBO {
 		accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
 		this.addAccountPayment(accountPaymentEntity);
 		this.buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
+		
+		//Client performance entry
+		updateCustomerHistoryOnDisbursement();
+		if(getPerformanceHistory()!=null)
+			getPerformanceHistory().setLoanMaturityDate(getLastInstallmentAccountAction().getActionDate());
+		
 		new AccountPersistanceService().update(this);
 
 	}
@@ -978,6 +997,8 @@ public class LoanBO extends AccountBO {
 			// loanTrxnDetailEntity.setRunningBalance(loanSummary);
 		}
 		try {
+			if(getPerformanceHistory()!=null)
+				getPerformanceHistory().setNoOfPayments(getPerformanceHistory().getNoOfPayments()+1);
 			addLoanActivity(buildLoanActivity(accountPaymentEntity
 					.getAccountTrxns(), personnelId, "Loan Repayment"));
 			buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
@@ -998,6 +1019,9 @@ public class LoanBO extends AccountBO {
 				.findById(AccountStateEntity.class,
 						AccountStates.LOANACC_OBLIGATIONSMET));
 		this.setClosedDate(new Date(System.currentTimeMillis()));
+		
+		//Client performance entry
+		updateCustomerHistoryOnRepayment(totalAmount);
 
 		loanPersistance.createOrUpdate(this);
 	}
@@ -1183,6 +1207,10 @@ public class LoanBO extends AccountBO {
 		Date currrentDate = DateHelper.getLocaleDate(Configuration
 				.getInstance().getSystemConfig().getMFILocale(), systemDate);
 		this.setUpdatedDate(currrentDate);
+		
+		//Client performance entry
+		updateCustomerHistoryOnArrears();
+		
 		loanPersistance.createOrUpdate(this);
 	}
 
@@ -1246,6 +1274,10 @@ public class LoanBO extends AccountBO {
 				.getAccountTrxns(), personnelId, "Loan Written Off"));
 		buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 		changeStatus(statusId, null, comment);
+		
+		//Client performance entry
+		updateCustomerHistoryOnWriteOff();
+		
 		getAccountPersistenceService().update(this);
 	}
 
@@ -1457,6 +1489,19 @@ public class LoanBO extends AccountBO {
 		return loanSummary.getOriginalPrincipal().subtract(loanSummary.getPrincipalPaid());
 	}
 	
+	public Integer getDaysInArrears(){
+		if(!getDetailsOfInstallmentsInArrears().isEmpty()){
+			AccountActionDateEntity accountActionDateEntity=getDetailsOfInstallmentsInArrears().get(getDetailsOfInstallmentsInArrears().size()-1);
+			Calendar actionDate = new GregorianCalendar();
+			actionDate.setTime(accountActionDateEntity.getActionDate());
+			long diffInTermsOfDay = (Calendar.getInstance()
+					.getTimeInMillis() - actionDate.getTimeInMillis())
+					/ (24 * 60 * 60 * 1000);
+			return Integer.valueOf(new Long(diffInTermsOfDay).toString());
+		}
+		return null;
+	}
+	
 	public Boolean isAccountActive(){
 		return (getAccountState().getId().equals(
 				AccountStates.LOANACC_ACTIVEINGOODSTANDING) || getAccountState()
@@ -1492,5 +1537,51 @@ public class LoanBO extends AccountBO {
 			}
 		return noOfMissedPayments;
 	}
+	
+	private void updateCustomerHistoryOnLastInstlPayment(Money totalAmount) {
+		if(getCustomer().getCustomerLevel().getLevelId().equals(Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))) {
+			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity)getCustomer().getCustomerPerformanceHistory();
+			clientPerfHistory.setLastLoanAmount(totalAmount);
+			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory.getNoOfActiveLoans()-1);
+		}
+	}
+	
+	private void updateCustomerHistoryOnPayment() {
+		if(getCustomer().getCustomerLevel().getLevelId().equals(Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))) {
+			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity)getCustomer().getCustomerPerformanceHistory();
+			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory.getNoOfActiveLoans()-1);
+		}
+	}
+	
+	private void updateCustomerHistoryOnDisbursement() {
+		if(getCustomer().getCustomerLevel().getLevelId().equals(Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))) {
+			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity)getCustomer().getCustomerPerformanceHistory();
+			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory.getNoOfActiveLoans()+1);
+		}
+	}
+	
+	private void updateCustomerHistoryOnRepayment(Money totalAmount) {
+		if(getCustomer().getCustomerLevel().getLevelId().equals(Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))) {
+			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity)getCustomer().getCustomerPerformanceHistory();
+			clientPerfHistory.setLastLoanAmount(totalAmount);
+			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory.getNoOfActiveLoans()-1);
+		}
+	}
+	
+	private void updateCustomerHistoryOnArrears() {
+		if(getCustomer().getCustomerLevel().getLevelId().equals(Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))) {
+			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity)getCustomer().getCustomerPerformanceHistory();
+			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory.getNoOfActiveLoans()+1);
+		}
+	}
+	
+	private void updateCustomerHistoryOnWriteOff() {
+		if(getCustomer().getCustomerLevel().getLevelId().equals(Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))) {
+			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity)getCustomer().getCustomerPerformanceHistory();
+			clientPerfHistory.setLoanCycleNumber(clientPerfHistory.getLoanCycleNumber()-1);
+			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory.getNoOfActiveLoans()-1);
+		}
+	}
+
 
 }

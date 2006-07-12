@@ -59,7 +59,7 @@ import org.mifos.framework.util.helpers.Money;
  */
 public class GroupBO extends CustomerBO {
 	
-	private GroupPerformanceHistoryEntity groupPerformanceHistory;
+	private GroupPerformanceHistoryEntity performanceHistory;
 
 	public GroupBO(){}
 	
@@ -72,16 +72,18 @@ public class GroupBO extends CustomerBO {
 			return true;
 		return false;
 	}
-
-	public GroupPerformanceHistoryEntity getGroupPerformanceHistory() {
-		return groupPerformanceHistory;
-	}
-
-	public void setGroupPerformanceHistory(
-			GroupPerformanceHistoryEntity groupPerformanceHistory) {
-		this.groupPerformanceHistory = groupPerformanceHistory;
-	}
 	
+	public GroupPerformanceHistoryEntity getPerformanceHistory() {
+		return performanceHistory;
+	}
+
+	public void setPerformanceHistory(
+			GroupPerformanceHistoryEntity performanceHistory) {
+		if(performanceHistory != null)
+			performanceHistory.setGroup(this);
+		this.performanceHistory = performanceHistory;
+	}
+
 	public void generatePortfolioAtRisk() throws PersistenceException, ServiceException{
 		Money amount=getBalanceForAccountsAtRisk();
 		List<CustomerBO> clients = getDBService().getAllChildrenForParent(
@@ -92,8 +94,8 @@ public class GroupBO extends CustomerBO {
 				amount=amount.add(client.getBalanceForAccountsAtRisk());
 			}
 		}
-		if(getGroupPerformanceHistory().getTotalOutstandingPortfolio().getAmountDoubleValue()!=0.0)
-			getGroupPerformanceHistory().setPortfolioAtRisk(amount.divide(getGroupPerformanceHistory().getTotalOutstandingPortfolio()));
+		if(getPerformanceHistory().getTotalOutstandingPortfolio().getAmountDoubleValue()!=0.0)
+			getPerformanceHistory().setPortfolioAtRisk(amount.divide(getPerformanceHistory().getTotalOutstandingPortfolio()));
 		getDBService().update(this);
 	}
 }

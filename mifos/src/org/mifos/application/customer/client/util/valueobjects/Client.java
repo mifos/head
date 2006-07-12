@@ -34,7 +34,7 @@ public class Client extends Customer {
 	
 	private short flagId;
 	
-	private ClientPerformanceHistory clientPerformanceHistory;
+	private ClientPerformanceHistory performanceHistory;
 	/**
 	 * Method which returns the flagId	
 	 * @return Returns the flagId.
@@ -141,13 +141,14 @@ public class Client extends Customer {
 		this.parentGroupId = parentGroupId;
 	}
 
-	public ClientPerformanceHistory getClientPerformanceHistory() {
-		return clientPerformanceHistory;
+	public ClientPerformanceHistory getPerformanceHistory() {
+		return performanceHistory;
 	}
 
-	public void setClientPerformanceHistory(
-			ClientPerformanceHistory clientPerformanceHistory) {
-		this.clientPerformanceHistory = clientPerformanceHistory;
+	public void setPerformanceHistory(ClientPerformanceHistory performanceHistory) {
+		if(performanceHistory != null)
+			performanceHistory.setClient(this);
+		this.performanceHistory = performanceHistory;
 	}
 	
 

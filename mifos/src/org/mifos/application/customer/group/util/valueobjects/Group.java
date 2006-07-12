@@ -58,7 +58,7 @@ public class Group extends Customer {
 	private Set customerProgram;
 	*/
 	
-	private GroupPerformanceHistory groupPerformanceHistory;
+	private GroupPerformanceHistory performanceHistory;
 	/** Constructor for the Group */
 	public Group(){
 	}
@@ -122,13 +122,16 @@ public class Group extends Customer {
 	   return parentCustomer;	
 	}
 
-	public GroupPerformanceHistory getGroupPerformanceHistory() {
-		return groupPerformanceHistory;
+	public GroupPerformanceHistory getPerformanceHistory() {
+		return performanceHistory;
 	}
 
-	public void setGroupPerformanceHistory(
-			GroupPerformanceHistory groupPerformanceHistory) {
-		this.groupPerformanceHistory = groupPerformanceHistory;
+	public void setPerformanceHistory(GroupPerformanceHistory performanceHistory) {
+		if(performanceHistory!=null)
+			performanceHistory.setGroup(this);
+		this.performanceHistory = performanceHistory;
 	}
+
+
 	
 }

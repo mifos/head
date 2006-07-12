@@ -11,12 +11,6 @@ import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 
-/**
- * This class acts as valueObject for clients module
- * 
- * @author ashishsm
- * 
- */
 public class ClientBO extends CustomerBO {
 
 	private InputStream customerPicture;
@@ -29,7 +23,7 @@ public class ClientBO extends CustomerBO {
 
 	private String governmentId;
 
-	private ClientPerformanceHistoryEntity clientPerformanceHistory;
+	private ClientPerformanceHistoryEntity performanceHistory;
 
 	public ClientBO() {
 		this.customerNameDetailSet = new HashSet();
@@ -84,14 +78,16 @@ public class ClientBO extends CustomerBO {
 	public void setGovernmentId(String governmentId) {
 		this.governmentId = governmentId;
 	}
-
-	public ClientPerformanceHistoryEntity getClientPerformanceHistory() {
-		return clientPerformanceHistory;
+	
+	public ClientPerformanceHistoryEntity getPerformanceHistory() {
+		return performanceHistory;
 	}
 
-	public void setClientPerformanceHistory(
-			ClientPerformanceHistoryEntity clientPerformanceHistory) {
-		this.clientPerformanceHistory = clientPerformanceHistory;
+	public void setPerformanceHistory(
+			ClientPerformanceHistoryEntity performanceHistory) {
+		if(performanceHistory!=null)
+			performanceHistory.setClient(this);
+		this.performanceHistory = performanceHistory;
 	}
 
 	public void addClientAttendance(ClientAttendanceBO clientAttendance) {
@@ -125,4 +121,6 @@ public class ClientBO extends CustomerBO {
 			return true;
 		return false;
 	}
+	
+	
 }

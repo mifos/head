@@ -66,6 +66,7 @@ import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.util.helpers.ValidateMethods;
 import org.mifos.application.customer.client.util.valueobjects.Client;
+import org.mifos.application.customer.client.util.valueobjects.ClientPerformanceHistory;
 import org.mifos.application.customer.client.util.valueobjects.CustomerPicture;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
@@ -77,7 +78,6 @@ import org.mifos.application.customer.util.valueobjects.Customer;
 import org.mifos.application.customer.util.valueobjects.CustomerHierarchy;
 import org.mifos.application.meeting.util.valueobjects.MeetingType;
 import org.mifos.application.office.dao.OfficeDAO;
-import org.mifos.application.personnel.dao.PersonnelDAO;
 import org.mifos.application.personnel.util.valueobjects.Personnel;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -97,6 +97,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ExceptionConstants;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.valueobjects.Context;
 
@@ -225,6 +226,9 @@ public class ClientCreationDAO extends DAO {
 			 	vo.getCustomerMeeting().getMeeting().setMeetingType(meetingType);
 			 	session.save(vo.getCustomerMeeting().getMeeting());
 			}
+			
+			ClientPerformanceHistory clientPerfHistory = new ClientPerformanceHistory(0,0,new Money(),new Money(),new Money());
+			vo.setPerformanceHistory(clientPerfHistory);
 
 			session.save(vo);
 			//the client is set with the global customer number that has been generated from
@@ -562,7 +566,6 @@ public class ClientCreationDAO extends DAO {
 				if(accntActDates!=null){
 					Hibernate.initialize(accntActDates);
 					for(AccountActionDate accountActionDate :  accntActDates){
-						System.out.println("******1**********addddid : " +  accountActionDate.getActionDateId());
 						accountActionDate.getActionDate();
 					}
 				}
@@ -571,7 +574,6 @@ public class ClientCreationDAO extends DAO {
 				if(accntFees!=null){
 					Hibernate.initialize(accntFees);
 					for(AccountFees accountFees :  accntFees){
-						System.out.println("*********2*******acfeeinid : " +  accountFees.getAccountFeeId());
 						accountFees.getAccountId();
 						accountFees.getAccountFeeAmount();
 					}

@@ -65,7 +65,7 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 				(GroupBO) group, 0, new Money(), new Money(), new Money(),
 				new Money(), new Money());
 		groupPerformanceHistoryEntity.setTotalOutstandingPortfolio(((LoanBO)account1).getLoanSummary().getOriginalPrincipal().add(((LoanBO)account2).getLoanSummary().getOriginalPrincipal()));
-		((GroupBO)group).setGroupPerformanceHistory(groupPerformanceHistoryEntity);
+		((GroupBO)group).setPerformanceHistory(groupPerformanceHistoryEntity);
 		TestObjectFactory.updateObject(group);
 		TestObjectFactory.flushandCloseSession();
 		group=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
@@ -90,7 +90,7 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 		client=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
 		account1=(AccountBO)TestObjectFactory.getObject(AccountBO.class,account1.getAccountId());
 		account2=(AccountBO)TestObjectFactory.getObject(AccountBO.class,account2.getAccountId());
-		assertEquals(new Money("1"),((GroupBO)group).getGroupPerformanceHistory().getPortfolioAtRisk());
+		assertEquals(new Money("1"),((GroupBO)group).getPerformanceHistory().getPortfolioAtRisk());
 	}
 
 
