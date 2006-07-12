@@ -750,7 +750,7 @@
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"><mifos:mifoslabel
 								name="client.DeliquentPortfolio" bundle="ClientUIResources"/> <c:out
-								value="${sessionScope.ClientPerformanceHistory.delinquentPortfolio}" /></span></td>
+								value="${sessionScope.ClientPerformanceHistory.delinquentPortfolioAmount}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
