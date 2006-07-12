@@ -73,6 +73,7 @@ import org.mifos.application.customer.group.util.helpers.GroupHelper;
 import org.mifos.application.customer.group.util.helpers.GroupTransferInput;
 import org.mifos.application.customer.group.util.helpers.LinkParameters;
 import org.mifos.application.customer.group.util.valueobjects.Group;
+import org.mifos.application.customer.group.util.valueobjects.GroupPerformanceHistory;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerHelper;
 import org.mifos.application.customer.util.valueobjects.Customer;
@@ -104,6 +105,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.valueobjects.Context;
 import org.mifos.framework.util.valueobjects.SearchResults;
 
@@ -316,12 +318,10 @@ public class GroupBusinessProcessor extends MifosBusinessProcessor {
 		  //set maxchildcount for the group
 		  groupVO.setMaxChildCount(0);
 		  
-		  //check permission
-//		  if(groupVO.getPersonnelId()!=null)
-//				checkPermissionForCreate(groupVO.getStatusId(),context.getUserContext(),null,groupVO.getOffice().getOfficeId(),groupVO.getPersonnelId());
-//			else
-//				checkPermissionForCreate(groupVO.getStatusId(),context.getUserContext(),null,groupVO.getOffice().getOfficeId(),context.getUserContext().getId());
-//		  
+		  GroupPerformanceHistory groupPerformanceHistory=new GroupPerformanceHistory(0,new Money(),new Money(),
+					new Money(),new Money(),new Money());
+		  groupVO.setPerformanceHistory(groupPerformanceHistory);
+		  
 		  super.create(context);	
 		  }
 		  catch(SystemException se){

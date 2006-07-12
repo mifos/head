@@ -2,7 +2,11 @@ package org.mifos.application.customer.group.business;
 
 import org.mifos.application.customer.business.CustomerPerformanceHistory;
 import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.Money;
+
+import com.sun.org.apache.bcel.internal.generic.GETFIELD;
 
 public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
@@ -24,11 +28,10 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 	
 	public GroupPerformanceHistoryEntity(){}
 	
-	public GroupPerformanceHistoryEntity(GroupBO group, Integer clientCount,
+	public GroupPerformanceHistoryEntity(Integer clientCount,
 			Money lastGroupLoanAmount, Money avgLoanForMember,
 			Money totalOutstandingPortfolio, Money totalSavings,
 			Money portfolioAtRisk) {
-		this.group=group;
 		this.portfolioAtRisk=portfolioAtRisk;
 		this.totalOutstandingPortfolio=totalOutstandingPortfolio;
 		this.totalSavings=totalSavings;
@@ -47,13 +50,18 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		this.id = id;
 	}
 
-	public Money getAvgLoanForMember() {
+	private Money getAvgLoanForMember() {
 		return avgLoanForMember;
 	}
 
-	public void setAvgLoanForMember(Money avgLoanForMember) {
+	private void setAvgLoanForMember(Money avgLoanForMember) {
 		this.avgLoanForMember = avgLoanForMember;
 	}
+	
+	public Money getAvgLoanAmountForMember() throws PersistenceException, ServiceException {
+		return getGroup().getAverageLoanAmount();
+	}
+
 
 	public Integer getClientCount() {
 		return clientCount;
@@ -71,12 +79,16 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		this.lastGroupLoanAmount = lastGroupLoanAmount;
 	}
 
-	public Money getTotalOutstandingPortfolio() {
+	private Money getTotalOutstandingPortfolio(){
 		return totalOutstandingPortfolio;
 	}
-
-	public void setTotalOutstandingPortfolio(Money totalOutstandingPortfolio) {
+	
+	private void setTotalOutstandingPortfolio(Money totalOutstandingPortfolio) {
 		this.totalOutstandingPortfolio = totalOutstandingPortfolio;
+	}
+	
+	public Money getTotalOutStandingLoanAmount() throws PersistenceException, ServiceException{
+		return getGroup().getTotalOutStandingLoanAmount();
 	}
 
 	public Money getPortfolioAtRisk() {

@@ -94,8 +94,38 @@ public class GroupBO extends CustomerBO {
 				amount=amount.add(client.getBalanceForAccountsAtRisk());
 			}
 		}
-		if(getPerformanceHistory().getTotalOutstandingPortfolio().getAmountDoubleValue()!=0.0)
-			getPerformanceHistory().setPortfolioAtRisk(amount.divide(getPerformanceHistory().getTotalOutstandingPortfolio()));
+		if(getPerformanceHistory().getTotalOutStandingLoanAmount().getAmountDoubleValue()!=0.0)
+			getPerformanceHistory().setPortfolioAtRisk(amount.divide(getPerformanceHistory().getTotalOutStandingLoanAmount()));
 		getDBService().update(this);
+	}
+	
+	public Money getTotalOutStandingLoanAmount() throws PersistenceException, ServiceException{
+		Money amount=getOutstandingLoanAmount();
+		List<CustomerBO> clients = getDBService().getAllChildrenForParent(
+					getSearchId(), getOffice().getOfficeId(),
+					CustomerConstants.GROUP_LEVEL_ID);
+		if(clients!=null && !clients.isEmpty()){
+			for(CustomerBO client : clients){
+				amount=amount.add(client.getOutstandingLoanAmount());
+			}
+		}
+		return amount;
+	}
+	
+	public Money getAverageLoanAmount() throws PersistenceException, ServiceException{
+		Money amountForActiveAccount=new Money();
+		Money amountForAllAccounts=new Money();
+		List<CustomerBO> clients = getDBService().getAllChildrenForParent(
+				getSearchId(), getOffice().getOfficeId(),
+				CustomerConstants.GROUP_LEVEL_ID);
+		if(clients!=null && !clients.isEmpty()){
+			for(CustomerBO client : clients){
+				amountForActiveAccount=amountForActiveAccount.add(client.getOutstandingLoanAmount());
+				amountForAllAccounts=amountForAllAccounts.add(client.getTotalLoanAmount());
+			}
+		}
+		if(amountForAllAccounts.getAmountDoubleValue()!=0.0)
+			return amountForActiveAccount.divide(amountForAllAccounts);
+		return new Money();
 	}
 }

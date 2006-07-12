@@ -61,9 +61,8 @@ public class TestGroupBO extends MifosTestCase {
 		group=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
 		client=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
 		GroupPerformanceHistoryEntity groupPerformanceHistoryEntity = new GroupPerformanceHistoryEntity(
-				(GroupBO) group, 0, new Money(), new Money(), new Money(),
+				0, new Money(), new Money(), ((LoanBO)account1).getLoanSummary().getOriginalPrincipal().add(((LoanBO)account2).getLoanSummary().getOriginalPrincipal()),
 				new Money(), new Money());
-		groupPerformanceHistoryEntity.setTotalOutstandingPortfolio(((LoanBO)account1).getLoanSummary().getOriginalPrincipal().add(((LoanBO)account2).getLoanSummary().getOriginalPrincipal()));
 		((GroupBO)group).setPerformanceHistory(groupPerformanceHistoryEntity);
 		TestObjectFactory.updateObject(group);
 		TestObjectFactory.flushandCloseSession();
@@ -80,7 +79,45 @@ public class TestGroupBO extends MifosTestCase {
 			}
 		}
 		group.generatePortfolioAtRisk();
-		assertEquals(new Money("1"),((GroupBO)group).getPerformanceHistory().getPortfolioAtRisk());
+		assertEquals(new Money("1.0"),((GroupBO)group).getPerformanceHistory().getPortfolioAtRisk());
+		TestObjectFactory.flushandCloseSession();
+		center=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
+		group=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
+		client=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
+		account1=(AccountBO)TestObjectFactory.getObject(AccountBO.class,account1.getAccountId());
+		account2=(AccountBO)TestObjectFactory.getObject(AccountBO.class,account2.getAccountId());
+	}
+	
+	public void testGetTotalOutStandingLoanAmount() throws SchedulerException, HibernateException, ServiceException, PersistenceException{
+		createInitialObject();
+		GroupPerformanceHistoryEntity groupPerformanceHistoryEntity = new GroupPerformanceHistoryEntity(
+				0, new Money(), new Money(), ((LoanBO)account1).getLoanSummary().getOriginalPrincipal().add(((LoanBO)account2).getLoanSummary().getOriginalPrincipal()),
+				new Money(), new Money());
+		((GroupBO)group).setPerformanceHistory(groupPerformanceHistoryEntity);
+		TestObjectFactory.updateObject(group);
+		TestObjectFactory.flushandCloseSession();
+		group=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
+		assertEquals(new Money("600.0"),((GroupBO)group).getTotalOutStandingLoanAmount());
+		assertEquals(new Money("600.0"),((GroupBO)group).getPerformanceHistory().getTotalOutStandingLoanAmount());
+		TestObjectFactory.flushandCloseSession();
+		center=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
+		group=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
+		client=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
+		account1=(AccountBO)TestObjectFactory.getObject(AccountBO.class,account1.getAccountId());
+		account2=(AccountBO)TestObjectFactory.getObject(AccountBO.class,account2.getAccountId());
+	}
+	
+	public void testGetAverageLoanAmount() throws SchedulerException, HibernateException, ServiceException, PersistenceException{
+		createInitialObject();
+		GroupPerformanceHistoryEntity groupPerformanceHistoryEntity = new GroupPerformanceHistoryEntity(
+				0, new Money(), new Money(), ((LoanBO)account1).getLoanSummary().getOriginalPrincipal().add(((LoanBO)account2).getLoanSummary().getOriginalPrincipal()),
+				new Money(), new Money());
+		((GroupBO)group).setPerformanceHistory(groupPerformanceHistoryEntity);
+		TestObjectFactory.updateObject(group);
+		TestObjectFactory.flushandCloseSession();
+		group=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
+		assertEquals(new Money("1.0"),((GroupBO)group).getAverageLoanAmount());
+		assertEquals(new Money("1.0"),((GroupBO)group).getPerformanceHistory().getAvgLoanAmountForMember());
 		TestObjectFactory.flushandCloseSession();
 		center=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
 		group=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());

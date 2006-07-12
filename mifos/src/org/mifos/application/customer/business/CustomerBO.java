@@ -537,15 +537,39 @@ public class CustomerBO extends BusinessObject {
 	public void generatePortfolioAtRisk()throws PersistenceException, ServiceException{}
 	
 	public Money getBalanceForAccountsAtRisk(){
+		Money amount=new Money();
 		for(AccountBO account : getAccounts()){
 			if(account.getAccountType().getAccountTypeId().equals(AccountConstants.LOAN_TYPE)
 					&& ((LoanBO)account).isAccountActive()){
 				LoanBO loan=(LoanBO)account;
 				if(loan.hasPortfolioAtRisk())
-					return loan.getRemainingPrincipalAmount();
+					amount=amount.add(loan.getRemainingPrincipalAmount());
 			}
 		}
-		return new Money();
+		return amount;
+	}
+	
+	public Money getOutstandingLoanAmount(){
+		Money amount=new Money();
+		for(AccountBO account : getAccounts()){
+			if(account.getAccountType().getAccountTypeId().equals(AccountConstants.LOAN_TYPE)
+					&& ((LoanBO)account).isAccountActive()){
+				LoanBO loan=(LoanBO)account;
+				amount=amount.add(loan.getRemainingPrincipalAmount());
+			}
+		}
+		return amount;
+	}
+	
+	public Money getTotalLoanAmount(){
+		Money amount=new Money();
+		for(AccountBO account : getAccounts()){
+			if(account.getAccountType().getAccountTypeId().equals(AccountConstants.LOAN_TYPE)){
+				LoanBO loan=(LoanBO)account;
+				amount=amount.add(loan.getRemainingPrincipalAmount());
+			}
+		}
+		return amount;
 	}
 
 	public Money getDelinquentPortfolioAmount(){

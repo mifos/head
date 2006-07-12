@@ -223,7 +223,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	 *This methods tries to check the result of  applying adjustment
 	 *to a loan account which has no payment made to it.
 	*/
-	public void testLoadAdjustmentWithNoPmnts()throws Exception{
+	/*public void testLoadAdjustmentWithNoPmnts()throws Exception{
 		loan =(LoanBO)getLoanAccount();
 		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
 		addRequestParameter("method", "loadAdjustment");
@@ -234,9 +234,9 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		loan = (LoanBO)TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
 		verifyForward("loadAdjustment_failure");
 
-	}
+	}*/
 
-	public void testAdjustmentForZeroPmnt()throws Exception{
+	/*public void testAdjustmentForZeroPmnt()throws Exception{
 
 		loan =(LoanBO)getLoanAccount();
 		applyPayment(loan, 0);
@@ -250,7 +250,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		loan = (LoanBO)TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
 		verifyForward("applyAdjustment_failure");
 
-	}
+	}*/
 
 	public void testValidation()throws Exception{
 		loan =(LoanBO)getLoanAccount();

@@ -70,6 +70,7 @@ import org.mifos.application.customer.client.util.valueobjects.ClientPerformance
 import org.mifos.application.customer.client.util.valueobjects.CustomerPicture;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.group.util.valueobjects.GroupPerformanceHistory;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerHelper;
@@ -140,6 +141,8 @@ public class ClientCreationDAO extends DAO {
 		if (cust != null) {
 			vo.setSearchId(vo.getParentCustomer().getSearchId()+ "."+ String.valueOf(vo.getParentCustomer().getMaxChildCount() + 1));
 			vo.getParentCustomer().setMaxChildCount(vo.getParentCustomer().getMaxChildCount() + 1);
+			GroupPerformanceHistory groupPerformanceHistory= ((GroupPerformanceHistory)vo.getParentCustomer(). getCustomerPerformanceHistory());
+			groupPerformanceHistory.setClientCount(groupPerformanceHistory.getClientCount()+1);
 			
 		}
 		else{

@@ -81,6 +81,7 @@ import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
+import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.valueobjects.Fees;
@@ -671,7 +672,7 @@ public class LoanBO extends AccountBO {
 		this.buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 		
 		//Client performance entry
-		updateCustomerHistoryOnDisbursement();
+		updateCustomerHistoryOnDisbursement(accountPaymentEntity.getAmount());
 		if(getPerformanceHistory()!=null)
 			getPerformanceHistory().setLoanMaturityDate(getLastInstallmentAccountAction().getActionDate());
 		
@@ -1509,7 +1510,7 @@ public class LoanBO extends AccountBO {
 	}
 	
 	public Integer getMissedPaymentCount(){
-		Integer noOfMissedPayments=0;
+		int noOfMissedPayments=0;
 		List<AccountActionDateEntity> accountActionDateList = getDetailsOfInstallmentsInArrears();
 		if(!accountActionDateList.isEmpty())
 			noOfMissedPayments=+accountActionDateList.size();
@@ -1553,10 +1554,15 @@ public class LoanBO extends AccountBO {
 		}
 	}
 	
-	private void updateCustomerHistoryOnDisbursement() {
+	private void updateCustomerHistoryOnDisbursement(Money disburseAmount) {
 		if(getCustomer().getCustomerLevel().getLevelId().equals(Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))) {
 			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity)getCustomer().getCustomerPerformanceHistory();
 			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory.getNoOfActiveLoans()+1);
+		}else if (getCustomer().getCustomerLevel().getLevelId().equals(
+				Short.valueOf(CustomerConstants.GROUP_LEVEL_ID))
+				&& getCustomer().getCustomerPerformanceHistory() != null) {
+				GroupPerformanceHistoryEntity groupPerformanceHistoryEntity=(GroupPerformanceHistoryEntity)getCustomer().getCustomerPerformanceHistory();
+				groupPerformanceHistoryEntity.setLastGroupLoanAmount(disburseAmount);
 		}
 	}
 	

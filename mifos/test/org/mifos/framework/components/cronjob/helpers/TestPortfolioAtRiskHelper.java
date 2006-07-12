@@ -62,9 +62,8 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 		group=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
 		client=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
 		GroupPerformanceHistoryEntity groupPerformanceHistoryEntity = new GroupPerformanceHistoryEntity(
-				(GroupBO) group, 0, new Money(), new Money(), new Money(),
+				0, new Money(), new Money(), ((LoanBO)account1).getLoanSummary().getOriginalPrincipal().add(((LoanBO)account2).getLoanSummary().getOriginalPrincipal()),
 				new Money(), new Money());
-		groupPerformanceHistoryEntity.setTotalOutstandingPortfolio(((LoanBO)account1).getLoanSummary().getOriginalPrincipal().add(((LoanBO)account2).getLoanSummary().getOriginalPrincipal()));
 		((GroupBO)group).setPerformanceHistory(groupPerformanceHistoryEntity);
 		TestObjectFactory.updateObject(group);
 		TestObjectFactory.flushandCloseSession();

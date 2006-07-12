@@ -34,14 +34,12 @@ public class TestCustomerBO extends MifosTestCase {
 	private GroupBO group;
 	private ClientBO client;
 	private CustomerPersistence customerPersistence;
-	LoanPersistance loanPersistence;
 	private MeetingBO meeting;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		customerPersistence = new CustomerPersistence();
-		loanPersistence = new LoanPersistance();
 	}
 
 	@Override
@@ -82,9 +80,7 @@ public class TestCustomerBO extends MifosTestCase {
 		createInitialObjects();
 		GroupPerformanceHistoryEntity groupPerformanceHistory = new GroupPerformanceHistoryEntity();
 		groupPerformanceHistory.setClientCount(Integer.valueOf("1"));
-		groupPerformanceHistory.setAvgLoanForMember(new Money("200"));
 		groupPerformanceHistory.setLastGroupLoanAmount(new Money("100"));
-		groupPerformanceHistory.setTotalOutstandingPortfolio(new Money("100"));
 		groupPerformanceHistory.setTotalSavings(new Money("100"));
 		groupPerformanceHistory.setPortfolioAtRisk(new Money("100"));
 		groupPerformanceHistory.setGroup(group);
@@ -203,6 +199,32 @@ public class TestCustomerBO extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		client=(ClientBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
 		assertEquals(new Money("1.0"),client.getDelinquentPortfolioAmount());
+		TestObjectFactory.flushandCloseSession();
+		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		client=(ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
+		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
+	}
+	
+	public void testGetOutstandingLoanAmount() throws PersistenceException {
+		createInitialObjects();
+		accountBO = getLoanAccount(group,meeting);
+		TestObjectFactory.flushandCloseSession();
+		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		assertEquals(new Money("300.0"),group.getOutstandingLoanAmount());
+		TestObjectFactory.flushandCloseSession();
+		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		client=(ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
+		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
+	}
+	
+	public void testTotalLoanAmount() throws PersistenceException {
+		createInitialObjects();
+		accountBO = getLoanAccount(group,meeting);
+		TestObjectFactory.flushandCloseSession();
+		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		assertEquals(new Money("300.0"),group.getTotalLoanAmount());
 		TestObjectFactory.flushandCloseSession();
 		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
 		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());

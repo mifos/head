@@ -30,6 +30,9 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
+import org.mifos.application.customer.group.util.valueobjects.GroupPerformanceHistory;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
@@ -1258,6 +1261,30 @@ public class TestLoanBO extends MifosTestCase {
 
 	}
 	
+	private AccountBO getLoanAccountWithGroupPerformanceHistory(Short accountSate, Date startDate,
+			int disbursalType) {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("1"), startDate, Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), meeting);
+		GroupPerformanceHistoryEntity groupPerformanceHistoryEntity = new GroupPerformanceHistoryEntity(0,new Money(),new Money(),new Money(),new Money(),new Money());
+		((GroupBO) group).setPerformanceHistory(groupPerformanceHistoryEntity);
+		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(
+				"99999999999", group, accountSate, startDate, loanOffering,
+				disbursalType);
+		LoanPerformanceHistoryEntity loanPerfHistory = new LoanPerformanceHistoryEntity();
+		((LoanBO)accountBO).setPerformanceHistory(loanPerfHistory);
+		return accountBO;
+
+	}
+	
 	private AccountActionDateEntity getLastInstallmentAccountAction(LoanBO loanBO) {
 		AccountActionDateEntity nextAccountAction = null;
 		if (loanBO.getAccountActionDates() != null
@@ -1393,5 +1420,27 @@ public class TestLoanBO extends MifosTestCase {
 		
 		
 	}
+	
+	public void testDisbursalLoanForGroupPerfHistory()throws AccountException, SystemException,RepaymentScheduleException, FinancialException {
+		Date startDate = new Date(System.currentTimeMillis());
+		accountBO = getLoanAccountWithGroupPerformanceHistory(Short.valueOf("3"), startDate, 3);
+		Short personnelId = accountBO.getPersonnel().getPersonnelId();
+		GroupPerformanceHistoryEntity groupPerformanceHistoryEntity =(GroupPerformanceHistoryEntity) ((LoanBO)accountBO).getCustomer().getCustomerPerformanceHistory();
+		((LoanBO) accountBO).disburseLoan("1234", startDate,
+				Short.valueOf("1"), personnelId, startDate, Short.valueOf("1"));
+		HibernateUtil.commitTransaction();
+		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.closeSession();
+		group=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+				AccountBO.class, accountBO.getAccountId());
+		LoanBO loan = (LoanBO) accountBO;
+		assertEquals(new Money("300.0"),groupPerformanceHistoryEntity.getLastGroupLoanAmount());
+		LoanPerformanceHistoryEntity loanPerfHistory = loan.getPerformanceHistory();
+		assertEquals(getLastInstallmentAccountAction(loan).getActionDate(),loanPerfHistory.getLoanMaturityDate());
+	}
+
+	
+	
 
 }

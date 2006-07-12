@@ -22,6 +22,17 @@ public class GroupPerformanceHistory extends CustomerPerformanceHistory {
 
 	private Group group;
 
+	public GroupPerformanceHistory(){}
+	
+	public GroupPerformanceHistory(Integer clientCount,Money lastGroupLoanAmount,Money avgLoanForMember,
+			Money totalOutStandingPortfolio,Money totalSavings,Money portfolioAtRisk){
+		this.clientCount=clientCount;
+		this.lastGroupLoanAmount=lastGroupLoanAmount;
+		this.avgLoanForMember=avgLoanForMember;
+		this.totalOutstandingPortfolio=totalOutStandingPortfolio;
+		this.totalSavings=totalSavings;
+		this.portfolioAtRisk=portfolioAtRisk;
+	}
 	
 
 	public Integer getId() {
