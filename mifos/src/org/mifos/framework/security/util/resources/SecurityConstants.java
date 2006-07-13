@@ -157,7 +157,7 @@ public interface SecurityConstants {
 
 	public final short CIENT_ADD_NOTES_TO_ACCOUNT = 48;
 
-	public final short CIENT_EDIT_PERSONNEL_ANDMFI_INFORMATION = 49;
+	public final short CIENT_EDIT_MFI_INFORMATION = 49;
 
 	public final short CIENT_CHANGE_GROUP_MEMBERSHIP = 50;
 
@@ -311,7 +311,7 @@ public interface SecurityConstants {
 
 	public final short CLIENT_CREATE_CLIENT = 125;
 
-	public final short CLIENT_UPDATE_CLIENT = 126;
+	public final short CLIENT_UPDATE_PERSONNEL_INFO = 126;
 
 	public final short CLIENT_UPDATE_STATUS = 127;
 

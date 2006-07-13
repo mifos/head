@@ -365,13 +365,13 @@ public class ActivityMapper {
 		activityMap.put("/clientCreationAction-loadBranchTransfer",
 				SecurityConstants.CIENT_TRANSFER_THE_CLIENT);
 		activityMap.put("/clientCreationAction-editMFIInfo",
-				SecurityConstants.CIENT_EDIT_PERSONNEL_ANDMFI_INFORMATION);
+				SecurityConstants.CIENT_EDIT_MFI_INFORMATION);
 		activityMap.put("/clientCreationAction-editPersonalInfo",
-				SecurityConstants.CIENT_EDIT_PERSONNEL_ANDMFI_INFORMATION);
+				SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
 		activityMap.put("/clientCreationAction-update",
-				SecurityConstants.CIENT_EDIT_PERSONNEL_ANDMFI_INFORMATION);
+				SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
 		activityMap.put("/clientCreationAction-updateMfi",
-				SecurityConstants.CIENT_EDIT_PERSONNEL_ANDMFI_INFORMATION);
+				SecurityConstants.CIENT_EDIT_MFI_INFORMATION);
 
 		activityMap.put("/clientCreationAction-loadMeeting-ClientCreate",
 				SecurityConstants.MEETING_CREATE_CLIENT_MEETING);
