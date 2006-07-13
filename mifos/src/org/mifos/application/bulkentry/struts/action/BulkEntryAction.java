@@ -192,26 +192,23 @@ public class BulkEntryAction extends BaseAction {
 		HttpSession session = request.getSession();
 		BulkEntryActionForm actionForm = (BulkEntryActionForm) form;
 		try {
-
-			Date meetingDate = bulkEntryBusinessService
-					.getLastMeetingDateForCustomer(Integer.valueOf(actionForm
-							.getCustomerId()));
-			if (meetingDate != null) {
-
-				actionForm.setTransactionDate(DateHelper.getUserLocaleDate(
-						getUserLocale(request), meetingDate.toString()));
-			} else {
-				actionForm.setTransactionDate(DateHelper
-						.getCurrentDate(getUserLocale(request)));
-			}
-
-			session.setAttribute("LastMeetingDate", meetingDate);
 			boolean isBackDatedTrxnAllowed = false;
 			if (actionForm.getOfficeId() != null)
 				isBackDatedTrxnAllowed = Configuration.getInstance()
 						.getAccountConfig(
 								Short.valueOf(actionForm.getOfficeId()))
 						.isBackDatedTxnAllowed();
+			Date meetingDate = bulkEntryBusinessService
+					.getLastMeetingDateForCustomer(Integer.valueOf(actionForm
+							.getCustomerId()));
+			if (meetingDate != null && isBackDatedTrxnAllowed) {
+				actionForm.setTransactionDate(DateHelper.getUserLocaleDate(
+						getUserLocale(request), meetingDate.toString()));
+			} else {
+				actionForm.setTransactionDate(DateHelper
+						.getCurrentDate(getUserLocale(request)));
+			}
+			session.setAttribute("LastMeetingDate", meetingDate);
 			session.setAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
 					isBackDatedTrxnAllowed ? Constants.YES : Constants.NO);
 		} catch (SystemException se) {

@@ -48,6 +48,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.CustomerAccountView;
@@ -57,10 +60,12 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.bulkentry.business.BulkEntryBO;
 import org.mifos.application.bulkentry.business.BulkEntryView;
+import org.mifos.application.bulkentry.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeView;
 import org.mifos.application.master.business.service.MasterDataService;
@@ -75,6 +80,7 @@ import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.scheduler.ScheduleDataIntf;
 import org.mifos.framework.components.scheduler.ScheduleInputsIntf;
 import org.mifos.framework.components.scheduler.SchedulerException;
@@ -83,8 +89,10 @@ import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -494,7 +502,6 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "load");
 		actionPerform();
 		verifyForward("load_success");
-
 		assertEquals("The value for isBackDated Trxn Allowed", request
 				.getSession().getAttribute(
 						BulkEntryConstants.ISBACKDATEDTRXNALLOWED),
@@ -529,11 +536,9 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		List<PersonnelView> loanOfficerList = (List<PersonnelView>) request
 				.getSession().getAttribute(CustomerConstants.LOAN_OFFICER_LIST);
 		assertEquals(1, loanOfficerList.size());
-
 	}
 
 	public void testLoadCustomers() {
-
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active", Short
@@ -555,7 +560,6 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testGetLastMeetingDateForCustomer() {
-
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active", Short
@@ -568,21 +572,44 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		addRequestParameter("customerId", String.valueOf(center.getCustomerId()
 				.intValue()));
 		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
 		verifyForward("load_success");
-		Calendar meetinDateCalendar = new GregorianCalendar();
-		meetinDateCalendar.setTime(getMeetingDates(meeting));
-		int year = meetinDateCalendar.get(Calendar.YEAR);
-		int month = meetinDateCalendar.get(Calendar.MONTH);
-		int day = meetinDateCalendar.get(Calendar.DAY_OF_MONTH);
-		meetinDateCalendar = new GregorianCalendar(year, month, day);
-		assertEquals((new java.sql.Date(meetinDateCalendar.getTimeInMillis())
-				.toString()), request.getSession().getAttribute(
-				"LastMeetingDate").toString());
-		assertEquals("The value for isBackDated Trxn Allowed", request
-				.getSession().getAttribute(
-						BulkEntryConstants.ISBACKDATEDTRXNALLOWED),
-				Constants.YES);
-
+		if (Configuration.getInstance().getAccountConfig(
+				Short.valueOf(center.getOffice().getOfficeId()))
+				.isBackDatedTxnAllowed()) {
+			assertEquals("The value for isBackDated Trxn Allowed", request
+					.getSession().getAttribute(
+							BulkEntryConstants.ISBACKDATEDTRXNALLOWED),
+					Constants.YES);
+			assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(
+					getMeetingDates(meeting).getTime()).getTime()).toString(),
+					request.getSession().getAttribute("LastMeetingDate")
+							.toString());
+			assertEquals(DateHelper.getUserLocaleDate(getUserLocale(request),
+					new java.sql.Date(DateUtils.getDateWithoutTimeStamp(
+							getMeetingDates(meeting).getTime()).getTime())
+							.toString()), ((BulkEntryActionForm) request
+					.getSession().getAttribute(
+							BulkEntryConstants.BULKENTRYACTIONFORM))
+					.getTransactionDate());
+		} else {
+			assertEquals("The value for isBackDated Trxn Allowed", request
+					.getSession().getAttribute(
+							BulkEntryConstants.ISBACKDATEDTRXNALLOWED),
+					Constants.NO);
+			assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(
+					getMeetingDates(meeting).getTime()).getTime()).toString(),
+					request.getSession().getAttribute("LastMeetingDate")
+							.toString());
+			assertEquals(DateHelper.getUserLocaleDate(getUserLocale(request),
+					new java.sql.Date(DateUtils
+							.getCurrentDateWithoutTimeStamp().getTime())
+							.toString()), ((BulkEntryActionForm) request
+					.getSession().getAttribute(
+							BulkEntryConstants.BULKENTRYACTIONFORM))
+					.getTransactionDate());
+		}
 	}
 
 	public void testSuccessfulGet() throws Exception {
@@ -686,7 +713,6 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		customerList.add(parentCustomer);
 		request.getSession().setAttribute(BulkEntryConstants.CUSTOMERSLIST,
 				customerList);
-
 	}
 
 	public void testFailureGet() {
@@ -713,7 +739,6 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				Short.valueOf("1"), Short.valueOf("1"), meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, Short
 				.valueOf("5"), startDate.getTime(), loanOffering);
-
 	}
 
 	private static java.util.Date getMeetingDates(MeetingBO meeting) {
@@ -779,6 +804,22 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyActionErrors(new String[] { "errors.invalidamount",
 				"errors.invalidamount" });
+	}
+
+	private Locale getUserLocale(HttpServletRequest request) {
+		Locale locale = null;
+		HttpSession session = request.getSession();
+		if (session != null) {
+			UserContext userContext = (UserContext) session
+					.getAttribute(LoginConstants.USERCONTEXT);
+			if (null != userContext) {
+				locale = userContext.getPereferedLocale();
+				if (null == locale) {
+					locale = userContext.getMfiLocale();
+				}
+			}
+		}
+		return locale;
 	}
 
 }
