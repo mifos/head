@@ -36,7 +36,8 @@ public class LoanDisbursmentActionForm extends AccountApplyPaymentActionForm {
 		if(errors1!=null)errors.add(errors1);
 		
 		if(methodCalled!=null&& methodCalled.equals("preview")){
-			if ( this.getAmount().getAmountDoubleValue()>0.0)
+			
+			if ( this.getAmount()!=null&&this.getAmount().getAmountDoubleValue()>0.0)
 			if( this.paymentModeOfPayment==null||this.paymentModeOfPayment.equals("")){
 				errors.add(AccountConstants.ERROR_MANDATORY,new ActionMessage(AccountConstants.ERROR_MANDATORY,resources.getString("loan.paymentid")));
 			}

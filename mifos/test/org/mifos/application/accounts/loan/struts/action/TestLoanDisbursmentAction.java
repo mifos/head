@@ -30,6 +30,8 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 	protected UserContext userContext = null;
 
 	protected LoanBO accountBO = null;
+	
+	protected LoanBO loanBO = null;
 
 	protected CustomerBO center = null;
 
@@ -73,6 +75,7 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
+		TestObjectFactory.cleanUp(loanBO);
 		TestObjectFactory.cleanUp(accountBO);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
@@ -118,7 +121,7 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 
 	public void testPreviewFailure_NomaadatoryFieds() {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
-		String []errors = {AccountConstants.ERROR_MANDATORY,AccountConstants.ERROR_MANDATORY,AccountConstants.ERROR_MANDATORY};
+		String []errors = {AccountConstants.ERROR_MANDATORY,AccountConstants.ERROR_MANDATORY};
 		addRequestParameter("method", "preview");
 		actionPerform();
 
@@ -135,7 +138,7 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 		addRequestParameter("receiptDate", sdf.format(new Date(calendar.getTimeInMillis())));
 		addRequestParameter("transactionDate", sdf.format(new Date(calendar.getTimeInMillis())));
 		addRequestParameter("paymentTypeId", "1");
-		String []errors = {AccountConstants.ERROR_FUTUREDATE,AccountConstants.ERROR_FUTUREDATE,AccountConstants.ERROR_MANDATORY}; 
+		String []errors = {AccountConstants.ERROR_FUTUREDATE,AccountConstants.ERROR_FUTUREDATE}; 
 		addRequestParameter("method", "preview");
 		actionPerform();
 
@@ -147,7 +150,7 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 	
 	
 	public void testPreviewSucess(){
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		addRequestParameter("receiptDate", sdf.format(currentDate));
 		addRequestParameter("transactionDate", sdf.format(currentDate));
 		addRequestParameter("paymentTypeId", "1");
@@ -180,5 +183,22 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyForward(Constants.UPDATE_SUCCESS);
 
+	}
+	public void testUpdateNopaymentAtDisbursal(){
+		
+		loanBO =getLoanAccount(Short
+				.valueOf(AccountStates.LOANACC_APPROVED),currentDate , 3);
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		addRequestParameter("receiptDate", sdf.format(currentDate));
+		addRequestParameter("transactionDate", sdf.format(currentDate));
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO,request.getSession());
+		request.getSession().setAttribute(Constants.USER_CONTEXT_KEY, userContext);
+		addRequestParameter("paymentTypeId", "1");
+		addRequestParameter("method", "update");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(Constants.UPDATE_SUCCESS);
+	
+		
 	}
 }

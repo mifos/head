@@ -83,7 +83,11 @@ public class LoanDisbursmentAction extends BaseAction {
 		Date trxnDate = getDateFromString(actionForm.getTransactionDate(),uc.getPereferedLocale());
 		Date receiptDate = getDateFromString(actionForm.getReceiptDate(),uc.getPereferedLocale());
 		if(!loan.isTrxnDateValid(trxnDate)) throw new AccountException("errors.invalidTxndate");
-		loan.disburseLoan(actionForm.getReceiptId(),trxnDate,Short.valueOf(actionForm.getPaymentTypeId()),uc.getId(),receiptDate,Short.valueOf(actionForm.getPaymentModeOfPayment()));
+		if(actionForm.getPaymentModeOfPayment()!=null && actionForm.getPaymentModeOfPayment().equals(""))
+			loan.disburseLoan(actionForm.getReceiptId(),trxnDate,Short.valueOf(actionForm.getPaymentTypeId()),uc.getId(),receiptDate,Short.valueOf(actionForm.getPaymentModeOfPayment()));
+		else
+			loan.disburseLoan(actionForm.getReceiptId(),trxnDate,Short.valueOf(actionForm.getPaymentTypeId()),uc.getId(),receiptDate,Short.valueOf("1"));
+		//loan.disburseLoan(actionForm.getReceiptId(),trxnDate,Short.valueOf(actionForm.getPaymentTypeId()),uc.getId(),receiptDate,Short.valueOf(actionForm.getPaymentModeOfPayment()));
 		return mapping.findForward(Constants.UPDATE_SUCCESS);
 	}
 	private Date getDateFromString(String strDate, Locale locale){
