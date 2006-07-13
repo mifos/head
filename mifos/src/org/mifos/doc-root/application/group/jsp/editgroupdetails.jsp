@@ -209,6 +209,7 @@
 										</td>
 										<td width="75%">
 											<mifos:checkbox keyhm="Group.Trained" name="GroupVO" property="trained" value="1" disabled="true" />
+											<html-el:hidden property="trained" value="1"/>
 										</td>
 									</tr>
 									<tr class="fontnormal">
