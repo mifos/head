@@ -44,7 +44,9 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory{
 	}
 	
 	public Money getDelinquentPortfolioAmount() {
-		return getClient().getDelinquentPortfolioAmount();
+		if(getClient() != null)
+			return getClient().getDelinquentPortfolioAmount();
+		return new Money();
 	}
 
 	private void setDelinquentPortfolio(Money delinquentPortfolio) {
@@ -80,7 +82,9 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory{
 	}
 	
 	public Money getTotalSavingsAmount(){
-		return getClient().getSavingsBalance();
+		if(getClient() != null)
+			return getClient().getSavingsBalance();
+		return new Money();
 	}
 
 	private void setTotalSavings(Money totalSavings) {

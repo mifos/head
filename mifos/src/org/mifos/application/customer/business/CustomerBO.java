@@ -583,7 +583,7 @@ public class CustomerBO extends BusinessObject {
 			}
 		}
 		if(totalOutStandingAmount.getAmountDoubleValue()!=0.0)
-			return amountOverDue.divide(totalOutStandingAmount);
+			return new Money(String.valueOf(amountOverDue.getAmountDoubleValue()/totalOutStandingAmount.getAmountDoubleValue()));
 		return new Money();
 	}
 	

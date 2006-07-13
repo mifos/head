@@ -123,11 +123,13 @@ public class EditLoanStatusDAO extends DAO{
 			Client client=(Client)session.get(Client.class,loan.getCustomer().getCustomerId());
 			if(loanStatus.getNewStatusId().equals(Short.valueOf(AccountStates.LOANACC_WRITTENOFF)) || loanStatus.getNewStatusId().equals(Short.valueOf(AccountStates.LOANACC_RESCHEDULED)) || loanStatus.getNewStatusId().equals(Short.valueOf(AccountStates.LOANACC_CANCEL))) {
 				ClientPerformanceHistory clientPerfHistory = client.getPerformanceHistory();
-				clientPerfHistory.setLoanCycleNumber(clientPerfHistory.getLoanCycleNumber()-1);
-				if(loanStatus.getNewStatusId().equals(Short.valueOf(AccountStates.LOANACC_WRITTENOFF)) || loanStatus.getNewStatusId().equals(Short.valueOf(AccountStates.LOANACC_RESCHEDULED))) {
-					clientPerfHistory.setNoOfActiveLoans(clientPerfHistory.getNoOfActiveLoans()-1);
+				if(clientPerfHistory != null) {
+					clientPerfHistory.setLoanCycleNumber(clientPerfHistory.getLoanCycleNumber()-1);
+					if(loanStatus.getNewStatusId().equals(Short.valueOf(AccountStates.LOANACC_WRITTENOFF)) || loanStatus.getNewStatusId().equals(Short.valueOf(AccountStates.LOANACC_RESCHEDULED))) {
+						clientPerfHistory.setNoOfActiveLoans(clientPerfHistory.getNoOfActiveLoans()-1);
+					}
+					session.update(clientPerfHistory);
 				}
-				session.update(clientPerfHistory);
 			}
 		}
 	}

@@ -163,8 +163,10 @@ public class CustomerBusinessService extends BusinessService{
 		Money total = new Money();
 		for(AccountBO accountBO : accountList) {
 			LoanBO loanBO = (LoanBO) accountBO;
-			for(AccountActionDateEntity accountActionDateEntity : loanBO.getAccountActionDates()) {
-				total = total.add(accountActionDateEntity.getPrincipal());
+			if(loanBO.isAccountActive()) {
+				for(AccountActionDateEntity accountActionDateEntity : loanBO.getAccountActionDates()) {
+					total = total.add(accountActionDateEntity.getPrincipal());
+				}
 			}
 		}
 		return total;
@@ -174,12 +176,14 @@ public class CustomerBusinessService extends BusinessService{
 		Money amount = new Money();
 		for(AccountBO accountBO : accountList) {
 			LoanBO loanBO = (LoanBO) accountBO;
-			for(AccountActionDateEntity accountActionDateEntity : loanBO.getAccountActionDates()) {
-				Calendar actionDate=new GregorianCalendar();
-				actionDate.setTime(accountActionDateEntity.getActionDate());
-				long diffInTermsOfDay = (Calendar.getInstance().getTimeInMillis()-actionDate.getTimeInMillis())/(24*60*60*1000);
-				if(diffInTermsOfDay>30) {
-					amount = amount.add(accountActionDateEntity.getPrincipalDue());
+			if(loanBO.isAccountActive()) {
+				for(AccountActionDateEntity accountActionDateEntity : loanBO.getAccountActionDates()) {
+					Calendar actionDate=new GregorianCalendar();
+					actionDate.setTime(accountActionDateEntity.getActionDate());
+					long diffInTermsOfDay = (Calendar.getInstance().getTimeInMillis()-actionDate.getTimeInMillis())/(24*60*60*1000);
+					if(diffInTermsOfDay>30) {
+						amount = amount.add(accountActionDateEntity.getPrincipalDue());
+					}
 				}
 			}
 		}
@@ -231,8 +235,7 @@ public class CustomerBusinessService extends BusinessService{
 		Money portfolioAtRisk = new Money();
 		Money totalOutstandingLoan = getTotalOutstandingLoan(loanList);
 		if (totalOutstandingLoan.getAmountDoubleValue() != 0)
-			portfolioAtRisk = getPortfolioAtRisk(loanList).divide(
-					totalOutstandingLoan);
+			portfolioAtRisk = new Money(String.valueOf(getPortfolioAtRisk(loanList).getAmountDoubleValue()/totalOutstandingLoan.getAmountDoubleValue()));
 		Money totalSavings = getTotalSavings(savingsList);
 
 		CenterPerformanceHistory centerPerformanceHistory = new CenterPerformanceHistory();

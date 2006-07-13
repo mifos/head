@@ -3,6 +3,7 @@ package org.mifos.application.accounts.loan.business;
 import java.sql.Date;
 
 import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.util.helpers.Money;
 
 public class LoanPerformanceHistoryEntity extends PersistentObject {
 
@@ -54,11 +55,17 @@ public class LoanPerformanceHistoryEntity extends PersistentObject {
 		this.loanMaturityDate = loanMaturityDate;
 	}
 
-	public Integer getNoOfMissedPayments() {
-		return getLoan().getMissedPaymentCount();
+	private Integer getNoOfMissedPayments() {
+		return noOfMissedPayments;
+	}
+	
+	public Integer getTotalNoOfMissedPayments() {
+		if(getLoan() != null)
+			return getLoan().getMissedPaymentCount();
+		return 0;
 	}
 
-	public void setNoOfMissedPayments(Integer noOfMissedPayments) {
+	private void setNoOfMissedPayments(Integer noOfMissedPayments) {
 		this.noOfMissedPayments = noOfMissedPayments;
 	}
 

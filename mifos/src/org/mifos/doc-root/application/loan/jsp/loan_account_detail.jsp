@@ -545,7 +545,7 @@
 		              	</tr>
 		             	 <tr>
 		                <td class="paddingL10"><span class="fontnormal8pt"><mifos:mifoslabel
-								name="loan.missed_payments" /> <c:out value="${sessionScope.performanceHistory.noOfMissedPayments}" /></span></td>
+								name="loan.missed_payments" /> <c:out value="${sessionScope.performanceHistory.totalNoOfMissedPayments}" /></span></td>
 		              	</tr>
 		              	<tr>
 		                <td class="paddingL10"><span class="fontnormal8pt"><mifos:mifoslabel

@@ -333,7 +333,8 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 		//performance history
 		if(loan.getCustomer().getCustomerLevel().getLevelId().equals(Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))) {
 			ClientPerformanceHistory clientPerfHistory = (ClientPerformanceHistory)loan.getCustomer().getCustomerPerformanceHistory();
-			clientPerfHistory.setLoanCycleNumber(clientPerfHistory.getLoanCycleNumber()+1);
+			if(clientPerfHistory != null)
+				clientPerfHistory.setLoanCycleNumber(clientPerfHistory.getLoanCycleNumber()+1);
 		}
 		
 		RepaymentSchedule repaymentSchedule = (RepaymentSchedule) context

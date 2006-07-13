@@ -118,7 +118,6 @@ public class TestCustomerBO extends MifosTestCase {
 		accountBO = getLoanAccount(client,meeting);
 		LoanPerformanceHistoryEntity loanPerformanceHistory = new LoanPerformanceHistoryEntity();
 		loanPerformanceHistory.setDaysInArrears(Integer.valueOf("1"));
-		loanPerformanceHistory.setNoOfMissedPayments(Integer.valueOf("2"));
 		loanPerformanceHistory.setNoOfPayments(Integer.valueOf("3"));
 		loanPerformanceHistory.setLoanMaturityDate(currentDate);
 		LoanBO loanBO = (LoanBO)accountBO;
@@ -129,7 +128,6 @@ public class TestCustomerBO extends MifosTestCase {
 		loanBO = (LoanBO) new AccountPersistanceService().getAccount(loanBO.getAccountId());
 		assertEquals(loanBO.getAccountId(),loanBO.getPerformanceHistory().getLoan().getAccountId());
 		assertEquals(Integer.valueOf("0"),loanBO.getPerformanceHistory().getDaysInArrears());
-		assertEquals(Integer.valueOf("0"),loanBO.getPerformanceHistory().getNoOfMissedPayments());
 		assertEquals(Integer.valueOf("3"),loanBO.getPerformanceHistory().getNoOfPayments());
 		assertEquals(currentDate,loanBO.getPerformanceHistory().getLoanMaturityDate());
 	}

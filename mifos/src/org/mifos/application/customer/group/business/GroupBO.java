@@ -40,10 +40,6 @@ package org.mifos.application.customer.group.business;
 
 import java.util.List;
 
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -94,8 +90,8 @@ public class GroupBO extends CustomerBO {
 				amount=amount.add(client.getBalanceForAccountsAtRisk());
 			}
 		}
-		if(getPerformanceHistory().getTotalOutStandingLoanAmount().getAmountDoubleValue()!=0.0)
-			getPerformanceHistory().setPortfolioAtRisk(amount.divide(getPerformanceHistory().getTotalOutStandingLoanAmount()));
+		if(getPerformanceHistory() != null && getPerformanceHistory().getTotalOutStandingLoanAmount().getAmountDoubleValue()!=0.0)
+			getPerformanceHistory().setPortfolioAtRisk(new Money(String.valueOf(amount.getAmountDoubleValue()/getPerformanceHistory().getTotalOutStandingLoanAmount().getAmountDoubleValue())));
 		getDBService().update(this);
 	}
 	
@@ -125,7 +121,7 @@ public class GroupBO extends CustomerBO {
 			}
 		}
 		if(amountForAllAccounts.getAmountDoubleValue()!=0.0)
-			return amountForActiveAccount.divide(amountForAllAccounts);
+			return new Money(String.valueOf(amountForActiveAccount.getAmountDoubleValue()/amountForAllAccounts.getAmountDoubleValue()));
 		return new Money();
 	}
 	

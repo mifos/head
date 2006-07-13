@@ -344,11 +344,6 @@ public class LoanDAO extends AccountsDAO {
 					.get(0);
 			loan.setAccountFlagDetail(accountFlagDetail);
 		}
-		/*loan.getCustomer().getDisplayName();
-		if(loan.getCustomer().getCustomerLevel().equals(CustomerConstants.CLIENT_LEVEL_ID))
-			((Client)loan.getCustomer()).getClientPerformanceHistory().getNoOfActiveLoans();
-		else if(loan.getCustomer().getCustomerLevel().equals(CustomerConstants.GROUP_LEVEL_ID))
-			((Group)loan.getCustomer()).getGroupPerformanceHistory().getAvgLoanForMember();*/
 		Hibernate.initialize(loan.getAccountActionDateSet());
 
 	}
@@ -495,7 +490,7 @@ public class LoanDAO extends AccountsDAO {
 		try {
 			session = getHibernateSession();
 			tx = session.beginTransaction();
-			if(loan.getCustomer().getCustomerLevel().getLevelId().equals(Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID)))
+			if(loan.getCustomer().getCustomerLevel().getLevelId().equals(Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID)) && loan.getCustomer().getCustomerPerformanceHistory()!=null)
 				session.update((ClientPerformanceHistory)loan.getCustomer().getCustomerPerformanceHistory());
 			session.save(loan);
 			session.flush();

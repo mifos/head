@@ -59,7 +59,9 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 	}
 	
 	public Money getAvgLoanAmountForMember() throws PersistenceException, ServiceException {
-		return getGroup().getAverageLoanAmount();
+		if(getGroup()!=null)
+			return getGroup().getAverageLoanAmount();
+		return new Money();
 	}
 
 
@@ -88,7 +90,9 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 	}
 	
 	public Money getTotalOutStandingLoanAmount() throws PersistenceException, ServiceException{
-		return getGroup().getTotalOutStandingLoanAmount();
+		if(getGroup()!=null)
+			return getGroup().getTotalOutStandingLoanAmount();
+		return new Money();
 	}
 
 	public Money getPortfolioAtRisk() {
@@ -104,7 +108,9 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 	}
 	
 	public Money getTotalSavingsAmount() throws PersistenceException, ServiceException{
-		return getGroup().getTotalSavingsBalance();
+		if(getGroup()!=null)
+			return getGroup().getTotalSavingsBalance();
+		return new Money();
 	}
 
 	private void setTotalSavings(Money totalSavings) {

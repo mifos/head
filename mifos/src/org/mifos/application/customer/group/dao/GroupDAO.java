@@ -39,7 +39,6 @@
 package org.mifos.application.customer.group.dao;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -51,16 +50,13 @@ import org.hibernate.Session;
 import org.hibernate.StaleObjectStateException;
 import org.hibernate.StaleStateException;
 import org.hibernate.Transaction;
-import org.hibernate.engine.HibernateIterator;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.IDGenerator;
 import org.mifos.application.accounts.util.valueobjects.Account;
 import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
-import org.mifos.application.accounts.util.valueobjects.AccountFeesActionDetail;
 import org.mifos.application.accounts.util.valueobjects.CustomerAccount;
 import org.mifos.application.configuration.business.ConfigurationIntf;
 import org.mifos.application.configuration.business.MifosConfiguration;
@@ -76,7 +72,6 @@ import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.group.util.helpers.GroupHelper;
 import org.mifos.application.customer.group.util.helpers.GroupTransferInput;
 import org.mifos.application.customer.group.util.valueobjects.Group;
-import org.mifos.application.customer.group.util.valueobjects.GroupPerformanceHistory;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerHelper;
 import org.mifos.application.customer.util.helpers.IdGenerator;
@@ -790,42 +785,7 @@ public class GroupDAO extends DAO {
 			HibernateUtil.closeSession(session);
 		}
 	  }
-
-  
-	/**
-	 * This method returns performance history for the group.
-	 * @param clientSize tells the total number of client assigned to the group
-	 * The customerAccount is set null since along with group we don't want to update them but they are
-	 * created when group is created for the first time.
-	 * @return an instance of GroupPerformanceHistory
-	 */	
-  	/*public GroupPerformanceHistory getPerformanceHistory(int clientSize){
-		GroupPerformanceHistory perf = new GroupPerformanceHistory();
-		perf.setClientCount(clientSize);
-		//TODO: values to be replaced by actual values
-		perf.setAvgLoanForMember(new Double(0.0));
-		perf.setLastGroupLoanAmount(new Double(0.0));
-		perf.setTotalSavings(new Double(0.0));
-		perf.setPortfolioAtRisk(new Double(0.0));
-		return perf;
-  	}*/
- 
-	/**feature removed:
-	 * This method is the helper method to create customer program relationship.
-	 * @param customerPrograms set of CustomerProgram objects
-	 *
-  	private void setCustomerProgram(Set customerPrograms){
-		Iterator custPrgIterator = customerPrograms.iterator();
-		CustomerProgram custPrg=null;
-		Program p = null;
-		while (custPrgIterator.hasNext()){
-			custPrg =(CustomerProgram)custPrgIterator.next();
-			p = new Program();
-			p.setProgramId(custPrg.getProgramId());
-			custPrg.setProgram(p);
-		}
-	}*/
-  
+  	
 	/**
 	 * This method obtains the group details based on global customer number(systemId).
 	 * If group not found it returns null

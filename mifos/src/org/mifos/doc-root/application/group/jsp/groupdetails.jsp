@@ -720,6 +720,20 @@ function meetingpopup(){
 				</tr>
 				<tr>
 					<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
+						name="Group.Amountoflast" bundle="GroupUIResources" /> <mifos:mifoslabel
+						name="${ConfigurationConstants.GROUP}" /> <mifos:mifoslabel
+						name="${ConfigurationConstants.LOAN}" isColonRequired="yes"/> <c:out
+						value="${sessionScope.GroupPerformanceHistory.lastGroupLoanAmount}" /></span></td>
+				</tr>
+				<tr>
+					<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
+						name="Group.Avgindividual" bundle="GroupUIResources" /> <mifos:mifoslabel
+						name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
+						name="Group.size" bundle="GroupUIResources" /> <c:out
+						value="${sessionScope.GroupPerformanceHistory.avgLoanAmountForMember}" /></span></td>
+				</tr>
+				<tr>
+					<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
 						name="Group.Total" bundle="GroupUIResources" /> <mifos:mifoslabel
 						name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
 						name="Group.portfolio" bundle="GroupUIResources" /> <c:out
