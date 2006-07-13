@@ -94,7 +94,7 @@
 			<table width="96%" border="0" cellpadding="3" cellspacing="0">
 				<tr>
 					<td width="100%" colspan="2" class="headingorange"><span
-						class="heading"><c:out value="${param.prdOfferingName}" />#<c:out
+						class="heading"><c:out value="${param.prdOfferingName}" /> # <c:out
 						value="${param.globalAccountNum}" /> - </span> <mifos:mifoslabel
 						name="accounts.reviewtransaction" /></td>
 				</tr>
@@ -129,7 +129,7 @@
 				</tr>
 				<tr>
 					<td align="right" class="fontnormalbold"><mifos:mifoslabel
-						name="accounts.mode_of_payment" mandatory="yes" /> <mifos:mifoslabel
+						name="accounts.mode_of_payment"  /> <mifos:mifoslabel
 						name="accounts.colon" /></td>
 					<td class="fontnormal"><c:forEach var="payment"
 						items="${sessionScope.PaymentType}">

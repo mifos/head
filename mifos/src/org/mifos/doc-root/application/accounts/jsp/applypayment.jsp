@@ -98,7 +98,8 @@
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td width="70%" class="headingorange"><span class="heading"> <c:out
-								value="${param.prdOfferingName}" /> - </span><mifos:mifoslabel
+								value="${param.prdOfferingName}" /> # <c:out
+						value="${param.globalAccountNum}" /> - </span><mifos:mifoslabel
 								name="accounts.apply_payment" />
 								</td>
 						</tr>

@@ -842,7 +842,7 @@ public class LoanBO extends AccountBO {
 		// loanTrxnDetailEntity.setp
 		loanTrxnDetailEntity.setAccountActionEntity(action);
 		loanTrxnDetailEntity.setCustomer(this.getCustomer());
-		loanTrxnDetailEntity.setComments("Loan Disburesed");
+		loanTrxnDetailEntity.setComments("-");
 		loanTrxnDetailEntity.setTrxnCreatedDate(new Timestamp(System
 				.currentTimeMillis()));
 		loanTrxnDetailEntity.setInstallmentId(Short.valueOf("0"));
