@@ -11,6 +11,7 @@
             <generator class="native"/>
         </id>
         
+        <property name="clientCount" column="NO_OF_CLIENTS" />
         <property name="lastGroupLoanAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
 	        <column name="LAST_GROUP_LOAN_AMNT_DISB_CURRENCY_ID" /> 
 			<column name="LAST_GROUP_LOAN_AMNT_DISB" />

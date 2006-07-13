@@ -128,4 +128,17 @@ public class GroupBO extends CustomerBO {
 			return amountForActiveAccount.divide(amountForAllAccounts);
 		return new Money();
 	}
+	
+	public Money getTotalSavingsBalance() throws PersistenceException, ServiceException{
+		Money amount=getSavingsBalance();
+		List<CustomerBO> clients = getDBService().getAllChildrenForParent(
+					getSearchId(), getOffice().getOfficeId(),
+					CustomerConstants.GROUP_LEVEL_ID);
+		if(clients!=null && !clients.isEmpty()){
+			for(CustomerBO client : clients){
+				amount=amount.add(client.getSavingsBalance());
+			}
+		}
+		return amount;
+	}
 }

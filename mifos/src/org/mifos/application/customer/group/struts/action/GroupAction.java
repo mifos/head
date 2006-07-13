@@ -53,11 +53,17 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.accounts.util.valueobjects.CustomerAccount;
+import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.center.util.helpers.ValidateMethods;
 import org.mifos.application.customer.center.util.valueobjects.Center;
 import org.mifos.application.customer.center.util.valueobjects.CenterSearchResults;
+import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.application.customer.client.util.valueobjects.Client;
+import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.customer.group.struts.actionforms.GroupActionForm;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.group.util.helpers.GroupTransferInput;
@@ -265,6 +271,11 @@ public class GroupAction extends MifosSearchAction {
 	    SessionUtils.setAttribute(GroupConstants.IS_GROUP_LOAN_ALLOWED,Configuration.getInstance().getCustomerConfig(group.getOffice().getOfficeId()).canGroupApplyForLoan(),request.getSession());
 	    SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST,(String)context.getBusinessResults().get(GroupConstants.CENTER_HIERARCHY_EXIST),request.getSession());
 	    SessionUtils.setAttribute(GroupConstants.LINK_VALUES,(LinkParameters)context.getBusinessResults(GroupConstants.LINK_VALUES),request.getSession());
+	    
+	    Integer customerId = group.getCustomerId();
+	    GroupBO groupBO = (GroupBO) new CustomerBusinessService().getCustomer(customerId);
+	    GroupPerformanceHistoryEntity groupPerfHistoryEntity = groupBO.getPerformanceHistory();
+	    SessionUtils.setAttribute(GroupConstants.GROUP_PERFORMANCE_VO,groupPerfHistoryEntity,request.getSession());
 	    return forward;
 	}
 

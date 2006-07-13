@@ -756,7 +756,7 @@
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
 								name="client.Total" bundle="ClientUIResources" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.SAVINGS}" isColonRequired="yes"/> <c:out
-								value="${sessionScope.ClientPerformanceHistory.totalSavings}" /></span></td>
+								value="${sessionScope.ClientPerformanceHistory.totalSavingsAmount}" /></span></td>
 						</tr>
 					</table>
 					<table width="95%" border="0" cellspacing="0" cellpadding="0">

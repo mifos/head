@@ -38,48 +38,30 @@
 package org.mifos.application.accounts.struts.action;
 
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-
-
-
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentData;
-import org.mifos.application.accounts.util.helpers.LoanPaymentData;
-import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.LoggerConfigurationException;
-import org.mifos.framework.hibernate.HibernateStartUp;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.authorization.AuthorizationManager;
-import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-
-import org.mifos.framework.MifosMockStrutsTestCase;
 
 /**
  * This class tests methods of ApplyAdjustment action class.
@@ -219,11 +201,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		verifyForward("canceladj_success");
 	}
 
-	/**
-	 *This methods tries to check the result of  applying adjustment
-	 *to a loan account which has no payment made to it.
-	*/
-	/*public void testLoadAdjustmentWithNoPmnts()throws Exception{
+	public void testLoadAdjustmentWithNoPmnts()throws Exception{
 		loan =(LoanBO)getLoanAccount();
 		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
 		addRequestParameter("method", "loadAdjustment");
@@ -234,9 +212,9 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		loan = (LoanBO)TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
 		verifyForward("loadAdjustment_failure");
 
-	}*/
+	}
 
-	/*public void testAdjustmentForZeroPmnt()throws Exception{
+	public void testAdjustmentForZeroPmnt()throws Exception{
 
 		loan =(LoanBO)getLoanAccount();
 		applyPayment(loan, 0);
@@ -250,7 +228,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		loan = (LoanBO)TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
 		verifyForward("applyAdjustment_failure");
 
-	}*/
+	}
 
 	public void testValidation()throws Exception{
 		loan =(LoanBO)getLoanAccount();

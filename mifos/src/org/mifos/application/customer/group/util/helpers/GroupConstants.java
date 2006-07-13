@@ -51,7 +51,7 @@ public interface GroupConstants {
 	public static final String GROUP_PARENT = "GroupParent";
 	
 	public static final short ENTITY_TYPE = 12;
-	public static final String GROUP_PERFORMANCE_VO = "GroupPerformanceVO";
+	public static final String GROUP_PERFORMANCE_VO = "GroupPerformanceHistory";
 	public static final short LOANOFFICER_LEVEL_ID=1;
 	
 	//for programs

@@ -99,11 +99,15 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		this.portfolioAtRisk = portfolioAtRisk;
 	}
 
-	public Money getTotalSavings() {
+	private Money getTotalSavings() {
 		return totalSavings;
 	}
+	
+	public Money getTotalSavingsAmount() throws PersistenceException, ServiceException{
+		return getGroup().getTotalSavingsBalance();
+	}
 
-	public void setTotalSavings(Money totalSavings) {
+	private void setTotalSavings(Money totalSavings) {
 		this.totalSavings = totalSavings;
 	}
 

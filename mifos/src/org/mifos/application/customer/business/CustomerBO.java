@@ -48,6 +48,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
@@ -592,5 +593,16 @@ public class CustomerBO extends BusinessObject {
 	}
 	protected CustomerPerformanceHistory getPerformanceHistory() {
 		return null;
+	}
+	
+	public Money getSavingsBalance(){
+		Money amount=new Money();
+		for(AccountBO account : getAccounts()){
+			if(account.getAccountType().getAccountTypeId().equals(AccountConstants.SAVING_TYPE)){
+				SavingsBO savingsBO=(SavingsBO)account;
+				amount=amount.add(savingsBO.getSavingsBalance());
+			}
+		}
+		return amount;
 	}
 }

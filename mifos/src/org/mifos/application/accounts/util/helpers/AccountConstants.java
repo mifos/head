@@ -159,6 +159,7 @@ public interface AccountConstants {
 	
 	//AccountTypes
 	public static Short LOAN_TYPE=1;
+	public static Short SAVING_TYPE=2;
 	
 	//For loan next meeting date, amount due, amount in arrears
 	

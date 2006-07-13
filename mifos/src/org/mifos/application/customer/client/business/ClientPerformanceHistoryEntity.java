@@ -75,11 +75,15 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory{
 		this.noOfActiveLoans = noOfActiveLoans;
 	}
 
-	public Money getTotalSavings() {
+	private Money getTotalSavings() {
 		return totalSavings;
 	}
+	
+	public Money getTotalSavingsAmount(){
+		return getClient().getSavingsBalance();
+	}
 
-	public void setTotalSavings(Money totalSavings) {
+	private void setTotalSavings(Money totalSavings) {
 		this.totalSavings = totalSavings;
 	}
 

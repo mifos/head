@@ -9,8 +9,10 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanPerformanceHistoryEntity;
 import org.mifos.application.accounts.loan.business.LoanSummaryEntity;
-import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
@@ -21,6 +23,7 @@ import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -35,6 +38,8 @@ public class TestCustomerBO extends MifosTestCase {
 	private ClientBO client;
 	private CustomerPersistence customerPersistence;
 	private MeetingBO meeting;
+	private SavingsTestHelper helper = new SavingsTestHelper();
+	private SavingsOfferingBO savingsOffering;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -81,7 +86,6 @@ public class TestCustomerBO extends MifosTestCase {
 		GroupPerformanceHistoryEntity groupPerformanceHistory = new GroupPerformanceHistoryEntity();
 		groupPerformanceHistory.setClientCount(Integer.valueOf("1"));
 		groupPerformanceHistory.setLastGroupLoanAmount(new Money("100"));
-		groupPerformanceHistory.setTotalSavings(new Money("100"));
 		groupPerformanceHistory.setPortfolioAtRisk(new Money("100"));
 		groupPerformanceHistory.setGroup(group);
 		group.setPerformanceHistory(groupPerformanceHistory);
@@ -98,7 +102,6 @@ public class TestCustomerBO extends MifosTestCase {
 		clientPerformanceHistory.setLoanCycleNumber(Integer.valueOf("1"));
 		clientPerformanceHistory.setLastLoanAmount(new Money("100"));
 		clientPerformanceHistory.setNoOfActiveLoans(Integer.valueOf("1"));
-		clientPerformanceHistory.setTotalSavings(new Money("300"));
 		clientPerformanceHistory.setClient(client);
 		client.setPerformanceHistory(clientPerformanceHistory);
 		TestObjectFactory.updateObject(client);
@@ -230,5 +233,31 @@ public class TestCustomerBO extends MifosTestCase {
 		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
 		client=(ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
 		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
+	}
+	
+	private SavingsBO getSavingsAccount() {
+		createInitialObjects();
+		savingsOffering = helper.createSavingsOffering();
+		return TestObjectFactory.createSavingsAccount("000100000000017",
+				client, AccountStates.SAVINGS_ACC_APPROVED, new Date(System
+						.currentTimeMillis()), savingsOffering);
+	}
+	
+	public void testgetSavingsBalance() throws Exception {
+		SavingsBO savings = getSavingsAccount();
+		savings.setSavingsBalance(new Money("1000"));
+		savings.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		savings=(SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
+		client=(ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
+		assertEquals(new Money("1000.0"), savings.getSavingsBalance());
+		assertEquals(new Money("1000.0"), client.getSavingsBalance());
+		TestObjectFactory.flushandCloseSession();
+		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		client=(ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
+		savings=(SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
+		TestObjectFactory.cleanUp(savings);
 	}
 }

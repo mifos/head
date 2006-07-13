@@ -710,25 +710,32 @@ function meetingpopup(){
               <tr>
                 <td class="paddingL10"><img src="pages/framework/images/trans.gif" width="10" height="2"></td>
               </tr>
-           
               <tr>
-                <td class="paddingL10"><span class="fontnormal8pt">
-                <mifos:mifoslabel name="Group.hashof" bundle="GroupUIResources"/> <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"></mifos:mifoslabel><mifos:mifoslabel name="Group.s" bundle="GroupUIResources"/>-
-                <c:out value="${requestScope.GroupPerformanceVO.clientCount}"/></span></td>
-          <c:if test="${sessionScope.isGroupLoanAllowed == true}"> 
-              <tr>
-                  <td class="paddingL10"><span class="fontnormal8pt">
-                  <mifos:mifoslabel name="${ConfigurationConstants.LOAN}"></mifos:mifoslabel>                  
-                  <mifos:mifoslabel name="label.loancyclecounter" bundle="CustomerUIResources"></mifos:mifoslabel>
-                  -</span></td>
-              </tr>
-              
-              <c:forEach items='${sessionScope.GroupAction_Context.businessResults["loanCycleCounter"]}' var="loanCycleCounter">
+					<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
+						name="Group.hashof" bundle="GroupUIResources" /> <mifos:mifoslabel
+						name="${ConfigurationConstants.CLIENT}" /><mifos:mifoslabel
+						name="Group.s" bundle="GroupUIResources"/> <c:out
+						value="${sessionScope.GroupPerformanceHistory.clientCount}" /> </span>
+					</td>
+				</tr>
 				<tr>
-          				<td class="paddingL10"><span class="fontnormal8pt">&nbsp;&nbsp;&nbsp;<c:out value="${loanCycleCounter.offeringName}"/>: <c:out value="${loanCycleCounter.counter}"/></span></td>
-    		    </tr>
-              </c:forEach>
-          </c:if>
+					<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
+						name="Group.Total" bundle="GroupUIResources" /> <mifos:mifoslabel
+						name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
+						name="Group.portfolio" bundle="GroupUIResources" /> <c:out
+						value="${sessionScope.GroupPerformanceHistory.totalOutStandingLoanAmount}" /></span></td>
+				</tr>
+				<tr>
+					<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
+						name="Group.PortfolioAtRisk" bundle="GroupUIResources" /> <c:out
+						value="${sessionScope.GroupPerformanceHistory.portfolioAtRisk}" /></span></td>
+				</tr>
+				<tr>
+					<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
+						name="Group.Total" bundle="GroupUIResources" /> <mifos:mifoslabel
+						name="${ConfigurationConstants.SAVINGS}" isColonRequired="yes" />
+					<c:out value="${sessionScope.GroupPerformanceHistory.totalSavingsAmount}" /></span></td>
+				</tr>
             </table>
               <table width="95%" border="0" cellspacing="0" cellpadding="0">
                   <tr>
