@@ -65,18 +65,20 @@
 			if(! (validateMyForm(mfiJoiningDate,mfiJoiningDateFormat,mfiJoiningDateYY)))
 				return false;
 	 		 	  	
-			for(var i=0; i <=centerActionForm.fieldTypeList.length;i++){
-			if (centerActionForm.fieldTypeList[i]!= undefined){
-				if(centerActionForm.fieldTypeList[i].value == "3"){
-					var customFieldDate = document.getElementById("customField["+i+"].fieldValue");
-					var customFieldDateFormat = document.getElementById("customField["+i+"].fieldValueFormat");	  
-			  	 	var customFieldDateYY = document.getElementById("customField["+i+"].fieldValueYY");	  
-					var dateValue = customFieldDate.value;
-					if(!(validateMyForm(customFieldDate,customFieldDateFormat,customFieldDateYY)))
-						return false;
-				}
-			}
-	 	}
+			if (centerActionForm.fieldTypeList.length!= undefined && centerActionForm.fieldTypeList.length!= null){ 	
+				for(var i=0; i <=centerActionForm.fieldTypeList.length;i++){
+					if (centerActionForm.fieldTypeList[i]!= undefined){
+						if(centerActionForm.fieldTypeList[i].value == "3"){
+							var customFieldDate = document.getElementById("customField["+i+"].fieldValue");
+							var customFieldDateFormat = document.getElementById("customField["+i+"].fieldValueFormat");	  
+					  	 	var customFieldDateYY = document.getElementById("customField["+i+"].fieldValueYY");	  
+							var dateValue = customFieldDate.value;
+							if(!(validateMyForm(customFieldDate,customFieldDateFormat,customFieldDateYY)))
+								return false;
+						}
+					}
+		 		}
+		 	}
 	  }
 	</script>
 

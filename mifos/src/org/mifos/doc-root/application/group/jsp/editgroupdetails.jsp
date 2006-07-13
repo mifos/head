@@ -53,18 +53,20 @@
 	  		if(! chkForDateTrainedDate())
 				return false;
 	 		 	  	
-			for(var i=0; i <=groupActionForm.fieldTypeList.length;i++){
-				if (groupActionForm.fieldTypeList[i]!= undefined){
-					if(groupActionForm.fieldTypeList[i].value == "3"){
-						var customFieldDate = document.getElementById("customField["+i+"].fieldValue");
-						var customFieldDateFormat = document.getElementById("customField["+i+"].fieldValueFormat");	  
-				  	 	var customFieldDateYY = document.getElementById("customField["+i+"].fieldValueYY");	  
-						var dateValue = customFieldDate.value;
-						if(!(validateMyForm(customFieldDate,customFieldDateFormat,customFieldDateYY)))
-							return false;
+			if (groupActionForm.fieldTypeList.length!= undefined && groupActionForm.fieldTypeList.length!= null){	  	
+				for(var i=0; i <=groupActionForm.fieldTypeList.length;i++){
+					if (groupActionForm.fieldTypeList[i]!= undefined){
+						if(groupActionForm.fieldTypeList[i].value == "3"){
+							var customFieldDate = document.getElementById("customField["+i+"].fieldValue");
+							var customFieldDateFormat = document.getElementById("customField["+i+"].fieldValueFormat");	  
+					  	 	var customFieldDateYY = document.getElementById("customField["+i+"].fieldValueYY");	  
+							var dateValue = customFieldDate.value;
+							if(!(validateMyForm(customFieldDate,customFieldDateFormat,customFieldDateYY)))
+								return false;
+						}
 					}
-				}
-	 	}
+		 		}
+		 	 }
 	  }
   function chkForDateTrainedDate(){
 	 var trainedDate = document.getElementById("trainedDate");	  

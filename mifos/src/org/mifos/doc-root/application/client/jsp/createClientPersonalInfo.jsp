@@ -74,18 +74,20 @@
 	  	 	var dateOfBirthYY = document.getElementById("dateOfBirthYY");	  
 			if(! (validateMyForm(dateOfBirth,dateOfBirthFormat,dateOfBirthYY)))
 				return false;
-			for(var i=0; i <clientCreationActionForm.fieldTypeList.length;i++){
-				if (clientCreationActionForm.fieldTypeList[i]!= undefined){
-					if(clientCreationActionForm.fieldTypeList[i].value == "3"){
-						var customFieldDate = document.getElementById("customField["+i+"].fieldValue");
-						var customFieldDateFormat = document.getElementById("customField["+i+"].fieldValueFormat");	  
-				  	 	var customFieldDateYY = document.getElementById("customField["+i+"].fieldValueYY");	  
-						var dateValue = customFieldDate.value;
-						if(!(validateMyForm(customFieldDate,customFieldDateFormat,customFieldDateYY)))
-							return false;
+			if (clientCreationActionForm.fieldTypeList.length!= undefined && clientCreationActionForm.fieldTypeList.length!= null){ 	
+				for(var i=0; i <=clientCreationActionForm.fieldTypeList.length;i++){
+					if (clientCreationActionForm.fieldTypeList[i]!= undefined){
+						if(clientCreationActionForm.fieldTypeList[i].value == "3"){
+							var customFieldDate = document.getElementById("customField["+i+"].fieldValue");
+							var customFieldDateFormat = document.getElementById("customField["+i+"].fieldValueFormat");	  
+						 	var customFieldDateYY = document.getElementById("customField["+i+"].fieldValueYY");	  
+							var dateValue = customFieldDate.value;
+							if(!(validateMyForm(customFieldDate,customFieldDateFormat,customFieldDateYY)))
+								return false;
+						}
 					}
-				}
-			}
+			 	}
+		 	}
 			return true;
   }
 </script>
@@ -453,8 +455,7 @@
 								<%-- Education Level --%>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel keyhm="Client.EducationLevel"
-										name="client.EducationLevel" bundle="ClientUIResources"
-										mandatory="yes"></mifos:mifoslabel></td>
+										name="client.EducationLevel" bundle="ClientUIResources"></mifos:mifoslabel></td>
 
 									<td><c:set var="educationLevelList" scope="request"
 										value="${requestScope.educationLevelEntity.lookUpMaster}" /> <mifos:select keyhm="Client.EducationLevel"

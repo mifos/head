@@ -61,19 +61,21 @@
 		if(!(chkForDateOfBirthDate())){
 			return false;
 		}
-		for(var i=0; i <=clientCreationActionForm.fieldTypeList.length;i++){
-			if (clientCreationActionForm.fieldTypeList[i]!= undefined){
-				if(clientCreationActionForm.fieldTypeList[i].value == "3"){
-					var customFieldDate = document.getElementById("customField["+i+"].fieldValue");
-					var customFieldDateFormat = document.getElementById("customField["+i+"].fieldValueFormat");	  
-				 	var customFieldDateYY = document.getElementById("customField["+i+"].fieldValueYY");	  
-					var dateValue = customFieldDate.value;
-					if(!(validateMyForm(customFieldDate,customFieldDateFormat,customFieldDateYY)))
-						return false;
+		if (clientCreationActionForm.fieldTypeList.length!= undefined && clientCreationActionForm.fieldTypeList.length!= null){ 	
+			for(var i=0; i <=clientCreationActionForm.fieldTypeList.length;i++){
+				if (clientCreationActionForm.fieldTypeList[i]!= undefined){
+					if(clientCreationActionForm.fieldTypeList[i].value == "3"){
+						var customFieldDate = document.getElementById("customField["+i+"].fieldValue");
+						var customFieldDateFormat = document.getElementById("customField["+i+"].fieldValueFormat");	  
+					 	var customFieldDateYY = document.getElementById("customField["+i+"].fieldValueYY");	  
+						var dateValue = customFieldDate.value;
+						if(!(validateMyForm(customFieldDate,customFieldDateFormat,customFieldDateYY)))
+							return false;
 					}
-			 	}
+				}
 		 	}
-		}
+		 }
+	  }
 	
 	  function chkForDateOfBirthDate(){
 		 var statusIdValue = document.getElementById("statusId").value;	  
@@ -374,7 +376,7 @@
 						<%-- Education Level --%>
 						<tr class="fontnormal">
 							<td align="right"><mifos:mifoslabel name="client.EducationLevel" keyhm="Client.EducationLevel"
-								bundle="ClientUIResources" mandatory="yes"></mifos:mifoslabel></td>
+								bundle="ClientUIResources"></mifos:mifoslabel></td>
 
 							<td><c:set var="educationLevelList" scope="request"
 								value="${requestScope.educationLevelEntity.lookUpMaster}" /> <mifos:select keyhm="Client.EducationLevel"
