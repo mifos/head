@@ -758,6 +758,35 @@
 								name="${ConfigurationConstants.SAVINGS}" isColonRequired="yes"/> <c:out
 								value="${sessionScope.ClientPerformanceHistory.totalSavingsAmount}" /></span></td>
 						</tr>
+						<tr>
+							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
+								name="client.MeetingsAttended" bundle="ClientUIResources" /> <c:out
+								value='${requestScope.Context.businessResults["customerPerformance"].meetingsAttended}' />
+							</span></td>
+						</tr>
+						<tr>
+							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
+								name="client.MeetingsMissed" bundle="ClientUIResources" /> <c:out
+								value='${requestScope.Context.businessResults["customerPerformanceHistory"].meetingsMissed}' />
+							</span></td>
+						</tr>
+
+
+						<tr>
+							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
+								name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
+								name="label.loancyclecounter" bundle="CustomerUIResources"></mifos:mifoslabel>
+							-</span></td>
+						</tr>
+						<c:forEach
+							items='${sessionScope.ClientCreationAction_Context.businessResults["loanCycleCounter"]}'
+							var="loanCycleCounter">
+							<tr>
+								<td class="paddingL10"><span class="fontnormal8pt">&nbsp;&nbsp;&nbsp;<c:out
+									value="${loanCycleCounter.offeringName}" />: <c:out
+									value="${loanCycleCounter.counter}" /></span></td>
+							</tr>
+						</c:forEach>
 					</table>
 					<table width="95%" border="0" cellspacing="0" cellpadding="0">
 						<tr>

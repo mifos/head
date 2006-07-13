@@ -750,6 +750,24 @@ function meetingpopup(){
 						name="${ConfigurationConstants.SAVINGS}" isColonRequired="yes" />
 					<c:out value="${sessionScope.GroupPerformanceHistory.totalSavingsAmount}" /></span></td>
 				</tr>
+				<c:if test="${sessionScope.isGroupLoanAllowed == true}">
+					<tr>
+						<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
+							name="${ConfigurationConstants.LOAN}"></mifos:mifoslabel> <mifos:mifoslabel
+							name="label.loancyclecounter" bundle="CustomerUIResources"></mifos:mifoslabel>
+						-</span></td>
+					</tr>
+
+					<c:forEach
+						items='${sessionScope.GroupAction_Context.businessResults["loanCycleCounter"]}'
+						var="loanCycleCounter">
+						<tr>
+							<td class="paddingL10"><span class="fontnormal8pt">&nbsp;&nbsp;&nbsp;<c:out
+								value="${loanCycleCounter.offeringName}" />: <c:out
+								value="${loanCycleCounter.counter}" /></span></td>
+						</tr>
+					</c:forEach>
+				</c:if>
             </table>
               <table width="95%" border="0" cellspacing="0" cellpadding="0">
                   <tr>

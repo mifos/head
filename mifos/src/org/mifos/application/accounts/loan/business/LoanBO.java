@@ -1532,7 +1532,6 @@ public class LoanBO extends AccountBO {
 												accountTrxnEntity.getDueDate().getTime())) > 0) {
 						
 							noOfMissedPayments++;
-							break;
 					}
 				}
 			}
