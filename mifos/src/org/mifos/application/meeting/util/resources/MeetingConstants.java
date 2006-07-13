@@ -53,6 +53,8 @@ public interface MeetingConstants {
 
 	public final short WEEK = 1;
 
+	public final short DAYS = 3;
+	
 	public final String WEEKLY = "1";
 	
 	public final String MONTHLY = "2";

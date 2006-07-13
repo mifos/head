@@ -163,13 +163,23 @@
                         <mifos:mifoslabel name="Savings.timePeriodFor"/>
                   		<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}"/>
                   		<mifos:mifoslabel name="Savings.rateCalculation"/>: 
-                      </span><c:out value="${sessionScope.BusinessKey.savingsOffering.timePerForInstcalc.meeting.feeMeetingSchedule}" /><br>
+                      </span>
+                      	<c:out value="${sessionScope.BusinessKey.savingsOffering.timePerForInstcalc.meeting.meetingDetails.recurAfter}"/>
+                  	  	<c:if test="${sessionScope.BusinessKey.savingsOffering.timePerForInstcalc.meeting.meetingDetails.recurrenceType.recurrenceId == 2}">
+                  	  		<mifos:mifoslabel name="meeting.labelMonths" bundle="MeetingResources"/>
+                  	  	</c:if>
+                  	  	<c:if test="${sessionScope.BusinessKey.savingsOffering.timePerForInstcalc.meeting.meetingDetails.recurrenceType.recurrenceId == 3}">
+	                  	  	<mifos:mifoslabel name="meeting.labelDays" bundle="MeetingResources"/>
+                  	  	</c:if><br>
                       <span class="fontnormalbold">
                         <mifos:mifoslabel name="Savings.frequencyOf"/>
                  		<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}"/>
                  		<mifos:mifoslabel name="Savings.postingToAccounts"/>: 
                       </span>
-                        <c:out value="${sessionScope.BusinessKey.savingsOffering.freqOfPostIntcalc.meeting.feeMeetingSchedule}" /> <br>
+                        <c:out value="${sessionScope.BusinessKey.savingsOffering.freqOfPostIntcalc.meeting.meetingDetails.recurAfter}"/>
+                  	    <c:if test="${sessionScope.BusinessKey.savingsOffering.freqOfPostIntcalc.meeting.meetingDetails.recurrenceType.recurrenceId == 2}">
+                  	  		<mifos:mifoslabel name="meeting.labelMonths" bundle="MeetingResources"/>
+						</c:if> <br>
                       <span class="fontnormalbold">
                         <mifos:mifoslabel name="Savings.minBalanceRequired"/>
                   		<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}"/>
