@@ -79,7 +79,7 @@
 							<td width="70%" class="headingorange"><span class="heading"> <c:out
 								value="${loanDisbursmentActionForm.prdOfferingName}" />&nbsp;#&nbsp;
 							<c:out value="${loanDisbursmentActionForm.globalAccountNum}" />
-							&nbsp;-&nbsp; </span> <mifos:mifoslabel name="loan.repay" /><mifos:mifoslabel
+							&nbsp;-&nbsp; </span> <mifos:mifoslabel name="loan.disburse" /><mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}" /></td>
 						</tr>
 						<tr>
@@ -152,7 +152,8 @@
 							<td align="right" class="fontnormal"><mifos:mifoslabel
 								name="loan.mode_of_payment" mandatory="yes" />:&nbsp;</td>
 							<td><c:choose>
-								<c:when test="${loanDisbursmentActionForm.amount.amountDoubleValue == 0.0}">
+								<c:when
+									test="${loanDisbursmentActionForm.amount.amountDoubleValue == 0.0}">
 									<mifos:select property="paymentModeOfPayment"
 										style="width:136px;" disabled="true">
 										<html-el:options collection="PaymentType" property="id"
@@ -177,24 +178,12 @@
 							<td align="center">&nbsp;</td>
 						</tr>
 						<tr>
-							<td align="center">
-							
-							<c:choose>
-							<c:when test="${FutureDate == true}">
-								<html-el:submit  styleClass="buttn" style="width:130px;" disabled="true" >
-									<mifos:mifoslabel name="loan.reviewtransaction" />
-								</html-el:submit>
-
-							</c:when> 
-							
-							<c:otherwise>
-								<html-el:submit styleClass="buttn" style="width:130px;">
-									<mifos:mifoslabel name="loan.reviewtransaction" />
-								</html-el:submit>
-							</c:otherwise> 
-							</c:choose> &nbsp; <html-el:button
-								property="cancelButton" styleClass="cancelbuttn"
-								style="width:65px;" onclick="javascript:fun_return(this.form)">
+							<td align="center"><html-el:submit styleClass="buttn"
+								style="width:130px;">
+								<mifos:mifoslabel name="loan.reviewtransaction" />
+							</html-el:submit> &nbsp; <html-el:button property="cancelButton"
+								styleClass="cancelbuttn" style="width:65px;"
+								onclick="javascript:fun_return(this.form)">
 								<mifos:mifoslabel name="loan.cancel" />
 							</html-el:button></td>
 						</tr>

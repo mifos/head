@@ -44,12 +44,9 @@ public class LoanDisbursmentAction extends BaseAction {
 		LoanDisbursmentActionForm loanDisbursmentActionForm = (LoanDisbursmentActionForm)form;
 		loanDisbursmentActionForm.clear();
 		Date currentDate=new Date(System.currentTimeMillis());
-		loanDisbursmentActionForm.setTransactionDate(DateHelper.getCurrentDate(uc.getPereferedLocale()));
+		
 		LoanBO  loan =  ((LoanBusinessService)getService()).getAccount(Integer.valueOf(loanDisbursmentActionForm.getAccountId()));
-		if ( loan.getDisbursementDate().after(currentDate))
-			SessionUtils.setAttribute(LoanConstants.FUTUREDISBURSALDATE,new Boolean(true), request.getSession());
-		else
-			SessionUtils.setAttribute(LoanConstants.FUTUREDISBURSALDATE,new Boolean(false), request.getSession());
+		loanDisbursmentActionForm.setTransactionDate(DateHelper.getUserLocaleDate(uc.getPereferedLocale(),loan.getDisbursementDate().toString()));
 		loan.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request.getSession());
 		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,	getMasterDataService().getSupportedPaymentModes(uc.getLocaleId(),TrxnTypes.loan_repayment.getValue()),request.getSession());
