@@ -168,7 +168,7 @@ public class SavingsClosureAction extends BaseAction {
 		CustomerBO customer = searchForCustomer(request,actionForm.getCustomerId());
 		if (customer==null)
 			customer = savings.getCustomer();
-		savings.closeAccount(payment,notes,customer);
+		savings.closeAccount(payment,notes,customer,new SavingsHelper().getCurrentDate());
 		request.getSession().removeAttribute(SavingsConstants.CLIENT_LIST);
 		request.getSession().removeAttribute(SavingsConstants.ACCOUNT_PAYMENT);
 		HibernateUtil.commitTransaction();

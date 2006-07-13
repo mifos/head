@@ -26,6 +26,7 @@ import org.mifos.application.accounts.exceptions.IDGenerationException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.savings.persistence.service.SavingsPersistenceService;
+import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
@@ -3675,40 +3676,118 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 	}
 	
-	public void testCloseAccount() throws Exception{
+	public void testSuccessfulCloseAccount() throws Exception{
 		createInitialObjects();
 		savingsOffering = helper.createSavingsOffering();
 		savings = helper.createSavingsAccount("000X00000000017",  savingsOffering,
 				group, AccountStates.SAVINGS_ACC_APPROVED,userContext);
-		savings.setSavingsBalance(new Money(currency,"500"));
-		Money interestAmount = new Money(currency, "40");
-		savings.setInterestToBePosted(interestAmount);
+		savings.setActivationDate(helper.getDate("20/05/2006"));
+		
+		AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(new Money(currency, "1000.0"), new Money(currency, "1000.0"),
+				helper.getDate("30/05/2006"),AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,group);
+		savings.addAccountPayment(payment1);
 		savings.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
+		
+		Money balanceAmount = new Money(currency, "1500.0");
+		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(
+				new Money(currency, "500.0"), balanceAmount,
+				helper.getDate("15/06/2006"),
+				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
+				group);
+		savings.addAccountPayment(payment2);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		Money interestAmount = new Money(currency, "40");
+		savings.setInterestToBePosted(interestAmount);
+		savings.setSavingsBalance(balanceAmount);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
 		savings = savingsService.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
+		Money interestAtClosure = savings.calculateInterestForClosure(new SavingsHelper().getCurrentDate());
 		AccountPaymentEntity payment = new AccountPaymentEntity();
-		payment.setPaymentDate(new Date(new SavingsHelper().getCurrentDate()
-				.getTime()));
-		payment.setAmount(new Money(Configuration.getInstance()
-				.getSystemConfig().getCurrency(), "540"));
+		payment.setPaymentDate(new SavingsHelper().getCurrentDate());
+		payment.setAmount(balanceAmount.add(interestAtClosure));
 		PaymentTypeEntity paymentType = new PaymentTypeEntity();
 		paymentType.setId(Short.valueOf("1"));
 		payment.setPaymentType(paymentType);
 		AccountNotesEntity notes = new AccountNotesEntity();
 		notes.setComment("closing account");
-		savings.closeAccount(payment, notes, group);
+		savings.closeAccount(payment, notes, group,new SavingsHelper().getCurrentDate());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		savings = savingsService.findById(savings.getAccountId());
 		assertEquals(2,savings.getSavingsActivityDetails().size());
 		for(SavingsActivityEntity activity: savings.getSavingsActivityDetails()){
 			if(activity.getActivity().getId().equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL))
-				assertEquals(new Money(currency,"540"), activity.getAmount());
+				assertEquals(balanceAmount.add(interestAtClosure), activity.getAmount());
 			else if(activity.getActivity().getId().equals(AccountConstants.ACTION_SAVINGS_INTEREST_POSTING))
-				assertEquals(interestAmount, activity.getAmount());			
+				assertEquals(interestAtClosure, activity.getAmount());			
 		}
+		group = savings.getCustomer();
+		center = group.getParentCustomer();
+	}
+	
+	public void testCloseAccountFailure() throws Exception{
+		createInitialObjects();
+		savingsOffering = helper.createSavingsOffering();
+		savings = helper.createSavingsAccount("000X00000000017",  savingsOffering,
+				group, AccountStates.SAVINGS_ACC_APPROVED,userContext);
+		savings.setActivationDate(helper.getDate("20/05/2006"));
+		
+		AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(new Money(currency, "1000.0"), new Money(currency, "1000.0"),
+				helper.getDate("30/05/2006"),AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,group);
+		savings.addAccountPayment(payment1);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		Money balanceAmount = new Money(currency, "1500.0");
+		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(
+				new Money(currency, "500.0"), balanceAmount,
+				helper.getDate("15/06/2006"),
+				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
+				group);
+		savings.addAccountPayment(payment2);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		Money interestAmount = new Money(currency, "40");
+		savings.setInterestToBePosted(interestAmount);
+		savings.setSavingsBalance(balanceAmount);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		savings = savingsService.findById(savings.getAccountId());
+		savings.setUserContext(userContext);
+		
+		Money interestAtClosure = new Money(currency,"5");
+		AccountPaymentEntity payment = new AccountPaymentEntity();
+		payment.setPaymentDate(new SavingsHelper().getCurrentDate());
+		payment.setAmount(balanceAmount.add(interestAtClosure));
+		PaymentTypeEntity paymentType = new PaymentTypeEntity();
+		paymentType.setId(Short.valueOf("1"));
+		payment.setPaymentType(paymentType);
+		AccountNotesEntity notes = new AccountNotesEntity();
+		notes.setComment("closing account");
+		try{
+			savings.closeAccount(payment, notes, group,new SavingsHelper().getCurrentDate());
+		}catch(AccountException ae){
+			assertTrue(true);
+			assertEquals(SavingsConstants.INVALID_INTEREST_AMOUNT, ae.getKey());
+		}
+		
+		HibernateUtil.closeSession();
+		savings = savingsService.findById(savings.getAccountId());
+		
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
 	}
