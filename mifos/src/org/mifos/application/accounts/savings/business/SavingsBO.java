@@ -548,8 +548,8 @@ public class SavingsBO extends AccountBO {
 	}
 
 	public void closeAccount(AccountPaymentEntity payment,
-			AccountNotesEntity notes, CustomerBO customer, Date closureDate)
-			throws SystemException, FinancialException , InterestCalculationException, AccountException{
+			AccountNotesEntity notes, CustomerBO customer)
+			throws SystemException, FinancialException {
 		logger.debug("In SavingsBO::closeAccount(), accountId: "
 				+ getAccountId());
 		PersonnelBO loggedInUser = getPersonnelDBService().getPersonnel(
@@ -557,16 +557,10 @@ public class SavingsBO extends AccountBO {
 		AccountStateEntity accountState = this.getAccountState();
 		this.setAccountState(getDBService().getAccountStatusObject(
 				AccountStates.SAVINGS_ACC_CLOSED));
-		Money recalculatedInterest = calculateInterestForClosure(closureDate);
-		Money postInterestUI = payment.getAmount().subtract(getSavingsBalance());
 		
-		if(!recalculatedInterest.equals(postInterestUI))
-			throw new AccountException(SavingsConstants.INVALID_INTEREST_AMOUNT);
+		setInterestToBePosted(payment.getAmount().subtract(getSavingsBalance()));
 		
-		setInterestToBePosted(recalculatedInterest);
-		
-		
-		if (getInterestToBePosted().getAmountDoubleValue() > 0) 
+		if (getInterestToBePosted() != null	&& getInterestToBePosted().getAmountDoubleValue() > 0) 
 			makeEntriesForInterestPosting(getInterestToBePosted(), payment.getPaymentType(),customer,loggedInUser);
 		if (payment.getAmount().getAmountDoubleValue() > 0) {
 			payment.addAcountTrxn(helper.createAccountPaymentTrxn(payment,
