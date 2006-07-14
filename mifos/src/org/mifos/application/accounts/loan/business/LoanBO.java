@@ -568,7 +568,6 @@ public class LoanBO extends AccountBO {
 			}
 		}
 		if (null != getLastPmnt() && getLastPmntAmnt() != 0) {
-
 			return true;
 		}
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
@@ -612,8 +611,7 @@ public class LoanBO extends AccountBO {
 					}
 				}
 			}
-			addLoanActivity(buildLoanActivity(reversedTrxns, getUserContext()
-					.getId(), "Loan Adjusted"));
+			addLoanActivity(buildLoanActivity(reversedTrxns, getUserContext().getId(), "Loan Adjusted"));
 		}
 	}
 
@@ -1530,8 +1528,15 @@ public class LoanBO extends AccountBO {
 												accountTrxnEntity.getActionDate().getTime())
 										.compareTo(DateUtils.getDateWithoutTimeStamp(
 												accountTrxnEntity.getDueDate().getTime())) > 0) {
-						
 							noOfMissedPayments++;
+					}
+					if (accountTrxnEntity.getAccountActionEntity().getId()
+							.equals(AccountConstants.ACTION_LOAN_ADJUSTMENT)
+							&& DateUtils.getDateWithoutTimeStamp(
+									accountTrxnEntity.getRelatedTrxn().getActionDate().getTime())
+							.compareTo(DateUtils.getDateWithoutTimeStamp(
+									accountTrxnEntity.getRelatedTrxn().getDueDate().getTime())) > 0){
+							noOfMissedPayments--;
 					}
 				}
 			}
@@ -1587,6 +1592,11 @@ public class LoanBO extends AccountBO {
 			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory.getNoOfActiveLoans()-1);
 		}
 	}
-
+	
+	protected void updatePerformanceHistoryOnAdjustment(Integer noOfTrxnReversed) {
+		if(getPerformanceHistory()!=null){
+			getPerformanceHistory().setNoOfPayments(getPerformanceHistory().getNoOfPayments()-noOfTrxnReversed);
+		}
+	}
 
 }

@@ -552,6 +552,7 @@ public class AccountBO extends BusinessObject {
 					.reversalAdjustment(adjustmentComment);
 			updateInstallmentAfterAdjustment(reversedTrxns);
 			buildFinancialEntries(new HashSet(reversedTrxns));
+			updatePerformanceHistoryOnAdjustment(reversedTrxns.size());
 			((AccountPersistanceService) ServiceFactory.getInstance()
 					.getPersistenceService(PersistenceServiceName.Account))
 					.save(this);
@@ -560,6 +561,8 @@ public class AccountBO extends BusinessObject {
 					AccountExceptionConstants.CANNOTADJUST);
 	}
 
+	protected void updatePerformanceHistoryOnAdjustment(Integer noOfTrxnReversed) {}
+	
 	protected void updateInstallmentAfterAdjustment(
 			List<AccountTrxnEntity> reversedTrxns) {
 	}

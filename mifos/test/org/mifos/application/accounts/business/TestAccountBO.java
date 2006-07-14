@@ -12,11 +12,13 @@ import org.hibernate.HibernateException;
 import org.mifos.application.accounts.TestAccount;
 import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.LoanPerformanceHistoryEntity;
 import org.mifos.application.accounts.loan.business.LoanSummaryEntity;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.fees.business.FeesBO;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -362,5 +364,47 @@ public class TestAccountBO extends TestAccount {
 		TestObjectFactory.flushandCloseSession();
 		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
 		assertEquals(new Money("200"),((LoanBO)accountBO).getTotalPrincipalAmountInArrears());
+	}
+	
+	public void testUpdatePerformanceHistoryOnAdjustment() throws Exception {
+		Date currentDate = new Date(System.currentTimeMillis());
+		LoanPerformanceHistoryEntity loanPerfHistory = new LoanPerformanceHistoryEntity();
+		((LoanBO) accountBO).setPerformanceHistory(loanPerfHistory);
+		Integer noOfPayments = loanPerfHistory.getNoOfPayments();
+		TestObjectFactory.updateObject(accountBO);
+		TestObjectFactory.flushandCloseSession();
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
+		((LoanBO) accountBO).setUserContext(TestObjectFactory.getUserContext());
+		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
+		int count = 0;
+		for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()) {
+			if(count==5)
+				break;
+			accntActionDates.add(accountActionDateEntity);
+			count++;
+		}
+		PaymentData paymentData = TestObjectFactory
+				.getLoanAccountPaymentData(accntActionDates, TestObjectFactory
+						.getMoneyForMFICurrency(212 * 5), null, Short
+						.valueOf("1"), "receiptNum", Short.valueOf("1"),
+						currentDate,currentDate);
+		((LoanBO) accountBO).applyPayment(paymentData);
+		loanPerfHistory = ((LoanBO) accountBO).getPerformanceHistory();
+		noOfPayments = loanPerfHistory.getNoOfPayments();
+		TestObjectFactory.updateObject(accountBO);
+		TestObjectFactory.flushandCloseSession();
+		
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
+		((LoanBO) accountBO).setUserContext(TestObjectFactory.getUserContext());
+		((LoanBO) accountBO).adjustPmnt("loan account has been adjusted by test code");
+		TestObjectFactory.updateObject(accountBO);
+		TestObjectFactory.flushandCloseSession();
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
+		assertEquals(noOfPayments-5, ((LoanBO) accountBO).getPerformanceHistory().getNoOfPayments().intValue());
+		
+		group = (CustomerBO) HibernateUtil.getSessionTL().get(CustomerBO.class,
+				group.getCustomerId());
+		center = (CustomerBO) HibernateUtil.getSessionTL().get(
+				CustomerBO.class, center.getCustomerId());
 	}
 }
