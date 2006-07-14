@@ -535,7 +535,7 @@ public class SavingsBO extends AccountBO {
 			if (getMinAmntForInt() != null	&& principal != null && 
 					(getMinAmntForInt().getAmountDoubleValue() == 0 ||	principal.getAmountDoubleValue() >= getMinAmntForInt().getAmountDoubleValue()))
 				interestAmount = calculateInterestForDays(principal, interestRate, fromDate, toDate);
-			}
+		}
 		logger.info("In SavingsBO::calculateInterest(), accountId: "	+ getAccountId()+ 
 				", from date:"+ fromDate +", toDate:"+ toDate + "InterestAmt: "+ interestAmount);
 		return interestAmount;
@@ -795,6 +795,8 @@ public class SavingsBO extends AccountBO {
 		accountPayment.setPaymentDetails(totalAmount, paymentData
 				.getRecieptNum(), paymentData.getRecieptDate(), paymentData
 				.getPaymentTypeId());
+		if(this.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_INACTIVE))
+			this.setAccountState(getDBService().getAccountStatusObject(AccountStates.SAVINGS_ACC_APPROVED));
 		if (totalAmount.getAmountDoubleValue() > 0
 				&& paymentData.getAccountPayments().size() <= 0) {
 			SavingsTrxnDetailEntity accountTrxn = buildUnscheduledDeposit(
@@ -856,8 +858,6 @@ public class SavingsBO extends AccountBO {
 		addSavingsActivityDetails(buildSavingsActivity(totalAmount,
 				getSavingsBalance(), AccountConstants.ACTION_SAVINGS_DEPOSIT,
 				paymentData.getPersonnelId()));
-		if(this.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_INACTIVE))
-			this.setAccountState(getDBService().getAccountStatusObject(AccountStates.SAVINGS_ACC_APPROVED));
 		return accountPayment;
 	}
 
@@ -1052,7 +1052,7 @@ public class SavingsBO extends AccountBO {
 	}	
 	
 	private SavingsTrxnDetailEntity getLastTrxnForPayment(AccountPaymentEntity payment){
-		Short accountAction = payment.getActionType();
+		Short accountAction = helper.getPaymentActionType(payment);
 		if(accountAction.equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL)){
 			for(AccountTrxnEntity accountTrxn: payment.getAccountTrxns())
 					return (SavingsTrxnDetailEntity)accountTrxn;
@@ -1071,7 +1071,7 @@ public class SavingsBO extends AccountBO {
 	}
 	
 	private SavingsTrxnDetailEntity getLastTrxnForAdjustedPayment(AccountPaymentEntity payment){
-		Short accountAction = payment.getActionType();
+		Short accountAction = helper.getPaymentActionType(payment);
 		if(accountAction.equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL)){
 			for(AccountTrxnEntity accountTrxn: payment.getAccountTrxns()){
 				if (accountTrxn.getAccountActionEntity().getId().equals(AccountConstants.ACTION_SAVINGS_ADJUSTMENT))
@@ -1125,11 +1125,12 @@ public class SavingsBO extends AccountBO {
 	protected void adjustExistingPayment(Money amountAdjustedTo, String adjustmentComment) throws SystemException, ApplicationException {
 		AccountPaymentEntity lastPayment = getLastPmnt();
 		lastPayment.setUserContext(getUserContext());
+		Short actionType = helper.getPaymentActionType(lastPayment);
 		for (AccountTrxnEntity accntTrxn : lastPayment.getAccountTrxns()) {
-			if (lastPayment.getActionType().equals(
+			if (actionType.equals(
 					AccountConstants.ACTION_SAVINGS_DEPOSIT))
 				adjustForDeposit(accntTrxn);
-			else if (lastPayment.getActionType().equals(
+			else if (actionType.equals(
 					AccountConstants.ACTION_SAVINGS_WITHDRAWAL))
 				adjustForWithdrawal(accntTrxn);
 		}
@@ -1164,7 +1165,7 @@ public class SavingsBO extends AccountBO {
 			}
 			this.addAccountPayment(newAccountPayment);
 			buildFinancialEntries(newAccountPayment.getAccountTrxns());
-			addSavingsActivityDetails(buildSavingsActivity(amountAdjustedTo,getSavingsBalance(), lastPayment.getActionType(),userContext.getId()));
+			addSavingsActivityDetails(buildSavingsActivity(amountAdjustedTo,getSavingsBalance(), helper.getPaymentActionType(lastPayment),userContext.getId()));
 		}
 		
 		return newAccountPayment;
@@ -1187,13 +1188,14 @@ public class SavingsBO extends AccountBO {
 	protected Set<AccountTrxnEntity> createTrxnsForAmountAdjusted(
 			AccountPaymentEntity lastAccountPayment, Money newAmount)
 			throws SystemException {
+		Short actionType = helper.getPaymentActionType(lastAccountPayment);
 		if (isMandatory()
-				&& lastAccountPayment.getActionType().equals(
+				&& actionType.equals(
 						AccountConstants.ACTION_SAVINGS_DEPOSIT))
 			return createDepositTrxnsForMandatoryAccountsAfterAdjust(
 					lastAccountPayment, newAmount);
 
-		if (lastAccountPayment.getActionType().equals(AccountConstants.ACTION_SAVINGS_DEPOSIT))
+		if (actionType.equals(AccountConstants.ACTION_SAVINGS_DEPOSIT))
 			return createDepositTrxnsForVolAccountsAfterAdjust(lastAccountPayment, newAmount);
 		
 		return createWithdrawalTrxnsAfterAdjust(lastAccountPayment, newAmount);
@@ -1387,9 +1389,8 @@ public class SavingsBO extends AccountBO {
 		AccountPaymentEntity accountPayment = getLastPmnt();
 		if (accountPayment != null
 				&& getLastPmntAmnt() != 0
-				&& (accountPayment.getActionType().equals(
-						AccountConstants.ACTION_SAVINGS_WITHDRAWAL) || accountPayment
-						.getActionType().equals(
+				&& (helper.getPaymentActionType(accountPayment).equals(
+						AccountConstants.ACTION_SAVINGS_WITHDRAWAL) || helper.getPaymentActionType(accountPayment).equals(
 								AccountConstants.ACTION_SAVINGS_DEPOSIT))) {
 			if (accountPayment.getAmount().equals(amountAdjustedTo)) {
 				logger
@@ -1408,7 +1409,7 @@ public class SavingsBO extends AccountBO {
 			AccountPaymentEntity accountPayment, Money amountAdjustedTo) {
 		Double maxWithdrawAmount = getSavingsOffering().getMaxAmntWithdrawl()
 				.getAmountDoubleValue();
-		if (accountPayment.getActionType().equals(
+		if (helper.getPaymentActionType(accountPayment).equals(
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL)
 				&& maxWithdrawAmount != null
 				&& maxWithdrawAmount != 0
@@ -1424,7 +1425,7 @@ public class SavingsBO extends AccountBO {
 		Money balanceAfterAdjust = getSavingsBalance();
 		for (AccountTrxnEntity accntTrxn : accountPayment.getAccountTrxns()) {
 			SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) accntTrxn;
-			if (accountPayment.getActionType().equals(
+			if (helper.getPaymentActionType(accountPayment).equals(
 					AccountConstants.ACTION_SAVINGS_WITHDRAWAL)
 					&& amountAdjustedTo.getAmountDoubleValue() > savingsTrxn
 							.getWithdrawlAmount().getAmountDoubleValue()) {

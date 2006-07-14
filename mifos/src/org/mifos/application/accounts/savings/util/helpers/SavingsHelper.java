@@ -46,6 +46,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -185,5 +186,13 @@ public class SavingsHelper {
 		payment.setAmount(amount);
 		payment.setPaymentType(paymentTypeEntity);
 		return payment;
+	}
+	
+	public Short getPaymentActionType(AccountPaymentEntity payment){
+		for(AccountTrxnEntity accntTrxn : payment.getAccountTrxns()){
+			if(!accntTrxn.getAccountActionEntity().getId().equals(AccountConstants.ACTION_SAVINGS_ADJUSTMENT))
+				return accntTrxn.getAccountActionEntity().getId();
+		}
+		return null;
 	}
 }

@@ -47,6 +47,7 @@ import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
+import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
@@ -107,7 +108,7 @@ public class SavingsApplyAdjustmentActionForm extends ValidatorActionForm{
 			if(method.equals("preview")){
 				SavingsBO savings = (SavingsBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request.getSession());
 				AccountPaymentEntity payment = savings.getLastPmnt();
-				if(payment==null || savings.getLastPmntAmnt()==0 || !(payment.getActionType().equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL) || payment.getActionType().equals(AccountConstants.ACTION_SAVINGS_DEPOSIT))){
+				if(payment==null || savings.getLastPmntAmnt()==0 || !(new SavingsHelper().getPaymentActionType(payment).equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL) || new SavingsHelper().getPaymentActionType(payment).equals(AccountConstants.ACTION_SAVINGS_DEPOSIT))){
 					if(errors==null)
 						errors = new ActionErrors();
 					errors.add(SavingsConstants.INVALID_LAST_PAYMENT,new ActionMessage(SavingsConstants.INVALID_LAST_PAYMENT));

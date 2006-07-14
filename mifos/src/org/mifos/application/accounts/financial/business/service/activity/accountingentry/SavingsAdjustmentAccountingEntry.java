@@ -44,6 +44,7 @@ import org.mifos.application.accounts.financial.util.helpers.FinancialActionCons
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
+import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.framework.util.helpers.Money;
@@ -68,7 +69,7 @@ public class SavingsAdjustmentAccountingEntry extends BaseAccountingEntry {
 	}
 	
 	private boolean isAdjustmentForWithdrawal(SavingsBO savings){
-		return (savings.getLastPmnt().getActionType().equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL));
+		return (new SavingsHelper().getPaymentActionType(savings.getLastPmnt()).equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL));		
 	}
 	
 	private void adjustWithdrawal(SavingsBO savings,SavingsTrxnDetailEntity savingsTrxn)throws FinancialException{

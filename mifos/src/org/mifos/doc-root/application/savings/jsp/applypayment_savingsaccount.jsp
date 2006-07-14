@@ -123,7 +123,14 @@
                 	<mifos:mifoslabel name="Savings.dateOfTrxn" mandatory="Yes" isColonRequired="Yes"/>
                 </td>
                 <td class="fontnormal">
-	                <date:datetag property="trxnDate" />
+                	<c:choose>
+	                	<c:when test="${sessionScope.isBackDatedTrxnAllowed == true}">
+		                	<date:datetag property="trxnDate" />
+	                	</c:when>
+	                	<c:otherwise>
+	                		<date:datetag property="trxnDate" isDisabled="Yes"/>
+	                	</c:otherwise>
+                	</c:choose>
                 </td>
               </tr>
               <tr>

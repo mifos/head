@@ -641,6 +641,31 @@ public class TestSavingsBO extends MifosTestCase {
 				.getCustomerId());
 	}
 
+	public void testSuccessfulApplyPaymentWhenNoDepositDue() throws AccountException,SystemException {
+		createInitialObjects();
+		savingsOffering = helper.createSavingsOffering();
+		savings = helper.createSavingsAccount("000X00000000013", savingsOffering, group, AccountStates.SAVINGS_ACC_INACTIVE,userContext);
+		HibernateUtil.closeSession();
+		savings = savingsService.findById(savings.getAccountId());
+		Money enteredAmount = new Money(currency, "100.0");
+		PaymentData paymentData = new PaymentData(enteredAmount, Short
+				.valueOf("1"), Short.valueOf("1"), new Date(System
+				.currentTimeMillis()));
+		paymentData.setCustomerId(group.getCustomerId());
+		paymentData.setRecieptDate(new Date(System.currentTimeMillis()));
+		paymentData.setRecieptNum("34244");
+		paymentData.addAccountPaymentData(new SavingsPaymentData(null));
+		savings.applyPayment(paymentData);
+		
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		savings = savingsService.findById(savings.getAccountId());
+		
+		assertEquals(AccountStates.SAVINGS_ACC_APPROVED,savings.getAccountState().getId().shortValue());
+		assertEquals(100.0, savings.getSavingsBalance().getAmountDoubleValue());
+		assertEquals(1, savings.getSavingsActivityDetails().size());
+	}
+	
 	public void testGetStatusName() throws ApplicationException,
 			SystemException {
 		createInitialObjects();

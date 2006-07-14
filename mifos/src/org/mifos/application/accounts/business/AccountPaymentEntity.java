@@ -229,12 +229,5 @@ public class AccountPaymentEntity extends PersistentObject {
 		
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("After adding adjustment transactions the total no of transactions are " + getAccountTrxns().size());
 		return newlyAddedTrxns;
-	}
-	
-	public Short getActionType(){
-		for(AccountTrxnEntity accntTrxn : getAccountTrxns())
-			return (accntTrxn.getAccountActionEntity().getId());
-		return null;
-	}
-	
+	}	
 }

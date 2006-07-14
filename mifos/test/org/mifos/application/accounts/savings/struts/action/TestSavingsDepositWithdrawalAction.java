@@ -100,6 +100,8 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		
 		List<CustomerBO> clientList = (List<CustomerBO>)request.getSession().getAttribute(SavingsConstants.CLIENT_LIST);
 		assertNotNull(clientList);
+		Boolean isBackDatedAllowed = (Boolean)request.getSession().getAttribute(SavingsConstants.IS_BACKDATED_TRXN_ALLOWED);
+		assertNotNull(isBackDatedAllowed);
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
 		client1 = new CustomerPersistenceService().getCustomer(client1

@@ -52,6 +52,7 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.application.accounts.savings.struts.actionforms.SavingsApplyAdjustmentActionForm;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
+import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -94,9 +95,9 @@ public class SavingsApplyAdjustmentAction extends BaseAction{
 		savings.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,savings,request.getSession());
 		AccountPaymentEntity lastPayment = savings.getLastPmnt();
-		if(null != lastPayment&& lastPayment.getAmount().getAmountDoubleValue()!=0 && (lastPayment.getActionType().equals(AccountConstants.ACTION_SAVINGS_DEPOSIT) ||lastPayment.getActionType().equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL))){
+		if(null != lastPayment&& lastPayment.getAmount().getAmountDoubleValue()!=0 && (new SavingsHelper().getPaymentActionType(lastPayment).equals(AccountConstants.ACTION_SAVINGS_DEPOSIT) ||new SavingsHelper().getPaymentActionType(lastPayment).equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL))){
 			actionForm.setLastPaymentAmount(savings.getLastPmnt().getAmount());
-			AccountActionEntity accountAction = ((AccountPersistanceService) ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.Account)).getAccountAction(savings.getLastPmnt().getActionType());
+			AccountActionEntity accountAction = ((AccountPersistanceService) ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.Account)).getAccountAction(new SavingsHelper().getPaymentActionType(lastPayment));
 			accountAction.setLocaleId(uc.getLocaleId());
 			Hibernate.initialize(savings.getLastPmnt().getAccountTrxns());
 			SessionUtils.setAttribute(SavingsConstants.ACCOUNT_ACTION,accountAction,request.getSession());

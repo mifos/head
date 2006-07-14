@@ -32,6 +32,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -78,7 +79,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction{
 		else
 			SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST,null,request.getSession());
 		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,new ArrayList<PaymentTypeEntity>(),request.getSession());
-		
+		SessionUtils.setAttribute(SavingsConstants.IS_BACKDATED_TRXN_ALLOWED,new Boolean(Configuration.getInstance().getAccountConfig(savings.getCustomer().getOffice().getOfficeId()).isBackDatedTxnAllowed()),request.getSession());
 		
 		actionForm.setTrxnDate(DateHelper.getCurrentDate(uc.getPereferedLocale()));
 		return mapping.findForward(ActionForwards.load_success.toString());
