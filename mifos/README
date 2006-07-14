@@ -47,7 +47,7 @@ Issue tracking is https://mifos.dev.java.net/servlets/ProjectIssues
 http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html 
 
 5. Testing environment 
-http://test.mifos.org:8080/Mifos 
+http://test.mifos.org:8080/mifos 
 Login user is "mifos", password is "mifos" 
 
 
@@ -136,22 +136,22 @@ PATH	Ensure that JAVA_HOME/bin, JBOSS_HOME/bin, and ANT_HOME/bin are in your pat
    We will use the 'default' configuration that comes with the JBoss
    distribution as our template. Make a copy of
    $JBOSS_HOME/server/default and its contents to
-   $JBOSS_HOME/server/Mifos. On *nix:
+   $JBOSS_HOME/server/mifos. On *nix:
 
-       cp -pr $JBOSS_HOME/server/default $JBOSS_HOME/server/Mifos
+       cp -pr $JBOSS_HOME/server/default $JBOSS_HOME/server/mifos
 
    Be sure that a full copy of default is made, and not a symbolic
    link, as this can have undesirable consequences. On Windows,
    perform a copy operation of $JBOSS_HOME/server/default in Windows
-   Explorer, renaming it to $JBOSS_HOME/server/Mifos.  Also, you do need 
-   a full copy of the default and not the "all" or "minimal". 
+   Explorer, renaming it to $JBOSS_HOME/server/mifos.  Also, you do need 
+   a full copy of the default and not the "all" or "minimal". (case sensitive)
 
    Next, copy the MySQL driver and create the datasource configuration
    required for JBoss. The file lib/mysql-connector-java-3.1.7-bin.jar 
    (which lives under DevSpace/Workspace) should be copied to 
-   $JBOSS_HOME/server/Mifos/lib.
+   $JBOSS_HOME/server/mifos/lib.
 
-   Create a file called $JBOSS_HOME/server/Mifos/deploy/mysql-ds.xml
+   Create a file called $JBOSS_HOME/server/mifos/deploy/mysql-ds.xml
    with the following content:
 
         <?xml version="1.0" encoding="UTF-8"?>
@@ -223,20 +223,20 @@ Ant clean copy_files compile war;
 
 7. Deploy Mifos
 
-   copy dist/Mifos.war to $JBOSS_HOME/server/Mifos/deploy
+   copy dist/mifos.war to $JBOSS_HOME/server/mifos/deploy
 
 8. Start Mifos
 
-   Start JBoss, specifying 'Mifos' as the server configuration. For
+   Start JBoss, specifying 'mifos' as the server configuration. For
    example:
 
-       $JBOSS_HOME/bin/run.sh -c Mifos
+       $JBOSS_HOME/bin/run.sh -c mifos
 
 or, on Windows:
-       $JBOSS_HOME/bin/run.bat  –c Mifos
+       $JBOSS_HOME/bin/run.bat  –c mifos
 
 Now, time to try it out!  You should be able to go to:
-      http://localhost:8080/Mifos
+      http://localhost:8080/mifos
 
 
 9. Stopping Mifos
