@@ -66,7 +66,7 @@
 								<mifos:mifoslabel name="loan.apply_adjustment"	bundle="loanUIResources" />
 							</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							</c:if>
-							<html-el:link href="AccountsApplyChargesAction.do?method=load&input=installmentDetailsPage&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}">
+							<html-el:link href="AccountsApplyChargesAction.do?method=load&input=reviewTransactionPage&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}">
 								<mifos:mifoslabel name="loan.apply_charges" bundle="loanUIResources" />
 							</html-el:link>							
 							</td>

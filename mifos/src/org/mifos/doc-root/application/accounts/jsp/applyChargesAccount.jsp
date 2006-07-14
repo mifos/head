@@ -233,10 +233,11 @@
 							<td align="center"><html-el:submit styleClass="buttn"
 								style="width:65px;">
 								<mifos:mifoslabel name="accounts.submit"></mifos:mifoslabel>
-							</html-el:submit> &nbsp; <html-el:cancel styleClass="cancelbuttn"
+							</html-el:submit> &nbsp;
+							 <html-el:button property="btn"  styleClass="cancelbuttn"
 								style="width:65px;" onclick="javascript:fun_cancel(this.form)">
 								<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
-							</html-el:cancel></td>
+							</html-el:button></td>
 						</tr>
 					</table>
 					</td>

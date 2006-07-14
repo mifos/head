@@ -16,6 +16,7 @@ import org.mifos.application.accounts.dao.AccountNotesDAO;
 import org.mifos.application.accounts.dao.ClosedAccSearchDAO;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.LoanPerformanceHistoryEntity;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.business.util.helpers.LoanHeaderObject;
 import org.mifos.application.accounts.loan.dao.LoanDAO;
@@ -32,6 +33,7 @@ import org.mifos.application.accounts.util.helpers.PathConstants;
 import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.accounts.util.valueobjects.AccountStatusChangeHistory;
+import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.client.util.valueobjects.ClientPerformanceHistory;
 import org.mifos.application.customer.dao.CustomerUtilDAO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -73,6 +75,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.valueobjects.Context;
 import org.mifos.framework.util.valueobjects.SearchResults;
 
@@ -642,6 +645,7 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 		LoanBO loanBO = new LoanBusinessService()
 				.findBySystemId(((Loan) context.getValueObject())
 						.getGlobalAccountNum());
+		context.addAttribute(new SearchResults(CenterConstants.PERFORMANCE_HISTORY,loanBO.getPerformanceHistory()));
 		List<LoanActivityView> loanRecentActivityView = new LoanBusinessService()
 				.getRecentActivityView(loanBO.getGlobalAccountNum(), context
 						.getUserContext().getLocaleId());

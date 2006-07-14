@@ -29,6 +29,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SecurityException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
@@ -289,9 +290,8 @@ public class LoanAction extends AccountAction{
 		// It is being set as attribute and not as removable attribute because we want it to
 		// be accessed even when the action changes.
 		SessionUtils.setAttribute("header_get", headerObject, request.getSession());
-		LoanPerformanceHistoryEntity loanPerformanceHistory = new LoanPerformanceHistoryEntity();
-		loanPerformanceHistory = new LoanBusinessService().findBySystemId(((Loan)context.getValueObject()).getGlobalAccountNum()).getPerformanceHistory();
-	    SessionUtils.setAttribute(CenterConstants.PERFORMANCE_HISTORY,loanPerformanceHistory,request.getSession());
+		
+		
 		return forward;
 
 	}

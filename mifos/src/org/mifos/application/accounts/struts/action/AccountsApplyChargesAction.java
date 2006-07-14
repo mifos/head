@@ -51,6 +51,7 @@ import org.mifos.framework.business.util.helpers.HeaderObject;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.struts.action.MifosBaseAction;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
@@ -116,17 +117,13 @@ public class AccountsApplyChargesAction extends MifosBaseAction {
 		if (inputPage != null) {
 			if (inputPage.equals("reviewTransactionPage")) {
 				forward = MethodNameConstants.CANCEL_LOAN_SUCCESS;
-
 			} else if (inputPage.equals(GroupConstants.VIEW_GROUP_CHARGES)) {
 				forward = GroupConstants.VIEW_GROUP_CHARGES;
 			} else if (inputPage.equals("ViewCenterCharges")) {
 				forward = CenterConstants.CENTER_CHARGES_DETAILS_PAGE;
 			} else if (inputPage.equals("ViewClientCharges")) {
 				forward = "ViewClientCharges";
-			} else if (inputPage.equals("installmentDetailsPage")) {				
-				forward = AccountConstants.LOAN_DETAILS_PAGE;
 			} 
-			
 		}
 		return mapping.findForward(forward);
 	}
