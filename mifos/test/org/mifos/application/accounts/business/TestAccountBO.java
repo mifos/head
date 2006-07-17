@@ -39,10 +39,9 @@ public class TestAccountBO extends TestAccount {
 	public TestAccountBO() {
 	}
 
-	public void testSuccessRemoveFees() {
-		try {
-			HibernateUtil.getSessionTL();
-			HibernateUtil.startTransaction();
+	public void testSuccessRemoveFees() throws Exception {
+			TestObjectFactory.flushandCloseSession();
+			accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
 			UserContext uc = TestObjectFactory.getUserContext();
 			Set<AccountFeesEntity> accountFeesEntitySet = accountBO
 					.getAccountFees();
@@ -86,9 +85,7 @@ public class TestAccountBO extends TestAccount {
 				else
 					assertEquals(new Money("112.0"),accountActionDate.getTotalDue());
 			}
-		} catch (Exception e) {
-			assertTrue(false);
-		}
+		
 	}
 
 	public void testFailureRemoveFees() {
