@@ -46,6 +46,7 @@ import org.mifos.application.master.util.valueobjects.InterestCalcRule;
 import org.mifos.application.master.util.valueobjects.InterestTypes;
 import org.mifos.application.master.util.valueobjects.YesNoMaster;
 import org.mifos.application.penalty.util.valueobjects.Penalty;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.security.util.UserContext;
 
 /**
@@ -417,5 +418,9 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
 	public void setPrincipalGLcode(GLCodeEntity principalGLcode) {
 		this.principalGLcode = principalGLcode;
+	}
+	
+	public Boolean isPrincipalDueInLastInstallment(){
+		return getPrinDueLastInstFlag().equals(YesNoFlag.YES.getValue()) ? true: false;
 	}
 }

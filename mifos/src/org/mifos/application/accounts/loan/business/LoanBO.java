@@ -537,6 +537,29 @@ public class LoanBO extends AccountBO {
 				.subtract(totalFeeAmount));
 	}
 	
+	public void roundInstallments(List<Short> installmentIdList){
+		if(!getLoanOffering().isPrincipalDueInLastInstallment()){
+			AccountActionDateEntity lastAccountActionDate =getLastInstallmentAccountAction();
+			Money diffAmount=new Money();
+			int count=0;
+			for(AccountActionDateEntity accountActionDate : getAccountActionDates()){
+				if(installmentIdList.contains(accountActionDate.getInstallmentId())){
+					if(isInterestDeductedAtDisbursement() && accountActionDate.getInstallmentId().equals(Short.valueOf("1")))
+						continue;
+					count++;
+					if(count==installmentIdList.size()){
+						break;
+					}
+					Money totalAmount=accountActionDate.getTotalDue();
+					Money roundedTotalAmount=Money.round(totalAmount);
+					accountActionDate.setPrincipal(accountActionDate.getPrincipal().subtract(totalAmount.subtract(roundedTotalAmount)));
+					diffAmount=diffAmount.add(totalAmount.subtract(roundedTotalAmount));
+				}
+			}
+			lastAccountActionDate.setPrincipal(lastAccountActionDate.getPrincipal().add(diffAmount));
+		}
+	}
+	
 	public void updateTotalPenaltyAmount(Money totalPenaltyAmount) {
 		LoanSummaryEntity loanSummaryEntity = this.getLoanSummary();
 		loanSummaryEntity.setOriginalPenalty(loanSummaryEntity.getOriginalPenalty().subtract(totalPenaltyAmount));

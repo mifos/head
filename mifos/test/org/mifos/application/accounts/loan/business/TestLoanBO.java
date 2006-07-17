@@ -7,6 +7,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.struts.taglib.tiles.GetAttributeTag;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
@@ -84,7 +85,7 @@ public class TestLoanBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
-
+	
 	public void testGetTotalRepayAmountForCurrentDateBeforeFirstInstallment() {
 		accountBO = getLoanAccount();
 		HibernateUtil.getSessionTL().flush();
@@ -1438,6 +1439,32 @@ public class TestLoanBO extends MifosTestCase {
 		assertEquals(new Money("300.0"),groupPerformanceHistoryEntity.getLastGroupLoanAmount());
 		LoanPerformanceHistoryEntity loanPerfHistory = loan.getPerformanceHistory();
 		assertEquals(getLastInstallmentAccountAction(loan).getActionDate(),loanPerfHistory.getLoanMaturityDate());
+	}
+	
+	
+	public void testRoundInstallments() throws AccountException, SystemException {
+		accountBO = getLoanAccount();
+		TestObjectFactory.flushandCloseSession();
+		accountBO= (AccountBO) TestObjectFactory.getObject(AccountBO.class,	accountBO.getAccountId());
+		((LoanBO)accountBO).getLoanOffering().setPrinDueLastInst(false);
+		List<Short> installmentIdList=new ArrayList<Short>();
+		for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
+			installmentIdList.add(accountActionDateEntity.getInstallmentId());
+			if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1")))
+				accountActionDateEntity.setMiscFee(new Money("20.3"));
+		}
+		((LoanBO)accountBO).roundInstallments(installmentIdList);
+		TestObjectFactory.updateObject(accountBO);
+		TestObjectFactory.flushandCloseSession();
+		accountBO= (AccountBO) TestObjectFactory.getObject(AccountBO.class,	accountBO.getAccountId());
+		for(AccountActionDateEntity accountActionDate : accountBO.getAccountActionDates()){
+			if(accountActionDate.getInstallmentId().equals(Short.valueOf("1")))
+				assertEquals(new Money("133.0"),accountActionDate.getTotalDue());
+			else if(accountActionDate.getInstallmentId().equals(Short.valueOf("6")))
+				assertEquals(new Money("111.3"),accountActionDate.getTotalDue());
+			else
+				assertEquals(new Money("112.0"),accountActionDate.getTotalDue());
+		}
 	}
 
 	

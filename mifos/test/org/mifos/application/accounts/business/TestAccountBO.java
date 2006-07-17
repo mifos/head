@@ -46,6 +46,11 @@ public class TestAccountBO extends TestAccount {
 			UserContext uc = TestObjectFactory.getUserContext();
 			Set<AccountFeesEntity> accountFeesEntitySet = accountBO
 					.getAccountFees();
+			((LoanBO)accountBO).getLoanOffering().setPrinDueLastInst(false);
+			for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
+				if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1")))
+					accountActionDateEntity.setMiscFee(new Money("20.3"));
+			}
 			Iterator itr = accountFeesEntitySet.iterator();
 			while (itr.hasNext())
 				accountBO.removeFees(((AccountFeesEntity) itr.next()).getFees()
@@ -72,6 +77,14 @@ public class TestAccountBO extends TestAccount {
 						loanSummaryEntity.getPenaltyPaid()),
 						accountNonTrxnEntity.getPenaltyOutstanding());
 				break;
+			}
+			for(AccountActionDateEntity accountActionDate : accountBO.getAccountActionDates()){
+				if(accountActionDate.getInstallmentId().equals(Short.valueOf("1")))
+					assertEquals(new Money("133.0"),accountActionDate.getTotalDue());
+				else if(accountActionDate.getInstallmentId().equals(Short.valueOf("6")))
+					assertEquals(new Money("111.3"),accountActionDate.getTotalDue());
+				else
+					assertEquals(new Money("112.0"),accountActionDate.getTotalDue());
 			}
 		} catch (Exception e) {
 			assertTrue(false);

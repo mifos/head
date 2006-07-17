@@ -537,9 +537,12 @@ public class AccountBO extends BusinessObject {
 			FeesBO feesBO = getAccountFeesObject(feeId);
 			String description = feesBO.getFeeName()+ " " + AccountConstants.FEES_REMOVED;
 			updateAccountActivity(totalFeeAmount,personnelId,description);
+			roundInstallments(installmentIdList);
 		}
 
 	}
+	
+	public void roundInstallments(List<Short> installmentIdList){}
 	
 	public void updateAccountActivity(Money totalFeeAmount,Short personnelId,String description){}
 
