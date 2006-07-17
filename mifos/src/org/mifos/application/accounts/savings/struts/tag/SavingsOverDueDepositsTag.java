@@ -36,20 +36,29 @@ public class SavingsOverDueDepositsTag extends BodyTagSupport {
 					.getAttribute(Constants.USERCONTEXT)).getPereferedLocale();
 			StringBuilder builder = new StringBuilder();
 			for (AccountActionDateEntity installment : installmentsInArrears) {
-				currentSize = currentSize + 1;
+				currentSize++;
 				if (actionDate == null)
 					actionDate = installment.getActionDate();
 				if (actionDate.compareTo(installment.getActionDate()) != 0
 						|| currentSize == listSize) {
-					
-					builder.append("<tr>");
-					builder.append(buildDateUI(locale, actionDate));
-					if (currentSize == listSize)
-						builder.append(buildAmountUI(totalAmount
-								.add(installment.getTotalDepositDue())));
-					else
-						builder.append(buildAmountUI(totalAmount));
-					builder.append("</tr>");
+					if (currentSize == listSize
+							&& actionDate
+									.compareTo(installment.getActionDate()) == 0) {
+						builder.append(buildDepositDueUIRow(locale, actionDate,
+								totalAmount.add(installment
+										.getTotalDepositDue())));
+					} else if (actionDate
+							.compareTo(installment.getActionDate()) != 0
+							&& currentSize != listSize) {
+						builder.append(buildDepositDueUIRow(locale, actionDate,
+								totalAmount));
+					} else {
+						builder.append(buildDepositDueUIRow(locale, actionDate,
+								totalAmount));
+						builder.append(buildDepositDueUIRow(locale, installment
+								.getActionDate(), installment
+								.getTotalDepositDue()));
+					}
 					totalAmount = installment.getTotalDepositDue();
 					actionDate = installment.getActionDate();
 				} else
@@ -62,7 +71,6 @@ public class SavingsOverDueDepositsTag extends BodyTagSupport {
 				e.printStackTrace();
 			}
 		}
-		
 
 		return SKIP_BODY;
 	}
@@ -85,6 +93,16 @@ public class SavingsOverDueDepositsTag extends BodyTagSupport {
 		builder.append("<td align=\"right\" class=\"drawtablerow\">");
 		builder.append("&nbsp;");
 		builder.append("</td>");
+		return builder;
+	}
+
+	private StringBuilder buildDepositDueUIRow(Locale locale, Date actionDate,
+			Money dueAmount) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("<tr>");
+		builder.append(buildDateUI(locale, actionDate));
+		builder.append(buildAmountUI(dueAmount));
+		builder.append("</tr>");
 		return builder;
 	}
 
