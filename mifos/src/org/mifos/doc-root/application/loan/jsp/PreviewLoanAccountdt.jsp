@@ -72,7 +72,7 @@
 											<c:out value="${requestScope.loan.loanOffering.prdOfferingName}" />&nbsp;#
 											<c:out value="${requestScope.loan.globalAccountNum}" />-&nbsp;  
 										</span>
-  										<mifos:mifoslabel name="loan.preview" /><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /><mifos:mifoslabel name="loan.acc_info" />
+  										<mifos:mifoslabel name="loan.preview" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.acc_info" />
 									</td>
 								</tr>
 								<tr>
@@ -141,14 +141,11 @@
 														<mifos:mifoslabel name="loan.no" />
 													</c:otherwise>
 												</c:choose>
-											
 											</span> 
-									</td>
-								</tr>
-							</table>
-							<table width="95%" border="0" cellpadding="0" cellspacing="0">
-								<tr id="Loan.PurposeOfLoan">
-									<td class="fontnormalbold">
+										</td>
+									</tr>
+									<tr id="Loan.PurposeOfLoan">
+									<td class="fontnormal">
 											<mifos:mifoslabel name="loan.business_work_act" keyhm="Loan.PurposeOfLoan" isManadatoryIndicationNotRequired="yes"/><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" isColonRequired="yes"/>&nbsp;
 											<span class="fontnormal"> 
 												<mifoscustom:lookUpValue id="${requestScope.loan.businessActivityId}"
@@ -156,21 +153,21 @@
 												</mifoscustom:lookUpValue> 
 											</span> 
 									</td>
-								</tr>
-								<tr id="Loan.CollateralType">
-									<td class="fontnormalbold">
-											<mifos:mifoslabel name="loan.collateral_type" keyhm="Loan.CollateralType" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>&nbsp;
-											<span class="fontnormal"> 
-												<mifoscustom:lookUpValue
-													id="${requestScope.loan.collateralTypeId}"
-													searchResultName="CollateralTypes"
-													mapToSeperateMasterTable="true">
-												</mifoscustom:lookUpValue>
-											</span>
-								</td>
-								</tr>
-								<tr id="Loan.CollateralNotes">
-									<td class="fontnormalbold"><br>
+									</tr>
+									<tr id="Loan.CollateralType">
+										<td class="fontnormal">
+												<mifos:mifoslabel name="loan.collateral_type" keyhm="Loan.CollateralType" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>&nbsp;
+												<span class="fontnormal"> 
+													<mifoscustom:lookUpValue
+														id="${requestScope.loan.collateralTypeId}"
+														searchResultName="CollateralTypes"
+														mapToSeperateMasterTable="true">
+													</mifoscustom:lookUpValue>
+												</span>
+									</td>
+									</tr>
+									<tr id="Loan.CollateralNotes">
+									<td class="fontnormal"><br>
 											<mifos:mifoslabel name="loan.collateral_notes" keyhm="Loan.CollateralNotes" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>&nbsp; 
 											<span class="fontnormal"><br>
 												<c:out value="${requestScope.loan.collateralNote}" /> <br> <br>
@@ -179,7 +176,7 @@
 												</html-el:button> 
 											</span>
 									</td>
-								</tr>
+									</tr>
 							</table>
 							<table width="95%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
