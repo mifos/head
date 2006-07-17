@@ -95,15 +95,21 @@
 							<td bgcolor="#F0D4A5" style="padding-left:10px; padding-bottom:3px;">
 								<span class="fontnormalbold">
 									<mifos:mifoslabel name="loan.apply_trans" />
-								</span>&nbsp;&nbsp;&nbsp;&nbsp;								
-								<c:if test="${param.lastPaymentAction != '10'}">
-								<c:choose>
-									<c:when test="${param.accountStateId=='5' || param.accountStateId=='9'}">
+								</span>&nbsp;&nbsp;&nbsp;&nbsp;	
+								<c:if test="${(param.accountStateId=='5' || param.accountStateId=='9')}">
 									<html-el:link href="applyPaymentAction.do?method=load&input=loan&prdOfferingName=${param.prdOfferingName}&globalAccountNum=${param.globalAccountNum}&accountId=${param.accountId}&accountType=${param.accountTypeId}
 															&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}&accountStateId=${param.accountStateId}">
 										<mifos:mifoslabel name="loan.apply_payment" />
 									</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										<html-el:link href="applyAdjustment.do?method=loadAdjustment&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}"> 
+								</c:if>							
+								<c:if test="${param.lastPaymentAction != '10'}">
+								<c:choose>
+									<c:when test="${param.accountStateId=='5' || param.accountStateId=='9'}">
+								<%--	<html-el:link href="applyPaymentAction.do?method=load&input=loan&prdOfferingName=${param.prdOfferingName}&globalAccountNum=${param.globalAccountNum}&accountId=${param.accountId}&accountType=${param.accountTypeId}
+															&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}&accountStateId=${param.accountStateId}">
+										<mifos:mifoslabel name="loan.apply_payment" />
+									</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								--%>		<html-el:link href="applyAdjustment.do?method=loadAdjustment&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}"> 
 											<mifos:mifoslabel name="loan.apply_adjustment" />
 										</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 									</c:when>
