@@ -140,7 +140,7 @@
                 </td>
               </tr>
               <tr>
-                <td class="fontnormal"><span class="fontnormalbold">
+                <td class="fontnormal"><span class="fontnormal">
 <mifos:mifoslabel name="client.amtdue" bundle="ClientUIResources"/>:
 <c:out value='${requestScope.Context.businessResults["ClientFeeChargeDue"].amountDoubleValue}'/>
                   </span>
@@ -150,7 +150,7 @@
 	              </html-el:link>
 	              </c:if>
 	              <br>
-                          <span class="fontnormalbold">
+                          <span class="fontnormal">
 <mifos:mifoslabel name="client.amtoverdue" bundle="ClientUIResources"/>: 
 <c:out value='${requestScope.Context.businessResults["ClientFeeChargeOverDue"].amountDoubleValue}'/>
 						</span>
