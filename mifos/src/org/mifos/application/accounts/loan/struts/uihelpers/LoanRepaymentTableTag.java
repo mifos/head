@@ -89,7 +89,7 @@ public class LoanRepaymentTableTag extends BodyTagSupport {
 							.append(
 									"<tr><td width=\"25%\" align=\"right\" class=\"drawtablerowbold\">Principal</td>")
 							.append(
-									"<td width=\"25%\" align=\"right\" class=\"drawtablerowbold\">Interest</td>")
+									"<td width=\"25%\" align=\"right\" class=\"drawtablerowbold\">"+MifosConfiguration.getInstance().getLabel(ConfigurationConstants.INTEREST,locale)+"</td>")
 							.append(
 									"<td width=\"25%\" align=\"right\" class=\"drawtablerowbold\">Fees</td>")
 							.append(
