@@ -8,7 +8,6 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanPerformanceHistoryEntity;
-import org.mifos.application.accounts.loan.business.LoanSummaryEntity;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -190,16 +189,13 @@ public class TestCustomerBO extends MifosTestCase {
 	public void testGetDelinquentPortfolioAmount() {
 		createInitialObjects();
 		accountBO = getLoanAccount(client,meeting);
-		LoanSummaryEntity loanSummary = ((LoanBO)accountBO).getLoanSummary();
-		loanSummary.setPrincipalPaid(loanSummary.getPrincipalPaid().add(new Money("100")));
-		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();
 		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
 		setActionDateToPastDate();
 		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();
 		client=(ClientBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
-		assertEquals(new Money("1.0"),client.getDelinquentPortfolioAmount());
+		assertEquals(new Money("0.7"),client.getDelinquentPortfolioAmount());
 		TestObjectFactory.flushandCloseSession();
 		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
 		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
@@ -220,12 +216,12 @@ public class TestCustomerBO extends MifosTestCase {
 		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
 	}
 	
-	public void testTotalLoanAmount() throws PersistenceException {
+	public void testGetActiveLoanCounts() throws PersistenceException {
 		createInitialObjects();
 		accountBO = getLoanAccount(group,meeting);
 		TestObjectFactory.flushandCloseSession();
 		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		assertEquals(new Money("300.0"),group.getTotalLoanAmount());
+		assertEquals(1,group.getActiveLoanCounts().intValue());
 		TestObjectFactory.flushandCloseSession();
 		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
 		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());

@@ -670,7 +670,7 @@ public class LoanBO extends AccountBO {
 		this.buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 		
 		//Client performance entry
-		updateCustomerHistoryOnDisbursement(accountPaymentEntity.getAmount());
+		updateCustomerHistoryOnDisbursement(this.loanAmount);
 		if(getPerformanceHistory()!=null)
 			getPerformanceHistory().setLoanMaturityDate(getLastInstallmentAccountAction().getActionDate());
 		

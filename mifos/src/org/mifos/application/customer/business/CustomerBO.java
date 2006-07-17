@@ -555,31 +555,31 @@ public class CustomerBO extends BusinessObject {
 		for(AccountBO account : getAccounts()){
 			if(account.getAccountType().getAccountTypeId().equals(AccountConstants.LOAN_TYPE)
 					&& ((LoanBO)account).isAccountActive()){
-				LoanBO loan=(LoanBO)account;
-				amount=amount.add(loan.getRemainingPrincipalAmount());
+				amount=amount.add(((LoanBO)account).getRemainingPrincipalAmount());
 			}
 		}
 		return amount;
 	}
 	
-	public Money getTotalLoanAmount(){
-		Money amount=new Money();
+	public Integer getActiveLoanCounts(){
+		Integer countOfActiveLoans=0;
 		for(AccountBO account : getAccounts()){
-			if(account.getAccountType().getAccountTypeId().equals(AccountConstants.LOAN_TYPE)){
-				LoanBO loan=(LoanBO)account;
-				amount=amount.add(loan.getRemainingPrincipalAmount());
+			if(account.getAccountType().getAccountTypeId().equals(AccountConstants.LOAN_TYPE)
+					&& ((LoanBO)account).isAccountActive()){
+				countOfActiveLoans++;
 			}
 		}
-		return amount;
+		return countOfActiveLoans;
 	}
 
 	public Money getDelinquentPortfolioAmount(){
 		Money amountOverDue=new Money();
 		Money totalOutStandingAmount=new Money();
 		for(AccountBO accountBO : getAccounts()){
-			if(accountBO.getAccountType().getAccountTypeId().equals(AccountConstants.LOAN_TYPE)){
+			if(accountBO.getAccountType().getAccountTypeId().equals(AccountConstants.LOAN_TYPE)
+					&& ((LoanBO)accountBO).isAccountActive()){
 				amountOverDue=amountOverDue.add(accountBO.getTotalPrincipalAmountInArrears());
-				totalOutStandingAmount=totalOutStandingAmount.add(((LoanBO)accountBO).getRemainingPrincipalAmount());
+				totalOutStandingAmount=totalOutStandingAmount.add(((LoanBO)accountBO).getLoanSummary().getOriginalPrincipal());
 			}
 		}
 		if(totalOutStandingAmount.getAmountDoubleValue()!=0.0)

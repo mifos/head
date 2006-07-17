@@ -126,8 +126,8 @@ public class TestGroupBO extends MifosTestCase {
 		TestObjectFactory.updateObject(group);
 		TestObjectFactory.flushandCloseSession();
 		group=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
-		assertEquals(new Money("1.0"),((GroupBO)group).getAverageLoanAmount());
-		assertEquals(new Money("1.0"),((GroupBO)group).getPerformanceHistory().getAvgLoanAmountForMember());
+		assertEquals(new Money("300.0"),((GroupBO)group).getAverageLoanAmount());
+		assertEquals(new Money("300.0"),((GroupBO)group).getPerformanceHistory().getAvgLoanAmountForMember());
 		TestObjectFactory.flushandCloseSession();
 		center=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
 		group=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());

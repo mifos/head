@@ -110,18 +110,18 @@ public class GroupBO extends CustomerBO {
 	
 	public Money getAverageLoanAmount() throws PersistenceException, ServiceException{
 		Money amountForActiveAccount=new Money();
-		Money amountForAllAccounts=new Money();
+		Integer countOfActiveLoans=0;
 		List<CustomerBO> clients = getDBService().getAllChildrenForParent(
 				getSearchId(), getOffice().getOfficeId(),
 				CustomerConstants.GROUP_LEVEL_ID);
 		if(clients!=null && !clients.isEmpty()){
 			for(CustomerBO client : clients){
 				amountForActiveAccount=amountForActiveAccount.add(client.getOutstandingLoanAmount());
-				amountForAllAccounts=amountForAllAccounts.add(client.getTotalLoanAmount());
+				countOfActiveLoans+=client.getActiveLoanCounts();
 			}
 		}
-		if(amountForAllAccounts.getAmountDoubleValue()!=0.0)
-			return new Money(String.valueOf(amountForActiveAccount.getAmountDoubleValue()/amountForAllAccounts.getAmountDoubleValue()));
+		if(countOfActiveLoans.intValue()>0)
+			return new Money(String.valueOf(amountForActiveAccount.getAmountDoubleValue()/countOfActiveLoans.intValue()));
 		return new Money();
 	}
 	
