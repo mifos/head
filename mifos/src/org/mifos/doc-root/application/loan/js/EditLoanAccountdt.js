@@ -205,8 +205,8 @@
  			 		document.getElementById("intrestAtDisbursement").disabled=true	;
  			 		document.getElementById("gracePeriodDuration").disabled=true;	
  		}
- 		if(accountState == "5")  {
+ 		/*if(accountState == "5")  {
  			document.getElementById("businessActivityId").disabled=true	;
- 		}
+ 		}*/
  		
  	}			

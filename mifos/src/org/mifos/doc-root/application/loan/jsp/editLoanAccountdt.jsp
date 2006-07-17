@@ -233,7 +233,7 @@
 								<html-el:hidden value="${requestScope.loan.loanAmount}" property="loanAmount"/>
 								<html-el:hidden value="${requestScope.loan.interestRateAmount}" property="interestRateAmount"/>
 								<html-el:hidden value="${requestScope.loan.noOfInstallments}" property="noOfInstallments"/>
-								<html-el:hidden value="${requestScope.loan.businessActivityId}" property="businessActivityId"/>
+								<!-- <html-el:hidden value="${requestScope.loan.businessActivityId}" property="businessActivityId"/> -->
 								<html-el:hidden value="${requestScope.loan.gracePeriodDuration}" property="gracePeriodDuration"/>
 							</c:if>
 						<tr class="fontnormal">
