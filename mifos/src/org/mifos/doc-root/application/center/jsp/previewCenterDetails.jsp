@@ -248,16 +248,15 @@ function goToEditPage(){
 					<mifos:mifoslabel name="${ConfigurationConstants.POSTAL_CODE}" keyhm="Center.PostalCode" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
 					<span class="fontnormal"><c:out value="${requestScope.centerVO.customerAddressDetail.zip}"/> </span>
 					<br>
-                	<br>
-				</td>
+                </td>
 				</tr>
 				
 				<tr id="Center.PhoneNumber">
                 <td class="fontnormal">
-                <span class="fontnormalbold">                
+                <span class="fontnormalbold"><br>                
 					<mifos:mifoslabel name="Center.Telephone" bundle="CenterUIResources" keyhm="Center.PhoneNumber" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> 
 					<span class="fontnormal"><c:out value="${requestScope.centerVO.customerAddressDetail.phoneNumber}"/> </span>					
-					</span>
+					</span><br>
 				</td>
 				</tr>
 				
@@ -265,7 +264,7 @@ function goToEditPage(){
 				<tr>
                 <td class="fontnormal">					
 					<span class="fontnormalbold">
-					<br><br>
+					<br>
 					<mifos:mifoslabel name="Center.AdditionalInformationHeading" bundle="CenterUIResources"></mifos:mifoslabel> 
 					<br>
 					 <c:forEach var="cf" items="${requestScope.customFields}">

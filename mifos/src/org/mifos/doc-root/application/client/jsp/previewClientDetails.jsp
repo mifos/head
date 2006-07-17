@@ -326,9 +326,8 @@
 									<span class="fontnormal"><c:out
 										value="${requestScope.clientVO.customerAddressDetail.zip}" />
 									<br>
-									<br>
 									</span> </td></tr>
-									<tr id="Client.PhoneNumber"><td class="fontnormalbold"><mifos:mifoslabel name="client.Telephone"
+									<tr id="Client.PhoneNumber"><td class="fontnormalbold"><br><mifos:mifoslabel name="client.Telephone"
 										bundle="ClientUIResources" keyhm="Client.PhoneNumber" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <span
 										class="fontnormal"><c:out
 										value="${requestScope.clientVO.customerAddressDetail.phoneNumber}" />
