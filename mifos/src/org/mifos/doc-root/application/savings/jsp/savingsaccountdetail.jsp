@@ -284,7 +284,7 @@
               <tr>
                 <td class="paddingL10">
                 <span class="fontnormal8pt">
-               		<mifos:mifoslabel name="Savings.dateAccountOpened"/>: <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.createdDate)}" />
+               		<mifos:mifoslabel name="Savings.dateAccountOpened"/>: <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.activationDate)}" />
 					 </span></td>
 			  </tr>
               <tr>

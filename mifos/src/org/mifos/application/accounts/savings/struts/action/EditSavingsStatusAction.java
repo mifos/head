@@ -69,6 +69,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
@@ -244,6 +245,8 @@ public class EditSavingsStatusAction extends AccountAppAction {
 		SessionUtils.setAttribute(SavingsConstants.NEW_FLAG_NAME,
 				SessionUtils.getAttribute(SavingsConstants.FLAG_NAME, request
 						.getSession()), request.getSession());
+		HibernateUtil.commitTransaction();
+		HibernateUtil.getSessionTL().evict(savingsBO);
 		return mapping.findForward(MethodNameConstants.UPDATE_SUCCESS);
 	}
 
