@@ -54,6 +54,7 @@ import org.mifos.application.accounts.business.AccountCustomFieldEntity;
 import org.mifos.application.accounts.business.AccountFlagMapping;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
@@ -78,6 +79,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
@@ -119,6 +121,7 @@ public class SavingsAction extends AccountAppAction {
 				|| method.equals("get") || method.equals("editPrevious")
 				|| method.equals("getRecentActivity")
 				|| method.equals("getTransactionHistory")
+				|| method.equals("getStatusHistory")
 				|| method.equals("getDepositDueDetails")
 				|| method.equals("waiveAmountDue")
 				|| method.equals("waiveAmountOverDue")) {
@@ -469,6 +472,22 @@ public class SavingsAction extends AccountAppAction {
 		SessionUtils.setAttribute(SavingsConstants.TRXN_HISTORY_LIST,
 				savingsTransactionHistoryViewList, request.getSession());
 		return mapping.findForward("getTransactionHistory_success");
+	}
+	
+	public ActionForward getStatusHistory(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		logger.debug("In SavingsAction::getRecentActivity()");
+		String globalAccountNum = request.getParameter("globalAccountNum");
+		SavingsBO savings = savingsService.findBySystemId(globalAccountNum);
+		Hibernate.initialize(savings.getAccountStatusChangeHistory());
+		savings.setUserContext((UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession()));
+		List<AccountStatusChangeHistoryEntity> savingsStatusHistoryViewList = new ArrayList<AccountStatusChangeHistoryEntity>(savings.getAccountStatusChangeHistory());
+		SessionUtils.setAttribute(SavingsConstants.STATUS_CHANGE_HISTORY_LIST,
+				savingsStatusHistoryViewList, request.getSession());
+		
+		return mapping.findForward("getStatusHistory_success");
 	}
 
 	public ActionForward validate(ActionMapping mapping, ActionForm form,

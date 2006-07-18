@@ -242,6 +242,7 @@
        		<forward name="getTransactionHistory_success" path="/pages/application/savings/jsp/viewsavingstrxnhistory.jsp" />       		       		       		       		       		
        		<forward name="depositduedetails_success" path="/pages/application/savings/jsp/savingsaccountdepositduedetails.jsp" />
        		<forward name="waiveAmount_success" path="/savingsAction.do?method=getDepositDueDetails" />
+       		<forward name="getStatusHistory_success" path="/pages/application/savings/jsp/viewstatuschangehistory.jsp" />
  		</action>
  		<!-- Edit savings status action start -->
 		<action path="/editSavingsAction" type="org.mifos.application.accounts.savings.struts.action.EditSavingsStatusAction" 

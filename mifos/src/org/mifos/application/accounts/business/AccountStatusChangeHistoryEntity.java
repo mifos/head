@@ -38,21 +38,27 @@
 package org.mifos.application.accounts.business;
 
 import java.util.Date;
+import java.util.Locale;
 
+import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.struts.tags.DateHelper;
 
 public class AccountStatusChangeHistoryEntity extends PersistentObject{
 	private Integer accountStatusChangeId;
 	private AccountBO account;
 	private AccountStateEntity oldStatus;
 	private AccountStateEntity newStatus;
+	private PersonnelBO personnel;
+	private Locale locale=null;
 	
 	public AccountStatusChangeHistoryEntity(){}
 
-	public AccountStatusChangeHistoryEntity(AccountStateEntity oldStatus,AccountStateEntity newStatus,Short personnelId){
+	public AccountStatusChangeHistoryEntity(AccountStateEntity oldStatus,AccountStateEntity newStatus,PersonnelBO personnel){
 		this.setOldStatus(oldStatus);
 		this.setNewStatus(newStatus);
-		this.setCreatedBy(personnelId);
+		//this.setCreatedBy(personnelId);
+		this.setPersonnel(personnel);
 		this.setCreatedDate(new Date(System.currentTimeMillis()));
 	}
 	public AccountBO getAccount() {
@@ -86,6 +92,37 @@ public class AccountStatusChangeHistoryEntity extends PersistentObject{
 	public void setOldStatus(AccountStateEntity oldStatus) {
 		this.oldStatus = oldStatus;
 	}
+
+	public PersonnelBO getPersonnel() {
+		return personnel;
+	}
+
+	public void setPersonnel(PersonnelBO personnel) {
+		this.personnel = personnel;
+	}
 	
+	public String getPersonnelName(){
+		return personnel.getDisplayName();
+	}
+	
+	public String getOldStatusName(){
+			return oldStatus.getName(account.getUserContext().getLocaleId());
+	}
+	
+	public String getNewStatusName(){
+		return newStatus.getName(account.getUserContext().getLocaleId());
+	}
+	
+	public Locale getLocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		this.locale = locale;
+	}
+
+	public String getUserPrefferedTransactionDate() {
+		return DateHelper.getUserLocaleDate(getLocale(),getCreatedDate().toString());
+	}
 	
 }

@@ -95,4 +95,5 @@ public class SavingsConstants {
 	public static final String CREATE_FAILED="errors.createfailed";
 	public static final String UPDATE_FAILED="errors.updatefailed";
 	public static final String INVALID_INTEREST_AMOUNT="errors.invalidInterestAmount";
+	public static final String STATUS_CHANGE_HISTORY_LIST = "statusChangeHistoryList";
 }

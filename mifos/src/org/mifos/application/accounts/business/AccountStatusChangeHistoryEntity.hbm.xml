@@ -23,7 +23,10 @@
 	<many-to-one name="newStatus" column="NEW_STATUS"
 			class="org.mifos.application.accounts.business.AccountStateEntity"
 			cascade="none" update="false" insert="true" unique="true" />
-	<property name="createdBy" column="CHANGED_BY"/>
+	<many-to-one name="personnel" column="CHANGED_BY"
+			class="org.mifos.application.personnel.business.PersonnelBO"
+			cascade="none" update="false" insert="true" unique="true" />
+	<!-- <property name="createdBy" column="CHANGED_BY"/>-->
 
     </class>
  	<query name="accounts.getLastLoanAmount">

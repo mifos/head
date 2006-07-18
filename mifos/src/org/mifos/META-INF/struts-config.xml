@@ -751,6 +751,8 @@
 			<forward name="update_failure" path="/pages/application/savings/jsp/previewsavingsaccount.jsp" />
 			<forward name="depositduedetails_success" path="/pages/application/savings/jsp/savingsaccountdepositduedetails.jsp" />
 			<forward name="waiveAmount_success" path="/savingsAction.do?method=getDepositDueDetails" />
+			<forward name="getStatusHistory_success" path="/pages/application/savings/jsp/viewstatuschangehistory.jsp" />
+			
 		</action>
 		<!-- Savings Accounts action end -->
 		<!-- Edit savings status action start -->

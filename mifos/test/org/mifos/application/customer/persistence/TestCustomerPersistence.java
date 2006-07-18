@@ -345,7 +345,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		HibernateUtil.closeSession();
 		account=(AccountBO)HibernateUtil.getSessionTL().get(LoanBO.class,loanBO.getAccountId());		
 		AccountStateEntity accountStateEntity = new AccountStateEntity(Short.valueOf("6"));		
-		AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity = new AccountStatusChangeHistoryEntity(account.getAccountState(),accountStateEntity,Short.valueOf("1"));
+		AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity = new AccountStatusChangeHistoryEntity(account.getAccountState(),accountStateEntity,center.getPersonnel());
 		account.addAccountStatusChangeHistory(accountStatusChangeHistoryEntity);
 		account.setAccountState(accountStateEntity);				
 		TestObjectFactory.updateObject(account);			

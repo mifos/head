@@ -133,6 +133,8 @@ public class SavingsTestHelper {
 		AccountNotesEntity notes = new AccountNotesEntity();
 		notes.setAccount(savingsBO);
 		notes.setComment("xxxxxxxxxxxx");
+		notes.setCommentDate(new java.sql.Date(System.currentTimeMillis()));
+		notes.setPersonnel(savingsBO.getPersonnel());
 		return notes;
 	}
 	public AccountActionDateEntity createAccountActionDate(short installmentId,Date dueDate,Date paymentDate,CustomerBO customer, Money deposit, Money depositPaid, Short paymentStatus){

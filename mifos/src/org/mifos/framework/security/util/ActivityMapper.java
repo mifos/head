@@ -620,6 +620,7 @@ public class ActivityMapper {
 		activityMap.put("/savingsAction-previous", SecurityConstants.VIEW);
 		activityMap.put("/savingsAction-create", SecurityConstants.VIEW);
 		activityMap.put("/savingsAction-get", SecurityConstants.VIEW);
+		activityMap.put("/savingsAction-getStatusHistory", SecurityConstants.VIEW);
 		activityMap.put("/savingsAction-edit",
 				SecurityConstants.SAVINGS_UPDATE_SAVINGS);
 		activityMap.put("/savingsAction-editPreview",

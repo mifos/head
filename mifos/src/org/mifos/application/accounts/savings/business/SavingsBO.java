@@ -584,8 +584,7 @@ public class SavingsBO extends AccountBO {
 		this.setClosedDate(new Date(System.currentTimeMillis()));
 		this
 				.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
-						accountState, this.getAccountState(), loggedInUser
-								.getPersonnelId()));
+						accountState, this.getAccountState(), loggedInUser));
 		this.update();
 		logger
 				.debug("In SavingsBO::close(), account closed successfully ; accountId: "
@@ -1021,8 +1020,8 @@ public class SavingsBO extends AccountBO {
 			this.setClosedDate(new Date(System.currentTimeMillis()));
 		this
 				.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
-						accountState, this.getAccountState(), userContext
-								.getId()));
+						accountState, this.getAccountState(), getPersonnelDBService().getPersonnel(userContext
+								.getId())));
 	}
 
 	public void adjustLastUserAction(Money amountAdjustedTo,String adjustmentComment) throws ApplicationException,SystemException {

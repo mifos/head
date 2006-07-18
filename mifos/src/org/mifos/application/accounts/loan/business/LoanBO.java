@@ -182,7 +182,7 @@ public class LoanBO extends AccountBO {
 	private String stateSelected;
 
 	private LoanOfferingBO loanOffering;
-	
+
 	private LoanPerformanceHistoryEntity performanceHistory;
 
 	public Set<LoanActivityEntity> loanActivityDetails;
@@ -377,7 +377,7 @@ public class LoanBO extends AccountBO {
 
 	public void setPerformanceHistory(
 			LoanPerformanceHistoryEntity performanceHistory) {
-		if(performanceHistory != null)
+		if (performanceHistory != null)
 			performanceHistory.setLoan(this);
 		this.performanceHistory = performanceHistory;
 	}
@@ -420,10 +420,12 @@ public class LoanBO extends AccountBO {
 				this
 						.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
 								accountState, this.getAccountState(),
-								paymentData.getPersonnelId()));
-				
-				//Client performance entry
-				updateCustomerHistoryOnLastInstlPayment(paymentData.getTotalAmount());
+								getPersonnelDBService().getPersonnel(
+										paymentData.getPersonnelId())));
+
+				// Client performance entry
+				updateCustomerHistoryOnLastInstlPayment(paymentData
+						.getTotalAmount());
 			}
 			if (getAccountState().getId().shortValue() == AccountStates.LOANACC_BADSTANDING) {
 				AccountStateEntity accountState = this.getAccountState();
@@ -432,9 +434,10 @@ public class LoanBO extends AccountBO {
 				this
 						.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
 								accountState, this.getAccountState(),
-								paymentData.getPersonnelId()));
-				
-				//Client performance entry
+								getPersonnelDBService().getPersonnel(
+										paymentData.getPersonnelId())));
+
+				// Client performance entry
 				updateCustomerHistoryOnPayment();
 			}
 			LoanPaymentData loanPaymentData = (LoanPaymentData) accountPaymentData;
@@ -455,9 +458,10 @@ public class LoanBO extends AccountBO {
 							.getPenaltyPaid().add(
 									loanPaymentData.getMiscPenaltyPaid()),
 					totalFees.add(loanPaymentData.getMiscFeePaid()));
-			
-			if(getPerformanceHistory()!=null)
-				getPerformanceHistory().setNoOfPayments(getPerformanceHistory().getNoOfPayments()+1);
+
+			if (getPerformanceHistory() != null)
+				getPerformanceHistory().setNoOfPayments(
+						getPerformanceHistory().getNoOfPayments() + 1);
 
 		}
 		addLoanActivity(buildLoanActivity(accountPayment.getAccountTrxns(),
@@ -531,38 +535,46 @@ public class LoanBO extends AccountBO {
 		return totalOverDueAmounts;
 	}
 
-	public void updateTotalFeeAmount(Money totalFeeAmount) {		
+	public void updateTotalFeeAmount(Money totalFeeAmount) {
 		LoanSummaryEntity loanSummaryEntity = this.getLoanSummary();
 		loanSummaryEntity.setOriginalFees(loanSummaryEntity.getOriginalFees()
 				.subtract(totalFeeAmount));
 	}
-	
-	public void roundInstallments(List<Short> installmentIdList){
-		if(!getLoanOffering().isPrincipalDueInLastInstallment()){
-			AccountActionDateEntity lastAccountActionDate =getLastInstallmentAccountAction();
-			Money diffAmount=new Money();
-			int count=0;
-			for(AccountActionDateEntity accountActionDate : getAccountActionDates()){
-				if(installmentIdList.contains(accountActionDate.getInstallmentId())){
-					if(isInterestDeductedAtDisbursement() && accountActionDate.getInstallmentId().equals(Short.valueOf("1")))
+
+	public void roundInstallments(List<Short> installmentIdList) {
+		if (!getLoanOffering().isPrincipalDueInLastInstallment()) {
+			AccountActionDateEntity lastAccountActionDate = getLastInstallmentAccountAction();
+			Money diffAmount = new Money();
+			int count = 0;
+			for (AccountActionDateEntity accountActionDate : getAccountActionDates()) {
+				if (installmentIdList.contains(accountActionDate
+						.getInstallmentId())) {
+					if (isInterestDeductedAtDisbursement()
+							&& accountActionDate.getInstallmentId().equals(
+									Short.valueOf("1")))
 						continue;
 					count++;
-					if(count==installmentIdList.size()){
+					if (count == installmentIdList.size()) {
 						break;
 					}
-					Money totalAmount=accountActionDate.getTotalDue();
-					Money roundedTotalAmount=Money.round(totalAmount);
-					accountActionDate.setPrincipal(accountActionDate.getPrincipal().subtract(totalAmount.subtract(roundedTotalAmount)));
-					diffAmount=diffAmount.add(totalAmount.subtract(roundedTotalAmount));
+					Money totalAmount = accountActionDate.getTotalDue();
+					Money roundedTotalAmount = Money.round(totalAmount);
+					accountActionDate.setPrincipal(accountActionDate
+							.getPrincipal().subtract(
+									totalAmount.subtract(roundedTotalAmount)));
+					diffAmount = diffAmount.add(totalAmount
+							.subtract(roundedTotalAmount));
 				}
 			}
-			lastAccountActionDate.setPrincipal(lastAccountActionDate.getPrincipal().add(diffAmount));
+			lastAccountActionDate.setPrincipal(lastAccountActionDate
+					.getPrincipal().add(diffAmount));
 		}
 	}
-	
+
 	public void updateTotalPenaltyAmount(Money totalPenaltyAmount) {
 		LoanSummaryEntity loanSummaryEntity = this.getLoanSummary();
-		loanSummaryEntity.setOriginalPenalty(loanSummaryEntity.getOriginalPenalty().subtract(totalPenaltyAmount));
+		loanSummaryEntity.setOriginalPenalty(loanSummaryEntity
+				.getOriginalPenalty().subtract(totalPenaltyAmount));
 	}
 
 	public boolean isAdjustPossibleOnLastTrxn() {
@@ -634,13 +646,14 @@ public class LoanBO extends AccountBO {
 					}
 				}
 			}
-			addLoanActivity(buildLoanActivity(reversedTrxns, getUserContext().getId(), "Loan Adjusted"));
+			addLoanActivity(buildLoanActivity(reversedTrxns, getUserContext()
+					.getId(), "Loan Adjusted"));
 		}
 	}
 
 	public void disburseLoan(String recieptNum, Date transactionDate,
-			Short paymentTypeId, Short personnelId, Date receiptDate,Short rcvdPaymentTypeId)
-			throws AccountException, SystemException,
+			Short paymentTypeId, Short personnelId, Date receiptDate,
+			Short rcvdPaymentTypeId) throws AccountException, SystemException,
 			RepaymentScheduleException, FinancialException {
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity();
 
@@ -656,7 +669,8 @@ public class LoanBO extends AccountBO {
 		// update status change history also
 		this
 				.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
-						this.getAccountState(), newState, personnelId));
+						this.getAccountState(), newState, getPersonnelDBService().getPersonnel(
+								personnelId)));
 		this.setAccountState(newState);
 
 		// create trxn entry for disbursal
@@ -673,7 +687,8 @@ public class LoanBO extends AccountBO {
 		if (null != this.intrestAtDisbursement
 				&& this.intrestAtDisbursement == 1) {
 			accountPaymentEntity = payInterestAtDisbursement(recieptNum,
-					transactionDate, rcvdPaymentTypeId, personnelId, receiptDate);
+					transactionDate, rcvdPaymentTypeId, personnelId,
+					receiptDate);
 		} else {
 			if (loanPersistance.getFeeAmountAtDisbursement(this.getAccountId(),
 					transactionDate) > 0.0)
@@ -691,12 +706,13 @@ public class LoanBO extends AccountBO {
 		accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
 		this.addAccountPayment(accountPaymentEntity);
 		this.buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
-		
-		//Client performance entry
+
+		// Client performance entry
 		updateCustomerHistoryOnDisbursement(this.loanAmount);
-		if(getPerformanceHistory()!=null)
-			getPerformanceHistory().setLoanMaturityDate(getLastInstallmentAccountAction().getActionDate());
-		
+		if (getPerformanceHistory() != null)
+			getPerformanceHistory().setLoanMaturityDate(
+					getLastInstallmentAccountAction().getActionDate());
+
 		new AccountPersistanceService().update(this);
 
 	}
@@ -937,10 +953,11 @@ public class LoanBO extends AccountBO {
 		}
 		return paymentData;
 	}
-	protected Money getDueAmount(AccountActionDateEntity installment){
+
+	protected Money getDueAmount(AccountActionDateEntity installment) {
 		return installment.getTotalDueWithFees();
 	}
-		
+
 	public Money getTotalEarlyRepayAmount() {
 		Money amount = new Money();
 		List<AccountActionDateEntity> dueInstallmentsList = getApplicableIdsForDueInstallments();
@@ -1019,8 +1036,9 @@ public class LoanBO extends AccountBO {
 			// loanTrxnDetailEntity.setRunningBalance(loanSummary);
 		}
 		try {
-			if(getPerformanceHistory()!=null)
-				getPerformanceHistory().setNoOfPayments(getPerformanceHistory().getNoOfPayments()+1);
+			if (getPerformanceHistory() != null)
+				getPerformanceHistory().setNoOfPayments(
+						getPerformanceHistory().getNoOfPayments() + 1);
 			addLoanActivity(buildLoanActivity(accountPaymentEntity
 					.getAccountTrxns(), personnelId, "Loan Repayment"));
 			buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
@@ -1036,13 +1054,14 @@ public class LoanBO extends AccountBO {
 						AccountStates.LOANACC_OBLIGATIONSMET);
 		this
 				.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
-						this.getAccountState(), newAccountState, personnelId));
+						this.getAccountState(), newAccountState, getPersonnelDBService().getPersonnel(
+								personnelId)));
 		this.setAccountState((AccountStateEntity) masterPersistenceService
 				.findById(AccountStateEntity.class,
 						AccountStates.LOANACC_OBLIGATIONSMET));
 		this.setClosedDate(new Date(System.currentTimeMillis()));
-		
-		//Client performance entry
+
+		// Client performance entry
 		updateCustomerHistoryOnRepayment(totalAmount);
 
 		loanPersistance.createOrUpdate(this);
@@ -1220,8 +1239,7 @@ public class LoanBO extends AccountBO {
 				.findById(AccountStateEntity.class,
 						AccountStates.LOANACC_BADSTANDING);
 		AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(
-				this.getAccountState(), stateEntity, this.getPersonnel()
-						.getPersonnelId());
+				this.getAccountState(), stateEntity, this.getPersonnel());
 		this.addAccountStatusChangeHistory(historyEntity);
 		this.setAccountState(stateEntity);
 		String systemDate = DateHelper.getCurrentDate(Configuration
@@ -1229,10 +1247,10 @@ public class LoanBO extends AccountBO {
 		Date currrentDate = DateHelper.getLocaleDate(Configuration
 				.getInstance().getSystemConfig().getMFILocale(), systemDate);
 		this.setUpdatedDate(currrentDate);
-		
-		//Client performance entry
+
+		// Client performance entry
 		updateCustomerHistoryOnArrears();
-		
+
 		loanPersistance.createOrUpdate(this);
 	}
 
@@ -1296,10 +1314,10 @@ public class LoanBO extends AccountBO {
 				.getAccountTrxns(), personnelId, "Loan Written Off"));
 		buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 		changeStatus(statusId, null, comment);
-		
-		//Client performance entry
+
+		// Client performance entry
 		updateCustomerHistoryOnWriteOff();
-		
+
 		getAccountPersistenceService().update(this);
 	}
 
@@ -1337,8 +1355,7 @@ public class LoanBO extends AccountBO {
 					.findById(AccountStateFlagEntity.class, flagId);
 		}
 		AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(
-				this.getAccountState(), accountStateEntity, this.getPersonnel()
-						.getPersonnelId());
+				this.getAccountState(), accountStateEntity, this.getPersonnel());
 		AccountNotesEntity accountNotesEntity = createAccountNotes(comment);
 		this.addAccountStatusChangeHistory(historyEntity);
 		this.setAccountState(accountStateEntity);
@@ -1386,89 +1403,97 @@ public class LoanBO extends AccountBO {
 		}
 		return amount;
 	}
-	
+
 	@Override
-	public void waiveAmountDue(WaiveEnum waiveType) throws ServiceException {				
-		if(waiveType.equals(WaiveEnum.FEES)){					
+	public void waiveAmountDue(WaiveEnum waiveType) throws ServiceException {
+		if (waiveType.equals(WaiveEnum.FEES)) {
 			waiveFeeAmountDue();
-		}
-		else if(waiveType.equals(WaiveEnum.PENALTY)){			
+		} else if (waiveType.equals(WaiveEnum.PENALTY)) {
 			waivePenaltyAmountDue();
-		}		
+		}
 	}
 
 	@Override
-	public void waiveAmountOverDue(WaiveEnum waiveType) throws ServiceException {		
-		if(waiveType.equals(WaiveEnum.FEES)){
+	public void waiveAmountOverDue(WaiveEnum waiveType) throws ServiceException {
+		if (waiveType.equals(WaiveEnum.FEES)) {
 			waiveFeeAmountOverDue();
-		}
-		else if(waiveType.equals(WaiveEnum.PENALTY)){
+		} else if (waiveType.equals(WaiveEnum.PENALTY)) {
 			waivePenaltyAmountOverDue();
-		}			
+		}
 	}
-	
-	public void waiveFeeAmountDue() throws ServiceException{
+
+	public void waiveFeeAmountDue() throws ServiceException {
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
 		AccountActionDateEntity accountActionDateEntity = accountActionDateList
 				.get(accountActionDateList.size() - 1);
 		Money chargeWaived = accountActionDateEntity.waiveFeeCharges();
 		if (chargeWaived != null && chargeWaived.getAmountDoubleValue() > 0.0) {
-			updateAccountActivity(chargeWaived, userContext.getId(), "Amnt "+chargeWaived+" waived" );
-			updateTotalFeeAmount(chargeWaived);			
-		}		
+			updateAccountActivity(chargeWaived, userContext.getId(), "Amnt "
+					+ chargeWaived + " waived");
+			updateTotalFeeAmount(chargeWaived);
+		}
 		getAccountPersistenceService().update(this);
 	}
-	
-	public void waivePenaltyAmountDue() throws ServiceException{
+
+	public void waivePenaltyAmountDue() throws ServiceException {
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
 		AccountActionDateEntity accountActionDateEntity = accountActionDateList
 				.get(accountActionDateList.size() - 1);
 		Money chargeWaived = accountActionDateEntity.waivePenaltyCharges();
 		if (chargeWaived != null && chargeWaived.getAmountDoubleValue() > 0.0) {
-			updateAccountActivity(chargeWaived, userContext.getId(), "Amnt "+chargeWaived+" waived" );			
+			updateAccountActivity(chargeWaived, userContext.getId(), "Amnt "
+					+ chargeWaived + " waived");
 			updateTotalPenaltyAmount(chargeWaived);
 		}
 		getAccountPersistenceService().update(this);
 	}
-	
-	public void waiveFeeAmountOverDue() throws ServiceException{
+
+	public void waiveFeeAmountOverDue() throws ServiceException {
 		Money chargeWaived = new Money();
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
 		accountActionDateList.remove(accountActionDateList.size() - 1);
 		for (AccountActionDateEntity accountActionDateEntity : accountActionDateList) {
-			chargeWaived = chargeWaived.add(accountActionDateEntity.waiveFeeCharges());
+			chargeWaived = chargeWaived.add(accountActionDateEntity
+					.waiveFeeCharges());
 		}
 		if (chargeWaived != null && chargeWaived.getAmountDoubleValue() > 0.0) {
-			updateAccountActivity(chargeWaived, userContext.getId(), "Amnt "+chargeWaived+" waived" );
-			updateTotalFeeAmount(chargeWaived);	
+			updateAccountActivity(chargeWaived, userContext.getId(), "Amnt "
+					+ chargeWaived + " waived");
+			updateTotalFeeAmount(chargeWaived);
 		}
 		getAccountPersistenceService().update(this);
 	}
-	public void waivePenaltyAmountOverDue() throws ServiceException{
+
+	public void waivePenaltyAmountOverDue() throws ServiceException {
 		Money chargeWaived = new Money();
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
 		accountActionDateList.remove(accountActionDateList.size() - 1);
 		for (AccountActionDateEntity accountActionDateEntity : accountActionDateList) {
-			chargeWaived = chargeWaived.add(accountActionDateEntity.waivePenaltyCharges());
+			chargeWaived = chargeWaived.add(accountActionDateEntity
+					.waivePenaltyCharges());
 		}
 		if (chargeWaived != null && chargeWaived.getAmountDoubleValue() > 0.0) {
-			updateAccountActivity(chargeWaived, userContext.getId(), "Amnt "+chargeWaived+" waived" );	
+			updateAccountActivity(chargeWaived, userContext.getId(), "Amnt "
+					+ chargeWaived + " waived");
 			updateTotalPenaltyAmount(chargeWaived);
 		}
 		getAccountPersistenceService().update(this);
 	}
-	
-	
+
 	@Override
-	protected void regenerateFutureInstallments(Short nextIntallmentId) throws PersistenceException, SchedulerException {
+	protected void regenerateFutureInstallments(Short nextIntallmentId)
+			throws PersistenceException, SchedulerException {
 		if (!this.getAccountState().getId().equals(
 				AccountStates.LOANACC_OBLIGATIONSMET)
 				&& !this.getAccountState().getId().equals(
 						AccountStates.LOANACC_WRITTENOFF)
 				&& !this.getAccountState().getId().equals(
 						AccountStates.LOANACC_CANCEL)) {
-			SchedulerIntf scheduler = SchedulerHelper.getScheduler(getCustomer().getCustomerMeeting().getMeeting());
-			List<Date> meetingDates= scheduler.getAllDates(getApplicableIdsForFutureInstallments().size()+1);
+			SchedulerIntf scheduler = SchedulerHelper
+					.getScheduler(getCustomer().getCustomerMeeting()
+							.getMeeting());
+			List<Date> meetingDates = scheduler
+					.getAllDates(getApplicableIdsForFutureInstallments().size() + 1);
 			meetingDates.remove(0);
 			int count = 0;
 			List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForFutureInstallments();
@@ -1478,26 +1503,26 @@ public class LoanBO extends AccountBO {
 			}
 		}
 	}
-	
-	public Money getAmountTobePaidAtdisburtail(Date disbursalDate){
-		
-		if ( this.intrestAtDisbursement !=null && this.intrestAtDisbursement.intValue()==1){
-			return       getDueAmount( getAccountActionDate(Short.valueOf("1")));
+
+	public Money getAmountTobePaidAtdisburtail(Date disbursalDate) {
+
+		if (this.intrestAtDisbursement != null
+				&& this.intrestAtDisbursement.intValue() == 1) {
+			return getDueAmount(getAccountActionDate(Short.valueOf("1")));
+		} else {
+			return new Money(loanPersistance.getFeeAmountAtDisbursement(
+					this.getAccountId(), disbursalDate).toString());
 		}
-		else
-		{
-			return  new Money(loanPersistance.getFeeAmountAtDisbursement(this.getAccountId(),disbursalDate).toString());
-		}
-		
+
 	}
-	
-	public Boolean hasPortfolioAtRisk(){
+
+	public Boolean hasPortfolioAtRisk() {
 		List<AccountActionDateEntity> accountActionDateList = getDetailsOfInstallmentsInArrears();
-		for (AccountActionDateEntity accountActionDateEntity : accountActionDateList ) {
+		for (AccountActionDateEntity accountActionDateEntity : accountActionDateList) {
 			Calendar actionDate = new GregorianCalendar();
 			actionDate.setTime(accountActionDateEntity.getActionDate());
-			long diffInTermsOfDay = (Calendar.getInstance()
-					.getTimeInMillis() - actionDate.getTimeInMillis())
+			long diffInTermsOfDay = (Calendar.getInstance().getTimeInMillis() - actionDate
+					.getTimeInMillis())
 					/ (24 * 60 * 60 * 1000);
 			if (diffInTermsOfDay > 30) {
 				return true;
@@ -1505,121 +1530,168 @@ public class LoanBO extends AccountBO {
 		}
 		return false;
 	}
-	
-	
-	public Money getRemainingPrincipalAmount(){
-		return loanSummary.getOriginalPrincipal().subtract(loanSummary.getPrincipalPaid());
+
+	public Money getRemainingPrincipalAmount() {
+		return loanSummary.getOriginalPrincipal().subtract(
+				loanSummary.getPrincipalPaid());
 	}
-	
-	public Integer getDaysInArrears(){
-		if(!getDetailsOfInstallmentsInArrears().isEmpty()){
-			AccountActionDateEntity accountActionDateEntity=getDetailsOfInstallmentsInArrears().get(getDetailsOfInstallmentsInArrears().size()-1);
+
+	public Integer getDaysInArrears() {
+		if (!getDetailsOfInstallmentsInArrears().isEmpty()) {
+			AccountActionDateEntity accountActionDateEntity = getDetailsOfInstallmentsInArrears()
+					.get(getDetailsOfInstallmentsInArrears().size() - 1);
 			Calendar actionDate = new GregorianCalendar();
 			actionDate.setTime(accountActionDateEntity.getActionDate());
-			long diffInTermsOfDay = (Calendar.getInstance()
-					.getTimeInMillis() - actionDate.getTimeInMillis())
+			long diffInTermsOfDay = (Calendar.getInstance().getTimeInMillis() - actionDate
+					.getTimeInMillis())
 					/ (24 * 60 * 60 * 1000);
 			return Integer.valueOf(new Long(diffInTermsOfDay).toString());
 		}
 		return 0;
 	}
-	
-	public Boolean isAccountActive(){
+
+	public Boolean isAccountActive() {
 		return (getAccountState().getId().equals(
 				AccountStates.LOANACC_ACTIVEINGOODSTANDING) || getAccountState()
-				.getId().equals(AccountStates.LOANACC_BADSTANDING)) ? true : false;
+				.getId().equals(AccountStates.LOANACC_BADSTANDING)) ? true
+				: false;
 	}
-	
-	public Integer getMissedPaymentCount(){
-		int noOfMissedPayments=0;
+
+	public Integer getMissedPaymentCount() {
+		int noOfMissedPayments = 0;
 		List<AccountActionDateEntity> accountActionDateList = getDetailsOfInstallmentsInArrears();
-		if(!accountActionDateList.isEmpty())
-			noOfMissedPayments=+accountActionDateList.size();
-		noOfMissedPayments=noOfMissedPayments+getNoOfBackDatedPayments();
+		if (!accountActionDateList.isEmpty())
+			noOfMissedPayments = +accountActionDateList.size();
+		noOfMissedPayments = noOfMissedPayments + getNoOfBackDatedPayments();
 		return noOfMissedPayments;
 	}
-	
-	private Integer getNoOfBackDatedPayments(){
-		int noOfMissedPayments=0;
+
+	private Integer getNoOfBackDatedPayments() {
+		int noOfMissedPayments = 0;
 		Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
-		for(AccountPaymentEntity accountPaymentEntity : getAccountPayments()){
-			Set<AccountTrxnEntity> accountTrxnEntityList = accountPaymentEntity.getAccountTrxns();
-				for(AccountTrxnEntity accountTrxnEntity : accountTrxnEntityList){
-					if (accountTrxnEntity.getAccountActionEntity().getId()
-										.equals(AccountConstants.ACTION_LOAN_REPAYMENT)
-							&& DateUtils.getDateWithoutTimeStamp(
-												accountTrxnEntity.getActionDate().getTime())
-										.compareTo(DateUtils.getDateWithoutTimeStamp(
-												accountTrxnEntity.getDueDate().getTime())) > 0) {
-							noOfMissedPayments++;
-					}
-					if (accountTrxnEntity.getAccountActionEntity().getId()
-							.equals(AccountConstants.ACTION_LOAN_ADJUSTMENT)
-							&& DateUtils.getDateWithoutTimeStamp(
-									accountTrxnEntity.getRelatedTrxn().getActionDate().getTime())
-							.compareTo(DateUtils.getDateWithoutTimeStamp(
-									accountTrxnEntity.getRelatedTrxn().getDueDate().getTime())) > 0){
-							noOfMissedPayments--;
-					}
+		for (AccountPaymentEntity accountPaymentEntity : getAccountPayments()) {
+			Set<AccountTrxnEntity> accountTrxnEntityList = accountPaymentEntity
+					.getAccountTrxns();
+			for (AccountTrxnEntity accountTrxnEntity : accountTrxnEntityList) {
+				if (accountTrxnEntity.getAccountActionEntity().getId().equals(
+						AccountConstants.ACTION_LOAN_REPAYMENT)
+						&& DateUtils
+								.getDateWithoutTimeStamp(
+										accountTrxnEntity.getActionDate()
+												.getTime())
+								.compareTo(
+										DateUtils
+												.getDateWithoutTimeStamp(accountTrxnEntity
+														.getDueDate().getTime())) > 0) {
+					noOfMissedPayments++;
+				}
+				if (accountTrxnEntity.getAccountActionEntity().getId().equals(
+						AccountConstants.ACTION_LOAN_ADJUSTMENT)
+						&& DateUtils
+								.getDateWithoutTimeStamp(
+										accountTrxnEntity.getRelatedTrxn()
+												.getActionDate().getTime())
+								.compareTo(
+										DateUtils
+												.getDateWithoutTimeStamp(accountTrxnEntity
+														.getRelatedTrxn()
+														.getDueDate().getTime())) > 0) {
+					noOfMissedPayments--;
 				}
 			}
+		}
 		return noOfMissedPayments;
 	}
-	
+
 	private void updateCustomerHistoryOnLastInstlPayment(Money totalAmount) {
-		if(getCustomer().getCustomerLevel().getLevelId().equals(Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID)) && getCustomer().getCustomerPerformanceHistory() != null) {
-			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity)getCustomer().getCustomerPerformanceHistory();
+		if (getCustomer().getCustomerLevel().getLevelId().equals(
+				Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))
+				&& getCustomer().getCustomerPerformanceHistory() != null) {
+			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
+					.getCustomerPerformanceHistory();
 			clientPerfHistory.setLastLoanAmount(totalAmount);
-			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory.getNoOfActiveLoans()-1);
+			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory
+					.getNoOfActiveLoans() - 1);
 		}
 	}
-	
+
 	private void updateCustomerHistoryOnPayment() {
-		if(getCustomer().getCustomerLevel().getLevelId().equals(Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID)) && getCustomer().getCustomerPerformanceHistory() != null) {
-			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity)getCustomer().getCustomerPerformanceHistory();
-			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory.getNoOfActiveLoans()-1);
+		if (getCustomer().getCustomerLevel().getLevelId().equals(
+				Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))
+				&& getCustomer().getCustomerPerformanceHistory() != null) {
+			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
+					.getCustomerPerformanceHistory();
+			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory
+					.getNoOfActiveLoans() - 1);
 		}
 	}
-	
+
 	private void updateCustomerHistoryOnDisbursement(Money disburseAmount) {
-		if(getCustomer().getCustomerLevel().getLevelId().equals(Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID)) && getCustomer().getCustomerPerformanceHistory() != null) {
-			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity)getCustomer().getCustomerPerformanceHistory();
-			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory.getNoOfActiveLoans()+1);
-		}else if (getCustomer().getCustomerLevel().getLevelId().equals(
+		if (getCustomer().getCustomerLevel().getLevelId().equals(
+				Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))
+				&& getCustomer().getCustomerPerformanceHistory() != null) {
+			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
+					.getCustomerPerformanceHistory();
+			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory
+					.getNoOfActiveLoans() + 1);
+		} else if (getCustomer().getCustomerLevel().getLevelId().equals(
 				Short.valueOf(CustomerConstants.GROUP_LEVEL_ID))
 				&& getCustomer().getCustomerPerformanceHistory() != null) {
-				GroupPerformanceHistoryEntity groupPerformanceHistoryEntity=(GroupPerformanceHistoryEntity)getCustomer().getCustomerPerformanceHistory();
-				groupPerformanceHistoryEntity.setLastGroupLoanAmount(disburseAmount);
+			GroupPerformanceHistoryEntity groupPerformanceHistoryEntity = (GroupPerformanceHistoryEntity) getCustomer()
+					.getCustomerPerformanceHistory();
+			groupPerformanceHistoryEntity
+					.setLastGroupLoanAmount(disburseAmount);
 		}
 	}
-	
+
 	private void updateCustomerHistoryOnRepayment(Money totalAmount) {
-		if(getCustomer().getCustomerLevel().getLevelId().equals(Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID)) && getCustomer().getCustomerPerformanceHistory() != null) {
-			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity)getCustomer().getCustomerPerformanceHistory();
+		if (getCustomer().getCustomerLevel().getLevelId().equals(
+				Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))
+				&& getCustomer().getCustomerPerformanceHistory() != null) {
+			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
+					.getCustomerPerformanceHistory();
 			clientPerfHistory.setLastLoanAmount(totalAmount);
-			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory.getNoOfActiveLoans()-1);
+			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory
+					.getNoOfActiveLoans() - 1);
 		}
 	}
-	
+
 	private void updateCustomerHistoryOnArrears() {
-		if(getCustomer().getCustomerLevel().getLevelId().equals(Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID)) && getCustomer().getCustomerPerformanceHistory() != null) {
-			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity)getCustomer().getCustomerPerformanceHistory();
-			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory.getNoOfActiveLoans()+1);
+		if (getCustomer().getCustomerLevel().getLevelId().equals(
+				Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))
+				&& getCustomer().getCustomerPerformanceHistory() != null) {
+			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
+					.getCustomerPerformanceHistory();
+			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory
+					.getNoOfActiveLoans() + 1);
 		}
 	}
-	
+
 	private void updateCustomerHistoryOnWriteOff() {
-		if(getCustomer().getCustomerLevel().getLevelId().equals(Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID)) && getCustomer().getCustomerPerformanceHistory() != null) {
-			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity)getCustomer().getCustomerPerformanceHistory();
-			clientPerfHistory.setLoanCycleNumber(clientPerfHistory.getLoanCycleNumber()-1);
-			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory.getNoOfActiveLoans()-1);
+		if (getCustomer().getCustomerLevel().getLevelId().equals(
+				Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))
+				&& getCustomer().getCustomerPerformanceHistory() != null) {
+			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
+					.getCustomerPerformanceHistory();
+			clientPerfHistory.setLoanCycleNumber(clientPerfHistory
+					.getLoanCycleNumber() - 1);
+			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory
+					.getNoOfActiveLoans() - 1);
 		}
 	}
-	
+
 	protected void updatePerformanceHistoryOnAdjustment(Integer noOfTrxnReversed) {
-		if(getPerformanceHistory()!=null){
-			getPerformanceHistory().setNoOfPayments(getPerformanceHistory().getNoOfPayments()-noOfTrxnReversed);
+		if (getPerformanceHistory() != null) {
+			getPerformanceHistory().setNoOfPayments(
+					getPerformanceHistory().getNoOfPayments()
+							- noOfTrxnReversed);
 		}
+	}
+
+	private PersonnelPersistenceService getPersonnelDBService()
+			throws ServiceException {
+		return (PersonnelPersistenceService) ServiceFactory.getInstance()
+				.getPersistenceService(PersistenceServiceName.Personnel);
 	}
 
 }

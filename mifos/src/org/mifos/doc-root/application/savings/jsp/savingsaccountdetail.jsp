@@ -229,7 +229,8 @@
 									<br>
 									<span class="fontnormal"> <html-el:link href="#">
 											<mifos:mifoslabel name="Savings.viewChangeLog" />
-										</html-el:link> <br> <html-el:link href="#">
+										</html-el:link> <br>
+									 <html-el:link href="savingsAction.do?method=getStatusHistory&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}">
 											<mifos:mifoslabel name="Savings.viewStatusHistory" />
 										</html-el:link> </span>
 								</td>
