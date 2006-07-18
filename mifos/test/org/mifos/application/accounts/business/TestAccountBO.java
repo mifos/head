@@ -79,11 +79,11 @@ public class TestAccountBO extends TestAccount {
 			}
 			for(AccountActionDateEntity accountActionDate : accountBO.getAccountActionDates()){
 				if(accountActionDate.getInstallmentId().equals(Short.valueOf("1")))
-					assertEquals(new Money("133.0"),accountActionDate.getTotalDue());
+					assertEquals(new Money("133.0"),accountActionDate.getTotalDueWithFees());
 				else if(accountActionDate.getInstallmentId().equals(Short.valueOf("6")))
-					assertEquals(new Money("111.3"),accountActionDate.getTotalDue());
+					assertEquals(new Money("111.3"),accountActionDate.getTotalDueWithFees());
 				else
-					assertEquals(new Money("112.0"),accountActionDate.getTotalDue());
+					assertEquals(new Money("112.0"),accountActionDate.getTotalDueWithFees());
 			}
 		
 	}

@@ -557,7 +557,7 @@ public class LoanBO extends AccountBO {
 					if (count == installmentIdList.size()) {
 						break;
 					}
-					Money totalAmount = accountActionDate.getTotalDue();
+					Money totalAmount = accountActionDate.getTotalDueWithFees();
 					Money roundedTotalAmount = Money.round(totalAmount);
 					accountActionDate.setPrincipal(accountActionDate
 							.getPrincipal().subtract(
