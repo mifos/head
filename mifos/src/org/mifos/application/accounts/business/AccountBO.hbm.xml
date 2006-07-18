@@ -75,7 +75,7 @@
 			<one-to-many class="org.mifos.application.accounts.business.AccountCustomFieldEntity" />
 		</set>
 		<set name="accountStatusChangeHistory" cascade="all" inverse="true"
-			table="ACCOUNT_STATUS_CHANGE_HISTORY" lazy="true" >
+			table="ACCOUNT_STATUS_CHANGE_HISTORY" lazy="true" order-by="ACCOUNT_STATUS_CHANGE_ID desc">
 			<key column="ACCOUNT_ID" />
 			<one-to-many
 				class="org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity" />
