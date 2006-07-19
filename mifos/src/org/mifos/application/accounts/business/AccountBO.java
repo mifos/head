@@ -878,4 +878,10 @@ public class AccountBO extends BusinessObject {
 		}
 		return notes;
 	}
+	
+	public void update() throws SystemException {
+		this.setUpdatedBy(userContext.getId());
+		this.setUpdatedDate(new Date());
+		getAccountPersistenceService().update(this);
+	}
 }

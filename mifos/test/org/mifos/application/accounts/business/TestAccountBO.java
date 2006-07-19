@@ -22,6 +22,9 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.fees.business.FeesBO;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
+import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
@@ -32,6 +35,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestAccountBO extends TestAccount {
@@ -416,5 +420,24 @@ public class TestAccountBO extends TestAccount {
 				group.getCustomerId());
 		center = (CustomerBO) HibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
+	}
+	
+	public void testUpdate() throws Exception {
+		TestObjectFactory.flushandCloseSession();
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
+		accountBO.setUserContext(TestObjectFactory.getUserContext());
+		
+		java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
+		PersonnelBO personnelBO = ((PersonnelPersistenceService) ServiceFactory.getInstance()
+				.getPersistenceService(PersistenceServiceName.Personnel)).getPersonnel(TestObjectFactory.getUserContext().getId());
+		AccountNotesEntity accountNotesEntity = new AccountNotesEntity(currentDate,"account updated",personnelBO);
+		accountBO.addAccountNotes(accountNotesEntity);
+		TestObjectFactory.updateObject(accountBO);
+		TestObjectFactory.flushandCloseSession();
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
+		for(AccountNotesEntity accountNotes : accountBO.getRecentAccountNotes()) {
+			assertEquals("Last note added is account updated","account updated",accountNotesEntity.getComment());
+			break;
+		}
 	}
 }

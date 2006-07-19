@@ -49,12 +49,12 @@
 	<tiles:put name="body" type="string">
 		<script language="javascript">
   function AddNote(){
-	accountNotesActionForm.action="AccountNotesAction.do?method=load";
-	accountNotesActionForm.submit();
+	notesActionForm.action="notesAction.do?method=load";
+	notesActionForm.submit();
   }
  function SeeAllNotes(){
-	accountNotesActionForm.action="AccountNotesAction.do?method=get";
-	accountNotesActionForm.submit();
+	notesActionForm.action="notesAction.do?method=get";
+	notesActionForm.submit();
   }
   function editStatus(){
   	editSavingsStatusActionForm.submit();
@@ -350,23 +350,23 @@
 	 					</c:choose>
                   </td>
                 </tr> 
-							<%--  <tr> 
+				<tr> 
                 	<td align="right" class="paddingleft05">
 						<span class="fontnormal8pt">
-							<c:if test="${!empty requestScope.notes}">
+							<c:if test="${!empty sessionScope.notes}">
 								<html-el:link href="#">
 									<mifos:mifoslabel name="Savings.seeAllNotes" />
 								</html-el:link>
 							</c:if>
 							
 								<br>
-							<html-el:link href="#">
+							<html-el:link href="javascript:AddNote()">
 									<mifos:mifoslabel name="Savings.addANote" />
 							</html-el:link>
 							
 						</span>
 					</td>
-                </tr>--%>
+                </tr>
 						</table>
 					</td>
 				</tr>
@@ -375,12 +375,11 @@
 			<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}" />
 		</html-el:form>
 
-		<html-el:form action="AccountNotesAction.do?method=load">
-			<%--
-<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}"/>
-<html-el:hidden property="accountTypeId" value="${sessionScope.BusinessKey.accountTypeId}"/>
-<html-el:hidden property="accountName" value="${sessionScope.BusinessKey.savingsOffering.prdOfferingName}"/>
-<html-el:hidden value='${sessionScope.BusinessKey.globalAccountNum}' property="globalAccountNum"/> --%>
+		<html-el:form action="notesAction.do?method=load">
+			<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}"/>
+			<html-el:hidden property="accountTypeId" value="${sessionScope.BusinessKey.accountType.accountTypeId}"/>
+			<html-el:hidden property="prdOfferingName" value="${sessionScope.BusinessKey.savingsOffering.prdOfferingName}"/>
+			<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}"/>
 		</html-el:form>
 		<html-el:form action="editSavingsAction.do?method=load">
 			<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}" />

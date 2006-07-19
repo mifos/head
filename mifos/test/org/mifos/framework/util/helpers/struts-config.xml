@@ -144,6 +144,7 @@
 		<!-- Accounts notes form bean -->
 		<form-bean name="accountNotesActionForm"
 			type="org.mifos.application.accounts.struts.actionforms.AccountNotesActionForm" />
+			<form-bean name="notesActionForm" type="org.mifos.application.accounts.struts.actionforms.NotesActionForm" />
 		<!-- Fees Action Form  -->
 		<form-bean name="FeesActionForm"
 			type="org.mifos.application.fees.struts.actionforms.FeesActionForm" />
@@ -1188,6 +1189,19 @@
 				path="/loanAction.do?method=get" />
 		</action>
 		<!-- AccountNotes action -->
+		<!-- Notes action -->
+		<action path="/notesAction" type="org.mifos.application.accounts.struts.action.NotesAction" name="notesActionForm" parameter="method" validate="true" input="/notesAction.do?method=validate" scope="session">
+			<forward name="load_success" path="/pages/application/accounts/jsp/account_addnotes.jsp" />
+			<forward name="get_success" path="/notesAction.do?method=search" />
+			<forward name="search_success" path="/pages/application/accounts/jsp/account_notes.jsp" />
+			<forward name="preview_success" path="/pages/application/accounts/jsp/account_previewnotes.jsp" />
+			<forward name="previous_success" path="/pages/application/accounts/jsp/account_addnotes.jsp" />
+			<forward name="loan_details_page" path="/loanAction.do?method=get" />
+			<forward name="savings_details_page" path="/savingsAction.do?method=get" />
+			<forward name="preview_failure" path="/pages/application/accounts/jsp/account_addnotes.jsp" />
+			<forward name="create_failure" path="/pages/application/accounts/jsp/account_previewnotes.jsp" />
+		</action>
+		<!-- Notes action -->
 		<!-- admin action -->
 		<action path="/AdminAction"
 			type="org.mifos.application.admin.struts.action.AdminAction"

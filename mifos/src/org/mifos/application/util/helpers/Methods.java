@@ -38,6 +38,6 @@
 package org.mifos.application.util.helpers;
 
 public enum Methods {
-	method, preview, editPreview;
+	method, preview, editPreview, create, cancel, load, previous, searchNext, searchPrev, search, get;
 
 }

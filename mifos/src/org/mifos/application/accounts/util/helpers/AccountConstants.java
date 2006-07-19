@@ -181,6 +181,7 @@ public interface AccountConstants {
 	public final String ERROR_FUTUREDATE="errors.futuredate";
 	public final String ERROR_INVALID_TRXN="errors.invalidTxndate";
 	public final String WAIVE_TYPE="WaiveType";	
-	
+	public static final short COMMENT_LENGTH = 500;
+	public static final String MAX_LENGTH="errors.maximumlength";
 }
 

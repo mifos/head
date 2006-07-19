@@ -384,4 +384,6 @@ public interface SecurityConstants {
 	public final short LOAN_CAN_DISBURSE_LOAN = 189;
 	
 	public final short SAVINGS_CAN_MAKE_DEPOSIT_WITHDRAWAL = 190;
+	
+	public final short SAVINGS_CAN_ADD_NOTES_TO_SAVINGS = 191;
 }
