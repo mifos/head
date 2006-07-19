@@ -44,9 +44,11 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
@@ -59,6 +61,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestSavingsBO extends MifosTestCase {
@@ -3768,5 +3771,35 @@ public class TestSavingsBO extends MifosTestCase {
 						System.currentTimeMillis()));
 		savingsOffering = helper.createSavingsOffering();
 		return helper.createSavingsAccount(savingsOffering,center,AccountStates.SAVINGS_ACC_APPROVED,userContext);
+	}
+	
+	public void testGetRecentAccountNotes() throws Exception {
+		savings = getSavingsAccountForCenter();
+		addNotes("note1");
+		addNotes("note2");
+		addNotes("note3");
+		addNotes("note4");
+		addNotes("note5");
+		HibernateUtil.closeSession();
+		
+		savings = savingsService.findById(savings.getAccountId());
+		List<AccountNotesEntity> notes = savings.getRecentAccountNotes();
+		
+		assertEquals("Size of recent notes is 3",3,notes.size());
+		for(AccountNotesEntity accountNotesEntity : notes) {
+			assertEquals("Last note added is note5","note5",accountNotesEntity.getComment());
+			break;
+		}
+		
+	}
+	
+	private void addNotes(String comment) throws SystemException {
+		java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
+		PersonnelBO personnelBO = ((PersonnelPersistenceService) ServiceFactory.getInstance()
+				.getPersistenceService(PersistenceServiceName.Personnel)).getPersonnel(userContext.getId());
+		AccountNotesEntity accountNotesEntity = new AccountNotesEntity(currentDate,comment,personnelBO);
+		savings.addAccountNotes(accountNotesEntity);
+		savings.update();
+		HibernateUtil.commitTransaction();
 	}
 }

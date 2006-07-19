@@ -866,4 +866,16 @@ public class AccountBO extends BusinessObject {
 		}
 		return amount;
 	}
+	
+	public List<AccountNotesEntity> getRecentAccountNotes() {
+		List<AccountNotesEntity> notes = new ArrayList<AccountNotesEntity>();
+		int count = 0;
+		for(AccountNotesEntity accountNotesEntity : getAccountNotes()) {
+			if(count>2)
+				break;
+			notes.add(accountNotesEntity);
+			count++;
+		}
+		return notes;
+	}
 }

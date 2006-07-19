@@ -332,22 +332,22 @@
                 </tr>
               <tr>
                   <td class="paddingL10">
-                  		<%--<c:choose>
-              				<c:when test="${!empty requestScope.notes}">
-								<c:forEach var="note" items="${requestScope.notes}">
+                  		<c:choose>
+              				<c:when test="${!empty sessionScope.notes}">
+								<c:forEach var="note" items="${sessionScope.notes}">
 									<span class="fontnormal8ptbold"> <c:out value="${note.commentDate}"/>:</span>
 									<span class="fontnormal8pt"> 
 			                				<c:out value="${note.comment}"/>-<em>
-											<c:out value="${note.officer.displayName}"/></em><br><br>
+											<c:out value="${note.personnel.displayName}"/></em><br><br>
 			                	     </span>
 			                	</c:forEach>
-			                </c:when>--%>
-             			<%--	<c:otherwise>--%>
+			                </c:when>
+             				<c:otherwise>
 	         					<span class="fontnormal"> 
 	              	 				<mifos:mifoslabel name="accounts.NoNotesAvailable" />
 	         					</span>
-	     				<%--	</c:otherwise>
-	 					</c:choose>--%>
+	     					</c:otherwise>
+	 					</c:choose>
                   </td>
                 </tr> 
 							<%--  <tr> 

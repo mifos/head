@@ -79,7 +79,6 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
@@ -323,6 +322,8 @@ public class SavingsAction extends AccountAppAction {
 		SessionUtils.setAttribute(
 				SavingsConstants.RECENTY_ACTIVITY_DETAIL_PAGE, savings
 						.getRecentAccountActivity(3), request.getSession());
+		SessionUtils.setAttribute(
+				SavingsConstants.NOTES, savings.getRecentAccountNotes(), request.getSession());
 		logger
 				.info("In SavingsAction::get(), Savings object retrieved successfully");
 		return mapping.findForward("get_success");

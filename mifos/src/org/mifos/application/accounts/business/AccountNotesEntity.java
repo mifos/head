@@ -63,6 +63,11 @@ public class AccountNotesEntity extends PersistentObject {
 	public AccountNotesEntity() {
 		super();
 	}
+	public AccountNotesEntity(Date commentDate,String comment,PersonnelBO personnel) {
+		this.commentDate = commentDate;
+		this.comment  = comment;
+		this.personnel = personnel;
+	}
 
 	public java.lang.Integer getCommentId() {
 		return commentId;

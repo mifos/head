@@ -38,7 +38,7 @@
 			cascade="none" update="false" insert="true" unique="true" />
 
 		<set name="accountNotes" cascade="all" inverse="true"
-			table="ACCOUNT_NOTES" lazy="true">
+			table="ACCOUNT_NOTES" lazy="true" order-by="ACCOUNT_NOTES_ID desc">
 			<key column="ACCOUNT_ID" />
 			<many-to-many
 				class="org.mifos.application.accounts.business.AccountNotesEntity"
