@@ -12,6 +12,7 @@ import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.service.PersistenceService;
@@ -79,6 +80,10 @@ public class AccountPersistanceService extends PersistenceService {
 	}
 	public List<Integer> getCustomerAccountsForFee(Short feeId){
 		return accountPersistence.getCustomerAccountsForFee(feeId);
+
+	}
+	public List<CustomerAccountBO> getActiveCustomerAccounts(){
+		return accountPersistence.getActiveCustomerAccounts();
 
 	}
 }

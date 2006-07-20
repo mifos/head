@@ -432,4 +432,6 @@ public interface NamedQueryConstants {
 	public String GET_CUSTOMER_ACCOUNTS_FOR_FEE="getCustomerAccountsForFee";
 	public String GET_FEE_UPDATETYPE="getFeeUpdateType";
 	
+	public String GET_ACTIVE_CUSTOMER_ACCOUNTS="getActiveCustomerAccounts";
+	
 }

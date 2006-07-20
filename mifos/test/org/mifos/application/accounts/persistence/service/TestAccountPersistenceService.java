@@ -101,4 +101,11 @@ public void testGetCustomerAccountsForFee(){
 		
 
 	}
+
+public void testGetActiveCustomerAccounts(){
+	
+	List<CustomerAccountBO> customerAccounts = accountPersistenceService.getActiveCustomerAccounts();
+	assertNotNull(customerAccounts);
+	assertEquals(2,customerAccounts.size());
+}
 }

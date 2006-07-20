@@ -119,4 +119,11 @@ public class TestAccountPersistence extends TestAccount {
 		
 
 	}
+	
+	public void testGetActiveCustomerAccounts(){
+		
+		List<CustomerAccountBO> customerAccounts = accountPersistence.getActiveCustomerAccounts();
+		assertNotNull(customerAccounts);
+		assertEquals(2,customerAccounts.size());
+	}
 }

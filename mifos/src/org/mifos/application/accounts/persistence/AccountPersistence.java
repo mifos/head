@@ -15,6 +15,7 @@ import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -158,6 +159,10 @@ public class AccountPersistence extends Persistence {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("FEEID",feeId);
 		return executeNamedQuery(NamedQueryConstants.GET_CUSTOMER_ACCOUNTS_FOR_FEE,queryParameters);
+
+	}
+	public List<CustomerAccountBO> getActiveCustomerAccounts(){
+		return executeNamedQuery(NamedQueryConstants.GET_ACTIVE_CUSTOMER_ACCOUNTS,null);
 
 	}
 }
