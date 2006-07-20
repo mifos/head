@@ -15,4 +15,8 @@
         <many-to-one  name="personnel" column="OFFICER_ID" class="org.mifos.application.personnel.business.PersonnelBO" insert="true" update="false" unique="true" lazy="true"/>
         <many-to-one  name="account" column="ACCOUNT_ID" class="org.mifos.application.accounts.business.AccountBO" insert="true" update="false" unique="true" lazy="true"/>
     </class>
+    
+    <query name="notes.getAllAccountNotes">
+    	   <![CDATA[from org.mifos.application.accounts.business.AccountNotesEntity note where note.account.accountId=:accountId order by note.commentId desc]]>
+     </query>
 </hibernate-mapping>

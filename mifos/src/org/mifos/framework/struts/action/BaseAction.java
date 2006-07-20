@@ -18,12 +18,14 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.IllegalStateException;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.exceptions.SearchObjectNotCreatedException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ExceptionConstants;
+import org.mifos.framework.util.helpers.SearchObject;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.framework.util.helpers.ValueObjectUtil;
 
@@ -159,5 +161,9 @@ public abstract class BaseAction extends DispatchAction {
 
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return false;
+	}
+	
+	protected SearchObject formSearchObject(ActionForm form,HttpServletRequest request) throws SearchObjectNotCreatedException {
+		return ValueObjectUtil.getSearchObject(form);
 	}
 }// :~

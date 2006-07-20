@@ -74,6 +74,7 @@ public interface AccountConstants {
 	
 	public static final String ACCOUNT_NOTES_VO="AccountNotesVO";
 	public static final String ACCOUNT_NOTES="AccountNotes";
+	public static final String ACCOUNT_NOTE="AccountNote";
 	public static final String GET_SUCCESS="get_success";
 	public static final String LOAD_SUCCESS="load_success";
 	public static final String LOAN_DETAILS_PAGE="loan_details_page";

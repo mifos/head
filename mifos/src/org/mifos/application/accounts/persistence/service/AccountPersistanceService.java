@@ -11,10 +11,14 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
+import org.mifos.application.accounts.business.AccountNotesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.framework.exceptions.HibernateProcessException;
+import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.persistence.service.PersistenceService;
 
 public class AccountPersistanceService extends PersistenceService {
@@ -77,6 +81,9 @@ public class AccountPersistanceService extends PersistenceService {
 	}
 	public List<Integer> getAccountsWithTodaysInstallment() throws PersistenceException{
 		return accountPersistence.getAccountsWithTodaysInstallment();
+	}
+	public QueryResult getAllAccountNotes(Integer accountId) throws PersistenceException, HibernateSearchException, HibernateProcessException {
+		return accountPersistence.getAllAccountNotes(accountId);
 	}
 	public List<Integer> getCustomerAccountsForFee(Short feeId){
 		return accountPersistence.getCustomerAccountsForFee(feeId);

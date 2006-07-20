@@ -544,7 +544,6 @@
 		<!-- Notes action -->
 		<action path="/notesAction" type="org.mifos.application.accounts.struts.action.NotesAction" name="notesActionForm" parameter="method" validate="true" input="/notesAction.do?method=validate" scope="session">
 			<forward name="load_success" path="/pages/application/accounts/jsp/account_addnotes.jsp" />
-			<forward name="get_success" path="/notesAction.do?method=search" />
 			<forward name="search_success" path="/pages/application/accounts/jsp/account_notes.jsp" />
 			<forward name="preview_success" path="/pages/application/accounts/jsp/account_previewnotes.jsp" />
 			<forward name="previous_success" path="/pages/application/accounts/jsp/account_addnotes.jsp" />

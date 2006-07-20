@@ -112,5 +112,9 @@ public class AccountNotesEntity extends PersistentObject {
 	public void setPersonnel(PersonnelBO personnel) {
 		this.personnel = personnel;
 	}
+	
+	public String getPersonnelName(){
+		return personnel.getDisplayName();
+	}
 
 }

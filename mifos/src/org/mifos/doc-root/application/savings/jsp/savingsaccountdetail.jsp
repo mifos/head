@@ -53,7 +53,7 @@
 	notesActionForm.submit();
   }
  function SeeAllNotes(){
-	notesActionForm.action="notesAction.do?method=get";
+	notesActionForm.action="notesAction.do?method=search";
 	notesActionForm.submit();
   }
   function editStatus(){
@@ -354,7 +354,7 @@
                 	<td align="right" class="paddingleft05">
 						<span class="fontnormal8pt">
 							<c:if test="${!empty sessionScope.notes}">
-								<html-el:link href="#">
+								<html-el:link href="javascript:SeeAllNotes()">
 									<mifos:mifoslabel name="Savings.seeAllNotes" />
 								</html-el:link>
 							</c:if>

@@ -84,6 +84,7 @@ public interface NamedQueryConstants {
 	public String GET_NOTES="notes.getNotes";
 	public String GET_PERSONNEL_NOTES="notes.getPersonnelNotes";
 	public String GET_ACCOUNT_NOTES="notes.getAccountNotes";
+	public String GETALLACCOUNTNOTES="notes.getAllAccountNotes";
 	//for historical data
 	public String GET_HISTORICAL_DATA="getHistoricalData";
 	

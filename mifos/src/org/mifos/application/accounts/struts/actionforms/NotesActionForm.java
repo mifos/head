@@ -58,7 +58,6 @@ public class NotesActionForm extends SearchActionForm {
 			if(Methods.cancel.toString().equals(methodCalled) || 
 			  Methods.searchNext.toString().equals(methodCalled)||
 			  Methods.search.toString().equals(methodCalled)||
-			  Methods.get.toString().equals(methodCalled)||
 			  Methods.searchPrev.toString().equals(methodCalled)||	 
 			  Methods.load.toString().equals(methodCalled)){
 				request.setAttribute(Constants.SKIPVALIDATION, Boolean.valueOf(true));

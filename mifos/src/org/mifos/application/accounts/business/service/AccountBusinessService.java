@@ -5,7 +5,9 @@ import java.util.List;
 import org.hibernate.StaleObjectStateException;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.business.AccountNotesEntity;
 import org.mifos.application.accounts.business.TransactionHistoryView;
+import org.mifos.application.accounts.dao.AccountNotesDAO;
 import org.mifos.application.accounts.exceptions.AccountExceptionConstants;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
@@ -16,6 +18,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 
@@ -78,6 +81,10 @@ public class AccountBusinessService extends BusinessService {
 			dbService=(AccountPersistanceService) ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.Account);
 		
 		return dbService;
+	}
+	
+	public QueryResult getAllAccountNotes(Integer accountId) throws ApplicationException, SystemException{
+		return getDBService().getAllAccountNotes(accountId);
 	}
 
 }

@@ -22,12 +22,12 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
@@ -53,7 +53,8 @@ public class NotesAction extends SearchAction {
 				|| method.equals(Methods.load.toString())
 				|| method.equals(Methods.preview.toString())
 				|| method.equals(Methods.cancel.toString())
-				|| method.equals(Methods.create.toString())) {
+				|| method.equals(Methods.create.toString())
+				|| method.equals(Methods.search.toString())) {
 			return true;
 		} else
 			return false;
@@ -80,11 +81,11 @@ public class NotesAction extends SearchAction {
 	}
 	
 	public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
-		NotesActionForm notesActionForm = (NotesActionForm) form;
-		return mapping.findForward(chooseForward(new Short(notesActionForm.getAccountTypeId())));
+		return mapping.findForward(chooseForward(new Short(((NotesActionForm)form).getAccountTypeId())));
 	}
 	
 	public ActionForward create(ActionMapping mapping, ActionForm form,	HttpServletRequest request, HttpServletResponse response)throws Exception {
+		ActionForward forward = null;
 		NotesActionForm notesActionForm = (NotesActionForm) form;
 		try{
 			AccountBO accountBO = accountBusinessService.getAccount(Integer.valueOf(notesActionForm.getAccountId()));
@@ -94,14 +95,17 @@ public class NotesAction extends SearchAction {
 			accountBO.setUserContext(uc);
 			accountBO.update();
 			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
+			forward = mapping.findForward(chooseForward(new Short(notesActionForm.getAccountTypeId())));
 		}catch(Exception e ){
 			ActionErrors errors = new ActionErrors();
 			errors.add(AccountConstants.UNKNOWN_EXCEPTION,new ActionMessage(AccountConstants.UNKNOWN_EXCEPTION));
 			request.setAttribute(Globals.ERROR_KEY, errors);
-			return mapping.findForward(ActionForwards.create_failure.toString());
+			forward = mapping.findForward(ActionForwards.create_failure.toString());
+			HibernateUtil.rollbackTransaction();
+		}finally {
+			HibernateUtil.closeSession();
 		}
-		return mapping.findForward(chooseForward(new Short(notesActionForm.getAccountTypeId())));
+		return forward;
 	}
 	
 	private String chooseForward(Short accountTypeId){
@@ -128,8 +132,13 @@ public class NotesAction extends SearchAction {
 	}
 	
 	private void clearActionForm(ActionForm form){
-		NotesActionForm actionForm =(NotesActionForm)form;
-		actionForm.setComment("");
+		((NotesActionForm)form).setComment("");
 	}
 
+	@Override
+	protected QueryResult getSearchResult(ActionForm form)throws Exception {
+		return accountBusinessService.getAllAccountNotes(Integer.valueOf(((NotesActionForm)form).getAccountId()));
+	}
+	
+	
 }

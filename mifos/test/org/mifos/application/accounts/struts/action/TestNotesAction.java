@@ -15,12 +15,15 @@ import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.framework.util.valueobjects.Context;
 
 public class TestNotesAction extends MifosMockStrutsTestCase {
 	
@@ -139,6 +142,35 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		verifyForward("savings_details_page");
 		verifyNoActionErrors();
 		verifyNoActionMessages();
+	}
+	
+	public void testSearch() throws HibernateSearchException {
+		savingsBO = getSavingsAccount();
+		Context context = new Context();
+		SessionUtils.setAttribute(Constants.CONTEXT, context,request.getSession());
+		
+		setRequestPathInfo("/notesAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("comment", "Notes created");
+		actionPerform();
+		
+		setRequestPathInfo("/notesAction.do");
+		addRequestParameter("method", "create");
+		addRequestParameter("accountTypeId", savingsBO.getAccountType().getAccountTypeId().toString());
+		addRequestParameter("accountId", savingsBO.getAccountId().toString());
+		addRequestParameter("comment", "Notes created");
+		actionPerform();
+		
+		setRequestPathInfo("/notesAction.do");
+		addRequestParameter("method", "search");
+		addRequestParameter("accountId", savingsBO.getAccountId().toString());
+		actionPerform();
+		verifyForward("search_success");
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		
+		context = (Context)SessionUtils.getAttribute(Constants.CONTEXT, request.getSession());
+		assertEquals("Size of the search result should be 1",1,context.getSearchResult().getSize());
 	}
 	
 	private void createInitialObjects() {

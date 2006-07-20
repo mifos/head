@@ -14,13 +14,18 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
+import org.mifos.application.accounts.business.AccountNotesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.framework.exceptions.HibernateProcessException;
+import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.QueryFactory;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.persistence.Persistence;
 
 public class AccountPersistence extends Persistence {
@@ -153,6 +158,22 @@ public class AccountPersistence extends Persistence {
 		queryParameters.put("CURRENT_DATE",currentDate);
 		queryParameters.put("PAYMENT_UNPAID",AccountConstants.PAYMENT_UNPAID);		
 		return executeNamedQuery(NamedQueryConstants.GET_TODAYS_UNPAID_INSTALLMENT_FOR_ACTIVE_CUSTOMERS,queryParameters);			
+	}
+	
+	public QueryResult getAllAccountNotes(Integer accountId) throws PersistenceException, HibernateSearchException, HibernateProcessException {
+		QueryResult notesResult=null;
+		try{
+			Session session=null;
+			 notesResult = QueryFactory.getQueryResult("NotesSearch");
+			 session = notesResult.getSession();
+	 		Query query= session.getNamedQuery(NamedQueryConstants.GETALLACCOUNTNOTES);
+	 		query.setInteger("accountId",accountId);
+	 		notesResult.executeQuery(query);
+	 	}
+		catch(HibernateProcessException  hpe) {		
+			throw hpe;
+		}
+      return notesResult;
 	}
 	
 	public List<Integer> getCustomerAccountsForFee(Short feeId){
