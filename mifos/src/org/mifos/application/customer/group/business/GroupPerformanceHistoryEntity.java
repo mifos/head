@@ -68,6 +68,12 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 	public Integer getClientCount() {
 		return clientCount;
 	}
+	public Integer getActiveClientCount() throws PersistenceException, ServiceException {
+		if(getGroup()!=null)
+			return getGroup().getActiveOnHoldChildrenOfGroup();
+		
+		return 0;
+	}
 
 	public void setClientCount(Integer clientCount) {
 		this.clientCount = clientCount;

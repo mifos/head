@@ -40,6 +40,8 @@ public class TestGroupBO extends MifosTestCase {
 	protected CustomerBO group = null;
 	
 	protected CustomerBO client = null;
+	protected CustomerBO client1 = null;
+	protected CustomerBO client2 = null;
 
 	private SavingsTestHelper helper = new SavingsTestHelper();
 	
@@ -57,6 +59,8 @@ public class TestGroupBO extends MifosTestCase {
 	protected void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(account2);
 		TestObjectFactory.cleanUp(account1);
+		TestObjectFactory.cleanUp(client1);
+		TestObjectFactory.cleanUp(client2);
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
@@ -225,5 +229,21 @@ public class TestGroupBO extends MifosTestCase {
 		savings2=(SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savings2.getAccountId());
 		TestObjectFactory.cleanUp(savings1);
 		TestObjectFactory.cleanUp(savings2);
+	}
+	public void testGetActiveOnHoldChildrenOfGroup() throws Exception{
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active_test", Short
+				.valueOf("13"), "1.4", meeting, new Date(System
+				.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE, "1.4.1", center, new Date(System
+				.currentTimeMillis()));
+		client = TestObjectFactory.createClient("client1",ClientConstants.STATUS_ACTIVE,"1.4.1.1",group,new Date(System
+				.currentTimeMillis()));
+		client1 = TestObjectFactory.createClient("client2",ClientConstants.STATUS_HOLD,"1.4.1.2",group,new Date(System
+				.currentTimeMillis()));
+		client2 = TestObjectFactory.createClient("client3",ClientConstants.STATUS_CANCELLED,"1.4.1.3",group,new Date(System
+				.currentTimeMillis()));
+		assertEquals(Integer.valueOf("2") , ((GroupBO)group).getActiveOnHoldChildrenOfGroup());
 	}
 }

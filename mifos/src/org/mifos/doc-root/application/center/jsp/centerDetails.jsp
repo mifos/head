@@ -144,17 +144,23 @@
 	                  </span><br>
 	                  <div id="Layer2" style="border: 1px solid #CECECE; height:100px; width:250px; overflow: auto; padding:6px; margin-top:5px;">
 	                   <span class="fontnormal">
-	                  	<c:forEach var="group" items="${requestScope.groups}">
-						   <span class="fontnormal">
-		                  	  <a href="GroupAction.do?method=get&globalCustNum=<c:out value="${group.globalCustNum}"/>&recordOfficeId=${requestScope.centerVO.office.officeId}&recordLoanOfficerId=${requestScope.centerVO.personnel.personnelId}">
-		                  	  <c:out value="${group.displayName}"/></a><br>
-					       </span>
-					    </c:forEach>
-					    <c:if test="${sessionScope.performanceHistory.numberOfGroups==0}">
-					    <mifos:mifoslabel name="Center.No" bundle="CenterUIResources" />
-					    <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/><mifos:mifoslabel name="Center.s" bundle="CenterUIResources" />
-					    <mifos:mifoslabel name="Center.Available" bundle="CenterUIResources" />
-					    </c:if>
+	                  	<c:choose>
+		                  	<c:when test="${!empty requestScope.groups}">
+			                  	<c:forEach var="group" items="${requestScope.groups}">
+								   <span class="fontnormal">
+				                  	  <a href="GroupAction.do?method=get&globalCustNum=<c:out value="${group.globalCustNum}"/>&recordOfficeId=${requestScope.centerVO.office.officeId}&recordLoanOfficerId=${requestScope.centerVO.personnel.personnelId}">
+				                  	  <c:out value="${group.displayName}"/></a><br>
+							       </span>
+							    </c:forEach>
+						    </c:when>
+						    <c:otherwise>
+							    <!-- <c:if test="${sessionScope.performanceHistory.numberOfGroups==0}">-->
+							    <mifos:mifoslabel name="Center.No" bundle="CenterUIResources" />
+							    <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/><mifos:mifoslabel name="Center.s" bundle="CenterUIResources" />
+							    <mifos:mifoslabel name="Center.Available" bundle="CenterUIResources" />
+							    <!-- </c:if> -->
+							</c:otherwise>    
+						</c:choose>
 					  </div>
 					  <br></td>
 	                </tr>

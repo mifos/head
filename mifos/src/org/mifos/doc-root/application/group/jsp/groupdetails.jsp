@@ -715,7 +715,7 @@ function meetingpopup(){
 						name="Group.hashof" bundle="GroupUIResources" /> <mifos:mifoslabel
 						name="${ConfigurationConstants.CLIENT}" /><mifos:mifoslabel
 						name="Group.s" bundle="GroupUIResources"/> <c:out
-						value="${sessionScope.GroupPerformanceHistory.clientCount}" /> </span>
+						value="${sessionScope.GroupPerformanceHistory.activeClientCount}" /> </span>
 					</td>
 				</tr>
 				<tr>

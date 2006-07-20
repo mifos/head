@@ -137,4 +137,14 @@ public class GroupBO extends CustomerBO {
 		}
 		return amount;
 	}
+	
+	public Integer getActiveOnHoldChildrenOfGroup() throws PersistenceException, ServiceException{
+		List<CustomerBO> clients = getDBService().getAllChildrenForParent(
+					getSearchId(), getOffice().getOfficeId(),
+					CustomerConstants.GROUP_LEVEL_ID);
+		if(clients!=null && !clients.isEmpty()){
+			return Integer.valueOf(clients.size());
+		}
+		return Integer.valueOf(0);
+	}
 }

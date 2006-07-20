@@ -195,7 +195,7 @@
 		<![CDATA[from org.mifos.application.customer.client.business.ClientBO as client where client.globalCustNum = :globalCustNum ]]>
 	</query>	
 	<query name="Customer.getAllChildren">
-		<![CDATA[from org.mifos.application.customer.business.CustomerBO as customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerLevel.levelId < :LEVEL_ID ]]>
+		<![CDATA[from org.mifos.application.customer.business.CustomerBO as customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerLevel.levelId < :LEVEL_ID and customer.customerStatus.statusId in (3,4,9,10)]]>
 	</query>
 	<query name="Customer.getAllCustomers">
 		<![CDATA[select customer.customerId from org.mifos.application.customer.business.CustomerBO as customer where customer.customerLevel.levelId =:LEVEL_ID ]]>

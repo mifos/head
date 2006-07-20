@@ -141,9 +141,9 @@ public class ClientCreationDAO extends DAO {
 		if (cust != null) {
 			vo.setSearchId(vo.getParentCustomer().getSearchId()+ "."+ String.valueOf(vo.getParentCustomer().getMaxChildCount() + 1));
 			vo.getParentCustomer().setMaxChildCount(vo.getParentCustomer().getMaxChildCount() + 1);
-			GroupPerformanceHistory groupPerformanceHistory= ((GroupPerformanceHistory)vo.getParentCustomer(). getCustomerPerformanceHistory());
+			/*GroupPerformanceHistory groupPerformanceHistory= ((GroupPerformanceHistory)vo.getParentCustomer(). getCustomerPerformanceHistory());
 			if(groupPerformanceHistory!=null)
-				groupPerformanceHistory.setClientCount(groupPerformanceHistory.getClientCount()+1);
+				groupPerformanceHistory.setClientCount(groupPerformanceHistory.getClientCount()+1);*/
 			
 		}
 		else{

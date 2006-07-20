@@ -92,6 +92,33 @@
   }
 </script>
 
+<script language="javascript">
+
+	/**<!-- NLO : Date: 15/07/2006  -->
+	<!-- 
+	     These functions check to see if the Father/Spouse Select is equal to Spouse
+	     If Father/Spouse is equal to Spouse and the Marital Status has not already been selected
+	     Then Marital Status is set to Married automatically
+	  -->
+	**/
+	var bAlreadySelected;
+	bAlreadySelected = false;
+
+	function CheckMaritalStatus(){
+		var sMaritalStatusValue = document.forms["clientCreationActionForm"].elements["customerNameDetail[1].nameType"].value;
+		if(bAlreadySelected==false) {
+			if(sMaritalStatusValue=='1')
+				document.forms["clientCreationActionForm"].elements["customerDetail.maritalStatus"].value=66;
+			else
+				document.forms["clientCreationActionForm"].elements["customerDetail.maritalStatus"].value='';
+		}
+	}
+
+	function MaritalStatusSelected(){
+		bAlreadySelected = true;
+	}
+
+</script>
 
 		<html-el:form action="/clientCreationAction.do?method=next"
 			method="post" enctype="multipart/form-data"
@@ -413,7 +440,7 @@
 
 									<td><c:set var="maritalStatusList" scope="request"
 										value="${requestScope.maritalStatusEntity.lookUpMaster}" /> <mifos:select
-										name="clientCreationActionForm"
+										name="clientCreationActionForm" onchange="MaritalStatusSelected()"
 										property="customerDetail.maritalStatus" size="1">
 										<html-el:options collection="maritalStatusList"
 											property="lookUpId" labelProperty="lookUpValue" />
@@ -509,7 +536,7 @@
 												bundle="ClientUIResources"></mifos:mifoslabel> <c:set
 												var="spouseFatherList" scope="request"
 												value="${requestScope.spouseEntity.lookUpMaster}" /> <mifos:select
-												style="width:80px;" name="clientCreationActionForm"
+												style="width:80px;" onchange="CheckMaritalStatus()" name="clientCreationActionForm"
 												property="customerNameDetail[1].nameType" size="1">
 												<html-el:options collection="spouseFatherList" property="id"
 													labelProperty="lookUpValue" />
