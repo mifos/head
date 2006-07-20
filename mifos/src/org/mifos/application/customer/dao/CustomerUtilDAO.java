@@ -980,6 +980,32 @@ public class CustomerUtilDAO extends DAO {
 		return customerChildren;
 
 	}
+	
+	/**
+	 * This method obtains list of all the clients that belong to customer with
+	 * given searchId.
+	 */
+	public List<CustomerMaster> getCustomerChildrenOtherThanClosedOrCancelled(String searchIdStr,
+			short officeId) throws SystemException {
+		List<CustomerMaster> customerChildren = new ArrayList<CustomerMaster>();
+		List queryResult = null;
+		HashMap queryParameters = new HashMap();
+		queryParameters.put("SEARCH_STRING", searchIdStr + ".%");
+		queryParameters.put("OFFICE_ID", officeId);
+		queryResult = executeNamedQuery(
+					NamedQueryConstants.GET_CHILDREN_OTHER_THAN_CLOSED_CANCELLED,
+					queryParameters);
+		if (null != queryResult && queryResult.size() > 0) {
+			for (int i = 0; i < queryResult.size(); i++) {
+				Object obj = queryResult.get(i);
+				if (obj != null) {
+					customerChildren.add((CustomerMaster) obj);
+				}
+			}
+		}
+		return customerChildren;
+
+	}
 
 	public List<Customer> getChildListForParent(String searchString,
 			short officeId, Session session) throws HibernateProcessException,

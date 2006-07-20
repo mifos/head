@@ -988,7 +988,7 @@ public class GroupBusinessProcessor extends MifosBusinessProcessor {
 		}
 		
 		CustomerUtilDAO customerUtilDAO = new CustomerUtilDAO();
-		clients = customerUtilDAO.getCustomerChildren(group.getSearchId(),group.getOffice().getOfficeId(),null);
+		clients = customerUtilDAO.getCustomerChildrenOtherThanClosedOrCancelled(group.getSearchId(),group.getOffice().getOfficeId());
 		context.addAttribute(this.getResultObject(GroupConstants.CLIENT_LIST,clients));
 		
 		

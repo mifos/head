@@ -116,6 +116,10 @@
          <query name="getCustomerMasterBySearchId">
 	        	   <![CDATA[select new org.mifos.application.customer.util.valueobjects.CustomerMaster(customer.customerId,customer.displayName,customer.globalCustNum,customer.statusId,customer.customerLevel.levelId,customer.versionNo,customer.office.officeId,customer.personnel.personnelId) from Customer customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID]]>
           </query>
+          <query name="getClientOtherThanClosedOrCancelled">
+	        	   <![CDATA[select new org.mifos.application.customer.util.valueobjects.CustomerMaster(customer.customerId,customer.displayName,customer.globalCustNum,customer.statusId,customer.customerLevel.levelId,customer.versionNo,customer.office.officeId,customer.personnel.personnelId) from Customer customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.statusId in (1,2,3,4)]]>
+          </query>
+          
 	 <!-- This query obtains  the customer with the specified customer id -->
         <query name="Customer.RetrieveCustomerMaster">
 	        	   <![CDATA[select new org.mifos.application.customer.util.valueobjects.CustomerMaster(customer.customerId,customer.displayName,customer.globalCustNum,customer.statusId,customer.customerLevel.levelId,customer.versionNo,customer.office.officeId,customer.personnel.personnelId,customer.customerMeeting.meeting.MeetingDetails.recurAfter)

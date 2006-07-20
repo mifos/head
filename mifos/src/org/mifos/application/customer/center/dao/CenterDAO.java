@@ -612,7 +612,7 @@ public class CenterDAO extends DAO {
 		try{
 			session = HibernateUtil.getSession();
 			
-			Query query = session.createQuery("from Customer customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID");
+			Query query = session.createQuery("from Customer customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.statusId in (1,2,3,4,7,8,9,10)");
 			//Bug id 27252. Changed the searchString to get child of the Center 
 			query.setString("SEARCH_STRING", searchString+".%");
 			query.setShort("OFFICE_ID", officeId);

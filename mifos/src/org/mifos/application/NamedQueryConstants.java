@@ -242,7 +242,7 @@ public interface NamedQueryConstants {
 	public String CUSTOMERGETACTIVELOANOFFICERS="Customer.getactiveloanofficers";
 	public String CUSTOMERGETOFFICES="Customer.getOffices";
 	public String CUSTOMERGETACTIVEOFFICES="Customer.getActiveOffices";
-	
+	public String GET_CHILDREN_OTHER_THAN_CLOSED_CANCELLED = "getClientOtherThanClosedOrCancelled";
 	public String RETRIEVE_INSTALLMENT_NUM = "Account.GetInstallmentId";
 	public String RETRIEVE_INSTALLMENTS = "Account.GetInstallments";
 	
