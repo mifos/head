@@ -64,6 +64,7 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.valueobjects.CustomFieldDefinition;
 import org.mifos.application.customer.util.valueobjects.Customer;
 import org.mifos.application.customer.util.valueobjects.CustomerMaster;
+import org.mifos.application.customer.util.valueobjects.CustomerPosition;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.fees.util.valueobjects.FeeMaster;
@@ -1028,6 +1029,27 @@ public class CustomerUtilDAO extends DAO {
 				HibernateUtil.closeSession(session);
 		}
 	}
+
+	public void checkIfClientIsAssignedPosition(Session session,  Integer parentCustomerId , Integer customerId)throws SystemException {
+		 boolean isClientAssignedToPosition = false;
+		  HashMap queryParameters = new HashMap();
+		  queryParameters.put("CUSTOMER_ID",customerId);
+		  queryParameters.put("PARENT_CUSTOMER_ID",parentCustomerId);
+		  List queryResult = executeNamedQuery("Customer.clientPositions",queryParameters,session);
+		  System.out.println("----------------query size: "+queryResult.size() +queryResult.getClass());
+		  if(null!=queryResult){
+			 for(int i=0;i<queryResult.size();i++){
+				 if(null!=queryResult){
+					 System.out.println("----------------query class: "+queryResult.get(i).getClass());
+					 CustomerPosition clientPosition = (CustomerPosition)queryResult.get(i); 
+					 clientPosition.setCustomerId(null);
+					 session.update(clientPosition);
+				 }
+			 }
+		  }
+	
+	 
+}
 	
 	public static void applyFees(Customer customer,Session session) throws SystemException, CustomerException{
 		

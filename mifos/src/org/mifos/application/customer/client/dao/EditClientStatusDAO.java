@@ -73,8 +73,10 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.valueobjects.Context;
 import org.mifos.framework.util.valueobjects.SearchResults;
+
 
 /**
  * This class acts as DAO for edit client status module.
@@ -132,6 +134,17 @@ public class EditClientStatusDAO extends DAO {
 			}
 			
 			session.update(client);
+			//if the client status being changed to closed or cancelled, any positions to which it has been assigned is changed to null
+			CustomerUtilDAO customerDAO = new CustomerUtilDAO();
+			Customer oldParent = client.getParentCustomer();
+			if(client.getGroupFlag() == Constants.YES && (client.getStatusId().shortValue() == CustomerConstants.CLIENT_CLOSED ||client.getStatusId().shortValue() == CustomerConstants.CLIENT_CANCELLED)){
+				customerDAO.checkIfClientIsAssignedPosition(session ,oldParent.getCustomerId() , client.getCustomerId());
+				//if client is being transferred between groups in different centers, and if center has this client assigned to a position,
+				//then that is removed 
+				if(oldParent.getParentCustomer()!=null ){
+					customerDAO.checkIfClientIsAssignedPosition(session ,oldParent.getParentCustomer().getCustomerId() , client.getCustomerId());
+				}
+			}
 			
 			//calls the addNotes in customerNoteDAO passing the current session
 			customerNoteDAO.addNotes(session,customerNote);

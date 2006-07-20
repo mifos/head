@@ -52,6 +52,7 @@ import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.client.util.valueobjects.Client;
+import org.mifos.application.customer.dao.CustomerUtilDAO;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -108,6 +109,7 @@ public class EditGrpMembershipDAO extends DAO {
 	 */
 	public void update(Context context)throws SystemException,ApplicationException{
 		
+		CustomerUtilDAO customerDAO = new CustomerUtilDAO();
 		Transaction tx = null;
 		Session session = null;
 		CustomerHierarchy customerHierarchy = null;
@@ -175,12 +177,12 @@ public class EditGrpMembershipDAO extends DAO {
 			session.update(cust);
 			//updating the client details
 			session.update(client);
-			checkIfClientIsAssignedPosition(session ,oldParent.getCustomerId() , client.getCustomerId());
+			customerDAO.checkIfClientIsAssignedPosition(session ,oldParent.getCustomerId() , client.getCustomerId());
 			//if client is being transferred between groups in different centers, and if center has this client assigned to a position,
 			//then that is removed 
 			if(oldParent.getParentCustomer()!=null && cust.getParentCustomer()!=null ){
 				if(oldParent.getParentCustomer().getCustomerId().intValue() != cust.getParentCustomer().getCustomerId().intValue() ){
-					checkIfClientIsAssignedPosition(session ,oldParent.getParentCustomer().getCustomerId() , client.getCustomerId());
+					customerDAO.checkIfClientIsAssignedPosition(session ,oldParent.getParentCustomer().getCustomerId() , client.getCustomerId());
 				}
 			}
 			// make old hierarhcy inactive
@@ -216,27 +218,7 @@ public class EditGrpMembershipDAO extends DAO {
 			}
 	}
 	
-	public void checkIfClientIsAssignedPosition(Session session,  Integer parentCustomerId , Integer customerId)throws SystemException {
-			 boolean isClientAssignedToPosition = false;
-			  HashMap queryParameters = new HashMap();
-			  queryParameters.put("CUSTOMER_ID",customerId);
-			  queryParameters.put("PARENT_CUSTOMER_ID",parentCustomerId);
-			  List queryResult = executeNamedQuery("Customer.clientPositions",queryParameters,session);
-			  System.out.println("----------------query size: "+queryResult.size() +queryResult.getClass());
-			  if(null!=queryResult){
-				 for(int i=0;i<queryResult.size();i++){
-					 if(null!=queryResult){
-						 System.out.println("----------------query class: "+queryResult.get(i).getClass());
-						 CustomerPosition clientPosition = (CustomerPosition)queryResult.get(i); 
-						 clientPosition.setCustomerId(null);
-						 session.update(clientPosition);
-					 }
-				 }
-			  }
-		
-		 
-	}
-/**
+	/**
 	 * This updates the the client object based on the client id. This is called to if the parent group chnages its membership 
 	 * of the client
 	 * The attributes to be updated are: - 
