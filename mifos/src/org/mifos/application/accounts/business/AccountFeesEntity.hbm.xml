@@ -34,4 +34,7 @@
 			not-null="true" unique="true" lazy="true" />
 
 	</class>
+		<query name="getCustomerAccountsForFee">
+		<![CDATA[select distinct(afe.account.accountId) from AccountFeesEntity afe where afe.fees.feeId =:FEEID ]]>
+	</query>  
 </hibernate-mapping>

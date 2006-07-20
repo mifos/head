@@ -16,6 +16,7 @@
 		<property name="createdBy" column="CREATED_BY" />
 		<property name="updatedDate" column="UPDATED_DATE" />
 		<property name="updatedBy" column="UPDATED_BY" />
+		<property name="updateFlag"  column="UPDATE_FLAG"/>
 
 		<property name="rate" column="RATE" type="double" />
 		<property name="feeAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
@@ -24,15 +25,18 @@
 		</property>
 
 		<many-to-one name="feeFormula" column="FORMULA_ID" class="org.mifos.application.fees.business.FeeFormulaEntity" insert="true" update="false" />
+		<many-to-one name="feeUpdateType" column="UPDATE_TYPE" class="org.mifos.application.fees.business.FeeUpdateTypeEntity" insert="true" update="true" />
 		<many-to-one name="categoryType" column="CATEGORY_ID" class="org.mifos.application.fees.business.CategoryTypeEntity" update="false" insert="true" />
 		<many-to-one name="office" column="OFFICE_ID" class="org.mifos.application.office.business.OfficeBO" insert="true" update="false" />
 		<many-to-one name="glCodeEntity" column="GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" lazy="true" insert="true" update="false" />
 		<many-to-one name="feeStatus" column="STATUS" class="org.mifos.application.fees.business.FeeStatusEntity" insert="true" update="true" />
-
 		<one-to-one name="feeFrequency" class="org.mifos.application.fees.business.FeeFrequencyEntity" cascade="all" property-ref="fee" lazy="false" />
 		<set name="feeLevels" cascade="all" inverse="true" table="FEELEVEL">
 			<key column="FEE_ID" not-null="false" />
 			<one-to-many class="org.mifos.application.fees.business.FeeLevelEntity" />
 		</set>
 	</class>
+	<query name="getUpdatedFeesForCustomers">
+		<![CDATA[from FeesBO fee where  fee.updateFlag in (1,2,3) and fee.categoryType.categoryId in (1,2,3,4)]]>
+	</query>
 </hibernate-mapping>

@@ -426,4 +426,10 @@ public interface NamedQueryConstants {
 	public String GET_UPDATED_CUSTOMER_MEETINGS="getUpdatedMeetings";
 	public String GET_MISSED_DEPOSITS_PAID_AFTER_DUEDATE="accounts.countOfMissedDepositsPaidAfterDueDate";
 	
+	 
+	//fee related m2
+	public String GET_UPDATED_FEES_FOR_CUSTOMERS="getUpdatedFeesForCustomers";
+	public String GET_CUSTOMER_ACCOUNTS_FOR_FEE="getCustomerAccountsForFee";
+	public String GET_FEE_UPDATETYPE="getFeeUpdateType";
+	
 }

@@ -37,7 +37,13 @@
  */
 package org.mifos.application.fees.persistence;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.hibernate.Session;
+import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.fees.business.FeeUpdateTypeEntity;
 import org.mifos.application.fees.business.FeesBO;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
@@ -53,4 +59,12 @@ public class FeePersistence extends Persistence {
 		return (FeesBO)session.get(FeesBO.class,feeid);
 	}
 
+	public List<FeesBO>  getUpdatedFeesForCustomer(){
+		return executeNamedQuery(NamedQueryConstants.GET_UPDATED_FEES_FOR_CUSTOMERS,null);
+	}
+	public FeeUpdateTypeEntity getUpdateTypeEntity(Short id){
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("ID",id);
+		return (FeeUpdateTypeEntity)executeNamedQuery(NamedQueryConstants.GET_FEE_UPDATETYPE,queryParameters).get(0);
+	}
 }

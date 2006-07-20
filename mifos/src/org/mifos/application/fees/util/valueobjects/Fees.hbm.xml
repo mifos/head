@@ -23,7 +23,7 @@
         <property name="createdBy" column="CREATED_BY" type="integer" />
         <property name="updatedDate" column="UPDATED_DATE" type="date"   />
         <property name="updatedBy" column="UPDATED_BY" type="integer"  />
-        <property name="updatedOfficeId" column="UPDATED_OFFICE_ID" type="short"   />
+      <!--   <property name="updatedOfficeId" column="UPDATED_OFFICE_ID" type="short"   /> -->
         <property name="categoryId" column="CATEGORY_ID" type="short"/>
         <property name="adminCheck" column="DEFAULT_ADMIN_FEE" type="string"/>
  

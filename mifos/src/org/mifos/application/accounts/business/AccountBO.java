@@ -1,6 +1,6 @@
 /**
 
- * AccountBO.java    version: xxx
+* AccountBO.java    version: xxx
 
  
 
@@ -414,6 +414,17 @@ public class AccountBO extends BusinessObject {
 		}
 		return null;
 	}
+	
+	
+	public AccountFeesEntity getAccountFees(Short feeId) {
+		Set<AccountFeesEntity> accountFeesEntitySet = this.getAccountFees();
+		for (AccountFeesEntity accountFeesEntity : accountFeesEntitySet) {
+			if (accountFeesEntity.getFees().getFeeId().equals(feeId)) {
+				return accountFeesEntity;
+			}
+		}
+		return null;
+	}
 
 	public Boolean isFeeActive(Short feeId) {
 		Set<AccountFeesEntity> accountFeesEntitySet = this.getAccountFees();
@@ -620,6 +631,21 @@ public class AccountBO extends BusinessObject {
 		return futureActionDateList;
 	}
 
+	public List <AccountActionDateEntity> getPastInstallments(){
+		List<AccountActionDateEntity> pastActionDateList = new ArrayList<AccountActionDateEntity>();
+		
+		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
+			
+				if (accountActionDateEntity
+						.compareDate(DateUtils.getCurrentDateWithoutTimeStamp()) < 0) {
+					pastActionDateList.add(accountActionDateEntity);
+				}
+			
+		}
+		return pastActionDateList;
+
+		
+	}
 	protected boolean isCurrentDateEquallToInstallmentDate() {
 		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
 			if (accountActionDateEntity.getPaymentStatus().equals(

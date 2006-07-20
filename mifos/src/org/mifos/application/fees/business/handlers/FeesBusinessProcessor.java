@@ -132,7 +132,7 @@ public class FeesBusinessProcessor extends MifosBusinessProcessor {
 		fees.setCreatedDate(new Date(System.currentTimeMillis()));
 		fees.setUpdatedBy(null);
 		fees.setUpdatedDate(null);
-		fees.setUpdatedOfficeId(null);
+		//fees.setUpdatedOfficeId(null);
 		fees.setGlobalFeeNum(null);
 		fees.setStatus(new Short(FeeStatus.ACTIVE.getValue()));
 		fees.setOfficeId(null);

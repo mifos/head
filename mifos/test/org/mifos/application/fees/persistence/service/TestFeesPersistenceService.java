@@ -39,10 +39,12 @@
 package org.mifos.application.fees.persistence.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.fees.business.CategoryTypeEntity;
 import org.mifos.application.fees.business.FeeFrequencyEntity;
+import org.mifos.application.fees.business.FeeUpdateTypeEntity;
 import org.mifos.application.fees.business.FeesBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
@@ -107,4 +109,36 @@ public class TestFeesPersistenceService extends MifosTestCase {
 		return fees;
 	}
 
+	public void testGetUpdatedFeesForCustomer() throws Exception{
+
+		// crate periodic fee
+		FeesBO periodicFee = TestObjectFactory.createPeriodicFees(
+				"ClientPeridoicFee", 5.0, 1, 1, 2);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		//get fee from db 
+		periodicFee =(FeesBO) HibernateUtil.getSessionTL().get(FeesBO.class,periodicFee.getFeeId());
+		periodicFee.setUserContext(TestObjectFactory.getUserContext());
+		periodicFee.setUpdateFlag(Short.valueOf("1"));
+		periodicFee.save(false);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		List fees = new FeePersistenceService().getUpdatedFeesForCustomer();
+		assertNotNull(fees);
+		assertEquals(1,fees.size());
+
+		//cleanup
+		periodicFee =(FeesBO) HibernateUtil.getSessionTL().get(FeesBO.class,periodicFee.getFeeId());
+		TestObjectFactory.removeObject(periodicFee);
+		
+	}
+	
+	public void testGetUpdateTypeEntity(){
+		
+		  FeeUpdateTypeEntity feeUpdateType=	new FeePersistenceService().getUpdateTypeEntity(Short.valueOf("1"));
+		  assertNotNull(feeUpdateType);
+		  assertEquals(1,feeUpdateType.getId().intValue());
+			
+		}
 }

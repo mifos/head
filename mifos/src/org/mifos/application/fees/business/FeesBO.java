@@ -84,6 +84,10 @@ public class FeesBO extends BusinessObject {
 	private FeeStatusEntity feeStatus;
 
 	private Short rateFlatFlag;
+	
+	private Short updateFlag;
+	
+	private FeeUpdateTypeEntity feeUpdateType;
 
 	@Deprecated
 	private Double rateOrAmount;
@@ -317,6 +321,22 @@ public class FeesBO extends BusinessObject {
 
 	public boolean isActive() {
 		return getFeeStatus().isActive();
+	}
+
+	public Short getUpdateFlag() {
+		return updateFlag;
+	}
+
+	public void setUpdateFlag(Short updateFlag) {
+		this.updateFlag = updateFlag;
+	}
+
+	public FeeUpdateTypeEntity getFeeUpdateType() {
+		return feeUpdateType;
+	}
+
+	public void setFeeUpdateType(FeeUpdateTypeEntity feeUpdateType) {
+		this.feeUpdateType = feeUpdateType;
 	}
 
 }

@@ -153,4 +153,11 @@ public class AccountPersistence extends Persistence {
 		queryParameters.put("PAYMENT_UNPAID",AccountConstants.PAYMENT_UNPAID);		
 		return executeNamedQuery(NamedQueryConstants.GET_TODAYS_UNPAID_INSTALLMENT_FOR_ACTIVE_CUSTOMERS,queryParameters);			
 	}
+	
+	public List<Integer> getCustomerAccountsForFee(Short feeId){
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("FEEID",feeId);
+		return executeNamedQuery(NamedQueryConstants.GET_CUSTOMER_ACCOUNTS_FOR_FEE,queryParameters);
+
+	}
 }

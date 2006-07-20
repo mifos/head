@@ -252,6 +252,7 @@
 	<mapping resource="org/mifos/application/fees/business/FeesBO.hbm.xml" />
 	<mapping resource="org/mifos/application/fees/business/FeeStatusEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/fees/business/FeeTypeEntity.hbm.xml" />
+	<mapping resource="org/mifos/application/fees/business/FeeUpdateTypeEntity.hbm.xml" />
 
 	<!-- Mapping files for collection sheet generation-->
 	<mapping resource="org/mifos/application/collectionsheet/business/CollectionSheetBO.hbm.xml" />

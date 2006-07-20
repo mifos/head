@@ -440,4 +440,15 @@ public class TestAccountBO extends TestAccount {
 			break;
 		}
 	}
+	public void testGetPastInstallments(){
+		
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1,1,4,2));
+        Calendar calendar = new GregorianCalendar();
+        calendar.roll(Calendar.MONTH,-2);
+        CustomerBO centerBO=TestObjectFactory.createCenter("Center",Short.valueOf("13"),"1.1",meeting,calendar.getTime());
+        List<AccountActionDateEntity> pastInstallments =  centerBO.getCustomerAccount().getPastInstallments();
+        assertNotNull(pastInstallments);
+        assertEquals(3,pastInstallments.size());
+        TestObjectFactory.cleanUp(centerBO);
+	}
 }

@@ -105,7 +105,7 @@ public class Fees extends ValueObject {
 	private Integer updatedBy;
 
 	
-	private Short updatedOfficeId;
+//	private Short updatedOfficeId;
 
 	
 	private String adminCheck;
@@ -230,7 +230,7 @@ public class Fees extends ValueObject {
 	public void setUpdatedBy(Integer updatedBy) {
 		this.updatedBy = updatedBy;
 	}
-
+/*
 	public Short getUpdatedOfficeId() {
 		return this.updatedOfficeId;
 	}
@@ -238,7 +238,7 @@ public class Fees extends ValueObject {
 	public void setUpdatedOfficeId(Short updatedOfficeId) {
 		this.updatedOfficeId = updatedOfficeId;
 	}
-
+*/
 	public Short getCategoryId() {
 		return categoryId;
 	}

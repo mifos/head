@@ -1,9 +1,12 @@
 package org.mifos.application.accounts.persistence.service;
 
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.HibernateException;
+import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -73,5 +76,9 @@ public class AccountPersistanceService extends PersistenceService {
 	}
 	public List<Integer> getAccountsWithTodaysInstallment() throws PersistenceException{
 		return accountPersistence.getAccountsWithTodaysInstallment();
+	}
+	public List<Integer> getCustomerAccountsForFee(Short feeId){
+		return accountPersistence.getCustomerAccountsForFee(feeId);
+
 	}
 }
