@@ -1,15 +1,23 @@
 package org.mifos.application.customer.struts.action;
+import java.util.Date;
+import java.util.Locale;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.customer.group.util.helpers.LinkParameters;
 import org.mifos.application.customer.struts.actionforms.CustomerHistoricalDataActionForm;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.valueobjects.CustomerHistoricalData;
+import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.MifosBaseAction;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.framework.util.valueobjects.Context;
 
@@ -27,6 +35,30 @@ public class CustomerHistoricalDataAction extends MifosBaseAction {
 	public String getPath() {
 		return CustomerConstants.CUSTOMER_HISTORICAL_DATA_ACTION;
 	}
+	
+	/**
+	 * This method is called before th laod page for center is called
+	 * It sets this information in session and context.This should be removed after center was successfully created.
+	 * @param mapping
+	 * @param form
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	public ActionForward load(ActionMapping mapping,
+			ActionForm form,
+			HttpServletRequest request,
+			HttpServletResponse response)throws Exception {
+		this.clearActionForm(form);
+		ActionForward forward = super.load(mapping,form,request,response);
+		Context context = (Context)request.getAttribute(Constants.CONTEXT);
+		CustomerHistoricalData customerHistoricalData = (CustomerHistoricalData)context.getValueObject();
+		if(customerHistoricalData.getMfiJoiningDate() == null){
+			customerHistoricalData.setMfiJoiningDate(new java.sql.Date(new Date().getTime()));
+		}
+		return forward;
+	}
   
 	public ActionForward customGet(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
 		HttpSession session= request.getSession();
@@ -38,6 +70,7 @@ public class CustomerHistoricalDataAction extends MifosBaseAction {
   
 	@TransactionDemarcate(saveToken = true)
 	public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
+		CustomerHistoricalDataActionForm customerHistoricalDataActionForm = (CustomerHistoricalDataActionForm)form;
 		ActionForward forward = super.get(mapping,form,request,response);
 		Context context = (Context)request.getAttribute(Constants.CONTEXT);
 		Object obj=context.getBusinessResults(CustomerConstants.IS_HISTORICAL_DATA_PRESENT);
@@ -117,6 +150,7 @@ public class CustomerHistoricalDataAction extends MifosBaseAction {
 			}
 			return mapping.findForward(forward); 
 	}
+	
 }
 
 

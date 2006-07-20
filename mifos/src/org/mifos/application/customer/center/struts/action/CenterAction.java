@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -77,6 +78,7 @@ import org.mifos.application.customer.util.valueobjects.CustomerNote;
 import org.mifos.application.customer.util.valueobjects.CustomerPosition;
 import org.mifos.application.fees.util.valueobjects.FeeMaster;
 import org.mifos.application.fees.util.valueobjects.Fees;
+import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.personnel.util.valueobjects.Personnel;
@@ -86,6 +88,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.MifosSearchAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
@@ -162,6 +165,7 @@ public class CenterAction extends MifosSearchAction{
 					centerForm.getCustomField(i).setFieldValue(customFields.get(i).getDefaultValue());
 			}
 		}
+		centerForm.setMfiJoiningDate(DateHelper.getCurrentDate(getUserLocale(request)));
 	    return forward;
 	}
 	/**
@@ -738,5 +742,20 @@ public class CenterAction extends MifosSearchAction{
 			context.setValueObject(center);
 			return get(mapping,form,request,response);
 		}
+		 protected Locale getUserLocale(HttpServletRequest request) {
+				Locale locale = null;
+				HttpSession session = request.getSession();
+				if (session != null) {
+					UserContext userContext = (UserContext) session
+							.getAttribute(LoginConstants.USERCONTEXT);
+					if (null != userContext) {
+						locale = userContext.getPereferedLocale();
+						if (null == locale) {
+							locale = userContext.getMfiLocale();
+						}
+					}
+				}
+				return locale;
+			}
 
 }
