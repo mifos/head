@@ -49,12 +49,13 @@ function goToCancelPage(){
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td><br>
-							<span class="fontnormal"> <mifos:mifoslabel
-								name="Account.EnterANote" bundle="accountsUIResources"></mifos:mifoslabel>
-							<mifos:mifoslabel name="Account.ClickPreview"
-								bundle="accountsUIResources"></mifos:mifoslabel> <mifos:mifoslabel
-								name="Account.ClickCancelToDetailsPage"
-								bundle="accountsUIResources"></mifos:mifoslabel> </span></td>
+							<span class="fontnormal"> 
+								<mifos:mifoslabel name="Account.EnterANote" bundle="accountsUIResources"></mifos:mifoslabel>
+								<mifos:mifoslabel name="Account.ClickPreview" bundle="accountsUIResources"></mifos:mifoslabel>
+								<mifos:mifoslabel name="Savings.clickCancelToReturn" bundle="SavingsUIResources"/>
+					            <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
+					            <mifos:mifoslabel name="Savings.accountDetailsPage" bundle="SavingsUIResources"/> 
+					         </span></td>
 						</tr>
 						<tr>
 							<td class="blueline"><img src="pages/framework/images/trans.gif"

@@ -335,7 +335,7 @@
                   		<c:choose>
               				<c:when test="${!empty sessionScope.notes}">
 								<c:forEach var="note" items="${sessionScope.notes}">
-									<span class="fontnormal8ptbold"> <c:out value="${note.commentDate}"/>:</span>
+									<span class="fontnormal8ptbold"> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,note.commentDate)}"/>:</span>
 									<span class="fontnormal8pt"> 
 			                				<c:out value="${note.comment}"/>-<em>
 											<c:out value="${note.personnel.displayName}"/></em><br><br>
