@@ -364,7 +364,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		assertEquals(1,centerPerformanceHistory.getNumberOfClients().intValue());
 		assertEquals(new Money("2400.0"),totalLoan);
 		assertEquals(new Money("400.0"),totalSavings);
-		assertEquals(new Money("0.1"),totalPortfolioAtRisk);
+		assertEquals(new Money("0.5"),totalPortfolioAtRisk);
 		
 		account1 = (AccountBO) (HibernateUtil.getSessionTL().get(AccountBO.class,new Integer(account1.getAccountId())));
 		account2 = (AccountBO) (HibernateUtil.getSessionTL().get(AccountBO.class,new Integer(account2.getAccountId())));

@@ -38,8 +38,6 @@
 package org.mifos.application.customer.business.service;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 
@@ -48,6 +46,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.CustomerActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
@@ -174,17 +173,26 @@ public class CustomerBusinessService extends BusinessService{
 	
 	private Money getPortfolioAtRisk(List<AccountBO> accountList) throws PersistenceException, ServiceException {
 		Money amount = new Money();
-		for(AccountBO accountBO : accountList) {
-			LoanBO loanBO = (LoanBO) accountBO;
-			if(loanBO.isAccountActive()) {
-				for(AccountActionDateEntity accountActionDateEntity : loanBO.getAccountActionDates()) {
-					Calendar actionDate=new GregorianCalendar();
-					actionDate.setTime(accountActionDateEntity.getActionDate());
-					long diffInTermsOfDay = (Calendar.getInstance().getTimeInMillis()-actionDate.getTimeInMillis())/(24*60*60*1000);
-					if(diffInTermsOfDay>30) {
-						amount = amount.add(accountActionDateEntity.getPrincipalDue());
-					}
+		for(AccountBO account : accountList) {
+			if(account.getAccountType().getAccountTypeId().equals(AccountConstants.LOAN_TYPE)
+					&& ((LoanBO)account).isAccountActive()){
+				LoanBO loan=(LoanBO)account;
+				if(loan.hasPortfolioAtRisk()) {
+					amount = getBalanceForPortfolioAtRisk(accountList);
+					break;
 				}
+			}
+		}
+		return amount;
+	}
+	
+	private Money getBalanceForPortfolioAtRisk(List<AccountBO> accountList) throws PersistenceException, ServiceException {
+		Money amount = new Money();
+		for(AccountBO account : accountList) {
+			if(account.getAccountType().getAccountTypeId().equals(AccountConstants.LOAN_TYPE)
+					&& ((LoanBO)account).isAccountActive()){
+				LoanBO loan=(LoanBO)account;
+				amount=amount.add(loan.getRemainingPrincipalAmount());
 			}
 		}
 		return amount;
