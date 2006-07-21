@@ -435,4 +435,8 @@ public interface NamedQueryConstants {
 	
 	public String GET_ACTIVE_CUSTOMER_ACCOUNTS="getActiveCustomerAccounts";
 	
+	public String GET_LASTINSTALLMENT="getLastInstallment";
+	
+	
+	
 }

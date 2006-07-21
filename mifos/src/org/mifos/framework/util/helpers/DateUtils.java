@@ -80,4 +80,12 @@ public class DateUtils {
 		cal1.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DATE),0,0,0);
 		return new Date(cal1.getTimeInMillis());
 	}
+	public static Calendar getFistDayOfNextYear(Calendar cal){
+		cal.roll(Calendar.YEAR,1);
+		cal.set(Calendar.MONTH,Calendar.JANUARY);
+		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DATE));
+		Calendar cal1 = Calendar.getInstance();
+		cal1.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DATE),0,0,0);
+		return cal1;
+	}
 }

@@ -93,4 +93,9 @@ public class AccountPersistanceService extends PersistenceService {
 		return accountPersistence.getActiveCustomerAccounts();
 
 	}
+	public AccountActionDateEntity getLastInstallment(Integer accountId ){
+		
+		return accountPersistence.getLastInstallment(accountId );
+
+	}
 }

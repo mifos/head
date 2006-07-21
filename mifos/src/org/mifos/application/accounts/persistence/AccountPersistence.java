@@ -186,4 +186,10 @@ public class AccountPersistence extends Persistence {
 		return executeNamedQuery(NamedQueryConstants.GET_ACTIVE_CUSTOMER_ACCOUNTS,null);
 
 	}
+	public AccountActionDateEntity getLastInstallment(Integer accountId ){
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("accountId",accountId);
+		return (AccountActionDateEntity)executeNamedQuery(NamedQueryConstants.GET_LASTINSTALLMENT,queryParameters).get(0);
+
+	}
 }

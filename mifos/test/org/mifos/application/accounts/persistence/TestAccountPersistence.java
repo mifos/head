@@ -126,4 +126,21 @@ public class TestAccountPersistence extends TestAccount {
 		assertNotNull(customerAccounts);
 		assertEquals(2,customerAccounts.size());
 	}
+	public void testGetLastInstallment(){
+		
+		Short maxInstallmentid =null;
+		for (AccountActionDateEntity installment : center.getCustomerAccount().getAccountActionDates()) {
+			
+			if ( maxInstallmentid==null)
+			 maxInstallmentid = installment.getInstallmentId();
+			else {
+				
+				if(maxInstallmentid.shortValue()< installment.getInstallmentId().shortValue())maxInstallmentid=installment.getInstallmentId();
+				
+			}
+		}
+		assertEquals(maxInstallmentid.shortValue(), accountPersistence.getLastInstallment(center.getCustomerAccount().getAccountId()).getInstallmentId().shortValue());
+		
+		
+	}
 }
