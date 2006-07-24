@@ -302,8 +302,8 @@ public class TestAccountBO extends TestAccount {
 	public void testIsTrxnDateValid() throws Exception{
 		
 		Calendar calendar = new GregorianCalendar();
-		
-		calendar.roll(Calendar.DAY_OF_MONTH,10);
+		/*Added by rajender on 24th July as test case was not passing*/
+		calendar.add(Calendar.DAY_OF_MONTH,10);
 		java.util.Date  trxnDate = new Date(calendar.getTimeInMillis());
 		if(Configuration.getInstance().getAccountConfig(Short.valueOf("3")).isBackDatedTxnAllowed())
 			assertTrue(accountBO.isTrxnDateValid(trxnDate));

@@ -130,8 +130,8 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "preview");
 		actionPerform();
 		verifyActionErrors(new String[] { "Please specify Fee Name .",
-				"Please select customers/products to which Fees Applies.",
-				"Please select Frequency.", "Please select GL Code.",
+				"Please select Customers/Products to which fees apply.",
+				"Please select the Frequency.", "Please select the GL Code.",
 				"errors.enter" });
 		verifyInputForward();
 	}
@@ -147,8 +147,8 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		addRequestParameter("rate", "");
 		actionPerform();
 		verifyActionErrors(new String[] { "Please specify Fee Name .",
-				"Please select one time along with payment type.",
-				"Please select GL Code.", "errors.amountOrRate" });
+				"Please select frequency along with Payment Type.",
+				"Please select the GL Code.", "errors.amountOrRate" });
 		verifyInputForward();
 	}
 
@@ -163,8 +163,8 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		addRequestParameter("rate", "13");
 		actionPerform();
 		verifyActionErrors(new String[] { "Please specify Fee Name .",
-				"Please select one time along with payment type.",
-				"Please select GL Code.", "errors.rateAndFormulaId" });
+				"Please select frequency along with Payment Type.",
+				"Please select the GL Code.", "errors.rateAndFormulaId" });
 		verifyInputForward();
 	}
 
