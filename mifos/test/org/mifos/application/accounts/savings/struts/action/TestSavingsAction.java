@@ -568,7 +568,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		verifyForward("getStatusHistory_success");
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		assertEquals(1,((List<SavingsTransactionHistoryView>) request
+		assertEquals(2,((List<SavingsTransactionHistoryView>) request
 				.getSession().getAttribute(SavingsConstants.STATUS_CHANGE_HISTORY_LIST))
 				.size());
 			}

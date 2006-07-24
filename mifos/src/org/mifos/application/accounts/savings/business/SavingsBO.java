@@ -418,7 +418,9 @@ public class SavingsBO extends AccountBO {
 
 		// security check befor saving
 		checkPermissionForSave(this.getAccountState(), userContext, null);
-
+		this.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
+				this.getAccountState(), this.getAccountState(), getPersonnelDBService().getPersonnel(userContext
+						.getId())));
 		getDBService().save(this);
 		logger.info("In SavingsBO::save(), Successfully saved , accountId: "
 				+ getAccountId());
@@ -570,6 +572,7 @@ public class SavingsBO extends AccountBO {
 			payment.setPaymentDate(helper.getCurrentDate());
 			this.addAccountPayment(payment);
 			addSavingsActivityDetails(buildSavingsActivity(payment.getAmount(), new Money(),AccountConstants.ACTION_SAVINGS_WITHDRAWAL, userContext.getId()));
+			getSavingsPerformance().setTotalWithdrawals(getSavingsPerformance().getTotalWithdrawals().add(payment.getAmount()));
 			buildFinancialEntries(payment.getAccountTrxns());
 		}
 		notes.setCommentDate(new java.sql.Date(helper.getCurrentDate()
