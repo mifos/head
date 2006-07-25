@@ -41,10 +41,12 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -52,6 +54,7 @@ import org.apache.struts.action.ActionMapping;
 
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.MifosSearchAction;
 import org.mifos.framework.struts.tags.DateHelper;
@@ -62,6 +65,7 @@ import org.mifos.framework.util.valueobjects.Context;
 import org.mifos.framework.util.valueobjects.SearchResults;
 
 import org.mifos.application.configuration.util.helpers.PathConstants;
+import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.util.valueobjects.EntityMaster;
 import org.mifos.application.master.util.valueobjects.LookUpMaster;
 import org.mifos.application.master.util.valueobjects.SupportedLocales;
@@ -662,6 +666,7 @@ public class PersonnelAction extends MifosSearchAction{
 				}
 			}
 		}
+		actionForm.setDateOfJoiningMFI(DateHelper.getCurrentDate(getUserLocale(request)));
 		return forward;
 	}
 	
@@ -686,5 +691,20 @@ public class PersonnelAction extends MifosSearchAction{
 		Context context=(Context)request.getAttribute(Constants.CONTEXT);
 		context.removeAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST);
 	}
+	 protected Locale getUserLocale(HttpServletRequest request) {
+			Locale locale = null;
+			HttpSession session = request.getSession();
+			if (session != null) {
+				UserContext userContext = (UserContext) session
+						.getAttribute(LoginConstants.USERCONTEXT);
+				if (null != userContext) {
+					locale = userContext.getPereferedLocale();
+					if (null == locale) {
+						locale = userContext.getMfiLocale();
+					}
+				}
+			}
+			return locale;
+		}
 
 }
