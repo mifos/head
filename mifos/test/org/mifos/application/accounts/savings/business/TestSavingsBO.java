@@ -3752,8 +3752,10 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = savingsService.findById(savings.getAccountId());
 		assertEquals(2,savings.getSavingsActivityDetails().size());
 		for(SavingsActivityEntity activity: savings.getSavingsActivityDetails()){
-			if(activity.getActivity().getId().equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL))
+			if(activity.getActivity().getId().equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL)){
 				assertEquals(balanceAmount.add(interestAtClosure), activity.getAmount());
+				assertEquals(balanceAmount.add(interestAtClosure) ,savings.getSavingsPerformance().getTotalWithdrawals());
+			}
 			else if(activity.getActivity().getId().equals(AccountConstants.ACTION_SAVINGS_INTEREST_POSTING))
 				assertEquals(interestAtClosure, activity.getAmount());			
 		}
