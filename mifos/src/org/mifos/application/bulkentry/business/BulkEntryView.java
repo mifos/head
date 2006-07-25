@@ -41,29 +41,25 @@ package org.mifos.application.bulkentry.business;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountFeesEntity;
+import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.business.CustomerAccountView;
 import org.mifos.application.accounts.business.LoanAccountView;
 import org.mifos.application.accounts.business.LoanAccountsProductView;
 import org.mifos.application.accounts.business.SavingsAccountView;
-import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
+import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.framework.business.View;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.util.helpers.Money;
 
-/**
- * @author rohitr
- * 
- */
 public class BulkEntryView extends View {
-
-	private BulkEntryBusinessService businessService;
 
 	private boolean hasChild;
 
@@ -86,7 +82,6 @@ public class BulkEntryView extends View {
 		loanAccountDetails = new ArrayList<LoanAccountsProductView>();
 		savingsAccountDetails = new ArrayList<SavingsAccountView>();
 		bulkEntryChildren = new ArrayList<BulkEntryView>();
-		businessService = new BulkEntryBusinessService();
 		currency = Configuration.getInstance().getSystemConfig().getCurrency();
 	}
 
@@ -167,141 +162,215 @@ public class BulkEntryView extends View {
 		this.customerAccountDetails = customerAccountDetails;
 	}
 
-	public void populate(Date transactionDate) {
+	public void populateLoanAccountsInformation(CustomerBO customer,
+			Date transactionDate,
+			List<BulkEntryAccountActionView> bulkEntryAccountActionViews,
+			List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews) {
 		Integer customerId = customerDetail.getCustomerId();
-		List<LoanAccountView> loanAccounts = retrieveAccountInformation(
-				customerId, transactionDate);
-		for (LoanAccountView accountView : loanAccounts) {
-			if (accountView.getAccountSate().shortValue() == AccountStates.LOANACC_APPROVED
-					|| accountView.getAccountSate().shortValue() == AccountStates.LOANACC_DBTOLOANOFFICER) {
-
-				if (accountView.isInterestDeductedAtDisbursement()) {
-					List<AccountActionDateEntity> installments = retrieveLoanAccountTransactionDetail(
-							accountView.getAccountId(), transactionDate);
-					// first intallment will be interest or any fee to be
-					// deducted
-					for (AccountActionDateEntity entity : installments) {
-						if (entity.getInstallmentId().shortValue() == 1) {
-							accountView.setAmountPaidAtDisbursement(entity
-									.getTotalDueWithFees()
-									.getAmountDoubleValue());
-							break;
-						}
-
-					}
-				} else {
-					accountView.setAmountPaidAtDisbursement(businessService
-							.getFeeAmountAtDisbursement(accountView
-									.getAccountId(), transactionDate));
-				}
-				continue;
+		List<LoanBO> customerLoanAccounts = customer
+				.getActiveAndApprovedLoanAccounts(transactionDate);
+		if (customerLoanAccounts != null && customerLoanAccounts.size() > 0) {
+			for (LoanBO loan : customerLoanAccounts) {
+				LoanAccountView loanAccountView = getLoanAccountView(loan);
+				addLoanAccountDetails(loanAccountView);
+				if (loanAccountView.isDisbursalAccount())
+					loanAccountView
+							.setAmountPaidAtDisbursement(getAmountPaidAtDisb(
+									loanAccountView, customerId,
+									bulkEntryAccountActionViews,
+									bulkEntryAccountFeeActionViews, loan));
+				else
+					loanAccountView.addTrxnDetails(retrieveAccountActionDetail(
+							loanAccountView.getAccountId(), customerId,
+							bulkEntryAccountActionViews,
+							bulkEntryAccountFeeActionViews));
 			}
-			accountView.addTrxnDetails(retrieveLoanAccountTransactionDetail(
-					accountView.getAccountId(), transactionDate));
 		}
-		for (LoanAccountView loanAccountView : loanAccounts)
-			addLoanAccountDetails(loanAccountView);
-
-		populateSavingsAccountInformation(customerId);
-
-		populateCustomerAccountInformation(customerId, transactionDate);
 	}
 
-	private List<LoanAccountView> retrieveAccountInformation(
-			Integer customerId, Date disbursementDate) {
-		return businessService.retrieveAccountInformationForCustomer(
-				customerId, disbursementDate);
+	private LoanAccountView getLoanAccountView(LoanBO loan) {
+		return new LoanAccountView(loan.getAccountId(), loan.getLoanOffering()
+				.getPrdOfferingShortName(), loan.getAccountType()
+				.getAccountTypeId(), loan.getLoanOffering().getPrdOfferingId(),
+				loan.getAccountState().getId(),
+				loan.getIntrestAtDisbursement(), loan.getLoanAmount());
 	}
 
-	private List<AccountActionDateEntity> retrieveLoanAccountTransactionDetail(
-			Integer accountId, Date transactionDate) {
-		return businessService.retrieveLoanAccountTransactionDetail(accountId,
-				transactionDate);
+	private Double getAmountPaidAtDisb(LoanAccountView loanAccountView,
+			Integer customerId,
+			List<BulkEntryAccountActionView> bulkEntryAccountActionViews,
+			List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews,
+			LoanBO loan) {
+		if (loanAccountView.isInterestDeductedAtDisbursement())
+			return getInterestAmountDedAtDisb(retrieveAccountActionDetail(
+					loanAccountView.getAccountId(), customerId,
+					bulkEntryAccountActionViews, bulkEntryAccountFeeActionViews));
+		else
+			return getFeeAmountAtDisb(loan.getAccountFees());
 	}
 
-	private void populateCustomerAccountInformation(Integer customerId,
-			Date transactionDate) {
-		CustomerBO customer = businessService
-				.retrieveCustomerAccountInfo(customerId);
+	private Double getInterestAmountDedAtDisb(
+			List<BulkEntryAccountActionView> installments) {
+		for (BulkEntryAccountActionView bulkEntryAccountAction : installments)
+			if (bulkEntryAccountAction.getInstallmentId().shortValue() == 1)
+				return bulkEntryAccountAction.getTotalDueWithFees()
+						.getAmountDoubleValue();
+		return 0.0;
+	}
+
+	private Double getFeeAmountAtDisb(Set<AccountFeesEntity> accountFees) {
+		Money feeAtDisbursement = new Money();
+		for (AccountFeesEntity entity : accountFees) {
+			if (entity.isTimeOfDisbursement())
+				feeAtDisbursement = feeAtDisbursement.add(entity
+						.getAccountFeeAmount());
+		}
+		return feeAtDisbursement.getAmountDoubleValue();
+	}
+
+	private List<BulkEntryAccountActionView> retrieveAccountActionDetail(
+			Integer accountId, Integer customerId,
+			List<BulkEntryAccountActionView> bulkEntryAccountActionViews,
+			List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews) {
+		int index = bulkEntryAccountActionViews
+				.indexOf(new BulkEntryAccountActionView(accountId, customerId));
+		int lastIndex = bulkEntryAccountActionViews
+				.lastIndexOf(new BulkEntryAccountActionView(accountId,
+						customerId));
+		if (lastIndex != -1 && index != -1) {
+			List<BulkEntryAccountActionView> applicableInstallments = bulkEntryAccountActionViews
+					.subList(index, lastIndex + 1);
+			for (BulkEntryAccountActionView bulkEntryAccountActionView : applicableInstallments) {
+				int feeIndex = bulkEntryAccountFeeActionViews
+						.indexOf(new BulkEntryAccountFeeActionView(
+								bulkEntryAccountActionView.getActionDateId()));
+				int feeLastIndex = bulkEntryAccountFeeActionViews
+						.lastIndexOf(new BulkEntryAccountFeeActionView(
+								bulkEntryAccountActionView.getActionDateId()));
+				if (feeIndex != -1 && feeLastIndex != -1)
+					bulkEntryAccountActionView
+							.setBulkEntryAccountFeeActions(bulkEntryAccountFeeActionViews
+									.subList(feeIndex, feeLastIndex + 1));
+			}
+			return applicableInstallments;
+		}
+		return null;
+	}
+
+	public void populateCustomerAccountInformation(CustomerBO customer,
+			List<BulkEntryAccountActionView> bulkEntryAccountActionViews,
+			List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews) {
+		CustomerAccountBO customerAccount = customer.getCustomerAccount();
 		CustomerAccountView customerAccountView = new CustomerAccountView(
-				customer.getCustomerAccount().getAccountId());
-		customerAccountView.setAccountActionDates(businessService
-				.retrieveCustomerAccountActionDetails(customerAccountView
-						.getAccountId(), transactionDate));
+				customerAccount.getAccountId());
+		customerAccountView.setAccountActionDates(retrieveAccountActionDetail(
+				customerAccount.getAccountId(), customer.getCustomerId(),
+				bulkEntryAccountActionViews, bulkEntryAccountFeeActionViews));
 		setCustomerAccountDetails(customerAccountView);
 	}
 
-	private void populateSavingsAccountInformation(Integer customerId) {
-		List<SavingsAccountView> savingsAccounts = businessService
-				.retrieveSavingsAccountInformationForCustomer(customerId);
-
-		if (customerDetail.getCustomerLevelId().equals(
-				CustomerConstants.CENTER_LEVEL_ID)) {
+	public void populateSavingsAccountsInformation(CustomerBO customer) {
+		List<SavingsAccountView> savingsAccounts = getSavingsAccountViews(customer);
+		if (customerDetail.isCustomerCenter()) {
 			for (BulkEntryView child : bulkEntryChildren) {
-				addSavingsAccountView(child.getBulkEntryChildren(),
+				addSavingsAccountViewToClients(child.getBulkEntryChildren(),
 						savingsAccounts);
 			}
-		} else if (customerDetail.getCustomerLevelId().equals(
-				CustomerConstants.GROUP_LEVEL_ID)) {
-			addSavingsAccountView(bulkEntryChildren, savingsAccounts);
+		} else if (customerDetail.isCustomerGroup()) {
+			addSavingsAccountViewToClients(bulkEntryChildren, savingsAccounts);
 		}
 		for (SavingsAccountView savingsAccountView : savingsAccounts)
 			addSavingsAccountDetail(savingsAccountView);
 	}
 
-	private void addSavingsAccountView(List<BulkEntryView> parent,
+	private List<SavingsAccountView> getSavingsAccountViews(CustomerBO customer) {
+		List<SavingsBO> customerSavingsAccounts = customer
+				.getActiveSavingsAccounts();
+		List<SavingsAccountView> savingsAccounts = new ArrayList<SavingsAccountView>();
+		if (customerSavingsAccounts != null
+				&& customerSavingsAccounts.size() > 0)
+			for (SavingsBO savingsAccount : customerSavingsAccounts) {
+				SavingsAccountView savingsAccountView = getSavingsAccountView(savingsAccount);
+				savingsAccounts.add(savingsAccountView);
+			}
+		return savingsAccounts;
+	}
+
+	private SavingsAccountView getSavingsAccountView(SavingsBO savingsAccount) {
+		return new SavingsAccountView(savingsAccount.getAccountId(),
+				savingsAccount.getAccountType().getAccountTypeId(),
+				savingsAccount.getSavingsOffering());
+
+	}
+
+	private SavingsAccountView getSavingsAccountView(
+			SavingsAccountView savingsAccountView) {
+		return new SavingsAccountView(savingsAccountView.getAccountId(),
+				savingsAccountView.getAccountType(), savingsAccountView
+						.getSavingsOffering());
+
+	}
+
+	private void addSavingsAccountViewToClients(
+			List<BulkEntryView> clientBulkEntryViews,
 			List<SavingsAccountView> savingsAccountViews) {
-		for (BulkEntryView bulkEntryView : parent) {
+		for (BulkEntryView bulkEntryView : clientBulkEntryViews) {
 			for (SavingsAccountView savingsAccountView : savingsAccountViews) {
-				SavingsAccountView savings = new SavingsAccountView(
-						savingsAccountView.getAccountId(), savingsAccountView
-								.getAccountType(), savingsAccountView
-								.getSavingsOffering());
-				bulkEntryView.addSavingsAccountDetail(savings);
+				bulkEntryView
+						.addSavingsAccountDetail(getSavingsAccountView(savingsAccountView));
 			}
 		}
 	}
 
 	public void populateSavingsAccountActions(Integer customerId,
-			Date transactionDate) {
-		if (customerDetail.getCustomerLevelId().equals(
-				CustomerConstants.CENTER_LEVEL_ID)) {
+			Date transactionDate,
+			List<BulkEntryAccountActionView> bulkEntryAccountActionViews) {
+		if (customerDetail.isCustomerCenter())
 			return;
-		}
 		for (SavingsAccountView savingsAccountView : savingsAccountDetails) {
-			if (!(customerDetail.getCustomerLevelId().equals(
-					CustomerConstants.GROUP_LEVEL_ID) && savingsAccountView
+			if (!(customerDetail.isCustomerGroup() && savingsAccountView
 					.getSavingsOffering().getRecommendedAmntUnit()
 					.getRecommendedAmntUnitId().equals(
 							ProductDefinitionConstants.PERINDIVIDUAL))) {
 				addAccountActionToSavingsView(savingsAccountView, customerId,
-						transactionDate);
+						transactionDate, bulkEntryAccountActionViews);
 			}
 		}
-
 	}
 
 	private void addAccountActionToSavingsView(
 			SavingsAccountView savingsAccountView, Integer customerId,
-			Date transactionDate) {
+			Date transactionDate,
+			List<BulkEntryAccountActionView> bulkEntryAccountActionViews) {
 		boolean isMandatory = false;
 		if (savingsAccountView.getSavingsOffering().getSavingsType()
 				.getSavingsTypeId()
 				.equals(ProductDefinitionConstants.MANDATORY))
 			isMandatory = true;
-		List<AccountActionDateEntity> accountActionDetails = retrieveSavingsAccountActions(
-				savingsAccountView.getAccountId(), customerId, transactionDate,
-				isMandatory);
-		for (AccountActionDateEntity accountAction : accountActionDetails) {
-			savingsAccountView.addAccountTrxnDetail(accountAction);
-		}
+		List<BulkEntryAccountActionView> accountActionDetails = retrieveSavingsAccountActions(
+				savingsAccountView.getAccountId(), customerId,
+				bulkEntryAccountActionViews, isMandatory);
+		if (accountActionDetails != null)
+			for (BulkEntryAccountActionView accountAction : accountActionDetails) {
+				savingsAccountView.addAccountTrxnDetail(accountAction);
+			}
 	}
 
-	private List<AccountActionDateEntity> retrieveSavingsAccountActions(
-			Integer accountId, Integer customerId, Date transactionDate,
+	private List<BulkEntryAccountActionView> retrieveSavingsAccountActions(
+			Integer accountId, Integer customerId,
+			List<BulkEntryAccountActionView> bulkEntryAccountActionViews,
 			boolean isMandatory) {
-		return businessService.retrieveSavingsAccountTransactionDetail(
-				accountId, customerId, transactionDate, isMandatory);
+		int index = bulkEntryAccountActionViews
+				.indexOf(new BulkEntryAccountActionView(accountId, customerId));
+		if (!isMandatory && index != -1) {
+			return bulkEntryAccountActionViews.subList(index, index + 1);
+		}
+		int lastIndex = bulkEntryAccountActionViews
+				.lastIndexOf(new BulkEntryAccountActionView(accountId,
+						customerId));
+		if (lastIndex != -1 && index != -1)
+			return bulkEntryAccountActionViews.subList(index, lastIndex + 1);
+		return null;
 	}
 
 	public void setSavinsgAmountsEntered(Short prdOfferingId,

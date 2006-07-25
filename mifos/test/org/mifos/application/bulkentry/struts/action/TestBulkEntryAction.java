@@ -66,7 +66,6 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeView;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -93,7 +92,6 @@ import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -212,10 +210,10 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("attendenceSelected[0]", "1");
-		addRequestParameter("enteredAmount[0][0]", "100.0");
-		addRequestParameter("enteredAmount[1][1]", "100.0");
-		addRequestParameter("enteredAmount[0][1]", "100.0");
-		addRequestParameter("enteredAmount[1][0]", "100.0");
+		addRequestParameter("enteredAmount[0][0]", "212.0");
+		addRequestParameter("enteredAmount[1][1]", "212.0");
+		addRequestParameter("enteredAmount[0][1]", "212.0");
+		addRequestParameter("enteredAmount[1][0]", "212.0");
 		addRequestParameter("withDrawalAmountEntered[2][2]", "100.0");
 		addRequestParameter("depositAmountEntered[2][2]", "100.0");
 		addRequestParameter("withDrawalAmountEntered[0][0]", "100.0");
@@ -413,29 +411,12 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	}
 
 	private LoanAccountView getLoanAccountView(LoanBO account) {
-		LoanAccountView accountView = new LoanAccountView(account
-				.getAccountId(),
-				account.getLoanOffering().getPrdOfferingName(), account
-						.getAccountType().getAccountTypeId(), account
-						.getLoanOffering().getPrdOfferingId(), account
-						.getAccountState().getId(), account
-						.getIntrestAtDisbursement(), account.getLoanBalance());
-
-		MifosCurrency currency = TestObjectFactory.getMFICurrency();
-		AccountActionDateEntity accountAction = new AccountActionDateEntity();
-		accountAction.setInstallmentId(Short.valueOf("1"));
-		accountAction.setPaymentStatus(Short.valueOf("0"));
-		accountAction.setPrincipal(new Money(currency, "100.0"));
-		accountAction.setInterest(new Money(currency, "0.0"));
-		accountAction.setPenalty(new Money(currency, "0.0"));
-		accountAction.setMiscFee(new Money(currency, "0.0"));
-		accountAction.setMiscPenalty(new Money(currency, "0.0"));
-		accountAction.setMiscPenaltyPaid(new Money(currency, "0.0"));
-		accountAction.setPenaltyPaid(new Money(currency, "0.0"));
+		LoanAccountView accountView = TestObjectFactory
+				.getLoanAccountView(account);
 		List<AccountActionDateEntity> actionDates = new ArrayList<AccountActionDateEntity>();
-		actionDates.add(accountAction);
-
-		accountView.addTrxnDetails(actionDates);
+		actionDates.add(account.getAccountActionDate((short) 1));
+		accountView.addTrxnDetails(TestObjectFactory
+				.getBulkEntryAccountActionViews(actionDates));
 
 		return accountView;
 	}
@@ -444,13 +425,9 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		SavingsAccountView accountView = new SavingsAccountView(account
 				.getAccountId(), account.getAccountType().getAccountTypeId(),
 				account.getSavingsOffering());
-		MifosCurrency currency = TestObjectFactory.getMFICurrency();
-		AccountActionDateEntity accountAction = new AccountActionDateEntity();
-		accountAction.setInstallmentId(Short.valueOf("1"));
-		accountAction.setPaymentStatus(Short.valueOf("0"));
-		accountAction.setDeposit(new Money(currency, "100.0"));
-
-		accountView.addAccountTrxnDetail(accountAction);
+		accountView.addAccountTrxnDetail(TestObjectFactory
+				.getBulkEntryAccountActionView(account
+						.getAccountActionDate((short) 1)));
 
 		return accountView;
 	}
@@ -487,11 +464,12 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	private CustomerAccountView getCustomerAccountView(CustomerBO customer) {
 		CustomerAccountView customerAccountView = new CustomerAccountView(
 				customer.getCustomerAccount().getAccountId());
-		AccountActionDateEntity accountActionDateEntity = customer
-				.getCustomerAccount().getAccountActionDate(Short.valueOf("1"));
+
 		List<AccountActionDateEntity> accountAction = new ArrayList<AccountActionDateEntity>();
-		accountAction.add(accountActionDateEntity);
-		customerAccountView.setAccountActionDates(accountAction);
+		accountAction.add(customer.getCustomerAccount().getAccountActionDate(
+				Short.valueOf("1")));
+		customerAccountView.setAccountActionDates(TestObjectFactory
+				.getBulkEntryAccountActionViews(accountAction));
 		customerAccountView.setCustomerAccountAmountEntered("100.0");
 		customerAccountView.setValidCustomerAccountAmountEntered(true);
 		return customerAccountView;

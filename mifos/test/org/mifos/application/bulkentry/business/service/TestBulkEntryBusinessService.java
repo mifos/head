@@ -15,6 +15,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
 import org.mifos.application.bulkentry.exceptions.BulkEntryAccountUpdateException;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -107,16 +108,21 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 	}
 
 	public void testSuccessfulSaveLoanAccount() throws Exception {
-		createLoanAccount();
+		try {
+			createLoanAccount();
 
-		bulkEntryBusinessService.saveLoanAccount(getAccountView(account),
-				(short) 1, "324423", (short) 1, null, new java.sql.Date(System
-						.currentTimeMillis()));
+			bulkEntryBusinessService.saveLoanAccount(getAccountView(account),
+					(short) 1, "324423", (short) 1, null, new java.sql.Date(
+							System.currentTimeMillis()));
 
-		HibernateUtil.commitTransaction();
+			HibernateUtil.commitTransaction();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		account = (LoanBO) accountPersistanceService.getAccount(account
 				.getAccountId());
-		group = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
+		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+				group.getCustomerId());
 		assertEquals(account.getGlobalAccountNum(), "42423142341");
 		assertEquals(account.getLoanOffering().getPrdOfferingName(), "Loan");
 		assertEquals(account.getLoanSummary().getFeesPaid()
@@ -205,7 +211,6 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 			throws AccountException, SystemException, NumberFormatException,
 			BulkEntryAccountUpdateException {
 		createSavingsAccountWithBal("100");
-
 		bulkEntryBusinessService.saveSavingsWithdrawalAccount(
 				getSavingsAccountView(clientSavingsAccount, "0", "100"), Short
 						.valueOf("1"), "3424", (short) 1, new java.sql.Date(
@@ -294,7 +299,8 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.1", meeting, currentDate);
-		HibernateUtil.closeSession();
+
+		// HibernateUtil.closeSession();
 	}
 
 	private void createLoanAccount() {
@@ -311,16 +317,11 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 	}
 
 	private LoanAccountsProductView getAccountView(LoanBO account) {
-		LoanAccountView accountView = new LoanAccountView(account
-				.getAccountId(),
-				account.getLoanOffering().getPrdOfferingName(), account
-						.getAccountType().getAccountTypeId(), account
-						.getLoanOffering().getPrdOfferingId(), account
-						.getAccountState().getId(), account
-						.getIntrestAtDisbursement(), account.getLoanBalance());
-
-		List<AccountActionDateEntity> actionDates = new ArrayList<AccountActionDateEntity>();
-		actionDates.add(account.getAccountActionDates().iterator().next());
+		LoanAccountView accountView = TestObjectFactory
+				.getLoanAccountView(account);
+		List<BulkEntryAccountActionView> actionDates = new ArrayList<BulkEntryAccountActionView>();
+		actionDates.add(TestObjectFactory.getBulkEntryAccountActionView(account
+				.getAccountActionDates().iterator().next()));
 		accountView.addTrxnDetails(actionDates);
 
 		LoanAccountsProductView loanAccountsProductView = new LoanAccountsProductView(
@@ -364,8 +365,9 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 				account.getSavingsOffering());
 		accountView.setDepositAmountEntered(depAmount);
 		accountView.setWithDrawalAmountEntered(withAmount);
-		accountView.addAccountTrxnDetail(account.getAccountActionDates()
-				.iterator().next());
+		accountView.addAccountTrxnDetail(TestObjectFactory
+				.getBulkEntryAccountActionView(account.getAccountActionDates()
+						.iterator().next()));
 		return accountView;
 	}
 
@@ -392,6 +394,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 				getSavingsAccountView(clientSavingsAccount, amount, "0"), Short
 						.valueOf("1"), "3424", (short) 1, currentDate,
 				currentDate, false, client.getCustomerId());
+		HibernateUtil.commitTransaction();
 	}
 
 	private CustomerAccountView createCustomerAccountWithNoDue()

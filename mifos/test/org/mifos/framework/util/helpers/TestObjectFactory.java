@@ -45,6 +45,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Hibernate;
 import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -59,6 +60,7 @@ import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.business.CustomerAccountView;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
+import org.mifos.application.accounts.business.LoanAccountView;
 import org.mifos.application.accounts.business.LoanTrxnDetailEntity;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
@@ -71,6 +73,8 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
+import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
 import org.mifos.application.checklist.business.CheckListBO;
 import org.mifos.application.collectionsheet.business.CollSheetCustBO;
@@ -1675,7 +1679,7 @@ public class TestObjectFactory {
 		List<AccountActionDateEntity> accountAction = getDueActionDatesForAccount(
 				customer.getCustomerAccount().getAccountId(),
 				new java.sql.Date(System.currentTimeMillis()));
-		customerAccountView.setAccountActionDates(accountAction);
+		customerAccountView.setAccountActionDates(getBulkEntryAccountActionViews(accountAction));
 		return customerAccountView;
 	}
 
@@ -1684,6 +1688,12 @@ public class TestObjectFactory {
 		List<AccountActionDateEntity> dueActionDates = new BulkEntryBusinessService()
 				.retrieveCustomerAccountActionDetails(accountId,
 						transactionDate);
+		for(AccountActionDateEntity accountActionDate : dueActionDates) {
+			Hibernate.initialize(accountActionDate);
+			for(AccountFeesActionDetailEntity accountFeesActionDetail : accountActionDate.getAccountFeesActionDetails()) {
+				Hibernate.initialize(accountFeesActionDetail);
+			}
+		}
 		HibernateUtil.closeSession();
 		return dueActionDates;
 	}
@@ -1756,5 +1766,70 @@ public class TestObjectFactory {
 			paymentData.addAccountPaymentData(loanPaymentData);
 		}
 		return paymentData;
+	}
+
+	public static LoanAccountView getLoanAccountView(LoanBO loan) {
+		return new LoanAccountView(loan.getAccountId(), loan.getLoanOffering()
+				.getPrdOfferingName(),
+				loan.getAccountType().getAccountTypeId(), loan
+						.getLoanOffering().getPrdOfferingId(), loan
+						.getAccountState().getId(), loan
+						.getIntrestAtDisbursement(), loan.getLoanBalance());
+
+	}
+
+	public static BulkEntryAccountActionView getBulkEntryAccountActionView(
+			AccountActionDateEntity actionDate) {
+		BulkEntryAccountActionView bulkEntryAccountActionView = new BulkEntryAccountActionView(
+				actionDate.getAccount().getAccountId(), actionDate
+						.getCustomer().getCustomerId(), actionDate
+						.getInstallmentId(), actionDate.getActionDate(),
+				actionDate.getPrincipal(), actionDate.getPrincipalPaid(),
+				actionDate.getInterest(), actionDate.getInterestPaid(),
+				actionDate.getMiscFee(), actionDate.getMiscFeePaid(),
+				actionDate.getPenalty(), actionDate.getPenaltyPaid(),
+				actionDate.getMiscPenalty(), actionDate.getMiscPenaltyPaid(),
+				actionDate.getDeposit(), actionDate.getDepositPaid(),
+				actionDate.getActionDateId());
+		bulkEntryAccountActionView
+				.setBulkEntryAccountFeeActions(getBulkEntryAccountFeeActionViews(actionDate));
+		return bulkEntryAccountActionView;
+
+	}
+
+	public static BulkEntryAccountFeeActionView getBulkEntryAccountFeeActionView(
+			AccountFeesActionDetailEntity feeAction) {
+		return new BulkEntryAccountFeeActionView(feeAction
+				.getAccountActionDate().getActionDateId(), feeAction.getFee(),
+				feeAction.getFeeAmount(), feeAction.getFeeAmountPaid());
+
+	}
+
+	public static List<BulkEntryAccountFeeActionView> getBulkEntryAccountFeeActionViews(
+			AccountActionDateEntity actionDate) {
+		List<BulkEntryAccountFeeActionView> bulkEntryFeeViews = new ArrayList<BulkEntryAccountFeeActionView>();
+		if (actionDate.getAccountFeesActionDetails() != null
+				&& actionDate.getAccountFeesActionDetails().size() > 0) {
+			for (AccountFeesActionDetailEntity accountFeesActionDetail : actionDate
+					.getAccountFeesActionDetails()) {
+				bulkEntryFeeViews
+						.add(getBulkEntryAccountFeeActionView(accountFeesActionDetail));
+			}
+		}
+		return bulkEntryFeeViews;
+
+	}
+
+	public static List<BulkEntryAccountActionView> getBulkEntryAccountActionViews(
+			List<AccountActionDateEntity> actionDates) {
+		List<BulkEntryAccountActionView> bulkEntryActionViews = new ArrayList<BulkEntryAccountActionView>();
+		if (actionDates != null && actionDates.size() > 0) {
+			for (AccountActionDateEntity actionDate : actionDates) {
+				bulkEntryActionViews
+						.add(getBulkEntryAccountActionView(actionDate));
+			}
+		}
+		return bulkEntryActionViews;
+
 	}
 }

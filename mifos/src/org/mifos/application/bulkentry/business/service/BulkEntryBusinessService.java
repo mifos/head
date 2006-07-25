@@ -55,10 +55,12 @@ import org.mifos.application.accounts.persistence.service.AccountPersistanceServ
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.service.SavingsPersistenceService;
 import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
+import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
 import org.mifos.application.bulkentry.business.BulkEntryBO;
 import org.mifos.application.bulkentry.exceptions.BulkEntryAccountUpdateException;
 import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistanceService;
@@ -136,8 +138,17 @@ public class BulkEntryBusinessService extends BusinessService {
 				.getLastMeetingDateForCustomer(customerId);
 	}
 
-	private AccountBO getAccount(Integer accountId) {
-		return accountPersistanceService.getAccount(accountId);
+	private AccountBO getAccount(Integer accountId, String type) {
+		if (type.equals(AccountTypes.LOANACCOUNT))
+			return bulkEntryPersistanceService
+					.getLoanAccountWithAccountActionsInitialized(accountId);
+		else if (type.equals(AccountTypes.SAVINGSACCOUNT))
+			return bulkEntryPersistanceService
+					.getSavingsAccountWithAccountActionsInitialized(accountId);
+		else if (type.equals(AccountTypes.CUSTOMERACCOUNT))
+			return bulkEntryPersistanceService
+					.getCustomerAccountWithAccountActionsInitialized(accountId);
+		return null;
 	}
 
 	public void saveLoanAccount(
@@ -164,7 +175,8 @@ public class BulkEntryBusinessService extends BusinessService {
 			String disbursementAmountEntered, Date receiptDate)
 			throws BulkEntryAccountUpdateException {
 		if (Double.valueOf(disbursementAmountEntered).doubleValue() > 0) {
-			LoanBO account = (LoanBO) getAccount(accountId);
+			LoanBO account = (LoanBO) getAccount(accountId,
+					AccountTypes.LOANACCOUNT);
 			try {
 				account.disburseLoan(recieptId, transactionDate, paymentId,
 						personnelId, receiptDate, paymentId);
@@ -193,12 +205,14 @@ public class BulkEntryBusinessService extends BusinessService {
 		Double amount = Double.valueOf(loanAccountsProductView
 				.getEnteredAmount());
 		if (amount > 0) {
-			Money enteredAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), loanAccountView.getTotalAmountDue());
+			Money enteredAmount = new Money(Configuration.getInstance()
+					.getSystemConfig().getCurrency(), loanAccountView
+					.getTotalAmountDue());
 			PaymentData paymentData = getLoanAccountPaymentData(loanAccountView
 					.getAccountTrxnDetails(), enteredAmount, personnelId,
 					recieptId, paymentId, receiptDate, transactionDate);
 
-			AccountBO account = getAccount(accountId);
+			AccountBO account = getAccount(accountId, AccountTypes.LOANACCOUNT);
 			try {
 				account.applyPayment(paymentData);
 			} catch (AccountException ae) {
@@ -209,7 +223,6 @@ public class BulkEntryBusinessService extends BusinessService {
 						new String[] { account.getGlobalAccountNum() });
 			}
 		}
-
 	}
 
 	private boolean isDisbursalAccount(LoanAccountView loanAccountView) {
@@ -221,14 +234,14 @@ public class BulkEntryBusinessService extends BusinessService {
 	}
 
 	private PaymentData getLoanAccountPaymentData(
-			List<AccountActionDateEntity> accountActions, Money totalAmount,
+			List<BulkEntryAccountActionView> accountActions, Money totalAmount,
 			Short personnelId, String recieptNum, Short paymentId,
 			Date receiptDate, Date transactionDate) {
 		PaymentData paymentData = new PaymentData(totalAmount, personnelId,
 				paymentId, transactionDate);
 		paymentData.setRecieptDate(receiptDate);
 		paymentData.setRecieptNum(recieptNum);
-		for (AccountActionDateEntity actionDate : accountActions) {
+		for (BulkEntryAccountActionView actionDate : accountActions) {
 			LoanPaymentData loanPaymentData = new LoanPaymentData(actionDate);
 			paymentData.addAccountPaymentData(loanPaymentData);
 		}
@@ -263,7 +276,7 @@ public class BulkEntryBusinessService extends BusinessService {
 	private void saveSavingsAccountPayment(Integer accountId,
 			PaymentData accountPaymentDataView)
 			throws BulkEntryAccountUpdateException {
-		AccountBO account = getAccount(accountId);
+		AccountBO account = getAccount(accountId, AccountTypes.SAVINGSACCOUNT);
 		try {
 			account.applyPayment(accountPaymentDataView);
 		} catch (AccountException ae) {
@@ -283,7 +296,8 @@ public class BulkEntryBusinessService extends BusinessService {
 
 		Double amount = Double.valueOf(savingsAccountView
 				.getDepositAmountEntered());
-		Money enteredAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), amount);
+		Money enteredAmount = new Money(Configuration.getInstance()
+				.getSystemConfig().getCurrency(), amount);
 		PaymentData paymentData = new PaymentData(enteredAmount, personnelId,
 				paymentId, transactionDate);
 		if (!isCenterGroupIndvAccount
@@ -298,7 +312,7 @@ public class BulkEntryBusinessService extends BusinessService {
 
 	private void buildIndividualAccountSavingsPayments(PaymentData paymentData,
 			SavingsAccountView savingsAccountView, Money enteredAmount) {
-		for (AccountActionDateEntity accountActionDate : savingsAccountView
+		for (BulkEntryAccountActionView accountActionDate : savingsAccountView
 				.getAccountTrxnDetails()) {
 			SavingsPaymentData savingsPaymentData = new SavingsPaymentData(
 					accountActionDate);
@@ -325,7 +339,8 @@ public class BulkEntryBusinessService extends BusinessService {
 	private void saveSavingsWithdrawal(Integer accountId,
 			PaymentData accountPaymentDataView)
 			throws BulkEntryAccountUpdateException {
-		SavingsBO account = (SavingsBO) getAccount(accountId);
+		SavingsBO account = (SavingsBO) getAccount(accountId,
+				AccountTypes.SAVINGSACCOUNT);
 		try {
 			account.withdraw(accountPaymentDataView);
 		} catch (AccountException ae) {
@@ -344,7 +359,8 @@ public class BulkEntryBusinessService extends BusinessService {
 
 		Double amount = Double.valueOf(savingsAccountView
 				.getWithDrawalAmountEntered());
-		Money enteredAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), amount);
+		Money enteredAmount = new Money(Configuration.getInstance()
+				.getSystemConfig().getCurrency(), amount);
 
 		PaymentData paymentData = new PaymentData(enteredAmount, personnelId,
 				paymentId, transactionDate);
@@ -378,6 +394,7 @@ public class BulkEntryBusinessService extends BusinessService {
 			Date transactionDate) {
 		return loanPersistenceService.getFeeAmountAtDisbursement(accountId,
 				transactionDate);
+
 	}
 
 	public CustomerBO retrieveCustomerAccountInfo(Integer customerId) {
@@ -400,7 +417,7 @@ public class BulkEntryBusinessService extends BusinessService {
 				customerAccountView.getTotalAmountDue(), personnelId,
 				recieptId, paymentId, receiptDate, transactionDate);
 
-		AccountBO account = getAccount(accountId);
+		AccountBO account = getAccount(accountId, AccountTypes.CUSTOMERACCOUNT);
 		try {
 			account.applyPayment(accountPaymentDataView);
 		} catch (AccountException ae) {
@@ -413,7 +430,7 @@ public class BulkEntryBusinessService extends BusinessService {
 	}
 
 	private PaymentData getCustomerAccountPaymentDataView(
-			List<AccountActionDateEntity> accountActions, Money totalAmount,
+			List<BulkEntryAccountActionView> accountActions, Money totalAmount,
 			Short personnelId, String recieptNum, Short paymentId,
 			Date receiptDate, Date transactionDate) {
 		PaymentData paymentData = new PaymentData(totalAmount, personnelId,
@@ -421,7 +438,7 @@ public class BulkEntryBusinessService extends BusinessService {
 		paymentData.setRecieptDate(receiptDate);
 		paymentData.setRecieptNum(recieptNum);
 
-		for (AccountActionDateEntity actionDate : accountActions) {
+		for (BulkEntryAccountActionView actionDate : accountActions) {
 			CustomerAccountPaymentData customerAccountPaymentData = new CustomerAccountPaymentData(
 					actionDate);
 			paymentData.addAccountPaymentData(customerAccountPaymentData);

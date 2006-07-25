@@ -40,8 +40,10 @@ package org.mifos.application.bulkentry.business;
 import java.sql.Date;
 import java.util.List;
 
+import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistanceService;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryDataView;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryNodeBuilder;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -54,10 +56,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 
-/**
- * @author rohitr
- * 
- */
 public class BulkEntryBO extends BusinessObject {
 
 	private CustomerPersistenceService customerDbService;
@@ -181,21 +179,27 @@ public class BulkEntryBO extends BusinessObject {
 	 */
 	public void buildBulkEntryView(CustomerView parentCustomer)
 			throws SystemException, ApplicationException {
-		List<CustomerView> allChildNodes = retrieveChildrenForParents(
-				parentCustomer.getCustomerId(), parentCustomer
+		BulkEntryPersistanceService bulkEntryPersistanceService = new BulkEntryPersistanceService();
+		List<CustomerBO> allChildNodes = retrieveActiveCustomersUnderParent(
+				parentCustomer.getCustomerSearchId(), office.getOfficeId());
+		List<BulkEntryAccountActionView> bulkEntryAccountActionViews = bulkEntryPersistanceService
+				.getBulkEntryActionView(transactionDate, parentCustomer
+						.getCustomerSearchId(), office.getOfficeId());
+		List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews = bulkEntryPersistanceService
+				.getBulkEntryFeeActionView(transactionDate, parentCustomer
 						.getCustomerSearchId(), office.getOfficeId());
 		totalCustomers = allChildNodes.size();
-		bulkEntryParent = BulkEntryNodeBuilder.buildBulkEntryNode(
-				allChildNodes, parentCustomer, transactionDate);
+		bulkEntryParent = BulkEntryNodeBuilder.buildBulkEntry(allChildNodes,
+				parentCustomer, transactionDate, bulkEntryAccountActionViews,
+				bulkEntryAccountFeeActionViews);
 		BulkEntryNodeBuilder.buildBulkEntrySavingsAccounts(bulkEntryParent,
-				transactionDate);
+				transactionDate, bulkEntryAccountActionViews);
 	}
 
-	private List<CustomerView> retrieveChildrenForParents(Integer customerId,
+	private List<CustomerBO> retrieveActiveCustomersUnderParent(
 			String searchId, Short officeId) throws SystemException,
 			ApplicationException {
-		return customerDbService.getChildrenForParent(customerId, searchId,
-				officeId);
+		return customerDbService.getCustomersUnderParent(searchId, officeId);
 	}
 
 	public void setBulkEntryDataView(BulkEntryDataView bulkEntryDataView) {
@@ -302,7 +306,6 @@ public class BulkEntryBO extends BusinessObject {
 						.getPrdOfferingId(), depositAmountEnteredValue,
 						withDrawalAmountEnteredValue);
 			}
-
 			columnIndex++;
 		}
 	}

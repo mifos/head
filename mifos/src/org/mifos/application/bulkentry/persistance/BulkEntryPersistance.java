@@ -38,8 +38,52 @@
 
 package org.mifos.application.bulkentry.persistance;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
+import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
+import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
 import org.mifos.framework.persistence.Persistence;
 
 public class BulkEntryPersistance extends Persistence {
+
+	public List<BulkEntryAccountActionView> getBulkEntryActionView(
+			Date meetingDate, String searchString, Short officeId) {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("MEETING_DATE", meetingDate);
+		queryParameters.put("PAYMENT_STATUS", AccountConstants.PAYMENT_UNPAID);
+		queryParameters.put("SEARCH_STRING", searchString + '%');
+		queryParameters.put("OFFICE_ID", officeId);
+		List<BulkEntryAccountActionView> queryResult = executeNamedQuery(
+				"account.getAllInstallmentsForAllAcounts", queryParameters);
+		return queryResult;
+
+	}
+
+	public List<BulkEntryAccountFeeActionView> getBulkEntryFeeActionView(
+			Date meetingDate, String searchString, Short officeId) {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("MEETING_DATE", meetingDate);
+		queryParameters.put("PAYMENT_STATUS", AccountConstants.PAYMENT_UNPAID);
+		queryParameters.put("SEARCH_STRING", searchString + '%');
+		queryParameters.put("OFFICE_ID", officeId);
+		List<BulkEntryAccountFeeActionView> queryResult = executeNamedQuery(
+				"account.getAllAccountFeeForAllInstallmentsForAllAcounts",
+				queryParameters);
+		return queryResult;
+
+	}
+
+	public List<AccountFeesActionDetailEntity> getFeesActionDetails(
+			Integer actionId) {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("ACCOUNT_ACTION_ID", actionId);
+		List<AccountFeesActionDetailEntity> queryResult = executeNamedQuery(
+				"acccount.getAccountFeeActionDetails", queryParameters);
+		return queryResult;
+
+	}
 }

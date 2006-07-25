@@ -37,11 +37,12 @@
  */
 package org.mifos.application.customer.business;
 
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.framework.business.View;
 
 /**
  * @author sumeethaec
- *
+ * 
  */
 public class CustomerView extends View {
 
@@ -98,8 +99,9 @@ public class CustomerView extends View {
 	}
 
 	/**
-	 * This constructor is called when instantiating the object from the query 
+	 * This constructor is called when instantiating the object from the query
 	 * Retrieve Customer Master and CustomerUtilDAO.
+	 * 
 	 * @param customerId
 	 * @param displayName
 	 * @param globalCustNum
@@ -200,4 +202,15 @@ public class CustomerView extends View {
 		this.versionNo = versionNo;
 	}
 
+	public boolean isCustomerCenter() {
+		return getCustomerLevelId().equals(CustomerConstants.CENTER_LEVEL_ID);
+	}
+
+	public boolean isCustomerGroup() {
+		return getCustomerLevelId().equals(CustomerConstants.GROUP_LEVEL_ID);
+	}
+
+	public boolean isCustomerClient() {
+		return getCustomerLevelId().equals(CustomerConstants.CLIENT_LEVEL_ID);
+	}
 }

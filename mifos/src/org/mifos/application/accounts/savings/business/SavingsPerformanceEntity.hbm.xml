@@ -7,11 +7,9 @@
 <hibernate-mapping>
 
     <class name="org.mifos.application.accounts.savings.business.SavingsPerformanceEntity" table="SAVINGS_PERFORMANCE">
-        <id name="accountId" column="ACCOUNT_ID" type="integer">
-			<generator class="foreign">
-				<param name="property">savings</param>
-			</generator>
-		</id>
+       <id name="id" column="ID" type="integer" access="field">
+            <generator class="native"/>
+	   </id>
 		<property name="totalDeposits" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
 			 <column name="TOTAL_DEPOSITS_CURRENCY_ID" /> 
 			 <column name="TOTAL_DEPOSITS" />
@@ -26,6 +24,6 @@
 		</property>			
 		<property name="missedDeposits" column="MISSED_DEPOSITS"  />
    
-    <one-to-one name="savings" class="org.mifos.application.accounts.savings.business.SavingsBO" lazy="false" />
+    <many-to-one name="savings" column="ACCOUNT_ID" class="org.mifos.application.accounts.savings.business.SavingsBO" lazy="true" unique="true" />
      </class>
 </hibernate-mapping>

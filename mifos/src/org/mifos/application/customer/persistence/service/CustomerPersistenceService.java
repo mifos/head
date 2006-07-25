@@ -1,3 +1,41 @@
+/**
+
+ * CustomerPersistenceService.java    version: xxx
+
+ 
+
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+
+ * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+
+ * All rights reserved.
+
+ 
+
+ * Apache License 
+ * Copyright (c) 2005-2006 Grameen Foundation USA 
+ * 
+
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ *
+
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the 
+
+ * License. 
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
+
+ * and how it is applied. 
+
+ *
+
+ */
+
 package org.mifos.application.customer.persistence.service;
 
 import java.sql.Date;
@@ -38,13 +76,17 @@ public class CustomerPersistenceService extends PersistenceService {
 			ApplicationException {
 		return serviceImpl.getChildrenForParent(customerId, searchId, officeId);
 	}
-	
-	public List<Integer> getChildrenForParent(
-			String searchId, Short officeId) throws SystemException,
-			ApplicationException {
+
+	public List<CustomerBO> getCustomersUnderParent(String searchId,
+			Short officeId) throws SystemException, ApplicationException {
+		return serviceImpl.getCustomersUnderParent(searchId, officeId);
+	}
+
+	public List<Integer> getChildrenForParent(String searchId, Short officeId)
+			throws SystemException, ApplicationException {
 		return serviceImpl.getChildrenForParent(searchId, officeId);
 	}
-	
+
 	public List<PrdOfferingBO> getLoanProductsAsOfMeetingDate(Date meetingDate,
 			String searchId, Short personnelId) throws SystemException,
 			ApplicationException {
@@ -66,40 +108,63 @@ public class CustomerPersistenceService extends PersistenceService {
 
 		return serviceImpl.getCustomer(customerId);
 	}
-	
-	public CustomerBO findBySystemId(String globalCustNum) throws PersistenceException {
+
+	public CustomerBO findBySystemId(String globalCustNum)
+			throws PersistenceException {
 		return serviceImpl.findBySystemId(globalCustNum);
 	}
-	public CustomerBO getBySystemId(String globalCustNum,Short levelId) throws PersistenceException {
-		return serviceImpl.getBySystemId(globalCustNum,levelId);
-	}	
-	public List<CustomerBO> getChildrenForParent(String searchId, Short officeId, Short customerLevelId) throws PersistenceException {
-		return serviceImpl.getChildrenForParent(searchId, officeId,customerLevelId);
+
+	public CustomerBO getBySystemId(String globalCustNum, Short levelId)
+			throws PersistenceException {
+		return serviceImpl.getBySystemId(globalCustNum, levelId);
 	}
-	
-	public List<SavingsBO> retrieveSavingsAccountForCustomer(Integer customerId)throws PersistenceException{
+
+	public List<CustomerBO> getChildrenForParent(String searchId,
+			Short officeId, Short customerLevelId) throws PersistenceException {
+		return serviceImpl.getChildrenForParent(searchId, officeId,
+				customerLevelId);
+	}
+
+	public List<SavingsBO> retrieveSavingsAccountForCustomer(Integer customerId)
+			throws PersistenceException {
 		return serviceImpl.retrieveSavingsAccountForCustomer(customerId);
 	}
 
 	public List<LoanCycleCounter> fetchLoanCycleCounter(Integer customerId) {
-		HashMap<String,Integer> queryParameters = new HashMap<String,Integer>();
+		HashMap<String, Integer> queryParameters = new HashMap<String, Integer>();
 		queryParameters.put("customerId", customerId);
-		List queryResult = serviceImpl.executeNamedQuery(NamedQueryConstants.FETCH_LOANCOUNTERS, queryParameters);
-		if(null != queryResult && queryResult.size()>0){
-			MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER).debug("Fetch loan cycle counter query returned : " +queryResult.size()+" rows" );
+		List queryResult = serviceImpl.executeNamedQuery(
+				NamedQueryConstants.FETCH_LOANCOUNTERS, queryParameters);
+		if (null != queryResult && queryResult.size() > 0) {
+			MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER).debug(
+					"Fetch loan cycle counter query returned : "
+							+ queryResult.size() + " rows");
 			List<LoanCycleCounter> loanCycleCounters = new ArrayList<LoanCycleCounter>();
-			for(Object obj:queryResult){
-				String prdOfferingName = (String)obj;
-				MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER).debug("Prd offering name of the loan account is " + prdOfferingName );
+			for (Object obj : queryResult) {
+				String prdOfferingName = (String) obj;
+				MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER).debug(
+						"Prd offering name of the loan account is "
+								+ prdOfferingName);
 				int counter = 1;
-				LoanCycleCounter loanCycleCounter = new LoanCycleCounter(prdOfferingName,counter);
-				if(!loanCycleCounters.contains(loanCycleCounter)){
-					MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER).debug("Prd offering name " + prdOfferingName + " does not already exist in the list hence adding it to the list");
+				LoanCycleCounter loanCycleCounter = new LoanCycleCounter(
+						prdOfferingName, counter);
+				if (!loanCycleCounters.contains(loanCycleCounter)) {
+					MifosLogManager
+							.getLogger(LoggerConstants.CLIENTLOGGER)
+							.debug(
+									"Prd offering name "
+											+ prdOfferingName
+											+ " does not already exist in the list hence adding it to the list");
 					loanCycleCounters.add(loanCycleCounter);
-				}else{
-					MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER).debug("Prd offering name " + prdOfferingName + " already exists in the list hence incrementing the counter.");
-					for(LoanCycleCounter loanCycle:loanCycleCounters){
-						if(loanCycle.getOfferingName().equals(prdOfferingName)){
+				} else {
+					MifosLogManager
+							.getLogger(LoggerConstants.CLIENTLOGGER)
+							.debug(
+									"Prd offering name "
+											+ prdOfferingName
+											+ " already exists in the list hence incrementing the counter.");
+					for (LoanCycleCounter loanCycle : loanCycleCounters) {
+						if (loanCycle.getOfferingName().equals(prdOfferingName)) {
 							loanCycle.incrementCounter();
 						}
 					}
@@ -107,37 +172,49 @@ public class CustomerPersistenceService extends PersistenceService {
 			}
 			return loanCycleCounters;
 		}
-		MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER).debug("Fetch loan cycle counter query returned : 0 rows" );
+		MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER).debug(
+				"Fetch loan cycle counter query returned : 0 rows");
 		return null;
 	}
-	public CustomerPerformanceHistoryView getLastLoanAmount(Integer customerId)throws PersistenceException{
+
+	public CustomerPerformanceHistoryView getLastLoanAmount(Integer customerId)
+			throws PersistenceException {
 		return serviceImpl.getLastLoanAmount(customerId);
 	}
-	public CustomerPerformanceHistoryView numberOfMeetings(boolean isPresent , Integer customerId)throws HibernateProcessException{
-		return serviceImpl.numberOfMeetings(isPresent,customerId);
+
+	public CustomerPerformanceHistoryView numberOfMeetings(boolean isPresent,
+			Integer customerId) throws HibernateProcessException {
+		return serviceImpl.numberOfMeetings(isPresent, customerId);
 	}
-	
+
 	public void update(CustomerBO customer) {
 		serviceImpl.createOrUpdate(customer);
 	}
-	
-	public List<CustomerStateEntity> getCustomerStates(Short optionalFlag)throws PersistenceException{
+
+	public List<CustomerStateEntity> getCustomerStates(Short optionalFlag)
+			throws PersistenceException {
 		return serviceImpl.getCustomerStates(optionalFlag);
 	}
-	
-	public List<Integer> getCustomersWithUpdatedMeetings() throws PersistenceException{
+
+	public List<Integer> getCustomersWithUpdatedMeetings()
+			throws PersistenceException {
 		return serviceImpl.getCustomersWithUpdatedMeetings();
 	}
-	
-	public List<AccountBO> retrieveAccountsUnderCustomer(String searchId, Short officeId, Short accountTypeId)throws PersistenceException{
-		return serviceImpl.retrieveAccountsUnderCustomer(searchId,officeId,accountTypeId);
+
+	public List<AccountBO> retrieveAccountsUnderCustomer(String searchId,
+			Short officeId, Short accountTypeId) throws PersistenceException {
+		return serviceImpl.retrieveAccountsUnderCustomer(searchId, officeId,
+				accountTypeId);
 	}
-	
-	public List<CustomerBO> getAllChildrenForParent(String searchId, Short officeId,Short customerLevelId) throws PersistenceException {
-		return serviceImpl.getAllChildrenForParent(searchId, officeId,customerLevelId);
+
+	public List<CustomerBO> getAllChildrenForParent(String searchId,
+			Short officeId, Short customerLevelId) throws PersistenceException {
+		return serviceImpl.getAllChildrenForParent(searchId, officeId,
+				customerLevelId);
 	}
-	
-	public List<Integer> getCustomers(Short levelId) throws PersistenceException {
+
+	public List<Integer> getCustomers(Short levelId)
+			throws PersistenceException {
 		return serviceImpl.getCustomers(levelId);
 	}
 }

@@ -1,6 +1,6 @@
 /**
 
-* AccountBO.java    version: xxx
+ * AccountBO.java    version: xxx
 
  
 
@@ -82,12 +82,6 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.StringUtils;
 
-/**
- * This class acts as base class for all types of accounts.
- * 
- * @author ashishsm
- * 
- */
 public class AccountBO extends BusinessObject {
 	AccountPersistanceService accountPersistanceService = null;
 
@@ -182,7 +176,7 @@ public class AccountBO extends BusinessObject {
 		return accountPayments;
 	}
 
-	private void setAccountPayments(Set<AccountPaymentEntity> accountPayments) {
+	public void setAccountPayments(Set<AccountPaymentEntity> accountPayments) {
 		this.accountPayments = accountPayments;
 	}
 
@@ -324,6 +318,8 @@ public class AccountBO extends BusinessObject {
 	}
 
 	public void addAccountPayment(AccountPaymentEntity payment) {
+		if (accountPayments == null)
+			accountPayments = new HashSet<AccountPaymentEntity>();
 		payment.setAccount(this);
 		for (AccountTrxnEntity trxn : payment.getAccountTrxns()) {
 			trxn.setAccount(this);
@@ -374,10 +370,10 @@ public class AccountBO extends BusinessObject {
 
 	protected void updateTotalFeeAmount(Money totalFeeAmount) {
 	}
-	
-	public void updateTotalPenaltyAmount(Money totalPenaltyAmount) {		
+
+	public void updateTotalPenaltyAmount(Money totalPenaltyAmount) {
 	}
-	
+
 	public Money updateAccountActionDateEntity(List<Short> intallmentIdList,
 			Short feeId) {
 		Money totalFeeAmount = new Money();
@@ -414,8 +410,7 @@ public class AccountBO extends BusinessObject {
 		}
 		return null;
 	}
-	
-	
+
 	public AccountFeesEntity getAccountFees(Short feeId) {
 		Set<AccountFeesEntity> accountFeesEntitySet = this.getAccountFees();
 		for (AccountFeesEntity accountFeesEntity : accountFeesEntitySet) {
@@ -538,24 +533,32 @@ public class AccountBO extends BusinessObject {
 		return null;
 	}
 
-	public void removeFees(Short feeId, Short personnelId) throws SystemException, ApplicationException {
-		List<Short> installmentIdList = getAccountPersistenceService().getNextInstallmentList(this.getAccountId());
+	public void removeFees(Short feeId, Short personnelId)
+			throws SystemException, ApplicationException {
+		List<Short> installmentIdList = getAccountPersistenceService()
+				.getNextInstallmentList(this.getAccountId());
 		Money totalFeeAmount = new Money();
-		if (installmentIdList != null && installmentIdList.size() != 0 && isFeeActive(feeId)) {
-			totalFeeAmount = updateAccountActionDateEntity(installmentIdList, feeId);
+		if (installmentIdList != null && installmentIdList.size() != 0
+				&& isFeeActive(feeId)) {
+			totalFeeAmount = updateAccountActionDateEntity(installmentIdList,
+					feeId);
 			updateAccountFeesEntity(feeId);
 			updateTotalFeeAmount(totalFeeAmount);
 			FeesBO feesBO = getAccountFeesObject(feeId);
-			String description = feesBO.getFeeName()+ " " + AccountConstants.FEES_REMOVED;
-			updateAccountActivity(totalFeeAmount,personnelId,description);
+			String description = feesBO.getFeeName() + " "
+					+ AccountConstants.FEES_REMOVED;
+			updateAccountActivity(totalFeeAmount, personnelId, description);
 			roundInstallments(installmentIdList);
 		}
 
 	}
-	
-	public void roundInstallments(List<Short> installmentIdList){}
-	
-	public void updateAccountActivity(Money totalFeeAmount,Short personnelId,String description){}
+
+	public void roundInstallments(List<Short> installmentIdList) {
+	}
+
+	public void updateAccountActivity(Money totalFeeAmount, Short personnelId,
+			String description) {
+	}
 
 	public void adjustPmnt(String adjustmentComment)
 			throws ApplicationException, SystemException {
@@ -575,8 +578,9 @@ public class AccountBO extends BusinessObject {
 					AccountExceptionConstants.CANNOTADJUST);
 	}
 
-	protected void updatePerformanceHistoryOnAdjustment(Integer noOfTrxnReversed) {}
-	
+	protected void updatePerformanceHistoryOnAdjustment(Integer noOfTrxnReversed) {
+	}
+
 	protected void updateInstallmentAfterAdjustment(
 			List<AccountTrxnEntity> reversedTrxns) {
 	}
@@ -587,8 +591,8 @@ public class AccountBO extends BusinessObject {
 			for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
 				if (accountActionDateEntity.getPaymentStatus().equals(
 						AccountConstants.PAYMENT_UNPAID)) {
-					if (accountActionDateEntity
-							.compareDate(DateUtils.getCurrentDateWithoutTimeStamp()) <= 0) {
+					if (accountActionDateEntity.compareDate(DateUtils
+							.getCurrentDateWithoutTimeStamp()) <= 0) {
 						dueActionDateList.add(accountActionDateEntity);
 					}
 				}
@@ -598,12 +602,15 @@ public class AccountBO extends BusinessObject {
 			for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
 				if (accountActionDateEntity.getPaymentStatus().equals(
 						AccountConstants.PAYMENT_UNPAID)) {
-					if (accountActionDateEntity
-							.compareDate(DateUtils.getCurrentDateWithoutTimeStamp()) < 0) {
+					if (accountActionDateEntity.compareDate(DateUtils
+							.getCurrentDateWithoutTimeStamp()) < 0) {
 						dueActionDateList.add(accountActionDateEntity);
 					} else if (flag == true
-							&& accountActionDateEntity.getActionDate()
-									.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) > 0) {
+							&& accountActionDateEntity
+									.getActionDate()
+									.compareTo(
+											DateUtils
+													.getCurrentDateWithoutTimeStamp()) > 0) {
 						dueActionDateList.add(accountActionDateEntity);
 						flag = false;
 					}
@@ -615,15 +622,16 @@ public class AccountBO extends BusinessObject {
 
 	public List<AccountActionDateEntity> getApplicableIdsForFutureInstallments() {
 		List<AccountActionDateEntity> futureActionDateList = new ArrayList<AccountActionDateEntity>();
-		AccountActionDateEntity accountActionDate=null;
+		AccountActionDateEntity accountActionDate = null;
 		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
 			if (accountActionDateEntity.getPaymentStatus().equals(
 					AccountConstants.PAYMENT_UNPAID)) {
-				if (accountActionDateEntity
-						.compareDate(DateUtils.getCurrentDateWithoutTimeStamp()) >= 0) {
-					if (accountActionDate==null){
-						accountActionDate=accountActionDateEntity;
-					}else if(!accountActionDate.getInstallmentId().equals((accountActionDateEntity.getInstallmentId())))
+				if (accountActionDateEntity.compareDate(DateUtils
+						.getCurrentDateWithoutTimeStamp()) >= 0) {
+					if (accountActionDate == null) {
+						accountActionDate = accountActionDateEntity;
+					} else if (!accountActionDate.getInstallmentId().equals(
+							(accountActionDateEntity.getInstallmentId())))
 						futureActionDateList.add(accountActionDateEntity);
 				}
 			}
@@ -631,27 +639,27 @@ public class AccountBO extends BusinessObject {
 		return futureActionDateList;
 	}
 
-	public List <AccountActionDateEntity> getPastInstallments(){
+	public List<AccountActionDateEntity> getPastInstallments() {
 		List<AccountActionDateEntity> pastActionDateList = new ArrayList<AccountActionDateEntity>();
-		
+
 		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
-			
-				if (accountActionDateEntity
-						.compareDate(DateUtils.getCurrentDateWithoutTimeStamp()) < 0) {
-					pastActionDateList.add(accountActionDateEntity);
-				}
-			
+
+			if (accountActionDateEntity.compareDate(DateUtils
+					.getCurrentDateWithoutTimeStamp()) < 0) {
+				pastActionDateList.add(accountActionDateEntity);
+			}
+
 		}
 		return pastActionDateList;
 
-		
 	}
+
 	protected boolean isCurrentDateEquallToInstallmentDate() {
 		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
 			if (accountActionDateEntity.getPaymentStatus().equals(
 					AccountConstants.PAYMENT_UNPAID)) {
-				if (accountActionDateEntity
-						.compareDate(DateUtils.getCurrentDateWithoutTimeStamp()) == 0) {
+				if (accountActionDateEntity.compareDate(DateUtils
+						.getCurrentDateWithoutTimeStamp()) == 0) {
 					return true;
 				}
 			}
@@ -667,29 +675,29 @@ public class AccountBO extends BusinessObject {
 	public List<TransactionHistoryView> getTransactionHistoryView() {
 
 		List<TransactionHistoryView> trxnHistory = new ArrayList<TransactionHistoryView>();
-			for (AccountPaymentEntity accountPayment : getAccountPayments()) {
-				for (AccountTrxnEntity accountTrxn : accountPayment
-						.getAccountTrxns()) {
-					for (FinancialTransactionBO financialTrxn : accountTrxn
-							.getFinancialTransactions()) {
-						TransactionHistoryView transactionHistory = new TransactionHistoryView();
-						setFinancialEntries(financialTrxn, transactionHistory);
-						setAccountingEntries(accountTrxn, transactionHistory);
-						trxnHistory.add(transactionHistory);
-					}
+		for (AccountPaymentEntity accountPayment : getAccountPayments()) {
+			for (AccountTrxnEntity accountTrxn : accountPayment
+					.getAccountTrxns()) {
+				for (FinancialTransactionBO financialTrxn : accountTrxn
+						.getFinancialTransactions()) {
+					TransactionHistoryView transactionHistory = new TransactionHistoryView();
+					setFinancialEntries(financialTrxn, transactionHistory);
+					setAccountingEntries(accountTrxn, transactionHistory);
+					trxnHistory.add(transactionHistory);
 				}
 			}
+		}
 
 		return trxnHistory;
 	}
 
 	public Money removeSign(Money amount) {
-		if (amount!=null && amount.getAmountDoubleValue() < 0)
+		if (amount != null && amount.getAmountDoubleValue() < 0)
 			return amount.negate();
 		else
 			return amount;
 	}
-	
+
 	private void setFinancialEntries(FinancialTransactionBO financialTrxn,
 			TransactionHistoryView transactionHistory) {
 		String debit = "-", credit = "-", notes = "-";
@@ -710,12 +718,14 @@ public class AccountBO extends BusinessObject {
 
 	}
 
-	
-	private void setAccountingEntries(AccountTrxnEntity accountTrxn,TransactionHistoryView transactionHistory){
-		
-		transactionHistory.setAccountingEnteries(accountTrxn.getAccountPayment().getPaymentId(),
-				accountTrxn.getAccountTrxnId(),String.valueOf(removeSign(accountTrxn.getAmount())),
-				accountTrxn.getCustomer().getDisplayName(),accountTrxn.getCustomer().getPersonnel().getDisplayName());
+	private void setAccountingEntries(AccountTrxnEntity accountTrxn,
+			TransactionHistoryView transactionHistory) {
+
+		transactionHistory.setAccountingEnteries(accountTrxn
+				.getAccountPayment().getPaymentId(), accountTrxn
+				.getAccountTrxnId(), String.valueOf(removeSign(accountTrxn
+				.getAmount())), accountTrxn.getCustomer().getDisplayName(),
+				accountTrxn.getCustomer().getPersonnel().getDisplayName());
 	}
 
 	protected List<AccountTrxnEntity> getAccountTrxnsOrderByTrxnDate() {
@@ -736,10 +746,12 @@ public class AccountBO extends BusinessObject {
 		return accountTrxnList;
 	}
 
-	public void waiveAmountDue(WaiveEnum waiveType) throws ServiceException,AccountException {
+	public void waiveAmountDue(WaiveEnum waiveType) throws ServiceException,
+			AccountException {
 	}
 
-	public void waiveAmountOverDue(WaiveEnum waiveType) throws ServiceException,AccountException {
+	public void waiveAmountOverDue(WaiveEnum waiveType)
+			throws ServiceException, AccountException {
 	}
 
 	public Date getNextMeetingDate() {
@@ -781,43 +793,49 @@ public class AccountBO extends BusinessObject {
 
 		return nextAccountAction;
 	}
-	
-	protected List<AccountFeesEntity> getPeriodicFeeList(){	
-		List<AccountFeesEntity> periodicFeeList = new ArrayList<AccountFeesEntity>();		
-		for(AccountFeesEntity accountFee: getAccountFees()){				
-			if(accountFee.getFees().isPeriodic()){
+
+	protected List<AccountFeesEntity> getPeriodicFeeList() {
+		List<AccountFeesEntity> periodicFeeList = new ArrayList<AccountFeesEntity>();
+		for (AccountFeesEntity accountFee : getAccountFees()) {
+			if (accountFee.getFees().isPeriodic()) {
 				periodicFeeList.add(accountFee);
 			}
-		}		
+		}
 		return periodicFeeList;
 	}
-	
+
 	public AccountFeesEntity getPeriodicAccountFees(Short feeId) {
-		for(AccountFeesEntity accountFeesEntity : getAccountFees()){
-			if(feeId.equals(accountFeesEntity.getFees().getFeeId())){
+		for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
+			if (feeId.equals(accountFeesEntity.getFees().getFeeId())) {
 				return accountFeesEntity;
 			}
 		}
 		return null;
 	}
-	
-	public Money getTotalAmountDue(){
-		Money totalAmt  = getTotalAmountInArrears();
+
+	public Money getTotalAmountDue() {
+		Money totalAmt = getTotalAmountInArrears();
 		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
-		if(nextInstallment!=null && nextInstallment.getPaymentStatus().equals(AccountConstants.PAYMENT_UNPAID))
-			totalAmt =totalAmt.add(getDueAmount(nextInstallment));
+		if (nextInstallment != null
+				&& nextInstallment.getPaymentStatus().equals(
+						AccountConstants.PAYMENT_UNPAID))
+			totalAmt = totalAmt.add(getDueAmount(nextInstallment));
 		return totalAmt;
 	}
-	
-	public Money getTotalPaymentDue(){
-		Money totalAmt  = getTotalAmountInArrears();
+
+	public Money getTotalPaymentDue() {
+		Money totalAmt = getTotalAmountInArrears();
 		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
-		if(nextInstallment!=null && nextInstallment.getPaymentStatus().equals(AccountConstants.PAYMENT_UNPAID)
-				&&DateUtils.getDateWithoutTimeStamp(nextInstallment.getActionDate().getTime()).equals(DateUtils.getCurrentDateWithoutTimeStamp()))
-			totalAmt =totalAmt.add(getDueAmount(nextInstallment));
+		if (nextInstallment != null
+				&& nextInstallment.getPaymentStatus().equals(
+						AccountConstants.PAYMENT_UNPAID)
+				&& DateUtils.getDateWithoutTimeStamp(
+						nextInstallment.getActionDate().getTime()).equals(
+						DateUtils.getCurrentDateWithoutTimeStamp()))
+			totalAmt = totalAmt.add(getDueAmount(nextInstallment));
 		return totalAmt;
 	}
-	
+
 	public Money getTotalAmountInArrears() {
 		List<AccountActionDateEntity> installmentsInArrears = getDetailsOfInstallmentsInArrears();
 		Money totalAmount = new Money();
@@ -826,85 +844,101 @@ public class AccountBO extends BusinessObject {
 				totalAmount = totalAmount.add(getDueAmount(accountAction));
 		return totalAmount;
 	}
-	
-	protected Money getDueAmount(AccountActionDateEntity installment){
+
+	protected Money getDueAmount(AccountActionDateEntity installment) {
 		return null;
 	}
-	
-	public List<AccountActionDateEntity> getTotalInstallmentsDue(){
-		 List<AccountActionDateEntity> dueInstallments = getDetailsOfInstallmentsInArrears();
-		 AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
-		 if(nextInstallment!=null && nextInstallment.getPaymentStatus().equals(AccountConstants.PAYMENT_UNPAID)
-				 &&DateUtils.getDateWithoutTimeStamp(nextInstallment.getActionDate().getTime()).equals(DateUtils.getCurrentDateWithoutTimeStamp()))
-			 dueInstallments.add(nextInstallment);
-		 return dueInstallments;
+
+	public List<AccountActionDateEntity> getTotalInstallmentsDue() {
+		List<AccountActionDateEntity> dueInstallments = getDetailsOfInstallmentsInArrears();
+		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
+		if (nextInstallment != null
+				&& nextInstallment.getPaymentStatus().equals(
+						AccountConstants.PAYMENT_UNPAID)
+				&& DateUtils.getDateWithoutTimeStamp(
+						nextInstallment.getActionDate().getTime()).equals(
+						DateUtils.getCurrentDateWithoutTimeStamp()))
+			dueInstallments.add(nextInstallment);
+		return dueInstallments;
 	}
-	
-	public boolean isTrxnDateValid(Date trxnDate)throws ApplicationException, SystemException{
-		
-		if(Configuration.getInstance().getAccountConfig(getOffice().getOfficeId()).isBackDatedTxnAllowed()){
-			Date meetingDate =getCustomerDBService().getLastMeetingDateForCustomer(getCustomer().getCustomerId());
-			Date lastMeetingDate =null;
-			if (meetingDate!=null)
-			{
-				 lastMeetingDate = DateUtils.getDateWithoutTimeStamp(meetingDate.getTime());
-				 return trxnDate.compareTo(lastMeetingDate)>=0 ? true :false;
-			}
-			else
+
+	public boolean isTrxnDateValid(Date trxnDate) throws ApplicationException,
+			SystemException {
+
+		if (Configuration.getInstance().getAccountConfig(
+				getOffice().getOfficeId()).isBackDatedTxnAllowed()) {
+			Date meetingDate = getCustomerDBService()
+					.getLastMeetingDateForCustomer(
+							getCustomer().getCustomerId());
+			Date lastMeetingDate = null;
+			if (meetingDate != null) {
+				lastMeetingDate = DateUtils.getDateWithoutTimeStamp(meetingDate
+						.getTime());
+				return trxnDate.compareTo(lastMeetingDate) >= 0 ? true : false;
+			} else
 				return false;
-			
+
 		}
 		return trxnDate.equals(DateUtils.getCurrentDateWithoutTimeStamp());
 	}
-	
-	private CustomerPersistenceService getCustomerDBService() throws ServiceException {
+
+	private CustomerPersistenceService getCustomerDBService()
+			throws ServiceException {
 		return (CustomerPersistenceService) ServiceFactory.getInstance()
-		.getPersistenceService(PersistenceServiceName.Customer);
-	}	
-	
-	public void handleChangeInMeetingSchedule() throws SchedulerException, ServiceException, HibernateException, PersistenceException{
-		AccountActionDateEntity accountActionDateEntity =getDetailsOfNextInstallment();
-		if(accountActionDateEntity!=null){
+				.getPersistenceService(PersistenceServiceName.Customer);
+	}
+
+	public void handleChangeInMeetingSchedule() throws SchedulerException,
+			ServiceException, HibernateException, PersistenceException {
+		AccountActionDateEntity accountActionDateEntity = getDetailsOfNextInstallment();
+		if (accountActionDateEntity != null) {
 			MeetingBO meeting = getCustomer().getCustomerMeeting().getMeeting();
-			Calendar meetingStartDate= meeting.getMeetingStartDate();
-			meeting.setMeetingStartDate(DateUtils.getCalendarDate(accountActionDateEntity.getActionDate().getTime()));
-			regenerateFutureInstallments((short)(accountActionDateEntity.getInstallmentId().intValue()+1));
+			Calendar meetingStartDate = meeting.getMeetingStartDate();
+			meeting.setMeetingStartDate(DateUtils
+					.getCalendarDate(accountActionDateEntity.getActionDate()
+							.getTime()));
+			regenerateFutureInstallments((short) (accountActionDateEntity
+					.getInstallmentId().intValue() + 1));
 			meeting.setMeetingStartDate(meetingStartDate);
 			getAccountPersistenceService().update(this);
 		}
 	}
-	
-	protected void regenerateFutureInstallments(Short nextIntallmentId)throws HibernateException, ServiceException, PersistenceException ,SchedulerException{}
-	
-	protected void deleteFutureInstallments() throws HibernateException, ServiceException{
+
+	protected void regenerateFutureInstallments(Short nextIntallmentId)
+			throws HibernateException, ServiceException, PersistenceException,
+			SchedulerException {
+	}
+
+	protected void deleteFutureInstallments() throws HibernateException,
+			ServiceException {
 		List<AccountActionDateEntity> futureInstllments = getApplicableIdsForFutureInstallments();
-		for(AccountActionDateEntity accountActionDateEntity : futureInstllments){
+		for (AccountActionDateEntity accountActionDateEntity : futureInstllments) {
 			accountActionDates.remove(accountActionDateEntity);
 			getAccountPersistenceService().delete(accountActionDateEntity);
 		}
 	}
-	
-	public Money getTotalPrincipalAmountInArrears(){
-		Money amount=new Money();
-		List<AccountActionDateEntity> actionDateList=getDetailsOfInstallmentsInArrears();
-		for(AccountActionDateEntity accountActionDateEntity : actionDateList){
-			amount=amount.add(accountActionDateEntity.getPrincipal());
+
+	public Money getTotalPrincipalAmountInArrears() {
+		Money amount = new Money();
+		List<AccountActionDateEntity> actionDateList = getDetailsOfInstallmentsInArrears();
+		for (AccountActionDateEntity accountActionDateEntity : actionDateList) {
+			amount = amount.add(accountActionDateEntity.getPrincipal());
 		}
 		return amount;
 	}
-	
+
 	public List<AccountNotesEntity> getRecentAccountNotes() {
 		List<AccountNotesEntity> notes = new ArrayList<AccountNotesEntity>();
 		int count = 0;
-		for(AccountNotesEntity accountNotesEntity : getAccountNotes()) {
-			if(count>2)
+		for (AccountNotesEntity accountNotesEntity : getAccountNotes()) {
+			if (count > 2)
 				break;
 			notes.add(accountNotesEntity);
 			count++;
 		}
 		return notes;
 	}
-	
+
 	public void update() throws SystemException {
 		this.setUpdatedBy(userContext.getId());
 		this.setUpdatedDate(new Date());

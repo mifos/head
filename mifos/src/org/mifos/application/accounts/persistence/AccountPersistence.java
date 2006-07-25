@@ -196,4 +196,39 @@ public class AccountPersistence extends Persistence {
 			return null;
 
 	}
+	
+	public AccountBO getCustomerAccountWithAccountActionsInitialized(
+			Integer accountId) {
+		Session session = HibernateUtil.getSessionTL();
+		Query query = session
+				.getNamedQuery("accounts.retrieveCustomerAccountWithAccountActions");
+		query.setInteger("accountId", accountId);
+		List obj = query.list();
+		Object[] obj1 = (Object[]) obj.get(0);
+		return (AccountBO) obj1[0];
+	}
+
+	public AccountBO getSavingsAccountWithAccountActionsInitialized(
+			Integer accountId) {
+		Session session = HibernateUtil.getSessionTL();
+		Query query = session
+				.getNamedQuery("accounts.retrieveSavingsAccountWithAccountActions");
+		query.setInteger("accountId", accountId);
+		List obj = query.list();
+		Object[] obj1 = (Object[]) obj.get(0);
+		return (AccountBO) obj1[0];
+	}
+
+	public AccountBO getLoanAccountWithAccountActionsInitialized(
+			Integer accountId) {
+		Session session = HibernateUtil.getSessionTL();
+		Query query = session
+				.getNamedQuery("accounts.retrieveLoanAccountWithAccountActions");
+		query.setInteger("accountId", accountId);
+		List obj = query.list();
+		Object[] obj1 = (Object[]) obj.get(0);
+		return (AccountBO) obj1[0];
+	}
+	
+	
 }

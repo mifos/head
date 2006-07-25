@@ -42,44 +42,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
 import org.mifos.framework.business.View;
 import org.mifos.framework.util.helpers.Money;
 
-/**
- * @author rohitr
- * 
- */
 public class LoanAccountView extends View {
 
 	private Integer accountId;
-	
+
 	private Money loanAmount;
 
 	private String prdOfferingShortName;
 
-	private List<AccountActionDateEntity> accountTrxnDetails;
+	private List<BulkEntryAccountActionView> accountTrxnDetails;
 
 	private Short accountType;
 
 	private Short prdOfferingId;
-	
+
 	private Short accountSate;
-	
+
 	private Short interestDeductedAtDisbursement;
-	
+
 	private Double amountPaidAtDisbursement;
 
 	public LoanAccountView(Integer accountId, String prdOfferingShortName,
-			Short accountType, Short prdOfferingId,Short accountSate,
-			Short interestDeductedAtDisbursement,Money loanAmount) {
+			Short accountType, Short prdOfferingId, Short accountSate,
+			Short interestDeductedAtDisbursement, Money loanAmount) {
 		this.accountId = accountId;
 		this.prdOfferingShortName = prdOfferingShortName;
 		this.accountType = accountType;
 		this.prdOfferingId = prdOfferingId;
-		accountTrxnDetails = new ArrayList<AccountActionDateEntity>();
-		this.accountSate=accountSate;
-		this.interestDeductedAtDisbursement=interestDeductedAtDisbursement;
-		this.loanAmount=loanAmount;
+		accountTrxnDetails = new ArrayList<BulkEntryAccountActionView>();
+		this.accountSate = accountSate;
+		this.interestDeductedAtDisbursement = interestDeductedAtDisbursement;
+		this.loanAmount = loanAmount;
 	}
 
 	public Integer getAccountId() {
@@ -98,29 +95,29 @@ public class LoanAccountView extends View {
 		return prdOfferingId;
 	}
 
-	public List<AccountActionDateEntity> getAccountTrxnDetails() {
+	public List<BulkEntryAccountActionView> getAccountTrxnDetails() {
 		return accountTrxnDetails;
 	}
 
-	public void addTrxnDetails(List<AccountActionDateEntity> accountTrxnDetails) {
-		this.accountTrxnDetails.addAll(accountTrxnDetails);
+	public void addTrxnDetails(
+			List<BulkEntryAccountActionView> accountTrxnDetails) {
+		if (null != accountTrxnDetails && accountTrxnDetails.size() > 0)
+			this.accountTrxnDetails.addAll(accountTrxnDetails);
 	}
 
 	public Double getTotalAmountDue() {
 		Money totalAmount = new Money();
-		if( accountSate.shortValue()==AccountStates.LOANACC_APPROVED||accountSate.shortValue()==AccountStates.LOANACC_DBTOLOANOFFICER)
-		{
+		if (accountSate.shortValue() == AccountStates.LOANACC_APPROVED
+				|| accountSate.shortValue() == AccountStates.LOANACC_DBTOLOANOFFICER) {
 			return amountPaidAtDisbursement;
-		}
-		else
-		{
-		if (accountTrxnDetails != null && accountTrxnDetails.size() > 0) {
-			for (AccountActionDateEntity accountAction : accountTrxnDetails) {
-				totalAmount = totalAmount.add(accountAction
-						.getTotalDueWithFees());
+		} else {
+			if (accountTrxnDetails != null && accountTrxnDetails.size() > 0) {
+				for (BulkEntryAccountActionView accountAction : accountTrxnDetails) {
+					totalAmount = totalAmount.add(accountAction
+							.getTotalDueWithFees());
+				}
 			}
-		}
-		return totalAmount.getAmountDoubleValue();
+			return totalAmount.getAmountDoubleValue();
 		}
 	}
 
@@ -131,8 +128,9 @@ public class LoanAccountView extends View {
 	private Short getInterestDeductedAtDisbursement() {
 		return interestDeductedAtDisbursement;
 	}
+
 	public boolean isInterestDeductedAtDisbursement() {
-		return getInterestDeductedAtDisbursement()>0?true:false;
+		return getInterestDeductedAtDisbursement() > 0 ? true : false;
 	}
 
 	public Double getAmountPaidAtDisbursement() {
@@ -142,14 +140,18 @@ public class LoanAccountView extends View {
 	public void setAmountPaidAtDisbursement(Double amountPaidAtDisbursement) {
 		this.amountPaidAtDisbursement = amountPaidAtDisbursement;
 	}
-	
-	public Double getTotalDisburseAmount(){
-		if( accountSate.shortValue()==AccountStates.LOANACC_APPROVED||accountSate.shortValue()==AccountStates.LOANACC_DBTOLOANOFFICER)
-		{
+
+	public Double getTotalDisburseAmount() {
+		if (accountSate.shortValue() == AccountStates.LOANACC_APPROVED
+				|| accountSate.shortValue() == AccountStates.LOANACC_DBTOLOANOFFICER) {
 			return this.loanAmount.getAmountDoubleValue();
-		}
-		else return 0.0;
-	
+		} else
+			return 0.0;
+
 	}
 
+	public boolean isDisbursalAccount() {
+		return getAccountSate().shortValue() == AccountStates.LOANACC_APPROVED
+				|| getAccountSate().shortValue() == AccountStates.LOANACC_DBTOLOANOFFICER;
+	}
 }

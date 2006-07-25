@@ -16,9 +16,9 @@
 			<column name="BALANCE_AMOUNT_CURRENCY_ID" />
 			<column name="BALANCE_AMOUNT" />
 		</property>
-		<many-to-one name="trxnCreatedBy" column="CREATED_BY" class="org.mifos.application.personnel.business.PersonnelBO" cascade="none" update="false" insert="true" unique="true" />
-		<many-to-one name="account" column="ACCOUNT_ID" class="org.mifos.application.accounts.business.AccountBO" cascade="none" update="false" insert="true" unique="true" />
-		<many-to-one name="activity" column="ACCOUNT_ACTION_ID" class="org.mifos.application.accounts.business.AccountActionEntity" cascade="none" update="false" insert="true" />
+		<many-to-one name="trxnCreatedBy" column="CREATED_BY" class="org.mifos.application.personnel.business.PersonnelBO" cascade="none" update="false" insert="true" unique="true" lazy="true"/>
+		<many-to-one name="account" column="ACCOUNT_ID" class="org.mifos.application.accounts.business.AccountBO" cascade="none" update="false" insert="true" unique="true"  lazy="true"/>
+		<many-to-one name="activity" column="ACCOUNT_ACTION_ID" class="org.mifos.application.accounts.business.AccountActionEntity" cascade="none" update="false" insert="true" lazy="true" />
 	</class>
 
 </hibernate-mapping>

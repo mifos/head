@@ -57,6 +57,7 @@ import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.business.CustomerAccountView;
 import org.mifos.application.accounts.business.LoanAccountsProductView;
 import org.mifos.application.accounts.business.SavingsAccountView;
+import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.bulkentry.business.BulkEntryBO;
 import org.mifos.application.bulkentry.business.BulkEntryView;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
@@ -175,7 +176,7 @@ public class BulkEntryAction extends BaseAction {
 					Constants.NO);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			
 		}
 		return mapping.findForward(BulkEntryConstants.LOADSUCCESS);
 	}
@@ -327,7 +328,7 @@ public class BulkEntryAction extends BaseAction {
 											"attendanceId").getLookUpMaster());
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			
 		}
 		return mapping.findForward(BulkEntryConstants.GETSUCCESS);
 	}
@@ -549,33 +550,6 @@ public class BulkEntryAction extends BaseAction {
 				transactionDate, customerAccountNums);
 	}
 
-	private void saveCustomerAccountCollections(
-			CustomerAccountView customerAccountView, Short personnelId,
-			String recieptId, Short paymentId, Date receiptDate,
-			Date transactionDate, List<String> accountNums) {
-		if (null != customerAccountView) {
-			String amount = customerAccountView
-					.getCustomerAccountAmountEntered();
-			if (null != amount && !Double.valueOf(amount).equals(0.0)) {
-				try {
-					bulkEntryBusinessService.saveCustomerAccountCollections(
-							customerAccountView, personnelId, recieptId,
-							paymentId, receiptDate, transactionDate);
-					HibernateUtil.commitTransaction();
-				} catch (BulkEntryAccountUpdateException be) {
-					accountNums.add((String) (be.getValues()[0]));
-					HibernateUtil.rollbackTransaction();
-				} catch (Exception e) {
-					accountNums.add(customerAccountView.getAccountId()
-							.toString());
-					HibernateUtil.rollbackTransaction();
-				} finally {
-					HibernateUtil.closeSession();
-				}
-			}
-		}
-	}
-
 	private void saveWithdrawals(BulkEntryView parent, Short personnelId,
 			String receiptId, Short paymentId, Date receiptDate,
 			Date transactionDate, Date meetingDate,
@@ -690,6 +664,33 @@ public class BulkEntryAction extends BaseAction {
 		}
 	}
 
+	private void saveCustomerAccountCollections(
+			CustomerAccountView customerAccountView, Short personnelId,
+			String recieptId, Short paymentId, Date receiptDate,
+			Date transactionDate, List<String> accountNums) {
+		if (null != customerAccountView) {
+			String amount = customerAccountView
+					.getCustomerAccountAmountEntered();
+			if (null != amount && !Double.valueOf(amount).equals(0.0)) {
+				try {
+					bulkEntryBusinessService.saveCustomerAccountCollections(
+							customerAccountView, personnelId, recieptId,
+							paymentId, receiptDate, transactionDate);
+					HibernateUtil.commitTransaction();
+				} catch (BulkEntryAccountUpdateException be) {
+					accountNums.add((String) (be.getValues()[0]));
+					HibernateUtil.rollbackTransaction();
+				} catch (Exception e) {
+					accountNums.add(customerAccountView.getAccountId()
+							.toString());
+					HibernateUtil.rollbackTransaction();
+				} finally {
+					HibernateUtil.closeSession();
+				}
+			}
+		}
+	}
+
 	private void saveAttendance(BulkEntryView bulkEntryView, Date meetingDate) {
 		try {
 			Short attendance = Short.valueOf(bulkEntryView.getAttendence());
@@ -697,7 +698,6 @@ public class BulkEntryAction extends BaseAction {
 					.getCustomerDetail().getCustomerId(), meetingDate,
 					attendance);
 			HibernateUtil.commitTransaction();
-
 		} catch (BulkEntryAccountUpdateException e) {
 			HibernateUtil.rollbackTransaction();
 		} catch (Exception e) {

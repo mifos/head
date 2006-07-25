@@ -7,6 +7,7 @@ import org.mifos.application.accounts.business.CustomerAccountView;
 import org.mifos.application.accounts.business.LoanAccountsProductView;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistanceService;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.master.business.PaymentTypeView;
@@ -20,6 +21,7 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestBulkEntryView extends MifosTestCase {
@@ -249,9 +251,19 @@ public class TestBulkEntryView extends MifosTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
+		BulkEntryPersistanceService bulkEntryPersistanceService = new BulkEntryPersistanceService();
+		List<BulkEntryAccountActionView> bulkEntryAccountActionViews = bulkEntryPersistanceService
+				.getBulkEntryActionView(DateUtils
+						.getCurrentDateWithoutTimeStamp(),
+						center.getSearchId(), center.getOffice().getOfficeId());
+		List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews = bulkEntryPersistanceService
+				.getBulkEntryFeeActionView(DateUtils
+						.getCurrentDateWithoutTimeStamp(),
+						center.getSearchId(), center.getOffice().getOfficeId());
 		assertNotNull(center.getCustomerAccount());
 		BulkEntryView bulkEntryView = new BulkEntryView(getCusomerView(center));
-		bulkEntryView.populate(new java.sql.Date(System.currentTimeMillis()));
+		bulkEntryView.populateCustomerAccountInformation(center,
+				bulkEntryAccountActionViews, bulkEntryAccountFeeActionViews);
 		CustomerAccountView customerAccountView = bulkEntryView
 				.getCustomerAccountDetails();
 		assertEquals(

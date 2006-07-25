@@ -42,65 +42,93 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
+import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
 import org.mifos.application.bulkentry.business.BulkEntryView;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
 
 public class BulkEntryNodeBuilder {
 
-	/**
-	 * This function builds each bulk entry node. Each node has a customer view
-	 * object associated with it which has information like customer id,
-	 * customer name, search id, parent id etc. The node also has information of
-	 * the accounts for which payment is due as well the attendance of the
-	 * customer at the last meeting. This node is build from the list of
-	 * children that are retrieved for the parent customer.
-	 * 
-	 */
-	public static BulkEntryView buildBulkEntryNode(
-			List<CustomerView> allChildNodes, CustomerView parentCustomer,
-			Date transactionDate) {
-
-		BulkEntryView parentNode = new BulkEntryView(parentCustomer);
-		List<CustomerView> immediateChildren = getImmediateChildren(parentNode
-				.getCustomerDetail().getCustomerId(), allChildNodes);
-		if (immediateChildren != null && immediateChildren.size() != 0) {
-			for (CustomerView childCustomer : immediateChildren) {
-				parentNode.addChildNode(buildBulkEntryNode(allChildNodes,
-						childCustomer, transactionDate));
-			}
-		}
-		parentNode.populate(transactionDate);
-		return parentNode;
-	}
-
-	/**
-	 * This function retrieves the list of immediate children for a parent. It
-	 * checks the parent ids and obtains those customers whose parent id is that
-	 * of the customer id being passed.
-	 */
-	private static List<CustomerView> getImmediateChildren(Integer customerId,
-			List<CustomerView> allChildNodes) {
-
-		List<CustomerView> immediateChildren = new ArrayList<CustomerView>();
-		for (CustomerView child : allChildNodes) {
-			if (customerId.equals(child.getParentCustomerId())) {
-				immediateChildren.add(child);
-			}
-		}
-		return immediateChildren;
+	public static BulkEntryView buildBulkEntry(List<CustomerBO> allCustomers,
+			CustomerView parentCustomerView, Date transactionDate,
+			List<BulkEntryAccountActionView> bulkEntryAccountActionViews,
+			List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews) {
+		CustomerBO parentCustomer = getCustomer(parentCustomerView
+				.getCustomerId(), allCustomers);
+		return buildBulkEntry(allCustomers, parentCustomer, parentCustomerView,
+				transactionDate, bulkEntryAccountActionViews,
+				bulkEntryAccountFeeActionViews);
 	}
 
 	public static void buildBulkEntrySavingsAccounts(BulkEntryView parentNode,
-			Date transactionDate) {
+			Date transactionDate,
+			List<BulkEntryAccountActionView> bulkEntryAccountActionViews) {
 		List<BulkEntryView> immediateChildren = parentNode
 				.getBulkEntryChildren();
 		if (immediateChildren != null && immediateChildren.size() != 0) {
 			for (BulkEntryView childCustomer : immediateChildren) {
-				buildBulkEntrySavingsAccounts(childCustomer, transactionDate);
+				buildBulkEntrySavingsAccounts(childCustomer, transactionDate,
+						bulkEntryAccountActionViews);
 			}
 		}
 		parentNode.populateSavingsAccountActions(parentNode.getCustomerDetail()
-				.getCustomerId(), transactionDate);
+				.getCustomerId(), transactionDate, bulkEntryAccountActionViews);
 
 	}
+
+	private static BulkEntryView buildBulkEntry(List<CustomerBO> allCustomers,
+			CustomerBO parentCustomer, CustomerView parentCustomerView,
+			Date transactionDate,
+			List<BulkEntryAccountActionView> bulkEntryAccountActionViews,
+			List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews) {
+		BulkEntryView parentNode = new BulkEntryView(parentCustomerView);
+		List<CustomerBO> immediateChildren = getImmediateCustomers(parentNode
+				.getCustomerDetail().getCustomerId(), allCustomers);
+		if (immediateChildren != null && immediateChildren.size() != 0) {
+			for (CustomerBO childCustomer : immediateChildren) {
+				CustomerView customerView = getCustomerView(childCustomer);
+				parentNode.addChildNode(buildBulkEntry(allCustomers,
+						childCustomer, customerView, transactionDate,
+						bulkEntryAccountActionViews,
+						bulkEntryAccountFeeActionViews));
+			}
+		}
+		parentNode.populateLoanAccountsInformation(parentCustomer,
+				transactionDate, bulkEntryAccountActionViews,
+				bulkEntryAccountFeeActionViews);
+		parentNode.populateSavingsAccountsInformation(parentCustomer);
+		parentNode.populateCustomerAccountInformation(parentCustomer,
+				bulkEntryAccountActionViews, bulkEntryAccountFeeActionViews);
+		return parentNode;
+	}
+
+	private static CustomerBO getCustomer(Integer customerId,
+			List<CustomerBO> customers) {
+		for (CustomerBO customer : customers) {
+			if (customerId.equals(customer.getCustomerId()))
+				return customer;
+		}
+		return null;
+	}
+
+	private static List<CustomerBO> getImmediateCustomers(
+			Integer parentCustomerId, List<CustomerBO> allCustomers) {
+		List<CustomerBO> immediateChildren = new ArrayList<CustomerBO>();
+		for (CustomerBO child : allCustomers) {
+			if (child.getParentCustomer() != null
+					&& parentCustomerId.equals(child.getParentCustomer()
+							.getCustomerId()))
+				immediateChildren.add(child);
+		}
+		return immediateChildren;
+	}
+
+	private static CustomerView getCustomerView(CustomerBO customer) {
+		return new CustomerView(customer.getCustomerId(), customer
+				.getDisplayName(),
+				customer.getParentCustomer().getCustomerId(), customer
+						.getCustomerLevel().getLevelId());
+	}
+
 }

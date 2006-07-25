@@ -3,6 +3,7 @@ import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.util.helpers.Money;
 
 public class SavingsPerformanceEntity extends PersistentObject {
+	private Integer id;
 	private Integer accountId;
     private Money totalDeposits;
     private Money totalWithdrawals;

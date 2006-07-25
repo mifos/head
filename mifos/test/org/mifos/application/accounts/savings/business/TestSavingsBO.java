@@ -33,6 +33,7 @@ import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
+import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
@@ -657,7 +658,7 @@ public class TestSavingsBO extends MifosTestCase {
 		paymentData.setCustomerId(group.getCustomerId());
 		paymentData.setRecieptDate(new Date(System.currentTimeMillis()));
 		paymentData.setRecieptNum("34244");
-		paymentData.addAccountPaymentData(new SavingsPaymentData(null));
+		paymentData.addAccountPaymentData(getSavingsPaymentdata(null));
 		savings.applyPayment(paymentData);
 		
 		HibernateUtil.commitTransaction();
@@ -667,6 +668,10 @@ public class TestSavingsBO extends MifosTestCase {
 		assertEquals(AccountStates.SAVINGS_ACC_APPROVED,savings.getAccountState().getId().shortValue());
 		assertEquals(100.0, savings.getSavingsBalance().getAmountDoubleValue());
 		assertEquals(1, savings.getSavingsActivityDetails().size());
+	}
+	
+	private SavingsPaymentData getSavingsPaymentdata(BulkEntryAccountActionView bulkEntryAccountActionView) {
+		return new SavingsPaymentData(bulkEntryAccountActionView);
 	}
 	
 	public void testGetStatusName() throws ApplicationException,
