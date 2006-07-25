@@ -6,7 +6,7 @@ public class GenMeetingsForCustomerNSavingsTask extends MifosTask {
 
 	@Override
 	public void run() {
-		helper = new GenMeetingsForCustomerNSavingsHelper();
+		helper = new GenerateMeetingsForCustomerAndSavingsHelper();
 		helper.executeTask(this);
 		super.run();
 	}

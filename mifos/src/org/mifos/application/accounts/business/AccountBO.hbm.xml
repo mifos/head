@@ -329,7 +329,7 @@
 			]]>
 	</query>
     
-    <query name="getActiveCustomerAccounts">
-    	<![CDATA[ from org.mifos.application.accounts.business.CustomerAccountBO ca where  ca.accountState = 11 and ca.accountType.accountTypeId=3]]>
+    <query name="getActiveCustomerAndSavingsAccounts">
+    	<![CDATA[ from org.mifos.application.accounts.business.AccountBO ca where  ca.accountState in (11,16) and ca.accountType.accountTypeId in (2,3)]]>
     </query>
 </hibernate-mapping>

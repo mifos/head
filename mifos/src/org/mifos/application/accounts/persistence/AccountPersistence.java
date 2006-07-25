@@ -182,14 +182,18 @@ public class AccountPersistence extends Persistence {
 		return executeNamedQuery(NamedQueryConstants.GET_CUSTOMER_ACCOUNTS_FOR_FEE,queryParameters);
 
 	}
-	public List<CustomerAccountBO> getActiveCustomerAccounts(){
-		return executeNamedQuery(NamedQueryConstants.GET_ACTIVE_CUSTOMER_ACCOUNTS,null);
+	public List<AccountBO> getActiveCustomerAndSavingsAccounts(){
+		return executeNamedQuery(NamedQueryConstants.GET_ACTIVE_CUSTOMER__AND_SAVINGS_ACCOUNTS,null);
 
 	}
 	public AccountActionDateEntity getLastInstallment(Integer accountId ){
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("accountId",accountId);
-		return (AccountActionDateEntity)executeNamedQuery(NamedQueryConstants.GET_LASTINSTALLMENT,queryParameters).get(0);
+		
+		List intallments  = executeNamedQuery(NamedQueryConstants.GET_LASTINSTALLMENT,queryParameters);
+		if (intallments!=null&&intallments.size()>0)return (AccountActionDateEntity)intallments.get(0);
+		else
+			return null;
 
 	}
 }
