@@ -1363,6 +1363,7 @@ public class TestLoanBO extends MifosTestCase {
 		Short personnelId = accountBO.getPersonnel().getPersonnelId();
 		ClientPerformanceHistoryEntity clientPerfHistory =(ClientPerformanceHistoryEntity) ((LoanBO)accountBO).getCustomer().getCustomerPerformanceHistory();
 		Integer noOfActiveLoans = clientPerfHistory.getNoOfActiveLoans();
+		Integer loanCycleNumber = clientPerfHistory.getLoanCycleNumber();
 		((LoanBO) accountBO).disburseLoan("1234", startDate,
 				Short.valueOf("1"), personnelId, startDate, Short.valueOf("1"));
 		HibernateUtil.commitTransaction();
@@ -1373,6 +1374,7 @@ public class TestLoanBO extends MifosTestCase {
 				AccountBO.class, accountBO.getAccountId());
 		LoanBO loan = (LoanBO) accountBO;
 		assertEquals(noOfActiveLoans+1,clientPerfHistory.getNoOfActiveLoans().intValue());
+		assertEquals(loanCycleNumber+1,clientPerfHistory.getLoanCycleNumber().intValue());
 		LoanPerformanceHistoryEntity loanPerfHistory = loan.getPerformanceHistory();
 		assertEquals(getLastInstallmentAccountAction(loan).getActionDate(),loanPerfHistory.getLoanMaturityDate());
 	}

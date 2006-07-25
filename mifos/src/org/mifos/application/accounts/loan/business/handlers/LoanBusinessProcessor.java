@@ -16,7 +16,6 @@ import org.mifos.application.accounts.dao.AccountNotesDAO;
 import org.mifos.application.accounts.dao.ClosedAccSearchDAO;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.business.LoanPerformanceHistoryEntity;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.business.util.helpers.LoanHeaderObject;
 import org.mifos.application.accounts.loan.dao.LoanDAO;
@@ -34,9 +33,7 @@ import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.accounts.util.valueobjects.AccountStatusChangeHistory;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
-import org.mifos.application.customer.client.util.valueobjects.ClientPerformanceHistory;
 import org.mifos.application.customer.dao.CustomerUtilDAO;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.valueobjects.Customer;
 import org.mifos.application.customer.util.valueobjects.CustomerMaster;
 import org.mifos.application.customer.util.valueobjects.CustomerMeeting;
@@ -75,7 +72,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.valueobjects.Context;
 import org.mifos.framework.util.valueobjects.SearchResults;
 
@@ -332,13 +328,6 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 		// we need the customer loan officerId for recordLoanOfficeis
 
 		// checkPermissionForCreate(loan.getAccountStateId(),context.getUserContext(),null,loan.getOfficeId(),context.getUserContext().getId());
-		
-		//performance history
-		if(loan.getCustomer().getCustomerLevel().getLevelId().equals(Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))) {
-			ClientPerformanceHistory clientPerfHistory = (ClientPerformanceHistory)loan.getCustomer().getCustomerPerformanceHistory();
-			if(clientPerfHistory != null)
-				clientPerfHistory.setLoanCycleNumber(clientPerfHistory.getLoanCycleNumber()+1);
-		}
 		
 		RepaymentSchedule repaymentSchedule = (RepaymentSchedule) context
 				.getBusinessResults(LoanConstants.REPAYMENTSCHEDULE);

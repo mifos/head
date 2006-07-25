@@ -1634,6 +1634,8 @@ public class LoanBO extends AccountBO {
 					.getCustomerPerformanceHistory();
 			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory
 					.getNoOfActiveLoans() + 1);
+			clientPerfHistory.setLoanCycleNumber(clientPerfHistory
+					.getLoanCycleNumber() + 1);
 		} else if (getCustomer().getCustomerLevel().getLevelId().equals(
 				Short.valueOf(CustomerConstants.GROUP_LEVEL_ID))
 				&& getCustomer().getCustomerPerformanceHistory() != null) {
