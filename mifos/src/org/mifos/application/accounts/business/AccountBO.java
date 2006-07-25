@@ -47,7 +47,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.exceptions.AccountExceptionConstants;
 import org.mifos.application.accounts.exceptions.IDGenerationException;
@@ -58,11 +60,15 @@ import org.mifos.application.accounts.persistence.service.AccountPersistanceServ
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
+import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
 import org.mifos.application.fees.business.FeesBO;
+import org.mifos.application.fees.util.helpers.FeeFrequencyType;
+import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.BusinessObject;
@@ -72,9 +78,11 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -943,5 +951,78 @@ public class AccountBO extends BusinessObject {
 		this.setUpdatedBy(userContext.getId());
 		this.setUpdatedDate(new Date());
 		getAccountPersistenceService().update(this);
+	}
+	
+	protected Meeting convertM2StyleToM1(MeetingBO meeting) {
+
+		Meeting meetingM1 = null;
+		Session session = null;
+		try {
+			session = HibernateUtil.getSession();
+			meetingM1 = (Meeting) session.get(Meeting.class, meeting
+					.getMeetingId());
+		} catch (HibernateProcessException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				HibernateUtil.closeSession(session);
+			} catch (HibernateProcessException e) {
+				e.printStackTrace();
+			}
+		}
+		return meetingM1;
+	}
+	
+	// TODO this method will go once scheduler is moved to m2 style
+	protected AccountFees getAccountFees(Integer accountFeeId) {
+		AccountFees accountFees = new AccountFees();
+		Session session = null;
+		try {
+			session = HibernateUtil.getSession();
+			accountFees = (AccountFees) session.get(AccountFees.class,
+					accountFeeId);
+			Fees fees = accountFees.getFees();
+			initializeMeetings(fees);
+			if (null != fees) {
+				fees.getFeeFrequency().getFeeFrequencyId();
+			}
+		} catch (HibernateProcessException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				HibernateUtil.closeSession(session);
+			} catch (HibernateProcessException e) {
+				e.printStackTrace();
+			}
+		}
+		Hibernate.initialize(accountFees);
+		return accountFees;
+	}
+	
+
+
+	private void initializeMeetings(Fees fees) {
+
+		if (fees.getFeeFrequency().getFeeFrequencyTypeId().equals(
+				FeeFrequencyType.PERIODIC.getValue())) {
+			Meeting meeting = fees.getFeeFrequency().getFeeMeetingFrequency();
+			meeting.getMeetingType().getMeetingPurpose();
+		}
+
+	}
+	
+	protected  Short getLastInstallmentId(){
+		
+		Short LastInstallmentId = null;
+		for (AccountActionDateEntity date : this.getAccountActionDates()) {
+			
+			if( LastInstallmentId ==null) LastInstallmentId = date.getInstallmentId();
+			else {
+				if ( LastInstallmentId < date.getInstallmentId()) LastInstallmentId= date.getInstallmentId();
+			}
+			
+		}
+		return LastInstallmentId;
+		
 	}
 }

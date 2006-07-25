@@ -26,6 +26,7 @@ import org.mifos.application.master.persistence.service.MasterPersistenceService
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.components.repaymentschedule.MeetingScheduleHelper;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
 import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
@@ -593,5 +594,29 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			else if(actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
 				assertEquals(DateUtils.getDateWithoutTimeStamp(installment3ndDate.getTime()),DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
 		}
+	}
+	
+	public void testGenerateMeetingsForNextYear() throws Exception{
+		
+		createInitialObjects();
+		center.getCustomerAccount().generateMeetingsForNextYear();
+		MeetingBO meetingBO = center.getCustomerMeeting().getMeeting();
+		meetingBO.setMeetingStartDate(DateUtils
+				.getFistDayOfNextYear(Calendar.getInstance()));
+		List<java.util.Date> meetingDates = MeetingScheduleHelper.getSchedulerObject(
+				meetingBO).getAllDates();
+		Date date = center.getCustomerAccount().getAccountActionDate(
+				Short.valueOf("4")).getActionDate();
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		Calendar calendar2 = Calendar.getInstance();
+		calendar2.setTime(meetingDates.get(0));
+		assertEquals(0, new GregorianCalendar(calendar.get(Calendar.YEAR),
+				calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE),
+				0, 0, 0).compareTo(new GregorianCalendar(calendar2
+				.get(Calendar.YEAR), calendar2.get(Calendar.MONTH),
+				calendar2.get(Calendar.DATE), 0, 0, 0)));
+
+		
 	}
 }

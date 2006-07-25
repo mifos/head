@@ -41,6 +41,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -865,7 +866,33 @@ public class SavingsBO extends AccountBO {
 							+ dt);
 		}
 	}
+	private void generateDepositAccountActions(CustomerBO customer,
+			MeetingBO meeting,Short installmentId) throws SchedulerException {
+		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
+		List<Date> depositDates = scheduler.getAllDates(new Date(meeting.getMeetingEndDate().getTimeInMillis()));
+		if(skipFirstInstallment(depositDates.get(0))) depositDates.remove(0);
+		short installmentNumber = installmentId;
+		for (Date dt : depositDates) {
+			AccountActionDateEntity actionDate = helper.createActionDateObject(
+					customer, dt, userContext.getId(), getRecommendedAmount());
+			
+			actionDate.setInstallmentId(installmentNumber++);
+			
+			addAccountActionDate(actionDate);
+			logger
+					.debug("In SavingsBO::generateDepositAccountActions(), Successfully added account action on date: "
+							+ dt);
+		}
+	}
+	private boolean skipFirstInstallment(Date date){
+		Calendar fistDay = DateUtils.getFistDayOfNextYear(Calendar.getInstance());
+		Calendar firstInstallmentDate =Calendar.getInstance();
+		firstInstallmentDate.setTime(date);
+		Calendar firstInstallmentDateWithoutTimestamp = new GregorianCalendar(firstInstallmentDate.get(Calendar.YEAR),firstInstallmentDate.get(Calendar.MONTH),firstInstallmentDate.get(Calendar.DATE),0,0,0);
+		
+		return firstInstallmentDateWithoutTimestamp.compareTo(fistDay)<0 ? true :false;
 
+	}
 	protected AccountPaymentEntity makePayment(PaymentData paymentData)
 			throws AccountException, SystemException {
 		Money totalAmount = paymentData.getTotalAmount();
@@ -1920,4 +1947,34 @@ public class SavingsBO extends AccountBO {
 						.getMissedDepositsPaidAfterDueDate(getAccountId()));
 	}
 
+	public  void generateMeetingsForNextYear() throws SchedulerException, PersistenceException, ServiceException{
+		CustomerBO customerBO = getCustomer();
+		if (customerBO.getCustomerMeeting() != null
+				&& customerBO.getCustomerMeeting().getMeeting() != null) {
+			MeetingBO depositSchedule = customerBO.getCustomerMeeting()
+					.getMeeting();
+
+			Calendar calendar = Calendar.getInstance();
+			Short lastInstallmentId = getLastInstallmentId();
+			AccountActionDateEntity installment = getAccountActionDate(lastInstallmentId);
+			calendar.setTimeInMillis(installment. getActionDate().getTime());
+			depositSchedule.setMeetingStartDate(calendar);
+			
+			depositSchedule.setMeetingEndDate(DateUtils.getLastDayOfNextYear(Calendar.getInstance()));
+			if (customerBO.getCustomerLevel().getLevelId().equals(
+					CustomerConstants.CLIENT_LEVEL_ID)
+					|| (customerBO.getCustomerLevel().getLevelId().equals(
+							CustomerConstants.GROUP_LEVEL_ID) && getRecommendedAmntUnit()
+							.getRecommendedAmntUnitId().shortValue() == ProductDefinitionConstants.COMPLETEGROUP)) {
+				generateDepositAccountActions(customerBO, depositSchedule,(short)(installment.getInstallmentId()+1));
+			} else {
+				List<CustomerBO> children =getCustomer().getChildren(
+						CustomerConstants.CLIENT_LEVEL_ID);
+				for (CustomerBO customer : children) {
+					
+					generateDepositAccountActions(customer, depositSchedule,installment.getInstallmentId());
+				}
+			}
+		}
+	}
 }

@@ -51,6 +51,7 @@ import org.mifos.application.productdefinition.util.helpers.ProductDefinitionCon
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.components.repaymentschedule.MeetingScheduleHelper;
 import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
@@ -64,6 +65,8 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+
+import sun.security.action.GetLongAction;
 
 public class TestSavingsBO extends MifosTestCase {
 	private UserContext userContext;
@@ -361,6 +364,7 @@ public class TestSavingsBO extends MifosTestCase {
 	 * (16/02/2006 - 05/03/06) 17 4000*17 + (05/03/2006 - 05/04/06) 31 4200*31 +
 	 * (05/04/2006 - 10/04/06) 05 4000*5 = 523200 Avg = 523200/95 = 5507.3
 	 */
+	
 	public void testGetAverageBalance() throws Exception {
 		createInitialObjects();
 		SavingsBO savingsObj = createSavingsWithAccountPayments();
@@ -1007,9 +1011,9 @@ public class TestSavingsBO extends MifosTestCase {
 		assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
 	}
 
-	/*
-	 * When IsAdjustPossibleOnLastTrxn returns false.
-	 */
+	
+	 //When IsAdjustPossibleOnLastTrxn returns false.
+	 
 	public void testAdjustPmntFailure() throws Exception {
 		createInitialObjects();
 		savingsOffering = helper.createSavingsOffering();
@@ -1791,6 +1795,7 @@ public class TestSavingsBO extends MifosTestCase {
 	 * amount to be paid for next installment)
 	 * 
 	 */
+	
   public void testGetTotalAmountInArrearsForCurrentDateMeeting()
 			throws Exception {
 		savings = getSavingsAccount();
@@ -3808,5 +3813,71 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.addAccountNotes(accountNotesEntity);
 		savings.update();
 		HibernateUtil.commitTransaction();
+	}
+	
+	public void testGenerateMeetingForNextYear() throws Exception{
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		Date startDate = new Date(System.currentTimeMillis());
+
+		center = TestObjectFactory.createCenter("center1", Short.valueOf("13"),
+				"1.4", meeting, startDate);
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, startDate);
+
+		SavingsTestHelper SavingsTestHelper = new SavingsTestHelper();
+
+		SavingsOfferingBO savingsOfferingBO = SavingsTestHelper
+				.createSavingsOffering();
+		savingsOfferingBO.getRecommendedAmntUnit().setRecommendedAmntUnitId(
+				Short.valueOf("2"));
+		SavingsBO savingsBO = SavingsTestHelper.createSavingsAccount(
+				savingsOfferingBO, group, Short.valueOf("16"),
+				TestObjectFactory.getUserContext());
+		
+		Short LastInstallmentId = null;
+		for (AccountActionDateEntity date : savingsBO.getAccountActionDates()) {
+			if( LastInstallmentId ==null) LastInstallmentId = date.getInstallmentId();
+			else {
+				if ( LastInstallmentId < date.getInstallmentId()) LastInstallmentId= date.getInstallmentId();
+			}
+			
+		}
+	       AccountActionDateEntity lastYearLastInstallment = savingsBO.getAccountActionDate(LastInstallmentId);
+	        
+			Integer installmetId = lastYearLastInstallment.getInstallmentId().intValue()+(short)1;
+
+		savingsBO.generateMeetingsForNextYear();
+		TestObjectFactory.updateObject(savingsBO);
+		TestObjectFactory.updateObject(center);
+		TestObjectFactory.updateObject(group);
+		TestObjectFactory.updateObject(savingsBO);
+		TestObjectFactory.flushandCloseSession();
+		center = (CustomerBO) HibernateUtil.getSessionTL().get(
+				CustomerBO.class, center.getCustomerId());
+		group = (CustomerBO) HibernateUtil.getSessionTL().get(
+				CustomerBO.class, group.getCustomerId());
+		savingsBO = (SavingsBO) HibernateUtil.getSessionTL().get(
+				SavingsBO.class, savingsBO.getAccountId());
+		
+		MeetingBO meetingBO = center.getCustomerMeeting().getMeeting();
+		meetingBO.setMeetingStartDate(DateUtils
+				.getFistDayOfNextYear(Calendar.getInstance()));
+		List<Date> meetingDates = MeetingScheduleHelper.getSchedulerObject(
+				meetingBO).getAllDates();
+		Date FirstSavingInstallmetDate = savingsBO.getAccountActionDate(Short.valueOf(installmetId.shortValue())).getActionDate();
+		Calendar calendar2 = Calendar.getInstance();
+		calendar2.setTime(meetingDates.get(0));
+		Calendar calendar3 = Calendar.getInstance();
+		calendar3.setTime(FirstSavingInstallmetDate);
+		assertEquals(0, new GregorianCalendar(calendar3.get(Calendar.YEAR),
+				calendar3.get(Calendar.MONTH), calendar3.get(Calendar.DATE),
+				0, 0, 0).compareTo(new GregorianCalendar(calendar2
+				.get(Calendar.YEAR), calendar2.get(Calendar.MONTH),
+				calendar2.get(Calendar.DATE), 0, 0, 0)));
+
+		
+		TestObjectFactory.cleanUp(savingsBO);	
+		
 	}
 }

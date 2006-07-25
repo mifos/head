@@ -814,25 +814,7 @@ public class LoanBO extends AccountBO {
 
 	}
 
-	private Meeting convertM2StyleToM1(MeetingBO meeting) {
 
-		Meeting meetingM1 = null;
-		Session session = null;
-		try {
-			session = HibernateUtil.getSession();
-			meetingM1 = (Meeting) session.get(Meeting.class, meeting
-					.getMeetingId());
-		} catch (HibernateProcessException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				HibernateUtil.closeSession(session);
-			} catch (HibernateProcessException e) {
-				e.printStackTrace();
-			}
-		}
-		return meetingM1;
-	}
 
 	private AccountPaymentEntity insertOnlyFeeAtDisbursement(String recieptNum,
 			Date recieptDate, Short paymentTypeId, Short personnelId) {
@@ -886,41 +868,7 @@ public class LoanBO extends AccountBO {
 		return loanTrxnDetailEntity;
 	}
 
-	// TODO this method will go once scheduler is moved to m2 style
-	private AccountFees getAccountFees(Integer accountFeeId) {
-		AccountFees accountFees = new AccountFees();
-		Session session = null;
-		try {
-			session = HibernateUtil.getSession();
-			accountFees = (AccountFees) session.get(AccountFees.class,
-					accountFeeId);
-			Fees fees = accountFees.getFees();
-			initializeMeetings(fees);
-			if (null != fees) {
-				fees.getFeeFrequency().getFeeFrequencyId();
-			}
-		} catch (HibernateProcessException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				HibernateUtil.closeSession(session);
-			} catch (HibernateProcessException e) {
-				e.printStackTrace();
-			}
-		}
-		Hibernate.initialize(accountFees);
-		return accountFees;
-	}
 
-	private void initializeMeetings(Fees fees) {
-
-		if (fees.getFeeFrequency().getFeeFrequencyTypeId().equals(
-				FeeFrequencyType.PERIODIC.getValue())) {
-			Meeting meeting = fees.getFeeFrequency().getFeeMeetingFrequency();
-			meeting.getMeetingType().getMeetingPurpose();
-		}
-
-	}
 
 	private Set<AccountFees> getAccountFeesSet() {
 		Set<AccountFees> accountFeesSet = new HashSet<AccountFees>();
