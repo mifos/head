@@ -732,16 +732,15 @@ public class TestObjectFactory {
 		savingsOffering.setCreatedDate(new Date(System.currentTimeMillis()));
 		savingsOffering.setCreatedBy(personnel.getPersonnelId());
 		MifosCurrency currency = testObjectPersistence.getCurrency();
-		savingsOffering.setRecommendedAmount(new Money(currency,
-				recommenededAmt));
+		savingsOffering.setRecommendedAmount(new Money(recommenededAmt.toString()));
 		RecommendedAmntUnit amountUnit = new RecommendedAmntUnit();
 		amountUnit.setRecommendedAmntUnitId(recomAmtUnitId);
 		savingsOffering.setRecommendedAmntUnit(amountUnit);
 
 		savingsOffering.setInterestRate(intRate);
 		savingsOffering
-				.setMaxAmntWithdrawl(new Money(currency, maxAmtWithdrawl));
-		savingsOffering.setMinAmntForInt(new Money(currency, minAmtForInt));
+				.setMaxAmntWithdrawl(new Money(maxAmtWithdrawl.toString()));
+		savingsOffering.setMinAmntForInt(new Money( minAmtForInt.toString()));
 
 		SavingsType savingsType = new SavingsType();
 		savingsType.setSavingsTypeId(savingsTypeId);
@@ -1276,11 +1275,11 @@ public class TestObjectFactory {
 	}
 
 	public static Money getMoneyForMFICurrency(double amnt) {
-		return new Money(testObjectPersistence.getCurrency(), amnt);
+		return new Money( String.valueOf(amnt));
 	}
 
 	public static Money getMoney(Short currencyId, double amnt) {
-		return new Money(testObjectPersistence.getCurrency(currencyId), amnt);
+		return new Money(String.valueOf(amnt));
 	}
 
 	public static void updateObject(PersistentObject obj) {

@@ -215,10 +215,9 @@ public class TestLoanBO extends MifosTestCase {
 		LoanBO loanBO = (LoanBO) accountBO;
 		LoanSummaryEntity loanSummaryEntity = loanBO.getLoanSummary();
 		Money orignalFeesAmount = loanSummaryEntity.getOriginalFees();
-		loanBO.updateTotalFeeAmount(new Money(TestObjectFactory
-				.getMFICurrency(), 20));
+		loanBO.updateTotalFeeAmount(new Money("20"));
 		assertEquals(loanSummaryEntity.getOriginalFees(), (orignalFeesAmount
-				.subtract(new Money(TestObjectFactory.getMFICurrency(), 20))));
+				.subtract(new Money("20"))));
 	}
 
 	public void testDisburseLoanWithFeeAtDisbursement()

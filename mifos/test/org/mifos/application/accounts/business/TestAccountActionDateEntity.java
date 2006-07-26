@@ -89,75 +89,75 @@ public class TestAccountActionDateEntity extends TestAccount {
 	public void testGetPrincipalDue(){
 		Money principal=null;
 		AccountActionDateEntity accountActionDate = (AccountActionDateEntity)accountBO.getAccountActionDates().toArray()[0];
-		accountActionDate.setPrincipalPaid(new Money(currency ,10.0));
+		accountActionDate.setPrincipalPaid(new Money("10.0"));
 		assertEquals(90.0 , accountActionDate.getPrincipalDue().getAmountDoubleValue());
 		
 	}
 	
 	public void testGetInterestDue(){
 		AccountActionDateEntity accountActionDate = (AccountActionDateEntity)accountBO.getAccountActionDates().toArray()[0];
-		accountActionDate.setInterestPaid(new Money(currency ,2.0));
+		accountActionDate.setInterestPaid(new Money("2.0"));
 		assertEquals(10.0 , accountActionDate.getInterestDue().getAmountDoubleValue());
 		
 	}
 	
 	public void testGetPenaltyDue(){
 		AccountActionDateEntity accountActionDate = (AccountActionDateEntity)accountBO.getAccountActionDates().toArray()[0];
-		accountActionDate.setPenalty(new Money(currency ,20.0));
-		accountActionDate.setPenaltyPaid(new Money(currency ,5.0));
-		accountActionDate.setMiscPenalty(new Money(currency ,10.0));
+		accountActionDate.setPenalty(new Money("20.0"));
+		accountActionDate.setPenaltyPaid(new Money("5.0"));
+		accountActionDate.setMiscPenalty(new Money("10.0"));
 		assertEquals(25.0 , accountActionDate.getPenaltyDue().getAmountDoubleValue());
 		
 	}
 	
 	public void testGetTotalDue(){
 		AccountActionDateEntity accountActionDate = (AccountActionDateEntity)accountBO.getAccountActionDates().toArray()[0];
-		accountActionDate.setPrincipalPaid(new Money(currency ,10.0));
-		accountActionDate.setInterestPaid(new Money(currency ,2.0));
-		accountActionDate.setPenalty(new Money(currency ,20.0));
-		accountActionDate.setPenaltyPaid(new Money(currency ,5.0));
-		accountActionDate.setMiscPenalty(new Money(currency ,10.0));
-		accountActionDate.setMiscFee(new Money(currency ,20.0));
-		accountActionDate.setMiscFeePaid(new Money(currency ,5.0));
+		accountActionDate.setPrincipalPaid(new Money("10.0"));
+		accountActionDate.setInterestPaid(new Money("2.0"));
+		accountActionDate.setPenalty(new Money("20.0"));
+		accountActionDate.setPenaltyPaid(new Money("5.0"));
+		accountActionDate.setMiscPenalty(new Money("10.0"));
+		accountActionDate.setMiscFee(new Money("20.0"));
+		accountActionDate.setMiscFeePaid(new Money("5.0"));
 		assertEquals(140.0 , accountActionDate.getTotalDue().getAmountDoubleValue());
 		
 	}
 	
 	public void testGetTotalDueWithFees(){
 		AccountActionDateEntity accountActionDate = (AccountActionDateEntity)accountBO.getAccountActionDates().toArray()[0];
-		accountActionDate.setPrincipalPaid(new Money(currency ,10.0));
-		accountActionDate.setInterestPaid(new Money(currency ,2.0));
-		accountActionDate.setPenalty(new Money(currency ,20.0));
-		accountActionDate.setPenaltyPaid(new Money(currency ,5.0));
-		accountActionDate.setMiscPenalty(new Money(currency ,10.0));
-		accountActionDate.setMiscFee(new Money(currency ,20.0));
-		accountActionDate.setMiscFeePaid(new Money(currency ,5.0));
+		accountActionDate.setPrincipalPaid(new Money("10.0"));
+		accountActionDate.setInterestPaid(new Money("2.0"));
+		accountActionDate.setPenalty(new Money("20.0"));
+		accountActionDate.setPenaltyPaid(new Money("5.0"));
+		accountActionDate.setMiscPenalty(new Money("10.0"));
+		accountActionDate.setMiscFee(new Money("20.0"));
+		accountActionDate.setMiscFeePaid(new Money("5.0"));
 		assertEquals(240.0 , accountActionDate.getTotalDueWithFees().getAmountDoubleValue());
 		
 	}
 	
 	public void testGetDueAmounts() {
 		AccountActionDateEntity accountActionDate = (AccountActionDateEntity)accountBO.getAccountActionDates().toArray()[0];
-		accountActionDate.setPrincipalPaid(new Money(currency ,10.0));
-		accountActionDate.setInterestPaid(new Money(currency ,2.0));
-		accountActionDate.setPenalty(new Money(currency ,20.0));
-		accountActionDate.setPenaltyPaid(new Money(currency ,5.0));
-		accountActionDate.setMiscPenalty(new Money(currency ,10.0));
-		accountActionDate.setMiscFee(new Money(currency ,20.0));
-		accountActionDate.setMiscFeePaid(new Money(currency ,5.0));
+		accountActionDate.setPrincipalPaid(new Money("10.0"));
+		accountActionDate.setInterestPaid(new Money("2.0"));
+		accountActionDate.setPenalty(new Money("20.0"));
+		accountActionDate.setPenaltyPaid(new Money("5.0"));
+		accountActionDate.setMiscPenalty(new Money("10.0"));
+		accountActionDate.setMiscFee(new Money("20.0"));
+		accountActionDate.setMiscFeePaid(new Money("5.0"));
 		assertEquals(115.0 , accountActionDate.getDueAmnts().getFeesOverdue().getAmountDoubleValue());
 		
 	}
 	
 	public void testGetTotalDueAmounts() {
 		AccountActionDateEntity accountActionDate = (AccountActionDateEntity)accountBO.getAccountActionDates().toArray()[0];
-		accountActionDate.setPrincipalPaid(new Money(currency ,10.0));
-		accountActionDate.setInterestPaid(new Money(currency ,2.0));
-		accountActionDate.setPenalty(new Money(currency ,20.0));
-		accountActionDate.setPenaltyPaid(new Money(currency ,5.0));
-		accountActionDate.setMiscPenalty(new Money(currency ,10.0));
-		accountActionDate.setMiscFee(new Money(currency ,20.0));
-		accountActionDate.setMiscFeePaid(new Money(currency ,5.0));
+		accountActionDate.setPrincipalPaid(new Money("10.0"));
+		accountActionDate.setInterestPaid(new Money("2.0"));
+		accountActionDate.setPenalty(new Money("20.0"));
+		accountActionDate.setPenaltyPaid(new Money("5.0"));
+		accountActionDate.setMiscPenalty(new Money("10.0"));
+		accountActionDate.setMiscFee(new Money("20.0"));
+		accountActionDate.setMiscFeePaid(new Money("5.0"));
 		OverDueAmounts  totalDue = accountActionDate.getDueAmnts();
 		assertEquals(115.0 , totalDue.getFeesOverdue().getAmountDoubleValue());
 		assertEquals(90.0 , totalDue.getPrincipalOverDue().getAmountDoubleValue());
