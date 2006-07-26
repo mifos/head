@@ -141,7 +141,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		FinancialInitializer.initialize();
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
 		accntActionDates.add(loan.getAccountActionDate(Short.valueOf("1")));
-		PaymentData accountPaymentDataView = TestObjectFactory.getLoanAccountPaymentData(accntActionDates,TestObjectFactory.getMoneyForMFICurrency(amnt),null,Short.valueOf("1"),"receiptNum",Short.valueOf("1"),currentDate,currentDate );
+		PaymentData accountPaymentDataView = TestObjectFactory.getLoanAccountPaymentData(accntActionDates,TestObjectFactory.getMoneyForMFICurrency(amnt),null,loan.getPersonnel(),"receiptNum",Short.valueOf("1"),currentDate,currentDate );
 		
 		loan.applyPayment(accountPaymentDataView);
 		TestObjectFactory.updateObject(loan);

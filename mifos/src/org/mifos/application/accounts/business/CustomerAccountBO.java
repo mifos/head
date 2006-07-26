@@ -79,10 +79,6 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
-/**
- * @author ashishsm
- * 
- */
 public class CustomerAccountBO extends AccountBO {
 
 	Set<CustomerActivityEntity> customerActivitDetails = null;
@@ -129,12 +125,15 @@ public class CustomerAccountBO extends AccountBO {
 			CustomerTrxnDetailEntity accountTrxn = new CustomerTrxnDetailEntity();
 			accountTrxn.setAccount(this);
 			accountTrxn.setPaymentDetails(accountAction,
-					customerAccountPaymentData, paymentData.getPersonnelId(),
+					customerAccountPaymentData, paymentData.getPersonnel(),
 					paymentData.getTransactionDate());
 			accountPayment.addAcountTrxn(accountTrxn);
-			addCustomerActivity(buildCustomerActivity(paymentData
-					.getTotalAmount(), "Payment rcvd.", paymentData
-					.getPersonnelId()));
+			addCustomerActivity(
+					new CustomerActivityEntity(paymentData
+							.getPersonnel(), "Payment rcvd.", paymentData
+							.getTotalAmount()));
+					
+					
 		}
 		return accountPayment;
 	}

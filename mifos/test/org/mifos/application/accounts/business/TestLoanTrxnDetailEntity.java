@@ -66,7 +66,7 @@ private BulkEntryPersistance bulkEntryPersistance;
 		List<AccountActionDateEntity> accountActionsToBeUpdated = new ArrayList<AccountActionDateEntity>();
 		accountActionsToBeUpdated.add(account.getAccountActionDates().iterator().next());
 		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
-				accountActionsToBeUpdated,new Money(TestObjectFactory.getMFICurrency(),"1000.0"),null,Short.valueOf("1"),
+				accountActionsToBeUpdated,new Money(TestObjectFactory.getMFICurrency(),"1000.0"),null,account.getPersonnel(),
 				"423423",Short.valueOf("1"),new Date(System
 						.currentTimeMillis()),new Date(System
 								.currentTimeMillis()));

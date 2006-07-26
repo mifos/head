@@ -1657,11 +1657,11 @@ public class TestObjectFactory {
 
 	public static PaymentData getCustomerAccountPaymentDataView(
 			List<AccountActionDateEntity> accountActions, Money totalAmount,
-			Integer customerId, Short personnelId, String recieptNum,
+			CustomerBO customer, PersonnelBO personnel, String recieptNum,
 			Short paymentId, Date receiptDate, Date transactionDate) {
-		PaymentData paymentData = new PaymentData(totalAmount, personnelId,
+		PaymentData paymentData = new PaymentData(totalAmount, personnel,
 				paymentId, transactionDate);
-		paymentData.setCustomerId(customerId);
+		paymentData.setCustomer(customer);
 		paymentData.setRecieptDate(receiptDate);
 		paymentData.setRecieptNum(recieptNum);
 		for (AccountActionDateEntity actionDate : accountActions) {
@@ -1679,7 +1679,8 @@ public class TestObjectFactory {
 		List<AccountActionDateEntity> accountAction = getDueActionDatesForAccount(
 				customer.getCustomerAccount().getAccountId(),
 				new java.sql.Date(System.currentTimeMillis()));
-		customerAccountView.setAccountActionDates(getBulkEntryAccountActionViews(accountAction));
+		customerAccountView
+				.setAccountActionDates(getBulkEntryAccountActionViews(accountAction));
 		return customerAccountView;
 	}
 
@@ -1688,9 +1689,10 @@ public class TestObjectFactory {
 		List<AccountActionDateEntity> dueActionDates = new BulkEntryBusinessService()
 				.retrieveCustomerAccountActionDetails(accountId,
 						transactionDate);
-		for(AccountActionDateEntity accountActionDate : dueActionDates) {
+		for (AccountActionDateEntity accountActionDate : dueActionDates) {
 			Hibernate.initialize(accountActionDate);
-			for(AccountFeesActionDetailEntity accountFeesActionDetail : accountActionDate.getAccountFeesActionDetails()) {
+			for (AccountFeesActionDetailEntity accountFeesActionDetail : accountActionDate
+					.getAccountFeesActionDetails()) {
 				Hibernate.initialize(accountFeesActionDetail);
 			}
 		}
@@ -1754,11 +1756,11 @@ public class TestObjectFactory {
 
 	public static PaymentData getLoanAccountPaymentData(
 			List<AccountActionDateEntity> accountActions, Money totalAmount,
-			Integer customerId, Short personnelId, String recieptNum,
+			CustomerBO customer, PersonnelBO personnel, String recieptNum,
 			Short paymentId, Date receiptDate, Date transactionDate) {
-		PaymentData paymentData = new PaymentData(totalAmount, personnelId,
+		PaymentData paymentData = new PaymentData(totalAmount, personnel,
 				paymentId, transactionDate);
-		paymentData.setCustomerId(customerId);
+		paymentData.setCustomer(customer);
 		paymentData.setRecieptDate(receiptDate);
 		paymentData.setRecieptNum(recieptNum);
 		for (AccountActionDateEntity actionDate : accountActions) {

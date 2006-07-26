@@ -140,9 +140,12 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 	public void setMiscPenaltyAmount(Money miscPenaltyAmount) {
 		this.miscPenaltyAmount = miscPenaltyAmount;
 	}
-	
-	public void setLoanTrxnDetailsForWriteOff(AccountActionDateEntity accountAction,Short personnelId) throws ServiceException {
-		PersonnelBO personnel = new PersonnelPersistenceService().getPersonnel(personnelId);
+
+	public void setLoanTrxnDetailsForWriteOff(
+			AccountActionDateEntity accountAction, Short personnelId)
+			throws ServiceException {
+		PersonnelBO personnel = new PersonnelPersistenceService()
+				.getPersonnel(personnelId);
 		setAmount(accountAction.getPrincipal());
 		principalAmount = accountAction.getPrincipal();
 		setComments("Loan Written Off");
@@ -152,28 +155,19 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 		setInstallmentId(accountAction.getInstallmentId());
 		setActionDate(new Date(System.currentTimeMillis()));
 		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-		.getInstance().getPersistenceService(
-				PersistenceServiceName.MasterDataService);
-		setAccountActionEntity((AccountActionEntity) masterPersistenceService.findById(AccountActionEntity.class,
+				.getInstance().getPersistenceService(
+						PersistenceServiceName.MasterDataService);
+		setAccountActionEntity((AccountActionEntity) masterPersistenceService
+				.findById(AccountActionEntity.class,
 						AccountConstants.ACTION_WRITEOFF));
 	}
 
 	public Money setPaymentDetails(AccountActionDateEntity accountAction,
-			LoanPaymentData loanPaymentDataView, Short personnelId,
+			LoanPaymentData loanPaymentDataView, PersonnelBO personnel,
 			java.util.Date transactionDate) throws ServiceException {
-		// TODO - Remove this from loanPersistence service as a new
-		// AccountActionEntity has been added
-		// in business
-		/*
-		 * AccountAction action = loanPersistance
-		 * .getAccountAction(AccountConstants.ACTION_LOAN_REPAYMENT);
-		 */
 		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
 				.getInstance().getPersistenceService(
 						PersistenceServiceName.MasterDataService);
-		PersonnelBO personnel = new PersonnelPersistenceService()
-				.getPersonnel(personnelId);
-
 		setActionDate(transactionDate);
 		setDueDate(accountAction.getActionDate());
 		setPersonnel(personnel);

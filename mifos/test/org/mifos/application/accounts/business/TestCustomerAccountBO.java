@@ -88,7 +88,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		PaymentData accountPaymentDataView = TestObjectFactory
 				.getCustomerAccountPaymentDataView(dueActionDates, new Money(
 						TestObjectFactory.getMFICurrency(), "100.0"), null,
-						center.getPersonnel().getPersonnelId(), "3424324",
+						center.getPersonnel(), "3424324",
 						Short.valueOf("1"), transactionDate, transactionDate);
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
@@ -120,7 +120,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		PaymentData accountPaymentDataView = TestObjectFactory
 				.getCustomerAccountPaymentDataView(dueActionDates, new Money(
 						TestObjectFactory.getMFICurrency(), "100.0"), null,
-						center.getPersonnel().getPersonnelId(), "3424324",
+						center.getPersonnel(), "3424324",
 						Short.valueOf("1"), transactionDate, transactionDate);
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());

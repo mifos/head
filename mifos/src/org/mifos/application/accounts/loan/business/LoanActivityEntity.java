@@ -144,9 +144,8 @@ public class LoanActivityEntity extends PersistentObject {
 		this.personnel = personnel;
 	}
 
-	public void setActivityDetails(LoanSummaryEntity loanSummary,Short personnelId,
+	public void setActivityDetails(LoanSummaryEntity loanSummary,PersonnelBO personnel,
 			Money principal, Money interest, Money fees, Money penalty,String comments) {
-		PersonnelBO personnel = new PersonnelPersistenceService().getPersonnel(personnelId);
 		setPrincipal(principal);
 		setInterest(interest);
 		setPenalty(penalty);

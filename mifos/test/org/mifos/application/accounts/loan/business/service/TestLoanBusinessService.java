@@ -171,7 +171,7 @@ public class TestLoanBusinessService extends MifosTestCase {
 
 	private PaymentData createPaymentViewObject(AccountBO accountBO) {
 		PaymentData paymentData = new PaymentData(new Money(TestObjectFactory
-				.getMFICurrency(), "1000.0"), Short.valueOf("1"), Short
+				.getMFICurrency(), "1000.0"), accountBO.getPersonnel(), Short
 				.valueOf("1"), new Date(System.currentTimeMillis()));
 		paymentData.setRecieptDate(new Date(System.currentTimeMillis()));
 		paymentData.setRecieptNum("423423");

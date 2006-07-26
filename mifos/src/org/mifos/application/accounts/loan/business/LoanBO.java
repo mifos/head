@@ -420,8 +420,7 @@ public class LoanBO extends AccountBO {
 				this
 						.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
 								accountState, this.getAccountState(),
-								getPersonnelDBService().getPersonnel(
-										paymentData.getPersonnelId())));
+								paymentData.getPersonnel()));
 
 				// Client performance entry
 				updateCustomerHistoryOnLastInstlPayment(paymentData
@@ -434,8 +433,7 @@ public class LoanBO extends AccountBO {
 				this
 						.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
 								accountState, this.getAccountState(),
-								getPersonnelDBService().getPersonnel(
-										paymentData.getPersonnelId())));
+								paymentData.getPersonnel()));
 
 				// Client performance entry
 				updateCustomerHistoryOnPayment();
@@ -447,7 +445,7 @@ public class LoanBO extends AccountBO {
 			LoanTrxnDetailEntity accountTrxnBO = new LoanTrxnDetailEntity();
 			accountTrxnBO.setAccount(this);
 			Money totalFees = accountTrxnBO.setPaymentDetails(accountAction,
-					loanPaymentData, paymentData.getPersonnelId(), paymentData
+					loanPaymentData, paymentData.getPersonnel(), paymentData
 							.getTransactionDate());
 			accountTrxnBO.setSumAmount(totalFees);
 			accountPayment.addAcountTrxn(accountTrxnBO);
@@ -465,13 +463,13 @@ public class LoanBO extends AccountBO {
 
 		}
 		addLoanActivity(buildLoanActivity(accountPayment.getAccountTrxns(),
-				paymentData.getPersonnelId(), "Payment rcvd."));
+				paymentData.getPersonnel(), "Payment rcvd."));
 		return accountPayment;
 	}
 
 	private LoanActivityEntity buildLoanActivity(
 			Collection<AccountTrxnEntity> accountTrxnDetails,
-			Short personnelId, String comments) {
+			PersonnelBO personnel, String comments) {
 		LoanActivityEntity loanActivity = new LoanActivityEntity();
 		Money principal = new Money();
 		Money interest = new Money();
@@ -489,7 +487,7 @@ public class LoanBO extends AccountBO {
 				fees = fees.add(removeSign(feesTrxn.getFeeAmount()));
 			}
 		}
-		loanActivity.setActivityDetails(loanSummary, personnelId, principal,
+		loanActivity.setActivityDetails(loanSummary, personnel, principal,
 				interest, fees, penalty, comments);
 		loanActivity.setAccount(this);
 		return loanActivity;
@@ -646,13 +644,16 @@ public class LoanBO extends AccountBO {
 					}
 				}
 			}
-			addLoanActivity(buildLoanActivity(reversedTrxns, getUserContext()
-					.getId(), "Loan Adjusted"));
+			PersonnelBO personnel = new PersonnelPersistenceService()
+					.getPersonnel(getUserContext().getId());
+			addLoanActivity(buildLoanActivity(reversedTrxns, personnel,
+					"Loan Adjusted"));
+
 		}
 	}
 
 	public void disburseLoan(String recieptNum, Date transactionDate,
-			Short paymentTypeId, Short personnelId, Date receiptDate,
+			Short paymentTypeId, PersonnelBO personnel, Date receiptDate,
 			Short rcvdPaymentTypeId) throws AccountException, SystemException,
 			RepaymentScheduleException, FinancialException {
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity();
@@ -669,31 +670,29 @@ public class LoanBO extends AccountBO {
 		// update status change history also
 		this
 				.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
-						this.getAccountState(), newState, getPersonnelDBService().getPersonnel(
-								personnelId)));
+						this.getAccountState(), newState, personnel));
 		this.setAccountState(newState);
 
 		// create trxn entry for disbursal
 		LoanTrxnDetailEntity loanTrxnDetailEntity = getLoanTrxnDetailEntity(
 				AccountConstants.ACTION_DISBURSAL, transactionDate,
-				paymentTypeId, personnelId);
+				paymentTypeId, personnel);
 		loanTrxnDetailEntity.setDesbursementDetails(this.loanAmount,
 				this.loanAmount);
 		// loanTrxnDetailEntity.setRunningBalance(loanSummary);
 		List<AccountTrxnEntity> loanTrxns = new ArrayList<AccountTrxnEntity>();
 		loanTrxns.add(loanTrxnDetailEntity);
-		addLoanActivity(buildLoanActivity(loanTrxns, personnelId,
+		addLoanActivity(buildLoanActivity(loanTrxns, personnel,
 				"Loan Disbursal"));
 		if (null != this.intrestAtDisbursement
 				&& this.intrestAtDisbursement == 1) {
 			accountPaymentEntity = payInterestAtDisbursement(recieptNum,
-					transactionDate, rcvdPaymentTypeId, personnelId,
-					receiptDate);
+					transactionDate, rcvdPaymentTypeId, personnel, receiptDate);
 		} else {
 			if (loanPersistance.getFeeAmountAtDisbursement(this.getAccountId(),
 					transactionDate) > 0.0)
 				accountPaymentEntity = insertOnlyFeeAtDisbursement(recieptNum,
-						transactionDate, rcvdPaymentTypeId, personnelId);
+						transactionDate, rcvdPaymentTypeId, personnel);
 		}
 
 		if (null == accountPaymentEntity) {
@@ -817,12 +816,12 @@ public class LoanBO extends AccountBO {
 
 
 	private AccountPaymentEntity insertOnlyFeeAtDisbursement(String recieptNum,
-			Date recieptDate, Short paymentTypeId, Short personnelId) {
+			Date recieptDate, Short paymentTypeId, PersonnelBO personnel) {
 		Set<AccountFeesEntity> accountFees = this.getAccountFees();
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity();
 		LoanTrxnDetailEntity loanTrxnDetailEntity = getLoanTrxnDetailEntity(
 				AccountConstants.ACTION_FEE_REPAYMENT, recieptDate,
-				paymentTypeId, personnelId);
+				paymentTypeId, personnel);
 		loanTrxnDetailEntity.setMiscFeeAmount(new Money());
 		accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
 		Money totalPayment = new Money();
@@ -842,19 +841,17 @@ public class LoanBO extends AccountBO {
 		accountPaymentEntity.setPaymentDetails(totalPayment, recieptNum,
 				recieptDate, paymentTypeId);
 		addLoanActivity(buildLoanActivity(accountPaymentEntity
-				.getAccountTrxns(), personnelId, "Payment rcvd."));
+				.getAccountTrxns(), personnel, "Payment rcvd."));
 		return accountPaymentEntity;
 	}
 
 	private LoanTrxnDetailEntity getLoanTrxnDetailEntity(short accountAction,
-			Date recieptDate, Short paymentTypeId, Short personnelId) {
+			Date recieptDate, Short paymentTypeId, PersonnelBO personnel) {
 		// set the loantrxn details
 		LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity();
 		loanTrxnDetailEntity.setAccount(this);
 		AccountActionEntity action = loanPersistance
 				.getAccountActionEntity(accountAction);
-		PersonnelBO personnel = new PersonnelPersistenceService()
-				.getPersonnel(personnelId);
 		loanTrxnDetailEntity.setActionDate(recieptDate);
 		loanTrxnDetailEntity.setDueDate(recieptDate);
 		loanTrxnDetailEntity.setPersonnel(personnel);
@@ -888,10 +885,10 @@ public class LoanBO extends AccountBO {
 	}
 
 	private PaymentData getLoanAccountPaymentData(Money totalAmount,
-			List<AccountActionDateEntity> accountActions, Short personnelId,
-			String recieptId, Short paymentId, Date receiptDate,
-			Date transactionDate) {
-		PaymentData paymentData = new PaymentData(totalAmount, personnelId,
+			List<AccountActionDateEntity> accountActions,
+			PersonnelBO personnel, String recieptId, Short paymentId,
+			Date receiptDate, Date transactionDate) {
+		PaymentData paymentData = new PaymentData(totalAmount, personnel,
 				paymentId, transactionDate);
 		paymentData.setRecieptDate(receiptDate);
 		paymentData.setRecieptNum(recieptId);
@@ -923,6 +920,8 @@ public class LoanBO extends AccountBO {
 	public void makeEarlyRepayment(Money totalAmount, String receiptNumber,
 			Date recieptDate, String paymentTypeId, Short personnelId)
 			throws ServiceException, AccountException {
+		PersonnelBO personnel = new PersonnelPersistenceService()
+				.getPersonnel(personnelId);
 		this.setUpdatedBy(personnelId);
 		this.setUpdatedDate(new Date(System.currentTimeMillis()));
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity();
@@ -949,7 +948,7 @@ public class LoanBO extends AccountBO {
 			LoanPaymentData loanPaymentData = new LoanPaymentData(
 					accountActionDateEntity);
 			loanTrxnDetailEntity.setPaymentDetails(accountActionDateEntity,
-					loanPaymentData, personnelId, new Date(System
+					loanPaymentData, personnel, new Date(System
 							.currentTimeMillis()));
 
 			loanSummary
@@ -975,7 +974,7 @@ public class LoanBO extends AccountBO {
 					accountActionDateEntity);
 
 			loanTrxnDetailEntity.setPaymentDetails(accountActionDateEntity,
-					loanPaymentData, personnelId, new Date(System
+					loanPaymentData, personnel, new Date(System
 							.currentTimeMillis()));
 
 			loanSummary.decreaseBy(null, interest, penalty, fees);
@@ -988,7 +987,7 @@ public class LoanBO extends AccountBO {
 				getPerformanceHistory().setNoOfPayments(
 						getPerformanceHistory().getNoOfPayments() + 1);
 			addLoanActivity(buildLoanActivity(accountPaymentEntity
-					.getAccountTrxns(), personnelId, "Loan Repayment"));
+					.getAccountTrxns(), personnel, "Loan Repayment"));
 			buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 		} catch (FinancialException fe) {
 			throw new AccountException("errors.update", fe);
@@ -1002,8 +1001,8 @@ public class LoanBO extends AccountBO {
 						AccountStates.LOANACC_OBLIGATIONSMET);
 		this
 				.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
-						this.getAccountState(), newAccountState, getPersonnelDBService().getPersonnel(
-								personnelId)));
+						this.getAccountState(), newAccountState,
+						getPersonnelDBService().getPersonnel(personnelId)));
 		this.setAccountState((AccountStateEntity) masterPersistenceService
 				.findById(AccountStateEntity.class,
 						AccountStates.LOANACC_OBLIGATIONSMET));
@@ -1085,7 +1084,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	private AccountPaymentEntity payInterestAtDisbursement(String recieptNum,
-			Date transactionDate, Short paymentTypeId, Short personnelId,
+			Date transactionDate, Short paymentTypeId, PersonnelBO personnel,
 			Date receiptDate) throws SystemException, AccountException {
 		AccountActionDateEntity firstInstallment = null;
 		for (AccountActionDateEntity accountActionDate : this
@@ -1099,7 +1098,7 @@ public class LoanBO extends AccountBO {
 		installmentsToBePaid.add(firstInstallment);
 
 		PaymentData paymentData = getLoanAccountPaymentData(firstInstallment
-				.getTotalDueWithFees(), installmentsToBePaid, personnelId,
+				.getTotalDueWithFees(), installmentsToBePaid, personnel,
 				recieptNum, paymentTypeId, receiptDate, transactionDate);
 
 		return makePayment(paymentData);
@@ -1243,6 +1242,8 @@ public class LoanBO extends AccountBO {
 	public void writeOff(String comment) throws ServiceException,
 			SecurityException, PersistenceException, FinancialException {
 		Short personnelId = this.getUserContext().getId();
+		PersonnelBO personnel = new PersonnelPersistenceService()
+				.getPersonnel(personnelId);
 		Short statusId = Short.valueOf(AccountStates.LOANACC_WRITTENOFF);
 		this.setUpdatedBy(personnelId);
 		this.setUpdatedDate(new Date(System.currentTimeMillis()));
@@ -1259,7 +1260,7 @@ public class LoanBO extends AccountBO {
 					accountActionDateEntity, personnelId);
 		}
 		addLoanActivity(buildLoanActivity(accountPaymentEntity
-				.getAccountTrxns(), personnelId, "Loan Written Off"));
+				.getAccountTrxns(), personnel, "Loan Written Off"));
 		buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 		changeStatus(statusId, null, comment);
 

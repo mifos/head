@@ -4,15 +4,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.util.helpers.Money;
 
 public class PaymentData {
 
 	private Money totalAmount;
 
-	private Integer customerId;
+	private CustomerBO customer;
 
-	private Short personnelId;
+	private PersonnelBO personnel;
 
 	private Date transactionDate;
 
@@ -24,11 +26,11 @@ public class PaymentData {
 
 	private List<AccountPaymentData> accountPayments;
 
-	public PaymentData(Money totalAmount, Short personnelId,Short paymentId,
-			Date transactionDate) {
+	public PaymentData(Money totalAmount, PersonnelBO personnel,
+			Short paymentId, Date transactionDate) {
 		accountPayments = new ArrayList<AccountPaymentData>();
 		setTotalAmount(totalAmount);
-		setPersonnelId(personnelId);
+		setPersonnel(personnel);
 		setPaymentTypeId(paymentId);
 		setTransactionDate(transactionDate);
 	}
@@ -37,16 +39,12 @@ public class PaymentData {
 		return accountPayments;
 	}
 
-	public Integer getCustomerId() {
-		return customerId;
-	}
-
 	public Short getPaymentTypeId() {
 		return paymentTypeId;
 	}
 
-	public Short getPersonnelId() {
-		return personnelId;
+	public PersonnelBO getPersonnel() {
+		return personnel;
 	}
 
 	public Date getRecieptDate() {
@@ -69,16 +67,20 @@ public class PaymentData {
 		this.accountPayments = accountPayments;
 	}
 
-	public void setCustomerId(Integer customerId) {
-		this.customerId = customerId;
+	private void setPersonnel(PersonnelBO personnel) {
+		this.personnel = personnel;
+	}
+
+	public CustomerBO getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(CustomerBO customer) {
+		this.customer = customer;
 	}
 
 	private void setPaymentTypeId(Short paymentTypeId) {
 		this.paymentTypeId = paymentTypeId;
-	}
-
-	private void setPersonnelId(Short personnelId) {
-		this.personnelId = personnelId;
 	}
 
 	public void setRecieptDate(Date recieptDate) {

@@ -67,6 +67,7 @@ import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistanceS
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
+import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
@@ -151,6 +152,14 @@ public class BulkEntryBusinessService extends BusinessService {
 		return null;
 	}
 
+	private CustomerBO getCustomer(Integer customerId) {
+		return bulkEntryPersistanceService.getCustomer(customerId);
+	}
+
+	private PersonnelBO getPersonnel(Short personnelId) {
+		return bulkEntryPersistanceService.getPersonnel(personnelId);
+	}
+
 	public void saveLoanAccount(
 			LoanAccountsProductView loanAccountsProductView, Short personnelId,
 			String recieptId, Short paymentId, Date receiptDate,
@@ -179,7 +188,7 @@ public class BulkEntryBusinessService extends BusinessService {
 					AccountTypes.LOANACCOUNT);
 			try {
 				account.disburseLoan(recieptId, transactionDate, paymentId,
-						personnelId, receiptDate, paymentId);
+						getPersonnel(personnelId), receiptDate, paymentId);
 			} catch (RepaymentScheduleException rse) {
 				throw new BulkEntryAccountUpdateException("errors.update", rse,
 						new String[] { account.getGlobalAccountNum() });
@@ -237,8 +246,8 @@ public class BulkEntryBusinessService extends BusinessService {
 			List<BulkEntryAccountActionView> accountActions, Money totalAmount,
 			Short personnelId, String recieptNum, Short paymentId,
 			Date receiptDate, Date transactionDate) {
-		PaymentData paymentData = new PaymentData(totalAmount, personnelId,
-				paymentId, transactionDate);
+		PaymentData paymentData = new PaymentData(totalAmount,
+				getPersonnel(personnelId), paymentId, transactionDate);
 		paymentData.setRecieptDate(receiptDate);
 		paymentData.setRecieptNum(recieptNum);
 		for (BulkEntryAccountActionView actionDate : accountActions) {
@@ -250,8 +259,7 @@ public class BulkEntryBusinessService extends BusinessService {
 
 	public void saveAttendance(Integer customerId, Date meetingDate,
 			Short attendance) throws BulkEntryAccountUpdateException {
-		ClientBO client = (ClientBO) new CustomerPersistenceService()
-				.getCustomer(customerId);
+		ClientBO client = (ClientBO) getCustomer(customerId);
 		try {
 			client.handleAttendance(meetingDate, attendance);
 		} catch (ServiceException se) {
@@ -298,13 +306,13 @@ public class BulkEntryBusinessService extends BusinessService {
 				.getDepositAmountEntered());
 		Money enteredAmount = new Money(Configuration.getInstance()
 				.getSystemConfig().getCurrency(), amount);
-		PaymentData paymentData = new PaymentData(enteredAmount, personnelId,
-				paymentId, transactionDate);
+		PaymentData paymentData = new PaymentData(enteredAmount,
+				getPersonnel(personnelId), paymentId, transactionDate);
 		if (!isCenterGroupIndvAccount
 				&& savingsAccountView.getAccountTrxnDetails().size() > 0)
 			buildIndividualAccountSavingsPayments(paymentData,
 					savingsAccountView, enteredAmount);
-		paymentData.setCustomerId(customerId);
+		paymentData.setCustomer(getCustomer(customerId));
 		paymentData.setRecieptDate(receiptDate);
 		paymentData.setRecieptNum(recieptNum);
 		return paymentData;
@@ -362,9 +370,9 @@ public class BulkEntryBusinessService extends BusinessService {
 		Money enteredAmount = new Money(Configuration.getInstance()
 				.getSystemConfig().getCurrency(), amount);
 
-		PaymentData paymentData = new PaymentData(enteredAmount, personnelId,
-				paymentId, transactionDate);
-		paymentData.setCustomerId(customerId);
+		PaymentData paymentData = new PaymentData(enteredAmount,
+				getPersonnel(personnelId), paymentId, transactionDate);
+		paymentData.setCustomer(getCustomer(customerId));
 		paymentData.setRecieptDate(receiptDate);
 		paymentData.setRecieptNum(recieptNum);
 		return paymentData;
@@ -433,8 +441,8 @@ public class BulkEntryBusinessService extends BusinessService {
 			List<BulkEntryAccountActionView> accountActions, Money totalAmount,
 			Short personnelId, String recieptNum, Short paymentId,
 			Date receiptDate, Date transactionDate) {
-		PaymentData paymentData = new PaymentData(totalAmount, personnelId,
-				paymentId, transactionDate);
+		PaymentData paymentData = new PaymentData(totalAmount,
+				getPersonnel(personnelId), paymentId, transactionDate);
 		paymentData.setRecieptDate(receiptDate);
 		paymentData.setRecieptNum(recieptNum);
 

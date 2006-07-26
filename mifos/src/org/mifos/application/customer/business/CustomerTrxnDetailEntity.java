@@ -13,7 +13,6 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -74,14 +73,11 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 
 	public void setPaymentDetails(AccountActionDateEntity accountAction,
 			CustomerAccountPaymentData customerAccountPaymentDataView,
-			Short personnelId, java.util.Date transactionDate)
+			PersonnelBO personnel, java.util.Date transactionDate)
 			throws ServiceException {
 		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
 				.getInstance().getPersistenceService(
 						PersistenceServiceName.MasterDataService);
-		PersonnelBO personnel = new PersonnelPersistenceService()
-				.getPersonnel(personnelId);
-
 		setActionDate(transactionDate);
 		setDueDate(accountAction.getActionDate());
 		setPersonnel(personnel);
@@ -116,7 +112,7 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 		totalAmount = miscFeeAmount.add(miscPenaltyAmount).add(totalFees);
 		setAmount(totalAmount);
 	}
-	
+
 	public FeesTrxnDetailEntity getFeesTrxn(Integer accountFeeId) {
 
 		if (null != getFeesTrxnDetails() && feesTrxnDetails.size() > 0) {
@@ -163,8 +159,7 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 				"Just before setting created date");
 		reverseAccntTrxn.setTrxnCreatedDate(new Timestamp(System
 				.currentTimeMillis()));
-		
-		
+
 		if (getMiscFeeAmount().getAmountDoubleValue() > 0)
 			reverseAccntTrxn.setMiscFeeAmount(getMiscFeeAmount().negate());
 		else
@@ -172,7 +167,7 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 		if (getMiscPenaltyAmount().getAmountDoubleValue() > 0)
 			reverseAccntTrxn.setMiscPenaltyAmount(getMiscPenaltyAmount()
 					.negate());
-		else 
+		else
 			reverseAccntTrxn.setMiscPenaltyAmount(new Money());
 
 		reverseAccntTrxn.setInstallmentId(getInstallmentId());

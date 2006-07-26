@@ -130,7 +130,7 @@ public class TestAccountAction extends MifosMockStrutsTestCase {
 		accntActionDates.addAll(loan.getAccountActionDates());
 		PaymentData accountPaymentDataView = TestObjectFactory
 				.getLoanAccountPaymentData(accntActionDates, TestObjectFactory
-						.getMoneyForMFICurrency(0), null, Short.valueOf("1"),
+						.getMoneyForMFICurrency(0), null, loan.getPersonnel(),
 						"receiptNum", Short.valueOf("1"), currentDate,
 						currentDate);
 		loan.applyPayment(accountPaymentDataView);
