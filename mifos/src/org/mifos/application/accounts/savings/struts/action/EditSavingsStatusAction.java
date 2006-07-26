@@ -137,7 +137,7 @@ public class EditSavingsStatusAction extends AccountAppAction {
 		Hibernate.initialize(savingsBO.getSavingsOffering());
 		Hibernate.initialize(savingsBO.getAccountFlags());
 		Hibernate.initialize(savingsBO.getTimePerForInstcalc());
-		Hibernate.initialize(savingsBO.getFreqOfPostIntcalc());
+		Hibernate.initialize(savingsBO.getSavingsOffering().getFreqOfPostIntcalc().getMeeting());
 		
 		if (savingsBO.getCustomer().getCustomerMeeting() != null
 				&& savingsBO.getCustomer().getCustomerMeeting().getMeeting() != null)

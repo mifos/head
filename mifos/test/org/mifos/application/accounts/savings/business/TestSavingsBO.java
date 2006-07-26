@@ -255,9 +255,7 @@ public class TestSavingsBO extends MifosTestCase {
 		assertEquals(savings.getTimePerForInstcalc().getMeetingDetails()
 				.getRecurAfter(), savingsOffering.getTimePerForInstcalc()
 				.getMeeting().getMeetingDetails().getRecurAfter());
-		assertEquals(savings.getFreqOfPostIntcalc().getMeetingDetails()
-				.getRecurAfter(), savingsOffering.getFreqOfPostIntcalc()
-				.getMeeting().getMeetingDetails().getRecurAfter());
+		
 	}
 
 	public void testSuccessfulSaveInApprovedState() throws Exception {
@@ -301,9 +299,6 @@ public class TestSavingsBO extends MifosTestCase {
 				savingsOffering.getMinAmntForInt().getAmountDoubleValue());
 		assertEquals(savings.getTimePerForInstcalc().getMeetingDetails()
 				.getRecurAfter(), savingsOffering.getTimePerForInstcalc()
-				.getMeeting().getMeetingDetails().getRecurAfter());
-		assertEquals(savings.getFreqOfPostIntcalc().getMeetingDetails()
-				.getRecurAfter(), savingsOffering.getFreqOfPostIntcalc()
 				.getMeeting().getMeetingDetails().getRecurAfter());
 	}
 

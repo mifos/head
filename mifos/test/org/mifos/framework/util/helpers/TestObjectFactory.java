@@ -1202,8 +1202,6 @@ public class TestObjectFactory {
 			SavingsBO savings = (SavingsBO) account;
 			session.delete(account);
 			session.delete(savings.getTimePerForInstcalc());
-			session.delete(savings.getFreqOfPostIntcalc());
-
 			for (PrdOfferingMeetingEntity prdOfferingMeeting : savings
 					.getSavingsOffering().getPrdOfferingMeetings()) {
 				prdOfferingMeeting.setMeeting(null);

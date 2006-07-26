@@ -182,7 +182,7 @@
 			<property name="interIntCalcDate" column="INTER_INT_CALC_DATE" lazy="true"/>
 			
 			<many-to-one name="timePerForInstcalc" column="TIME_PER_FOR_INT_CALC" class="org.mifos.application.meeting.business.MeetingBO" cascade="all" insert="true" update="true" unique="true"  lazy="true"/>
-			<many-to-one name="freqOfPostIntcalc" column="FREQ_FOR_INT_POST" class="org.mifos.application.meeting.business.MeetingBO" cascade="all" insert="true" update="true" unique="true"   lazy="true"/>
+			<!--  <many-to-one name="freqOfPostIntcalc" column="FREQ_FOR_INT_POST" class="org.mifos.application.meeting.business.MeetingBO" cascade="all" insert="true" update="true" unique="true"   lazy="true"/> -->
 			<many-to-one name="interestCalcType" column="INTEREST_CALCULATION_TYPE_ID" class="org.mifos.application.master.util.valueobjects.InterestCalcType"   lazy="true"/>
 			<many-to-one name="recommendedAmntUnit" column="RECOMMENDED_AMNT_UNIT_ID" class="org.mifos.application.master.util.valueobjects.RecommendedAmntUnit" insert="true" update="false" cascade="none"  lazy="true"/>
 	        <many-to-one name="savingsType" column="SAVINGS_TYPE_ID" class="org.mifos.application.master.util.valueobjects.SavingsType" insert="true" update="false" cascade="none"  lazy="true"/>			

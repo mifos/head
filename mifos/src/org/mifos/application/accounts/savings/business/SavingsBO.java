@@ -152,7 +152,7 @@ public class SavingsBO extends AccountBO {
 
 	private MeetingBO timePerForInstcalc;
 
-	private MeetingBO freqOfPostIntcalc;
+	//private MeetingBO freqOfPostIntcalc;
 
 	private Set<SavingsActivityEntity> savingsActivityDetails;
 
@@ -272,9 +272,9 @@ public class SavingsBO extends AccountBO {
 		this.nextIntPostDate = nextIntPostDate;
 	}
 
-	public MeetingBO getFreqOfPostIntcalc() {
+	/*public MeetingBO getFreqOfPostIntcalc() {
 		return freqOfPostIntcalc;
-	}
+	}*/
 
 	public InterestCalcType getInterestCalcType() {
 		return interestCalcType;
@@ -292,10 +292,10 @@ public class SavingsBO extends AccountBO {
 		return timePerForInstcalc;
 	}
 
-	private void setFreqOfPostIntcalc(MeetingBO freqOfPostIntcalc) {
+	/*private void setFreqOfPostIntcalc(MeetingBO freqOfPostIntcalc) {
 		this.freqOfPostIntcalc = freqOfPostIntcalc;
 	}
-
+*/
 	private void setInterestCalcType(InterestCalcType interestCalcType) {
 		this.interestCalcType = interestCalcType;
 	}
@@ -334,8 +334,7 @@ public class SavingsBO extends AccountBO {
 		setInterestCalcType(getSavingsOffering().getInterestCalcType());
 		setTimePerForInstcalc(getMeeting(getSavingsOffering()
 				.getTimePerForInstcalc().getMeeting()));
-		setFreqOfPostIntcalc(getMeeting(getSavingsOffering()
-				.getFreqOfPostIntcalc().getMeeting()));
+		//setFreqOfPostIntcalc(getMeeting(getSavingsOffering().getFreqOfPostIntcalc().getMeeting()));
 	}
 
 	private MeetingBO getMeeting(MeetingBO offeringMeeting) {
@@ -490,7 +489,8 @@ public class SavingsBO extends AccountBO {
 			setInterestToBePosted(new Money());
 			setLastIntPostDate(getNextIntPostDate());
 			setNextIntPostDate(helper.getNextScheduleDate(getActivationDate(),
-					getLastIntPostDate(), getFreqOfPostIntcalc()));
+					getLastIntPostDate(), getMeeting(getSavingsOffering()
+							.getFreqOfPostIntcalc().getMeeting())));
 			PaymentTypeEntity paymentType = (PaymentTypeEntity) HibernateUtil
 					.getSession().get(PaymentTypeEntity.class,
 							SavingsConstants.DEFAULT_PAYMENT_TYPE);
@@ -1070,7 +1070,8 @@ public class SavingsBO extends AccountBO {
 		this.setNextIntCalcDate(helper.getNextScheduleDate(getActivationDate(),
 				null, getTimePerForInstcalc()));
 		this.setNextIntPostDate(helper.getNextScheduleDate(getActivationDate(),
-				null, getFreqOfPostIntcalc()));
+				null, getMeeting(getSavingsOffering()
+						.getFreqOfPostIntcalc().getMeeting())));
 	}
 
 	public AccountStateEntity retrieveAccountStateEntityMasterObject(
