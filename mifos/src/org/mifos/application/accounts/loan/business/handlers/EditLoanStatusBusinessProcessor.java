@@ -43,10 +43,12 @@ import java.util.List;
 
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStateFlagEntity;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.dao.EditLoanStatusDAO;
 import org.mifos.application.accounts.loan.dao.LoanDAO;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.valueobjects.EditLoanStatus;
+import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.valueobjects.Account;
 import org.mifos.application.configuration.util.helpers.PathConstants;
@@ -90,6 +92,10 @@ public class EditLoanStatusBusinessProcessor extends MifosBusinessProcessor{
 		List statusList =getEditLoanStatusDAO().getStatusList(context.getUserContext().getLocaleId(),loanStatus.getCurrentStatusId());
 		context.addAttribute(getResultObject(LoanConstants.STATUS_LIST,statusList));
 		context.addAttribute(getResultObject(LoanConstants.OLD_STATUS_NAME,getEditLoanStatusDAO().getStatusName(context.getUserContext().getLocaleId(),loanStatus.getCurrentStatusId())));
+		if(getEditLoanStatusDAO().hasLoanPrdOfferingChanged(loanStatus.getAccountId(),loanStatus.getCurrentStatusId())){
+			context.addAttribute(getResultObject(LoanConstants.ERROR,1));
+			throw new AccountException(LoanConstants.HANDLE_CHANGE_IN_PRODUCT_DEFINITION);
+		}
 		//context.addAttribute(getResultObject(LoanConstants.FLAG_NAME,getEditLoanStatusDAO().getFlagName(context.getUserContext().getLocaleId(),loanStatus.getCurrentStatusId())));
 	}
 

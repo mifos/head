@@ -331,16 +331,13 @@ public class AccountActionDate extends ValueObject
 	}
 	public boolean equals(Object obj)
 	{
-		System.out.println("equals in account action date called");
 		AccountActionDate accountActionDate = (AccountActionDate)obj;
 		if(this.actionDateId.intValue() == accountActionDate.getActionDateId().intValue())
 		{
-			System.out.println("equals in account action date called remvoing");
 			 return true;
 		}
 		else 
 		{
-			System.out.println("equals in account action date called not remvoing");
 			return false;
 		}
 		

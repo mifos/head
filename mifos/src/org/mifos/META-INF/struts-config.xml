@@ -561,6 +561,7 @@
 		<action path="/LoanStatusAction" type="org.mifos.application.accounts.loan.struts.action.EditLoanStatusAction" name="loanStatusActionForm" parameter="method" input="/LoanStatusAction.do?method=validate" validate="true" scope="session">
 			<!--  Load forwards -->
 			<forward name="load_success" path="/pages/application/loan/jsp/change_loan_status.jsp" />
+			<forward name="load_failure" path="/pages/application/loan/jsp/change_loan_status.jsp" />
 			<!-- Preview Page Forwards -->
 			<forward name="preview_success" path="/pages/application/loan/jsp/status_preview_checklist.jsp" />
 			<!-- Previous Page Forwards -->

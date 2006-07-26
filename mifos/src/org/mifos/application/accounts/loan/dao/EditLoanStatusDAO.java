@@ -48,8 +48,10 @@ import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.dao.AccountNotesDAO;
 import org.mifos.application.accounts.dao.AccountsDAO;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.valueobjects.EditLoanStatus;
+import org.mifos.application.accounts.loan.util.valueobjects.Loan;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.valueobjects.Account;
@@ -61,6 +63,7 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.util.valueobjects.AccountState;
 import org.mifos.application.master.util.valueobjects.FlagMaster;
 import org.mifos.application.master.util.valueobjects.StatusMaster;
+import org.mifos.application.productdefinition.util.valueobjects.LoanOffering;
 import org.mifos.framework.dao.DAO;
 import org.mifos.framework.dao.helpers.MasterDataRetriever;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -421,4 +424,24 @@ public class EditLoanStatusDAO extends DAO{
 		}
 		return false;
 	}
+	
+	public Boolean hasLoanPrdOfferingChanged(Integer accountId,Short currentState) throws HibernateProcessException{
+		if(currentState.equals(AccountStates.LOANACC_PENDINGAPPROVAL))
+		{
+			Session session = null;
+		   	try{
+		   		session = HibernateUtil.getSession();
+		   		Loan loan=(Loan)session.get(Loan.class,accountId);
+		   		LoanOffering loanOffering=loan.getLoanOffering();
+		   		if(loan.getLoanAmount().getAmountDoubleValue()<loanOffering.getMinLoanAmount().getAmountDoubleValue() || loan.getLoanAmount().getAmountDoubleValue()>loanOffering.getMaxLoanAmount().getAmountDoubleValue()
+		   				|| (double)loan.getInterestRateAmount() < (double)loanOffering.getMinInterestRate() || (double)loan.getInterestRateAmount() > (double)loanOffering.getMaxInterestRate()
+		   				|| (short)loan.getNoOfInstallments()<(short)loanOffering.getMinNoInstallments() || (short)loan.getNoOfInstallments()>(short)loanOffering.getMaxNoInstallments())
+		   			return true;
+		   		}finally{
+		   		HibernateUtil.closeSession(session);
+		   	}
+		}
+		return false;
+	}
+	
 }

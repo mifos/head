@@ -142,4 +142,8 @@ public interface LoanConstants {
 	
 	public static final String STATUS_CHANGE_NOT_ALLOWED="error.statuschangenotallowed";
 	public static final String FUTUREDISBURSALDATE="FutureDate";
+	public static final String HANDLE_CHANGE_IN_PRODUCT_DEFINITION="exceptions.application.loan.changeInLoanOffering";
+	
+	public static final String ERROR="error";
+																	
 }

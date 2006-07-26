@@ -138,10 +138,22 @@ function goToCancelPage(){
 					<br>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit styleClass="buttn"
-								style="width:70px;">
-								<mifos:mifoslabel name="loan.preview" bundle="loanUIResources"></mifos:mifoslabel>
-							</html-el:submit> &nbsp;&nbsp; <html-el:button property="btn"
+							<td align="center">
+							<c:choose>
+								<c:when test="${requestScope.error eq 1}">
+									<html-el:submit styleClass="buttn"
+										style="width:70px;" disabled="true">
+										<mifos:mifoslabel name="loan.preview" bundle="loanUIResources"></mifos:mifoslabel>
+									</html-el:submit> 
+								</c:when>
+								<c:otherwise>
+									<html-el:submit styleClass="buttn"
+										style="width:70px;">
+										<mifos:mifoslabel name="loan.preview" bundle="loanUIResources"></mifos:mifoslabel>
+									</html-el:submit> 
+								</c:otherwise>
+							</c:choose>&nbsp;&nbsp; 
+							<html-el:button property="btn"
 								styleClass="cancelbuttn" style="width:70px"
 								onclick="goToCancelPage()">
 								<mifos:mifoslabel name="loan.cancel" bundle="loanUIResources"></mifos:mifoslabel>
