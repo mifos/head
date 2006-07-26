@@ -47,6 +47,7 @@ import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.financial.business.service.activity.BaseFinancialActivity;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
+import org.mifos.application.accounts.financial.util.helpers.COACache;
 import org.mifos.application.accounts.financial.util.helpers.CategoryConstants;
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.framework.util.helpers.Money;
@@ -61,13 +62,18 @@ public abstract class BaseAccountingEntry {
 	}
 
 	protected void addAccountEntryDetails(Money postedMoney,
-			FinancialActionBO financialAction, GLCodeEntity glcode,Short debitCreditFlag) {
+			FinancialActionBO financialAction, GLCodeEntity glcode,
+			Short debitCreditFlag) throws FinancialException {
 		if (postedMoney.getAmountDoubleValue() != 0) {
-			 postedMoney = getAmountToPost(postedMoney,
-                     financialAction, glcode,debitCreditFlag);
-			FinancialTransactionBO financialTransaction=new FinancialTransactionBO(financialAction,postedMoney,
-					glcode,financialActivity.getAccountTrxn().getActionDate(),financialActivity.getAccountTrxn().getPersonnel(),debitCreditFlag);
-			 financialTransaction.setNotes(financialActivity.getAccountTrxn().getComments());
+			postedMoney = getAmountToPost(postedMoney, financialAction, glcode,
+					debitCreditFlag);
+			FinancialTransactionBO financialTransaction = new FinancialTransactionBO(
+					financialAction, postedMoney, glcode, financialActivity
+							.getAccountTrxn().getActionDate(),
+					financialActivity.getAccountTrxn().getPersonnel(),
+					debitCreditFlag);
+			financialTransaction.setNotes(financialActivity.getAccountTrxn()
+					.getComments());
 			financialActivity.addFinancialTransaction(financialTransaction);
 		}
 
@@ -85,27 +91,30 @@ public abstract class BaseAccountingEntry {
 		return glcode;
 
 	}
-	
-	
-	private Money getAmountToPost(Money postedMoney,FinancialActionBO financialAction, GLCodeEntity glcode,Short debitCreditFlag){
-				
-		if(glcode.getAssociatedCOA().getCOAHead().getCategoryId().equals(CategoryConstants.ASSETS) || glcode.getAssociatedCOA().getCOAHead().getCategoryId().equals(CategoryConstants.EXPENDITURE))
-		{
-            if(debitCreditFlag.equals(FinancialConstants.DEBIT))
-            	return postedMoney;
-            else
-                return postedMoney.negate();
+
+	private Money getAmountToPost(Money postedMoney,
+			FinancialActionBO financialAction, GLCodeEntity glcode,
+			Short debitCreditFlag) throws FinancialException {
+		COABO coabo = COACache
+				.getCOA(glcode.getAssociatedCOA().getCategoryId());
+		if (coabo.getCOAHead().getCategoryId().equals(CategoryConstants.ASSETS)
+				|| coabo.getCOAHead().getCategoryId().equals(
+						CategoryConstants.EXPENDITURE)) {
+			if (debitCreditFlag.equals(FinancialConstants.DEBIT))
+				return postedMoney;
+			else
+				return postedMoney.negate();
 		}
-		if(glcode.getAssociatedCOA().getCOAHead().getCategoryId().equals(CategoryConstants.LIABILITIES) || glcode.getAssociatedCOA().getCOAHead().getCategoryId().equals(CategoryConstants.INCOME))
-		{
-            if(debitCreditFlag.equals(FinancialConstants.DEBIT))
-                return postedMoney.negate();
-            else
-                return postedMoney;
+		if (coabo.getCOAHead().getCategoryId().equals(
+				CategoryConstants.LIABILITIES)
+				|| coabo.getCOAHead().getCategoryId().equals(
+						CategoryConstants.INCOME)) {
+			if (debitCreditFlag.equals(FinancialConstants.DEBIT))
+				return postedMoney.negate();
+			else
+				return postedMoney;
 		}
 		return null;
 	}
 
-	
 }
-

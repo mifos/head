@@ -6,84 +6,75 @@
 
 <hibernate-mapping>
 
-	<class
-		name="org.mifos.application.accounts.business.AccountActionDateEntity"
-		table="ACCOUNT_ACTIONS_DATE">
-		<id name="actionDateId" column="ID" type="integer"
-			unsaved-value="-1">
+	<class name="org.mifos.application.accounts.business.AccountActionDateEntity" table="ACCOUNT_ACTIONS_DATE">
+		<id name="actionDateId" column="ID" type="integer" unsaved-value="-1">
 			<generator class="native" />
 		</id>
-		<version name="versionNo" column="VERSION_NO" type="integer"
-			unsaved-value="null" />
+		<version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null" />
 
 		<property name="actionDate" column="ACTION_DATE" />
 		<property name="deposit" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-		 <column name="DEPOSIT_CURRENCY_ID" /> 
-		 <column name="DEPOSIT" />
+			<column name="DEPOSIT_CURRENCY_ID" />
+			<column name="DEPOSIT" />
 		</property>
 		<property name="principal" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-		 <column name="PRINCIPAL_CURRENCY_ID" /> 
-		 <column name="PRINCIPAL" />
+			<column name="PRINCIPAL_CURRENCY_ID" />
+			<column name="PRINCIPAL" />
 		</property>
 		<property name="interest" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-		 <column name="INTEREST_CURRENCY_ID" /> 
-		 <column name="INTEREST" />
+			<column name="INTEREST_CURRENCY_ID" />
+			<column name="INTEREST" />
 		</property>
 		<property name="penalty" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-		 <column name="PENALTY_CURRENCY_ID" /> 
-		 <column name="PENALTY" />
+			<column name="PENALTY_CURRENCY_ID" />
+			<column name="PENALTY" />
 		</property>
 		<property name="miscFee" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-		 <column name="MISC_FEES_CURRENCY_ID" /> 
-		 <column name="MISC_FEES" />
+			<column name="MISC_FEES_CURRENCY_ID" />
+			<column name="MISC_FEES" />
 		</property>
 		<property name="miscFeePaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-		 <column name="MISC_FEES_PAID_CURRENCY_ID" /> 
-		 <column name="MISC_FEES_PAID" />
+			<column name="MISC_FEES_PAID_CURRENCY_ID" />
+			<column name="MISC_FEES_PAID" />
 		</property>
 		<property name="miscPenalty" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-		 <column name="MISC_PENALTY_CURRENCY_ID" /> 
-		 <column name="MISC_PENALTY" />
+			<column name="MISC_PENALTY_CURRENCY_ID" />
+			<column name="MISC_PENALTY" />
 		</property>
 		<property name="miscPenaltyPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-		 <column name="MISC_PENALTY_PAID_CURRENCY_ID" /> 
-		 <column name="MISC_PENALTY_PAID" />
+			<column name="MISC_PENALTY_PAID_CURRENCY_ID" />
+			<column name="MISC_PENALTY_PAID" />
 		</property>
 		<property name="depositPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-		 <column name="DEPOSIT_PAID_CURRENCY_ID" /> 
-		 <column name="DEPOSIT_PAID" />
+			<column name="DEPOSIT_PAID_CURRENCY_ID" />
+			<column name="DEPOSIT_PAID" />
 		</property>
 		<property name="principalPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-		 <column name="PRINCIPAL_PAID_CURRENCY_ID" /> 
-		 <column name="PRINCIPAL_PAID" />
+			<column name="PRINCIPAL_PAID_CURRENCY_ID" />
+			<column name="PRINCIPAL_PAID" />
 		</property>
 		<property name="interestPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-		 <column name="INTEREST_PAID_CURRENCY_ID" /> 
-		 <column name="INTEREST_PAID" />
+			<column name="INTEREST_PAID_CURRENCY_ID" />
+			<column name="INTEREST_PAID" />
 		</property>
 		<property name="penaltyPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-		 <column name="PENALTY_PAID_CURRENCY_ID" /> 
-		 <column name="PENALTY_PAID" />
+			<column name="PENALTY_PAID_CURRENCY_ID" />
+			<column name="PENALTY_PAID" />
 		</property>
 		<property name="parentFlag" column="PARENT_FLAG" lazy="true" />
-		<property name="paymentStatus" column="PAYMENT_STATUS" lazy="true"/>
-		<property name="installmentId" column="INSTALLMENT_ID" lazy="true"/>
-		<property name="paymentDate" column="PAYMENT_DATE" lazy="true"/>
+		<property name="paymentStatus" column="PAYMENT_STATUS" lazy="true" />
+		<property name="installmentId" column="INSTALLMENT_ID" lazy="true" />
+		<property name="paymentDate" column="PAYMENT_DATE" lazy="true" />
 
-		<many-to-one name="account" column="ACCOUNT_ID"
-			class="org.mifos.application.accounts.business.AccountBO"
-			unique="true" lazy="true" cascade="none" insert="true" update="true" />
-		<many-to-one name="customer" column="CUSTOMER_ID" lazy="true"
-			class="org.mifos.application.customer.business.CustomerBO" />
-		<set name="accountFeesActionDetails" cascade="all,delete-orphan"
-			lazy="false" inverse="true" >
+		<many-to-one name="account" column="ACCOUNT_ID" class="org.mifos.application.accounts.business.AccountBO" unique="true" lazy="true" cascade="none" insert="true" update="true" />
+		<many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" lazy="true" />
+		<set name="accountFeesActionDetails" cascade="all,delete-orphan" lazy="true" inverse="true">
 			<key column="ID" update="false" />
-			<one-to-many
-				class="org.mifos.application.accounts.business.AccountFeesActionDetailEntity" />
+			<one-to-many class="org.mifos.application.accounts.business.AccountFeesActionDetailEntity" />
 		</set>
 
 	</class>
-	
+
 	<query name="account.GetNextInstallmentIds">
 		<![CDATA[
 			select accountAct.installmentId 
@@ -91,17 +82,17 @@
 			where accountAct.account.accountId = :accountId 
 			and accountAct.actionDate >= current_date and accountAct.paymentStatus=:paymentStatus
 		]]>
-    </query>
-    
-    <query name="getTodaysUnpaidInstallmentForActiveCustomers">
+	</query>
+
+	<query name="getTodaysUnpaidInstallmentForActiveCustomers">
 		<![CDATA[select accountActionDateEntity.account.accountId from org.mifos.application.accounts.business.AccountActionDateEntity accountActionDateEntity where accountActionDateEntity.account.accountType.accountTypeId=:CUSTOMER_TYPE_ID and accountActionDateEntity.customer.customerStatus.statusId in (:ACTIVE_CENTER_STATE, :ACTIVE_GROUP_STATE, :ACTIVE_CLIENT_STATE, :ONHOLD_CLIENT_STATE, :ONHOLD_GROUP_STATE) and accountActionDateEntity.actionDate=:CURRENT_DATE and accountActionDateEntity.paymentStatus=:PAYMENT_UNPAID ]]>
 	</query>
 
 	<query name="getLastInstallment">
 		<![CDATA[ from org.mifos.application.accounts.business.AccountActionDateEntity accountActOuter where accountActOuter.installmentId= (select max(accountAct.installmentId)	from org.mifos.application.accounts.business.AccountActionDateEntity accountAct where accountAct.account.accountId = :accountId)]]>
-    </query>
-    
-    <query name="account.getAllInstallmentsForAllAcounts">
+	</query>
+
+	<query name="account.getAllInstallmentsForAllAcounts">
 		<![CDATA[select new org.mifos.application.bulkentry.business.BulkEntryAccountActionView(
 			accountAction.account.accountId,customer.customerId,accountAction.installmentId,
 			accountAction.actionDate,accountAction.principal,accountAction.principalPaid,

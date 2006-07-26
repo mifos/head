@@ -1,3 +1,40 @@
+/**
+
+ * TestAccountBO.java    version: 1.0
+
+ 
+
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+
+ * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+
+ * All rights reserved.
+
+ 
+
+ * Apache License 
+ * Copyright (c) 2005-2006 Grameen Foundation USA 
+ * 
+
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ *
+
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the 
+
+ * License. 
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
+
+ * and how it is applied.  
+
+ *
+
+ */
 package org.mifos.application.accounts.business;
 
 import java.sql.Date;
@@ -318,7 +355,7 @@ public class TestAccountBO extends TestAccount {
 	public void testIsTrxnDateValid() throws Exception {
 
 		Calendar calendar = new GregorianCalendar();
-		/* Added by rajender on 24th July as test case was not passing */
+		// Added by rajender on 24th July as test case was not passing
 		calendar.add(Calendar.DAY_OF_MONTH, 10);
 		java.util.Date trxnDate = new Date(calendar.getTimeInMillis());
 		if (Configuration.getInstance().getAccountConfig(Short.valueOf("3"))
@@ -421,54 +458,6 @@ public class TestAccountBO extends TestAccount {
 				.getTotalPrincipalAmountInArrears());
 	}
 
-	public void testUpdatePerformanceHistoryOnAdjustment() throws Exception {
-		Date currentDate = new Date(System.currentTimeMillis());
-		LoanPerformanceHistoryEntity loanPerfHistory = new LoanPerformanceHistoryEntity();
-		((LoanBO) accountBO).setPerformanceHistory(loanPerfHistory);
-		Integer noOfPayments = loanPerfHistory.getNoOfPayments();
-		TestObjectFactory.updateObject(accountBO);
-		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
-				AccountBO.class, accountBO.getAccountId());
-		((LoanBO) accountBO).setUserContext(TestObjectFactory.getUserContext());
-		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
-		int count = 0;
-		for (AccountActionDateEntity accountActionDateEntity : accountBO
-				.getAccountActionDates()) {
-			if (count == 5)
-				break;
-			accntActionDates.add(accountActionDateEntity);
-			count++;
-		}
-		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
-				accntActionDates, TestObjectFactory
-						.getMoneyForMFICurrency(212 * 5), null, accountBO
-						.getPersonnel(), "receiptNum", Short.valueOf("1"),
-				currentDate, currentDate);
-		((LoanBO) accountBO).applyPayment(paymentData);
-		loanPerfHistory = ((LoanBO) accountBO).getPerformanceHistory();
-		noOfPayments = loanPerfHistory.getNoOfPayments();
-		TestObjectFactory.updateObject(accountBO);
-		TestObjectFactory.flushandCloseSession();
-
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
-				AccountBO.class, accountBO.getAccountId());
-		((LoanBO) accountBO).setUserContext(TestObjectFactory.getUserContext());
-		((LoanBO) accountBO)
-				.adjustPmnt("loan account has been adjusted by test code");
-		TestObjectFactory.updateObject(accountBO);
-		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
-				AccountBO.class, accountBO.getAccountId());
-		assertEquals(noOfPayments - 5, ((LoanBO) accountBO)
-				.getPerformanceHistory().getNoOfPayments().intValue());
-
-		group = (CustomerBO) HibernateUtil.getSessionTL().get(CustomerBO.class,
-				group.getCustomerId());
-		center = (CustomerBO) HibernateUtil.getSessionTL().get(
-				CustomerBO.class, center.getCustomerId());
-	}
-
 	public void testUpdate() throws Exception {
 		TestObjectFactory.flushandCloseSession();
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
@@ -509,5 +498,46 @@ public class TestAccountBO extends TestAccount {
 		assertNotNull(pastInstallments);
 		assertEquals(3, pastInstallments.size());
 		TestObjectFactory.cleanUp(centerBO);
+	}
+
+	public void testUpdatePerformanceHistoryOnAdjustment() throws Exception {
+		Date currentDate = new Date(System.currentTimeMillis());
+		HibernateUtil.closeSession();
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+				AccountBO.class, accountBO.getAccountId());
+
+		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
+		int count = 0;
+		for (AccountActionDateEntity accountActionDateEntity : accountBO
+				.getAccountActionDates()) {
+			if (count == 5)
+				break;
+			accntActionDates.add(accountActionDateEntity);
+			count++;
+		}
+		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
+				accntActionDates, TestObjectFactory
+						.getMoneyForMFICurrency(212 * 5), null, accountBO
+						.getPersonnel(), "receiptNum", Short.valueOf("1"),
+				currentDate, currentDate);
+		accountBO.applyPayment(paymentData);
+
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+				AccountBO.class, accountBO.getAccountId());
+		accountBO.setUserContext(TestObjectFactory.getUserContext());
+		LoanPerformanceHistoryEntity loanPerfHistory = new LoanPerformanceHistoryEntity();
+		((LoanBO) accountBO).setPerformanceHistory(loanPerfHistory);
+		accountBO.adjustPmnt("loan account has been adjusted by test code");
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+				AccountBO.class, accountBO.getAccountId());
+		assertEquals(-5, ((LoanBO) accountBO).getPerformanceHistory()
+				.getNoOfPayments().intValue());
+
 	}
 }
