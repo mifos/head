@@ -118,72 +118,91 @@ public class AuthorizationManager implements Observer {
 			}
 
 			if (e.getEventType().toLowerCase() == Constants.CREATE) {
-				Set<Short> keys = activityToRolesCacheMap.keySet();
+				createRole(activitySet , role);
+
+			} 
+			else if (e.getEventType().toLowerCase() == Constants.UPDATE) {
+				
+				updateRole(activitySet , role);
+			}
+			else if (e.getEventType().toLowerCase() == Constants.DELETE) {
+				deleteRole(activitySet , role);
+				
+			}
+
+		}
+	}
+
+	
+	
+	public void createRole(List activitySet , Role role){
+		Set<Short> keys = activityToRolesCacheMap.keySet();
+
+		/*
+		 * iterate the cache based on the activities and whatever
+		 * activities role has update that
+		 */
+		for (Iterator iter = keys.iterator(); iter.hasNext();) {
+			Short cacheActivity = (Short) iter.next();
+
+			/*
+			 * see if for this activity role activitySet has anything in
+			 * it If there is any add it to the cache
+			 */
+			if (activitySet.contains(cacheActivity)) {
+				Set roleSet = activityToRolesCacheMap
+						.get(cacheActivity);
+				roleSet.add(role.getId());
+			}
+
+		}
+	}
+	public void updateRole(List activitySet , Role role){
+		// During update we may have to remove some role_id's and add
+		// other role_id's
+		Set<Short> keys = activityToRolesCacheMap.keySet();
+		synchronized (activityToRolesCacheMap) {
+			for (Iterator iter = keys.iterator(); iter.hasNext();) {
+				Short cacheActivity = (Short) iter.next();
 
 				/*
-				 * iterate the cache based on the activities and whatever
-				 * activities role has update that
+				 * see if for this activity role activitySet has anything in
+				 * it If there is not any remove it from the cache
 				 */
-				for (Iterator iter = keys.iterator(); iter.hasNext();) {
-					Short cacheActivity = (Short) iter.next();
-
-					/*
-					 * see if for this activity role activitySet has anything in
-					 * it If there is any add it to the cache
-					 */
-					if (activitySet.contains(cacheActivity)) {
-						Set roleSet = activityToRolesCacheMap
-								.get(cacheActivity);
-						roleSet.add(role.getId());
-					}
-
-				}
-
-			} else if (e.getEventType().toLowerCase() == Constants.UPDATE) {
-
-				// During update we may have to remove some role_id's and add
-				// other role_id's
-				Set<Short> keys = activityToRolesCacheMap.keySet();
-				for (Iterator iter = keys.iterator(); iter.hasNext();) {
-					Short cacheActivity = (Short) iter.next();
-
-					/*
-					 * see if for this activity role activitySet has anything in
-					 * it If there is not any remove it from the cache
-					 */
+				
 					Set roleSet = activityToRolesCacheMap.get(cacheActivity);
 					if (activitySet.contains(cacheActivity)) {
-
+	
 						roleSet.add(role.getId());
-
+	
 					} else {
 						roleSet.remove(role.getId());
 					}
+			}
+			
+		}
+	}
+	public void deleteRole(List activitySet , Role role){
+		Set<Short> keys = activityToRolesCacheMap.keySet();
 
-				}
-
-			} else if (e.getEventType().toLowerCase() == Constants.DELETE) {
-				Set<Short> keys = activityToRolesCacheMap.keySet();
+		/*
+		 * iterate the cache based on the activities and whatever
+		 * activities role has update that
+		 */
+		synchronized (activityToRolesCacheMap) {
+			for (Iterator iter = keys.iterator(); iter.hasNext();) {
+				Short cacheActivity = (Short) iter.next();
 
 				/*
-				 * iterate the cache based on the activities and whatever
-				 * activities role has update that
+				 * see if for this activity role activitySet has anything in
+				 * it If there is any remove it from the cache
 				 */
-				for (Iterator iter = keys.iterator(); iter.hasNext();) {
-					Short cacheActivity = (Short) iter.next();
-
-					/*
-					 * see if for this activity role activitySet has anything in
-					 * it If there is any remove it from the cache
-					 */
-					if (activitySet.contains(cacheActivity)) {
+				if (activitySet.contains(cacheActivity)) {
+					
 						Set roleSet = activityToRolesCacheMap
 								.get(cacheActivity);
 						roleSet.remove(role.getId());
-					}
-
 				}
-
 			}
 
 		}
