@@ -57,7 +57,6 @@ import org.mifos.application.master.util.valueobjects.LookUpMaster;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Money;
 
 public class BulkEntryDisplayHelper {
@@ -478,19 +477,17 @@ public class BulkEntryDisplayHelper {
 		if (method.equals(BulkEntryConstants.GETMETHOD)) {
 			if (Configuration.getInstance().getCustomerConfig(officeId)
 					.isCenterHierarchyExists()) {
-				BulkEntryTagUIHelper.getInstance().generateTextInput(
-						builder,
+				BulkEntryTagUIHelper.getInstance().generateTextInput(builder,
 						"enteredAmount[" + rows + "][" + columns + "]",
 						amountToBeShown, rows, columns, size, initialAccNo,
 						columns, loanproductSize, savingsProductSize);
 			} else {
-				BulkEntryTagUIHelper.getInstance().generateTextInput(
-						builder,
+				BulkEntryTagUIHelper.getInstance().generateTextInput(builder,
 						"enteredAmount[" + rows + "][" + columns + "]",
 						amountToBeShown, columns, size, loanproductSize,
 						savingsProductSize);
 			}
-		
+
 			Double totalAmount = amountToBeShown;
 			groupTotals[columns] = groupTotals[columns] == null ? 0.0 + totalAmount
 					: groupTotals[columns] + totalAmount;
@@ -529,22 +526,19 @@ public class BulkEntryDisplayHelper {
 			else
 				enteredAmount = accountViewBO.getDisBursementAmountEntered();
 
-		
 			if (Configuration.getInstance().getCustomerConfig(officeId)
 					.isCenterHierarchyExists()) {
-				BulkEntryTagUIHelper.getInstance().generateTextInput(
-						builder,
+				BulkEntryTagUIHelper.getInstance().generateTextInput(builder,
 						"enteredAmount[" + rows + "][" + columns + "]",
 						enteredAmount, rows, columns, size, initialAccNo,
 						columns, loanproductSize, savingsProductSize);
 			} else {
-				BulkEntryTagUIHelper.getInstance().generateTextInput(
-						builder,
+				BulkEntryTagUIHelper.getInstance().generateTextInput(builder,
 						"enteredAmount[" + rows + "][" + columns + "]",
 						enteredAmount, columns, size, loanproductSize,
 						savingsProductSize);
 			}
-		
+
 			Double totalAmount = 0.0;
 			boolean isValidAmountEntered;
 			if (isShowingDue)
@@ -624,20 +618,18 @@ public class BulkEntryDisplayHelper {
 				|| method.equals(BulkEntryConstants.GETMETHOD)) {
 			if (Configuration.getInstance().getCustomerConfig(officeId)
 					.isCenterHierarchyExists()) {
-				BulkEntryTagUIHelper.getInstance()
-						.generateSavingsTextInput(builder,
-								name + "[" + rows + "][" + columns + "]",
-								amount, rows, columns, size, initialAccNo,
-								loanProductsSize, savingsProductSize,
-								depWithFlag, totalsColumn, levelId);
+				BulkEntryTagUIHelper.getInstance().generateSavingsTextInput(
+						builder, name + "[" + rows + "][" + columns + "]",
+						amount, rows, columns, size, initialAccNo,
+						loanProductsSize, savingsProductSize, depWithFlag,
+						totalsColumn, levelId);
 			} else {
-				BulkEntryTagUIHelper.getInstance()
-						.generateSavingsTextInput(builder,
-								name + "[" + rows + "][" + columns + "]",
-								amount, columns, size, depWithFlag,
-								loanProductsSize, savingsProductSize);
+				BulkEntryTagUIHelper.getInstance().generateSavingsTextInput(
+						builder, name + "[" + rows + "][" + columns + "]",
+						amount, columns, size, depWithFlag, loanProductsSize,
+						savingsProductSize);
 			}
-		
+
 		} else if (method.equals(BulkEntryConstants.PREVIEWMETHOD)) {
 			if (isDeposit
 					&& totalAmount.doubleValue() < accountView
@@ -702,7 +694,7 @@ public class BulkEntryDisplayHelper {
 		if (method.equals(BulkEntryConstants.PREVIOUSMETHOD)
 				|| method.equals(BulkEntryConstants.VALIDATEMETHOD)
 				|| method.equals(BulkEntryConstants.GETMETHOD)) {
-		
+
 			if (Configuration.getInstance().getCustomerConfig(officeId)
 					.isCenterHierarchyExists()) {
 				BulkEntryTagUIHelper.getInstance()
@@ -711,8 +703,7 @@ public class BulkEntryDisplayHelper {
 								"customerAccountAmountEntered" + "[" + rows
 										+ "][" + columnIndex + "]", amount,
 								rows, columnIndex, size, initialAccNo,
-								loanProductSize, savingsProductSize,
-								levelId);
+								loanProductSize, savingsProductSize, levelId);
 			} else {
 				BulkEntryTagUIHelper.getInstance()
 						.generateCustomerAccountTextInput(
@@ -722,7 +713,7 @@ public class BulkEntryDisplayHelper {
 								columnIndex, size, loanProductSize,
 								savingsProductSize);
 			}
-		
+
 		} else if (method.equals(BulkEntryConstants.PREVIEWMETHOD)) {
 			if (totalAmount.doubleValue() != customerAccountView
 					.getTotalAmountDue().getAmountDoubleValue())
@@ -756,10 +747,12 @@ public class BulkEntryDisplayHelper {
 						.append("<td height=\"30\" class=\"drawtablerow\">&nbsp;&nbsp;</td>");
 				for (int i = 0; i < (loanProductsSize + savingsProductSize); i++) {
 					Double groupTotal = totals[i] == null ? 0.0 : totals[i];
+					Money groupTotalMoney = new Money(groupTotal.toString());
+					Money.round(groupTotalMoney);
 					builder.append("<td class=\"drawtablerow\">");
 					builder.append("<input name=\"group[" + rows + "][" + i
 							+ "]\" type=\"text\" style=\"width:40px\""
-							+ " value=\"" + groupTotal
+							+ " value=\"" + groupTotalMoney
 							+ "\" size=\"6\" disabled>");
 					builder.append("</td>");
 				}
@@ -769,10 +762,12 @@ public class BulkEntryDisplayHelper {
 						"&nbsp;", true);
 				for (int i = (loanProductsSize + savingsProductSize); i < (2 * (loanProductsSize + savingsProductSize)); i++) {
 					Double groupTotal = totals[i] == null ? 0.0 : totals[i];
+					Money groupTotalMoney = new Money(groupTotal.toString());
+					Money.round(groupTotalMoney);
 					builder.append("<td class=\"drawtablerow\">");
 					builder.append("<input name=\"group[" + rows + "][" + i
 							+ "]\" type=\"text\" style=\"width:40px\""
-							+ " value=\"" + groupTotal
+							+ " value=\"" + groupTotalMoney
 							+ "\" size=\"6\" disabled>");
 					builder.append("</td>");
 				}
@@ -782,11 +777,14 @@ public class BulkEntryDisplayHelper {
 						"&nbsp;", true);
 				Double groupTotal = totals[(2 * (loanProductsSize + savingsProductSize))] == null ? 0.0
 						: totals[(2 * (loanProductsSize + savingsProductSize))];
+				Money groupTotalMoney = new Money(groupTotal.toString());
+				Money.round(groupTotalMoney);
 				builder.append("<td class=\"drawtablerow\">");
 				builder.append("<input name=\"group[" + rows + "]["
 						+ (2 * (loanProductsSize + savingsProductSize))
 						+ "]\" type=\"text\" style=\"width:40px\""
-						+ " value=\"" + groupTotal + "\" size=\"6\" disabled>");
+						+ " value=\"" + groupTotalMoney
+						+ "\" size=\"6\" disabled>");
 				builder.append("</td>");
 				BulkEntryTagUIHelper.getInstance().generateTD(builder, 19,
 						"&nbsp;", true);
@@ -804,10 +802,12 @@ public class BulkEntryDisplayHelper {
 
 				for (int i = 0; i < (loanProductsSize + savingsProductSize); i++) {
 					Double centerTotal = totals[i] == null ? 0.0 : totals[i];
+					Money centerTotalMoney = new Money(centerTotal.toString());
+					Money.round(centerTotalMoney);
 					builder.append("<td class=\"drawtablerow\">");
 					builder.append("<input name=\"center[" + i
 							+ "]\" type=\"text\" style=\"width:40px\""
-							+ " value=\"" + centerTotal
+							+ " value=\"" + centerTotalMoney
 							+ "\" size=\"6\" disabled>");
 					builder.append("</td>");
 				}
@@ -817,10 +817,12 @@ public class BulkEntryDisplayHelper {
 						"&nbsp;", true);
 				for (int i = (loanProductsSize + savingsProductSize); i < (2 * (loanProductsSize + savingsProductSize)); i++) {
 					Double centerTotal = totals[i] == null ? 0.0 : totals[i];
+					Money centerTotalMoney = new Money(centerTotal.toString());
+					Money.round(centerTotalMoney);
 					builder.append("<td class=\"drawtablerow\">");
 					builder.append("<input name=\"center[" + i
 							+ "]\" type=\"text\" style=\"width:40px\""
-							+ " value=\"" + centerTotal
+							+ " value=\"" + centerTotalMoney
 							+ "\" size=\"6\" disabled>");
 					builder.append("</td>");
 				}
@@ -830,13 +832,14 @@ public class BulkEntryDisplayHelper {
 						"&nbsp;", true);
 				Double centerTotal = totals[(2 * (loanProductsSize + savingsProductSize))] == null ? 0.0
 						: totals[(2 * (loanProductsSize + savingsProductSize))];
+				Money centerTotalMoney = new Money(centerTotal.toString());
+				Money.round(centerTotalMoney);
 				builder.append("<td class=\"drawtablerow\">");
-				builder
-						.append("<input name=\"center["
-								+ (2 * (loanProductsSize + savingsProductSize))
-								+ "]\" type=\"text\" style=\"width:40px\""
-								+ " value=\"" + centerTotal
-								+ "\" size=\"6\" disabled>");
+				builder.append("<input name=\"center["
+						+ (2 * (loanProductsSize + savingsProductSize))
+						+ "]\" type=\"text\" style=\"width:40px\""
+						+ " value=\"" + centerTotalMoney
+						+ "\" size=\"6\" disabled>");
 				builder.append("</td>");
 				BulkEntryTagUIHelper.getInstance().generateTD(builder, 19,
 						"&nbsp;", true);
@@ -861,9 +864,11 @@ public class BulkEntryDisplayHelper {
 					.append("<td height=\"30\" class=\"drawtablerow\">&nbsp;&nbsp;</td>");
 
 			for (int i = 0; i < (loanProductsSize + savingsProductSize); i++) {
-				Double groupTotal = totals[i] == null ? 0.0 : totals[i];
+				Double total = totals[i] == null ? 0.0 : totals[i];
+				Money totalMoney = new Money(total.toString());
+				Money.round(totalMoney);
 				builder.append("<td class=\"drawtablerow\">");
-				builder.append(groupTotal);
+				builder.append(totalMoney);
 				builder.append("</td>");
 			}
 			BulkEntryTagUIHelper.getInstance().generateTD(builder, 19,
@@ -872,8 +877,10 @@ public class BulkEntryDisplayHelper {
 					"&nbsp;", true);
 			for (int i = (loanProductsSize + savingsProductSize); i < (2 * (loanProductsSize + savingsProductSize)); i++) {
 				Double total = totals[i] == null ? 0.0 : totals[i];
+				Money totalMoney = new Money(total.toString());
+				Money.round(totalMoney);
 				builder.append("<td class=\"drawtablerow\">");
-				builder.append(total);
+				builder.append(totalMoney);
 				builder.append("</td>");
 			}
 			BulkEntryTagUIHelper.getInstance().generateTD(builder, 19,
@@ -882,8 +889,10 @@ public class BulkEntryDisplayHelper {
 					"&nbsp;", true);
 			Double total = totals[(2 * (loanProductsSize + savingsProductSize))] == null ? 0.0
 					: totals[(2 * (loanProductsSize + savingsProductSize))];
+			Money totalMoney = new Money(total.toString());
+			Money.round(totalMoney);
 			builder.append("<td class=\"drawtablerow\">");
-			builder.append(total);
+			builder.append(totalMoney);
 			builder.append("</td>");
 			BulkEntryTagUIHelper.getInstance().generateTD(builder, 19,
 					"&nbsp;", true);
@@ -892,7 +901,6 @@ public class BulkEntryDisplayHelper {
 		}
 		BulkEntryTagUIHelper.getInstance().generateEmptyTD(builder, true);
 		BulkEntryTagUIHelper.getInstance().generateEndTR(builder);
-
 	}
 
 	public StringBuilder buildTotals(Double[] totals, int loanProductsSize,
@@ -918,13 +926,31 @@ public class BulkEntryDisplayHelper {
 		Double totColl = dueColl + otherColl;
 		Double totIssue = withDrawals + loanDisb;
 		Double netCash = totColl - totIssue;
-		return buildTotalstable(dueColl, loanDisb, otherColl, withDrawals,
-				totColl, totIssue, netCash, method);
+
+		Money totalDueCollection = new Money(dueColl.toString());
+		Money totalLoanDisburesed = new Money(loanDisb.toString());
+		Money otherCollection = new Money(otherColl.toString());
+		Money totalWithDrawals = new Money(withDrawals.toString());
+		Money totalCollection = new Money(totColl.toString());
+		Money totalIssue = new Money(totIssue.toString());
+		Money netCashAvailable = new Money(netCash.toString());
+
+		Money.round(totalDueCollection);
+		Money.round(totalLoanDisburesed);
+		Money.round(otherCollection);
+		Money.round(totalWithDrawals);
+		Money.round(totalCollection);
+		Money.round(totalIssue);
+		Money.round(netCashAvailable);
+
+		return buildTotalstable(totalDueCollection, totalLoanDisburesed,
+				otherCollection, totalWithDrawals, totalCollection, totalIssue,
+				netCashAvailable, method);
 	}
 
-	private StringBuilder buildTotalstable(Double dueColl, Double loanDisb,
-			Double otherColl, Double withDrawals, Double totColl,
-			Double totIssue, Double netCash, String method) {
+	private StringBuilder buildTotalstable(Money dueColl, Money loanDisb,
+			Money otherColl, Money withDrawals, Money totColl, Money totIssue,
+			Money netCash, String method) {
 		StringBuilder builder = new StringBuilder();
 		builder
 				.append("<table width=\"95%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\">");
@@ -1015,7 +1041,7 @@ public class BulkEntryDisplayHelper {
 					+ totIssue + "</td>");
 			builder
 					.append("<td width=\"6%\" class=\"fontnormal8ptbold\">Net Cash:</td>");
-			if (netCash < 0) {
+			if (Double.valueOf(netCash.toString()).doubleValue() < 0) {
 				builder
 						.append("<td width=\"54%\" class=\"fontnormal8ptbold\">"
 								+ "<font color=\"#FF0000\">"
