@@ -235,8 +235,8 @@
                     
                     <br>
                     <span class="fontnormal">
-                    <html-el:button property="editButton" styleClass="insidebuttn" 	style="width:190px;" onclick="fnCreateEdit(this.form)">
-                   		<mifos:mifoslabel name="Savings.Edit"/> <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/> <mifos:mifoslabel name="Savings.accountInformation"/>
+                    <html-el:button property="editButton" styleClass="insidebuttn" 	onclick="fnCreateEdit(this.form)">
+                   		<mifos:mifoslabel name="Savings.Edit"/><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/><mifos:mifoslabel name="Savings.accountInformation"/>
 					</html-el:button> 
      			 </span> </td>
                 </tr>
