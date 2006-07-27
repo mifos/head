@@ -95,9 +95,7 @@ public class BulkEntryBusinessService extends BusinessService {
 
 	public BulkEntryBusinessService() {
 		try {
-			bulkEntryPersistanceService = (BulkEntryPersistanceService) ServiceFactory
-					.getInstance().getPersistenceService(
-							PersistenceServiceName.BulkEntryPersistanceService);
+			bulkEntryPersistanceService = new BulkEntryPersistanceService();
 			customerPersistenceService = (CustomerPersistenceService) ServiceFactory
 					.getInstance().getPersistenceService(
 							PersistenceServiceName.Customer);

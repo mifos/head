@@ -157,6 +157,6 @@
 		<![CDATA[select customer.customerId from org.mifos.application.customer.business.CustomerBO as customer where customer.customerLevel.levelId =:LEVEL_ID ]]>
 	</query>
 	<query name="Customer.getActiveCustomerUnderParent">
-		<![CDATA[from org.mifos.application.customer.business.CustomerBO as customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerStatus.statusId in (3,4,9,10,13) order by customer.displayName]]>
+		<![CDATA[from org.mifos.application.customer.business.CustomerBO as customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerStatus.statusId in (3,4,9,10,13) order by customer.customerActivationDate]]>
 	</query>
 </hibernate-mapping>
