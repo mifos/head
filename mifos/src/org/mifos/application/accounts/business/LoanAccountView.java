@@ -107,8 +107,7 @@ public class LoanAccountView extends View {
 
 	public Double getTotalAmountDue() {
 		Money totalAmount = new Money();
-		if (accountSate.shortValue() == AccountStates.LOANACC_APPROVED
-				|| accountSate.shortValue() == AccountStates.LOANACC_DBTOLOANOFFICER) {
+		if (isDisbursalAccount()) {
 			return amountPaidAtDisbursement;
 		} else {
 			if (accountTrxnDetails != null && accountTrxnDetails.size() > 0) {
@@ -142,12 +141,8 @@ public class LoanAccountView extends View {
 	}
 
 	public Double getTotalDisburseAmount() {
-		if (accountSate.shortValue() == AccountStates.LOANACC_APPROVED
-				|| accountSate.shortValue() == AccountStates.LOANACC_DBTOLOANOFFICER) {
-			return this.loanAmount.getAmountDoubleValue();
-		} else
-			return 0.0;
-
+		return isDisbursalAccount() ? this.loanAmount.getAmountDoubleValue()
+				: 0.0;
 	}
 
 	public boolean isDisbursalAccount() {

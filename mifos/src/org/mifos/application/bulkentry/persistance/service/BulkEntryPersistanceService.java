@@ -39,10 +39,8 @@
 package org.mifos.application.bulkentry.persistance.service;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
@@ -54,6 +52,7 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
 import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
 import org.mifos.application.bulkentry.persistance.BulkEntryPersistance;
+import org.mifos.application.bulkentry.util.helpers.BulkEntryCache;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -63,11 +62,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 
 public class BulkEntryPersistanceService extends PersistenceService {
 
-	private Map<Integer, AccountBO> accounts = new HashMap<Integer, AccountBO>();
-
-	private Map<Integer, CustomerBO> customers = new HashMap<Integer, CustomerBO>();
-
-	private Map<Short, PersonnelBO> personnels = new HashMap<Short, PersonnelBO>();
+	private BulkEntryCache bulkEntryCache = new BulkEntryCache();
 
 	public List<BulkEntryAccountActionView> getBulkEntryActionView(
 			Date meetingDate, String searchString, Short officeId) {
@@ -97,10 +92,10 @@ public class BulkEntryPersistanceService extends PersistenceService {
 
 	public AccountBO getSavingsAccountWithAccountActionsInitialized(
 			Integer accountId) {
-		if (!accounts.containsKey(accountId)) {
+		if (!bulkEntryCache.isAccountPresent(accountId)) {
 			AccountBO account = new AccountPersistence()
 					.getSavingsAccountWithAccountActionsInitialized(accountId);
-			accounts.put(accountId, account);
+			bulkEntryCache.addAccount(accountId, account);
 			Set<AccountActionDateEntity> accountActionDates = account
 					.getAccountActionDates();
 			for (Iterator<AccountActionDateEntity> iter = accountActionDates
@@ -113,7 +108,7 @@ public class BulkEntryPersistanceService extends PersistenceService {
 					iter.remove();
 			}
 		}
-		SavingsBO savings = (SavingsBO) accounts.get(accountId);
+		SavingsBO savings = (SavingsBO) bulkEntryCache.getAccount(accountId);
 		savings.setAccountPayments(null);
 		savings.setSavingsActivityDetails(null);
 		return savings;
@@ -126,21 +121,21 @@ public class BulkEntryPersistanceService extends PersistenceService {
 	}
 
 	public CustomerBO getCustomer(Integer customerId) {
-		if (!customers.containsKey(customerId)) {
+		if (!bulkEntryCache.isCustomerPresent(customerId)) {
 			CustomerBO customer = new CustomerPersistenceService()
 					.getCustomer(customerId);
-			customers.put(customerId, customer);
+			bulkEntryCache.addCustomer(customerId, customer);
 		}
-		return customers.get(customerId);
+		return bulkEntryCache.getCustomer(customerId);
 	}
 
 	public PersonnelBO getPersonnel(Short personnelId) {
-		if (!personnels.containsKey(personnelId)) {
+		if (!bulkEntryCache.isPersonnelPresent(personnelId)) {
 			PersonnelBO personnel = new PersonnelPersistenceService()
 					.getPersonnel(personnelId);
-			personnels.put(personnelId, personnel);
+			bulkEntryCache.addPersonnel(personnelId, personnel);
 		}
-		return personnels.get(personnelId);
+		return bulkEntryCache.getPersonnel(personnelId);
 
 	}
 

@@ -926,14 +926,14 @@ public class SavingsBO extends AccountBO {
 					accountPaymentData.getInstallmentId(), customer
 							.getCustomerId());
 			if (accountAction != null
-					&& enteredAmount.getAmountDoubleValue() >= 0.0) {
+					&& enteredAmount.getAmountDoubleValue() > 0.0) {
 				if (accountAction.getPaymentStatus().equals(
 						AccountConstants.PAYMENT_PAID))
 					throw new AccountException("errors.update",
 							new String[] { getGlobalAccountNum() });
 				Money depositAmount = new Money();
 				Short paymentStatus = AccountConstants.PAYMENT_UNPAID;
-				if (enteredAmount.getAmountDoubleValue() > accountAction
+				if (enteredAmount.getAmountDoubleValue() >= accountAction
 						.getTotalDepositDue().getAmountDoubleValue()) {
 					depositAmount = accountAction.getTotalDepositDue();
 					enteredAmount = enteredAmount.subtract(accountAction
