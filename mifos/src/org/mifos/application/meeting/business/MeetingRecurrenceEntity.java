@@ -61,6 +61,13 @@ public class MeetingRecurrenceEntity extends PersistentObject {
 	public MeetingRecurrenceEntity() {
 	}
 
+	public MeetingRecurrenceEntity(MeetingDetailsEntity meetingDetails) {
+		this.meetingDetails = meetingDetails;
+		this.weekDay = null;
+		this.rankOfDays = null;
+		this.dayNumber = null;
+	}
+	
 	public Short getDayNumber() {
 		return dayNumber;
 	}

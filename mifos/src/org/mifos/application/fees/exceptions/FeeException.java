@@ -49,4 +49,7 @@ public class FeeException extends ApplicationException {
 		super(key, cause);
 	}
 
+	public FeeException(Throwable cause) {
+		super(cause);
+	}
 }

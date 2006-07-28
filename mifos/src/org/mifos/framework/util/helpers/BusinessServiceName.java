@@ -10,7 +10,7 @@ public enum BusinessServiceName {
 	Financial("org.mifos.application.accounts.financial.business.service.FinancialBusinessService"),
 	Loan("org.mifos.application.accounts.loan.business.service.LoanBusinessService"),
 	ReportsService("org.mifos.application.reports.business.service.ReportsBusinessService"),
-	FeesService("org.mifos.application.fees.business.service.FeesBusinessService");
+	FeesService("org.mifos.application.fees.business.service.FeeBusinessService");
 
 	String name;
 

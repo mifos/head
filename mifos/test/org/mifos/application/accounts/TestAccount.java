@@ -33,7 +33,6 @@ public class TestAccount extends MifosTestCase {
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		accountPersistence = null;
-		HibernateUtil.closeSession();
 	}
 
 	public AccountBO getLoanAccount()

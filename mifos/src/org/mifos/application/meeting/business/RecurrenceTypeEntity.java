@@ -37,8 +37,8 @@
  */
 package org.mifos.application.meeting.business;
 
+import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.framework.business.PersistentObject;
-import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class encapsulate the RecurrenceType for a meeting
@@ -57,6 +57,11 @@ public class RecurrenceTypeEntity extends PersistentObject {
 	public RecurrenceTypeEntity() {
 	}
 
+	public RecurrenceTypeEntity(MeetingFrequency recurrence){
+		this.recurrenceId = recurrence.getValue();
+		this.recurrenceName = null;
+		this.description = null;
+	}
 	public String getDescription() {
 		return description;
 	}
@@ -79,5 +84,13 @@ public class RecurrenceTypeEntity extends PersistentObject {
 
 	public void setRecurrenceName(String recurrenceName) {
 		this.recurrenceName = recurrenceName;
+	}
+	
+	public boolean isWeekly(){
+		return recurrenceId.equals(MeetingFrequency.WEEKLY.getValue());
+	}
+
+	public boolean isMonthly(){
+		return recurrenceId.equals(MeetingFrequency.MONTHLY.getValue());
 	}
 }

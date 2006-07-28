@@ -25,7 +25,7 @@ public class CustomerAccountFeesAccountingEntry extends BaseAccountingEntry {
 			FeesTrxnDetailEntity feeTrxn = iterFees.next();
 
 			addAccountEntryDetails(feeTrxn.getFeeAmount(), finActionFee,
-					feeTrxn.getAccountFees().getFees().getGlCodeEntity(),
+					feeTrxn.getAccountFees().getFees().getGlCode(),
 					FinancialConstants.CREDIT);
 
 			addAccountEntryDetails(feeTrxn.getFeeAmount(), finActionFee,

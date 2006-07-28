@@ -13,7 +13,7 @@
 	<version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null"/>
  	<one-to-one name="MeetingDetails"  class="org.mifos.application.meeting.business.MeetingDetailsEntity"   lazy="false" cascade="all" property-ref="meeting" />
  	<many-to-one name="MeetingType" column="MEETING_TYPE_ID"  class="org.mifos.application.meeting.business.MeetingTypeEntity"  insert="true" update="true"  unique="true" lazy="false" cascade="none"/>
-        <property name="meetingPlace" column="MEETING_PALACE" type="string" />
+        <property name="meetingPlace" column="MEETING_PLACE" type="string" />
         <property name="meetingStartDate" column="START_DATE" type="calendar" />  
         <property name="meetingEndDate" column="END_DATE" type="calendar" />        
         <property name="meetingStartTime" column="START_TIME" type="calendar" />        

@@ -44,7 +44,7 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
-import org.mifos.application.fees.business.FeesBO;
+import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.components.repaymentschedule.MeetingScheduleHelper;
@@ -69,7 +69,7 @@ public class AccountFeesEntity extends PersistentObject {
 
 	private AccountBO account;
 
-	private FeesBO fees;
+	private FeeBO fees;
 
 	private Money accountFeeAmount;
 
@@ -127,11 +127,11 @@ public class AccountFeesEntity extends PersistentObject {
 		this.feeAmount = feeAmount;
 	}
 
-	public FeesBO getFees() {
+	public FeeBO getFees() {
 		return fees;
 	}
 
-	public void setFees(FeesBO fees) {
+	public void setFees(FeeBO fees) {
 		this.fees = fees;
 	}
 

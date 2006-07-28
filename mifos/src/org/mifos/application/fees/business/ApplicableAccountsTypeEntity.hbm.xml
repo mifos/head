@@ -6,7 +6,7 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.application.fees.business.FeeUpdateTypeEntity" table="FEE_UPDATE_TYPE">
+    <class name="org.mifos.application.fees.business.ApplicableAccountsTypeEntity" table="FEE_UPDATE_TYPE">
         <id name="id" column="FEE_UPDATE_TYPE_ID" >
             <generator class="native"/>
         </id>
@@ -15,6 +15,6 @@
     
     <query name="getFeeUpdateType">
     
-    <![CDATA[ from  FeeUpdateTypeEntity fute where fute.id =:ID ]]>
+    <![CDATA[ from  ApplicableAccountsTypeEntity entity where entity.id =:ID ]]>
     </query>
 </hibernate-mapping>

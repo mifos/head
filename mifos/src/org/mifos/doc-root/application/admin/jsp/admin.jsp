@@ -115,7 +115,7 @@
 								src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
 							<td width="97%"><a
-								href="feesAction.do?method=search&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+								href="feeaction.do?method=viewAll&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 								<mifos:mifoslabel name="admin.viewfees" /></a> | <html-el:link
 								action="feeaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}" >
 								<mifos:mifoslabel name="admin.defnewfees" /></html-el:link></td>

@@ -37,52 +37,18 @@
  */
 package org.mifos.application.fees.business;
 
-import java.util.Set;
-
 import org.mifos.application.fees.util.helpers.FeeStatus;
-import org.mifos.application.master.util.valueobjects.LookUpValueLocale;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.application.master.business.MasterDataEntity;
 
-public class FeeStatusEntity extends PersistentObject {
-
-	private Short statusId;
-
-	private Integer lookUpId;
-
-	private Set<LookUpValueLocale> lookUpValueLocale;
-
-	public FeeStatusEntity() {
+public class FeeStatusEntity extends MasterDataEntity {
+	protected FeeStatusEntity() {
 	}
 
-	public FeeStatusEntity(Short statusId) {
-		this.statusId = statusId;
-	}
-
-	public Integer getLookUpId() {
-		return lookUpId;
-	}
-
-	public void setLookUpId(Integer lookUpId) {
-		this.lookUpId = lookUpId;
-	}
-
-	public Set<LookUpValueLocale> getLookUpValueLocale() {
-		return lookUpValueLocale;
-	}
-
-	public void setLookUpValueLocale(Set<LookUpValueLocale> lookUpValueLocale) {
-		this.lookUpValueLocale = lookUpValueLocale;
-	}
-
-	public Short getStatusId() {
-		return statusId;
-	}
-
-	public void setStatusId(Short statusId) {
-		this.statusId = statusId;
+	public FeeStatusEntity(FeeStatus feeStatus) {
+		super(feeStatus.getValue());
 	}
 
 	public boolean isActive() {
-		return getStatusId().equals(FeeStatus.ACTIVE.getValue());
+		return getId().equals(FeeStatus.ACTIVE.getValue());
 	}
 }

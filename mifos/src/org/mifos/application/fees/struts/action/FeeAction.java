@@ -51,15 +51,23 @@ import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
-import org.mifos.application.fees.business.FeesBO;
-import org.mifos.application.fees.business.service.FeesBusinessService;
+import org.mifos.application.fees.business.AmountFeeBO;
+import org.mifos.application.fees.business.CategoryTypeEntity;
+import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.business.FeeFormulaEntity;
+import org.mifos.application.fees.business.FeeFrequencyTypeEntity;
+import org.mifos.application.fees.business.FeePaymentEntity;
+import org.mifos.application.fees.business.FeeStatusEntity;
+import org.mifos.application.fees.business.RateFeeBO;
+import org.mifos.application.fees.business.service.FeeBusinessService;
 import org.mifos.application.fees.struts.actionforms.FeeActionForm;
 import org.mifos.application.fees.util.helpers.FeePayment;
-import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.fees.util.helpers.FeesConstants;
-import org.mifos.application.master.business.service.MasterDataService;
-import org.mifos.application.master.util.valueobjects.EntityMaster;
-import org.mifos.application.master.util.valueobjects.LookUpMaster;
+import org.mifos.application.fees.util.helpers.RateAmountFlag;
+import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
@@ -81,36 +89,26 @@ public class FeeAction extends BaseAction {
 
 	@Override
 	protected BusinessService getService() throws ServiceException {
-		return (FeesBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.FeesService);
+		return getFeeBusinessService();
 	}
 
 	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
-		return !method.equals(Methods.preview.toString());
+		return true;
 	}
 
 	@TransactionDemarcate(saveToken = true)
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-
-		HttpSession session = request.getSession();
-		UserContext userContext = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, session);
-		Short localeId = userContext.getLocaleId();
-		doCleanUp(session, userContext);
-		obtainCreateMasterData(localeId, session);
+		doCleanUp(request.getSession());
+		loadCreateMasterData(request);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		FeesBO fees = (FeesBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
-		FeeActionForm feeActionForm = (FeeActionForm) form;
-		fees.setRateFee(feeActionForm.getRate() != null && !"".equals(feeActionForm.getRate()));
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 
@@ -125,68 +123,63 @@ public class FeeAction extends BaseAction {
 	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		FeesBO fees = (FeesBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
-		FeeActionForm feeActionForm = (FeeActionForm) form;
-		boolean adminCheck = feeActionForm.getAdminCheck() != null
-				&& feeActionForm.getAdminCheck().equals(
-						FeesConstants.ADMINCHECK);
-		fees.save(adminCheck);
+		FeeActionForm actionForm = (FeeActionForm) form;
+		FeeBO fee = createFee(actionForm, request);
+		fee.save();
+		actionForm.setFeeId(fee.getFeeId().toString());
 		return mapping.findForward(ActionForwards.create_success.toString());
+	}
+
+	public ActionForward get(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		FeeActionForm actionForm = (FeeActionForm) form;
+		FeeBO fee = getFeeBusinessService().getFee(actionForm.getFeeIdValue());
+		setLocaleForMasterEntities(fee, getUserContext(request).getLocaleId());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request
+				.getSession());
+		return mapping.findForward(ActionForwards.get_success.toString());
 	}
 
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		String forward = null;
-		String input = request.getParameter("input");
-		if (input == null || "".equals(input.trim()))
-			forward = ActionForwards.preview_failure.toString();
-		else if (input.equals("previewFees"))
-			forward = ActionForwards.preview_success.toString();
-		else if (input.equals("previewEditFees"))
-			forward = ActionForwards.editpreview_success.toString();
-		else
-			forward = ActionForwards.editpreview_failure.toString();
-		return mapping.findForward(forward);
+		ActionForwards forward = null;
+		String method = (String) request.getAttribute("methodCalled");
+		if (method != null) {
+			if (method.equals(Methods.preview.toString()))
+				forward = ActionForwards.preview_failure;
+			else if (method.equals(Methods.editPreview.toString()))
+				forward = ActionForwards.editpreview_failure;
+		}
+		return mapping.findForward(forward.toString());
 	}
 
 	public ActionForward manage(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		FeesBusinessService feesBusinessService = (FeesBusinessService) ServiceFactory
-				.getInstance().getBusinessService(
-						BusinessServiceName.FeesService);
-
-		HttpSession session = request.getSession();
-		UserContext userContext = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, session);
-		Short localeId = userContext.getLocaleId();
-		doCleanUp(session, userContext);
-		Short feeId = Short.valueOf(request.getParameter("feeId"));
-
-		FeesBO fees = feesBusinessService.getFees(feeId);
-		fees.setUserContext(userContext);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, fees, session);
-		obtainUpdateMasterData(localeId, session);
+		FeeBO fee = (FeeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,
+				request.getSession());
+		FeeActionForm feeActionForm = (FeeActionForm) form;
+		feeActionForm.setFeeStatus(fee.getFeeStatus().getId().toString());
+		if (fee.getFeeType().equals(RateAmountFlag.AMOUNT)) {
+			feeActionForm.setAmount(((AmountFeeBO) fee).getFeeAmount()
+					.toString());
+			feeActionForm.setRate(null);
+			feeActionForm.setFeeFormula(null);
+		} else {
+			feeActionForm.setRate(((RateFeeBO) fee).getRate().toString());
+			feeActionForm.setFeeFormula(((RateFeeBO) fee).getFeeFormula()
+					.getId().toString());
+			feeActionForm.setAmount(null);
+		}
+		loadUpdateMasterData(request);
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
 
 	public ActionForward editPreview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		FeeActionForm feeActionForm = (FeeActionForm) form;
-		FeesBO fees = (FeesBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
-		FeeStatus status = feeActionForm.getFeeStatus().getStatusId().equals(
-				FeeStatus.ACTIVE.getValue()) ? FeeStatus.ACTIVE
-				: FeeStatus.INACTIVE;
-		fees.modifyStatus(status);
-		if (fees.getRate() == null)
-			fees.setAmount(feeActionForm.getAmount());
-		else
-			fees.setRate(Double.valueOf(feeActionForm.getRate()));
-
 		return mapping.findForward(ActionForwards.editpreview_success
 				.toString());
 	}
@@ -194,7 +187,6 @@ public class FeeAction extends BaseAction {
 	public ActionForward editPrevious(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-
 		return mapping.findForward(ActionForwards.editprevious_success
 				.toString());
 	}
@@ -202,82 +194,198 @@ public class FeeAction extends BaseAction {
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		FeesBO fees = (FeesBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
-		fees.update();
+		FeeActionForm feeActionForm = (FeeActionForm) form;
+		FeeBO fee = (FeeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,
+				request.getSession());
+		fee.setUserContext(getUserContext(request));
+		if (fee.getFeeType().equals(RateAmountFlag.AMOUNT))
+			((AmountFeeBO) fee).setFeeAmount(feeActionForm.getAmountValue());
+		else
+			((RateFeeBO) fee).setRate(feeActionForm.getRateValue());
+
+		fee.updateStatus(feeActionForm.getFeeStatusValue());
+		fee.update();
 		return mapping.findForward(ActionForwards.update_success.toString());
+	}
+
+	public ActionForward viewAll(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		Short localeId = getUserContext(request).getLocaleId();
+
+		List<FeeBO> customerFees = getFeeBusinessService()
+				.retrieveCustomerFees();
+		List<FeeBO> productFees = getFeeBusinessService().retrieveProductFees();
+
+		for (FeeBO fee : customerFees)
+			setLocaleForMasterEntities(fee, localeId);
+		for (FeeBO fee : productFees)
+			setLocaleForMasterEntities(fee, localeId);
+
+		SessionUtils.setAttribute(FeesConstants.CUSTOMER_FEES, customerFees,
+				request.getSession());
+		SessionUtils.setAttribute(FeesConstants.PRODUCT_FEES, productFees,
+				request.getSession());
+		return mapping.findForward(ActionForwards.viewAll_success.toString());
+	}
+
+	private FeeBO createFee(FeeActionForm actionForm, HttpServletRequest request)
+			throws ApplicationException {
+		HttpSession session = request.getSession();
+		CategoryTypeEntity feeCategory = (CategoryTypeEntity) findMasterEntity(
+				session, FeesConstants.CATEGORYLIST, actionForm
+						.getCategoryTypeValue().getValue());
+		FeeFrequencyTypeEntity feeFrequencyType = (FeeFrequencyTypeEntity) findMasterEntity(
+				session, FeesConstants.FEE_FREQUENCY_TYPE_LIST, actionForm
+						.getFeeFrequencyTypeValue().getValue());
+		GLCodeEntity glCode = findGLCodeEntity(session,
+				FeesConstants.GLCODE_LIST, actionForm.getGlCodeValue());
+
+		if (feeFrequencyType.isOneTime())
+			return createOneTimeFee(actionForm, request, feeCategory,
+					feeFrequencyType, glCode);
+		else
+			return createPeriodicFee(actionForm, request, feeCategory,
+					feeFrequencyType, glCode);
+
+	}
+
+	private FeeBO createOneTimeFee(FeeActionForm actionForm,
+			HttpServletRequest request, CategoryTypeEntity feeCategory,
+			FeeFrequencyTypeEntity feeFrequencyType, GLCodeEntity glCode)
+			throws ApplicationException {
+		UserContext userContext = getUserContext(request);
+		FeePaymentEntity feePayment = (FeePaymentEntity) findMasterEntity(
+				request.getSession(), FeesConstants.TIMEOFCHARGES, actionForm
+						.getFeePaymentTypeValue().getValue());
+		if (actionForm.isRateFee()) {
+			FeeFormulaEntity feeFormula = (FeeFormulaEntity) findMasterEntity(
+					request.getSession(), FeesConstants.FORMULALIST, actionForm
+							.getFeeFormulaValue().getValue());
+			return new RateFeeBO(userContext, actionForm.getFeeName(),
+					feeCategory, feeFrequencyType, glCode, actionForm
+							.getRateValue(), feeFormula, actionForm
+							.isCustomerDefaultFee(), feePayment);
+		} else {
+			return new AmountFeeBO(userContext, actionForm.getFeeName(),
+					feeCategory, feeFrequencyType, glCode, actionForm
+							.getAmountValue(), actionForm
+							.isCustomerDefaultFee(), feePayment);
+		}
+	}
+
+	private FeeBO createPeriodicFee(FeeActionForm actionForm,
+			HttpServletRequest request, CategoryTypeEntity feeCategory,
+			FeeFrequencyTypeEntity feeFrequencyType, GLCodeEntity glCode)
+			throws ApplicationException {
+		UserContext userContext = getUserContext(request);
+		MeetingBO feeFrequency = actionForm.getFeeRecurrenceTypeValue().equals(
+				MeetingFrequency.MONTHLY) ? new MeetingBO(actionForm
+				.getFeeRecurrenceTypeValue(), actionForm
+				.getMonthRecurAfterValue(), MeetingType.FEEMEETING)
+				: new MeetingBO(actionForm.getFeeRecurrenceTypeValue(),
+						actionForm.getWeekRecurAfterValue(),
+						MeetingType.FEEMEETING);
+		if (actionForm.isRateFee()) {
+			FeeFormulaEntity feeFormula = (FeeFormulaEntity) findMasterEntity(
+					request.getSession(), FeesConstants.FORMULALIST, actionForm
+							.getFeeFormulaValue().getValue());
+			return new RateFeeBO(userContext, actionForm.getFeeName(),
+					feeCategory, feeFrequencyType, glCode, actionForm
+							.getRateValue(), feeFormula, actionForm
+							.isCustomerDefaultFee(), feeFrequency);
+		} else {
+			return new AmountFeeBO(userContext, actionForm.getFeeName(),
+					feeCategory, feeFrequencyType, glCode, actionForm
+							.getAmountValue(), actionForm
+							.isCustomerDefaultFee(), feeFrequency);
+		}
 	}
 
 	private List<GLCodeEntity> getGLCodes() throws SystemException,
 			ApplicationException {
 
-		FinancialBusinessService financialBusinessService = new FinancialBusinessService();
-		return financialBusinessService.getGLCodes(
+		return new FinancialBusinessService().getGLCodes(
 				FinancialActionConstants.FEEPOSTING, FinancialConstants.CREDIT);
 	}
 
-	private List<LookUpMaster> getTimeOfChargeForCustomer(
-			List<LookUpMaster> timeOfCharges) {
-		List<LookUpMaster> customerTimeOfCharges = new ArrayList<LookUpMaster>();
-		for (LookUpMaster lookUpMaster : timeOfCharges)
-			if (lookUpMaster.getId().intValue() == FeePayment.UPFRONT
-					.getValue().intValue())
-				customerTimeOfCharges.add(lookUpMaster);
+	private List<MasterDataEntity> getTimeOfChargeForCustomer(
+			List<MasterDataEntity> timeOfCharges) {
+		List<MasterDataEntity> customerTimeOfCharges = new ArrayList<MasterDataEntity>();
+		for (MasterDataEntity entity : timeOfCharges)
+			if (entity.getId().equals(FeePayment.UPFRONT.getValue()))
+				customerTimeOfCharges.add(entity);
 		return customerTimeOfCharges;
 	}
 
-	private void doCleanUp(HttpSession session, UserContext userContext) {
+	private void doCleanUp(HttpSession session) {
 		session.setAttribute("feeactionform", null);
 		session.removeAttribute(Constants.BUSINESS_KEY);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, new FeesBO(
-				userContext), session);
 	}
 
-	private void obtainCreateMasterData(Short localeId, HttpSession session)
+	private void loadCreateMasterData(HttpServletRequest request)
 			throws ApplicationException, SystemException {
-		MasterDataService masterDataService = (MasterDataService) ServiceFactory
-				.getInstance().getBusinessService(
-						BusinessServiceName.MasterDataService);
-		SessionUtils
-				.setAttribute(
-						FeesConstants.CATEGORYLIST,
-						masterDataService
-								.getMasterData(
-										FeesConstants.FEECATEGORY,
-										localeId,
-										"org.mifos.application.fees.business.CategoryTypeEntity",
-										"categoryId").getLookUpMaster(),
-						session);
-		EntityMaster timeOfChargesEntityMaster = masterDataService
-				.getMasterData(FeesConstants.FEEPAYMENT, localeId,
-						"org.mifos.application.fees.business.FeePaymentEntity",
-						"feePaymentId");
-		List<LookUpMaster> timeOfCharges = timeOfChargesEntityMaster
-				.getLookUpMaster();
-		SessionUtils.setAttribute(FeesConstants.LOANTIMEOFCHARGES,
-				timeOfCharges, session);
+		Short localeId = getUserContext(request).getLocaleId();
+		HttpSession session = request.getSession();
+
+		SessionUtils.setAttribute(FeesConstants.CATEGORYLIST,
+				getMasterEntities(CategoryTypeEntity.class, localeId), session);
+
+		List<MasterDataEntity> timeOfCharges = getMasterEntities(
+				FeePaymentEntity.class, localeId);
+		SessionUtils.setAttribute(FeesConstants.TIMEOFCHARGES, timeOfCharges,
+				session);
 		SessionUtils.setAttribute(FeesConstants.CUSTOMERTIMEOFCHARGES,
 				getTimeOfChargeForCustomer(timeOfCharges), session);
-		SessionUtils.setAttribute(FeesConstants.FORMULALIST, masterDataService
-				.getMasterData(FeesConstants.FEEFORMULA, localeId,
-						"org.mifos.application.fees.business.FeeFormulaEntity",
-						"feeFormulaId").getLookUpMaster(), session);
+		SessionUtils.setAttribute(FeesConstants.FORMULALIST, getMasterEntities(
+				FeeFormulaEntity.class, localeId), session);
+		SessionUtils.setAttribute(FeesConstants.FEE_FREQUENCY_TYPE_LIST,
+				getMasterEntities(FeeFrequencyTypeEntity.class, localeId),
+				session);
 		SessionUtils.setAttribute(FeesConstants.GLCODE_LIST, getGLCodes(),
 				session);
 	}
 
-	private void obtainUpdateMasterData(Short localeId, HttpSession session)
+	private void loadUpdateMasterData(HttpServletRequest request)
 			throws ApplicationException, SystemException {
-		MasterDataService masterDataService = (MasterDataService) ServiceFactory
-				.getInstance().getBusinessService(
-						BusinessServiceName.MasterDataService);
-		SessionUtils.setAttribute(FeesConstants.STATUSLIST, masterDataService
-				.getMasterData(FeesConstants.FEESTATUS, localeId,
-						"org.mifos.application.fees.business.FeeStatusEntity",
-						"statusId").getLookUpMaster(), session);
-		SessionUtils.setAttribute(FeesConstants.FORMULALIST, masterDataService
-				.getMasterData(FeesConstants.FEEFORMULA, localeId,
-						"org.mifos.application.fees.business.FeeFormulaEntity",
-						"feeFormulaId").getLookUpMaster(), session);
+
+		SessionUtils.setAttribute(FeesConstants.STATUSLIST, getMasterEntities(
+				FeeStatusEntity.class, getUserContext(request).getLocaleId()),
+				request.getSession());
+	}
+
+	private void setLocaleForMasterEntities(FeeBO fee, Short localeId) {
+		fee.getCategoryType().setLocaleId(localeId);
+		fee.getFeeFrequency().getFeeFrequencyType().setLocaleId(localeId);
+		fee.getFeeStatus().setLocaleId(localeId);
+		if (fee.isOneTime())
+			fee.getFeeFrequency().getFeePayment().setLocaleId(localeId);
+		if (fee.getFeeType().equals(RateAmountFlag.RATE))
+			((RateFeeBO) fee).getFeeFormula().setLocaleId(localeId);
+	}
+
+	private MasterDataEntity findMasterEntity(HttpSession session,
+			String collectionName, Short value) {
+		List<MasterDataEntity> entities = (List<MasterDataEntity>) SessionUtils
+				.getAttribute(collectionName, session);
+		for (MasterDataEntity entity : entities)
+			if (entity.getId().equals(value))
+				return entity;
+		return null;
+	}
+
+	private GLCodeEntity findGLCodeEntity(HttpSession session,
+			String collectionName, Short value) {
+		List<GLCodeEntity> glCodeList = (List<GLCodeEntity>) SessionUtils
+				.getAttribute(collectionName, session);
+		for (GLCodeEntity glCode : glCodeList)
+			if (glCode.getGlcodeId().equals(value))
+				return glCode;
+		return null;
+	}
+
+	private FeeBusinessService getFeeBusinessService() throws ServiceException {
+		return (FeeBusinessService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.FeesService);
 	}
 }

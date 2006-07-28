@@ -42,6 +42,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
@@ -73,10 +74,17 @@ public class BulkEntryPersistance extends Persistence {
 		List<BulkEntryAccountFeeActionView> queryResult = executeNamedQuery(
 				"account.getAllAccountFeeForAllInstallmentsForAllAcounts",
 				queryParameters);
+		initializeFees(queryResult);
 		return queryResult;
 
 	}
 
+	private void initializeFees(List<BulkEntryAccountFeeActionView> actionViewList){
+		for(BulkEntryAccountFeeActionView actionView: actionViewList){
+			Hibernate.initialize(actionView.getFee());
+		}
+	}
+	
 	public List<AccountFeesActionDetailEntity> getFeesActionDetails(
 			Integer actionId) {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();

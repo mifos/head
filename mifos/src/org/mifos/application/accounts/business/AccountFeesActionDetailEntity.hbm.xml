@@ -23,7 +23,7 @@
 		</property>
 		<many-to-one name="accountFee" column="ACCOUNT_FEE_ID" class="org.mifos.application.accounts.business.AccountFeesEntity" />
 		<many-to-one name="accountActionDate" column="ID" class="org.mifos.application.accounts.business.AccountActionDateEntity" />
-		<many-to-one name="fee" column="FEE_ID" class="org.mifos.application.fees.business.FeesBO" />
+		<many-to-one name="fee" column="FEE_ID" class="org.mifos.application.fees.business.FeeBO" />
 
 	</class>
 

@@ -72,10 +72,12 @@ public class SystemException extends Exception {
 	
 	public SystemException(String key,Throwable cause) {
 		this.key = key;
-		this.initCause(cause);
-		
+		this.initCause(cause);		
 	}
 
+	public SystemException(String key) {
+		this.key = key;
+	}
 	/**
 	 * Returns the key which maps to an entry in ExceptionResources file.
 	 * The message corresponding to this key is used for logging purposes

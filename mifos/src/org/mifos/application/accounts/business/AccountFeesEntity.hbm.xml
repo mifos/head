@@ -8,7 +8,7 @@
 
 	<class
 		name="org.mifos.application.accounts.business.AccountFeesEntity"
-		table="ACCOUNT_FEES">
+		table="ACCOUNT_FEES" >
 		<id name="accountFeeId" column="ACCOUNT_FEE_ID"
 			type="integer">
 			<generator class="native" />
@@ -28,10 +28,10 @@
 		<property name="lastAppliedDate" column="LAST_APPLIED_DATE" />
 		<many-to-one name="account" column="ACCOUNT_ID"
 			class="org.mifos.application.accounts.business.AccountBO"
-			not-null="true" lazy="false" />
-		<many-to-one name="fees" column="FEE_ID"
-			class="org.mifos.application.fees.business.FeesBO"
-			not-null="true" unique="true" lazy="true" />
+			 lazy="false" />
+		<many-to-one name="fees" column="FEE_ID" 
+			class="org.mifos.application.fees.business.FeeBO"
+			 unique="true" lazy="true" fetch="join" />
 
 	</class>
 		<query name="getCustomerAccountsForFee">

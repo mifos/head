@@ -63,7 +63,9 @@ import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
-import org.mifos.application.fees.business.FeesBO;
+import org.mifos.application.fees.business.AmountFeeBO;
+import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.master.util.valueobjects.AccountType;
@@ -409,7 +411,7 @@ public class AccountBO extends BusinessObject {
 		}
 	}
 
-	public FeesBO getAccountFeesObject(Short feeId) {
+	public FeeBO getAccountFeesObject(Short feeId) {
 		Set<AccountFeesEntity> accountFeesEntitySet = this.getAccountFees();
 		for (AccountFeesEntity accountFeesEntity : accountFeesEntitySet) {
 			if (accountFeesEntity.getFees().getFeeId().equals(feeId)) {
@@ -552,7 +554,7 @@ public class AccountBO extends BusinessObject {
 					feeId);
 			updateAccountFeesEntity(feeId);
 			updateTotalFeeAmount(totalFeeAmount);
-			FeesBO feesBO = getAccountFeesObject(feeId);
+			FeeBO feesBO = getAccountFeesObject(feeId);
 			String description = feesBO.getFeeName() + " "
 					+ AccountConstants.FEES_REMOVED;
 			updateAccountActivity(totalFeeAmount, personnelId, description);
@@ -804,8 +806,10 @@ public class AccountBO extends BusinessObject {
 
 	protected List<AccountFeesEntity> getPeriodicFeeList() {
 		List<AccountFeesEntity> periodicFeeList = new ArrayList<AccountFeesEntity>();
+		
 		for (AccountFeesEntity accountFee : getAccountFees()) {
 			if (accountFee.getFees().isPeriodic()) {
+				new FeePersistence().getFee(accountFee.getFees().getFeeId());
 				periodicFeeList.add(accountFee);
 			}
 		}

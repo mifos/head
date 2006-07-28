@@ -62,7 +62,7 @@ public class FeesAccountingEntry extends BaseAccountingEntry {
 
 			
 			addAccountEntryDetails(feeTrxn.getFeeAmount(), finActionFee, feeTrxn
-					.getAccountFees().getFees().getGlCodeEntity(),FinancialConstants.CREDIT);
+					.getAccountFees().getFees().getGlCode(),FinancialConstants.CREDIT);
 
 			
 			addAccountEntryDetails(feeTrxn.getFeeAmount(), finActionFee,

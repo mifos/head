@@ -38,51 +38,25 @@
 
 package org.mifos.application.fees.business;
 
-import java.util.Set;
-
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 /**
  * @author ashishsm
  * 
  */
 
-public class CategoryTypeEntity extends PersistentObject {
+public class CategoryTypeEntity extends MasterDataEntity {
 
-	private Short categoryId;
-
-	private Integer lookUpId;
-
-	private Set lookUpValueLocale;
-
-	public CategoryTypeEntity() {
+	protected CategoryTypeEntity() {
 	}
-
-	public Short getCategoryId() {
-		return categoryId;
+	
+	public CategoryTypeEntity(FeeCategory feeCategory) {
+		super(feeCategory.getValue());
 	}
-
-	public void setCategoryId(Short categoryId) {
-
-		this.categoryId = categoryId;
+	
+	public FeeCategory getFeeCategory()throws PropertyNotFoundException{
+		return FeeCategory.getFeeCategory(getId());
 	}
-
-	public void setLookUpValueLocale(Set lookUpValueLocale) {
-
-		this.lookUpValueLocale = lookUpValueLocale;
-	}
-
-	public Set getLookUpValueLocale() {
-		return lookUpValueLocale;
-
-	}
-
-	public Integer getLookUpId() {
-		return lookUpId;
-	}
-
-	public void setLookUpId(Integer lookUpId) {
-		this.lookUpId = lookUpId;
-	}
-
 }

@@ -37,6 +37,8 @@
  */
 package org.mifos.application.fees.util.helpers;
 
+import org.mifos.framework.exceptions.PropertyNotFoundException;
+
 public enum FeeFrequencyType {
 	PERIODIC((short) 1), ONETIME((short) 2);
 
@@ -48,5 +50,12 @@ public enum FeeFrequencyType {
 
 	public Short getValue() {
 		return value;
+	}
+	
+	public static FeeFrequencyType getFeeFrequencyType(Short value)throws PropertyNotFoundException{
+		for (FeeFrequencyType feeFrequencyType : FeeFrequencyType.values()) 
+			if (feeFrequencyType.getValue().equals(value))
+				return feeFrequencyType;
+		throw new PropertyNotFoundException("FeeFrequencyType");
 	}
 }

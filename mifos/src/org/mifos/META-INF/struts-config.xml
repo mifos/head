@@ -626,7 +626,9 @@
 			<forward name="editpreview_success" path="/pages/application/fees/jsp/previewfeesedit.jsp" />
 			<forward name="editpreview_failure" path="/pages/application/fees/jsp/feesedit.jsp" />
 			<forward name="editprevious_success" path="/pages/application/fees/jsp/feesedit.jsp" />
-			<forward name="update_success" path="/feesAction.do?method=get" />
+			<forward name="update_success" path="/feeaction.do?method=get" />
+			<forward name="get_success" path="/pages/application/fees/jsp/FeeDetails.jsp" />
+			<forward name="viewAll_success" path="/pages/application/fees/jsp/ViewEditFees.jsp" />
 		</action>
 		<!-- closed acc search action -->
 		<action path="/closedaccsearchaction" type="org.mifos.application.accounts.struts.action.ClosedAccSearchAction" name="closedaccsearchactionform" parameter="method" input="/clientCreationAction.do?method=validate" validate="false">

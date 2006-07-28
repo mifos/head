@@ -38,7 +38,7 @@
 
 package org.mifos.application.bulkentry.business;
 
-import org.mifos.application.fees.business.FeesBO;
+import org.mifos.application.fees.business.FeeBO;
 import org.mifos.framework.business.View;
 import org.mifos.framework.util.helpers.Money;
 
@@ -46,13 +46,13 @@ public class BulkEntryAccountFeeActionView extends View {
 
 	private final Integer actionDateId;
 
-	private final FeesBO fee;
+	private final FeeBO fee;
 
 	private final Money feeAmount;
 
 	private final Money feeAmountPaid;
 
-	public BulkEntryAccountFeeActionView(Integer actionDateId, FeesBO fee,
+	public BulkEntryAccountFeeActionView(Integer actionDateId, FeeBO fee,
 			Money feeAmount, Money feeAmountPaid) {
 		this.actionDateId = actionDateId;
 		this.fee = fee;
@@ -68,7 +68,7 @@ public class BulkEntryAccountFeeActionView extends View {
 		return actionDateId;
 	}
 
-	public FeesBO getFee() {
+	public FeeBO getFee() {
 		return fee;
 	}
 

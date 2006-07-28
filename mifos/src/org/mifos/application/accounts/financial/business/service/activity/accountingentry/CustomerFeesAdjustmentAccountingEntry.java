@@ -26,7 +26,7 @@ public class CustomerFeesAdjustmentAccountingEntry extends
 		while (iterFees.hasNext()) {
 			FeesTrxnDetailEntity feeTrxn = iterFees.next();
 			addAccountEntryDetails(removeSign(feeTrxn.getFeeAmount()), finActionFee,
-					feeTrxn.getAccountFees().getFees().getGlCodeEntity(),
+					feeTrxn.getAccountFees().getFees().getGlCode(),
 					FinancialConstants.DEBIT);
 			
 			addAccountEntryDetails(removeSign(feeTrxn.getFeeAmount()), finActionFee,

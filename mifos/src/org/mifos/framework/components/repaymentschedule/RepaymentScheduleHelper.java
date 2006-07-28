@@ -39,7 +39,7 @@ import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
 import org.mifos.application.accounts.util.valueobjects.AccountFeesActionDetail;
-import org.mifos.application.fees.business.FeesBO;
+import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.persistence.service.FeePersistenceService;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.framework.components.interestcalculator.InterestInputs;
@@ -394,7 +394,7 @@ public class RepaymentScheduleHelper
 
 	}
 	
-	private static FeesBO getFeesBO(Short feeId){
+	private static FeeBO getFeesBO(Short feeId){
 		FeePersistenceService feePersistenceService = new FeePersistenceService();
 		return feePersistenceService.getFees(feeId);
 	}

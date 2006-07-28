@@ -225,7 +225,7 @@
 		<![CDATA[select  distinct loanAccount.loanOffering from org.mifos.application.accounts.loan.business.LoanBO loanAccount where loanAccount.customer.searchId = :CUSTOMER_SEARCH_ID and (loanAccount.accountState.id in (5,9) or (loanAccount.accountState.id in (3,4) and  loanAccount.disbursementDate <= :DISBURSEMENT_DATE))]]>
 	</query>
 	<query name="accounts.getFeeAmountAtDisbursement">
-		<![CDATA[  from org.mifos.application.accounts.business.AccountFeesEntity afe where afe.account.accountId = :ACCOUNT_ID and  afe.fees.feeFrequency.feePayment.feePaymentId = 2]]>
+		<![CDATA[  from org.mifos.application.accounts.business.AccountFeesEntity afe where afe.account.accountId = :ACCOUNT_ID and  afe.fees.feeFrequency.feePayment.id = 2]]>
 	</query>
 
 	<query name="accounts.getAccountTrxnsForAccountId">

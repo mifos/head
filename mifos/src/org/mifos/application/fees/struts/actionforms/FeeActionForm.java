@@ -40,38 +40,43 @@ package org.mifos.application.fees.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.validator.ValidatorActionForm;
-import org.mifos.application.accounts.financial.business.GLCodeEntity;
-import org.mifos.application.fees.business.CategoryTypeEntity;
-import org.mifos.application.fees.business.FeeFormulaEntity;
-import org.mifos.application.fees.business.FeeFrequencyEntity;
-import org.mifos.application.fees.business.FeeStatusEntity;
 import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.fees.util.helpers.FeeFormula;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
+import org.mifos.application.fees.util.helpers.FeePayment;
+import org.mifos.application.fees.util.helpers.FeeStatus;
+import org.mifos.application.fees.util.helpers.FeesConstants;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.framework.exceptions.PropertyNotFoundException;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class FeeActionForm extends ValidatorActionForm {
+	private String feeId;
 
 	private String feeName;
 
-	private CategoryTypeEntity categoryType;
+	private String categoryType;
 
-	private String adminCheck;
+	private boolean customerDefaultFee = false;
 
-	private FeeFrequencyEntity feeFrequency;
+	private String feeFrequencyType;
+
+	private String feeRecurrenceType;
 
 	private String amount;
 
 	private String rate;
 
-	private FeeFormulaEntity feeFormula;
+	private String feeFormula;
 
-	private GLCodeEntity glCodeEntity;
+	private String glCode;
 
 	private String loanCharge;
 
@@ -81,23 +86,18 @@ public class FeeActionForm extends ValidatorActionForm {
 
 	private String monthRecurAfter;
 
-	private FeeStatusEntity feeStatus;
+	private String feeStatus;
 
-	public FeeActionForm() {
-		super();
-		categoryType = new CategoryTypeEntity();
-		feeFrequency = new FeeFrequencyEntity();
-		feeFormula = new FeeFormulaEntity();
-		glCodeEntity = new GLCodeEntity();
-		feeStatus = new FeeStatusEntity();
+	public String getFeeId() {
+		return feeId;
 	}
 
-	public String getAdminCheck() {
-		return adminCheck;
+	public Short getFeeIdValue() {
+		return getShortValue(feeId);
 	}
-
-	public void setAdminCheck(String adminCheck) {
-		this.adminCheck = adminCheck;
+	
+	public void setFeeId(String feeId) {
+		this.feeId = feeId;
 	}
 
 	public String getAmount() {
@@ -108,36 +108,65 @@ public class FeeActionForm extends ValidatorActionForm {
 		this.amount = amount;
 	}
 
-	public CategoryTypeEntity getCategoryType() {
+	public Money getAmountValue() {
+		return getMoney(amount);
+	}
+
+	public String getCategoryType() {
 		return categoryType;
 	}
 
-	public void setCategoryType(CategoryTypeEntity categoryType) {
+	public void setCategoryType(String categoryType) {
 		this.categoryType = categoryType;
 	}
 
-	public FeeFormulaEntity getFeeFormula() {
+	public FeeCategory getCategoryTypeValue() throws PropertyNotFoundException {
+		return StringUtils.isNullAndEmptySafe(categoryType) ? FeeCategory
+				.getFeeCategory(Short.valueOf(categoryType)) : null;
+	}
+
+	public String getCustomerCharge() {
+		return customerCharge;
+	}
+
+	public void setCustomerCharge(String customerCharge) {
+		this.customerCharge = customerCharge;
+	}
+
+	public void setCustomerDefaultFee(boolean customerDefaultFee) {
+		this.customerDefaultFee = customerDefaultFee;
+	}
+
+	public boolean isCustomerDefaultFee() {
+		return customerDefaultFee;
+	}
+
+	public String getFeeFormula() {
 		return feeFormula;
 	}
 
-	public void setFeeFormula(FeeFormulaEntity feeFormula) {
+	public void setFeeFormula(String feeFormula) {
 		this.feeFormula = feeFormula;
 	}
 
-	public FeeFrequencyEntity getFeeFrequency() {
-		Short frequencyTypeId = feeFrequency.getFeeFrequencyType()
-				.getFeeFrequencyTypeId();
-		if (frequencyTypeId != null) {
-			if (frequencyTypeId.equals(FeeFrequencyType.PERIODIC.getValue()))
-				buildPeriodicFeeFrequency();
-			else if (categoryType.getCategoryId() != null)
-				buildOneTimeFeeFrequency(isCategoryLoan());
-		}
-		return feeFrequency;
+	public FeeFormula getFeeFormulaValue() throws PropertyNotFoundException {
+		return StringUtils.isNullAndEmptySafe(feeFormula) ? FeeFormula
+				.getFeeFormula(Short.valueOf(feeFormula)) : null;
 	}
 
-	public void setFeeFrequency(FeeFrequencyEntity feeFrequency) {
-		this.feeFrequency = feeFrequency;
+	public String getFeeFrequencyType() {
+		return feeFrequencyType;
+	}
+
+	public void setFeeFrequencyType(String feeFrequencyType) {
+		this.feeFrequencyType = feeFrequencyType;
+	}
+
+	public FeeFrequencyType getFeeFrequencyTypeValue()
+			throws PropertyNotFoundException {
+		return StringUtils.isNullAndEmptySafe(feeFrequencyType) ? FeeFrequencyType
+				.getFeeFrequencyType(Short.valueOf(feeFrequencyType))
+				: null;
 	}
 
 	public String getFeeName() {
@@ -148,28 +177,54 @@ public class FeeActionForm extends ValidatorActionForm {
 		this.feeName = feeName;
 	}
 
-	public GLCodeEntity getGlCodeEntity() {
-		return glCodeEntity;
+	public String getFeePaymentType() {
+		return StringUtils.isNullAndEmptySafe(categoryType) && isCategoryLoan() ? loanCharge
+				: customerCharge;
 	}
 
-	public void setGlCodeEntity(GLCodeEntity glCodeEntity) {
-		this.glCodeEntity = glCodeEntity;
+	public FeePayment getFeePaymentTypeValue() throws PropertyNotFoundException {
+		return StringUtils.isNullAndEmptySafe(getFeePaymentType()) ? FeePayment
+				.getFeePayment(Short.valueOf(getFeePaymentType())) : null;
 	}
 
-	public String getRate() {
-		return rate;
+	public String getFeeRecurrenceType() {
+		return feeRecurrenceType;
 	}
 
-	public void setRate(String rate) {
-		this.rate = rate;
+	public void setFeeRecurrenceType(String feeRecurrenceType) {
+		this.feeRecurrenceType = feeRecurrenceType;
 	}
 
-	public String getCustomerCharge() {
-		return customerCharge;
+	public MeetingFrequency getFeeRecurrenceTypeValue()
+			throws PropertyNotFoundException {
+		return StringUtils.isNullAndEmptySafe(feeRecurrenceType) ? MeetingFrequency
+				.getMeetingFrequency(Short.valueOf(feeRecurrenceType))
+				: null;
 	}
 
-	public void setCustomerCharge(String customerCharge) {
-		this.customerCharge = customerCharge;
+	public String getFeeStatus() {
+		return feeStatus;
+	}
+
+	public void setFeeStatus(String feeStatus) {
+		this.feeStatus = feeStatus;
+	}
+
+	public FeeStatus getFeeStatusValue() {
+		return StringUtils.isNullAndEmptySafe(feeStatus) ? FeeStatus
+				.getFeeStatus(Short.valueOf(feeStatus)) : null;
+	}
+
+	public String getGlCode() {
+		return glCode;
+	}
+
+	public void setGlCode(String glCode) {
+		this.glCode = glCode;
+	}
+
+	public Short getGlCodeValue() {
+		return getShortValue(glCode);
 	}
 
 	public String getLoanCharge() {
@@ -188,6 +243,23 @@ public class FeeActionForm extends ValidatorActionForm {
 		this.monthRecurAfter = monthRecurAfter;
 	}
 
+	public Short getMonthRecurAfterValue() {
+		return getShortValue(monthRecurAfter);
+	}
+
+	public String getRate() {
+		return rate;
+	}
+
+	public void setRate(String rate) {
+		this.rate = rate;
+	}
+
+	public Double getRateValue() {
+		return StringUtils.isNullAndEmptySafe(rate) ? Double.valueOf(rate)
+				: null;
+	}
+
 	public String getWeekRecurAfter() {
 		return weekRecurAfter;
 	}
@@ -196,12 +268,17 @@ public class FeeActionForm extends ValidatorActionForm {
 		this.weekRecurAfter = weekRecurAfter;
 	}
 
-	public FeeStatusEntity getFeeStatus() {
-		return feeStatus;
+	public Short getWeekRecurAfterValue() {
+		return getShortValue(weekRecurAfter);
 	}
 
-	public void setFeeStatus(FeeStatusEntity status) {
-		this.feeStatus = status;
+	public boolean isCategoryLoan() {
+		return FeeCategory.LOAN.getValue().equals(Short.valueOf(categoryType));
+	}
+
+	public boolean isRateFee() {
+		return StringUtils.isNullAndEmptySafe(rate)
+				&& StringUtils.isNullAndEmptySafe(feeFormula);
 	}
 
 	@Override
@@ -209,7 +286,7 @@ public class FeeActionForm extends ValidatorActionForm {
 		super.reset(mapping, request);
 		String method = request.getParameter(Methods.method.toString());
 		if (method != null && method.equals(Methods.preview.toString())) {
-			adminCheck = null;
+			customerDefaultFee = false;
 			loanCharge = null;
 			customerCharge = null;
 			amount = null;
@@ -231,50 +308,60 @@ public class FeeActionForm extends ValidatorActionForm {
 				validateForEditPreview(errors);
 			}
 		}
+		
+		if (null != errors && !errors.isEmpty()) {
+			request.setAttribute(Globals.ERROR_KEY, errors);
+			request.setAttribute("methodCalled", methodCalled);
+		}
 		return errors;
 	}
 
 	private void validateForPreview(ActionErrors errors) {
-		if (isCategoryLoan()) {
+		if (StringUtils.isNullAndEmptySafe(categoryType) && isCategoryLoan()) {
 			validateForPreviewLoanCategory(errors);
-		} else if (!StringUtils.isNullAndEmptySafe(amount)) {
-			addError(errors, "amount", "errors.enter");
+		} else if (getAmountValue().equals(new Money())) {
+			addError(errors, FeesConstants.AMOUNT, FeesConstants.ERRORS_SPECIFY_VALUE);
 		}
 	}
 
 	private void validateForPreviewLoanCategory(ActionErrors errors) {
 		if (isBothRateAndAmountEmpty() || isBothRateAndAmountNotEmpty())
-			addError(errors, "RateOrAmount", "errors.amountOrRate");
+			addError(errors, FeesConstants.RATE_OR_AMOUNT, FeesConstants.ERRORS_SPECIFY_AMOUNT_OR_RATE);
 		if (isRateEmptyAndFormulaNotNull() || isRateNotEmptyAndFormulaNull())
-			addError(errors, "RateAndFormula", "errors.rateAndFormulaId");
+			addError(errors, FeesConstants.RATE_AND_FORMULA, FeesConstants.ERRORS_SPECIFY_RATE_AND_FORMULA);
 	}
 
 	private void validateForEditPreview(ActionErrors errors) {
-		if (rate == null && "".equals(amount.trim()))
-			addError(errors, "amount", "errors.enter");
-		if (amount == null && "".equals(rate.trim()))
-			addError(errors, "RateAndFormula", "errors.rateAndFormulaId");
-		if (getFeeStatus().getStatusId() == null)
-			addError(errors, "amount", "errors.select", "Status");
+		if (StringUtils.isNullAndEmptySafe(feeFormula)) {
+			if (!StringUtils.isNullAndEmptySafe(rate))
+				addError(errors, FeesConstants.RATE_AND_FORMULA, FeesConstants.ERRORS_SPECIFY_RATE_AND_FORMULA);
+		} else if (!StringUtils.isNullAndEmptySafe(amount))
+			addError(errors, FeesConstants.AMOUNT, FeesConstants.ERRORS_SPECIFY_VALUE);
+
+		if (getFeeStatusValue() == null)
+			addError(errors, FeesConstants.AMOUNT, FeesConstants.ERRORS_SELECT_STATUS);
 	}
 
 	private boolean isBothRateAndAmountEmpty() {
-		return (StringUtils.isEmpty(rate) && StringUtils.isEmpty(amount));
+		return !StringUtils.isNullAndEmptySafe(rate)
+				&& !StringUtils.isNullAndEmptySafe(amount);
 	}
 
 	private boolean isBothRateAndAmountNotEmpty() {
-		return (!StringUtils.isEmpty(rate) && !StringUtils.isEmpty(amount));
+		return StringUtils.isNullAndEmptySafe(rate)
+				&& StringUtils.isNullAndEmptySafe(amount)
+				|| StringUtils.isNullAndEmptySafe(feeFormula)
+				&& StringUtils.isNullAndEmptySafe(amount);
 	}
 
 	private boolean isRateEmptyAndFormulaNotNull() {
-		return (feeFormula.getFeeFormulaId() != null && StringUtils
-				.isEmpty(rate));
+		return (!StringUtils.isNullAndEmptySafe(rate) && StringUtils
+				.isNullAndEmptySafe(feeFormula));
 	}
 
 	private boolean isRateNotEmptyAndFormulaNull() {
-		return (!StringUtils.isEmpty(rate)
-				&& feeFormula.getFeeFormulaId() == null && StringUtils
-				.isEmpty(amount));
+		return (StringUtils.isNullAndEmptySafe(rate) && !StringUtils
+				.isNullAndEmptySafe(feeFormula));
 	}
 
 	private void addError(ActionErrors errors, String property, String key,
@@ -282,33 +369,13 @@ public class FeeActionForm extends ValidatorActionForm {
 		errors.add(property, new ActionMessage(key, arg));
 	}
 
-	private void buildPeriodicFeeFrequency() {
-		Short recurrencId = feeFrequency.getFeeMeetingFrequency()
-				.getMeetingDetails().getRecurrenceType().getRecurrenceId();
-		if (recurrencId != null) {
-			if (recurrencId.equals(MeetingFrequency.WEEKLY.getValue())
-					&& StringUtils.isNullAndEmptySafe(getWeekRecurAfter()))
-				feeFrequency.getFeeMeetingFrequency().getMeetingDetails()
-						.setRecurAfter(Short.valueOf(getWeekRecurAfter()));
-			else if (recurrencId.equals(MeetingFrequency.MONTHLY.getValue())
-					&& StringUtils.isNullAndEmptySafe(getMonthRecurAfter()))
-				feeFrequency.getFeeMeetingFrequency().getMeetingDetails()
-						.setRecurAfter(Short.valueOf(getMonthRecurAfter()));
-
-		}
+	private Short getShortValue(String str) {
+		return StringUtils.isNullAndEmptySafe(str) ? Short.valueOf(str) : null;
 	}
 
-	private void buildOneTimeFeeFrequency(boolean isCategoryLoan) {
-		if (StringUtils.isNullAndEmptySafe(loanCharge) && isCategoryLoan)
-			feeFrequency.getFeePayment().setFeePaymentId(
-					Short.valueOf(loanCharge));
-		else if (StringUtils.isNullAndEmptySafe(customerCharge))
-			feeFrequency.getFeePayment().setFeePaymentId(
-					Short.valueOf(customerCharge));
-	}
-
-	private boolean isCategoryLoan() {
-		return FeeCategory.LOAN.getValue().equals(
-				categoryType.getCategoryId());
+	private Money getMoney(String str) {
+		return (StringUtils.isNullAndEmptySafe(str) && !str.trim().equals(".")) ? new Money(
+				str)
+				: new Money();
 	}
 }

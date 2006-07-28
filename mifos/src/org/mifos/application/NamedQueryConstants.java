@@ -438,5 +438,7 @@ public interface NamedQueryConstants {
 	public String GET_LASTINSTALLMENT="getLastInstallment";
 	
 	public String ACTIVE_CUSTOMERS_UNDER_PARENT = "Customer.getActiveCustomerUnderParent";
-	
+	public String RETRIEVE_CUSTOMER_FEES="retrieveCustomerFees";
+	public String RETRIEVE_PRODUCT_FEES="retrieveProductFees";
+
 }

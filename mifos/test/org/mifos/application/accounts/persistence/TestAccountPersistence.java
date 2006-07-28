@@ -17,8 +17,11 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.accounts.util.valueobjects.CustomerAccount;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.fees.business.FeesBO;
+import org.mifos.application.fees.business.AmountFeeBO;
+import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -100,11 +103,11 @@ public class TestAccountPersistence extends TestAccount {
 
 	public void testGetCustomerAccountsForFee(){
 		
-		FeesBO periodicFee = TestObjectFactory.createPeriodicFees(
-				"ClientPeridoicFee", 5.0, 1, 1, 4);
+		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
+				"ClientPeridoicFee", FeeCategory.CENTER, "5", MeetingFrequency.WEEKLY, Short.valueOf("1"));
 		AccountFeesEntity accountFee = new AccountFeesEntity();
-		accountFee.setFeeAmount(periodicFee.getFeeAmount());
-		accountFee.setAccountFeeAmount(periodicFee.getFeeAmount());
+		accountFee.setFeeAmount(((AmountFeeBO)periodicFee).getFeeAmount());
+		accountFee.setAccountFeeAmount(((AmountFeeBO)periodicFee).getFeeAmount());
 		accountFee.setFees(periodicFee);
 		CustomerAccountBO customerAccount = center.getCustomerAccount();
 		customerAccount.addAccountFees(accountFee);

@@ -43,17 +43,22 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import org.mifos.application.accounts.financial.business.GLCodeEntity;
-import org.mifos.application.fees.business.FeesBO;
+import org.mifos.application.fees.business.AmountFeeBO;
+import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.business.RateFeeBO;
+import org.mifos.application.fees.struts.actionforms.FeeActionForm;
 import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.fees.util.helpers.FeeFormula;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.fees.util.helpers.FeesConstants;
-import org.mifos.application.master.util.valueobjects.LookUpMaster;
+import org.mifos.application.fees.util.helpers.RateAmountFlag;
+import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -64,10 +69,13 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestFeeAction extends MifosMockStrutsTestCase {
 
-	private final static Short FORMULA_ID = 1;
 
-	private final static String GLOCDE_ID = "7";
-
+	private final static String GLOCDE_ID = "47";
+	private FeeBO fee;
+	private FeeBO fee1;
+	private FeeBO fee2;
+	private FeeBO fee3;
+	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -91,10 +99,14 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
+		TestObjectFactory.cleanUp(fee);
+		TestObjectFactory.cleanUp(fee1);
+		TestObjectFactory.cleanUp(fee2);
+		TestObjectFactory.cleanUp(fee3);
 		super.tearDown();
 	}
 
-	public void testLoad() {
+	public void testLoad() throws Exception {
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "load");
 		actionPerform();
@@ -104,200 +116,240 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 
 		HttpSession session = request.getSession();
 		assertEquals("The size of master data for categories",
-				((List<LookUpMaster>) session
+				((List<MasterDataEntity>) session
 						.getAttribute(FeesConstants.CATEGORYLIST)).size(), 5);
 		assertEquals(
 				"The size of master data for loan time of charges for one time fees  : ",
-				((List<LookUpMaster>) session
-						.getAttribute(FeesConstants.LOANTIMEOFCHARGES)).size(),
+				((List<MasterDataEntity>) session
+						.getAttribute(FeesConstants.TIMEOFCHARGES)).size(),
 				3);
 		assertEquals(
 				"The size of master data for customer  time of charges for one time fees master : ",
-				((List<LookUpMaster>) session
+				((List<MasterDataEntity>) session
 						.getAttribute(FeesConstants.CUSTOMERTIMEOFCHARGES))
 						.size(), 1);
 		assertEquals("The size of master data for loan formula : ",
-				((List<LookUpMaster>) session
+				((List<MasterDataEntity>) session
 						.getAttribute(FeesConstants.FORMULALIST)).size(), 3);
 		assertEquals("The size of master data for GLCodes of fees : ",
-				((List<GLCodeEntity>) session
+				((List<MasterDataEntity>) session
 						.getAttribute(FeesConstants.GLCODE_LIST)).size(), 7);
 
 	}
 
-	public void testFailurePreview() {
+	public void testFailurePreviewWithAllValuesNull() throws Exception {
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
 		actionPerform();
-		verifyActionErrors(new String[] { "Please specify Fee Name .",
-				"Please select Customers/Products to which fees apply.",
-				"Please select the Frequency.", "Please select the GL Code.",
-				"errors.enter" });
+
+		assertEquals(5, getErrrorSize());
+		assertEquals("Fee Name",1, getErrrorSize("feeName"));
+		assertEquals("Fee Applies to Product/Customer",1, getErrrorSize("categoryType"));
+		assertEquals("Periodic or OneTime Fee", 1, getErrrorSize("feeFrequencyType"));
+		assertEquals("Fee Amount",1, getErrrorSize("amount"));		
+		assertEquals("Fee GlCode", 1, getErrrorSize("glCode"));						
 		verifyInputForward();
 	}
 
-	public void testFailurePreviewWithCategory() {
+	public void testFailurePreviewWithFeeNameNotNull()  throws Exception{
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
-		addRequestParameter("categoryType.categoryId", FeeCategory.LOAN
-				.getValue().toString());
-		addRequestParameter("feeFrequency.feeFrequencyType.feeFrequencyTypeId",
-				FeeFrequencyType.ONETIME.getValue().toString());
-		addRequestParameter("amount", "");
-		addRequestParameter("rate", "");
+		addRequestParameter("feeName", "CustomerFee");
 		actionPerform();
-		verifyActionErrors(new String[] { "Please specify Fee Name .",
-				"Please select frequency along with Payment Type.",
-				"Please select the GL Code.", "errors.amountOrRate" });
+		
+		assertEquals(4, getErrrorSize());
+		assertEquals("Fee Name",0, getErrrorSize("feeName"));
+		assertEquals("Fee Applies to Product/Customer",1, getErrrorSize("categoryType"));
+		assertEquals("Periodic or OneTime Fee", 1, getErrrorSize("feeFrequencyType"));
+		assertEquals("Fee Amount",1, getErrrorSize("amount"));		
+		assertEquals("Fee GlCode", 1, getErrrorSize("glCode"));				
 		verifyInputForward();
 	}
-
-	public void testFailurePreviewWithOnlyRateEntered() {
+	
+	public void testFailurePreviewWithFeeCategoryNotNull() throws Exception {
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
-		addRequestParameter("categoryType.categoryId", FeeCategory.LOAN
-				.getValue().toString());
-		addRequestParameter("feeFrequency.feeFrequencyType.feeFrequencyTypeId",
-				FeeFrequencyType.ONETIME.getValue().toString());
-		addRequestParameter("amount", "");
-		addRequestParameter("rate", "13");
+		addRequestParameter("feeName", "CustomerFee");
+		addRequestParameter("categoryType", FeeCategory.CENTER.getValue().toString());
 		actionPerform();
-		verifyActionErrors(new String[] { "Please specify Fee Name .",
-				"Please select frequency along with Payment Type.",
-				"Please select the GL Code.", "errors.rateAndFormulaId" });
+
+		assertEquals(3, getErrrorSize());
+		assertEquals("Periodic or OneTime Fee", 1, getErrrorSize("feeFrequencyType"));
+		assertEquals("Fee Amount",1, getErrrorSize("amount"));		
+		assertEquals("Fee GlCode", 1, getErrrorSize("glCode"));				
 		verifyInputForward();
 	}
-
-	public void testSuccessfulPreview() {
+	
+	public void testFailurePreviewWith_FeeFrequencyOneTime() throws Exception {
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
-		addRequestParameter("categoryType.categoryId", FeeCategory.ALLCUSTOMERS
-				.getValue().toString());
-		addRequestParameter("amount", "100");
-		addRequestParameter("feeName", "Customer One time");
-		addRequestParameter("feeFrequency.feeFrequencyType.feeFrequencyTypeId",
-				FeeFrequencyType.ONETIME.getValue().toString());
-		addRequestParameter("customerCharge", FeePayment.UPFRONT.getValue()
-				.toString());
-		addRequestParameter("glCodeEntity.glcodeId", GLOCDE_ID);
+		addRequestParameter("feeName", "CustomerFee");
+		addRequestParameter("categoryType", FeeCategory.CENTER.getValue().toString());
+		addRequestParameter("feeFrequencyType", FeeFrequencyType.ONETIME.getValue().toString());
+		addRequestParameter("customerCharge", FeePayment.UPFRONT.getValue().toString());
 		actionPerform();
+
+		assertEquals(2, getErrrorSize());
+		assertEquals("Fee Amount",1, getErrrorSize("amount"));		
+		assertEquals("Fee GlCode", 1, getErrrorSize("glCode"));			
+		verifyInputForward();
+	}
+	
+	public void testFailurePreviewWith_FeeFrequencyPeriodic() throws Exception {
+		setRequestPathInfo("/feeaction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("feeName", "CustomerFee");
+		addRequestParameter("categoryType", FeeCategory.CENTER.getValue().toString());
+		addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC.getValue().toString());
+		addRequestParameter("feeRecurrenceType", MeetingFrequency.MONTHLY.getValue().toString());
+		addRequestParameter("monthRecurAfter", "2");
+		actionPerform();
+
+		assertEquals(2, getErrrorSize());
+		assertEquals("Fee Amount",1, getErrrorSize("amount"));		
+		assertEquals("Fee GlCode", 1, getErrrorSize("glCode"));			
+		verifyInputForward();
+	}
+	
+	public void testFailurePreviewWith_RateEnteredWithoutFormula() throws Exception {
+		setRequestPathInfo("/feeaction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("feeName", "CustomerFee");
+		addRequestParameter("categoryType", FeeCategory.LOAN.getValue().toString());
+		addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC.getValue().toString());
+		addRequestParameter("feeRecurrenceType", MeetingFrequency.WEEKLY.getValue().toString());
+		addRequestParameter("weekRecurAfter", "2");
+		addRequestParameter("rate", "10");
+		actionPerform();
+
+		assertEquals(2, getErrrorSize());
+		assertEquals("Fee GlCode", 1, getErrrorSize("glCode"));			
+		assertEquals("Fee Rate or Formula", 1, getErrrorSize("RateAndFormula"));
+		verifyInputForward();
+	}
+	
+	public void testFailurePreviewWith_AmountNotNull() throws Exception {
+		setRequestPathInfo("/feeaction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("feeName", "CustomerFee");
+		addRequestParameter("categoryType", FeeCategory.CENTER.getValue().toString());
+		addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC.getValue().toString());
+		addRequestParameter("feeRecurrenceType", MeetingFrequency.MONTHLY.getValue().toString());
+		addRequestParameter("monthRecurAfter", "2");
+		addRequestParameter("amount", "200");
+		actionPerform();
+
+		assertEquals(1, getErrrorSize());
+		assertEquals("Fee GlCode", 1, getErrrorSize("glCode"));			
+		verifyInputForward();
+	}
+	
+	public void testSuccessfulPreview() throws Exception {
+		setRequestPathInfo("/feeaction.do");
+		addRequestParameter("method", "load");
+		actionPerform();
+		setRequestPathInfo("/feeaction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("feeName", "CustomerFee");
+		addRequestParameter("categoryType", FeeCategory.LOAN.getValue().toString());
+		addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC.getValue().toString());
+		addRequestParameter("feeRecurrenceType", MeetingFrequency.WEEKLY.getValue().toString());
+		addRequestParameter("weekRecurAfter", "2");
+		addRequestParameter("rate", "10");
+		addRequestParameter("feeFormula", FeeFormula.AMOUNT.getValue().toString());
+		addRequestParameter("glCode", GLOCDE_ID);
+		actionPerform();
+		assertEquals(0, getErrrorSize());
+		verifyForward(ActionForwards.preview_success.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		verifyForward(ActionForwards.preview_success.toString());
-
-		HttpSession session = request.getSession();
-		FeesBO fees = (FeesBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, session);
-		assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fees
-				.getCategoryType().getCategoryId());
-		assertEquals("Customer One time", fees.getFeeName());
-		assertFalse(fees.isRateFee());
 	}
-
-	public void testSuccessfulCreateOneTimeFee() {
+	
+	
+	public void testSuccessfulCreateOneTimeFee() throws Exception {
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "load");
 		actionPerform();
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
-		addRequestParameter("categoryType.categoryId", FeeCategory.ALLCUSTOMERS
-				.getValue().toString());
+		addRequestParameter("categoryType", FeeCategory.ALLCUSTOMERS.getValue().toString());
 		addRequestParameter("amount", "100");
-		addRequestParameter("feeName", "Customer One time");
-		addRequestParameter("feeFrequency.feeFrequencyType.feeFrequencyTypeId",
-				FeeFrequencyType.ONETIME.getValue().toString());
-		addRequestParameter("customerCharge", FeePayment.UPFRONT.getValue()
-				.toString());
-		addRequestParameter("glCodeEntity.glcodeId", GLOCDE_ID);
+		addRequestParameter("feeName", "Customer_One_time");
+		addRequestParameter("feeFrequencyType",	FeeFrequencyType.ONETIME.getValue().toString());
+		addRequestParameter("customerCharge", FeePayment.UPFRONT.getValue().toString());
+		addRequestParameter("glCode", GLOCDE_ID);
 		actionPerform();
 		verifyNoActionErrors();
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "create");
-		addRequestParameter("org.apache.struts.taglib.html.TOKEN",
-				(String) request.getSession().getAttribute(
+		addRequestParameter("org.apache.struts.taglib.html.TOKEN",	(String) request.getSession().getAttribute(
 						"org.apache.struts.action.TOKEN"));
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.create_success.toString());
 
-		HttpSession session = request.getSession();
-		FeesBO fee = (FeesBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,
-				session);
-		fee = (FeesBO) TestObjectFactory
-				.getObject(FeesBO.class, fee.getFeeId());
-		assertEquals("Customer One time", fee.getFeeName());
-		assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType()
-				.getCategoryId());
-		assertEquals(new Money("100.0"), fee.getFeeAmount());
-		assertNull(fee.getRate());
+		FeeActionForm actionForm = (FeeActionForm)request.getSession().getAttribute("feeactionform");
+		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, actionForm.getFeeIdValue());
+		assertEquals("Customer_One_time", fee.getFeeName());
+		assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType().getId());
+		assertEquals(RateAmountFlag.AMOUNT,fee.getFeeType());
+		assertEquals(new Money("100.0"), ((AmountFeeBO)fee).getFeeAmount());
 		assertTrue(fee.isOneTime());
-		assertFalse(fee.isAdminFee());
+		assertFalse(fee.isCustomerDefaultFee());
 		assertTrue(fee.isActive());
 	}
-
-	public void testSuccessfulCreateOneTimeAdminFee() {
+	
+	public void testSuccessfulCreateOneTimeAdminFee() throws Exception {
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "load");
 		actionPerform();
 
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
-		addRequestParameter("categoryType.categoryId", FeeCategory.ALLCUSTOMERS
-				.getValue().toString());
+		addRequestParameter("categoryType", FeeCategory.ALLCUSTOMERS.getValue().toString());
 		addRequestParameter("amount", "100");
-		addRequestParameter("adminCheck", "1");
-		addRequestParameter("feeName", "Customer One time Admin Fee");
-		addRequestParameter("feeFrequency.feeFrequencyType.feeFrequencyTypeId",
-				FeeFrequencyType.ONETIME.getValue().toString());
-		addRequestParameter("customerCharge", FeePayment.UPFRONT.getValue()
-				.toString());
-		addRequestParameter("glCodeEntity.glcodeId", GLOCDE_ID);
+		addRequestParameter("customerDefaultFee", "1");
+		addRequestParameter("feeName", "Customer_One_time_Default_Fee");
+		addRequestParameter("feeFrequencyType",	FeeFrequencyType.ONETIME.getValue().toString());
+		addRequestParameter("customerCharge", FeePayment.UPFRONT.getValue().toString());
+		addRequestParameter("glCode", GLOCDE_ID);
 		actionPerform();
 		verifyNoActionErrors();
 
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "create");
-		addRequestParameter("org.apache.struts.taglib.html.TOKEN",
-				(String) request.getSession().getAttribute(
+		addRequestParameter("org.apache.struts.taglib.html.TOKEN",(String) request.getSession().getAttribute(
 						"org.apache.struts.action.TOKEN"));
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.create_success.toString());
 
-		HttpSession session = request.getSession();
-		FeesBO fee = (FeesBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,
-				session);
-		fee = (FeesBO) TestObjectFactory
-				.getObject(FeesBO.class, fee.getFeeId());
-		assertEquals("Customer One time Admin Fee", fee.getFeeName());
-		assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType()
-				.getCategoryId());
-		assertEquals(new Money("100.0"), fee.getFeeAmount());
-		assertNull(fee.getRate());
+		FeeActionForm actionForm = (FeeActionForm)request.getSession().getAttribute("feeactionform");
+		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, actionForm.getFeeIdValue());
+		assertEquals("Customer_One_time_Default_Fee", fee.getFeeName());
+		assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType().getId());
+		assertEquals(RateAmountFlag.AMOUNT,fee.getFeeType());
+		assertEquals(new Money("100.0"), ((AmountFeeBO)fee).getFeeAmount());
 		assertTrue(fee.isOneTime());
-		assertTrue(fee.isAdminFee());
+		assertTrue(fee.isCustomerDefaultFee());
 		assertTrue(fee.isActive());
 	}
 
-	public void testSuccessfulCreatePeriodicFee() {
+	public void testSuccessfulCreatePeriodicFee() throws Exception {
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "load");
 		actionPerform();
 
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
-		addRequestParameter("categoryType.categoryId", FeeCategory.ALLCUSTOMERS
-				.getValue().toString());
+		addRequestParameter("categoryType", FeeCategory.ALLCUSTOMERS.getValue().toString());
 		addRequestParameter("amount", "100");
-		addRequestParameter("adminCheck", "1");
+		addRequestParameter("customerDefaultFee", "1");
 		addRequestParameter("feeName", "Customer Periodic Fee");
-		addRequestParameter("feeFrequency.feeFrequencyType.feeFrequencyTypeId",
-				FeeFrequencyType.PERIODIC.getValue().toString());
-		addRequestParameter(
-				"feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId",
-				MeetingFrequency.WEEKLY.getValue().toString());
+		addRequestParameter("feeFrequencyType",	FeeFrequencyType.PERIODIC.getValue().toString());
+		addRequestParameter("feeRecurrenceType",MeetingFrequency.WEEKLY.getValue().toString());
 		addRequestParameter("weekRecurAfter", "2");
-		addRequestParameter("glCodeEntity.glcodeId", GLOCDE_ID);
+		addRequestParameter("glCode", GLOCDE_ID);
 		actionPerform();
 		verifyNoActionErrors();
 
@@ -310,42 +362,36 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.create_success.toString());
 
-		HttpSession session = request.getSession();
-		FeesBO fee = (FeesBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,
-				session);
-		fee = (FeesBO) TestObjectFactory
-				.getObject(FeesBO.class, fee.getFeeId());
+		FeeActionForm actionForm = (FeeActionForm)request.getSession().getAttribute("feeactionform");
+		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, actionForm.getFeeIdValue());
+
 		assertEquals("Customer Periodic Fee", fee.getFeeName());
 		assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType()
-				.getCategoryId());
-		assertEquals(new Money("100.0"), fee.getFeeAmount());
-		assertNull(fee.getRate());
+				.getId());
+		assertEquals(RateAmountFlag.AMOUNT,fee.getFeeType());
+		assertEquals(new Money("100.0"), ((AmountFeeBO)fee).getFeeAmount());
 		assertTrue(fee.isPeriodic());
-		assertTrue(fee.isAdminFee());
+		assertTrue(fee.isCustomerDefaultFee());
 		assertTrue(fee.isActive());
 	}
 
-	public void testSuccessfulCreatePeriodicFeeWithFormula() {
+	public void testSuccessfulCreatePeriodicFeeWithFormula() throws Exception {
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "load");
 		actionPerform();
 
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
-		addRequestParameter("categoryType.categoryId", FeeCategory.LOAN
-				.getValue().toString());
+		addRequestParameter("categoryType", FeeCategory.LOAN.getValue().toString());
 		addRequestParameter("rate", "23");
 		addRequestParameter("amount", "");
-		addRequestParameter("feeFormula.feeFormulaId", FORMULA_ID.toString());
-		addRequestParameter("feeName", "Loan Periodic Fee");
-		addRequestParameter("adminCheck", "0");
-		addRequestParameter("feeFrequency.feeFrequencyType.feeFrequencyTypeId",
-				FeeFrequencyType.PERIODIC.getValue().toString());
-		addRequestParameter(
-				"feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId",
-				MeetingFrequency.WEEKLY.getValue().toString());
+		addRequestParameter("feeFormula", FeeFormula.AMOUNT.getValue().toString());
+		addRequestParameter("feeName", "Loan_Periodic_Fee");
+		addRequestParameter("customerDefaultFee", "0");
+		addRequestParameter("feeFrequencyType",	FeeFrequencyType.PERIODIC.getValue().toString());
+		addRequestParameter("feeRecurrenceType",MeetingFrequency.WEEKLY.getValue().toString());
 		addRequestParameter("weekRecurAfter", "2");
-		addRequestParameter("glCodeEntity.glcodeId", GLOCDE_ID);
+		addRequestParameter("glCode", GLOCDE_ID);
 		actionPerform();
 		verifyNoActionErrors();
 
@@ -358,114 +404,119 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.create_success.toString());
 
-		HttpSession session = request.getSession();
-		FeesBO fee = (FeesBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,
-				session);
-		fee = (FeesBO) TestObjectFactory
-				.getObject(FeesBO.class, fee.getFeeId());
-		assertEquals("Loan Periodic Fee", fee.getFeeName());
-		assertEquals(FeeCategory.LOAN.getValue(), fee.getCategoryType()
-				.getCategoryId());
-		assertEquals(23.0, fee.getRate());
-		assertTrue(fee.isRateFee());
-		assertEquals(fee.getFeeFormula().getFeeFormulaId(), FORMULA_ID);
+		FeeActionForm actionForm = (FeeActionForm)request.getSession().getAttribute("feeactionform");
+		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, actionForm.getFeeIdValue());
+
+		assertEquals("Loan_Periodic_Fee", fee.getFeeName());
+		assertEquals(FeeCategory.LOAN.getValue(), fee.getCategoryType().getId());
+		assertEquals(RateAmountFlag.RATE,fee.getFeeType());
+		assertEquals(23.0, ((RateFeeBO)fee).getRate());
+		assertEquals(((RateFeeBO)fee).getFeeFormula().getId(), FeeFormula.AMOUNT.getValue());
 		assertTrue(fee.isPeriodic());
 		assertTrue(fee.isActive());
 	}
-
-	public void testManage() {
-		FeesBO fee = TestObjectFactory.createOneTimeFees("One Time Fee", 100.0,
-				Short.valueOf("1"), 1);
+	
+	public void testSuccessfulManage_AmountFee() throws Exception {
+		fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS,"100",FeePayment.UPFRONT);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,fee, request.getSession());
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "manage");
-		addRequestParameter("feeId", fee.getFeeId().toString());
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.manage_success.toString());
 
-		HttpSession session = request.getSession();
-		fee = (FeesBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,
-				request.getSession());
-		assertEquals("One Time Fee", fee.getFeeName());
-		assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType()
-				.getCategoryId());
-		assertEquals(FeeFrequencyType.ONETIME.getValue(), fee.getFeeFrequency()
-				.getFeeFrequencyType().getFeeFrequencyTypeId());
-		assertEquals("The size of master data for status",
-				((List<LookUpMaster>) session
-						.getAttribute(FeesConstants.STATUSLIST)).size(), 2);
-		assertEquals("The size of master data for loan formula : ",
-				((List<LookUpMaster>) session
-						.getAttribute(FeesConstants.FORMULALIST)).size(), 3);
-
+		FeeActionForm actionForm = (FeeActionForm)request.getSession().getAttribute("feeactionform");
+		assertEquals("100.0",actionForm.getAmount());
+		assertNull(actionForm.getRate());
+		assertNull(actionForm.getFeeFormula());
+		
+		assertEquals("The size of master data for status",2,
+				((List<MasterDataEntity>) SessionUtils.getAttribute(FeesConstants.STATUSLIST,request.getSession())).size());
 	}
 
+	public void testSuccessfulManage_RateFee() throws Exception {
+		fee = TestObjectFactory.createOneTimeRateFee("One Time Fee", FeeCategory.ALLCUSTOMERS,24.0, FeeFormula.AMOUNT, FeePayment.UPFRONT);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,fee, request.getSession());
+		setRequestPathInfo("/feeaction.do");
+		addRequestParameter("method", "manage");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.manage_success.toString());
+
+		FeeActionForm actionForm = (FeeActionForm)request.getSession().getAttribute("feeactionform");
+		assertEquals("24.0",actionForm.getRate());
+		assertEquals(FeeFormula.AMOUNT.getValue().toString(),actionForm.getFeeFormula());
+		assertNull(actionForm.getAmount());
+		
+		assertEquals("The size of master data for status",2,
+				((List<MasterDataEntity>) SessionUtils.getAttribute(FeesConstants.STATUSLIST,request.getSession())).size());
+	}
+	
 	public void testFailureEditPreviewForAmount() {
+		fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS,"100",FeePayment.UPFRONT);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,fee, request.getSession());
+		setRequestPathInfo("/feeaction.do");
+		addRequestParameter("method", "manage");
+		actionPerform();
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "editPreview");
 		addRequestParameter("amount", "");
 		actionPerform();
-		verifyActionErrors(new String[] { "errors.enter", "errors.select" });
+		assertEquals(1, getErrrorSize());
+		assertEquals("Fee Amount",1, getErrrorSize("amount"));	
 		verifyInputForward();
 	}
 
-	public void testFailureEditPreviewForRate() {
+	public void testFailureEditPreviewForRate() throws Exception{
+		fee = TestObjectFactory.createOneTimeRateFee("One Time Fee", FeeCategory.ALLCUSTOMERS,24.0, FeeFormula.AMOUNT, FeePayment.UPFRONT);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,fee, request.getSession());
+		setRequestPathInfo("/feeaction.do");
+		addRequestParameter("method", "manage");
+		actionPerform();
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "editPreview");
 		addRequestParameter("rate", "");
 		actionPerform();
-		verifyActionErrors(new String[] { "errors.rateAndFormulaId",
-				"errors.select" });
+		assertEquals(1, getErrrorSize());
+		assertEquals("RateAndFormula",1, getErrrorSize("RateAndFormula"));
 		verifyInputForward();
 	}
-
-	public void testFailureEditPreviewWithAmount() {
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "editPreview");
-		addRequestParameter("amount", "100.0");
-		actionPerform();
-		verifyActionErrors(new String[] { "errors.select" });
-		verifyInputForward();
-	}
-
-	public void testSuccessfulEditPreview() {
-		FeesBO fee = TestObjectFactory.createOneTimeFees("One Time Fee", 100.0,
-				Short.valueOf("1"), 1);
+	
+	public void testSuccessfulEditPreview() throws Exception {
+		fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS,"100",FeePayment.UPFRONT);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,fee, request.getSession());
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "manage");
-		addRequestParameter("feeId", fee.getFeeId().toString());
 		actionPerform();
 
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "editPreview");
-		addRequestParameter("amount", "100.0");
-		addRequestParameter("feeStatus.statusId", FeeStatus.INACTIVE.getValue()
-				.toString());
+		addRequestParameter("amount", "200.0");
+		addRequestParameter("feeStatus", FeeStatus.INACTIVE.getValue().toString());
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.editpreview_success.toString());
 
-		HttpSession session = request.getSession();
-		fee = (FeesBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,
-				request.getSession());
-		assertFalse(fee.isActive());
-		assertEquals(new Money("100.0"), fee.getFeeAmount());
+		FeeActionForm actionForm = (FeeActionForm)request.getSession().getAttribute("feeactionform");
+		assertEquals(new Money("200"),actionForm.getAmountValue());
+		assertEquals(FeeStatus.INACTIVE,actionForm.getFeeStatusValue());
+		assertNull(actionForm.getRate());
+		assertNull(actionForm.getFeeFormula());
 	}
 
-	public void testSuccessfulUpdate() {
-		FeesBO fee = TestObjectFactory.createOneTimeFees("One Time Fee", 100.0,
-				Short.valueOf("1"), 1);
+	public void testSuccessfulUpdate_AmountFee() throws Exception {
+		fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS,"100",FeePayment.UPFRONT);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,fee, request.getSession());
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "manage");
-		addRequestParameter("feeId", fee.getFeeId().toString());
 		actionPerform();
 
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "editPreview");
-		addRequestParameter("amount", "100.0");
-		addRequestParameter("feeStatus.statusId", FeeStatus.INACTIVE.getValue()
-				.toString());
+		addRequestParameter("amount", "200.0");
+		addRequestParameter("feeStatus", FeeStatus.INACTIVE.getValue().toString());
 		actionPerform();
 
 		setRequestPathInfo("/feeaction.do");
@@ -473,11 +524,60 @@ public class TestFeeAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.update_success.toString());
-
-		fee = (FeesBO) TestObjectFactory
-				.getObject(FeesBO.class, fee.getFeeId());
+		
+		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
 		assertFalse(fee.isActive());
-		assertEquals(new Money("100.0"), fee.getFeeAmount());
+		assertEquals(new Money("200.0"), ((AmountFeeBO)fee).getFeeAmount());
 	}
+	
+	public void testSuccessfulUpdate_RateFee()  throws Exception{
+		fee = TestObjectFactory.createOneTimeRateFee("One Time Fee", FeeCategory.ALLCUSTOMERS,24.0, FeeFormula.AMOUNT, FeePayment.UPFRONT);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,fee, request.getSession());
+		setRequestPathInfo("/feeaction.do");
+		addRequestParameter("method", "manage");
+		actionPerform();
 
+		setRequestPathInfo("/feeaction.do");
+		addRequestParameter("method", "editPreview");
+		addRequestParameter("rate", "30");
+		actionPerform();
+
+		setRequestPathInfo("/feeaction.do");
+		addRequestParameter("method", "update");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.update_success.toString());
+		
+		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
+		assertTrue(fee.isActive());
+		assertEquals(30.0, ((RateFeeBO)fee).getRate());
+	}
+	
+	public void testSuccessfulViewAllFees() throws Exception{
+		fee = TestObjectFactory.createOneTimeRateFee("Group_Fee", FeeCategory.GROUP,10.0, FeeFormula.AMOUNT, FeePayment.UPFRONT);
+		fee1 = TestObjectFactory.createOneTimeRateFee("Customer_Fee", FeeCategory.ALLCUSTOMERS,20.0, FeeFormula.AMOUNT, FeePayment.UPFRONT);
+		fee2 = TestObjectFactory.createOneTimeRateFee("Loan_Fee1", FeeCategory.LOAN,30.0, FeeFormula.AMOUNT, FeePayment.UPFRONT);
+		fee3 = TestObjectFactory.createOneTimeRateFee("Center_Fee", FeeCategory.CENTER,40.0, FeeFormula.AMOUNT, FeePayment.UPFRONT);
+		HibernateUtil.closeSession();
+		setRequestPathInfo("/feeaction.do");
+		addRequestParameter("method", "viewAll");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.viewAll_success.toString());
+		List<FeeBO> customerFees = (List<FeeBO>)SessionUtils.getAttribute(FeesConstants.CUSTOMER_FEES, request.getSession());
+		List<FeeBO> productFees = (List<FeeBO>)SessionUtils.getAttribute(FeesConstants.PRODUCT_FEES,  request.getSession());
+		assertEquals(3, customerFees.size());
+		assertEquals(1, productFees.size());
+		
+		assertEquals("Center_Fee",customerFees.get(0).getFeeName());
+		assertEquals("Customer_Fee",customerFees.get(1).getFeeName());
+		assertEquals("Group_Fee",customerFees.get(2).getFeeName());
+		
+		assertEquals("Loan_Fee1",productFees.get(0).getFeeName());
+		
+		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
+		fee1 = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee1.getFeeId());
+		fee2 = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee2.getFeeId());
+		fee3 = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee3.getFeeId());
+	}
 }

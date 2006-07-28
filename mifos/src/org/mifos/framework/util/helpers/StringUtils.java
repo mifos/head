@@ -72,6 +72,10 @@ public class StringUtils {
 		return isNullSafe(stringToBeChecked) && !isEmpty(stringToBeChecked);
 	}
 
+	public static boolean isNullOrEmpty(String stringToBeChecked) {
+		return !isNullSafe(stringToBeChecked) || isEmpty(stringToBeChecked);
+	}
+	
 	public static boolean isNullSafe(String stringToBeChecked) {
 		return stringToBeChecked != null;
 	}

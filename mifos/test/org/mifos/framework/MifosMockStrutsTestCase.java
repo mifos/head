@@ -38,6 +38,8 @@
 
 package org.mifos.framework;
 
+import org.apache.struts.Globals;
+import org.apache.struts.action.ActionErrors;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 
 import servletunit.struts.MockStrutsTestCase;
@@ -49,5 +51,15 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 		} catch (ClassNotFoundException e) {
 			throw new Error("Failed to start up", e);
 		}
+	}
+	
+	protected int getErrrorSize(String field){
+		ActionErrors errors = (ActionErrors)request.getAttribute(Globals.ERROR_KEY);
+		return errors.size(field);
+	}
+	
+	protected int getErrrorSize(){
+		ActionErrors errors = (ActionErrors)request.getAttribute(Globals.ERROR_KEY);
+		return (errors == null || errors.isEmpty()) ? 0 : errors.size();
 	}
 }

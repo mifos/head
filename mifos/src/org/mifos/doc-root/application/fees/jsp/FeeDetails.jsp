@@ -56,8 +56,8 @@ function fnOnAdmin(form){
 }
 
 function fnOnView(form){
-	form.method.value="search";
-	form.action="feesAction.do";
+	form.method.value="viewAll";
+	form.action="feeaction.do";
 	form.submit();
 }
 
@@ -69,15 +69,15 @@ function fnOnEditFeeInformation(form){
 </script>
 
 
-		<html-el:form action="/feesAction.do">
+		<html-el:form action="/feeaction.do">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 
 					<td class="bluetablehead05">
-						<span class="fontnormal8pt"> <html-el:link href="javascript:fnOnAdmin(FeesActionForm)">
+						<span class="fontnormal8pt"> <html-el:link href="javascript:fnOnAdmin(feeactionform)">
 								<mifos:mifoslabel name="Fees.admin" bundle="FeesUIResources">
 								</mifos:mifoslabel>
-							</html-el:link> / <html-el:link href="javascript:fnOnView(FeesActionForm)">
+							</html-el:link> / <html-el:link href="javascript:fnOnView(feeactionform)">
 								<mifos:mifoslabel name="Fees.viewfees" bundle="FeesUIResources">
 								</mifos:mifoslabel>
 							</html-el:link> / </span> <span class="fontnormal8ptbold"> <c:out value="${requestScope.fees.feeName}"></c:out> </span>
@@ -93,10 +93,10 @@ function fnOnEditFeeInformation(form){
 						<table width="96%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
 								<td width="67%" height="23" class="headingorange">
-									<c:out value="${requestScope.fees.feeName}"></c:out>
+									<c:out value="${sessionScope.BusinessKey.feeName}"></c:out>
 								</td>
 								<td width="33%" align="right">
-									<html-el:link href="javascript:fnOnEditFeeInformation(FeesActionForm)">
+									<html-el:link href="javascript:fnOnEditFeeInformation(feeactionform)">
 										<mifos:mifoslabel name="Fees.editfeeinformation" bundle="FeesUIResources">
 										</mifos:mifoslabel>
 									</html-el:link>
@@ -111,68 +111,53 @@ function fnOnEditFeeInformation(form){
 
 									<br>
 									<font class="fontnormalRedBold"> <html-el:errors bundle="FeesUIResources" /> </font> <span class="fontnormal"> <c:choose>
-											<c:when test="${fees.status==1}">
+											<c:when test="${sessionScope.BusinessKey.active == true}">
 												<img src="pages/framework/images/status_activegreen.gif" width="8" height="9">
 											</c:when>
 											<c:otherwise>
 												<img src="pages/framework/images/status_closedblack.gif" width="8" height="9">
 											</c:otherwise>
-										</c:choose> <c:forEach var="code" items="${requestScope.status.lookUpMaster}">
-											<c:if test="${code.id == fees.status}">
-												<c:out value="${code.lookUpValue}"></c:out>
-											</c:if>
-										</c:forEach> </span>
+										</c:choose>
+										<c:out value="${sessionScope.BusinessKey.feeStatus.name}"/>
+										 </span>
 									<br>
 									<br>
 
 									<mifos:mifoslabel name="Fees.feeappliesto" bundle="FeesUIResources"></mifos:mifoslabel>
-									<c:forEach var="code" items="${requestScope.catagory.lookUpMaster}">
-										<c:if test="${code.id == fees.categoryId}">
-											<c:out value="${code.lookUpValue}"></c:out>
-										</c:if>
-									</c:forEach>
+									<c:out value="${sessionScope.BusinessKey.categoryType.name}"/>
 									<br>
 									<c:choose>
-										<c:when test="${requestScope.fees.categoryId!=5}">
+										<c:when test="${sessionScope.BusinessKey.categoryType.id != FeeCategory.LOAN.value}">
 											<mifos:mifoslabel name="Fees.defaultFees" bundle="FeesUIResources"></mifos:mifoslabel>
-											<c:out value="${requestScope.Context.businessResults['defaultAdminFee']}"></c:out>
+											<c:choose>
+												<c:when test="${sessionScope.BusinessKey.customerDefaultFee}">
+													<mifos:mifoslabel name="Fees.DefaultFeeYes" />
+												</c:when>
+												<c:otherwise>
+													<mifos:mifoslabel name="Fees.DefaultFeeNo" />
+												</c:otherwise>
+											</c:choose>
 											<br>
 										</c:when>
 									</c:choose>
 									<mifos:mifoslabel name="Fees.frequency" bundle="FeesUIResources"></mifos:mifoslabel>
-									<c:choose>
-										<c:when test="${requestScope.fees.feeFrequency.feeFrequencyTypeId==1}">
-											<mifos:mifoslabel name="Fees.periodic" bundle="FeesUIResources"></mifos:mifoslabel>
-										</c:when>
-										<c:otherwise>
-											<mifos:mifoslabel name="Fees.oneTime" bundle="FeesUIResources"></mifos:mifoslabel>
-										</c:otherwise>
-									</c:choose>
+									<c:out value="${sessionScope.BusinessKey.feeFrequency.feeFrequencyType.name}"/>
 									<br>
-
+									<mifos:mifoslabel name="Fees.timeToCharge" bundle="FeesUIResources"></mifos:mifoslabel>
 									<c:choose>
-										<c:when test="${requestScope.fees.feeFrequency.feeFrequencyTypeId==2}">
-											<mifos:mifoslabel name="Fees.timeToCharge" bundle="FeesUIResources"></mifos:mifoslabel>
-											<c:forEach var="code" items="${requestScope.payment.lookUpMaster}">
-												<c:if test="${code.id == fees.feeFrequency.feePaymentId}">
-													<c:out value="${code.lookUpValue}"></c:out>
-												</c:if>
-											</c:forEach>
+										<c:when test="${sessionScope.BusinessKey.oneTime==true}">
+											<c:out value="${sessionScope.BusinessKey.feeFrequency.feePayment.name}"/>
 										</c:when>
 										<c:otherwise>
-
-											<mifos:mifoslabel name="Fees.timeToCharge" bundle="FeesUIResources"></mifos:mifoslabel>
-											<mifos:mifoslabel name="meeting.labelRecurEvery" bundle="MeetingResources" />
-											<c:out value="${requestScope.fees.feeFrequency.feeMeetingFrequency.meetingDetails.recurAfter}"></c:out>
-											<c:if test="${requestScope.fees.feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId==1}">
-												<mifos:mifoslabel name="meeting.labelWeeks" bundle="FeesUIResources" />
+											<mifos:mifoslabel name="Fees.labelRecurEvery" />
+											<c:out value="${sessionScope.BusinessKey.feeFrequency.feeMeetingFrequency.meetingDetails.recurAfter}"></c:out>
+											<c:if test="${sessionScope.BusinessKey.feeFrequency.feeMeetingFrequency.weekly==true}">
+												<mifos:mifoslabel name="Fees.labelWeeks" />
 											</c:if>
-											<c:if test="${requestScope.fees.feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId==2}">
-												<mifos:mifoslabel name="meeting.labelMonths" bundle="FeesUIResources" />
+											<c:if test="${sessionScope.BusinessKey.feeFrequency.feeMeetingFrequency.monthly==true}">
+												<mifos:mifoslabel name="Fees.labelMonths" />
 											</c:if>
-
-
-
+											
 										</c:otherwise>
 									</c:choose>
 									<br>
@@ -182,41 +167,31 @@ function fnOnEditFeeInformation(form){
 										</mifos:mifoslabel> </span>
 									<br>
 									<c:choose>
-										<c:when test="${requestScope.fees.categoryId==5 && requestScope.fees.rateFlatFalg==1}">
+										<c:when test="${sessionScope.BusinessKey.feeType.value==RateAmountFlag.RATE.value}">
 											<mifos:mifoslabel name="Fees.amountcalculatedas" bundle="FeesUIResources"></mifos:mifoslabel>
+											<c:out value ="${sessionScope.BusinessKey.rate}"/>
+											<mifos:mifoslabel name="Fees.ofa" bundle="FeesUIResources"></mifos:mifoslabel>
+											<c:out value="${sessionScope.BusinessKey.feeFormula.name}"/>
 										</c:when>
 										<c:otherwise>
 											<mifos:mifoslabel name="Fees.amount" bundle="FeesUIResources"></mifos:mifoslabel>
+											<c:out value ="${sessionScope.BusinessKey.feeAmount}"/>
 										</c:otherwise>
 									</c:choose>
-									<c:out value="${requestScope.fees.rateOrAmount}"></c:out>
-									<c:if test="${requestScope.fees.rateFlatFalg==1}">
-										<mifos:mifoslabel name="Fees.ofa" bundle="FeesUIResources"></mifos:mifoslabel>
-										<c:forEach var="code" items="${requestScope.formula.lookUpMaster}">
-											<c:if test="${code.id == fees.formulaId}">
-												<c:out value="${code.lookUpValue}"></c:out>
-											</c:if>
-										</c:forEach>
-									</c:if>
 									<br>
 									<br>
 									<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.accounting" bundle="FeesUIResources">
 										</mifos:mifoslabel> </span>
 									<br>
 									<mifos:mifoslabel name="Fees.GLCode" bundle="FeesUIResources"></mifos:mifoslabel>
-									<c:forEach var="glCodeList" items="${requestScope.glCodeList}">
-										<c:if test="${glCodeList.glcodeId == fees.glCodeEntity.glcodeId}">
-											<c:out value="${glCodeList.glcode}" />
-										</c:if>
-									</c:forEach>
+									
+									<c:out value ="${sessionScope.BusinessKey.glCode.glcode}"/>
 								</td>
 								<td height="23" align="right" valign="top" class="fontnormalbold">
 									<span class="fontnormal"> <br> <br> </span>
 								</td>
 							</tr>
 							<html-el:hidden property="method" value="cancel" />
-							<html-el:hidden property="input" />
-							<html-el:hidden property="feeId" value="${requestScope.fees.feeId}" />
 						</table>
 						<br>
 					</td>

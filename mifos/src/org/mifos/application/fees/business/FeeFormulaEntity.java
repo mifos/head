@@ -38,49 +38,19 @@
 
 package org.mifos.application.fees.business;
 
-import java.util.Set;
-
-import org.mifos.application.master.util.valueobjects.LookUpValueLocale;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.application.fees.util.helpers.FeeFormula;
+import org.mifos.application.master.business.MasterDataEntity;
 
 /**
  * @author ashishsm
  * 
  */
-public class FeeFormulaEntity extends PersistentObject {
+public class FeeFormulaEntity extends MasterDataEntity {
 
-	private Short feeFormulaId;
-
-	private Integer lookUpId;
-
-	private Set<LookUpValueLocale> lookUpValueLocale;
-
-	public FeeFormulaEntity() {
+	protected FeeFormulaEntity() {
 	}
-
-	public Short getFeeFormulaId() {
-		return feeFormulaId;
+	
+	public FeeFormulaEntity(FeeFormula feeFormula) {
+		super(feeFormula.getValue());
 	}
-
-	public void setFeeFormulaId(Short feeFormulaId) {
-
-		this.feeFormulaId = feeFormulaId;
-	}
-
-	public void setLookUpValueLocale(Set<LookUpValueLocale> lookUpValueLocale) {
-		this.lookUpValueLocale = lookUpValueLocale;
-	}
-
-	public Set<LookUpValueLocale> getLookUpValueLocale() {
-		return lookUpValueLocale;
-	}
-
-	public Integer getLookUpId() {
-		return lookUpId;
-	}
-
-	public void setLookUpId(Integer lookUpId) {
-		this.lookUpId = lookUpId;
-	}
-
 }

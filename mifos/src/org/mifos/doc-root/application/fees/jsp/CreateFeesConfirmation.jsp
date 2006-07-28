@@ -50,15 +50,13 @@ function meetingpopup(){	window.open("schedulemeetingpopup.htm",null,"height=400
 }
 
 function fnOnView(Id){
-	document.FeesActionForm.input.value="createFeesConformation";
-	document.FeesActionForm.feeIdTemp.value=Id;
-	document.FeesActionForm.method.value="get";
-	document.FeesActionForm.action="feesAction.do";
-	document.FeesActionForm.submit();
+	document.feeactionform.feeId.value=Id;
+	document.feeactionform.method.value="get";
+	document.feeactionform.action="feeaction.do";
+	document.feeactionform.submit();
 }
 
 function fnOnNewFee(form){
-	form.input.value="createFeesConformation";
 	form.method.value="load";
 	form.action="feeaction.do";
 	form.submit();
@@ -67,7 +65,7 @@ function fnOnNewFee(form){
 </script>
 
 
-<html-el:form action="/feesAction.do">
+<html-el:form action="/feeaction.do">
 
 
           <table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -95,7 +93,7 @@ function fnOnNewFee(form){
                     <br>
                     <br>
                     </span>
-					<html-el:link href="javascript:fnOnView(${sessionScope.BusinessKey.feeId})">
+					<html-el:link href="javascript:fnOnView(${sessionScope.feeactionform.feeId})">
 					<mifos:mifoslabel name="Fees.viewfeedetail" bundle="FeesUIResources"></mifos:mifoslabel>
 					</html-el:link>
                     
@@ -104,29 +102,22 @@ function fnOnNewFee(form){
                     <br>
                     <span>
                     <span class="fontnormal">
-                    <html-el:link href="javascript:fnOnNewFee(FeesActionForm)">
+                    <html-el:link href="javascript:fnOnNewFee(feeactionform)">
                     <mifos:mifoslabel name="Fees.definenewfee" bundle="FeesUIResources">
                     </mifos:mifoslabel>
                     </html-el:link>
                     </span>
                     </td>
                   </tr>
-				  <html-el:hidden property="input" />
+
                   <html-el:hidden property="method" value="get"/> 
-				  <html-el:hidden property="feeIdTemp" value=""/> 
+                  <html-el:hidden property="feeId" value=""/>
 				  
                   </table>
                   <br>
               </td>
             </tr>
           </table>
-          <br>
-        </td>
-      </tr>
-    </table>
-      <br></td>
-  </tr>
-</table>
 </html-el:form>
 </tiles:put>
 </tiles:insert>

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
+import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.dao.MasterDAO;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
@@ -17,6 +18,7 @@ import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 
@@ -99,5 +101,8 @@ public class MasterDataService extends BusinessService {
 	public List<PaymentTypeEntity> getSupportedPaymentModes(Short localeId, Short transactionTypeId)throws SystemException{
 		return masterPersistenceService.getSupportedPaymentModes(localeId, transactionTypeId);
 	}
-
+	
+	public List<MasterDataEntity> retrieveMasterEntities(Class entityName, Short localeId) throws PersistenceException {
+		return masterPersistenceService.retrieveMasterEntities(entityName, localeId);
+	}
 }

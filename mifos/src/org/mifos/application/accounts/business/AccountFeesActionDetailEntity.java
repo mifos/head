@@ -39,7 +39,7 @@
 package org.mifos.application.accounts.business;
 
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.application.fees.business.FeesBO;
+import org.mifos.application.fees.business.FeeBO;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.util.helpers.Money;
 
@@ -51,7 +51,7 @@ public class AccountFeesActionDetailEntity extends PersistentObject {
 
 	private Short installmentId;
 
-	private FeesBO fee;
+	private FeeBO fee;
 
 	private AccountFeesEntity accountFee;
 
@@ -83,11 +83,11 @@ public class AccountFeesActionDetailEntity extends PersistentObject {
 		this.accountFeesActionDetailId = accountFeesActionDetailId;
 	}
 
-	public FeesBO getFee() {
+	public FeeBO getFee() {
 		return fee;
 	}
 
-	public void setFee(FeesBO fee) {
+	public void setFee(FeeBO fee) {
 		this.fee = fee;
 	}
 

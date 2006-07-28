@@ -10,7 +10,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.service.PersistenceService;
-import org.mifos.framework.util.valueobjects.SearchResults;
 
 public class MasterPersistenceService extends PersistenceService {
 
@@ -26,7 +25,6 @@ public class MasterPersistenceService extends PersistenceService {
 	 * @throws ApplicationException
 	 */
 	public EntityMaster retrieveMasterData(String entityName,Short localeId) throws SystemException,ApplicationException{
-		SearchResults searchResults= null;
 		EntityMaster entityMaster = null;
 		entityMaster = serviceImpl.getLookUpEntity(entityName,localeId);
 		return entityMaster;
@@ -34,7 +32,6 @@ public class MasterPersistenceService extends PersistenceService {
 
 	public EntityMaster  retrieveMasterData(String entityName, Short localeId, String classPath, String column )
 			throws SystemException,ApplicationException{
-		SearchResults searchResults= null;
 		EntityMaster entityMaster = null;
 		entityMaster = serviceImpl.getLookUpEntity(entityName,localeId,classPath,column);
 		return entityMaster;
@@ -51,4 +48,8 @@ public class MasterPersistenceService extends PersistenceService {
 	public List<PaymentTypeEntity> getSupportedPaymentModes(Short localeId, Short trxnTypeId)throws PersistenceException{
 		return serviceImpl.getSupportedPaymentModes(localeId, trxnTypeId);
 	}	
+	
+	public List<MasterDataEntity> retrieveMasterEntities(Class entityName, Short localeId) throws PersistenceException {
+		return serviceImpl.retrieveMasterEntities(entityName, localeId);
+	}
 }

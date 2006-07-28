@@ -121,7 +121,7 @@
 							<tr>
 								<td width="100%" height="23" class="fontnormal">
 									<span class="fontnormalbold"> <c:choose>
-											<c:when test="${sessionScope.BusinessKey.rate != null}">
+											<c:when test="${sessionScope.BusinessKey.feeType.value==RateAmountFlag.RATE.value}">
 												<mifos:mifoslabel name="Fees.amountcalculatedas" />
 											</c:when>
 											<c:otherwise>
@@ -129,24 +129,20 @@
 											</c:otherwise>
 										</c:choose> </span>
 									<c:choose>
-										<c:when test="${sessionScope.BusinessKey.rate != null}">
-											<c:out value="${sessionScope.BusinessKey.rate}" />
+										<c:when test="${sessionScope.BusinessKey.feeType.value==RateAmountFlag.RATE.value}">
+											<c:out value="${sessionScope.feeactionform.rate}" />
 											<mifos:mifoslabel name="Fees.ofa" />
-											<c:forEach var="code" items="${sessionScope.FormulaList}">
-												<c:if test="${code.id == sessionScope.BusinessKey.feeFormula.feeFormulaId}">
-													<c:out value="${code.lookUpValue}"></c:out>
-												</c:if>
-											</c:forEach>
+											<c:out value="${sessionScope.BusinessKey.feeFormula.name}"/>
 										</c:when>
 										<c:otherwise>
-											<c:out value="${sessionScope.BusinessKey.feeAmount}" />
+											<c:out value="${sessionScope.feeactionform.amount}" />
 										</c:otherwise>
 									</c:choose>
 									<br>
 									<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.status" /> </span>
-									<c:forEach var="code" items="${sessionScope.StatusList}">
-										<c:if test="${code.id == sessionScope.BusinessKey.feeStatus.statusId}">
-											<c:out value="${code.lookUpValue}" />
+									<c:forEach var="entity" items="${sessionScope.StatusList}">
+										<c:if test="${entity.id == sessionScope.feeactionform.feeStatus}">
+											<c:out value="${entity.name}" />
 										</c:if>
 									</c:forEach>
 									<br>

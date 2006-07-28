@@ -26,7 +26,7 @@
 		 <column name="ACCOUNT_FEE_AMNT" />
 		</property>
  		<many-to-one name="account" column="ACCOUNT_ID" class="org.mifos.application.accounts.util.valueobjects.Account"  not-null="true" lazy="false" />
-        <many-to-one name="fees" column="FEE_ID" class="org.mifos.application.fees.util.valueobjects.Fees"  not-null="true" unique="true" lazy="true"/>
+        <many-to-one name="fees" column="FEE_ID" class="org.mifos.application.fees.util.valueobjects.Fees"  not-null="true" unique="true" lazy="true" fetch="join"/>
         
     </class>
     <!-- required for client upcoming fees charges added by mohammedn-->

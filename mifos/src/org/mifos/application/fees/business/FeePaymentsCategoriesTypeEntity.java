@@ -39,7 +39,6 @@
 package org.mifos.application.fees.business;
 
 import org.mifos.framework.business.PersistentObject;
-import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * @author ashishsm

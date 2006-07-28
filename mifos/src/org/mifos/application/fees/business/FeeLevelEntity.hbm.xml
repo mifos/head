@@ -4,12 +4,12 @@
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
 	<class name="org.mifos.application.fees.business.FeeLevelEntity" table="FEELEVEL">
-		<id name="feeLevelId" column="FEELEVEL_ID" type="short">
+		<id name="feeLevelId" column="FEELEVEL_ID" type="short" access="field">
 			<generator class="native" />
 		</id>
 
 		<property name="levelId" column="LEVEL_ID" />
 
-		<many-to-one name="fee" column="FEE_ID" class="org.mifos.application.fees.business.FeesBO" cascade="all" insert="true" />
+		<many-to-one name="fee" column="FEE_ID" class="org.mifos.application.fees.business.FeeBO" cascade="all" insert="true" access="field" />
 	</class>
 </hibernate-mapping>

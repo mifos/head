@@ -14,8 +14,11 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.fees.business.FeesBO;
+import org.mifos.application.fees.business.AmountFeeBO;
+import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.util.helpers.Money;
@@ -178,12 +181,13 @@ public class TestAccountActionDateEntity extends TestAccount {
 	}
 	
 	public void testApplyPeriodicFees(){	
-		FeesBO periodicFees = TestObjectFactory.createPeriodicFees("Periodic Fee", 100.0, 1,1, 5);
+		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN,"100", MeetingFrequency.WEEKLY, Short.valueOf("1"));
+		
 		AccountFeesEntity accountFeesEntity = new AccountFeesEntity();
 		accountFeesEntity.setAccount(group.getCustomerAccount());
-		accountFeesEntity.setAccountFeeAmount(periodicFees.getFeeAmount());
-		accountFeesEntity.setFeeAmount(periodicFees.getFeeAmount());
-		accountFeesEntity.setFees(periodicFees);
+		accountFeesEntity.setAccountFeeAmount(((AmountFeeBO)periodicFee).getFeeAmount());
+		accountFeesEntity.setFeeAmount(((AmountFeeBO)periodicFee).getFeeAmount());
+		accountFeesEntity.setFees(periodicFee);
 		accountFeesEntity.setLastAppliedDate(new Date(System.currentTimeMillis()));
 		group.getCustomerAccount().addAccountFees(accountFeesEntity);
 		TestObjectFactory.updateObject(group);

@@ -37,6 +37,9 @@
  */
 package org.mifos.application.fees.util.helpers;
 
+import org.mifos.framework.exceptions.PropertyNotFoundException;
+
+
 public enum FeePayment {
 	UPFRONT((short) 1), TIME_OF_DISBURSMENT((short) 2), TIME_OF_FIRSTLOANREPAYMENT(
 			(short) 3);
@@ -49,5 +52,12 @@ public enum FeePayment {
 
 	public Short getValue() {
 		return value;
+	}
+	
+	public static FeePayment getFeePayment(Short value)throws PropertyNotFoundException{
+		for (FeePayment feePayment : FeePayment.values()) 
+			if (feePayment.getValue().equals(value))
+				return feePayment;
+		throw new PropertyNotFoundException("FeePayment");
 	}
 }

@@ -498,7 +498,7 @@ public class ActivityMapper {
 		activityMap.put("/feeaction-update", SecurityConstants.FEES_EDIT_FEES);
 		activityMap.put("/feeaction-previous", SecurityConstants.VIEW);
 		activityMap.put("/feeaction-editPrevious", SecurityConstants.VIEW);
-
+		activityMap.put("/feeaction-viewAll", SecurityConstants.VIEW);
 		// checklist mapping
 
 		activityMap.put("/checkListAction-loadall", SecurityConstants.VIEW);

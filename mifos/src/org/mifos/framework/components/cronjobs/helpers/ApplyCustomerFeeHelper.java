@@ -19,7 +19,7 @@ public class ApplyCustomerFeeHelper extends TaskHelper {
 			AccountPersistanceService accountPersistanceService = (AccountPersistanceService) ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.Account);
 			List<Integer> accountIds = accountPersistanceService.getAccountsWithTodaysInstallment();
 			for(Integer accountId : accountIds){
-				try{					
+				try{			
 					Session session = HibernateUtil.getSessionTL();
 					CustomerAccountBO customerAccountBO = (CustomerAccountBO) session.get(CustomerAccountBO.class,accountId);
 					Date date = DateUtils.getDateWithoutTimeStamp(timeInMills);
@@ -27,6 +27,7 @@ public class ApplyCustomerFeeHelper extends TaskHelper {
 					HibernateUtil.commitTransaction();
 				}			
 				catch(Exception e){
+					e.printStackTrace();
 					HibernateUtil.rollbackTransaction();
 				}finally{
 					HibernateUtil.closeSession();

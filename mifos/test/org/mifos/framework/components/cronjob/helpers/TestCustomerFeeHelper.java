@@ -6,23 +6,17 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.mifos.framework.MifosTestCase;
-
 import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
-import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
-import org.mifos.application.fees.business.FeesBO;
+import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.cronjobs.helpers.ApplyCustomerFeeHelper;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.hibernate.HibernateStartUp;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.authorization.AuthorizationManager;
-import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -35,11 +29,11 @@ public class TestCustomerFeeHelper extends MifosTestCase{
 	}
 
 	public void tearDown() {		
-		TestObjectFactory.cleanUp(center);		
+		TestObjectFactory.cleanUp(center);
 		HibernateUtil.closeSession();
 
 	}
-	public void testExecute() throws Exception{		
+	public void testExecute() throws Exception{
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("center1_Active_test", Short.valueOf("13"), "1.4", meeting, new Date(System.currentTimeMillis()));
 		Set<AccountFeesEntity> accountFeeSet = center.getCustomerAccount().getAccountFees();
@@ -47,8 +41,7 @@ public class TestCustomerFeeHelper extends MifosTestCase{
 		accountPeriodicFee.setAccount(center.getCustomerAccount());
 		accountPeriodicFee.setAccountFeeAmount(new Money("100.0"));
 		accountPeriodicFee.setFeeAmount(new Money("100.0"));
-		FeesBO trainingFee = TestObjectFactory.createPeriodicFees("Training_Fee", 100.0, 1,
-				2, 5);
+		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee("Training_Fee", FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY,Short.valueOf("2"));
 		accountPeriodicFee.setFees(trainingFee);
 		accountFeeSet.add(accountPeriodicFee);
 		Date currentDate=DateUtils.getCurrentDateWithoutTimeStamp();
@@ -76,6 +69,5 @@ public class TestCustomerFeeHelper extends MifosTestCase{
 				assertEquals(currentDate,DateUtils.getDateWithoutTimeStamp(periodicFees.getLastAppliedDate().getTime()));
 		}
 		
-	}
-
+		}
 }

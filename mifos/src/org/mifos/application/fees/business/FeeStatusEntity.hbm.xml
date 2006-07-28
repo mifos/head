@@ -5,23 +5,11 @@
 
 
 <hibernate-mapping>
-
     <class name="org.mifos.application.fees.business.FeeStatusEntity" table="FEE_STATUS">
-        <id name="statusId" column="STATUS_ID" type="short">
+        <id name="id" column="STATUS_ID" type="short">
             <generator class="native"/>
         </id>
-	
-        		<property name="lookUpId" column="STATUS_LOOKUP_ID"  />
-			
-	
-		        <set name="lookUpValueLocale" >
-			          <key column ="LOOKUP_ID"
-			           property-ref="lookUpId"/>
-			          
-			          <one-to-many  class="org.mifos.application.master.util.valueobjects.LookUpValueLocale" />
-	        	</set>
-		
-    </class>
-
-         
+		<many-to-one name="lookUpValue" column="STATUS_LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" 
+    		cascade="none" update="false" unique="true"/>
+  	</class>         
 </hibernate-mapping>

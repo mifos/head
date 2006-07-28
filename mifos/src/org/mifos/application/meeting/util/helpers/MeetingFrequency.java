@@ -37,6 +37,8 @@
  */
 package org.mifos.application.meeting.util.helpers;
 
+import org.mifos.framework.exceptions.PropertyNotFoundException;
+
 public enum MeetingFrequency {
 	WEEKLY((short) 1), MONTHLY((short) 2), DAILY((short) 3);
 
@@ -48,5 +50,12 @@ public enum MeetingFrequency {
 
 	public Short getValue() {
 		return value;
+	}
+	
+	public static MeetingFrequency getMeetingFrequency(Short value)throws PropertyNotFoundException{
+		for (MeetingFrequency frequency : MeetingFrequency.values()) 
+			if (frequency.getValue().equals(value))
+				return frequency;
+		throw new PropertyNotFoundException("MeetingFrequency");
 	}
 }

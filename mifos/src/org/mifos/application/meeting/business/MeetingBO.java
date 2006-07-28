@@ -39,6 +39,8 @@ package org.mifos.application.meeting.business;
 
 import java.util.Calendar;
 
+import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
@@ -73,6 +75,12 @@ public class MeetingBO extends BusinessObject {
 		meetingType = new MeetingTypeEntity();
 	}
 
+	public MeetingBO(MeetingFrequency meetingRecurrence, Short recurAfter, MeetingType meetingType){
+		RecurrenceTypeEntity recurrenceType = new RecurrenceTypeEntity(meetingRecurrence);
+		this.meetingDetails =  new MeetingDetailsEntity(recurrenceType, recurAfter, this);
+		this.meetingType = new MeetingTypeEntity(meetingType);
+	}
+	
 	public MeetingDetailsEntity getMeetingDetails() {
 		return meetingDetails;
 	}
@@ -316,4 +324,13 @@ public class MeetingBO extends BusinessObject {
 	public Short getEntityID() {
 		return EntityMasterConstants.Meeting;
 	}
+	
+	public boolean isWeekly(){
+		return getMeetingDetails().isWeekly();
+	}
+
+	public boolean isMonthly(){
+		return getMeetingDetails().isMonthly();
+	}
+
 }

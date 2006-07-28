@@ -38,50 +38,28 @@
 
 package org.mifos.application.fees.business;
 
-import java.util.Set;
-
 import org.mifos.application.fees.util.helpers.FeePayment;
-import org.mifos.application.master.util.valueobjects.LookUpValueLocale;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.application.master.business.MasterDataEntity;
 
-public class FeePaymentEntity extends PersistentObject {
+public class FeePaymentEntity extends MasterDataEntity {
 
-	private Short feePaymentId;
-
-	private Integer lookUpId;
-
-	private Set<LookUpValueLocale> lookUpValueLocale;
-
-	public FeePaymentEntity() {
+	protected FeePaymentEntity() {
 	}
 
-	public Short getFeePaymentId() {
-		return feePaymentId;
+	public FeePaymentEntity(FeePayment feePayment){
+		super(feePayment.getValue());
 	}
-
-	public void setFeePaymentId(Short feePaymentId) {
-		this.feePaymentId = feePaymentId;
-	}
-
-	public void setLookUpValueLocale(Set<LookUpValueLocale> lookUpValueLocale) {
-		this.lookUpValueLocale = lookUpValueLocale;
-	}
-
-	public Set<LookUpValueLocale> getLookUpValueLocale() {
-		return lookUpValueLocale;
-	}
-
-	public Integer getLookUpId() {
-		return lookUpId;
-	}
-
-	public void setLookUpId(Integer lookUpId) {
-		this.lookUpId = lookUpId;
-	}
-
+	
 	public boolean isTimeOfDisbursement() {
-		return getFeePaymentId().equals(
-				FeePayment.TIME_OF_DISBURSMENT.getValue());
+		return getId().equals(FeePayment.TIME_OF_DISBURSMENT.getValue());
 	}
-
+	
+	public FeePayment getFeePayment() {
+		FeePayment[] feePayments = FeePayment.values();
+		for (FeePayment feePayment : feePayments) {
+			if (String.valueOf(getId()).equals(feePayment.getValue()))
+				return feePayment;
+		}
+		return null;
+	}
 }

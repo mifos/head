@@ -58,12 +58,17 @@ public class MeetingDetailsEntity extends PersistentObject {
 	private MeetingBO meeting;
 
 	public MeetingDetailsEntity() {
-
 		meetingRecurrence = new MeetingRecurrenceEntity();
 		recurrenceType = new RecurrenceTypeEntity();
-
 	}
-
+	
+	public MeetingDetailsEntity(RecurrenceTypeEntity recurrenceType, Short recurAfter, MeetingBO meeting) {
+		this.recurrenceType = recurrenceType;
+		this.recurAfter = recurAfter;
+		this.meeting = meeting;
+		this.meetingRecurrence = new MeetingRecurrenceEntity(this);
+	}
+	
 	public MeetingBO getMeeting() {
 		return meeting;
 	}
@@ -108,4 +113,11 @@ public class MeetingDetailsEntity extends PersistentObject {
 		this.recurrenceType = recurrenceType;
 	}
 
+	public boolean isWeekly(){
+		return getRecurrenceType().isWeekly();
+	}
+
+	public boolean isMonthly(){
+		return getRecurrenceType().isMonthly();
+	}
 }

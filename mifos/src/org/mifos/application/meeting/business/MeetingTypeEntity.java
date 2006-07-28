@@ -37,6 +37,7 @@
  */
 package org.mifos.application.meeting.business;
 
+import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.framework.business.PersistentObject;
 
 /**
@@ -55,6 +56,10 @@ public class MeetingTypeEntity extends PersistentObject {
 
 	public MeetingTypeEntity() {
 
+	}
+
+	public MeetingTypeEntity(MeetingType meetingType) {
+		this.meetingTypeId = meetingType.getValue();
 	}
 
 	public String getDescription() {

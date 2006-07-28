@@ -3,32 +3,23 @@ package org.mifos.application.accounts.business;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.Set;
 
-import org.mifos.application.accounts.TestAccount;
-import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.fees.business.FeesBO;
+import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
 import org.mifos.framework.components.scheduler.SchedulerException;
-import org.mifos.framework.hibernate.HibernateStartUp;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.authorization.AuthorizationManager;
-import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import org.mifos.framework.MifosTestCase;
 
 public class TestAccountFeesEntity extends MifosTestCase {
 	protected AccountBO accountBO=null;
@@ -46,7 +37,6 @@ public class TestAccountFeesEntity extends MifosTestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		
 		TestObjectFactory.cleanUp(accountBO);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
@@ -86,8 +76,7 @@ public class TestAccountFeesEntity extends MifosTestCase {
 		accountPeriodicFee.setAccount(center.getCustomerAccount());
 		accountPeriodicFee.setAccountFeeAmount(new Money("100.0"));
 		accountPeriodicFee.setFeeAmount(new Money("100.0"));
-		FeesBO trainingFee = TestObjectFactory.createPeriodicFees("Training_Fee", 100.0, 1,
-				2, 5);
+		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee("Training_Fee", FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY, Short.valueOf("2"));
 		accountPeriodicFee.setFees(trainingFee);
 		center.getCustomerAccount().getAccountFees().add(accountPeriodicFee);
         Date currentDate=DateUtils.getCurrentDateWithoutTimeStamp();

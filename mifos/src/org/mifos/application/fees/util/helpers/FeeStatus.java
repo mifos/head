@@ -37,6 +37,7 @@
  */
 package org.mifos.application.fees.util.helpers;
 
+
 public enum FeeStatus {
 	ACTIVE((short) 1), INACTIVE((short) 2);
 
@@ -48,5 +49,12 @@ public enum FeeStatus {
 
 	public Short getValue() {
 		return value;
+	}
+	
+	public static FeeStatus getFeeStatus(Short value){
+		for(FeeStatus status : FeeStatus.values())
+			if(status.getValue().equals(value))
+				return status;
+		return null;
 	}
 }

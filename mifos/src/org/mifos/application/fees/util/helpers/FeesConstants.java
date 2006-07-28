@@ -58,66 +58,7 @@ public interface FeesConstants {
 	//Default Admin
 	public static final String YES="Yes";
 	public static final String NO="No";
-	public static final String ADMINCHECK="1";
-	
-	
-	
-	/*	
-	//PaymentId 
-	public static final Short UPFRONT=1;
-	public static final Short TIME_OF_DISBURSMENT=2;
-	public static final Short TIME_OF_FIRSTLOANREPAYMENT=3;
 
-	//Meeting Type
-	public static final Short WEEKLY=1;
-	public static final Short MONTHLY=2;
-	
-	//Fee frequency
-	public static final Short PERIODIC=1;
-	public static final Short ONETIME=2;
-	
-	//Fees CategoryTypes
-	public static final String ALLCUSTOMERS="1";
-	public static final String CLIENT="2";
-	public static final String GROUP="3";
-	public static final String CENTER="4";
-	public static final String LOAN="5";
-	
-	//Status  
-	public static  final Short STATUS_ACTIVE=1;
-	public static  final Short STATUS_INACTIVE=2;
-	
-	//Admin level for different categories
-	public static final Short LEVEL_ID_CLIENT=1;
-	public static final Short LEVEL_ID_GRUOP=2;
-	public static final Short LEVEL_ID_CENTER=3;
-	
-	//methods
-	public static final String METHOD="method";
-	public static final String PREVIEW_METHOD="preview";
-	public static final String EDITPREVIEW_METHOD="editPreview";
-	
-	//M2 style conversion
-	public static final String LOADSUCCESS="load_success";
-	public static final String PREVIEWSUCCESS="preview_success";
-	public static final String PREVIEWFAILURE="preview_failure";
-	public static final String EDITPREVIEWFAILURE="editpreview_failure";
-	public static final String PREVIOUSSUCCESS="previous_success";
-	public static final String CREATESUCCESS="create_success";
-	public static final String MANAGESUCCESS="manage_success";
-	public static final String EDITPREVIEWSUCCESS="editpreview_success";
-	public static final String EDITPREVIOUSSUCCESS="editprevious_success";
-	public static final String UPDATESUCCESS="update_success";
-	
-	//	public static final String FEES_INACTIVE="2";
-	 
-	//public static final Short FEEMEETING=5; 
-	  
-	 //Used in RateFlatFlag
-	public static final String AMOUNT="0";
-	public static final String RATE="1"; 
-	
-*/
 	//Constansts used in Action Forwards
 	public static final String VIEWFEES="viewFees";
 	public static final String CREATEFEES="createFees";
@@ -135,12 +76,40 @@ public interface FeesConstants {
 
 	public static final String GLCODE_LIST="glCodeList";
 	public static final String PAYMENTID="paymentId";
-	public static final String LOANTIMEOFCHARGES="LoanTimeOfCharges";
+	public static final String TIMEOFCHARGES="TimeOfCharges";
 	public static final String CUSTOMERTIMEOFCHARGES="CustomerTimeOfCharges";
 	public static final String CATEGORYLIST="CategoryList";
 	public static final String FORMULALIST="FormulaList";
 	public static final String STATUSLIST="StatusList";
+	public static final String FEE_FREQUENCY_TYPE_LIST = "feeFrequencyTypeList";
+	
+	public static final String PRODUCT_FEES="productFees";
+	public static final String CUSTOMER_FEES="customerFees";
 	
 	public static final String INACTIVE="FEES_INACTIVE";
+	
+	public static final String RATE_AND_FORMULA = "RateAndFormula";
+	public static final String RATE_OR_AMOUNT = "RateOrAmount";
+	public static final String AMOUNT = "amount";
+	
+	//error messages for BO
+	public static final String INVALID_FEE_NAME = "errors.Fee.invalidName";
+	public static final String INVALID_FEE_CATEGORY = "errors.Fee.invalidCategory";
+	public static final String INVALID_GLCODE = "errors.Fee.invalidGLCode";
+	public static final String INVALID_FEE_FREQUENCY_TYPE = "errors.Fee.invalidFrequencyType";
+	public static final String INVALID_FEE_PAYEMENT_TYPE = "errors.Fee.invalidPaymentType";
+	public static final String INVALID_FEE_FREQUENCY = "errors.Fee.invalidFrequency";
+	public static final String INVALID_FEE_RATE_OR_FORMULA = "errors.Fee.invalidRateOrFormula";
+	public static final String INVALID_FEE_AMOUNT = "errors.Fee.invalidAmount";
+	public static final String FEE_CREATE_ERROR = "errors.Fee.create";
+	public static final String FEE_UPDATE_ERROR = "errors.Fee.update";
+	public static final String INVALID_FEE = "errors.Fee.invalid";
 
+	
+	
+	//error messages for UI
+	public static final String ERRORS_SPECIFY_VALUE = "errors.enter";
+	public static final String ERRORS_SPECIFY_AMOUNT_OR_RATE = "errors.amountOrRate";
+	public static final String ERRORS_SPECIFY_RATE_AND_FORMULA = "errors.rateAndFormulaId";
+	public static final String ERRORS_SELECT_STATUS = "errors.select";
 }

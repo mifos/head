@@ -1633,10 +1633,10 @@
 					<var-value>50</var-value>
 				</var>
 			</field>
-			<field property="categoryType.categoryId" depends="required">
+			<field property="categoryType" depends="required">
 				<msg name="required" key="errors.mandatory_feescategory"  bundle="FeesUIResources"/>				
 			</field>
-			<field property="feeFrequency.feeFrequencyType.feeFrequencyTypeId" depends="required">
+			<field property="feeFrequencyType" depends="required">
 				<msg name="required" key="errors.mandatory_selectbox"  bundle="FeesUIResources"/>
 				<arg key="Fees.mandatory_frequency"/>				
 			</field>
@@ -1646,17 +1646,17 @@
 					bundle="FeesUIResources" />
 					<var>
 					<var-name>test</var-name>
-					<var-value>(((*this*!=null) or (customerCharge!=null)) or (feeFrequency.feeFrequencyType.feeFrequencyTypeId!=2))</var-value>
+					<var-value>(((*this*!=null) or (customerCharge!=null)) or (feeFrequencyType!="2"))</var-value>
 				</var>
 			</field>
-			<field property="feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId" depends="validwhen">
+			<field property="feeRecurrenceType" depends="validwhen">
 				<msg name="validwhen"
 					key="error.periodicandfrequency"
 					bundle="FeesUIResources" />
 					<var>
 					<var-name>test</var-name>
 					<var-value>
-					((*this*!=null) or (feeFrequency.feeFrequencyType.feeFrequencyTypeId!=1))
+					((*this*!=null) or (feeFrequencyType!="1"))
 					</var-value>
 				</var>
 			</field>
@@ -1668,7 +1668,7 @@
 					<var>
 					<var-name>test</var-name>
 					<var-value>
-						(((feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId != 1) or (*this* != null)) or (feeFrequency.feeFrequencyType.feeFrequencyTypeId!=1))
+						(((feeRecurrenceType != "1") or (*this* != null)) or (feeFrequencyType != "1"))
 					</var-value>
 				</var>
 			</field>
@@ -1679,7 +1679,7 @@
 					<var>
 					<var-name>test</var-name>
 					<var-value>
-						(((feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId != 2) or (*this* != null)) or (feeFrequency.feeFrequencyType.feeFrequencyTypeId!=1))
+						(((feeRecurrenceType != "2") or (*this* != null)) or (feeFrequencyType!="1"))
 					</var-value>
 				</var>
 			</field>
@@ -1707,7 +1707,7 @@
 			</field>
 			
 			
-			<field property="glCodeEntity.glcodeId" depends="required">
+			<field property="glCode" depends="required">
 				<msg name="required" key="errors.mandatory_selectbox"  bundle="FeesUIResources"/>
 				<arg key="Fees.mandatory_glCode"/>
 			</field>

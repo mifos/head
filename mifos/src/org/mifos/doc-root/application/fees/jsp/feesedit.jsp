@@ -116,7 +116,7 @@
 							<tr class="fontnormal">
 								<td width="27%" align="right">
 									<c:choose>
-										<c:when test="${sessionScope.BusinessKey.rate != null}">
+										<c:when test="${sessionScope.BusinessKey.feeType.value==RateAmountFlag.RATE.value}">
 											<mifos:mifoslabel name="Fees.calculatefeeas" mandatory="yes" />
 										</c:when>
 										<c:otherwise>
@@ -129,17 +129,13 @@
 
 								<td width="73%" valign="top">
 									<c:choose>
-										<c:when test="${sessionScope.BusinessKey.rate != null}">
-											<mifos:mifosdecimalinput name="${Constants.BUSINESS_KEY}" property="rate" size="3" decimalFmt="10.5" value="${sessionScope.BusinessKey.rate}" />
+										<c:when test="${sessionScope.BusinessKey.feeType.value==RateAmountFlag.RATE.value}">
+											<mifos:mifosdecimalinput property="rate" size="3" decimalFmt="10.5" />
 											<mifos:mifoslabel name="Fees.percentof" />
-											<c:forEach var="code" items="${sessionScope.FormulaList}">
-												<c:if test="${code.id == sessionScope.BusinessKey.feeFormula.feeFormulaId}">
-													<c:out value="${code.lookUpValue}"></c:out>
-												</c:if>
-											</c:forEach>
+											<c:out value="${sessionScope.BusinessKey.feeFormula.name}"/>
 										</c:when>
 										<c:otherwise>
-											<mifos:mifosdecimalinput name="${Constants.BUSINESS_KEY}" property="amount" value="${sessionScope.BusinessKey.feeAmount}" />
+											<mifos:mifosdecimalinput property="amount" />
 										</c:otherwise>
 									</c:choose>
 								</td>
@@ -150,8 +146,8 @@
 
 								</td>
 								<td valign="top">
-									<mifos:select name="${Constants.BUSINESS_KEY}" property="feeStatus.statusId" style="width:136px;">
-										<html-el:options property="id" labelProperty="lookUpValue" collection="StatusList" />
+									<mifos:select property="feeStatus"  style="width:136px;">
+										<html-el:options property="id" labelProperty="name" collection="StatusList" />
 									</mifos:select>
 								</td>
 							</tr>

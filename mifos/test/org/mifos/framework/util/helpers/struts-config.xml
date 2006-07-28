@@ -1343,6 +1343,7 @@
 				path="/pages/application/fees/jsp/feesedit.jsp" />
 			<forward name="update_success"
 				path="/feesAction.do?method=get" />
+			<forward name="viewAll_success" path="/pages/application/fees/jsp/ViewEditFees.jsp" />
 		</action>
 		<!-- closed acc search action -->
 		<action path="/closedaccsearchaction"

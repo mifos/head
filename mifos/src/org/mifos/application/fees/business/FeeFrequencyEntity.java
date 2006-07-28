@@ -39,93 +39,72 @@
 package org.mifos.application.fees.business;
 
 import org.mifos.application.fees.exceptions.FeeException;
+import org.mifos.application.fees.util.helpers.FeesConstants;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.framework.business.PersistentObject;
 
 public class FeeFrequencyEntity extends PersistentObject {
 
-	private Short feeFrequencyId;
+	private final Short feeFrequencyId;
 
-	private FeeFrequencyTypeEntity feeFrequencyType;
+	private final FeeFrequencyTypeEntity feeFrequencyType;
 
-	private FeePaymentEntity feePayment;
+	private final FeePaymentEntity feePayment;
 
-	private FeesBO fee;
+	private final FeeBO fee;
 
-	private MeetingBO feeMeetingFrequency;
+	private final MeetingBO feeMeetingFrequency;
 
-	public FeeFrequencyEntity() {
-		feeFrequencyType = new FeeFrequencyTypeEntity();
-		feePayment = new FeePaymentEntity();
-		feeMeetingFrequency = new MeetingBO();
+	protected FeeFrequencyEntity() {
+		this.feeFrequencyId = null;
+		this.feeFrequencyType = null;
+		this.feePayment = null;
+		this.fee = null;
+		this.feeMeetingFrequency = null;
 	}
 
-	private void setFeeFrequencyId(Short feeFrequencyId) {
-		this.feeFrequencyId = feeFrequencyId;
-	}
-
-	private Short getFeeFrequencyId() {
-		return feeFrequencyId;
-	}
-
-	public void setFee(FeesBO fee) {
+	protected FeeFrequencyEntity(FeeFrequencyTypeEntity feeFrequencyType, FeeBO fee, FeePaymentEntity feePayment, MeetingBO feeFrequency) throws FeeException{
+		validateFields(feeFrequencyType, fee, feePayment, feeFrequency);
+		this.feeFrequencyId = null;
+		this.feeFrequencyType = feeFrequencyType;
 		this.fee = fee;
-	}
-
-	private FeesBO getFee() {
-		return fee;
-	}
-
-	public void setFeeMeetingFrequency(MeetingBO feeMeetingFrequency) {
-		this.feeMeetingFrequency = feeMeetingFrequency;
-	}
-
-	public MeetingBO getFeeMeetingFrequency() {
-		return feeMeetingFrequency;
+		this.feePayment = feePayment;
+		this.feeMeetingFrequency = feeFrequency;
 	}
 
 	public FeeFrequencyTypeEntity getFeeFrequencyType() {
 		return feeFrequencyType;
 	}
 
-	public void setFeeFrequencyType(FeeFrequencyTypeEntity feeFrequencyType) {
-		this.feeFrequencyType = feeFrequencyType;
+	public MeetingBO getFeeMeetingFrequency() {
+		return feeMeetingFrequency;
 	}
 
 	public FeePaymentEntity getFeePayment() {
 		return feePayment;
 	}
-
-	public void setFeePayment(FeePaymentEntity feePayment) {
-		this.feePayment = feePayment;
-	}
-
-	public void buildFeeFrequency() throws FeeException {
-		if (getFeeFrequencyType().getFeeFrequencyTypeId() == null)
-			throw new FeeException("errors.invalidfreqtype");
-		if (isPeriodic()) {
-			setFeePayment(null);
-			feeMeetingFrequency.getMeetingType().setMeetingTypeId(
-					MeetingType.FEEMEETING.getValue());
-			feeMeetingFrequency.setMeetingPlace("");
-		} else {
-			setFeeMeetingFrequency(null);
-		}
-	}
-
+	
 	public boolean isPeriodic() {
 		return getFeeFrequencyType().isPeriodic();
-
 	}
 
 	public boolean isOneTime() {
 		return getFeeFrequencyType().isOneTime();
-
 	}
 
 	public boolean isTimeOfDisbursement() {
 		return isOneTime() && getFeePayment().isTimeOfDisbursement();
 	}
-
+	
+	private void validateFields(FeeFrequencyTypeEntity frequencyType, FeeBO fee, FeePaymentEntity feePayment,
+			MeetingBO feeFrequency)throws FeeException{
+		if(fee==null)
+			throw new FeeException(FeesConstants.INVALID_FEE);
+		if(frequencyType==null)
+			throw new FeeException(FeesConstants.INVALID_FEE_FREQUENCY_TYPE);
+		if(frequencyType.isOneTime() && feePayment==null)
+			throw new FeeException(FeesConstants.INVALID_FEE_PAYEMENT_TYPE);
+		if(frequencyType.isPeriodic() && feeFrequency==null)
+			throw new FeeException(FeesConstants.INVALID_FEE_FREQUENCY);
+	}
 }

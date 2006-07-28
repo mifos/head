@@ -37,20 +37,25 @@
  */
 package org.mifos.application.fees.business.service;
 
-import org.mifos.application.fees.business.FeesBO;
+import java.util.List;
+
+import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.exceptions.FeeException;
 import org.mifos.application.fees.persistence.service.FeePersistenceService;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 
-public class FeesBusinessService extends BusinessService {
+public class FeeBusinessService extends BusinessService {
 
 	private FeePersistenceService feePersistenceService;
 
-	public FeesBusinessService() throws ServiceException {
+	public FeeBusinessService() throws ServiceException {
 		feePersistenceService = (FeePersistenceService) ServiceFactory
 				.getInstance().getPersistenceService(
 						PersistenceServiceName.Fees);
@@ -58,10 +63,30 @@ public class FeesBusinessService extends BusinessService {
 
 	@Override
 	public BusinessObject getBusinessObject(UserContext userContext) {
-		return new FeesBO(userContext);
+		return null;
+	};
+	
+	public FeeBO getFees(Short feeId){
+		return feePersistenceService.getFees(feeId);
 	}
 	
-	public FeesBO getFees(Short feeId){
-		return feePersistenceService.getFees(feeId);
+	public FeeBO getFee(Short feeId){
+		return feePersistenceService.getFee(feeId);
+	}
+	
+	public List<FeeBO> retrieveCustomerFees()throws FeeException{
+		try{
+			return feePersistenceService.retrieveCustomerFees();
+		}catch(PersistenceException pe){
+			throw new FeeException(pe);
+		}
+	}
+	
+	public List<FeeBO> retrieveProductFees()throws FeeException{
+		try{
+			return feePersistenceService.retrieveProductFees();
+		}catch(PersistenceException pe){
+			throw new FeeException(pe);
+		}
 	}
 }

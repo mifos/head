@@ -44,16 +44,16 @@ function onPageLoad() {
     showRateOrAmoount();
 }
 function selectAdminBox() {
-    if (document.getElementsByName("categoryType.categoryId")[0].value == document.getElementsByName("loanCategoryId")[0].value) {
-        document.getElementsByName("adminCheck")[0].disabled = true;
-        document.getElementsByName("adminCheck")[0].checked = false;
+    if (document.getElementsByName("categoryType")[0].value == document.getElementsByName("loanCategoryId")[0].value) {
+        document.getElementsByName("customerDefaultFee")[0].disabled = true;
+        document.getElementsByName("customerDefaultFee")[0].checked = false;
     } else {
-        document.getElementsByName("adminCheck").disabled = false;
+        document.getElementsByName("customerDefaultFee")[0].disabled = false;
     }
 }
 function showFrequency() {
-    var freqTypes = document.getElementsByName("feeFrequency.feeFrequencyType.feeFrequencyTypeId");
-    var recurTypes = document.getElementsByName("feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId");
+    var freqTypes = document.getElementsByName("feeFrequencyType");
+    var recurTypes = document.getElementsByName("feeRecurrenceType");
     if (freqTypes[0].checked == false && freqTypes[1].checked == false) {
         freqTypes[1].checked = true;
     }
@@ -71,7 +71,7 @@ function showFrequency() {
     }
 }
 function showMeetingFrequency() {
-    var recurTypes = document.getElementsByName("feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId");
+    var recurTypes = document.getElementsByName("feeRecurrenceType");
     if (recurTypes[0].checked == true) {
         document.getElementById("weekDIV").style.display = "block";
         document.getElementById("monthDIV").style.display = "none";
@@ -83,7 +83,7 @@ function showMeetingFrequency() {
     }
 }
 function showTimeOfCharges() {
-    if (document.getElementsByName("categoryType.categoryId")[0].value == document.getElementsByName("loanCategoryId")[0].value) {
+    if (document.getElementsByName("categoryType")[0].value == document.getElementsByName("loanCategoryId")[0].value) {
         document.getElementById("loanTimeOfChargeDiv").style.display = "block";
         document.getElementById("customerTimeOfChargeDiv").style.display = "none";
         document.getElementsByName("customerCharge")[0].selectedIndex = 0;
@@ -94,12 +94,12 @@ function showTimeOfCharges() {
     }
 }
 function showRateOrAmoount() {
-    if (document.getElementsByName("categoryType.categoryId")[0].value == document.getElementsByName("loanCategoryId")[0].value) {
+    if (document.getElementsByName("categoryType")[0].value == document.getElementsByName("loanCategoryId")[0].value) {
         document.getElementById("rateDiv").style.display = "block";
         document.getElementById("rateDivHeading").style.display = "block";
     } else {
         document.getElementsByName("rate")[0].value = "";
-        document.getElementsByName("feeFormula.feeFormulaId")[0].selectedIndex = 0;
+        document.getElementsByName("feeFormula")[0].selectedIndex = 0;
         document.getElementById("rateDiv").style.display = "none";
         document.getElementById("rateDivHeading").style.display = "none";
     }

@@ -1,6 +1,6 @@
 /**
 
- * FeeLevel.java    version: 1.0
+ * FeeFormula.java    version: 1.0
 
  
 
@@ -37,12 +37,14 @@
  */
 package org.mifos.application.fees.util.helpers;
 
-public enum FeeLevel {
-	CLIENTLEVEL((short) 1), GROUPLEVEL((short) 2), CENTERLEVEL((short) 3);
+import org.mifos.framework.exceptions.PropertyNotFoundException;
+
+public enum FeeFormula {
+	AMOUNT((short) 1), AMOUNT_AND_INTEREST((short) 2), INTEREST((short) 3);
 
 	Short value;
 
-	FeeLevel(Short value) {
+	FeeFormula(Short value) {
 		this.value = value;
 	}
 
@@ -50,10 +52,10 @@ public enum FeeLevel {
 		return value;
 	}
 	
-	public static FeeLevel getFeeLevel(Short value){
-		for (FeeLevel feeLevel : FeeLevel.values()) 
-			if (feeLevel.getValue().equals(value))
-				return feeLevel;
-		return null;
+	public static FeeFormula getFeeFormula(Short value)throws PropertyNotFoundException{
+		for (FeeFormula feeFormula : FeeFormula.values()) 
+			if (feeFormula.getValue().equals(value))
+				return feeFormula;
+		throw new PropertyNotFoundException("FeeFormula");
 	}
 }

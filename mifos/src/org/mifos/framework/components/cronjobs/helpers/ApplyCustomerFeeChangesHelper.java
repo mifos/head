@@ -3,17 +3,18 @@ package org.mifos.framework.components.cronjobs.helpers;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.PropertyNotFoundException;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.fees.business.FeesBO;
+import org.mifos.application.fees.business.AmountFeeBO;
+import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.persistence.service.FeePersistenceService;
-import org.mifos.application.fees.util.helpers.FeeFrequencyType;
+import org.mifos.application.fees.util.helpers.FeeChangeType;
 import org.mifos.application.fees.util.helpers.FeeStatus;
-import org.mifos.application.fees.util.helpers.FeeUpdateTypes;
 import org.mifos.framework.components.cronjobs.TaskHelper;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -31,23 +32,23 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 			if (fees != null && fees.size() > 0) {
 				HibernateUtil.startTransaction();
 				for (Object fee : fees) {
-					FeesBO feesBO = (FeesBO) fee;
-					if (feesBO.getFeeUpdateType().getId().intValue() == 1) {
+					FeeBO feeBO = (FeeBO) fee;
+					if (!feeBO.getFeeChangeType().equals(FeeChangeType.NOT_UPDATED)) {
 						List<Integer> accounts = accountPersistanceService
-								.getCustomerAccountsForFee(feesBO.getFeeId());
+								.getCustomerAccountsForFee(feeBO.getFeeId());
 						if (accounts != null && accounts.size() > 0) {
 							for (Integer accountId : accounts) {
-								updateAccountFee(accountId, feesBO,
+								updateAccountFee(accountId, feeBO,
 										accountPersistanceService);
 
 							}
 						}
 					}
-					feesBO.setUpdateFlag(Short.valueOf("0"));
+					feeBO.updateFeeChangeType(FeeChangeType.NOT_UPDATED);
 					UserContext userContext = new UserContext();
 					userContext.setId(Short.valueOf("1"));
-					feesBO.setUserContext(userContext);
-					feesBO.save(false);
+					feeBO.setUserContext(userContext);
+					feeBO.save();
 					HibernateUtil.commitTransaction();
 				}
 			}
@@ -56,7 +57,7 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 		}
 	}
 
-	private void updateAccountFee(Integer accountId, FeesBO feesBO,
+	private void updateAccountFee(Integer accountId, FeeBO feesBO,
 			AccountPersistanceService accountPersistanceService)
 			throws NumberFormatException, SystemException, ApplicationException {
 		AccountBO accountBO = accountPersistanceService.getAccount(accountId);
@@ -65,35 +66,31 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 
 	}
 
-	private void updateFee(AccountFeesEntity fee, FeesBO feesBO,
+	private void updateFee(AccountFeesEntity fee, FeeBO feeBO,
 			AccountBO accountBO) throws NumberFormatException, SystemException,
-			ApplicationException {
+			ApplicationException,PropertyNotFoundException {
 
-		Short updateType = feesBO.getUpdateFlag().shortValue();
-		boolean feeApplied = isFeeAlreadyApplied(fee, feesBO, accountBO);
+		boolean feeApplied = isFeeAlreadyApplied(fee, feeBO, accountBO);
 		if (!feeApplied) {
 			// update this account fee
 
-			if (updateType == FeeUpdateTypes.AMOUNT_AND_STATUS_UPDATED
-					.getValue()) {
-				if (feesBO.getFeeStatus().getStatusId().shortValue() == FeeStatus.INACTIVE
-						.getValue().shortValue()) {
-					accountBO.removeFees(feesBO.getFeeId(), Short.valueOf("1"));
-					updateAccountFee(fee, feesBO);
+			if (feeBO.getFeeChangeType().equals(FeeChangeType.AMOUNT_AND_STATUS_UPDATED)) {
+				if (!feeBO.isActive()) {
+					accountBO.removeFees(feeBO.getFeeId(), Short.valueOf("1"));
+					updateAccountFee(fee, feeBO);
 
 				} else {
 					// generate repayment schedule and enable fee
-					updateAccountFee(fee, feesBO);
+					updateAccountFee(fee, feeBO);
 					fee.changeFeesStatus(FeeStatus.ACTIVE.getValue(), new Date(System
 							.currentTimeMillis()));
 					AddTonextInstallment(accountBO, fee);
 
 				}
 
-			} else if (updateType == FeeUpdateTypes.STATUS_UPDATED.getValue()) {
-				if (feesBO.getFeeStatus().getStatusId().shortValue() == FeeStatus.INACTIVE
-						.getValue().shortValue()) {
-					accountBO.removeFees(feesBO.getFeeId(), Short.valueOf("1"));
+			} else if (feeBO.getFeeChangeType().equals(FeeChangeType.STATUS_UPDATED)) {
+				if (!feeBO.isActive()) {
+					accountBO.removeFees(feeBO.getFeeId(), Short.valueOf("1"));
 
 				} else {
 					fee.changeFeesStatus(FeeStatus.ACTIVE.getValue(), new Date(System
@@ -101,20 +98,17 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 					AddTonextInstallment(accountBO, fee);
 				}
 
-			} else if (updateType == FeeUpdateTypes.AMOUNT_UPDATED.getValue()) {
-
-				updateAccountFee(fee, feesBO);
+			} else if (feeBO.getFeeChangeType().equals(FeeChangeType.AMOUNT_UPDATED)) {
+				updateAccountFee(fee, feeBO);
 				updateNextInstallment(accountBO, fee);
 			}
 		}
 	}
 
-	private boolean isFeeAlreadyApplied(AccountFeesEntity fee, FeesBO feesBO,
+	private boolean isFeeAlreadyApplied(AccountFeesEntity fee, FeeBO feeBO,
 			AccountBO accountBO) {
 		boolean feeApplied = false;
-		if (feesBO.getFeeFrequency().getFeeFrequencyType()
-				.getFeeFrequencyTypeId().shortValue() == FeeFrequencyType.ONETIME
-				.getValue().shortValue()) {
+		if (feeBO.isOneTime()) {
 			for (AccountActionDateEntity installment : accountBO
 					.getPastInstallments()) {
 				if (installment.getAccountFeesAction(fee.getAccountFeeId()) != null) {
@@ -127,11 +121,11 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 
 	}
 
-	private void updateAccountFee(AccountFeesEntity fee, FeesBO feesBO) {
+	private void updateAccountFee(AccountFeesEntity fee, FeeBO feeBO) {
 		fee.changeFeesStatus(FeeStatus.INACTIVE.getValue(), new Date(System
 				.currentTimeMillis()));
-		fee.setFeeAmount(feesBO.getFeeAmount());
-		fee.setAccountFeeAmount(feesBO.getFeeAmount());
+		fee.setFeeAmount(((AmountFeeBO)feeBO).getFeeAmount());
+		fee.setAccountFeeAmount(((AmountFeeBO)feeBO).getFeeAmount());
 	}
 
 	private void updateNextInstallment(AccountBO accountBO,

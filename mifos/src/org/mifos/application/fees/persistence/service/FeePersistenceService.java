@@ -37,33 +37,40 @@
  */
 package org.mifos.application.fees.persistence.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.fees.business.FeeUpdateTypeEntity;
-import org.mifos.application.fees.business.FeesBO;
+import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.business.ApplicableAccountsTypeEntity;
+import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.persistence.FeePersistence;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.service.PersistenceService;
 
 public class FeePersistenceService extends PersistenceService{
 	
 	private FeePersistence feePersistence= new FeePersistence();
 	
-	public FeesBO getFees(Short feeId){
+	public FeeBO getFees(Short feeId){
 		return feePersistence.getFees(feeId);
 	}
 	
-	public void save(FeesBO fees) {
-		feePersistence.createOrUpdate(fees);
+	public FeeBO getFee(Short feeId){
+		return feePersistence.getFee(feeId);
 	}
 	
-	public List<FeesBO>  getUpdatedFeesForCustomer(){
+	public List<FeeBO>  getUpdatedFeesForCustomer(){
 		return feePersistence.getUpdatedFeesForCustomer();
 	} 
 	
-	public FeeUpdateTypeEntity getUpdateTypeEntity(Short id){
+	public ApplicableAccountsTypeEntity getUpdateTypeEntity(Short id){
 		return feePersistence.getUpdateTypeEntity(id);
+	}
+	
+	public List<FeeBO> retrieveCustomerFees()throws PersistenceException{
+		return feePersistence.retrieveCustomerFees();
+	}
+	
+	public List<FeeBO> retrieveProductFees()throws PersistenceException{
+		return feePersistence.retrieveProductFees();
 	}
 }

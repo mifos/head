@@ -39,8 +39,9 @@ package org.mifos.framework.persistence;
 
 import org.hibernate.Session;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeFrequencyTypeEntity;
-import org.mifos.application.fees.business.FeesBO;
+import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.valueobjects.Currency;
 import org.mifos.application.office.business.OfficeBO;
@@ -80,12 +81,17 @@ public class TestObjectPersistence {
 		return (PersonnelBO)session.get(PersonnelBO.class, new Short("2"));
 	}
 	
-	public FeesBO createFees(FeesBO fees) {
+	public FeeBO createFees(FeeBO fees) {
 		Session session = HibernateUtil.getSessionTL();
 		session.save(fees);
 		return fees;
 	}
 	
+	public FeeBO createFee(FeeBO fee) {
+		Session session = HibernateUtil.getSessionTL();
+		session.save(fee);
+		return fee;
+	}
 	/**
 	 * This persists any object passed as parameter . It starts a new transaction and commits it
 	 * if the insertion was successful.

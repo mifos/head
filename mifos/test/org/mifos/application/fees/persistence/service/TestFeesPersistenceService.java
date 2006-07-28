@@ -38,107 +38,82 @@
 
 package org.mifos.application.fees.persistence.service;
 
-import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.accounts.financial.business.GLCodeEntity;
-import org.mifos.application.fees.business.CategoryTypeEntity;
-import org.mifos.application.fees.business.FeeFrequencyEntity;
-import org.mifos.application.fees.business.FeeUpdateTypeEntity;
-import org.mifos.application.fees.business.FeesBO;
+import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.business.ApplicableAccountsTypeEntity;
 import org.mifos.application.fees.util.helpers.FeeCategory;
-import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeePayment;
-import org.mifos.application.fees.util.helpers.FeeStatus;
+import org.mifos.application.fees.util.helpers.FeeChangeType;
+import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestFeesPersistenceService extends MifosTestCase {
-
-	public void testSave() throws Exception {
-
-		FeesBO fees = buildFees();
-		new FeePersistenceService().save(fees);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-
-		fees = (FeesBO) TestObjectFactory.getObject(FeesBO.class, fees
-				.getFeeId());
-		assertEquals("One time fees", fees.getFeeName());
-		assertEquals(FeeCategory.CLIENT.getValue(), fees.getCategoryType()
-				.getCategoryId());
-		assertFalse(fees.isRateFee());
-		assertTrue(fees.isOneTime());
+	private FeePersistenceService feePersistenceService = new FeePersistenceService();
+	private FeeBO fee1;
+	private FeeBO fee2;
+	
+	@Override
+	protected void tearDown() throws Exception {
+		TestObjectFactory.removeObject(fee1);
+		TestObjectFactory.removeObject(fee2);
 	}
-
+	
 	public void testGetFees() {
-		FeesBO fees = TestObjectFactory.createOneTimeFees("One Time Fee",
-				100.0, Short.valueOf("1"), 1);
-		fees = new FeePersistenceService().getFees(fees.getFeeId());
+		fee1 = TestObjectFactory.createOneTimeAmountFee("One Time Fee",
+				FeeCategory.ALLCUSTOMERS,"100", FeePayment.UPFRONT);
+		fee1 = feePersistenceService.getFees(fee1.getFeeId());
 
-		assertEquals("One Time Fee", fees.getFeeName());
-		assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fees
-				.getCategoryType().getCategoryId());
-		assertTrue(fees.isOneTime());
-	}
-
-	private FeesBO buildFees() throws Exception {
-		UserContext userContext = TestObjectFactory.getUserContext();
-		FeesBO fees = new FeesBO(userContext);
-		fees.setFeeName("One time fees");
-
-		fees.setFeeFrequency(new FeeFrequencyEntity());
-		fees.setCategoryType(new CategoryTypeEntity());
-		fees.getFeeFrequency().getFeeFrequencyType().setFeeFrequencyTypeId(
-				FeeFrequencyType.ONETIME.getValue());
-		fees.getFeeFrequency().getFeePayment().setFeePaymentId(
-				FeePayment.UPFRONT.getValue());
-		fees.getCategoryType().setCategoryId(FeeCategory.CLIENT.getValue());
-		fees.setRateFee(false);
-		fees.setAmount("100.0");
-		fees.setGlCodeEntity((GLCodeEntity) HibernateUtil.getSessionTL().get(
-				GLCodeEntity.class, Short.valueOf("7")));
-
-		fees.setCreatedDate(new Date());
-		fees.setCreatedBy(userContext.getId());
-		fees.modifyStatus(FeeStatus.ACTIVE);
-		fees.setOffice(TestObjectFactory.getOffice(userContext.getBranchId()));
-		fees.getFeeFrequency().buildFeeFrequency();
-		return fees;
+		assertEquals("One Time Fee", fee1.getFeeName());
+		assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee1
+				.getCategoryType().getId());
+		assertTrue(fee1.isOneTime());
 	}
 
 	public void testGetUpdatedFeesForCustomer() throws Exception{
 
 		// crate periodic fee
-		FeesBO periodicFee = TestObjectFactory.createPeriodicFees(
-				"ClientPeridoicFee", 5.0, 1, 1, 2);
+		fee1 = TestObjectFactory.createPeriodicAmountFee(
+				"ClientPeridoicFee", FeeCategory.CLIENT, "5", MeetingFrequency.WEEKLY, Short.valueOf("1"));
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		
 		//get fee from db 
-		periodicFee =(FeesBO) HibernateUtil.getSessionTL().get(FeesBO.class,periodicFee.getFeeId());
-		periodicFee.setUserContext(TestObjectFactory.getUserContext());
-		periodicFee.setUpdateFlag(Short.valueOf("1"));
-		periodicFee.save(false);
+		fee1 =(FeeBO) HibernateUtil.getSessionTL().get(FeeBO.class,fee1.getFeeId());
+		fee1.setUserContext(TestObjectFactory.getUserContext());
+		fee1.updateFeeChangeType(FeeChangeType.AMOUNT_UPDATED);
+		fee1.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		List fees = new FeePersistenceService().getUpdatedFeesForCustomer();
+		List fees = feePersistenceService.getUpdatedFeesForCustomer();
 		assertNotNull(fees);
 		assertEquals(1,fees.size());
-
-		//cleanup
-		periodicFee =(FeesBO) HibernateUtil.getSessionTL().get(FeesBO.class,periodicFee.getFeeId());
-		TestObjectFactory.removeObject(periodicFee);
-		
+		fee1 = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee1.getFeeId());
 	}
 	
 	public void testGetUpdateTypeEntity(){
-		
-		  FeeUpdateTypeEntity feeUpdateType=	new FeePersistenceService().getUpdateTypeEntity(Short.valueOf("1"));
+		  ApplicableAccountsTypeEntity feeUpdateType=feePersistenceService.getUpdateTypeEntity(Short.valueOf("1"));
 		  assertNotNull(feeUpdateType);
 		  assertEquals(1,feeUpdateType.getId().intValue());
-			
-		}
+	}
+	
+	public void testRetrieveFeesForCustomer()throws Exception{
+		fee1 = TestObjectFactory.createPeriodicAmountFee("CustomerFee1", FeeCategory.CENTER, "200", MeetingFrequency.MONTHLY,Short.valueOf("2"));
+		fee2 = TestObjectFactory.createPeriodicAmountFee("ProductFee1", FeeCategory.LOAN, "400", MeetingFrequency.MONTHLY,Short.valueOf("2"));
+		List<FeeBO> feeList = feePersistenceService.retrieveCustomerFees();
+		assertNotNull(feeList);
+		assertEquals(1, feeList.size());
+		assertEquals("CustomerFee1",feeList.get(0).getFeeName());
+	}
+	
+	public void testRetrieveFeesForProduct()throws Exception{
+		fee1 = TestObjectFactory.createPeriodicAmountFee("CustomerFee1", FeeCategory.CENTER, "200", MeetingFrequency.MONTHLY,Short.valueOf("2"));
+		fee2 = TestObjectFactory.createPeriodicAmountFee("ProductFee1", FeeCategory.LOAN, "400", MeetingFrequency.MONTHLY,Short.valueOf("2"));
+		List<FeeBO> feeList = feePersistenceService.retrieveProductFees();
+		assertNotNull(feeList);
+		assertEquals(1, feeList.size());
+		assertEquals("ProductFee1",feeList.get(0).getFeeName());
+	}
 }

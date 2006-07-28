@@ -131,20 +131,20 @@
 													</mifos:mifoslabel> </span>
 												<br>
 												<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.feename" /> </span>
-												<c:out value="${sessionScope.BusinessKey.feeName}" />
+												<c:out value="${sessionScope.feeactionform.feeName}" />
 												<br>
 												<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.feeappliesto" /> </span>
-												<c:forEach var="code" items="${sessionScope.CategoryList}">
-													<c:if test="${code.id == sessionScope.BusinessKey.categoryType.categoryId}">
-														<c:out value="${code.lookUpValue}" />
+												<c:forEach var="entity" items="${sessionScope.CategoryList}">
+													<c:if test="${entity.id == sessionScope.feeactionform.categoryType}">
+														<c:out value="${entity.name}" />
 													</c:if>
 												</c:forEach>
 												<br>
 												<c:choose>
-													<c:when test="${sessionScope.BusinessKey.categoryType.categoryId!=FeeCategory.LOAN.value}">
+													<c:when test="${sessionScope.feeactionform.categoryType!=FeeCategory.LOAN.value}">
 														<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.defaultFees" /> </span>
 														<c:choose>
-															<c:when test="${sessionScope.feeactionform.adminCheck==FeesConstants.ADMINCHECK}">
+															<c:when test="${sessionScope.feeactionform.customerDefaultFee == true}">
 																<mifos:mifoslabel name="Fees.DefaultFeeYes" />
 																<br>
 															</c:when>
@@ -157,33 +157,31 @@
 												</c:choose>
 
 												<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.frequency" /> </span>
-												<c:choose>
-													<c:when test="${sessionScope.BusinessKey.periodic==true}">
-														<mifos:mifoslabel name="Fees.periodic" />
-													</c:when>
-													<c:otherwise>
-														<mifos:mifoslabel name="Fees.oneTime" />
-													</c:otherwise>
-												</c:choose>
+												<c:forEach var="entity" items="${sessionScope.feeFrequencyTypeList}">
+													<c:if test="${entity.id == sessionScope.feeactionform.feeFrequencyType}">
+														<c:out value="${entity.name}" />
+													</c:if>
+												</c:forEach>
 												<br>
 												<c:choose>
-													<c:when test="${sessionScope.BusinessKey.periodic==true}">
+													<c:when test="${sessionScope.feeactionform.feeFrequencyType==FeeFrequencyType.PERIODIC.value}">
 														<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.timeToCharge" /></span>
 														<mifos:mifoslabel name="Fees.labelRecurEvery" />
-														<c:out value="${sessionScope.BusinessKey.feeFrequency.feeMeetingFrequency.meetingDetails.recurAfter}" />
-														<c:if test="${sessionScope.BusinessKey.feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId==MeetingFrequency.WEEKLY.value}">
+														<c:if test="${sessionScope.feeactionform.feeRecurrenceType==MeetingFrequency.WEEKLY.value}">
+															<c:out value="${sessionScope.feeactionform.weekRecurAfter}" />
 															<mifos:mifoslabel name="Fees.labelWeeks" />
 														</c:if>
-														<c:if test="${sessionScope.BusinessKey.feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId==MeetingFrequency.MONTHLY.value}">
+														<c:if test="${sessionScope.feeactionform.feeRecurrenceType==MeetingFrequency.MONTHLY.value}">
+															<c:out value="${sessionScope.feeactionform.monthRecurAfter}" />
 															<mifos:mifoslabel name="Fees.labelMonths" />
 														</c:if>
 													</c:when>
 													<c:otherwise>
 														<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.timeToCharge" /> </span>
 
-														<c:forEach var="code" items="${sessionScope.LoanTimeOfCharges}">
-															<c:if test="${code.id == sessionScope.BusinessKey.feeFrequency.feePayment.feePaymentId}">
-																<c:out value="${code.lookUpValue}" />
+														<c:forEach var="entity" items="${sessionScope.TimeOfCharges}">
+															<c:if test="${entity.id == sessionScope.feeactionform.feePaymentType}">
+																<c:out value="${entity.name}" />
 															</c:if>
 														</c:forEach>
 													</c:otherwise>
@@ -193,28 +191,28 @@
 												<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.feecalculation" /> </span>
 												<br>
 												<c:choose>
-													<c:when test="${sessionScope.BusinessKey.categoryType.categoryId==FeeCategory.LOAN.value && sessionScope.BusinessKey.rateFee==true}">
+													<c:when test="${sessionScope.feeactionform.categoryType==FeeCategory.LOAN.value && sessionScope.feeactionform.rateFee==true}">
 														<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.amountcalculatedas" /> </span>
-														<c:out value="${sessionScope.BusinessKey.rate}" />
+														<c:out value="${sessionScope.feeactionform.rate}" />
 													</c:when>
 													<c:otherwise>
 														<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.amount" /> </span>
-														<c:out value="${sessionScope.BusinessKey.feeAmount}" />
+														<c:out value="${sessionScope.feeactionform.amount}" />
 													</c:otherwise>
 												</c:choose>
-												<c:if test="${sessionScope.BusinessKey.rateFee==true}">
+												<c:if test="${sessionScope.feeactionform.rateFee==true}">
 													<mifos:mifoslabel name="Fees.ofa" />
-													<c:forEach var="code" items="${sessionScope.FormulaList}">
-														<c:if test="${code.id == sessionScope.BusinessKey.feeFormula.feeFormulaId}">
-															<c:out value="${code.lookUpValue}" />
-														</c:if>
-													</c:forEach>
+													<c:forEach var="entity" items="${sessionScope.FormulaList}">
+															<c:if test="${entity.id == sessionScope.feeactionform.feeFormula}">
+																<c:out value="${entity.name}" />
+															</c:if>
+														</c:forEach>
 												</c:if>
 												<br>
 												<br>
 												<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.accounting" /> <br> <mifos:mifoslabel name="Fees.GLCode" /> </span>
 												<c:forEach var="glCodeList" items="${sessionScope.glCodeList}">
-													<c:if test="${glCodeList.glcodeId == sessionScope.BusinessKey.glCodeEntity.glcodeId}">
+													<c:if test="${glCodeList.glcodeId == sessionScope.feeactionform.glCode}">
 														<c:out value="${glCodeList.glcode}" />
 													</c:if>
 												</c:forEach>

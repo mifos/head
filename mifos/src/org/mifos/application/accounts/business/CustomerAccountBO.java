@@ -44,6 +44,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
@@ -56,7 +57,10 @@ import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
-import org.mifos.application.fees.business.FeesBO;
+import org.mifos.application.fees.business.AmountFeeBO;
+import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.business.RateFeeBO;
+import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -76,6 +80,7 @@ import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
@@ -240,14 +245,18 @@ public class CustomerAccountBO extends AccountBO {
 				List<AccountFeesEntity> periodicFeeList = getPeriodicFeeList();
 				for (AccountFeesEntity accountFeesEntity : periodicFeeList) {
 					if (accountFeesEntity.isApplicable(date) == true) {
+						Hibernate.initialize(accountFeesEntity.getFees());
 						accountFeesEntity.setLastAppliedDate(date);
 						accountActionDate.applyPeriodicFees(accountFeesEntity
 								.getFees().getFeeId());
-						FeesBO feesBO = getAccountFeesObject(accountFeesEntity
+						
+						FeeBO feesBO = getAccountFeesObject(accountFeesEntity
 								.getFees().getFeeId());
+						
 						String description = feesBO.getFeeName() + " "
 								+ AccountConstants.FEES_APPLIED;
-						updateAccountActivity(feesBO.getFeeAmount(), null,
+						
+						updateAccountActivity(((AmountFeeBO)feesBO).getFeeAmount(), null,
 								description);
 						getAccountPersistenceService().save(this);
 					}

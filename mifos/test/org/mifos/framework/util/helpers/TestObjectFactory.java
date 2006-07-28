@@ -92,12 +92,17 @@ import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.CategoryTypeEntity;
-import org.mifos.application.fees.business.FeeFrequencyEntity;
+import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.business.FeeFormulaEntity;
 import org.mifos.application.fees.business.FeeFrequencyTypeEntity;
 import org.mifos.application.fees.business.FeePaymentEntity;
-import org.mifos.application.fees.business.FeesBO;
-import org.mifos.application.fees.util.helpers.FeeStatus;
+import org.mifos.application.fees.business.RateFeeBO;
+import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.fees.util.helpers.FeeFormula;
+import org.mifos.application.fees.util.helpers.FeeFrequencyType;
+import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.master.util.valueobjects.InterestCalcRule;
@@ -112,8 +117,9 @@ import org.mifos.application.meeting.business.MeetingRecurrenceEntity;
 import org.mifos.application.meeting.business.MeetingTypeEntity;
 import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.application.meeting.business.WeekDaysEntity;
+import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.office.business.OfficeBO;
-import org.mifos.application.office.persistence.service.OfficePersistenceService;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity;
@@ -215,8 +221,8 @@ public class TestObjectFactory {
 		accountPeriodicFee.setAccount(custAccount);
 		accountPeriodicFee.setAccountFeeAmount(new Money(currency, "100.0"));
 		accountPeriodicFee.setFeeAmount(new Money(currency, "100.0"));
-		FeesBO maintanenceFee = createPeriodicFees("Mainatnence Fee", 100.0, 1,
-				1, 5);
+		FeeBO maintanenceFee = createPeriodicAmountFee("Mainatnence Fee", FeeCategory.ALLCUSTOMERS, "100",MeetingFrequency.WEEKLY,
+		Short.valueOf("1"));
 		accountPeriodicFee.setFees(maintanenceFee);
 		custAccount.addAccountFees(accountPeriodicFee);
 
@@ -614,8 +620,8 @@ public class TestObjectFactory {
 		accountPeriodicFee.setAccount(loan);
 		accountPeriodicFee.setAccountFeeAmount(new Money(currency, "100.0"));
 		accountPeriodicFee.setFeeAmount(new Money(currency, "100.0"));
-		FeesBO maintanenceFee = createPeriodicFees("Mainatnence Fee", 100.0, 1,
-				1, 5);
+		FeeBO maintanenceFee = createPeriodicAmountFee("Mainatnence Fee", FeeCategory.LOAN, "100",MeetingFrequency.WEEKLY,
+				Short.valueOf("1"));
 		accountPeriodicFee.setFees(maintanenceFee);
 		loan.addAccountFees(accountPeriodicFee);
 
@@ -962,108 +968,48 @@ public class TestObjectFactory {
 		return scheduler;
 	}
 
-	/**
-	 * Creates a periodic fees with parameters passed from user.
-	 * 
-	 * @param feeName -
-	 *            name of the fees.
-	 * @param feeAmnt -
-	 *            feeAmnt
-	 * @param frequency
-	 *            -Weekly(1)/Monthly(2)
-	 * @param recurAfter-specifying
-	 *            the recurrence pattern
-	 * @param feeCategory-
-	 *            1-ALLCUSTOMERS,2-CLIENT,3-GROUP,4-CENTER,5-LOAN;
-	 */
-	public static FeesBO createPeriodicFees(String feeName, Double feeAmnt,
-			int frequency, int recurAfter, int feeCategory) {
-		FeesBO fees = null;
-		try {
-			fees = new FeesBO(TestObjectFactory.getUserContext());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		fees.setFeeName(feeName);
-		fees.setCreatedDate(new Date(System.currentTimeMillis()));
-		fees.setCreatedBy(fees.getUserContext().getId());
-		fees.modifyStatus(FeeStatus.ACTIVE);
-		fees.setOffice(new OfficePersistenceService().getHeadOffice());
-		FeeFrequencyEntity feeFrequency = new FeeFrequencyEntity();
-		MeetingBO feeMeetingFrequency = getMeetingHelper(frequency, recurAfter,
-				5);
-		feeFrequency.setFeeMeetingFrequency(feeMeetingFrequency);
-		feeFrequency.setFee(fees);
-		FeeFrequencyTypeEntity feeFrequencyTypeEntity = testObjectPersistence
-				.getFeeFrequencyType();
-		feeFrequency.setFeeFrequencyType(feeFrequencyTypeEntity);
-		fees.setFeeFrequency(feeFrequency);
-
-		CategoryTypeEntity categoryTypeEntity = new CategoryTypeEntity();
-		categoryTypeEntity.setCategoryId(Short.valueOf(Integer
-				.toString(feeCategory)));
-		fees.setCategoryType(categoryTypeEntity);
-
-		fees.setRateFee(false);
-		fees.setAmount(feeAmnt.toString());
-		GLCodeEntity glCodeFee = (GLCodeEntity) HibernateUtil.getSessionTL()
-				.get(GLCodeEntity.class, Short.valueOf("24"));
-		fees.setGlCodeEntity(glCodeFee);
-
-		return testObjectPersistence.createFees(fees);
+	public static FeeBO createPeriodicAmountFee(String feeName, FeeCategory feeCategory, String feeAmnt,
+			MeetingFrequency meetingFrequency, Short recurAfter) {
+		GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(GLCodeEntity.class, Short.valueOf("24"));
+		MeetingBO meeting  = new MeetingBO(meetingFrequency,recurAfter,MeetingType.FEEMEETING);
+		FeeBO fee = null;
+		//TODO: throw exception
+		try{
+			fee = new AmountFeeBO(TestObjectFactory.getUserContext(),feeName, 
+				new CategoryTypeEntity(feeCategory), new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC),
+				glCode, getMoneyForMFICurrency(feeAmnt),false, meeting);
+		
+		}catch(Exception e){}
+		return testObjectPersistence.createFee(fee);
 	}
 
-	/**
-	 * Creates a one time fees with parameters passed from user.
-	 * 
-	 * @param feeName -
-	 *            name of the fees.
-	 * @param feeAmnt -
-	 *            feeAmnt
-	 * @param timeOfCharge
-	 *            1-UPFRONT,2-TIME_OF_DISBURSMENT, 3-TIME_OF_FIRSTLOANREPAYMENT
-	 * @param feeCategory-
-	 *            1-ALLCUSTOMERS,2-CLIENT,3-GROUP,4-CENTER,5-LOAN;
-	 */
-	public static FeesBO createOneTimeFees(String feeName, Double feeAmnt,
-			short timeOfCharge, int feeCategory) {
-		FeesBO fees = null;
-		try {
-			fees = new FeesBO(TestObjectFactory.getUserContext());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		fees.setFeeName(feeName);
-		fees.setCreatedDate(new Date(System.currentTimeMillis()));
-		fees.setCreatedBy(fees.getUserContext().getId());
-		fees.modifyStatus(FeeStatus.ACTIVE);
-		fees.setOffice(new OfficePersistenceService().getHeadOffice());
-		FeeFrequencyEntity feeFrequency = new FeeFrequencyEntity();
-		feeFrequency.setFee(fees);
-		FeeFrequencyTypeEntity feeFrequencyTypeEntity = new FeeFrequencyTypeEntity();
-		feeFrequencyTypeEntity.setFeeFrequencyTypeId(Short.valueOf("2"));
-		feeFrequency.setFeeFrequencyType(feeFrequencyTypeEntity);
-		FeePaymentEntity feePaymentEntity = new FeePaymentEntity();
-		feePaymentEntity.setFeePaymentId(timeOfCharge);
-		feeFrequency.setFeePayment(feePaymentEntity);
-		fees.setFeeFrequency(feeFrequency);
-
-		CategoryTypeEntity categoryTypeEntity = new CategoryTypeEntity();
-		categoryTypeEntity.setCategoryId(Short.valueOf(Integer
-				.toString(feeCategory)));
-		fees.setCategoryType(categoryTypeEntity);
-
-		fees.setRateFee(false);
-		fees.setAmount(feeAmnt.toString());
-		fees.getFeeFrequency().setFeeMeetingFrequency(null);
-		GLCodeEntity glCodeEntity = (GLCodeEntity) HibernateUtil.getSessionTL()
-				.get(GLCodeEntity.class, Short.valueOf("7"));
-		fees.setGlCodeEntity(glCodeEntity);
-
-		return testObjectPersistence.createFees(fees);
+	public static FeeBO createOneTimeAmountFee(String feeName, FeeCategory feeCategory, String feeAmnt, FeePayment feePayment) {
+		GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(GLCodeEntity.class, Short.valueOf("24"));
+		FeeBO fee = null;
+		//TODO: throw exception
+		try{
+			fee = new AmountFeeBO(TestObjectFactory.getUserContext(),feeName, 
+				new CategoryTypeEntity(feeCategory), new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
+				glCode, getMoneyForMFICurrency(feeAmnt),false, new FeePaymentEntity(feePayment));
+		
+		}catch(Exception e){}
+		return testObjectPersistence.createFee(fee);
 	}
-
+	
+	public static FeeBO createOneTimeRateFee(String feeName, FeeCategory feeCategory, Double rate, FeeFormula feeFormula, FeePayment feePayment) {
+		GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(GLCodeEntity.class, Short.valueOf("24"));
+		FeeBO fee = null;
+		//TODO: throw exception
+		try{
+			fee = new RateFeeBO(TestObjectFactory.getUserContext(),feeName, 
+				new CategoryTypeEntity(feeCategory), new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
+				glCode, rate, new FeeFormulaEntity(feeFormula),false, new FeePaymentEntity(feePayment));
+		
+		}catch(Exception e){}
+		return testObjectPersistence.createFee(fee);
+	}
+	
 	/**
 	 * This is a helper method which returns a fresh meeting object based on the
 	 * parameters passed to it.
@@ -1152,26 +1098,57 @@ public class TestObjectFactory {
 		}
 	}
 
+	public static void cleanUp(List<CustomerBO> customerList) {
+		if (null != customerList) {
+			deleteCustomers(customerList);
+		}
+	}
+	
+	public static void cleanUp(FeeBO fee) {
+		if (null != fee) {
+			deleteFee(fee);
+		}
+	}
+	
 	public static void cleanUp(AccountBO account) {
 		if (null != account) {
 			deleteAccount(account, null);
 		}
 	}
 
-	private static void deleteAccount(AccountBO account, Session session) {
-		boolean newSession = false;
-
-		Transaction transaction = null;
-		if (null == session) {
-			session = HibernateUtil.getSessionTL();
-			transaction = HibernateUtil.startTransaction();
-			newSession = true;
+	private static void deleteFee(FeeBO fee) {
+		Session session = HibernateUtil.getSessionTL();
+		Transaction transaction = HibernateUtil.startTransaction();
+		if(fee.isPeriodic()){
+			session.delete(fee.getFeeFrequency().getFeeMeetingFrequency());
 		}
+		session.delete(fee);
+		transaction.commit();
+	}
+	
+	private static void deleteFees(List<FeeBO> feeList) {
+		Session session = HibernateUtil.getSessionTL();
+		for(FeeBO fee:feeList){
+			if(fee.isPeriodic()){
+				session.delete(fee.getFeeFrequency().getFeeMeetingFrequency());
+			}
+			session.delete(fee);
+		}
+	}
+	
+	
+	
+	private static void deleteAccountPayments(AccountBO account){
+		Session session = HibernateUtil.getSessionTL();
 		for (AccountPaymentEntity accountPayment : account.getAccountPayments()) {
 			if (null != accountPayment) {
 				deleteAccountPayment(accountPayment, session);
 			}
 		}
+	}
+
+	private static void deleteAccountActionDates(AccountBO account){
+		Session session = HibernateUtil.getSessionTL();
 		for (AccountActionDateEntity actionDates : account
 				.getAccountActionDates()) {
 			for (AccountFeesActionDetailEntity actionFees : actionDates
@@ -1180,10 +1157,17 @@ public class TestObjectFactory {
 			}
 			session.delete(actionDates);
 		}
+	}
+
+	private static void deleteAccountFees(AccountBO account){
+		Session session = HibernateUtil.getSessionTL();
 		for (AccountFeesEntity accountFees : account.getAccountFees()) {
 			session.delete(accountFees);
 		}
-
+	}
+	
+	private static void deleteSpecificAccount(AccountBO account){
+		Session session = HibernateUtil.getSessionTL();
 		if (account instanceof LoanBO) {
 
 			LoanBO loan = (LoanBO) account;
@@ -1211,7 +1195,36 @@ public class TestObjectFactory {
 		} else {
 			session.delete(account);
 		}
-
+	}
+	
+	private static void deleteAccountWithoutFee(AccountBO account) {
+		deleteAccountPayments(account);
+		deleteAccountActionDates(account);
+		deleteAccountFees(account);
+		deleteSpecificAccount(account);
+	}
+	
+	private static void deleteAccount(AccountBO account, Session session) {
+		boolean newSession = false;
+		Transaction transaction = null;
+		if (null == session) {
+			session = HibernateUtil.getSessionTL();
+			transaction = HibernateUtil.startTransaction();
+			newSession = true;
+		}
+		
+		List<FeeBO> feeList = new ArrayList<FeeBO>(); 
+		for(AccountFeesEntity accountFees: account.getAccountFees()){
+			if(!feeList.contains(accountFees.getFees()))
+					feeList.add(accountFees.getFees());
+		}
+		
+		deleteAccountPayments(account);
+		deleteAccountActionDates(account);
+		deleteAccountFees(account);
+		deleteSpecificAccount(account);
+		deleteFees(feeList);
+		
 		if (newSession) {
 			transaction.commit();
 		}
@@ -1240,14 +1253,68 @@ public class TestObjectFactory {
 		session.delete(accountPayment);
 	}
 
+	private static void deleteCustomers(List<CustomerBO> customerList){
+		List<FeeBO> feeList = new ArrayList<FeeBO>();
+		for(CustomerBO customer: customerList){
+			Session session = HibernateUtil.getSessionTL();
+			session.lock(customer, LockMode.UPGRADE);
+			for(AccountBO account: customer.getAccounts()){
+				for(AccountFeesEntity accountFees: account.getAccountFees()){
+					if(!feeList.contains(accountFees.getFees()))
+							feeList.add(accountFees.getFees());
+				}
+			}
+			Transaction transaction = HibernateUtil.startTransaction();
+			deleteCustomerWithoutFee(customer);			
+			transaction.commit();
+		}
+		Transaction transaction = HibernateUtil.startTransaction();
+		deleteFees(feeList);
+		transaction.commit();
+	}
+	
+	private static void deleteCustomerWithoutFee(CustomerBO customer) {
+		Session session = HibernateUtil.getSessionTL();
+		deleteCenterMeeting(customer);
+		deleteClientAttendence(customer);
+		for (AccountBO account : customer.getAccounts()) {
+			if (null != account) {
+				deleteAccountWithoutFee(account);
+			}
+		}
+		session.delete(customer);
+	}
+	
 	private static void deleteCustomer(CustomerBO customer) {
 		Session session = HibernateUtil.getSessionTL();
 		Transaction transaction = HibernateUtil.startTransaction();
 		session.lock(customer, LockMode.UPGRADE);
+		deleteCenterMeeting(customer);
+		deleteClientAttendence(customer);
+		
+		List<FeeBO> feeList = new ArrayList<FeeBO>();
+		for (AccountBO account : customer.getAccounts()) {
+			if (null != account) {
+				for(AccountFeesEntity accountFee: account.getAccountFees())
+					if(!feeList.contains(accountFee.getFees()))
+						feeList.add(accountFee.getFees());
+				deleteAccountWithoutFee(account);
+			}
+		}
+		session.delete(customer);
+		deleteFees(feeList);
+		transaction.commit();
+	}
+
+	private static void deleteCenterMeeting(CustomerBO customer){
+		Session session = HibernateUtil.getSessionTL();
 		if (customer instanceof CenterBO) {
 			session.delete(customer.getCustomerMeeting());
 		}
-
+	}
+	
+	private static void deleteClientAttendence(CustomerBO customer){
+		Session session = HibernateUtil.getSessionTL();
 		if (customer instanceof ClientBO) {
 			Set<ClientAttendanceBO> attendance = ((ClientBO) customer)
 					.getClientAttendances();
@@ -1257,15 +1324,9 @@ public class TestObjectFactory {
 					session.delete(custAttendance);
 				}
 		}
-		for (AccountBO account : customer.getAccounts()) {
-			if (null != account) {
-				deleteAccount(account, session);
-			}
-		}
-		session.delete(customer);
-		transaction.commit();
 	}
-
+	
+	
 	public static MifosCurrency getMFICurrency() {
 		return testObjectPersistence.getCurrency();
 	}
@@ -1278,6 +1339,10 @@ public class TestObjectFactory {
 		return new Money( String.valueOf(amnt));
 	}
 
+	public static Money getMoneyForMFICurrency(String amnt) {
+		return new Money(testObjectPersistence.getCurrency(), amnt);
+	}
+	
 	public static Money getMoney(Short currencyId, double amnt) {
 		return new Money(String.valueOf(amnt));
 	}
@@ -1379,22 +1444,22 @@ public class TestObjectFactory {
 		accountPeriodicFee.setAccount(loan);
 		accountPeriodicFee.setAccountFeeAmount(new Money(currency, "10.0"));
 		accountPeriodicFee.setFeeAmount(new Money(currency, "10.0"));
-		FeesBO maintanenceFee = createPeriodicFees("Mainatnence Fee", 100.0, 1,
-				1, 5);
+		FeeBO maintanenceFee = createPeriodicAmountFee("Mainatnence Fee", FeeCategory.LOAN, "100",MeetingFrequency.WEEKLY,
+				Short.valueOf("1"));
 		accountPeriodicFee.setFees(maintanenceFee);
 		loan.addAccountFees(accountPeriodicFee);
 		AccountFeesEntity accountDisbursementFee = null;
-		FeesBO disbursementFee = null;
+		FeeBO disbursementFee = null;
 		AccountFeesEntity accountDisbursementFee2 = null;
-		FeesBO disbursementFee2 = null;
+		FeeBO disbursementFee2 = null;
 
 		if (disbursalType == 1 || disbursalType == 2) {
 			accountDisbursementFee = new AccountFeesEntity();
 			accountDisbursementFee.setAccountFeeAmount(new Money(currency,
 					"10.0"));
 			accountDisbursementFee.setFeeAmount(new Money(currency, "10.0"));
-			disbursementFee = createOneTimeFees("Disbursement Fee 1", 10.0,
-					(short) 2, 5);
+			disbursementFee = createOneTimeAmountFee("Disbursement Fee 1", FeeCategory.LOAN, "10",
+					FeePayment.TIME_OF_DISBURSMENT);
 			accountDisbursementFee.setFees(disbursementFee);
 			accountDisbursementFee.setAccount(loan);
 			loan.addAccountFees(accountDisbursementFee);
@@ -1403,8 +1468,8 @@ public class TestObjectFactory {
 			accountDisbursementFee2.setAccountFeeAmount(new Money(currency,
 					"20.0"));
 			accountDisbursementFee2.setFeeAmount(new Money(currency, "20.0"));
-			disbursementFee2 = createOneTimeFees("Disbursement Fee 2", 20.0,
-					(short) 2, 5);
+			disbursementFee2 = createOneTimeAmountFee("Disbursement Fee 2", FeeCategory.LOAN, "20",
+					FeePayment.TIME_OF_DISBURSMENT);
 			accountDisbursementFee2.setFees(disbursementFee2);
 			accountDisbursementFee2.setAccount(loan);
 			loan.addAccountFees(accountDisbursementFee2);
@@ -1620,10 +1685,18 @@ public class TestObjectFactory {
 			}
 			session.delete(actionDates);
 		}
+		
+		List<FeeBO> feeList = new ArrayList<FeeBO>(); 
+		for(AccountFeesEntity accountFees: account.getAccountFees()){
+			if(!feeList.contains(accountFees.getFees()))
+					feeList.add(accountFees.getFees());
+		}
+		
 		for (AccountFeesEntity accountFees : account.getAccountFees()) {
 			session.delete(accountFees);
 		}
 
+		deleteFees(feeList);
 		if (account instanceof LoanBO) {
 
 			LoanBO loan = (LoanBO) account;

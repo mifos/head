@@ -137,8 +137,8 @@
 												<mifos:mifoslabel name="Fees.feeappliesto" mandatory="yes" />
 											</td>
 											<td valign="top">
-												<mifos:select property="categoryType.categoryId" style="width:136px;" onchange="onPageLoad();">
-													<html-el:options property="id" labelProperty="lookUpValue" collection="CategoryList" />
+												<mifos:select property="categoryType" style="width:136px;" onchange="onPageLoad();">
+													<html-el:options property="id" labelProperty="name" collection="CategoryList" />
 												</mifos:select>
 											</td>
 										</tr>
@@ -147,7 +147,7 @@
 												<mifos:mifoslabel name="Fees.defaultfees" />
 											</td>
 											<td valign="top">
-												<html-el:checkbox property="adminCheck" value="1" />
+												<html-el:checkbox property="customerDefaultFee" value="1" />
 											</td>
 										</tr>
 										<tr class="fontnormal">
@@ -156,13 +156,21 @@
 											</td>
 											<td valign="top">
 
-												<html-el:radio property="feeFrequency.feeFrequencyType.feeFrequencyTypeId" value="${FeeFrequencyType.PERIODIC.value}" onclick="onPageLoad();">
-													<mifos:mifoslabel name="Fees.periodic" />
+												<html-el:radio property="feeFrequencyType" value="${FeeFrequencyType.PERIODIC.value}" onclick="onPageLoad();">
+													<c:forEach var="entity" items="${sessionScope.feeFrequencyTypeList}">
+														<c:if test="${entity.id == FeeFrequencyType.PERIODIC.value}">
+															<c:out value="${entity.name}" />
+														</c:if>
+													</c:forEach>
 												</html-el:radio>
 
 												<br>
-												<html-el:radio property="feeFrequency.feeFrequencyType.feeFrequencyTypeId" value="${FeeFrequencyType.ONETIME.value}" onclick="onPageLoad();">
-													<mifos:mifoslabel name="Fees.onetime" />
+												<html-el:radio property="feeFrequencyType" value="${FeeFrequencyType.ONETIME.value}" onclick="onPageLoad();">
+													<c:forEach var="entity" items="${sessionScope.feeFrequencyTypeList}">
+														<c:if test="${entity.id == FeeFrequencyType.ONETIME.value}">
+															<c:out value="${entity.name}" />
+														</c:if>
+													</c:forEach>
 												</html-el:radio>
 											</td>
 										</tr>
@@ -176,12 +184,12 @@
 													<br>
 													<div id="loanTimeOfChargeDiv">
 														<mifos:select property="loanCharge" style="width:180px;">
-															<html-el:options property="id" labelProperty="lookUpValue" collection="LoanTimeOfCharges" />
+															<html-el:options property="id" labelProperty="name" collection="TimeOfCharges" />
 														</mifos:select>
 													</div>
 													<div id="customerTimeOfChargeDiv">
 														<mifos:select property="customerCharge" style="width:180px;">
-															<html-el:options property="id" labelProperty="lookUpValue" collection="CustomerTimeOfCharges" />
+															<html-el:options property="id" labelProperty="name" collection="CustomerTimeOfCharges" />
 														</mifos:select>
 													</div>
 												</div>
@@ -193,13 +201,13 @@
 																	<tr class="fontnormal">
 
 																		<td width="49%">
-																			<html-el:radio property="feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId" value="${MeetingFrequency.WEEKLY.value}" onclick="onPageLoad();">
+																			<html-el:radio property="feeRecurrenceType" value="${MeetingFrequency.WEEKLY.value}" onclick="onPageLoad();">
 																				<mifos:mifoslabel name="Fees.weekly" />
 																			</html-el:radio>
 																		</td>
 
 																		<td width="49%">
-																			<html-el:radio property="feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId" value="${MeetingFrequency.MONTHLY.value}" onclick="onPageLoad();">
+																			<html-el:radio property="feeRecurrenceType" value="${MeetingFrequency.MONTHLY.value}" onclick="onPageLoad();">
 																				<mifos:mifoslabel name="Fees.monthly" />
 																			</html-el:radio>
 																		</td>
@@ -217,7 +225,7 @@
 																		<tr class="fontnormal">
 																			<td colspan="4">
 																				<mifos:mifoslabel name="Fees.labelRecurEvery" />
-																				<mifos:mifosnumbertext property="weekRecurAfter" size="3" />
+																				<mifos:mifosnumbertext property="weekRecurAfter" size="3" maxlength="3"/>
 																				<mifos:mifoslabel name="Fees.labelWeeks" />
 																			</td>
 																		</tr>
@@ -230,7 +238,7 @@
 																		<tr class="fontnormal">
 																			<td>
 																				<mifos:mifoslabel name="Fees.labelRecurEvery" />
-																				<mifos:mifosnumbertext property="monthRecurAfter" size="3" />
+																				<mifos:mifosnumbertext property="monthRecurAfter" size="3" maxlength="3"/>
 																				<mifos:mifoslabel name="Fees.labelMonths" />
 																			</td>
 																		</tr>
@@ -287,8 +295,8 @@
 															<td width="16%">
 																<mifos:mifosdecimalinput property="rate" size="3" decimalFmt="10.5"></mifos:mifosdecimalinput>
 																<mifos:mifoslabel name="Fees.percentof" />
-																<mifos:select property="feeFormula.feeFormulaId" style="width:136px;">
-																	<html-el:options property="id" labelProperty="lookUpValue" collection="FormulaList" />
+																<mifos:select property="feeFormula" style="width:136px;">
+																	<html-el:options property="id" labelProperty="name" collection="FormulaList" />
 																</mifos:select>
 															</td>
 															<td width="17%">
@@ -320,7 +328,7 @@
 												<mifos:mifoslabel name="Fees.GLCode" mandatory="yes" />
 											</td>
 											<td valign="top">
-												<mifos:select property="glCodeEntity.glcodeId" style="width:136px;">
+												<mifos:select property="glCode" style="width:136px;">
 													<html-el:options collection="glCodeList" property="glcodeId" labelProperty="glcode"></html-el:options>
 												</mifos:select>
 											</td>

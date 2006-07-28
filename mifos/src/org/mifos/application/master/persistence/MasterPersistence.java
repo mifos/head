@@ -115,4 +115,32 @@ public EntityMaster getLookUpEntity(String entityName,Short localeId) throws App
 		}
 		return paymentTypes;
 	}
+	
+
+	public List<MasterDataEntity> retrieveMasterEntities(Class clazz, Short localeId)throws PersistenceException {
+		try {
+			Session session = HibernateUtil.getSessionTL();
+			List<MasterDataEntity> masterEntities = session.createQuery("from " + clazz.getName()).list();
+			for (MasterDataEntity masterData : masterEntities) {
+				masterData.setLocaleId(localeId);
+			}
+			return masterEntities;
+		} catch (HibernateException he) {
+			new PersistenceException(he);
+		}
+		return null;
+	}
+	
+	public MasterDataEntity retrieveMasterEntity(Short entityId, Class clazz, Short localeId)throws PersistenceException {
+		try {
+			Session session = HibernateUtil.getSessionTL();
+			List<MasterDataEntity> masterEntity = session.createQuery("from " + clazz.getName() + " masterEntity where masterEntity.id = "+ entityId).list();
+			if(masterEntity!=null && masterEntity.size()>0)
+				return masterEntity.get(0);
+			throw new PersistenceException("errors.entityNotFound");
+		} catch (HibernateException he) {
+			new PersistenceException(he);
+		}
+		return null;
+	}
 }

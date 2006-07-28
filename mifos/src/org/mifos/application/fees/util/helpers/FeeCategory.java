@@ -37,6 +37,8 @@
  */
 package org.mifos.application.fees.util.helpers;
 
+import org.mifos.framework.exceptions.PropertyNotFoundException;
+
 public enum FeeCategory {
 	ALLCUSTOMERS((short) 1), CLIENT((short) 2), GROUP((short) 3), CENTER(
 			(short) 4), LOAN((short) 5);
@@ -50,5 +52,11 @@ public enum FeeCategory {
 	public Short getValue() {
 		return value;
 	}
-
+	
+	public static FeeCategory getFeeCategory(Short value)throws PropertyNotFoundException{
+		for (FeeCategory feeCategory : FeeCategory.values()) 
+			if (feeCategory.getValue().equals(value))
+				return feeCategory;
+		throw new PropertyNotFoundException("FeeCategory");
+	}
 }

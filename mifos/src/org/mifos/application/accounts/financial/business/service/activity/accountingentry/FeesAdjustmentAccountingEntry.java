@@ -26,7 +26,7 @@ public class FeesAdjustmentAccountingEntry extends BaseAccountingEntry {
 			FeesTrxnDetailEntity feeTrxn = iterFees.next();
 
 			addAccountEntryDetails(removeSign(feeTrxn.getFeeAmount()), finActionFee,
-					feeTrxn.getAccountFees().getFees().getGlCodeEntity(),
+					feeTrxn.getAccountFees().getFees().getGlCode(),
 					FinancialConstants.DEBIT);
 
 			addAccountEntryDetails(removeSign(feeTrxn.getFeeAmount()), finActionFee,
