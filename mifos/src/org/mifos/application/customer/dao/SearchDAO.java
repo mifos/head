@@ -169,16 +169,6 @@ public class SearchDAO {
 		}
 		queryInputs.setParamList(paramList);
 		queryResult.setQueryInputs(queryInputs);
-		for (Object p : paramList) {
-			
-			Param pp =(Param) p;
-			
-			System.out.println("Param name is -->"+pp.getParamName()+"param value is --->"+pp.getValue());
-			
-		}
-		
-		System.out.println("qury we are executing is 1---------------->>"+namedQuery[0]);
-		System.out.println("qury we are executing is 2---------------->>"+namedQuery[1]);
 	}
 	
 	public void intiliatizeQueryInputsForPersonnelSearch(String searchString, Short userLevelId,String officeSearchId ,Short UserId ,Short officeId) throws SystemException
@@ -318,11 +308,8 @@ public class SearchDAO {
 				paramList.add(typeNameValue("String","OFFICE_SEARCH_ID",officeSearchId+"%"));
 			}
 		}			
-		
 		paramList.add(typeNameValue("Short","USERID",UserId));
 		paramList.add(typeNameValue("Short","LOID",PersonnelConstants.LOAN_OFFICER));
-		
-		
 		paramList.add(typeNameValue("Short","LEVELID",CustomerConstants.CLIENT_LEVEL_ID));
 		paramList.add(typeNameValue("Short","USERLEVEL_ID",userLevelId));
 		paramList.add(typeNameValue("String","SEARCH_STRING",searchString+"%"));
