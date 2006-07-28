@@ -2,6 +2,9 @@ package org.mifos.framework.components.customTableTag;
 
 import java.util.*;
 
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.PageContext;
+
 import org.mifos.framework.exceptions.TableTagParseException;
 
 public class Table {
@@ -26,8 +29,8 @@ public class Table {
 		return row;
 	}
 
-	public void getTable(StringBuilder tableInfo, List obj, Locale locale,Locale prefferedLocale,Locale mfiLocale)
-			throws TableTagParseException {
+	public void getTable(StringBuilder tableInfo, List obj, Locale locale,Locale prefferedLocale,Locale mfiLocale, PageContext pageContext, String bundle)
+			throws TableTagParseException, JspException {
 		tableInfo.append("<table width=\"" + getRow().getTotWidth()
 				+ "%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\" >");
 
@@ -35,7 +38,7 @@ public class Table {
 		tableInfo.append("<tr ");
 		getHeaderDetails().getHeaderInfo(tableInfo);
 		tableInfo.append(" >");
-		getRow().getRowHeader(tableInfo);
+		getRow().getRowHeader(tableInfo, pageContext, bundle);
 		tableInfo.append("</tr>");
 		// End :: Generationg Header
 

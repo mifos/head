@@ -10,9 +10,12 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.application.configuration.business.MifosConfiguration;
+import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.LabelTagUtils;
 
 public class LoanActivityTag extends BodyTagSupport{
 	Locale locale = null;
@@ -26,21 +29,21 @@ public class LoanActivityTag extends BodyTagSupport{
 				builder
 						.append("<tr>")
 						.append("<td colspan=\"8\">&nbsp;</td>")
-						.append("<td colspan=\"4\" class=\"drawtablerowboldnoline\">Running balance</td>")
+						.append("<td colspan=\"4\" class=\"drawtablerowboldnoline\">"+getLabel("loan.running_bal",locale)+"</td>")
 						.append("</tr>")
 						.append("<tr class=\"drawtablerowbold\">")
-						.append("<td width=\"9%\" class=\"drawtablerowbold\">Date</td>")
-						.append("<td width=\"19%\" class=\"drawtablerowbold\">Activity</td>")
-						.append("<td width=\"8%\" align=\"right\" class=\"drawtablerowbold\">Principal</td>")
-						.append("<td width=\"8%\" align=\"right\" class=\"drawtablerowbold\">Interest</td>")
-						.append("<td width=\"8%\" align=\"right\" class=\"drawtablerowbold\">Fees</td>")
-						.append("<td width=\"8%\" align=\"right\" class=\"drawtablerowbold\">Penalty</td>")
-						.append("<td width=\"6%\" align=\"right\" class=\"drawtablerowbold\">Total</td>")
+						.append("<td width=\"9%\" class=\"drawtablerowbold\">"+getLabel("loan.date",locale)+"</td>")
+						.append("<td width=\"19%\" class=\"drawtablerowbold\">"+getLabel("loan.activity",locale)+"</td>")
+						.append("<td width=\"8%\" align=\"right\" class=\"drawtablerowbold\">"+getLabel("loan.principal",locale)+"</td>")
+						.append("<td width=\"8%\" align=\"right\" class=\"drawtablerowbold\">"+MifosConfiguration.getInstance().getLabel(ConfigurationConstants.INTEREST,locale)+"</td>")
+						.append("<td width=\"8%\" align=\"right\" class=\"drawtablerowbold\">"+getLabel("loan.fees",locale)+"</td>")
+						.append("<td width=\"8%\" align=\"right\" class=\"drawtablerowbold\">"+getLabel("loan.penalty",locale)+"</td>")
+						.append("<td width=\"6%\" align=\"right\" class=\"drawtablerowbold\">"+getLabel("loan.total",locale)+"</td>")
 						.append("<td width=\"4\" align=\"right\" class=\"fontnormalbold\">&nbsp;</td>")
-						.append("<td width=\"8%\" align=\"right\" class=\"drawtablerowbold\">Principal</td>")
-						.append("<td width=\"8%\" align=\"right\" class=\"drawtablerowbold\">Interest</td>")
-						.append("<td width=\"8%\" align=\"right\" class=\"drawtablerowbold\">Fees</td>")
-						.append("<td width=\"6%\" align=\"right\" class=\"drawtablerowbold\">Total</td>")
+						.append("<td width=\"8%\" align=\"right\" class=\"drawtablerowbold\">"+getLabel("loan.principal",locale)+"</td>")
+						.append("<td width=\"8%\" align=\"right\" class=\"drawtablerowbold\">"+MifosConfiguration.getInstance().getLabel(ConfigurationConstants.INTEREST,locale)+"</td>")
+						.append("<td width=\"8%\" align=\"right\" class=\"drawtablerowbold\">"+getLabel("loan.fees",locale)+"</td>")
+						.append("<td width=\"6%\" align=\"right\" class=\"drawtablerowbold\">"+getLabel("loan.total",locale)+"</td>")
 						.append("</tr>");
 				
 				List<LoanActivityView> loanRecentActivityViewSet = (List<LoanActivityView>) object;
@@ -103,4 +106,7 @@ public class LoanActivityTag extends BodyTagSupport{
 		return stringBuilder.toString();
 	}
 
+	private String  getLabel(String key,Locale locale) throws JspException{
+		return LabelTagUtils.getInstance().getLabel(pageContext,"loanUIResources",locale,key,null);
+	}
 }

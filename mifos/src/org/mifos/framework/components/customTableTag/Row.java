@@ -3,6 +3,9 @@ package org.mifos.framework.components.customTableTag;
 import java.util.*;
 import java.lang.reflect.*;
 
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.PageContext;
+
 import org.mifos.framework.exceptions.TableTagParseException;
 
 public class Row {
@@ -37,10 +40,10 @@ public class Row {
 		this.bottomLineRequired = bottomLineRequired;
 	}
 
-	public void getRowHeader(StringBuilder tableInfo) {
+	public void getRowHeader(StringBuilder tableInfo, PageContext pageContext, String bundle) throws JspException {
 		Column[] column = getColumn();
 		for (int i = 0; i < column.length; i++) {
-			column[i].getColumnHeader(tableInfo);
+			column[i].getColumnHeader(tableInfo, pageContext,bundle);
 		}
 	}
 

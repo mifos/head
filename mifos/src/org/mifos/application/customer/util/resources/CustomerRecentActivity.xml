@@ -13,7 +13,7 @@
 	<column label="Amount"    value="amount"  valueType="method"   columnType="text"> 
 	    <columnDetails   rowStyle="drawtablerow" colWidth="22"/>
     </column>
-    	<column label="Posted by"    value="postedBy"  valueType="method"   columnType="text"> 
+    	<column label="Postedby"    value="postedBy"  valueType="method"   columnType="text"> 
 	    <columnDetails   rowStyle="drawtablerow" colWidth="27"/>
     </column>
   </row>

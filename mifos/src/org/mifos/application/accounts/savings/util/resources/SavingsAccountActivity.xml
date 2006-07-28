@@ -13,7 +13,7 @@
     <column label="Amount" value="amount" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="17" align="right"/>
     </column>
-    <column label="Running Balance" value="runningBalance" valueType="method" columnType="text">
+    <column label="RunningBalance" value="runningBalance" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="19" align="right"/>
     </column>
   </row>

@@ -10,10 +10,10 @@
 	<column label="Field" value="fieldName" valueType="method" columnType="text">
 	     <columnDetails  rowStyle="drawtablerow" colWidth="27"/>
     </column>
-	<column label="Old Value"    value="oldValue"  valueType="method"   columnType="text"> 
+	<column label="OldValue"    value="oldValue"  valueType="method"   columnType="text"> 
 	    <columnDetails   rowStyle="drawtablerow" colWidth="20"/>
     </column>
-    <column label="New Value"    value="newValue"  valueType="method"   columnType="text"> 
+    <column label="NewValue"    value="newValue"  valueType="method"   columnType="text"> 
 	    <columnDetails   rowStyle="drawtablerow" colWidth="19"/>
     </column>
     <column label="User"  value="userName"  valueType="method"   columnType="text"> 

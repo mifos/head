@@ -7,7 +7,7 @@
 	<column label="Installment" value="installment" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="10"/>
     </column>
-	<column label="Due Date" value="dueDateInUserLocale" valueType="method" columnType="text">
+	<column label="DueDate" value="dueDateInUserLocale" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="22"/>
     </column>
     <column label="Principal" value="principal" valueType="method" columnType="text">

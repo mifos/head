@@ -17,6 +17,7 @@ import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.struts.tags.MifosPropertyMessageResources;
 import org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.LabelTagUtils;
 import org.mifos.framework.util.helpers.Money;
 
 public class LoanRepaymentTableTag extends BodyTagSupport {
@@ -48,22 +49,22 @@ public class LoanRepaymentTableTag extends BodyTagSupport {
 				StringBuilder builderHeader1 = new StringBuilder();
 				builderHeader1
 						.append(
-								"<tr><td width=\"6%\" class=\"drawtablerowbold\">No.</td>")
+								"<tr><td width=\"6%\" class=\"drawtablerowbold\">"+getLabel("loan.no",locale)+"</td>")
 						.append(
-								"<td width=\"18%\" class=\"drawtablerowbold\">Due Date</td>")
+								"<td width=\"18%\" class=\"drawtablerowbold\">"+getLabel("loan.due_date",locale)+"</td>")
 						.append(
-								"<td width=\"18%\" class=\"drawtablerowbold\">Date Paid</td>")
+								"<td width=\"18%\" class=\"drawtablerowbold\">"+getLabel("loan.date_paid",locale)+"</td>")
 						.append(
-								"<td width=\"15%\" align=\"right\" class=\"drawtablerowbold\">Principal</td>");
+								"<td width=\"15%\" align=\"right\" class=\"drawtablerowbold\">"+getLabel("loan.principal",locale)+"</td>");
 				
 				builderHeader1.append(
 								"<td width=\"14%\" align=\"right\" class=\"drawtablerowbold\">"+MifosConfiguration.getInstance().getLabel(ConfigurationConstants.INTEREST,locale)+"</td>");
 				
 				
 						builderHeader1.append(
-								"<td width=\"14%\" align=\"right\" class=\"drawtablerowbold\">Fees</td>")
+								"<td width=\"14%\" align=\"right\" class=\"drawtablerowbold\">"+getLabel("loan.fees",locale)+"</td>")
 						.append(
-								"<td width=\"15%\" align=\"right\" class=\"drawtablerowbold\">Total</td></tr>");
+								"<td width=\"15%\" align=\"right\" class=\"drawtablerowbold\">"+getLabel("loan.total",locale)+"</td></tr>");
 
 				List<AccountActionDate> list = (List<AccountActionDate>) object;
 				// iterate once through the list to get the totals. Else will
@@ -87,27 +88,27 @@ public class LoanRepaymentTableTag extends BodyTagSupport {
 					// installments paid and running balance table is required
 					builderHeader2
 							.append(
-									"<tr><td width=\"25%\" align=\"right\" class=\"drawtablerowbold\">Principal</td>")
+									"<tr><td width=\"25%\" align=\"right\" class=\"drawtablerowbold\">"+getLabel("loan.principal",locale)+"</td>")
 							.append(
 									"<td width=\"25%\" align=\"right\" class=\"drawtablerowbold\">"+MifosConfiguration.getInstance().getLabel(ConfigurationConstants.INTEREST,locale)+"</td>")
 							.append(
-									"<td width=\"25%\" align=\"right\" class=\"drawtablerowbold\">Fees</td>")
+									"<td width=\"25%\" align=\"right\" class=\"drawtablerowbold\">"+getLabel("loan.fees",locale)+"</td>")
 							.append(
-									"<td width=\"25%\" align=\"right\" class=\"drawtablerowbold\">Total</td></tr>");
+									"<td width=\"25%\" align=\"right\" class=\"drawtablerowbold\">"+getLabel("loan.total",locale)+"</td></tr>");
 
 				}
 
 				builder1
 						.append("<tr><td colspan=\"7\" class=\"drawtablerowbold\">&nbsp;</tr>");
 				builder2
-						.append("<tr><td colspan=\"4\" class=\"drawtablerowbold\">Running Balance</tr>");
+						.append("<tr><td colspan=\"4\" class=\"drawtablerowbold\">"+getLabel("loan.running_bal",locale)+"</tr>");
 
 				builder1.append(builderHeader1.toString());
 				builder2.append(builderHeader2.toString());
 
 				if (twoTables){
 					builder1
-							.append("<tr><td colspan=\"7\" class=\"drawtablerowbold\">Installments Paid</tr>");
+							.append("<tr><td colspan=\"7\" class=\"drawtablerowbold\">"+getLabel("loan.instt_paid",locale)+"</tr>");
 					builder2
 					.append("<tr><td colspan=\"4\" class=\"drawtablerowbold\">&nbsp;</tr>");
 				}
@@ -135,7 +136,7 @@ public class LoanRepaymentTableTag extends BodyTagSupport {
 
 				if (dueInstallments) {
 					builder1
-							.append("<tr><td colspan=\"7\" class=\"drawtablerowbold\">Installments Due</tr>");
+							.append("<tr><td colspan=\"7\" class=\"drawtablerowbold\">"+getLabel("loan.instt_due",locale)+"</tr>");
 					while (index < list.size() - 1
 							&& installment.getPaymentStatus() == Constants.NO
 							&& installment.getActionDate().getTime() <= new java.util.Date()
@@ -153,7 +154,7 @@ public class LoanRepaymentTableTag extends BodyTagSupport {
 					futureInstallments = true;
 				if(futureInstallments){
 					builder1
-							.append("<tr><td colspan=\"7\" class=\"drawtablerowbold\">Future Installments</tr>");
+							.append("<tr><td colspan=\"7\" class=\"drawtablerowbold\">"+getLabel("loan.future_install",locale)+"</tr>");
 					while (index < list.size() - 1) {
 						index++;
 						builder1.append(createInstallmentRow(installment));
@@ -252,6 +253,8 @@ public class LoanRepaymentTableTag extends BodyTagSupport {
 		return builder.toString();
 
 	}
-
+	private String  getLabel(String key,Locale locale) throws JspException{
+		return LabelTagUtils.getInstance().getLabel(pageContext,"loanUIResources",locale,key,null);
+	}
 
 }

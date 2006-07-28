@@ -7,10 +7,10 @@
 	<column label="Date" value="userPrefferedTransactionDate" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="8"/>
     </column>
-	<column label="Old Status" value="oldStatusName" valueType="method" columnType="text">
+	<column label="OldStatus" value="oldStatusName" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="8"/>
     </column>
-    <column label="New Status" value="newStatusName" valueType="method" columnType="text">
+    <column label="NewStatus" value="newStatusName" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="8"/>
     </column>
     <column label="User" value="personnelName" valueType="method" columnType="text">

@@ -3,8 +3,11 @@ package org.mifos.framework.components.customTableTag;
 import java.io.IOException;
 import java.lang.reflect.*;
 import java.util.*;
+
 import javax.servlet.jsp.tagext.BodyTagSupport;
 import javax.servlet.jsp.JspException;
+
+import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.TableTagParseException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -24,12 +27,13 @@ public class TableTag extends BodyTagSupport {
   Locale mfiLocale=null;
   Locale prefferedLocale=null;
 
-  protected String source=null;
-  protected String scope=null;
-  protected String xmlFileName=null;
-  protected String moduleName=null;
-  protected String passLocale=null;
-
+  private String source=null;
+  private String scope=null;
+  private String xmlFileName=null;
+  private String moduleName=null;
+  private String passLocale=null;
+  
+  
   public void setSource(String source){
 	  this.source =source;
   }
@@ -69,12 +73,12 @@ public class TableTag extends BodyTagSupport {
   }
 
   public int doStartTag() throws JspException {
-
-
-
     try {
 
       table=TableTagParser.getInstance().parser(ResourceLoader.getURI("org/mifos/application/"+moduleName+"/util/resources/"+xmlFileName).toString());
+     // PropertyResourceBundle bundle =	(PropertyResourceBundle)PropertyResourceBundle.getBundle("org/mifos/application/"+moduleName+"/util/resources/"+getResourcebundleName(moduleName));
+      
+		
       tableInfo=new StringBuilder();
       if(source==null || scope==null){
        	  throw new JspException();
@@ -103,7 +107,7 @@ public class TableTag extends BodyTagSupport {
     	  }
       }
       
-     table.getTable(tableInfo,obj,locale,prefferedLocale,mfiLocale);
+     table.getTable(tableInfo,obj,locale,prefferedLocale,mfiLocale, pageContext,getResourcebundleName(moduleName));
 
 
     }
@@ -138,6 +142,16 @@ public class TableTag extends BodyTagSupport {
 		if(userContext.getMfiLocale()!=null){
 			mfiLocale=userContext.getMfiLocale();
 	    }
+  }
+  
+  private String getResourcebundleName(String moduleName){
+	  if(moduleName.lastIndexOf("\\")>-1)
+	  moduleName=moduleName.substring(moduleName.lastIndexOf("\\")+1,moduleName.length());
+	  else if(moduleName.lastIndexOf("/")>-1 )
+			  moduleName=moduleName.substring(moduleName.lastIndexOf("/")+1,moduleName.length());
+	  if (moduleName.contains( "UIResources") ) return moduleName;
+	  else  return moduleName + "UIResources";
+	  
   }
 
 }
