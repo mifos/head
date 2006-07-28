@@ -13,6 +13,7 @@ import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
 import org.mifos.application.customer.business.CustomerBO;
@@ -258,7 +259,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				.getAccountActionDate(custTrxn.getInstallmentId());
 		assertEquals(
 				"The installment adjusted should now be marked unpaid(due).",
-				installment.getPaymentStatus(), AccountConstants.PAYMENT_UNPAID);
+				installment.getPaymentStatus(), PaymentStatus.UNPAID.getValue());
 
 	}
 
@@ -368,7 +369,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		accountAction.setMiscPenaltyPaid(TestObjectFactory
 				.getMoneyForMFICurrency(100));
 		accountAction.setPaymentDate(currentDate);
-		accountAction.setPaymentStatus(AccountConstants.PAYMENT_PAID);
+		accountAction.setPaymentStatus(PaymentStatus.PAID.getValue());
 
 		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
 				.getInstance().getPersistenceService(

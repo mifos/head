@@ -15,6 +15,7 @@ import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -156,7 +157,7 @@ public class TestLoanPersistence extends MifosTestCase {
 			assertTrue(date.after(actionDates.getActionDate()));
 			
 			//assert that the payment status in 0 - unpaid
-			assertEquals(AccountConstants.PAYMENT_UNPAID,actionDates.getPaymentStatus());
+			assertEquals(PaymentStatus.UNPAID.getValue(),actionDates.getPaymentStatus());
 			
 			
 			

@@ -15,6 +15,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
 import org.mifos.application.bulkentry.exceptions.BulkEntryAccountUpdateException;
 import org.mifos.application.customer.business.CustomerBO;
@@ -416,7 +417,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 	private void makePaymentForallInstallments() {
 		for (AccountActionDateEntity actionDate : account
 				.getAccountActionDates()) {
-			actionDate.setPaymentStatus(AccountConstants.PAYMENT_PAID);
+			actionDate.setPaymentStatus(PaymentStatus.PAID.getValue());
 		}
 
 		accountPersistanceService.updateAccount(account);

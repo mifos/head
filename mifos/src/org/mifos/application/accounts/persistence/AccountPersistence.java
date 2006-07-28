@@ -18,6 +18,7 @@ import org.mifos.application.accounts.business.AccountNotesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.framework.exceptions.HibernateProcessException;
@@ -51,7 +52,7 @@ public class AccountPersistence extends Persistence {
 			session=HibernateUtil.getSessionTL();
 			Query query = session.getNamedQuery(NamedQueryConstants.ACCOUNT_GETNEXTINSTALLMENTIDS);
 			query.setInteger("accountId",accountId);
-			query.setShort("paymentStatus",AccountConstants.PAYMENT_UNPAID);
+			query.setShort("paymentStatus",PaymentStatus.UNPAID.getValue());
 			installmentIds=query.list();
 		}catch(Exception ex){
 			throw new PersistenceException(ex);
@@ -127,7 +128,7 @@ public class AccountPersistence extends Persistence {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("ACCOUNT_ID", accountId);
 		queryParameters.put("ACTION_DATE", transactionDate);
-		queryParameters.put("PAYMENT_STATUS", AccountConstants.PAYMENT_UNPAID);
+		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
 		List<AccountActionDateEntity> queryResult = executeNamedQuery(
 				NamedQueryConstants.CUSTOMER_ACCOUNT_ACTIONS_DATE,
 				queryParameters);
@@ -156,7 +157,7 @@ public class AccountPersistence extends Persistence {
 		queryParameters.put("ONHOLD_CLIENT_STATE",CustomerConstants.CLIENT_ONHOLD);
 		queryParameters.put("ONHOLD_GROUP_STATE",GroupConstants.HOLD);
 		queryParameters.put("CURRENT_DATE",currentDate);
-		queryParameters.put("PAYMENT_UNPAID",AccountConstants.PAYMENT_UNPAID);		
+		queryParameters.put("PAYMENT_UNPAID",PaymentStatus.UNPAID.getValue());		
 		return executeNamedQuery(NamedQueryConstants.GET_TODAYS_UNPAID_INSTALLMENT_FOR_ACTIVE_CUSTOMERS,queryParameters);			
 	}
 	

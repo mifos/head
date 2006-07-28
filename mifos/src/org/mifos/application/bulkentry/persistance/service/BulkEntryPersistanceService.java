@@ -49,6 +49,7 @@ import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
 import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
 import org.mifos.application.bulkentry.persistance.BulkEntryPersistance;
@@ -102,7 +103,7 @@ public class BulkEntryPersistanceService extends PersistenceService {
 					.iterator(); iter.hasNext();) {
 				AccountActionDateEntity actionDate = iter.next();
 				if (actionDate.getPaymentStatus().equals(
-						AccountConstants.PAYMENT_PAID)
+						PaymentStatus.PAID.getValue())
 						|| actionDate.compareDate(DateUtils
 								.getCurrentDateWithoutTimeStamp()) > 0)
 					iter.remove();

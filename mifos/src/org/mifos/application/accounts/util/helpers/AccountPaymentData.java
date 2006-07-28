@@ -66,12 +66,12 @@ public abstract class AccountPaymentData {
 	public AccountPaymentData(AccountActionDateEntity accountActionDate) {
 		if (accountActionDate != null)
 			setInstallmentId(accountActionDate.getInstallmentId());
-		setPaymentStatus(AccountConstants.PAYMENT_PAID);
+		setPaymentStatus(PaymentStatus.PAID.getValue());
 	}
 
 	public AccountPaymentData(BulkEntryAccountActionView bulkEntryAccountAction) {
 		if (bulkEntryAccountAction != null)
 			setInstallmentId(bulkEntryAccountAction.getInstallmentId());
-		setPaymentStatus(AccountConstants.PAYMENT_PAID);
+		setPaymentStatus(PaymentStatus.PAID.getValue());
 	}
 }

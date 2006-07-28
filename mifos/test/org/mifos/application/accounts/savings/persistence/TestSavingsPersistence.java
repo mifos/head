@@ -22,6 +22,7 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.checklist.business.AccountCheckListBO;
 import org.mifos.application.checklist.business.CheckListDetailEntity;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
@@ -496,7 +497,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 		AccountActionDateEntity accountActionDateEntity = savings
 				.getAccountActionDate((short) 1);
 		accountActionDateEntity.setActionDate(offSetCurrentDate(7));
-		accountActionDateEntity.setPaymentStatus(AccountConstants.PAYMENT_PAID);
+		accountActionDateEntity.setPaymentStatus(PaymentStatus.PAID.getValue());
 		Calendar currentDateCalendar = new GregorianCalendar();
 		java.sql.Date currentDate = new java.sql.Date(currentDateCalendar.getTimeInMillis());
 

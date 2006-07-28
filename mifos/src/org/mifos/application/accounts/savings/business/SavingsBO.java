@@ -70,6 +70,7 @@ import org.mifos.application.accounts.util.helpers.AccountPaymentData;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.exception.StateChangeException;
@@ -928,17 +929,17 @@ public class SavingsBO extends AccountBO {
 			if (accountAction != null
 					&& enteredAmount.getAmountDoubleValue() > 0.0) {
 				if (accountAction.getPaymentStatus().equals(
-						AccountConstants.PAYMENT_PAID))
+						PaymentStatus.PAID.getValue()))
 					throw new AccountException("errors.update",
 							new String[] { getGlobalAccountNum() });
 				Money depositAmount = new Money();
-				Short paymentStatus = AccountConstants.PAYMENT_UNPAID;
+				Short paymentStatus = PaymentStatus.UNPAID.getValue();
 				if (enteredAmount.getAmountDoubleValue() >= accountAction
 						.getTotalDepositDue().getAmountDoubleValue()) {
 					depositAmount = accountAction.getTotalDepositDue();
 					enteredAmount = enteredAmount.subtract(accountAction
 							.getTotalDepositDue());
-					paymentStatus = AccountConstants.PAYMENT_PAID;
+					paymentStatus = PaymentStatus.PAID.getValue();
 				} else {
 					depositAmount = enteredAmount;
 					enteredAmount = new Money();
@@ -946,7 +947,7 @@ public class SavingsBO extends AccountBO {
 				if (getSavingsType().getSavingsTypeId().equals(
 						ProductDefinitionConstants.VOLUNTARY)
 						&& depositAmount.getAmountDoubleValue() > 0.0)
-					paymentStatus = AccountConstants.PAYMENT_PAID;
+					paymentStatus = PaymentStatus.PAID.getValue();
 				savingsBalance = savingsBalance.add(depositAmount);
 
 				savingsPerformance.setPaymentDetails(depositAmount);
@@ -1334,7 +1335,7 @@ public class SavingsBO extends AccountBO {
 		for (AccountActionDateEntity accountAction : getAccountActionDates()) {
 			if (accountAction.getActionDate().compareTo(dueDate) <= 0
 					&& accountAction.getPaymentStatus().equals(
-							AccountConstants.PAYMENT_UNPAID)
+							PaymentStatus.UNPAID.getValue())
 					&& accountAction.getCustomer().getCustomerId().equals(
 							customerId))
 				accountActions.add(accountAction);
@@ -1409,13 +1410,13 @@ public class SavingsBO extends AccountBO {
 				newAmount = newAmount.subtract(accountAction.getDeposit());
 				accountAction.setDepositPaid(accountAction.getDepositPaid()
 						.add(accountTrxn.getDepositAmount()));
-				accountAction.setPaymentStatus(AccountConstants.PAYMENT_PAID);
+				accountAction.setPaymentStatus(PaymentStatus.PAID.getValue());
 			} else {
 				accountTrxn.setDepositAmount(newAmount);
 				newAmount = newAmount.subtract(newAmount);
 				accountAction.setDepositPaid(accountAction.getDepositPaid()
 						.add(accountTrxn.getDepositAmount()));
-				accountAction.setPaymentStatus(AccountConstants.PAYMENT_UNPAID);
+				accountAction.setPaymentStatus(PaymentStatus.UNPAID.getValue());
 			}
 			accountAction
 					.setPaymentDate(new java.sql.Date(new Date().getTime()));
@@ -1485,7 +1486,7 @@ public class SavingsBO extends AccountBO {
 								.getDepositPaid().add(
 										accountTrxn.getDepositAmount()));
 						accountAction
-								.setPaymentStatus(AccountConstants.PAYMENT_PAID);
+								.setPaymentStatus(PaymentStatus.PAID.getValue());
 					} else if (newAmount.getAmountDoubleValue() != 0) {
 						accountTrxn.setDepositAmount(newAmount);
 						newAmount = newAmount.subtract(newAmount);
@@ -1493,7 +1494,7 @@ public class SavingsBO extends AccountBO {
 								.getDepositPaid().add(
 										accountTrxn.getDepositAmount()));
 						accountAction
-								.setPaymentStatus(AccountConstants.PAYMENT_UNPAID);
+								.setPaymentStatus(PaymentStatus.UNPAID.getValue());
 					}
 					accountAction.setPaymentDate(new java.sql.Date(new Date()
 							.getTime()));
@@ -1547,7 +1548,7 @@ public class SavingsBO extends AccountBO {
 		if (accntActionDate != null) {
 			accntActionDate.setDepositPaid(accntActionDate.getDepositPaid()
 					.subtract(savingsTrxn.getDepositAmount()));
-			accntActionDate.setPaymentStatus(AccountConstants.PAYMENT_UNPAID);
+			accntActionDate.setPaymentStatus(PaymentStatus.UNPAID.getValue());
 			accntActionDate.setPaymentDate(null);
 		}
 		getSavingsPerformance().setTotalDeposits(
@@ -1692,7 +1693,7 @@ public class SavingsBO extends AccountBO {
 		Money overdueAmount = new Money();
 		if (isMandatory()) {
 			for (AccountActionDateEntity accountActionDate : getAccountActionDates()) {
-				if (accountActionDate.getPaymentStatus().shortValue() == AccountConstants.PAYMENT_UNPAID
+				if (accountActionDate.getPaymentStatus().shortValue() == PaymentStatus.UNPAID.getValue()
 						&& (accountActionDate.getActionDate()
 								.before(meetingDate))) {
 					overdueAmount = overdueAmount.add(accountActionDate
@@ -1749,7 +1750,7 @@ public class SavingsBO extends AccountBO {
 			for (AccountActionDateEntity accntActionDate : getAccountActionDates()) {
 				if (accntActionDate.getInstallmentId().equals(installmentId)
 						&& accntActionDate.getPaymentStatus().equals(
-								AccountConstants.PAYMENT_UNPAID)) {
+								PaymentStatus.UNPAID.getValue())) {
 					totalAmount = totalAmount.add(accntActionDate
 							.getTotalDepositDue());
 				}
@@ -1776,7 +1777,7 @@ public class SavingsBO extends AccountBO {
 				if (accntActionDate.getInstallmentId().equals(
 						nextAccountAction.getInstallmentId())
 						&& accntActionDate.getPaymentStatus().equals(
-								AccountConstants.PAYMENT_UNPAID))
+								PaymentStatus.UNPAID.getValue()))
 					nextInstallment.add(accntActionDate);
 		}
 		return nextInstallment;
@@ -1894,7 +1895,7 @@ public class SavingsBO extends AccountBO {
 			for (AccountActionDateEntity accountAction : getAccountActionDates()) {
 				if (accountAction.getActionDate().compareTo(currentDate) <= 0
 						&& accountAction.getPaymentStatus().equals(
-								AccountConstants.PAYMENT_UNPAID)
+								PaymentStatus.UNPAID.getValue())
 						&& accountAction.getCustomer().getCustomerId().equals(
 								customerId))
 					dueInstallements.add(accountAction);

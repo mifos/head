@@ -55,6 +55,7 @@ import org.mifos.application.accounts.loan.util.valueobjects.LoanActivity;
 import org.mifos.application.accounts.loan.util.valueobjects.LoanSummary;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.valueobjects.Account;
 import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
 import org.mifos.application.accounts.util.valueobjects.AccountApplyChargesMaster;
@@ -319,7 +320,7 @@ public class AccountsApplyChargesDAO extends DAO {
 			accountActionDateList = session
 					.createQuery(
 							" from org.mifos.application.accounts.util.valueobjects.AccountActionDate as aad  where aad.actionDate>=current_date and aad.paymentStatus=:paymentStatus and aad.account.accountId=:accountId order by aad.installmentId")
-					.setShort("paymentStatus", AccountConstants.PAYMENT_UNPAID)
+					.setShort("paymentStatus", PaymentStatus.UNPAID.getValue())
 					.setInteger("accountId", accountId).list();
 
 			transaction.commit();

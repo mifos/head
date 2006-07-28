@@ -45,6 +45,7 @@ import java.util.List;
 import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
 import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
 import org.mifos.framework.persistence.Persistence;
@@ -55,7 +56,7 @@ public class BulkEntryPersistance extends Persistence {
 			Date meetingDate, String searchString, Short officeId) {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("MEETING_DATE", meetingDate);
-		queryParameters.put("PAYMENT_STATUS", AccountConstants.PAYMENT_UNPAID);
+		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
 		queryParameters.put("SEARCH_STRING", searchString + '%');
 		queryParameters.put("OFFICE_ID", officeId);
 		List<BulkEntryAccountActionView> queryResult = executeNamedQuery(
@@ -68,7 +69,7 @@ public class BulkEntryPersistance extends Persistence {
 			Date meetingDate, String searchString, Short officeId) {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("MEETING_DATE", meetingDate);
-		queryParameters.put("PAYMENT_STATUS", AccountConstants.PAYMENT_UNPAID);
+		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
 		queryParameters.put("SEARCH_STRING", searchString + '%');
 		queryParameters.put("OFFICE_ID", officeId);
 		List<BulkEntryAccountFeeActionView> queryResult = executeNamedQuery(

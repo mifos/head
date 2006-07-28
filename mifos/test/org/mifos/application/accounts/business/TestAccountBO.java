@@ -55,6 +55,7 @@ import org.mifos.application.accounts.persistence.service.AccountPersistanceServ
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.fees.business.FeeBO;
@@ -251,7 +252,7 @@ public class TestAccountBO extends TestAccount {
 				.getAccountActionDate(lastLoanTrxn.getInstallmentId());
 		assertEquals(
 				"The installment adjusted should now be marked unpaid(due).",
-				installment.getPaymentStatus(), AccountConstants.PAYMENT_UNPAID);
+				installment.getPaymentStatus(), PaymentStatus.UNPAID.getValue());
 
 	}
 

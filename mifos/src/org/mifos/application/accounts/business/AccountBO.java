@@ -59,6 +59,7 @@ import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.customer.business.CustomerBO;
@@ -600,7 +601,7 @@ public class AccountBO extends BusinessObject {
 		if (isCurrentDateEquallToInstallmentDate()) {
 			for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
 				if (accountActionDateEntity.getPaymentStatus().equals(
-						AccountConstants.PAYMENT_UNPAID)) {
+						PaymentStatus.UNPAID.getValue())) {
 					if (accountActionDateEntity.compareDate(DateUtils
 							.getCurrentDateWithoutTimeStamp()) <= 0) {
 						dueActionDateList.add(accountActionDateEntity);
@@ -611,7 +612,7 @@ public class AccountBO extends BusinessObject {
 			Boolean flag = true;
 			for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
 				if (accountActionDateEntity.getPaymentStatus().equals(
-						AccountConstants.PAYMENT_UNPAID)) {
+						PaymentStatus.UNPAID.getValue())) {
 					if (accountActionDateEntity.compareDate(DateUtils
 							.getCurrentDateWithoutTimeStamp()) < 0) {
 						dueActionDateList.add(accountActionDateEntity);
@@ -635,7 +636,7 @@ public class AccountBO extends BusinessObject {
 		AccountActionDateEntity accountActionDate = null;
 		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
 			if (accountActionDateEntity.getPaymentStatus().equals(
-					AccountConstants.PAYMENT_UNPAID)) {
+					PaymentStatus.UNPAID.getValue())) {
 				if (accountActionDateEntity.compareDate(DateUtils
 						.getCurrentDateWithoutTimeStamp()) >= 0) {
 					if (accountActionDate == null) {
@@ -667,7 +668,7 @@ public class AccountBO extends BusinessObject {
 	protected boolean isCurrentDateEquallToInstallmentDate() {
 		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
 			if (accountActionDateEntity.getPaymentStatus().equals(
-					AccountConstants.PAYMENT_UNPAID)) {
+					PaymentStatus.UNPAID.getValue())) {
 				if (accountActionDateEntity.compareDate(DateUtils
 						.getCurrentDateWithoutTimeStamp()) == 0) {
 					return true;
@@ -779,7 +780,7 @@ public class AccountBO extends BusinessObject {
 			for (AccountActionDateEntity accountAction : getAccountActionDates()) {
 				if (accountAction.getActionDate().compareTo(currentDate) < 0
 						&& accountAction.getPaymentStatus().equals(
-								AccountConstants.PAYMENT_UNPAID))
+								PaymentStatus.UNPAID.getValue()))
 					installmentsInArrears.add(accountAction);
 			}
 		}
@@ -830,7 +831,7 @@ public class AccountBO extends BusinessObject {
 		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
 		if (nextInstallment != null
 				&& nextInstallment.getPaymentStatus().equals(
-						AccountConstants.PAYMENT_UNPAID))
+						PaymentStatus.UNPAID.getValue()))
 			totalAmt = totalAmt.add(getDueAmount(nextInstallment));
 		return totalAmt;
 	}
@@ -840,7 +841,7 @@ public class AccountBO extends BusinessObject {
 		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
 		if (nextInstallment != null
 				&& nextInstallment.getPaymentStatus().equals(
-						AccountConstants.PAYMENT_UNPAID)
+						PaymentStatus.UNPAID.getValue())
 				&& DateUtils.getDateWithoutTimeStamp(
 						nextInstallment.getActionDate().getTime()).equals(
 						DateUtils.getCurrentDateWithoutTimeStamp()))
@@ -866,7 +867,7 @@ public class AccountBO extends BusinessObject {
 		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
 		if (nextInstallment != null
 				&& nextInstallment.getPaymentStatus().equals(
-						AccountConstants.PAYMENT_UNPAID)
+						PaymentStatus.UNPAID.getValue())
 				&& DateUtils.getDateWithoutTimeStamp(
 						nextInstallment.getActionDate().getTime()).equals(
 						DateUtils.getCurrentDateWithoutTimeStamp()))

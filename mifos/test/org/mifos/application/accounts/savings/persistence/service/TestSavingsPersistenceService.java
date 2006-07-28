@@ -23,6 +23,7 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.checklist.business.AccountCheckListBO;
 import org.mifos.application.checklist.business.CheckListDetailEntity;
@@ -395,7 +396,7 @@ public class TestSavingsPersistenceService extends MifosTestCase {
 		Calendar currentDateCalendar = new GregorianCalendar();
 		java.sql.Date currentDate = new java.sql.Date(currentDateCalendar.getTimeInMillis());
 
-		accountActionDateEntity.setPaymentStatus(AccountConstants.PAYMENT_PAID);
+		accountActionDateEntity.setPaymentStatus(PaymentStatus.PAID.getValue());
 		accountActionDateEntity.setPaymentDate(currentDate);
 		savings.update();
 		HibernateUtil.getSessionTL().flush();

@@ -50,6 +50,7 @@ import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountHelper;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -119,7 +120,7 @@ public class CustomerAccountBO extends AccountBO {
 			AccountActionDateEntity accountAction = getAccountActionDate(accountPaymentData
 					.getInstallmentId());
 			if (accountAction.getPaymentStatus().equals(
-					AccountConstants.PAYMENT_PAID))
+					PaymentStatus.PAID.getValue()))
 				throw new AccountException("errors.update",
 						new String[] { getGlobalAccountNum() });
 			CustomerAccountPaymentData customerAccountPaymentData = (CustomerAccountPaymentData) accountPaymentData;
@@ -177,7 +178,7 @@ public class CustomerAccountBO extends AccountBO {
 				AccountActionDateEntity accntActionDate = getAccountActionDate(custTrxn
 						.getInstallmentId());
 				accntActionDate
-						.setPaymentStatus(AccountConstants.PAYMENT_UNPAID);
+						.setPaymentStatus(PaymentStatus.UNPAID.getValue());
 				accntActionDate.setPaymentDate(null);
 				accntActionDate.setMiscFeePaid(accntActionDate.getMiscFeePaid()
 						.add(custTrxn.getMiscFeeAmount()));
@@ -356,7 +357,7 @@ public class CustomerAccountBO extends AccountBO {
 			date.setCustomer(getCustomer());
 			date
 					.setInstallmentId((short) (date.getInstallmentId() + lastInstallmentId));
-			date.setPaymentStatus(AccountConstants.PAYMENT_UNPAID);
+			date.setPaymentStatus(PaymentStatus.UNPAID.getValue());
 		}
 		getAccountActionDates().addAll(installments);
 

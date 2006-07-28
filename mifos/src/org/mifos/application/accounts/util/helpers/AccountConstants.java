@@ -144,9 +144,10 @@ public interface AccountConstants {
 	public final Short MISC_FEES=-1;
 	public final Short MISC_PENALTY=-2;
 	
-	//Payment Status
-	public final Short PAYMENT_UNPAID=0;
-	public final Short PAYMENT_PAID=1;
+	/*Payment Status
+		public final Short PAYMENT_UNPAID=0;
+		public final Short PAYMENT_PAID=1;
+	*/
 	
 	//Account Fees Status
 	public final Short ACTIVE_FEES=1;

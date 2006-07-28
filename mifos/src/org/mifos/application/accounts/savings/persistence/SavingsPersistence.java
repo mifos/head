@@ -54,6 +54,7 @@ import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.checklist.util.valueobjects.CheckListMaster;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerLevelEntity;
@@ -160,7 +161,7 @@ public class SavingsPersistence extends Persistence {
 		queryParameters.put("ACCOUNT_ID", accountId);
 		queryParameters.put("CUSTOMER_ID", customerId);
 		queryParameters.put("ACTION_DATE", transactionDate);
-		queryParameters.put("PAYMENT_STATUS", AccountConstants.PAYMENT_UNPAID);
+		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
 		List<AccountActionDateEntity> queryResult = null; 
 		if(isMandatory) {
 			queryResult = executeNamedQuery(NamedQueryConstants.GET_LISTOFACCOUNTSACTIONS_FOR_SAVINGS_MANDATORY,queryParameters);
@@ -288,7 +289,7 @@ public class SavingsPersistence extends Persistence {
 			queryParameters.put("ACCOUNT_TYPE_ID", AccountTypes.SAVINGSACCOUNT );
 			queryParameters.put("ACTIVE", AccountStates.SAVINGS_ACC_APPROVED );
 			queryParameters.put("CHECKDATE", currentDate);
-			queryParameters.put("PAYMENTSTATUS", AccountConstants.PAYMENT_UNPAID);
+			queryParameters.put("PAYMENTSTATUS", PaymentStatus.UNPAID.getValue());
 			
 			List queryResult=executeNamedQuery(NamedQueryConstants.GET_MISSED_DEPOSITS_COUNT,queryParameters);
 			
@@ -313,7 +314,7 @@ public class SavingsPersistence extends Persistence {
 				queryParameters.put("ACCOUNT_ID", accountId);
 				queryParameters.put("ACCOUNT_TYPE_ID", AccountTypes.SAVINGSACCOUNT );
 				queryParameters.put("ACTIVE", AccountStates.SAVINGS_ACC_APPROVED );
-				queryParameters.put("PAYMENTSTATUS", AccountConstants.PAYMENT_PAID);
+				queryParameters.put("PAYMENTSTATUS", PaymentStatus.PAID.getValue());
 				
 				List queryResult=executeNamedQuery(NamedQueryConstants.GET_MISSED_DEPOSITS_PAID_AFTER_DUEDATE,queryParameters);
 				

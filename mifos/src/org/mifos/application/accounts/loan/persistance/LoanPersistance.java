@@ -20,6 +20,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -56,7 +57,7 @@ public class LoanPersistance extends Persistence {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("ACCOUNT_ID", accountId);
 		queryParameters.put("ACTION_DATE", transactionDate);
-		queryParameters.put("PAYMENT_STATUS", AccountConstants.PAYMENT_UNPAID);
+		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
 		List<AccountActionDateEntity> queryResult = executeNamedQuery(
 				NamedQueryConstants.GET_LISTOFACCOUNTSTRXNS_FOR_LOAN,
 				queryParameters);
@@ -127,7 +128,7 @@ public class LoanPersistance extends Persistence {
 			Date date = new Date(currentDate.getTimeInMillis());
 								
 			queryParameters.put("ACCOUNTTYPE_ID",Short.valueOf(AccountTypes.LOANACCOUNT));
-			queryParameters.put("PAYMENTSTATUS",Short.valueOf(AccountConstants.PAYMENT_UNPAID));
+			queryParameters.put("PAYMENTSTATUS",Short.valueOf(PaymentStatus.UNPAID.getValue()));
 			queryParameters.put("LOANAPPROVED",Short.valueOf(AccountStates.LOANACC_APPROVED));
 			queryParameters.put("LOANACTIVEINGOODSTAND",Short.valueOf(AccountStates.LOANACC_ACTIVEINGOODSTANDING));
 			queryParameters.put("CHECKDATE",date);

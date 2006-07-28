@@ -25,6 +25,7 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -502,7 +503,7 @@ public class TestLoanBO extends MifosTestCase {
 		AccountActionDateEntity accountActionDateEntity = accountBO
 				.getAccountActionDate((short) 1);
 		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
-		accountActionDateEntity.setPaymentStatus(AccountConstants.PAYMENT_PAID);
+		accountActionDateEntity.setPaymentStatus(PaymentStatus.PAID.getValue());
 
 		accountBO = saveAndFetch(accountBO);
 
@@ -644,7 +645,7 @@ public class TestLoanBO extends MifosTestCase {
 		AccountActionDateEntity accountActionDateEntity = accountBO
 				.getAccountActionDate(Short.valueOf("1"));
 		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
-		accountActionDateEntity.setPaymentStatus(AccountConstants.PAYMENT_PAID);
+		accountActionDateEntity.setPaymentStatus(PaymentStatus.PAID.getValue());
 		accountBO = saveAndFetch(accountBO);
 		assertEquals(((LoanBO) accountBO).getTotalAmountInArrears()
 				.getAmountDoubleValue(), 0.0);

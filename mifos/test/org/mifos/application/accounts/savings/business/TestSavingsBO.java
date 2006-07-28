@@ -31,6 +31,7 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
@@ -1265,11 +1266,11 @@ public class TestSavingsBO extends MifosTestCase {
 		AccountActionDateEntity actionDate1 = helper.createAccountActionDate(
 				Short.valueOf("1"), helper.getDate("01/05/2006"), paymentDate,
 				savings.getCustomer(), recommendedAmnt, recommendedAmnt,
-				AccountConstants.PAYMENT_PAID);
+				PaymentStatus.PAID.getValue());
 		AccountActionDateEntity actionDate2 = helper.createAccountActionDate(
 				Short.valueOf("2"), helper.getDate("08/05/2006"), paymentDate,
 				savings.getCustomer(), recommendedAmnt, recommendedAmnt,
-				AccountConstants.PAYMENT_PAID);
+				PaymentStatus.PAID.getValue());
 
 		savings.addAccountActionDate(actionDate1);
 		savings.addAccountActionDate(actionDate2);
@@ -1371,11 +1372,11 @@ public class TestSavingsBO extends MifosTestCase {
 		AccountActionDateEntity actionDate1 = helper.createAccountActionDate(
 				Short.valueOf("1"), helper.getDate("01/05/2006"), paymentDate,
 				savings.getCustomer(), recommendedAmnt, recommendedAmnt,
-				AccountConstants.PAYMENT_PAID);
+				PaymentStatus.PAID.getValue());
 		AccountActionDateEntity actionDate2 = helper.createAccountActionDate(
 				Short.valueOf("2"), helper.getDate("08/05/2006"), null, savings
 						.getCustomer(), recommendedAmnt, null,
-				AccountConstants.PAYMENT_UNPAID);
+				PaymentStatus.UNPAID.getValue());
 
 		savings.addAccountActionDate(actionDate1);
 		savings.addAccountActionDate(actionDate2);
@@ -1455,11 +1456,11 @@ public class TestSavingsBO extends MifosTestCase {
 		AccountActionDateEntity actionDate1 = helper.createAccountActionDate(
 				Short.valueOf("1"), helper.getDate("01/05/2006"), paymentDate,
 				savings.getCustomer(), recommendedAmnt, recommendedAmnt,
-				AccountConstants.PAYMENT_PAID);
+				PaymentStatus.PAID.getValue());
 		AccountActionDateEntity actionDate2 = helper.createAccountActionDate(
 				Short.valueOf("2"), helper.getDate("08/05/2006"), paymentDate,
 				savings.getCustomer(), recommendedAmnt, partialAmnt,
-				AccountConstants.PAYMENT_UNPAID);
+				PaymentStatus.UNPAID.getValue());
 
 		savings.addAccountActionDate(actionDate1);
 		savings.addAccountActionDate(actionDate2);
@@ -1540,11 +1541,11 @@ public class TestSavingsBO extends MifosTestCase {
 		AccountActionDateEntity actionDate1 = helper.createAccountActionDate(
 				Short.valueOf("1"), helper.getDate("01/05/2006"), paymentDate,
 				savings.getCustomer(), recommendedAmnt, partialAmnt,
-				AccountConstants.PAYMENT_PAID);
+				PaymentStatus.PAID.getValue());
 		AccountActionDateEntity actionDate2 = helper.createAccountActionDate(
 				Short.valueOf("2"), helper.getDate("08/05/2006"), null, savings
 						.getCustomer(), recommendedAmnt, null,
-				AccountConstants.PAYMENT_UNPAID);
+				PaymentStatus.UNPAID.getValue());
 
 		savings.addAccountActionDate(actionDate1);
 		savings.addAccountActionDate(actionDate2);
@@ -1615,11 +1616,11 @@ public class TestSavingsBO extends MifosTestCase {
 		AccountActionDateEntity actionDate1 = helper.createAccountActionDate(
 				Short.valueOf("1"), helper.getDate("01/05/2006"), paymentDate,
 				savings.getCustomer(), recommendedAmnt, partialAmnt,
-				AccountConstants.PAYMENT_PAID);
+				PaymentStatus.PAID.getValue());
 		AccountActionDateEntity actionDate2 = helper.createAccountActionDate(
 				Short.valueOf("2"), helper.getDate("08/05/2006"), null, savings
 						.getCustomer(), recommendedAmnt, null,
-				AccountConstants.PAYMENT_UNPAID);
+				PaymentStatus.UNPAID.getValue());
 
 		savings.addAccountActionDate(actionDate1);
 		savings.addAccountActionDate(actionDate2);
@@ -1822,7 +1823,7 @@ public class TestSavingsBO extends MifosTestCase {
 		AccountActionDateEntity accountActionDateEntity = savings
 				.getAccountActionDate(Short.valueOf("1"));
 		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
-		accountActionDateEntity.setPaymentStatus(AccountConstants.PAYMENT_PAID);
+		accountActionDateEntity.setPaymentStatus(PaymentStatus.PAID.getValue());
 		savings = (SavingsBO) saveAndFetch(savings);
 		assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(),
 				0.0);
@@ -1878,7 +1879,7 @@ public class TestSavingsBO extends MifosTestCase {
 		AccountActionDateEntity accountActionDateEntity = savings
 				.getAccountActionDate((short) 1);
 		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
-		accountActionDateEntity.setPaymentStatus(AccountConstants.PAYMENT_PAID);
+		accountActionDateEntity.setPaymentStatus(PaymentStatus.PAID.getValue());
 
 		savings = (SavingsBO) saveAndFetch(savings);
 
@@ -1934,7 +1935,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		AccountActionDateEntity accountActionDateEntity = savings
 				.getAccountActionDate(Short.valueOf("1"));
-		accountActionDateEntity.setPaymentStatus(AccountConstants.PAYMENT_PAID);
+		accountActionDateEntity.setPaymentStatus(PaymentStatus.PAID.getValue());
 		savings = (SavingsBO) saveAndFetch(savings);
 		assertEquals(savings.getTotalAmountDueForNextInstallment()
 				.getAmountDoubleValue(), 0.0);
@@ -1961,7 +1962,7 @@ public class TestSavingsBO extends MifosTestCase {
 		AccountActionDateEntity accountActionDateEntity = savings
 				.getAccountActionDate(Short.valueOf("1"));
 		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
-		accountActionDateEntity.setPaymentStatus(AccountConstants.PAYMENT_PAID);
+		accountActionDateEntity.setPaymentStatus(PaymentStatus.PAID.getValue());
 		savings = (SavingsBO) saveAndFetch(savings);
 		assertEquals(savings.getDetailsOfInstallmentsInArrears().size(), 0);
 	}
@@ -2936,11 +2937,11 @@ public class TestSavingsBO extends MifosTestCase {
 		AccountActionDateEntity actionDate1 = helper.createAccountActionDate(
 				Short.valueOf("1"), helper.getDate("07/03/2006"), paymentDate,
 				savings.getCustomer(), recommendedAmnt, recommendedAmnt,
-				AccountConstants.PAYMENT_PAID);
+				PaymentStatus.PAID.getValue());
 		AccountActionDateEntity actionDate2 = helper.createAccountActionDate(
 				Short.valueOf("2"), helper.getDate("14/03/2006"), paymentDate,
 				savings.getCustomer(), recommendedAmnt, recommendedAmnt,
-				AccountConstants.PAYMENT_PAID);
+				PaymentStatus.PAID.getValue());
 
 		savings.addAccountActionDate(actionDate1);
 		savings.addAccountActionDate(actionDate2);
@@ -3076,11 +3077,11 @@ public class TestSavingsBO extends MifosTestCase {
 		AccountActionDateEntity actionDate1 = helper.createAccountActionDate(
 				Short.valueOf("1"), helper.getDate("07/03/2006"), paymentDate,
 				savings.getCustomer(), recommendedAmnt, recommendedAmnt,
-				AccountConstants.PAYMENT_PAID);
+				PaymentStatus.PAID.getValue());
 		AccountActionDateEntity actionDate2 = helper.createAccountActionDate(
 				Short.valueOf("2"), helper.getDate("14/03/2006"), paymentDate,
 				savings.getCustomer(), recommendedAmnt, recommendedAmnt,
-				AccountConstants.PAYMENT_PAID);
+				PaymentStatus.PAID.getValue());
 
 		savings.addAccountActionDate(actionDate1);
 		savings.addAccountActionDate(actionDate2);
@@ -3217,11 +3218,11 @@ public class TestSavingsBO extends MifosTestCase {
 		AccountActionDateEntity actionDate1 = helper.createAccountActionDate(
 				Short.valueOf("1"), helper.getDate("07/03/2006"), paymentDate,
 				savings.getCustomer(), recommendedAmnt, recommendedAmnt,
-				AccountConstants.PAYMENT_PAID);
+				PaymentStatus.PAID.getValue());
 		AccountActionDateEntity actionDate2 = helper.createAccountActionDate(
 				Short.valueOf("2"), helper.getDate("14/03/2006"), paymentDate,
 				savings.getCustomer(), recommendedAmnt, recommendedAmnt,
-				AccountConstants.PAYMENT_PAID);
+				PaymentStatus.PAID.getValue());
 
 		savings.addAccountActionDate(actionDate1);
 		savings.addAccountActionDate(actionDate2);
@@ -3692,11 +3693,11 @@ public class TestSavingsBO extends MifosTestCase {
 		AccountActionDateEntity actionDate1 = helper.createAccountActionDate(
 				Short.valueOf("1"), cal2.getTime(), paymentDate,
 				savings.getCustomer(), recommendedAmnt, new Money(),
-				AccountConstants.PAYMENT_UNPAID);
+				PaymentStatus.UNPAID.getValue());
 		AccountActionDateEntity actionDate2 = helper.createAccountActionDate(
 				Short.valueOf("2"), new Date(), paymentDate,
 				savings.getCustomer(), recommendedAmnt, new Money(),
-				AccountConstants.PAYMENT_UNPAID);
+				PaymentStatus.UNPAID.getValue());
 		savings.addAccountActionDate(actionDate1);
 		savings.addAccountActionDate(actionDate2);
 		savings.update();

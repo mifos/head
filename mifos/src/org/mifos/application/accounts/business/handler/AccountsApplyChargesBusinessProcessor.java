@@ -60,6 +60,7 @@ import org.mifos.application.accounts.loan.util.valueobjects.LoanSummary;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.valueobjects.Account;
 import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
@@ -372,7 +373,7 @@ public class AccountsApplyChargesBusinessProcessor extends
 							|| aacdao
 									.doesLastPaidInstallmentFallsOnCurrentDate(
 											accountId,
-											AccountConstants.PAYMENT_PAID)) {
+											PaymentStatus.PAID.getValue())) {
 						Calendar feeDate = new GregorianCalendar();
 						feeDate.setTime(feeStartDate);
 						Calendar calendarTypeNewDate = new GregorianCalendar(

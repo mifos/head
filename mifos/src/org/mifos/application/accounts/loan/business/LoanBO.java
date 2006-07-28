@@ -78,6 +78,7 @@ import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
@@ -408,7 +409,7 @@ public class LoanBO extends AccountBO {
 			AccountActionDateEntity accountAction = getAccountActionDate(accountPaymentData
 					.getInstallmentId());
 			if (accountAction.getPaymentStatus().equals(
-					AccountConstants.PAYMENT_PAID))
+					PaymentStatus.PAID.getValue()))
 				throw new AccountException("errors.update",
 						new String[] { getGlobalAccountNum() });
 			if (accountAction.getInstallmentId().equals(
@@ -629,7 +630,7 @@ public class LoanBO extends AccountBO {
 								.getMiscPenaltyAmount(), loanTrxn
 								.getMiscFeeAmount());
 				accntActionDate
-						.setPaymentStatus(AccountConstants.PAYMENT_UNPAID);
+						.setPaymentStatus(PaymentStatus.UNPAID.getValue());
 				accntActionDate.setPaymentDate(null);
 
 				if (null != accntActionDate.getAccountFeesActionDetails()
@@ -1023,7 +1024,7 @@ public class LoanBO extends AccountBO {
 		for (AccountActionDateEntity entity : accntActionDateEntitySet) {
 			initializeAmounts(entity);
 			if (entity.getPaymentStatus() == null) {
-				entity.setPaymentStatus(AccountConstants.PAYMENT_UNPAID);
+				entity.setPaymentStatus(PaymentStatus.UNPAID.getValue());
 			}
 			entity.setCustomer(this.getCustomer());
 
@@ -1274,7 +1275,7 @@ public class LoanBO extends AccountBO {
 		List<AccountActionDateEntity> unpaidInstallmentList = new ArrayList<AccountActionDateEntity>();
 		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
 			if (accountActionDateEntity.getPaymentStatus().equals(
-					AccountConstants.PAYMENT_UNPAID)) {
+					PaymentStatus.UNPAID.getValue())) {
 				unpaidInstallmentList.add(accountActionDateEntity);
 			}
 		}

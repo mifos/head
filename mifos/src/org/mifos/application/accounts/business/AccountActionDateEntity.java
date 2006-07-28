@@ -48,6 +48,7 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.OverDueAmounts;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.util.helpers.Money;
@@ -394,7 +395,7 @@ public class AccountActionDateEntity extends PersistentObject {
 			setPenaltyPaid(getPenalty());
 			setMiscFeePaid(getMiscFee());
 			setMiscPenaltyPaid(getMiscPenalty());
-			setPaymentStatus(AccountConstants.PAYMENT_PAID);
+			setPaymentStatus(PaymentStatus.PAID.getValue());
 			setPaymentDate(new Date(System.currentTimeMillis()));
 			Set<AccountFeesActionDetailEntity> accountFeesActionDetailSet=this.getAccountFeesActionDetails();
 			for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetailSet){
@@ -406,7 +407,7 @@ public class AccountActionDateEntity extends PersistentObject {
 			setPenalty(new Money());
 			setMiscFee(new Money());
 			setMiscPenalty(new Money());
-			setPaymentStatus(AccountConstants.PAYMENT_PAID);
+			setPaymentStatus(PaymentStatus.PAID.getValue());
 			setPaymentDate(new Date(System.currentTimeMillis()));
 			Set<AccountFeesActionDetailEntity> accountFeesActionDetailSet=this.getAccountFeesActionDetails();
 			for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetailSet){
@@ -450,7 +451,7 @@ public class AccountActionDateEntity extends PersistentObject {
 	public void waiveDepositDue() {
 		Money depositDue = getTotalDepositDue();
 		deposit = deposit.subtract(depositDue);
-		setPaymentStatus(AccountConstants.PAYMENT_PAID);
+		setPaymentStatus(PaymentStatus.PAID.getValue());
 	}
 	public Money waiveFeeCharges(){
 		Money chargeWaived=new Money();
