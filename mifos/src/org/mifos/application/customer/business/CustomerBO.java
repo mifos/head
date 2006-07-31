@@ -1,6 +1,6 @@
 /**
 
- * Customer.java    version: xxx
+ * CustomerBO.java    version: xxx
 
 
 
@@ -46,7 +46,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
@@ -56,6 +55,7 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -70,12 +70,13 @@ import org.mifos.framework.util.helpers.PersistenceServiceName;
 /**
  * A class that represents a customer entity after being created.
  * 
- * @author ashishsm
+ * @author navitas
  */
-public class CustomerBO extends BusinessObject {
-
+public abstract class CustomerBO extends BusinessObject {
+	//TODO: Change to final, access field and remove setter
 	private Integer customerId;
-
+	
+	//TODO: Change to final, access field and remove setter
 	private String globalCustNum;
 
 	private String displayName;
@@ -84,8 +85,6 @@ public class CustomerBO extends BusinessObject {
 
 	private String externalId;
 
-	private Short groupFlag;
-
 	private Short trained;
 
 	private Date trainedDate;
@@ -93,17 +92,15 @@ public class CustomerBO extends BusinessObject {
 	private Date mfiJoiningDate;
 
 	private String searchId;
-
+	
 	private Integer maxChildCount;
 
-	private Short hoUpdated;
-
-	private Short clientConfidential;
-
+	//TODO: Change to access field and remove setter
 	private Date customerActivationDate;
 
 	private CustomerStatusEntity customerStatus;
 
+	//TODO: Change to access field and remove setter
 	private Set<CustomerCustomFieldEntity> customFields;
 
 	private Set<CustomerPositionEntity> customerPositions;
@@ -114,25 +111,22 @@ public class CustomerBO extends BusinessObject {
 
 	private Set<AccountBO> accounts;
 
+	//TODO: Change to final, access field and remove setter
 	private CustomerLevelEntity customerLevel;
 
 	private PersonnelBO personnel;
 
 	private PersonnelBO customerFormedByPersonnel;
 
+	//TODO: Change to final, access field and remove setter
 	private OfficeBO office;
 
-	private CustomerAddressDetailEntity customerAddressDetail;
-
-	private CustomerDetailEntity customerDetail;
-
-	private CustomerAccountBO customerAccount;
+	private CustomerAddressDetailEntity customerAddressDetail;	
 
 	private CustomerMeetingEntity customerMeeting;
 
-	private CustomerHierarchyEntity customerHierarchy;
-
-	private CustomerNoteEntity customerNote;
+	//TODO: Change to access field and remove setter
+	private Set<CustomerHierarchyEntity> customerHierarchy;
 
 	private CustomerHistoricalDataEntity historicalData;
 
@@ -143,13 +137,8 @@ public class CustomerBO extends BusinessObject {
 	public CustomerBO() {
 		this.office = new OfficeBO();
 		this.customerAddressDetail = new CustomerAddressDetailEntity();
-		this.customerDetail = new CustomerDetailEntity();
-		this.customerDetail = new CustomerDetailEntity();
-		this.customerAccount = new CustomerAccountBO();
-		this.customerHierarchy = new CustomerHierarchyEntity();
 		this.customerLevel = new CustomerLevelEntity();
 		this.customerPositions = new TreeSet<CustomerPositionEntity>();
-		this.customerNote = new CustomerNoteEntity();
 		this.historicalData = new CustomerHistoricalDataEntity();
 		this.accounts = new HashSet<AccountBO>();
 		this.customerStatus = new CustomerStatusEntity();
@@ -160,16 +149,8 @@ public class CustomerBO extends BusinessObject {
 
 	}
 
-	private Short getBlackListed() {
-		return blackListed;
-	}
-
-	private void setBlackListed(Short blackListed) {
-		this.blackListed = blackListed;
-	}
-
-	public boolean isBlackList() {
-		return this.blackListed > 0;
+	public boolean isBlackList(){
+		return blackListed.equals(YesNoFlag.YES.getValue());
 	}
 
 	public Integer getCustomerId() {
@@ -177,7 +158,6 @@ public class CustomerBO extends BusinessObject {
 	}
 
 	public void setCustomerId(Integer customerId) {
-
 		this.customerId = customerId;
 	}
 
@@ -186,7 +166,6 @@ public class CustomerBO extends BusinessObject {
 	}
 
 	public void setCustomerLevel(CustomerLevelEntity customerLevel) {
-
 		this.customerLevel = customerLevel;
 	}
 
@@ -238,36 +217,12 @@ public class CustomerBO extends BusinessObject {
 		this.externalId = externalId;
 	}
 
-	private Short getGroupFlag() {
-		return this.groupFlag;
+	public void setTrained(boolean trained){
+		this.trained = (short) (trained ? 1 : 0);	
 	}
-
-	private void setGroupFlag(Short groupFlag) {
-		this.groupFlag = groupFlag;
-	}
-
-	public boolean isAGroupFlag() {
-		return this.groupFlag > 0;
-	}
-
-	public void addGroupFlag(boolean groupFlag) {
-		this.groupFlag = (short) (groupFlag ? 1 : 0);
-	}
-
-	private Short getTrained() {
-		return this.trained;
-	}
-
-	private void setTrained(Short trained) {
-		this.trained = trained;
-	}
-
-	public boolean hasTrained() {
-		return this.trained > 0;
-	}
-
-	public void addTrained(boolean trained) {
-		this.trained = (short) (trained ? 1 : 0);
+	
+	public boolean isTrained() {
+		return trained.equals(YesNoFlag.YES.getValue());
 	}
 
 	public Date getTrainedDate() {
@@ -294,22 +249,6 @@ public class CustomerBO extends BusinessObject {
 		this.maxChildCount = maxChildCount;
 	}
 
-	public Short getHoUpdated() {
-		return this.hoUpdated;
-	}
-
-	public void setHoUpdated(Short hoUpdated) {
-		this.hoUpdated = hoUpdated;
-	}
-
-	public Short getClientConfidential() {
-		return this.clientConfidential;
-	}
-
-	public void setClientConfidential(Short clientConfidential) {
-		this.clientConfidential = clientConfidential;
-	}
-
 	public CustomerAddressDetailEntity getCustomerAddressDetail() {
 		return customerAddressDetail;
 	}
@@ -320,14 +259,6 @@ public class CustomerBO extends BusinessObject {
 			customerAddressDetail.setCustomer(this);
 		}
 		this.customerAddressDetail = customerAddressDetail;
-	}
-
-	public CustomerDetailEntity getCustomerDetail() {
-		return customerDetail;
-	}
-
-	public void setCustomerDetail(CustomerDetailEntity customerDetail) {
-		this.customerDetail = customerDetail;
 	}
 
 	public OfficeBO getOffice() {
@@ -389,9 +320,9 @@ public class CustomerBO extends BusinessObject {
 		return savingsAccounts;
 	}
 
-	public void setCustomerAccount(CustomerAccountBO customerAccount) {
-		this.customerAccount = customerAccount;
-	}
+//	public void setCustomerAccount(CustomerAccountBO customerAccount) {
+//		this.customerAccount = customerAccount;
+//	}
 
 	public CustomerMeetingEntity getCustomerMeeting() {
 		return customerMeeting;
@@ -403,14 +334,18 @@ public class CustomerBO extends BusinessObject {
 		this.customerMeeting = customerMeeting;
 	}
 
-	public CustomerHierarchyEntity getCustomerHierarchy() {
-		return customerHierarchy;
+	//TODO: write code to fetch active hierarchy for the customer
+	public  CustomerHierarchyEntity getActiveCustomerHierarchy() {
+		return null;
 	}
-
-	public void setCustomerHierarchy(CustomerHierarchyEntity customerHierarchy) {
-		this.customerHierarchy = customerHierarchy;
+	
+	public void addCustomerHierarchy(CustomerHierarchyEntity hierarchy) {
+		if (hierarchy != null) {
+			hierarchy.setCustomer(this);
+			this.customerHierarchy.add(hierarchy);
+		}
 	}
-
+	
 	public Set<CustomerPositionEntity> getCustomerPositions() {
 		return customerPositions;
 	}
@@ -466,13 +401,6 @@ public class CustomerBO extends BusinessObject {
 		this.customerFlags.add(customerFlag);
 	}
 
-	public CustomerNoteEntity getCustomerNote() {
-		return customerNote;
-	}
-
-	public void setCustomerNote(CustomerNoteEntity customerNote) {
-		this.customerNote = customerNote;
-	}
 
 	public Date getMfiJoiningDate() {
 		return mfiJoiningDate;
@@ -480,18 +408,6 @@ public class CustomerBO extends BusinessObject {
 
 	public void setMfiJoiningDate(Date mfiJoiningDate) {
 		this.mfiJoiningDate = mfiJoiningDate;
-	}
-
-	public void setSelectedFeeSet(Set<AccountFeesEntity> selectedFeeSet) {
-		if (this.customerAccount != null && selectedFeeSet != null) {
-			for (AccountFeesEntity fee : selectedFeeSet) {
-				fee.setAccount(this.customerAccount);
-				this.customerAccount.addAccountFees(fee);
-			}
-		}
-		Set<AccountBO> accountsSet = new HashSet<AccountBO>();
-		accountsSet.add(this.customerAccount);
-		this.accounts = accountsSet;
 	}
 
 	public void setParentCustomer(CustomerBO parentCustomer) {
@@ -566,18 +482,12 @@ public class CustomerBO extends BusinessObject {
 		return dbService;
 	}
 
-	public boolean isAdjustPossibleOnLastTrxn() {
-		return customerAccount.isAdjustPossibleOnLastTrxn();
-	}
-
 	public void adjustPmnt(String adjustmentComment)
 			throws ApplicationException, SystemException {
 		getCustomerAccount().adjustPmnt(adjustmentComment);
 	}
 
-	public boolean isCustomerActive() {
-		return false;
-	}
+	public abstract boolean isCustomerActive();
 
 	@Override
 	public Short getEntityID() {

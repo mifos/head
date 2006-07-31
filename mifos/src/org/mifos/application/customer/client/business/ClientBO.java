@@ -6,8 +6,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerNameDetailEntity;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 
@@ -15,7 +15,7 @@ public class ClientBO extends CustomerBO {
 
 	private InputStream customerPicture;
 
-	private Set customerNameDetailSet;
+	private Set<ClientNameDetailEntity> nameDetailSet;
 
 	private Set<ClientAttendanceBO> clientAttendances;
 
@@ -25,8 +25,12 @@ public class ClientBO extends CustomerBO {
 
 	private ClientPerformanceHistoryEntity performanceHistory;
 
+	private Short groupFlag;
+	
+	private ClientDetailEntity customerDetail;
+	
 	public ClientBO() {
-		this.customerNameDetailSet = new HashSet();
+		this.nameDetailSet = new HashSet<ClientNameDetailEntity>();
 		clientAttendances = new HashSet<ClientAttendanceBO>();
 	}
 
@@ -34,17 +38,17 @@ public class ClientBO extends CustomerBO {
 		super(userContext);
 	}
 
-	public Set getCustomerNameDetailSet() {
-		return customerNameDetailSet;
+	public Set<ClientNameDetailEntity> getNameDetailSet() {
+		return nameDetailSet;
 	}
 
-	public void setCustomerNameDetailSet(Set customerNameDetailSet) {
+	public void setNameDetailSet(Set<ClientNameDetailEntity> customerNameDetailSet) {
 		if (customerNameDetailSet != null) {
 			for (Object obj : customerNameDetailSet) {
-				((CustomerNameDetailEntity) obj).setCustomer(this);
+				((ClientNameDetailEntity) obj).setClient(this);
 			}
 		}
-		this.customerNameDetailSet = customerNameDetailSet;
+		this.nameDetailSet = customerNameDetailSet;
 	}
 
 	public InputStream getCustomerPicture() {
@@ -83,6 +87,14 @@ public class ClientBO extends CustomerBO {
 		return performanceHistory;
 	}
 
+	public ClientDetailEntity getCustomerDetail() {
+		return customerDetail;
+	}
+
+	public void setCustomerDetail(ClientDetailEntity customerDetail) {
+		this.customerDetail = customerDetail;
+	}
+	
 	public void setPerformanceHistory(
 			ClientPerformanceHistoryEntity performanceHistory) {
 		if(performanceHistory!=null)
@@ -122,5 +134,7 @@ public class ClientBO extends CustomerBO {
 		return false;
 	}
 	
-	
+	public boolean isClientUnderGroup() {
+		return groupFlag.equals(YesNoFlag.YES.getValue());
+	}
 }

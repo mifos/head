@@ -19,10 +19,7 @@ public class CenterBO extends CustomerBO {
 		super();
 	}
 
-	public CenterBO(UserContext userContext) {
-		super(userContext);
-	}
-	
+		
 	public boolean isCustomerActive()
 	{
 		if(getCustomerStatus().getStatusId().equals(CustomerConstants.CENTER_ACTIVE_STATE))

@@ -4,31 +4,28 @@
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
 	<class name="org.mifos.application.customer.business.CustomerBO" table="CUSTOMER">
-		<id name="customerId" column="CUSTOMER_ID" type="integer" unsaved-value="-1">
+		<id name="customerId" column="CUSTOMER_ID" type="integer" unsaved-value="-1"  access="field">
 			<generator class="native" />
 		</id>
 		<discriminator>
 			<column name="DISCRIMINATOR" />
 		</discriminator>
 		<version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null" />
-		<property name="globalCustNum" column="GLOBAL_CUST_NUM" type="string" />
+		<property name="globalCustNum" column="GLOBAL_CUST_NUM" type="string" access="field"/>
 		<property name="displayName" column="DISPLAY_NAME" type="string" />
 
 		<property name="displayAddress" column="DISPLAY_ADDRESS" type="string" />
 		<property name="externalId" column="EXTERNAL_ID" type="string" />
-		<property name="groupFlag" column="GROUP_FLAG" type="short" />
-		<property name="trained" column="TRAINED" type="short" />
+		<property name="trained" column="TRAINED" type="short" access="field"/>
 		<property name="trainedDate" column="TRAINED_DATE" type="date" />
 		<property name="createdDate" column="CREATED_DATE" type="date" />
 		<property name="updatedDate" column="UPDATED_DATE" type="date" />
 		<property name="mfiJoiningDate" column="MFI_JOINING_DATE" type="date" />
 		<property name="searchId" column="SEARCH_ID" type="string" />
 		<property name="maxChildCount" column="MAX_CHILD_COUNT" type="integer" />
-		<property name="hoUpdated" column="HO_UPDATED" type="short" />
-		<property name="clientConfidential" column="CLIENT_CONFIDENTIAL" type="short" />
 		<property name="createdBy" column="CREATED_BY" />
 		<property name="updatedBy" column="UPDATED_BY" />
-		<property name="blackListed" column="BLACKLISTED" />
+		<property name="blackListed" column="BLACKLISTED" access="field"/>
 		<property name="customerActivationDate" column="CUSTOMER_ACTIVATION_DATE " not-null="false" />
 		<many-to-one name="customerStatus" column="STATUS_ID" class="org.mifos.application.customer.business.CustomerStatusEntity" insert="true" update="true" unique="true" lazy="true" />
 		<many-to-one name="customerLevel" column="CUSTOMER_LEVEL_ID" class="org.mifos.application.customer.business.CustomerLevelEntity" insert="true" update="true" unique="true" lazy="true" />
@@ -36,7 +33,6 @@
 		<many-to-one name="customerFormedByPersonnel" column="CUSTOMER_FORMEDBY_ID" class="org.mifos.application.personnel.business.PersonnelBO" unique="true" lazy="true" insert="true" update="true" />
 		<many-to-one name="office" column="BRANCH_ID" class="org.mifos.application.office.business.OfficeBO" unique="true" lazy="true" insert="true" update="true" />
 		<one-to-one name="customerAddressDetail" class="org.mifos.application.customer.business.CustomerAddressDetailEntity" cascade="all" lazy="true" property-ref="customer" />
-		<one-to-one name="customerDetail" class="org.mifos.application.customer.business.CustomerDetailEntity" cascade="all" lazy="true" />
 		<many-to-one name="parentCustomer" column="PARENT_CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" cascade="none" insert="true" unique="true" update="true" lazy="true" />
 		<one-to-one name="historicalData" class="org.mifos.application.customer.business.CustomerHistoricalDataEntity" cascade="all" lazy="true" property-ref="customer" />
 		<one-to-one name="customerMeeting" class="org.mifos.application.customer.business.CustomerMeetingEntity" cascade="all" lazy="true" property-ref="customer" />
@@ -77,9 +73,11 @@
 		<subclass name="org.mifos.application.customer.client.business.ClientBO" discriminator-value="CLIENT">
 			<property name="governmentId" column="GOVERNMENT_ID" type="string" />
 			<property name="dateOfBirth" column="DATE_OF_BIRTH" type="date" />
-			<set name="customerNameDetailSet" cascade="all">
+			<property name="groupFlag" column="GROUP_FLAG" type="short" access="field"/>
+			<one-to-one name="customerDetail" class="org.mifos.application.customer.client.business.ClientDetailEntity" cascade="all" lazy="true" />
+			<set name="nameDetailSet" cascade="all">
 				<key column="CUSTOMER_ID" />
-				<one-to-many class="org.mifos.application.customer.business.CustomerNameDetailEntity" />
+				<one-to-many class="org.mifos.application.customer.client.business.ClientNameDetailEntity" />
 			</set>
 			<set name="clientAttendances" cascade="all" inverse="true">
 				<key column="CUSTOMER_ID" />

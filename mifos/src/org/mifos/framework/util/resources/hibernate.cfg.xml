@@ -183,7 +183,7 @@
 
 	<mapping resource="org/mifos/application/customer/business/CustomerAddressDetailEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/business/CustomerBO.hbm.xml" />
-	<mapping resource="org/mifos/application/customer/business/CustomerDetailEntity.hbm.xml" />
+	<mapping resource="org/mifos/application/customer/client/business/ClientDetailEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/business/CustomerCustomFieldEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/business/CustomerFlagEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/business/CustomerHierarchyEntity.hbm.xml" />
@@ -191,7 +191,7 @@
 	<mapping resource="org/mifos/application/customer/business/CustomerLevelEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/business/CustomerMeetingEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/business/CustomerMovementEntity.hbm.xml" />
-	<mapping resource="org/mifos/application/customer/business/CustomerNameDetailEntity.hbm.xml" />
+	<mapping resource="org/mifos/application/customer/client/business/ClientNameDetailEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/business/CustomerNoteEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/business/CustomerPositionEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/business/CustomerStateEntity.hbm.xml" />

@@ -85,11 +85,11 @@ import org.mifos.application.customer.business.CustomerAddressDetailEntity;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.customer.business.CustomerMeetingEntity;
-import org.mifos.application.customer.business.CustomerNameDetailEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.ClientNameDetailEntity;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fees.business.AmountFeeBO;
@@ -320,12 +320,11 @@ public class TestObjectFactory {
 		center.setSearchId(searchId);
 		center.setCustomerLevel(custLevel);
 
-		center.setClientConfidential(null);
 		center.setCustomerAddressDetail(null);
-		center.setCustomerDetail(null);
-		center.setCustomerHierarchy(null);
+		//center.setCustomerDetail(null);
+		//center.setCustomerHierarchy(null);
 		center.setCustomerHistoricalData(null);
-		center.setCustomerNote(null);
+		//center.setCustomerNote(null);
 
 		center.setParentCustomer(null);
 		return (CenterBO) testObjectPersistence.persist(center);
@@ -399,11 +398,10 @@ public class TestObjectFactory {
 		group.setSearchId(searchId);
 		group.setCustomerLevel(custLevel);
 
-		group.setClientConfidential(null);
-		group.setCustomerDetail(null);
-		group.setCustomerHierarchy(null);
+	//	group.setCustomerDetail(null);
+		//group.setCustomerHierarchy(null);
 		group.setCustomerHistoricalData(null);
-		group.setCustomerNote(null);
+		//group.setCustomerNote(null);
 		group.setParentCustomer(parentCustomer);
 		return (GroupBO) testObjectPersistence.persist(group);
 	}
@@ -455,11 +453,11 @@ public class TestObjectFactory {
 		name.setFirstName(customerName);
 		name.setLastName(customerName);
 
-		CustomerNameDetailEntity customerNameDetail = new CustomerNameDetailEntity();
+		ClientNameDetailEntity customerNameDetail = new ClientNameDetailEntity();
 		customerNameDetail.setName(name);
-		customerNameDetail.setCustomer(client);
+		customerNameDetail.setClient(client);
 
-		Set<CustomerNameDetailEntity> custNameDetEnitites = new HashSet<CustomerNameDetailEntity>();
+		Set<ClientNameDetailEntity> custNameDetEnitites = new HashSet<ClientNameDetailEntity>();
 		custNameDetEnitites.add(customerNameDetail);
 
 		client.setCreatedBy(personnel.getPersonnelId());
@@ -476,13 +474,12 @@ public class TestObjectFactory {
 		client.setSearchId(searchId);
 		client.setCustomerLevel(custLevel);
 
-		client.setClientConfidential(null);
 		client.setCustomerDetail(null);
-		client.setCustomerHierarchy(null);
+		//client.setCustomerHierarchy(null);
 		client.setCustomerHistoricalData(null);
-		client.setCustomerNote(null);
+		//client.setCustomerNote(null);
 		client.setParentCustomer(parentCustomer);
-		client.setCustomerNameDetailSet(custNameDetEnitites);
+		//client.setCustomerNameDetailSet(custNameDetEnitites);
 		return (ClientBO) testObjectPersistence.persist(client);
 	}
 
