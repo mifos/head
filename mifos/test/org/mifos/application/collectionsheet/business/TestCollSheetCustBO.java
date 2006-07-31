@@ -43,6 +43,7 @@ import java.util.Date;
 import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -51,6 +52,7 @@ import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.business.CollSheetLnDetailsEntity;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.exceptions.LoggerConfigurationException;
@@ -68,10 +70,17 @@ import org.mifos.framework.MifosTestCase;
  */
 public class TestCollSheetCustBO extends MifosTestCase{
 	
+	private AccountBO accountBO;
 	
+	private CustomerBO center;
+	
+	private CustomerBO group;
 	
 	@Override
 	protected void tearDown() throws Exception {
+		TestObjectFactory.cleanUp(accountBO);
+		TestObjectFactory.cleanUp(group);
+		TestObjectFactory.cleanUp(center);
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
@@ -108,8 +117,8 @@ public class TestCollSheetCustBO extends MifosTestCase{
 		accountActionDate.addAccountFeesAction(accntFeesActionDetailEntity);
 		
 		
-		LoanBO loan = new LoanBO();
-		loan.setAccountId(Integer.valueOf("1"));
+		LoanBO loan = (LoanBO)createLoanAccount();
+		
 		
 		accountActionDate.setAccount(loan);
 		accountActionDate.setPenalty(TestObjectFactory.getMoneyForMFICurrency(10));
@@ -120,7 +129,6 @@ public class TestCollSheetCustBO extends MifosTestCase{
 		
 		collSheetCustBO.populateAccountDetails(accountActionDate);
 		
-		assertEquals(collSheetCustBO.getCustAccntId(),Integer.valueOf("1"));
 		assertEquals(collSheetCustBO.getCustAccntPenalty(),TestObjectFactory.getMoneyForMFICurrency(8));
 		assertEquals(collSheetCustBO.getCustAccntFee(),TestObjectFactory.getMoneyForMFICurrency(2));
 	}
@@ -187,6 +195,25 @@ public class TestCollSheetCustBO extends MifosTestCase{
 		assertEquals(collSheetCustObj.getCollectiveAccntCharges(),TestObjectFactory.getMoneyForMFICurrency(10));
 		assertEquals(collSheetCustObj.getCollectiveAccntCharges(),TestObjectFactory.getMoneyForMFICurrency(10));
 		
+	}
+	
+	private AccountBO createLoanAccount(){
+		Date startDate = new Date(System.currentTimeMillis());
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center1", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), meeting);
+		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
+				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				loanOffering);
+		return accountBO;
 	}
 	
 	

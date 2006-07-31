@@ -55,6 +55,7 @@ import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
@@ -62,8 +63,10 @@ import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.RateFeeBO;
 import org.mifos.application.fees.persistence.FeePersistence;
+import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
+import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -363,6 +366,34 @@ public class CustomerAccountBO extends AccountBO {
 
 
 	}
+	
+	/*Need to remove while refactoring*/
+	public void setOffice(OfficeBO office){
+		this.office=office;
+	}
+	
+	/*Need to remove while refactoring*/
+	public void setGlobalAccountNum(String globalAccountNum){
+		this.globalAccountNum=globalAccountNum;
+	}
+	
+	/*Need to remove while refactoring*/
+	public void setAccountType(AccountType accountType){
+		this.accountType=accountType;
+	}
+	
+	/*Need to remove while refactoring*/
+	public void setCustomer(CustomerBO customer){
+		this.customer=customer;
+	}
+	
+	/*Need to remove while refactoring*/
+	public void setPersonnel(PersonnelBO personnel){
+		this.personnel=personnel;
+	}
+	
+	
+	
 	
 
 }

@@ -81,6 +81,7 @@ import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -88,10 +89,12 @@ import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
+import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.master.util.valueobjects.CollateralType;
 import org.mifos.application.master.util.valueobjects.InterestTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
+import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -126,6 +129,7 @@ import org.mifos.framework.util.helpers.PersistenceServiceName;
 public class LoanBO extends AccountBO {
 
 	public LoanBO() {
+		super();
 		loanPersistance = new LoanPersistance();
 		loanInstallments = new ArrayList();
 		loanActivityDetails = new HashSet<LoanActivityEntity>();
@@ -1644,6 +1648,31 @@ public class LoanBO extends AccountBO {
 			throws ServiceException {
 		return (PersonnelPersistenceService) ServiceFactory.getInstance()
 				.getPersistenceService(PersistenceServiceName.Personnel);
+	}
+	
+	/*Need to remove while refactoring*/
+	public void setOffice(OfficeBO office){
+		this.office=office;
+	}
+	
+	/*Need to remove while refactoring*/
+	public void setGlobalAccountNum(String globalAccountNum){
+		this.globalAccountNum=globalAccountNum;
+	}
+	
+	/*Need to remove while refactoring*/
+	public void setAccountType(AccountType accountType){
+		this.accountType=accountType;
+	}
+	
+	/*Need to remove while refactoring*/
+	public void setCustomer(CustomerBO customer){
+		this.customer=customer;
+	}
+	
+	/*Need to remove while refactoring*/
+	public void setPersonnel(PersonnelBO personnel){
+		this.personnel=personnel;
 	}
 
 }

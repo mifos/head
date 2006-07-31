@@ -96,7 +96,28 @@ import org.mifos.framework.util.helpers.StringUtils;
 public class AccountBO extends BusinessObject {
 	AccountPersistanceService accountPersistanceService = null;
 
-	public AccountBO(UserContext userContext) {
+	// TODO: make constructor as protected and remove usage of this constructor
+	// from test cases.
+	protected AccountBO() {
+		accountId = null;
+		globalAccountNum=null;
+		customer=null;
+		accountType = null;
+		office =null;
+		personnel = null;
+		accountFees = new HashSet<AccountFeesEntity>();
+		accountPayments = new HashSet<AccountPaymentEntity>();
+		accountActionDates = new HashSet<AccountActionDateEntity>();
+		accountCustomFields = new HashSet<AccountCustomFieldEntity>();
+		accountNotes = new HashSet<AccountNotesEntity>();
+		accountStatusChangeHistory = new HashSet<AccountStatusChangeHistoryEntity>();
+		accountFlags = new HashSet<AccountFlagMapping>();
+	}
+	
+
+	protected AccountBO(UserContext userContext, CustomerBO customer,
+			AccountType accountType)
+			throws Exception {
 		super(userContext);
 		accountFees = new HashSet<AccountFeesEntity>();
 		accountPayments = new HashSet<AccountPaymentEntity>();
@@ -105,12 +126,22 @@ public class AccountBO extends BusinessObject {
 		accountNotes = new HashSet<AccountNotesEntity>();
 		accountStatusChangeHistory = new HashSet<AccountStatusChangeHistoryEntity>();
 		accountFlags = new HashSet<AccountFlagMapping>();
-
+		this.accountId = null;
+		this.globalAccountNum = generateId(userContext.getBranchGlobalNum());
+		this.customer = customer;
+		this.accountType = accountType;
+		this.office = customer.getOffice();
+		this.personnel = customer.getPersonnel();
 	}
-
-	// TODO: make constructor as protected and remove usage of this constructor
-	// from test cases.
-	public AccountBO() {
+	
+	protected AccountBO(UserContext userContext) {
+		super(userContext);
+		accountId = null;
+		globalAccountNum = null;
+		customer = null;
+		office = null;
+		personnel = null;
+		accountType = null;
 		accountFees = new HashSet<AccountFeesEntity>();
 		accountPayments = new HashSet<AccountPaymentEntity>();
 		accountActionDates = new HashSet<AccountActionDateEntity>();
@@ -120,23 +151,23 @@ public class AccountBO extends BusinessObject {
 		accountFlags = new HashSet<AccountFlagMapping>();
 	}
 
-	private Integer accountId;
+	private  Integer accountId;
 
-	private String globalAccountNum;
+	protected  String globalAccountNum;
 
 	private Date closedDate;
 
-	private CustomerBO customer;
+	protected  CustomerBO customer;
 
 	private AccountStateEntity accountState;
 
 	private Set<AccountFlagMapping> accountFlags;
 
-	private AccountType accountType;
+	protected  AccountType accountType;
 
-	private OfficeBO office;
+	protected  OfficeBO office;
 
-	private PersonnelBO personnel;
+	protected  PersonnelBO personnel;
 
 	private Set<AccountFeesEntity> accountFees;
 
@@ -149,6 +180,10 @@ public class AccountBO extends BusinessObject {
 	public Set<AccountNotesEntity> accountNotes;
 
 	public Set<AccountStatusChangeHistoryEntity> accountStatusChangeHistory;
+	
+	public Integer getAccountId() {
+		return accountId;
+	}
 
 	public Set<AccountActionDateEntity> getAccountActionDates() {
 		return accountActionDates;
@@ -175,13 +210,7 @@ public class AccountBO extends BusinessObject {
 		this.accountFees = accountFees;
 	}
 
-	public Integer getAccountId() {
-		return accountId;
-	}
-
-	public void setAccountId(Integer accountId) {
-		this.accountId = accountId;
-	}
+	
 
 	public Set<AccountPaymentEntity> getAccountPayments() {
 		return accountPayments;
@@ -203,16 +232,8 @@ public class AccountBO extends BusinessObject {
 		return accountType;
 	}
 
-	public void setAccountType(AccountType accountType) {
-		this.accountType = accountType;
-	}
-
 	public String getGlobalAccountNum() {
 		return globalAccountNum;
-	}
-
-	public void setGlobalAccountNum(String globalAccountNum) {
-		this.globalAccountNum = globalAccountNum;
 	}
 
 	public Date getClosedDate() {
@@ -227,24 +248,14 @@ public class AccountBO extends BusinessObject {
 		return customer;
 	}
 
-	public void setCustomer(CustomerBO customer) {
-		this.customer = customer;
-	}
+	
 
 	public OfficeBO getOffice() {
 		return office;
 	}
 
-	public void setOffice(OfficeBO office) {
-		this.office = office;
-	}
-
 	public PersonnelBO getPersonnel() {
 		return personnel;
-	}
-
-	public void setPersonnel(PersonnelBO personnel) {
-		this.personnel = personnel;
 	}
 
 	public Set<AccountStatusChangeHistoryEntity> getAccountStatusChangeHistory() {
@@ -1030,4 +1041,5 @@ public class AccountBO extends BusinessObject {
 		return LastInstallmentId;
 		
 	}
+	
 }

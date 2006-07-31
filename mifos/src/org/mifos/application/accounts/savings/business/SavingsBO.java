@@ -84,6 +84,7 @@ import org.mifos.application.master.util.valueobjects.SavingsType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingDetailsEntity;
 import org.mifos.application.meeting.business.MeetingRecurrenceEntity;
+import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
@@ -396,6 +397,31 @@ public class SavingsBO extends AccountBO {
 		return savingsPerformance;
 	}
 
+	/*Need to remove while refactoring*/
+	public void setOffice(OfficeBO office){
+		this.office=office;
+	}
+	
+	/*Need to remove while refactoring*/
+	public void setGlobalAccountNum(String globalAccountNum){
+		this.globalAccountNum=globalAccountNum;
+	}
+	
+	/*Need to remove while refactoring*/
+	public void setAccountType(AccountType accountType){
+		this.accountType=accountType;
+	}
+	
+	/*Need to remove while refactoring*/
+	public void setCustomer(CustomerBO customer){
+		this.customer=customer;
+	}
+	
+	/*Need to remove while refactoring*/
+	public void setPersonnel(PersonnelBO personnel){
+		this.personnel=personnel;
+	}
+	
 	public void save() throws IDGenerationException, SchedulerException,
 			SystemException, ApplicationException {
 		logger.info("In SavingsBO::save(), Before Saving , accountId: "

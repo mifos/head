@@ -53,16 +53,16 @@ public class TestCollSheetBO extends MifosTestCase {
 	protected CustomerBO group=null;
 	protected CustomerBO client=null;
 	protected CollectionSheetBO collectionSheet=null;
+	
 	@Override
 	protected void tearDown() throws Exception {
-		
+		TestObjectFactory.cleanUp(accountBO);
+		TestObjectFactory.cleanUp(client);
+		TestObjectFactory.cleanUp(group);
+		TestObjectFactory.cleanUp(center);
+		TestObjectFactory.cleanUp(collectionSheet);
 		HibernateUtil.closeSession();
 		super.tearDown();
-		TestObjectFactory.cleanUp(accountBO);
-		TestObjectFactory.cleanUp(center);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(collectionSheet);
 	}
 	
 	protected void setUp()throws Exception{
@@ -112,8 +112,7 @@ public class TestCollSheetBO extends MifosTestCase {
 		client.setPersonnel(personnel);
 		client.setOffice(office);
 		
-		LoanBO loan = new LoanBO();
-		loan.setAccountId(Integer.valueOf("1"));
+		LoanBO loan = (LoanBO)createLoanAccount();
 		loan.setLoanAmount(TestObjectFactory.getMoneyForMFICurrency(100));
 		loan.setNoOfInstallments(Short.valueOf("5"));
 		loan.setCustomer(client);
@@ -127,12 +126,8 @@ public class TestCollSheetBO extends MifosTestCase {
 		CollSheetCustBO collectionSheetCustomer = collSheet
 		.getCollectionSheetCustomerForCustomerId(client.getCustomerId());
 		assertNotNull(collectionSheetCustomer);
-		assertEquals(collectionSheetCustomer.getLoanDetailsForAccntId(
-				Integer.valueOf("1")).getAccountId(), Integer.valueOf("1"));
-		assertEquals(collectionSheetCustomer.getLoanDetailsForAccntId(
-				Integer.valueOf("1")).getTotalNoOfInstallments(), Short
+		assertEquals(collectionSheetCustomer.getLoanDetailsForAccntId(loan.getAccountId()).getTotalNoOfInstallments(), Short
 				.valueOf("5"));
-		
 	}
 	
 	public void testCollSheetForLoanDisbursal() throws Exception{
@@ -375,17 +370,13 @@ public class TestCollSheetBO extends MifosTestCase {
 	}
 	
 	private   List<AccountActionDateEntity> getCustomerAccntDetails() {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center1", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
 		List<AccountActionDateEntity> accntActionDates = getAccountActionDates();
 		for (AccountActionDateEntity accntActionDate : accntActionDates) {
-			
-			AccountType accntType = new AccountType();
-			accntType.setAccountTypeId(Short
-					.valueOf(AccountTypes.CUSTOMERACCOUNT));
-			
-			AccountBO accountBO = new AccountBO();
-			accountBO.setAccountType(accntType);
-			
-			accntActionDate.setAccount(accountBO);
+			AccountBO accountBO = center.getCustomerAccount();
 			accntActionDate.setAccount(accountBO);
 			AccountFeesActionDetailEntity accntFeesActionDetailEntity = new AccountFeesActionDetailEntity();
 			accntFeesActionDetailEntity.setFeeAmount(TestObjectFactory.getMoneyForMFICurrency(5));
@@ -404,23 +395,12 @@ public class TestCollSheetBO extends MifosTestCase {
 		return accntActionDates;
 	}
 	
-	private LoanBO getLoan(Double lnAmnt, Short noOfInstallments) {
-		LoanBO loan = new LoanBO();
-		loan.setAccountId(Integer.valueOf("1"));
-		loan.setLoanAmount(TestObjectFactory.getMoneyForMFICurrency(lnAmnt));
-		loan.setNoOfInstallments(noOfInstallments);
-		return loan;
-	}
-	
 	private List<AccountActionDateEntity> getLnAccntDetails() {
 		List<AccountActionDateEntity> accntActionDates = getAccountActionDates();
 		for (AccountActionDateEntity accntActionDate : accntActionDates) {
 			
 			AccountType accntType = new AccountType();
 			accntType.setAccountTypeId(Short.valueOf(AccountTypes.LOANACCOUNT));
-			
-			//LoanBO loan = getLoan(Double.valueOf("100"), Short.valueOf("10"));
-			//loan.setAccountType(accntType);
 			
 			LoanBO loan= createLoanAccount(accntActionDate.getCustomer());
 			accntActionDate.setAccount(loan);
@@ -527,5 +507,24 @@ public class TestCollSheetBO extends MifosTestCase {
 		return TestObjectFactory.createSavingsAccount("43245434",
 				client, (short)16, new Date(System.currentTimeMillis()), savingsOffering);
 
+	}
+	
+	private AccountBO createLoanAccount(){
+		Date startDate = new Date(System.currentTimeMillis());
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), meeting);
+		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
+				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				loanOffering);
+		return accountBO;
 	}
 }

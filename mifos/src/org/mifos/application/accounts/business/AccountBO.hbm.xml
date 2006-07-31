@@ -6,13 +6,13 @@
 
 	<class name="org.mifos.application.accounts.business.AccountBO"
 		table="ACCOUNT">
-		<id name="accountId" column="ACCOUNT_ID" type="integer">
+		<id name="accountId" column="ACCOUNT_ID" type="integer" access="field">
 			<generator class="native" />
 		</id>
 		<version name="versionNo" column="VERSION_NO" type="integer"
 			unsaved-value="null" />
 
-		<property name="globalAccountNum" column="GLOBAL_ACCOUNT_NUM"/>
+		<property name="globalAccountNum" column="GLOBAL_ACCOUNT_NUM" access="field"/>
 		<property name="createdBy" column="CREATED_BY" not-null="true"
 			update="false" lazy="true"/>
 		<property name="createdDate" column="CREATED_DATE"
@@ -23,19 +23,19 @@
 
 		<many-to-one name="customer" column="CUSTOMER_ID"
 			class="org.mifos.application.customer.business.CustomerBO"
-			cascade="none" update="false" insert="true" unique="true" lazy="true" />
+			cascade="none" update="false" insert="true" unique="true" lazy="true"  access="field"/>
 		<many-to-one name="office" column="OFFICE_ID"
 			class="org.mifos.application.office.business.OfficeBO" cascade="none"
-			update="false" insert="true" unique="true" lazy="true" />
+			update="false" insert="true" unique="true" lazy="true" access="field"/>
 		<many-to-one name="accountState" column="ACCOUNT_STATE_ID"
 			class="org.mifos.application.accounts.business.AccountStateEntity"
 			cascade="none" update="true" insert="true" unique="true" lazy="true" />
 		<many-to-one name="accountType" column="ACCOUNT_TYPE_ID"
 			class="org.mifos.application.master.util.valueobjects.AccountType"
-			cascade="none" update="false" insert="true" unique="true" lazy="true" />
+			cascade="none" update="false" insert="true" unique="true" lazy="true" access="field"/>
 		<many-to-one name="personnel" column="PERSONNEL_ID"
 			class="org.mifos.application.personnel.business.PersonnelBO"
-			cascade="none" update="false" insert="true" unique="true" lazy="true" />
+			cascade="none" update="false" insert="true" unique="true" lazy="true" access="field"/>
 
 		<set name="accountNotes" cascade="all" inverse="true"
 			table="ACCOUNT_NOTES" lazy="true" order-by="ACCOUNT_NOTES_ID desc">
