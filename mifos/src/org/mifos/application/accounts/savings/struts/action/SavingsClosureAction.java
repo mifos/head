@@ -132,9 +132,7 @@ public class SavingsClosureAction extends BaseAction {
 		
 		Money interestAmount = savings.calculateInterestForClosure(new SavingsHelper().getCurrentDate());
 		logger.debug("In SavingsClosureAction::load(), Interest calculated:  "+ interestAmount.getAmountDoubleValue());
-		AccountPaymentEntity payment = new AccountPaymentEntity();
-		payment.setPaymentDate(new Date(new java.util.Date().getTime()));
-		payment.setAmount(savings.getSavingsBalance().add(interestAmount));
+		AccountPaymentEntity payment = new AccountPaymentEntity(savings,savings.getSavingsBalance().add(interestAmount),null,null,null);
 		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT,payment, request.getSession());
 		return mapping.findForward("load_success");
 	}
@@ -144,12 +142,22 @@ public class SavingsClosureAction extends BaseAction {
 		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
 		SavingsClosureActionForm actionForm = (SavingsClosureActionForm)form;
 		AccountPaymentEntity payment = (AccountPaymentEntity)SessionUtils.getAttribute(SavingsConstants.ACCOUNT_PAYMENT,request.getSession());
+		AccountPaymentEntity accountPaymentEntity=null;
 		if(actionForm.getReceiptDate()!=null && actionForm.getReceiptDate()!="")
-		payment.setReceiptDate(new java.util.Date(DateHelper.getLocaleDate(uc.getPereferedLocale(),actionForm.getReceiptDate()).getTime()));
-		payment.setReceiptNumber(actionForm.getReceiptId());
-		PaymentTypeEntity paymentType = new PaymentTypeEntity();
-		paymentType.setId(Short.valueOf(actionForm.getPaymentTypeId()));
-		payment.setPaymentType(paymentType);
+			accountPaymentEntity = new AccountPaymentEntity(payment
+					.getAccount(), payment.getAmount(), actionForm
+					.getReceiptId(), new java.util.Date(DateHelper
+					.getLocaleDate(uc.getPereferedLocale(),
+							actionForm.getReceiptDate()).getTime()),
+					new PaymentTypeEntity(Short.valueOf(actionForm
+							.getPaymentTypeId())));
+		else
+			accountPaymentEntity = new AccountPaymentEntity(payment
+					.getAccount(), payment.getAmount(), actionForm
+					.getReceiptId(),null,
+					new PaymentTypeEntity(Short.valueOf(actionForm
+							.getPaymentTypeId())));
+		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT,accountPaymentEntity, request.getSession());
 		return mapping.findForward("preview_success");
 	}
 	

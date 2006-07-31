@@ -189,7 +189,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 			savingsOffering = helper.createSavingsOffering();
 			savings = new SavingsBO(userContext);
 			AccountPaymentEntity payment = helper
-					.createAccountPaymentToPersist(new Money(Configuration
+					.createAccountPaymentToPersist(savings,new Money(Configuration
 							.getInstance().getSystemConfig().getCurrency(),
 							"700.0"), new Money(Configuration.getInstance()
 							.getSystemConfig().getCurrency(), "1700.0"), helper
@@ -209,7 +209,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 			HibernateUtil.getSessionTL().flush();
 			HibernateUtil.closeSession();
 
-			payment = helper.createAccountPaymentToPersist(
+			payment = helper.createAccountPaymentToPersist(savings,
 					new Money(Configuration.getInstance().getSystemConfig()
 							.getCurrency(), "1000.0"), new Money(Configuration
 							.getInstance().getSystemConfig().getCurrency(),
@@ -223,7 +223,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 
 			savings = savingsPersistence.findById(savings.getAccountId());
 			savings.setUserContext(userContext);
-			payment = helper.createAccountPaymentToPersist(
+			payment = helper.createAccountPaymentToPersist(savings,
 					new Money(Configuration.getInstance().getSystemConfig()
 							.getCurrency(), "500.0"), new Money(Configuration
 							.getInstance().getSystemConfig().getCurrency(),
@@ -237,7 +237,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 
 			savings = savingsPersistence.findById(savings.getAccountId());
 			savings.setUserContext(userContext);
-			payment = helper.createAccountPaymentToPersist(
+			payment = helper.createAccountPaymentToPersist(savings,
 					new Money(Configuration.getInstance().getSystemConfig()
 							.getCurrency(), "1200.0"), new Money(Configuration
 							.getInstance().getSystemConfig().getCurrency(),
@@ -251,7 +251,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 
 			savings = savingsPersistence.findById(savings.getAccountId());
 			savings.setUserContext(userContext);
-			payment = helper.createAccountPaymentToPersist(
+			payment = helper.createAccountPaymentToPersist(savings,
 					new Money(Configuration.getInstance().getSystemConfig()
 							.getCurrency(), "2500.0"), new Money(Configuration
 							.getInstance().getSystemConfig().getCurrency(),

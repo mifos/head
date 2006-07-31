@@ -228,7 +228,7 @@ public class TestSavingsPersistenceService extends MifosTestCase {
 		savingsOffering = helper.createSavingsOffering();
 
 		savings = new SavingsBO(userContext);
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				new Money(Configuration.getInstance().getSystemConfig()
 						.getCurrency(), "700.0"), new Money(Configuration
 						.getInstance().getSystemConfig().getCurrency(),
@@ -247,7 +247,7 @@ public class TestSavingsPersistenceService extends MifosTestCase {
 
 		savings = dbService.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
-		payment = helper.createAccountPaymentToPersist(new Money(Configuration
+		payment = helper.createAccountPaymentToPersist(savings,new Money(Configuration
 				.getInstance().getSystemConfig().getCurrency(), "1000.0"),
 				new Money(Configuration.getInstance().getSystemConfig()
 						.getCurrency(), "2700.0"),
@@ -261,7 +261,7 @@ public class TestSavingsPersistenceService extends MifosTestCase {
 
 		savings = dbService.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
-		payment = helper.createAccountPaymentToPersist(new Money(Configuration
+		payment = helper.createAccountPaymentToPersist(savings,new Money(Configuration
 				.getInstance().getSystemConfig().getCurrency(), "500.0"),
 				new Money(Configuration.getInstance().getSystemConfig()
 						.getCurrency(), "2200.0"),
@@ -276,7 +276,7 @@ public class TestSavingsPersistenceService extends MifosTestCase {
 		savings = dbService.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
 		HibernateUtil.getSessionTL().flush();
-		payment = helper.createAccountPaymentToPersist(new Money(Configuration
+		payment = helper.createAccountPaymentToPersist(savings,new Money(Configuration
 				.getInstance().getSystemConfig().getCurrency(), "1200.0"),
 				new Money(Configuration.getInstance().getSystemConfig()
 						.getCurrency(), "3400.0"),
@@ -290,7 +290,7 @@ public class TestSavingsPersistenceService extends MifosTestCase {
 
 		savings = dbService.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
-		payment = helper.createAccountPaymentToPersist(new Money(Configuration
+		payment = helper.createAccountPaymentToPersist(savings,new Money(Configuration
 				.getInstance().getSystemConfig().getCurrency(), "2500.0"),
 				new Money(Configuration.getInstance().getSystemConfig()
 						.getCurrency(), "900.0"), helper.getDate("25/03/2006"),

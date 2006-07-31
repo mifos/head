@@ -97,7 +97,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				.getPersonnel(userContext.getId());
 		Money depositAmount = new Money(Configuration.getInstance()
 				.getSystemConfig().getCurrency(), "1000");
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				depositAmount, depositAmount, helper.getDate("20/05/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -140,7 +140,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				.getSystemConfig().getCurrency(), "1000.0");
 		Money balance = new Money(Configuration.getInstance().getSystemConfig()
 				.getCurrency(), "2000.0");
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				withdrawalAmount, balance, helper.getDate("20/05/2006"),
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings, createdBy,
 				group);
@@ -205,7 +205,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		HibernateUtil.closeSession();
 		PersonnelBO createdBy = new PersonnelPersistence()
 				.getPersonnel(userContext.getId());
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				new Money(Configuration.getInstance().getSystemConfig()
 						.getCurrency(), "1000.0"), new Money(Configuration
 						.getInstance().getSystemConfig().getCurrency(),
@@ -270,7 +270,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				.getPersonnel(userContext.getId());
 		Money depositAmount = new Money(Configuration.getInstance()
 				.getSystemConfig().getCurrency(), "1000.0");
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				depositAmount, depositAmount, helper.getDate("20/05/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);

@@ -627,7 +627,6 @@ public class SavingsBO extends AccountBO {
 					new Money(), AccountConstants.ACTION_SAVINGS_WITHDRAWAL,
 					customer, loggedInUser));
 			payment.setCreatedDate(helper.getCurrentDate());
-			payment.setPaymentDate(helper.getCurrentDate());
 			this.addAccountPayment(payment);
 			addSavingsActivityDetails(buildSavingsActivity(payment.getAmount(),
 					new Money(), AccountConstants.ACTION_SAVINGS_WITHDRAWAL,
@@ -660,7 +659,7 @@ public class SavingsBO extends AccountBO {
 			PaymentTypeEntity paymentType, CustomerBO customer,
 			PersonnelBO loggedInUser) throws SystemException,
 			FinancialException {
-		AccountPaymentEntity interestPayment = helper.createAccountPayment(
+		AccountPaymentEntity interestPayment = helper.createAccountPayment(this,
 				interestAmt, paymentType, loggedInUser);
 		interestPayment.addAcountTrxn(helper.createAccountPaymentTrxn(
 				interestPayment, interestAmt,
@@ -761,7 +760,9 @@ public class SavingsBO extends AccountBO {
 							.compareTo(
 									DateUtils.getDateWithoutTimeStamp(toDate
 											.getTime())) < 0) {
+			
 				Money lastTrxnAmt = getLastTrxnBalance(accountTrxnList, i);
+			
 				i = getLastTrxnIndexForDay(accountTrxnList, i);
 				SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) accountTrxnList
 						.get(i);
@@ -771,8 +772,11 @@ public class SavingsBO extends AccountBO {
 				if (initialTrxn.getActionDate().equals(
 						savingsTrxn.getActionDate())
 						&& initialTrxn.getAccountTrxnId() < savingsTrxn
-								.getAccountTrxnId())
+								.getAccountTrxnId()){
+			
 					initialBalance = lastTrxnAmt;
+				}
+			
 				totalBalance = totalBalance.add(new Money(Configuration
 						.getInstance().getSystemConfig().getCurrency(),
 						initialBalance.getAmountDoubleValue() * days));
@@ -785,11 +789,13 @@ public class SavingsBO extends AccountBO {
 			}
 		}
 		int days = helper.calculateDays(fromDate, toDate);
+	
 		totalBalance = totalBalance.add(new Money(Configuration.getInstance()
 				.getSystemConfig().getCurrency(), initialBalance
 				.getAmountDoubleValue()
 				* days));
 		noOfDays += days;
+	
 		return (noOfDays == 0 ? initialBalance : new Money(Configuration
 				.getInstance().getSystemConfig().getCurrency(), totalBalance
 				.getAmountDoubleValue()
@@ -928,10 +934,9 @@ public class SavingsBO extends AccountBO {
 				.getAccountPayments();
 
 		CustomerBO customer = paymentData.getCustomer();
-		AccountPaymentEntity accountPayment = new AccountPaymentEntity();
-		accountPayment.setPaymentDetails(totalAmount, paymentData
-				.getRecieptNum(), paymentData.getRecieptDate(), paymentData
-				.getPaymentTypeId());
+		AccountPaymentEntity accountPayment = new AccountPaymentEntity(this,totalAmount, paymentData
+				.getRecieptNum(), paymentData.getRecieptDate(),new PaymentTypeEntity(paymentData
+				.getPaymentTypeId()));
 		if (this.getAccountState().getId().equals(
 				AccountStates.SAVINGS_ACC_INACTIVE))
 			this.setAccountState(getDBService().getAccountStatusObject(
@@ -1034,11 +1039,9 @@ public class SavingsBO extends AccountBO {
 		savingsPerformance.setWithdrawDetails(totalAmount);
 
 		CustomerBO customer = accountPaymentData.getCustomer();
-		AccountPaymentEntity accountPayment = new AccountPaymentEntity();
-		accountPayment.setPaymentDetails(totalAmount, accountPaymentData
+		AccountPaymentEntity accountPayment = new AccountPaymentEntity(this,totalAmount, accountPaymentData
 				.getRecieptNum(), accountPaymentData.getRecieptDate(),
-				accountPaymentData.getPaymentTypeId());
-
+				new PaymentTypeEntity(accountPaymentData.getPaymentTypeId()));
 		SavingsTrxnDetailEntity accountTrxnBO = new SavingsTrxnDetailEntity();
 		accountTrxnBO.setAccount(this);
 		accountTrxnBO.setWithdrawalDetails(totalAmount, new java.sql.Date(
@@ -1300,7 +1303,6 @@ public class SavingsBO extends AccountBO {
 			String adjustmentComment) throws SystemException,
 			ApplicationException {
 		AccountPaymentEntity lastPayment = getLastPmnt();
-		lastPayment.setUserContext(getUserContext());
 		Short actionType = helper.getPaymentActionType(lastPayment);
 		PersonnelBO personnel = getPersonnelDBService().getPersonnel(
 				userContext.getId());
@@ -1331,12 +1333,10 @@ public class SavingsBO extends AccountBO {
 		AccountPaymentEntity newAccountPayment = null;
 		PersonnelBO personnel = getPersonnelDBService().getPersonnel(
 				userContext.getId());
-		lastPayment.setUserContext(getUserContext());
 		if (amountAdjustedTo.getAmountDoubleValue() > 0) {
-			newAccountPayment = helper.createAccountPayment(amountAdjustedTo,
+			newAccountPayment = helper.createAccountPayment(this,amountAdjustedTo,
 					lastPayment.getPaymentType(), getPersonnelDBService()
 							.getPersonnel(userContext.getId()));
-			newAccountPayment.setPaymentDate(new Date());
 		}
 		if (newAccountPayment != null) {
 			newAccountPayment.setAmount(amountAdjustedTo);

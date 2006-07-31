@@ -1,5 +1,6 @@
 package org.mifos.application.accounts.savings.business;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -25,6 +26,7 @@ import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.exceptions.IDGenerationException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.persistence.service.SavingsPersistenceService;
 import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -36,7 +38,9 @@ import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -66,8 +70,6 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import sun.security.action.GetLongAction;
 
 public class TestSavingsBO extends MifosTestCase {
 	private UserContext userContext;
@@ -168,62 +170,92 @@ public class TestSavingsBO extends MifosTestCase {
 
 	private SavingsBO createSavingsWithAccountPayments() throws Exception {
 		AccountPaymentEntity payment;
-		SavingsBO savingsObj = new SavingsBO(userContext);
+		createInitialObjects();
+		savingsOffering = helper.createSavingsOffering();
+		savings = helper.createSavingsAccount(savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,userContext);
 
-		payment = helper.createAccountPayment(1, new Money(currency, "2500.0"),
+		Money initialBal = new Money(currency, "5500");
+		payment = helper.createAccountPayment(savings,null, new Money(currency, "5500.0"),
+				new Date(), createdBy);
+		payment.addAcountTrxn(helper.createAccountTrxn(null,
+				initialBal, initialBal, helper.getDate("04/01/2006"), null, null,
+				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
+				group));
+		savings.addAccountPayment(payment);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		
+		payment = helper.createAccountPayment(savings,null, new Money(currency, "2500.0"),
 				new Date(), createdBy);
 		payment.addAcountTrxn(helper.createAccountTrxn(null, new Money(
 				currency, "2500"), new Money(currency, "7500"), helper
-				.getDate("10/01/2006"), null, 1,
-				AccountConstants.ACTION_SAVINGS_DEPOSIT, savingsObj, createdBy,
+				.getDate("10/01/2006"), null, null,
+				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group));
-		savingsObj.addAccountPayment(payment);
-
-		payment = helper.createAccountPayment(2, new Money(currency, "3500.0"),
+		savings.addAccountPayment(payment);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		
+		payment = helper.createAccountPayment(savings,null, new Money(currency, "3500.0"),
 				new Date(), createdBy);
 		payment.addAcountTrxn(helper.createAccountTrxn(null, new Money(
 				currency, "3500"), new Money(currency, "4000"), helper
-				.getDate("16/02/2006"), null, 2,
-				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savingsObj,
+				.getDate("16/02/2006"), null, null,
+				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings,
 				createdBy, group));
-		savingsObj.addAccountPayment(payment);
-
-		payment = helper.createAccountPayment(3, new Money(currency, "1000.0"),
+		savings.addAccountPayment(payment);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		
+		payment = helper.createAccountPayment(savings,null, new Money(currency, "1000.0"),
 				new Date(), createdBy);
 		payment.addAcountTrxn(helper.createAccountTrxn(null, new Money(
 				currency, "1000"), new Money(currency, "5000"), helper
-				.getDate("05/03/2006"), null, 3,
-				AccountConstants.ACTION_SAVINGS_DEPOSIT, savingsObj, createdBy,
+				.getDate("05/03/2006"), null,null,
+				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group));
-		savingsObj.addAccountPayment(payment);
+		savings.addAccountPayment(payment);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		
+		
 
-		payment = helper.createAccountPayment(5, new Money(currency, "500.0"),
-				new Date(), createdBy);
-		payment.addAcountTrxn(helper.createAccountTrxn(null, new Money(
-				currency, "500.0"), new Money(currency, "4200.0"), helper
-				.getDate("05/03/2006"), null, 5,
-				AccountConstants.ACTION_SAVINGS_DEPOSIT, savingsObj, createdBy,
-				group));
-		savingsObj.addAccountPayment(payment);
-
-		payment = helper.createAccountPayment(4, new Money(currency, "500.0"),
+		payment = helper.createAccountPayment(savings,null, new Money(currency, "500.0"),
 				new Date(), createdBy);
 		payment.addAcountTrxn(helper.createAccountTrxn(null, new Money(
 				currency, "1200.0"), new Money(currency, "3800.0"), helper
-				.getDate("05/03/2006"), null, 4,
-				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savingsObj,
+				.getDate("05/03/2006"), null, null,
+				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings,
 				createdBy, group));
-		savingsObj.addAccountPayment(payment);
-
-		payment = helper.createAccountPayment(6, new Money(currency, "200.0"),
+		savings.addAccountPayment(payment);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		
+		payment = helper.createAccountPayment(savings,null, new Money(currency, "500.0"),
+				new Date(), createdBy);
+		payment.addAcountTrxn(helper.createAccountTrxn(null, new Money(
+				currency, "500.0"), new Money(currency, "4200.0"), helper
+				.getDate("05/03/2006"), null, null,
+				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
+				group));
+		savings.addAccountPayment(payment);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		
+		payment = helper.createAccountPayment(savings,null, new Money(currency, "200.0"),
 				new Date(), createdBy);
 		payment.addAcountTrxn(helper.createAccountTrxn(null, new Money(
 				currency, "200"), new Money(currency, "4000"), helper
-				.getDate("05/04/2006"), null, 6,
-				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savingsObj,
+				.getDate("05/04/2006"), null, null,
+				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings,
 				createdBy, group));
-		savingsObj.addAccountPayment(payment);
-		return savingsObj;
+		savings.addAccountPayment(payment);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		
+		HibernateUtil.closeSession();
+		
+		return (SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
 	}
 
 	public void testSuccessfulSave() throws Exception {
@@ -341,17 +373,17 @@ public class TestSavingsBO extends MifosTestCase {
 	}
 
 	public void testGetMinimumBalance() throws Exception {
-		createInitialObjects();
-		SavingsBO savingsObj = createSavingsWithAccountPayments();
-		Money initialBal = new Money(currency, "5500");
-		SavingsTrxnDetailEntity initialTrxn = helper.createAccountTrxn(null,
-				initialBal, initialBal, helper.getDate("04/01/2006"), null, 1,
-				AccountConstants.ACTION_SAVINGS_DEPOSIT, savingsObj, createdBy,
-				group);
-		Money minBal = savingsObj.getMinimumBalance(helper
-				.getDate("05/01/2006"), helper.getDate("10/05/2006"),
+		savings = createSavingsWithAccountPayments();
+		SavingsTrxnDetailEntity initialTrxn = new SavingsPersistence().retrieveFirstTransaction(savings.getAccountId());
+
+		Money minBal = savings.getMinimumBalance(getTimeStampDate(helper
+				.getDate("05/01/2006")), getTimeStampDate(helper.getDate("10/05/2006")),
 				initialTrxn, null);
 		assertEquals(Double.valueOf("4000"), minBal.getAmountDoubleValue());
+		TestObjectFactory.flushandCloseSession();
+		savings=(SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
+		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class,savings.getCustomer().getCustomerId());
+		center = (CenterBO)TestObjectFactory.getObject(CenterBO.class,group.getParentCustomer().getCustomerId());
 	}
 
 	/*
@@ -362,20 +394,24 @@ public class TestSavingsBO extends MifosTestCase {
 	 */
 	
 	public void testGetAverageBalance() throws Exception {
-		createInitialObjects();
-		SavingsBO savingsObj = createSavingsWithAccountPayments();
-		Money initialBal = new Money(currency, "5500");
-		SavingsTrxnDetailEntity initialTrxn = helper.createAccountTrxn(null,
-				initialBal, initialBal, helper.getDate("04/01/2006"), null, 1,
-				AccountConstants.ACTION_SAVINGS_DEPOSIT, savingsObj, createdBy,
-				group);
-		Money avgBalance = savingsObj.getAverageBalance(helper
-				.getDate("05/01/2006"), helper.getDate("10/04/2006"),
+		savings = createSavingsWithAccountPayments();
+		SavingsTrxnDetailEntity initialTrxn = new SavingsPersistence().retrieveLastTransaction(savings.getAccountId(),helper
+				.getDate("05/01/2006"));
+		Money avgBalance = savings.getAverageBalance(getTimeStampDate(helper
+				.getDate("05/01/2006")), getTimeStampDate(helper.getDate("10/04/2006")),
 				initialTrxn, null);
 		assertEquals(Double.valueOf("5507.4"), avgBalance
 				.getAmountDoubleValue());
+		TestObjectFactory.flushandCloseSession();
+		savings=(SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
+		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class,savings.getCustomer().getCustomerId());
+		center = (CenterBO)TestObjectFactory.getObject(CenterBO.class,group.getParentCustomer().getCustomerId());
 	}
 
+	private Date getTimeStampDate(Date date){
+		return new Timestamp(date.getTime());
+	}
+	
 	public void testCalculateInterestForClosureAvgBal() throws Exception {
 		createInitialObjects();
 		savingsOffering = helper.createSavingsOffering();
@@ -393,7 +429,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.getSessionTL().flush();
 		savings.setActivationDate(helper.getDate("15/05/2006"));
 
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				new Money(currency, "1000.0"), new Money(currency, "1000.0"),
 				helper.getDate("20/05/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
@@ -429,7 +465,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.getSessionTL().flush();
 		savings.setActivationDate(helper.getDate("15/05/2006"));
 
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				new Money(currency, "1000.0"), new Money(currency, "1000.0"),
 				helper.getDate("20/05/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
@@ -455,7 +491,7 @@ public class TestSavingsBO extends MifosTestCase {
 		createInitialObjects();
 		savingsOffering = helper.createSavingsOffering();
 		savings = new SavingsBO(userContext);
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				new Money(currency, "700.0"), new Money(currency, "1700.0"),
 				helper.getDate("15/01/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
@@ -470,7 +506,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.getSessionTL().flush();
 		savings.setActivationDate(helper.getDate("05/01/2006"));
 
-		payment = helper.createAccountPaymentToPersist(new Money(currency,
+		payment = helper.createAccountPaymentToPersist(savings,new Money(currency,
 				"1000.0"), new Money(currency, "2700.0"), helper
 				.getDate("20/02/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
@@ -479,7 +515,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.update();
 		HibernateUtil.getSessionTL().flush();
 
-		payment = helper.createAccountPaymentToPersist(new Money(currency,
+		payment = helper.createAccountPaymentToPersist(savings,new Money(currency,
 				"500.0"), new Money(currency, "2200.0"), helper
 				.getDate("10/03/2006"),
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings, createdBy,
@@ -488,7 +524,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.update();
 		HibernateUtil.getSessionTL().flush();
 
-		payment = helper.createAccountPaymentToPersist(new Money(currency,
+		payment = helper.createAccountPaymentToPersist(savings,new Money(currency,
 				"1200.0"), new Money(currency, "3400.0"), helper
 				.getDate("15/03/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
@@ -497,7 +533,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.update();
 		HibernateUtil.getSessionTL().flush();
 
-		payment = helper.createAccountPaymentToPersist(new Money(currency,
+		payment = helper.createAccountPaymentToPersist(savings,new Money(currency,
 				"2000.0"), new Money(currency, "1400.0"), helper
 				.getDate("25/03/2006"),
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings, createdBy,
@@ -910,7 +946,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = helper.createSavingsAccount("000100000000017",
 				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
 				userContext);
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				new Money(currency, "1000.0"), new Money(currency, "1000.0"),
 				helper.getDate("20/05/2006"),
 				AccountConstants.ACTION_SAVINGS_INTEREST_POSTING, savings,
@@ -933,7 +969,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = helper.createSavingsAccount("000100000000017",
 				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
 				userContext);
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				new Money(currency, "1000.0"), new Money(currency, "1000.0"),
 				helper.getDate("20/05/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
@@ -957,7 +993,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = helper.createSavingsAccount("000100000000017",
 				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
 				userContext);
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				new Money(currency, "1000.0"), new Money(currency, "1000.0"),
 				helper.getDate("20/05/2006"),
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings, createdBy,
@@ -982,7 +1018,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = helper.createSavingsAccount("000100000000017",
 				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
 				userContext);
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				new Money(currency, "1000.0"), new Money(currency, "1000.0"),
 				helper.getDate("20/05/2006"),
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings, createdBy,
@@ -1012,7 +1048,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = helper.createSavingsAccount("000100000000017",
 				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
 				userContext);
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				new Money(currency, "1000.0"), new Money(currency, "1000.0"),
 				helper.getDate("20/05/2006"),
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings, createdBy,
@@ -1044,7 +1080,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = helper.createSavingsAccount("000100000000017",
 				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
 				userContext);
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				new Money(currency, "1000.0"), new Money(currency, "1000.0"),
 				helper.getDate("20/05/2006"),
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings, createdBy,
@@ -1092,7 +1128,7 @@ public class TestSavingsBO extends MifosTestCase {
 				userContext);
 		Money withdrawalAmount = new Money(currency, "1000.0");
 		Money balanceAmount = new Money(currency, "4500.0");
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				withdrawalAmount, balanceAmount, helper.getDate("20/05/2006"),
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings, createdBy,
 				group);
@@ -1155,7 +1191,7 @@ public class TestSavingsBO extends MifosTestCase {
 				userContext);
 		Money withdrawalAmount = new Money(currency, "1000.0");
 		Money balanceAmount = new Money(currency, "4500.0");
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				withdrawalAmount, balanceAmount, helper.getDate("20/05/2006"),
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings, createdBy,
 				group);
@@ -1203,7 +1239,7 @@ public class TestSavingsBO extends MifosTestCase {
 		Money depositAmount = new Money(currency, "1000.0");
 		Money balanceAmount = new Money(currency, "4500.0");
 
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				depositAmount, balanceAmount, helper.getDate("20/05/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -1279,7 +1315,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		// Adding 1 account payment of Rs 1200. With three transactions of (500
 		// + 500 + 200).
-		AccountPaymentEntity payment = helper.createAccountPayment(
+		AccountPaymentEntity payment = helper.createAccountPayment(savings,
 				depositAmount, paymentDate, createdBy);
 		Money balanceAmount = new Money(currency, "4500.0");
 		SavingsTrxnDetailEntity trxn1 = helper.createAccountTrxn(Short
@@ -1384,7 +1420,7 @@ public class TestSavingsBO extends MifosTestCase {
 		Money depositAmount = new Money(currency, "500.0");
 
 		// Adding 1 account payment of Rs 500. With one transactions of 500.
-		AccountPaymentEntity payment = helper.createAccountPayment(
+		AccountPaymentEntity payment = helper.createAccountPayment(savings,
 				depositAmount, paymentDate, createdBy);
 		Money balanceAmount = new Money(currency, "4500.0");
 
@@ -1468,7 +1504,7 @@ public class TestSavingsBO extends MifosTestCase {
 		Money depositAmount = new Money(currency, "700.0");
 
 		// Adding 1 account payment of Rs 500. With one transactions of 500.
-		AccountPaymentEntity payment = helper.createAccountPayment(
+		AccountPaymentEntity payment = helper.createAccountPayment(savings,
 				depositAmount, paymentDate, createdBy);
 		Money balanceAmount = new Money(currency, "4500.0");
 		SavingsTrxnDetailEntity trxn1 = helper.createAccountTrxn(Short
@@ -1553,7 +1589,7 @@ public class TestSavingsBO extends MifosTestCase {
 		Money depositAmount = new Money(currency, "200.0");
 
 		// Adding 1 account payment of Rs 500. With one transactions of 500.
-		AccountPaymentEntity payment = helper.createAccountPayment(
+		AccountPaymentEntity payment = helper.createAccountPayment(savings,
 				depositAmount, paymentDate, createdBy);
 		Money balanceAmount = new Money(currency, "4200.0");
 		SavingsTrxnDetailEntity trxn1 = helper.createAccountTrxn(Short
@@ -1628,7 +1664,7 @@ public class TestSavingsBO extends MifosTestCase {
 		Money depositAmount = new Money(currency, "200.0");
 
 		// Adding 1 account payment of Rs 500. With one transactions of 500.
-		AccountPaymentEntity payment = helper.createAccountPayment(
+		AccountPaymentEntity payment = helper.createAccountPayment(savings,
 				depositAmount, paymentDate, createdBy);
 		Money balanceAmount = new Money(currency, "4200.0");
 		SavingsTrxnDetailEntity trxn1 = helper.createAccountTrxn(Short
@@ -2104,7 +2140,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.getAmountDoubleValue());
 		assertEquals(helper.getDate("07/03/2006"), savings.getNextIntCalcDate());
 
-		AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(savings,
 				new Money(currency, "1000.0"), new Money(currency, "1000.0"),
 				helper.getDate("06/03/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
@@ -2114,7 +2150,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.update();
 		HibernateUtil.commitTransaction();
 
-		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(savings,
 				new Money(currency, "2500.0"), new Money(currency, "3500.0"),
 				helper.getDate("06/03/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
@@ -2149,7 +2185,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.getAmountDoubleValue());
 		assertEquals(helper.getDate("07/03/2006"), savings.getNextIntCalcDate());
 
-		AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(savings,
 				new Money(currency, "1000.0"), new Money(currency, "1000.0"),
 				helper.getDate("06/03/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
@@ -2159,7 +2195,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.update();
 		HibernateUtil.commitTransaction();
 
-		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(savings,
 				new Money(currency, "2500.0"), new Money(currency, "3500.0"),
 				helper.getDate("06/03/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
@@ -2194,7 +2230,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.getAmountDoubleValue());
 		assertEquals(helper.getDate("22/03/2006"), savings.getNextIntCalcDate());
 
-		AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(savings,
 				new Money(currency, "1000.0"), new Money(currency, "1000.0"),
 				helper.getDate("11/03/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
@@ -2204,7 +2240,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.update();
 		HibernateUtil.commitTransaction();
 
-		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(savings,
 				new Money(currency, "500.0"), new Money(currency, "500.0"),
 				helper.getDate("15/03/2006"),
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings, createdBy,
@@ -2212,7 +2248,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.addAccountPayment(payment2);
 		savings.update();
 
-		AccountPaymentEntity payment3 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment3 = helper.createAccountPaymentToPersist(savings,
 				new Money(currency, "2500.0"), new Money(currency, "3000.0"),
 				helper.getDate("19/03/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
@@ -2247,7 +2283,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.getAmountDoubleValue());
 		assertEquals(helper.getDate("22/03/2006"), savings.getNextIntCalcDate());
 
-		AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(savings,
 				new Money(currency, "1000.0"), new Money(currency, "1000.0"),
 				helper.getDate("11/03/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
@@ -2257,7 +2293,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.update();
 		HibernateUtil.commitTransaction();
 
-		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(savings,
 				new Money(currency, "500.0"), new Money(currency, "500.0"),
 				helper.getDate("15/03/2006"),
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings, createdBy,
@@ -2265,7 +2301,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.addAccountPayment(payment2);
 		savings.update();
 
-		AccountPaymentEntity payment3 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment3 = helper.createAccountPaymentToPersist(savings,
 				new Money(currency, "2500.0"), new Money(currency, "3000.0"),
 				helper.getDate("19/03/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
@@ -2330,7 +2366,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 
 		Money depositMoney = new Money(currency, "2000.0");
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				depositMoney, depositMoney, helper.getDate("25/02/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -2398,7 +2434,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 
 		Money depositMoney = new Money(currency, "2000.0");
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				depositMoney, depositMoney, helper.getDate("25/02/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -2410,7 +2446,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		depositMoney = new Money(currency, "5000.0");
 		Money balanceAmt = new Money(currency, "7000.0");
-		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(savings,
 				depositMoney, balanceAmt, helper.getDate("27/02/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -2481,7 +2517,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 		// add deposit trxn
 		Money depositMoney = new Money(currency, "2000.0");
-		AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(savings,
 				depositMoney, depositMoney, helper.getDate("20/02/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -2494,7 +2530,7 @@ public class TestSavingsBO extends MifosTestCase {
 		// add deposit trxn
 		depositMoney = new Money(currency, "1000.0");
 		Money balanceAmt = new Money(currency, "3000.0");
-		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(savings,
 				depositMoney, balanceAmt, helper.getDate("24/02/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -2507,7 +2543,7 @@ public class TestSavingsBO extends MifosTestCase {
 		// add withdrawal trxn
 		Money withrawalAmt = new Money(currency, "500.0");
 		balanceAmt = new Money(currency, "2500.0");
-		AccountPaymentEntity payment3 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment3 = helper.createAccountPaymentToPersist(savings,
 				withrawalAmt, balanceAmt, helper.getDate("26/02/2006"),
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings, createdBy,
 				group);
@@ -2572,7 +2608,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 		// add deposit trxn
 		Money depositMoney = new Money(currency, "2000.0");
-		AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(savings,
 				depositMoney, depositMoney, helper.getDate("20/02/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -2585,7 +2621,7 @@ public class TestSavingsBO extends MifosTestCase {
 		// add deposit trxn
 		depositMoney = new Money(currency, "1000.0");
 		Money balanceAmt = new Money(currency, "3000.0");
-		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(savings,
 				depositMoney, balanceAmt, helper.getDate("24/02/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -2598,7 +2634,7 @@ public class TestSavingsBO extends MifosTestCase {
 		// add withdrawal trxn
 		Money withrawalAmt = new Money(currency, "500.0");
 		balanceAmt = new Money(currency, "2500.0");
-		AccountPaymentEntity payment3 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment3 = helper.createAccountPaymentToPersist(savings,
 				withrawalAmt, balanceAmt, helper.getDate("26/02/2006"),
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings, createdBy,
 				group);
@@ -2664,7 +2700,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 		// add deposit trxn
 		Money depositMoney = new Money(currency, "2000.0");
-		AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(savings,
 				depositMoney, depositMoney, helper.getDate("20/02/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -2677,7 +2713,7 @@ public class TestSavingsBO extends MifosTestCase {
 		// add withdrawal trxn
 		Money withrawalAmt = new Money(currency, "500.0");
 		Money balanceAmt = new Money(currency, "1500.0");
-		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(savings,
 				withrawalAmt, balanceAmt, helper.getDate("25/02/2006"),
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings, createdBy,
 				group);
@@ -2742,7 +2778,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 
 		Money depositMoney = new Money(currency, "2000.0");
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				depositMoney, depositMoney, helper.getDate("25/02/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -2754,7 +2790,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		depositMoney = new Money(currency, "5000.0");
 		Money balanceAmt = new Money(currency, "7000.0");
-		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(savings,
 				depositMoney, balanceAmt, helper.getDate("27/02/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -2821,7 +2857,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 
 		Money depositMoney = new Money(currency, "2000.0");
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				depositMoney, depositMoney, helper.getDate("25/02/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -2833,7 +2869,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		depositMoney = new Money(currency, "5000.0");
 		Money balanceAmt = new Money(currency, "7000.0");
-		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(savings,
 				depositMoney, balanceAmt, helper.getDate("27/02/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -2909,7 +2945,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 
 		Money depositMoney = new Money(currency, "2000.0");
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				depositMoney, depositMoney, helper.getDate("25/02/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -2921,7 +2957,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		depositMoney = new Money(currency, "5000.0");
 		Money balanceAmt = new Money(currency, "7000.0");
-		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(savings,
 				depositMoney, balanceAmt, helper.getDate("27/02/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -2950,7 +2986,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		// Adding 1 account payment of Rs 1200. With three transactions of (500
 		// + 500 + 200).
-		AccountPaymentEntity payment3 = helper.createAccountPayment(
+		AccountPaymentEntity payment3 = helper.createAccountPayment(savings,
 				depositMoney, paymentDate, createdBy);
 		Money balanceAmount = new Money(currency, "7500.0");
 		SavingsTrxnDetailEntity trxn1 = helper.createAccountTrxn(Short
@@ -3049,7 +3085,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 
 		Money depositMoney = new Money(currency, "2000.0");
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				depositMoney, depositMoney, helper.getDate("25/02/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -3061,7 +3097,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		depositMoney = new Money(currency, "5000.0");
 		Money balanceAmt = new Money(currency, "7000.0");
-		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(savings,
 				depositMoney, balanceAmt, helper.getDate("27/02/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -3090,7 +3126,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		// Adding 1 account payment of Rs 1200. With three transactions of (500
 		// + 500 + 200).
-		AccountPaymentEntity payment3 = helper.createAccountPayment(
+		AccountPaymentEntity payment3 = helper.createAccountPayment(savings,
 				depositMoney, paymentDate, createdBy);
 		Money balanceAmount = new Money(currency, "7500.0");
 		SavingsTrxnDetailEntity trxn1 = helper.createAccountTrxn(Short
@@ -3190,7 +3226,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 
 		Money depositMoney = new Money(currency, "2000.0");
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				depositMoney, depositMoney, helper.getDate("25/02/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -3202,7 +3238,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		depositMoney = new Money(currency, "5000.0");
 		Money balanceAmt = new Money(currency, "7000.0");
-		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(savings,
 				depositMoney, balanceAmt, helper.getDate("27/02/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -3231,7 +3267,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		// Adding 1 account payment of Rs 1200. With three transactions of (500
 		// + 500 + 200).
-		AccountPaymentEntity payment3 = helper.createAccountPayment(
+		AccountPaymentEntity payment3 = helper.createAccountPayment(savings,
 				depositMoney, paymentDate, createdBy);
 		Money balanceAmount = new Money(currency, "7500.0");
 		SavingsTrxnDetailEntity trxn1 = helper.createAccountTrxn(Short
@@ -3329,7 +3365,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 
 		Money depositMoney = new Money(currency, "2000.0");
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				depositMoney, depositMoney, helper.getDate("25/02/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -3341,7 +3377,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		depositMoney = new Money(currency, "5000.0");
 		Money balanceAmt = new Money(currency, "7000.0");
-		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(savings,
 				depositMoney, balanceAmt, helper.getDate("27/02/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -3353,7 +3389,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		Money withdrawalMoney = new Money(currency, "2000.0");
 		balanceAmt = new Money(currency, "5000.0");
-		AccountPaymentEntity payment3 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment3 = helper.createAccountPaymentToPersist(savings,
 				withdrawalMoney, balanceAmt, helper.getDate("15/03/2006"),
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings, createdBy,
 				group);
@@ -3428,7 +3464,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 
 		Money depositMoney = new Money(currency, "2000.0");
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
 				depositMoney, depositMoney, helper.getDate("25/02/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -3445,7 +3481,7 @@ public class TestSavingsBO extends MifosTestCase {
 		Date paymentDate = helper.getDate("27/02/2006");
 		Money recommendedAmnt = new Money(currency, "2000");
 
-		AccountPaymentEntity payment2 = helper.createAccountPayment(
+		AccountPaymentEntity payment2 = helper.createAccountPayment(savings,
 				depositMoney, paymentDate, createdBy);
 		Money balanceAmount = new Money(currency, "4000.0");
 		SavingsTrxnDetailEntity trxn1 = helper.createAccountTrxn(Short
@@ -3477,7 +3513,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		depositMoney = new Money(currency, "1200.0");
 		balanceAmount = new Money(currency, "8200.0");
-		AccountPaymentEntity payment3 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment3 = helper.createAccountPaymentToPersist(savings,
 				depositMoney, balanceAmount, helper.getDate("15/03/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
@@ -3712,7 +3748,7 @@ public class TestSavingsBO extends MifosTestCase {
 				group, AccountStates.SAVINGS_ACC_APPROVED,userContext);
 		savings.setActivationDate(helper.getDate("20/05/2006"));
 		
-		AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(new Money(currency, "1000.0"), new Money(currency, "1000.0"),
+		AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(savings,new Money(currency, "1000.0"), new Money(currency, "1000.0"),
 				helper.getDate("30/05/2006"),AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,group);
 		savings.addAccountPayment(payment1);
 		savings.update();
@@ -3720,7 +3756,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		
 		Money balanceAmount = new Money(currency, "1500.0");
-		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(savings,
 				new Money(currency, "500.0"), balanceAmount,
 				helper.getDate("15/06/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
@@ -3740,12 +3776,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = savingsService.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
 		Money interestAtClosure = savings.calculateInterestForClosure(new SavingsHelper().getCurrentDate());
-		AccountPaymentEntity payment = new AccountPaymentEntity();
-		payment.setPaymentDate(new SavingsHelper().getCurrentDate());
-		payment.setAmount(balanceAmount.add(interestAtClosure));
-		PaymentTypeEntity paymentType = new PaymentTypeEntity();
-		paymentType.setId(Short.valueOf("1"));
-		payment.setPaymentType(paymentType);
+		AccountPaymentEntity payment = new AccountPaymentEntity(savings,balanceAmount.add(interestAtClosure),null,null,new PaymentTypeEntity(Short.valueOf("1")));
 		AccountNotesEntity notes = new AccountNotesEntity();
 		notes.setComment("closing account");
 		savings.closeAccount(payment, notes, group);

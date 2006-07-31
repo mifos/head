@@ -43,6 +43,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
@@ -177,14 +178,12 @@ public class SavingsHelper {
 		return savingsTrxn;
 	}
 	
-	public AccountPaymentEntity createAccountPayment(Money amount, PaymentTypeEntity paymentTypeEntity, PersonnelBO createdBy ){
-		AccountPaymentEntity  payment = new AccountPaymentEntity();
+	public AccountPaymentEntity createAccountPayment(AccountBO account,Money amount, PaymentTypeEntity paymentTypeEntity, PersonnelBO createdBy ){
+		AccountPaymentEntity  payment = new AccountPaymentEntity(account,amount,null,null,paymentTypeEntity);
 		if(createdBy!=null)
 			payment.setCreatedBy(createdBy.getPersonnelId());
 		payment.setCreatedDate(getCurrentDate());
-		payment.setPaymentDate(payment.getCreatedDate());
 		payment.setAmount(amount);
-		payment.setPaymentType(paymentTypeEntity);
 		return payment;
 	}
 	

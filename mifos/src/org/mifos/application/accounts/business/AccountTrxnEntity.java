@@ -74,8 +74,6 @@ public class AccountTrxnEntity extends PersistentObject {
 
 	private CustomerBO customer;
 	
-	private UserContext userContext;
-	
 	private Timestamp trxnCreatedDate;
 
 	private Set<FinancialTransactionBO> financialTransactions;
@@ -171,14 +169,6 @@ public class AccountTrxnEntity extends PersistentObject {
 		this.personnel = personnel;
 	}
 	
-	public UserContext getUserContext() {
-		return userContext;
-	}
-
-	public void setUserContext(UserContext userContext) {
-		this.userContext = userContext;
-	}
-
 	public void addFinancialTransction(
 			FinancialTransactionBO financialTransaction) {
 		financialTransaction.setAccountTrxn(this);

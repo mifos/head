@@ -139,11 +139,8 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testSuccessfullPreview() {
-		AccountPaymentEntity payment = new AccountPaymentEntity();
-		payment.setPaymentDate(new Date(new SavingsHelper().getCurrentDate()
-				.getTime()));
-		payment.setAmount(new Money(Configuration.getInstance()
-				.getSystemConfig().getCurrency(), "500"));
+		AccountPaymentEntity payment = new AccountPaymentEntity(null,new Money(Configuration.getInstance()
+				.getSystemConfig().getCurrency(), "500"),null,null,null);
 		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
 				request.getSession());
 		addRequestParameter("receiptId", "101");
@@ -172,7 +169,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 				group, AccountStates.SAVINGS_ACC_APPROVED,userContext);
 		savings.setActivationDate(helper.getDate("20/05/2006"));
 		PersonnelBO createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
-		AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(new Money(TestObjectFactory.getMFICurrency(), "1000.0"), new Money(TestObjectFactory.getMFICurrency(), "1000.0"),
+		AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(savings,new Money(TestObjectFactory.getMFICurrency(), "1000.0"), new Money(TestObjectFactory.getMFICurrency(), "1000.0"),
 				helper.getDate("30/05/2006"),AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,group);
 		savings.addAccountPayment(payment1);
 		savings.update();
@@ -180,7 +177,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		HibernateUtil.closeSession();
 		
 		Money balanceAmount = new Money(TestObjectFactory.getMFICurrency(), "1500.0");
-		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(
+		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(savings,
 				new Money(TestObjectFactory.getMFICurrency(), "500.0"), balanceAmount,
 				helper.getDate("15/06/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
@@ -206,7 +203,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		savings.getSavingsOffering().getDescription();
 		savings.getCustomer().getPersonnel();
 
-		AccountPaymentEntity payment = new AccountPaymentEntity();
+		AccountPaymentEntity payment = new AccountPaymentEntity(savings,balanceAmount.add(interestAtClosure),null,null,new PaymentTypeEntity(Short.valueOf("1")));
 		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
 
 		for (AccountPaymentEntity acPayment : savings.getAccountPayments())
@@ -218,13 +215,6 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 			fee.getAccountFeeAmount();
 		for (AccountNotesEntity notes : savings.getAccountNotes())
 			notes.getCommentDate();
-		payment.setPaymentDate(new Date(new SavingsHelper().getCurrentDate()
-				.getTime()));
-		payment.setAmount(balanceAmount.add(interestAtClosure));
-
-		PaymentTypeEntity paymentType = new PaymentTypeEntity();
-		paymentType.setId(Short.valueOf("1"));
-		payment.setPaymentType(paymentType);
 
 		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
 				request.getSession());

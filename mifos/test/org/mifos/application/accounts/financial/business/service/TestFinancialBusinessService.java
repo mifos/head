@@ -27,6 +27,7 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -78,8 +79,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		Date currentDate = new Date(System.currentTimeMillis());
 		loan = getLoanAccount();
 		loan.setUserContext(TestObjectFactory.getUserContext());
-		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity();
-		accountPaymentEntity.setPaymentDetails(TestObjectFactory.getMoneyForMFICurrency(630), "1111", currentDate, Short.valueOf("1"));
+		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loan,TestObjectFactory.getMoneyForMFICurrency(630), "1111", currentDate, new PaymentTypeEntity(Short.valueOf("1")));
 		FinancialBusinessService financialBusinessService = (FinancialBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Financial);
 		AccountTrxnEntity accountTrxnEntity = getAccountTrxnObj();
 		accountTrxnEntity.setAccount(loan);
@@ -157,7 +157,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		java.util.Date trxnDate=helper.getDate("20/05/2006");
 
 		
-		AccountPaymentEntity  payment = helper.createAccountPaymentToPersist(depositAmount,balanceAmount,trxnDate,AccountConstants.ACTION_SAVINGS_DEPOSIT,savings, createdBy,group);
+		AccountPaymentEntity  payment = helper.createAccountPaymentToPersist(savings,depositAmount,balanceAmount,trxnDate,AccountConstants.ACTION_SAVINGS_DEPOSIT,savings, createdBy,group);
 		savings.addAccountPayment(payment);
 		savings.setSavingsBalance(balanceAmount);
 		savings.update();
@@ -218,7 +218,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		java.util.Date trxnDate=helper.getDate("20/05/2006");
 
 		
-		AccountPaymentEntity  payment = helper.createAccountPaymentToPersist(withdrawalAmount,balanceAmount,trxnDate,AccountConstants.ACTION_SAVINGS_WITHDRAWAL,savings, createdBy,group);
+		AccountPaymentEntity  payment = helper.createAccountPaymentToPersist(savings,withdrawalAmount,balanceAmount,trxnDate,AccountConstants.ACTION_SAVINGS_WITHDRAWAL,savings, createdBy,group);
 		savings.addAccountPayment(payment);
 		savings.setSavingsBalance(balanceAmount);
 		savings.update();
@@ -278,7 +278,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 			
 		GLCodeEntity glCodeEntity =(GLCodeEntity)HibernateUtil.getSessionTL().get(GLCodeEntity.class,Short.valueOf("31"));
 		savings.getSavingsOffering().setDepositGLCode(glCodeEntity);
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(withdrawalAmount,new Money(),trxnDate, AccountConstants.ACTION_SAVINGS_WITHDRAWAL,savings,createdBy,group);
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,withdrawalAmount,new Money(),trxnDate, AccountConstants.ACTION_SAVINGS_WITHDRAWAL,savings,createdBy,group);
 		
 		assertEquals(Integer.valueOf(1).intValue(),payment.getAccountTrxns().size());
 		FinancialBusinessService financialBusinessService = (FinancialBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Financial);
@@ -323,8 +323,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		Date currentDate = new Date(System.currentTimeMillis());
 		loan = getLoanAccount();
 		loan.setUserContext(TestObjectFactory.getUserContext());
-		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity();
-		accountPaymentEntity.setPaymentDetails(TestObjectFactory.getMoneyForMFICurrency(630), null, null, Short.valueOf("1"));
+		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loan,TestObjectFactory.getMoneyForMFICurrency(630), null, null, new PaymentTypeEntity(Short.valueOf("1")));
 		FinancialBusinessService financialBusinessService = (FinancialBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Financial);
 		AccountActionDateEntity accountActionDateEntity = loan.getAccountActionDate(Short.valueOf("1"));
 		LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity();

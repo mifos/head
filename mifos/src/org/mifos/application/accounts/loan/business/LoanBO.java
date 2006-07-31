@@ -88,6 +88,7 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.fund.util.valueobjects.Fund;
+import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.master.util.valueobjects.CollateralType;
@@ -99,6 +100,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.valueobjects.GracePeriodType;
+import org.mifos.application.productdefinition.util.valueobjects.PaymentType;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -383,10 +385,9 @@ public class LoanBO extends AccountBO {
 	protected AccountPaymentEntity makePayment(PaymentData paymentData)
 			throws AccountException, SystemException {
 		AccountActionDateEntity lastAccountAction = getLastInstallmentAccountAction();
-		AccountPaymentEntity accountPayment = new AccountPaymentEntity();
-		accountPayment.setPaymentDetails(paymentData.getTotalAmount(),
-				paymentData.getRecieptNum(), paymentData.getRecieptDate(),
-				paymentData.getPaymentTypeId());
+		PaymentTypeEntity paymentTypeEntity=new PaymentTypeEntity();
+		paymentTypeEntity.setId(paymentData.getPaymentTypeId());
+		AccountPaymentEntity accountPayment = new AccountPaymentEntity(this,paymentData.getTotalAmount(),paymentData.getRecieptNum(),paymentData.getRecieptDate(),paymentTypeEntity);
 		for (AccountPaymentData accountPaymentData : paymentData
 				.getAccountPayments()) {
 			AccountActionDateEntity accountAction = getAccountActionDate(accountPaymentData
@@ -640,7 +641,7 @@ public class LoanBO extends AccountBO {
 			Short paymentTypeId, PersonnelBO personnel, Date receiptDate,
 			Short rcvdPaymentTypeId) throws AccountException, SystemException,
 			RepaymentScheduleException, FinancialException {
-		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity();
+		AccountPaymentEntity accountPaymentEntity = null;
 
 		// if the trxn date is not equal to disbursementDate we need to
 		// regenerate the installments
@@ -680,12 +681,12 @@ public class LoanBO extends AccountBO {
 		}
 
 		if (null == accountPaymentEntity) {
-			accountPaymentEntity = new AccountPaymentEntity();
+			accountPaymentEntity = new AccountPaymentEntity(this,this.loanAmount,recieptNum,transactionDate,new PaymentTypeEntity(paymentTypeId));
+		}else{
+			accountPaymentEntity.setAmount(this.loanAmount.subtract(accountPaymentEntity.getAmount()));
 		}
 
-		accountPaymentEntity.setPaymentDetails(this.loanAmount
-				.subtract(accountPaymentEntity.getAmount()), recieptNum,
-				transactionDate, paymentTypeId);
+		
 		accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
 		this.addAccountPayment(accountPaymentEntity);
 		this.buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
@@ -802,12 +803,10 @@ public class LoanBO extends AccountBO {
 	private AccountPaymentEntity insertOnlyFeeAtDisbursement(String recieptNum,
 			Date recieptDate, Short paymentTypeId, PersonnelBO personnel) {
 		Set<AccountFeesEntity> accountFees = this.getAccountFees();
-		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity();
 		LoanTrxnDetailEntity loanTrxnDetailEntity = getLoanTrxnDetailEntity(
 				AccountConstants.ACTION_FEE_REPAYMENT, recieptDate,
 				paymentTypeId, personnel);
 		loanTrxnDetailEntity.setMiscFeeAmount(new Money());
-		accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
 		Money totalPayment = new Money();
 		for (AccountFeesEntity accountFeesEntity : accountFees) {
 			if (accountFeesEntity.isTimeOfDisbursement()) {
@@ -821,9 +820,9 @@ public class LoanBO extends AccountBO {
 		}
 		loanTrxnDetailEntity.setAmount(totalPayment);
 		loanSummary.updateFeePaid(totalPayment);
-		// loanTrxnDetailEntity.setRunningBalance(loanSummary);
-		accountPaymentEntity.setPaymentDetails(totalPayment, recieptNum,
-				recieptDate, paymentTypeId);
+		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this,totalPayment, recieptNum,
+				recieptDate, new PaymentTypeEntity(paymentTypeId));
+		accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
 		addLoanActivity(buildLoanActivity(accountPaymentEntity
 				.getAccountTrxns(), personnel, "Payment rcvd."));
 		return accountPaymentEntity;
@@ -908,9 +907,8 @@ public class LoanBO extends AccountBO {
 				.getPersonnel(personnelId);
 		this.setUpdatedBy(personnelId);
 		this.setUpdatedDate(new Date(System.currentTimeMillis()));
-		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity();
-		accountPaymentEntity.setPaymentDetails(totalAmount, receiptNumber,
-				recieptDate, Short.valueOf(paymentTypeId));
+		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this,totalAmount, receiptNumber,
+				recieptDate, new PaymentTypeEntity(Short.valueOf(paymentTypeId)));
 		this.addAccountPayment(accountPaymentEntity);
 		List<AccountActionDateEntity> dueInstallmentsList = getApplicableIdsForDueInstallments();
 		List<AccountActionDateEntity> futureInstallmentsList = getApplicableIdsForFutureInstallments();
@@ -1231,11 +1229,9 @@ public class LoanBO extends AccountBO {
 		Short statusId = Short.valueOf(AccountStates.LOANACC_WRITTENOFF);
 		this.setUpdatedBy(personnelId);
 		this.setUpdatedDate(new Date(System.currentTimeMillis()));
-		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity();
-		accountPaymentEntity.setPaymentDetails(getEarlyClosureAmount(), null,
-				null, Short.valueOf("1"));
+		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this,getEarlyClosureAmount(), null,
+				null, new PaymentTypeEntity(Short.valueOf("1")));
 		this.addAccountPayment(accountPaymentEntity);
-
 		for (AccountActionDateEntity accountActionDateEntity : getListOfUnpaidInstallments()) {
 			LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity();
 			accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);

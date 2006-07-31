@@ -63,6 +63,7 @@ import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.RateFeeBO;
 import org.mifos.application.fees.persistence.FeePersistence;
+import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
@@ -114,10 +115,9 @@ public class CustomerAccountBO extends AccountBO {
 
 	protected AccountPaymentEntity makePayment(PaymentData paymentData)
 			throws AccountException, SystemException {
-		AccountPaymentEntity accountPayment = new AccountPaymentEntity();
-		accountPayment.setPaymentDetails(paymentData.getTotalAmount(),
+		AccountPaymentEntity accountPayment = new AccountPaymentEntity(this,paymentData.getTotalAmount(),
 				paymentData.getRecieptNum(), paymentData.getRecieptDate(),
-				paymentData.getPaymentTypeId());
+				new PaymentTypeEntity(paymentData.getPaymentTypeId()));
 		for (AccountPaymentData accountPaymentData : paymentData
 				.getAccountPayments()) {
 			AccountActionDateEntity accountAction = getAccountActionDate(accountPaymentData

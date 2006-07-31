@@ -25,6 +25,7 @@ import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
@@ -375,10 +376,9 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				.getInstance().getPersistenceService(
 						PersistenceServiceName.MasterDataService);
 
-		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity();
-		accountPaymentEntity.setPaymentDetails(TestObjectFactory
-				.getMoneyForMFICurrency(300), "1111", currentDate, Short
-				.valueOf("1"));
+		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(customerAccountBO,TestObjectFactory
+				.getMoneyForMFICurrency(300), "1111", currentDate, new PaymentTypeEntity(Short
+				.valueOf("1")));
 
 		Money totalFees = new Money();
 		CustomerTrxnDetailEntity accountTrxnEntity = new CustomerTrxnDetailEntity();

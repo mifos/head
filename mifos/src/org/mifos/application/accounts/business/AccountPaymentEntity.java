@@ -56,41 +56,71 @@ import org.mifos.framework.util.helpers.Money;
 public class AccountPaymentEntity extends PersistentObject {
 
 
-	private Integer paymentId;
+	private final Integer paymentId=null;
 
-	private AccountBO account;
+	private final AccountBO account;
 
-	private PaymentTypeEntity paymentType;
+	private final PaymentTypeEntity paymentType;
 
+	private final String receiptNumber;
+
+	private final String voucherNumber;
+
+	private final String checkNumber;
+
+	private final Date receiptDate;
+
+	private final String bankName;
+	
+	private final Date paymentDate;
+	
 	private Money amount;
-	
-	private String receiptNumber;
-
-	private String voucherNumber;
-
-	private String checkNumber;
-
-	private Date paymentDate;
-
-	private Date receiptDate;
-
-	private String bankName;
-	
-	private UserContext userContext;
 
 	private Set<AccountTrxnEntity> accountTrxns;
-	public AccountPaymentEntity() {
-		paymentDate = new Date(System.currentTimeMillis());
-		paymentType = new PaymentTypeEntity();
+	
+	protected AccountPaymentEntity() {
 		accountTrxns = new HashSet<AccountTrxnEntity>();
+		paymentDate = new Date(System.currentTimeMillis());
+		account=null;
+		paymentType=null;
+		receiptNumber=null;
+		voucherNumber=null;
+		checkNumber=null;
+		receiptDate=null;
+		bankName=null;
+	}
+	
+	public AccountPaymentEntity(AccountBO account,Money amount,
+			String receiptNumber, 
+			Date receiptDate, PaymentTypeEntity paymentType) {
+		this.accountTrxns=new HashSet<AccountTrxnEntity>();
+		this.paymentDate = new Date(System.currentTimeMillis());
+		this.account=account;
+		this.receiptNumber=receiptNumber;
+		this.paymentType=paymentType;
+		this.receiptDate=receiptDate;
+		this.amount=amount;
+		this.bankName=null;
+		this.voucherNumber=null;
+		this.checkNumber=null;
+		
+	}
+
+	
+	public Integer getPaymentId() {
+		return paymentId;
 	}
 
 	public AccountBO getAccount() {
 		return account;
 	}
+	
+	public PaymentTypeEntity getPaymentType() {
+		return paymentType;
+	}
 
-	public void setAccount(AccountBO account) {
-		this.account = account;
+	public Date getPaymentDate() {
+		return paymentDate;
 	}
 
 	public Set<AccountTrxnEntity> getAccountTrxns() {
@@ -105,95 +135,34 @@ public class AccountPaymentEntity extends PersistentObject {
 		return bankName;
 	}
 
-	public void setBankName(String bankName) {
-		this.bankName = bankName;
-	}
-
 	public String getCheckNumber() {
 		return checkNumber;
 	}
 
-	public void setCheckNumber(String checkNumber) {
-		this.checkNumber = checkNumber;
-	}
-
-	public Date getPaymentDate() {
-		return paymentDate;
-	}
-
-	public void setPaymentDate(Date paymentDate) {
-		this.paymentDate = paymentDate;
-	}
-
-
 	public Date getReceiptDate() {
 		return receiptDate;
-	}
-
-	public void setReceiptDate(Date receiptDate) {
-		this.receiptDate = receiptDate;
 	}
 
 	public String getReceiptNumber() {
 		return receiptNumber;
 	}
 
-	public void setReceiptNumber(String receiptNumber) {
-		this.receiptNumber = receiptNumber;
-	}
-
 	public String getVoucherNumber() {
 		return voucherNumber;
 	}
-
-	public void setVoucherNumber(String voucherNumber) {
-		this.voucherNumber = voucherNumber;
+	
+	public Money getAmount() {
+		return amount;
 	}
-
-	public Integer getPaymentId() {
-		return paymentId;
-	}
-
-	public void setPaymentId(Integer paymentId) {
-		this.paymentId = paymentId;
+	
+	public void setAmount(Money amount) {
+		this.amount = amount;
 	}
 
 	public void addAcountTrxn(AccountTrxnEntity accountTrxn) {
 		accountTrxn.setAccountPayment(this);
 		accountTrxn.setAccount(this.account);
 		accountTrxns.add(accountTrxn);
-	}
-
-	public void setPaymentDetails(Money totalAmount, String recieptNum,
-			Date recieptDate, Short paymentTypeId) {
-		this.amount = totalAmount;
-		this.receiptNumber = recieptNum;
-		this.receiptDate = recieptDate;
-		this.paymentType.setId(paymentTypeId);
-	}
-
-	public PaymentTypeEntity getPaymentType() {
-		return paymentType;
-	}
-
-	public void setPaymentType(PaymentTypeEntity paymentType) {
-		this.paymentType = paymentType;
-	}
-
-	public Money getAmount() {
-		return amount;
-	}
-
-	public void setAmount(Money amount) {
-		this.amount = amount;
-	}
-	
-	public UserContext getUserContext() {
-		return userContext;
-	}
-
-	public void setUserContext(UserContext userContext) {
-		this.userContext = userContext;
 	}
 
 	/**
@@ -212,7 +181,6 @@ public class AccountPaymentEntity extends PersistentObject {
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("The number of transactions before adjustment are " + getAccountTrxns().size());
 			Set<AccountTrxnEntity> reverseAccntTrxns = new HashSet<AccountTrxnEntity>();
 			for(AccountTrxnEntity accntTrxn : getAccountTrxns()){
-				accntTrxn.setUserContext(getUserContext());
 				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Generating reverse transactions for transaction id " + accntTrxn.getAccountTrxnId());
 				AccountTrxnEntity reverseAccntTrxn = accntTrxn.generateReverseTrxn(adjustmentComment);
 				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Amount associated with reverse transaction is " + reverseAccntTrxn.getAmount().getAmountDoubleValue());

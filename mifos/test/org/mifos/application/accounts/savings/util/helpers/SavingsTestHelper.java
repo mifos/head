@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountNotesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
@@ -31,25 +32,19 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class SavingsTestHelper {
 	
-	public AccountPaymentEntity createAccountPayment(Money amount, Date paymentDate, PersonnelBO createdBy){
-		return createAccountPayment(null, amount, paymentDate, createdBy);
+	public AccountPaymentEntity createAccountPayment(AccountBO account,Money amount, Date paymentDate, PersonnelBO createdBy){
+		return createAccountPayment(account,null, amount, paymentDate, createdBy);
 	}
 
-	public AccountPaymentEntity createAccountPayment(Integer paymentId, Money amount, Date paymentDate, PersonnelBO createdBy){
-		AccountPaymentEntity payment = new AccountPaymentEntity();
-		payment.setAmount(amount);
+	public AccountPaymentEntity createAccountPayment(AccountBO account,Integer paymentId, Money amount, Date paymentDate, PersonnelBO createdBy){
+		AccountPaymentEntity payment = new AccountPaymentEntity(account,amount,null,null,new PaymentTypeEntity(Short.valueOf("1")));
 		payment.setCreatedBy(createdBy.getPersonnelId());
 		payment.setCreatedDate(new Date());
-		payment.setPaymentDate(paymentDate);
-		PaymentTypeEntity paymentType=new PaymentTypeEntity();
-		paymentType.setId(Short.valueOf("1"));
-		payment.setPaymentType(paymentType);
-		payment.setPaymentId(paymentId);
 		return payment;
 	}
 	
-	public AccountPaymentEntity createAccountPaymentToPersist(Money amount, Money balance,  Date trxnDate, Short accountAction, SavingsBO savingsObj,PersonnelBO createdBy, CustomerBO customer)throws Exception{
-		AccountPaymentEntity payment =createAccountPayment(amount, new Date(),createdBy);
+	public AccountPaymentEntity createAccountPaymentToPersist(AccountBO account,Money amount, Money balance,  Date trxnDate, Short accountAction, SavingsBO savingsObj,PersonnelBO createdBy, CustomerBO customer)throws Exception{
+		AccountPaymentEntity payment =createAccountPayment(account,amount, new Date(),createdBy);
 		payment.addAcountTrxn(createAccountTrxn(null,amount, balance, trxnDate, trxnDate, null, accountAction,savingsObj, createdBy, customer));
 		return payment;
 	}

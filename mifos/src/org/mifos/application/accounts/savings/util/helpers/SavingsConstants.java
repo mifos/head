@@ -55,6 +55,7 @@ public class SavingsConstants {
 	public static final String IS_LAST_PAYMENT_VALID  ="isLastPaymentValid";
 	public static final String IS_BACKDATED_TRXN_ALLOWED  ="isBackDatedTrxnAllowed";
 	public static final String ACCOUNT_PAYMENT  ="accountPayment";
+	public static final String PAYMENT_AMOUNT  ="amount";
 	public static final Short DEFAULT_PAYMENT_TYPE=1;
 	//savings types
 	public static final short  SAVINGS_MANDATORY=1;
