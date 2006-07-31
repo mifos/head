@@ -71,7 +71,6 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 		HibernateUtil.closeSession();
 		account = (LoanBO) accountPersistence
 				.getAccount(account.getAccountId());
-		assertEquals(account.getGlobalAccountNum(), "42423142341");
 		assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(),
 				"Loan");
 	}
@@ -97,7 +96,6 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 		HibernateUtil.closeSession();
 		account = (LoanBO) accountPersistence
 				.getAccount(account.getAccountId());
-		assertEquals(account.getGlobalAccountNum(), "42423142341");
 		assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(),
 				"Loan");
 
@@ -141,7 +139,6 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 		HibernateUtil.closeSession();
 		account = (LoanBO) accountPersistence
 				.getAccount(account.getAccountId());
-		assertEquals(account.getGlobalAccountNum(), "42423142341");
 		assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(),
 				"Loan");
 
@@ -187,7 +184,6 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 		HibernateUtil.closeSession();
 		account = (LoanBO) accountPersistence
 				.getAccount(account.getAccountId());
-		assertEquals(account.getGlobalAccountNum(), "42423142341");
 		assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(),
 				"Loan");
 		for (AccountActionDateEntity actionDate : account

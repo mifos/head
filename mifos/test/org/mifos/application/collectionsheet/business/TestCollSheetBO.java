@@ -94,28 +94,9 @@ public class TestCollSheetBO extends MifosTestCase {
 	}
 	
 	public void testAddLoanDetailsForDisbursal() {
-		
-		PersonnelBO personnel = new PersonnelBO();
-		personnel.setPersonnelId(Short.valueOf("1"));
-		
-		OfficeBO office = new OfficeBO();
-		office.setOfficeId(Short.valueOf("1"));
-		
-		CustomerLevelEntity custLevel = new CustomerLevelEntity();
-		custLevel.setLevelId(Short.valueOf("1"));
-		
-		ClientBO client = new ClientBO();
-		client.setCustomerId(Integer.valueOf("1"));
-		client.setCustomerLevel(custLevel);
-		client.setDisplayName("displayname");
-		client.setSearchId("1.1.1");
-		client.setPersonnel(personnel);
-		client.setOffice(office);
-		
 		LoanBO loan = (LoanBO)createLoanAccount();
 		loan.setLoanAmount(TestObjectFactory.getMoneyForMFICurrency(100));
 		loan.setNoOfInstallments(Short.valueOf("5"));
-		loan.setCustomer(client);
 		InterestTypes interestType = new InterestTypes();
 		interestType.setInterestTypeId(Short.valueOf(LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT));
 		loan.setInterestType(interestType);
@@ -124,7 +105,7 @@ public class TestCollSheetBO extends MifosTestCase {
 		CollectionSheetBO collSheet = new CollectionSheetBO();
 		collSheet.addLoanDetailsForDisbursal(loanWithDisbursalDate);
 		CollSheetCustBO collectionSheetCustomer = collSheet
-		.getCollectionSheetCustomerForCustomerId(client.getCustomerId());
+		.getCollectionSheetCustomerForCustomerId(group.getCustomerId());
 		assertNotNull(collectionSheetCustomer);
 		assertEquals(collectionSheetCustomer.getLoanDetailsForAccntId(loan.getAccountId()).getTotalNoOfInstallments(), Short
 				.valueOf("5"));
@@ -527,4 +508,5 @@ public class TestCollSheetBO extends MifosTestCase {
 				loanOffering);
 		return accountBO;
 	}
+	
 }

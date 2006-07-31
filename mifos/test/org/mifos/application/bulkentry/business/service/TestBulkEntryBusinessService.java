@@ -124,7 +124,6 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 				.getAccountId());
 		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
-		assertEquals(account.getGlobalAccountNum(), "42423142341");
 		assertEquals(account.getLoanOffering().getPrdOfferingName(), "Loan");
 		assertEquals(account.getLoanSummary().getFeesPaid()
 				.getAmountDoubleValue(), Double.valueOf("100.0"));

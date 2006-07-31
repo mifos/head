@@ -28,7 +28,7 @@ public class LoanBusinessService extends BusinessService {
 
 	@Override
 	public BusinessObject getBusinessObject(UserContext userContext) {
-		return new LoanBO(userContext);
+		return null;
 	}
 
 	public LoanBO findBySystemId(String accountGlobalNum)throws SystemException,ApplicationException {

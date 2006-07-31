@@ -60,7 +60,6 @@ private BulkEntryPersistance bulkEntryPersistance;
 		account=TestObjectFactory.createLoanAccount("42423142341",group,Short.valueOf("5"),new Date(System.currentTimeMillis()),loanOffering);
 		HibernateUtil.closeSession();
 		account = (LoanBO) accountPersistence.getAccount(account.getAccountId());
-		assertEquals(account.getGlobalAccountNum(),"42423142341");
 		assertEquals(((LoanBO)account).getLoanOffering().getPrdOfferingName(), "Loan");
 		
 		List<AccountActionDateEntity> accountActionsToBeUpdated = new ArrayList<AccountActionDateEntity>();

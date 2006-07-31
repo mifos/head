@@ -114,7 +114,6 @@ public class TestLoanPersistenceService extends MifosTestCase {
 			list = loanPersistenceService.getLoanAccountsInArrears(latenessDays);
 			assertNotNull(list);
 			LoanBO testBO = (LoanBO) list.get(0);
-			assertEquals("42423142341",testBO.getGlobalAccountNum());
 			assertEquals(Short.valueOf(AccountStates.LOANACC_ACTIVEINGOODSTANDING),testBO.getAccountState().getId());
 			
 			// Get the first action date i.e for the first Installment

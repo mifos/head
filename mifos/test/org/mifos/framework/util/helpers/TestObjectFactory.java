@@ -166,6 +166,7 @@ public class TestObjectFactory {
 
 	private static TestObjectPersistence testObjectPersistence = new TestObjectPersistence();
 
+	
 	/**
 	 * @return - Returns the office created by test data scripts. If the row
 	 *         does not already exist in the database it returns null. defaults
@@ -591,26 +592,20 @@ public class TestObjectFactory {
 	 * 
 	 * @param globalNum
 	 * @param accountStateId
+	 * @throws Exception 
 	 */
 	public static LoanBO createLoanAccount(String globalNum,
 			CustomerBO customer, Short accountStateId, Date startDate,
 			LoanOfferingBO loanOfering) {
-		LoanBO loan = new LoanBO();
-		loan.setGlobalAccountNum(globalNum);
-
-		loan.setCustomer(customer);
+		LoanBO loan=null;
+		try{
+			UserContext userContext = TestObjectFactory.getUserContext();
+			AccountType accountType = new AccountType();
+			accountType.setAccountTypeId(Short.valueOf(AccountTypes.LOANACCOUNT));
+			loan = new LoanBO(userContext,loanOfering,customer,accountType);
+		}catch(Exception e){}
 
 		loan.setAccountState(new AccountStateEntity(accountStateId));
-
-		AccountType accountType = new AccountType();
-		accountType.setAccountTypeId(Short.valueOf(AccountTypes.LOANACCOUNT));
-		loan.setAccountType(accountType);
-
-		OfficeBO office = customer.getOffice();
-		loan.setOffice(office);
-
-		PersonnelBO personnel = customer.getPersonnel();
-		loan.setPersonnel(personnel);
 
 		MifosCurrency currency = testObjectPersistence.getCurrency();
 		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity();
@@ -675,7 +670,6 @@ public class TestObjectFactory {
 		loan.setCreatedBy(Short.valueOf("1"));
 		loan.setCreatedDate(new Date(System.currentTimeMillis()));
 
-		loan.setLoanOffering(loanOfering);
 		LoanSummaryEntity loanSummary = new LoanSummaryEntity();
 		loanSummary.setLoan(loan);
 		loanSummary.setOriginalFees(new Money(currency, "0.0"));
@@ -1420,21 +1414,14 @@ public class TestObjectFactory {
 	public static LoanBO createLoanAccountWithDisbursement(String globalNum,
 			CustomerBO customer, Short accountStateId, Date startDate,
 			LoanOfferingBO loanOfering, int disbursalType) {
-		LoanBO loan = new LoanBO();
-		loan.setGlobalAccountNum(globalNum);
-
-		loan.setCustomer(customer);
+		LoanBO loan=null;
+		try{
+			UserContext userContext=TestObjectFactory.getUserContext();
+			AccountType accountType = new AccountType();
+			accountType.setAccountTypeId(Short.valueOf(AccountTypes.LOANACCOUNT));
+			loan = new LoanBO(userContext,loanOfering,customer,accountType);
+		}catch(Exception e){}
 		loan.setAccountState(new AccountStateEntity(accountStateId));
-
-		AccountType accountType = new AccountType();
-		accountType.setAccountTypeId(Short.valueOf(AccountTypes.LOANACCOUNT));
-		loan.setAccountType(accountType);
-
-		OfficeBO office = customer.getOffice();
-		loan.setOffice(office);
-
-		PersonnelBO personnel = customer.getPersonnel();
-		loan.setPersonnel(personnel);
 
 		MifosCurrency currency = testObjectPersistence.getCurrency();
 		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity();
@@ -1643,7 +1630,6 @@ public class TestObjectFactory {
 				.getSystemConfig().getCurrency(), "10.0"));
 		loan.setCreatedDate(new Date(System.currentTimeMillis()));
 
-		loan.setLoanOffering(loanOfering);
 		LoanSummaryEntity loanSummary = new LoanSummaryEntity();
 		loanSummary.setLoan(loan);
 		loanSummary.setOriginalFees(new Money(currency, "0.0"));

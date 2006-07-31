@@ -95,10 +95,9 @@ public class TestLoanActivityAction extends MifosMockStrutsTestCase {
 			LoanBO loan = (LoanBO) accountBO;
 			setRequestPathInfo("/loanAccountAction.do");
 			addRequestParameter("method", "getAllActivity");
-			addRequestParameter("globalAccountNum", "99999999999");
+			addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
 			actionPerform();
 			verifyForward("getAllActivity_success");
-			assertEquals(loan.getGlobalAccountNum(), "99999999999");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

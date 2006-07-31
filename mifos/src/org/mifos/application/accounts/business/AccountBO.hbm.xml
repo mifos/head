@@ -121,7 +121,7 @@
 			<many-to-one name="loanOffering" column="PRD_OFFERING_ID"
 				class="org.mifos.application.productdefinition.business.LoanOfferingBO"
 				unique="true" lazy="true" cascade="none" insert="true"
-				update="false" />
+				update="false"  access="field"/>
 			<many-to-one name="fund" column="FUND_ID"
 				class="org.mifos.application.fund.util.valueobjects.Fund"
 				cascade="none" insert="true" update="false" unique="true" />

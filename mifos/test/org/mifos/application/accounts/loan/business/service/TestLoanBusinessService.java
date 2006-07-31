@@ -124,7 +124,7 @@ public class TestLoanBusinessService extends MifosTestCase {
 
 		accountBO = accountPersistence.getAccount(accountBO.getAccountId());
 		List<LoanActivityView> loanRecentActivityView = loanBusinessService
-				.getRecentActivityView("42423142341", Short.valueOf("1"));
+				.getRecentActivityView(accountBO.getGlobalAccountNum(), Short.valueOf("1"));
 
 		assertEquals(3, loanRecentActivityView.size());
 		assertNotNull(loanRecentActivityView);
@@ -163,7 +163,7 @@ public class TestLoanBusinessService extends MifosTestCase {
 
 		accountBO = accountPersistence.getAccount(accountBO.getAccountId());
 		List<LoanActivityView> loanAllActivityView = loanBusinessService
-				.getAllActivityView("42423142341", Short.valueOf("1"));
+				.getAllActivityView(accountBO.getGlobalAccountNum(), Short.valueOf("1"));
 
 		assertNotNull(loanAllActivityView);
 		assertEquals(6, loanAllActivityView.size());

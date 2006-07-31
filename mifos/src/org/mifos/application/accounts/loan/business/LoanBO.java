@@ -128,16 +128,19 @@ import org.mifos.framework.util.helpers.PersistenceServiceName;
 
 public class LoanBO extends AccountBO {
 
-	public LoanBO() {
+	protected LoanBO() {
 		super();
-		loanPersistance = new LoanPersistance();
-		loanInstallments = new ArrayList();
+		this.loanPersistance = new LoanPersistance();
 		loanActivityDetails = new HashSet<LoanActivityEntity>();
+		this.loanOffering=null;
 	}
 
-	public LoanBO(UserContext userContext) {
-		super(userContext);
-		loanActivityDetails = new HashSet<LoanActivityEntity>();
+	public LoanBO(UserContext userContext,LoanOfferingBO loanOffering, CustomerBO customer,
+			AccountType accountType) throws Exception {
+		super(userContext,customer,accountType);
+		this.loanPersistance = new LoanPersistance();
+		this.loanActivityDetails = new HashSet<LoanActivityEntity>();
+		this.loanOffering=loanOffering;
 	}
 
 	private LoanPersistance loanPersistance;
@@ -176,29 +179,17 @@ public class LoanBO extends AccountBO {
 
 	private LoanPerfHistory perfHistory;
 
-	private List loanInstallments;
-
 	private Short status;
-
-	private AccountBO account;
 
 	private LoanSummaryEntity loanSummary;
 
 	private String stateSelected;
 
-	private LoanOfferingBO loanOffering;
+	private final LoanOfferingBO loanOffering;
 
 	private LoanPerformanceHistoryEntity performanceHistory;
 
 	public Set<LoanActivityEntity> loanActivityDetails;
-
-	public AccountBO getAccount() {
-		return account;
-	}
-
-	public void setAccount(AccountBO account) {
-		this.account = account;
-	}
 
 	public Integer getBusinessActivityId() {
 		return businessActivityId;
@@ -312,14 +303,6 @@ public class LoanBO extends AccountBO {
 		this.loanBalance = loanBalance;
 	}
 
-	public List getLoanInstallments() {
-		return loanInstallments;
-	}
-
-	public void setLoanInstallments(List loanInstallments) {
-		this.loanInstallments = loanInstallments;
-	}
-
 	public MeetingBO getLoanMeeting() {
 		return loanMeeting;
 	}
@@ -330,10 +313,6 @@ public class LoanBO extends AccountBO {
 
 	public LoanOfferingBO getLoanOffering() {
 		return loanOffering;
-	}
-
-	public void setLoanOffering(LoanOfferingBO loanOffering) {
-		this.loanOffering = loanOffering;
 	}
 
 	public LoanSummaryEntity getLoanSummary() {
@@ -1648,31 +1627,6 @@ public class LoanBO extends AccountBO {
 			throws ServiceException {
 		return (PersonnelPersistenceService) ServiceFactory.getInstance()
 				.getPersistenceService(PersistenceServiceName.Personnel);
-	}
-	
-	/*Need to remove while refactoring*/
-	public void setOffice(OfficeBO office){
-		this.office=office;
-	}
-	
-	/*Need to remove while refactoring*/
-	public void setGlobalAccountNum(String globalAccountNum){
-		this.globalAccountNum=globalAccountNum;
-	}
-	
-	/*Need to remove while refactoring*/
-	public void setAccountType(AccountType accountType){
-		this.accountType=accountType;
-	}
-	
-	/*Need to remove while refactoring*/
-	public void setCustomer(CustomerBO customer){
-		this.customer=customer;
-	}
-	
-	/*Need to remove while refactoring*/
-	public void setPersonnel(PersonnelBO personnel){
-		this.personnel=personnel;
 	}
 
 }
