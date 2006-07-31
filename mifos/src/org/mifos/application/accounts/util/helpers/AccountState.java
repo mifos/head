@@ -37,6 +37,8 @@
  */
 package org.mifos.application.accounts.util.helpers;
 
+import org.mifos.framework.exceptions.PropertyNotFoundException;
+
 public enum AccountState {
 
 	LOANACC_PARTIALAPPLICATION((short) 1), LOANACC_PENDINGAPPROVAL((short) 2), LOANACC_APPROVED(
@@ -57,5 +59,12 @@ public enum AccountState {
 
 	public Short getValue() {
 		return value;
+	}
+	
+	public static AccountState getStatus(Short value)throws PropertyNotFoundException{
+		for(AccountState status : AccountState.values())
+			if(status.getValue().equals(value))
+				return status;
+		throw new PropertyNotFoundException("AccountState");
 	}
 }

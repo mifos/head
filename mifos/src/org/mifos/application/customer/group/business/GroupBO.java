@@ -40,109 +40,169 @@ package org.mifos.application.customer.group.business;
 
 import java.util.List;
 
+import org.mifos.application.accounts.business.AccountFeesEntity;
+import org.mifos.application.customer.business.CustomerAddressDetailEntity;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerCustomFieldEntity;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 
 /**
- * This class denotes the Group (row in customer table) object and all attributes associated with it.
- * It has a composition of other objects like Custom fields, fees, personnel etc., since it inherits from Customer
+ * This class denotes the Group (row in customer table) object and all
+ * attributes associated with it. It has a composition of other objects like
+ * Custom fields, fees, personnel etc., since it inherits from Customer
+ * 
  * @author navitas
  */
 public class GroupBO extends CustomerBO {
-	
+
 	private GroupPerformanceHistoryEntity performanceHistory;
 
-	public GroupBO(){}
-	
-	public GroupBO(UserContext userContext){
-		super(userContext);
+	protected GroupBO() {
+		super();
 	}
-	public boolean isCustomerActive()
-	{
-		if(getCustomerStatus().getStatusId().equals(GroupConstants.ACTIVE))
+
+	// TODO: removed searchId from parameter and generate internally
+	public GroupBO(UserContext userContext, String displayName,
+			CustomerStatus customerStatus,
+			CustomerAddressDetailEntity customerAddress,
+			List<CustomerCustomFieldEntity> customFields, PersonnelBO formedBy,
+			OfficeBO office, CustomerBO parentCustomer, String searchId)
+			throws CustomerException {
+		this(userContext, displayName, customerStatus, customerAddress,
+				customFields, formedBy, office, parentCustomer, null, null,
+				searchId);
+	}
+
+	public GroupBO(UserContext userContext, String displayName,
+			CustomerStatus customerStatus,
+			CustomerAddressDetailEntity customerAddress,
+			List<CustomerCustomFieldEntity> customFields, PersonnelBO formedBy,
+			OfficeBO office, MeetingBO meeting, PersonnelBO personnel,
+			String searchId) throws CustomerException {
+		this(userContext, displayName, customerStatus, customerAddress,
+				customFields, formedBy, office, null, meeting, personnel,
+				searchId);
+	}
+
+	private GroupBO(UserContext userContext, String displayName,
+			CustomerStatus customerStatus,
+			CustomerAddressDetailEntity customerAddress,
+			List<CustomerCustomFieldEntity> customFields, PersonnelBO formedBy, 
+			OfficeBO office, CustomerBO parentCustomer, MeetingBO meeting,
+			PersonnelBO personnel, String searchId) throws CustomerException {
+		super(userContext, displayName, CustomerLevel.GROUP, customerStatus,
+				customerAddress, customFields, formedBy, office,
+				parentCustomer, meeting, personnel);
+		this.setSearchId(searchId);
+		if(customerStatus.equals(CustomerStatus.GROUP_ACTIVE.getValue()))
+			this.setCustomerActivationDate(this.getCreatedDate());
+	}
+
+	public boolean isCustomerActive() {
+		if (getCustomerStatus().getStatusId().equals(GroupConstants.ACTIVE))
 			return true;
 		return false;
 	}
-	
+
 	public GroupPerformanceHistoryEntity getPerformanceHistory() {
 		return performanceHistory;
 	}
 
 	public void setPerformanceHistory(
 			GroupPerformanceHistoryEntity performanceHistory) {
-		if(performanceHistory != null)
+		if (performanceHistory != null)
 			performanceHistory.setGroup(this);
 		this.performanceHistory = performanceHistory;
 	}
 
-	public void generatePortfolioAtRisk() throws PersistenceException, ServiceException{
-		Money amount=getBalanceForAccountsAtRisk();
-		List<CustomerBO> clients = getDBService().getAllChildrenForParent(
-					getSearchId(), getOffice().getOfficeId(),
-					CustomerConstants.GROUP_LEVEL_ID);
-		if(clients!=null && !clients.isEmpty()){
-			for(CustomerBO client : clients){
-				amount=amount.add(client.getBalanceForAccountsAtRisk());
-			}
-		}
-		if(getPerformanceHistory() != null && getPerformanceHistory().getTotalOutStandingLoanAmount().getAmountDoubleValue()!=0.0)
-			getPerformanceHistory().setPortfolioAtRisk(new Money(String.valueOf(amount.getAmountDoubleValue()/getPerformanceHistory().getTotalOutStandingLoanAmount().getAmountDoubleValue())));
-		getDBService().update(this);
-	}
-	
-	public Money getTotalOutStandingLoanAmount() throws PersistenceException, ServiceException{
-		Money amount=getOutstandingLoanAmount();
-		List<CustomerBO> clients = getDBService().getAllChildrenForParent(
-					getSearchId(), getOffice().getOfficeId(),
-					CustomerConstants.GROUP_LEVEL_ID);
-		if(clients!=null && !clients.isEmpty()){
-			for(CustomerBO client : clients){
-				amount=amount.add(client.getOutstandingLoanAmount());
-			}
-		}
-		return amount;
-	}
-	
-	public Money getAverageLoanAmount() throws PersistenceException, ServiceException{
-		Money amountForActiveAccount=new Money();
-		Integer countOfActiveLoans=0;
+	public void generatePortfolioAtRisk() throws PersistenceException,
+			ServiceException {
+		Money amount = getBalanceForAccountsAtRisk();
 		List<CustomerBO> clients = getDBService().getAllChildrenForParent(
 				getSearchId(), getOffice().getOfficeId(),
 				CustomerConstants.GROUP_LEVEL_ID);
-		if(clients!=null && !clients.isEmpty()){
-			for(CustomerBO client : clients){
-				amountForActiveAccount=amountForActiveAccount.add(client.getOutstandingLoanAmount());
-				countOfActiveLoans+=client.getActiveLoanCounts();
+		if (clients != null && !clients.isEmpty()) {
+			for (CustomerBO client : clients) {
+				amount = amount.add(client.getBalanceForAccountsAtRisk());
 			}
 		}
-		if(countOfActiveLoans.intValue()>0)
-			return new Money(String.valueOf(amountForActiveAccount.getAmountDoubleValue()/countOfActiveLoans.intValue()));
-		return new Money();
+		if (getPerformanceHistory() != null
+				&& getPerformanceHistory().getTotalOutStandingLoanAmount()
+						.getAmountDoubleValue() != 0.0)
+			getPerformanceHistory().setPortfolioAtRisk(
+					new Money(String.valueOf(amount.getAmountDoubleValue()
+							/ getPerformanceHistory()
+									.getTotalOutStandingLoanAmount()
+									.getAmountDoubleValue())));
+		getDBService().update(this);
 	}
-	
-	public Money getTotalSavingsBalance() throws PersistenceException, ServiceException{
-		Money amount=getSavingsBalance();
+
+	public Money getTotalOutStandingLoanAmount() throws PersistenceException,
+			ServiceException {
+		Money amount = getOutstandingLoanAmount();
 		List<CustomerBO> clients = getDBService().getAllChildrenForParent(
-					getSearchId(), getOffice().getOfficeId(),
-					CustomerConstants.GROUP_LEVEL_ID);
-		if(clients!=null && !clients.isEmpty()){
-			for(CustomerBO client : clients){
-				amount=amount.add(client.getSavingsBalance());
+				getSearchId(), getOffice().getOfficeId(),
+				CustomerConstants.GROUP_LEVEL_ID);
+		if (clients != null && !clients.isEmpty()) {
+			for (CustomerBO client : clients) {
+				amount = amount.add(client.getOutstandingLoanAmount());
 			}
 		}
 		return amount;
 	}
-	
-	public Integer getActiveOnHoldChildrenOfGroup() throws PersistenceException, ServiceException{
+
+	public Money getAverageLoanAmount() throws PersistenceException,
+			ServiceException {
+		Money amountForActiveAccount = new Money();
+		Integer countOfActiveLoans = 0;
 		List<CustomerBO> clients = getDBService().getAllChildrenForParent(
-					getSearchId(), getOffice().getOfficeId(),
-					CustomerConstants.GROUP_LEVEL_ID);
-		if(clients!=null && !clients.isEmpty()){
+				getSearchId(), getOffice().getOfficeId(),
+				CustomerConstants.GROUP_LEVEL_ID);
+		if (clients != null && !clients.isEmpty()) {
+			for (CustomerBO client : clients) {
+				amountForActiveAccount = amountForActiveAccount.add(client
+						.getOutstandingLoanAmount());
+				countOfActiveLoans += client.getActiveLoanCounts();
+			}
+		}
+		if (countOfActiveLoans.intValue() > 0)
+			return new Money(String.valueOf(amountForActiveAccount
+					.getAmountDoubleValue()
+					/ countOfActiveLoans.intValue()));
+		return new Money();
+	}
+
+	public Money getTotalSavingsBalance() throws PersistenceException,
+			ServiceException {
+		Money amount = getSavingsBalance();
+		List<CustomerBO> clients = getDBService().getAllChildrenForParent(
+				getSearchId(), getOffice().getOfficeId(),
+				CustomerConstants.GROUP_LEVEL_ID);
+		if (clients != null && !clients.isEmpty()) {
+			for (CustomerBO client : clients) {
+				amount = amount.add(client.getSavingsBalance());
+			}
+		}
+		return amount;
+	}
+
+	public Integer getActiveOnHoldChildrenOfGroup()
+			throws PersistenceException, ServiceException {
+		List<CustomerBO> clients = getDBService().getAllChildrenForParent(
+				getSearchId(), getOffice().getOfficeId(),
+				CustomerConstants.GROUP_LEVEL_ID);
+		if (clients != null && !clients.isEmpty()) {
 			return Integer.valueOf(clients.size());
 		}
 		return Integer.valueOf(0);

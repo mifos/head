@@ -81,17 +81,13 @@ import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.business.CollSheetLnDetailsEntity;
 import org.mifos.application.collectionsheet.business.CollSheetSavingsDetailsEntity;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
-import org.mifos.application.customer.business.CustomerAddressDetailEntity;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerLevelEntity;
-import org.mifos.application.customer.business.CustomerMeetingEntity;
-import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientNameDetailEntity;
 import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.CategoryTypeEntity;
 import org.mifos.application.fees.business.FeeBO;
@@ -129,7 +125,6 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.valueobjects.GracePeriodType;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
@@ -286,7 +281,7 @@ public class TestObjectFactory {
 	 *            Meeting object for the center,this could be obtained using
 	 *            other helper methods in the class.
 	 */
-	public static CenterBO createCenter(String customerName, Short statusId,
+	/*public static CenterBO createCenter(String customerName, Short statusId,
 			String searchId, MeetingBO meeting, Date startDate) {
 		CenterBO center = new CenterBO();
 
@@ -322,15 +317,28 @@ public class TestObjectFactory {
 		center.setCustomerLevel(custLevel);
 
 		center.setCustomerAddressDetail(null);
-		//center.setCustomerDetail(null);
-		//center.setCustomerHierarchy(null);
 		center.setCustomerHistoricalData(null);
-		//center.setCustomerNote(null);
-
 		center.setParentCustomer(null);
 		return (CenterBO) testObjectPersistence.persist(center);
-	}
+	}*/
 
+	public static CenterBO createCenter(String customerName, Short statusId,
+			String searchId, MeetingBO meeting, Date startDate) {
+		CenterBO center = null;
+		try{
+			OfficeBO office = getOffice(new Short("3"));
+			PersonnelBO personnel = getPersonnel(new Short("1"));
+			center = new CenterBO(getUserContext(), customerName, CustomerStatus.getStatus(statusId), null, null, personnel, office, meeting, personnel, searchId);
+			center.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), center, startDate));
+			center.save();
+			HibernateUtil.commitTransaction();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return center;
+	}
+		
+	
 	/**
 	 * This is just a helper method which returns a address object , this is
 	 * just a helper it does not persist any data.
@@ -357,7 +365,7 @@ public class TestObjectFactory {
 	 *            parentCustomer to be set for the group being created. This
 	 *            helps in creating hierarchies.
 	 */
-	public static GroupBO createGroup(String customerName, Short statusId,
+	/*public static GroupBO createGroup(String customerName, Short statusId,
 			String searchId, CustomerBO parentCustomer, Date startDate) {
 		GroupBO group = new GroupBO();
 
@@ -405,8 +413,24 @@ public class TestObjectFactory {
 		//group.setCustomerNote(null);
 		group.setParentCustomer(parentCustomer);
 		return (GroupBO) testObjectPersistence.persist(group);
-	}
+	}*/
 
+	public static GroupBO createGroup(String customerName, Short statusId,
+			String searchId, CustomerBO parentCustomer, Date startDate) {
+		GroupBO group = null;
+		try{
+			OfficeBO office = getOffice(new Short("3"));
+			PersonnelBO personnel = getPersonnel(new Short("1"));
+			group = new GroupBO(getUserContext(), customerName, CustomerStatus.getStatus(statusId), null, null, personnel, office, parentCustomer, searchId);
+			group.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), group, startDate));
+			group.save();
+			HibernateUtil.commitTransaction();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return group;
+	}
+	
 	/**
 	 * This client is created belonging to branch office with its loan officer
 	 * set .Global cust name is same as customerName
@@ -421,7 +445,7 @@ public class TestObjectFactory {
 	 *            parentCustomer to be set for the client being created. This
 	 *            helps in creating hierarchies.
 	 */
-	public static ClientBO createClient(String customerName, Short statusId,
+	/*public static ClientBO createClient(String customerName, Short statusId,
 			String searchId, CustomerBO parentCustomer, Date startDate) {
 
 		ClientBO client = new ClientBO();
@@ -482,8 +506,35 @@ public class TestObjectFactory {
 		client.setParentCustomer(parentCustomer);
 		//client.setCustomerNameDetailSet(custNameDetEnitites);
 		return (ClientBO) testObjectPersistence.persist(client);
-	}
+	}*/
 
+	public static ClientBO createClient(String customerName, Short statusId,
+			String searchId, CustomerBO parentCustomer, Date startDate) {
+		ClientBO client = null;
+		try{
+			OfficeBO office = getOffice(new Short("3"));
+			PersonnelBO personnel = getPersonnel(new Short("1"));
+			client = new ClientBO(getUserContext(), customerName, CustomerStatus.getStatus(statusId), null, null, personnel, office, parentCustomer, searchId);
+			client.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), client, startDate));
+			Name name = new Name();
+			name.setFirstName(customerName);
+			name.setLastName(customerName);
+
+			ClientNameDetailEntity customerNameDetail = new ClientNameDetailEntity();
+			customerNameDetail.setName(name);
+			customerNameDetail.setClient(client);
+
+			Set<ClientNameDetailEntity> custNameDetEnitites = new HashSet<ClientNameDetailEntity>();
+			custNameDetEnitites.add(customerNameDetail);
+			client.setNameDetailSet(custNameDetEnitites);
+			client.save();
+			HibernateUtil.commitTransaction();
+			//TODO: throw Exception
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return client;
+	}
 	/**
 	 * @param name -
 	 *            name of the prd offering
@@ -1279,7 +1330,7 @@ public class TestObjectFactory {
 	private static void deleteCustomer(CustomerBO customer) {
 		Session session = HibernateUtil.getSessionTL();
 		Transaction transaction = HibernateUtil.startTransaction();
-		session.lock(customer, LockMode.UPGRADE);
+		session.lock(customer, LockMode.NONE);
 		deleteCenterMeeting(customer);
 		deleteClientAttendence(customer);
 		

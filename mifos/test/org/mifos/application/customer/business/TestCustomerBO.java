@@ -89,7 +89,7 @@ public class TestCustomerBO extends MifosTestCase {
 		groupPerformanceHistory.setGroup(group);
 		group.setPerformanceHistory(groupPerformanceHistory);
 		TestObjectFactory.updateObject(group);
-		group = (GroupBO)customerPersistence.getBySystemId("Group",group.getCustomerLevel().getLevelId());
+		group = (GroupBO)customerPersistence.getBySystemId(group.getGlobalCustNum(),group.getCustomerLevel().getLevelId());
 		assertEquals(group.getCustomerId(),group.getPerformanceHistory().getGroup().getCustomerId());
 		assertEquals(Integer.valueOf("1"),group.getPerformanceHistory().getClientCount());
 		assertEquals(new Money("100"),group.getPerformanceHistory().getLastGroupLoanAmount());
@@ -104,7 +104,7 @@ public class TestCustomerBO extends MifosTestCase {
 		clientPerformanceHistory.setClient(client);
 		client.setPerformanceHistory(clientPerformanceHistory);
 		TestObjectFactory.updateObject(client);
-		client = (ClientBO)customerPersistence.getBySystemId("Client",client.getCustomerLevel().getLevelId());
+		client = (ClientBO)customerPersistence.getBySystemId(client.getGlobalCustNum(),client.getCustomerLevel().getLevelId());
 		assertEquals(client.getCustomerId(),client.getPerformanceHistory().getClient().getCustomerId());
 		assertEquals(Integer.valueOf("1"),client.getPerformanceHistory().getLoanCycleNumber());
 		assertEquals(new Money("100"),client.getPerformanceHistory().getLastLoanAmount());

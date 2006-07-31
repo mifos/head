@@ -38,6 +38,7 @@
 package org.mifos.application.customer.business;
 
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.PersistentObject;
 
 /**
@@ -56,6 +57,17 @@ public class CustomerMeetingEntity extends PersistentObject {
 	
 	private Short updatedFlag;
 
+	protected CustomerMeetingEntity(){
+		
+	}
+	
+	public CustomerMeetingEntity(CustomerBO customer, MeetingBO meeting){
+		this.customer = customer;
+		this.meeting = meeting;
+		this.custMeetingId = null;
+		this.updatedFlag  = YesNoFlag.NO.getValue();
+	}
+	
 	public Integer getCustMeetingId() {
 		return custMeetingId;
 	}

@@ -88,7 +88,7 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/custApplyAdjustment.do");
 		addRequestParameter("method", "loadAdjustment");
 		addRequestParameter("input","ViewClientCharges");
-		addRequestParameter("globalCustNum","Client_Active_test_3");
+		addRequestParameter("globalCustNum",client.getGlobalCustNum());
 		addRequestParameter("prdOfferingName","Client_Active_test_3");
 		getRequest().getSession().setAttribute("security_param","Client");
 		actionPerform();
@@ -102,7 +102,7 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/custApplyAdjustment.do");
 		addRequestParameter("method", "previewAdjustment");
 		addRequestParameter("input","ViewClientCharges");
-		addRequestParameter("globalCustNum","Client_Active_test_3");
+		addRequestParameter("globalCustNum",client.getGlobalCustNum());
 		addRequestParameter("prdOfferingName","Client_Active_test_3");
 		addRequestParameter("adjustcheckbox","true");
 		addRequestParameter("adjustmentNote","abc");
@@ -117,7 +117,7 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		applyPayment();
 		setRequestPathInfo("/custApplyAdjustment.do");
 		addRequestParameter("method", "applyAdjustment");
-		addRequestParameter("globalCustNum","Client_Active_test_3");
+		addRequestParameter("globalCustNum",client.getGlobalCustNum());
 		addRequestParameter("prdOfferingName","Client_Active_test_3");
 		addRequestParameter("input","ViewClientCharges");
 		addRequestParameter("adjustmentNote","abcef");

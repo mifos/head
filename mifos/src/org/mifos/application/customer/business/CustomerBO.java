@@ -43,16 +43,26 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
+import org.hibernate.HibernateException;
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.customer.util.helpers.IdGenerator;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -73,10 +83,9 @@ import org.mifos.framework.util.helpers.PersistenceServiceName;
  * @author navitas
  */
 public abstract class CustomerBO extends BusinessObject {
-	//TODO: Change to final, access field and remove setter
-	private Integer customerId;
 	
-	//TODO: Change to final, access field and remove setter
+	private final Integer customerId;
+
 	private String globalCustNum;
 
 	private String displayName;
@@ -95,12 +104,10 @@ public abstract class CustomerBO extends BusinessObject {
 	
 	private Integer maxChildCount;
 
-	//TODO: Change to access field and remove setter
 	private Date customerActivationDate;
 
 	private CustomerStatusEntity customerStatus;
 
-	//TODO: Change to access field and remove setter
 	private Set<CustomerCustomFieldEntity> customFields;
 
 	private Set<CustomerPositionEntity> customerPositions;
@@ -111,22 +118,19 @@ public abstract class CustomerBO extends BusinessObject {
 
 	private Set<AccountBO> accounts;
 
-	//TODO: Change to final, access field and remove setter
-	private CustomerLevelEntity customerLevel;
+	private final CustomerLevelEntity customerLevel;
 
 	private PersonnelBO personnel;
 
-	private PersonnelBO customerFormedByPersonnel;
+	private PersonnelBO formedByPersonnel;
 
-	//TODO: Change to final, access field and remove setter
-	private OfficeBO office;
+	private final OfficeBO office;
 
 	private CustomerAddressDetailEntity customerAddressDetail;	
 
 	private CustomerMeetingEntity customerMeeting;
 
-	//TODO: Change to access field and remove setter
-	private Set<CustomerHierarchyEntity> customerHierarchy;
+	private Set<CustomerHierarchyEntity> customerHierarchies;
 
 	private CustomerHistoricalDataEntity historicalData;
 
@@ -134,21 +138,55 @@ public abstract class CustomerBO extends BusinessObject {
 
 	private CustomerPersistenceService dbService;
 
-	public CustomerBO() {
-		this.office = new OfficeBO();
-		this.customerAddressDetail = new CustomerAddressDetailEntity();
-		this.customerLevel = new CustomerLevelEntity();
-		this.customerPositions = new TreeSet<CustomerPositionEntity>();
-		this.historicalData = new CustomerHistoricalDataEntity();
+	protected CustomerBO() {
+		super();
+		this.customerId = null;
+		this.globalCustNum = null;
+		this.customerLevel = null;
+		this.office = null;
+	}
+
+	protected CustomerBO(UserContext userContext, String displayName, CustomerLevel customerLevel, CustomerStatus customerStatus, CustomerAddressDetailEntity customerAddress, List<CustomerCustomFieldEntity> customFields, PersonnelBO formedBy, OfficeBO office, CustomerBO parentCustomer, MeetingBO meeting, PersonnelBO personnel) throws CustomerException {
+		this.userContext = userContext;
+		this.office = office;
+		this.displayName = displayName;
+		//TODO: create value for display address field.
+		this.customerAddressDetail = customerAddress;
+		this.customerLevel = new CustomerLevelEntity(customerLevel);
+		
+		if(parentCustomer!=null)
+			this.personnel = parentCustomer.getPersonnel();
+		else
+			this.personnel = personnel;
+		
+		if(parentCustomer!=null && parentCustomer.getCustomerMeeting()!=null)
+			this.customerMeeting = createCustomerMeeting(parentCustomer.getCustomerMeeting().getMeeting());
+		else
+			this.customerMeeting = createCustomerMeeting(meeting);
+		
+		this.formedByPersonnel = formedBy;
+		this.parentCustomer = parentCustomer;
+		
+		if(customFields!=null)
+			for(CustomerCustomFieldEntity customField: customFields)
+				addCustomField(customField);
+
+		this.customerStatus = new CustomerStatusEntity(customerStatus);
+		this.maxChildCount = 0;
+		this.blackListed = YesNoFlag.NO.getValue();
+		this.customerId = null;		
+		this.historicalData = null;
+		this.customerFlags = null;
+		//TODO: create a customer account and set here
 		this.accounts = new HashSet<AccountBO>();
-		this.customerStatus = new CustomerStatusEntity();
+		//TODO: write code to create customer hierarchy and add
+		this.setCreateDetails();
 	}
 
-	public CustomerBO(UserContext userContext) {
-		super(userContext);
-
+	private CustomerMeetingEntity createCustomerMeeting(MeetingBO meeting){
+		return meeting!=null ? new CustomerMeetingEntity(this, meeting): null;
 	}
-
+	
 	public boolean isBlackList(){
 		return blackListed.equals(YesNoFlag.YES.getValue());
 	}
@@ -157,24 +195,12 @@ public abstract class CustomerBO extends BusinessObject {
 		return customerId;
 	}
 
-	public void setCustomerId(Integer customerId) {
-		this.customerId = customerId;
-	}
-
 	public CustomerLevelEntity getCustomerLevel() {
 		return this.customerLevel;
 	}
 
-	public void setCustomerLevel(CustomerLevelEntity customerLevel) {
-		this.customerLevel = customerLevel;
-	}
-
 	public String getGlobalCustNum() {
 		return this.globalCustNum;
-	}
-
-	public void setGlobalCustNum(String globalCustNum) {
-		this.globalCustNum = globalCustNum;
 	}
 
 	public PersonnelBO getPersonnel() {
@@ -265,10 +291,17 @@ public abstract class CustomerBO extends BusinessObject {
 		return office;
 	}
 
-	public void setOffice(OfficeBO office) {
-		this.office = office;
+	public void save() throws ApplicationException, CustomerException {
+		try {
+			new CustomerPersistence().createOrUpdate(this);
+			String gCustNum=IdGenerator.generateSystemIdForCustomer(getOffice().getGlobalOfficeNum(),getCustomerId());
+			globalCustNum = (gCustNum);
+			new CustomerPersistence().createOrUpdate(this);
+		} catch (HibernateException he) {
+			throw new CustomerException(CustomerConstants.CREATE_FAILED_EXCEPTION, he);
+		}
 	}
-
+	
 	public CustomerAccountBO getCustomerAccount() {
 		for (AccountBO account : accounts) {
 			if (account.getAccountType().getAccountTypeId().equals(
@@ -320,10 +353,6 @@ public abstract class CustomerBO extends BusinessObject {
 		return savingsAccounts;
 	}
 
-//	public void setCustomerAccount(CustomerAccountBO customerAccount) {
-//		this.customerAccount = customerAccount;
-//	}
-
 	public CustomerMeetingEntity getCustomerMeeting() {
 		return customerMeeting;
 	}
@@ -342,7 +371,7 @@ public abstract class CustomerBO extends BusinessObject {
 	public void addCustomerHierarchy(CustomerHierarchyEntity hierarchy) {
 		if (hierarchy != null) {
 			hierarchy.setCustomer(this);
-			this.customerHierarchy.add(hierarchy);
+			this.customerHierarchies.add(hierarchy);
 		}
 	}
 	
@@ -422,10 +451,6 @@ public abstract class CustomerBO extends BusinessObject {
 		return accounts;
 	}
 
-	private void setAccounts(Set<AccountBO> customerAccounts) {
-		this.accounts = customerAccounts;
-	}
-
 	public void addCustomerAccount(CustomerAccountBO customerAccount) {
 		customerAccount.setCustomer(this);
 		this.accounts.add(customerAccount);
@@ -435,16 +460,8 @@ public abstract class CustomerBO extends BusinessObject {
 		return customerActivationDate;
 	}
 
-	public void setCustomerActivationDate(Date activationDate) {
-		this.customerActivationDate = activationDate;
-	}
-
 	public Set<CustomerCustomFieldEntity> getCustomFields() {
 		return customFields;
-	}
-
-	private void setCustomFields(Set<CustomerCustomFieldEntity> customFields) {
-		this.customFields = customFields;
 	}
 
 	public void addCustomField(CustomerCustomFieldEntity customField) {
@@ -465,12 +482,12 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 
 	public PersonnelBO getCustomerFormedByPersonnel() {
-		return customerFormedByPersonnel;
+		return formedByPersonnel;
 	}
 
 	public void setCustomerFormedByPersonnel(
 			PersonnelBO customerFormedByPersonnel) {
-		this.customerFormedByPersonnel = customerFormedByPersonnel;
+		this.formedByPersonnel = customerFormedByPersonnel;
 	}
 
 	protected CustomerPersistenceService getDBService() throws ServiceException {
@@ -577,4 +594,9 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 		return amount;
 	}
+
+	public void setCustomerActivationDate(Date customerActivationDate) {
+		this.customerActivationDate = customerActivationDate;
+	}
+	
 }

@@ -2,6 +2,7 @@ package org.mifos.application.customer.business;
 
 import java.util.Set;
 
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.framework.business.PersistentObject;
 
 public class CustomerStatusEntity extends PersistentObject {
@@ -21,6 +22,10 @@ public class CustomerStatusEntity extends PersistentObject {
 	public CustomerStatusEntity() {
 	}
 
+	public CustomerStatusEntity(CustomerStatus customerStatus) {
+		this.statusId = customerStatus.getValue();
+	}
+	
 	public void setStatusId(Short statusId) {
 		this.statusId = statusId;
 	}

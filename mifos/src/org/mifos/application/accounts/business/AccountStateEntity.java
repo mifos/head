@@ -6,6 +6,7 @@ package org.mifos.application.accounts.business;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.productdefinition.util.valueobjects.ProductType;
 
@@ -27,6 +28,11 @@ public class AccountStateEntity extends MasterDataEntity {
 	public AccountStateEntity() {
 	}
 
+	public AccountStateEntity(AccountState accountState) {
+		super(accountState.getValue());
+		this.flagSet = new HashSet<AccountStateFlagEntity>();
+	}
+	
 	public AccountStateEntity(Short accountStateId) {
 		super(accountStateId);
 		this.flagSet = new HashSet<AccountStateFlagEntity>();

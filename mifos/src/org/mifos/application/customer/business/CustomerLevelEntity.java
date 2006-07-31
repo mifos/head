@@ -37,8 +37,8 @@
  */
 package org.mifos.application.customer.business;
 
-import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.util.valueobjects.LookUpEntity;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.framework.business.PersistentObject;
@@ -63,6 +63,10 @@ public class CustomerLevelEntity extends PersistentObject {
 	public CustomerLevelEntity() {
 	}
 
+	public CustomerLevelEntity(CustomerLevel customerLevel) {
+		this.levelId = customerLevel.getValue();
+	}
+	
 	public Short getLevelId() {
 		return levelId;
 	}

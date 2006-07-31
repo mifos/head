@@ -228,8 +228,8 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		group = TestObjectFactory.createGroup("Group_Active_test", Short
 				.valueOf("9"), "1.1.1", center, new Date(System
 				.currentTimeMillis()));
-		GroupBO groupBO = (GroupBO) service.findBySystemId("Group_Active_test");
-		assertEquals(groupBO.getGlobalCustNum(), group.getGlobalCustNum());
+		GroupBO groupBO = (GroupBO) service.findBySystemId(group.getGlobalCustNum());
+		assertEquals("Group_Active_test",groupBO.getDisplayName());
 	}
 
 	public void testgetBySystemId() throws PersistenceException,
@@ -242,9 +242,9 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		group = TestObjectFactory.createGroup("Group_Active_test", Short
 				.valueOf("9"), "1.1.1", center, new Date(System
 				.currentTimeMillis()));
-		GroupBO groupBO = (GroupBO) service.getBySystemId("Group_Active_test",
+		GroupBO groupBO = (GroupBO) service.getBySystemId(group.getGlobalCustNum(),
 				group.getCustomerLevel().getLevelId());
-		assertEquals(groupBO.getGlobalCustNum(), group.getGlobalCustNum());
+		assertEquals("Group_Active_test",groupBO.getDisplayName());
 	}
 
 	private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {

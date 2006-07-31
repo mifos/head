@@ -26,12 +26,12 @@
 		<property name="createdBy" column="CREATED_BY" />
 		<property name="updatedBy" column="UPDATED_BY" />
 		<property name="blackListed" column="BLACKLISTED" access="field"/>
-		<property name="customerActivationDate" column="CUSTOMER_ACTIVATION_DATE " not-null="false" />
+		<property name="customerActivationDate" column="CUSTOMER_ACTIVATION_DATE " not-null="false" access="field"/>
 		<many-to-one name="customerStatus" column="STATUS_ID" class="org.mifos.application.customer.business.CustomerStatusEntity" insert="true" update="true" unique="true" lazy="true" />
-		<many-to-one name="customerLevel" column="CUSTOMER_LEVEL_ID" class="org.mifos.application.customer.business.CustomerLevelEntity" insert="true" update="true" unique="true" lazy="true" />
+		<many-to-one name="customerLevel" column="CUSTOMER_LEVEL_ID" class="org.mifos.application.customer.business.CustomerLevelEntity" insert="true" update="true" unique="true" lazy="true" access="field"/>
 		<many-to-one name="personnel" column="LOAN_OFFICER_ID" class="org.mifos.application.personnel.business.PersonnelBO" unique="true" lazy="true" insert="true" update="true" />
 		<many-to-one name="customerFormedByPersonnel" column="CUSTOMER_FORMEDBY_ID" class="org.mifos.application.personnel.business.PersonnelBO" unique="true" lazy="true" insert="true" update="true" />
-		<many-to-one name="office" column="BRANCH_ID" class="org.mifos.application.office.business.OfficeBO" unique="true" lazy="true" insert="true" update="true" />
+		<many-to-one name="office" column="BRANCH_ID" class="org.mifos.application.office.business.OfficeBO" unique="true" lazy="true" insert="true" update="true" access="field"/>
 		<one-to-one name="customerAddressDetail" class="org.mifos.application.customer.business.CustomerAddressDetailEntity" cascade="all" lazy="true" property-ref="customer" />
 		<many-to-one name="parentCustomer" column="PARENT_CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" cascade="none" insert="true" unique="true" update="true" lazy="true" />
 		<one-to-one name="historicalData" class="org.mifos.application.customer.business.CustomerHistoricalDataEntity" cascade="all" lazy="true" property-ref="customer" />
@@ -47,7 +47,11 @@
 			<property name="fieldValue" column="FIELD_VALUE" />
 			</composite-element>
 			</set> -->
-		<set name="customFields" cascade="all" lazy="true">
+		<set name="customFields" cascade="all" lazy="true" access="field">
+			<key column="CUSTOMER_ID" update="false" />
+			<one-to-many class="org.mifos.application.customer.business.CustomerCustomFieldEntity" />
+		</set>
+		<set name="customerHierarchies" cascade="all" lazy="true" access="field">
 			<key column="CUSTOMER_ID" update="false" />
 			<one-to-many class="org.mifos.application.customer.business.CustomerCustomFieldEntity" />
 		</set>
@@ -56,7 +60,7 @@
 			<one-to-many class="org.mifos.application.customer.business.CustomerPositionEntity" />
 		</set>
 
-		<set name="accounts" cascade="all" table="ACCOUNT" lazy="true">
+		<set name="accounts" cascade="all" table="ACCOUNT" lazy="true" access="field">
 			<key column="CUSTOMER_ID" />
 			<one-to-many class="org.mifos.application.accounts.business.AccountBO" />
 		</set>
