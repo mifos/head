@@ -82,8 +82,8 @@ public class TestDuplicateClientHelper extends MifosTestCase{
 		
 		client1=(ClientBO)testObjectPersistence.getObject(ClientBO.class,client1.getCustomerId());
 		client2=(ClientBO)testObjectPersistence.getObject(ClientBO.class,client2.getCustomerId());
-		assertEquals(Short.valueOf(ClientConstants.STATUS_CLOSED),client1.getCustomerStatus().getStatusId());
-		assertEquals(Short.valueOf(ClientConstants.STATUS_CLOSED),client2.getCustomerStatus().getStatusId());
+		assertEquals(Short.valueOf(ClientConstants.STATUS_CLOSED),client1.getCustomerStatus().getId());
+		assertEquals(Short.valueOf(ClientConstants.STATUS_CLOSED),client2.getCustomerStatus().getId());
 		
 		client3.setGovernmentId("1");
 		client4.setGovernmentId("1");
@@ -94,8 +94,8 @@ public class TestDuplicateClientHelper extends MifosTestCase{
 		client3=(ClientBO)testObjectPersistence.getObject(ClientBO.class,client3.getCustomerId());
 		client4=(ClientBO)testObjectPersistence.getObject(ClientBO.class,client4.getCustomerId());
 
-		assertEquals(Short.valueOf(ClientConstants.STATUS_CLOSED),client3.getCustomerStatus().getStatusId());
-		assertEquals(Short.valueOf(ClientConstants.STATUS_CLOSED),client4.getCustomerStatus().getStatusId());
+		assertEquals(Short.valueOf(ClientConstants.STATUS_CLOSED),client3.getCustomerStatus().getId());
+		assertEquals(Short.valueOf(ClientConstants.STATUS_CLOSED),client4.getCustomerStatus().getId());
 		group=(GroupBO)testObjectPersistence.getObject(GroupBO.class,group.getCustomerId());
 		center = (CenterBO)testObjectPersistence.getObject(CenterBO.class,center.getCustomerId());
 	}

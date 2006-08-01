@@ -46,14 +46,11 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -68,6 +65,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -146,13 +144,17 @@ public abstract class CustomerBO extends BusinessObject {
 		this.office = null;
 	}
 
-	protected CustomerBO(UserContext userContext, String displayName, CustomerLevel customerLevel, CustomerStatus customerStatus, CustomerAddressDetailEntity customerAddress, List<CustomerCustomFieldEntity> customFields, PersonnelBO formedBy, OfficeBO office, CustomerBO parentCustomer, MeetingBO meeting, PersonnelBO personnel) throws CustomerException {
+	protected CustomerBO(UserContext userContext, String displayName, CustomerLevel customerLevel, CustomerStatus customerStatus, Address address, List<CustomerCustomFieldView> customFields, PersonnelBO formedBy, OfficeBO office, CustomerBO parentCustomer, MeetingBO meeting, PersonnelBO personnel) throws CustomerException {
 		this.userContext = userContext;
 		this.office = office;
 		this.displayName = displayName;
-		//TODO: create value for display address field.
-		this.customerAddressDetail = customerAddress;
 		this.customerLevel = new CustomerLevelEntity(customerLevel);
+		
+		if(address!=null){
+			this.customerAddressDetail = new CustomerAddressDetailEntity(this, address);
+			//TODO: change address to proper display format
+			this.displayAddress = this.customerAddressDetail.getDisplayAddress();
+		}
 		
 		if(parentCustomer!=null)
 			this.personnel = parentCustomer.getPersonnel();
@@ -168,8 +170,8 @@ public abstract class CustomerBO extends BusinessObject {
 		this.parentCustomer = parentCustomer;
 		
 		if(customFields!=null)
-			for(CustomerCustomFieldEntity customField: customFields)
-				addCustomField(customField);
+			for(CustomerCustomFieldView customField: customFields)
+				addCustomField(new CustomerCustomFieldEntity(customField.getFieldId(), customField.getFieldValue(), this));
 
 		this.customerStatus = new CustomerStatusEntity(customerStatus);
 		this.maxChildCount = 0;
@@ -279,11 +281,7 @@ public abstract class CustomerBO extends BusinessObject {
 		return customerAddressDetail;
 	}
 
-	public void setCustomerAddressDetail(
-			CustomerAddressDetailEntity customerAddressDetail) {
-		if (null != customerAddressDetail) {
-			customerAddressDetail.setCustomer(this);
-		}
+	public void setCustomerAddressDetail(CustomerAddressDetailEntity customerAddressDetail) {
 		this.customerAddressDetail = customerAddressDetail;
 	}
 
@@ -369,8 +367,7 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 	
 	public void addCustomerHierarchy(CustomerHierarchyEntity hierarchy) {
-		if (hierarchy != null) {
-			hierarchy.setCustomer(this);
+		if (hierarchy != null) {			
 			this.customerHierarchies.add(hierarchy);
 		}
 	}
@@ -466,7 +463,6 @@ public abstract class CustomerBO extends BusinessObject {
 
 	public void addCustomField(CustomerCustomFieldEntity customField) {
 		if (customField != null) {
-			customField.setCustomer(this);
 			this.customFields.add(customField);
 		}
 	}

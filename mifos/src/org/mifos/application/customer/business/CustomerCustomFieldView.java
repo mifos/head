@@ -1,6 +1,6 @@
 /**
 
- * CustomerCustomField.java    version: xxx
+ * CustomerCustomFieldView.java    version: xxx
 
 
 
@@ -39,18 +39,8 @@
 package org.mifos.application.customer.business;
 
 import org.mifos.framework.business.View;
-import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * This class encpsulate the custome field for the customer
- * 
- * @author ashishsm
- * 
- */
 public class CustomerCustomFieldView extends View {
-
-
-	private Integer customerId;
 
 	private Short fieldId;
 
@@ -60,13 +50,9 @@ public class CustomerCustomFieldView extends View {
 		super();
 	}
 
-
-	public Integer getCustomerId() {
-		return customerId;
-	}
-
-	public void setCustomerId(Integer customerId) {
-		this.customerId = customerId;
+	public CustomerCustomFieldView(Short fieldId, String fieldValue) {
+		this.fieldId = fieldId;
+		this.fieldValue = fieldValue;
 	}
 
 	public Short getFieldId() {
@@ -84,15 +70,14 @@ public class CustomerCustomFieldView extends View {
 	public void setFieldValue(String fieldValue) {
 		this.fieldValue = fieldValue;
 	}
-
+	
+	@Override
 	public boolean equals(Object obj) {
-		CustomerCustomFieldView customerCustomField = (CustomerCustomFieldView) obj;
-		if (this.customerId.equals(customerCustomField.getCustomerId())
-				&& this.fieldId.equals(customerCustomField.getFieldId())) {
-			return true;
-		} else {
-			return false;
-		}
+		return this.fieldId.equals(((CustomerCustomFieldView)obj).getFieldId());
 	}
-
+	
+	@Override
+	public int hashCode() {
+		return fieldId.hashCode();
+	}
 }

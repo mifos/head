@@ -7,11 +7,10 @@
 <hibernate-mapping>
 
     <class name="org.mifos.application.customer.business.CustomerAddressDetailEntity" table="CUSTOMER_ADDRESS_DETAIL">
-        <id name="customerAddressId" column="CUSTOMER_ADDRESS_ID" type="integer" unsaved-value="null">
+        <id name="customerAddressId" column="CUSTOMER_ADDRESS_ID" type="integer" unsaved-value="null" access="field">
             <generator class="native"/>
         </id>
-        <property name="addressName" column="ADDRESS_NAME" type="string"  />
-        <component name="address" class="org.mifos.framework.business.util.Address">
+        <component name="address" class="org.mifos.framework.business.util.Address" access="field">
 	        <property name="line1" column="LINE_1" type="string"  />
 	        <property name="line2" column="LINE_2" type="string"   />
    	       <property name="line3" column="LINE_3" type="string"  />
@@ -21,9 +20,7 @@
 	        <property name="zip" column="ZIP" type="string"   />
      		<property name="phoneNumber" column="PHONE_NUMBER" type="string"  />
         </component>
-        <many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO"  unique="true" />
- 
-        
+        <many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO"  unique="true" access="field"/>        
     </class>
     
 </hibernate-mapping>

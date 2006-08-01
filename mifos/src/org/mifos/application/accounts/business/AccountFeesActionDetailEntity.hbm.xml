@@ -40,7 +40,7 @@
 			where customer.customerId = accountAction.customer.customerId
 			and accountAction.actionDate <=:MEETING_DATE and accountAction.paymentStatus=:PAYMENT_STATUS
 			and customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and 
-			customer.customerStatus.statusId in (3,4,9,10,13) 
+			customer.customerStatus.id in (3,4,9,10,13) 
 			and accountAction.actionDateId = feeAction.accountActionDate.actionDateId
 			order by customer.customerId,
 			accountAction.account.accountId,accountAction.actionDate,feeAction.accountActionDate.actionDateId

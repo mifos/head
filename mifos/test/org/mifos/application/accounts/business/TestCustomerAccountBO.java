@@ -22,6 +22,7 @@ import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
@@ -588,8 +589,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		}
 		MeetingBO meeting = center.getCustomerMeeting().getMeeting();
 		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
-		CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity();
-		customerStatusEntity.setStatusId(GroupConstants.CLOSED);
+		CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(CustomerStatus.GROUP_CLOSED);
 		group.setCustomerStatus(customerStatusEntity);
 		group.getCustomerAccount().regenerateFutureInstallments((short)2);
 		HibernateUtil.commitTransaction();

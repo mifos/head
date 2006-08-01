@@ -85,7 +85,7 @@
 	</query>
 
 	<query name="getTodaysUnpaidInstallmentForActiveCustomers">
-		<![CDATA[select accountActionDateEntity.account.accountId from org.mifos.application.accounts.business.AccountActionDateEntity accountActionDateEntity where accountActionDateEntity.account.accountType.accountTypeId=:CUSTOMER_TYPE_ID and accountActionDateEntity.customer.customerStatus.statusId in (:ACTIVE_CENTER_STATE, :ACTIVE_GROUP_STATE, :ACTIVE_CLIENT_STATE, :ONHOLD_CLIENT_STATE, :ONHOLD_GROUP_STATE) and accountActionDateEntity.actionDate=:CURRENT_DATE and accountActionDateEntity.paymentStatus=:PAYMENT_UNPAID ]]>
+		<![CDATA[select accountActionDateEntity.account.accountId from org.mifos.application.accounts.business.AccountActionDateEntity accountActionDateEntity where accountActionDateEntity.account.accountType.accountTypeId=:CUSTOMER_TYPE_ID and accountActionDateEntity.customer.customerStatus.id in (:ACTIVE_CENTER_STATE, :ACTIVE_GROUP_STATE, :ACTIVE_CLIENT_STATE, :ONHOLD_CLIENT_STATE, :ONHOLD_GROUP_STATE) and accountActionDateEntity.actionDate=:CURRENT_DATE and accountActionDateEntity.paymentStatus=:PAYMENT_UNPAID ]]>
 	</query>
 
 	<query name="getLastInstallment">
@@ -105,7 +105,7 @@
 			where customer.customerId = accountAction.customer.customerId
 			and accountAction.actionDate <=:MEETING_DATE and accountAction.paymentStatus=:PAYMENT_STATUS
 			and customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and 
-			customer.customerStatus.statusId in (3,4,9,10,13) order by customer.customerId,
+			customer.customerStatus.id in (3,4,9,10,13) order by customer.customerId,
 			accountAction.account.accountId,accountAction.actionDate
 		]]>
 	</query>

@@ -1,6 +1,6 @@
 /**
 
- * CustomerHierarchy.java    version: xxx
+ * CustomerHierarchyEntity.java    version: xxx
 
 
 
@@ -40,7 +40,7 @@ package org.mifos.application.customer.business;
 
 import java.util.Date;
 
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.application.util.helpers.Status;
 import org.mifos.framework.business.PersistentObject;
 
 /**
@@ -50,45 +50,43 @@ import org.mifos.framework.business.PersistentObject;
  */
 public class CustomerHierarchyEntity extends PersistentObject {
 
-	private Integer hierarchyId;
+	private final Integer hierarchyId;
 
-	private CustomerBO parentCustomer;
+	private final CustomerBO parentCustomer;
 
-	private CustomerBO customer;
-
-	private Integer parentId;
+	private final CustomerBO customer;
 
 	private Short status;
 
 	private Date endDate;
 
-
-	public CustomerHierarchyEntity() {
+	/*
+	 * Adding a default constructor is hibernate's requirement and should not be
+	 * used to create a valid Object.
+	 */
+	protected CustomerHierarchyEntity() {
+		this.hierarchyId = null;
+		this.parentCustomer = null;
+		this.customer = null;
 	}
-
+	
+	public CustomerHierarchyEntity(CustomerBO customer, CustomerBO parentCustomer, Status status) {
+		this.customer = customer;
+		this.parentCustomer = parentCustomer;
+		this.status = status.getValue();
+		this.hierarchyId = null;
+	}
+	
 	public Integer getHierarchyId() {
 		return hierarchyId;
 	}
 
-	public void setHierarchyId(Integer hierarchyId) {
-
-		this.hierarchyId = hierarchyId;
+	public CustomerBO getCustomer() {
+		return customer;
 	}
 
-	public Integer getParentId() {
-		return this.parentId;
-	}
-
-	public void setParentId(Integer parentId) {
-		this.parentId = parentId;
-	}
-
-	public Short getStatus() {
-		return this.status;
-	}
-
-	public void setStatus(Short status) {
-		this.status = status;
+	public CustomerBO getParentCustomer() {
+		return parentCustomer;
 	}
 
 	public Date getEndDate() {
@@ -98,22 +96,12 @@ public class CustomerHierarchyEntity extends PersistentObject {
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
-
-
-	public CustomerBO getCustomer() {
-		return customer;
+	
+	public void updateStatus(Status status){
+		this.status = status.getValue();
 	}
 
-	public void setCustomer(CustomerBO customer) {
-		this.customer = customer;
+	public boolean isActive(){
+		return status.equals(Status.ACTIVE.getValue());
 	}
-
-	public CustomerBO getParentCustomer() {
-		return parentCustomer;
-	}
-
-	public void setParentCustomer(CustomerBO parentCustomer) {
-		this.parentCustomer = parentCustomer;
-	}
-
 }

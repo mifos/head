@@ -6,10 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.customer.business.CustomerAddressDetailEntity;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerCustomFieldEntity;
+import org.mifos.application.customer.business.CustomerCustomFieldView;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -18,6 +16,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 
@@ -47,39 +46,34 @@ public class ClientBO extends CustomerBO {
 	}
 
 	public ClientBO(UserContext userContext, String displayName,
-			CustomerStatus customerStatus,
-			CustomerAddressDetailEntity customerAddress,
-			List<CustomerCustomFieldEntity> customFields, PersonnelBO formedBy, 
+			CustomerStatus customerStatus, Address address,
+			List<CustomerCustomFieldView> customFields, PersonnelBO formedBy,
 			OfficeBO office, CustomerBO parentCustomer, String searchId)
 			throws CustomerException {
-		this(userContext, displayName, customerStatus, customerAddress,
-				customFields, formedBy, office, parentCustomer, null, null,
-				searchId);
+		this(userContext, displayName, customerStatus, address, customFields,
+				formedBy, office, parentCustomer, null, null, searchId);
 		clientAttendances = new HashSet<ClientAttendanceBO>();
 	}
 
 	public ClientBO(UserContext userContext, String displayName,
-			CustomerStatus customerStatus,
-			CustomerAddressDetailEntity customerAddress,
-			List<CustomerCustomFieldEntity> customFields, PersonnelBO formedBy, 
+			CustomerStatus customerStatus, Address address,
+			List<CustomerCustomFieldView> customFields, PersonnelBO formedBy,
 			OfficeBO office, MeetingBO meeting, PersonnelBO personnel,
 			String searchId) throws CustomerException {
-		this(userContext, displayName, customerStatus, customerAddress,
-				customFields, formedBy, office, null, meeting, personnel,
-				searchId);
+		this(userContext, displayName, customerStatus, address, customFields,
+				formedBy, office, null, meeting, personnel, searchId);
 	}
 
 	private ClientBO(UserContext userContext, String displayName,
-			CustomerStatus customerStatus,
-			CustomerAddressDetailEntity customerAddress,
-			List<CustomerCustomFieldEntity> customFields, PersonnelBO formedBy,
+			CustomerStatus customerStatus, Address address,
+			List<CustomerCustomFieldView> customFields, PersonnelBO formedBy,
 			OfficeBO office, CustomerBO parentCustomer, MeetingBO meeting,
 			PersonnelBO personnel, String searchId) throws CustomerException {
 		super(userContext, displayName, CustomerLevel.CLIENT, customerStatus,
-				customerAddress, customFields, formedBy, office,
-				parentCustomer, meeting, personnel);
+				address, customFields, formedBy, office, parentCustomer,
+				meeting, personnel);
 		this.setSearchId(searchId);
-		if(customerStatus.equals(CustomerStatus.CLIENT_ACTIVE.getValue()))
+		if (customerStatus.equals(CustomerStatus.CLIENT_ACTIVE.getValue()))
 			this.setCustomerActivationDate(this.getCreatedDate());
 	}
 
@@ -174,7 +168,7 @@ public class ClientBO extends CustomerBO {
 	}
 
 	public boolean isCustomerActive() {
-		if (getCustomerStatus().getStatusId().equals(
+		if (getCustomerStatus().getId().equals(
 				ClientConstants.STATUS_ACTIVE))
 			return true;
 		return false;

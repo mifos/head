@@ -40,10 +40,8 @@ package org.mifos.application.customer.group.business;
 
 import java.util.List;
 
-import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.customer.business.CustomerAddressDetailEntity;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerCustomFieldEntity;
+import org.mifos.application.customer.business.CustomerCustomFieldView;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -52,6 +50,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
@@ -74,43 +73,38 @@ public class GroupBO extends CustomerBO {
 
 	// TODO: removed searchId from parameter and generate internally
 	public GroupBO(UserContext userContext, String displayName,
-			CustomerStatus customerStatus,
-			CustomerAddressDetailEntity customerAddress,
-			List<CustomerCustomFieldEntity> customFields, PersonnelBO formedBy,
+			CustomerStatus customerStatus, Address address,
+			List<CustomerCustomFieldView> customFields, PersonnelBO formedBy,
 			OfficeBO office, CustomerBO parentCustomer, String searchId)
 			throws CustomerException {
-		this(userContext, displayName, customerStatus, customerAddress,
-				customFields, formedBy, office, parentCustomer, null, null,
-				searchId);
+		this(userContext, displayName, customerStatus, address, customFields,
+				formedBy, office, parentCustomer, null, null, searchId);
 	}
 
 	public GroupBO(UserContext userContext, String displayName,
-			CustomerStatus customerStatus,
-			CustomerAddressDetailEntity customerAddress,
-			List<CustomerCustomFieldEntity> customFields, PersonnelBO formedBy,
+			CustomerStatus customerStatus, Address address,
+			List<CustomerCustomFieldView> customFields, PersonnelBO formedBy,
 			OfficeBO office, MeetingBO meeting, PersonnelBO personnel,
 			String searchId) throws CustomerException {
-		this(userContext, displayName, customerStatus, customerAddress,
-				customFields, formedBy, office, null, meeting, personnel,
-				searchId);
+		this(userContext, displayName, customerStatus, address, customFields,
+				formedBy, office, null, meeting, personnel, searchId);
 	}
 
 	private GroupBO(UserContext userContext, String displayName,
-			CustomerStatus customerStatus,
-			CustomerAddressDetailEntity customerAddress,
-			List<CustomerCustomFieldEntity> customFields, PersonnelBO formedBy, 
+			CustomerStatus customerStatus, Address address,
+			List<CustomerCustomFieldView> customFields, PersonnelBO formedBy,
 			OfficeBO office, CustomerBO parentCustomer, MeetingBO meeting,
 			PersonnelBO personnel, String searchId) throws CustomerException {
 		super(userContext, displayName, CustomerLevel.GROUP, customerStatus,
-				customerAddress, customFields, formedBy, office,
-				parentCustomer, meeting, personnel);
+				address, customFields, formedBy, office, parentCustomer,
+				meeting, personnel);
 		this.setSearchId(searchId);
-		if(customerStatus.equals(CustomerStatus.GROUP_ACTIVE.getValue()))
+		if (customerStatus.equals(CustomerStatus.GROUP_ACTIVE.getValue()))
 			this.setCustomerActivationDate(this.getCreatedDate());
 	}
 
 	public boolean isCustomerActive() {
-		if (getCustomerStatus().getStatusId().equals(GroupConstants.ACTIVE))
+		if (getCustomerStatus().getId().equals(GroupConstants.ACTIVE))
 			return true;
 		return false;
 	}

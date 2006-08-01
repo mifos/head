@@ -1,6 +1,6 @@
 /**
 
- * CustomerCustomField.java    version: xxx
+ * CustomerCustomFieldEntity.java    version: xxx
 
 
 
@@ -41,52 +41,44 @@ package org.mifos.application.customer.business;
 import org.mifos.framework.business.PersistentObject;
 
 /**
- * This class encpsulate the custome field for the customer
- * 
+ * This class encpsulate the custom field for the customer
  * @author ashishsm
- * 
  */
-public class CustomerCustomFieldEntity extends PersistentObject  {
+public class CustomerCustomFieldEntity extends PersistentObject {
 
-	private Integer customerCustomFieldId;
-	
-	private Short fieldId;
+	private final Integer customFieldId;
+
+	private final Short fieldId;
 
 	private String fieldValue;
-	
-	private CustomerBO customer; 
-	
-	public CustomerCustomFieldEntity() {
+
+	private final CustomerBO customer;
+
+	/*
+	 * Adding a default constructor is hibernate's requirement and should not be
+	 * used to create a valid Object.
+	 */
+	protected CustomerCustomFieldEntity() {
 		super();
+		this.customFieldId = null;
+		this.fieldId = null;
+		this.customer = null;
 	}
 
-
-	public CustomerBO getCustomer() {
-		return customer;
-	}
-
-
-	public void setCustomer(CustomerBO customer) {
+	public CustomerCustomFieldEntity(Short fieldId, String fieldValue,
+			CustomerBO customer) {
+		this.fieldId = fieldId;
+		this.fieldValue = fieldValue;
 		this.customer = customer;
+		this.customFieldId = null;
 	}
 
-
-	public Integer getCustomerCustomFieldId() {
-		return customerCustomFieldId;
+	public Integer getCustomFieldId() {
+		return customFieldId;
 	}
-
-
-	public void setCustomerCustomFieldId(Integer customerCustomFieldId) {
-		this.customerCustomFieldId = customerCustomFieldId;
-	}
-
-
+	
 	public Short getFieldId() {
 		return fieldId;
-	}
-
-	public void setFieldId(Short fieldId) {
-		this.fieldId = fieldId;
 	}
 
 	public String getFieldValue() {
@@ -97,14 +89,20 @@ public class CustomerCustomFieldEntity extends PersistentObject  {
 		this.fieldValue = fieldValue;
 	}
 
+	private CustomerBO getCustomer (){
+		return this.customer;
+	}
+	
+	@Override
 	public boolean equals(Object obj) {
 		CustomerCustomFieldEntity customerCustomField = (CustomerCustomFieldEntity) obj;
-		if (this.customer.getCustomerId().equals(customerCustomField.getCustomer().getCustomerId())
-				&& this.fieldId.equals(customerCustomField.getFieldId())) {
-			return true;
-		} else {
-			return false;
-		}
+		return this.customer.getCustomerId().equals(
+				customerCustomField.getCustomer().getCustomerId())
+				&& this.fieldId.equals(customerCustomField.getFieldId());
 	}
-
+	
+	@Override
+	public int hashCode() {
+		return this.customer.getCustomerId().hashCode() + fieldId.hashCode();
+	}
 }

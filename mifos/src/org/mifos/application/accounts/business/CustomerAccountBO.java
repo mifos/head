@@ -293,13 +293,13 @@ public class CustomerAccountBO extends AccountBO {
 	@Override
 	protected void regenerateFutureInstallments(Short nextIntallmentId)
 			throws HibernateException, ServiceException, SchedulerException {
-		if (!this.getCustomer().getCustomerStatus().getStatusId().equals(
+		if (!this.getCustomer().getCustomerStatus().getId().equals(
 				ClientConstants.STATUS_CANCELLED)
-				&& !this.getCustomer().getCustomerStatus().getStatusId()
+				&& !this.getCustomer().getCustomerStatus().getId()
 						.equals(ClientConstants.STATUS_CLOSED)
-				&& !this.getCustomer().getCustomerStatus().getStatusId()
+				&& !this.getCustomer().getCustomerStatus().getId()
 						.equals(GroupConstants.CANCELLED)
-				&& !this.getCustomer().getCustomerStatus().getStatusId()
+				&& !this.getCustomer().getCustomerStatus().getId()
 						.equals(GroupConstants.CLOSED)) {
 			SchedulerIntf scheduler = SchedulerHelper
 					.getScheduler(getCustomer().getCustomerMeeting()

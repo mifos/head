@@ -48,7 +48,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
-import org.mifos.application.customer.business.CustomerStateEntity;
+import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.LoanCycleCounter;
@@ -191,7 +191,7 @@ public class CustomerPersistenceService extends PersistenceService {
 		serviceImpl.createOrUpdate(customer);
 	}
 
-	public List<CustomerStateEntity> getCustomerStates(Short optionalFlag)
+	public List<CustomerStatusEntity> getCustomerStates(Short optionalFlag)
 			throws PersistenceException {
 		return serviceImpl.getCustomerStates(optionalFlag);
 	}

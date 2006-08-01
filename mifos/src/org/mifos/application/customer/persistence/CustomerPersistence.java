@@ -54,7 +54,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
-import org.mifos.application.customer.business.CustomerStateEntity;
+import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -352,11 +352,11 @@ public class CustomerPersistence extends Persistence {
 		}
 	}
 
-	public List<CustomerStateEntity> getCustomerStates(Short optionalFlag)
+	public List<CustomerStatusEntity> getCustomerStates(Short optionalFlag)
 			throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("OPTIONAL_FLAG", optionalFlag);
-		List<CustomerStateEntity> queryResult = null;
+		List<CustomerStatusEntity> queryResult = null;
 		try {
 			queryResult = executeNamedQuery(
 					NamedQueryConstants.GET_CUSTOMER_STATES, queryParameters);

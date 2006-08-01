@@ -94,10 +94,10 @@
 	<!-- This query obtains  the customer with the specified loan office id,officeid,customerlevelid -->
 	<query name="Customer.getParentCustomersForLoanOfficer">
 		<![CDATA[select new org.mifos.application.customer.business.CustomerView(customer.customerId,customer.displayName,customer.customerLevel.levelId,customer.searchId) from  org.mifos.application.customer.business.CustomerBO customer where customer.personnel.personnelId=:personnelId and 
-	        	   		customer.office.officeId=:officeId and customer.customerLevel.levelId=:customerLevelId and customer.customerStatus.statusId in (13,9,10) order by customer.displayName ]]>
+	        	   		customer.office.officeId=:officeId and customer.customerLevel.levelId=:customerLevelId and customer.customerStatus.id in (13,9,10) order by customer.displayName ]]>
 	</query>
 	<query name="Customer.getActiveChildrenForParent">
-		<![CDATA[select new org.mifos.application.customer.business.CustomerView(customer.customerId,customer.displayName,customer.parentCustomer.customerId,customer.customerLevel.levelId) from org.mifos.application.customer.business.CustomerBO as customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerStatus.statusId in (3,4,9,10) order by customer.displayName]]>
+		<![CDATA[select new org.mifos.application.customer.business.CustomerView(customer.customerId,customer.displayName,customer.parentCustomer.customerId,customer.customerLevel.levelId) from org.mifos.application.customer.business.CustomerBO as customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerStatus.id in (3,4,9,10) order by customer.displayName]]>
 	</query>
 	<query name="Customer.getChildrenForParent">
 		<![CDATA[select customer.customerId from org.mifos.application.customer.business.CustomerBO as customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID order by customer.customerId]]>
@@ -131,7 +131,7 @@
 			order by account.customer.customerLevel.levelId,account.savingsOffering.prdOfferingShortName]]>
 	</query>
 	<query name="Customer.getChildren">
-		<![CDATA[from org.mifos.application.customer.business.CustomerBO as customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerLevel.levelId = :LEVEL_ID and customer.customerStatus.statusId not in (6,12) ]]>
+		<![CDATA[from org.mifos.application.customer.business.CustomerBO as customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerLevel.levelId = :LEVEL_ID and customer.customerStatus.id not in (6,12) ]]>
 	</query>
 	<query name="Customer.getActiveLoanAccounts">
 		<![CDATA[from org.mifos.application.accounts.loan.business.LoanBO as loan where loan.customer.customerId=:CUSTOMER_ID and loan.accountState.id in (1,2,3,4,5,9) ]]>
@@ -153,12 +153,12 @@
 		<![CDATA[from org.mifos.application.customer.client.business.ClientBO as client where client.globalCustNum = :globalCustNum ]]>
 	</query>
 	<query name="Customer.getAllChildren">
-		<![CDATA[from org.mifos.application.customer.business.CustomerBO as customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerLevel.levelId < :LEVEL_ID and customer.customerStatus.statusId in (3,4,9,10)]]>
+		<![CDATA[from org.mifos.application.customer.business.CustomerBO as customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerLevel.levelId < :LEVEL_ID and customer.customerStatus.id in (3,4,9,10)]]>
 	</query>
 	<query name="Customer.getAllCustomers">
 		<![CDATA[select customer.customerId from org.mifos.application.customer.business.CustomerBO as customer where customer.customerLevel.levelId =:LEVEL_ID ]]>
 	</query>
 	<query name="Customer.getActiveCustomerUnderParent">
-		<![CDATA[from org.mifos.application.customer.business.CustomerBO as customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerStatus.statusId in (3,4,9,10,13) order by customer.customerActivationDate]]>
+		<![CDATA[from org.mifos.application.customer.business.CustomerBO as customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerStatus.id in (3,4,9,10,13) order by customer.customerActivationDate]]>
 	</query>
 </hibernate-mapping>

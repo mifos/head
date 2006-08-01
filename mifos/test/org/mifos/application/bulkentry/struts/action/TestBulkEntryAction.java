@@ -445,7 +445,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 			customerView.setParentCustomerId(customer.getParentCustomer()
 					.getCustomerId());
 		customerView.setPersonnelId(customer.getPersonnel().getPersonnelId());
-		customerView.setStatusId(customer.getCustomerStatus().getStatusId());
+		customerView.setStatusId(customer.getCustomerStatus().getId());
 		return customerView;
 	}
 

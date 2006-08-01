@@ -72,7 +72,7 @@
 	    is either active or hold. and it has active accounts.-->
 	<query name="CollectionSheetCustomer.customersWithSpecifiedMeetingDate">
 		<![CDATA[ from org.mifos.application.accounts.business.AccountActionDateEntity accountActionDate
-					where accountActionDate.account.customer.customerStatus.statusId in (3,4,9,10,13)
+					where accountActionDate.account.customer.customerStatus.id in (3,4,9,10,13)
 					and (accountActionDate.actionDate= :meeting_date and accountActionDate.account.accountState.id in (5,11,16))
 						
 						
@@ -81,7 +81,7 @@
 	<!--This query would get accounts which have disbursal date same as that of meeting date passed.-->
 	<query name="CollectionSheetCustomer.customersWithSpecifiedDisbursalDate">
 		<![CDATA[ from org.mifos.application.accounts.loan.business.LoanBO loan
-					where loan.customer.customerStatus.statusId in (3,4,9,10,13)
+					where loan.customer.customerStatus.id in (3,4,9,10,13)
 					and (loan.disbursementDate= :meeting_date and loan.accountState.id in (3,4))
 						
 						

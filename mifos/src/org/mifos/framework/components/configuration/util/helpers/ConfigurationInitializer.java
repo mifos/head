@@ -51,7 +51,7 @@ import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.customer.business.CustomerStateEntity;
+import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
@@ -116,7 +116,7 @@ public class ConfigurationInitializer {
 			createOfficeCache(officeConfigMap,systemConfigList.get(i));
 		}
 		
-		List<CustomerStateEntity> customerOptionalStates =((CustomerPersistenceService) ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.Customer)).getCustomerStates(ConfigConstants.OPTIONAL_FLAG);
+		List<CustomerStatusEntity> customerOptionalStates =((CustomerPersistenceService) ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.Customer)).getCustomerStates(ConfigConstants.OPTIONAL_FLAG);
 		setCustomerOptionalStates(officeConfigMap,customerOptionalStates);
 		
 		List<AccountStateEntity> accountOptionalStates =((AccountPersistanceService) ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.Account)).getAccountStates(ConfigConstants.OPTIONAL_FLAG);
@@ -162,9 +162,9 @@ public class ConfigurationInitializer {
 		officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),ConfigConstants.DORMANCY_DAYS),dormancyDays);
 	}
 	
-	private void setCustomerOptionalStates(Map<Key,Object> officeConfigMap,List<CustomerStateEntity> customerOptionalStates)throws SystemException{
+	private void setCustomerOptionalStates(Map<Key,Object> officeConfigMap,List<CustomerStatusEntity> customerOptionalStates)throws SystemException{
 		if(customerOptionalStates!=null && customerOptionalStates.size()>0){
-			for(CustomerStateEntity customerStateEntity: customerOptionalStates){
+			for(CustomerStatusEntity customerStateEntity: customerOptionalStates){
 				if(customerStateEntity.getCustomerLevel().getLevelId().equals(CustomerConstants.CLIENT_LEVEL_ID))
 					setClientOptionalState(officeConfigMap,customerStateEntity);
 				else if(customerStateEntity.getCustomerLevel().getLevelId().equals(CustomerConstants.GROUP_LEVEL_ID))
@@ -184,13 +184,13 @@ public class ConfigurationInitializer {
 		}
 	}
 
-	private void setClientOptionalState(Map<Key,Object> officeConfigMap,CustomerStateEntity customerStateEntity)throws SystemException{
-		if(customerStateEntity.getStatusId().equals(ClientConstants.STATUS_PENDING))
+	private void setClientOptionalState(Map<Key,Object> officeConfigMap,CustomerStatusEntity customerStateEntity)throws SystemException{
+		if(customerStateEntity.getId().equals(ClientConstants.STATUS_PENDING))
 			officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),ConfigConstants.PENDING_APPROVAL_DEFINED_FOR_CLIENT),Constants.NO);
 	}
 	
-	private void setGroupOptionalState(Map<Key,Object> officeConfigMap,CustomerStateEntity customerStateEntity)throws SystemException{
-		if(customerStateEntity.getStatusId().equals(GroupConstants.PENDING_APPROVAL))
+	private void setGroupOptionalState(Map<Key,Object> officeConfigMap,CustomerStatusEntity customerStateEntity)throws SystemException{
+		if(customerStateEntity.getId().equals(GroupConstants.PENDING_APPROVAL))
 			officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),ConfigConstants.PENDING_APPROVAL_DEFINED_FOR_GROUP),Constants.NO);
 	}
 	

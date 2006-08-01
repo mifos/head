@@ -87,4 +87,9 @@ public class Address {
 	public void setZip(String zip) {
 		this.zip = zip;
 	}
+	
+	//TODO: change address to proper display format
+	public String getDisplayAddress(){
+		return line1 + " " + line2 + " "+ line3 ;
+	}
 }

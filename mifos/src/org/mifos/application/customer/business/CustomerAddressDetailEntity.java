@@ -49,49 +49,33 @@ import org.mifos.framework.business.util.Address;
  */
 public class CustomerAddressDetailEntity extends PersistentObject {
 
-	private Integer customerAddressId;
+	private final Integer customerAddressId;
 
-	private CustomerBO customer;
+	private final CustomerBO customer;
 
-	private String addressName;
+	private final Address address;
 	
-	private Address address;
-
+	/*
+	 * Adding a default constructor is hibernate's requirement and should not be
+	 * used to create a valid Object.
+	 */
+	protected CustomerAddressDetailEntity(){
+		this.customerAddressId = null;
+		this.customer = null;
+		this.address = null;
+	}
+	
+	public CustomerAddressDetailEntity(CustomerBO customer, Address address){
+		this.customer = customer;
+		this.address = address;
+		this.customerAddressId = null;
+	}
+	
 	public Address getAddress() {
 		return address;
 	}
-
-	public void setAddress(Address address) {
-		this.address = address;
+	
+	public String getDisplayAddress(){
+		return getAddress().getDisplayAddress();
 	}
-
-	public CustomerAddressDetailEntity() {
-		address = new Address();
-	}
-
-	public Integer getCustomerAddressId() {
-		return customerAddressId;
-	}
-
-	public void setCustomerAddressId(Integer customerAddressId) {
-
-		this.customerAddressId = customerAddressId;
-	}
-
-	public String getAddressName() {
-		return this.addressName;
-	}
-
-	public void setAddressName(String addressName) {
-		this.addressName = addressName;
-	}
-
-	public CustomerBO getCustomer() {
-		return customer;
-	}
-
-	public void setCustomer(CustomerBO customer) {
-		this.customer = customer;
-	}
-
 }

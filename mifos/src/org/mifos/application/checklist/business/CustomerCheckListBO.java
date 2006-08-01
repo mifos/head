@@ -1,7 +1,7 @@
 package org.mifos.application.checklist.business;
 
 import org.mifos.application.customer.business.CustomerLevelEntity;
-import org.mifos.application.customer.business.CustomerStateEntity;
+import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 
 
@@ -13,7 +13,7 @@ public class CustomerCheckListBO extends CheckListBO {
 	}	
 	
 	private CustomerLevelEntity customerLevelEntity ;
-	private CustomerStateEntity customerStateEntity;		
+	private CustomerStatusEntity customerStatus;		
 
 	public CustomerLevelEntity getCustomerLevelEntity() {
 		return customerLevelEntity;
@@ -23,12 +23,12 @@ public class CustomerCheckListBO extends CheckListBO {
 		this.customerLevelEntity = customerLevelEntity;
 	}
 
-	public CustomerStateEntity getCustomerStateEntity() {
-		return customerStateEntity;
+	public CustomerStatusEntity getCustomerStatus() {
+		return customerStatus;
 	}
 
-	public void setCustomerStateEntity(CustomerStateEntity customerStateEntity) {
-		this.customerStateEntity = customerStateEntity;
+	public void setCustomerStatus(CustomerStatusEntity customerStatus) {
+		this.customerStatus = customerStatus;
 	}
 
 	@Override

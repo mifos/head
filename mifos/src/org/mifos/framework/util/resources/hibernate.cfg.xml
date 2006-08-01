@@ -194,7 +194,6 @@
 	<mapping resource="org/mifos/application/customer/client/business/ClientNameDetailEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/business/CustomerNoteEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/business/CustomerPositionEntity.hbm.xml" />
-	<mapping resource="org/mifos/application/customer/business/CustomerStateEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/business/CustomerStatusEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/business/CustomFieldDefinitionEntity.hbm.xml" />
 
