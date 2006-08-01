@@ -38,11 +38,6 @@
 package org.mifos.framework.util.helpers;
 
 import org.apache.commons.beanutils.Converter;
-import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.HibernateStartUp;
-
 import org.mifos.framework.MifosTestCase;
 
 /**
@@ -64,7 +59,7 @@ public class StringToMoneyConverterTest extends MifosTestCase {
 	public void testConvert(){
 		
 		Converter stringToMoney = new StringToMoneyConverter();
-		Money money = new Money(TestObjectFactory.getMFICurrency(),142.34);
+		Money money = new Money(TestObjectFactory.getMFICurrency(),"142.34");
 		assertEquals("testing StringToMoneyConverter should have returned a Money object.",money, (Money)stringToMoney.convert(Money.class, "142.34"));
 		
 	}
@@ -78,7 +73,7 @@ public class StringToMoneyConverterTest extends MifosTestCase {
 	public void testConvertWithEmptyString(){
 		
 		Converter stringToMoney = new StringToMoneyConverter();
-		Money money = new Money(TestObjectFactory.getMFICurrency(),0);
+		Money money = new Money(TestObjectFactory.getMFICurrency(),"0");
 		assertEquals("testing StringToMoneyConverter should have returned a Money object with amount set to zero.",money, (Money)stringToMoney.convert(Money.class, ""));
 		
 	}

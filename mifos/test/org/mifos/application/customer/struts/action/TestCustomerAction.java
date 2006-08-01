@@ -7,23 +7,15 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
-import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.hibernate.HibernateStartUp;
+import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.authorization.AuthorizationManager;
-import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import org.mifos.framework.MifosMockStrutsTestCase;
 
 public class TestCustomerAction extends MifosMockStrutsTestCase {
 	
@@ -81,7 +73,7 @@ public class TestCustomerAction extends MifosMockStrutsTestCase {
 		addRequestParameter("type","Client");
 		AccountBO accountBO=client.getCustomerAccount();
 		addRequestParameter("accountId",accountBO.getAccountId().toString());
-		getRequest().getSession().putValue("security_param","Client");
+		getRequest().getSession().setAttribute("security_param","Client");
 		actionPerform();
 		verifyForward("waiveChargesDue_Success");
 		verifyNoActionErrors();
@@ -95,7 +87,7 @@ public class TestCustomerAction extends MifosMockStrutsTestCase {
 		addRequestParameter("type","Client");
 		AccountBO accountBO=client.getCustomerAccount();
 		addRequestParameter("accountId",accountBO.getAccountId().toString());
-		getRequest().getSession().putValue("security_param","Client");
+		getRequest().getSession().setAttribute("security_param","Client");
 		actionPerform();
 		verifyForward("waiveChargesOverDue_Success");
 		verifyNoActionErrors();
@@ -108,7 +100,7 @@ public class TestCustomerAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "getAllActivity");
 		addRequestParameter("type","Client");
 		addRequestParameter("globalCustNum",client.getGlobalCustNum());
-		getRequest().getSession().putValue("security_param","Client");
+		getRequest().getSession().setAttribute("security_param","Client");
 		actionPerform();
 		verifyForward("viewClientActivity");
 		verifyNoActionErrors();
