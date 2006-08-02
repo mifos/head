@@ -67,5 +67,6 @@ public interface AccountStates {
 	public final short SAVINGS_ACC_CLOSED = 17;
 	public final short SAVINGS_ACC_INACTIVE = 18;
 
-	public final String TRANSITION_CONFIG_FILE_PATH="org/mifos/framework/util/resources/stateMachine/StateMachine_saving.xml";
+	public final String TRANSITION_CONFIG_FILE_PATH_SAVINGS="org/mifos/framework/util/resources/stateMachine/StateMachine_saving.xml";
+	public final String TRANSITION_CONFIG_FILE_PATH_LOAN="org/mifos/framework/util/resources/stateMachine/StateMachine_loan.xml";
 }

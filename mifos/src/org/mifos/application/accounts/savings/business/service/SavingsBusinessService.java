@@ -39,12 +39,9 @@ package org.mifos.application.accounts.savings.business.service;
 
 import java.util.List;
 
-import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.application.accounts.business.AccountStateFlagEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.service.SavingsPersistenceService;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
-import org.mifos.application.checklist.util.valueobjects.CheckListMaster;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.office.business.OfficeBO;
@@ -96,20 +93,8 @@ public class SavingsBusinessService extends BusinessService{
 		return dbService;
 	}
 	
-	public List<AccountStateEntity> retrieveAllAccountStateList(Short prdTypeId) throws PersistenceException, ServiceException{
-		return getDBService().retrieveAllAccountStateList(prdTypeId);
-	}
-	
-	public List<CheckListMaster> getStatusChecklist(Short accountStatusId, Short accountTypeId ) throws ServiceException{
-		return getDBService().getStatusChecklist(accountStatusId,accountTypeId);
-	}
-	
 	public List<SavingsBO> getAllClosedAccounts(Integer customerId) throws ServiceException, PersistenceException {
 		return getDBService().getAllClosedAccounts(customerId);
-	}
-	
-	public AccountStateFlagEntity getAccountStateFlag(Short flagId) throws ServiceException, PersistenceException {
-		return getDBService().getAccountStateFlag(flagId);
 	}
 	
 }

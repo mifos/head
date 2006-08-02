@@ -47,7 +47,7 @@ import org.mifos.framework.exceptions.StatesInitializationException;
  */
 public interface StateMachine {
 	
-	public void initialize(Short localeId, Short officeId) throws StatesInitializationException;
+	public void initialize(Short localeId, Short officeId, Short prdTypeId) throws StatesInitializationException;
 	public boolean isTransitionAllowed(Object businessObject,AccountStateEntity newState) throws ApplicationException;
 
 }

@@ -11,25 +11,21 @@ import java.util.Set;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.SavingsAccountView;
-import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.checklist.business.AccountCheckListBO;
 import org.mifos.application.checklist.business.CheckListDetailEntity;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -41,9 +37,10 @@ import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.tags.DateHelper;
+import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestConstants;
@@ -54,6 +51,7 @@ public class TestSavingsPersistenceService extends MifosTestCase {
 	private UserContext userContext;
 
 	private SavingsPersistenceService dbService;
+	private AccountBusinessService accountBusinessService;
 
 	private CustomerBO client;
 	private CustomerBO group;
@@ -79,6 +77,7 @@ public class TestSavingsPersistenceService extends MifosTestCase {
 		super.setUp();
 		dbService = (SavingsPersistenceService) ServiceFactory.getInstance()
 				.getPersistenceService(PersistenceServiceName.Savings);
+		accountBusinessService = (AccountBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Accounts);
 		userContext = new UserContext();
 		userContext.setId(new Short("1"));
 		userContext.setLocaleId(new Short("1"));
@@ -152,9 +151,9 @@ public class TestSavingsPersistenceService extends MifosTestCase {
 				AccountStates.SAVINGS_ACC_CLOSED);
 	}
 
-	public void testGetStatusChecklist() {
+	public void testGetStatusChecklist() throws NumberFormatException, ServiceException {
 		createCheckList();
-		List statusCheckList = dbService.getStatusChecklist(
+		List statusCheckList = accountBusinessService.getStatusChecklist(
 				Short.valueOf("13"), Short.valueOf("2"));
 		assertNotNull(statusCheckList);
 		assertEquals(1, statusCheckList.size());

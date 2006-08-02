@@ -1,20 +1,17 @@
 package org.mifos.application.accounts.persistence.service;
 
 import java.sql.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.hibernate.HibernateException;
-import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.accounts.business.AccountNotesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.application.accounts.business.CustomerAccountBO;
+import org.mifos.application.accounts.business.AccountStateFlagEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.application.checklist.util.valueobjects.CheckListMaster;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -97,5 +94,17 @@ public class AccountPersistanceService extends PersistenceService {
 		
 		return accountPersistence.getLastInstallment(accountId );
 
+	}
+	
+	public List<AccountStateEntity> retrieveAllAccountStateList(Short prdTypeId) throws PersistenceException{
+		return accountPersistence.retrieveAllAccountStateList(prdTypeId);
+	}
+	
+	public List<CheckListMaster> getStatusChecklist(Short accountStatusId, Short accountTypeId) {
+		return accountPersistence.getStatusChecklist(accountStatusId,accountTypeId);
+	}
+	
+	public AccountStateFlagEntity getAccountStateFlag(Short flagId) throws PersistenceException {
+		return accountPersistence.getAccountStateFlag(flagId);
 	}
 }

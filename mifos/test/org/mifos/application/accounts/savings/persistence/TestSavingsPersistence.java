@@ -11,11 +11,10 @@ import java.util.Set;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.SavingsAccountView;
-import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
@@ -48,6 +47,8 @@ public class TestSavingsPersistence extends MifosTestCase {
 	private UserContext userContext;
 
 	private SavingsPersistence savingsPersistence;
+	
+	private AccountPersistence accountPersistence;
 
 	private CustomerBO group;
 
@@ -73,6 +74,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		savingsPersistence = new SavingsPersistence();
+		accountPersistence = new AccountPersistence();
 		userContext = new UserContext();
 		userContext.setId(new Short("1"));
 		userContext.setLocaleId(new Short("1"));
@@ -154,7 +156,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 
 	public void testRetrieveAllAccountStateList() throws NumberFormatException,
 			PersistenceException {
-		List<AccountStateEntity> accountStateEntityList = savingsPersistence
+		List<AccountStateEntity> accountStateEntityList = accountPersistence
 				.retrieveAllAccountStateList(Short.valueOf("2"));
 		assertNotNull(accountStateEntityList);
 		assertEquals(6, accountStateEntityList.size());
@@ -162,7 +164,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 
 	public void testGetStatusChecklist() {
 		createCheckList();
-		List statusCheckList = savingsPersistence.getStatusChecklist(Short
+		List statusCheckList = accountPersistence.getStatusChecklist(Short
 				.valueOf("13"), Short.valueOf("2"));
 		assertNotNull(statusCheckList);
 		assertEquals(1, statusCheckList.size());

@@ -16,6 +16,7 @@ import org.mifos.application.accounts.business.TestAccountPaymentEntity;
 import org.mifos.application.accounts.business.TestAccountStateEntity;
 import org.mifos.application.accounts.business.TestCustomerAccountBO;
 import org.mifos.application.accounts.business.TestLoanTrxnDetailEntity;
+import org.mifos.application.accounts.business.TestAccountStateMachine;
 import org.mifos.application.accounts.business.service.TestAccountService;
 import org.mifos.application.accounts.financial.business.service.TestFinancialBusinessService;
 import org.mifos.application.accounts.persistence.TestAccountPersistence;
@@ -60,6 +61,7 @@ public class AccountTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(TestFinancialBusinessService.class);
 		testSuite.addTestSuite(TestApplyPaymentAction.class);
 		testSuite.addTestSuite(TestNotesAction.class);
+		testSuite.addTestSuite(TestAccountStateMachine.class);
 		return testSuite;
 		
 	}

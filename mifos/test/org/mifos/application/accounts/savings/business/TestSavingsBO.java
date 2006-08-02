@@ -22,6 +22,7 @@ import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStateFlagEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
+import org.mifos.application.accounts.business.AccountStateMachines;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.exceptions.IDGenerationException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
@@ -32,6 +33,7 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
@@ -714,7 +716,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = helper.createSavingsAccount("000X00000000013",
 				savingsOffering, group, AccountStates.SAVINGS_ACC_CANCEL,
 				userContext);
-		savings.initializeSavingsStateMachine(userContext.getLocaleId());
+		savings.initializeStateMachine(userContext.getLocaleId());
 		String name = savings.getStatusName(userContext.getLocaleId(), savings
 				.getAccountState().getId());
 		assertEquals("Cancelled", name);
@@ -727,7 +729,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = helper.createSavingsAccount("000X00000000013",
 				savingsOffering, group, AccountStates.SAVINGS_ACC_CANCEL,
 				userContext);
-		savings.initializeSavingsStateMachine(userContext.getLocaleId());
+		savings.initializeStateMachine(userContext.getLocaleId());
 		String name = savings.getFlagName(Short.valueOf("4"));
 		assertEquals("Withdraw", name);
 	}
@@ -739,7 +741,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = helper.createSavingsAccount("000X00000000013",
 				savingsOffering, group, AccountStates.SAVINGS_ACC_CANCEL,
 				userContext);
-		savings.initializeSavingsStateMachine(userContext.getLocaleId());
+		savings.initializeStateMachine(userContext.getLocaleId());
 		AccountStateEntity accountStateEntity = savings
 				.retrieveAccountStateEntityMasterObject(savings
 						.getAccountState());
@@ -817,7 +819,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = helper.createSavingsAccount("000100000000017",
 				savingsOffering, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
-		SavingsStateMachine.getInstance().initialize((short) 1, (short) 1);
+		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountType.SAVINGSACCOUNT.getValue());
 		savings.changeStatus(new AccountStateEntity(
 				AccountStates.SAVINGS_ACC_PENDINGAPPROVAL), helper
 				.getAccountNotes(savings), null, userContext);
@@ -835,7 +837,7 @@ public class TestSavingsBO extends MifosTestCase {
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
 
 		try {
-			SavingsStateMachine.getInstance().initialize((short) 1, (short) 1);
+			AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountType.SAVINGSACCOUNT.getValue());
 			Set<Short> set = new HashSet<Short>();
 			set.add(Short.valueOf("2"));
 			userContext.setRoles(set);
@@ -862,7 +864,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = helper.createSavingsAccount("000100000000017",
 				savingsOffering, group,
 				AccountStates.SAVINGS_ACC_PENDINGAPPROVAL, userContext);
-		SavingsStateMachine.getInstance().initialize((short) 1, (short) 1);
+		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountType.SAVINGSACCOUNT.getValue());
 		AccountStateFlagEntity stateFlag = null;
 		// 6 is blacklisted
 		Session session = HibernateUtil.getSessionTL();
@@ -885,7 +887,7 @@ public class TestSavingsBO extends MifosTestCase {
 				AccountStates.SAVINGS_ACC_PENDINGAPPROVAL, userContext);
 
 		try {
-			SavingsStateMachine.getInstance().initialize((short) 1, (short) 1);
+			AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountType.SAVINGSACCOUNT.getValue());
 			Set<Short> set = new HashSet<Short>();
 			set.add(Short.valueOf("2"));
 			userContext.setRoles(set);

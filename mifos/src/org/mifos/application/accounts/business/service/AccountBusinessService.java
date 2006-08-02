@@ -5,12 +5,13 @@ import java.util.List;
 import org.hibernate.StaleObjectStateException;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.AccountNotesEntity;
+import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.accounts.business.AccountStateFlagEntity;
 import org.mifos.application.accounts.business.TransactionHistoryView;
-import org.mifos.application.accounts.dao.AccountNotesDAO;
 import org.mifos.application.accounts.exceptions.AccountExceptionConstants;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.checklist.util.valueobjects.CheckListMaster;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -85,6 +86,18 @@ public class AccountBusinessService extends BusinessService {
 	
 	public QueryResult getAllAccountNotes(Integer accountId) throws ApplicationException, SystemException{
 		return getDBService().getAllAccountNotes(accountId);
+	}
+	
+	public List<AccountStateEntity> retrieveAllAccountStateList(Short prdTypeId) throws PersistenceException, ServiceException{
+		return getDBService().retrieveAllAccountStateList(prdTypeId);
+	}
+	
+	public List<CheckListMaster> getStatusChecklist(Short accountStatusId, Short accountTypeId ) throws ServiceException{
+		return getDBService().getStatusChecklist(accountStatusId,accountTypeId);
+	}
+	
+	public AccountStateFlagEntity getAccountStateFlag(Short flagId) throws ServiceException, PersistenceException {
+		return getDBService().getAccountStateFlag(flagId);
 	}
 
 }

@@ -14,11 +14,10 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.accounts.business.AccountNotesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.application.accounts.business.CustomerAccountBO;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.business.AccountStateFlagEntity;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
+import org.mifos.application.checklist.util.valueobjects.CheckListMaster;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.framework.exceptions.HibernateProcessException;
@@ -231,5 +230,39 @@ public class AccountPersistence extends Persistence {
 		return (AccountBO) obj1[0];
 	}
 	
+	public List<AccountStateEntity> retrieveAllAccountStateList(Short prdTypeId) throws PersistenceException {
+		try {
+			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("prdTypeId", prdTypeId);
+			List<AccountStateEntity> queryResult = executeNamedQuery(
+					NamedQueryConstants.RETRIEVEALLACCOUNTSTATES,
+					queryParameters);
+			return queryResult;
+		} catch (HibernateException he) {
+			throw new PersistenceException(he);
+		}
+
+	}
+
+	public List<CheckListMaster> getStatusChecklist(Short accountStatusId, Short accountTypeId) {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("accountTypeId", accountTypeId);
+		queryParameters.put("accountStatus", accountStatusId);
+		queryParameters.put("checklistStatus", 1);
+		List queryResult = executeNamedQuery(
+				NamedQueryConstants.STATUSCHECKLIST, queryParameters);
+		return queryResult;
+	}
+
+	public AccountStateFlagEntity getAccountStateFlag(Short flagId) throws PersistenceException {
+		AccountStateFlagEntity accountStateFlagEntity;
+		try {
+			Session session = HibernateUtil.getSessionTL();
+			accountStateFlagEntity = (AccountStateFlagEntity) session.get(AccountStateFlagEntity.class, flagId);
+		} catch (HibernateException he) {
+			throw new PersistenceException(he);
+		}
+		return accountStateFlagEntity;
+	}
 	
 }

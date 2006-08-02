@@ -43,13 +43,11 @@ import java.util.List;
 import org.hibernate.HibernateException;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.application.accounts.business.AccountStateFlagEntity;
 import org.mifos.application.accounts.business.SavingsAccountView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
-import org.mifos.application.checklist.util.valueobjects.CheckListMaster;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.office.business.OfficeBO;
@@ -138,24 +136,12 @@ public class SavingsPersistenceService extends PersistenceService {
 		return serviceImpl.retrieveFirstTransaction(accountId);
 	}
 	
-	public List<AccountStateEntity> retrieveAllAccountStateList(Short prdTypeId) throws PersistenceException{
-		return serviceImpl.retrieveAllAccountStateList(prdTypeId);
-	} 
-	
 	public AccountStateEntity getAccountStatusObject(Short accountStatusId) throws PersistenceException {
 		return serviceImpl.getAccountStatusObject(accountStatusId);
 	}
 	
-	public List<CheckListMaster> getStatusChecklist(Short accountStatusId, Short accountTypeId) {
-		return serviceImpl.getStatusChecklist(accountStatusId,accountTypeId);
-	}
-	
 	public List<SavingsBO> getAllClosedAccounts(Integer customerId) throws PersistenceException {
 		return serviceImpl.getAllClosedAccount(customerId);
-	}
-	
-	public AccountStateFlagEntity getAccountStateFlag(Short flagId) throws PersistenceException {
-		return serviceImpl.getAccountStateFlag(flagId);
 	}
 
 	public int getMissedDeposits(Integer accountId , Date currentDate ) throws PersistenceException {

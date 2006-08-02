@@ -50,21 +50,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.accounts.business.AccountNotesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.application.accounts.business.AccountStateFlagEntity;
 import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.business.LoanTrxnDetailEntity;
+import org.mifos.application.accounts.business.AccountStateMachines;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.loan.exceptions.LoanExceptionConstants;
@@ -75,6 +73,7 @@ import org.mifos.application.accounts.persistence.service.AccountPersistanceServ
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
 import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -85,8 +84,6 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
-import org.mifos.application.fees.util.helpers.FeeFrequencyType;
-import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
@@ -95,12 +92,10 @@ import org.mifos.application.master.util.valueobjects.CollateralType;
 import org.mifos.application.master.util.valueobjects.InterestTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
-import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.valueobjects.GracePeriodType;
-import org.mifos.application.productdefinition.util.valueobjects.PaymentType;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -115,14 +110,12 @@ import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -1261,70 +1254,6 @@ public class LoanBO extends AccountBO {
 		return unpaidInstallmentList;
 	}
 
-	private void changeStatus(Short newStatusId, Short flagId, String comment)
-			throws SecurityException, ServiceException, PersistenceException {
-		if (null != getCustomer().getPersonnel().getPersonnelId())
-			checkPermissionForStatusChange(newStatusId, this.getUserContext(),
-					flagId, getOffice().getOfficeId(), getCustomer()
-							.getPersonnel().getPersonnelId());
-		else
-			checkPermissionForStatusChange(newStatusId, this.getUserContext(),
-					flagId, getOffice().getOfficeId(), this.getUserContext()
-							.getId());
-
-		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.MasterDataService);
-		AccountStateEntity accountStateEntity = (AccountStateEntity) masterPersistenceService
-				.findById(AccountStateEntity.class, newStatusId);
-		accountStateEntity.setLocaleId(this.getUserContext().getLocaleId());
-		AccountStateFlagEntity accountStateFlagEntity = null;
-		if (flagId != null) {
-			accountStateFlagEntity = (AccountStateFlagEntity) masterPersistenceService
-					.findById(AccountStateFlagEntity.class, flagId);
-		}
-		AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(
-				this.getAccountState(), accountStateEntity, this.getPersonnel());
-		AccountNotesEntity accountNotesEntity = createAccountNotes(comment);
-		this.addAccountStatusChangeHistory(historyEntity);
-		this.setAccountState(accountStateEntity);
-		this.addAccountNotes(accountNotesEntity);
-		if (accountStateFlagEntity != null) {
-			accountStateFlagEntity.setLocaleId(this.getUserContext()
-					.getLocaleId());
-			this.addAccountFlag(accountStateFlagEntity);
-		}
-		this.setClosedDate(new Date(System.currentTimeMillis()));
-	}
-
-	private AccountNotesEntity createAccountNotes(String comment)
-			throws ServiceException {
-		AccountNotesEntity accountNotes = new AccountNotesEntity();
-		accountNotes.setCommentDate(new java.sql.Date(System
-				.currentTimeMillis()));
-		accountNotes.setPersonnel(this.getPersonnel());
-		accountNotes.setComment(comment);
-		return accountNotes;
-	}
-
-	private void checkPermissionForStatusChange(Short newState,
-			UserContext userContext, Short flagSelected, Short recordOfficeId,
-			Short recordLoanOfficerId) throws SecurityException {
-		if (!isPermissionAllowed(newState, userContext, flagSelected,
-				recordOfficeId, recordLoanOfficerId))
-			throw new SecurityException(
-					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-	}
-
-	private boolean isPermissionAllowed(Short newState,
-			UserContext userContext, Short flagSelected, Short recordOfficeId,
-			Short recordLoanOfficerId) {
-		return ActivityMapper.getInstance().isStateChangePermittedForAccount(
-				newState.shortValue(),
-				null != flagSelected ? flagSelected.shortValue() : 0,
-				userContext, recordOfficeId, recordLoanOfficerId);
-	}
-
 	private Money getEarlyClosureAmount() {
 		Money amount = new Money();
 		for (AccountActionDateEntity accountActionDateEntity : getListOfUnpaidInstallments()) {
@@ -1624,5 +1553,25 @@ public class LoanBO extends AccountBO {
 		return (PersonnelPersistenceService) ServiceFactory.getInstance()
 				.getPersistenceService(PersistenceServiceName.Personnel);
 	}
+	
+	public void initializeStateMachine(Short localeId) throws StatesInitializationException {
+		AccountStateMachines.getInstance().initialize(localeId, getOffice().getOfficeId(),org.mifos.application.accounts.util.helpers.AccountType.LOANACCOUNT.getValue());
+	}
+	
+	public List<AccountStateEntity> getStatusList() {
+		List<AccountStateEntity> statusList = AccountStateMachines.getInstance()
+				.getStatusList(this.getAccountState(),Short.valueOf(AccountTypes.LOANACCOUNT));
+			for (AccountStateEntity accStateObj : statusList) {
+				accStateObj.setLocaleId(userContext.getLocaleId());
+			}
+		return statusList;
+	}
+	
+	public String getStatusName(Short localeId, Short accountStateId) throws ApplicationException, SystemException {
+		return AccountStateMachines.getInstance().getStatusName(localeId,accountStateId,Short.valueOf(AccountTypes.LOANACCOUNT));
+	}
 
+	public String getFlagName(Short flagId) throws ApplicationException,SystemException {
+		return AccountStateMachines.getInstance().getFlagName(flagId,Short.valueOf(AccountTypes.LOANACCOUNT));
+	}
 }

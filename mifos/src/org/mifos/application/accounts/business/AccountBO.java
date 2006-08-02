@@ -64,11 +64,11 @@ import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
-import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.valueobjects.Fees;
+import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
@@ -84,9 +84,12 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -1041,4 +1044,80 @@ public class AccountBO extends BusinessObject {
 		
 	}
 	
+	public void changeStatus(Short newStatusId, Short flagId, String comment) throws SecurityException, ServiceException, PersistenceException {
+		if (null != getCustomer().getPersonnel().getPersonnelId())
+			checkPermissionForStatusChange(newStatusId, this.getUserContext(),
+					flagId, getOffice().getOfficeId(), getCustomer()
+							.getPersonnel().getPersonnelId());
+		else
+			checkPermissionForStatusChange(newStatusId, this.getUserContext(),
+					flagId, getOffice().getOfficeId(), this.getUserContext()
+							.getId());
+		
+		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
+				.getInstance().getPersistenceService(
+						PersistenceServiceName.MasterDataService);
+		AccountStateEntity accountStateEntity = (AccountStateEntity) masterPersistenceService
+				.findById(AccountStateEntity.class, newStatusId);
+		accountStateEntity.setLocaleId(this.getUserContext().getLocaleId());
+		AccountStateFlagEntity accountStateFlagEntity = null;
+		if (flagId != null) {
+			accountStateFlagEntity = (AccountStateFlagEntity) masterPersistenceService
+					.findById(AccountStateFlagEntity.class, flagId);
+		}
+		AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(
+				this.getAccountState(), accountStateEntity, this.getPersonnel());
+		AccountNotesEntity accountNotesEntity = createAccountNotes(comment);
+		this.addAccountStatusChangeHistory(historyEntity);
+		this.setAccountState(accountStateEntity);
+		this.addAccountNotes(accountNotesEntity);
+		if (accountStateFlagEntity != null) {
+			accountStateFlagEntity.setLocaleId(this.getUserContext()
+					.getLocaleId());
+			this.addAccountFlag(accountStateFlagEntity);
+		}
+		this.setClosedDate(new Date(System.currentTimeMillis()));
+	}
+	
+	private void checkPermissionForStatusChange(Short newState,
+			UserContext userContext, Short flagSelected, Short recordOfficeId,
+			Short recordLoanOfficerId) throws SecurityException {
+		if (!isPermissionAllowed(newState, userContext, flagSelected,
+				recordOfficeId, recordLoanOfficerId))
+			throw new SecurityException(
+					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+	}
+
+	private boolean isPermissionAllowed(Short newState,
+			UserContext userContext, Short flagSelected, Short recordOfficeId,
+			Short recordLoanOfficerId) {
+		return ActivityMapper.getInstance().isStateChangePermittedForAccount(
+				newState.shortValue(),
+				null != flagSelected ? flagSelected.shortValue() : 0,
+				userContext, recordOfficeId, recordLoanOfficerId);
+	}
+	
+	private AccountNotesEntity createAccountNotes(String comment)throws ServiceException {
+		AccountNotesEntity accountNotes = new AccountNotesEntity();
+		accountNotes.setCommentDate(new java.sql.Date(System
+				.currentTimeMillis()));
+		accountNotes.setPersonnel(this.getPersonnel());
+		accountNotes.setComment(comment);
+		return accountNotes;
+	}
+	
+	public void initializeStateMachine(Short localeId) throws StatesInitializationException{
+	}
+	
+	public List<AccountStateEntity> getStatusList() {
+		return null;
+	}
+	
+	public String getStatusName(Short localeId, Short accountStateId) throws ApplicationException, SystemException {
+		return null;
+	}
+
+	public String getFlagName(Short flagId) throws ApplicationException,SystemException {
+		return null;
+	}
 }

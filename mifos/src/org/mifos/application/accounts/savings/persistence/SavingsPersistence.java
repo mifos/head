@@ -47,7 +47,6 @@ import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.application.accounts.business.AccountStateFlagEntity;
 import org.mifos.application.accounts.business.SavingsAccountView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
@@ -55,7 +54,6 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.checklist.util.valueobjects.CheckListMaster;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.office.business.OfficeBO;
@@ -198,21 +196,6 @@ public class SavingsPersistence extends Persistence {
 		return null;
 	}
 	
-	public List<AccountStateEntity> retrieveAllAccountStateList(Short prdTypeId)
-		throws PersistenceException {
-		try {
-			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("prdTypeId", prdTypeId);
-			List<AccountStateEntity> queryResult = executeNamedQuery(
-					NamedQueryConstants.RETRIEVEALLACCOUNTSTATES,
-					queryParameters);
-			return queryResult;
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
-	
-	}
-	
 	public AccountStateEntity getAccountStatusObject(Short accountStatusId) throws PersistenceException {
 		AccountStateEntity accountStateEntity;
 		try {
@@ -225,16 +208,6 @@ public class SavingsPersistence extends Persistence {
 		return accountStateEntity;
 	}
 	
-	public List<CheckListMaster> getStatusChecklist(Short accountStatusId, Short accountTypeId) {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("accountTypeId", accountTypeId);
-		queryParameters.put("accountStatus", accountStatusId);
-		queryParameters.put("checklistStatus", 1);
-		List queryResult = executeNamedQuery(
-				NamedQueryConstants.STATUSCHECKLIST, queryParameters);
-		return queryResult;
-		}
-	
 	public List<SavingsBO> getAllClosedAccount(Integer customerId) throws PersistenceException{
 		try {
 			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
@@ -244,18 +217,6 @@ public class SavingsPersistence extends Persistence {
 		}catch (HibernateException he) {
 			throw new PersistenceException(he);
 		}
-	}
-	
-	public AccountStateFlagEntity getAccountStateFlag(Short flagId) throws PersistenceException {
-		AccountStateFlagEntity accountStateFlagEntity;
-		try {
-			logger.debug("In SavingsPersistence::getAccountStateFlag(), flagId: "+ flagId);
-			Session session = HibernateUtil.getSessionTL();
-			accountStateFlagEntity = (AccountStateFlagEntity) session.get(AccountStateFlagEntity.class, flagId);
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
-		return accountStateFlagEntity;
 	}
 	
 	public List<Integer>retreiveAccountsPendingForIntCalc(Date currentDate)throws PersistenceException {

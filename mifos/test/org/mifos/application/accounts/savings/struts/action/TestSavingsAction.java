@@ -9,14 +9,15 @@ import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountCustomFieldEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.accounts.business.AccountStateMachines;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsRecentActivityView;
-import org.mifos.application.accounts.savings.business.SavingsStateMachine;
 import org.mifos.application.accounts.savings.business.SavingsTransactionHistoryView;
 import org.mifos.application.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -547,7 +548,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		savings = helper.createSavingsAccount("000100000000017",
 				savingsOffering, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
-		SavingsStateMachine.getInstance().initialize((short) 1, (short) 1);
+		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountType.SAVINGSACCOUNT.getValue());
 		savings.changeStatus(new AccountStateEntity(
 				AccountStates.SAVINGS_ACC_PENDINGAPPROVAL), helper
 				.getAccountNotes(savings), null, userContext);

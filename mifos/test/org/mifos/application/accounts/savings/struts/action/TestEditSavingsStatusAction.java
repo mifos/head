@@ -11,13 +11,13 @@ import org.hibernate.Session;
 import org.mifos.application.accounts.business.AccountNotesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.struts.actionforms.EditSavingsStatusActionForm;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
@@ -29,8 +29,6 @@ import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import org.mifos.framework.MifosMockStrutsTestCase;
 
 public class TestEditSavingsStatusAction extends MifosMockStrutsTestCase {
 	private AccountStateEntity accountStateEntity;
@@ -113,7 +111,7 @@ public class TestEditSavingsStatusAction extends MifosMockStrutsTestCase {
 		savingsOffering = createSavingsOffering();
 		savingsBO = createSavingsAccount("000X00000000013", savingsOffering,
 				AccountStates.SAVINGS_ACC_CANCEL);
-		savingsBO.initializeSavingsStateMachine(userContext.getLocaleId());
+		savingsBO.initializeStateMachine(userContext.getLocaleId());
 		savingsBO.setAccountState(getAccountStateEntityObject(savingsBO.getAccountState().getId()));
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savingsBO,request.getSession());
 		setRequestPathInfo("/editSavingsAction.do");
@@ -138,7 +136,7 @@ public class TestEditSavingsStatusAction extends MifosMockStrutsTestCase {
 		savingsOffering = createSavingsOffering();
 		savingsBO = createSavingsAccount("000X00000000013", savingsOffering,
 				AccountStates.SAVINGS_ACC_CANCEL);
-		savingsBO.initializeSavingsStateMachine(userContext.getLocaleId());
+		savingsBO.initializeStateMachine(userContext.getLocaleId());
 		savingsBO.setAccountState(getAccountStateEntityObject(savingsBO.getAccountState().getId()));
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savingsBO,request.getSession());
 		setRequestPathInfo("/editSavingsAction.do");
@@ -156,7 +154,7 @@ public class TestEditSavingsStatusAction extends MifosMockStrutsTestCase {
 		savingsOffering = createSavingsOffering();
 		savingsBO = createSavingsAccount("000X00000000013", savingsOffering,
 				AccountStates.SAVINGS_ACC_APPROVED);
-		savingsBO.initializeSavingsStateMachine(userContext.getLocaleId());
+		savingsBO.initializeStateMachine(userContext.getLocaleId());
 		savingsBO.setAccountState(getAccountStateEntityObject(savingsBO.getAccountState().getId()));
 		savingsBO.getAccountState().setLocaleId(userContext.getLocaleId());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savingsBO,request.getSession());
@@ -185,7 +183,7 @@ public class TestEditSavingsStatusAction extends MifosMockStrutsTestCase {
 		savingsOffering = createSavingsOffering();
 		savingsBO = createSavingsAccount("000X00000000013", savingsOffering,
 				AccountStates.SAVINGS_ACC_APPROVED);
-		savingsBO.initializeSavingsStateMachine(userContext.getLocaleId());
+		savingsBO.initializeStateMachine(userContext.getLocaleId());
 		savingsBO.setAccountState(getAccountStateEntityObject(savingsBO.getAccountState().getId()));
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savingsBO,request.getSession());
 		AccountNotesEntity accountNotes = new AccountNotesEntity();

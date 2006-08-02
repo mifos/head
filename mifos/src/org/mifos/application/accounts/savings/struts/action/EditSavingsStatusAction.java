@@ -53,6 +53,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountNotesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStateFlagEntity;
+import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.application.accounts.savings.struts.actionforms.EditSavingsStatusActionForm;
@@ -83,6 +84,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 public class EditSavingsStatusAction extends AccountAppAction {
 
 	private SavingsBusinessService savingsService;
+	private AccountBusinessService accountBusinessService;
 
 	private PersonnelPersistenceService personnelPersistenceService;
 
@@ -95,6 +97,7 @@ public class EditSavingsStatusAction extends AccountAppAction {
 		personnelPersistenceService = (PersonnelPersistenceService) ServiceFactory
 				.getInstance().getPersistenceService(
 						PersistenceServiceName.Personnel);
+		accountBusinessService = (AccountBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Accounts);
 	}
 
 	protected BusinessService getService() {
@@ -145,7 +148,7 @@ public class EditSavingsStatusAction extends AccountAppAction {
 					.getMeeting());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savingsBO, request
 				.getSession());
-		savingsBO.initializeSavingsStateMachine(userContext.getLocaleId());
+		savingsBO.initializeStateMachine(userContext.getLocaleId());
 		SessionUtils.setAttribute(SavingsConstants.STATUS_LIST, savingsBO
 				.getStatusList(), request.getSession());
 		return mapping.findForward(MethodNameConstants.LOAD_SUCCESS);
@@ -160,7 +163,7 @@ public class EditSavingsStatusAction extends AccountAppAction {
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 
-		List<CheckListMaster> checklist = savingsService.getStatusChecklist(
+		List<CheckListMaster> checklist = accountBusinessService.getStatusChecklist(
 				Short.valueOf(((EditSavingsStatusActionForm) form)
 						.getNewStatusId()), savingsBO.getAccountType()
 						.getAccountTypeId());
@@ -228,7 +231,7 @@ public class EditSavingsStatusAction extends AccountAppAction {
 							.getNewStatusId()));
 			AccountStateFlagEntity accountStateFlagEntity = null;
 			if(((EditSavingsStatusActionForm) form).getFlagId() != null) {
-				accountStateFlagEntity = savingsService.getAccountStateFlag(new Short(((EditSavingsStatusActionForm) form).getFlagId()));
+				accountStateFlagEntity = accountBusinessService.getAccountStateFlag(new Short(((EditSavingsStatusActionForm) form).getFlagId()));
 				accountStateFlagEntity.setLocaleId(userContext.getLocaleId());
 			}
 			savingsBO.changeStatus(accountStateEntity, accountNotesEntity,accountStateFlagEntity,userContext);
