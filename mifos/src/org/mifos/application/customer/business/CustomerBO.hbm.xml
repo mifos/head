@@ -67,7 +67,7 @@
 
 		<set name="customerFlags" cascade="none" lazy="true">
 			<key column="CUSTOMER_ID" />
-			<one-to-many class="org.mifos.application.customer.business.CustomerFlagEntity" />
+			<one-to-many class="org.mifos.application.customer.business.CustomerFlagDetailEntity" />
 		</set>
 		<subclass name="org.mifos.application.customer.center.business.CenterBO" discriminator-value="CENTER"></subclass>
 

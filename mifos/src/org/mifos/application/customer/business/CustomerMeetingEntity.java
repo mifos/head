@@ -57,6 +57,10 @@ public class CustomerMeetingEntity extends PersistentObject {
 	
 	private Short updatedFlag;
 
+	/*
+	 * Adding a default constructor is hibernate's requirement and should not be
+	 * used to create a valid Object.
+	 */
 	protected CustomerMeetingEntity(){
 		this.custMeetingId = null;
 		this.customer = null;

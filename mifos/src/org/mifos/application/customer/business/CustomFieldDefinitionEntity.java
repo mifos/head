@@ -52,80 +52,66 @@ import org.mifos.framework.util.helpers.Constants;
 
 public class CustomFieldDefinitionEntity extends PersistentObject {
 
-	private Short fieldId;
+	private final Short fieldId;
 
-	private LookUpEntity lookUpEntity;
+	private final LookUpEntity lookUpEntity;
 
-	private Short levelId;
+	private final Short levelId;
 
-	private Short fieldType;
+	private final Short fieldType;
 
-	private Short entityType;
-	
-	private String defaultValue;
-	
-	private Short mandatoryFlag;
+	private final Short entityType;
 
-	public CustomFieldDefinitionEntity() {
+	private final String defaultValue;
+
+	private final Short mandatoryFlag;
+
+	/*
+	 * Adding a default constructor is hibernate's requirement and should not be
+	 * used to create a valid Object.
+	 */
+	protected CustomFieldDefinitionEntity() {
+		this.fieldId = null;
+		this.lookUpEntity = null;
+		this.levelId = null;
+		this.fieldType = null;
+		this.entityType = null;
+		this.defaultValue = null;
+		this.mandatoryFlag = null;
 	}
 
 	public Short getFieldId() {
 		return fieldId;
 	}
 
-	public void setFieldId(Short fieldId) {
-
-		this.fieldId = fieldId;
-	}
-
 	public LookUpEntity getLookUpEntity() {
 		return this.lookUpEntity;
-	}
-
-	public void setLookUpEntity(LookUpEntity lookUpEntity) {
-		this.lookUpEntity = lookUpEntity;
 	}
 
 	public Short getLevelId() {
 		return this.levelId;
 	}
 
-	public void setLevelId(Short levelId) {
-		this.levelId = levelId;
-	}
-
 	public Short getFieldType() {
 		return this.fieldType;
-	}
-
-	public void setFieldType(Short fieldType) {
-		this.fieldType = fieldType;
 	}
 
 	public Short getEntityType() {
 		return this.entityType;
 	}
 
-	public void setEntityType(Short entityType) {
-		this.entityType = entityType;
-	}
-
 	private Short getMandatoryFlag() {
 		return this.mandatoryFlag;
 	}
-	 public String getDefaultValue() {
-			return defaultValue;
+
+	public String getDefaultValue() {
+		return defaultValue;
 	}
 
-	public void setDefaultValue(String defaultValue) {
-		this.defaultValue = defaultValue;
+	public boolean isMandatoryFlag() {
+		return this.mandatoryFlag > 0;
 	}
-	private void setMandatoryFlag(Short mandatoryFlag) {
-		this.mandatoryFlag = mandatoryFlag;
-	}
-   public boolean isMandatoryFlag(){
-	   return this.mandatoryFlag>0;
-   }
+
 	public boolean equals(Object obj) {
 		CustomFieldDefinitionEntity customFieldDefinition = (CustomFieldDefinitionEntity) obj;
 		if (this.entityType.equals(customFieldDefinition.getEntityType())
@@ -138,13 +124,14 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
 			return false;
 		}
 	}
+
 	public String getMandatoryStringValue() {
-		return (mandatoryFlag.shortValue() == Constants.YES ? CustomerConstants.YES_SMALL : CustomerConstants.NO_SMALL);
-		
+		return (mandatoryFlag.shortValue() == Constants.YES ? CustomerConstants.YES_SMALL
+				: CustomerConstants.NO_SMALL);
 	}
+
 	public int hashCode() {
 		return entityType.hashCode() * levelId.hashCode()
 				* fieldType.hashCode();
 	}
-
 }

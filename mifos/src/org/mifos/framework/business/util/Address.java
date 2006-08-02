@@ -103,7 +103,7 @@ public class Address {
 		if(StringUtils.isNullAndEmptySafe(getLine3())&& StringUtils.isNullAndEmptySafe(getLine2())||(StringUtils.isNullAndEmptySafe(getLine3())&& StringUtils.isNullAndEmptySafe(getLine1()))){			
 			displayAddress+=", "+ getLine3();			
 		}
-		else if(!StringUtils.isNullAndEmptySafe(getLine3())){			
+		else if(StringUtils.isNullAndEmptySafe(getLine3())){			
 			displayAddress+=getLine3();
 		}
 		return displayAddress;

@@ -42,16 +42,28 @@ import org.mifos.application.master.util.valueobjects.Position;
 import org.mifos.framework.business.PersistentObject;
 
 /**
- * A Customer can hold various positions like president ,vice president etc. This class holds the relationship
- * between the customer and the postion he holds 
+ * A Customer can hold various positions like president ,vice president etc.
+ * This class holds the relationship between the customer and the postion he
+ * holds
  */
 public class CustomerPositionEntity extends PersistentObject {
 
-	private Integer customerPositionId;
-	
-	private Position position;
+	private final Integer customerPositionId;
+
+	private final Position position;
 
 	private CustomerBO customer;
+
+	protected CustomerPositionEntity() {
+		this.customerPositionId = null;
+		this.position = null;
+	}
+
+	public CustomerPositionEntity(Position position, CustomerBO customer) {
+		this.position = position;
+		this.customer = customer;
+		this.customerPositionId = null;
+	}
 
 	public CustomerBO getCustomer() {
 		return customer;
@@ -65,21 +77,7 @@ public class CustomerPositionEntity extends PersistentObject {
 		return position;
 	}
 
-	public void setPosition(Position position) {
-		this.position = position;
-	}
-
-	public CustomerPositionEntity() {
-
-	}
-
-	public void setCustomerPositionId(Integer customerPositionId) {
-
-		this.customerPositionId = customerPositionId;
-	}
-
 	public Integer getCustomerPositionId() {
-
 		return customerPositionId;
 	}
 }

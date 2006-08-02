@@ -70,6 +70,10 @@ public class CustomerHistoricalDataEntity extends PersistentObject {
 
 	private Date mfiJoiningDate;
 
+	/*
+	 * Adding a default constructor is hibernate's requirement and should not be
+	 * used to create a valid Object.
+	 */
 	protected CustomerHistoricalDataEntity() {
 		this.historicalId = null;
 		this.customer = null;

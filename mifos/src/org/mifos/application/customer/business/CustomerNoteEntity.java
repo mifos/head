@@ -1,6 +1,6 @@
 /**
 
- * CustomerNote.java    version: xxx
+ * CustomerNoteEntity.java    version: xxx
 
 
 
@@ -38,99 +38,64 @@
 
 package org.mifos.application.customer.business;
 
-
-
 import java.util.Date;
 
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.PersistentObject;
 
-
 /**
- * @author ashishsm
+ * @author navitas
  */
-public class CustomerNoteEntity extends PersistentObject{
+public class CustomerNoteEntity extends PersistentObject {
 
-   private Integer commentId;
+	private final Integer commentId;
 
-   private Date commentDate;
+	private final Date commentDate;
 
-   private String comment;
-   
-   private Short personnelId;
+	private final String comment;
 
-   private CustomerBO customer;
-   
-   private PersonnelBO personnel;
+	private final CustomerBO customer;
 
-   private Integer customerId;
+	private final PersonnelBO personnel;
 
-   public CustomerNoteEntity()
-   {
-   }
-   public void setCustomerId(Integer customerId)
-   {
-	   this.customerId = customerId;
-   }
-   public Integer getCustomerId()
-   {
-	   return customerId;
-   }
-   public Integer getCommentId()
-   {
-       return commentId;
-   }
-   public void setCommentId(Integer commentId)
-   {
+	/*
+	 * Adding a default constructor is hibernate's requirement and should not be
+	 * used to create a valid Object.
+	 */
+	protected CustomerNoteEntity() {
+		this.commentId = null;
+		this.commentDate = null;
+		this.comment = null;
+		this.personnel = null;
+		this.customer = null;
+	}
 
-       this.commentId = commentId;
-   }
-   public String getCommentDateStr()
-   {
-	   return (commentDate!=null)?this.commentDate.toString():"";	   
-   }
-   public Date getCommentDate()
-   {
-       return this.commentDate;
-   }
-   public void setCommentDate(Date commentDate)
-   {
-       this.commentDate = commentDate;
-   }
-   public String getComment()
-   {
-       return this.comment;
-   }
-   public void setComment(String comment)
-   {
-       this.comment = comment;
-   }
-   public CustomerBO getCustomer() {
-	   return customer;
-   }	
-   public void setCustomer(CustomerBO customer)
-   {
-		if(customer != null)
-	    	this.customerId = customer.getCustomerId();
-	
+	protected CustomerNoteEntity(String comment, Date commentDate,
+			PersonnelBO personnel, CustomerBO customer) {
+		this.comment = comment;
+		this.commentDate = commentDate;
+		this.personnel = personnel;
 		this.customer = customer;
-   }
-	public PersonnelBO getPersonnel()
-	{
+		this.commentId = null;
+	}
+
+	public String getCommentDateStr() {
+		return (commentDate != null) ? this.commentDate.toString() : "";
+	}
+
+	public Date getCommentDate() {
+		return this.commentDate;
+	}
+
+	public String getComment() {
+		return this.comment;
+	}
+
+	public PersonnelBO getPersonnel() {
 		return personnel;
 	}
-	public void setPersonnel(PersonnelBO personnel) {
-		this.personnel = personnel;
-	}
-	public Short getPersonnelId() {
-		return personnelId;
-	}
-	public void setPersonnelId(Short personnelId) {
-		this.personnelId = personnelId;
-	}
-	public String getPersonnelName()
-	{
+
+	public String getPersonnelName() {
 		return personnel.getDisplayName();
 	}
 }
-

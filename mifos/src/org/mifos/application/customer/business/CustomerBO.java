@@ -110,7 +110,7 @@ public abstract class CustomerBO extends BusinessObject {
 
 	private Set<CustomerPositionEntity> customerPositions;
 
-	private Set<CustomerFlagEntity> customerFlags;
+	private Set<CustomerFlagDetailEntity> customerFlags;
 
 	private CustomerBO parentCustomer;
 
@@ -406,16 +406,15 @@ public abstract class CustomerBO extends BusinessObject {
 		return historicalData;
 	}
 
-	public Set<CustomerFlagEntity> getCustomerFlags() {
+	public Set<CustomerFlagDetailEntity> getCustomerFlags() {
 		return customerFlags;
 	}
 
-	private void setCustomerFlags(Set<CustomerFlagEntity> customerFlag) {
+	private void setCustomerFlags(Set<CustomerFlagDetailEntity> customerFlag) {
 		this.customerFlags = customerFlag;
 	}
 
-	public void addCustomerFlag(CustomerFlagEntity customerFlag) {
-		customerFlag.setCustomer(this);
+	public void addCustomerFlag(CustomerFlagDetailEntity customerFlag) {
 		this.customerFlags.add(customerFlag);
 	}
 

@@ -185,7 +185,8 @@
 	<mapping resource="org/mifos/application/customer/business/CustomerBO.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/client/business/ClientDetailEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/business/CustomerCustomFieldEntity.hbm.xml" />
-	<mapping resource="org/mifos/application/customer/business/CustomerFlagEntity.hbm.xml" />
+	<mapping resource="org/mifos/application/customer/business/CustomerFlagDetailEntity.hbm.xml" />
+	<mapping resource="org/mifos/application/customer/business/CustomerStatusFlagEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/business/CustomerHierarchyEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/business/CustomerHistoricalDataEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/business/CustomerLevelEntity.hbm.xml" />
@@ -196,7 +197,7 @@
 	<mapping resource="org/mifos/application/customer/business/CustomerPositionEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/business/CustomerStatusEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/business/CustomFieldDefinitionEntity.hbm.xml" />
-
+	<mapping resource="org/mifos/application/customer/business/PositionEntity.hbm.xml" />
 
 
 	<!-- M2 style objects for meeting-->

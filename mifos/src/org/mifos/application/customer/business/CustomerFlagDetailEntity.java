@@ -1,6 +1,6 @@
 /**
 
- * CustomerFlag.java    version: xxx
+ * CustomerFlagDetailEntity.java    version: xxx
 
 
 
@@ -43,57 +43,39 @@ import org.mifos.framework.business.PersistentObject;
  * A class that represents a row in the 'customer flag' table.
  * 
  */
-public class CustomerFlagEntity extends PersistentObject {
+public class CustomerFlagDetailEntity extends PersistentObject {
 
-	private Integer customerFlagId;
+	private final Integer customerFlagId;
 
-	private Integer customerId;
+	private final CustomerStatusFlagEntity statusFlag;
 
-	private Short flagId;
+	private final CustomerBO customer;
 
-	private Short flagStatus;
-
-	private CustomerBO customer;
-
-	public CustomerFlagEntity() {
+	/*
+	 * Adding a default constructor is hibernate's requirement and should not be
+	 * used to create a valid Object.
+	 */
+	protected CustomerFlagDetailEntity() {
+		this.customerFlagId = null;
+		this.statusFlag = null;
+		this.customer = null;
 	}
 
-	public void setCustomerFlagId(Integer customerFlagId) {
-		this.customerFlagId = customerFlagId;
+	protected CustomerFlagDetailEntity(CustomerBO customer, CustomerStatusFlagEntity statusFlag) {
+		this.customer = customer;
+		this.statusFlag= statusFlag;
+		this.customerFlagId = null;
 	}
 
 	public Integer getCustomerFlagId() {
 		return customerFlagId;
 	}
 
-	public void setCustomerId(Integer customerId) {
-
-		this.customerId = customerId;
+	public CustomerStatusFlagEntity getStatusFlag() {
+		return statusFlag;
 	}
-	public Integer getCustomerId() {
-
-		return customerId;
-	}
-	public void setFlagId(Short flagId) {
-		this.flagId = flagId;
-	}
-
-	public Short getFlagId() {
-		return flagId;
-	}
-	public void setFlagStatus(Short flagStatus) {
-		this.flagStatus = flagStatus;
-	}
-
-	public Short getFlagStatus() {
-		return flagStatus;
-	}
-
+	
 	public CustomerBO getCustomer() {
 		return customer;
 	}
-	public void setCustomer(CustomerBO customer) {
-		this.customer = customer;
-	}
-
 }
