@@ -173,7 +173,7 @@
 													<mifos:mifoslabel name="Savings.recommendedAmountForDeposit" />: 
 	                  </c:otherwise>
 											</c:choose> <c:out value="${sessionScope.BusinessKey.recommendedAmount.amountDoubleValue}" /> <c:choose>
-												<c:when test="${sessionScope.BusinessKey.customer.customerLevel.levelId==CustomerConstants.GROUP_LEVEL_ID}">
+												<c:when test="${sessionScope.BusinessKey.customer.customerLevel.id==CustomerConstants.GROUP_LEVEL_ID}">
 	                    (<customtags:lookUpValue id="${sessionScope.BusinessKey.recommendedAmntUnit.recommendedAmntUnitId}" searchResultName="RecommendedAmtUnit" mapToSeperateMasterTable="true">
 													</customtags:lookUpValue>)
 	                    </c:when>

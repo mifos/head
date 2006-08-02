@@ -11,7 +11,7 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestFeePersistence extends MifosTestCase {
+public class FeePersistenceTest extends MifosTestCase {
 
 	private FeePersistence feePersistence = new FeePersistence();
 	private FeeBO fee1;

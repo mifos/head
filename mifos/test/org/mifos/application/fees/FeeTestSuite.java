@@ -4,9 +4,9 @@ import junit.framework.Test;
 import junit.textui.TestRunner;
 
 import org.mifos.application.fees.business.FeeBOTest;
-import org.mifos.application.fees.persistence.TestFeePersistence;
+import org.mifos.application.fees.persistence.FeePersistenceTest;
 import org.mifos.application.fees.persistence.service.TestFeesPersistenceService;
-import org.mifos.application.fees.struts.action.TestFeeAction;
+import org.mifos.application.fees.struts.action.FeeActionTest;
 import org.mifos.framework.MifosTestSuite;
 
 public class FeeTestSuite extends MifosTestSuite {
@@ -30,9 +30,9 @@ public class FeeTestSuite extends MifosTestSuite {
 	{	
 		FeeTestSuite testSuite = new FeeTestSuite();
 		testSuite.addTestSuite(TestFeesPersistenceService.class);
-		testSuite.addTestSuite(TestFeeAction.class);
+		testSuite.addTestSuite(FeeActionTest.class);
 		testSuite.addTestSuite(FeeBOTest.class);
-		testSuite.addTestSuite(TestFeePersistence.class);
+		testSuite.addTestSuite(FeePersistenceTest.class);
 		return testSuite;	
 	}
 }

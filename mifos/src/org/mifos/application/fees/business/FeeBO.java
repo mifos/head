@@ -198,7 +198,6 @@ public abstract class FeeBO extends BusinessObject {
 		try {
 			new FeePersistence().createOrUpdate(this);
 		} catch (HibernateException he) {
-			he.printStackTrace();
 			throw new FeeException(FeesConstants.FEE_CREATE_ERROR, he);
 		}
 	}	

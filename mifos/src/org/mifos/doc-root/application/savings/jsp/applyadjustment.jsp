@@ -90,14 +90,14 @@
                     <mifos:mifosdecimalinput name="savingsApplyAdjustmentActionForm" property="lastPaymentAmount"/> 
                 <c:if test="${sessionScope.isLastPaymentValid == 1}">
                     &nbsp;( <mifos:mifoslabel name="Savings.paymentType"/>: 
-                  	<c:out value="${sessionScope.accountAction.name}"/><c:if test="${(!empty sessionScope.clientName) or (sessionScope.BusinessKey.customer.customerLevel.levelId!=1)}">; <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>
+                  	<c:out value="${sessionScope.accountAction.name}"/><c:if test="${(!empty sessionScope.clientName) or (sessionScope.BusinessKey.customer.customerLevel.id!=1)}">; <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>
                   	<mifos:mifoslabel name="Savings.clientName"/>:</c:if>
                   	<c:choose>
 	              		<c:when test="${!empty sessionScope.clientName}">
 							<c:out value="${sessionScope.clientName}"/>
 	                	</c:when>
                   	<c:otherwise>
-	                  	<c:if test="${sessionScope.BusinessKey.customer.customerLevel.levelId!=1}">
+	                  	<c:if test="${sessionScope.BusinessKey.customer.customerLevel.id!=1}">
 		                  	<mifos:mifoslabel name="Savings.nonSpecified"/>
 	                  	</c:if>
                   	</c:otherwise>

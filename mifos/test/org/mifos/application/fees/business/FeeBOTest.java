@@ -73,7 +73,7 @@ public class FeeBOTest extends MifosTestCase {
 					new FeePaymentEntity(FeePayment.UPFRONT));
 			assertFalse("Fee is created without fee name", true);
 		} catch (FeeException e) {
-			assertTrue("Fee is not created without name", true);
+			assertNull(fee);
 			assertEquals(e.getKey(),FeesConstants.INVALID_FEE_NAME);
 		}
 	}
@@ -86,7 +86,7 @@ public class FeeBOTest extends MifosTestCase {
 					false ,new FeePaymentEntity(FeePayment.UPFRONT));
 			assertFalse("Fee is created without fee category", true);
 		} catch (FeeException e) {
-			assertTrue("Fee is not created without fee category", true);
+			assertNull(fee);
 			assertEquals(e.getKey(),FeesConstants.INVALID_FEE_CATEGORY);
 		}
 	}
@@ -99,7 +99,7 @@ public class FeeBOTest extends MifosTestCase {
 					new FeePaymentEntity(FeePayment.UPFRONT));
 			assertFalse("Fee is created without frequency type", true);
 		} catch (FeeException e) {
-			assertTrue("Fee is not created without frequency type", true);
+			assertNull(fee);
 			assertEquals(e.getKey(),FeesConstants.INVALID_FEE_FREQUENCY_TYPE);
 		}
 	}
@@ -111,7 +111,7 @@ public class FeeBOTest extends MifosTestCase {
 					getGLCode("7"), null, false , new FeePaymentEntity(FeePayment.UPFRONT));
 			assertFalse("Fee is created without Amount", true);
 		} catch (FeeException e) {
-			assertTrue("Fee is not created without Amount", true);
+			assertNull(fee);
 			assertEquals(e.getKey(),FeesConstants.INVALID_FEE_AMOUNT);
 		}
 	}
@@ -124,7 +124,7 @@ public class FeeBOTest extends MifosTestCase {
 					getGLCode("7"), null, feeFormula, false ,new FeePaymentEntity(FeePayment.UPFRONT));
 			assertFalse("Fee is created without Rate", true);
 		} catch (FeeException e) {
-			assertTrue("Fee is not created without Rate", true);
+			assertNull(fee);
 			assertEquals(e.getKey(),FeesConstants.INVALID_FEE_RATE_OR_FORMULA);
 		}
 	}
@@ -136,18 +136,19 @@ public class FeeBOTest extends MifosTestCase {
 					getGLCode("7"), 2.0, null,  false ,new FeePaymentEntity(FeePayment.UPFRONT));
 			assertFalse("Fee is created without Formula", true);
 		} catch (FeeException e) {
-			assertTrue("Fee is not created without Formula", true);
+			assertNull(fee);
 			assertEquals(e.getKey(),FeesConstants.INVALID_FEE_RATE_OR_FORMULA);
 		}
 	}
 	
 	public void testCreateOneTimeAmountFee() throws Exception {
-		fee = createOneTimeAmountFee("Customer_OneTime_AmountFee",FeeCategory.CENTER, "100", false, FeePayment.UPFRONT);
+		String name ="Customer_OneTime_AmountFee";
+		fee = createOneTimeAmountFee(name,FeeCategory.CENTER, "100", false, FeePayment.UPFRONT);
 		fee.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
-		assertEquals("Customer_OneTime_AmountFee", fee.getFeeName());
+		assertEquals(name, fee.getFeeName());
 		assertEquals(FeeCategory.CENTER.getValue(), fee.getCategoryType().getId());
 	}
 

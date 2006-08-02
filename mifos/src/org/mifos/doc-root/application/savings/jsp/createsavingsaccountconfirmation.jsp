@@ -96,7 +96,7 @@
 			            	<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
 			            	<mifos:mifoslabel name="Savings.account"/> 
                         </html-el:link><br>
-                    <c:if test="${sessionScope.BusinessKey.customer.customerLevel.levelId != CustomerConstants.CENTER_LEVEL_ID}">
+                    <c:if test="${sessionScope.BusinessKey.customer.customerLevel.id != CustomerConstants.CENTER_LEVEL_ID}">
                         <html-el:link href="loanAction.do?method=getPrdOfferings&customer.customerId=${sessionScope.BusinessKey.customer.customerId}">
                             <mifos:mifoslabel name="Savings.openANew"/>
 			            	<mifos:mifoslabel name="${ConfigurationConstants.LOAN}"/>

@@ -67,7 +67,7 @@ import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestFeeAction extends MifosMockStrutsTestCase {
+public class FeeActionTest extends MifosMockStrutsTestCase {
 
 
 	private final static String GLOCDE_ID = "47";
