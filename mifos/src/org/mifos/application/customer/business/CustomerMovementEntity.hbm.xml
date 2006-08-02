@@ -7,15 +7,15 @@
 <hibernate-mapping>
 
     <class name="org.mifos.application.customer.business.CustomerMovementEntity" table="CUSTOMER_MOVEMENT">
-  		<id name="customerMovementId" column="CUSTOMER_MOVEMENT_ID" type="integer" unsaved-value="-1">
+  		<id name="customerMovementId" column="CUSTOMER_MOVEMENT_ID" type="integer" unsaved-value="-1" access="field">
             <generator class="native"/>
         </id>
-        <property name="status" column="STATUS" type="short" />
-        <property name="createdDate" column="START_DATE" type="date" />
+        <property name="status" column="STATUS" type="short" access="field"/>
+        <property name="startDate" column="START_DATE" type="date" access="field"/>
         <property name="endDate" column="END_DATE" type="date"  />
         <property name="updatedDate" column="UPDATED_DATE" type="date" />
-        <many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" />
-        <many-to-one name="office" column="OFFICE_ID" class="org.mifos.application.office.business.OfficeBO"  not-null="true" />
-        <many-to-one name="personnel" column="PERSONNEL_ID" class="org.mifos.application.personnel.business.PersonnelBO"  />
+        <many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" insert="true" update="false" cascade="none" access="field"/>
+        <many-to-one name="office" column="OFFICE_ID" class="org.mifos.application.office.business.OfficeBO"  insert="true" update="false" cascade="none" access="field"/>
+        <many-to-one name="personnel" column="PERSONNEL_ID" class="org.mifos.application.personnel.business.PersonnelBO" insert="true" update="false" cascade="none" access="field"/>
     </class>
  </hibernate-mapping>

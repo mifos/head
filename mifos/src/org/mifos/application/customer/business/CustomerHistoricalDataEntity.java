@@ -1,6 +1,6 @@
 /**
 
- * CustomerHistoricalData.java    version: 1.0
+ * CustomerHistoricalDataEntity.java    version: 1.0
 
 
 
@@ -43,141 +43,112 @@ import org.mifos.framework.business.PersistentObject;
 
 /**
  * This class encapsulate the customer historical data
+ * 
  * @author navitas
  */
-public class CustomerHistoricalDataEntity extends PersistentObject{
-	
-	 private Short historicalId;
-	 
-	 private Integer customerId;
-	 
-	 private String productName;
-	 
-	 private Double loanAmount;
-	 
-	 private Double totalAmountPaid;
-	 
-	 private Double interestPaid;
-	 
-	 private Integer missedPaymentsCount;
-	 
-	 private Integer totalPaymentsCount;
-	 
-	 private String notes;
-	 
-	 private Integer loanCycleNumber;
-	 
-	 private CustomerBO customer;
-	 
-	 private Date mfiJoiningDate;
+public class CustomerHistoricalDataEntity extends PersistentObject {
 
-	 public CustomerHistoricalDataEntity() {}
+	private final Short historicalId;
 
-	 public void setMfiJoiningDate(Date mfiJoiningDate)
-	 {
-		 this.mfiJoiningDate = mfiJoiningDate;
-	 }
-	 
-	 public Date getMfiJoiningDate()
-	 {
-		return mfiJoiningDate;
-	 }
-	 
-	 public void setCustomer(CustomerBO customer)
-	 {
+	private String productName;
+
+	private Double loanAmount;
+
+	private Double totalAmountPaid;
+
+	private Double interestPaid;
+
+	private Integer missedPaymentsCount;
+
+	private Integer totalPaymentsCount;
+
+	private String notes;
+
+	private Integer loanCycleNumber;
+
+	private final CustomerBO customer;
+
+	private Date mfiJoiningDate;
+
+	protected CustomerHistoricalDataEntity() {
+		this.historicalId = null;
+		this.customer = null;
+	}
+
+	protected CustomerHistoricalDataEntity(CustomerBO customer) {
 		this.customer = customer;
-		if(customer != null)
-		   this.mfiJoiningDate = customer.getMfiJoiningDate();
-	 }
-	 
-	 public CustomerBO getCustomer()
-	 {
-		return customer;
-	 }
-	 
-	public void setHistoricalId(Short historicalId)
-	{
-		this.historicalId = historicalId;
+		this.historicalId = null;
 	}
-	public Short getHistoricalId()
-	{
-		return historicalId;
+	
+	public void setMfiJoiningDate(Date mfiJoiningDate) {
+		this.mfiJoiningDate = mfiJoiningDate;
 	}
 
-	public void setCustomerId(Integer customerId)
-	{
-		this.customerId = customerId;
-	}
-	public Integer getCustomerId()
-	{
-		return customerId;
+	public Date getMfiJoiningDate() {
+		return mfiJoiningDate;
 	}
 
-	public void setNotes(String notes)
-	{
+	public void setNotes(String notes) {
 		this.notes = notes;
 	}
-	public String getNotes()
-	{
+
+	public String getNotes() {
 		return notes;
 	}
 
-	public void setLoanCycleNumber(Integer loanCycleNumber)
-	{
+	public void setLoanCycleNumber(Integer loanCycleNumber) {
 		this.loanCycleNumber = loanCycleNumber;
 	}
-	public Integer getLoanCycleNumber()
-	{
+
+	public Integer getLoanCycleNumber() {
 		return loanCycleNumber;
 	}
-	public void setTotalAmountPaid(Double totalAmountPaid)
-	{
+
+	public void setTotalAmountPaid(Double totalAmountPaid) {
 		this.totalAmountPaid = totalAmountPaid;
 	}
-	public Double getTotalAmountPaid()
-	{
+
+	public Double getTotalAmountPaid() {
 		return totalAmountPaid;
 	}
-	public void setInterestPaid(Double interestPaid)
-	{
+
+	public void setInterestPaid(Double interestPaid) {
 		this.interestPaid = interestPaid;
 	}
-	public Double getInterestPaid()
-	{
+
+	public Double getInterestPaid() {
 		return interestPaid;
 	}
-	public void setMissedPaymentsCount(Integer missedPaymentsCount)
-	{
+
+	public void setMissedPaymentsCount(Integer missedPaymentsCount) {
 		this.missedPaymentsCount = missedPaymentsCount;
 	}
-	public Integer getMissedPaymentsCount()
-	{
+
+	public Integer getMissedPaymentsCount() {
 		return missedPaymentsCount;
 	}
-	public void setTotalPaymentsCount(Integer totalPaymentsCount)
-	{
+
+	public void setTotalPaymentsCount(Integer totalPaymentsCount) {
 		this.totalPaymentsCount = totalPaymentsCount;
 	}
-	public Integer getTotalPaymentsCount()
-	{
+
+	public Integer getTotalPaymentsCount() {
 		return totalPaymentsCount;
 	}
-	public void setProductName(String productName)
-	{
+
+	public void setProductName(String productName) {
 		this.productName = productName;
 	}
 
-	public String getProductName()
-	{
+	public String getProductName() {
 		return productName;
 	}
-	
-	public void setLoanAmount(Double loanAmount)
-	{
+
+	public void setLoanAmount(Double loanAmount) {
 		this.loanAmount = loanAmount;
 	}
-	public Double getLoanAmount()
-	{
+
+	public Double getLoanAmount() {
 		return loanAmount;
 	}
 }

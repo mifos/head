@@ -37,94 +37,43 @@
  */
 package org.mifos.application.customer.business;
 
-import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
-import org.mifos.application.master.util.valueobjects.LookUpEntity;
+import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
-import org.mifos.framework.business.PersistentObject;
 
 /**
- * This class  represents  customer level e.g client,center etc
+ * This class represents customer level e.g client,center etc
  */
-public class CustomerLevelEntity extends PersistentObject {
-
-	private Short levelId;
+public class CustomerLevelEntity extends MasterDataEntity {
 
 	private CustomerLevelEntity parentCustomerLevel;
 
-	private LookUpEntity lookUpEntity;
-
-	private Short interactionFlag;
-
-	private Short maxChildCount;
-
-	private Short maxInstanceCount;
-
-	public CustomerLevelEntity() {
+	protected CustomerLevelEntity() {
+		super();
 	}
 
 	public CustomerLevelEntity(CustomerLevel customerLevel) {
-		this.levelId = customerLevel.getValue();
+		super(customerLevel.getValue());
 	}
-	
-	public Short getLevelId() {
-		return levelId;
-	}
+
 	public CustomerLevelEntity getParentCustomerLevel() {
 		return parentCustomerLevel;
 	}
-	public void setParentCustomerLevel(CustomerLevelEntity parentCustomerLevel) {
-		this.parentCustomerLevel = parentCustomerLevel;
-	}
 
-	public LookUpEntity getLookupEntity() {
-		return this.lookUpEntity;
-	}
-	public void setLookUpEntity(LookUpEntity lookUpEntity) {
-		this.lookUpEntity = lookUpEntity;
-	}
-	private Short getInteractionFlag() {
-		return this.interactionFlag;
-	}
-	private void setInteractionFlag(Short interactionFlag) {
-		this.interactionFlag = interactionFlag;
-	}
-	public boolean isInteractionAllowed(){
-		return this.interactionFlag>0;
-	}
-	public Short getMaxChildCount() {
-		return this.maxChildCount;
-	}
-
-	public void setMaxChildCount(Short maxChildCount) {
-		this.maxChildCount = maxChildCount;
-	}
-	public Short getMaxInstanceCount() {
-		return this.maxInstanceCount;
-	}
-	public void setMaxInstanceCount(Short maxInstanceCount) {
-		this.maxInstanceCount = maxInstanceCount;
-	}
-	public LookUpEntity getLookUpEntity() {
-		return lookUpEntity;
-	}
-	
-	public void setLevelId(Short levelId) {
-		this.levelId = levelId;
-	}
-	
-	/** Based on the customer level , it returns the product applicable type. This is being used, 
-	 *  when savings/loan products are to find as per customer level.
+	/**
+	 * Based on the customer level , it returns the product applicable type.
+	 * This is being used, when savings/loan products are to find as per
+	 * customer level.
 	 */
-	public Short getProductApplicableType(){
-		if(levelId!=null){
-			if(levelId.shortValue() == CustomerConstants.CLIENT_LEVEL_ID ){
-				return Short.valueOf(ProductDefinitionConstants.OFFERINGAPPLICABLETOCLIENTS);
-			}else if(levelId == CustomerConstants.GROUP_LEVEL_ID){
-				return Short.valueOf(ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS);	
-			}else
-				return Short.valueOf(ProductDefinitionConstants.OFFERINGAPPLICABLETOCENTERS);
-		}
-		return null;
+	public Short getProductApplicableType() {
+		if (getId().equals(CustomerLevel.CLIENT.getValue())) {
+			return Short
+					.valueOf(ProductDefinitionConstants.OFFERINGAPPLICABLETOCLIENTS);
+		} else if (getId().equals(CustomerLevel.GROUP.getValue())) {
+			return Short
+					.valueOf(ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS);
+		} else
+			return Short
+					.valueOf(ProductDefinitionConstants.OFFERINGAPPLICABLETOCENTERS);
 	}
 }

@@ -242,19 +242,19 @@ public class CustomerPersistence extends Persistence {
 		customer.getGlobalCustNum();
 		customer.getOffice().getOfficeId();
 		customer.getOffice().getOfficeName();
-		customer.getCustomerLevel().getLevelId();
+		customer.getCustomerLevel().getId();
 		customer.getDisplayName();
 		if (customer.getParentCustomer() != null) {
 			customer.getParentCustomer().getGlobalCustNum();
 			customer.getParentCustomer().getCustomerId();
-			customer.getParentCustomer().getCustomerLevel().getLevelId();
+			customer.getParentCustomer().getCustomerLevel().getId();
 			if (customer.getParentCustomer().getParentCustomer() != null) {
 				customer.getParentCustomer().getParentCustomer()
 						.getGlobalCustNum();
 				customer.getParentCustomer().getParentCustomer()
 						.getCustomerId();
 				customer.getParentCustomer().getParentCustomer()
-						.getCustomerLevel().getLevelId();
+						.getCustomerLevel().getId();
 			}
 		}
 

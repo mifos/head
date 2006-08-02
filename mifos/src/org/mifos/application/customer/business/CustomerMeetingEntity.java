@@ -1,6 +1,6 @@
 /**
 
- * CustomerMeeting.java    version: 1.0
+ * CustomerMeetingEntity.java    version: 1.0
 
  
 
@@ -49,16 +49,17 @@ import org.mifos.framework.business.PersistentObject;
  */
 public class CustomerMeetingEntity extends PersistentObject {
 
-	private Integer custMeetingId;
+	private final Integer custMeetingId;
 
 	private MeetingBO meeting;
 
-	private CustomerBO customer;
+	private final CustomerBO customer;
 	
 	private Short updatedFlag;
 
 	protected CustomerMeetingEntity(){
-		
+		this.custMeetingId = null;
+		this.customer = null;
 	}
 	
 	public CustomerMeetingEntity(CustomerBO customer, MeetingBO meeting){
@@ -68,20 +69,8 @@ public class CustomerMeetingEntity extends PersistentObject {
 		this.updatedFlag  = YesNoFlag.NO.getValue();
 	}
 	
-	public Integer getCustMeetingId() {
-		return custMeetingId;
-	}
-
-	public void setCustMeetingId(Integer custMeetingId) {
-		this.custMeetingId = custMeetingId;
-	}
-
 	public CustomerBO getCustomer() {
 		return customer;
-	}
-
-	public void setCustomer(CustomerBO customer) {
-		this.customer = customer;
 	}
 
 	public MeetingBO getMeeting() {
@@ -98,6 +87,5 @@ public class CustomerMeetingEntity extends PersistentObject {
 
 	public void setUpdatedFlag(Short updatedFlag) {
 		this.updatedFlag = updatedFlag;
-	}
-	
+	}	
 }

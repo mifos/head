@@ -181,7 +181,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction{
 	}
 	
 	private String getClientName(SavingsBO savings , AccountPaymentEntity lastPayment){
-		if(savings.getCustomer().getCustomerLevel().getLevelId().equals(CustomerConstants.CLIENT_LEVEL_ID))
+		if(savings.getCustomer().getCustomerLevel().getId().equals(CustomerConstants.CLIENT_LEVEL_ID))
 			return null;
 		String clientName=null;
 		CustomerBO customer = null;
@@ -189,7 +189,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction{
 			customer = accountTrxn.getCustomer(); 
 			break;
 		}
-		if(customer!=null && customer.getCustomerLevel().getLevelId().equals(CustomerConstants.CLIENT_LEVEL_ID)){
+		if(customer!=null && customer.getCustomerLevel().getId().equals(CustomerConstants.CLIENT_LEVEL_ID)){
 			return customer.getDisplayName();
 		}
 			

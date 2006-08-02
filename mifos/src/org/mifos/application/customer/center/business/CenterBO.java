@@ -6,7 +6,7 @@ package org.mifos.application.customer.center.business;
 import java.util.List;
 
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerCustomFieldView;
+import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -30,7 +30,7 @@ public class CenterBO extends CustomerBO {
 	// TODO: removed searchId from parameter and generate internally
 	public CenterBO(UserContext userContext, String displayName,
 			CustomerStatus customerStatus, Address address,
-			List<CustomerCustomFieldView> customFields, PersonnelBO formedBy,
+			List<CustomFieldView> customFields, PersonnelBO formedBy,
 			OfficeBO office, MeetingBO meeting, PersonnelBO personnel,
 			String searchId) throws CustomerException {
 		super(userContext, displayName, CustomerLevel.CENTER, customerStatus,

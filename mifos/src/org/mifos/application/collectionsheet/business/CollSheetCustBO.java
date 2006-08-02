@@ -227,7 +227,7 @@ public class CollSheetCustBO extends BusinessObject {
 	 */
 	public void populateCustomerDetails(CustomerBO customer) {
 		this.custId = customer.getCustomerId();
-		this.custLevel = customer.getCustomerLevel().getLevelId();
+		this.custLevel = customer.getCustomerLevel().getId();
 		this.custDisplayName = customer.getDisplayName();
 		this.searchId = customer.getSearchId();
 		CustomerBO parentCustomer = customer.getParentCustomer();

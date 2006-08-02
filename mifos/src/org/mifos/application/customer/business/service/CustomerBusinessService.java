@@ -215,7 +215,7 @@ public class CustomerBusinessService extends BusinessService{
 		List<CustomerBO> children = new ArrayList<CustomerBO>();
 		for(int i=0;i<centerChildren.size();i++){
 			CustomerBO customer = centerChildren.get(i);
-			if( customer.getCustomerLevel().getLevelId().shortValue() == childLevelId )
+			if( customer.getCustomerLevel().getId().shortValue() == childLevelId )
 				children.add(customer);
 		}
 		return children;

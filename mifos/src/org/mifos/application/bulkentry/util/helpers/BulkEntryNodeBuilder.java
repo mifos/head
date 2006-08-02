@@ -128,7 +128,7 @@ public class BulkEntryNodeBuilder {
 		return new CustomerView(customer.getCustomerId(), customer
 				.getDisplayName(),
 				customer.getParentCustomer().getCustomerId(), customer
-						.getCustomerLevel().getLevelId());
+						.getCustomerLevel().getId());
 	}
 
 }

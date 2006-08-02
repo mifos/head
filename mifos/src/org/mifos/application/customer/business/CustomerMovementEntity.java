@@ -42,6 +42,7 @@ import java.util.Date;
 
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.util.helpers.Status;
 import org.mifos.framework.business.PersistentObject;
 
 /**
@@ -50,26 +51,40 @@ import org.mifos.framework.business.PersistentObject;
  */
 public class CustomerMovementEntity extends PersistentObject {
 
-	private Integer customerMovementId;
+	private final Integer customerMovementId;
 
 	private Short status;
 
+	private final Date startDate;
+	
 	private Date endDate;
 
-	private CustomerBO customer;
+	private final CustomerBO customer;
 
-	private OfficeBO office;
+	private final OfficeBO office;
 
-	private PersonnelBO personnel;
+	private final PersonnelBO personnel;
 
-	public CustomerBO getCustomer() {
-		return customer;
+	protected CustomerMovementEntity(){
+		this.customerMovementId = null;
+		this.customer = null;
+		this.office = null;
+		this.personnel = null;
+		this.startDate = null;
 	}
-
-	public void setCustomer(CustomerBO customer) {
+	
+	public CustomerMovementEntity(CustomerBO customer, PersonnelBO personnel, Date startDate){
 		this.customer = customer;
+		this.office = customer.getOffice();
+		this.personnel = personnel;
+		this.startDate = startDate;
+		this.customerMovementId = null;
 	}
-
+	
+	public Date getStartDate() {
+		return startDate;
+	}
+	
 	public Date getEndDate() {
 		return endDate;
 	}
@@ -82,40 +97,15 @@ public class CustomerMovementEntity extends PersistentObject {
 		return office;
 	}
 
-	public void setOffice(OfficeBO office) {
-		this.office = office;
-	}
-
 	public PersonnelBO getPersonnel() {
 		return personnel;
 	}
-
-	public void setPersonnel(PersonnelBO personnel) {
-		this.personnel = personnel;
+	
+	public void updateStatus(Status status){
+		this.status = status.getValue();
 	}
 
-	public Short getStatus() {
-		return status;
+	public boolean isActive(){
+		return status.equals(Status.ACTIVE.getValue());
 	}
-
-	public void setStatus(Short status) {
-		this.status = status;
-	}
-
-	public Short getUpdatedBy() {
-		return updatedBy;
-	}
-
-	public void setUpdatedBy(Short updatedBy) {
-		this.updatedBy = updatedBy;
-	}
-
-	public Integer getCustomerMovementId() {
-		return customerMovementId;
-	}
-
-	public void setCustomerMovementId(Integer customerMovementId) {
-		this.customerMovementId = customerMovementId;
-	}
-
 }

@@ -79,11 +79,11 @@ public class CustomerTagGenerator extends TagGenerator{
 	}
 	
 	private String getAction(CustomerBO customer){
-		if(customer.getCustomerLevel().getLevelId().shortValue()==CustomerConstants.CENTER_LEVEL_ID)
+		if(customer.getCustomerLevel().getId().shortValue()==CustomerConstants.CENTER_LEVEL_ID)
 			return "centerAction.do?method=get&globalCustNum=";
-		else if (customer.getCustomerLevel().getLevelId().shortValue()==CustomerConstants.GROUP_LEVEL_ID)
+		else if (customer.getCustomerLevel().getId().shortValue()==CustomerConstants.GROUP_LEVEL_ID)
 			return "GroupAction.do?method=get&globalCustNum=";
-		else if (customer.getCustomerLevel().getLevelId().shortValue()==CustomerConstants.CLIENT_LEVEL_ID)
+		else if (customer.getCustomerLevel().getId().shortValue()==CustomerConstants.CLIENT_LEVEL_ID)
 			return "clientCreationAction.do?method=get&globalCustNum=";
 		return "";
 	}

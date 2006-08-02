@@ -80,7 +80,7 @@ public class SavingsPersistence extends Persistence {
 		try {
 			logger
 					.debug("In SavingsPersistence::getSavingsProducts(), customerLevelId: "
-							+ customerLevel.getLevelId());
+							+ customerLevel.getId());
 			Map<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put(AccountConstants.PRDTYPEID,
 					ProductDefinitionConstants.SAVINGSID);

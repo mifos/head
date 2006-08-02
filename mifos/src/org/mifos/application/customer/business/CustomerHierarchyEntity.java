@@ -77,10 +77,6 @@ public class CustomerHierarchyEntity extends PersistentObject {
 		this.hierarchyId = null;
 	}
 	
-	public Integer getHierarchyId() {
-		return hierarchyId;
-	}
-
 	public CustomerBO getCustomer() {
 		return customer;
 	}

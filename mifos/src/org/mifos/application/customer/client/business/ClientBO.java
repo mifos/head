@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerCustomFieldView;
+import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -47,7 +47,7 @@ public class ClientBO extends CustomerBO {
 
 	public ClientBO(UserContext userContext, String displayName,
 			CustomerStatus customerStatus, Address address,
-			List<CustomerCustomFieldView> customFields, PersonnelBO formedBy,
+			List<CustomFieldView> customFields, PersonnelBO formedBy,
 			OfficeBO office, CustomerBO parentCustomer, String searchId)
 			throws CustomerException {
 		this(userContext, displayName, customerStatus, address, customFields,
@@ -57,7 +57,7 @@ public class ClientBO extends CustomerBO {
 
 	public ClientBO(UserContext userContext, String displayName,
 			CustomerStatus customerStatus, Address address,
-			List<CustomerCustomFieldView> customFields, PersonnelBO formedBy,
+			List<CustomFieldView> customFields, PersonnelBO formedBy,
 			OfficeBO office, MeetingBO meeting, PersonnelBO personnel,
 			String searchId) throws CustomerException {
 		this(userContext, displayName, customerStatus, address, customFields,
@@ -66,7 +66,7 @@ public class ClientBO extends CustomerBO {
 
 	private ClientBO(UserContext userContext, String displayName,
 			CustomerStatus customerStatus, Address address,
-			List<CustomerCustomFieldView> customFields, PersonnelBO formedBy,
+			List<CustomFieldView> customFields, PersonnelBO formedBy,
 			OfficeBO office, CustomerBO parentCustomer, MeetingBO meeting,
 			PersonnelBO personnel, String searchId) throws CustomerException {
 		super(userContext, displayName, CustomerLevel.CLIENT, customerStatus,

@@ -165,9 +165,9 @@ public class ConfigurationInitializer {
 	private void setCustomerOptionalStates(Map<Key,Object> officeConfigMap,List<CustomerStatusEntity> customerOptionalStates)throws SystemException{
 		if(customerOptionalStates!=null && customerOptionalStates.size()>0){
 			for(CustomerStatusEntity customerStateEntity: customerOptionalStates){
-				if(customerStateEntity.getCustomerLevel().getLevelId().equals(CustomerConstants.CLIENT_LEVEL_ID))
+				if(customerStateEntity.getCustomerLevel().getId().equals(CustomerConstants.CLIENT_LEVEL_ID))
 					setClientOptionalState(officeConfigMap,customerStateEntity);
-				else if(customerStateEntity.getCustomerLevel().getLevelId().equals(CustomerConstants.GROUP_LEVEL_ID))
+				else if(customerStateEntity.getCustomerLevel().getId().equals(CustomerConstants.GROUP_LEVEL_ID))
 					setGroupOptionalState(officeConfigMap,customerStateEntity);
 			}
 		}

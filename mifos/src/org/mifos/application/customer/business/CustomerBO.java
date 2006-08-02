@@ -144,7 +144,7 @@ public abstract class CustomerBO extends BusinessObject {
 		this.office = null;
 	}
 
-	protected CustomerBO(UserContext userContext, String displayName, CustomerLevel customerLevel, CustomerStatus customerStatus, Address address, List<CustomerCustomFieldView> customFields, PersonnelBO formedBy, OfficeBO office, CustomerBO parentCustomer, MeetingBO meeting, PersonnelBO personnel) throws CustomerException {
+	protected CustomerBO(UserContext userContext, String displayName, CustomerLevel customerLevel, CustomerStatus customerStatus, Address address, List<CustomFieldView> customFields, PersonnelBO formedBy, OfficeBO office, CustomerBO parentCustomer, MeetingBO meeting, PersonnelBO personnel) throws CustomerException {
 		this.userContext = userContext;
 		this.office = office;
 		this.displayName = displayName;
@@ -170,7 +170,7 @@ public abstract class CustomerBO extends BusinessObject {
 		this.parentCustomer = parentCustomer;
 		
 		if(customFields!=null)
-			for(CustomerCustomFieldView customField: customFields)
+			for(CustomFieldView customField: customFields)
 				addCustomField(new CustomerCustomFieldEntity(customField.getFieldId(), customField.getFieldValue(), this));
 
 		this.customerStatus = new CustomerStatusEntity(customerStatus);
@@ -356,8 +356,6 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 
 	public void setCustomerMeeting(CustomerMeetingEntity customerMeeting) {
-		if (null != customerMeeting)
-			customerMeeting.setCustomer(this);
 		this.customerMeeting = customerMeeting;
 	}
 
@@ -397,17 +395,11 @@ public abstract class CustomerBO extends BusinessObject {
 
 	}
 
-	public void setCustomerHistoricalData(
-			CustomerHistoricalDataEntity historicalData) {
-
+	public void setCustomerHistoricalData(CustomerHistoricalDataEntity historicalData) {
 		if (historicalData != null) {
 			this.mfiJoiningDate = historicalData.getMfiJoiningDate();
-			historicalData.setCustomer(this);
-
 		}
-
 		setHistoricalData(historicalData);
-
 	}
 
 	public CustomerHistoricalDataEntity getHistoricalData() {

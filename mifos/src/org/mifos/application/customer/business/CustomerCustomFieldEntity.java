@@ -42,6 +42,7 @@ import org.mifos.framework.business.PersistentObject;
 
 /**
  * This class encpsulate the custom field for the customer
+ * 
  * @author ashishsm
  */
 public class CustomerCustomFieldEntity extends PersistentObject {
@@ -73,10 +74,6 @@ public class CustomerCustomFieldEntity extends PersistentObject {
 		this.customFieldId = null;
 	}
 
-	public Integer getCustomFieldId() {
-		return customFieldId;
-	}
-	
 	public Short getFieldId() {
 		return fieldId;
 	}
@@ -89,10 +86,10 @@ public class CustomerCustomFieldEntity extends PersistentObject {
 		this.fieldValue = fieldValue;
 	}
 
-	private CustomerBO getCustomer (){
+	private CustomerBO getCustomer() {
 		return this.customer;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		CustomerCustomFieldEntity customerCustomField = (CustomerCustomFieldEntity) obj;
@@ -100,7 +97,7 @@ public class CustomerCustomFieldEntity extends PersistentObject {
 				customerCustomField.getCustomer().getCustomerId())
 				&& this.fieldId.equals(customerCustomField.getFieldId());
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return this.customer.getCustomerId().hashCode() + fieldId.hashCode();

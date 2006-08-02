@@ -86,8 +86,8 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 		SessionUtils.setAttribute(AccountConstants.TRXN_TYPES, trxnTypes,
 				request.getSession());
 
-		if (savings.getCustomer().getCustomerLevel().getLevelId().shortValue() == CustomerConstants.CENTER_LEVEL_ID
-				|| (savings.getCustomer().getCustomerLevel().getLevelId()
+		if (savings.getCustomer().getCustomerLevel().getId().shortValue() == CustomerConstants.CENTER_LEVEL_ID
+				|| (savings.getCustomer().getCustomerLevel().getId()
 						.shortValue() == CustomerConstants.GROUP_LEVEL_ID && savings
 						.getRecommendedAmntUnit().getRecommendedAmntUnitId()
 						.shortValue() == ProductDefinitionConstants.PERINDIVIDUAL))

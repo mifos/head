@@ -40,17 +40,17 @@ package org.mifos.application.customer.business;
 
 import org.mifos.framework.business.View;
 
-public class CustomerCustomFieldView extends View {
+public class CustomFieldView extends View {
 
 	private Short fieldId;
 
 	private String fieldValue;
 	
-	public CustomerCustomFieldView() {
+	public CustomFieldView() {
 		super();
 	}
 
-	public CustomerCustomFieldView(Short fieldId, String fieldValue) {
+	public CustomFieldView(Short fieldId, String fieldValue) {
 		this.fieldId = fieldId;
 		this.fieldValue = fieldValue;
 	}
@@ -73,7 +73,7 @@ public class CustomerCustomFieldView extends View {
 	
 	@Override
 	public boolean equals(Object obj) {
-		return this.fieldId.equals(((CustomerCustomFieldView)obj).getFieldId());
+		return this.fieldId.equals(((CustomFieldView)obj).getFieldId());
 	}
 	
 	@Override

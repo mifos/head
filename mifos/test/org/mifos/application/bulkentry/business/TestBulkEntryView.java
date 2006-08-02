@@ -233,7 +233,7 @@ public class TestBulkEntryView extends MifosTestCase {
 		CustomerView customerView = new CustomerView();
 		customerView.setCustomerId(customer.getCustomerId());
 		customerView.setCustomerLevelId(customer.getCustomerLevel()
-				.getLevelId());
+				.getId());
 		customerView.setCustomerSearchId(customer.getSearchId());
 		customerView.setDisplayName(customer.getDisplayName());
 		customerView.setGlobalCustNum(customer.getGlobalCustNum());

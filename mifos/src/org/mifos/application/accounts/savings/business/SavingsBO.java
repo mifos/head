@@ -846,7 +846,7 @@ public class SavingsBO extends AccountBO {
 	public void generateAndUpdateDepositActionsForClient(CustomerBO client)
 			throws SchedulerException, SystemException {
 		if (client.getCustomerMeeting().getMeeting() != null) {
-			if (!(getCustomer().getCustomerLevel().getLevelId().shortValue() == CustomerConstants.GROUP_LEVEL_ID && getRecommendedAmntUnit()
+			if (!(getCustomer().getCustomerLevel().getId().shortValue() == CustomerConstants.GROUP_LEVEL_ID && getRecommendedAmntUnit()
 					.getRecommendedAmntUnitId().shortValue() == ProductDefinitionConstants.COMPLETEGROUP
 					.shortValue())) {
 				generateDepositAccountActions(client, client
@@ -867,9 +867,9 @@ public class SavingsBO extends AccountBO {
 					.getMeeting();
 
 			depositSchedule.setMeetingStartDate(Calendar.getInstance());
-			if (getCustomer().getCustomerLevel().getLevelId().equals(
+			if (getCustomer().getCustomerLevel().getId().equals(
 					CustomerConstants.CLIENT_LEVEL_ID)
-					|| (getCustomer().getCustomerLevel().getLevelId().equals(
+					|| (getCustomer().getCustomerLevel().getId().equals(
 							CustomerConstants.GROUP_LEVEL_ID) && getRecommendedAmntUnit()
 							.getRecommendedAmntUnitId().shortValue() == ProductDefinitionConstants.COMPLETEGROUP)) {
 				generateDepositAccountActions(getCustomer(), depositSchedule);
@@ -1871,9 +1871,9 @@ public class SavingsBO extends AccountBO {
 			List<Date> meetingDates = scheduler.getAllDates();
 			meetingDates.remove(0);
 			deleteFutureInstallments();
-			if (getCustomer().getCustomerLevel().getLevelId().equals(
+			if (getCustomer().getCustomerLevel().getId().equals(
 					CustomerConstants.CLIENT_LEVEL_ID)
-					|| (getCustomer().getCustomerLevel().getLevelId().equals(
+					|| (getCustomer().getCustomerLevel().getId().equals(
 							CustomerConstants.GROUP_LEVEL_ID) && getRecommendedAmntUnit()
 							.getRecommendedAmntUnitId().shortValue() == ProductDefinitionConstants.COMPLETEGROUP)) {
 				for (Date date : meetingDates) {
@@ -1986,9 +1986,9 @@ public class SavingsBO extends AccountBO {
 			depositSchedule.setMeetingStartDate(calendar);
 			
 			depositSchedule.setMeetingEndDate(DateUtils.getLastDayOfNextYear(Calendar.getInstance()));
-			if (customerBO.getCustomerLevel().getLevelId().equals(
+			if (customerBO.getCustomerLevel().getId().equals(
 					CustomerConstants.CLIENT_LEVEL_ID)
-					|| (customerBO.getCustomerLevel().getLevelId().equals(
+					|| (customerBO.getCustomerLevel().getId().equals(
 							CustomerConstants.GROUP_LEVEL_ID) && getRecommendedAmntUnit()
 							.getRecommendedAmntUnitId().shortValue() == ProductDefinitionConstants.COMPLETEGROUP)) {
 				generateDepositAccountActions(customerBO, depositSchedule,(short)(installment.getInstallmentId()+1));

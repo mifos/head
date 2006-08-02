@@ -41,7 +41,7 @@ package org.mifos.application.customer.group.business;
 import java.util.List;
 
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerCustomFieldView;
+import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -74,7 +74,7 @@ public class GroupBO extends CustomerBO {
 	// TODO: removed searchId from parameter and generate internally
 	public GroupBO(UserContext userContext, String displayName,
 			CustomerStatus customerStatus, Address address,
-			List<CustomerCustomFieldView> customFields, PersonnelBO formedBy,
+			List<CustomFieldView> customFields, PersonnelBO formedBy,
 			OfficeBO office, CustomerBO parentCustomer, String searchId)
 			throws CustomerException {
 		this(userContext, displayName, customerStatus, address, customFields,
@@ -83,7 +83,7 @@ public class GroupBO extends CustomerBO {
 
 	public GroupBO(UserContext userContext, String displayName,
 			CustomerStatus customerStatus, Address address,
-			List<CustomerCustomFieldView> customFields, PersonnelBO formedBy,
+			List<CustomFieldView> customFields, PersonnelBO formedBy,
 			OfficeBO office, MeetingBO meeting, PersonnelBO personnel,
 			String searchId) throws CustomerException {
 		this(userContext, displayName, customerStatus, address, customFields,
@@ -92,7 +92,7 @@ public class GroupBO extends CustomerBO {
 
 	private GroupBO(UserContext userContext, String displayName,
 			CustomerStatus customerStatus, Address address,
-			List<CustomerCustomFieldView> customFields, PersonnelBO formedBy,
+			List<CustomFieldView> customFields, PersonnelBO formedBy,
 			OfficeBO office, CustomerBO parentCustomer, MeetingBO meeting,
 			PersonnelBO personnel, String searchId) throws CustomerException {
 		super(userContext, displayName, CustomerLevel.GROUP, customerStatus,

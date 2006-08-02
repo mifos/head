@@ -123,8 +123,8 @@ public class SavingsClosureAction extends BaseAction {
 		//client list will be loaded only if it is center savings account, 
 		//or group savings account with deposit schedule of per client
 		
-		if(savings.getCustomer().getCustomerLevel().getLevelId().shortValue()==CustomerConstants.CENTER_LEVEL_ID || 
-				(savings.getCustomer().getCustomerLevel().getLevelId().shortValue()==CustomerConstants.GROUP_LEVEL_ID &&
+		if(savings.getCustomer().getCustomerLevel().getId().shortValue()==CustomerConstants.CENTER_LEVEL_ID || 
+				(savings.getCustomer().getCustomerLevel().getId().shortValue()==CustomerConstants.GROUP_LEVEL_ID &&
 					savings.getRecommendedAmntUnit().getRecommendedAmntUnitId().shortValue()==ProductDefinitionConstants.PERINDIVIDUAL))
 			SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST,savings.getCustomer().getChildren(CustomerConstants.CLIENT_LEVEL_ID),request.getSession());
 		else

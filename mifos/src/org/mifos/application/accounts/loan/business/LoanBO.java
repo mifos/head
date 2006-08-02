@@ -1533,7 +1533,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	private void updateCustomerHistoryOnLastInstlPayment(Money totalAmount) {
-		if (getCustomer().getCustomerLevel().getLevelId().equals(
+		if (getCustomer().getCustomerLevel().getId().equals(
 				Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))
 				&& getCustomer().getCustomerPerformanceHistory() != null) {
 			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
@@ -1545,7 +1545,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	private void updateCustomerHistoryOnPayment() {
-		if (getCustomer().getCustomerLevel().getLevelId().equals(
+		if (getCustomer().getCustomerLevel().getId().equals(
 				Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))
 				&& getCustomer().getCustomerPerformanceHistory() != null) {
 			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
@@ -1556,7 +1556,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	private void updateCustomerHistoryOnDisbursement(Money disburseAmount) {
-		if (getCustomer().getCustomerLevel().getLevelId().equals(
+		if (getCustomer().getCustomerLevel().getId().equals(
 				Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))
 				&& getCustomer().getCustomerPerformanceHistory() != null) {
 			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
@@ -1565,7 +1565,7 @@ public class LoanBO extends AccountBO {
 					.getNoOfActiveLoans() + 1);
 			clientPerfHistory.setLoanCycleNumber(clientPerfHistory
 					.getLoanCycleNumber() + 1);
-		} else if (getCustomer().getCustomerLevel().getLevelId().equals(
+		} else if (getCustomer().getCustomerLevel().getId().equals(
 				Short.valueOf(CustomerConstants.GROUP_LEVEL_ID))
 				&& getCustomer().getCustomerPerformanceHistory() != null) {
 			GroupPerformanceHistoryEntity groupPerformanceHistoryEntity = (GroupPerformanceHistoryEntity) getCustomer()
@@ -1576,7 +1576,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	private void updateCustomerHistoryOnRepayment(Money totalAmount) {
-		if (getCustomer().getCustomerLevel().getLevelId().equals(
+		if (getCustomer().getCustomerLevel().getId().equals(
 				Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))
 				&& getCustomer().getCustomerPerformanceHistory() != null) {
 			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
@@ -1588,7 +1588,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	private void updateCustomerHistoryOnArrears() {
-		if (getCustomer().getCustomerLevel().getLevelId().equals(
+		if (getCustomer().getCustomerLevel().getId().equals(
 				Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))
 				&& getCustomer().getCustomerPerformanceHistory() != null) {
 			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
@@ -1599,7 +1599,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	private void updateCustomerHistoryOnWriteOff() {
-		if (getCustomer().getCustomerLevel().getLevelId().equals(
+		if (getCustomer().getCustomerLevel().getId().equals(
 				Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))
 				&& getCustomer().getCustomerPerformanceHistory() != null) {
 			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()

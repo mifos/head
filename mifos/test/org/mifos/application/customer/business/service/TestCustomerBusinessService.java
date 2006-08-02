@@ -243,7 +243,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				.valueOf("9"), "1.1.1", center, new Date(System
 				.currentTimeMillis()));
 		GroupBO groupBO = (GroupBO) service.getBySystemId(group.getGlobalCustNum(),
-				group.getCustomerLevel().getLevelId());
+				group.getCustomerLevel().getId());
 		assertEquals("Group_Active_test",groupBO.getDisplayName());
 	}
 
