@@ -40,5 +40,5 @@ package org.mifos.application.util.helpers;
 
 public enum ActionForwards {
 	load_success, load_failure, preview_success, preview_failure, editpreview_success, editpreview_failure, previous_success, previous_failure, create_success, create_failure, manage_success, manage_failure, editprevious_success, editprevious_failure, update_success, update_failure,
-	loan_detail_page, account_details_page, savings_details_page, get_success, search_success, viewAll_success;
+	loan_detail_page, account_details_page, savings_details_page, get_success, search_success, viewAll_success, cancel_success;
 }

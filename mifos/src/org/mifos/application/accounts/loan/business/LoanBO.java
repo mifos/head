@@ -1199,7 +1199,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	public void writeOff(String comment) throws ServiceException,
-			SecurityException, PersistenceException, FinancialException {
+			SecurityException, PersistenceException, ApplicationException {
 		Short personnelId = this.getUserContext().getId();
 		PersonnelBO personnel = new PersonnelPersistenceService()
 				.getPersonnel(personnelId);

@@ -540,13 +540,19 @@ public class ActivityMapper {
 		activityMap.put("/loanAccountAction-getAllActivity",
 				SecurityConstants.VIEW);
 
-		// mapping for account status
+		// mapping for account status::TO BE REMOVED
 		activityMap.put("/LoanStatusAction-load", SecurityConstants.VIEW);
 		activityMap.put("/LoanStatusAction-preview", SecurityConstants.VIEW);
 		activityMap.put("/LoanStatusAction-previous", SecurityConstants.VIEW);
 		activityMap.put("/LoanStatusAction-update", SecurityConstants.VIEW);
 		activityMap.put("/LoanStatusAction-search", SecurityConstants.VIEW);
 		activityMap.put("/LoanStatusAction-writeOff", SecurityConstants.VIEW);
+		
+		// mapping for account status
+		activityMap.put("/editStatusAction-load", SecurityConstants.VIEW);
+		activityMap.put("/editStatusAction-preview", SecurityConstants.VIEW);
+		activityMap.put("/editStatusAction-previous", SecurityConstants.VIEW);
+		activityMap.put("/editStatusAction-update", SecurityConstants.VIEW);
 
 		// mapping for account notes
 		activityMap.put("/AccountNotesAction-load",
@@ -997,7 +1003,6 @@ public class ActivityMapper {
 			break;
 		}
 
-		System.out.println("Returing the activityId " + activityId);
 		return activityId;
 	}
 

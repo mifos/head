@@ -24,6 +24,7 @@ import org.mifos.application.accounts.persistence.service.TestAccountPersistence
 import org.mifos.application.accounts.struts.action.TestAccountAction;
 import org.mifos.application.accounts.struts.action.TestApplyAdjustmentAction;
 import org.mifos.application.accounts.struts.action.TestApplyPaymentAction;
+import org.mifos.application.accounts.struts.action.TestEditStatusAction;
 import org.mifos.application.accounts.struts.action.TestNotesAction;
 import org.mifos.framework.MifosTestSuite;
 
@@ -62,6 +63,7 @@ public class AccountTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(TestApplyPaymentAction.class);
 		testSuite.addTestSuite(TestNotesAction.class);
 		testSuite.addTestSuite(TestAccountStateMachine.class);
+		testSuite.addTestSuite(TestEditStatusAction.class);
 		return testSuite;
 		
 	}

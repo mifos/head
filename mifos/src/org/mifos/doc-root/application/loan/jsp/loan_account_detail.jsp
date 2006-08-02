@@ -58,10 +58,6 @@
 	 loanStatusActionForm.action="LoanStatusAction.do?method=search";
 	 loanStatusActionForm.submit();
  }
- function changeStatus(){
-	 loanStatusActionForm.action="LoanStatusAction.do?method=load";
-	 loanStatusActionForm.submit();
- }
 </script>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
@@ -91,7 +87,7 @@
 							</td>
 							<td width="38%" rowspan="2" align="right" valign="top" class="fontnormal"><c:if
 								test="${requestScope.loan.accountStateId != 6 and requestScope.loan.accountStateId != 7 and requestScope.loan.accountStateId !=8 and requestScope.loan.accountStateId !=10}">
-								<html-el:link href="javascript:changeStatus()">
+								<html-el:link href="editStatusAction.do?method=load&accountId=${requestScope.loan.accountId}">
 									<mifos:mifoslabel name="loan.edit_acc_status" />
 								</html-el:link>
 							</c:if><br>
@@ -625,18 +621,5 @@
 			<html-el:hidden value='${requestScope.loan.globalAccountNum}'
 				property="globalAccountNum" />
 		</html-el:form>
-		<html-el:form action="LoanStatusAction.do?method=load">
-			<html-el:hidden property="accountId"
-				value="${requestScope.loan.accountId}" />
-			<html-el:hidden property="globalAccountNum"
-				value="${requestScope.loan.globalAccountNum}" />
-			<html-el:hidden property="accountName"
-				value="${requestScope.loan.loanOffering.prdOfferingName}" />
-			<html-el:hidden property="versionNo"
-				value="${requestScope.loan.versionNo}" />
-			<html-el:hidden property="currentStatusId"
-				value="${requestScope.loan.accountStateId}" />
-		</html-el:form>
-
 	</tiles:put>
 </tiles:insert>

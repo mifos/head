@@ -204,6 +204,7 @@
 		<form-bean name="applyPaymentActionForm" type="org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActionForm" />
 		<!-- Action Form deposit and withdrawal in savings account -->
 		<form-bean name="savingsDepositWithdrawalForm" type="org.mifos.application.accounts.savings.struts.actionforms.SavingsDepositWithdrawalActionForm" />				
+		<form-bean name="editStatusActionForm" type="org.mifos.application.accounts.struts.actionforms.EditStatusActionForm" />
 	</form-beans>
 	<global-exceptions>
 		<exception type="org.mifos.framework.exceptions.SystemException"
@@ -1686,6 +1687,16 @@
 			<forward name="previous_success" path="/pages/application/savings/jsp/applypayment_savingsaccount.jsp"/>
 			<forward name="account_details_page" path="/savingsAction.do?method=get"/>
 			<forward name="makePayment_failure" path="/pages/application/savings/jsp/review_transaction_savings.jsp"/>
+		</action>
+		<!-- Edit Status Action -->
+		<action path="/editStatusAction" type="org.mifos.application.accounts.struts.action.EditStatusAction" name="editStatusActionForm" parameter="method" input="/editStatusAction.do?method=validate" validate="true" scope="session">
+			<forward name="load_success" path="/pages/application/accounts/jsp/change_status.jsp" />
+			<forward name="loan_detail_page" path="/loanAction.do?method=get" />
+			<forward name="savings_details_page" path="/savingsAction.do?method=get" />
+			<forward name="preview_success" path="/pages/application/accounts/jsp/change_status_preview.jsp" />
+			<forward name="previous_success" path="/pages/application/accounts/jsp/change_status.jsp" />
+			<forward name="update_failure" path="/pages/application/accounts/jsp/change_status_preview.jsp" />
+			<forward name="preview_failure" path="/pages/application/accounts/jsp/change_status.jsp" />
 		</action>
 	</action-mappings>
 

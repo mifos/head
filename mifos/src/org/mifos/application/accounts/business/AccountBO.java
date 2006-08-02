@@ -57,12 +57,14 @@ import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.center.exception.StateChangeException;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.persistence.FeePersistence;
@@ -1041,7 +1043,7 @@ public class AccountBO extends BusinessObject {
 		
 	}
 	
-	public void changeStatus(Short newStatusId, Short flagId, String comment) throws SecurityException, ServiceException, PersistenceException {
+	public void changeStatus(Short newStatusId, Short flagId, String comment) throws SecurityException, ServiceException, PersistenceException, ApplicationException {
 		if (null != getCustomer().getPersonnel().getPersonnelId())
 			checkPermissionForStatusChange(newStatusId, this.getUserContext(),
 					flagId, getOffice().getOfficeId(), getCustomer()
@@ -1050,12 +1052,12 @@ public class AccountBO extends BusinessObject {
 			checkPermissionForStatusChange(newStatusId, this.getUserContext(),
 					flagId, getOffice().getOfficeId(), this.getUserContext()
 							.getId());
-		
 		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
 				.getInstance().getPersistenceService(
 						PersistenceServiceName.MasterDataService);
 		AccountStateEntity accountStateEntity = (AccountStateEntity) masterPersistenceService
 				.findById(AccountStateEntity.class, newStatusId);
+		checkStatusChangeAllowed(accountStateEntity);
 		accountStateEntity.setLocaleId(this.getUserContext().getLocaleId());
 		AccountStateFlagEntity accountStateFlagEntity = null;
 		if (flagId != null) {
@@ -1101,6 +1103,13 @@ public class AccountBO extends BusinessObject {
 		accountNotes.setPersonnel(this.getPersonnel());
 		accountNotes.setComment(comment);
 		return accountNotes;
+	}
+	
+	protected void checkStatusChangeAllowed(AccountStateEntity newState) throws ApplicationException {
+		if (!(AccountStateMachines.getInstance().isTransitionAllowed(this,newState))) {
+			throw new StateChangeException(	SavingsConstants.STATUS_CHANGE_NOT_ALLOWED);
+		}
+
 	}
 	
 	public void initializeStateMachine(Short localeId) throws StatesInitializationException{

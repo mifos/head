@@ -1765,16 +1765,6 @@ public class SavingsBO extends AccountBO {
 									.getPersonnel().getPersonnelId()));
 	}
 
-	private void checkStatusChangeAllowed(AccountStateEntity newState)
-			throws ApplicationException {
-		if (!(AccountStateMachines.getInstance().isTransitionAllowed(this,
-				newState))) {
-			throw new StateChangeException(
-					SavingsConstants.STATUS_CHANGE_NOT_ALLOWED);
-		}
-
-	}
-
 	private void checkPermissionForStatusChange(AccountStateEntity newState,
 			UserContext userContext, AccountStateFlagEntity flagSelected)
 			throws SecurityException {
