@@ -37,8 +37,11 @@
  */
 package org.mifos.framework;
 
+import junit.framework.ComparisonFailure;
 import junit.framework.TestCase;
 
+import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 
 public class MifosTestCase extends TestCase {
@@ -48,5 +51,12 @@ public class MifosTestCase extends TestCase {
 		} catch (ClassNotFoundException e) {
 			throw new Error("Failed to start up", e);
 		}
+	}
+	
+	public void assertEquals(String s , Money one , Money two)
+	{
+		if(one.equals(two))
+			return;
+		 throw new ComparisonFailure(s,one.toString(),two.toString());
 	}
 }

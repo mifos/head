@@ -86,7 +86,7 @@ public class WithdrawalAccountingEntry extends BaseAccountingEntry {
 			else
 				addEntriesForDecreasedAmount(savings, finActionRounding, roundedAmount, savingsTrxn.getWithdrawlAmount());
 			
-			savingsTrxn.setWithdrawlAmount(roundedAmount);
+			//savingsTrxn.setWithdrawlAmount(roundedAmount);
 		}
 	}
 	

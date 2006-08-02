@@ -64,12 +64,14 @@ import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.RateFeeBO;
 import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
+import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.repaymentschedule.RepaymentSchedule;
@@ -88,6 +90,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.PersistenceServiceName;
 
 public class CustomerAccountBO extends AccountBO {
 
@@ -115,6 +118,9 @@ public class CustomerAccountBO extends AccountBO {
 
 	protected AccountPaymentEntity makePayment(PaymentData paymentData)
 			throws AccountException, SystemException {
+		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
+		.getInstance().getPersistenceService(
+				PersistenceServiceName.MasterDataService);
 		AccountPaymentEntity accountPayment = new AccountPaymentEntity(this,paymentData.getTotalAmount(),
 				paymentData.getRecieptNum(), paymentData.getRecieptDate(),
 				new PaymentTypeEntity(paymentData.getPaymentTypeId()));
@@ -130,12 +136,14 @@ public class CustomerAccountBO extends AccountBO {
 			accountAction.setPaymentDetails(customerAccountPaymentData,
 					new java.sql.Date(paymentData.getTransactionDate()
 							.getTime()));
-
-			CustomerTrxnDetailEntity accountTrxn = new CustomerTrxnDetailEntity();
-			accountTrxn.setAccount(this);
-			accountTrxn.setPaymentDetails(accountAction,
-					customerAccountPaymentData, paymentData.getPersonnel(),
-					paymentData.getTransactionDate());
+			customerAccountPaymentData.setAccountActionDate(accountAction);	
+			CustomerTrxnDetailEntity accountTrxn = new CustomerTrxnDetailEntity(
+					accountPayment, customerAccountPaymentData, paymentData
+							.getPersonnel(), paymentData.getTransactionDate(),
+					(AccountActionEntity) masterPersistenceService.findById(
+							AccountActionEntity.class,
+							AccountConstants.ACTION_CUSTOMER_ACCOUNT_REPAYMENT),
+					"Payment rcvd.");
 			accountPayment.addAcountTrxn(accountTrxn);
 			addCustomerActivity(
 					new CustomerActivityEntity(paymentData

@@ -55,6 +55,8 @@ public class CustomerAccountPaymentData extends AccountPaymentData {
 	private Money miscPenaltyPaid;
 
 	private Map<Short, Money> feesPaid;
+	
+	private AccountActionDateEntity accountActionDateEntity=null;
 
 	public Map<Short, Money> getFeesPaid() {
 		return feesPaid;
@@ -79,6 +81,10 @@ public class CustomerAccountPaymentData extends AccountPaymentData {
 	private void setMiscPenaltyPaid(Money miscPenaltyPaid) {
 		this.miscPenaltyPaid = miscPenaltyPaid;
 	}
+	
+	private void setAccountActionDateEntity(AccountActionDateEntity accountActionDateEntity){
+		this.accountActionDateEntity=accountActionDateEntity;
+	}
 
 	public CustomerAccountPaymentData(AccountActionDateEntity accountAction) {
 		super(accountAction);
@@ -90,6 +96,7 @@ public class CustomerAccountPaymentData extends AccountPaymentData {
 			feesPaid.put(accountFees.getFee().getFeeId(), accountFees
 					.getFeeAmount());
 		}
+		this.accountActionDateEntity=accountAction;
 		setFeesPaid(feesPaid);
 	}
 
@@ -113,6 +120,31 @@ public class CustomerAccountPaymentData extends AccountPaymentData {
 			}
 		}
 		setFeesPaid(feesPaid);
+	}
+	
+	public Money getTotalPaidAmnt() {
+		Money totalAmount = new Money();
+		return totalAmount.add(getMiscFeePaid()).add(
+				getMiscPenaltyPaid());
+	}
+	
+	public Money getTotalPaidAmount(){
+		return getTotalPaidAmnt().add(getTotalFees());
+	}
+	
+	public Money getTotalFees(){
+		Money totalAmount=new Money();
+		for (AccountFeesActionDetailEntity accountFeesActionDetail :getAccountActionDate()
+				.getAccountFeesActionDetails()) {
+			if (getFeesPaid().containsKey(
+					accountFeesActionDetail.getFee().getFeeId())) {
+				accountFeesActionDetail.makePayment(getFeesPaid().get(
+								accountFeesActionDetail.getFee().getFeeId()));
+				totalAmount = totalAmount.add(accountFeesActionDetail
+						.getFeeAmountPaid());
+			}
+		}
+		return totalAmount;
 	}
 
 }

@@ -43,6 +43,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
@@ -172,9 +173,11 @@ public class SavingsHelper {
 		return actionDate;
 	}
 	
-	public AccountTrxnEntity createAccountPaymentTrxn(AccountPaymentEntity payment, Money balance, Short accountAction, CustomerBO customer, PersonnelBO createdBy)throws SystemException{
-		SavingsTrxnDetailEntity savingsTrxn = new SavingsTrxnDetailEntity();
-		savingsTrxn.setTrxnDetails(accountAction, payment.getAmount(), balance, customer, createdBy);
+	public AccountTrxnEntity createAccountPaymentTrxn(AccountPaymentEntity payment, Money balance, AccountActionEntity accountAction, CustomerBO customer, PersonnelBO createdBy)throws SystemException{
+		SavingsTrxnDetailEntity savingsTrxn =new SavingsTrxnDetailEntity(
+				payment,customer,accountAction,
+				 payment.getAmount(),
+				 balance, createdBy,null,new SavingsHelper().getCurrentDate(),null,"");
 		return savingsTrxn;
 	}
 	

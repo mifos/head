@@ -160,8 +160,6 @@ public class AccountPaymentEntity extends PersistentObject {
 	}
 
 	public void addAcountTrxn(AccountTrxnEntity accountTrxn) {
-		accountTrxn.setAccountPayment(this);
-		accountTrxn.setAccount(this.account);
 		accountTrxns.add(accountTrxn);
 	}
 

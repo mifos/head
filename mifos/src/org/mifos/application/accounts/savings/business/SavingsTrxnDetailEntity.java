@@ -2,12 +2,19 @@ package org.mifos.application.accounts.savings.business;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.HashSet;
 
+import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
+import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
+import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
+import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.LoanPaymentData;
+import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -19,73 +26,131 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 
 public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
-	private Money depositAmount;
+	
+	private final Money depositAmount;
 
-	private Money withdrawlAmount;
+	private final Money withdrawlAmount;
 
-	private Money interestAmount;
+	private final Money interestAmount;
 
-	private Money balance;
+	private final Money balance;
+	
+	protected SavingsTrxnDetailEntity(){
+		depositAmount=null;
+		withdrawlAmount=null;
+		interestAmount=null;
+		balance=null;
+	}
+	
+	public SavingsTrxnDetailEntity(Money depositAmount,Money withdrawlAmount,Money interestAmount,Money balance){
+		this.depositAmount=depositAmount;
+		this.withdrawlAmount=withdrawlAmount;
+		this.interestAmount=interestAmount;
+		this.balance=balance;
+	}
 
 	public Money getDepositAmount() {
 		return depositAmount;
 	}
 
-	public void setDepositAmount(Money depositAmount) {
-		this.depositAmount = depositAmount;
-	}
-
 	public Money getWithdrawlAmount() {
 		return withdrawlAmount;
 	}
-
-	public void setWithdrawlAmount(Money withdrawlAmount) {
-		this.withdrawlAmount = withdrawlAmount;
-	}
-
+	
 	public Money getBalance() {
 		return balance;
-	}
-
-	public void setBalance(Money balance) {
-		this.balance = balance;
 	}
 
 	public Money getInterestAmount() {
 		return interestAmount;
 	}
-
-	public void setInterestAmount(Money interestAmount) {
-		this.interestAmount = interestAmount;
+	
+	
+	public SavingsTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity,
+			PersonnelBO personnel,
+			java.util.Date transactionDate,
+			AccountActionEntity accountActionEntity, Money depositAmount ,
+			Short installmentId, java.util.Date actionDate) {
+		super(accountPaymentEntity, accountActionEntity, installmentId, 
+				 actionDate,personnel, transactionDate, depositAmount, "");
+		this.balance = ((SavingsBO) getAccount()).getSavingsBalance();
+		this.depositAmount = depositAmount;
+		this.withdrawlAmount=new Money();
+		this.interestAmount=new Money();
 	}
-
-	public void setTrxnDetails(Short action, Money amount, Money balance,
-			CustomerBO customer, PersonnelBO createdBy) throws SystemException {
-		this.setAccountActionEntity(getAccountDBService().getAccountAction(
-				action));
-		this.setAmount(amount);
-		this.setCustomer(customer);
-		this.setPersonnel(createdBy);
-		this.setCreatedDate(new SavingsHelper().getCurrentDate());
-		this.setActionDate(this.getCreatedDate());
-		this.setBalance(balance);
-		if (action.equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL))
-			this.setWithdrawlAmount(amount);
-		else if (action.equals(AccountConstants.ACTION_SAVINGS_DEPOSIT))
-			this.setDepositAmount(amount);
-		else if (action
-				.equals(AccountConstants.ACTION_SAVINGS_INTEREST_POSTING))
-			this.setInterestAmount(amount);
-		setTrxnCreatedDate(new Timestamp(System.currentTimeMillis()));
+	
+	public SavingsTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity,
+			PersonnelBO personnel,
+			java.util.Date transactionDate,
+			AccountActionEntity accountActionEntity, Money withdrawAmount) {
+		super(accountPaymentEntity, accountActionEntity, null, 
+				transactionDate,personnel, transactionDate, withdrawAmount, "");
+		this.balance = ((SavingsBO) getAccount()).getSavingsBalance();
+		this.depositAmount = new Money();
+		this.withdrawlAmount=withdrawAmount;
+		this.interestAmount=new Money();
+	
 	}
-
-	public void setTrxnDetails(Short action, Money amount, Money balance,
-			CustomerBO customer, PersonnelBO createdBy, java.util.Date dueDate,
-			java.util.Date transactionDate) throws SystemException {
-		setTrxnDetails(action, amount, balance, customer, createdBy);
-		setActionDate(transactionDate);
-		setDueDate(dueDate);
+	
+	public SavingsTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity,CustomerBO customer,
+			AccountActionEntity accountActionEntity, Money amount, Money balance,
+			PersonnelBO createdBy,java.util.Date dueDate,
+			java.util.Date transactionDate,Short installmentId,String comment) throws SystemException {
+		super(accountPaymentEntity,customer,accountActionEntity , installmentId, dueDate,
+				createdBy, transactionDate, amount,comment);
+		this.balance = balance;
+		if (accountActionEntity.getId().equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL)){
+			this.depositAmount = new Money();
+			this.withdrawlAmount=amount;
+			this.interestAmount=new Money();
+		}
+		else if (accountActionEntity.getId().equals(AccountConstants.ACTION_SAVINGS_DEPOSIT)){
+			this.depositAmount = amount;
+			this.withdrawlAmount=new Money();
+			this.interestAmount=new Money();
+		}
+		else if (accountActionEntity.getId()
+				.equals(AccountConstants.ACTION_SAVINGS_INTEREST_POSTING)){
+			this.depositAmount = new Money();
+			this.withdrawlAmount=new Money();
+			this.interestAmount=amount;
+		}else{
+			this.depositAmount = new Money();
+			this.withdrawlAmount=new Money();
+			this.interestAmount=new Money();
+		}
 	}
+	
+	
+	public SavingsTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity,
+			AccountActionEntity accountActionEntity, Money amount, Money balance,
+			PersonnelBO createdBy,java.util.Date dueDate,
+			java.util.Date transactionDate,String comments,AccountTrxnEntity relatedTrxn) {
+		super(accountPaymentEntity,accountActionEntity , null, dueDate,
+				createdBy, transactionDate, amount,comments,relatedTrxn);
+		this.balance = balance;
+		Short lastAccountAction=new SavingsHelper().getPaymentActionType(accountPaymentEntity);
+		if (lastAccountAction.equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL)){
+			this.depositAmount = new Money();
+			this.withdrawlAmount=amount;
+			this.interestAmount=new Money();
+		}
+		else if (lastAccountAction.equals(AccountConstants.ACTION_SAVINGS_DEPOSIT)){
+			this.depositAmount = amount;
+			this.withdrawlAmount=new Money();
+			this.interestAmount=new Money();
+		}
+		else if (lastAccountAction.equals(AccountConstants.ACTION_SAVINGS_INTEREST_POSTING)){
+			this.depositAmount = new Money();
+			this.withdrawlAmount=new Money();
+			this.interestAmount=amount;
+		}else{
+			this.depositAmount = new Money();
+			this.withdrawlAmount=new Money();
+			this.interestAmount=new Money();
+		}
+	}
+		
 
 	private AccountPersistanceService getAccountDBService()
 			throws ServiceException {
@@ -93,64 +158,41 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 				.getPersistenceService(PersistenceServiceName.Account);
 	}
 
-	public void setPaymentDetails(Money depositAmount, Date actionDate,
-			CustomerBO customer, PersonnelBO personnel,
-			java.util.Date transactionDate) throws ServiceException {
-		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.MasterDataService);
-		setActionDate(transactionDate);
-		setDueDate(actionDate);
-		setPersonnel(personnel);
-		setAccountActionEntity((AccountActionEntity) masterPersistenceService
-				.findById(AccountActionEntity.class,
-						AccountConstants.ACTION_SAVINGS_DEPOSIT));
-		setCustomer(customer);
-		setTrxnCreatedDate(new Timestamp(System.currentTimeMillis()));
-
-		balance = ((SavingsBO) getAccount()).getSavingsBalance();
-		this.depositAmount = depositAmount;
-		setAmount(depositAmount);
-	}
-
-	public void setWithdrawalDetails(Money amount, Date actionDate,
-			CustomerBO customer, PersonnelBO personnel,
-			java.util.Date transactionDate) throws ServiceException {
-		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.MasterDataService);
-		setActionDate(transactionDate);
-		setDueDate(actionDate);
-		setPersonnel(personnel);
-		setAccountActionEntity((AccountActionEntity) masterPersistenceService
-				.findById(AccountActionEntity.class,
-						AccountConstants.ACTION_SAVINGS_WITHDRAWAL));
-		setCustomer(customer);
-		setTrxnCreatedDate(new Timestamp(System.currentTimeMillis()));
-		setWithdrawlAmount(amount);
-		balance = ((SavingsBO) getAccount()).getSavingsBalance();
-		setAmount(amount);
-	}
-
+	
 	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment)
 			throws ApplicationException, SystemException {
-		SavingsTrxnDetailEntity reverseAccntTrxn = new SavingsTrxnDetailEntity();
+		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
+		.getInstance().getPersistenceService(
+				PersistenceServiceName.MasterDataService);
+		SavingsTrxnDetailEntity reverseAccntTrxn = null;
 		Money balAfterAdjust = null;
 		if (getAccountActionEntity().getId().equals(
 				AccountConstants.ACTION_SAVINGS_DEPOSIT)) {
 			balAfterAdjust = getBalance().subtract(getDepositAmount());
-			reverseAccntTrxn.setDepositAmount(getDepositAmount().negate());
+			reverseAccntTrxn=new SavingsTrxnDetailEntity(
+					getAccountPayment(),(AccountActionEntity) masterPersistenceService
+					.findById(AccountActionEntity.class,
+							AccountConstants.ACTION_SAVINGS_ADJUSTMENT),
+					getDepositAmount().negate(),
+					balAfterAdjust, getPersonnel(),getDueDate(), getActionDate(),adjustmentComment,this);
 		} else if (getAccountActionEntity().getId().equals(
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL)) {
 			balAfterAdjust = getBalance().add(getWithdrawlAmount());
-			reverseAccntTrxn.setWithdrawlAmount(getWithdrawlAmount().negate());
+			reverseAccntTrxn=new SavingsTrxnDetailEntity(
+					getAccountPayment(),(AccountActionEntity) masterPersistenceService
+					.findById(AccountActionEntity.class,
+							AccountConstants.ACTION_SAVINGS_ADJUSTMENT),
+							getWithdrawlAmount().negate(),
+					balAfterAdjust, getPersonnel(),getDueDate(), getActionDate(),adjustmentComment,this);
+			
+		}else{
+			reverseAccntTrxn=new SavingsTrxnDetailEntity(
+					getAccountPayment(),(AccountActionEntity) masterPersistenceService
+					.findById(AccountActionEntity.class,
+							AccountConstants.ACTION_SAVINGS_ADJUSTMENT),
+							getAmount().negate(),
+					balAfterAdjust, getPersonnel(),getDueDate(), getActionDate(),adjustmentComment,this);
 		}
-		reverseAccntTrxn.setTrxnDetails(
-				AccountConstants.ACTION_SAVINGS_ADJUSTMENT, getAmount()
-						.negate(), balAfterAdjust, getCustomer(),
-				getPersonnel(), getDueDate(), getActionDate());
-		reverseAccntTrxn.setComments(adjustmentComment);
-		reverseAccntTrxn.setRelatedTrxn(this);
 		return reverseAccntTrxn;
 	}
 }

@@ -80,6 +80,7 @@ import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
+import org.mifos.application.accounts.util.valueobjects.AccountPayment;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
@@ -395,8 +396,7 @@ public class LoanBO extends AccountBO {
 				setAccountState(new AccountStateEntity(
 						AccountStates.LOANACC_OBLIGATIONSMET));
 				this.setClosedDate(new Date(System.currentTimeMillis()));
-				this
-						.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
+				this.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
 								accountState, this.getAccountState(),
 								paymentData.getPersonnel()));
 
@@ -419,13 +419,17 @@ public class LoanBO extends AccountBO {
 			LoanPaymentData loanPaymentData = (LoanPaymentData) accountPaymentData;
 			accountAction.setPaymentDetails(loanPaymentData, new java.sql.Date(
 					paymentData.getTransactionDate().getTime()));
-
-			LoanTrxnDetailEntity accountTrxnBO = new LoanTrxnDetailEntity();
-			accountTrxnBO.setAccount(this);
-			Money totalFees = accountTrxnBO.setPaymentDetails(accountAction,
-					loanPaymentData, paymentData.getPersonnel(), paymentData
-							.getTransactionDate());
-			accountTrxnBO.setSumAmount(totalFees);
+			MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
+			.getInstance().getPersistenceService(
+					PersistenceServiceName.MasterDataService);
+			accountPaymentData.setAccountActionDate(accountAction);
+			LoanTrxnDetailEntity accountTrxnBO = new LoanTrxnDetailEntity(
+					accountPayment, loanPaymentData, paymentData
+							.getPersonnel(), paymentData.getTransactionDate(),
+					(AccountActionEntity) masterPersistenceService.findById(
+							AccountActionEntity.class,
+							AccountConstants.ACTION_LOAN_REPAYMENT),loanPaymentData.getTotalPaidAmnt(),
+					"Payment rcvd.");
 			accountPayment.addAcountTrxn(accountTrxnBO);
 
 			loanSummary.updatePaymentDetails(
@@ -433,7 +437,7 @@ public class LoanBO extends AccountBO {
 							.getInterestPaid(), loanPaymentData
 							.getPenaltyPaid().add(
 									loanPaymentData.getMiscPenaltyPaid()),
-					totalFees.add(loanPaymentData.getMiscFeePaid()));
+									loanPaymentData.getTotalFees().add(loanPaymentData.getMiscFeePaid()));
 
 			if (getPerformanceHistory() != null)
 				getPerformanceHistory().setNoOfPayments(
@@ -444,6 +448,10 @@ public class LoanBO extends AccountBO {
 				paymentData.getPersonnel(), "Payment rcvd."));
 		return accountPayment;
 	}
+	
+	
+	
+	
 
 	private LoanActivityEntity buildLoanActivity(
 			Collection<AccountTrxnEntity> accountTrxnDetails,
@@ -651,17 +659,6 @@ public class LoanBO extends AccountBO {
 						this.getAccountState(), newState, personnel));
 		this.setAccountState(newState);
 
-		// create trxn entry for disbursal
-		LoanTrxnDetailEntity loanTrxnDetailEntity = getLoanTrxnDetailEntity(
-				AccountConstants.ACTION_DISBURSAL, transactionDate,
-				paymentTypeId, personnel);
-		loanTrxnDetailEntity.setDesbursementDetails(this.loanAmount,
-				this.loanAmount);
-		// loanTrxnDetailEntity.setRunningBalance(loanSummary);
-		List<AccountTrxnEntity> loanTrxns = new ArrayList<AccountTrxnEntity>();
-		loanTrxns.add(loanTrxnDetailEntity);
-		addLoanActivity(buildLoanActivity(loanTrxns, personnel,
-				"Loan Disbursal"));
 		if (null != this.intrestAtDisbursement
 				&& this.intrestAtDisbursement == 1) {
 			accountPaymentEntity = payInterestAtDisbursement(recieptNum,
@@ -679,8 +676,20 @@ public class LoanBO extends AccountBO {
 			accountPaymentEntity.setAmount(this.loanAmount.subtract(accountPaymentEntity.getAmount()));
 		}
 
+		// create trxn entry for disbursal
+		LoanTrxnDetailEntity loanTrxnDetailEntity =new LoanTrxnDetailEntity(accountPaymentEntity,
+				transactionDate,loanPersistance.getAccountActionEntity(AccountConstants.ACTION_DISBURSAL),
+				personnel,"-",Short.valueOf("0"),this.loanAmount);
+		
+		
+		List<AccountTrxnEntity> loanTrxns = new ArrayList<AccountTrxnEntity>();
+		loanTrxns.add(loanTrxnDetailEntity);
+		
+		addLoanActivity(buildLoanActivity(loanTrxns, personnel,
+				"Loan Disbursal"));
 		
 		accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
+		
 		this.addAccountPayment(accountPaymentEntity);
 		this.buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 
@@ -795,53 +804,30 @@ public class LoanBO extends AccountBO {
 
 	private AccountPaymentEntity insertOnlyFeeAtDisbursement(String recieptNum,
 			Date recieptDate, Short paymentTypeId, PersonnelBO personnel) {
-		Set<AccountFeesEntity> accountFees = this.getAccountFees();
-		LoanTrxnDetailEntity loanTrxnDetailEntity = getLoanTrxnDetailEntity(
-				AccountConstants.ACTION_FEE_REPAYMENT, recieptDate,
-				paymentTypeId, personnel);
-		loanTrxnDetailEntity.setMiscFeeAmount(new Money());
+
 		Money totalPayment = new Money();
-		for (AccountFeesEntity accountFeesEntity : accountFees) {
+		for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
 			if (accountFeesEntity.isTimeOfDisbursement()) {
 				totalPayment = totalPayment.add(accountFeesEntity
 						.getAccountFeeAmount());
-				FeesTrxnDetailEntity feesTrxnDetailEntity = new FeesTrxnDetailEntity();
-				feesTrxnDetailEntity.setFeeDetails(accountFeesEntity,
-						accountFeesEntity.getAccountFeeAmount());
-				loanTrxnDetailEntity.addFeesTrxnDetail(feesTrxnDetailEntity);
 			}
 		}
-		loanTrxnDetailEntity.setAmount(totalPayment);
+		
 		loanSummary.updateFeePaid(totalPayment);
+		
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this,totalPayment, recieptNum,
 				recieptDate, new PaymentTypeEntity(paymentTypeId));
+		
+		LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity,
+				recieptDate,loanPersistance.getAccountActionEntity(AccountConstants.ACTION_FEE_REPAYMENT),
+				personnel,"-",Short.valueOf("0"),totalPayment,getAccountFees());
+		
 		accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
+
 		addLoanActivity(buildLoanActivity(accountPaymentEntity
 				.getAccountTrxns(), personnel, "Payment rcvd."));
 		return accountPaymentEntity;
 	}
-
-	private LoanTrxnDetailEntity getLoanTrxnDetailEntity(short accountAction,
-			Date recieptDate, Short paymentTypeId, PersonnelBO personnel) {
-		// set the loantrxn details
-		LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity();
-		loanTrxnDetailEntity.setAccount(this);
-		AccountActionEntity action = loanPersistance
-				.getAccountActionEntity(accountAction);
-		loanTrxnDetailEntity.setActionDate(recieptDate);
-		loanTrxnDetailEntity.setDueDate(recieptDate);
-		loanTrxnDetailEntity.setPersonnel(personnel);
-		// loanTrxnDetailEntity.setp
-		loanTrxnDetailEntity.setAccountActionEntity(action);
-		loanTrxnDetailEntity.setCustomer(this.getCustomer());
-		loanTrxnDetailEntity.setComments("-");
-		loanTrxnDetailEntity.setTrxnCreatedDate(new Timestamp(System
-				.currentTimeMillis()));
-		loanTrxnDetailEntity.setInstallmentId(Short.valueOf("0"));
-		return loanTrxnDetailEntity;
-	}
-
-
 
 	private Set<AccountFees> getAccountFeesSet() {
 		Set<AccountFees> accountFeesSet = new HashSet<AccountFees>();
@@ -896,6 +882,9 @@ public class LoanBO extends AccountBO {
 	public void makeEarlyRepayment(Money totalAmount, String receiptNumber,
 			Date recieptDate, String paymentTypeId, Short personnelId)
 			throws ServiceException, AccountException {
+		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
+		.getInstance().getPersistenceService(
+				PersistenceServiceName.MasterDataService);
 		PersonnelBO personnel = new PersonnelPersistenceService()
 				.getPersonnel(personnelId);
 		this.setUpdatedBy(personnelId);
@@ -910,52 +899,50 @@ public class LoanBO extends AccountBO {
 			Money interest = accountActionDateEntity.getInterest();
 			Money fees = accountActionDateEntity.getTotalFees();
 			Money penalty = accountActionDateEntity.getTotalPenalty();
-
+			Money totalAmt=principal.add(interest).add(fees).add(penalty);
 			accountActionDateEntity
 					.makeEarlyRepaymentEnteries(LoanConstants.PAY_FEES_PENALTY_INTEREST);
 
-			LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity();
-			accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
-			loanTrxnDetailEntity.setAccount(this);
-			loanTrxnDetailEntity.setAmount(principal.add(interest).add(fees)
-					.add(penalty));
-
 			LoanPaymentData loanPaymentData = new LoanPaymentData(
 					accountActionDateEntity);
-			loanTrxnDetailEntity.setPaymentDetails(accountActionDateEntity,
-					loanPaymentData, personnel, new Date(System
-							.currentTimeMillis()));
-
+			
+			LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(
+					accountPaymentEntity, loanPaymentData, personnel,  new Date(System
+							.currentTimeMillis()),
+			(AccountActionEntity) masterPersistenceService.findById(
+					AccountActionEntity.class,
+					AccountConstants.ACTION_LOAN_REPAYMENT),totalAmt,
+			"Payment rcvd.");
+			accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
 			loanSummary
 					.updatePaymentDetails(principal, interest, penalty, fees);
-
-			// loanTrxnDetailEntity.setRunningBalance(loanSummary);
 		}
 		for (AccountActionDateEntity accountActionDateEntity : futureInstallmentsList) {
 			Money principal = accountActionDateEntity.getPrincipal();
 			Money interest = accountActionDateEntity.getInterest();
 			Money fees = accountActionDateEntity.getTotalFees();
 			Money penalty = accountActionDateEntity.getTotalPenalty();
+			Money totalAmt=principal.add(interest).add(fees).add(penalty);
 
 			accountActionDateEntity
 					.makeEarlyRepaymentEnteries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST);
 
-			LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity();
-			accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
-			loanTrxnDetailEntity.setAccount(this);
-			loanTrxnDetailEntity.setAmount(principal);
-
 			LoanPaymentData loanPaymentData = new LoanPaymentData(
 					accountActionDateEntity);
-
-			loanTrxnDetailEntity.setPaymentDetails(accountActionDateEntity,
-					loanPaymentData, personnel, new Date(System
-							.currentTimeMillis()));
+			
+			LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(
+					accountPaymentEntity, loanPaymentData, personnel,  new Date(System
+							.currentTimeMillis()),
+			(AccountActionEntity) masterPersistenceService.findById(
+					AccountActionEntity.class,
+					AccountConstants.ACTION_LOAN_REPAYMENT),principal,
+			"Payment rcvd.");
+			
+			accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
 
 			loanSummary.decreaseBy(null, interest, penalty, fees);
 			loanSummary.updatePaymentDetails(principal, null, null, null);
 
-			// loanTrxnDetailEntity.setRunningBalance(loanSummary);
 		}
 		try {
 			if (getPerformanceHistory() != null)
@@ -968,9 +955,6 @@ public class LoanBO extends AccountBO {
 			throw new AccountException("errors.update", fe);
 		}
 
-		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.MasterDataService);
 		AccountStateEntity newAccountState = (AccountStateEntity) masterPersistenceService
 				.findById(AccountStateEntity.class,
 						AccountStates.LOANACC_OBLIGATIONSMET);
@@ -1226,11 +1210,14 @@ public class LoanBO extends AccountBO {
 				null, new PaymentTypeEntity(Short.valueOf("1")));
 		this.addAccountPayment(accountPaymentEntity);
 		for (AccountActionDateEntity accountActionDateEntity : getListOfUnpaidInstallments()) {
-			LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity();
+			MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
+			.getInstance().getPersistenceService(
+					PersistenceServiceName.MasterDataService);
+			LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity,
+					(AccountActionEntity) masterPersistenceService
+							.findById(AccountActionEntity.class,AccountConstants.ACTION_WRITEOFF),
+					accountActionDateEntity, personnel, "Loan Written Off");
 			accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
-			loanTrxnDetailEntity.setAccount(this);
-			loanTrxnDetailEntity.setLoanTrxnDetailsForWriteOff(
-					accountActionDateEntity, personnelId);
 		}
 		addLoanActivity(buildLoanActivity(accountPaymentEntity
 				.getAccountTrxns(), personnel, "Loan Written Off"));

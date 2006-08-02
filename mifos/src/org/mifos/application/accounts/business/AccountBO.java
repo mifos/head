@@ -345,9 +345,6 @@ public class AccountBO extends BusinessObject {
 	public void addAccountPayment(AccountPaymentEntity payment) {
 		if (accountPayments == null)
 			accountPayments = new HashSet<AccountPaymentEntity>();
-		for (AccountTrxnEntity trxn : payment.getAccountTrxns()) {
-			trxn.setAccount(this);
-		}
 		accountPayments.add(payment);
 	}
 

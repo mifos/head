@@ -7,10 +7,12 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountNotesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
@@ -26,6 +28,7 @@ import org.mifos.framework.components.scheduler.ScheduleDataIntf;
 import org.mifos.framework.components.scheduler.SchedulerFactory;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -45,34 +48,34 @@ public class SavingsTestHelper {
 	
 	public AccountPaymentEntity createAccountPaymentToPersist(AccountBO account,Money amount, Money balance,  Date trxnDate, Short accountAction, SavingsBO savingsObj,PersonnelBO createdBy, CustomerBO customer)throws Exception{
 		AccountPaymentEntity payment =createAccountPayment(account,amount, new Date(),createdBy);
-		payment.addAcountTrxn(createAccountTrxn(null,amount, balance, trxnDate, trxnDate, null, accountAction,savingsObj, createdBy, customer));
+		payment.addAcountTrxn(createAccountTrxn(payment,null,amount, balance, trxnDate, trxnDate, null, accountAction,savingsObj, createdBy, customer));
 		return payment;
 	}
 	
-	public SavingsTrxnDetailEntity createAccountTrxn(Short installmentId, Money amount, Money balance, Date trxnDate, Date dueDate,Integer id, Short accountAction, SavingsBO savingsObj, PersonnelBO createdBy, CustomerBO customer)throws Exception{
-		SavingsTrxnDetailEntity trxn = new SavingsTrxnDetailEntity();
+	public SavingsTrxnDetailEntity createAccountTrxn(AccountPaymentEntity paymentEntity,Short installmentId, Money amount, Money balance, Date trxnDate, Date dueDate,Integer id, Short accountAction, SavingsBO savingsObj, PersonnelBO createdBy, CustomerBO customer)throws Exception{
 		AccountPersistanceService accountDBService = new AccountPersistanceService();
-		trxn.setAccountActionEntity(accountDBService.getAccountAction(accountAction));
-		trxn.setPersonnel(createdBy);
-		trxn.setActionDate(trxnDate);
-		trxn.setDueDate(dueDate);
-		trxn.setAmount(amount);
-		trxn.setBalance(balance);
-		trxn.setTrxnCreatedDate(new Timestamp(trxnDate.getTime()));
-		trxn.setCreatedBy(createdBy.getPersonnelId());
-		trxn.setAccountTrxnId(id);
-		trxn.setAccount(savingsObj);
-		trxn.setCustomer(customer);
-		trxn.setInstallmentId(installmentId);
-		if(accountAction.equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL ))
-			trxn.setWithdrawlAmount(amount);
-		else 
-			trxn.setDepositAmount(amount);
-		if(accountAction.equals(AccountConstants.ACTION_SAVINGS_ADJUSTMENT)){
-			trxn.setWithdrawlAmount(amount);
-			trxn.setDepositAmount(amount);
-		}
-			
+		SavingsTrxnDetailEntity trxn = new SavingsTrxnDetailEntity(paymentEntity,customer,
+				accountDBService.getAccountAction(accountAction), amount, balance,
+				createdBy,dueDate,
+				trxnDate,installmentId,"");
+		return trxn;
+	}
+
+	public SavingsTrxnDetailEntity createAccountTrxn(AccountPaymentEntity paymentEntity,Money amount, Money balance, Date trxnDate, Date dueDate,Short accountAction, SavingsBO savingsObj, PersonnelBO createdBy, CustomerBO customer,String comments,AccountTrxnEntity relatedTrxn)throws Exception{
+		AccountPersistanceService accountDBService = new AccountPersistanceService();
+		SavingsTrxnDetailEntity trxn = new SavingsTrxnDetailEntity(paymentEntity,
+				accountDBService.getAccountAction(accountAction), amount, balance,
+				createdBy,dueDate,
+				trxnDate,comments,relatedTrxn);
+		return trxn;
+	}
+	
+	public SavingsTrxnDetailEntity createAccountTrxn(AccountPaymentEntity paymentEntity,Short installmentId, Money amount, Money balance, Date trxnDate, Date dueDate,Integer id, Short accountAction, SavingsBO savingsObj, PersonnelBO createdBy, CustomerBO customer,String comments)throws Exception{
+		AccountPersistanceService accountDBService = new AccountPersistanceService();
+		SavingsTrxnDetailEntity trxn = new SavingsTrxnDetailEntity(paymentEntity,customer,
+				accountDBService.getAccountAction(accountAction), amount, balance,
+				createdBy,dueDate,
+				trxnDate,installmentId,comments);
 		return trxn;
 	}
 	

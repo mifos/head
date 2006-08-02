@@ -62,6 +62,8 @@ public class LoanPaymentData extends AccountPaymentData {
 	private Money miscPenaltyPaid;
 
 	private Map<Short, Money> feesPaid;
+	
+	
 
 	public Map<Short, Money> getFeesPaid() {
 		return feesPaid;
@@ -157,5 +159,31 @@ public class LoanPaymentData extends AccountPaymentData {
 			}
 		}
 		setFeesPaid(feesPaid);
+	}
+	
+	public Money getTotalPaidAmnt() {
+		Money totalAmount = new Money();
+		return totalAmount.add(getInterestPaid()).add(getPenaltyPaid()).add(
+				getPrincipalPaid()).add(getMiscFeePaid()).add(
+				getMiscPenaltyPaid());
+	}
+	
+	public Money getTotalPaidAmount(){
+		return getTotalPaidAmnt().add(getTotalFees());
+	}
+	
+	public Money getTotalFees(){
+		Money totalAmount=new Money();
+		for (AccountFeesActionDetailEntity accountFeesActionDetail :getAccountActionDate()
+				.getAccountFeesActionDetails()) {
+			if (getFeesPaid().containsKey(
+					accountFeesActionDetail.getFee().getFeeId())) {
+				accountFeesActionDetail.makePayment(getFeesPaid().get(
+								accountFeesActionDetail.getFee().getFeeId()));
+				totalAmount = totalAmount.add(accountFeesActionDetail
+						.getFeeAmountPaid());
+			}
+		}
+		return totalAmount;
 	}
 }

@@ -7,45 +7,45 @@
 		name="org.mifos.application.accounts.business.AccountTrxnEntity"
 		table="ACCOUNT_TRXN">
 		<id name="accountTrxnId" column="ACCOUNT_TRXN_ID"
-			type="integer">
+			type="integer" access="field">
 			<generator class="native" />
 		</id>
 
 
 		<many-to-one name="account" column="ACCOUNT_ID"
 			class="org.mifos.application.accounts.business.AccountBO" lazy="true"
-			insert="true" update="false" />
+			insert="true" update="false" access="field" />
 
 		<many-to-one name="accountPayment" column="PAYMENT_ID"
 			class="org.mifos.application.accounts.business.AccountPaymentEntity"
-			lazy="true" insert="true" update="false" />
+			lazy="true" insert="true" update="false" access="field" />
 
 		<many-to-one name="accountActionEntity" column="ACCOUNT_ACTION_ID"
 			class="org.mifos.application.accounts.business.AccountActionEntity"
-			cascade="none" update="false" insert="true" />
+			cascade="none" update="false" insert="true" access="field"/>
 
 		<many-to-one name="personnel" column="PERSONNEL_ID"
 			class="org.mifos.application.personnel.business.PersonnelBO"
-			cascade="none" update="false" insert="true" unique="true" />
+			cascade="none" update="false" insert="true" unique="true" access="field" />
 		<many-to-one name="customer" column="CUSTOMER_ID"
 			class="org.mifos.application.customer.business.CustomerBO"
-			cascade="none" update="false" insert="true" unique="true" />
-		<property name="amount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			cascade="none" update="false" insert="true" unique="true" access="field"/>
+		<property name="amount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
 		 <column name="AMOUNT_CURRENCY_ID" /> 
 		 <column name="AMOUNT" />
 		</property>
 
 		<!-- <property name="amount" column="AMOUNT" /> -->
-		<property name="dueDate" column="DUE_DATE" />
-		<property name="comments" column="COMMENTS" />
-		<property name="actionDate" column="ACTION_DATE"  />
-		<property name="trxnCreatedDate" column="CREATED_DATE"  />
-		<property name="installmentId" column="INSTALLMENT_ID" type="short" />
+		<property name="dueDate" column="DUE_DATE" access="field"/>
+		<property name="comments" column="COMMENTS" access="field"/>
+		<property name="actionDate" column="ACTION_DATE" access="field" />
+		<property name="trxnCreatedDate" column="CREATED_DATE" access="field" />
+		<property name="installmentId" column="INSTALLMENT_ID" type="short" access="field" />
 		<many-to-one name="relatedTrxn" column="RELATED_TRXN_ID"
 				class="org.mifos.application.accounts.business.AccountTrxnEntity"
-				lazy="true" cascade="all" insert="true" update="false" />
+				lazy="true" cascade="all" insert="true" update="false" access="field" />
 				
-		<set name="financialTransactions" inverse="true" cascade="all" lazy="true" order-by="TRXN_ID desc">   	
+		<set name="financialTransactions" inverse="true" cascade="all" lazy="true" order-by="TRXN_ID desc" access="field" >   	
 			<key column="ACCOUNT_TRXN_ID"/>
 			<one-to-many class="org.mifos.application.accounts.financial.business.FinancialTransactionBO"/>
 		</set>
@@ -54,50 +54,50 @@
 			name="org.mifos.application.accounts.business.LoanTrxnDetailEntity"
 			table="LOAN_TRXN_DETAIL">
 			<key column="ACCOUNT_TRXN_ID" />
-			<property name="principalAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<property name="principalAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
 			 <column name="PRINCIPAL_AMOUNT_CURRENCY_ID" /> 
 			 <column name="PRINCIPAL_AMOUNT" />
 			</property>
-			<property name="interestAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<property name="interestAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
 			 <column name="INTEREST_AMOUNT_CURRENCY_ID" /> 
 			 <column name="INTEREST_AMOUNT" />
 			</property>
-			<property name="penaltyAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<property name="penaltyAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
 			 <column name="PENALTY_AMOUNT_CURRENCY_ID" /> 
 			 <column name="PENALTY_AMOUNT" />
 			</property>
-			<property name="miscFeeAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<property name="miscFeeAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
 			 <column name="MISC_FEE_AMOUNT_CURRENCY_ID" /> 
 			 <column name="MISC_FEE_AMOUNT" />
 			</property>
-			<property name="miscPenaltyAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<property name="miscPenaltyAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
 			 <column name="MISC_PENALTY_AMOUNT_CURRENCY_ID" /> 
 			 <column name="MISC_PENALTY_AMOUNT" />
 			</property>
 			<set name="feesTrxnDetails" inverse="true" cascade="all"
-				lazy="true">
+				lazy="true" access="field">
 				<key column="ACCOUNT_TRXN_ID" />
 				<one-to-many
-					class="org.mifos.application.accounts.business.FeesTrxnDetailEntity" />
+					class="org.mifos.application.accounts.business.FeesTrxnDetailEntity"/>
 			</set>
 		</joined-subclass>
 		<joined-subclass
 			name="org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity"
 			table="SAVINGS_TRXN_DETAIL">
 			<key column="ACCOUNT_TRXN_ID" />
-			<property name="depositAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<property name="depositAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
 			 <column name="DEPOSIT_AMOUNT_CURRENCY_ID" /> 
 			 <column name="DEPOSIT_AMOUNT" />
 			</property>
-			<property name="withdrawlAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<property name="withdrawlAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
 			 <column name="WITHDRAWAL_AMOUNT_CURRENCY_ID" /> 
 			 <column name="WITHDRAWAL_AMOUNT" />
 			</property>
-			<property name="balance" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<property name="balance" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
 			 <column name="BALANCE_CURRENCY_ID" /> 
 			 <column name="BALANCE" />
 			</property>
-			<property name="interestAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<property name="interestAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
 			 <column name="INTEREST_AMOUNT_CURRENCY_ID" /> 
 			 <column name="INTEREST_AMOUNT" />
 			</property>
@@ -106,20 +106,20 @@
 			name="org.mifos.application.customer.business.CustomerTrxnDetailEntity"
 			table="CUSTOMER_TRXN_DETAIL">
 			<key column="ACCOUNT_TRXN_ID" />
-			<property name="totalAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<property name="totalAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
 			 <column name="TOTAL_AMOUNT_CURRENCY_ID" /> 
 			 <column name="TOTAL_AMOUNT" />
 			</property>
-			<property name="miscFeeAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<property name="miscFeeAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
 			 <column name="MISC_FEE_AMOUNT_CURRENCY_ID" /> 
 			 <column name="MISC_FEE_AMOUNT" />
 			</property>
-			<property name="miscPenaltyAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<property name="miscPenaltyAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
 			 <column name="MISC_PENALTY_AMOUNT_CURRENCY_ID" /> 
 			 <column name="MISC_PENALTY_AMOUNT" />
 			</property>
 			<set name="feesTrxnDetails" inverse="true" cascade="all"
-				lazy="true">
+				lazy="true" access="field">
 				<key column="ACCOUNT_TRXN_ID" />
 				<one-to-many
 					class="org.mifos.application.accounts.business.FeesTrxnDetailEntity" />

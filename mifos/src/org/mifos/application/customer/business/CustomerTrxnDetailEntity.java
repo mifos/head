@@ -1,16 +1,21 @@
 package org.mifos.application.customer.business;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
+import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
+import org.mifos.application.accounts.business.LoanTrxnDetailEntity;
+import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
+import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -23,78 +28,57 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 
 public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
-	public CustomerTrxnDetailEntity() {
+	protected CustomerTrxnDetailEntity() {
+		totalAmount=null;
+		miscPenaltyAmount=null;
+		miscFeeAmount=null;
+		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
 	}
 
-	private Set<FeesTrxnDetailEntity> feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
+	private final Set<FeesTrxnDetailEntity> feesTrxnDetails;
 
-	private Money totalAmount;
+	private final Money totalAmount;
 
-	private Money miscPenaltyAmount;
+	private final Money miscPenaltyAmount;
 
-	private Money miscFeeAmount;
+	private final Money miscFeeAmount;
 
 	public Money getTotalAmount() {
 		return totalAmount;
-	}
-
-	public void setTotalAmount(Money totalAmount) {
-		this.totalAmount = totalAmount;
 	}
 
 	public Money getMiscFeeAmount() {
 		return miscFeeAmount;
 	}
 
-	public void setMiscFeeAmount(Money miscFeeAmount) {
-		this.miscFeeAmount = miscFeeAmount;
-	}
-
 	public Money getMiscPenaltyAmount() {
 		return miscPenaltyAmount;
-	}
-
-	public void setMiscPenaltyAmount(Money miscPenaltyAmount) {
-		this.miscPenaltyAmount = miscPenaltyAmount;
 	}
 
 	public Set<FeesTrxnDetailEntity> getFeesTrxnDetails() {
 		return feesTrxnDetails;
 	}
-
-	private void setFeesTrxnDetails(Set<FeesTrxnDetailEntity> feesTrxnDetails) {
-		this.feesTrxnDetails = feesTrxnDetails;
-	}
-
+	
 	public void addFeesTrxnDetail(FeesTrxnDetailEntity feesTrxn) {
 		feesTrxn.setAccountTrxn(this);
 		feesTrxnDetails.add(feesTrxn);
 	}
-
-	public void setPaymentDetails(AccountActionDateEntity accountAction,
-			CustomerAccountPaymentData customerAccountPaymentDataView,
-			PersonnelBO personnel, java.util.Date transactionDate)
-			throws ServiceException {
-		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.MasterDataService);
-		setActionDate(transactionDate);
-		setDueDate(accountAction.getActionDate());
-		setPersonnel(personnel);
-		setAccountActionEntity((AccountActionEntity) masterPersistenceService
-				.findById(AccountActionEntity.class,
-						AccountConstants.ACTION_CUSTOMER_ACCOUNT_REPAYMENT));
-		setCustomer(accountAction.getCustomer());
-		setComments("Payment rcvd.");
-		setTrxnCreatedDate(new Timestamp(System.currentTimeMillis()));
-
-		setInstallmentId(customerAccountPaymentDataView.getInstallmentId());
+	
+	public CustomerTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity,
+			CustomerAccountPaymentData customerAccountPaymentDataView, PersonnelBO personnel,
+			java.util.Date transactionDate,
+			AccountActionEntity accountActionEntity,
+			String comments) {
+		
+		super(accountPaymentEntity, accountActionEntity,
+				customerAccountPaymentDataView.getInstallmentId(), customerAccountPaymentDataView.getAccountActionDate()
+						.getActionDate(),personnel, transactionDate,customerAccountPaymentDataView.getTotalPaidAmnt(), 
+				 comments);
+		totalAmount=customerAccountPaymentDataView.getTotalPaidAmnt();
 		miscFeeAmount = customerAccountPaymentDataView.getMiscFeePaid();
 		miscPenaltyAmount = customerAccountPaymentDataView.getMiscPenaltyPaid();
-
-		Money totalFees = new Money();
-		for (AccountFeesActionDetailEntity accountFeesActionDetail : accountAction
-				.getAccountFeesActionDetails()) {
+		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
+		for (AccountFeesActionDetailEntity accountFeesActionDetail : customerAccountPaymentDataView.getAccountActionDate().getAccountFeesActionDetails()) {
 			if (customerAccountPaymentDataView.getFeesPaid().containsKey(
 					accountFeesActionDetail.getFee().getFeeId())) {
 				accountFeesActionDetail
@@ -105,14 +89,12 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 				FeesTrxnDetailEntity feesTrxnDetailBO = new FeesTrxnDetailEntity();
 				feesTrxnDetailBO.makePayment(accountFeesActionDetail);
 				addFeesTrxnDetail(feesTrxnDetailBO);
-				totalFees = totalFees.add(accountFeesActionDetail
-						.getFeeAmountPaid());
 			}
 		}
-		totalAmount = miscFeeAmount.add(miscPenaltyAmount).add(totalFees);
-		setAmount(totalAmount);
 	}
+	
 
+	
 	public FeesTrxnDetailEntity getFeesTrxn(Integer accountFeeId) {
 
 		if (null != getFeesTrxnDetails() && feesTrxnDetails.size() > 0) {
@@ -126,6 +108,21 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 		}
 		return null;
 	}
+	
+	public CustomerTrxnDetailEntity(AccountPaymentEntity accountPayment,
+			AccountActionEntity accountActionEntity, Short installmentId,
+			Date dueDate, PersonnelBO personnel,
+			Date actionDate, Money amount, 
+			String comments, AccountTrxnEntity relatedTrxn,
+			Money miscFeeAmount, Money miscPenaltyAmount) {
+		super(accountPayment, accountActionEntity, installmentId, dueDate, 
+				personnel, actionDate, amount, comments,
+				relatedTrxn);
+		this.miscFeeAmount = miscFeeAmount;
+		this.miscPenaltyAmount = miscPenaltyAmount;
+		this.totalAmount=amount;
+		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
+	}
 
 	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment)
 			throws ApplicationException, SystemException {
@@ -136,42 +133,22 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 				.debug(
 						"Inside generate reverse transaction method of loan trxn detail");
-		CustomerTrxnDetailEntity reverseAccntTrxn = new CustomerTrxnDetailEntity();
-		reverseAccntTrxn.setAccount(getAccount());
-		reverseAccntTrxn.setAccountPayment(getAccountPayment());
-		reverseAccntTrxn.setPersonnel(getPersonnel());
-		reverseAccntTrxn
-				.setAccountActionEntity((AccountActionEntity) masterPersistenceService
-						.findById(AccountActionEntity.class,
-								AccountConstants.ACTION_CUSTOMER_ADJUSTMENT));
-		reverseAccntTrxn.setAmount(getAmount().negate());
-		reverseAccntTrxn.setTotalAmount(getAmount().negate());
-
-		reverseAccntTrxn.setDueDate(getDueDate());
+		String comment=null;
 		if (null == adjustmentComment)
-			reverseAccntTrxn.setComments(getComments());
+			comment=getComments();
 		else
-			reverseAccntTrxn.setComments(adjustmentComment);
+			comment=adjustmentComment;
 
-		reverseAccntTrxn.setActionDate(getActionDate());
-		reverseAccntTrxn.setCustomer(getCustomer());
-		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-				"Just before setting created date");
-		reverseAccntTrxn.setTrxnCreatedDate(new Timestamp(System
-				.currentTimeMillis()));
-
-		if (getMiscFeeAmount().getAmountDoubleValue() > 0)
-			reverseAccntTrxn.setMiscFeeAmount(getMiscFeeAmount().negate());
-		else
-			reverseAccntTrxn.setMiscFeeAmount(new Money());
-		if (getMiscPenaltyAmount().getAmountDoubleValue() > 0)
-			reverseAccntTrxn.setMiscPenaltyAmount(getMiscPenaltyAmount()
-					.negate());
-		else
-			reverseAccntTrxn.setMiscPenaltyAmount(new Money());
-
-		reverseAccntTrxn.setInstallmentId(getInstallmentId());
-		reverseAccntTrxn.setRelatedTrxn(this);
+		CustomerTrxnDetailEntity  reverseAccntTrxn=new CustomerTrxnDetailEntity(getAccountPayment(),
+				(AccountActionEntity) masterPersistenceService
+				.findById(AccountActionEntity.class,
+						AccountConstants.ACTION_CUSTOMER_ADJUSTMENT), 
+						getInstallmentId(),
+						getDueDate(), getPersonnel(),
+						getActionDate(), getAmount().negate(), 
+				 comment, this,
+				getMiscFeeAmount().negate(), getMiscPenaltyAmount().negate()); 
+		
 
 		if (null != getFeesTrxnDetails() && getFeesTrxnDetails().size() > 0) {
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
