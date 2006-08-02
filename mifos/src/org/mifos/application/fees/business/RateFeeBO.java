@@ -39,7 +39,7 @@ package org.mifos.application.fees.business;
 
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.fees.exceptions.FeeException;
-import org.mifos.application.fees.util.helpers.FeesConstants;
+import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.security.util.UserContext;
@@ -100,7 +100,7 @@ public class RateFeeBO extends FeeBO {
 	
 	private void validateFields(Double rate, FeeFormulaEntity feeFormula)throws FeeException{
 		if(rate==null || rate.doubleValue()<=0.0 || feeFormula==null)
-			throw new FeeException(FeesConstants.INVALID_FEE_RATE_OR_FORMULA);
+			throw new FeeException(FeeConstants.INVALID_FEE_RATE_OR_FORMULA);
 	}
 	
 	public FeeFormulaEntity getFeeFormula() {

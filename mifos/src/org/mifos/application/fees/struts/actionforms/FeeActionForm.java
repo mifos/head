@@ -50,7 +50,7 @@ import org.mifos.application.fees.util.helpers.FeeFormula;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.FeeStatus;
-import org.mifos.application.fees.util.helpers.FeesConstants;
+import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
@@ -320,26 +320,26 @@ public class FeeActionForm extends ValidatorActionForm {
 		if (StringUtils.isNullAndEmptySafe(categoryType) && isCategoryLoan()) {
 			validateForPreviewLoanCategory(errors);
 		} else if (getAmountValue().equals(new Money())) {
-			addError(errors, FeesConstants.AMOUNT, FeesConstants.ERRORS_SPECIFY_VALUE);
+			addError(errors, FeeConstants.AMOUNT, FeeConstants.ERRORS_SPECIFY_VALUE);
 		}
 	}
 
 	private void validateForPreviewLoanCategory(ActionErrors errors) {
 		if (isBothRateAndAmountEmpty() || isBothRateAndAmountNotEmpty())
-			addError(errors, FeesConstants.RATE_OR_AMOUNT, FeesConstants.ERRORS_SPECIFY_AMOUNT_OR_RATE);
+			addError(errors, FeeConstants.RATE_OR_AMOUNT, FeeConstants.ERRORS_SPECIFY_AMOUNT_OR_RATE);
 		if (isRateEmptyAndFormulaNotNull() || isRateNotEmptyAndFormulaNull())
-			addError(errors, FeesConstants.RATE_AND_FORMULA, FeesConstants.ERRORS_SPECIFY_RATE_AND_FORMULA);
+			addError(errors, FeeConstants.RATE_AND_FORMULA, FeeConstants.ERRORS_SPECIFY_RATE_AND_FORMULA);
 	}
 
 	private void validateForEditPreview(ActionErrors errors) {
 		if (StringUtils.isNullAndEmptySafe(feeFormula)) {
 			if (!StringUtils.isNullAndEmptySafe(rate))
-				addError(errors, FeesConstants.RATE_AND_FORMULA, FeesConstants.ERRORS_SPECIFY_RATE_AND_FORMULA);
+				addError(errors, FeeConstants.RATE_AND_FORMULA, FeeConstants.ERRORS_SPECIFY_RATE_AND_FORMULA);
 		} else if (!StringUtils.isNullAndEmptySafe(amount))
-			addError(errors, FeesConstants.AMOUNT, FeesConstants.ERRORS_SPECIFY_VALUE);
+			addError(errors, FeeConstants.AMOUNT, FeeConstants.ERRORS_SPECIFY_VALUE);
 
 		if (getFeeStatusValue() == null)
-			addError(errors, FeesConstants.AMOUNT, FeesConstants.ERRORS_SELECT_STATUS);
+			addError(errors, FeeConstants.AMOUNT, FeeConstants.ERRORS_SELECT_STATUS);
 	}
 
 	private boolean isBothRateAndAmountEmpty() {

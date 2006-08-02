@@ -45,7 +45,7 @@ import java.util.Date;
 import org.mifos.application.fees.dao.FeesDAO;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeeStatus;
-import org.mifos.application.fees.util.helpers.FeesConstants;
+import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.framework.business.handlers.MifosBusinessProcessor;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -153,7 +153,7 @@ public class FeesBusinessProcessor extends MifosBusinessProcessor {
 	public void previewInitial(Context context)throws SystemException,ApplicationException{
 		Fees fees=(Fees)context.getValueObject();
 		if(fees.getRateOrAmount()==null ||fees.getRateOrAmount().equals(Double.valueOf("0.0"))){
-			throw new ApplicationException(FeesConstants.AMOUNTCANNOTBEZERO);
+			throw new ApplicationException(FeeConstants.AMOUNTCANNOTBEZERO);
 		}
 	}
 	

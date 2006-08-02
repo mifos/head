@@ -13,7 +13,6 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
-import org.mifos.application.fees.persistence.service.FeePersistenceService;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeChangeType;
 import org.mifos.application.fees.util.helpers.FeeStatus;

@@ -955,7 +955,7 @@
 		org.mifos.application.configuration.util.helpers.ConfigurationConstants,
 		org.mifos.application.accounts.util.helpers.AccountStates,
 		org.mifos.application.accounts.savings.util.helpers.SavingsConstants,
-		org.mifos.application.fees.util.helpers.FeesConstants" />
+		org.mifos.application.fees.util.helpers.FeeConstants" />
 	</plug-in>
 	<plug-in className="org.mifos.framework.struts.plugin.EnumPlugin">
 		<set-property property="enumFileNames"

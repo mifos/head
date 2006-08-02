@@ -52,7 +52,7 @@ import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionCache;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
-import org.mifos.application.fees.util.helpers.FeesConstants;
+import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.fees.util.valueobjects.ViewFees;
@@ -78,19 +78,19 @@ public class FeesDAO extends DAO {
 			throws SystemException, ApplicationException {
 		MasterDataRetriever masterDataRetriever = new MasterDataRetriever();
 		context.addAttribute(masterDataRetriever.retrieveMasterData(
-				FeesConstants.FEECATEGORY, localeId, FeesConstants.CATAGORY,
+				FeeConstants.FEECATEGORY, localeId, FeeConstants.CATAGORY,
 				"org.mifos.application.fees.util.valueobjects.CategoryType",
 				"categoryId"));
 		context.addAttribute(masterDataRetriever.retrieveMasterData(
-				FeesConstants.FEEPAYMENT, localeId, FeesConstants.PAYMENT,
+				FeeConstants.FEEPAYMENT, localeId, FeeConstants.PAYMENT,
 				"org.mifos.application.fees.util.valueobjects.FeePayment",
 				"feePaymentId"));
 		context.addAttribute(masterDataRetriever.retrieveMasterData(
-				FeesConstants.FEEFORMULA, localeId, FeesConstants.FORMULA,
+				FeeConstants.FEEFORMULA, localeId, FeeConstants.FORMULA,
 				"org.mifos.application.fees.util.valueobjects.FeeFormula",
 				"feeFormulaId"));
 		context.addAttribute(masterDataRetriever.retrieveMasterData(
-				FeesConstants.FEESTATUS, localeId, FeesConstants.STATUS,
+				FeeConstants.FEESTATUS, localeId, FeeConstants.STATUS,
 				"org.mifos.application.fees.util.valueobjects.FeeStatus",
 				"statusId"));
 		// context.addAttribute(masterDataRetriever )
@@ -171,7 +171,7 @@ public class FeesDAO extends DAO {
 		} catch (StaleObjectStateException sOSE) {
 			tx.rollback();
 			throw new ApplicationException(
-					FeesConstants.VERSIONNOMATCHINGPROBLEM);
+					FeeConstants.VERSIONNOMATCHINGPROBLEM);
 		} catch (HibernateProcessException e) {
 			tx.rollback();
 			throw new SystemException(e);

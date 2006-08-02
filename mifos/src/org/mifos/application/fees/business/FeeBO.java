@@ -49,7 +49,7 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeChangeType;
 import org.mifos.application.fees.util.helpers.FeeLevel;
 import org.mifos.application.fees.util.helpers.FeeStatus;
-import org.mifos.application.fees.util.helpers.FeesConstants;
+import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -188,7 +188,7 @@ public abstract class FeeBO extends BusinessObject {
 			setUpdateDetails();
 			new FeePersistence().createOrUpdate(this);
 		} catch (HibernateException he) {
-			throw new FeeException(FeesConstants.FEE_UPDATE_ERROR, he);
+			throw new FeeException(FeeConstants.FEE_UPDATE_ERROR, he);
 		}
 	}
 		
@@ -198,7 +198,7 @@ public abstract class FeeBO extends BusinessObject {
 		try {
 			new FeePersistence().createOrUpdate(this);
 		} catch (HibernateException he) {
-			throw new FeeException(FeesConstants.FEE_CREATE_ERROR, he);
+			throw new FeeException(FeeConstants.FEE_CREATE_ERROR, he);
 		}
 	}	
 
@@ -259,17 +259,17 @@ public abstract class FeeBO extends BusinessObject {
 	
 	private void validateFeeName(String feeName)throws FeeException{
 		if (StringUtils.isNullOrEmpty(feeName))
-			throw new FeeException(FeesConstants.INVALID_FEE_NAME);
+			throw new FeeException(FeeConstants.INVALID_FEE_NAME);
 	}
 	
 	private void validateGLCode(GLCodeEntity glCode)throws FeeException{
 		if(glCode==null)
-			throw new FeeException(FeesConstants.INVALID_GLCODE);
+			throw new FeeException(FeeConstants.INVALID_GLCODE);
 	}
 	
 	private void validateFeeCateogry(CategoryTypeEntity categoryType)throws FeeException{
 		if(categoryType==null)
-			throw new FeeException(FeesConstants.INVALID_FEE_CATEGORY);
+			throw new FeeException(FeeConstants.INVALID_FEE_CATEGORY);
 	}
 	
 	private FeeStatusEntity retrieveFeeStatusEntity(FeeStatus status)throws FeeException{

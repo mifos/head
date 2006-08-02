@@ -12,7 +12,7 @@ import org.mifos.application.accounts.persistence.service.AccountPersistanceServ
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
-import org.mifos.application.fees.persistence.service.FeePersistenceService;
+import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeChangeType;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.framework.components.cronjobs.TaskHelper;
@@ -27,7 +27,7 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 	@Override
 	public void execute(long timeInMillis) {
 		try {
-			List fees = new FeePersistenceService().getUpdatedFeesForCustomer();
+			List fees = new FeePersistence().getUpdatedFeesForCustomer();
 			AccountPersistanceService accountPersistanceService = new AccountPersistanceService();
 			if (fees != null && fees.size() > 0) {
 				HibernateUtil.startTransaction();

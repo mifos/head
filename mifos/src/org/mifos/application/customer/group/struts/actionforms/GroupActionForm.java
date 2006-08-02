@@ -65,7 +65,7 @@ import org.mifos.application.customer.util.valueobjects.CustomerCustomField;
 import org.mifos.application.customer.util.valueobjects.CustomerNote;
 import org.mifos.application.customer.util.valueobjects.CustomerPosition;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
-import org.mifos.application.fees.util.helpers.FeesConstants;
+import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.valueobjects.FeeMaster;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.meeting.util.resources.MeetingConstants;

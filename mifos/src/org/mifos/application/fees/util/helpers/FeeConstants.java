@@ -39,7 +39,7 @@
 
 package org.mifos.application.fees.util.helpers;
 
-public interface FeesConstants {
+public interface FeeConstants {
 
 	//Constants being used in to name the collection in masterdatareterival
 	public static final String LOCALEID="localeId";

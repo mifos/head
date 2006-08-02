@@ -51,7 +51,7 @@ import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
 import org.mifos.application.accounts.util.valueobjects.ClientUpcomingFeecahrges;
 import org.mifos.application.customer.client.util.valueobjects.ClientChangeLog;
 import org.mifos.application.fees.util.helpers.FeeStatus;
-import org.mifos.application.fees.util.helpers.FeesConstants;
+import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.framework.components.audit.util.valueobjects.AuditLog;
 import org.mifos.framework.components.audit.util.valueobjects.AuditLogRecord;
@@ -169,7 +169,7 @@ public class ClosedAccSearchDAO extends DAO {
 			Query query = session
 					.getNamedQuery(NamedQueryConstants.GETRECURRENCEFEESCHARGES);
 			query.setInteger(ClosedAccSearchConstants.ACCOUNTID, accountId);
-			query.setShort(FeesConstants.INACTIVE, FeeStatus.INACTIVE
+			query.setShort(FeeConstants.INACTIVE, FeeStatus.INACTIVE
 					.getValue());
 			List<ClientUpcomingFeecahrges> clientUpcomingFeecahrgesList = query
 					.list();

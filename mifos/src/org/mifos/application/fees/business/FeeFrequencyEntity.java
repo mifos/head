@@ -39,7 +39,7 @@
 package org.mifos.application.fees.business;
 
 import org.mifos.application.fees.exceptions.FeeException;
-import org.mifos.application.fees.util.helpers.FeesConstants;
+import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.business.PersistentObject;
 
@@ -99,12 +99,12 @@ public class FeeFrequencyEntity extends PersistentObject {
 	private void validateFields(FeeFrequencyTypeEntity frequencyType, FeeBO fee, FeePaymentEntity feePayment,
 			MeetingBO feeFrequency)throws FeeException{
 		if(fee==null)
-			throw new FeeException(FeesConstants.INVALID_FEE);
+			throw new FeeException(FeeConstants.INVALID_FEE);
 		if(frequencyType==null)
-			throw new FeeException(FeesConstants.INVALID_FEE_FREQUENCY_TYPE);
+			throw new FeeException(FeeConstants.INVALID_FEE_FREQUENCY_TYPE);
 		if(frequencyType.isOneTime() && feePayment==null)
-			throw new FeeException(FeesConstants.INVALID_FEE_PAYEMENT_TYPE);
+			throw new FeeException(FeeConstants.INVALID_FEE_PAYEMENT_TYPE);
 		if(frequencyType.isPeriodic() && feeFrequency==null)
-			throw new FeeException(FeesConstants.INVALID_FEE_FREQUENCY);
+			throw new FeeException(FeeConstants.INVALID_FEE_FREQUENCY);
 	}
 }

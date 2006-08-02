@@ -45,7 +45,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.fees.struts.actionforms.FeesActionForm;
-import org.mifos.application.fees.util.helpers.FeesConstants;
+import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -73,7 +73,7 @@ public class FeesAction extends MifosBaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		request.getSession().setAttribute("FeesActionForm", null);
-		return mapping.findForward(FeesConstants.CREATEFEES);
+		return mapping.findForward(FeeConstants.CREATEFEES);
 	}
 
 	public ActionForward customGet(ActionMapping mapping, ActionForm form,
@@ -82,7 +82,7 @@ public class FeesAction extends MifosBaseAction {
 
 		Context context = (Context) request.getAttribute(Constants.CONTEXT);
 		context.addBusinessResults("feesId", request.getParameter("feeIdTemp"));
-		return mapping.findForward(FeesConstants.FEEDETAILS);
+		return mapping.findForward(FeeConstants.FEEDETAILS);
 	}
 
 	public ActionForward customPreview(ActionMapping mapping, ActionForm form,
@@ -103,10 +103,10 @@ public class FeesAction extends MifosBaseAction {
 			fees.setRateOrAmount(amount.getAmountDoubleValue());
 		}
 
-		if (input.equalsIgnoreCase(FeesConstants.EDITFEEDETAILS)) {
-			return mapping.findForward(FeesConstants.PREVIEWFEEDETAILS);
+		if (input.equalsIgnoreCase(FeeConstants.EDITFEEDETAILS)) {
+			return mapping.findForward(FeeConstants.PREVIEWFEEDETAILS);
 		} else {
-			return mapping.findForward(FeesConstants.CREATEFEESPREVIEW);
+			return mapping.findForward(FeeConstants.CREATEFEESPREVIEW);
 		}
 	}
 
@@ -114,7 +114,7 @@ public class FeesAction extends MifosBaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
-		return mapping.findForward(FeesConstants.CREATEFEESCONFIRMATION);
+		return mapping.findForward(FeeConstants.CREATEFEESCONFIRMATION);
 
 	}
 
@@ -122,10 +122,10 @@ public class FeesAction extends MifosBaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		String input = request.getParameter("input");
-		if (input.equalsIgnoreCase(FeesConstants.PREVIEWFEEDETAILS)) {
-			return mapping.findForward(FeesConstants.EDITFEEDETAILS);
+		if (input.equalsIgnoreCase(FeeConstants.PREVIEWFEEDETAILS)) {
+			return mapping.findForward(FeeConstants.EDITFEEDETAILS);
 		} else {
-			return mapping.findForward(FeesConstants.CREATEFEES);
+			return mapping.findForward(FeeConstants.CREATEFEES);
 		}
 
 	}
@@ -133,21 +133,21 @@ public class FeesAction extends MifosBaseAction {
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		return mapping.findForward(FeesConstants.ADMIN);
+		return mapping.findForward(FeeConstants.ADMIN);
 	}
 
 	public ActionForward customManage(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
-		return mapping.findForward(FeesConstants.EDITFEEDETAILS);
+		return mapping.findForward(FeeConstants.EDITFEEDETAILS);
 
 	}
 
 	public ActionForward customSearch(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		return mapping.findForward(FeesConstants.VIEWEDITFEES);
+		return mapping.findForward(FeeConstants.VIEWEDITFEES);
 
 	}
 
@@ -155,10 +155,10 @@ public class FeesAction extends MifosBaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		String input = request.getParameter("input");
-		if (input.equalsIgnoreCase(FeesConstants.EDITFEEDETAILS)) {
-			return mapping.findForward(FeesConstants.EDITFEEDETAILS);
+		if (input.equalsIgnoreCase(FeeConstants.EDITFEEDETAILS)) {
+			return mapping.findForward(FeeConstants.EDITFEEDETAILS);
 		} else {
-			return mapping.findForward(FeesConstants.CREATEFEES);
+			return mapping.findForward(FeeConstants.CREATEFEES);
 		}
 	}
 

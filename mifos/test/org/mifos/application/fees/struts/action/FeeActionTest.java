@@ -52,7 +52,7 @@ import org.mifos.application.fees.util.helpers.FeeFormula;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.FeeStatus;
-import org.mifos.application.fees.util.helpers.FeesConstants;
+import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
@@ -117,23 +117,23 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		HttpSession session = request.getSession();
 		assertEquals("The size of master data for categories",
 				((List<MasterDataEntity>) session
-						.getAttribute(FeesConstants.CATEGORYLIST)).size(), 5);
+						.getAttribute(FeeConstants.CATEGORYLIST)).size(), 5);
 		assertEquals(
 				"The size of master data for loan time of charges for one time fees  : ",
 				((List<MasterDataEntity>) session
-						.getAttribute(FeesConstants.TIMEOFCHARGES)).size(),
+						.getAttribute(FeeConstants.TIMEOFCHARGES)).size(),
 				3);
 		assertEquals(
 				"The size of master data for customer  time of charges for one time fees master : ",
 				((List<MasterDataEntity>) session
-						.getAttribute(FeesConstants.CUSTOMERTIMEOFCHARGES))
+						.getAttribute(FeeConstants.CUSTOMERTIMEOFCHARGES))
 						.size(), 1);
 		assertEquals("The size of master data for loan formula : ",
 				((List<MasterDataEntity>) session
-						.getAttribute(FeesConstants.FORMULALIST)).size(), 3);
+						.getAttribute(FeeConstants.FORMULALIST)).size(), 3);
 		assertEquals("The size of master data for GLCodes of fees : ",
 				((List<MasterDataEntity>) session
-						.getAttribute(FeesConstants.GLCODE_LIST)).size(), 7);
+						.getAttribute(FeeConstants.GLCODE_LIST)).size(), 7);
 
 	}
 
@@ -432,7 +432,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		assertNull(actionForm.getFeeFormula());
 		
 		assertEquals("The size of master data for status",2,
-				((List<MasterDataEntity>) SessionUtils.getAttribute(FeesConstants.STATUSLIST,request.getSession())).size());
+				((List<MasterDataEntity>) SessionUtils.getAttribute(FeeConstants.STATUSLIST,request.getSession())).size());
 	}
 
 	public void testSuccessfulManage_RateFee() throws Exception {
@@ -451,7 +451,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		assertNull(actionForm.getAmount());
 		
 		assertEquals("The size of master data for status",2,
-				((List<MasterDataEntity>) SessionUtils.getAttribute(FeesConstants.STATUSLIST,request.getSession())).size());
+				((List<MasterDataEntity>) SessionUtils.getAttribute(FeeConstants.STATUSLIST,request.getSession())).size());
 	}
 	
 	public void testFailureEditPreviewForAmount() {
@@ -564,8 +564,8 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.viewAll_success.toString());
-		List<FeeBO> customerFees = (List<FeeBO>)SessionUtils.getAttribute(FeesConstants.CUSTOMER_FEES, request.getSession());
-		List<FeeBO> productFees = (List<FeeBO>)SessionUtils.getAttribute(FeesConstants.PRODUCT_FEES,  request.getSession());
+		List<FeeBO> customerFees = (List<FeeBO>)SessionUtils.getAttribute(FeeConstants.CUSTOMER_FEES, request.getSession());
+		List<FeeBO> productFees = (List<FeeBO>)SessionUtils.getAttribute(FeeConstants.PRODUCT_FEES,  request.getSession());
 		assertEquals(3, customerFees.size());
 		assertEquals(1, productFees.size());
 		

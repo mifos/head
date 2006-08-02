@@ -62,7 +62,7 @@ import org.mifos.application.fees.business.RateFeeBO;
 import org.mifos.application.fees.business.service.FeeBusinessService;
 import org.mifos.application.fees.struts.actionforms.FeeActionForm;
 import org.mifos.application.fees.util.helpers.FeePayment;
-import org.mifos.application.fees.util.helpers.FeesConstants;
+import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -222,9 +222,9 @@ public class FeeAction extends BaseAction {
 		for (FeeBO fee : productFees)
 			setLocaleForMasterEntities(fee, localeId);
 
-		SessionUtils.setAttribute(FeesConstants.CUSTOMER_FEES, customerFees,
+		SessionUtils.setAttribute(FeeConstants.CUSTOMER_FEES, customerFees,
 				request.getSession());
-		SessionUtils.setAttribute(FeesConstants.PRODUCT_FEES, productFees,
+		SessionUtils.setAttribute(FeeConstants.PRODUCT_FEES, productFees,
 				request.getSession());
 		return mapping.findForward(ActionForwards.viewAll_success.toString());
 	}
@@ -233,13 +233,13 @@ public class FeeAction extends BaseAction {
 			throws ApplicationException {
 		HttpSession session = request.getSession();
 		CategoryTypeEntity feeCategory = (CategoryTypeEntity) findMasterEntity(
-				session, FeesConstants.CATEGORYLIST, actionForm
+				session, FeeConstants.CATEGORYLIST, actionForm
 						.getCategoryTypeValue().getValue());
 		FeeFrequencyTypeEntity feeFrequencyType = (FeeFrequencyTypeEntity) findMasterEntity(
-				session, FeesConstants.FEE_FREQUENCY_TYPE_LIST, actionForm
+				session, FeeConstants.FEE_FREQUENCY_TYPE_LIST, actionForm
 						.getFeeFrequencyTypeValue().getValue());
 		GLCodeEntity glCode = findGLCodeEntity(session,
-				FeesConstants.GLCODE_LIST, actionForm.getGlCodeValue());
+				FeeConstants.GLCODE_LIST, actionForm.getGlCodeValue());
 
 		if (feeFrequencyType.isOneTime())
 			return createOneTimeFee(actionForm, request, feeCategory,
@@ -256,11 +256,11 @@ public class FeeAction extends BaseAction {
 			throws ApplicationException {
 		UserContext userContext = getUserContext(request);
 		FeePaymentEntity feePayment = (FeePaymentEntity) findMasterEntity(
-				request.getSession(), FeesConstants.TIMEOFCHARGES, actionForm
+				request.getSession(), FeeConstants.TIMEOFCHARGES, actionForm
 						.getFeePaymentTypeValue().getValue());
 		if (actionForm.isRateFee()) {
 			FeeFormulaEntity feeFormula = (FeeFormulaEntity) findMasterEntity(
-					request.getSession(), FeesConstants.FORMULALIST, actionForm
+					request.getSession(), FeeConstants.FORMULALIST, actionForm
 							.getFeeFormulaValue().getValue());
 			return new RateFeeBO(userContext, actionForm.getFeeName(),
 					feeCategory, feeFrequencyType, glCode, actionForm
@@ -288,7 +288,7 @@ public class FeeAction extends BaseAction {
 						MeetingType.FEEMEETING);
 		if (actionForm.isRateFee()) {
 			FeeFormulaEntity feeFormula = (FeeFormulaEntity) findMasterEntity(
-					request.getSession(), FeesConstants.FORMULALIST, actionForm
+					request.getSession(), FeeConstants.FORMULALIST, actionForm
 							.getFeeFormulaValue().getValue());
 			return new RateFeeBO(userContext, actionForm.getFeeName(),
 					feeCategory, feeFrequencyType, glCode, actionForm
@@ -328,28 +328,28 @@ public class FeeAction extends BaseAction {
 		Short localeId = getUserContext(request).getLocaleId();
 		HttpSession session = request.getSession();
 
-		SessionUtils.setAttribute(FeesConstants.CATEGORYLIST,
+		SessionUtils.setAttribute(FeeConstants.CATEGORYLIST,
 				getMasterEntities(CategoryTypeEntity.class, localeId), session);
 
 		List<MasterDataEntity> timeOfCharges = getMasterEntities(
 				FeePaymentEntity.class, localeId);
-		SessionUtils.setAttribute(FeesConstants.TIMEOFCHARGES, timeOfCharges,
+		SessionUtils.setAttribute(FeeConstants.TIMEOFCHARGES, timeOfCharges,
 				session);
-		SessionUtils.setAttribute(FeesConstants.CUSTOMERTIMEOFCHARGES,
+		SessionUtils.setAttribute(FeeConstants.CUSTOMERTIMEOFCHARGES,
 				getTimeOfChargeForCustomer(timeOfCharges), session);
-		SessionUtils.setAttribute(FeesConstants.FORMULALIST, getMasterEntities(
+		SessionUtils.setAttribute(FeeConstants.FORMULALIST, getMasterEntities(
 				FeeFormulaEntity.class, localeId), session);
-		SessionUtils.setAttribute(FeesConstants.FEE_FREQUENCY_TYPE_LIST,
+		SessionUtils.setAttribute(FeeConstants.FEE_FREQUENCY_TYPE_LIST,
 				getMasterEntities(FeeFrequencyTypeEntity.class, localeId),
 				session);
-		SessionUtils.setAttribute(FeesConstants.GLCODE_LIST, getGLCodes(),
+		SessionUtils.setAttribute(FeeConstants.GLCODE_LIST, getGLCodes(),
 				session);
 	}
 
 	private void loadUpdateMasterData(HttpServletRequest request)
 			throws ApplicationException, SystemException {
 
-		SessionUtils.setAttribute(FeesConstants.STATUSLIST, getMasterEntities(
+		SessionUtils.setAttribute(FeeConstants.STATUSLIST, getMasterEntities(
 				FeeStatusEntity.class, getUserContext(request).getLocaleId()),
 				request.getSession());
 	}

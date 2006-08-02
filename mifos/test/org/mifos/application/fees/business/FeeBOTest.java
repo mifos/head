@@ -46,7 +46,7 @@ import org.mifos.application.fees.util.helpers.FeeFormula;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeeLevel;
 import org.mifos.application.fees.util.helpers.FeePayment;
-import org.mifos.application.fees.util.helpers.FeesConstants;
+import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -74,7 +74,7 @@ public class FeeBOTest extends MifosTestCase {
 			assertFalse("Fee is created without fee name", true);
 		} catch (FeeException e) {
 			assertNull(fee);
-			assertEquals(e.getKey(),FeesConstants.INVALID_FEE_NAME);
+			assertEquals(e.getKey(),FeeConstants.INVALID_FEE_NAME);
 		}
 	}
 	
@@ -87,7 +87,7 @@ public class FeeBOTest extends MifosTestCase {
 			assertFalse("Fee is created without fee category", true);
 		} catch (FeeException e) {
 			assertNull(fee);
-			assertEquals(e.getKey(),FeesConstants.INVALID_FEE_CATEGORY);
+			assertEquals(e.getKey(),FeeConstants.INVALID_FEE_CATEGORY);
 		}
 	}
 	
@@ -100,7 +100,7 @@ public class FeeBOTest extends MifosTestCase {
 			assertFalse("Fee is created without frequency type", true);
 		} catch (FeeException e) {
 			assertNull(fee);
-			assertEquals(e.getKey(),FeesConstants.INVALID_FEE_FREQUENCY_TYPE);
+			assertEquals(e.getKey(),FeeConstants.INVALID_FEE_FREQUENCY_TYPE);
 		}
 	}
 	
@@ -112,7 +112,7 @@ public class FeeBOTest extends MifosTestCase {
 			assertFalse("Fee is created without Amount", true);
 		} catch (FeeException e) {
 			assertNull(fee);
-			assertEquals(e.getKey(),FeesConstants.INVALID_FEE_AMOUNT);
+			assertEquals(e.getKey(),FeeConstants.INVALID_FEE_AMOUNT);
 		}
 	}
 	
@@ -125,7 +125,7 @@ public class FeeBOTest extends MifosTestCase {
 			assertFalse("Fee is created without Rate", true);
 		} catch (FeeException e) {
 			assertNull(fee);
-			assertEquals(e.getKey(),FeesConstants.INVALID_FEE_RATE_OR_FORMULA);
+			assertEquals(e.getKey(),FeeConstants.INVALID_FEE_RATE_OR_FORMULA);
 		}
 	}
 	
@@ -137,7 +137,7 @@ public class FeeBOTest extends MifosTestCase {
 			assertFalse("Fee is created without Formula", true);
 		} catch (FeeException e) {
 			assertNull(fee);
-			assertEquals(e.getKey(),FeesConstants.INVALID_FEE_RATE_OR_FORMULA);
+			assertEquals(e.getKey(),FeeConstants.INVALID_FEE_RATE_OR_FORMULA);
 		}
 	}
 	

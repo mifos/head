@@ -68,7 +68,7 @@ import org.mifos.application.customer.util.valueobjects.CustomerMeeting;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeePayment;
-import org.mifos.application.fees.util.helpers.FeesConstants;
+import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.meeting.util.valueobjects.MeetingDetails;
@@ -199,8 +199,8 @@ public class AccountsApplyChargesDAO extends DAO {
 
 		context
 				.addAttribute(masterDataRetriever.retrieveMasterData(
-						FeesConstants.FEEFORMULA, context.getUserContext()
-								.getLocaleId(), FeesConstants.FORMULA,
+						FeeConstants.FEEFORMULA, context.getUserContext()
+								.getLocaleId(), FeeConstants.FORMULA,
 						AccountConstants.FEEFORMULAPATH,
 						AccountConstants.FEEFORMULAID));
 

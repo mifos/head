@@ -41,7 +41,7 @@ package org.mifos.application.fees.util.valueobjects;
 import java.util.Set;
 
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
-import org.mifos.application.fees.util.helpers.FeesConstants;
+import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
@@ -257,7 +257,7 @@ public class Fees extends ValueObject {
 	}
 
 	public String getResultName() {
-		return FeesConstants.FEES;
+		return FeeConstants.FEES;
 	}
 
 	public Integer getVersionNo() {
