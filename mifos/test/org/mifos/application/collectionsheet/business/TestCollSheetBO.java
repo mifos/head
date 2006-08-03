@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.framework.MifosTestCase;
-
 import org.hibernate.Session;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -22,15 +20,12 @@ import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.collectionsheet.persistence.service.CollectionSheetPersistenceService;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerLevelEntity;
-import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.util.valueobjects.AccountType;
-import org.mifos.application.master.util.valueobjects.InterestTypes;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.office.business.OfficeBO;
-import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -97,8 +92,7 @@ public class TestCollSheetBO extends MifosTestCase {
 		LoanBO loan = (LoanBO)createLoanAccount();
 		loan.setLoanAmount(TestObjectFactory.getMoneyForMFICurrency(100));
 		loan.setNoOfInstallments(Short.valueOf("5"));
-		InterestTypes interestType = new InterestTypes();
-		interestType.setInterestTypeId(Short.valueOf(LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT));
+		InterestTypesEntity interestType = new InterestTypesEntity(Short.valueOf(LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT));
 		loan.setInterestType(interestType);
 		List<LoanBO> loanWithDisbursalDate = new ArrayList<LoanBO>();
 		loanWithDisbursalDate.add(loan);

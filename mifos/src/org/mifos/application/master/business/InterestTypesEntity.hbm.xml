@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.master.business.InterestTypesEntity" table="INTEREST_TYPES">
+        <id name="id" column="INTEREST_TYPE_ID" >
+            <generator class="native"/>
+        </id>
+        <property name="descripton" column="DESCRIPTON" type="string" />
+        <many-to-one name="productType" column="CATEGORY_ID" class="org.mifos.application.productdefinition.business.ProductTypeEntity"  not-null="true" />
+        <many-to-one name="lookUpValue" class="org.mifos.application.master.business.LookUpValueEntity" column="LOOKUP_ID" insert="true" update="false"/>
+    </class>
+</hibernate-mapping>

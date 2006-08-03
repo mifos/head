@@ -41,6 +41,7 @@ package org.mifos.application.productdefinition.business;
 import java.util.Set;
 
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
+import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.util.valueobjects.Currency;
 import org.mifos.application.master.util.valueobjects.InterestCalcRule;
 import org.mifos.application.master.util.valueobjects.InterestTypes;
@@ -60,7 +61,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
 	private Short gracePeriodDuration;
 
-	private InterestTypes interestTypes;
+	private InterestTypesEntity interestTypes;
 
 	private Penalty penalty;
 
@@ -228,11 +229,11 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		this.interestCalcRule = interestCalcRule;
 	}
 
-	public InterestTypes getInterestTypes() {
+	public InterestTypesEntity getInterestTypes() {
 		return interestTypes;
 	}
 
-	public void setInterestTypes(InterestTypes interestTypes) {
+	public void setInterestTypes(InterestTypesEntity interestTypes) {
 		this.interestTypes = interestTypes;
 	}
 

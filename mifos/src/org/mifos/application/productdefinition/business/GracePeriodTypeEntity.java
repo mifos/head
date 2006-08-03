@@ -38,35 +38,20 @@
 
 package org.mifos.application.productdefinition.business;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.application.master.business.MasterDataEntity;
 
 /**
  * @author ashishsm
  * 
  */
-public class GracePeriodTypeEntity extends PersistentObject {
-
-	private Short gracePeriodTypeId;
-
-	private Integer lookUpId;
+public class GracePeriodTypeEntity extends MasterDataEntity {
 
 	public GracePeriodTypeEntity() {
 		super();
 	}
 
-	public Short getGracePeriodTypeId() {
-		return gracePeriodTypeId;
+	public GracePeriodTypeEntity(Short id) {
+		super(id);
 	}
-
-	public void setGracePeriodTypeId(Short gracePeriodTypeId) {
-		this.gracePeriodTypeId = gracePeriodTypeId;
-	}
-
-	public Integer getLookUpId() {
-		return lookUpId;
-	}
-
-	public void setLookUpId(Integer lookUpId) {
-		this.lookUpId = lookUpId;
-	}
+	
 }

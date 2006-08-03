@@ -38,7 +38,6 @@
 
 package org.mifos.application.accounts.loan.business;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -58,11 +57,11 @@ import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.accounts.business.AccountStateMachines;
 import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.business.LoanTrxnDetailEntity;
-import org.mifos.application.accounts.business.AccountStateMachines;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.loan.exceptions.LoanExceptionConstants;
@@ -80,23 +79,22 @@ import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
-import org.mifos.application.accounts.util.valueobjects.AccountPayment;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fund.util.valueobjects.Fund;
+import org.mifos.application.master.business.CollateralTypeEntity;
+import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.master.util.valueobjects.AccountType;
-import org.mifos.application.master.util.valueobjects.CollateralType;
-import org.mifos.application.master.util.valueobjects.InterestTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
+import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.util.valueobjects.GracePeriodType;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -143,9 +141,9 @@ public class LoanBO extends AccountBO {
 
 	private Integer businessActivityId;
 
-	private CollateralType collateralType;
+	private CollateralTypeEntity collateralType;
 
-	private GracePeriodType gracePeriodType;
+	private GracePeriodTypeEntity gracePeriodType;
 
 	private Short groupFlag;
 
@@ -153,7 +151,7 @@ public class LoanBO extends AccountBO {
 
 	private Money loanBalance;
 
-	private InterestTypes interestType;
+	private InterestTypesEntity interestType;
 
 	private Money interestRateAmount;
 
@@ -203,12 +201,22 @@ public class LoanBO extends AccountBO {
 		this.collateralNote = collateralNote;
 	}
 
-	public CollateralType getCollateralType() {
+
+
+	public CollateralTypeEntity getCollateralType() {
 		return collateralType;
 	}
 
-	public void setCollateralType(CollateralType collateralType) {
+	public void setCollateralType(CollateralTypeEntity collateralType) {
 		this.collateralType = collateralType;
+	}
+	
+	public GracePeriodTypeEntity getGracePeriodType() {
+		return gracePeriodType;
+	}
+
+	public void setGracePeriodType(GracePeriodTypeEntity gracePeriodType) {
+		this.gracePeriodType = gracePeriodType;
 	}
 
 	public Date getDisbursementDate() {
@@ -243,14 +251,6 @@ public class LoanBO extends AccountBO {
 		this.gracePeriodPenalty = gracePeriodPenalty;
 	}
 
-	public GracePeriodType getGracePeriodType() {
-		return gracePeriodType;
-	}
-
-	public void setGracePeriodType(GracePeriodType gracePeriodType) {
-		this.gracePeriodType = gracePeriodType;
-	}
-
 	public Short getGroupFlag() {
 		return groupFlag;
 	}
@@ -267,11 +267,11 @@ public class LoanBO extends AccountBO {
 		this.interestRateAmount = interestRateAmount;
 	}
 
-	public InterestTypes getInterestType() {
+	public InterestTypesEntity getInterestType() {
 		return interestType;
 	}
 
-	public void setInterestType(InterestTypes interestType) {
+	public void setInterestType(InterestTypesEntity interestType) {
 		this.interestType = interestType;
 	}
 
@@ -757,8 +757,7 @@ public class LoanBO extends AccountBO {
 		repaymntScheduleInputs.setMeeting(convertM2StyleToM1(meeting));
 		// set the inputs for repaymentSchedule
 		repaymntScheduleInputs.setGracePeriod(this.getGracePeriodDuration());
-		repaymntScheduleInputs.setGraceType(this.getGracePeriodType()
-				.getGracePeriodTypeId());
+		repaymntScheduleInputs.setGraceType(this.getGracePeriodType().getId());
 		repaymntScheduleInputs.setIsInterestDedecutedAtDisburesement(this
 				.getIntrestAtDisbursement().equals(Short.valueOf("1")) ? true
 				: false);
@@ -767,8 +766,7 @@ public class LoanBO extends AccountBO {
 		repaymntScheduleInputs.setInterestRate(this.getInterestRateAmount()
 				.getAmountDoubleValue());
 		repaymntScheduleInputs.setNoOfInstallments(this.getNoOfInstallments());
-		repaymntScheduleInputs.setInterestType(this.getInterestType()
-				.getInterestTypeId());
+		repaymntScheduleInputs.setInterestType(this.getInterestType().getId());
 		repaymntScheduleInputs.setMiscFees(getMiscFee());
 		repaymntScheduleInputs.setMiscPenlty(getMiscPenalty());
 		// TODO convert accountfee to m1 style

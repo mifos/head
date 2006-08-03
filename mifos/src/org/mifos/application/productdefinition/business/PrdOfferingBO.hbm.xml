@@ -43,7 +43,7 @@
 			<property name="gracePeriodDuration" column="GRACE_PERIOD_DURATION" type="short" />
 			<property name="penaltyRate" column="PENALTY_RATE" type="double" />
 			<many-to-one name="gracePeriodType" column="GRACEPERIOD_TYPE_ID" class="org.mifos.application.productdefinition.business.GracePeriodTypeEntity" cascade="none" />
-			<many-to-one name="interestTypes" column="INTEREST_TYPE_ID" class="org.mifos.application.master.util.valueobjects.InterestTypes" not-null="true" />
+			<many-to-one name="interestTypes" column="INTEREST_TYPE_ID" class="org.mifos.application.master.business.InterestTypesEntity" not-null="true" />
 			<many-to-one name="penalty" column="PENALTY_ID" class="org.mifos.application.penalty.util.valueobjects.Penalty" />
 			<many-to-one name="interestCalcRule" column="INTEREST_CALC_RULE_ID" class="org.mifos.application.master.util.valueobjects.InterestCalcRule" />
 			<many-to-one name="loanCounter" column="LOAN_COUNTER_FLAG" class="org.mifos.application.master.util.valueobjects.YesNoMaster" />

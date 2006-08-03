@@ -99,11 +99,11 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFormula;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeePayment;
+import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.master.util.valueobjects.InterestCalcRule;
 import org.mifos.application.master.util.valueobjects.InterestCalcType;
-import org.mifos.application.master.util.valueobjects.InterestTypes;
 import org.mifos.application.master.util.valueobjects.PrdApplicableMaster;
 import org.mifos.application.master.util.valueobjects.RecommendedAmntUnit;
 import org.mifos.application.master.util.valueobjects.SavingsType;
@@ -117,12 +117,12 @@ import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.productdefinition.util.valueobjects.GracePeriodType;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.framework.business.PersistentObject;
@@ -382,8 +382,7 @@ public class TestObjectFactory {
 
 		PrdStatusEntity prdStatus = new PrdStatusEntity();
 
-		InterestTypes interestType = new InterestTypes();
-		interestType.setInterestTypeId(interestTypeId);
+		InterestTypesEntity interestTypes = new InterestTypesEntity(interestTypeId);
 
 		InterestCalcRule interestCalcRule = new InterestCalcRule();
 		interestCalcRule.setInterestCalcRuleId(intCalcRuleId);
@@ -423,7 +422,7 @@ public class TestObjectFactory {
 		loanOffering
 				.setPrinDueLastInst(princDueLastInst.intValue() == 0 ? false
 						: true);
-		loanOffering.setInterestTypes(interestType);
+		loanOffering.setInterestTypes(interestTypes);
 		loanOffering.setInterestCalcRule(interestCalcRule);
 		loanOffering.setPrdOfferingMeeting(prdOfferingMeeting);
 
@@ -519,8 +518,7 @@ public class TestObjectFactory {
 		loan.setLoanBalance(new Money(currency, "300.0"));
 		loan.setNoOfInstallments(Short.valueOf("6"));
 
-		GracePeriodType gracePeriodType = new GracePeriodType();
-		gracePeriodType.setGracePeriodTypeId(Short.valueOf("1"));
+		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(Short.valueOf("1"));
 		loan.setGracePeriodType(gracePeriodType);
 		loan.setCreatedBy(Short.valueOf("1"));
 		loan.setCreatedDate(new Date(System.currentTimeMillis()));
@@ -1472,14 +1470,12 @@ public class TestObjectFactory {
 		loan.setLoanBalance(new Money(currency, "300.0"));
 		loan.setNoOfInstallments(Short.valueOf("6"));
 
-		GracePeriodType gracePeriodType = new GracePeriodType();
-		gracePeriodType.setGracePeriodTypeId(Short.valueOf("1"));
+		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(Short.valueOf("1"));
 		loan.setGracePeriodType(gracePeriodType);
 		loan.setCreatedBy(Short.valueOf("1"));
 		loan.setGracePeriodDuration(Short.valueOf("0"));
 
-		InterestTypes interestTypes = new InterestTypes();
-		interestTypes.setInterestTypeId(Short.valueOf("1"));
+		InterestTypesEntity interestTypes = new InterestTypesEntity(Short.valueOf("1"));
 		loan.setInterestType(interestTypes);
 		loan.setInterestRateAmount(new Money(Configuration.getInstance()
 				.getSystemConfig().getCurrency(), "10.0"));

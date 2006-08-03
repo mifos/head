@@ -102,7 +102,7 @@ public class TestLoanProduct extends MockStrutsTestCase {
 		addRequestParameter("minLoanAmount","1200");
 		addRequestParameter("maxLoanAmount","1500");
 		addRequestParameter("defaultLoanAmount","1350");
-		addRequestParameter("interestTypes.interestTypeId","1");
+		addRequestParameter("interestTypes.id","1");
 		addRequestParameter("maxInterestRate","120");
 		addRequestParameter("minInterestRate","101");
 		addRequestParameter("defInterestRate","110");
@@ -113,7 +113,7 @@ public class TestLoanProduct extends MockStrutsTestCase {
 		addRequestParameter("minNoInstallments","100");
 		addRequestParameter("defNoInstallments","110");
 		addRequestParameter("intDedDisbursementFlag","1");
-		addRequestParameter("gracePeriodType.gracePeriodTypeId","2");
+		addRequestParameter("gracePeriodType.id","2");
 
 		addRequestParameter("gracePeriodDuration","2");
 		addRequestParameter("prdOfferinFees","1");
@@ -223,7 +223,7 @@ public class TestLoanProduct extends MockStrutsTestCase {
 		addRequestParameter("minLoanAmount","1200");
 		addRequestParameter("maxLoanAmount","1500");
 		addRequestParameter("defaultLoanAmount","1350");
-		addRequestParameter("interestTypes.interestTypeId","1");
+		addRequestParameter("interestTypes.id","1");
 		addRequestParameter("maxInterestRate","120");
 		addRequestParameter("minInterestRate","101");
 		addRequestParameter("defInterestRate","110");
@@ -234,7 +234,7 @@ public class TestLoanProduct extends MockStrutsTestCase {
 		addRequestParameter("minNoInstallments","100");
 		addRequestParameter("defNoInstallments","110");
 		addRequestParameter("intDedDisbursementFlag","1");
-		addRequestParameter("gracePeriodType.gracePeriodTypeId","2");
+		addRequestParameter("gracePeriodType.id","2");
 
 		addRequestParameter("gracePeriodDuration","2");
 		addRequestParameter("prdOfferinFees","1");
