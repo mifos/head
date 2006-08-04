@@ -63,6 +63,7 @@ import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.valueobjects.CustomFieldDefinition;
 import org.mifos.application.customer.util.valueobjects.Customer;
+import org.mifos.application.customer.util.valueobjects.CustomerFeesActionDetail;
 import org.mifos.application.customer.util.valueobjects.CustomerMaster;
 import org.mifos.application.customer.util.valueobjects.CustomerPosition;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
@@ -1073,7 +1074,7 @@ public class CustomerUtilDAO extends DAO {
 				}
 				Set<AccountFeesActionDetail> accountFeesActionDetailSet=new HashSet<AccountFeesActionDetail>();
 				for(AccountFees accountFees :  accountFeesSet){
-					AccountFeesActionDetail accountFeesActionDetail = new AccountFeesActionDetail();
+					AccountFeesActionDetail accountFeesActionDetail = new CustomerFeesActionDetail();
 					accountFeesActionDetail.setInstallmentId(accActionDate.getInstallmentId());
 					accountFeesActionDetail.setAccountFee(accountFees);
 					accountFeesActionDetail.setFeeId(accountFees.getFees().getFeeId());

@@ -148,9 +148,7 @@
 	<mapping resource="org/mifos/application/accounts/util/valueobjects/AccountTrxn.hbm.xml" />
 	<mapping resource="org/mifos/application/accounts/util/valueobjects/LoanTrxnDetail.hbm.xml" />
 	<mapping resource="org/mifos/application/accounts/util/valueobjects/FeesTrxnDetail.hbm.xml" />
-	<mapping resource="org/mifos/application/accounts/util/valueobjects/AccountActionDate.hbm.xml" />
-	<mapping resource="org/mifos/application/accounts/util/valueobjects/AccountFeesActionDetail.hbm.xml" />
-
+	
 	<!-- Audit Log -->
 	<mapping resource="org/mifos/framework/struts/plugin/valueObjects/EntityMaster.hbm.xml" />
 	<mapping resource="org/mifos/framework/components/audit/util/valueobjects/AuditLog.hbm.xml" />
@@ -312,6 +310,10 @@
 
 	<mapping resource="org/mifos/application/accounts/loan/business/LoanFeeScheduleEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/business/CustomerFeeScheduleEntity.hbm.xml" />
+	<mapping
+		resource="org/mifos/application/customer/util/valueobjects/CustomerActionDate.hbm.xml" />
+	<mapping
+		resource="org/mifos/application/customer/util/valueobjects/CustomerFeesActionDetail.hbm.xml" />
 </session-factory>
 
 </hibernate-configuration>  

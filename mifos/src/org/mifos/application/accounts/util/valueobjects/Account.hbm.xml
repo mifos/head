@@ -35,15 +35,19 @@
 				<one-to-many class="org.mifos.application.accounts.util.valueobjects.AccountActivity" />
 		</set>
 		
-		<set name="accountActionDateSet"  cascade="all" inverse="true" table="ACCOUNT_ACTIONS_DATE" order-by="INSTALLMENT_ID asc" lazy="true">
+		<!--<set name="accountActionDateSet"  cascade="all" inverse="true" table="ACCOUNT_ACTIONS_DATE" order-by="INSTALLMENT_ID asc" lazy="true">
 				<key column="ACCOUNT_ID"  />
 				<one-to-many class="org.mifos.application.accounts.util.valueobjects.AccountActionDate" />
-		</set>
+		</set>-->
 		
 		
 		<!-- This is for customer account-->
 		<joined-subclass name="org.mifos.application.accounts.util.valueobjects.CustomerAccount" table="CUSTOMER_ACCOUNT">
 			<key column="ACCOUNT_ID"/>
+			<set name="accountActionDateSet"  cascade="all" inverse="true" order-by="INSTALLMENT_ID asc" lazy="true">
+				<key column="ACCOUNT_ID"  />
+				<one-to-many class="org.mifos.application.customer.util.valueobjects.CustomerActionDate" />
+			</set>
 		</joined-subclass>
 		
 		<!-- This is for loan account-->
