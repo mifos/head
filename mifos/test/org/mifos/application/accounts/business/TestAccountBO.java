@@ -548,8 +548,6 @@ public class TestAccountBO extends TestAccount {
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
 		accountBO.setUserContext(TestObjectFactory.getUserContext());
-		LoanPerformanceHistoryEntity loanPerfHistory = new LoanPerformanceHistoryEntity();
-		((LoanBO) accountBO).setPerformanceHistory(loanPerfHistory);
 		accountBO.adjustPmnt("loan account has been adjusted by test code");
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -560,7 +558,7 @@ public class TestAccountBO extends TestAccount {
 				.getCustomerId());
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		assertEquals(-5, ((LoanBO) accountBO).getPerformanceHistory()
+		assertEquals(0, ((LoanBO) accountBO).getPerformanceHistory()
 				.getNoOfPayments().intValue());
 
 	}

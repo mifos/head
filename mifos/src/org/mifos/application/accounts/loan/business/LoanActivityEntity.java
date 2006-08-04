@@ -4,164 +4,122 @@ import java.sql.Timestamp;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.util.helpers.Money;
 
 public class LoanActivityEntity extends PersistentObject {
 
-	private Integer id;
+	private final Integer id;
 
-	private PersonnelBO personnel;
+	private final AccountBO account;
 
-	private String comments;
+	private final PersonnelBO personnel;
 
-	private Money principal;
+	private final String comments;
 
-	private Money principalOutstanding;
+	private final Money principal;
 
-	private Money interest;
+	private final Money principalOutstanding;
 
-	private Money interestOutstanding;
+	private final Money interest;
 
-	private Money fee;
+	private final Money interestOutstanding;
 
-	private Money feeOutstanding;
+	private final Money fee;
 
-	private Money penalty;
+	private final Money feeOutstanding;
 
-	private Money penaltyOutstanding;
+	private final Money penalty;
 
-	private Timestamp trxnCreatedDate;
+	private final Money penaltyOutstanding;
 
-	private AccountBO account;
+	private final Timestamp trxnCreatedDate;
 
-	public LoanActivityEntity() {
-		trxnCreatedDate = new Timestamp(System.currentTimeMillis());
+	protected LoanActivityEntity() {
+		this.id = null;
+		this.personnel = null;
+		this.comments = null;
+		this.principal = null;
+		this.principalOutstanding = null;
+		this.interest = null;
+		this.interestOutstanding = null;
+		this.fee = null;
+		this.feeOutstanding = null;
+		this.penalty = null;
+		this.penaltyOutstanding = null;
+		this.trxnCreatedDate = null;
+		this.account = null;
 	}
 
-	public Money getInterest() {
-		return interest;
-	}
-
-	public void setInterest(Money interest) {
-		this.interest = interest;
-	}
-
-	public Money getPrincipal() {
-		return principal;
-	}
-
-	public void setPrincipal(Money principal) {
+	public LoanActivityEntity(AccountBO account,PersonnelBO personnel, String comments,
+			Money principal, Money principalOutstanding, Money interest,
+			Money interestOutstanding, Money fee, Money feeOutstanding,
+			Money penalty, Money penaltyOutstanding ) {
+		this.id = null;
+		this.personnel = personnel;
+		this.comments = comments;
 		this.principal = principal;
+		this.principalOutstanding = principalOutstanding;
+		this.interest = interest;
+		this.interestOutstanding = interestOutstanding;
+		this.fee = fee;
+		this.feeOutstanding = feeOutstanding;
+		this.penalty = penalty;
+		this.penaltyOutstanding = penaltyOutstanding;
+		this.trxnCreatedDate = new Timestamp(System.currentTimeMillis());
+		this.account = account;
 	}
 
 	public AccountBO getAccount() {
 		return account;
 	}
 
-	public void setAccount(AccountBO account) {
-		this.account = account;
-	}
-
 	public String getComments() {
 		return comments;
-	}
-
-	public void setComments(String comments) {
-		this.comments = comments;
 	}
 
 	public Money getFee() {
 		return fee;
 	}
 
-	public void setFee(Money fee) {
-		this.fee = fee;
-	}
-
 	public Money getFeeOutstanding() {
 		return feeOutstanding;
-	}
-
-	public void setFeeOutstanding(Money feeOutstanding) {
-		this.feeOutstanding = feeOutstanding;
-	}
-
-	public Money getInterestOutstanding() {
-		return interestOutstanding;
-	}
-
-	public void setInterestOutstanding(Money interestOutstanding) {
-		this.interestOutstanding = interestOutstanding;
-	}
-
-	public Money getPenalty() {
-		return penalty;
-	}
-
-	public void setPenalty(Money penalty) {
-		this.penalty = penalty;
-	}
-
-	public Money getPenaltyOutstanding() {
-		return penaltyOutstanding;
-	}
-
-	public void setPenaltyOutstanding(Money penaltyOutstanding) {
-		this.penaltyOutstanding = penaltyOutstanding;
-	}
-
-	public Money getPrincipalOutstanding() {
-		return principalOutstanding;
-	}
-
-	public void setPrincipalOutstanding(Money principalOutstanding) {
-		this.principalOutstanding = principalOutstanding;
-	}
-
-	public Timestamp getTrxnCreatedDate() {
-		return trxnCreatedDate;
-	}
-
-	public void setTrxnCreatedDate(Timestamp trxnCreatedDate) {
-		this.trxnCreatedDate = trxnCreatedDate;
 	}
 
 	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public Money getInterest() {
+		return interest;
+	}
+
+	public Money getInterestOutstanding() {
+		return interestOutstanding;
+	}
+
+	public Money getPenalty() {
+		return penalty;
+	}
+
+	public Money getPenaltyOutstanding() {
+		return penaltyOutstanding;
 	}
 
 	public PersonnelBO getPersonnel() {
 		return personnel;
 	}
 
-	public void setPersonnel(PersonnelBO personnel) {
-		this.personnel = personnel;
+	public Money getPrincipal() {
+		return principal;
 	}
 
-	public void setActivityDetails(LoanSummaryEntity loanSummary,PersonnelBO personnel,
-			Money principal, Money interest, Money fees, Money penalty,String comments) {
-		setPrincipal(principal);
-		setInterest(interest);
-		setPenalty(penalty);
-		setFee(fees);
-		setPrincipalOutstanding(loanSummary.getOriginalPrincipal().subtract(
-				loanSummary.getPrincipalPaid()));
-		setFeeOutstanding(loanSummary.getOriginalFees().subtract(
-				loanSummary.getFeesPaid()));
-		setPenaltyOutstanding(loanSummary.getOriginalPenalty().subtract(
-				loanSummary.getPenaltyPaid()));
-		setInterestOutstanding(loanSummary.getOriginalInterest().subtract(
-				loanSummary.getInterestPaid()));
-		
-		setPersonnel(personnel);
-		setComments(comments);
-		trxnCreatedDate = new Timestamp(System.currentTimeMillis());
+	public Money getPrincipalOutstanding() {
+		return principalOutstanding;
+	}
+
+	public Timestamp getTrxnCreatedDate() {
+		return trxnCreatedDate;
 	}
 
 }

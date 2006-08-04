@@ -143,11 +143,11 @@
 				cascade="none" update="false" insert="true" unique="true" />
 			<one-to-one name="loanSummary"
 				class="org.mifos.application.accounts.loan.business.LoanSummaryEntity"
-				cascade="all" lazy="true" />
+				cascade="all" lazy="true" access="field"/>
 			<one-to-one name="performanceHistory" 
 				class="org.mifos.application.accounts.loan.business.LoanPerformanceHistoryEntity" 
-				cascade="all" lazy="true" property-ref="loan"/>
-			<set name="loanActivityDetails" cascade="all" inverse="true"
+				cascade="all" lazy="true" property-ref="loan" access="field"/>
+			<set name="loanActivityDetails" cascade="all" inverse="true" access="field"
 				table="LOAN_ACTIVITY_DETAILS" lazy="true" order-by="ID desc">
 				<key column="ACCOUNT_ID" />
 				<one-to-many

@@ -71,15 +71,16 @@ import org.mifos.application.accounts.loan.business.LoanSummaryEntity;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
+import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
 import org.mifos.application.bulkentry.business.BulkEntryCustomerAccountInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
-import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
 import org.mifos.application.bulkentry.business.BulkEntryLoanInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntrySavingsInstallmentView;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
@@ -469,7 +470,7 @@ public class TestObjectFactory {
 			AccountType accountType = new AccountType();
 			accountType.setAccountTypeId(Short
 					.valueOf(AccountTypes.LOANACCOUNT));
-			loan = new LoanBO(userContext, loanOfering, customer, accountType);
+			loan = new LoanBO(userContext, loanOfering, customer, accountType,AccountState.getStatus(accountStateId));
 		} catch (Exception e) {
 		}
 
@@ -533,17 +534,9 @@ public class TestObjectFactory {
 		loan.setCreatedBy(Short.valueOf("1"));
 		loan.setCreatedDate(new Date(System.currentTimeMillis()));
 
-		LoanSummaryEntity loanSummary = new LoanSummaryEntity();
-		loanSummary.setLoan(loan);
-		loanSummary.setOriginalFees(new Money(currency, "0.0"));
+		LoanSummaryEntity loanSummary = loan.getLoanSummary();
 		loanSummary.setOriginalPrincipal(new Money(currency, "300.0"));
 		loanSummary.setOriginalInterest(new Money(currency, "36.0"));
-		loanSummary.setPenaltyPaid(new Money(currency, "0.0"));
-		loanSummary.setOriginalPenalty(new Money(currency, "0.0"));
-		loanSummary.setPrincipalPaid(new Money(currency, "0.0"));
-		loanSummary.setInterestPaid(new Money(currency, "0.0"));
-		loanSummary.setFeesPaid(new Money(currency, "0.0"));
-		loan.setLoanSummary(loanSummary);
 
 		return (LoanBO) testObjectPersistence.persist(loan);
 	}
@@ -1315,7 +1308,7 @@ public class TestObjectFactory {
 			AccountType accountType = new AccountType();
 			accountType.setAccountTypeId(Short
 					.valueOf(AccountTypes.LOANACCOUNT));
-			loan = new LoanBO(userContext, loanOfering, customer, accountType);
+			loan = new LoanBO(userContext, loanOfering, customer, accountType,AccountState.getStatus(accountStateId));
 		} catch (Exception e) {
 		}
 		loan.setAccountState(new AccountStateEntity(accountStateId));
@@ -1501,18 +1494,10 @@ public class TestObjectFactory {
 				.getSystemConfig().getCurrency(), "10.0"));
 		loan.setCreatedDate(new Date(System.currentTimeMillis()));
 
-		LoanSummaryEntity loanSummary = new LoanSummaryEntity();
-		loanSummary.setLoan(loan);
-		loanSummary.setOriginalFees(new Money(currency, "0.0"));
+		LoanSummaryEntity loanSummary = loan.getLoanSummary();
 		loanSummary.setOriginalPrincipal(new Money(currency, "300.0"));
 		loanSummary.setOriginalInterest(new Money(currency, "36.0"));
-		loanSummary.setPenaltyPaid(new Money(currency, "0.0"));
-		loanSummary.setOriginalPenalty(new Money(currency, "0.0"));
-		loanSummary.setPrincipalPaid(new Money(currency, "0.0"));
-		loanSummary.setInterestPaid(new Money(currency, "0.0"));
-		loanSummary.setFeesPaid(new Money(currency, "0.0"));
-		loan.setLoanSummary(loanSummary);
-
+		
 		return (LoanBO) testObjectPersistence.persist(loan);
 	}
 

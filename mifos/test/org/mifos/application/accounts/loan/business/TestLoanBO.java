@@ -1260,8 +1260,6 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = TestObjectFactory.createLoanAccount("42423142341", client,
 				Short.valueOf("3"), new Date(System.currentTimeMillis()),
 				loanOffering);
-		LoanPerformanceHistoryEntity loanPerfHistory = new LoanPerformanceHistoryEntity();
-		((LoanBO) accountBO).setPerformanceHistory(loanPerfHistory);
 		TestObjectFactory.updateObject(accountBO);
 		return accountBO;
 	}
@@ -1288,8 +1286,6 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", client, accountSate, startDate, loanOffering,
 				disbursalType);
-		LoanPerformanceHistoryEntity loanPerfHistory = new LoanPerformanceHistoryEntity();
-		((LoanBO) accountBO).setPerformanceHistory(loanPerfHistory);
 		return accountBO;
 
 	}
@@ -1314,8 +1310,6 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", group, accountSate, startDate, loanOffering,
 				disbursalType);
-		LoanPerformanceHistoryEntity loanPerfHistory = new LoanPerformanceHistoryEntity();
-		((LoanBO) accountBO).setPerformanceHistory(loanPerfHistory);
 		return accountBO;
 
 	}

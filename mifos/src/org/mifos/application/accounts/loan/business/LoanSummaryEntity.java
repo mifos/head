@@ -43,7 +43,9 @@ import org.mifos.framework.util.helpers.Money;
 
 public class LoanSummaryEntity extends PersistentObject {
 
-	private Integer accountId;
+	private final Integer accountId;
+
+	private final LoanBO loan;
 
 	private Money originalPrincipal;
 
@@ -61,22 +63,25 @@ public class LoanSummaryEntity extends PersistentObject {
 
 	private Money penaltyPaid;
 
-	private LoanBO loan;
-
-	public Integer getAccountId() {
-		return accountId;
+	protected LoanSummaryEntity() {
+		super();
+		this.accountId = null;
+		this.loan = null;
 	}
 
-	public void setAccountId(Integer accountId) {
-		this.accountId = accountId;
-	}
-
-	public LoanBO getLoan() {
-		return loan;
-	}
-
-	public void setLoan(LoanBO loan) {
+	public LoanSummaryEntity(LoanBO loan, Money originalPrincipal,
+			Money originalInterest, Money originalFees) {
+		super();
+		this.accountId = null;
 		this.loan = loan;
+		this.originalPrincipal = originalPrincipal;
+		this.originalInterest = originalInterest;
+		this.originalFees = originalFees;
+		this.originalPenalty = new Money();
+		this.principalPaid = new Money();
+		this.interestPaid = new Money();
+		this.feesPaid = new Money();
+		this.penaltyPaid = new Money();
 	}
 
 	public Money getFeesPaid() {

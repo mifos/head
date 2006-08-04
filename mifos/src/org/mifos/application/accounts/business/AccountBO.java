@@ -101,91 +101,7 @@ import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class AccountBO extends BusinessObject {
-	AccountPersistanceService accountPersistanceService = null;
-
-	// TODO: make constructor as protected and remove usage of this constructor
-	// from test cases.
-	protected AccountBO() {
-		accountId = null;
-		globalAccountNum=null;
-		customer=null;
-		accountType = null;
-		office =null;
-		personnel = null;
-		accountFees = new HashSet<AccountFeesEntity>();
-		accountPayments = new HashSet<AccountPaymentEntity>();
-		accountActionDates = new HashSet<AccountActionDateEntity>();
-		accountCustomFields = new HashSet<AccountCustomFieldEntity>();
-		accountNotes = new HashSet<AccountNotesEntity>();
-		accountStatusChangeHistory = new HashSet<AccountStatusChangeHistoryEntity>();
-		accountFlags = new HashSet<AccountFlagMapping>();
-	}
 	
-
-	protected AccountBO(UserContext userContext, CustomerBO customer,
-			AccountType accountType)
-			throws Exception {
-		super(userContext);
-		accountFees = new HashSet<AccountFeesEntity>();
-		accountPayments = new HashSet<AccountPaymentEntity>();
-		accountActionDates = new HashSet<AccountActionDateEntity>();
-		accountCustomFields = new HashSet<AccountCustomFieldEntity>();
-		accountNotes = new HashSet<AccountNotesEntity>();
-		accountStatusChangeHistory = new HashSet<AccountStatusChangeHistoryEntity>();
-		accountFlags = new HashSet<AccountFlagMapping>();
-		this.accountId = null;
-		this.globalAccountNum = generateId(userContext.getBranchGlobalNum());
-		this.customer = customer;
-		this.accountType = accountType;
-		this.office = customer.getOffice();
-		this.personnel = customer.getPersonnel();
-	}
-	
-	protected AccountBO(UserContext userContext, CustomerBO customer,
-			AccountType accountType, AccountState accountState)
-			throws AccountException {
-		super(userContext);
-		try{
-			accountFees = new HashSet<AccountFeesEntity>();
-			accountPayments = new HashSet<AccountPaymentEntity>();
-			accountActionDates = new HashSet<AccountActionDateEntity>();
-			accountCustomFields = new HashSet<AccountCustomFieldEntity>();
-			accountNotes = new HashSet<AccountNotesEntity>();
-			accountStatusChangeHistory = new HashSet<AccountStatusChangeHistoryEntity>();
-			accountFlags = new HashSet<AccountFlagMapping>();
-			this.accountId = null;
-			this.globalAccountNum = generateId(userContext.getBranchGlobalNum());
-			this.customer = customer;
-			this.accountType = accountType;
-			this.office = customer.getOffice();
-			this.personnel = customer.getPersonnel();
-			this.setAccountState(new AccountStateEntity(accountState));
-			setCreateDetails();
-		}catch(IDGenerationException idge){
-			throw new AccountException(idge);
-		}
-		catch(ServiceException se){
-			throw new AccountException(se);
-		}
-	}
-	
-	protected AccountBO(UserContext userContext) {
-		super(userContext);
-		accountId = null;
-		globalAccountNum = null;
-		customer = null;
-		office = null;
-		personnel = null;
-		accountType = null;
-		accountFees = new HashSet<AccountFeesEntity>();
-		accountPayments = new HashSet<AccountPaymentEntity>();
-		accountActionDates = new HashSet<AccountActionDateEntity>();
-		accountCustomFields = new HashSet<AccountCustomFieldEntity>();
-		accountNotes = new HashSet<AccountNotesEntity>();
-		accountStatusChangeHistory = new HashSet<AccountStatusChangeHistoryEntity>();
-		accountFlags = new HashSet<AccountFlagMapping>();
-	}
-
 	private  Integer accountId;
 
 	protected  String globalAccountNum;
@@ -216,6 +132,55 @@ public class AccountBO extends BusinessObject {
 
 	public Set<AccountStatusChangeHistoryEntity> accountStatusChangeHistory;
 	
+	protected AccountBO() {
+		this(null);
+	}
+	
+	protected AccountBO(UserContext userContext) {
+		super(userContext);
+		accountId = null;
+		globalAccountNum = null;
+		customer = null;
+		office = null;
+		personnel = null;
+		accountType = null;
+		accountFees = new HashSet<AccountFeesEntity>();
+		accountPayments = new HashSet<AccountPaymentEntity>();
+		accountActionDates = new HashSet<AccountActionDateEntity>();
+		accountCustomFields = new HashSet<AccountCustomFieldEntity>();
+		accountNotes = new HashSet<AccountNotesEntity>();
+		accountStatusChangeHistory = new HashSet<AccountStatusChangeHistoryEntity>();
+		accountFlags = new HashSet<AccountFlagMapping>();
+	}
+	
+	protected AccountBO(UserContext userContext, CustomerBO customer,
+			AccountType accountType, AccountState accountState)
+			throws AccountException {
+		super(userContext);
+		try{
+			accountFees = new HashSet<AccountFeesEntity>();
+			accountPayments = new HashSet<AccountPaymentEntity>();
+			accountActionDates = new HashSet<AccountActionDateEntity>();
+			accountCustomFields = new HashSet<AccountCustomFieldEntity>();
+			accountNotes = new HashSet<AccountNotesEntity>();
+			accountStatusChangeHistory = new HashSet<AccountStatusChangeHistoryEntity>();
+			accountFlags = new HashSet<AccountFlagMapping>();
+			this.accountId = null;
+			this.globalAccountNum = generateId(userContext.getBranchGlobalNum());
+			this.customer = customer;
+			this.accountType = accountType;
+			this.office = customer.getOffice();
+			this.personnel = customer.getPersonnel();
+			this.setAccountState(new AccountStateEntity(accountState));
+			setCreateDetails();
+		}catch(IDGenerationException idge){
+			throw new AccountException(idge);
+		}
+		catch(ServiceException se){
+			throw new AccountException(se);
+		}
+	}
+	
 	public Integer getAccountId() {
 		return accountId;
 	}
@@ -244,8 +209,6 @@ public class AccountBO extends BusinessObject {
 	private void setAccountFees(Set<AccountFeesEntity> accountFees) {
 		this.accountFees = accountFees;
 	}
-
-	
 
 	public Set<AccountPaymentEntity> getAccountPayments() {
 		return accountPayments;
@@ -512,12 +475,9 @@ public class AccountBO extends BusinessObject {
 
 	protected AccountPersistanceService getAccountPersistenceService()
 			throws ServiceException {
-		if (accountPersistanceService == null) {
-			accountPersistanceService = (AccountPersistanceService) ServiceFactory
+			return (AccountPersistanceService) ServiceFactory
 					.getInstance().getPersistenceService(
 							PersistenceServiceName.Account);
-		}
-		return accountPersistanceService;
 	}
 
 	public double getLastPmntAmnt() {
