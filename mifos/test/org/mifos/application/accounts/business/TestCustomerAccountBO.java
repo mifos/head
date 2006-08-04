@@ -81,7 +81,6 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 	public void testSuccessfulMakePayment() throws AccountException,
 			SystemException {
-		try {
 			createCenter();
 			CustomerAccountBO customerAccount = center.getCustomerAccount();
 			assertNotNull(customerAccount);
@@ -110,9 +109,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 							customerAccount.getAccountId(), transactionDate)
 							.size(), 0);
 			assertEquals(customerAccount.getCustomerActivitDetails().size(), 1);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
+
 	}
 
 	public void testFailureMakePayment() throws AccountException,
@@ -291,6 +289,9 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 	public void testWaiveChargeOverDue() throws Exception {
 		createInitialObjects();
+		TestObjectFactory.flushandCloseSession();
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
 		CustomerAccountBO customerAccountBO = group.getCustomerAccount();
 		changeFirstInstallmentDateToPreviousDate(customerAccountBO);
 		TestObjectFactory.updateObject(customerAccountBO);
@@ -350,11 +351,9 @@ public class TestCustomerAccountBO extends MifosTestCase {
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.1", meeting, new Date(System
+		center = TestObjectFactory.createCenter("Center_Active_test", CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting, new Date(System
 				.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group_Active_test", Short
-				.valueOf("3"), "1.1.1", center, new Date(System
+		group = TestObjectFactory.createGroup("Group_Active_test", CustomerStatus.GROUP_ACTIVE.getValue(), "1.1.1", center, new Date(System
 				.currentTimeMillis()));
 	}
 
@@ -641,16 +640,19 @@ public class TestCustomerAccountBO extends MifosTestCase {
 	}
 
 	public void testGenerateMeetingsForNextYear() throws Exception {
-
 		createInitialObjects();
+		TestObjectFactory.flushandCloseSession();
+		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+		int lastInstallmentId = center.getCustomerAccount().getAccountActionDates().size();
 		center.getCustomerAccount().generateMeetingsForNextYear();
 		MeetingBO meetingBO = center.getCustomerMeeting().getMeeting();
 		meetingBO.setMeetingStartDate(DateUtils.getFistDayOfNextYear(Calendar
 				.getInstance()));
 		List<java.util.Date> meetingDates = MeetingScheduleHelper
 				.getSchedulerObject(meetingBO).getAllDates();
+		
 		Date date = center.getCustomerAccount().getAccountActionDate(
-				Short.valueOf("4")).getActionDate();
+				(short)(lastInstallmentId+1)).getActionDate();
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		Calendar calendar2 = Calendar.getInstance();

@@ -105,24 +105,23 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 	}
 
 	public void testExcuteWithCustomerAccounts() throws NumberFormatException, SystemException, ApplicationException {
-		CustomerPersistence customerPersistence = new CustomerPersistence();
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test", Short
 				.valueOf("13"), "1.4", meeting, new Date(System
 				.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE, "1.4.1", center, new Date(System
+		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE, center.getSearchId()+".1", center, new Date(System
 				.currentTimeMillis()));
 		CenterBO center1 = TestObjectFactory.createCenter("Center_Active_test1", Short
 				.valueOf("13"), "1.5", meeting, new Date(System
 				.currentTimeMillis()));
-		GroupBO group1 = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE, "1.5.1", center1, new Date(System
+		GroupBO group1 = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE, center1.getSearchId()+".1", center1, new Date(System
 				.currentTimeMillis()));
-		client = TestObjectFactory.createClient("client1",ClientConstants.STATUS_ACTIVE,"1.4.1.1",group,new Date(System
+		client = TestObjectFactory.createClient("client1",ClientConstants.STATUS_ACTIVE,group.getSearchId()+".1",group,new Date(System
 				.currentTimeMillis()));
-		ClientBO client2 = TestObjectFactory.createClient("client2",ClientConstants.STATUS_CLOSED,"1.4.1.2",group,new Date(System
+		ClientBO client2 = TestObjectFactory.createClient("client2",ClientConstants.STATUS_CLOSED,group.getSearchId()+".2",group,new Date(System
 				.currentTimeMillis()));
-		ClientBO client3 = TestObjectFactory.createClient("client3",ClientConstants.STATUS_CANCELLED,"1.5.1",group1,new Date(System
+		ClientBO client3 = TestObjectFactory.createClient("client3",ClientConstants.STATUS_CANCELLED,group1.getSearchId()+".1",group1,new Date(System
 				.currentTimeMillis()));
 		
 		center.getCustomerMeeting().getMeeting().getMeetingDetails().setRecurAfter(Short.valueOf("2"));
@@ -308,12 +307,12 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		TestObjectFactory.createMeeting(meeting);
 		center = TestObjectFactory.createCenter("Center_Active_test", Short.valueOf("13"), "1.1", meeting,new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group1", Short.valueOf("9"),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
+				center.getSearchId()+".1", center, new Date(System.currentTimeMillis()));
 		client1 = TestObjectFactory.createClient("client1",
-				ClientConstants.STATUS_ACTIVE, "1.1.1.1", group, new Date(
+				ClientConstants.STATUS_ACTIVE, group.getSearchId()+".1", group, new Date(
 						System.currentTimeMillis()));
 		client2 = TestObjectFactory.createClient("client2",
-				ClientConstants.STATUS_ACTIVE, "1.1.1.2", group, new Date(
+				ClientConstants.STATUS_ACTIVE, group.getSearchId()+".2", group, new Date(
 						System.currentTimeMillis()));
 		MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
@@ -346,7 +345,7 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
+				center.getSearchId()+".1", center, new Date(System.currentTimeMillis()));
 		loanOfferingBO = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),
 				new Date(System.currentTimeMillis()), Short.valueOf("1"),

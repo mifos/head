@@ -60,6 +60,7 @@ import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
@@ -138,6 +139,34 @@ public class AccountBO extends BusinessObject {
 		this.accountType = accountType;
 		this.office = customer.getOffice();
 		this.personnel = customer.getPersonnel();
+	}
+	
+	protected AccountBO(UserContext userContext, CustomerBO customer,
+			AccountType accountType, AccountState accountState)
+			throws AccountException {
+		super(userContext);
+		try{
+			accountFees = new HashSet<AccountFeesEntity>();
+			accountPayments = new HashSet<AccountPaymentEntity>();
+			accountActionDates = new HashSet<AccountActionDateEntity>();
+			accountCustomFields = new HashSet<AccountCustomFieldEntity>();
+			accountNotes = new HashSet<AccountNotesEntity>();
+			accountStatusChangeHistory = new HashSet<AccountStatusChangeHistoryEntity>();
+			accountFlags = new HashSet<AccountFlagMapping>();
+			this.accountId = null;
+			this.globalAccountNum = generateId(userContext.getBranchGlobalNum());
+			this.customer = customer;
+			this.accountType = accountType;
+			this.office = customer.getOffice();
+			this.personnel = customer.getPersonnel();
+			this.setAccountState(new AccountStateEntity(accountState));
+			setCreateDetails();
+		}catch(IDGenerationException idge){
+			throw new AccountException(idge);
+		}
+		catch(ServiceException se){
+			throw new AccountException(se);
+		}
 	}
 	
 	protected AccountBO(UserContext userContext) {

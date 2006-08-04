@@ -232,7 +232,7 @@ public class MeetingBO extends BusinessObject {
 	 * 
 	 * @return String
 	 */
-	public String getFeeMeetingSchedule() {
+	public String getShortMeetingSchedule() {
 		String meeetingInfo = "";
 		if (null != this.meetingDetails) {
 			RecurrenceTypeEntity rt = this.meetingDetails.getRecurrenceType();
@@ -241,7 +241,7 @@ public class MeetingBO extends BusinessObject {
 						&& rt.getRecurrenceId().shortValue() == MeetingConstants.WEEK) {
 
 					meeetingInfo = this.meetingDetails.getRecurAfter()
-							+ " Week(s) ";
+							+ " week(s) ";
 
 				} else if (null != rt.getRecurrenceId()
 						&& rt.getRecurrenceId().shortValue() == MeetingConstants.MONTH) {

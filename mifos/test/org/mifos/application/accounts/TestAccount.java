@@ -2,14 +2,12 @@ package org.mifos.application.accounts;
 
 import java.util.Date;
 
-import org.mifos.framework.MifosTestCase;
-
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestAccount extends MifosTestCase {

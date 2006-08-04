@@ -64,7 +64,14 @@ public class AccountFeesEntity extends PersistentObject {
 		super();
 
 	}
-
+	
+	public AccountFeesEntity(AccountBO account, FeeBO fee, Money feeAmount){
+		this.account = account;
+		this.fees = fee;
+		this.feeAmount = feeAmount;
+		this.accountFeeAmount = feeAmount;
+	}
+	
 	private Integer accountFeeId;
 
 	private AccountBO account;

@@ -49,6 +49,10 @@ import org.hibernate.HibernateException;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
+import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
+import org.mifos.application.accounts.util.helpers.PaymentData;
+
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
@@ -59,8 +63,11 @@ import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.business.FeeView;
+import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.master.util.valueobjects.AccountType;
@@ -85,6 +92,7 @@ import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
@@ -98,6 +106,55 @@ public class CustomerAccountBO extends AccountBO {
 		customerActivitDetails = new HashSet<CustomerActivityEntity>();
 	}
 
+	public CustomerAccountBO(UserContext userContext, CustomerBO customer,
+			List<FeeView> fees) throws AccountException {
+		super(userContext,	customer, 
+				new AccountType(org.mifos.application.accounts.util.helpers.AccountType.CUSTOMERACCOUNT.getValue()), 
+				AccountState.CUSTOMERACCOUNT_ACTIVE);
+		if(fees !=null){
+			for(FeeView feeView: fees){
+				FeeBO fee = new FeePersistence().getFee(feeView.getFeeId());
+				this.addAccountFees(new AccountFeesEntity(this,fee, feeView.getAmount()));
+			}
+			generateCustomerFeeSchedule(customer);
+		}
+			
+		customerActivitDetails = new HashSet<CustomerActivityEntity>();
+	}
+
+	private void generateCustomerFeeSchedule(CustomerBO customer)throws AccountException{
+		if(customer.getCustomerMeeting()!=null && (
+				customer.getCustomerLevel().isGroup()&& customer.getCustomerStatus().getId().equals(CustomerStatus.GROUP_ACTIVE.getValue())
+				||customer.getCustomerLevel().isClient()&& customer.getCustomerStatus().getId().equals(CustomerStatus.CLIENT_ACTIVE.getValue())
+				||customer.getCustomerLevel().isCenter()&& customer.getCustomerStatus().getId().equals(CustomerStatus.CENTER_ACTIVE.getValue()))
+				){
+		try{
+			generateFeeSchedule(customer.getCustomerMeeting().getMeeting());
+		}catch(RepaymentScheduleException rse){
+			throw new AccountException(rse);
+		}
+	}
+	}
+	
+	private void generateFeeSchedule(MeetingBO meeting)throws RepaymentScheduleException{
+		RepaymentScheduleInputsIfc repaymntScheduleInputs = RepaymentScheduleFactory.getRepaymentScheduleInputs();
+		RepaymentScheduleIfc repaymentScheduler = RepaymentScheduleFactory.getRepaymentScheduler();
+		repaymntScheduleInputs.setMeeting(meeting);
+		repaymntScheduleInputs.setMeetingToConsider(RepaymentScheduleConstansts.MEETING_CUSTOMER);
+		repaymntScheduleInputs.setRepaymentFrequency(meeting);
+		repaymntScheduleInputs.setAccountFeeEntity(getAccountFees());
+		repaymentScheduler.setRepaymentScheduleInputs(repaymntScheduleInputs);
+		RepaymentSchedule repaymentSchedule = repaymentScheduler.getRepaymentSchedule();
+		Set<AccountActionDateEntity> accntActionDateSet = RepaymentScheduleHelper.getActionDateEntity(repaymentSchedule, "", this, customer);
+        //this will insert records in account action date which is noting but installments.
+		if(accntActionDateSet!=null){
+			for(AccountActionDateEntity accountActionDate : accntActionDateSet){
+				//accountActionDate.setCurrency(Short.valueOf("1"));
+				this.addAccountActionDate(accountActionDate);
+			}
+		}
+	}
+	
 	public Set<CustomerActivityEntity> getCustomerActivitDetails() {
 		return customerActivitDetails;
 	}
@@ -262,7 +319,6 @@ public class CustomerAccountBO extends AccountBO {
 						((CustomerScheduleEntity) accountActionDate)
 								.applyPeriodicFees(accountFeesEntity.getFees()
 										.getFeeId());
-
 						FeeBO feesBO = getAccountFeesObject(accountFeesEntity
 								.getFees().getFeeId());
 

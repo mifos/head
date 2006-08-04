@@ -103,6 +103,7 @@ import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeFormulaEntity;
 import org.mifos.application.fees.business.FeeFrequencyTypeEntity;
 import org.mifos.application.fees.business.FeePaymentEntity;
+import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.RateFeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFormula;
@@ -199,7 +200,7 @@ public class TestObjectFactory {
 	 * This is just a helper method which returns a new cust account object to
 	 * be used else where . The method does not persist it.
 	 */
-	public static CustomerAccountBO getCustAccountsHelper(Short createdBy,
+	/*public static CustomerAccountBO getCustAccountsHelper(Short createdBy,
 			CustomerBO customer, Date startDate) {
 		CustomerAccountBO custAccount = new CustomerAccountBO();
 
@@ -256,27 +257,36 @@ public class TestObjectFactory {
 		}
 
 		return custAccount;
-	}
+	}*/
 
 	public static CenterBO createCenter(String customerName, Short statusId,
 			String searchId, MeetingBO meeting, Date startDate) {
 		CenterBO center = null;
 		try {
-			OfficeBO office = getOffice(new Short("3"));
-			PersonnelBO personnel = getPersonnel(new Short("1"));
-			center = new CenterBO(getUserContext(), customerName,
-					CustomerStatus.getStatus(statusId), null, null, personnel,
-					office, meeting, personnel, searchId);
-			center.addCustomerAccount(getCustAccountsHelper(personnel
-					.getPersonnelId(), center, startDate));
+			Short officeId = new Short("3");
+			PersonnelBO personnel = getPersonnel(new Short("1"));		
+			if(meeting!=null)
+				meeting.setMeetingStartDate(new GregorianCalendar());
+			center = new CenterBO(getUserContext(), customerName, null, null, getFees(), personnel, officeId, meeting, personnel);
+			//center.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), center, startDate));
 			center.save();
 			HibernateUtil.commitTransaction();
-		} catch (Exception e) {
+			//TODO: throw Exception
+		}catch(Exception e){
 			e.printStackTrace();
 		}
 		return center;
 	}
-
+		
+	private static List<FeeView> getFees(){
+		List<FeeView> fees = new ArrayList<FeeView>();		
+		AmountFeeBO maintanenceFee = (AmountFeeBO)createPeriodicAmountFee("Mainatnence Fee", FeeCategory.ALLCUSTOMERS, "100",MeetingFrequency.WEEKLY,
+				Short.valueOf("1"));
+		FeeView fee = new FeeView(maintanenceFee.getFeeId(),maintanenceFee.getFeeName(), maintanenceFee.getFeeAmount().getAmountDoubleValue(), maintanenceFee.isPeriodic(), maintanenceFee.getFeeFrequency().getFeeMeetingFrequency());
+		fees.add(fee);
+		return fees;
+	}
+	
 	/**
 	 * This is just a helper method which returns a address object , this is
 	 * just a helper it does not persist any data.
@@ -293,16 +303,17 @@ public class TestObjectFactory {
 			String searchId, CustomerBO parentCustomer, Date startDate) {
 		GroupBO group = null;
 		try {
-			OfficeBO office = getOffice(new Short("3"));
+			Short office = new Short("3");
 			PersonnelBO personnel = getPersonnel(new Short("1"));
-			group = new GroupBO(getUserContext(), customerName, CustomerStatus
-					.getStatus(statusId), null, null, personnel, office,
-					parentCustomer, searchId);
-			group.addCustomerAccount(getCustAccountsHelper(personnel
-					.getPersonnelId(), group, startDate));
+			if(parentCustomer!=null && parentCustomer.getCustomerMeeting()!=null 
+					&& parentCustomer.getCustomerMeeting().getMeeting()!=null)
+				parentCustomer.getCustomerMeeting().getMeeting().setMeetingStartDate(new GregorianCalendar());
+			group = new GroupBO(getUserContext(), customerName, CustomerStatus.getStatus(statusId), null, null, getFees(), personnel, office, parentCustomer, searchId);
+			//group.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), group, startDate));
 			group.save();
 			HibernateUtil.commitTransaction();
-		} catch (Exception e) {
+			//TODO: throw Exception
+		}catch(Exception e){
 			e.printStackTrace();
 		}
 		return group;
@@ -312,13 +323,14 @@ public class TestObjectFactory {
 			String searchId, CustomerBO parentCustomer, Date startDate) {
 		ClientBO client = null;
 		try {
-			OfficeBO office = getOffice(new Short("3"));
+			Short office = new Short("3");
 			PersonnelBO personnel = getPersonnel(new Short("1"));
-			client = new ClientBO(getUserContext(), customerName,
-					CustomerStatus.getStatus(statusId), null, null, personnel,
-					office, parentCustomer, searchId);
-			client.addCustomerAccount(getCustAccountsHelper(personnel
-					.getPersonnelId(), client, startDate));
+			if(parentCustomer!=null && parentCustomer.getCustomerMeeting()!=null 
+					&& parentCustomer.getCustomerMeeting().getMeeting()!=null)
+				parentCustomer.getCustomerMeeting().getMeeting().setMeetingStartDate(new GregorianCalendar());
+			client = new ClientBO(getUserContext(), customerName, CustomerStatus.getStatus(statusId), null, null, getFees(), personnel, office, parentCustomer, searchId);
+		//	client.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), client, startDate));
+
 			Name name = new Name();
 			name.setFirstName(customerName);
 			name.setLastName(customerName);
@@ -943,6 +955,7 @@ public class TestObjectFactory {
 	}
 
 	public static void cleanUp(CustomerBO customer) {
+		
 		if (null != customer) {
 			deleteCustomer(customer);
 			customer=null;

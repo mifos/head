@@ -40,15 +40,15 @@ package org.mifos.application.customer.group.business;
 
 import java.util.List;
 
-import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomFieldView;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -74,29 +74,30 @@ public class GroupBO extends CustomerBO {
 	// TODO: removed searchId from parameter and generate internally
 	public GroupBO(UserContext userContext, String displayName,
 			CustomerStatus customerStatus, Address address,
-			List<CustomFieldView> customFields, PersonnelBO formedBy,
-			OfficeBO office, CustomerBO parentCustomer, String searchId)
-			throws CustomerException {
+			List<CustomFieldView> customFields, List<FeeView> fees,
+			PersonnelBO formedBy, Short office, CustomerBO parentCustomer,
+			String searchId) throws CustomerException {
 		this(userContext, displayName, customerStatus, address, customFields,
-				formedBy, office, parentCustomer, null, null, searchId);
+				fees, formedBy, office, parentCustomer, null, null, searchId);
 	}
 
 	public GroupBO(UserContext userContext, String displayName,
 			CustomerStatus customerStatus, Address address,
-			List<CustomFieldView> customFields, PersonnelBO formedBy,
-			OfficeBO office, MeetingBO meeting, PersonnelBO personnel,
-			String searchId) throws CustomerException {
+			List<CustomFieldView> customFields, List<FeeView> fees,
+			PersonnelBO formedBy, Short office, MeetingBO meeting,
+			PersonnelBO personnel, String searchId) throws CustomerException {
 		this(userContext, displayName, customerStatus, address, customFields,
-				formedBy, office, null, meeting, personnel, searchId);
+				fees, formedBy, office, null, meeting, personnel, searchId);
 	}
 
 	private GroupBO(UserContext userContext, String displayName,
 			CustomerStatus customerStatus, Address address,
-			List<CustomFieldView> customFields, PersonnelBO formedBy,
-			OfficeBO office, CustomerBO parentCustomer, MeetingBO meeting,
-			PersonnelBO personnel, String searchId) throws CustomerException {
+			List<CustomFieldView> customFields, List<FeeView> fees,
+			PersonnelBO formedBy, Short office, CustomerBO parentCustomer,
+			MeetingBO meeting, PersonnelBO personnel, String searchId)
+			throws CustomerException {
 		super(userContext, displayName, CustomerLevel.GROUP, customerStatus,
-				address, customFields, formedBy, office, parentCustomer,
+				address, customFields, fees, formedBy, office, parentCustomer,
 				meeting, personnel);
 		this.setSearchId(searchId);
 		if (customerStatus.equals(CustomerStatus.GROUP_ACTIVE.getValue()))

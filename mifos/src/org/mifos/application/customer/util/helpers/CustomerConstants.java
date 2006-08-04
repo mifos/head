@@ -207,4 +207,12 @@ public interface CustomerConstants {
 	
 	public static final short CUSTOMER_TYPE_ID = 3;
 	public static final short GROUP_ONHOLD = 3;
+	
+	//-------------------------------------------constants for M2 Migration
+	public static final String INVALID_MEETING="errors.Customer.invalidMeeting";
+	public static final String INVALID_LOAN_OFFICER="errors.Customer.invalidLoanOfficer";
+	public static final String INVALID_FORMED_BY="errors.Customer.invalidFormedBy";
+	public static final String INVALID_STATUS="errors.Customer.invalidStatus";
+	public static final String INVALID_NAME="errors.Customer.invalidName";
+	public static final String INVALID_OFFICE="errors.Customer.invalidOffice";
 }

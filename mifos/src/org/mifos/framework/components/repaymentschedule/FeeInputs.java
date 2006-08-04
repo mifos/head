@@ -26,6 +26,8 @@ package org.mifos.framework.components.repaymentschedule;
 
 import java.util.Set;
 import java.util.List;
+
+import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.framework.util.helpers.Money;
@@ -48,6 +50,7 @@ public class FeeInputs
 	private Date feeStartDate = null;
 	private Money feeAmount = new Money();
 	private int meetingToConsider;
+	private Set<AccountFeesEntity> accountFeesEntity = null;
 	
 	public int getMeetingToConsider() {
 		return meetingToConsider;
@@ -123,6 +126,14 @@ public class FeeInputs
 	public Date getFeeStartDate()
 	{
 		return feeStartDate;
+	}
+
+	public Set<AccountFeesEntity> getAccountFeesEntity() {
+		return accountFeesEntity;
+	}
+
+	public void setAccountFeesEntity(Set<AccountFeesEntity> accountFeesEntity) {
+		this.accountFeesEntity = accountFeesEntity;
 	}
 
 }

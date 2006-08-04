@@ -90,16 +90,16 @@ public class CustomerCustomFieldEntity extends PersistentObject {
 		return this.customer;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		CustomerCustomFieldEntity customerCustomField = (CustomerCustomFieldEntity) obj;
-		return this.customer.getCustomerId().equals(
-				customerCustomField.getCustomer().getCustomerId())
-				&& this.fieldId.equals(customerCustomField.getFieldId());
-	}
+//	@Override
+//	public boolean equals(Object obj) {
+//		CustomerCustomFieldEntity customerCustomField = (CustomerCustomFieldEntity) obj;
+//		return this.customer.getCustomerId().equals(
+//				customerCustomField.getCustomer().getCustomerId())
+//				&& this.fieldId.equals(customerCustomField.getFieldId());
+//	}
 
-	@Override
-	public int hashCode() {
-		return this.customer.getCustomerId().hashCode() + fieldId.hashCode();
-	}
+//	@Override
+//	public int hashCode() {
+//		return this.customer.getCustomerId().hashCode() + fieldId.hashCode();
+//	}
 }

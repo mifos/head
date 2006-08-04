@@ -161,4 +161,8 @@
 	<query name="Customer.getActiveCustomerUnderParent">
 		<![CDATA[from org.mifos.application.customer.business.CustomerBO as customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerStatus.id in (3,4,9,10,13) order by customer.customerActivationDate]]>
 	</query>
+	<query name="Customer.getCustomerCountForOffice">
+	    <![CDATA[select count(*) from org.mifos.application.customer.business.CustomerBO as customer where customer.customerLevel.id =:LEVEL_ID and customer.office.officeId =:OFFICE_ID]]>
+    </query>
+	
 </hibernate-mapping>

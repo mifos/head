@@ -173,6 +173,8 @@ public class RepaymentScheduleHelper {
 		feeInputs.setFeeStartDate(repaymentScheduleInputs.getFeeStartDate());
 		feeInputs.setMeetingToConsider(repaymentScheduleInputs
 				.getMeetingToConsider());
+		feeInputs.setAccountFeesEntity(repaymentScheduleInputs
+				.getAccountFeesEntity());
 
 		return feeInputs;
 
@@ -394,6 +396,7 @@ public class RepaymentScheduleHelper {
 		for (RepaymentScheduleInstallment repaymentScheduleInstallment : repaymentScheduleInstallmentList) {
 			accountActionDateEntity = getInstallmentEntity(
 					repaymentScheduleInstallment, type, account, customer);
+
 			accountActionDateEntitySet.add(accountActionDateEntity);
 
 		}
@@ -420,6 +423,26 @@ public class RepaymentScheduleHelper {
 					lastInstallment);
 			accountActionDateEntitySet.add(accountActionDateEntity);
 
+			// <<<<<<< .mine
+			// accountActionDateEntity.setInstallmentId(new Short(new
+			// Integer(repaymentScheduleInstallment.getInstallment()).shortValue()));
+			// accountActionDateEntity.setActionDate(new
+			// java.sql.Date(repaymentScheduleInstallment.getDueDate().getTime()));
+			// accountActionDateEntity.setPrincipal(repaymentScheduleInstallment.getPrincipal());
+			// accountActionDateEntity.setInterest(repaymentScheduleInstallment.getInterest());
+			// accountActionDateEntity.setDeposit(new Money());
+			// accountActionDateEntity.setPenalty(new Money());
+			//			
+			// accountActionDateEntity.setPenaltyPaid(new Money());
+			// accountActionDateEntity.setMiscPenaltyPaid(new Money());
+			//			
+			// accountActionDateEntity.setMiscFee(repaymentScheduleInstallment.getMiscFees());
+			// accountActionDateEntity.setMiscPenalty(repaymentScheduleInstallment.getMiscPenalty());
+			// accountActionDateEntity.setPaymentStatus(YesNoFlag.NO.getValue());
+			// if(repaymentScheduleInstallment.getFeeInstallment() != null)
+			// setFeeDetailEntity(accountActionDateEntity,repaymentScheduleInstallment.getFeeInstallment());
+			//			
+			// =======
 		}
 		MifosLogManager.getLogger(LoggerConstants.REPAYMENTSCHEDULAR).debug(
 				"RepamentScheduleHelper:getActionDateValueObject returning ");
@@ -535,7 +558,7 @@ public class RepaymentScheduleHelper {
 		return accountActionDateEntity;
 	}
 
-	public static void setFeeDetailEntity(
+public static void setFeeDetailEntity(
 			AccountActionDateEntity accountActionDate,
 			FeeInstallment feeInstallment, String type) {
 		MifosLogManager.getLogger(LoggerConstants.REPAYMENTSCHEDULAR).debug(
@@ -562,20 +585,25 @@ public class RepaymentScheduleHelper {
 						accountActionDate.getActionDate());
 				((LoanScheduleEntity) accountActionDate)
 						.addAccountFeesAction(accountFeesActionDetailEntity);
-
 			} else {
+				AccountFeesEntity accountFeesEntity = getAccountFeesEntity(accountFeeInstallment
+						.getAccountFee().getAccountFeeId());
+
+				if(accountFeesEntity == null)
+					accountFeesEntity = accountFeeInstallment.getAccountFeeEntity();
+					
 				accountFeesActionDetailEntity = new CustomerFeeScheduleEntity(
 						accountActionDate,
 						accountActionDate.getInstallmentId(),
 						getFeesBO(new Short(accountFeeInstallment.getFeeId())),
-						getAccountFeesEntity(accountFeeInstallment
-								.getAccountFee().getAccountFeeId()),
+						accountFeesEntity,
 						accountFeeInstallment.getAccountFeeAmount());
+				
 				accountFeeInstallment.getAccountFee().setLastAppliedDate(
 						accountActionDate.getActionDate());
+				
 				((CustomerScheduleEntity) accountActionDate)
 						.addAccountFeesAction(accountFeesActionDetailEntity);
-
 			}
 
 		}
@@ -583,11 +611,9 @@ public class RepaymentScheduleHelper {
 		MifosLogManager.getLogger(LoggerConstants.REPAYMENTSCHEDULAR).debug(
 				"RepamentScheduleHelper:getFeeDetail returning ");
 
-	}
-
-	private static FeeBO getFeesBO(Short feeId) {
+	}	private static FeeBO getFeesBO(Short feeId) {
 		FeePersistence feePersistenceService = new FeePersistence();
-		return feePersistenceService.getFees(feeId);
+		return feePersistenceService.getFee(feeId);
 	}
 
 	private static AccountFeesEntity getAccountFeesEntity(

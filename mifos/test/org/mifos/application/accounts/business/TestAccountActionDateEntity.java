@@ -15,11 +15,11 @@ import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
+import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
@@ -34,13 +34,9 @@ public class TestAccountActionDateEntity extends TestAccount {
 
 	private TestObjectPersistence testObjectPersistence;
 
-	private MifosCurrency currency = null;
-
 	public void setUp() throws Exception {
 		super.setUp();
 		testObjectPersistence = new TestObjectPersistence();
-		currency = testObjectPersistence.getCurrency();
-
 	}
 
 	public void testMakeEarlyRepaymentEnteriesForFeePayment() {
@@ -103,7 +99,8 @@ public class TestAccountActionDateEntity extends TestAccount {
 		Set<AccountActionDateEntity> accountActionDates = accountBO
 				.getAccountActionDates();
 		for (AccountActionDateEntity accountActionDate : accountActionDates) {
-			Money principal = ((LoanScheduleEntity)accountActionDate).getPrincipal();
+			Money principal = ((LoanScheduleEntity) accountActionDate)
+					.getPrincipal();
 			assertEquals(100.0, principal.getAmount().doubleValue());
 		}
 	}
@@ -203,6 +200,10 @@ public class TestAccountActionDateEntity extends TestAccount {
 	}
 
 	public void testWaiveCharges() {
+		HibernateUtil.closeSession();
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+
 		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) group
 				.getCustomerAccount().getAccountActionDates().toArray()[0];
 		accountActionDate.setMiscFee(new Money("20"));
@@ -213,7 +214,14 @@ public class TestAccountActionDateEntity extends TestAccount {
 			assertEquals(new Money(), accountFeesActionDetailEntity
 					.getFeeAmount());
 		}
-		assertEquals(new Money("120"), chargeWaived);
+		assertEquals(new Money("120.0"), chargeWaived);
+		HibernateUtil.closeSession();
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		accountBO = (AccountBO) TestObjectFactory.getObject(LoanBO.class,
+				accountBO.getAccountId());
 	}
 
 	public void testApplyPeriodicFees() {

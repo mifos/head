@@ -6,6 +6,7 @@ import junit.textui.TestRunner;
 import org.mifos.application.customer.business.TestCustomerBO;
 import org.mifos.application.customer.business.TestCustomerTrxnDetailEntity;
 import org.mifos.application.customer.business.service.TestCustomerBusinessService;
+import org.mifos.application.customer.center.business.CenterBOTest;
 import org.mifos.application.customer.client.business.TestClientBO;
 import org.mifos.application.customer.group.TestGroupBO;
 import org.mifos.application.customer.persistence.TestCustomerPersistence;
@@ -35,7 +36,7 @@ public class CustomerTestSuite extends MifosTestSuite {
 	{
 		CustomerTestSuite testSuite = new CustomerTestSuite();
 		testSuite.addTestSuite(TestCustomerPersistence.class);
-		testSuite.addTestSuite(TestCustomerPersistenceService.class);
+		//testSuite.addTestSuite(TestCustomerPersistenceService.class);
 		testSuite.addTestSuite(TestCustomerBusinessService.class);
 		testSuite.addTestSuite(TestCustomerTrxnDetailEntity.class);
 		testSuite.addTestSuite(TestCustomerApplyAdjustmentAction.class);
@@ -43,7 +44,7 @@ public class CustomerTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(TestClientBO.class);
 		testSuite.addTestSuite(TestCustomerBO.class);
 		testSuite.addTestSuite(TestGroupBO.class);
-		
+		testSuite.addTestSuite(CenterBOTest.class);
 		return testSuite;
 		
 	}

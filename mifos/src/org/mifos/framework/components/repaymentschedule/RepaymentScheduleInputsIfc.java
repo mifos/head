@@ -25,60 +25,103 @@
 
 package org.mifos.framework.components.repaymentschedule;
 
-import org.mifos.application.meeting.util.valueobjects.Meeting;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.framework.util.helpers.Money;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.List;
-import java.util.Date;
 /**
- *
- *  This interface takes in the relavant data required to perform various repayment schedule operations
+ * 
+ * This interface takes in the relavant data required to perform various
+ * repayment schedule operations
  */
-public interface RepaymentScheduleInputsIfc
-{
-
-
-
+public interface RepaymentScheduleInputsIfc {
 	public void setMeeting(Meeting meeting);
+
+	public void setMeeting(MeetingBO meeting);
+
 	public void setRepaymentFrequency(Meeting repaymentFrequency);
+
+	public void setRepaymentFrequency(MeetingBO repaymentFrequency);
+
 	public void setGraceType(int graceType);
+
 	public void setGracePeriod(int gracePeriodInInstallments);
+
 	public void setIsInterestDedecutedAtDisburesement(boolean isInterestDeducted);
+
 	public void setIsPrincipalInLastPayment(boolean isPrincipalInLastPayment);
+
 	public void setPrincipal(Money principal);
+
 	public void setInterestRate(double interestRate);
+
 	public void setNoOfInstallments(int noOfInstallments);
+
 	public void setInterestType(int interestType);
+
 	public void setLoanInterest(Money loanInterest);
+
 	public void setAccountFee(Set<AccountFees> fees);
+
+	public void setAccountFeeEntity(Set<AccountFeesEntity> fees);
+	
 	public void setInstallmentDate(List<InstallmentDate> installmentDate);
+
 	public void setFeeStartDate(Date feeStartDate);
+
 	public void setTotalFees(Money totalFees);
+
 	public void setMeetingToConsider(int meetingToConsider);
+
 	public void setDisbursementDate(Date disburesmentDate);
+
 	public void setMiscFees(Money miscFee);
+
 	public void setMiscPenlty(Money miscPenalty);
 
 	public Date getDisbursementDate();
+
 	public Meeting getMeeting();
+
 	public Meeting getRepaymentFrequency();
+
 	public int getGraceType();
+
 	public int getGracePeriod();
+
 	public boolean getIsInterestDedecutedAtDisburesement();
+
 	public boolean getIsPrincipalInLastPayment();
+
 	public Money getPrincipal();
+
 	public double getInterestRate();
+
 	public int getNoOfInstallments();
+
 	public int getInterestType();
+
 	public Money getLoanInterest();
+
 	public Set<AccountFees> getAccountFee();
+	
+	public Set<AccountFeesEntity> getAccountFeesEntity();
+
 	public List<InstallmentDate> getInstallmentDate();
+
 	public Date getFeeStartDate();
+
 	public Money getTotalFees();
+
 	public int getMeetingToConsider();
+
 	public Money getMiscFees();
+
 	public Money getMiscPenalty();
 }

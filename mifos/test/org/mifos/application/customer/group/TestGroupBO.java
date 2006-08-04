@@ -147,8 +147,8 @@ public class TestGroupBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
-		client = TestObjectFactory.createClient("Client",ClientConstants.STATUS_ACTIVE,"1.1.1.1",group,new Date(System
+				center.getSearchId()+".1", center, new Date(System.currentTimeMillis()));
+		client = TestObjectFactory.createClient("Client",ClientConstants.STATUS_ACTIVE,group.getSearchId()+".1",group,new Date(System
 				.currentTimeMillis()));
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),

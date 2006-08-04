@@ -60,6 +60,7 @@ import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -424,4 +425,23 @@ public class CustomerPersistence extends Persistence {
 			throw new PersistenceException(he);
 		}
 	}
+	
+	public int getCustomerCountForOffice(CustomerLevel customerLevel, Short officeId)
+			throws PersistenceException {
+		try {
+			int count = 0;
+			Map<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("LEVEL_ID", customerLevel.getValue());
+			queryParameters.put("OFFICE_ID", officeId);
+			List queryResult = executeNamedQuery(NamedQueryConstants.GET_CUSTOMER_COUNT_FOR_OFFICE, queryParameters);
+			if(queryResult.size()>0 && queryResult.get(0)!=null)
+				count = (Integer)queryResult.get(0);
+			
+			return count;
+		} catch (HibernateException he) {
+			he.printStackTrace();
+			throw new PersistenceException(he);
+		}
+	}
+	
 }

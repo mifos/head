@@ -123,6 +123,9 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
+		HibernateUtil.closeSession();
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
 		List<CustomerRecentActivityView> customerActivityViewList = service
 				.getAllActivityView(center.getGlobalCustNum());
 		assertEquals(0, customerActivityViewList.size());
@@ -145,6 +148,9 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
+		HibernateUtil.closeSession();
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
 		List<CustomerRecentActivityView> customerActivityViewList = service
 				.getAllActivityView(center.getGlobalCustNum());
 		assertEquals(0, customerActivityViewList.size());
@@ -339,21 +345,21 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				.valueOf("13"), "1.4", meeting, new Date(System
 				.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
-				"1.4.1", center, new Date(System.currentTimeMillis()));
+				center.getSearchId()+".1", center, new Date(System.currentTimeMillis()));
 		CenterBO center1 = TestObjectFactory.createCenter(
 				"Center_Active_test1", Short.valueOf("13"), "1.5", meeting,
 				new Date(System.currentTimeMillis()));
 		GroupBO group1 = TestObjectFactory.createGroup("Group1",
-				GroupConstants.ACTIVE, "1.5.1", center1, new Date(System
+				GroupConstants.ACTIVE, center1.getSearchId()+".1", center1, new Date(System
 						.currentTimeMillis()));
 		client = TestObjectFactory.createClient("client1",
-				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
+				ClientConstants.STATUS_ACTIVE, group.getSearchId()+".1", group, new Date(
 						System.currentTimeMillis()));
 		ClientBO client2 = TestObjectFactory.createClient("client2",
-				ClientConstants.STATUS_CLOSED, "1.4.1.2", group, new Date(
+				ClientConstants.STATUS_CLOSED, group.getSearchId()+".2", group, new Date(
 						System.currentTimeMillis()));
 		ClientBO client3 = TestObjectFactory.createClient("client3",
-				ClientConstants.STATUS_CANCELLED, "1.5.1", group1, new Date(
+				ClientConstants.STATUS_CANCELLED, group1.getSearchId()+".1", group1, new Date(
 						System.currentTimeMillis()));
 		account = getSavingsAccountWithBalance(center, meeting);
 		AccountBO account1 = getSavingsAccountWithBalance(client, meeting);
@@ -372,7 +378,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		AccountBO account10 = getLoanAccount(group, meeting);
 
 		CenterPerformanceHistory centerPerformanceHistory = service
-				.getCenterPerformanceHistory("1.4", Short.valueOf("3"));
+				.getCenterPerformanceHistory(center.getSearchId(), Short.valueOf("3"));
 		totalLoan = centerPerformanceHistory.getTotalOutstandingPortfolio();
 		totalSavings = centerPerformanceHistory.getTotalSavings();
 		totalPortfolioAtRisk = centerPerformanceHistory.getPortfolioAtRisk();
@@ -419,7 +425,6 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				new Integer(group1.getCustomerId())));
 		center1 = (CenterBO) (HibernateUtil.getSessionTL().get(CenterBO.class,
 				new Integer(center1.getCustomerId())));
-
 		TestObjectFactory.cleanUp(account3);
 		TestObjectFactory.cleanUp(account2);
 		TestObjectFactory.cleanUp(account1);

@@ -47,10 +47,12 @@ import java.util.Set;
 import org.hibernate.HibernateException;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.CustomerAccountBO;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -59,8 +61,10 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.IdGenerator;
+import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.BusinessObject;
@@ -74,6 +78,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
+import org.mifos.framework.util.helpers.StringUtils;
 
 /**
  * A class that represents a customer entity after being created.
@@ -147,10 +152,16 @@ public abstract class CustomerBO extends BusinessObject {
 	protected CustomerBO(UserContext userContext, String displayName,
 			CustomerLevel customerLevel, CustomerStatus customerStatus,
 			Address address, List<CustomFieldView> customFields,
-			PersonnelBO formedBy, OfficeBO office, CustomerBO parentCustomer,
-			MeetingBO meeting, PersonnelBO personnel) throws CustomerException {
-		this.userContext = userContext;
-		this.office = office;
+			List<FeeView> fees, PersonnelBO formedBy, Short officeId,
+			CustomerBO parentCustomer, MeetingBO meeting, PersonnelBO personnel)
+			throws CustomerException {
+		super(userContext);
+		validateFields(displayName, customerStatus, formedBy, officeId);
+		this.customFields = new HashSet<CustomerCustomFieldEntity>();
+		this.accounts = new HashSet<AccountBO>();
+
+		this.office = new OfficePersistence().getOffice(officeId);
+
 		this.displayName = displayName;
 		this.customerLevel = new CustomerLevelEntity(customerLevel);
 
@@ -188,15 +199,11 @@ public abstract class CustomerBO extends BusinessObject {
 		this.customerId = null;
 		this.historicalData = null;
 		this.customerFlags = null;
-		// TODO: create a customer account and set here
-		this.accounts = new HashSet<AccountBO>();
+
+		this.accounts.add(createCustomerAccount(fees));
+
 		// TODO: write code to create customer hierarchy and add
 		this.setCreateDetails();
-	}
-
-	private CustomerMeetingEntity createCustomerMeeting(MeetingBO meeting) {
-		return meeting != null ? new CustomerMeetingEntity(this, meeting)
-				: null;
 	}
 
 	public boolean isBlackList() {
@@ -316,7 +323,7 @@ public abstract class CustomerBO extends BusinessObject {
 	public CustomerAccountBO getCustomerAccount() {
 		for (AccountBO account : accounts) {
 			if (account.getAccountType().getAccountTypeId().equals(
-					Short.valueOf(AccountTypes.CUSTOMERACCOUNT)))
+					Short.valueOf(AccountType.CUSTOMERACCOUNT.getValue())))
 				return (CustomerAccountBO) account;
 		}
 		return null;
@@ -599,4 +606,40 @@ public abstract class CustomerBO extends BusinessObject {
 		this.customerActivationDate = customerActivationDate;
 	}
 
+	private void validateFields(String displayName,
+			CustomerStatus customerStatus, PersonnelBO personnel, Short officeId)
+			throws CustomerException {
+		if (StringUtils.isNullOrEmpty(displayName))
+			throw new CustomerException(CustomerConstants.INVALID_NAME);
+		if (customerStatus == null)
+			throw new CustomerException(CustomerConstants.INVALID_STATUS);
+		if (personnel == null)
+			throw new CustomerException(CustomerConstants.INVALID_FORMED_BY);
+		if (officeId == null)
+			throw new CustomerException(CustomerConstants.INVALID_OFFICE);
+	}
+
+	protected void validateMeeting(MeetingBO meeting) throws CustomerException {
+		if (meeting == null)
+			throw new CustomerException(CustomerConstants.INVALID_MEETING);
+	}
+
+	protected void validateLO(PersonnelBO personnel) throws CustomerException {
+		if (personnel == null)
+			throw new CustomerException(CustomerConstants.INVALID_LOAN_OFFICER);
+	}
+
+	private CustomerAccountBO createCustomerAccount(List<FeeView> fees)
+			throws CustomerException {
+		try {
+			return new CustomerAccountBO(userContext, this, fees);
+		} catch (AccountException ae) {
+			throw new CustomerException(ae);
+		}
+	}
+
+	private CustomerMeetingEntity createCustomerMeeting(MeetingBO meeting) {
+		return meeting != null ? new CustomerMeetingEntity(this, meeting)
+				: null;
+	}
 }

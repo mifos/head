@@ -24,6 +24,7 @@
  */
 package org.mifos.framework.components.repaymentschedule;
 
+import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.framework.util.helpers.Money;
 
@@ -38,6 +39,7 @@ public class AccountFeeInstallment
 	private Short feeId;;
 	private Money accountFeeAmount = new Money();
 	private AccountFees accountFees;
+	private AccountFeesEntity accountFeeEntity;
 
 
 	public void setFeeId(Short feeId)
@@ -68,6 +70,14 @@ public class AccountFeeInstallment
 	public AccountFees getAccountFee()
 	{
 		return accountFees;
+	}
+
+	public AccountFeesEntity getAccountFeeEntity() {
+		return accountFeeEntity;
+	}
+
+	public void setAccountFeeEntity(AccountFeesEntity accountFeeEntity) {
+		this.accountFeeEntity = accountFeeEntity;
 	}
 
 

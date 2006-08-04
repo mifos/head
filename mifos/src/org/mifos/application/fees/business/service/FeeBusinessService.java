@@ -60,10 +60,6 @@ public class FeeBusinessService extends BusinessService {
 		return null;
 	};
 
-	public FeeBO getFees(Short feeId) {
-		return feePersistence.getFees(feeId);
-	}
-
 	public FeeBO getFee(Short feeId) {
 		return feePersistence.getFee(feeId);
 	}

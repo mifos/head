@@ -2,9 +2,12 @@ package org.mifos.application.accounts.business;
 
 import java.util.Date;
 
+import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -49,7 +52,11 @@ public class TestAccountFeesActionDetailEntity extends MifosTestCase {
 		}
 	}
 
+
 	public void testWaiveCharges() {
+		HibernateUtil.closeSession();
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+
 		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) group
 				.getCustomerAccount().getAccountActionDates().toArray()[0];
 		Money chargeWaived = new Money();
@@ -60,6 +67,10 @@ public class TestAccountFeesActionDetailEntity extends MifosTestCase {
 					.getFeeAmount());
 		}
 		assertEquals(new Money("100"), chargeWaived);
+		HibernateUtil.closeSession();
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
+		accountBO=(AccountBO)TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
 	}
 
 	private AccountBO getLoanAccount() {

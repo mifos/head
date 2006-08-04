@@ -43,51 +43,62 @@ import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.ApplicableAccountsTypeEntity;
 import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
 /**
  * @author rajenders
- *
+ * 
  */
 public class FeePersistence extends Persistence {
-	
-	public FeeBO getFees( Short feeid){
+
+	public FeeBO getFee(Short feeId) {
 		Session session = HibernateUtil.getSessionTL();
-		return (FeeBO)session.get(FeeBO.class,feeid);
+		return (FeeBO) session.get(FeeBO.class, feeId);
 	}
 
-	public FeeBO getFee( Short feeid){
-		Session session = HibernateUtil.getSessionTL();
-		return (FeeBO)session.get(FeeBO.class,feeid);
+	public List<FeeBO> getUpdatedFeesForCustomer() {
+		return executeNamedQuery(
+				NamedQueryConstants.GET_UPDATED_FEES_FOR_CUSTOMERS, null);
 	}
-	
-	public List<FeeBO>  getUpdatedFeesForCustomer(){
-		return executeNamedQuery(NamedQueryConstants.GET_UPDATED_FEES_FOR_CUSTOMERS,null);
-	}
-	
-	public ApplicableAccountsTypeEntity getUpdateTypeEntity(Short id){
+
+	public ApplicableAccountsTypeEntity getUpdateTypeEntity(Short id) {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("ID",id);
-		return (ApplicableAccountsTypeEntity)executeNamedQuery(NamedQueryConstants.GET_FEE_UPDATETYPE,queryParameters).get(0);
+		queryParameters.put("ID", id);
+		return (ApplicableAccountsTypeEntity) executeNamedQuery(
+				NamedQueryConstants.GET_FEE_UPDATETYPE, queryParameters).get(0);
 	}
-	
-	public List<FeeBO> retrieveCustomerFees()throws PersistenceException{
-		try{
-			return executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOMER_FEES,null);
-		}catch(HibernateException he){
+
+	public List<FeeBO> retrieveCustomerFees() throws PersistenceException {
+		try {
+			return executeNamedQuery(
+					NamedQueryConstants.RETRIEVE_CUSTOMER_FEES, null);
+		} catch (HibernateException he) {
+			throw new PersistenceException(he);
+		}
+	}
+
+	public List<FeeBO> retrieveProductFees() throws PersistenceException {
+		try {
+			return executeNamedQuery(NamedQueryConstants.RETRIEVE_PRODUCT_FEES,
+					null);
+		} catch (HibernateException he) {
 			throw new PersistenceException(he);
 		}
 	}
 	
-	public List<FeeBO> retrieveProductFees()throws PersistenceException{
-		try{
-			return executeNamedQuery(NamedQueryConstants.RETRIEVE_PRODUCT_FEES,null);
-		}catch(HibernateException he){
+	public List<FeeBO> retrieveCustomerFeesByCategaroyType(FeeCategory feeCategory) throws PersistenceException {
+		try {
+			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put(FeeCategory.ALLCUSTOMERS.toString(), FeeCategory.ALLCUSTOMERS.getValue());
+			queryParameters.put("CUSTOMER_CATEGAORY", feeCategory.getValue());
+			return executeNamedQuery(
+					NamedQueryConstants.RETRIEVE_CUSTOMER_FEES_BY_CATEGORY_TYPE, queryParameters);
+		} catch (HibernateException he) {
 			throw new PersistenceException(he);
 		}
 	}

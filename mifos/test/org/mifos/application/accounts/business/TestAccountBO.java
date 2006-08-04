@@ -52,13 +52,12 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanPerformanceHistoryEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanSummaryEntity;
-import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
@@ -95,13 +94,14 @@ public class TestAccountBO extends TestAccount {
 				.getAccountActionDates()) {
 			if (accountActionDateEntity.getInstallmentId().equals(
 					Short.valueOf("1")))
-				((LoanScheduleEntity)accountActionDateEntity).setMiscFee(new Money("20.3"));
+				((LoanScheduleEntity) accountActionDateEntity)
+						.setMiscFee(new Money("20.3"));
 		}
 		Iterator itr = accountFeesEntitySet.iterator();
 		while (itr.hasNext())
 			accountBO.removeFees(((AccountFeesEntity) itr.next()).getFees()
 					.getFeeId(), uc.getId());
-		
+
 		HibernateUtil.getTransaction().commit();
 		for (AccountFeesEntity accountFeesEntity : accountFeesEntitySet) {
 			assertEquals(accountFeesEntity.getFeeStatus(),
@@ -127,7 +127,7 @@ public class TestAccountBO extends TestAccount {
 		}
 		for (AccountActionDateEntity accountActionDate : accountBO
 				.getAccountActionDates()) {
-			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity)accountActionDate;
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
 			if (accountActionDate.getInstallmentId().equals(Short.valueOf("1")))
 				assertEquals(new Money("133.0"), loanScheduleEntity
 						.getTotalDueWithFees());
@@ -184,18 +184,21 @@ public class TestAccountBO extends TestAccount {
 			}
 		} catch (Exception e) {
 			assertFalse(false);
-		} 
+		}
 	}
 
-	private List<Short> getApplicableInstallmentIdsForRemoveFees(AccountBO account) {
+	private List<Short> getApplicableInstallmentIdsForRemoveFees(
+			AccountBO account) {
 		List<Short> installmentIdList = new ArrayList<Short>();
-		for(AccountActionDateEntity accountActionDateEntity : account.getApplicableIdsForFutureInstallments()){
+		for (AccountActionDateEntity accountActionDateEntity : account
+				.getApplicableIdsForFutureInstallments()) {
 			installmentIdList.add(accountActionDateEntity.getInstallmentId());
 		}
-		installmentIdList.add(account.getDetailsOfNextInstallment().getInstallmentId());
+		installmentIdList.add(account.getDetailsOfNextInstallment()
+				.getInstallmentId());
 		return installmentIdList;
 	}
-	
+
 	public void testSuccessUpdateAccountFeesEntity() {
 		Set<AccountFeesEntity> accountFeesEntitySet = accountBO
 				.getAccountFees();
@@ -346,13 +349,14 @@ public class TestAccountBO extends TestAccount {
 	}
 
 	public void testGetPeriodicFeeList() {
-		try{
 		AccountFeesEntity accountOneTimeFee = new AccountFeesEntity();
 		accountOneTimeFee.setAccount(accountBO);
 		accountOneTimeFee.setAccountFeeAmount(new Money("1.0"));
 		accountOneTimeFee.setFeeAmount(new Money("1.0"));
-		FeeBO oneTimeFee = TestObjectFactory.createOneTimeAmountFee("One Time Fee",FeeCategory.LOAN,"20", FeePayment.TIME_OF_DISBURSMENT);
-		
+		FeeBO oneTimeFee = TestObjectFactory.createOneTimeAmountFee(
+				"One Time Fee", FeeCategory.LOAN, "20",
+				FeePayment.TIME_OF_DISBURSMENT);
+
 		accountOneTimeFee.setFees(oneTimeFee);
 		accountBO.addAccountFees(accountOneTimeFee);
 		accountPersistence.createOrUpdate(accountBO);
@@ -360,9 +364,6 @@ public class TestAccountBO extends TestAccount {
 		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		assertEquals(1, accountBO.getPeriodicFeeList().size());
-		}catch(Exception e){
-			e.printStackTrace();
-		}
 	}
 
 	public void testIsTrxnDateValid() throws Exception {
@@ -502,14 +503,20 @@ public class TestAccountBO extends TestAccount {
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		Calendar calendar = new GregorianCalendar();
-		calendar.roll(Calendar.MONTH, -2);
-		CustomerBO centerBO = TestObjectFactory.createCenter("Center", Short
-				.valueOf("13"), "1.1", meeting, calendar.getTime());
+		CenterBO centerBO = TestObjectFactory.createCenter("Center", Short
+				.valueOf("13"), "1.1", meeting, new java.util.Date());
+		HibernateUtil.closeSession();
+		centerBO = (CenterBO) TestObjectFactory.getObject(CenterBO.class,
+				centerBO.getCustomerId());
+		for (AccountActionDateEntity actionDate : centerBO.getCustomerAccount()
+				.getAccountActionDates()) {
+			actionDate.setActionDate(offSetCurrentDate(4));
+			break;
+		}
 		List<AccountActionDateEntity> pastInstallments = centerBO
 				.getCustomerAccount().getPastInstallments();
 		assertNotNull(pastInstallments);
-		assertEquals(3, pastInstallments.size());
+		assertEquals(1, pastInstallments.size());
 		TestObjectFactory.cleanUp(centerBO);
 	}
 
@@ -549,9 +556,21 @@ public class TestAccountBO extends TestAccount {
 
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
 		assertEquals(-5, ((LoanBO) accountBO).getPerformanceHistory()
 				.getNoOfPayments().intValue());
 
 	}
-	
+
+	private java.sql.Date offSetCurrentDate(int noOfDays) {
+		Calendar currentDateCalendar = new GregorianCalendar();
+		int year = currentDateCalendar.get(Calendar.YEAR);
+		int month = currentDateCalendar.get(Calendar.MONTH);
+		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
+		currentDateCalendar = new GregorianCalendar(year, month, day - noOfDays);
+		return new java.sql.Date(currentDateCalendar.getTimeInMillis());
+	}
 }

@@ -321,6 +321,7 @@ public interface NamedQueryConstants {
 	public String GET_ALL_CHILDREN="Customer.getAllChildren";
 	public String GET_CHILDREN_FOR_PARENT="Customer.getChildrenForParent";
 	public String GET_ALL_CUSTOMERS="Customer.getAllCustomers";
+	public String GET_CUSTOMER_COUNT_FOR_OFFICE="Customer.getCustomerCountForOffice";
 	/*Office Queries*/
 	public String OFFICE_GET_SEARCHID="office.getOfficeSearchId";
 	public String OFFICE_GET_HEADOFFICE="office.getHeadOffice";
@@ -438,6 +439,7 @@ public interface NamedQueryConstants {
 	public String GET_LASTINSTALLMENT="getLastInstallment";
 	
 	public String ACTIVE_CUSTOMERS_UNDER_PARENT = "Customer.getActiveCustomerUnderParent";
+	public String RETRIEVE_CUSTOMER_FEES_BY_CATEGORY_TYPE="retrieveCustomerFeesByCategoryType";
 	public String RETRIEVE_CUSTOMER_FEES="retrieveCustomerFees";
 	public String RETRIEVE_PRODUCT_FEES="retrieveProductFees";
 	

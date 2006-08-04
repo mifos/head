@@ -55,4 +55,8 @@
 	<query name="getUpdatedFeesForCustomers">
 		<![CDATA[from FeeBO fee where  fee.changeType in (1,2,3) and fee.categoryType.id in (1,2,3,4)]]>
 	</query>
+	
+	<query name="retrieveCustomerFeesByCategoryType">
+		<![CDATA[from FeeBO fee where fee.categoryType.id=:ALLCUSTOMERS or fee.categoryType.id=:CUSTOMER_CATEGAORY order by fee.feeName]]>
+	</query>
 </hibernate-mapping>

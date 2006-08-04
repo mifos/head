@@ -37,6 +37,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -411,11 +412,23 @@ public class FeeInstallmentGenerator implements FeeInstallmentGeneratorIfc
 		accountFeeInstallment.setFeeId(accountFee.getFees().getFeeId());
 		accountFeeInstallment.setAccountFeeAmount(accountFeeAmount);
 		accountFeeInstallment.setAccountFee(accountFee);
+		accountFeeInstallment.setAccountFeeEntity(getAccountFeeEntity(accountFee));
 		feeInstallment.setAccountFee(accountFeeAmount);
 		feeInstallment.addAccountFeeInstallment(accountFeeInstallment);
 
 
 
+	}
+	
+	private AccountFeesEntity getAccountFeeEntity(AccountFees accountFee)
+	{
+		Set<AccountFeesEntity> accountFeesEntity = feeInputs.getAccountFeesEntity();
+		if(accountFeesEntity!=null){
+			for(AccountFeesEntity accountFeeEntity: accountFeesEntity)
+				if(accountFeeEntity.getFees().getFeeId().equals(accountFee.getFees().getFeeId()))
+					return accountFeeEntity;			
+		}		
+		return null;
 	}
 
 	private FeeInstallment getFeeInstallment(int installmentId)

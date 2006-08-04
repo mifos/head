@@ -80,4 +80,17 @@ public class CustomerLevelEntity extends MasterDataEntity {
 			return Short
 					.valueOf(ProductDefinitionConstants.OFFERINGAPPLICABLETOCENTERS);
 	}
+	
+	public boolean isCenter(){
+		return getId().equals(CustomerLevel.CENTER.getValue());
+	}
+	
+	public boolean isGroup(){
+		return getId().equals(CustomerLevel.GROUP.getValue());
+	}
+
+	public boolean isClient(){
+		return getId().equals(CustomerLevel.CLIENT.getValue());
+	}
+
 }
