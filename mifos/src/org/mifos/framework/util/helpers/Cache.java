@@ -138,11 +138,16 @@ public class Cache {
 		 *  in the cache.
 		 *  otherwise store all data.
 		 */
+		
+		addFromObject(start,pageSize);
+		/*
 		int end=(noOfPages>5?5:noOfPages);
 			for (int i = 1; i <= end; i++) {
 				addFromObject(start,i);
 				start = ((start + pageSize) < size) ? (start + pageSize) : size;
 			}
+		*/
+		
 	}
 
 	/**
@@ -160,7 +165,7 @@ public class Cache {
 		 * for any other page number call another helper method to add and
 		 * remove the page which is out of bound.
 		 */
-		if((current==1||current==2)) {
+		if((current==0||current==1||current==2)) {
 		}
 
 		else {
@@ -222,7 +227,8 @@ public class Cache {
 	}
 
 	private void addFromObject(int start,int key) throws HibernateSearchException {
-		cacheMap.put(Integer.valueOf(key), data.get(start,pageSize));
+		
+		cacheMap.put(new Integer(start), data.get(start,pageSize));
 		// System.out.println("start="+start);
 	}
 
@@ -234,7 +240,7 @@ public class Cache {
 	}
 
 	private List getDataFromCache(int current) throws HibernateSearchException {
-		Integer key = Integer.valueOf(current);
+		Integer key = current;
 		if(cacheMap.containsKey(key)) {
 			return (List)cacheMap.get(key);
 		}

@@ -55,6 +55,18 @@
 	<query name="getPersonnelByUserName"><![CDATA[from Personnel as personnel where personnel.userName = :UserName]]></query>
 	<query name="getPersonnelByGovtId"><![CDATA[from org.mifos.application.personnel.util.valueobjects.Personnel as personnel where personnel.personnelDetails.governmentIdNumber = :GOVT_ID]]></query>
 	<query name="getPersonnelByNameAndDOB"><![CDATA[from org.mifos.application.personnel.util.valueobjects.Personnel as personnel where personnel.displayName = :userName and personnel.personnelDetails.dob =:dob]]></query>
-	<query name="searchPersonnel"><![CDATA[select distinct personnel.office.officeId, personnel.office.officeName,personnel.personnelId,personnel.globalPersonnelNum,personnel.displayName from Personnel personnel where ( (:USERLEVEL_ID=:LOID and personnel.personnelId=:USERID) or :USERLEVEL_ID!=:LOID) and (personnel.office.searchId=:SEARCH_ID or personnel.office.searchId like :SEARCH_ALL) and (personnel.personnelDetails.firstName like :USER_NAME or personnel.personnelDetails.lastName like :USER_NAME ) order by personnel.office.officeName, personnel.personnelDetails.lastName]]></query>
-	<query name="count_searchPersonnel"><![CDATA[select count(*) from Personnel personnel where ( (:USERLEVEL_ID=:LOID and personnel.personnelId=:USERID) or :USERLEVEL_ID!=:LOID) and (personnel.office.searchId=:SEARCH_ID or personnel.office.searchId like :SEARCH_ALL) and (personnel.personnelDetails.firstName like :USER_NAME or personnel.personnelDetails.lastName like :USER_NAME ) order by personnel.office.officeName, personnel.personnelDetails.lastName]]></query>
+	<query name="searchPersonnel">
+	<![CDATA[select distinct personnel.office.officeId, personnel.office.officeName,personnel.personnelId,personnel.globalPersonnelNum,personnel.displayName 
+	from Personnel personnel 
+	where ( (:USERLEVEL_ID=:LOID and personnel.personnelId=:USERID) or :USERLEVEL_ID!=:LOID) 
+	and (personnel.office.searchId=:SEARCH_ID or personnel.office.searchId like :SEARCH_ALL) 
+	and (personnel.personnelDetails.firstName like :USER_NAME or personnel.personnelDetails.lastName like :USER_NAME )
+	 order by personnel.office.officeName, personnel.personnelDetails.lastName]]></query>
+	<query name="count_searchPersonnel">
+	<![CDATA[select count(*) 
+	from Personnel personnel 
+	where ( (:USERLEVEL_ID=:LOID and personnel.personnelId=:USERID) or :USERLEVEL_ID!=:LOID) 
+	and (personnel.office.searchId=:SEARCH_ID or personnel.office.searchId like :SEARCH_ALL) 
+	and (personnel.personnelDetails.firstName like :USER_NAME or personnel.personnelDetails.lastName like :USER_NAME )
+	 ]]></query>
 </hibernate-mapping>

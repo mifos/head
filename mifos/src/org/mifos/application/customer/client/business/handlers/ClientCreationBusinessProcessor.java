@@ -246,6 +246,17 @@ public class ClientCreationBusinessProcessor extends MifosBusinessProcessor {
 		//a check is made on the status of associated entities like loan officer, branch and fees chosen.
 		//If any of these are	inactive an error is thrown
 		checkIFAssociatedEntitiesAreActive(context);
+		
+		//finally add the entries to client name 
+		Iterator iterator = client.getCustomerNameDetailSet().iterator();
+		while( iterator.hasNext()){
+			CustomerNameDetail customerNameDetail =(CustomerNameDetail) iterator.next();
+			
+			if ( customerNameDetail.getNameType().shortValue()==ClientConstants.CLIENT_NAME_TYPE){
+				
+				client.setClientName(customerNameDetail.getFirstName(),customerNameDetail.getLastName(),customerNameDetail.getSecondLastName());
+			}
+		}
 	}
 
 	/**
@@ -620,9 +631,19 @@ public class ClientCreationBusinessProcessor extends MifosBusinessProcessor {
 
 		try{
 			//setting the updated_date and updated_by fields to the current date and current logged in user
-			((Client)context.getValueObject()).setUpdatedDate(new java.sql.Date(Calendar.getInstance().getTime().getTime()));
-			((Client)context.getValueObject()).setUpdatedBy(context.getUserContext().getId());
-
+			Client client = (Client)context.getValueObject();
+			client.setUpdatedDate(new java.sql.Date(Calendar.getInstance().getTime().getTime()));
+			client.setUpdatedBy(context.getUserContext().getId());
+			//finally add the entries to client name 
+			Iterator iterator = client.getCustomerNameDetailSet().iterator();
+			while( iterator.hasNext()){
+				CustomerNameDetail customerNameDetail =(CustomerNameDetail) iterator.next();
+				
+				if ( customerNameDetail.getNameType().shortValue()==ClientConstants.CLIENT_NAME_TYPE){
+					
+					client.setClientName(customerNameDetail.getFirstName(),customerNameDetail.getLastName(),customerNameDetail.getSecondLastName());
+				}
+			}
 			super.update(context);
 		}
 		catch(SystemException se){

@@ -220,8 +220,6 @@ public class SearchDAO {
 		paramList.add(typeNameValue("String","SEARCH_ID",officeSearchId+"%"));
 		paramList.add(typeNameValue("String","SEARCH_STRING",searchString+"%"));
 		paramList.add(typeNameValue("Short","LEVEL_ID",CustomerConstants.GROUP_LEVEL_ID));
-		paramList.add(typeNameValue("Short","STATUS1",GroupConstants.CANCELLED));
-		paramList.add(typeNameValue("Short","STATUS2",GroupConstants.CLOSED));
 		paramList.add(typeNameValue("Short","USER_ID",UserId));
 		paramList.add(typeNameValue("Short","USER_LEVEL_ID",userLevelId));
 		paramList.add(typeNameValue("Short","LO_LEVEL_ID",PersonnelConstants.LOAN_OFFICER));
@@ -232,158 +230,96 @@ public class SearchDAO {
 	}
 	public void intiliatizeQueryInputsForClientOrGroupSearch(String searchString, Short userLevelId,String officeSearchId ,Short UserId ,Short officeId) throws SystemException
 	{
-		logger.debug("\n\nIn intiliatizeQueryInputsForClientOrGroupSearch of searchDAO ::searchString="+searchString+"\tuserLevleId="+userLevelId+"\tofficeSearchId="+officeSearchId+"\tuserid="+UserId+"\tofficeId="+officeId);	
-		if (userLevelId.shortValue()==PersonnelConstants.LOAN_OFFICER ){
-			if(clientsExists()){
-				namedQuery[0]=NamedQueryConstants.LEVEL_COUNT_ACCOUNTSEARCH;
-				namedQuery[1]=NamedQueryConstants.LEVEL_ACCOUNTSEARCH;				
-				paramList.add(typeNameValue("Short","PERSONNEL_ID",UserId));				
-				paramList.add(typeNameValue("Short","CLIENTACTIVE",CustomerConstants.CLIENT_APPROVED));
-				paramList.add(typeNameValue("Short","CLIENTNAMETYPE",ClientConstants.CLIENT_NAME_TYPE));
-			}
-			else{
-				namedQuery[0]=NamedQueryConstants.LEVEL_COUNT_ACCOUNTSEARCH_NOCLIENTS;
-				namedQuery[1]=NamedQueryConstants.LEVEL_ACCOUNTSEARCH_NOCLIENTS;				
-				paramList.add(typeNameValue("Short","PERSONNEL_ID",UserId));				
-			}		
+		logger
+				.debug("\n\nIn intiliatizeQueryInputsForClientOrGroupSearch of searchDAO ::searchString="
+						+ searchString
+						+ "\tuserLevleId="
+						+ userLevelId
+						+ "\tofficeSearchId="
+						+ officeSearchId
+						+ "\tuserid="
+						+ UserId + "\tofficeId=" + officeId);
+
+		if (userLevelId.shortValue() == PersonnelConstants.LOAN_OFFICER) {
+
+			namedQuery[0] = NamedQueryConstants.LEVEL_COUNT_ACCOUNTSEARCH;
+			namedQuery[1] = NamedQueryConstants.LEVEL_ACCOUNTSEARCH;
+			paramList.add(typeNameValue("Short", "PERSONNEL_ID", UserId));
+
+		} else {
+			namedQuery[0] = NamedQueryConstants.COUNT_ACCOUNTSEARCH;
+			namedQuery[1] = NamedQueryConstants.ACCOUNTSEARCH;
+
 		}
-		else{
-			if(clientsExists()){
-				logger.debug("\n\nBefore setting Parameters");
-				namedQuery[0]=NamedQueryConstants.COUNT_ACCOUNTSEARCH;
-				namedQuery[1]=NamedQueryConstants.ACCOUNTSEARCH;				
-				paramList.add(typeNameValue("Short","CLIENTACTIVE",CustomerConstants.CLIENT_APPROVED));
-				paramList.add(typeNameValue("Short","CLIENTNAMETYPE",ClientConstants.CLIENT_NAME_TYPE));
-			}
-			else{
-				namedQuery[0]=NamedQueryConstants.COUNT_ACCOUNTSEARCH_NOCLIENTS;
-				namedQuery[1]=NamedQueryConstants.ACCOUNTSEARCH_NOCLIENTS;
-			}
-		}
-		
-		paramList.add(typeNameValue("String","SEARCH_ID",officeSearchId+"%"));
-		paramList.add(typeNameValue("String","SEARCH_STRING",searchString+"%"));
-		paramList.add(typeNameValue("Short","LEVELID",CustomerConstants.CLIENT_LEVEL_ID));
-		paramList.add(typeNameValue("Short","GROUPLEVELID",CustomerConstants.GROUP_LEVEL_ID));
-		paramList.add(typeNameValue("Short","GROUPACTIVE",CustomerConstants.GROUP_ACTIVE_STATE));
-		paramList.add(typeNameValue("Boolean","GROUP_LOAN_ALLOWED",Configuration.getInstance().getCustomerConfig(officeId).canGroupApplyForLoan()));
-		
-		String[] aliasNames = { "clientName", "clientId", "groupName","centerName", "officeName","globelNo" };
+
+		paramList
+				.add(typeNameValue("String", "SEARCH_ID", officeSearchId + "%"));
+		paramList.add(typeNameValue("String", "SEARCH_STRING", searchString
+				+ "%"));
+		paramList.add(typeNameValue("Boolean", "GROUP_LOAN_ALLOWED",
+				Configuration.getInstance().getCustomerConfig(officeId)
+						.canGroupApplyForLoan() == true ? new Boolean(true)
+						: new Boolean(true)));
+
+		String[] aliasNames = { "clientName", "clientId", "groupName",
+				"centerName", "officeName", "globelNo" };
 		queryInputs.setQueryStrings(namedQuery);
-		queryInputs.setPath("org.mifos.application.accounts.util.valueobjects.AccountSearchResults");
+		queryInputs
+				.setPath("org.mifos.application.accounts.util.valueobjects.AccountSearchResults");
 		queryInputs.setAliasNames(aliasNames);	
 	}
-	public void intiliatizeQueryInputsForCustomerSearch(String searchString, Short userLevelId,String officeSearchId ,Short UserId ,Short officeId) throws SystemException
-	{
-		if(officeId.shortValue()!=0)
-		{				
-			if(clientsExists())
-			{
-			namedQuery[0]=NamedQueryConstants.COUNT_CUSTOMERSEARCH;
-			namedQuery[1]=NamedQueryConstants.CUSTOMERSEARCH;				
-			paramList.add(typeNameValue("Short","OFFICEID",officeId));				
-			paramList.add(typeNameValue("Short","CLIENTNAMETYPE",ClientConstants.CLIENT_NAME_TYPE));
-			}
-			else
-			{
-				namedQuery[0]=NamedQueryConstants.COUNT_CUSTOMERSEARCH_NOCLIENTS;
-				namedQuery[1]=NamedQueryConstants.CUSTOMERSEARCH_NOCLIENTS;				
-				paramList.add(typeNameValue("Short","OFFICEID",officeId));				
-			}
-			
+	public void intiliatizeQueryInputsForCustomerSearch(String searchString,
+			Short userLevelId, String officeSearchId, Short UserId,
+			Short officeId) throws SystemException {
+		if (officeId.shortValue() != 0) {
+			namedQuery[0] = NamedQueryConstants.COUNT_CUSTOMERSEARCH;
+			namedQuery[1] = NamedQueryConstants.CUSTOMERSEARCH;
+			paramList.add(typeNameValue("Short", "OFFICEID", officeId));
+
+		} else {
+			namedQuery[0] = NamedQueryConstants.COUNT_CUSTOMERSEARCH_NOOFFICEID;
+			namedQuery[1] = NamedQueryConstants.CUSTOMERSEARCH_NOOFFICEID;
+			paramList.add(typeNameValue("String", "OFFICE_SEARCH_ID",
+					officeSearchId + "%"));
 		}
-		else
-		{				
-			if(clientsExists())
-			{					
-				namedQuery[0]=NamedQueryConstants.COUNT_CUSTOMERSEARCH_NOOFFICEID;
-				namedQuery[1]=NamedQueryConstants.CUSTOMERSEARCH_NOOFFICEID;					
-				paramList.add(typeNameValue("Short","CLIENTNAMETYPE",ClientConstants.CLIENT_NAME_TYPE));
-				paramList.add(typeNameValue("String","OFFICE_SEARCH_ID",officeSearchId+"%"));
-			}
-			else
-			{				
-				namedQuery[0]=NamedQueryConstants.COUNT_CUSTOMERSEARCH_NOOFFICEID_NOCLIENTS;
-				namedQuery[1]=NamedQueryConstants.CUSTOMERSEARCH_NOOFFICEID_NOCLIENTS;										
-				paramList.add(typeNameValue("String","OFFICE_SEARCH_ID",officeSearchId+"%"));
-			}
-		}			
-		paramList.add(typeNameValue("Short","USERID",UserId));
-		paramList.add(typeNameValue("Short","LOID",PersonnelConstants.LOAN_OFFICER));
-		paramList.add(typeNameValue("Short","LEVELID",CustomerConstants.CLIENT_LEVEL_ID));
-		paramList.add(typeNameValue("Short","USERLEVEL_ID",userLevelId));
-		paramList.add(typeNameValue("String","SEARCH_STRING",searchString+"%"));
-		
-		String[] aliasNames = {"customerId","centerName" , "centerGlobalCustNum" , "customerType" , "branchGlobalNum",
- 				 "branchName" , "loanOfficerName" , "loanOffcerGlobalNum","customerStatus",
- 				 "groupName","groupGlobalCustNum","clientName","clientGlobalCustNum","loanGlobalAccountNumber"};
+		paramList.add(typeNameValue("Short", "USERID", UserId));
+		paramList.add(typeNameValue("Short", "LOID",
+				PersonnelConstants.LOAN_OFFICER));
+		paramList.add(typeNameValue("Short", "LEVELID",
+				CustomerConstants.CLIENT_LEVEL_ID));
+		paramList.add(typeNameValue("Short", "USERLEVEL_ID", userLevelId));
+		paramList.add(typeNameValue("String", "SEARCH_STRING", searchString
+				+ "%"));
+
+		String[] aliasNames = { "customerId", "centerName",
+				"centerGlobalCustNum", "customerType", "branchGlobalNum",
+				"branchName", "loanOfficerName", "loanOffcerGlobalNum",
+				"customerStatus", "groupName", "groupGlobalCustNum",
+				"clientName", "clientGlobalCustNum", "loanGlobalAccountNumber" };
 		queryInputs.setQueryStrings(namedQuery);
-		queryInputs.setPath("org.mifos.application.customer.util.valueobjects.CustomerSearch");
+		queryInputs
+				.setPath("org.mifos.application.customer.util.valueobjects.CustomerSearch");
 		queryInputs.setAliasNames(aliasNames);
 	}
 	public void intiliatizeQueryInputsForCustomerSearchForSavings(String searchString, Short userLevelId,String officeSearchId ,Short UserId ,Short officeId) throws SystemException
 	{
 		if (userLevelId.shortValue()==PersonnelConstants.LOAN_OFFICER )
 		{		
-			if(clientsExists())
-			{			
 				namedQuery[0]=NamedQueryConstants.COUNT_CUSTOMERSFORSAVINGSACCOUNT;
 				namedQuery[1]=NamedQueryConstants.CUSTOMERSFORSAVINGSACCOUNT;				
 				paramList.add(typeNameValue("String","SEARCH_ID",officeSearchId+"%"));
 				paramList.add(typeNameValue("String","SEARCH_STRING",searchString+"%"));
 				paramList.add(typeNameValue("Short","PERSONNEL_ID",UserId));				
-				paramList.add(typeNameValue("Short","LEVELID",CustomerConstants.CLIENT_LEVEL_ID));					
-				paramList.add(typeNameValue("Short","GROUPLEVELID",CustomerConstants.GROUP_LEVEL_ID));
-				paramList.add(typeNameValue("Short","CENTERLEVELID",CustomerConstants.CENTER_LEVEL_ID));
-				paramList.add(typeNameValue("Short","CENTERACTIVE",CustomerConstants.CENTER_ACTIVE_STATE));
-				paramList.add(typeNameValue("Short","GROUPACTIVE",CustomerConstants.GROUP_ACTIVE_STATE));
-				paramList.add(typeNameValue("Short","CLIENTACTIVE",CustomerConstants.CLIENT_APPROVED));
-				paramList.add(typeNameValue("Short","CLIENTNAMETYPE",ClientConstants.CLIENT_NAME_TYPE));
 				
-			}
-			else
-			{				
-				namedQuery[0]=NamedQueryConstants.COUNT_CUSTOMERSFORSAVINGSACCOUNT_NOCLIENTS;
-				namedQuery[1]=NamedQueryConstants.CUSTOMERSFORSAVINGSACCOUNT_NOCLIENTS;				
-				paramList.add(typeNameValue("String","SEARCH_ID",officeSearchId+"%"));
-				paramList.add(typeNameValue("String","SEARCH_STRING",searchString+"%"));
-				paramList.add(typeNameValue("Short","PERSONNEL_ID",UserId));
-				paramList.add(typeNameValue("Short","GROUPLEVELID",CustomerConstants.GROUP_LEVEL_ID));
-				paramList.add(typeNameValue("Short","CENTERLEVELID",CustomerConstants.CENTER_LEVEL_ID));
-				paramList.add(typeNameValue("Short","CENTERACTIVE",CustomerConstants.CENTER_ACTIVE_STATE));
-				paramList.add(typeNameValue("Short","GROUPACTIVE",CustomerConstants.GROUP_ACTIVE_STATE));
-				
-			}
 		
 		}
 		else
 		{				
-			if(clientsExists())
-			{			
 				namedQuery[0]=NamedQueryConstants.COUNT_CUSTOMERSFORSAVINGSACCOUNTNONLO;
 				namedQuery[1]=NamedQueryConstants.CUSTOMERSFORSAVINGSACCOUNTNONLO;				
 				paramList.add(typeNameValue("String","SEARCH_ID",officeSearchId+"%"));
 				paramList.add(typeNameValue("String","SEARCH_STRING",searchString+"%"));
-				paramList.add(typeNameValue("Short","LEVELID",CustomerConstants.CLIENT_LEVEL_ID));
-				paramList.add(typeNameValue("Short","GROUPLEVELID",CustomerConstants.GROUP_LEVEL_ID));
-				paramList.add(typeNameValue("Short","CENTERLEVELID",CustomerConstants.CENTER_LEVEL_ID));
-				paramList.add(typeNameValue("Short","CENTERACTIVE",CustomerConstants.CENTER_ACTIVE_STATE));
-				paramList.add(typeNameValue("Short","GROUPACTIVE",CustomerConstants.GROUP_ACTIVE_STATE));
-				paramList.add(typeNameValue("Short","CLIENTACTIVE",CustomerConstants.CLIENT_APPROVED));
-				paramList.add(typeNameValue("Short","CLIENTNAMETYPE",ClientConstants.CLIENT_NAME_TYPE));
-			}
-			else
-			{				
-				namedQuery[0]=NamedQueryConstants.COUNT_CUSTOMERSFORSAVINGSACCOUNTNONLO_NOCLIENTS;
-				namedQuery[1]=NamedQueryConstants.CUSTOMERSFORSAVINGSACCOUNTNONLO_NOCLIENTS;				
-				paramList.add(typeNameValue("String","SEARCH_ID",officeSearchId+"%"));
-				paramList.add(typeNameValue("String","SEARCH_STRING",searchString+"%"));
-				paramList.add(typeNameValue("Short","GROUPLEVELID",CustomerConstants.GROUP_LEVEL_ID));
-				paramList.add(typeNameValue("Short","CENTERLEVELID",CustomerConstants.CENTER_LEVEL_ID));
-				paramList.add(typeNameValue("Short","CENTERACTIVE",CustomerConstants.CENTER_ACTIVE_STATE));
-				paramList.add(typeNameValue("Short","GROUPACTIVE",CustomerConstants.GROUP_ACTIVE_STATE));	
-				
-			}
+			
 		}	
 		String[] aliasNames = { "clientName", "clientId", "groupName","centerName", "officeName","globelNo" };
 		queryInputs.setQueryStrings(namedQuery);

@@ -15,7 +15,7 @@
    		 </discriminator>
  		<version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null"/>
         <property name="globalCustNum" column="GLOBAL_CUST_NUM" type="string" />
-        <property name="statusId" column="STATUS_ID" type="short" />
+        <property name="statusId" column="STATUS_ID"  />
         <property name="displayName" column="DISPLAY_NAME" type="string" />
         <property name="governmentId" column="GOVERNMENT_ID" type="string" />
         <property name="displayAddress" column="DISPLAY_ADDRESS" type="string"  />
@@ -34,7 +34,13 @@
         <property name="createdBy" column="CREATED_BY"  />
         <property name="updatedBy" column="UPDATED_BY"  />
         <property name="blackListed" column="BLACKLISTED"  />
+        
+        <property name="firstName" column="FIRST_NAME" access="field" />
+        <property name="lastName" column="LAST_NAME" access="field" />
+        <property name="secondLastName" column="SECOND_LAST_NAME" access="field" />
+        
         <!-- to remove-->
+        
         <property name="personnelId" column="LOAN_OFFICER_ID" insert="false" update="false" />
         <property name="customerActivationDate" column="CUSTOMER_ACTIVATION_DATE " not-null="false"/>
         
@@ -199,13 +205,37 @@
 	        	   <![CDATA[from org.mifos.application.customer.util.valueobjects.Customer customer where customer.globalCustNum =:globalCustNum]]>
         </query> 
         <query name="groupSearchWithCenter">
-	        	   <![CDATA[select distinct customer.office.officeName,customer.displayName,customer.parentCustomer.displayName, customer.customerId from Customer customer where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) and customer.office.searchId like :SEARCH_ID and customer.displayName like :SEARCH_STRING and customer.customerLevel.levelId =:LEVEL_ID and customer.statusId!=:STATUS1 and customer.statusId!=:STATUS2 ORDER BY customer.office.officeName,customer.parentCustomer.displayName ,customer.displayName]]>
+	        	   <![CDATA[select  customer.office.officeName,customer.displayName,customer.parentCustomer.displayName, customer.customerId from Customer customer 
+	        	   where ((customer.personnel.personnelId=:USER_ID 
+	        	   and :USER_LEVEL_ID=:LO_LEVEL_ID)
+	        	   or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) 
+	        	   and customer.office.searchId like :SEARCH_ID 
+	        	   and customer.displayName like :SEARCH_STRING 
+	        	   and customer.customerLevel.levelId =:LEVEL_ID 
+	        	   and customer.statusId in (7,8,9,10) 
+	        	   ORDER BY customer.office.officeName,customer.parentCustomer.displayName ,customer.displayName]]>
         </query>
         <query name="count_groupSearchWithCenter">
-	        	   <![CDATA[select count(*) from Customer customer where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) and customer.office.searchId like :SEARCH_ID and customer.displayName like :SEARCH_STRING and customer.customerLevel.levelId =:LEVEL_ID and customer.statusId!=:STATUS1 and customer.statusId!=:STATUS2 ORDER BY customer.office.officeName,customer.parentCustomer.displayName ,customer.displayName]]>
+	        	   <![CDATA[select count(*) from Customer customer 
+	        	   where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)
+	        	   or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) 
+	        	   and customer.office.searchId like :SEARCH_ID 
+	        	   and customer.displayName like :SEARCH_STRING 
+	        	   and customer.customerLevel.levelId =:LEVEL_ID 
+	        	   and customer.statusId in (7,8,9,10) 
+	        	    
+	        	   	]]>
         </query>
         <query name="groupSearchWithoutCenter">
-	        	   <![CDATA[select distinct customer.office.officeName,customer.displayName,customer.customerId from Customer customer where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) and customer.office.searchId like :SEARCH_ID and customer.displayName like :SEARCH_STRING and customer.customerLevel.levelId =:LEVEL_ID and customer.statusId!=:STATUS1 and customer.statusId!=:STATUS2 ORDER BY customer.office.officeName,customer.displayName]]>
+	        	   <![CDATA[select  customer.office.officeName,customer.displayName,customer.customerId 
+	        	   from Customer customer 
+	        	   where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)
+	        	   or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) 
+	        	   and customer.office.searchId like :SEARCH_ID 
+	        	   and customer.displayName like :SEARCH_STRING 
+	        	   and customer.customerLevel.levelId =:LEVEL_ID 
+	        	   and  customer.statusId in (7,8,9,10)
+	        	   ORDER BY customer.office.officeName,customer.displayName]]>
         </query>
         <query name="isCenterActive">
 	        	   <![CDATA[select count(*) from Customer customer where customer.customerId = :customerId and customer.statusId = :statusId]]>
@@ -220,17 +250,69 @@
         </query>
         
          <query name="searchCenters">
-	        	   <![CDATA[select distinct customer.office.officeId, customer.office.officeName,customer.globalCustNum,customer.displayName from Customer customer where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) and customer.office.searchId like :SEARCH_ID and customer.displayName like :CENTER_NAME and customer.customerLevel.levelId =:LEVEL_ID and customer.statusId = :STATUS_ID ORDER BY customer.office.officeName ,customer.displayName ]]>
+	        	   <![CDATA[select  customer.office.officeId, customer.office.officeName,customer.globalCustNum,customer.displayName 
+	        	   from Customer customer 
+	        	   where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)
+	        	   or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) 
+	        	   and customer.office.searchId like :SEARCH_ID 
+	        	   and customer.displayName like :CENTER_NAME 
+	        	   and customer.customerLevel.levelId =:LEVEL_ID 
+	        	   and customer.statusId = :STATUS_ID 
+	        	   ORDER BY customer.office.officeName ,customer.displayName ]]>
         </query>
         
          <query name="count_searchCenters">
-	        	   <![CDATA[select count(*) from Customer customer where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) and customer.office.searchId like :SEARCH_ID and customer.displayName like :CENTER_NAME and customer.customerLevel.levelId =:LEVEL_ID and customer.statusId = :STATUS_ID ORDER BY customer.office.officeName ,customer.displayName ]]>
+	        	   <![CDATA[select count(*) 
+	        	   from Customer customer 
+	        	   where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)
+	        	   or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) 
+	        	   and customer.office.searchId like :SEARCH_ID 
+	        	   and customer.displayName like :CENTER_NAME 
+	        	   and customer.customerLevel.levelId =:LEVEL_ID 
+	        	   and customer.statusId = :STATUS_ID
+	        	    ]]>
         </query>
         <query name="Customer.search">
-	        	   <![CDATA[select distinct c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.levelId,off.officeId,off.officeName,per.displayName,per.personnelId,c.statusId,pa.displayName, pa.globalCustNum,papa.displayName,papa.globalCustNum from org.mifos.application.customer.util.valueobjects.Customer as c  left join c.parentCustomer as pa left join 	pa.parentCustomer as papa left join c.office as off  left join c.personnel as per , org.mifos.application.customer.util.valueobjects.CustomerNameDetail as cnd where ( (:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or :USERLEVEL_ID!=:LOID) and c.office.officeId=:OFFICEID and ((c.customerLevel.levelId !=:LEVELID and c.displayName like :SEARCH_STRING) or ((c.customerLevel.levelId =:LEVELID and cnd.customer.customerId=c.customerId and cnd.nameType=:CLIENTNAMETYPE) and (cnd.firstName like :SEARCH_STRING or cnd.lastName like :SEARCH_STRING or cnd.secondLastName like :SEARCH_STRING) )) order by c.customerLevel.levelId,cnd.lastName,cnd.firstName,c.displayName]]>
+	        	   <![CDATA[select  c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.levelId,off.officeId,off.officeName,per.displayName,per.personnelId,c.statusId,pa.displayName, pa.globalCustNum,papa.displayName,papa.globalCustNum 
+	        	   from org.mifos.application.customer.util.valueobjects.Customer as c  
+	        	   left join c.parentCustomer as pa 
+	        	   left join pa.parentCustomer as papa 
+	        	   left join c.office as off  
+	        	   left join c.personnel as per  
+	        	   where ( 
+	        	         (:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) 
+	        	         or :USERLEVEL_ID!=:LOID) 
+	        	         and c.office.officeId=:OFFICEID 
+	        	         and ((c.customerLevel.levelId !=:LEVELID and c.displayName like :SEARCH_STRING) 
+	        	              or (c.customerLevel.levelId =:LEVELID 
+	        	              
+	        	               
+	        	              and (c.firstName like :SEARCH_STRING 
+	        	              or c.lastName like :SEARCH_STRING 
+	        	              or c.secondLastName like :SEARCH_STRING)
+	        	               )
+	        	         ) order by c.customerLevel.levelId,c.lastName,c.firstName,c.displayName]]>
         </query>
         <query name="Customer.count_search">
-	        	   <![CDATA[select count(distinct c.customerId) from org.mifos.application.customer.util.valueobjects.Customer as c  left join c.parentCustomer as pa left join 	pa.parentCustomer as papa left join c.office as off  left join c.personnel as per , org.mifos.application.customer.util.valueobjects.CustomerNameDetail as cnd where ( (:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or :USERLEVEL_ID!=:LOID) and c.office.officeId=:OFFICEID and ((c.customerLevel.levelId !=:LEVELID and c.displayName like :SEARCH_STRING) or ((c.customerLevel.levelId =:LEVELID and cnd.customer.customerId=c.customerId and cnd.nameType=:CLIENTNAMETYPE) and (cnd.firstName like :SEARCH_STRING or cnd.lastName like :SEARCH_STRING or cnd.secondLastName like :SEARCH_STRING) )) order by c.customerLevel.levelId,cnd.lastName,cnd.firstName,c.displayName]]>
+	        	   <![CDATA[select count(*) 
+	        	   from org.mifos.application.customer.util.valueobjects.Customer as c  
+	        	   left join c.parentCustomer as pa 
+	        	   left join pa.parentCustomer as papa 
+	        	   left join c.office as off  
+	        	   left join c.personnel as per 
+	        	   where ( 
+	        	         (:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) 
+	        	         or :USERLEVEL_ID!=:LOID) 
+	        	         and c.office.officeId=:OFFICEID 
+	        	         and ((c.customerLevel.levelId !=:LEVELID and c.displayName like :SEARCH_STRING) 
+	        	              or (c.customerLevel.levelId =:LEVELID 
+	        	              
+	        	               
+	        	              and (c.firstName like :SEARCH_STRING 
+	        	              or c.lastName like :SEARCH_STRING 
+	        	              or c.secondLastName like :SEARCH_STRING)
+	        	               )
+	        	         ) ]]>
         </query>       
         <query name="Customer.search_noclients">
 	        	   <![CDATA[select distinct c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.levelId,off.officeId,off.officeName,per.displayName,per.personnelId,c.statusId,pa.displayName, pa.globalCustNum,papa.displayName,papa.globalCustNum from org.mifos.application.customer.util.valueobjects.Customer as c  left join c.parentCustomer as pa left join 	pa.parentCustomer as papa left join c.office as off  left join c.personnel as per  where ((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or :USERLEVEL_ID!=:LOID) and c.office.officeId=:OFFICEID and c.customerLevel.levelId !=:LEVELID and c.displayName like :SEARCH_STRING order by c.customerLevel.levelId,c.displayName]]>
@@ -240,12 +322,38 @@
         </query> 
         
         <query name="Customer.search_noofficeid">
-	        	   <![CDATA[select  distinct c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.levelId,off.officeId,off.officeName,per.displayName,per.personnelId,c.statusId,pa.displayName, pa.globalCustNum,papa.displayName,papa.globalCustNum from  org.mifos.application.customer.util.valueobjects.Customer as c left join c.parentCustomer as pa left join pa.parentCustomer as papa  left join c.office as off  left join c.personnel as per, org.mifos.application.customer.util.valueobjects.CustomerNameDetail as cnd  where (((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or (:USERLEVEL_ID!=:LOID)) and (off.searchId like :OFFICE_SEARCH_ID) and ( ((c.customerLevel.levelId !=:LEVELID) and (c.displayName like :SEARCH_STRING)) or ((c.customerLevel.levelId =:LEVELID) and (cnd.customer.customerId=c.customerId) and (cnd.nameType=:CLIENTNAMETYPE) and (cnd.firstName like :SEARCH_STRING or cnd.lastName like :SEARCH_STRING or cnd.secondLastName like :SEARCH_STRING )))) order by c.customerLevel.levelId,cnd.lastName,cnd.firstName,c.displayName]]>
+	        	   <![CDATA[select   c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.levelId,off.officeId,off.officeName,per.displayName,per.personnelId,c.statusId,pa.displayName, pa.globalCustNum,papa.displayName,papa.globalCustNum from 
+	        	    org.mifos.application.customer.util.valueobjects.Customer as c 
+	        	    left join c.parentCustomer as pa 
+	        	    left join pa.parentCustomer as papa  
+	        	    left join c.office as off  
+	        	    left join c.personnel as per
+                    where ( 
+                    		((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or (:USERLEVEL_ID!=:LOID)) 
+                         and (off.searchId like :OFFICE_SEARCH_ID) 
+                         and (
+                               (c.customerLevel.levelId in (2,3)  and c.displayName like :SEARCH_STRING) 
+                    		   or (c.customerLevel.levelId =:LEVELID and (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING ))
+                    		   )
+                    		 ) 
+                    order by c.customerLevel.levelId,c.lastName,c.firstName,c.displayName]]>
         </query>
         <query name="Customer.count_search_noofficeid">
-	        	   <![CDATA[select  count(distinct c.customerId) from  org.mifos.application.customer.util.valueobjects.Customer as c left join c.parentCustomer as pa left join pa.parentCustomer as papa  left join c.office as off  left join c.personnel as per, org.mifos.application.customer.util.valueobjects.CustomerNameDetail as cnd  where  (((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or (:USERLEVEL_ID!=:LOID)) and (off.searchId like :OFFICE_SEARCH_ID) and ( ((c.customerLevel.levelId !=:LEVELID) and (c.displayName like :SEARCH_STRING)) or ((c.customerLevel.levelId =:LEVELID) and (cnd.customer.customerId=c.customerId) and (cnd.nameType=:CLIENTNAMETYPE) and (cnd.firstName like :SEARCH_STRING or cnd.lastName like :SEARCH_STRING or cnd.secondLastName like :SEARCH_STRING )))) order by c.customerLevel.levelId,cnd.lastName,cnd.firstName,c.displayName ]]>
+	        	   <![CDATA[select  count(c.customerId) from  
+	        	    org.mifos.application.customer.util.valueobjects.Customer as c 
+	        	    left join c.parentCustomer as pa left join pa.parentCustomer as papa  
+	        	    left join c.office as off  
+	        	    left join c.personnel as per 
+                    where ( 
+                    		((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or (:USERLEVEL_ID!=:LOID)) 
+                         and (off.searchId like :OFFICE_SEARCH_ID) 
+                         and (
+                               (c.customerLevel.levelId in (2,3)  and c.displayName like :SEARCH_STRING) 
+                    		   or (c.customerLevel.levelId =:LEVELID and (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING ))
+                    		   )
+                    		 ) 
+					]]>
         </query>
-        
         <query name="Customer.search_noofficeid_noclients">
 	        	   <![CDATA[select  distinct c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.levelId,off.officeId,off.officeName,per.displayName,per.personnelId,c.statusId,pa.displayName, pa.globalCustNum,papa.displayName,papa.globalCustNum from  org.mifos.application.customer.util.valueobjects.Customer as c left join c.parentCustomer as pa left join pa.parentCustomer as papa  left join c.office as off  left join c.personnel as per  where ( ((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or (:USERLEVEL_ID!=:LOID)) and (off.searchId like :OFFICE_SEARCH_ID) and (c.customerLevel.levelId !=:LEVELID) and (c.displayName like :SEARCH_STRING))  order by c.customerLevel.levelId,c.displayName]]>
         </query>
@@ -275,6 +383,14 @@
 	        	   <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientAttendanceBO customerAttendance where customerAttendance.meetingDate > :DATEONEYEARBEFORE and customerAttendance.attendance in (2,3) and customerAttendance.id in (select max(custAttendance.id) from org.mifos.application.customer.client.business.ClientAttendanceBO custAttendance where custAttendance.customer.customerId=:CUSTOMERID group by custAttendance.meetingDate )]]>
         </query>
         <query name="count_groupSearchWithoutCenter">
-	        	   <![CDATA[select count(*) from Customer customer where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) and customer.office.searchId like :SEARCH_ID and customer.displayName like :SEARCH_STRING and customer.customerLevel.levelId =:LEVEL_ID and customer.statusId!=:STATUS1 and customer.statusId!=:STATUS2 ORDER BY customer.office.officeName,customer.displayName]]>
+	        	   <![CDATA[select count(*) 
+	        	   from Customer customer 
+	        	   where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)
+	        	   or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) 
+	        	   and customer.office.searchId like :SEARCH_ID 
+	        	   and customer.displayName like :SEARCH_STRING 
+	        	   and customer.customerLevel.levelId =:LEVEL_ID 
+	        	   and  customer.statusId in (7,8,9,10) 
+	        	   ]]>
         </query>
 </hibernate-mapping>

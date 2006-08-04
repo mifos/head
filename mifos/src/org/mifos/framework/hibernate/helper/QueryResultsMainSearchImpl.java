@@ -29,7 +29,8 @@ public class QueryResultsMainSearchImpl extends QueryResultSearchDTOImpl {
 			    	query.setMaxResults(noOfObjects);			    	
 			    	list=query.list();			    	
 			    	this.queryInputs.setTypes(query.getReturnTypes());			    	
-			    	dtoBuilder.setInputs(queryInputs);			    	
+			    	dtoBuilder.setInputs(queryInputs);
+			    	Query query1 = session.createQuery("select account.globalAccountNum from Account account where account.customer.customerId=:customerId and account.accountTypeId=:accountTypeId");
 		    		if(list!=null)
 		 		   	{		    			
 			    	   for(int i=0;i < list.size(); i++)	  	     
@@ -38,15 +39,10 @@ public class QueryResultsMainSearchImpl extends QueryResultSearchDTOImpl {
 			    		   	  {	    
 					    		  Object record = buildDTO((Object[])list.get(i));
 					    		  CustomerSearch cs = ((CustomerSearch)record);
-					    		  Integer customerId = cs.getCustomerId();					    		  
-					    		  query= session.createQuery("select account.globalAccountNum from Account account where account.customer.customerId=:customerId and account.accountTypeId=:accountTypeId");
-					    		  query.setInteger("customerId",customerId).setShort("accountTypeId",(short)1);
-					    		  List listOfLoanAccounts = query.list();
-					    		  cs.setLoanGlobalAccountNum(listOfLoanAccounts);
-					    		  query = session.createQuery("select account.globalAccountNum from Account account where account.customer.customerId=:customerId and account.accountTypeId=:accountTypeId");
-					    		  query.setInteger("customerId",customerId).setShort("accountTypeId",(short)2);
-					    		  List listofSavingsAccounts = query.list();
-					    		  cs.setSavingsGlobalAccountNum(listofSavingsAccounts);
+					    		  query1.setInteger("customerId",cs.getCustomerId()).setShort("accountTypeId",(short)1);
+					    		  cs.setLoanGlobalAccountNum(query1.list());
+					    		  query1.setShort("accountTypeId",(short)2);
+					    		  cs.setSavingsGlobalAccountNum(query1.list());
 					    		  returnList.add(cs);					    		  
 			    		   	  }
 			  		 		  else

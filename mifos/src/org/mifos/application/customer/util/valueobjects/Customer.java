@@ -196,6 +196,12 @@ public class Customer extends ValueObject {
 	private Short blackListed;
 
 	private Short personnelId;
+	
+	private String firstName;
+	
+	private String lastName;
+	
+	private String secondLastName;
 
 	/**
 	 * @return Returns the personnelId.
@@ -915,5 +921,9 @@ public class Customer extends ValueObject {
 	protected CustomerPerformanceHistory getPerformanceHistory() {
 		return null;
 	}
-	
+	protected  void setNameDetail(String firstName,String lastName ,String secondLastName){
+		  this.firstName=firstName;
+		  this.lastName=lastName;
+		  this.secondLastName=secondLastName;
+	  }	
 }

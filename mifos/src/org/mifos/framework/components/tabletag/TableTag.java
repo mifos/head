@@ -616,7 +616,7 @@ public class TableTag extends BodyTagSupport {
 			QueryResult query = context.getSearchResult();
 			if(null!= query) {
 				cache=new Cache(query);
-				list = cache.getList(1,"");
+				list = cache.getList(0,"");
 				if (null == list) {
 					list= new ArrayList();
 				}

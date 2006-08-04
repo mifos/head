@@ -151,6 +151,8 @@ public class Client extends Customer {
 		this.performanceHistory = performanceHistory;
 	}
 	
-
+  public  void setClientName(String firstName,String lastName ,String secondLastName){
+	  setNameDetail(firstName,lastName,secondLastName);
+  }
 	
 }
