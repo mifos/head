@@ -15,8 +15,10 @@ import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -135,19 +137,11 @@ public class SavingsTestHelper {
 		notes.setPersonnel(savingsBO.getPersonnel());
 		return notes;
 	}
-	public AccountActionDateEntity createAccountActionDate(short installmentId,Date dueDate,Date paymentDate,CustomerBO customer, Money deposit, Money depositPaid, Short paymentStatus){
-		AccountActionDateEntity actionDate = new AccountActionDateEntity();
-		actionDate.setInstallmentId(installmentId);
-		actionDate.setActionDate(new java.sql.Date(dueDate.getTime()));
+	public AccountActionDateEntity createAccountActionDate(AccountBO account,short installmentId,Date dueDate,Date paymentDate,CustomerBO customer, Money deposit, Money depositPaid, PaymentStatus paymentStatus){
+		SavingsScheduleEntity actionDate = new SavingsScheduleEntity(account,customer,installmentId,new java.sql.Date(dueDate.getTime()),paymentStatus,deposit);
+		actionDate.setDepositPaid(depositPaid);
 		if(paymentDate!=null)
 			actionDate.setPaymentDate(new java.sql.Date(paymentDate.getTime()));
-		actionDate.setCustomer(customer);
-		actionDate.setDeposit(deposit);
-		actionDate.setDepositPaid(depositPaid);
-		actionDate.setPaymentStatus(paymentStatus);
-		actionDate.setPrincipal(new Money());
-		actionDate.setInterest(new Money());
-		actionDate.setPenalty(new Money());
 		return actionDate;
 	}
 	

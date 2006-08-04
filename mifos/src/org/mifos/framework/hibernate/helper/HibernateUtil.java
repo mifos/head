@@ -204,7 +204,9 @@ public class HibernateUtil {
 	public static void closeSession() {
 		SessionHolder sessionHolder = getSessionHolder();
 		if(sessionHolder != null){
-			sessionHolder.getSession().close();
+			Session s = sessionHolder.getSession();
+			s.close();
+			s=null;
 			threadLocal.set(null);
 		}
 	}

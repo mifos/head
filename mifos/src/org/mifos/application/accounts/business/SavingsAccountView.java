@@ -40,7 +40,8 @@ package org.mifos.application.accounts.business;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
+import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
+import org.mifos.application.bulkentry.business.BulkEntrySavingsInstallmentView;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.business.View;
 import org.mifos.framework.util.helpers.Money;
@@ -53,7 +54,7 @@ public class SavingsAccountView extends View {
 
 	private String withDrawalAmountEntered;
 
-	private List<BulkEntryAccountActionView> accountTrxnDetails;
+	private List<BulkEntryInstallmentView> accountTrxnDetails;
 
 	private Short accountType;
 
@@ -68,7 +69,7 @@ public class SavingsAccountView extends View {
 		this.accountId = accountId;
 		this.accountType = accountType;
 		this.savingsOffering = savingsOffering;
-		accountTrxnDetails = new ArrayList<BulkEntryAccountActionView>();
+		accountTrxnDetails = new ArrayList<BulkEntryInstallmentView>();
 		isValidDepositAmountEntered = true;
 		isValidWithDrawalAmountEntered = true;
 	}
@@ -77,12 +78,12 @@ public class SavingsAccountView extends View {
 		return accountId;
 	}
 
-	public List<BulkEntryAccountActionView> getAccountTrxnDetails() {
+	public List<BulkEntryInstallmentView> getAccountTrxnDetails() {
 		return accountTrxnDetails;
 	}
 
 	public void addAccountTrxnDetail(
-			BulkEntryAccountActionView accountTrxnDetail) {
+			BulkEntryInstallmentView accountTrxnDetail) {
 		this.accountTrxnDetails.add(accountTrxnDetail);
 	}
 
@@ -130,8 +131,8 @@ public class SavingsAccountView extends View {
 	public Double getTotalDepositDue() {
 		Money totalDepositDue = new Money();
 		if (accountTrxnDetails != null && accountTrxnDetails.size() > 0) {
-			for (BulkEntryAccountActionView actionDates : accountTrxnDetails) {
-				totalDepositDue = totalDepositDue.add(actionDates
+			for (BulkEntryInstallmentView actionDates : accountTrxnDetails) {
+				totalDepositDue = totalDepositDue.add(((BulkEntrySavingsInstallmentView)actionDates)
 						.getTotalDepositDue());
 			}
 		}

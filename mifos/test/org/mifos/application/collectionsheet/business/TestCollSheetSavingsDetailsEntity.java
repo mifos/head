@@ -44,6 +44,7 @@ import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
@@ -89,12 +90,12 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 		assertEquals(200.00 ,collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue());
 		
 		
-		AccountActionDateEntity accountActionDate = savings.getAccountActionDate((short)1);
+		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity)savings.getAccountActionDate((short)1);
 		accountActionDate.setDepositPaid(new Money("100.00"));
 		collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short)3));
 		assertEquals(300.00 ,collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue());
 		assertEquals(200.00 ,collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue());
-		accountActionDate = savings.getAccountActionDate(Short.valueOf("1"));
+		accountActionDate = (SavingsScheduleEntity)savings.getAccountActionDate((short)1);
 		accountActionDate.setDepositPaid(new Money("200.00"));
 		accountActionDate.setPaymentStatus(PaymentStatus.PAID.getValue());
 		collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short)3));
@@ -109,7 +110,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 		//obtaining the last installment
 		//Scenario: Mandatory savings Account: For the first installment a partial payment of Rs 100 has been done and hence with a deposit
 		//of 200, total overdue amount is Rs 300 and due amount for next meeting date is Rs 200
-		AccountActionDateEntity accountActionDate = savings.getAccountActionDate((short)1);
+		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity)savings.getAccountActionDate((short)1);
 		accountActionDate.setDepositPaid(new Money("100.00"));
 		collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short)3));
 		assertEquals(300.00 ,collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue());
@@ -123,7 +124,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 		//obtaining the last installment
 		//Scenario: Mandatory savings Account: For the first installment a full payment of Rs 200 has been done and hence with a deposit
 		//of 200, total overdue amount is Rs 200 and due amount for next meeting date is Rs 200
-		AccountActionDateEntity accountActionDate = savings.getAccountActionDate((short)1);
+		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity)savings.getAccountActionDate((short)1);
 		accountActionDate.setDepositPaid(new Money("200.00"));
 		accountActionDate.setPaymentStatus(PaymentStatus.PAID.getValue());
 		collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short)3));
@@ -137,7 +138,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 		//obtaining the last installment
 		//Scenario: Voluntary savings Account: For the first installment a full payment of Rs 200 has been done and hence with a deposit
 		//of 200, total overdue amount is Rs 0 and due amount for next meeting date is Rs 200
-		AccountActionDateEntity accountActionDate = savings.getAccountActionDate((short)1);
+		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity)savings.getAccountActionDate((short)1);
 		accountActionDate.setDepositPaid(new Money("100.00"));
 		collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short)3));
 		assertEquals(0.00 ,collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue());
@@ -151,7 +152,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 		//obtaining the last installment
 		//Scenario: Voluntary savings Account: For the first installment a full payment of Rs 200 has been done and hence with a deposit
 		//of 200, total overdue amount is Rs 0 and due amount for next meeting date is Rs 200
-		AccountActionDateEntity accountActionDate = savings.getAccountActionDate((short)1);
+		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity)savings.getAccountActionDate((short)1);
 		accountActionDate.setDepositPaid(new Money("200.00"));
 		accountActionDate.setPaymentStatus(PaymentStatus.PAID.getValue());
 		collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short)3));
@@ -163,7 +164,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 		
 		savings = createSavingsAccount(SavingsConstants.SAVINGS_VOLUNTARY);
 		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
-		AccountActionDateEntity accountActionDate = savings.getAccountActionDate((short)1);
+		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity)savings.getAccountActionDate((short)1);
 		accountActionDate.setDepositPaid(new Money("200.00"));
 		accountActionDate.setPaymentStatus(PaymentStatus.PAID.getValue());
 		collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short)3));
@@ -174,7 +175,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 		
 		savings = createSavingsAccount(SavingsConstants.SAVINGS_MANDATORY);
 		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
-		AccountActionDateEntity accountActionDate = savings.getAccountActionDate((short)1);
+		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity)savings.getAccountActionDate((short)1);
 		accountActionDate.setDepositPaid(new Money("200.00"));
 		accountActionDate.setPaymentStatus(PaymentStatus.PAID.getValue());
 		collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short)3));

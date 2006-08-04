@@ -3,6 +3,7 @@
  */
 package org.mifos.application.accounts.persistence.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -46,14 +47,12 @@ public class TestAccountPersistenceService extends TestAccount {
 	}
 
 	public void testSuccessGetNextInstallmentListService() {
-		List<Short> installmentIdList = null;
-		try {
-			installmentIdList = accountPersistenceService
-					.getNextInstallmentList(accountBO.getAccountId());
-			assertEquals(6, installmentIdList.size());
-		} catch (PersistenceException e) {
-			assertTrue(false);
+		List<Short> installmentIdList = new ArrayList<Short>();
+		for(AccountActionDateEntity accountActionDateEntity : accountBO.getApplicableIdsForFutureInstallments()){
+			installmentIdList.add(accountActionDateEntity.getInstallmentId());
 		}
+		installmentIdList.add(accountBO.getDetailsOfNextInstallment().getInstallmentId());
+		assertEquals(6, installmentIdList.size());
 	}
 
 	public void testSuccessSave() {
@@ -130,23 +129,7 @@ public class TestAccountPersistenceService extends TestAccount {
 		TestObjectFactory.cleanUp(savingsBO);
 
 	}
-	public void testGetLastInstallment(){
-		
-		Short maxInstallmentid =null;
-		for (AccountActionDateEntity installment : center.getCustomerAccount().getAccountActionDates()) {
-			
-			if ( maxInstallmentid==null)
-			 maxInstallmentid = installment.getInstallmentId();
-			else {
-				
-				if(maxInstallmentid.shortValue()< installment.getInstallmentId().shortValue())maxInstallmentid=installment.getInstallmentId();
-				
-			}
-		}
-		assertEquals(maxInstallmentid.shortValue(), accountPersistenceService.getLastInstallment(center.getCustomerAccount().getAccountId()).getInstallmentId().shortValue());
-		
-		
-	}
+	
 	private SavingsOfferingBO createSavingsOffering(String offeringName) {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));

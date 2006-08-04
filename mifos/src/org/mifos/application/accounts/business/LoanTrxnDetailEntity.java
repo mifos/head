@@ -38,43 +38,37 @@
 
 package org.mifos.application.accounts.business;
 
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
-import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 
 public class LoanTrxnDetailEntity extends AccountTrxnEntity {
-	
+
 	protected LoanTrxnDetailEntity() {
 		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
-		principalAmount=null;
-		interestAmount=null;
-		penaltyAmount=null;
-		miscFeeAmount=null;
-		miscPenaltyAmount=null;
+		principalAmount = null;
+		interestAmount = null;
+		penaltyAmount = null;
+		miscFeeAmount = null;
+		miscPenaltyAmount = null;
 	}
-	
-	
-	
-	
+
 	private LoanPersistance loanPersistance;
-	
+
 	private final Money principalAmount;
 
 	private final Money interestAmount;
@@ -106,7 +100,7 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 	public Money getMiscFeeAmount() {
 		return miscFeeAmount;
 	}
-	
+
 	public void addFeesTrxnDetail(FeesTrxnDetailEntity feesTrxn) {
 		feesTrxn.setAccountTrxn(this);
 		feesTrxnDetails.add(feesTrxn);
@@ -115,17 +109,15 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 	public Money getMiscPenaltyAmount() {
 		return miscPenaltyAmount;
 	}
-	
+
 	public LoanTrxnDetailEntity(AccountPaymentEntity accountPayment,
 			AccountActionEntity accountActionEntity, Short installmentId,
-			Date dueDate, PersonnelBO personnel,
-			Date actionDate, Money amount, 
+			Date dueDate, PersonnelBO personnel, Date actionDate, Money amount,
 			String comments, AccountTrxnEntity relatedTrxn,
 			Money principalAmount, Money interestAmount, Money penaltyAmount,
 			Money miscFeeAmount, Money miscPenaltyAmount) {
-		super(accountPayment, accountActionEntity, installmentId, dueDate, 
-				personnel, actionDate, amount, comments,
-				relatedTrxn);
+		super(accountPayment, accountActionEntity, installmentId, dueDate,
+				personnel, actionDate, amount, comments, relatedTrxn);
 		loanPersistance = new LoanPersistance();
 		this.principalAmount = principalAmount;
 		this.interestAmount = interestAmount;
@@ -134,24 +126,26 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 		this.miscPenaltyAmount = miscPenaltyAmount;
 		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
 	}
-	
-	
+
 	public LoanTrxnDetailEntity(AccountPaymentEntity accountPayment,
-			AccountActionEntity accountActionEntity,AccountActionDateEntity accountActionDateEntity,
-			PersonnelBO personnel,String comments) {
-		super(accountPayment, accountActionEntity, accountActionDateEntity.getInstallmentId(), 
-				accountActionDateEntity.getActionDate(), 
-				personnel, new Date(System.currentTimeMillis()), accountActionDateEntity.getPrincipal(),
+			AccountActionEntity accountActionEntity,
+			AccountActionDateEntity accountActionDateEntity,
+			PersonnelBO personnel, String comments) {
+		super(accountPayment, accountActionEntity, accountActionDateEntity
+				.getInstallmentId(), accountActionDateEntity.getActionDate(),
+				personnel, new Date(System.currentTimeMillis()),
+				((LoanScheduleEntity) accountActionDateEntity).getPrincipal(),
 				comments);
 		loanPersistance = new LoanPersistance();
-		this.principalAmount = accountActionDateEntity.getPrincipal();
+		this.principalAmount = ((LoanScheduleEntity) accountActionDateEntity)
+				.getPrincipal();
 		this.interestAmount = new Money();
 		this.penaltyAmount = new Money();
 		this.miscFeeAmount = new Money();
 		this.miscPenaltyAmount = new Money();
 		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
 	}
-	
+
 	public LoanTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity,
 			Date recieptDate, AccountActionEntity accountActionEntity,
 			PersonnelBO personnel, String comments, Short installmentId,
@@ -165,8 +159,7 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 		miscPenaltyAmount = new Money();
 		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
 	}
-	
-	
+
 	public LoanTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity,
 			Date recieptDate, AccountActionEntity accountActionEntity,
 			PersonnelBO personnel, String comments, Short installmentId,
@@ -188,25 +181,26 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 			}
 		}
 	}
-	
-	
+
 	public LoanTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity,
 			LoanPaymentData loanPaymentDataView, PersonnelBO personnel,
 			java.util.Date transactionDate,
-			AccountActionEntity accountActionEntity,Money amount,
+			AccountActionEntity accountActionEntity, Money amount,
 			String comments) {
-		
-		super(accountPaymentEntity, accountActionEntity,
-				loanPaymentDataView.getInstallmentId(), loanPaymentDataView.getAccountActionDate()
-						.getActionDate(),personnel, transactionDate,amount, 
-				 comments);
+
+		super(accountPaymentEntity, accountActionEntity, loanPaymentDataView
+				.getInstallmentId(), loanPaymentDataView.getAccountActionDate()
+				.getActionDate(), personnel, transactionDate, amount, comments);
 		interestAmount = loanPaymentDataView.getInterestPaid();
 		penaltyAmount = loanPaymentDataView.getPenaltyPaid();
 		principalAmount = loanPaymentDataView.getPrincipalPaid();
 		miscFeeAmount = loanPaymentDataView.getMiscFeePaid();
 		miscPenaltyAmount = loanPaymentDataView.getMiscPenaltyPaid();
 		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
-		for (AccountFeesActionDetailEntity accountFeesActionDetail : loanPaymentDataView.getAccountActionDate().getAccountFeesActionDetails()) {
+		LoanScheduleEntity loanSchedule = (LoanScheduleEntity) loanPaymentDataView
+				.getAccountActionDate();
+		for (AccountFeesActionDetailEntity accountFeesActionDetail : loanSchedule
+				.getAccountFeesActionDetails()) {
 			if (loanPaymentDataView.getFeesPaid().containsKey(
 					accountFeesActionDetail.getFee().getFeeId())) {
 				accountFeesActionDetail.makePayment(loanPaymentDataView
@@ -219,7 +213,6 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 		}
 	}
 
-	
 	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment)
 			throws ApplicationException, SystemException {
 		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
@@ -229,24 +222,23 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 				.debug(
 						"Inside generate reverse transaction method of loan trxn detail");
-		String comment=null;
+		String comment = null;
 		if (null == adjustmentComment)
-			 comment = getComments();
+			comment = getComments();
 		else
-			comment=adjustmentComment;
-		
-		LoanTrxnDetailEntity reverseAccntTrxn=new LoanTrxnDetailEntity(getAccountPayment(),
-				(AccountActionEntity) masterPersistenceService
-				.findById(AccountActionEntity.class,
-						AccountConstants.ACTION_LOAN_ADJUSTMENT), 
-						getInstallmentId(),
-						getDueDate(), getPersonnel(),
-						getActionDate(), getAmount().negate(), 
-				 comment, this,
-				getPrincipalAmount().negate(), getInterestAmount().negate(), getPenaltyAmount().negate(),
-				getMiscFeeAmount().negate(), getMiscPenaltyAmount().negate()); 
-			
-		
+			comment = adjustmentComment;
+
+		LoanTrxnDetailEntity reverseAccntTrxn = new LoanTrxnDetailEntity(
+				getAccountPayment(),
+				(AccountActionEntity) masterPersistenceService.findById(
+						AccountActionEntity.class,
+						AccountConstants.ACTION_LOAN_ADJUSTMENT),
+				getInstallmentId(), getDueDate(), getPersonnel(),
+				getActionDate(), getAmount().negate(), comment, this,
+				getPrincipalAmount().negate(), getInterestAmount().negate(),
+				getPenaltyAmount().negate(), getMiscFeeAmount().negate(),
+				getMiscPenaltyAmount().negate());
+
 		if (null != getFeesTrxnDetails() && getFeesTrxnDetails().size() > 0) {
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 					"Before generating reverse entries for fees");

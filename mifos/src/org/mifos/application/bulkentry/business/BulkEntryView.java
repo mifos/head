@@ -164,7 +164,7 @@ public class BulkEntryView extends View {
 
 	public void populateLoanAccountsInformation(CustomerBO customer,
 			Date transactionDate,
-			List<BulkEntryAccountActionView> bulkEntryAccountActionViews,
+			List<BulkEntryInstallmentView> bulkEntryAccountActionViews,
 			List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews) {
 		Integer customerId = customerDetail.getCustomerId();
 		List<LoanBO> customerLoanAccounts = customer
@@ -180,7 +180,7 @@ public class BulkEntryView extends View {
 									bulkEntryAccountActionViews,
 									bulkEntryAccountFeeActionViews, loan));
 				else
-					loanAccountView.addTrxnDetails(retrieveAccountActionDetail(
+					loanAccountView.addTrxnDetails(retrieveLoanSchedule(
 							loanAccountView.getAccountId(), customerId,
 							bulkEntryAccountActionViews,
 							bulkEntryAccountFeeActionViews));
@@ -198,11 +198,11 @@ public class BulkEntryView extends View {
 
 	private Double getAmountPaidAtDisb(LoanAccountView loanAccountView,
 			Integer customerId,
-			List<BulkEntryAccountActionView> bulkEntryAccountActionViews,
+			List<BulkEntryInstallmentView> bulkEntryAccountActionViews,
 			List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews,
 			LoanBO loan) {
 		if (loanAccountView.isInterestDeductedAtDisbursement())
-			return getInterestAmountDedAtDisb(retrieveAccountActionDetail(
+			return getInterestAmountDedAtDisb(retrieveLoanSchedule(
 					loanAccountView.getAccountId(), customerId,
 					bulkEntryAccountActionViews, bulkEntryAccountFeeActionViews));
 		else
@@ -210,11 +210,11 @@ public class BulkEntryView extends View {
 	}
 
 	private Double getInterestAmountDedAtDisb(
-			List<BulkEntryAccountActionView> installments) {
-		for (BulkEntryAccountActionView bulkEntryAccountAction : installments)
+			List<BulkEntryInstallmentView> installments) {
+		for (BulkEntryInstallmentView bulkEntryAccountAction : installments)
 			if (bulkEntryAccountAction.getInstallmentId().shortValue() == 1)
-				return bulkEntryAccountAction.getTotalDueWithFees()
-						.getAmountDoubleValue();
+				return ((BulkEntryLoanInstallmentView) bulkEntryAccountAction)
+						.getTotalDueWithFees().getAmountDoubleValue();
 		return 0.0;
 	}
 
@@ -228,19 +228,19 @@ public class BulkEntryView extends View {
 		return feeAtDisbursement.getAmountDoubleValue();
 	}
 
-	private List<BulkEntryAccountActionView> retrieveAccountActionDetail(
+	private List<BulkEntryInstallmentView> retrieveLoanSchedule(
 			Integer accountId, Integer customerId,
-			List<BulkEntryAccountActionView> bulkEntryAccountActionViews,
+			List<BulkEntryInstallmentView> bulkEntryAccountActionViews,
 			List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews) {
 		int index = bulkEntryAccountActionViews
-				.indexOf(new BulkEntryAccountActionView(accountId, customerId));
+				.indexOf(new BulkEntryLoanInstallmentView(accountId, customerId));
 		int lastIndex = bulkEntryAccountActionViews
-				.lastIndexOf(new BulkEntryAccountActionView(accountId,
+				.lastIndexOf(new BulkEntryLoanInstallmentView(accountId,
 						customerId));
 		if (lastIndex != -1 && index != -1) {
-			List<BulkEntryAccountActionView> applicableInstallments = bulkEntryAccountActionViews
+			List<BulkEntryInstallmentView> applicableInstallments = bulkEntryAccountActionViews
 					.subList(index, lastIndex + 1);
-			for (BulkEntryAccountActionView bulkEntryAccountActionView : applicableInstallments) {
+			for (BulkEntryInstallmentView bulkEntryAccountActionView : applicableInstallments) {
 				int feeIndex = bulkEntryAccountFeeActionViews
 						.indexOf(new BulkEntryAccountFeeActionView(
 								bulkEntryAccountActionView.getActionDateId()));
@@ -248,7 +248,37 @@ public class BulkEntryView extends View {
 						.lastIndexOf(new BulkEntryAccountFeeActionView(
 								bulkEntryAccountActionView.getActionDateId()));
 				if (feeIndex != -1 && feeLastIndex != -1)
-					bulkEntryAccountActionView
+					((BulkEntryLoanInstallmentView) bulkEntryAccountActionView)
+							.setBulkEntryAccountFeeActions(bulkEntryAccountFeeActionViews
+									.subList(feeIndex, feeLastIndex + 1));
+			}
+			return applicableInstallments;
+		}
+		return null;
+	}
+
+	private List<BulkEntryInstallmentView> retrieveCustomerSchedule(
+			Integer accountId, Integer customerId,
+			List<BulkEntryInstallmentView> bulkEntryAccountActionViews,
+			List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews) {
+		int index = bulkEntryAccountActionViews
+				.indexOf(new BulkEntryCustomerAccountInstallmentView(accountId,
+						customerId));
+		int lastIndex = bulkEntryAccountActionViews
+				.lastIndexOf(new BulkEntryCustomerAccountInstallmentView(
+						accountId, customerId));
+		if (lastIndex != -1 && index != -1) {
+			List<BulkEntryInstallmentView> applicableInstallments = bulkEntryAccountActionViews
+					.subList(index, lastIndex + 1);
+			for (BulkEntryInstallmentView bulkEntryAccountActionView : applicableInstallments) {
+				int feeIndex = bulkEntryAccountFeeActionViews
+						.indexOf(new BulkEntryAccountFeeActionView(
+								bulkEntryAccountActionView.getActionDateId()));
+				int feeLastIndex = bulkEntryAccountFeeActionViews
+						.lastIndexOf(new BulkEntryAccountFeeActionView(
+								bulkEntryAccountActionView.getActionDateId()));
+				if (feeIndex != -1 && feeLastIndex != -1)
+					((BulkEntryCustomerAccountInstallmentView) bulkEntryAccountActionView)
 							.setBulkEntryAccountFeeActions(bulkEntryAccountFeeActionViews
 									.subList(feeIndex, feeLastIndex + 1));
 			}
@@ -258,12 +288,12 @@ public class BulkEntryView extends View {
 	}
 
 	public void populateCustomerAccountInformation(CustomerBO customer,
-			List<BulkEntryAccountActionView> bulkEntryAccountActionViews,
+			List<BulkEntryInstallmentView> bulkEntryAccountActionViews,
 			List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews) {
 		CustomerAccountBO customerAccount = customer.getCustomerAccount();
 		CustomerAccountView customerAccountView = new CustomerAccountView(
 				customerAccount.getAccountId());
-		customerAccountView.setAccountActionDates(retrieveAccountActionDetail(
+		customerAccountView.setAccountActionDates(retrieveCustomerSchedule(
 				customerAccount.getAccountId(), customer.getCustomerId(),
 				bulkEntryAccountActionViews, bulkEntryAccountFeeActionViews));
 		setCustomerAccountDetails(customerAccountView);
@@ -324,7 +354,7 @@ public class BulkEntryView extends View {
 
 	public void populateSavingsAccountActions(Integer customerId,
 			Date transactionDate,
-			List<BulkEntryAccountActionView> bulkEntryAccountActionViews) {
+			List<BulkEntryInstallmentView> bulkEntryAccountActionViews) {
 		if (customerDetail.isCustomerCenter())
 			return;
 		for (SavingsAccountView savingsAccountView : savingsAccountDetails) {
@@ -341,32 +371,33 @@ public class BulkEntryView extends View {
 	private void addAccountActionToSavingsView(
 			SavingsAccountView savingsAccountView, Integer customerId,
 			Date transactionDate,
-			List<BulkEntryAccountActionView> bulkEntryAccountActionViews) {
+			List<BulkEntryInstallmentView> bulkEntryAccountActionViews) {
 		boolean isMandatory = false;
 		if (savingsAccountView.getSavingsOffering().getSavingsType()
 				.getSavingsTypeId()
 				.equals(ProductDefinitionConstants.MANDATORY))
 			isMandatory = true;
-		List<BulkEntryAccountActionView> accountActionDetails = retrieveSavingsAccountActions(
+		List<BulkEntryInstallmentView> accountActionDetails = retrieveSavingsAccountActions(
 				savingsAccountView.getAccountId(), customerId,
 				bulkEntryAccountActionViews, isMandatory);
 		if (accountActionDetails != null)
-			for (BulkEntryAccountActionView accountAction : accountActionDetails) {
+			for (BulkEntryInstallmentView accountAction : accountActionDetails) {
 				savingsAccountView.addAccountTrxnDetail(accountAction);
 			}
 	}
 
-	private List<BulkEntryAccountActionView> retrieveSavingsAccountActions(
+	private List<BulkEntryInstallmentView> retrieveSavingsAccountActions(
 			Integer accountId, Integer customerId,
-			List<BulkEntryAccountActionView> bulkEntryAccountActionViews,
+			List<BulkEntryInstallmentView> bulkEntryAccountActionViews,
 			boolean isMandatory) {
 		int index = bulkEntryAccountActionViews
-				.indexOf(new BulkEntryAccountActionView(accountId, customerId));
+				.indexOf(new BulkEntrySavingsInstallmentView(accountId,
+						customerId));
 		if (!isMandatory && index != -1) {
 			return bulkEntryAccountActionViews.subList(index, index + 1);
 		}
 		int lastIndex = bulkEntryAccountActionViews
-				.lastIndexOf(new BulkEntryAccountActionView(accountId,
+				.lastIndexOf(new BulkEntrySavingsInstallmentView(accountId,
 						customerId));
 		if (lastIndex != -1 && index != -1)
 			return bulkEntryAccountActionViews.subList(index, lastIndex + 1);

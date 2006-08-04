@@ -9,7 +9,6 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.bulkentry.exceptions.BulkEntryAccountUpdateException;
@@ -104,8 +103,8 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 		Date currentDate = new Date(System.currentTimeMillis());
 		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
 				accntActionDates, new Money(TestObjectFactory.getMFICurrency(),
-						"1000.0"), null, account.getPersonnel(), "423423", Short
-						.valueOf("1"), currentDate, currentDate);
+						"1000.0"), null, account.getPersonnel(), "423423",
+				Short.valueOf("1"), currentDate, currentDate);
 		try {
 			account.applyPayment(paymentData);
 			assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid()
@@ -147,8 +146,8 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 		Date currentDate = new Date(System.currentTimeMillis());
 		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
 				accntActionDates, new Money(TestObjectFactory.getMFICurrency(),
-						"1000.0"), null, account.getPersonnel(), "423423", Short
-						.valueOf("1"), currentDate, currentDate);
+						"1000.0"), null, account.getPersonnel(), "423423",
+				Short.valueOf("1"), currentDate, currentDate);
 
 		account.applyPayment(paymentData);
 		HibernateUtil.commitTransaction();
@@ -158,13 +157,6 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 
 	public void testFailureApplyPayment() throws NumberFormatException,
 			AccountException, SystemException {
-
-		AccountActionDateEntity accountAction = new AccountActionDateEntity();
-		accountAction.setInstallmentId(Short.valueOf("1"));
-		accountAction.setPaymentStatus(Short.valueOf("0"));
-		List<AccountActionDateEntity> actionDates = new ArrayList<AccountActionDateEntity>();
-		actionDates.add(accountAction);
-
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active", Short
@@ -197,8 +189,8 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 		Date currentDate = new Date(System.currentTimeMillis());
 		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
 				accntActionDates, new Money(TestObjectFactory.getMFICurrency(),
-						"1000.0"), null, account.getPersonnel(), "423423", Short
-						.valueOf("1"), currentDate, currentDate);
+						"1000.0"), null, account.getPersonnel(), "423423",
+				Short.valueOf("1"), currentDate, currentDate);
 
 		try {
 			account.applyPayment(paymentData);

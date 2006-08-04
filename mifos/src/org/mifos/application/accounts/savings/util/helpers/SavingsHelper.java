@@ -47,8 +47,10 @@ import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
+import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -67,90 +69,110 @@ import org.mifos.framework.util.helpers.Money;
 
 public class SavingsHelper {
 	private Calendar cal;
-	//TODO: pick from configuration
-	private Date getFiscalStartDate(){
-		try{
+
+	// TODO: pick from configuration
+	private Date getFiscalStartDate() {
+		try {
 			SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 			return df.parse("01/01/2006");
-		}catch(ParseException pe){			
+		} catch (ParseException pe) {
 		}
 		return null;
 	}
-	
-	private int getFiscalStartDayNumber(){
+
+	private int getFiscalStartDayNumber() {
 		Calendar cal = getCalendar();
 		cal.setTime(getFiscalStartDate());
 		return cal.get(Calendar.DAY_OF_MONTH);
 	}
-	
-	public SavingsHelper(){
-		cal=Calendar.getInstance();
+
+	public SavingsHelper() {
+		cal = Calendar.getInstance();
 		cal.setTime(getFiscalStartDate());
 	}
-	
-	public Date getNextScheduleDate(Date accountActivationDate, Date currentScheduleDate, MeetingBO meeting)throws SchedulerException{
+
+	public Date getNextScheduleDate(Date accountActivationDate,
+			Date currentScheduleDate, MeetingBO meeting)
+			throws SchedulerException {
 		SchedulerIntf scheduler = getScheduler(meeting);
-		return (currentScheduleDate==null)? getFirstDate(scheduler, accountActivationDate) : scheduler.getNextScheduleDateAfterRecurrence(currentScheduleDate);
+		return (currentScheduleDate == null) ? getFirstDate(scheduler,
+				accountActivationDate) : scheduler
+				.getNextScheduleDateAfterRecurrence(currentScheduleDate);
 	}
-	
-	public Date getPrevScheduleDate(Date accountActivationDate, Date currentScheduleDate, MeetingBO meeting)throws SchedulerException{
+
+	public Date getPrevScheduleDate(Date accountActivationDate,
+			Date currentScheduleDate, MeetingBO meeting)
+			throws SchedulerException {
 		SchedulerIntf scheduler = getScheduler(meeting);
-		Date prevScheduleDate = scheduler.getPrevScheduleDateAfterRecurrence(currentScheduleDate);
-		return (prevScheduleDate!=null && getDate(accountActivationDate).compareTo(prevScheduleDate)>0) ? null: prevScheduleDate;
+		Date prevScheduleDate = scheduler
+				.getPrevScheduleDateAfterRecurrence(currentScheduleDate);
+		return (prevScheduleDate != null && getDate(accountActivationDate)
+				.compareTo(prevScheduleDate) > 0) ? null : prevScheduleDate;
 	}
-	
-	private Date getDate(Date date){
+
+	private Date getDate(Date date) {
 		return new Date(date.getTime());
 	}
-	
-	private Date getFirstDate(SchedulerIntf scheduler, Date accountActivationDate)throws SchedulerException{
+
+	private Date getFirstDate(SchedulerIntf scheduler,
+			Date accountActivationDate) throws SchedulerException {
 		Date date = null;
-		for(date = scheduler.getNextScheduleDateAfterRecurrence(getFiscalStartDate());
-			date.compareTo(accountActivationDate)<=0;
-			date = scheduler.getNextScheduleDateAfterRecurrence(date));
+		for (date = scheduler
+				.getNextScheduleDateAfterRecurrence(getFiscalStartDate()); date
+				.compareTo(accountActivationDate) <= 0; date = scheduler
+				.getNextScheduleDateAfterRecurrence(date))
+			;
 		return date;
 	}
-	
-	
-	private SchedulerIntf getScheduler(MeetingBO meeting)throws SchedulerException{
+
+	private SchedulerIntf getScheduler(MeetingBO meeting)
+			throws SchedulerException {
 		Calendar cal = getCalendar();
 		cal.setTime(getFiscalStartDate());
 		meeting.setMeetingStartDate(cal);
-		Short recurrenceId = meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId();
+		Short recurrenceId = meeting.getMeetingDetails().getRecurrenceType()
+				.getRecurrenceId();
 		ScheduleDataIntf scheduleData;
-		scheduleData=SchedulerFactory.getScheduleData(recurrenceId);
-		if(scheduleData instanceof MonthData){
-			if(meeting.getMeetingType().getMeetingTypeId().equals(MeetingConstants.INTEREST_POST_FREQ))
+		scheduleData = SchedulerFactory.getScheduleData(recurrenceId);
+		if (scheduleData instanceof MonthData) {
+			if (meeting.getMeetingType().getMeetingTypeId().equals(
+					MeetingConstants.INTEREST_POST_FREQ))
 				scheduleData.setDayNumber(31);
-			else if(meeting.getMeetingType().getMeetingTypeId().equals(MeetingConstants.INTEREST_CALC_FREQ))			
+			else if (meeting.getMeetingType().getMeetingTypeId().equals(
+					MeetingConstants.INTEREST_CALC_FREQ))
 				scheduleData.setDayNumber(getFiscalStartDayNumber());
 		}
-		return SchedulerHelper.getScheduler(scheduleData , meeting);		
+		return SchedulerHelper.getScheduler(scheduleData, meeting);
 	}
-	
-	public int calculateDays(Date fromDate, Date toDate){
+
+	public int calculateDays(Date fromDate, Date toDate) {
 		long y = 1000 * 60 * 60 * 24;
-		long x = (getMFITime(toDate)/y)-(getMFITime(fromDate)/y);
-		return (int)x;
+		long x = (getMFITime(toDate) / y) - (getMFITime(fromDate) / y);
+		return (int) x;
 	}
-	
-	private long getMFITime(Date date){
-		Calendar cal1 = Calendar.getInstance(Configuration.getInstance().getSystemConfig().getMifosTimeZone());
+
+	private long getMFITime(Date date) {
+		Calendar cal1 = Calendar.getInstance(Configuration.getInstance()
+				.getSystemConfig().getMifosTimeZone());
 		cal1.setTime(date);
-		return date.getTime()+cal1.get(Calendar.ZONE_OFFSET)+cal1.get(Calendar.DST_OFFSET);
+		return date.getTime() + cal1.get(Calendar.ZONE_OFFSET)
+				+ cal1.get(Calendar.DST_OFFSET);
 	}
-	
-	private Calendar getCalendar(){
-		return Calendar.getInstance(Configuration.getInstance().getSystemConfig().getMifosTimeZone());
+
+	private Calendar getCalendar() {
+		return Calendar.getInstance(Configuration.getInstance()
+				.getSystemConfig().getMifosTimeZone());
 	}
-	
-	public Date getCurrentDate(){
+
+	public Date getCurrentDate() {
 		cal = Calendar.getInstance();
-		cal.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DATE),0,0,0);
+		cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal
+				.get(Calendar.DATE), 0, 0, 0);
 		return cal.getTime();
 	}
-	
-	public InterestInputs createInterestInputs(Money principal,  double interestRate, int duration, String durationType){
+
+	public InterestInputs createInterestInputs(Money principal,
+			double interestRate, int duration, String durationType) {
 		InterestInputs interestInputs = new InterestInputs();
 		interestInputs.setPrincipal(principal);
 		interestInputs.setDuration(duration);
@@ -158,41 +180,44 @@ public class SavingsHelper {
 		interestInputs.setInterestRate(interestRate);
 		return interestInputs;
 	}
-	
-	public AccountActionDateEntity createActionDateObject(CustomerBO customer, Date date, Short userId, Money amount){
-		AccountActionDateEntity actionDate = new AccountActionDateEntity();
-		actionDate.setActionDate(new java.sql.Date(date.getTime()));
+
+	public AccountActionDateEntity createActionDateObject(AccountBO account,
+			CustomerBO customer, Short installmentId, Date date, Short userId,
+			Money amount) {
+		AccountActionDateEntity actionDate = new SavingsScheduleEntity(account,
+				customer, installmentId, new java.sql.Date(date.getTime()),
+				PaymentStatus.UNPAID, amount);
 		actionDate.setCreatedBy(userId);
 		actionDate.setCreatedDate(new Date());
-		actionDate.setCustomer(customer);
-		actionDate.setDeposit(amount);
-		actionDate.setPaymentStatus(new Short("0"));
-		actionDate.setPrincipal(new Money());
-		actionDate.setInterest(new Money());
-		actionDate.setPenalty(new Money());
 		return actionDate;
 	}
-	
-	public AccountTrxnEntity createAccountPaymentTrxn(AccountPaymentEntity payment, Money balance, AccountActionEntity accountAction, CustomerBO customer, PersonnelBO createdBy)throws SystemException{
-		SavingsTrxnDetailEntity savingsTrxn =new SavingsTrxnDetailEntity(
-				payment,customer,accountAction,
-				 payment.getAmount(),
-				 balance, createdBy,null,new SavingsHelper().getCurrentDate(),null,"");
+
+	public AccountTrxnEntity createAccountPaymentTrxn(
+			AccountPaymentEntity payment, Money balance,
+			AccountActionEntity accountAction, CustomerBO customer,
+			PersonnelBO createdBy) throws SystemException {
+		SavingsTrxnDetailEntity savingsTrxn = new SavingsTrxnDetailEntity(
+				payment, customer, accountAction, payment.getAmount(), balance,
+				createdBy, null, new SavingsHelper().getCurrentDate(), null, "");
 		return savingsTrxn;
 	}
-	
-	public AccountPaymentEntity createAccountPayment(AccountBO account,Money amount, PaymentTypeEntity paymentTypeEntity, PersonnelBO createdBy ){
-		AccountPaymentEntity  payment = new AccountPaymentEntity(account,amount,null,null,paymentTypeEntity);
-		if(createdBy!=null)
+
+	public AccountPaymentEntity createAccountPayment(AccountBO account,
+			Money amount, PaymentTypeEntity paymentTypeEntity,
+			PersonnelBO createdBy) {
+		AccountPaymentEntity payment = new AccountPaymentEntity(account,
+				amount, null, null, paymentTypeEntity);
+		if (createdBy != null)
 			payment.setCreatedBy(createdBy.getPersonnelId());
 		payment.setCreatedDate(getCurrentDate());
 		payment.setAmount(amount);
 		return payment;
 	}
-	
-	public Short getPaymentActionType(AccountPaymentEntity payment){
-		for(AccountTrxnEntity accntTrxn : payment.getAccountTrxns()){
-			if(!accntTrxn.getAccountActionEntity().getId().equals(AccountConstants.ACTION_SAVINGS_ADJUSTMENT))
+
+	public Short getPaymentActionType(AccountPaymentEntity payment) {
+		for (AccountTrxnEntity accntTrxn : payment.getAccountTrxns()) {
+			if (!accntTrxn.getAccountActionEntity().getId().equals(
+					AccountConstants.ACTION_SAVINGS_ADJUSTMENT))
 				return accntTrxn.getAccountActionEntity().getId();
 		}
 		return null;

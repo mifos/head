@@ -44,21 +44,6 @@ public class AccountPersistence extends Persistence {
 		return account;
 	}
 	
-	public List<Short> getNextInstallmentList(Integer accountId) throws PersistenceException{
-		Session session=null;
-		List<Short> installmentIds=null;
-		try{
-			session=HibernateUtil.getSessionTL();
-			Query query = session.getNamedQuery(NamedQueryConstants.ACCOUNT_GETNEXTINSTALLMENTIDS);
-			query.setInteger("accountId",accountId);
-			query.setShort("paymentStatus",PaymentStatus.UNPAID.getValue());
-			installmentIds=query.list();
-		}catch(Exception ex){
-			throw new PersistenceException(ex);
-		}
-		return installmentIds;
-	}
-		
 	public AccountBO loadBusinessObject(Integer accountId)throws PersistenceException{
 		Session session=null;
 		AccountBO accountBO=null;
@@ -186,16 +171,7 @@ public class AccountPersistence extends Persistence {
 		return executeNamedQuery(NamedQueryConstants.GET_ACTIVE_CUSTOMER__AND_SAVINGS_ACCOUNTS,null);
 
 	}
-	public AccountActionDateEntity getLastInstallment(Integer accountId ){
-		Map<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("accountId",accountId);
-		
-		List intallments  = executeNamedQuery(NamedQueryConstants.GET_LASTINSTALLMENT,queryParameters);
-		if (intallments!=null&&intallments.size()>0)return (AccountActionDateEntity)intallments.get(0);
-		else
-			return null;
-
-	}
+	
 	
 	public AccountBO getCustomerAccountWithAccountActionsInitialized(
 			Integer accountId) {

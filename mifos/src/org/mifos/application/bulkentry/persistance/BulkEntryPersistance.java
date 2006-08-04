@@ -43,56 +43,68 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.hibernate.Hibernate;
-import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
 import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
+import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
 import org.mifos.framework.persistence.Persistence;
 
 public class BulkEntryPersistance extends Persistence {
 
-	public List<BulkEntryAccountActionView> getBulkEntryActionView(
-			Date meetingDate, String searchString, Short officeId) {
+	public List<BulkEntryInstallmentView> getBulkEntryActionView(
+			Date meetingDate, String searchString, Short officeId,
+			AccountType accountType) {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("MEETING_DATE", meetingDate);
 		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
 		queryParameters.put("SEARCH_STRING", searchString + '%');
 		queryParameters.put("OFFICE_ID", officeId);
-		List<BulkEntryAccountActionView> queryResult = executeNamedQuery(
-				"account.getAllInstallmentsForAllAcounts", queryParameters);
-		return queryResult;
+		if (accountType.equals(AccountType.LOANACCOUNT)) {
+			return executeNamedQuery(
+					NamedQueryConstants.ALL_LOAN_SCHEDULE_DETAILS,
+					queryParameters);
+		} else if (accountType.equals(AccountType.SAVINGSACCOUNT)) {
+			return executeNamedQuery(
+					NamedQueryConstants.ALL_SAVINGS_SCHEDULE_DETAILS,
+					queryParameters);
+		} else if (accountType.equals(AccountType.CUSTOMERACCOUNT)) {
+			return executeNamedQuery(
+					NamedQueryConstants.ALL_CUSTOMER_SCHEDULE_DETAILS,
+					queryParameters);
+		}
+		return null;
 
 	}
 
 	public List<BulkEntryAccountFeeActionView> getBulkEntryFeeActionView(
-			Date meetingDate, String searchString, Short officeId) {
+			Date meetingDate, String searchString, Short officeId,
+			AccountType accountType) {
+		List<BulkEntryAccountFeeActionView> queryResult = null;
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("MEETING_DATE", meetingDate);
 		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
 		queryParameters.put("SEARCH_STRING", searchString + '%');
 		queryParameters.put("OFFICE_ID", officeId);
-		List<BulkEntryAccountFeeActionView> queryResult = executeNamedQuery(
-				"account.getAllAccountFeeForAllInstallmentsForAllAcounts",
-				queryParameters);
+		if (accountType.equals(AccountType.LOANACCOUNT)) {
+			queryResult = executeNamedQuery(
+					NamedQueryConstants.ALL_LOAN_FEE_SCHEDULE_DETAILS,
+					queryParameters);
+		} else if (accountType.equals(AccountType.CUSTOMERACCOUNT)) {
+			queryResult = executeNamedQuery(
+					NamedQueryConstants.ALL_CUSTOMER_FEE_SCHEDULE_DETAILS,
+					queryParameters);
+		}
 		initializeFees(queryResult);
 		return queryResult;
 
 	}
 
-	private void initializeFees(List<BulkEntryAccountFeeActionView> actionViewList){
-		for(BulkEntryAccountFeeActionView actionView: actionViewList){
+	private void initializeFees(
+			List<BulkEntryAccountFeeActionView> actionViewList) {
+		for (BulkEntryAccountFeeActionView actionView : actionViewList) {
 			Hibernate.initialize(actionView.getFee());
 		}
 	}
-	
-	public List<AccountFeesActionDetailEntity> getFeesActionDetails(
-			Integer actionId) {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("ACCOUNT_ACTION_ID", actionId);
-		List<AccountFeesActionDetailEntity> queryResult = executeNamedQuery(
-				"acccount.getAccountFeeActionDetails", queryParameters);
-		return queryResult;
 
-	}
 }

@@ -40,6 +40,7 @@ package org.mifos.application.bulkentry.business;
 import java.sql.Date;
 import java.util.List;
 
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistanceService;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryDataView;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryNodeBuilder;
@@ -182,18 +183,33 @@ public class BulkEntryBO extends BusinessObject {
 		BulkEntryPersistanceService bulkEntryPersistanceService = new BulkEntryPersistanceService();
 		List<CustomerBO> allChildNodes = retrieveActiveCustomersUnderParent(
 				parentCustomer.getCustomerSearchId(), office.getOfficeId());
-		List<BulkEntryAccountActionView> bulkEntryAccountActionViews = bulkEntryPersistanceService
+		List<BulkEntryInstallmentView> bulkEntryLoanScheduleViews = bulkEntryPersistanceService
 				.getBulkEntryActionView(transactionDate, parentCustomer
-						.getCustomerSearchId(), office.getOfficeId());
-		List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews = bulkEntryPersistanceService
+						.getCustomerSearchId(), office.getOfficeId(),
+						AccountType.LOANACCOUNT);
+		List<BulkEntryInstallmentView> bulkEntrySavingsScheduleViews = bulkEntryPersistanceService
+				.getBulkEntryActionView(transactionDate, parentCustomer
+						.getCustomerSearchId(), office.getOfficeId(),
+						AccountType.SAVINGSACCOUNT);
+		List<BulkEntryInstallmentView> bulkEntryCustomerScheduleViews = bulkEntryPersistanceService
+				.getBulkEntryActionView(transactionDate, parentCustomer
+						.getCustomerSearchId(), office.getOfficeId(),
+						AccountType.CUSTOMERACCOUNT);
+		List<BulkEntryAccountFeeActionView> bulkEntryLoanFeeScheduleViews = bulkEntryPersistanceService
 				.getBulkEntryFeeActionView(transactionDate, parentCustomer
-						.getCustomerSearchId(), office.getOfficeId());
+						.getCustomerSearchId(), office.getOfficeId(),
+						AccountType.LOANACCOUNT);
+		List<BulkEntryAccountFeeActionView> bulkEntryCustomerFeeScheduleViews = bulkEntryPersistanceService
+				.getBulkEntryFeeActionView(transactionDate, parentCustomer
+						.getCustomerSearchId(), office.getOfficeId(),
+						AccountType.CUSTOMERACCOUNT);
 		totalCustomers = allChildNodes.size();
 		bulkEntryParent = BulkEntryNodeBuilder.buildBulkEntry(allChildNodes,
-				parentCustomer, transactionDate, bulkEntryAccountActionViews,
-				bulkEntryAccountFeeActionViews);
+				parentCustomer, transactionDate, bulkEntryLoanScheduleViews,
+				bulkEntryCustomerScheduleViews, bulkEntryLoanFeeScheduleViews,
+				bulkEntryCustomerFeeScheduleViews);
 		BulkEntryNodeBuilder.buildBulkEntrySavingsAccounts(bulkEntryParent,
-				transactionDate, bulkEntryAccountActionViews);
+				transactionDate, bulkEntrySavingsScheduleViews);
 	}
 
 	private List<CustomerBO> retrieveActiveCustomersUnderParent(

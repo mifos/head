@@ -71,7 +71,23 @@
 	    date is the same as that passed and status of the customer
 	    is either active or hold. and it has active accounts.-->
 	<query name="CollectionSheetCustomer.customersWithSpecifiedMeetingDate">
-		<![CDATA[ from org.mifos.application.accounts.business.AccountActionDateEntity accountActionDate
+		<![CDATA[ from org.mifos.application.customer.business.CustomerScheduleEntity accountActionDate
+					where accountActionDate.account.customer.customerStatus.id in (3,4,9,10,13)
+					and (accountActionDate.actionDate= :meeting_date and accountActionDate.account.accountState.id in (5,11,16))
+						
+						
+		]]>
+	</query>
+	<query name="CollectionSheetCustomer.loansWithSpecifiedMeetingDate">
+		<![CDATA[ from org.mifos.application.accounts.loan.business.LoanScheduleEntity accountActionDate
+					where accountActionDate.account.customer.customerStatus.id in (3,4,9,10,13)
+					and (accountActionDate.actionDate= :meeting_date and accountActionDate.account.accountState.id in (5,11,16))
+						
+						
+		]]>
+	</query>
+	<query name="CollectionSheetCustomer.savingssWithSpecifiedMeetingDate">
+		<![CDATA[ from org.mifos.application.accounts.savings.business.SavingsScheduleEntity accountActionDate
 					where accountActionDate.account.customer.customerStatus.id in (3,4,9,10,13)
 					and (accountActionDate.actionDate= :meeting_date and accountActionDate.account.accountState.id in (5,11,16))
 						

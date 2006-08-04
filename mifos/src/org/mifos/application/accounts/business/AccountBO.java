@@ -56,6 +56,7 @@ import org.mifos.application.accounts.exceptions.IDGenerationException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
+import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
@@ -340,8 +341,6 @@ public class AccountBO extends BusinessObject {
 			throw new NullPointerException();
 		}
 		this.getAccountActionDates().add(accountAction);
-		// TODO does this relation need to be bidirectional??
-		accountAction.setAccount(this);
 	}
 
 	public void addAccountPayment(AccountPaymentEntity payment) {
@@ -399,17 +398,7 @@ public class AccountBO extends BusinessObject {
 
 	public Money updateAccountActionDateEntity(List<Short> intallmentIdList,
 			Short feeId) {
-		Money totalFeeAmount = new Money();
-		Set<AccountActionDateEntity> accountActionDateEntitySet = this
-				.getAccountActionDates();
-		for (AccountActionDateEntity accountActionDateEntity : accountActionDateEntitySet) {
-			if (intallmentIdList.contains(accountActionDateEntity
-					.getInstallmentId())) {
-				totalFeeAmount = totalFeeAmount.add(accountActionDateEntity
-						.removeFees(feeId));
-			}
-		}
-		return totalFeeAmount;
+		return new Money();
 	}
 
 	public void updateAccountFeesEntity(Short feeId) {
@@ -558,8 +547,7 @@ public class AccountBO extends BusinessObject {
 
 	public void removeFees(Short feeId, Short personnelId)
 			throws SystemException, ApplicationException {
-		List<Short> installmentIdList = getAccountPersistenceService()
-				.getNextInstallmentList(this.getAccountId());
+		List<Short> installmentIdList = getApplicableInstallmentIdsForRemoveFees();
 		Money totalFeeAmount = new Money();
 		if (installmentIdList != null && installmentIdList.size() != 0
 				&& isFeeActive(feeId)) {
@@ -574,6 +562,15 @@ public class AccountBO extends BusinessObject {
 			roundInstallments(installmentIdList);
 		}
 
+	}
+	
+	private List<Short> getApplicableInstallmentIdsForRemoveFees() {
+		List<Short> installmentIdList = new ArrayList<Short>();
+		for(AccountActionDateEntity accountActionDateEntity : getApplicableIdsForFutureInstallments()){
+			installmentIdList.add(accountActionDateEntity.getInstallmentId());
+		}
+		installmentIdList.add(getDetailsOfNextInstallment().getInstallmentId());
+		return installmentIdList;
 	}
 
 	public void roundInstallments(List<Short> installmentIdList) {
@@ -947,7 +944,7 @@ public class AccountBO extends BusinessObject {
 		Money amount = new Money();
 		List<AccountActionDateEntity> actionDateList = getDetailsOfInstallmentsInArrears();
 		for (AccountActionDateEntity accountActionDateEntity : actionDateList) {
-			amount = amount.add(accountActionDateEntity.getPrincipal());
+			amount = amount.add(((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
 		}
 		return amount;
 	}
@@ -1057,7 +1054,7 @@ public class AccountBO extends BusinessObject {
 						PersistenceServiceName.MasterDataService);
 		AccountStateEntity accountStateEntity = (AccountStateEntity) masterPersistenceService
 				.findById(AccountStateEntity.class, newStatusId);
-		checkStatusChangeAllowed(accountStateEntity);
+		//checkStatusChangeAllowed(accountStateEntity);
 		accountStateEntity.setLocaleId(this.getUserContext().getLocaleId());
 		AccountStateFlagEntity accountStateFlagEntity = null;
 		if (flagId != null) {

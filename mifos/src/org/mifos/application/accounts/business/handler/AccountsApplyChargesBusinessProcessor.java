@@ -401,12 +401,12 @@ public class AccountsApplyChargesBusinessProcessor extends
 								FeePayment.TIME_OF_DISBURSMENT.getValue())) {
 					accountActionDateList = RepaymentScheduleHelper
 							.getAccountActionFee(accountActionDateList,
-									feeInstallment);
+									feeInstallment,"Loan");
 
 				} else {
 					accountActionDateList = removeTimeOfDisbursmentFees(
 							RepaymentScheduleHelper.getAccountActionFee(
-									accountActionDateList, feeInstallment),
+									accountActionDateList, feeInstallment,"customer"),
 							accountFee.getFees());
 				}
 

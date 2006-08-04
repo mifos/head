@@ -50,6 +50,7 @@ import org.mifos.application.accounts.TestAccount;
 import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanPerformanceHistoryEntity;
+import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanSummaryEntity;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
@@ -94,12 +95,13 @@ public class TestAccountBO extends TestAccount {
 				.getAccountActionDates()) {
 			if (accountActionDateEntity.getInstallmentId().equals(
 					Short.valueOf("1")))
-				accountActionDateEntity.setMiscFee(new Money("20.3"));
+				((LoanScheduleEntity)accountActionDateEntity).setMiscFee(new Money("20.3"));
 		}
 		Iterator itr = accountFeesEntitySet.iterator();
 		while (itr.hasNext())
 			accountBO.removeFees(((AccountFeesEntity) itr.next()).getFees()
 					.getFeeId(), uc.getId());
+		
 		HibernateUtil.getTransaction().commit();
 		for (AccountFeesEntity accountFeesEntity : accountFeesEntitySet) {
 			assertEquals(accountFeesEntity.getFeeStatus(),
@@ -125,15 +127,16 @@ public class TestAccountBO extends TestAccount {
 		}
 		for (AccountActionDateEntity accountActionDate : accountBO
 				.getAccountActionDates()) {
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity)accountActionDate;
 			if (accountActionDate.getInstallmentId().equals(Short.valueOf("1")))
-				assertEquals(new Money("133.0"), accountActionDate
+				assertEquals(new Money("133.0"), loanScheduleEntity
 						.getTotalDueWithFees());
-			else if (accountActionDate.getInstallmentId().equals(
+			else if (loanScheduleEntity.getInstallmentId().equals(
 					Short.valueOf("6")))
-				assertEquals(new Money("111.3"), accountActionDate
+				assertEquals(new Money("111.3"), loanScheduleEntity
 						.getTotalDueWithFees());
 			else
-				assertEquals(new Money("112.0"), accountActionDate
+				assertEquals(new Money("112.0"), loanScheduleEntity
 						.getTotalDueWithFees());
 		}
 
@@ -168,11 +171,9 @@ public class TestAccountBO extends TestAccount {
 	}
 
 	public void testSuccessUpdateAccountActionDateEntity() {
-		AccountPersistanceService accountPersistanceService = new AccountPersistanceService();
 		List<Short> installmentIdList;
 		try {
-			installmentIdList = accountPersistanceService
-					.getNextInstallmentList(accountBO.getAccountId());
+			installmentIdList = getApplicableInstallmentIdsForRemoveFees(accountBO);
 			Set<AccountFeesEntity> accountFeesEntitySet = accountBO
 					.getAccountFees();
 			Iterator itr = accountFeesEntitySet.iterator();
@@ -183,11 +184,18 @@ public class TestAccountBO extends TestAccount {
 			}
 		} catch (Exception e) {
 			assertFalse(false);
-		} finally {
-			accountPersistanceService = null;
-		}
+		} 
 	}
 
+	private List<Short> getApplicableInstallmentIdsForRemoveFees(AccountBO account) {
+		List<Short> installmentIdList = new ArrayList<Short>();
+		for(AccountActionDateEntity accountActionDateEntity : account.getApplicableIdsForFutureInstallments()){
+			installmentIdList.add(accountActionDateEntity.getInstallmentId());
+		}
+		installmentIdList.add(account.getDetailsOfNextInstallment().getInstallmentId());
+		return installmentIdList;
+	}
+	
 	public void testSuccessUpdateAccountFeesEntity() {
 		Set<AccountFeesEntity> accountFeesEntitySet = accountBO
 				.getAccountFees();
@@ -545,4 +553,5 @@ public class TestAccountBO extends TestAccount {
 				.getNoOfPayments().intValue());
 
 	}
+	
 }

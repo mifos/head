@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+	<class name="org.mifos.application.customer.business.CustomerScheduleEntity" table="CUSTOMER_SCHEDULE">
+		<id name="actionDateId" column="ID" type="integer" unsaved-value="-1" access="field">
+			<generator class="native" />
+		</id>
+
+		<version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null" />
+
+		<property name="installmentId" column="INSTALLMENT_ID" access="field" />
+		<property name="actionDate" column="ACTION_DATE" />
+		<property name="paymentStatus" column="PAYMENT_STATUS" />
+		<property name="paymentDate" column="PAYMENT_DATE" lazy="true" />
+
+		<property name="miscFee" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<column name="MISC_FEES_CURRENCY_ID" />
+			<column name="MISC_FEES" />
+		</property>
+		<property name="miscFeePaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<column name="MISC_FEES_PAID_CURRENCY_ID" />
+			<column name="MISC_FEES_PAID" />
+		</property>
+		<property name="miscPenalty" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<column name="MISC_PENALTY_CURRENCY_ID" />
+			<column name="MISC_PENALTY" />
+		</property>
+		<property name="miscPenaltyPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<column name="MISC_PENALTY_PAID_CURRENCY_ID" />
+			<column name="MISC_PENALTY_PAID" />
+		</property>
+
+		<many-to-one name="account" column="ACCOUNT_ID" class="org.mifos.application.accounts.business.AccountBO" unique="true" lazy="true" cascade="none" insert="true" update="true" access="field" />
+		<many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" lazy="true" access="field"/>
+		<set name="accountFeesActionDetails" cascade="all,delete-orphan" lazy="true" inverse="true" access="field">
+			<key column="ID" update="false" />
+			<one-to-many class="org.mifos.application.customer.business.CustomerFeeScheduleEntity" />
+		</set>
+
+	</class>
+	
+	<query name="account.getAllInstallmentsForAllCustomerAcounts">
+		<![CDATA[select new org.mifos.application.bulkentry.business.BulkEntryCustomerAccountInstallmentView(
+			accountAction.account.accountId,customer.customerId,accountAction.installmentId,
+			accountAction.actionDateId,accountAction.actionDate,
+			accountAction.miscFee,accountAction.miscFeePaid,
+			accountAction.miscPenalty,accountAction.miscPenaltyPaid
+			) from org.mifos.application.customer.business.CustomerScheduleEntity as accountAction,
+			org.mifos.application.customer.business.CustomerBO as customer 
+			where customer.customerId = accountAction.customer.customerId
+			and accountAction.actionDate <=:MEETING_DATE and accountAction.paymentStatus=:PAYMENT_STATUS
+			and customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and 
+			customer.customerStatus.id in (3,4,9,10,13) order by customer.customerId,
+			accountAction.account.accountId,accountAction.actionDate
+		]]>
+	</query>
+	
+
+</hibernate-mapping>

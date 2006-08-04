@@ -10,6 +10,7 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
@@ -54,7 +55,7 @@ public class TestAccountPaymentEntity extends MifosTestCase {
 		CustomerAccountBO customerAccountBO = (CustomerAccountBO) accountBO;
 		customerAccountBO.setUserContext(userContext);
 		
-		AccountActionDateEntity accountAction = customerAccountBO.getAccountActionDate(Short.valueOf("1"));
+		CustomerScheduleEntity accountAction = (CustomerScheduleEntity)customerAccountBO.getAccountActionDate(Short.valueOf("1"));
 		accountAction.setMiscFeePaid(TestObjectFactory.getMoneyForMFICurrency(100));
 		accountAction.setMiscPenaltyPaid(TestObjectFactory.getMoneyForMFICurrency(100));
 		accountAction.setPaymentDate(currentDate);
@@ -92,7 +93,7 @@ public class TestAccountPaymentEntity extends MifosTestCase {
 		List<AccountTrxnEntity> reversedTrxns = customerAccountBO.getLastPmnt().reversalAdjustment("adjustment");
 		for (AccountTrxnEntity accntTrxn : reversedTrxns) {
 			CustomerTrxnDetailEntity custTrxn = (CustomerTrxnDetailEntity)accntTrxn;
-			AccountActionDateEntity accntActionDate = customerAccountBO.getAccountActionDate(custTrxn.getInstallmentId());
+			CustomerScheduleEntity accntActionDate =(CustomerScheduleEntity) customerAccountBO.getAccountActionDate(custTrxn.getInstallmentId());
 			assertEquals(custTrxn.getMiscFeeAmount().getAmountDoubleValue(),accntActionDate.getMiscFeePaid().negate().getAmountDoubleValue());
 			assertEquals(custTrxn.getMiscPenaltyAmount().getAmountDoubleValue(),accntActionDate.getMiscPenaltyPaid().negate().getAmountDoubleValue());
 		}

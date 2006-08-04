@@ -39,7 +39,9 @@
 package org.mifos.application.accounts.util.helpers;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
+import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
+import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
+import org.mifos.application.bulkentry.business.BulkEntrySavingsInstallmentView;
 import org.mifos.framework.util.helpers.Money;
 
 public class SavingsPaymentData extends AccountPaymentData {
@@ -53,17 +55,16 @@ public class SavingsPaymentData extends AccountPaymentData {
 		this.depositPaid = depositPaid;
 	}
 
-	public SavingsPaymentData(
-			AccountActionDateEntity accountActionDate) {
+	public SavingsPaymentData(AccountActionDateEntity accountActionDate) {
 		super(accountActionDate);
-		if(accountActionDate != null)
-			setDepositPaid(accountActionDate.getTotalDepositDue());
+		if (accountActionDate != null)
+			setDepositPaid(((SavingsScheduleEntity) accountActionDate)
+					.getTotalDepositDue());
 	}
-	
-	public SavingsPaymentData(
-			BulkEntryAccountActionView bulkEntryAccountAction) {
+
+	public SavingsPaymentData(BulkEntryInstallmentView bulkEntryAccountAction) {
 		super(bulkEntryAccountAction);
-		if(bulkEntryAccountAction != null)
-			setDepositPaid(bulkEntryAccountAction.getTotalDepositDue());
+		if (bulkEntryAccountAction != null)
+			setDepositPaid(((BulkEntrySavingsInstallmentView)bulkEntryAccountAction).getTotalDepositDue());
 	}
 }

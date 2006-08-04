@@ -74,6 +74,8 @@ public class CollectionSheetPersistence extends Persistence{
 		HashMap queryParameters = new HashMap();
 		queryParameters.put(CollectionSheetConstants.MEETING_DATE, date);
 		accountActionDate = executeNamedQuery(NamedQueryConstants.CUSTOMERS_WITH_SPECIFIED_MEETING_DATE,queryParameters);
+		accountActionDate.addAll(executeNamedQuery("CollectionSheetCustomer.loansWithSpecifiedMeetingDate",queryParameters));
+		accountActionDate.addAll(executeNamedQuery("CollectionSheetCustomer.savingssWithSpecifiedMeetingDate",queryParameters));
 		return accountActionDate;
 	}
 	

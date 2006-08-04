@@ -78,7 +78,8 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 		miscFeeAmount = customerAccountPaymentDataView.getMiscFeePaid();
 		miscPenaltyAmount = customerAccountPaymentDataView.getMiscPenaltyPaid();
 		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
-		for (AccountFeesActionDetailEntity accountFeesActionDetail : customerAccountPaymentDataView.getAccountActionDate().getAccountFeesActionDetails()) {
+		CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity)customerAccountPaymentDataView.getAccountActionDate();
+		for (AccountFeesActionDetailEntity accountFeesActionDetail : customerScheduleEntity.getAccountFeesActionDetails()) {
 			if (customerAccountPaymentDataView.getFeesPaid().containsKey(
 					accountFeesActionDetail.getFee().getFeeId())) {
 				accountFeesActionDetail

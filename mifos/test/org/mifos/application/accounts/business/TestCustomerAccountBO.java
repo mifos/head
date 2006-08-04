@@ -1,7 +1,6 @@
 package org.mifos.application.accounts.business;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -17,11 +16,11 @@ import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
@@ -60,7 +59,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 	private CustomerBO group = null;
 
 	private CustomerBO client = null;
-	
+
 	private UserContext userContext;
 
 	@Override
@@ -82,36 +81,36 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 	public void testSuccessfulMakePayment() throws AccountException,
 			SystemException {
-		try{
-		createCenter();
-		CustomerAccountBO customerAccount = center.getCustomerAccount();
-		assertNotNull(customerAccount);
-		Date transactionDate = new Date(System.currentTimeMillis());
-		List<AccountActionDateEntity> dueActionDates = TestObjectFactory
-				.getDueActionDatesForAccount(customerAccount.getAccountId(),
-						transactionDate);
-		assertEquals("The size of the due insallments is ", dueActionDates
-				.size(), 1);
-		PaymentData accountPaymentDataView = TestObjectFactory
-				.getCustomerAccountPaymentDataView(dueActionDates, new Money(
-						TestObjectFactory.getMFICurrency(), "100.0"), null,
-						center.getPersonnel(), "3424324",
-						Short.valueOf("1"), transactionDate, transactionDate);
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
-		customerAccount = center.getCustomerAccount();
+		try {
+			createCenter();
+			CustomerAccountBO customerAccount = center.getCustomerAccount();
+			assertNotNull(customerAccount);
+			Date transactionDate = new Date(System.currentTimeMillis());
+			List<AccountActionDateEntity> dueActionDates = TestObjectFactory
+					.getDueActionDatesForAccount(
+							customerAccount.getAccountId(), transactionDate);
+			assertEquals("The size of the due insallments is ", dueActionDates
+					.size(), 1);
+			PaymentData accountPaymentDataView = TestObjectFactory
+					.getCustomerAccountPaymentDataView(dueActionDates,
+							new Money(TestObjectFactory.getMFICurrency(),
+									"100.0"), null, center.getPersonnel(),
+							"3424324", Short.valueOf("1"), transactionDate,
+							transactionDate);
+			center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+					center.getCustomerId());
+			customerAccount = center.getCustomerAccount();
 
-		customerAccount.applyPayment(accountPaymentDataView);
-		HibernateUtil.commitTransaction();
-		assertEquals("The size of the payments done is", customerAccount
-				.getAccountPayments().size(), 1);
-		assertEquals(
-				"The size of the due insallments after payment is",
-				TestObjectFactory.getDueActionDatesForAccount(
-						customerAccount.getAccountId(), transactionDate).size(),
-				0);
-		assertEquals(customerAccount.getCustomerActivitDetails().size(), 1);
-		}catch(Exception e){
+			customerAccount.applyPayment(accountPaymentDataView);
+			HibernateUtil.commitTransaction();
+			assertEquals("The size of the payments done is", customerAccount
+					.getAccountPayments().size(), 1);
+			assertEquals("The size of the due insallments after payment is",
+					TestObjectFactory.getDueActionDatesForAccount(
+							customerAccount.getAccountId(), transactionDate)
+							.size(), 0);
+			assertEquals(customerAccount.getCustomerActivitDetails().size(), 1);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -130,8 +129,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		PaymentData accountPaymentDataView = TestObjectFactory
 				.getCustomerAccountPaymentDataView(dueActionDates, new Money(
 						TestObjectFactory.getMFICurrency(), "100.0"), null,
-						center.getPersonnel(), "3424324",
-						Short.valueOf("1"), transactionDate, transactionDate);
+						center.getPersonnel(), "3424324", Short.valueOf("1"),
+						transactionDate, transactionDate);
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
 		customerAccount = center.getCustomerAccount();
@@ -154,8 +153,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
-		
-		//HibernateUtil.closeSession();
+
+		// HibernateUtil.closeSession();
 	}
 
 	public void testIsAdjustPossibleOnLastTrxn_NotActiveState()
@@ -216,7 +215,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		customerAccountBO.updateInstallmentAfterAdjustment(reversedTrxns);
 		for (AccountTrxnEntity accntTrxn : reversedTrxns) {
 			CustomerTrxnDetailEntity custTrxn = (CustomerTrxnDetailEntity) accntTrxn;
-			AccountActionDateEntity accntActionDate = customerAccountBO
+			CustomerScheduleEntity accntActionDate = (CustomerScheduleEntity) customerAccountBO
 					.getAccountActionDate(custTrxn.getInstallmentId());
 			assertEquals("Misc Fee Adjusted", accntActionDate.getMiscFeePaid()
 					.getAmountDoubleValue(), 0.0);
@@ -274,8 +273,9 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		CustomerAccountBO customerAccountBO = group.getCustomerAccount();
 		customerAccountBO.setUserContext(userContext);
 		customerAccountBO.waiveAmountDue(WaiveEnum.ALL);
-		for (AccountActionDateEntity accountActionDateEntity : customerAccountBO
+		for (AccountActionDateEntity accountAction : customerAccountBO
 				.getAccountActionDates()) {
+			CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) accountAction;
 			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
 					.getAccountFeesActionDetails()) {
 				if (accountActionDateEntity.getInstallmentId().equals(
@@ -300,8 +300,9 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		userContext = TestObjectFactory.getUserContext();
 		customerAccountBO = group.getCustomerAccount();
 		customerAccountBO.setUserContext(userContext);
-		for (AccountActionDateEntity accountActionDateEntity : customerAccountBO
+		for (AccountActionDateEntity accountAction : customerAccountBO
 				.getAccountActionDates()) {
+			CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) accountAction;
 			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
 					.getAccountFeesActionDetails()) {
 				System.out.println("fees : "
@@ -312,8 +313,9 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			}
 		}
 		customerAccountBO.waiveAmountOverDue(WaiveEnum.ALL);
-		for (AccountActionDateEntity accountActionDateEntity : customerAccountBO
+		for (AccountActionDateEntity accountAction : customerAccountBO
 				.getAccountActionDates()) {
+			CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) accountAction;
 			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
 					.getAccountFeesActionDetails()) {
 				if (accountActionDateEntity.getInstallmentId().equals(
@@ -364,7 +366,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		Date currentDate = new Date(System.currentTimeMillis());
 		customerAccountBO.setUserContext(userContext);
 
-		AccountActionDateEntity accountAction = customerAccountBO
+		CustomerScheduleEntity accountAction = (CustomerScheduleEntity) customerAccountBO
 				.getAccountActionDate(Short.valueOf("1"));
 		accountAction.setMiscFeePaid(TestObjectFactory
 				.getMoneyForMFICurrency(100));
@@ -377,20 +379,22 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				.getInstance().getPersistenceService(
 						PersistenceServiceName.MasterDataService);
 
-		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(customerAccountBO,TestObjectFactory
-				.getMoneyForMFICurrency(300), "1111", currentDate, new PaymentTypeEntity(Short
-				.valueOf("1")));
+		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
+				customerAccountBO, TestObjectFactory
+						.getMoneyForMFICurrency(300), "1111", currentDate,
+				new PaymentTypeEntity(Short.valueOf("1")));
 
 		Money totalFees = new Money();
-		CustomerTrxnDetailEntity accountTrxnEntity = 
-		 new CustomerTrxnDetailEntity(accountPaymentEntity,
-					(AccountActionEntity) masterPersistenceService
-						.findById(AccountActionEntity.class,AccountConstants.ACTION_PAYMENT),Short.valueOf("1"),
-					accountAction.getActionDate(), TestObjectFactory.getPersonnel(userContext.getId()),
-					currentDate, TestObjectFactory
-					.getMoneyForMFICurrency(300), 
-					"payment done", null,
-					TestObjectFactory.getMoneyForMFICurrency(100), TestObjectFactory.getMoneyForMFICurrency(100));
+		CustomerTrxnDetailEntity accountTrxnEntity = new CustomerTrxnDetailEntity(
+				accountPaymentEntity,
+				(AccountActionEntity) masterPersistenceService.findById(
+						AccountActionEntity.class,
+						AccountConstants.ACTION_PAYMENT), Short.valueOf("1"),
+				accountAction.getActionDate(), TestObjectFactory
+						.getPersonnel(userContext.getId()), currentDate,
+				TestObjectFactory.getMoneyForMFICurrency(300), "payment done",
+				null, TestObjectFactory.getMoneyForMFICurrency(100),
+				TestObjectFactory.getMoneyForMFICurrency(100));
 
 		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction
 				.getAccountFeesActionDetails()) {
@@ -412,11 +416,14 @@ public class TestCustomerAccountBO extends MifosTestCase {
 	public void testApplyPeriodicFees() throws RepaymentScheduleException,
 			SchedulerException, PersistenceException, ServiceException {
 		createInitialObjects();
-		FeeBO fee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY, Short.valueOf("1"));
+		FeeBO fee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
+				FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY, Short
+						.valueOf("1"));
 		AccountFeesEntity accountFeesEntity = new AccountFeesEntity();
 		accountFeesEntity.setAccount(group.getCustomerAccount());
-		accountFeesEntity.setAccountFeeAmount(((AmountFeeBO)fee).getFeeAmount());
-		accountFeesEntity.setFeeAmount(((AmountFeeBO)fee).getFeeAmount());
+		accountFeesEntity.setAccountFeeAmount(((AmountFeeBO) fee)
+				.getFeeAmount());
+		accountFeesEntity.setFeeAmount(((AmountFeeBO) fee).getFeeAmount());
 		accountFeesEntity.setFees(fee);
 		accountFeesEntity.setLastAppliedDate(new Date(System
 				.currentTimeMillis()));
@@ -429,7 +436,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 
-		AccountActionDateEntity accountActionDateEntity = (AccountActionDateEntity) group
+		CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) group
 				.getCustomerAccount().getAccountActionDates().toArray()[0];
 
 		Set<AccountFeesActionDetailEntity> feeDetailsSet = accountActionDateEntity
@@ -445,7 +452,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		AccountActionDateEntity firstInstallment = (AccountActionDateEntity) group
+		CustomerScheduleEntity firstInstallment = (CustomerScheduleEntity) group
 				.getCustomerAccount().getAccountActionDates().toArray()[0];
 		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : firstInstallment
 				.getAccountFeesActionDetails()) {
@@ -514,93 +521,134 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			assertEquals("222.0", customerActivityEntity.getAmount().toString());
 		}
 	}
-	
-	public void testRegenerateFutureInstallments() throws SchedulerException, HibernateException, ServiceException{
+
+	public void testRegenerateFutureInstallments() throws SchedulerException,
+			HibernateException, ServiceException {
 		createCenter();
 		TestObjectFactory.flushandCloseSession();
-		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
-		AccountActionDateEntity accountActionDateEntity =center.getCustomerAccount().getDetailsOfNextInstallment();
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		AccountActionDateEntity accountActionDateEntity = center
+				.getCustomerAccount().getDetailsOfNextInstallment();
 		MeetingBO meeting = center.getCustomerMeeting().getMeeting();
 		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
-		meeting.setMeetingStartDate(DateUtils.getCalendarDate(accountActionDateEntity.getActionDate().getTime()));
+		meeting.setMeetingStartDate(DateUtils
+				.getCalendarDate(accountActionDateEntity.getActionDate()
+						.getTime()));
 		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
 		List<java.util.Date> meetingDates = scheduler.getAllDates();
 		meetingDates.remove(0);
-		center.getCustomerAccount().regenerateFutureInstallments((short)(accountActionDateEntity.getInstallmentId().intValue()+1));
+		center.getCustomerAccount()
+				.regenerateFutureInstallments(
+						(short) (accountActionDateEntity.getInstallmentId()
+								.intValue() + 1));
 		HibernateUtil.getTransaction().commit();
 		HibernateUtil.closeSession();
-		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
-		for(AccountActionDateEntity actionDateEntity : center.getCustomerAccount().getAccountActionDates()){
-			if(actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()));
-			else if(actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
-				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		for (AccountActionDateEntity actionDateEntity : center
+				.getCustomerAccount().getAccountActionDates()) {
+			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity
+						.getActionDate().getTime()), DateUtils
+						.getDateWithoutTimeStamp(meetingDates.get(0).getTime()));
+			else if (actionDateEntity.getInstallmentId().equals(
+					Short.valueOf("3")))
+				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity
+						.getActionDate().getTime()), DateUtils
+						.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
 		}
 	}
-	
-	public void testRegenerateFutureInstallmentsForGroup() throws SchedulerException, HibernateException, ServiceException{
+
+	public void testRegenerateFutureInstallmentsForGroup()
+			throws SchedulerException, HibernateException, ServiceException {
 		createInitialObjects();
 		TestObjectFactory.flushandCloseSession();
-		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
-		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
 		MeetingBO meeting = center.getCustomerMeeting().getMeeting();
 		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
 		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
 		List<java.util.Date> meetingDates = scheduler.getAllDates();
-		group.getCustomerAccount().regenerateFutureInstallments((short)2);
+		group.getCustomerAccount().regenerateFutureInstallments((short) 2);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
-		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		for(AccountActionDateEntity actionDateEntity : group.getCustomerAccount().getAccountActionDates()){
-			if(actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
-			else if(actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
-				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),DateUtils.getDateWithoutTimeStamp(meetingDates.get(2).getTime()));
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		for (AccountActionDateEntity actionDateEntity : group
+				.getCustomerAccount().getAccountActionDates()) {
+			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity
+						.getActionDate().getTime()), DateUtils
+						.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
+			else if (actionDateEntity.getInstallmentId().equals(
+					Short.valueOf("3")))
+				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity
+						.getActionDate().getTime()), DateUtils
+						.getDateWithoutTimeStamp(meetingDates.get(2).getTime()));
 		}
 	}
-	
-	
-	public void testRegenerateFutureInstallmentsWithAccountClosed() throws SchedulerException, HibernateException, ServiceException{
+
+	public void testRegenerateFutureInstallmentsWithAccountClosed()
+			throws SchedulerException, HibernateException, ServiceException {
 		createInitialObjects();
 		TestObjectFactory.flushandCloseSession();
-		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
-		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		Date installment2ndDate=null;
-		Date installment3ndDate=null;
-		for(AccountActionDateEntity actionDateEntity : group.getCustomerAccount().getAccountActionDates()){
-			if(actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		Date installment2ndDate = null;
+		Date installment3ndDate = null;
+		for (AccountActionDateEntity actionDateEntity : group
+				.getCustomerAccount().getAccountActionDates()) {
+			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
 				installment2ndDate = actionDateEntity.getActionDate();
-			else if(actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
-				installment3ndDate=actionDateEntity.getActionDate();
+			else if (actionDateEntity.getInstallmentId().equals(
+					Short.valueOf("3")))
+				installment3ndDate = actionDateEntity.getActionDate();
 		}
 		MeetingBO meeting = center.getCustomerMeeting().getMeeting();
 		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
-		CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(CustomerStatus.GROUP_CLOSED);
+		CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(
+				CustomerStatus.GROUP_CLOSED);
 		group.setCustomerStatus(customerStatusEntity);
-		group.getCustomerAccount().regenerateFutureInstallments((short)2);
+		group.getCustomerAccount().regenerateFutureInstallments((short) 2);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
-		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-	
-		for(AccountActionDateEntity actionDateEntity : group.getCustomerAccount().getAccountActionDates()){
-			if(actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-				assertEquals(DateUtils.getDateWithoutTimeStamp(installment2ndDate.getTime()),DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
-			else if(actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
-				assertEquals(DateUtils.getDateWithoutTimeStamp(installment3ndDate.getTime()),DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+
+		for (AccountActionDateEntity actionDateEntity : group
+				.getCustomerAccount().getAccountActionDates()) {
+			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+				assertEquals(DateUtils
+						.getDateWithoutTimeStamp(installment2ndDate.getTime()),
+						DateUtils.getDateWithoutTimeStamp(actionDateEntity
+								.getActionDate().getTime()));
+			else if (actionDateEntity.getInstallmentId().equals(
+					Short.valueOf("3")))
+				assertEquals(DateUtils
+						.getDateWithoutTimeStamp(installment3ndDate.getTime()),
+						DateUtils.getDateWithoutTimeStamp(actionDateEntity
+								.getActionDate().getTime()));
 		}
 	}
-	
-	public void testGenerateMeetingsForNextYear() throws Exception{
-		
+
+	public void testGenerateMeetingsForNextYear() throws Exception {
+
 		createInitialObjects();
 		center.getCustomerAccount().generateMeetingsForNextYear();
 		MeetingBO meetingBO = center.getCustomerMeeting().getMeeting();
-		meetingBO.setMeetingStartDate(DateUtils
-				.getFistDayOfNextYear(Calendar.getInstance()));
-		List<java.util.Date> meetingDates = MeetingScheduleHelper.getSchedulerObject(
-				meetingBO).getAllDates();
+		meetingBO.setMeetingStartDate(DateUtils.getFistDayOfNextYear(Calendar
+				.getInstance()));
+		List<java.util.Date> meetingDates = MeetingScheduleHelper
+				.getSchedulerObject(meetingBO).getAllDates();
 		Date date = center.getCustomerAccount().getAccountActionDate(
 				Short.valueOf("4")).getActionDate();
 		Calendar calendar = Calendar.getInstance();
@@ -608,11 +656,10 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		Calendar calendar2 = Calendar.getInstance();
 		calendar2.setTime(meetingDates.get(0));
 		assertEquals(0, new GregorianCalendar(calendar.get(Calendar.YEAR),
-				calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE),
-				0, 0, 0).compareTo(new GregorianCalendar(calendar2
-				.get(Calendar.YEAR), calendar2.get(Calendar.MONTH),
-				calendar2.get(Calendar.DATE), 0, 0, 0)));
+				calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), 0,
+				0, 0).compareTo(new GregorianCalendar(calendar2
+				.get(Calendar.YEAR), calendar2.get(Calendar.MONTH), calendar2
+				.get(Calendar.DATE), 0, 0, 0)));
 
-		
 	}
 }

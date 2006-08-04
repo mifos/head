@@ -49,8 +49,9 @@ import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
+import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
 import org.mifos.application.bulkentry.persistance.BulkEntryPersistance;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryCache;
@@ -65,25 +66,21 @@ public class BulkEntryPersistanceService extends PersistenceService {
 
 	private BulkEntryCache bulkEntryCache = new BulkEntryCache();
 
-	public List<BulkEntryAccountActionView> getBulkEntryActionView(
-			Date meetingDate, String searchString, Short officeId) {
+	public List<BulkEntryInstallmentView> getBulkEntryActionView(
+			Date meetingDate, String searchString, Short officeId,AccountType accountType) {
 		return new BulkEntryPersistance().getBulkEntryActionView(meetingDate,
-				searchString, officeId);
+				searchString, officeId,accountType);
 
 	}
 
 	public List<BulkEntryAccountFeeActionView> getBulkEntryFeeActionView(
-			Date meetingDate, String searchString, Short officeId) {
+			Date meetingDate, String searchString, Short officeId,AccountType accountType) {
 		return new BulkEntryPersistance().getBulkEntryFeeActionView(
-				meetingDate, searchString, officeId);
+				meetingDate, searchString, officeId,accountType);
 
 	}
 
-	public List<AccountFeesActionDetailEntity> getFeesActionDetails(
-			Integer actionId) {
-		return new BulkEntryPersistance().getFeesActionDetails(actionId);
-
-	}
+	
 
 	public AccountBO getCustomerAccountWithAccountActionsInitialized(
 			Integer accountId) {
@@ -102,6 +99,7 @@ public class BulkEntryPersistanceService extends PersistenceService {
 			for (Iterator<AccountActionDateEntity> iter = accountActionDates
 					.iterator(); iter.hasNext();) {
 				AccountActionDateEntity actionDate = iter.next();
+				actionDate.getCustomer().getCustomerId();
 				if (actionDate.getPaymentStatus().equals(
 						PaymentStatus.PAID.getValue())
 						|| actionDate.compareDate(DateUtils

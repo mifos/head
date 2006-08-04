@@ -45,54 +45,46 @@ import org.mifos.framework.util.helpers.Money;
 
 public class AccountFeesActionDetailEntity extends PersistentObject {
 
-	private Integer accountFeesActionDetailId;
+	private final Integer accountFeesActionDetailId;
 
-	private AccountActionDateEntity accountActionDate;
+	private final AccountActionDateEntity accountActionDate;
 
-	private Short installmentId;
+	private final Short installmentId;
 
-	private FeeBO fee;
+	private final FeeBO fee;
 
-	private AccountFeesEntity accountFee;
+	private final AccountFeesEntity accountFee;
 
 	private Money feeAmount;
 
 	private Money feeAmountPaid;
 
-	public AccountActionDateEntity getAccountActionDate() {
-		return accountActionDate;
+	protected AccountFeesActionDetailEntity(
+			AccountActionDateEntity accountActionDate, Short installmentId,
+			FeeBO fee, AccountFeesEntity accountFee, Money feeAmount) {
+		this.accountFeesActionDetailId = null;
+		this.accountActionDate = accountActionDate;
+		this.installmentId = installmentId;
+		this.fee = fee;
+		this.accountFee = accountFee;
+		this.feeAmount = feeAmount;
 	}
 
-	public void setAccountActionDate(AccountActionDateEntity accountActionDate) {
-		this.accountActionDate = accountActionDate;
+	public AccountActionDateEntity getAccountActionDate() {
+		return accountActionDate;
 	}
 
 	public AccountFeesEntity getAccountFee() {
 		return accountFee;
 	}
 
-	public void setAccountFee(AccountFeesEntity accountFee) {
-		this.accountFee = accountFee;
-	}
-
 	public Integer getAccountFeesActionDetailId() {
 		return accountFeesActionDetailId;
-	}
-
-	public void setAccountFeesActionDetailId(Integer accountFeesActionDetailId) {
-		this.accountFeesActionDetailId = accountFeesActionDetailId;
 	}
 
 	public FeeBO getFee() {
 		return fee;
 	}
-
-	public void setFee(FeeBO fee) {
-		this.fee = fee;
-	}
-
-	
-	
 
 	public Money getFeeAmount() {
 		return feeAmount;
@@ -114,30 +106,26 @@ public class AccountFeesActionDetailEntity extends PersistentObject {
 		return installmentId;
 	}
 
-	public void setInstallmentId(Short installmentId) {
-		this.installmentId = installmentId;
-	}
-
 	public void makePayment(Money feeAmountPaid) {
 		this.feeAmountPaid = feeAmountPaid;
 	}
 
 	public Money getFeeDue() {
-		
+
 		return getFeeAmount().subtract(getFeeAmountPaid());
 	}
-	
-	public void makeRepaymentEnteries(String payFullOrPartial){
-		if(payFullOrPartial.equals(LoanConstants.PAY_FEES_PENALTY_INTEREST)){
+
+	public void makeRepaymentEnteries(String payFullOrPartial) {
+		if (payFullOrPartial.equals(LoanConstants.PAY_FEES_PENALTY_INTEREST)) {
 			setFeeAmountPaid(getFeeAmount());
-		}else{
+		} else {
 			setFeeAmount(new Money());
 		}
 	}
-	
-	public Money waiveCharges(){
-		Money chargeWaived=new Money();
-		chargeWaived=chargeWaived.add(getFeeAmount());
+
+	public Money waiveCharges() {
+		Money chargeWaived = new Money();
+		chargeWaived = chargeWaived.add(getFeeAmount());
 		setFeeAmount(new Money());
 		return chargeWaived;
 	}

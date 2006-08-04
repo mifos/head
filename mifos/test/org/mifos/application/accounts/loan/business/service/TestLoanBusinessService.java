@@ -12,6 +12,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.ViewInstallmentDetails;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -180,7 +181,8 @@ public class TestLoanBusinessService extends MifosTestCase {
 	
 	public void testGetUpcomingInstallmentDetails(){
 		accountBO = getLoanAccount();				
-		for(AccountActionDateEntity installment : accountBO.getAccountActionDates()){
+		for(AccountActionDateEntity  accountActionDateEntity: accountBO.getAccountActionDates()){
+			LoanScheduleEntity installment = (LoanScheduleEntity)accountActionDateEntity;
 			if(installment.getInstallmentId().intValue()==1){
 				installment.setPrincipal(installment.getPrincipal().add(new Money("10")));
 				installment.setPenalty(installment.getPenalty().add(new Money("20")));

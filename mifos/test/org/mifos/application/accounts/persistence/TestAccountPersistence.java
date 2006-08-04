@@ -36,14 +36,9 @@ public class TestAccountPersistence extends TestAccount {
 	private AccountPersistence accountPersistence=new AccountPersistence();
 	
 	public void testSuccessGetNextInstallmentList(){
-		List<Short> installmentIdList=null;
-		try {
-			installmentIdList = accountPersistence.getNextInstallmentList(accountBO.getAccountId());
-			assertTrue(true);
-		} catch (PersistenceException e) {
-			assertFalse(false);
-		}
-		
+		List<AccountActionDateEntity> installmentIdList=null;
+		installmentIdList = accountBO.getApplicableIdsForFutureInstallments();
+		assertTrue(true);
 	}
 	
 	
@@ -56,16 +51,6 @@ public class TestAccountPersistence extends TestAccount {
 			assertTrue(false);
 		}
 		
-	}
-	
-	
-	public void testFailureGetNextInstallmentList(){
-		try {
-			accountPersistence.getNextInstallmentList(null);
-			assertTrue(false);
-		} catch (PersistenceException e) {
-			assertTrue(true);
-		}
 	}
 	
 	
@@ -136,24 +121,6 @@ public class TestAccountPersistence extends TestAccount {
 		assertEquals(3,customerAccounts.size());
 		TestObjectFactory.cleanUp(savingsBO);
 	}
-	public void testGetLastInstallment(){
-		
-		Short maxInstallmentid =null;
-		for (AccountActionDateEntity installment : center.getCustomerAccount().getAccountActionDates()) {
-			
-			if ( maxInstallmentid==null)
-			 maxInstallmentid = installment.getInstallmentId();
-			else {
-				
-				if(maxInstallmentid.shortValue()< installment.getInstallmentId().shortValue())maxInstallmentid=installment.getInstallmentId();
-				
-			}
-		}
-		assertEquals(maxInstallmentid.shortValue(), accountPersistence.getLastInstallment(center.getCustomerAccount().getAccountId()).getInstallmentId().shortValue());
-		
-		
-	}
-	
 	
 	private SavingsOfferingBO createSavingsOffering(String offeringName) {
 		MeetingBO meetingIntCalc = TestObjectFactory

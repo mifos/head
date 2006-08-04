@@ -65,16 +65,23 @@ import org.mifos.application.accounts.business.LoanTrxnDetailEntity;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.LoanFeeScheduleEntity;
+import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanSummaryEntity;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
-import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
+import org.mifos.application.bulkentry.business.BulkEntryCustomerAccountInstallmentView;
+import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
+import org.mifos.application.bulkentry.business.BulkEntryLoanInstallmentView;
+import org.mifos.application.bulkentry.business.BulkEntrySavingsInstallmentView;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
 import org.mifos.application.checklist.business.CheckListBO;
 import org.mifos.application.collectionsheet.business.CollSheetCustBO;
@@ -82,6 +89,8 @@ import org.mifos.application.collectionsheet.business.CollSheetLnDetailsEntity;
 import org.mifos.application.collectionsheet.business.CollSheetSavingsDetailsEntity;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
+import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -161,7 +170,6 @@ public class TestObjectFactory {
 
 	private static TestObjectPersistence testObjectPersistence = new TestObjectPersistence();
 
-	
 	/**
 	 * @return - Returns the office created by test data scripts. If the row
 	 *         does not already exist in the database it returns null. defaults
@@ -217,8 +225,9 @@ public class TestObjectFactory {
 		accountPeriodicFee.setAccount(custAccount);
 		accountPeriodicFee.setAccountFeeAmount(new Money(currency, "100.0"));
 		accountPeriodicFee.setFeeAmount(new Money(currency, "100.0"));
-		FeeBO maintanenceFee = createPeriodicAmountFee("Mainatnence Fee", FeeCategory.ALLCUSTOMERS, "100",MeetingFrequency.WEEKLY,
-		Short.valueOf("1"));
+		FeeBO maintanenceFee = createPeriodicAmountFee("Mainatnence Fee",
+				FeeCategory.ALLCUSTOMERS, "100", MeetingFrequency.WEEKLY, Short
+						.valueOf("1"));
 		accountPeriodicFee.setFees(maintanenceFee);
 		custAccount.addAccountFees(accountPeriodicFee);
 
@@ -231,36 +240,18 @@ public class TestObjectFactory {
 
 		short i = 0;
 		for (Date date : meetingDates) {
-			AccountActionDateEntity actionDate = new AccountActionDateEntity();
-			actionDate.setAccount(custAccount);
-			actionDate.setActionDate(new java.sql.Date(date.getTime()));
-			// actionDate.setCurrency(currency);
-			actionDate.setCustomer(customer);
-			actionDate.setInstallmentId(++i);
-			actionDate.setDeposit(new Money(currency, "0.0"));
-			actionDate.setDepositPaid(new Money(currency, "0.0"));
-			actionDate.setPenalty(new Money(currency, "0.0"));
-			actionDate.setPenaltyPaid(new Money(currency, "0.0"));
+			CustomerScheduleEntity actionDate = new CustomerScheduleEntity(
+					custAccount, customer, ++i, new java.sql.Date(date
+							.getTime()), PaymentStatus.UNPAID);
 			actionDate.setMiscFee(new Money(currency, "0.0"));
 			actionDate.setMiscFeePaid(new Money(currency, "0.0"));
 			actionDate.setMiscPenalty(new Money(currency, "0.0"));
 			actionDate.setMiscPenaltyPaid(new Money(currency, "0.0"));
-			actionDate.setPrincipal(new Money(currency, "0.0"));
-			actionDate.setPrincipalPaid(new Money(currency, "0.0"));
-			actionDate.setInterest(new Money(currency, "0.0"));
-			actionDate.setInterestPaid(new Money(currency, "0.0"));
-			actionDate.setPaymentStatus(Short.valueOf("0"));
-
 			custAccount.addAccountActionDate(actionDate);
-
-			AccountFeesActionDetailEntity accountFeesaction = new AccountFeesActionDetailEntity();
-			accountFeesaction.setAccountFee(accountPeriodicFee);
-			accountFeesaction.setAccountActionDate(actionDate);
-			accountFeesaction.setFee(maintanenceFee);
-			accountFeesaction.setFeeAmount(new Money(currency, "100.0"));
+			AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(
+					actionDate, i, maintanenceFee, accountPeriodicFee,
+					new Money(currency, "100.0"));
 			accountFeesaction.setFeeAmountPaid(new Money(currency, "0.0"));
-			accountFeesaction.setInstallmentId(i);
-
 			actionDate.addAccountFeesAction(accountFeesaction);
 		}
 
@@ -270,20 +261,22 @@ public class TestObjectFactory {
 	public static CenterBO createCenter(String customerName, Short statusId,
 			String searchId, MeetingBO meeting, Date startDate) {
 		CenterBO center = null;
-		try{
+		try {
 			OfficeBO office = getOffice(new Short("3"));
 			PersonnelBO personnel = getPersonnel(new Short("1"));
-			center = new CenterBO(getUserContext(), customerName, CustomerStatus.getStatus(statusId), null, null, personnel, office, meeting, personnel, searchId);
-			center.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), center, startDate));
+			center = new CenterBO(getUserContext(), customerName,
+					CustomerStatus.getStatus(statusId), null, null, personnel,
+					office, meeting, personnel, searchId);
+			center.addCustomerAccount(getCustAccountsHelper(personnel
+					.getPersonnelId(), center, startDate));
 			center.save();
 			HibernateUtil.commitTransaction();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return center;
 	}
-		
-	
+
 	/**
 	 * This is just a helper method which returns a address object , this is
 	 * just a helper it does not persist any data.
@@ -299,27 +292,33 @@ public class TestObjectFactory {
 	public static GroupBO createGroup(String customerName, Short statusId,
 			String searchId, CustomerBO parentCustomer, Date startDate) {
 		GroupBO group = null;
-		try{
+		try {
 			OfficeBO office = getOffice(new Short("3"));
 			PersonnelBO personnel = getPersonnel(new Short("1"));
-			group = new GroupBO(getUserContext(), customerName, CustomerStatus.getStatus(statusId), null, null, personnel, office, parentCustomer, searchId);
-			group.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), group, startDate));
+			group = new GroupBO(getUserContext(), customerName, CustomerStatus
+					.getStatus(statusId), null, null, personnel, office,
+					parentCustomer, searchId);
+			group.addCustomerAccount(getCustAccountsHelper(personnel
+					.getPersonnelId(), group, startDate));
 			group.save();
 			HibernateUtil.commitTransaction();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return group;
 	}
-	
+
 	public static ClientBO createClient(String customerName, Short statusId,
 			String searchId, CustomerBO parentCustomer, Date startDate) {
 		ClientBO client = null;
-		try{
+		try {
 			OfficeBO office = getOffice(new Short("3"));
 			PersonnelBO personnel = getPersonnel(new Short("1"));
-			client = new ClientBO(getUserContext(), customerName, CustomerStatus.getStatus(statusId), null, null, personnel, office, parentCustomer, searchId);
-			client.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), client, startDate));
+			client = new ClientBO(getUserContext(), customerName,
+					CustomerStatus.getStatus(statusId), null, null, personnel,
+					office, parentCustomer, searchId);
+			client.addCustomerAccount(getCustAccountsHelper(personnel
+					.getPersonnelId(), client, startDate));
 			Name name = new Name();
 			name.setFirstName(customerName);
 			name.setLastName(customerName);
@@ -333,12 +332,13 @@ public class TestObjectFactory {
 			client.setNameDetailSet(custNameDetEnitites);
 			client.save();
 			HibernateUtil.commitTransaction();
-			//TODO: throw Exception
-		}catch(Exception e){
+			// TODO: throw Exception
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return client;
 	}
+
 	/**
 	 * @param name -
 	 *            name of the prd offering
@@ -446,18 +446,20 @@ public class TestObjectFactory {
 	 * 
 	 * @param globalNum
 	 * @param accountStateId
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public static LoanBO createLoanAccount(String globalNum,
 			CustomerBO customer, Short accountStateId, Date startDate,
 			LoanOfferingBO loanOfering) {
-		LoanBO loan=null;
-		try{
+		LoanBO loan = null;
+		try {
 			UserContext userContext = TestObjectFactory.getUserContext();
 			AccountType accountType = new AccountType();
-			accountType.setAccountTypeId(Short.valueOf(AccountTypes.LOANACCOUNT));
-			loan = new LoanBO(userContext,loanOfering,customer,accountType);
-		}catch(Exception e){}
+			accountType.setAccountTypeId(Short
+					.valueOf(AccountTypes.LOANACCOUNT));
+			loan = new LoanBO(userContext, loanOfering, customer, accountType);
+		} catch (Exception e) {
+		}
 
 		loan.setAccountState(new AccountStateEntity(accountStateId));
 
@@ -466,8 +468,9 @@ public class TestObjectFactory {
 		accountPeriodicFee.setAccount(loan);
 		accountPeriodicFee.setAccountFeeAmount(new Money(currency, "100.0"));
 		accountPeriodicFee.setFeeAmount(new Money(currency, "100.0"));
-		FeeBO maintanenceFee = createPeriodicAmountFee("Mainatnence Fee", FeeCategory.LOAN, "100",MeetingFrequency.WEEKLY,
-				Short.valueOf("1"));
+		FeeBO maintanenceFee = createPeriodicAmountFee("Mainatnence Fee",
+				FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY, Short
+						.valueOf("1"));
 		accountPeriodicFee.setFees(maintanenceFee);
 		loan.addAccountFees(accountPeriodicFee);
 
@@ -483,15 +486,13 @@ public class TestObjectFactory {
 
 		short i = 0;
 		for (Date date : meetingDates) {
-			AccountActionDateEntity actionDate = new AccountActionDateEntity();
-			actionDate.setAccount(loan);
-			actionDate.setActionDate(new java.sql.Date(date.getTime()));
-			actionDate.setCustomer(customer);
-			actionDate.setInstallmentId(++i);
-			actionDate.setDeposit(new Money(currency, "0.0"));
-			actionDate.setDepositPaid(new Money(currency, "0.0"));
+			LoanScheduleEntity actionDate = new LoanScheduleEntity(loan,
+					customer, ++i, new java.sql.Date(date.getTime()),
+					PaymentStatus.UNPAID, new Money(currency, "100.0"),
+					new Money(currency, "12.0"));
+
 			actionDate.setPenalty(new Money(currency, "0.0"));
-			actionDate.setInterest(new Money(currency, "12.0"));
+
 			actionDate.setInterestPaid(new Money(currency, "0.0"));
 			actionDate.setPrincipalPaid(new Money(currency, "0.0"));
 			actionDate.setPenaltyPaid(new Money(currency, "0.0"));
@@ -500,16 +501,13 @@ public class TestObjectFactory {
 			actionDate.setMiscPenaltyPaid(new Money(currency, "0.0"));
 			actionDate.setMiscPenalty(new Money(currency, "0.0"));
 			actionDate.setPaymentStatus(Short.valueOf("0"));
-			actionDate.setPrincipal(new Money(currency, "100.0"));
+
 			loan.addAccountActionDate(actionDate);
 
-			AccountFeesActionDetailEntity accountFeesaction = new AccountFeesActionDetailEntity();
-			accountFeesaction.setAccountFee(accountPeriodicFee);
-			accountFeesaction.setAccountActionDate(actionDate);
-			accountFeesaction.setFee(maintanenceFee);
-			accountFeesaction.setFeeAmount(new Money(currency, "100.0"));
+			AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
+					actionDate, i, maintanenceFee, accountPeriodicFee,
+					new Money(currency, "100.0"));
 			accountFeesaction.setFeeAmountPaid(new Money(currency, "0.0"));
-			accountFeesaction.setInstallmentId(i);
 
 			actionDate.addAccountFeesAction(accountFeesaction);
 		}
@@ -582,15 +580,16 @@ public class TestObjectFactory {
 		savingsOffering.setCreatedDate(new Date(System.currentTimeMillis()));
 		savingsOffering.setCreatedBy(personnel.getPersonnelId());
 		MifosCurrency currency = testObjectPersistence.getCurrency();
-		savingsOffering.setRecommendedAmount(new Money(recommenededAmt.toString()));
+		savingsOffering.setRecommendedAmount(new Money(recommenededAmt
+				.toString()));
 		RecommendedAmntUnit amountUnit = new RecommendedAmntUnit();
 		amountUnit.setRecommendedAmntUnitId(recomAmtUnitId);
 		savingsOffering.setRecommendedAmntUnit(amountUnit);
 
 		savingsOffering.setInterestRate(intRate);
-		savingsOffering
-				.setMaxAmntWithdrawl(new Money(maxAmtWithdrawl.toString()));
-		savingsOffering.setMinAmntForInt(new Money( minAmtForInt.toString()));
+		savingsOffering.setMaxAmntWithdrawl(new Money(maxAmtWithdrawl
+				.toString()));
+		savingsOffering.setMinAmntForInt(new Money(minAmtForInt.toString()));
 
 		SavingsType savingsType = new SavingsType();
 		savingsType.setSavingsTypeId(savingsTypeId);
@@ -648,17 +647,9 @@ public class TestObjectFactory {
 		List<Date> meetingDates = getMeetingDates(meeting, 3);
 		short i = 0;
 		for (Date date : meetingDates) {
-			AccountActionDateEntity actionDate = new AccountActionDateEntity();
-			actionDate.setAccount(savings);
-			actionDate.setActionDate(new java.sql.Date(date.getTime()));
-			actionDate.setCustomer(customer);
-			actionDate.setInstallmentId(++i);
-			actionDate.setDeposit(new Money(currency, "200.0"));
-			actionDate.setPenalty(new Money(currency, "0.0"));
-			actionDate.setInterest(new Money(currency, "0.0"));
-			actionDate.setInterestPaid(new Money(currency, "0.0"));
-			actionDate.setPaymentStatus(Short.valueOf("0"));
-			actionDate.setPrincipal(new Money(currency, "0.0"));
+			SavingsScheduleEntity actionDate = new SavingsScheduleEntity(
+					savings, customer, ++i, new java.sql.Date(date.getTime()),
+					PaymentStatus.UNPAID, new Money(currency, "200.0"));
 			savings.addAccountActionDate(actionDate);
 		}
 		HibernateUtil.commitTransaction();
@@ -812,48 +803,63 @@ public class TestObjectFactory {
 		return scheduler;
 	}
 
-	public static FeeBO createPeriodicAmountFee(String feeName, FeeCategory feeCategory, String feeAmnt,
+	public static FeeBO createPeriodicAmountFee(String feeName,
+			FeeCategory feeCategory, String feeAmnt,
 			MeetingFrequency meetingFrequency, Short recurAfter) {
-		GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(GLCodeEntity.class, Short.valueOf("24"));
-		MeetingBO meeting  = new MeetingBO(meetingFrequency,recurAfter,MeetingType.FEEMEETING);
+		GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(
+				GLCodeEntity.class, Short.valueOf("24"));
+		MeetingBO meeting = new MeetingBO(meetingFrequency, recurAfter,
+				MeetingType.FEEMEETING);
 		FeeBO fee = null;
-		//TODO: throw exception
-		try{
-			fee = new AmountFeeBO(TestObjectFactory.getUserContext(),feeName, 
-				new CategoryTypeEntity(feeCategory), new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC),
-				glCode, getMoneyForMFICurrency(feeAmnt),false, meeting);
-		
-		}catch(Exception e){}
+		// TODO: throw exception
+		try {
+			fee = new AmountFeeBO(TestObjectFactory.getUserContext(), feeName,
+					new CategoryTypeEntity(feeCategory),
+					new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC),
+					glCode, getMoneyForMFICurrency(feeAmnt), false, meeting);
+
+		} catch (Exception e) {
+		}
 		return testObjectPersistence.createFee(fee);
 	}
 
+	public static FeeBO createOneTimeAmountFee(String feeName,
+			FeeCategory feeCategory, String feeAmnt, FeePayment feePayment) {
+		GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(
+				GLCodeEntity.class, Short.valueOf("24"));
+		FeeBO fee = null;
+		// TODO: throw exception
+		try {
+			fee = new AmountFeeBO(TestObjectFactory.getUserContext(), feeName,
+					new CategoryTypeEntity(feeCategory),
+					new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
+					glCode, getMoneyForMFICurrency(feeAmnt), false,
+					new FeePaymentEntity(feePayment));
 
-	public static FeeBO createOneTimeAmountFee(String feeName, FeeCategory feeCategory, String feeAmnt, FeePayment feePayment) {
-		GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(GLCodeEntity.class, Short.valueOf("24"));
-		FeeBO fee = null;
-		//TODO: throw exception
-		try{
-			fee = new AmountFeeBO(TestObjectFactory.getUserContext(),feeName, 
-				new CategoryTypeEntity(feeCategory), new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
-				glCode, getMoneyForMFICurrency(feeAmnt),false, new FeePaymentEntity(feePayment));
-		
-		}catch(Exception e){}
+		} catch (Exception e) {
+		}
 		return testObjectPersistence.createFee(fee);
 	}
-	
-	public static FeeBO createOneTimeRateFee(String feeName, FeeCategory feeCategory, Double rate, FeeFormula feeFormula, FeePayment feePayment) {
-		GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(GLCodeEntity.class, Short.valueOf("24"));
+
+	public static FeeBO createOneTimeRateFee(String feeName,
+			FeeCategory feeCategory, Double rate, FeeFormula feeFormula,
+			FeePayment feePayment) {
+		GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(
+				GLCodeEntity.class, Short.valueOf("24"));
 		FeeBO fee = null;
-		//TODO: throw exception
-		try{
-			fee = new RateFeeBO(TestObjectFactory.getUserContext(),feeName, 
-				new CategoryTypeEntity(feeCategory), new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
-				glCode, rate, new FeeFormulaEntity(feeFormula),false, new FeePaymentEntity(feePayment));
-		
-		}catch(Exception e){}
+		// TODO: throw exception
+		try {
+			fee = new RateFeeBO(TestObjectFactory.getUserContext(), feeName,
+					new CategoryTypeEntity(feeCategory),
+					new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
+					glCode, rate, new FeeFormulaEntity(feeFormula), false,
+					new FeePaymentEntity(feePayment));
+
+		} catch (Exception e) {
+		}
 		return testObjectPersistence.createFee(fee);
 	}
-	
+
 	/**
 	 * This is a helper method which returns a fresh meeting object based on the
 	 * parameters passed to it.
@@ -939,50 +945,53 @@ public class TestObjectFactory {
 	public static void cleanUp(CustomerBO customer) {
 		if (null != customer) {
 			deleteCustomer(customer);
+			customer=null;
 		}
+		
 	}
 
 	public static void cleanUp(List<CustomerBO> customerList) {
 		if (null != customerList) {
 			deleteCustomers(customerList);
+			customerList =null;
 		}
 	}
-	
+
 	public static void cleanUp(FeeBO fee) {
 		if (null != fee) {
 			deleteFee(fee);
+			fee=null;
 		}
 	}
-	
+
 	public static void cleanUp(AccountBO account) {
 		if (null != account) {
 			deleteAccount(account, null);
+			account=null;
 		}
 	}
 
 	private static void deleteFee(FeeBO fee) {
 		Session session = HibernateUtil.getSessionTL();
 		Transaction transaction = HibernateUtil.startTransaction();
-		if(fee.isPeriodic()){
+		if (fee.isPeriodic()) {
 			session.delete(fee.getFeeFrequency().getFeeMeetingFrequency());
 		}
 		session.delete(fee);
 		transaction.commit();
 	}
-	
+
 	private static void deleteFees(List<FeeBO> feeList) {
 		Session session = HibernateUtil.getSessionTL();
-		for(FeeBO fee:feeList){
-			if(fee.isPeriodic()){
+		for (FeeBO fee : feeList) {
+			if (fee.isPeriodic()) {
 				session.delete(fee.getFeeFrequency().getFeeMeetingFrequency());
 			}
 			session.delete(fee);
 		}
 	}
-	
-	
-	
-	private static void deleteAccountPayments(AccountBO account){
+
+	private static void deleteAccountPayments(AccountBO account) {
 		Session session = HibernateUtil.getSessionTL();
 		for (AccountPaymentEntity accountPayment : account.getAccountPayments()) {
 			if (null != accountPayment) {
@@ -991,26 +1000,44 @@ public class TestObjectFactory {
 		}
 	}
 
-	private static void deleteAccountActionDates(AccountBO account){
+	private static void deleteAccountActionDates(AccountBO account) {
 		Session session = HibernateUtil.getSessionTL();
 		for (AccountActionDateEntity actionDates : account
 				.getAccountActionDates()) {
-			for (AccountFeesActionDetailEntity actionFees : actionDates
-					.getAccountFeesActionDetails()) {
-				session.delete(actionFees);
+			if (account
+					.getAccountType()
+					.getAccountTypeId()
+					.equals(
+							org.mifos.application.accounts.util.helpers.AccountType.LOANACCOUNT)) {
+				LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) actionDates;
+				for (AccountFeesActionDetailEntity actionFees : loanScheduleEntity
+						.getAccountFeesActionDetails()) {
+					session.delete(actionFees);
+				}
+			}
+			if (account
+					.getAccountType()
+					.getAccountTypeId()
+					.equals(
+							org.mifos.application.accounts.util.helpers.AccountType.CUSTOMERACCOUNT)) {
+				CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) actionDates;
+				for (AccountFeesActionDetailEntity actionFees : customerScheduleEntity
+						.getAccountFeesActionDetails()) {
+					session.delete(actionFees);
+				}
 			}
 			session.delete(actionDates);
 		}
 	}
 
-	private static void deleteAccountFees(AccountBO account){
+	private static void deleteAccountFees(AccountBO account) {
 		Session session = HibernateUtil.getSessionTL();
 		for (AccountFeesEntity accountFees : account.getAccountFees()) {
 			session.delete(accountFees);
 		}
 	}
-	
-	private static void deleteSpecificAccount(AccountBO account){
+
+	private static void deleteSpecificAccount(AccountBO account) {
 		Session session = HibernateUtil.getSessionTL();
 		if (account instanceof LoanBO) {
 
@@ -1040,14 +1067,14 @@ public class TestObjectFactory {
 			session.delete(account);
 		}
 	}
-	
+
 	private static void deleteAccountWithoutFee(AccountBO account) {
 		deleteAccountPayments(account);
 		deleteAccountActionDates(account);
 		deleteAccountFees(account);
 		deleteSpecificAccount(account);
 	}
-	
+
 	private static void deleteAccount(AccountBO account, Session session) {
 		boolean newSession = false;
 		Transaction transaction = null;
@@ -1056,19 +1083,19 @@ public class TestObjectFactory {
 			transaction = HibernateUtil.startTransaction();
 			newSession = true;
 		}
-		
-		List<FeeBO> feeList = new ArrayList<FeeBO>(); 
-		for(AccountFeesEntity accountFees: account.getAccountFees()){
-			if(!feeList.contains(accountFees.getFees()))
-					feeList.add(accountFees.getFees());
+
+		List<FeeBO> feeList = new ArrayList<FeeBO>();
+		for (AccountFeesEntity accountFees : account.getAccountFees()) {
+			if (!feeList.contains(accountFees.getFees()))
+				feeList.add(accountFees.getFees());
 		}
-		
+
 		deleteAccountPayments(account);
 		deleteAccountActionDates(account);
 		deleteAccountFees(account);
 		deleteSpecificAccount(account);
 		deleteFees(feeList);
-		
+
 		if (newSession) {
 			transaction.commit();
 		}
@@ -1097,26 +1124,26 @@ public class TestObjectFactory {
 		session.delete(accountPayment);
 	}
 
-	private static void deleteCustomers(List<CustomerBO> customerList){
+	private static void deleteCustomers(List<CustomerBO> customerList) {
 		List<FeeBO> feeList = new ArrayList<FeeBO>();
-		for(CustomerBO customer: customerList){
+		for (CustomerBO customer : customerList) {
 			Session session = HibernateUtil.getSessionTL();
 			session.lock(customer, LockMode.UPGRADE);
-			for(AccountBO account: customer.getAccounts()){
-				for(AccountFeesEntity accountFees: account.getAccountFees()){
-					if(!feeList.contains(accountFees.getFees()))
-							feeList.add(accountFees.getFees());
+			for (AccountBO account : customer.getAccounts()) {
+				for (AccountFeesEntity accountFees : account.getAccountFees()) {
+					if (!feeList.contains(accountFees.getFees()))
+						feeList.add(accountFees.getFees());
 				}
 			}
 			Transaction transaction = HibernateUtil.startTransaction();
-			deleteCustomerWithoutFee(customer);			
+			deleteCustomerWithoutFee(customer);
 			transaction.commit();
 		}
 		Transaction transaction = HibernateUtil.startTransaction();
 		deleteFees(feeList);
 		transaction.commit();
 	}
-	
+
 	private static void deleteCustomerWithoutFee(CustomerBO customer) {
 		Session session = HibernateUtil.getSessionTL();
 		deleteCenterMeeting(customer);
@@ -1128,19 +1155,19 @@ public class TestObjectFactory {
 		}
 		session.delete(customer);
 	}
-	
+
 	private static void deleteCustomer(CustomerBO customer) {
 		Session session = HibernateUtil.getSessionTL();
 		Transaction transaction = HibernateUtil.startTransaction();
 		session.lock(customer, LockMode.NONE);
 		deleteCenterMeeting(customer);
 		deleteClientAttendence(customer);
-		
+
 		List<FeeBO> feeList = new ArrayList<FeeBO>();
 		for (AccountBO account : customer.getAccounts()) {
 			if (null != account) {
-				for(AccountFeesEntity accountFee: account.getAccountFees())
-					if(!feeList.contains(accountFee.getFees()))
+				for (AccountFeesEntity accountFee : account.getAccountFees())
+					if (!feeList.contains(accountFee.getFees()))
 						feeList.add(accountFee.getFees());
 				deleteAccountWithoutFee(account);
 			}
@@ -1150,14 +1177,14 @@ public class TestObjectFactory {
 		transaction.commit();
 	}
 
-	private static void deleteCenterMeeting(CustomerBO customer){
+	private static void deleteCenterMeeting(CustomerBO customer) {
 		Session session = HibernateUtil.getSessionTL();
 		if (customer instanceof CenterBO) {
 			session.delete(customer.getCustomerMeeting());
 		}
 	}
-	
-	private static void deleteClientAttendence(CustomerBO customer){
+
+	private static void deleteClientAttendence(CustomerBO customer) {
 		Session session = HibernateUtil.getSessionTL();
 		if (customer instanceof ClientBO) {
 			Set<ClientAttendanceBO> attendance = ((ClientBO) customer)
@@ -1169,8 +1196,7 @@ public class TestObjectFactory {
 				}
 		}
 	}
-	
-	
+
 	public static MifosCurrency getMFICurrency() {
 		return testObjectPersistence.getCurrency();
 	}
@@ -1180,13 +1206,13 @@ public class TestObjectFactory {
 	}
 
 	public static Money getMoneyForMFICurrency(double amnt) {
-		return new Money( String.valueOf(amnt));
+		return new Money(String.valueOf(amnt));
 	}
 
 	public static Money getMoneyForMFICurrency(String amnt) {
 		return new Money(testObjectPersistence.getCurrency(), amnt);
 	}
-	
+
 	public static Money getMoney(Short currencyId, double amnt) {
 		return new Money(String.valueOf(amnt));
 	}
@@ -1224,6 +1250,7 @@ public class TestObjectFactory {
 	public static void cleanUp(CheckListBO checkListBO) {
 		if (null != checkListBO) {
 			deleteChecklist(checkListBO);
+			checkListBO=null;
 		}
 	}
 
@@ -1239,6 +1266,7 @@ public class TestObjectFactory {
 	public static void cleanUp(ReportsCategoryBO reportsCategoryBO) {
 		if (null != reportsCategoryBO) {
 			deleteReportCategory(reportsCategoryBO);
+			reportsCategoryBO=null;
 		}
 	}
 
@@ -1253,6 +1281,7 @@ public class TestObjectFactory {
 	public static void cleanUp(ReportsBO reportsBO) {
 		if (null != reportsBO) {
 			deleteReportCategory(reportsBO);
+			reportsBO=null;
 		}
 	}
 
@@ -1267,13 +1296,15 @@ public class TestObjectFactory {
 	public static LoanBO createLoanAccountWithDisbursement(String globalNum,
 			CustomerBO customer, Short accountStateId, Date startDate,
 			LoanOfferingBO loanOfering, int disbursalType) {
-		LoanBO loan=null;
-		try{
-			UserContext userContext=TestObjectFactory.getUserContext();
+		LoanBO loan = null;
+		try {
+			UserContext userContext = TestObjectFactory.getUserContext();
 			AccountType accountType = new AccountType();
-			accountType.setAccountTypeId(Short.valueOf(AccountTypes.LOANACCOUNT));
-			loan = new LoanBO(userContext,loanOfering,customer,accountType);
-		}catch(Exception e){}
+			accountType.setAccountTypeId(Short
+					.valueOf(AccountTypes.LOANACCOUNT));
+			loan = new LoanBO(userContext, loanOfering, customer, accountType);
+		} catch (Exception e) {
+		}
 		loan.setAccountState(new AccountStateEntity(accountStateId));
 
 		MifosCurrency currency = testObjectPersistence.getCurrency();
@@ -1281,8 +1312,9 @@ public class TestObjectFactory {
 		accountPeriodicFee.setAccount(loan);
 		accountPeriodicFee.setAccountFeeAmount(new Money(currency, "10.0"));
 		accountPeriodicFee.setFeeAmount(new Money(currency, "10.0"));
-		FeeBO maintanenceFee = createPeriodicAmountFee("Mainatnence Fee", FeeCategory.LOAN, "100",MeetingFrequency.WEEKLY,
-				Short.valueOf("1"));
+		FeeBO maintanenceFee = createPeriodicAmountFee("Mainatnence Fee",
+				FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY, Short
+						.valueOf("1"));
 		accountPeriodicFee.setFees(maintanenceFee);
 		loan.addAccountFees(accountPeriodicFee);
 		AccountFeesEntity accountDisbursementFee = null;
@@ -1295,8 +1327,8 @@ public class TestObjectFactory {
 			accountDisbursementFee.setAccountFeeAmount(new Money(currency,
 					"10.0"));
 			accountDisbursementFee.setFeeAmount(new Money(currency, "10.0"));
-			disbursementFee = createOneTimeAmountFee("Disbursement Fee 1", FeeCategory.LOAN, "10",
-					FeePayment.TIME_OF_DISBURSMENT);
+			disbursementFee = createOneTimeAmountFee("Disbursement Fee 1",
+					FeeCategory.LOAN, "10", FeePayment.TIME_OF_DISBURSMENT);
 			accountDisbursementFee.setFees(disbursementFee);
 			accountDisbursementFee.setAccount(loan);
 			loan.addAccountFees(accountDisbursementFee);
@@ -1305,8 +1337,8 @@ public class TestObjectFactory {
 			accountDisbursementFee2.setAccountFeeAmount(new Money(currency,
 					"20.0"));
 			accountDisbursementFee2.setFeeAmount(new Money(currency, "20.0"));
-			disbursementFee2 = createOneTimeAmountFee("Disbursement Fee 2", FeeCategory.LOAN, "20",
-					FeePayment.TIME_OF_DISBURSMENT);
+			disbursementFee2 = createOneTimeAmountFee("Disbursement Fee 2",
+					FeeCategory.LOAN, "20", FeePayment.TIME_OF_DISBURSMENT);
 			accountDisbursementFee2.setFees(disbursementFee2);
 			accountDisbursementFee2.setAccount(loan);
 			loan.addAccountFees(accountDisbursementFee2);
@@ -1331,16 +1363,14 @@ public class TestObjectFactory {
 				if (i == 0) {
 					i++;
 					loan.setDisbursementDate(date);
-					AccountActionDateEntity actionDate = new AccountActionDateEntity();
-					actionDate.setAccount(loan);
-					actionDate.setActionDate(new java.sql.Date(date.getTime()));
-					// actionDate.setCurrency(currency);
-					actionDate.setCustomer(customer);
-					actionDate.setInstallmentId(i);
-					actionDate.setDeposit(new Money(currency, "0.0"));
-					actionDate.setDepositPaid(new Money(currency, "0.0"));
+					LoanScheduleEntity actionDate = new LoanScheduleEntity(
+							loan, customer, i,
+							new java.sql.Date(date.getTime()),
+							PaymentStatus.UNPAID, new Money(currency, "0.0"),
+							new Money(currency, "12.0"));
+
 					actionDate.setPenalty(new Money(currency, "0.0"));
-					actionDate.setInterest(new Money(currency, "12.0"));
+
 					actionDate.setInterestPaid(new Money(currency, "0.0"));
 					actionDate.setPrincipalPaid(new Money(currency, "0.0"));
 					actionDate.setPenaltyPaid(new Money(currency, "0.0"));
@@ -1349,57 +1379,45 @@ public class TestObjectFactory {
 					actionDate.setMiscPenalty(new Money(currency, "0.0"));
 					actionDate.setMiscPenaltyPaid(new Money(currency, "0.0"));
 					actionDate.setPaymentStatus(Short.valueOf("0"));
-					actionDate.setPrincipal(new Money(currency, "0.0"));
+
 					loan.addAccountActionDate(actionDate);
 
 					// periodic fee
-					AccountFeesActionDetailEntity accountFeesaction = new AccountFeesActionDetailEntity();
-					accountFeesaction.setAccountFee(accountPeriodicFee);
-					accountFeesaction.setAccountActionDate(actionDate);
-					accountFeesaction.setFee(maintanenceFee);
-					accountFeesaction.setFeeAmount(new Money(currency, "10.0"));
+					AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
+							actionDate, i, maintanenceFee, accountPeriodicFee,
+							new Money(currency, "10.0"));
 					accountFeesaction.setFeeAmountPaid(new Money(currency,
 							"0.0"));
-					accountFeesaction.setInstallmentId(i);
 					actionDate.addAccountFeesAction(accountFeesaction);
 
 					// dibursement fee one
-					AccountFeesActionDetailEntity accountFeesaction1 = new AccountFeesActionDetailEntity();
-					accountFeesaction1.setAccountFee(accountDisbursementFee);
-					accountFeesaction1.setAccountActionDate(actionDate);
-					accountFeesaction1.setFee(disbursementFee);
-					accountFeesaction1
-							.setFeeAmount(new Money(currency, "10.0"));
+					AccountFeesActionDetailEntity accountFeesaction1 = new LoanFeeScheduleEntity(
+							actionDate, i, disbursementFee,
+							accountDisbursementFee, new Money(currency, "10.0"));
+
 					accountFeesaction1.setFeeAmountPaid(new Money(currency,
 							"0.0"));
-					accountFeesaction1.setInstallmentId(i);
 					actionDate.addAccountFeesAction(accountFeesaction1);
 
 					// disbursementfee2
-					AccountFeesActionDetailEntity accountFeesaction2 = new AccountFeesActionDetailEntity();
-					accountFeesaction2.setAccountFee(accountDisbursementFee2);
-					accountFeesaction2.setAccountActionDate(actionDate);
-					accountFeesaction2.setFee(disbursementFee2);
-					accountFeesaction2
-							.setFeeAmount(new Money(currency, "20.0"));
+					AccountFeesActionDetailEntity accountFeesaction2 = new LoanFeeScheduleEntity(
+							actionDate, i, disbursementFee2,
+							accountDisbursementFee2,
+							new Money(currency, "20.0"));
 					accountFeesaction2.setFeeAmountPaid(new Money(currency,
 							"0.0"));
-					accountFeesaction2.setInstallmentId(i);
 					actionDate.addAccountFeesAction(accountFeesaction2);
 
 					continue;
 				}
-				AccountActionDateEntity actionDate = new AccountActionDateEntity();
-				actionDate.setAccount(loan);
-				actionDate.setActionDate(new java.sql.Date(date.getTime()));
-				// actionDate.setCurrency(currency);
-				actionDate.setCustomer(customer);
 				i++;
-				actionDate.setInstallmentId(i);
-				actionDate.setDeposit(new Money(currency, "0.0"));
-				actionDate.setDepositPaid(new Money(currency, "0.0"));
+				LoanScheduleEntity actionDate = new LoanScheduleEntity(loan,
+						customer, i, new java.sql.Date(date.getTime()),
+						PaymentStatus.UNPAID, new Money(currency, "100.0"),
+						new Money(currency, "12.0"));
+
 				actionDate.setPenalty(new Money(currency, "0.0"));
-				actionDate.setInterest(new Money(currency, "12.0"));
+
 				actionDate.setInterestPaid(new Money(currency, "0.0"));
 				actionDate.setPrincipalPaid(new Money(currency, "0.0"));
 				actionDate.setPenaltyPaid(new Money(currency, "0.0"));
@@ -1408,17 +1426,13 @@ public class TestObjectFactory {
 				actionDate.setMiscPenalty(new Money(currency, "0.0"));
 				actionDate.setMiscPenaltyPaid(new Money(currency, "0.0"));
 				actionDate.setPaymentStatus(Short.valueOf("0"));
-				actionDate.setPrincipal(new Money(currency, "100.0"));
+
 				loan.addAccountActionDate(actionDate);
 
-				AccountFeesActionDetailEntity accountFeesaction = new AccountFeesActionDetailEntity();
-				accountFeesaction.setAccountFee(accountPeriodicFee);
-				accountFeesaction.setAccountActionDate(actionDate);
-				accountFeesaction.setFee(maintanenceFee);
-				accountFeesaction.setFeeAmount(new Money(currency, "100.0"));
+				AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
+						actionDate, i, maintanenceFee, accountPeriodicFee,
+						new Money(currency, "100.0"));
 				accountFeesaction.setFeeAmountPaid(new Money(currency, "0.0"));
-				accountFeesaction.setInstallmentId(i);
-
 				actionDate.addAccountFeesAction(accountFeesaction);
 			}
 
@@ -1434,14 +1448,11 @@ public class TestObjectFactory {
 					loan.setDisbursementDate(date);
 					continue;
 				}
-				AccountActionDateEntity actionDate = new AccountActionDateEntity();
-				actionDate.setAccount(loan);
-				actionDate.setActionDate(new java.sql.Date(date.getTime()));
-				// actionDate.setCurrency(currency);
-				actionDate.setCustomer(customer);
-				actionDate.setInstallmentId(i++);
-				actionDate.setDeposit(new Money(currency, "0.0"));
-				actionDate.setDepositPaid(new Money(currency, "0.0"));
+				LoanScheduleEntity actionDate = new LoanScheduleEntity(loan,
+						customer, i++, new java.sql.Date(date.getTime()),
+						PaymentStatus.UNPAID, new Money(currency, "0.0"),
+						new Money(currency, "12.0"));
+
 				actionDate.setPenalty(new Money(currency, "0.0"));
 				actionDate.setInterest(new Money(currency, "12.0"));
 				actionDate.setInterestPaid(new Money(currency, "0.0"));
@@ -1455,14 +1466,10 @@ public class TestObjectFactory {
 				actionDate.setPrincipal(new Money(currency, "100.0"));
 				loan.addAccountActionDate(actionDate);
 
-				AccountFeesActionDetailEntity accountFeesaction = new AccountFeesActionDetailEntity();
-				accountFeesaction.setAccountFee(accountPeriodicFee);
-				accountFeesaction.setAccountActionDate(actionDate);
-				accountFeesaction.setFee(maintanenceFee);
-				accountFeesaction.setFeeAmount(new Money(currency, "100.0"));
+				AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
+						actionDate, i, maintanenceFee, accountPeriodicFee,
+						new Money(currency, "100.0"));
 				accountFeesaction.setFeeAmountPaid(new Money(currency, "0.0"));
-				accountFeesaction.setInstallmentId(i);
-
 				actionDate.addAccountFeesAction(accountFeesaction);
 			}
 		}
@@ -1513,19 +1520,37 @@ public class TestObjectFactory {
 		}
 		for (AccountActionDateEntity actionDates : account
 				.getAccountActionDates()) {
-			for (AccountFeesActionDetailEntity actionFees : actionDates
-					.getAccountFeesActionDetails()) {
-				session.delete(actionFees);
+			if (account
+					.getAccountType()
+					.getAccountTypeId()
+					.equals(
+							org.mifos.application.accounts.util.helpers.AccountType.LOANACCOUNT)) {
+				LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) actionDates;
+				for (AccountFeesActionDetailEntity actionFees : loanScheduleEntity
+						.getAccountFeesActionDetails()) {
+					session.delete(actionFees);
+				}
+			}
+			if (account
+					.getAccountType()
+					.getAccountTypeId()
+					.equals(
+							org.mifos.application.accounts.util.helpers.AccountType.CUSTOMERACCOUNT)) {
+				CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) actionDates;
+				for (AccountFeesActionDetailEntity actionFees : customerScheduleEntity
+						.getAccountFeesActionDetails()) {
+					session.delete(actionFees);
+				}
 			}
 			session.delete(actionDates);
 		}
-		
-		List<FeeBO> feeList = new ArrayList<FeeBO>(); 
-		for(AccountFeesEntity accountFees: account.getAccountFees()){
-			if(!feeList.contains(accountFees.getFees()))
-					feeList.add(accountFees.getFees());
+
+		List<FeeBO> feeList = new ArrayList<FeeBO>();
+		for (AccountFeesEntity accountFees : account.getAccountFees()) {
+			if (!feeList.contains(accountFees.getFees()))
+				feeList.add(accountFees.getFees());
 		}
-		
+
 		for (AccountFeesEntity accountFees : account.getAccountFees()) {
 			session.delete(accountFees);
 		}
@@ -1556,6 +1581,7 @@ public class TestObjectFactory {
 	public static void cleanUpWithoutDeletetingProduct(AccountBO account) {
 		if (null != account) {
 			deleteAccountWithoutDeletetingProduct(account, null);
+			account=null;
 		}
 	}
 
@@ -1595,9 +1621,20 @@ public class TestObjectFactory {
 						transactionDate);
 		for (AccountActionDateEntity accountActionDate : dueActionDates) {
 			Hibernate.initialize(accountActionDate);
-			for (AccountFeesActionDetailEntity accountFeesActionDetail : accountActionDate
-					.getAccountFeesActionDetails()) {
-				Hibernate.initialize(accountFeesActionDetail);
+
+			if (accountActionDate instanceof LoanScheduleEntity) {
+				LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
+				for (AccountFeesActionDetailEntity accountFeesActionDetail : loanScheduleEntity
+						.getAccountFeesActionDetails()) {
+					Hibernate.initialize(accountFeesActionDetail);
+				}
+			}
+			if (accountActionDate instanceof CustomerScheduleEntity) {
+				CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDate;
+				for (AccountFeesActionDetailEntity accountFeesActionDetail : customerScheduleEntity
+						.getAccountFeesActionDetails()) {
+					Hibernate.initialize(accountFeesActionDetail);
+				}
 			}
 		}
 		HibernateUtil.closeSession();
@@ -1607,6 +1644,7 @@ public class TestObjectFactory {
 	public static void cleanUp(CollectionSheetBO collSheet) {
 		if (null != collSheet) {
 			deleteCollectionSheet(collSheet, null);
+			collSheet=null;
 		}
 	}
 
@@ -1684,23 +1722,43 @@ public class TestObjectFactory {
 
 	}
 
-	public static BulkEntryAccountActionView getBulkEntryAccountActionView(
-			AccountActionDateEntity actionDate) {
-		BulkEntryAccountActionView bulkEntryAccountActionView = new BulkEntryAccountActionView(
-				actionDate.getAccount().getAccountId(), actionDate
-						.getCustomer().getCustomerId(), actionDate
-						.getInstallmentId(), actionDate.getActionDate(),
-				actionDate.getPrincipal(), actionDate.getPrincipalPaid(),
-				actionDate.getInterest(), actionDate.getInterestPaid(),
-				actionDate.getMiscFee(), actionDate.getMiscFeePaid(),
-				actionDate.getPenalty(), actionDate.getPenaltyPaid(),
-				actionDate.getMiscPenalty(), actionDate.getMiscPenaltyPaid(),
-				actionDate.getDeposit(), actionDate.getDepositPaid(),
-				actionDate.getActionDateId());
-		bulkEntryAccountActionView
-				.setBulkEntryAccountFeeActions(getBulkEntryAccountFeeActionViews(actionDate));
+	public static BulkEntryInstallmentView getBulkEntryAccountActionView(
+			AccountActionDateEntity accountActionDateEntity) {
+		BulkEntryInstallmentView bulkEntryAccountActionView =null;
+		if(accountActionDateEntity instanceof LoanScheduleEntity) {
+			LoanScheduleEntity actionDate = (LoanScheduleEntity)accountActionDateEntity;
+			BulkEntryLoanInstallmentView installmentView = new BulkEntryLoanInstallmentView(
+					actionDate.getAccount().getAccountId(), actionDate
+							.getCustomer().getCustomerId(), actionDate
+							.getInstallmentId(), actionDate.getActionDateId(),actionDate.getActionDate(),
+					actionDate.getPrincipal(), actionDate.getPrincipalPaid(),
+					actionDate.getInterest(), actionDate.getInterestPaid(),
+					actionDate.getMiscFee(), actionDate.getMiscFeePaid(),
+					actionDate.getPenalty(), actionDate.getPenaltyPaid(),
+					actionDate.getMiscPenalty(), actionDate.getMiscPenaltyPaid());
+			installmentView.setBulkEntryAccountFeeActions(getBulkEntryAccountFeeActionViews(accountActionDateEntity));
+			bulkEntryAccountActionView = installmentView;
+		} else if(accountActionDateEntity instanceof SavingsScheduleEntity) {
+			SavingsScheduleEntity actionDate = (SavingsScheduleEntity)accountActionDateEntity;
+			BulkEntrySavingsInstallmentView installmentView = new BulkEntrySavingsInstallmentView(
+					actionDate.getAccount().getAccountId(), actionDate
+							.getCustomer().getCustomerId(), actionDate
+							.getInstallmentId(), actionDate.getActionDateId(),actionDate.getActionDate(),
+							actionDate.getDeposit(), actionDate.getDepositPaid());
+			bulkEntryAccountActionView = installmentView;
+			
+		}else if(accountActionDateEntity instanceof CustomerScheduleEntity) {
+			CustomerScheduleEntity actionDate = (CustomerScheduleEntity)accountActionDateEntity;
+			BulkEntryCustomerAccountInstallmentView installmentView = new BulkEntryCustomerAccountInstallmentView(
+					actionDate.getAccount().getAccountId(), actionDate
+							.getCustomer().getCustomerId(), actionDate
+							.getInstallmentId(), actionDate.getActionDateId(),actionDate.getActionDate(),
+							actionDate.getMiscFee(), actionDate.getMiscFeePaid(),
+							actionDate.getMiscPenalty(), actionDate.getMiscPenaltyPaid());
+			installmentView.setBulkEntryAccountFeeActions(getBulkEntryAccountFeeActionViews(accountActionDateEntity));
+			bulkEntryAccountActionView = installmentView;				
+		}
 		return bulkEntryAccountActionView;
-
 	}
 
 	public static BulkEntryAccountFeeActionView getBulkEntryAccountFeeActionView(
@@ -1712,23 +1770,26 @@ public class TestObjectFactory {
 	}
 
 	public static List<BulkEntryAccountFeeActionView> getBulkEntryAccountFeeActionViews(
-			AccountActionDateEntity actionDate) {
+			AccountActionDateEntity accountActionDateEntity) {
 		List<BulkEntryAccountFeeActionView> bulkEntryFeeViews = new ArrayList<BulkEntryAccountFeeActionView>();
-		if (actionDate.getAccountFeesActionDetails() != null
-				&& actionDate.getAccountFeesActionDetails().size() > 0) {
-			for (AccountFeesActionDetailEntity accountFeesActionDetail : actionDate
-					.getAccountFeesActionDetails()) {
-				bulkEntryFeeViews
-						.add(getBulkEntryAccountFeeActionView(accountFeesActionDetail));
+		Set<AccountFeesActionDetailEntity> feeActions = null;
+		if(accountActionDateEntity instanceof LoanScheduleEntity) {
+			feeActions = ((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails();
+		} else if(accountActionDateEntity instanceof CustomerScheduleEntity) {
+			feeActions = ((CustomerScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails();
+		}
+		if (feeActions != null	&& feeActions.size() > 0) {
+			for (AccountFeesActionDetailEntity accountFeesActionDetail : feeActions) {
+				bulkEntryFeeViews.add(getBulkEntryAccountFeeActionView(accountFeesActionDetail));
 			}
 		}
 		return bulkEntryFeeViews;
 
 	}
 
-	public static List<BulkEntryAccountActionView> getBulkEntryAccountActionViews(
+	public static List<BulkEntryInstallmentView> getBulkEntryAccountActionViews(
 			List<AccountActionDateEntity> actionDates) {
-		List<BulkEntryAccountActionView> bulkEntryActionViews = new ArrayList<BulkEntryAccountActionView>();
+		List<BulkEntryInstallmentView> bulkEntryActionViews = new ArrayList<BulkEntryInstallmentView>();
 		if (actionDates != null && actionDates.size() > 0) {
 			for (AccountActionDateEntity actionDate : actionDates) {
 				bulkEntryActionViews

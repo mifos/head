@@ -11,6 +11,7 @@ import org.mifos.application.accounts.exceptions.AccountExceptionConstants;
 import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.persistance.service.LoanPersistenceService;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
@@ -101,20 +102,24 @@ public class LoanBusinessService extends BusinessService {
 
 	}
 	
-	public ViewInstallmentDetails getUpcomingInstallmentDetails(AccountActionDateEntity upcomingInstallment){
-		if(upcomingInstallment != null)
+	public ViewInstallmentDetails getUpcomingInstallmentDetails(AccountActionDateEntity upcomingAccountActionDate){
+		if(upcomingAccountActionDate != null) {
+			LoanScheduleEntity upcomingInstallment = (LoanScheduleEntity)upcomingAccountActionDate; 
 		return new ViewInstallmentDetails(upcomingInstallment.getPrincipal(),
 				upcomingInstallment.getInterest(), upcomingInstallment
 						.getTotalFees(), upcomingInstallment.getTotalPenalty());
+		}
 		return null;
 	}
 	
-	public ViewInstallmentDetails getOverDueInstallmentDetails(List<AccountActionDateEntity> overDueInstallmentList){		
+	public ViewInstallmentDetails getOverDueInstallmentDetails(List<AccountActionDateEntity> overDueInstallmentList){
+		
 		Money principalDue = new Money();
 		Money interestDue = new Money();
 		Money feesDue = new Money();
 		Money penaltyDue = new Money();		
-		for(AccountActionDateEntity installment : overDueInstallmentList){
+		for(AccountActionDateEntity accountActionDate : overDueInstallmentList){
+			LoanScheduleEntity installment = (LoanScheduleEntity)accountActionDate;
 			principalDue = principalDue.add(installment.getPrincipalDue());			
 			interestDue = interestDue.add(installment.getInterestDue());
 			feesDue = feesDue.add(installment.getTotalFees());

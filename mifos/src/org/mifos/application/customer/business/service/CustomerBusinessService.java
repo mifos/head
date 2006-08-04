@@ -45,6 +45,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.CustomerActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -164,7 +165,7 @@ public class CustomerBusinessService extends BusinessService{
 			LoanBO loanBO = (LoanBO) accountBO;
 			if(loanBO.isAccountActive()) {
 				for(AccountActionDateEntity accountActionDateEntity : loanBO.getAccountActionDates()) {
-					total = total.add(accountActionDateEntity.getPrincipal());
+					total = total.add(((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
 				}
 			}
 		}

@@ -42,8 +42,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
 import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
+import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntryView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
@@ -52,18 +52,20 @@ public class BulkEntryNodeBuilder {
 
 	public static BulkEntryView buildBulkEntry(List<CustomerBO> allCustomers,
 			CustomerView parentCustomerView, Date transactionDate,
-			List<BulkEntryAccountActionView> bulkEntryAccountActionViews,
-			List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews) {
+			List<BulkEntryInstallmentView> bulkEntryLoanViews,
+			List<BulkEntryInstallmentView> bulkEntryCustomerViews,
+			List<BulkEntryAccountFeeActionView> bulkEntryLoanFeeViews,
+			List<BulkEntryAccountFeeActionView> bulkEntryCustomerFeeViews) {
 		CustomerBO parentCustomer = getCustomer(parentCustomerView
 				.getCustomerId(), allCustomers);
 		return buildBulkEntry(allCustomers, parentCustomer, parentCustomerView,
-				transactionDate, bulkEntryAccountActionViews,
-				bulkEntryAccountFeeActionViews);
+				transactionDate, bulkEntryLoanViews, bulkEntryCustomerViews,
+				bulkEntryLoanFeeViews, bulkEntryCustomerFeeViews);
 	}
 
 	public static void buildBulkEntrySavingsAccounts(BulkEntryView parentNode,
 			Date transactionDate,
-			List<BulkEntryAccountActionView> bulkEntryAccountActionViews) {
+			List<BulkEntryInstallmentView> bulkEntryAccountActionViews) {
 		List<BulkEntryView> immediateChildren = parentNode
 				.getBulkEntryChildren();
 		if (immediateChildren != null && immediateChildren.size() != 0) {
@@ -80,8 +82,10 @@ public class BulkEntryNodeBuilder {
 	private static BulkEntryView buildBulkEntry(List<CustomerBO> allCustomers,
 			CustomerBO parentCustomer, CustomerView parentCustomerView,
 			Date transactionDate,
-			List<BulkEntryAccountActionView> bulkEntryAccountActionViews,
-			List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews) {
+			List<BulkEntryInstallmentView> bulkEntryLoanViews,
+			List<BulkEntryInstallmentView> bulkEntryCustomerViews,
+			List<BulkEntryAccountFeeActionView> bulkEntryLoanFeeViews,
+			List<BulkEntryAccountFeeActionView> bulkEntryCustomerFeeViews) {
 		BulkEntryView parentNode = new BulkEntryView(parentCustomerView);
 		List<CustomerBO> immediateChildren = getImmediateCustomers(parentNode
 				.getCustomerDetail().getCustomerId(), allCustomers);
@@ -90,16 +94,15 @@ public class BulkEntryNodeBuilder {
 				CustomerView customerView = getCustomerView(childCustomer);
 				parentNode.addChildNode(buildBulkEntry(allCustomers,
 						childCustomer, customerView, transactionDate,
-						bulkEntryAccountActionViews,
-						bulkEntryAccountFeeActionViews));
+						bulkEntryLoanViews, bulkEntryCustomerViews,
+						bulkEntryLoanFeeViews, bulkEntryCustomerFeeViews));
 			}
 		}
 		parentNode.populateLoanAccountsInformation(parentCustomer,
-				transactionDate, bulkEntryAccountActionViews,
-				bulkEntryAccountFeeActionViews);
+				transactionDate, bulkEntryLoanViews, bulkEntryLoanFeeViews);
 		parentNode.populateSavingsAccountsInformation(parentCustomer);
 		parentNode.populateCustomerAccountInformation(parentCustomer,
-				bulkEntryAccountActionViews, bulkEntryAccountFeeActionViews);
+				bulkEntryCustomerViews, bulkEntryCustomerFeeViews);
 		return parentNode;
 	}
 

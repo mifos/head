@@ -81,7 +81,7 @@ import org.mifos.framework.util.helpers.PersistenceServiceName;
  * @author navitas
  */
 public abstract class CustomerBO extends BusinessObject {
-	
+
 	private final Integer customerId;
 
 	private String globalCustNum;
@@ -99,7 +99,7 @@ public abstract class CustomerBO extends BusinessObject {
 	private Date mfiJoiningDate;
 
 	private String searchId;
-	
+
 	private Integer maxChildCount;
 
 	private Date customerActivationDate;
@@ -124,7 +124,7 @@ public abstract class CustomerBO extends BusinessObject {
 
 	private final OfficeBO office;
 
-	private CustomerAddressDetailEntity customerAddressDetail;	
+	private CustomerAddressDetailEntity customerAddressDetail;
 
 	private CustomerMeetingEntity customerMeeting;
 
@@ -144,52 +144,62 @@ public abstract class CustomerBO extends BusinessObject {
 		this.office = null;
 	}
 
-	protected CustomerBO(UserContext userContext, String displayName, CustomerLevel customerLevel, CustomerStatus customerStatus, Address address, List<CustomFieldView> customFields, PersonnelBO formedBy, OfficeBO office, CustomerBO parentCustomer, MeetingBO meeting, PersonnelBO personnel) throws CustomerException {
+	protected CustomerBO(UserContext userContext, String displayName,
+			CustomerLevel customerLevel, CustomerStatus customerStatus,
+			Address address, List<CustomFieldView> customFields,
+			PersonnelBO formedBy, OfficeBO office, CustomerBO parentCustomer,
+			MeetingBO meeting, PersonnelBO personnel) throws CustomerException {
 		this.userContext = userContext;
 		this.office = office;
 		this.displayName = displayName;
 		this.customerLevel = new CustomerLevelEntity(customerLevel);
-		
-		if(address!=null){
-			this.customerAddressDetail = new CustomerAddressDetailEntity(this, address);
-			//TODO: change address to proper display format
-			this.displayAddress = this.customerAddressDetail.getDisplayAddress();
+
+		if (address != null) {
+			this.customerAddressDetail = new CustomerAddressDetailEntity(this,
+					address);
+			// TODO: change address to proper display format
+			this.displayAddress = this.customerAddressDetail
+					.getDisplayAddress();
 		}
-		
-		if(parentCustomer!=null)
+
+		if (parentCustomer != null)
 			this.personnel = parentCustomer.getPersonnel();
 		else
 			this.personnel = personnel;
-		
-		if(parentCustomer!=null && parentCustomer.getCustomerMeeting()!=null)
-			this.customerMeeting = createCustomerMeeting(parentCustomer.getCustomerMeeting().getMeeting());
+
+		if (parentCustomer != null
+				&& parentCustomer.getCustomerMeeting() != null)
+			this.customerMeeting = createCustomerMeeting(parentCustomer
+					.getCustomerMeeting().getMeeting());
 		else
 			this.customerMeeting = createCustomerMeeting(meeting);
-		
+
 		this.formedByPersonnel = formedBy;
 		this.parentCustomer = parentCustomer;
-		
-		if(customFields!=null)
-			for(CustomFieldView customField: customFields)
-				addCustomField(new CustomerCustomFieldEntity(customField.getFieldId(), customField.getFieldValue(), this));
+
+		if (customFields != null)
+			for (CustomFieldView customField : customFields)
+				addCustomField(new CustomerCustomFieldEntity(customField
+						.getFieldId(), customField.getFieldValue(), this));
 
 		this.customerStatus = new CustomerStatusEntity(customerStatus);
 		this.maxChildCount = 0;
 		this.blackListed = YesNoFlag.NO.getValue();
-		this.customerId = null;		
+		this.customerId = null;
 		this.historicalData = null;
 		this.customerFlags = null;
-		//TODO: create a customer account and set here
+		// TODO: create a customer account and set here
 		this.accounts = new HashSet<AccountBO>();
-		//TODO: write code to create customer hierarchy and add
+		// TODO: write code to create customer hierarchy and add
 		this.setCreateDetails();
 	}
 
-	private CustomerMeetingEntity createCustomerMeeting(MeetingBO meeting){
-		return meeting!=null ? new CustomerMeetingEntity(this, meeting): null;
+	private CustomerMeetingEntity createCustomerMeeting(MeetingBO meeting) {
+		return meeting != null ? new CustomerMeetingEntity(this, meeting)
+				: null;
 	}
-	
-	public boolean isBlackList(){
+
+	public boolean isBlackList() {
 		return blackListed.equals(YesNoFlag.YES.getValue());
 	}
 
@@ -245,10 +255,10 @@ public abstract class CustomerBO extends BusinessObject {
 		this.externalId = externalId;
 	}
 
-	public void setTrained(boolean trained){
-		this.trained = (short) (trained ? 1 : 0);	
+	public void setTrained(boolean trained) {
+		this.trained = (short) (trained ? 1 : 0);
 	}
-	
+
 	public boolean isTrained() {
 		return trained.equals(YesNoFlag.YES.getValue());
 	}
@@ -281,7 +291,8 @@ public abstract class CustomerBO extends BusinessObject {
 		return customerAddressDetail;
 	}
 
-	public void setCustomerAddressDetail(CustomerAddressDetailEntity customerAddressDetail) {
+	public void setCustomerAddressDetail(
+			CustomerAddressDetailEntity customerAddressDetail) {
 		this.customerAddressDetail = customerAddressDetail;
 	}
 
@@ -292,14 +303,16 @@ public abstract class CustomerBO extends BusinessObject {
 	public void save() throws ApplicationException, CustomerException {
 		try {
 			new CustomerPersistence().createOrUpdate(this);
-			String gCustNum=IdGenerator.generateSystemIdForCustomer(getOffice().getGlobalOfficeNum(),getCustomerId());
+			String gCustNum = IdGenerator.generateSystemIdForCustomer(
+					getOffice().getGlobalOfficeNum(), getCustomerId());
 			globalCustNum = (gCustNum);
 			new CustomerPersistence().createOrUpdate(this);
 		} catch (HibernateException he) {
-			throw new CustomerException(CustomerConstants.CREATE_FAILED_EXCEPTION, he);
+			throw new CustomerException(
+					CustomerConstants.CREATE_FAILED_EXCEPTION, he);
 		}
 	}
-	
+
 	public CustomerAccountBO getCustomerAccount() {
 		for (AccountBO account : accounts) {
 			if (account.getAccountType().getAccountTypeId().equals(
@@ -359,17 +372,17 @@ public abstract class CustomerBO extends BusinessObject {
 		this.customerMeeting = customerMeeting;
 	}
 
-	//TODO: write code to fetch active hierarchy for the customer
-	public  CustomerHierarchyEntity getActiveCustomerHierarchy() {
+	// TODO: write code to fetch active hierarchy for the customer
+	public CustomerHierarchyEntity getActiveCustomerHierarchy() {
 		return null;
 	}
-	
+
 	public void addCustomerHierarchy(CustomerHierarchyEntity hierarchy) {
-		if (hierarchy != null) {			
+		if (hierarchy != null) {
 			this.customerHierarchies.add(hierarchy);
 		}
 	}
-	
+
 	public Set<CustomerPositionEntity> getCustomerPositions() {
 		return customerPositions;
 	}
@@ -395,7 +408,8 @@ public abstract class CustomerBO extends BusinessObject {
 
 	}
 
-	public void setCustomerHistoricalData(CustomerHistoricalDataEntity historicalData) {
+	public void setCustomerHistoricalData(
+			CustomerHistoricalDataEntity historicalData) {
 		if (historicalData != null) {
 			this.mfiJoiningDate = historicalData.getMfiJoiningDate();
 		}
@@ -417,7 +431,6 @@ public abstract class CustomerBO extends BusinessObject {
 	public void addCustomerFlag(CustomerFlagDetailEntity customerFlag) {
 		this.customerFlags.add(customerFlag);
 	}
-
 
 	public Date getMfiJoiningDate() {
 		return mfiJoiningDate;
@@ -548,7 +561,7 @@ public abstract class CustomerBO extends BusinessObject {
 			if (accountBO.getAccountType().getAccountTypeId().equals(
 					AccountConstants.LOAN_TYPE)
 					&& ((LoanBO) accountBO).isAccountActive()) {
-				amountOverDue = amountOverDue.add(accountBO
+				amountOverDue = amountOverDue.add(((LoanBO) accountBO)
 						.getTotalPrincipalAmountInArrears());
 				totalOutStandingAmount = totalOutStandingAmount
 						.add(((LoanBO) accountBO).getLoanSummary()
@@ -585,5 +598,5 @@ public abstract class CustomerBO extends BusinessObject {
 	public void setCustomerActivationDate(Date customerActivationDate) {
 		this.customerActivationDate = customerActivationDate;
 	}
-	
+
 }

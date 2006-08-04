@@ -7,6 +7,7 @@ import org.mifos.application.accounts.business.CustomerAccountView;
 import org.mifos.application.accounts.business.LoanAccountsProductView;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistanceService;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
@@ -232,8 +233,7 @@ public class TestBulkEntryView extends MifosTestCase {
 	private CustomerView getCusomerView(CustomerBO customer) {
 		CustomerView customerView = new CustomerView();
 		customerView.setCustomerId(customer.getCustomerId());
-		customerView.setCustomerLevelId(customer.getCustomerLevel()
-				.getId());
+		customerView.setCustomerLevelId(customer.getCustomerLevel().getId());
 		customerView.setCustomerSearchId(customer.getSearchId());
 		customerView.setDisplayName(customer.getDisplayName());
 		customerView.setGlobalCustNum(customer.getGlobalCustNum());
@@ -252,14 +252,16 @@ public class TestBulkEntryView extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
 		BulkEntryPersistanceService bulkEntryPersistanceService = new BulkEntryPersistanceService();
-		List<BulkEntryAccountActionView> bulkEntryAccountActionViews = bulkEntryPersistanceService
+		List<BulkEntryInstallmentView> bulkEntryAccountActionViews = bulkEntryPersistanceService
 				.getBulkEntryActionView(DateUtils
 						.getCurrentDateWithoutTimeStamp(),
-						center.getSearchId(), center.getOffice().getOfficeId());
+						center.getSearchId(), center.getOffice().getOfficeId(),
+						AccountType.CUSTOMERACCOUNT);
 		List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews = bulkEntryPersistanceService
 				.getBulkEntryFeeActionView(DateUtils
 						.getCurrentDateWithoutTimeStamp(),
-						center.getSearchId(), center.getOffice().getOfficeId());
+						center.getSearchId(), center.getOffice().getOfficeId(),
+						AccountType.CUSTOMERACCOUNT);
 		assertNotNull(center.getCustomerAccount());
 		BulkEntryView bulkEntryView = new BulkEntryView(getCusomerView(center));
 		bulkEntryView.populateCustomerAccountInformation(center,

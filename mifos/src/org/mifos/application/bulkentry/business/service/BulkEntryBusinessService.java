@@ -60,7 +60,7 @@ import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
-import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
+import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntryBO;
 import org.mifos.application.bulkentry.exceptions.BulkEntryAccountUpdateException;
 import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistanceService;
@@ -333,14 +333,14 @@ public class BulkEntryBusinessService extends BusinessService {
 	}
 
 	private PaymentData getLoanAccountPaymentData(
-			List<BulkEntryAccountActionView> accountActions, Money totalAmount,
+			List<BulkEntryInstallmentView> accountActions, Money totalAmount,
 			Short personnelId, String recieptNum, Short paymentId,
 			Date receiptDate, Date transactionDate) {
 		PaymentData paymentData = new PaymentData(totalAmount,
 				getPersonnel(personnelId), paymentId, transactionDate);
 		paymentData.setRecieptDate(receiptDate);
 		paymentData.setRecieptNum(recieptNum);
-		for (BulkEntryAccountActionView actionDate : accountActions) {
+		for (BulkEntryInstallmentView actionDate : accountActions) {
 			LoanPaymentData loanPaymentData = new LoanPaymentData(actionDate);
 			paymentData.addAccountPaymentData(loanPaymentData);
 		}
@@ -384,7 +384,7 @@ public class BulkEntryBusinessService extends BusinessService {
 
 	private void buildIndividualAccountSavingsPayments(PaymentData paymentData,
 			SavingsAccountView savingsAccountView, Money enteredAmount) {
-		for (BulkEntryAccountActionView accountActionDate : savingsAccountView
+		for (BulkEntryInstallmentView accountActionDate : savingsAccountView
 				.getAccountTrxnDetails()) {
 			SavingsPaymentData savingsPaymentData = new SavingsPaymentData(
 					accountActionDate);
@@ -424,14 +424,14 @@ public class BulkEntryBusinessService extends BusinessService {
 	}
 
 	private PaymentData getCustomerAccountPaymentDataView(
-			List<BulkEntryAccountActionView> accountActions, Money totalAmount,
+			List<BulkEntryInstallmentView> accountActions, Money totalAmount,
 			Short personnelId, String recieptNum, Short paymentId,
 			Date receiptDate, Date transactionDate) {
 		PaymentData paymentData = new PaymentData(totalAmount,
 				getPersonnel(personnelId), paymentId, transactionDate);
 		paymentData.setRecieptDate(receiptDate);
 		paymentData.setRecieptNum(recieptNum);
-		for (BulkEntryAccountActionView actionDate : accountActions) {
+		for (BulkEntryInstallmentView actionDate : accountActions) {
 			CustomerAccountPaymentData customerAccountPaymentData = new CustomerAccountPaymentData(
 					actionDate);
 			paymentData.addAccountPaymentData(customerAccountPaymentData);

@@ -42,7 +42,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -252,10 +254,17 @@ public class CollSheetCustBO extends BusinessObject {
 	}
 	
 	
-	public void populateAccountDetails(AccountActionDateEntity accountActionDate) {
-		this.custAccntId = accountActionDate.getAccount().getAccountId();
-		this.custAccntPenalty = accountActionDate.getPenaltyDue();
-		this.custAccntFee = accountActionDate.getTotalFeeDue() .add( accountActionDate.getMiscFeeDue());
+	public void populateAccountDetails(AccountActionDateEntity accountActionDateEntity) {
+		if(accountActionDateEntity instanceof CustomerScheduleEntity) {
+			CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity)accountActionDateEntity;
+			this.custAccntId = accountActionDate.getAccount().getAccountId();
+			this.custAccntFee = accountActionDate.getTotalFeeDue() .add( accountActionDate.getMiscFeeDue());
+		} else if(accountActionDateEntity instanceof LoanScheduleEntity) {
+			LoanScheduleEntity accountActionDate = (LoanScheduleEntity)accountActionDateEntity;
+			this.custAccntPenalty = accountActionDate.getPenaltyDue();
+			this.custAccntId = accountActionDate.getAccount().getAccountId();
+			this.custAccntFee = accountActionDate.getTotalFeeDue() .add( accountActionDate.getMiscFeeDue());
+		}
 	}
 	
 	/**

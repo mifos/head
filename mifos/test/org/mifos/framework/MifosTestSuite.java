@@ -43,6 +43,7 @@ import junit.framework.TestSuite;
 public class MifosTestSuite extends TestSuite {
 
 	public MifosTestSuite() {
+		System.gc();
 	}
 
 }

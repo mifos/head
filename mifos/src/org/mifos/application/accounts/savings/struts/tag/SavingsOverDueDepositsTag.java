@@ -10,6 +10,7 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
@@ -35,7 +36,8 @@ public class SavingsOverDueDepositsTag extends BodyTagSupport {
 			Locale locale = ((UserContext) pageContext.getSession()
 					.getAttribute(Constants.USERCONTEXT)).getPereferedLocale();
 			StringBuilder builder = new StringBuilder();
-			for (AccountActionDateEntity installment : installmentsInArrears) {
+			for (AccountActionDateEntity accountActionDate : installmentsInArrears) {
+				SavingsScheduleEntity installment = (SavingsScheduleEntity) accountActionDate;
 				currentSize++;
 				if (actionDate == null)
 					actionDate = installment.getActionDate();

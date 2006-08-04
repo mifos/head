@@ -105,7 +105,7 @@
 	<query name="Customer.getLoanProductForCustomer">
 		<![CDATA[select distinct account.loanOffering
 			from org.mifos.application.accounts.loan.business.LoanBO account,
-			org.mifos.application.accounts.business.AccountActionDateEntity actionDate
+			org.mifos.application.accounts.loan.business.LoanScheduleEntity actionDate
 			where account.customer.personnel.personnelId=:personnelId
 			and account.customer.searchId like :searchId and 
 			account.accountId=actionDate.account.accountId and 
@@ -119,7 +119,7 @@
 	<query name="Customer.getSavingsProductForCustomer">
 		<![CDATA[select distinct account.savingsOffering
 			from org.mifos.application.accounts.savings.business.SavingsBO account,
-			org.mifos.application.accounts.business.AccountActionDateEntity actionDate
+			org.mifos.application.accounts.savings.business.SavingsScheduleEntity actionDate
 			where account.accountId=actionDate.account.accountId 
 			and actionDate.actionDate=:meetingDate and account.savingsOffering.prdOfferingId != null 
 			and account.customer.personnel.personnelId=:personnelId

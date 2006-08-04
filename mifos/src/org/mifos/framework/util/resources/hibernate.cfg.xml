@@ -224,9 +224,7 @@
 	<mapping resource="org/mifos/application/productdefinition/business/ProductTypeEntity.hbm.xml" />
 	<!--M2 style object for GLCODE-->
 	<mapping resource="org/mifos/application/accounts/financial/business/GLCodeEntity.hbm.xml" />
-	<mapping resource="org/mifos/application/accounts/business/AccountActionDateEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/accounts/business/AccountBO.hbm.xml" />
-	<mapping resource="org/mifos/application/accounts/business/AccountFeesActionDetailEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/accounts/business/AccountCustomFieldEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/accounts/business/AccountFeesEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/accounts/business/AccountPaymentEntity.hbm.xml" />
@@ -307,6 +305,13 @@
 	<mapping resource="org/mifos/application/customer/group/util/valueobjects/GroupPerformanceHistory.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/client/business/ClientPerformanceHistoryEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/client/util/valueobjects/ClientPerformanceHistory.hbm.xml" />
+	
+	<mapping resource="org/mifos/application/accounts/loan/business/LoanScheduleEntity.hbm.xml" />
+	<mapping resource="org/mifos/application/accounts/savings/business/SavingsScheduleEntity.hbm.xml" />
+	<mapping resource="org/mifos/application/customer/business/CustomerScheduleEntity.hbm.xml" />
+
+	<mapping resource="org/mifos/application/accounts/loan/business/LoanFeeScheduleEntity.hbm.xml" />
+	<mapping resource="org/mifos/application/customer/business/CustomerFeeScheduleEntity.hbm.xml" />
 </session-factory>
 
 </hibernate-configuration>  

@@ -486,7 +486,7 @@ public class LoanDAO extends AccountsDAO {
 		RepaymentSchedule repaymentSchedule = (RepaymentSchedule) context
 				.getBusinessResults(LoanConstants.REPAYMENTSCHEDULE);
 		Set<AccountActionDate> accntActionDateSet = RepaymentScheduleHelper
-				.getActionDateValueObject(repaymentSchedule);
+				.getActionDateValueObject(repaymentSchedule,"Loan");
 		try {
 			session = getHibernateSession();
 			tx = session.beginTransaction();
@@ -694,7 +694,7 @@ public class LoanDAO extends AccountsDAO {
 			RepaymentSchedule repaymentSchedule = (RepaymentSchedule) context
 					.getBusinessResults(LoanConstants.REPAYMENTSCHEDULE);
 			Set<AccountActionDate> accntActionDateSet = RepaymentScheduleHelper
-					.getActionDateValueObject(repaymentSchedule);
+					.getActionDateValueObject(repaymentSchedule,"Loan");
 			CustomerMaster customerMaster = (CustomerMaster) context
 					.getBusinessResults(AccountConstants.CUSTOMERMASTER);
 			List<AccountActionDate> accountActionsDateList = null;

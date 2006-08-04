@@ -646,7 +646,7 @@ public class CustomerHelper {
 			// this method invokes the  repayment schedule generator.
 			repaymentScheduler.setRepaymentScheduleInputs(repaymntScheduleInputs);
 			RepaymentSchedule repaymentSchedule = repaymentScheduler.getRepaymentSchedule();
-			Set<AccountActionDate> accntActionDateSet = RepaymentScheduleHelper.getActionDateValueObject(repaymentSchedule);
+			Set<AccountActionDate> accntActionDateSet = RepaymentScheduleHelper.getActionDateValueObject(repaymentSchedule,"customer");
 	        //this will insert records in account action date which is noting but installments.
 			if(null != accntActionDateSet && ! accntActionDateSet.isEmpty()){
 				// iterate over account action date set and set the relation ship.
@@ -747,7 +747,7 @@ public class CustomerHelper {
 				// this method invokes the  repayment schedule generator.
 				repaymentScheduler.setRepaymentScheduleInputs(repaymntScheduleInputs);
 				RepaymentSchedule repaymentSchedule = repaymentScheduler.getRepaymentSchedule();
-				Set<AccountActionDate> accntActionDateSet = RepaymentScheduleHelper.getActionDateValueObject(repaymentSchedule);
+				Set<AccountActionDate> accntActionDateSet = RepaymentScheduleHelper.getActionDateValueObject(repaymentSchedule,"customer");
 				//context.addAttribute(new SearchResults("AccountActionDate",accntActionDateSet));
 		        //this will insert records in account action date which is noting but installments.
 				if(null != accntActionDateSet && ! accntActionDateSet.isEmpty()){

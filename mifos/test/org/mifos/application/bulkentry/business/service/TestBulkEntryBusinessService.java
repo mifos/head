@@ -4,7 +4,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.business.CustomerAccountView;
@@ -15,9 +14,8 @@ import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
+import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
 import org.mifos.application.bulkentry.exceptions.BulkEntryAccountUpdateException;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -320,7 +318,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 	private LoanAccountsProductView getAccountView(LoanBO account) {
 		LoanAccountView accountView = TestObjectFactory
 				.getLoanAccountView(account);
-		List<BulkEntryAccountActionView> actionDates = new ArrayList<BulkEntryAccountActionView>();
+		List<BulkEntryInstallmentView> actionDates = new ArrayList<BulkEntryInstallmentView>();
 		actionDates.add(TestObjectFactory.getBulkEntryAccountActionView(account
 				.getAccountActionDates().iterator().next()));
 		accountView.addTrxnDetails(actionDates);

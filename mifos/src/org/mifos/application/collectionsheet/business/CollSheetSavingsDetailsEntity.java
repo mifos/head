@@ -39,6 +39,7 @@ package org.mifos.application.collectionsheet.business;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.collectionsheet.persistence.service.CollectionSheetPersistenceService;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -171,13 +172,14 @@ public class CollSheetSavingsDetailsEntity extends PersistentObject {
 	 * @param accountActionDate
 	 */
 	public void addAccountDetails(AccountActionDateEntity accountActionDate)throws SystemException,ApplicationException   {
-		this.accountId = accountActionDate.getAccount().getAccountId();
+		SavingsScheduleEntity savingsSchedule = (SavingsScheduleEntity)accountActionDate;
+		this.accountId = savingsSchedule.getAccount().getAccountId();
 		collSheetPersistService = (CollectionSheetPersistenceService)ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.CollectionSheet);
 		SavingsBO savings= collSheetPersistService.getSavingsAccount(accountId);
-		this.installmentId = accountActionDate.getInstallmentId();
+		this.installmentId = savingsSchedule.getInstallmentId();
 		this.accountBalance = savings.getSavingsBalance();
-		this.recommendedAmntDue = accountActionDate.getDeposit() .subtract( accountActionDate.getDepositPaid());
-		this.amntOverDue = savings.getOverDueDepositAmount(accountActionDate.getActionDate());
+		this.recommendedAmntDue = savingsSchedule.getDeposit() .subtract( savingsSchedule.getDepositPaid());
+		this.amntOverDue = savings.getOverDueDepositAmount(savingsSchedule.getActionDate());
 	}
 
 }

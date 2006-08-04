@@ -47,6 +47,9 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.LoanFeeScheduleEntity;
+import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.valueobjects.CustomerAccount;
 import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.business.CollSheetLnDetailsEntity;
@@ -59,6 +62,7 @@ import org.mifos.framework.exceptions.LoggerConfigurationException;
 import org.mifos.framework.hibernate.HibernateStartUp;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 import junit.framework.Assert;
@@ -109,18 +113,18 @@ public class TestCollSheetCustBO extends MifosTestCase{
 	public void testPopulateAccountDetails() {
 		CollSheetCustBO collSheetCustBO = new CollSheetCustBO();
 		
-		AccountFeesActionDetailEntity accntFeesActionDetailEntity = new AccountFeesActionDetailEntity();
-		accntFeesActionDetailEntity.setFeeAmount(TestObjectFactory.getMoneyForMFICurrency(5));
-		accntFeesActionDetailEntity.setFeeAmountPaid(TestObjectFactory.getMoneyForMFICurrency(3));
+	
 		
-		AccountActionDateEntity accountActionDate = new AccountActionDateEntity();
-		accountActionDate.addAccountFeesAction(accntFeesActionDetailEntity);
+		
 		
 		
 		LoanBO loan = (LoanBO)createLoanAccount();
 		
+		LoanScheduleEntity accountActionDate = new LoanScheduleEntity(loan, group,(short)1,new java.sql.Date(System.currentTimeMillis()),PaymentStatus.UNPAID,new Money(),new Money());
+		LoanFeeScheduleEntity accntFeesActionDetailEntity = new LoanFeeScheduleEntity(accountActionDate,(short)1,null,null,TestObjectFactory.getMoneyForMFICurrency(5));
+		accntFeesActionDetailEntity.setFeeAmountPaid(TestObjectFactory.getMoneyForMFICurrency(3));
+		accountActionDate.addAccountFeesAction(accntFeesActionDetailEntity);
 		
-		accountActionDate.setAccount(loan);
 		accountActionDate.setPenalty(TestObjectFactory.getMoneyForMFICurrency(10));
 		accountActionDate.setMiscPenalty(TestObjectFactory.getMoneyForMFICurrency(3));
 		accountActionDate.setPenaltyPaid(TestObjectFactory.getMoneyForMFICurrency(5));

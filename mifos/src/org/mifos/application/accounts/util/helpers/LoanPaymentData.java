@@ -45,8 +45,10 @@ import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
-import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
+import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
+import org.mifos.application.bulkentry.business.BulkEntryLoanInstallmentView;
 import org.mifos.framework.util.helpers.Money;
 
 public class LoanPaymentData extends AccountPaymentData {
@@ -62,8 +64,6 @@ public class LoanPaymentData extends AccountPaymentData {
 	private Money miscPenaltyPaid;
 
 	private Map<Short, Money> feesPaid;
-	
-	
 
 	public Map<Short, Money> getFeesPaid() {
 		return feesPaid;
@@ -115,15 +115,16 @@ public class LoanPaymentData extends AccountPaymentData {
 
 	public LoanPaymentData(AccountActionDateEntity accountActionDate) {
 		super(accountActionDate);
-		setPrincipalPaid(accountActionDate.getPrincipal());
-		setInterestPaid(accountActionDate.getInterest());
-		setPenaltyPaid(accountActionDate.getPenalty());
-		setMiscFeePaid(accountActionDate.getMiscFee());
-		setMiscPenaltyPaid(accountActionDate.getMiscPenalty());
+		LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
+		setPrincipalPaid(loanScheduleEntity.getPrincipal());
+		setInterestPaid(loanScheduleEntity.getInterest());
+		setPenaltyPaid(loanScheduleEntity.getPenalty());
+		setMiscFeePaid(loanScheduleEntity.getMiscFee());
+		setMiscPenaltyPaid(loanScheduleEntity.getMiscPenalty());
 		Map<Short, Money> feesPaid = new HashMap<Short, Money>();
-		Set<AccountFeesActionDetailEntity> accountFeesActionDetails = accountActionDate
+		Set<AccountFeesActionDetailEntity> accountFeesActionDetails = loanScheduleEntity
 				.getAccountFeesActionDetails();
-		if (accountFeesActionDetails != null 
+		if (accountFeesActionDetails != null
 				&& accountFeesActionDetails.size() > 0) {
 			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
 				if (accountFeesActionDetailEntity.getFeeAmount() != null
@@ -137,15 +138,16 @@ public class LoanPaymentData extends AccountPaymentData {
 		setFeesPaid(feesPaid);
 	}
 
-	public LoanPaymentData(BulkEntryAccountActionView bulkEntryAccountAction) {
+	public LoanPaymentData(BulkEntryInstallmentView bulkEntryAccountAction) {
 		super(bulkEntryAccountAction);
-		setPrincipalPaid(bulkEntryAccountAction.getPrincipal());
-		setInterestPaid(bulkEntryAccountAction.getInterest());
-		setPenaltyPaid(bulkEntryAccountAction.getPenalty());
-		setMiscFeePaid(bulkEntryAccountAction.getMiscFee());
-		setMiscPenaltyPaid(bulkEntryAccountAction.getMiscPenalty());
+		BulkEntryLoanInstallmentView installmentView = (BulkEntryLoanInstallmentView)bulkEntryAccountAction;
+		setPrincipalPaid(installmentView.getPrincipal());
+		setInterestPaid(installmentView.getInterest());
+		setPenaltyPaid(installmentView.getPenalty());
+		setMiscFeePaid(installmentView.getMiscFee());
+		setMiscPenaltyPaid(installmentView.getMiscPenalty());
 		Map<Short, Money> feesPaid = new HashMap<Short, Money>();
-		List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews = bulkEntryAccountAction
+		List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews = installmentView
 				.getBulkEntryAccountFeeActions();
 		if (bulkEntryAccountFeeActionViews != null
 				&& bulkEntryAccountFeeActionViews.size() > 0) {
@@ -160,26 +162,27 @@ public class LoanPaymentData extends AccountPaymentData {
 		}
 		setFeesPaid(feesPaid);
 	}
-	
+
 	public Money getTotalPaidAmnt() {
 		Money totalAmount = new Money();
 		return totalAmount.add(getInterestPaid()).add(getPenaltyPaid()).add(
 				getPrincipalPaid()).add(getMiscFeePaid()).add(
 				getMiscPenaltyPaid());
 	}
-	
-	public Money getTotalPaidAmount(){
+
+	public Money getTotalPaidAmount() {
 		return getTotalPaidAmnt().add(getTotalFees());
 	}
-	
-	public Money getTotalFees(){
-		Money totalAmount=new Money();
-		for (AccountFeesActionDetailEntity accountFeesActionDetail :getAccountActionDate()
+
+	public Money getTotalFees() {
+		Money totalAmount = new Money();
+		LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) getAccountActionDate();
+		for (AccountFeesActionDetailEntity accountFeesActionDetail : loanScheduleEntity
 				.getAccountFeesActionDetails()) {
 			if (getFeesPaid().containsKey(
 					accountFeesActionDetail.getFee().getFeeId())) {
 				accountFeesActionDetail.makePayment(getFeesPaid().get(
-								accountFeesActionDetail.getFee().getFeeId()));
+						accountFeesActionDetail.getFee().getFeeId()));
 				totalAmount = totalAmount.add(accountFeesActionDetail
 						.getFeeAmountPaid());
 			}

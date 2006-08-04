@@ -10,7 +10,7 @@ import org.mifos.framework.util.helpers.Money;
 
 public class AccountHelper {
 
-	public static AccountActionDateEntity createEmptyInstallment(Date date,CustomerBO customer,Short installmentId){
+/*	public static AccountActionDateEntity createEmptyInstallment(Date date,CustomerBO customer,Short installmentId){
 		AccountActionDateEntity actionDate = new AccountActionDateEntity();
 		actionDate.setActionDate(new java.sql.Date(date.getTime()));
 		actionDate.setCustomer(customer);
@@ -24,4 +24,5 @@ public class AccountHelper {
 		actionDate.setInstallmentId(installmentId);
 		return actionDate;
 	}
+	*/
 }

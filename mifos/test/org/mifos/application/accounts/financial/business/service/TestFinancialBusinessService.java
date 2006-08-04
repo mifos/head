@@ -19,6 +19,7 @@ import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
@@ -107,7 +108,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		.getInstance().getPersistenceService(PersistenceServiceName.MasterDataService);
 		Date currentDate = new Date(System.currentTimeMillis());
 		
-		AccountActionDateEntity accountAction = loan.getAccountActionDate(Short.valueOf("1"));
+		LoanScheduleEntity accountAction =(LoanScheduleEntity) loan.getAccountActionDate(Short.valueOf("1"));
 		
 		LoanTrxnDetailEntity accountTrxnEntity = new LoanTrxnDetailEntity(
 				accountPaymentEntity,

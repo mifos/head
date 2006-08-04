@@ -21,6 +21,7 @@ import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.business.CenterPerformanceHistory;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -154,8 +155,9 @@ public class TestCustomerBusinessService extends MifosTestCase {
 
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		for (AccountActionDateEntity accountActionDateEntity : center
+		for (AccountActionDateEntity accountAction : center
 				.getCustomerAccount().getAccountActionDates()) {
+			CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) accountAction;
 			if (accountActionDateEntity.getInstallmentId().equals(
 					Short.valueOf("1"))) {
 				Set<AccountFeesActionDetailEntity> accountFeesActionDetails = accountActionDateEntity
@@ -173,8 +175,9 @@ public class TestCustomerBusinessService extends MifosTestCase {
 
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		for (AccountActionDateEntity accountActionDateEntity : center
+		for (AccountActionDateEntity accountAction : center
 				.getCustomerAccount().getAccountActionDates()) {
+			CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) accountAction;
 			if (accountActionDateEntity.getInstallmentId().equals(
 					Short.valueOf("1"))) {
 				Set<AccountFeesActionDetailEntity> accountFeesActionDetails = accountActionDateEntity
@@ -192,8 +195,9 @@ public class TestCustomerBusinessService extends MifosTestCase {
 
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		for (AccountActionDateEntity accountActionDateEntity : center
+		for (AccountActionDateEntity accountAction : center
 				.getCustomerAccount().getAccountActionDates()) {
+			CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) accountAction;
 			if (accountActionDateEntity.getInstallmentId().equals(
 					Short.valueOf("3"))) {
 				Set<AccountFeesActionDetailEntity> accountFeesActionDetails = accountActionDateEntity
@@ -228,8 +232,9 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		group = TestObjectFactory.createGroup("Group_Active_test", Short
 				.valueOf("9"), "1.1.1", center, new Date(System
 				.currentTimeMillis()));
-		GroupBO groupBO = (GroupBO) service.findBySystemId(group.getGlobalCustNum());
-		assertEquals("Group_Active_test",groupBO.getDisplayName());
+		GroupBO groupBO = (GroupBO) service.findBySystemId(group
+				.getGlobalCustNum());
+		assertEquals("Group_Active_test", groupBO.getDisplayName());
 	}
 
 	public void testgetBySystemId() throws PersistenceException,
@@ -242,9 +247,9 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		group = TestObjectFactory.createGroup("Group_Active_test", Short
 				.valueOf("9"), "1.1.1", center, new Date(System
 				.currentTimeMillis()));
-		GroupBO groupBO = (GroupBO) service.getBySystemId(group.getGlobalCustNum(),
-				group.getCustomerLevel().getId());
-		assertEquals("Group_Active_test",groupBO.getDisplayName());
+		GroupBO groupBO = (GroupBO) service.getBySystemId(group
+				.getGlobalCustNum(), group.getCustomerLevel().getId());
+		assertEquals("Group_Active_test", groupBO.getDisplayName());
 	}
 
 	private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {

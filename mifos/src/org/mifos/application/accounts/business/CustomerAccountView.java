@@ -41,7 +41,8 @@ package org.mifos.application.accounts.business;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
+import org.mifos.application.bulkentry.business.BulkEntryCustomerAccountInstallmentView;
+import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
 import org.mifos.framework.business.View;
 import org.mifos.framework.util.helpers.Money;
 
@@ -51,23 +52,23 @@ public class CustomerAccountView extends View {
 
 	private String customerAccountAmountEntered;
 
-	private List<BulkEntryAccountActionView> accountActionDates;
+	private List<BulkEntryInstallmentView> accountActionDates;
 
 	private boolean isValidCustomerAccountAmountEntered;
 
 	public CustomerAccountView(Integer accountId) {
 		this.accountId = accountId;
 		customerAccountAmountEntered = "0.0";
-		accountActionDates = new ArrayList<BulkEntryAccountActionView>();
+		accountActionDates = new ArrayList<BulkEntryInstallmentView>();
 		isValidCustomerAccountAmountEntered = true;
 	}
 
-	public List<BulkEntryAccountActionView> getAccountActionDates() {
+	public List<BulkEntryInstallmentView> getAccountActionDates() {
 		return accountActionDates;
 	}
 
 	public void setAccountActionDates(
-			List<BulkEntryAccountActionView> accountActionDates) {
+			List<BulkEntryInstallmentView> accountActionDates) {
 		this.accountActionDates = accountActionDates;
 	}
 
@@ -100,8 +101,8 @@ public class CustomerAccountView extends View {
 	public Money getTotalAmountDue() {
 		Money totalAmount = new Money();
 		if (accountActionDates != null && accountActionDates.size() > 0)
-			for (BulkEntryAccountActionView accountAction : accountActionDates)
-				totalAmount = totalAmount.add(accountAction
+			for (BulkEntryInstallmentView accountAction : accountActionDates)
+				totalAmount = totalAmount.add(((BulkEntryCustomerAccountInstallmentView)accountAction)
 						.getTotalDueWithFees());
 		return totalAmount;
 	}

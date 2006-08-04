@@ -44,8 +44,10 @@ import java.util.Map;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
-import org.mifos.application.bulkentry.business.BulkEntryAccountActionView;
+import org.mifos.application.bulkentry.business.BulkEntryCustomerAccountInstallmentView;
+import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
+import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.framework.util.helpers.Money;
 
 public class CustomerAccountPaymentData extends AccountPaymentData {
@@ -55,8 +57,8 @@ public class CustomerAccountPaymentData extends AccountPaymentData {
 	private Money miscPenaltyPaid;
 
 	private Map<Short, Money> feesPaid;
-	
-	private AccountActionDateEntity accountActionDateEntity=null;
+
+	private AccountActionDateEntity accountActionDateEntity = null;
 
 	public Map<Short, Money> getFeesPaid() {
 		return feesPaid;
@@ -81,32 +83,35 @@ public class CustomerAccountPaymentData extends AccountPaymentData {
 	private void setMiscPenaltyPaid(Money miscPenaltyPaid) {
 		this.miscPenaltyPaid = miscPenaltyPaid;
 	}
-	
-	private void setAccountActionDateEntity(AccountActionDateEntity accountActionDateEntity){
-		this.accountActionDateEntity=accountActionDateEntity;
+
+	private void setAccountActionDateEntity(
+			AccountActionDateEntity accountActionDateEntity) {
+		this.accountActionDateEntity = accountActionDateEntity;
 	}
 
 	public CustomerAccountPaymentData(AccountActionDateEntity accountAction) {
 		super(accountAction);
+		CustomerScheduleEntity customerSchedule = (CustomerScheduleEntity) accountAction;
 		Map<Short, Money> feesPaid = new HashMap<Short, Money>();
-		setMiscFeePaid(accountAction.getMiscFee());
-		setMiscPenaltyPaid(accountAction.getMiscPenalty());
-		for (AccountFeesActionDetailEntity accountFees : accountAction
+		setMiscFeePaid(customerSchedule.getMiscFee());
+		setMiscPenaltyPaid(customerSchedule.getMiscPenalty());
+		for (AccountFeesActionDetailEntity accountFees : customerSchedule
 				.getAccountFeesActionDetails()) {
 			feesPaid.put(accountFees.getFee().getFeeId(), accountFees
 					.getFeeAmount());
 		}
-		this.accountActionDateEntity=accountAction;
+		this.accountActionDateEntity = accountAction;
 		setFeesPaid(feesPaid);
 	}
 
 	public CustomerAccountPaymentData(
-			BulkEntryAccountActionView bulkEntryAccountAction) {
+			BulkEntryInstallmentView bulkEntryAccountAction) {
 		super(bulkEntryAccountAction);
+		BulkEntryCustomerAccountInstallmentView installmentView = (BulkEntryCustomerAccountInstallmentView)bulkEntryAccountAction;
 		Map<Short, Money> feesPaid = new HashMap<Short, Money>();
-		setMiscFeePaid(bulkEntryAccountAction.getMiscFee());
-		setMiscPenaltyPaid(bulkEntryAccountAction.getMiscPenalty());
-		List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews = bulkEntryAccountAction
+		setMiscFeePaid(installmentView.getMiscFee());
+		setMiscPenaltyPaid(installmentView.getMiscPenalty());
+		List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews = installmentView
 				.getBulkEntryAccountFeeActions();
 		if (bulkEntryAccountFeeActionViews != null
 				&& bulkEntryAccountFeeActionViews.size() > 0) {
@@ -121,25 +126,25 @@ public class CustomerAccountPaymentData extends AccountPaymentData {
 		}
 		setFeesPaid(feesPaid);
 	}
-	
+
 	public Money getTotalPaidAmnt() {
 		Money totalAmount = new Money();
-		return totalAmount.add(getMiscFeePaid()).add(
-				getMiscPenaltyPaid());
+		return totalAmount.add(getMiscFeePaid()).add(getMiscPenaltyPaid());
 	}
-	
-	public Money getTotalPaidAmount(){
+
+	public Money getTotalPaidAmount() {
 		return getTotalPaidAmnt().add(getTotalFees());
 	}
-	
-	public Money getTotalFees(){
-		Money totalAmount=new Money();
-		for (AccountFeesActionDetailEntity accountFeesActionDetail :getAccountActionDate()
+
+	public Money getTotalFees() {
+		Money totalAmount = new Money();
+		CustomerScheduleEntity customerSchedule = (CustomerScheduleEntity) getAccountActionDate();
+		for (AccountFeesActionDetailEntity accountFeesActionDetail : customerSchedule
 				.getAccountFeesActionDetails()) {
 			if (getFeesPaid().containsKey(
 					accountFeesActionDetail.getFee().getFeeId())) {
 				accountFeesActionDetail.makePayment(getFeesPaid().get(
-								accountFeesActionDetail.getFee().getFeeId()));
+						accountFeesActionDetail.getFee().getFeeId()));
 				totalAmount = totalAmount.add(accountFeesActionDetail
 						.getFeeAmountPaid());
 			}

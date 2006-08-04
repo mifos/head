@@ -33,10 +33,6 @@ public class AccountPersistanceService extends PersistenceService {
 		return (AccountBO)accountPersistence.createOrUpdate(account);
 	}
 	
-	public List<Short> getNextInstallmentList(Integer accountId) throws PersistenceException{
-		return accountPersistence.getNextInstallmentList(accountId);
-	}
-		
 	public AccountBO loadBusinessObject(Integer accountId) throws PersistenceException{
 		return accountPersistence.loadBusinessObject(accountId);
 	}
@@ -90,12 +86,7 @@ public class AccountPersistanceService extends PersistenceService {
 		return accountPersistence.getActiveCustomerAndSavingsAccounts();
 
 	}
-	public AccountActionDateEntity getLastInstallment(Integer accountId ){
 		
-		return accountPersistence.getLastInstallment(accountId );
-
-	}
-	
 	public List<AccountStateEntity> retrieveAllAccountStateList(Short prdTypeId) throws PersistenceException{
 		return accountPersistence.retrieveAllAccountStateList(prdTypeId);
 	}

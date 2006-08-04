@@ -72,7 +72,7 @@ public class TestCustomerTrxnDetailEntity extends MifosTestCase {
 		CustomerAccountBO customerAccountBO = (CustomerAccountBO) accountBO;
 		customerAccountBO.setUserContext(userContext);
 		
-		AccountActionDateEntity accountAction = customerAccountBO.getAccountActionDate(Short.valueOf("1"));
+		CustomerScheduleEntity accountAction =(CustomerScheduleEntity) customerAccountBO.getAccountActionDate(Short.valueOf("1"));
 		accountAction.setMiscFeePaid(TestObjectFactory.getMoneyForMFICurrency(100));
 		accountAction.setMiscPenaltyPaid(TestObjectFactory.getMoneyForMFICurrency(100));
 		accountAction.setPaymentDate(currentDate);
