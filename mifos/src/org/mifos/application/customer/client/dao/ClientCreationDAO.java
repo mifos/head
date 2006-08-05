@@ -54,7 +54,7 @@ import org.hibernate.StaleObjectStateException;
 import org.hibernate.Transaction;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.application.accounts.util.helpers.IDGenerator;
 import org.mifos.application.accounts.util.valueobjects.Account;
 import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
@@ -70,7 +70,6 @@ import org.mifos.application.customer.client.util.valueobjects.ClientPerformance
 import org.mifos.application.customer.client.util.valueobjects.CustomerPicture;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
-import org.mifos.application.customer.group.util.valueobjects.GroupPerformanceHistory;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerHelper;
@@ -169,7 +168,7 @@ public class ClientCreationDAO extends DAO {
 		vo.getCustomerAccount().setPersonnelId(context.getUserContext().getId());
 		vo.getCustomerAccount().setOfficeId(vo.getOffice().getOfficeId());
 		vo.getCustomerAccount().setAccountTypeId(
-				Short.valueOf(AccountTypes.CUSTOMERACCOUNT));
+				AccountType.CUSTOMERACCOUNT.getValue());
 		// setting the customer account state to active. To be reset when
 		// cancelled, deleted, on hold or withdrawn
 		vo.getCustomerAccount().setAccountStateId(
@@ -454,7 +453,8 @@ public class ClientCreationDAO extends DAO {
 				Iterator accountsIterator  = client.getCustomerAccounts().iterator();
 				while(accountsIterator.hasNext()){
 					Account account = (Account)accountsIterator.next();
-					if(account.getAccountTypeId().shortValue()== new Short(AccountTypes.CUSTOMERACCOUNT).shortValue()){
+					if(account.getAccountTypeId().equals(
+				AccountType.CUSTOMERACCOUNT.getValue())){
 						client.setCustomerAccount((CustomerAccount)account);
 						break;
 					}
@@ -556,7 +556,8 @@ public class ClientCreationDAO extends DAO {
 				Iterator accountsIterator  = client.getCustomerAccounts().iterator();
 				while(accountsIterator.hasNext()){
 					Account account = (Account)accountsIterator.next();
-					if(account.getAccountTypeId().shortValue()== new Short(AccountTypes.CUSTOMERACCOUNT).shortValue()){
+					if(account.getAccountTypeId().equals(
+				AccountType.CUSTOMERACCOUNT.getValue())){
 						client.setCustomerAccount((CustomerAccount)account);
 						break;
 					}

@@ -57,7 +57,6 @@ import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
-import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.business.CustomerAccountView;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.business.LoanAccountView;
@@ -73,7 +72,6 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -90,7 +88,6 @@ import org.mifos.application.collectionsheet.business.CollSheetLnDetailsEntity;
 import org.mifos.application.collectionsheet.business.CollSheetSavingsDetailsEntity;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
@@ -468,8 +465,7 @@ public class TestObjectFactory {
 		try {
 			UserContext userContext = TestObjectFactory.getUserContext();
 			AccountType accountType = new AccountType();
-			accountType.setAccountTypeId(Short
-					.valueOf(AccountTypes.LOANACCOUNT));
+			accountType.setAccountTypeId(org.mifos.application.accounts.util.helpers.AccountType.LOANACCOUNT.getValue());
 			loan = new LoanBO(userContext, loanOfering, customer, accountType,AccountState.getStatus(accountStateId));
 		} catch (Exception e) {
 		}
@@ -1306,8 +1302,7 @@ public class TestObjectFactory {
 		try {
 			UserContext userContext = TestObjectFactory.getUserContext();
 			AccountType accountType = new AccountType();
-			accountType.setAccountTypeId(Short
-					.valueOf(AccountTypes.LOANACCOUNT));
+			accountType.setAccountTypeId(org.mifos.application.accounts.util.helpers.AccountType.LOANACCOUNT.getValue());
 			loan = new LoanBO(userContext, loanOfering, customer, accountType,AccountState.getStatus(accountStateId));
 		} catch (Exception e) {
 		}

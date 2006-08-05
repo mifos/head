@@ -39,7 +39,7 @@ package org.mifos.framework.components.taggenerator;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.framework.business.BusinessObject;
 
 public class AccountTagGenerator extends TagGenerator {
@@ -62,7 +62,8 @@ public class AccountTagGenerator extends TagGenerator {
 	}
 	
 	private void createAccountLink(StringBuilder strBuilder, AccountBO account){
-		if(account.getAccountType().getAccountTypeId().shortValue()==Short.valueOf(AccountTypes.SAVINGSACCOUNT).shortValue()){
+		if(account.getAccountType().getAccountTypeId().equals(
+				AccountType.SAVINGSACCOUNT.getValue())){
 			strBuilder.append("<a href=\"");
 			strBuilder.append(getAction(account));
 			strBuilder.append(account.getGlobalAccountNum());
@@ -74,14 +75,16 @@ public class AccountTagGenerator extends TagGenerator {
 	}
 	
 	private String getAccountName(AccountBO account){
-		if(account.getAccountType().getAccountTypeId().equals(Short.valueOf(AccountTypes.SAVINGSACCOUNT))){
+		if(account.getAccountType().getAccountTypeId().equals(
+				AccountType.SAVINGSACCOUNT.getValue())){
 			return ((SavingsBO)account).getSavingsOffering().getPrdOfferingName();
 		}
 		return null;
 	}
 	
 	private String getAction(AccountBO account){
-		if(account.getAccountType().getAccountTypeId().shortValue()==Short.valueOf(AccountTypes.SAVINGSACCOUNT).shortValue()){
+		if(account.getAccountType().getAccountTypeId().equals(
+				AccountType.SAVINGSACCOUNT.getValue())){
 			return "savingsAction.do?method=get&globalAccountNum=";
 		}
 		return "";

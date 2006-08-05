@@ -55,13 +55,13 @@ import org.mifos.application.accounts.persistence.service.AccountPersistanceServ
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.service.SavingsPersistenceService;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
-import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntryBO;
+import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
 import org.mifos.application.bulkentry.exceptions.BulkEntryAccountUpdateException;
 import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistanceService;
 import org.mifos.application.customer.business.CustomerBO;
@@ -227,7 +227,7 @@ public class BulkEntryBusinessService extends BusinessService {
 				customerAccountView.getAccountActionDates(),
 				customerAccountView.getTotalAmountDue(), personnelId,
 				recieptId, paymentId, receiptDate, transactionDate);
-		AccountBO account = getAccount(accountId, AccountTypes.CUSTOMERACCOUNT);
+		AccountBO account = getAccount(accountId, AccountType.CUSTOMERACCOUNT);
 		try {
 			account.applyPayment(accountPaymentDataView);
 		} catch (AccountException ae) {
@@ -250,14 +250,14 @@ public class BulkEntryBusinessService extends BusinessService {
 		}
 	}
 
-	private AccountBO getAccount(Integer accountId, String type) {
-		if (type.equals(AccountTypes.LOANACCOUNT))
+	private AccountBO getAccount(Integer accountId, AccountType type) {
+		if (type.equals(AccountType.LOANACCOUNT))
 			return bulkEntryPersistanceService
 					.getLoanAccountWithAccountActionsInitialized(accountId);
-		else if (type.equals(AccountTypes.SAVINGSACCOUNT))
+		else if (type.equals(AccountType.SAVINGSACCOUNT))
 			return bulkEntryPersistanceService
 					.getSavingsAccountWithAccountActionsInitialized(accountId);
-		else if (type.equals(AccountTypes.CUSTOMERACCOUNT))
+		else if (type.equals(AccountType.CUSTOMERACCOUNT))
 			return bulkEntryPersistanceService
 					.getCustomerAccountWithAccountActionsInitialized(accountId);
 		return null;
@@ -277,7 +277,7 @@ public class BulkEntryBusinessService extends BusinessService {
 			throws BulkEntryAccountUpdateException {
 		if (Double.valueOf(disbursementAmountEntered).doubleValue() > 0) {
 			LoanBO account = (LoanBO) getAccount(accountId,
-					AccountTypes.LOANACCOUNT);
+					AccountType.LOANACCOUNT);
 			try {
 				account.disburseLoan(recieptId, transactionDate, paymentId,
 						getPersonnel(personnelId), receiptDate, paymentId);
@@ -312,7 +312,7 @@ public class BulkEntryBusinessService extends BusinessService {
 			PaymentData paymentData = getLoanAccountPaymentData(loanAccountView
 					.getAccountTrxnDetails(), enteredAmount, personnelId,
 					recieptId, paymentId, receiptDate, transactionDate);
-			AccountBO account = getAccount(accountId, AccountTypes.LOANACCOUNT);
+			AccountBO account = getAccount(accountId, AccountType.LOANACCOUNT);
 			try {
 				account.applyPayment(paymentData);
 			} catch (AccountException ae) {
@@ -350,7 +350,7 @@ public class BulkEntryBusinessService extends BusinessService {
 	private void saveSavingsAccountPayment(Integer accountId,
 			PaymentData accountPaymentDataView)
 			throws BulkEntryAccountUpdateException {
-		AccountBO account = getAccount(accountId, AccountTypes.SAVINGSACCOUNT);
+		AccountBO account = getAccount(accountId, AccountType.SAVINGSACCOUNT);
 		try {
 			account.applyPayment(accountPaymentDataView);
 		} catch (AccountException ae) {
@@ -396,7 +396,7 @@ public class BulkEntryBusinessService extends BusinessService {
 			PaymentData accountPaymentDataView)
 			throws BulkEntryAccountUpdateException {
 		SavingsBO account = (SavingsBO) getAccount(accountId,
-				AccountTypes.SAVINGSACCOUNT);
+				AccountType.SAVINGSACCOUNT);
 		try {
 			account.withdraw(accountPaymentDataView);
 		} catch (AccountException ae) {

@@ -53,7 +53,6 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountType;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
@@ -333,7 +332,7 @@ public abstract class CustomerBO extends BusinessObject {
 		List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
 		for (AccountBO account : accounts) {
 			if (account.getAccountType().getAccountTypeId().equals(
-					Short.valueOf(AccountTypes.LOANACCOUNT)))
+					AccountType.LOANACCOUNT.getValue()))
 				loanAccounts.add((LoanBO) account);
 		}
 		return loanAccounts;
@@ -343,7 +342,7 @@ public abstract class CustomerBO extends BusinessObject {
 		List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
 		for (AccountBO account : accounts) {
 			if (account.getAccountType().getAccountTypeId().equals(
-					Short.valueOf(AccountTypes.LOANACCOUNT))) {
+					AccountType.LOANACCOUNT.getValue())) {
 				short accounStateId = account.getAccountState().getId()
 						.shortValue();
 				LoanBO loan = (LoanBO) account;
@@ -364,7 +363,7 @@ public abstract class CustomerBO extends BusinessObject {
 		List<SavingsBO> savingsAccounts = new ArrayList<SavingsBO>();
 		for (AccountBO account : accounts) {
 			if (account.getAccountType().getAccountTypeId().equals(
-					Short.valueOf(AccountTypes.SAVINGSACCOUNT))
+					AccountType.SAVINGSACCOUNT.getValue())
 					&& account.getAccountState().getId().shortValue() == AccountStates.SAVINGS_ACC_APPROVED)
 				savingsAccounts.add((SavingsBO) account);
 		}

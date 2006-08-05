@@ -37,8 +37,6 @@
 
 package org.mifos.application.customer.center.dao;
 import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -53,7 +51,7 @@ import org.hibernate.StaleObjectStateException;
 import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.application.accounts.util.helpers.IDGenerator;
 import org.mifos.application.accounts.util.valueobjects.Account;
 import org.mifos.application.accounts.util.valueobjects.CustomerAccount;
@@ -62,7 +60,6 @@ import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.center.exception.DuplicateCustomerException;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
-import org.mifos.application.customer.center.util.helpers.ValidateMethods;
 import org.mifos.application.customer.center.util.valueobjects.Center;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.dao.CustomerNoteDAO;
@@ -73,13 +70,11 @@ import org.mifos.application.customer.util.helpers.CustomerHelper;
 import org.mifos.application.customer.util.helpers.IdGenerator;
 import org.mifos.application.customer.util.valueobjects.CustomFieldDefinition;
 import org.mifos.application.customer.util.valueobjects.Customer;
-import org.mifos.application.customer.util.valueobjects.CustomerCustomField;
 import org.mifos.application.customer.util.valueobjects.CustomerHierarchy;
 import org.mifos.application.customer.util.valueobjects.CustomerMaster;
 import org.mifos.application.office.dao.OfficeDAO;
 import org.mifos.application.office.util.valueobjects.Office;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
-import org.mifos.application.personnel.util.valueobjects.Personnel;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.audit.util.helpers.LogInfo;
@@ -99,7 +94,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.valueobjects.Context;
 import org.mifos.framework.util.valueobjects.SearchResults;
@@ -278,7 +272,7 @@ public class CenterDAO extends DAO {
 					center.getPersonnel().getPersonnelId());
 			center.getCustomerAccount().setOfficeId(center.getOffice().getOfficeId());
 			center.getCustomerAccount().setAccountTypeId(
-					Short.valueOf(AccountTypes.CUSTOMERACCOUNT));
+					AccountType.CUSTOMERACCOUNT.getValue());
 			// setting the customer account state to active. To be reset when
 			// cancelled, deleted, on hold or withdrawn
 			center.getCustomerAccount().setAccountStateId(
@@ -578,7 +572,8 @@ public class CenterDAO extends DAO {
 				Iterator accountsIterator  = center.getCustomerAccounts().iterator();
 				while(accountsIterator.hasNext()){
 					Account account = (Account)accountsIterator.next();
-					if(account.getAccountTypeId().shortValue()== new Short(AccountTypes.CUSTOMERACCOUNT).shortValue()){
+					if(account.getAccountTypeId().equals(
+							AccountType.CUSTOMERACCOUNT.getValue())){
 						center.setCustomerAccount((CustomerAccount)account);
 						break;
 					}

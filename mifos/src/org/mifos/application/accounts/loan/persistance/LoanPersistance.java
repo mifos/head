@@ -17,9 +17,8 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.LoanAccountView;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -127,7 +126,8 @@ public class LoanPersistance extends Persistence {
 			currentDate = new GregorianCalendar(year, month, day-latenessDays);
 			Date date = new Date(currentDate.getTimeInMillis());
 								
-			queryParameters.put("ACCOUNTTYPE_ID",Short.valueOf(AccountTypes.LOANACCOUNT));
+			queryParameters.put("ACCOUNTTYPE_ID",
+					AccountType.LOANACCOUNT.getValue());
 			queryParameters.put("PAYMENTSTATUS",Short.valueOf(PaymentStatus.UNPAID.getValue()));
 			queryParameters.put("LOANAPPROVED",Short.valueOf(AccountStates.LOANACC_APPROVED));
 			queryParameters.put("LOANACTIVEINGOODSTAND",Short.valueOf(AccountStates.LOANACC_ACTIVEINGOODSTANDING));

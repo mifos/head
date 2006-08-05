@@ -15,7 +15,7 @@ import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.struts.actionforms.NotesActionForm;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -110,9 +110,11 @@ public class NotesAction extends SearchAction {
 	
 	private String chooseForward(Short accountTypeId){
 		String forward=null;
-		if(accountTypeId.equals(new Short(AccountTypes.LOANACCOUNT)))
+		if(accountTypeId.equals(
+				AccountType.LOANACCOUNT.getValue()))
 			forward = ActionForwards.loan_detail_page.toString();
-		else if(accountTypeId.equals(new Short(AccountTypes.SAVINGSACCOUNT)))
+		else if(accountTypeId.equals(
+				AccountType.SAVINGSACCOUNT.getValue()))
 			forward = ActionForwards.savings_details_page.toString();
 		return forward;
 	}

@@ -69,12 +69,10 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.center.exception.StateChangeException;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
@@ -431,7 +429,7 @@ public class SavingsBO extends AccountBO {
 		logger.info("In SavingsBO::save(), Generated globalAccountNum: "
 				+ getGlobalAccountNum());
 		setOffice(getCustomer().getOffice());
-		setAccountType(new AccountType(new Short(AccountTypes.SAVINGSACCOUNT)));
+		setAccountType(new AccountType(org.mifos.application.accounts.util.helpers.AccountType.SAVINGSACCOUNT.getValue()));
 		setSavingsPerformance(createSavingsPerformance());
 		setSavingsBalance(new Money());
 		this.setCreatedBy(userContext.getId());
@@ -1111,7 +1109,7 @@ public class SavingsBO extends AccountBO {
 	public List<AccountStateEntity> getStatusList() {
 		List<AccountStateEntity> statusList = AccountStateMachines
 				.getInstance().getStatusList(this.getAccountState(),
-						Short.valueOf(AccountTypes.SAVINGSACCOUNT));
+						org.mifos.application.accounts.util.helpers.AccountType.SAVINGSACCOUNT.getValue());
 		if (null != statusList) {
 			for (AccountStateEntity accStateObj : statusList) {
 				accStateObj.setLocaleId(userContext.getLocaleId());
@@ -1124,19 +1122,19 @@ public class SavingsBO extends AccountBO {
 			throws StatesInitializationException {
 		AccountStateMachines.getInstance().initialize(localeId,
 				getOffice().getOfficeId(),
-				Short.valueOf(AccountTypes.SAVINGSACCOUNT));
+				org.mifos.application.accounts.util.helpers.AccountType.SAVINGSACCOUNT.getValue());
 	}
 
 	public String getStatusName(Short localeId, Short accountStateId)
 			throws ApplicationException, SystemException {
 		return AccountStateMachines.getInstance().getStatusName(localeId,
-				accountStateId, Short.valueOf(AccountTypes.SAVINGSACCOUNT));
+				accountStateId, org.mifos.application.accounts.util.helpers.AccountType.SAVINGSACCOUNT.getValue());
 	}
 
 	public String getFlagName(Short flagId) throws ApplicationException,
 			SystemException {
 		return AccountStateMachines.getInstance().getFlagName(flagId,
-				Short.valueOf(AccountTypes.SAVINGSACCOUNT));
+				org.mifos.application.accounts.util.helpers.AccountType.SAVINGSACCOUNT.getValue());
 	}
 
 	private void setValuesForActiveState() throws SchedulerException,
@@ -1154,7 +1152,7 @@ public class SavingsBO extends AccountBO {
 			AccountStateEntity accountStateEntity) {
 		return AccountStateMachines.getInstance()
 				.retrieveAccountStateEntityMasterObject(accountStateEntity,
-						Short.valueOf(AccountTypes.SAVINGSACCOUNT));
+						org.mifos.application.accounts.util.helpers.AccountType.SAVINGSACCOUNT.getValue());
 	}
 
 	private void activationDateHelper(Short newStatusId)

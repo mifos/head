@@ -48,12 +48,11 @@ import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.dao.AccountNotesDAO;
 import org.mifos.application.accounts.dao.AccountsDAO;
-import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.valueobjects.EditLoanStatus;
 import org.mifos.application.accounts.loan.util.valueobjects.Loan;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.application.accounts.util.valueobjects.Account;
 import org.mifos.application.accounts.util.valueobjects.AccountFlagDetail;
 import org.mifos.application.accounts.util.valueobjects.AccountStatusChangeHistory;
@@ -186,11 +185,11 @@ public class EditLoanStatusDAO extends DAO{
 					status!=AccountStates.LOANACC_WRITTENOFF && 
 					status!=AccountStates.LOANACC_CANCEL){
 			//get list of all status
-				applicabelStatusList=new AccountsDAO().getStatesCurrentlyInUse(new Short(AccountTypes.LOANACCOUNT));
+				applicabelStatusList=new AccountsDAO().getStatesCurrentlyInUse(AccountType.LOANACCOUNT.getValue());
 			// get status names as per locales
-				statusMasterList=getStatusMaster(localeId,new Short(AccountTypes.LOANACCOUNT));
+				statusMasterList=getStatusMaster(localeId,AccountType.LOANACCOUNT.getValue());
 			//get flag names as per locales
-				flagMasterList=getFlagMaster(localeId,new Short(AccountTypes.LOANACCOUNT));
+				flagMasterList=getFlagMaster(localeId,AccountType.LOANACCOUNT.getValue());
 		}
 		
 		
@@ -373,7 +372,7 @@ public class EditLoanStatusDAO extends DAO{
 	 * @throws SystemException 
 	 */
 	public String getStatusName(short localeId,short statusId) throws ApplicationException,SystemException{
-		List<StatusMaster> statusMasterList=getStatusMaster(localeId,new Short(AccountTypes.LOANACCOUNT));
+		List<StatusMaster> statusMasterList=getStatusMaster(localeId,AccountType.LOANACCOUNT.getValue());
 		if(statusMasterList!=null){
 			for(int i=0;i<statusMasterList.size();i++){
 				StatusMaster sm =(StatusMaster)statusMasterList.get(i);
@@ -386,7 +385,7 @@ public class EditLoanStatusDAO extends DAO{
 	
 	
 	public String getFlagName(short localeId,short flagId) throws ApplicationException,SystemException{
-		List<FlagMaster> flagMasterList=getFlagMaster(localeId,new Short(AccountTypes.LOANACCOUNT));
+		List<FlagMaster> flagMasterList=getFlagMaster(localeId,AccountType.LOANACCOUNT.getValue());
 		for(FlagMaster flagMaster : flagMasterList) {
 			if(flagMaster.getFlagId().equals(flagId))
 				return flagMaster.getFlagName();

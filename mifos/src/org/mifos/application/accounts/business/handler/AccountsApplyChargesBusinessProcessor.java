@@ -59,7 +59,7 @@ import org.mifos.application.accounts.loan.util.valueobjects.LoanActivity;
 import org.mifos.application.accounts.loan.util.valueobjects.LoanSummary;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.valueobjects.Account;
 import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
@@ -492,14 +492,11 @@ public class AccountsApplyChargesBusinessProcessor extends
 
 				Short accountType = account.getAccountTypeId();
 
-				if (accountType.shortValue() == Short.valueOf(
-						AccountTypes.LOANACCOUNT).shortValue()) {
+				if (accountType.equals(AccountType.LOANACCOUNT.getValue())) {
 					setLoanInput(account, inputs);
-				} else if (accountType.shortValue() == Short.valueOf(
-						AccountTypes.CUSTOMERACCOUNT).shortValue()) {
+				} else if (accountType.equals(AccountType.CUSTOMERACCOUNT.getValue())) {
 					setCustomerInput(account, inputs);
-				} else if (accountType.shortValue() == Short.valueOf(
-						AccountTypes.SAVINGSACCOUNT).shortValue()) {
+				} else if (accountType.equals(AccountType.SAVINGSACCOUNT.getValue())) {
 
 				}
 

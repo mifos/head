@@ -72,7 +72,6 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -1534,7 +1533,7 @@ public class LoanBO extends AccountBO {
 	public List<AccountStateEntity> getStatusList() {
 		List<AccountStateEntity> statusList = AccountStateMachines
 				.getInstance().getStatusList(this.getAccountState(),
-						Short.valueOf(AccountTypes.LOANACCOUNT));
+						org.mifos.application.accounts.util.helpers.AccountType.LOANACCOUNT.getValue());
 		for (AccountStateEntity accStateObj : statusList) {
 			accStateObj.setLocaleId(userContext.getLocaleId());
 		}
@@ -1544,12 +1543,12 @@ public class LoanBO extends AccountBO {
 	public String getStatusName(Short localeId, Short accountStateId)
 			throws ApplicationException, SystemException {
 		return AccountStateMachines.getInstance().getStatusName(localeId,
-				accountStateId, Short.valueOf(AccountTypes.LOANACCOUNT));
+				accountStateId, org.mifos.application.accounts.util.helpers.AccountType.LOANACCOUNT.getValue());
 	}
 
 	public String getFlagName(Short flagId) throws ApplicationException,
 			SystemException {
 		return AccountStateMachines.getInstance().getFlagName(flagId,
-				Short.valueOf(AccountTypes.LOANACCOUNT));
+				org.mifos.application.accounts.util.helpers.AccountType.LOANACCOUNT.getValue());
 	}
 }

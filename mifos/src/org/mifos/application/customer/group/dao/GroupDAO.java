@@ -52,7 +52,7 @@ import org.hibernate.StaleStateException;
 import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.application.accounts.util.helpers.IDGenerator;
 import org.mifos.application.accounts.util.valueobjects.Account;
 import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
@@ -232,7 +232,8 @@ public class GroupDAO extends DAO {
 			customerAccount.setPersonnelId(groupVO.getPersonnel().getPersonnelId());
 		
 		customerAccount.setOfficeId(groupVO.getOffice().getOfficeId());
-		customerAccount.setAccountTypeId(Short.valueOf(AccountTypes.CUSTOMERACCOUNT));
+		customerAccount.setAccountTypeId(
+				AccountType.CUSTOMERACCOUNT.getValue());
 		// setting the customer account state to active. To be reset when
 		// cancelled, deleted, on hold or withdrawn
 		customerAccount.setAccountStateId(Short.valueOf(AccountStates.CUSTOMERACCOUNT_ACTIVE));
@@ -847,7 +848,8 @@ public class GroupDAO extends DAO {
 				Iterator accountsIterator  = group.getCustomerAccounts().iterator();
 				while(accountsIterator.hasNext()){
 					Account account = (Account)accountsIterator.next();
-					if(account.getAccountTypeId().shortValue()== new Short(AccountTypes.CUSTOMERACCOUNT).shortValue()){
+					if(account.getAccountTypeId().equals(
+				AccountType.CUSTOMERACCOUNT.getValue())){
 						group.setCustomerAccount((CustomerAccount)account);
 						break;
 					}

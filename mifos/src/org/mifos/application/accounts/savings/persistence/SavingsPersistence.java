@@ -52,7 +52,7 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerLevelEntity;
@@ -247,7 +247,7 @@ public class SavingsPersistence extends Persistence {
 			Integer count =0;
 			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put("ACCOUNT_ID", accountId);
-			queryParameters.put("ACCOUNT_TYPE_ID", AccountTypes.SAVINGSACCOUNT );
+			queryParameters.put("ACCOUNT_TYPE_ID", AccountType.SAVINGSACCOUNT.getValue() );
 			queryParameters.put("ACTIVE", AccountStates.SAVINGS_ACC_APPROVED );
 			queryParameters.put("CHECKDATE", currentDate);
 			queryParameters.put("PAYMENTSTATUS", PaymentStatus.UNPAID.getValue());
@@ -273,7 +273,7 @@ public class SavingsPersistence extends Persistence {
 				Integer count =0;
 				HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 				queryParameters.put("ACCOUNT_ID", accountId);
-				queryParameters.put("ACCOUNT_TYPE_ID", AccountTypes.SAVINGSACCOUNT );
+				queryParameters.put("ACCOUNT_TYPE_ID", AccountType.SAVINGSACCOUNT.getValue() );
 				queryParameters.put("ACTIVE", AccountStates.SAVINGS_ACC_APPROVED );
 				queryParameters.put("PAYMENTSTATUS", PaymentStatus.PAID.getValue());
 				

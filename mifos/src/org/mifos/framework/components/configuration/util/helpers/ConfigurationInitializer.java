@@ -50,7 +50,7 @@ import java.util.Map;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
@@ -176,9 +176,11 @@ public class ConfigurationInitializer {
 	private void setAccountOptionalStates(Map<Key,Object> officeConfigMap,List<AccountStateEntity> accountOptionalStates)throws SystemException{
 		if(accountOptionalStates!=null && accountOptionalStates.size()>0){
 			for(AccountStateEntity accountStateEntity: accountOptionalStates){
-				if(accountStateEntity.getPrdType().getProductTypeID().equals(Short.valueOf(AccountTypes.SAVINGSACCOUNT)))
+				if(accountStateEntity.getPrdType().getProductTypeID().equals(
+						AccountType.SAVINGSACCOUNT.getValue()))
 					setSavingsOptionalState(officeConfigMap,accountStateEntity);
-				else if(accountStateEntity.getPrdType().getProductTypeID().equals(Short.valueOf(AccountTypes.LOANACCOUNT)))
+				else if(accountStateEntity.getPrdType().getProductTypeID().equals(
+						AccountType.LOANACCOUNT.getValue()))
 					setLoanOptionalStates(officeConfigMap,accountStateEntity);
 			}
 		}

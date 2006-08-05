@@ -38,30 +38,20 @@
 
 package org.mifos.application.customer.dao;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.framework.dao.DAO;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
-/**
- * This class is used as DAO for viewing all closed accounts of a customer.
- * @author ashishsm
- *
- */
 public class ViewClosedAccountsDAO extends DAO {
 
-	/**
-	 * 
-	 */
 	public ViewClosedAccountsDAO() {
 		super();
 		
@@ -90,12 +80,14 @@ public class ViewClosedAccountsDAO extends DAO {
 			session = HibernateUtil.getSession();
 			Query query = session.createQuery("select count(*) from org.mifos.application.accounts.util.valueobjects.Account account where account.customer.customerId=:customerId and ((account.accountTypeId=:accountTypeIdLoan and account.accountStateId!=:status1 and account.accountStateId!=:status2 and account.accountStateId!=:status3 and account.accountStateId!=:status4) or (account.accountTypeId=:accountTypeIdSavings and account.accountStateId!=:status5 and account.accountStateId!=:status6))");
 			query.setInteger("customerId", customerId);
-			query.setShort("accountTypeIdLoan",new Short(AccountTypes.LOANACCOUNT));
+			query.setShort("accountTypeIdLoan",
+					AccountType.LOANACCOUNT.getValue());
 			query.setShort("status1",AccountStates.LOANACC_CANCEL);
 			query.setShort("status2",AccountStates.LOANACC_BADSTANDING);
 			query.setShort("status3",AccountStates.LOANACC_OBLIGATIONSMET);
 			query.setShort("status4",AccountStates.LOANACC_WRITTENOFF);
-			query.setShort("accountTypeIdSavings",new Short(AccountTypes.SAVINGSACCOUNT));
+			query.setShort("accountTypeIdSavings",
+					AccountType.SAVINGSACCOUNT.getValue());
 			query.setShort("status5",AccountStates.SAVINGS_ACC_CANCEL);
 			query.setShort("status6",AccountStates.SAVINGS_ACC_CLOSED);
 			

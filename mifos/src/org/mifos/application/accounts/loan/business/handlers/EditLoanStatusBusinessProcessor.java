@@ -49,7 +49,7 @@ import org.mifos.application.accounts.loan.dao.LoanDAO;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.valueobjects.EditLoanStatus;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.application.accounts.util.valueobjects.Account;
 import org.mifos.application.configuration.util.helpers.PathConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
@@ -112,7 +112,8 @@ public class EditLoanStatusBusinessProcessor extends MifosBusinessProcessor{
 
 			short localeId=context.getUserContext().getLocaleId();
 			//retrive checklist details for given locale and status
-			context.addAttribute(getEditLoanStatusDAO().getAccountCheckList(localeId,loanStatus.getNewStatusId(),new Short(AccountTypes.LOANACCOUNT)));
+			context.addAttribute(getEditLoanStatusDAO().getAccountCheckList(localeId,loanStatus.getNewStatusId(),
+					AccountType.LOANACCOUNT.getValue()));
 
 			//build Customer Note object
 			loanStatus.getNotes().setCommentDate(new Date(new java.util.Date().getTime()));

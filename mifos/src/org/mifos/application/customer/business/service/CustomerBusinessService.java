@@ -48,7 +48,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.center.business.CenterPerformanceHistory;
@@ -232,9 +232,9 @@ public class CustomerBusinessService extends BusinessService{
 		List<CustomerBO> clients = getChildList(centerChildren,
 				CenterConstants.CLIENT_LEVEL_ID);
 		List<AccountBO> loanList = getAccountsForCustomer(searchId, officeId,
-				Short.valueOf(AccountTypes.LOANACCOUNT));
+				AccountType.LOANACCOUNT.getValue());
 		List<AccountBO> savingsList = getAccountsForCustomer(searchId,
-				officeId, Short.valueOf(AccountTypes.SAVINGSACCOUNT));
+				officeId, AccountType.SAVINGSACCOUNT.getValue());
 		int clientSize = 0;
 		int groupSize = 0;
 		if (clients != null)

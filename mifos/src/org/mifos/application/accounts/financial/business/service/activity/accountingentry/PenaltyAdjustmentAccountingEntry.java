@@ -6,7 +6,7 @@ import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionCache;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
 import org.mifos.framework.util.helpers.Money;
 
@@ -16,12 +16,11 @@ public class PenaltyAdjustmentAccountingEntry extends BaseAccountingEntry {
 	protected void getSpecificAccountActionEntry() throws FinancialException {
 		Money amount = new Money();
 		if (financialActivity.getAccountTrxn().getAccount().getAccountType()
-				.getAccountTypeId().equals(Short.valueOf(AccountTypes.LOANACCOUNT)))
+				.getAccountTypeId().equals(AccountType.LOANACCOUNT.getValue()))
 			amount = ((LoanTrxnDetailEntity) financialActivity.getAccountTrxn())
 					.getMiscPenaltyAmount();
 		else if (financialActivity.getAccountTrxn().getAccount()
-				.getAccountType().getAccountTypeId().equals(Short.valueOf(
-						AccountTypes.CUSTOMERACCOUNT)))
+				.getAccountType().getAccountTypeId().equals(AccountType.CUSTOMERACCOUNT.getValue()))
 			amount = ((CustomerTrxnDetailEntity) financialActivity
 					.getAccountTrxn()).getMiscPenaltyAmount();
 

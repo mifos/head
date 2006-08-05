@@ -42,9 +42,8 @@ import java.util.List;
 
 import org.mifos.application.accounts.dao.AccountTrxnDAO;
 import org.mifos.application.accounts.loan.business.util.helpers.LoanHeaderObject;
-import org.mifos.application.accounts.loan.util.valueobjects.Loan;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.AccountType;
 import org.mifos.application.accounts.util.helpers.CustomerTrxnBuilder;
 import org.mifos.application.accounts.util.helpers.LoanTrxnBuilder;
 import org.mifos.application.accounts.util.helpers.SavingsTrxnBuilder;
@@ -91,7 +90,7 @@ public class AccountTrxnBusinessProcessor extends MifosBusinessProcessor {
 		AccountTrxnDAO dao = new AccountTrxnDAO();
 		AccountPayment pmntOld = (AccountPayment) (context.getValueObject());
 		Integer accountId = pmntOld.getAccountId();
-		short accountType = pmntOld.getAccountType();
+		Short accountType = pmntOld.getAccountType();
 		Short personnelId = context.getUserContext().getId();
 		context.addBusinessResults("AccountId",accountId);
 		try{
@@ -103,14 +102,12 @@ public class AccountTrxnBusinessProcessor extends MifosBusinessProcessor {
 			TrxnObjectBuilder builder = null;
 			// populate the AccountTrxn VO from AccountActionDate VO
 			// check here if the account type is loan, saving or customer
-			if (accountType == Short.valueOf(AccountTypes.LOANACCOUNT)) {
+			if (accountType.equals(AccountType.LOANACCOUNT.getValue())) {
 				builder = new LoanTrxnBuilder();
-			} else if (accountType == Short
-					.valueOf(AccountTypes.CUSTOMERACCOUNT)) {
+			} else if (accountType.equals(AccountType.CUSTOMERACCOUNT.getValue())) {
 				// do the customer processing here
 				builder = new CustomerTrxnBuilder();
-			} else if (accountType == Short
-					.valueOf(AccountTypes.SAVINGSACCOUNT)) {
+			} else if (accountType.equals(AccountType.SAVINGSACCOUNT.getValue())) {
 				// do the savings processing here
 				builder = new SavingsTrxnBuilder();
 			}
