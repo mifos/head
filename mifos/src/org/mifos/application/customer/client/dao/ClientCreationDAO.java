@@ -54,7 +54,7 @@ import org.hibernate.StaleObjectStateException;
 import org.hibernate.Transaction;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.AccountType;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.IDGenerator;
 import org.mifos.application.accounts.util.valueobjects.Account;
 import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
@@ -168,7 +168,7 @@ public class ClientCreationDAO extends DAO {
 		vo.getCustomerAccount().setPersonnelId(context.getUserContext().getId());
 		vo.getCustomerAccount().setOfficeId(vo.getOffice().getOfficeId());
 		vo.getCustomerAccount().setAccountTypeId(
-				AccountType.CUSTOMERACCOUNT.getValue());
+				AccountTypes.CUSTOMERACCOUNT.getValue());
 		// setting the customer account state to active. To be reset when
 		// cancelled, deleted, on hold or withdrawn
 		vo.getCustomerAccount().setAccountStateId(
@@ -454,7 +454,7 @@ public class ClientCreationDAO extends DAO {
 				while(accountsIterator.hasNext()){
 					Account account = (Account)accountsIterator.next();
 					if(account.getAccountTypeId().equals(
-				AccountType.CUSTOMERACCOUNT.getValue())){
+				AccountTypes.CUSTOMERACCOUNT.getValue())){
 						client.setCustomerAccount((CustomerAccount)account);
 						break;
 					}
@@ -557,7 +557,7 @@ public class ClientCreationDAO extends DAO {
 				while(accountsIterator.hasNext()){
 					Account account = (Account)accountsIterator.next();
 					if(account.getAccountTypeId().equals(
-				AccountType.CUSTOMERACCOUNT.getValue())){
+				AccountTypes.CUSTOMERACCOUNT.getValue())){
 						client.setCustomerAccount((CustomerAccount)account);
 						break;
 					}

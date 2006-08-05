@@ -27,7 +27,7 @@ import org.mifos.application.accounts.loan.util.valueobjects.LoanPenalty;
 import org.mifos.application.accounts.loan.util.valueobjects.LoanSummary;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.AccountType;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PathConstants;
 import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
@@ -268,7 +268,7 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 						+ loan.getIntrestAtDisbursement());
 		// set the account type to loan account
 		loan.setAccountTypeId(
-				AccountType.LOANACCOUNT.getValue());
+				AccountTypes.LOANACCOUNT.getValue());
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"account type is " + loan.getAccountTypeId());
 		// set personnel id to the personnel who is creating the account

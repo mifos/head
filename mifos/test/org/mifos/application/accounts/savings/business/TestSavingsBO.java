@@ -33,7 +33,7 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.AccountType;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
@@ -838,7 +838,7 @@ public class TestSavingsBO extends MifosTestCase {
 				savingsOffering, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
 		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
-				AccountType.SAVINGSACCOUNT.getValue());
+				AccountTypes.SAVINGSACCOUNT.getValue());
 		savings.changeStatus(new AccountStateEntity(
 				AccountStates.SAVINGS_ACC_PENDINGAPPROVAL), helper
 				.getAccountNotes(savings), null, userContext);
@@ -857,7 +857,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		try {
 			AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
-					AccountType.SAVINGSACCOUNT.getValue());
+					AccountTypes.SAVINGSACCOUNT.getValue());
 			Set<Short> set = new HashSet<Short>();
 			set.add(Short.valueOf("2"));
 			userContext.setRoles(set);
@@ -885,7 +885,7 @@ public class TestSavingsBO extends MifosTestCase {
 				savingsOffering, group,
 				AccountStates.SAVINGS_ACC_PENDINGAPPROVAL, userContext);
 		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
-				AccountType.SAVINGSACCOUNT.getValue());
+				AccountTypes.SAVINGSACCOUNT.getValue());
 		AccountStateFlagEntity stateFlag = null;
 		// 6 is blacklisted
 		Session session = HibernateUtil.getSessionTL();
@@ -909,7 +909,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		try {
 			AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
-					AccountType.SAVINGSACCOUNT.getValue());
+					AccountTypes.SAVINGSACCOUNT.getValue());
 			Set<Short> set = new HashSet<Short>();
 			set.add(Short.valueOf("2"));
 			userContext.setRoles(set);

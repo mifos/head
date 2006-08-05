@@ -50,6 +50,7 @@ import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 
@@ -109,7 +110,7 @@ public class CustomerAccountBO extends AccountBO {
 	public CustomerAccountBO(UserContext userContext, CustomerBO customer,
 			List<FeeView> fees) throws AccountException {
 		super(userContext,	customer, 
-				new AccountType(org.mifos.application.accounts.util.helpers.AccountType.CUSTOMERACCOUNT.getValue()), 
+				new AccountType(AccountTypes.CUSTOMERACCOUNT.getValue()), 
 				AccountState.CUSTOMERACCOUNT_ACTIVE);
 		if(fees !=null){
 			for(FeeView feeView: fees){

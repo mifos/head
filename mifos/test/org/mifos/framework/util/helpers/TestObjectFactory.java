@@ -205,7 +205,7 @@ public class TestObjectFactory {
 		custAccount.setAccountState(new AccountStateEntity(
 				AccountStates.CUSTOMERACCOUNT_ACTIVE));
 
-		AccountType accountType = new AccountType();
+		AccountTypes accountType = new AccountTypes();
 		accountType.setAccountTypeId(Short
 				.valueOf(AccountTypes.CUSTOMERACCOUNT));
 		custAccount.setAccountType(accountType);
@@ -465,7 +465,7 @@ public class TestObjectFactory {
 		try {
 			UserContext userContext = TestObjectFactory.getUserContext();
 			AccountType accountType = new AccountType();
-			accountType.setAccountTypeId(org.mifos.application.accounts.util.helpers.AccountType.LOANACCOUNT.getValue());
+			accountType.setAccountTypeId(org.mifos.application.accounts.util.helpers.AccountTypes.LOANACCOUNT.getValue());
 			loan = new LoanBO(userContext, loanOfering, customer, accountType,AccountState.getStatus(accountStateId));
 		} catch (Exception e) {
 		}
@@ -1010,7 +1010,7 @@ public class TestObjectFactory {
 					.getAccountType()
 					.getAccountTypeId()
 					.equals(
-							org.mifos.application.accounts.util.helpers.AccountType.LOANACCOUNT)) {
+							org.mifos.application.accounts.util.helpers.AccountTypes.LOANACCOUNT)) {
 				LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) actionDates;
 				for (AccountFeesActionDetailEntity actionFees : loanScheduleEntity
 						.getAccountFeesActionDetails()) {
@@ -1021,7 +1021,7 @@ public class TestObjectFactory {
 					.getAccountType()
 					.getAccountTypeId()
 					.equals(
-							org.mifos.application.accounts.util.helpers.AccountType.CUSTOMERACCOUNT)) {
+							org.mifos.application.accounts.util.helpers.AccountTypes.CUSTOMERACCOUNT)) {
 				CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) actionDates;
 				for (AccountFeesActionDetailEntity actionFees : customerScheduleEntity
 						.getAccountFeesActionDetails()) {
@@ -1302,7 +1302,7 @@ public class TestObjectFactory {
 		try {
 			UserContext userContext = TestObjectFactory.getUserContext();
 			AccountType accountType = new AccountType();
-			accountType.setAccountTypeId(org.mifos.application.accounts.util.helpers.AccountType.LOANACCOUNT.getValue());
+			accountType.setAccountTypeId(org.mifos.application.accounts.util.helpers.AccountTypes.LOANACCOUNT.getValue());
 			loan = new LoanBO(userContext, loanOfering, customer, accountType,AccountState.getStatus(accountStateId));
 		} catch (Exception e) {
 		}
@@ -1517,7 +1517,7 @@ public class TestObjectFactory {
 					.getAccountType()
 					.getAccountTypeId()
 					.equals(
-							org.mifos.application.accounts.util.helpers.AccountType.LOANACCOUNT)) {
+							org.mifos.application.accounts.util.helpers.AccountTypes.LOANACCOUNT)) {
 				LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) actionDates;
 				for (AccountFeesActionDetailEntity actionFees : loanScheduleEntity
 						.getAccountFeesActionDetails()) {
@@ -1528,7 +1528,7 @@ public class TestObjectFactory {
 					.getAccountType()
 					.getAccountTypeId()
 					.equals(
-							org.mifos.application.accounts.util.helpers.AccountType.CUSTOMERACCOUNT)) {
+							org.mifos.application.accounts.util.helpers.AccountTypes.CUSTOMERACCOUNT)) {
 				CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) actionDates;
 				for (AccountFeesActionDetailEntity actionFees : customerScheduleEntity
 						.getAccountFeesActionDetails()) {

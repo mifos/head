@@ -50,7 +50,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.AccountType;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -61,10 +61,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.exceptions.SystemException;
 
-/**
- * @author rohitr
- * 
- */
 public class AccountStateMachines implements StateMachine {
 	AccountBusinessService accountBusinessService = new AccountBusinessService();
 
@@ -95,14 +91,14 @@ public class AccountStateMachines implements StateMachine {
 	public void initialize(Short localeId, Short officeId, Short prdTypeId) throws StatesInitializationException {
 		logger.debug("In SavingsStateMachine::initialize()");
 		try {
-			if(prdTypeId.equals(AccountType.LOANACCOUNT.getValue())) {
+			if(prdTypeId.equals(AccountTypes.LOANACCOUNT.getValue())) {
 				statesMapForLoan = StateXMLParser.getInstance().loadMapFromXml(
 						AccountStates.TRANSITION_CONFIG_FILE_PATH_LOAN,	getConfigurationName(officeId,prdTypeId));
 				accountStateEntityListForLoan = retrieveAllAccountStateList(prdTypeId);
 				for (AccountStateEntity accountState : accountStateEntityListForLoan)
 					Hibernate.initialize(accountState.getFlagSet());
 				populateLoanStatesViewMap();
-			}else if(prdTypeId.equals(AccountType.SAVINGSACCOUNT.getValue())) {
+			}else if(prdTypeId.equals(AccountTypes.SAVINGSACCOUNT.getValue())) {
 				statesMapForSavings = StateXMLParser.getInstance().loadMapFromXml(
 						AccountStates.TRANSITION_CONFIG_FILE_PATH_SAVINGS,	getConfigurationName(officeId,prdTypeId));
 				accountStateEntityListForSavings = retrieveAllAccountStateList(prdTypeId);
@@ -161,9 +157,9 @@ public class AccountStateMachines implements StateMachine {
 }
 
 	public List<AccountStateEntity> getStatusList(AccountStateEntity accountStateEntity, Short prdTypeId) {
-		if(prdTypeId.equals(AccountType.LOANACCOUNT.getValue())) {
+		if(prdTypeId.equals(AccountTypes.LOANACCOUNT.getValue())) {
 			return statesViewMapForLoan.get(accountStateEntity);
-		}else if(prdTypeId.equals(AccountType.SAVINGSACCOUNT.getValue())) {
+		}else if(prdTypeId.equals(AccountTypes.SAVINGSACCOUNT.getValue())) {
 			return statesViewMapForSavings.get(accountStateEntity);
 		}
 		return null;
@@ -228,13 +224,13 @@ public class AccountStateMachines implements StateMachine {
 	public String getStatusName(Short localeId, Short accountStatusId,Short prdTypeId)
 			throws ApplicationException, SystemException, NumberFormatException {
 		try {
-			if(prdTypeId.equals(AccountType.LOANACCOUNT.getValue())) {
+			if(prdTypeId.equals(AccountTypes.LOANACCOUNT.getValue())) {
 				for (AccountStateEntity accountStateEntityObj : accountStateEntityListForLoan) {
 					if (accountStateEntityObj.getId().equals(accountStatusId)) {
 						return accountStateEntityObj.getName(localeId);
 					}
 				}
-			}else if(prdTypeId.equals(AccountType.SAVINGSACCOUNT.getValue())) {
+			}else if(prdTypeId.equals(AccountTypes.SAVINGSACCOUNT.getValue())) {
 				for (AccountStateEntity accountStateEntityObj : accountStateEntityListForSavings) {
 					if (accountStateEntityObj.getId().equals(accountStatusId)) {
 						return accountStateEntityObj.getName(localeId);
@@ -252,7 +248,7 @@ public class AccountStateMachines implements StateMachine {
 
 	public String getFlagName(Short flagId,Short prdTypeId) throws ApplicationException,
 			SystemException {
-		if(prdTypeId.equals(AccountType.LOANACCOUNT.getValue())) {
+		if(prdTypeId.equals(AccountTypes.LOANACCOUNT.getValue())) {
 			for (AccountStateEntity accountStateEntity : accountStateEntityListForLoan) {
 				for (AccountStateFlagEntity accountStateFlagEntity : accountStateEntity.getFlagSet()) {
 					if (null != accountStateFlagEntity.getId()) {
@@ -262,7 +258,7 @@ public class AccountStateMachines implements StateMachine {
 					}
 				}
 			}
-		} else if(prdTypeId.equals(AccountType.SAVINGSACCOUNT.getValue())) {
+		} else if(prdTypeId.equals(AccountTypes.SAVINGSACCOUNT.getValue())) {
 			for (AccountStateEntity accountStateEntity : accountStateEntityListForSavings) {
 				for (AccountStateFlagEntity accountStateFlagEntity : accountStateEntity.getFlagSet()) {
 					if (null != accountStateFlagEntity.getId()) {
@@ -277,11 +273,11 @@ public class AccountStateMachines implements StateMachine {
 	}
 	
 	public AccountStateEntity retrieveAccountStateEntityMasterObject(AccountStateEntity obj,Short prdTypeId) {
-		if(prdTypeId.equals(AccountType.LOANACCOUNT.getValue())) {
+		if(prdTypeId.equals(AccountTypes.LOANACCOUNT.getValue())) {
 			for(AccountStateEntity object:accountStateEntityListForLoan) {
 				if(object.equals(obj)) return object;
 			}
-		}else if(prdTypeId.equals(AccountType.SAVINGSACCOUNT.getValue())) {
+		}else if(prdTypeId.equals(AccountTypes.SAVINGSACCOUNT.getValue())) {
 			for(AccountStateEntity object:accountStateEntityListForSavings) {
 				if(object.equals(obj)) return object;
 			}
@@ -309,7 +305,7 @@ public class AccountStateMachines implements StateMachine {
 	
 	private String getConfigurationName(Short officeId, Short prdTypeId) {
 		String configurationName = null;
-		if(prdTypeId.equals(AccountType.LOANACCOUNT.getValue())) {
+		if(prdTypeId.equals(AccountTypes.LOANACCOUNT.getValue())) {
 			if(Configuration.getInstance().getAccountConfig(officeId).isDisbursedToLOStateDefinedForLoan()) {
 				if(Configuration.getInstance().getAccountConfig(officeId).isPendingApprovalStateDefinedForLoan())
 					configurationName = "configuration 1";
@@ -321,7 +317,7 @@ public class AccountStateMachines implements StateMachine {
 				else
 					configurationName = "configuration 4";
 			}
-		}else if(prdTypeId.equals(AccountType.SAVINGSACCOUNT.getValue())){
+		}else if(prdTypeId.equals(AccountTypes.SAVINGSACCOUNT.getValue())){
 			if(Configuration.getInstance().getAccountConfig(officeId).isPendingApprovalStateDefinedForSavings())
 				configurationName = "configuration 1";
 			else

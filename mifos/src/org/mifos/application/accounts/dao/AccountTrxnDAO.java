@@ -46,7 +46,7 @@ import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.loan.util.valueobjects.LoanSummary;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.accounts.util.helpers.AccountType;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
 import org.mifos.application.accounts.util.valueobjects.AccountFeesActionDetail;
 import org.mifos.application.accounts.util.valueobjects.AccountPayment;
@@ -147,7 +147,7 @@ public class AccountTrxnDAO extends DAO {
 
 
 			//check the account type
-			if(payment.getAccountType() == AccountType.LOANACCOUNT.getValue().shortValue()){
+			if(payment.getAccountType() == AccountTypes.LOANACCOUNT.getValue().shortValue()){
 
 				//TODO - current version supports full payment only. Refactoring needed here
 				actDate.setPrincipalPaid(actDate.getPrincipal());
@@ -172,9 +172,9 @@ public class AccountTrxnDAO extends DAO {
 					session.update(summary);
 				}
 
-			}else if(payment.getAccountType() == AccountType.SAVINGSACCOUNT.getValue().shortValue()){
+			}else if(payment.getAccountType() == AccountTypes.SAVINGSACCOUNT.getValue().shortValue()){
 				//TODO Savings code goes here
-			}else if(payment.getAccountType() == AccountType.CUSTOMERACCOUNT.getValue().shortValue()){
+			}else if(payment.getAccountType() == AccountTypes.CUSTOMERACCOUNT.getValue().shortValue()){
 				actDate.setPaymentStatus(Constants.YES);
 				actDate.setPaymentDate(payment.getPaymentDate());
 				for(AccountFeesActionDetail feeDetail : actDate.getAccountFeesActionDetail()){

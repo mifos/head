@@ -44,7 +44,7 @@ import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.util.helpers.AccountType;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.collectionsheet.persistence.service.CollectionSheetPersistenceService;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
 import org.mifos.application.customer.business.CustomerBO;
@@ -265,7 +265,7 @@ public class CollectionSheetBO extends BusinessObject {
 				// one customer account with a customer so it would definitely would not have been 
 				// added to the list.
 				MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug("account type id is " + accountActionDate.getAccount().getAccountType());
-				if(accountActionDate.getAccount().getAccountType().getAccountTypeId().equals(AccountType.CUSTOMERACCOUNT.getValue()) ){
+				if(accountActionDate.getAccount().getAccountType().getAccountTypeId().equals(AccountTypes.CUSTOMERACCOUNT.getValue()) ){
 					
 					collectionSheetCustomer.populateAccountDetails(accountActionDate);
 					MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug("after adding account details");
@@ -292,7 +292,7 @@ public class CollectionSheetBO extends BusinessObject {
 		// if yes add it to the collectionSheetCustomer.
 		for(AccountActionDateEntity accountActionDate : accountActionDates){
 			System.out.println("t accoutns size: "+ accountActionDates.size());
-			if(accountActionDate.getAccount().getAccountType().getAccountTypeId().equals(AccountType.LOANACCOUNT.getValue()) ){
+			if(accountActionDate.getAccount().getAccountType().getAccountTypeId().equals(AccountTypes.LOANACCOUNT.getValue()) ){
 				System.out.println("Loan accoutns size: "+ accountActionDate);
 				CollSheetLnDetailsEntity collectionSheetLoanDetail = new CollSheetLnDetailsEntity();
 				collectionSheetLoanDetail.addAccountDetails(accountActionDate);
@@ -317,7 +317,7 @@ public class CollectionSheetBO extends BusinessObject {
 		// iterate over the accountActionDateList and check if there is any savings account due to meet today
 		// if yes add it to the collectionSheetCustomer.
 		 for(AccountActionDateEntity accountActionDate : accountActionDates){
-			if(accountActionDate.getAccount().getAccountType().getAccountTypeId().equals(AccountType.SAVINGSACCOUNT.getValue())){
+			if(accountActionDate.getAccount().getAccountType().getAccountTypeId().equals(AccountTypes.SAVINGSACCOUNT.getValue())){
 				 CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
 				 collSheetSavingsDetail.addAccountDetails(accountActionDate);
 				 getCollectionSheetCustomerForCustomerId(accountActionDate.getCustomer().getCustomerId()).addCollectionSheetSavingsDetail(collSheetSavingsDetail);

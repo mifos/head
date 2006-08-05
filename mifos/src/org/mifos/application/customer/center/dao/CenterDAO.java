@@ -51,7 +51,7 @@ import org.hibernate.StaleObjectStateException;
 import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.AccountType;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.IDGenerator;
 import org.mifos.application.accounts.util.valueobjects.Account;
 import org.mifos.application.accounts.util.valueobjects.CustomerAccount;
@@ -272,7 +272,7 @@ public class CenterDAO extends DAO {
 					center.getPersonnel().getPersonnelId());
 			center.getCustomerAccount().setOfficeId(center.getOffice().getOfficeId());
 			center.getCustomerAccount().setAccountTypeId(
-					AccountType.CUSTOMERACCOUNT.getValue());
+					AccountTypes.CUSTOMERACCOUNT.getValue());
 			// setting the customer account state to active. To be reset when
 			// cancelled, deleted, on hold or withdrawn
 			center.getCustomerAccount().setAccountStateId(
@@ -573,7 +573,7 @@ public class CenterDAO extends DAO {
 				while(accountsIterator.hasNext()){
 					Account account = (Account)accountsIterator.next();
 					if(account.getAccountTypeId().equals(
-							AccountType.CUSTOMERACCOUNT.getValue())){
+							AccountTypes.CUSTOMERACCOUNT.getValue())){
 						center.setCustomerAccount((CustomerAccount)account);
 						break;
 					}

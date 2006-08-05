@@ -1,6 +1,6 @@
 /**
 
- * AccountType.java    version: xxx
+ * AccountTypes.java    version: xxx
 
  
 

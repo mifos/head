@@ -9,6 +9,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
@@ -70,12 +71,12 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 		group=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
 		client=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
 		for(AccountBO account : group.getAccounts()){
-			if(account.getAccountType().getAccountTypeId().equals(AccountConstants.LOAN_TYPE)){
+			if(account.getAccountType().getAccountTypeId().equals(AccountTypes.LOANACCOUNT.getValue())){
 				changeFirstInstallmentDate(account,31);
 			}
 		}
 		for(AccountBO account : client.getAccounts()){
-			if(account.getAccountType().getAccountTypeId().equals(AccountConstants.LOAN_TYPE)){
+			if(account.getAccountType().getAccountTypeId().equals(AccountTypes.LOANACCOUNT.getValue())){
 				changeFirstInstallmentDate(account,31);
 			}
 		}

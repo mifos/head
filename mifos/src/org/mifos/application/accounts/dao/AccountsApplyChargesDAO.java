@@ -55,6 +55,7 @@ import org.mifos.application.accounts.loan.util.valueobjects.LoanActivity;
 import org.mifos.application.accounts.loan.util.valueobjects.LoanSummary;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.valueobjects.Account;
 import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
@@ -66,9 +67,9 @@ import org.mifos.application.accounts.util.valueobjects.CustomerAccount;
 import org.mifos.application.customer.util.valueobjects.Customer;
 import org.mifos.application.customer.util.valueobjects.CustomerMeeting;
 import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeePayment;
-import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.meeting.util.valueobjects.MeetingDetails;
@@ -596,7 +597,7 @@ public class AccountsApplyChargesDAO extends DAO {
 			List<AccountApplyChargesMaster> feeList, Account account,
 			boolean currentDateGreaterThenFirstInstallmentDate)
 			throws SystemException, ApplicationException {
-		if (account.getAccountTypeId().equals(AccountConstants.LOAN_TYPE)) {
+		if (account.getAccountTypeId().equals(AccountTypes.LOANACCOUNT.getValue())) {
 			Iterator<AccountApplyChargesMaster> accountApplyChargesMasterList = feeList
 					.iterator();
 			while (accountApplyChargesMasterList.hasNext()) {
@@ -630,7 +631,7 @@ public class AccountsApplyChargesDAO extends DAO {
 			List<AccountApplyChargesMaster> feeList, Account account,
 			boolean currentDateGreaterThenFirstInstallmentDate)
 			throws SystemException, ApplicationException {
-		if (account.getAccountTypeId().equals(AccountConstants.LOAN_TYPE)) {
+		if (account.getAccountTypeId().equals(AccountTypes.LOANACCOUNT.getValue())) {
 			Iterator<AccountApplyChargesMaster> accountApplyChargesMasterList = feeList
 					.iterator();
 			while (accountApplyChargesMasterList.hasNext()) {

@@ -40,8 +40,7 @@ package org.mifos.application.accounts.util.helpers;
 
 /**
  * This interface stores constants common to all accounts.
- * @author ashishsm
- *
+ * 
  */
 public interface AccountConstants {
 	public final String GETPRDOFFERINGS = "getPrdOfferings";
@@ -160,8 +159,8 @@ public interface AccountConstants {
 	public static final String VERSIONNOMATCHINGPROBLEM="error.versionnodonotmatch";
 	
 	//AccountTypes
-	public static Short LOAN_TYPE=1;
-	public static Short SAVING_TYPE=2;
+	//public static Short LOAN_TYPE=1;
+	//public static Short SAVING_TYPE=2;
 	
 	//For loan next meeting date, amount due, amount in arrears
 	

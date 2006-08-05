@@ -44,7 +44,7 @@ import java.util.List;
 
 import org.hibernate.Hibernate;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.accounts.util.helpers.AccountType;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
 import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
@@ -54,21 +54,21 @@ public class BulkEntryPersistance extends Persistence {
 
 	public List<BulkEntryInstallmentView> getBulkEntryActionView(
 			Date meetingDate, String searchString, Short officeId,
-			AccountType accountType) {
+			AccountTypes accountType) {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("MEETING_DATE", meetingDate);
 		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
 		queryParameters.put("SEARCH_STRING", searchString + '%');
 		queryParameters.put("OFFICE_ID", officeId);
-		if (accountType.equals(AccountType.LOANACCOUNT)) {
+		if (accountType.equals(AccountTypes.LOANACCOUNT)) {
 			return executeNamedQuery(
 					NamedQueryConstants.ALL_LOAN_SCHEDULE_DETAILS,
 					queryParameters);
-		} else if (accountType.equals(AccountType.SAVINGSACCOUNT)) {
+		} else if (accountType.equals(AccountTypes.SAVINGSACCOUNT)) {
 			return executeNamedQuery(
 					NamedQueryConstants.ALL_SAVINGS_SCHEDULE_DETAILS,
 					queryParameters);
-		} else if (accountType.equals(AccountType.CUSTOMERACCOUNT)) {
+		} else if (accountType.equals(AccountTypes.CUSTOMERACCOUNT)) {
 			return executeNamedQuery(
 					NamedQueryConstants.ALL_CUSTOMER_SCHEDULE_DETAILS,
 					queryParameters);
@@ -79,18 +79,18 @@ public class BulkEntryPersistance extends Persistence {
 
 	public List<BulkEntryAccountFeeActionView> getBulkEntryFeeActionView(
 			Date meetingDate, String searchString, Short officeId,
-			AccountType accountType) {
+			AccountTypes accountType) {
 		List<BulkEntryAccountFeeActionView> queryResult = null;
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("MEETING_DATE", meetingDate);
 		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
 		queryParameters.put("SEARCH_STRING", searchString + '%');
 		queryParameters.put("OFFICE_ID", officeId);
-		if (accountType.equals(AccountType.LOANACCOUNT)) {
+		if (accountType.equals(AccountTypes.LOANACCOUNT)) {
 			queryResult = executeNamedQuery(
 					NamedQueryConstants.ALL_LOAN_FEE_SCHEDULE_DETAILS,
 					queryParameters);
-		} else if (accountType.equals(AccountType.CUSTOMERACCOUNT)) {
+		} else if (accountType.equals(AccountTypes.CUSTOMERACCOUNT)) {
 			queryResult = executeNamedQuery(
 					NamedQueryConstants.ALL_CUSTOMER_FEE_SCHEDULE_DETAILS,
 					queryParameters);

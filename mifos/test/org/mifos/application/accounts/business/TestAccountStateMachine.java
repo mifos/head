@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
-import org.mifos.application.accounts.util.helpers.AccountType;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -49,7 +49,7 @@ public class TestAccountStateMachine extends MifosTestCase {
 	public void testGetStatusList() throws StatesInitializationException {
 		createInitialObjects();
 		accountBO  = getLoanAccount(client,meeting);
-		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountType.LOANACCOUNT.getValue());
+		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountTypes.LOANACCOUNT.getValue());
 		List<AccountStateEntity> stateList = accountBO.getStatusList();
 		assertEquals(2,stateList.size());
 	}
@@ -57,14 +57,14 @@ public class TestAccountStateMachine extends MifosTestCase {
 	public void testGetStatusName() throws ApplicationException, SystemException {
 		createInitialObjects();
 		accountBO  = getLoanAccount(client,meeting);
-		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountType.LOANACCOUNT.getValue());
+		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountTypes.LOANACCOUNT.getValue());
 		assertEquals("Closed- Rescheduled",accountBO.getStatusName((short) 1, (short) 8));
 	}
 	
 	public void testGetFlagName() throws ApplicationException, SystemException {
 		createInitialObjects();
 		accountBO  = getLoanAccount(client,meeting);
-		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountType.LOANACCOUNT.getValue());
+		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountTypes.LOANACCOUNT.getValue());
 		assertEquals("Withdraw",accountBO.getFlagName((short) 1));
 	}
 	
@@ -73,7 +73,7 @@ public class TestAccountStateMachine extends MifosTestCase {
 		accountBO  = getLoanAccount(client,meeting);
 		AccountStateEntity accountStateEntity1 = new AccountStateEntity(Short.valueOf("8"));
 		AccountStateEntity accountStateEntity2 = new AccountStateEntity(Short.valueOf("10"));
-		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountType.LOANACCOUNT.getValue());
+		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountTypes.LOANACCOUNT.getValue());
 		assertTrue("This state change is allowed",AccountStateMachines.getInstance().isTransitionAllowed(accountBO,accountStateEntity1));
 		assertFalse("This state change is not allowed",AccountStateMachines.getInstance().isTransitionAllowed(accountBO,accountStateEntity2));
 		

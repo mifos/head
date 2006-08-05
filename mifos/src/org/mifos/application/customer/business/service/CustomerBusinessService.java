@@ -48,7 +48,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.accounts.util.helpers.AccountType;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.center.business.CenterPerformanceHistory;
@@ -175,7 +175,7 @@ public class CustomerBusinessService extends BusinessService{
 	private Money getPortfolioAtRisk(List<AccountBO> accountList) throws PersistenceException, ServiceException {
 		Money amount = new Money();
 		for(AccountBO account : accountList) {
-			if(account.getAccountType().getAccountTypeId().equals(AccountConstants.LOAN_TYPE)
+			if(account.getAccountType().getAccountTypeId().equals(AccountTypes.LOANACCOUNT.getValue())
 					&& ((LoanBO)account).isAccountActive()){
 				LoanBO loan=(LoanBO)account;
 				if(loan.hasPortfolioAtRisk()) {
@@ -190,7 +190,7 @@ public class CustomerBusinessService extends BusinessService{
 	private Money getBalanceForPortfolioAtRisk(List<AccountBO> accountList) throws PersistenceException, ServiceException {
 		Money amount = new Money();
 		for(AccountBO account : accountList) {
-			if(account.getAccountType().getAccountTypeId().equals(AccountConstants.LOAN_TYPE)
+			if(account.getAccountType().getAccountTypeId().equals(AccountTypes.LOANACCOUNT.getValue())
 					&& ((LoanBO)account).isAccountActive()){
 				LoanBO loan=(LoanBO)account;
 				amount=amount.add(loan.getRemainingPrincipalAmount());
@@ -232,9 +232,9 @@ public class CustomerBusinessService extends BusinessService{
 		List<CustomerBO> clients = getChildList(centerChildren,
 				CenterConstants.CLIENT_LEVEL_ID);
 		List<AccountBO> loanList = getAccountsForCustomer(searchId, officeId,
-				AccountType.LOANACCOUNT.getValue());
+				AccountTypes.LOANACCOUNT.getValue());
 		List<AccountBO> savingsList = getAccountsForCustomer(searchId,
-				officeId, AccountType.SAVINGSACCOUNT.getValue());
+				officeId, AccountTypes.SAVINGSACCOUNT.getValue());
 		int clientSize = 0;
 		int groupSize = 0;
 		if (clients != null)

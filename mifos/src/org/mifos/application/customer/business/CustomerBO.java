@@ -52,7 +52,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.AccountType;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
@@ -322,7 +322,7 @@ public abstract class CustomerBO extends BusinessObject {
 	public CustomerAccountBO getCustomerAccount() {
 		for (AccountBO account : accounts) {
 			if (account.getAccountType().getAccountTypeId().equals(
-					Short.valueOf(AccountType.CUSTOMERACCOUNT.getValue())))
+					Short.valueOf(AccountTypes.CUSTOMERACCOUNT.getValue())))
 				return (CustomerAccountBO) account;
 		}
 		return null;
@@ -332,7 +332,7 @@ public abstract class CustomerBO extends BusinessObject {
 		List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
 		for (AccountBO account : accounts) {
 			if (account.getAccountType().getAccountTypeId().equals(
-					AccountType.LOANACCOUNT.getValue()))
+					AccountTypes.LOANACCOUNT.getValue()))
 				loanAccounts.add((LoanBO) account);
 		}
 		return loanAccounts;
@@ -342,7 +342,7 @@ public abstract class CustomerBO extends BusinessObject {
 		List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
 		for (AccountBO account : accounts) {
 			if (account.getAccountType().getAccountTypeId().equals(
-					AccountType.LOANACCOUNT.getValue())) {
+					AccountTypes.LOANACCOUNT.getValue())) {
 				short accounStateId = account.getAccountState().getId()
 						.shortValue();
 				LoanBO loan = (LoanBO) account;
@@ -363,7 +363,7 @@ public abstract class CustomerBO extends BusinessObject {
 		List<SavingsBO> savingsAccounts = new ArrayList<SavingsBO>();
 		for (AccountBO account : accounts) {
 			if (account.getAccountType().getAccountTypeId().equals(
-					AccountType.SAVINGSACCOUNT.getValue())
+					AccountTypes.SAVINGSACCOUNT.getValue())
 					&& account.getAccountState().getId().shortValue() == AccountStates.SAVINGS_ACC_APPROVED)
 				savingsAccounts.add((SavingsBO) account);
 		}
@@ -525,7 +525,7 @@ public abstract class CustomerBO extends BusinessObject {
 		Money amount = new Money();
 		for (AccountBO account : getAccounts()) {
 			if (account.getAccountType().getAccountTypeId().equals(
-					AccountConstants.LOAN_TYPE)
+					AccountTypes.LOANACCOUNT.getValue())
 					&& ((LoanBO) account).isAccountActive()) {
 				LoanBO loan = (LoanBO) account;
 				if (loan.hasPortfolioAtRisk())
@@ -539,7 +539,7 @@ public abstract class CustomerBO extends BusinessObject {
 		Money amount = new Money();
 		for (AccountBO account : getAccounts()) {
 			if (account.getAccountType().getAccountTypeId().equals(
-					AccountConstants.LOAN_TYPE)
+					AccountTypes.LOANACCOUNT.getValue())
 					&& ((LoanBO) account).isAccountActive()) {
 				amount = amount.add(((LoanBO) account)
 						.getRemainingPrincipalAmount());
@@ -552,7 +552,7 @@ public abstract class CustomerBO extends BusinessObject {
 		Integer countOfActiveLoans = 0;
 		for (AccountBO account : getAccounts()) {
 			if (account.getAccountType().getAccountTypeId().equals(
-					AccountConstants.LOAN_TYPE)
+					AccountTypes.LOANACCOUNT.getValue())
 					&& ((LoanBO) account).isAccountActive()) {
 				countOfActiveLoans++;
 			}
@@ -565,7 +565,7 @@ public abstract class CustomerBO extends BusinessObject {
 		Money totalOutStandingAmount = new Money();
 		for (AccountBO accountBO : getAccounts()) {
 			if (accountBO.getAccountType().getAccountTypeId().equals(
-					AccountConstants.LOAN_TYPE)
+					AccountTypes.LOANACCOUNT.getValue())
 					&& ((LoanBO) accountBO).isAccountActive()) {
 				amountOverDue = amountOverDue.add(((LoanBO) accountBO)
 						.getTotalPrincipalAmountInArrears());
@@ -593,7 +593,7 @@ public abstract class CustomerBO extends BusinessObject {
 		Money amount = new Money();
 		for (AccountBO account : getAccounts()) {
 			if (account.getAccountType().getAccountTypeId().equals(
-					AccountConstants.SAVING_TYPE)) {
+					AccountTypes.SAVINGSACCOUNT.getValue())) {
 				SavingsBO savingsBO = (SavingsBO) account;
 				amount = amount.add(savingsBO.getSavingsBalance());
 			}

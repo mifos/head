@@ -40,7 +40,7 @@ package org.mifos.application.bulkentry.business;
 import java.sql.Date;
 import java.util.List;
 
-import org.mifos.application.accounts.util.helpers.AccountType;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistanceService;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryDataView;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryNodeBuilder;
@@ -186,23 +186,23 @@ public class BulkEntryBO extends BusinessObject {
 		List<BulkEntryInstallmentView> bulkEntryLoanScheduleViews = bulkEntryPersistanceService
 				.getBulkEntryActionView(transactionDate, parentCustomer
 						.getCustomerSearchId(), office.getOfficeId(),
-						AccountType.LOANACCOUNT);
+						AccountTypes.LOANACCOUNT);
 		List<BulkEntryInstallmentView> bulkEntrySavingsScheduleViews = bulkEntryPersistanceService
 				.getBulkEntryActionView(transactionDate, parentCustomer
 						.getCustomerSearchId(), office.getOfficeId(),
-						AccountType.SAVINGSACCOUNT);
+						AccountTypes.SAVINGSACCOUNT);
 		List<BulkEntryInstallmentView> bulkEntryCustomerScheduleViews = bulkEntryPersistanceService
 				.getBulkEntryActionView(transactionDate, parentCustomer
 						.getCustomerSearchId(), office.getOfficeId(),
-						AccountType.CUSTOMERACCOUNT);
+						AccountTypes.CUSTOMERACCOUNT);
 		List<BulkEntryAccountFeeActionView> bulkEntryLoanFeeScheduleViews = bulkEntryPersistanceService
 				.getBulkEntryFeeActionView(transactionDate, parentCustomer
 						.getCustomerSearchId(), office.getOfficeId(),
-						AccountType.LOANACCOUNT);
+						AccountTypes.LOANACCOUNT);
 		List<BulkEntryAccountFeeActionView> bulkEntryCustomerFeeScheduleViews = bulkEntryPersistanceService
 				.getBulkEntryFeeActionView(transactionDate, parentCustomer
 						.getCustomerSearchId(), office.getOfficeId(),
-						AccountType.CUSTOMERACCOUNT);
+						AccountTypes.CUSTOMERACCOUNT);
 		totalCustomers = allChildNodes.size();
 		bulkEntryParent = BulkEntryNodeBuilder.buildBulkEntry(allChildNodes,
 				parentCustomer, transactionDate, bulkEntryLoanScheduleViews,

@@ -10,8 +10,8 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -83,12 +83,12 @@ public class TestGroupBO extends MifosTestCase {
 		group=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
 		client=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
 		for(AccountBO account : group.getAccounts()){
-			if(account.getAccountType().getAccountTypeId().equals(AccountConstants.LOAN_TYPE)){
+			if(account.getAccountType().getAccountTypeId().equals(AccountTypes.LOANACCOUNT.getValue())){
 				changeFirstInstallmentDate(account,31);
 			}
 		}
 		for(AccountBO account : client.getAccounts()){
-			if(account.getAccountType().getAccountTypeId().equals(AccountConstants.LOAN_TYPE)){
+			if(account.getAccountType().getAccountTypeId().equals(AccountTypes.LOANACCOUNT.getValue())){
 				changeFirstInstallmentDate(account,31);
 			}
 		}

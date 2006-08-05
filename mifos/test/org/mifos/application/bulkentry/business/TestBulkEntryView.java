@@ -7,7 +7,7 @@ import org.mifos.application.accounts.business.CustomerAccountView;
 import org.mifos.application.accounts.business.LoanAccountsProductView;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
-import org.mifos.application.accounts.util.helpers.AccountType;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistanceService;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
@@ -256,12 +256,12 @@ public class TestBulkEntryView extends MifosTestCase {
 				.getBulkEntryActionView(DateUtils
 						.getCurrentDateWithoutTimeStamp(),
 						center.getSearchId(), center.getOffice().getOfficeId(),
-						AccountType.CUSTOMERACCOUNT);
+						AccountTypes.CUSTOMERACCOUNT);
 		List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews = bulkEntryPersistanceService
 				.getBulkEntryFeeActionView(DateUtils
 						.getCurrentDateWithoutTimeStamp(),
 						center.getSearchId(), center.getOffice().getOfficeId(),
-						AccountType.CUSTOMERACCOUNT);
+						AccountTypes.CUSTOMERACCOUNT);
 		assertNotNull(center.getCustomerAccount());
 		BulkEntryView bulkEntryView = new BulkEntryView(getCusomerView(center));
 		bulkEntryView.populateCustomerAccountInformation(center,

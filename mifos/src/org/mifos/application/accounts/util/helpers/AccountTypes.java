@@ -1,6 +1,6 @@
 /**
 
- * AccountType.java    version: xxx
+ * AccountTypes.java    version: xxx
 
  
 
@@ -37,12 +37,12 @@
  */
 package org.mifos.application.accounts.util.helpers;
 
-public enum AccountType {
+public enum AccountTypes {
 	LOANACCOUNT((short) 1), SAVINGSACCOUNT((short) 2), CUSTOMERACCOUNT(
 			(short) 3);
 	Short value;
 
-	AccountType(Short value) {
+	AccountTypes(Short value) {
 		this.value = value;
 	}
 

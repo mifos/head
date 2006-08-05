@@ -7,7 +7,7 @@ import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStateMachines;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.AccountType;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
@@ -57,7 +57,7 @@ public class TestSavingsStateMachine extends MifosTestCase {
 	}
 
 	public void testInitialize() throws StatesInitializationException {
-		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountType.SAVINGSACCOUNT.getValue());
+		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountTypes.SAVINGSACCOUNT.getValue());
 	}
 
 	public void testIsTransitionAllowed() throws ApplicationException {

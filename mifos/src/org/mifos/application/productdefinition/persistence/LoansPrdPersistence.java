@@ -42,7 +42,7 @@ import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.accounts.util.helpers.AccountType;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
@@ -52,7 +52,7 @@ public class LoansPrdPersistence extends Persistence {
 		try {
 			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put("productTypeId",
-					AccountType.LOANACCOUNT.getValue());
+					AccountTypes.LOANACCOUNT.getValue());
 			List<Short> queryResult = executeNamedQuery(NamedQueryConstants.GET_LATENESS_FOR_LOANS,queryParameters);
 			
 			 if (null != queryResult && null != queryResult.get(0)) {

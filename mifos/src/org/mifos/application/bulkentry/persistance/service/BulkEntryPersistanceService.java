@@ -49,7 +49,7 @@ import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.accounts.util.helpers.AccountType;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
@@ -67,14 +67,14 @@ public class BulkEntryPersistanceService extends PersistenceService {
 	private BulkEntryCache bulkEntryCache = new BulkEntryCache();
 
 	public List<BulkEntryInstallmentView> getBulkEntryActionView(
-			Date meetingDate, String searchString, Short officeId,AccountType accountType) {
+			Date meetingDate, String searchString, Short officeId,AccountTypes accountType) {
 		return new BulkEntryPersistance().getBulkEntryActionView(meetingDate,
 				searchString, officeId,accountType);
 
 	}
 
 	public List<BulkEntryAccountFeeActionView> getBulkEntryFeeActionView(
-			Date meetingDate, String searchString, Short officeId,AccountType accountType) {
+			Date meetingDate, String searchString, Short officeId,AccountTypes accountType) {
 		return new BulkEntryPersistance().getBulkEntryFeeActionView(
 				meetingDate, searchString, officeId,accountType);
 
