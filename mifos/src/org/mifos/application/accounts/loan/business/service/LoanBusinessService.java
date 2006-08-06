@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.ViewInstallmentDetails;
 import org.mifos.application.accounts.exceptions.AccountExceptionConstants;
 import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.loan.persistance.service.LoanPersistenceService;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
@@ -128,4 +128,7 @@ public class LoanBusinessService extends BusinessService {
 		return new ViewInstallmentDetails(principalDue, interestDue, feesDue, penaltyDue);
 	}
 	
+	public Short getLastPaymentAction(Integer accountId) throws SystemException {
+		return new LoanPersistance().getLastPaymentAction(accountId);
+	}
 }

@@ -81,8 +81,8 @@
 								<c:out value='${sessionScope.loanAccounts_Context.businessResults["loanAccGlobalNum"]}'/>
 								<mifos:mifoslabel name="loan.congo3"  />
 								<br><br><br>
-							</span><html-el:link href="loanAction.do?method=get
-									&globalAccountNum=${sessionScope.loanAccounts_Context.businessResults['loanAccGlobalNum']}
+							</span><html-el:link href="loanAccountAction.do?method=get
+									&accountId=${requestScope.loan.accountId}
 									&recordOfficeId=${requestScope.loan.officeId}
 									&recordLoanOfficerId=${requestScope.loan.personnelId}">								<mifos:mifoslabel name="loan.view_loan_acc1" /><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.view_loan_acc2" />
 							</html-el:link><span class="fontnormal"><br>
@@ -114,6 +114,7 @@
 				</tr>
 			</table>
 <html-el:hidden value='${sessionScope.loanAccounts_Context.businessResults["loanAccGlobalNum"]}' property="globalAccountNum"/>
+<html-el:hidden property="accountId" value="${requestScope.loan.accountId}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

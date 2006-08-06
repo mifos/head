@@ -6,18 +6,23 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.accounts.business.AccountFlagMapping;
 import org.mifos.application.accounts.business.ViewInstallmentDetails;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.struts.action.AccountAppAction;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
@@ -64,6 +69,32 @@ public class LoanAccountAction extends AccountAppAction {
 	public ActionForward forwardWaiveCharge(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {		
 		String type = request.getParameter("type");
 		return mapping.findForward("waive"+type+"Charges_Success");
-	}	
+	}
 	
+	public ActionForward get(ActionMapping mapping,	ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception{
+		Integer accountId = Integer.valueOf(request.getParameter("accountId"));
+		request.getSession().removeAttribute(Constants.BUSINESS_KEY);
+		LoanBO loanBO = loanBusinessService.getAccount(accountId);
+		setLocaleForMasterEntities(loanBO,getUserContext(request).getLocaleId());
+		loadLoanInfo(loanBO,request);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loanBO, request.getSession());
+		return mapping.findForward(ActionForwards.get_success.toString());
+	}
+	
+	private void setLocaleForMasterEntities(LoanBO loanBO, Short localeId) {
+		loanBO.getGracePeriodType().setLocaleId(localeId);
+		if(loanBO.getCollateralType() != null) 
+			loanBO.getCollateralType().setLocaleId(localeId);
+		loanBO.getInterestType().setLocaleId(localeId);
+		loanBO.getAccountState().setLocaleId(localeId);
+		for(AccountFlagMapping accountFlagMapping : loanBO.getAccountFlags()) {
+			accountFlagMapping.getFlag().setLocaleId(localeId);
+		}
+	}
+	
+	private void loadLoanInfo(LoanBO loanBO, HttpServletRequest request) throws SystemException, ApplicationException{
+		SessionUtils.setAttribute(LoanConstants.RECENTACCOUNTACTIVITIES,loanBusinessService.getRecentActivityView(loanBO.getGlobalAccountNum(),getUserContext(request).getLocaleId()),request.getSession());
+		SessionUtils.setAttribute(AccountConstants.LAST_PAYMENT_ACTION,loanBusinessService.getLastPaymentAction(loanBO.getAccountId()),request.getSession());
+		SessionUtils.setAttribute(LoanConstants.NOTES, loanBO.getRecentAccountNotes(), request.getSession());
+	}
 }

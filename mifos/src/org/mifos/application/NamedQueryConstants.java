@@ -257,6 +257,7 @@ public interface NamedQueryConstants {
 	public String RETRIEVE_MAX_ACTIONID="accountTrxn.maxActionId";
 	public String RETRIEVE_TOTAL_AMOUNT="accountTrxn.totalAmount";
 	public String RETRIEVE_MAX_ACCOUNTPAYMENT="accountPayment.maxAccountPayment";
+	public String RETRIEVE_MAX_ACCPAYMENT="accountPayment.maxAccPayment";
 	public String RETRIEVE_ACCOUNTTRANSACTRANSACTIONS="accountTrxn.AccountTrxns";
 	public String RETRIEVE_ACCOUNTTRANSAMOUNTTOTAL="accountTrxn.AccountTrxnsTotalAmount";
 	

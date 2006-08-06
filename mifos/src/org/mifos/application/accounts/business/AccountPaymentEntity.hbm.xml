@@ -41,4 +41,11 @@
 		</set>
 
 	</class>
+	<query name="accountPayment.maxAccPayment">
+		<![CDATA[from org.mifos.application.accounts.business.AccountPaymentEntity accpayment
+				where accpayment.paymentId = (select max(accountPayment.paymentId) 
+				from org.mifos.application.accounts.business.AccountPaymentEntity accountPayment 
+				where accountPayment.account.accountId = :accountId)
+				]]>
+	  </query>
 </hibernate-mapping>

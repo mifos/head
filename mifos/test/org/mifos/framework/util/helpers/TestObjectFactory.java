@@ -107,6 +107,7 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFormula;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeePayment;
+import org.mifos.application.master.business.CollateralTypeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.valueobjects.AccountType;
@@ -1477,11 +1478,14 @@ public class TestObjectFactory {
 		loan.setLoanAmount(new Money(currency, "300.0"));
 		loan.setLoanBalance(new Money(currency, "300.0"));
 		loan.setNoOfInstallments(Short.valueOf("6"));
-
+		
 		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(Short.valueOf("1"));
 		loan.setGracePeriodType(gracePeriodType);
 		loan.setCreatedBy(Short.valueOf("1"));
 		loan.setGracePeriodDuration(Short.valueOf("0"));
+		
+		CollateralTypeEntity collateralType = new CollateralTypeEntity(Short.valueOf("1"));
+		loan.setCollateralType(collateralType);
 
 		InterestTypesEntity interestTypes = new InterestTypesEntity(Short.valueOf("1"));
 		loan.setInterestType(interestTypes);

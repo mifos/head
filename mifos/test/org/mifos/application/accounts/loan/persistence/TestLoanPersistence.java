@@ -10,17 +10,28 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.LoanAccountView;
+import org.mifos.application.accounts.exceptions.AccountException;
+import org.mifos.application.accounts.financial.exceptions.FinancialException;
+import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.LoanPerformanceHistoryEntity;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestLoanPersistence extends MifosTestCase {
@@ -174,4 +185,27 @@ public class TestLoanPersistence extends MifosTestCase {
 		assertEquals(loanBO.getAccountId(),loanAccount.getAccountId());				
 	}
 	
+	public void testGetLastPaymentAction() throws NumberFormatException, AccountException, RepaymentScheduleException, FinancialException, SystemException {
+		Date startDate = new Date(System.currentTimeMillis());
+		loanAccountForDisbursement = getLoanAccount(AccountState.LOANACC_APPROVED.getValue(),startDate,1);
+		disburseLoan(startDate);
+		assertEquals("Last payment action should be 'PAYMENT'",AccountActionTypes.DISBURSAL.getValue(),loanPersistence.getLastPaymentAction(loanAccountForDisbursement.getAccountId()));
+	}
+	
+	private void disburseLoan(Date startDate) throws NumberFormatException, AccountException, RepaymentScheduleException, FinancialException, SystemException {
+		((LoanBO) loanAccountForDisbursement).disburseLoan("1234", startDate,Short.valueOf("1"), loanAccountForDisbursement.getPersonnel(), startDate, Short.valueOf("1"));
+		HibernateUtil.commitTransaction();
+	}	
+	
+	private AccountBO getLoanAccount(Short accountSate, Date startDate,
+			int disbursalType) {
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), meeting);
+		return TestObjectFactory.createLoanAccountWithDisbursement(
+				"99999999999", group, accountSate, startDate, loanOffering,
+				disbursalType);
+	}
 }

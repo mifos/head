@@ -6,6 +6,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -15,17 +16,22 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
+import org.mifos.application.accounts.business.AccountPaymentEntity;
+import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.LoanAccountView;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.struts.tags.DateHelper;
+import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
 
 public class LoanPersistance extends Persistence {
@@ -149,5 +155,28 @@ public class LoanPersistance extends Persistence {
 		
 		public LoanBO getAccount(Integer accountId) {
 			return (LoanBO)HibernateUtil.getSessionTL().get(LoanBO.class, accountId);
+		}
+		
+		public Short getLastPaymentAction(Integer accountId) throws SystemException {
+			Session session = null;
+			try {
+				session = HibernateUtil.getSession();
+				HashMap queryParameters = new HashMap();
+				queryParameters.put("accountId", accountId);
+				List<AccountPaymentEntity> accountPaymentList = executeNamedQuery(
+						NamedQueryConstants.RETRIEVE_MAX_ACCPAYMENT,queryParameters);
+				if (accountPaymentList != null && accountPaymentList.size() > 0) {
+					AccountPaymentEntity accountPayment = (AccountPaymentEntity) accountPaymentList
+							.get(0);
+					Set<AccountTrxnEntity> accountTrxnSet = accountPayment.getAccountTrxns();
+					for (AccountTrxnEntity accountTrxn : accountTrxnSet) {
+						if (accountTrxn.getAccountActionEntity().getId().shortValue() == AccountConstants.ACTION_DISBURSAL)
+							return accountTrxn.getAccountActionEntity().getId();
+					}
+				}
+			} catch (HibernateException he) {
+				throw new SystemException(ExceptionConstants.SYSTEMEXCEPTION, he);
+			}
+			return null;
 		}
 }

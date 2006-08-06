@@ -38,6 +38,7 @@
 package org.mifos.framework.components.taggenerator;
 
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.framework.business.BusinessObject;
@@ -62,30 +63,29 @@ public class AccountTagGenerator extends TagGenerator {
 	}
 	
 	private void createAccountLink(StringBuilder strBuilder, AccountBO account){
-		if(account.getAccountType().getAccountTypeId().equals(
-				AccountTypes.SAVINGSACCOUNT.getValue())){
-			strBuilder.append("<a href=\"");
-			strBuilder.append(getAction(account));
-			strBuilder.append(account.getGlobalAccountNum());
-			strBuilder.append("\">");
-			//TODO internationalize this
-			strBuilder.append(getAccountName(account));
-			strBuilder.append("</a>");
-		}
+		strBuilder.append("<a href=\"");
+		strBuilder.append(getAction(account));
+		//strBuilder.append(account.getAccountId());
+		strBuilder.append("\">");
+		//TODO internationalize this
+		strBuilder.append(getAccountName(account));
+		strBuilder.append("</a>");
 	}
 	
 	private String getAccountName(AccountBO account){
-		if(account.getAccountType().getAccountTypeId().equals(
-				AccountTypes.SAVINGSACCOUNT.getValue())){
+		if(account.getAccountType().getAccountTypeId().equals(AccountTypes.SAVINGSACCOUNT.getValue())){
 			return ((SavingsBO)account).getSavingsOffering().getPrdOfferingName();
+		}else if(account.getAccountType().getAccountTypeId().equals(AccountTypes.LOANACCOUNT.getValue())){
+			return ((LoanBO)account).getLoanOffering().getPrdOfferingName();
 		}
 		return null;
 	}
 	
 	private String getAction(AccountBO account){
-		if(account.getAccountType().getAccountTypeId().equals(
-				AccountTypes.SAVINGSACCOUNT.getValue())){
-			return "savingsAction.do?method=get&globalAccountNum=";
+		if(account.getAccountType().getAccountTypeId().equals(AccountTypes.SAVINGSACCOUNT.getValue())){
+			return "savingsAction.do?method=get&globalAccountNum="+account.getGlobalAccountNum();
+		}else if(account.getAccountType().getAccountTypeId().equals(AccountTypes.LOANACCOUNT.getValue())){
+			return "loanAccountAction.do?method=get&accountId="+account.getAccountId();
 		}
 		return "";
 	}

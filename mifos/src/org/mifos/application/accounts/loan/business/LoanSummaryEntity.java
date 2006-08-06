@@ -151,6 +151,34 @@ public class LoanSummaryEntity extends PersistentObject {
 	public void updateFeePaid(Money totalPayment) {
 		feesPaid = feesPaid.add(totalPayment);
 	}
+	
+	public Money getPrincipalDue(){
+		return getOriginalPrincipal().subtract(getPrincipalPaid());
+	}
+	
+	public Money getInterestDue(){
+		return getOriginalInterest().subtract(getInterestPaid());
+	}
+
+	public Money getPenaltyDue(){
+		return getOriginalPenalty().subtract(getPenaltyPaid());
+	}
+
+	public Money getFeesDue(){
+		return getOriginalFees().subtract(getFeesPaid());
+	}
+
+	public Money getTotalAmntDue(){
+		return getPrincipalDue().add(getInterestDue()).add(getPenaltyDue()).add(getFeesDue());
+	}
+	
+	public Money getTotalLoanAmnt(){
+		return getOriginalPrincipal().add(getOriginalFees()).add(getOriginalInterest()).add(getOriginalPenalty());
+	}
+
+	public Money getTotalAmntPaid(){
+		return getPrincipalPaid().add(getFeesPaid()).add(getInterestPaid()).add(getPenaltyPaid());
+	}
 
 	public Money getOustandingBalance() {
 		Money totalAmount = new Money();
