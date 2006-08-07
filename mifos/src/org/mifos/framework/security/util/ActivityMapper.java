@@ -540,6 +540,7 @@ public class ActivityMapper {
 		activityMap.put("/loanAccountAction-getAllActivity",
 				SecurityConstants.VIEW);
 		activityMap.put("/loanAccountAction-get",SecurityConstants.VIEW);
+		activityMap.put("/loanAccountAction-getLoanRepaymentSchedule",SecurityConstants.VIEW);
 
 		// mapping for account status::TO BE REMOVED
 		activityMap.put("/LoanStatusAction-load", SecurityConstants.VIEW);

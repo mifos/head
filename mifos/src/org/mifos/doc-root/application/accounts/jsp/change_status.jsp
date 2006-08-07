@@ -32,10 +32,7 @@
 				<tr>
 					<td class="bluetablehead05">
 						<span class="fontnormal8pt">
-	          				<customtags:headerLink/><html-el:link
-						action="loanAction.do?method=get&globalAccountNum=${sessionScope.editStatusActionForm.globalAccountNum}">
-						<c:out value="${sessionScope.editStatusActionForm.accountName}" />
-					</html-el:link> 
+	          				<customtags:headerLink/>
 	        			</span>
 					</td>
 				</tr>
@@ -170,6 +167,7 @@
 					</td>
 				</tr>
 			</table>
+			<html-el:hidden property="globalAccountNum" value="${sessionScope.editStatusActionForm.globalAccountNum}" />
 		</html-el:form>
 		<script language="javascript">
 				if(editStatusActionForm.newStatusId.length != undefined){

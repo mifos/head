@@ -50,7 +50,7 @@
   </row>
   
   <row>
-  	<column label="Loan" labeltype="key" boldlabel="true" type="link" action="loanAction.do">
+  	<column label="Loan" labeltype="key" boldlabel="true" type="link" action="loanAccountAction.do">
   		<displayname>
   			<fragment-name name="Account # " type="string"/>
   			<fragment-name name="loanGlobalAccountNum" type="method"/>

@@ -105,6 +105,8 @@
 		<form-bean name="savingsDepositWithdrawalForm" type="org.mifos.application.accounts.savings.struts.actionforms.SavingsDepositWithdrawalActionForm" />
 		<!-- Edit status for accounts-->
 		<form-bean name="editStatusActionForm" type="org.mifos.application.accounts.struts.actionforms.EditStatusActionForm" />
+		<!-- loan account action form-->
+		<form-bean name="loanAccountActionForm" type="org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionForm" />
 	</form-beans>
 
 	<global-exceptions>
@@ -878,13 +880,15 @@
 			<forward name="applyPayment_failure" path="/pages/application/accounts/jsp/reviewapplypayment.jsp"/>
 			<forward name="loan_detail_page" path="/loanAction.do?method=get" />
 		</action>
-		<action path="/loanAccountAction" type="org.mifos.application.accounts.loan.struts.action.LoanAccountAction" parameter="method" scope="session">
+		<action path="/loanAccountAction" type="org.mifos.application.accounts.loan.struts.action.LoanAccountAction" name="loanAccountActionForm" parameter="method" 
+			input="/loanAccountAction.do?method=validate" scope="session" validate="true">
 			<forward name="viewInstmentDetails_success" path="/pages/application/loan/jsp/nextPayment_loanAccount.jsp" />
 			<forward name="getAllActivity_success" path="/pages/application/loan/jsp/viewloanaccountactivity.jsp" />
 			<forward name="waiveChargesDue_Success" path="/loanAccountAction.do?method=forwardWaiveCharge"></forward>
 			<forward name="waiveChargesOverDue_Success" path="/loanAccountAction.do?method=forwardWaiveCharge"></forward>
 			<forward name="waiveLoanAccountCharges_Success" path="/loanAccountAction.do?method=getInstallmentDetails"/>			
 			<forward name="get_success" path="/pages/application/loan/jsp/loanaccountdetail.jsp" />
+			<forward name="getLoanRepaymentSchedule" path="/pages/application/loan/jsp/loanRepayment.jsp" />
 		</action>
 		<action path="/savingsDepositWithdrawalAction" type="org.mifos.application.accounts.savings.struts.action.SavingsDepositWithdrawalAction" name="savingsDepositWithdrawalForm" parameter="method" 
 			input="/savingsDepositWithdrawalAction.do?method=validate" scope="session" validate="true">

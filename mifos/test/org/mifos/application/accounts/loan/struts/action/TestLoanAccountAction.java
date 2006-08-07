@@ -28,6 +28,7 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
@@ -129,7 +130,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "get");
-		addRequestParameter("accountId", loan.getAccountId().toString());
+		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
 		actionPerform();
 		verifyForward("get_success");
 		
@@ -148,7 +149,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "get");
-		addRequestParameter("accountId", loan.getAccountId().toString());
+		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
 		actionPerform();
 		verifyForward("get_success");
 		
@@ -159,6 +160,13 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		client = (CustomerBO) HibernateUtil.getSessionTL().get(CustomerBO.class,client.getCustomerId());
 		group = (CustomerBO) HibernateUtil.getSessionTL().get(CustomerBO.class,group.getCustomerId());
 		center = (CustomerBO) HibernateUtil.getSessionTL().get(CustomerBO.class,center.getCustomerId());
+	}
+	
+	public void testGetLoanRepaymentSchedule() {
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "getLoanRepaymentSchedule");
+		actionPerform();
+		verifyForward(ActionForwards.getLoanRepaymentSchedule.toString());
 	}
 	
 	private void modifyActionDateForFirstInstallment() {

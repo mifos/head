@@ -44,5 +44,54 @@ public class LoanAccountActionForm extends ValidatorActionForm {
 	public LoanAccountActionForm() {
 		super();
 	}
+	
+	private String accountId;
 
+	private String globalAccountNum;
+	
+	private String prdOfferingName;
+
+	private String accountName;
+	
+	private String accountTypeId;
+
+	public String getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(String accountId) {
+		this.accountId = accountId;
+	}
+
+	public String getAccountName() {
+		return accountName;
+	}
+
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
+	}
+
+	public String getAccountTypeId() {
+		return accountTypeId;
+	}
+
+	public void setAccountTypeId(String accountTypeId) {
+		this.accountTypeId = accountTypeId;
+	}
+
+	public String getGlobalAccountNum() {
+		return globalAccountNum;
+	}
+
+	public void setGlobalAccountNum(String globalAccountNum) {
+		this.globalAccountNum = globalAccountNum;
+	}
+
+	public String getPrdOfferingName() {
+		return prdOfferingName;
+	}
+
+	public void setPrdOfferingName(String prdOfferingName) {
+		this.prdOfferingName = prdOfferingName;
+	}
 }

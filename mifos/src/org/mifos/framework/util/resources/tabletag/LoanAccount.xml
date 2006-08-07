@@ -9,7 +9,7 @@
   
   
   <row>
-  	<column label="Loan" labeltype="key" boldlabel="true" type="link" action="loanAction.do"  styleClass="headingblue">
+  	<column label="Loan" labeltype="key" boldlabel="true" type="link" action="loanAccountAction.do"  styleClass="headingblue">
   		<displayname bold="true">
   			<fragment-name name="Account # " type="string"/>
   			<fragment-name name="loanGlobalAccountNumber" type="method"/>  			

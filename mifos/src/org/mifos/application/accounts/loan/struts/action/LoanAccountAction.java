@@ -6,9 +6,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.hibernate.Hibernate;
+import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFlagMapping;
 import org.mifos.application.accounts.business.ViewInstallmentDetails;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.struts.action.AccountAppAction;
@@ -72,17 +76,28 @@ public class LoanAccountAction extends AccountAppAction {
 	}
 	
 	public ActionForward get(ActionMapping mapping,	ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception{
-		Integer accountId = Integer.valueOf(request.getParameter("accountId"));
+		String globalAccountNum = request.getParameter("globalAccountNum");
 		request.getSession().removeAttribute(Constants.BUSINESS_KEY);
-		LoanBO loanBO = loanBusinessService.getAccount(accountId);
+		LoanBO loanBO = loanBusinessService.findBySystemId(globalAccountNum);
+		for(AccountActionDateEntity accountActionDateEntity : loanBO.getAccountActionDates()) {
+			Hibernate.initialize(accountActionDateEntity);
+			for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity).getAccountFeesActionDetails()) {
+				Hibernate.initialize(accountFeesActionDetailEntity);
+			}
+		}
 		setLocaleForMasterEntities(loanBO,getUserContext(request).getLocaleId());
-		loadLoanInfo(loanBO,request);
+		loadLoanDetailPageInfo(loanBO,request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loanBO, request.getSession());
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
 	
+	public ActionForward getLoanRepaymentSchedule(ActionMapping mapping,ActionForm form, HttpServletRequest request,HttpServletResponse response) throws Exception {
+		return mapping.findForward(ActionForwards.getLoanRepaymentSchedule.toString()); 
+	}
+	
 	private void setLocaleForMasterEntities(LoanBO loanBO, Short localeId) {
-		loanBO.getGracePeriodType().setLocaleId(localeId);
+		if(loanBO.getGracePeriodType() != null) 
+			loanBO.getGracePeriodType().setLocaleId(localeId);
 		if(loanBO.getCollateralType() != null) 
 			loanBO.getCollateralType().setLocaleId(localeId);
 		loanBO.getInterestType().setLocaleId(localeId);
@@ -92,7 +107,7 @@ public class LoanAccountAction extends AccountAppAction {
 		}
 	}
 	
-	private void loadLoanInfo(LoanBO loanBO, HttpServletRequest request) throws SystemException, ApplicationException{
+	private void loadLoanDetailPageInfo(LoanBO loanBO, HttpServletRequest request) throws SystemException, ApplicationException{
 		SessionUtils.setAttribute(LoanConstants.RECENTACCOUNTACTIVITIES,loanBusinessService.getRecentActivityView(loanBO.getGlobalAccountNum(),getUserContext(request).getLocaleId()),request.getSession());
 		SessionUtils.setAttribute(AccountConstants.LAST_PAYMENT_ACTION,loanBusinessService.getLastPaymentAction(loanBO.getAccountId()),request.getSession());
 		SessionUtils.setAttribute(LoanConstants.NOTES, loanBO.getRecentAccountNotes(), request.getSession());

@@ -65,7 +65,7 @@ public class AccountTagGenerator extends TagGenerator {
 	private void createAccountLink(StringBuilder strBuilder, AccountBO account){
 		strBuilder.append("<a href=\"");
 		strBuilder.append(getAction(account));
-		//strBuilder.append(account.getAccountId());
+		strBuilder.append(account.getGlobalAccountNum());
 		strBuilder.append("\">");
 		//TODO internationalize this
 		strBuilder.append(getAccountName(account));
@@ -83,9 +83,9 @@ public class AccountTagGenerator extends TagGenerator {
 	
 	private String getAction(AccountBO account){
 		if(account.getAccountType().getAccountTypeId().equals(AccountTypes.SAVINGSACCOUNT.getValue())){
-			return "savingsAction.do?method=get&globalAccountNum="+account.getGlobalAccountNum();
+			return "savingsAction.do?method=get&globalAccountNum=";
 		}else if(account.getAccountType().getAccountTypeId().equals(AccountTypes.LOANACCOUNT.getValue())){
-			return "loanAccountAction.do?method=get&accountId="+account.getAccountId();
+			return "loanAccountAction.do?method=get&globalAccountNum=";
 		}
 		return "";
 	}

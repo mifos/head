@@ -29,7 +29,7 @@
 		</parameters>
 		
 	</column>
-	<column label="/" labeltype="string" boldlabel="true" type="link" action="loanAction.do">
+	<column label="/" labeltype="string" boldlabel="true" type="link" action="loanAccountAction.do">
 		<displayname bold="true">
 			<fragment-name name="clientName" type="method" bold="true"/>
 			<fragment-name name=":ID" type="string" bold="true"/>

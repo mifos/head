@@ -242,7 +242,7 @@
 												cellpadding="0">
 												<tr>
 													<td width="65%"><span class="fontnormal"> <html-el:link
-														href="loanAction.do?globalAccountNum=${loan.globalAccountNum}&method=get&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}">
+														href="loanAccountAction.do?globalAccountNum=${loan.globalAccountNum}&method=get&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}">
 														<c:out value="${loan.loanOffering.prdOfferingName}" />,Acct #<c:out
 															value="${loan.globalAccountNum}" />
 													</html-el:link> </span></td>

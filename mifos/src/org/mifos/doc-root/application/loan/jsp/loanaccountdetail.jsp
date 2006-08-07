@@ -62,6 +62,7 @@
 </script>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+		<html-el:form method="post" action="/loanAccountAction.do">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -131,10 +132,8 @@
 									<mifos:mifoslabel name="loan.acc_summary" />
 								</td>
 								<td width="33%" align="right" class="fontnormal">
-									<html-el:link href="accountTrxn.do?method=getInstallmentHistory&input=reviewTransactionPage
-										&accountId=${sessionScope.BusinessKey.accountId}&accountName=${sessionScope.BusinessKey.loanOffering.prdOfferingName}
-										&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}&accountType=${sessionScope.BusinessKey.accountType.accountTypeId}
-										&accountStateId=${sessionScope.BusinessKey.accountState.id}&recordOfficeId=${sessionScope.BusinessKey.office.officeId}
+									<html-el:link href="loanAccountAction.do?method=getLoanRepaymentSchedule&input=reviewTransactionPage
+										&recordOfficeId=${sessionScope.BusinessKey.office.officeId}
 										&recordLoanOfficerId=${sessionScope.BusinessKey.personnel.personnelId}&lastPaymentAction=${sessionScope.lastPaymentAction}">
 										<mifos:mifoslabel name="loan.view_schd" />
 									</html-el:link>
@@ -146,8 +145,8 @@
 								<tr>
 									<td width="58%" class="fontnormal">
 										<mifos:mifoslabel name="loan.totalAmtDue" />
-										<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.LoanNextMeeetingDate)}" />:
-										<c:out value="${sessionScope.BusinessKey.LoanAmountDue}" />
+										<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.nextMeetingDate)}" />:
+										<c:out value="${sessionScope.BusinessKey.totalAmountDue}" />
 									</td>
 									<%--<span
 										class="fontnormal"><a href="nextPayment_loanAccount.htm"><mifos:mifoslabel name="loan.view_inst_details" /></a></span><a href="#"><span
@@ -167,7 +166,7 @@
 								<tr>
 									<td colspan="2" class="fontnormal">
 										<mifos:mifoslabel name="loan.arrear" />:
-										<c:out value="${sessionScope.BusinessKey.LoanAmountInArrears}" />
+										<c:out value="${sessionScope.BusinessKey.totalAmountInArrears}" />
 									</td>
 								</tr>
 							</table>
@@ -596,6 +595,7 @@
 			<html-el:hidden property="accountTypeId" value="${sessionScope.BusinessKey.accountType.accountTypeId}" />
 			<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}" />
 			<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}"/>
+	</html-el:form>
 		<html-el:form action="AccountNotesAction.do?method=load">
 			<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}" />
 			<html-el:hidden property="accountTypeId" value="${sessionScope.BusinessKey.accountType.accountTypeId}" />

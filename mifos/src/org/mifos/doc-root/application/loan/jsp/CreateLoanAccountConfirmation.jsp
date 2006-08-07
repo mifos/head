@@ -82,7 +82,7 @@
 								<mifos:mifoslabel name="loan.congo3"  />
 								<br><br><br>
 							</span><html-el:link href="loanAccountAction.do?method=get
-									&accountId=${requestScope.loan.accountId}
+									&globalAccountNum=${sessionScope.loanAccounts_Context.businessResults['loanAccGlobalNum']}
 									&recordOfficeId=${requestScope.loan.officeId}
 									&recordLoanOfficerId=${requestScope.loan.personnelId}">								<mifos:mifoslabel name="loan.view_loan_acc1" /><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.view_loan_acc2" />
 							</html-el:link><span class="fontnormal"><br>

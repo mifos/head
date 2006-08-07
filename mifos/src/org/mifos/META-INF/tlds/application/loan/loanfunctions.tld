@@ -40,5 +40,9 @@
 		<tagclass>org.mifos.application.accounts.loan.struts.uihelpers.LoanRepaymentTableTag</tagclass>
 		<bodycontent>JSP</bodycontent>
 	</tag>
-  
+  	<tag>
+		<name>getLoanRepaymentTable</name>
+		<tagclass>org.mifos.application.accounts.loan.struts.uihelpers.LoanRepaymentTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+	</tag>
   </taglib>
