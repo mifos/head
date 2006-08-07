@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/jaxb-api.jar"/>
+	<classpathentry kind="lib" path="lib/jaxb-impl.jar"/>
+	<classpathentry kind="lib" path="lib/jaxb-libs.jar"/>
+	<classpathentry kind="lib" path="lib/relaxngDatatype.jar"/>
+	<classpathentry kind="lib" path="lib/struts-1.2.7.jar"/>
+	<classpathentry kind="lib" path="lib/jsp-api.jar"/>
+	<classpathentry kind="lib" path="lib/junit.jar"/>
+	<classpathentry kind="lib" path="lib/javax.servlet.jar"/>
+	<classpathentry kind="lib" path="lib/commons-validator.jar"/>
+	<classpathentry kind="lib" path="lib/commons-beanutils.jar"/>
+	<classpathentry kind="lib" path="lib/commons-beanutils-bean-collections.jar"/>
+	<classpathentry kind="lib" path="lib/commons-beanutils-core.jar"/>
+	<classpathentry kind="lib" path="lib/commons-collections.jar"/>
+	<classpathentry kind="lib" path="lib/commons-fileupload.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang.jar"/>
+	<classpathentry kind="lib" path="lib/hibernate3.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.11.jar"/>
+	<classpathentry kind="lib" path="lib/struts-el.jar"/>
+	<classpathentry kind="lib" path="lib/c3p0-0.9.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/ehcache-0.9.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-3.1.7-bin.jar"/>
+	<classpathentry kind="lib" path="lib/strutstest-2.1.3.jar"/>
+	<classpathentry kind="lib" path="lib/dom4j-1.4.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
