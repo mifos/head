@@ -47,19 +47,17 @@ import org.mifos.application.accounts.business.CustomerActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.center.business.CenterPerformanceHistory;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
-import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerRecentActivityView;
 import org.mifos.application.customer.util.helpers.LoanCycleCounter;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -67,118 +65,141 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 
-public class CustomerBusinessService extends BusinessService{
-	private CustomerPersistenceService dbService;
-	
-	public CustomerBusinessService()throws ServiceException{
-		
+public class CustomerBusinessService extends BusinessService {
+
+	public CustomerBusinessService() throws ServiceException {
+
 	}
+
 	public BusinessObject getBusinessObject(UserContext userContext) {
 		return new SavingsBO(userContext);
 	}
-	
-	public CustomerBO getCustomer(Integer customerId)throws ServiceException{
-		return getDBService().getCustomer(customerId);
-    }
-	
-	public CustomerBO findBySystemId(String globalCustNum) throws PersistenceException, ServiceException {
-		return getDBService().findBySystemId(globalCustNum);
+
+	public CustomerBO getCustomer(Integer customerId) throws ServiceException {
+		return new CustomerPersistence().getCustomer(customerId);
 	}
-	public CustomerBO getBySystemId(String globalCustNum,Short levelId) throws PersistenceException, ServiceException {
-		return getDBService().getBySystemId(globalCustNum,levelId);
-	}	
-	private CustomerPersistenceService getDBService()throws ServiceException{
-		if(dbService==null){
-			dbService=(CustomerPersistenceService) ServiceFactory.getInstance().getPersistenceService(
-					PersistenceServiceName.Customer);
-		}
-		return dbService;
+
+	public CustomerBO findBySystemId(String globalCustNum)
+			throws PersistenceException, ServiceException {
+		return new CustomerPersistence().findBySystemId(globalCustNum);
 	}
-	
-	public  List<LoanCycleCounter> fetchLoanCycleCounter(Integer customerId)throws SystemException{
-		return getDBService().fetchLoanCycleCounter(customerId);
-		
+
+	public CustomerBO getBySystemId(String globalCustNum, Short levelId)
+			throws PersistenceException, ServiceException {
+		return new CustomerPersistence().getBySystemId(globalCustNum, levelId);
 	}
-	
-	public CustomerPerformanceHistoryView getLastLoanAmount(Integer customerId) throws  PersistenceException, ServiceException{
-		return getDBService().getLastLoanAmount(customerId);
+
+	public List<LoanCycleCounter> fetchLoanCycleCounter(Integer customerId)
+			throws SystemException {
+		return new CustomerPersistence().fetchLoanCycleCounter(customerId);
+
 	}
-	public CustomerPerformanceHistoryView numberOfMeetings(boolean isPresent , Integer customerId)throws HibernateProcessException, ServiceException{
-		return getDBService().numberOfMeetings(isPresent,customerId);
+
+	public CustomerPerformanceHistoryView getLastLoanAmount(Integer customerId)
+			throws PersistenceException, ServiceException {
+		return new CustomerPersistence().getLastLoanAmount(customerId);
 	}
-	
-	public double getLastTrxnAmnt(String globalCustNum) throws PersistenceException, ServiceException {
-		return findBySystemId(globalCustNum).getCustomerAccount().getLastPmntAmnt();
+
+	public CustomerPerformanceHistoryView numberOfMeetings(boolean isPresent,
+			Integer customerId) throws HibernateProcessException,
+			ServiceException {
+		return new CustomerPersistence()
+				.numberOfMeetings(isPresent, customerId);
 	}
-	
-	public List<CustomerRecentActivityView> getRecentActivityView(Integer customerId) throws SystemException, ApplicationException {
-		CustomerBO customerBO = getDBService().getCustomer(customerId);
-		Set<CustomerActivityEntity> customerAtivityDetails = customerBO.getCustomerAccount().getCustomerActivitDetails();
+
+	public double getLastTrxnAmnt(String globalCustNum)
+			throws PersistenceException, ServiceException {
+		return findBySystemId(globalCustNum).getCustomerAccount()
+				.getLastPmntAmnt();
+	}
+
+	public List<CustomerRecentActivityView> getRecentActivityView(
+			Integer customerId) throws SystemException, ApplicationException {
+		CustomerBO customerBO = new CustomerPersistence()
+				.getCustomer(customerId);
+		Set<CustomerActivityEntity> customerAtivityDetails = customerBO
+				.getCustomerAccount().getCustomerActivitDetails();
 		List<CustomerRecentActivityView> customerActivityViewList = new ArrayList<CustomerRecentActivityView>();
-		
-		int count=0;
-		for(CustomerActivityEntity customerActivityEntity : customerAtivityDetails) {
-			customerActivityViewList.add(getCustomerActivityView(customerActivityEntity));
-			if(++count == 3)
+
+		int count = 0;
+		for (CustomerActivityEntity customerActivityEntity : customerAtivityDetails) {
+			customerActivityViewList
+					.add(getCustomerActivityView(customerActivityEntity));
+			if (++count == 3)
 				break;
 		}
 		return customerActivityViewList;
 	}
-	
-	public List<CustomerRecentActivityView> getAllActivityView(String globalCustNum) throws SystemException, ApplicationException {
+
+	public List<CustomerRecentActivityView> getAllActivityView(
+			String globalCustNum) throws SystemException, ApplicationException {
 		CustomerBO customerBO = findBySystemId(globalCustNum);
-		Set<CustomerActivityEntity> customerAtivityDetails = customerBO.getCustomerAccount().getCustomerActivitDetails();
+		Set<CustomerActivityEntity> customerAtivityDetails = customerBO
+				.getCustomerAccount().getCustomerActivitDetails();
 		List<CustomerRecentActivityView> customerActivityViewList = new ArrayList<CustomerRecentActivityView>();
-		for(CustomerActivityEntity customerActivityEntity : customerAtivityDetails) {
-			customerActivityViewList.add(getCustomerActivityView(customerActivityEntity));
+		for (CustomerActivityEntity customerActivityEntity : customerAtivityDetails) {
+			customerActivityViewList
+					.add(getCustomerActivityView(customerActivityEntity));
 		}
 		return customerActivityViewList;
 	}
-	
-	private CustomerRecentActivityView getCustomerActivityView(CustomerActivityEntity customerActivityEntity) {
+
+	private CustomerRecentActivityView getCustomerActivityView(
+			CustomerActivityEntity customerActivityEntity) {
 		CustomerRecentActivityView customerRecentActivityView = new CustomerRecentActivityView();
-		customerRecentActivityView.setActivityDate(customerActivityEntity.getCreatedDate());
-		customerRecentActivityView.setDescription(customerActivityEntity.getDescription());
-		customerRecentActivityView.setAmount(removeSign(customerActivityEntity.getAmount()));
-		if(customerActivityEntity.getPersonnel()!=null)
-			customerRecentActivityView.setPostedBy(customerActivityEntity.getPersonnel().getDisplayName());
+		customerRecentActivityView.setActivityDate(customerActivityEntity
+				.getCreatedDate());
+		customerRecentActivityView.setDescription(customerActivityEntity
+				.getDescription());
+		customerRecentActivityView.setAmount(removeSign(customerActivityEntity
+				.getAmount()));
+		if (customerActivityEntity.getPersonnel() != null)
+			customerRecentActivityView.setPostedBy(customerActivityEntity
+					.getPersonnel().getDisplayName());
 		return customerRecentActivityView;
 	}
 
-	
-	private Money removeSign(Money amount){
-		if(amount!=null && amount.getAmountDoubleValue()<0)
+	private Money removeSign(Money amount) {
+		if (amount != null && amount.getAmountDoubleValue() < 0)
 			return amount.negate();
 		else
 			return amount;
 	}
-	
-	private List<AccountBO> getAccountsForCustomer(String searchId, Short officeId, Short accountTypeId) throws PersistenceException, ServiceException {
-		return getDBService().retrieveAccountsUnderCustomer(searchId,officeId,accountTypeId);
+
+	private List<AccountBO> getAccountsForCustomer(String searchId,
+			Short officeId, Short accountTypeId) throws PersistenceException,
+			ServiceException {
+		return new CustomerPersistence().retrieveAccountsUnderCustomer(
+				searchId, officeId, accountTypeId);
 	}
-	
-	private Money getTotalOutstandingLoan(List<AccountBO> accountList) throws PersistenceException, ServiceException {
+
+	private Money getTotalOutstandingLoan(List<AccountBO> accountList)
+			throws PersistenceException, ServiceException {
 		Money total = new Money();
-		for(AccountBO accountBO : accountList) {
+		for (AccountBO accountBO : accountList) {
 			LoanBO loanBO = (LoanBO) accountBO;
-			if(loanBO.isAccountActive()) {
-				for(AccountActionDateEntity accountActionDateEntity : loanBO.getAccountActionDates()) {
-					total = total.add(((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
+			if (loanBO.isAccountActive()) {
+				for (AccountActionDateEntity accountActionDateEntity : loanBO
+						.getAccountActionDates()) {
+					total = total
+							.add(((LoanScheduleEntity) accountActionDateEntity)
+									.getPrincipal());
 				}
 			}
 		}
 		return total;
 	}
-	
-	private Money getPortfolioAtRisk(List<AccountBO> accountList) throws PersistenceException, ServiceException {
+
+	private Money getPortfolioAtRisk(List<AccountBO> accountList)
+			throws PersistenceException, ServiceException {
 		Money amount = new Money();
-		for(AccountBO account : accountList) {
-			if(account.getAccountType().getAccountTypeId().equals(AccountTypes.LOANACCOUNT.getValue())
-					&& ((LoanBO)account).isAccountActive()){
-				LoanBO loan=(LoanBO)account;
-				if(loan.hasPortfolioAtRisk()) {
+		for (AccountBO account : accountList) {
+			if (account.getAccountType().getAccountTypeId().equals(
+					AccountTypes.LOANACCOUNT.getValue())
+					&& ((LoanBO) account).isAccountActive()) {
+				LoanBO loan = (LoanBO) account;
+				if (loan.hasPortfolioAtRisk()) {
 					amount = getBalanceForPortfolioAtRisk(accountList);
 					break;
 				}
@@ -186,42 +207,49 @@ public class CustomerBusinessService extends BusinessService{
 		}
 		return amount;
 	}
-	
-	private Money getBalanceForPortfolioAtRisk(List<AccountBO> accountList) throws PersistenceException, ServiceException {
+
+	private Money getBalanceForPortfolioAtRisk(List<AccountBO> accountList)
+			throws PersistenceException, ServiceException {
 		Money amount = new Money();
-		for(AccountBO account : accountList) {
-			if(account.getAccountType().getAccountTypeId().equals(AccountTypes.LOANACCOUNT.getValue())
-					&& ((LoanBO)account).isAccountActive()){
-				LoanBO loan=(LoanBO)account;
-				amount=amount.add(loan.getRemainingPrincipalAmount());
+		for (AccountBO account : accountList) {
+			if (account.getAccountType().getAccountTypeId().equals(
+					AccountTypes.LOANACCOUNT.getValue())
+					&& ((LoanBO) account).isAccountActive()) {
+				LoanBO loan = (LoanBO) account;
+				amount = amount.add(loan.getRemainingPrincipalAmount());
 			}
 		}
 		return amount;
 	}
-	
-	private Money getTotalSavings(List<AccountBO> accountList) throws PersistenceException, ServiceException {
+
+	private Money getTotalSavings(List<AccountBO> accountList)
+			throws PersistenceException, ServiceException {
 		Money total = new Money();
-		for(AccountBO accountBO : accountList) {
+		for (AccountBO accountBO : accountList) {
 			SavingsBO savingsBO = (SavingsBO) accountBO;
 			total = total.add(savingsBO.getSavingsBalance());
 		}
 		return total;
 	}
-	
-	private List<CustomerBO> getCustomer(String searchId, Short officeId, Short customerLevelId) throws PersistenceException, ServiceException {
-		return getDBService().getAllChildrenForParent(searchId,officeId,customerLevelId);
+
+	private List<CustomerBO> getCustomer(String searchId, Short officeId,
+			Short customerLevelId) throws PersistenceException,
+			ServiceException {
+		return new CustomerPersistence().getAllChildrenForParent(searchId,
+				officeId, customerLevelId);
 	}
-	
-	private List<CustomerBO> getChildList(List<CustomerBO> centerChildren , short childLevelId){
+
+	private List<CustomerBO> getChildList(List<CustomerBO> centerChildren,
+			short childLevelId) {
 		List<CustomerBO> children = new ArrayList<CustomerBO>();
-		for(int i=0;i<centerChildren.size();i++){
+		for (int i = 0; i < centerChildren.size(); i++) {
 			CustomerBO customer = centerChildren.get(i);
-			if( customer.getCustomerLevel().getId().shortValue() == childLevelId )
+			if (customer.getCustomerLevel().getId().shortValue() == childLevelId)
 				children.add(customer);
 		}
 		return children;
 	}
-	
+
 	public CenterPerformanceHistory getCenterPerformanceHistory(
 			String searchId, Short officeId) throws PersistenceException,
 			ServiceException {
@@ -244,7 +272,9 @@ public class CustomerBusinessService extends BusinessService{
 		Money portfolioAtRisk = new Money();
 		Money totalOutstandingLoan = getTotalOutstandingLoan(loanList);
 		if (totalOutstandingLoan.getAmountDoubleValue() != 0)
-			portfolioAtRisk = new Money(String.valueOf(getPortfolioAtRisk(loanList).getAmountDoubleValue()/totalOutstandingLoan.getAmountDoubleValue()));
+			portfolioAtRisk = new Money(String.valueOf(getPortfolioAtRisk(
+					loanList).getAmountDoubleValue()
+					/ totalOutstandingLoan.getAmountDoubleValue()));
 		Money totalSavings = getTotalSavings(savingsList);
 
 		CenterPerformanceHistory centerPerformanceHistory = new CenterPerformanceHistory();
@@ -253,5 +283,5 @@ public class CustomerBusinessService extends BusinessService{
 						totalOutstandingLoan, totalSavings, portfolioAtRisk);
 		return centerPerformanceHistory;
 	}
-	
+
 }

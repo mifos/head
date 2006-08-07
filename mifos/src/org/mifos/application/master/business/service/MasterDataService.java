@@ -4,7 +4,7 @@ import java.sql.Date;
 import java.util.List;
 
 import org.mifos.application.customer.business.CustomerView;
-import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.dao.MasterDAO;
@@ -27,7 +27,7 @@ public class MasterDataService extends BusinessService {
 
 	private OfficePersistenceService officePersistenceService = new OfficePersistenceService();
 
-	private CustomerPersistenceService customerPersistenceService = new CustomerPersistenceService();
+	private CustomerPersistence customerPersistence = new CustomerPersistence();
 
 	private MasterPersistenceService masterPersistenceService = new MasterPersistenceService();
 
@@ -60,9 +60,8 @@ public class MasterDataService extends BusinessService {
 
 	public List<CustomerView> getListOfActiveParentsUnderLoanOfficer(
 			Short personnelId, Short customerLevel, Short officeId) {
-		return customerPersistenceService
-				.getListOfActiveParentsUnderLoanOfficer(personnelId,
-						customerLevel, officeId);
+		return customerPersistence.getActiveParentList(personnelId,
+				customerLevel, officeId);
 
 	}
 
@@ -84,25 +83,30 @@ public class MasterDataService extends BusinessService {
 	public List<PrdOfferingBO> getLoanProductsAsOfMeetingDate(Date meetingDate,
 			String searchId, Short personnelId) throws SystemException,
 			ApplicationException {
-		return customerPersistenceService.getLoanProductsAsOfMeetingDate(
-				meetingDate, searchId, personnelId);
+		return customerPersistence.getLoanProducts(meetingDate, searchId,
+				personnelId);
 	}
 
 	public List<PrdOfferingBO> getSavingsProductsAsOfMeetingDate(
 			Date meetingDate, String searchId, Short personnelId) {
-		return customerPersistenceService.getSavingsProductsAsOfMeetingDate(
-				meetingDate, searchId, personnelId);
+		return customerPersistence.getSavingsProducts(meetingDate, searchId,
+				personnelId);
 	}
-	
-	public List<PaymentTypeEntity> retrievePaymentTypes(Short localeId)throws SystemException{
+
+	public List<PaymentTypeEntity> retrievePaymentTypes(Short localeId)
+			throws SystemException {
 		return masterPersistenceService.retrievePaymentTypes(localeId);
 	}
-	
-	public List<PaymentTypeEntity> getSupportedPaymentModes(Short localeId, Short transactionTypeId)throws SystemException{
-		return masterPersistenceService.getSupportedPaymentModes(localeId, transactionTypeId);
+
+	public List<PaymentTypeEntity> getSupportedPaymentModes(Short localeId,
+			Short transactionTypeId) throws SystemException {
+		return masterPersistenceService.getSupportedPaymentModes(localeId,
+				transactionTypeId);
 	}
-	
-	public List<MasterDataEntity> retrieveMasterEntities(Class entityName, Short localeId) throws PersistenceException {
-		return masterPersistenceService.retrieveMasterEntities(entityName, localeId);
+
+	public List<MasterDataEntity> retrieveMasterEntities(Class entityName,
+			Short localeId) throws PersistenceException {
+		return masterPersistenceService.retrieveMasterEntities(entityName,
+				localeId);
 	}
 }

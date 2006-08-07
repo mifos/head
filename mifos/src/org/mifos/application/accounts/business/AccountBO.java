@@ -68,7 +68,7 @@ import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.exception.StateChangeException;
-import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
@@ -879,7 +879,7 @@ public class AccountBO extends BusinessObject {
 
 		if (Configuration.getInstance().getAccountConfig(
 				getOffice().getOfficeId()).isBackDatedTxnAllowed()) {
-			Date meetingDate = getCustomerDBService()
+			Date meetingDate = new CustomerPersistence()
 					.getLastMeetingDateForCustomer(
 							getCustomer().getCustomerId());
 			Date lastMeetingDate = null;
@@ -894,11 +894,6 @@ public class AccountBO extends BusinessObject {
 		return trxnDate.equals(DateUtils.getCurrentDateWithoutTimeStamp());
 	}
 
-	private CustomerPersistenceService getCustomerDBService()
-			throws ServiceException {
-		return (CustomerPersistenceService) ServiceFactory.getInstance()
-				.getPersistenceService(PersistenceServiceName.Customer);
-	}
 
 	public void handleChangeInMeetingSchedule() throws SchedulerException,
 			ServiceException, HibernateException, PersistenceException {

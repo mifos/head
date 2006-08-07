@@ -45,18 +45,16 @@ import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
+import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
 import org.mifos.application.bulkentry.persistance.BulkEntryPersistance;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryCache;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.framework.persistence.service.PersistenceService;
@@ -121,7 +119,7 @@ public class BulkEntryPersistanceService extends PersistenceService {
 
 	public CustomerBO getCustomer(Integer customerId) {
 		if (!bulkEntryCache.isCustomerPresent(customerId)) {
-			CustomerBO customer = new CustomerPersistenceService()
+			CustomerBO customer = new CustomerPersistence()
 					.getCustomer(customerId);
 			bulkEntryCache.addCustomer(customerId, customer);
 		}

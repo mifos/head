@@ -44,6 +44,7 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -124,7 +125,7 @@ public class GroupBO extends CustomerBO {
 	public void generatePortfolioAtRisk() throws PersistenceException,
 			ServiceException {
 		Money amount = getBalanceForAccountsAtRisk();
-		List<CustomerBO> clients = getDBService().getAllChildrenForParent(
+		List<CustomerBO> clients = new CustomerPersistence().getAllChildrenForParent(
 				getSearchId(), getOffice().getOfficeId(),
 				CustomerConstants.GROUP_LEVEL_ID);
 		if (clients != null && !clients.isEmpty()) {
@@ -140,13 +141,13 @@ public class GroupBO extends CustomerBO {
 							/ getPerformanceHistory()
 									.getTotalOutStandingLoanAmount()
 									.getAmountDoubleValue())));
-		getDBService().update(this);
+		new CustomerPersistence().createOrUpdate(this);
 	}
 
 	public Money getTotalOutStandingLoanAmount() throws PersistenceException,
 			ServiceException {
 		Money amount = getOutstandingLoanAmount();
-		List<CustomerBO> clients = getDBService().getAllChildrenForParent(
+		List<CustomerBO> clients = new CustomerPersistence().getAllChildrenForParent(
 				getSearchId(), getOffice().getOfficeId(),
 				CustomerConstants.GROUP_LEVEL_ID);
 		if (clients != null && !clients.isEmpty()) {
@@ -161,7 +162,7 @@ public class GroupBO extends CustomerBO {
 			ServiceException {
 		Money amountForActiveAccount = new Money();
 		Integer countOfActiveLoans = 0;
-		List<CustomerBO> clients = getDBService().getAllChildrenForParent(
+		List<CustomerBO> clients = new CustomerPersistence().getAllChildrenForParent(
 				getSearchId(), getOffice().getOfficeId(),
 				CustomerConstants.GROUP_LEVEL_ID);
 		if (clients != null && !clients.isEmpty()) {
@@ -181,7 +182,7 @@ public class GroupBO extends CustomerBO {
 	public Money getTotalSavingsBalance() throws PersistenceException,
 			ServiceException {
 		Money amount = getSavingsBalance();
-		List<CustomerBO> clients = getDBService().getAllChildrenForParent(
+		List<CustomerBO> clients = new CustomerPersistence().getAllChildrenForParent(
 				getSearchId(), getOffice().getOfficeId(),
 				CustomerConstants.GROUP_LEVEL_ID);
 		if (clients != null && !clients.isEmpty()) {
@@ -194,7 +195,7 @@ public class GroupBO extends CustomerBO {
 
 	public Integer getActiveOnHoldChildrenOfGroup()
 			throws PersistenceException, ServiceException {
-		List<CustomerBO> clients = getDBService().getAllChildrenForParent(
+		List<CustomerBO> clients = new CustomerPersistence().getAllChildrenForParent(
 				getSearchId(), getOffice().getOfficeId(),
 				CustomerConstants.GROUP_LEVEL_ID);
 		if (clients != null && !clients.isEmpty()) {

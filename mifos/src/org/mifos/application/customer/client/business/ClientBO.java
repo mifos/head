@@ -10,6 +10,7 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
@@ -165,7 +166,7 @@ public class ClientBO extends CustomerBO {
 			addClientAttendance(clientAttendance);
 		}
 		clientAttendance.setAttendance(attendance);
-		getDBService().update(this);
+		new CustomerPersistence().createOrUpdate(this);
 	}
 
 	public boolean isCustomerActive() {

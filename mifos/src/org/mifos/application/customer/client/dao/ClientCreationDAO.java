@@ -70,7 +70,7 @@ import org.mifos.application.customer.client.util.valueobjects.ClientPerformance
 import org.mifos.application.customer.client.util.valueobjects.CustomerPicture;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
-import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerHelper;
 import org.mifos.application.customer.util.helpers.IdGenerator;
@@ -80,7 +80,6 @@ import org.mifos.application.meeting.util.valueobjects.MeetingType;
 import org.mifos.application.office.dao.OfficeDAO;
 import org.mifos.application.personnel.util.valueobjects.Personnel;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.audit.util.helpers.LogInfo;
 import org.mifos.framework.components.audit.util.helpers.LogValueMap;
@@ -98,7 +97,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.valueobjects.Context;
 
 /**
@@ -293,12 +291,12 @@ public class ClientCreationDAO extends DAO {
 	
 	private void saveDepositSchedule(Customer client, UserContext userContext)throws ApplicationException, SystemException{
 		if(client.getCustomerMeeting()!=null && client.getCustomerMeeting().getMeeting()!=null){
-			CustomerPersistenceService customerPersistenceService = (CustomerPersistenceService) ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.Customer);
-			CustomerBO customer = customerPersistenceService.getCustomer(client.getCustomerId());
+			CustomerPersistence customerPersistence = new CustomerPersistence();
+			CustomerBO customer = customerPersistence.getCustomer(client.getCustomerId());
 			if(customer.getParentCustomer()!=null){
-				List<SavingsBO> savingsList = customerPersistenceService.retrieveSavingsAccountForCustomer(customer.getParentCustomer().getCustomerId());
+				List<SavingsBO> savingsList = customerPersistence.retrieveSavingsAccountForCustomer(customer.getParentCustomer().getCustomerId());
 				if(customer.getParentCustomer().getParentCustomer()!=null)
-					savingsList.addAll(customerPersistenceService.retrieveSavingsAccountForCustomer(customer.getParentCustomer().getParentCustomer().getCustomerId()));
+					savingsList.addAll(customerPersistence.retrieveSavingsAccountForCustomer(customer.getParentCustomer().getParentCustomer().getCustomerId()));
 				for(SavingsBO savings : savingsList){
 					savings.setUserContext(userContext);
 					savings.generateAndUpdateDepositActionsForClient(customer);

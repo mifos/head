@@ -4,20 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.hibernate.HibernateException;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.cronjobs.TaskHelper;
-import org.mifos.framework.components.scheduler.SchedulerException;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 
 public class RegenerateScheduleHelper extends TaskHelper {
 
@@ -26,9 +18,7 @@ public class RegenerateScheduleHelper extends TaskHelper {
 	public void execute(long timeInMills){
 		try{
 			accountList=new ArrayList<Integer>();
-			CustomerPersistenceService customerPersistenceService=(CustomerPersistenceService) ServiceFactory.getInstance().getPersistenceService(
-				PersistenceServiceName.Customer);
-			List<Integer> customerIds = customerPersistenceService.getCustomersWithUpdatedMeetings();
+			List<Integer> customerIds = new CustomerPersistence().getCustomersWithUpdatedMeetings();
 			if(customerIds!=null && !customerIds.isEmpty())
 				for(Integer customerId :  customerIds){
 					try{
@@ -63,8 +53,7 @@ public class RegenerateScheduleHelper extends TaskHelper {
 					accountList.add(account.getAccountId());
 				}
 			}
-		CustomerPersistenceService customerPersistenceService=(CustomerPersistenceService) ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.Customer);
-		List<Integer> customerIds=customerPersistenceService.getChildrenForParent(customer.getSearchId(),customer.getOffice().getOfficeId());
+		List<Integer> customerIds=new CustomerPersistence().getChildrenForParent(customer.getSearchId(),customer.getOffice().getOfficeId());
 		if(customerIds!=null && !customerIds.isEmpty()){
 			for(Integer childCustomerId : customerIds){
 				handleChangeInMeetingSchedule(childCustomerId);

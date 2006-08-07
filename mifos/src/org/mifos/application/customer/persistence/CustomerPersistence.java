@@ -39,6 +39,7 @@
 package org.mifos.application.customer.persistence;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -61,9 +62,12 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.customer.util.helpers.LoanCycleCounter;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -444,4 +448,50 @@ public class CustomerPersistence extends Persistence {
 		}
 	}
 	
+	public List<LoanCycleCounter> fetchLoanCycleCounter(Integer customerId) {
+		HashMap<String, Integer> queryParameters = new HashMap<String, Integer>();
+		queryParameters.put("customerId", customerId);
+		List queryResult = executeNamedQuery(
+				NamedQueryConstants.FETCH_LOANCOUNTERS, queryParameters);
+		if (null != queryResult && queryResult.size() > 0) {
+			MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER).debug(
+					"Fetch loan cycle counter query returned : "
+							+ queryResult.size() + " rows");
+			List<LoanCycleCounter> loanCycleCounters = new ArrayList<LoanCycleCounter>();
+			for (Object obj : queryResult) {
+				String prdOfferingName = (String) obj;
+				MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER).debug(
+						"Prd offering name of the loan account is "
+								+ prdOfferingName);
+				int counter = 1;
+				LoanCycleCounter loanCycleCounter = new LoanCycleCounter(
+						prdOfferingName, counter);
+				if (!loanCycleCounters.contains(loanCycleCounter)) {
+					MifosLogManager
+							.getLogger(LoggerConstants.CLIENTLOGGER)
+							.debug(
+									"Prd offering name "
+											+ prdOfferingName
+											+ " does not already exist in the list hence adding it to the list");
+					loanCycleCounters.add(loanCycleCounter);
+				} else {
+					MifosLogManager
+							.getLogger(LoggerConstants.CLIENTLOGGER)
+							.debug(
+									"Prd offering name "
+											+ prdOfferingName
+											+ " already exists in the list hence incrementing the counter.");
+					for (LoanCycleCounter loanCycle : loanCycleCounters) {
+						if (loanCycle.getOfferingName().equals(prdOfferingName)) {
+							loanCycle.incrementCounter();
+						}
+					}
+				}
+			}
+			return loanCycleCounters;
+		}
+		MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER).debug(
+				"Fetch loan cycle counter query returned : 0 rows");
+		return null;
+	}
 }

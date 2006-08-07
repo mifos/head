@@ -43,7 +43,7 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.valueobjects.InterestCalcType;
@@ -609,7 +609,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		savings = new SavingsPersistenceService().findById(savings
 				.getAccountId());
-		client1 = new CustomerPersistenceService().getCustomer(client1
+		client1 = new CustomerPersistence().getCustomer(client1
 				.getCustomerId());
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
@@ -688,7 +688,7 @@ public class TestSavingsBO extends MifosTestCase {
 		assertEquals(100.0, savings.getSavingsBalance().getAmountDoubleValue());
 		assertEquals(1, savings.getSavingsActivityDetails().size());
 		savings.getAccountPayments().clear();
-		client1 = new CustomerPersistenceService().getCustomer(client1
+		client1 = new CustomerPersistence().getCustomer(client1
 				.getCustomerId());
 	}
 

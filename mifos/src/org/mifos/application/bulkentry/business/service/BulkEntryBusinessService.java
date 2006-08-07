@@ -66,7 +66,7 @@ import org.mifos.application.bulkentry.exceptions.BulkEntryAccountUpdateExceptio
 import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistanceService;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.framework.business.BusinessObject;
@@ -85,7 +85,7 @@ public class BulkEntryBusinessService extends BusinessService {
 
 	private BulkEntryPersistanceService bulkEntryPersistanceService;
 
-	private CustomerPersistenceService customerPersistenceService;
+	private CustomerPersistence customerPersistence;
 
 	private AccountPersistanceService accountPersistanceService;
 
@@ -96,9 +96,7 @@ public class BulkEntryBusinessService extends BusinessService {
 	public BulkEntryBusinessService() {
 		try {
 			bulkEntryPersistanceService = new BulkEntryPersistanceService();
-			customerPersistenceService = (CustomerPersistenceService) ServiceFactory
-					.getInstance().getPersistenceService(
-							PersistenceServiceName.Customer);
+			customerPersistence = new CustomerPersistence();
 			accountPersistanceService = (AccountPersistanceService) ServiceFactory
 					.getInstance().getPersistenceService(
 							PersistenceServiceName.Account);
@@ -151,7 +149,7 @@ public class BulkEntryBusinessService extends BusinessService {
 	}
 
 	public CustomerBO retrieveCustomerAccountInfo(Integer customerId) {
-		return customerPersistenceService.getCustomer(customerId);
+		return customerPersistence.getCustomer(customerId);
 	}
 
 	public List<AccountActionDateEntity> retrieveCustomerAccountActionDetails(
@@ -162,7 +160,7 @@ public class BulkEntryBusinessService extends BusinessService {
 
 	public Date getLastMeetingDateForCustomer(Integer customerId)
 			throws SystemException, ApplicationException {
-		return customerPersistenceService
+		return customerPersistence
 				.getLastMeetingDateForCustomer(customerId);
 	}
 

@@ -46,7 +46,7 @@ import org.mifos.application.bulkentry.util.helpers.BulkEntryDataView;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryNodeBuilder;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
-import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.business.PaymentTypeView;
 import org.mifos.application.office.business.OfficeView;
@@ -59,7 +59,7 @@ import org.mifos.framework.security.util.UserContext;
 
 public class BulkEntryBO extends BusinessObject {
 
-	private CustomerPersistenceService customerDbService;
+	private CustomerPersistence customerDbService;
 
 	private PersonnelView loanOfficer;
 
@@ -83,12 +83,12 @@ public class BulkEntryBO extends BusinessObject {
 
 	public BulkEntryBO() {
 		super();
-		customerDbService = new CustomerPersistenceService();
+		customerDbService = new CustomerPersistence();
 	}
 
 	public BulkEntryBO(UserContext userContext) {
 		super(userContext);
-		customerDbService = new CustomerPersistenceService();
+		customerDbService = new CustomerPersistence();
 	}
 
 	public BulkEntryView getBulkEntryParent() {

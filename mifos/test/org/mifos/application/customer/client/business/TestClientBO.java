@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -16,21 +16,15 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestClientBO extends MifosTestCase {
 
-	private CustomerPersistenceService dbService;
-
 	private CustomerBO center;
 
 	private CustomerBO group;
 
 	private ClientBO client;
 
+	private CustomerPersistence customerPersistence = new CustomerPersistence();
 	@Override
 	protected void setUp() throws Exception {
-		if (dbService == null) {
-			dbService = (CustomerPersistenceService) ServiceFactory
-					.getInstance().getPersistenceService(
-							PersistenceServiceName.Customer);
-		}
 		super.setUp();
 	}
 
@@ -46,7 +40,7 @@ public class TestClientBO extends MifosTestCase {
 		createInitialObjects();
 		Date meetingDate = getCurrentDateWithoutTIme();
 		client.addClientAttendance(getClientAttendance(meetingDate));
-		dbService.update(client);
+		customerPersistence.createOrUpdate(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
@@ -59,7 +53,7 @@ public class TestClientBO extends MifosTestCase {
 		createInitialObjects();
 		Date meetingDate = getCurrentDateWithoutTIme();
 		client.addClientAttendance(getClientAttendance(meetingDate));
-		dbService.update(client);
+		customerPersistence.createOrUpdate(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client

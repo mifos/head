@@ -20,7 +20,7 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
-import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -132,9 +132,9 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 				SavingsConstants.CLIENT_LIST));
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
-		client1 = new CustomerPersistenceService().getCustomer(client1
+		client1 = new CustomerPersistence().getCustomer(client1
 				.getCustomerId());
-		client2 = new CustomerPersistenceService().getCustomer(client2
+		client2 = new CustomerPersistence().getCustomer(client2
 				.getCustomerId());
 	}
 

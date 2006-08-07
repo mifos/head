@@ -50,12 +50,10 @@ import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
-import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -138,7 +136,6 @@ public abstract class CustomerBO extends BusinessObject {
 
 	private Short blackListed;
 
-	private CustomerPersistenceService dbService;
 
 	protected CustomerBO() {
 		super();
@@ -483,7 +480,7 @@ public abstract class CustomerBO extends BusinessObject {
 
 	public List<CustomerBO> getChildren(Short customerLevel)
 			throws PersistenceException, ServiceException {
-		return getDBService().getChildrenForParent(getSearchId(),
+		return new CustomerPersistence().getChildrenForParent(getSearchId(),
 				getOffice().getOfficeId(), customerLevel);
 	}
 
@@ -494,15 +491,6 @@ public abstract class CustomerBO extends BusinessObject {
 	public void setCustomerFormedByPersonnel(
 			PersonnelBO customerFormedByPersonnel) {
 		this.formedByPersonnel = customerFormedByPersonnel;
-	}
-
-	protected CustomerPersistenceService getDBService() throws ServiceException {
-		if (dbService == null) {
-			dbService = (CustomerPersistenceService) ServiceFactory
-					.getInstance().getPersistenceService(
-							PersistenceServiceName.Customer);
-		}
-		return dbService;
 	}
 
 	public void adjustPmnt(String adjustmentComment)

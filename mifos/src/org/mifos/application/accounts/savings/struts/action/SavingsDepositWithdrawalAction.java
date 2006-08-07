@@ -23,7 +23,7 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
-import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
+import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.service.MasterDataService;
@@ -209,7 +209,8 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 	}
 
 	private PaymentData createPaymentData(
-			SavingsDepositWithdrawalActionForm actionForm, UserContext uc) {
+			SavingsDepositWithdrawalActionForm actionForm, UserContext uc)
+			throws ServiceException {
 		Date trxnDate = getDateFromString(actionForm.getTrxnDate(), uc
 				.getPereferedLocale());
 		Date receiptDate = getDateFromString(actionForm.getReceiptDate(), uc
@@ -219,14 +220,16 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 				Short.valueOf(actionForm.getPaymentTypeId()), trxnDate);
 		paymentData.setRecieptDate(receiptDate);
 		paymentData.setRecieptNum(actionForm.getReceiptId());
-		paymentData.setCustomer(new CustomerPersistenceService()
-				.getCustomer(Integer.valueOf(actionForm.getCustomerId())));
+		CustomerBusinessService customerService = (CustomerBusinessService) ServiceFactory
+				.getInstance().getBusinessService(BusinessServiceName.Customer);
+		paymentData.setCustomer(customerService.getCustomer(Integer
+				.valueOf(actionForm.getCustomerId())));
 		return paymentData;
 	}
 
 	private PaymentData createPaymentDataForDeposit(
 			SavingsDepositWithdrawalActionForm actionForm, UserContext uc,
-			SavingsBO savings) {
+			SavingsBO savings) throws ServiceException {
 		PaymentData paymentData = createPaymentData(actionForm, uc);
 		for (AccountActionDateEntity installment : savings
 				.getTotalInstallmentsDue(Integer.valueOf(actionForm

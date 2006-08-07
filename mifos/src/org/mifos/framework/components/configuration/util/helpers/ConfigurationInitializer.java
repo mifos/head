@@ -54,7 +54,7 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
-import org.mifos.application.customer.persistence.service.CustomerPersistenceService;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.office.business.OfficeBO;
@@ -116,7 +116,7 @@ public class ConfigurationInitializer {
 			createOfficeCache(officeConfigMap,systemConfigList.get(i));
 		}
 		
-		List<CustomerStatusEntity> customerOptionalStates =((CustomerPersistenceService) ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.Customer)).getCustomerStates(ConfigConstants.OPTIONAL_FLAG);
+		List<CustomerStatusEntity> customerOptionalStates = new CustomerPersistence().getCustomerStates(ConfigConstants.OPTIONAL_FLAG);
 		setCustomerOptionalStates(officeConfigMap,customerOptionalStates);
 		
 		List<AccountStateEntity> accountOptionalStates =((AccountPersistanceService) ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.Account)).getAccountStates(ConfigConstants.OPTIONAL_FLAG);
