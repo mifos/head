@@ -86,6 +86,14 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		this.principal = principal;
 		this.interest = interest;
 		accountFeesActionDetails = new HashSet<AccountFeesActionDetailEntity>();
+		this.penalty = new Money();
+		this.miscFee = new Money();
+		this.miscPenalty = new Money();
+		this.principalPaid = new Money();
+		this.interestPaid = new Money();
+		this.penaltyPaid = new Money();
+		this.miscFeePaid = new Money();
+		this.miscPenaltyPaid = new Money();
 	}
 
 	public Money getInterest() {

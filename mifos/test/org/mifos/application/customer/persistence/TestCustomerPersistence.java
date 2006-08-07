@@ -327,7 +327,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		center=createCenter();
 		group=TestObjectFactory.createGroup("Group",Short.valueOf("9"),"1.1.1",center,new Date(System.currentTimeMillis()));
 		client = TestObjectFactory.createClient("Client",Short.valueOf("3"),"1.1.1.1",group,new Date(System.currentTimeMillis()));
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", Short.valueOf("2"),new Date(System.currentTimeMillis()), Short.valueOf("1"),300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),Short.valueOf("1"), meeting);
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", Short.valueOf("2"),new Date(System.currentTimeMillis()), Short.valueOf("1"),300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
 		LoanBO loanBO = TestObjectFactory.createLoanAccount("42423142341", client, Short.valueOf("5"), new Date(System.currentTimeMillis()),loanOffering);
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();

@@ -50,6 +50,7 @@ import org.mifos.application.accounts.business.LoanAccountView;
 import org.mifos.application.accounts.business.LoanAccountsProductView;
 import org.mifos.application.accounts.business.SavingsAccountView;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
@@ -189,11 +190,13 @@ public class BulkEntryView extends View {
 	}
 
 	private LoanAccountView getLoanAccountView(LoanBO loan) {
+		Short interestDedAtDisb = loan.isInterestDeductedAtDisbursement() ? 
+				LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT : (short)0;
 		return new LoanAccountView(loan.getAccountId(), loan.getLoanOffering()
 				.getPrdOfferingShortName(), loan.getAccountType()
 				.getAccountTypeId(), loan.getLoanOffering().getPrdOfferingId(),
 				loan.getAccountState().getId(),
-				loan.getIntrestAtDisbursement(), loan.getLoanAmount());
+				interestDedAtDisb, loan.getLoanAmount());
 	}
 
 	private Double getAmountPaidAtDisb(LoanAccountView loanAccountView,

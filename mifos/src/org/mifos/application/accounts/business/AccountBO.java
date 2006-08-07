@@ -158,6 +158,7 @@ public class AccountBO extends BusinessObject {
 			AccountTypes accountType, AccountState accountState)
 			throws AccountException {
 		super(userContext);
+		validate(userContext, customer, accountType,accountState);
 		try{
 			accountFees = new HashSet<AccountFeesEntity>();
 			accountPayments = new HashSet<AccountPaymentEntity>();
@@ -1107,5 +1108,11 @@ public class AccountBO extends BusinessObject {
 
 	public String getFlagName(Short flagId) throws ApplicationException,SystemException {
 		return null;
+	}
+	
+	private void validate(UserContext userContext, CustomerBO customer,
+			AccountTypes accountType, AccountState accountState) throws AccountException {
+		if(userContext == null || customer==null || accountType==null || accountState==null)
+			throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION);
 	}
 }

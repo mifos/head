@@ -89,10 +89,23 @@
 			name="org.mifos.application.accounts.loan.business.LoanBO"
 			table="LOAN_ACCOUNT">
 			<key column="ACCOUNT_ID" />
-
+			
+			<property name="groupFlag" column="GROUP_FLAG" />
 			<property name="businessActivityId"
 				column="BUSINESS_ACTIVITIES_ID" />
-			<property name="groupFlag" column="GROUP_FLAG" />
+			<property name="interestRate" column="INTEREST_RATE" lazy="true" />
+			<property name="noOfInstallments"
+				column="NO_OF_INSTALLMENTS" not-null="true" />
+			<property name="disbursementDate"
+				column="DISBURSEMENT_DATE" />
+			<property name="collateralNote" column="COLLATERAL_NOTE" />
+			<property name="gracePeriodDuration"
+				column="GRACE_PERIOD_DURATION" />
+			<property name="intrestAtDisbursement" access="field"
+				column="INTEREST_AT_DISB" />
+			<property name="gracePeriodPenalty"
+				column="GRACE_PERIOD_PENALTY" update="false" />
+			
 			<property name="loanAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
 			 <column name="LOAN_AMOUNT_CURRENCY_ID" /> 
 			 <column name="LOAN_AMOUNT" />
@@ -101,23 +114,7 @@
 			 <column name="LOAN_BALANCE_CURRENCY_ID" /> 
 			 <column name="LOAN_BALANCE" />
 			</property>
-			<property name="interestRateAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-			 <column name="INTEREST_RATE_CURRENCY_ID" /> 
-			 <column name="INTEREST_RATE_AMOUNT" />
-			</property>
 			
-			<property name="noOfInstallments"
-				column="NO_OF_INSTALLMENTS" not-null="true" />
-			<property name="disbursementDate"
-				column="DISBURSEMENT_DATE" />
-			<property name="collateralNote" column="COLLATERAL_NOTE" />
-			<property name="gracePeriodDuration"
-				column="GRACE_PERIOD_DURATION" />
-			<property name="intrestAtDisbursement"
-				column="INTEREST_AT_DISB" />
-			<property name="gracePeriodPenalty"
-				column="GRACE_PERIOD_PENALTY" update="false" />
-
 			<many-to-one name="loanOffering" column="PRD_OFFERING_ID"
 				class="org.mifos.application.productdefinition.business.LoanOfferingBO"
 				unique="true" lazy="true" cascade="none" insert="true"
@@ -125,8 +122,8 @@
 			<many-to-one name="fund" column="FUND_ID"
 				class="org.mifos.application.fund.util.valueobjects.Fund"
 				cascade="none" insert="true" update="false" unique="true" />
-			<many-to-one name="loanMeeting" column="MEETING_ID"
-				class="org.mifos.application.meeting.business.MeetingBO"
+			<many-to-one name="loanMeeting" column="MEETING_ID" access="field"
+				class="org.mifos.application.meeting.business.MeetingBO" 
 				unique="true" insert="true" cascade="all" update="false" />
 			<many-to-one name="collateralType"
 				column="COLLATERAL_TYPE_ID"

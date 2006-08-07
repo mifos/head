@@ -30,12 +30,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
-import org.mifos.application.fees.business.FeeFrequencyEntity;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.fees.util.valueobjects.FeeFrequency;
 import org.mifos.application.fees.util.valueobjects.Fees;
@@ -269,7 +267,7 @@ public class RepaymentScheduleInputs implements RepaymentScheduleInputsIfc {
 		return miscPenalty;
 	}
 
-	public static Meeting convertMeeting(MeetingBO M2meeting) {
+	private Meeting convertMeeting(MeetingBO M2meeting) {
 		Meeting meetingToReturn = new Meeting();
 		meetingToReturn.setMeetingStartDate(M2meeting.getMeetingStartDate());
 		meetingToReturn.setMeetingPlace("");

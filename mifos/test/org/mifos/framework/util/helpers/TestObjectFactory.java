@@ -61,6 +61,7 @@ import org.mifos.application.accounts.business.CustomerAccountView;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.business.LoanAccountView;
 import org.mifos.application.accounts.business.LoanTrxnDetailEntity;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -107,10 +108,10 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFormula;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeePayment;
+import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.master.business.CollateralTypeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.master.util.valueobjects.InterestCalcRule;
 import org.mifos.application.master.util.valueobjects.InterestCalcType;
 import org.mifos.application.master.util.valueobjects.PrdApplicableMaster;
@@ -132,12 +133,12 @@ import org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.GracePeriodTypeConstants;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.scheduler.Constants;
 import org.mifos.framework.components.scheduler.ScheduleDataIntf;
 import org.mifos.framework.components.scheduler.ScheduleInputsIntf;
@@ -145,6 +146,9 @@ import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerFactory;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.EncryptionException;
+import org.mifos.framework.exceptions.InvalidUserException;
+import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
@@ -407,7 +411,10 @@ public class TestObjectFactory {
 
 		loanOffering.setPrdApplicableMaster(prdApplicableMaster);
 		loanOffering.setPrdCategory(getLoanPrdCategory());
-
+		
+		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(GracePeriodTypeConstants.GRACEONALLREPAYMENTS);
+		loanOffering.setGracePeriodType(gracePeriodType);
+		
 		loanOffering.setPrdType(prdStatus.getPrdType());
 		loanOffering.setOffice(office);
 		loanOffering.setStartDate(startDate);
@@ -462,16 +469,28 @@ public class TestObjectFactory {
 	public static LoanBO createLoanAccount(String globalNum,
 			CustomerBO customer, Short accountStateId, Date startDate,
 			LoanOfferingBO loanOfering) {
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(startDate);
+		customer.getCustomerMeeting().getMeeting()
+				.setMeetingStartDate(calendar);
+		MeetingBO meeting = createLoanMeeting(customer.getCustomerMeeting()
+				.getMeeting());
+		List<Date> meetingDates = getMeetingDates(meeting, 6);
 		LoanBO loan = null;
-		try {
-			UserContext userContext = TestObjectFactory.getUserContext();
-			loan = new LoanBO(userContext, loanOfering, customer,AccountState.getStatus(accountStateId));
-		} catch (Exception e) {
-		}
-
-		loan.setAccountState(new AccountStateEntity(accountStateId));
-
 		MifosCurrency currency = testObjectPersistence.getCurrency();
+		try {
+			loan = new LoanBO(TestObjectFactory.getUserContext(), loanOfering, customer,
+						AccountState.getStatus(accountStateId),	new Money(currency, "300.0"),
+						Short.valueOf("6"),meetingDates.get(0),false,0.0,(short) 0,
+						new Fund(),new ArrayList<FeeView>());
+		} catch (NumberFormatException e) {
+		} catch (AccountException e) {
+			e.printStackTrace();
+		} catch (InvalidUserException e) {
+		} catch (PropertyNotFoundException e) {
+		} catch (SystemException e) {
+		} catch (ApplicationException e) {
+		}
 		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity();
 		accountPeriodicFee.setAccount(loan);
 		accountPeriodicFee.setAccountFeeAmount(new Money(currency, "100.0"));
@@ -481,51 +500,22 @@ public class TestObjectFactory {
 						.valueOf("1"));
 		accountPeriodicFee.setFees(maintanenceFee);
 		loan.addAccountFees(accountPeriodicFee);
-
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTime(startDate);
-		customer.getCustomerMeeting().getMeeting()
-				.setMeetingStartDate(calendar);
-		MeetingBO meeting = createLoanMeeting(customer.getCustomerMeeting()
-				.getMeeting());
 		loan.setLoanMeeting(meeting);
-
-		List<Date> meetingDates = getMeetingDates(loan.getLoanMeeting(), 6);
-
 		short i = 0;
 		for (Date date : meetingDates) {
-			LoanScheduleEntity actionDate = new LoanScheduleEntity(loan,
-					customer, ++i, new java.sql.Date(date.getTime()),
-					PaymentStatus.UNPAID, new Money(currency, "100.0"),
-					new Money(currency, "12.0"));
-
-			actionDate.setPenalty(new Money(currency, "0.0"));
-
-			actionDate.setInterestPaid(new Money(currency, "0.0"));
-			actionDate.setPrincipalPaid(new Money(currency, "0.0"));
-			actionDate.setPenaltyPaid(new Money(currency, "0.0"));
-			actionDate.setMiscFee(new Money(currency, "0.0"));
-			actionDate.setMiscFeePaid(new Money(currency, "0.0"));
-			actionDate.setMiscPenaltyPaid(new Money(currency, "0.0"));
-			actionDate.setMiscPenalty(new Money(currency, "0.0"));
-			actionDate.setPaymentStatus(Short.valueOf("0"));
-
+			LoanScheduleEntity actionDate = (LoanScheduleEntity)loan.getAccountActionDate(++i);
+			actionDate.setPrincipal(new Money(currency, "100.0"));
+			actionDate.setInterest(new Money(currency, "12.0"));
+			actionDate.setActionDate(new java.sql.Date(date.getTime()));
+			actionDate.setPaymentStatus(PaymentStatus.UNPAID.getValue());
 			loan.addAccountActionDate(actionDate);
 
 			AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
 					actionDate, i, maintanenceFee, accountPeriodicFee,
 					new Money(currency, "100.0"));
 			accountFeesaction.setFeeAmountPaid(new Money(currency, "0.0"));
-
 			actionDate.addAccountFeesAction(accountFeesaction);
 		}
-
-		loan.setLoanAmount(new Money(currency, "300.0"));
-		loan.setLoanBalance(new Money(currency, "300.0"));
-		loan.setNoOfInstallments(Short.valueOf("6"));
-
-		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(Short.valueOf("1"));
-		loan.setGracePeriodType(gracePeriodType);
 		loan.setCreatedBy(Short.valueOf("1"));
 		loan.setCreatedDate(new Date(System.currentTimeMillis()));
 
@@ -1222,8 +1212,7 @@ public class TestObjectFactory {
 		testObjectPersistence.update(obj);
 	}
 
-	public static UserContext getUserContext() throws Exception {
-
+	public static UserContext getUserContext() throws SystemException, InvalidUserException, ApplicationException  {
 		byte[] password = EncryptionService.getInstance()
 				.createEncryptedPassword("mifos");
 		PersonnelBO personnel = getPersonnel(Short.valueOf("1"));
@@ -1297,15 +1286,28 @@ public class TestObjectFactory {
 	public static LoanBO createLoanAccountWithDisbursement(String globalNum,
 			CustomerBO customer, Short accountStateId, Date startDate,
 			LoanOfferingBO loanOfering, int disbursalType) {
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(startDate);
+		customer.getCustomerMeeting().getMeeting()
+				.setMeetingStartDate(calendar);
+		MeetingBO meeting = createLoanMeeting(customer.getCustomerMeeting()
+				.getMeeting());
+		List<Date> meetingDates = getMeetingDates(meeting, 6);
 		LoanBO loan = null;
-		try {
-			UserContext userContext = TestObjectFactory.getUserContext();
-			loan = new LoanBO(userContext, loanOfering, customer, AccountState.getStatus(accountStateId));
-		} catch (Exception e) {
-		}
-		loan.setAccountState(new AccountStateEntity(accountStateId));
-
 		MifosCurrency currency = testObjectPersistence.getCurrency();
+			try {
+				loan = new LoanBO(TestObjectFactory.getUserContext(), loanOfering, customer,
+						AccountState.getStatus(accountStateId),new Money(currency, "300.0"),
+						Short.valueOf("6"),meetingDates.get(0),false,10.0,
+						(short)0,new Fund(),new ArrayList<FeeView>());
+			} catch (NumberFormatException e) {
+			} catch (AccountException e) {
+				e.printStackTrace();
+			} catch (InvalidUserException e) {
+			} catch (PropertyNotFoundException e) {
+			} catch (SystemException e) {
+			} catch (ApplicationException e) {
+			}
 		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity();
 		accountPeriodicFee.setAccount(loan);
 		accountPeriodicFee.setAccountFeeAmount(new Money(currency, "10.0"));
@@ -1341,43 +1343,21 @@ public class TestObjectFactory {
 			accountDisbursementFee2.setAccount(loan);
 			loan.addAccountFees(accountDisbursementFee2);
 		}
-
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTime(startDate);
-		customer.getCustomerMeeting().getMeeting()
-				.setMeetingStartDate(calendar);
-		MeetingBO meeting = createLoanMeeting(customer.getCustomerMeeting()
-				.getMeeting());
 		loan.setLoanMeeting(meeting);
 
 		if (disbursalType == 2)// 2-Interest At Disbursment
 		{
-			loan
-					.setIntrestAtDisbursement(LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT);
-			List<Date> meetingDates = getMeetingDates(loan.getLoanMeeting(), 6);
+			loan.setInterestDeductedAtDisbursement(true);
+			meetingDates = getMeetingDates(loan.getLoanMeeting(), 6);
 			short i = 0;
 			for (Date date : meetingDates) {
-
 				if (i == 0) {
 					i++;
 					loan.setDisbursementDate(date);
-					LoanScheduleEntity actionDate = new LoanScheduleEntity(
-							loan, customer, i,
-							new java.sql.Date(date.getTime()),
-							PaymentStatus.UNPAID, new Money(currency, "0.0"),
-							new Money(currency, "12.0"));
-
-					actionDate.setPenalty(new Money(currency, "0.0"));
-
-					actionDate.setInterestPaid(new Money(currency, "0.0"));
-					actionDate.setPrincipalPaid(new Money(currency, "0.0"));
-					actionDate.setPenaltyPaid(new Money(currency, "0.0"));
-					actionDate.setMiscFee(new Money(currency, "0.0"));
-					actionDate.setMiscFeePaid(new Money(currency, "0.0"));
-					actionDate.setMiscPenalty(new Money(currency, "0.0"));
-					actionDate.setMiscPenaltyPaid(new Money(currency, "0.0"));
-					actionDate.setPaymentStatus(Short.valueOf("0"));
-
+					LoanScheduleEntity actionDate = (LoanScheduleEntity)loan.getAccountActionDate(i);
+					actionDate.setActionDate(new java.sql.Date(date.getTime()));
+					actionDate.setInterest(new Money(currency, "12.0"));
+					actionDate.setPaymentStatus(PaymentStatus.UNPAID.getValue());
 					loan.addAccountActionDate(actionDate);
 
 					// periodic fee
@@ -1409,24 +1389,12 @@ public class TestObjectFactory {
 					continue;
 				}
 				i++;
-				LoanScheduleEntity actionDate = new LoanScheduleEntity(loan,
-						customer, i, new java.sql.Date(date.getTime()),
-						PaymentStatus.UNPAID, new Money(currency, "100.0"),
-						new Money(currency, "12.0"));
-
-				actionDate.setPenalty(new Money(currency, "0.0"));
-
-				actionDate.setInterestPaid(new Money(currency, "0.0"));
-				actionDate.setPrincipalPaid(new Money(currency, "0.0"));
-				actionDate.setPenaltyPaid(new Money(currency, "0.0"));
-				actionDate.setMiscFee(new Money(currency, "0.0"));
-				actionDate.setMiscFeePaid(new Money(currency, "0.0"));
-				actionDate.setMiscPenalty(new Money(currency, "0.0"));
-				actionDate.setMiscPenaltyPaid(new Money(currency, "0.0"));
-				actionDate.setPaymentStatus(Short.valueOf("0"));
-
+				LoanScheduleEntity actionDate = (LoanScheduleEntity)loan.getAccountActionDate(i);
+				actionDate.setActionDate(new java.sql.Date(date.getTime()));
+				actionDate.setPrincipal(new Money(currency, "100.0"));
+				actionDate.setInterest(new Money(currency, "12.0"));
+				actionDate.setPaymentStatus(PaymentStatus.UNPAID.getValue());
 				loan.addAccountActionDate(actionDate);
-
 				AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
 						actionDate, i, maintanenceFee, accountPeriodicFee,
 						new Money(currency, "100.0"));
@@ -1435,8 +1403,8 @@ public class TestObjectFactory {
 			}
 
 		} else if (disbursalType == 1 || disbursalType == 3) {
-			loan.setIntrestAtDisbursement(Short.valueOf("0"));
-			List<Date> meetingDates = getMeetingDates(loan.getLoanMeeting(), 7);
+			loan.setInterestDeductedAtDisbursement(false);
+			meetingDates = getMeetingDates(loan.getLoanMeeting(), 6);
 
 			short i = 0;
 			for (Date date : meetingDates) {
@@ -1445,25 +1413,21 @@ public class TestObjectFactory {
 					i++;
 					loan.setDisbursementDate(date);
 					continue;
-				}
+				} 
+					LoanScheduleEntity actionDate = (LoanScheduleEntity)loan.getAccountActionDate(i++);
+					actionDate.setActionDate(new java.sql.Date(date.getTime()));
+					actionDate.setPrincipal(new Money(currency, "100.0"));
+					actionDate.setInterest(new Money(currency, "12.0"));
+					actionDate.setPaymentStatus(PaymentStatus.UNPAID.getValue());
+					loan.addAccountActionDate(actionDate);
+					
+/*				
 				LoanScheduleEntity actionDate = new LoanScheduleEntity(loan,
 						customer, i++, new java.sql.Date(date.getTime()),
-						PaymentStatus.UNPAID, new Money(currency, "0.0"),
+						PaymentStatus.UNPAID, new Money(currency, "100.0"),
 						new Money(currency, "12.0"));
-
-				actionDate.setPenalty(new Money(currency, "0.0"));
-				actionDate.setInterest(new Money(currency, "12.0"));
-				actionDate.setInterestPaid(new Money(currency, "0.0"));
-				actionDate.setPrincipalPaid(new Money(currency, "0.0"));
-				actionDate.setPenaltyPaid(new Money(currency, "0.0"));
-				actionDate.setMiscFee(new Money(currency, "0.0"));
-				actionDate.setMiscFeePaid(new Money(currency, "0.0"));
-				actionDate.setMiscPenalty(new Money(currency, "0.0"));
-				actionDate.setMiscPenaltyPaid(new Money(currency, "0.0"));
-				actionDate.setPaymentStatus(Short.valueOf("0"));
-				actionDate.setPrincipal(new Money(currency, "100.0"));
 				loan.addAccountActionDate(actionDate);
-
+*/
 				AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
 						actionDate, i, maintanenceFee, accountPeriodicFee,
 						new Money(currency, "100.0"));
@@ -1471,22 +1435,16 @@ public class TestObjectFactory {
 				actionDate.addAccountFeesAction(accountFeesaction);
 			}
 		}
-		loan.setLoanAmount(new Money(currency, "300.0"));
-		loan.setLoanBalance(new Money(currency, "300.0"));
-		loan.setNoOfInstallments(Short.valueOf("6"));
-		
 		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(Short.valueOf("1"));
 		loan.setGracePeriodType(gracePeriodType);
 		loan.setCreatedBy(Short.valueOf("1"));
-		loan.setGracePeriodDuration(Short.valueOf("0"));
 		
 		CollateralTypeEntity collateralType = new CollateralTypeEntity(Short.valueOf("1"));
 		loan.setCollateralType(collateralType);
 
 		InterestTypesEntity interestTypes = new InterestTypesEntity(Short.valueOf("1"));
 		loan.setInterestType(interestTypes);
-		loan.setInterestRateAmount(new Money(Configuration.getInstance()
-				.getSystemConfig().getCurrency(), "10.0"));
+		loan.setInterestRate(10.0);
 		loan.setCreatedDate(new Date(System.currentTimeMillis()));
 
 		LoanSummaryEntity loanSummary = loan.getLoanSummary();
@@ -1706,12 +1664,13 @@ public class TestObjectFactory {
 	}
 
 	public static LoanAccountView getLoanAccountView(LoanBO loan) {
+		Short interestDedAtDisb = loan.isInterestDeductedAtDisbursement() ? 
+				LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT : (short)0;
 		return new LoanAccountView(loan.getAccountId(), loan.getLoanOffering()
 				.getPrdOfferingName(),
 				loan.getAccountType().getAccountTypeId(), loan
 						.getLoanOffering().getPrdOfferingId(), loan
-						.getAccountState().getId(), loan
-						.getIntrestAtDisbursement(), loan.getLoanBalance());
+						.getAccountState().getId(), interestDedAtDisb, loan.getLoanBalance());
 
 	}
 

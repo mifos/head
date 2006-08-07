@@ -48,4 +48,5 @@ public interface AccountExceptionConstants {
 	public final String FINDBYGLOBALACCNTEXCEPTION = "exception.accounts.ApplicationException.FindByGlobalAccntException";
 	public final String ZEROAMNTADJUSTMENT = "exception.accounts.ApplicationException.ZeroAmntAdjustmnet";
 	public final String CANNOTADJUST = "exception.accounts.ApplicationException.CannotAdjust";
+	public final String CREATEEXCEPTION = "exception.accounts.create";
 }
