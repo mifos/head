@@ -53,9 +53,6 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
-
-import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
-import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
@@ -110,7 +107,7 @@ public class CustomerAccountBO extends AccountBO {
 	public CustomerAccountBO(UserContext userContext, CustomerBO customer,
 			List<FeeView> fees) throws AccountException {
 		super(userContext,	customer, 
-				new AccountType(AccountTypes.CUSTOMERACCOUNT.getValue()), 
+				AccountTypes.CUSTOMERACCOUNT, 
 				AccountState.CUSTOMERACCOUNT_ACTIVE);
 		if(fees !=null){
 			for(FeeView feeView: fees){

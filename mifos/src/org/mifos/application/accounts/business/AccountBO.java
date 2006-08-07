@@ -61,6 +61,7 @@ import org.mifos.application.accounts.persistence.service.AccountPersistanceServ
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
@@ -154,7 +155,7 @@ public class AccountBO extends BusinessObject {
 	}
 	
 	protected AccountBO(UserContext userContext, CustomerBO customer,
-			AccountType accountType, AccountState accountState)
+			AccountTypes accountType, AccountState accountState)
 			throws AccountException {
 		super(userContext);
 		try{
@@ -168,7 +169,7 @@ public class AccountBO extends BusinessObject {
 			this.accountId = null;
 			this.globalAccountNum = generateId(userContext.getBranchGlobalNum());
 			this.customer = customer;
-			this.accountType = accountType;
+			this.accountType = new AccountType(accountType.getValue());
 			this.office = customer.getOffice();
 			this.personnel = customer.getPersonnel();
 			this.setAccountState(new AccountStateEntity(accountState));

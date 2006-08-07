@@ -465,9 +465,7 @@ public class TestObjectFactory {
 		LoanBO loan = null;
 		try {
 			UserContext userContext = TestObjectFactory.getUserContext();
-			AccountType accountType = new AccountType();
-			accountType.setAccountTypeId(org.mifos.application.accounts.util.helpers.AccountTypes.LOANACCOUNT.getValue());
-			loan = new LoanBO(userContext, loanOfering, customer, accountType,AccountState.getStatus(accountStateId));
+			loan = new LoanBO(userContext, loanOfering, customer,AccountState.getStatus(accountStateId));
 		} catch (Exception e) {
 		}
 
@@ -1302,9 +1300,7 @@ public class TestObjectFactory {
 		LoanBO loan = null;
 		try {
 			UserContext userContext = TestObjectFactory.getUserContext();
-			AccountType accountType = new AccountType();
-			accountType.setAccountTypeId(org.mifos.application.accounts.util.helpers.AccountTypes.LOANACCOUNT.getValue());
-			loan = new LoanBO(userContext, loanOfering, customer, accountType,AccountState.getStatus(accountStateId));
+			loan = new LoanBO(userContext, loanOfering, customer, AccountState.getStatus(accountStateId));
 		} catch (Exception e) {
 		}
 		loan.setAccountState(new AccountStateEntity(accountStateId));

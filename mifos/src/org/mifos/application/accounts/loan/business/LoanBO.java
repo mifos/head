@@ -88,7 +88,6 @@ import org.mifos.application.master.business.CollateralTypeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
-import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -173,8 +172,8 @@ public class LoanBO extends AccountBO {
 	}
 
 	public LoanBO(UserContext userContext, LoanOfferingBO loanOffering,
-			CustomerBO customer, AccountType accountType,AccountState accountState) throws Exception {
-		super(userContext, customer, accountType,accountState);
+			CustomerBO customer,AccountState accountState) throws Exception {
+		super(userContext, customer,AccountTypes.LOANACCOUNT,accountState);
 		this.loanActivityDetails = new HashSet<LoanActivityEntity>();
 		this.loanOffering = loanOffering;
 		this.loanSummary = new LoanSummaryEntity(this,loanAmount,new Money(),new Money());
