@@ -112,6 +112,10 @@
         </tr>
       </table>
       <br>
+	  <mifos:SecurityParam property="${param.securityParamInput}" />
+	  <html-el:hidden property="securityParamInput" value="${param.securityParamInput}" />
+      <html-el:hidden property="globalAccountNum" value="${sessionScope.notesActionForm.globalAccountNum}"/>
+      <html-el:hidden property="accountTypeId" value="${param.accountTypeId}"/>
 </html-el:form>
 </tiles:put>
 </tiles:insert>

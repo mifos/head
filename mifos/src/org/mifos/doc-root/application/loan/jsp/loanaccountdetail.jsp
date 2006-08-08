@@ -48,12 +48,12 @@
 
 <script language="javascript">
   function AddNote(){
-	accountNotesActionForm.action="AccountNotesAction.do?method=load";
-	accountNotesActionForm.submit();
+	notesActionForm.action="notesAction.do?method=load";
+	notesActionForm.submit();
   }
  function SeeAllNotes(){
-	accountNotesActionForm.action="AccountNotesAction.do?method=get";
-	accountNotesActionForm.submit();
+	notesActionForm.action="notesAction.do?method=search";
+	notesActionForm.submit();
   }
  function statusHistory(){
 	 loanStatusActionForm.action="LoanStatusAction.do?method=search";
@@ -578,11 +578,11 @@
 						<tr>
 							<td align="right" class="paddingleft05"><span
 								class="fontnormal8pt"> <c:if test="${!empty sessionScope.notes}">
-								<html-el:link href="javascript:SeeAllNotes()">
+								<html-el:link href="notesAction.do?method=search&accountId=${sessionScope.BusinessKey.accountId}&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}&prdOfferingName=${sessionScope.BusinessKey.loanOffering.prdOfferingName}&securityParamInput=Loan&accountTypeId=${sessionScope.BusinessKey.accountType.accountTypeId}">
 									<mifos:mifoslabel name="loan.seeallnotes" />
 								</html-el:link>
 							</c:if> <br>
-							<html-el:link href="javascript:AddNote()">
+							<html-el:link href="notesAction.do?method=load&accountId=${sessionScope.BusinessKey.accountId}">
 								<mifos:mifoslabel name="loan.addnote" />
 							</html-el:link> </span></td>
 						</tr>
@@ -596,12 +596,6 @@
 			<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}" />
 			<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}"/>
 	</html-el:form>
-		<html-el:form action="AccountNotesAction.do?method=load">
-			<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}" />
-			<html-el:hidden property="accountTypeId" value="${sessionScope.BusinessKey.accountType.accountTypeId}" />
-			<html-el:hidden property="accountName" value="${sessionScope.BusinessKey.loanOffering.prdOfferingName}" />
-			<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}"/>
-		</html-el:form>
 		<html-el:form action="LoanStatusAction.do?method=search">
 			<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}" />
 			<html-el:hidden property="accountTypeId" value="${sessionScope.BusinessKey.accountType.accountTypeId}" />

@@ -19,6 +19,7 @@ public class NotesActionForm extends SearchActionForm {
 	private String prdOfferingName;
 	private String comment;
 	private String globalAccountNum;
+	private String securityParamInput;
 	
 	public String getAccountId() {
 		return accountId;
@@ -50,6 +51,12 @@ public class NotesActionForm extends SearchActionForm {
 	public void setGlobalAccountNum(String globalAccountNum) {
 		this.globalAccountNum = globalAccountNum;
 	}
+	public String getSecurityParamInput() {
+		return securityParamInput;
+	}
+	public void setSecurityParamInput(String securityParamInput) {
+		this.securityParamInput = securityParamInput;
+	}
 	
 	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
 		String methodCalled = request.getParameter(Methods.method.toString());
@@ -59,7 +66,8 @@ public class NotesActionForm extends SearchActionForm {
 			  Methods.searchNext.toString().equals(methodCalled)||
 			  Methods.search.toString().equals(methodCalled)||
 			  Methods.searchPrev.toString().equals(methodCalled)||	 
-			  Methods.load.toString().equals(methodCalled)){
+			  Methods.load.toString().equals(methodCalled) ||
+			  Methods.create.toString().equals(methodCalled)){
 				request.setAttribute(Constants.SKIPVALIDATION, Boolean.valueOf(true));
 			} else if (Methods.preview.toString().equals(methodCalled)) {
 				errors = handlePreviewValidations(request,errors);
@@ -90,5 +98,4 @@ public class NotesActionForm extends SearchActionForm {
 		}
 		return errors;
 	}
-
 }

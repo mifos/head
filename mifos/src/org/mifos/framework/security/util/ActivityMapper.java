@@ -818,14 +818,18 @@ public class ActivityMapper {
 		activityMap.put("/savingsDepositWithdrawalAction-makePayment",SecurityConstants.VIEW);
 		
 		// mapping for notes
-		activityMap.put("/notesAction-load",
+		activityMap.put("/notesAction-load-Savings",
 				SecurityConstants.SAVINGS_CAN_ADD_NOTES_TO_SAVINGS);
+		activityMap.put("/notesAction-load-Loan",
+				SecurityConstants.LOAN_CAN_ADD_NOTES_TO_LOAN);
 		activityMap.put("/notesAction-preview", SecurityConstants.VIEW);
 		activityMap.put("/notesAction-previous", SecurityConstants.VIEW);
 		activityMap.put("/notesAction-get", SecurityConstants.VIEW);
 		activityMap.put("/notesAction-search", SecurityConstants.VIEW);
-		activityMap.put("/notesAction-create",
+		activityMap.put("/notesAction-create-Savings",
 				SecurityConstants.SAVINGS_CAN_ADD_NOTES_TO_SAVINGS);
+		activityMap.put("/notesAction-create-Loan",
+				SecurityConstants.LOAN_CAN_ADD_NOTES_TO_LOAN);
 	}
 
 	private static ActivityMapper instance = new ActivityMapper();

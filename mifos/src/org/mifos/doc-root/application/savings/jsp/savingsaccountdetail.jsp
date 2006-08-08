@@ -354,13 +354,13 @@
                 	<td align="right" class="paddingleft05">
 						<span class="fontnormal8pt">
 							<c:if test="${!empty sessionScope.notes}">
-								<html-el:link href="javascript:SeeAllNotes()">
+								<html-el:link href="notesAction.do?method=search&accountId=${sessionScope.BusinessKey.accountId}&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}&prdOfferingName=${sessionScope.BusinessKey.savingsOffering.prdOfferingName}&securityParamInput=Savings&accountTypeId=${sessionScope.BusinessKey.accountType.accountTypeId}">
 									<mifos:mifoslabel name="Savings.seeAllNotes" />
 								</html-el:link>
 							</c:if>
 							
 								<br>
-							<html-el:link href="javascript:AddNote()">
+							<html-el:link href="notesAction.do?method=load&accountId=${sessionScope.BusinessKey.accountId}">
 									<mifos:mifoslabel name="Savings.addANote" />
 							</html-el:link>
 							
@@ -371,15 +371,9 @@
 					</td>
 				</tr>
 			</table>
+			<mifos:SecurityParam property="Savings" />
 			<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}" />
 			<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}" />
-		</html-el:form>
-
-		<html-el:form action="notesAction.do?method=load">
-			<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}"/>
-			<html-el:hidden property="accountTypeId" value="${sessionScope.BusinessKey.accountType.accountTypeId}"/>
-			<html-el:hidden property="prdOfferingName" value="${sessionScope.BusinessKey.savingsOffering.prdOfferingName}"/>
-			<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}"/>
 		</html-el:form>
 		<html-el:form action="editSavingsAction.do?method=load">
 			<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}" />

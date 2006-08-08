@@ -9,7 +9,7 @@
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
-<html-el:form action="notesAction.do?method=preview">
+<html-el:form action="notesAction.do">
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           	<td class="bluetablehead05">
@@ -59,6 +59,10 @@
         </tr>
       </table>
       <br>
+	  <mifos:SecurityParam property="${param.securityParamInput}" />
+	  <html-el:hidden property="securityParamInput" value="${param.securityParamInput}" />
+      <html-el:hidden property="globalAccountNum" value="${sessionScope.notesActionForm.globalAccountNum}"/>
+      <html-el:hidden property="accountTypeId" value="${param.accountTypeId}"/>
   </html-el:form>
 </tiles:put>
 </tiles:insert>

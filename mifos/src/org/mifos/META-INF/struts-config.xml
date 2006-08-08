@@ -551,7 +551,7 @@
 			<forward name="search_success" path="/pages/application/accounts/jsp/account_notes.jsp" />
 			<forward name="preview_success" path="/pages/application/accounts/jsp/account_previewnotes.jsp" />
 			<forward name="previous_success" path="/pages/application/accounts/jsp/account_addnotes.jsp" />
-			<forward name="loan_details_page" path="/loanAction.do?method=get" />
+			<forward name="loan_detail_page" path="/loanAccountAction.do?method=get" />
 			<forward name="savings_details_page" path="/savingsAction.do?method=get" />
 			<forward name="preview_failure" path="/pages/application/accounts/jsp/account_addnotes.jsp" />
 			<forward name="create_failure" path="/pages/application/accounts/jsp/account_previewnotes.jsp" />
