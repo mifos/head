@@ -89,7 +89,7 @@
 
 	<target name="clean_all" depends="clean">
 		<delete dir="${dist.dir}"/>
-		<delete dir="${docs.dir}/api"/>
+		<delete dir="${doc.dir}/api"/>
 		<!--<delete dir="${src.dir}"/>
 		<delete dir="${test.dir}"/>
 		<delete dir="${sql.dir}"/>-->
@@ -314,7 +314,7 @@
 				<include name="**/*.*" />
 				<exclude name="${dist.dir}/**/*"/>
 				<exclude name="${build.dir}/**/*"/>
-				<exclude name="${docs.dir}/**/*"/>
+				<exclude name="${doc.dir}/**/*"/>
 			</fileset>
 		</zip>
 	</target>-->
