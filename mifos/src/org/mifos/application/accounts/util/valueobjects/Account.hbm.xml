@@ -56,7 +56,7 @@
 			
 	        <property name="groupFlag" column="GROUP_FLAG" type="short" />
 	        <property name="loanBalance" column="LOAN_BALANCE" type="double" />
-	        <property name="interestRateAmount" column="INTEREST_RATE_AMOUNT" type="double" />
+	        <property name="interestRateAmount" column="INTEREST_RATE" type="double" />
 	        <property name="noOfInstallments" column="NO_OF_INSTALLMENTS" type="short"  not-null="true" />
 	        <property name="disbursementDate" column="DISBURSEMENT_DATE" type="date" />
 	        <property name="collateralNote" column="COLLATERAL_NOTE" type="string"   />
