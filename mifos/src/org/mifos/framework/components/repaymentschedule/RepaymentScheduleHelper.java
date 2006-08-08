@@ -573,25 +573,23 @@ public static void setFeeDetailEntity(
 		for (int i = 0; i < count; i++) {
 
 			accountFeeInstallment = accountFeeInstallmentList.get(i);
+			AccountFeesEntity accountFeesEntity = getAccountFeesEntity(accountFeeInstallment
+					.getAccountFee().getAccountFeeId());
+
+			if(accountFeesEntity == null)
+				accountFeesEntity = accountFeeInstallment.getAccountFeeEntity();
 			if (type.equals("Loan")) {
 				accountFeesActionDetailEntity = new LoanFeeScheduleEntity(
 						accountActionDate,
 						accountActionDate.getInstallmentId(),
 						getFeesBO(new Short(accountFeeInstallment.getFeeId())),
-						getAccountFeesEntity(accountFeeInstallment
-								.getAccountFee().getAccountFeeId()),
+						accountFeesEntity,
 						accountFeeInstallment.getAccountFeeAmount());
 				accountFeeInstallment.getAccountFee().setLastAppliedDate(
 						accountActionDate.getActionDate());
 				((LoanScheduleEntity) accountActionDate)
 						.addAccountFeesAction(accountFeesActionDetailEntity);
 			} else {
-				AccountFeesEntity accountFeesEntity = getAccountFeesEntity(accountFeeInstallment
-						.getAccountFee().getAccountFeeId());
-
-				if(accountFeesEntity == null)
-					accountFeesEntity = accountFeeInstallment.getAccountFeeEntity();
-					
 				accountFeesActionDetailEntity = new CustomerFeeScheduleEntity(
 						accountActionDate,
 						accountActionDate.getInstallmentId(),

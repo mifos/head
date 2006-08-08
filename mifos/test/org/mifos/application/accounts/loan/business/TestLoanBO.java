@@ -29,27 +29,31 @@ import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.util.helpers.FeeCategory;
-import org.mifos.application.fees.util.helpers.FeeFormula;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.GracePeriodTypeConstants;
+import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
 import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidUserException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -96,7 +100,7 @@ public class TestLoanBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
-
+	
 	public void testGetTotalRepayAmountForCurrentDateBeforeFirstInstallment() {
 		accountBO = getLoanAccount();
 		HibernateUtil.getSessionTL().flush();
@@ -1314,190 +1318,599 @@ public class TestLoanBO extends MifosTestCase {
 		}
 	}
 
-	public void testBuildLoanWithoutLoanOffering() throws NumberFormatException, AccountException, Exception {
+	public void testBuildLoanWithoutLoanOffering()
+			throws NumberFormatException, AccountException, Exception {
 		createInitialCustomers();
 		try {
-		LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(), null, group,
-				AccountState.LOANACC_APPROVED,	new Money("300.0"),
-				Short.valueOf("6"),new Date(System.currentTimeMillis()),false,10.0,(short) 0,
-				new Fund(),new ArrayList<FeeView>());
-		assertFalse("The Loan object is created for null loan offering",true);
-		} catch(AccountException ae) {
-			assertTrue("The Loan object is not created for null loan offering",true);
-		} 
-	}
-	
-	public void testBuildLoanWithoutCustomer() throws NumberFormatException, AccountException, Exception {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"),meeting);
-		try {
-		LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(), loanOffering, null,
-				AccountState.LOANACC_APPROVED,	new Money("300.0"),
-				Short.valueOf("6"),new Date(System.currentTimeMillis()),false,10.0,(short) 0,
-				new Fund(),new ArrayList<FeeView>());
-		assertFalse("The Loan object is created for null customer",true);
-		} catch(AccountException ae) {
-			assertTrue("The Loan object is not created for null customer",true);
-		} 
-		TestObjectFactory.removeObject(loanOffering);
-	}
-	
-	public void testBuildLoanWithoutLoanAmount() throws NumberFormatException, AccountException, Exception {
-		createInitialCustomers();
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
-		try {
-		LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(), loanOffering, group,
-				AccountState.LOANACC_APPROVED,	null,
-				Short.valueOf("6"),new Date(System.currentTimeMillis()),false,10.0,(short) 0,
-				new Fund(),new ArrayList<FeeView>());
-		assertFalse("The Loan object is created for null customer",true);
-		} catch(AccountException ae) {
-			assertTrue("The Loan object is not created for null customer",true);
-		} 
-		TestObjectFactory.removeObject(loanOffering);
-	}
-	
-	public void testBuildLoanForInterestDedAtDisb() throws NumberFormatException, AccountException, Exception {
-		createInitialCustomers();
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"),meeting);
-		
-		LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(), loanOffering, group,
-				AccountState.LOANACC_APPROVED,	new Money("300.0"),
-				Short.valueOf("6"),new Date(System.currentTimeMillis()),true,10.0,(short) 0,
-				new Fund(),new ArrayList<FeeView>());
-		assertEquals("For interest ded at disb, grace period type should be none",
-				GracePeriodTypeConstants.NONE,loan.getGracePeriodType().getId());
-		assertEquals(Short.valueOf("1"),loan.getInterestType().getId());
-		
-		TestObjectFactory.removeObject(loanOffering);
-	}
-	
-	public void testBuildLoanWithInvalidDisbDate() throws NumberFormatException, AccountException, Exception {
-		createInitialCustomers();
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
-		try {
-		LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(), loanOffering, group,
-				AccountState.LOANACC_APPROVED,	null,
-				Short.valueOf("6"),offSetCurrentDate(3),false,10.0,(short) 0,
-				new Fund(),new ArrayList<FeeView>());
-		assertFalse("The Loan object is created for invalid disbursement date",true);
-		} catch(AccountException ae) {
-			assertTrue("The Loan object is created for invalid disbursement date",true);
-		} 
-		TestObjectFactory.removeObject(loanOffering);
-	}
-	
-	public void testBuildLoanWithFee() throws NumberFormatException, AccountException, Exception {
-		createInitialCustomers();
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"),meeting);
-		
-		List<FeeView> feeViews = getFeeViews();
-		LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(), loanOffering, group,
-				AccountState.LOANACC_APPROVED,	new Money("300.0"),
-				Short.valueOf("6"),new Date(System.currentTimeMillis()),true,10.0,(short) 0,
-				new Fund(),feeViews);
-		assertEquals(2,loan.getAccountFees().size());
-		for(AccountFeesEntity accountFees : loan.getAccountFees()) {
-			if(accountFees.getFees().getFeeName().equals("One Time Amount Fee"))
-				assertEquals(new Money("120.0"),accountFees.getFeeAmount());
-			else 
-				assertEquals(new Money("10.0"),accountFees.getFeeAmount());
+			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(), null,
+					group, AccountState.LOANACC_APPROVED, new Money("300.0"),
+					Short.valueOf("6"), new Date(System.currentTimeMillis()),
+					false, 10.0, (short) 0, new Fund(),
+					new ArrayList<FeeView>());
+			assertFalse("The Loan object is created for null loan offering",
+					true);
+		} catch (AccountException ae) {
+			assertTrue("The Loan object is not created for null loan offering",
+					true);
 		}
+	}
+	
+	public void testBuildForInactiveLoanOffering() throws NumberFormatException, InvalidUserException, SystemException, ApplicationException {
+		createInitialCustomers();
+		LoanOfferingBO loanOffering = createLoanOffering(false,ProductDefinitionConstants.LOANINACTIVE);
+		try {
+			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(), loanOffering,
+					group, AccountState.LOANACC_APPROVED, new Money("300.0"),
+					Short.valueOf("6"), new Date(System.currentTimeMillis()),
+					false, 10.0, (short) 0, new Fund(),
+					new ArrayList<FeeView>());
+			assertFalse("The Loan object is created for inactive loan offering",
+					true);
+		} catch (AccountException ae) {
+			assertTrue("The Loan object is not created for inactive loan offering",
+					true);
+		}
+	}
+
+	public void testBuildLoanWithoutCustomer() throws NumberFormatException,
+			AccountException, Exception {
+		createInitialCustomers();
+		LoanOfferingBO loanOffering = createLoanOffering(false);
+		try {
+			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+					loanOffering, null, AccountState.LOANACC_APPROVED,
+					new Money("300.0"), Short.valueOf("6"), new Date(System
+							.currentTimeMillis()), false, 10.0, (short) 0,
+					new Fund(), new ArrayList<FeeView>());
+			assertFalse("The Loan object is created for null customer", true);
+		} catch (AccountException ae) {
+			assertTrue("The Loan object is not created for null customer", true);
+		}
+		TestObjectFactory.removeObject(loanOffering);
+	}
+	
+	public void testBuildForInactiveCustomer() throws NumberFormatException, InvalidUserException, SystemException, ApplicationException {
+		createInitialCustomers();
+		group.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_CLOSED));
+		TestObjectFactory.updateObject(group);
+		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
 		
+		LoanOfferingBO loanOffering = createLoanOffering(false);
+		try {
+			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+					loanOffering, null, AccountState.LOANACC_APPROVED,
+					new Money("300.0"), Short.valueOf("6"), new Date(System
+							.currentTimeMillis()), false, 10.0, (short) 0,
+					new Fund(), new ArrayList<FeeView>());
+			assertFalse("The Loan object is created for inactive customer", true);
+		} catch (AccountException ae) {
+			assertTrue("The Loan object is not created for inactive customer", true);
+		}
+		TestObjectFactory.removeObject(loanOffering);
+		
+	}
+	
+	public void testMeetingNotMatchingForCustomerAndLoanOffering()
+			throws NumberFormatException, InvalidUserException,
+			SystemException, ApplicationException {
+		createInitialCustomers();
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(2, 1, 4, 2));
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"),
+				new Date(System.currentTimeMillis()),
+				ProductDefinitionConstants.LOANACTIVE, 300.0, 1.2, Short
+						.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), Short.valueOf("0"), Short.valueOf("1"),
+				meeting);
+		try {
+			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+					loanOffering, null, AccountState.LOANACC_APPROVED,
+					new Money("300.0"), Short.valueOf("6"), new Date(System
+							.currentTimeMillis()), false, 10.0, (short) 0,
+					new Fund(), new ArrayList<FeeView>());
+			assertFalse(
+					"The Loan object is created even if meetings do not match",
+					true);
+		} catch (AccountException ae) {
+			assertTrue(
+					"The Loan object is not created if meetings do not match",
+					true);
+		}
+		TestObjectFactory.removeObject(loanOffering);
+	}
+	
+	public void testMeetingRecurrenceOfLoanOfferingInMultipleOfCustomer()
+			throws NumberFormatException, InvalidUserException,
+			SystemException, ApplicationException {
+		createInitialCustomers();
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 2, 4, 2));
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"),
+				new Date(System.currentTimeMillis()),
+				ProductDefinitionConstants.LOANACTIVE, 300.0, 1.2, Short
+						.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), Short.valueOf("0"), Short.valueOf("1"),
+				meeting);
+		LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+				loanOffering, group, AccountState.LOANACC_APPROVED, new Money(
+						"300.0"), Short.valueOf("6"), new Date(System
+						.currentTimeMillis()), false, 10.0, (short) 0,
+				new Fund(), new ArrayList<FeeView>());
+		assertTrue(
+				"The Loan object is created if meeting recurrence of loan offering is in multiples of customer",
+				true);
+		TestObjectFactory.removeObject(loanOffering);
+	}
+	
+	public void testBuildLoanWithoutLoanAmount() throws NumberFormatException,
+			AccountException, Exception {
+		createInitialCustomers();
+		LoanOfferingBO loanOffering = createLoanOffering(false);
+		try {
+			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+					loanOffering, group, AccountState.LOANACC_APPROVED, null,
+					Short.valueOf("6"), new Date(System.currentTimeMillis()),
+					false, 10.0, (short) 0, new Fund(),
+					new ArrayList<FeeView>());
+			assertFalse("The Loan object is created for null customer", true);
+		} catch (AccountException ae) {
+			assertTrue("The Loan object is not created for null customer", true);
+		}
+		TestObjectFactory.removeObject(loanOffering);
+	}
+	
+	public void testGracePeriodGraterThanMaxNoOfInst()
+			throws NumberFormatException, InvalidUserException,
+			SystemException, ApplicationException {
+		createInitialCustomers();
+		LoanOfferingBO loanOffering = createLoanOffering(false);
+		try {
+			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+					loanOffering, group, AccountState.LOANACC_APPROVED, null,
+					Short.valueOf("6"), new Date(System.currentTimeMillis()),
+					false, 10.0, (short) 5, new Fund(),
+					new ArrayList<FeeView>());
+			assertFalse(
+					"The Loan object is created for grace period greather than max installments",
+					true);
+		} catch (AccountException ae) {
+			assertTrue(
+					"The Loan object is not created for grace period greather than max installments",
+					true);
+		}
+		TestObjectFactory.removeObject(loanOffering);
+	}
+	
+	public void testGracePeriodForInterestNotDedAtDisb()
+			throws NumberFormatException, AccountException, Exception {
+		createInitialCustomers();
+		LoanOfferingBO loanOffering = createLoanOffering(false);
+
+		LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+				loanOffering, group, AccountState.LOANACC_APPROVED, new Money(
+						"300.0"), Short.valueOf("6"), new Date(System
+						.currentTimeMillis()), false, 10.0, (short) 1,
+				new Fund(), new ArrayList<FeeView>());
+		assertEquals(loanOffering.getGracePeriodType().getId(), loan
+				.getGracePeriodType().getId());
+		assertEquals(1, loan.getGracePeriodDuration().intValue());
+		assertNotSame(new java.sql.Date(DateUtils
+				.getCurrentDateWithoutTimeStamp().getTime()).toString(), loan
+				.getAccountActionDate((short) 1).getActionDate().toString());
+
+		TestObjectFactory.removeObject(loanOffering);
+	}
+
+	public void testGracePeriodForInterestDedAtDisb()
+			throws NumberFormatException, AccountException, Exception {
+		createInitialCustomers();
+		LoanOfferingBO loanOffering = createLoanOffering(false);
+
+		LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+				loanOffering, group, AccountState.LOANACC_APPROVED, new Money(
+						"300.0"), Short.valueOf("6"), new Date(System
+						.currentTimeMillis()), true, 10.0, (short) 5,
+				new Fund(), new ArrayList<FeeView>());
+		assertEquals(
+				"For interest ded at disb, grace period type should be none",
+				GracePeriodTypeConstants.NONE, loan.getGracePeriodType()
+						.getId());
+		assertEquals(0, loan.getGracePeriodDuration().intValue());
+		assertEquals(new java.sql.Date(DateUtils
+				.getCurrentDateWithoutTimeStamp().getTime()).toString(), loan
+				.getAccountActionDate((short) 1).getActionDate().toString());
+
+		TestObjectFactory.removeObject(loanOffering);
+	}
+
+	public void testBuildLoanWithInvalidDisbDate()
+			throws NumberFormatException, AccountException, Exception {
+		createInitialCustomers();
+		LoanOfferingBO loanOffering = createLoanOffering(false);
+		Date disbursementDate = offSetCurrentDate(3);
+
+		try {
+			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+					loanOffering, group, AccountState.LOANACC_APPROVED,
+					new Money("300.0"), Short.valueOf("6"), disbursementDate,
+					false, 10.0, (short) 0, new Fund(),
+					new ArrayList<FeeView>());
+			assertFalse(
+					"The Loan object is created for invalid disbursement date",
+					true);
+		} catch (AccountException ae) {
+			assertTrue(
+					"The Loan object is created for invalid disbursement date",
+					true);
+		}
+		TestObjectFactory.removeObject(loanOffering);
+	}
+
+	public void testBuildLoanWithFee() throws NumberFormatException,
+			AccountException, Exception {
+		createInitialCustomers();
+		LoanOfferingBO loanOffering = createLoanOffering(false);
+		List<FeeView> feeViews = getFeeViews();
+
+		LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+				loanOffering, group, AccountState.LOANACC_APPROVED, new Money(
+						"300.0"), Short.valueOf("6"), new Date(System
+						.currentTimeMillis()), true, 10.0, (short) 0,
+				new Fund(), feeViews);
+
+		assertEquals(2, loan.getAccountFees().size());
+		for (AccountFeesEntity accountFees : loan.getAccountFees()) {
+			if (accountFees.getFees().getFeeName()
+					.equals("One Time Amount Fee"))
+				assertEquals(new Money("120.0"), accountFees.getFeeAmount());
+			else
+				assertEquals(new Money("10.0"), accountFees.getFeeAmount());
+		}
+		for (AccountActionDateEntity accountActionDate : loan
+				.getAccountActionDates()) {
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
+			if (loanScheduleEntity.getInstallmentId() == 1) {
+				assertEquals(2, loanScheduleEntity
+						.getAccountFeesActionDetails().size());
+				assertEquals(new Money("130.0"), loanScheduleEntity
+						.getTotalFeeDue());
+			} else {
+				assertEquals(1, loanScheduleEntity
+						.getAccountFeesActionDetails().size());
+				assertEquals(new Money("10.0"), loanScheduleEntity
+						.getTotalFeeDue());
+			}
+		}
+
 		deleteFee(feeViews);
 		TestObjectFactory.removeObject(loanOffering);
 	}
-	
-	public void testBuildLoan() throws NumberFormatException, AccountException, Exception {
+
+	public void testBuildLoan() throws NumberFormatException, AccountException,
+			Exception {
 		createInitialCustomers();
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"),meeting);
-		
+		LoanOfferingBO loanOffering = createLoanOffering(false);
 		List<FeeView> feeViews = getFeeViews();
-		LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(), loanOffering, group,
-				AccountState.LOANACC_APPROVED,	new Money("300.0"),
-				Short.valueOf("6"),new Date(System.currentTimeMillis()),true,10.0,(short) 0,
-				new Fund(),feeViews);
-		assertEquals(2,loan.getAccountFees().size());
-		for(AccountFeesEntity accountFees : loan.getAccountFees()) {
-			if(accountFees.getFees().getFeeName().equals("One Time Amount Fee"))
-				assertEquals(new Money("120.0"),accountFees.getFeeAmount());
-			else 
-				assertEquals(new Money("10.0"),accountFees.getFeeAmount());
+
+		LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+				loanOffering, group, AccountState.LOANACC_APPROVED, new Money(
+						"300.0"), Short.valueOf("6"), new Date(System
+						.currentTimeMillis()), true, 10.0, (short) 0,
+				new Fund(), feeViews);
+
+		assertNotNull(loan.getLoanSummary());
+		assertNotNull(loan.getPerformanceHistory());
+		assertEquals(new Money("300.0"), loan.getLoanSummary()
+				.getOriginalPrincipal());
+		assertEquals(new Money("300.0"), loan.getLoanAmount());
+		assertEquals(new Money("300.0"), loan.getLoanBalance());
+		assertEquals(Short.valueOf("6"), loan.getNoOfInstallments());
+		assertEquals(6, loan.getAccountActionDates().size());
+		assertEquals(loan.getNoOfInstallments().intValue(), loan
+				.getAccountActionDates().size());
+
+		deleteFee(feeViews);
+		TestObjectFactory.removeObject(loanOffering);
+	}
+
+	public void testCreateLoan() throws NumberFormatException,
+			AccountException, Exception {
+		createInitialCustomers();
+		LoanOfferingBO loanOffering = createLoanOffering(false);
+		List<FeeView> feeViews = getFeeViews();
+		boolean isInterestDedAtDisb = false;
+		Short noOfinstallments = (short) 6;
+
+		LoanBO loan = createAndRetrieveLoanAccount(loanOffering,
+				isInterestDedAtDisb, feeViews, noOfinstallments);
+
+		assertEquals(2, loan.getAccountFees().size());
+		for (AccountFeesEntity accountFees : loan.getAccountFees()) {
+			if (accountFees.getFees().getFeeName()
+					.equals("One Time Amount Fee"))
+				assertEquals(new Money("120.0"), accountFees.getFeeAmount());
+			else
+				assertEquals(new Money("10.0"), accountFees.getFeeAmount());
+		}
+		for (AccountActionDateEntity accountActionDate : loan
+				.getAccountActionDates()) {
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
+			if (loanScheduleEntity.getInstallmentId() != 6) {
+				assertEquals(new Money("50.5"), loanScheduleEntity
+						.getPrincipal());
+				assertEquals(new Money("0.5"), loanScheduleEntity.getInterest());
+			} else {
+				assertEquals(new Money("47.5"), loanScheduleEntity
+						.getPrincipal());
+				assertEquals(new Money("0.5"), loanScheduleEntity.getInterest());
+			}
 		}
 		assertNotNull(loan.getLoanSummary());
 		assertNotNull(loan.getPerformanceHistory());
-		assertEquals(new Money("300.0"),loan.getLoanSummary().getOriginalPrincipal());
-		assertEquals(new Money("300.0"),loan.getLoanAmount());
-		assertEquals(new Money("300.0"),loan.getLoanBalance());
-		assertEquals(Short.valueOf("6"),loan.getNoOfInstallments());
-		assertEquals(6,loan.getAccountActionDates().size());
-		deleteFee(feeViews);
-		TestObjectFactory.removeObject(loanOffering);
+		assertEquals(new Money("300.0"), loan.getLoanSummary()
+				.getOriginalPrincipal());
+		assertEquals(new Money("300.0"), loan.getLoanAmount());
+		assertEquals(new Money("300.0"), loan.getLoanBalance());
+		assertEquals(Short.valueOf("6"), loan.getNoOfInstallments());
+		assertEquals(6, loan.getAccountActionDates().size());
 	}
-	private List<FeeView> getFeeViews() {
-		FeeBO fee1 = TestObjectFactory.createOneTimeAmountFee("One Time Amount Fee",
-				FeeCategory.LOAN, "100.0", FeePayment.TIME_OF_DISBURSMENT);
-			/*FeeBO fee2 = TestObjectFactory.createOneTimeRateFee("One Time Rate Fee",
-					FeeCategory.LOAN, 10.0,FeeFormula.AMOUNT, FeePayment.TIME_OF_DISBURSMENT);
-					*/
-			FeeBO fee3 = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",FeeCategory.LOAN,
-					"100.0",MeetingFrequency.WEEKLY,(short)1);
-			List<FeeView> feeViews = new ArrayList<FeeView>();
-			FeeView feeView1 = new FeeView(fee1.getFeeId(), fee1.getFeeName(), 120.0, false,null);
-			FeeView feeView2 = new FeeView(fee3.getFeeId(), fee3.getFeeName(), 10.0, true,fee3.getFeeFrequency().getFeeMeetingFrequency());
-			feeViews.add(feeView1);
-			feeViews.add(feeView2);
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
-			return feeViews;
+
+	public void testCreateLoanForInterestDedAtDisb()
+			throws NumberFormatException, AccountException, Exception {
+		createInitialCustomers();
+		LoanOfferingBO loanOffering = createLoanOffering(false);
+		List<FeeView> feeViews = getFeeViews();
+		boolean isInterestDedAtDisb = true;
+		Short noOfinstallments = (short) 6;
+
+		LoanBO loan = createAndRetrieveLoanAccount(loanOffering,
+				isInterestDedAtDisb, feeViews, noOfinstallments);
+
+		assertEquals(2, loan.getAccountFees().size());
+		for (AccountFeesEntity accountFees : loan.getAccountFees()) {
+			if (accountFees.getFees().getFeeName()
+					.equals("One Time Amount Fee"))
+				assertEquals(new Money("120.0"), accountFees.getFeeAmount());
+			else
+				assertEquals(new Money("10.0"), accountFees.getFeeAmount());
+		}
+		for (AccountActionDateEntity accountActionDate : loan
+				.getAccountActionDates()) {
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
+			if (loanScheduleEntity.getInstallmentId() != 1) {
+				assertEquals(new Money("60.0"), loanScheduleEntity
+						.getPrincipal());
+				assertEquals(new Money("0.0"), loanScheduleEntity.getInterest());
+			} else {
+				assertEquals(new Money("0.0"), loanScheduleEntity
+						.getPrincipal());
+				assertEquals(new Money("3.0"), loanScheduleEntity.getInterest());
+			}
+		}
+
+		assertNotNull(loan.getLoanSummary());
+		assertNotNull(loan.getPerformanceHistory());
+		assertEquals(new Money("300.0"), loan.getLoanSummary()
+				.getOriginalPrincipal());
+		assertEquals(new Money("300.0"), loan.getLoanAmount());
+		assertEquals(new Money("300.0"), loan.getLoanBalance());
+		assertEquals(Short.valueOf("6"), loan.getNoOfInstallments());
+		assertEquals(6, loan.getAccountActionDates().size());
 	}
 	
-	private void deleteFee(List<FeeView> feeViews) {
-		for(FeeView feeView : feeViews) {
-			TestObjectFactory.cleanUp((FeeBO)TestObjectFactory.getObject(FeeBO.class,feeView.getFeeId()));
+	public void testCreateLoanForPrincipalAtLastInst()
+			throws NumberFormatException, AccountException, Exception {
+		createInitialCustomers();
+		LoanOfferingBO loanOffering = createLoanOffering(true);
+		List<FeeView> feeViews = getFeeViews();
+		boolean isInterestDedAtDisb = false;
+		Short noOfinstallments = (short) 6;
+
+		LoanBO loan = createAndRetrieveLoanAccount(loanOffering,
+				isInterestDedAtDisb, feeViews, noOfinstallments);
+
+		assertEquals(2, loan.getAccountFees().size());
+		for (AccountFeesEntity accountFees : loan.getAccountFees()) {
+			if (accountFees.getFees().getFeeName()
+					.equals("One Time Amount Fee"))
+				assertEquals(new Money("120.0"), accountFees.getFeeAmount());
+			else
+				assertEquals(new Money("10.0"), accountFees.getFeeAmount());
 		}
-		
+		for (AccountActionDateEntity accountActionDate : loan
+				.getAccountActionDates()) {
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
+			if (loanScheduleEntity.getInstallmentId() != 6) {
+				assertEquals(new Money("0.0"), loanScheduleEntity
+						.getPrincipal());
+				assertEquals(new Money("0.5"), loanScheduleEntity.getInterest());
+			} else {
+				assertEquals(new Money("300.0"), loanScheduleEntity
+						.getPrincipal());
+				assertEquals(new Money("0.5"), loanScheduleEntity.getInterest());
+			}
+		}
+		assertNotNull(loan.getLoanSummary());
+		assertNotNull(loan.getPerformanceHistory());
+		assertEquals(new Money("300.0"), loan.getLoanSummary()
+				.getOriginalPrincipal());
+		assertEquals(new Money("300.0"), loan.getLoanAmount());
+		assertEquals(new Money("300.0"), loan.getLoanBalance());
+		assertEquals(Short.valueOf("6"), loan.getNoOfInstallments());
+		assertEquals(6, loan.getAccountActionDates().size());
+
+	}
+
+	public void testCreateLoanForPrincipalAtLastInstAndIntDedAtDisb()
+			throws NumberFormatException, AccountException, Exception {
+		createInitialCustomers();
+		LoanOfferingBO loanOffering = createLoanOffering(true);
+		List<FeeView> feeViews = getFeeViews();
+		boolean isInterestDedAtDisb = true;
+		Short noOfinstallments = (short) 6;
+
+		LoanBO loan = createAndRetrieveLoanAccount(loanOffering,
+				isInterestDedAtDisb, feeViews, noOfinstallments);
+
+		assertEquals(2, loan.getAccountFees().size());
+		for (AccountFeesEntity accountFees : loan.getAccountFees()) {
+			if (accountFees.getFees().getFeeName()
+					.equals("One Time Amount Fee"))
+				assertEquals(new Money("120.0"), accountFees.getFeeAmount());
+			else
+				assertEquals(new Money("10.0"), accountFees.getFeeAmount());
+		}
+		for (AccountActionDateEntity accountActionDate : loan
+				.getAccountActionDates()) {
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
+			if (loanScheduleEntity.getInstallmentId() == 1) {
+				assertEquals(new Money("0.0"), loanScheduleEntity
+						.getPrincipal());
+				assertEquals(new Money("3.0"), loanScheduleEntity.getInterest());
+			} else if (loanScheduleEntity.getInstallmentId() == 6) {
+				assertEquals(new Money("300.0"), loanScheduleEntity
+						.getPrincipal());
+				assertEquals(new Money("0.0"), loanScheduleEntity.getInterest());
+			} else {
+				assertEquals(new Money("0.0"), loanScheduleEntity
+						.getPrincipal());
+				assertEquals(new Money("0.0"), loanScheduleEntity.getInterest());
+			}
+
+		}
+		assertNotNull(loan.getLoanSummary());
+		assertNotNull(loan.getPerformanceHistory());
+		assertEquals(new Money("300.0"), loan.getLoanSummary()
+				.getOriginalPrincipal());
+		assertEquals(new Money("300.0"), loan.getLoanAmount());
+		assertEquals(new Money("300.0"), loan.getLoanBalance());
+		assertEquals(Short.valueOf("6"), loan.getNoOfInstallments());
+		assertEquals(6, loan.getAccountActionDates().size());
+
+	}
+	
+	public void testAmountRoundedWhileCreate() throws NumberFormatException,
+			AccountException, Exception {
+		createInitialCustomers();
+		LoanOfferingBO loanOffering = createLoanOffering(false);
+		boolean isInterestDedAtDisb = false;
+		Short noOfinstallments = (short) 6;
+
+		LoanBO loan = createAndRetrieveLoanAccount(loanOffering,
+				isInterestDedAtDisb, null, noOfinstallments);
+
+		for (AccountActionDateEntity accountActionDate : loan
+				.getAccountActionDates()) {
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
+			if (loanScheduleEntity.getInstallmentId() != 6) {
+				assertEquals(new Money("51.0"), loanScheduleEntity
+						.getTotalDueWithFees());
+			} else {
+				assertEquals(
+						"The last installment amount is adjusted for rounding",
+						new Money("48.0"), loanScheduleEntity
+								.getTotalDueWithFees());
+			}
+		}
+	}
+	
+	public void testAmountNotRoundedWhileCreate() throws NumberFormatException,
+			AccountException, Exception {
+		createInitialCustomers();
+		LoanOfferingBO loanOffering = createLoanOffering(false);
+		boolean isInterestDedAtDisb = false;
+		Short noOfinstallments = (short) 6;
+
+		LoanBO loan = createAndRetrieveLoanAccount(loanOffering,
+				isInterestDedAtDisb, null, noOfinstallments,0.0);
+
+		for (AccountActionDateEntity accountActionDate : loan
+				.getAccountActionDates()) {
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
+			if (loanScheduleEntity.getInstallmentId() != 6) {
+				assertEquals(new Money("50.0"), loanScheduleEntity
+						.getTotalDueWithFees());
+			} else {
+				assertEquals(
+						"The last installment amount is not adjusted for rounding",
+						new Money("50.0"), loanScheduleEntity
+								.getTotalDueWithFees());
+			}
+		}
+	}
+	
+	
+
+	private LoanBO createAndRetrieveLoanAccount(LoanOfferingBO loanOffering,
+			boolean isInterestDedAtDisb, List<FeeView> feeViews,
+			Short noOfinstallments, Double interestRate)
+			throws NumberFormatException, AccountException,
+			InvalidUserException, SystemException, ApplicationException {
+		LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+				loanOffering, group, AccountState.LOANACC_APPROVED, new Money(
+						"300.0"), noOfinstallments, new Date(System
+						.currentTimeMillis()), isInterestDedAtDisb,
+				interestRate, (short) 0, new Fund(), feeViews);
+		loan.save();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				loan.getAccountId());
+		return (LoanBO) accountBO;
+	}
+	
+	private LoanBO createAndRetrieveLoanAccount(LoanOfferingBO loanOffering,
+			boolean isInterestDedAtDisb, List<FeeView> feeViews,
+			Short noOfinstallments) throws NumberFormatException,
+			AccountException, InvalidUserException, SystemException,
+			ApplicationException {
+		return createAndRetrieveLoanAccount(loanOffering, isInterestDedAtDisb,
+				feeViews, noOfinstallments, 10.0);
+	}
+
+	private LoanOfferingBO createLoanOffering(boolean isPrincipalAtLastInst) {
+		return createLoanOffering(isPrincipalAtLastInst,ProductDefinitionConstants.LOANACTIVE);
+	}
+	
+	private LoanOfferingBO createLoanOffering(boolean isPrincipalAtLastInst,Short statusId) {
+		Short principalAtLastInst = isPrincipalAtLastInst ? (short) 1
+				: (short) 0;
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		return TestObjectFactory.createLoanOffering("Loan", Short.valueOf("2"),
+				new Date(System.currentTimeMillis()), statusId,
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), principalAtLastInst,
+				Short.valueOf("1"), meeting);
+	}
+
+	private List<FeeView> getFeeViews() {
+		FeeBO fee1 = TestObjectFactory.createOneTimeAmountFee(
+				"One Time Amount Fee", FeeCategory.LOAN, "100.0",
+				FeePayment.TIME_OF_DISBURSMENT);
+		FeeBO fee3 = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
+				FeeCategory.LOAN, "100.0", MeetingFrequency.WEEKLY, (short) 1);
+		List<FeeView> feeViews = new ArrayList<FeeView>();
+		FeeView feeView1 = new FeeView(fee1.getFeeId(), fee1.getFeeName(),
+				120.0, false, null);
+		FeeView feeView2 = new FeeView(fee3.getFeeId(), fee3.getFeeName(),
+				10.0, true, fee3.getFeeFrequency().getFeeMeetingFrequency());
+		feeViews.add(feeView1);
+		feeViews.add(feeView2);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		return feeViews;
+	}
+
+	private void deleteFee(List<FeeView> feeViews) {
+		for (FeeView feeView : feeViews) {
+			TestObjectFactory.cleanUp((FeeBO) TestObjectFactory.getObject(
+					FeeBO.class, feeView.getFeeId()));
+		}
+
 	}
 	
 	private AccountBO getLoanAccount() {

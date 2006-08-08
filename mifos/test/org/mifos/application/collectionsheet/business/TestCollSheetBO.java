@@ -22,6 +22,7 @@ import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.collectionsheet.persistence.service.CollectionSheetPersistenceService;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.util.valueobjects.InterestTypes;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -383,12 +384,10 @@ public class TestCollSheetBO extends MifosTestCase {
 				.valueOf("1"), "1.1", meeting, new Date(System
 				.currentTimeMillis()));
 
-		CustomerBO group = TestObjectFactory.createGroup("ashGrp", Short
-				.valueOf("1"), "1.1.1", center, new Date(System
+		CustomerBO group = TestObjectFactory.createGroup("ashGrp", CustomerStatus.GROUP_ACTIVE.getValue(), "1.1.1", center, new Date(System
 				.currentTimeMillis()));
 
-		CustomerBO client = TestObjectFactory.createClient("ash", Short
-				.valueOf("1"), "1.1.1.1", group, new Date(System
+		CustomerBO client = TestObjectFactory.createClient("ash", CustomerStatus.CLIENT_ACTIVE.getValue(), "1.1.1.1", group, new Date(System
 				.currentTimeMillis()));
 
 		List<CustomerBO> customers = new ArrayList<CustomerBO>();

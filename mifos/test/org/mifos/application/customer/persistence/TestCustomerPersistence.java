@@ -16,6 +16,7 @@ import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService
 import org.mifos.application.bulkentry.exceptions.BulkEntryAccountUpdateException;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
+import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -24,6 +25,7 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
@@ -400,15 +402,22 @@ public class TestCustomerPersistence extends MifosTestCase {
 				.currentTimeMillis()));
 		client = TestObjectFactory.createClient("client1",ClientConstants.STATUS_ACTIVE,"1.4.1.1",group,new Date(System
 				.currentTimeMillis()));
-		ClientBO client2 = TestObjectFactory.createClient("client2",ClientConstants.STATUS_CLOSED,"1.4.1.2",group,new Date(System
+		ClientBO client2 = TestObjectFactory.createClient("client2",CustomerStatus.CLIENT_ACTIVE.getValue(),"1.4.1.2",group,new Date(System
 				.currentTimeMillis()));
-		ClientBO client3 = TestObjectFactory.createClient("client3",ClientConstants.STATUS_CANCELLED,"1.5.1",group1,new Date(System
+		ClientBO client3 = TestObjectFactory.createClient("client3",CustomerStatus.CLIENT_ACTIVE.getValue(),"1.5.1",group1,new Date(System
 				.currentTimeMillis()));
 		account = getLoanAccount(group, meeting);
 		AccountBO account1 = getLoanAccount(client, meeting);
 		AccountBO account2 = getLoanAccount(client2, meeting);
 		AccountBO account3 = getLoanAccount(client3, meeting);
 		AccountBO account4 = getLoanAccount(group1, meeting);
+		
+		client2.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.CLIENT_CLOSED));
+		TestObjectFactory.updateObject(client2);
+		client2 =(ClientBO) TestObjectFactory.getObject(ClientBO.class,client2.getCustomerId());
+		client3.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.CLIENT_CANCELLED));
+		TestObjectFactory.updateObject(client3);
+		client3 =(ClientBO) TestObjectFactory.getObject(ClientBO.class,client3.getCustomerId());
 		
 		List<AccountBO> loansForCenter = customerPersistence.retrieveAccountsUnderCustomer("1.4",Short.valueOf("3"),Short.valueOf("1"));
 		assertEquals(3,loansForCenter.size());

@@ -22,6 +22,7 @@ import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
+import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.business.CenterPerformanceHistory;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -29,6 +30,7 @@ import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerRecentActivityView;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.LoanCycleCounter;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.valueobjects.YesNoMaster;
@@ -356,10 +358,10 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				ClientConstants.STATUS_ACTIVE, group.getSearchId()+".1", group, new Date(
 						System.currentTimeMillis()));
 		ClientBO client2 = TestObjectFactory.createClient("client2",
-				ClientConstants.STATUS_CLOSED, group.getSearchId()+".2", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE.getValue(), group.getSearchId()+".2", group, new Date(
 						System.currentTimeMillis()));
 		ClientBO client3 = TestObjectFactory.createClient("client3",
-				ClientConstants.STATUS_CANCELLED, group1.getSearchId()+".1", group1, new Date(
+				CustomerStatus.CLIENT_ACTIVE.getValue(), group1.getSearchId()+".1", group1, new Date(
 						System.currentTimeMillis()));
 		account = getSavingsAccountWithBalance(center, meeting);
 		AccountBO account1 = getSavingsAccountWithBalance(client, meeting);
@@ -376,6 +378,13 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		AccountBO account9 = getLoanAccount(client, meeting);
 		changeFirstInstallmentDateToPastDate(account9);
 		AccountBO account10 = getLoanAccount(group, meeting);
+		
+		client2.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.CLIENT_CLOSED));
+		TestObjectFactory.updateObject(client2);
+		client2 =(ClientBO) TestObjectFactory.getObject(ClientBO.class,client2.getCustomerId());
+		client3.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.CLIENT_CANCELLED));
+		TestObjectFactory.updateObject(client3);
+		client3 =(ClientBO) TestObjectFactory.getObject(ClientBO.class,client3.getCustomerId());
 
 		CenterPerformanceHistory centerPerformanceHistory = service
 				.getCenterPerformanceHistory(center.getSearchId(), Short.valueOf("3"));
@@ -388,7 +397,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		assertEquals(new Money("2400.0"), totalLoan);
 		assertEquals(new Money("400.0"), totalSavings);
 		assertEquals(new Money("0.5"), totalPortfolioAtRisk);
-
+		
 		account1 = (AccountBO) (HibernateUtil.getSessionTL().get(
 				AccountBO.class, new Integer(account1.getAccountId())));
 		account2 = (AccountBO) (HibernateUtil.getSessionTL().get(

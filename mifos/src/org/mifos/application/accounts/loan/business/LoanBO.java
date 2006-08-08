@@ -49,6 +49,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
@@ -100,6 +101,7 @@ import org.mifos.application.personnel.persistence.service.PersonnelPersistenceS
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.GracePeriodTypeConstants;
+import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -179,13 +181,15 @@ public class LoanBO extends AccountBO {
 	}
 
 	public LoanBO(UserContext userContext, LoanOfferingBO loanOffering,
-			CustomerBO customer,AccountState accountState,Money loanAmount,
-			Short noOfinstallments,Date disbursementDate,
-			boolean interestDeductedAtDisbursement,Double interesRate,
-			Short gracePeriodDuration,Fund fund,List<FeeView> feeViews) throws AccountException {
-		super(userContext, customer,AccountTypes.LOANACCOUNT,accountState);
-		validate(loanOffering,	loanAmount,noOfinstallments, disbursementDate,
-				 interesRate, gracePeriodDuration, fund);
+			CustomerBO customer, AccountState accountState, Money loanAmount,
+			Short noOfinstallments, Date disbursementDate,
+			boolean interestDeductedAtDisbursement, Double interesRate,
+			Short gracePeriodDuration, Fund fund, List<FeeView> feeViews)
+			throws AccountException {
+		super(userContext, customer, AccountTypes.LOANACCOUNT, accountState);
+		validate(loanOffering, loanAmount, noOfinstallments, disbursementDate,
+				interesRate, gracePeriodDuration, fund, customer);
+		setCreateDetails();
 		this.loanOffering = loanOffering;
 		this.loanAmount = loanAmount;
 		this.loanBalance = loanAmount;
@@ -193,22 +197,24 @@ public class LoanBO extends AccountBO {
 		this.interestType = loanOffering.getInterestTypes();
 		this.interestRate = interesRate;
 		setInterestDeductedAtDisbursement(interestDeductedAtDisbursement);
-		setGracePeriodType(interestDeductedAtDisbursement);
-		this.gracePeriodDuration = gracePeriodDuration;
+		setGracePeriodTypeAndDuration(interestDeductedAtDisbursement,
+				gracePeriodDuration);
 		this.gracePeriodPenalty = loanOffering.getPenaltyGrace();
 		this.fund = fund;
-		this.loanMeeting = buildLoanMeeting(customer.getCustomerMeeting().getMeeting(),
-				loanOffering.getPrdOfferingMeeting().getMeeting());
+		this.loanMeeting = buildLoanMeeting(customer.getCustomerMeeting()
+				.getMeeting(), loanOffering.getPrdOfferingMeeting()
+				.getMeeting());
 		buildAccountFee(feeViews);
 		try {
-			buildLoanSchedule(generateRepaymentSchedule(disbursementDate,"create"));
+			buildLoanSchedule(generateRepaymentSchedule(disbursementDate,
+					"create"));
 		} catch (RepaymentScheduleException e) {
-			e.printStackTrace();
-			throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION); 
+			throw new AccountException(
+					AccountExceptionConstants.CREATEEXCEPTION);
 		}
 		this.disbursementDate = disbursementDate;
 		this.loanSummary = buildLoanSummary();
-		this.performanceHistory = new LoanPerformanceHistoryEntity(this) ;
+		this.performanceHistory = new LoanPerformanceHistoryEntity(this);
 		this.loanActivityDetails = new HashSet<LoanActivityEntity>();
 	}
 	
@@ -1582,23 +1588,58 @@ public class LoanBO extends AccountBO {
 		return AccountStateMachines.getInstance().getFlagName(flagId,
 				AccountTypes.LOANACCOUNT.getValue());
 	}
+
+	public void save() throws AccountException {
+		try {
+			new LoanPersistance().createOrUpdate(this);
+		} catch (HibernateException he) {
+			throw new AccountException(
+					AccountExceptionConstants.CREATEEXCEPTION, he);
+		}
+	}
 	
-	private MeetingBO buildLoanMeeting(MeetingBO customerMeeting,MeetingBO loanOfferingMeeting)	{
+	private MeetingBO buildLoanMeeting(MeetingBO customerMeeting,
+			MeetingBO loanOfferingMeeting) throws AccountException {
+		if (customerMeeting != null
+				&& loanOfferingMeeting != null
+				&& customerMeeting.getMeetingDetails().getRecurrenceType()
+						.getRecurrenceId().equals(
+								loanOfferingMeeting.getMeetingDetails()
+										.getRecurrenceType().getRecurrenceId())
+				&& isMultiple(loanOfferingMeeting.getMeetingDetails()
+						.getRecurAfter(), customerMeeting.getMeetingDetails()
+						.getRecurAfter())) {
+
 			MeetingBO meetingToReturn = new MeetingBO();
-			meetingToReturn.setMeetingStartDate(customerMeeting.getMeetingStartDate());
+			meetingToReturn.setMeetingStartDate(customerMeeting
+					.getMeetingStartDate());
 			meetingToReturn.setMeetingType(customerMeeting.getMeetingType());
 
-			MeetingRecurrenceEntity  meetingRecToReturn = new MeetingRecurrenceEntity();
-			meetingRecToReturn.setDayNumber(customerMeeting.getMeetingDetails().getMeetingRecurrence().getDayNumber());
-			meetingRecToReturn.setRankOfDays(customerMeeting.getMeetingDetails().getMeetingRecurrence().getRankOfDays());
-			meetingRecToReturn.setWeekDay(customerMeeting.getMeetingDetails().getMeetingRecurrence().getWeekDay());
+			MeetingRecurrenceEntity meetingRecToReturn = new MeetingRecurrenceEntity();
+			meetingRecToReturn.setDayNumber(customerMeeting.getMeetingDetails()
+					.getMeetingRecurrence().getDayNumber());
+			meetingRecToReturn
+					.setRankOfDays(customerMeeting.getMeetingDetails()
+							.getMeetingRecurrence().getRankOfDays());
+			meetingRecToReturn.setWeekDay(customerMeeting.getMeetingDetails()
+					.getMeetingRecurrence().getWeekDay());
 
 			MeetingDetailsEntity meetingDetailsToReturn = new MeetingDetailsEntity();
 			meetingDetailsToReturn.setMeetingRecurrence(meetingRecToReturn);
-			meetingDetailsToReturn.setRecurAfter(loanOfferingMeeting.getMeetingDetails().getRecurAfter());
-			meetingDetailsToReturn.setRecurrenceType(customerMeeting.getMeetingDetails().getRecurrenceType());
+			meetingDetailsToReturn.setRecurAfter(loanOfferingMeeting
+					.getMeetingDetails().getRecurAfter());
+			meetingDetailsToReturn.setRecurrenceType(customerMeeting
+					.getMeetingDetails().getRecurrenceType());
 			meetingToReturn.setMeetingDetails(meetingDetailsToReturn);
 			return meetingToReturn;
+		} else {
+			throw new AccountException(
+					AccountExceptionConstants.CREATEEXCEPTION);
+		}
+	}
+	
+	private boolean isMultiple(Short valueToBeChecked,Short valueToBeCheckedWith) {
+		return valueToBeChecked%valueToBeCheckedWith==0;
 	}
 	
 	private void buildLoanSchedule(Set<AccountActionDateEntity> accountActionDates) {
@@ -1623,9 +1664,14 @@ public class LoanBO extends AccountBO {
 	
 	private void validate(LoanOfferingBO loanOffering,	Money loanAmount,
 			Short noOfinstallments,Date disbursementDate,
-			Double interestRate,Short gracePeriodDuration,Fund fund) throws AccountException {
+			Double interestRate,Short gracePeriodDuration,Fund fund,CustomerBO customer) throws AccountException {
 		if(loanOffering == null || loanAmount == null || noOfinstallments == null ||
 				disbursementDate==null || interestRate == null || gracePeriodDuration==null || fund==null)
+			throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION);
+		
+		if(! customer.isCustomerActive())
+			throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION);
+		if(! loanOffering.getPrdStatus().getOfferingStatusId().equals(ProductDefinitionConstants.LOANACTIVE))
 			throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION);
 	}
 	
@@ -1638,11 +1684,22 @@ public class LoanBO extends AccountBO {
 		}
 	}
 	
-	private void setGracePeriodType(boolean nterestDeductedAtDisbursement) {
-		if(nterestDeductedAtDisbursement) {
-			this.gracePeriodType = new GracePeriodTypeEntity(GracePeriodTypeConstants.NONE);
+	private void setGracePeriodTypeAndDuration(
+			boolean interestDeductedAtDisbursement, Short gracePeriodDuration)
+			throws AccountException {
+		if (interestDeductedAtDisbursement) {
+			this.gracePeriodType = new GracePeriodTypeEntity(
+					GracePeriodTypeConstants.NONE);
+			this.gracePeriodDuration = (short) 0;
 		} else {
+			if ((!loanOffering.getGracePeriodType().getId().equals(
+					GracePeriodTypeConstants.NONE))
+					&& gracePeriodDuration >= loanOffering
+							.getMaxNoInstallments())
+				throw new AccountException(
+						AccountExceptionConstants.CREATEEXCEPTION);
 			this.gracePeriodType = loanOffering.getGracePeriodType();
+			this.gracePeriodDuration = gracePeriodDuration;
 		}
 	}
 }
