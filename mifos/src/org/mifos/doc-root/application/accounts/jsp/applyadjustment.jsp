@@ -48,7 +48,7 @@
 <%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
 <%@taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
-
+<%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
@@ -57,13 +57,8 @@
 		<html-el:form method="post" action="applyAdjustment.do" onsubmit="return fn_submit();">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt">
-						<mifoscustom:getLoanHeader loanHeader='${sessionScope.header_get}'/>
-						<html-el:link href="loanAction.do?method=get&globalAccountNum=${param.globalAccountNum}">
-							<c:out value="${param.prdOfferingName}" />
-						</html-el:link> 
-							
-						</span>
+					<td class="bluetablehead05">
+						<span class="fontnormal8pt"> <customtags:headerLink/> </span>
 					</td>
 				</tr>
 			</table>

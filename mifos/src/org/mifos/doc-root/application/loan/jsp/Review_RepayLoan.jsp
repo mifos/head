@@ -45,13 +45,14 @@
 <%@ taglib uri="/tags/date" prefix="date" %>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@taglib uri="/loan/loanfunctions" prefix="loanfn"%>
+<%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 
 		<script>
 			function fun_return(form){
-					form.action="loanAction.do?method=get";
+					form.action="loanAccountAction.do?method=get";
 					form.submit();
 			}
 			function fun_edit(form){
@@ -62,17 +63,12 @@
 		<html-el:form  action="repayLoanAction.do?method=makeRepayment">
 
 				<table width="95%" border="0" cellpadding="0" cellspacing="0">
-					<tr>
-						<td class="bluetablehead05"><span class="fontnormal8pt">
-						<mifoscustom:getLoanHeader loanHeader='${sessionScope.header_get}'/>
-											<html-el:link href="loanAction.do?method=get&globalAccountNum=${param.globalAccountNum}">
-												<c:out value="${param.prdOfferingName}" />
-											</html-el:link> 
-								</span>
-						</td>
-					</tr>
-									
-				</table>
+				<tr>
+					<td class="bluetablehead05">
+						<span class="fontnormal8pt"> <customtags:headerLink/> </span>
+					</td>
+				</tr>
+			</table>
 				<table width="95%" border="0" cellpadding="0" cellspacing="0">
 								<font class="fontnormalRedBold">
 									<html-el:errors bundle="loanUIResources" /> 

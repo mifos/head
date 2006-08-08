@@ -67,10 +67,6 @@
 
 					<c:choose>
 						<c:when test="${param.input == 'LoanDetails'}">
-							<html-el:link
-								action="loanAccountAction.do?globalAccountNum=${param.globalAccountNum}&method=get"> /
-	          	    <c:out value="${param.prdOfferingName}"></c:out>
-							</html-el:link>
 						</c:when>
 						<c:otherwise>
 							<html-el:link href="javascript:ViewDetails()">

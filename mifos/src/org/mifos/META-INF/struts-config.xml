@@ -726,7 +726,7 @@
 			<forward name="load_success" path="/pages/application/loan/jsp/RepayLoan.jsp" />
 			<forward name="preview_success" path="/pages/application/loan/jsp/Review_RepayLoan.jsp" />
 			<forward name="previous_success" path="/pages/application/loan/jsp/RepayLoan.jsp" />
-			<forward name="update_success" path="/loanAction.do?method=get" />
+			<forward name="update_success" path="/loanAccountAction.do?method=get" />
 			<forward name="preview_faliure" path="/pages/application/loan/jsp/RepayLoan.jsp" />
 		</action>
 		<!-- End -->
@@ -795,8 +795,8 @@
 			<forward name="loadadjustment_success" path="/pages/application/accounts/jsp/applyadjustment.jsp" />
 			<forward name="loadAdjustment_failure" path="/pages/application/accounts/jsp/applyadjustment.jsp" />
 			<forward name="previewadj_success" path="/pages/application/accounts/jsp/applyadjustment.jsp" />
-			<forward name="canceladj_success" path="/loanAction.do?method=get" />
-			<forward name="applyadj_success" path="/loanAction.do?method=get" />
+			<forward name="canceladj_success" path="/loanAccountAction.do?method=get" />
+			<forward name="applyadj_success" path="/loanAccountAction.do?method=get" />
 			<forward name="previewAdjustment_failure" path="/pages/application/accounts/jsp/applyadjustment.jsp" />
 			<forward name="cancelAdjustment_failure" path="/pages/application/accounts/jsp/applyadjustment.jsp" />
 			<forward name="applyAdjustment_failure" path="/pages/application/accounts/jsp/applyadjustment.jsp" />
