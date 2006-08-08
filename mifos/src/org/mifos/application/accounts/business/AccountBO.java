@@ -560,7 +560,9 @@ public class AccountBO extends BusinessObject {
 		for(AccountActionDateEntity accountActionDateEntity : getApplicableIdsForFutureInstallments()){
 			installmentIdList.add(accountActionDateEntity.getInstallmentId());
 		}
-		installmentIdList.add(getDetailsOfNextInstallment().getInstallmentId());
+		if(getDetailsOfNextInstallment() != null) {
+			installmentIdList.add(getDetailsOfNextInstallment().getInstallmentId());
+		}	
 		return installmentIdList;
 	}
 

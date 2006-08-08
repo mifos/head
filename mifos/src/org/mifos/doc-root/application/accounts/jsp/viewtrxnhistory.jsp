@@ -56,7 +56,7 @@
 	}
 
 </SCRIPT>
-	<html-el:form method="post" action="/loanAction.do?method=get" >
+	<html-el:form method="post" action="/loanAccountAction.do?method=get" >
 
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
@@ -66,7 +66,7 @@
 	          	
 	          	<c:choose>
 	          	<c:when test="${param.input == 'LoanDetails'}">
-	          	  <html-el:link action="loanAction.do?globalAccountNum=${param.globalAccountNum}&method=get"> /
+	          	  <html-el:link action="loanAccountAction.do?globalAccountNum=${param.globalAccountNum}&method=get"> /
 	          	    <c:out value="${param.prdOfferingName}"></c:out>
 	          	  </html-el:link>
 	          	</c:when>
@@ -136,6 +136,7 @@
         </tr>
       </table>
 <html-el:hidden property="statusId" value="${param.statusId}"/>  
+<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}"/>
 </html-el:form>
 <html-el:form  action="closedaccsearchaction.do?method=search">
 <html-el:hidden property="searchNode(search_name)" value="${param.searchInput}"/>

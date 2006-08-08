@@ -38,6 +38,6 @@
  
  	function fun_return(form)
 		{
-			form.action="loanAction.do?method=get";
+			form.action="loanAccountAction.do?method=get";
 			form.submit();
 		}

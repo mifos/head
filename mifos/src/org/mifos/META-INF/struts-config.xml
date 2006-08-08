@@ -717,7 +717,7 @@
 			<forward name="preview_success" path="/pages/application/loan/jsp/Review_loanDisbursment.jsp" />
 			<forward name="preview_failure" path="/pages/application/loan/jsp/DisburseLoan.jsp" />
 			<forward name="previous_success" path="/pages/application/loan/jsp/DisburseLoan.jsp" />
-			<forward name="update_success" path="/loanAction.do?method=get" />
+			<forward name="update_success" path="/loanAccountAction.do?method=get" />
 			<forward name="update_failure" path="/pages/application/loan/jsp/Review_loanDisbursment.jsp" />
 		</action>
 		<!-- End -->
@@ -746,7 +746,7 @@
 			<forward name="remove_group_charges" path="/closedaccsearchaction.do?method=search" />
 			<forward name="remove_center_charges" path="/closedaccsearchaction.do?method=search" />
 			<forward name="remove_client_charges" path="/closedaccsearchaction.do?method=search" />
-			<forward name="remove_success" path="/loanAction.do?method=get" />
+			<forward name="remove_success" path="/loanAccountAction.do?method=get" />
 			<forward name="getTransactionHistory_success" path="/pages/application/accounts/jsp/viewtrxnhistory.jsp" />
 		</action>
 		<!-- End -->
@@ -878,7 +878,7 @@
 			<forward name="previous_success" path="/pages/application/accounts/jsp/applypayment.jsp"/>
 			<forward name="applyPayment_success" path="/closedaccsearchaction.do?method=search"/>
 			<forward name="applyPayment_failure" path="/pages/application/accounts/jsp/reviewapplypayment.jsp"/>
-			<forward name="loan_detail_page" path="/loanAction.do?method=get" />
+			<forward name="loan_detail_page" path="/loanAccountAction.do?method=get" />
 		</action>
 		<action path="/loanAccountAction" type="org.mifos.application.accounts.loan.struts.action.LoanAccountAction" name="loanAccountActionForm" parameter="method" 
 			input="/loanAccountAction.do?method=validate" scope="session" validate="true">

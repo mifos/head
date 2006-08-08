@@ -304,12 +304,12 @@
 							<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" />
 							<mifos:mifoslabel name="loan.interest_amount" />:&nbsp;<span
 								class="fontnormal"><c:out
-								value="${sessionScope.BusinessKey.interestRateAmount}" />%&nbsp;<mifos:mifoslabel
+								value="${sessionScope.BusinessKey.interestRate}" />%&nbsp;<mifos:mifoslabel
 								name="loan.apr" /> </span><br>
 							</span> 
 							<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" />
 							<mifos:mifoslabel name="loan.interest_disb" />:<c:choose>
-								<c:when test="${sessionScope.BusinessKey.intrestAtDisbursement eq 1}">
+								<c:when test="${sessionScope.BusinessKey.interestDeductedAtDisbursement}">
 									<mifos:mifoslabel name="loan.yes" />
 								</c:when>
 								<c:otherwise>
@@ -399,7 +399,7 @@
 										name="loan.periodicityTypeRate" /> <c:out
 										value="${feesSet.fees.feeFrequency.feeMeetingFrequency.shortMeetingSchedule}" />)
 									<html-el:link
-										href="accountAppAction.do?method=removeFees&feeId=${feesSet.fees.feeId}
+										href="accountAppAction.do?method=removeFees&feeId=${feesSet.fees.feeId}&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}
 														&accountId=${sessionScope.BusinessKey.accountId}&recordOfficeId=${sessionScope.BusinessKey.office.officeId}
 														&recordLoanOfficerId=${sessionScope.BusinessKey.personnel.personnelId}&createdDate=${sessionScope.BusinessKey.createdDate}"> 
 														<mifos:mifoslabel name="loan.remove" />
@@ -597,6 +597,12 @@
 			<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}"/>
 	</html-el:form>
 		<html-el:form action="AccountNotesAction.do?method=load">
+			<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}" />
+			<html-el:hidden property="accountTypeId" value="${sessionScope.BusinessKey.accountType.accountTypeId}" />
+			<html-el:hidden property="accountName" value="${sessionScope.BusinessKey.loanOffering.prdOfferingName}" />
+			<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}"/>
+		</html-el:form>
+		<html-el:form action="LoanStatusAction.do?method=search">
 			<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}" />
 			<html-el:hidden property="accountTypeId" value="${sessionScope.BusinessKey.accountType.accountTypeId}" />
 			<html-el:hidden property="accountName" value="${sessionScope.BusinessKey.loanOffering.prdOfferingName}" />

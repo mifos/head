@@ -1561,7 +1561,7 @@
 			parameter="method" scope="session" name="accountAppActionForm"
 			validate="true" input="/accountAppAction.do?method=validate">
 			<forward name="remove_success"
-				path="/loanAction.do?method=get" />
+				path="/loanAccountAction.do?method=get" />
 				<forward name="getTransactionHistory_success" path="/pages/application/jsp/viewtrxnhistory.jsp" />
 
 		</action>
@@ -1674,7 +1674,7 @@
 			<forward name="load_success" path="/pages/application/account/jsp/applypayment.jsp" />
 			<forward name="preview_success" path="/pages/application/account/jsp/reviewapplypayment.jsp" />
 			<forward name="previous_success" path="/pages/application/account/jsp/applypayment.jsp"/>
-			<forward name="loan_detail_page" path="/loanAction.do?method=get" />
+			<forward name="loan_detail_page" path="/loanAccountAction.do?method=get" />
 		</action>
 		<action path="/loanAccountAction" type="org.mifos.application.accounts.loan.struts.action.LoanAccountAction" name="loanAccountActionForm" parameter="method" 
 			input="/loanAccountAction.do?method=validate" scope="session" validate="true">

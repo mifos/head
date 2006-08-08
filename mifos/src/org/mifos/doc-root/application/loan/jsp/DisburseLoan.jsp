@@ -52,7 +52,7 @@
 		<script>
 			function fun_return(form)
 					{
-						form.action="loanAction.do";
+						form.action="loanAccountAction.do";
 						form.method.value="get";
 						form.submit();
 					}
@@ -64,10 +64,7 @@
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink />
-					</span> <span class="fontnormal8pt"> <html-el:link
-						href="loanAction.do?method=get&globalAccountNum=${loanDisbursmentActionForm.globalAccountNum}">
-						<c:out value="${loanDisbursmentActionForm.prdOfferingName}" />
-					</html-el:link> </span></td>
+					</span></td>
 				</tr>
 			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">

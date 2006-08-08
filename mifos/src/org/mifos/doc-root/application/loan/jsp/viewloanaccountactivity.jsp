@@ -50,17 +50,12 @@
 	<html-el:form method="post" action="/loanAction.do" >
 	<SCRIPT SRC="pages/application/loan/js/LoanAccountActivity.js"></SCRIPT>
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-          <td class="bluetablehead05">
-			  <span class="fontnormal8pt">
-					<mifoscustom:getLoanHeader loanHeader='${sessionScope.header_get}'/>
-						<html-el:link action="loanAction.do?method=get&globalAccountNum=${param.globalAccountNum}">
-							<c:out value="${param.prdOfferingName}" />
-						</html-el:link>
-			  </span>               
-          </td>
-        </tr>
-      </table>
+				<tr>
+					<td class="bluetablehead05">
+						<span class="fontnormal8pt"> <customtags:headerLink/> </span>
+					</td>
+				</tr>
+	  </table>
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td align="left" valign="top" class="paddingL15T15" >

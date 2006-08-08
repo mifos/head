@@ -51,7 +51,7 @@
 		closedaccsearchactionform.submit();
 	}
 	function ViewLoanDetails(form){
-		form.action="loanAction.do?method=get";
+		form.action="loanAccountAction.do?method=get";
 		form.submit();
 	}
 	function goToPrevious(form){
@@ -68,7 +68,7 @@
 					<c:choose>
 						<c:when test="${param.input == 'LoanDetails'}">
 							<html-el:link
-								action="loanAction.do?globalAccountNum=${param.globalAccountNum}&method=get"> /
+								action="loanAccountAction.do?globalAccountNum=${param.globalAccountNum}&method=get"> /
 	          	    <c:out value="${param.prdOfferingName}"></c:out>
 							</html-el:link>
 						</c:when>

@@ -52,7 +52,7 @@
 	}
 	
 	function ViewLoanDetails(form){
-		form.action="loanAction.do?method=get";
+		form.action="loanAccountAction.do?method=get";
 		form.submit();
 	}
 </SCRIPT>
@@ -64,12 +64,12 @@
 
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink />
+					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink selfLink="false"/>
 
 					<c:choose>
 						<c:when test="${param.input == 'loan'}">
 							<html-el:link
-								action="loanAction.do?globalAccountNum=${param.globalAccountNum}&method=get"> /
+								action="loanAccountAction.do?globalAccountNum=${param.globalAccountNum}&method=get"> /
 	          	  			  <c:out value="${param.prdOfferingName}"></c:out>
 							</html-el:link>
 						</c:when>
