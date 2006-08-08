@@ -162,11 +162,27 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		center = (CustomerBO) HibernateUtil.getSessionTL().get(CustomerBO.class,center.getCustomerId());
 	}
 	
-	public void testGetLoanRepaymentSchedule() {
+	public void testGetLoanRepaymentSchedule() {		
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getLoanRepaymentSchedule");
 		actionPerform();
 		verifyForward(ActionForwards.getLoanRepaymentSchedule.toString());
+	}
+	
+	public void testViewStatusHistory() {
+		Date startDate = new Date(System.currentTimeMillis());
+		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
+		LoanBO loan = (LoanBO) accountBO;
+		
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "get");
+		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
+		actionPerform();
+		
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "viewStatusHistory");
+		actionPerform();
+		verifyForward(ActionForwards.viewStatusHistory.toString());
 	}
 	
 	private void modifyActionDateForFirstInstallment() {

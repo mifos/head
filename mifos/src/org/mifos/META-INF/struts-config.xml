@@ -889,6 +889,7 @@
 			<forward name="waiveLoanAccountCharges_Success" path="/loanAccountAction.do?method=getInstallmentDetails"/>			
 			<forward name="get_success" path="/pages/application/loan/jsp/loanaccountdetail.jsp" />
 			<forward name="getLoanRepaymentSchedule" path="/pages/application/loan/jsp/loanRepayment.jsp" />
+			<forward name="viewStatusHistory" path="/pages/application/loan/jsp/viewLoanStatusHistory.jsp" />
 		</action>
 		<action path="/savingsDepositWithdrawalAction" type="org.mifos.application.accounts.savings.struts.action.SavingsDepositWithdrawalAction" name="savingsDepositWithdrawalForm" parameter="method" 
 			input="/savingsDepositWithdrawalAction.do?method=validate" scope="session" validate="true">

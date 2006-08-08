@@ -46,20 +46,6 @@
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 
-<script language="javascript">
-  function AddNote(){
-	notesActionForm.action="notesAction.do?method=load";
-	notesActionForm.submit();
-  }
- function SeeAllNotes(){
-	notesActionForm.action="notesAction.do?method=search";
-	notesActionForm.submit();
-  }
- function statusHistory(){
-	 loanStatusActionForm.action="LoanStatusAction.do?method=search";
-	 loanStatusActionForm.submit();
- }
-</script>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<html-el:form method="post" action="/loanAccountAction.do">
@@ -428,7 +414,7 @@
 														&recordLoanOfficerId=${sessionScope.BusinessKey.personnel.personnelId}&createdDate=${sessionScope.BusinessKey.createdDate}">
 								<mifos:mifoslabel name="loan.view_change_log" />
 							</html-el:link> <br>
-							<html-el:link href="javascript:statusHistory()">
+							<html-el:link href="loanAccountAction.do?method=viewStatusHistory&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}">
 								<mifos:mifoslabel name="loan.view_status_history" />
 							</html-el:link><br>
 							<html-el:link href="accountAppAction.do?method=getTrxnHistory&input=LoanDetails&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}&accountId=${sessionScope.BusinessKey.accountId}&prdOfferingName=${sessionScope.BusinessKey.loanOffering.prdOfferingName}">

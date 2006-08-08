@@ -48,14 +48,6 @@
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<script language="javascript">
-  function AddNote(){
-	notesActionForm.action="notesAction.do?method=load";
-	notesActionForm.submit();
-  }
- function SeeAllNotes(){
-	notesActionForm.action="notesAction.do?method=search";
-	notesActionForm.submit();
-  }
   function editStatus(){
   	editSavingsStatusActionForm.submit();
   }

@@ -53,7 +53,12 @@
 			<mifos:mifoslabel name="Account.Submit" bundle="accountsUIResources"></mifos:mifoslabel>
 			<mifos:mifoslabel name="Account.Edit" bundle="accountsUIResources"></mifos:mifoslabel>
 			<mifos:mifoslabel name="Savings.clickCancelToReturn" bundle="SavingsUIResources"/>
-            <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
+            <c:if test="${sessionScope.notesActionForm.accountTypeId == '1'}">
+				<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
+			</c:if>
+			<c:if test="${sessionScope.notesActionForm.accountTypeId == '2'}">
+				<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
+			</c:if>
             <mifos:mifoslabel name="Savings.accountDetailsPage" bundle="SavingsUIResources"/>
 			</span></td>
                 </tr>

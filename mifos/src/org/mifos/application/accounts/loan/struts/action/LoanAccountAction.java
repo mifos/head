@@ -1,5 +1,8 @@
 package org.mifos.application.accounts.loan.struts.action;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -10,6 +13,7 @@ import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFlagMapping;
+import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.application.accounts.business.ViewInstallmentDetails;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
@@ -93,6 +97,16 @@ public class LoanAccountAction extends AccountAppAction {
 	
 	public ActionForward getLoanRepaymentSchedule(ActionMapping mapping,ActionForm form, HttpServletRequest request,HttpServletResponse response) throws Exception {
 		return mapping.findForward(ActionForwards.getLoanRepaymentSchedule.toString()); 
+	}
+	
+	public ActionForward viewStatusHistory(ActionMapping mapping,ActionForm form, HttpServletRequest request,HttpServletResponse response) throws Exception {
+		String globalAccountNum = request.getParameter("globalAccountNum");
+		LoanBO loanBO = loanBusinessService.findBySystemId(globalAccountNum);
+		Hibernate.initialize(loanBO.accountStatusChangeHistory);
+		loanBO.setUserContext(getUserContext(request));
+		List<AccountStatusChangeHistoryEntity> accStatusChangeHistory = new ArrayList<AccountStatusChangeHistoryEntity>(loanBO.accountStatusChangeHistory);
+		SessionUtils.setAttribute(LoanConstants.STATUS_HISTORY,accStatusChangeHistory,request.getSession());
+		return mapping.findForward(ActionForwards.viewStatusHistory.toString()); 
 	}
 	
 	private void setLocaleForMasterEntities(LoanBO loanBO, Short localeId) {
