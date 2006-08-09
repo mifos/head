@@ -851,6 +851,12 @@ public class ActivityMapper {
 
 		activityMap.put("/notesAction-create-Loan",
 				SecurityConstants.LOAN_CAN_ADD_NOTES_TO_LOAN);
+		
+	// apply charges
+		activityMap.put("/applyChargeAction-load",
+				SecurityConstants.VIEW);
+		activityMap.put("/applyChargeAction-update",
+				SecurityConstants.APPLY_CHARGES_TO_CLIENT_GROUP_CENTERS_LOANS);
 
 	}
 

@@ -129,21 +129,23 @@ public class AccountBusinessService extends BusinessService {
 		AccountPersistence accountPersistence = new AccountPersistence();
 		AccountBO account = accountPersistence.getAccount(accountId);
 		Short categoryType = getCategoryType(account.getCustomer());
+		List<ApplicableCharge> applicableChargeList = null;
 		if (account.getAccountType().getAccountTypeId().equals(
 				AccountTypes.LOANACCOUNT.getValue()))
-			return getLoanApplicableCharges(accountPersistence
+			applicableChargeList = getLoanApplicableCharges(accountPersistence
 					.getAllAppllicableFees(accountId, FeeCategory.LOAN
 							.getValue()), userContext.getLocaleId(), (LoanBO)account);
 		else if (account.getAccountType().getAccountTypeId().equals(
 				AccountTypes.CUSTOMERACCOUNT.getValue()))
-			return getCustomerApplicableCharges(accountPersistence
+			applicableChargeList = getCustomerApplicableCharges(accountPersistence
 					.getAllAppllicableFees(accountId, getCategoryType(account
 							.getCustomer())), userContext.getLocaleId(),
 					((CustomerAccountBO) account).getCustomer()
 							.getCustomerMeeting().getMeeting()
 							.getMeetingDetails().getRecurrenceType()
 							.getRecurrenceId());
-		return null;
+		addMiscFeeAndPenalty(applicableChargeList);
+		return applicableChargeList;
 	}
 
 	private Short getCategoryType(CustomerBO customer) {
@@ -161,21 +163,18 @@ public class AccountBusinessService extends BusinessService {
 
 	private List<ApplicableCharge> getCustomerApplicableCharges(
 			List<FeeBO> feeList, Short locale, Short accountMeetingRecurrance) {
-		List<ApplicableCharge> applicableChargeList = null;
+		List<ApplicableCharge> applicableChargeList = new ArrayList<ApplicableCharge>();
 		if (feeList != null && !feeList.isEmpty()) {
-			applicableChargeList = new ArrayList<ApplicableCharge>();
 			filterBasedOnRecurranceType(feeList, accountMeetingRecurrance);
 			populaleApplicableCharge(applicableChargeList, feeList, locale);
-			addMiscFeeAndPenalty(applicableChargeList);
 		}
 		return applicableChargeList;
 	}
 
 	private List<ApplicableCharge> getLoanApplicableCharges(
 			List<FeeBO> feeList, Short locale, LoanBO loanBO) {
-		List<ApplicableCharge> applicableChargeList = null;
+		List<ApplicableCharge> applicableChargeList = new ArrayList<ApplicableCharge>();
 		if (feeList != null && !feeList.isEmpty()) {
-			applicableChargeList = new ArrayList<ApplicableCharge>();
 			Short accountMeetingRecurrance = loanBO.getCustomer()
 					.getCustomerMeeting().getMeeting().getMeetingDetails()
 					.getRecurrenceType().getRecurrenceId();
@@ -183,7 +182,6 @@ public class AccountBusinessService extends BusinessService {
 			filterDisbursmentFee(feeList, loanBO);
 			filterTimeOfFirstRepaymentFee(feeList, loanBO);
 			populaleApplicableCharge(applicableChargeList, feeList, locale);
-			addMiscFeeAndPenalty(applicableChargeList);
 		}
 		return applicableChargeList;
 	}
@@ -208,6 +206,8 @@ public class AccountBusinessService extends BusinessService {
 			if (meeting != null) {
 				applicableCharge.setPeriodicity(meeting
 						.getSimpleMeetingSchedule());
+			}else{
+				applicableCharge.setPaymentType(fee.getFeeFrequency().getFeePayment().getName(locale));
 			}
 			applicableChargeList.add(applicableCharge);
 		}

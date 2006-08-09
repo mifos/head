@@ -112,7 +112,7 @@
 		            </c:if>
 		            <c:if test="${param.statusId == 7 || param.statusId == 8 || param.statusId == 9 || param.statusId == 10}">
 	                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	                    <html-el:link href="AccountsApplyChargesAction.do?method=load&statusId=${param.statusId}&globalCustNum=${sessionScope.linkValues.globalCustNum}&prdOfferingName=${sessionScope.linkValues.customerName}&input=ViewGroupCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}">
+	                    <html-el:link href="applyChargeAction.do?method=load&accountId=${param.accountId}">
 	                    <mifos:mifoslabel name="client.ApplyCharges" bundle="ClientUIResources"/>
 	                    </html-el:link>
 	                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

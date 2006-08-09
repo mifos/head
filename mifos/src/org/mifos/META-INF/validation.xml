@@ -1018,13 +1018,13 @@
 		<!-- Personnel Notes Action Ends-->
 
 		<!-- Account apply charges Action-->
-		<form name="/AccountsApplyChargesAction">
+		<form name="/applyChargeAction">
         	<!-- Comment -->
          	<field property="chargeType" depends="required">
 	         	<msg name="required" key="errors.mandatory"  bundle="accountsUIResources"/>
 	         	<arg0 key="account.chargetype" />
 			</field>
-			<field property="chargeAmount" depends="required,validwhen,decimalFormat">
+			<field property="charge" depends="required,validwhen,decimalFormat">
 	         	<msg name="required" key="errors.mandatory"  bundle="accountsUIResources"/>
 	         	<arg0 key="account.amount" />
 	            <msg name="validwhen" key="account.amount_zero"

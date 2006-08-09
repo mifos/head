@@ -104,7 +104,7 @@
 	                    	<mifos:mifoslabel name="Center.ApplyAdjustment" bundle="CenterUIResources"/>
 	                    </html-el:link>
 	                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	                    <html-el:link href="AccountsApplyChargesAction.do?method=load&statusId=${param.statusId}&globalCustNum=${sessionScope.linkValues.globalCustNum}&prdOfferingName=${sessionScope.linkValues.customerName}&input=ViewCenterCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}">
+	                    <html-el:link href="applyChargeAction.do?method=load&accountId=${param.accountId}">
 	                    	<mifos:mifoslabel name="Center.ApplyCharges" />
 						</html-el:link>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>

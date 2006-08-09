@@ -124,7 +124,7 @@
 		             </c:if>
 		             <c:if test="${param.statusId == 1 || param.statusId == 2 || param.statusId == 3 || param.statusId == 4}">
 			             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		                <html-el:link href="AccountsApplyChargesAction.do?method=load&statusId=${param.statusId}&globalCustNum=${sessionScope.linkValues.globalCustNum}&prdOfferingName=${sessionScope.linkValues.customerName}&input=ViewClientCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}">
+		                <html-el:link href="applyChargeAction.do?method=load&accountId=${param.accountId}">
 		                	<mifos:mifoslabel name="Customer.apply_charges" />
 		                </html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	                </c:if>

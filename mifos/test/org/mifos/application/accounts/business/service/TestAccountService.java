@@ -162,7 +162,7 @@ public class TestAccountService extends MifosTestCase {
 				.getAccountId());
 		UserContext uc = TestObjectFactory.getUserContext();
 		List<ApplicableCharge> applicableChargeList=accountBusinessService.getAppllicableFees(accountBO.getAccountId(),uc);
-		assertNull(applicableChargeList);
+		assertEquals(2,applicableChargeList.size());
 	}
 	
 	public void testGetAppllicableFeesForInstallmentStartingOnCurrentDate() throws Exception {

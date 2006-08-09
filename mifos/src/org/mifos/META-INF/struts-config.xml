@@ -111,6 +111,9 @@
 		<form-bean name="loanAccountActionForm" type="org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionForm" />
 		<!-- Edit status for customers-->
 		<form-bean name="editCustomerStatusActionForm" type="org.mifos.application.customer.struts.actionforms.EditCustomerStatusActionForm" />
+		<!-- apply charge action form-->
+		<form-bean name="ApplyChargeActionForm" type="org.mifos.application.accounts.struts.actionforms.ApplyChargeActionForm" />
+		
 	</form-beans>
 
 	<global-exceptions>
@@ -944,6 +947,15 @@
 			<forward name="center_detail_page" path="/centerAction.do?method=get" />
 			<forward name="update_failure" path="/pages/application/customer/jsp/changeStatusPreview.jsp" />
 			<forward name="preview_failure" path="/pages/application/customer/jsp/changeStatus.jsp" />
+		</action>
+		
+		<action path="/applyChargeAction" type="org.mifos.application.accounts.struts.action.ApplyChargeAction" parameter="method" name="ApplyChargeActionForm" input="/applyChargeAction.do?method=validate" validate="true" scope="session">
+			<forward name="load_success" path="/pages/application/accounts/jsp/applyCharges.jsp"></forward>
+			<forward name="update_failure" path="/pages/application/accounts/jsp/applyCharges.jsp"></forward>
+			<forward name="loanDetails_success" path="/loanAccountAction.do?method=get"></forward>
+			<forward name="clientDetails_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewClientCharges&amp;searchNode(search_name)=ClientChargesDetails" />
+			<forward name="groupDetails_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewGroupCharges&amp;searchNode(search_name)=ClientChargesDetails" />
+			<forward name="centerDetails_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewCenterCharges&amp;searchNode(search_name)=ClientChargesDetails" />
 		</action>
 	</action-mappings>
 

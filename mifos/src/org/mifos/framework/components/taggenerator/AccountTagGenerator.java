@@ -78,7 +78,7 @@ public class AccountTagGenerator extends TagGenerator {
 		}else if(account.getAccountType().getAccountTypeId().equals(AccountTypes.LOANACCOUNT.getValue())){
 			return ((LoanBO)account).getLoanOffering().getPrdOfferingName();
 		}
-		return null;
+		return "";
 	}
 	
 	private String getAction(AccountBO account){
