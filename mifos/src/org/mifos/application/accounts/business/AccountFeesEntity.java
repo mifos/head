@@ -91,6 +91,17 @@ public class AccountFeesEntity extends PersistentObject {
 	public AccountBO getAccount() {
 		return account;
 	}
+	
+	public AccountFeesEntity(AccountBO account, FeeBO fees, Money feeAmount,
+			Short feeStatus, Date statusChangeDate, Date lastAppliedDate) {
+		this.account = account;
+		this.fees = fees;
+		this.accountFeeAmount = feeAmount;
+		this.feeAmount = feeAmount;
+		this.feeStatus = feeStatus;
+		this.statusChangeDate = statusChangeDate;
+		this.lastAppliedDate = lastAppliedDate;
+	}
 
 	public void setAccount(AccountBO account) {
 		this.account = account;

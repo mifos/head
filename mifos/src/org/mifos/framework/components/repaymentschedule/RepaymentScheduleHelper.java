@@ -581,7 +581,6 @@ public static void setFeeDetailEntity(
 			if (type.equals("Loan")) {
 				accountFeesActionDetailEntity = new LoanFeeScheduleEntity(
 						accountActionDate,
-						accountActionDate.getInstallmentId(),
 						getFeesBO(new Short(accountFeeInstallment.getFeeId())),
 						accountFeesEntity,
 						accountFeeInstallment.getAccountFeeAmount());
@@ -592,7 +591,6 @@ public static void setFeeDetailEntity(
 			} else {
 				accountFeesActionDetailEntity = new CustomerFeeScheduleEntity(
 						accountActionDate,
-						accountActionDate.getInstallmentId(),
 						getFeesBO(new Short(accountFeeInstallment.getFeeId())),
 						accountFeesEntity,
 						accountFeeInstallment.getAccountFeeAmount());

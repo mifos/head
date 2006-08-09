@@ -452,4 +452,6 @@ public interface NamedQueryConstants {
 	public String ALL_LOAN_FEE_SCHEDULE_DETAILS = "account.getAllAccountFeeForAllInstallmentsForAllLoanAcounts";
 	public String ALL_CUSTOMER_FEE_SCHEDULE_DETAILS = "account.getAllAccountFeeForAllInstallmentsForAllCustomerAccounts";
 
+	public String GET_ALL_APPLICABLE_CUSTOMER_FEE="getAllApplicableFeesForCustomer";
+	public String GET_ALL_APPLICABLE_LOAN_FEE="getAllApplicableFeesForLoan";
 }

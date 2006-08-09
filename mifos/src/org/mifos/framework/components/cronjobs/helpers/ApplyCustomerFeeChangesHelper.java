@@ -154,7 +154,7 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 		CustomerScheduleEntity nextInstallment = (CustomerScheduleEntity) accountBO
 				.getDetailsOfNextInstallment();
 		AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(
-				nextInstallment, nextInstallment.getInstallmentId(), fee
+				nextInstallment, fee
 						.getFees(), fee, fee.getAccountFeeAmount());
 		accountFeesaction.setFeeAmountPaid(new Money("0.0"));
 		nextInstallment.addAccountFeesAction(accountFeesaction);

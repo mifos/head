@@ -69,7 +69,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) customerAccount
 				.getAccountActionDate(Short.valueOf("1"));
 		AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(
-				accountActionDate, Short.valueOf("1"), trainingFee,
+				accountActionDate, trainingFee,
 				accountPeriodicFee, new Money("10.0"));
 		accountFeesaction.setFeeAmountPaid(new Money("0.0"));
 		accountActionDate.addAccountFeesAction(accountFeesaction);
@@ -118,7 +118,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) customerAccount
 				.getAccountActionDate(Short.valueOf("1"));
 		AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(
-				accountActionDate, Short.valueOf("1"), trainingFee,
+				accountActionDate,  trainingFee,
 				accountPeriodicFee, new Money("10.0"));
 		accountFeesaction.setFeeAmountPaid(new Money("0.0"));
 		accountActionDate.addAccountFeesAction(accountFeesaction);
@@ -162,7 +162,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) customerAccount
 				.getAccountActionDate(Short.valueOf("1"));
 		AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(
-				accountActionDate, Short.valueOf("1"), trainingFee,
+				accountActionDate,  trainingFee,
 				accountPeriodicFee, new Money("10.0"));
 		accountFeesaction.setFeeAmountPaid(new Money("0.0"));
 		accountActionDate.addAccountFeesAction(accountFeesaction);
@@ -322,7 +322,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) centerAccount
 				.getAccountActionDate(Short.valueOf("1"));
 		AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(
-				accountActionDate, Short.valueOf("1"), trainingFee,
+				accountActionDate,  trainingFee,
 				accountPeriodicFee, new Money("10.0"));
 
 		accountFeesaction.setFeeAmountPaid(new Money("0.0"));
@@ -332,7 +332,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		CustomerScheduleEntity groupaccountActionDate = (CustomerScheduleEntity) groupAccount
 				.getAccountActionDate(Short.valueOf("1"));
 		AccountFeesActionDetailEntity groupaccountFeesaction = new CustomerFeeScheduleEntity(
-				groupaccountActionDate, Short.valueOf("1"), trainingFee,
+				groupaccountActionDate,  trainingFee,
 				groupaccountPeriodicFee, new Money("10.0"));
 		groupaccountFeesaction.setFeeAmountPaid(new Money("0.0"));
 		groupaccountActionDate.addAccountFeesAction(groupaccountFeesaction);

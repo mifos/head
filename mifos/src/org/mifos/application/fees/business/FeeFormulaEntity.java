@@ -53,4 +53,8 @@ public class FeeFormulaEntity extends MasterDataEntity {
 	public FeeFormulaEntity(FeeFormula feeFormula) {
 		super(feeFormula.getValue());
 	}
+	
+	public String getFormulaString(Short locale){
+		return "Formula: % "+getName(locale);
+	}
 }

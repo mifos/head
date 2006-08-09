@@ -8,6 +8,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.framework.util.helpers.Money;
@@ -104,7 +105,7 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
 		AccountFeesEntity accountFeesEntity = account
 				.getPeriodicAccountFees(feeId);
 		AccountFeesActionDetailEntity accountFeesActionDetailEntity = new CustomerFeeScheduleEntity(
-				this, getInstallmentId(), accountFeesEntity.getFees(),
+				this, accountFeesEntity.getFees(),
 				accountFeesEntity, accountFeesEntity.getAccountFeeAmount());
 		addAccountFeesAction(accountFeesActionDetailEntity);
 	}
@@ -175,4 +176,12 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
 
 		return feeAmount;
 	}
+	
+	public void applyMiscCharge(Short chargeType,Money charge){
+		if(chargeType.equals(Short.valueOf(AccountConstants.MISC_FEES)))
+			setMiscFee(getMiscFee().add(charge));
+		else if(chargeType.equals(Short.valueOf(AccountConstants.MISC_PENALTY)))
+			setMiscPenalty(getMiscPenalty().add(charge));
+	}
+	
 }

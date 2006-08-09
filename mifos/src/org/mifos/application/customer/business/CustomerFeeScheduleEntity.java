@@ -10,13 +10,13 @@ public class CustomerFeeScheduleEntity extends
 		AccountFeesActionDetailEntity {
 
 	protected CustomerFeeScheduleEntity() {
-		super(null, null, null, null, null);
+		super(null, null, null, null);
 	}
 
 	public CustomerFeeScheduleEntity(
-			AccountActionDateEntity accountActionDate, Short installmentId,
+			AccountActionDateEntity accountActionDate,
 			FeeBO fee, AccountFeesEntity accountFee, Money feeAmount) {
-		super(accountActionDate, installmentId, fee, accountFee, feeAmount);
+		super(accountActionDate, fee, accountFee, feeAmount);
 	}
 
 }

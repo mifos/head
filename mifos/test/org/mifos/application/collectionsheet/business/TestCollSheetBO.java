@@ -409,7 +409,7 @@ public class TestCollSheetBO extends MifosTestCase {
 		for (AccountActionDateEntity accountActionDateEntity : accntActionDates) {
 			LoanScheduleEntity accntActionDate = (LoanScheduleEntity) accountActionDateEntity;
 			AccountFeesActionDetailEntity accntFeesActionDetailEntity = new LoanFeeScheduleEntity(
-					accntActionDate, accntActionDate.getInstallmentId(), null,
+					accntActionDate,null,
 					null, new Money("5"));
 
 			accntFeesActionDetailEntity.setFeeAmountPaid(TestObjectFactory
@@ -443,7 +443,7 @@ public class TestCollSheetBO extends MifosTestCase {
 					customer, (short) 2, new Date(System.currentTimeMillis()),
 					PaymentStatus.UNPAID, new Money(), new Money());
 			AccountFeesActionDetailEntity accntFeesActionDetailEntity = new LoanFeeScheduleEntity(
-					accntActionDate, accntActionDate.getInstallmentId(), null,
+					accntActionDate,  null,
 					null, new Money("5"));
 			accntFeesActionDetailEntity.setFeeAmountPaid(TestObjectFactory
 					.getMoneyForMFICurrency(3));

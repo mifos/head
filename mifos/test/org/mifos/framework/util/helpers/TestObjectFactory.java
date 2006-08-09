@@ -476,13 +476,15 @@ public class TestObjectFactory {
 		MeetingBO meeting = createLoanMeeting(customer.getCustomerMeeting()
 				.getMeeting());
 		List<Date> meetingDates = getMeetingDates(meeting, 6);
+		
 		LoanBO loan = null;
 		MifosCurrency currency = testObjectPersistence.getCurrency();
 		try {
 			loan = new LoanBO(TestObjectFactory.getUserContext(), loanOfering, customer,
 						AccountState.getStatus(accountStateId),	new Money(currency, "300.0"),
-						Short.valueOf("6"),meetingDates.get(0),false,0.0,(short) 0,
+						Short.valueOf("6"),meetingDates.get(0),true,0.0,(short) 0,
 						new Fund(),new ArrayList<FeeView>());
+			
 		} catch (NumberFormatException e) {
 		} catch (AccountException e) {
 			e.printStackTrace();
@@ -511,7 +513,7 @@ public class TestObjectFactory {
 			loan.addAccountActionDate(actionDate);
 
 			AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
-					actionDate, i, maintanenceFee, accountPeriodicFee,
+					actionDate, maintanenceFee, accountPeriodicFee,
 					new Money(currency, "100.0"));
 			accountFeesaction.setFeeAmountPaid(new Money(currency, "0.0"));
 			actionDate.addAccountFeesAction(accountFeesaction);
@@ -1362,7 +1364,7 @@ public class TestObjectFactory {
 
 					// periodic fee
 					AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
-							actionDate, i, maintanenceFee, accountPeriodicFee,
+							actionDate,  maintanenceFee, accountPeriodicFee,
 							new Money(currency, "10.0"));
 					accountFeesaction.setFeeAmountPaid(new Money(currency,
 							"0.0"));
@@ -1370,7 +1372,7 @@ public class TestObjectFactory {
 
 					// dibursement fee one
 					AccountFeesActionDetailEntity accountFeesaction1 = new LoanFeeScheduleEntity(
-							actionDate, i, disbursementFee,
+							actionDate,  disbursementFee,
 							accountDisbursementFee, new Money(currency, "10.0"));
 
 					accountFeesaction1.setFeeAmountPaid(new Money(currency,
@@ -1379,7 +1381,7 @@ public class TestObjectFactory {
 
 					// disbursementfee2
 					AccountFeesActionDetailEntity accountFeesaction2 = new LoanFeeScheduleEntity(
-							actionDate, i, disbursementFee2,
+							actionDate, disbursementFee2,
 							accountDisbursementFee2,
 							new Money(currency, "20.0"));
 					accountFeesaction2.setFeeAmountPaid(new Money(currency,
@@ -1396,7 +1398,7 @@ public class TestObjectFactory {
 				actionDate.setPaymentStatus(PaymentStatus.UNPAID.getValue());
 				loan.addAccountActionDate(actionDate);
 				AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
-						actionDate, i, maintanenceFee, accountPeriodicFee,
+						actionDate, maintanenceFee, accountPeriodicFee,
 						new Money(currency, "100.0"));
 				accountFeesaction.setFeeAmountPaid(new Money(currency, "0.0"));
 				actionDate.addAccountFeesAction(accountFeesaction);
@@ -1429,7 +1431,7 @@ public class TestObjectFactory {
 				loan.addAccountActionDate(actionDate);
 */
 				AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
-						actionDate, i, maintanenceFee, accountPeriodicFee,
+						actionDate,maintanenceFee, accountPeriodicFee,
 						new Money(currency, "100.0"));
 				accountFeesaction.setFeeAmountPaid(new Money(currency, "0.0"));
 				actionDate.addAccountFeesAction(accountFeesaction);

@@ -69,6 +69,31 @@ public class LoanActivityEntity extends PersistentObject {
 		this.trxnCreatedDate = new Timestamp(System.currentTimeMillis());
 		this.account = account;
 	}
+	
+	public LoanActivityEntity(AccountBO account,PersonnelBO personnel,Money principal,Money interest,Money fee,Money penalty,LoanSummaryEntity loanSummary,String comments) {
+		trxnCreatedDate = new Timestamp(System.currentTimeMillis());
+		this.id = null;
+		this.principal=principal;
+		this.interest=interest;
+		this.account=account;
+		this.personnel=personnel;
+		this.fee=fee;
+		this.penalty=penalty;
+		this.comments=comments;
+		this.feeOutstanding=loanSummary
+				.getOriginalFees().subtract(
+						loanSummary.getFeesPaid());
+		this.interestOutstanding=loanSummary
+				.getOriginalInterest().subtract(
+						loanSummary.getInterestPaid());
+		this.penaltyOutstanding=loanSummary
+				.getOriginalPenalty().subtract(
+						loanSummary.getPenaltyPaid());
+		this.principalOutstanding=loanSummary
+				.getOriginalPrincipal().subtract(
+						loanSummary.getPrincipalPaid());
+	}
+
 
 	public AccountBO getAccount() {
 		return account;

@@ -212,12 +212,12 @@ public class MeetingBO extends BusinessObject {
 				if (null != rt.getRecurrenceId()
 						&& rt.getRecurrenceId().shortValue() == MeetingConstants.WEEK) {
 
-					meeetingInfo = "Recur every "
+					meeetingInfo = "Periodicity: Recur every "
 							+ this.meetingDetails.getRecurAfter() + " Week(s) ";
 
 				} else if (null != rt.getRecurrenceId()
 						&& rt.getRecurrenceId().shortValue() == MeetingConstants.MONTH) {
-					meeetingInfo = "Recur  every "
+					meeetingInfo = "Periodicity: Recur  every "
 							+ this.meetingDetails.getRecurAfter()
 							+ " month(s) ";
 				}

@@ -43,8 +43,12 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Hibernate;
@@ -52,6 +56,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.exceptions.AccountExceptionConstants;
+import org.mifos.application.accounts.exceptions.AccountsApplyChargesException;
 import org.mifos.application.accounts.exceptions.IDGenerationException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.service.FinancialBusinessService;
@@ -65,6 +70,7 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
+import org.mifos.application.accounts.util.valueobjects.Account;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.exception.StateChangeException;
@@ -72,6 +78,7 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
+import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.master.util.valueobjects.AccountType;
@@ -84,6 +91,12 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.repaymentschedule.FeeInstallment;
+import org.mifos.framework.components.repaymentschedule.RepaymentSchedule;
+import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
+import org.mifos.framework.components.repaymentschedule.RepaymentScheduleFactory;
+import org.mifos.framework.components.repaymentschedule.RepaymentScheduleIfc;
+import org.mifos.framework.components.repaymentschedule.RepaymentScheduleInputsIfc;
 import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
@@ -651,6 +664,30 @@ public class AccountBO extends BusinessObject {
 		}
 		return futureActionDateList;
 	}
+	
+	protected final List<AccountActionDateEntity> getDueInstallments() {
+		List<AccountActionDateEntity> dueInstallmentList = new ArrayList<AccountActionDateEntity>();
+		AccountActionDateEntity accountActionDate = null;
+		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
+			if (accountActionDateEntity.getPaymentStatus().equals(
+					PaymentStatus.UNPAID.getValue())) {
+				if (accountActionDateEntity.compareDate(DateUtils
+						.getCurrentDateWithoutTimeStamp()) > 0) {
+					dueInstallmentList.add(accountActionDateEntity);
+				}
+			}
+		}
+		return dueInstallmentList;
+	}
+	
+	protected final List<Short> getIdList(List<AccountActionDateEntity> dueInstallments){
+		List<Short> ids=new ArrayList<Short>();
+		for(AccountActionDateEntity accountActionDateEntity : dueInstallments)
+			ids.add(accountActionDateEntity.getInstallmentId());
+		return ids;
+	}
+	
+	
 
 	public List<AccountActionDateEntity> getPastInstallments() {
 		List<AccountActionDateEntity> pastActionDateList = new ArrayList<AccountActionDateEntity>();
@@ -1117,4 +1154,89 @@ public class AccountBO extends BusinessObject {
 		if(userContext == null || customer==null || accountType==null || accountState==null)
 			throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION);
 	}
+	
+
+	public Boolean isCurrentDateGreaterThanFirstInstallment() {
+		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
+			if (DateUtils.getCurrentDateWithoutTimeStamp().compareTo(
+					DateUtils.getDateWithoutTimeStamp(accountActionDateEntity
+							.getActionDate().getTime())) >= 0)
+				return true;
+		}
+		return false;
+	}
+	
+	public void applyCharge(Short feeId,Money charge) throws ApplicationException{}
+	
+	protected final Map<Short, Money> getFeeInstallmentMap(
+			AccountFeesEntity accountFee, Date feeStartDate)
+			throws RepaymentScheduleException {
+		Set<AccountFeesEntity> accountFeeSet = new HashSet<AccountFeesEntity>();
+		accountFeeSet.add(accountFee);
+		RepaymentSchedule repaymentSchedule = getFeeInstallment(accountFeeSet,
+				feeStartDate);
+		List<FeeInstallment> feeInstallmentList = repaymentSchedule
+				.getRepaymentFeeInstallment();
+		Map<Short, Money> feeInstallmentMap = new HashMap<Short, Money>();
+		for (Iterator<FeeInstallment> iter = feeInstallmentList.iterator(); iter
+				.hasNext();) {
+			FeeInstallment feeInstallment = iter.next();
+			feeInstallmentMap.put(new Short(Integer.toString(feeInstallment
+					.getInstallmentId())), feeInstallment
+					.getSummaryAccountFeeInstallment().get(0)
+					.getAccountFeeAmount());
+			accountFee.setAccountFeeAmount(feeInstallment
+					.getSummaryAccountFeeInstallment().get(0).getAccountFee()
+					.getAccountFeeAmount());
+		}
+		return feeInstallmentMap;
+	}
+	
+	protected final RepaymentSchedule getFeeInstallment(
+			Set<AccountFeesEntity> accountFeeSet,
+			Date feeStartDate) throws RepaymentScheduleException {
+		RepaymentScheduleInputsIfc inputs = RepaymentScheduleFactory
+				.getRepaymentScheduleInputs();
+		RepaymentScheduleIfc repaymentScheduler = RepaymentScheduleFactory
+				.getRepaymentScheduler();
+		Short accountType = this.getAccountType().getAccountTypeId();
+		if (accountType.equals(AccountTypes.LOANACCOUNT.getValue())){
+			setLoanInput(inputs, feeStartDate);
+		} else if (accountType.equals(AccountTypes.CUSTOMERACCOUNT.getValue())) {
+			setCustomerInput(inputs, feeStartDate);
+		}
+		inputs.setAccountFeeEntity(accountFeeSet);
+		inputs.setFeeStartDate(feeStartDate);
+		repaymentScheduler.setRepaymentScheduleInputs(inputs);
+		return repaymentScheduler.getRepaymentSchedule();
+	}
+	
+	protected void setLoanInput(RepaymentScheduleInputsIfc inputs,Date feeStartDate){}
+	
+	protected void setCustomerInput(RepaymentScheduleInputsIfc inputs,Date feeStartDate){}
+	
+	protected final Boolean isFeeAlreadyApplied(FeeBO fee) {
+		if (getAccountFees() != null)
+			for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
+				if (accountFeesEntity.getFees().getFeeId().equals(
+						fee.getFeeId()))
+					return true;
+			}
+		return false;
+	}
+	
+	protected final AccountFeesEntity getAccountFee(FeeBO fee,Money charge){
+		AccountFeesEntity accountFee = null;
+		if(fee.isPeriodic() && isFeeAlreadyApplied(fee)){
+			accountFee = getAccountFees(fee.getFeeId());
+			accountFee.setFeeAmount(charge);
+			accountFee.setFeeStatus(FeeStatus.ACTIVE.getValue());
+		}else{
+			accountFee = new AccountFeesEntity(this,fee,charge,
+					FeeStatus.ACTIVE.getValue(),new Date(System
+							.currentTimeMillis()),null);
+		}
+		return accountFee;
+	}
+	
 }

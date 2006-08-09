@@ -58,13 +58,16 @@ public class AccountFeesActionDetailEntity extends PersistentObject {
 	private Money feeAmount;
 
 	private Money feeAmountPaid;
-
+	
 	protected AccountFeesActionDetailEntity(
-			AccountActionDateEntity accountActionDate, Short installmentId,
+			AccountActionDateEntity accountActionDate,
 			FeeBO fee, AccountFeesEntity accountFee, Money feeAmount) {
 		this.accountFeesActionDetailId = null;
 		this.accountActionDate = accountActionDate;
-		this.installmentId = installmentId;
+		if(accountActionDate!=null)
+			this.installmentId = accountActionDate.getInstallmentId();
+		else
+			this.installmentId =null;
 		this.fee = fee;
 		this.accountFee = accountFee;
 		this.feeAmount = feeAmount;

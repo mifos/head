@@ -34,6 +34,7 @@ import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.business.RateFeeBO;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.fees.util.valueobjects.FeeFrequency;
 import org.mifos.application.fees.util.valueobjects.Fees;
@@ -333,8 +334,14 @@ public class RepaymentScheduleInputs implements RepaymentScheduleInputsIfc {
 	private Fees getFees(FeeBO feebo){
 		Fees fee = new Fees();
 		fee.setFeeId(feebo.getFeeId());
-		fee.setFeeAmount(((AmountFeeBO)feebo).getFeeAmount());
-		fee.setRateFlatFalg(RateAmountFlag.AMOUNT.getValue());
+		if(feebo.getFeeType().equals(RateAmountFlag.AMOUNT)) {
+			fee.setFeeAmount(((AmountFeeBO)feebo).getFeeAmount());
+			fee.setRateFlatFalg(RateAmountFlag.AMOUNT.getValue());
+		}else {
+			fee.setFeeAmount(new Money(((RateFeeBO)feebo).getRate().toString()));
+			fee.setRateFlatFalg(RateAmountFlag.RATE.getValue());
+			fee.setFormulaId(((RateFeeBO)feebo).getFeeFormula().getId());
+		}
 		FeeFrequency feeFrequency = new FeeFrequency();
 		feeFrequency.setFeeFrequencyTypeId(feebo.getFeeFrequency().getFeeFrequencyType().getId());
 		if(feebo.isPeriodic())

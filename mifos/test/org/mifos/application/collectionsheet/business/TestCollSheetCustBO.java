@@ -112,16 +112,10 @@ public class TestCollSheetCustBO extends MifosTestCase{
 	
 	public void testPopulateAccountDetails() {
 		CollSheetCustBO collSheetCustBO = new CollSheetCustBO();
-		
-	
-		
-		
-		
-		
 		LoanBO loan = (LoanBO)createLoanAccount();
 		
 		LoanScheduleEntity accountActionDate = new LoanScheduleEntity(loan, group,(short)1,new java.sql.Date(System.currentTimeMillis()),PaymentStatus.UNPAID,new Money(),new Money());
-		LoanFeeScheduleEntity accntFeesActionDetailEntity = new LoanFeeScheduleEntity(accountActionDate,(short)1,null,null,TestObjectFactory.getMoneyForMFICurrency(5));
+		LoanFeeScheduleEntity accntFeesActionDetailEntity = new LoanFeeScheduleEntity(accountActionDate,null,null,TestObjectFactory.getMoneyForMFICurrency(5));
 		accntFeesActionDetailEntity.setFeeAmountPaid(TestObjectFactory.getMoneyForMFICurrency(3));
 		accountActionDate.addAccountFeesAction(accntFeesActionDetailEntity);
 		

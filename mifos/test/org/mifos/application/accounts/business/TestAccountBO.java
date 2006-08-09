@@ -93,7 +93,7 @@ public class TestAccountBO extends TestAccount {
 		for (AccountActionDateEntity accountActionDateEntity : accountBO
 				.getAccountActionDates()) {
 			if (accountActionDateEntity.getInstallmentId().equals(
-					Short.valueOf("1")))
+					Short.valueOf("2")))
 				((LoanScheduleEntity) accountActionDateEntity)
 						.setMiscFee(new Money("20.3"));
 		}
@@ -128,14 +128,14 @@ public class TestAccountBO extends TestAccount {
 		for (AccountActionDateEntity accountActionDate : accountBO
 				.getAccountActionDates()) {
 			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
-			if (accountActionDate.getInstallmentId().equals(Short.valueOf("1")))
+			if (accountActionDate.getInstallmentId().equals(Short.valueOf("2")))
 				assertEquals(new Money("133.0"), loanScheduleEntity
 						.getTotalDueWithFees());
 			else if (loanScheduleEntity.getInstallmentId().equals(
 					Short.valueOf("6")))
 				assertEquals(new Money("111.3"), loanScheduleEntity
 						.getTotalDueWithFees());
-			else
+			else 
 				assertEquals(new Money("112.0"), loanScheduleEntity
 						.getTotalDueWithFees());
 		}

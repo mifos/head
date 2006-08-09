@@ -2,6 +2,7 @@ package org.mifos.application.accounts.persistence;
 
 import java.sql.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -16,13 +17,19 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStateFlagEntity;
+import org.mifos.application.accounts.util.helpers.ApplicableCharge;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.checklist.util.valueobjects.CheckListMaster;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.fees.util.helpers.FeeFrequencyType;
+import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -241,4 +248,28 @@ public class AccountPersistence extends Persistence {
 		return accountStateFlagEntity;
 	}
 	
+	public List<FeeBO> getAllAppllicableFees(Integer accountId,Short categoryType) throws ServiceException{
+		List queryResult=null;
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("accountId", accountId);
+		queryParameters.put("feeFrequencyTypeId", FeeFrequencyType.PERIODIC.getValue());
+		queryParameters.put("active", FeeStatus.ACTIVE.getValue());
+		if(categoryType.equals(FeeCategory.LOAN.getValue())){
+			queryParameters.put("category",FeeCategory.LOAN.getValue());
+			queryResult = executeNamedQuery(
+					NamedQueryConstants.GET_ALL_APPLICABLE_LOAN_FEE, queryParameters);
+		}else{
+			queryParameters.put("category1", FeeCategory.ALLCUSTOMERS.getValue());
+			queryParameters.put("category2",categoryType);
+			queryResult = executeNamedQuery(
+					NamedQueryConstants.GET_ALL_APPLICABLE_CUSTOMER_FEE, queryParameters);
+		}
+		for (Iterator iter = queryResult.iterator(); iter.hasNext();) {
+			FeeBO element = (FeeBO) iter.next();
+			System.out.println("****1*******feeName : " + element.getFeeName());
+			
+		}
+		return queryResult;
+	}
+
 }

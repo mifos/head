@@ -140,8 +140,8 @@ public interface AccountConstants {
 	public final String UNEXPECTEDERROR="errors.unexpected";
 	public final String NOMOREINSTALLMENTS="errors.nomoreinstallments";
 	//Misc Fees and Penalty
-	public final Short MISC_FEES=-1;
-	public final Short MISC_PENALTY=-2;
+	public final String MISC_FEES="-1";
+	public final String MISC_PENALTY="-2";
 	
 	/*Payment Status
 		public final Short PAYMENT_UNPAID=0;
@@ -184,5 +184,6 @@ public interface AccountConstants {
 	public final String WAIVE_TYPE="WaiveType";	
 	public static final short COMMENT_LENGTH = 500;
 	public static final String MAX_LENGTH="errors.maximumlength";
+	public static final String APPLICABLE_CHARGE_LIST="applicableChargeList";
 }
 

@@ -416,11 +416,11 @@ public class AccountsApplyChargesDAO extends DAO {
 			feeList = new ArrayList();
 		}
 		AccountApplyChargesMaster accountApplyChargesMaster = new AccountApplyChargesMaster();
-		accountApplyChargesMaster.setFeeId(AccountConstants.MISC_FEES);
+		accountApplyChargesMaster.setFeeId(Short.valueOf(AccountConstants.MISC_FEES));
 		accountApplyChargesMaster.setFeeName("Misc Fees");
 		feeList.add(accountApplyChargesMaster);
 		accountApplyChargesMaster = new AccountApplyChargesMaster();
-		accountApplyChargesMaster.setFeeId(AccountConstants.MISC_PENALTY);
+		accountApplyChargesMaster.setFeeId(Short.valueOf(AccountConstants.MISC_PENALTY));
 		accountApplyChargesMaster.setFeeName("Misc Penalty");
 		feeList.add(accountApplyChargesMaster);
 	}

@@ -208,4 +208,12 @@ public class LoanSummaryEntity extends PersistentObject {
 		originalPenalty = originalPenalty.subtract(penalty);
 		originalInterest = originalInterest.subtract(interest);
 	}
+	
+	public void updateOriginalFees(Money charge){
+		setOriginalFees(getOriginalFees().add(charge));
+	}
+	
+	public void updateOriginalPenalty(Money charge){
+		setOriginalPenalty(getOriginalPenalty().add(charge));
+	}
 }

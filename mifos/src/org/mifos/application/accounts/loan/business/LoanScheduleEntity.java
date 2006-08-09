@@ -46,6 +46,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
@@ -364,9 +365,16 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		AccountFeesEntity accountFeesEntity = account
 				.getPeriodicAccountFees(feeId);
 		AccountFeesActionDetailEntity accountFeesActionDetailEntity = new LoanFeeScheduleEntity(
-				this, getInstallmentId(), accountFeesEntity.getFees(),
+				this, accountFeesEntity.getFees(),
 				accountFeesEntity, accountFeesEntity.getAccountFeeAmount());
 		addAccountFeesAction(accountFeesActionDetailEntity);
+	}
+	
+	public void applyMiscCharge(Short chargeType,Money charge){
+		if(chargeType.equals(Short.valueOf(AccountConstants.MISC_FEES)))
+			setMiscFee(getMiscFee().add(charge));
+		else if(chargeType.equals(Short.valueOf(AccountConstants.MISC_PENALTY)))
+			setMiscPenalty(getMiscPenalty().add(charge));
 	}
 
 }

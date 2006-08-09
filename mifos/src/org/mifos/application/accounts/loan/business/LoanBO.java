@@ -44,9 +44,11 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.HibernateException;
@@ -69,17 +71,21 @@ import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.loan.exceptions.LoanExceptionConstants;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.application.accounts.loan.util.valueobjects.Loan;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.ApplicableCharge;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
+import org.mifos.application.accounts.util.valueobjects.Account;
+import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
@@ -88,6 +94,10 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.persistence.FeePersistence;
+import org.mifos.application.fees.util.helpers.FeeFrequencyType;
+import org.mifos.application.fees.util.helpers.FeePayment;
+import org.mifos.application.fees.util.helpers.FeeStatus;
+import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.master.business.CollateralTypeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
@@ -97,6 +107,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingDetailsEntity;
 import org.mifos.application.meeting.business.MeetingRecurrenceEntity;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -106,6 +117,7 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.repaymentschedule.FeeInstallment;
 import org.mifos.framework.components.repaymentschedule.RepaymentSchedule;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleFactory;
@@ -1024,7 +1036,7 @@ public class LoanBO extends AccountBO {
 								.getAccountFeeId());
 				if (accountFeesAction != null) {
 					AccountFeesActionDetailEntity accountFeesActionDetail = new LoanFeeScheduleEntity(
-							entityNew, entityNew.getInstallmentId(),
+							entityNew, 
 							accountFeesEntity.getFees(), accountFeesEntity,
 							accountFeesAction.getFeeAmount());
 					accountFeesActionDetail.setFeeAmountPaid(new Money());
@@ -1702,4 +1714,140 @@ public class LoanBO extends AccountBO {
 			this.gracePeriodDuration = gracePeriodDuration;
 		}
 	}
+	
+	@Override
+	public void applyCharge(Short feeId, Money charge)
+			throws ApplicationException {
+		List<AccountActionDateEntity> dueInstallments = getDueInstallments();
+		if (!dueInstallments.isEmpty()) {
+			if (feeId.equals(Short.valueOf(AccountConstants.MISC_FEES))
+					|| feeId.equals(Short
+							.valueOf(AccountConstants.MISC_PENALTY))) {
+				applyMiscCharge(feeId, charge, dueInstallments.get(0));
+			} else {
+				FeeBO fee = new FeePersistence().getFee(feeId);
+				if (fee.getFeeFrequency().getFeePayment() != null) {
+					applyOneTimeFee(fee, charge, dueInstallments.get(0));
+				} else {
+					applyPeriodicFee(fee,charge,getDueInstallments());
+				}
+			}
+			roundInstallments(getIdList(dueInstallments));
+		} else {
+			throw new ApplicationException(AccountConstants.NOMOREINSTALLMENTS);
+		}
+	}
+	
+	private void applyPeriodicFee(FeeBO fee,Money charge,List<AccountActionDateEntity> dueInstallments) throws RepaymentScheduleException{
+		AccountFeesEntity accountFee = getAccountFee(fee,charge);
+		Map<Short,Money> feeInstallmentMap=getFeeInstallmentMap(accountFee,dueInstallments.get(0).getActionDate());
+		Money totalFeeAmountApplied=applyFeeToInstallments(feeInstallmentMap,dueInstallments,fee,accountFee);
+		updateLoanSummary(fee.getFeeId(),totalFeeAmountApplied);
+		updateLoanActivity(fee.getFeeId(),totalFeeAmountApplied);
+	}
+	
+	
+	private void applyOneTimeFee(FeeBO fee,Money charge,AccountActionDateEntity accountActionDateEntity) throws RepaymentScheduleException{
+		LoanScheduleEntity loanScheduleEntity=(LoanScheduleEntity)accountActionDateEntity;
+		AccountFeesEntity accountFee = new AccountFeesEntity(this,fee,charge,
+				FeeStatus.ACTIVE.getValue(),new Date(System
+						.currentTimeMillis()),null);
+		Map<Short,Money> feeInstallmentMap=getFeeInstallmentMap(accountFee,loanScheduleEntity.getActionDate());
+		List<AccountActionDateEntity> loanScheduleEntityList=new ArrayList<AccountActionDateEntity>();
+		loanScheduleEntityList.add(loanScheduleEntity);
+		Money totalFeeAmountApplied=applyFeeToInstallments(feeInstallmentMap,loanScheduleEntityList,fee,accountFee);
+		filterTimeOfDisbursementFees(loanScheduleEntity,fee); 
+		updateLoanSummary(fee.getFeeId(),totalFeeAmountApplied);
+		updateLoanActivity(fee.getFeeId(),totalFeeAmountApplied);
+	}
+	
+	private void applyMiscCharge(Short chargeType,Money charge,AccountActionDateEntity accountActionDateEntity){
+		LoanScheduleEntity loanScheduleEntity=(LoanScheduleEntity)accountActionDateEntity;
+		loanScheduleEntity.applyMiscCharge(chargeType,charge);
+		updateLoanSummary(chargeType,charge);
+		updateLoanActivity(chargeType,charge);
+	}
+	
+	private void updateLoanSummary(Short chargeType,Money charge){
+		if(chargeType!=null && chargeType.equals(Short.valueOf(AccountConstants.MISC_PENALTY)))
+			getLoanSummary().updateOriginalPenalty(charge);
+		else
+			getLoanSummary().updateOriginalFees(charge);
+	}
+	
+	private void updateLoanActivity(Short chargeType, Money charge) {
+		PersonnelBO personnel = new PersonnelPersistence()
+				.getPersonnel(getUserContext().getId());
+		LoanActivityEntity loanActivityEntity = null;
+		if (chargeType!=null && chargeType.equals(Short.valueOf(AccountConstants.MISC_PENALTY)))
+			loanActivityEntity=new LoanActivityEntity(this, personnel, new Money(), new Money(),
+					new Money(), charge, getLoanSummary(),
+					AccountConstants.MISC_PENALTY_APPLIED);
+		else if (chargeType!=null && chargeType.equals(Short.valueOf(AccountConstants.MISC_FEES)))
+			loanActivityEntity=new LoanActivityEntity(this, personnel, new Money(), new Money(),
+					charge, new Money(), getLoanSummary(),
+					AccountConstants.MISC_FEES_APPLIED);
+		else
+			loanActivityEntity=new LoanActivityEntity(this, personnel, new Money(), new Money(),
+					charge, new Money(), getLoanSummary(),
+					AccountConstants.FEES_APPLIED);
+		addLoanActivity(loanActivityEntity);
+	}
+	
+	
+	
+	private Money applyFeeToInstallments(Map<Short, Money> feeInstallmentMap,
+			List<AccountActionDateEntity> accountActionDateList, FeeBO fee,
+			AccountFeesEntity accountFee) {
+		Date lastAppliedDate = null;
+		Money totalFeeAmountApplied=new Money();
+		for (AccountActionDateEntity accountActionDateEntity : accountActionDateList) {
+			LoanScheduleEntity loanScheduleEntity=(LoanScheduleEntity)accountActionDateEntity;
+			if (feeInstallmentMap.get(loanScheduleEntity.getInstallmentId()) != null) {
+				lastAppliedDate = loanScheduleEntity.getActionDate();
+				totalFeeAmountApplied=totalFeeAmountApplied.add(feeInstallmentMap
+								.get(loanScheduleEntity.getInstallmentId()));
+				AccountFeesActionDetailEntity accountFeesActionDetailEntity = new LoanFeeScheduleEntity(
+						loanScheduleEntity, fee, accountFee, totalFeeAmountApplied);
+				loanScheduleEntity
+						.addAccountFeesAction(accountFeesActionDetailEntity);
+			}
+		}
+		accountFee.setLastAppliedDate(lastAppliedDate);
+		addAccountFees(accountFee);
+		return totalFeeAmountApplied;
+	}
+
+	private void filterTimeOfDisbursementFees(
+			LoanScheduleEntity loanScheduleEntity, FeeBO fee) {
+		Short paymentType = fee.getFeeFrequency().getFeePayment().getId();
+		if (paymentType.equals(FeePayment.TIME_OF_DISBURSMENT.getValue())
+				&& !isInterestDeductedAtDisbursement()) {
+			Set<AccountFeesActionDetailEntity> accountFeesDetailSet = loanScheduleEntity
+					.getAccountFeesActionDetails();
+			for (Iterator<AccountFeesActionDetailEntity> iter = accountFeesDetailSet
+					.iterator(); iter.hasNext();) {
+				AccountFeesActionDetailEntity accountFeesActionDetailEntity = iter
+						.next();
+				if (fee.equals(accountFeesActionDetailEntity.getFee())){
+					iter.remove();
+				}
+			}
+		}
+	}
+
+	@Override
+	protected void setLoanInput(RepaymentScheduleInputsIfc inputs,Date feeStartDate) {
+		inputs.setDisbursementDate(getDisbursementDate());
+		inputs.setIsInterestDedecutedAtDisburesement(isInterestDeductedAtDisbursement());
+		inputs.setIsPrincipalInLastPayment(getLoanOffering().isPrincipalDueInLastInstallment());
+		inputs.setRepaymentFrequency(getLoanMeeting());
+		inputs.setNoOfInstallments(getNoOfInstallments());
+		inputs.setPrincipal(getLoanAmount());
+		inputs.setInterestRate(getInterestRate());
+		inputs.setGraceType(getGracePeriodType().getId());
+		inputs.setGracePeriod(getGracePeriodDuration());
+	}
+	
 }
+	

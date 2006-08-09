@@ -28,6 +28,16 @@ public class CustomerActivityEntity extends PersistentObject {
 		this.description = description;
 		this.createdDate = new Date(System.currentTimeMillis());
 	}
+	
+	public CustomerActivityEntity(CustomerAccountBO customerAccount,PersonnelBO personnel, Money amount,
+			String description) {
+		this.customerAccount=customerAccount;
+		this.personnel = personnel;
+		this.amount = amount;
+		this.description = description;
+		this.createdDate = new Date(System.currentTimeMillis());
+	}
+
 
 	public Money getAmount() {
 		return amount;

@@ -36,5 +36,7 @@
 	</class>
 		<query name="getCustomerAccountsForFee">
 		<![CDATA[select distinct(afe.account.accountId) from AccountFeesEntity afe where afe.fees.feeId =:FEEID ]]>
-	</query>  
+	</query>
+	
+	
 </hibernate-mapping>

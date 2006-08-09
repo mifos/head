@@ -10,21 +10,30 @@ import java.util.Set;
 import org.hibernate.HibernateException;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
+import org.mifos.application.accounts.loan.business.LoanActivityEntity;
+import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.customer.util.valueobjects.CustomerFeesActionDetail;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.business.RateFeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.fees.util.helpers.FeeFormula;
+import org.mifos.application.fees.util.helpers.FeePayment;
+import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -664,4 +673,133 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				.get(Calendar.DATE), 0, 0, 0)));
 
 	}
+	
+	public void testApplyMiscCharge() throws Exception{
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active_test", CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting, new Date(System
+				.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group_Active_test", CustomerStatus.GROUP_ACTIVE.getValue(), "1.1.1", center, new Date(System
+				.currentTimeMillis()));
+		TestObjectFactory.flushandCloseSession();
+		center=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
+		group=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
+		customerAccountBO=group.getCustomerAccount();
+		UserContext uc = TestObjectFactory.getUserContext();
+		customerAccountBO.setUserContext(uc);
+		customerAccountBO.applyCharge(Short.valueOf("-1"),new Money("33"));
+		Money amount=new Money();
+		for(AccountActionDateEntity accountActionDateEntity : customerAccountBO.getAccountActionDates()){
+			CustomerScheduleEntity customerScheduleEntity=(CustomerScheduleEntity)accountActionDateEntity;
+			if(customerScheduleEntity.getInstallmentId().equals(Short.valueOf("2"))){
+				amount=customerScheduleEntity.getMiscFee();
+				assertEquals(new Money("33.0"),customerScheduleEntity.getMiscFee());
+			}
+		}
+		if(customerAccountBO.getCustomerActivitDetails()!=null){
+			CustomerActivityEntity customerActivityEntity=((CustomerActivityEntity)(customerAccountBO.getCustomerActivitDetails().toArray())[0]);
+			assertEquals(AccountConstants.MISC_FEES_APPLIED,customerActivityEntity.getDescription());
+			assertEquals(amount,customerActivityEntity.getAmount());
+		}
+	}
+	
+	
+	public void testApplyPeriodicFee() throws Exception{
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active_test", CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting, new Date(System
+				.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group_Active_test", CustomerStatus.GROUP_ACTIVE.getValue(), "1.1.1", center, new Date(System
+				.currentTimeMillis()));
+		TestObjectFactory.flushandCloseSession();
+		center=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
+		group=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
+		customerAccountBO=group.getCustomerAccount();
+		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
+				FeeCategory.ALLCUSTOMERS, "200", MeetingFrequency.WEEKLY, Short
+						.valueOf("2"));
+		UserContext uc = TestObjectFactory.getUserContext();
+		customerAccountBO.setUserContext(uc);
+		customerAccountBO.applyCharge(periodicFee.getFeeId(),((AmountFeeBO)periodicFee).getFeeAmount());
+		HibernateUtil.commitTransaction();
+		Date lastAppliedDate=null;
+		Money amount =new Money();
+		for(AccountActionDateEntity accountActionDateEntity : customerAccountBO.getAccountActionDates()){
+			CustomerScheduleEntity customerScheduleEntity=(CustomerScheduleEntity)accountActionDateEntity;
+			if(customerScheduleEntity.getInstallmentId().equals(Short.valueOf("2"))){
+				assertEquals(1,customerScheduleEntity.getAccountFeesActionDetails().size());
+				amount=amount.add(new Money("200"));
+				lastAppliedDate=customerScheduleEntity.getActionDate();
+			}
+		}
+		CustomerActivityEntity customerActivityEntity=((CustomerActivityEntity)(customerAccountBO.getCustomerActivitDetails().toArray())[0]);
+		assertEquals(AccountConstants.FEES_APPLIED,customerActivityEntity.getDescription());
+		assertEquals(amount,customerActivityEntity.getAmount());
+		AccountFeesEntity accountFeesEntity=customerAccountBO.getAccountFees(periodicFee.getFeeId());
+		assertEquals(FeeStatus.ACTIVE.getValue(),accountFeesEntity.getFeeStatus());
+		assertEquals(DateUtils.getDateWithoutTimeStamp(lastAppliedDate.getTime()),DateUtils.getDateWithoutTimeStamp(accountFeesEntity.getLastAppliedDate().getTime()));
+	}
+	
+	public void testApplyPeriodicFeeToPartialPending() throws Exception{
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active_test", CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting, new Date(System
+				.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group_Active_test", CustomerStatus. GROUP_PENDING.getValue(), "1.1.1", center, new Date(System
+				.currentTimeMillis()));
+		TestObjectFactory.flushandCloseSession();
+		center=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
+		group=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
+		customerAccountBO=group.getCustomerAccount();
+		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
+				FeeCategory.ALLCUSTOMERS, "200", MeetingFrequency.WEEKLY, Short
+						.valueOf("2"));
+		UserContext uc = TestObjectFactory.getUserContext();
+		customerAccountBO.setUserContext(uc);
+		customerAccountBO.applyCharge(periodicFee.getFeeId(),((AmountFeeBO)periodicFee).getFeeAmount());
+		HibernateUtil.commitTransaction();
+		AccountFeesEntity accountFeesEntity=customerAccountBO.getAccountFees(periodicFee.getFeeId());
+		assertEquals(FeeStatus.INACTIVE.getValue(),accountFeesEntity.getFeeStatus());
+		assertNull(accountFeesEntity.getLastAppliedDate());
+	}
+	
+	public void testApplyUpfrontFee() throws Exception{
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active_test", CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting, new Date(System
+				.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group_Active_test", CustomerStatus.GROUP_ACTIVE.getValue(), "1.1.1", center, new Date(System
+				.currentTimeMillis()));
+		TestObjectFactory.flushandCloseSession();
+		center=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
+		group=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
+		customerAccountBO=group.getCustomerAccount();
+		FeeBO upfrontFee = TestObjectFactory.createOneTimeAmountFee("Upfront Fee",
+				FeeCategory.ALLCUSTOMERS, "20",FeePayment.UPFRONT);
+		UserContext uc = TestObjectFactory.getUserContext();
+		customerAccountBO.setUserContext(uc);
+		customerAccountBO.applyCharge(upfrontFee.getFeeId(),((AmountFeeBO)upfrontFee).getFeeAmount());;
+		HibernateUtil.commitTransaction();
+		Date lastAppliedDate=null;
+		Money amount =new Money();
+		for(AccountActionDateEntity accountActionDateEntity : customerAccountBO.getAccountActionDates()){
+			CustomerScheduleEntity customerScheduleEntity=(CustomerScheduleEntity)accountActionDateEntity;
+			if(customerScheduleEntity.getInstallmentId().equals(Short.valueOf("2"))){
+				assertEquals(1,customerScheduleEntity.getAccountFeesActionDetails().size());
+				amount=amount.add(new Money("20"));
+				lastAppliedDate=customerScheduleEntity.getActionDate();
+			}
+		}
+		
+		if(customerAccountBO.getCustomerActivitDetails()!=null){
+			CustomerActivityEntity customerActivityEntity=((CustomerActivityEntity)(customerAccountBO.getCustomerActivitDetails().toArray())[0]);
+			assertEquals(AccountConstants.FEES_APPLIED,customerActivityEntity.getDescription());
+			assertEquals(amount,customerActivityEntity.getAmount());
+			AccountFeesEntity accountFeesEntity=customerAccountBO.getAccountFees(upfrontFee.getFeeId());
+			assertEquals(FeeStatus.ACTIVE.getValue(),accountFeesEntity.getFeeStatus());
+			assertEquals(DateUtils.getDateWithoutTimeStamp(lastAppliedDate.getTime()),DateUtils.getDateWithoutTimeStamp(accountFeesEntity.getLastAppliedDate().getTime()));
+		}
+	}
+
+	
 }
