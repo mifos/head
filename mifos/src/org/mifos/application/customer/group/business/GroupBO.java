@@ -50,10 +50,11 @@ import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.util.Address;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 
@@ -202,5 +203,10 @@ public class GroupBO extends CustomerBO {
 			return Integer.valueOf(clients.size());
 		}
 		return Integer.valueOf(0);
+	}
+	
+	@Override
+	protected void validateStatusChange(Short newStatusId) throws ApplicationException, SystemException{
+		
 	}
 }

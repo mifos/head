@@ -27,7 +27,7 @@
 		
 		<joined-subclass name="org.mifos.application.checklist.business.CustomerCheckListBO" table="CUSTOMER_CHECKLIST">			
 			<key column="CHECKLIST_ID" />			
-			<many-to-one name="customerLevelEntity" column="LEVEL_ID" class="org.mifos.application.customer.business.CustomerLevelEntity" insert="true" update="true"  unique="true" lazy="true" not-null="true"/>
+			<many-to-one name="customerLevel" column="LEVEL_ID" class="org.mifos.application.customer.business.CustomerLevelEntity" insert="true" update="true"  unique="true" lazy="true" not-null="true"/>
         	<many-to-one name="customerStatus" column="CUSTOMER_STATUS_ID" class="org.mifos.application.customer.business.CustomerStatusEntity"  not-null="true"  lazy="true"/>        			
 		</joined-subclass>
 		
@@ -51,5 +51,10 @@
    	       and accountCheckList.checklistId=checkListDetail.checkListBO.checklistId
    	       ]]>
      </query>    
+     <query name="customer.checklist">
+    	       <![CDATA[from org.mifos.application.checklist.business.CustomerCheckListBO customerChecklist 
+    	       			where customerChecklist.checklistStatus =:CHECKLIST_STATUS and customerChecklist.customerStatus.id=:STATUS_ID and customerChecklist.customerLevel.id =:LEVEL_ID
+    	       			]]>
+          </query>
        
 </hibernate-mapping>

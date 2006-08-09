@@ -75,5 +75,7 @@ public interface CheckListConstants {
 	public String CUSTOMERSTATUSLIST_WITHOUTPENDING_APPROVAL = "customerstatuslist_withoutpending_approval";
 	public String PRODUCTSTATUSLIST_WITHOUTPENDING_APPROVAL = "productstatuslist_withoutpending_approval";
 	public String PENDINGAPPROVAL="Application Pending Approval";
+	public final Short STATUS_ACTIVE = 1;
+	public final Short STATUS_INACTIVE = 0;
 	
 }

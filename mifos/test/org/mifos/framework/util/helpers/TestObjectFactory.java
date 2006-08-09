@@ -84,12 +84,16 @@ import org.mifos.application.bulkentry.business.BulkEntryLoanInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntrySavingsInstallmentView;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
 import org.mifos.application.checklist.business.CheckListBO;
+import org.mifos.application.checklist.business.CheckListDetailEntity;
+import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.business.CollSheetLnDetailsEntity;
 import org.mifos.application.collectionsheet.business.CollSheetSavingsDetailsEntity;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
+import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -112,6 +116,7 @@ import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.master.business.CollateralTypeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.util.valueobjects.InterestCalcRule;
 import org.mifos.application.master.util.valueobjects.InterestCalcType;
 import org.mifos.application.master.util.valueobjects.PrdApplicableMaster;
@@ -146,7 +151,6 @@ import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerFactory;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.EncryptionException;
 import org.mifos.framework.exceptions.InvalidUserException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.SystemException;
@@ -1239,6 +1243,33 @@ public class TestObjectFactory {
 
 	}
 
+	public static CustomerCheckListBO createCustomerChecklist(Short customerLevel, Short customerStatus, Short checklistStatus){
+		Session session = HibernateUtil.getSessionTL();
+		Transaction tx = null;
+		tx = session.beginTransaction();
+		CustomerCheckListBO customerChecklist = new CustomerCheckListBO();
+		customerChecklist.setChecklistName("productchecklist");
+		customerChecklist.setChecklistStatus(checklistStatus);
+
+		SupportedLocalesEntity supportedLocales = new SupportedLocalesEntity();
+		supportedLocales.setLocaleId(Short.valueOf("1"));
+		customerChecklist.setSupportedLocales(supportedLocales);
+
+		CheckListDetailEntity checkListDetailEntity = new CheckListDetailEntity();
+		checkListDetailEntity.setDetailText("item1");
+		checkListDetailEntity.setAnswerType(Short.valueOf("1"));
+		checkListDetailEntity.setSupportedLocales(supportedLocales);
+		customerChecklist.addChecklistDetail(checkListDetailEntity);
+		CustomerLevelEntity customerLevelEntity = (CustomerLevelEntity) session.get(
+				CustomerLevelEntity.class, customerLevel);
+		CustomerStatusEntity customerStatusEntity = (CustomerStatusEntity) session.get(CustomerStatusEntity.class, customerStatus);
+		customerChecklist.setCustomerLevel(customerLevelEntity); 
+		customerChecklist.setCustomerStatus(customerStatusEntity);
+		customerChecklist.create();
+		HibernateUtil.commitTransaction();
+		return customerChecklist;
+	}
+	
 	public static void cleanUp(CheckListBO checkListBO) {
 		if (null != checkListBO) {
 			deleteChecklist(checkListBO);
@@ -1246,14 +1277,23 @@ public class TestObjectFactory {
 		}
 	}
 
-	public static void deleteChecklist(CheckListBO checkListBO) {
+	public static void deleteChecklist(CheckListBO checkListBO ) {
+			Session session = HibernateUtil.getSessionTL();
+			Transaction	transaction = HibernateUtil.startTransaction();
+				
+			
+			if (checkListBO.getChecklistDetailSet() != null) {
+				for (CheckListDetailEntity checklistDetail : checkListBO.getChecklistDetailSet()) {
+					if (null != checklistDetail) {
+						session.delete(checklistDetail);
+					}
+				}
+			}
+			session.delete(checkListBO);
+			transaction.commit();
+		
+		}
 
-		Session session = HibernateUtil.getSessionTL();
-		Transaction transaction = HibernateUtil.startTransaction();
-
-		session.delete(checkListBO);
-		transaction.commit();
-	}
 
 	public static void cleanUp(ReportsCategoryBO reportsCategoryBO) {
 		if (null != reportsCategoryBO) {

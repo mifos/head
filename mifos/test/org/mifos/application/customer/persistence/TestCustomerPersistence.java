@@ -14,6 +14,9 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
 import org.mifos.application.bulkentry.exceptions.BulkEntryAccountUpdateException;
+import org.mifos.application.checklist.business.CheckListBO;
+import org.mifos.application.checklist.business.CustomerCheckListBO;
+import org.mifos.application.checklist.util.resources.CheckListConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.business.CustomerStatusEntity;
@@ -558,6 +561,40 @@ public class TestCustomerPersistence extends MifosTestCase {
 		TestObjectFactory.cleanUp(group1);
 		TestObjectFactory.cleanUp(center1);
 	}
+	
+	public void testGetCustomerChecklist() throws NumberFormatException, SystemException, ApplicationException {
+		
+		center = createCenter();
+		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE, "1.4.1", center, new Date(System
+				.currentTimeMillis()));
+		client = TestObjectFactory.createClient("client1",
+				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
+						System.currentTimeMillis()));
+		CustomerCheckListBO checklistCenter = TestObjectFactory.createCustomerChecklist(center.getCustomerLevel().getId(),center.getCustomerStatus().getId(),CheckListConstants.STATUS_ACTIVE);
+		CustomerCheckListBO checklistClient = TestObjectFactory.createCustomerChecklist(client.getCustomerLevel().getId(),client.getCustomerStatus().getId(),CheckListConstants.STATUS_INACTIVE);
+		CustomerCheckListBO checklistGroup = TestObjectFactory.createCustomerChecklist(group.getCustomerLevel().getId(),group.getCustomerStatus().getId(),CheckListConstants.STATUS_ACTIVE);
+		HibernateUtil.closeSession();
+		assertEquals(1 , customerPersistence.getStatusChecklist(center.getCustomerStatus().getId(),center.getCustomerLevel().getId()).size());
+		client = (ClientBO) (HibernateUtil.getSessionTL().get(ClientBO.class,
+				new Integer(client.getCustomerId())));
+		group = (GroupBO) (HibernateUtil.getSessionTL().get(GroupBO.class,
+				new Integer(group.getCustomerId())));
+		center = (CenterBO) (HibernateUtil.getSessionTL().get(CenterBO.class,
+				new Integer(center.getCustomerId())));
+		checklistCenter = (CustomerCheckListBO)(HibernateUtil.getSessionTL().get(CheckListBO.class, new Short(checklistCenter.getChecklistId())));
+		checklistClient = (CustomerCheckListBO)(HibernateUtil.getSessionTL().get(CheckListBO.class, new Short(checklistClient.getChecklistId())));
+		checklistGroup = (CustomerCheckListBO)(HibernateUtil.getSessionTL().get(CheckListBO.class, new Short(checklistGroup.getChecklistId())));
+		TestObjectFactory.cleanUp(checklistCenter);
+		TestObjectFactory.cleanUp(checklistClient);
+		TestObjectFactory.cleanUp(checklistGroup);
+				
+	}
+	
+	public void testRetrieveAllCustomerStatusList() throws NumberFormatException, SystemException, ApplicationException {
+		center = createCenter();
+		assertEquals(2 , customerPersistence.retrieveAllCustomerStatusList(center.getCustomerLevel().getId()).size());
+	}
+
 
 	public void testCustomerCountByOffice() throws Exception{
 		int count = customerPersistence.getCustomerCountForOffice(CustomerLevel.CENTER, Short.valueOf("3"));
@@ -574,4 +611,5 @@ public class TestCustomerPersistence extends MifosTestCase {
 				.valueOf("13"), "1.4", meeting, new Date(System
 				.currentTimeMillis()));
 	}
+
 }

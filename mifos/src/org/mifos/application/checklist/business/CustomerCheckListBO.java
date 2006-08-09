@@ -11,16 +11,16 @@ public class CustomerCheckListBO extends CheckListBO {
 
 	public CustomerCheckListBO() {
 	}	
-	
-	private CustomerLevelEntity customerLevelEntity ;
+		
+	private CustomerLevelEntity customerLevel ;
 	private CustomerStatusEntity customerStatus;		
 
-	public CustomerLevelEntity getCustomerLevelEntity() {
-		return customerLevelEntity;
+	public CustomerLevelEntity getCustomerLevel() {
+		return customerLevel;
 	}
 
-	public void setCustomerLevelEntity(CustomerLevelEntity customerLevelEntity) {
-		this.customerLevelEntity = customerLevelEntity;
+	public void setCustomerLevel(CustomerLevelEntity customerLevelEntity) {
+		this.customerLevel = customerLevelEntity;
 	}
 
 	public CustomerStatusEntity getCustomerStatus() {

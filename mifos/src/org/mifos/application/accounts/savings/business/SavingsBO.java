@@ -1177,7 +1177,6 @@ public class SavingsBO extends AccountBO {
 			AccountNotesEntity accountNotesEntity,
 			AccountStateFlagEntity flagSelected, UserContext userContext)
 			throws ApplicationException, SystemException {
-		checkStatusChangeAllowed(newState);
 		// permission Check
 		checkPermissionForStatusChange(newState, userContext, flagSelected);
 

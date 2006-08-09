@@ -20,6 +20,9 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
+import org.mifos.application.checklist.business.CheckListBO;
+import org.mifos.application.checklist.business.CustomerCheckListBO;
+import org.mifos.application.checklist.util.resources.CheckListConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
@@ -40,6 +43,7 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -448,6 +452,47 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		TestObjectFactory.cleanUp(account6);
 		TestObjectFactory.cleanUp(center1);
 		TestObjectFactory.cleanUp(account7);
+	}
+	
+	public void testGetCustomerChecklist() throws NumberFormatException, SystemException, ApplicationException {
+		
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active_test", Short
+				.valueOf("13"), "1.4", meeting, new Date(System
+				.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE, "1.4.1", center, new Date(System
+				.currentTimeMillis()));
+		client = TestObjectFactory.createClient("client1",
+				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
+						System.currentTimeMillis()));
+		CustomerCheckListBO checklistCenter = TestObjectFactory.createCustomerChecklist(center.getCustomerLevel().getId(),center.getCustomerStatus().getId(),CheckListConstants.STATUS_ACTIVE);
+		CustomerCheckListBO checklistClient = TestObjectFactory.createCustomerChecklist(client.getCustomerLevel().getId(),client.getCustomerStatus().getId(),CheckListConstants.STATUS_INACTIVE);
+		CustomerCheckListBO checklistGroup = TestObjectFactory.createCustomerChecklist(group.getCustomerLevel().getId(),group.getCustomerStatus().getId(),CheckListConstants.STATUS_ACTIVE);
+		HibernateUtil.closeSession();
+		assertEquals(1 , service.getStatusChecklist(center.getCustomerStatus().getId(),center.getCustomerLevel().getId()).size());
+		client = (ClientBO) (HibernateUtil.getSessionTL().get(ClientBO.class,
+				new Integer(client.getCustomerId())));
+		group = (GroupBO) (HibernateUtil.getSessionTL().get(GroupBO.class,
+				new Integer(group.getCustomerId())));
+		center = (CenterBO) (HibernateUtil.getSessionTL().get(CenterBO.class,
+				new Integer(center.getCustomerId())));
+		checklistCenter = (CustomerCheckListBO)(HibernateUtil.getSessionTL().get(CheckListBO.class, new Short(checklistCenter.getChecklistId())));
+		checklistClient = (CustomerCheckListBO)(HibernateUtil.getSessionTL().get(CheckListBO.class, new Short(checklistClient.getChecklistId())));
+		checklistGroup = (CustomerCheckListBO)(HibernateUtil.getSessionTL().get(CheckListBO.class, new Short(checklistGroup.getChecklistId())));
+		TestObjectFactory.cleanUp(checklistCenter);
+		TestObjectFactory.cleanUp(checklistClient);
+		TestObjectFactory.cleanUp(checklistGroup);
+				
+	}
+	
+	public void testRetrieveAllCustomerStatusList() throws NumberFormatException, SystemException, ApplicationException {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active_test", Short
+				.valueOf("13"), "1.4", meeting, new Date(System
+				.currentTimeMillis()));
+		assertEquals(2 , service.retrieveAllCustomerStatusList(center.getCustomerLevel().getId()).size());
 	}
 
 }

@@ -14,9 +14,16 @@
 	  	<many-to-one name="lookUpValue" column="STATUS_LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" 
     			cascade="none" update="false" unique="true"/>
 	  	<many-to-one name="customerLevel" column="LEVEL_ID" class="org.mifos.application.customer.business.CustomerLevelEntity"  access="field" />
+	  	<set name="flagSet" table="CUSTOMER_STATE_FLAG" >
+			<key column="STATUS_ID"/>
+			<one-to-many class="org.mifos.application.customer.business.CustomerStatusFlagEntity"/>
+		</set>
     </class>
  <query name="customer.getStates">
 		<![CDATA[from org.mifos.application.customer.business.CustomerStatusEntity customerState where customerState.optional=:OPTIONAL_FLAG]]>
+ </query>
+ <query name="customer.getStatusForCustomer">
+		<![CDATA[from org.mifos.application.customer.business.CustomerStatusEntity customerState where customerState.customerLevel.id=:LEVEL_ID]]>
  </query>
 </hibernate-mapping>
 

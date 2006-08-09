@@ -93,11 +93,12 @@
 	                  <td rowspan="2" align="right" valign="top" class="headingorange">
 	                  	<span class="fontnormal">
 						<!-- Edit center status link -->
-	                  	  <html-el:link action="centerAction.do?method=loadStatus">
+	                  	  				   
+	                  	  <a href= "editCustomerStatusAction.do?method=load&customerId=<c:out value="${requestScope.centerVO.customerId}"/>&securityParamInput=Center">
 	                  	  <mifos:mifoslabel name="Center.Edit" bundle="CenterUIResources" />
 	                  	  <mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
 	                  	  <mifos:mifoslabel name="Center.Status1" bundle="CenterUIResources" />	                  	  
-	                  	  </html-el:link><br>
+	                  	  </a><br>
 	                  	  </span></td>
 	                </tr>
 	                <tr>

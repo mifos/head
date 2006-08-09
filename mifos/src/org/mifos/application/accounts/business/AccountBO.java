@@ -1127,13 +1127,6 @@ public class AccountBO extends BusinessObject {
 		return accountNotes;
 	}
 	
-	protected void checkStatusChangeAllowed(AccountStateEntity newState) throws ApplicationException {
-		if (!(AccountStateMachines.getInstance().isTransitionAllowed(this,newState))) {
-			throw new StateChangeException(	SavingsConstants.STATUS_CHANGE_NOT_ALLOWED);
-		}
-
-	}
-	
 	public void initializeStateMachine(Short localeId) throws StatesInitializationException{
 	}
 	

@@ -109,6 +109,8 @@
 		<form-bean name="editStatusActionForm" type="org.mifos.application.accounts.struts.actionforms.EditStatusActionForm" />
 		<!-- loan account action form-->
 		<form-bean name="loanAccountActionForm" type="org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionForm" />
+		<!-- Edit status for customers-->
+		<form-bean name="editCustomerStatusActionForm" type="org.mifos.application.customer.struts.actionforms.EditCustomerStatusActionForm" />
 	</form-beans>
 
 	<global-exceptions>
@@ -927,6 +929,21 @@
 			<forward name="previous_success" path="/pages/application/accounts/jsp/change_status.jsp" />
 			<forward name="update_failure" path="/pages/application/accounts/jsp/change_status_preview.jsp" />
 			<forward name="preview_failure" path="/pages/application/accounts/jsp/change_status.jsp" />
+		</action>
+		<!-- Edit Customer Status Action -->
+		<action path="/editCustomerStatusAction" 
+			type="org.mifos.application.customer.struts.action.EditCustomerStatusAction" 
+			name="editCustomerStatusActionForm" 
+			parameter="method" 
+			input="/editCustomerStatusAction.do?method=validate" 
+			validate="true" 
+			scope="session">
+			<forward name="load_success" path="/pages/application/customer/jsp/changeStatus.jsp" />
+			<forward name="preview_success" path="/pages/application/customer/jsp/changeStatusPreview.jsp" />
+			<forward name="previous_success" path="/pages/application/customer/jsp/changeStatus.jsp" />
+			<forward name="center_detail_page" path="/centerAction.do?method=get" />
+			<forward name="update_failure" path="/pages/application/customer/jsp/changeStatusPreview.jsp" />
+			<forward name="preview_failure" path="/pages/application/customer/jsp/changeStatus.jsp" />
 		</action>
 	</action-mappings>
 

@@ -53,6 +53,9 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.checklist.business.CustomerCheckListBO;
+import org.mifos.application.checklist.util.resources.CheckListConstants;
+import org.mifos.application.checklist.util.valueobjects.CheckListMaster;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.business.CustomerStatusEntity;
@@ -429,6 +432,21 @@ public class CustomerPersistence extends Persistence {
 			throw new PersistenceException(he);
 		}
 	}
+
+
+	public List<CustomerCheckListBO> getStatusChecklist(Short statusId, Short customerLevelId) throws PersistenceException {
+		try {
+			Map<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("CHECKLIST_STATUS", CheckListConstants.STATUS_ACTIVE);	
+			queryParameters.put("STATUS_ID", statusId);
+			queryParameters.put("LEVEL_ID", customerLevelId);
+			List<CustomerCheckListBO> queryResult = executeNamedQuery(NamedQueryConstants.GET_CUSTOMER_STATE_CHECKLIST, queryParameters);
+			return queryResult;
+		} catch (HibernateException he) {
+			throw new PersistenceException(he);
+		}
+	}
+
 	
 	public int getCustomerCountForOffice(CustomerLevel customerLevel, Short officeId)
 			throws PersistenceException {
@@ -448,6 +466,7 @@ public class CustomerPersistence extends Persistence {
 		}
 	}
 	
+
 	public List<LoanCycleCounter> fetchLoanCycleCounter(Integer customerId) {
 		HashMap<String, Integer> queryParameters = new HashMap<String, Integer>();
 		queryParameters.put("customerId", customerId);
@@ -494,4 +513,16 @@ public class CustomerPersistence extends Persistence {
 				"Fetch loan cycle counter query returned : 0 rows");
 		return null;
 	}
+
+	public List<CustomerStatusEntity> retrieveAllCustomerStatusList(Short levelId) throws PersistenceException {
+		try {
+			Map<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("LEVEL_ID", levelId);
+			List<CustomerStatusEntity> queryResult = executeNamedQuery(NamedQueryConstants.GET_CUSTOMER_STATUS_LIST, queryParameters);
+			return queryResult;
+		} catch (HibernateException he) {
+			throw new PersistenceException(he);
+		}
+	}
+
 }

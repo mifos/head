@@ -13,6 +13,7 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.center.exception.StateChangeException;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -20,6 +21,8 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
@@ -247,5 +250,19 @@ public class TestCustomerBO extends MifosTestCase {
 		client=(ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
 		savings=(SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
 		TestObjectFactory.cleanUp(savings);
+	}
+	
+	public void testValidateStatusWithActiveGroups() throws Exception {
+		createInitialObjects();
+		Short newStatusId= CustomerStatus.CENTER_INACTIVE.getValue();
+		try{
+			center.changeStatus(newStatusId,null,"Test");
+			//assertFalse(true);
+		}
+		catch(StateChangeException sce){
+			assertTrue(true);
+			assertEquals(sce.getKey(),CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION);
+		}
+		//TestObjectFactory.cleanUp(savings);
 	}
 }

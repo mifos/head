@@ -43,13 +43,16 @@ import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.business.AccountStateMachines;
 import org.mifos.application.accounts.business.CustomerActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
+import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.center.business.CenterPerformanceHistory;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -62,18 +65,19 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 
 public class CustomerBusinessService extends BusinessService {
 
-	public CustomerBusinessService() throws ServiceException {
+	public CustomerBusinessService() {
 
 	}
 
 	public BusinessObject getBusinessObject(UserContext userContext) {
-		return new SavingsBO(userContext);
+		return null;
 	}
 
 	public CustomerBO getCustomer(Integer customerId) throws ServiceException {
@@ -283,5 +287,20 @@ public class CustomerBusinessService extends BusinessService {
 						totalOutstandingLoan, totalSavings, portfolioAtRisk);
 		return centerPerformanceHistory;
 	}
+	
+	public List<CustomerCheckListBO> getStatusChecklist(Short statusId, Short customerLevelId ) throws PersistenceException,
+	ServiceException {
+		return new CustomerPersistence().getStatusChecklist(statusId,customerLevelId);
+	}
 
+	public List<CustomerStatusEntity> retrieveAllCustomerStatusList(Short levelId)throws PersistenceException,
+	ServiceException {
+		return new CustomerPersistence().retrieveAllCustomerStatusList(levelId);
+	}
+	
+	public void initializeStateMachine(Short localeId , Short officeId , Short levelId) throws StatesInitializationException {
+		AccountStateMachines.getInstance().initialize(localeId,
+				officeId,	levelId);
+		//AccountStateMachines.getInstance().printstatesViewMapForCenter();
+	}
 }

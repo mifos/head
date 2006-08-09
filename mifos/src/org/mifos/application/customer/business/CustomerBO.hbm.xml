@@ -64,7 +64,13 @@
 			<key column="CUSTOMER_ID" />
 			<one-to-many class="org.mifos.application.accounts.business.AccountBO" />
 		</set>
-
+		<set name="customerNotes" cascade="all" inverse="true"
+			table="CUSTOMER_NOTE" lazy="true" order-by="COMMENT_ID desc">
+			<key column="CUSTOMER_ID" />
+			<many-to-many
+				class="org.mifos.application.customer.business.CustomerNoteEntity"
+				column="COMMENT_ID" />
+		</set>
 		<set name="customerFlags" cascade="none" lazy="true">
 			<key column="CUSTOMER_ID" />
 			<one-to-many class="org.mifos.application.customer.business.CustomerFlagDetailEntity" />

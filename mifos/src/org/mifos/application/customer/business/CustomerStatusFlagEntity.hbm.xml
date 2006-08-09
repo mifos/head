@@ -10,6 +10,7 @@
             <generator class="native"/>
         </id>
       	<property name="blacklisted" column="ISBLACKLISTED" type="short" access="field"/>
+      	<property name="flagDescription" column="FLAG_DESCRIPTION" type="string" access="field"/>
 	  	<many-to-one name="lookUpValue" column="FLAG_LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" 
     			cascade="none" update="false" unique="true"/>
 	  	<many-to-one name="customerStatus" column="STATUS_ID" class="org.mifos.application.customer.business.CustomerStatusEntity"  access="field" />

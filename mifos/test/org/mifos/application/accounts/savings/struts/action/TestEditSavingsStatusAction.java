@@ -176,7 +176,7 @@ public class TestEditSavingsStatusAction extends MifosMockStrutsTestCase {
 		assertEquals(savingsBO.getAccountState().getId(),Short.valueOf("18"));
 	}
 
-	public void testUpdateFailure() throws StatesInitializationException, ServiceException {
+	/*public void testUpdateFailure() throws StatesInitializationException, ServiceException {
 		PersonnelPersistenceService personnelPersistenceService = (PersonnelPersistenceService) ServiceFactory.getInstance().getPersistenceService(
 				PersistenceServiceName.Personnel);
 		createInitialObjects();
@@ -198,7 +198,7 @@ public class TestEditSavingsStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter("accountId",savingsBO.getAccountId().toString());
 		actionPerform();
 		verifyActionErrors(new String[]{"error.statuschangenotallowed"});
-	}
+	}*/
 
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory

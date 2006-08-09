@@ -7,14 +7,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.business.StateEntity;
 import org.mifos.application.productdefinition.util.valueobjects.ProductType;
 
 /**
  * @author rohitr
  *
  */
-public class AccountStateEntity extends MasterDataEntity {
+public class AccountStateEntity extends StateEntity {
 
 	private static final long serialVersionUID = 13465L;
 
@@ -54,18 +54,6 @@ public class AccountStateEntity extends MasterDataEntity {
 		this.flagSet = flagSet;
 	}
 
-	public boolean equals(Object obj) {
-		if (obj != null && !(obj instanceof AccountStateEntity)) {
-			return false;
-		}
-		AccountStateEntity accountStateEntity = (AccountStateEntity) obj;
-		return accountStateEntity.getId().equals(this.getId());
-	}
-
-	public int hashCode() {
-		return this.getId();
-	}
-	
 	public Short getOptional() {
 		return optional;
 	}

@@ -839,8 +839,19 @@ public class ActivityMapper {
 		activityMap.put("/notesAction-search", SecurityConstants.VIEW);
 		activityMap.put("/notesAction-create-Savings",
 				SecurityConstants.SAVINGS_CAN_ADD_NOTES_TO_SAVINGS);
+
+		//mapping for editing customer status
+		activityMap.put("/editCustomerStatusAction-load-Center", SecurityConstants.VIEW);
+		activityMap.put("/editCustomerStatusAction-preview", SecurityConstants.VIEW);
+		activityMap.put("/editCustomerStatusAction-previous", SecurityConstants.VIEW);
+		activityMap.put("/editCustomerStatusAction-update", SecurityConstants.VIEW);
+		activityMap.put("/editCustomerStatusAction-load-Group", SecurityConstants.VIEW);
+		activityMap.put("/editCustomerStatusAction-load-Client", SecurityConstants.VIEW);
+		
+
 		activityMap.put("/notesAction-create-Loan",
 				SecurityConstants.LOAN_CAN_ADD_NOTES_TO_LOAN);
+
 	}
 
 	private static ActivityMapper instance = new ActivityMapper();

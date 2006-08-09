@@ -48,8 +48,7 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
-import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.master.business.StateEntity;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -77,9 +76,9 @@ public class StateXMLParser {
 		return instance;
 	}
 
-	public Map<AccountStateEntity,List<AccountStateEntity>> loadMapFromXml(String filename, String configurationName) {
+	public Map<StateEntity,List<StateEntity>> loadMapFromXml(String filename, String configurationName) {
 
-		Map<AccountStateEntity,List<AccountStateEntity>> transitionMap = new HashMap<AccountStateEntity,List<AccountStateEntity>>();
+		Map<StateEntity,List<StateEntity>> transitionMap = new HashMap<StateEntity,List<StateEntity>>();
 
 		try {
 
@@ -130,20 +129,20 @@ public class StateXMLParser {
 
 				// iterate for each child of state
 				NodeList stateInfoList = state.getChildNodes();
-				AccountStateEntity currentState = null;
-				List<AccountStateEntity> currntPossibleStates = new ArrayList<AccountStateEntity>();
+				StateEntity currentState = null;
+				List<StateEntity> currntPossibleStates = new ArrayList<StateEntity>();
 				for (int j = 0; j < stateInfoList.getLength(); j++) {
 					Node info = stateInfoList.item(j);
 
 					if ("stateid".equals(info.getLocalName())) {
 						Element ele = (Element) info;
-						currentState = new AccountStateEntity(Short.valueOf(((Text) ele
+						currentState = new StateEntity(Short.valueOf(((Text) ele
 								.getFirstChild()).getData()));
 					}
 					if ("possiblestates".equals(info.getLocalName())) {
 						// get all the childern
 						NodeList allStates = info.getChildNodes();
-						currntPossibleStates = new ArrayList<AccountStateEntity>();
+						currntPossibleStates = new ArrayList<StateEntity>();
 						for (int k = 0; k < allStates.getLength(); k++) {
 							Node infoState = allStates.item(k);
 							NodeList eachPossiblechild = infoState
@@ -159,7 +158,7 @@ public class StateXMLParser {
 									Short possibleTrantionId = Short
 											.valueOf(((Text) element
 													.getFirstChild()).getData());
-									 currntPossibleStates.add(new AccountStateEntity(possibleTrantionId));
+									 currntPossibleStates.add(new StateEntity(possibleTrantionId));
 
 								}
 							}

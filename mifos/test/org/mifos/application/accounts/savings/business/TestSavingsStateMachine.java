@@ -60,17 +60,6 @@ public class TestSavingsStateMachine extends MifosTestCase {
 		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountTypes.SAVINGSACCOUNT.getValue());
 	}
 
-	public void testIsTransitionAllowed() throws ApplicationException {
-		createInitialObjects();
-		savingsOffering = createSavingsOffering();
-		savingsBO = createSavingsAccount("000X00000000013", savingsOffering,
-				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
-		accountStateEntity = new AccountStateEntity(Short.valueOf("15"));
-			boolean bool = AccountStateMachines.getInstance()
-					.isTransitionAllowed(savingsBO, accountStateEntity);
-			assertFalse("This test should fail", !bool);
-	}
-
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));

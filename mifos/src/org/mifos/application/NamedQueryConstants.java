@@ -328,6 +328,7 @@ public interface NamedQueryConstants {
 	public String OFFICE_GET_HEADOFFICE="office.getHeadOffice";
 	/**Account*/
 	public String GET_LISTOFACCOUNTS_FOR_CUSTOMER = "accounts.findByCustomerId";
+	public String GET_CUSTOMER_STATE_CHECKLIST = "customer.checklist";
 	public String GET_LISTOFACCOUNTSTRXNS_FOR_LOAN = "accounts.getAccountTrxnsForAccountId";
 	public String BULKENTRYPRODUCTS = "Customer.getLoanProductForCustomer";
 	public String GET_LAST_MEETINGDATE_FOR_CUSTOMER="accounts.getLastMeetingDateforCustomer";
@@ -379,6 +380,7 @@ public interface NamedQueryConstants {
 	
 	public String LISTOFSAVINGSANDLOANACCOUNTS="accounts.listOfAccountsForLoanAccountIdSearch";
 	public String GETPOTENTIAL_DISBDATE = "accounts.getPotentialDisbDate";
+	
 	public String FETCH_LOANCOUNTERS = "Customer.fetchLoanCounters";
 	
 	
@@ -386,7 +388,7 @@ public interface NamedQueryConstants {
 	public String CUSTOMER_ACTIVE_LOAN_ACCOUNTS="Customer.getActiveLoanAccounts";
 	public String CUSTOMER_ACTIVE_SAVINGS_ACCOUNTS="Customer.getActiveSavingsAccounts";
 	public String CUSTOMER_FIND_ACCOUNT_BY_SYSTEM_ID="customer.findBySystemId";
-	
+	public String GET_CUSTOMER_STATUS_LIST = "customer.getStatusForCustomer";
 	public String GET_CENTER_BY_SYSTEMID="customer.findCenterSystemId";
 	public String GET_GROUP_BY_SYSTEMID="customer.findGroupSystemId";
 	public String GET_CLIENT_BY_SYSTEMID="customer.findClientSystemId";

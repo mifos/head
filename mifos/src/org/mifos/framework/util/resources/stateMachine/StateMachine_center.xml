@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<statemaps xmlns="http://www.aditi.com"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.aditi.com StateMachine.xsd ">
+	<stateConfiguration configurationName="configuration 1">
+		<state>
+			<statename>Active</statename>
+			<stateid>13</stateid>
+			<possiblestates>
+				<possiblestate>
+						<statename>Inactive</statename>
+						<stateid>14</stateid>
+				</possiblestate>
+			</possiblestates>
+		</state>
+		<state>
+			<statename>Inactive</statename>
+			<stateid>14</stateid>
+			<possiblestates>
+				<possiblestate>
+					<statename>Active</statename>
+					<stateid>13</stateid>
+				</possiblestate>
+			</possiblestates>
+		</state>
+	</stateConfiguration>
+</statemaps>

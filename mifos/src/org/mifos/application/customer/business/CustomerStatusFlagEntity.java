@@ -6,7 +6,7 @@ import org.mifos.application.util.helpers.YesNoFlag;
 
 public class CustomerStatusFlagEntity extends MasterDataEntity {
 	private Short blacklisted;
-
+	private String flagDescription;
 	private CustomerStatusEntity customerStatus;
 
 	/*
@@ -28,4 +28,13 @@ public class CustomerStatusFlagEntity extends MasterDataEntity {
 	public boolean isBlackListed() {
 		return (blacklisted.equals(YesNoFlag.YES.getValue()));
 	}
+
+	public String getFlagDescription() {
+		return flagDescription;
+	}
+
+	public void setFlagDescription(String flagDescription) {
+		this.flagDescription = flagDescription;
+	}
+	
 }

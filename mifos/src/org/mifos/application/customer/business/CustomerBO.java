@@ -46,19 +46,35 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.business.AccountNotesEntity;
+import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.accounts.business.AccountStateFlagEntity;
+import org.mifos.application.accounts.business.AccountStateMachines;
+import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.configuration.business.ConfigurationIntf;
+import org.mifos.application.configuration.business.MifosConfiguration;
+import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.customer.center.exception.StateChangeException;
+import org.mifos.application.customer.dao.ViewClosedAccountsDAO;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.exceptions.CustomerStateChangeException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.IdGenerator;
 import org.mifos.application.fees.business.FeeView;
+import org.mifos.application.fees.exceptions.FeeException;
+import org.mifos.application.fees.persistence.FeePersistence;
+import org.mifos.application.fees.util.helpers.FeeConstants;
+import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
@@ -71,8 +87,11 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
@@ -136,6 +155,8 @@ public abstract class CustomerBO extends BusinessObject {
 	private CustomerHistoricalDataEntity historicalData;
 
 	private Short blackListed;
+	
+	public Set<CustomerNoteEntity> customerNotes;
 
 
 	protected CustomerBO() {
@@ -156,7 +177,7 @@ public abstract class CustomerBO extends BusinessObject {
 		validateFields(displayName, customerStatus, officeId);
 		this.customFields = new HashSet<CustomerCustomFieldEntity>();
 		this.accounts = new HashSet<AccountBO>();
-
+		this.customerNotes = new HashSet<CustomerNoteEntity>();
 		this.office = new OfficePersistence().getOffice(officeId);
 
 		this.displayName = displayName;
@@ -306,6 +327,14 @@ public abstract class CustomerBO extends BusinessObject {
 		return office;
 	}
 
+	public Set<CustomerNoteEntity> getCustomerNotes() {
+		return customerNotes;
+	}
+
+	private void setCustomerNotes(Set<CustomerNoteEntity> customerNotes) {
+		this.customerNotes = customerNotes;
+	}
+
 	public void save() throws ApplicationException, CustomerException {
 		try {
 			new CustomerPersistence().createOrUpdate(this);
@@ -316,6 +345,15 @@ public abstract class CustomerBO extends BusinessObject {
 		} catch (HibernateException he) {
 			throw new CustomerException(
 					CustomerConstants.CREATE_FAILED_EXCEPTION, he);
+		}
+	}
+	
+	public void update() throws CustomerException{
+		try {
+			setUpdateDetails();
+			new CustomerPersistence().createOrUpdate(this);
+		} catch (HibernateException he) {
+			throw new CustomerException(CustomerConstants.UPDATE_FAILED_EXCEPTION, he);
 		}
 	}
 
@@ -369,7 +407,19 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 		return savingsAccounts;
 	}
-
+	
+	public List<CustomerNoteEntity> getRecentCustomerNotes() {
+		List<CustomerNoteEntity> notes = new ArrayList<CustomerNoteEntity>();
+		int count = 0;
+		for (CustomerNoteEntity customerNote : getCustomerNotes()) {
+			if (count > 2)
+				break;
+			notes.add(customerNote);
+			count++;
+		}
+		return notes;
+	}
+	
 	public CustomerMeetingEntity getCustomerMeeting() {
 		return customerMeeting;
 	}
@@ -596,6 +646,12 @@ public abstract class CustomerBO extends BusinessObject {
 		this.customerActivationDate = customerActivationDate;
 	}
 
+	public List<CustomerStatusEntity> getStatusList() {
+		return null;
+	}
+	
+
+
 	private void validateFields(String displayName,
 			CustomerStatus customerStatus, Short officeId)
 			throws CustomerException {
@@ -630,4 +686,77 @@ public abstract class CustomerBO extends BusinessObject {
 		return meeting != null ? new CustomerMeetingEntity(this, meeting)
 				: null;
 	}
+
+	public String getStatusName(Short localeId, Short statusId) throws ApplicationException, SystemException {
+		return null;
+	}
+
+	public String getFlagName(Short flagId) throws ApplicationException, SystemException {
+		return null;
+	}
+	
+	public void changeStatus(Short newStatusId, Short flagId, String comment) throws SecurityException, ServiceException, PersistenceException, ApplicationException , SystemException{
+		validateStatusChange(newStatusId);
+		if (null != getPersonnel().getPersonnelId())
+			checkPermissionForStatusChange(newStatusId, this.getUserContext(),
+					flagId, getOffice().getOfficeId(), getPersonnel().getPersonnelId());
+		else
+			checkPermissionForStatusChange(newStatusId, this.getUserContext(),
+					flagId, getOffice().getOfficeId(), this.getUserContext()
+							.getId());
+		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
+				.getInstance().getPersistenceService(
+						PersistenceServiceName.MasterDataService);
+		CustomerStatusEntity customerStatus = (CustomerStatusEntity) masterPersistenceService
+				.findById(CustomerStatusEntity.class, newStatusId);
+		customerStatus.setLocaleId(this.getUserContext().getLocaleId());
+		CustomerStatusFlagEntity customerStatusFlagEntity = null;
+		if (flagId != null) {
+			customerStatusFlagEntity = (CustomerStatusFlagEntity) masterPersistenceService
+					.findById(AccountStateFlagEntity.class, flagId);
+		}
+		CustomerNoteEntity customerNote = createCustomerNotes(comment);
+		this.setCustomerStatus(customerStatus);
+		this.addCustomerNotes(customerNote);
+		if (customerStatusFlagEntity != null) {
+			customerStatusFlagEntity.setLocaleId(this.getUserContext()
+					.getLocaleId());
+			CustomerFlagDetailEntity customerFlag = new CustomerFlagDetailEntity(this,customerStatusFlagEntity);
+			customerFlag.setCreatedBy(this.getUserContext().getId());
+			customerFlag.setCreatedDate(new Date());
+			this.addCustomerFlag(customerFlag);
+		}
+	}
+	
+	protected abstract void validateStatusChange(Short newStatusId) throws ApplicationException, SystemException;
+		
+	private void addCustomerNotes(CustomerNoteEntity customerNote) {
+		this.customerNotes.add(customerNote);
+	
+}
+
+	private void checkPermissionForStatusChange(Short newState,
+			UserContext userContext, Short flagSelected, Short recordOfficeId,
+			Short recordLoanOfficerId) throws SecurityException {
+		if (!isPermissionAllowed(newState, userContext, flagSelected,
+				recordOfficeId, recordLoanOfficerId))
+			throw new SecurityException(
+					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+	}
+
+	private boolean isPermissionAllowed(Short newState,
+			UserContext userContext, Short flagSelected, Short recordOfficeId,
+			Short recordLoanOfficerId) {
+		return ActivityMapper.getInstance().isStateChangePermittedForAccount(
+				newState.shortValue(),
+				null != flagSelected ? flagSelected.shortValue() : 0,
+				userContext, recordOfficeId, recordLoanOfficerId);
+	}
+	
+	private CustomerNoteEntity createCustomerNotes(String comment)throws ServiceException {
+		CustomerNoteEntity customerNote = new CustomerNoteEntity(comment,new java.sql.Date(System
+				.currentTimeMillis()),this.getPersonnel(),this);
+		return customerNote;
+	}
+			
 }

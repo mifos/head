@@ -205,7 +205,6 @@ public interface CustomerConstants {
 	public static final String CURRENT_DOB = "currentDOB";
 	public static final String CURRENT_GOVT_ID = "currentGovtId"; 
 	public static final String CLIENTRECENTACCACTIVITYLIST="customerAccountActivityList";
-	
 	public static final short CUSTOMER_TYPE_ID = 3;
 	public static final short GROUP_ONHOLD = 3;
 	
@@ -221,6 +220,17 @@ public interface CustomerConstants {
 	public static final String INVALID_STATUS="errors.Customer.invalidStatus";
 	public static final String INVALID_NAME="errors.Customer.invalidName";
 	public static final String INVALID_OFFICE="errors.Customer.invalidOffice";
+
+	public final String TRANSITION_CONFIG_FILE_PATH_CENTER="org/mifos/framework/util/resources/stateMachine/StateMachine_center.xml";	
+	
+	public static final String NOTES_FIELD="notes";
+	public static final String FLAG_FIELD="flag";
+	public static final String STATUS_FIELD="status";
+	public static final String MANDATORY_TEXTBOX="errors.mandatory_textbox";
+	public static final String MANDATORY_SELECT="errors.mandatoryselect";
+	public static final String MAXIMUM_LENGTH="errors.maximumlength";
+
+
 	
 	public static final String ERRORS_SPECIFY_NAME="errors.Customer.specifyName";
 	public static final String ERRORS_SELECT_LOAN_OFFICER="errors.Customer.specifyLoanOfficer";
@@ -228,4 +238,5 @@ public interface CustomerConstants {
 	public static final String ERRORS_SPECIFY_CUSTOM_FIELD_VALUE="errors.Customer.specifyCustomFieldValue";
 	public static final String ERRORS_DUPLICATE_PERIODIC_FEE="errors.Customer.duplicatePeriodicFee";
 	public static final String ERRORS_SPECIFY_FEE_AMOUNT="errors.Customer.specifyFeeAmount";
+
 }
