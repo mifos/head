@@ -332,6 +332,16 @@ public class ActivityMapper {
 		activityMap.put("/centerAction-loadSearch", SecurityConstants.VIEW);
 		activityMap.put("/centerAction-search", SecurityConstants.VIEW);
 
+		
+		//For M2 Center ------------------------
+		activityMap.put("/centerCustAction-chooseOffice", SecurityConstants.CENTER_CREATE_NEW_CENTER);
+		activityMap.put("/centerCustAction-load",	SecurityConstants.CENTER_CREATE_NEW_CENTER);
+		activityMap.put("/centerCustAction-loadMeeting-CenterCreate", SecurityConstants.MEETING_CREATE_CENTER_MEETING);
+		activityMap.put("/centerCustAction-previous", SecurityConstants.VIEW);
+		activityMap.put("/centerCustAction-preview", SecurityConstants.VIEW);
+		activityMap.put("/centerCustAction-create",	SecurityConstants.CENTER_CREATE_NEW_CENTER);
+		// For M2 Center ends
+		
 		// colsed account searchaction in center details page
 		activityMap
 				.put("/closedaccsearchaction-search", SecurityConstants.VIEW);

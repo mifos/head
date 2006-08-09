@@ -14,8 +14,6 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
-import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -25,14 +23,13 @@ public class CenterBOTest extends MifosTestCase {
 
 	private Short officeId = 1;
 
-	private PersonnelBO personnel;
+	private Short personnel = 3;
 
 	private MeetingBO meeting;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		personnel = new PersonnelPersistence().getPersonnel(Short.valueOf("3"));
 	}
 
 	@Override
@@ -46,7 +43,7 @@ public class CenterBOTest extends MifosTestCase {
 		try {
 			meeting = getMeeting();
 			center = new CenterBO(TestObjectFactory.getUserContext(), "", null,
-					null, null, personnel, officeId, meeting, personnel);
+					null, null,  officeId, meeting, personnel);
 			assertFalse("Center Created", true);
 		} catch (CustomerException ce) {
 			assertNull(center);
@@ -59,7 +56,7 @@ public class CenterBOTest extends MifosTestCase {
 		try {
 			meeting = getMeeting();
 			center = new CenterBO(TestObjectFactory.getUserContext(), "Center",
-					null, null, null, personnel, officeId, meeting, null);
+					null, null, null, officeId, meeting, null);
 			assertFalse("Center Created", true);
 		} catch (CustomerException ce) {
 			assertNull(center);
@@ -68,23 +65,11 @@ public class CenterBOTest extends MifosTestCase {
 		TestObjectFactory.removeObject(meeting);
 	}
 
-	public void testCreateWithoutFormedBy() throws Exception {
-		try {
-			meeting = getMeeting();
-			center = new CenterBO(TestObjectFactory.getUserContext(), "Center",
-					null, null, null, null, officeId, meeting, personnel);
-			assertFalse("Center Created", true);
-		} catch (CustomerException ce) {
-			assertNull(center);
-			assertEquals(ce.getKey(), CustomerConstants.INVALID_FORMED_BY);
-		}
-		TestObjectFactory.removeObject(meeting);
-	}
 
 	public void testCreateWithoutMeeting() throws Exception {
 		try {
 			center = new CenterBO(TestObjectFactory.getUserContext(), "Center",
-					null, null, null, personnel, officeId, meeting, personnel);
+					null, null, null, officeId, meeting, personnel);
 			assertFalse("Center Created", true);
 		} catch (CustomerException ce) {
 			assertNull(center);
@@ -96,7 +81,7 @@ public class CenterBOTest extends MifosTestCase {
 		try {
 			meeting = getMeeting();
 			center = new CenterBO(TestObjectFactory.getUserContext(), "Center",
-					null, null, null, personnel, null, meeting, personnel);
+					null, null, null,  null, meeting, personnel);
 			assertFalse("Center Created", true);
 		} catch (CustomerException ce) {
 			assertNull(center);
@@ -109,7 +94,7 @@ public class CenterBOTest extends MifosTestCase {
 		String name = "Center1";
 		meeting = getMeeting();
 		center = new CenterBO(TestObjectFactory.getUserContext(), name, null,
-				null, null, personnel, officeId, meeting, personnel);
+				null, null,  officeId, meeting, personnel);
 		center.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -123,7 +108,7 @@ public class CenterBOTest extends MifosTestCase {
 		String name = "Center1";
 		meeting = getMeeting();
 		center = new CenterBO(TestObjectFactory.getUserContext(), name, null,
-				getCustomFields(), null, personnel, officeId, meeting,
+				getCustomFields(), null,  officeId, meeting,
 				personnel);
 		center.save();
 		HibernateUtil.commitTransaction();
@@ -141,7 +126,7 @@ public class CenterBOTest extends MifosTestCase {
 		meeting = getMeeting();
 		List<FeeView> fees = getFees();
 		center = new CenterBO(TestObjectFactory.getUserContext(), name, null,
-				getCustomFields(), fees, personnel, officeId, meeting,
+				getCustomFields(), fees,  officeId, meeting,
 				personnel);
 		center.save();
 		HibernateUtil.commitTransaction();
@@ -155,9 +140,9 @@ public class CenterBOTest extends MifosTestCase {
 				.getCustomerAccount().getAccountState().getId());
 		// check if values in account fees are entered.
 		assertNotNull(center.getCustomerAccount().getAccountFees(
-				fees.get(0).getFeeId()));
+				fees.get(0).getFeeIdValue()));
 		assertNotNull(center.getCustomerAccount().getAccountFees(
-				fees.get(1).getFeeId()));
+				fees.get(1).getFeeIdValue()));
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -186,13 +171,8 @@ public class CenterBOTest extends MifosTestCase {
 		AmountFeeBO fee2 = (AmountFeeBO) TestObjectFactory
 				.createOneTimeAmountFee("OneTimeAmountFee",
 						FeeCategory.ALLCUSTOMERS, "100", FeePayment.UPFRONT);
-		FeeView feeView1 = new FeeView(fee1.getFeeId(), "feeName", fee1
-				.getFeeAmount().getAmountDoubleValue(), fee1.isPeriodic(), fee1
-				.getFeeFrequency().getFeeMeetingFrequency());
-		FeeView feeView2 = new FeeView(fee2.getFeeId(), "feeName", fee2
-				.getFeeAmount().getAmountDoubleValue(), fee2.isPeriodic(), null);
-		fees.add(feeView1);
-		fees.add(feeView2);
+		fees.add(new FeeView(fee1));
+		fees.add(new FeeView(fee2));
 		HibernateUtil.commitTransaction();
 		return fees;
 	}

@@ -65,6 +65,10 @@ public class WeekDaysEntity extends PersistentObject {
 	public WeekDaysEntity() {
 	}
 
+	public WeekDaysEntity(Short weekDay) {
+		this.weekDayId = weekDay;
+	}
+	
 	public Short getLookUpId() {
 		return lookUpId;
 	}

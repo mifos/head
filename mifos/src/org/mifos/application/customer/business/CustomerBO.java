@@ -63,6 +63,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -148,11 +149,11 @@ public abstract class CustomerBO extends BusinessObject {
 	protected CustomerBO(UserContext userContext, String displayName,
 			CustomerLevel customerLevel, CustomerStatus customerStatus,
 			Address address, List<CustomFieldView> customFields,
-			List<FeeView> fees, PersonnelBO formedBy, Short officeId,
-			CustomerBO parentCustomer, MeetingBO meeting, PersonnelBO personnel)
+			List<FeeView> fees, Short formedBy, Short officeId,
+			CustomerBO parentCustomer, MeetingBO meeting, Short loanOfficerId)
 			throws CustomerException {
 		super(userContext);
-		validateFields(displayName, customerStatus, formedBy, officeId);
+		validateFields(displayName, customerStatus, officeId);
 		this.customFields = new HashSet<CustomerCustomFieldEntity>();
 		this.accounts = new HashSet<AccountBO>();
 
@@ -164,15 +165,15 @@ public abstract class CustomerBO extends BusinessObject {
 		if (address != null) {
 			this.customerAddressDetail = new CustomerAddressDetailEntity(this,
 					address);
-			// TODO: change address to proper display format
 			this.displayAddress = this.customerAddressDetail
 					.getDisplayAddress();
 		}
 
 		if (parentCustomer != null)
 			this.personnel = parentCustomer.getPersonnel();
-		else
-			this.personnel = personnel;
+		else 
+			if(loanOfficerId != null)
+				this.personnel = new PersonnelPersistence().getPersonnel(loanOfficerId);
 
 		if (parentCustomer != null
 				&& parentCustomer.getCustomerMeeting() != null)
@@ -181,7 +182,9 @@ public abstract class CustomerBO extends BusinessObject {
 		else
 			this.customerMeeting = createCustomerMeeting(meeting);
 
-		this.formedByPersonnel = formedBy;
+		if(formedBy!=null)
+			this.formedByPersonnel = new PersonnelPersistence().getPersonnel(formedBy);
+		
 		this.parentCustomer = parentCustomer;
 
 		if (customFields != null)
@@ -594,14 +597,12 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 
 	private void validateFields(String displayName,
-			CustomerStatus customerStatus, PersonnelBO personnel, Short officeId)
+			CustomerStatus customerStatus, Short officeId)
 			throws CustomerException {
 		if (StringUtils.isNullOrEmpty(displayName))
 			throw new CustomerException(CustomerConstants.INVALID_NAME);
 		if (customerStatus == null)
 			throw new CustomerException(CustomerConstants.INVALID_STATUS);
-		if (personnel == null)
-			throw new CustomerException(CustomerConstants.INVALID_FORMED_BY);
 		if (officeId == null)
 			throw new CustomerException(CustomerConstants.INVALID_OFFICE);
 	}
@@ -611,8 +612,8 @@ public abstract class CustomerBO extends BusinessObject {
 			throw new CustomerException(CustomerConstants.INVALID_MEETING);
 	}
 
-	protected void validateLO(PersonnelBO personnel) throws CustomerException {
-		if (personnel == null)
+	protected void validateLO(Short loanOfficerId) throws CustomerException {
+		if (loanOfficerId == null)
 			throw new CustomerException(CustomerConstants.INVALID_LOAN_OFFICER);
 	}
 

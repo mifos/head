@@ -154,6 +154,7 @@ public interface CustomerConstants {
 	String STATUS_LIST ="statusList";
 	String FEES_LIST ="feesList";
 	String ADMIN_FEES_LIST ="adminFeesList";
+	public static final String ADDITIONAL_FEES_LIST = "additionalFeeList";
 	String COLLECTION_SHEET_TYPES ="collectionSheetTypes";
 	String CHECKLISTS ="checkLists";
 	String POSITIONS ="positions";
@@ -209,10 +210,22 @@ public interface CustomerConstants {
 	public static final short GROUP_ONHOLD = 3;
 	
 	//-------------------------------------------constants for M2 Migration
+	public static final String NAME="Name";
+	public static final String LOAN_OFFICER="LoanOfficer";
+	public static final String MEETING = "Meeting";
+	public static final String CUSTOM_FIELD = "CustomField";
+	public static final String FEE ="Fee";
 	public static final String INVALID_MEETING="errors.Customer.invalidMeeting";
 	public static final String INVALID_LOAN_OFFICER="errors.Customer.invalidLoanOfficer";
 	public static final String INVALID_FORMED_BY="errors.Customer.invalidFormedBy";
 	public static final String INVALID_STATUS="errors.Customer.invalidStatus";
 	public static final String INVALID_NAME="errors.Customer.invalidName";
 	public static final String INVALID_OFFICE="errors.Customer.invalidOffice";
+	
+	public static final String ERRORS_SPECIFY_NAME="errors.Customer.specifyName";
+	public static final String ERRORS_SELECT_LOAN_OFFICER="errors.Customer.specifyLoanOfficer";
+	public static final String ERRORS_SPECIFY_MEETING="errors.Customer.specifyMeeting";
+	public static final String ERRORS_SPECIFY_CUSTOM_FIELD_VALUE="errors.Customer.specifyCustomFieldValue";
+	public static final String ERRORS_DUPLICATE_PERIODIC_FEE="errors.Customer.duplicatePeriodicFee";
+	public static final String ERRORS_SPECIFY_FEE_AMOUNT="errors.Customer.specifyFeeAmount";
 }

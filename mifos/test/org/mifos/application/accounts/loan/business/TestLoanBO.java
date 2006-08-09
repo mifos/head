@@ -1980,15 +1980,13 @@ public class TestLoanBO extends MifosTestCase {
 
 	private List<FeeView> getFeeViews() {
 		FeeBO fee1 = TestObjectFactory.createOneTimeAmountFee(
-				"One Time Amount Fee", FeeCategory.LOAN, "100.0",
+				"One Time Amount Fee", FeeCategory.LOAN, "120.0",
 				FeePayment.TIME_OF_DISBURSMENT);
 		FeeBO fee3 = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
-				FeeCategory.LOAN, "100.0", MeetingFrequency.WEEKLY, (short) 1);
+				FeeCategory.LOAN, "10.0", MeetingFrequency.WEEKLY, (short) 1);
 		List<FeeView> feeViews = new ArrayList<FeeView>();
-		FeeView feeView1 = new FeeView(fee1.getFeeId(), fee1.getFeeName(),
-				120.0, false, null);
-		FeeView feeView2 = new FeeView(fee3.getFeeId(), fee3.getFeeName(),
-				10.0, true, fee3.getFeeFrequency().getFeeMeetingFrequency());
+		FeeView feeView1 = new FeeView(fee1);
+		FeeView feeView2 = new FeeView(fee3);
 		feeViews.add(feeView1);
 		feeViews.add(feeView2);
 		HibernateUtil.commitTransaction();
@@ -1999,7 +1997,7 @@ public class TestLoanBO extends MifosTestCase {
 	private void deleteFee(List<FeeView> feeViews) {
 		for (FeeView feeView : feeViews) {
 			TestObjectFactory.cleanUp((FeeBO) TestObjectFactory.getObject(
-					FeeBO.class, feeView.getFeeId()));
+					FeeBO.class, feeView.getFeeIdValue()));
 		}
 
 	}

@@ -99,7 +99,7 @@
 						<namefragment>label.createnew</namefragment> 
 						<namefragment>Center</namefragment>
 					</displayname>
-					<linkvalue>centerAction.do?method=chooseOffice&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
+					<linkvalue>centerCustAction.do?method=chooseOffice&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
 				</menuitem>
 
 				<menuitem>

@@ -58,9 +58,12 @@ public class RankOfDaysEntity extends PersistentObject {
 	private Set<LookUpValueLocale> lookUpValueLocale;
 
 	public RankOfDaysEntity() {
-
 	}
 
+	public RankOfDaysEntity(Short dayRank) {
+		this.rankOfDayId = dayRank;
+	}
+	
 	public Short getLookUpId() {
 		return lookUpId;
 	}

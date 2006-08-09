@@ -86,7 +86,7 @@
 
                 </tr>
               </table>
-              <office:listOffices methodName="load" actionName="centerAction.do" onlyBranchOffices="yes"/>
+              <office:listOffices methodName="load" actionName="centerCustAction.do" onlyBranchOffices="yes"/>
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center" class="blueline">&nbsp;</td>

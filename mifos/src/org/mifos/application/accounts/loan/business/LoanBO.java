@@ -1690,8 +1690,8 @@ public class LoanBO extends AccountBO {
 	private void buildAccountFee(List<FeeView> feeViews) {
 		if(feeViews !=null && feeViews.size() > 0){
 			for(FeeView feeView: feeViews){
-				FeeBO fee = new FeePersistence().getFee(feeView.getFeeId());
-				this.addAccountFees(new AccountFeesEntity(this,fee, feeView.getAmount()));
+				FeeBO fee = new FeePersistence().getFee(feeView.getFeeIdValue());
+				this.addAccountFees(new AccountFeesEntity(this,fee, feeView.getAmountMoney()));
 			}
 		}
 	}

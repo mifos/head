@@ -76,30 +76,30 @@ public class GroupBO extends CustomerBO {
 	public GroupBO(UserContext userContext, String displayName,
 			CustomerStatus customerStatus, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
-			PersonnelBO formedBy, Short office, CustomerBO parentCustomer,
+			Short formedById, Short officeId, CustomerBO parentCustomer,
 			String searchId) throws CustomerException {
 		this(userContext, displayName, customerStatus, address, customFields,
-				fees, formedBy, office, parentCustomer, null, null, searchId);
+				fees, formedById, officeId, parentCustomer, null, null, searchId);
 	}
 
 	public GroupBO(UserContext userContext, String displayName,
 			CustomerStatus customerStatus, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
-			PersonnelBO formedBy, Short office, MeetingBO meeting,
-			PersonnelBO personnel, String searchId) throws CustomerException {
+			Short formedById, Short officeId, MeetingBO meeting,
+			Short loanOfficerId, String searchId) throws CustomerException {
 		this(userContext, displayName, customerStatus, address, customFields,
-				fees, formedBy, office, null, meeting, personnel, searchId);
+				fees, formedById, officeId, null, meeting, loanOfficerId, searchId);
 	}
 
 	private GroupBO(UserContext userContext, String displayName,
 			CustomerStatus customerStatus, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
-			PersonnelBO formedBy, Short office, CustomerBO parentCustomer,
-			MeetingBO meeting, PersonnelBO personnel, String searchId)
+			Short formedById, Short officeId, CustomerBO parentCustomer,
+			MeetingBO meeting, Short loanOfficerId, String searchId)
 			throws CustomerException {
 		super(userContext, displayName, CustomerLevel.GROUP, customerStatus,
-				address, customFields, fees, formedBy, office, parentCustomer,
-				meeting, personnel);
+				address, customFields, fees, formedById, officeId, parentCustomer,
+				meeting, loanOfficerId);
 		this.setSearchId(searchId);
 		if (customerStatus.equals(CustomerStatus.GROUP_ACTIVE.getValue()))
 			this.setCustomerActivationDate(this.getCreatedDate());

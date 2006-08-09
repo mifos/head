@@ -83,7 +83,6 @@ public interface CenterConstants {
 	String ADDITIONAL_FEES_LIST = "additionalFees";
 	
 	
-	
 	String BLANK = "";
 	String ZERO ="0";
 	String HYPHEN ="-";
@@ -121,5 +120,7 @@ public interface CenterConstants {
 	String CENTER_SEARCH_TRANSFER_CANCEL_PAGE = "cancelTransfer_success";
 	String OLD_PERSONNEL = "oldPersonnel";
 	
-	
+	//FOR M2
+	String CENTER_MEETING = "centerMeeting";
+
 }

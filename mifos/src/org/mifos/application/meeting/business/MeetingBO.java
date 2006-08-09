@@ -81,6 +81,12 @@ public class MeetingBO extends BusinessObject {
 		this.meetingType = new MeetingTypeEntity(meetingType);
 	}
 	
+	public MeetingBO(MeetingFrequency meetingRecurrence, Short recurAfter, MeetingType meetingType, Short weekDay, Short dayRank){
+		RecurrenceTypeEntity recurrenceType = new RecurrenceTypeEntity(meetingRecurrence);
+		this.meetingDetails =  new MeetingDetailsEntity(recurrenceType, recurAfter, weekDay, dayRank, this);
+		this.meetingType = new MeetingTypeEntity(meetingType);
+	}
+	
 	public MeetingDetailsEntity getMeetingDetails() {
 		return meetingDetails;
 	}
@@ -175,8 +181,12 @@ public class MeetingBO extends BusinessObject {
 					MeetingRecurrenceEntity mr = this.meetingDetails
 							.getMeetingRecurrence();
 					Short dayNumber = mr.getDayNumber();
-					Short day = mr.getWeekDay().getWeekDayId();
-					Short rank = mr.getRankOfDays().getRankOfDayId();
+					Short day = null;
+					Short rank = null;
+					if(mr.getWeekDay()!=null)
+						day = mr.getWeekDay().getWeekDayId();
+					if(mr.getRankOfDays()!=null)
+						rank = mr.getRankOfDays().getRankOfDayId();
 
 					if (null != dayNumber) {
 						meeetingInfo = "Recur on day " + dayNumber.shortValue()

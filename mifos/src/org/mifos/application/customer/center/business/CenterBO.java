@@ -31,13 +31,12 @@ public class CenterBO extends CustomerBO {
 
 	// TODO: removed searchId from parameter and generate internally
 	public CenterBO(UserContext userContext, String displayName, Address address,
-			List<CustomFieldView> customFields, List<FeeView> fees,
-			PersonnelBO formedBy, Short office, MeetingBO meeting,
-			PersonnelBO personnel) throws CustomerException {
+			List<CustomFieldView> customFields, List<FeeView> fees,	 Short office, MeetingBO meeting,
+			Short loanOfficerId) throws CustomerException {
 		super(userContext, displayName, CustomerLevel.CENTER, CustomerStatus.CENTER_ACTIVE,
-				address, customFields, fees, formedBy, office, null, meeting,
-				personnel);
-		this.validateFields(meeting, personnel);
+				address, customFields, fees, null, office, null, meeting,
+				loanOfficerId);
+		this.validateFields(meeting, loanOfficerId);
 		int count;
 		try{
 			count = new CustomerPersistence().getCustomerCountForOffice(CustomerLevel.CENTER,office);
@@ -55,7 +54,7 @@ public class CenterBO extends CustomerBO {
 		return false;
 	}
 
-	private void validateFields(MeetingBO meeting, PersonnelBO personnel)
+	private void validateFields(MeetingBO meeting, Short personnel)
 			throws CustomerException {
 		validateMeeting(meeting);
 		validateLO(personnel);

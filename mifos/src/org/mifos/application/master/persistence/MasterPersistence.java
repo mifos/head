@@ -3,16 +3,21 @@ package org.mifos.application.master.persistence;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.TransactionTypeEntity;
+import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.valueobjects.EntityMaster;
 import org.mifos.application.master.util.valueobjects.LookUpMaster;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -142,5 +147,17 @@ public EntityMaster getLookUpEntity(String entityName,Short localeId) throws App
 			new PersistenceException(he);
 		}
 		return null;
+	}
+	
+	public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition(
+			EntityType entityType) throws PersistenceException {
+		try {
+			Map<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put(MasterConstants.ENTITY_TYPE, entityType.getValue());
+			return (List<CustomFieldDefinitionEntity>) executeNamedQuery(
+					NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
+		} catch (HibernateException he) {
+			throw new PersistenceException(he);
+		}
 	}
 }

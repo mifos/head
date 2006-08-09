@@ -9,6 +9,8 @@
 		</form-bean>
 		<!-- Center Action form -->
 		<form-bean name="centerActionForm" type="org.mifos.application.customer.center.struts.actionforms.CenterActionForm"></form-bean>
+		<!-- Center Action form -->
+		<form-bean name="centerCustActionForm" type="org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm"></form-bean>
 		<!-- Client Action form -->
 		<form-bean name="clientCreationActionForm" type="org.mifos.application.customer.client.struts.actionforms.ClientCreationActionForm"></form-bean>
 		<!-- Edit Client Status Action form -->
@@ -175,6 +177,22 @@
 			<forward name="cancelTransfer_success" path="/GroupAction.do?method=get" />
 			<forward name="cancelManage_success" path="/centerAction.do?method=get" />
 			<forward name="cancelStatus_success" path="/centerAction.do?method=get" />
+		</action>
+		
+		<!-- Center Action -->
+		<action path="/centerCustAction" type="org.mifos.application.customer.center.struts.action.CenterCustAction" name="centerCustActionForm" parameter="method" 
+		input="/centerCustAction.do?method=validate" validate="true" scope="session">
+			<forward name="chooseOffice_success" path="/pages/application/center/jsp/chooseOffice.jsp" />
+			<forward name="load_success" path="/pages/application/center/jsp/createnewcenter.jsp" />
+			<!-- Preview Page Forwards -->
+			<forward name="preview_success" path="/pages/application/center/jsp/previewcenter.jsp" />
+			<forward name="preview_failure" path="/pages/application/center/jsp/createnewcenter.jsp" />
+			<forward name="previous_success" path="/pages/application/center/jsp/createnewcenter.jsp" />
+			<forward name="create_success" path="/pages/application/center/jsp/createcenterconfirmation.jsp" />
+			<forward name="create_failure" path="/pages/application/center/jsp/previewcenter.jsp" />
+			<forward name="loadMeeting_success" path="/MeetingAction.do?method=load&amp;input=Center" />
+			<!-- Cancel Page Forwards -->
+			<forward name="cancelCreate_success" path="/CustomerSearchAction.do?method=load" />
 		</action>
 		<!-- Client Creation Action -->
 		<action path="/clientCreationAction" type="org.mifos.application.customer.client.struts.action.ClientCreationAction" name="clientCreationActionForm" parameter="method" input="/clientCreationAction.do?method=validate" validate="true"
@@ -512,7 +530,7 @@
 			<forward name="group_success" path="/GroupAction.do?method=previous&amp;input=CreateMeeting" />
 			<forward name="group_details_page" path="/GroupAction.do?method=get" />
 			<forward name="client_success" path="/clientCreationAction.do?method=previous&amp;input=CreateMeeting" />
-			<forward name="center_success" path="/centerAction.do?method=previous&amp;input=CreateMeeting" />
+			<forward name="center_success" path="/centerCustAction.do?method=previous&amp;input=CreateMeeting" />
 			<forward name="loadMeeting_success" path="/pages/application/meeting/jsp/createcustomermeeting.jsp" />
 			<forward name="editCenterMeeting_success" path="/centerAction.do?method=get" />
 			<forward name="editClientMeeting_success" path="/clientCreationAction.do?method=get" />

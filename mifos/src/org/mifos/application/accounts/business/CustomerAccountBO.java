@@ -129,8 +129,8 @@ public class CustomerAccountBO extends AccountBO {
 				AccountState.CUSTOMERACCOUNT_ACTIVE);
 		if(fees !=null){
 			for(FeeView feeView: fees){
-				FeeBO fee = new FeePersistence().getFee(feeView.getFeeId());
-				this.addAccountFees(new AccountFeesEntity(this,fee, feeView.getAmount()));
+				FeeBO fee = new FeePersistence().getFee(feeView.getFeeIdValue());
+				this.addAccountFees(new AccountFeesEntity(this,fee, new Money(feeView.getAmount())));
 			}
 			generateCustomerFeeSchedule(customer);
 		}

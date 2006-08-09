@@ -40,6 +40,7 @@ package org.mifos.application.customer.business;
 
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.util.valueobjects.LookUpEntity;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.util.helpers.Constants;
 
@@ -108,8 +109,8 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
 		return defaultValue;
 	}
 
-	public boolean isMandatoryFlag() {
-		return this.mandatoryFlag > 0;
+	public boolean isMandatory() {
+		return mandatoryFlag.equals(YesNoFlag.YES.getValue());
 	}
 
 	public boolean equals(Object obj) {

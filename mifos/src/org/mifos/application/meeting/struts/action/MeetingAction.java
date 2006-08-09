@@ -50,9 +50,11 @@ import javax.servlet.http.HttpSession;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.PathConstants;
 import org.mifos.application.customer.util.valueobjects.Customer;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.struts.actionforms.MeetingActionForm;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
@@ -67,6 +69,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.struts.action.MifosBaseAction;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.valueobjects.Context;
 
 /**
@@ -148,6 +151,15 @@ public class MeetingAction extends MifosBaseAction {
 		MeetingActionForm maf = (MeetingActionForm) form;
 		maf.clearForm();
 		Meeting meeting =getMeetingFromContext(request,form);
+		
+		//Code added for M2 Center.
+		if(meeting == null){
+			Object obj = SessionUtils.getAttribute(CenterConstants.CENTER_MEETING, request.getSession());
+			if(obj!=null)
+				meeting = MeetingHelper.convertMeetingM2toM1((MeetingBO)obj);
+		}
+		// Code for M2 center ends
+		
 		if (null !=meeting ) {
 			
 			initActionForm(meeting,form);
@@ -270,6 +282,9 @@ public class MeetingAction extends MifosBaseAction {
 				forward = MeetingConstants.FORWARD_EDIT_CLIENT_MEETING_SUCESS;
 			}
 		}
+		
+		//Meeting is being stored in session for center create
+		SessionUtils.setAttribute(CenterConstants.CENTER_MEETING, MeetingHelper.convertMeetingM1oM2(meeting), request.getSession());
 		meetingLogger.info("We are forwarding to " + forward);
 
 		return mapping.findForward(forward);

@@ -267,10 +267,10 @@ public class TestObjectFactory {
 		CenterBO center = null;
 		try {
 			Short officeId = new Short("3");
-			PersonnelBO personnel = getPersonnel(new Short("1"));		
+			Short personnel = new Short("1");		
 			if(meeting!=null)
 				meeting.setMeetingStartDate(new GregorianCalendar());
-			center = new CenterBO(getUserContext(), customerName, null, null, getFees(), personnel, officeId, meeting, personnel);
+			center = new CenterBO(getUserContext(), customerName, null, null, getFees(),  officeId, meeting, personnel);
 			//center.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), center, startDate));
 			center.save();
 			HibernateUtil.commitTransaction();
@@ -285,7 +285,7 @@ public class TestObjectFactory {
 		List<FeeView> fees = new ArrayList<FeeView>();		
 		AmountFeeBO maintanenceFee = (AmountFeeBO)createPeriodicAmountFee("Mainatnence Fee", FeeCategory.ALLCUSTOMERS, "100",MeetingFrequency.WEEKLY,
 				Short.valueOf("1"));
-		FeeView fee = new FeeView(maintanenceFee.getFeeId(),maintanenceFee.getFeeName(), maintanenceFee.getFeeAmount().getAmountDoubleValue(), maintanenceFee.isPeriodic(), maintanenceFee.getFeeFrequency().getFeeMeetingFrequency());
+		FeeView fee = new FeeView(maintanenceFee);
 		fees.add(fee);
 		return fees;
 	}
@@ -307,7 +307,7 @@ public class TestObjectFactory {
 		GroupBO group = null;
 		try {
 			Short office = new Short("3");
-			PersonnelBO personnel = getPersonnel(new Short("1"));
+			Short personnel = new Short("1");	
 			if(parentCustomer!=null && parentCustomer.getCustomerMeeting()!=null 
 					&& parentCustomer.getCustomerMeeting().getMeeting()!=null)
 				parentCustomer.getCustomerMeeting().getMeeting().setMeetingStartDate(new GregorianCalendar());
@@ -327,7 +327,7 @@ public class TestObjectFactory {
 		ClientBO client = null;
 		try {
 			Short office = new Short("3");
-			PersonnelBO personnel = getPersonnel(new Short("1"));
+			Short personnel = new Short("1");	
 			if(parentCustomer!=null && parentCustomer.getCustomerMeeting()!=null 
 					&& parentCustomer.getCustomerMeeting().getMeeting()!=null)
 				parentCustomer.getCustomerMeeting().getMeeting().setMeetingStartDate(new GregorianCalendar());

@@ -42,6 +42,7 @@ import java.util.List;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.exceptions.FeeException;
 import org.mifos.application.fees.persistence.FeePersistence;
+import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -75,6 +76,14 @@ public class FeeBusinessService extends BusinessService {
 	public List<FeeBO> retrieveProductFees() throws FeeException {
 		try {
 			return feePersistence.retrieveProductFees();
+		} catch (PersistenceException pe) {
+			throw new FeeException(pe);
+		}
+	}
+	
+	public List<FeeBO> retrieveCustomerFeesByCategaroyType(FeeCategory feeCategory) throws FeeException {
+		try {
+			return feePersistence.retrieveCustomerFeesByCategaroyType(feeCategory);
 		} catch (PersistenceException pe) {
 			throw new FeeException(pe);
 		}

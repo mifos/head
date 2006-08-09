@@ -2,6 +2,7 @@ package org.mifos.framework.struts.actionforms;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.PropertyResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,5 +39,19 @@ public class BaseActionForm extends ValidatorActionForm {
 		}
 	}
 	
-	
+	protected void checkForMandatoryFields(Short entityId,ActionErrors errors,HttpServletRequest request){
+		Map<Short,List<FieldConfigurationEntity>> entityMandatoryFieldMap=(Map<Short,List<FieldConfigurationEntity>>)request.getSession().getServletContext().getAttribute(Constants.FIELD_CONFIGURATION);
+		List<FieldConfigurationEntity> mandatoryfieldList=entityMandatoryFieldMap.get(entityId);
+		for(FieldConfigurationEntity fieldConfigurationEntity : mandatoryfieldList){
+			String propertyName=request.getParameter(fieldConfigurationEntity.getLabel());
+			if(propertyName!=null && !propertyName.equals("") ){
+				String propertyValue=request.getParameter(propertyName);
+				Locale locale=((UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT)).getPereferedLocale();
+				if(propertyValue==null || propertyValue.equals(""))
+					errors.add(fieldConfigurationEntity.getLabel(),
+							new ActionMessage(FieldConfigurationConstant.EXCEPTION_MANDATORY,
+									FieldConfigurationHelper.getLocalSpecificFieldNames(fieldConfigurationEntity.getLabel(),locale)));
+			}
+		}
+	}
 }

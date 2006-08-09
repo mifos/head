@@ -37,9 +37,24 @@
 */
 package org.mifos.application.customer.center.struts.actionforms;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts.action.ActionErrors;
 import org.mifos.application.customer.struts.actionforms.CustomerActionForm;
+import org.mifos.application.util.helpers.EntityType;
+import org.mifos.application.util.helpers.Methods;
 
-public class CenterCustomerActionForm extends CustomerActionForm{
-
-
+public class CenterCustActionForm extends CustomerActionForm{
+	protected ActionErrors validateFields(HttpServletRequest request, String method){
+		ActionErrors errors = new ActionErrors();
+		if(method.equals(Methods.preview.toString())){		
+			validateName(errors);
+			validateLO(errors);
+			validateMeeting(request, errors);
+			validateConfigurableMandatoryFields(request,errors,EntityType.CENTER);
+			validateCustomFields(request,errors);
+			validateFees(request, errors);
+		}
+		return errors;
+	}
 }

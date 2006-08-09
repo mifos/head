@@ -38,14 +38,19 @@
 
 package org.mifos.application.customer.business;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import org.mifos.framework.business.View;
+import org.mifos.framework.struts.tags.DateHelper;
 
 public class CustomFieldView extends View {
 
 	private Short fieldId;
 
 	private String fieldValue;
-	
+
 	public CustomFieldView() {
 		super();
 	}
@@ -70,14 +75,24 @@ public class CustomFieldView extends View {
 	public void setFieldValue(String fieldValue) {
 		this.fieldValue = fieldValue;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		return this.fieldId.equals(((CustomFieldView)obj).getFieldId());
+		return this.fieldId.equals(((CustomFieldView) obj).getFieldId());
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return fieldId.hashCode();
 	}
+
+	public void convertDateToUniformPattern(Locale currentLocale) {
+		SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance(
+				DateFormat.SHORT, currentLocale);
+		String userfmt = DateHelper
+				.convertToCurrentDateFormat(((SimpleDateFormat) sdf)
+						.toPattern());
+		setFieldValue(DateHelper.convertUserToDbFmt(getFieldValue(), userfmt));
+	}
+
 }

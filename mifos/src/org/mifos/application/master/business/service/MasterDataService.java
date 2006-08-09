@@ -3,11 +3,13 @@ package org.mifos.application.master.business.service;
 import java.sql.Date;
 import java.util.List;
 
+import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.dao.MasterDAO;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.master.util.valueobjects.EntityMaster;
 import org.mifos.application.office.business.OfficeView;
@@ -15,6 +17,7 @@ import org.mifos.application.office.persistence.service.OfficePersistenceService
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -108,5 +111,10 @@ public class MasterDataService extends BusinessService {
 			Short localeId) throws PersistenceException {
 		return masterPersistenceService.retrieveMasterEntities(entityName,
 				localeId);
+	}
+	
+	public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition(
+			EntityType entityType) throws SystemException {
+		return new MasterPersistence().retrieveCustomFieldsDefinition(entityType);
 	}
 }

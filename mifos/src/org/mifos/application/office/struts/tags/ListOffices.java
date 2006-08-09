@@ -253,7 +253,10 @@ public class ListOffices extends BodyTagSupport {
 		String newOfficeName = replaceSpaces(officeName);
 		String str = "<a href=" + actionName + "?method=" + methodName
 				+ "&amp;office.officeId=" + officeId
-				+ "&amp;office.officeName=" + newOfficeName + ">" + officeName
+				+ "&amp;office.officeName=" + newOfficeName
+				+ "&amp;officeId=" + officeId
+				+ "&amp;officeName=" + newOfficeName
+				+ ">" + officeName
 				+ "</a>";
 		return str;
 	}

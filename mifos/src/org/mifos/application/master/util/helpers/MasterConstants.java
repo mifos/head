@@ -73,4 +73,5 @@ public interface MasterConstants {
 	public static final short CUSTOMFIELD_NUMBER = 1;
 	public static final short CUSTOMFIELD_ALPHANUMBER = 2;
 	public static final short CUSTOMFIELD_DATE = 3;
+	public static final String ENTITY_TYPE="entityType";
 }
