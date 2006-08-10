@@ -536,7 +536,7 @@ public class CustomerAccountBO extends AccountBO {
 				dueInstallments.get(0).getActionDate());
 		Money totalFeeAmountApplied = applyFeeToInstallments(feeInstallmentMap,
 				dueInstallments, fee, accountFee);
-		updateCustomerActivity(fee.getFeeId(), totalFeeAmountApplied);
+		updateCustomerActivity(fee.getFeeId(), totalFeeAmountApplied,fee.getFeeName()+" applied");
 		accountFee.setFeeStatus(FeeStatus.ACTIVE.getValue());
 	}
 
@@ -552,7 +552,7 @@ public class CustomerAccountBO extends AccountBO {
 		customerScheduleList.add(customerScheduleEntity);
 		Money totalFeeAmountApplied = applyFeeToInstallments(feeInstallmentMap,
 				customerScheduleList, fee, accountFee);
-		updateCustomerActivity(fee.getFeeId(), totalFeeAmountApplied);
+		updateCustomerActivity(fee.getFeeId(), totalFeeAmountApplied,fee.getFeeName()+" applied");
 		accountFee.setFeeStatus(FeeStatus.ACTIVE.getValue());
 	}
 
@@ -560,10 +560,10 @@ public class CustomerAccountBO extends AccountBO {
 			AccountActionDateEntity accountActionDateEntity) {
 		CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDateEntity;
 		customerScheduleEntity.applyMiscCharge(chargeType, charge);
-		updateCustomerActivity(chargeType, charge);
+		updateCustomerActivity(chargeType,charge,"");
 	}
 
-	private void updateCustomerActivity(Short chargeType, Money charge) {
+	private void updateCustomerActivity(Short chargeType, Money charge,String comments) {
 		PersonnelBO personnel = new PersonnelPersistence()
 				.getPersonnel(getUserContext().getId());
 		CustomerActivityEntity customerActivityEntity = null;
@@ -578,7 +578,7 @@ public class CustomerAccountBO extends AccountBO {
 					charge,	AccountConstants.MISC_FEES_APPLIED);
 		else
 			customerActivityEntity = new CustomerActivityEntity(this, personnel,
-					charge,  AccountConstants.FEES_APPLIED);
+					charge,  comments);
 		addCustomerActivity(customerActivityEntity);
 	}
 

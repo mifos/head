@@ -23,6 +23,7 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
@@ -60,8 +61,7 @@ public class ApplyChargeAction extends BaseAction {
 	}
 
 	public ActionForward update(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+			HttpServletRequest request, HttpServletResponse response) throws SystemException, ApplicationException{
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		ApplyChargeActionForm applyChargeActionForm = (ApplyChargeActionForm) form;
@@ -69,25 +69,9 @@ public class ApplyChargeAction extends BaseAction {
 		Money chargeAmount = new Money(request.getParameter("charge"));
 		AccountBO accountBO = (AccountBO) getAccountBusinessService().getAccount(Integer.valueOf(applyChargeActionForm.getAccountId()));
 		accountBO.setUserContext(userContext);
-		try {
-			accountBO.applyCharge(chargeType, chargeAmount);
-			accountBO.update();
-			HibernateUtil.commitTransaction();
-		} catch (ApplicationException ae) {
-			ActionErrors errors = new ActionErrors();
-			errors.add(ae.getMessage(), new ActionMessage(ae.getMessage()));
-			request.setAttribute(Globals.ERROR_KEY, errors);
-			HibernateUtil.rollbackTransaction();
-			return mapping
-					.findForward(ActionForwards.update_failure.toString());
-		} catch (Exception e) {
-			ActionErrors errors = new ActionErrors();
-			errors.add(AccountConstants.UNEXPECTEDERROR, new ActionMessage(AccountConstants.UNEXPECTEDERROR));
-			request.setAttribute(Globals.ERROR_KEY, errors);
-			HibernateUtil.rollbackTransaction();
-			return mapping
-					.findForward(ActionForwards.update_failure.toString());
-		}
+		accountBO.applyCharge(chargeType, chargeAmount);
+		accountBO.update();
+		HibernateUtil.commitTransaction();
 		return mapping.findForward(getDetailAccountPage(accountBO));
 	}
 
@@ -131,11 +115,11 @@ public class ApplyChargeAction extends BaseAction {
 				AccountTypes.LOANACCOUNT.getValue())) {
 			return "loanDetails_success";
 		} else {
-			if (account.getCustomer().getCustomerLevel().equals(
-					CustomerLevel.CLIENT))
+			if (account.getCustomer().getCustomerLevel().getId().equals(
+					CustomerLevel.CLIENT.getValue()))
 				return "clientDetails_success";
-			else if (account.getCustomer().getCustomerLevel().equals(
-					CustomerLevel.CLIENT))
+			else if (account.getCustomer().getCustomerLevel().getId().equals(
+					CustomerLevel.GROUP.getValue()))
 				return "groupDetails_success";
 			else
 				return "centerDetails_success";

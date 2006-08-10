@@ -61,7 +61,9 @@
 						form.submit();
 				}
 				
-					
+				function fun_submit(){
+					document.getElementsByName("charge")[0].value=document.getElementsByName("chargeAmount")[0].value;
+				}		
 					
 			function loadValues(current)
 			
@@ -73,7 +75,6 @@
 						  	var periodicity=document.getElementsByName("periodicity")[current.selectedIndex].value;
 						  	var paymentType=document.getElementsByName("paymentType")[current.selectedIndex].value;
 							document.getElementsByName("chargeAmount")[0].value=amount;
-							document.getElementsByName("charge")[0].value=amount;
 							if(periodicity!=""){
 								document.getElementsByName("chargeAmount")[0].disabled=true;
 							}else{
@@ -111,7 +112,7 @@
 			}
 		
 	</script>
-		<html-el:form method="post" action="applyChargeAction.do?method=update">
+		<html-el:form method="post" action="applyChargeAction.do?method=update" onsubmit="fun_submit()">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -216,8 +217,12 @@
 	<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}"/> 
 	<html-el:hidden property="globalCustNum" value="${sessionScope.BusinessKey.customer.globalCustNum}"/> 
 	<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}"/> 
-	<html-el:hidden property="accountType" value="${sessionScope.BusinessKey.accountType.accountTypeId}"/>
-	<html-el:hidden property="statusId" value="${sessionScope.BusinessKey.customer.customerStatus.id}" /> 	
+	<!-- Should be removed after complete migration of customer happens-->
+	<html-el:hidden property="input" value="${param.input}"/>
+	<html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}"/>
+	<html-el:hidden property="searchInput" value="${param.searchInput}" />	
+	<html-el:hidden property="headingInput" value="${param.headingInput}"/>
+	<html-el:hidden property="statusId" value="${param.statusId}"/>
 	</html-el:form>
 	</tiles:put>
 </tiles:insert>

@@ -730,12 +730,14 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				lastAppliedDate=customerScheduleEntity.getActionDate();
 			}
 		}
-		CustomerActivityEntity customerActivityEntity=((CustomerActivityEntity)(customerAccountBO.getCustomerActivitDetails().toArray())[0]);
-		assertEquals(AccountConstants.FEES_APPLIED,customerActivityEntity.getDescription());
-		assertEquals(amount,customerActivityEntity.getAmount());
-		AccountFeesEntity accountFeesEntity=customerAccountBO.getAccountFees(periodicFee.getFeeId());
-		assertEquals(FeeStatus.ACTIVE.getValue(),accountFeesEntity.getFeeStatus());
-		assertEquals(DateUtils.getDateWithoutTimeStamp(lastAppliedDate.getTime()),DateUtils.getDateWithoutTimeStamp(accountFeesEntity.getLastAppliedDate().getTime()));
+		if(customerAccountBO.getCustomerActivitDetails()!=null){
+			CustomerActivityEntity customerActivityEntity=((CustomerActivityEntity)(customerAccountBO.getCustomerActivitDetails().toArray())[0]);
+			assertEquals(periodicFee.getFeeName()+" applied",customerActivityEntity.getDescription());
+			assertEquals(amount,customerActivityEntity.getAmount());
+			AccountFeesEntity accountFeesEntity=customerAccountBO.getAccountFees(periodicFee.getFeeId());
+			assertEquals(FeeStatus.ACTIVE.getValue(),accountFeesEntity.getFeeStatus());
+			assertEquals(DateUtils.getDateWithoutTimeStamp(lastAppliedDate.getTime()),DateUtils.getDateWithoutTimeStamp(accountFeesEntity.getLastAppliedDate().getTime()));
+		}
 	}
 	
 	public void testApplyPeriodicFeeToPartialPending() throws Exception{
@@ -791,7 +793,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		
 		if(customerAccountBO.getCustomerActivitDetails()!=null){
 			CustomerActivityEntity customerActivityEntity=((CustomerActivityEntity)(customerAccountBO.getCustomerActivitDetails().toArray())[0]);
-			assertEquals(AccountConstants.FEES_APPLIED,customerActivityEntity.getDescription());
+			assertEquals(upfrontFee.getFeeName()+" applied",customerActivityEntity.getDescription());
 			assertEquals(amount,customerActivityEntity.getAmount());
 			AccountFeesEntity accountFeesEntity=customerAccountBO.getAccountFees(upfrontFee.getFeeId());
 			assertEquals(FeeStatus.ACTIVE.getValue(),accountFeesEntity.getFeeStatus());

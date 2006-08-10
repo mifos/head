@@ -110,7 +110,7 @@
 									</c:when>
 								</c:choose>
 								</c:if>
-								<html-el:link href="AccountsApplyChargesAction.do?method=load&input=reviewTransactionPage&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}"> 
+        						 <html-el:link href="applyChargeAction.do?method=load&accountId=${param.accountId}">
 									<mifos:mifoslabel name="loan.apply_charges" />
 								</html-el:link>
 							</td>

@@ -442,7 +442,7 @@
 												<mifos:mifoslabel name="loan.apply_payment" />
 											</html-el:link><br> 
 										</c:if>
-									 <html-el:link href="applyChargeAction.do?method=load&accountId=${param.accountId}">
+									 <html-el:link href="applyChargeAction.do?method=load&accountId=${sessionScope.BusinessKey.accountId}">
 										<mifos:mifoslabel name="loan.apply_charges" />
 									</html-el:link><br>
 									<c:choose>
@@ -464,8 +464,8 @@
 								<c:when
 									test="${sessionScope.BusinessKey.accountState.id=='1' || sessionScope.BusinessKey.accountState.id=='2' || sessionScope.BusinessKey.accountState.id=='3' || sessionScope.BusinessKey.accountState.id=='4'}">
 
-									<span class="fontnormal8pt"> <html-el:link
-										href="AccountsApplyChargesAction.do?method=load&input=reviewTransactionPage&accountId=${sessionScope.BusinessKey.accountId}&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}&prdOfferingName=${sessionScope.BusinessKey.loanOffering.prdOfferingName}">
+									<span class="fontnormal8pt"> 
+									  <html-el:link href="applyChargeAction.do?method=load&accountId=${sessionScope.BusinessKey.accountId}"> 
 										<mifos:mifoslabel name="loan.apply_charges" />
 									</html-el:link><br>
 									</span>

@@ -1889,7 +1889,7 @@ public class TestLoanBO extends MifosTestCase {
 		}
 		assertEquals(intialTotalFeeAmount.add(new Money("600.0")),((LoanBO)accountBO).getLoanSummary().getOriginalFees());
 		LoanActivityEntity loanActivityEntity=((LoanActivityEntity)(((LoanBO)accountBO).getLoanActivityDetails().toArray())[0]);
-		assertEquals(AccountConstants.FEES_APPLIED,loanActivityEntity.getComments());
+		assertEquals(periodicFee.getFeeName()+" applied",loanActivityEntity.getComments());
 		assertEquals(((LoanBO)accountBO).getLoanSummary().getOriginalFees(),loanActivityEntity.getFeeOutstanding());
 		AccountFeesEntity accountFeesEntity=accountBO.getAccountFees(periodicFee.getFeeId());
 		assertEquals(FeeStatus.ACTIVE.getValue(),accountFeesEntity.getFeeStatus());
@@ -1925,7 +1925,7 @@ public class TestLoanBO extends MifosTestCase {
 		}
 		assertEquals(intialTotalFeeAmount.add(feeAmountApplied),((LoanBO)accountBO).getLoanSummary().getOriginalFees());
 		LoanActivityEntity loanActivityEntity=((LoanActivityEntity)(((LoanBO)accountBO).getLoanActivityDetails().toArray())[0]);
-		assertEquals(AccountConstants.FEES_APPLIED,loanActivityEntity.getComments());
+		assertEquals(upfrontFee.getFeeName()+" applied",loanActivityEntity.getComments());
 		assertEquals(((LoanBO)accountBO).getLoanSummary().getOriginalFees(),loanActivityEntity.getFeeOutstanding());
 		AccountFeesEntity accountFeesEntity=accountBO.getAccountFees(upfrontFee.getFeeId());
 		assertEquals(FeeStatus.ACTIVE.getValue(),accountFeesEntity.getFeeStatus());

@@ -1761,7 +1761,7 @@ public class LoanBO extends AccountBO {
 		Map<Short,Money> feeInstallmentMap=getFeeInstallmentMap(accountFee,dueInstallments.get(0).getActionDate());
 		Money totalFeeAmountApplied=applyFeeToInstallments(feeInstallmentMap,dueInstallments,fee,accountFee);
 		updateLoanSummary(fee.getFeeId(),totalFeeAmountApplied);
-		updateLoanActivity(fee.getFeeId(),totalFeeAmountApplied);
+		updateLoanActivity(fee.getFeeId(),totalFeeAmountApplied,fee.getFeeName()+" applied");
 	}
 	
 	
@@ -1776,14 +1776,14 @@ public class LoanBO extends AccountBO {
 		Money totalFeeAmountApplied=applyFeeToInstallments(feeInstallmentMap,loanScheduleEntityList,fee,accountFee);
 		filterTimeOfDisbursementFees(loanScheduleEntity,fee); 
 		updateLoanSummary(fee.getFeeId(),totalFeeAmountApplied);
-		updateLoanActivity(fee.getFeeId(),totalFeeAmountApplied);
+		updateLoanActivity(fee.getFeeId(),totalFeeAmountApplied,fee.getFeeName()+" applied");
 	}
 	
 	private void applyMiscCharge(Short chargeType,Money charge,AccountActionDateEntity accountActionDateEntity){
 		LoanScheduleEntity loanScheduleEntity=(LoanScheduleEntity)accountActionDateEntity;
 		loanScheduleEntity.applyMiscCharge(chargeType,charge);
 		updateLoanSummary(chargeType,charge);
-		updateLoanActivity(chargeType,charge);
+		updateLoanActivity(chargeType,charge,"");
 	}
 	
 	private void updateLoanSummary(Short chargeType,Money charge){
@@ -1793,7 +1793,7 @@ public class LoanBO extends AccountBO {
 			getLoanSummary().updateOriginalFees(charge);
 	}
 	
-	private void updateLoanActivity(Short chargeType, Money charge) {
+	private void updateLoanActivity(Short chargeType, Money charge,String comments) {
 		PersonnelBO personnel = new PersonnelPersistence()
 				.getPersonnel(getUserContext().getId());
 		LoanActivityEntity loanActivityEntity = null;
@@ -1808,7 +1808,7 @@ public class LoanBO extends AccountBO {
 		else
 			loanActivityEntity=new LoanActivityEntity(this, personnel, new Money(), new Money(),
 					charge, new Money(), getLoanSummary(),
-					AccountConstants.FEES_APPLIED);
+					comments);
 		addLoanActivity(loanActivityEntity);
 	}
 	

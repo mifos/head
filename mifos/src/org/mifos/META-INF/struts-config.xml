@@ -1064,7 +1064,8 @@
 		org.mifos.application.fees.util.helpers.FeeStatus,
 		org.mifos.application.fees.util.helpers.RateAmountFlag,
 		org.mifos.application.meeting.util.helpers.MeetingFrequency,
-		org.mifos.application.meeting.util.helpers.MeetingType" />
+		org.mifos.application.meeting.util.helpers.MeetingType,
+		org.mifos.application.accounts.util.helpers.AccountTypes" />
 	</plug-in>
 
 </struts-config>
