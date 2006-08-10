@@ -4,7 +4,7 @@
 
 
 
-* Copyright © 2005-2006 Grameen Foundation USA
+* Copyright (c) 2005-2006 Grameen Foundation USA
 
 * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
 
@@ -47,10 +47,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.application.accounts.business.AccountNotesEntity;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
-import org.mifos.application.accounts.struts.actionforms.NotesActionForm;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerNoteEntity;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
