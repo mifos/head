@@ -93,8 +93,8 @@ public class LoanRepaymentTag extends BodyTagSupport {
 	
 					StringBuilder builderHeader2 = new StringBuilder();
 	
-					if (firstInstallment.getPaymentStatus() == YesNoFlag.YES
-							.getValue()) {
+					if (firstInstallment.getPaymentStatus().equals(YesNoFlag.YES
+							.getValue())) {
 						twoTables = true;
 						// installments paid and running balance table is required
 						builderHeader2
@@ -142,8 +142,8 @@ public class LoanRepaymentTag extends BodyTagSupport {
 					LoanScheduleEntity installment = (LoanScheduleEntity) list
 							.get(index);
 					while (index <= list.size() - 1
-							&& installment.getPaymentStatus() == YesNoFlag.YES
-									.getValue()) {
+							&& installment.getPaymentStatus().equals(YesNoFlag.YES
+									.getValue())) {
 						index++;
 						if (index != list.size())
 							builder1.append(createInstallmentRow(installment));
@@ -159,7 +159,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 					}
 	
 					boolean dueInstallments = false;
-					if (installment.getPaymentStatus() == YesNoFlag.NO.getValue()
+					if (installment.getPaymentStatus().equals(YesNoFlag.NO.getValue())
 							&& installment.getActionDate().getTime() <= new java.util.Date()
 									.getTime())
 						dueInstallments = true;
@@ -170,8 +170,8 @@ public class LoanRepaymentTag extends BodyTagSupport {
 										+ getLabel("loan.instt_due", locale)
 										+ "</tr>");
 						while (index < list.size() - 1
-								&& installment.getPaymentStatus() == YesNoFlag.NO
-										.getValue()
+								&& installment.getPaymentStatus().equals(YesNoFlag.NO
+										.getValue())
 								&& installment.getActionDate().getTime() <= new java.util.Date()
 										.getTime()) {
 							index++;
@@ -181,7 +181,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 					}
 	
 					boolean futureInstallments = false;
-					if (installment.getPaymentStatus() == YesNoFlag.NO.getValue()
+					if (installment.getPaymentStatus().equals(YesNoFlag.NO.getValue())
 							&& installment.getActionDate().getTime() > new java.util.Date()
 									.getTime())
 						futureInstallments = true;

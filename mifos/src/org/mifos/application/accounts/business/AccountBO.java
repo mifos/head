@@ -81,6 +81,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -1057,8 +1058,10 @@ public class AccountBO extends BusinessObject {
 			accountStateFlagEntity = (AccountStateFlagEntity) masterPersistence
 					.findById(AccountStateFlagEntity.class, flagId);
 		}
+		PersonnelBO personnel = new PersonnelPersistenceService()
+				.getPersonnel(getUserContext().getId());
 		AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(
-				this.getAccountState(), accountStateEntity, this.getPersonnel());
+				this.getAccountState(), accountStateEntity, personnel);
 		AccountNotesEntity accountNotesEntity = createAccountNotes(comment);
 		this.addAccountStatusChangeHistory(historyEntity);
 		this.setAccountState(accountStateEntity);
