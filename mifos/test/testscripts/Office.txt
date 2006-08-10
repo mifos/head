@@ -1,0 +1,88 @@
+Function Main 
+#comment
+    ; Remove the comment below to "Enable" error handling
+    ; On Error Call OnErrorHandler
+
+Attach "PopupWindow~1"
+   Button "Start", 'Left SingleClick'
+   PopupMenuSelect "Run..."
+   Pause 3, 'Seconds' 
+  
+Attach "Run PopupWindow"
+   ComboText "&Open:", "iexplore" 
+   Button "OK", 'Left SingleClick'
+
+Attach "about:blank - Microsoft Internet Explorer MainWindow"
+   EditClick "~1", 'Left SingleClick', 39, 8 
+   Pause 3, 'Seconds'
+   ret = PromptBox( "URL", "Enter URL",value)
+   ComboText "~1", value
+   TypeToControl "Edit", "~1", "{Return}"
+Login()
+testdata ( "c:\Office.csv" ,chr(44), chr(13) + chr(10))
+n=testDataCurField() 
+i=0
+Csv()
+End Function ; Main
+Function Csv
+if(TestDataCurRecord( ) = TestDataRecordCount( ))
+RecordEnd()
+else
+i=i+1
+OfficeCreation()
+EndIf
+End Function ; Csv
+
+Function OfficeCreation
+ret1=TestDataField( i, 1 )
+ret2=TestDataField( i, 2 )
+ret3=TestDataField( i, 3 )
+ret4=TestDataField( i, 4 )
+ret5=TestDataField( i, 5 )
+ret6=TestDataField( i, 6 )
+ret7=TestDataField( i, 7 )
+ret8=TestDataField( i, 8 )
+ret9=TestDataField( i, 9 )
+
+Attach "Mifos - Microsoft Internet Explorer MainWindow"
+Attach "Mifos ChildWindow"
+AnchorSelect "Admin", 'Left SingleClick'
+AnchorSelect "Define a new office", 'Left SingleClick'
+EditText "officeName", ret1
+EditText "shortName", ret2
+ComboBox "formOfficeType", ret3, 'Left SingleClick'
+    Pause 5, 'Seconds'
+    ComboBox "formParentOffice", ret4, 'Left SingleClick'
+EditText "address.address1", ret5
+EditText "address.city", ret6
+EditText "address.state", ret7
+EditText "address.country", ret8
+EditText "address.postalCode", ret9
+Button "Preview", 'Left SingleClick'
+Button "Submit", 'Left SingleClick'
+Anchorselect "Add a new office",'Left SingleClick'
+Csv()
+End Function
+
+
+Function Login
+Attach "Mifos - Microsoft Internet Explorer MainWindow"
+Attach "Mifos ChildWindow"
+    EditText "userName", "mifos"
+    EditText "password", "mifos"
+    Button "Login", 'Left SingleClick'
+End Function
+Function RecordEnd
+Anchorselect "Logout",'Left SingleClick'
+logcomment "No Of Records Exceeded"
+
+End Function
+
+Function OnErrorHandler
+
+    ;
+    ; Insert your Error handling code here.
+    ;
+    Resume Next ; Continue On Error
+
+End Function

@@ -1,0 +1,210 @@
+Function Main
+ #comment
+    ; Remove the comment below to "Enable" error handling
+    ; On Error Call OnErrorHandler
+
+ 
+Attach "PopupWindow~1"
+    Button "Start", 'Left SingleClick' 
+    PopupMenuSelect "Run..."
+    Pause 3, 'Seconds' 
+
+Attach "Run PopupWindow"
+    ComboText "&Open:", "iexplore"
+    Button "OK", 'Left SingleClick'
+    testdata ( "c:\Fee.csv" ,chr(44), chr(13) + chr(10))
+    n=testDataCurField() 
+    i=0
+    Url()
+End Function ; Main
+
+Function Url
+    win1=Activewindow()
+    Attach win1
+    ret = PromptBox( "URL", "Enter URL", value )
+    ComboText "~1", value
+    TypeToControl "Edit", "~1", "{Return}"
+    res=Check ("LoginCheck0005")
+    if res=1
+    Login()
+    Csv()
+else
+logcomment "Check your URL"
+Url()
+Endif
+End Function 
+
+Function Csv
+if(TestDataCurRecord( ) = TestDataRecordCount( ))
+RecordEnd()
+else
+i=i+1
+FeeCreation()
+EndIf
+
+End Function ; csv
+
+Function Login
+Attach "Mifos - Microsoft Internet Explorer MainWindow"
+Attach "Mifos ChildWindow"
+    EditText "userName", "mifos"
+    EditText "password", "mifos"
+    Button "Login", 'Left SingleClick'
+End Function
+
+Function FeeCreation
+ret1=TestDataField( i, 1 )
+ret2=TestDataField( i, 2 )
+ret3=TestDataField( i, 3 )
+ret4=TestDataField( i, 4 )
+ret5=TestDataField( i, 5 )
+ret6=TestDataField( i, 6 )
+ret7=TestDataField( i, 7 )
+ret8=TestDataField( i, 8 )
+ret9=TestDataField( i, 9 )
+ret10=TestDataField( i, 10 )
+ret11=TestDataField( i, 11 )
+ret12=TestDataField( i, 12 )
+ret13=TestDataField( i, 13 )
+ret14=TestDataField( i, 14 )
+ret15=TestDataField( i, 15 )
+ret16=TestDataField( i, 16 )
+ret17=TestDataField( i, 17 )
+ret18=TestDataField( i, 18 )
+ret19=TestDataField( i, 19 )
+ret20=TestDataField( i, 20 )
+ret21=TestDataField( i, 21 )
+
+    win2=Activewindow()
+    Attach win2
+AnchorSelect "Admin", 'Left SingleClick'
+AnchorSelect "Define new fees", 'Left SingleClick'
+TypeToControl "Static", "~4", "{Ctrl {ExtEnd}}"
+res2=Check ("FeeCheck")
+if res2=1
+    EditText "feeName", ret1
+ComboBox "categoryId", ret2, 'Left SingleClick'
+RadioButton ret3, 'Left SingleClick'
+if ret3= "Periodic"
+TypeToControl "Static", "~4", "{Ctrl {ExtEnd}}"
+Periodic()    
+else
+ComboBox "feeFrequency.feePaymentId", ret13, 'Left SingleClick'
+endif
+Loan()
+Button "Preview", 'Left SingleClick'
+res2=Check ("FeeReview")
+if res2=1
+Button "Submit",'Left SingleClick'
+res3=Check ("FeeSuccess")
+if res3=1
+if ret17="1"
+EditFee()
+else
+Csv()
+Endif
+else
+FError()
+EndIf
+else
+FError()
+EndIf
+else
+FError()
+EndIf
+End Function
+Function FError
+logcomment "Problem with ur data" 
+Csv()
+End Function
+
+Function Periodic
+RadioButton ret4, 'Left SingleClick'
+if ret4="Weekly"
+        EditText "recurWeek", ret5
+        ComboBox "week(s) on", ret6, 'Left SingleClick'
+endif
+
+    if ret4="Monthly"
+    RadioButton ret7, 'Left SingleClick'
+        if ret7="monthType"
+            EditText "monthDay", ret8
+            EditText "monthMonth", ret9
+        else
+            ComboBox "The", ret10, 'Left SingleClick'
+            ComboBox "monthWeek", ret11, 'Left SingleClick'
+            EditText "monthMonthRank", ret12
+        endif
+     Endif
+
+End Function
+
+Function Other
+EditText "amount", ret14
+End Function
+
+Function Loan
+If ret2="Loans"
+EditText "% of", ret15
+ComboBox "% of", ret16, 'Left SingleClick'
+Else
+Other()
+Endif
+End Function
+
+Function OtherEdit
+EditText "amount", ret19
+End Function
+
+Function LoanEdit
+EditText "% of", ret20
+ComboBox "% of", ret21, 'Left SingleClick'
+End Function
+
+
+Function RecordEnd
+Anchorselect "Logout",'Left SingleClick'
+logcomment "No Of Records Exceeded"
+
+End Function
+
+Function EditFee()
+AnchorSelect "View fee details now", 'Left SingleClick'
+Pause 5, 'Seconds'
+res4=Check ("EditCheck")
+if res4=1
+AnchorSelect "Edit fee information", 'Left SingleClick'
+Pause 6, 'Seconds'
+res5=Check ("EditCheck001")
+if res5=1
+if ret2="Loans"
+LoanEdit()
+else
+OtherEdit()
+EndIf
+ComboBox "status", ret18, 'Left SingleClick'
+Button "Preview", 'Left SingleClick'
+Pause 7, 'Seconds'
+res6=Check ("EditConfirm")
+if res6=1
+Button "Submit", 'Left SingleClick'
+Pause 4, 'Seconds'
+Csv()
+else 
+Ferror()
+EndIf
+else 
+Ferror()
+EndIf
+else 
+Ferror()
+EndIf
+End Function
+Function OnErrorHandler
+
+    ;
+    ; Insert your Error handling code here.
+    ;
+    Resume Next ; Continue On Error
+
+End Function

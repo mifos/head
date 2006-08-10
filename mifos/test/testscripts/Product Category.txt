@@ -1,0 +1,88 @@
+Function Main 
+
+    ; Remove the comment below to "Enable" error handling
+    ; On Error Call OnErrorHandler
+
+Attach "PopupWindow~1"
+    Button "start", 'Left SingleClick'
+    PopupMenuSelect "Run..." 
+    Pause 3, 'Seconds' 
+     
+Attach "Run PopupWindow" 
+    ComboBox "&Open:", "iexplore", 'Left SingleClick'
+    Button "OK", 'Left SingleClick'
+
+Attach "about:blank - Microsoft Internet Explorer MainWindow"
+    Maximize
+    Pause 5, 'Seconds'
+    ComboBox "~1", "http://aditi582:8080/Mifos", 'Left SingleClick'
+    Pause 3, 'Seconds'
+
+Attach "Mifos ChildWindow"
+    EditText "userName", "mifos"
+    Pause 2, 'Seconds'
+    EditText "password", "mifos"
+    Button "Login", 'Left SingleClick'
+    Pause 8, 'Seconds'
+
+Attach "Mifos ChildWindow"
+    AnchorSelect "Admin", 'Left SingleClick'
+    Pause 2, 'Seconds'
+
+Attach "Mifos ChildWindow"
+    AnchorSelect "Define new category", 'Left SingleClick'
+    Pause 7, 'Seconds'
+
+Attach "Mifos - Microsoft Internet Explorer MainWindow"
+    ComboBox "productType.productTypeID", "Loan", 'Left SingleClick'
+
+Attach "Mifos ChildWindow"
+    EditClick "productCategoryName", 'Left SingleClick', 104, 12
+    Pause 4, 'Seconds'
+    EditText "productCategoryName", "Loan Account"
+    EditClick "productCategoryDesc", 'Left SingleClick', 127, 30
+    Button "Preview", 'Left SingleClick'
+    Pause 36, 'Seconds'
+
+Attach "Mifos ChildWindow"
+    Button "Submit", 'Left SingleClick'
+    Pause 12, 'Seconds'
+    AnchorSelect "View category details now", 'Left SingleClick'
+    Pause 5, 'Seconds'
+    AnchorSelect "Edit category information", 'Left SingleClick'
+    Pause 6, 'Seconds'
+
+Attach "Mifos - Microsoft Internet Explorer MainWindow"
+    ComboBox "prdCategoryStatus.prdCategoryStatusId", "Inactive", 'Left SingleClick'
+
+Attach "Mifos ChildWindow"
+    Button "Preview", 'Left SingleClick'
+    Pause 5, 'Seconds'
+    Button "Edit category information", 'Left SingleClick'
+    Pause 4, 'Seconds'
+
+Attach "Mifos - Microsoft Internet Explorer MainWindow"
+    ComboBox "prdCategoryStatus.prdCategoryStatusId", "Active", 'Left SingleClick'
+
+Attach "Mifos ChildWindow"
+    Button "Preview", 'Left SingleClick'
+    Button "Submit", 'Left SingleClick'
+    Pause 3, 'Seconds'
+    AnchorSelect "Edit category information", 'Left SingleClick'
+    Pause 2, 'Seconds'
+    Button "Cancel", 'Left SingleClick'
+
+
+Attach "Mifos ChildWindow"
+    AnchorSelect "Logout", 'Left SingleClick'
+
+End Function ; Main
+
+Function OnErrorHandler
+
+    ;
+    ; Insert your Error handling code here.
+    ;
+    Resume Next ; Continue On Error
+
+End Function

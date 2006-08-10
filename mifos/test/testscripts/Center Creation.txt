@@ -1,0 +1,119 @@
+Function Main
+
+    ; Remove the comment below to "Enable" error handling
+    ; On Error Call OnErrorHandler
+
+Attach "Popupwindow~1"
+    Button "start",'Left SingleClick'
+    PopupMenuSelect "Run..."
+Attach "Run Popupwindow"
+    ComboText "&open:","iexplore"
+    pause 4,'seconds'
+    button "OK",'Left singleClick'
+
+Attach "about:blank - Microsoft Internet Explorer MainWindow"
+    EditClick "~1", 'Left SingleClick', 96, 6
+    ComboText "~1", "http://aditi501/mifos/index.htm"
+    TypeToControl "Edit", "~1", "{Return}"
+    Center()
+End Function ; Main
+Function Center() 
+    AnchorSelect "Create new center",'Left SingleClick'
+    win1=Activewindow()
+    attach win1
+    EditText "textfield22","Sreedhar"
+    ComboBox "select12", "Loan Officer 1", 'Left SingleClick'
+    AnchorSelect "Schedule Meeting"
+    sechedulemeeting()
+    EditText "textfield222","Sadashiva Nagar"
+    EditText "textfield2422222","50032"
+    EditText "textfield2432","Martha Halli"
+    EditText "textfield2442","Mathakeri"    
+    EditText "textfield24422","BTM Layout"
+    EditText "textfield2452","Banglore"
+    EditText "textfield2462","Karnataka"
+    EditText "textfield2472","India"
+    EditText "textfield2482","560080"
+    EditText "textfield2492","9886661109"    
+    EditText "textfield242222","Mifos"
+    EditText "textfield2422223","MFI"
+    EditText "MM", "12"
+    EditText "MM~2", "12"   
+    EditText "DD", "05"
+    EditText "textfield24224","MFI"
+    EditText "textfield2422224","Sree"
+    EditText "textfield242242","dhar"
+    EditText "textfield242243222","300"
+    Checkbox "Check to Remove~2", 'Left SingleClick'
+    ComboBox "select5", "Training Fee", 'Left SingleClick'
+    EditText "textfield24224322","200"
+    ComboBox "select2", "Training Fee", 'Left SingleClick'
+    EditText "textfield24224323","200"
+    ComboBox "select3", "Training Fee", 'Left SingleClick'
+    EditText "textfield2422432","200"
+    Preview()
+    win1=Activewindow()
+    Attach  win1
+    Submit()
+    anchorselect "Create a new center"
+End Function;
+
+Function sechedulemeeting()
+    winname=activewindow()
+    Attach winname
+    resultm=Check ("Schedule Meeting Check")
+    if resultm=1
+    RadioButton "frequency~1", 'Left SingleClick'
+    RadioButton "daily~2", 'Left SingleClick'
+    ComboBox "select5", "8:00 AM", 'Left SingleClick'
+    EditText "textfield2410","15/04/1981"
+    EditText "textfield24102","15/04/1981"
+    button "Save",'Left singleClick'
+    winname=activewindow()
+    Attach winname
+    else
+    Merror()
+    endif
+End Function
+
+Function Merror()
+LogComment "Test Fail"
+Center()
+End Function;
+
+Function Preview()
+    winname3=activewindow()
+    Attach winname3
+    result1=Check ("Center")
+    if result1=1
+    button "Preview" ,'Left singleClick'
+    else
+    Merror()
+    Endif
+End Function
+
+
+Function Submit()
+    winname4=activewindow()
+    Attach winname4
+    result2=Check("Submit")
+    if result2=1
+    TypeToControl "PushButton", "Submit ", "{Ctrl {ExtEnd}}"   
+    Button "Submit ", 'Left SingleClick'
+    else
+    Merror()
+    Endif
+
+
+    
+End Function
+
+Function OnErrorHandler
+
+    ;
+    ; Insert your Error handling code here.
+    ;
+    Resume Next ; Continue On Error
+
+End Function
+

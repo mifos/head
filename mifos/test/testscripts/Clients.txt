@@ -1,0 +1,119 @@
+Function Main
+
+    ; Remove the comment below to "Enable" error handling
+    ; On Error Call OnErrorHandler
+
+Attach "PopupWindow~1"
+   Button "Start", 'Left SingleClick'
+   PopupMenuSelect "Run..."
+   Pause 3, 'Seconds'
+
+Attach "Run PopupWindow"
+   ComboText "&Open:", "iexplore"
+   Button "OK", 'Left SingleClick'
+
+Attach "about:blank - Microsoft Internet Explorer MainWindow"
+   EditClick "~1", 'Left SingleClick', 39, 8 
+   Pause 3, 'Seconds'
+   ret = PromptBox( "URL", "Enter URL",value)
+   ComboText "~1", value
+   TypeToControl "Edit", "~1", "{Return}"
+Login()
+testdata ( "c:\Client.csv" ,chr(44), chr(13) + chr(10))
+n=testDataCurField() 
+i=0
+Csv()
+End Function ; Main
+Function Csv
+if(TestDataCurRecord( ) = TestDataRecordCount( ))
+RecordEnd()
+else
+i=i+1
+ClientCreation()
+EndIf
+End Function ; Csv
+
+Function PersonalCreation
+ret1=TestDataField( i, 1 )
+ret2=TestDataField( i, 2 )
+ret3=TestDataField( i, 3 )
+ret4=TestDataField( i, 4 )
+ret5=TestDataField( i, 5 )
+ret6=TestDataField( i, 6 )
+ret7=TestDataField( i, 7 )
+ret8=TestDataField( i, 8 )
+ret9=TestDataField( i, 9 )
+ret10=TestDataField( i, 10 )
+ret11=TestDataField( i, 11 )
+ret12=TestDataField( i, 12 )
+ret13=TestDataField( i, 13 )
+ret14=TestDataField( i, 14 )
+ret15=TestDataField( i, 15 )
+ret16=TestDataField( i, 16 )
+ret17=TestDataField( i, 17 )
+ret18=TestDataField( i, 18 )
+ret19=TestDataField( i, 19 )
+ret20=TestDataField( i, 20 )
+
+Attach "Mifos - Microsoft Internet Explorer MainWindow"
+Attach "Mifos ChildWindow"
+AnchorSelect "Clients & Accounts", 'Left SingleClick'
+AnchorSelect "Create New client", 'Left SingleClick'
+Pause 10, 'Seconds'
+AnchorSelect "Click here to continue if group membership is not required for your client.", 'Left SingleClick'
+Pause 5, 'Seconds'
+AnchorSelect ret1, 'Left SingleClick'
+ComboBox "customerNameDetail[0].salutation", ret2, 'Left SingleClick'
+EditText "customerNameDetail[0].firstName", ret3
+EditText "customerNameDetail[0].lastName", ret4
+EditText "governmentId", ret5
+EditText "(MM)", ret6
+EditText "(MM)~2", ret7
+EditText "(DD)", ret8
+ComboBox "customerDetail.gender", "Male", ret9
+ComboBox "customerNameDetail[1].nameType", ret10, 'Left SingleClick'
+EditText "customerNameDetail[1].firstName", ret11
+EditText "customerNameDetail[1].lastName", ret12
+EditText "customerAddressDetail.line1", ret13
+EditText "customerAddressDetail.city", ret14
+EditText "customerAddressDetail.state", ret15
+EditText "customerAddressDetail.country", ret16
+EditText "customerAddressDetail.zip", ret17
+Button "Continue", 'Left SingleClick'
+Pause 10, 'Seconds'
+ComboBox "loanOfficerId", ret18, 'Left SingleClick'
+EditText "(MM)", ret19
+EditText "(MM)~2", ret20
+EditText "(DD)", ret20
+Button "Preview", 'Left SingleClick'
+TypeToControl "Static", "First Name: Sreedhar ...", "{Ctrl {ExtEnd}}"
+Button "Submit", 'Left SingleClick'
+
+Anchorselect "Add a new user",'Left SingleClick'
+Csv()
+End Function
+
+
+Function Login
+Attach "Mifos - Microsoft Internet Explorer MainWindow"
+Attach "Mifos ChildWindow"
+    EditText "userName", "mifos"
+    EditText "password", "mifos"
+    Button "Login", 'Left SingleClick'
+End Function
+Function RecordEnd
+Anchorselect "Logout",'Left SingleClick'
+logcomment "No Of Records Exceeded"
+
+End Function
+
+Function OnErrorHandler
+
+    ;
+    ; Insert your Error handling code here.
+    ;
+    Resume Next ; Continue On Error
+
+End Function
+
+
