@@ -55,9 +55,12 @@ import javax.servlet.http.HttpSession;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.hibernate.Hibernate;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.accounts.util.valueobjects.CustomerAccount;
+import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
+import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.business.CenterPerformanceHistory;
 import org.mifos.application.customer.center.struts.actionforms.CenterActionForm;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
@@ -68,6 +71,7 @@ import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.util.helpers.CenterSearchInput;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.group.util.helpers.LinkParameters;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerHelper;
 import org.mifos.application.customer.util.valueobjects.CustomFieldDefinition;
@@ -495,15 +499,34 @@ public class CenterAction extends MifosSearchAction{
 	 */
 	@TransactionDemarcate(saveToken =true)
 	public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
+		 Context context=(Context)request.getAttribute(Constants.CONTEXT);
+		 
+		 //TODO: remove when get is migrated to M2
+		 String centerId = ((Center)context.getValueObject()).getGlobalCustNum();
+		 if(centerId==null ||centerId==""){
+		    	Object obj = SessionUtils.getAttribute(Constants.BUSINESS_KEY, request.getSession());
+		    	if(obj!=null && obj instanceof CenterBO){
+		    		((Center)context.getValueObject()).setGlobalCustNum(((CenterBO)obj).getGlobalCustNum());
+		    	}	    		
+		    }	
 	  	ActionForward forward =super.get(mapping,form,request,response);
-	    Context context=(Context)request.getAttribute(Constants.CONTEXT);
-	    String centerId = ((Center)context.getValueObject()).getGlobalCustNum();
 	    String searchString = ((Center)context.getValueObject()).getSearchId();
 	    Short officeId = ((Center)context.getValueObject()).getOffice().getOfficeId();
 	    CenterPerformanceHistory centerPerformanceHistory = new CustomerBusinessService().getCenterPerformanceHistory(searchString,officeId);
 	    HttpSession session = request.getSession();
 	    session.setAttribute(CustomerConstants.LINK_VALUES,(LinkParameters)context.getBusinessResults(CustomerConstants.LINK_VALUES));
 	    SessionUtils.setAttribute(CenterConstants.PERFORMANCE_HISTORY,centerPerformanceHistory,session);
+	    Center center = (Center)context.getValueObject();
+	    //TODO: Remove when get migrates to M2
+	    CenterBO centerBO = (CenterBO) new CustomerPersistence().getCustomer(center.getCustomerId());
+	    Hibernate.initialize(centerBO.getCustomerPositions());
+	    for(CustomerPositionEntity position: centerBO.getCustomerPositions()){
+	    	if(position.getCustomer()!=null)
+	    			Hibernate.initialize(position.getCustomer());
+	    	Hibernate.initialize(position.getPosition());
+	    }
+	    Hibernate.initialize(centerBO.getCustomFields());
+	    SessionUtils.setAttribute(Constants.BUSINESS_KEY,centerBO,session);
 	    return forward;
 	}
 

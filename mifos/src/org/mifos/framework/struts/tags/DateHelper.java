@@ -308,5 +308,12 @@ public class DateHelper {
 		ret = sdf.format(dbDate);
 		return ret;
 	}
-
+	
+	public static String getDBtoUserFormatShortString(Date dbDate, Locale userLocale){
+		String ret = null;
+		SimpleDateFormat sdf = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.SHORT, userLocale);
+		String userfmt = convertToCurrentDateFormat(((SimpleDateFormat) sdf).toPattern());
+		ret = sdf.format(dbDate);
+		return ret;
+	}
 }

@@ -86,6 +86,7 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -168,8 +169,8 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 
 	protected CustomerBO(UserContext userContext, String displayName,
-			CustomerLevel customerLevel, CustomerStatus customerStatus,
-			Address address, List<CustomFieldView> customFields,
+			CustomerLevel customerLevel, CustomerStatus customerStatus, String externalId,
+			Date mfiJoiningDate, Address address, List<CustomFieldView> customFields,
 			List<FeeView> fees, Short formedBy, Short officeId,
 			CustomerBO parentCustomer, MeetingBO meeting, Short loanOfficerId)
 			throws CustomerException {
@@ -179,7 +180,8 @@ public abstract class CustomerBO extends BusinessObject {
 		this.accounts = new HashSet<AccountBO>();
 		this.customerNotes = new HashSet<CustomerNoteEntity>();
 		this.office = new OfficePersistence().getOffice(officeId);
-
+		this.externalId = externalId;
+		this.mfiJoiningDate = mfiJoiningDate;
 		this.displayName = displayName;
 		this.customerLevel = new CustomerLevelEntity(customerLevel);
 
@@ -335,6 +337,14 @@ public abstract class CustomerBO extends BusinessObject {
 		this.customerNotes = customerNotes;
 	}
 
+	public Address getAddress(){
+		return customerAddressDetail!=null ? customerAddressDetail.getAddress() : null;
+	}
+	
+	public CustomerStatus getStatus() throws PropertyNotFoundException{
+		return CustomerStatus.getStatus(customerStatus.getId());
+	}
+	
 	public void save() throws ApplicationException, CustomerException {
 		try {
 			new CustomerPersistence().createOrUpdate(this);
@@ -357,6 +367,10 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 	}
 
+	public void updateAddress(Address address) throws CustomerException{
+		getCustomerAddressDetail().setAddress(address);
+	}
+	
 	public CustomerAccountBO getCustomerAccount() {
 		for (AccountBO account : accounts) {
 			if (account.getAccountType().getAccountTypeId().equals(
@@ -450,7 +464,6 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 
 	public void addCustomerPosition(CustomerPositionEntity customerPosition) {
-		customerPosition.setCustomer(this);
 		this.customerPositions.add(customerPosition);
 	}
 

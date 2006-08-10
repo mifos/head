@@ -53,7 +53,7 @@ public class CustomerAddressDetailEntity extends PersistentObject {
 
 	private final CustomerBO customer;
 
-	private final Address address;
+	private Address address;
 	
 	/*
 	 * Adding a default constructor is hibernate's requirement and should not be
@@ -73,6 +73,10 @@ public class CustomerAddressDetailEntity extends PersistentObject {
 	
 	public Address getAddress() {
 		return address;
+	}
+	
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 	
 	public String getDisplayAddress(){

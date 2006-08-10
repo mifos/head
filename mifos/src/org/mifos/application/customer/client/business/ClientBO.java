@@ -6,16 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.application.configuration.business.MifosConfiguration;
-import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.center.exception.StateChangeException;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
-import org.mifos.application.customer.exceptions.CustomerStateChangeException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
@@ -53,33 +48,38 @@ public class ClientBO extends CustomerBO {
 	}
 
 	public ClientBO(UserContext userContext, String displayName,
-			CustomerStatus customerStatus, Address address,
+			CustomerStatus customerStatus, String externalId,
+			Date mfiJoiningDate, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
 			Short formedById, Short officeId, CustomerBO parentCustomer,
 			String searchId) throws CustomerException {
-		this(userContext, displayName, customerStatus, address, customFields,
-				fees, formedById, officeId, parentCustomer, null, null, searchId);
+		this(userContext, displayName, customerStatus, externalId,
+				mfiJoiningDate, address, customFields, fees, formedById,
+				officeId, parentCustomer, null, null, searchId);
 		clientAttendances = new HashSet<ClientAttendanceBO>();
 	}
 
 	public ClientBO(UserContext userContext, String displayName,
-			CustomerStatus customerStatus, Address address,
+			CustomerStatus customerStatus, String externalId,
+			Date mfiJoiningDate, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
 			Short formedById, Short officeId, MeetingBO meeting,
 			Short loanOfficerId, String searchId) throws CustomerException {
-		this(userContext, displayName, customerStatus, address, customFields,
-				fees, formedById, officeId, null, meeting, loanOfficerId, searchId);
+		this(userContext, displayName, customerStatus, externalId,
+				mfiJoiningDate, address, customFields, fees, formedById,
+				officeId, null, meeting, loanOfficerId, searchId);
 	}
 
 	private ClientBO(UserContext userContext, String displayName,
-			CustomerStatus customerStatus, Address address,
+			CustomerStatus customerStatus, String externalId,
+			Date mfiJoiningDate, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
 			Short formedById, Short officeId, CustomerBO parentCustomer,
 			MeetingBO meeting, Short loanOfficerId, String searchId)
 			throws CustomerException {
 		super(userContext, displayName, CustomerLevel.CLIENT, customerStatus,
-				address, customFields, fees, formedById, officeId, parentCustomer,
-				meeting, loanOfficerId);
+				externalId, mfiJoiningDate, address, customFields, fees,
+				formedById, officeId, parentCustomer, meeting, loanOfficerId);
 		this.setSearchId(searchId);
 		if (customerStatus.equals(CustomerStatus.CLIENT_ACTIVE.getValue()))
 			this.setCustomerActivationDate(this.getCreatedDate());
@@ -184,9 +184,10 @@ public class ClientBO extends CustomerBO {
 	public boolean isClientUnderGroup() {
 		return groupFlag.equals(YesNoFlag.YES.getValue());
 	}
-	
+
 	@Override
-	protected void validateStatusChange(Short newStatusId) throws ApplicationException, SystemException{
-		
+	protected void validateStatusChange(Short newStatusId)
+			throws ApplicationException, SystemException {
+
 	}
 }

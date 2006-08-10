@@ -155,6 +155,7 @@ public interface CustomerConstants {
 	String FEES_LIST ="feesList";
 	String ADMIN_FEES_LIST ="adminFeesList";
 	public static final String ADDITIONAL_FEES_LIST = "additionalFeeList";
+	public static final String CLIENT_LIST="clients";
 	String COLLECTION_SHEET_TYPES ="collectionSheetTypes";
 	String CHECKLISTS ="checkLists";
 	String POSITIONS ="positions";
@@ -209,6 +210,7 @@ public interface CustomerConstants {
 	public static final short GROUP_ONHOLD = 3;
 	
 	//-------------------------------------------constants for M2 Migration
+	public static final String DISPLAY_NAME="DISPLAY_NAME";
 	public static final String NAME="Name";
 	public static final String LOAN_OFFICER="LoanOfficer";
 	public static final String MEETING = "Meeting";
@@ -231,7 +233,7 @@ public interface CustomerConstants {
 	public static final String MAXIMUM_LENGTH="errors.maximumlength";
 
 
-	
+	public static final String ERRORS_DUPLICATE_CUSTOMER="errors.Customer.duplicateCustomer";
 	public static final String ERRORS_SPECIFY_NAME="errors.Customer.specifyName";
 	public static final String ERRORS_SELECT_LOAN_OFFICER="errors.Customer.specifyLoanOfficer";
 	public static final String ERRORS_SPECIFY_MEETING="errors.Customer.specifyMeeting";

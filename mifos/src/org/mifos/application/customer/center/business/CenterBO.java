@@ -13,6 +13,7 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.center.exception.StateChangeException;
+import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.exceptions.CustomerStateChangeException;
@@ -41,12 +42,12 @@ public class CenterBO extends CustomerBO {
 	// TODO: removed searchId from parameter and generate internally
 	public CenterBO(UserContext userContext, String displayName,
 			Address address, List<CustomFieldView> customFields,
-			List<FeeView> fees, Short office, MeetingBO meeting,
+			List<FeeView> fees, String externalId, Date mfiJoiningDate, Short office, MeetingBO meeting,
 			Short loanOfficerId) throws CustomerException {
 		super(userContext, displayName, CustomerLevel.CENTER,
-				CustomerStatus.CENTER_ACTIVE, address, customFields, fees,
+				CustomerStatus.CENTER_ACTIVE, externalId, mfiJoiningDate, address, customFields, fees,
 				null, office, null, meeting, loanOfficerId);
-		this.validateFields(meeting, loanOfficerId);
+		this.validateFields(displayName, meeting, loanOfficerId);
 		int count;
 		try {
 			count = new CustomerPersistence().getCustomerCountForOffice(
@@ -65,8 +66,13 @@ public class CenterBO extends CustomerBO {
 		return false;
 	}
 
-	private void validateFields(MeetingBO meeting, Short personnel)
+	private void validateFields(String displayName, MeetingBO meeting, Short personnel)
 			throws CustomerException {
+		if(new CenterPersistence().isCenterExists(displayName)){
+			Object[] values = new Object[1];
+			values[0] = displayName;
+			throw new CustomerException(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER,values);
+		}
 		validateMeeting(meeting);
 		validateLO(personnel);
 	}

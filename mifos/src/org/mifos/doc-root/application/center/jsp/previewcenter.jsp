@@ -56,7 +56,7 @@ function goToEditPage(){
 	centerCustActionForm.submit();
   }
   function goToCancelPage(){
-	centerCustActionForm.action="centerAction.do?method=cancel";
+	centerCustActionForm.action="centerCustAction.do?method=cancel";
 	centerCustActionForm.submit();
   }
 </script>

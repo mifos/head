@@ -73,7 +73,7 @@ public class MeetingHelper {
 	public static Meeting convertMeetingM2toM1(MeetingBO M2meeting) {
 		Meeting meetingToReturn = new Meeting();
 		meetingToReturn.setMeetingStartDate(M2meeting.getMeetingStartDate());
-		meetingToReturn.setMeetingPlace("");
+		meetingToReturn.setMeetingPlace(M2meeting.getMeetingPlace());
 		MeetingType meetingType = new MeetingType();
 		meetingType.setMeetingTypeId(M2meeting.getMeetingType()
 				.getMeetingTypeId());

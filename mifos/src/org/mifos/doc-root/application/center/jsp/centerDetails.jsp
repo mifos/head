@@ -302,7 +302,7 @@
               <tr>
                 <td width="50%" height="23" class="headingorange"><mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/><c:out value=" "/><mifos:mifoslabel name="Center.Information" bundle="CenterUIResources"/></td>
                 <td width="50%" align="right" class="fontnormal">
-                	<html-el:link action="centerAction.do?method=manage"><mifos:mifoslabel name="Center.Edit" bundle="CenterUIResources" /><c:out value=" "/><mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/><c:out value=" "/><mifos:mifoslabel name="Center.details" bundle="CenterUIResources" /></html-el:link>
+                	<html-el:link action="centerCustAction.do?method=manage"><mifos:mifoslabel name="Center.Edit" bundle="CenterUIResources" /><c:out value=" "/><mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/><c:out value=" "/><mifos:mifoslabel name="Center.details" bundle="CenterUIResources" /></html-el:link>
                 </td>
               </tr>
               

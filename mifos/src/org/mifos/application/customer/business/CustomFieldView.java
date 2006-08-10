@@ -50,14 +50,17 @@ public class CustomFieldView extends View {
 	private Short fieldId;
 
 	private String fieldValue;
+	
+	private Short fieldType;
 
 	public CustomFieldView() {
 		super();
 	}
 
-	public CustomFieldView(Short fieldId, String fieldValue) {
+	public CustomFieldView(Short fieldId, String fieldValue, Short fieldType) {
 		this.fieldId = fieldId;
 		this.fieldValue = fieldValue;
+		this.fieldType = fieldType;
 	}
 
 	public Short getFieldId() {
@@ -74,6 +77,14 @@ public class CustomFieldView extends View {
 
 	public void setFieldValue(String fieldValue) {
 		this.fieldValue = fieldValue;
+	}
+
+	public Short getFieldType() {
+		return fieldType;
+	}
+
+	public void setFieldType(Short fieldType) {
+		this.fieldType = fieldType;
 	}
 
 	@Override

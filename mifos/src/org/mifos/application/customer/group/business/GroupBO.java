@@ -38,6 +38,7 @@
 
 package org.mifos.application.customer.group.business;
 
+import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.customer.business.CustomFieldView;
@@ -75,30 +76,30 @@ public class GroupBO extends CustomerBO {
 
 	// TODO: removed searchId from parameter and generate internally
 	public GroupBO(UserContext userContext, String displayName,
-			CustomerStatus customerStatus, Address address,
+			CustomerStatus customerStatus, String externalId, Date mfiJoiningDate, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
 			Short formedById, Short officeId, CustomerBO parentCustomer,
 			String searchId) throws CustomerException {
-		this(userContext, displayName, customerStatus, address, customFields,
+		this(userContext, displayName, customerStatus, externalId, mfiJoiningDate, address, customFields,
 				fees, formedById, officeId, parentCustomer, null, null, searchId);
 	}
 
 	public GroupBO(UserContext userContext, String displayName,
-			CustomerStatus customerStatus, Address address,
+			CustomerStatus customerStatus, String externalId, Date mfiJoiningDate, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
 			Short formedById, Short officeId, MeetingBO meeting,
 			Short loanOfficerId, String searchId) throws CustomerException{
-		this(userContext, displayName, customerStatus, address, customFields,
+		this(userContext, displayName, customerStatus, externalId, mfiJoiningDate, address, customFields,
 				fees, formedById, officeId, null, meeting, loanOfficerId, searchId);
 	}
 
 	private GroupBO(UserContext userContext, String displayName,
-			CustomerStatus customerStatus, Address address,
+			CustomerStatus customerStatus, String externalId, Date mfiJoiningDate, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
 			Short formedById, Short officeId, CustomerBO parentCustomer,
 			MeetingBO meeting, Short loanOfficerId, String searchId)
 			throws CustomerException{
-		super(userContext, displayName, CustomerLevel.GROUP, customerStatus,
+		super(userContext, displayName, CustomerLevel.GROUP, customerStatus, externalId, mfiJoiningDate,
 				address, customFields, fees, formedById, officeId, parentCustomer,
 				meeting, loanOfficerId);
 		this.setSearchId(searchId);

@@ -39,7 +39,10 @@
 package org.mifos.application.customer.center.struts.action;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,11 +52,18 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
+import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerCustomFieldEntity;
+import org.mifos.application.customer.business.CustomerPositionEntity;
+import org.mifos.application.customer.business.CustomerPositionView;
+import org.mifos.application.customer.business.PositionEntity;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
@@ -66,16 +76,20 @@ import org.mifos.application.personnel.business.service.PersonnelBusinessService
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
@@ -107,7 +121,7 @@ public class CenterCustAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		CenterCustActionForm actionForm = (CenterCustActionForm) form;
-		doCleanUp(request, actionForm);
+		doCleanUp(actionForm, request);
 		request.getSession().removeAttribute(CenterConstants.CENTER_MEETING);
 		loadCreateMasterData(actionForm, request);
 		return mapping.findForward(ActionForwards.load_success.toString());
@@ -139,11 +153,15 @@ public class CenterCustAction extends BaseAction {
 		MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(
 				CenterConstants.CENTER_MEETING, request.getSession());
 		List<CustomFieldView> customFields = actionForm.getCustomFields();
-		convertCustomFieldDateToUniformPattern(customFields, request);
-
-		CenterBO center = new CenterBO(getUserContext(request), actionForm
-				.getDisplayName(), actionForm.getAddress(), customFields,
-				actionForm.getFeesToApply(), actionForm.getOfficeIdValue(),
+		UserContext userContext = getUserContext(request);
+		convertCustomFieldDateToUniformPattern(customFields, userContext.getPereferedLocale());
+		
+		CenterBO center = new CenterBO(userContext,
+				actionForm.getDisplayName(), actionForm.getAddress(),
+				customFields, actionForm.getFeesToApply(), actionForm
+						.getExternalId(),
+				getDateFromString(actionForm.getMfiJoiningDate(), userContext
+						.getPereferedLocale()), actionForm.getOfficeIdValue(),
 				meeting, actionForm.getLoanOfficerIdValue());
 		center.save();
 
@@ -152,28 +170,169 @@ public class CenterCustAction extends BaseAction {
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
-	private void convertCustomFieldDateToUniformPattern(
-			List<CustomFieldView> customFields, HttpServletRequest request) {
+	public ActionForward manage(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		clearActionForm((CenterCustActionForm) form);
+		CenterBO center = (CenterBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request.getSession());
+		loadUpdateMasterData(center.getOffice().getOfficeId(), request);
+		setValuesInActionForm((CenterCustActionForm) form, request);
+		return mapping.findForward(ActionForwards.manage_success.toString());
+	}
+
+	private void setValuesInActionForm(CenterCustActionForm actionForm,
+			HttpServletRequest request) {
+		CenterBO center = (CenterBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request.getSession());
+		actionForm.setLoanOfficerId(center.getPersonnel().getPersonnelId()
+				.toString());
+		actionForm.setCustomerId(center.getCustomerId().toString());
+		actionForm.setGlobalCustNum(center.getGlobalCustNum());
+		actionForm.setExternalId(center.getExternalId());
+
+		if (center.getMfiJoiningDate() != null)
+			actionForm.setMfiJoiningDate(DateHelper.getUserLocaleDate(
+					getUserContext(request).getPereferedLocale(), center
+							.getMfiJoiningDate().toString()));
+
+		actionForm.setAddress(center.getAddress());
+		actionForm.setCustomerPositions(createCustomerPositionViews(center
+				.getCustomerPositions(), request));
+		actionForm.setCustomFields(createCustomFieldViews(center
+				.getCustomFields(), request));
+	}
+
+	private List<CustomerPositionView> createCustomerPositionViews(
+			Set<CustomerPositionEntity> custPosEntities, HttpServletRequest request) {
+		List<PositionEntity> positions = (List<PositionEntity>)SessionUtils.getAttribute(CustomerConstants.POSITIONS, request.getSession());
+		List<CustomerPositionView> customerPositions = new ArrayList<CustomerPositionView>();
+		for(PositionEntity position: positions)
+			for (CustomerPositionEntity entity : custPosEntities){
+				if(position.getId().equals(entity.getPosition().getId())){
+					if(entity.getCustomer()!=null)
+						customerPositions.add(new CustomerPositionView(entity.getCustomer()
+							.getCustomerId(), entity.getPosition().getId()));
+					else
+						customerPositions.add(new CustomerPositionView(null, entity.getPosition().getId()));
+				}
+			}
+		return customerPositions;
+	}
+
+	private List<CustomFieldView> createCustomFieldViews(
+			Set<CustomerCustomFieldEntity> customFieldEntities,
+			HttpServletRequest request) {
+		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
 				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request
 						.getSession());
+
+		Locale locale = getUserContext(request).getPereferedLocale();
 		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-			if (customFieldDef.getFieldType().equals(
-					CustomFieldType.DATE.getValue())) {
-				for (CustomFieldView customField : customFields) {
-					if (StringUtils.isNullAndEmptySafe(customField
-							.getFieldValue())
-							&& customField.getFieldId().equals(
-									customFieldDef.getFieldId())) {
-						customField.convertDateToUniformPattern(getUserContext(
-								request).getPereferedLocale());
+			for (CustomerCustomFieldEntity customFieldEntity : customFieldEntities) {
+				if (customFieldDef.getFieldId().equals(
+						customFieldEntity.getFieldId())) {
+					if (customFieldDef.getFieldType().equals(
+							CustomFieldType.DATE.getValue())) {
+						customFields.add(new CustomFieldView(customFieldEntity
+								.getFieldId(), DateHelper.getUserLocaleDate(
+								locale, customFieldEntity.getFieldValue()),
+								customFieldDef.getFieldType()));
+					} else {
+						customFields
+								.add(new CustomFieldView(customFieldEntity
+										.getFieldId(), customFieldEntity
+										.getFieldValue(), customFieldDef
+										.getFieldType()));
 					}
 				}
 			}
-
 		}
+		return customFields;
 	}
 
+	public ActionForward editPreview(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(ActionForwards.editpreview_success
+				.toString());
+	}
+
+	public ActionForward editPrevious(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(ActionForwards.editprevious_success
+				.toString());
+	}
+
+	public ActionForward update(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		CenterBO center = (CenterBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request.getSession());
+		CenterCustActionForm actionForm = (CenterCustActionForm) form;
+		if(!center.getPersonnel().getPersonnelId().equals(actionForm.getLoanOfficerIdValue()))
+			   center.setPersonnel(getPersonnelBusinessService().getPersonnel(actionForm.getLoanOfficerIdValue()));
+		center.setExternalId(actionForm.getExternalId());
+		if(actionForm.getMfiJoiningDate()!=null)
+			center.setMfiJoiningDate(getDateFromString(actionForm.getMfiJoiningDate(), getUserContext(request)
+				.getPereferedLocale()));
+		center.updateAddress(actionForm.getAddress());
+		convertCustomFieldDateToUniformPattern(actionForm.getCustomFields(), getUserContext(request).getPereferedLocale());
+		for(CustomFieldView fieldView : actionForm.getCustomFields())
+			for(CustomerCustomFieldEntity fieldEntity: center.getCustomFields())
+				if(fieldView.getFieldId().equals(fieldEntity.getFieldId()))
+					fieldEntity.setFieldValue(fieldView.getFieldValue());
+		
+		for(CustomerPositionView positionView: actionForm.getCustomerPositions()){
+			boolean isPositionFound = false;
+			for(CustomerPositionEntity positionEntity: center.getCustomerPositions()){
+				if(positionView.getPositionId().equals(positionEntity.getPosition().getId())){
+					positionEntity.setCustomer(findClientObject(request, positionView.getCustomerId()));
+					isPositionFound = true;
+					break;
+				}
+				
+			}
+			if(!isPositionFound){
+				center.addCustomerPosition(new CustomerPositionEntity(findPosition(request,positionView.getPositionId()),findClientObject(request,positionView.getCustomerId()), center));
+			}
+		}
+		center.setUserContext(getUserContext(request));
+		center.update();
+		
+		return mapping.findForward(ActionForwards.update_success.toString());
+	}
+
+	private CustomerBO findClientObject(HttpServletRequest request, Integer customerId){
+		if(customerId!=null){
+			List<CustomerBO> clientList = (List<CustomerBO>) SessionUtils.getAttribute(CustomerConstants.CLIENT_LIST, request.getSession());
+			for(CustomerBO customer: clientList){
+				if(customer.getCustomerId().equals(customerId))
+					return customer;
+			}
+		}
+		return null;
+	}
+	
+	private PositionEntity findPosition(HttpServletRequest request, Short positionId){
+		if(positionId!=null){
+			List<PositionEntity> positions = (List<PositionEntity>) SessionUtils.getAttribute(CustomerConstants.POSITIONS, request.getSession());
+			for(PositionEntity position : positions){
+				if(position.getId().equals(positionId))
+					return position;
+			}
+		}
+		return null;
+	}
+
+	private PersonnelBusinessService getPersonnelBusinessService()throws ServiceException{
+		return (PersonnelBusinessService) ServiceFactory.getInstance()
+		.getBusinessService(BusinessServiceName.Personnel);
+	}
+	
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -181,24 +340,34 @@ public class CenterCustAction extends BaseAction {
 		return mapping.findForward(method + "_failure");
 	}
 
-	public ActionForward Cancel(ActionMapping mapping, ActionForm form,
+	public ActionForward cancel(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
 		CenterCustActionForm actionForm = (CenterCustActionForm) form;
 		ActionForwards forward = null;
-		if (CenterConstants.INPUT_CREATE.equals(actionForm.getInput()))
+		if (actionForm.getInput().equals(Methods.create.toString()))
 			forward = ActionForwards.cancel_success;
+		else if (actionForm.getInput().equals(Methods.manage.toString()))
+			forward = ActionForwards.editcancel_success;
 		return mapping.findForward(forward.toString());
 	}
 
 	private void loadCreateMasterData(CenterCustActionForm actionForm,
 			HttpServletRequest request) throws ApplicationException,
 			SystemException {
-		loadLoanOfficers(request, actionForm.getOfficeIdValue());
-		loadCustomFields(actionForm, request);
+		loadLoanOfficers(actionForm.getOfficeIdValue(), request);
+		loadCreateCustomFields(actionForm, request);
 		loadFees(actionForm, request);
 	}
 
-	private void loadLoanOfficers(HttpServletRequest request, Short officeId)
+	private void loadUpdateMasterData(Short officeId, HttpServletRequest request)
+			throws ApplicationException, SystemException {
+		loadLoanOfficers(officeId, request);
+		loadCustomFieldDefinitions(request);
+		loadPositions(request);
+		loadClients(request);
+	}
+
+	private void loadLoanOfficers(Short officeId, HttpServletRequest request)
 			throws ServiceException {
 		PersonnelBusinessService personnelService = (PersonnelBusinessService) ServiceFactory
 				.getInstance()
@@ -211,30 +380,38 @@ public class CenterCustAction extends BaseAction {
 				personnelList, request.getSession());
 	}
 
-	private void loadCustomFields(CenterCustActionForm actionForm,
+	private void loadCreateCustomFields(CenterCustActionForm actionForm,
 			HttpServletRequest request) throws SystemException {
+		loadCustomFieldDefinitions(request);
+		// Set Default values for custom fields
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request
+						.getSession());
+		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+
+		for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
+			if (StringUtils.isNullAndEmptySafe(fieldDef.getDefaultValue())
+					&& fieldDef.getFieldType().equals(
+							CustomFieldType.DATE.getValue())) {
+				customFields.add(new CustomFieldView(fieldDef.getFieldId(),
+						DateHelper.getUserLocaleDate(getUserContext(request)
+								.getPereferedLocale(), fieldDef
+								.getDefaultValue()), fieldDef.getFieldType()));
+			} else {
+				customFields.add(new CustomFieldView(fieldDef.getFieldId(),
+						fieldDef.getDefaultValue(), fieldDef.getFieldType()));
+			}
+		}
+		actionForm.setCustomFields(customFields);
+	}
+
+	private void loadCustomFieldDefinitions(HttpServletRequest request)
+			throws SystemException {
 		MasterDataService masterDataService = (MasterDataService) ServiceFactory
 				.getInstance().getBusinessService(
 						BusinessServiceName.MasterDataService);
 		List<CustomFieldDefinitionEntity> customFieldDefs = masterDataService
 				.retrieveCustomFieldsDefinition(EntityType.CENTER);
-		// Set Default values for custom fields
-		int i = 0;
-		for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
-			actionForm.getCustomField(i).setFieldId(fieldDef.getFieldId());
-			if (StringUtils.isNullAndEmptySafe(fieldDef.getDefaultValue())
-					&& fieldDef.getFieldId().equals(
-							CustomFieldType.DATE.getValue())) {
-				actionForm.getCustomField(i).setFieldValue(
-						DateHelper.getUserLocaleDate(getUserContext(request)
-								.getPereferedLocale(), fieldDef
-								.getDefaultValue()));
-			} else
-				actionForm.getCustomField(i).setFieldValue(
-						fieldDef.getDefaultValue());
-			i++;
-		}
-
 		SessionUtils.setAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,
 				customFieldDefs, request.getSession());
 	}
@@ -259,14 +436,55 @@ public class CenterCustAction extends BaseAction {
 				additionalFees, request.getSession());
 	}
 
-	private void doCleanUp(HttpServletRequest request, CenterCustActionForm actionForm){
-		clearActionForm(actionForm);
-		SessionUtils.setAttribute(CenterConstants.CENTER_MEETING, null, request.getSession());
+	private void loadPositions(HttpServletRequest request)
+			throws PersistenceException, ServiceException {
+		SessionUtils.setAttribute(CustomerConstants.POSITIONS,
+				getMasterEntities(PositionEntity.class, getUserContext(request)
+						.getLocaleId()), request.getSession());
 	}
-	
+
+	private void loadClients(HttpServletRequest request)
+			throws PropertyNotFoundException, SystemException {
+		CenterBO center = (CenterBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request.getSession());
+		List<CustomerBO> customerList = center.getChildren(CustomerLevel.CLIENT.getValue());
+		List<CustomerBO> customerListToPopulate = new ArrayList<CustomerBO>();
+		for(CustomerBO customer: customerList){
+			if(!(customer.getStatus().equals(CustomerStatus.CLIENT_CANCELLED) || customer.getStatus().equals(CustomerStatus.CLIENT_CLOSED)))
+				customerListToPopulate.add(customer);
+		}
+		SessionUtils.setAttribute(CustomerConstants.CLIENT_LIST, customerListToPopulate , request
+				.getSession());
+	}
+
+	private void convertCustomFieldDateToUniformPattern(
+			List<CustomFieldView> customFields, Locale locale) {		
+		for (CustomFieldView customField : customFields) {
+			if (customField.getFieldType().equals(CustomFieldType.DATE.getValue()) && StringUtils.isNullAndEmptySafe(customField
+					.getFieldValue()))
+					customField.convertDateToUniformPattern(locale);
+		}
+	}
+
+	private void doCleanUp(CenterCustActionForm actionForm,
+			HttpServletRequest request) {
+		clearActionForm(actionForm);
+		SessionUtils.setAttribute(CenterConstants.CENTER_MEETING, null, request
+				.getSession());
+	}
+
+	private Date getDateFromString(String strDate, Locale locale) {
+		Date date = null;
+		if (StringUtils.isNullAndEmptySafe(strDate))
+			date = new Date(DateHelper.getLocaleDate(locale, strDate).getTime());
+		return date;
+	}
+
 	private void clearActionForm(CenterCustActionForm actionForm) {
 		actionForm.setDefaultFees(new ArrayList<FeeView>());
 		actionForm.setAdditionalFees(new ArrayList<FeeView>());
+		actionForm.setCustomerPositions(new ArrayList<CustomerPositionView>());
+		actionForm.setCustomFields(new ArrayList<CustomFieldView>());
 		actionForm.setAddress(new Address());
 		actionForm.setDisplayName(null);
 		actionForm.setMfiJoiningDate(null);
@@ -274,6 +492,5 @@ public class CenterCustAction extends BaseAction {
 		actionForm.setCustomerId(null);
 		actionForm.setExternalId(null);
 		actionForm.setLoanOfficerId(null);
-		actionForm.setCustomFields(new ArrayList<CustomFieldView>());
 	}
 }

@@ -37,14 +37,34 @@
 */
 package org.mifos.application.customer.center.struts.actionforms;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
+import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.struts.actionforms.CustomerActionForm;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 
 public class CenterCustActionForm extends CustomerActionForm{
+	private List<CustomerPositionView> customerPositions;
+	
+	public List<CustomerPositionView> getCustomerPositions() {
+		return customerPositions;
+	}
+
+	public void setCustomerPositions(List<CustomerPositionView> customerPositions) {
+		this.customerPositions = customerPositions;
+	}
+
+	public CustomerPositionView getCustomerPosition(int index) {		
+		while(index>=customerPositions.size()){
+			customerPositions.add(new CustomerPositionView());
+		}
+		return (CustomerPositionView)customerPositions.get(index);
+	}
+
 	protected ActionErrors validateFields(HttpServletRequest request, String method){
 		ActionErrors errors = new ActionErrors();
 		if(method.equals(Methods.preview.toString())){		
@@ -54,6 +74,10 @@ public class CenterCustActionForm extends CustomerActionForm{
 			validateConfigurableMandatoryFields(request,errors,EntityType.CENTER);
 			validateCustomFields(request,errors);
 			validateFees(request, errors);
+		}else if (method.equals(Methods.editPreview.toString())){
+			validateLO(errors);
+			validateConfigurableMandatoryFields(request,errors,EntityType.CENTER);
+			validateCustomFields(request,errors);
 		}
 		return errors;
 	}

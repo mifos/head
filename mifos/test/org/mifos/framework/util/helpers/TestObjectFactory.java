@@ -93,6 +93,7 @@ import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.customer.business.CustomerNoteEntity;
+import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -275,7 +276,7 @@ public class TestObjectFactory {
 			Short personnel = new Short("1");		
 			if(meeting!=null)
 				meeting.setMeetingStartDate(new GregorianCalendar());
-			center = new CenterBO(getUserContext(), customerName, null, null, getFees(),  officeId, meeting, personnel);
+			center = new CenterBO(getUserContext(), customerName, null, null, getFees(),  null, null, officeId, meeting, personnel);
 			//center.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), center, startDate));
 			center.save();
 			HibernateUtil.commitTransaction();
@@ -316,7 +317,7 @@ public class TestObjectFactory {
 			if(parentCustomer!=null && parentCustomer.getCustomerMeeting()!=null 
 					&& parentCustomer.getCustomerMeeting().getMeeting()!=null)
 				parentCustomer.getCustomerMeeting().getMeeting().setMeetingStartDate(new GregorianCalendar());
-			group = new GroupBO(getUserContext(), customerName, CustomerStatus.getStatus(statusId), null, null, getFees(), personnel, office, parentCustomer, searchId);
+			group = new GroupBO(getUserContext(), customerName, CustomerStatus.getStatus(statusId), null, null, null, null, getFees(), personnel, office, parentCustomer, searchId);
 			//group.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), group, startDate));
 			group.save();
 			HibernateUtil.commitTransaction();
@@ -336,7 +337,7 @@ public class TestObjectFactory {
 			if(parentCustomer!=null && parentCustomer.getCustomerMeeting()!=null 
 					&& parentCustomer.getCustomerMeeting().getMeeting()!=null)
 				parentCustomer.getCustomerMeeting().getMeeting().setMeetingStartDate(new GregorianCalendar());
-			client = new ClientBO(getUserContext(), customerName, CustomerStatus.getStatus(statusId), null, null, getFees(), personnel, office, parentCustomer, searchId);
+			client = new ClientBO(getUserContext(), customerName, CustomerStatus.getStatus(statusId), null, null, null, null, getFees(), personnel, office, parentCustomer, searchId);
 		//	client.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), client, startDate));
 
 			Name name = new Name();
@@ -1168,7 +1169,7 @@ public class TestObjectFactory {
 			}
 		}
 		session.delete(customer);
-		deleteFees(feeList);
+		deleteFees(feeList);		
 		transaction.commit();
 	}
 

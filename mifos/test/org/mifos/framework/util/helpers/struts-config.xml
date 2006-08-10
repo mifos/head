@@ -406,6 +406,12 @@
 			<forward name="create_success" path="/pages/application/center/jsp/createcenterconfirmation.jsp" />
 			<forward name="create_failure" path="/pages/application/center/jsp/previewcenter.jsp" />
 			<forward name="loadMeeting_success" path="/MeetingAction.do?method=load&amp;input=Center" />
+			<forward name="manage_success" path="/pages/application/center/jsp/editcenter.jsp" />
+			<forward name="editpreview_success" path="/pages/application/center/jsp/previeweditcenter.jsp" />
+			<forward name="editpreview_failure" path="/pages/application/center/jsp/editcenter.jsp" />			
+			<forward name="editprevious_success" path="/pages/application/center/jsp/editcenter.jsp" />						
+			<forward name="update_success" path="/centerAction.do?method=get" />
+			
 			<!-- Cancel Page Forwards -->
 			<forward name="cancelCreate_success" path="/CustomerSearchAction.do?method=load" />
 		</action>

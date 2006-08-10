@@ -340,6 +340,14 @@ public class ActivityMapper {
 		activityMap.put("/centerCustAction-previous", SecurityConstants.VIEW);
 		activityMap.put("/centerCustAction-preview", SecurityConstants.VIEW);
 		activityMap.put("/centerCustAction-create",	SecurityConstants.CENTER_CREATE_NEW_CENTER);
+		activityMap.put(
+				"/centerCustAction-manage",
+				SecurityConstants.CENTER_MODIFY_CENTER_INFORMATION_AND_CHANGE_CENTER_STATUS);
+		activityMap.put("/centerCustAction-editPrevious", SecurityConstants.VIEW);
+		activityMap.put("/centerCustAction-editPreview", SecurityConstants.VIEW);
+		activityMap.put(
+				"/centerCustAction-update",
+				SecurityConstants.CENTER_MODIFY_CENTER_INFORMATION_AND_CHANGE_CENTER_STATUS);
 		// For M2 Center ends
 		
 		// colsed account searchaction in center details page

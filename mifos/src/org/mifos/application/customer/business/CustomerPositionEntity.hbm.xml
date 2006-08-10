@@ -11,7 +11,8 @@
                 <generator class="native"/>
         </id>
        <!-- <version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null"/>-->
-       <many-to-one name="position" column="POSITION_ID" class="org.mifos.application.master.util.valueobjects.Position" insert="false" update="false"  lazy="true" access="field"/>
-	   <many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO"  insert="false" update="false"  lazy="true" />	
+       <many-to-one name="position" column="POSITION_ID" class="org.mifos.application.customer.business.PositionEntity" insert="true" update="false"  lazy="true" access="field"/>
+	   <many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO"  insert="true" update="true"  lazy="true" />	
+	   <many-to-one name="parentCustomer" column="PARENT_CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO"  insert="true" update="false"  lazy="true" access="field"/>	
     </class>
 </hibernate-mapping>

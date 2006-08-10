@@ -252,6 +252,7 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 		}
 
 		catch (Exception e) {
+			e.printStackTrace();
 			forward = (processException(request, response, e, form, mapping));
 			// set the last forward in the activity context
 			if(activityContext!=null)

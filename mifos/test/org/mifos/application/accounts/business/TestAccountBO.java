@@ -504,7 +504,7 @@ public class TestAccountBO extends TestAccount {
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		CenterBO centerBO = TestObjectFactory.createCenter("Center", Short
+		CenterBO centerBO = TestObjectFactory.createCenter("Center_Active", Short
 				.valueOf("13"), "1.1", meeting, new java.util.Date());
 		HibernateUtil.closeSession();
 		centerBO = (CenterBO) TestObjectFactory.getObject(CenterBO.class,
