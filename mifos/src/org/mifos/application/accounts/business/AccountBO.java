@@ -1062,7 +1062,7 @@ public class AccountBO extends BusinessObject {
 				.getPersonnel(getUserContext().getId());
 		AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(
 				this.getAccountState(), accountStateEntity, personnel);
-		AccountNotesEntity accountNotesEntity = createAccountNotes(comment);
+		AccountNotesEntity accountNotesEntity = createAccountNotes(comment,personnel);
 		this.addAccountStatusChangeHistory(historyEntity);
 		this.setAccountState(accountStateEntity);
 		this.addAccountNotes(accountNotesEntity);
@@ -1092,11 +1092,11 @@ public class AccountBO extends BusinessObject {
 				userContext, recordOfficeId, recordLoanOfficerId);
 	}
 	
-	private AccountNotesEntity createAccountNotes(String comment){
+	private AccountNotesEntity createAccountNotes(String comment,PersonnelBO personnel){
 		AccountNotesEntity accountNotes = new AccountNotesEntity();
 		accountNotes.setCommentDate(new java.sql.Date(System
 				.currentTimeMillis()));
-		accountNotes.setPersonnel(this.getPersonnel());
+		accountNotes.setPersonnel(personnel);
 		accountNotes.setComment(comment);
 		return accountNotes;
 	}
