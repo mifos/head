@@ -44,7 +44,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://struts.apache.org/tags-bean-el" prefix="bean-el"%>
-
+<%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 
 <tiles:insert definition=".detailsCustomer">
 	<tiles:put name="body" type="string">
@@ -95,27 +95,13 @@
 
 		<html-el:form action="centerCustAction.do?method=editPreview" onsubmit="return chkForValidDates()">
 		<html-el:hidden property="input" value="manage" />
-			<%--
-			<html-el:hidden property="customerId" value="${requestScope.centerVO.customerId}" />
-			<html-el:hidden property="office.officeId" value="${requestScope.centerVO.office.officeId}" />
-			<html-el:hidden property="office.versionNo" value="${requestScope.centerVO.office.versionNo}" />
-			<html-el:hidden property="globalCustNum" value="${requestScope.centerVO.globalCustNum}" />
-			<html-el:hidden property="versionNo" value="${requestScope.centerVO.versionNo}" />
-			<html-el:hidden name="centerCustActionForm" property="customerAddressDetail.customerAddressId" value="${requestScope.centerVO.customerAddressDetail.customerAddressId}" />
-			<html-el:hidden property="displayName" value="${requestScope.centerVO.displayName}" />
-			<html-el:hidden property="statusId" value="${requestScope.centerVO.statusId}" /> --%>
-
-
-		<%--	<td align="left" valign="top" bgcolor="#FFFFFF" class="paddingleftmain">--%>
 				<table width="95%" border="0" cellpadding="0" cellspacing="0">
 					<tr>
 						<td class="bluetablehead05">
-						<%--	<span class="fontnormal8pt"> <a
-								href="CustomerSearchAction.do?method=getOfficeHomePage&officeId=<c:out value="${sessionScope.BusinessKey.office.officeId}"/>&officeName=<c:out value="${sessionScope.BusinessKey.office.officeName}"/>&loanOfficerId=<c:out value="${sessionScope.userContext.id}"/>">
-									<c:out value="${sessionScope.BusinessKey.office.officeName}" /></a> / </span>
-							<!-- Name of the client -->
-							<span class="fontnormal8pt"> <a href="centerAction.do?method=get&globalCustNum=<c:out value="${sessionScope.BusinessKey.globalCustNum}"/>"> <c:out value="${sessionScope.BusinessKey.displayName}" /> </a> </span>
-							--%>
+							<span class="fontnormal8pt"> 
+							<customtags:headerLink/> 
+						</span>
+						
 						</td>
 					</tr>
 				</table>

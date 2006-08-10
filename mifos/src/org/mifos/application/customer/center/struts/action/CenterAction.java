@@ -62,6 +62,7 @@ import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.business.CenterPerformanceHistory;
+import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.center.struts.actionforms.CenterActionForm;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.center.util.helpers.PathConstants;
@@ -518,7 +519,7 @@ public class CenterAction extends MifosSearchAction{
 	    SessionUtils.setAttribute(CenterConstants.PERFORMANCE_HISTORY,centerPerformanceHistory,session);
 	    Center center = (Center)context.getValueObject();
 	    //TODO: Remove when get migrates to M2
-	    CenterBO centerBO = (CenterBO) new CustomerPersistence().getCustomer(center.getCustomerId());
+	    CenterBO centerBO = (CenterBO) new CenterPersistence().getCenter(center.getCustomerId());
 	    Hibernate.initialize(centerBO.getCustomerPositions());
 	    for(CustomerPositionEntity position: centerBO.getCustomerPositions()){
 	    	if(position.getCustomer()!=null)

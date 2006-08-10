@@ -34,6 +34,14 @@ public class TestCenterPersistence extends MifosTestCase{
 		assertFalse(new CenterPersistence().isCenterExists("NewCenter11"));
 	}
 	
+	public void testGetCenter(){
+		String centerName="NewCenter";
+		center = TestObjectFactory.createCenter(centerName,CustomerStatus.CENTER_ACTIVE.getValue(),"",getMeeting(),new Date());
+		HibernateUtil.closeSession();
+		center = new CenterPersistence().getCenter(center.getCustomerId());
+		assertEquals(centerName, center.getDisplayName());
+	}
+	
 	private MeetingBO getMeeting() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));

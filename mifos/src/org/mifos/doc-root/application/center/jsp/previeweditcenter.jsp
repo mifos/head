@@ -43,7 +43,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://struts.apache.org/tags-bean-el" prefix="bean-el"%>
-
+<%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 
 
 <tiles:insert definition=".detailsCustomer">
@@ -72,16 +72,9 @@
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
           <tr>
             <td class="bluetablehead05">
-	            <%--<span class="fontnormal8pt">
-	            	<a href="CustomerSearchAction.do?method=getOfficeHomePage&officeId=<c:out value="${sessionScope.linkValues.customerOfficeId}"/>&officeName=<c:out value="${sessionScope.linkValues.customerOfficeName}"/>&loanOfficerId=<c:out value="${requestScope.Context.userContext.id}"/>">
-	            	<c:out value="${sessionScope.linkValues.customerOfficeName}"/></a>  /
-	            </span>
-	            <!-- Name of the client -->
 	            <span class="fontnormal8pt">
-	            <a href="centerAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.globalCustNum}"/>">
-	           				<c:out value="${sessionScope.linkValues.customerName}"/>            	
-           			</a>
-	            </span>--%>
+	            	<customtags:headerLink/> 
+	            </span>
 	                        </td>
           </tr>
         </table>

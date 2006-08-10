@@ -44,6 +44,7 @@
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
+<%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 
 <!-- Tils definition for the header and menu -->
 <tiles:insert definition=".clientsacclayoutsearchmenu">
@@ -72,13 +73,7 @@
           <tr>
             <td class="bluetablehead05">
 	            <span class="fontnormal8pt">
-	            	<a href="CustomerSearchAction.do?method=getOfficeHomePage&officeId=<c:out value="${sessionScope.linkValues.customerOfficeId}"/>&officeName=<c:out value="${sessionScope.linkValues.customerOfficeName}"/>&loanOfficerId=<c:out value="${requestScope.Context.userContext.id}"/>">
-	            	<c:out value="${sessionScope.linkValues.customerOfficeName}"/></a> 
-					 /
-	            </span>
-	            <!-- Name of the client -->
-	            <span class="fontnormal8ptbold">
-	            	<c:out value="${requestScope.centerVO.displayName}"/>
+	            	<customtags:headerLink selfLink="false"/>
 	            </span>
             </td>
           </tr>
