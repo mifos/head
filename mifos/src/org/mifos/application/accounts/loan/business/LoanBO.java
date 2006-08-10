@@ -96,6 +96,7 @@ import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.master.business.CollateralTypeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingDetailsEntity;
@@ -658,8 +659,10 @@ public class LoanBO extends AccountBO {
 			regeneratePaymentSchedule(transactionDate);
 		}
 		this.disbursementDate = transactionDate;
-		AccountStateEntity newState = new AccountStateEntity(
+		AccountStateEntity newState = (AccountStateEntity) (new MasterPersistence())
+		.findById(AccountStateEntity.class,
 				AccountStates.LOANACC_ACTIVEINGOODSTANDING);
+		
 		// update status change history also
 		this
 				.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
