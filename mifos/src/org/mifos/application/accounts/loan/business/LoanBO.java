@@ -111,17 +111,18 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.repaymentschedule.FeeInstallment;
 import org.mifos.framework.components.repaymentschedule.RepaymentSchedule;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleFactory;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleHelper;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleIfc;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleInputsIfc;
+import org.mifos.framework.components.repaymentschedule.RepaymentScheduleInstallment;
 import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -790,7 +791,20 @@ public class LoanBO extends AccountBO {
 		}
 		RepaymentSchedule repaymentSchedule = repaymentScheduler
 				.getRepaymentSchedule();
+		//removeDisbursalFee(repaymentSchedule);
 		return RepaymentScheduleHelper.getActionDateEntity(repaymentSchedule,"Loan",this,getCustomer());
+	}
+	
+	private void removeDisbursalFee(RepaymentSchedule repaymentSchedule) {
+		for (RepaymentScheduleInstallment repaymentScheduleInstallment : repaymentSchedule
+				.getRepaymentScheduleInstallment()) {
+			if (repaymentScheduleInstallment.getInstallment().intValue() == 1) {
+				FeeInstallment feeInstallment = repaymentScheduleInstallment
+						.getFeeInstallment();
+				if (feeInstallment != null)
+					feeInstallment.removeDisbursalFee();
+			}
+		}
 	}
 
 	private AccountPaymentEntity insertOnlyFeeAtDisbursement(String recieptNum,
@@ -1673,7 +1687,7 @@ public class LoanBO extends AccountBO {
 				fees = fees.add(loanSchedule.getTotalFees());
 			}
 		}
-		return new LoanSummaryEntity(this,loanAmount,new Money(),new Money());
+		return new LoanSummaryEntity(this,loanAmount,interest,fees);
 	}
 	
 	private void validate(LoanOfferingBO loanOffering,	Money loanAmount,

@@ -129,5 +129,20 @@ public class FeeInstallment
 		return list;
 
 	}
+	
+	public void removeDisbursalFee() {
+		if (accountFeeInstallmentList != null
+				&& accountFeeInstallmentList.size() > 0) {
+			Iterator<AccountFeeInstallment> iter = accountFeeInstallmentList
+					.iterator();
+			while (iter.hasNext()) {
+				AccountFeeInstallment accountFeeInstallment = iter.next();
+				if (accountFeeInstallment.getAccountFeeEntity()
+						.isTimeOfDisbursement()) {
+					iter.remove();
+				}
+			}
+		}
+	}
 
 }
