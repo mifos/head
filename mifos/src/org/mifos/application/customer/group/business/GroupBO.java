@@ -87,7 +87,7 @@ public class GroupBO extends CustomerBO {
 			CustomerStatus customerStatus, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
 			Short formedById, Short officeId, MeetingBO meeting,
-			Short loanOfficerId, String searchId) throws CustomerException {
+			Short loanOfficerId, String searchId) throws CustomerException{
 		this(userContext, displayName, customerStatus, address, customFields,
 				fees, formedById, officeId, null, meeting, loanOfficerId, searchId);
 	}
@@ -97,7 +97,7 @@ public class GroupBO extends CustomerBO {
 			List<CustomFieldView> customFields, List<FeeView> fees,
 			Short formedById, Short officeId, CustomerBO parentCustomer,
 			MeetingBO meeting, Short loanOfficerId, String searchId)
-			throws CustomerException {
+			throws CustomerException{
 		super(userContext, displayName, CustomerLevel.GROUP, customerStatus,
 				address, customFields, fees, formedById, officeId, parentCustomer,
 				meeting, loanOfficerId);

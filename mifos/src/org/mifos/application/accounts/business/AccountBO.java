@@ -43,7 +43,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -52,35 +51,31 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Hibernate;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.exceptions.AccountExceptionConstants;
-import org.mifos.application.accounts.exceptions.AccountsApplyChargesException;
 import org.mifos.application.accounts.exceptions.IDGenerationException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
-import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
-import org.mifos.application.accounts.util.valueobjects.Account;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.center.exception.StateChangeException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.fees.util.valueobjects.Fees;
-import org.mifos.application.master.persistence.service.MasterPersistenceService;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
@@ -97,13 +92,10 @@ import org.mifos.framework.components.repaymentschedule.RepaymentScheduleExcepti
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleFactory;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleIfc;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleInputsIfc;
-import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.StatesInitializationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
@@ -111,7 +103,6 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class AccountBO extends BusinessObject {
@@ -169,7 +160,7 @@ public class AccountBO extends BusinessObject {
 	
 	protected AccountBO(UserContext userContext, CustomerBO customer,
 			AccountTypes accountType, AccountState accountState)
-			throws AccountException {
+			throws AccountException{
 		super(userContext);
 		validate(userContext, customer, accountType,accountState);
 		try{
@@ -190,9 +181,6 @@ public class AccountBO extends BusinessObject {
 			setCreateDetails();
 		}catch(IDGenerationException idge){
 			throw new AccountException(idge);
-		}
-		catch(ServiceException se){
-			throw new AccountException(se);
 		}
 	}
 	
@@ -377,23 +365,15 @@ public class AccountBO extends BusinessObject {
 		this.accountFlags.add(flagMap);
 	}
 
-	public void applyPayment(PaymentData paymentData) throws AccountException,
-			SystemException {
+	public void applyPayment(PaymentData paymentData) throws AccountException{
 		AccountPaymentEntity accountPayment = makePayment(paymentData);
 		addAccountPayment(accountPayment);
-		try {
-			buildFinancialEntries(accountPayment.getAccountTrxns());
-			getAccountPersistenceService().update(this);
-		} catch (FinancialException fe) {
-			throw new AccountException("errors.update", fe);
-		} catch (ServiceException e) {
-			throw new AccountException("errors.update", e);
-		}
-
+		buildFinancialEntries(accountPayment.getAccountTrxns());
+		(new AccountPersistence()).createOrUpdate(this);
 	}
 
 	protected AccountPaymentEntity makePayment(PaymentData accountPaymentData)
-			throws AccountException, SystemException {
+			throws AccountException{
 		return null;
 	}
 
@@ -454,18 +434,24 @@ public class AccountBO extends BusinessObject {
 		return false;
 	}
 
-	protected void buildFinancialEntries(Set<AccountTrxnEntity> accountTrxns)
-			throws ServiceException, FinancialException {
-		FinancialBusinessService financialBusinessService = (FinancialBusinessService) ServiceFactory
-				.getInstance()
-				.getBusinessService(BusinessServiceName.Financial);
-		for (AccountTrxnEntity accountTrxn : accountTrxns) {
-			financialBusinessService.buildAccountingEntries(accountTrxn);
+	protected final void buildFinancialEntries(
+			Set<AccountTrxnEntity> accountTrxns) throws AccountException{
+		try {
+			FinancialBusinessService financialBusinessService = (FinancialBusinessService) ServiceFactory
+					.getInstance().getBusinessService(
+							BusinessServiceName.Financial);
+			for (AccountTrxnEntity accountTrxn : accountTrxns) {
+				financialBusinessService.buildAccountingEntries(accountTrxn);
+			}
+		} catch (ServiceException se) {
+			throw new AccountException("errors.update",se);
+		} catch (FinancialException fe) {
+			throw new AccountException("errors.update",fe);
 		}
 	}
 
 	protected String generateId(String officeGlobalNum)
-			throws ServiceException, IDGenerationException {
+			throws  IDGenerationException {
 		StringBuilder systemId = new StringBuilder();
 		systemId.append(officeGlobalNum);
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
@@ -473,7 +459,7 @@ public class AccountBO extends BusinessObject {
 						+ systemId.toString());
 		// setting the 11 digits of account running number.
 		try {
-			systemId.append(StringUtils.lpad(getAccountPersistenceService()
+			systemId.append(StringUtils.lpad((new AccountPersistence())
 					.getAccountRunningNumber().toString(), '0', 11));
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 					"After appending the running number to loanAccountSysID  it becomes"
@@ -486,13 +472,6 @@ public class AccountBO extends BusinessObject {
 					AccountExceptionConstants.IDGenerationException, se);
 		}
 		return systemId.toString();
-	}
-
-	protected AccountPersistanceService getAccountPersistenceService()
-			throws ServiceException {
-			return (AccountPersistanceService) ServiceFactory
-					.getInstance().getPersistenceService(
-							PersistenceServiceName.Account);
 	}
 
 	public double getLastPmntAmnt() {
@@ -550,7 +529,7 @@ public class AccountBO extends BusinessObject {
 	}
 
 	public void removeFees(Short feeId, Short personnelId)
-			throws SystemException, ApplicationException {
+			throws AccountException {
 		List<Short> installmentIdList = getApplicableInstallmentIdsForRemoveFees();
 		Money totalFeeAmount = new Money();
 		if (installmentIdList != null && installmentIdList.size() != 0
@@ -586,8 +565,7 @@ public class AccountBO extends BusinessObject {
 			String description) {
 	}
 
-	public void adjustPmnt(String adjustmentComment)
-			throws ApplicationException, SystemException {
+	public void adjustPmnt(String adjustmentComment) throws AccountException {
 		if (isAdjustPossibleOnLastTrxn()) {
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 					"Adjustment is possible hence attempting to adjust.");
@@ -596,12 +574,9 @@ public class AccountBO extends BusinessObject {
 			updateInstallmentAfterAdjustment(reversedTrxns);
 			buildFinancialEntries(new HashSet(reversedTrxns));
 			updatePerformanceHistoryOnAdjustment(reversedTrxns.size());
-			((AccountPersistanceService) ServiceFactory.getInstance()
-					.getPersistenceService(PersistenceServiceName.Account))
-					.save(this);
+			(new AccountPersistence()).createOrUpdate(this);
 		} else
-			throw new ApplicationException(
-					AccountExceptionConstants.CANNOTADJUST);
+			throw new AccountException(AccountExceptionConstants.CANNOTADJUST);
 	}
 
 	protected void updatePerformanceHistoryOnAdjustment(Integer noOfTrxnReversed) {
@@ -796,12 +771,11 @@ public class AccountBO extends BusinessObject {
 		return accountTrxnList;
 	}
 
-	public void waiveAmountDue(WaiveEnum waiveType) throws ServiceException,
-			AccountException {
+	public void waiveAmountDue(WaiveEnum waiveType) throws AccountException {
 	}
 
 	public void waiveAmountOverDue(WaiveEnum waiveType)
-			throws ServiceException, AccountException {
+			throws AccountException {
 	}
 
 	public Date getNextMeetingDate() {
@@ -914,29 +888,30 @@ public class AccountBO extends BusinessObject {
 		return dueInstallments;
 	}
 
-	public boolean isTrxnDateValid(Date trxnDate) throws ApplicationException,
-			SystemException {
-
-		if (Configuration.getInstance().getAccountConfig(
-				getOffice().getOfficeId()).isBackDatedTxnAllowed()) {
-			Date meetingDate = new CustomerPersistence()
-					.getLastMeetingDateForCustomer(
-							getCustomer().getCustomerId());
-			Date lastMeetingDate = null;
-			if (meetingDate != null) {
-				lastMeetingDate = DateUtils.getDateWithoutTimeStamp(meetingDate
-						.getTime());
-				return trxnDate.compareTo(lastMeetingDate) >= 0 ? true : false;
-			} else
-				return false;
-
+	public boolean isTrxnDateValid(Date trxnDate) throws AccountException {
+		try{
+			if (Configuration.getInstance().getAccountConfig(
+					getOffice().getOfficeId()).isBackDatedTxnAllowed()) {
+				Date meetingDate = new CustomerPersistence()
+						.getLastMeetingDateForCustomer(
+								getCustomer().getCustomerId());
+				Date lastMeetingDate = null;
+				if (meetingDate != null) {
+					lastMeetingDate = DateUtils.getDateWithoutTimeStamp(meetingDate
+							.getTime());
+					return trxnDate.compareTo(lastMeetingDate) >= 0 ? true : false;
+				} else
+					return false;
+	
+			}
+		}catch(ApplicationException ae){
+			throw new AccountException(ae);
 		}
 		return trxnDate.equals(DateUtils.getCurrentDateWithoutTimeStamp());
 	}
 
 
-	public void handleChangeInMeetingSchedule() throws SchedulerException,
-			ServiceException, HibernateException, PersistenceException {
+	public void handleChangeInMeetingSchedule() throws AccountException {
 		AccountActionDateEntity accountActionDateEntity = getDetailsOfNextInstallment();
 		if (accountActionDateEntity != null) {
 			MeetingBO meeting = getCustomer().getCustomerMeeting().getMeeting();
@@ -947,21 +922,19 @@ public class AccountBO extends BusinessObject {
 			regenerateFutureInstallments((short) (accountActionDateEntity
 					.getInstallmentId().intValue() + 1));
 			meeting.setMeetingStartDate(meetingStartDate);
-			getAccountPersistenceService().update(this);
+			(new AccountPersistence()).createOrUpdate(this);
 		}
 	}
 
 	protected void regenerateFutureInstallments(Short nextIntallmentId)
-			throws HibernateException, ServiceException, PersistenceException,
-			SchedulerException {
+			throws AccountException {
 	}
 
-	protected void deleteFutureInstallments() throws HibernateException,
-			ServiceException {
+	protected void deleteFutureInstallments() {
 		List<AccountActionDateEntity> futureInstllments = getApplicableIdsForFutureInstallments();
 		for (AccountActionDateEntity accountActionDateEntity : futureInstllments) {
 			accountActionDates.remove(accountActionDateEntity);
-			getAccountPersistenceService().delete(accountActionDateEntity);
+			(new AccountPersistence()).delete(accountActionDateEntity);
 		}
 	}
 
@@ -986,10 +959,10 @@ public class AccountBO extends BusinessObject {
 		return notes;
 	}
 
-	public void update() throws SystemException {
+	public void update() {
 		this.setUpdatedBy(userContext.getId());
 		this.setUpdatedDate(new Date());
-		getAccountPersistenceService().update(this);
+		(new AccountPersistence()).createOrUpdate(this);
 	}
 	
 	protected Meeting convertM2StyleToM1(MeetingBO meeting) {
@@ -1065,7 +1038,7 @@ public class AccountBO extends BusinessObject {
 		
 	}
 	
-	public void changeStatus(Short newStatusId, Short flagId, String comment) throws SecurityException, ServiceException, PersistenceException, ApplicationException {
+	public void changeStatus(Short newStatusId, Short flagId, String comment) throws AccountException {
 		if (null != getCustomer().getPersonnel().getPersonnelId())
 			checkPermissionForStatusChange(newStatusId, this.getUserContext(),
 					flagId, getOffice().getOfficeId(), getCustomer()
@@ -1074,16 +1047,14 @@ public class AccountBO extends BusinessObject {
 			checkPermissionForStatusChange(newStatusId, this.getUserContext(),
 					flagId, getOffice().getOfficeId(), this.getUserContext()
 							.getId());
-		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.MasterDataService);
-		AccountStateEntity accountStateEntity = (AccountStateEntity) masterPersistenceService
+		MasterPersistence masterPersistence = new MasterPersistence();
+		AccountStateEntity accountStateEntity = (AccountStateEntity) masterPersistence
 				.findById(AccountStateEntity.class, newStatusId);
 		//checkStatusChangeAllowed(accountStateEntity);
 		accountStateEntity.setLocaleId(this.getUserContext().getLocaleId());
 		AccountStateFlagEntity accountStateFlagEntity = null;
 		if (flagId != null) {
-			accountStateFlagEntity = (AccountStateFlagEntity) masterPersistenceService
+			accountStateFlagEntity = (AccountStateFlagEntity) masterPersistence
 					.findById(AccountStateFlagEntity.class, flagId);
 		}
 		AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(
@@ -1102,7 +1073,7 @@ public class AccountBO extends BusinessObject {
 	
 	private void checkPermissionForStatusChange(Short newState,
 			UserContext userContext, Short flagSelected, Short recordOfficeId,
-			Short recordLoanOfficerId) throws SecurityException {
+			Short recordLoanOfficerId) {
 		if (!isPermissionAllowed(newState, userContext, flagSelected,
 				recordOfficeId, recordLoanOfficerId))
 			throw new SecurityException(
@@ -1118,7 +1089,7 @@ public class AccountBO extends BusinessObject {
 				userContext, recordOfficeId, recordLoanOfficerId);
 	}
 	
-	private AccountNotesEntity createAccountNotes(String comment)throws ServiceException {
+	private AccountNotesEntity createAccountNotes(String comment){
 		AccountNotesEntity accountNotes = new AccountNotesEntity();
 		accountNotes.setCommentDate(new java.sql.Date(System
 				.currentTimeMillis()));
@@ -1127,18 +1098,18 @@ public class AccountBO extends BusinessObject {
 		return accountNotes;
 	}
 	
-	public void initializeStateMachine(Short localeId) throws StatesInitializationException{
+	public void initializeStateMachine(Short localeId) throws AccountException {
 	}
 	
 	public List<AccountStateEntity> getStatusList() {
 		return null;
 	}
 	
-	public String getStatusName(Short localeId, Short accountStateId) throws ApplicationException, SystemException {
+	public String getStatusName(Short localeId, Short accountStateId) throws AccountException{
 		return null;
 	}
 
-	public String getFlagName(Short flagId) throws ApplicationException,SystemException {
+	public String getFlagName(Short flagId) throws AccountException{
 		return null;
 	}
 	
@@ -1159,11 +1130,11 @@ public class AccountBO extends BusinessObject {
 		return false;
 	}
 	
-	public void applyCharge(Short feeId,Money charge) throws ApplicationException{}
+	public void applyCharge(Short feeId,Money charge) throws AccountException{}
 	
 	protected final Map<Short, Money> getFeeInstallmentMap(
 			AccountFeesEntity accountFee, Date feeStartDate)
-			throws RepaymentScheduleException {
+			throws AccountException {
 		Set<AccountFeesEntity> accountFeeSet = new HashSet<AccountFeesEntity>();
 		accountFeeSet.add(accountFee);
 		RepaymentSchedule repaymentSchedule = getFeeInstallment(accountFeeSet,
@@ -1187,7 +1158,7 @@ public class AccountBO extends BusinessObject {
 	
 	protected final RepaymentSchedule getFeeInstallment(
 			Set<AccountFeesEntity> accountFeeSet,
-			Date feeStartDate) throws RepaymentScheduleException {
+			Date feeStartDate) throws AccountException {
 		RepaymentScheduleInputsIfc inputs = RepaymentScheduleFactory
 				.getRepaymentScheduleInputs();
 		RepaymentScheduleIfc repaymentScheduler = RepaymentScheduleFactory
@@ -1200,8 +1171,15 @@ public class AccountBO extends BusinessObject {
 		}
 		inputs.setAccountFeeEntity(accountFeeSet);
 		inputs.setFeeStartDate(feeStartDate);
-		repaymentScheduler.setRepaymentScheduleInputs(inputs);
-		return repaymentScheduler.getRepaymentSchedule();
+		RepaymentSchedule repaymentSchedule=null;
+		try {
+			repaymentScheduler.setRepaymentScheduleInputs(inputs);
+			repaymentSchedule= repaymentScheduler.getRepaymentSchedule();
+		} catch (RepaymentScheduleException e) {
+			throw new AccountException(e);
+		}
+		return repaymentSchedule;
+		
 	}
 	
 	protected void setLoanInput(RepaymentScheduleInputsIfc inputs,Date feeStartDate){}

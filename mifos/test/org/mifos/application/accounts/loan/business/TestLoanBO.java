@@ -891,8 +891,7 @@ public class TestLoanBO extends MifosTestCase {
 		}
 	}
 
-	public void testRegenerateFutureInstallments() throws SchedulerException,
-			HibernateException, ServiceException, PersistenceException {
+	public void testRegenerateFutureInstallments() throws AccountException, SchedulerException {
 		accountBO = getLoanAccount();
 		TestObjectFactory.flushandCloseSession();
 		accountBO = (AccountBO) TestObjectFactory.getObject(LoanBO.class,
@@ -933,7 +932,7 @@ public class TestLoanBO extends MifosTestCase {
 
 	public void testRegenerateFutureInstallmentsWithCancelState()
 			throws SchedulerException, HibernateException, ServiceException,
-			PersistenceException {
+			PersistenceException, AccountException {
 		accountBO = getLoanAccount();
 		TestObjectFactory.flushandCloseSession();
 		accountBO = (AccountBO) TestObjectFactory.getObject(LoanBO.class,

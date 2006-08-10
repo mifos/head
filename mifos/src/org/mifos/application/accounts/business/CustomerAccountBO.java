@@ -52,6 +52,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.exceptions.AccountsApplyChargesException;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
@@ -138,29 +139,37 @@ public class CustomerAccountBO extends AccountBO {
 		customerActivitDetails = new HashSet<CustomerActivityEntity>();
 	}
 
-	private void generateCustomerFeeSchedule(CustomerBO customer)throws AccountException{
-		if(customer.getCustomerMeeting()!=null && (
-				customer.getCustomerLevel().isGroup()&& customer.getCustomerStatus().getId().equals(CustomerStatus.GROUP_ACTIVE.getValue())
-				||customer.getCustomerLevel().isClient()&& customer.getCustomerStatus().getId().equals(CustomerStatus.CLIENT_ACTIVE.getValue())
-				||customer.getCustomerLevel().isCenter()&& customer.getCustomerStatus().getId().equals(CustomerStatus.CENTER_ACTIVE.getValue()))
-				){
-		try{
+	private void generateCustomerFeeSchedule(CustomerBO customer) throws AccountException{
+		if (customer.getCustomerMeeting() != null
+				&& (customer.getCustomerLevel().isGroup()
+						&& customer.getCustomerStatus().getId().equals(
+								CustomerStatus.GROUP_ACTIVE.getValue())
+						|| customer.getCustomerLevel().isClient()
+						&& customer.getCustomerStatus().getId().equals(
+								CustomerStatus.CLIENT_ACTIVE.getValue()) || customer
+						.getCustomerLevel().isCenter()
+						&& customer.getCustomerStatus().getId().equals(
+								CustomerStatus.CENTER_ACTIVE.getValue()))) {
+
 			generateFeeSchedule(customer.getCustomerMeeting().getMeeting());
-		}catch(RepaymentScheduleException rse){
-			throw new AccountException(rse);
+
 		}
 	}
-	}
 	
-	private void generateFeeSchedule(MeetingBO meeting)throws RepaymentScheduleException{
+	private void generateFeeSchedule(MeetingBO meeting)throws AccountException{
 		RepaymentScheduleInputsIfc repaymntScheduleInputs = RepaymentScheduleFactory.getRepaymentScheduleInputs();
 		RepaymentScheduleIfc repaymentScheduler = RepaymentScheduleFactory.getRepaymentScheduler();
 		repaymntScheduleInputs.setMeeting(meeting);
 		repaymntScheduleInputs.setMeetingToConsider(RepaymentScheduleConstansts.MEETING_CUSTOMER);
 		repaymntScheduleInputs.setRepaymentFrequency(meeting);
 		repaymntScheduleInputs.setAccountFeeEntity(getAccountFees());
-		repaymentScheduler.setRepaymentScheduleInputs(repaymntScheduleInputs);
-		RepaymentSchedule repaymentSchedule = repaymentScheduler.getRepaymentSchedule();
+		RepaymentSchedule repaymentSchedule =null;
+		try {
+			repaymentScheduler.setRepaymentScheduleInputs(repaymntScheduleInputs);
+			repaymentSchedule = repaymentScheduler.getRepaymentSchedule();
+		} catch (RepaymentScheduleException e) {
+			throw new AccountException(e);
+		}
 		Set<AccountActionDateEntity> accntActionDateSet = RepaymentScheduleHelper.getActionDateEntity(repaymentSchedule, "", this, customer);
         //this will insert records in account action date which is noting but installments.
 		if(accntActionDateSet!=null){
@@ -187,10 +196,8 @@ public class CustomerAccountBO extends AccountBO {
 	}
 
 	protected AccountPaymentEntity makePayment(PaymentData paymentData)
-			throws AccountException, SystemException {
-		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.MasterDataService);
+			throws AccountException{
+		MasterPersistenceService masterPersistenceService = new MasterPersistenceService();
 		AccountPaymentEntity accountPayment = new AccountPaymentEntity(this,
 				paymentData.getTotalAmount(), paymentData.getRecieptNum(),
 				paymentData.getRecieptDate(), new PaymentTypeEntity(paymentData
@@ -291,7 +298,7 @@ public class CustomerAccountBO extends AccountBO {
 	}
 
 	@Override
-	public void waiveAmountDue(WaiveEnum chargeType) throws ServiceException {
+	public void waiveAmountDue(WaiveEnum chargeType){
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
 		AccountActionDateEntity accountActionDateEntity = accountActionDateList
 				.get(accountActionDateList.size() - 1);
@@ -301,12 +308,11 @@ public class CustomerAccountBO extends AccountBO {
 			addCustomerActivity(buildCustomerActivity(chargeWaived,
 					"Amnt waived", userContext.getId()));
 		}
-		getAccountPersistenceService().update(this);
+		(new AccountPersistence()).createOrUpdate(this);
 	}
 
 	@Override
-	public void waiveAmountOverDue(WaiveEnum chargeType)
-			throws ServiceException {
+	public void waiveAmountOverDue(WaiveEnum chargeType){
 		Money chargeWaived = new Money();
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
 		accountActionDateList.remove(accountActionDateList.size() - 1);
@@ -319,11 +325,10 @@ public class CustomerAccountBO extends AccountBO {
 			addCustomerActivity(buildCustomerActivity(chargeWaived,
 					"Amnt waived", userContext.getId()));
 		}
-		getAccountPersistenceService().update(this);
+		(new AccountPersistence()).createOrUpdate(this);
 	}
 
-	public void applyPeriodicFees(Date date) throws RepaymentScheduleException,
-			SchedulerException, PersistenceException, ServiceException {
+	public void applyPeriodicFees(Date date) throws ApplicationException,SystemException {
 		Set<AccountActionDateEntity> accountActionDateSet = getAccountActionDates();
 		for (AccountActionDateEntity accountActionDate : accountActionDateSet) {
 			if (date.equals(accountActionDate.getActionDate())) {
@@ -343,7 +348,7 @@ public class CustomerAccountBO extends AccountBO {
 
 						updateAccountActivity(((AmountFeeBO) feesBO)
 								.getFeeAmount(), null, description);
-						getAccountPersistenceService().save(this);
+						(new AccountPersistence()).createOrUpdate(this);
 					}
 				}
 				break;
@@ -372,8 +377,7 @@ public class CustomerAccountBO extends AccountBO {
 	}
 
 	@Override
-	protected void regenerateFutureInstallments(Short nextIntallmentId)
-			throws HibernateException, ServiceException, SchedulerException {
+	protected void regenerateFutureInstallments(Short nextIntallmentId) throws AccountException{
 		if (!this.getCustomer().getCustomerStatus().getId().equals(
 				ClientConstants.STATUS_CANCELLED)
 				&& !this.getCustomer().getCustomerStatus().getId().equals(
@@ -382,10 +386,16 @@ public class CustomerAccountBO extends AccountBO {
 						GroupConstants.CANCELLED)
 				&& !this.getCustomer().getCustomerStatus().getId().equals(
 						GroupConstants.CLOSED)) {
-			SchedulerIntf scheduler = SchedulerHelper
-					.getScheduler(getCustomer().getCustomerMeeting()
-							.getMeeting());
-			List<Date> meetingDates = scheduler.getAllDates();
+			SchedulerIntf scheduler;
+			List<Date> meetingDates=null;
+			try {
+				scheduler = SchedulerHelper
+						.getScheduler(getCustomer().getCustomerMeeting()
+								.getMeeting());
+			    meetingDates = scheduler.getAllDates();
+			} catch (SchedulerException e) {
+				throw new AccountException(e);
+			}
 			meetingDates.remove(0);
 			deleteFutureInstallments();
 			for (Date date : meetingDates) {
@@ -484,7 +494,7 @@ public class CustomerAccountBO extends AccountBO {
 	
 	@Override
 	public void applyCharge(Short feeId, Money charge)
-			throws ApplicationException {
+			throws AccountException {
 		if(!isCustomerValid())
 			addFeeToAccountFee(feeId,charge);
 		else{
@@ -503,7 +513,7 @@ public class CustomerAccountBO extends AccountBO {
 					}
 				}
 			} else {
-				throw new ApplicationException(AccountConstants.NOMOREINSTALLMENTS);
+				throw new AccountException(AccountConstants.NOMOREINSTALLMENTS);
 			}
 		}
 	}
@@ -520,7 +530,7 @@ public class CustomerAccountBO extends AccountBO {
 	}
 	
 	private void applyPeriodicFee(FeeBO fee, Money charge,List<AccountActionDateEntity> dueInstallments)
-			throws RepaymentScheduleException {
+			throws AccountException {
 		AccountFeesEntity accountFee = getAccountFee(fee, charge);
 		Map<Short, Money> feeInstallmentMap = getFeeInstallmentMap(accountFee,
 				dueInstallments.get(0).getActionDate());
@@ -531,7 +541,7 @@ public class CustomerAccountBO extends AccountBO {
 	}
 
 	private void applyOneTimeFee(FeeBO fee, Money charge, AccountActionDateEntity accountActionDateEntity)
-			throws RepaymentScheduleException {
+			throws AccountException {
 		CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDateEntity;
 		AccountFeesEntity accountFee = new AccountFeesEntity(this, fee, charge,
 				FeeStatus.ACTIVE.getValue(), new Date(System

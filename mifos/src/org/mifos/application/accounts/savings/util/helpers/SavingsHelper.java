@@ -195,7 +195,7 @@ public class SavingsHelper {
 	public AccountTrxnEntity createAccountPaymentTrxn(
 			AccountPaymentEntity payment, Money balance,
 			AccountActionEntity accountAction, CustomerBO customer,
-			PersonnelBO createdBy) throws SystemException {
+			PersonnelBO createdBy) {
 		SavingsTrxnDetailEntity savingsTrxn = new SavingsTrxnDetailEntity(
 				payment, customer, accountAction, payment.getAmount(), balance,
 				createdBy, null, new SavingsHelper().getCurrentDate(), null, "");

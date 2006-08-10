@@ -51,6 +51,7 @@ import org.mifos.framework.components.repaymentschedule.MeetingScheduleHelper;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
 import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
@@ -200,8 +201,7 @@ public class AccountFeesEntity extends PersistentObject {
 		return getFees().isTimeOfDisbursement();
 	}
 
-	public boolean isApplicable(Date date) throws RepaymentScheduleException,
-			SchedulerException {
+	public boolean isApplicable(Date date) throws ApplicationException {
 		boolean isApplicable = false;
 		SchedulerIntf schedulerIntf;
 		if (getLastAppliedDate() != null) {

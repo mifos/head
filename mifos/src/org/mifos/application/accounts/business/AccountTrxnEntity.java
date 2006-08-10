@@ -43,6 +43,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -229,7 +230,7 @@ public class AccountTrxnEntity extends PersistentObject {
 	/**
 	 * This method will be implemented by the sub class.
 	 */
-	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment)throws ApplicationException, SystemException {
+	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment)throws AccountException{
 		return null;
 	}
 

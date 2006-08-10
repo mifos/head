@@ -264,11 +264,6 @@ public class AccountPersistence extends Persistence {
 			queryResult = executeNamedQuery(
 					NamedQueryConstants.GET_ALL_APPLICABLE_CUSTOMER_FEE, queryParameters);
 		}
-		for (Iterator iter = queryResult.iterator(); iter.hasNext();) {
-			FeeBO element = (FeeBO) iter.next();
-			System.out.println("****1*******feeName : " + element.getFeeName());
-			
-		}
 		return queryResult;
 	}
 

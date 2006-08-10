@@ -54,6 +54,7 @@ import org.mifos.application.accounts.business.AccountNotesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStateFlagEntity;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.application.accounts.savings.struts.actionforms.EditSavingsStatusActionForm;
@@ -69,6 +70,7 @@ import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
@@ -214,8 +216,7 @@ public class EditSavingsStatusAction extends AccountAppAction {
 	}
 
 	public ActionForward update(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+			HttpServletRequest request, HttpServletResponse response) throws ServiceException, PersistenceException{
 		logger.debug("In EditSavingsStatusAction:update()");
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
@@ -235,7 +236,7 @@ public class EditSavingsStatusAction extends AccountAppAction {
 				accountStateFlagEntity.setLocaleId(userContext.getLocaleId());
 			}
 			savingsBO.changeStatus(accountStateEntity, accountNotesEntity,accountStateFlagEntity,userContext);
-		} catch (StateChangeException ch) {
+		}catch(AccountException e){
 			ActionErrors errors = new ActionErrors();
 			errors.add(SavingsConstants.STATUS_CHANGE_NOT_ALLOWED,
 					new ActionMessage(

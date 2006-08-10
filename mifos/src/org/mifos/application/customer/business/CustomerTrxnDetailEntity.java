@@ -16,6 +16,7 @@ import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -125,11 +126,8 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
 	}
 
-	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment)
-			throws ApplicationException, SystemException {
-		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.MasterDataService);
+	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment){
+		MasterPersistence masterPersistence = new MasterPersistence();
 		MifosLogManager
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 				.debug(
@@ -141,7 +139,7 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 			comment=adjustmentComment;
 
 		CustomerTrxnDetailEntity  reverseAccntTrxn=new CustomerTrxnDetailEntity(getAccountPayment(),
-				(AccountActionEntity) masterPersistenceService
+				(AccountActionEntity) masterPersistence
 				.findById(AccountActionEntity.class,
 						AccountConstants.ACTION_CUSTOMER_ADJUSTMENT), 
 						getInstallmentId(),

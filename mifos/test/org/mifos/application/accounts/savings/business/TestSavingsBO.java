@@ -867,7 +867,7 @@ public class TestSavingsBO extends MifosTestCase {
 					.getAccountNotes(savings), null, userContext);
 			assertEquals(true, false);
 		} catch (ApplicationException se) {
-			if (se instanceof SecurityException)
+			if (se instanceof AccountException)
 				assertEquals(true, true);
 
 			else
@@ -924,7 +924,7 @@ public class TestSavingsBO extends MifosTestCase {
 					.getAccountNotes(savings), stateFlag, userContext);
 			assertEquals(true, false);
 		} catch (ApplicationException se) {
-			if (se instanceof SecurityException)
+			if (se instanceof AccountException)
 				assertEquals(true, true);
 
 			else

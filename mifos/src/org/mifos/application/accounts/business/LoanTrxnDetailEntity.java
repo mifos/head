@@ -213,11 +213,8 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 		}
 	}
 
-	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment)
-			throws ApplicationException, SystemException {
-		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.MasterDataService);
+	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment){
+		MasterPersistenceService masterPersistenceService = new MasterPersistenceService();
 		MifosLogManager
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 				.debug(

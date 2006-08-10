@@ -634,9 +634,7 @@ public class TestObjectFactory {
 
 		try {
 			savings.save();
-		} catch (SystemException e) {
-			e.printStackTrace();
-		} catch (ApplicationException e) {
+		}catch (ApplicationException e) {
 			e.printStackTrace();
 		}
 		savings.setAccountState(new AccountStateEntity(accountStateId));
@@ -685,8 +683,6 @@ public class TestObjectFactory {
 			savings.setGlobalAccountNum(globalNum);
 			savings.setActivationDate(new Date(System.currentTimeMillis()));
 			HibernateUtil.commitTransaction();
-		} catch (SystemException e) {
-			e.printStackTrace();
 		} catch (ApplicationException e) {
 			e.printStackTrace();
 		}

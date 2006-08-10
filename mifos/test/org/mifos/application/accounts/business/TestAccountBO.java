@@ -69,8 +69,10 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -380,8 +382,7 @@ public class TestAccountBO extends TestAccount {
 
 	}
 
-	public void testHandleChangeInMeetingSchedule() throws SchedulerException,
-			ServiceException, HibernateException, PersistenceException {
+	public void testHandleChangeInMeetingSchedule() throws ApplicationException,SystemException {
 		TestObjectFactory.flushandCloseSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
@@ -430,7 +431,7 @@ public class TestAccountBO extends TestAccount {
 	}
 
 	public void testDeleteFutureInstallments() throws HibernateException,
-			ServiceException {
+			SystemException {
 		TestObjectFactory.flushandCloseSession();
 		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());

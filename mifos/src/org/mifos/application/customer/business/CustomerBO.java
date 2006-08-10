@@ -532,7 +532,7 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 
 	public List<CustomerBO> getChildren(Short customerLevel)
-			throws PersistenceException, ServiceException {
+			throws SystemException {
 		return new CustomerPersistence().getChildrenForParent(getSearchId(),
 				getOffice().getOfficeId(), customerLevel);
 	}

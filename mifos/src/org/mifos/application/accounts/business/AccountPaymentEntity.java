@@ -44,6 +44,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -168,7 +169,7 @@ public class AccountPaymentEntity extends PersistentObject {
 	 *and adds them to the set of transactions associated. 
 	 * @throws SystemException 
 	 */
-	public List<AccountTrxnEntity> reversalAdjustment(String adjustmentComment)throws ApplicationException, SystemException {
+	public List<AccountTrxnEntity> reversalAdjustment(String adjustmentComment)throws AccountException {
 		List<AccountTrxnEntity> newlyAddedTrxns = null;
 		this.setAmount(getAmount().subtract(getAmount()));
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("The amount in account payment is " + getAmount().getAmountDoubleValue());

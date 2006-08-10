@@ -10,6 +10,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.accounts.business.AccountNotesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -131,7 +132,7 @@ public class TestEditSavingsStatusAction extends MifosMockStrutsTestCase {
 		//assertNotNull(request.getSession().getAttribute(SavingsConstants.STATUS_CHECK_LIST));
 	}
 
-	public void testPrevious() throws StatesInitializationException {
+	public void testPrevious() throws StatesInitializationException, AccountException {
 		createInitialObjects();
 		savingsOffering = createSavingsOffering();
 		savingsBO = createSavingsAccount("000X00000000013", savingsOffering,
@@ -147,7 +148,7 @@ public class TestEditSavingsStatusAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 	}
 
-	public void testUpdateSuccess() throws StatesInitializationException, ServiceException {
+	public void testUpdateSuccess() throws StatesInitializationException, ServiceException, AccountException {
 		PersonnelPersistenceService personnelPersistenceService = (PersonnelPersistenceService) ServiceFactory.getInstance().getPersistenceService(
 				PersistenceServiceName.Personnel);
 		createInitialObjects();

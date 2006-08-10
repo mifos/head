@@ -421,8 +421,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 	}
 
-	public void testApplyPeriodicFees() throws RepaymentScheduleException,
-			SchedulerException, PersistenceException, ServiceException {
+	public void testApplyPeriodicFees() throws ApplicationException,SystemException{
 		createInitialObjects();
 		FeeBO fee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
 				FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY, Short
@@ -530,8 +529,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		}
 	}
 
-	public void testRegenerateFutureInstallments() throws SchedulerException,
-			HibernateException, ServiceException {
+	public void testRegenerateFutureInstallments() throws ApplicationException,SystemException {
 		createCenter();
 		TestObjectFactory.flushandCloseSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
@@ -569,7 +567,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 	}
 
 	public void testRegenerateFutureInstallmentsForGroup()
-			throws SchedulerException, HibernateException, ServiceException {
+			throws ApplicationException,SystemException {
 		createInitialObjects();
 		TestObjectFactory.flushandCloseSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
@@ -602,7 +600,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 	}
 
 	public void testRegenerateFutureInstallmentsWithAccountClosed()
-			throws SchedulerException, HibernateException, ServiceException {
+			throws ApplicationException,SystemException {
 		createInitialObjects();
 		TestObjectFactory.flushandCloseSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center

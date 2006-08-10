@@ -88,8 +88,7 @@ public class CustomerPersistence extends Persistence {
 	}
 
 	public List<CustomerView> getChildrenForParent(Integer customerId,
-			String searchId, Short officeId) throws SystemException,
-			ApplicationException {
+			String searchId, Short officeId) throws ApplicationException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("SEARCH_STRING", searchId + ".%");
 		queryParameters.put("OFFICE_ID", officeId);
@@ -101,7 +100,7 @@ public class CustomerPersistence extends Persistence {
 	}
 
 	public List<CustomerBO> getCustomersUnderParent(String searchId,
-			Short officeId) throws SystemException, ApplicationException {
+			Short officeId) throws ApplicationException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("SEARCH_STRING", searchId + "%");
 		queryParameters.put("OFFICE_ID", officeId);
@@ -113,7 +112,7 @@ public class CustomerPersistence extends Persistence {
 	}
 
 	public List<Integer> getChildrenForParent(String searchId, Short officeId)
-			throws SystemException, ApplicationException {
+			throws  ApplicationException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("SEARCH_STRING", searchId + ".%");
 		queryParameters.put("OFFICE_ID", officeId);
@@ -138,8 +137,7 @@ public class CustomerPersistence extends Persistence {
 	}
 
 	public List<PrdOfferingBO> getLoanProducts(Date meetingDate,
-			String searchId, Short personnelId) throws ApplicationException,
-			SystemException {
+			String searchId, Short personnelId) throws ApplicationException {
 
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("meetingDate", meetingDate);
@@ -165,7 +163,7 @@ public class CustomerPersistence extends Persistence {
 	}
 
 	public Date getLastMeetingDateForCustomer(Integer customerId)
-			throws ApplicationException, SystemException {
+			throws ApplicationException {
 
 		Date meetingDate = null;
 		Date actionDate = new java.sql.Date(Calendar.getInstance().getTime()

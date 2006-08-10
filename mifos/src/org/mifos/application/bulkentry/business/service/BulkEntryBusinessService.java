@@ -231,9 +231,6 @@ public class BulkEntryBusinessService extends BusinessService {
 		} catch (AccountException ae) {
 			throw new BulkEntryAccountUpdateException("errors.update", ae,
 					new String[] { account.getGlobalAccountNum() });
-		} catch (SystemException se) {
-			throw new BulkEntryAccountUpdateException("errors.update", se,
-					new String[] { account.getGlobalAccountNum() });
 		}
 	}
 
@@ -316,9 +313,6 @@ public class BulkEntryBusinessService extends BusinessService {
 			} catch (AccountException ae) {
 				throw new BulkEntryAccountUpdateException("errors.update", ae,
 						new String[] { account.getGlobalAccountNum() });
-			} catch (SystemException se) {
-				throw new BulkEntryAccountUpdateException("errors.update", se,
-						new String[] { account.getGlobalAccountNum() });
 			}
 		}
 	}
@@ -353,9 +347,6 @@ public class BulkEntryBusinessService extends BusinessService {
 			account.applyPayment(accountPaymentDataView);
 		} catch (AccountException ae) {
 			throw new BulkEntryAccountUpdateException("errors.update", ae,
-					new String[] { account.getGlobalAccountNum() });
-		} catch (SystemException se) {
-			throw new BulkEntryAccountUpdateException("errors.update", se,
 					new String[] { account.getGlobalAccountNum() });
 		}
 	}
@@ -399,9 +390,6 @@ public class BulkEntryBusinessService extends BusinessService {
 			account.withdraw(accountPaymentDataView);
 		} catch (AccountException ae) {
 			throw new BulkEntryAccountUpdateException("errors.update", ae,
-					new String[] { account.getGlobalAccountNum() });
-		} catch (SystemException se) {
-			throw new BulkEntryAccountUpdateException("errors.update", se,
 					new String[] { account.getGlobalAccountNum() });
 		}
 	}

@@ -70,6 +70,7 @@ import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.loan.exceptions.LoanExceptionConstants;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
@@ -189,7 +190,7 @@ public class LoanBO extends AccountBO {
 			Short noOfinstallments, Date disbursementDate,
 			boolean interestDeductedAtDisbursement, Double interesRate,
 			Short gracePeriodDuration, Fund fund, List<FeeView> feeViews)
-			throws AccountException {
+			throws AccountException,SystemException {
 		super(userContext, customer, AccountTypes.LOANACCOUNT, accountState);
 		validate(loanOffering, loanAmount, noOfinstallments, disbursementDate,
 				interesRate, gracePeriodDuration, fund, customer);
@@ -383,7 +384,7 @@ public class LoanBO extends AccountBO {
 
 	@Override
 	protected AccountPaymentEntity makePayment(PaymentData paymentData)
-			throws AccountException, SystemException {
+			throws AccountException {
 		AccountActionDateEntity lastAccountAction = getLastInstallmentAccountAction();
 		PaymentTypeEntity paymentTypeEntity = new PaymentTypeEntity();
 		paymentTypeEntity.setId(paymentData.getPaymentTypeId());
@@ -428,9 +429,7 @@ public class LoanBO extends AccountBO {
 			LoanPaymentData loanPaymentData = (LoanPaymentData) accountPaymentData;
 			accountAction.setPaymentDetails(loanPaymentData, new java.sql.Date(
 					paymentData.getTransactionDate().getTime()));
-			MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-					.getInstance().getPersistenceService(
-							PersistenceServiceName.MasterDataService);
+			MasterPersistenceService masterPersistenceService = new MasterPersistenceService();
 			accountPaymentData.setAccountActionDate(accountAction);
 			LoanTrxnDetailEntity accountTrxnBO = new LoanTrxnDetailEntity(
 					accountPayment, loanPaymentData,
@@ -879,7 +878,7 @@ public class LoanBO extends AccountBO {
 
 	public void makeEarlyRepayment(Money totalAmount, String receiptNumber,
 			Date recieptDate, String paymentTypeId, Short personnelId)
-			throws ServiceException, AccountException {
+			throws SystemException, AccountException {
 		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
 				.getInstance().getPersistenceService(
 						PersistenceServiceName.MasterDataService);
@@ -944,16 +943,13 @@ public class LoanBO extends AccountBO {
 			loanSummary.updatePaymentDetails(principal, null, null, null);
 
 		}
-		try {
-			if (getPerformanceHistory() != null)
+		
+		if (getPerformanceHistory() != null)
 				getPerformanceHistory().setNoOfPayments(
 						getPerformanceHistory().getNoOfPayments() + 1);
-			addLoanActivity(buildLoanActivity(accountPaymentEntity
+		addLoanActivity(buildLoanActivity(accountPaymentEntity
 					.getAccountTrxns(), personnel, "Loan Repayment"));
-			buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
-		} catch (FinancialException fe) {
-			throw new AccountException("errors.update", fe);
-		}
+		buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 
 		AccountStateEntity newAccountState = (AccountStateEntity) masterPersistenceService
 				.findById(AccountStateEntity.class,
@@ -1181,7 +1177,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	public void writeOff(String comment) throws ServiceException,
-			SecurityException, PersistenceException, ApplicationException {
+			  ApplicationException,SystemException {
 		Short personnelId = this.getUserContext().getId();
 		PersonnelBO personnel = new PersonnelPersistenceService()
 				.getPersonnel(personnelId);
@@ -1212,7 +1208,7 @@ public class LoanBO extends AccountBO {
 		// Client performance entry
 		updateCustomerHistoryOnWriteOff();
 
-		getAccountPersistenceService().update(this);
+		(new AccountPersistence()).createOrUpdate(this);
 	}
 
 	private List<AccountActionDateEntity> getListOfUnpaidInstallments() {
@@ -1236,7 +1232,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	@Override
-	public void waiveAmountDue(WaiveEnum waiveType) throws ServiceException {
+	public void waiveAmountDue(WaiveEnum waiveType) {
 		if (waiveType.equals(WaiveEnum.FEES)) {
 			waiveFeeAmountDue();
 		} else if (waiveType.equals(WaiveEnum.PENALTY)) {
@@ -1245,7 +1241,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	@Override
-	public void waiveAmountOverDue(WaiveEnum waiveType) throws ServiceException {
+	public void waiveAmountOverDue(WaiveEnum waiveType) {
 		if (waiveType.equals(WaiveEnum.FEES)) {
 			waiveFeeAmountOverDue();
 		} else if (waiveType.equals(WaiveEnum.PENALTY)) {
@@ -1253,7 +1249,7 @@ public class LoanBO extends AccountBO {
 		}
 	}
 
-	public void waiveFeeAmountDue() throws ServiceException {
+	public void waiveFeeAmountDue() {
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
 		LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountActionDateList
 				.get(accountActionDateList.size() - 1);
@@ -1263,10 +1259,10 @@ public class LoanBO extends AccountBO {
 					+ chargeWaived + " waived");
 			updateTotalFeeAmount(chargeWaived);
 		}
-		getAccountPersistenceService().update(this);
+		(new AccountPersistence()).createOrUpdate(this);
 	}
 
-	public void waivePenaltyAmountDue() throws ServiceException {
+	public void waivePenaltyAmountDue() {
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
 		LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountActionDateList
 				.get(accountActionDateList.size() - 1);
@@ -1276,10 +1272,10 @@ public class LoanBO extends AccountBO {
 					+ chargeWaived + " waived");
 			updateTotalPenaltyAmount(chargeWaived);
 		}
-		getAccountPersistenceService().update(this);
+		(new AccountPersistence()).createOrUpdate(this);
 	}
 
-	public void waiveFeeAmountOverDue() throws ServiceException {
+	public void waiveFeeAmountOverDue() {
 		Money chargeWaived = new Money();
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
 		accountActionDateList.remove(accountActionDateList.size() - 1);
@@ -1293,10 +1289,10 @@ public class LoanBO extends AccountBO {
 					+ chargeWaived + " waived");
 			updateTotalFeeAmount(chargeWaived);
 		}
-		getAccountPersistenceService().update(this);
+		(new AccountPersistence()).createOrUpdate(this);
 	}
 
-	public void waivePenaltyAmountOverDue() throws ServiceException {
+	public void waivePenaltyAmountOverDue() {
 		Money chargeWaived = new Money();
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
 		accountActionDateList.remove(accountActionDateList.size() - 1);
@@ -1310,23 +1306,28 @@ public class LoanBO extends AccountBO {
 					+ chargeWaived + " waived");
 			updateTotalPenaltyAmount(chargeWaived);
 		}
-		getAccountPersistenceService().update(this);
+		(new AccountPersistence()).createOrUpdate(this);
 	}
 
 	@Override
-	protected void regenerateFutureInstallments(Short nextIntallmentId)
-			throws PersistenceException, SchedulerException {
+	protected void regenerateFutureInstallments(Short nextIntallmentId) throws AccountException{
 		if (!this.getAccountState().getId().equals(
 				AccountStates.LOANACC_OBLIGATIONSMET)
 				&& !this.getAccountState().getId().equals(
 						AccountStates.LOANACC_WRITTENOFF)
 				&& !this.getAccountState().getId().equals(
 						AccountStates.LOANACC_CANCEL)) {
-			SchedulerIntf scheduler = SchedulerHelper
-					.getScheduler(getCustomer().getCustomerMeeting()
-							.getMeeting());
-			List<Date> meetingDates = scheduler
-					.getAllDates(getApplicableIdsForFutureInstallments().size() + 1);
+			SchedulerIntf scheduler;
+			List<Date> meetingDates =null;
+			try {
+				scheduler = SchedulerHelper
+						.getScheduler(getCustomer().getCustomerMeeting()
+								.getMeeting());
+				meetingDates = scheduler
+				.getAllDates(getApplicableIdsForFutureInstallments().size() + 1);
+			} catch (SchedulerException e) {
+				throw new AccountException(e);
+			}
 			meetingDates.remove(0);
 			int count = 0;
 			List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForFutureInstallments();
@@ -1557,15 +1558,18 @@ public class LoanBO extends AccountBO {
 	}
 
 	@Override
-	public void initializeStateMachine(Short localeId)
-			throws StatesInitializationException {
-		AccountStateMachines
-				.getInstance()
-				.initialize(
-						localeId,
-						getOffice().getOfficeId(),
-						AccountTypes.LOANACCOUNT
-								.getValue());
+	public void initializeStateMachine(Short localeId) throws AccountException{
+		try {
+			AccountStateMachines
+					.getInstance()
+					.initialize(
+							localeId,
+							getOffice().getOfficeId(),
+							AccountTypes.LOANACCOUNT
+									.getValue());
+		} catch (StatesInitializationException e) {
+			throw new AccountException(e);
+		}
 	}
 
 	@Override
@@ -1580,17 +1584,23 @@ public class LoanBO extends AccountBO {
 	}
 	
 	@Override
-	public String getStatusName(Short localeId, Short accountStateId)
-			throws ApplicationException, SystemException {
-		return AccountStateMachines.getInstance().getStatusName(localeId,
-				accountStateId, AccountTypes.LOANACCOUNT.getValue());
+	public String getStatusName(Short localeId, Short accountStateId) throws AccountException {
+		try {
+			return AccountStateMachines.getInstance().getStatusName(localeId,
+					accountStateId, AccountTypes.LOANACCOUNT.getValue());
+		} catch (ApplicationException e) {
+			throw new AccountException(e);
+		}
 	}
 
 	@Override
-	public String getFlagName(Short flagId) throws ApplicationException,
-			SystemException {
-		return AccountStateMachines.getInstance().getFlagName(flagId,
-				AccountTypes.LOANACCOUNT.getValue());
+	public String getFlagName(Short flagId) throws AccountException{
+		try {
+			return AccountStateMachines.getInstance().getFlagName(flagId,
+					AccountTypes.LOANACCOUNT.getValue());
+		} catch (ApplicationException e) {
+			throw new AccountException(e);
+		}
 	}
 
 	public void save() throws AccountException {
@@ -1711,8 +1721,7 @@ public class LoanBO extends AccountBO {
 	}
 	
 	@Override
-	public void applyCharge(Short feeId, Money charge)
-			throws ApplicationException {
+	public void applyCharge(Short feeId, Money charge) throws AccountException{
 		List<AccountActionDateEntity> dueInstallments = getDueInstallments();
 		if (!dueInstallments.isEmpty()) {
 			if (feeId.equals(Short.valueOf(AccountConstants.MISC_FEES))
@@ -1729,11 +1738,11 @@ public class LoanBO extends AccountBO {
 			}
 			roundInstallments(getIdList(dueInstallments));
 		} else {
-			throw new ApplicationException(AccountConstants.NOMOREINSTALLMENTS);
+			throw new AccountException(AccountConstants.NOMOREINSTALLMENTS);
 		}
 	}
 	
-	private void applyPeriodicFee(FeeBO fee,Money charge,List<AccountActionDateEntity> dueInstallments) throws RepaymentScheduleException{
+	private void applyPeriodicFee(FeeBO fee,Money charge,List<AccountActionDateEntity> dueInstallments) throws AccountException{
 		AccountFeesEntity accountFee = getAccountFee(fee,charge);
 		Map<Short,Money> feeInstallmentMap=getFeeInstallmentMap(accountFee,dueInstallments.get(0).getActionDate());
 		Money totalFeeAmountApplied=applyFeeToInstallments(feeInstallmentMap,dueInstallments,fee,accountFee);
@@ -1742,7 +1751,7 @@ public class LoanBO extends AccountBO {
 	}
 	
 	
-	private void applyOneTimeFee(FeeBO fee,Money charge,AccountActionDateEntity accountActionDateEntity) throws RepaymentScheduleException{
+	private void applyOneTimeFee(FeeBO fee,Money charge,AccountActionDateEntity accountActionDateEntity) throws AccountException{
 		LoanScheduleEntity loanScheduleEntity=(LoanScheduleEntity)accountActionDateEntity;
 		AccountFeesEntity accountFee = new AccountFeesEntity(this,fee,charge,
 				FeeStatus.ACTIVE.getValue(),new Date(System

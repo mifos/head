@@ -266,8 +266,7 @@ public class AccountStateMachines implements StateMachine {
 	}
 
 	public String getStatusName(Short localeId, Short accountStatusId,
-			Short prdTypeId) throws ApplicationException, SystemException,
-			NumberFormatException {
+			Short prdTypeId) throws ApplicationException{
 		try {
 			if (prdTypeId.equals(AccountTypes.LOANACCOUNT.getValue())) {
 				for (AccountStateEntity accountStateEntityObj : accountStateEntityListForLoan) {
@@ -294,7 +293,7 @@ public class AccountStateMachines implements StateMachine {
 	}
 
 	public String getFlagName(Short flagId, Short prdTypeId)
-			throws ApplicationException, SystemException {
+			throws ApplicationException{
 		if (prdTypeId.equals(AccountTypes.LOANACCOUNT.getValue())) {
 			for (AccountStateEntity accountStateEntity : accountStateEntityListForLoan) {
 				for (AccountStateFlagEntity accountStateFlagEntity : accountStateEntity
