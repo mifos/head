@@ -10,6 +10,7 @@
         <id name="id" column="COLLATERAL_TYPE_ID" >
             <generator class="native"/>
         </id>
-        <many-to-one name="lookUpValue" class="org.mifos.application.master.business.LookUpValueEntity" column="LOOKUP_ID" insert="true" update="false"/>
+        <many-to-one name="lookUpValue" class="org.mifos.application.master.business.LookUpValueEntity" column="LOOKUP_ID" 
+        cascade="none" update="false" unique="true"/>
     </class>
 </hibernate-mapping>

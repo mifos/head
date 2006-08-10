@@ -24,7 +24,11 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
+import org.mifos.application.customer.business.CustomerLevelEntity;
+import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -179,4 +183,32 @@ public class LoanPersistance extends Persistence {
 			}
 			return null;
 		}
+		
+		
+	public List<LoanOfferingBO> getApplicablePrdOfferings(
+			CustomerLevelEntity customerLevel) {
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put(AccountConstants.PRDSTATUS,
+				ProductDefinitionConstants.LOANACTIVE);
+		queryParameters.put(AccountConstants.PRODUCT_APPLICABLE_TO,
+				customerLevel.getProductApplicableType());
+		return executeNamedQuery(NamedQueryConstants.APPLICABLE_LOAN_OFFERINGS,
+				queryParameters);
+	}
+	
+	public LoanOfferingBO getLoanOffering(Short loanOfferingId, Short localeId) {
+		Session session = HibernateUtil.getSessionTL();
+		LoanOfferingBO loanOffering = (LoanOfferingBO) session.get(
+				LoanOfferingBO.class, loanOfferingId);
+		if (loanOffering.getLoanOfferingFunds() != null
+				&& loanOffering.getLoanOfferingFunds().size() > 0)
+			for (LoanOfferingFundEntity loanOfferingFund : loanOffering
+					.getLoanOfferingFunds()) {
+				loanOfferingFund.getFund().getFundId();
+				loanOfferingFund.getFund().getFundName();
+			}
+		loanOffering.getInterestTypes().setLocaleId(localeId);
+		loanOffering.getGracePeriodType().setLocaleId(localeId);
+		return loanOffering;
+	}
 }

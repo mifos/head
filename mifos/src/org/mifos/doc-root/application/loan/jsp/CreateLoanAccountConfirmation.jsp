@@ -39,82 +39,75 @@
 <%@taglib uri="/tags/struts-html" prefix="html"%>
 <%@taglib uri="/tags/struts-bean" prefix="bean"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
+<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
-<%@taglib uri="/tags/struts-html-el" prefix="html-el"%>
-<%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 
-		<html-el:form method="post" action="/loanAction.do?method=get">
+		<html-el:form method="post" action="/loanAccountAction.do?method=get">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td align="left" valign="top" class="paddingL15T15">
-					<table width="98%" border="0" cellspacing="0" cellpadding="3">
-						<tr>
-							<td class="headingorange"><mifos:mifoslabel
-								name="loan.successful_creation"  />
-								<mifos:mifoslabel	name="${ConfigurationConstants.LOAN}"  />
-								<mifos:mifoslabel	name="accounts.account"  />
-								
-								<br>
-							<br>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<font class="fontnormalRedBold">
-									<html-el:errors bundle="loanUIResources" /> 
-								</font>
-							</td>
- 						</tr>
-						<tr>
-							<td class="fontnormalbold">
-								<mifos:mifoslabel name="loan.plz_note" />
-								&nbsp;<span class="fontnormal">
-								<mifos:mifoslabel name="loan.congo1_1"  />
-								<mifos:mifoslabel name="${ConfigurationConstants.LOAN}"  />
-								<mifos:mifoslabel name="loan.congo1_2"  />																
-								<c:out value='${sessionScope.loanAccounts_Context.businessResults["customerMaster"].displayName}'/>
-								<mifos:mifoslabel name="loan.congo2"  />
-								<c:out value='${sessionScope.loanAccounts_Context.businessResults["loanAccGlobalNum"]}'/>
-								<mifos:mifoslabel name="loan.congo3"  />
-								<br><br><br>
-							</span><html-el:link href="loanAccountAction.do?method=get
-									&globalAccountNum=${sessionScope.loanAccounts_Context.businessResults['loanAccGlobalNum']}
+						<table width="98%" border="0" cellspacing="0" cellpadding="3">
+							<tr>
+								<td class="headingorange">
+									<mifos:mifoslabel name="loan.successful_creation" />
+									<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
+									<mifos:mifoslabel name="accounts.account" />
+
+									<br>
+									<br>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<font class="fontnormalRedBold"> <html-el:errors bundle="loanUIResources" /> </font>
+								</td>
+							</tr>
+							<tr>
+								<td class="fontnormalbold">
+									<mifos:mifoslabel name="loan.plz_note" />
+									&nbsp;<span class="fontnormal"> <mifos:mifoslabel name="loan.congo1_1" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.congo1_2" /> <c:out value='${sessionScope.loanAccountOwner.displayName}' /> <mifos:mifoslabel
+											name="loan.congo2" /> <c:out value='${sessionScope.BusinessKey.globalAccountNum}' /> <mifos:mifoslabel name="loan.congo3" /> <br> <br> <br> </span>
+									<html-el:link href="loanAccountAction.do?method=get
+									&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}
 									&recordOfficeId=${requestScope.loan.officeId}
-									&recordLoanOfficerId=${requestScope.loan.personnelId}">								<mifos:mifoslabel name="loan.view_loan_acc1" /><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.view_loan_acc2" />
-							</html-el:link><span class="fontnormal"><br>
-							<br>
-							</span><span class="fontnormalboldorange"><mifos:mifoslabel
-								name="loan.suggested_steps"  /></span><span
-								class="fontnormal"> <br>
-							<mifos:mifoslabel name="loan.open_new_acc"/>
-							<c:out value='${sessionScope.loanAccounts_Context.businessResults["customerMaster"].displayName}'/>
-							<br>
-							</span>
-							<table width="80%" border="0" cellspacing="0" cellpadding="0">
-								<tr>
-									<td width="2%"><img src="pages/framework/images/trans.gif"
-										width="15" height="10"></td>
-									<td width="98%"><span class="fontnormal"><html-el:link href="savingsAction.do?method=getPrdOfferings&customerId=${requestScope.loan.customer.customerId}">
-										<mifos:mifoslabel name="loan.open_new"/><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>&nbsp;<mifos:mifoslabel name="accounts.account"/>
-									</html-el:link> <br>
-									<html-el:link href="loanAction.do?method=getPrdOfferings">
-										<mifos:mifoslabel name="loan.open_new"/><mifos:mifoslabel name="${ConfigurationConstants.LOAN}"/>&nbsp;<mifos:mifoslabel name="accounts.account"/>									</html-el:link></span></td>
-								</tr>
-							</table>
-							</td>
-						</tr>
-					</table>
-					<br>
-					<br>
+									&recordLoanOfficerId=${requestScope.loan.personnelId}">
+										<mifos:mifoslabel name="loan.view_loan_acc1" />
+										<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
+										<mifos:mifoslabel name="loan.view_loan_acc2" />
+									</html-el:link>
+									<span class="fontnormal"><br> <br> </span><span class="fontnormalboldorange"><mifos:mifoslabel name="loan.suggested_steps" /></span><span class="fontnormal"> <br> <mifos:mifoslabel name="loan.open_new_acc" /> <c:out
+											value='${sessionScope.loanAccountOwner.displayName}' /> <br> </span>
+									<table width="80%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td width="2%">
+												<img src="pages/framework/images/trans.gif" width="15" height="10">
+											</td>
+											<td width="98%">
+												<span class="fontnormal"><html-el:link href="savingsAction.do?method=getPrdOfferings&customerId=${sessionScope.loanAccountOwner.customerId}">
+														<mifos:mifoslabel name="loan.open_new" />
+														<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />&nbsp;<mifos:mifoslabel name="accounts.account" />
+													</html-el:link> <br> <html-el:link href="loanAccountAction.do?method=getPrdOfferings">
+														<mifos:mifoslabel name="loan.open_new" />
+														<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />&nbsp;<mifos:mifoslabel name="accounts.account" />
+													</html-el:link></span>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+						<br>
+						<br>
 					</td>
 				</tr>
 			</table>
-<html-el:hidden value='${sessionScope.loanAccounts_Context.businessResults["loanAccGlobalNum"]}' property="globalAccountNum"/>
-<html-el:hidden property="accountId" value="${requestScope.loan.accountId}" />
+			<html-el:hidden value='${sessionScope.BusinessKey.globalAccountNum}' property="globalAccountNum" />
+			<html-el:hidden property="accountId" value="${requestScope.loan.accountId}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

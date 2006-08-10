@@ -24,6 +24,15 @@
     <query name="entities">
       	   <![CDATA[from  org.mifos.application.master.business.MifosLookUpEntity ]]>
     </query>
- 
+ 	 <query name="masterdata.mifosEntityValue">
+    	   <![CDATA[select new org.mifos.application.master.business.BusinessActivityEntity
+    	   (locale.lookUpValueId ,locale.lookUpValue)
+    	    from org.mifos.application.master.business.MifosLookUpEntity entity, 
+    	    org.mifos.application.master.business.LookUpValueEntity value,
+    	    org.mifos.application.master.business.LookUpValueLocaleEntity locale
+    	    where entity.entityId = value.lookUpEntity.entityId 
+    	    and locale.lookUpId = value.lookUpId
+    	    and locale.localeId=:localeId and entity.entityType=:entityType]]>
+    </query>
             
 </hibernate-mapping> 

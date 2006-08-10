@@ -44,7 +44,6 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -71,21 +70,17 @@ import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.loan.exceptions.LoanExceptionConstants;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.application.accounts.loan.util.valueobjects.Loan;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.accounts.util.helpers.ApplicableCharge;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
-import org.mifos.application.accounts.util.valueobjects.Account;
-import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
@@ -94,10 +89,8 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.persistence.FeePersistence;
-import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.FeeStatus;
-import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.master.business.CollateralTypeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
@@ -117,7 +110,6 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.repaymentschedule.FeeInstallment;
 import org.mifos.framework.components.repaymentschedule.RepaymentSchedule;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleFactory;
@@ -1678,7 +1670,7 @@ public class LoanBO extends AccountBO {
 			Short noOfinstallments,Date disbursementDate,
 			Double interestRate,Short gracePeriodDuration,Fund fund,CustomerBO customer) throws AccountException {
 		if(loanOffering == null || loanAmount == null || noOfinstallments == null ||
-				disbursementDate==null || interestRate == null || gracePeriodDuration==null || fund==null)
+				disbursementDate==null || interestRate == null )
 			throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION);
 		
 		if(! customer.isCustomerActive())
@@ -1688,10 +1680,12 @@ public class LoanBO extends AccountBO {
 	}
 	
 	private void buildAccountFee(List<FeeView> feeViews) {
-		if(feeViews !=null && feeViews.size() > 0){
-			for(FeeView feeView: feeViews){
-				FeeBO fee = new FeePersistence().getFee(feeView.getFeeIdValue());
-				this.addAccountFees(new AccountFeesEntity(this,fee, feeView.getAmountMoney()));
+		if (feeViews != null && feeViews.size() > 0) {
+			for (FeeView feeView : feeViews) {
+				FeeBO fee = new FeePersistence()
+						.getFee(feeView.getFeeIdValue());
+				this.addAccountFees(new AccountFeesEntity(this, fee, feeView
+						.getAmountMoney()));
 			}
 		}
 	}
@@ -1704,12 +1698,13 @@ public class LoanBO extends AccountBO {
 					GracePeriodTypeConstants.NONE);
 			this.gracePeriodDuration = (short) 0;
 		} else {
-			if ((!loanOffering.getGracePeriodType().getId().equals(
+			if (!loanOffering.getGracePeriodType().getId().equals(
 					GracePeriodTypeConstants.NONE))
-					&& gracePeriodDuration >= loanOffering
-							.getMaxNoInstallments())
-				throw new AccountException(
-						AccountExceptionConstants.CREATEEXCEPTION);
+				if (gracePeriodDuration == null
+						|| gracePeriodDuration >= loanOffering
+								.getMaxNoInstallments())
+					throw new AccountException(
+							AccountExceptionConstants.CREATEEXCEPTION);
 			this.gracePeriodType = loanOffering.getGracePeriodType();
 			this.gracePeriodDuration = gracePeriodDuration;
 		}

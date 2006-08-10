@@ -43,7 +43,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.mifos.application.fund.util.valueobjects.Fund;
-import org.mifos.application.productdefinition.util.valueobjects.LoanOfferingFund;
+import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.struts.tags.DateHelper;
@@ -74,7 +74,7 @@ public class LoanUIHelperFn {
 		if(object !=null) {
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Iterating over the sources of fund object");
 			Set fundSet=(Set)object;
-			for(Iterator<LoanOfferingFund> iter=fundSet.iterator();iter.hasNext();) {
+			for(Iterator<LoanOfferingFundEntity> iter=fundSet.iterator();iter.hasNext();) {
 				Fund fund = iter.next().getFund();
 				if(null != fund){
 					String fundName = fund.getFundName();

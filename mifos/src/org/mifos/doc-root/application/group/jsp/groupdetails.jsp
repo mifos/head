@@ -227,7 +227,7 @@ function meetingpopup(){
 		            
 		              &nbsp;
 		              <c:if test="${sessionScope.isGroupLoanAllowed == true}">
-		              <html-el:link href="loanAction.do?method=getPrdOfferings&customer.customerId=${requestScope.GroupVO.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+		              <html-el:link href="loanAccountAction.do?method=getPrdOfferings&customerId=${requestScope.GroupVO.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 		           	   <mifos:mifoslabel name="${ConfigurationConstants.LOAN}"></mifos:mifoslabel>
 		              </html-el:link> &nbsp;|&nbsp; 
 		              </c:if>

@@ -3,15 +3,12 @@ package org.mifos.framework.struts.actionforms;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.PropertyResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.validator.ValidatorActionForm;
-import org.mifos.application.configuration.business.MifosConfiguration;
-import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
@@ -19,7 +16,9 @@ import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfi
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationHelper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class BaseActionForm extends ValidatorActionForm {
 
@@ -54,4 +53,45 @@ public class BaseActionForm extends ValidatorActionForm {
 			}
 		}
 	}
+	
+	protected Short getShortValue(String str) {
+		return StringUtils.isNullAndEmptySafe(str) ? Short.valueOf(str) : null;
+	}
+
+	protected Integer getIntegerValue(String str) {
+		return StringUtils.isNullAndEmptySafe(str) ? Integer.valueOf(str) : null;
+	}
+	
+	protected Double getDoubleValue(String str) {
+		return StringUtils.isNullAndEmptySafe(str) ? Double.valueOf(str) : null;
+	}
+
+	protected boolean getBooleanValue(String value) {
+		Short shortValue = getShortValue(value);
+		return shortValue !=null &&  shortValue > 0;
+	}
+	
+	protected Money getMoney(String str) {
+		return (StringUtils.isNullAndEmptySafe(str) && !str.trim().equals(".")) ? new Money(
+				str)
+				: new Money();
+	}
+	
+	protected String getStringValue(Double value) {
+		return value != null ? String.valueOf(value) : null;
+	}
+	
+	protected String getStringValue(Short value) {
+		return value != null ? String.valueOf(value) : null;
+	}
+	
+	protected String getStringValue(boolean value) {
+		return value ? "1" : "0";
+	}
+	
+	protected void addError(ActionErrors errors, String property, String key,
+			String... arg) {
+		errors.add(property, new ActionMessage(key, arg));
+	}
+
 }

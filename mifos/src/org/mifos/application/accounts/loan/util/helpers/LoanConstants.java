@@ -38,12 +38,6 @@
 
 package org.mifos.application.accounts.loan.util.helpers;
 
-import org.mifos.framework.util.valueobjects.ReturnType;
-
-/**
- * @author ashishsm
- *
- */
 public interface LoanConstants {
 	public final String LOANACTIONFORM = "loanActionForm";
 	public final String LOANPRDOFFERINGS = "loanPrdOfferings";
@@ -145,5 +139,19 @@ public interface LoanConstants {
 	public static final String HANDLE_CHANGE_IN_PRODUCT_DEFINITION="exceptions.application.loan.changeInLoanOffering";
 	
 	public static final String ERROR="error";
-																	
+	
+	public static final String LOANACCOUNTOWNER="loanAccountOwner";
+	public static final String CUSTOMER="customer";
+	public static final String CUSTOMERNOTSELECTEDERROR="errors.customernotselected";
+	public static final String LOANOFFERINGNOTSELECTEDERROR="errors.loanofferingnotselected";
+	public static final String INSTANCENAME="instance name";
+	public static final String LOANOFFERING="loanOffering";
+	public static final String LOANFUNDS="loanfunds";
+	public static final String GRACEPERIODDURATION="Grace period for repayments";
+	public static final String GRACEPERIODERROR="errors.graceper";
+	public static final String ADDITIONAL_FEES_LIST = "additionalFeeList";
+	public static final String ERRORS_DUPLICATE_PERIODIC_FEE="errors.loan.duplicatePeriodicFee";
+	public static final String ERRORS_SPECIFY_FEE_AMOUNT="errors.loan.specifyFeeAmount";
+	public static final String FEE ="Fee";
+	public static final String PROPOSEDDISBDATE ="proposedDisbDate";
 }

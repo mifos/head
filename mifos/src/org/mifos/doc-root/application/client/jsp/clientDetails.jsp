@@ -210,7 +210,7 @@
 							<tr align="right">
 								<td class="headingorange"><span class="fontnormal">Open new
 								account:&nbsp; <html-el:link
-									href="loanAction.do?method=getPrdOfferings&customer.customerId=${requestScope.clientVO.customerId}">
+									href="loanAccountAction.do?method=getPrdOfferings&customerId=${requestScope.clientVO.customerId}">
 									<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 								</html-el:link> &nbsp;|&nbsp; <html-el:link
 									href="savingsAction.do?method=getPrdOfferings&customerId=${requestScope.clientVO.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">

@@ -1,37 +1,62 @@
 package org.mifos.application.accounts.loan.struts.action;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.apache.struts.Globals;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFlagMapping;
+import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.application.accounts.business.ViewInstallmentDetails;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.struts.action.AccountAppAction;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.business.FeeView;
+import org.mifos.application.fees.business.service.FeeBusinessService;
+import org.mifos.application.fees.exceptions.FeeException;
+import org.mifos.application.fund.util.valueobjects.Fund;
+import org.mifos.application.master.business.CollateralTypeEntity;
+import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.util.helpers.MasterConstants;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.components.repaymentschedule.RepaymentScheduleInstallment;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
@@ -109,6 +134,123 @@ public class LoanAccountAction extends AccountAppAction {
 		return mapping.findForward(ActionForwards.viewStatusHistory.toString()); 
 	}
 	
+	public ActionForward validate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		ActionForwards actionForward = null;
+		String method = (String) request.getAttribute("methodCalled");
+		if (method.equals(Methods.getPrdOfferings.toString())
+				|| method.equals(Methods.load.toString()))
+			actionForward = ActionForwards.getPrdOfferigs_success;
+		else if (method.equals(Methods.schedulePreview.toString()))
+			actionForward = ActionForwards.load_success;
+
+		return mapping.findForward(actionForward.toString());
+	}
+	
+	public ActionForward getPrdOfferings(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		logger.debug("Inside getPrdOfferings method");
+
+		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
+		CustomerBO customer = getCustomer(loanActionForm.getCustomerIdValue());
+		doCleanUp(request.getSession());
+		List<LoanOfferingBO> loanOfferings = loanBusinessService
+				.getApplicablePrdOfferings(customer.getCustomerLevel());
+		removePrdOfferingsNotMachingCustomerMeeting(loanOfferings, customer);
+		SessionUtils.setAttribute(LoanConstants.LOANPRDOFFERINGS,
+				loanOfferings, request.getSession());
+		SessionUtils.setAttribute(LoanConstants.LOANACCOUNTOWNER, customer,
+				request.getSession());
+		SessionUtils.setAttribute(LoanConstants.PROPOSEDDISBDATE, customer
+				.getCustomerAccount().getNextMeetingDate(), request
+				.getSession());
+		return mapping.findForward(ActionForwards.getPrdOfferigs_success
+				.toString());
+	}
+	
+	public ActionForward load(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
+		LoanOfferingBO loanOffering = getLoanOffering(loanActionForm
+				.getPrdOfferingIdValue(), getUserContext(request).getLocaleId());
+		setDataIntoForm(loanOffering, loanActionForm,request);
+		loadFees(loanActionForm, loanOffering, request);
+		loadMasterData(request);
+		request.getSession().removeAttribute(LoanConstants.LOANOFFERING);
+		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
+				request.getSession());
+		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
+				getFunds(loanOffering), request.getSession());
+		return mapping.findForward(ActionForwards.load_success.toString());
+	}
+	
+	public ActionForward schedulePreview(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
+		HttpSession session = request.getSession();
+		LoanBO loan = null;
+		try {
+			loan = new LoanBO(getUserContext(request), (LoanOfferingBO) session
+					.getAttribute(LoanConstants.LOANOFFERING),
+					(CustomerBO) session
+							.getAttribute(LoanConstants.LOANACCOUNTOWNER),
+					AccountState.LOANACC_PARTIALAPPLICATION, loanActionForm
+							.loanAmountValue(), loanActionForm
+							.getNoOfInstallmentsValue(), loanActionForm
+							.getDisbursementDateValue(getUserContext(request)
+									.getPereferedLocale()), loanActionForm
+							.isInterestDedAtDisbValue(), loanActionForm
+							.getInterestDoubleValue(), loanActionForm
+							.getGracePeriodDurationValue(), getFund(session,
+							loanActionForm.getLoanOfferingFundValue()),
+					loanActionForm.getFeesToApply());
+		} catch (Exception e) {
+			ActionErrors errors = new ActionErrors();
+			errors.add("Proposed/Actual disbursal date", new ActionMessage(
+					"errors.mandatory", "Proposed/Actual disbursal date"));
+			request.setAttribute(Globals.ERROR_KEY, errors);
+			return mapping.findForward(ActionForwards.load_success.toString());
+		}
+		loan.setBusinessActivityId(loanActionForm.getBusinessActivityIdValue());
+		loan.setCollateralNote(loanActionForm.getCollateralNote());
+		CollateralTypeEntity collateralTypeEntity = (CollateralTypeEntity) findMasterEntity(
+				request.getSession(), MasterConstants.COLLATERAL_TYPES,
+				loanActionForm.getCollateralTypeIdValue());
+		loan.setCollateralType(collateralTypeEntity);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request
+				.getSession());
+		SessionUtils.setAttribute(LoanConstants.REPAYMENTSCHEDULEINSTALLMENTS,
+				getLoanSchedule(loan), request.getSession());
+		return mapping.findForward(ActionForwards.schedulePreview_success
+				.toString());
+	}
+	
+	public ActionForward preview(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(ActionForwards.preview_success.toString());
+	}
+	
+	public ActionForward previous(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(ActionForwards.load_success.toString());
+	}
+	
+	public ActionForward create(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		LoanBO loan =(LoanBO) request.getSession().getAttribute(Constants.BUSINESS_KEY);
+		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
+		loan.setAccountState(new AccountStateEntity(loanActionForm.getState()));
+		loan.save();
+		return mapping.findForward(ActionForwards.create_success.toString());
+	}
+	
 	private void setLocaleForMasterEntities(LoanBO loanBO, Short localeId) {
 		if(loanBO.getGracePeriodType() != null) 
 			loanBO.getGracePeriodType().setLocaleId(localeId);
@@ -125,5 +267,150 @@ public class LoanAccountAction extends AccountAppAction {
 		SessionUtils.setAttribute(LoanConstants.RECENTACCOUNTACTIVITIES,loanBusinessService.getRecentActivityView(loanBO.getGlobalAccountNum(),getUserContext(request).getLocaleId()),request.getSession());
 		SessionUtils.setAttribute(AccountConstants.LAST_PAYMENT_ACTION,loanBusinessService.getLastPaymentAction(loanBO.getAccountId()),request.getSession());
 		SessionUtils.setAttribute(LoanConstants.NOTES, loanBO.getRecentAccountNotes(), request.getSession());
+	}
+	
+	private void removePrdOfferingsNotMachingCustomerMeeting(
+			List<LoanOfferingBO> loanOfferings, CustomerBO customer) {
+		MeetingBO customerMeeting = customer.getCustomerMeeting().getMeeting();
+		for (Iterator<LoanOfferingBO> iter = loanOfferings.iterator(); iter
+				.hasNext();) {
+			LoanOfferingBO loanOffering = iter.next();
+			if (!isMeetingMatched(customerMeeting, loanOffering
+					.getPrdOfferingMeeting().getMeeting()))
+				iter.remove();
+		}
+	}
+
+	private boolean isMeetingMatched(MeetingBO customerMeeting,
+			MeetingBO loanOfferingMeeting) {
+		return customerMeeting != null
+				&& loanOfferingMeeting != null
+				&& customerMeeting.getMeetingDetails().getRecurrenceType()
+						.getRecurrenceId().equals(
+								loanOfferingMeeting.getMeetingDetails()
+										.getRecurrenceType().getRecurrenceId())
+				&& isMultiple(loanOfferingMeeting.getMeetingDetails()
+						.getRecurAfter(), customerMeeting.getMeetingDetails()
+						.getRecurAfter());
+	}
+
+	private boolean isMultiple(Short valueToBeChecked,
+			Short valueToBeCheckedWith) {
+		return valueToBeChecked % valueToBeCheckedWith == 0;
+	}
+	
+	private void doCleanUp(HttpSession session) {
+		session.setAttribute("loanAccountActionForm",null);
+		session.removeAttribute(Constants.BUSINESS_KEY);
+		session.removeAttribute(LoanConstants.LOANACCOUNTOWNER);
+		session.removeAttribute(LoanConstants.PRDOFFERINGID);
+	}
+	
+	private LoanOfferingBO getLoanOffering(Short loanOfferingId, short localeId)
+			throws ServiceException {
+		return loanBusinessService.getLoanOffering(loanOfferingId, localeId);
+	}
+	
+	private void setDataIntoForm(LoanOfferingBO loanOffering,
+			LoanAccountActionForm loanAccountActionForm,
+			HttpServletRequest request) {
+		loanAccountActionForm.setLoanAmount(getStringValue(loanOffering
+				.getDefaultLoanAmount()));
+		loanAccountActionForm.setInterestRate(getStringValue(loanOffering
+				.getDefInterestRate()));
+		loanAccountActionForm.setNoOfInstallments(getStringValue(loanOffering
+				.getDefNoInstallments()));
+		loanAccountActionForm.setIntDedDisbursement(getStringValue(loanOffering
+				.isIntDedDisbursement()));
+		loanAccountActionForm
+				.setGracePeriodDuration(getStringValue(loanOffering
+						.getGracePeriodDuration()));
+		loanAccountActionForm.setDisbursementDate(DateHelper.getUserLocaleDate(
+				getUserContext(request).getPereferedLocale(), request
+						.getSession().getAttribute(
+								LoanConstants.PROPOSEDDISBDATE).toString()));
+	}
+	
+	private List<Fund> getFunds(LoanOfferingBO loanOffering) {
+		List<Fund> funds = new ArrayList<Fund>();
+		if (loanOffering.getLoanOfferingFunds() != null
+				&& loanOffering.getLoanOfferingFunds().size() > 0)
+			for (LoanOfferingFundEntity loanOfferingFund : loanOffering
+					.getLoanOfferingFunds()) {
+				funds.add(loanOfferingFund.getFund());
+			}
+		return funds;
+	}
+	
+	private void loadFees(LoanAccountActionForm actionForm,
+			LoanOfferingBO loanOffering, HttpServletRequest request)
+			throws FeeException, ServiceException {
+		FeeBusinessService feeService = (FeeBusinessService) ServiceFactory
+				.getInstance().getBusinessService(
+						BusinessServiceName.FeesService);
+		Short localeId = getUserContext(request).getLocaleId();
+		List<FeeBO> fees = feeService.getAllAppllicableFeeForLoanCreation();
+		List<FeeView> additionalFees = new ArrayList<FeeView>();
+		List<FeeView> defaultFees = new ArrayList<FeeView>();
+		for (FeeBO fee : fees) {
+			if (loanOffering.isFeePresent(fee))
+				defaultFees.add(new FeeView(fee,localeId));
+			else
+				additionalFees.add(new FeeView(fee,localeId));
+		}
+		actionForm.setDefaultFees(defaultFees);
+		SessionUtils.setAttribute(LoanConstants.ADDITIONAL_FEES_LIST,
+				additionalFees, request.getSession());
+	}
+	
+	private void loadMasterData(HttpServletRequest request)
+			throws ApplicationException, SystemException {
+		SessionUtils.setAttribute(MasterConstants.COLLATERAL_TYPES,
+				getMasterEntities(CollateralTypeEntity.class, getUserContext(
+						request).getLocaleId()), request.getSession());
+		SessionUtils.setAttribute(MasterConstants.BUSINESS_ACTIVITIES,
+				loanBusinessService.retrieveMasterEntities(
+						MasterConstants.LOAN_PURPOSES, getUserContext(request)
+								.getLocaleId()), request.getSession());
+	}
+	
+	private Fund getFund(HttpSession session,Short fundId) {
+		List<Fund> funds = (List<Fund>)session.getAttribute(LoanConstants.LOANFUNDS);
+		for(Fund fund : funds) {
+			if(fund.getFundId().equals(fundId))
+				return fund;
+		}
+		return null;
+	}
+	
+	private List<RepaymentScheduleInstallment> getLoanSchedule(LoanBO loan) {
+		List<RepaymentScheduleInstallment> schedule = new ArrayList<RepaymentScheduleInstallment>();
+		for(AccountActionDateEntity actionDate : loan.getAccountActionDates()) {
+			LoanScheduleEntity loanSchedule = (LoanScheduleEntity)actionDate;
+			schedule.add(getRepaymentScheduleInstallment(loanSchedule));
+		}
+		Collections.sort(schedule, new Comparator<RepaymentScheduleInstallment>() {
+			public int compare(RepaymentScheduleInstallment act1, RepaymentScheduleInstallment act2) {
+				return act1.getInstallment().compareTo(act2.getInstallment());
+			}
+		});
+		return schedule;
+	}
+	
+	private RepaymentScheduleInstallment getRepaymentScheduleInstallment(LoanScheduleEntity loanSchedule) {
+		return new RepaymentScheduleInstallment(loanSchedule.getInstallmentId(), 
+				loanSchedule.getActionDate(),loanSchedule.getPrincipal(),
+				loanSchedule.getInterest(),loanSchedule.getTotalFeeDue(),
+				loanSchedule.getMiscFee(),loanSchedule.getMiscPenalty());
+	}
+	
+	private MasterDataEntity findMasterEntity(HttpSession session,
+			String collectionName, Short value) {
+		List<MasterDataEntity> entities = (List<MasterDataEntity>) SessionUtils
+				.getAttribute(collectionName, session);
+		for (MasterDataEntity entity : entities)
+			if (entity.getId().equals(value))
+				return entity;
+		return null;
 	}
 }

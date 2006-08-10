@@ -33,8 +33,10 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ExceptionConstants;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SearchObject;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.framework.util.helpers.ValueObjectUtil;
 
@@ -189,5 +191,38 @@ public abstract class BaseAction extends DispatchAction {
 				.getInstance().getBusinessService(
 						BusinessServiceName.MasterDataService);
 		return masterDataService.retrieveMasterEntities(clazz, localeId);
+	}
+	
+	protected Short getShortValue(String str) {
+		return StringUtils.isNullAndEmptySafe(str) ? Short.valueOf(str) : null;
+	}
+
+	protected Integer getIntegerValue(String str) {
+		return StringUtils.isNullAndEmptySafe(str) ? Integer.valueOf(str) : null;
+	}
+	
+	protected Double getDoubleValue(String str) {
+		return StringUtils.isNullAndEmptySafe(str) ? Double.valueOf(str) : null;
+	}
+	
+	protected Money getMoney(String str) {
+		return (StringUtils.isNullAndEmptySafe(str) && !str.trim().equals(".")) ? new Money(
+				str)
+				: new Money();
+	}
+	
+	protected String getStringValue(Double value) {
+		return value != null ? String.valueOf(value) : null;
+	}
+	
+	protected String getStringValue(Short value) {
+		return value != null ? String.valueOf(value) : null;
+	}
+	
+	protected String getStringValue(boolean value) {
+		if (value)
+			return "1";
+		return "0";
+
 	}
 }// :~

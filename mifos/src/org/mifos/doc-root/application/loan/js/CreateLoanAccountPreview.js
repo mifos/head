@@ -54,14 +54,14 @@
 				
 				function fnEdit(form) {
 						form.method.value="previous";
-						form.action="loanAction.do";
+						form.action="loanAccountAction.do";
 						form.submit();
 					}
 					
 				function fun_submitForApproval(form) {
 						form.method.value="create";
 						form.stateSelected.value="2";
-						form.action="loanAction.do";
+						form.action="loanAccountAction.do";
 						form.submit();
 						func_disableSubmitBtn("submitForApprovalButton");
 						
@@ -70,7 +70,7 @@
 				function fun_approved(form) {
 						form.method.value="create";
 						form.stateSelected.value="3";
-						form.action="loanAction.do";
+						form.action="loanAccountAction.do";
 						form.submit();
 						func_disableSubmitBtn("approvedButton");
 						
@@ -79,7 +79,7 @@
 				function fun_saveForLater(form) {
 						form.method.value="create";
 						form.stateSelected.value="1";
-						form.action="loanAction.do";
+						form.action="loanAccountAction.do";
 						form.submit();
 						func_disableSubmitBtn("saveForLaterButton");
 					}

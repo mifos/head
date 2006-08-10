@@ -4,14 +4,15 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.LoanAccountView;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
-import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.application.customer.business.CustomerLevelEntity;
+import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.persistence.service.PersistenceService;
 
 public class LoanPersistenceService extends PersistenceService {
@@ -48,4 +49,13 @@ public class LoanPersistenceService extends PersistenceService {
 		return serviceImpl.getAccount(accountId);
 	}
 	
+	public List<LoanOfferingBO> getApplicablePrdOfferings(
+			CustomerLevelEntity customerLevel) {
+		return serviceImpl.getApplicablePrdOfferings(customerLevel);
+	}
+	
+	public LoanOfferingBO getLoanOffering(Short loanOfferingId,Short localeId) {
+		return serviceImpl.getLoanOffering(loanOfferingId,localeId);
+	}
+
 }

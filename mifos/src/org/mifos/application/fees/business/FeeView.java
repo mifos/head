@@ -13,7 +13,9 @@ public class FeeView extends View{
 	private boolean periodic;
 	private String feeSchedule;
 	private Short feeRemoved;
-	
+	private String feeFormula;
+	private Short localeId;
+
 	public FeeView(){}
 	
 	public FeeView(FeeBO fee){
@@ -21,6 +23,23 @@ public class FeeView extends View{
 		this.feeName = fee.getFeeName();
 		if(fee.getFeeType().equals(RateAmountFlag.AMOUNT))
 			this.amount = ((AmountFeeBO)fee).getFeeAmount().toString();
+		this.periodic = fee.isPeriodic();
+		if(fee.isPeriodic())
+			this.feeSchedule = fee.getFeeFrequency().getFeeMeetingFrequency().getShortMeetingSchedule();
+		this.feeRemoved = YesNoFlag.NO.getValue();
+	}
+	
+	public FeeView(FeeBO fee,Short localeId){
+		this.feeId = fee.getFeeId().toString();
+		this.feeName = fee.getFeeName();
+		if(fee.getFeeType().equals(RateAmountFlag.AMOUNT)) {
+			this.amount = ((AmountFeeBO)fee).getFeeAmount().toString();
+			this.feeFormula = "";
+		}
+		else { 
+			this.amount = ((RateFeeBO)fee).getRate().toString();
+			this.feeFormula = ((RateFeeBO)fee).getFeeFormula().getFormulaString(localeId);
+		}
 		this.periodic = fee.isPeriodic();
 		if(fee.isPeriodic())
 			this.feeSchedule = fee.getFeeFrequency().getFeeMeetingFrequency().getShortMeetingSchedule();
@@ -78,4 +97,14 @@ public class FeeView extends View{
 	public Double getAmountDoubleValue() {
 		return new Money(amount).getAmountDoubleValue();
 	}
+
+	public String getFeeFormula() {
+		return feeFormula;
+	}
+
+	public Short getLocaleId() {
+		return localeId;
+	}
+	
+	
 }

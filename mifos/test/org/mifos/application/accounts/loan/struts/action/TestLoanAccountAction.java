@@ -1,6 +1,7 @@
 package org.mifos.application.accounts.loan.struts.action;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -8,6 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+
+import javax.servlet.http.HttpSession;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -18,6 +21,7 @@ import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
@@ -26,8 +30,18 @@ import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.fees.util.helpers.FeePayment;
+import org.mifos.application.fund.util.valueobjects.Fund;
+import org.mifos.application.master.business.CollateralTypeEntity;
+import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -36,7 +50,9 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -185,6 +201,401 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.viewStatusHistory.toString());
 	}
 	
+	public void testGetPrdOfferingsWithoutCustomer() {
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "getPrdOfferings");
+		actionPerform();
+		verifyActionErrors(new String[]{LoanConstants.CUSTOMERNOTSELECTEDERROR});
+		verifyInputForward();
+	}
+	
+	public void testGetPrdOfferings() {
+
+		createInitialObjects();
+
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "getPrdOfferings");
+		addRequestParameter("customerId", group.getCustomerId().toString());
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.getPrdOfferigs_success.toString());
+		
+		assertEquals("Group", ((CustomerBO) request.getSession()
+				.getAttribute(LoanConstants.LOANACCOUNTOWNER)).getDisplayName());
+	}
+
+	public void testGetPrdOfferingsApplicableForCustomer() {
+		createInitialObjects();
+		LoanOfferingBO loanOffering1 = getLoanOffering(
+				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+		LoanOfferingBO loanOffering2 = getLoanOffering(
+				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+		LoanOfferingBO loanOffering3 = getLoanOffering(
+				ProductDefinitionConstants.OFFERINGAPPLICABLETOCLIENTS, 1, 1);
+
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "getPrdOfferings");
+		addRequestParameter("customerId", group.getCustomerId().toString());
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.getPrdOfferigs_success.toString());
+
+		assertEquals("Group", ((CustomerBO) request.getSession()
+				.getAttribute(LoanConstants.LOANACCOUNTOWNER)).getDisplayName());
+		assertEquals(2, ((List<LoanOfferingBO>) request.getSession()
+				.getAttribute(LoanConstants.LOANPRDOFFERINGS)).size());
+
+		TestObjectFactory.removeObject(loanOffering1);
+		TestObjectFactory.removeObject(loanOffering2);
+		TestObjectFactory.removeObject(loanOffering3);
+	}
+
+	public void testGetPrdOfferingsApplicableForCustomersWithMeeting() {
+		createInitialObjects();
+		LoanOfferingBO loanOffering1 = getLoanOffering(
+				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+		LoanOfferingBO loanOffering2 = getLoanOffering(
+				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+		LoanOfferingBO loanOffering3 = getLoanOffering(
+				ProductDefinitionConstants.OFFERINGAPPLICABLETOCLIENTS, 1, 1);
+		LoanOfferingBO loanOffering4 = getLoanOffering(
+				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 2, 1);
+		LoanOfferingBO loanOffering5 = getLoanOffering(
+				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 3);
+
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "getPrdOfferings");
+		addRequestParameter("customerId", group.getCustomerId().toString());
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.getPrdOfferigs_success.toString());
+
+		assertEquals("Group", ((CustomerBO) request.getSession()
+				.getAttribute(LoanConstants.LOANACCOUNTOWNER)).getDisplayName());
+		assertEquals(3, ((List<LoanOfferingBO>) request.getSession()
+				.getAttribute(LoanConstants.LOANPRDOFFERINGS)).size());
+
+		TestObjectFactory.removeObject(loanOffering1);
+		TestObjectFactory.removeObject(loanOffering2);
+		TestObjectFactory.removeObject(loanOffering3);
+		TestObjectFactory.removeObject(loanOffering4);
+		TestObjectFactory.removeObject(loanOffering5);
+	}
+	
+	public void testLoadWithoutCustomerAndPrdOfferingId() {
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "load");
+		actionPerform();
+		verifyActionErrors(new String[] {
+				LoanConstants.CUSTOMERNOTSELECTEDERROR,
+				LoanConstants.LOANOFFERINGNOTSELECTEDERROR });
+		verifyInputForward();
+	}
+	
+	public void testLoadWithoutCustomer() {
+		LoanOfferingBO loanOffering = getLoanOffering(
+				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId().toString());
+		actionPerform();
+		verifyActionErrors(new String[] {
+				LoanConstants.CUSTOMERNOTSELECTEDERROR});
+		verifyInputForward();
+		
+		TestObjectFactory.removeObject(loanOffering);
+	}
+	
+	public void testLoadWithoutPrdOfferingId() {
+		createInitialObjects();
+		
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("customerId", group.getCustomerId().toString());
+		addRequestParameter("prdOfferingId", "");
+		actionPerform();
+		verifyActionErrors(new String[] {
+				LoanConstants.LOANOFFERINGNOTSELECTEDERROR});
+		verifyInputForward();
+	}
+	
+	public void testLoad() {
+		createInitialObjects();
+		LoanOfferingBO loanOffering = getLoanOffering(
+				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "getPrdOfferings");
+		addRequestParameter("customerId", group.getCustomerId().toString());
+		actionPerform();
+
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("customerId", group.getCustomerId().toString());
+		addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId()
+				.toString());
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.load_success.toString());
+		assertNotNull(request.getSession().getAttribute(
+				LoanConstants.LOANOFFERING));
+		assertNotNull(request.getSession()
+				.getAttribute(LoanConstants.LOANFUNDS));
+
+		TestObjectFactory.removeObject(loanOffering);
+	}
+	
+	public void testLoadForMasterData() {
+		createInitialObjects();
+		LoanOfferingBO loanOffering = getLoanOffering(
+				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "getPrdOfferings");
+		addRequestParameter("customerId", group.getCustomerId().toString());
+		actionPerform();
+		
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("customerId", group.getCustomerId().toString());
+		addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId().toString());
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.load_success.toString());
+		
+		assertEquals(2, ((List) request.getSession()
+				.getAttribute(MasterConstants.COLLATERAL_TYPES)).size());
+		assertEquals(129, ((List) request.getSession()
+				.getAttribute(MasterConstants.BUSINESS_ACTIVITIES)).size());
+		
+		TestObjectFactory.removeObject(loanOffering);
+	}
+	
+	public void testLoadWithFee() {
+		createInitialObjects();
+		LoanOfferingBO loanOffering = getLoanOffering(
+				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+		List<FeeBO> fees = getFee();
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "getPrdOfferings");
+		addRequestParameter("customerId", group.getCustomerId().toString());
+		actionPerform();
+
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("customerId", group.getCustomerId().toString());
+		addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId()
+				.toString());
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.load_success.toString());
+
+		HttpSession session = request.getSession();
+		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) session
+				.getAttribute("loanAccountActionForm");
+		assertEquals(2,( (List)session.getAttribute(LoanConstants.ADDITIONAL_FEES_LIST)).size());
+		assertEquals(loanOffering.getDefaultLoanAmount().toString(),
+				loanActionForm.getLoanAmount());
+
+		assertEquals(loanOffering.getDefNoInstallments().toString(),
+				loanActionForm.getNoOfInstallments());
+		assertEquals(loanOffering.getDefInterestRate().toString(),
+				loanActionForm.getInterestRate());
+		assertEquals(loanOffering.isIntDedDisbursement(), loanActionForm
+				.isInterestDedAtDisbValue());
+		assertEquals(loanOffering.getGracePeriodDuration().toString(),
+				loanActionForm.getGracePeriodDuration());
+		assertEquals(DateHelper.getCurrentDate(((UserContext) session
+				.getAttribute("UserContext")).getPereferedLocale()),
+				loanActionForm.getDisbursementDate());
+
+		TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory
+				.getObject(LoanOfferingBO.class, loanOffering
+						.getPrdOfferingId()));
+		for (FeeBO fee : fees) {
+			TestObjectFactory.cleanUp((FeeBO) TestObjectFactory.getObject(
+					FeeBO.class, fee.getFeeId()));
+		}
+		
+		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+	}
+	
+	public void testSchedulePreviewWithoutData() {
+		createInitialObjects();
+		LoanOfferingBO loanOffering = getLoanOffering(
+				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
+				request.getSession());
+		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
+				new ArrayList<Fund>(), request.getSession());
+		SessionUtils.setAttribute(LoanConstants.LOANACCOUNTOWNER, group,
+				request.getSession());
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "schedulePreview");
+		actionPerform();
+
+		verifyActionErrors(new String[] { "errors.defMinMax",
+				"errors.defMinMax", "errors.defMinMax",
+				"errors.validandmandatory", "errors.graceper" });
+		verifyInputForward();
+		
+		TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory
+				.getObject(LoanOfferingBO.class, loanOffering
+						.getPrdOfferingId()));
+	}
+	
+	public void testSchedulePreviewWithDataWithNoGracePer() {
+		createInitialObjects();
+		LoanOfferingBO loanOffering = getLoanOffering(
+				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
+				request.getSession());
+		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
+				new ArrayList<Fund>(), request.getSession());
+		SessionUtils.setAttribute(LoanConstants.LOANACCOUNTOWNER, group,
+				request.getSession());
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("loanAmount", loanOffering.getDefaultLoanAmount()
+				.toString());
+		addRequestParameter("interestRate", loanOffering.getDefInterestRate()
+				.toString());
+		addRequestParameter("noOfInstallments", loanOffering
+				.getDefNoInstallments().toString());
+		addRequestParameter("disbursementDate", DateHelper
+				.getCurrentDate(((UserContext) request.getSession()
+						.getAttribute("UserContext")).getPereferedLocale()));
+
+		addRequestParameter("method", "schedulePreview");
+		actionPerform();
+		verifyActionErrors(new String[] { "errors.graceper" });
+		verifyInputForward();
+
+		TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory
+				.getObject(LoanOfferingBO.class, loanOffering
+						.getPrdOfferingId()));
+	}
+	
+	public void testSchedulePreviewWithData() {
+		createInitialObjects();
+		LoanOfferingBO loanOffering = getLoanOffering(
+				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
+				request.getSession());
+		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
+				new ArrayList<Fund>(), request.getSession());
+		SessionUtils.setAttribute(LoanConstants.LOANACCOUNTOWNER, group,
+				request.getSession());
+		SessionUtils.setAttribute(MasterConstants.COLLATERAL_TYPES,
+				new ArrayList<MasterDataEntity>(), request.getSession());
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("loanAmount", loanOffering.getDefaultLoanAmount()
+				.toString());
+		addRequestParameter("interestRate", loanOffering.getDefInterestRate()
+				.toString());
+		addRequestParameter("noOfInstallments", loanOffering
+				.getDefNoInstallments().toString());
+		addRequestParameter("disbursementDate", DateHelper
+				.getCurrentDate(((UserContext) request.getSession()
+						.getAttribute("UserContext")).getPereferedLocale()));
+		addRequestParameter("gracePeriodDuration", "1");
+		addRequestParameter("method", "schedulePreview");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.schedulePreview_success.toString());
+		TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory
+				.getObject(LoanOfferingBO.class, loanOffering
+						.getPrdOfferingId()));
+	}
+	
+	public void testSchedulePreviewWithDataForIntDedAtDisb() {
+		createInitialObjects();
+		LoanOfferingBO loanOffering = getLoanOffering(
+				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
+				request.getSession());
+		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
+				new ArrayList<Fund>(), request.getSession());
+		SessionUtils.setAttribute(LoanConstants.LOANACCOUNTOWNER, group,
+				request.getSession());
+		SessionUtils.setAttribute(MasterConstants.COLLATERAL_TYPES,
+				new ArrayList<MasterDataEntity>(), request.getSession());
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("loanAmount", loanOffering.getDefaultLoanAmount()
+				.toString());
+		addRequestParameter("interestRate", loanOffering.getDefInterestRate()
+				.toString());
+		addRequestParameter("noOfInstallments", loanOffering
+				.getDefNoInstallments().toString());
+		addRequestParameter("disbursementDate", DateHelper
+				.getCurrentDate(((UserContext) request.getSession()
+						.getAttribute("UserContext")).getPereferedLocale()));
+		addRequestParameter("intDedDisbursement", "1");
+		addRequestParameter("method", "schedulePreview");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.schedulePreview_success.toString());
+		TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory
+				.getObject(LoanOfferingBO.class, loanOffering
+						.getPrdOfferingId()));
+	}
+	
+	public void testCreate() {
+		createInitialObjects();
+		LoanOfferingBO loanOffering = getLoanOffering(
+				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
+				request.getSession());
+		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
+				new ArrayList<Fund>(), request.getSession());
+		SessionUtils.setAttribute(LoanConstants.LOANACCOUNTOWNER, group,
+				request.getSession());
+		SessionUtils.setAttribute(MasterConstants.COLLATERAL_TYPES,
+				new ArrayList<MasterDataEntity>(), request.getSession());
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("loanAmount", loanOffering.getDefaultLoanAmount()
+				.toString());
+		addRequestParameter("interestRate", loanOffering.getDefInterestRate()
+				.toString());
+		addRequestParameter("noOfInstallments", loanOffering
+				.getDefNoInstallments().toString());
+		addRequestParameter("disbursementDate", DateHelper
+				.getCurrentDate(((UserContext) request.getSession()
+						.getAttribute("UserContext")).getPereferedLocale()));
+		addRequestParameter("gracePeriodDuration", "0");
+		addRequestParameter("method", "schedulePreview");
+		actionPerform();
+
+		addRequestParameter("method", "create");
+		addRequestParameter("stateSelected", "1");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.create_success.toString());
+
+		LoanBO loan = (LoanBO) request.getSession().getAttribute(
+				Constants.BUSINESS_KEY);
+		loan = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loan
+				.getAccountId());
+		assertEquals(loanOffering.getDefaultLoanAmount().toString(), loan
+				.getLoanAmount().toString());
+
+		assertEquals(loanOffering.getDefInterestRate(), loan.getInterestRate());
+		assertEquals(loanOffering.getDefNoInstallments(), loan
+				.getNoOfInstallments());
+		assertEquals(new java.sql.Date(DateUtils
+				.getCurrentDateWithoutTimeStamp().getTime()).toString(), loan
+				.getDisbursementDate().toString());
+		assertEquals(Short.valueOf("0"), loan.getGracePeriodDuration());
+		assertEquals(Short.valueOf("1"), loan.getAccountState().getId());
+		TestObjectFactory.cleanUp(loan);
+	}
+	
 	private void modifyActionDateForFirstInstallment() {
 		LoanScheduleEntity installment = (LoanScheduleEntity)accountBO.getAccountActionDate((short) 1);
 		installment.setPrincipal(new Money("20.0"));
@@ -275,5 +686,40 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		addNotes();
 		TestObjectFactory.updateObject(accountBO);
 		return accountBO;
+	}
+	
+	private void createInitialObjects() {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+	}
+	
+	private LoanOfferingBO getLoanOffering(String prdApplicableTo,
+			int meetingFrequency, int recurAfter) {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(meetingFrequency, recurAfter, 4, 2));
+		Date currentDate = new Date(System.currentTimeMillis());
+		return TestObjectFactory.createLoanOffering("Loan", Short
+				.valueOf(prdApplicableTo), currentDate, Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), meeting);
+	}
+	
+	private List<FeeBO> getFee() {
+		List<FeeBO> fees = new ArrayList<FeeBO>();
+		FeeBO fee1 = TestObjectFactory.createOneTimeAmountFee(
+				"One Time Amount Fee", FeeCategory.LOAN, "120.0",
+				FeePayment.TIME_OF_DISBURSMENT);
+		FeeBO fee3 = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
+				FeeCategory.LOAN, "10.0", MeetingFrequency.WEEKLY, (short) 1);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		fees.add(fee1);
+		fees.add(fee3);
+		return fees;
 	}
 }

@@ -2,12 +2,13 @@ package org.mifos.application.master.persistence;
 
 import java.util.List;
 
-import org.mifos.framework.MifosTestCase;
-
+import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.valueobjects.EntityMaster;
 import org.mifos.application.master.util.valueobjects.LookUpMaster;
+import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestConstants;
 
@@ -46,5 +47,11 @@ public class TestMasterPersistence extends MifosTestCase {
 		MasterPersistence masterPersistence = new MasterPersistence();				
 		List<PaymentTypeEntity> paymentTypeList = masterPersistence.getSupportedPaymentModes(Short.valueOf("1"),Short.valueOf("1"));
 		assertEquals(TestConstants.PAYMENTTYPES_NUMBER,paymentTypeList.size());
+	}
+	
+	public void testRetrieveMasterEntities() throws NumberFormatException, PersistenceException {
+		MasterPersistence masterPersistence = new MasterPersistence();
+		List<BusinessActivityEntity> masterEntity = masterPersistence.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES,Short.valueOf("1"));
+		assertEquals(129,masterEntity.size());
 	}
 }

@@ -37,7 +37,7 @@
 		</displayname>	
 		<parameters>
 			<parameter name="method" value="getPrdOfferings" valuetype="string"/>
-			<parameter name="customer.customerId" value="clientId" valuetype="method"/>
+			<parameter name="customerId" value="clientId" valuetype="method"/>
 			
 		</parameters>
 		

@@ -453,7 +453,12 @@ public interface NamedQueryConstants {
 	
 	public String ALL_LOAN_FEE_SCHEDULE_DETAILS = "account.getAllAccountFeeForAllInstallmentsForAllLoanAcounts";
 	public String ALL_CUSTOMER_FEE_SCHEDULE_DETAILS = "account.getAllAccountFeeForAllInstallmentsForAllCustomerAccounts";
+	
+	public String APPLICABLE_LOAN_OFFERINGS = "loanOffering.getApplicableProduts";
 
 	public String GET_ALL_APPLICABLE_CUSTOMER_FEE="getAllApplicableFeesForCustomer";
 	public String GET_ALL_APPLICABLE_LOAN_FEE="getAllApplicableFeesForLoan";
+	
+	public String GET_ALL_APPLICABLE_FEE_FOR_LOAN_CREATION="getAllApplicableFeesForLoanCreation";
+	public String MASTERDATA_MIFOS_ENTITY_VALUE="masterdata.mifosEntityValue";
 }

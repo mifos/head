@@ -240,10 +240,6 @@ public abstract class CustomerActionForm extends BaseActionForm{
 		return (FeeView)(defaultFees.get(i));
 	}
 	
-	private Short getShortValue(String str) {
-		return StringUtils.isNullAndEmptySafe(str) ? Short.valueOf(str) : null;
-	}
-	
 	public List<FeeView> getFeesToApply(){
 		List<FeeView> feesToApply = new ArrayList<FeeView>();
 		for(FeeView fee: getAdditionalFees())

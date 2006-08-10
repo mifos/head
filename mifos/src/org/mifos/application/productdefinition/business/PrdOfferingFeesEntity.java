@@ -38,6 +38,7 @@
 
 package org.mifos.application.productdefinition.business;
 
+import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -81,6 +82,10 @@ public class PrdOfferingFeesEntity extends PersistentObject {
 
 	public void setPrdOfferingFeeId(Short prdOfferingFeeId) {
 		this.prdOfferingFeeId = prdOfferingFeeId;
+	}
+	
+	public boolean isFeePresent(Short feeId) {
+		return fees.getFeeId().equals(feeId);
 	}
 
 	@Override

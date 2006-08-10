@@ -26,6 +26,11 @@ public abstract class MasterDataEntity extends PersistentObject {
 		this.id=id;
 	}
 	
+	public MasterDataEntity(Short id, Short localeId){
+		this.id=id;
+		this.localeId=localeId;
+	}
+	
 	public Short getId() {
 		return id;
 	}

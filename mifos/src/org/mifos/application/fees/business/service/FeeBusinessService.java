@@ -46,6 +46,7 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 
 public class FeeBusinessService extends BusinessService {
@@ -87,5 +88,10 @@ public class FeeBusinessService extends BusinessService {
 		} catch (PersistenceException pe) {
 			throw new FeeException(pe);
 		}
+	}
+	
+	public List<FeeBO> getAllAppllicableFeeForLoanCreation()
+			throws ServiceException {
+		return feePersistence.getAllAppllicableFeeForLoanCreation();
 	}
 }

@@ -412,7 +412,13 @@ public class FeeInstallmentGenerator implements FeeInstallmentGeneratorIfc
 		accountFeeInstallment.setFeeId(accountFee.getFees().getFeeId());
 		accountFeeInstallment.setAccountFeeAmount(accountFeeAmount);
 		accountFeeInstallment.setAccountFee(accountFee);
-		accountFeeInstallment.setAccountFeeEntity(getAccountFeeEntity(accountFee));
+		AccountFeesEntity accountFeeEntity = getAccountFeeEntity(accountFee);
+		if(accountFeeEntity != null)
+		{
+			accountFeeEntity.setAccountFeeAmount(accountFee.getAccountFeeAmount());
+			accountFeeInstallment.setAccountFeeEntity(accountFeeEntity);
+		}
+
 		feeInstallment.setAccountFee(accountFeeAmount);
 		feeInstallment.addAccountFeeInstallment(accountFeeInstallment);
 

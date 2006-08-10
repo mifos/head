@@ -439,6 +439,7 @@ public class TestObjectFactory {
 		loanOffering.setDefNoInstallments(defInstallments);
 		loanOffering.setMaxNoInstallments(defInstallments);
 		loanOffering.setPenaltyGrace(penaltyGrace);
+		loanOffering.setGracePeriodDuration((short)0);
 		loanOffering.setIntDedDisbursement(intDedAtDisb.intValue() == 0 ? false
 				: true);
 		loanOffering

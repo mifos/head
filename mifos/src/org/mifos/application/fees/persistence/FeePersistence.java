@@ -46,7 +46,9 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.fees.business.ApplicableAccountsTypeEntity;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
@@ -101,5 +103,15 @@ public class FeePersistence extends Persistence {
 		} catch (HibernateException he) {
 			throw new PersistenceException(he);
 		}
+	}
+	
+	public List<FeeBO> getAllAppllicableFeeForLoanCreation()
+			throws ServiceException {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("active", FeeStatus.ACTIVE.getValue());
+		queryParameters.put("category", FeeCategory.LOAN.getValue());
+		return executeNamedQuery(
+				NamedQueryConstants.GET_ALL_APPLICABLE_FEE_FOR_LOAN_CREATION,
+				queryParameters);
 	}
 }

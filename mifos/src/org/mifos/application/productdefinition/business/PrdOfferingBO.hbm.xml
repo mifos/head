@@ -95,4 +95,9 @@
 		</joined-subclass>
 
 	</class>
+	<query name="loanOffering.getApplicableProduts">
+		<![CDATA[from org.mifos.application.productdefinition.business.LoanOfferingBO loanOffering 
+				where loanOffering.prdApplicableMaster.prdApplicableMasterId = :prdApplicableMaster and 
+				loanOffering.prdStatus.offeringStatusId = :prdStatus order by loanOffering.prdOfferingName]]>
+	</query>
 </hibernate-mapping>

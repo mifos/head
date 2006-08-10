@@ -70,6 +70,9 @@
 		and fees.feeId not in ( select af.fees.feeId from org.mifos.application.accounts.business.AccountFeesEntity af 
 		where af.account.accountId=:accountId and af.fees.feeFrequency.feeFrequencyType.id=:feeFrequencyTypeId and (af.feeStatus=null or af.feeStatus=:active))
 		]]>
+	</query> 
+	<query name="getAllApplicableFeesForLoanCreation">
+		<![CDATA[from FeeBO as fees where fees.feeStatus.id=:active and fees.categoryType.id =:category]]>
 	</query>  
 	
 </hibernate-mapping>
