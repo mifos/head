@@ -271,7 +271,7 @@
 							<td width="31%" align="right" valign="top" class="fontnormal"><c:if
 								test="${sessionScope.BusinessKey.accountState.id != 6 && sessionScope.BusinessKey.accountState.id != 7 && sessionScope.BusinessKey.accountState.id !=8 && sessionScope.BusinessKey.accountState.id !=10}">
 								<html-el:link
-									action="loanAction.do?method=manage&prdOfferingName=${sessionScope.BusinessKey.loanOffering.prdOfferingName}">
+									action="loanAccountAction.do?method=manage&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}">
 									<mifos:mifoslabel name="loan.edit_acc_info" />
 								</html-el:link>
 							</c:if></td>

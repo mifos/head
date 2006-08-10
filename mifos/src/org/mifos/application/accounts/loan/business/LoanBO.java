@@ -656,7 +656,7 @@ public class LoanBO extends AccountBO {
 		// if the trxn date is not equal to disbursementDate we need to
 		// regenerate the installments
 		if (!this.disbursementDate.equals(transactionDate)) {
-			regeneratePaymentSchedule(transactionDate);
+			regeneratePaymentSchedule(transactionDate,"Disbursal");
 		}
 		this.disbursementDate = transactionDate;
 		AccountStateEntity newState = (AccountStateEntity) (new MasterPersistence())
@@ -986,11 +986,11 @@ public class LoanBO extends AccountBO {
 		new LoanPersistance().createOrUpdate(this);
 	}
 
-	private void regeneratePaymentSchedule(Date transactionDate)
+	private void regeneratePaymentSchedule(Date transactionDate,String action)
 			throws RepaymentScheduleException {
 		Set<AccountActionDateEntity> accntActionDateEntitySet = null;
 
-		accntActionDateEntitySet = generateRepaymentSchedule(transactionDate,"Disbursal");
+		accntActionDateEntitySet = generateRepaymentSchedule(transactionDate,action);
 		reAssociateFeePenaltyAtDisbursal(accntActionDateEntitySet);
 		for (AccountActionDateEntity entity : accntActionDateEntitySet) {
 			initializeAmounts(entity);
@@ -1573,20 +1573,17 @@ public class LoanBO extends AccountBO {
 		return (PersonnelPersistenceService) ServiceFactory.getInstance()
 				.getPersistenceService(PersistenceServiceName.Personnel);
 	}
-
-	@Override
-	public void initializeStateMachine(Short localeId) throws AccountException{
-		try {
-			AccountStateMachines
-					.getInstance()
-					.initialize(
-							localeId,
-							getOffice().getOfficeId(),
-							AccountTypes.LOANACCOUNT
-									.getValue());
-		} catch (StatesInitializationException e) {
-			throw new AccountException(e);
-		}
+	
+@Override
+	public void initializeStateMachine(Short localeId)
+			throws StatesInitializationException {
+		AccountStateMachines
+				.getInstance()
+				.initialize(
+						localeId,
+						getOffice().getOfficeId(),
+						AccountTypes.LOANACCOUNT
+								.getValue());
 	}
 
 	@Override
@@ -1601,23 +1598,15 @@ public class LoanBO extends AccountBO {
 	}
 	
 	@Override
-	public String getStatusName(Short localeId, Short accountStateId) throws AccountException {
-		try {
-			return AccountStateMachines.getInstance().getStatusName(localeId,
-					accountStateId, AccountTypes.LOANACCOUNT.getValue());
-		} catch (ApplicationException e) {
-			throw new AccountException(e);
-		}
+	public String getStatusName(Short localeId, Short accountStateId) throws ApplicationException {
+		return AccountStateMachines.getInstance().getStatusName(localeId,
+				accountStateId, AccountTypes.LOANACCOUNT.getValue());
 	}
 
 	@Override
-	public String getFlagName(Short flagId) throws AccountException{
-		try {
-			return AccountStateMachines.getInstance().getFlagName(flagId,
-					AccountTypes.LOANACCOUNT.getValue());
-		} catch (ApplicationException e) {
-			throw new AccountException(e);
-		}
+	public String getFlagName(Short flagId) throws ApplicationException{
+		return AccountStateMachines.getInstance().getFlagName(flagId,
+				AccountTypes.LOANACCOUNT.getValue());
 	}
 
 	public void save() throws AccountException {
@@ -1870,5 +1859,14 @@ public class LoanBO extends AccountBO {
 		inputs.setGracePeriod(getGracePeriodDuration());
 	}
 	
+	public void updateLoan() throws ApplicationException, SystemException {
+		if (getAccountState().getId().equals(AccountState.LOANACC_APPROVED.getValue())
+					|| getAccountState().getId().equals(AccountState.LOANACC_DBTOLOANOFFICER.getValue())
+					|| getAccountState().getId().equals(AccountState.LOANACC_PARTIALAPPLICATION.getValue())
+					|| getAccountState().getId().equals(AccountState.LOANACC_PENDINGAPPROVAL.getValue())) {
+				regeneratePaymentSchedule(getDisbursementDate(),"update");
+		}
+		update();
+	}
 }
 	

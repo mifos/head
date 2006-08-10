@@ -560,6 +560,11 @@ public class ActivityMapper {
 		activityMap.put("/loanAccountAction-get",SecurityConstants.VIEW);
 		activityMap.put("/loanAccountAction-getLoanRepaymentSchedule",SecurityConstants.VIEW);
 		activityMap.put("/loanAccountAction-viewStatusHistory", SecurityConstants.VIEW);
+		activityMap.put("/loanAccountAction-manage", SecurityConstants.LOAN_UPDATE_LOAN);
+		activityMap.put("/loanAccountAction-managePreview",SecurityConstants.VIEW);
+		activityMap.put("/loanAccountAction-managePrevious",SecurityConstants.VIEW);
+		activityMap.put("/loanAccountAction-cancel",SecurityConstants.VIEW);
+		activityMap.put("/loanAccountAction-update", SecurityConstants.LOAN_UPDATE_LOAN);
 
 		activityMap.put("/loanAccountAction-getPrdOfferings", SecurityConstants.VIEW);
 		activityMap.put("/loanAccountAction-load", SecurityConstants.VIEW);

@@ -1932,6 +1932,40 @@ public class TestLoanBO extends MifosTestCase {
 		assertEquals(DateUtils.getDateWithoutTimeStamp(lastAppliedDate.getTime()),DateUtils.getDateWithoutTimeStamp(accountFeesEntity.getLastAppliedDate().getTime()));
 	}
 	
+	public void testUpdateLoanSuccessWithRegeneratingNewRepaymentSchedule() throws ApplicationException, SystemException {
+		Date startDate = new Date(System.currentTimeMillis());
+		Date newDate = incrementCurrentDate(14);
+		accountBO = getLoanAccount();
+		accountBO.setAccountState(new AccountStateEntity(AccountState.LOANACC_APPROVED.getValue()));
+		((LoanBO)accountBO).setDisbursementDate(newDate);
+		((LoanBO)accountBO).updateLoan();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+				group.getCustomerId());
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+				AccountBO.class, accountBO.getAccountId());
+		Date newActionDate = DateUtils.getDateWithoutTimeStamp(accountBO.getAccountActionDate(Short.valueOf("1")).getActionDate().getTime());
+		assertEquals("New repayment schedule generated, so first installment date should be same as newDate",newDate,newActionDate);
+	}
+	
+	public void testUpdateLoanWithoutRegeneratingNewRepaymentSchedule() throws ApplicationException, SystemException {
+		Date startDate = new Date(System.currentTimeMillis());
+		Date newDate = incrementCurrentDate(14);
+		accountBO = getLoanAccount();
+		Date oldActionDate = DateUtils.getDateWithoutTimeStamp(accountBO.getAccountActionDate(Short.valueOf("1")).getActionDate().getTime());
+		((LoanBO)accountBO).setDisbursementDate(newDate);
+		((LoanBO)accountBO).updateLoan();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.closeSession();
+		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+				group.getCustomerId());
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+				AccountBO.class, accountBO.getAccountId());
+		Date newActionDate = DateUtils.getDateWithoutTimeStamp(accountBO.getAccountActionDate(Short.valueOf("1")).getActionDate().getTime());
+		assertEquals("Didn't generate new repayment schedule, so first installment date should be same as before ",oldActionDate,newActionDate);
+	}
 	
 	private LoanBO createAndRetrieveLoanAccount(LoanOfferingBO loanOffering,
 			boolean isInterestDedAtDisb, List<FeeView> feeViews,
@@ -2259,5 +2293,13 @@ public class TestLoanBO extends MifosTestCase {
 				disbursalType);
 
 	}
-
+	
+	private Date incrementCurrentDate(int noOfDays) {
+		Calendar currentDateCalendar = new GregorianCalendar();
+		int year = currentDateCalendar.get(Calendar.YEAR);
+		int month = currentDateCalendar.get(Calendar.MONTH);
+		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
+		currentDateCalendar = new GregorianCalendar(year, month, day + noOfDays);
+		return DateUtils.getDateWithoutTimeStamp(currentDateCalendar.getTimeInMillis());
+	}
 }

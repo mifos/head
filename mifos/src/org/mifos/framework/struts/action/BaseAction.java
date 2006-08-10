@@ -215,7 +215,15 @@ public abstract class BaseAction extends DispatchAction {
 		return value != null ? String.valueOf(value) : null;
 	}
 	
+	protected String getStringValue(Integer value) {
+		return value != null ? String.valueOf(value) : null;
+	}
+	
 	protected String getStringValue(Short value) {
+		return value != null ? String.valueOf(value) : null;
+	}
+	
+	protected String getStringValue(Money value) {
 		return value != null ? String.valueOf(value) : null;
 	}
 	

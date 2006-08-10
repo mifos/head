@@ -317,6 +317,14 @@ public class LoanAccountActionForm extends BaseActionForm {
 	public Short getCollateralTypeIdValue() {
 		return getShortValue(getCollateralTypeId());
 	}
+	
+	public Money getLoanAmountValue() {
+		return getMoney(loanAmount);
+	}
+	
+	public Double getInterestRateValue() {
+		return getDoubleValue(interestRate);
+	}
 
 	public FeeView getDefaultFee(int i) {
 		while (i >= defaultFees.size()) {
@@ -355,6 +363,8 @@ public class LoanAccountActionForm extends BaseActionForm {
 					defaultFees.get(i).setFeeRemoved(YesNoFlag.NO.getValue());
 				}
 			}
+		}else if (method.equals(Methods.managePreview.toString())) {
+			intDedDisbursement = null;
 		}
 
 	}
@@ -369,6 +379,8 @@ public class LoanAccountActionForm extends BaseActionForm {
 		else if (method.equals(Methods.load.toString()))
 			checkValidationForLoad(errors);
 		else if (method.equals(Methods.schedulePreview.toString()))
+			checkValidationForSchedulePreview(errors, request);
+		else if (method.equals(Methods.managePreview.toString()))
 			checkValidationForSchedulePreview(errors, request);
 		if (!errors.isEmpty()) {
 			request.setAttribute("methodCalled", method);

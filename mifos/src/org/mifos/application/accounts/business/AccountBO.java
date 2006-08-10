@@ -97,6 +97,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
@@ -1101,18 +1102,18 @@ public class AccountBO extends BusinessObject {
 		return accountNotes;
 	}
 	
-	public void initializeStateMachine(Short localeId) throws AccountException {
+	public void initializeStateMachine(Short localeId) throws AccountException, StatesInitializationException {
 	}
 	
 	public List<AccountStateEntity> getStatusList() {
 		return null;
 	}
 	
-	public String getStatusName(Short localeId, Short accountStateId) throws AccountException{
+	public String getStatusName(Short localeId, Short accountStateId) throws AccountException, ApplicationException{
 		return null;
 	}
 
-	public String getFlagName(Short flagId) throws AccountException{
+	public String getFlagName(Short flagId) throws AccountException, ApplicationException{
 		return null;
 	}
 	

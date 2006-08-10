@@ -1720,6 +1720,13 @@
 			<forward name="schedulePreview_success" path="/pages/application/loan/jsp/schedulePreview.jsp" />
 			<forward name="preview_success" path="/pages/application/loan/jsp/createloanpreview.jsp" />
 			<forward name="create_success" path="/pages/application/loan/jsp/CreateLoanAccountConfirmation.jsp" />
+			<forward name="manage_success" path="/pages/application/loan/jsp/editLoanAccount.jsp" />
+			<forward name="managepreview_success" path="/pages/application/loan/jsp/editPreviewLoanAccount.jsp" />
+			<forward name="managepreview_failure" path="/pages/application/loan/jsp/editLoanAccount.jsp" />
+			<forward name="update_success" path="/loanAccountAction.do?method=get" />
+			<forward name="update_failure" path="/pages/application/loan/jsp/editPreviewLoanAccount.jsp" />
+			<forward name="manageprevious_success" path="/pages/application/loan/jsp/editLoanAccount.jsp" />
+			<forward name="loan_detail_page" path="/loanAccountAction.do?method=get" />
 			
 		</action>
 		<action path="/savingsDepositWithdrawalAction" type="org.mifos.application.accounts.savings.struts.action.SavingsDepositWithdrawalAction" name="savingsDepositWithdrawalForm" parameter="method" 
