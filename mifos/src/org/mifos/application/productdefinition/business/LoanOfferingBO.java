@@ -341,12 +341,17 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		this.prinDueLastInstFlag = prinDueLastInstFlag;
 	}
 
-	public boolean isPrinDueLastInst(){
-		return this.prinDueLastInstFlag>0;
+	public boolean isPrinDueLastInst() {
+		return this.prinDueLastInstFlag.shortValue() != Short.valueOf(
+				ProductDefinitionConstants.DEFAULTPRINDUELASTINSTFLAG)
+				.shortValue();
 	}
-	public void setPrinDueLastInst(boolean prinDueLastInst){
-		this.prinDueLastInstFlag=(short)(prinDueLastInst?1:0);
+
+	public void setPrinDueLastInst(boolean prinDueLastInst) {
+		this.prinDueLastInstFlag = Short.valueOf(prinDueLastInst ? "1"
+				: ProductDefinitionConstants.DEFAULTINTDEDDISBURSEMENTFLAG);
 	}
+	
 	public Short getRepmtfreqId() {
 		return repmtfreqId;
 	}

@@ -283,10 +283,10 @@
 								<mifos:mifoslabel
 								name="loan.interestRules" /></span> <span class="fontnormal"><br>
 							<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" />	
-							<mifos:mifoslabel name="loan.interest_type" />:&nbsp;<mifoscustom:lookUpValue
-								id="${sessionScope.BusinessKey.interestType.id}"
-								searchResultName="InterestTypes" mapToSeperateMasterTable="true">
-							</mifoscustom:lookUpValue><br>
+							<mifos:mifoslabel name="loan.interest_type" />:&nbsp;
+							
+							<c:out value="${sessionScope.BusinessKey.interestType.name}" />
+							<br>
 							<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" />
 							<mifos:mifoslabel name="loan.interest_amount" />:&nbsp;<span
 								class="fontnormal"><c:out
@@ -333,7 +333,7 @@
 							<mifos:mifoslabel name="loan.penalty_type" />:&nbsp;<c:out
 								value="${sessionScope.BusinessKey.loanOffering.penalty.penaltyType}" /><br>
 							<mifos:mifoslabel name="loan.grace_period_type" />:&nbsp;
-							<c:out value="${sessionScope.BusinessKey.gracePeriodType.id}" /><br>
+							<c:out value="${sessionScope.BusinessKey.gracePeriodType.name}" /><br>
 							<mifos:mifoslabel name="loan.no_of_inst" />:&nbsp;<c:out
 								value="${sessionScope.BusinessKey.noOfInstallments}" /> <mifos:mifoslabel
 								name="loan.allowed_no_of_inst" />&nbsp;<c:out
@@ -344,8 +344,8 @@
 							<mifos:mifoslabel name="loan.grace_period" />:&nbsp;<c:out
 								value="${sessionScope.BusinessKey.gracePeriodDuration}" />&nbsp;<mifos:mifoslabel
 								name="loan.inst" /><br>
-							<mifos:mifoslabel name="loan.source_fund" />:&nbsp;<%--c:out
-								value="${loanfn:getSourcesOfFund(sessionScope.BusinessKey.loanOffering.loanOfferingFunds)}" /--%><br>
+							<mifos:mifoslabel name="loan.source_fund" />:&nbsp;
+							<c:out value="${sessionScope.BusinessKey.fund.fundName}" /><br>
 						</td>
 						</tr>
 					</table>
@@ -359,7 +359,7 @@
 						<tr id="Loan.CollateralType">
 							<td class="fontnormal">
 								<mifos:mifoslabel name="loan.collateral_type" keyhm="Loan.CollateralType" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>&nbsp;
-								<c:out value="${sessionScope.BusinessKey.collateralType.id}" />
+								<c:out value="${sessionScope.BusinessKey.collateralType.name}" />
 							</td>
 						</tr>
 						<tr id="Loan.CollateralNotes">
