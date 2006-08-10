@@ -67,6 +67,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 
@@ -301,6 +302,9 @@ public class CustomerBusinessService extends BusinessService {
 	public void initializeStateMachine(Short localeId , Short officeId , Short levelId) throws StatesInitializationException {
 		AccountStateMachines.getInstance().initialize(localeId,
 				officeId,	levelId);
-		//AccountStateMachines.getInstance().printstatesViewMapForCenter();
+	}
+	
+	public QueryResult getAllCustomerNotes(Integer customerId) throws ApplicationException, SystemException{
+		return new CustomerPersistence().getAllCustomerNotes(customerId);
 	}
 }

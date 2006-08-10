@@ -863,6 +863,14 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/applyChargeAction-update",
 				SecurityConstants.APPLY_CHARGES_TO_CLIENT_GROUP_CENTERS_LOANS);
+		//mapping for adding customer notes
+		activityMap.put("/customerNotesAction-load-Center", SecurityConstants.CENTER_ADD_NOTE_TO_CENTER);
+		activityMap.put("/customerNotesAction-preview", SecurityConstants.VIEW);
+		activityMap.put("/customerNotesAction-previous", SecurityConstants.VIEW);
+		activityMap.put("/customerNotesAction-create", SecurityConstants.VIEW);
+		activityMap.put("/customerNotesAction-search", SecurityConstants.VIEW);
+		activityMap.put("/customerNotesAction-load-Group", SecurityConstants.VIEW);
+		activityMap.put("/customerNotesAction-load-Client", SecurityConstants.VIEW);
 
 	}
 

@@ -393,6 +393,7 @@ public interface NamedQueryConstants {
 	public String GET_GROUP_BY_SYSTEMID="customer.findGroupSystemId";
 	public String GET_CLIENT_BY_SYSTEMID="customer.findClientSystemId";
 	
+	
 	//number of meetings attended and missed
 	public String NUMBEROFMEETINGSATTENDED="numberOfMeetingsAttended";
 	public String NUMBEROFMEETINGSMISSED="numberOfMeetingsMissed";
@@ -458,7 +459,11 @@ public interface NamedQueryConstants {
 
 	public String GET_ALL_APPLICABLE_CUSTOMER_FEE="getAllApplicableFeesForCustomer";
 	public String GET_ALL_APPLICABLE_LOAN_FEE="getAllApplicableFeesForLoan";
+
+	public String GETALLCUSTOMERNOTES = "notes.getAllCustomerNotes";
+
 	
 	public String GET_ALL_APPLICABLE_FEE_FOR_LOAN_CREATION="getAllApplicableFeesForLoanCreation";
 	public String MASTERDATA_MIFOS_ENTITY_VALUE="masterdata.mifosEntityValue";
+
 }

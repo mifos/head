@@ -70,7 +70,7 @@ public class CustomerNoteEntity extends PersistentObject {
 		this.customer = null;
 	}
 
-	protected CustomerNoteEntity(String comment, Date commentDate,
+	public CustomerNoteEntity(String comment, Date commentDate,
 			PersonnelBO personnel, CustomerBO customer) {
 		this.comment = comment;
 		this.commentDate = commentDate;

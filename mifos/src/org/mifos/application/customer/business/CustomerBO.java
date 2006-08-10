@@ -730,7 +730,7 @@ public abstract class CustomerBO extends BusinessObject {
 	
 	protected abstract void validateStatusChange(Short newStatusId) throws ApplicationException, SystemException;
 		
-	private void addCustomerNotes(CustomerNoteEntity customerNote) {
+	public void addCustomerNotes(CustomerNoteEntity customerNote) {
 		this.customerNotes.add(customerNote);
 	
 }

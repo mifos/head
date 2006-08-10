@@ -73,9 +73,12 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
+import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.QueryFactory;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.struts.tags.DateHelper;
 
@@ -523,6 +526,22 @@ public class CustomerPersistence extends Persistence {
 		} catch (HibernateException he) {
 			throw new PersistenceException(he);
 		}
+	}
+	
+	public QueryResult getAllCustomerNotes(Integer customerId) throws PersistenceException, HibernateSearchException, HibernateProcessException {
+		QueryResult notesResult=null;
+		try{
+			Session session=null;
+			 notesResult = QueryFactory.getQueryResult("NotesSearch");
+			 session = notesResult.getSession();
+	 		Query query= session.getNamedQuery(NamedQueryConstants.GETALLCUSTOMERNOTES);
+	 		query.setInteger("CUSTOMER_ID",customerId);
+	 		notesResult.executeQuery(query);
+	 	}
+		catch(HibernateProcessException  hpe) {		
+			throw hpe;
+		}
+      return notesResult;
 	}
 
 }

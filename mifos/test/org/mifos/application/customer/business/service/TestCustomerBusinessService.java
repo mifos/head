@@ -494,5 +494,18 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				.currentTimeMillis()));
 		assertEquals(2 , service.retrieveAllCustomerStatusList(center.getCustomerLevel().getId()).size());
 	}
+	
+	public void testGetAllCustomerNotes() throws Exception{
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active_test", Short
+				.valueOf("13"), "1.4", meeting, new Date(System
+				.currentTimeMillis()));
+		center.addCustomerNotes(TestObjectFactory.getCustomerNote("Test Note" , center));
+		TestObjectFactory.updateObject(center);
+		assertEquals(1, service.getAllCustomerNotes(center.getCustomerId()).getSize());
+		center = (CenterBO) (HibernateUtil.getSessionTL().get(CenterBO.class,
+				new Integer(center.getCustomerId())));
+	}
 
 }

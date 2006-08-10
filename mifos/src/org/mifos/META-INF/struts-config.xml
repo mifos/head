@@ -113,6 +113,8 @@
 		<form-bean name="editCustomerStatusActionForm" type="org.mifos.application.customer.struts.actionforms.EditCustomerStatusActionForm" />
 		<!-- apply charge action form-->
 		<form-bean name="ApplyChargeActionForm" type="org.mifos.application.accounts.struts.actionforms.ApplyChargeActionForm" />
+		<!-- add notesform  for customer-->
+		<form-bean name="customerNotesActionForm" type="org.mifos.application.customer.struts.actionforms.CustomerNotesActionForm" />
 		
 	</form-beans>
 
@@ -963,6 +965,23 @@
 			<forward name="clientDetails_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewClientCharges&amp;searchNode(search_name)=ClientChargesDetails" />
 			<forward name="groupDetails_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewGroupCharges&amp;searchNode(search_name)=ClientChargesDetails" />
 			<forward name="centerDetails_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewCenterCharges&amp;searchNode(search_name)=ClientChargesDetails" />
+		</action>
+		<!-- CustomerNotes action -->
+		<action path="/customerNotesAction" type="org.mifos.application.customer.struts.action.CustomerNotesAction" 
+			name="customerNotesActionForm" 
+			parameter="method" 
+			validate="true" 
+			input="/customerNotesAction.do?method=validate" scope="session">
+			<forward name="load_success" path="/pages/application/customer/jsp/addCustomerNotes.jsp" />
+			<forward name="get_success" path="/CustomerNoteAction.do?method=search" />
+			<forward name="search_success" path="/pages/application/customer/jsp/viewCustomerNotes.jsp" />
+			<forward name="preview_success" path="/pages/application/customer/jsp/previewCustomerNotes.jsp" />
+			<forward name="preview_failure" path="/pages/application/customer/jsp/addCustomerNotes.jsp" />
+			<forward name="create_failure" path="/pages/application/customer/jsp/previewCustomerNotes.jsp" />
+			<forward name="previous_success" path="/pages/application/customer/jsp/addCustomerNotes.jsp" />
+			<forward name="group_detail_page" path="/GroupAction.do?method=get" />
+			<forward name="center_detail_page" path="/centerAction.do?method=get" />
+			<forward name="client_detail_page" path="/clientCreationAction.do?method=get" />
 		</action>
 	</action-mappings>
 

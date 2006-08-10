@@ -524,7 +524,7 @@
                     <c:when test="${!empty requestScope.notes}">
 	                    <c:forEach var="note" items="${requestScope.notes}">
 	                    	<span class="fontnormal8ptbold"> 
- <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,note.commentDate)}" />
+ 								<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,note.commentDate)}" />
 	                    	</span>
 	                    	<span class="fontnormal8pt"> 
 	                    	<c:out value="${note.comment}"/>
@@ -544,11 +544,11 @@
 	                  <td align="right" class="paddingleft05">
                     <span class="fontnormal8pt">
                      <c:if test="${!empty requestScope.notes}">
-            		<a href="CustomerNoteAction.do?method=get&input=Center">
-                    	<mifos:mifoslabel name="center.SeeAllNotesLink" bundle="CenterUIResources" ></mifos:mifoslabel>
-                    </a><br>
+            		<html-el:link href="customerNotesAction.do?method=search&customerId=${requestScope.centerVO.customerId}&globalAccountNum=${requestScope.centerVO.globalCustNum}&customerName=${requestScope.centerVO.displayName}&securityParamInput=Center&levelId=${requestScope.centerVO.customerLevel.levelId}">
+            		  	<mifos:mifoslabel name="center.SeeAllNotesLink" bundle="CenterUIResources" ></mifos:mifoslabel>
+                    </html-el:link><br>
                     </c:if>
-            	    <a href="CustomerNoteAction.do?method=load&input=Center">
+            	   <a href="customerNotesAction.do?method=load&customerId=<c:out value="${requestScope.centerVO.customerId}"/>">
 			             <mifos:mifoslabel name="Center.NotesLink" bundle="CenterUIResources"></mifos:mifoslabel>
             	    </a>
                     </span></td>

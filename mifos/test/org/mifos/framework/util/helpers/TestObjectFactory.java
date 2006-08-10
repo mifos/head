@@ -92,6 +92,7 @@ import org.mifos.application.collectionsheet.business.CollSheetSavingsDetailsEnt
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerLevelEntity;
+import org.mifos.application.customer.business.CustomerNoteEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -1160,7 +1161,7 @@ public class TestObjectFactory {
 		session.lock(customer, LockMode.NONE);
 		deleteCenterMeeting(customer);
 		deleteClientAttendence(customer);
-
+		deleteCustomerNotes(customer);
 		List<FeeBO> feeList = new ArrayList<FeeBO>();
 		for (AccountBO account : customer.getAccounts()) {
 			if (null != account) {
@@ -1173,6 +1174,17 @@ public class TestObjectFactory {
 		session.delete(customer);
 		deleteFees(feeList);
 		transaction.commit();
+	}
+
+	private static void deleteCustomerNotes(CustomerBO customer) {
+		Session session = HibernateUtil.getSessionTL();
+		Set<CustomerNoteEntity> customerNotes = customer.getCustomerNotes();
+		if (customerNotes != null && customerNotes.size() > 0){
+			for (CustomerNoteEntity customerNote : customerNotes) {
+				session.delete(customerNote);
+			}
+		}
+		
 	}
 
 	private static void deleteCenterMeeting(CustomerBO customer) {
@@ -1794,4 +1806,11 @@ public class TestObjectFactory {
 		return bulkEntryActionViews;
 
 	}
+	
+	public static CustomerNoteEntity getCustomerNote (String comment , CustomerBO customer){
+		java.sql.Date commentDate = new java.sql.Date(System.currentTimeMillis());
+		CustomerNoteEntity notes = new CustomerNoteEntity(comment, commentDate , customer.getPersonnel() , customer );
+		return notes;
+	}
+	
 }

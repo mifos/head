@@ -604,6 +604,16 @@ public class TestCustomerPersistence extends MifosTestCase {
 		assertEquals(1, count);
 	}
 	
+	public void testGetAllCustomerNotes() throws Exception{
+		center = createCenter();
+		center.addCustomerNotes(TestObjectFactory.getCustomerNote("Test Note" , center));
+		TestObjectFactory.updateObject(center);
+		assertEquals(1, customerPersistence.getAllCustomerNotes(center.getCustomerId()).getSize());
+		center = (CenterBO) (HibernateUtil.getSessionTL().get(CenterBO.class,
+				new Integer(center.getCustomerId())));
+	}
+	
+	
 	private CenterBO createCenter(){
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
