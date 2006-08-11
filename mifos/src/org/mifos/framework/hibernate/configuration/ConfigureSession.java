@@ -38,15 +38,13 @@
 package org.mifos.framework.hibernate.configuration;
 
 
-import org.hibernate.cfg.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
-import org.mifos.framework.hibernate.helper.HibernateConstants;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
+
+import org.hibernate.cfg.Configuration;
 import org.mifos.framework.exceptions.HibernateStartUpException;
-import org.mifos.framework.util.helpers.ExceptionConstants;
+import org.mifos.framework.hibernate.helper.HibernateConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.ResourceLoader;
 
@@ -82,13 +80,11 @@ public class ConfigureSession
 	  {
 
 		 config.configure(ResourceLoader.getURI(FilePaths.HIBERNATECFGFILE).toURL());
-		 MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("Resource added ");
 	   }
 	   catch(Exception e)
 	   {
 		    
-		    MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).error("hibernate.cfg.xml filenot found ");
-		 	throw new HibernateStartUpException(HibernateConstants.CFGFILENOTFOUND,e);
+		  throw new HibernateStartUpException(HibernateConstants.CFGFILENOTFOUND,e);
 	   }
 	   try
 	   {
@@ -96,9 +92,6 @@ public class ConfigureSession
 
 		 hibernateProperties.load(new FileInputStream(new File(ResourceLoader.getURI(hibernatePropertiesPath))))                                                                                            ;
 		 config.setProperties(hibernateProperties);
-		 MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("properties added ");
-
-
 	  }
 	  catch(Exception e)
 	  {

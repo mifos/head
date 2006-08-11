@@ -87,8 +87,6 @@ public  class DAO
 {
 	
 	
-	public static String dataSourceName;
-	private static DataSource ds = null;
 	/**
 	 * It updates the ValueObject instance passed in the Context object in the database. This method gets the hibernate session , starts a transaction , calls update on hibernate session and then commits and closes the hibernate session , this method can be over-ridden for any other different behaviour for update
 	 * @param context
@@ -206,63 +204,22 @@ public  class DAO
 		return HibernateUtil.getSession();
 	}
 	
-	/**This returns a connection object after doing a lookup in the jndi tree.
-	 * This is primarily for the logger which uses this connection 
-	 * to log statements in the database.
-	 * @return
-	 */
+	/**
+	 * This returns a connection object.
+  	 * This is primarily for the logger which uses this connection
+  	 * to log statements in the database.
+	 * @return Connection
+  	 */
 	public static Connection getConnection()  throws DBConnectionFailedException{
-		
-		Context cxt = null;
-		
 		Connection con = null;
-		try {
-			cxt = new InitialContext();
-		} catch (NamingException e) {
-			
-			e.printStackTrace();
-		}
-		
-		if(null == ds){
-			try {
-				ds = (DataSource)cxt.lookup("java:"+getDataSourceName());
-			} catch (NamingException e) {
-				
-				e.printStackTrace();
-			}
-		}
-		
-		try {
-			con = ds.getConnection();
-			
-		} catch (SQLException e) {
-			
-			Date currentDate = new Date(System.currentTimeMillis());
-			System.out.println("WARN," + DAO.class.getName() + ","+ currentDate +" This Logger could not log the message in the database because it could not get a connection to the database for the designated datasource being :- java:"+getDataSourceName());
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		
-		return con;
-		
-	}
-	
-	
-	
-	/**
-	 * @return
-	 */
-	public static String getDataSourceName() {
-		return dataSourceName;
-	}
-	
-	/**
-	 * @param dataSourceName
-	 */
-	public static void initializeDataSourceName(String dataSourceName) {
-		DAO.dataSourceName = dataSourceName;
-	}
-	
+  		try {
+			con = HibernateUtil.getSession().connection();
+		} catch(Exception e){
+  			throw new DBConnectionFailedException(e);
+  		}
+  		return con;
+  	}
+
 	public MasterDataRetriever getMasterDataRetriever()throws HibernateProcessException{
 		return new MasterDataRetriever();
 	}

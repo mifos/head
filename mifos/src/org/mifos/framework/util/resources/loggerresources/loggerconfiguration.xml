@@ -75,14 +75,14 @@
 	<appender-ref ref="MifosRollingFileAppender"/>
 	
 	<!-- Denotes the jdbc appender -->
-	<!--appender-ref ref="MifosJDBCAppender"/-->
+	<!-- <appender-ref ref="MifosJDBCAppender"/>-->
 
  </category>
  
  <!-- Category type org.mifos.framework -->
   <category name="org.mifos.framework" additivity="true"> 
 	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
-	<priority value="ERROR"/> 
+	<priority value="INFO"/> 
   </category>
   
   <!-- Category type org.mifos.application.customer.customernote for CustomerNote -->

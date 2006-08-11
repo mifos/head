@@ -126,11 +126,11 @@ public class InitializerPlugin implements PlugIn {
 
 		try {
 			initializeLogger();
+			initializeHibernate(this.hibernatePropertiesPath);
 			// System.out.println("logger has been initialized");
 			initializeApplication(servlet, config);
 			MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info(
 					"Logger has been initialised", false, null);
-			initializeHibernate(this.hibernatePropertiesPath);
 			initializeSecurity();
 			configureAdminUser();
 			FinancialInitializer.initialize();
@@ -198,9 +198,6 @@ public class InitializerPlugin implements PlugIn {
 		String businessProcessorImplementation = null;
 
 		try {
-			// read the dsn and set it in the DAO
-			DAO.initializeDataSourceName(servlet.getInitParameter("DSN"));
-
 			// read delegator
 			node = getNode(FilePaths.INITIALIZATIONFILE, Constants.DELEGATOR);
 			delegator = (Delegator) Class.forName(
