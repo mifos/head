@@ -12,7 +12,7 @@
 	<property name="sql.dir" value="${basedir}/sql"/>
 	<property name="build.dir" value="${basedir}/build"/>
 	<property name="dist.dir" value="${basedir}/dist"/>
-	<property name="doc.dir" value="${basedir}/docs"/>
+	<!--property name="doc.dir" value="${basedir}/docs"/-->
 
 	<!--Helper path for building, copying resources etc-->
 	<property name="build.src.dir" value="${build.dir}/src_pkg"/>
@@ -41,6 +41,15 @@
 
 	<!--<echo level="debug">CLASSPATH - ${java.class.path}</echo>-->
 
+        <echo>ant.java.version = ${ant.java.version} </echo> 
+        <echo>java.version = ${java.version}</echo> 
+        <echo>env.JAVA_HOME = ${env.JAVA_HOME}</echo> 
+        <echo>env.JBOSS_HOME = ${env.JBOSS_HOME}</echo> 
+        <echo>env.COBERTURA_HOME = ${env.COBERTURA_HOME}</echo> 
+        <echo>env.ANT_HOME = ${env.ANT_HOME}</echo> 
+        <echo>env.CLASSPATH = ${env.CLASSPATH}</echo>  
+
+  
 	<target name="init">
 		<tstamp>
 			<format property="BUILD_ID" pattern="MMM-dd-yyyy hh:mm aa z" locale="en"/>
@@ -65,10 +74,14 @@
 		<mkdir dir="${test.classes}/conf"/>
 	</target>
 
-	<target name="checkout" depends="check_config" description="Gets the latest version from the source control">
+	<!-- erase this target name="checkout" depends="check_config" description="Gets the latest version from the source control">
 		<cvspass cvsRoot=":pserver:${cvs.uname}@${cvs.host}:/MIFOSCVS" password="${cvs.passwd}" />
 		<cvs cvsRoot=":pserver:${cvs.uname}@${cvs.host}:/MIFOSCVS" 
 		package="MIFOSCVS/DevSpace/WorkSpace"  dest="../../.." />
+	</target -->
+
+	<!-- needs work... target name="checkout" depends="check_config" description="Gets the latest version from the source control">
+		<svn checkout="svn checkout ${svn.host} mifos --username ${svn.uname} --password ${svn.passwd}" />
 	</target>
 
 	<target name="clean_src_classes" description="Cleans the source classes">
