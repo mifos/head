@@ -74,9 +74,9 @@
 		<mkdir dir="${test.classes}/conf"/>
 	</target>
 
-	<!-- <target name="checkout" depends="check_config" description="Gets the latest version from the source control">
-		<svn checkout="svn checkout ${svn.host} mifos -username ${svn.uname} -password ${svn.passwd}" />
-	</target> -->
+	<target name="checkout" depends="check_config" description="Gets the latest version from the source control">
+		<!-- <svn checkout="svn checkout ${svn.host} mifos -username ${svn.uname} -password ${svn.passwd}" /> -->
+	</target>
 
 	<target name="clean_src_classes" description="Cleans the source classes">
 		<delete>
