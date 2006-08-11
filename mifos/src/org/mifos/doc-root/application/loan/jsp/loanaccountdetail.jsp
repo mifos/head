@@ -408,10 +408,7 @@
 							<td class="fontnormal"><%--
 									<html-el:link href="transaction_history_loanAccount.htm"> <mifos:mifoslabel name="loan.view_transc_history" />
 									</html-el:link><br>--%> <span class="fontnormal"> <html-el:link
-								href="loanAction.do?method=search&input=LoanChangeLog
-														&prdOfferingName=${sessionScope.BusinessKey.loanOffering.prdOfferingName}
-														&accountId=${sessionScope.BusinessKey.accountId}&recordOfficeId=${sessionScope.BusinessKey.office.officeId}
-														&recordLoanOfficerId=${sessionScope.BusinessKey.personnel.personnelId}&createdDate=${sessionScope.BusinessKey.createdDate}">
+								href="#">
 								<mifos:mifoslabel name="loan.view_change_log" />
 							</html-el:link> <br>
 							<html-el:link href="loanAccountAction.do?method=viewStatusHistory&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}">
