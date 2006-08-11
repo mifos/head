@@ -82,7 +82,7 @@
  <!-- Category type org.mifos.framework -->
   <category name="org.mifos.framework" additivity="true"> 
 	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
-	<priority value="INFO"/> 
+	<priority value="ERROR"/> 
   </category>
   
   <!-- Category type org.mifos.application.customer.customernote for CustomerNote -->
