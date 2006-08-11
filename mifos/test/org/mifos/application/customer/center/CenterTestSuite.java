@@ -3,6 +3,7 @@ package org.mifos.application.customer.center;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
+import org.mifos.application.customer.center.business.service.TestCenterBusinessService;
 import org.mifos.application.fees.TestFees;
 
 public class CenterTestSuite extends TestSuite{
@@ -20,6 +21,7 @@ public class CenterTestSuite extends TestSuite{
 	public static void main(String[] args){
 		TestSuite suite = new TestSuite();
 		suite.addTest(new TestCenter("Center"));
+		suite.addTestSuite(TestCenterBusinessService.class);
 		suite.run(new TestResult());
 	}
 }

@@ -643,5 +643,31 @@ public class CustomerAccountBO extends AccountBO {
 		}
 	}
 
+	public Money getNextDueAmount() throws Exception {
+
+		AccountActionDateEntity accountAction = null;
+		for (AccountActionDateEntity accountActionDate : getAccountActionDates()) {
+
+			if (accountActionDate.getPaymentStatus().equals(
+					PaymentStatus.UNPAID.getValue())) {
+				if (accountActionDate.compareDate(DateUtils
+						.getCurrentDateWithoutTimeStamp()) >= 0) {
+					if (accountAction == null)
+						accountAction = accountActionDate;
+					else {
+						if (accountAction.getInstallmentId() > accountActionDate
+								.getInstallmentId())
+							accountAction = accountActionDate;
+					}
+
+				}
+			}
+		}
+
+		if (accountAction != null)
+			return getDueAmount(accountAction);
+		else
+			return new Money("0.0");
+	}
 
 }

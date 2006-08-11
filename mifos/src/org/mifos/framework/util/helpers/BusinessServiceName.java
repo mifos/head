@@ -11,7 +11,8 @@ public enum BusinessServiceName {
 	Loan("org.mifos.application.accounts.loan.business.service.LoanBusinessService"),
 	ReportsService("org.mifos.application.reports.business.service.ReportsBusinessService"),
 	FeesService("org.mifos.application.fees.business.service.FeeBusinessService"),
-	Personnel("org.mifos.application.personnel.business.service.PersonnelBusinessService");
+	Personnel("org.mifos.application.personnel.business.service.PersonnelBusinessService"),
+	Center("org.mifos.application.customer.center.business.service.CenterBusinessService");
 
 	String name;
 

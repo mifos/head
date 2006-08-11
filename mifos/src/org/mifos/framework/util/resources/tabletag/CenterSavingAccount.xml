@@ -37,7 +37,7 @@
   </row>
   
   <row>
-    <column label="Center" labeltype="key" boldlabel="false" type="link" action="centerAction.do">
+    <column label="Center" labeltype="key" boldlabel="false" type="link" action="centerCustAction.do">
       <displayname>
        <fragment-name name="centerName" type="method"/>
        <fragment-name name=": ID " type="string"/>
@@ -45,7 +45,7 @@
       </displayname>
       <parameters>
         <parameter name="globalCustNum" value="centerGlobalCustNum" valuetype="method"/>
-        <parameter name="method" value="getDetails" valuetype="string"/>
+        <parameter name="method" value="get" valuetype="string"/>
         <parameter name="recordOfficeId" value="branchGlobalNum" valuetype="method"/>
         <parameter name="recordLoanOfficerId" value="loanOffcerGlobalNum" valuetype="method"/>
       </parameters>
@@ -61,13 +61,13 @@
 			<parameter name="method" value="load" valuetype="string"/>
 		</parameters>
 	</column>
-	<column label="/" labeltype="string" boldlabel="false" type="link" action="centerAction.do">
+	<column label="/" labeltype="string" boldlabel="false" type="link" action="centerCustAction.do">
 		<displayname>
 			<fragment-name name="clientName" type="method"/>
 		</displayname>
 		<parameters>
 			<parameter name="globalCustNum" value="clientGlobalCustNum" valuetype="method"/>
-			<parameter name="method" value="getDetails" valuetype="string"/>
+			<parameter name="method" value="get" valuetype="string"/>
 			<parameter name="recordOfficeId" value="branchGlobalNum" valuetype="method"/>
         	<parameter name="recordLoanOfficerId" value="loanOffcerGlobalNum" valuetype="method"/>
 		</parameters>

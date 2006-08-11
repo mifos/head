@@ -348,6 +348,10 @@ public class ActivityMapper {
 		activityMap.put(
 				"/centerCustAction-update",
 				SecurityConstants.CENTER_MODIFY_CENTER_INFORMATION_AND_CHANGE_CENTER_STATUS);
+		
+		activityMap.put("/centerCustAction-get", SecurityConstants.VIEW);
+		
+		
 		// For M2 Center ends
 		
 		// colsed account searchaction in center details page
@@ -858,6 +862,8 @@ public class ActivityMapper {
 		activityMap.put("/notesAction-search", SecurityConstants.VIEW);
 		activityMap.put("/notesAction-create-Savings",
 				SecurityConstants.SAVINGS_CAN_ADD_NOTES_TO_SAVINGS);
+		
+		
 
 		//mapping for editing customer status
 		activityMap.put("/editCustomerStatusAction-load-Center", SecurityConstants.VIEW);
@@ -884,6 +890,7 @@ public class ActivityMapper {
 		activityMap.put("/customerNotesAction-search", SecurityConstants.VIEW);
 		activityMap.put("/customerNotesAction-load-Group", SecurityConstants.VIEW);
 		activityMap.put("/customerNotesAction-load-Client", SecurityConstants.VIEW);
+		
 
 	}
 

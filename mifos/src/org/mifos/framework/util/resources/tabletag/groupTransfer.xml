@@ -3,7 +3,7 @@
 		xmlns="http://www.aditi.com" 
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 		xsi:schemaLocation="http://www.aditi.com tabletag.xsd ">
-<path key="centerSearch" forwardkey="search_success" action="/centerAction.do"/> 
+<path key="centerSearch" forwardkey="search_success" action="/centerCustAction.do"/> 
 <pagerequirements numbersrequired="true" bluelinerequired="true" headingrequired="false" blanklinerequired="false" valignnumbers="true"/>  
   
 <row>

@@ -59,11 +59,16 @@ import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.business.PositionEntity;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.center.business.CenterPerformanceHistory;
+import org.mifos.application.customer.center.business.service.CenterBusinessService;
 import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
+import org.mifos.application.customer.center.util.valueobjects.Center;
+import org.mifos.application.customer.group.util.helpers.LinkParameters;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.customer.util.valueobjects.Customer;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
@@ -96,7 +101,7 @@ import org.mifos.framework.util.helpers.StringUtils;
 public class CenterCustAction extends BaseAction {
 	@Override
 	protected BusinessService getService() throws ServiceException {
-		return getCustomerBusinessService();
+		return getCenterBusinessService();
 	}
 
 	@Override
@@ -104,10 +109,10 @@ public class CenterCustAction extends BaseAction {
 		return true;
 	}
 
-	private CustomerBusinessService getCustomerBusinessService()
+	private CenterBusinessService getCenterBusinessService()
 			throws ServiceException {
-		return (CustomerBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Customer);
+		return (CenterBusinessService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.Center);
 	}
 
 	public ActionForward chooseOffice(ActionMapping mapping, ActionForm form,
@@ -176,6 +181,12 @@ public class CenterCustAction extends BaseAction {
 		clearActionForm((CenterCustActionForm) form);
 		CenterBO center = (CenterBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
+		CenterBO centerBO = getCenterBusinessService().getCenter(center.getCustomerId());
+		
+		
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,centerBO
+				, request
+						.getSession());
 		loadUpdateMasterData(center.getOffice().getOfficeId(), request);
 		setValuesInActionForm((CenterCustActionForm) form, request);
 		return mapping.findForward(ActionForwards.manage_success.toString());
@@ -300,6 +311,8 @@ public class CenterCustAction extends BaseAction {
 				center.addCustomerPosition(new CustomerPositionEntity(findPosition(request,positionView.getPositionId()),findClientObject(request,positionView.getCustomerId()), center));
 			}
 		}
+		
+		
 		center.setUserContext(getUserContext(request));
 		center.update();
 		
@@ -456,6 +469,27 @@ public class CenterCustAction extends BaseAction {
 		SessionUtils.setAttribute(CustomerConstants.CLIENT_LIST, customerListToPopulate , request
 				.getSession());
 	}
+	public ActionForward get(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		CenterCustActionForm actionForm = (CenterCustActionForm) form;
+		
+		
+		CustomerBusinessService customerBusinessService = ((CustomerBusinessService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.Customer));
+		CenterBO centerBO =(CenterBO) customerBusinessService.getBySystemId(actionForm.getGlobalCustNum(),CustomerLevel.CENTER.getValue());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,centerBO
+				, request
+						.getSession());
+		centerBO.getCustomerStatus().setLocaleId(getUserContext(request).getLocaleId());
+		SessionUtils.setAttribute(CenterConstants.GROUP_LIST,centerBO.getChildren(CustomerLevel.GROUP.getValue()),request
+				.getSession());
+	  CenterPerformanceHistory centerPerformanceHistory = 	customerBusinessService.getCenterPerformanceHistory(centerBO.getSearchId(),centerBO.getOffice().getOfficeId());
+	  SessionUtils.setAttribute(CenterConstants.PERFORMANCE_HISTORY,centerPerformanceHistory,request
+				.getSession());
+	  
+		return mapping.findForward(ActionForwards.get_success.toString());
+	}
 
 	private void convertCustomFieldDateToUniformPattern(
 			List<CustomFieldView> customFields, Locale locale) {		
@@ -493,4 +527,5 @@ public class CenterCustAction extends BaseAction {
 		actionForm.setExternalId(null);
 		actionForm.setLoanOfficerId(null);
 	}
+
 }

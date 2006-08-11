@@ -63,10 +63,10 @@
 </script>
 <html-el:form action="centerCustAction.do?method=update" onsubmit="func_disableSubmitBtn('submitButton');">
 		<html-el:hidden property="input" value="manage"/> 
-		<html-el:hidden property="customerId" value="${requestScope.centerVO.customerId}"/> 
-		<html-el:hidden property="globalCustNum" value="${requestScope.centerVO.globalCustNum}"/> 
-		<html-el:hidden property="versionNo" value="${requestScope.centerVO.versionNo}"/> 
-		<html-el:hidden property="customerAddressDetail.customerAddressId" value="${requestScope.centerVO.customerAddressDetail.customerAddressId}"/> 
+		<html-el:hidden property="customerId" value="${sessionScope.BusinessKey.customerId}"/> 
+		<html-el:hidden property="globalCustNum" value="${sessionScope.BusinessKey.globalCustNum}"/> 
+		<html-el:hidden property="versionNo" value="${sessionScope.BusinessKey.versionNo}"/> 
+		<%--  <html-el:hidden property="customerAddressDetail.customerAddressId" value="${sessionScope.BusinessKey.customerAddressDetail.customerAddressId}"/>  --%>
 		    
      <td align="left" valign="top" bgcolor="#FFFFFF" class="paddingleftmain">
       <table width="95%" border="0" cellpadding="0" cellspacing="0">

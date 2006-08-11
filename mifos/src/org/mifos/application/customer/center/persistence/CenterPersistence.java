@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -24,6 +25,6 @@ public class CenterPersistence extends  Persistence{
 		Session session = HibernateUtil.getSessionTL();
 		CenterBO center = (CenterBO) session.get(CenterBO.class,
 				customerId);
-		return center;
+				return center;
 	}
 }

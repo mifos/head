@@ -414,6 +414,7 @@
 			
 			<!-- Cancel Page Forwards -->
 			<forward name="cancelCreate_success" path="/CustomerSearchAction.do?method=load" />
+			<forward name="get_success" path="/pages/application/center/jsp/center_details.jsp" />
 		</action>
 		<!-- Client Creation Action -->
 		<action path="/clientCreationAction"

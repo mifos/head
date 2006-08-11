@@ -45,7 +45,8 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
-<%@ taglib uri="/mifos/customtags" prefix="mifoscustom" %>
+<%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
+<%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
@@ -60,17 +61,8 @@
   <table width="95%" border="0" cellpadding="0" cellspacing="0">
           <tr>
             <td class="bluetablehead05">
-	            <span class="fontnormal8pt">
-	            	<a href="CustomerSearchAction.do?method=getOfficeHomePage&officeId=<c:out value="${sessionScope.linkValues.customerOfficeId}"/>&officeName=<c:out value="${sessionScope.linkValues.customerOfficeName}"/>&loanOfficerId=<c:out value="${requestScope.Context.userContext.id}"/>">
-	            	<c:out value="${sessionScope.linkValues.customerOfficeName}"/></a> /
-	            </span>
-	            <!-- Name of the client -->
-	            <span class="fontnormal8pt">
-	            <a href="centerAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.globalCustNum}"/>">
-	           				<c:out value="${sessionScope.linkValues.customerName}"/>            	
-           			</a>
-	            </span>
-	                        </td>
+            <customtags:headerLink/> 
+	             </td>
           </tr>
         </table>
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -78,7 +70,7 @@
           <td width="70%" height="24" align="left" valign="top" class="paddingL15T15"><table width="96%" border="0" cellpadding="3" cellspacing="0">
               <tr>
                 <td class="headingorange"><span class="heading">
-<c:out value="${sessionScope.linkValues.customerName}"/> 
+<c:out value="${sessionScope.BusinessKey.displayName}"/> 
                     - </span>
 <mifos:mifoslabel name="client.changelog" bundle="ClientUIResources"/>
 				</td>

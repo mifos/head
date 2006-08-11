@@ -800,6 +800,16 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			assertEquals(DateUtils.getDateWithoutTimeStamp(lastAppliedDate.getTime()),DateUtils.getDateWithoutTimeStamp(accountFeesEntity.getLastAppliedDate().getTime()));
 		}
 	}
+	
+	public void testGetNextDueAmount() throws Exception{
+		
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active_test", CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting, new Date(System
+				.currentTimeMillis()));
+		assertEquals(100.00,center.getCustomerAccount().getNextDueAmount().getAmountDoubleValue());
+		
+	}
 
 	
 }

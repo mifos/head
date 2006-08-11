@@ -47,6 +47,8 @@
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
+<%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
+
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
@@ -60,19 +62,11 @@ function fnCancel(form){
 		<html-el:form action="closedaccsearchaction.do?method=search">
 			  <table width="95%" border="0" cellpadding="0" cellspacing="0">
           <tr>
-            <td class="bluetablehead05">
+           <td class="bluetablehead05">
 	            <span class="fontnormal8pt">
-	            	<a href="CustomerSearchAction.do?method=getOfficeHomePage&officeId=<c:out value="${sessionScope.linkValues.customerOfficeId}"/>&officeName=<c:out value="${sessionScope.linkValues.customerOfficeName}"/>&loanOfficerId=<c:out value="${requestScope.Context.userContext.id}"/>">
-	            	<c:out value="${sessionScope.linkValues.customerOfficeName}"/></a> /
+	            	<customtags:headerLink />
 	            </span>
-	            <!-- Name of the client -->
-	            <span class="fontnormal8pt">
-	            <a href="centerAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.globalCustNum}"/>">
-	           				<c:out value="${sessionScope.linkValues.customerName}"/>            	
-           			</a>
-	            </span>
-	                        </td>
-          </tr>
+           </tr>
         </table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>

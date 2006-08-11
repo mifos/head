@@ -73,14 +73,14 @@
 			<parameter name="method" value="load" valuetype="string"/>
 		</parameters>
 	</column>
-	<column label="/" labeltype="string" boldlabel="false" type="link" action="centerAction.do">
+	<column label="/" labeltype="string" boldlabel="false" type="link" action="centerCustAction.do">
 		<displayname>
 			<fragment-name name="groupName" type="method" />
 			
 		</displayname>
 		<parameters>
 			<parameter name="globalCustNum" value="groupGlobalCustNum" valuetype="method"/>
-			<parameter name="method" value="getDetails" valuetype="string"/>
+			<parameter name="method" value="get" valuetype="string"/>
 			<parameter name="recordOfficeId" value="branchGlobalNum" valuetype="method"/>
         	<parameter name="recordLoanOfficerId" value="loanOffcerGlobalNum" valuetype="method"/>
 		</parameters>

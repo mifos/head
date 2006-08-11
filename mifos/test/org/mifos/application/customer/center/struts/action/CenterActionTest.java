@@ -7,12 +7,14 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.PositionEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
@@ -465,5 +467,34 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 	private void createGroupAndClient(){
 		group = TestObjectFactory.createGroup("group", CustomerStatus.GROUP_ACTIVE.getValue(), center.getSearchId()+".1", center, new Date());
 		client = TestObjectFactory.createClient("client",CustomerStatus.CLIENT_ACTIVE.getValue(), group.getSearchId()+".1", group, new Date());
+	}
+	
+	public void testGet(){
+		
+		
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short
+				.valueOf("13"), "1.4", meeting, new Date(System
+				.currentTimeMillis()));
+		GroupBO group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE, center.getSearchId()+".1", center, new Date(System
+				.currentTimeMillis()));
+		
+		setRequestPathInfo("/centerCustAction.do");
+		addRequestParameter("method", "get");
+		addRequestParameter("globalCustNum", center.getGlobalCustNum());
+		actionPerform();
+		
+		verifyForward(ActionForwards.get_success.toString());
+		CustomerBO centerBO =(CenterBO) request.getSession().getAttribute(Constants.BUSINESS_KEY);
+		assertNotNull(center);
+		assertEquals(center.getCustomerId(),centerBO.getCustomerId());
+		List children =(List) request.getSession().getAttribute(CenterConstants.GROUP_LIST);
+		assertNotNull(children);
+		assertEquals(1,children.size());
+		
+		
+		TestObjectFactory.cleanUp(group);
+
 	}
 }
