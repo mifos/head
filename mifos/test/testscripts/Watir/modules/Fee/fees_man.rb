@@ -44,7 +44,7 @@ class Fee_Test
   	catid=feeobject.arrval[rowid+=1]
   	def_fee=feeobject.arrval[rowid+=1]
   	freq=feeobject.arrval[rowid+=1]
-  	toc=feeobject.arrval[rowid+=1]
+  	toc=feeobject.arrval[rowid+=1].to_s
   	week=feeobject.arrval[rowid+=1].to_i.to_s
   	month=feeobject.arrval[rowid+=1].to_i.to_s
   	amt_rate=feeobject.arrval[rowid+=1].to_i.to_s
@@ -54,7 +54,7 @@ class Fee_Test
   	newamount=feeobject.arrval[rowid+=1].to_s
   	status=feeobject.arrval[rowid+=1].to_i.to_s
   	glcode=feeobject.arrval[rowid+=1].to_i.to_s
-  	 
+  	
 
   	feeobject.fee_create(feename, catid, def_fee,toc,freq,week,month,amt_rate,amount,formula,glcode)
 

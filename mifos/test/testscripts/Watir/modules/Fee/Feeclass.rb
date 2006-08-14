@@ -78,25 +78,25 @@ class Feeclass<TestClass
 	def check_errormsg_with_feename_catid(feename,catid)
 		begin
 		$ie.text_field(:name,'feeName').set(feename)
-		$ie.select_list(:name,"categoryType.categoryId").select(catid)
+		$ie.select_list(:name,"categoryType").select(catid)
         $ie.button(:value,'Preview').click
 		assert($ie.contains_text($f_m_freq_oe) ) and (assert($ie.contains_text($f_m_freq_ra)) or assert($ie.contains_text($f_m_amt_e)) )and assert($ie.contains_text($gl_code))
 		$logger.log_results("Mandatory check for fields feename,fee_category",feename+","+catid,"error message for other mandatory fields that are not filled","passed")
-		rescue =>e
+		rescue Test::Unit::AssertionFailedError=>e
 		$logger.log_results("Mandatory check for fields feename,fee_category",feename+","+catid,"error message for other mandatory fields that are not filled","failed")
 		end
 	end
 	#checking the conditions when category id loan selected
 	def fee_type_selected(catid,toc)
 	   if catid=="Loans" then
-	   if !($ie.checkbox(:name, "adminCheck", "Yes").enabled?()) then
+	   if !($ie.checkbox(:name, "customerDefaultFee", "1").enabled?()) then
 	   $logger.log_results("default fees checkbox for ",catid,"disabled","passed")
 	   else
 	   $logger.log_results("default fees checkbox for",catid,"disabled","failed")
 	   end
 	   $ie.select_list(:name,"loanCharge").select(toc)
        else
-	   if ($ie.checkbox(:name, "adminCheck", "Yes").enabled?()) then
+	   if ($ie.checkbox(:name, "customerDefaultFee", "1").enabled?()) then
 	   $logger.log_results("default fees checkbox for",catid,"enabled","passed")
 	   else
 	   $logger.log_results("default fees checkbox for",catid,"enabled","failed")
@@ -125,7 +125,7 @@ class Feeclass<TestClass
 	end
     #checking the mandatory when you selct type id also
 	def check_errormsg_with_type_id()
-	    $ie.radio(:name,"feeFrequency.feeFrequencyType.feeFrequencyTypeId","1").set
+	    $ie.radio(:name,"feeFrequencyType","1").set
         $ie.button(:value,'Preview').click
         $logger.log_message("__FEENAME,FEECATEGORY,PERIODIC FEE FREQUENCY ENTERED,OTHERS BLANK__")
 		begin
@@ -138,7 +138,7 @@ class Feeclass<TestClass
     #checking error message when week periodicity selected
 	def check_weekperiodicy_errormsg()
 	    $logger.log_message("__CHECK FOR PERIODICITY WITHOUT WEEK OPTION__")
-	    $ie.radio(:name,"feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId","1").set
+	    $ie.radio(:name,"feeRecurrenceType","1").set
         $ie.button(:value,'Preview').click
 		begin
 		 assert($ie.contains_text($f_m_freq_we)) and  (assert($ie.contains_text($f_m_freq_ra)) or assert($ie.contains_text($f_m_amt_e)) )and assert($ie.contains_text($gl_code))
@@ -150,7 +150,7 @@ class Feeclass<TestClass
     #checking error message when month periodicity selected
 	def check_monthperiodicy_errormsg()
         $logger.log_message("__CHECK FOR PERIODICITY WITHOUT MONTH OPTION__")
-        $ie.radio(:name,"feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId","2").set
+        $ie.radio(:name,"feeRecurrenceType","2").set
         $ie.button(:value,'Preview').click
 		begin
 		assert($ie.contains_text($f_m_freq_me)) and  (assert($ie.contains_text($f_m_freq_ra)) or assert($ie.contains_text($f_m_amt_e)) )and assert($ie.contains_text($gl_code))
@@ -165,7 +165,7 @@ class Feeclass<TestClass
      $ie.text_field(:name,"rate").set(amount)
      $ie.button(:value,'Preview').click
      check_errormsg_rate()
-     $ie.select_list(:name,"feeFormula.feeFormulaId").select_value(formula_id)
+     $ie.select_list(:name,"feeFormula").select_value(formula_id)
      $ie.button(:value,'Preview').click
      check_errormsg_maxrate(amount)
      $ie.text_field(:name,"rate").clear
@@ -214,7 +214,7 @@ class Feeclass<TestClass
 	end
 	#checking the conditions when category id is not Loan
 	def not_for_loan(catid,toc,amount)
-      $ie.radio(:name,"feeFrequency.feeFrequencyType.feeFrequencyTypeId","2").set
+      $ie.radio(:name,"feeFrequencyType","2").set
       if catid!="Loans" then
         $ie.select_list(:name,"loanCharge").select(toc)
         $ie.text_field(:name,"amount").set(amount)
@@ -243,40 +243,41 @@ class Feeclass<TestClass
 	    admin_check()
 	    feelink_check()
 		$ie.text_field(:name,'feeName').set(feename)
-		if ($ie.checkbox(:name, "adminCheck", "Yes").enabled?() and (catid!="Loans" and def_fee=="Yes") )then
-		$ie.checkbox(:name, "adminCheck", "Yes").set
-		elsif  (catid=="Loans" and ($ie.checkbox(:name, "adminCheck", "Yes").enabled?())) then
-		$ie.checkbox(:name, "adminCheck", "Yes").clear
+		if ($ie.checkbox(:name, "customerDefaultFee", "1").enabled?() and (catid!="Loans" and def_fee=="Yes") )then
+    	  $ie.checkbox(:name, "customerDefaultFee", "1").set
+		elsif  (catid=="Loans" and ($ie.checkbox(:name, "customerDefaultFee", "1").enabled?())) then
+	      $ie.checkbox(:name, "customerDefaultFee", "1").clear
 		end
-		$ie.select_list(:name,"categoryType.categoryId").select(catid)
-		if ((catid!="Loans") and (freq=="One time")) then
-		$ie.radio(:name,"feeFrequency.feeFrequencyType.feeFrequencyTypeId","2").set
-		$ie.select_list(:name,"loanCharge").select(toc)
-		elsif ( (catid=="Loans" ) and freq=="One time")then
-		$ie.radio(:name,"feeFrequency.feeFrequencyType.feeFrequencyTypeId","2").set
-		$ie.select_list(:name,"loanCharge").select(toc)
+		$ie.select_list(:name,"categoryType").select(catid)
+		if ((catid.to_s!="Loans") and (freq.to_s=="One Time")) then
+		  $ie.radio(:name,"feeFrequencyType","2").set
+		  $ie.select_list(:name,"customerCharge").select(toc)
+		elsif ( (catid.to_s=="Loans" ) and freq.to_s=="One Time")then
+  		  $ie.radio(:name,"feeFrequencyType","2").set
+		  $ie.select_list(:name,"loanCharge").select(toc)
 		else
-		$ie.radio(:name,"feeFrequency.feeFrequencyType.feeFrequencyTypeId","1").set
-		if (week)=="0" then 
-		$ie.radio(:name,"feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId","2").set
-		$ie.text_field(:name,"monthRecurAfter").set(month)
-		else
-		$ie.radio(:name,"feeFrequency.feeMeetingFrequency.meetingDetails.recurrenceType.recurrenceId","1").set
-		$ie.text_field(:name,"weekRecurAfter").set(week)
-		end
-		end
+		  $ie.radio(:name,"feeFrequencyType","1").set
+  		    if (week)=="0"  
+    		  $ie.radio(:name,"feeRecurrenceType","2").set
+	     	  $ie.text_field(:name,"monthRecurAfter").set(month)
+		    else
+		      $ie.radio(:name,"feeRecurrenceType","1").set
+		      $ie.text_field(:name,"weekRecurAfter").set(week)
+		    end
+		end  
+		
 		if catid!="Loans" then 
-		$ie.text_field(:name,"amount").clear()
-		$ie.text_field(:name,"amount").set(amount)
+		  $ie.text_field(:name,"amount").clear()
+		  $ie.text_field(:name,"amount").set(amount)
 		elsif ((catid=="Loans") and (amt_rate=="0")) then
-		$ie.text_field(:name,"amount").clear()
-		$ie.text_field(:name,"amount").set(amount)
+		  $ie.text_field(:name,"amount").clear()
+		  $ie.text_field(:name,"amount").set(amount)
 		else
-		$ie.text_field(:name,"amount").clear()
-		$ie.text_field(:name,"rate").set(amount)
-		$ie.select_list(:name,"feeFormula.feeFormulaId").select_value(formula)
+		  $ie.text_field(:name,"amount").clear()
+		  $ie.text_field(:name,"rate").set(amount)
+		  $ie.select_list(:name,"feeFormula").select_value(formula)
 		end
-		$ie.select_list(:name,"glCodeEntity.glcodeId").select_value(glcode)
+		$ie.select_list(:name,"glCode").select(glcode)
 		$ie.button(:value,'Preview').click
 	end
 	#clicking on submit button
