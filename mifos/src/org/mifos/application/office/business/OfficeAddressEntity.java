@@ -52,17 +52,25 @@ public class OfficeAddressEntity extends PersistentObject {
 	
 
 
-	private Short officeAdressId;
+	private final Short officeAdressId;
 
-	private OfficeBO office;
+	private final  OfficeBO office;
 
 	private Address address;
 	
-	public OfficeAddressEntity(){
+	public OfficeAddressEntity(OfficeBO office, Address address) {
 		super();
+		
+		this.office = office;
+		this.address = address;
+		this.officeAdressId=null;
+	}
+	protected  OfficeAddressEntity(){
+		super();
+		officeAdressId=null;
+		office=null;
 		address = new Address();
 	}
-
 	public Address getAddress() {
 		return address;
 	}
@@ -70,22 +78,4 @@ public class OfficeAddressEntity extends PersistentObject {
 	public void setAddress(Address address) {
 		this.address = address;
 	}
-
-	public OfficeBO getOffice() {
-		return office;
-	}
-
-	public void setOffice(OfficeBO office) {
-		this.office = office;
-	}
-	public Short getOfficeAdressId() {
-		return officeAdressId;
-	}
-
-	public void setOfficeAdressId(Short officeAdressId) {
-		this.officeAdressId = officeAdressId;
-	}
-	
-	
-
 }

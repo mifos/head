@@ -225,7 +225,7 @@ public class TestBulkEntryView extends MifosTestCase {
 
 	private OfficeView getOfficeView(OfficeBO office) {
 		OfficeView officeView = new OfficeView(office.getOfficeId(), office
-				.getOfficeName(), office.getLevel().getLevelId(), office
+				.getOfficeName(), office.getLevel().getId(), office
 				.getVersionNo());
 		return officeView;
 	}

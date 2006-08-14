@@ -7,7 +7,7 @@
 <hibernate-mapping>
 
     <class name="org.mifos.application.office.business.OfficeAddressEntity" table="OFFICE_ADDRESS">
-        <id name="officeAdressId" column="OFFICE_ADDRESS_ID" type="short">
+        <id name="officeAdressId" column="OFFICE_ADDRESS_ID" type="short" access="field">
             <generator class="native"/>
         </id>
         <component name="address" class="org.mifos.framework.business.util.Address">
@@ -21,7 +21,7 @@
      		<property name="phoneNumber" column="TELEPHONE" type="string"  />
         </component>
     
-    <many-to-one name="office" column="OFFICE_ID" class="org.mifos.application.office.business.OfficeBO"   />
+    <many-to-one name="office" column="OFFICE_ID" class="org.mifos.application.office.business.OfficeBO"  access="field" />
     
     </class>
 

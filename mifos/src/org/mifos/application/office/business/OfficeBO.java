@@ -40,10 +40,19 @@ package org.mifos.application.office.business;
 import java.util.Date;
 import java.util.Set;
 
+import org.mifos.application.master.persistence.service.MasterPersistenceService;
+import org.mifos.application.office.util.helpers.OfficeLevel;
+import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.office.util.helpers.OperationMode;
 import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
+import org.mifos.framework.util.helpers.PersistenceServiceName;
 
 /**
  * This is office business object encapsulate the office related functionality
@@ -52,18 +61,20 @@ import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
  * 
  */
 public class OfficeBO extends BusinessObject {
+	
+	private MifosLogger logger =null;
 
-	private Short officeId;
+	private final Short officeId;
 
-	private String globalOfficeNum;
+	private final String globalOfficeNum;
 
 	private OfficeLevelEntity level;
 
-	private Integer maxChildCount;
+	private final Integer maxChildCount;
 
 	private String searchId;
 
-	private Short operationMode;
+	private final Short operationMode;
 
 	private OfficeBO parentOffice;
 
@@ -77,26 +88,20 @@ public class OfficeBO extends BusinessObject {
 
 	private OfficeAddressEntity address;
 
-	public OfficeBO() {
-		super(null);
-		this.status = new OfficeStatusEntity();
-		this.address = new OfficeAddressEntity();
+	public  OfficeBO() {
+		maxChildCount = null;
+		officeId = null;
+		globalOfficeNum = null;
+		operationMode = null;
+		status = new OfficeStatusEntity();
+		address = new OfficeAddressEntity();
 	}
-
-	public OfficeBO(UserContext userContext) {
-		super(userContext);
-	}
-
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
 
 	public String getGlobalOfficeNum() {
 		return globalOfficeNum;
-	}
-
-	public void setGlobalOfficeNum(String globalOfficeNum) {
-		this.globalOfficeNum = globalOfficeNum;
 	}
 
 	public OfficeLevelEntity getLevel() {
@@ -111,10 +116,6 @@ public class OfficeBO extends BusinessObject {
 		return maxChildCount;
 	}
 
-	public void setMaxChildCount(Integer maxChildCount) {
-		this.maxChildCount = maxChildCount;
-	}
-
 	public String getOfficeName() {
 		return officeName;
 	}
@@ -127,17 +128,8 @@ public class OfficeBO extends BusinessObject {
 		return officeId;
 	}
 
-	public void setOfficeId(Short officeId) {
-		this.officeId = officeId;
-	}
-
-	
 	public Short getOperationMode() {
 		return operationMode;
-	}
-
-	public void setOperationMode(Short operationMode) {
-		this.operationMode = operationMode;
 	}
 
 	public OfficeBO getParentOffice() {
@@ -180,28 +172,30 @@ public class OfficeBO extends BusinessObject {
 		return address;
 	}
 
-	public void setAddress(OfficeAddressEntity address) {
-		if (address != null)
-			address.setOffice(this);
-		this.address = address;
-	}
-
 	public Set getCustomFields() {
 		return customFields;
 	}
 
 	public void setCustomFields(Set<OfficeCustomFieldEntity> customFields) {
-		this.customFields = customFields;
-	}
-
-	public void setCustomField(OfficeCustomFieldEntity officeCustomFieldView) {
-		if (null != officeCustomFieldView) {
-			officeCustomFieldView.setOffice(this);
-		}
+		if (customFields != null)
+			this.customFields = customFields;
 	}
 
 	@Override
 	public Short getEntityID() {
 		return EntityMasterConstants.Office;
 	}
+
+	public void  changeStatus(OfficeStatus status) throws ServiceException{
+		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
+		.getInstance().getPersistenceService(
+				PersistenceServiceName.MasterDataService);
+		
+		
+		 
+	}
+	public void setAddress(OfficeAddressEntity address) {
+		this.address = address;
+	}
+
 }

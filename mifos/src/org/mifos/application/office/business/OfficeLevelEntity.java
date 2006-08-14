@@ -39,7 +39,10 @@ package org.mifos.application.office.business;
 
 import java.util.Set;
 
+import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 /**
  * This class represet the OfficeLevel in the system e.g. headoffice
@@ -47,33 +50,20 @@ import org.mifos.framework.business.PersistentObject;
  * @author rajenders
  * 
  */
-public class OfficeLevelEntity extends PersistentObject {
+public class OfficeLevelEntity extends MasterDataEntity {
 
+	private final OfficeLevelEntity parent;
 
-	private Short levelId;
-
-	private Integer lookUpId;
-
-	private Set lookUpValueLocale;
-
-	private OfficeLevelEntity parent;
-
-	private OfficeLevelEntity child;
+	private final OfficeLevelEntity child;
 
 	private Short configured;
 
 	private Short interactionFlag;
 
-	public OfficeLevelEntity() {
+	protected  OfficeLevelEntity() {
+		parent=null;
+		child=null;
 
-	}
-
-	public OfficeLevelEntity(Short levelId) {
-		this.levelId = levelId;
-	}
-
-	private Short getConfigured() {
-		return configured;
 	}
 
 	private void setConfigured(Short configured) {
@@ -86,13 +76,8 @@ public class OfficeLevelEntity extends PersistentObject {
 	}
 	public void  addConfigured(boolean configured)
 	{
-		 this.configured=(short)(configured?1:0);
+		 setConfigured((short)(configured?1:0));
 	}
-
-	private Short getInteractionFlag() {
-		return interactionFlag;
-	}
-
 	private void setInteractionFlag(Short interactionFlag) {
 		this.interactionFlag = interactionFlag;
 	}
@@ -103,48 +88,17 @@ public class OfficeLevelEntity extends PersistentObject {
 	}
 	public void addInteractionFlag(boolean interactionFlag)
 	{
-		 this.interactionFlag=(short)(interactionFlag?1:0);
-	}
-	
-	public Short getLevelId() {
-		return levelId;
-	}
-
-	public void setLevelId(Short levelId) {
-		this.levelId = levelId;
-	}
-
-	public void setLookUpValueLocale(Set lookUpValueLocale) {
-
-		this.lookUpValueLocale = lookUpValueLocale;
-	}
-
-	public Set getLookUpValueLocale() {
-		return lookUpValueLocale;
-
-	}
-
-	public Integer getLookUpId() {
-		return lookUpId;
-	}
-
-	public void setLookUpId(Integer lookUpId) {
-		this.lookUpId = lookUpId;
+		 setInteractionFlag((short)(interactionFlag?1:0));
 	}
 
 	public OfficeLevelEntity getParent() {
 		return parent;
 	}
-
-	public void setParent(OfficeLevelEntity parent) {
-		this.parent = parent;
-	}
-
 	public OfficeLevelEntity getChild() {
 		return child;
 	}
-
-	public void setChild(OfficeLevelEntity child) {
-		this.child = child;
+	
+	public OfficeLevel getLevel() throws PropertyNotFoundException{
+		return OfficeLevel.getOfficeLevel(this.getId());
 	}
 }

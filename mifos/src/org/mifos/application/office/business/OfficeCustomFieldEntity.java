@@ -37,29 +37,41 @@
  */
 package org.mifos.application.office.business;
 
+import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.business.View;
 
 /**
  * This class represent the custom fields for the office
  * @author rajenders
  */
-public class OfficeCustomFieldEntity extends View {
+public class OfficeCustomFieldEntity extends PersistentObject {
 	
-	private Integer officecustomFieldId;
+	private final Integer officecustomFieldId;
 	
 	private String fieldValue;
 
-	private Short fieldId;
+	private final Short fieldId;
 
-	private OfficeBO office;
+	private final  OfficeBO office;
+	
+	protected  OfficeCustomFieldEntity() {
+		officecustomFieldId=null;
+		office=null;
+		fieldId=null;
+	}
+
+	public OfficeCustomFieldEntity(String fieldValue, Short fieldId, OfficeBO office) {
+		this.fieldValue = fieldValue;
+		this.fieldId = fieldId;
+		this.office = office;
+		this.officecustomFieldId=null;
+	}
+
 
 	public Short getFieldId() {
 		return fieldId;
 	}
 
-	public void setFieldId(Short fieldId) {
-		this.fieldId = fieldId;
-	}
 
 	public String getFieldValue() {
 		return fieldValue;
@@ -73,17 +85,10 @@ public class OfficeCustomFieldEntity extends View {
 		return office;
 	}
 
-	public void setOffice(OfficeBO office) {
-		this.office = office;
-	}
 
 	public Integer getOfficecustomFieldId() {
 		return officecustomFieldId;
 	}
 
-	public void setOfficecustomFieldId(Integer officecustomFieldId) {
-		this.officecustomFieldId = officecustomFieldId;
-	}
-	
-	
+
 }

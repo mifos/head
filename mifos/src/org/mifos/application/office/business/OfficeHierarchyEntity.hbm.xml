@@ -9,7 +9,7 @@
 	<class
 		name="org.mifos.application.office.business.OfficeHierarchyEntity"
 		table="OFFICE_HIERARCHY">
-		<id name="hierarchyId" column="HIERARCHY_ID" type="integer">
+		<id name="hierarchyId" column="HIERARCHY_ID" type="integer" access="field">
 			<generator class="native" />
 		</id>
 		<property name="createdDate" column="START_DATE" type="date" />
