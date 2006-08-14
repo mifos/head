@@ -142,8 +142,6 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 			String method = request.getParameter("method");
 			String key = path + "-" + method;
 			Short activityId = null;
-			
-			System.out.println("key1 ------------"+key);
 			if (null != method
 					&& (method.equals("cancel") || method.equals("validate")
 							|| method.equals("searchPrev") || method
@@ -151,8 +149,6 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 				return true;
 			else {
 				activityId = activityMapper.getActivityId(key);
-				
-				System.out.println("activityId 1" +activityId);
 				request.setAttribute(Globals.ERROR_KEY, null);
 				String activityKey = null;
 				
@@ -160,10 +156,7 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 				
 				if (null == activityId) {
 					activityKey = path + "-" + request.getParameter("viewPath");
-					System.out.println("activityKey2 ------------"+activityKey);
 					activityId = activityMapper.getActivityId(activityKey);
-					System.out.println("activityId 2" +activityId);
-
 				}
 				// Check for fingrained permissions
 				if (null == activityId) {
@@ -171,9 +164,7 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 							+ "-"
 							+ session
 									.getAttribute(SecurityConstants.SECURITY_PARAM);
-					System.out.println("activityKey3 ------------"+activityKey);
 					activityId = activityMapper.getActivityId(activityKey);
-					System.out.println("activityId 3" +activityId);
 				}
 				if (null == activityId)
 					return false;
@@ -184,7 +175,6 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 					(UserContext) session.getAttribute("UserContext"),
 					setActivityContextFromRequest(request, activityId));
 		}
-		System.out.println("returnValue "+returnValue);
 		return returnValue;
 	}
 

@@ -148,6 +148,7 @@ public class MeetingAction extends MifosBaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
+		
 		MeetingActionForm maf = (MeetingActionForm) form;
 		maf.clearForm();
 		Meeting meeting =getMeetingFromContext(request,form);
@@ -217,7 +218,7 @@ public class MeetingAction extends MifosBaseAction {
 			throws Exception {
 
 		ActionForward af = super.get(mapping, form, request, response);
-		Context ctx = (Context) request.getAttribute(Constants.CONTEXT);
+		 Context ctx = (Context) request.getAttribute(Constants.CONTEXT);
 		Meeting meeting = (Meeting) ctx.getValueObject();
 		if (null != meeting) {
 			meetingLogger.info("Initializing the meetingActionForm ...");
@@ -518,7 +519,14 @@ public class MeetingAction extends MifosBaseAction {
 		meetingLogger.info("Forwarding the action to  =" + forward);
 		Context context = (Context) request.getAttribute(Constants.CONTEXT);
 		Customer customer = getCustomerFromTheContext(request,form);
+		if ( customer!=null)
 		context.addBusinessResults("Customer",customer);
+		else
+		{
+			 Object object= request.getSession().getAttribute("CustomerVO");
+			 context.addBusinessResults("Customer",object);
+
+		}
 		return mapping.findForward(forward);
 	}
 

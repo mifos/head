@@ -61,6 +61,7 @@ import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.business.CenterPerformanceHistory;
 import org.mifos.application.customer.center.business.service.CenterBusinessService;
+import org.mifos.application.customer.center.dao.CenterDAO;
 import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.center.util.valueobjects.Center;
@@ -76,6 +77,7 @@ import org.mifos.application.fees.exceptions.FeeException;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -97,6 +99,7 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.valueobjects.Context;
 
 public class CenterCustAction extends BaseAction {
 	@Override
@@ -488,6 +491,17 @@ public class CenterCustAction extends BaseAction {
 	  SessionUtils.setAttribute(CenterConstants.PERFORMANCE_HISTORY,centerPerformanceHistory,request
 				.getSession());
 	  
+	  //	TODO : get value object 
+	  CenterDAO centerDAO =  new CenterDAO();
+	  Center center = centerDAO.findBySystemId(centerBO.getGlobalCustNum());
+	  
+	  
+	  SessionUtils.setAttribute("CustomerVO",center
+				, request
+						.getSession());  
+	  
+	  SessionUtils.setAttribute(CustomerConstants.LINK_VALUES,getLinkValues(center),request
+						.getSession());
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
 
@@ -527,5 +541,21 @@ public class CenterCustAction extends BaseAction {
 		actionForm.setExternalId(null);
 		actionForm.setLoanOfficerId(null);
 	}
-
+	
+	//TODO: remove this function after complete migration 
+	LinkParameters getLinkValues(Center center){
+		LinkParameters linkParams = new LinkParameters();
+		linkParams.setCustomerId(center.getCustomerId());
+		linkParams.setCustomerName(center.getDisplayName());
+		linkParams.setGlobalCustNum(center.getGlobalCustNum());
+		linkParams.setCustomerOfficeId(center.getOffice().getOfficeId());
+		linkParams.setCustomerOfficeName(center.getOffice().getOfficeName());
+		linkParams.setLevelId(CustomerConstants.CENTER_LEVEL_ID);
+		Customer parent = center.getParentCustomer();
+		if(parent!=null){
+			linkParams.setCustomerParentGCNum(parent.getGlobalCustNum());
+			linkParams.setCustomerParentName(parent.getDisplayName());
+		}
+		return linkParams;
+	}
 }

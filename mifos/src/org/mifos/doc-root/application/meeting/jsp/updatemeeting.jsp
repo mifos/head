@@ -128,7 +128,7 @@ function goToCancelPage(){
 	            </span>
 	            <c:if test="${!empty sessionScope.linkValues.customerCenterName}">
 	               <span class="fontnormal8pt">
-	               	<a href="centerAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.customerCenterGCNum}"/>">
+	               	<a href="centerCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.customerCenterGCNum}"/>">
 				       	<c:out value="${sessionScope.linkValues.customerCenterName}"/>
 			       	</a>  /  </span>
 		    	</c:if>
@@ -155,7 +155,7 @@ function goToCancelPage(){
 							<td class="bluetablehead05"><span class="fontnormal8pt"> <a href="CustomerSearchAction.do?method=getOfficeHomePage&officeId=<c:out value="${sessionScope.linkValues.customerOfficeId}"/>&officeName=<c:out value="${sessionScope.linkValues.customerOfficeName}"/>&loanOfficerId=<c:out value="${requestScope.Context.userContext.id}"/>">
 	            			<c:out value="${sessionScope.linkValues.customerOfficeName}"/></a> / 
 	            	</span> <span class="fontnormal8pt"> <a
-								href="centerAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.globalCustNum}"/>">
+								href="centerCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.globalCustNum}"/>">
 							<c:out value="${sessionScope.linkValues.customerName}" /> </a> </span>
 							</td>
 						</tr>
