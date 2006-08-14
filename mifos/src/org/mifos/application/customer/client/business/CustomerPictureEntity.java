@@ -40,33 +40,33 @@ package org.mifos.application.customer.client.business;
 
 import java.sql.Blob;
 
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.framework.business.PersistentObject;
 
-/**
- * This class maps to customer_picture table of the database, which is used to
- * store customer picture as a blob.
- * 
- * @author ashishsm
- * 
- */
 public class CustomerPictureEntity extends PersistentObject {
 
-	private Integer pictureId;
+	private final Integer pictureId;
 
-	private Integer customerId;
+	private final CustomerBO customer;
 
 	private Blob picture;
 
-	public CustomerPictureEntity() {
+	protected CustomerPictureEntity() {
 		super();
+		this.pictureId = null;
+		this.customer = null;
+		this.picture = null;
 	}
 
-	public Integer getCustomerId() {
-		return customerId;
+	public CustomerPictureEntity(CustomerBO customer, Blob picture) {
+		super();
+		this.pictureId = null;
+		this.customer = customer;
+		this.picture = picture;
 	}
 
-	public void setCustomerId(Integer customerId) {
-		this.customerId = customerId;
+	public CustomerBO getCustomer() {
+		return customer;
 	}
 
 	public Blob getPicture() {
@@ -80,9 +80,4 @@ public class CustomerPictureEntity extends PersistentObject {
 	public Integer getPictureId() {
 		return pictureId;
 	}
-
-	public void setPictureId(Integer pictureId) {
-		this.pictureId = pictureId;
-	}
-
 }

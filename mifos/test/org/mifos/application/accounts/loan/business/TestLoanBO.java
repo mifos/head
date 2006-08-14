@@ -2147,9 +2147,7 @@ public class TestLoanBO extends MifosTestCase {
 		client = TestObjectFactory.createClient("Client",
 				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
 						System.currentTimeMillis()));
-		ClientPerformanceHistoryEntity clientPerfHistory = new ClientPerformanceHistoryEntity(
-				1, 0, new Money(), new Money(), new Money());
-		((ClientBO) client).setPerformanceHistory(clientPerfHistory);
+		((ClientBO)client).getPerformanceHistory().setLoanCycleNumber(1);
 		TestObjectFactory.updateObject(client);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),
@@ -2180,9 +2178,7 @@ public class TestLoanBO extends MifosTestCase {
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), meeting);
-		ClientPerformanceHistoryEntity clientPerfHistory = new ClientPerformanceHistoryEntity(
-				1, 0, new Money(), new Money(), new Money());
-		((ClientBO) client).setPerformanceHistory(clientPerfHistory);
+		((ClientBO)client).getPerformanceHistory().setLoanCycleNumber(1);
 		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", client, accountSate, startDate, loanOffering,
 				disbursalType);

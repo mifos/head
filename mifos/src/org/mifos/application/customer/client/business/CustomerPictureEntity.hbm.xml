@@ -5,10 +5,10 @@
   
 <hibernate-mapping > 
   <class name="org.mifos.application.customer.client.business.CustomerPictureEntity" table="CUSTOMER_PICTURE" >
-    <id column="PICTURE_ID" name="pictureId" type="integer" > 
+    <id column="PICTURE_ID" name="pictureId" type="integer" access="field"> 
 		<generator class="native"></generator>
     </id>    
-	<property column="CUSTOMER_ID"  name="customerId"  type="integer"/>
+	<property column="CUSTOMER_ID"  name="customerId"  type="integer"  access="field"/>
 	<property column="PICTURE"  name="picture"  type="blob"/>
   </class> 
 </hibernate-mapping>  

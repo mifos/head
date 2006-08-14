@@ -44,9 +44,9 @@ import org.mifos.framework.business.util.Name;
 
 public class ClientNameDetailEntity extends PersistentObject {
 
-	private Integer customerNameId;
+	private final Integer customerNameId;
 
-	private ClientBO client;
+	private final ClientBO client;
 
 	private Short nameType;
 
@@ -55,10 +55,33 @@ public class ClientNameDetailEntity extends PersistentObject {
 	private String secondMiddleName;
 
 	private String displayName;
-	
+
 	private Name name;
-	
-	
+
+	protected ClientNameDetailEntity() {
+		super();
+		this.customerNameId = null;
+		this.client = null;
+		this.nameType = null;
+		this.salutation = null;
+		this.secondMiddleName = null;
+		this.displayName = null;
+		this.name = null;
+	}
+
+	public ClientNameDetailEntity(ClientBO client, Short nameType,
+			Integer salutation, String secondMiddleName, String displayName,
+			Name name) {
+		super();
+		this.customerNameId = null;
+		this.client = client;
+		this.nameType = nameType;
+		this.salutation = salutation;
+		this.secondMiddleName = secondMiddleName;
+		this.displayName = displayName;
+		this.name = name;
+	}
+
 	public String getDisplayName() {
 		return displayName;
 	}
@@ -83,17 +106,8 @@ public class ClientNameDetailEntity extends PersistentObject {
 		this.secondMiddleName = secondMiddleName;
 	}
 
-	public ClientNameDetailEntity() {
-		//this.customer = new CustomerBO();
-		this.name = new Name();
-	}
-
 	public CustomerBO getClient() {
 		return client;
-	}
-
-	public void setClient(ClientBO client) {
-		this.client = client;
 	}
 
 	public Short getNameType() {
@@ -108,10 +122,6 @@ public class ClientNameDetailEntity extends PersistentObject {
 		return customerNameId;
 	}
 
-	public void setCustomerNameId(Integer customerNameId) {
-		this.customerNameId = customerNameId;
-	}
-
 	public Name getName() {
 		return name;
 	}
@@ -119,6 +129,5 @@ public class ClientNameDetailEntity extends PersistentObject {
 	public void setName(Name name) {
 		this.name = name;
 	}
-
 
 }

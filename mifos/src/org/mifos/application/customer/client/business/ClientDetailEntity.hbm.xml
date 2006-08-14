@@ -6,9 +6,9 @@
 <hibernate-mapping>
 
     <class name="org.mifos.application.customer.client.business.ClientDetailEntity" table="CUSTOMER_DETAIL">
-       <id name="customerId" column="CUSTOMER_ID" type="integer">
+       <id name="customerId" column="CUSTOMER_ID" type="integer" access="field">
             <generator class="foreign">
-            	<param name="property">customer</param>
+            	<param name="property">client</param>
             </generator>
         </id>
  		
@@ -22,7 +22,7 @@
         <property name="gender" column="GENDER" type="short" />
         <property name="dateStarted" column="DATE_STARTED" type="date" />
         <property name="handicappedDetails" column="HANDICAPPED_DETAILS" type="string"  />
-        <one-to-one name="client" class="org.mifos.application.customer.client.business.ClientBO" cascade="all" />
+        <one-to-one name="client" class="org.mifos.application.customer.client.business.ClientBO" cascade="all" access="field"/>
     </class>
          
 </hibernate-mapping>

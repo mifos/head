@@ -7,7 +7,7 @@
 <hibernate-mapping>
 
     <class name="org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity" table="CLIENT_PERF_HISTORY">
-        <id name="id" column="ID" type="integer">
+        <id name="id" column="ID" type="integer" access="field">
             <generator class="native"/>
 	   </id>
         
@@ -26,7 +26,7 @@
 			<column name="TOTAL_SAVINGS_AMNT" />
 		</property>     
         <many-to-one name="client" column="CUSTOMER_ID"
-			class="org.mifos.application.customer.client.business.ClientBO" lazy="true" unique="true"/>
+			class="org.mifos.application.customer.client.business.ClientBO" lazy="true" unique="true" access="field"/>
     </class>    
     
 </hibernate-mapping>

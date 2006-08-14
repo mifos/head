@@ -43,19 +43,11 @@ import java.util.Date;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.framework.business.PersistentObject;
 
-/**
- * This class encapsulate the details of the customer
- * 
- * @author ashishsm
- * 
- */
 public class ClientDetailEntity extends PersistentObject {
 
-	private Short customerDetailId;
+	private final Integer customerId;
 
-	private Integer customerId;
-
-	private ClientBO client;
+	private final ClientBO client;
 
 	private Integer ethinicity;
 
@@ -77,16 +69,40 @@ public class ClientDetailEntity extends PersistentObject {
 
 	private String handicappedDetails;
 
-	public ClientDetailEntity() {
+	protected ClientDetailEntity() {
+		super();
+		this.customerId = null;
+		this.client = null;
+		this.ethinicity = null;
+		this.citizenship = null;
+		this.handicapped = null;
+		this.businessActivities = null;
+		this.maritalStatus = null;
+		this.educationLevel = null;
+		this.numChildren = null;
+		this.gender = null;
+		this.dateStarted = null;
+		this.handicappedDetails = null;
 	}
 
-	public Short getCustomerDetailId() {
-		return customerDetailId;
-	}
-
-	public void setCustomerDetailId(Short customerDetailId) {
-
-		this.customerDetailId = customerDetailId;
+	public ClientDetailEntity(ClientBO client, Integer ethinicity,
+			Integer citizenship, Integer handicapped,
+			Integer businessActivities, Integer maritalStatus,
+			Integer educationLevel, Short numChildren, Short gender,
+			Date dateStarted, String handicappedDetails) {
+		super();
+		this.customerId = null;
+		this.client = client;
+		this.ethinicity = ethinicity;
+		this.citizenship = citizenship;
+		this.handicapped = handicapped;
+		this.businessActivities = businessActivities;
+		this.maritalStatus = maritalStatus;
+		this.educationLevel = educationLevel;
+		this.numChildren = numChildren;
+		this.gender = gender;
+		this.dateStarted = dateStarted;
+		this.handicappedDetails = handicappedDetails;
 	}
 
 	public Integer getEthinicity() {
@@ -112,6 +128,7 @@ public class ClientDetailEntity extends PersistentObject {
 	public void setHandicapped(Integer handicapped) {
 		this.handicapped = handicapped;
 	}
+
 	public Integer getBusinessActivities() {
 		return this.businessActivities;
 	}
@@ -172,15 +189,7 @@ public class ClientDetailEntity extends PersistentObject {
 		return customerId;
 	}
 
-	public void setCustomerId(Integer customerId) {
-		this.customerId = customerId;
-	}
-
 	public CustomerBO getClient() {
 		return client;
-	}
-
-	public void setClient(ClientBO client) {
-		this.client = client;
 	}
 }

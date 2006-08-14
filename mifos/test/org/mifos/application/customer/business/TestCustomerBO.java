@@ -100,12 +100,10 @@ public class TestCustomerBO extends MifosTestCase {
 	
 	public void testClientPerfObject() throws PersistenceException {
 		createInitialObjects();
-		ClientPerformanceHistoryEntity clientPerformanceHistory = new ClientPerformanceHistoryEntity();
+		ClientPerformanceHistoryEntity clientPerformanceHistory = ((ClientBO)client).getPerformanceHistory();
 		clientPerformanceHistory.setLoanCycleNumber(Integer.valueOf("1"));
-		clientPerformanceHistory.setLastLoanAmount(new Money("100"));
 		clientPerformanceHistory.setNoOfActiveLoans(Integer.valueOf("1"));
-		clientPerformanceHistory.setClient(client);
-		client.setPerformanceHistory(clientPerformanceHistory);
+		clientPerformanceHistory.setLastLoanAmount(new Money("100"));
 		TestObjectFactory.updateObject(client);
 		client = (ClientBO)customerPersistence.getBySystemId(client.getGlobalCustNum(),client.getCustomerLevel().getId());
 		assertEquals(client.getCustomerId(),client.getPerformanceHistory().getClient().getCustomerId());

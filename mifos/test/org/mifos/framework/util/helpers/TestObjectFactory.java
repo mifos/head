@@ -344,9 +344,7 @@ public class TestObjectFactory {
 			name.setFirstName(customerName);
 			name.setLastName(customerName);
 
-			ClientNameDetailEntity customerNameDetail = new ClientNameDetailEntity();
-			customerNameDetail.setName(name);
-			customerNameDetail.setClient(client);
+			ClientNameDetailEntity customerNameDetail = new ClientNameDetailEntity(client,null,null,null,null,name);
 
 			Set<ClientNameDetailEntity> custNameDetEnitites = new HashSet<ClientNameDetailEntity>();
 			custNameDetEnitites.add(customerNameDetail);

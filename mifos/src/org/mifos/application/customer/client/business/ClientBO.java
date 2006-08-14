@@ -34,7 +34,7 @@ public class ClientBO extends CustomerBO {
 
 	private String governmentId;
 
-	private ClientPerformanceHistoryEntity performanceHistory;
+	private final ClientPerformanceHistoryEntity performanceHistory;
 
 	private Short groupFlag;
 
@@ -45,6 +45,7 @@ public class ClientBO extends CustomerBO {
 		super();
 		this.nameDetailSet = new HashSet<ClientNameDetailEntity>();
 		clientAttendances = new HashSet<ClientAttendanceBO>();
+		this.performanceHistory = null;
 	}
 
 	public ClientBO(UserContext userContext, String displayName,
@@ -83,6 +84,7 @@ public class ClientBO extends CustomerBO {
 		this.setSearchId(searchId);
 		if (customerStatus.equals(CustomerStatus.CLIENT_ACTIVE.getValue()))
 			this.setCustomerActivationDate(this.getCreatedDate());
+		this.performanceHistory = new ClientPerformanceHistoryEntity(this);
 	}
 
 	public Set<ClientNameDetailEntity> getNameDetailSet() {
@@ -91,11 +93,6 @@ public class ClientBO extends CustomerBO {
 
 	public void setNameDetailSet(
 			Set<ClientNameDetailEntity> customerNameDetailSet) {
-		if (customerNameDetailSet != null) {
-			for (Object obj : customerNameDetailSet) {
-				((ClientNameDetailEntity) obj).setClient(this);
-			}
-		}
 		this.nameDetailSet = customerNameDetailSet;
 	}
 
@@ -141,13 +138,6 @@ public class ClientBO extends CustomerBO {
 
 	public void setCustomerDetail(ClientDetailEntity customerDetail) {
 		this.customerDetail = customerDetail;
-	}
-
-	public void setPerformanceHistory(
-			ClientPerformanceHistoryEntity performanceHistory) {
-		if (performanceHistory != null)
-			performanceHistory.setClient(this);
-		this.performanceHistory = performanceHistory;
 	}
 
 	public void addClientAttendance(ClientAttendanceBO clientAttendance) {

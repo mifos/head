@@ -7,7 +7,7 @@
 <hibernate-mapping>
 
     <class name="org.mifos.application.customer.client.business.ClientNameDetailEntity" table="CUSTOMER_NAME_DETAIL">
-        <id name="customerNameId" column="CUSTOMER_NAME_ID" type="integer">
+        <id name="customerNameId" column="CUSTOMER_NAME_ID" type="integer" access="field">
             <generator class="native"/>
         </id>
         <property name="nameType" column="NAME_TYPE" type="short" />
@@ -21,7 +21,7 @@
 	        <property name="lastName" column="LAST_NAME" type="string" />
 	        <property name="secondLastName" column="SECOND_LAST_NAME" type="string"   />
 		</component>
-        <many-to-one name="client" column="CUSTOMER_ID" class="org.mifos.application.customer.client.business.ClientBO" insert="true" update="true"   />
+        <many-to-one name="client" column="CUSTOMER_ID" class="org.mifos.application.customer.client.business.ClientBO" insert="true" update="true"  access="field"/>
     </class>
     
 </hibernate-mapping>

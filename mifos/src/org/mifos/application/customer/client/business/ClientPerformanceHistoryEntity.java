@@ -1,12 +1,11 @@
 package org.mifos.application.customer.client.business;
 
-
 import org.mifos.application.customer.business.CustomerPerformanceHistory;
 import org.mifos.framework.util.helpers.Money;
 
-public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory{
+public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
-	private Integer id;
+	private final Integer id;
 
 	private Integer loanCycleNumber;
 
@@ -18,11 +17,36 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory{
 
 	private Money totalSavings;
 
-	private ClientBO client;
+	private final ClientBO client;
+
+	protected ClientPerformanceHistoryEntity() {
+		super();
+		this.id = null;
+		this.client = null;
+		this.loanCycleNumber = 0;
+		this.noOfActiveLoans = 0;
+		this.lastLoanAmount = null;
+		this.delinquentPortfolio = null;
+		this.totalSavings = null;
+	}
 	
-	public ClientPerformanceHistoryEntity() {}
-	
-	public ClientPerformanceHistoryEntity(Integer loanCycleNumber,Integer noOfActiveLoans,Money lastLoanAmount,Money delinquentPortfolio,Money totalSavings) {
+	public ClientPerformanceHistoryEntity(ClientBO client) {
+		super();
+		this.id = null;
+		this.client = client;
+		this.loanCycleNumber = 0;
+		this.noOfActiveLoans = 0;
+		this.lastLoanAmount = new Money();
+		this.delinquentPortfolio = new Money();
+		this.totalSavings = new Money();
+	}
+
+	public ClientPerformanceHistoryEntity(ClientBO client,
+			Integer loanCycleNumber, Integer noOfActiveLoans,
+			Money lastLoanAmount, Money delinquentPortfolio, Money totalSavings) {
+		super();
+		this.id = null;
+		this.client = client;
 		this.loanCycleNumber = loanCycleNumber;
 		this.noOfActiveLoans = noOfActiveLoans;
 		this.lastLoanAmount = lastLoanAmount;
@@ -30,21 +54,16 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory{
 		this.totalSavings = totalSavings;
 	}
 
-	
 	public Integer getId() {
 		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	private Money getDelinquentPortfolio() {
 		return delinquentPortfolio;
 	}
-	
+
 	public Money getDelinquentPortfolioAmount() {
-		if(getClient() != null)
+		if (getClient() != null)
 			return getClient().getDelinquentPortfolioAmount();
 		return new Money();
 	}
@@ -80,9 +99,9 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory{
 	private Money getTotalSavings() {
 		return totalSavings;
 	}
-	
-	public Money getTotalSavingsAmount(){
-		if(getClient() != null)
+
+	public Money getTotalSavingsAmount() {
+		if (getClient() != null)
 			return getClient().getSavingsBalance();
 		return new Money();
 	}
@@ -94,10 +113,4 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory{
 	public ClientBO getClient() {
 		return client;
 	}
-
-	public void setClient(ClientBO client) {
-		this.client = client;
-	}
-	
-
 }
