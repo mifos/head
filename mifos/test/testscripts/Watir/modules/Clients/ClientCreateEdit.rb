@@ -349,7 +349,46 @@ class ClientCreateEdit<TestClass
         $logger.log_results("Cancel button in select group page","Should work","Not Working","Passed")
     end
   end
+  #Searching for a group which is not in database
+  def no_groups_while_search()
+    begin
+      $ie.link(:text,"Clients & Accounts").click
+      $ie.link(:text,@@createclientlabel).click
+      $ie.text_field(:name,"searchNode(searchString)").set("%^")        
+      $ie.button(:value,"Proceed").click
+      assert($ie.contains_text("No results found"))
+      $logger.log_results("Displaying No results when there is no Group Names in database","N/A","N/A","Passed")
+    rescue=>e
+      $logger.log_results("Displaying results when there is no Group Names in database","N/A","N/A","Failed")
+    end
+  end
   
+  #Checking the next link functionality in search group page
+  
+  def check_next_link_in_search_group_page()
+     begin
+      $ie.link(:text,"Clients & Accounts").click
+      $ie.link(:text,@@createclientlabel).click
+      $ie.text_field(:name,"searchNode(searchString)").set("%")        
+      $ie.button(:value,"Proceed").click
+      $ie.link(:text,"Next").click
+      assert($ie.contains_text("11."))
+      $logger.log_results("Next Button","Should Work","Working","Passed")
+    rescue=>e
+      $logger.log_results("Next Button","Should Work","Working","Failed")
+    end
+  end
+  #Checking the next link functionality in search group page
+  
+  def check_next_link_in_search_group_page()
+     begin
+      $ie.link(:text,"Previous").click
+      assert($ie.contains_text("10."))
+      $logger.log_results("Previous Button","Should Work","Working","Passed")
+    rescue=>e
+      $logger.log_results("Previous Button","Should Work","Working","Failed")
+    end
+  end
   
   #selecting group before creating client in select group page
   
@@ -649,7 +688,9 @@ class ClientCreateEdit<TestClass
       $ie.select_list(:name,"customerNameDetail[1].nameType").select_value(nsorftype)
       $ie.text_field(:name,"customerNameDetail[1].firstName").set(nsorffname)
       $ie.text_field(:name,"customerNameDetail[1].lastName").set(nsorflname)
-      $ie.text_field(:name,"customField[0].fieldValue").set(ncustom)
+      #$ie.text_field(:name,"customField[0].fieldValue").set(ncustom)
+      custom_fields(ncustom)
+      
       $ie.button(:value,@@button_continue).click
       @@c_name=String(nfname)+"   "+String(nlname)
       assert($ie.contains_text(@@client_mfi_page_msg))
@@ -659,7 +700,36 @@ class ClientCreateEdit<TestClass
     end
   end
   
+  #checking for the no of mandatory custom fields
+  def custom_fields(ncustom)
+      search_client=$dbh.real_query("select entity_id from custom_field_definition where entity_type=1 and mandatory_flag=1")
+      dbresult1=search_client.fetch_row.to_a
+      rowl= search_client.num_rows
+      rowc=0
+	  while(rowc < rowl-1)
+	  
+        @@entity_id=dbresult1[0]
+      
+        if @@entity_id=="10" then
+           insert_data_in_to_first_custom_field(ncustom)
+        end
+        if @@entity_id=="58" then
+           insert_data_in_to_second_custom_field(ncustom)
+        end
+        
+        rowc+=1
+      end    
+  end
   
+  #inserts data into first custom field
+  def insert_data_in_to_first_custom_field(ncustom)
+     $ie.text_field(:name,"customField[0].fieldValue").set(ncustom)
+  end
+  
+  #inserts data into second custom field
+  def insert_data_in_to_second_custom_field(ncustom)
+     $ie.text_field(:name,"customField[1].fieldValue").set(ncustom)
+  end
   #mandatory check with out formed by in Enter MFI information page
   
   def check_create_client_mfi_mandatory()
@@ -743,7 +813,8 @@ class ClientCreateEdit<TestClass
     $ie.text_field(:name,"customerAddressDetail.country").set(ncountry)
     $ie.text_field(:name,"customerAddressDetail.zip").set(npcode)
     $ie.text_field(:name,"customerAddressDetail.phoneNumber").set(nphone)
-    $ie.text_field(:name,"customField[0].fieldValue").set(ncustom)
+    #$ie.text_field(:name,"customField[0].fieldValue").set(ncustom)
+    custom_fields(ncustom)
     @@c_name=String(nfname)+" "+String(nmname)+" "+String(nsname)+" "+String(nlname)
   end
   
@@ -1025,7 +1096,8 @@ class ClientCreateEdit<TestClass
       $ie.text_field(:name,"customerAddressDetail.country").set(ncountry)
       $ie.text_field(:name,"customerAddressDetail.zip").set(npcode)
       $ie.text_field(:name,"customerAddressDetail.phoneNumber").set(nphone)
-      $ie.text_field(:name,"customField[0].fieldValue").set(ncustom)
+      #$ie.text_field(:name,"customField[0].fieldValue").set(ncustom)
+      custom_fields(ncustom)
       $ie.button(:value,@@button_preview).click
       assert($ie.contains_text(@@clientprop['client.EditPreviewPersonalReviewTitle']))
       $logger.log_results("Edit Personnel from details page--review&submit personal information page","n/a","n/a","passed")
@@ -1112,22 +1184,30 @@ class ClientCreateEdit<TestClass
   end
   
   
-  #Checking that View all closed accounts existed and working
+  #Checking that View all closed accounts existed 
   
-  def view_all_closed_accounts()
+  def check_view_all_closed_accounts_link()
     begin
-      @@view_all_closed_accounts_client=@@clientprop['client.ClosedAccountsLink']
+      @@view_all_closed_accounts_client=@@clientprop['']
       assert($ie.contains_text(@@view_all_closed_accounts_client))
       $logger.log_results("View all closed accounts link existed","NA","NA","passed")
-      $ie.link(:text,@@view_all_closed_accounts_client).click
-      $ie.button(:value,@@return_to_details_page).click
-      assert($ie.contains_text(@@clientprop['client.AccountHeading']))
-      $logger.log_results("View all closed accounts link working","NA","NA","passed")
-    rescue Test::Unit::AssertionFailedError=>e
-      $logger.log_results("View all closed accounts link working","NA","NA","failed")   
-    rescue Test::Unit::AssertionFailedError=>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("View all closed accounts link existed","NA","NA","failed")    
     end
+  end
+  
+#Checking that View all closed accountsworking
+
+  def click_view_all_closed_accounts_link
+    begin
+      $ie.link(:text,@@view_all_closed_accounts_client).click
+      assert($ie.contains_text("- Closed accounts"))    
+      $logger.log_results("View all closed accounts link working","NA","NA","passed")
+      $ie.button(:value,@@return_to_details_page).click
+    rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results("View all closed accounts link working","NA","NA","failed")   
+    end
+    
   end
   
   
@@ -1182,7 +1262,9 @@ class ClientCreateEdit<TestClass
   # checking whether view summarized historical Data link exist
   def check_view_summarized_historical_Data_link_exist()
     begin
-      assret($ie.contains_text(@@clientprop['client.HistoricalDataLink']))
+      $ie.wait(10)
+      @@historical_data_link=@@clientprop['client.HistoricalDataLink'].squeeze{" "}
+      assret($ie.contains_text(@@historical_data_link))
       $logger.log_results("View Summarized Historical Data","Should exist","Existed","Passed")
     rescue=>e
       $logger.log_results("View Summarized Historical Data","Should exist","Existed","Failed")
@@ -1191,12 +1273,13 @@ class ClientCreateEdit<TestClass
  # checking whether view summarized historical Data link exist
  def check_view_summarized_historical_Data_link_functinality()
     begin
-      $ie.link(:text,@@clientprop['client.HistoricalDataLink']).click
-      assret($ie.contains_text(@@c_name +" Historical data"))
+      $ie.link(:text,@@historical_data_link).click
+      assret($ie.contains_link("Add/Edit historical Data"))
       $logger.log_results("View Summarized Historical Data","Should work","Working","Passed")
       $ie.button(:value,@@return_to_details_page).click
     rescue=>e
       $logger.log_results("View Summarized Historical Data","Should work","Working","Failed")
+      $ie.button(:value,@@return_to_details_page).click
     end
   end
   #Selecting the loan officer while entering MFI information
@@ -1204,6 +1287,7 @@ class ClientCreateEdit<TestClass
   def select_loan_officer()
     $ie.select_list(:name,"loanOfficerId").select_value(@@personnel_id)
     meeting(@@lookup_name_client)
+    
   end
   
   def select_office()
@@ -1217,6 +1301,7 @@ class ClientCreateEdit<TestClass
           display_name=dbresult[1]
       end      
       $ie.link(:text,display_name).click 
+      $ie.wait(10)
       assert($ie.contains_text(@@client_select_client))
       $logger.log_results("page redirected to",@@client_select_client,"Page","Passed")
       rescue=>e
@@ -1330,8 +1415,8 @@ class ClientCreateEdit<TestClass
       dbquery("select office_id,display_name from office where status_id=1 and office_level_id=5 and office_id not in ('"+@@office_id+"')")
       @@office_name=dbresult[1]
       $ie.link(:text,@@office_name).click
+      $ie.wait(10)
       @@header=(@@c_name+" - "+@@clientprop['client.EditPreviewPersonalReviewTitle']).squeeze(" ")
-      puts @@header
       assert($ie.contains_text(@@header))
       $logger.log_results("Change Branch Membership confirm page","N/A","N/A","Passed")    
       $ie.button(:value,@@button_submit).click
@@ -1343,21 +1428,22 @@ class ClientCreateEdit<TestClass
  #Checking for add notes link
  def check_add_notes_link()
   begin
-    assert($ie.contains_text(@@clientprop['client.NotesLink']))
-    $logger.log_results("Link"+@@clientprop['client.NotesLink'],"Should Exist","Existed","passed")
+    @@notes=@@clientprop['client.NotesLink'].squeeze(" ")
+    assert($ie.contains_text(@@notes))
+    $logger.log_results("Link "+@@clientprop['client.NotesLink'],"Should Exist","Existed","passed")
     rescue=>e
-    $logger.log_results("Link"+@@clientprop['client.NotesLink'],"Should Exist","Not Existed","Failed")
+    $logger.log_results("Link "+@@clientprop['client.NotesLink'],"Should Exist","Not Existed","Failed")
   end
  end
  
  #Clicking on Add notes link
  def click_add_notes_link()
   begin
-    $ie.link(:text,@@clientprop['client.NotesLink']).click
+    $ie.link(:text,@@notes).click
     assert($ie.contains_text(@@c_name+" - Add note"))
-    $logger.log_results("Link"+@@clientprop['client.NotesLink'],"Should Work","Working","passed")
+    $logger.log_results("Link "+@@clientprop['client.NotesLink'],"Should Work","Working","passed")
     rescue=>e
-    $logger.log_results("Link"+@@clientprop['client.NotesLink'],"Should Work","Not Working","Failed")
+    $logger.log_results("Link "+@@clientprop['client.NotesLink'],"Should Work","Not Working","Failed")
   end
  end
  
@@ -1386,10 +1472,13 @@ class ClientCreateEdit<TestClass
  #Check for see all notes link
  def check_for_see_all_notes_link
   begin
+    
+    $ie.wait(10)
     assert($ie.contains_text(@@clientprop['client.SeeAllNotesLink']))
-    $logger.log_results("Link"+@@clientprop['client.SeeAllNotesLink'],"should Exist","Existed","Passed")
+    $logger.log_results("Link "+@@clientprop['client.SeeAllNotesLink'],"should Exist","Existed","Passed")
+    
     rescue=>e
-    $logger.log_results("Link"+@@clientprop['client.SeeAllNotesLink'],"should Exist","Not Existed","Failed")
+    $logger.log_results("Link "+@@clientprop['client.SeeAllNotesLink'],"should Exist","Not Existed","Failed")
   end
 end
 
@@ -1398,9 +1487,9 @@ def click_see_all_notes_link()
   begin 
     $ie.link(:text,@@clientprop['client.SeeAllNotesLink']).click
     assert($ie.contains_text(@@c_name+" - Notes "))
-    $logger.log_results("Link"+@@clientprop['client.SeeAllNotesLink'],"should Work","Working","Passed")
+    $logger.log_results("Link "+@@clientprop['client.SeeAllNotesLink'],"should Work","Working","Passed")
     rescue=>e
-    $logger.log_results("Link"+@@clientprop['client.SeeAllNotesLink'],"should Work","Not Working","Failed")
+    $logger.log_results("Link "+@@clientprop['client.SeeAllNotesLink'],"should Work","Not Working","Failed")
   end
   end
 end

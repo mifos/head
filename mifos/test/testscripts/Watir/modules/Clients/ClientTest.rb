@@ -25,6 +25,9 @@ class ClientTest
   clientobject.check_createnewclient_link
   clientobject.select_grouppage_check
   clientobject.click_cancel_from_group_select
+  clientobject.no_groups_while_search
+  clientobject.check_next_link_in_search_group_page
+  clientobject.check_next_link_in_search_group_page
   
 #Search for the group by clicking on continue and Select the group from the group select page
  
@@ -128,7 +131,8 @@ class ClientTest
     clientobject.check_view_summarized_historical_Data_link_exist()
     clientobject.check_view_summarized_historical_Data_link_functinality()
 #Checking for View closed account link functinality
-    clientobject.view_all_closed_accounts()
+    clientobject.check_view_all_closed_accounts_link
+    clientobject.click_view_all_closed_accounts_link
 #Checking for the Add notes and see all notes links
 #Clicking on the links and check the page whether it is redirecting to proper page
 #Adding a note
