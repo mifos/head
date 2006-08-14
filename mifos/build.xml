@@ -74,10 +74,6 @@
 		<mkdir dir="${test.classes}/conf"/>
 	</target>
 
-	<target name="checkout" depends="check_config" description="Gets the latest version from the source control">
-		<!-- <svn checkout="svn checkout ${svn.host} mifos -username ${svn.uname} -password ${svn.passwd}" /> -->
-	</target>
-
 	<target name="clean_src_classes" description="Cleans the source classes">
 		<delete>
 			<fileset dir="${build.classes}" includes="**/*.class"/>
@@ -212,7 +208,7 @@
 	<!--<target name="test_dist" depends="compile" description="Compiles, runs test cass and prepares the final war for distribution">
 	</target>-->
 
-	<target name="clean_build" depends="check_config,clean_all,checkout,dist_ddl" description="Initates a clean build, cleaning all directories and getting a fresh copy from source control"/>
+	<target name="clean_build" depends="check_config,clean_all,dist_ddl" description="Initates a clean build, cleaning all directories and getting a fresh copy from source control"/>
 
 	<target name="build_db" description="Builds the application database">
 		<sql driver="${db.driver}" url="jdbc:mysql://${db.ip}:${db.port}/" userid="${db.user}" password="${db.pwd}"
@@ -289,7 +285,7 @@
 		<copy file="${conf.dir}/mysql-ds.xml" todir="${env.JBOSS_HOME}/server/${jboss.server.name}/deploy/"/>
 	</target>
 
-	<target name="all" depends="clean_all,checkout,coverage,war,deploy,build_db,javadoc,email" description="Cleans the directory structure, gets latest, compiles, makes war, runs coverage test, builds db and sends an email of status"/>
+	<target name="all" depends="clean_all,coverage,war,deploy,build_db,javadoc,email" description="Cleans the directory structure, gets latest, compiles, makes war, runs coverage test, builds db and sends an email of status"/>
 
 	<target name="email">
 		<mail mailhost="${mail.server}" mailport="${mail.port}" subject="CVS Build successful on ${BUILD_ID}" encoding="plain">
