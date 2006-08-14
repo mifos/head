@@ -139,6 +139,7 @@ class ClientTest
     clientobject.check_add_notes_link
     clientobject.click_add_notes_link
     clientobject.check_mandatory_in_add_notes_page
+    clientobject.enter_more_data_in_notes_field(clientobject.Notes)
     clientobject.enter_data_in_add_note
     clientobject.check_for_see_all_notes_link
     clientobject.click_see_all_notes_link    

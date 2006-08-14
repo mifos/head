@@ -73,6 +73,7 @@ class ClientCreateEdit<TestClass
       @tdate=arrval[rowid+=1].to_i.to_s
       @tmonth=arrval[rowid+=1].to_i.to_s        
       @tyear=arrval[rowid+=1].to_i.to_s
+      @notes=arrval[rowid+=1]
     elsif sheetid==3 then
       @salutation=arrval[rowid+=1]
       @fname=arrval[rowid+=1]
@@ -293,6 +294,9 @@ class ClientCreateEdit<TestClass
   def Meetingplace
     @meetingplace
   end
+  def Notes
+    @notes
+  end
   #logining into Mifos
   
   def client_login()
@@ -305,6 +309,7 @@ class ClientCreateEdit<TestClass
     @@meetingprop=load_properties("modules/propertis/Meeting.properties")
     @@adminprop=load_properties("modules/propertis/adminUIResources.properties")
     @@menuprop=load_properties("modules/propertis/MenuResources.properties")
+    @@custprop=load_properties("modules/propertis/CustomerUIResources.properties")
     
   end
   
@@ -434,6 +439,8 @@ class ClientCreateEdit<TestClass
       @@client_spo_or_father_type_msg=string_replace_message(@@clientprop['errors.requiredSelect'],@@clientprop['client.GenderValue'],@@clientprop['client.SpouseNameTypeValue'])
       @@client_spo_or_father_fname_msg=string_replace_message(@@clientprop['errors.mandatory'],@@clientprop['client.DateOfBirthValue'],@@clientprop['client.SpouseFirstNameValue'])
       @@client_spo_or_father_lname_msg=string_replace_message(@@clientprop['errors.mandatory'],@@clientprop['client.SpouseFirstNameValue'],@@clientprop['client.SpouseLastNameValue'])
+      @@client_note_error_message=string_replace(@@custprop['errors.maxlength']),"{0}",@@custprop['label.noteMsg'])
+      @@client_note_error_message["{1}"]=""
       @@client_note_msg=string_replace_message(@@clientprop['errors.mandatory'],@@clientprop['client.SpouseLastNameValue'],@@clientprop['client.Note'])      
       @@clientprop['errors.requiredCustomField']["<li>"]=""
       @@clientprop['errors.requiredCustomField']["</li>"]=""
@@ -1455,7 +1462,19 @@ class ClientCreateEdit<TestClass
     rescue=>e
     $logger.log_results("Mandatory Check when you don't enter any note","N/A","N/A","Failed")
  end
+ #Checking for boundary condition for the field notes
  
+ def enter_more_data_in_notes_field(nnotes)
+  begin
+    $ie.text_field(:name,"comment").set(nnotes)
+    $ie.button(:value,@@button_preview).click
+    @@client_note_error_message+" 500"
+    assert($ie.contains_text(@@client_note_error_message))
+    $logger.log_results("Bundaory Check for Notes ","Should display Proper Error Message","Displaying","Passed")
+    rescue=>e
+    $logger.log_results("Bundaory Check for Notes ","Should display Proper Error Message","Not Displaying","Failed")    
+  end
+ end
  #Adding a note to the customer record
  def enter_data_in_add_note()
   begin
