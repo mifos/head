@@ -33,6 +33,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -84,7 +85,11 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.load_success.toString());
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.LOAN_OFFICER_LIST, request.getSession()));
-		assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,request.getSession()));		
+		assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,request.getSession()));
+		
+		CenterCustActionForm actionForm = (CenterCustActionForm)request.getSession().getAttribute("centerCustActionForm");
+		String currentDate = DateHelper.getCurrentDate(TestObjectFactory.getUserContext().getPereferedLocale());
+		assertEquals(currentDate,actionForm.getMfiJoiningDate());
 	}
 	
 	public void testFailurePreviewWithAllValuesNull() throws Exception {

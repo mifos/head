@@ -367,7 +367,7 @@
               </tr>
               <tr class="fontnormal">
          <td width="22%" align="right">
-			<mifos:mifoslabel name="Personnel.UserName" mandatory="yes" bundle="PersonnelUIResources"></mifos:mifoslabel>
+			<mifos:mifoslabel name="Personnel.UserName" bundle="PersonnelUIResources"></mifos:mifoslabel>
 		</td>
         <td width="78%">
            	<c:out value="${requestScope.PersonnelVO.userName}"/>

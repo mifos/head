@@ -6,14 +6,12 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.hibernate.HibernateException;
-import org.mifos.application.fees.business.CategoryTypeEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -32,6 +30,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
@@ -51,7 +50,7 @@ public abstract class BaseAction extends DispatchAction {
 		TransactionDemarcate annotation = getTransaction(form, request);
 		preExecute(form, request, annotation);
 		ActionForward forward = super.execute(mapping, form, request, response);
-		postExecute(request, annotation);
+		postExecute(request, annotation, isCloseSessionAnnotationPresent(form, request));
 		return forward;
 	}
 
@@ -86,6 +85,23 @@ public abstract class BaseAction extends DispatchAction {
 		return annotation;
 	}
 
+	protected boolean isCloseSessionAnnotationPresent(ActionForm actionForm,
+			HttpServletRequest request) {
+		boolean isAnnotationPresent = false;
+		try {
+			String methodName = request
+					.getParameter(MethodNameConstants.METHOD);
+			Method methodToExecute = this.clazz
+					.getMethod(methodName, new Class[] { ActionMapping.class,
+							ActionForm.class, HttpServletRequest.class,
+							HttpServletResponse.class });
+			isAnnotationPresent = methodToExecute.isAnnotationPresent(CloseSession.class);
+		} catch (NoSuchMethodException nsme) {
+			nsme.printStackTrace();
+		}
+		return isAnnotationPresent;
+	}
+	
 	protected void preHandleTransaction(HttpServletRequest request,
 			TransactionDemarcate annotation) throws PageExpiredException {
 		if (null != annotation && annotation.saveToken()) {
@@ -109,10 +125,9 @@ public abstract class BaseAction extends DispatchAction {
 	}
 
 	protected void postExecute(HttpServletRequest request,
-			TransactionDemarcate annotation) throws ApplicationException,
+			TransactionDemarcate annotation, boolean closeSession) throws ApplicationException,
 			SystemException {
 		// do cleanup here
-
 		if (startSession()) {
 			try {
 				HibernateUtil.commitTransaction();
@@ -127,6 +142,9 @@ public abstract class BaseAction extends DispatchAction {
 		} else {
 			postHandleTransaction(request, annotation);
 		}
+		
+		if(closeSession)
+			HibernateUtil.closeSession();
 	}
 
 	protected boolean isNewBizRequired(HttpServletRequest request)

@@ -77,7 +77,6 @@ import org.mifos.application.fees.exceptions.FeeException;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -96,10 +95,10 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
-import org.mifos.framework.util.valueobjects.Context;
 
 public class CenterCustAction extends BaseAction {
 	@Override
@@ -132,6 +131,7 @@ public class CenterCustAction extends BaseAction {
 		doCleanUp(actionForm, request);
 		request.getSession().removeAttribute(CenterConstants.CENTER_MEETING);
 		loadCreateMasterData(actionForm, request);
+		actionForm.setMfiJoiningDate(DateHelper.getCurrentDate(getUserContext(request).getPereferedLocale()));
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
@@ -280,7 +280,8 @@ public class CenterCustAction extends BaseAction {
 		return mapping.findForward(ActionForwards.editprevious_success
 				.toString());
 	}
-
+	
+	@CloseSession
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -315,10 +316,8 @@ public class CenterCustAction extends BaseAction {
 			}
 		}
 		
-		
 		center.setUserContext(getUserContext(request));
 		center.update();
-		
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 

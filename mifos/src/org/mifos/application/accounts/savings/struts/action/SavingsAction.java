@@ -281,9 +281,11 @@ public class SavingsAction extends AccountAppAction {
 		SavingsBO savings = savingsService.findBySystemId(systemId);
 		savings.getSavingPerformanceHistory();
 		for (AccountActionDateEntity actionDate : savings
-				.getAccountActionDates())
+				.getAccountActionDates()){
 			Hibernate.initialize(actionDate);
-
+			actionDate.getCustomer().getCustomerId();
+		}
+		
 		Hibernate.initialize(savings.getAccountNotes());
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
