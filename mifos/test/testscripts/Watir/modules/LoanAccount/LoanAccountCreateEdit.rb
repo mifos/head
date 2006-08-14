@@ -431,9 +431,9 @@ class LoanAccountCreateEdit<TestClass
     account_id=dbresult[0]
     dbquery("select account_state_id from account where account_id="+account_id)
     statusid=dbresult[0]
-    if statusid==1 then
+    if statusid=="1" then
     change_status_pending()
-    elsif statusid==2 then
+    elsif statusid=="2" then
     change_status_approved()
     end
   end
@@ -519,7 +519,10 @@ class LoanAccountCreateEdit<TestClass
     $ie.select_list(:name,"businessActivityId").select_value(233)
     $ie.select_list(:name,"collateralTypeId").select_value(2)
     $ie.text_field(:name,"collateralNote").set("aaaaa")
+    $ie.select_list(:name,"businessActivityId").select_value(443)
     $ie.buttton(:value,"Preview").click
+    assert_on_page("Purpose of Loan: 0001-Cow Purchase")
+    assert_on_page("Account Owner: "+@@display_name)
     assert($ie.contains_text($loan_preview_from_view))
     $logger.log_results("Page redirected to preview","N/A","N/A","Passed")
     $ie.button(:value,"Submit").click
@@ -527,6 +530,40 @@ class LoanAccountCreateEdit<TestClass
     $logger.log_results("Page redirected to preview","N/A","N/A","Failed")
     end
   end
+  def open_loan_account_in_active_state()
+    begin
+    dbquery("select a.GLOBAL_ACCOUNT_NUM from loan_account la, Account a where la.Account_ID = a.account_id and a.account_STATE_id = 5")
+    if $row==0 then
+    $logger.log_results("No accounts existed with active good standing state","N/A","N/A","Passed")
+    else
+      global_account_number=dbresult[0]
+    end
+      $ie.link(:text,"Clients & Accounts").click
+      $ie.text_field(:name,"searchNode(searchString)").set(global_account_number)
+      $ie.button("Search").click
+      search_name="Account # "+global_account_number
+      $ie.link(:text,search_name).click
+    assert($ie.contains_text("Performance History"))
+      $logger.log_results("Account Details page","Open","opened","passed")
+    rescue=>e
+    $logger.log_results("Account Details page","Open","not opened","failed")
+    
+  end
+  end
+  def edit_loan_account_with_purpose_of_loan()
+  begin
+  $ie.link(:text,"Edit account information").click
+  $ie.select_list(:name,"businessActivityId").select_value(231)
+  $ie.button(:value,"Preview").click
+  assert($ie.contains_text("Preview Loan account information"))
+  $logger.log_results("Can able to select purpose of loan","N/A","N/A","Passed")
+  $ie.button(:value,"Submit").click
+  rescue=>e
+  $logger.log_results("Can able to select purpose of loan","N/A","N/A","Failed")
+  end
+  end
+  
+  
   
   
 end
