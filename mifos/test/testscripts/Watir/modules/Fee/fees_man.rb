@@ -1,7 +1,7 @@
 require 'mysql'
 require 'test/unit'
 require 'watir'
-require 'Feeclass'
+require 'modules/Fee/Feeclass'
 
 class Fee_Test
   feeobject=Feeclass.new
@@ -9,7 +9,7 @@ class Fee_Test
   feeobject.admin_check()
   feeobject.feelink_check()
   
-  filename=File.join(File.dirname($PROGRAM_NAME),"data/testdata.xls")
+  filename=File.expand_path(File.dirname($PROGRAM_NAME))+"/data/testdata.xls"
   feeobject.open(filename,1)
   rowid= -1
   

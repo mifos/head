@@ -13,7 +13,7 @@ class Funds_Main
   funds_obj.Check_Funds_Links
   funds_obj.Check_New_Funds_cancel
     
-  filename = File.dirname($PROGRAM_NAME)+"\\data\\Funds_Data.xls"  
+  filename = File.expand_path(File.dirname($PROGRAM_NAME))+"/data/Funds_Data.xls"  
 
 #This section deals with the all validation message and error handling
 

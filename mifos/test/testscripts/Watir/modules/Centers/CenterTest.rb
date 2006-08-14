@@ -6,7 +6,7 @@ require 'modules/Centers/CenterCreateEdit'
 
 class CenterTest
   centerobject=CenterCreateEdit.new
-  filename=File.join(File.dirname($PROGRAM_NAME),"data/testdata.xls")
+  filename=File.expand_path(File.dirname($PROGRAM_NAME))+"/data/testdata.xls"
   centerobject.open(filename,1)
   rowid=-1
   colid=1

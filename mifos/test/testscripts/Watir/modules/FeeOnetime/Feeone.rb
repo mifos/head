@@ -8,7 +8,7 @@ class Feeone
   feeobj=FeeOnetime.new
   feeobj.fee_login
   feeobj.man_search_account
-  filename=File.join(File.dirname($PROGRAM_NAME),"data/testdata.xls")
+  filename=File.expand_path(File.dirname($PROGRAM_NAME))+"/data/testdata.xls"
   feeobj.open(filename,1)
   rowid=-1
   while(rowid<$maxrow*$maxcol-1)
