@@ -91,8 +91,8 @@
 					<table width="95%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td colspan="2"><span class="fontnormalbold"> <mifos:mifoslabel
-								name="loan.acc_owner" />:&nbsp; </span> <c:out
-								value='${sessionScope.displayName}' /></td>
+								name="loan.acc_owner" />:&nbsp; </span><span class="fontnormal"> <c:out
+								value='${sessionScope.BusinessKey.customer.displayName}' /></span></td>
 						</tr>
 						<tr>
 							<td width="100%" colspan="2" class="fontnormalbold"><mifos:mifoslabel

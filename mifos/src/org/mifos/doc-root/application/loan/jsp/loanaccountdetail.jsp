@@ -103,7 +103,11 @@
 								<td class="fontnormal">
 									<mifos:mifoslabel name="loan.business_work_act" keyhm="Loan.PurposeOfLoan" isManadatoryIndicationNotRequired="yes"/>
 									<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" isColonRequired="yes"/>
-									<c:out value="${sessionScope.BusinessKey.businessActivityId}" />
+									<c:forEach items="${sessionScope.BusinessActivities}" var="busId">
+										<c:if test="${busId.id eq sessionScope.BusinessKey.businessActivityId}">
+											<c:out value="${busId.name}" />
+										</c:if>
+									</c:forEach>
 								</td>
 							</tr>
 						</table>

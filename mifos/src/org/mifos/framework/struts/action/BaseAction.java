@@ -16,6 +16,7 @@ import org.hibernate.HibernateException;
 import org.mifos.application.fees.business.CategoryTypeEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.service.MasterDataService;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -191,6 +192,11 @@ public abstract class BaseAction extends DispatchAction {
 				.getInstance().getBusinessService(
 						BusinessServiceName.MasterDataService);
 		return masterDataService.retrieveMasterEntities(clazz, localeId);
+	}
+	
+	protected MasterDataEntity getMasterEntities(Short entityId,Class clazz,
+			Short localeId) throws ServiceException, PersistenceException {
+		return new MasterPersistence().retrieveMasterEntity(entityId,clazz, localeId);
 	}
 	
 	protected Short getShortValue(String str) {

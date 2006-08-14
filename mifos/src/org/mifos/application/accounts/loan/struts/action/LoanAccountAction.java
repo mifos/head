@@ -56,6 +56,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleInstallment;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
@@ -333,6 +334,7 @@ public class LoanAccountAction extends AccountAppAction {
 					.getLocaleId());
 		}
 		loanBO.setCollateralType(collateralTypeEntity);
+		loanBO.setBusinessActivityId(loanAccountActionForm.getBusinessActivityIdValue());
 		return mapping.findForward(ActionForwards.managepreview_success
 				.toString());
 	}
@@ -348,6 +350,7 @@ public class LoanAccountAction extends AccountAppAction {
 			throws Exception {
 		LoanBO loanBO = (LoanBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
+		Integer versionNumber = loanBO.getVersionNo();
 		loanBO = loanBusinessService.findBySystemId(loanBO
 				.getGlobalAccountNum());
 		/*if(! loanBO.getVersionNo().equals(versionNumber))
@@ -359,11 +362,16 @@ public class LoanAccountAction extends AccountAppAction {
 	}
 
 	private void updateBusinessData(LoanBO loanBO, ActionForm form,
-			HttpServletRequest request) {
+			HttpServletRequest request) throws AccountException {
 		LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
 		if (loanAccountActionForm.getIntDedDisbursement().equals("1")) {
-			loanBO.setGracePeriodType(new GracePeriodTypeEntity(
-					GracePeriodTypeConstants.NONE));
+			try {
+				loanBO.setGracePeriodType((GracePeriodTypeEntity)getMasterEntities(GracePeriodTypeConstants.NONE,GracePeriodTypeEntity.class,getUserContext(request).getLocaleId()));
+			} catch (ServiceException e) {
+				throw new AccountException(e);
+			} catch (PersistenceException e) {
+				throw new AccountException(e);
+			}
 		} else {
 			loanBO.setGracePeriodType(loanBO.getLoanOffering()
 					.getGracePeriodType());
@@ -407,7 +415,7 @@ public class LoanAccountAction extends AccountAppAction {
 
 	private void loadLoanDetailPageInfo(LoanBO loanBO,
 			HttpServletRequest request) throws SystemException,
-			ApplicationException {
+			ApplicationException {		
 		SessionUtils.setAttribute(LoanConstants.RECENTACCOUNTACTIVITIES,
 				loanBusinessService.getRecentActivityView(loanBO
 						.getGlobalAccountNum(), getUserContext(request)
