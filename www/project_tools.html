@@ -1,0 +1,58 @@
+</dd>
+</dl>
+<script id="eraser">
+
+  // if the Get Involved block was named I could just get the
+  // the two sections by name and set the display to none. 
+
+  // get to the block
+  var dd = document.getElementById("eraser").previousSibling;
+
+  // hide all  default navigation bars
+  
+  // within the previous blocks hide everything
+  for( n=dd; n!=null; n=n.previousSibling ) {
+    if(n.nodeType==1) { // if element
+      if(n.tagName=="DL") { // kill all the link items
+        n.style.display = "none";
+      }
+    }
+  }
+
+  // This is all you can do because the "Search" and "How do I"
+  // boxes aren't created
+</script>
+
+
+
+
+<dl id="mifosprojecttools" class="navgroup">
+<dt>Mifos Project Tools</dt>
+<dd>
+<ul>
+<li><a href="https://mifos.dev.java.net/">Project Home</a></li>
+<li><a href="http://wiki.java.net/bin/view/Javatools/MIFOS">Wiki</a></li>
+<li><a href="https://mifos.dev.java.net/servlets/ProjectMemberList">Membership</a></li>
+<li><a href="https://mifos.dev.java.net/servlets/ProjectDocumentList">Documents and Files</a></li>
+<li><a href="http://cruisecontrol.mifos.org:8080/">CruiseControl CI</a></li>
+<li><a href="https://mifos.dev.java.net/source/browse/mifos/">Browse Source Code</a></li>
+<li><a href="https://mifos.dev.java.net/servlets/ProjectIssues">Issue Tracker</a></li>
+</ul>
+</dd>
+
+
+
+<dl id="getinvolved" class="navgroup">
+<dt>Mifos Get Involved</dt>
+<dd>
+<ul>
+<li><a href="https://lists.sourceforge.net/lists/listinfo/mifos-developer">Listserv Sign Up</a></li>
+<li><a href="http://wiki.java.net/bin/view/Javatools/KickStart">Developer Start</a></li>
+<li><a href="irc://freenode/mifos">IRC #mifos</a></li>
+
+</ul>
+</dd>
+</dl>
+
+
+
