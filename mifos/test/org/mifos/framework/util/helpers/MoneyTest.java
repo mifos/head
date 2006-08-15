@@ -48,10 +48,10 @@ import junit.framework.TestCase;
  */
 public class MoneyTest extends TestCase {
 	
-	private static final MifosCurrency RUPEE =
+	public static final MifosCurrency RUPEE =
 		new MifosCurrency((short)2, "RUPEE", "Rs", (short)1, 1.0f, (short)1, (short)1);
 	
-	private static final MifosCurrency EURO =
+	public static final MifosCurrency EURO =
 		new MifosCurrency((short)3, "EURO", "", (short)2, 0.5f, (short)0, (short)1);
 
 	public MoneyTest(){
@@ -164,11 +164,25 @@ public class MoneyTest extends TestCase {
 	}
 	
 	public void testSetScale(){
-		Money money=null;
-		money = new Money(RUPEE, "142.344");
-		assertEquals(142.3,money.getAmountDoubleValue());
-		money = new Money(RUPEE, "142.356");
-		assertEquals(142.4,money.getAmountDoubleValue());
+		assertEquals(
+			142.3,
+			new Money(RUPEE, "142.344").getAmountDoubleValue(),
+			0.00000001);
+		assertEquals(
+			142.4,
+			new Money(RUPEE, "142.356").getAmountDoubleValue(),
+			0.00000001);
+	}
+	
+	public void testFromDouble() throws Exception {
+		assertEquals(
+			"142.3",
+			new Money(RUPEE, 142.344).toString()
+		);
+		assertEquals(
+			"1.0",
+			new Money(RUPEE, 0.9999).toString()
+		);
 	}
 	
 	public void testToString() {

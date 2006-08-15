@@ -34,26 +34,40 @@ import org.mifos.framework.util.helpers.Money;
 public class InterestInputs
 {
 
-		private Money principal = new Money();
+		private Money principal = null;
 		private double interestRate = 0;
 		private int duration = 0;
 		private String durationType = InterestCalculatorConstansts.WEEK_INSTALLMENT;
 		Date installmentStartDate = null;
 		Date installmentEndDate = null;
+		
+		public InterestInputs() {
+		}
 
+		public InterestInputs(Money principal, double interestRate, int duration, String durationType, Date installmentStartDate, Date installmentEndDate) {
+			this.principal = principal;
+			this.interestRate = interestRate;
+			this.duration = duration;
+			this.durationType = durationType;
+			this.installmentStartDate = installmentStartDate;
+			this.installmentEndDate = installmentEndDate;
+		}
 
 		public void setPrincipal(Money principal)
 		{
 			this.principal = principal;
 		}
+
 		public void setInterestRate(double interestRate)
 		{
 			this.interestRate = interestRate;
 		}
+
 		public void setDuration(int duration)
 		{
 			this.duration = duration;
 		}
+
 		public void setDurationType(String durationType)
 		{
 			this.durationType = durationType;
@@ -63,18 +77,22 @@ public class InterestInputs
 		{
 			return principal;
 		}
+
 		public double getInterestRate()
 		{
 			return interestRate;
 		}
+
 		public int getDuration()
 		{
 			return duration;
 		}
+
 		public String getDurationType()
 		{
 			return durationType;
 		}
+
 		public void setInstallmentStartDate(Date installmentStartDate)
 		{
 			this.installmentStartDate = installmentStartDate;
@@ -84,15 +102,15 @@ public class InterestInputs
 		{
 			this.installmentEndDate = installmentEndDate;
 		}
+
 		public Date getInstallmentStartDate()
 		{
 			return installmentStartDate;
 		}
+
 		public Date getInstallmentEndDate()
 		{
 			return installmentEndDate;
 		}
-
-
 
 }

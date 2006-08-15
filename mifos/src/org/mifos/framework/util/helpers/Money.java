@@ -258,6 +258,7 @@ public final class Money implements Serializable {
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Money))
 			return false;
@@ -268,6 +269,7 @@ public final class Money implements Serializable {
 				&& (this.amount.compareTo(money.getAmount()) == 0);
 	}
 
+	@Override
 	public int hashCode() {
 		if (amount == null || currency == null)
 			return System.identityHashCode(null);
@@ -291,7 +293,7 @@ public final class Money implements Serializable {
 		return amount;
 	}
 	
-
+	@Override
 	public String toString() {
 		if(amount != null && currency != null)
 			return amount.toString();

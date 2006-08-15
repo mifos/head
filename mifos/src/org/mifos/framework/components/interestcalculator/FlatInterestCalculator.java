@@ -24,18 +24,27 @@
  */
 package org.mifos.framework.components.interestcalculator;
 
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.util.helpers.Money;
 
 /**
- *
  *  This class handles flat interest calculation
  */
 
-public class FlatInterestCalculator implements  InterestCalculatorIfc
+public class FlatInterestCalculator implements InterestCalculatorIfc
 {
+
+	private final MifosLogger logger;
+
+	public FlatInterestCalculator() {
+		this(MifosLogManager.getLogger(LoggerConstants.REPAYMENTSCHEDULAR));
+	}
+
+	public FlatInterestCalculator(MifosLogger logger) {
+		this.logger = logger;
+	}
 
 	public Money getInterest(InterestInputs interestInputs) throws InterestCalculationException
 	{
@@ -46,16 +55,18 @@ public class FlatInterestCalculator implements  InterestCalculatorIfc
 			Double interestRate=new Double(interestInputs.getInterestRate());
 			Double durationInYears=new Double(getTotalDurationInYears(interestInputs));
 			
-			Money interestRateM=new Money(Configuration.getInstance().getSystemConfig().getCurrency(),interestRate);
-			Money durationInYearsM=new Money(Configuration.getInstance().getSystemConfig().getCurrency(),durationInYears);
+			Money interestRateM=new Money(principal.getCurrency(), interestRate);
+			Money durationInYearsM=new Money(principal.getCurrency(), durationInYears);
 
 
-			MifosLogManager.getLogger(LoggerConstants.REPAYMENTSCHEDULAR).info("FlatInterestCalculator:getInterest duration in years..."+durationInYears);
+			logger.info("FlatInterestCalculator:getInterest duration in years..."+durationInYears);
 
-			Money interest=principal.multiply(interestRateM.multiply(durationInYearsM)).divide(new Money(Configuration.getInstance().getSystemConfig().getCurrency(),100));
+			Money interest = 
+				principal
+					.multiply(interestRateM.multiply(durationInYearsM))
+					.divide(new Money(principal.getCurrency(), 100));
 
-
-			MifosLogManager.getLogger(LoggerConstants.REPAYMENTSCHEDULAR).info("FlatInterestCalculator:getInterest interest accumulated..."+interest);
+			logger.info("FlatInterestCalculator:getInterest interest accumulated..."+interest);
 			return interest;
 	}
 
@@ -73,7 +84,7 @@ public class FlatInterestCalculator implements  InterestCalculatorIfc
 						double totalWeekDays = interestInputs.getDuration() * daysInWeek;
 						double durationInYears = totalWeekDays/InterestCalculatorConstansts.INTEREST_DAYS_360 ;
 
-						MifosLogManager.getLogger(LoggerConstants.REPAYMENTSCHEDULAR).info("FlatInterestCalculator:getTotalDurationInYears total week days.."+totalWeekDays);
+						logger.info("FlatInterestCalculator:getTotalDurationInYears total week days.."+totalWeekDays);
 
 
 						return InterestCalculatorHelper.round(durationInYears);
@@ -88,7 +99,7 @@ public class FlatInterestCalculator implements  InterestCalculatorIfc
 						double totalMonthDays = interestInputs.getDuration() * daysInMonth;
 						double durationInYears = totalMonthDays/InterestCalculatorConstansts.INTEREST_DAYS_360 ;
 
-						MifosLogManager.getLogger(LoggerConstants.REPAYMENTSCHEDULAR).info("FlatInterestCalculator:getTotalDurationInYears total month days.."+totalMonthDays);
+						logger.info("FlatInterestCalculator:getTotalDurationInYears total month days.."+totalMonthDays);
 
 
 
@@ -106,7 +117,7 @@ public class FlatInterestCalculator implements  InterestCalculatorIfc
 				if(interestInputs.getDurationType().equals(InterestCalculatorConstansts.WEEK_INSTALLMENT))
 				{
 
-						MifosLogManager.getLogger(LoggerConstants.REPAYMENTSCHEDULAR).info("FlatInterestCalculator:getTotalDurationInYears in interest week 365 days");
+						logger.info("FlatInterestCalculator:getTotalDurationInYears in interest week 365 days");
 
 
 						double totalWeekDays = interestInputs.getDuration() * daysInWeek;
@@ -118,7 +129,7 @@ public class FlatInterestCalculator implements  InterestCalculatorIfc
 				else
 				if(interestInputs.getDurationType().equals(InterestCalculatorConstansts.MONTH_INSTALLMENT))
 				{
-						MifosLogManager.getLogger(LoggerConstants.REPAYMENTSCHEDULAR).info("FlatInterestCalculator:getTotalDurationInYears in interest month 365 days");
+						logger.info("FlatInterestCalculator:getTotalDurationInYears in interest month 365 days");
 
 						// will have to consider inc/dec time in some countries
 						Long installmentStartTime = interestInputs.getInstallmentStartDate().getTime();
@@ -126,12 +137,12 @@ public class FlatInterestCalculator implements  InterestCalculatorIfc
 						Long diffTime = installmentEndTime - installmentStartTime;
 						double daysDiff = diffTime/(1000*60*60*24);
 
-						MifosLogManager.getLogger(LoggerConstants.REPAYMENTSCHEDULAR).info("FlatInterestCalculator:getTotalDurationInYears start date.."+interestInputs.getInstallmentStartDate());
+						logger.info("FlatInterestCalculator:getTotalDurationInYears start date.."+interestInputs.getInstallmentStartDate());
 
-						MifosLogManager.getLogger(LoggerConstants.REPAYMENTSCHEDULAR).info("FlatInterestCalculator:getTotalDurationInYears end date.."+interestInputs.getInstallmentEndDate());
+						logger.info("FlatInterestCalculator:getTotalDurationInYears end date.."+interestInputs.getInstallmentEndDate());
 
 
-						MifosLogManager.getLogger(LoggerConstants.REPAYMENTSCHEDULAR).info("FlatInterestCalculator:getTotalDurationInYears diff in days..."+daysDiff);
+						logger.info("FlatInterestCalculator:getTotalDurationInYears diff in days..."+daysDiff);
 
 
 						double durationInYears = daysDiff/InterestCalculatorConstansts.INTEREST_DAYS_365 ;
@@ -170,22 +181,18 @@ public class FlatInterestCalculator implements  InterestCalculatorIfc
 
 	private void validate(InterestInputs interestInputs) throws InterestCalculationException
 	{
+		Money principal = interestInputs.getPrincipal();
+		double interestRate = interestInputs.getInterestRate();
+		int duration = interestInputs.getDuration();
+		String durationType = interestInputs.getDurationType();
 
-			Money principal = interestInputs.getPrincipal();
-			double interestRate = interestInputs.getInterestRate();
-			int duration = interestInputs.getDuration();
-			String durationType = interestInputs.getDurationType();
+		logger.info("***********Interest Related Inputs****************");
 
-			MifosLogManager.getLogger(LoggerConstants.REPAYMENTSCHEDULAR).info("***********Interest Related Inputs****************");
-
-			MifosLogManager.getLogger(LoggerConstants.REPAYMENTSCHEDULAR).info("principal passed.."+principal);
-			MifosLogManager.getLogger(LoggerConstants.REPAYMENTSCHEDULAR).info("interestRate passed.."+interestRate);
-			MifosLogManager.getLogger(LoggerConstants.REPAYMENTSCHEDULAR).info("duration.."+duration);
-			MifosLogManager.getLogger(LoggerConstants.REPAYMENTSCHEDULAR).info("durationType passed.."+durationType);
-			MifosLogManager.getLogger(LoggerConstants.REPAYMENTSCHEDULAR).info("***********Interest Related Inputs End****************");
-
-
-
+		logger.info("principal passed.."+principal);
+		logger.info("interestRate passed.."+interestRate);
+		logger.info("duration.."+duration);
+		logger.info("durationType passed.."+durationType);
+		logger.info("***********Interest Related Inputs End****************");
 	}
 
 }

@@ -33,6 +33,7 @@ import org.mifos.framework.util.helpers.Money;
 public interface InterestCalculatorIfc
 {
 
-	public Money getInterest(InterestInputs interestInputs) throws InterestCalculationException;
+	public Money getInterest(InterestInputs interestInputs) 
+	throws InterestCalculationException;
 
 }

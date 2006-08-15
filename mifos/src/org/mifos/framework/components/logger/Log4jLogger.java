@@ -32,19 +32,21 @@ import org.apache.log4j.Logger;
 
 /**	@author sumeethaec
  *  Created Date: 28-07-05
- *  This class contains a logger object log the messages. Also contains functions to log the messages at different levels 
+ *  This class contains a logger object log the messages. 
+ *  Also contains functions to log the messages at different levels 
  */ 
-public class MifosLogger  {
+public class Log4jLogger implements MifosLogger {
 
 	/**logger to log the statements*/
 	private Logger logger=null;
 		
 	/**
 	 * Constructor: 
-	 * Obtains an instance of the logger with a specified name. <!-->Root logger is "org.mifos"
+	 * Obtains an instance of the logger with a specified name. 
+	 * <!-->Root logger is "org.mifos"
 	 * @param name The name of the Logger
 	 */
-	public MifosLogger(String name) {
+	public Log4jLogger(String name) {
 		logger = Logger.getLogger(name);
 	}//end-constructor
 	/**
@@ -54,66 +56,45 @@ public class MifosLogger  {
 	 * @param name The name of the Logger
 	 * @param resourceBundle The resource bundle associated with the logger
 	 */
-	public MifosLogger(String name , ResourceBundle resourceBundle) {
+	public Log4jLogger(String name , ResourceBundle resourceBundle) {
 		logger = Logger.getLogger(name);
 		//sets the resource bundle for the logger
 		logger.setResourceBundle(resourceBundle);
 	}//end-constructor 
 	
-	/**
-	 * Function to log statements with level DEBUG
-	 * @param key Key present in the resource bundle. If asString parameter is false 
-	 * 			  then this is treated as the string to be displayed
-	 * @param asString Boolean value which decides if the parameter "key" should be 
-	 * 				   treated as a key in the resource bundle or as a string
-	 * @param args  List of parameters which can be used to replace placeholders 
-	 * 				in a message. 	
+	/* (non-Javadoc)
+	 * @see org.mifos.framework.components.logger.MifosLogger#debug(java.lang.String, boolean, java.lang.Object[])
 	 */
 	public void debug(String key, boolean asString ,Object[] args){
 		logMessage(Level.DEBUG ,key, asString , args,null);
 		
 	}//end-method debug
 	
-	/**
-	 * Function to log statements with level DEBUG
-	 * @param message Message to be printed
-	 * 
+	/* (non-Javadoc)
+	 * @see org.mifos.framework.components.logger.MifosLogger#debug(java.lang.String)
 	 */
 	public void debug(String message){
 		logMessage(Level.DEBUG ,message, false , null ,null);
 		 
 	}//end-method debug
 	
-	/**
-	 * Function to log statements with level INFO
-	 * @param key Key present in the resource bundle. If asString parameter is false 
-	 * 			   then this is treated as the string to be displayed
-	 * @param asString Boolean value which decides if the parameter "key" should be 
-	 * 					treated as a key in the resource bundle or as a string
-	 * @param args List of parameters which can be used to replace placeholders 
-	 * 				in a message. 	
+	/* (non-Javadoc)
+	 * @see org.mifos.framework.components.logger.MifosLogger#info(java.lang.String, boolean, java.lang.Object[])
 	 */
 	
 	public void info(String key, boolean asString , Object[] args){
 		logMessage(Level.INFO ,key, asString , args,null);
 	}//end-method info
 	
-	/**
-	 * Function to log statements with level INFO
-	 * @param message Message to be printed 	
+	/* (non-Javadoc)
+	 * @see org.mifos.framework.components.logger.MifosLogger#info(java.lang.String)
 	 */
 	
 	public void info(String message){
 		logMessage(Level.INFO ,message, false , null ,null);
 	}//end-method info
-	/**
-	 * Function to log statements with level WARN
-	 * @param key Key present in the resource bundle. If asString parameter is false 
-	 * 			   then this is treated as the string to be displayed
-	 * @param asString Boolean value which decides if the parameter "key" should be 
-	 * 					treated as a key in the resource bundle or as a string
-	 * @param args List of parameters which can be used to replace placeholders 
-	 * 				in a message. 
+	/* (non-Javadoc)
+	 * @see org.mifos.framework.components.logger.MifosLogger#warn(java.lang.String, boolean, java.lang.Object[])
 	 */
 	public void warn(String key, boolean asString , Object[] args){
 		
@@ -121,23 +102,15 @@ public class MifosLogger  {
 		
 	}	//end-method warn
 	
-	/**
-	 * Function to log statements with level WARN
-	 * @param message Message to be printed 	
+	/* (non-Javadoc)
+	 * @see org.mifos.framework.components.logger.MifosLogger#warn(java.lang.String)
 	 */
 	
 	public void warn(String message){
 		logMessage(Level.WARN ,message, false , null ,null);
 	}//end-method warn
-	/**
-	 * Function to log statements with level WARN and print stack trace
-	 * @param key Key present in the resource bundle. If asString parameter is false 
-	 * 			   then this is treated as the string to be displayed
-	 * @param asString Boolean value which decides if the parameter "key" should be 
-	 * 					treated as a key in the resource bundle or as a string
-	 * @param args List of parameters which can be used to replace placeholders 
-	 * 				in a message. 
-	 * @param t Exception object whose stack trace will be printed
+	/* (non-Javadoc)
+	 * @see org.mifos.framework.components.logger.MifosLogger#warn(java.lang.String, boolean, java.lang.Object[], java.lang.Throwable)
 	 */
 	public void warn(String key, boolean asString , Object[] args , Throwable t){
 	
@@ -145,48 +118,28 @@ public class MifosLogger  {
 	}//end-method warn	
 	
 	
-	/**
-	 * Function to log statements with level ERROR
-	 * @param key Key present in the resource bundle. If asString parameter is false 
-	 * 			   then this is treated as the string to be displayed
-	 * @param asString Boolean value which decides if the parameter "key" should be 
-	 * 					treated as a key in the resource bundle or as a string
-	 * @param args List of parameters which can be used to replace placeholders 
-	 * 				in a message. 	
+	/* (non-Javadoc)
+	 * @see org.mifos.framework.components.logger.MifosLogger#error(java.lang.String, boolean, java.lang.Object[])
 	 */
 	public void error(String key, boolean asString , Object[] args){
 		
 		logMessage(Level.ERROR ,key, asString , args , null);
 	}	//end-method error
-	/**
-	 * Function to log statements with level ERROR and print stack trace
-	 * @param key Key present in the resource bundle. If asString parameter is false 
-	 * 			   then this is treated as the string to be displayed
-	 * @param asString Boolean value which decides if the parameter "key" should be 
-	 * 					treated as a key in the resource bundle or as a string
-	 * @param args List of parameters which can be used to replace placeholders 
-	 * 				in a message. 	
-	 * @param t Exception object whose stack trace will be printed
+	/* (non-Javadoc)
+	 * @see org.mifos.framework.components.logger.MifosLogger#error(java.lang.String, boolean, java.lang.Object[], java.lang.Throwable)
 	 */
 	public void error(String key, boolean asString , Object[] args,Throwable t){
 		logMessage(Level.ERROR ,key, asString , args ,t);
 		
 	}	//end-method error
-	/**
-	 * Function to log statements with level ERROR
-	 * @param message Message to be printed 	
+	/* (non-Javadoc)
+	 * @see org.mifos.framework.components.logger.MifosLogger#error(java.lang.String)
 	 */
 	public void error(String message){
 		logMessage(Level.ERROR ,message, false , null ,null);
 	}//end-method error
-	/**
-	 * Function to log statements with level FATAL
-	 * @param key Key present in the resource bundle. If asString parameter is false 
-	 * 			   then this is treated as the string to be displayed
-	 * @param asString Boolean value which decides if the parameter "key" should be 
-	 * 					treated as a key in the resource bundle or as a string
-	 * @param args List of parameters which can be used to replace placeholders 
-	 * 				in a message. 
+	/* (non-Javadoc)
+	 * @see org.mifos.framework.components.logger.MifosLogger#fatal(java.lang.String, boolean, java.lang.Object[])
 	 */
 	public void fatal(String key, boolean asString , Object[] args){
 		
@@ -194,37 +147,27 @@ public class MifosLogger  {
 		
 		
 	}//end-method fatal
-	/**
-	 * Function to log statements with level FATAL and print stack trace
-	 * @param key Key present in the resource bundle. If asString parameter is false 
-	 * 			   then this is treated as the string to be displayed
-	 * @param asString Boolean value which decides if the parameter "key" should be 
-	 * 					treated as a key in the resource bundle or as a string
-	 * @param args List of parameters which can be used to replace placeholders 
-	 * 				in a message. 
-	 * @param t Exception object whose stack trace will be printed
+	/* (non-Javadoc)
+	 * @see org.mifos.framework.components.logger.MifosLogger#fatal(java.lang.String, boolean, java.lang.Object[], java.lang.Throwable)
 	 */
 	public void fatal(String key, boolean asString , Object[] args,Throwable t){
 		
 		logMessage(Level.FATAL ,key, asString , args ,t);
 	}//end-method fatal
-	/**
-	 * Function to log statements with level FATAL
-	 * @param message Message to be printed 	
+	/* (non-Javadoc)
+	 * @see org.mifos.framework.components.logger.MifosLogger#fatal(java.lang.String)
 	 */
 	public void fatal(String message){
 		logMessage(Level.FATAL ,message, false , null ,null);
 	}//end-method fatal
-	/**
-	 * Description: Function to obtain the userID of the person logging the statements
-	 * @return  UserId of the person
+	/* (non-Javadoc)
+	 * @see org.mifos.framework.components.logger.MifosLogger#getUserID()
 	 */
 	public String getUserID(){
 		return ApplicationConfig.getUserId();
 	}//end-method getUserID
-	/**
-	 * Function to obtain the officeID of the user logging the statements
-	 * @return  OfficeId of the person
+	/* (non-Javadoc)
+	 * @see org.mifos.framework.components.logger.MifosLogger#getOfficeID()
 	 */
 	public String getOfficeID(){
 		return ApplicationConfig.getOfficeId();

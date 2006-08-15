@@ -55,7 +55,7 @@ public class MifosLogManager {
 		//Initialises a logger with the name com.mifos which acts as the ancestor for all the other loggers
 		try {
 			readConfiguration(fileName);
-			MifosLogger logger = new MifosLogger(LoggerConstants.ROOTLOGGER , getResourceBundle(LoggerConstants.LOGGERRESOURCEBUNDLE));
+			MifosLogger logger = new Log4jLogger(LoggerConstants.ROOTLOGGER , getResourceBundle(LoggerConstants.LOGGERRESOURCEBUNDLE));
 			loggerRepository=new HashMap<String, MifosLogger>(20);
 			loggerRepository.put(LoggerConstants.ROOTLOGGER, logger);
 
@@ -117,12 +117,12 @@ public class MifosLogManager {
 					else{
 						if(resourceBundleName!=null)
 							try {
-								logger = new MifosLogger(name , getResourceBundle(resourceBundleName));
+								logger = new Log4jLogger(name , getResourceBundle(resourceBundleName));
 							} catch (ResourceBundleNotFoundException rbnfe) {
 								rbnfe.printStackTrace();
 							}
 						else
-							logger = new MifosLogger(name);
+							logger = new Log4jLogger(name);
 					loggerRepository.put(name,logger);
 
 					}

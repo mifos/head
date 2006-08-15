@@ -19,9 +19,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 
 /**
  * @author navitas
- *
- * 
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class DateHelper {
 
