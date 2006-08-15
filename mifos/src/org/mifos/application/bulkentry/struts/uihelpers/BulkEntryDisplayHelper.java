@@ -587,6 +587,8 @@ public class BulkEntryDisplayHelper {
 							&& accountView.isValidDepositAmountEntered()) {
 						Money total = new Money(currency, accountView
 								.getDepositAmountEntered());
+						// FIXME: This doesn't do anything - round returns a new
+						// Money object, rather than side-effecting anything.
 						Money.round(total);
 						totalAmount = total.getAmountDoubleValue();
 						amount = total.toString();
@@ -605,6 +607,8 @@ public class BulkEntryDisplayHelper {
 							&& accountView.isValidWithDrawalAmountEntered()) {
 						Money total = new Money(currency, accountView
 								.getWithDrawalAmountEntered());
+						// FIXME: This doesn't do anything - round returns a new
+						// Money object, rather than side-effecting anything.
 						Money.round(total);
 						totalAmount = total.getAmountDoubleValue();
 						amount = total.toString();
@@ -684,6 +688,8 @@ public class BulkEntryDisplayHelper {
 						&& customerAccountView
 								.isValidCustomerAccountAmountEntered()) {
 					Money total = new Money(currency, amount);
+					// FIXME: This doesn't do anything - round returns a new
+					// Money object, rather than side-effecting anything.
 					Money.round(total);
 					totalAmount = total.getAmountDoubleValue();
 					amount = total.toString();
@@ -748,6 +754,8 @@ public class BulkEntryDisplayHelper {
 				for (int i = 0; i < (loanProductsSize + savingsProductSize); i++) {
 					Double groupTotal = totals[i] == null ? 0.0 : totals[i];
 					Money groupTotalMoney = new Money(groupTotal.toString());
+					// FIXME: This doesn't do anything - round returns a new
+					// Money object, rather than side-effecting anything.
 					Money.round(groupTotalMoney);
 					builder.append("<td class=\"drawtablerow\">");
 					builder.append("<input name=\"group[" + rows + "][" + i
@@ -763,6 +771,8 @@ public class BulkEntryDisplayHelper {
 				for (int i = (loanProductsSize + savingsProductSize); i < (2 * (loanProductsSize + savingsProductSize)); i++) {
 					Double groupTotal = totals[i] == null ? 0.0 : totals[i];
 					Money groupTotalMoney = new Money(groupTotal.toString());
+					// FIXME: This doesn't do anything - round returns a new
+					// Money object, rather than side-effecting anything.
 					Money.round(groupTotalMoney);
 					builder.append("<td class=\"drawtablerow\">");
 					builder.append("<input name=\"group[" + rows + "][" + i
@@ -778,6 +788,8 @@ public class BulkEntryDisplayHelper {
 				Double groupTotal = totals[(2 * (loanProductsSize + savingsProductSize))] == null ? 0.0
 						: totals[(2 * (loanProductsSize + savingsProductSize))];
 				Money groupTotalMoney = new Money(groupTotal.toString());
+				// FIXME: This doesn't do anything - round returns a new
+				// Money object, rather than side-effecting anything.
 				Money.round(groupTotalMoney);
 				builder.append("<td class=\"drawtablerow\">");
 				builder.append("<input name=\"group[" + rows + "]["
@@ -803,6 +815,8 @@ public class BulkEntryDisplayHelper {
 				for (int i = 0; i < (loanProductsSize + savingsProductSize); i++) {
 					Double centerTotal = totals[i] == null ? 0.0 : totals[i];
 					Money centerTotalMoney = new Money(centerTotal.toString());
+					// FIXME: This doesn't do anything - round returns a new
+					// Money object, rather than side-effecting anything.
 					Money.round(centerTotalMoney);
 					builder.append("<td class=\"drawtablerow\">");
 					builder.append("<input name=\"center[" + i
@@ -833,6 +847,8 @@ public class BulkEntryDisplayHelper {
 				Double centerTotal = totals[(2 * (loanProductsSize + savingsProductSize))] == null ? 0.0
 						: totals[(2 * (loanProductsSize + savingsProductSize))];
 				Money centerTotalMoney = new Money(centerTotal.toString());
+				// FIXME: This doesn't do anything - round returns a new
+				// Money object, rather than side-effecting anything.
 				Money.round(centerTotalMoney);
 				builder.append("<td class=\"drawtablerow\">");
 				builder.append("<input name=\"center["
@@ -866,6 +882,8 @@ public class BulkEntryDisplayHelper {
 			for (int i = 0; i < (loanProductsSize + savingsProductSize); i++) {
 				Double total = totals[i] == null ? 0.0 : totals[i];
 				Money totalMoney = new Money(total.toString());
+				// FIXME: This doesn't do anything - round returns a new
+				// Money object, rather than side-effecting anything.
 				Money.round(totalMoney);
 				builder.append("<td class=\"drawtablerow\">");
 				builder.append(totalMoney);
@@ -878,6 +896,8 @@ public class BulkEntryDisplayHelper {
 			for (int i = (loanProductsSize + savingsProductSize); i < (2 * (loanProductsSize + savingsProductSize)); i++) {
 				Double total = totals[i] == null ? 0.0 : totals[i];
 				Money totalMoney = new Money(total.toString());
+				// FIXME: This doesn't do anything - round returns a new
+				// Money object, rather than side-effecting anything.
 				Money.round(totalMoney);
 				builder.append("<td class=\"drawtablerow\">");
 				builder.append(totalMoney);
@@ -890,6 +910,8 @@ public class BulkEntryDisplayHelper {
 			Double total = totals[(2 * (loanProductsSize + savingsProductSize))] == null ? 0.0
 					: totals[(2 * (loanProductsSize + savingsProductSize))];
 			Money totalMoney = new Money(total.toString());
+			// FIXME: This doesn't do anything - round returns a new
+			// Money object, rather than side-effecting anything.
 			Money.round(totalMoney);
 			builder.append("<td class=\"drawtablerow\">");
 			builder.append(totalMoney);
@@ -935,6 +957,8 @@ public class BulkEntryDisplayHelper {
 		Money totalIssue = new Money(totIssue.toString());
 		Money netCashAvailable = new Money(netCash.toString());
 
+		// FIXME: These don't do anything - round returns a new
+		// Money object, rather than side-effecting anything.
 		Money.round(totalDueCollection);
 		Money.round(totalLoanDisburesed);
 		Money.round(otherCollection);
