@@ -28,7 +28,7 @@ import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.application.accounts.loan.util.helpers.LoanHelpers;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
-import org.mifos.framework.components.interestcalculator.InterestCalculatorConstansts;
+import org.mifos.framework.components.interestcalculator.InterestCalculatorConstants;
 import org.mifos.framework.components.interestcalculator.InterestCalculatorFactory;
 import org.mifos.framework.components.interestcalculator.InterestCalculatorIfc;
 import org.mifos.framework.components.interestcalculator.InterestInputs;
@@ -397,7 +397,7 @@ public class RepaymentScheduler implements RepaymentScheduleIfc
 
 		try
 		{
-			InterestCalculatorIfc interestCalculator = InterestCalculatorFactory.getInterestCalculator(InterestCalculatorConstansts.FLAT_INTEREST);
+			InterestCalculatorIfc interestCalculator = InterestCalculatorFactory.getInterestCalculator(InterestCalculatorConstants.FLAT_INTEREST);
 			InterestInputs interestInputs = RepaymentScheduleHelper.buildInterestInputs(repaymentScheduleInputs);
 
 			Money loanInterest = interestCalculator.getInterest(interestInputs);

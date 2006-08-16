@@ -30,7 +30,7 @@ package org.mifos.framework.components.interestcalculator;
  *  This class holds the constants for interest calculation
  */
 
-public interface InterestCalculatorConstansts
+public interface InterestCalculatorConstants
 {
 
 

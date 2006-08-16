@@ -93,7 +93,7 @@ import org.mifos.application.productdefinition.util.helpers.ProductDefinitionCon
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.interestcalculator.InterestCalculationException;
-import org.mifos.framework.components.interestcalculator.InterestCalculatorConstansts;
+import org.mifos.framework.components.interestcalculator.InterestCalculatorConstants;
 import org.mifos.framework.components.interestcalculator.InterestCalculatorFactory;
 import org.mifos.framework.components.interestcalculator.InterestCalculatorIfc;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -853,9 +853,9 @@ public class SavingsBO extends AccountBO {
 		try {
 			int days = helper.calculateDays(fromDate, toDate);
 			InterestCalculatorIfc calculator = InterestCalculatorFactory
-					.getInterestCalculator(InterestCalculatorConstansts.COMPOUND_INTEREST);
+					.getInterestCalculator(InterestCalculatorConstants.COMPOUND_INTEREST);
 			return calculator.getInterest(helper.createInterestInputs(principal,
-					interestRate, days, InterestCalculatorConstansts.DAYS));
+					interestRate, days, InterestCalculatorConstants.DAYS));
 		} catch (InterestCalculationException e) {
 			throw new AccountException(e);
 		}

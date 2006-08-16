@@ -52,8 +52,8 @@ public class FlatInterestCalculator implements InterestCalculatorIfc
 
 			Money principal = interestInputs.getPrincipal();
 			
-			Double interestRate=new Double(interestInputs.getInterestRate());
-			Double durationInYears=new Double(getTotalDurationInYears(interestInputs));
+			Double interestRate= interestInputs.getInterestRate();
+			Double durationInYears= getTotalDurationInYears(interestInputs);
 			
 			Money interestRateM=new Money(principal.getCurrency(), interestRate);
 			Money durationInYearsM=new Money(principal.getCurrency(), durationInYears);
@@ -77,12 +77,12 @@ public class FlatInterestCalculator implements InterestCalculatorIfc
 			int daysInWeek = getDaysInWeek();
 			int daysInMonth = getDaysInMonth();
 
-			if(interestDays == InterestCalculatorConstansts.INTEREST_DAYS_360)
+			if(interestDays == InterestCalculatorConstants.INTEREST_DAYS_360)
 			{
-				if(interestInputs.getDurationType().equals(InterestCalculatorConstansts.WEEK_INSTALLMENT))
+				if(interestInputs.getDurationType().equals(InterestCalculatorConstants.WEEK_INSTALLMENT))
 				{
 						double totalWeekDays = interestInputs.getDuration() * daysInWeek;
-						double durationInYears = totalWeekDays/InterestCalculatorConstansts.INTEREST_DAYS_360 ;
+						double durationInYears = totalWeekDays/InterestCalculatorConstants.INTEREST_DAYS_360 ;
 
 						logger.info("FlatInterestCalculator:getTotalDurationInYears total week days.."+totalWeekDays);
 
@@ -93,11 +93,11 @@ public class FlatInterestCalculator implements InterestCalculatorIfc
 
 				}
 				else
-				if(interestInputs.getDurationType().equals(InterestCalculatorConstansts.MONTH_INSTALLMENT))
+				if(interestInputs.getDurationType().equals(InterestCalculatorConstants.MONTH_INSTALLMENT))
 				{
 
 						double totalMonthDays = interestInputs.getDuration() * daysInMonth;
-						double durationInYears = totalMonthDays/InterestCalculatorConstansts.INTEREST_DAYS_360 ;
+						double durationInYears = totalMonthDays/InterestCalculatorConstants.INTEREST_DAYS_360 ;
 
 						logger.info("FlatInterestCalculator:getTotalDurationInYears total month days.."+totalMonthDays);
 
@@ -107,27 +107,27 @@ public class FlatInterestCalculator implements InterestCalculatorIfc
 
 
 				}
-				throw new InterestCalculationException(InterestCalculatorConstansts.NOT_SUPPORTED_DURATION_TYPE);
+				throw new InterestCalculationException(InterestCalculatorConstants.NOT_SUPPORTED_DURATION_TYPE);
 
 			}
 			else
-			if(interestDays == InterestCalculatorConstansts.INTEREST_DAYS_365)
+			if(interestDays == InterestCalculatorConstants.INTEREST_DAYS_365)
 			{
 
-				if(interestInputs.getDurationType().equals(InterestCalculatorConstansts.WEEK_INSTALLMENT))
+				if(interestInputs.getDurationType().equals(InterestCalculatorConstants.WEEK_INSTALLMENT))
 				{
 
 						logger.info("FlatInterestCalculator:getTotalDurationInYears in interest week 365 days");
 
 
 						double totalWeekDays = interestInputs.getDuration() * daysInWeek;
-						double durationInYears = totalWeekDays/InterestCalculatorConstansts.INTEREST_DAYS_365 ;
+						double durationInYears = totalWeekDays/InterestCalculatorConstants.INTEREST_DAYS_365 ;
 
 						return InterestCalculatorHelper.round(durationInYears);
 
 				}
 				else
-				if(interestInputs.getDurationType().equals(InterestCalculatorConstansts.MONTH_INSTALLMENT))
+				if(interestInputs.getDurationType().equals(InterestCalculatorConstants.MONTH_INSTALLMENT))
 				{
 						logger.info("FlatInterestCalculator:getTotalDurationInYears in interest month 365 days");
 
@@ -145,36 +145,36 @@ public class FlatInterestCalculator implements InterestCalculatorIfc
 						logger.info("FlatInterestCalculator:getTotalDurationInYears diff in days..."+daysDiff);
 
 
-						double durationInYears = daysDiff/InterestCalculatorConstansts.INTEREST_DAYS_365 ;
+						double durationInYears = daysDiff/InterestCalculatorConstants.INTEREST_DAYS_365 ;
 
 						return InterestCalculatorHelper.round(durationInYears);
 
 				}
-				throw new InterestCalculationException(InterestCalculatorConstansts.NOT_SUPPORTED_DURATION_TYPE);
+				throw new InterestCalculationException(InterestCalculatorConstants.NOT_SUPPORTED_DURATION_TYPE);
 
 
 			}
 			else
-				throw new InterestCalculationException(InterestCalculatorConstansts.NOT_SUPPORTED_INTEREST_DAYS);
+				throw new InterestCalculationException(InterestCalculatorConstants.NOT_SUPPORTED_INTEREST_DAYS);
 
 	}
 
 	// read from configuration
 	private int getInterestDays()
 	{
-			return InterestCalculatorConstansts.INTEREST_DAYS;
+			return InterestCalculatorConstants.INTEREST_DAYS;
 	}
 
 	// read from configuration
 	private int getDaysInWeek()
 	{
-		return InterestCalculatorConstansts.DAYS_IN_WEEK;
+		return InterestCalculatorConstants.DAYS_IN_WEEK;
 	}
 
 	// read from configuration
 	private int getDaysInMonth()
 	{
-		return InterestCalculatorConstansts.DAYS_IN_MONTH;
+		return InterestCalculatorConstants.DAYS_IN_MONTH;
 	}
 
 

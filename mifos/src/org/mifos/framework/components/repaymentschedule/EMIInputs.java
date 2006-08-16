@@ -26,7 +26,7 @@
 package org.mifos.framework.components.repaymentschedule;
 
 import org.mifos.application.meeting.util.valueobjects.Meeting;
-import org.mifos.framework.components.interestcalculator.InterestCalculatorConstansts;
+import org.mifos.framework.components.interestcalculator.InterestCalculatorConstants;
 import org.mifos.framework.util.helpers.Money;
 
 /**

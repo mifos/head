@@ -44,7 +44,7 @@ import org.mifos.application.meeting.util.valueobjects.MeetingDetails;
 import org.mifos.application.meeting.util.valueobjects.MeetingRecurrence;
 import org.mifos.application.meeting.util.valueobjects.MeetingType;
 import org.mifos.application.meeting.util.valueobjects.RecurrenceType;
-import org.mifos.framework.components.interestcalculator.InterestCalculatorConstansts;
+import org.mifos.framework.components.interestcalculator.InterestCalculatorConstants;
 import org.mifos.framework.util.helpers.Money;
 
 /**
@@ -76,7 +76,7 @@ public class RepaymentScheduleInputs implements RepaymentScheduleInputsIfc {
 
 	private int noOfInstallments = 0;
 
-	private int interestType = InterestCalculatorConstansts.FLAT_INTEREST; // defaults
+	private int interestType = InterestCalculatorConstants.FLAT_INTEREST; // defaults
 																			// to
 																			// flat
 																			// interest

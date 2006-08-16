@@ -5,9 +5,9 @@ import org.mifos.framework.util.helpers.Money;
 public class CompoundInterestCalculator implements  InterestCalculatorIfc {
 	public Money getInterest(InterestInputs interestInputs) throws InterestCalculationException{
 		double intRate = interestInputs.getInterestRate();
-		if(interestInputs.getDurationType().equals(InterestCalculatorConstansts.DAYS)){
+		if(interestInputs.getDurationType().equals(InterestCalculatorConstants.DAYS)){
 			
-			intRate = (intRate/(InterestCalculatorConstansts.INTEREST_DAYS))* interestInputs.getDuration();
+			intRate = (intRate/(InterestCalculatorConstants.INTEREST_DAYS))* interestInputs.getDuration();
 		}
 		else{
 			intRate = (intRate/12)*interestInputs.getDuration();

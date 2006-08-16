@@ -30,9 +30,9 @@ package org.mifos.framework.components.interestcalculator;
 public class InterestCalculatorFactory
 {
 	public static InterestCalculatorIfc getInterestCalculator(int interestType)
-	{	if(interestType==InterestCalculatorConstansts.FLAT_INTEREST)
+	{	if(interestType==InterestCalculatorConstants.FLAT_INTEREST)
 			return new FlatInterestCalculator();
-		else if(interestType==InterestCalculatorConstansts.COMPOUND_INTEREST)
+		else if(interestType==InterestCalculatorConstants.COMPOUND_INTEREST)
 			return new CompoundInterestCalculator();
 		return null;
 	}

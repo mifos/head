@@ -37,7 +37,7 @@ public class InterestInputs
 		private Money principal = null;
 		private double interestRate = 0;
 		private int duration = 0;
-		private String durationType = InterestCalculatorConstansts.WEEK_INSTALLMENT;
+		private String durationType = InterestCalculatorConstants.WEEK_INSTALLMENT;
 		Date installmentStartDate = null;
 		Date installmentEndDate = null;
 		
