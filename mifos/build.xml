@@ -283,7 +283,6 @@
 	<target name="deploy">
 		<echo message="Deploying application ${webapplication.name}.war to JBoss server ${jboss.server.name}"/>
 		<copy file="${dist.dir}/${webapplication.name}.war" todir="${env.JBOSS_HOME}/server/${jboss.server.name}/deploy/"/>
-		<copy file="${conf.dir}/mysql-ds.xml" todir="${env.JBOSS_HOME}/server/${jboss.server.name}/deploy/"/>
 	</target>
 
 	<target name="all" depends="clean_all,coverage,war,deploy,build_db,javadoc,email" description="Cleans the directory structure, gets latest, compiles, makes war, runs coverage test, builds db and sends an email of status"/>
