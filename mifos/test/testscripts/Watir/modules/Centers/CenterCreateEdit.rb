@@ -27,7 +27,7 @@ class CenterCreateEdit < TestClass
 		$ie.link(:text,"Clients & Accounts").click
 		assert($ie.contains_text("Create new Kendra"))
 		$logger.log_results("Link Check","Create New Kendra","Create New Kendra","passed")
-		rescue =>e
+		rescue Test::Unit::AssertionFailedError=>e
 		$logger.log_results("Link Check","Create New Kendra","exists","failed")
 		end
 		
@@ -47,7 +47,7 @@ class CenterCreateEdit < TestClass
         $ie.link(:text,display_name).click
         assert($ie.contains_text("Create a new Kendra - Enter Kendra information"))
         $logger.log_results("Page Enter Kendra Information","Should appear","appeared","passed")
-        rescue=>e
+        rescue Test::Unit::AssertionFailedError=>e
         $logger.log_results("Page Enter Kendra Information","Should appear","not appeared","failed")
   end      
   end
@@ -55,9 +55,9 @@ class CenterCreateEdit < TestClass
   def mandatory_all()
     begin
     $ie.button(:value,"Preview").click
-    assert($ie.contains_text($additional_information_msg)) and  assert($ie.contains_text($center_name_msg))
+    assert($ie.contains_text($additional_information_msg)) and  assert($ie.contains_text($center_name_msg)) and assert($ie.contains_text($meeting_msg))
     $logger.log_results("all mandatory check ","NA","NA","passed");
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("all mandatory check ","NA","NA","failed");
     end
   end
@@ -66,9 +66,9 @@ class CenterCreateEdit < TestClass
     begin
     $ie.text_field(:name,"displayName").set("aaa")
     $ie.button(:value,"Preview").click
-    assert($ie.contains_text($additional_information_msg))
+    assert($ie.contains_text($additional_information_msg)) and assert($ie.contains_text($meeting_msg))
     $logger.log_results("mandatory checks when Kendra name entered ","NA","NA","passed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("mandatory checks when Kendra name entered ","NA","NA","failed")
     end
   end
@@ -80,7 +80,7 @@ class CenterCreateEdit < TestClass
      $ie.button(:value,"Preview").click 
      assert($ie.contains_text($meeting_msg)) and  assert($ie.contains_text($Loan_officer_msg))
      $logger.log_results("mandatory checks when Kendra name,additional information entered","NA","NA","passed")
-     rescue=>e
+     rescue Test::Unit::AssertionFailedError=>e
      $logger.log_results("mandatory checks when Kendra name,additional information entered","NA","NA","failed")
     end
   end
@@ -100,9 +100,9 @@ class CenterCreateEdit < TestClass
      $ie.text_field(:name,"customField[1].fieldValue").set("111")
      $ie.select_list(:name,"loanOfficerId").select_value(@@personnel_id)
      $ie.button(:value,"Preview").click 
-     assert($ie.contains_text($meeting_msg)) and  assert($ie.contains_text($Loan_officer_msg))
+     assert($ie.contains_text($meeting_msg)) 
      $logger.log_results("mandatory checks when Kendra name,additional information entered","NA","NA","passed")
-     rescue=>e
+     rescue Test::Unit::AssertionFailedError=>e
      $logger.log_results("mandatory checks when Kendra name,additional information entered","NA","NA","failed")
     end
   end
@@ -117,14 +117,14 @@ class CenterCreateEdit < TestClass
       $ie.text_field(:name,"mfiJoiningDateDD").set(mfi_date)
       $ie.text_field(:name,"mfiJoiningDateMM").set(mfi_month)
       $ie.text_field(:name,"mfiJoiningDateYY").set(mfi_year)
-      $ie.text_field(:name,"customerAddressDetail.line1").set(address1)
-      $ie.text_field(:name,"customerAddressDetail.line2").set(address2)
-      #$ie.text_field(:name,"customerAddressDetail.line3").set(address3)
-      $ie.text_field(:name,"customerAddressDetail.city").set(city)
-      $ie.text_field(:name,"customerAddressDetail.state").set(state)
-      $ie.text_field(:name,"customerAddressDetail.country").set(country)
-      $ie.text_field(:name,"customerAddressDetail.zip").set(postal_code)
-      $ie.text_field(:name,"customerAddressDetail.phoneNumber").set(telephone)
+      $ie.text_field(:name,"address.line1").set(address1)
+      $ie.text_field(:name,"address.line2").set(address2)
+      #$ie.text_field(:name,"address.line3").set(address3)
+      $ie.text_field(:name,"address.city").set(city)
+      $ie.text_field(:name,"address.state").set(state)
+      #$ie.text_field(:name,"address.country").set(country)
+      $ie.text_field(:name,"address.zip").set(postal_code)
+      #$ie.text_field(:name,"address.phoneNumber").set(telephone)
       $ie.text_field(:name,"customField[1].fieldValue").set(custom1)
       $ie.text_field(:name,"customField[0].fieldValue").set(custom1)      
       
@@ -139,7 +139,7 @@ class CenterCreateEdit < TestClass
       assert($ie.contains_text($center_review)) and assert($ie.contains_text(centername))
       $logger.log_results("Kendra Creation","Review&submit page","opened","passed")
       center_submit()
-      rescue =>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Kendra Creation","Review&submit page","opened","failed")
       end
   end
@@ -150,7 +150,7 @@ class CenterCreateEdit < TestClass
     assert($ie.contains_text($center_success)) and assert($ie.contains_text(@@name_center))
     $logger.log_results("Kendra Creation","successfull page","opened","passed")
     $ie.link(:text,"View Kendra details now").click
-    rescue =>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Kendra Creation","successfull page","opened","failed")
     end
   end
@@ -161,7 +161,7 @@ class CenterCreateEdit < TestClass
     assert($ie.contains_text($meetin_msg))
     $logger.log_results("Meeeting page Opened","NA","NA","Passed")
     meeting_mandatory_week()
-    rescue =>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Meeeting page Opened","NA","NA","Failed")
   end
   end
@@ -172,7 +172,7 @@ class CenterCreateEdit < TestClass
     assert($ie.contains_text($reccur_week_msg)) and assert($ie.contains_text($location_msg))
     $logger.log_results("all mandatory check for week ","NA","NA","passed");
     meeting_mandatory_month()
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("all mandatory check for week","NA","NA","failed");
     meeting_mandatory_month()
     end
@@ -185,7 +185,7 @@ class CenterCreateEdit < TestClass
     assert($ie.contains_text($month_msg))and assert($ie.contains_text($location_msg))
     $logger.log_results("all mandatory check for month ","NA","NA","passed");
     meeting_cancel()
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("all mandatory check for month","NA","NA","failed");
     meeting_cancel()
     end
@@ -196,7 +196,7 @@ class CenterCreateEdit < TestClass
     $ie.button(:value,"Cancel").click
     assert($ie.contains_text("Administrative set fees"))
     $logger.log_results("Meetin cancel","NA","NA","passed");
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Meetin cancel","NA","NA","failed");
   end
   end
@@ -215,7 +215,7 @@ class CenterCreateEdit < TestClass
       center_create(centername,external_id,mfi_date,mfi_month,mfi_year,address1,address2,address3,city,state,country,postal_code,telephone,custom1,frequncymeeting,monthtype,reccurweek,weekweekday,monthday,monthmonth,monthrank,monthweek,monthmonthrank,meetingplace)
       assert($ie.contains_text($center_review)) and assert($ie.contains_text(centername))
       $logger.log_results("Kendra Creation","Review&submit page","opened","passed")
-      rescue=>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Kendra Creation","Review&submit page","opened","failed")
       end
   end
@@ -226,7 +226,7 @@ class CenterCreateEdit < TestClass
       error_message="The entered name, "+centername+" already exists in the system. Please enter a different name"
       assert($ie.contains_text("Create a new Kendra - Review & submit")) 
       $logger.log_results("duplicate check","NA","NA","passed")
-      rescue=>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("duplicate check","NA","NA","failed")
       end
   end
@@ -287,13 +287,13 @@ class CenterCreateEdit < TestClass
   def status_active()
     begin
     $ie.link(:text,"Edit Kendra Status").click
-    $ie.radio(:name,"statusId","13").set
-    $ie.text_field(:name,"customerNote.comment").set("AAAAA")
+    $ie.radio(:name,"newStatusId","13").set
+    $ie.text_field(:name,"notes").set("AAAAA")
     $ie.button(:value,"Preview").click
     $ie.button(:value,"Submit").click
     assert($ie.contains_text("Performance History ")) and assert($ie.contains_text("Active"))
     $logger.log_results("Status changed to active","NA","NA","passed"); 
-    rescue
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Status changed to active","NA","NA","failed"); 
     end
   end
@@ -301,13 +301,13 @@ class CenterCreateEdit < TestClass
   def status_inactive()
     begin
     $ie.link(:text,"Edit Kendra Status").click
-    $ie.radio(:name,"statusId","14").set
-    $ie.text_field(:name,"customerNote.comment").set("AAAAA")
+    $ie.radio(:name,"newStatusId","14").set
+    $ie.text_field(:name,"notes").set("AAAAA")
     $ie.button(:value,"Preview").click
     $ie.button(:value,"Submit").click
     assert($ie.contains_text("Performance History ")) and assert($ie.contains_text("inactive"))
     $logger.log_results("Status changed to inactive","NA","NA","passed"); 
-    rescue
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Status changed to inactive","NA","NA","failed"); 
   end
  end
@@ -315,16 +315,19 @@ class CenterCreateEdit < TestClass
  def view_all_closed_accounts()
     begin
     assert($ie.contains_text("View all closed accounts"))
-    $logger.log_results("View all closed accounts link existed","NA","NA","passed");
-    $ie.link(:text,"View all closed accounts").click
-    $ie.button(:value,"Return to details page").click
-    assert($ie.contains_text("Account information"))
-    $logger.log_results("View all closed accounts link working","NA","NA","passed");
-    rescue =>e
-    $logger.log_results("View all closed accounts link working","NA","NA","failed");   
-    rescue =>e
-    $logger.log_results("View all closed accounts link existed","NA","NA","failed");    
-    end
+      $logger.log_results("View all closed accounts link existed","NA","NA","passed");
+      $ie.link(:text,"View all closed accounts").click
+      $ie.button(:value,"Return to details page").click
+       if($ie.contains_text("Account information"))
+          $logger.log_results("View all closed accounts link working","NA","NA","passed");
+       else 
+          $logger.log_results("View all closed accounts link working","NA","NA","failed");
+       end
+    rescue Test::Unit::AssertionFailedError=>e 
+      $logger.log_results("View all closed accounts link existed","NA","NA","failed");    
+   
+   end
+   
   end
    #checking the functionality of View change log link
   def view_change_log()
@@ -347,10 +350,10 @@ class CenterCreateEdit < TestClass
     $ie.link(:text,"Edit Kendra details").click
     $ie.button(:value,"Cancel").click
     assert($ie.contains_text("Account information"))
-    $logger.log_results("View change log link working","NA","NA","passed")
+    $logger.log_results("Cancel Button in Edit Center Details Page","Should Work","Working","Passed")
     enter_data_edit_page(external_id,mfi_date,mfi_month,mfi_year,address1,address2,address3,city,state,country,postal_code,telephone, custom1)
     rescue=>e
-    $logger.log_results("View change log link working","NA","NA","failed")
+    $logger.log_results("Cancel Button in Edit Center Details Page","Should Work","Working","Failed")
     end
    end
      #Editing the center details form center details page
@@ -361,18 +364,18 @@ class CenterCreateEdit < TestClass
     $ie.text_field(:name,"mfiJoiningDateDD").set(mfi_date)
     $ie.text_field(:name,"mfiJoiningDateMM").set(mfi_month)
     $ie.text_field(:name,"mfiJoiningDateYY").set(mfi_year)
-    $ie.text_field(:name,"customerAddressDetail.line1").set(address1)
-    $ie.text_field(:name,"customerAddressDetail.line2").set(address2)
+    $ie.text_field(:name,"address.line1").set(address1)
+    $ie.text_field(:name,"address.line2").set(address2)
     #$ie.text_field(:name,"customerAddressDetail.line3").set(address3)
-    $ie.text_field(:name,"customerAddressDetail.city").set(city)
-    $ie.text_field(:name,"customerAddressDetail.state").set(state)
-    $ie.text_field(:name,"customerAddressDetail.country").set(country)
-    $ie.text_field(:name,"customerAddressDetail.zip").set(postal_code)
-    $ie.text_field(:name,"customerAddressDetail.phoneNumber").set(telephone)
+    $ie.text_field(:name,"address.city").set(city)
+    $ie.text_field(:name,"address.state").set(state)
+    #$ie.text_field(:name,"customerAddressDetail.country").set(country)
+    $ie.text_field(:name,"address.zip").set(postal_code)
+    #$ie.text_field(:name,"customerAddressDetail.phoneNumber").set(telephone)
     $ie.text_field(:name,"customField[1].fieldValue").set(custom1)
     $ie.text_field(:name,"customField[0].fieldValue").set(custom1) 
     $ie.button(:value,"Preview").click
-    assert($ie.contains_text(external_id))and assert($ie.contains_text(address1))and assert($ie.contains_text(address2)) and assert($ie.contains_text(address3)) and assert($ie.contains_text(city))and assert($ie.contains_text(state))and assert($ie.contains_text(state))and assert($ie.contains_text(country))
+    assert($ie.contains_text(external_id))and assert($ie.contains_text(address1))and assert($ie.contains_text(address2)) and  assert($ie.contains_text(city))and assert($ie.contains_text(state))
     $logger.log_results("Edit Kendra","Review&submit page","opened","passed")
     $ie.button(:value,"Submit").click
     rescue=>e

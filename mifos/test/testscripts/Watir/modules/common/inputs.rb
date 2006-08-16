@@ -24,7 +24,7 @@ $date_trxn_msg="Please select the value for Date of transaction"
 #center start
 $additional_information_msg="Please specify required additional information"
 $center_name_msg="Please specify Name"
-$meeting_msg="Please select meeting schedule"
+$meeting_msg="Please select Meeting schedule"
 $Loan_officer_msg="Please select loan officer"
 $meetin_msg="Meeting schedule for Kendra"
 $center_review="Create a new Kendra - Review & submit"
