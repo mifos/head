@@ -891,6 +891,46 @@ public class ActivityMapper {
 		activityMap.put("/customerNotesAction-load-Group", SecurityConstants.VIEW);
 		activityMap.put("/customerNotesAction-load-Client", SecurityConstants.VIEW);
 		
+		
+		// client creation action- migration
+		activityMap.put("/clientCustAction-load", SecurityConstants.VIEW);
+		activityMap.put("/clientCustAction-chooseOffice",
+				SecurityConstants.VIEW);
+		activityMap.put("/clientCustAction-next", SecurityConstants.VIEW);
+		activityMap
+				.put("/clientCustAction-preview", SecurityConstants.VIEW);
+		activityMap.put("/clientCustAction-prevPersonalInfo",
+				SecurityConstants.VIEW);
+		activityMap.put("/clientCustAction-prevMFIInfo",
+				SecurityConstants.VIEW);
+		activityMap.put("/clientCustAction-create", SecurityConstants.VIEW);
+		/*activityMap.put("/clientCustAction-get", SecurityConstants.VIEW);
+		activityMap.put("/clientCustAction-editMFIInfo",
+				SecurityConstants.CIENT_EDIT_MFI_INFORMATION);
+		activityMap.put("/clientCustAction-editPersonalInfo",
+				SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
+		activityMap.put("/clientCustAction-update",
+				SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
+		activityMap.put("/clientCustAction-updateMfi",
+				SecurityConstants.CIENT_EDIT_MFI_INFORMATION);
+
+		activityMap.put("/clientCustAction-loadMeeting-ClientCreate",
+				SecurityConstants.MEETING_CREATE_CLIENT_MEETING);
+		activityMap.put("/clientCustAction-loadMeeting-Client",
+				SecurityConstants.MEETING_UPDATE_CLIENT_MEETING);
+
+		activityMap.put("/clientCustAction-previous",
+				SecurityConstants.VIEW);
+		activityMap.put("/clientCustAction-retrievePictureOnPreview",
+				SecurityConstants.VIEW);
+		activityMap.put("/clientCustAction-retrievePicture",
+				SecurityConstants.VIEW);
+		activityMap.put("/clientCustAction-showPicture",
+				SecurityConstants.VIEW);*/
+		
+		
+
+		
 
 	}
 

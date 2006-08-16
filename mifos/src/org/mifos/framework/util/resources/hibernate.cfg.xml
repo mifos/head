@@ -265,6 +265,7 @@
 	<mapping resource="org/mifos/application/master/business/MifosLookUpEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/master/business/SupportedLocalesEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/master/business/PaymentTypeEntity.hbm.xml" />
+	<mapping resource="org/mifos/application/master/business/SpouseFatherLookupEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/accounts/savings/business/SavingsPerformanceEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/accounts/business/AccountActionEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/accounts/business/CustomerActivityEntity.hbm.xml" />

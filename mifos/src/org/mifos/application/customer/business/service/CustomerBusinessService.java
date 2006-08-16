@@ -59,6 +59,8 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerRecentActivityView;
 import org.mifos.application.customer.util.helpers.LoanCycleCounter;
+import org.mifos.application.master.business.BusinessActivityEntity;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -306,5 +308,9 @@ public class CustomerBusinessService extends BusinessService {
 	
 	public QueryResult getAllCustomerNotes(Integer customerId) throws ApplicationException, SystemException{
 		return new CustomerPersistence().getAllCustomerNotes(customerId);
+	}
+
+	public List<BusinessActivityEntity> retrieveMasterEntities(String entityName, Short localeId) throws PersistenceException {
+		return new MasterPersistence().retrieveMasterEntities(entityName,localeId);
 	}
 }

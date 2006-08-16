@@ -99,6 +99,7 @@ public interface ClientConstants {
 	public static final String INPUT_GROUP_TRANSFER  = "groupTransfer";
 	public static final String CLIENT_TRANSFER = "clientTransfer";
 	public static final String INPUT_BRANCH_TRANSFER  = "branchTransfer";
+	public static final String CLIENT_MEETING = "clientMeeting";
 	
 	
 	
@@ -182,7 +183,9 @@ public interface ClientConstants {
 	public static final String INVALID_CLIENT_STATUS_EXCEPTION ="GroupStatusException";
 	
 	public String CLIENTPERFORMANCEHISTORY = "ClientPerformanceHistory";
-	
-	
+	public static final String YES ="1";
+	public static final String NO ="0";
+	public static final Short SPOUSE_VALUE = 1;
+	public static final Short FATHER_VALUE = 2;
 
 }
