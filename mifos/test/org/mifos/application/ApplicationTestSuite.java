@@ -59,6 +59,7 @@ import org.mifos.framework.components.ComponentsTestSuite;
 import org.mifos.framework.components.configuration.ConfigurationTestSuite;
 import org.mifos.framework.components.cronjob.CronjobTestSuite;
 import org.mifos.framework.components.fieldConfiguration.FieldConfigurationTestSuite;
+import org.mifos.framework.components.interestcalculator.FlatInterestCalculatorTest;
 import org.mifos.framework.struts.plugin.InitializerPluginTest;
 import org.mifos.framework.struts.plugin.TestConstPlugin;
 import org.mifos.framework.util.helpers.MoneyTest;
@@ -81,6 +82,7 @@ public class ApplicationTestSuite extends MifosTestSuite {
 		suite.addTest(BulkEntryTestSuite.suite());
 		suite.addTest(AccountTestSuite.suite());
 		suite.addTest(FinancialTestSuite.suite());
+		suite.addTestSuite(FlatInterestCalculatorTest.class);
 		suite.addTestSuite(MoneyTest.class);
 		suite.addTestSuite(StringToMoneyConverterTest.class);
 		suite.addTestSuite(InitializerPluginTest.class);
