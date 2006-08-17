@@ -37,7 +37,7 @@
   </row>
   
   <row>
-    <column label="Client" labeltype="key" boldlabel="false" type="link" action="clientCreationAction.do">
+    <column label="Client" labeltype="key" boldlabel="false" type="link" action="clientCustAction.do">
       <displayname>
        <fragment-name name="centerName" type="method"/>
        <fragment-name name=": ID " type="string"/>
@@ -45,7 +45,7 @@
       </displayname>
       <parameters>
         <parameter name="globalCustNum" value="centerGlobalCustNum" valuetype="method"/>
-        <parameter name="method" value="getDetails" valuetype="string"/>
+        <parameter name="method" value="get" valuetype="string"/>
         <parameter name="recordOfficeId" value="branchGlobalNum" valuetype="method"/>
         <parameter name="recordLoanOfficerId" value="loanOffcerGlobalNum" valuetype="method"/>
       </parameters>

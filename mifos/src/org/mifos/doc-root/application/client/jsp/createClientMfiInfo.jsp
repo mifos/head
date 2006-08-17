@@ -326,7 +326,7 @@
 									</td>
 								</tr>
 								<!-- For each admin fee that is retrieved the name and amoutn is displayed -->
-								<c:forEach var="adminFees" items="${requestScope.adminFeesList}"
+						<%--		<c:forEach var="adminFees" items="${requestScope.adminFeesList}"
 									varStatus="loopStatus1">
 									<bean:define id="ctr1" toScope="request">
 										<c:out value="${loopStatus1.index}" />
@@ -399,7 +399,7 @@
 										</table>
 										</td>
 									</tr>
-								</c:forEach>
+								</c:forEach>--%>
 							</table>
 							<br>
 							<!-- Administrative Set Fees End--> <!-- Fee Type -->

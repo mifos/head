@@ -1011,53 +1011,6 @@
 			scope="session">
 			<forward name="load_success" path="/pages/application/client/jsp/create_ClientPersonalInfo.jsp" />
 			<!--  Next forwards -->
-			<forward name="next_success" path="/pages/application/client/jsp/createClientMfiInfo.jsp" />
-			<!-- <forward name="previous_success" path="/pages/application/client/jsp/createClientMfiInfo.jsp" /> -->
-			<forward name="next_failure" path="/pages/application/client/jsp/createClientPersonalInfo.jsp" />
-			<!-- Preview Page Forwards -->
-			<forward name="previewCreate_success" path="/pages/application/client/jsp/previewClientDetails.jsp" />
-			<forward name="previewPersonalInfo_failure" path="/pages/application/client/jsp/createClientPersonalInfo.jsp" />
-			<forward name="previewMfiInfo_failure" path="/pages/application/client/jsp/createClientMfiInfo.jsp" />
-			<forward name="previewEditPersonalInfo_success" path="/pages/application/client/jsp/previewEditClientPersonalInfo.jsp" />
-			<forward name="update_failure" path="/pages/application/client/jsp/previewEditClientPersonalInfo.jsp" />
-			<forward name="previewEditPersonalInfo_failure" path="/pages/application/client/jsp/editClientPersonalInfo.jsp" />
-			<forward name="previewEditMfiInfo_success" path="/pages/application/client/jsp/previewEditClientMfiInfo.jsp" />
-			<forward name="previewEditMfiInfo_failure" path="/pages/application/client/jsp/editClientMfiInfo.jsp" />
-			<!-- Preview Page Forwards End -->
-			<!-- Previous Page Forwards -->
-			<forward name="prevPersonalInfo_success" path="/pages/application/client/jsp/createClientPersonalInfo.jsp" />
-			<forward name="prevEditPersonalInfo_success" path="/pages/application/client/jsp/editClientPersonalInfo.jsp" />
-			<forward name="prevMfiInfo_success" path="/pages/application/client/jsp/createClientMfiInfo.jsp" />
-			<forward name="prevEditMfiInfo_success" path="/pages/application/client/jsp/editClientMfiInfo.jsp" />
-			<!-- Previous Page Forwards End -->
-			<forward name="get_success" path="/pages/application/client/jsp/clientDetails.jsp" />
-			<forward name="create_success" path="/pages/application/client/jsp/clientCreationConfirmation.jsp" />
-			<forward name="create_failure" path="/pages/application/client/jsp/previewClientDetails.jsp" />
-			<forward name="editPersonalInfo_success" path="/pages/application/client/jsp/editClientPersonalInfo.jsp" />
-			<forward name="editMfiInfo_success" path="/pages/application/client/jsp/editClientMfiInfo.jsp" />
-			<forward name="update_success" path="/clientCreationAction.do?method=get" />
-			<forward name="update_success" path="/clientCreationAction.do?method=get" />
-			<forward name="loadStatus_success" path="/clientStatusAction.do?method=load" />
-			<forward name="loadTransfer_success" path="/clientTransferAction.do?method=loadGroupTransfer" />
-			<forward name="loadBranchTransfer_success" path="/clientTransferAction.do?method=loadTransfer" />
-			<forward name="loadHistoricalData_success" path="/CustomerHistoricalDataAction.do?method=get&amp;input=Client" />
-			<forward name="loadMeeting_success" path="/MeetingAction.do?method=load&amp;input=Client" />
-			<forward name="loadEditMeeting_success" path="/MeetingAction.do?method=load&amp;input=ClientDetails" />
-			<forward name="updateMeeting_success" path="/clientCreationAction.do?method=get" />
-			<forward name="retrievePicture_success" path="/pages/application/client/jsp/customerPicture.jsp" />
-			<forward name="chooseOffice_success" path="/pages/application/client/jsp/chooseOffice.jsp" />
-			<forward name="failure" path="/error.jsp" />
-			<!-- Cancel Page Forwards -->
-			<forward name="cancelCreate_success" path="/CustomerSearchAction.do?method=load" />
-			<forward name="cancelEdit_success" path="/clientCreationAction.do?method=get" />
-		</action>
-		<!-- Client Creation Action -->
-		<action path="/clientCustAction" type="org.mifos.application.customer.client.struts.action.ClientCustAction" 
-			name="clientCustActionForm" parameter="method" 
-			input="/clientCustAction.do?method=validate" validate="true"
-			scope="session">
-			<forward name="load_success" path="/pages/application/client/jsp/create_ClientPersonalInfo.jsp" />
-			<!--  Next forwards -->
 			<forward name="next_success" path="/pages/application/client/jsp/create_ClientMfiInfo.jsp" />
 			<!-- <forward name="previous_success" path="/pages/application/client/jsp/createClientMfiInfo.jsp" /> -->
 			<forward name="next_failure" path="/pages/application/client/jsp/create_ClientPersonalInfo.jsp" />
@@ -1078,7 +1031,7 @@
 			<forward name="prevMFIInfo_success" path="/pages/application/client/jsp/create_ClientMfiInfo.jsp" />
 			<forward name="prevEditMfiInfo_success" path="/pages/application/client/jsp/editClientMfiInfo.jsp" />
 			<!-- Previous Page Forwards End -->
-			<forward name="get_success" path="/pages/application/client/jsp/clientDetails.jsp" />
+			<forward name="get_success" path="/pages/application/client/jsp/viewClientDetails.jsp" />
 			<forward name="create_success" path="/pages/application/client/jsp/clientCreationConfirmation.jsp" />
 			<forward name="create_failure" path="/pages/application/client/jsp/previewClientDetails.jsp" />
 			<forward name="editPersonalInfo_success" path="/pages/application/client/jsp/editClientPersonalInfo.jsp" />
@@ -1093,6 +1046,7 @@
 			<forward name="loadEditMeeting_success" path="/MeetingAction.do?method=load&amp;input=ClientDetails" />
 			<forward name="updateMeeting_success" path="/clientCreationAction.do?method=get" />
 			<forward name="retrievePicture_success" path="/pages/application/client/jsp/customerPicture.jsp" />
+			<forward name="getPicture_success" path="/pages/application/client/jsp/clientPicture.jsp" />
 			<forward name="chooseOffice_success" path="/pages/application/client/jsp/chooseOffice.jsp" />
 			<forward name="failure" path="/error.jsp" />
 			<!-- Cancel Page Forwards -->
@@ -1101,7 +1055,7 @@
 		</action>
 	</action-mappings>
 
-	<controller nocache="false" processorClass="org.mifos.framework.struts.action.MifosRequestProcessor" contentType="text/html; charset=UTF-8"></controller>
+	<controller nocache="true" processorClass="org.mifos.framework.struts.action.MifosRequestProcessor" contentType="text/html; charset=UTF-8"></controller>
 
 	<message-resources key="UIResources" parameter="org.mifos.framework.util.resources.UIResources" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />
 	<message-resources key="LoggerResources" parameter="org.mifos.framework.util.resources.loggerresources.LoggerStatements" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />

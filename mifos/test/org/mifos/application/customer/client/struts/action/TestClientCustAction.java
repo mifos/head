@@ -42,13 +42,17 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
 import org.apache.struts.Globals;
+import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -61,7 +65,7 @@ import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
-import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
@@ -80,6 +84,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 	private CenterBO center;
 	private GroupBO group;
 	private ClientBO client;
+	private MeetingBO meeting;
+	private AccountBO accountBO;
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -118,9 +124,12 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 
 	@Override
 	protected void tearDown() throws Exception {
+		TestObjectFactory.cleanUp(accountBO);
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
+		HibernateUtil.closeSession();
+		super.tearDown();
 	}
 
 	public void testLoad() throws Exception {
@@ -383,6 +392,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		removeFees(feesToRemove);
 	}
 	public void testPreviewSuccess() throws Exception {
+		List<FeeView> feesToRemove = getFees();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -409,7 +419,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		}
 		actionPerform();
 		
-		List<FeeView> feesToRemove = getFees();
+		
 		List<FeeView> feeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request.getSession());
 		FeeView fee = feeList.get(0);
 		setRequestPathInfo("/clientCustAction.do");
@@ -461,6 +471,53 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		}
 	}
 	
+	private void createInitialCustomers(){
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"), "1.4", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("group", CustomerStatus.GROUP_ACTIVE.getValue(), center.getSearchId()+".1", center, new Date());
+		client = TestObjectFactory.createClient("client",CustomerStatus.CLIENT_ACTIVE.getValue(), group.getSearchId()+".1", group, new Date());
+	}
+	
+	private java.sql.Date offSetCurrentDate(int noOfyears) {
+		Calendar currentDateCalendar = new GregorianCalendar();
+		int year = currentDateCalendar.get(Calendar.YEAR);
+		int month = currentDateCalendar.get(Calendar.MONTH);
+		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
+		currentDateCalendar = new GregorianCalendar(year-noOfyears, month, day);
+		return new java.sql.Date(currentDateCalendar.getTimeInMillis());
+	}
+	
+	private LoanBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
+		Date startDate = new Date(System.currentTimeMillis());
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"), startDate, Short
+						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), Short.valueOf("1"), meeting);
+		return TestObjectFactory.createLoanAccount("42423142341", customer, Short
+				.valueOf("5"), startDate, loanOffering);
+
+	}
+	
+	public void testGet(){	
+		createInitialCustomers();
+		accountBO = getLoanAccount(client,meeting);
+		client.setDateOfBirth(offSetCurrentDate(50));
+		TestObjectFactory.updateObject(client);	
+		HibernateUtil.closeSession();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "get");
+		addRequestParameter("globalCustNum", client.getGlobalCustNum());
+		actionPerform();	
+		verifyForward(ActionForwards.get_success.toString());
+		assertEquals("Age of customer should be 50 years",50,SessionUtils.getAttribute(ClientConstants.AGE,request.getSession()));
+		//assertEquals("No of active loan accounts should be 1",1,((List<LoanBO>)SessionUtils.getAttribute(ClientConstants.CUSTOMERACTIVELOANACCOUNTS,request.getSession())).size());
+		HibernateUtil.closeSession();
+		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,group.getCustomerId());
+		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,center.getCustomerId());
+		client = (ClientBO)HibernateUtil.getSessionTL().get(ClientBO.class,client.getCustomerId());
+		accountBO = (LoanBO) HibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());
+	}
 	
 	
 	

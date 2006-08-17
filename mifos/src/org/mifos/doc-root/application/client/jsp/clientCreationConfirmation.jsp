@@ -79,7 +79,7 @@
 							bundle="ClientUIResources"></mifos:mifoslabel> <br>
 						<br>
 						</span> <!-- Link to view the center details --> <a
-							href="clientCreationAction.do?method=get&globalCustNum=<c:out value="${requestScope.clientVO.globalCustNum}"/>&recordOfficeId=${requestScope.clientVO.office.officeId}&recordLoanOfficerId=${requestScope.clientVO.personnel.personnelId}">
+							href="clientCustAction.do?method=get&globalCustNum=<c:out value="${requestScope.clientVO.globalCustNum}"/>&recordOfficeId=${requestScope.clientVO.office.officeId}&recordLoanOfficerId=${requestScope.clientVO.personnel.personnelId}">
 						<mifos:mifoslabel name="client.ViewClientDetailsLink1"
 							bundle="ClientUIResources"></mifos:mifoslabel> <mifos:mifoslabel
 							name="${ConfigurationConstants.CLIENT}" /> <mifos:mifoslabel

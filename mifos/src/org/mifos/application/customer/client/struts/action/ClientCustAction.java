@@ -42,7 +42,6 @@ import java.io.BufferedOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,22 +52,22 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
-import org.mifos.application.customer.center.business.service.CenterBusinessService;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
+import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientDetailView;
+import org.mifos.application.customer.client.business.ClientNameDetailEntity;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.business.service.ClientBusinessService;
-import org.mifos.application.customer.client.struts.actionforms.ClientCreationActionForm;
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
-import org.mifos.application.customer.client.util.valueobjects.Client;
 import org.mifos.application.customer.struts.action.CustAction;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerHelper;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.master.business.SpouseFatherLookupEntity;
+import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
-import org.mifos.application.master.util.valueobjects.SpouseFatherLookup;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
@@ -80,16 +79,14 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
-import org.mifos.framework.util.valueobjects.Context;
 
 public class ClientCustAction extends CustAction {
 
@@ -270,5 +267,100 @@ private PersonnelPersistenceService personnelPersistenceService;
 			throws Exception {
 		String method = (String) request.getAttribute("methodCalled");
 		return mapping.findForward(method + "_failure");
+	}
+	
+	public ActionForward get(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		ClientCustActionForm actionForm = (ClientCustActionForm) form;
+		CustomerBusinessService customerBusinessService = ((CustomerBusinessService) ServiceFactory
+				.getInstance().getBusinessService(BusinessServiceName.Customer));
+		ClientBO clientBO = (ClientBO) customerBusinessService.getBySystemId(
+				actionForm.getGlobalCustNum(), CustomerLevel.CLIENT.getValue());
+		clientBO.getCustomerStatus().setLocaleId(
+				getUserContext(request).getLocaleId());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request
+				.getSession());
+		request.getSession().removeAttribute(ClientConstants.AGE);
+		loadMasterDataForDetailsPage(request,clientBO);
+		//setSpouseOrFatherName(request, clientBO);
+		return mapping.findForward(ActionForwards.get_success.toString());
+	}
+
+	private void loadMasterDataForDetailsPage(HttpServletRequest request,
+			ClientBO clientBO) throws SystemException {
+		SessionUtils.setAttribute(ClientConstants.AGE, new CustomerHelper()
+				.calculateAge(clientBO.getDateOfBirth()), request.getSession());
+		/*SessionUtils.setAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
+				getMasterEntities(SpouseFatherLookupEntity.class,
+						getUserContext(request).getLocaleId()), request
+						.getSession());
+		SessionUtils.setAttribute(CustomerConstants.CUSTOMERPERFORMANCE,
+				customerService
+						.numberOfMeetings(true, clientBO.getCustomerId()),
+				request.getSession());
+		SessionUtils.setAttribute(CustomerConstants.CUSTOMERPERFORMANCEHISTORY,
+				customerService.numberOfMeetings(false, clientBO
+						.getCustomerId()), request.getSession());
+		SessionUtils
+				.setAttribute(ClientConstants.LOANCYCLECOUNTER, customerService
+						.fetchLoanCycleCounter(clientBO.getCustomerId()),
+						request.getSession());
+		SessionUtils.setAttribute(ClientConstants.CUSTOMERACTIVELOANACCOUNTS,
+				clientBO.getActiveAndApprovedLoanAccounts(new Date()), request
+						.getSession());
+		SessionUtils.setAttribute(
+				ClientConstants.BUSINESS_ACTIVITIES_ENTITY_NAME,
+				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
+						.getBusinessActivities(), getUserContext(request)
+						.getLocaleId()), request.getSession());
+		SessionUtils.setAttribute(ClientConstants.HANDICAPPED_ENTITY_NAME,
+				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
+						.getHandicapped(), getUserContext(request)
+						.getLocaleId()), request.getSession());
+		SessionUtils.setAttribute(ClientConstants.MARITAL_STATUS_ENTITY_NAME,
+				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
+						.getMaritalStatus(), getUserContext(request)
+						.getLocaleId()), request.getSession());
+		SessionUtils.setAttribute(ClientConstants.CITIZENSHIP_ENTITY_NAME,
+				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
+						.getCitizenship(), getUserContext(request)
+						.getLocaleId()), request.getSession());
+		SessionUtils
+				.setAttribute(ClientConstants.ETHINICITY_ENTITY_NAME,
+						getNameForBusinessActivityEntity(clientBO
+								.getCustomerDetail().getEthinicity(),
+								getUserContext(request).getLocaleId()), request
+								.getSession());
+		SessionUtils.setAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY_NAME,
+				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
+						.getEducationLevel(), getUserContext(request)
+						.getLocaleId()), request.getSession());*/
+	}
+
+	private String getNameForBusinessActivityEntity(Integer entityId,
+			Short localeId) throws PersistenceException, ServiceException {
+		if (entityId != null)
+			return ((MasterDataService) ServiceFactory.getInstance()
+					.getBusinessService(BusinessServiceName.MasterDataService))
+					.retrieveMasterEntities(entityId, localeId);
+		return "";
+	}
+
+	private void setSpouseOrFatherName(HttpServletRequest request,
+			ClientBO clientBO) {
+		for (ClientNameDetailEntity clientNameDetailEntity : clientBO
+				.getNameDetailSet()) {
+			if (clientNameDetailEntity.getNameType().shortValue() != ClientConstants.CLIENT_NAME_TYPE) {
+				SessionUtils.setAttribute(
+						ClientConstants.SPOUSE_FATHER_NAME_VALUE,
+						clientNameDetailEntity.getDisplayName(), request
+								.getSession());
+				SessionUtils.setAttribute(ClientConstants.SPOUSE_FATHER_VALUE,
+						clientNameDetailEntity.getNameType(), request
+								.getSession());
+				break;
+			}
+		}
 	}
 }

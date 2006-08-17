@@ -904,8 +904,8 @@ public class ActivityMapper {
 		activityMap.put("/clientCustAction-prevMFIInfo",
 				SecurityConstants.VIEW);
 		activityMap.put("/clientCustAction-create", SecurityConstants.VIEW);
-		/*activityMap.put("/clientCustAction-get", SecurityConstants.VIEW);
-		activityMap.put("/clientCustAction-editMFIInfo",
+		activityMap.put("/clientCustAction-get", SecurityConstants.VIEW);
+		/*activityMap.put("/clientCustAction-editMFIInfo",
 				SecurityConstants.CIENT_EDIT_MFI_INFORMATION);
 		activityMap.put("/clientCustAction-editPersonalInfo",
 				SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
