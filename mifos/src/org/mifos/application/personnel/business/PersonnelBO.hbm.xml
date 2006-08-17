@@ -69,4 +69,5 @@
 	<query name="masterdata.activeloanofficers">
 		<![CDATA[select new org.mifos.application.personnel.business.PersonnelView(personnel.personnelId,personnel.displayName) from org.mifos.application.personnel.business.PersonnelBO as personnel where ((personnel.personnelId=:userId and :userLevelId=:levelId) or (:userLevelId!=:levelId and personnel.level.levelId = :levelId)) and personnel.office.officeId =:officeId and personnel.personnelStatus =:statusId order by personnel.displayName]]>
 	</query>
+	<query name="personnel.formedByLoanOfficers"><![CDATA[select new org.mifos.application.personnel.business.PersonnelView(personnel.personnelId,personnel.displayName) from org.mifos.application.personnel.business.PersonnelBO as personnel where personnel.level.levelId = :levelId and personnel.office.officeId =:officeId and personnel.personnelStatus =:statusId]]></query>
 </hibernate-mapping>

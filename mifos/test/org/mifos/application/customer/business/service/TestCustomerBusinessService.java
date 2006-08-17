@@ -495,6 +495,15 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		assertEquals(2 , service.retrieveAllCustomerStatusList(center.getCustomerLevel().getId()).size());
 	}
 	
+	public void testGetFormedByPersonnel() throws NumberFormatException, SystemException, ApplicationException {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active_test", Short
+				.valueOf("13"), "1.4", meeting, new Date(System
+				.currentTimeMillis()));
+		assertEquals(1 , service.getFormedByPersonnel(ClientConstants.LOAN_OFFICER_LEVEL , center.getOffice().getOfficeId()).size());
+	}
+	
 	public void testGetAllCustomerNotes() throws Exception{
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));

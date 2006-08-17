@@ -47,24 +47,24 @@ public class ClientNameDetailView {
 	public ClientNameDetailView() {
 		super();
 	}
+	
 	private Short nameType;
 
 	private Integer salutation;
 
 	private StringBuilder displayName;
 	
-	private Name name;
+	private String firstName;
+
+	private String middleName;
+
+	private String lastName;
+
+	private String secondLastName;
+
 	
 	public void setDisplayName(StringBuilder displayName) {
 		this.displayName = displayName;
-	}
-
-	public Name getName() {
-		return name;
-	}
-
-	public void setName(Name name) {
-		this.name = name;
 	}
 
 	public Short getNameType() {
@@ -84,23 +84,54 @@ public class ClientNameDetailView {
 	}
 
 	public String getDisplayName() {
-		displayName.append(name.getFirstName());
-		if(!ValidateMethods.isNullOrBlank(name.getMiddleName())){
+		displayName = new StringBuilder();
+		displayName.append(firstName);
+		if(!ValidateMethods.isNullOrBlank(middleName)){
 			displayName.append(CustomerConstants.BLANK);
-			displayName.append(name.getMiddleName());
+			displayName.append(middleName);
 		}
-		if(!ValidateMethods.isNullOrBlank(name.getSecondLastName())){
+		if(!ValidateMethods.isNullOrBlank(secondLastName)){
 			displayName.append(CustomerConstants.BLANK);
-			displayName.append(name.getSecondLastName());
+			displayName.append(secondLastName);
 		}
-		if(!ValidateMethods.isNullOrBlank(name.getLastName())){
+		if(!ValidateMethods.isNullOrBlank(lastName )){
 			displayName.append(CustomerConstants.BLANK);
-			displayName.append(name.getLastName());
+			displayName.append(lastName);
 		}
 		return displayName.toString().trim();
 	}
 
-	
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getMiddleName() {
+		return middleName;
+	}
+
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
+	}
+
+	public String getSecondLastName() {
+		return secondLastName;
+	}
+
+	public void setSecondLastName(String secondLastName) {
+		this.secondLastName = secondLastName;
+	}
 	
 	
 

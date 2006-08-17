@@ -613,6 +613,10 @@ public class TestCustomerPersistence extends MifosTestCase {
 				new Integer(center.getCustomerId())));
 	}
 	
+	public void testGetFormedByPersonnel() throws NumberFormatException, SystemException, ApplicationException {
+		center = createCenter();
+		assertEquals(1 , customerPersistence.getFormedByPersonnel(ClientConstants.LOAN_OFFICER_LEVEL , center.getOffice().getOfficeId()).size());
+	}
 	
 	private CenterBO createCenter(){
 		return createCenter("Center_Active_test");

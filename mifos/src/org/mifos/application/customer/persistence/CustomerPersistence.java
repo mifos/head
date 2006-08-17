@@ -66,6 +66,8 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.LoanCycleCounter;
+import org.mifos.application.personnel.business.PersonnelView;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -540,6 +542,19 @@ public class CustomerPersistence extends Persistence {
 			throw hpe;
 		}
       return notesResult;
+	}
+
+	public List<PersonnelView> getFormedByPersonnel(Short levelId, Short officeId) throws PersistenceException {
+		try {
+			Map<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("levelId", levelId);
+			queryParameters.put("officeId", officeId);
+			queryParameters.put("statusId", PersonnelConstants.ACTIVE);
+			List<PersonnelView> queryResult = executeNamedQuery(NamedQueryConstants.FORMEDBY_LOANOFFICERS_LIST, queryParameters);
+			return queryResult;
+		} catch (HibernateException he) {
+			throw new PersistenceException(he);
+		}
 	}
 
 }

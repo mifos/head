@@ -39,8 +39,10 @@ package org.mifos.application.customer.struts.actionforms;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
@@ -51,10 +53,12 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fees.business.FeeView;
+import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -81,7 +85,9 @@ public abstract class CustomerActionForm extends BaseActionForm{
 
 	private String mfiJoiningDate;
 	
-	private String input;
+	protected String input;
+	
+	private String formedByPersonnel;
 	
 	private List<FeeView> defaultFees;
 
@@ -233,6 +239,14 @@ public abstract class CustomerActionForm extends BaseActionForm{
 		return (CustomFieldView)(customFields.get(i));
 	}
 	
+	public String getFormedByPersonnel() {
+		return formedByPersonnel;
+	}
+
+	public void setFormedByPersonnel(String formedByPersonnel) {
+		this.formedByPersonnel = formedByPersonnel;
+	}
+
 	public FeeView getDefaultFee(int i) {
 		while(i>=defaultFees.size()){
 			defaultFees.add(new FeeView());
@@ -295,6 +309,11 @@ public abstract class CustomerActionForm extends BaseActionForm{
 			errors.add(CustomerConstants.LOAN_OFFICER, new ActionMessage(CustomerConstants.ERRORS_SELECT_LOAN_OFFICER));
 	}
 	
+	protected void validateFormedByPersonnel(ActionErrors errors){
+		if (StringUtils.isNullOrEmpty(getFormedByPersonnel()))
+			errors.add(CustomerConstants.FORMED_BY_LOANOFFICER, new ActionMessage(CustomerConstants.FORMEDBY_LOANOFFICER_BLANK_EXCEPTION));
+	}
+	
 	protected void validateMeeting(HttpServletRequest request, ActionErrors errors){
 		Object meeting = SessionUtils.getAttribute(CenterConstants.CENTER_MEETING, request.getSession());
 		if(meeting == null || !(meeting instanceof MeetingBO))
@@ -352,5 +371,20 @@ public abstract class CustomerActionForm extends BaseActionForm{
 			if(fee.getFeeId().equals(selectedFee.getFeeId()))
 					return fee.isPeriodic();
 		return false;
+	}
+	
+	protected Locale getUserLocale(HttpServletRequest request) {
+		Locale locale=null;
+		HttpSession session= request.getSession();
+		if(session !=null) {
+			UserContext userContext= (UserContext)session.getAttribute(LoginConstants.USERCONTEXT);
+			if(null !=userContext) {
+				locale=userContext.getPereferedLocale();
+				if(null==locale) {
+					locale=userContext.getMfiLocale();
+				}
+			}
+		}
+		return locale;
 	}
 }

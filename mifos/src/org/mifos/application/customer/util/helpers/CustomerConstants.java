@@ -127,6 +127,7 @@ public interface CustomerConstants {
 	public static final String VIEW_CENTER_CHARGES="ViewCenterCharges";
 	public static final String APPLY_ADJUSTMENT_CLIENT_SUCCESS="applyAdjustment_client_success";
 	public static final String APPLY_ADJUSTMENT_GROUP_SUCCESS="applyAdjustment_group_success";
+	
 	public static final String APPLY_ADJUSTMENT_CENTER_SUCCESS="applyAdjustment_center_success";
 	public static final String CANCELADJ_CLIENT_SUCCESS="canceladj_client_success";
 	public static final String CANCELADJ_GROUP_SUCCESS="canceladj_group_success";
@@ -151,6 +152,7 @@ public interface CustomerConstants {
 	public static final String CONFIGURATION_LSM = "configurationLSM" ;
 	/**Request Parameters names*/
 	String LOAN_OFFICER_LIST ="loanOfficers";
+	
 	String STATUS_LIST ="statusList";
 	String FEES_LIST ="feesList";
 	String ADMIN_FEES_LIST ="adminFeesList";
@@ -240,5 +242,15 @@ public interface CustomerConstants {
 	public static final String ERRORS_SPECIFY_CUSTOM_FIELD_VALUE="errors.Customer.specifyCustomFieldValue";
 	public static final String ERRORS_DUPLICATE_PERIODIC_FEE="errors.Customer.duplicatePeriodicFee";
 	public static final String ERRORS_SPECIFY_FEE_AMOUNT="errors.Customer.specifyFeeAmount";
-
+	public static final String ERRORS_MANDATORY="errors.mandatory";
+	public static final String ERRORS_SELECT="errors.requiredSelect";
+	public static final String SALUTATION = "Salutation";
+	public static final String FIRST_NAME = "First Name";
+	public static final String LAST_NAME = "Last Name";
+	public static final String DOB = "Date of birth";
+	public static final String GENDER = "Gender";
+	public static final String SPOUSE_FIRST_NAME = "Spouse/Father First Name";
+	public static final String SPOUSE_LAST_NAME = "Spouse/Father Last Name";
+	public static final String SPOUSE_TYPE = "Spouse/Father type";
+	public static final String FORMED_BY_LOANOFFICER = "Formed By Loan officer";
 }

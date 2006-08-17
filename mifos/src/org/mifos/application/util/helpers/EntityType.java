@@ -2,7 +2,7 @@ package org.mifos.application.util.helpers;
 
 public enum EntityType {
 
-	PERSONNEL(Short.valueOf("17")), CENTER(Short.valueOf("20"));
+	PERSONNEL(Short.valueOf("17")), CENTER(Short.valueOf("20")), CLIENT(Short.valueOf("1"));
 
 	Short value;
 
