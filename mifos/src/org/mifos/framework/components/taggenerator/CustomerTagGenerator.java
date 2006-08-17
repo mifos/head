@@ -47,7 +47,7 @@ public class CustomerTagGenerator extends TagGenerator{
 	}
 	
 	protected StringBuilder build(BusinessObject obj){
-		return build(obj,false);
+		return build(obj,true);
 	}
 	
 	protected StringBuilder build(BusinessObject obj, boolean selfLinkRequired){
@@ -57,25 +57,37 @@ public class CustomerTagGenerator extends TagGenerator{
 		if(strBuilder==null)
 			strBuilder = new StringBuilder();
 		
-		buildLink(strBuilder,customer);
+		buildLink(strBuilder,customer,customer,selfLinkRequired);
 		return strBuilder;
 	}
 	
-	private void buildLink(StringBuilder strBuilder, CustomerBO customer){
+	private void buildLink(StringBuilder strBuilder, CustomerBO customer,CustomerBO originalCustomer, boolean selfLinkRequired){
 		if(customer==null)
 			return;
-		buildLink(strBuilder,customer.getParentCustomer());
+		buildLink(strBuilder,customer.getParentCustomer(),originalCustomer,selfLinkRequired);
 		strBuilder.append(" / ");
-		createCustomerLink(strBuilder,customer);
+		createCustomerLink(strBuilder,customer,originalCustomer,selfLinkRequired);
 	}
 	
-	private void  createCustomerLink(StringBuilder strBuilder, CustomerBO customer){
-		strBuilder.append("<a href=\"");
-		strBuilder.append(getAction(customer));
-		strBuilder.append(customer.getGlobalCustNum());
-		strBuilder.append("\">");
-		strBuilder.append(customer.getDisplayName());
-		strBuilder.append("</a>");
+	private void  createCustomerLink(StringBuilder strBuilder, CustomerBO customer,CustomerBO originalCustomer, boolean selfLinkRequired){
+		if(!customer.equals(originalCustomer)){
+			strBuilder.append("<a href=\"");
+			strBuilder.append(getAction(customer));
+			strBuilder.append(customer.getGlobalCustNum());
+			strBuilder.append("\">");
+			strBuilder.append(customer.getDisplayName());
+			strBuilder.append("</a>");
+		}else if(selfLinkRequired){
+			strBuilder.append("<a href=\"");
+			strBuilder.append(getAction(customer));
+			strBuilder.append(customer.getGlobalCustNum());
+			strBuilder.append("\">");
+			strBuilder.append(customer.getDisplayName());
+			strBuilder.append("</a>");
+		}else if(!selfLinkRequired){
+			strBuilder.append("<b>"+customer.getDisplayName()+"</b>");
+		}
+		
 	}
 	
 	private String getAction(CustomerBO customer){
@@ -84,7 +96,7 @@ public class CustomerTagGenerator extends TagGenerator{
 		else if (customer.getCustomerLevel().getId().shortValue()==CustomerConstants.GROUP_LEVEL_ID)
 			return "GroupAction.do?method=get&globalCustNum=";
 		else if (customer.getCustomerLevel().getId().shortValue()==CustomerConstants.CLIENT_LEVEL_ID)
-			return "clientCreationAction.do?method=get&globalCustNum=";
+			return "clientCustAction.do?method=get&globalCustNum=";
 		return "";
 	}
 	

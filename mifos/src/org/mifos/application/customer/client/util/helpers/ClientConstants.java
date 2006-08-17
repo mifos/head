@@ -68,6 +68,13 @@ public interface ClientConstants {
 	public static final String BUSINESS_ACTIVITIES_ENTITY = "businessActivitiesEntity";
 	public static final String  HANDICAPPED_ENTITY = "handicappedEntity";
 	public static final String  SPOUSE_FATHER_ENTITY = "spouseEntity";
+	public static final String GENDER_ENTITY_NAME  ="genderEntityName";
+	public static final String BUSINESS_ACTIVITIES_ENTITY_NAME = "businessActivitiesEntityName";
+	public static final String  HANDICAPPED_ENTITY_NAME = "handicappedEntityName";
+	public static final String  MARITAL_STATUS_ENTITY_NAME = "maritalStatusEntityName";
+	public static final String  CITIZENSHIP_ENTITY_NAME = "citizenshipEntityName";
+	public static final String  ETHINICITY_ENTITY_NAME= "ethinicityEntityName";
+	public static final String  EDUCATION_LEVEL_ENTITY_NAME = "educationLevelEntityName";
 	/**Status Constants*/
 	public static final short STATUS_PARTIAL =1;
 	public static final short STATUS_PENDING =2;
@@ -187,5 +194,9 @@ public interface ClientConstants {
 	public static final String NO ="0";
 	public static final Short SPOUSE_VALUE = 1;
 	public static final Short FATHER_VALUE = 2;
+	
+	public static final String AGE = "age";
+	public static final String LOANCYCLECOUNTER = "loanCycleCounter";
+	public static final String CUSTOMERACTIVELOANACCOUNTS = "customerActiveLoanAccounts";
 
 }

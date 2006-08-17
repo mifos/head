@@ -117,4 +117,8 @@ public class MasterDataService extends BusinessService {
 			EntityType entityType) throws SystemException {
 		return new MasterPersistence().retrieveCustomFieldsDefinition(entityType);
 	}
+	
+	public String retrieveMasterEntities(Integer entityId, Short localeId) throws PersistenceException {
+		return new MasterPersistence().retrieveMasterEntities(entityId,localeId);
+	}
 }

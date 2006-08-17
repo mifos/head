@@ -55,13 +55,13 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.checklist.util.resources.CheckListConstants;
-import org.mifos.application.checklist.util.valueobjects.CheckListMaster;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.CustomerPictureEntity;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -77,7 +77,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -556,5 +555,16 @@ public class CustomerPersistence extends Persistence {
 			throw new PersistenceException(he);
 		}
 	}
-
+	
+	public CustomerPictureEntity retrievePicture(Integer customerId)throws PersistenceException {
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("customerId",customerId);
+		List queryResult=null;
+		try{
+			queryResult = executeNamedQuery(NamedQueryConstants.GET_CUSTOMER_PICTURE, queryParameters);
+		}catch(HibernateException he){
+			throw new PersistenceException(he);
+		}
+		return (CustomerPictureEntity)queryResult.get(0);
+	}
 }

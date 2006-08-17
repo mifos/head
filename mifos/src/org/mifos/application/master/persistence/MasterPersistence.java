@@ -9,10 +9,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.BusinessActivityEntity;
-import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.TransactionTypeEntity;
@@ -174,5 +172,18 @@ public EntityMaster getLookUpEntity(String entityName,Short localeId) throws App
 			throw new PersistenceException(he);
 		}
 		return queryResult;
+	}
+	
+	public String retrieveMasterEntities(Integer entityId, Short localeId)throws PersistenceException {
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("lookUpValueId",entityId);
+		queryParameters.put("localeId",localeId);
+		List queryResult=null;
+		try{
+			queryResult = executeNamedQuery(NamedQueryConstants.MASTERDATA_MIFOS_ENTITY_NAME, queryParameters);
+		}catch(HibernateException he){
+			throw new PersistenceException(he);
+		}
+		return (String)queryResult.get(0);
 	}
 }

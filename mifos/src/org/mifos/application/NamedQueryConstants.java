@@ -472,6 +472,6 @@ public interface NamedQueryConstants {
 	public String GETCHILDCOUNT="office.getChlidCount";
 	public String CHECKOFFICENAMEUNIQUENESS="office.getOfficeWithName";
 	public String CHECKOFFICESHORTNAMEUNIQUENESS="office.getOfficeWithShortName";
-
-
+	public String MASTERDATA_MIFOS_ENTITY_NAME="masterdata.mifosEntityName";
+	public String GET_CUSTOMER_PICTURE="Customer.getPicture";
 }

@@ -55,6 +55,7 @@ import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.center.business.CenterPerformanceHistory;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
+import org.mifos.application.customer.client.business.CustomerPictureEntity;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerRecentActivityView;
@@ -318,5 +319,9 @@ public class CustomerBusinessService extends BusinessService {
 	public List<PersonnelView> getFormedByPersonnel(Short levelId , Short officeId)throws PersistenceException,
 	ServiceException {
 		return new CustomerPersistence().getFormedByPersonnel(levelId ,officeId);
+	}
+	
+	public CustomerPictureEntity retrievePicture(Integer customerId)throws PersistenceException {
+		return new CustomerPersistence().retrievePicture(customerId);
 	}
 }

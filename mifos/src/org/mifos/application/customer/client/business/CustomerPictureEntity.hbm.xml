@@ -11,4 +11,8 @@
 	<property column="CUSTOMER_ID"  name="customerId"  type="integer"  access="field"/>
 	<property column="PICTURE"  name="picture"  type="blob"/>
   </class> 
+  
+  	<query name="Customer.getPicture">
+		<![CDATA[from org.mifos.application.customer.client.business.CustomerPictureEntity customerPicture where customerPicture.customer.customerId =:customerId]]>
+	</query>
 </hibernate-mapping>  

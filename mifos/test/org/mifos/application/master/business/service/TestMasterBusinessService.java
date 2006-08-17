@@ -3,8 +3,6 @@ package org.mifos.application.master.business.service;
 import java.sql.Date;
 import java.util.List;
 
-import org.mifos.framework.MifosTestCase;
-
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
@@ -17,6 +15,8 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.util.helpers.TestConstants;
@@ -110,5 +110,9 @@ public class TestMasterBusinessService extends MifosTestCase {
 	public void testGetSupportedPaymentModes()throws Exception{
 		List<PaymentTypeEntity> paymentTypeList = masterService.getSupportedPaymentModes(Short.valueOf("1"),Short.valueOf("1"));
 		assertEquals(TestConstants.PAYMENTTYPES_NUMBER,paymentTypeList.size());
+	}
+	
+	public void testGetMasterEntityName() throws NumberFormatException, PersistenceException {
+		assertEquals("Partial Application",masterService.retrieveMasterEntities(1,Short.valueOf("1")));
 	}
 }

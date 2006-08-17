@@ -54,4 +54,9 @@ public class TestMasterPersistence extends MifosTestCase {
 		List<BusinessActivityEntity> masterEntity = masterPersistence.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES,Short.valueOf("1"));
 		assertEquals(129,masterEntity.size());
 	}
+	
+	public void testGetMasterEntityName() throws NumberFormatException, PersistenceException {
+		MasterPersistence masterPersistence = new MasterPersistence();
+		assertEquals("Partial Application",masterPersistence.retrieveMasterEntities(1,Short.valueOf("1")));
+	}
 }

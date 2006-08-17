@@ -34,5 +34,10 @@
     	    and locale.lookUpId = value.lookUpId
     	    and locale.localeId=:localeId and entity.entityType=:entityType]]>
     </query>
+    <query name="masterdata.mifosEntityName">
+    	   <![CDATA[select locale.lookUpValue from org.mifos.application.master.business.LookUpValueLocaleEntity locale
+    	    where locale.lookUpValueId = :lookUpValueId
+    	    and locale.localeId=:localeId]]>
+    </query>
             
 </hibernate-mapping> 
