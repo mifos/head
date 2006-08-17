@@ -46,7 +46,7 @@
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 
@@ -130,7 +130,7 @@
 														<td class="timelineboldorange">
 															<mifos:mifoslabel name="bulkEntry.select" />
 															<c:choose>
-																<c:when test="${sessionScope.isCenterHeirarchyExists==Constants.YES}">
+																<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
 																	<mifos:mifoslabel name="${LABEL_CENTER}" />
 																</c:when>
 																<c:otherwise>
@@ -179,7 +179,7 @@
 												<span class="heading"> <mifos:mifoslabel name="${LABEL_BULKENTRY}" /> - </span>
 												<mifos:mifoslabel name="bulkEntry.select" />
 												<c:choose>
-													<c:when test="${sessionScope.isCenterHeirarchyExists==Constants.YES}">
+													<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
 														<mifos:mifoslabel name="${LABEL_CENTER}" />
 													</c:when>
 													<c:otherwise>
@@ -195,7 +195,7 @@
 												<mifos:mifoslabel name="bulkEntry.fromlist" />
 												<mifos:mifoslabel name="bulkEntry.selloanoffcent" />
 												<c:choose>
-													<c:when test="${sessionScope.isCenterHeirarchyExists==Constants.YES}">
+													<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
 														<mifos:mifoslabel name="${LABEL_CENTER}" />
 													</c:when>
 													<c:otherwise>
@@ -226,7 +226,9 @@
 													</td>
 													<td>
 														<mifos:select property="officeId" style="width:136px;">
-															<html-el:options collection="OfficesBranchOffices" labelProperty="officeName" property="officeId" />
+															<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'OfficesBranchOffices')}" var="office">
+																<html-el:option value="${office.officeId}">${office.officeName}</html-el:option>
+															</c:forEach>
 														</mifos:select>
 													</td>
 												</tr>
@@ -237,7 +239,9 @@
 													</td>
 													<td>
 														<mifos:select property="loanOfficerId" style="width:136px;">
-															<html-el:options collection="loanOfficers" labelProperty="displayName" property="personnelId" />
+															<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanOfficers')}" var="loanOfficer">
+																<html-el:option value="${loanOfficer.personnelId}">${loanOfficer.displayName}</html-el:option>
+															</c:forEach>
 														</mifos:select>
 													</td>
 												</tr>
@@ -250,7 +254,9 @@
 													</td>
 													<td>
 														<mifos:select property="officeId" style="width:136px;" onchange="fnLoadLoanOfficers(this.form)">
-															<html-el:options collection="OfficesBranchOffices" labelProperty="officeName" property="officeId" />
+															<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'OfficesBranchOffices')}" var="office">
+																<html-el:option value="${office.officeId}">${office.officeName}</html-el:option>
+															</c:forEach>
 														</mifos:select>
 													</td>
 												</tr>
@@ -261,7 +267,9 @@
 													</td>
 													<td>
 														<mifos:select property="loanOfficerId" style="width:136px;" onchange="fnLoadCustomers(this.form)">
-															<html-el:options collection="loanOfficers" labelProperty="displayName" property="personnelId" />
+															<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanOfficers')}" var="loanOfficer">
+																<html-el:option value="${loanOfficer.personnelId}">${loanOfficer.displayName}</html-el:option>
+															</c:forEach>
 														</mifos:select>
 													</td>
 												</tr>
@@ -270,7 +278,7 @@
 										<tr class="fontnormal">
 											<td width="27%" align="right">
 												<c:choose>
-													<c:when test="${sessionScope.isCenterHeirarchyExists==Constants.YES}">
+													<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
 														<mifos:mifoslabel name="${LABEL_CENTER}" mandatory="yes" />
 													</c:when>
 													<c:otherwise>
@@ -281,7 +289,9 @@
 											</td>
 											<td width="73%">
 												<mifos:select property="customerId" style="width:136px;" onchange="getLastMeetingDateForCustomer(this.form)">
-													<html-el:options collection="CustomersList" labelProperty="displayName" property="customerId" />
+													<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CustomersList')}" var="customer">
+														<html-el:option value="${customer.customerId}">${customer.displayName}</html-el:option>
+													</c:forEach>
 												</mifos:select>
 											</td>
 										</tr>
@@ -292,7 +302,7 @@
 											</td>
 											<td>
 												<c:choose>
-													<c:when test="${sessionScope.isBackDatedTrxnAllowed==Constants.NO}">
+													<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isBackDatedTrxnAllowed')==Constants.NO}">
 														<date:datetag property="transactionDate" isDisabled="Yes" />
 													</c:when>
 													<c:otherwise>
@@ -308,7 +318,9 @@
 											</td>
 											<td>
 												<mifos:select property="paymentId" style="width:136px;">
-													<html-el:options collection="PaymentTypesList" labelProperty="lookUpValue" property="id" />
+													<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentTypesList')}" var="payment">
+														<html-el:option value="${payment.id}">${payment.lookUpValue}</html-el:option>
+													</c:forEach>
 												</mifos:select>
 											</td>
 										</tr>
@@ -340,6 +352,7 @@
 									</table>
 									<html-el:hidden property="method" value="get" />
 									<html-el:hidden property="input" value="load" />
+									<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 									<br>
 									<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>

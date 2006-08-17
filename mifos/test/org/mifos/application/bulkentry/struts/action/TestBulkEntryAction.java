@@ -85,6 +85,7 @@ import org.mifos.framework.components.scheduler.ScheduleInputsIntf;
 import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerFactory;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -92,7 +93,10 @@ import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Flow;
+import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ResourceLoader;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestBulkEntryAction extends MifosMockStrutsTestCase {
@@ -116,6 +120,9 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 	private SavingsBO clientSavingsAccount;
 
+	private String flowKey;
+
+	@Override
 	public void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(centerSavingsAccount);
 		TestObjectFactory.cleanUp(groupSavingsAccount);
@@ -130,6 +137,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		super.tearDown();
 	}
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		try {
@@ -159,14 +167,23 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		ActivityContext ac = new ActivityContext((short) 0, userContext
 				.getBranchId().shortValue(), userContext.getId().shortValue());
 		request.getSession(false).setAttribute("ActivityContext", ac);
+		Flow flow = new Flow();
+		flowKey = String.valueOf(System.currentTimeMillis());
+		FlowManager flowManager = new FlowManager();
+		flowManager.addFLow(flowKey, flow);
+		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
+				flowManager);
+
 	}
 
-	public void testSuccessfulCreate() {
+	public void testSuccessfulCreate() throws PageExpiredException {
 		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
-		request.getSession().setAttribute(BulkEntryConstants.BULKENTRY,
-				bulkEntry);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
+				request);
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "create");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -185,12 +202,14 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 	}
 
-	public void testFailureCreate() {
+	public void testFailureCreate() throws PageExpiredException {
 		BulkEntryBO bulkEntry = getFailureBulkEntry();
-		request.getSession().setAttribute(BulkEntryConstants.BULKENTRY,
-				bulkEntry);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
+				request);
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "create");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyActionErrors(new String[] { "errors.update" });
 
@@ -203,11 +222,13 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				client.getCustomerId());
 	}
 
-	public void testSuccessfulPreview() {
+	public void testSuccessfulPreview() throws PageExpiredException {
 		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
-		request.getSession().setAttribute(BulkEntryConstants.BULKENTRY,
-				bulkEntry);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
+				request);
 		setRequestPathInfo("/bulkentryaction.do");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		addRequestParameter("method", "preview");
 		addRequestParameter("attendenceSelected[0]", "1");
 		addRequestParameter("enteredAmount[0][0]", "212.0");
@@ -225,11 +246,13 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 	}
 
-	public void testFailurePreview() {
+	public void testFailurePreview() throws PageExpiredException {
 		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
-		request.getSession().setAttribute(BulkEntryConstants.BULKENTRY,
-				bulkEntry);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
+				request);
 		setRequestPathInfo("/bulkentryaction.do");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		addRequestParameter("method", "preview");
 		addRequestParameter("enteredAmount[0][0]", "10.0");
 		addRequestParameter("enteredAmount[0][1]", "10.0");
@@ -435,8 +458,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	private CustomerView getCusomerView(CustomerBO customer) {
 		CustomerView customerView = new CustomerView();
 		customerView.setCustomerId(customer.getCustomerId());
-		customerView.setCustomerLevelId(customer.getCustomerLevel()
-				.getId());
+		customerView.setCustomerLevelId(customer.getCustomerLevel().getId());
 		customerView.setCustomerSearchId(customer.getSearchId());
 		customerView.setDisplayName(customer.getDisplayName());
 		customerView.setGlobalCustNum(customer.getGlobalCustNum());
@@ -475,48 +497,48 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		return customerAccountView;
 	}
 
-	public void testLoad() {
+	public void testLoad() throws PageExpiredException {
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "load");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("load_success");
-		assertEquals("The value for isBackDated Trxn Allowed", request
-				.getSession().getAttribute(
-						BulkEntryConstants.ISBACKDATEDTRXNALLOWED),
-				Constants.NO);
-		assertEquals("The value for isCenter Heirarchy Exists", request
-				.getSession().getAttribute(
-						BulkEntryConstants.ISCENTERHEIRARCHYEXISTS),
-				Constants.YES);
+		assertEquals("The value for isBackDated Trxn Allowed", SessionUtils
+				.getAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
+						request), Constants.NO);
+		assertEquals("The value for isCenter Heirarchy Exists", SessionUtils
+				.getAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
+						request), Constants.YES);
 	}
 
-	public void testLoadForNonLoanOfficerInBranch() {
+	public void testLoadForNonLoanOfficerInBranch() throws PageExpiredException {
 		userContext.setBranchId(Short.valueOf("3"));
 		userContext.setId(Short.valueOf("2"));
 		userContext.setLevelId(Short.valueOf("2"));
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "load");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("load_success");
-		assertEquals("The value for isBackDated Trxn Allowed", request
-				.getSession().getAttribute(
-						BulkEntryConstants.ISBACKDATEDTRXNALLOWED),
-				Constants.NO);
+		assertEquals("The value for isBackDated Trxn Allowed", SessionUtils
+				.getAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
+						request), Constants.NO);
 	}
 
-	public void testLoadPersonnel() {
+	public void testLoadPersonnel() throws PageExpiredException {
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "loadLoanOfficers");
 		addRequestParameter("officeId", "3");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("load_success");
-		List<PersonnelView> loanOfficerList = (List<PersonnelView>) request
-				.getSession().getAttribute(CustomerConstants.LOAN_OFFICER_LIST);
+		List<PersonnelView> loanOfficerList = (List<PersonnelView>) SessionUtils
+				.getAttribute(CustomerConstants.LOAN_OFFICER_LIST, request);
 		assertEquals(1, loanOfficerList.size());
 	}
 
-	public void testLoadCustomers() {
+	public void testLoadCustomers() throws PageExpiredException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active", Short
@@ -526,18 +548,18 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "loadCustomerList");
 		addRequestParameter("officeId", "3");
 		addRequestParameter("loanOfficerId", "1");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("load_success");
-		List<CustomerView> parentCustomerList = (List<CustomerView>) request
-				.getSession().getAttribute(BulkEntryConstants.CUSTOMERSLIST);
+		List<CustomerView> parentCustomerList = (List<CustomerView>) SessionUtils
+				.getAttribute(BulkEntryConstants.CUSTOMERSLIST, request);
 		assertEquals(1, parentCustomerList.size());
-		assertEquals("The value for isCenter Heirarchy Exists", request
-				.getSession().getAttribute(
-						BulkEntryConstants.ISCENTERHEIRARCHYEXISTS),
-				Constants.YES);
+		assertEquals("The value for isCenter Heirarchy Exists", SessionUtils
+				.getAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
+						request), Constants.YES);
 	}
 
-	public void testGetLastMeetingDateForCustomer() {
+	public void testGetLastMeetingDateForCustomer() throws PageExpiredException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active", Short
@@ -545,6 +567,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				.currentTimeMillis()));
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "getLastMeetingDateForCustomer");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		addRequestParameter("officeId", "3");
 		addRequestParameter("loanOfficerId", "1");
 		addRequestParameter("customerId", String.valueOf(center.getCustomerId()
@@ -556,13 +579,12 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		if (Configuration.getInstance().getAccountConfig(
 				Short.valueOf(center.getOffice().getOfficeId()))
 				.isBackDatedTxnAllowed()) {
-			assertEquals("The value for isBackDated Trxn Allowed", request
-					.getSession().getAttribute(
-							BulkEntryConstants.ISBACKDATEDTRXNALLOWED),
-					Constants.YES);
+			assertEquals("The value for isBackDated Trxn Allowed", SessionUtils
+					.getAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
+							request), Constants.YES);
 			assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(
 					getMeetingDates(meeting).getTime()).getTime()).toString(),
-					request.getSession().getAttribute("LastMeetingDate")
+					SessionUtils.getAttribute("LastMeetingDate", request)
 							.toString());
 			assertEquals(DateHelper.getUserLocaleDate(getUserLocale(request),
 					new java.sql.Date(DateUtils.getDateWithoutTimeStamp(
@@ -572,13 +594,12 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 							BulkEntryConstants.BULKENTRYACTIONFORM))
 					.getTransactionDate());
 		} else {
-			assertEquals("The value for isBackDated Trxn Allowed", request
-					.getSession().getAttribute(
-							BulkEntryConstants.ISBACKDATEDTRXNALLOWED),
-					Constants.NO);
+			assertEquals("The value for isBackDated Trxn Allowed", SessionUtils
+					.getAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
+							request), Constants.NO);
 			assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(
 					getMeetingDates(meeting).getTime()).getTime()).toString(),
-					request.getSession().getAttribute("LastMeetingDate")
+					SessionUtils.getAttribute("LastMeetingDate", request)
 							.toString());
 			assertEquals(DateHelper.getUserLocaleDate(getUserLocale(request),
 					new java.sql.Date(DateUtils
@@ -617,9 +638,8 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		clientSavingsAccount = TestObjectFactory.createSavingsAccount(
 				"43245434", client, Short.valueOf("16"), startDate,
 				savingsOffering3);
-
-		request
-				.getSession()
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils
 				.setAttribute(
 						BulkEntryConstants.PAYMENT_TYPES_LIST,
 						masterService
@@ -627,9 +647,10 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 										MasterConstants.PAYMENT_TYPE,
 										userContext.getLocaleId(),
 										"org.mifos.application.productdefinition.util.valueobjects.PaymentType",
-										"paymentTypeId").getLookUpMaster());
-		request.getSession().setAttribute(
-				BulkEntryConstants.ISCENTERHEIRARCHYEXISTS, Constants.YES);
+										"paymentTypeId").getLookUpMaster(),
+						request);
+		SessionUtils.setAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
+				Constants.YES, request);
 
 		setMasterListInSession(center.getCustomerId());
 		setRequestPathInfo("/bulkentryaction.do");
@@ -637,6 +658,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		addRequestParameter("officeId", "3");
 		addRequestParameter("loanOfficerId", "3");
 		addRequestParameter("paymentId", "1");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 
 		Calendar meetinDateCalendar = new GregorianCalendar();
 		meetinDateCalendar.setTime(getMeetingDates(meeting));
@@ -644,8 +666,8 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		int month = meetinDateCalendar.get(Calendar.MONTH);
 		int day = meetinDateCalendar.get(Calendar.DAY_OF_MONTH);
 		meetinDateCalendar = new GregorianCalendar(year, month, day);
-		request.getSession().setAttribute("LastMeetingDate",
-				new java.sql.Date(meetinDateCalendar.getTimeInMillis()));
+		SessionUtils.setAttribute("LastMeetingDate", new java.sql.Date(
+				meetinDateCalendar.getTimeInMillis()), request);
 		addRequestParameter("transactionDate", (month + 1) + "/" + day + "/"
 				+ year);
 		addRequestParameter("receiptId", "1");
@@ -670,37 +692,40 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				meetingIntPost);
 	}
 
-	private void setMasterListInSession(Integer customerId) {
+	private void setMasterListInSession(Integer customerId)
+			throws PageExpiredException {
 		OfficeView office = new OfficeView(Short.valueOf("3"), "Branch",
 				OfficeConstants.BRANCHOFFICE, Integer.valueOf("0"));
 		List<OfficeView> branchOfficesList = new ArrayList<OfficeView>();
 		branchOfficesList.add(office);
-		request.getSession().setAttribute(
-				OfficeConstants.OFFICESBRANCHOFFICESLIST, branchOfficesList);
+		SessionUtils.setAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST,
+				branchOfficesList, request);
 
 		PersonnelView personnel = new PersonnelView(Short.valueOf("3"), "John");
 		List<PersonnelView> personnelList = new ArrayList<PersonnelView>();
 		personnelList.add(personnel);
-		request.getSession().setAttribute(CustomerConstants.LOAN_OFFICER_LIST,
-				personnelList);
+		SessionUtils.setAttribute(CustomerConstants.LOAN_OFFICER_LIST,
+				personnelList, request);
 
 		CustomerView parentCustomer = new CustomerView(customerId,
 				"Center_Active", Short
 						.valueOf(CustomerConstants.CENTER_LEVEL_ID), "1.1");
 		List<CustomerView> customerList = new ArrayList<CustomerView>();
 		customerList.add(parentCustomer);
-		request.getSession().setAttribute(BulkEntryConstants.CUSTOMERSLIST,
-				customerList);
+		SessionUtils.setAttribute(BulkEntryConstants.CUSTOMERSLIST,
+				customerList, request);
 	}
 
-	public void testFailureGet() {
+	public void testFailureGet() throws PageExpiredException {
 		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
-		request.getSession().setAttribute(BulkEntryConstants.BULKENTRY,
-				bulkEntry);
-		request.getSession().setAttribute(
-				BulkEntryConstants.ISCENTERHEIRARCHYEXISTS, Constants.YES);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
+				request);
+		SessionUtils.setAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
+				Constants.YES, request);
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "get");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyActionErrors(new String[] { "errors.mandatoryenter",
 				"errors.mandatoryselect", "errors.mandatoryselect",
@@ -744,10 +769,11 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		return dates.get(dates.size() - 1);
 	}
 
-	public void testFailurePreviewForEmptyAmount() {
+	public void testFailurePreviewForEmptyAmount() throws PageExpiredException {
 		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
-		request.getSession().setAttribute(BulkEntryConstants.BULKENTRY,
-				bulkEntry);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
+				request);
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("enteredAmount[0][0]", "");
@@ -759,15 +785,17 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		addRequestParameter("enteredAmount[2][0]", "");
 		addRequestParameter("enteredAmount[2][1]", "");
 		addRequestParameter("enteredAmount[2][2]", "");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyActionErrors(new String[] { "errors.invalidamount",
 				"errors.invalidamount" });
 	}
 
-	public void testFailurePreviewForCharAmount() {
+	public void testFailurePreviewForCharAmount() throws PageExpiredException {
 		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
-		request.getSession().setAttribute(BulkEntryConstants.BULKENTRY,
-				bulkEntry);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
+				request);
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("enteredAmount[0][0]", "abc");
@@ -779,6 +807,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		addRequestParameter("enteredAmount[2][0]", "abc");
 		addRequestParameter("enteredAmount[2][1]", "abc");
 		addRequestParameter("enteredAmount[2][2]", "abc");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyActionErrors(new String[] { "errors.invalidamount",
 				"errors.invalidamount" });

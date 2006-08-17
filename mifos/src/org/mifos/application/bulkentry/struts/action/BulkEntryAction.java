@@ -46,7 +46,6 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
@@ -65,7 +64,6 @@ import org.mifos.application.bulkentry.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
-import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.PaymentTypeView;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -80,6 +78,7 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -88,6 +87,8 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class BulkEntryAction extends BaseAction {
 
@@ -118,53 +119,54 @@ public class BulkEntryAction extends BaseAction {
 	 * this information in session and context.This should be removed after
 	 * center was successfully created.
 	 */
+	@TransactionDemarcate(saveToken = true)
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		try {
-			HttpSession session = request.getSession();
-			session.setAttribute(BulkEntryConstants.BULKENTRYACTIONFORM, null);
-			session.setAttribute(Constants.BUSINESS_KEY, null);
-			session.setAttribute(BulkEntryConstants.BULKENTRY, null);
-			UserContext userContext = (UserContext) session
-					.getAttribute(Constants.USER_CONTEXT_KEY);
+			request.getSession().setAttribute(
+					BulkEntryConstants.BULKENTRYACTIONFORM, null);
+			request.getSession().setAttribute(Constants.BUSINESS_KEY, null);
+			UserContext userContext = getUserContext(request);
 			List<OfficeView> activeBranches = masterService
 					.getActiveBranches(userContext.getBranchId());
-			session.setAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST,
-					activeBranches);
+			SessionUtils.setAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST,
+					activeBranches, request);
 			boolean isCenterHeirarchyExists = Configuration.getInstance()
 					.getCustomerConfig(
 							new OfficePersistenceService().getHeadOffice()
 									.getOfficeId()).isCenterHierarchyExists();
-			session.setAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
-					isCenterHeirarchyExists ? Constants.YES : Constants.NO);
+			SessionUtils.setAttribute(
+					BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
+					isCenterHeirarchyExists ? Constants.YES : Constants.NO,
+					request);
 			if (activeBranches.size() == 1) {
 				List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(
 						userContext, activeBranches.get(0).getOfficeId());
-				session.setAttribute(CustomerConstants.LOAN_OFFICER_LIST,
-						loanOfficers);
+				SessionUtils.setAttribute(CustomerConstants.LOAN_OFFICER_LIST,
+						loanOfficers, request);
 				if (loanOfficers.size() == 1) {
 					List<CustomerView> parentCustomerList = loadCustomers(
 							loanOfficers.get(0).getPersonnelId(),
 							activeBranches.get(0).getOfficeId());
-					session.setAttribute(BulkEntryConstants.CUSTOMERSLIST,
-							parentCustomerList);
+					SessionUtils.setAttribute(BulkEntryConstants.CUSTOMERSLIST,
+							parentCustomerList, request);
 					request.setAttribute(BulkEntryConstants.REFRESH,
 							Constants.NO);
 				} else {
-					session.setAttribute(BulkEntryConstants.CUSTOMERSLIST,
-							new ArrayList<CustomerView>());
+					SessionUtils.setAttribute(BulkEntryConstants.CUSTOMERSLIST,
+							new ArrayList<CustomerView>(), request);
 					request.setAttribute(BulkEntryConstants.REFRESH,
 							Constants.YES);
 				}
 			} else {
-				session.setAttribute(CustomerConstants.LOAN_OFFICER_LIST,
-						new ArrayList<PersonnelView>());
-				session.setAttribute(BulkEntryConstants.CUSTOMERSLIST,
-						new ArrayList<CustomerView>());
+				SessionUtils.setAttribute(CustomerConstants.LOAN_OFFICER_LIST,
+						new ArrayList<PersonnelView>(), request);
+				SessionUtils.setAttribute(BulkEntryConstants.CUSTOMERSLIST,
+						new ArrayList<CustomerView>(), request);
 				request.setAttribute(BulkEntryConstants.REFRESH, Constants.YES);
 			}
-			session
+			SessionUtils
 					.setAttribute(
 							BulkEntryConstants.PAYMENT_TYPES_LIST,
 							masterService
@@ -172,9 +174,11 @@ public class BulkEntryAction extends BaseAction {
 											MasterConstants.PAYMENT_TYPE,
 											userContext.getLocaleId(),
 											"org.mifos.application.productdefinition.util.valueobjects.PaymentType",
-											"paymentTypeId").getLookUpMaster());
-			session.setAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
-					Constants.NO);
+											"paymentTypeId").getLookUpMaster(),
+							request);
+			SessionUtils.setAttribute(
+					BulkEntryConstants.ISBACKDATEDTRXNALLOWED, Constants.NO,
+					request);
 
 		} catch (Exception e) {
 		}
@@ -187,10 +191,10 @@ public class BulkEntryAction extends BaseAction {
 	 * search criteria
 	 * 
 	 */
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward getLastMeetingDateForCustomer(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		HttpSession session = request.getSession();
 		BulkEntryActionForm actionForm = (BulkEntryActionForm) form;
 		try {
 			boolean isBackDatedTrxnAllowed = false;
@@ -209,75 +213,50 @@ public class BulkEntryAction extends BaseAction {
 				actionForm.setTransactionDate(DateHelper
 						.getCurrentDate(getUserLocale(request)));
 			}
-			session.setAttribute("LastMeetingDate", meetingDate);
-			session.setAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
-					isBackDatedTrxnAllowed ? Constants.YES : Constants.NO);
+			SessionUtils.setAttribute("LastMeetingDate", meetingDate, request);
+			SessionUtils.setAttribute(
+					BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
+					isBackDatedTrxnAllowed ? Constants.YES : Constants.NO,
+					request);
 		} catch (SystemException se) {
 		} catch (ApplicationException ae) {
 		}
 		return mapping.findForward(BulkEntryConstants.LOADSUCCESS);
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward loadLoanOfficers(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		HttpSession session = request.getSession();
-		UserContext userContext = (UserContext) session
-				.getAttribute(Constants.USER_CONTEXT_KEY);
+		UserContext userContext = getUserContext(request);
 		BulkEntryActionForm bulkEntryActionForm = (BulkEntryActionForm) form;
 		Short officeId = Short.valueOf(bulkEntryActionForm.getOfficeId());
 		List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(
 				userContext, officeId);
-		session.setAttribute(CustomerConstants.LOAN_OFFICER_LIST, loanOfficers);
+		SessionUtils.setAttribute(CustomerConstants.LOAN_OFFICER_LIST,
+				loanOfficers, request);
 		return mapping.findForward(BulkEntryConstants.LOADSUCCESS);
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward loadCustomerList(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		HttpSession session = request.getSession();
 		BulkEntryActionForm bulkEntryActionForm = (BulkEntryActionForm) form;
 		Short personnelId = Short.valueOf(bulkEntryActionForm
 				.getLoanOfficerId());
 		Short officeId = Short.valueOf(bulkEntryActionForm.getOfficeId());
 		List<CustomerView> parentCustomerList = loadCustomers(personnelId,
 				officeId);
-		session.setAttribute(BulkEntryConstants.CUSTOMERSLIST,
-				parentCustomerList);
+		SessionUtils.setAttribute(BulkEntryConstants.CUSTOMERSLIST,
+				parentCustomerList, request);
 		boolean isCenterHeirarchyExists = Configuration.getInstance()
 				.getCustomerConfig(officeId).isCenterHierarchyExists();
-		session.setAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
-				isCenterHeirarchyExists ? Constants.YES : Constants.NO);
+		SessionUtils
+				.setAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
+						isCenterHeirarchyExists ? Constants.YES : Constants.NO,
+						request);
 		return mapping.findForward(BulkEntryConstants.LOADSUCCESS);
-	}
-
-	private List<PersonnelView> loadLoanOfficersForBranch(
-			UserContext userContext, Short branchId) {
-		return masterService.getListOfActiveLoanOfficers(
-				PersonnelConstants.LOAN_OFFICER, branchId, userContext.getId(),
-				userContext.getLevelId());
-	}
-
-	/**
-	 * This method loads either the centers or groups under a particular loan
-	 * officer as this list of parent customer If the center hierarchy exists,
-	 * then the list of centers under the loan officer is retrieved as the list
-	 * of parent customers, else it is the list of groups.
-	 * 
-	 * @throws SystemException
-	 */
-	private List<CustomerView> loadCustomers(Short personnelId, Short officeId)
-			throws SystemException {
-		Short customerLevel;
-		if (Configuration.getInstance().getCustomerConfig(officeId)
-				.isCenterHierarchyExists())
-			customerLevel = new Short(CustomerConstants.CENTER_LEVEL_ID);
-		else
-			customerLevel = new Short(CustomerConstants.GROUP_LEVEL_ID);
-		List<CustomerView> activeParentUnderLoanOfficer = masterService
-				.getListOfActiveParentsUnderLoanOfficer(personnelId,
-						customerLevel, officeId);
-		return activeParentUnderLoanOfficer;
 	}
 
 	/**
@@ -288,21 +267,21 @@ public class BulkEntryAction extends BaseAction {
 	 * types and product list associated with the center, and its children are
 	 * also retrieved
 	 */
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward get(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		try {
-			HttpSession session = request.getSession();
-			UserContext userContext = (UserContext) session
-					.getAttribute(Constants.USER_CONTEXT_KEY);
-			Date meetingDate = (Date) session.getAttribute("LastMeetingDate");
-			BulkEntryBO bulkEntry = (BulkEntryBO) session
+			UserContext userContext = getUserContext(request);
+			Date meetingDate = (Date) SessionUtils.getAttribute(
+					"LastMeetingDate", request);
+			BulkEntryBO bulkEntry = (BulkEntryBO) request.getSession()
 					.getAttribute(Constants.BUSINESS_KEY);
-			PersonnelView loanOfficer = getSelectedLO(session, form);
+			PersonnelView loanOfficer = getSelectedLO(request, form);
 			bulkEntry.setLoanOfficer(loanOfficer);
-			bulkEntry.setOffice(getSelectedBranchOffice(session, form));
-			bulkEntry.setPaymentType(getSelectedPaymentType(session, form));
-			CustomerView parentCustomer = getSelectedCustomer(session, form);
+			bulkEntry.setOffice(getSelectedBranchOffice(request, form));
+			bulkEntry.setPaymentType(getSelectedPaymentType(request, form));
+			CustomerView parentCustomer = getSelectedCustomer(request, form);
 			bulkEntry.buildBulkEntryView(parentCustomer);
 			bulkEntry.setLoanProducts(masterService
 					.getLoanProductsAsOfMeetingDate(meetingDate, parentCustomer
@@ -312,8 +291,9 @@ public class BulkEntryAction extends BaseAction {
 					.getSavingsProductsAsOfMeetingDate(meetingDate,
 							parentCustomer.getCustomerSearchId(), loanOfficer
 									.getPersonnelId()));
-			session.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry);
-			session
+			SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
+					request);
+			SessionUtils
 					.setAttribute(
 							BulkEntryConstants.CUSTOMERATTENDANCETYPES,
 							masterService
@@ -321,102 +301,21 @@ public class BulkEntryAction extends BaseAction {
 											MasterConstants.ATTENDENCETYPES,
 											userContext.getLocaleId(),
 											"org.mifos.application.master.business.CustomerAttendance",
-											"attendanceId").getLookUpMaster());
+											"attendanceId").getLookUpMaster(),
+							request);
 		} catch (Exception e) {
 		}
 		return mapping.findForward(BulkEntryConstants.GETSUCCESS);
 	}
 
-	/**
-	 * This method retrieves the loan officer which was selected from the list
-	 * of loan officers
-	 * 
-	 */
-	private PersonnelView getSelectedLO(HttpSession session, ActionForm form) {
-		BulkEntryActionForm bulkEntryForm = (BulkEntryActionForm) form;
-		Short personnelId = Short.valueOf(bulkEntryForm.getLoanOfficerId());
-		List<PersonnelView> loanOfficerList = (List<PersonnelView>) session
-				.getAttribute(CustomerConstants.LOAN_OFFICER_LIST);
-		for (PersonnelView loanOfficer : loanOfficerList) {
-			if (personnelId.shortValue() == loanOfficer.getPersonnelId()
-					.shortValue()) {
-				return loanOfficer;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * This method retrieves the branch office which was selected from the list
-	 * of branch offices
-	 * 
-	 */
-	private OfficeView getSelectedBranchOffice(HttpSession session,
-			ActionForm form) {
-		BulkEntryActionForm bulkEntryForm = (BulkEntryActionForm) form;
-		Short officeId = Short.valueOf(bulkEntryForm.getOfficeId());
-		List<OfficeView> branchList = (List<OfficeView>) session
-				.getAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST);
-		for (OfficeView branch : branchList) {
-			if (officeId.shortValue() == branch.getOfficeId().shortValue()) {
-				return branch;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * This method retrieves the parent customer which was selected from the
-	 * list of customers which belong to a particualr branch and have a
-	 * particular loan officer
-	 */
-	private CustomerView getSelectedCustomer(HttpSession session,
-			ActionForm form) {
-		int i = 0;
-		BulkEntryActionForm bulkEntryForm = (BulkEntryActionForm) form;
-		Integer customerId = Integer.valueOf(bulkEntryForm.getCustomerId());
-		List<CustomerView> parentCustomerList = (List<CustomerView>) session
-				.getAttribute(BulkEntryConstants.CUSTOMERSLIST);
-		for (i = 0; i < parentCustomerList.size(); i++) {
-			if (customerId.intValue() == parentCustomerList.get(i)
-					.getCustomerId().intValue()) {
-				break;
-			}
-		}
-		return parentCustomerList.get(i);
-	}
-
-	/**
-	 * This method retrieves the payment type which was selected from the list
-	 * of payement types
-	 */
-	private PaymentTypeView getSelectedPaymentType(HttpSession session,
-			ActionForm form) {
-		int i = 0;
-		BulkEntryActionForm bulkEntryForm = (BulkEntryActionForm) form;
-		Short paymentTypeId = Short.valueOf(bulkEntryForm.getPaymentId());
-		List<LookUpMaster> paymentTypeList = (List<LookUpMaster>) session
-				.getAttribute(BulkEntryConstants.PAYMENT_TYPES_LIST);
-		for (i = 0; i < paymentTypeList.size(); i++) {
-			if (paymentTypeId.shortValue() == paymentTypeList.get(i).getId()
-					.shortValue()) {
-				break;
-			}
-		}
-		PaymentTypeView paymentType = new PaymentTypeView();
-		paymentType.setPaymentTypeId(paymentTypeList.get(i).getId()
-				.shortValue());
-		paymentType
-				.setPaymentTypeValue(paymentTypeList.get(i).getLookUpValue());
-		return paymentType;
-	}
-
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return mapping.findForward(BulkEntryConstants.PREVIEWSUCCESS);
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward previous(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -434,12 +333,15 @@ public class BulkEntryAction extends BaseAction {
 				forward = BulkEntryConstants.LOADSUCCESS;
 			else if ("get".equals(input))
 				forward = BulkEntryConstants.GETSUCCESS;
+			else if ("preview".equals(input))
+				forward = BulkEntryConstants.PREVIEWSUCCESS;
 		}
 		if (null != forward)
 			return mapping.findForward(forward);
 		return null;
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -450,12 +352,12 @@ public class BulkEntryAction extends BaseAction {
 		List<String> customerAccountNums = new ArrayList<String>();
 		StringBuilder builder = new StringBuilder();
 		ActionErrors actionErrors = new ActionErrors();
-		HttpSession session = request.getSession();
-		UserContext userContext = (UserContext) session
-				.getAttribute(LoginConstants.USERCONTEXT);
-		BulkEntryBO bulkEntry = (BulkEntryBO) session
-				.getAttribute(BulkEntryConstants.BULKENTRY);
-		Date meetingDate = (Date) session.getAttribute("LastMeetingDate");
+
+		UserContext userContext = getUserContext(request);
+		BulkEntryBO bulkEntry = (BulkEntryBO) SessionUtils.getAttribute(
+				BulkEntryConstants.BULKENTRY, request);
+		Date meetingDate = (Date) SessionUtils.getAttribute("LastMeetingDate",
+				request);
 		Short personnelId = userContext.getId();
 		saveData(bulkEntry, personnelId, meetingDate, loanAccountNums,
 				savingsDepositAccountNums, savingsWithdrawalsAccountNums,
@@ -475,7 +377,7 @@ public class BulkEntryAction extends BaseAction {
 							.toString()));
 			request.setAttribute(Globals.ERROR_KEY, actionErrors);
 		}
-		//TO clear bulk entry cache in persistence service
+		// TO clear bulk entry cache in persistence service
 		bulkEntryService = null;
 		return mapping.findForward(BulkEntryConstants.CREATESUCCESS);
 	}
@@ -709,17 +611,135 @@ public class BulkEntryAction extends BaseAction {
 		}
 	}
 
+	private List<PersonnelView> loadLoanOfficersForBranch(
+			UserContext userContext, Short branchId) {
+		return masterService.getListOfActiveLoanOfficers(
+				PersonnelConstants.LOAN_OFFICER, branchId, userContext.getId(),
+				userContext.getLevelId());
+	}
+
+	/**
+	 * This method loads either the centers or groups under a particular loan
+	 * officer as this list of parent customer If the center hierarchy exists,
+	 * then the list of centers under the loan officer is retrieved as the list
+	 * of parent customers, else it is the list of groups.
+	 * 
+	 * @throws SystemException
+	 */
+	private List<CustomerView> loadCustomers(Short personnelId, Short officeId)
+			throws SystemException {
+		Short customerLevel;
+		if (Configuration.getInstance().getCustomerConfig(officeId)
+				.isCenterHierarchyExists())
+			customerLevel = new Short(CustomerConstants.CENTER_LEVEL_ID);
+		else
+			customerLevel = new Short(CustomerConstants.GROUP_LEVEL_ID);
+		List<CustomerView> activeParentUnderLoanOfficer = masterService
+				.getListOfActiveParentsUnderLoanOfficer(personnelId,
+						customerLevel, officeId);
+		return activeParentUnderLoanOfficer;
+	}
+
+	/**
+	 * This method retrieves the loan officer which was selected from the list
+	 * of loan officers
+	 * 
+	 * @throws PageExpiredException
+	 * 
+	 */
+	private PersonnelView getSelectedLO(HttpServletRequest request,
+			ActionForm form) throws PageExpiredException {
+		BulkEntryActionForm bulkEntryForm = (BulkEntryActionForm) form;
+		Short personnelId = Short.valueOf(bulkEntryForm.getLoanOfficerId());
+		List<PersonnelView> loanOfficerList = (List<PersonnelView>) SessionUtils
+				.getAttribute(CustomerConstants.LOAN_OFFICER_LIST, request);
+		for (PersonnelView loanOfficer : loanOfficerList) {
+			if (personnelId.shortValue() == loanOfficer.getPersonnelId()
+					.shortValue()) {
+				return loanOfficer;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * This method retrieves the branch office which was selected from the list
+	 * of branch offices
+	 * 
+	 * @throws PageExpiredException
+	 * 
+	 */
+	private OfficeView getSelectedBranchOffice(HttpServletRequest request,
+			ActionForm form) throws PageExpiredException {
+		BulkEntryActionForm bulkEntryForm = (BulkEntryActionForm) form;
+		Short officeId = Short.valueOf(bulkEntryForm.getOfficeId());
+		List<OfficeView> branchList = (List<OfficeView>) SessionUtils
+				.getAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST, request);
+		for (OfficeView branch : branchList) {
+			if (officeId.shortValue() == branch.getOfficeId().shortValue()) {
+				return branch;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * This method retrieves the parent customer which was selected from the
+	 * list of customers which belong to a particualr branch and have a
+	 * particular loan officer
+	 * 
+	 * @throws PageExpiredException
+	 */
+	private CustomerView getSelectedCustomer(HttpServletRequest request,
+			ActionForm form) throws PageExpiredException {
+		int i = 0;
+		BulkEntryActionForm bulkEntryForm = (BulkEntryActionForm) form;
+		Integer customerId = Integer.valueOf(bulkEntryForm.getCustomerId());
+		List<CustomerView> parentCustomerList = (List<CustomerView>) SessionUtils
+				.getAttribute(BulkEntryConstants.CUSTOMERSLIST, request);
+		for (i = 0; i < parentCustomerList.size(); i++) {
+			if (customerId.intValue() == parentCustomerList.get(i)
+					.getCustomerId().intValue()) {
+				break;
+			}
+		}
+		return parentCustomerList.get(i);
+	}
+
+	/**
+	 * This method retrieves the payment type which was selected from the list
+	 * of payement types
+	 * 
+	 * @throws PageExpiredException
+	 */
+	private PaymentTypeView getSelectedPaymentType(HttpServletRequest request,
+			ActionForm form) throws PageExpiredException {
+		int i = 0;
+		BulkEntryActionForm bulkEntryForm = (BulkEntryActionForm) form;
+		Short paymentTypeId = Short.valueOf(bulkEntryForm.getPaymentId());
+		List<LookUpMaster> paymentTypeList = (List<LookUpMaster>) SessionUtils
+				.getAttribute(BulkEntryConstants.PAYMENT_TYPES_LIST, request);
+		for (i = 0; i < paymentTypeList.size(); i++) {
+			if (paymentTypeId.shortValue() == paymentTypeList.get(i).getId()
+					.shortValue()) {
+				break;
+			}
+		}
+		PaymentTypeView paymentType = new PaymentTypeView();
+		paymentType.setPaymentTypeId(paymentTypeList.get(i).getId()
+				.shortValue());
+		paymentType
+				.setPaymentTypeValue(paymentTypeList.get(i).getLookUpValue());
+		return paymentType;
+	}
+
 	protected Locale getUserLocale(HttpServletRequest request) {
 		Locale locale = null;
-		HttpSession session = request.getSession();
-		if (session != null) {
-			UserContext userContext = (UserContext) session
-					.getAttribute(LoginConstants.USERCONTEXT);
-			if (null != userContext) {
-				locale = userContext.getPereferedLocale();
-				if (null == locale) {
-					locale = userContext.getMfiLocale();
-				}
+		UserContext userContext = getUserContext(request);
+		if (null != userContext) {
+			locale = userContext.getPereferedLocale();
+			if (null == locale) {
+				locale = userContext.getMfiLocale();
 			}
 		}
 		return locale;

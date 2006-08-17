@@ -43,7 +43,6 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
@@ -57,9 +56,11 @@ import org.mifos.application.master.util.valueobjects.LookUpMaster;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.SessionUtils;
 
 public class BulkEntryTag extends BodyTagSupport {
 
@@ -67,20 +68,24 @@ public class BulkEntryTag extends BodyTagSupport {
 
 		HttpServletRequest request = (HttpServletRequest) pageContext
 				.getRequest();
-		HttpSession session = pageContext.getSession();
 		JspWriter out = pageContext.getOut();
 
 		StringBuilder builder = new StringBuilder();
-		BulkEntryBO bulkEntry = (BulkEntryBO) session
-				.getAttribute(BulkEntryConstants.BULKENTRY);
+		BulkEntryBO bulkEntry = null;
+		try {
+			bulkEntry = (BulkEntryBO) SessionUtils.getAttribute(
+					BulkEntryConstants.BULKENTRY, request);
+		} catch (PageExpiredException e) {
+		}
 		if (null != bulkEntry) {
 			List<PrdOfferingBO> loanProducts = bulkEntry.getLoanProducts();
 			List<PrdOfferingBO> savingsProducts = bulkEntry
 					.getSavingsProducts();
 			try {
-				List<LookUpMaster> custAttTypes = (List<LookUpMaster>) request
-						.getSession().getAttribute(
-								BulkEntryConstants.CUSTOMERATTENDANCETYPES);
+				List<LookUpMaster> custAttTypes = (List<LookUpMaster>) SessionUtils
+						.getAttribute(
+								BulkEntryConstants.CUSTOMERATTENDANCETYPES,
+								request);
 				String method = request.getParameter(BulkEntryConstants.METHOD);
 				generateTagData(bulkEntry, loanProducts, savingsProducts,
 						custAttTypes, method, builder);

@@ -42,11 +42,13 @@
 
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
+<%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@taglib uri="/mifos/bulkentrytags" prefix="bulkentry"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
@@ -75,6 +77,7 @@
 		</script>
 		<script SRC="pages/framework/js/CommonUtilities.js"></script>
 		<html-el:form action="/bulkentryaction" onsubmit="return fun_submit();">
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BulkEntry')}" var="BulkEntry" />
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
@@ -99,7 +102,7 @@
 														<td class="timelineboldgray">
 															<mifos:mifoslabel name="bulkEntry.select" />
 															<c:choose>
-																<c:when test="${sessionScope.isCenterHeirarchyExists==Constants.YES}">
+																<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
 																	<mifos:mifoslabel name="${LABEL_CENTER}" />
 																</c:when>
 																<c:otherwise>
@@ -153,14 +156,14 @@
 													<tr>
 														<td>
 															<span class="fontnormalbold"> <c:choose>
-																	<c:when test="${sessionScope.isCenterHeirarchyExists==Constants.YES}">
+																	<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
 																		<mifos:mifoslabel name="${LABEL_CENTER}" />
 																	</c:when>
 																	<c:otherwise>
 																		<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
 																	</c:otherwise>
-																</c:choose>: <c:out value="${sessionScope.BulkEntry.bulkEntryParent.customerDetail.displayName}" /><br> <mifos:mifoslabel name="bulkEntry.dateoftrxn" />: <c:out
-																	value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BulkEntry.transactionDate)}' /> </span>
+																</c:choose>: <c:out value="${BulkEntry.bulkEntryParent.customerDetail.displayName}" /><br> <mifos:mifoslabel name="bulkEntry.dateoftrxn" />: <c:out
+																	value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BulkEntry.transactionDate)}' /> </span>
 														</td>
 													</tr>
 												</table>
@@ -173,28 +176,30 @@
 														<td width="207" class="fontnormal">
 															<mifos:mifoslabel name="${LABEL_BRANCHOFFICE}" />
 															:
-															<c:out value="${sessionScope.BulkEntry.office.officeName}" />
+															<c:out value="${BulkEntry.office.officeName}" />
 															<br>
 															<mifos:mifoslabel name="bulkEntry.loanofficer" />
 															:
-															<c:out value="${sessionScope.BulkEntry.loanOfficer.displayName}" />
+															<c:out value="${BulkEntry.loanOfficer.displayName}" />
 														</td>
 														<td width="383" class="fontnormal">
 															<mifos:mifoslabel name="bulkEntry.pmnttype" />
 															:
-															<%--mifoscustom:lookUpValue
-										id="${sessionScope.BulkEntry.paymentType.paymentTypeId}"
-										searchResultName="PaymentTypesList"
-										mapToSeperateMasterTable="true">
-									</mifoscustom:lookUpValue--%>
-															<c:out value="${sessionScope.BulkEntry.paymentType.paymentTypeValue}" />
-															<table><tr id="BulkEntry.ReceiptId"><td class="fontnormal">
-															<mifos:mifoslabel name="bulkEntry.rcptid" keyhm="BulkEntry.ReceiptId" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
-															<c:out value="${sessionScope.BulkEntry.receiptId}" />
-															</td></tr><tr id="BulkEntry.ReceiptDate"><td class="fontnormal">
-															<mifos:mifoslabel name="bulkEntry.rcptdate" keyhm="BulkEntry.ReceiptDate" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
-															<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BulkEntry.receiptDate)}" />
-															</td></tr></table>
+															<c:out value="${BulkEntry.paymentType.paymentTypeValue}" />
+															<table>
+																<tr id="BulkEntry.ReceiptId">
+																	<td class="fontnormal">
+																		<mifos:mifoslabel name="bulkEntry.rcptid" keyhm="BulkEntry.ReceiptId" isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />
+																		<c:out value="${BulkEntry.receiptId}" />
+																	</td>
+																</tr>
+																<tr id="BulkEntry.ReceiptDate">
+																	<td class="fontnormal">
+																		<mifos:mifoslabel name="bulkEntry.rcptdate" keyhm="BulkEntry.ReceiptDate" isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />
+																		<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BulkEntry.receiptDate)}" />
+																	</td>
+																</tr>
+															</table>
 														</td>
 													</tr>
 												</table>
@@ -206,14 +211,14 @@
 												<mifos:mifoslabel name="bulkEntry.prevdataclisub" />
 												<mifos:mifoslabel name="bulkEntry.clickcanc" />
 												<br>
-												<%--span class="fontnormalRed">
-									Warning: Penalty has been added to
-									some of these accounts. If you still want to save the
-									transactions click submit.</span--%>
 											</td>
 										</tr>
 									</table>
 									<br>
+									<logic:messagesPresent>
+										<font class="fontnormalRedBold"> <html-el:errors bundle="bulkEntryUIResources" /> </font>
+										<br>
+									</logic:messagesPresent>
 									<bulkentry:bulkentrytag />
 									<br>
 									<table width="97%" border="0" cellpadding="0" cellspacing="0">
@@ -231,6 +236,8 @@
 										</tr>
 									</table>
 									<html-el:hidden property="method" value="create" />
+									<html-el:hidden property="input" value="preview" />
+									<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 									<br>
 									<table width="97%" border="0" cellpadding="0" cellspacing="0">
 										<tr>

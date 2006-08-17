@@ -658,13 +658,17 @@
 			<forward name="preview_failure" path="/pages/application/fees/jsp/feescreate.jsp" />
 			<forward name="preview_success" path="/pages/application/fees/jsp/previewfeescreate.jsp" />
 			<forward name="previous_success" path="/pages/application/fees/jsp/feescreate.jsp" />
+			<forward name="previous_failure" path="/pages/application/fees/jsp/previewfeescreate.jsp" />
 			<forward name="create_success" path="/pages/application/fees/jsp/CreateFeesConfirmation.jsp" />
+			<forward name="create_failure" path="/pages/application/fees/jsp/previewfeescreate.jsp" />
 			<forward name="admin" path="/pages/application/fees/jsp/admin.jsp" />
 			<forward name="manage_success" path="/pages/application/fees/jsp/feesedit.jsp" />
 			<forward name="editpreview_success" path="/pages/application/fees/jsp/previewfeesedit.jsp" />
 			<forward name="editpreview_failure" path="/pages/application/fees/jsp/feesedit.jsp" />
 			<forward name="editprevious_success" path="/pages/application/fees/jsp/feesedit.jsp" />
+			<forward name="editprevious_failure" path="/pages/application/fees/jsp/previewfeesedit.jsp" />
 			<forward name="update_success" path="/feeaction.do?method=get" />
+			<forward name="update_failure" path="/pages/application/fees/jsp/previewfeesedit.jsp" />
 			<forward name="get_success" path="/pages/application/fees/jsp/FeeDetails.jsp" />
 			<forward name="viewAll_success" path="/pages/application/fees/jsp/ViewEditFees.jsp" />
 		</action>
@@ -1049,7 +1053,7 @@
 		
 	</action-mappings>
 
-	<controller nocache="true" processorClass="org.mifos.framework.struts.action.MifosRequestProcessor" contentType="text/html; charset=UTF-8"></controller>
+	<controller nocache="false" processorClass="org.mifos.framework.struts.action.MifosRequestProcessor" contentType="text/html; charset=UTF-8"></controller>
 
 	<message-resources key="UIResources" parameter="org.mifos.framework.util.resources.UIResources" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />
 	<message-resources key="LoggerResources" parameter="org.mifos.framework.util.resources.loggerresources.LoggerStatements" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />

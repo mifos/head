@@ -1,7 +1,7 @@
 <!--
 /**
 
-* PreviewFeeDetails.jsp    version: 1.0
+* Previewfeesedit.jsp    version: 1.0
 
 
 
@@ -43,6 +43,7 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
@@ -53,7 +54,7 @@
 			function fnOnCancel(Id){
 				document.feeactionform.method.value="get";
 				document.feeactionform.feeIdTemp.value=Id;
-				document.feeactionform.action="feesAction.do";
+				document.feeactionform.action="feeaction.do";
 				document.feeactionform.submit();
 			}
 			function fnOnAdmin(form){
@@ -72,12 +73,13 @@
 				form.submit();
 			}
 			function fnOnView(form){
-				form.method.value="search";
-				form.action="feesAction.do";
+				form.method.value="viewAll";
+				form.action="feeaction.do";
 				form.submit();
 			}
 		</script>
 		<html-el:form action="/feeaction.do" onsubmit="return func_disableSubmitBtn('submitBtn');">
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -87,8 +89,8 @@
 							</html-el:link> / <html-el:link href="javascript:fnOnView(feeactionform)">
 								<mifos:mifoslabel name="Fees.viewfees">
 								</mifos:mifoslabel>
-							</html-el:link> / <html-el:link href="javascript:fnOnCancel(${sessionScope.BusinessKey.feeId})">
-								<c:out value="${sessionScope.BusinessKey.feeName}" />
+							</html-el:link> / <html-el:link href="javascript:fnOnCancel(${BusinessKey.feeId})">
+								<c:out value="${BusinessKey.feeName}" />
 							</html-el:link> </span>
 					</td>
 				</tr>
@@ -99,7 +101,7 @@
 						<table width="93%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
 								<td class="headingorange">
-									<span class="heading"> <c:out value="${sessionScope.BusinessKey.feeName}" /> - </span>
+									<span class="heading"> <c:out value="${BusinessKey.feeName}" /> - </span>
 									<mifos:mifoslabel name="Fees.previewfeeinformation">
 									</mifos:mifoslabel>
 								</td>
@@ -121,7 +123,7 @@
 							<tr>
 								<td width="100%" height="23" class="fontnormal">
 									<span class="fontnormalbold"> <c:choose>
-											<c:when test="${sessionScope.BusinessKey.feeType.value==RateAmountFlag.RATE.value}">
+											<c:when test="${BusinessKey.feeType.value==RateAmountFlag.RATE.value}">
 												<mifos:mifoslabel name="Fees.amountcalculatedas" />
 											</c:when>
 											<c:otherwise>
@@ -129,10 +131,10 @@
 											</c:otherwise>
 										</c:choose> </span>
 									<c:choose>
-										<c:when test="${sessionScope.BusinessKey.feeType.value==RateAmountFlag.RATE.value}">
+										<c:when test="${BusinessKey.feeType.value==RateAmountFlag.RATE.value}">
 											<c:out value="${sessionScope.feeactionform.rate}" />
 											<mifos:mifoslabel name="Fees.ofa" />
-											<c:out value="${sessionScope.BusinessKey.feeFormula.name}"/>
+											<c:out value="${BusinessKey.feeFormula.name}" />
 										</c:when>
 										<c:otherwise>
 											<c:out value="${sessionScope.feeactionform.amount}" />
@@ -140,7 +142,7 @@
 									</c:choose>
 									<br>
 									<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.status" /> </span>
-									<c:forEach var="entity" items="${sessionScope.StatusList}">
+									<c:forEach var="entity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'StatusList')}">
 										<c:if test="${entity.id == sessionScope.feeactionform.feeStatus}">
 											<c:out value="${entity.name}" />
 										</c:if>
@@ -171,14 +173,15 @@
 										<mifos:mifoslabel name="Fees.submit" />
 									</html-el:submit>
 									&nbsp;
-									<html-el:button property="cancelBtn" styleClass="cancelbuttn" style="width:65px" onclick="javascript:fnOnCancel(${sessionScope.BusinessKey.feeId})">
+									<html-el:button property="cancelBtn" styleClass="cancelbuttn" style="width:65px" onclick="javascript:fnOnCancel(${BusinessKey.feeId})">
 										<mifos:mifoslabel name="Fees.cancel" />
 									</html-el:button>
 								</td>
 							</tr>
 							<html-el:hidden property="method" value="update" />
 							<html-el:hidden property="input" value="previewEditFees" />
-							<html-el:hidden property="feeIdTemp" value="${sessionScope.BusinessKey.feeId}" />
+							<html-el:hidden property="feeIdTemp" value="${BusinessKey.feeId}" />
+							<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 						</table>
 						<br>
 					</td>

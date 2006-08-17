@@ -44,7 +44,7 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
 		<script src="pages/application/fees/js/Fees.js"></script>
@@ -138,7 +138,9 @@
 											</td>
 											<td valign="top">
 												<mifos:select property="categoryType" style="width:136px;" onchange="onPageLoad();">
-													<html-el:options property="id" labelProperty="name" collection="CategoryList" />
+													<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CategoryList')}" var="category">
+														<html-el:option value="${category.id}">${category.name}</html-el:option>
+													</c:forEach>
 												</mifos:select>
 											</td>
 										</tr>
@@ -155,18 +157,16 @@
 												<mifos:mifoslabel name="Fees.frequency" mandatory="yes" />
 											</td>
 											<td valign="top">
-
 												<html-el:radio property="feeFrequencyType" value="${FeeFrequencyType.PERIODIC.value}" onclick="onPageLoad();">
-													<c:forEach var="entity" items="${sessionScope.feeFrequencyTypeList}">
+													<c:forEach var="entity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'feeFrequencyTypeList')}">
 														<c:if test="${entity.id == FeeFrequencyType.PERIODIC.value}">
 															<c:out value="${entity.name}" />
 														</c:if>
 													</c:forEach>
 												</html-el:radio>
-
 												<br>
 												<html-el:radio property="feeFrequencyType" value="${FeeFrequencyType.ONETIME.value}" onclick="onPageLoad();">
-													<c:forEach var="entity" items="${sessionScope.feeFrequencyTypeList}">
+													<c:forEach var="entity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'feeFrequencyTypeList')}">
 														<c:if test="${entity.id == FeeFrequencyType.ONETIME.value}">
 															<c:out value="${entity.name}" />
 														</c:if>
@@ -184,12 +184,16 @@
 													<br>
 													<div id="loanTimeOfChargeDiv">
 														<mifos:select property="loanCharge" style="width:180px;">
-															<html-el:options property="id" labelProperty="name" collection="TimeOfCharges" />
+															<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'TimeOfCharges')}" var="timeOfcharge">
+																<html-el:option value="${timeOfcharge.id}">${timeOfcharge.name}</html-el:option>
+															</c:forEach>
 														</mifos:select>
 													</div>
 													<div id="customerTimeOfChargeDiv">
 														<mifos:select property="customerCharge" style="width:180px;">
-															<html-el:options property="id" labelProperty="name" collection="CustomerTimeOfCharges" />
+															<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CustomerTimeOfCharges')}" var="customerTimeOfCharge">
+																<html-el:option value="${customerTimeOfCharge.id}">${customerTimeOfCharge.name}</html-el:option>
+															</c:forEach>
 														</mifos:select>
 													</div>
 												</div>
@@ -225,7 +229,7 @@
 																		<tr class="fontnormal">
 																			<td colspan="4">
 																				<mifos:mifoslabel name="Fees.labelRecurEvery" />
-																				<mifos:mifosnumbertext property="weekRecurAfter" size="3" maxlength="3"/>
+																				<mifos:mifosnumbertext property="weekRecurAfter" size="3" maxlength="3" />
 																				<mifos:mifoslabel name="Fees.labelWeeks" />
 																			</td>
 																		</tr>
@@ -238,7 +242,7 @@
 																		<tr class="fontnormal">
 																			<td>
 																				<mifos:mifoslabel name="Fees.labelRecurEvery" />
-																				<mifos:mifosnumbertext property="monthRecurAfter" size="3" maxlength="3"/>
+																				<mifos:mifosnumbertext property="monthRecurAfter" size="3" maxlength="3" />
 																				<mifos:mifoslabel name="Fees.labelMonths" />
 																			</td>
 																		</tr>
@@ -296,7 +300,9 @@
 																<mifos:mifosdecimalinput property="rate" size="3" decimalFmt="10.5"></mifos:mifosdecimalinput>
 																<mifos:mifoslabel name="Fees.percentof" />
 																<mifos:select property="feeFormula" style="width:136px;">
-																	<html-el:options property="id" labelProperty="name" collection="FormulaList" />
+																	<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'FormulaList')}" var="formula">
+																		<html-el:option value="${formula.id}">${formula.name}</html-el:option>
+																	</c:forEach>
 																</mifos:select>
 															</td>
 															<td width="17%">
@@ -329,7 +335,9 @@
 											</td>
 											<td valign="top">
 												<mifos:select property="glCode" style="width:136px;">
-													<html-el:options collection="glCodeList" property="glcodeId" labelProperty="glcode"></html-el:options>
+													<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'glCodeList')}" var="glCode">
+														<html-el:option value="${glCode.glcodeId}">${glCode.glcode}</html-el:option>
+													</c:forEach>
 												</mifos:select>
 											</td>
 										</tr>
@@ -359,6 +367,7 @@
 											</td>
 										</tr>
 										<html-el:hidden property="method" value="preview" />
+										<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 									</table>
 									<br>
 								</td>

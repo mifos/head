@@ -49,6 +49,7 @@
 <%@taglib uri="/mifos/bulkentrytags" prefix="bulkentry"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
@@ -56,6 +57,7 @@
 		<script SRC="pages/application/bulkentry/js/BulkEntry.js"></script>
 
 		<html-el:form action="/bulkentryaction">
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BulkEntry')}" var="BulkEntry" />
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td align="left" valign="top" bgcolor="#FFFFFF">
@@ -80,7 +82,7 @@
 														<td class="timelineboldgray">
 															<mifos:mifoslabel name="bulkEntry.select" />
 															<c:choose>
-																<c:when test="${sessionScope.isCenterHeirarchyExists==Constants.YES}">
+																<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
 																	<mifos:mifoslabel name="${LABEL_CENTER}" />
 																</c:when>
 																<c:otherwise>
@@ -137,7 +139,7 @@
 													<tr>
 														<td class="fontnormalbold">
 															<c:choose>
-																<c:when test="${sessionScope.isCenterHeirarchyExists==Constants.YES}">
+																<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
 																	<mifos:mifoslabel name="${LABEL_CENTER}" />
 																</c:when>
 																<c:otherwise>
@@ -145,11 +147,11 @@
 																</c:otherwise>
 															</c:choose>
 															:
-															<c:out value="${sessionScope.BulkEntry.bulkEntryParent.customerDetail.displayName}" />
+															<c:out value="${BulkEntry.bulkEntryParent.customerDetail.displayName}" />
 															<br>
 															<mifos:mifoslabel name="bulkEntry.dateoftrxn" />
 															:
-															<c:out value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BulkEntry.transactionDate)}' />
+															<c:out value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BulkEntry.transactionDate)}' />
 
 														</td>
 													</tr>
@@ -163,30 +165,31 @@
 														<td width="207" class="fontnormal">
 															<mifos:mifoslabel name="${LABEL_BRANCHOFFICE}" />
 															:
-															<c:out value="${sessionScope.BulkEntry.office.officeName}" />
+															<c:out value="${BulkEntry.office.officeName}" />
 															<br>
 															<mifos:mifoslabel name="bulkEntry.loanofficer" />
 															:
-															<c:out value="${sessionScope.BulkEntry.loanOfficer.displayName}" />
+															<c:out value="${BulkEntry.loanOfficer.displayName}" />
 														</td>
 														<td width="383" class="fontnormal">
 															<mifos:mifoslabel name="bulkEntry.pmnttype" />
 															:
-															<%--c:out
-												value="${sessionScope.BulkEntry.paymentType.paymentTypeId}" /--%>
-															<c:out value="${sessionScope.BulkEntry.paymentType.paymentTypeValue}" />
-															<%--mifoscustom:lookUpValue
-										id="${sessionScope.BulkEntry.paymentType.paymentTypeId}"
-										searchResultName="PaymentTypesList"
-										mapToSeperateMasterTable="true">
-									</mifoscustom:lookUpValue--%>
-															<table><tr id="BulkEntry.ReceiptId"><td class="fontnormal">
-															<mifos:mifoslabel name="bulkEntry.rcptid" keyhm="BulkEntry.ReceiptId" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
-															<c:out value="${sessionScope.BulkEntry.receiptId}" />
-															</td></tr><tr id="BulkEntry.ReceiptDate"><td class="fontnormal">
-															<mifos:mifoslabel name="bulkEntry.rcptdate" keyhm="BulkEntry.ReceiptDate" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
-															<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BulkEntry.receiptDate)}" />
-															</td></tr></table>
+
+															<c:out value="${BulkEntry.paymentType.paymentTypeValue}" />
+															<table>
+																<tr id="BulkEntry.ReceiptId">
+																	<td class="fontnormal">
+																		<mifos:mifoslabel name="bulkEntry.rcptid" keyhm="BulkEntry.ReceiptId" isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />
+																		<c:out value="${BulkEntry.receiptId}" />
+																	</td>
+																</tr>
+																<tr id="BulkEntry.ReceiptDate">
+																	<td class="fontnormal">
+																		<mifos:mifoslabel name="bulkEntry.rcptdate" keyhm="BulkEntry.ReceiptDate" isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />
+																		<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BulkEntry.receiptDate)}" />
+																	</td>
+																</tr>
+															</table>
 														</td>
 													</tr>
 												</table>
@@ -208,6 +211,7 @@
 									</table>
 									<html-el:hidden property="method" value="preview" />
 									<html-el:hidden property="input" value="get" />
+									<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 									<br>
 									<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>

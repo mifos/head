@@ -43,6 +43,7 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 		<script>
@@ -94,7 +95,7 @@
 											class="fontnormalRedBold"> <html-el:errors bundle="FeesUIResources" /> </font> </span> </span> <span class="fontnormalbold"> <span class="fontnormalbold"> <mifos:mifoslabel name="Fees.productfees" bundle="FeesUIResources">
 											</mifos:mifoslabel><br> </span> </span> <span class="fontnormalbold"> </span>
 									<table width="90%" border="0" cellspacing="0" cellpadding="0">
-										<c:forEach var="productFee" items="${sessionScope.productFees}" >
+										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'productFees')}" var="productFee">
 											<tr class="fontnormal">
 												<td width="1%">
 													<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
@@ -109,7 +110,7 @@
 													<c:if test="${productFee.feeStatus.id == FeeStatus.INACTIVE.value}">
 														<img src="pages/framework/images/status_closedblack.gif" width="8" height="9">&nbsp;
 															<%--<mifos:mifoslabel name="Fees.inactive" bundle="FeesUIResources" />--%>
-															<c:out value="${productFee.feeStatus.name}"/>
+														<c:out value="${productFee.feeStatus.name}" />
 													</c:if>
 												</td>
 											</tr>
@@ -121,7 +122,7 @@
 									<br>
 
 									<table width="90%" border="0" cellspacing="0" cellpadding="0">
-										<c:forEach var="clientFee" items="${sessionScope.customerFees}" >
+										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customerFees')}" var="clientFee">
 											<tr class="fontnormal">
 												<td width="1%">
 													<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
@@ -135,7 +136,7 @@
 													)
 													<c:if test="${clientFee.feeStatus.id == FeeStatus.INACTIVE.value}">
 														<img src="pages/framework/images/status_closedblack.gif" width="8" height="9">&nbsp;
-														<c:out value="${clientFee.feeStatus.name}"/>
+														<c:out value="${clientFee.feeStatus.name}" />
 													</c:if>
 												</td>
 											</tr>

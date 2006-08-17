@@ -61,6 +61,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.MifosBaseAction;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ExceptionConstants;
+import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.framework.util.valueobjects.Context;
 
@@ -228,6 +229,7 @@ public class MifosLoginAction extends MifosBaseAction {
 		
 		request.getSession(false).setAttribute(LoginConstants.USERCONTEXT,userContext);
 		request.getSession(false).setAttribute(LoginConstants.ACTIVITYCONTEXT,ac);
+		request.getSession(false).setAttribute(Constants.FLOWMANAGER,new FlowManager());
 		
 		return userContext;
 	}

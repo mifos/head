@@ -43,21 +43,20 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.helpers.FeeFormula;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.FeeStatus;
-import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
+import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
 
-public class FeeActionForm extends ValidatorActionForm {
+public class FeeActionForm extends BaseActionForm {
 	private String feeId;
 
 	private String feeName;
@@ -95,7 +94,7 @@ public class FeeActionForm extends ValidatorActionForm {
 	public Short getFeeIdValue() {
 		return getShortValue(feeId);
 	}
-	
+
 	public void setFeeId(String feeId) {
 		this.feeId = feeId;
 	}
@@ -299,6 +298,11 @@ public class FeeActionForm extends ValidatorActionForm {
 			HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();
 		String methodCalled = request.getParameter(Methods.method.toString());
+		if (!methodCalled.equals(Methods.validate.toString()))
+			request.setAttribute("methodCalled", methodCalled);
+		else
+			request.setAttribute("methodCalled", request
+					.getAttribute("methodCalled"));
 		if (null != methodCalled) {
 			if (methodCalled.equals(Methods.preview.toString())) {
 				errors.add(super.validate(mapping, request));
@@ -308,11 +312,9 @@ public class FeeActionForm extends ValidatorActionForm {
 				validateForEditPreview(errors);
 			}
 		}
-		
-		if (null != errors && !errors.isEmpty()) {
+
+		if (null != errors && !errors.isEmpty())
 			request.setAttribute(Globals.ERROR_KEY, errors);
-			request.setAttribute("methodCalled", methodCalled);
-		}
 		return errors;
 	}
 
@@ -320,26 +322,32 @@ public class FeeActionForm extends ValidatorActionForm {
 		if (StringUtils.isNullAndEmptySafe(categoryType) && isCategoryLoan()) {
 			validateForPreviewLoanCategory(errors);
 		} else if (getAmountValue().equals(new Money())) {
-			addError(errors, FeeConstants.AMOUNT, FeeConstants.ERRORS_SPECIFY_VALUE);
+			addError(errors, FeeConstants.AMOUNT,
+					FeeConstants.ERRORS_SPECIFY_VALUE);
 		}
 	}
 
 	private void validateForPreviewLoanCategory(ActionErrors errors) {
 		if (isBothRateAndAmountEmpty() || isBothRateAndAmountNotEmpty())
-			addError(errors, FeeConstants.RATE_OR_AMOUNT, FeeConstants.ERRORS_SPECIFY_AMOUNT_OR_RATE);
+			addError(errors, FeeConstants.RATE_OR_AMOUNT,
+					FeeConstants.ERRORS_SPECIFY_AMOUNT_OR_RATE);
 		if (isRateEmptyAndFormulaNotNull() || isRateNotEmptyAndFormulaNull())
-			addError(errors, FeeConstants.RATE_AND_FORMULA, FeeConstants.ERRORS_SPECIFY_RATE_AND_FORMULA);
+			addError(errors, FeeConstants.RATE_AND_FORMULA,
+					FeeConstants.ERRORS_SPECIFY_RATE_AND_FORMULA);
 	}
 
 	private void validateForEditPreview(ActionErrors errors) {
 		if (StringUtils.isNullAndEmptySafe(feeFormula)) {
 			if (!StringUtils.isNullAndEmptySafe(rate))
-				addError(errors, FeeConstants.RATE_AND_FORMULA, FeeConstants.ERRORS_SPECIFY_RATE_AND_FORMULA);
+				addError(errors, FeeConstants.RATE_AND_FORMULA,
+						FeeConstants.ERRORS_SPECIFY_RATE_AND_FORMULA);
 		} else if (!StringUtils.isNullAndEmptySafe(amount))
-			addError(errors, FeeConstants.AMOUNT, FeeConstants.ERRORS_SPECIFY_VALUE);
+			addError(errors, FeeConstants.AMOUNT,
+					FeeConstants.ERRORS_SPECIFY_VALUE);
 
 		if (getFeeStatusValue() == null)
-			addError(errors, FeeConstants.AMOUNT, FeeConstants.ERRORS_SELECT_STATUS);
+			addError(errors, FeeConstants.AMOUNT,
+					FeeConstants.ERRORS_SELECT_STATUS);
 	}
 
 	private boolean isBothRateAndAmountEmpty() {
@@ -362,20 +370,5 @@ public class FeeActionForm extends ValidatorActionForm {
 	private boolean isRateNotEmptyAndFormulaNull() {
 		return (StringUtils.isNullAndEmptySafe(rate) && !StringUtils
 				.isNullAndEmptySafe(feeFormula));
-	}
-
-	private void addError(ActionErrors errors, String property, String key,
-			String... arg) {
-		errors.add(property, new ActionMessage(key, arg));
-	}
-
-	private Short getShortValue(String str) {
-		return StringUtils.isNullAndEmptySafe(str) ? Short.valueOf(str) : null;
-	}
-
-	private Money getMoney(String str) {
-		return (StringUtils.isNullAndEmptySafe(str) && !str.trim().equals(".")) ? new Money(
-				str)
-				: new Money();
 	}
 }

@@ -108,4 +108,7 @@ public interface Constants {
 	public static final String BUSINESS_KEY="BusinessKey";
 	
 	public static final String FIELD_CONFIGURATION="FieldConfiguration";
+	
+	public static final String CURRENTFLOWKEY="currentFlowKey";
+	public static final String FLOWMANAGER="flowManager";
 }

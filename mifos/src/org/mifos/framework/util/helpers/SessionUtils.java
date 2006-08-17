@@ -39,10 +39,12 @@ package org.mifos.framework.util.helpers;
 
 import java.util.Enumeration;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.exceptions.PageExpiredException;
 
 /**
  * This class has helper methods to set attributes in session and retrieve them.
@@ -193,5 +195,31 @@ public class SessionUtils {
 	 */
 	public static void doCleanUp(HttpSession session){
 		session.invalidate();
+	}
+	
+	public static void setAttribute(String key, Object value,
+			HttpServletRequest request) throws PageExpiredException {
+		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+				"An attribute being set in the session with key being " + key);
+		String currentFlowKey = (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY);
+		HttpSession session = request.getSession();
+		FlowManager flowManager = (FlowManager) session
+				.getAttribute(Constants.FLOWMANAGER);
+		flowManager.addToFlow(currentFlowKey, key, value);
+
+	}
+
+	public static Object getAttribute(String key, HttpServletRequest request)
+			throws PageExpiredException {
+		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+				"The key to be compared is   " + key);
+
+		String currentFlowKey = (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY);
+		HttpSession session = request.getSession();
+		FlowManager flowManager = (FlowManager) session
+				.getAttribute(Constants.FLOWMANAGER);
+		return flowManager.getFromFlow(currentFlowKey, key);
 	}
 }

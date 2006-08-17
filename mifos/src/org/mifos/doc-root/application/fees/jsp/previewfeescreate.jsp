@@ -44,6 +44,8 @@
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
+
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
 		<script src="pages/framework/js/CommonUtilities.js"></script>
@@ -134,7 +136,7 @@
 												<c:out value="${sessionScope.feeactionform.feeName}" />
 												<br>
 												<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.feeappliesto" /> </span>
-												<c:forEach var="entity" items="${sessionScope.CategoryList}">
+												<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CategoryList')}" var="entity">
 													<c:if test="${entity.id == sessionScope.feeactionform.categoryType}">
 														<c:out value="${entity.name}" />
 													</c:if>
@@ -157,7 +159,7 @@
 												</c:choose>
 
 												<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.frequency" /> </span>
-												<c:forEach var="entity" items="${sessionScope.feeFrequencyTypeList}">
+												<c:forEach var="entity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'feeFrequencyTypeList')}">
 													<c:if test="${entity.id == sessionScope.feeactionform.feeFrequencyType}">
 														<c:out value="${entity.name}" />
 													</c:if>
@@ -178,8 +180,7 @@
 													</c:when>
 													<c:otherwise>
 														<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.timeToCharge" /> </span>
-
-														<c:forEach var="entity" items="${sessionScope.TimeOfCharges}">
+														<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'TimeOfCharges')}" var="entity">
 															<c:if test="${entity.id == sessionScope.feeactionform.feePaymentType}">
 																<c:out value="${entity.name}" />
 															</c:if>
@@ -202,16 +203,16 @@
 												</c:choose>
 												<c:if test="${sessionScope.feeactionform.rateFee==true}">
 													<mifos:mifoslabel name="Fees.ofa" />
-													<c:forEach var="entity" items="${sessionScope.FormulaList}">
-															<c:if test="${entity.id == sessionScope.feeactionform.feeFormula}">
-																<c:out value="${entity.name}" />
-															</c:if>
-														</c:forEach>
+													<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'FormulaList')}" var="entity">
+														<c:if test="${entity.id == sessionScope.feeactionform.feeFormula}">
+															<c:out value="${entity.name}" />
+														</c:if>
+													</c:forEach>
 												</c:if>
 												<br>
 												<br>
 												<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.accounting" /> <br> <mifos:mifoslabel name="Fees.GLCode" /> </span>
-												<c:forEach var="glCodeList" items="${sessionScope.glCodeList}">
+												<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'glCodeList')}" var="glCodeList">
 													<c:if test="${glCodeList.glcodeId == sessionScope.feeactionform.glCode}">
 														<c:out value="${glCodeList.glcode}" />
 													</c:if>
@@ -251,6 +252,7 @@
 										</tr>
 										<html-el:hidden property="method" value="create" />
 										<html-el:hidden property="input" value="previewFees" />
+										<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 									</table>
 									<br>
 								</td>

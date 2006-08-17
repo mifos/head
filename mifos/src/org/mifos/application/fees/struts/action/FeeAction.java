@@ -42,7 +42,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -61,8 +60,8 @@ import org.mifos.application.fees.business.FeeStatusEntity;
 import org.mifos.application.fees.business.RateFeeBO;
 import org.mifos.application.fees.business.service.FeeBusinessService;
 import org.mifos.application.fees.struts.actionforms.FeeActionForm;
-import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.FeeConstants;
+import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -73,6 +72,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
@@ -101,17 +101,19 @@ public class FeeAction extends BaseAction {
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		doCleanUp(request.getSession());
+		doCleanUp(request);
 		loadCreateMasterData(request);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward previous(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -130,17 +132,6 @@ public class FeeAction extends BaseAction {
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
-	public ActionForward get(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		FeeActionForm actionForm = (FeeActionForm) form;
-		FeeBO fee = getFeeBusinessService().getFee(actionForm.getFeeIdValue());
-		setLocaleForMasterEntities(fee, getUserContext(request).getLocaleId());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request
-				.getSession());
-		return mapping.findForward(ActionForwards.get_success.toString());
-	}
-
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -151,15 +142,33 @@ public class FeeAction extends BaseAction {
 				forward = ActionForwards.preview_failure;
 			else if (method.equals(Methods.editPreview.toString()))
 				forward = ActionForwards.editpreview_failure;
+			else if (method.equals(Methods.previous.toString())
+					|| method.equals(Methods.create.toString()))
+				forward = ActionForwards.previous_failure;
+			else if (method.equals(Methods.editPrevious.toString())
+					|| method.equals(Methods.update.toString()))
+				forward = ActionForwards.editprevious_failure;
 		}
 		return mapping.findForward(forward.toString());
 	}
 
+	@TransactionDemarcate(saveToken = true)
+	public ActionForward get(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		FeeActionForm actionForm = (FeeActionForm) form;
+		FeeBO fee = getFeeBusinessService().getFee(actionForm.getFeeIdValue());
+		setLocaleForMasterEntities(fee, getUserContext(request).getLocaleId());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
+		return mapping.findForward(ActionForwards.get_success.toString());
+	}
+
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward manage(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		FeeBO fee = (FeeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,
-				request.getSession());
+				request);
 		FeeActionForm feeActionForm = (FeeActionForm) form;
 		feeActionForm.setFeeStatus(fee.getFeeStatus().getId().toString());
 		if (fee.getFeeType().equals(RateAmountFlag.AMOUNT)) {
@@ -177,6 +186,7 @@ public class FeeAction extends BaseAction {
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward editPreview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -184,6 +194,7 @@ public class FeeAction extends BaseAction {
 				.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward editPrevious(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -191,12 +202,13 @@ public class FeeAction extends BaseAction {
 				.toString());
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		FeeActionForm feeActionForm = (FeeActionForm) form;
 		FeeBO fee = (FeeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,
-				request.getSession());
+				request);
 		fee.setUserContext(getUserContext(request));
 		if (fee.getFeeType().equals(RateAmountFlag.AMOUNT))
 			((AmountFeeBO) fee).setFeeAmount(feeActionForm.getAmountValue());
@@ -208,6 +220,7 @@ public class FeeAction extends BaseAction {
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 
+	@TransactionDemarcate(saveToken = true)
 	public ActionForward viewAll(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -223,22 +236,22 @@ public class FeeAction extends BaseAction {
 			setLocaleForMasterEntities(fee, localeId);
 
 		SessionUtils.setAttribute(FeeConstants.CUSTOMER_FEES, customerFees,
-				request.getSession());
+				request);
 		SessionUtils.setAttribute(FeeConstants.PRODUCT_FEES, productFees,
-				request.getSession());
+				request);
 		return mapping.findForward(ActionForwards.viewAll_success.toString());
 	}
 
 	private FeeBO createFee(FeeActionForm actionForm, HttpServletRequest request)
 			throws ApplicationException {
-		HttpSession session = request.getSession();
+
 		CategoryTypeEntity feeCategory = (CategoryTypeEntity) findMasterEntity(
-				session, FeeConstants.CATEGORYLIST, actionForm
+				request, FeeConstants.CATEGORYLIST, actionForm
 						.getCategoryTypeValue().getValue());
 		FeeFrequencyTypeEntity feeFrequencyType = (FeeFrequencyTypeEntity) findMasterEntity(
-				session, FeeConstants.FEE_FREQUENCY_TYPE_LIST, actionForm
+				request, FeeConstants.FEE_FREQUENCY_TYPE_LIST, actionForm
 						.getFeeFrequencyTypeValue().getValue());
-		GLCodeEntity glCode = findGLCodeEntity(session,
+		GLCodeEntity glCode = findGLCodeEntity(request,
 				FeeConstants.GLCODE_LIST, actionForm.getGlCodeValue());
 
 		if (feeFrequencyType.isOneTime())
@@ -256,11 +269,11 @@ public class FeeAction extends BaseAction {
 			throws ApplicationException {
 		UserContext userContext = getUserContext(request);
 		FeePaymentEntity feePayment = (FeePaymentEntity) findMasterEntity(
-				request.getSession(), FeeConstants.TIMEOFCHARGES, actionForm
+				request, FeeConstants.TIMEOFCHARGES, actionForm
 						.getFeePaymentTypeValue().getValue());
 		if (actionForm.isRateFee()) {
 			FeeFormulaEntity feeFormula = (FeeFormulaEntity) findMasterEntity(
-					request.getSession(), FeeConstants.FORMULALIST, actionForm
+					request, FeeConstants.FORMULALIST, actionForm
 							.getFeeFormulaValue().getValue());
 			return new RateFeeBO(userContext, actionForm.getFeeName(),
 					feeCategory, feeFrequencyType, glCode, actionForm
@@ -288,7 +301,7 @@ public class FeeAction extends BaseAction {
 						MeetingType.FEEMEETING);
 		if (actionForm.isRateFee()) {
 			FeeFormulaEntity feeFormula = (FeeFormulaEntity) findMasterEntity(
-					request.getSession(), FeeConstants.FORMULALIST, actionForm
+					request, FeeConstants.FORMULALIST, actionForm
 							.getFeeFormulaValue().getValue());
 			return new RateFeeBO(userContext, actionForm.getFeeName(),
 					feeCategory, feeFrequencyType, glCode, actionForm
@@ -318,32 +331,29 @@ public class FeeAction extends BaseAction {
 		return customerTimeOfCharges;
 	}
 
-	private void doCleanUp(HttpSession session) {
-		session.setAttribute("feeactionform", null);
-		session.removeAttribute(Constants.BUSINESS_KEY);
+	private void doCleanUp(HttpServletRequest request) {
+		request.getSession().setAttribute("feeactionform", null);
 	}
 
 	private void loadCreateMasterData(HttpServletRequest request)
 			throws ApplicationException, SystemException {
 		Short localeId = getUserContext(request).getLocaleId();
-		HttpSession session = request.getSession();
-
-		SessionUtils.setAttribute(FeeConstants.CATEGORYLIST,
-				getMasterEntities(CategoryTypeEntity.class, localeId), session);
+		SessionUtils.setAttribute(FeeConstants.CATEGORYLIST, getMasterEntities(
+				CategoryTypeEntity.class, localeId), request);
 
 		List<MasterDataEntity> timeOfCharges = getMasterEntities(
 				FeePaymentEntity.class, localeId);
 		SessionUtils.setAttribute(FeeConstants.TIMEOFCHARGES, timeOfCharges,
-				session);
+				request);
 		SessionUtils.setAttribute(FeeConstants.CUSTOMERTIMEOFCHARGES,
-				getTimeOfChargeForCustomer(timeOfCharges), session);
+				getTimeOfChargeForCustomer(timeOfCharges), request);
 		SessionUtils.setAttribute(FeeConstants.FORMULALIST, getMasterEntities(
-				FeeFormulaEntity.class, localeId), session);
+				FeeFormulaEntity.class, localeId), request);
 		SessionUtils.setAttribute(FeeConstants.FEE_FREQUENCY_TYPE_LIST,
 				getMasterEntities(FeeFrequencyTypeEntity.class, localeId),
-				session);
+				request);
 		SessionUtils.setAttribute(FeeConstants.GLCODE_LIST, getGLCodes(),
-				session);
+				request);
 	}
 
 	private void loadUpdateMasterData(HttpServletRequest request)
@@ -351,7 +361,7 @@ public class FeeAction extends BaseAction {
 
 		SessionUtils.setAttribute(FeeConstants.STATUSLIST, getMasterEntities(
 				FeeStatusEntity.class, getUserContext(request).getLocaleId()),
-				request.getSession());
+				request);
 	}
 
 	private void setLocaleForMasterEntities(FeeBO fee, Short localeId) {
@@ -364,20 +374,20 @@ public class FeeAction extends BaseAction {
 			((RateFeeBO) fee).getFeeFormula().setLocaleId(localeId);
 	}
 
-	private MasterDataEntity findMasterEntity(HttpSession session,
-			String collectionName, Short value) {
+	private MasterDataEntity findMasterEntity(HttpServletRequest request,
+			String collectionName, Short value) throws PageExpiredException {
 		List<MasterDataEntity> entities = (List<MasterDataEntity>) SessionUtils
-				.getAttribute(collectionName, session);
+				.getAttribute(collectionName, request);
 		for (MasterDataEntity entity : entities)
 			if (entity.getId().equals(value))
 				return entity;
 		return null;
 	}
 
-	private GLCodeEntity findGLCodeEntity(HttpSession session,
-			String collectionName, Short value) {
+	private GLCodeEntity findGLCodeEntity(HttpServletRequest request,
+			String collectionName, Short value) throws PageExpiredException {
 		List<GLCodeEntity> glCodeList = (List<GLCodeEntity>) SessionUtils
-				.getAttribute(collectionName, session);
+				.getAttribute(collectionName, request);
 		for (GLCodeEntity glCode : glCodeList)
 			if (glCode.getGlcodeId().equals(value))
 				return glCode;

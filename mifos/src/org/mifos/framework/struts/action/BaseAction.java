@@ -33,6 +33,8 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ExceptionConstants;
+import org.mifos.framework.util.helpers.Flow;
+import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SearchObject;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -57,6 +59,8 @@ public abstract class BaseAction extends DispatchAction {
 	protected void preExecute(ActionForm actionForm,
 			HttpServletRequest request, TransactionDemarcate annotation)
 			throws SystemException, ApplicationException {
+		request.setAttribute(Constants.CURRENTFLOWKEY, request
+				.getParameter(Constants.CURRENTFLOWKEY));
 		preHandleTransaction(request, annotation);
 		UserContext userContext = (UserContext) request.getSession()
 				.getAttribute(Constants.USER_CONTEXT_KEY);
@@ -105,22 +109,33 @@ public abstract class BaseAction extends DispatchAction {
 	protected void preHandleTransaction(HttpServletRequest request,
 			TransactionDemarcate annotation) throws PageExpiredException {
 		if (null != annotation && annotation.saveToken()) {
-			resetToken(request);
-			saveToken(request);
-		} else if (null != annotation && annotation.validateAndResetToken()) {
-			if (!isTokenValid(request)) {
+			String flowKey = String.valueOf(System.currentTimeMillis());
+			FlowManager flowManager = (FlowManager) request.getSession()
+					.getAttribute(Constants.FLOWMANAGER);
+			flowManager.addFLow(flowKey, new Flow());
+			request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		} else if ((null != annotation && annotation.validateAndResetToken())
+				|| (null != annotation && annotation.joinToken())) {
+			String flowKey = (String) request
+					.getAttribute(Constants.CURRENTFLOWKEY);
+			FlowManager flowManager = (FlowManager) request.getSession()
+					.getAttribute(Constants.FLOWMANAGER);
+			if (flowKey == null || !flowManager.isFlowValid(flowKey)) {
 				throw new PageExpiredException(
 						ExceptionConstants.PAGEEXPIREDEXCEPTION);
 			}
 		}
-
 	}
 
 	protected void postHandleTransaction(HttpServletRequest request,
 			TransactionDemarcate annotation) throws SystemException,
 			ApplicationException {
 		if (null != annotation && annotation.validateAndResetToken()) {
-			resetToken(request);
+			FlowManager flowManager = (FlowManager) request.getSession()
+					.getAttribute(Constants.FLOWMANAGER);
+			flowManager.removeFlow((String) request
+					.getAttribute(Constants.CURRENTFLOWKEY));
+			request.setAttribute(Constants.CURRENTFLOWKEY, null);
 		}
 	}
 

@@ -43,7 +43,6 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -60,14 +59,13 @@ import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.ExceptionConstants;
+import org.mifos.framework.util.helpers.SessionUtils;
 
-/**
- * @author rohitr
- * 
- */
 public class BulkEntryActionForm extends ActionForm {
 
 	private static final long serialVersionUID = 1L;
@@ -142,95 +140,123 @@ public class BulkEntryActionForm extends ActionForm {
 		this.transactionDate = transactionDate;
 	}
 
+	@Override
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		if (request.getParameter(BulkEntryConstants.METHOD).equalsIgnoreCase(
-				BulkEntryConstants.LOADMETHOD)) {
-			request.getSession().setAttribute(Constants.BUSINESS_KEY, null);
-			request.getSession().setAttribute(BulkEntryConstants.BULKENTRY,
-					null);
-		}
-		if (request.getParameter(BulkEntryConstants.METHOD).equalsIgnoreCase(
 				BulkEntryConstants.PREVIEWMETHOD)) {
-			BulkEntryBO bulkEntry = (BulkEntryBO) request.getSession()
-					.getAttribute(BulkEntryConstants.BULKENTRY);
-			int customers = bulkEntry.getTotalCustomers();
-			int loanProductsSize = bulkEntry.getLoanProducts().size();
-			int savingsProductSize = bulkEntry.getSavingsProducts().size();
-			BulkEntryDataView bulkEntryDataView = new BulkEntryDataView();
-			String enteredAmount[][] = new String[customers + 1][loanProductsSize];
-			String disBurtialAmount[][] = new String[customers + 1][loanProductsSize];
-			String depositAmountEntered[][] = new String[customers + 1][savingsProductSize];
-			String withDrawalAmountEntered[][] = new String[customers + 1][savingsProductSize];
-			String attendance[] = new String[customers + 1];
-			String customerAccountAmountEntered[] = new String[customers + 1];
+			request.setAttribute(Constants.CURRENTFLOWKEY, request
+					.getParameter(Constants.CURRENTFLOWKEY));
+			try {
+				BulkEntryBO bulkEntry = (BulkEntryBO) SessionUtils
+						.getAttribute(BulkEntryConstants.BULKENTRY, request);
 
-			for (int rowIndex = 0; rowIndex <= customers; rowIndex++) {
-				attendance[rowIndex] = request
-						.getParameter("attendenceSelected[" + rowIndex + "]");
-				for (int columnIndex = 0; columnIndex < loanProductsSize; columnIndex++) {
-					enteredAmount[rowIndex][columnIndex] = request
-							.getParameter("enteredAmount[" + rowIndex + "]["
-									+ columnIndex + "]");
-					disBurtialAmount[rowIndex][columnIndex] = request
-							.getParameter("enteredAmount["
+				int customers = bulkEntry.getTotalCustomers();
+				int loanProductsSize = bulkEntry.getLoanProducts().size();
+				int savingsProductSize = bulkEntry.getSavingsProducts().size();
+				BulkEntryDataView bulkEntryDataView = new BulkEntryDataView();
+				String enteredAmount[][] = new String[customers + 1][loanProductsSize];
+				String disBurtialAmount[][] = new String[customers + 1][loanProductsSize];
+				String depositAmountEntered[][] = new String[customers + 1][savingsProductSize];
+				String withDrawalAmountEntered[][] = new String[customers + 1][savingsProductSize];
+				String attendance[] = new String[customers + 1];
+				String customerAccountAmountEntered[] = new String[customers + 1];
+
+				for (int rowIndex = 0; rowIndex <= customers; rowIndex++) {
+					attendance[rowIndex] = request
+							.getParameter("attendenceSelected[" + rowIndex
+									+ "]");
+					for (int columnIndex = 0; columnIndex < loanProductsSize; columnIndex++) {
+						enteredAmount[rowIndex][columnIndex] = request
+								.getParameter("enteredAmount[" + rowIndex
+										+ "][" + columnIndex + "]");
+						disBurtialAmount[rowIndex][columnIndex] = request
+								.getParameter("enteredAmount["
+										+ rowIndex
+										+ "]["
+										+ (loanProductsSize
+												+ savingsProductSize + columnIndex)
+										+ "]");
+
+					}
+					for (int columnIndex = 0; columnIndex < savingsProductSize; columnIndex++) {
+						depositAmountEntered[rowIndex][columnIndex] = request
+								.getParameter("depositAmountEntered["
+										+ rowIndex + "]["
+										+ (loanProductsSize + columnIndex)
+										+ "]");
+						withDrawalAmountEntered[rowIndex][columnIndex] = request
+								.getParameter("withDrawalAmountEntered["
+										+ rowIndex
+										+ "]["
+										+ ((2 * loanProductsSize)
+												+ savingsProductSize + columnIndex)
+										+ "]");
+					}
+					customerAccountAmountEntered[rowIndex] = request
+							.getParameter("customerAccountAmountEntered["
 									+ rowIndex
 									+ "]["
-									+ (loanProductsSize + savingsProductSize + columnIndex)
+									+ (2 * (loanProductsSize + savingsProductSize))
 									+ "]");
+				}
+				bulkEntryDataView
+						.setDisbursementAmountEntered(disBurtialAmount);
+				bulkEntryDataView.setLoanAmountEntered(enteredAmount);
 
-				}
-				for (int columnIndex = 0; columnIndex < savingsProductSize; columnIndex++) {
-					depositAmountEntered[rowIndex][columnIndex] = request
-							.getParameter("depositAmountEntered[" + rowIndex
-									+ "][" + (loanProductsSize + columnIndex)
-									+ "]");
-					withDrawalAmountEntered[rowIndex][columnIndex] = request
-							.getParameter("withDrawalAmountEntered["
-									+ rowIndex
-									+ "]["
-									+ ((2 * loanProductsSize)
-											+ savingsProductSize + columnIndex)
-									+ "]");
-				}
-				customerAccountAmountEntered[rowIndex] = request
-						.getParameter("customerAccountAmountEntered["
-								+ rowIndex + "]["
-								+ (2 * (loanProductsSize + savingsProductSize))
-								+ "]");
+				bulkEntryDataView
+						.setWithDrawalAmountEntered(withDrawalAmountEntered);
+				bulkEntryDataView.setDepositAmountEntered(depositAmountEntered);
+				bulkEntryDataView
+						.setCustomerAccountAmountEntered(customerAccountAmountEntered);
+				bulkEntryDataView.setAttendance(attendance);
+				bulkEntry.setBulkEntryDataView(bulkEntryDataView);
+			} catch (PageExpiredException e) {
+
 			}
-			bulkEntryDataView.setDisbursementAmountEntered(disBurtialAmount);
-			bulkEntryDataView.setLoanAmountEntered(enteredAmount);
-
-			bulkEntryDataView
-					.setWithDrawalAmountEntered(withDrawalAmountEntered);
-			bulkEntryDataView.setDepositAmountEntered(depositAmountEntered);
-			bulkEntryDataView
-					.setCustomerAccountAmountEntered(customerAccountAmountEntered);
-			bulkEntryDataView.setAttendance(attendance);
-			bulkEntry.setBulkEntryDataView(bulkEntryDataView);
-
 		}
 	}
 
+	@Override
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
+		request.setAttribute(Constants.CURRENTFLOWKEY, request
+				.getParameter(Constants.CURRENTFLOWKEY));
 		ActionErrors errors = new ActionErrors();
 		if (request.getParameter(BulkEntryConstants.METHOD).equalsIgnoreCase(
 				BulkEntryConstants.PREVIEWMETHOD)) {
-			HttpSession session = request.getSession();
-			BulkEntryBO bulkEntry = (BulkEntryBO) session
-					.getAttribute(BulkEntryConstants.BULKENTRY);
-			return validatePopulatedData(bulkEntry.getBulkEntryParent(), errors);
+			try {
+				BulkEntryBO bulkEntry = (BulkEntryBO) SessionUtils
+						.getAttribute(BulkEntryConstants.BULKENTRY, request);
+				return validatePopulatedData(bulkEntry.getBulkEntryParent(),
+						errors);
+			} catch (PageExpiredException e) {
+				errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
+						new ActionMessage(
+								ExceptionConstants.PAGEEXPIREDEXCEPTION));
+			}
 
 		} else if (request.getParameter(BulkEntryConstants.METHOD)
 				.equalsIgnoreCase(BulkEntryConstants.GETMETHOD)) {
 			Locale userLocale = getUserLocale(request);
-			java.sql.Date meetingDate = (Date) request.getSession()
-					.getAttribute("LastMeetingDate");
-			short isCenterHeirarchyExists = (Short) request.getSession()
-					.getAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS);
-			return mandatoryCheck(meetingDate, userLocale,
-					isCenterHeirarchyExists);
+			java.sql.Date meetingDate = null;
+			try {
+				meetingDate = (Date) SessionUtils.getAttribute(
+						"LastMeetingDate", request);
+
+			} catch (PageExpiredException e) {
+			}
+			try {
+				short isCenterHeirarchyExists = (Short) SessionUtils
+						.getAttribute(
+								BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
+								request);
+				return mandatoryCheck(meetingDate, userLocale,
+						isCenterHeirarchyExists);
+			} catch (PageExpiredException e) {
+				errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
+						new ActionMessage(
+								ExceptionConstants.PAGEEXPIREDEXCEPTION));
+			}
 		}
 		return errors;
 	}
@@ -372,7 +398,6 @@ public class BulkEntryActionForm extends ActionForm {
 		java.sql.Date trxnDate = null;
 		String customerLabel = isCenterHeirarchyExists == Constants.YES ? ConfigurationConstants.CENTER
 				: ConfigurationConstants.GROUP;
-
 		if (transactionDate != null && !transactionDate.equals("")) {
 			trxnDate = DateHelper.getLocaleDate(userLocale,
 					getTransactionDate());
@@ -421,27 +446,24 @@ public class BulkEntryActionForm extends ActionForm {
 
 	protected Locale getUserLocale(HttpServletRequest request) {
 		Locale locale = null;
-		HttpSession session = request.getSession();
-		if (session != null) {
-			UserContext userContext = (UserContext) session
-					.getAttribute(LoginConstants.USERCONTEXT);
-			if (null != userContext) {
-				locale = userContext.getPereferedLocale();
-				if (null == locale) {
-					locale = userContext.getMfiLocale();
-				}
+
+		UserContext userContext = (UserContext) request.getSession()
+				.getAttribute(LoginConstants.USERCONTEXT);
+		if (null != userContext) {
+			locale = userContext.getPereferedLocale();
+			if (null == locale) {
+				locale = userContext.getMfiLocale();
 			}
 		}
+
 		return locale;
 	}
 
 	private String getLabel(String key, Locale locale) {
-
 		try {
 			return MifosConfiguration.getInstance().getLabel(key, locale);
 		} catch (ConfigurationException e) {
 		}
-
 		return null;
 	}
 
