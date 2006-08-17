@@ -65,6 +65,12 @@ public class OfficeLevelEntity extends MasterDataEntity {
 		child=null;
 
 	}
+	
+	public OfficeLevelEntity(OfficeLevel level){
+		super(level.getValue());
+		parent=null;
+		child=null;
+	}
 
 	private void setConfigured(Short configured) {
 		this.configured = configured;

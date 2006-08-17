@@ -22,7 +22,7 @@
 		<property name="updatedBy" column="UPDATED_BY" />
 		<property name="shortName" column="OFFICE_SHORT_NAME" type="string" />
 		
-		 <many-to-one name="level" class="org.mifos.application.office.business.OfficeLevelEntity" column="OFFICE_LEVEL_ID" unique="true" insert="true" update="true" />
+		 <many-to-one name="level" class="org.mifos.application.office.business.OfficeLevelEntity" column="OFFICE_LEVEL_ID" unique="true" insert="true" update="true" access="field"/>
 		<many-to-one name="parentOffice" class="org.mifos.application.office.business.OfficeBO"	column="PARENT_OFFICE_ID" unique="true" insert="true" update="true"	lazy="true" cascade="none" />
 		<many-to-one name="status"	class="org.mifos.application.office.business.OfficeStatusEntity" column="STATUS_ID" unique="true" insert="true" update="true"	lazy="true" />
 		<set name="customFields" cascade="all" inverse="true"  table="OFFICE_CUSTOM_FIELD">
@@ -45,4 +45,16 @@
      <query name="office.getHeadOffice">
             <![CDATA[from org.mifos.application.office.business.OfficeBO office where office.level.id = :LEVEL_ID]]>
     </query>
+     <query name="office.getMaxId">
+            <![CDATA[select max(office.officeId)from org.mifos.application.office.business.OfficeBO office ]]>
+    </query>
+     <query name="office.getChlidCount">
+            <![CDATA[select count(*) from org.mifos.application.office.business.OfficeBO o where o.parentOffice.officeId=:OFFICE_ID ]]>
+    </query>
+    <query name="office.getOfficeWithName">
+            <![CDATA[select count(*) from org.mifos.application.office.business.OfficeBO o where o.parentOffice.officeName=:OFFICE_NAME ]]>
+    </query>
+    <query name="office.getOfficeWithShortName">
+            <![CDATA[select count(*) from org.mifos.application.office.business.OfficeBO o where o.parentOffice.shortName=:SHORT_NAME ]]>
+    </query>    
 </hibernate-mapping>

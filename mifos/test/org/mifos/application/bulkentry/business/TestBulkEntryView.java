@@ -15,6 +15,7 @@ import org.mifos.application.master.business.PaymentTypeView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficeView;
+import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -223,9 +224,9 @@ public class TestBulkEntryView extends MifosTestCase {
 		return paymentTypeView;
 	}
 
-	private OfficeView getOfficeView(OfficeBO office) {
+	private OfficeView getOfficeView(OfficeBO office) throws OfficeException {
 		OfficeView officeView = new OfficeView(office.getOfficeId(), office
-				.getOfficeName(), office.getLevel().getId(), office
+				.getOfficeName(), office.getOfficeLevel().getValue(), office
 				.getVersionNo());
 		return officeView;
 	}

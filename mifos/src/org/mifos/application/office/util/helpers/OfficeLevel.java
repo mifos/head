@@ -20,7 +20,7 @@ public enum OfficeLevel {
 	public static OfficeLevel getOfficeLevel(Short id)
 			throws PropertyNotFoundException {
 		for (OfficeLevel level : OfficeLevel.values())
-			if (level.value == id)
+			if (level.value.equals(id))
 				return level;
 		throw new PropertyNotFoundException("CustomerLevel");
 	}

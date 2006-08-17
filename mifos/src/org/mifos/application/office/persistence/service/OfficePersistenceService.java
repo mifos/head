@@ -3,8 +3,10 @@
  */
 package org.mifos.application.office.persistence.service;
 
+import java.util.HashMap;
 import java.util.List;
 
+import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.persistence.OfficePersistence;
@@ -23,17 +25,19 @@ public class OfficePersistenceService extends PersistenceService {
 	public OfficeBO getOffice(Short officeId) {
 		return serviceImpl.getOffice(officeId);
 	}
-
 	public List<OfficeView> getActiveBranches(Short officeId) {
 		return serviceImpl.getActiveOffices(officeId);
-
 	}
-	
 	public OfficeBO getHeadOffice() {
 		return serviceImpl.getHeadOffice();
 	}
-
 	public List<OfficeCacheView> getAllOffices()throws PersistenceException{
 		return serviceImpl.getAllOffices();
+	}
+	public Short getMaxOfficeId(){
+		return serviceImpl.getMaxOfficeId();
+	}
+	public Integer getChildCount(Short officeId){
+		return serviceImpl.getChildCount(officeId);
 	}
 }

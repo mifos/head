@@ -31,4 +31,18 @@ public class TestOfficePersistence extends MifosTestCase {
 	public void testGetAllOffices()throws Exception{
 		assertEquals(Integer.valueOf("3").intValue(),officePersistence.getAllOffices().size());
 	}
+	public void testGetMaxOfficeId(){
+		assertEquals(3,officePersistence.getMaxOfficeId().intValue());
+	}
+	public void testGetChildCount(){
+		
+		assertEquals(1,officePersistence.getChildCount(Short.valueOf("1")).intValue());
+	}
+	
+	public void testIsOfficeNameExist(){
+		assertTrue(officePersistence.isOfficeNameExist("TestAreaOffice "));
+	}
+	public void testIsOfficeShortNameExist(){
+		assertTrue(officePersistence.isOfficeShortNameExist("MIF2"));
+	}
 }

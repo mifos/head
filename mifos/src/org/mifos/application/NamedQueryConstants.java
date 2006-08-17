@@ -465,5 +465,11 @@ public interface NamedQueryConstants {
 	
 	public String GET_ALL_APPLICABLE_FEE_FOR_LOAN_CREATION="getAllApplicableFeesForLoanCreation";
 	public String MASTERDATA_MIFOS_ENTITY_VALUE="masterdata.mifosEntityValue";
+	
+	//M2 office
+	public String GETMAXOFFICEID="office.getMaxId";
+	public String GETCHILDCOUNT="office.getChlidCount";
+	public String CHECKOFFICENAMEUNIQUENESS="office.getOfficeWithName";
+	public String CHECKOFFICESHORTNAMEUNIQUENESS="office.getOfficeWithShortName";
 
 }

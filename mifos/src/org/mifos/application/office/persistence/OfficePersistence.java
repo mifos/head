@@ -80,4 +80,39 @@ public class OfficePersistence extends Persistence {
 		return null;
 	}
 
+	public Short getMaxOfficeId(){
+		List queryResult = executeNamedQuery(NamedQueryConstants.GETMAXOFFICEID,null);	
+		if(queryResult !=null && queryResult.size()!=0){
+			return (Short)queryResult.get(0);
+		}
+		return null;
+	}
+	public Integer getChildCount(Short officeId){
+		HashMap<String , Object> queryParameters = new HashMap<String , Object>();
+		queryParameters.put("OFFICE_ID",officeId);
+		List queryResult = executeNamedQuery(NamedQueryConstants.GETCHILDCOUNT,queryParameters);	
+		if(queryResult !=null && queryResult.size()!=0){
+			return (Integer)queryResult.get(0);
+		}
+		return null;
+		
+	}
+	public boolean isOfficeNameExist(String  officeName){
+		HashMap<String , Object> queryParameters = new HashMap<String , Object>();
+		queryParameters.put("OFFICE_NAME",officeName);
+		List queryResult = executeNamedQuery(NamedQueryConstants.CHECKOFFICENAMEUNIQUENESS,queryParameters);	
+		if(queryResult !=null && queryResult.size()!=0){
+			return (Integer)queryResult.get(0) >0 ?true:false;
+		}
+		return false;
+	}
+	public boolean isOfficeShortNameExist(String  shortName){
+		HashMap<String , Object> queryParameters = new HashMap<String , Object>();
+		queryParameters.put("SHORT_NAME",shortName);
+		List queryResult = executeNamedQuery(NamedQueryConstants.CHECKOFFICESHORTNAMEUNIQUENESS,queryParameters);	
+		if(queryResult !=null && queryResult.size()!=0){
+			return (Integer)queryResult.get(0) >0 ?true:false;
+		}
+		return false;
+	}
 }

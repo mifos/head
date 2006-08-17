@@ -1,72 +1,42 @@
-/**
-
- * Office.java    version: 1.0
-
-
-
- * Copyright (c) 2005-2006 Grameen Foundation USA
-
- * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
-
- * All rights reserved.
-
-
-
- * Apache License
- * Copyright (c) 2005-2006 Grameen Foundation USA
- *
-
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
- *
-
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the
-
- * License.
- *
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
-
- * and how it is applied.
-
- *
-
- */
 package org.mifos.application.office.business;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 
+import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
+import org.mifos.application.office.exceptions.OfficeException;
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.office.util.helpers.OperationMode;
+import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
+import org.mifos.framework.util.helpers.StringUtils;
 
-/**
- * This is office business object encapsulate the office related functionality
- * 
- * @author rajenders
- * 
- */
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
+
 public class OfficeBO extends BusinessObject {
-	
-	private MifosLogger logger =null;
+
+	private MifosLogger logger = null;
 
 	private final Short officeId;
 
-	private final String globalOfficeNum;
+	private String globalOfficeNum;
 
 	private OfficeLevelEntity level;
 
@@ -88,14 +58,52 @@ public class OfficeBO extends BusinessObject {
 
 	private OfficeAddressEntity address;
 
-	public  OfficeBO() {
+	public OfficeBO() {
 		maxChildCount = null;
 		officeId = null;
-		globalOfficeNum = null;
 		operationMode = null;
-		status = new OfficeStatusEntity();
+		status = new OfficeStatusEntity(OfficeStatus.ACTIVE);
 		address = new OfficeAddressEntity();
 	}
+
+	public OfficeBO(UserContext userContext, OfficeLevel level,
+			OfficeBO parentOffice, List<CustomFieldView> customFields,
+			String officeName, String shortName, Address address,
+			OperationMode operationMode) throws OfficeException {
+		super(userContext);
+		// initialize logger
+		logger = MifosLogManager.getLogger(LoggerConstants.OFFICELOGGER);
+		verifyFields(officeName, shortName, level, operationMode, parentOffice);
+		logger.debug(new StringBuilder().append(
+				"Creating office object with data # officeName : ").append(
+				officeName).append(" shortName :").append(shortName).append(
+				" officeLevel :").append(level.getValue()).append(
+				" operationMode : ").append(operationMode.getValue())
+				.toString());
+
+		setCreateDetails();
+
+		this.globalOfficeNum = null;
+		this.operationMode = operationMode.getValue();
+		this.maxChildCount = 0;
+		this.searchId = null;
+		this.officeId = null;
+		this.level = new OfficeLevelEntity(level);
+		this.status = new OfficeStatusEntity(OfficeStatus.ACTIVE);
+		this.parentOffice = parentOffice;
+
+		this.officeName = officeName;
+		this.shortName = shortName;
+		if (address != null)
+			this.address = new OfficeAddressEntity(this, address);
+		this.customFields = new HashSet<OfficeCustomFieldEntity>();
+		if (customFields != null)
+			for (CustomFieldView view : customFields) {
+				this.customFields.add(new OfficeCustomFieldEntity(view
+						.getFieldValue(), view.getFieldId(), this));
+			}
+	}
+
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
@@ -104,16 +112,13 @@ public class OfficeBO extends BusinessObject {
 		return globalOfficeNum;
 	}
 
-	public OfficeLevelEntity getLevel() {
-		return level;
-	}
+	public OfficeLevel getOfficeLevel() throws OfficeException {
+		try {
+			return OfficeLevel.getOfficeLevel(level.getId());
+		} catch (PropertyNotFoundException e) {
+			throw new OfficeException(e);
+		}
 
-	public void setLevel(OfficeLevelEntity level) {
-		this.level = level;
-	}
-
-	public Integer getMaxChildCount() {
-		return maxChildCount;
 	}
 
 	public String getOfficeName() {
@@ -128,8 +133,12 @@ public class OfficeBO extends BusinessObject {
 		return officeId;
 	}
 
-	public Short getOperationMode() {
-		return operationMode;
+	public OperationMode getMode() throws OfficeException {
+		try {
+			return OperationMode.getOperationMode(operationMode);
+		} catch (PropertyNotFoundException e) {
+			throw new OfficeException(e);
+		}
 	}
 
 	public OfficeBO getParentOffice() {
@@ -186,16 +195,93 @@ public class OfficeBO extends BusinessObject {
 		return EntityMasterConstants.Office;
 	}
 
-	public void  changeStatus(OfficeStatus status) throws ServiceException{
+	public void changeStatus(OfficeStatus status) throws ServiceException {
 		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-		.getInstance().getPersistenceService(
-				PersistenceServiceName.MasterDataService);
-		
-		
-		 
+				.getInstance().getPersistenceService(
+						PersistenceServiceName.MasterDataService);
+
 	}
-	public void setAddress(OfficeAddressEntity address) {
+
+	public void setAddress(OfficeAddressEntity address) throws OfficeException {
 		this.address = address;
 	}
 
+	private void verifyFields(String officeName, String shortName,
+			OfficeLevel level, OperationMode operationMode,
+			OfficeBO parentOffice) throws OfficeException {
+
+		OfficePersistence officePersistence = new OfficePersistence();
+		if (StringUtils.isNullOrEmpty(officeName))
+			throw new OfficeException(
+					OfficeConstants.ERRORMANDATORYFIELD,
+					new Object[] { getLocaleString(OfficeConstants.OFFICE_NAME) });
+		if (officePersistence.isOfficeNameExist(officeName))
+			throw new OfficeException(OfficeConstants.OFFICENAMEEXIST);
+		if (StringUtils.isNullOrEmpty(shortName))
+			throw new OfficeException(
+					OfficeConstants.ERRORMANDATORYFIELD,
+					new Object[] { getLocaleString(OfficeConstants.OFFICESHORTNAME) });
+		if (officePersistence.isOfficeShortNameExist(shortName))
+			throw new OfficeException(OfficeConstants.OFFICESHORTNAMEEXIST);
+		if (level == null)
+			throw new OfficeException(
+					OfficeConstants.ERRORMANDATORYFIELD,
+					new Object[] { getLocaleString(OfficeConstants.OFFICELEVEL) });
+		if (operationMode == null)
+			throw new OfficeException(
+					OfficeConstants.ERRORMANDATORYFIELD,
+					new Object[] { getLocaleString(OfficeConstants.OFFICEOPERATIONMODE) });
+		if (parentOffice == null)
+			throw new OfficeException(
+					OfficeConstants.ERRORMANDATORYFIELD,
+					new Object[] { getLocaleString(OfficeConstants.PARENTOFFICE) });
+
+	}
+
+	private String getLocaleString(String key) {
+		logger.debug("Getting resource text with key :  " + key);
+		ResourceBundle resourceBundle = ResourceBundle.getBundle(
+				OfficeConstants.OFFICERESOURCEPATH, userContext
+						.getPereferedLocale());
+		return resourceBundle.getString(key);
+
+	}
+
+	private String generateOfficeGlobalNo() throws OfficeException {
+
+		try {
+			String officeGlobelNo = String.valueOf(new OfficePersistence()
+					.getMaxOfficeId().intValue() + 1);
+			if (officeGlobelNo.length() > 4) {
+				throw new OfficeException(OfficeConstants.MAXOFFICELIMITREACHED);
+			}
+			StringBuilder temp = new StringBuilder("");
+			for (int i = officeGlobelNo.length(); i < 4; i++) {
+				temp.append("0");
+			}
+			logger.debug("Generated office global no is :"
+					+ temp.append(officeGlobelNo).toString());
+			return officeGlobelNo = temp.append(officeGlobelNo).toString();
+		} catch (ParseException e) {
+			throw new OfficeException(e);
+		}
+
+	}
+
+	private String generateSearchId() {
+		Integer noOfChildern = new OfficePersistence()
+				.getChildCount(parentOffice.getOfficeId());
+		String parentSearchId = HierarchyManager.getInstance().getSearchId(
+				parentOffice.getOfficeId());
+		parentSearchId += ".";
+		parentSearchId += ++noOfChildern;
+		return parentSearchId;
+	}
+
+	public void save() throws OfficeException {
+
+		this.globalOfficeNum = generateOfficeGlobalNo();
+		this.searchId = generateSearchId();
+		new OfficePersistence().createOrUpdate(this);
+	}
 }

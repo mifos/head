@@ -40,4 +40,11 @@ public class TestOfficePersistenceService extends MifosTestCase {
 	public void testGetAllOffices()throws Exception{
 		assertEquals(Integer.valueOf("3").intValue(),dbService.getAllOffices().size());
 	}
+	public void testGetMaxOfficeId(){
+		assertEquals(3,dbService.getMaxOfficeId().intValue());
+	}
+	public void testGetChildCount(){
+		
+		assertEquals(1,dbService.getChildCount(Short.valueOf("1")).intValue());
+	}
 }

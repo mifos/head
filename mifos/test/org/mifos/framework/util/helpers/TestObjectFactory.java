@@ -1808,4 +1808,15 @@ public class TestObjectFactory {
 		return notes;
 	}
 	
+	public static OfficeBO createOffice(){
+		
+		return null;
+	}
+	public static void cleanUp(OfficeBO office){
+		Session session= HibernateUtil.getSessionTL();
+		Transaction transaction = HibernateUtil.startTransaction();
+		session.lock(office, LockMode.NONE);
+		session.delete(office);
+		transaction.commit();
+	}
 }

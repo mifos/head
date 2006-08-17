@@ -37,6 +37,8 @@
  */
 package org.mifos.application.office.util.helpers;
 
+import org.mifos.framework.exceptions.PropertyNotFoundException;
+
 /**
  * Represent the operating mode of the office
  * 
@@ -44,5 +46,26 @@ package org.mifos.application.office.util.helpers;
  * 
  */
 public enum OperationMode {
-	LOCAL_SERVER, REMOTE_SERVER
+	LOCAL_SERVER(Short.valueOf("0")), REMOTE_SERVER(Short.valueOf("1"));
+	Short value;
+
+	OperationMode(Short value) {
+		this.value = value;
+	}
+
+	public Short getValue() {
+		return value;
+	}
+
+	public static OperationMode getOperationMode(Short id)
+			throws PropertyNotFoundException {
+		for (OperationMode operationMode : OperationMode.values())
+		{
+			
+			if (operationMode.value.equals( id))
+				return operationMode;
+		}
+		//TODO : replace this with proper key
+		throw new PropertyNotFoundException("CustomerLevel");
+	}
 }
