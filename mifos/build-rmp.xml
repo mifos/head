@@ -223,14 +223,6 @@
 		</war>
 	</target>
 
-	<target name="jar_i6">
-	  <jar destfile="${reports.lib.dir}/${webapplication.name}_i6.jar"
-       basedir="${basedir}/build/src_pkg/WEB-INF/classes/"
-       includes="org/mifos/**"
-	   excludes="org/mifos/application/reports/business/ReportsBO.class,org/mifos/application/reports/struts/action/ReportsAction.class, org/mifos/application/reports/business/service/ReportsBusinessService.class, org/mifos/application/reports/util/helpers/ReportsConstants.class, org/mifos/application/reports/persistence/ReportsPersistence.class, org/mifos/application/reports/persistence/service/ReportsPersistenceService.class, org/mifos/framework/security/util/ActivityMapper.class, org/mifos/framework/components/logger/LoggerConstants.class, org/mifos/framework/security/util/resources/SecurityConstants.class, org/mifos/application/reports/business/ReportsBO.hbm.xml,org/mifos/application/reports/util/resources/ReportsUIResources.properties, org/mifos/framework/util/resources/** "
-		/>
-	</target>
-
 	<target name="dist" depends="compile,copy_files,compile_test,copy_test_files,run_test,war,deploy" description="Compiles, runs test, builds a distributable war and places in the dist directory. Copies to the jboss server in use. Does not rebuild the production database"/>
 
 	<target name="dist_ddl" depends="compile,copy_files,compile_test,copy_test_files,run_test,war,deploy,build_db" description="Compiles, runs test, builds a distributable war and places in the dist directory. Copies to the jboss server in use. Rebuilds the production database"/>
