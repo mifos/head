@@ -99,7 +99,10 @@ import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.ClientDetailView;
 import org.mifos.application.customer.client.business.ClientNameDetailEntity;
+import org.mifos.application.customer.client.business.ClientNameDetailView;
+import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
@@ -328,8 +331,8 @@ public class TestObjectFactory {
 		return group;
 	}
 
-	public static ClientBO createClient(String customerName, Short statusId,
-			String searchId, CustomerBO parentCustomer, Date startDate) {
+	public static ClientBO createClient(String customerName, Short statusId,String searchId,
+			CustomerBO parentCustomer, Date startDate) {
 		ClientBO client = null;
 		try {
 			Short office = new Short("3");
@@ -337,18 +340,20 @@ public class TestObjectFactory {
 			if(parentCustomer!=null && parentCustomer.getCustomerMeeting()!=null 
 					&& parentCustomer.getCustomerMeeting().getMeeting()!=null)
 				parentCustomer.getCustomerMeeting().getMeeting().setMeetingStartDate(new GregorianCalendar());
-			client = new ClientBO(getUserContext(), customerName, CustomerStatus.getStatus(statusId), null, null, null, null, getFees(), personnel, office, parentCustomer, searchId);
+			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder("testClientName"),customerName,"middle",customerName,"secondLast");
+			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),customerName,"middle",customerName,"secondLast");
+			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"));
+			client = new ClientBO(getUserContext(), customerName, CustomerStatus.getStatus(statusId), null, null, null, null, getFees(), personnel, office, parentCustomer, null,
+					null,null,null,null,clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 		//	client.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), client, startDate));
-
-			Name name = new Name();
+			//to be removed later
+			client.setSearchId(searchId);
+			/*Name name = new Name();
 			name.setFirstName(customerName);
 			name.setLastName(customerName);
 
 			ClientNameDetailEntity customerNameDetail = new ClientNameDetailEntity(client,null,null,null,null,name);
-
-			Set<ClientNameDetailEntity> custNameDetEnitites = new HashSet<ClientNameDetailEntity>();
-			custNameDetEnitites.add(customerNameDetail);
-			client.setNameDetailSet(custNameDetEnitites);
+			client.addNameDetailSet(customerNameDetail);*/
 			client.save();
 			HibernateUtil.commitTransaction();
 			// TODO: throw Exception

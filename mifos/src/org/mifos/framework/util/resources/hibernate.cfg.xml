@@ -315,6 +315,8 @@
 		resource="org/mifos/application/customer/util/valueobjects/CustomerActionDate.hbm.xml" />
 	<mapping
 		resource="org/mifos/application/customer/util/valueobjects/CustomerFeesActionDetail.hbm.xml" />
+	<mapping
+		resource="org/mifos/application/customer/client/business/CustomerPictureEntity.hbm.xml" />
 </session-factory>
 
 </hibernate-configuration>  

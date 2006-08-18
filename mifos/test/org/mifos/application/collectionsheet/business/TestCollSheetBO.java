@@ -207,12 +207,16 @@ public class TestCollSheetBO extends MifosTestCase {
 	}
 
 	public void testPouplateCustomers() {
+		try{
 		CollectionSheetBO collSheet = new CollectionSheetBO();
 		List<AccountActionDateEntity> accountActionDates = getCustomerAccntDetails();
 		collSheet.pouplateCustAndCustAccntDetails(accountActionDates);
 		assertEquals(collSheet.getCollectionSheetCustomers().size(), 3);
 		for (AccountActionDateEntity entity : accountActionDates) {
 			TestObjectFactory.cleanUp(entity.getCustomer());
+		}
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -369,9 +373,9 @@ public class TestCollSheetBO extends MifosTestCase {
 						.currentTimeMillis()), PaymentStatus.UNPAID,
 				new Money(), new Money());
 
-		accntActionDates.add(accntActionDateCenter);
-		accntActionDates.add(accntActionDateGrp);
 		accntActionDates.add(accntActionDateClient);
+		accntActionDates.add(accntActionDateGrp);
+		accntActionDates.add(accntActionDateCenter);
 
 		return accntActionDates;
 	}
@@ -391,9 +395,9 @@ public class TestCollSheetBO extends MifosTestCase {
 				.currentTimeMillis()));
 
 		List<CustomerBO> customers = new ArrayList<CustomerBO>();
-		customers.add(center);
-		customers.add(group);
 		customers.add(client);
+		customers.add(group);
+		customers.add(center);
 		return customers;
 	}
 
@@ -539,8 +543,6 @@ public class TestCollSheetBO extends MifosTestCase {
 				collectionSheet.populateAccountActionDates(accountActionDates);
 
 			}
-			System.out.println("Coll sheet date: "
-					+ collectionSheet.getCollSheetDate());
 			List<LoanBO> loanBOs = collSheetPerService
 					.getLnAccntsWithDisbursalDate(collectionSheet
 							.getCollSheetDate());

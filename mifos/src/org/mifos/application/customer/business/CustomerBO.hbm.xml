@@ -53,7 +53,7 @@
 		</set>
 		<set name="customerHierarchies" cascade="all" lazy="true" access="field">
 			<key column="CUSTOMER_ID" update="false" />
-			<one-to-many class="org.mifos.application.customer.business.CustomerCustomFieldEntity" />
+			<one-to-many class="org.mifos.application.customer.business.CustomerHierarchyEntity" />
 		</set>
 		<set name="customerPositions" cascade="all" lazy="true">
 			<key column="PARENT_CUSTOMER_ID" update="false" />
@@ -85,6 +85,7 @@
 			<property name="dateOfBirth" column="DATE_OF_BIRTH" type="date" />
 			<property name="groupFlag" column="GROUP_FLAG" type="short" access="field"/>
 			<one-to-one name="customerDetail" class="org.mifos.application.customer.client.business.ClientDetailEntity" cascade="all" lazy="true" />
+			<one-to-one name="customerPicture" class="org.mifos.application.customer.client.business.CustomerPictureEntity" cascade="all" lazy="true" />
 			<set name="nameDetailSet" cascade="all">
 				<key column="CUSTOMER_ID" />
 				<one-to-many class="org.mifos.application.customer.client.business.ClientNameDetailEntity" />

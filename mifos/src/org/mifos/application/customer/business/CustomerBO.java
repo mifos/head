@@ -46,34 +46,20 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.AccountNotesEntity;
-import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStateFlagEntity;
-import org.mifos.application.accounts.business.AccountStateMachines;
-import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.configuration.business.ConfigurationIntf;
-import org.mifos.application.configuration.business.MifosConfiguration;
-import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
-import org.mifos.application.customer.center.exception.StateChangeException;
-import org.mifos.application.customer.dao.ViewClosedAccountsDAO;
 import org.mifos.application.customer.exceptions.CustomerException;
-import org.mifos.application.customer.exceptions.CustomerStateChangeException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.IdGenerator;
 import org.mifos.application.fees.business.FeeView;
-import org.mifos.application.fees.exceptions.FeeException;
-import org.mifos.application.fees.persistence.FeePersistence;
-import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
@@ -88,7 +74,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
@@ -115,9 +100,9 @@ public abstract class CustomerBO extends BusinessObject {
 
 	private String externalId;
 
-	private Short trained;
+	protected Short trained;
 
-	private Date trainedDate;
+	protected Date trainedDate;
 
 	private Date mfiJoiningDate;
 
@@ -175,6 +160,7 @@ public abstract class CustomerBO extends BusinessObject {
 			CustomerBO parentCustomer, MeetingBO meeting, Short loanOfficerId)
 			throws CustomerException {
 		super(userContext);
+		customerHierarchies = new HashSet<CustomerHierarchyEntity>();
 		validateFields(displayName, customerStatus, officeId);
 		this.customFields = new HashSet<CustomerCustomFieldEntity>();
 		this.accounts = new HashSet<AccountBO>();

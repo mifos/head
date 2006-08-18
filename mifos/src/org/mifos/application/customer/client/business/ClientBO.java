@@ -1,13 +1,16 @@
 package org.mifos.application.customer.client.business;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Hibernate;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerHierarchyEntity;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -15,6 +18,7 @@ import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.util.helpers.Status;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -24,7 +28,7 @@ import org.mifos.framework.security.util.UserContext;
 
 public class ClientBO extends CustomerBO {
 
-	private InputStream customerPicture;
+	private CustomerPictureEntity customerPicture;
 
 	private Set<ClientNameDetailEntity> nameDetailSet;
 
@@ -40,7 +44,6 @@ public class ClientBO extends CustomerBO {
 
 	private ClientDetailEntity customerDetail;
 
-	// TODO: removed searchId from parameter and generate internally
 	protected ClientBO() {
 		super();
 		this.nameDetailSet = new HashSet<ClientNameDetailEntity>();
@@ -53,10 +56,18 @@ public class ClientBO extends CustomerBO {
 			Date mfiJoiningDate, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
 			Short formedById, Short officeId, CustomerBO parentCustomer,
-			String searchId) throws CustomerException {
+			Date dateOfBirth, String governmentId, Short trained,
+			Date trainedDate, Short groupFlag,
+			ClientNameDetailView clientNameDetailView,
+			ClientNameDetailView spouseNameDetailView,
+			ClientDetailView clientDetailView, InputStream picture)
+			throws CustomerException {
 		this(userContext, displayName, customerStatus, externalId,
 				mfiJoiningDate, address, customFields, fees, formedById,
-				officeId, parentCustomer, null, null, searchId);
+				officeId, parentCustomer, null, null, dateOfBirth,
+				governmentId, trained, trainedDate, groupFlag,
+				clientNameDetailView, spouseNameDetailView, clientDetailView,
+				picture);
 		clientAttendances = new HashSet<ClientAttendanceBO>();
 	}
 
@@ -65,10 +76,18 @@ public class ClientBO extends CustomerBO {
 			Date mfiJoiningDate, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
 			Short formedById, Short officeId, MeetingBO meeting,
-			Short loanOfficerId, String searchId) throws CustomerException {
+			Short loanOfficerId, Date dateOfBirth, String governmentId,
+			Short trained, Date trainedDate, Short groupFlag,
+			ClientNameDetailView clientNameDetailView,
+			ClientNameDetailView spouseNameDetailView,
+			ClientDetailView clientDetailView, InputStream picture)
+			throws CustomerException {
 		this(userContext, displayName, customerStatus, externalId,
 				mfiJoiningDate, address, customFields, fees, formedById,
-				officeId, null, meeting, loanOfficerId, searchId);
+				officeId, null, meeting, loanOfficerId, dateOfBirth,
+				governmentId, trained, trainedDate, groupFlag,
+				clientNameDetailView, spouseNameDetailView, clientDetailView,
+				picture);
 	}
 
 	private ClientBO(UserContext userContext, String displayName,
@@ -76,31 +95,62 @@ public class ClientBO extends CustomerBO {
 			Date mfiJoiningDate, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
 			Short formedById, Short officeId, CustomerBO parentCustomer,
-			MeetingBO meeting, Short loanOfficerId, String searchId)
+			MeetingBO meeting, Short loanOfficerId, Date dateOfBirth,
+			String governmentId, Short trained, Date trainedDate,
+			Short groupFlag, ClientNameDetailView clientNameDetailView,
+			ClientNameDetailView spouseNameDetailView,
+			ClientDetailView clientDetailView, InputStream picture)
 			throws CustomerException {
 		super(userContext, displayName, CustomerLevel.CLIENT, customerStatus,
 				externalId, mfiJoiningDate, address, customFields, fees,
 				formedById, officeId, parentCustomer, meeting, loanOfficerId);
-		this.setSearchId(searchId);
+		nameDetailSet = new HashSet<ClientNameDetailEntity>();
 		if (customerStatus.equals(CustomerStatus.CLIENT_ACTIVE.getValue()))
 			this.setCustomerActivationDate(this.getCreatedDate());
 		this.performanceHistory = new ClientPerformanceHistoryEntity(this);
+		this.dateOfBirth = dateOfBirth;
+		this.governmentId = governmentId;
+		this.trained = trained;
+		this.trainedDate = trainedDate;
+		this.groupFlag = groupFlag;
+		this.addNameDetailSet(new ClientNameDetailEntity(this, null,
+				clientNameDetailView));
+		this.addNameDetailSet(new ClientNameDetailEntity(this, null,
+				spouseNameDetailView));
+		this.customerDetail = new ClientDetailEntity(this, clientDetailView);
+		try {
+			if (picture != null)
+				this.customerPicture = new CustomerPictureEntity(this,
+						Hibernate.createBlob(picture));
+		} catch (IOException e) {
+			throw new CustomerException(e);
+		}
+
+		if (parentCustomer != null) {
+			CustomerHierarchyEntity customerHierarchyEntity = new CustomerHierarchyEntity(
+					this, parentCustomer, Status.ACTIVE);
+			this.addCustomerHierarchy(customerHierarchyEntity);
+		}
 	}
 
 	public Set<ClientNameDetailEntity> getNameDetailSet() {
 		return nameDetailSet;
 	}
 
-	public void setNameDetailSet(
+	private void setNameDetailSet(
 			Set<ClientNameDetailEntity> customerNameDetailSet) {
 		this.nameDetailSet = customerNameDetailSet;
 	}
 
-	public InputStream getCustomerPicture() {
+	public void addNameDetailSet(ClientNameDetailEntity customerNameDetail) {
+		this.nameDetailSet.add(customerNameDetail);
+	}
+
+	public CustomerPictureEntity getCustomerPicture() {
 		return customerPicture;
 	}
 
-	public void setCustomerPicture(InputStream customerPicture) {
+	public void setCustomerPicture(CustomerPictureEntity customerPicture) {
 		this.customerPicture = customerPicture;
 	}
 

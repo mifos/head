@@ -81,6 +81,17 @@ public class ClientNameDetailEntity extends PersistentObject {
 		this.displayName = displayName;
 		this.name = name;
 	}
+	
+	public ClientNameDetailEntity(ClientBO client, String secondMiddleName, ClientNameDetailView view) {
+		super();
+		this.customerNameId = null;
+		this.client = client;
+		this.nameType = view.getNameType();
+		this.salutation = view.getSalutation();
+		this.secondMiddleName = secondMiddleName;
+		this.displayName = view.getDisplayName();
+		this.name = new Name(view.getFirstName(),view.getMiddleName(),view.getSecondLastName(),view.getLastName());
+	}
 
 	public String getDisplayName() {
 		return displayName;

@@ -121,10 +121,10 @@ public class TestSavingsBO extends MifosTestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		TestObjectFactory.cleanUp(savings);
-		TestObjectFactory.cleanUp(center);
-		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(client1);
 		TestObjectFactory.cleanUp(client2);
+		TestObjectFactory.cleanUp(group);
+		TestObjectFactory.cleanUp(center);
 		HibernateUtil.closeSession();
 	}
 
