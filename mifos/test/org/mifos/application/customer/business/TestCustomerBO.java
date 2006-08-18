@@ -17,6 +17,7 @@ import org.mifos.application.customer.center.exception.StateChangeException;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.application.customer.exceptions.CustomerStateChangeException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
@@ -35,12 +36,19 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestCustomerBO extends MifosTestCase {
 	private AccountBO accountBO;
+
 	private CenterBO center;
+
 	private GroupBO group;
+
 	private ClientBO client;
+
 	private CustomerPersistence customerPersistence;
+
 	private MeetingBO meeting;
+
 	private SavingsTestHelper helper = new SavingsTestHelper();
+
 	private SavingsOfferingBO savingsOffering;
 
 	@Override
@@ -58,31 +66,7 @@ public class TestCustomerBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
-	
-	private void createInitialObjects() {
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short
-				.valueOf("13"), "1.4", meeting, new Date(System
-				.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE, "1.4.1", center, new Date(System
-				.currentTimeMillis()));
-		client = TestObjectFactory.createClient("Client",ClientConstants.STATUS_ACTIVE,"1.4.1.1",group,new Date(System
-				.currentTimeMillis()));
-	}
-	
-	private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
-		Date startDate = new Date(System.currentTimeMillis());
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short
-						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), Short.valueOf("1"), meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", customer, Short
-				.valueOf("5"), startDate, loanOffering);
 
-	}
-	
 	public void testGroupPerfObject() throws PersistenceException {
 		createInitialObjects();
 		GroupPerformanceHistoryEntity groupPerformanceHistory = new GroupPerformanceHistoryEntity();
@@ -92,65 +76,241 @@ public class TestCustomerBO extends MifosTestCase {
 		groupPerformanceHistory.setGroup(group);
 		group.setPerformanceHistory(groupPerformanceHistory);
 		TestObjectFactory.updateObject(group);
-		group = (GroupBO)customerPersistence.getBySystemId(group.getGlobalCustNum(),group.getCustomerLevel().getId());
-		assertEquals(group.getCustomerId(),group.getPerformanceHistory().getGroup().getCustomerId());
-		assertEquals(Integer.valueOf("1"),group.getPerformanceHistory().getClientCount());
-		assertEquals(new Money("100"),group.getPerformanceHistory().getLastGroupLoanAmount());
+		group = (GroupBO) customerPersistence.getBySystemId(group
+				.getGlobalCustNum(), group.getCustomerLevel().getId());
+		assertEquals(group.getCustomerId(), group.getPerformanceHistory()
+				.getGroup().getCustomerId());
+		assertEquals(Integer.valueOf("1"), group.getPerformanceHistory()
+				.getClientCount());
+		assertEquals(new Money("100"), group.getPerformanceHistory()
+				.getLastGroupLoanAmount());
 	}
-	
+
 	public void testClientPerfObject() throws PersistenceException {
 		createInitialObjects();
-		ClientPerformanceHistoryEntity clientPerformanceHistory = ((ClientBO)client).getPerformanceHistory();
+		ClientPerformanceHistoryEntity clientPerformanceHistory = ((ClientBO) client)
+				.getPerformanceHistory();
 		clientPerformanceHistory.setLoanCycleNumber(Integer.valueOf("1"));
 		clientPerformanceHistory.setNoOfActiveLoans(Integer.valueOf("1"));
 		clientPerformanceHistory.setLastLoanAmount(new Money("100"));
 		TestObjectFactory.updateObject(client);
-		client = (ClientBO)customerPersistence.getBySystemId(client.getGlobalCustNum(),client.getCustomerLevel().getId());
-		assertEquals(client.getCustomerId(),client.getPerformanceHistory().getClient().getCustomerId());
-		assertEquals(Integer.valueOf("1"),client.getPerformanceHistory().getLoanCycleNumber());
-		assertEquals(new Money("100"),client.getPerformanceHistory().getLastLoanAmount());
-		assertEquals(new Money("0"),client.getPerformanceHistory().getDelinquentPortfolioAmount());
+		client = (ClientBO) customerPersistence.getBySystemId(client
+				.getGlobalCustNum(), client.getCustomerLevel().getId());
+		assertEquals(client.getCustomerId(), client.getPerformanceHistory()
+				.getClient().getCustomerId());
+		assertEquals(Integer.valueOf("1"), client.getPerformanceHistory()
+				.getLoanCycleNumber());
+		assertEquals(new Money("100"), client.getPerformanceHistory()
+				.getLastLoanAmount());
+		assertEquals(new Money("0"), client.getPerformanceHistory()
+				.getDelinquentPortfolioAmount());
 	}
-	
+
 	public void testLoanPerfObject() throws PersistenceException {
 		Date currentDate = new Date(System.currentTimeMillis());
 		createInitialObjects();
-		accountBO = getLoanAccount(client,meeting);
-		LoanBO loanBO = (LoanBO)accountBO;
-		LoanPerformanceHistoryEntity loanPerformanceHistory = loanBO.getPerformanceHistory();
+		accountBO = getLoanAccount(client, meeting);
+		LoanBO loanBO = (LoanBO) accountBO;
+		LoanPerformanceHistoryEntity loanPerformanceHistory = loanBO
+				.getPerformanceHistory();
 		loanPerformanceHistory.setNoOfPayments(Integer.valueOf("3"));
 		loanPerformanceHistory.setLoanMaturityDate(currentDate);
 		TestObjectFactory.updateObject(loanBO);
-		loanBO = (LoanBO) new AccountPersistanceService().getAccount(loanBO.getAccountId());
-		assertEquals(Integer.valueOf("3"),loanBO.getPerformanceHistory().getNoOfPayments());
-		assertEquals(currentDate,loanBO.getPerformanceHistory().getLoanMaturityDate());
+		loanBO = (LoanBO) new AccountPersistanceService().getAccount(loanBO
+				.getAccountId());
+		assertEquals(Integer.valueOf("3"), loanBO.getPerformanceHistory()
+				.getNoOfPayments());
+		assertEquals(currentDate, loanBO.getPerformanceHistory()
+				.getLoanMaturityDate());
 	}
-
-	
 
 	public void testGetBalanceForAccountsAtRisk() throws PersistenceException {
 		createInitialObjects();
-		accountBO = getLoanAccount(group,meeting);
+		accountBO = getLoanAccount(group, meeting);
 		TestObjectFactory.flushandCloseSession();
-		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		client=(ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
-		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
-		assertEquals(new Money(),group.getBalanceForAccountsAtRisk());
-		changeFirstInstallmentDate(accountBO,31);
-		assertEquals(new Money("300"),group.getBalanceForAccountsAtRisk());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+		assertEquals(new Money(), group.getBalanceForAccountsAtRisk());
+		changeFirstInstallmentDate(accountBO, 31);
+		assertEquals(new Money("300"), group.getBalanceForAccountsAtRisk());
 		TestObjectFactory.flushandCloseSession();
-		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
-		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		client=(ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
-		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
 	}
-	
-	private void changeFirstInstallmentDate(AccountBO accountBO,int numberOfDays) {
+
+	public void testGetDelinquentPortfolioAmount() {
+		createInitialObjects();
+		accountBO = getLoanAccount(client, meeting);
+		TestObjectFactory.flushandCloseSession();
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+		setActionDateToPastDate();
+		TestObjectFactory.updateObject(accountBO);
+		TestObjectFactory.flushandCloseSession();
+		client = (ClientBO) TestObjectFactory.getObject(CustomerBO.class,
+				client.getCustomerId());
+		assertEquals(new Money("0.7"), client.getDelinquentPortfolioAmount());
+		TestObjectFactory.flushandCloseSession();
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+	}
+
+	public void testGetOutstandingLoanAmount() throws PersistenceException {
+		createInitialObjects();
+		accountBO = getLoanAccount(group, meeting);
+		TestObjectFactory.flushandCloseSession();
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		assertEquals(new Money("300.0"), group.getOutstandingLoanAmount());
+		TestObjectFactory.flushandCloseSession();
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+	}
+
+	public void testGetActiveLoanCounts() throws PersistenceException {
+		createInitialObjects();
+		accountBO = getLoanAccount(group, meeting);
+		TestObjectFactory.flushandCloseSession();
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		assertEquals(1, group.getActiveLoanCounts().intValue());
+		TestObjectFactory.flushandCloseSession();
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+	}
+
+	public void testgetSavingsBalance() throws Exception {
+		SavingsBO savings = getSavingsAccount();
+		savings.setSavingsBalance(new Money("1000"));
+		savings.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		savings = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class,
+				savings.getAccountId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		assertEquals(new Money("1000.0"), savings.getSavingsBalance());
+		assertEquals(new Money("1000.0"), client.getSavingsBalance());
+		TestObjectFactory.flushandCloseSession();
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		savings = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class,
+				savings.getAccountId());
+		TestObjectFactory.cleanUp(savings);
+	}
+
+	public void testValidateStatusWithActiveGroups() throws Exception {
+		createInitialObjects();
+		Short newStatusId = CustomerStatus.CENTER_INACTIVE.getValue();
+		try {
+			center.changeStatus(newStatusId, null, "Test");
+			// assertFalse(true);
+		} catch (StateChangeException sce) {
+			assertTrue(true);
+			assertEquals(sce.getKey(),
+					CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION);
+		}
+		// TestObjectFactory.cleanUp(savings);
+	}
+
+	public void testValidateStatusForClientWithPartialGroups() throws Exception {
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.4", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group",
+				CustomerStatus.GROUP_PARTIAL.getValue(), "1.4.1", center,
+				new Date(System.currentTimeMillis()));
+		client = TestObjectFactory.createClient("Client",
+				CustomerStatus.CLIENT_PARTIAL.getValue(), "1.4.1.1", group,
+				new Date(System.currentTimeMillis()));
+		Short newStatusId = CustomerStatus.CLIENT_ACTIVE.getValue();
+		try {
+			client.changeStatus(newStatusId, null, "Test");
+			assertFalse(true);
+		} catch (CustomerStateChangeException sce) {
+			assertTrue(true);
+			assertEquals(sce.getKey(),
+					ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION);
+		}
+	}
+
+	public void testValidateStatusForClientWithActiveAccounts()
+			throws Exception {
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.4", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group",
+				CustomerStatus.GROUP_ACTIVE.getValue(), "1.4.1", center,
+				new Date(System.currentTimeMillis()));
+		client = TestObjectFactory.createClient("Client",
+				CustomerStatus.CLIENT_ACTIVE.getValue(), "1.4.1.1", group,
+				new Date(System.currentTimeMillis()));
+		accountBO = getLoanAccount(client, meeting);
+		HibernateUtil.closeSession();
+		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
+				client.getCustomerId());
+		Short newStatusId = CustomerStatus.CLIENT_CLOSED.getValue();
+		try {
+			client.changeStatus(newStatusId, null, "Test");
+			assertFalse(true);
+		} catch (CustomerStateChangeException sce) {
+			assertTrue(true);
+			assertEquals(sce.getKey(),
+					CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
+		}
+		HibernateUtil.closeSession();
+		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
+				client.getCustomerId());
+		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
+				group.getCustomerId());
+		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,
+				center.getCustomerId());
+		accountBO = (LoanBO) HibernateUtil.getSessionTL().get(LoanBO.class,
+				accountBO.getAccountId());
+	}
+
+	private void changeFirstInstallmentDate(AccountBO accountBO,
+			int numberOfDays) {
 		Calendar currentDateCalendar = new GregorianCalendar();
 		int year = currentDateCalendar.get(Calendar.YEAR);
 		int month = currentDateCalendar.get(Calendar.MONTH);
 		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-		currentDateCalendar = new GregorianCalendar(year, month, day - numberOfDays);
+		currentDateCalendar = new GregorianCalendar(year, month, day
+				- numberOfDays);
 		for (AccountActionDateEntity accountActionDateEntity : accountBO
 				.getAccountActionDates()) {
 			accountActionDateEntity.setActionDate(new java.sql.Date(
@@ -158,72 +318,30 @@ public class TestCustomerBO extends MifosTestCase {
 			break;
 		}
 	}
-	
+
 	private void setActionDateToPastDate() {
 		Calendar calendar = new GregorianCalendar();
-        calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
-        calendar.add(calendar.WEEK_OF_MONTH,-1);
-        java.sql.Date lastWeekDate = new java.sql.Date(calendar.getTimeInMillis());        
-        
-        Calendar date = new GregorianCalendar();
-        date.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
-        date.add(date.WEEK_OF_MONTH,-2);
-        java.sql.Date twoWeeksBeforeDate = new java.sql.Date(date.getTimeInMillis());
-        
-        
-		for(AccountActionDateEntity installment : accountBO.getAccountActionDates()){
-			if(installment.getInstallmentId().intValue()==1){
+		calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
+		calendar.add(calendar.WEEK_OF_MONTH, -1);
+		java.sql.Date lastWeekDate = new java.sql.Date(calendar
+				.getTimeInMillis());
+
+		Calendar date = new GregorianCalendar();
+		date.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
+		date.add(date.WEEK_OF_MONTH, -2);
+		java.sql.Date twoWeeksBeforeDate = new java.sql.Date(date
+				.getTimeInMillis());
+
+		for (AccountActionDateEntity installment : accountBO
+				.getAccountActionDates()) {
+			if (installment.getInstallmentId().intValue() == 1) {
 				installment.setActionDate(lastWeekDate);
-			}
-			else if(installment.getInstallmentId().intValue()==2){
+			} else if (installment.getInstallmentId().intValue() == 2) {
 				installment.setActionDate(twoWeeksBeforeDate);
 			}
 		}
 	}
-	
-	public void testGetDelinquentPortfolioAmount() {
-		createInitialObjects();
-		accountBO = getLoanAccount(client,meeting);
-		TestObjectFactory.flushandCloseSession();
-		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
-		setActionDateToPastDate();
-		TestObjectFactory.updateObject(accountBO);
-		TestObjectFactory.flushandCloseSession();
-		client=(ClientBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
-		assertEquals(new Money("0.7"),client.getDelinquentPortfolioAmount());
-		TestObjectFactory.flushandCloseSession();
-		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
-		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		client=(ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
-		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
-	}
-	
-	public void testGetOutstandingLoanAmount() throws PersistenceException {
-		createInitialObjects();
-		accountBO = getLoanAccount(group,meeting);
-		TestObjectFactory.flushandCloseSession();
-		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		assertEquals(new Money("300.0"),group.getOutstandingLoanAmount());
-		TestObjectFactory.flushandCloseSession();
-		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
-		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		client=(ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
-		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
-	}
-	
-	public void testGetActiveLoanCounts() throws PersistenceException {
-		createInitialObjects();
-		accountBO = getLoanAccount(group,meeting);
-		TestObjectFactory.flushandCloseSession();
-		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		assertEquals(1,group.getActiveLoanCounts().intValue());
-		TestObjectFactory.flushandCloseSession();
-		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
-		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		client=(ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
-		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
-	}
-	
+
 	private SavingsBO getSavingsAccount() {
 		createInitialObjects();
 		savingsOffering = helper.createSavingsOffering();
@@ -231,36 +349,28 @@ public class TestCustomerBO extends MifosTestCase {
 				client, AccountStates.SAVINGS_ACC_APPROVED, new Date(System
 						.currentTimeMillis()), savingsOffering);
 	}
-	
-	public void testgetSavingsBalance() throws Exception {
-		SavingsBO savings = getSavingsAccount();
-		savings.setSavingsBalance(new Money("1000"));
-		savings.update();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		savings=(SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
-		client=(ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
-		assertEquals(new Money("1000.0"), savings.getSavingsBalance());
-		assertEquals(new Money("1000.0"), client.getSavingsBalance());
-		TestObjectFactory.flushandCloseSession();
-		center=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
-		group=(GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		client=(ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
-		savings=(SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
-		TestObjectFactory.cleanUp(savings);
+
+	private void createInitialObjects() {
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.4", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
+				"1.4.1", center, new Date(System.currentTimeMillis()));
+		client = TestObjectFactory.createClient("Client",
+				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
+						System.currentTimeMillis()));
 	}
-	
-	public void testValidateStatusWithActiveGroups() throws Exception {
-		createInitialObjects();
-		Short newStatusId= CustomerStatus.CENTER_INACTIVE.getValue();
-		try{
-			center.changeStatus(newStatusId,null,"Test");
-			//assertFalse(true);
-		}
-		catch(StateChangeException sce){
-			assertTrue(true);
-			assertEquals(sce.getKey(),CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION);
-		}
-		//TestObjectFactory.cleanUp(savings);
+
+	private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
+		Date startDate = new Date(System.currentTimeMillis());
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), meeting);
+		return TestObjectFactory.createLoanAccount("42423142341", customer,
+				Short.valueOf("5"), startDate, loanOffering);
+
 	}
 }

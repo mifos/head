@@ -72,7 +72,9 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Money;
 
 public class CustomerBusinessService extends BusinessService {
@@ -292,36 +294,61 @@ public class CustomerBusinessService extends BusinessService {
 						totalOutstandingLoan, totalSavings, portfolioAtRisk);
 		return centerPerformanceHistory;
 	}
-	
-	public List<CustomerCheckListBO> getStatusChecklist(Short statusId, Short customerLevelId ) throws PersistenceException,
-	ServiceException {
-		return new CustomerPersistence().getStatusChecklist(statusId,customerLevelId);
+
+	public List<CustomerCheckListBO> getStatusChecklist(Short statusId,
+			Short customerLevelId) throws PersistenceException,
+			ServiceException {
+		return new CustomerPersistence().getStatusChecklist(statusId,
+				customerLevelId);
 	}
 
-	public List<CustomerStatusEntity> retrieveAllCustomerStatusList(Short levelId)throws PersistenceException,
-	ServiceException {
+	public List<CustomerStatusEntity> retrieveAllCustomerStatusList(
+			Short levelId) throws PersistenceException, ServiceException {
 		return new CustomerPersistence().retrieveAllCustomerStatusList(levelId);
 	}
-	
-	public void initializeStateMachine(Short localeId , Short officeId , Short levelId) throws StatesInitializationException {
-		AccountStateMachines.getInstance().initialize(localeId,
-				officeId,	levelId);
+
+	public void initializeStateMachine(Short localeId, Short officeId,
+			Short levelId) throws StatesInitializationException {
+		AccountStateMachines.getInstance().initialize(localeId, officeId,
+				levelId);
 	}
-	
-	public QueryResult getAllCustomerNotes(Integer customerId) throws ApplicationException, SystemException{
+
+	public QueryResult getAllCustomerNotes(Integer customerId)
+			throws ApplicationException, SystemException {
 		return new CustomerPersistence().getAllCustomerNotes(customerId);
 	}
 
-	public List<BusinessActivityEntity> retrieveMasterEntities(String entityName, Short localeId) throws PersistenceException {
-		return new MasterPersistence().retrieveMasterEntities(entityName,localeId);
+	public List<BusinessActivityEntity> retrieveMasterEntities(
+			String entityName, Short localeId) throws PersistenceException {
+		return new MasterPersistence().retrieveMasterEntities(entityName,
+				localeId);
 	}
-	
-	public List<PersonnelView> getFormedByPersonnel(Short levelId , Short officeId)throws PersistenceException,
-	ServiceException {
-		return new CustomerPersistence().getFormedByPersonnel(levelId ,officeId);
+
+	public List<PersonnelView> getFormedByPersonnel(Short levelId,
+			Short officeId) throws PersistenceException, ServiceException {
+		return new CustomerPersistence()
+				.getFormedByPersonnel(levelId, officeId);
 	}
-	
-	public CustomerPictureEntity retrievePicture(Integer customerId)throws PersistenceException {
+
+	public CustomerPictureEntity retrievePicture(Integer customerId)
+			throws PersistenceException {
 		return new CustomerPersistence().retrievePicture(customerId);
+	}
+
+	public void checkPermissionForStatusChange(Short newState,
+			UserContext userContext, Short flagSelected, Short recordOfficeId,
+			Short recordLoanOfficerId) throws SecurityException {
+		if (!isPermissionAllowed(newState, userContext, flagSelected,
+				recordOfficeId, recordLoanOfficerId))
+			throw new SecurityException(
+					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+	}
+
+	public boolean isPermissionAllowed(Short newState, UserContext userContext,
+			Short flagSelected, Short recordOfficeId, Short recordLoanOfficerId) {
+		return ActivityMapper.getInstance().isStateChangePermittedForAccount(
+				newState.shortValue(),
+				null != flagSelected ? flagSelected.shortValue() : 0,
+				userContext, recordOfficeId, recordLoanOfficerId);
 	}
 }

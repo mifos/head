@@ -75,9 +75,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
@@ -141,9 +139,8 @@ public abstract class CustomerBO extends BusinessObject {
 	private CustomerHistoricalDataEntity historicalData;
 
 	private Short blackListed;
-	
-	public Set<CustomerNoteEntity> customerNotes;
 
+	public Set<CustomerNoteEntity> customerNotes;
 
 	protected CustomerBO() {
 		super();
@@ -154,11 +151,11 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 
 	protected CustomerBO(UserContext userContext, String displayName,
-			CustomerLevel customerLevel, CustomerStatus customerStatus, String externalId,
-			Date mfiJoiningDate, Address address, List<CustomFieldView> customFields,
-			List<FeeView> fees, Short formedBy, Short officeId,
-			CustomerBO parentCustomer, MeetingBO meeting, Short loanOfficerId)
-			throws CustomerException {
+			CustomerLevel customerLevel, CustomerStatus customerStatus,
+			String externalId, Date mfiJoiningDate, Address address,
+			List<CustomFieldView> customFields, List<FeeView> fees,
+			Short formedBy, Short officeId, CustomerBO parentCustomer,
+			MeetingBO meeting, Short loanOfficerId) throws CustomerException {
 		super(userContext);
 		customerHierarchies = new HashSet<CustomerHierarchyEntity>();
 		validateFields(displayName, customerStatus, officeId);
@@ -180,9 +177,9 @@ public abstract class CustomerBO extends BusinessObject {
 
 		if (parentCustomer != null)
 			this.personnel = parentCustomer.getPersonnel();
-		else 
-			if(loanOfficerId != null)
-				this.personnel = new PersonnelPersistence().getPersonnel(loanOfficerId);
+		else if (loanOfficerId != null)
+			this.personnel = new PersonnelPersistence()
+					.getPersonnel(loanOfficerId);
 
 		if (parentCustomer != null
 				&& parentCustomer.getCustomerMeeting() != null)
@@ -191,9 +188,10 @@ public abstract class CustomerBO extends BusinessObject {
 		else
 			this.customerMeeting = createCustomerMeeting(meeting);
 
-		if(formedBy!=null)
-			this.formedByPersonnel = new PersonnelPersistence().getPersonnel(formedBy);
-		
+		if (formedBy != null)
+			this.formedByPersonnel = new PersonnelPersistence()
+					.getPersonnel(formedBy);
+
 		this.parentCustomer = parentCustomer;
 
 		if (customFields != null)
@@ -323,14 +321,15 @@ public abstract class CustomerBO extends BusinessObject {
 		this.customerNotes = customerNotes;
 	}
 
-	public Address getAddress(){
-		return customerAddressDetail!=null ? customerAddressDetail.getAddress() : null;
+	public Address getAddress() {
+		return customerAddressDetail != null ? customerAddressDetail
+				.getAddress() : null;
 	}
-	
-	public CustomerStatus getStatus() throws PropertyNotFoundException{
+
+	public CustomerStatus getStatus() throws PropertyNotFoundException {
 		return CustomerStatus.getStatus(customerStatus.getId());
 	}
-	
+
 	public void save() throws ApplicationException, CustomerException {
 		try {
 			new CustomerPersistence().createOrUpdate(this);
@@ -343,20 +342,21 @@ public abstract class CustomerBO extends BusinessObject {
 					CustomerConstants.CREATE_FAILED_EXCEPTION, he);
 		}
 	}
-	
-	public void update() throws CustomerException{
+
+	public void update() throws CustomerException {
 		try {
 			setUpdateDetails();
 			new CustomerPersistence().createOrUpdate(this);
 		} catch (HibernateException he) {
-			throw new CustomerException(CustomerConstants.UPDATE_FAILED_EXCEPTION, he);
+			throw new CustomerException(
+					CustomerConstants.UPDATE_FAILED_EXCEPTION, he);
 		}
 	}
 
-	public void updateAddress(Address address) throws CustomerException{
+	public void updateAddress(Address address) throws CustomerException {
 		getCustomerAddressDetail().setAddress(address);
 	}
-	
+
 	public CustomerAccountBO getCustomerAccount() {
 		for (AccountBO account : accounts) {
 			if (account.getAccountType().getAccountTypeId().equals(
@@ -407,7 +407,7 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 		return savingsAccounts;
 	}
-	
+
 	public List<CustomerNoteEntity> getRecentCustomerNotes() {
 		List<CustomerNoteEntity> notes = new ArrayList<CustomerNoteEntity>();
 		int count = 0;
@@ -419,7 +419,7 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 		return notes;
 	}
-	
+
 	public CustomerMeetingEntity getCustomerMeeting() {
 		return customerMeeting;
 	}
@@ -648,8 +648,6 @@ public abstract class CustomerBO extends BusinessObject {
 	public List<CustomerStatusEntity> getStatusList() {
 		return null;
 	}
-	
-
 
 	private void validateFields(String displayName,
 			CustomerStatus customerStatus, Short officeId)
@@ -686,23 +684,20 @@ public abstract class CustomerBO extends BusinessObject {
 				: null;
 	}
 
-	public String getStatusName(Short localeId, Short statusId) throws ApplicationException, SystemException {
+	public String getStatusName(Short localeId, Short statusId)
+			throws ApplicationException, SystemException {
 		return null;
 	}
 
-	public String getFlagName(Short flagId) throws ApplicationException, SystemException {
+	public String getFlagName(Short flagId) throws ApplicationException,
+			SystemException {
 		return null;
 	}
-	
-	public void changeStatus(Short newStatusId, Short flagId, String comment) throws SecurityException, ServiceException, PersistenceException, ApplicationException , SystemException{
+
+	public void changeStatus(Short newStatusId, Short flagId, String comment)
+			throws SecurityException, ServiceException, PersistenceException,
+			ApplicationException, SystemException {
 		validateStatusChange(newStatusId);
-		if (null != getPersonnel().getPersonnelId())
-			checkPermissionForStatusChange(newStatusId, this.getUserContext(),
-					flagId, getOffice().getOfficeId(), getPersonnel().getPersonnelId());
-		else
-			checkPermissionForStatusChange(newStatusId, this.getUserContext(),
-					flagId, getOffice().getOfficeId(), this.getUserContext()
-							.getId());
 		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
 				.getInstance().getPersistenceService(
 						PersistenceServiceName.MasterDataService);
@@ -720,42 +715,28 @@ public abstract class CustomerBO extends BusinessObject {
 		if (customerStatusFlagEntity != null) {
 			customerStatusFlagEntity.setLocaleId(this.getUserContext()
 					.getLocaleId());
-			CustomerFlagDetailEntity customerFlag = new CustomerFlagDetailEntity(this,customerStatusFlagEntity);
+			CustomerFlagDetailEntity customerFlag = new CustomerFlagDetailEntity(
+					this, customerStatusFlagEntity);
 			customerFlag.setCreatedBy(this.getUserContext().getId());
 			customerFlag.setCreatedDate(new Date());
 			this.addCustomerFlag(customerFlag);
 		}
 	}
-	
-	protected abstract void validateStatusChange(Short newStatusId) throws ApplicationException, SystemException;
-		
+
+	protected abstract void validateStatusChange(Short newStatusId)
+			throws ApplicationException, SystemException;
+
 	public void addCustomerNotes(CustomerNoteEntity customerNote) {
 		this.customerNotes.add(customerNote);
-	
-}
 
-	private void checkPermissionForStatusChange(Short newState,
-			UserContext userContext, Short flagSelected, Short recordOfficeId,
-			Short recordLoanOfficerId) throws SecurityException {
-		if (!isPermissionAllowed(newState, userContext, flagSelected,
-				recordOfficeId, recordLoanOfficerId))
-			throw new SecurityException(
-					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
 	}
 
-	private boolean isPermissionAllowed(Short newState,
-			UserContext userContext, Short flagSelected, Short recordOfficeId,
-			Short recordLoanOfficerId) {
-		return ActivityMapper.getInstance().isStateChangePermittedForAccount(
-				newState.shortValue(),
-				null != flagSelected ? flagSelected.shortValue() : 0,
-				userContext, recordOfficeId, recordLoanOfficerId);
-	}
-	
-	private CustomerNoteEntity createCustomerNotes(String comment)throws ServiceException {
-		CustomerNoteEntity customerNote = new CustomerNoteEntity(comment,new java.sql.Date(System
-				.currentTimeMillis()),this.getPersonnel(),this);
+	private CustomerNoteEntity createCustomerNotes(String comment)
+			throws ServiceException {
+		CustomerNoteEntity customerNote = new CustomerNoteEntity(comment,
+				new java.sql.Date(System.currentTimeMillis()), this
+						.getPersonnel(), this);
 		return customerNote;
 	}
-			
+
 }

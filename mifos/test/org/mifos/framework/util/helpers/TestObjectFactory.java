@@ -146,6 +146,7 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.GracePeriodTypeConstants;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
@@ -344,7 +345,7 @@ public class TestObjectFactory {
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),customerName,"middle",customerName,"secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"));
 			client = new ClientBO(getUserContext(), customerName, CustomerStatus.getStatus(statusId), null, null, null, null, getFees(), personnel, office, parentCustomer, null,
-					null,null,null,null,clientNameDetailView,spouseNameDetailView,clientDetailView,null);
+					null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 		//	client.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), client, startDate));
 			//to be removed later
 			client.setSearchId(searchId);

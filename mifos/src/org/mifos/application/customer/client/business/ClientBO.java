@@ -8,12 +8,16 @@ import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Hibernate;
+import org.mifos.application.configuration.business.MifosConfiguration;
+import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.exceptions.CustomerStateChangeException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
@@ -228,6 +232,43 @@ public class ClientBO extends CustomerBO {
 	@Override
 	protected void validateStatusChange(Short newStatusId)
 			throws ApplicationException, SystemException {
+		if ((newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue()) || newStatusId
+				.equals(CustomerStatus.CLIENT_PENDING.getValue()))
+				&& this.isClientUnderGroup()) {
+			if (checkGroupStatus(newStatusId, this.getParentCustomer()
+					.getCustomerStatus().getId())) {
+				throw new CustomerStateChangeException(
+						ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION,
+						new Object[] {
+								MifosConfiguration.getInstance().getLabel(
+										ConfigurationConstants.GROUP,
+										this.getUserContext().getPereferedLocale()),
+										MifosConfiguration.getInstance().getLabel(
+										ConfigurationConstants.CLIENT,
+										this.getUserContext().getPereferedLocale()) });
+			}
+		}else if (newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue())) {
+			if (getActiveAndApprovedLoanAccounts(new java.util.Date()).size() > 0
+					|| getActiveSavingsAccounts().size() > 0) {
+				throw new CustomerStateChangeException(
+						CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
+			}
+		}
+	}
 
+	private boolean checkGroupStatus(Short newStatusId, Short parentStatus) {
+		boolean isNotValid = false;
+		if (newStatusId.equals(CustomerStatus.CLIENT_PENDING.getValue())) {
+			if (parentStatus.equals(CustomerStatus.GROUP_PARTIAL.getValue())) {
+				isNotValid = true;
+			}
+		} else if (newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue())) {
+			if (parentStatus.equals(CustomerStatus.GROUP_PARTIAL.getValue())
+					|| parentStatus.equals(CustomerStatus.GROUP_PENDING
+							.getValue())) {
+				isNotValid = true;
+			}
+		}
+		return isNotValid;
 	}
 }
