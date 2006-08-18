@@ -65,7 +65,6 @@
 	</target>
 
 	<target name="make_dir">
-		<mkdir dir="${doc.dir}"/>
 		<mkdir dir="${dist.dir}"/>
 		<mkdir dir="${build.classes}"/>
 		<mkdir dir="${build.web-inf}"/>
@@ -92,7 +91,7 @@
 
 	<target name="clean_all" depends="clean">
 		<delete dir="${dist.dir}"/>
-		<delete dir="${doc.dir}/api"/>
+		<!-- <delete dir="${doc.dir}/api"/> -->
 		<!--<delete dir="${src.dir}"/>
 		<delete dir="${test.dir}"/>
 		<delete dir="${sql.dir}"/>-->
@@ -299,6 +298,7 @@
 	</target>
 
 	<target name="javadoc">
+	<!--
 		<mkdir dir="${doc.dir}/api"/>
 		<javadoc packagenames="org.*"
 			 sourcepath="${src.dir}" 
@@ -306,6 +306,7 @@
 			 author="true" version="true" use="true">
 			<classpath refid="class.path"/>
 		</javadoc>
+	-->
 	</target>
 
 	<!--<target name="src-zip" depends="compile" description="Creates source distribution">
