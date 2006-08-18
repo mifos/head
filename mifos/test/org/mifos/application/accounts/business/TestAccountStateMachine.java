@@ -8,6 +8,7 @@ import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerStatusEntity;
+import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -17,10 +18,13 @@ import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestAccountStateMachine extends MifosTestCase {
@@ -48,28 +52,25 @@ public class TestAccountStateMachine extends MifosTestCase {
 		super.tearDown();
 	}
 
-	public void testGetStatusList() throws StatesInitializationException {
+	public void testGetStatusList() throws StatesInitializationException, ServiceException {
 		createInitialObjects();
 		accountBO  = getLoanAccount(client,meeting);
-		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountTypes.LOANACCOUNT.getValue());
-		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,CustomerLevel.CENTER.getValue());
+		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountTypes.LOANACCOUNT.getValue(),null);
 		List<AccountStateEntity> stateList = accountBO.getStatusList();
-		List<CustomerStatusEntity> customerStateList = center.getStatusList();
-		assertEquals(1,customerStateList.size());
 		assertEquals(2,stateList.size());
 	}
 	
 	public void testGetStatusName() throws ApplicationException, SystemException {
 		createInitialObjects();
 		accountBO  = getLoanAccount(client,meeting);
-		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountTypes.LOANACCOUNT.getValue());
+		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountTypes.LOANACCOUNT.getValue(),null);
 		assertEquals("Closed- Rescheduled",accountBO.getStatusName((short) 1, (short) 8));
 	}
 	
 	public void testGetFlagName() throws ApplicationException, SystemException {
 		createInitialObjects();
 		accountBO  = getLoanAccount(client,meeting);
-		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountTypes.LOANACCOUNT.getValue());
+		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountTypes.LOANACCOUNT.getValue(),null);
 		assertEquals("Withdraw",accountBO.getFlagName((short) 1));
 	}
 	

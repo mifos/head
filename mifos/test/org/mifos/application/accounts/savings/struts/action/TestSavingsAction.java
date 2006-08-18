@@ -548,7 +548,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		savings = helper.createSavingsAccount("000100000000017",
 				savingsOffering, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
-		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountTypes.SAVINGSACCOUNT.getValue());
+		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountTypes.SAVINGSACCOUNT.getValue(),null);
 		savings.changeStatus(new AccountStateEntity(
 				AccountStates.SAVINGS_ACC_PENDINGAPPROVAL), helper
 				.getAccountNotes(savings), null, userContext);

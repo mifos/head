@@ -1583,7 +1583,7 @@ public class LoanBO extends AccountBO {
 						localeId,
 						getOffice().getOfficeId(),
 						AccountTypes.LOANACCOUNT
-								.getValue());
+								.getValue(),null);
 	}
 
 	@Override

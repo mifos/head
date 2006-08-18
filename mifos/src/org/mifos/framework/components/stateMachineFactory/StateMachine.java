@@ -47,5 +47,5 @@ import org.mifos.framework.exceptions.StatesInitializationException;
  */
 public interface StateMachine {
 	
-	public void initialize(Short localeId, Short officeId, Short prdTypeId) throws StatesInitializationException;
+	public void initialize(Short localeId, Short officeId, Short prdTypeId, Short levelId) throws StatesInitializationException;
 }

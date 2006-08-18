@@ -115,7 +115,7 @@
 												<c:if test="${sessionScope.editCustomerStatusActionForm.levelId == '1'}">
 													<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
 												</c:if>
-												<c:if test="${sessionScope.editCustomerStatusActionForm.accountTypeId == '2'}">
+												<c:if test="${sessionScope.editCustomerStatusActionForm.levelId == '2'}">
 													<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
 												</c:if>											
 												<mifos:mifoslabel name="Customer.SelectExplaination2" />

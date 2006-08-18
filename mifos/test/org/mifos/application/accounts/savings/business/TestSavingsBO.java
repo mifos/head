@@ -838,7 +838,7 @@ public class TestSavingsBO extends MifosTestCase {
 				savingsOffering, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
 		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
-				AccountTypes.SAVINGSACCOUNT.getValue());
+				AccountTypes.SAVINGSACCOUNT.getValue(),null);
 		savings.changeStatus(new AccountStateEntity(
 				AccountStates.SAVINGS_ACC_PENDINGAPPROVAL), helper
 				.getAccountNotes(savings), null, userContext);
@@ -857,7 +857,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		try {
 			AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
-					AccountTypes.SAVINGSACCOUNT.getValue());
+					AccountTypes.SAVINGSACCOUNT.getValue(),null);
 			Set<Short> set = new HashSet<Short>();
 			set.add(Short.valueOf("2"));
 			userContext.setRoles(set);
@@ -885,7 +885,7 @@ public class TestSavingsBO extends MifosTestCase {
 				savingsOffering, group,
 				AccountStates.SAVINGS_ACC_PENDINGAPPROVAL, userContext);
 		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
-				AccountTypes.SAVINGSACCOUNT.getValue());
+				AccountTypes.SAVINGSACCOUNT.getValue(),null);
 		AccountStateFlagEntity stateFlag = null;
 		// 6 is blacklisted
 		Session session = HibernateUtil.getSessionTL();
@@ -909,7 +909,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		try {
 			AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
-					AccountTypes.SAVINGSACCOUNT.getValue());
+					AccountTypes.SAVINGSACCOUNT.getValue(),null);
 			Set<Short> set = new HashSet<Short>();
 			set.add(Short.valueOf("2"));
 			userContext.setRoles(set);

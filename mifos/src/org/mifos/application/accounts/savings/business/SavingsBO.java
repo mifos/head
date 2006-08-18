@@ -1144,7 +1144,7 @@ public class SavingsBO extends AccountBO {
 		try {
 			AccountStateMachines.getInstance().initialize(localeId,
 					getOffice().getOfficeId(),
-					AccountTypes.SAVINGSACCOUNT.getValue());
+					AccountTypes.SAVINGSACCOUNT.getValue(),null);
 		} catch (StatesInitializationException e) {
 			throw new AccountException(e);
 		}

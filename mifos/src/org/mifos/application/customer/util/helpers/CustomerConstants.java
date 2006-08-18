@@ -226,6 +226,7 @@ public interface CustomerConstants {
 	public static final String INVALID_OFFICE="errors.Customer.invalidOffice";
 
 	public final String TRANSITION_CONFIG_FILE_PATH_CENTER="org/mifos/framework/util/resources/stateMachine/StateMachine_center.xml";	
+	public final String TRANSITION_CONFIG_FILE_PATH_CLIENT="org/mifos/framework/util/resources/stateMachine/StateMachine_client.xml";
 	
 	public static final String NOTES_FIELD="notes";
 	public static final String FLAG_FIELD="flag";

@@ -1055,7 +1055,7 @@
 		</action>
 	</action-mappings>
 
-	<controller nocache="true" processorClass="org.mifos.framework.struts.action.MifosRequestProcessor" contentType="text/html; charset=UTF-8"></controller>
+	<controller nocache="false" processorClass="org.mifos.framework.struts.action.MifosRequestProcessor" contentType="text/html; charset=UTF-8"></controller>
 
 	<message-resources key="UIResources" parameter="org.mifos.framework.util.resources.UIResources" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />
 	<message-resources key="LoggerResources" parameter="org.mifos.framework.util.resources.loggerresources.LoggerStatements" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />

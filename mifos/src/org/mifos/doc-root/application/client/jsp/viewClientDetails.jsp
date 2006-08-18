@@ -82,13 +82,13 @@
 							<td rowspan="2" align="right" valign="top" class="headingorange">
 							<span class="fontnormal"> <!-- Edit center status link --> <c:if
 								test="${sessionScope.BusinessKey.customerStatus.id != 6}">
-								<html-el:link action="clientCreationAction.do?method=loadStatus">
+								<a href="editCustomerStatusAction.do?method=load&customerId=<c:out value="${sessionScope.BusinessKey.customerId}"/>&securityParamInput=Client&input=client">
 									<mifos:mifoslabel name="client.EditLink"
 										bundle="ClientUIResources"></mifos:mifoslabel>
 									<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
 									<mifos:mifoslabel name="client.StatusLink"
 										bundle="ClientUIResources"></mifos:mifoslabel>
-								</html-el:link>
+								</a>
 							</c:if> <br>
 							</span></td>
 						</tr>
@@ -180,7 +180,7 @@
 						<c:if test="${sessionScope.BusinessKey.customerStatus.id == 3}">
 							<tr align="right">
 								<td class="headingorange"><span class="fontnormal"><mifos:mifoslabel
-									name="client.AccountsLink" />&nbsp; <html-el:link
+									name="client.AccountsLink" bundle="ClientUIResources"/>&nbsp; <html-el:link
 									href="loanAccountAction.do?method=getPrdOfferings&customerId=${sessionScope.BusinessKey.customerId}">
 									<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 								</html-el:link> &nbsp;|&nbsp; <html-el:link

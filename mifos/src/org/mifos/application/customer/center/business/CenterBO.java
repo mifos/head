@@ -6,12 +6,10 @@ package org.mifos.application.customer.center.business;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.accounts.business.AccountStateMachines;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.center.exception.StateChangeException;
 import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -42,11 +40,13 @@ public class CenterBO extends CustomerBO {
 	// TODO: removed searchId from parameter and generate internally
 	public CenterBO(UserContext userContext, String displayName,
 			Address address, List<CustomFieldView> customFields,
-			List<FeeView> fees, String externalId, Date mfiJoiningDate, Short office, MeetingBO meeting,
-			Short loanOfficerId) throws CustomerException {
+			List<FeeView> fees, String externalId, Date mfiJoiningDate,
+			Short office, MeetingBO meeting, Short loanOfficerId)
+			throws CustomerException {
 		super(userContext, displayName, CustomerLevel.CENTER,
-				CustomerStatus.CENTER_ACTIVE, externalId, mfiJoiningDate, address, customFields, fees,
-				null, office, null, meeting, loanOfficerId);
+				CustomerStatus.CENTER_ACTIVE, externalId, mfiJoiningDate,
+				address, customFields, fees, null, office, null, meeting,
+				loanOfficerId);
 		this.validateFields(displayName, meeting, loanOfficerId);
 		int count;
 		try {
@@ -66,42 +66,16 @@ public class CenterBO extends CustomerBO {
 		return false;
 	}
 
-	private void validateFields(String displayName, MeetingBO meeting, Short personnel)
-			throws CustomerException {
-		if(new CenterPersistence().isCenterExists(displayName)){
+	private void validateFields(String displayName, MeetingBO meeting,
+			Short personnel) throws CustomerException {
+		if (new CenterPersistence().isCenterExists(displayName)) {
 			Object[] values = new Object[1];
 			values[0] = displayName;
-			throw new CustomerException(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER,values);
+			throw new CustomerException(
+					CustomerConstants.ERRORS_DUPLICATE_CUSTOMER, values);
 		}
 		validateMeeting(meeting);
 		validateLO(personnel);
-	}
-
-	public String getStatusName(Short localeId, Short statusId)
-			throws ApplicationException, SystemException {
-		return AccountStateMachines.getInstance().getCustomerStatusName(
-				localeId, statusId, CustomerLevel.CENTER.getValue());
-	}
-
-	public String getFlagName(Short flagId) throws ApplicationException,
-			SystemException {
-		return AccountStateMachines.getInstance().getCustomerFlagName(flagId,
-				CustomerLevel.CENTER.getValue());
-	}
-
-	public List<CustomerStatusEntity> getStatusList() {
-		System.out.println("Key being passed from BO is : "
-				+ this.getCustomerStatus().getId().shortValue());
-		List<CustomerStatusEntity> statusList = AccountStateMachines
-				.getInstance().getStatusList(this.getCustomerStatus(),
-						CustomerLevel.CENTER.getValue());
-		System.out.println("Status List: " + statusList);
-		if (null != statusList) {
-			for (CustomerStatusEntity customerStatusObj : statusList) {
-				customerStatusObj.setLocaleId(userContext.getLocaleId());
-			}
-		}
-		return statusList;
 	}
 
 	@Override

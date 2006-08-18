@@ -307,10 +307,34 @@ public class CustomerBusinessService extends BusinessService {
 		return new CustomerPersistence().retrieveAllCustomerStatusList(levelId);
 	}
 
-	public void initializeStateMachine(Short localeId, Short officeId,
+	public void initializeStateMachine(Short localeId, Short officeId,Short prdTypeId,
 			Short levelId) throws StatesInitializationException {
-		AccountStateMachines.getInstance().initialize(localeId, officeId,
+		AccountStateMachines.getInstance().initialize(localeId, officeId,prdTypeId,levelId);
+	}
+
+	public String getStatusName(Short localeId, Short statusId, Short levelId)
+			throws ApplicationException, SystemException {
+		return AccountStateMachines.getInstance().getCustomerStatusName(
+				localeId, statusId, levelId);
+	}
+
+	public String getFlagName(Short localeId,Short flagId, Short levelId)
+			throws ApplicationException, SystemException {
+		return AccountStateMachines.getInstance().getCustomerFlagName(localeId,flagId,
 				levelId);
+	}
+
+	public List<CustomerStatusEntity> getStatusList(
+			CustomerStatusEntity customerStatusEntity, Short levelId,
+			Short localeId) {
+		List<CustomerStatusEntity> statusList = AccountStateMachines
+				.getInstance().getStatusList(customerStatusEntity, levelId);
+		if (null != statusList) {
+			for (CustomerStatusEntity customerStatusObj : statusList) {
+				customerStatusObj.setLocaleId(localeId);
+			}
+		}
+		return statusList;
 	}
 
 	public QueryResult getAllCustomerNotes(Integer customerId)

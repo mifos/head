@@ -645,10 +645,6 @@ public abstract class CustomerBO extends BusinessObject {
 		this.customerActivationDate = customerActivationDate;
 	}
 
-	public List<CustomerStatusEntity> getStatusList() {
-		return null;
-	}
-
 	private void validateFields(String displayName,
 			CustomerStatus customerStatus, Short officeId)
 			throws CustomerException {
@@ -682,16 +678,6 @@ public abstract class CustomerBO extends BusinessObject {
 	private CustomerMeetingEntity createCustomerMeeting(MeetingBO meeting) {
 		return meeting != null ? new CustomerMeetingEntity(this, meeting)
 				: null;
-	}
-
-	public String getStatusName(Short localeId, Short statusId)
-			throws ApplicationException, SystemException {
-		return null;
-	}
-
-	public String getFlagName(Short flagId) throws ApplicationException,
-			SystemException {
-		return null;
 	}
 
 	public void changeStatus(Short newStatusId, Short flagId, String comment)

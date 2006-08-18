@@ -57,7 +57,7 @@ public class TestSavingsStateMachine extends MifosTestCase {
 	}
 
 	public void testInitialize() throws StatesInitializationException {
-		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountTypes.SAVINGSACCOUNT.getValue());
+		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountTypes.SAVINGSACCOUNT.getValue(),null);
 	}
 
 	private void createInitialObjects() {
