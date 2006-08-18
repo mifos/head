@@ -88,11 +88,11 @@ class CenterCreateEdit < TestClass
   def mandatory_with_cname_addInformation_LO()
     begin
      if ($validname=="mifos") then
-     dbquery("select personnel_id,display_name from personnel where office_id="+@@office_id)
+     dbquery("select personnel_id,display_name from personnel where level_id=1 and office_id="+@@office_id)
      @@personnel_id=dbresult[0]
      @@loan_officer=dbresult[1]
      else
-     dbquery("select personnel_id,display_name from personnel where login_name='"+$validname+"'")
+     dbquery("select personnel_id,display_name from personnel where level_id=1 and login_name='"+$validname+"'")
      @@personnel_id=dbresult[0]
      @@loan_officer=dbresult[1]
      end
