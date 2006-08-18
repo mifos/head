@@ -47,7 +47,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
@@ -75,7 +74,6 @@ import org.mifos.application.customer.util.valueobjects.CustomerMeeting;
 import org.mifos.application.customer.util.valueobjects.CustomerNameDetail;
 import org.mifos.application.customer.util.valueobjects.CustomerNote;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
-import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.valueobjects.FeeMaster;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.meeting.util.resources.MeetingConstants;
@@ -263,9 +261,6 @@ public class ClientCreationActionForm extends MifosActionForm {
 	/**
 	 * It needs to validate certain things based on the state in which
 	 * client is being created.
-	 * @param mapping
-	 * @param request
-	 * @return
 	 */
 	public final ActionErrors customValidate(ActionMapping mapping,
 				HttpServletRequest request) {
@@ -274,7 +269,6 @@ public class ClientCreationActionForm extends MifosActionForm {
 		if(request.getSession()!=null){
 			 userContext=(UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
 		}
-		boolean duplicate = false;
 		boolean isNotValidCreation = false;
 		if(null !=methodCalled) {
 			if(	CustomerConstants.METHOD_CANCEL.equals(methodCalled) ||
@@ -1097,10 +1091,10 @@ public class ClientCreationActionForm extends MifosActionForm {
 		this.dateOfBirth = dateOfBirth;
 	}
 	/**
-	 * This method is used to clear check boxes if has deselected them in the last request
-	 * @param mapping
-	 * @param request
+	 * This method is used to clear check boxes if has deselected them in the 
+	 * last request
 	 */
+	@Override
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		if (request.getParameter("customerNameDetail[0].firstName")!=null){
 			if(request.getParameter("trained")==null)
@@ -1118,7 +1112,6 @@ public class ClientCreationActionForm extends MifosActionForm {
 
 	/**
 	 * Method which returns the customerId
-	 * @return Returns the customerId.
 	 */
 	public String getCustomerId() {
 		return customerId;

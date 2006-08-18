@@ -40,7 +40,6 @@ package org.mifos.application.accounts.util.valueobjects;
 import java.sql.Date;
 import java.util.Locale;
 
-import org.mifos.application.personnel.util.valueobjects.Personnel;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
@@ -64,7 +63,6 @@ public class AccountStatusChangeHistory extends ValueObject{
 	/** The name of the personnel, who changed the status */
 	private String personnelName;
 	
-	private String userPrefferedDate=null; 
 	private Locale userLocale=null;
 	
 	public AccountStatusChangeHistory(){}

@@ -33,14 +33,11 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- *
  *  This class generates the installments
  */
 
 public class InstallmentGenerator
 {
-	private RepaymentScheduleInputsIfc  repaymentScheduleInputs = null;
-
 
 	public Date getInstallmentStartDate(SchedulerIntf scheduler,RepaymentScheduleInputsIfc repaymentScheduleInputs,int gracePeriod) throws InstallmentException,SchedulerException
 	{
@@ -49,9 +46,6 @@ public class InstallmentGenerator
 		int installmentSkipToStartRepayment = getInstallmentSkipToStartRepayment(repaymentScheduleInputs,gracePeriod);
 
 		return scheduler.getSpecificScheduleDate(installmentSkipToStartRepayment+1);
-
-
-
 	}
 
 	public int getInstallmentSkipToStartRepayment(RepaymentScheduleInputsIfc repaymentScheduleInputs,int gracePeriod) throws InstallmentException
