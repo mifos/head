@@ -21,8 +21,14 @@ public class FeeView extends View{
 	public FeeView(FeeBO fee){
 		this.feeId = fee.getFeeId().toString();
 		this.feeName = fee.getFeeName();
-		if(fee.getFeeType().equals(RateAmountFlag.AMOUNT))
+		if(fee.getFeeType().equals(RateAmountFlag.AMOUNT)) {
 			this.amount = ((AmountFeeBO)fee).getFeeAmount().toString();
+			this.feeFormula = "";
+		}
+		else { 
+			this.amount = ((RateFeeBO)fee).getRate().toString();
+			this.feeFormula = ((RateFeeBO)fee).getFeeFormula().getFormulaString(localeId);
+		}
 		this.periodic = fee.isPeriodic();
 		if(fee.isPeriodic())
 			this.feeSchedule = fee.getFeeFrequency().getFeeMeetingFrequency().getShortMeetingSchedule();

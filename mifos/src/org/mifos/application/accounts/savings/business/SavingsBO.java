@@ -96,9 +96,11 @@ import org.mifos.framework.components.interestcalculator.InterestCalculationExce
 import org.mifos.framework.components.interestcalculator.InterestCalculatorConstants;
 import org.mifos.framework.components.interestcalculator.InterestCalculatorFactory;
 import org.mifos.framework.components.interestcalculator.InterestCalculatorIfc;
+import org.mifos.framework.components.interestcalculator.InterestInputs;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.components.repaymentschedule.MeetingScheduleHelper;
 import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
@@ -850,16 +852,24 @@ public class SavingsBO extends AccountBO {
 	private Money calculateInterestForDays(Money principal,
 			double interestRate, Date fromDate, Date toDate) throws AccountException
 			 {
-		try {
 			int days = helper.calculateDays(fromDate, toDate);
-			InterestCalculatorIfc calculator = InterestCalculatorFactory
-					.getInterestCalculator(InterestCalculatorConstants.COMPOUND_INTEREST);
-			return calculator.getInterest(helper.createInterestInputs(principal,
-					interestRate, days, InterestCalculatorConstants.DAYS));
-		} catch (InterestCalculationException e) {
-			throw new AccountException(e);
-		}
+			return getInterest(principal,
+					interestRate, days, InterestCalculatorConstants.DAYS);
 	}
+	
+	private Money getInterest(Money principal,
+			double interestRate, int duration, String durationType) {
+		double intRate = interestRate;
+		if(durationType.equals(InterestCalculatorConstants.DAYS)){
+			intRate = (intRate/(InterestCalculatorConstants.INTEREST_DAYS))* duration;
+		}
+		else{
+			intRate = (intRate/12)*duration;
+		}
+		Money interestAmount = principal.multiply(new Double(1+(intRate/100.0))).subtract(principal);
+		return interestAmount;
+	}
+
 
 	public void generateAndUpdateDepositActionsForClient(CustomerBO client)
 			throws AccountException {

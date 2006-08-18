@@ -41,31 +41,27 @@ package org.mifos.application.accounts.business;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Hibernate;
-import org.hibernate.HibernateException;
 import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.exceptions.AccountsApplyChargesException;
 import org.mifos.application.accounts.persistence.AccountPersistence;
-import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
+import org.mifos.application.accounts.util.helpers.FeeInstallment;
+import org.mifos.application.accounts.util.helpers.InstallmentDate;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
-import org.mifos.application.accounts.util.valueobjects.Account;
-import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
-import org.mifos.application.accounts.util.valueobjects.CustomerAccount;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
@@ -74,14 +70,11 @@ import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
-import org.mifos.application.customer.util.valueobjects.Customer;
-import org.mifos.application.customer.util.valueobjects.CustomerMeeting;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeStatus;
-import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.master.util.valueobjects.AccountType;
@@ -91,10 +84,8 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.repaymentschedule.FeeInstallment;
 import org.mifos.framework.components.repaymentschedule.RepaymentSchedule;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleConstansts;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
@@ -106,13 +97,10 @@ import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 
 public class CustomerAccountBO extends AccountBO {
 
@@ -151,7 +139,7 @@ public class CustomerAccountBO extends AccountBO {
 						&& customer.getCustomerStatus().getId().equals(
 								CustomerStatus.CENTER_ACTIVE.getValue()))) {
 
-			generateFeeSchedule(customer.getCustomerMeeting().getMeeting());
+			generateMeetingSchedule();
 
 		}
 	}
@@ -669,5 +657,49 @@ public class CustomerAccountBO extends AccountBO {
 		else
 			return new Money("0.0");
 	}
-
+	
+	@Override
+	protected final List<FeeInstallment> handlePeriodic(AccountFeesEntity accountFees,List<InstallmentDate> installmentDates) throws AccountException{
+		Money accountFeeAmount = accountFees.getAccountFeeAmount();
+		MeetingBO feeMeetingFrequency = accountFees.getFees().getFeeFrequency().getFeeMeetingFrequency();
+		List<Date> feeDates = getFeeDates(feeMeetingFrequency,installmentDates);
+		ListIterator<Date> feeDatesIterator = feeDates.listIterator();
+		List<FeeInstallment> feeInstallmentList=new ArrayList<FeeInstallment>();
+		while (feeDatesIterator.hasNext()) {
+			Date feeDate = feeDatesIterator.next();
+			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
+					.debug(
+							"FeeInstallmentGenerator:handlePeriodic date considered after removal.."
+									+ feeDate);
+			Short installmentId = getMatchingInstallmentId(installmentDates,feeDate);
+			feeInstallmentList.add(buildFeeInstallment(installmentId, accountFeeAmount, accountFees));
+			break;
+		}
+		return feeInstallmentList;
+	}
+	
+	private void generateMeetingSchedule() throws AccountException
+	{
+		List<InstallmentDate> installmentDates = getInstallmentDates(getCustomer().getCustomerMeeting().getMeeting(),(short)0,(short)0);
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("RepamentSchedular:getRepaymentSchedule , installment dates obtained ");
+		List<FeeInstallment> feeInstallmentList = mergeFeeInstallments(getFeeInstallment(installmentDates));
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("RepamentSchedular:getRepaymentSchedule , fee installment obtained ");
+		for(InstallmentDate installmentDate : installmentDates)
+		{
+			CustomerScheduleEntity customerScheduleEntity=new CustomerScheduleEntity(this,getCustomer(),
+					installmentDate.getInstallmentId(),new java.sql.Date(installmentDate.getInstallmentDueDate().getTime()),
+					PaymentStatus.UNPAID); 
+			addAccountActionDate(customerScheduleEntity);
+			for(FeeInstallment feeInstallment : feeInstallmentList){
+				if(feeInstallment.getInstallmentId().equals(installmentDate.getInstallmentId())){
+					CustomerFeeScheduleEntity customerFeeScheduleEntity=new CustomerFeeScheduleEntity(customerScheduleEntity,
+							feeInstallment.getAccountFeesEntity().getFees(),feeInstallment.getAccountFeesEntity(),
+							feeInstallment.getAccountFee());
+					customerScheduleEntity.addAccountFeesAction(customerFeeScheduleEntity);
+				}
+			}
+		}
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("RepamentSchedular:getRepaymentSchedule , repayment schedule generated  ");
+	}
+	
 }

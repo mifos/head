@@ -6,6 +6,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Calendar;
 
+import org.mifos.framework.util.helpers.DateUtils;
 
 public abstract class  AbstractScheduler implements SchedulerIntf{
 	/** gc is the calender used to calculates schedule dates.
@@ -104,14 +105,16 @@ public abstract class  AbstractScheduler implements SchedulerIntf{
 		Date sDate = getFirstDate(scheduleInputs.getStartDate());
 		Date currentScheduleDate=getNextWorkingDate(sDate);
 		Date nextDate=null;
-		while(currentScheduleDate.compareTo(scheduleDate)<0){
+		while(DateUtils.getDateWithoutTimeStamp(currentScheduleDate.getTime()).
+				compareTo(DateUtils.getDateWithoutTimeStamp(scheduleDate.getTime()))<0){
 			for(nextDate=getNextDate(sDate);currentScheduleDate.compareTo(nextDate)>=0;nextDate=getNextDate(nextDate));
 			//end-for
 			sDate=nextDate;
 			currentScheduleDate=getNextWorkingDate(sDate);
 		}
-
-		return (currentScheduleDate.compareTo(scheduleDate)==0)?true:false;
+		return (DateUtils.getDateWithoutTimeStamp(currentScheduleDate.getTime()).
+				compareTo(DateUtils.getDateWithoutTimeStamp(scheduleDate.getTime()))==0)?true:false;
+		
 
 	}
 

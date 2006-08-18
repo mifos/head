@@ -185,5 +185,24 @@ public interface AccountConstants {
 	public static final short COMMENT_LENGTH = 500;
 	public static final String MAX_LENGTH="errors.maximumlength";
 	public static final String APPLICABLE_CHARGE_LIST="applicableChargeList";
+	
+	public static final String NOT_SUPPORTED_GRACE_TYPE="errors.not_supported_gracetype";
+	public static final String INTERESTDEDUCTED_PRINCIPALLAST="errors.interestdedcuted_principallast";
+	public static final String PRINCIPALLASTPAYMENT_INVALIDGRACETYPE="errors.principallast_invalidgrace";
+	public static final String INTERESTDEDUCTED_INVALIDGRACETYPE="errors.interestdeducted_invalidgrace";
+	public static final String NOT_SUPPORTED_EMI_GENERATION="errors.emitype_not_supported";
+	public static final String DATES_MISMATCH = "errors.datemismatch";
+	public static int INTEREST_DAYS_360 = 360;
+	public static int INTEREST_DAYS_365 = 365;
+
+	public static final int INTEREST_DAYS=365;
+	public static final int DAYS_IN_WEEK=7;
+	public static final int DAYS_IN_MONTH=30;
+	
+	public static final String WEEK_INSTALLMENT = "Week";
+	public static final String MONTH_INSTALLMENT = "Month";
+	
+	public static final String NOT_SUPPORTED_DURATION_TYPE = "errors.not_supported_durationtype";
+	public static final String NOT_SUPPORTED_INTEREST_DAYS = "errors.not_supported_interestdays";
 }
 

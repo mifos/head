@@ -29,6 +29,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.valueobjects.CustomerFeesActionDetail;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.RateFeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFormula;
@@ -108,7 +109,6 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 					center.getCustomerId());
 			customerAccount = center.getCustomerAccount();
-
 			customerAccount.applyPayment(accountPaymentDataView);
 			HibernateUtil.commitTransaction();
 			assertEquals("The size of the payments done is", customerAccount
@@ -121,7 +121,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		
 
 	}
-
+	
 	public void testFailureMakePayment() throws AccountException,
 			SystemException {
 		createCenter();
@@ -809,6 +809,84 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				.currentTimeMillis()));
 		assertEquals(100.00,center.getCustomerAccount().getNextDueAmount().getAmountDoubleValue());
 		
+	}
+	
+	public void testGenerateMeetingSchedule() throws AccountException{
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		List<FeeView> feeView = new ArrayList<FeeView>();		
+		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.ALLCUSTOMERS, "100",MeetingFrequency.WEEKLY,
+				Short.valueOf("1"));
+		feeView.add(new FeeView(periodicFee));
+		FeeBO upfrontFee = TestObjectFactory.createOneTimeAmountFee("Upfront Fee",
+				FeeCategory.ALLCUSTOMERS,"30", FeePayment.UPFRONT);
+		feeView.add(new FeeView(upfrontFee));
+		center = TestObjectFactory.createCenter("Center_Active_test", CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting, new Date(System
+				.currentTimeMillis()),feeView);
+		Date startDate = new Date(System.currentTimeMillis());
+		 for(AccountActionDateEntity accountActionDateEntity : center.getCustomerAccount().getAccountActionDates()){
+			   if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))){
+				   assertEquals(DateUtils.getDateWithoutTimeStamp(startDate.getTime()),DateUtils.getDateWithoutTimeStamp(((CustomerScheduleEntity)accountActionDateEntity).getActionDate().getTime()));
+				   assertEquals(2,((CustomerScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
+				   for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((CustomerScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails()){
+					   
+					   if(accountFeesActionDetailEntity.getFee().getFeeName().equals("Periodic Fee"))
+						   assertEquals(new Money("100.0"),accountFeesActionDetailEntity.getFeeAmount());
+					   else{
+						   assertEquals("Upfront Fee",accountFeesActionDetailEntity.getFee().getFeeName());
+						   assertEquals(new Money("30.0"),accountFeesActionDetailEntity.getFeeAmount());
+					   }
+				   }
+			   }else if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("2"))){
+				   assertEquals(0,((CustomerScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
+				   assertEquals(DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(7).getTime()),DateUtils.getDateWithoutTimeStamp(((CustomerScheduleEntity)accountActionDateEntity).getActionDate().getTime()));
+			   }
+			   assertEquals(PaymentStatus.UNPAID.getValue(),((CustomerScheduleEntity)accountActionDateEntity).getPaymentStatus());
+			}
+	}
+	
+	public void testGenerateMeetingScheduleWithRecurAfterEveryTwoWeeks() throws AccountException{
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 2, 4, 2));
+		List<FeeView> feeView = new ArrayList<FeeView>();		
+		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.ALLCUSTOMERS, "100",MeetingFrequency.WEEKLY,
+				Short.valueOf("1"));
+		feeView.add(new FeeView(periodicFee));
+		FeeBO upfrontFee = TestObjectFactory.createOneTimeAmountFee("Upfront Fee",
+				FeeCategory.ALLCUSTOMERS,"30", FeePayment.UPFRONT);
+		feeView.add(new FeeView(upfrontFee));
+		center = TestObjectFactory.createCenter("Center_Active_test", CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting, new Date(System
+				.currentTimeMillis()),feeView);
+		Date startDate = new Date(System.currentTimeMillis());
+		 for(AccountActionDateEntity accountActionDateEntity : center.getCustomerAccount().getAccountActionDates()){
+			   if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))){
+				   assertEquals(DateUtils.getDateWithoutTimeStamp(startDate.getTime()),DateUtils.getDateWithoutTimeStamp(((CustomerScheduleEntity)accountActionDateEntity).getActionDate().getTime()));
+				   assertEquals(2,((CustomerScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
+				   for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((CustomerScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails()){
+					   
+					   if(accountFeesActionDetailEntity.getFee().getFeeName().equals("Periodic Fee"))
+						   assertEquals(new Money("100.0"),accountFeesActionDetailEntity.getFeeAmount());
+					   else{
+						   assertEquals("Upfront Fee",accountFeesActionDetailEntity.getFee().getFeeName());
+						   assertEquals(new Money("30.0"),accountFeesActionDetailEntity.getFeeAmount());
+					   }
+				   }
+			   }else if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("2"))){
+				   assertEquals(0,((CustomerScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
+				   assertEquals(DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(14).getTime()),DateUtils.getDateWithoutTimeStamp(((CustomerScheduleEntity)accountActionDateEntity).getActionDate().getTime()));
+			   }
+			   assertEquals(PaymentStatus.UNPAID.getValue(),((CustomerScheduleEntity)accountActionDateEntity).getPaymentStatus());
+			}
+	}
+
+	
+	private java.util.Date incrementCurrentDate(int noOfDays) {
+		Calendar currentDateCalendar = new GregorianCalendar();
+		int year = currentDateCalendar.get(Calendar.YEAR);
+		int month = currentDateCalendar.get(Calendar.MONTH);
+		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
+		currentDateCalendar = new GregorianCalendar(year, month, day + noOfDays);
+		return currentDateCalendar.getTime();
 	}
 
 	

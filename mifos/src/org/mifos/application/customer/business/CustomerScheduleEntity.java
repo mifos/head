@@ -33,6 +33,10 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
 			Short installmentId, Date actionDate, PaymentStatus paymentStatus) {
 		super(account, customer, installmentId, actionDate, paymentStatus);
 		accountFeesActionDetails = new HashSet<AccountFeesActionDetailEntity>();
+		miscFee=new Money();
+		miscFeePaid=new Money();
+		miscPenalty=new Money();
+		miscPenaltyPaid=new Money();
 	}
 
 	public Set<AccountFeesActionDetailEntity> getAccountFeesActionDetails() {

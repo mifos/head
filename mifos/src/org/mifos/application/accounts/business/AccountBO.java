@@ -43,6 +43,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -60,10 +61,11 @@ import org.mifos.application.accounts.financial.business.service.FinancialBusine
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
-import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.FeeInstallment;
+import org.mifos.application.accounts.util.helpers.InstallmentDate;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
@@ -79,6 +81,10 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
+import org.mifos.application.meeting.util.valueobjects.MeetingDetails;
+import org.mifos.application.meeting.util.valueobjects.MeetingRecurrence;
+import org.mifos.application.meeting.util.valueobjects.MeetingType;
+import org.mifos.application.meeting.util.valueobjects.RecurrenceType;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
@@ -87,12 +93,15 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.repaymentschedule.FeeInstallment;
+import org.mifos.framework.components.repaymentschedule.MeetingScheduleHelper;
 import org.mifos.framework.components.repaymentschedule.RepaymentSchedule;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleFactory;
+import org.mifos.framework.components.repaymentschedule.RepaymentScheduleHelper;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleIfc;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleInputsIfc;
+import org.mifos.framework.components.scheduler.SchedulerException;
+import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -1143,12 +1152,12 @@ public class AccountBO extends BusinessObject {
 		accountFeeSet.add(accountFee);
 		RepaymentSchedule repaymentSchedule = getFeeInstallment(accountFeeSet,
 				feeStartDate);
-		List<FeeInstallment> feeInstallmentList = repaymentSchedule
+		List<org.mifos.framework.components.repaymentschedule.FeeInstallment> feeInstallmentList = repaymentSchedule
 				.getRepaymentFeeInstallment();
 		Map<Short, Money> feeInstallmentMap = new HashMap<Short, Money>();
-		for (Iterator<FeeInstallment> iter = feeInstallmentList.iterator(); iter
+		for (Iterator<org.mifos.framework.components.repaymentschedule.FeeInstallment> iter = feeInstallmentList.iterator(); iter
 				.hasNext();) {
-			FeeInstallment feeInstallment = iter.next();
+			org.mifos.framework.components.repaymentschedule.FeeInstallment feeInstallment = iter.next();
 			feeInstallmentMap.put(new Short(Integer.toString(feeInstallment
 					.getInstallmentId())), feeInstallment
 					.getSummaryAccountFeeInstallment().get(0)
@@ -1213,5 +1222,204 @@ public class AccountBO extends BusinessObject {
 		}
 		return accountFee;
 	}
+	
+	protected final List<InstallmentDate> getInstallmentDates(MeetingBO meeting,Short noOfInstallments,Short installmentToSkip) throws AccountException
+	{
+		SchedulerIntf scheduler;
+		try {
+			scheduler = RepaymentScheduleHelper.getSchedulerObject(convertMeeting(meeting),true);
+		} catch (RepaymentScheduleException e) {
+			throw new AccountException(e);
+		}
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("RepamentSchedular:getInstallmentDates , installments input  ");
+		List<InstallmentDate> installmentDates =  getInstallmentDates(scheduler,noOfInstallments,installmentToSkip);
+		removeInstallmentsNeedNotPay(installmentToSkip,installmentDates);
+		return installmentDates;
+	}
+	
+	private List<InstallmentDate> getInstallmentDates(SchedulerIntf scheduler,Short noOfInstallments,Short installmentSkipToStartRepayment) throws AccountException{
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("InstallmentGenerator:getInstallmentDates no of installments..");
+		List<Date> dueDates=null;
+		try {
+			if(!noOfInstallments.equals(Short.valueOf("0")))
+				dueDates = scheduler.getAllDates(noOfInstallments+installmentSkipToStartRepayment);
+			else
+				dueDates = scheduler.getAllDates();
+		} catch (SchedulerException e) {
+			throw new AccountException(e);
+		}
+		int installmentId = 1;
+		List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
+		for(Date date : dueDates)
+			installmentDates.add(new InstallmentDate(new Short(Integer.toString(installmentId++)),date));
+		return installmentDates;
+	}
+	
+	private void removeInstallmentsNeedNotPay(Short installmentSkipToStartRepayment,List<InstallmentDate> installmentDates)
+	{
+		int removeCounter = 0;
+		for(int i =0; i < installmentSkipToStartRepayment; i++)
+			installmentDates.remove(removeCounter);
+		// re-adjust the installment ids
+		if(installmentSkipToStartRepayment > 0)
+		{
+			int count = installmentDates.size();
+			for(int i = 0; i < count ; i++)
+			{
+				InstallmentDate instDate = installmentDates.get(i);
+				instDate.setInstallmentId(new Short(Integer.toString(i+1)));
+			}
+		}
+	}
+	
+	protected  List<InstallmentDate> getInstallmentDates(SchedulerIntf scheduler,
+			Integer installmentSkipToStartRepayment) throws AccountException {
+		return null;
+	}
+	
+	
+	/*protected Integer getInstallmentSkipToStartRepayment() {
+		return 0;
+	}*/
+	
+	protected final Meeting convertMeeting(MeetingBO M2meeting) {
+		Meeting meetingToReturn = new Meeting();
+		meetingToReturn.setMeetingStartDate(M2meeting.getMeetingStartDate());
+		meetingToReturn.setMeetingPlace("");
+		MeetingType meetingType = new MeetingType();
+		meetingType.setMeetingTypeId(M2meeting.getMeetingType()
+				.getMeetingTypeId());
+		meetingToReturn.setMeetingType(meetingType);
+
+		MeetingRecurrence meetingRecToReturn = new MeetingRecurrence();
+		meetingRecToReturn.setDayNumber(M2meeting.getMeetingDetails()
+				.getMeetingRecurrence().getDayNumber());
+		if(M2meeting.getMeetingDetails()
+				.getMeetingRecurrence().getRankOfDays()!=null){
+			meetingRecToReturn.setRankOfDays(M2meeting.getMeetingDetails()
+					.getMeetingRecurrence().getRankOfDays().getRankOfDayId());
+		}
+		if(M2meeting.getMeetingDetails()
+				.getMeetingRecurrence().getWeekDay()!=null){
+			meetingRecToReturn.setWeekDay(M2meeting.getMeetingDetails()
+					.getMeetingRecurrence().getWeekDay().getWeekDayId());
+		}
+
+		MeetingDetails meetingDetailsToReturn = new MeetingDetails();
+		meetingDetailsToReturn.setMeetingRecurrence(meetingRecToReturn);
+		meetingDetailsToReturn.setRecurAfter(M2meeting.getMeetingDetails()
+				.getRecurAfter());
+
+		RecurrenceType recurrenceType = new RecurrenceType();
+		recurrenceType.setRecurrenceId(M2meeting.getMeetingDetails()
+				.getRecurrenceType().getRecurrenceId());
+
+		meetingDetailsToReturn.setRecurrenceType(recurrenceType);
+
+		meetingToReturn.setMeetingDetails(meetingDetailsToReturn);
+
+		return meetingToReturn;
+
+	}
+	
+	protected final List<FeeInstallment> getFeeInstallment(List<InstallmentDate> installmentDates) throws AccountException 
+	{
+		List<FeeInstallment> feeInstallmentList=new ArrayList<FeeInstallment>();
+		for(AccountFeesEntity accountFeesEntity :  getAccountFees()){
+			Short accountFeeType = accountFeesEntity.getFees().getFeeFrequency().getFeeFrequencyType().getId();
+			if(accountFeeType.equals(FeeFrequencyType.ONETIME.getValue()))
+			{
+				feeInstallmentList.add(handleOneTime(accountFeesEntity,installmentDates));
+			}
+			else if(accountFeeType.equals(FeeFrequencyType.PERIODIC.getValue()))
+			{
+				feeInstallmentList.addAll(handlePeriodic(accountFeesEntity,installmentDates));
+			}
+		}
+		return feeInstallmentList;
+	}
+	
+	protected List<FeeInstallment> handlePeriodic(AccountFeesEntity accountFees,List<InstallmentDate> installmentDates) throws AccountException{
+		return null;
+	}
+
+	
+	private FeeInstallment handleOneTime(AccountFeesEntity accountFee,List<InstallmentDate> installmentDates)
+	{
+			Money accountFeeAmount = getAccountFeeAmount(accountFee);
+			Date feeDate=installmentDates.get(0).getInstallmentDueDate();
+			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("FeeInstallmentGenerator:handleOneTime fee start date "+feeDate);
+			Short installmentId = getMatchingInstallmentId(installmentDates,feeDate);
+			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("FeeInstallmentGenerator:handleOneTime applicable installment id "+installmentId);
+			return buildFeeInstallment(installmentId,accountFeeAmount,accountFee);
+	}
+	
+	protected Money getAccountFeeAmount(AccountFeesEntity accountFeesEntity){
+		return accountFeesEntity.getFeeAmount();
+	}
+	
+	protected final List<Date> getFeeDates(MeetingBO feeMeetingFrequency,List<InstallmentDate> installmentDates)throws AccountException{
+		
+		MeetingBO repaymentFrequency = getCustomer().getCustomerMeeting().getMeeting();
+		Meeting newFeeMeetingFrequency = MeetingScheduleHelper.mergeFrequency(convertMeeting(repaymentFrequency),convertMeeting(feeMeetingFrequency));
+		Calendar feeStartDate=new GregorianCalendar();
+		feeStartDate.setTime((installmentDates.get(0)).getInstallmentDueDate());
+		newFeeMeetingFrequency.setMeetingStartDate(feeStartDate);
+		Date repaymentEndDate = (installmentDates.get(installmentDates.size() - 1)).getInstallmentDueDate();
+		SchedulerIntf scheduler;
+		List<Date> feeDueDates=null;
+		try {
+			scheduler = MeetingScheduleHelper.getSchedulerObject(newFeeMeetingFrequency,false);
+			feeDueDates = scheduler.getAllDates(repaymentEndDate);
+		} catch (ApplicationException e) {
+				throw new AccountException(e);
+		}
+		return feeDueDates;
+}
+	
+	protected final FeeInstallment buildFeeInstallment(Short installmentId, Money accountFeeAmount , AccountFeesEntity accountFee){
+		FeeInstallment feeInstallment = new FeeInstallment();
+		feeInstallment.setInstallmentId(installmentId);
+		feeInstallment.setAccountFee(accountFeeAmount);
+		feeInstallment.setAccountFeesEntity(accountFee);
+		accountFee.setAccountFeeAmount(accountFeeAmount);
+		return feeInstallment;
+	}
+	
+	
+	protected final Short getMatchingInstallmentId(List<InstallmentDate> installmentDates,Date feeDate){
+		for(InstallmentDate installmentDate : installmentDates){
+			if(DateUtils.getDateWithoutTimeStamp(installmentDate.getInstallmentDueDate().getTime()).
+					compareTo(DateUtils.getDateWithoutTimeStamp(feeDate.getTime()))>=0)
+				return installmentDate.getInstallmentId();
+		}
+		return null;
+	}
+		
+	protected final List<FeeInstallment> mergeFeeInstallments(List<FeeInstallment> feeInstallmentList){
+		List<FeeInstallment> newFeeInstallmentList=new ArrayList<FeeInstallment>();
+		for (Iterator<FeeInstallment> iterator = feeInstallmentList.iterator(); iterator.hasNext();) {
+			FeeInstallment feeInstallment = iterator.next();
+			iterator.remove();
+			FeeInstallment feeInstTemp=null;
+			for(FeeInstallment feeInst : newFeeInstallmentList){
+				if(feeInst.getInstallmentId().equals(feeInstallment.getInstallmentId())
+							&& feeInst.getAccountFeesEntity().equals(feeInstallment.getAccountFeesEntity())){
+						feeInstTemp=feeInst;
+						break;
+				}
+			}
+			if(feeInstTemp!=null){
+					newFeeInstallmentList.remove(feeInstTemp);
+					feeInstTemp.setAccountFee(feeInstTemp.getAccountFee().add(feeInstallment.getAccountFee()));
+					newFeeInstallmentList.add(feeInstTemp);
+			}else{
+					newFeeInstallmentList.add(feeInstallment);
+			}
+		} 
+		return newFeeInstallmentList;
+	}
+
+	
 	
 }
