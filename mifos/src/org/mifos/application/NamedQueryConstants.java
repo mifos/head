@@ -472,12 +472,13 @@ public interface NamedQueryConstants {
 	public String GETCHILDCOUNT="office.getChlidCount";
 	public String CHECKOFFICENAMEUNIQUENESS="office.getOfficeWithName";
 	public String CHECKOFFICESHORTNAMEUNIQUENESS="office.getOfficeWithShortName";
+	public String GET_CLIENT_BASEDON_NAME_DOB="Customer.getClientBasedOnNameAndDateOfBirth";
+	public String GET_CLIENT_BASEDON_GOVTID="Customer.getClientBasedOnGovtId";
 	public String GETOFFICEACTIVEPERSONNEL="getCountActivePersonnel";
 	public String GETCOUNTOFACTIVECHILDERN="getCountOfActiveChildren";
 	public String GETACTIVEPARENTS="masterdata.activeParents";
 	public String GETACTIVELEVELS="masterdata.activeLevels";
-
-	
 	public String MASTERDATA_MIFOS_ENTITY_NAME="masterdata.mifosEntityName";
 	public String GET_CUSTOMER_PICTURE="Customer.getPicture";
+
 }

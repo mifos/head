@@ -64,9 +64,12 @@ import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.SecurityException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
@@ -81,7 +84,7 @@ public class CustAction extends BaseAction {
 		return null;
 	}
 	
-	public void loadCreateCustomFields(CustomerActionForm actionForm, EntityType entityType,
+	protected void loadCreateCustomFields(CustomerActionForm actionForm, EntityType entityType,
 			HttpServletRequest request) throws SystemException {
 		loadCustomFieldDefinitions(entityType ,request);
 		// Set Default values for custom fields
@@ -106,7 +109,7 @@ public class CustAction extends BaseAction {
 		actionForm.setCustomFields(customFields);
 	}
 
-	public void loadCustomFieldDefinitions(EntityType entityType , HttpServletRequest request )
+	protected void loadCustomFieldDefinitions(EntityType entityType , HttpServletRequest request )
 			throws SystemException {
 		MasterDataService masterDataService = (MasterDataService) ServiceFactory
 				.getInstance().getBusinessService(
@@ -117,7 +120,7 @@ public class CustAction extends BaseAction {
 				customFieldDefs, request.getSession());
 	}
 
-	public void loadFees(CustomerActionForm actionForm,
+	protected void loadFees(CustomerActionForm actionForm,
 			HttpServletRequest request) throws FeeException, ServiceException {
 		FeeBusinessService feeService = (FeeBusinessService) ServiceFactory
 				.getInstance().getBusinessService(
@@ -137,14 +140,14 @@ public class CustAction extends BaseAction {
 				additionalFees, request.getSession());
 	}
 	
-	public void loadFormedByPersonnel(CustomerActionForm actionForm,
+	protected void loadFormedByPersonnel(Short officeId,
 			HttpServletRequest request) throws SystemException{
 		CustomerBusinessService customerService = (CustomerBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Customer);
-		List<PersonnelView> formedByPersonnel = customerService.getFormedByPersonnel(ClientConstants.LOAN_OFFICER_LEVEL, actionForm.getOfficeIdValue());
+		List<PersonnelView> formedByPersonnel = customerService.getFormedByPersonnel(ClientConstants.LOAN_OFFICER_LEVEL, officeId);
 		SessionUtils.setAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST,	formedByPersonnel, request.getSession());
 		
 	}
-	public void loadLoanOfficers(Short officeId, HttpServletRequest request)
+	protected void loadLoanOfficers(Short officeId, HttpServletRequest request)
 	throws ServiceException {
 		PersonnelBusinessService personnelService = (PersonnelBusinessService) ServiceFactory
 				.getInstance()
@@ -157,20 +160,29 @@ public class CustAction extends BaseAction {
 				personnelList, request.getSession());
 	}
 	
-	public Date getDateFromString(String strDate, Locale locale) {
+	protected Date getDateFromString(String strDate, Locale locale) {
 		Date date = null;
 		if (StringUtils.isNullAndEmptySafe(strDate))
 			date = new Date(DateHelper.getLocaleDate(locale, strDate).getTime());
 		return date;
 	}
 	
-	public void convertCustomFieldDateToUniformPattern(
+	protected void convertCustomFieldDateToUniformPattern(
 			List<CustomFieldView> customFields, Locale locale) {		
 		for (CustomFieldView customField : customFields) {
 			if (customField.getFieldType().equals(CustomFieldType.DATE.getValue()) && StringUtils.isNullAndEmptySafe(customField
 					.getFieldValue()))
 					customField.convertDateToUniformPattern(locale);
 		}
+	}
+	
+	protected void checkPermissionForCreate(Short newState,UserContext userContext,Short flagSelected,Short recordOfficeId,Short recordLoanOfficerId) throws SecurityException{
+		if(!isPermissionAllowed(newState,userContext,flagSelected,recordOfficeId,recordLoanOfficerId))
+			  throw new SecurityException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED); 	 
+	}
+	protected boolean isPermissionAllowed(Short newState,UserContext userContext,Short flagSelected,Short recordOfficeId,Short recordLoanOfficerId){
+		
+		return ActivityMapper.getInstance().isSavePermittedForCustomer(newState.shortValue(),userContext,recordOfficeId,recordLoanOfficerId);
 	}
 
 

@@ -2,20 +2,32 @@ package org.mifos.application.customer.client.business;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Date;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Hibernate;
+
+import org.hibernate.HibernateException;
+import org.mifos.application.configuration.business.MifosConfiguration;
+import org.mifos.application.configuration.exceptions.ConfigurationException;
+import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
+import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
+
+import org.mifos.application.customer.group.util.helpers.GroupConstants;
+
 import org.mifos.application.customer.exceptions.CustomerStateChangeException;
+
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -26,9 +38,12 @@ import org.mifos.application.util.helpers.Status;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class ClientBO extends CustomerBO {
 
@@ -109,8 +124,6 @@ public class ClientBO extends CustomerBO {
 				externalId, mfiJoiningDate, address, customFields, fees,
 				formedById, officeId, parentCustomer, meeting, loanOfficerId);
 		nameDetailSet = new HashSet<ClientNameDetailEntity>();
-		if (customerStatus.equals(CustomerStatus.CLIENT_ACTIVE.getValue()))
-			this.setCustomerActivationDate(this.getCreatedDate());
 		this.performanceHistory = new ClientPerformanceHistoryEntity(this);
 		this.dateOfBirth = dateOfBirth;
 		this.governmentId = governmentId;
@@ -134,6 +147,29 @@ public class ClientBO extends CustomerBO {
 			CustomerHierarchyEntity customerHierarchyEntity = new CustomerHierarchyEntity(
 					this, parentCustomer, Status.ACTIVE);
 			this.addCustomerHierarchy(customerHierarchyEntity);
+		}
+		generateSearchId(parentCustomer , officeId);
+		validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId);
+		if (customerStatus.getValue().equals(CustomerStatus.CLIENT_ACTIVE.getValue())){
+			if(!isClientUnderGroup()){
+				validateLO(loanOfficerId);
+				validateMeeting(meeting);
+			}
+			this.setCustomerActivationDate(this.getCreatedDate());
+		}
+		try{
+			if(isClientUnderGroup()){
+				if (customerStatus.getValue().equals(CustomerStatus.CLIENT_ACTIVE.getValue()) || customerStatus.getValue().equals(CustomerStatus.CLIENT_PENDING.getValue())){
+					if(isGroupStatusLower(customerStatus.getValue() ,parentCustomer.getCustomerStatus().getId())){
+						throw new CustomerException(ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION ,new Object[] {
+								MifosConfiguration.getInstance().getLabel(ConfigurationConstants.GROUP,	this.getUserContext().getPereferedLocale()) ,
+								MifosConfiguration.getInstance().getLabel(ConfigurationConstants.CLIENT,	this.getUserContext().getPereferedLocale()) ,});
+					}
+				}
+			}
+		}
+		catch(ConfigurationException ce){
+			throw new CustomerException(ce);
 		}
 	}
 
@@ -201,7 +237,7 @@ public class ClientBO extends CustomerBO {
 
 	public ClientAttendanceBO getClientAttendanceForMeeting(Date meetingDate) {
 		for (ClientAttendanceBO clientAttendance : getClientAttendances()) {
-			if (clientAttendance.getMeetingDate().compareTo(meetingDate) == 0)
+			if (DateUtils.getDateWithoutTimeStamp(clientAttendance.getMeetingDate().getTime()).compareTo(DateUtils.getDateWithoutTimeStamp(meetingDate.getTime())) == 0)
 				return clientAttendance;
 		}
 		return null;
@@ -270,5 +306,90 @@ public class ClientBO extends CustomerBO {
 			}
 		}
 		return isNotValid;
+	}
+	@Override
+	public void save() throws ApplicationException, CustomerException {
+	
+		try {
+			super.save();
+			if(this.getParentCustomer() !=null){
+				new CustomerPersistence().createOrUpdate(this.getParentCustomer());
+			}
+			
+		} catch (HibernateException he) {
+			throw new CustomerException(
+					CustomerConstants.CREATE_FAILED_EXCEPTION, he);
+		}
+	}
+	private void validateForDuplicateNameOrGovtId(String displayName, Date dateOfBirth, String governmentId)
+	throws CustomerException {
+		Integer custId = null;
+		if(getCustomerId() == null)
+			custId = Integer.valueOf("0");
+		else
+			custId = getCustomerId();
+		
+		checkForDuplicacy(displayName , dateOfBirth , governmentId , custId);
+		
+	}
+	
+	private void checkForDuplicacy(String name, Date dob, String governmentId , Integer customerId)throws CustomerException{
+		ClientPersistence clientPersistence = new ClientPersistence();
+		
+			if(!StringUtils.isNullOrEmpty(governmentId)){
+				try{
+					if(clientPersistence.checkForDuplicacyOnGovtId(governmentId) == true){
+						Object[] values = new Object[2];
+						values[0] = governmentId;
+						values[1]=MifosConfiguration.getInstance().getLabel(ConfigurationConstants.GOVERNMENT_ID,userContext.getPereferedLocale());
+						throw new CustomerException(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION,values);
+					}
+				}
+				catch(ConfigurationException ce){
+					throw new CustomerException();
+				}
+			}
+			else{
+				if(clientPersistence.checkForDuplicacyOnName(name,dob,customerId) == true){
+					Object[] values = new Object[1];
+					values[0] = name;
+					throw new CustomerException(CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION,values);
+				}
+			}
+		
+	}
+	
+	private boolean isGroupStatusLower(Short clientStatus , Short parentStatus ) {
+	
+		boolean isNotValid = false ;
+		if(clientStatus.equals(CustomerStatus.CLIENT_PENDING.getValue())){
+			if(parentStatus.equals(CustomerStatus.GROUP_PARTIAL.getValue())){
+				isNotValid = true;
+			}
+		}
+		else if(clientStatus.equals(CustomerStatus.CLIENT_ACTIVE.getValue())){
+			if(parentStatus.equals(CustomerStatus.GROUP_PARTIAL.getValue()) || parentStatus.equals(CustomerStatus.GROUP_PENDING.getValue())){
+				isNotValid = true;
+			}
+		}
+		return isNotValid;
+	}
+	
+	private void generateSearchId(CustomerBO parentCustomer , Short officeId) throws CustomerException{
+		int count;
+		if (parentCustomer != null) {
+			this.setSearchId(parentCustomer.getSearchId()+ "."+ String.valueOf(parentCustomer.getMaxChildCount() + 1));
+			parentCustomer.setMaxChildCount(parentCustomer.getMaxChildCount() + 1);
+		}
+		else{
+			try { 
+			count = new CustomerPersistence().getCustomerCountForOffice(CustomerLevel.CLIENT, officeId);
+			} catch (PersistenceException pe) {
+				throw new CustomerException(pe);
+			} 
+			String searchId=GroupConstants.PREFIX_SEARCH_STRING + ++count;
+			this.setSearchId(searchId);
+		  }
+		
 	}
 }

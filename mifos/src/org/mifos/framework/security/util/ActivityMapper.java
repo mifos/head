@@ -905,34 +905,33 @@ public class ActivityMapper {
 		activityMap.put("/clientCustAction-next", SecurityConstants.VIEW);
 		activityMap
 				.put("/clientCustAction-preview", SecurityConstants.VIEW);
+		activityMap.put("/clientCustAction-previewPersonalInfo", SecurityConstants.VIEW);
+		activityMap.put("/clientCustAction-retrievePictureOnPreview",
+				SecurityConstants.VIEW);
 		activityMap.put("/clientCustAction-prevPersonalInfo",
 				SecurityConstants.VIEW);
 		activityMap.put("/clientCustAction-prevMFIInfo",
 				SecurityConstants.VIEW);
+		activityMap.put("/clientCustAction-prevMeeting",
+				SecurityConstants.VIEW);
 		activityMap.put("/clientCustAction-create", SecurityConstants.VIEW);
+
+		activityMap.put("/clientCustAction-loadMeeting-ClientCreate",
+				SecurityConstants.MEETING_CREATE_CLIENT_MEETING);
 		activityMap.put("/clientCustAction-get", SecurityConstants.VIEW);
-		/*activityMap.put("/clientCustAction-editMFIInfo",
-				SecurityConstants.CIENT_EDIT_MFI_INFORMATION);
+		activityMap.put("/clientCustAction-editMFIInfo",SecurityConstants.CIENT_EDIT_MFI_INFORMATION);
 		activityMap.put("/clientCustAction-editPersonalInfo",
 				SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
 		activityMap.put("/clientCustAction-update",
 				SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
 		activityMap.put("/clientCustAction-updateMfi",
 				SecurityConstants.CIENT_EDIT_MFI_INFORMATION);
-
-		activityMap.put("/clientCustAction-loadMeeting-ClientCreate",
-				SecurityConstants.MEETING_CREATE_CLIENT_MEETING);
 		activityMap.put("/clientCustAction-loadMeeting-Client",
 				SecurityConstants.MEETING_UPDATE_CLIENT_MEETING);
-
-		activityMap.put("/clientCustAction-previous",
-				SecurityConstants.VIEW);
-		activityMap.put("/clientCustAction-retrievePictureOnPreview",
-				SecurityConstants.VIEW);
 		activityMap.put("/clientCustAction-retrievePicture",
 				SecurityConstants.VIEW);
 		activityMap.put("/clientCustAction-showPicture",
-				SecurityConstants.VIEW);*/
+				SecurityConstants.VIEW);
 		
 		
 

@@ -55,12 +55,17 @@ import org.mifos.application.customer.center.util.helpers.ValidateMethods;
 import org.mifos.application.customer.client.business.ClientDetailView;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.application.customer.group.util.valueobjects.Group;
 import org.mifos.application.customer.struts.actionforms.CustomerActionForm;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerHelper;
+import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationHelper;
@@ -69,6 +74,7 @@ import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.valueobjects.Context;
 
 public class ClientCustActionForm extends CustomerActionForm {
 
@@ -90,7 +96,11 @@ public class ClientCustActionForm extends CustomerActionForm {
 	public String getGroupFlag() {
 		return groupFlag;
 	}
-
+	
+	public Short getGroupFlagValue() {
+		return getShortValue(groupFlag);
+	}
+	
 	public void setGroupFlag(String groupFlag) {
 		this.groupFlag = groupFlag;
 	}
@@ -170,6 +180,10 @@ public class ClientCustActionForm extends CustomerActionForm {
 	public String getTrained() {
 		return trained;
 	}
+	
+	public Short getTrainedValue() {
+		return getShortValue(trained);
+	}
 
 	public void setTrained(String trained) {
 		this.trained = trained;
@@ -222,40 +236,44 @@ public class ClientCustActionForm extends CustomerActionForm {
 	protected ActionErrors validateFields(HttpServletRequest request, String method) {
 		
 		ActionErrors errors = new ActionErrors();
-		if( ( method.equals(Methods.preview.toString()) || method.equals(Methods.next.toString()) )&& ( ClientConstants.INPUT_PERSONAL_INFO.equals(input) || ClientConstants.INPUT_EDIT_PERSONAL_INFO.equals(input) )){
-			System.out.println("inside next method");
+		if(  (method.equals(Methods.previewPersonalInfo.toString()) || method.equals(Methods.next.toString()))&& ( ClientConstants.INPUT_PERSONAL_INFO.equals(input) || ClientConstants.INPUT_EDIT_PERSONAL_INFO.equals(input) )){
 			validateClientandSpouseNames(errors);
 			validateDateOfBirth(request,errors);
 			validateGender(errors);
 			validateConfigurableMandatoryFields(request,errors,EntityType.CLIENT);
 			validateCustomFields(request,errors);
-			if(picture !=null){
-				String fileName = picture.getFileName();
-				if(picture.getFileSize() > ClientConstants.PICTURE_ALLOWED_SIZE){
-					errors.add(ClientConstants.PICTURE_SIZE_EXCEPTION,new ActionMessage(ClientConstants.PICTURE_SIZE_EXCEPTION));
-				}
-				if(!ValidateMethods.isNullOrBlank(fileName)){
-					String fileExtension =fileName.substring(fileName.lastIndexOf(".")+1 , fileName.length());
-					if(!(fileExtension.equalsIgnoreCase("jpeg") || fileExtension.equalsIgnoreCase("jpg")) )
-						errors.add(ClientConstants.PICTURE_EXCEPTION,new ActionMessage(ClientConstants.PICTURE_EXCEPTION));
-
-				}
-				if(picture.getFileSize() == 0||picture.getFileSize() < 0){
-
-					SessionUtils.setAttribute("noPicture" , "Yes" ,request.getSession());
-				}
-				else{
-					SessionUtils.setAttribute("noPicture" , "No" ,request.getSession());
-				}
-			}
+			validatePicture(request, errors);
 		}
 		if(method.equals(Methods.preview.toString()) && ClientConstants.INPUT_MFI_INFO.equals(input) ){
 			validateConfigurableMandatoryFields(request,errors,EntityType.CLIENT);
 			validateFormedByPersonnel(errors);
 			validateFees(request, errors);
+			validateForFeeAssignedWithoutMeeting(request,errors);
 			validateTrained(request, errors);
 		}
 		return errors;
+	}
+
+	private void validatePicture(HttpServletRequest request , ActionErrors errors) {
+		if(picture !=null){
+			String fileName = picture.getFileName();
+			if(picture.getFileSize() > ClientConstants.PICTURE_ALLOWED_SIZE){
+				errors.add(ClientConstants.PICTURE_SIZE_EXCEPTION,new ActionMessage(ClientConstants.PICTURE_SIZE_EXCEPTION));
+			}
+			if(!ValidateMethods.isNullOrBlank(fileName)){
+				String fileExtension =fileName.substring(fileName.lastIndexOf(".")+1 , fileName.length());
+				if(!(fileExtension.equalsIgnoreCase("jpeg") || fileExtension.equalsIgnoreCase("jpg")) )
+					errors.add(ClientConstants.PICTURE_EXCEPTION,new ActionMessage(ClientConstants.PICTURE_EXCEPTION));
+
+			}
+			if(picture.getFileSize() == 0||picture.getFileSize() < 0){
+
+				SessionUtils.setAttribute("noPicture" , "Yes" ,request.getSession());
+			}
+			else{
+				SessionUtils.setAttribute("noPicture" , "No" ,request.getSession());
+			}
+		}
 	}
 
 	private void validateGender(ActionErrors errors) {
@@ -339,5 +357,23 @@ public class ClientCustActionForm extends CustomerActionForm {
 			}
 		}
 	}
-
+	
+	private void validateForFeeAssignedWithoutMeeting(HttpServletRequest request , ActionErrors errors){
+		for(int i=0; i < getDefaultFees().size();i++){
+			//if an already checked fee is unchecked then the value set to 0
+			if(request.getParameter("defaultFee["+i+"].feeRemoved")==null){
+				getDefaultFees().get(i).setFeeRemoved(YesNoFlag.NO.getValue());
+			}
+		}
+		MeetingBO meeting = null;
+		if(groupFlag.equals(ClientConstants.YES))
+			 meeting = parentGroup.getCustomerMeeting().getMeeting();
+		else{
+			 meeting = (MeetingBO)request.getSession().getAttribute(ClientConstants.CLIENT_MEETING);
+		}
+		if(meeting==null && getFeesToApply().size() > 0){
+			errors.add(CustomerConstants.MEETING_REQUIRED_EXCEPTION,new ActionMessage(CustomerConstants.MEETING_REQUIRED_EXCEPTION));
+		}
+		
+	}
 }

@@ -39,17 +39,22 @@
 package org.mifos.application.customer.client.struts.action;
 
 import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.struts.Globals;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
@@ -64,13 +69,16 @@ import org.mifos.application.customer.struts.action.CustAction;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerHelper;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.master.business.SpouseFatherLookupEntity;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
@@ -82,6 +90,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
@@ -133,9 +142,9 @@ private PersonnelPersistenceService personnelPersistenceService;
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
 		doCleanUp(actionForm, request);
 		request.getSession().removeAttribute(ClientConstants.CLIENT_MEETING);
-		if(actionForm.getGroupFlag().equals(ClientConstants.YES)){
+		if(actionForm.getGroupFlagValue().equals(YesNoFlag.YES.getValue())){
 			actionForm.setParentGroup(customerService.getCustomer(Integer.valueOf(actionForm.getParentGroupId())));
-			
+			actionForm.setOfficeId(actionForm.getParentGroup().getOffice().getOfficeId().toString());
 		}
 		loadCreateMasterData(actionForm, request);
 		return mapping.findForward(ActionForwards.load_success.toString());
@@ -177,6 +186,7 @@ private PersonnelPersistenceService personnelPersistenceService;
 
 	
 	private void loadCreateMasterData(ClientCustActionForm actionForm, HttpServletRequest request) throws ApplicationException, SystemException {
+		Short officeId = null;
 		SessionUtils.setAttribute(ClientConstants.SALUTATION_ENTITY,	customerService.retrieveMasterEntities(
 				MasterConstants.SALUTATION, getUserContext(request).getLocaleId()), request.getSession());
 		SessionUtils.setAttribute(ClientConstants.MARITAL_STATUS_ENTITY,	customerService.retrieveMasterEntities(
@@ -198,15 +208,18 @@ private PersonnelPersistenceService personnelPersistenceService;
 				MasterConstants.ETHINICITY, getUserContext(request).getLocaleId()), request.getSession());
 		loadCreateCustomFields(actionForm, EntityType.CLIENT, request);
 		loadFees(actionForm, request);
-		loadFormedByPersonnel(actionForm, request);
-		if(actionForm.getGroupFlag().equals(ClientConstants.NO)){
+		if(actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())){
 			loadLoanOfficers(actionForm.getOfficeIdValue() ,request);
-		}
+			officeId = actionForm.getOfficeIdValue();
+		}else
+			officeId = actionForm.getParentGroup().getOffice().getOfficeId();
+		loadFormedByPersonnel(officeId, request);
 	}
 	
 	public ActionForward retrievePictureOnPreview(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) throws Exception{
+		System.out.println("Inside retrieve picture on preview");
 		ClientCustActionForm actionForm = (ClientCustActionForm)form;
-		InputStream in = actionForm.getCustomerPicture();
+		InputStream in = actionForm.getPicture().getInputStream();
 		in.mark(0);
 		response.setContentType("image/jpeg");
 		BufferedOutputStream out = new BufferedOutputStream( response.getOutputStream() );
@@ -223,6 +236,12 @@ private PersonnelPersistenceService personnelPersistenceService;
 		return mapping.findForward(forward);
 	}
 	
+	public ActionForward previewPersonalInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse httpservletresponse)
+	throws Exception
+	{
+		return mapping.findForward(ActionForwards.previewPersonalInfo_success.toString());
+	}
+	
 	public ActionForward prevPersonalInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse httpservletresponse)
 	throws Exception
 	{
@@ -234,6 +253,80 @@ private PersonnelPersistenceService personnelPersistenceService;
 	{
 		return mapping.findForward(ActionForwards.prevMFIInfo_success.toString());
 	}
+	
+	public ActionForward prevMeeting(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) throws Exception{
+		System.out.println("------------------------------Inside previous");
+		return mapping.findForward(ActionForwards.next_success.toString());
+	}
+	
+	public ActionForward loadMeeting(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(ActionForwards.loadMeeting_success
+				.toString());
+	}
+	
+	public ActionForward create(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws ApplicationException, IOException {
+		ClientBO client = null;
+		ClientCustActionForm actionForm = (ClientCustActionForm) form;
+		MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(ClientConstants.CLIENT_MEETING, request.getSession());
+		List<CustomFieldView> customFields = actionForm.getCustomFields();
+		UserContext userContext = getUserContext(request);
+		convertCustomFieldDateToUniformPattern(customFields, userContext.getPereferedLocale());
+		Short personnelId=null;
+		Short officeId=null;
+		if(actionForm.getGroupFlagValue().equals(YesNoFlag.YES.getValue())){
+			personnelId = actionForm.getParentGroup().getPersonnel().getPersonnelId(); 
+			officeId = actionForm.getParentGroup().getOffice().getOfficeId(); 
+		}
+		else{
+			personnelId= actionForm.getLoanOfficerIdValue();
+			officeId = actionForm.getOfficeIdValue();
+		}
+		if(personnelId!=null)
+			checkPermissionForCreate(actionForm.getStatusValue(),getUserContext(request),null,officeId,personnelId);
+		else
+			checkPermissionForCreate(actionForm.getStatusValue(),getUserContext(request),null,officeId,getUserContext(request).getId());
+		try {	
+			if(actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())){
+				client = new ClientBO(userContext,actionForm.getClientName().getDisplayName(),CustomerStatus.getStatus(actionForm.getStatusValue()),
+						actionForm.getExternalId(),	getDateFromString(actionForm.getMfiJoiningDate(), userContext.getPereferedLocale()),
+						actionForm.getAddress(),customFields,actionForm.getFeesToApply(),actionForm.getFormedByPersonnelValue(),
+						actionForm.getOfficeIdValue(),meeting,actionForm.getLoanOfficerIdValue(),
+						getDateFromString(actionForm.getDateOfBirth(), userContext.getPereferedLocale()),
+						actionForm.getGovernmentId(),actionForm.getTrainedValue(),
+						getDateFromString(actionForm.getTrainedDate(), userContext.getPereferedLocale()),
+						actionForm.getGroupFlagValue(),	actionForm.getClientName(),
+						actionForm.getSpouseName(),	actionForm.getClientDetailView(),actionForm.getCustomerPicture());
+			}
+			else{
+						client = new ClientBO(userContext,actionForm.getClientName().getDisplayName(),
+						CustomerStatus.getStatus(actionForm.getStatusValue()),actionForm.getExternalId(),
+						getDateFromString(actionForm.getMfiJoiningDate(), userContext.getPereferedLocale()),
+						actionForm.getAddress(),customFields,actionForm.getFeesToApply(), 
+						actionForm.getFormedByPersonnelValue(),	actionForm.getParentGroup().getOffice().getOfficeId(),
+						actionForm.getParentGroup(),getDateFromString(actionForm.getDateOfBirth(), userContext.getPereferedLocale()),
+						actionForm.getGovernmentId(),actionForm.getTrainedValue(),
+						getDateFromString(actionForm.getTrainedDate(), userContext.getPereferedLocale()),
+						actionForm.getGroupFlagValue(),	actionForm.getClientName(),
+						actionForm.getSpouseName(),	actionForm.getClientDetailView(),actionForm.getCustomerPicture());
+			}
+			client.save();
+			actionForm.setCustomerId(client.getCustomerId().toString());
+			actionForm.setGlobalCustNum(client.getGlobalCustNum());
+		} 
+		catch (ApplicationException ae) {
+			ae.printStackTrace();
+			ActionErrors errors = new ActionErrors();
+			errors.add(ae.getKey(),	new ActionMessage(ae.getKey(),ae.getValues()));
+			request.setAttribute(Globals.ERROR_KEY, errors);
+			return mapping.findForward(ActionForwards.create_failure.toString());
+		}
+		return mapping.findForward(ActionForwards.create_success.toString());
+	}
+	
 	private void doCleanUp(ClientCustActionForm actionForm,
 			HttpServletRequest request) {
 		clearActionForm(actionForm);
@@ -248,6 +341,7 @@ private PersonnelPersistenceService personnelPersistenceService;
 		actionForm.setAddress(new Address());
 		actionForm.setDisplayName(null);
 		actionForm.setDateOfBirth(null);
+		actionForm.setGovernmentId(null);
 		actionForm.setMfiJoiningDate(null);
 		actionForm.setGlobalCustNum(null);
 		actionForm.setCustomerId(null);
@@ -290,7 +384,7 @@ private PersonnelPersistenceService personnelPersistenceService;
 	private void loadMasterDataForDetailsPage(HttpServletRequest request,
 			ClientBO clientBO) throws SystemException {
 		SessionUtils.setAttribute(ClientConstants.AGE, new CustomerHelper()
-				.calculateAge(clientBO.getDateOfBirth()), request.getSession());
+				.calculateAge(new java.sql.Date((clientBO.getDateOfBirth()).getTime())), request.getSession());
 		/*SessionUtils.setAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
 				getMasterEntities(SpouseFatherLookupEntity.class,
 						getUserContext(request).getLocaleId()), request

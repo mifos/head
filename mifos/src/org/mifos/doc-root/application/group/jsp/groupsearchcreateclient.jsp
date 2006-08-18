@@ -135,7 +135,7 @@
                   <td>&nbsp;</td>
                   <td>
                   <c:if test="${sessionScope.groupHierarchyRequired eq 'No'}">
-                   <a href="clientCreationAction.do?method=chooseOffice&amp;isClientUnderGrp=0"> 
+                   <a href="clientCustAction.do?method=chooseOffice&amp;groupFlag=0"> 
                  <%-- <a href="clientCreationAction.do?method=load&amp;office.officeId=5&amp;isClientUnderGrp=0"> --%>
                   <br>
                     <mifos:mifoslabel name="Group.clickheretocontinueif" /> <mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /> <mifos:mifoslabel name="Group.membershipisnotrequiredforyour" /> <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />.</a>

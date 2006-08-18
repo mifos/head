@@ -1797,7 +1797,6 @@
 			<forward name="center_detail_page" path="/centerAction.do?method=get" />
 			<forward name="client_detail_page" path="/clientCreationAction.do?method=get" />
 		</action>
-		<!-- Client Creation Action -->
 		<action path="/clientCustAction" type="org.mifos.application.customer.client.struts.action.ClientCustAction" 
 			name="clientCustActionForm" parameter="method" 
 			input="/clientCustAction.do?method=validate" validate="true"
@@ -1810,8 +1809,9 @@
 			<!-- Preview Page Forwards -->
 			<forward name="preview_success" path="/pages/application/client/jsp/preview_ClientDetails.jsp" />
 			<forward name="preview_failure" path="/pages/application/client/jsp/create_ClientMfiInfo.jsp" />
-			<forward name="previewPersonalInfo_failure" path="/pages/application/client/jsp/createClientPersonalInfo.jsp" />
-			<forward name="previewMFIInfo_failure" path="/pages/application/client/jsp/createClientMfiInfo.jsp" />
+			<forward name="previewPersonalInfo_success" path="/pages/application/client/jsp/preview_ClientDetails.jsp" />
+			<forward name="previewPersonalInfo_failure" path="/pages/application/client/jsp/create_ClientPersonalInfo.jsp" />
+			<forward name="previewMfiInfo_failure" path="/pages/application/client/jsp/createClientMfiInfo.jsp" />
 			<forward name="previewEditPersonalInfo_success" path="/pages/application/client/jsp/previewEditClientPersonalInfo.jsp" />
 			<forward name="update_failure" path="/pages/application/client/jsp/previewEditClientPersonalInfo.jsp" />
 			<forward name="previewEditPersonalInfo_failure" path="/pages/application/client/jsp/editClientPersonalInfo.jsp" />
@@ -1819,14 +1819,14 @@
 			<forward name="previewEditMfiInfo_failure" path="/pages/application/client/jsp/editClientMfiInfo.jsp" />
 			<!-- Preview Page Forwards End -->
 			<!-- Previous Page Forwards -->
-			<forward name="prevPersonalInfo_success" path="/pages/application/client/jsp/createClientPersonalInfo.jsp" />
+			<forward name="prevPersonalInfo_success" path="/pages/application/client/jsp/create_ClientPersonalInfo.jsp" />
 			<forward name="prevEditPersonalInfo_success" path="/pages/application/client/jsp/editClientPersonalInfo.jsp" />
-			<forward name="prevMFIInfo_success" path="/pages/application/client/jsp/createClientMfiInfo.jsp" />
+			<forward name="prevMFIInfo_success" path="/pages/application/client/jsp/create_ClientMfiInfo.jsp" />
 			<forward name="prevEditMfiInfo_success" path="/pages/application/client/jsp/editClientMfiInfo.jsp" />
 			<!-- Previous Page Forwards End -->
 			<forward name="get_success" path="/pages/application/client/jsp/viewClientDetails.jsp" />
-			<forward name="create_success" path="/pages/application/client/jsp/clientCreationConfirmation.jsp" />
-			<forward name="create_failure" path="/pages/application/client/jsp/previewClientDetails.jsp" />
+			<forward name="create_success" path="/pages/application/client/jsp/client_creationConfirmation.jsp" />
+			<forward name="create_failure" path="/pages/application/client/jsp/preview_ClientDetails.jsp" />
 			<forward name="editPersonalInfo_success" path="/pages/application/client/jsp/editClientPersonalInfo.jsp" />
 			<forward name="editMfiInfo_success" path="/pages/application/client/jsp/editClientMfiInfo.jsp" />
 			<forward name="update_success" path="/clientCreationAction.do?method=get" />

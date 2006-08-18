@@ -54,7 +54,7 @@ public class ClientAttendanceBO extends BusinessObject {
 
 	private Integer id;
 
-	private Date meetingDate;
+	private java.util.Date meetingDate;
 
 	private CustomerBO customer;
 
@@ -76,11 +76,11 @@ public class ClientAttendanceBO extends BusinessObject {
 		this.attendance = attendance;
 	}
 
-	public Date getMeetingDate() {
+	public java.util.Date getMeetingDate() {
 		return meetingDate;
 	}
 
-	public void setMeetingDate(Date meetingDate) {
+	public void setMeetingDate(java.util.Date meetingDate) {
 		this.meetingDate = meetingDate;
 	}
 

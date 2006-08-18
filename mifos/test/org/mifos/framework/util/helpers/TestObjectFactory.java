@@ -363,6 +363,46 @@ public class TestObjectFactory {
 		}
 		return client;
 	}
+	
+	public static ClientBO createClient(String customerName, MeetingBO meeting , Short statusId, Date startDate) {
+		ClientBO client = null;
+		try {
+			Short office = new Short("3");
+			Short personnel = new Short("1");	
+			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(customerName),customerName,"middle",customerName,"secondLast");
+			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),customerName,"middle",customerName,"secondLast");
+			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"));
+			client = new ClientBO(getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(statusId), null, null, null, null, getFees(), personnel, office,meeting,personnel, new Date(),
+					null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
+			client.save();
+			HibernateUtil.commitTransaction();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return client;
+	}
+	
+	public static ClientBO createClient(String customerName, Short statusId,CustomerBO parentCustomer, Date startDate) {
+		ClientBO client = null;
+		Short personnel = new Short("1");	
+		try {
+			if(parentCustomer!=null && parentCustomer.getCustomerMeeting()!=null 
+					&& parentCustomer.getCustomerMeeting().getMeeting()!=null)
+				parentCustomer.getCustomerMeeting().getMeeting().setMeetingStartDate(new GregorianCalendar());
+			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(customerName+customerName),customerName,"",customerName,"");
+			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),customerName,"middle",customerName,"secondLast");
+			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"));
+			client = new ClientBO(getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(statusId), null, null, null, null, getFees(), personnel, parentCustomer.getOffice().getOfficeId(), parentCustomer, null,
+					null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
+			
+			client.save();
+			HibernateUtil.commitTransaction();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return client;
+	}
 
 	/**
 	 * @param name -

@@ -51,6 +51,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
+import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.PathConstants;
 import org.mifos.application.customer.util.valueobjects.Customer;
@@ -152,10 +153,15 @@ public class MeetingAction extends MifosBaseAction {
 		MeetingActionForm maf = (MeetingActionForm) form;
 		maf.clearForm();
 		Meeting meeting =getMeetingFromContext(request,form);
-		
+		Object obj =null;
 		//Code added for M2 Center.
 		if(meeting == null){
-			Object obj = SessionUtils.getAttribute(CenterConstants.CENTER_MEETING, request.getSession());
+			if (maf.input.equalsIgnoreCase(MeetingConstants.CLIENT)) {
+				obj = SessionUtils.getAttribute(ClientConstants.CLIENT_MEETING, request.getSession());
+			}
+			else if (maf.input.equalsIgnoreCase(MeetingConstants.CENTER)) {
+				obj = SessionUtils.getAttribute(CenterConstants.CENTER_MEETING, request.getSession());
+			}
 			if(obj!=null)
 				meeting = MeetingHelper.convertMeetingM2toM1((MeetingBO)obj);
 		}
@@ -264,6 +270,7 @@ public class MeetingAction extends MifosBaseAction {
 			} else if (maf.input.equalsIgnoreCase(MeetingConstants.CLIENT)) {
 				setInContext(PathConstants.CLIENT_CREATION, request
 						.getSession(), meeting);
+				//forward = "clientCreate_success";
 				forward = MeetingConstants.FORWARD_CLIENT_SUCESS;
 			} else if (maf.input.equalsIgnoreCase(MeetingConstants.CENTER)) {
 				setInContext(
@@ -284,10 +291,15 @@ public class MeetingAction extends MifosBaseAction {
 			}
 		}
 		
-		//Meeting is being stored in session for center create
-		SessionUtils.setAttribute(CenterConstants.CENTER_MEETING, MeetingHelper.convertMeetingM1oM2(meeting), request.getSession());
+		if (maf.input.equalsIgnoreCase(MeetingConstants.CLIENT)) {
+			//Meeting is being stored in session for client create
+			SessionUtils.setAttribute(ClientConstants.CLIENT_MEETING, MeetingHelper.convertMeetingM1oM2(meeting), request.getSession());
+		}
+		else{
+			//Meeting is being stored in session for center create
+			SessionUtils.setAttribute(CenterConstants.CENTER_MEETING, MeetingHelper.convertMeetingM1oM2(meeting), request.getSession());
+		}
 		meetingLogger.info("We are forwarding to " + forward);
-
 		return mapping.findForward(forward);
 
 	}

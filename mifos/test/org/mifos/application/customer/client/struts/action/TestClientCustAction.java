@@ -48,13 +48,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import org.apache.struts.Globals;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -65,6 +65,7 @@ import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -286,7 +287,6 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		addRequestParameter("trained", "1");
 		addRequestParameter("input", "mfiInfo");
 		actionPerform();
-		System.out.println("Errors: "+ request.getAttribute(Globals.ERROR_KEY));
 		assertEquals(1, getErrrorSize());
 		assertEquals("Client Trained date not present", 1, getErrrorSize(ClientConstants.TRAINED_DATE_MANDATORY  ));
 		
@@ -391,6 +391,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		assertEquals("Fee", 1, getErrrorSize(CustomerConstants.FEE));
 		removeFees(feesToRemove);
 	}
+	
 	public void testPreviewSuccess() throws Exception {
 		List<FeeView> feesToRemove = getFees();
 		setRequestPathInfo("/clientCustAction.do");
@@ -418,8 +419,6 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 			i++;
 		}
 		actionPerform();
-		
-		
 		List<FeeView> feeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request.getSession());
 		FeeView fee = feeList.get(0);
 		setRequestPathInfo("/clientCustAction.do");
@@ -428,13 +427,14 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		addRequestParameter("formedByPersonnel", "1");
 		addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
 		addRequestParameter("selectedFee[0].amount", fee.getAmount());
+		SessionUtils.setAttribute(ClientConstants.CLIENT_MEETING,new MeetingBO(MeetingFrequency.MONTHLY, Short.valueOf("2"),MeetingType.CUSTOMERMEETING), request.getSession());
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.preview_success.toString());
 		removeFees(feesToRemove);
 	}
-	
+		
 	public void testSuccessfulPrevPersonalInfo() throws Exception {
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "prevPersonalInfo");
@@ -453,6 +453,134 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		verifyNoActionMessages();
 	}
 	
+	public void testCreateSuccessWithoutGroup() throws Exception {
+		List<FeeView> feesToRemove = getFees();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("officeId", "3");
+		addRequestParameter("groupFlag", "0");
+		actionPerform();
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request.getSession());
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "next");
+		addRequestParameter("officeId", "3");
+		addRequestParameter("clientName.salutation", "1");
+		addRequestParameter("clientName.firstName", "Client");
+		addRequestParameter("clientName.lastName", "LastName");
+		addRequestParameter("spouseName.firstName", "Spouse");
+		addRequestParameter("spouseName.lastName", "LastName");
+		addRequestParameter("spouseName.nameType", "1");
+		addRequestParameter("dateOfBirth", "03/20/2006");
+		addRequestParameter("clientDetailView.gender", "1");
+		addRequestParameter("input", "personalInfo");
+		int i = 0;
+		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
+			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
+			addRequestParameter("customField["+ i +"].fieldValue", "Req");
+			i++;
+		}
+		actionPerform();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "preview");	
+		addRequestParameter("input", "mfiInfo");
+		addRequestParameter("loanOfficerId", "1");
+		addRequestParameter("formedByPersonnel", "1");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.preview_success.toString());
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "create");	
+		addRequestParameter("input", "create");
+		addRequestParameter("status", "1");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.create_success.toString());
+		ClientCustActionForm actionForm = (ClientCustActionForm)request.getSession().getAttribute("clientCustActionForm");
+		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class, new Integer(actionForm.getCustomerId()).intValue());
+		removeFees(feesToRemove);
+	}
+	
+	
+	public void testCreateSuccessUnderGroup() throws Exception {
+		try{
+			createParentCustomer();
+			setRequestPathInfo("/clientCustAction.do");
+			addRequestParameter("method", "load");
+			addRequestParameter("parentGroupId", group.getCustomerId().toString());
+			addRequestParameter("groupFlag", "1");
+			actionPerform();
+			verifyNoActionErrors();
+			verifyNoActionMessages();
+			verifyForward(ActionForwards.load_success.toString());
+			List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request.getSession());
+			setRequestPathInfo("/clientCustAction.do");
+			addRequestParameter("method", "next");
+			addRequestParameter("officeId", "3");
+			addRequestParameter("clientName.salutation", "1");
+			addRequestParameter("clientName.firstName", "Client");
+			addRequestParameter("clientName.lastName", "LastName");
+			addRequestParameter("spouseName.firstName", "Spouse");
+			addRequestParameter("spouseName.lastName", "LastName");
+			addRequestParameter("spouseName.nameType", "1");
+			addRequestParameter("dateOfBirth", "03/20/2006");
+			addRequestParameter("clientDetailView.gender", "1");
+			addRequestParameter("input", "personalInfo");
+			int i = 0;
+			for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
+				addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
+				addRequestParameter("customField["+ i +"].fieldValue", "Req");
+				i++;
+			}
+			actionPerform();
+			verifyNoActionErrors();
+			verifyNoActionMessages();
+			verifyForward(ActionForwards.next_success.toString());
+
+			setRequestPathInfo("/clientCustAction.do");
+			addRequestParameter("method", "preview");	
+			addRequestParameter("input", "mfiInfo");
+			addRequestParameter("formedByPersonnel", "1");
+			actionPerform();
+			verifyNoActionErrors();
+			verifyNoActionMessages();
+			verifyForward(ActionForwards.preview_success.toString());
+			setRequestPathInfo("/clientCustAction.do");
+			addRequestParameter("method", "create");	
+			addRequestParameter("input", "create");
+			addRequestParameter("status", "1");
+			actionPerform();
+			verifyNoActionErrors();
+			verifyNoActionMessages();
+			verifyForward(ActionForwards.create_success.toString());
+			ClientCustActionForm actionForm = (ClientCustActionForm)request.getSession().getAttribute("clientCustActionForm");
+			client = (ClientBO)TestObjectFactory.getObject(ClientBO.class, new Integer(actionForm.getCustomerId()).intValue());
+		}
+		catch(Exception e ){
+			e.printStackTrace();
+		}
+	}
+	
+	public void testGet(){	
+		createInitialCustomers();
+		accountBO = getLoanAccount(client,meeting);
+		client.setDateOfBirth(offSetCurrentDate(50));
+		TestObjectFactory.updateObject(client);	
+		HibernateUtil.closeSession();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "get");
+		addRequestParameter("globalCustNum", client.getGlobalCustNum());
+		actionPerform();	
+		verifyForward(ActionForwards.get_success.toString());
+		assertEquals("Age of customer should be 50 years",50,SessionUtils.getAttribute(ClientConstants.AGE,request.getSession()));
+		//assertEquals("No of active loan accounts should be 1",1,((List<LoanBO>)SessionUtils.getAttribute(ClientConstants.CUSTOMERACTIVELOANACCOUNTS,request.getSession())).size());
+		HibernateUtil.closeSession();
+		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,group.getCustomerId());
+		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,center.getCustomerId());
+		client = (ClientBO)HibernateUtil.getSessionTL().get(ClientBO.class,client.getCustomerId());
+		accountBO = (LoanBO) HibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());
+	}
 	private List<FeeView> getFees() {
 		List<FeeView> fees = new ArrayList<FeeView>();
 		AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory
@@ -478,6 +606,12 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		client = TestObjectFactory.createClient("client",CustomerStatus.CLIENT_ACTIVE.getValue(), group.getSearchId()+".1", group, new Date());
 	}
 	
+	private void createParentCustomer(){
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"), "1.4", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("group", CustomerStatus.GROUP_ACTIVE.getValue(), center.getSearchId()+".1", center, new Date());
+	}
+	
 	private java.sql.Date offSetCurrentDate(int noOfyears) {
 		Calendar currentDateCalendar = new GregorianCalendar();
 		int year = currentDateCalendar.get(Calendar.YEAR);
@@ -499,25 +633,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 
 	}
 	
-	public void testGet(){	
-		createInitialCustomers();
-		accountBO = getLoanAccount(client,meeting);
-		client.setDateOfBirth(offSetCurrentDate(50));
-		TestObjectFactory.updateObject(client);	
-		HibernateUtil.closeSession();
-		setRequestPathInfo("/clientCustAction.do");
-		addRequestParameter("method", "get");
-		addRequestParameter("globalCustNum", client.getGlobalCustNum());
-		actionPerform();	
-		verifyForward(ActionForwards.get_success.toString());
-		assertEquals("Age of customer should be 50 years",50,SessionUtils.getAttribute(ClientConstants.AGE,request.getSession()));
-		//assertEquals("No of active loan accounts should be 1",1,((List<LoanBO>)SessionUtils.getAttribute(ClientConstants.CUSTOMERACTIVELOANACCOUNTS,request.getSession())).size());
-		HibernateUtil.closeSession();
-		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,group.getCustomerId());
-		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,center.getCustomerId());
-		client = (ClientBO)HibernateUtil.getSessionTL().get(ClientBO.class,client.getCustomerId());
-		accountBO = (LoanBO) HibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());
-	}
+	
 	
 	
 	

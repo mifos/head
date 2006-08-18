@@ -175,5 +175,10 @@
 	<query name="Customer.getCustomerCountForOffice">
 	    <![CDATA[select count(*) from org.mifos.application.customer.business.CustomerBO as customer where customer.customerLevel.id =:LEVEL_ID and customer.office.officeId =:OFFICE_ID]]>
     </query>
-	
+    <query name="Customer.getClientBasedOnGovtId">
+	    <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client where client.customerLevel.id =:LEVEL_ID and client.governmentId =:GOVT_ID]]>
+    </query>					  
+	<query name="Customer.getClientBasedOnNameAndDateOfBirth">
+	    <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client where (client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth =:DATE_OFBIRTH and :customerId = 0) or (:customerId != 0 and client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth =:DATE_OFBIRTH and client.customerId !=:customerId)]]>
+    </query>				      	  
 </hibernate-mapping>

@@ -12,12 +12,12 @@
 		<script language="javascript">
 
   function goToCancelPage(){
-	clientCreationActionForm.action="clientCreationAction.do?method=cancel";
-	clientCreationActionForm.submit();
+	clientCustActionForm.action="clientCustAction.do?method=cancel";
+	clientCustActionForm.submit();
   }
  
 </script>
-		<html-el:form action="clientCreationAction.do?method=load">
+		<html-el:form action="clientCustAction.do?method=load">
 			<html-el:hidden property="input" value="create" />
 			<html-el:hidden property="isClientUnderGrp" value="0" />
 
@@ -99,7 +99,7 @@
 						</tr>
 					</table>
 					<office:listOffices methodName="load"
-						actionName="clientCreationAction.do" onlyBranchOffices="yes" />
+						actionName="clientCustAction.do" onlyBranchOffices="yes" />
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center" class="blueline">&nbsp;</td>

@@ -232,6 +232,13 @@ public abstract class CustomerActionForm extends BaseActionForm{
 		return getShortValue(loanOfficerId);
 	}
 	
+	public Short getStatusValue() {
+			return getShortValue(status);
+		}
+	public Short getFormedByPersonnelValue() {
+		return getShortValue(formedByPersonnel);
+	}
+	
 	public CustomFieldView getCustomField(int i){
 		while(i>=customFields.size()){
 			customFields.add(new CustomFieldView());
