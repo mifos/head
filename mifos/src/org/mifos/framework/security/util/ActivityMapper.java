@@ -148,6 +148,12 @@ public class ActivityMapper {
 		activityMap.put("/OfficeHierarchyAction-load", SecurityConstants.VIEW);
 		activityMap.put("/OfficeHierarchyAction-update",
 				SecurityConstants.OFFICE_EDIT_OFFICE);
+		
+		//m2 office action 
+		activityMap.put("/offAction-load",
+				SecurityConstants.OFFICE_CREATE_OFFICE);
+		activityMap.put("/offAction-loadParent", SecurityConstants.VIEW);
+		
 
 		// roles and permission related mappings
 		activityMap.put("/manageRolesAndPermission-manage",

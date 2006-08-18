@@ -37,11 +37,8 @@
  */
 package org.mifos.application.office.business;
 
-import java.util.Set;
-
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.office.util.helpers.OfficeLevel;
-import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 /**
@@ -60,51 +57,43 @@ public class OfficeLevelEntity extends MasterDataEntity {
 
 	private Short interactionFlag;
 
-	protected  OfficeLevelEntity() {
-		parent=null;
-		child=null;
+	protected OfficeLevelEntity() {
+		parent = null;
+		child = null;
 
 	}
-	
-	public OfficeLevelEntity(OfficeLevel level){
+
+	public OfficeLevelEntity(OfficeLevel level) {
 		super(level.getValue());
-		parent=null;
-		child=null;
+		parent = null;
+		child = null;
 	}
 
-	private void setConfigured(Short configured) {
-		this.configured = configured;
-	}
-	
-	public boolean isConfigured()
-	{
-		return this.configured >0;
-	}
-	public void  addConfigured(boolean configured)
-	{
-		 setConfigured((short)(configured?1:0));
-	}
-	private void setInteractionFlag(Short interactionFlag) {
-		this.interactionFlag = interactionFlag;
+	public boolean isConfigured() {
+		return this.configured > 0;
 	}
 
-	public boolean isInteractionFlag()
-	{
-		return this.interactionFlag>0;
+	public void addConfigured(boolean configured) {
+		this.configured = (short) (configured ? 1 : 0);
 	}
-	public void addInteractionFlag(boolean interactionFlag)
-	{
-		 setInteractionFlag((short)(interactionFlag?1:0));
+
+	public boolean isInteractionFlag() {
+		return this.interactionFlag > 0;
+	}
+
+	public void addInteractionFlag(boolean interactionFlag) {
+		this.interactionFlag = (short) (interactionFlag ? 1 : 0);
 	}
 
 	public OfficeLevelEntity getParent() {
 		return parent;
 	}
+
 	public OfficeLevelEntity getChild() {
 		return child;
 	}
-	
-	public OfficeLevel getLevel() throws PropertyNotFoundException{
+
+	public OfficeLevel getLevel() throws PropertyNotFoundException {
 		return OfficeLevel.getOfficeLevel(this.getId());
 	}
 }

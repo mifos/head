@@ -11,8 +11,8 @@
 			<generator class="native" />
 		</id>
 
-		<property name="interactionFlag" column="INTERACTION_FLAG"	type="short" />
-		<property name="configured" column="CONFIGURED" type="short" />
+		<property name="interactionFlag" column="INTERACTION_FLAG"	type="short" access="field"/>
+		<property name="configured" column="CONFIGURED" type="short" access="field"/>
 
 		<many-to-one name="lookUpValue" column="LEVEL_NAME_ID" class="org.mifos.application.master.business.LookUpValueEntity" 
     			cascade="none" update="false" unique="true"/>	

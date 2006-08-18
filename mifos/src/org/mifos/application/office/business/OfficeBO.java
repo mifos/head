@@ -1,5 +1,6 @@
 package org.mifos.application.office.business;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -23,8 +24,12 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.authorization.HierarchyManager;
+import org.mifos.framework.security.util.EventManger;
+import org.mifos.framework.security.util.OfficeSearch;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.StringUtils;
 
@@ -121,6 +126,14 @@ public class OfficeBO extends BusinessObject {
 
 	}
 
+	public OfficeStatus getOfficeStatus() throws OfficeException {
+		try {
+			return OfficeStatus.getOfficeStatus(level.getId());
+		} catch (PropertyNotFoundException e) {
+			throw new OfficeException(e);
+		}
+	}
+
 	public String getOfficeName() {
 		return officeName;
 	}
@@ -165,14 +178,6 @@ public class OfficeBO extends BusinessObject {
 		this.shortName = shortName;
 	}
 
-	public OfficeStatusEntity getStatus() {
-		return status;
-	}
-
-	public void setStatus(OfficeStatusEntity status) {
-		this.status = status;
-	}
-
 	public void setUpdatedDate(Date updatedDate) {
 		this.updatedDate = updatedDate;
 	}
@@ -193,13 +198,6 @@ public class OfficeBO extends BusinessObject {
 	@Override
 	public Short getEntityID() {
 		return EntityMasterConstants.Office;
-	}
-
-	public void changeStatus(OfficeStatus status) throws ServiceException {
-		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.MasterDataService);
-
 	}
 
 	public void setAddress(OfficeAddressEntity address) throws OfficeException {
@@ -283,5 +281,74 @@ public class OfficeBO extends BusinessObject {
 		this.globalOfficeNum = generateOfficeGlobalNo();
 		this.searchId = generateSearchId();
 		new OfficePersistence().createOrUpdate(this);
+
+		// if we are here it means office created sucessfully
+		// we need to update hierarchy manager cache
+		OfficeSearch os = new OfficeSearch(getOfficeId(), getSearchId(),
+				getParentOffice().getOfficeId());
+		List<OfficeSearch> osList = new ArrayList<OfficeSearch>();
+		osList.add(os);
+		EventManger.postEvent(Constants.CREATE, osList,
+				SecurityConstants.OFFICECHANGEEVENT);
+
+	}
+
+	private void changeStatus(OfficeStatus status) throws OfficeException {
+		try {
+
+			if (!this.status.getId().equals(status.getValue())) {
+
+				if (status == OfficeStatus.INACTIVE) {
+					canInactivateOffice();
+				} else {
+					canActivateOffice();
+				}
+				
+				//still here we can update the status
+				MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
+				.getInstance().getPersistenceService(
+						PersistenceServiceName.MasterDataService);
+				this.status= (OfficeStatusEntity)masterPersistenceService.findById(OfficeStatusEntity.class,status.getValue());
+
+			}
+		} catch (ServiceException e) {
+			throw new OfficeException(e);
+		}
+
+	}
+
+	private void canInactivateOffice() throws OfficeException {
+		OfficePersistence officePersistence = new OfficePersistence();
+		if (officePersistence.hasActiveChildern(this.officeId))
+			throw new OfficeException(OfficeConstants.KEYHASACTIVECHILDREN);
+		if (officePersistence.hasActivePeronnel(this.officeId)) {
+			throw new OfficeException(OfficeConstants.KEYHASACTIVEPERSONNEL);
+
+		}
+	}
+
+	private void canActivateOffice() throws OfficeException {
+
+		if (parentOffice.getOfficeStatus().equals(OfficeStatus.INACTIVE))
+			throw new OfficeException(OfficeConstants.KEYPARENTNOTACTIVE);
+	}
+	public  void update(String newName,String newShortName,OfficeStatus newStatus,OfficeLevel newLevel,OfficeBO newParent) throws OfficeException{
+		changeOfficeName(newName);
+		changeOfficeShortName(newShortName);
+		changeStatus(newStatus);
+	}
+	private void changeOfficeName(String newName) throws OfficeException{
+		
+		if(! this.officeName.equalsIgnoreCase(newName)){
+			if (new OfficePersistence().isOfficeNameExist(newName))
+				throw new OfficeException(OfficeConstants.OFFICENAMEEXIST);
+		}
+	}
+	private void changeOfficeShortName(String newShortName) throws OfficeException{
+		
+		if(! this.officeName.equalsIgnoreCase(newShortName)){
+			if (new OfficePersistence().isOfficeShortNameExist(newShortName))
+				throw new OfficeException(OfficeConstants.OFFICESHORTNAMEEXIST);
+		}
 	}
 }

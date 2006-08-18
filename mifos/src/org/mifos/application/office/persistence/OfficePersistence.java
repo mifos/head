@@ -3,6 +3,8 @@ package org.mifos.application.office.persistence;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.net.ssl.SSLEngineResult.Status;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -10,7 +12,10 @@ import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficeView;
+import org.mifos.application.office.util.helpers.OfficeLevel;
+import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.office.util.resources.OfficeConstants;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SecurityException;
@@ -114,5 +119,49 @@ public class OfficePersistence extends Persistence {
 			return (Integer)queryResult.get(0) >0 ?true:false;
 		}
 		return false;
+	}
+	public boolean hasActiveChildern(Short officeId){
+		
+		HashMap<String , Object> queryParameters = new HashMap<String , Object>();
+		queryParameters.put("OFFICE_ID",officeId);
+		List queryResult = executeNamedQuery(NamedQueryConstants.GETCOUNTOFACTIVECHILDERN,queryParameters);	
+		if(queryResult !=null && queryResult.size()!=0){
+			return (Integer)queryResult.get(0)>0?true:false;
+		}
+		return false;
+	}
+	public boolean hasActivePeronnel(Short officeId){
+		
+		HashMap<String , Object> queryParameters = new HashMap<String , Object>();
+		queryParameters.put("OFFICE_ID",officeId);
+		queryParameters.put("STATUS_ID",PersonnelConstants.ACTIVE);
+		List queryResult = executeNamedQuery(NamedQueryConstants.GETOFFICEACTIVEPERSONNEL,queryParameters);	
+		if(queryResult !=null && queryResult.size()!=0){
+			return (Integer)queryResult.get(0)>0?true:false;
+		}
+		return false;
+	}
+	public List<OfficeView> getActiveParents(OfficeLevel level,Short localeId){
+		HashMap<String , Object> queryParameters = new HashMap<String , Object>();
+		queryParameters.put("LEVEL_ID",level.getValue());
+		queryParameters.put("STATUS_ID",OfficeStatus.ACTIVE.getValue());
+		queryParameters.put("LOCALE_ID",localeId);
+		List<OfficeView> queryResult = executeNamedQuery(NamedQueryConstants.GETACTIVEPARENTS,queryParameters);	
+		if(queryResult !=null && queryResult.size()!=0){
+			return queryResult; 
+		}
+		return null;
+		
+	}
+	
+	public List<OfficeView> getActiveLevels(Short localeId){
+		HashMap<String , Object> queryParameters = new HashMap<String , Object>();
+		queryParameters.put("LOCALE_ID",localeId);
+		List<OfficeView> queryResult = executeNamedQuery(NamedQueryConstants.GETACTIVELEVELS,queryParameters);	
+		if(queryResult !=null && queryResult.size()!=0){
+			return queryResult; 
+		}
+		return null;
+		
 	}
 }

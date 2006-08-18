@@ -24,7 +24,7 @@
 		
 		 <many-to-one name="level" class="org.mifos.application.office.business.OfficeLevelEntity" column="OFFICE_LEVEL_ID" unique="true" insert="true" update="true" access="field"/>
 		<many-to-one name="parentOffice" class="org.mifos.application.office.business.OfficeBO"	column="PARENT_OFFICE_ID" unique="true" insert="true" update="true"	lazy="true" cascade="none" />
-		<many-to-one name="status"	class="org.mifos.application.office.business.OfficeStatusEntity" column="STATUS_ID" unique="true" insert="true" update="true"	lazy="true" />
+		<many-to-one name="status"	class="org.mifos.application.office.business.OfficeStatusEntity" column="STATUS_ID" unique="true" insert="true" update="true"	lazy="true" access="field"/>
 		<set name="customFields" cascade="all" inverse="true"  table="OFFICE_CUSTOM_FIELD">
 			<key column="OFFICE_ID" />
 			<one-to-many class="org.mifos.application.office.business.OfficeCustomFieldEntity" />
@@ -56,5 +56,15 @@
     </query>
     <query name="office.getOfficeWithShortName">
             <![CDATA[select count(*) from org.mifos.application.office.business.OfficeBO o where o.parentOffice.shortName=:SHORT_NAME ]]>
-    </query>    
+    </query> 
+        <query name="getCountOfActiveChildren">
+            <![CDATA[select count(*) from org.mifos.application.office.business.OfficeBO o where o.parentOffice.officeId=:OFFICE_ID and o.status.id=1]]>
+    </query>
+	<query name="masterdata.activeParents">
+        <![CDATA[select new org.mifos.application.office.business.OfficeView(office.officeId, office.officeName,office.level.id,lvl.lookUpValue,office.versionNo) from org.mifos.application.office.business.OfficeBO office ,org.mifos.application.master.business.LookUpValueLocaleEntity lvl where lvl.lookUpId=office.level.lookUpValue.lookUpId and  office.level.id < :LEVEL_ID and office.status.id=:STATUS_ID and lvl.localeId = :LOCALE_ID ]]>
+    </query>       
+    <query name="masterdata.activeLevels">
+        <![CDATA[select new org.mifos.application.office.business.OfficeView(ol.id,lvl.lookUpValue) from org.mifos.application.office.business.OfficeLevelEntity ol ,org.mifos.application.master.business.LookUpValueLocaleEntity lvl where lvl.lookUpId=ol.lookUpValue.lookUpId and lvl.localeId = :LOCALE_ID and ol.configured=1 and ol.id !=1 order by ol.id  ]]>
+    </query>       
+    
 </hibernate-mapping>

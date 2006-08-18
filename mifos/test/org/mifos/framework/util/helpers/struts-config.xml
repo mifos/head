@@ -125,6 +125,12 @@
 		<form-bean name="officeHierarchyActionForm"
 			type="org.mifos.application.office.struts.actionforms.OfficeHierarchyActionForm" />
 
+
+		<form-bean name="offActionForm"
+			type="org.mifos.application.office.struts.actionforms.OffActionForm" />
+
+
+
 		<!-- meeting form -->
 		<form-bean name="meetingActionForm"
 			type="org.mifos.application.meeting.struts.actionforms.MeetingActionForm" />
@@ -1840,6 +1846,15 @@
 			<forward name="cancelCreate_success" path="/CustomerSearchAction.do?method=load" />
 			<forward name="cancelEdit_success" path="/clientCreationAction.do?method=get" />
 		</action>
+			<!-- offAction start-->
+		<action path="/offAction" type="org.mifos.application.office.struts.action.OffAction" 
+		name="offActionForm" parameter="method" 
+			input="/offAction.do?method=validate" validate="false">
+			<forward name="load_success" path="/pages/application/office/jsp/CreateNewOffice.jsp" />
+		</action>
+
+	<!-- offAction End-->
+		
 	</action-mappings>
 
 	<controller nocache="true"
@@ -1893,6 +1908,9 @@
 	<!-- office resources -->
 	<message-resources key="OfficeResources"
 		parameter="org.mifos.application.office.util.resources.Office"
+		factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />
+	<message-resources key="OfficeUIResources"
+		parameter="org.mifos.application.office.util.resources.OfficeUIResources"
 		factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />
 	<!-- meeting resources -->
 	<message-resources key="MeetingResources"
