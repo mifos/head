@@ -73,6 +73,7 @@ public class TestCollSheetCustBO extends MifosTestCase {
 		super.tearDown();
 	}
 
+	@Override
 	protected void setUp() throws Exception {
 		HibernateUtil.getSessionTL();
 	}
