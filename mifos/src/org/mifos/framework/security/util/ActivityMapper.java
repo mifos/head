@@ -153,6 +153,10 @@ public class ActivityMapper {
 		activityMap.put("/offAction-load",
 				SecurityConstants.OFFICE_CREATE_OFFICE);
 		activityMap.put("/offAction-loadParent", SecurityConstants.VIEW);
+		activityMap.put("/offAction-preview", SecurityConstants.VIEW);
+		activityMap.put("/offAction-previous", SecurityConstants.VIEW);
+		activityMap.put("/offAction-create",
+				SecurityConstants.OFFICE_CREATE_OFFICE);
 		
 
 		// roles and permission related mappings

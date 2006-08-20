@@ -257,8 +257,7 @@ public class OfficeBO extends BusinessObject {
 			for (int i = officeGlobelNo.length(); i < 4; i++) {
 				temp.append("0");
 			}
-			logger.debug("Generated office global no is :"
-					+ temp.append(officeGlobelNo).toString());
+			
 			return officeGlobelNo = temp.append(officeGlobelNo).toString();
 		} catch (ParseException e) {
 			throw new OfficeException(e);

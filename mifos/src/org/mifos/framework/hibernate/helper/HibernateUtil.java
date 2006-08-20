@@ -210,7 +210,16 @@ public class HibernateUtil {
 			threadLocal.set(null);
 		}
 	}
-
+	public static void closeandFlushSession() {
+		SessionHolder sessionHolder = getSessionHolder();
+		if(sessionHolder != null){
+			Session s = sessionHolder.getSession();
+			s.flush();
+			s.close();
+			s=null;
+			threadLocal.set(null);
+		}
+	}
 	private static SessionHolder getSessionHolder() {
 		if (null == threadLocal.get()) {
 			// need to log to indicate that the session is being invoked when not present

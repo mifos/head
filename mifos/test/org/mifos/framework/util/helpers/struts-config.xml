@@ -1849,8 +1849,14 @@
 			<!-- offAction start-->
 		<action path="/offAction" type="org.mifos.application.office.struts.action.OffAction" 
 		name="offActionForm" parameter="method" 
-			input="/offAction.do?method=validate" validate="false">
+			input="/offAction.do?method=validate" validate="true">
 			<forward name="load_success" path="/pages/application/office/jsp/CreateNewOffice.jsp" />
+			<forward name="preview_success" path="/pages/application/office/jsp/previewNewOffice.jsp" />
+			<forward name="preview_failure" path="/pages/application/office/jsp/CreateNewOffice.jsp" />
+			<forward name="previous_success" path="/pages/application/office/jsp/CreateNewOffice.jsp" />
+			<forward name="create_success" path="/pages/application/office/jsp/CreateNewOffice.jsp" />
+			<forward name="create_failure" path="/pages/application/office/jsp/CreateNewOffice.jsp" />
+			
 		</action>
 
 	<!-- offAction End-->

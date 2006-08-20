@@ -53,5 +53,7 @@ public class OfficeView extends View{
 		this.levelId = levelId;
 		this.levelName = levelName;
 	}
-	
+	public String getDisplayName (){
+		return levelName + "("+officeName+")";
+	}
 }

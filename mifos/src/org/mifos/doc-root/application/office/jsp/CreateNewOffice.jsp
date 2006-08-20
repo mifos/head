@@ -13,8 +13,9 @@
  * This function is called when user press the cancel button 
  */
 function goToCancelPage(){
-	document.officeActionForm.method.value="cancel";
-	officeActionForm.submit();
+	document.offActionForm.method.value="load";
+	document.offActionForm.action="AdminAction.do";
+	offActionForm.submit();
 	
 	
   }
@@ -27,8 +28,8 @@ function goToCancelPage(){
   {
   		if(selectBox.selectedIndex > 0)
   		{
-		  document.officeActionForm.method.value="loadParent";
-		  officeActionForm.submit();		
+		  document.offActionForm.method.value="loadParent";
+		  offActionForm.submit();		
 		}
 		else
 		{
@@ -37,7 +38,7 @@ function goToCancelPage(){
 		}
   }
 </script>
-		<html-el:form action="/OfficeAction.do">
+		<html-el:form action="/offAction.do">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
@@ -119,10 +120,10 @@ function goToCancelPage(){
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
-										name="office.labelOfficeType" mandatory="yes"
+										name="Office.labelOfficeType" mandatory="yes"
 										/></td>
-									<td><mifos:select property="officeType"
-										onchange="return papulateParent(this)">
+									<td><mifos:select property="officeLevel"
+										onchange="return papulateParent(this)" >
 										<html-el:options collection="OfficeLevelList"
 											property="levelId" labelProperty="levelName" />
 
@@ -130,9 +131,9 @@ function goToCancelPage(){
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
-										name="office.labelParentOffice" mandatory="yes"
-										bundle="OfficeResources"></mifos:mifoslabel></td>
-									<td><mifos:select property="formParentOffice">
+										name="Office.labelParentOffice" mandatory="yes"
+										/></td>
+									<td><mifos:select property="parentOfficeId">
 										<c:if test="${not empty sessionScope.Parents}">
 											<html-el:options collection="Parents" property="officeId"
 												labelProperty="displayName" />
@@ -155,13 +156,13 @@ function goToCancelPage(){
 										name="${ConfigurationConstants.ADDRESS1}"
 										bundle="OfficeUIResources"/>:</td>
 									<td width="80%"><mifos:mifosalphanumtext
-										property="address.address1" maxlength="200" /></td>
+										property="address.line1" maxlength="200" /></td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
 										name="${ConfigurationConstants.ADDRESS2}"
 										bundle="OfficeUIResources"/>:</td>
-									<td><mifos:mifosalphanumtext property="address.address2"
+									<td><mifos:mifosalphanumtext property="address.line2"
 										maxlength="200"/></td>
 								</tr>
 								<tr class="fontnormal">
@@ -169,7 +170,7 @@ function goToCancelPage(){
 										name="${ConfigurationConstants.ADDRESS3}"
 										bundle="OfficeUIResources" keyhm="Office.Address3"
 										isColonRequired="yes"></mifos:mifoslabel></td>
-									<td><mifos:mifosalphanumtext property="address.address3"
+									<td><mifos:mifosalphanumtext property="address.line3"
 										maxlength="200" keyhm="Office.Address3"></mifos:mifosalphanumtext></td>
 								</tr>
 								<tr class="fontnormal">
@@ -187,8 +188,8 @@ function goToCancelPage(){
 										maxlength="100" keyhm="Office.State"></mifos:mifosalphanumtext></td>
 								</tr>
 								<tr class="fontnormal">
-									<td align="right"><mifos:mifoslabel name="office.labelCountry"
-										bundle="OfficeResources" keyhm="Office.Country"></mifos:mifoslabel></td>
+									<td align="right"><mifos:mifoslabel name="Office.labelCountry"
+										 keyhm="Office.Country"/></td>
 									<td><mifos:mifosalphanumtext property="address.country"
 										maxlength="100" keyhm="Office.Country"></mifos:mifosalphanumtext></td>
 								</tr>
@@ -197,31 +198,31 @@ function goToCancelPage(){
 										name="${ConfigurationConstants.POSTAL_CODE}"
 										bundle="OfficeResources" keyhm="Office.PostalCode"
 										isColonRequired="yes"></mifos:mifoslabel></td>
-									<td><mifos:mifosalphanumtext property="address.postalCode"
+									<td><mifos:mifosalphanumtext property="address.zip"
 										maxlength="20" keyhm="Office.PostalCode"></mifos:mifosalphanumtext></td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
-										name="office.labelTelephone" bundle="OfficeResources"></mifos:mifoslabel>
+										name="Office.labelTelephone" />
 
 									</td>
 
-									<td><mifos:mifosalphanumtext property="address.telephoneNo"
+									<td><mifos:mifosalphanumtext property="address.phoneNumber"
 										maxlength="20"></mifos:mifosalphanumtext></td>
 								</tr>
 							</table>
 							<br>
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
-								<c:if test="${!empty requestScope.customFields}">
+								<c:if test="${!empty customFields}">
 									<tr>
 										<td colspan="2" class="fontnormalbold"><mifos:mifoslabel
-											name="office.labelAdditionInformation"
-											bundle="OfficeResources"></mifos:mifoslabel> <br>
+											name="Office.labelAdditionInformation"
+											/> <br>
 										<br>
 										</td>
 									</tr>
 								</c:if>
-								<c:forEach var="cf" items="${requestScope.customFields}"
+								<c:forEach var="cf" items="${customFields}"
 									varStatus="loopStatus">
 									<bean:define id="ctr">
 										<c:out value="${loopStatus.index}" />
@@ -233,13 +234,13 @@ function goToCancelPage(){
 											bundle="OfficeResources"></mifos:mifoslabel>: 
 										</td>
 										<td width="79%"><c:if test="${cf.fieldType == 1}">
-											<mifos:mifosnumbertext name="officeActionForm"
+											<mifos:mifosnumbertext name="offActionForm"
 												property='customField[${ctr}].fieldValue' maxlength="200" />
 										</c:if> <c:if test="${cf.fieldType == 2}">
-											<mifos:mifosalphanumtext name="officeActionForm"
+											<mifos:mifosalphanumtext name="offActionForm"
 												property='customField[${ctr}].fieldValue' maxlength="200" />
 										</c:if> <c:if test="${cf.fieldType == 3}">
-											<mifos:mifosalphanumtext name="officeActionForm"
+											<mifos:mifosalphanumtext name="offActionForm"
 												property='customField[${ctr}].fieldValue' maxlength="200" />
 
 										</c:if></td>
@@ -262,13 +263,13 @@ function goToCancelPage(){
 									<!-- Next are submit and cancel button -->
 									<td align="center"><html-el:submit styleClass="buttn"
 										style="width:70px;">
-										<mifos:mifoslabel name="office.button.preview"
-											bundle="OfficeResources"></mifos:mifoslabel>
+										<mifos:mifoslabel name="Office.preview"
+											/>
 									</html-el:submit> &nbsp; <html-el:button
 										onclick="goToCancelPage();" property="cancelButton"
 										value="Cancel" styleClass="cancelbuttn" style="width:70px">
-										<mifos:mifoslabel name="office.button.cancel"
-											bundle="OfficeResources"></mifos:mifoslabel>
+										<mifos:mifoslabel name="Office.cancel"
+											/>
 									</html-el:button></td>
 								</tr>
 							</table>

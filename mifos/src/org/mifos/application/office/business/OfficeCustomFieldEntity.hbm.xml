@@ -13,6 +13,6 @@
 		<property name="fieldId" column="FIELD_ID" not-null="true" access="field" />
 		<property name="fieldValue" column="FIELD_VALUE" />
 
-		<many-to-one name="office" column="OFFICE_ID" class="org.mifos.application.office.util.valueobjects.Office"  cascade="none" insert="true" update="true" unique="true" access="field"/>
+		<many-to-one name="office" column="OFFICE_ID" class="org.mifos.application.office.business.OfficeBO"  cascade="none" insert="true" update="true" unique="true" access="field"/>
 	</class>
 </hibernate-mapping>
