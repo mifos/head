@@ -203,7 +203,7 @@ public class LoanBO extends AccountBO {
 			Short noOfinstallments, Date disbursementDate,
 			boolean interestDeductedAtDisbursement, Double interesRate,
 			Short gracePeriodDuration,Fund fund, List<FeeView> feeViews)
-			throws AccountException,SystemException {
+			throws AccountException{
 		super(userContext, customer, AccountTypes.LOANACCOUNT, accountState);
 		validate(loanOffering, loanAmount, noOfinstallments, disbursementDate,
 				interesRate, gracePeriodDuration, fund, customer);
@@ -509,7 +509,7 @@ public class LoanBO extends AccountBO {
 	 * 
 	 */
 	public OverDueAmounts getOverDueAmntsUptoInstallment(Short installmentId)
-			throws ApplicationException, SystemException {
+			throws AccountException{
 		Set<AccountActionDateEntity> accountActionDateEntities = getAccountActionDates();
 		OverDueAmounts totalOverDueAmounts = new OverDueAmounts();
 		if (null != accountActionDateEntities
@@ -655,8 +655,7 @@ public class LoanBO extends AccountBO {
 
 	public void disburseLoan(String recieptNum, Date transactionDate,
 			Short paymentTypeId, PersonnelBO personnel, Date receiptDate,
-			Short rcvdPaymentTypeId) throws AccountException, SystemException,
-			RepaymentScheduleException, FinancialException {
+			Short rcvdPaymentTypeId) throws AccountException{
 		AccountPaymentEntity accountPaymentEntity = null;
 
 		// if the trxn date is not equal to disbursementDate we need to
@@ -757,54 +756,6 @@ public class LoanBO extends AccountBO {
 		}
 	}
 	
-	private Set<AccountActionDateEntity> generateRepaymentSchedule(
-			Date disbursementDate,String status) throws RepaymentScheduleException {
-		// get the repayment schedule input object which would be passed to
-		// repayment schedule generator
-		RepaymentScheduleInputsIfc repaymntScheduleInputs = RepaymentScheduleFactory
-				.getRepaymentScheduleInputs();
-		RepaymentScheduleIfc repaymentScheduler = RepaymentScheduleFactory
-				.getRepaymentScheduler();
-		repaymentScheduler.setRepaymentScheduleInputs(repaymntScheduleInputs);
-		MeetingBO meeting = this.getCustomer().getCustomerMeeting()
-				.getMeeting();
-		repaymntScheduleInputs.setMeeting(convertM2StyleToM1(meeting));
-		// set the inputs for repaymentSchedule
-		repaymntScheduleInputs.setGracePeriod(this.getGracePeriodDuration());
-		repaymntScheduleInputs.setGraceType(this.getGracePeriodType().getId());
-		repaymntScheduleInputs.setIsInterestDedecutedAtDisburesement(this.isInterestDeductedAtDisbursement());
-		repaymntScheduleInputs.setIsPrincipalInLastPayment(this.getLoanOffering().isPrincipalDueInLastInstallment());
-		repaymntScheduleInputs.setPrincipal(this.getLoanAmount());
-		repaymntScheduleInputs.setInterestRate(this.getInterestRate());
-		repaymntScheduleInputs.setNoOfInstallments(this.getNoOfInstallments());
-		repaymntScheduleInputs.setInterestType(this.getInterestType().getId());
-		repaymntScheduleInputs.setMiscFees(getMiscFee());
-		repaymntScheduleInputs.setMiscPenlty(getMiscPenalty());
-		// TODO convert accountfee to m1 style
-		if(status.equals("create")) {
-			repaymntScheduleInputs.setAccountFeeEntity(this.getAccountFees());
-		} else {
-			repaymntScheduleInputs.setAccountFee(getAccountFeesSet());
-		}
-		repaymntScheduleInputs.setDisbursementDate(disbursementDate);
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTime(disbursementDate);
-		this.getLoanMeeting().setMeetingStartDate(calendar);
-		repaymntScheduleInputs.setRepaymentFrequency(this.getLoanMeeting());
-		repaymntScheduleInputs.setMeeting(this.getLoanMeeting());
-		boolean isDisbursementDateValid = false;
-		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-				"id disbursement date valid" + isDisbursementDateValid);
-		if (!repaymentScheduler.isDisbursementDateValid()) {
-			throw new RepaymentScheduleException(
-					LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
-		}
-		RepaymentSchedule repaymentSchedule = repaymentScheduler
-				.getRepaymentSchedule();
-		//removeDisbursalFee(repaymentSchedule);
-		return RepaymentScheduleHelper.getActionDateEntity(repaymentSchedule,"Loan",this,getCustomer());
-	}
-	
 	private void removeDisbursalFee(RepaymentSchedule repaymentSchedule) {
 		for (RepaymentScheduleInstallment repaymentScheduleInstallment : repaymentSchedule
 				.getRepaymentScheduleInstallment()) {
@@ -902,10 +853,8 @@ public class LoanBO extends AccountBO {
 
 	public void makeEarlyRepayment(Money totalAmount, String receiptNumber,
 			Date recieptDate, String paymentTypeId, Short personnelId)
-			throws SystemException, AccountException {
-		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.MasterDataService);
+			throws AccountException {
+		MasterPersistence masterPersistence = new MasterPersistence();
 		PersonnelBO personnel = new PersonnelPersistenceService()
 				.getPersonnel(personnelId);
 		this.setUpdatedBy(personnelId);
@@ -932,7 +881,7 @@ public class LoanBO extends AccountBO {
 			LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(
 					accountPaymentEntity, loanPaymentData, personnel, new Date(
 							System.currentTimeMillis()),
-					(AccountActionEntity) masterPersistenceService.findById(
+					(AccountActionEntity) masterPersistence.findById(
 							AccountActionEntity.class,
 							AccountConstants.ACTION_LOAN_REPAYMENT), totalAmt,
 					"Payment rcvd.");
@@ -956,7 +905,7 @@ public class LoanBO extends AccountBO {
 			LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(
 					accountPaymentEntity, loanPaymentData, personnel, new Date(
 							System.currentTimeMillis()),
-					(AccountActionEntity) masterPersistenceService.findById(
+					(AccountActionEntity) masterPersistence.findById(
 							AccountActionEntity.class,
 							AccountConstants.ACTION_LOAN_REPAYMENT), principal,
 					"Payment rcvd.");
@@ -975,14 +924,14 @@ public class LoanBO extends AccountBO {
 					.getAccountTrxns(), personnel, "Loan Repayment"));
 		buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 
-		AccountStateEntity newAccountState = (AccountStateEntity) masterPersistenceService
+		AccountStateEntity newAccountState = (AccountStateEntity) masterPersistence
 				.findById(AccountStateEntity.class,
 						AccountStates.LOANACC_OBLIGATIONSMET);
 		this
 				.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
 						this.getAccountState(), newAccountState,
-						getPersonnelDBService().getPersonnel(personnelId)));
-		this.setAccountState((AccountStateEntity) masterPersistenceService
+						new PersonnelPersistence().getPersonnel(personnelId)));
+		this.setAccountState((AccountStateEntity) masterPersistence
 				.findById(AccountStateEntity.class,
 						AccountStates.LOANACC_OBLIGATIONSMET));
 		this.setClosedDate(new Date(System.currentTimeMillis()));
@@ -1064,7 +1013,7 @@ public class LoanBO extends AccountBO {
 
 	private AccountPaymentEntity payInterestAtDisbursement(String recieptNum,
 			Date transactionDate, Short paymentTypeId, PersonnelBO personnel,
-			Date receiptDate) throws SystemException, AccountException {
+			Date receiptDate) throws AccountException {
 		AccountActionDateEntity firstInstallment = null;
 		for (AccountActionDateEntity accountActionDate : this
 				.getAccountActionDates()) {
@@ -1137,21 +1086,9 @@ public class LoanBO extends AccountBO {
 					.getAccountFeeId()));
 	}
 
-	/**
-	 * @author shemeerb Add an account Status Change History Object to it with
-	 *         the required parameters. Set the State of the Account to Active
-	 *         in Bad Standing. Set the Updated date in the account object to
-	 *         current date.
-	 * @param account -
-	 *            The AccountBO Object returned from the query
-	 * @throws ServiceException
-	 */
-	public void handleArrears() throws ServiceException {
-
-		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.MasterDataService);
-		AccountStateEntity stateEntity = (AccountStateEntity) masterPersistenceService
+	public void handleArrears(){
+		MasterPersistence masterPersistence = new MasterPersistence();
+		AccountStateEntity stateEntity = (AccountStateEntity) masterPersistence
 				.findById(AccountStateEntity.class,
 						AccountStates.LOANACC_BADSTANDING);
 		AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(
@@ -1202,8 +1139,7 @@ public class LoanBO extends AccountBO {
 		return miscPenalty;
 	}
 
-	public void writeOff(String comment) throws ServiceException,
-			  ApplicationException,SystemException {
+	public void writeOff(String comment) throws AccountException{
 		Short personnelId = this.getUserContext().getId();
 		PersonnelBO personnel = new PersonnelPersistenceService()
 				.getPersonnel(personnelId);
@@ -1215,12 +1151,10 @@ public class LoanBO extends AccountBO {
 				new PaymentTypeEntity(Short.valueOf("1")));
 		this.addAccountPayment(accountPaymentEntity);
 		for (AccountActionDateEntity accountActionDateEntity : getListOfUnpaidInstallments()) {
-			MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-					.getInstance().getPersistenceService(
-							PersistenceServiceName.MasterDataService);
+			MasterPersistence masterPersistence = new MasterPersistence();
 			LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(
 					accountPaymentEntity,
-					(AccountActionEntity) masterPersistenceService.findById(
+					(AccountActionEntity) masterPersistence.findById(
 							AccountActionEntity.class,
 							AccountConstants.ACTION_WRITEOFF),
 					accountActionDateEntity, personnel, "Loan Written Off");
@@ -1577,22 +1511,20 @@ public class LoanBO extends AccountBO {
 		}
 	}
 
-	private PersonnelPersistenceService getPersonnelDBService()
-			throws ServiceException {
-		return (PersonnelPersistenceService) ServiceFactory.getInstance()
-				.getPersistenceService(PersistenceServiceName.Personnel);
-	}
 	
-@Override
-	public void initializeStateMachine(Short localeId)
-			throws StatesInitializationException {
-		AccountStateMachines
-				.getInstance()
-				.initialize(
-						localeId,
-						getOffice().getOfficeId(),
-						AccountTypes.LOANACCOUNT
-								.getValue(),null);
+	@Override
+	public void initializeStateMachine(Short localeId) throws AccountException{
+		try {
+			AccountStateMachines
+					.getInstance()
+					.initialize(
+							localeId,
+							getOffice().getOfficeId(),
+							AccountTypes.LOANACCOUNT
+									.getValue(),null);
+		} catch (StatesInitializationException e) {
+			throw new AccountException(e);
+		}
 	}
 
 	@Override
@@ -1607,15 +1539,23 @@ public class LoanBO extends AccountBO {
 	}
 	
 	@Override
-	public String getStatusName(Short localeId, Short accountStateId) throws ApplicationException {
-		return AccountStateMachines.getInstance().getStatusName(localeId,
-				accountStateId, AccountTypes.LOANACCOUNT.getValue());
+	public String getStatusName(Short localeId, Short accountStateId) throws AccountException {
+		try {
+			return AccountStateMachines.getInstance().getStatusName(localeId,
+					accountStateId, AccountTypes.LOANACCOUNT.getValue());
+		} catch (ApplicationException e) {
+			throw new AccountException(e);
+		}
 	}
 
 	@Override
-	public String getFlagName(Short flagId) throws ApplicationException{
-		return AccountStateMachines.getInstance().getFlagName(flagId,
-				AccountTypes.LOANACCOUNT.getValue());
+	public String getFlagName(Short flagId) throws AccountException{
+		try {
+			return AccountStateMachines.getInstance().getFlagName(flagId,
+					AccountTypes.LOANACCOUNT.getValue());
+		} catch (ApplicationException e) {
+			throw new AccountException(e);
+		}
 	}
 
 	public void save() throws AccountException {
@@ -1880,7 +1820,7 @@ public class LoanBO extends AccountBO {
 		inputs.setGracePeriod(getGracePeriodDuration());
 	}
 	
-	public void updateLoan() throws ApplicationException, SystemException {
+	public void updateLoan() throws AccountException  {
 		if (getAccountState().getId().equals(AccountState.LOANACC_APPROVED.getValue())
 					|| getAccountState().getId().equals(AccountState.LOANACC_DBTOLOANOFFICER.getValue())
 					|| getAccountState().getId().equals(AccountState.LOANACC_PARTIALAPPLICATION.getValue())

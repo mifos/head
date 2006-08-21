@@ -44,6 +44,7 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.business.PersistentObject;
@@ -201,7 +202,7 @@ public class AccountFeesEntity extends PersistentObject {
 		return getFees().isTimeOfDisbursement();
 	}
 
-	public boolean isApplicable(Date date) throws ApplicationException {
+	public boolean isApplicable(Date date) throws AccountException  {
 		boolean isApplicable = false;
 		SchedulerIntf schedulerIntf;
 		if (getLastAppliedDate() != null) {
@@ -215,8 +216,13 @@ public class AccountFeesEntity extends PersistentObject {
 			meetingBO.getMeetingDetails().setRecurAfter(
 					getFees().getFeeFrequency().getFeeMeetingFrequency()
 							.getMeetingDetails().getRecurAfter());
-			schedulerIntf = MeetingScheduleHelper.getSchedulerObject(meetingBO);
-			List<Date> applDates = schedulerIntf.getAllDates(date);
+			List<Date> applDates =null;
+			try {
+				schedulerIntf = MeetingScheduleHelper.getSchedulerObject(meetingBO);
+				applDates = schedulerIntf.getAllDates(date);
+			} catch (ApplicationException e) {
+				throw new AccountException(e);
+			}
 			if (applDates != null && !applDates.isEmpty()) {
 				Iterator<Date> itr = applDates.iterator();
 				while (itr.hasNext()) {

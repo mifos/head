@@ -1111,18 +1111,18 @@ public class AccountBO extends BusinessObject {
 		return accountNotes;
 	}
 	
-	public void initializeStateMachine(Short localeId) throws AccountException, StatesInitializationException {
+	public void initializeStateMachine(Short localeId) throws AccountException{
 	}
 	
 	public List<AccountStateEntity> getStatusList() {
 		return null;
 	}
 	
-	public String getStatusName(Short localeId, Short accountStateId) throws AccountException, ApplicationException{
+	public String getStatusName(Short localeId, Short accountStateId) throws AccountException{
 		return null;
 	}
 
-	public String getFlagName(Short flagId) throws AccountException, ApplicationException{
+	public String getFlagName(Short flagId) throws AccountException{
 		return null;
 	}
 	

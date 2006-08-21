@@ -474,22 +474,15 @@ public class TestLoanBO extends MifosTestCase {
 		Calendar cal = new GregorianCalendar(disbursalDate.get(Calendar.YEAR),
 				disbursalDate.get(Calendar.MONTH), disbursalDate
 						.get(Calendar.DATE), 0, 0);
-		try {
-			((LoanBO) accountBO).disburseLoan("1234", cal.getTime(), Short
+		((LoanBO) accountBO).disburseLoan("1234", cal.getTime(), Short
 					.valueOf("1"), accountBO.getPersonnel(), startDate, Short
 					.valueOf("1"));
-			Session session = HibernateUtil.getSessionTL();
-			HibernateUtil.startTransaction();
-			((LoanBO) accountBO).setLoanMeeting(null);
-			session.update(accountBO);
-			HibernateUtil.getTransaction().commit();
-			assertEquals(true, true);
-		} catch (RepaymentScheduleException rse) {
-			rse.printStackTrace();
-			assertEquals(true, false);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		Session session = HibernateUtil.getSessionTL();
+		HibernateUtil.startTransaction();
+		((LoanBO) accountBO).setLoanMeeting(null);
+		session.update(accountBO);
+		HibernateUtil.getTransaction().commit();
+		assertEquals(true, true);
 	}
 
 	public void testGetTotalAmountDueForCurrentDateMeeting() {

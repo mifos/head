@@ -276,17 +276,8 @@ public class BulkEntryBusinessService extends BusinessService {
 			try {
 				account.disburseLoan(recieptId, transactionDate, paymentId,
 						getPersonnel(personnelId), receiptDate, paymentId);
-			} catch (RepaymentScheduleException rse) {
-				throw new BulkEntryAccountUpdateException("errors.update", rse,
-						new String[] { account.getGlobalAccountNum() });
-			} catch (FinancialException fe) {
-				throw new BulkEntryAccountUpdateException("errors.update", fe,
-						new String[] { account.getGlobalAccountNum() });
 			} catch (AccountException ae) {
 				throw new BulkEntryAccountUpdateException("errors.update", ae,
-						new String[] { account.getGlobalAccountNum() });
-			} catch (SystemException se) {
-				throw new BulkEntryAccountUpdateException("errors.update", se,
 						new String[] { account.getGlobalAccountNum() });
 			}
 		}

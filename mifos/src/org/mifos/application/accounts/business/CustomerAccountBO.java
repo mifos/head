@@ -316,7 +316,7 @@ public class CustomerAccountBO extends AccountBO {
 		(new AccountPersistence()).createOrUpdate(this);
 	}
 
-	public void applyPeriodicFees(Date date) throws ApplicationException,SystemException {
+	public void applyPeriodicFees(Date date) throws AccountException{
 		Set<AccountActionDateEntity> accountActionDateSet = getAccountActionDates();
 		for (AccountActionDateEntity accountActionDate : accountActionDateSet) {
 			if (date.equals(accountActionDate.getActionDate())) {
@@ -412,7 +412,7 @@ public class CustomerAccountBO extends AccountBO {
 
 	}
 
-	public void generateMeetingsForNextYear() throws RepaymentScheduleException {
+	public void generateMeetingsForNextYear() throws AccountException {
 
 		RepaymentScheduleInputsIfc repaymntScheduleInputs = RepaymentScheduleFactory
 				.getRepaymentScheduleInputs();
@@ -429,9 +429,14 @@ public class CustomerAccountBO extends AccountBO {
 		repaymntScheduleInputs.setRepaymentFrequency(meeting);
 
 		repaymntScheduleInputs.setAccountFee(getAccountFeesSet());
-		repaymentScheduler.setRepaymentScheduleInputs(repaymntScheduleInputs);
-		RepaymentSchedule repaymentSchedule = repaymentScheduler
-				.getRepaymentSchedule();
+		RepaymentSchedule repaymentSchedule=null;
+		try {
+			repaymentScheduler.setRepaymentScheduleInputs(repaymntScheduleInputs);
+			repaymentSchedule = repaymentScheduler
+			.getRepaymentSchedule();
+		} catch (ApplicationException e) {
+			throw new AccountException(e);
+		}
 		Set<AccountActionDateEntity> installments = RepaymentScheduleHelper
 				.getActionDateEntity(repaymentSchedule, "customer", this,
 						getCustomer(), getLastInstallmentId());
@@ -631,7 +636,7 @@ public class CustomerAccountBO extends AccountBO {
 		}
 	}
 
-	public Money getNextDueAmount() throws Exception {
+	public Money getNextDueAmount(){
 
 		AccountActionDateEntity accountAction = null;
 		for (AccountActionDateEntity accountActionDate : getAccountActionDates()) {
