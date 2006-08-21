@@ -439,7 +439,7 @@ class ClientCreateEdit<TestClass
       @@client_spo_or_father_type_msg=string_replace_message(@@clientprop['errors.requiredSelect'],@@clientprop['client.GenderValue'],@@clientprop['client.SpouseNameTypeValue'])
       @@client_spo_or_father_fname_msg=string_replace_message(@@clientprop['errors.mandatory'],@@clientprop['client.DateOfBirthValue'],@@clientprop['client.SpouseFirstNameValue'])
       @@client_spo_or_father_lname_msg=string_replace_message(@@clientprop['errors.mandatory'],@@clientprop['client.SpouseFirstNameValue'],@@clientprop['client.SpouseLastNameValue'])
-      @@client_note_error_message=string_replace(@@custprop['errors.maxlength']),"{0}",@@custprop['label.noteMsg'])
+      @@client_note_error_message=string_replace(@@custprop['errors.maxlength'],"{0}",@@custprop['label.noteMsg'])
       @@client_note_error_message["{1}"]=""
       @@client_note_msg=string_replace_message(@@clientprop['errors.mandatory'],@@clientprop['client.SpouseLastNameValue'],@@clientprop['client.Note'])      
       @@clientprop['errors.requiredCustomField']["<li>"]=""
