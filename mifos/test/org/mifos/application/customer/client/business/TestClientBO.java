@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerMovementEntity;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -20,6 +21,10 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.application.office.util.helpers.OfficeLevel;
+import org.mifos.application.office.util.helpers.OperationMode;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosTestCase;
@@ -42,6 +47,7 @@ public class TestClientBO extends MifosTestCase {
 	
 	private Short personnel = 3;
 
+	private OfficeBO office;
 	private CustomerPersistence customerPersistence = new CustomerPersistence();
 	
 	@Override
@@ -54,6 +60,7 @@ public class TestClientBO extends MifosTestCase {
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
+		TestObjectFactory.cleanUp(office);
 		super.tearDown();
 	}
 
@@ -319,8 +326,7 @@ public class TestClientBO extends MifosTestCase {
 			
 	}
 	
-	public void testSuccessfulCreateClientInBranch() throws Exception {
-		
+	public void testSuccessfulCreateClientInBranch() throws Exception {		
 		String name = "Client 1";
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(name),"Client","","1","");
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
@@ -332,9 +338,79 @@ public class TestClientBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		assertEquals(name, client.getDisplayName());
-		assertEquals(officeId, client.getOffice().getOfficeId());	
+		assertEquals(officeId, client.getOffice().getOfficeId());			
+	}
+	
+	public void testUpdateBranchFailure_OfficeNULL()throws Exception{
+		createInitialObjects();
+		try{
+			client.updateBranch(null);
+			assertTrue(false);
+		}catch(CustomerException ce){
+			assertTrue(true);
+			assertEquals(CustomerConstants.INVALID_OFFICE,ce.getKey());
+		}
+	}
+	
+	public void testUpdateBranchFailure_TransferInSameOffice()throws Exception{
+		createInitialObjects();
+		try{
+			client.updateBranch(client.getOffice());
+			assertTrue(false);
+		}catch(CustomerException ce){
+			assertTrue(true);
+			assertEquals(CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER,ce.getKey());
+		}
+	}
+	
+	public void testUpdateBranchFirstTime()throws Exception{
+		createObjectsForClientTransfer();
+		assertNull(client.getActiveCustomerMovement());
 		
+		client.updateBranch(office);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
 		
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		assertNotNull(client.getActiveCustomerMovement());
+		assertEquals(office.getOfficeId(), client.getOffice().getOfficeId());
+		assertEquals(CustomerStatus.CLIENT_HOLD, client.getStatus());
+		office = client.getOffice();
+	}
+	
+	public void testUpdateBranchSecondTime()throws Exception{
+		createObjectsForClientTransfer();
+		assertNull(client.getActiveCustomerMovement());
+		OfficeBO oldOffice = client.getOffice();
+		
+		client.updateBranch(office);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		client.setUserContext(TestObjectFactory.getUserContext());
+		CustomerMovementEntity currentMovement = client.getActiveCustomerMovement();
+		assertNotNull(currentMovement);
+		assertEquals(office.getOfficeId(), currentMovement.getOffice().getOfficeId());
+		assertEquals(office.getOfficeId(), client.getOffice().getOfficeId());
+		
+		client.updateBranch(oldOffice);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		currentMovement = client.getActiveCustomerMovement();
+		assertNotNull(currentMovement);
+		assertEquals(oldOffice.getOfficeId(), currentMovement.getOffice().getOfficeId());
+		assertEquals(oldOffice.getOfficeId(), client.getOffice().getOfficeId());
+		
+		office = new OfficePersistence().getOffice(office.getOfficeId());
+	}
+	
+	private void createObjectsForClientTransfer()throws Exception{
+		office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory.getOffice(Short.valueOf("1")), "customer_office", "cust");
+		client = TestObjectFactory.createClient("client_to_transfer",getMeeting(),CustomerStatus.CLIENT_ACTIVE.getValue(), new java.util.Date());
+		HibernateUtil.closeSession();
 	}
 	
 	private List<FeeView> getFees() {
@@ -351,11 +427,13 @@ public class TestClientBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		return fees;
 	}
+	
 	private void removeFees(List<FeeView> feesToRemove){
 		for(FeeView fee :feesToRemove){
 			TestObjectFactory.cleanUp(new FeePersistence().getFee(fee.getFeeIdValue()));
 		}
 	}
+	
 	private List<CustomFieldView> getCustomFields() {
 			List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
 			fields.add(new CustomFieldView(Short.valueOf("5"), "value1", CustomFieldType.ALPHA_NUMERIC.getValue()));

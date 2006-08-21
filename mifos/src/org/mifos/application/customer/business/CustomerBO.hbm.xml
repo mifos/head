@@ -31,7 +31,7 @@
 		<many-to-one name="customerLevel" column="CUSTOMER_LEVEL_ID" class="org.mifos.application.customer.business.CustomerLevelEntity" insert="true" update="true" unique="true" lazy="true" access="field"/>
 		<many-to-one name="personnel" column="LOAN_OFFICER_ID" class="org.mifos.application.personnel.business.PersonnelBO" unique="true" lazy="true" insert="true" update="true" />
 		<many-to-one name="customerFormedByPersonnel" column="CUSTOMER_FORMEDBY_ID" class="org.mifos.application.personnel.business.PersonnelBO" unique="true" lazy="true" insert="true" update="true" />
-		<many-to-one name="office" column="BRANCH_ID" class="org.mifos.application.office.business.OfficeBO" unique="true" lazy="true" insert="true" update="true" access="field"/>
+		<many-to-one name="office" column="BRANCH_ID" class="org.mifos.application.office.business.OfficeBO" unique="true" lazy="true" insert="true" update="true" />
 		<one-to-one name="customerAddressDetail" class="org.mifos.application.customer.business.CustomerAddressDetailEntity" cascade="all" lazy="true" property-ref="customer" />
 		<many-to-one name="parentCustomer" column="PARENT_CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" cascade="none" insert="true" unique="true" update="true" lazy="true" />
 		<one-to-one name="historicalData" class="org.mifos.application.customer.business.CustomerHistoricalDataEntity" cascade="all" lazy="true" property-ref="customer" />
@@ -54,6 +54,10 @@
 		<set name="customerHierarchies" cascade="all" lazy="true" access="field">
 			<key column="CUSTOMER_ID" update="false" />
 			<one-to-many class="org.mifos.application.customer.business.CustomerHierarchyEntity" />
+		</set>
+		<set name="customerMovements" cascade="all" lazy="true" access="field">
+			<key column="CUSTOMER_ID" update="false" />
+			<one-to-many class="org.mifos.application.customer.business.CustomerMovementEntity" />
 		</set>
 		<set name="customerPositions" cascade="all" lazy="true">
 			<key column="PARENT_CUSTOMER_ID" update="false" />

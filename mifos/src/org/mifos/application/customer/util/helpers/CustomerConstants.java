@@ -243,6 +243,7 @@ public interface CustomerConstants {
 	public static final String ERRORS_SPECIFY_CUSTOM_FIELD_VALUE="errors.Customer.specifyCustomFieldValue";
 	public static final String ERRORS_DUPLICATE_PERIODIC_FEE="errors.Customer.duplicatePeriodicFee";
 	public static final String ERRORS_SPECIFY_FEE_AMOUNT="errors.Customer.specifyFeeAmount";
+	public static final String ERRORS_SAME_BRANCH_TRANSFER="errors.Customer.sameBranchTransfer";
 	public static final String ERRORS_MANDATORY="errors.mandatory";
 	public static final String ERRORS_SELECT="errors.requiredSelect";
 	public static final String SALUTATION = "Salutation";

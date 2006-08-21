@@ -59,6 +59,7 @@ import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.IdGenerator;
 import org.mifos.application.fees.business.FeeView;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
@@ -127,7 +128,7 @@ public abstract class CustomerBO extends BusinessObject {
 
 	private PersonnelBO formedByPersonnel;
 
-	private final OfficeBO office;
+	private OfficeBO office;
 
 	private CustomerAddressDetailEntity customerAddressDetail;
 
@@ -135,6 +136,8 @@ public abstract class CustomerBO extends BusinessObject {
 
 	private Set<CustomerHierarchyEntity> customerHierarchies;
 
+	private Set<CustomerMovementEntity> customerMovements;
+	
 	private CustomerHistoricalDataEntity historicalData;
 
 	private Short blackListed;
@@ -146,7 +149,6 @@ public abstract class CustomerBO extends BusinessObject {
 		this.customerId = null;
 		this.globalCustNum = null;
 		this.customerLevel = null;
-		this.office = null;
 	}
 
 	protected CustomerBO(UserContext userContext, String displayName,
@@ -157,6 +159,7 @@ public abstract class CustomerBO extends BusinessObject {
 			MeetingBO meeting, Short loanOfficerId) throws CustomerException {
 		super(userContext);
 		customerHierarchies = new HashSet<CustomerHierarchyEntity>();
+		customerMovements = new HashSet<CustomerMovementEntity>();
 		validateFields(displayName, customerStatus, officeId);
 		this.customFields = new HashSet<CustomerCustomFieldEntity>();
 		this.accounts = new HashSet<AccountBO>();
@@ -312,6 +315,10 @@ public abstract class CustomerBO extends BusinessObject {
 		return office;
 	}
 
+	public void setOffice(OfficeBO office) {
+		this.office = office;
+	}
+
 	public Set<CustomerNoteEntity> getCustomerNotes() {
 		return customerNotes;
 	}
@@ -329,7 +336,7 @@ public abstract class CustomerBO extends BusinessObject {
 		return CustomerStatus.getStatus(customerStatus.getId());
 	}
 
-	public void save() throws ApplicationException, CustomerException {
+	public void save() throws CustomerException {
 		try {
 			new CustomerPersistence().createOrUpdate(this);
 			String gCustNum = IdGenerator.generateSystemIdForCustomer(
@@ -438,6 +445,20 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 	}
 
+	public CustomerMovementEntity getActiveCustomerMovement() {
+		for(CustomerMovementEntity customerMovementEntity : customerMovements){
+			if(customerMovementEntity.isActive())
+				return customerMovementEntity;
+		}
+		return null;
+	}
+	
+	public void addCustomerMovement(CustomerMovementEntity customerMovement) {
+		if (customerMovement != null) {
+			this.customerMovements.add(customerMovement);
+		}
+	}
+	
 	public Set<CustomerPositionEntity> getCustomerPositions() {
 		return customerPositions;
 	}
@@ -684,18 +705,16 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 
 	public void changeStatus(Short newStatusId, Short flagId, String comment)
-			throws SecurityException, ServiceException, PersistenceException,
+			throws SecurityException, PersistenceException,
 			ApplicationException, SystemException {
 		validateStatusChange(newStatusId);
-		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.MasterDataService);
-		CustomerStatusEntity customerStatus = (CustomerStatusEntity) masterPersistenceService
+		MasterPersistence masterPersistence = new MasterPersistence();
+		CustomerStatusEntity customerStatus = (CustomerStatusEntity) masterPersistence
 				.findById(CustomerStatusEntity.class, newStatusId);
 		customerStatus.setLocaleId(this.getUserContext().getLocaleId());
 		CustomerStatusFlagEntity customerStatusFlagEntity = null;
 		if (flagId != null) {
-			customerStatusFlagEntity = (CustomerStatusFlagEntity) masterPersistenceService
+			customerStatusFlagEntity = (CustomerStatusFlagEntity) masterPersistence
 					.findById(CustomerStatusFlagEntity.class, flagId);
 		}
 		CustomerNoteEntity customerNote = createCustomerNotes(comment);
@@ -716,8 +735,7 @@ public abstract class CustomerBO extends BusinessObject {
 
 	}
 
-	private CustomerNoteEntity createCustomerNotes(String comment)
-			throws ServiceException {
+	private CustomerNoteEntity createCustomerNotes(String comment){
 		CustomerNoteEntity customerNote = new CustomerNoteEntity(comment,
 				new java.sql.Date(System.currentTimeMillis()), this
 						.getPersonnel(), this);

@@ -136,6 +136,8 @@ import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.util.helpers.OfficeLevel;
+import org.mifos.application.office.util.helpers.OperationMode;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -391,7 +393,7 @@ public class TestObjectFactory {
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),customerName,"middle",customerName,"secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"));
 			client = new ClientBO(getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(statusId), null, null, null, null, getFees(), personnel, office,meeting,personnel, new Date(),
-					null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
+					null,null,null,YesNoFlag.NO.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 			client.save();
 			HibernateUtil.commitTransaction();
 		} catch (Exception e) {
@@ -1975,15 +1977,20 @@ public class TestObjectFactory {
 		return notes;
 	}
 	
-	public static OfficeBO createOffice(){
-		
-		return null;
+	public static OfficeBO createOffice(OfficeLevel level, OfficeBO parentOffice, String officeName, String shortName)throws Exception{
+		OfficeBO officeBO=	new OfficeBO(TestObjectFactory.getUserContext(), level, parentOffice , null, officeName, shortName, null,
+				OperationMode.REMOTE_SERVER);
+		officeBO.save();
+		HibernateUtil.commitTransaction();
+		return officeBO;
 	}
 	public static void cleanUp(OfficeBO office){
-		Session session= HibernateUtil.getSessionTL();
-		Transaction transaction = HibernateUtil.startTransaction();
-		session.lock(office, LockMode.NONE);
-		session.delete(office);
-		transaction.commit();
+		if(office!=null){
+			Session session= HibernateUtil.getSessionTL();
+			Transaction transaction = HibernateUtil.startTransaction();
+			session.lock(office, LockMode.NONE);
+			session.delete(office);
+			transaction.commit();
+		}
 	}
 }

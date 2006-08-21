@@ -15,6 +15,8 @@ import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
+import org.mifos.application.customer.business.CustomerMovementEntity;
+import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
@@ -26,6 +28,7 @@ import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.util.helpers.Status;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
@@ -299,20 +302,19 @@ public class ClientBO extends CustomerBO {
 		}
 		return isNotValid;
 	}
+
 	@Override
-	public void save() throws ApplicationException, CustomerException {
-	
+	public void save() throws CustomerException {
+		super.save();
 		try {
-			super.save();
-			if(this.getParentCustomer() !=null){
+			if(this.getParentCustomer() !=null)
 				new CustomerPersistence().createOrUpdate(this.getParentCustomer());
-			}
-			
 		} catch (HibernateException he) {
 			throw new CustomerException(
 					CustomerConstants.CREATE_FAILED_EXCEPTION, he);
 		}
 	}
+	
 	private void validateForDuplicateNameOrGovtId(String displayName, Date dateOfBirth, String governmentId)
 	throws CustomerException {
 		Integer custId = null;
@@ -382,6 +384,37 @@ public class ClientBO extends CustomerBO {
 			String searchId=GroupConstants.PREFIX_SEARCH_STRING + ++count;
 			this.setSearchId(searchId);
 		  }
+	}
+	
+	public void updateBranch(OfficeBO officeToTransfer)throws CustomerException{
+		validateBranchTransfer(officeToTransfer);
+
+		if(getCustomerStatus().getId().equals(CustomerStatus.CLIENT_ACTIVE.getValue()))
+			setCustomerStatus(new CustomerStatusEntity(CustomerStatus.CLIENT_HOLD));
 		
+		CustomerMovementEntity currentCustomerMovement = getActiveCustomerMovement();
+		if(currentCustomerMovement == null)
+			currentCustomerMovement = new CustomerMovementEntity(this, getCreatedDate());
+		
+		currentCustomerMovement.updateStatus(Status.INACTIVE);
+		currentCustomerMovement.setEndDate(new Date());
+		currentCustomerMovement.setUpdatedBy(userContext.getId());
+		currentCustomerMovement.setUpdatedDate(new Date());
+		this.addCustomerMovement(currentCustomerMovement);
+
+		this.setOffice(officeToTransfer);
+		this.setPersonnel(null);
+		
+		CustomerMovementEntity newCustomerMovement = new CustomerMovementEntity(this, new Date());
+		this.addCustomerMovement(newCustomerMovement);
+		super.update();
+	}
+	
+	private void validateBranchTransfer(OfficeBO officeToTransfer)throws CustomerException{
+		if (officeToTransfer == null)
+			throw new CustomerException(CustomerConstants.INVALID_OFFICE);
+		
+		if(this.getOffice().getOfficeId().equals(officeToTransfer.getOfficeId()))
+			throw new CustomerException(CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER);
 	}
 }

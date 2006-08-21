@@ -77,11 +77,12 @@ public class CustomerMovementEntity extends PersistentObject {
 		this.startDate = null;
 	}
 	
-	public CustomerMovementEntity(CustomerBO customer, PersonnelBO personnel, Date startDate){
+	public CustomerMovementEntity(CustomerBO customer, Date startDate){
 		this.customer = customer;
 		this.office = customer.getOffice();
-		this.personnel = personnel;
+		this.personnel = customer.getPersonnel();
 		this.startDate = startDate;
+		this.status = Status.ACTIVE.getValue();
 		this.customerMovementId = null;
 	}
 	
