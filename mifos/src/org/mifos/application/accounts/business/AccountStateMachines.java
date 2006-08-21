@@ -109,39 +109,39 @@ public class AccountStateMachines implements StateMachine {
 	private MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
-	public void initialize(Short localeId, Short officeId, Short prdTypeId,
+	public void initialize(Short localeId, Short officeId, Short accountTypeId,
 			Short levelId) throws StatesInitializationException {
 		logger.debug("In SavingsStateMachine::initialize()");
 		try {
-			if (prdTypeId.equals(AccountTypes.LOANACCOUNT.getValue())) {
+			if (accountTypeId.equals(AccountTypes.LOANACCOUNT.getValue())) {
 				statesMapForLoan = StateXMLParser.getInstance().loadMapFromXml(
 						AccountStates.TRANSITION_CONFIG_FILE_PATH_LOAN,
-						getConfigurationName(officeId, prdTypeId, levelId));
-				accountStateEntityListForLoan = retrieveAllAccountStateList(prdTypeId);
+						getConfigurationName(officeId, accountTypeId, levelId));
+				accountStateEntityListForLoan = retrieveAllAccountStateList(accountTypeId);
 				for (AccountStateEntity accountState : accountStateEntityListForLoan)
 					Hibernate.initialize(accountState.getFlagSet());
 				populateLoanStatesViewMap();
-			} else if (prdTypeId.equals(AccountTypes.SAVINGSACCOUNT.getValue())) {
+			} else if (accountTypeId.equals(AccountTypes.SAVINGSACCOUNT.getValue())) {
 				statesMapForSavings = StateXMLParser
 						.getInstance()
 						.loadMapFromXml(
 								AccountStates.TRANSITION_CONFIG_FILE_PATH_SAVINGS,
-								getConfigurationName(officeId, prdTypeId,
+								getConfigurationName(officeId, accountTypeId,
 										levelId));
-				accountStateEntityListForSavings = retrieveAllAccountStateList(prdTypeId);
+				accountStateEntityListForSavings = retrieveAllAccountStateList(accountTypeId);
 				for (AccountStateEntity accountState : accountStateEntityListForSavings)
 					Hibernate.initialize(accountState.getFlagSet());
 				populateSavingsStatesViewMap();
-			} else if (prdTypeId
+			} else if (accountTypeId
 					.equals(AccountTypes.CUSTOMERACCOUNT.getValue())) {
 				if (levelId.equals(CustomerLevel.CENTER.getValue())) {
 					statesMapForCenter = StateXMLParser
 							.getInstance()
 							.loadMapFromXml(
 									CustomerConstants.TRANSITION_CONFIG_FILE_PATH_CENTER,
-									getConfigurationName(officeId, prdTypeId,
+									getConfigurationName(officeId, accountTypeId,
 											levelId));
-					customerStatusListForCenter = retrieveAllCustomerStatusList(prdTypeId);
+					customerStatusListForCenter = retrieveAllCustomerStatusList(accountTypeId);
 					for (CustomerStatusEntity customerStatus : customerStatusListForCenter)
 						Hibernate.initialize(customerStatus.getFlagSet());
 					populateCenterStatesViewMap();
@@ -150,11 +150,15 @@ public class AccountStateMachines implements StateMachine {
 							.getInstance()
 							.loadMapFromXml(
 									CustomerConstants.TRANSITION_CONFIG_FILE_PATH_CLIENT,
-									getConfigurationName(officeId, prdTypeId,
+									getConfigurationName(officeId, accountTypeId,
 											levelId));
 					customerStatusListForClient = retrieveAllCustomerStatusList(levelId);
-					for (CustomerStatusEntity customerStatus : customerStatusListForClient)
-						Hibernate.initialize(customerStatus.getFlagSet());
+					for (CustomerStatusEntity customerStatus : customerStatusListForClient) {
+						for(CustomerStatusFlagEntity customerStatusFlagEntity : customerStatus.getFlagSet()) {
+							Hibernate.initialize(customerStatusFlagEntity);
+							Hibernate.initialize(customerStatusFlagEntity.getNames());
+						}
+					}
 					populateClientStatesViewMap();
 				}
 			}
@@ -223,10 +227,10 @@ public class AccountStateMachines implements StateMachine {
 	}
 
 	public List<AccountStateEntity> getStatusList(
-			AccountStateEntity accountStateEntity, Short prdTypeId) {
-		if (prdTypeId.equals(AccountTypes.LOANACCOUNT.getValue())) {
+			AccountStateEntity accountStateEntity, Short accountTypeId) {
+		if (accountTypeId.equals(AccountTypes.LOANACCOUNT.getValue())) {
 			return statesViewMapForLoan.get(accountStateEntity.getId());
-		} else if (prdTypeId.equals(AccountTypes.SAVINGSACCOUNT.getValue())) {
+		} else if (accountTypeId.equals(AccountTypes.SAVINGSACCOUNT.getValue())) {
 			return statesViewMapForSavings.get(accountStateEntity.getId());
 		}
 		return null;
@@ -282,22 +286,22 @@ public class AccountStateMachines implements StateMachine {
 		}
 	}
 
-	private List<AccountStateEntity> retrieveAllAccountStateList(Short prdTypeId)
+	private List<AccountStateEntity> retrieveAllAccountStateList(Short accountTypeId)
 			throws ApplicationException, SystemException {
 		logger.debug("In SavingsStateMachine::retrieveAllAccountStateList()");
-		return accountBusinessService.retrieveAllAccountStateList(prdTypeId);
+		return accountBusinessService.retrieveAllAccountStateList(accountTypeId);
 	}
 
 	public String getStatusName(Short localeId, Short accountStatusId,
-			Short prdTypeId) throws ApplicationException {
+			Short accountTypeId) throws ApplicationException {
 		try {
-			if (prdTypeId.equals(AccountTypes.LOANACCOUNT.getValue())) {
+			if (accountTypeId.equals(AccountTypes.LOANACCOUNT.getValue())) {
 				for (AccountStateEntity accountStateEntityObj : accountStateEntityListForLoan) {
 					if (accountStateEntityObj.getId().equals(accountStatusId)) {
 						return accountStateEntityObj.getName(localeId);
 					}
 				}
-			} else if (prdTypeId.equals(AccountTypes.SAVINGSACCOUNT.getValue())) {
+			} else if (accountTypeId.equals(AccountTypes.SAVINGSACCOUNT.getValue())) {
 				for (AccountStateEntity accountStateEntityObj : accountStateEntityListForSavings) {
 					if (accountStateEntityObj.getId().equals(accountStatusId)) {
 						return accountStateEntityObj.getName(localeId);
@@ -315,9 +319,9 @@ public class AccountStateMachines implements StateMachine {
 		}
 	}
 
-	public String getFlagName(Short flagId, Short prdTypeId)
+	public String getFlagName(Short flagId, Short accountTypeId)
 			throws ApplicationException {
-		if (prdTypeId.equals(AccountTypes.LOANACCOUNT.getValue())) {
+		if (accountTypeId.equals(AccountTypes.LOANACCOUNT.getValue())) {
 			for (AccountStateEntity accountStateEntity : accountStateEntityListForLoan) {
 				for (AccountStateFlagEntity accountStateFlagEntity : accountStateEntity
 						.getFlagSet()) {
@@ -328,7 +332,7 @@ public class AccountStateMachines implements StateMachine {
 					}
 				}
 			}
-		} else if (prdTypeId.equals(AccountTypes.SAVINGSACCOUNT.getValue())) {
+		} else if (accountTypeId.equals(AccountTypes.SAVINGSACCOUNT.getValue())) {
 			for (AccountStateEntity accountStateEntity : accountStateEntityListForSavings) {
 				for (AccountStateFlagEntity accountStateFlagEntity : accountStateEntity
 						.getFlagSet()) {
@@ -344,13 +348,13 @@ public class AccountStateMachines implements StateMachine {
 	}
 
 	public AccountStateEntity retrieveAccountStateEntityMasterObject(
-			AccountStateEntity obj, Short prdTypeId) {
-		if (prdTypeId.equals(AccountTypes.LOANACCOUNT.getValue())) {
+			AccountStateEntity obj, Short accountTypeId) {
+		if (accountTypeId.equals(AccountTypes.LOANACCOUNT.getValue())) {
 			for (AccountStateEntity object : accountStateEntityListForLoan) {
 				if (object.equals(obj))
 					return object;
 			}
-		} else if (prdTypeId.equals(AccountTypes.SAVINGSACCOUNT.getValue())) {
+		} else if (accountTypeId.equals(AccountTypes.SAVINGSACCOUNT.getValue())) {
 			for (AccountStateEntity object : accountStateEntityListForSavings) {
 				if (object.equals(obj))
 					return object;
@@ -380,10 +384,10 @@ public class AccountStateMachines implements StateMachine {
 		return applicableTransitions.contains(newState);
 	}
 
-	private String getConfigurationName(Short officeId, Short prdTypeId,
+	private String getConfigurationName(Short officeId, Short accountTypeId,
 			Short levelId) {
 		String configurationName = null;
-		if (prdTypeId.equals(AccountTypes.LOANACCOUNT.getValue())) {
+		if (accountTypeId.equals(AccountTypes.LOANACCOUNT.getValue())) {
 			if (Configuration.getInstance().getAccountConfig(officeId)
 					.isDisbursedToLOStateDefinedForLoan()) {
 				if (Configuration.getInstance().getAccountConfig(officeId)
@@ -398,16 +402,16 @@ public class AccountStateMachines implements StateMachine {
 				else
 					configurationName = "configuration 4";
 			}
-		} else if (prdTypeId.equals(AccountTypes.SAVINGSACCOUNT.getValue())) {
+		} else if (accountTypeId.equals(AccountTypes.SAVINGSACCOUNT.getValue())) {
 			if (Configuration.getInstance().getAccountConfig(officeId)
 					.isPendingApprovalStateDefinedForSavings())
 				configurationName = "configuration 1";
 			else
 				configurationName = "configuration 2";
-		} else if (prdTypeId.equals(AccountTypes.CUSTOMERACCOUNT.getValue())) {
-			if (prdTypeId.equals(CustomerLevel.CENTER.getValue())) {
+		} else if (accountTypeId.equals(AccountTypes.CUSTOMERACCOUNT.getValue())) {
+			if (accountTypeId.equals(CustomerLevel.CENTER.getValue())) {
 				configurationName = "configuration 1";
-			} else if (prdTypeId.equals(CustomerLevel.CLIENT.getValue())) {
+			} else if (accountTypeId.equals(CustomerLevel.CLIENT.getValue())) {
 				if (Configuration.getInstance().getCustomerConfig(officeId)
 						.isPendingApprovalStateDefinedForClient())
 					configurationName = "configuration 1";
@@ -419,9 +423,9 @@ public class AccountStateMachines implements StateMachine {
 	}
 
 	private List<CustomerStatusEntity> retrieveAllCustomerStatusList(
-			Short prdTypeId) throws ApplicationException, SystemException {
+			Short accountTypeId) throws ApplicationException, SystemException {
 		logger.debug("In SavingsStateMachine::retrieveAllAccountStateList()");
-		return customerBusinessService.retrieveAllCustomerStatusList(prdTypeId);
+		return customerBusinessService.retrieveAllCustomerStatusList(accountTypeId);
 	}
 
 	private void populateCenterStatesViewMap() throws ApplicationException,
@@ -541,15 +545,15 @@ public class AccountStateMachines implements StateMachine {
 	}
 
 	public String getCustomerStatusName(Short localeId, Short customerStatusId,
-			Short prdTypeId) throws ApplicationException, SystemException {
+			Short accountTypeId) throws ApplicationException, SystemException {
 		try {
-			if (prdTypeId.equals(CustomerLevel.CENTER.getValue())) {
+			if (accountTypeId.equals(CustomerLevel.CENTER.getValue())) {
 				for (CustomerStatusEntity customerStatus : customerStatusListForCenter) {
 					if (customerStatus.getId().equals(customerStatusId)) {
 						return customerStatus.getName(localeId);
 					}
 				}
-			} else if (prdTypeId.equals(CustomerLevel.CLIENT.getValue())) {
+			} else if (accountTypeId.equals(CustomerLevel.CLIENT.getValue())) {
 				for (CustomerStatusEntity customerStatus : customerStatusListForClient) {
 					if (customerStatus.getId().equals(customerStatusId)) {
 						return customerStatus.getName(localeId);
@@ -564,8 +568,8 @@ public class AccountStateMachines implements StateMachine {
 	}
 
 	public String getCustomerFlagName(Short localeId, Short flagId,
-			Short prdTypeId) throws ApplicationException, SystemException {
-		if (prdTypeId.equals(CustomerLevel.CENTER.getValue())) {
+			Short accountTypeId) throws ApplicationException, SystemException {
+		if (accountTypeId.equals(CustomerLevel.CENTER.getValue())) {
 			for (CustomerStatusEntity customerStatus : customerStatusListForCenter) {
 				for (CustomerStatusFlagEntity customerStateFlagEntity : customerStatus
 						.getFlagSet()) {
@@ -576,7 +580,7 @@ public class AccountStateMachines implements StateMachine {
 					}
 				}
 			}
-		} else if (prdTypeId.equals(CustomerLevel.CLIENT.getValue())) {
+		} else if (accountTypeId.equals(CustomerLevel.CLIENT.getValue())) {
 			for (CustomerStatusEntity customerStatus : customerStatusListForClient) {
 				for (CustomerStatusFlagEntity customerStateFlagEntity : customerStatus
 						.getFlagSet()) {
@@ -604,5 +608,4 @@ public class AccountStateMachines implements StateMachine {
 		}
 		return null;
 	}
-
 }

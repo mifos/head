@@ -49,8 +49,6 @@ public class CustomerFlagDetailEntity extends PersistentObject {
 
 	private final CustomerStatusFlagEntity statusFlag;
 
-	private final CustomerBO customer;
-
 	/*
 	 * Adding a default constructor is hibernate's requirement and should not be
 	 * used to create a valid Object.
@@ -58,11 +56,9 @@ public class CustomerFlagDetailEntity extends PersistentObject {
 	protected CustomerFlagDetailEntity() {
 		this.customerFlagId = null;
 		this.statusFlag = null;
-		this.customer = null;
 	}
 
 	protected CustomerFlagDetailEntity(CustomerBO customer, CustomerStatusFlagEntity statusFlag) {
-		this.customer = customer;
 		this.statusFlag= statusFlag;
 		this.customerFlagId = null;
 	}
@@ -73,9 +69,5 @@ public class CustomerFlagDetailEntity extends PersistentObject {
 
 	public CustomerStatusFlagEntity getStatusFlag() {
 		return statusFlag;
-	}
-	
-	public CustomerBO getCustomer() {
-		return customer;
 	}
 }

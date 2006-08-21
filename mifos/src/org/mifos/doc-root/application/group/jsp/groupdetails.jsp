@@ -178,7 +178,7 @@ function meetingpopup(){
 			<c:choose>
                <c:when test="${!empty requestScope.GroupVO.personnel and !empty requestScope.GroupVO.personnel.personnelId}">
 	               <c:forEach var="client" items="${requestScope.clients}">
-						<a href="clientCreationAction.do?method=getDetails&globalCustNum=${client.globalCustNum}&recordOfficeId=${requestScope.GroupVO.office.officeId}&recordLoanOfficerId=${requestScope.GroupVO.personnel.personnelId}">
+						<a href="clientCustAction.do?method=get&globalCustNum=${client.globalCustNum}&recordOfficeId=${requestScope.GroupVO.office.officeId}&recordLoanOfficerId=${requestScope.GroupVO.personnel.personnelId}">
 							<c:out value="${client.displayName}"/>
 							<c:out value="${customerfn:getClientPositions(requestScope.customerPositions,client)}" />
 							<br>
@@ -187,7 +187,7 @@ function meetingpopup(){
 	           </c:when>
 	           <c:otherwise>
 	            	<c:forEach var="client" items="${requestScope.clients}">
-						<a href="clientCreationAction.do?method=getDetails&globalCustNum=${client.globalCustNum}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+						<a href="clientCustAction.do?method=get&globalCustNum=${client.globalCustNum}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 							<c:out value="${client.displayName}"/>
 							<c:out value="${customerfn:getClientPositions(requestScope.customerPositions,client)}" />
 							<br>

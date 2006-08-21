@@ -71,8 +71,8 @@
 				class="org.mifos.application.customer.business.CustomerNoteEntity"
 				column="COMMENT_ID" />
 		</set>
-		<set name="customerFlags" cascade="none" lazy="true">
-			<key column="CUSTOMER_ID" />
+		<set name="customerFlags" cascade="all" lazy="true">
+			<key column="CUSTOMER_ID" not-null="true"/>
 			<one-to-many class="org.mifos.application.customer.business.CustomerFlagDetailEntity" />
 		</set>
 		<subclass name="org.mifos.application.customer.center.business.CenterBO" discriminator-value="CENTER"></subclass>

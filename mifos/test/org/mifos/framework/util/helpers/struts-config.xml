@@ -1768,7 +1768,8 @@
 			<forward name="load_success" path="/pages/application/customer/jsp/changeStatus.jsp" />
 			<forward name="preview_success" path="/pages/application/customer/jsp/changeStatusPreview.jsp" />
 			<forward name="previous_success" path="/pages/application/customer/jsp/changeStatus.jsp" />
-			<forward name="center_detail_page" path="/centerAction.do?method=get" />
+			<forward name="center_detail_page" path="/centerCustAction.do?method=get" />
+			<forward name="client_detail_page" path="/clientCustAction.do?method=get" />
 			<forward name="update_failure" path="/pages/application/customer/jsp/changeStatusPreview.jsp" />
 			<forward name="preview_failure" path="/pages/application/customer/jsp/changeStatus.jsp" />
 		</action>

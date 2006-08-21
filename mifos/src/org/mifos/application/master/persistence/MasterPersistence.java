@@ -176,7 +176,7 @@ public EntityMaster getLookUpEntity(String entityName,Short localeId) throws App
 	
 	public String retrieveMasterEntities(Integer entityId, Short localeId)throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("lookUpValueId",entityId);
+		queryParameters.put("lookUpId",entityId);
 		queryParameters.put("localeId",localeId);
 		List queryResult=null;
 		try{

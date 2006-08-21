@@ -45,16 +45,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerStatusEntity;
-import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
-import org.mifos.application.customer.util.helpers.CustomerStatus;
-import org.mifos.application.fees.business.FeeBO;
-import org.mifos.application.fees.business.RateFeeBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -227,6 +222,116 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.center_detail_page.toString());
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class, center.getCustomerId());
 		assertFalse(center.isCustomerActive());
+	}
+	
+	public void testLoadForClient(){
+		createInitialObjects();
+		setRequestPathInfo("/editCustomerStatusAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("customerId",client.getCustomerId().toString());
+		getRequest().getSession().setAttribute("security_param","Client");
+		actionPerform();
+		verifyForward(ActionForwards.load_success.toString());
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST,request.getSession()));
+		assertEquals("Size of the status list should be 2",2,((List<CustomerStatusEntity>)SessionUtils.getAttribute(SavingsConstants.STATUS_LIST,request.getSession())).size());
+
+	}
+	
+	public void testFailurePreviewWithAllValuesNullForClient() throws Exception {
+		setRequestPathInfo("/editCustomerStatusAction.do");
+		addRequestParameter("method", "preview");
+		getRequest().getSession().setAttribute("security_param","Client");
+		actionPerform();
+		assertEquals(2, getErrrorSize());
+		assertEquals("Status id",1, getErrrorSize(CustomerConstants.MANDATORY_SELECT));
+		assertEquals("Notes",1, getErrrorSize(CustomerConstants.MANDATORY_TEXTBOX));
+		verifyInputForward();
+	}
+	
+	public void testFailurePreviewWithFlagValueNullForCLient() throws Exception {
+		setRequestPathInfo("/editCustomerStatusAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("newStatusId", "6");
+		getRequest().getSession().setAttribute("security_param","Client");
+		actionPerform();
+		assertEquals(2, getErrrorSize());
+		assertEquals("flag id",1, getErrrorSize(CustomerConstants.MANDATORY_SELECT));
+		assertEquals("Notes",1, getErrrorSize(CustomerConstants.MANDATORY_TEXTBOX));
+		verifyInputForward();
+	}
+	
+	public void testFailurePreviewWithNotesValueNullForClient() throws Exception {
+		setRequestPathInfo("/editCustomerStatusAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("newStatusId", "6");
+		addRequestParameter("flagId", "10");
+		getRequest().getSession().setAttribute("security_param","Client");
+		actionPerform();
+		assertEquals(1, getErrrorSize());
+		assertEquals("Notes",1, getErrrorSize(CustomerConstants.MANDATORY_TEXTBOX));
+		verifyInputForward();
+	}
+
+	public void testPreviewSuccessForClient() {
+		createInitialObjects();
+		setRequestPathInfo("/editCustomerStatusAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("customerId",client.getCustomerId().toString());
+		getRequest().getSession().setAttribute("security_param","Client");
+		actionPerform();
+		verifyForward("load_success");
+		assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST,request.getSession()));
+		assertEquals("Size of the status list should be 2",2,((List<AccountStateEntity>)SessionUtils.getAttribute(SavingsConstants.STATUS_LIST,request.getSession())).size());
+		
+		setRequestPathInfo("/editCustomerStatusAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("notes", "Test");
+		addRequestParameter("levelId", client.getCustomerLevel().getId().toString());
+		addRequestParameter("newStatusId", "6");
+		addRequestParameter("flagId", "10");
+		getRequest().getSession().setAttribute("security_param","Client");
+		actionPerform();
+		verifyForward("preview_success");
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		assertEquals("Closed",(String)SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME,request.getSession()));
+		assertEquals("Since new Status is Closed,so flag should not be null.","Other",SessionUtils.getAttribute(SavingsConstants.FLAG_NAME,request.getSession()));
+	}
+	
+	public void testUpdateCenterStatusForClient() {
+		createInitialObjects();
+		setRequestPathInfo("/editCustomerStatusAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("customerId",client.getCustomerId().toString());
+		getRequest().getSession().setAttribute("security_param","Client");
+		actionPerform();
+		verifyForward("load_success");
+		assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST,request.getSession()));
+		assertEquals("Size of the status list should be 2",2,((List<AccountStateEntity>)SessionUtils.getAttribute(SavingsConstants.STATUS_LIST,request.getSession())).size());
+		
+		setRequestPathInfo("/editCustomerStatusAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("notes", "Test");
+		addRequestParameter("levelId", client.getCustomerLevel().getId().toString());
+		addRequestParameter("newStatusId", "4");
+		addRequestParameter("flagId", "");
+		getRequest().getSession().setAttribute("security_param","Client");
+		actionPerform();
+		verifyForward("preview_success");
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		assertEquals("On Hold",(String)SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME,request.getSession()));
+		assertNull("Since new Status is not Closed,so flag should be null.",SessionUtils.getAttribute(SavingsConstants.FLAG_NAME,request.getSession()));
+		setRequestPathInfo("/editCustomerStatusAction.do");
+		addRequestParameter("method", "update");
+		getRequest().getSession().setAttribute("security_param","Client");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.client_detail_page.toString());
+		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class, client.getCustomerId());
+		assertFalse(client.isCustomerActive());
 	}
 	
 	private void createInitialObjects() {

@@ -132,12 +132,11 @@ public class EditCustomerStatusAction extends BaseAction {
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception, NumberFormatException {
-		EditCustomerStatusActionForm editCustomerStatusActionForm = (EditCustomerStatusActionForm) form;
 		CustomerBO customerBO = (CustomerBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
-		getCheckList(form, customerBO, request.getSession(), userContext);
+		setStatusDetails(form, customerBO, request.getSession(), userContext);
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 
@@ -191,7 +190,7 @@ public class EditCustomerStatusAction extends BaseAction {
 		return mapping.findForward(getDetailAccountPage(form));
 	}
 
-	private void getCheckList(ActionForm form, CustomerBO customerBO,
+	private void setStatusDetails(ActionForm form, CustomerBO customerBO,
 			HttpSession session, UserContext userContext) throws Exception {
 		EditCustomerStatusActionForm editCustomerStatusActionForm = (EditCustomerStatusActionForm) form;
 		editCustomerStatusActionForm.setCommentDate(DateHelper
@@ -205,19 +204,21 @@ public class EditCustomerStatusAction extends BaseAction {
 		SessionUtils.setAttribute(SavingsConstants.STATUS_CHECK_LIST,
 				checklist, session);
 		if (StringUtils.isNullAndEmptySafe(editCustomerStatusActionForm
-				.getNewStatusId()))
+				.getNewStatusId())){
 			newStatusName = customerService.getStatusName(userContext
 					.getLocaleId(), Short.valueOf(editCustomerStatusActionForm
 					.getNewStatusId()), getLevelIdBasedOnCustomer(customerBO));
+		}
 		SessionUtils.setAttribute(SavingsConstants.NEW_STATUS_NAME,
 				newStatusName, session);
 		if (StringUtils.isNullAndEmptySafe(editCustomerStatusActionForm
 				.getNewStatusId())
 				&& isNewStatusCancelledOrClosed(Short
-						.valueOf(editCustomerStatusActionForm.getNewStatusId())))
+						.valueOf(editCustomerStatusActionForm.getNewStatusId()))){
 			flagName = customerService.getFlagName(userContext.getLocaleId(),
 					new Short(editCustomerStatusActionForm.getFlagId()),
 					getLevelIdBasedOnCustomer(customerBO));
+		}
 		SessionUtils
 				.setAttribute(SavingsConstants.FLAG_NAME, flagName, session);
 
@@ -225,7 +226,7 @@ public class EditCustomerStatusAction extends BaseAction {
 
 	private boolean isNewStatusCancelledOrClosed(Short newStatusId) {
 		return newStatusId.equals(CustomerStatus.CLIENT_CANCELLED.getValue())
-				|| newStatusId.equals(CustomerStatus.CLIENT_CANCELLED
+				|| newStatusId.equals(CustomerStatus.CLIENT_CLOSED
 						.getValue())
 				|| newStatusId
 						.equals(CustomerStatus.GROUP_CANCELLED.getValue())
@@ -314,5 +315,4 @@ public class EditCustomerStatusAction extends BaseAction {
 		}
 		return mapping.findForward(forward);
 	}
-
 }

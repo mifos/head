@@ -8,26 +8,18 @@ import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Hibernate;
-
 import org.hibernate.HibernateException;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
-
-import org.mifos.application.configuration.business.MifosConfiguration;
-import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
-
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
 import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
-
-import org.mifos.application.customer.group.util.helpers.GroupConstants;
-
 import org.mifos.application.customer.exceptions.CustomerStateChangeException;
-
+import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;

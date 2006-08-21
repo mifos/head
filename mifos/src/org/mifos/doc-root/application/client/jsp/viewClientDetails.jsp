@@ -139,7 +139,7 @@
 								value="${sessionScope.BusinessKey.customerStatus.name}" /> <c:forEach
 								var="flagSet" items="${sessionScope.BusinessKey.customerFlags}">
 								<span class="fontnormal"> <c:if
-									test="${flagSet.statusFlag.blacklisted}">
+									test="${flagSet.statusFlag.blackListed}">
 									<mifos:MifosImage id="blackListed" moduleName="customer.client" />
 								</c:if> <c:out value="${flagSet.statusFlag.name}" /> </span>
 							</c:forEach> </span><br>

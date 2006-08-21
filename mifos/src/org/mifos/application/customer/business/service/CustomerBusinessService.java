@@ -307,9 +307,9 @@ public class CustomerBusinessService extends BusinessService {
 		return new CustomerPersistence().retrieveAllCustomerStatusList(levelId);
 	}
 
-	public void initializeStateMachine(Short localeId, Short officeId,Short prdTypeId,
+	public void initializeStateMachine(Short localeId, Short officeId,Short accountTypeId,
 			Short levelId) throws StatesInitializationException {
-		AccountStateMachines.getInstance().initialize(localeId, officeId,prdTypeId,levelId);
+		AccountStateMachines.getInstance().initialize(localeId, officeId,accountTypeId,levelId);
 	}
 
 	public String getStatusName(Short localeId, Short statusId, Short levelId)

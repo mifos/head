@@ -46,7 +46,6 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.AccountStateFlagEntity;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -483,7 +482,11 @@ public abstract class CustomerBO extends BusinessObject {
 		this.customerFlags = customerFlag;
 	}
 
-	public void addCustomerFlag(CustomerFlagDetailEntity customerFlag) {
+	public void addCustomerFlag(CustomerStatusFlagEntity customerStatusFlagEntity) {
+		CustomerFlagDetailEntity customerFlag = new CustomerFlagDetailEntity(
+				this, customerStatusFlagEntity);
+		customerFlag.setCreatedBy(this.getUserContext().getId());
+		customerFlag.setCreatedDate(new Date());
 		this.customerFlags.add(customerFlag);
 	}
 
@@ -693,7 +696,7 @@ public abstract class CustomerBO extends BusinessObject {
 		CustomerStatusFlagEntity customerStatusFlagEntity = null;
 		if (flagId != null) {
 			customerStatusFlagEntity = (CustomerStatusFlagEntity) masterPersistenceService
-					.findById(AccountStateFlagEntity.class, flagId);
+					.findById(CustomerStatusFlagEntity.class, flagId);
 		}
 		CustomerNoteEntity customerNote = createCustomerNotes(comment);
 		this.setCustomerStatus(customerStatus);
@@ -701,11 +704,7 @@ public abstract class CustomerBO extends BusinessObject {
 		if (customerStatusFlagEntity != null) {
 			customerStatusFlagEntity.setLocaleId(this.getUserContext()
 					.getLocaleId());
-			CustomerFlagDetailEntity customerFlag = new CustomerFlagDetailEntity(
-					this, customerStatusFlagEntity);
-			customerFlag.setCreatedBy(this.getUserContext().getId());
-			customerFlag.setCreatedDate(new Date());
-			this.addCustomerFlag(customerFlag);
+			this.addCustomerFlag(customerStatusFlagEntity);
 		}
 	}
 
