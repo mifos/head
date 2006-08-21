@@ -16,7 +16,10 @@ import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestOfficeAction extends MifosMockStrutsTestCase {
+	
+	private UserContext userContext ;
 	protected void setUp() throws Exception {
+		
 		super.setUp();
 		try {
 			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
@@ -27,7 +30,7 @@ public class TestOfficeAction extends MifosMockStrutsTestCase {
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
-		UserContext userContext = TestObjectFactory.getUserContext();
+		 userContext = TestObjectFactory.getUserContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
@@ -109,5 +112,16 @@ public class TestOfficeAction extends MifosMockStrutsTestCase {
 		 assertEquals("abcd",office.getShortName());
 		 assertEquals("123",office.getAddress().getAddress().getLine1());
 		 TestObjectFactory.cleanUp(office);
+	}
+	public void testGet(){
+		setRequestPathInfo("/offAction.do");
+		addRequestParameter("method", Methods.get.toString());
+		addRequestParameter("officeId","1");
+		actionPerform();
+		 OfficeBO office =  (OfficeBO)request.getSession()
+			.getAttribute(Constants.BUSINESS_KEY);
+		 assertNotNull(office);
+		 assertEquals(1,office.getOfficeId().intValue());
+		
 	}
 }

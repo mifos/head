@@ -1064,8 +1064,7 @@
 			<forward name="previous_success" path="/pages/application/office/jsp/CreateNewOffice.jsp" />
 			<forward name="create_success" path="/pages/application/office/jsp/createNewOfficeSuccessful.jsp" />
 			<forward name="create_failure" path="/pages/application/office/jsp/preview_new_office.jsp" />
-			
-			
+			<forward name="get_success" path="/pages/application/office/jsp/viewOfficeDetails.jsp" />
 		</action>
 
 	    <!-- offAction End-->
@@ -1149,7 +1148,8 @@
 		org.mifos.application.fees.util.helpers.RateAmountFlag,
 		org.mifos.application.meeting.util.helpers.MeetingFrequency,
 		org.mifos.application.meeting.util.helpers.MeetingType,
-		org.mifos.application.accounts.util.helpers.AccountTypes" />
+		org.mifos.application.accounts.util.helpers.AccountTypes,
+		org.mifos.application.office.util.helpers.OfficeStatus" />
 	</plug-in>
 
 </struts-config>

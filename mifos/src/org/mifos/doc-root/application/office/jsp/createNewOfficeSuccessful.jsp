@@ -7,11 +7,7 @@
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-		<script language="javascript">
-function goToCancelPage(){
-	document.offActionForm.method.value="cancel";
-	offActionForm.submit();
-  }
+<script language="javascript">
   function seeDetails(){
 	document.offActionForm.method.value="get";
 	offActionForm.submit();
@@ -46,7 +42,7 @@ function goToCancelPage(){
 
 									 
 									
-									<html-el:link action="/OfficeAction.do?method=get&officeId=${BusinessKey.officeId}">
+									<html-el:link action="/offAction.do?method=get&officeId=${BusinessKey.officeId}">
 									 <mifos:mifoslabel
 										name="Office.labelViewOfficeDetails" />
 									</html-el:link>

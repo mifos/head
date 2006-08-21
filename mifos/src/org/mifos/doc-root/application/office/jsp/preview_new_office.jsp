@@ -160,7 +160,7 @@ function goToCancelPage(){
 									<c:if test="${!empty offActionForm.customFields}">
 										<mifos:mifoslabel name="Office.labelAdditionInformation" />
 									</c:if> <span class="fontnormal"><br>
-									<!-- custom field preview --> <c:forEach var="cfdef"
+									 <c:forEach var="cfdef"
 										items="${offActionForm.customFields}">
 										<c:forEach var="cf" items="${sessionScope.customFields}">
 											<c:if test="${cfdef.fieldId==cf.fieldId}">

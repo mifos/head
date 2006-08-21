@@ -15,6 +15,7 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.service.OfficeBusinessService;
+import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.struts.actionforms.OffActionForm;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OperationMode;
@@ -54,10 +55,7 @@ public class OffAction extends BaseAction {
 		loadParents(request, actionForm);
 		actionForm.clear();
 		loadCreateCustomFields(actionForm, request);
-		SessionUtils.setAttribute(OfficeConstants.OFFICELEVELLIST,
-				((OfficeBusinessService) getService())
-						.getConfiguredLevels(getUserContext(request)
-								.getLocaleId()), request.getSession());
+		loadofficeLevels(request);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
@@ -159,4 +157,31 @@ public class OffAction extends BaseAction {
 		return mapping.findForward(method + "_failure");
 	}
 
+	public ActionForward get(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		OffActionForm actionForm = (OffActionForm) form;
+		OfficeBO officeBO = null;
+		if (StringUtils.isNullOrEmpty(actionForm.getOfficeId()))
+			throw new OfficeException(OfficeConstants.KEYGETFAILED);
+		officeBO = ((OfficeBusinessService) getService()).getOffice(Short
+				.valueOf(actionForm.getOfficeId()));
+		actionForm.clear();
+		loadCreateCustomFields(actionForm, request);
+		//loadofficeLevels(request);
+		officeBO.getStatus().setLocaleId(getUserContext(request).getLocaleId());
+		officeBO.getLevel().setLocaleId(getUserContext(request).getLocaleId());
+		actionForm.populate(officeBO);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, officeBO, request
+				.getSession());
+		return mapping.findForward(ActionForwards.get_success.toString());
+	}
+
+	private void loadofficeLevels(HttpServletRequest request)
+			throws ServiceException {
+		SessionUtils.setAttribute(OfficeConstants.OFFICELEVELLIST,
+				((OfficeBusinessService) getService())
+						.getConfiguredLevels(getUserContext(request)
+								.getLocaleId()), request.getSession());
+	}
 }

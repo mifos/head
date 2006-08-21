@@ -58,6 +58,7 @@ function goToCancelPage(){
 function getOffice(officeid){
 	document.officeActionForm.method.value="get";
 	document.officeActionForm.officeId.value=officeid;	
+	document.officeActionForm.action="offAction.do";	
 	officeActionForm.submit();
   }
 function addNewOffice(officeType){
