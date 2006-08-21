@@ -156,7 +156,7 @@ class ClientTest
  #creating meeting to the client
  #Removing the admin fee
  
-  while(rowid<$maxrow*$maxcol-1)
+    while(rowid<$maxrow*$maxcol-1)
     clientobject.read_client_values(rowid,3)
     clientobject.check_create_client_out_of_group_link
     clientobject.click_create_client_out_of_group_link
