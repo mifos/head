@@ -71,6 +71,7 @@ import org.mifos.application.customer.util.helpers.CustomerHelper;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
+import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.SpouseFatherLookupEntity;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -484,6 +485,10 @@ public class ClientCustAction extends CustAction {
 				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
 						.getEducationLevel(), getUserContext(request)
 						.getLocaleId()), request.getSession());
+		SessionUtils.setAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
+				getMasterEntities(SpouseFatherLookupEntity.class,
+						getUserContext(request).getLocaleId()), request
+						.getSession());
 	}
 
 	private String getNameForBusinessActivityEntity(Integer entityId,
@@ -504,9 +509,19 @@ public class ClientCustAction extends CustAction {
 						ClientConstants.SPOUSE_FATHER_NAME_VALUE,
 						clientNameDetailEntity.getDisplayName(), request
 								.getSession());
-				SessionUtils.setAttribute(ClientConstants.SPOUSE_FATHER_VALUE,clientNameDetailEntity.getNameType(), request.getSession());
+				SessionUtils.setAttribute(ClientConstants.SPOUSE_FATHER_VALUE,findMasterEntity(request.getSession(),ClientConstants.SPOUSE_FATHER_ENTITY,clientNameDetailEntity.getNameType()).getName(), request.getSession());
 				break;
 			}
 		}
+	}
+	
+	private MasterDataEntity findMasterEntity(HttpSession session,
+			String collectionName, Short value) {
+		List<MasterDataEntity> entities = (List<MasterDataEntity>) SessionUtils
+				.getAttribute(collectionName, session);
+		for (MasterDataEntity entity : entities)
+			if (entity.getId().equals(value))
+				return entity;
+		return null;
 	}
 }

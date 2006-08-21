@@ -41,22 +41,20 @@ package org.mifos.application.customer.struts.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.Globals;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerNoteEntity;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.struts.actionforms.CustomerNotesActionForm;
 import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
@@ -67,14 +65,12 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.SessionUtils;
 
 public class CustomerNotesAction extends SearchAction {
@@ -117,29 +113,17 @@ public class CustomerNotesAction extends SearchAction {
 		return mapping.findForward(getDetailCustomerPage(form));
 	}
 	
-	public ActionForward create(ActionMapping mapping, ActionForm form,	HttpServletRequest request, HttpServletResponse response)throws Exception {
+	public ActionForward create(ActionMapping mapping, ActionForm form,	HttpServletRequest request, HttpServletResponse response) throws CustomerException{
 		ActionForward forward = null;
 		CustomerNotesActionForm notesActionForm = (CustomerNotesActionForm) form;
-		try{
-			CustomerBO customerBO = customerBusinessService.getCustomer(Integer.valueOf(((CustomerNotesActionForm) form).getCustomerId()));
-			UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
-			PersonnelBO personnelBO = ((PersonnelPersistenceService) ServiceFactory.getInstance()
-					.getPersistenceService(PersistenceServiceName.Personnel)).getPersonnel(uc.getId());
-			CustomerNoteEntity customerNote = new CustomerNoteEntity(notesActionForm.getComment(), new java.sql.Date(System.currentTimeMillis()),personnelBO,customerBO);
-			customerBO.addCustomerNotes(customerNote);
-			customerBO.setUserContext(uc);
-			customerBO.update();
-			HibernateUtil.commitTransaction();
-			forward = mapping.findForward(getDetailCustomerPage(notesActionForm));
-		}catch(ApplicationException ae ){
-			ActionErrors errors = new ActionErrors();
-			errors.add(ae.getKey(),new ActionMessage(ae.getKey() , ae.getValues()));
-			request.setAttribute(Globals.ERROR_KEY, errors);
-			forward = mapping.findForward(ActionForwards.create_failure.toString());
-			HibernateUtil.rollbackTransaction();
-		}finally {
-			HibernateUtil.closeSession();
-		}
+		CustomerBO customerBO = customerBusinessService.getCustomer(Integer.valueOf(((CustomerNotesActionForm) form).getCustomerId()));
+		UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+		PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(uc.getId());
+		CustomerNoteEntity customerNote = new CustomerNoteEntity(notesActionForm.getComment(), new java.sql.Date(System.currentTimeMillis()),personnelBO,customerBO);
+		customerBO.addCustomerNotes(customerNote);
+		customerBO.setUserContext(uc);
+		customerBO.update();
+		forward = mapping.findForward(getDetailCustomerPage(notesActionForm));
 		return forward;
 	}
 	

@@ -53,7 +53,7 @@ public class TestTagGenerator extends MifosTestCase{
 		String createdLink = TagGenerator.createHeaderLinks(savings,false);
 		assertEquals(true,createdLink.contains("CustomerSearchAction"));
 		assertEquals(true,createdLink.contains("TestBranchOffice"));
-		assertEquals(true,createdLink.contains("centerAction"));
+		assertEquals(true,createdLink.contains("centerCustAction"));
 		assertEquals(true,createdLink.contains("Center_Active_test"));
 		assertEquals(true,createdLink.contains("GroupAction"));
 		assertEquals(true,createdLink.contains("Group_Active_test"));
@@ -65,7 +65,7 @@ public class TestTagGenerator extends MifosTestCase{
 		String createdLink = TagGenerator.createHeaderLinks(savings,true);
 		assertEquals(true,createdLink.contains("CustomerSearchAction"));
 		assertEquals(true,createdLink.contains("TestBranchOffice"));
-		assertEquals(true,createdLink.contains("centerAction"));
+		assertEquals(true,createdLink.contains("centerCustAction"));
 		assertEquals(true,createdLink.contains("Center_Active_test"));
 		assertEquals(true,createdLink.contains("GroupAction"));
 		assertEquals(true,createdLink.contains("Group_Active_test"));

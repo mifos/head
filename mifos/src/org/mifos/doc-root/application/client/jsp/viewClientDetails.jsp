@@ -765,8 +765,8 @@
 						</tr>
 						<tr>
 							<td class="paddingL10"><c:choose>
-								<c:when test="${!empty requestScope.notes}">
-									<c:forEach var="note" items="${requestScope.notes}">
+								<c:when test="${!empty sessionScope.BusinessKey.recentCustomerNotes}">
+									<c:forEach var="note" items="${sessionScope.BusinessKey.recentCustomerNotes}">
 										<span class="fontnormal8ptbold"> <!-- Bug Id 27911. Changed the all the dates in the clientDetails.jsp to display as per client Locale-->
 										<c:out
 											value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,note.commentDate)}" />:
@@ -785,12 +785,15 @@
 						</tr>
 						<tr>
 							<td align="right" class="paddingleft05"><span
-								class="fontnormal8pt"> <c:if test="${!empty requestScope.notes}">
-								<a href="CustomerNoteAction.do?method=get&input=Client"> <mifos:mifoslabel
+								class="fontnormal8pt"> <c:if test="${!empty sessionScope.BusinessKey.customerNotes}">
+								<html-el:link
+									href="customerNotesAction.do?method=search&customerId=${sessionScope.BusinessKey.customerId}&globalAccountNum=${sessionScope.BusinessKey.globalCustNum}&customerName=${sessionScope.BusinessKey.displayName}&securityParamInput=Client&levelId=${sessionScope.BusinessKey.customerLevel.id}">
+									<mifos:mifoslabel
 									name="client.SeeAllNotesLink" bundle="ClientUIResources"></mifos:mifoslabel>
-								</a>
+								</html-el:link>
 								<br>
-							</c:if> <a href="CustomerNoteAction.do?method=load&input=Client">
+							</c:if> <a
+								href="customerNotesAction.do?method=load&customerId=<c:out value="${sessionScope.BusinessKey.customerId}"/>">
 							<mifos:mifoslabel name="client.NotesLink"
 								bundle="ClientUIResources"></mifos:mifoslabel> </a> </span></td>
 						</tr>

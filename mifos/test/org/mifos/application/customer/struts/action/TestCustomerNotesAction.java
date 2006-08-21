@@ -46,6 +46,7 @@ import java.util.Set;
 
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -194,6 +195,93 @@ private UserContext userContext;
 		assertEquals(1, center.getCustomerNotes().size());
 		center = (CenterBO) (HibernateUtil.getSessionTL().get(CenterBO.class,
 				new Integer(center.getCustomerId())));
+	}
+	
+	public void testLoadForClient(){
+		createInitialObjects();
+		setRequestPathInfo("/customerNotesAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("customerId", client.getCustomerId().toString());
+		getRequest().getSession().setAttribute("security_param", "Client");
+		actionPerform();
+		verifyForward("load_success");
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+	}
+	
+	public void testFailurePreviewWithNotesValueNullForClient() throws Exception {
+		setRequestPathInfo("/customerNotesAction.do");
+		addRequestParameter("method", "preview");
+		getRequest().getSession().setAttribute("security_param","Client");
+		actionPerform();
+		assertEquals(1, getErrrorSize());
+		assertEquals("Notes",1, getErrrorSize(CustomerConstants.ERROR_MANDATORY_TEXT_AREA));
+		verifyInputForward();
+	}
+
+	public void testPreviewSuccessForClient() {
+		createInitialObjects();
+		setRequestPathInfo("/customerNotesAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("comment", "Test");
+		getRequest().getSession().setAttribute("security_param","Client");
+		actionPerform();
+		verifyForward("preview_success");
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+	}
+	
+	public void testPreviousSuccessForClient() {
+		setRequestPathInfo("/customerNotesAction.do");
+		addRequestParameter("method", "previous");
+		addRequestParameter("comment", "Test");
+		getRequest().getSession().setAttribute("security_param","Client");
+		actionPerform();
+		verifyForward("previous_success");
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+	}
+	
+	public void testCancelSuccessForClient() {
+		createInitialObjects();
+		setRequestPathInfo("/customerNotesAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("customerId", client.getCustomerId().toString());
+		getRequest().getSession().setAttribute("security_param", "Client");
+		actionPerform();
+		verifyForward("load_success");
+		setRequestPathInfo("/customerNotesAction.do");
+		addRequestParameter("method", "cancel");
+		actionPerform();
+		verifyForward(ActionForwards.client_detail_page.toString());
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+	}
+
+	public void testCreateNotesForClient() {
+		createInitialObjects();
+		setRequestPathInfo("/customerNotesAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("customerId", client.getCustomerId().toString());
+		getRequest().getSession().setAttribute("security_param", "Client");
+		actionPerform();
+		
+		setRequestPathInfo("/customerNotesAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("comment", "Notes created");
+		actionPerform();
+		
+		setRequestPathInfo("/customerNotesAction.do");
+		addRequestParameter("method", "create");
+		addRequestParameter("comment", "Notes created");
+		getRequest().getSession().setAttribute("security_param", "Client");
+		actionPerform();
+		verifyForward(ActionForwards.client_detail_page.toString());
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		assertEquals(1, client.getCustomerNotes().size());
+		client = (ClientBO) (HibernateUtil.getSessionTL().get(ClientBO.class,
+				new Integer(client.getCustomerId())));
 	}
 	
 	public void testSearch_Savings() throws HibernateSearchException {

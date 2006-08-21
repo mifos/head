@@ -87,7 +87,7 @@ public class CustomerBusinessService extends BusinessService {
 		return null;
 	}
 
-	public CustomerBO getCustomer(Integer customerId) throws ServiceException {
+	public CustomerBO getCustomer(Integer customerId){
 		return new CustomerPersistence().getCustomer(customerId);
 	}
 
