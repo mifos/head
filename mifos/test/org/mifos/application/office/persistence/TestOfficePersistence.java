@@ -83,4 +83,7 @@ public class TestOfficePersistence extends MifosTestCase {
 		assertEquals(4,officePersistence.getActiveLevels(Short.valueOf("1")).size());
 		
 	}
+	public void testGetStatusList(){
+		assertEquals(2,officePersistence.getStatusList(Short.valueOf("1")).size());
+	}
 }

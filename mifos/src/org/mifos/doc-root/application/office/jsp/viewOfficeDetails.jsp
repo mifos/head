@@ -19,9 +19,9 @@ function goToCancelPage(){
 		
 	offActionForm.submit();
   } 
-  function editOfficeInformationLink(){
-	document.offActionForm.method.value="manage";
-	document.offActionForm.input.value="manage";	
+  function editOfficeInformationLink(id){
+	document.offActionForm.method.value="edit";
+	document.offActionForm.officeLevel.value=id;
 	offActionForm.submit();
   }  
   function  submitAdminLink()
@@ -32,7 +32,7 @@ function goToCancelPage(){
 }
 </script>
 
-		<html-el:form action="/offAction.do" >
+		<html-el:form action="/offAction.do" method="get">
 
 			
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -55,7 +55,7 @@ function goToCancelPage(){
 									<td width="50%" height="23" class="headingorange"><c:out
 										value="${BusinessKey.officeName}"></c:out></td>
 									<td width="50%" align="right">
-									<html-el:link href="javascript:editOfficeInformationLink()"
+									<html-el:link href="javascript:editOfficeInformationLink(${BusinessKey.level.id})"
 										>
 										<mifos:mifoslabel name="Office.labelEditOfficeInfo"
 											/>
@@ -193,8 +193,9 @@ function goToCancelPage(){
 						</tr>
 					</table>
 					<br>
-			<html-el:hidden	property="officeId"	value="${requestScope.OfficeVo.officeId}" />
+			<html-el:hidden	property="officeId"	value="${BusinessKey.officeId}" />
 			<html-el:hidden	property="method"	value="" />
+			<html-el:hidden property="officeLevel" value="${BusinessKey.level.id}"/>
 		</html-el:form>
 
 	</tiles:put>

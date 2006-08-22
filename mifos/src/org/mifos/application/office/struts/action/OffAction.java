@@ -62,8 +62,12 @@ public class OffAction extends BaseAction {
 	public ActionForward loadParent(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		loadParents(request, (OffActionForm) form);
-		return mapping.findForward(ActionForwards.load_success.toString());
+		OffActionForm offActionForm =(OffActionForm) form ;
+		loadParents(request,offActionForm );
+		if (offActionForm.getInput()!=null&&offActionForm.getInput().equals("edit"))
+			return mapping.findForward(ActionForwards.edit_success.toString());
+		else
+			return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
@@ -184,4 +188,23 @@ public class OffAction extends BaseAction {
 						.getConfiguredLevels(getUserContext(request)
 								.getLocaleId()), request.getSession());
 	}
+	private void loadOfficeStatus(HttpServletRequest request)
+			throws ServiceException{
+		SessionUtils.setAttribute(OfficeConstants.OFFICESTATUSLIST,((OfficeBusinessService)getService()).getStatusList(getUserContext(request).getLocaleId()), request.getSession());
+		
+	}
+	public ActionForward edit(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		loadofficeLevels(request);
+		loadParents(request,(OffActionForm)form);
+		loadCreateCustomFields((OffActionForm)form, request);
+		loadOfficeStatus(request);
+		return mapping.findForward(ActionForwards.edit_success.toString());
+	}
+	public ActionForward editPreview(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(ActionForwards.editpreview_success.toString());
+	}		
 }

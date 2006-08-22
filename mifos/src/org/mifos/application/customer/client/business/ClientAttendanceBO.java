@@ -92,9 +92,5 @@ public class ClientAttendanceBO extends BusinessObject {
 		this.customer = customer;
 	}
 
-	@Override
-	public Short getEntityID() {
-		return null;
-	}
 
 }

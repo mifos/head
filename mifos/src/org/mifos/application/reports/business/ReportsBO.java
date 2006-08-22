@@ -49,9 +49,5 @@ public class ReportsBO extends BusinessObject {
 		this.reportsCategoryBO = reportsCategoryBO;
 	}
 
-	@Override
-	public Short getEntityID() {
-		return null;
-	}
-	
+
 }

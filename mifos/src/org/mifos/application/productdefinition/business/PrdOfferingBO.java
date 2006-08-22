@@ -42,6 +42,9 @@ import java.util.Date;
 
 import org.mifos.application.master.util.valueobjects.PrdApplicableMaster;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.application.office.util.helpers.OfficeLevel;
+import org.mifos.application.office.util.helpers.OperationMode;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
@@ -87,7 +90,8 @@ public class PrdOfferingBO extends BusinessObject {
 	
 
 	protected PrdOfferingBO() {
-		office = new OfficeBO();
+		
+		office=new OfficeBO();
 		prdCategory = new ProductCategoryBO();
 		prdStatus = new PrdStatusEntity();
 		prdApplicableMaster = new PrdApplicableMaster();
@@ -138,6 +142,7 @@ public class PrdOfferingBO extends BusinessObject {
 	}
 
 	public OfficeBO getOffice() {
+		
 		return office;
 	}
 
@@ -215,10 +220,5 @@ public class PrdOfferingBO extends BusinessObject {
 
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
-	}
-
-	@Override
-	public Short getEntityID() {
-		return EntityMasterConstants.ProductCategory;
 	}
 }

@@ -27,4 +27,7 @@ public class TestOfficeBusinessService extends MifosTestCase {
 	public void testGetOffice(){
 		assertNotNull(officeBusinessService.getOffice(Short.valueOf("1")));
 	}
+	public void testGetStatusList(){
+		assertEquals(2,officeBusinessService.getStatusList(Short.valueOf("1")).size());
+	}
 }

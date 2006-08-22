@@ -146,9 +146,5 @@ public class COABO extends BusinessObject {
 		return false;
 	}
 
-	@Override
-	public Short getEntityID() {
-		return null;
-	}
 
 }

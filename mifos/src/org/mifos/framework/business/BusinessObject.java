@@ -20,14 +20,10 @@ public abstract class BusinessObject extends PersistentObject{
 	
 	public BusinessObject(){
 		this.userContext = null;
-		if(getEntityID()!=null)
-			this.fieldList=fieldConfig.getEntityFieldMap().get(getEntityID());
 	}
 	
 	protected BusinessObject(UserContext userContext) {
 		this.userContext=userContext;
-		if(getEntityID()!=null)
-			this.fieldList=fieldConfig.getEntityFieldMap().get(getEntityID());
 	}
 	
 	public void setUserContext(UserContext userContext){
@@ -37,9 +33,6 @@ public abstract class BusinessObject extends PersistentObject{
 	public UserContext getUserContext(){
 		return this.userContext;
 	}
-	
-	public abstract Short getEntityID();
-	
 	public List<FieldConfigurationEntity> getMandatoryFieldList(){
 		List<FieldConfigurationEntity> mandatoryFieldList=new ArrayList<FieldConfigurationEntity>();
 		for(FieldConfigurationEntity fieldConfigurationEntity : fieldList){

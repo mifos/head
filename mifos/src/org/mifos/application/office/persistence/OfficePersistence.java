@@ -164,4 +164,13 @@ public class OfficePersistence extends Persistence {
 		return null;
 		
 	}
+	public List<OfficeView> getStatusList(Short localeId){
+		HashMap<String , Object> queryParameters = new HashMap<String , Object>();
+		queryParameters.put("LOCALE_ID",localeId);
+		List<OfficeView> queryResult = executeNamedQuery(NamedQueryConstants.GETOFFICESTATUS,queryParameters);	
+		if(queryResult !=null && queryResult.size()!=0){
+			return queryResult; 
+		}
+		return null;
+	}
 }

@@ -576,10 +576,7 @@ public abstract class CustomerBO extends BusinessObject {
 
 	public abstract boolean isCustomerActive();
 
-	@Override
-	public Short getEntityID() {
-		return EntityMasterConstants.Customer;
-	}
+
 
 	public void generatePortfolioAtRisk() throws PersistenceException,
 			ServiceException {

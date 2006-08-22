@@ -118,10 +118,5 @@ public class RateFeeBO extends FeeBO {
 	public RateAmountFlag getFeeType(){
 		return RateAmountFlag.RATE;
 	}
-	
-	@Override
-	public Short getEntityID() {
-		return EntityMasterConstants.Fees;
-	}
 
 }

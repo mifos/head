@@ -95,9 +95,5 @@ public class OfficeHierarchyEntity extends BusinessObject {
 		this.hierarchyId = null;
 	}
 
-	@Override
-	public Short getEntityID() {
-		return null;
-	}
 
 }

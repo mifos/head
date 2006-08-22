@@ -66,5 +66,8 @@
     <query name="masterdata.activeLevels">
         <![CDATA[select new org.mifos.application.office.business.OfficeView(ol.id,lvl.lookUpValue) from org.mifos.application.office.business.OfficeLevelEntity ol ,org.mifos.application.master.business.LookUpValueLocaleEntity lvl where lvl.lookUpId=ol.lookUpValue.lookUpId and lvl.localeId = :LOCALE_ID and ol.configured=1 and ol.id !=1 order by ol.id  ]]>
     </query>       
+    <query name="masterdata.officestatus">
+        <![CDATA[select new org.mifos.application.office.business.OfficeView(os.id,lvl.lookUpValue) from org.mifos.application.office.business.OfficeStatusEntity os ,org.mifos.application.master.business.LookUpValueLocaleEntity lvl where lvl.lookUpId=os.lookUpValue.lookUpId and lvl.localeId = :LOCALE_ID   ]]>
+    </query>       
     
 </hibernate-mapping>

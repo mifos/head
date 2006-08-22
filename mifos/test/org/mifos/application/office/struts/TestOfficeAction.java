@@ -124,4 +124,14 @@ public class TestOfficeAction extends MifosMockStrutsTestCase {
 		 assertEquals(1,office.getOfficeId().intValue());
 		
 	}
+	public void testEdit(){
+		setRequestPathInfo("/offAction.do");
+		addRequestParameter("method", Methods.edit.toString());
+		actionPerform();
+		verifyForward(ActionForwards.edit_success.toString());
+		
+	}
+	public void testEditPreview(){
+		
+	}
 }

@@ -37,9 +37,4 @@ public class ReportsCategoryBO extends BusinessObject {
 	public void addReports(ReportsBO reportsBO){		
 		this.reportsSet.add(reportsBO);
 	}
-	@Override
-	public Short getEntityID() {
-		return null;
-	}	
-	
 }

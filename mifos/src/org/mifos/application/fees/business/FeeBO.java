@@ -173,10 +173,6 @@ public abstract class FeeBO extends BusinessObject {
 		this.feeStatus = feeStatus;
 	}	
 
-	@Override
-	public Short getEntityID() {
-		return EntityMasterConstants.Fees;
-	}
 	
 	public void updateStatus(FeeStatus status) throws FeeException{
 		if(!this.feeStatus.getId().equals(status.getValue()))

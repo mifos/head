@@ -330,10 +330,7 @@ public class MeetingBO extends BusinessObject {
 
 	}
 
-	@Override
-	public Short getEntityID() {
-		return EntityMasterConstants.Meeting;
-	}
+
 	
 	public boolean isWeekly(){
 		return getMeetingDetails().isWeekly();

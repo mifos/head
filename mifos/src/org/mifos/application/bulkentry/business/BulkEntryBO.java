@@ -341,8 +341,5 @@ public class BulkEntryBO extends BusinessObject {
 		}
 	}
 
-	@Override
-	public Short getEntityID() {
-		return null;
-	}
+
 }

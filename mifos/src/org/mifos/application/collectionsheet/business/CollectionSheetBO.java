@@ -352,8 +352,4 @@ public class CollectionSheetBO extends BusinessObject {
 	}
 
 
-	@Override
-	public Short getEntityID() {
-		return null;
-	}
 }

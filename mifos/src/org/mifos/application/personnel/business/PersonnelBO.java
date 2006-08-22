@@ -321,8 +321,5 @@ public class PersonnelBO extends BusinessObject {
 		this.personnelRoles = personnelRoles;
 	}
 
-	@Override
-	public Short getEntityID() {
-		return EntityMasterConstants.Personnel;
-	}
+
 }

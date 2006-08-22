@@ -461,11 +461,6 @@ public class CollSheetCustBO extends BusinessObject {
 	}
 
 
-	@Override
-	public Short getEntityID() {
-		return null;
-	}
-	
-	
+
 	
 }

@@ -64,6 +64,7 @@ public class OfficeBO extends BusinessObject {
 	private OfficeAddressEntity address;
 
 	public OfficeBO() {
+		super();
 		maxChildCount = null;
 		officeId = null;
 		operationMode = null;
@@ -200,11 +201,6 @@ public class OfficeBO extends BusinessObject {
 	public void setCustomFields(Set<OfficeCustomFieldEntity> customFields) {
 		if (customFields != null)
 			this.customFields = customFields;
-	}
-
-	@Override
-	public Short getEntityID() {
-		return EntityMasterConstants.Office;
 	}
 
 	public void setAddress(OfficeAddressEntity address) throws OfficeException {

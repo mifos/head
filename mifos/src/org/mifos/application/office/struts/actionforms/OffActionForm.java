@@ -26,7 +26,10 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class OffActionForm extends BaseActionForm {
-	ResourceBundle resourceBundle = null;
+	
+	private String input;
+	
+	private ResourceBundle resourceBundle = null;
 
 	private String officeId;
 
@@ -245,5 +248,13 @@ public class OffActionForm extends BaseActionForm {
 			this.parentOfficeId = null;
 		
 
+	}
+
+	public String getInput() {
+		return input;
+	}
+
+	public void setInput(String input) {
+		this.input = input;
 	}
 }

@@ -126,9 +126,5 @@ public class ProductCategoryBO extends BusinessObject {
 	public void setGlobalPrdOfferingNum(String globalPrdOfferingNum) {
 		this.globalPrdOfferingNum = globalPrdOfferingNum;
 	}
-	@Override
-	public Short getEntityID() {
-		return null;
-	}
 
 }

@@ -230,9 +230,6 @@ public class FinancialTransactionBO extends BusinessObject {
 		return financialTrxn;
 	}
 
-	@Override
-	public Short getEntityID() {
-		return null;
-	}
+
 
 }
