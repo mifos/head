@@ -264,6 +264,7 @@ public interface NamedQueryConstants {
 	//For client closedacc, changelog,fee details
 	public String VIEWALLCLIENTCLOSEDACCOUNTS="accounts.viewallclosedaccounts";
 	public String VIEWALLSAVINGSCLOSEDACCOUNTS="accounts.viewallsavingsclosedaccounts";
+	public String VIEWALLCLOSEDACCOUNTS="customer.viewallclosedaccounts";
 	public String GETCLIENTCHARGES="Client.GetClientCharges";
 	public String GETSUMCLIENTDUECHARGES="Client.GetSumClientDueCharges";
 	public String GETSUMCLIENTOVERDUECHARGES="Client.GetSumClientOverDueCharges";

@@ -106,7 +106,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
@@ -1050,6 +1049,8 @@ public class AccountBO extends BusinessObject {
 	}
 	
 	public void changeStatus(Short newStatusId, Short flagId, String comment) throws AccountException {
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+				"In the change status method of AccountBO:: new StatusId= "	+ newStatusId);
 		if (null != getCustomer().getPersonnel().getPersonnelId())
 			checkPermissionForStatusChange(newStatusId, this.getUserContext(),
 					flagId, getOffice().getOfficeId(), getCustomer()
@@ -1081,7 +1082,10 @@ public class AccountBO extends BusinessObject {
 					.getLocaleId());
 			this.addAccountFlag(accountStateFlagEntity);
 		}
-		this.setClosedDate(new Date(System.currentTimeMillis()));
+		if(newStatusId.equals(AccountState.LOANACC_CANCEL.getValue()) || newStatusId.equals(AccountState.LOANACC_OBLIGATIONSMET.getValue()) 
+				|| newStatusId.equals(AccountState.LOANACC_RESCHEDULED.getValue()) || newStatusId.equals(AccountState.LOANACC_WRITTENOFF.getValue()))
+			this.setClosedDate(new Date(System.currentTimeMillis()));
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Coming out successfully from the change status method of AccountBO");
 	}
 	
 	private void checkPermissionForStatusChange(Short newState,

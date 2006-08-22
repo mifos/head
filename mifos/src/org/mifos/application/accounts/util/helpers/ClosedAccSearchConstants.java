@@ -44,6 +44,7 @@ package org.mifos.application.accounts.util.helpers;
 public interface ClosedAccSearchConstants {
 	
 	public String CLOSEDACCOUNTSLIST="ClosedAccountsList";
+	public String CLOSEDLOANACCOUNTSLIST="ClosedLoanAccountsList";
 	public String CLOSEDSAVINGSACCOUNTSLIST="ClosedSavingsAccountsList";
 	public String CLIENTUPCOMINGFEECHARGESLIST="ClientUpcomingFeeChargesList";
 	public String CLIENTRECENTACCACTIVITYLIST="RecentAcctActivityList";

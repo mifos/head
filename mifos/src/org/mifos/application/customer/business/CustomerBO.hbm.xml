@@ -184,5 +184,9 @@
     </query>					  
 	<query name="Customer.getClientBasedOnNameAndDateOfBirth">
 	    <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client where (client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth =:DATE_OFBIRTH and :customerId = 0) or (:customerId != 0 and client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth =:DATE_OFBIRTH and client.customerId !=:customerId)]]>
-    </query>				      	  
+    </query>
+    	<query name="customer.viewallclosedaccounts">
+		<![CDATA[from org.mifos.application.accounts.business.AccountBO account where account.customer.customerId=:customerId
+					and account.accountType.accountTypeId=:accountTypeId and account.accountState.id in(6,7,8,10,15,17) ]]>
+	</query>				      	  
 </hibernate-mapping>

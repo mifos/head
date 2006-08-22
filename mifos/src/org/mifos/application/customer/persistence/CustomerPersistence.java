@@ -567,4 +567,16 @@ public class CustomerPersistence extends Persistence {
 		}
 		return (CustomerPictureEntity)queryResult.get(0);
 	}
+	
+	public List<AccountBO> getAllClosedAccount(Integer customerId, Short accountTypeId) throws PersistenceException{
+		try {
+			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("customerId", customerId);
+			queryParameters.put("accountTypeId", accountTypeId);
+			List queryResult = executeNamedQuery(NamedQueryConstants.VIEWALLCLOSEDACCOUNTS, queryParameters);
+			return queryResult;
+		}catch (HibernateException he) {
+			throw new PersistenceException(he);
+		}
+	}
 }

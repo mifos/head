@@ -375,4 +375,8 @@ public class CustomerBusinessService extends BusinessService {
 				null != flagSelected ? flagSelected.shortValue() : 0,
 				userContext, recordOfficeId, recordLoanOfficerId);
 	}
+	
+	public List<AccountBO> getAllClosedAccount(Integer customerId, Short accountTypeId) throws PersistenceException {
+		return new CustomerPersistence().getAllClosedAccount(customerId,accountTypeId);
+	}
 }

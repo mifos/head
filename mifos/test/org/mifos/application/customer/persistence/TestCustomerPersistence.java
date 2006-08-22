@@ -9,9 +9,13 @@ import java.util.List;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
 import org.mifos.application.bulkentry.exceptions.BulkEntryAccountUpdateException;
 import org.mifos.application.checklist.business.CheckListBO;
@@ -61,17 +65,32 @@ public class TestCustomerPersistence extends MifosTestCase {
 	private CustomerBO group;
 
 	private AccountBO account;
-	
+
+	private LoanBO groupAccount;
+
+	private LoanBO clientAccount;
+
+	private SavingsBO centerSavingsAccount;
+
+	private SavingsBO groupSavingsAccount;
+
+	private SavingsBO clientSavingsAccount;
+
 	private SavingsOfferingBO savingsOffering;
-	
+
 	private CustomerPersistence customerPersistence = new CustomerPersistence();
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 	}
 
 	public void tearDown() {
+		TestObjectFactory.cleanUp(centerSavingsAccount);
+		TestObjectFactory.cleanUp(groupSavingsAccount);
+		TestObjectFactory.cleanUp(clientSavingsAccount);
+		TestObjectFactory.cleanUp(groupAccount);
+		TestObjectFactory.cleanUp(clientAccount);
 		TestObjectFactory.cleanUp(account);
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
@@ -101,8 +120,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 		group = client.getParentCustomer();
 		center = client.getParentCustomer().getParentCustomer();
 		List<CustomerView> customers = customerPersistence
-				.getChildrenForParent(center.getCustomerId(), center.getSearchId(), center
-						.getOffice().getOfficeId());
+				.getChildrenForParent(center.getCustomerId(), center
+						.getSearchId(), center.getOffice().getOfficeId());
 		assertEquals(2, customers.size());
 	}
 
@@ -112,8 +131,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 		group = client.getParentCustomer();
 		center = client.getParentCustomer().getParentCustomer();
 		List<CustomerView> customers = customerPersistence
-				.getChildrenForParent(center.getCustomerId(), center.getSearchId(), center
-						.getOffice().getOfficeId());
+				.getChildrenForParent(center.getCustomerId(), center
+						.getSearchId(), center.getOffice().getOfficeId());
 		assertEquals(2, customers.size());
 	}
 
@@ -155,10 +174,10 @@ public class TestCustomerPersistence extends MifosTestCase {
 	private AccountBO getLoanAccount(CustomerBO group, MeetingBO meeting) {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short
-						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
+				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), Short.valueOf("1"), meeting);
+				Short.valueOf("1"), meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, Short
 				.valueOf("5"), startDate, loanOffering);
 
@@ -172,11 +191,11 @@ public class TestCustomerPersistence extends MifosTestCase {
 				.valueOf(centerStatus), "1.1", meeting, new Date(System
 				.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group", Short
-				.valueOf(groupStatus), center.getSearchId()+".1", center, new Date(System
-				.currentTimeMillis()));
+				.valueOf(groupStatus), center.getSearchId() + ".1", center,
+				new Date(System.currentTimeMillis()));
 		client = TestObjectFactory.createClient("Client", Short
-				.valueOf(clientStatus), group.getSearchId()+".1", group, new Date(System
-				.currentTimeMillis()));
+				.valueOf(clientStatus), group.getSearchId() + ".1", group,
+				new Date(System.currentTimeMillis()));
 		return client;
 	}
 
@@ -207,7 +226,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 	public void testGetSavingsProducts() throws Exception {
 		CustomerPersistence customerPersistence = new CustomerPersistence();
-		
+
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
@@ -224,159 +243,226 @@ public class TestCustomerPersistence extends MifosTestCase {
 		account = TestObjectFactory.createSavingsAccount("432434", center,
 				Short.valueOf("16"), startDate, savingsOffering);
 		List<PrdOfferingBO> productList = customerPersistence
-				.getSavingsProducts(startDate, center.getSearchId(), center.getPersonnel()
-						.getPersonnelId());
+				.getSavingsProducts(startDate, center.getSearchId(), center
+						.getPersonnel().getPersonnelId());
 		assertEquals(1, productList.size());
 	}
 
-	public void testGetChildernForParent()throws Exception {
+	public void testGetChildernForParent() throws Exception {
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 		center = createCenter();
-		group = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE, center.getSearchId()+".1", center, new Date(System
-				.currentTimeMillis()));
-		client = TestObjectFactory.createClient("client1",ClientConstants.STATUS_ACTIVE,group.getSearchId()+".1",group,new Date(System
-				.currentTimeMillis()));
-		ClientBO client2 = TestObjectFactory.createClient("client2",ClientConstants.STATUS_CLOSED, group.getSearchId()+".2",group,new Date(System
-				.currentTimeMillis()));
-		ClientBO client3 = TestObjectFactory.createClient("client3",ClientConstants.STATUS_CANCELLED, group.getSearchId()+".3",group,new Date(System
-				.currentTimeMillis()));
-		ClientBO client4 = TestObjectFactory.createClient("client4",ClientConstants.STATUS_PENDING, group.getSearchId()+".4" ,group,new Date(System
-				.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE,
+				center.getSearchId() + ".1", center, new Date(System
+						.currentTimeMillis()));
+		client = TestObjectFactory.createClient("client1",
+				ClientConstants.STATUS_ACTIVE, group.getSearchId() + ".1",
+				group, new Date(System.currentTimeMillis()));
+		ClientBO client2 = TestObjectFactory.createClient("client2",
+				ClientConstants.STATUS_CLOSED, group.getSearchId() + ".2",
+				group, new Date(System.currentTimeMillis()));
+		ClientBO client3 = TestObjectFactory.createClient("client3",
+				ClientConstants.STATUS_CANCELLED, group.getSearchId() + ".3",
+				group, new Date(System.currentTimeMillis()));
+		ClientBO client4 = TestObjectFactory.createClient("client4",
+				ClientConstants.STATUS_PENDING, group.getSearchId() + ".4",
+				group, new Date(System.currentTimeMillis()));
 
-		List<CustomerBO> customerList = customerPersistence.getChildrenForParent(center.getSearchId(),center.getOffice().getOfficeId(),CustomerConstants.CLIENT_LEVEL_ID);
-		assertEquals(new Integer("3").intValue(),customerList.size());
-		
-		for(CustomerBO customer:customerList){
-			if(customer.getCustomerId().intValue()==client3.getCustomerId().intValue())
+		List<CustomerBO> customerList = customerPersistence
+				.getChildrenForParent(center.getSearchId(), center.getOffice()
+						.getOfficeId(), CustomerConstants.CLIENT_LEVEL_ID);
+		assertEquals(new Integer("3").intValue(), customerList.size());
+
+		for (CustomerBO customer : customerList) {
+			if (customer.getCustomerId().intValue() == client3.getCustomerId()
+					.intValue())
 				assertTrue(true);
 		}
 		TestObjectFactory.cleanUp(client2);
 		TestObjectFactory.cleanUp(client3);
 		TestObjectFactory.cleanUp(client4);
 	}
-	
-	public void testRetrieveSavingsAccountForCustomer()throws Exception{
+
+	public void testRetrieveSavingsAccountForCustomer() throws Exception {
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 		center = createCenter();
-		group = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE, center.getSearchId()+".1", center, new Date(System
-				.currentTimeMillis()));
-		MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1",Short.valueOf("2"),new Date(System.currentTimeMillis()),
-				Short.valueOf("2"),300.0,Short.valueOf("1"),1.2,200.0,200.0,Short.valueOf("2"),Short.valueOf("1"),meetingIntCalc,meetingIntPost);
+		group = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE,
+				center.getSearchId() + ".1", center, new Date(System
+						.currentTimeMillis()));
+		MeetingBO meetingIntCalc = TestObjectFactory
+				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		MeetingBO meetingIntPost = TestObjectFactory
+				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1",
+				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
+						.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0,
+				200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc,
+				meetingIntPost);
 		UserContext uc = new UserContext();
 		uc.setId(Short.valueOf("1"));
-		account = TestObjectFactory.createSavingsAccount("000100000000020",group, AccountStates.SAVINGS_ACC_APPROVED ,new java.util.Date(),savingsOffering,uc);
+		account = TestObjectFactory.createSavingsAccount("000100000000020",
+				group, AccountStates.SAVINGS_ACC_APPROVED,
+				new java.util.Date(), savingsOffering, uc);
 		HibernateUtil.closeSession();
-		List<SavingsBO> savingsList=customerPersistence.retrieveSavingsAccountForCustomer(group.getCustomerId());
+		List<SavingsBO> savingsList = customerPersistence
+				.retrieveSavingsAccountForCustomer(group.getCustomerId());
 		assertNotNull(savingsList);
-		assertEquals(Integer.valueOf("1").intValue(),savingsList.size());
+		assertEquals(Integer.valueOf("1").intValue(), savingsList.size());
 		account = savingsList.get(0);
 		group = account.getCustomer();
 		center = group.getParentCustomer();
 	}
-	public void testNumberOfMeetingsAttended() throws HibernateProcessException, NumberFormatException, BulkEntryAccountUpdateException{
-		
+
+	public void testNumberOfMeetingsAttended()
+			throws HibernateProcessException, NumberFormatException,
+			BulkEntryAccountUpdateException {
+
 		BulkEntryBusinessService bulkEntryBusinessService = new BulkEntryBusinessService();
 
-		center=createCenter();
-		group=TestObjectFactory.createGroup("Group",Short.valueOf("9"), center.getSearchId()+".1" ,center,new Date(System.currentTimeMillis()));
-		client = TestObjectFactory.createClient("Client",Short.valueOf("3"),group.getSearchId()+".1",group,new Date(System.currentTimeMillis()));
-		
-		bulkEntryBusinessService.saveAttendance(client.getCustomerId(),new Date(System.currentTimeMillis()),Short.valueOf("2"));
+		center = createCenter();
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				center.getSearchId() + ".1", center, new Date(System
+						.currentTimeMillis()));
+		client = TestObjectFactory.createClient("Client", Short.valueOf("3"),
+				group.getSearchId() + ".1", group, new Date(System
+						.currentTimeMillis()));
+
+		bulkEntryBusinessService.saveAttendance(client.getCustomerId(),
+				new Date(System.currentTimeMillis()), Short.valueOf("2"));
 		HibernateUtil.commitTransaction();
-		
-		bulkEntryBusinessService.saveAttendance(client.getCustomerId(),new Date(System.currentTimeMillis()),Short.valueOf("1"));
+
+		bulkEntryBusinessService.saveAttendance(client.getCustomerId(),
+				new Date(System.currentTimeMillis()), Short.valueOf("1"));
 		HibernateUtil.commitTransaction();
-		
+
 		Calendar currentDate = new GregorianCalendar();
-		currentDate.roll(Calendar.DATE,1);
-		
-		bulkEntryBusinessService.saveAttendance(client.getCustomerId(),new Date(currentDate.getTimeInMillis()),Short.valueOf("4"));
+		currentDate.roll(Calendar.DATE, 1);
+
+		bulkEntryBusinessService.saveAttendance(client.getCustomerId(),
+				new Date(currentDate.getTimeInMillis()), Short.valueOf("4"));
 		HibernateUtil.commitTransaction();
 
 		CustomerPersistence customerPersistence = new CustomerPersistence();
-		CustomerPerformanceHistoryView customerPerformanceHistoryView = customerPersistence.numberOfMeetings(true,client.getCustomerId());		
-		assertEquals(2,customerPerformanceHistoryView.getMeetingsAttended().intValue());
+		CustomerPerformanceHistoryView customerPerformanceHistoryView = customerPersistence
+				.numberOfMeetings(true, client.getCustomerId());
+		assertEquals(2, customerPerformanceHistoryView.getMeetingsAttended()
+				.intValue());
 		HibernateUtil.closeSession();
-		client = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
+		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+				client.getCustomerId());
 	}
-	
-	public void testNumberOfMeetingsMissed() throws HibernateProcessException, NumberFormatException, BulkEntryAccountUpdateException{
+
+	public void testNumberOfMeetingsMissed() throws HibernateProcessException,
+			NumberFormatException, BulkEntryAccountUpdateException {
 		BulkEntryBusinessService bulkEntryBusinessService = new BulkEntryBusinessService();
-		
-		center=createCenter();
-		group=TestObjectFactory.createGroup("Group",Short.valueOf("9"),"1.1.1",center,new Date(System.currentTimeMillis()));
-		client = TestObjectFactory.createClient("Client",Short.valueOf("3"),"1.1.1.1",group,new Date(System.currentTimeMillis()));
-		
-		bulkEntryBusinessService.saveAttendance(client.getCustomerId(),new Date(System.currentTimeMillis()),Short.valueOf("1"));
+
+		center = createCenter();
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		client = TestObjectFactory.createClient("Client", Short.valueOf("3"),
+				"1.1.1.1", group, new Date(System.currentTimeMillis()));
+
+		bulkEntryBusinessService.saveAttendance(client.getCustomerId(),
+				new Date(System.currentTimeMillis()), Short.valueOf("1"));
 		HibernateUtil.commitTransaction();
-		
-		bulkEntryBusinessService.saveAttendance(client.getCustomerId(),new Date(System.currentTimeMillis()),Short.valueOf("2"));
+
+		bulkEntryBusinessService.saveAttendance(client.getCustomerId(),
+				new Date(System.currentTimeMillis()), Short.valueOf("2"));
 		HibernateUtil.commitTransaction();
-		
+
 		Calendar currentDate = new GregorianCalendar();
-		currentDate.roll(Calendar.DATE,1);
-		bulkEntryBusinessService.saveAttendance(client.getCustomerId(),new Date(currentDate.getTimeInMillis()),Short.valueOf("3"));
+		currentDate.roll(Calendar.DATE, 1);
+		bulkEntryBusinessService.saveAttendance(client.getCustomerId(),
+				new Date(currentDate.getTimeInMillis()), Short.valueOf("3"));
 		HibernateUtil.commitTransaction();
 
 		CustomerPersistence customerPersistence = new CustomerPersistence();
-		CustomerPerformanceHistoryView customerPerformanceHistoryView = customerPersistence.numberOfMeetings(false,client.getCustomerId());		
-		assertEquals(2,customerPerformanceHistoryView.getMeetingsMissed().intValue());	
+		CustomerPerformanceHistoryView customerPerformanceHistoryView = customerPersistence
+				.numberOfMeetings(false, client.getCustomerId());
+		assertEquals(2, customerPerformanceHistoryView.getMeetingsMissed()
+				.intValue());
 		HibernateUtil.closeSession();
-		client = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
+		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+				client.getCustomerId());
 	}
 
-	
-	public void testLastLoanAmount() throws PersistenceException{		
-		center=createCenter();
-		group=TestObjectFactory.createGroup("Group",Short.valueOf("9"),"1.1.1",center,new Date(System.currentTimeMillis()));
-		client = TestObjectFactory.createClient("Client",Short.valueOf("3"),"1.1.1.1",group,new Date(System.currentTimeMillis()));
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", Short.valueOf("2"),new Date(System.currentTimeMillis()), Short.valueOf("1"),300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
-		LoanBO loanBO = TestObjectFactory.createLoanAccount("42423142341", client, Short.valueOf("5"), new Date(System.currentTimeMillis()),loanOffering);
+	public void testLastLoanAmount() throws PersistenceException {
+		center = createCenter();
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		client = TestObjectFactory.createClient("Client", Short.valueOf("3"),
+				"1.1.1.1", group, new Date(System.currentTimeMillis()));
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"),
+				new Date(System.currentTimeMillis()), Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
+		LoanBO loanBO = TestObjectFactory.createLoanAccount("42423142341",
+				client, Short.valueOf("5"),
+				new Date(System.currentTimeMillis()), loanOffering);
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
-		account=(AccountBO)HibernateUtil.getSessionTL().get(LoanBO.class,loanBO.getAccountId());		
-		AccountStateEntity accountStateEntity = new AccountStateEntity(Short.valueOf("6"));		
-		AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity = new AccountStatusChangeHistoryEntity(account.getAccountState(),accountStateEntity,center.getPersonnel());
+		account = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class,
+				loanBO.getAccountId());
+		AccountStateEntity accountStateEntity = new AccountStateEntity(Short
+				.valueOf("6"));
+		AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity = new AccountStatusChangeHistoryEntity(
+				account.getAccountState(), accountStateEntity, center
+						.getPersonnel());
 		account.addAccountStatusChangeHistory(accountStatusChangeHistoryEntity);
-		account.setAccountState(accountStateEntity);				
-		TestObjectFactory.updateObject(account);			
-		CustomerPersistence customerPersistence = new CustomerPersistence();				
-		CustomerPerformanceHistoryView customerPerformanceHistoryView = customerPersistence.getLastLoanAmount(client.getCustomerId());		
-		assertEquals("300.0",customerPerformanceHistoryView.getLastLoanAmount());
-	}	
-	
-	public void testFindBySystemId() throws PersistenceException, ServiceException {
-		center = createCenter();
-		group=TestObjectFactory.createGroup("Group_Active_test",Short.valueOf("9"),"1.1.1",center,new Date(System.currentTimeMillis()));
-		GroupBO groupBO = (GroupBO)customerPersistence.findBySystemId(group.getGlobalCustNum());
-		assertEquals(groupBO.getDisplayName(),group.getDisplayName());
+		account.setAccountState(accountStateEntity);
+		TestObjectFactory.updateObject(account);
+		CustomerPersistence customerPersistence = new CustomerPersistence();
+		CustomerPerformanceHistoryView customerPerformanceHistoryView = customerPersistence
+				.getLastLoanAmount(client.getCustomerId());
+		assertEquals("300.0", customerPerformanceHistoryView
+				.getLastLoanAmount());
 	}
-	public void testGetBySystemId() throws PersistenceException, ServiceException {
+
+	public void testFindBySystemId() throws PersistenceException,
+			ServiceException {
 		center = createCenter();
-		group=TestObjectFactory.createGroup("Group_Active_test",Short.valueOf("9"),"1.1.1",center,new Date(System.currentTimeMillis()));
-		GroupBO groupBO = (GroupBO)customerPersistence.getBySystemId(group.getGlobalCustNum(),group.getCustomerLevel().getId());
-		assertEquals(groupBO.getDisplayName(),group.getDisplayName());
-	}	
-	public void testOptionalCustomerStates() throws Exception{
-		assertEquals(Integer.valueOf(0).intValue(),customerPersistence.getCustomerStates(Short.valueOf("0")).size());
-	}
-	public void testCustomerStatesInUse() throws Exception{
-		assertEquals(Integer.valueOf(14).intValue(),customerPersistence.getCustomerStates(Short.valueOf("1")).size());
-	}
-	
-	public void testGetCustomersWithUpdatedMeetings() throws Exception{
-		center = createCenter();
-		group = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE, "1.4.1", center, new Date(System
+		group = TestObjectFactory.createGroup("Group_Active_test", Short
+				.valueOf("9"), "1.1.1", center, new Date(System
 				.currentTimeMillis()));
+		GroupBO groupBO = (GroupBO) customerPersistence.findBySystemId(group
+				.getGlobalCustNum());
+		assertEquals(groupBO.getDisplayName(), group.getDisplayName());
+	}
+
+	public void testGetBySystemId() throws PersistenceException,
+			ServiceException {
+		center = createCenter();
+		group = TestObjectFactory.createGroup("Group_Active_test", Short
+				.valueOf("9"), "1.1.1", center, new Date(System
+				.currentTimeMillis()));
+		GroupBO groupBO = (GroupBO) customerPersistence.getBySystemId(group
+				.getGlobalCustNum(), group.getCustomerLevel().getId());
+		assertEquals(groupBO.getDisplayName(), group.getDisplayName());
+	}
+
+	public void testOptionalCustomerStates() throws Exception {
+		assertEquals(Integer.valueOf(0).intValue(), customerPersistence
+				.getCustomerStates(Short.valueOf("0")).size());
+	}
+
+	public void testCustomerStatesInUse() throws Exception {
+		assertEquals(Integer.valueOf(14).intValue(), customerPersistence
+				.getCustomerStates(Short.valueOf("1")).size());
+	}
+
+	public void testGetCustomersWithUpdatedMeetings() throws Exception {
+		center = createCenter();
+		group = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE,
+				"1.4.1", center, new Date(System.currentTimeMillis()));
 		group.getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
 		TestObjectFactory.updateObject(group);
-		List<Integer> customerIds = customerPersistence.getCustomersWithUpdatedMeetings();
-		assertEquals(1,customerIds.size());
-		
+		List<Integer> customerIds = customerPersistence
+				.getCustomersWithUpdatedMeetings();
+		assertEquals(1, customerIds.size());
+
 	}
-	
+
 	private AccountBO getSavingsAccount(CustomerBO customer, MeetingBO meeting) {
 		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meetingIntCalc = TestObjectFactory
@@ -384,50 +470,66 @@ public class TestCustomerPersistence extends MifosTestCase {
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		SavingsOfferingBO savingsOffering = TestObjectFactory
-		.createSavingsOffering("SavingPrd1", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short
-						.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
-				200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),
-				meetingIntCalc, meetingIntPost);
-		return TestObjectFactory.createSavingsAccount("432434", customer,
-				Short.valueOf("16"), startDate, savingsOffering);
+				.createSavingsOffering("SavingPrd1", Short.valueOf("2"),
+						new Date(System.currentTimeMillis()), Short
+								.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
+						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),
+						meetingIntCalc, meetingIntPost);
+		return TestObjectFactory.createSavingsAccount("432434", customer, Short
+				.valueOf("16"), startDate, savingsOffering);
 
 	}
-	
-	public void testRetrieveAllLoanAccountUnderCustomer() throws PersistenceException {
+
+	public void testRetrieveAllLoanAccountUnderCustomer()
+			throws PersistenceException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = createCenter("center");
-		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE, center.getSearchId()+".1", center, new Date(System
-				.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
+				center.getSearchId() + ".1", center, new Date(System
+						.currentTimeMillis()));
 		CenterBO center1 = createCenter("center1");
-		GroupBO group1 = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE, center1.getSearchId()+".1", center1, new Date(System
-				.currentTimeMillis()));
-		client = TestObjectFactory.createClient("client1",ClientConstants.STATUS_ACTIVE,group.getSearchId()+".1",group,new Date(System
-				.currentTimeMillis()));
-		ClientBO client2 = TestObjectFactory.createClient("client2",CustomerStatus.CLIENT_ACTIVE.getValue(),group.getSearchId()+".2",group,new Date(System
-				.currentTimeMillis()));
-		ClientBO client3 = TestObjectFactory.createClient("client3",CustomerStatus.CLIENT_ACTIVE.getValue(),group1.getSearchId()+".1",group1,new Date(System
-				.currentTimeMillis()));
+		GroupBO group1 = TestObjectFactory.createGroup("Group1",
+				GroupConstants.ACTIVE, center1.getSearchId() + ".1", center1,
+				new Date(System.currentTimeMillis()));
+		client = TestObjectFactory.createClient("client1",
+				ClientConstants.STATUS_ACTIVE, group.getSearchId() + ".1",
+				group, new Date(System.currentTimeMillis()));
+		ClientBO client2 = TestObjectFactory.createClient("client2",
+				CustomerStatus.CLIENT_ACTIVE.getValue(), group.getSearchId()
+						+ ".2", group, new Date(System.currentTimeMillis()));
+		ClientBO client3 = TestObjectFactory.createClient("client3",
+				CustomerStatus.CLIENT_ACTIVE.getValue(), group1.getSearchId()
+						+ ".1", group1, new Date(System.currentTimeMillis()));
 		account = getLoanAccount(group, meeting);
 		AccountBO account1 = getLoanAccount(client, meeting);
 		AccountBO account2 = getLoanAccount(client2, meeting);
 		AccountBO account3 = getLoanAccount(client3, meeting);
 		AccountBO account4 = getLoanAccount(group1, meeting);
-		
-		client2.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.CLIENT_CLOSED));
+
+		client2.setCustomerStatus(new CustomerStatusEntity(
+				CustomerStatus.CLIENT_CLOSED));
 		TestObjectFactory.updateObject(client2);
-		client2 =(ClientBO) TestObjectFactory.getObject(ClientBO.class,client2.getCustomerId());
-		client3.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.CLIENT_CANCELLED));
+		client2 = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
+				client2.getCustomerId());
+		client3.setCustomerStatus(new CustomerStatusEntity(
+				CustomerStatus.CLIENT_CANCELLED));
 		TestObjectFactory.updateObject(client3);
-		client3 =(ClientBO) TestObjectFactory.getObject(ClientBO.class,client3.getCustomerId());
-		
-		List<AccountBO> loansForCenter = customerPersistence.retrieveAccountsUnderCustomer(center.getSearchId(),Short.valueOf("3"),Short.valueOf("1"));
-		assertEquals(3,loansForCenter.size());
-		List<AccountBO> loansForGroup = customerPersistence.retrieveAccountsUnderCustomer(group.getSearchId(),Short.valueOf("3"),Short.valueOf("1"));
-		assertEquals(3,loansForGroup.size());
-		List<AccountBO> loansForClient = customerPersistence.retrieveAccountsUnderCustomer(client.getSearchId(),Short.valueOf("3"),Short.valueOf("1"));
-		assertEquals(1,loansForClient.size());
+		client3 = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
+				client3.getCustomerId());
+
+		List<AccountBO> loansForCenter = customerPersistence
+				.retrieveAccountsUnderCustomer(center.getSearchId(), Short
+						.valueOf("3"), Short.valueOf("1"));
+		assertEquals(3, loansForCenter.size());
+		List<AccountBO> loansForGroup = customerPersistence
+				.retrieveAccountsUnderCustomer(group.getSearchId(), Short
+						.valueOf("3"), Short.valueOf("1"));
+		assertEquals(3, loansForGroup.size());
+		List<AccountBO> loansForClient = customerPersistence
+				.retrieveAccountsUnderCustomer(client.getSearchId(), Short
+						.valueOf("3"), Short.valueOf("1"));
+		assertEquals(1, loansForClient.size());
 
 		TestObjectFactory.cleanUp(account4);
 		TestObjectFactory.cleanUp(account3);
@@ -438,22 +540,28 @@ public class TestCustomerPersistence extends MifosTestCase {
 		TestObjectFactory.cleanUp(group1);
 		TestObjectFactory.cleanUp(center1);
 	}
-	
-	public void testRetrieveAllSavingsAccountUnderCustomer() throws PersistenceException {
+
+	public void testRetrieveAllSavingsAccountUnderCustomer()
+			throws PersistenceException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = createCenter("new_center");
-		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE, center.getSearchId()+".1", center, new Date(System
-				.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
+				center.getSearchId() + ".1", center, new Date(System
+						.currentTimeMillis()));
 		CenterBO center1 = createCenter("new_center1");
-		GroupBO group1 = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE, center1.getSearchId()+".1" , center1, new Date(System
-				.currentTimeMillis()));
-		client = TestObjectFactory.createClient("client1",ClientConstants.STATUS_ACTIVE,group.getSearchId()+".1",group,new Date(System
-				.currentTimeMillis()));
-		ClientBO client2 = TestObjectFactory.createClient("client2",ClientConstants.STATUS_CLOSED,group.getSearchId()+".2",group,new Date(System
-				.currentTimeMillis()));
-		ClientBO client3 = TestObjectFactory.createClient("client3",ClientConstants.STATUS_CANCELLED,group1.getSearchId()+".1",group1,new Date(System
-				.currentTimeMillis()));
+		GroupBO group1 = TestObjectFactory.createGroup("Group1",
+				GroupConstants.ACTIVE, center1.getSearchId() + ".1", center1,
+				new Date(System.currentTimeMillis()));
+		client = TestObjectFactory.createClient("client1",
+				ClientConstants.STATUS_ACTIVE, group.getSearchId() + ".1",
+				group, new Date(System.currentTimeMillis()));
+		ClientBO client2 = TestObjectFactory.createClient("client2",
+				ClientConstants.STATUS_CLOSED, group.getSearchId() + ".2",
+				group, new Date(System.currentTimeMillis()));
+		ClientBO client3 = TestObjectFactory.createClient("client3",
+				ClientConstants.STATUS_CANCELLED, group1.getSearchId() + ".1",
+				group1, new Date(System.currentTimeMillis()));
 		account = getSavingsAccount(center, meeting);
 		AccountBO account1 = getSavingsAccount(client, meeting);
 		AccountBO account2 = getSavingsAccount(client2, meeting);
@@ -461,15 +569,20 @@ public class TestCustomerPersistence extends MifosTestCase {
 		AccountBO account4 = getSavingsAccount(group1, meeting);
 		AccountBO account5 = getSavingsAccount(group, meeting);
 		AccountBO account6 = getSavingsAccount(center1, meeting);
-		
-		List<AccountBO> savingsForCenter = customerPersistence.retrieveAccountsUnderCustomer(center.getSearchId(),Short.valueOf("3"),Short.valueOf("2"));
-		assertEquals(4,savingsForCenter.size());
-		List<AccountBO> savingsForGroup = customerPersistence.retrieveAccountsUnderCustomer(group.getSearchId(),Short.valueOf("3"),Short.valueOf("2"));
-		assertEquals(3,savingsForGroup.size());
-		List<AccountBO> savingsForClient = customerPersistence.retrieveAccountsUnderCustomer(client.getSearchId(),Short.valueOf("3"),Short.valueOf("2"));
-		assertEquals(1,savingsForClient.size());
-		
-		
+
+		List<AccountBO> savingsForCenter = customerPersistence
+				.retrieveAccountsUnderCustomer(center.getSearchId(), Short
+						.valueOf("3"), Short.valueOf("2"));
+		assertEquals(4, savingsForCenter.size());
+		List<AccountBO> savingsForGroup = customerPersistence
+				.retrieveAccountsUnderCustomer(group.getSearchId(), Short
+						.valueOf("3"), Short.valueOf("2"));
+		assertEquals(3, savingsForGroup.size());
+		List<AccountBO> savingsForClient = customerPersistence
+				.retrieveAccountsUnderCustomer(client.getSearchId(), Short
+						.valueOf("3"), Short.valueOf("2"));
+		assertEquals(1, savingsForClient.size());
+
 		TestObjectFactory.cleanUp(account3);
 		TestObjectFactory.cleanUp(account2);
 		TestObjectFactory.cleanUp(account1);
@@ -481,152 +594,280 @@ public class TestCustomerPersistence extends MifosTestCase {
 		TestObjectFactory.cleanUp(account6);
 		TestObjectFactory.cleanUp(center1);
 	}
-	
-	public void testGetAllChildrenForParent() throws NumberFormatException, PersistenceException {
+
+	public void testGetAllChildrenForParent() throws NumberFormatException,
+			PersistenceException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = createCenter("Center");
-		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE, center.getSearchId()+".1", center, new Date(System
-				.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
+				center.getSearchId() + ".1", center, new Date(System
+						.currentTimeMillis()));
 		CenterBO center1 = createCenter("center11");
-		GroupBO group1 = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE, center1.getSearchId()+".1", center1, new Date(System
-				.currentTimeMillis()));
-		client = TestObjectFactory.createClient("client1",ClientConstants.STATUS_ACTIVE,group.getSearchId()+".1",group,new Date(System
-				.currentTimeMillis()));
-		ClientBO client2 = TestObjectFactory.createClient("client2",ClientConstants.STATUS_CLOSED,group.getSearchId()+".2",group,new Date(System
-				.currentTimeMillis()));
-		ClientBO client3 = TestObjectFactory.createClient("client3",ClientConstants.STATUS_CANCELLED,group1.getSearchId()+".1",group1,new Date(System
-				.currentTimeMillis()));
-		
-		List<CustomerBO> customerList1 = customerPersistence.getAllChildrenForParent(center.getSearchId(),Short.valueOf("3"),CustomerConstants.CENTER_LEVEL_ID);
-		assertEquals(2,customerList1.size());
-		List<CustomerBO> customerList2 = customerPersistence.getAllChildrenForParent(center.getSearchId(),Short.valueOf("3"),CustomerConstants.GROUP_LEVEL_ID);
-		assertEquals(1,customerList2.size());
-		
+		GroupBO group1 = TestObjectFactory.createGroup("Group1",
+				GroupConstants.ACTIVE, center1.getSearchId() + ".1", center1,
+				new Date(System.currentTimeMillis()));
+		client = TestObjectFactory.createClient("client1",
+				ClientConstants.STATUS_ACTIVE, group.getSearchId() + ".1",
+				group, new Date(System.currentTimeMillis()));
+		ClientBO client2 = TestObjectFactory.createClient("client2",
+				ClientConstants.STATUS_CLOSED, group.getSearchId() + ".2",
+				group, new Date(System.currentTimeMillis()));
+		ClientBO client3 = TestObjectFactory.createClient("client3",
+				ClientConstants.STATUS_CANCELLED, group1.getSearchId() + ".1",
+				group1, new Date(System.currentTimeMillis()));
+
+		List<CustomerBO> customerList1 = customerPersistence
+				.getAllChildrenForParent(center.getSearchId(), Short
+						.valueOf("3"), CustomerConstants.CENTER_LEVEL_ID);
+		assertEquals(2, customerList1.size());
+		List<CustomerBO> customerList2 = customerPersistence
+				.getAllChildrenForParent(center.getSearchId(), Short
+						.valueOf("3"), CustomerConstants.GROUP_LEVEL_ID);
+		assertEquals(1, customerList2.size());
+
 		TestObjectFactory.cleanUp(client3);
 		TestObjectFactory.cleanUp(client2);
 		TestObjectFactory.cleanUp(group1);
 		TestObjectFactory.cleanUp(center1);
 	}
-	
-	public void testGetChildrenForParent() throws NumberFormatException, SystemException, ApplicationException {
+
+	public void testGetChildrenForParent() throws NumberFormatException,
+			SystemException, ApplicationException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = createCenter("center");
-		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE, center.getSearchId()+".1", center, new Date(System
-				.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
+				center.getSearchId() + ".1", center, new Date(System
+						.currentTimeMillis()));
 		CenterBO center1 = createCenter("center1");
-		GroupBO group1 = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE, center1.getSearchId()+".1", center1, new Date(System
-				.currentTimeMillis()));
-		client = TestObjectFactory.createClient("client1",ClientConstants.STATUS_ACTIVE,group.getSearchId()+".1",group,new Date(System
-				.currentTimeMillis()));
-		ClientBO client2 = TestObjectFactory.createClient("client2",ClientConstants.STATUS_CLOSED,group.getSearchId()+".2",group,new Date(System
-				.currentTimeMillis()));
-		ClientBO client3 = TestObjectFactory.createClient("client3",ClientConstants.STATUS_CANCELLED,group1.getSearchId()+".1",group1,new Date(System
-				.currentTimeMillis()));
-		List<Integer> customerIds = customerPersistence.getChildrenForParent(center.getSearchId(),Short.valueOf("3"));
-		assertEquals(3,customerIds.size());
-		CustomerBO customer = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,customerIds.get(0));
-		assertEquals("Group",customer.getDisplayName());
-		customer = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,customerIds.get(1));
-		assertEquals("client1",customer.getDisplayName());
-		customer = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,customerIds.get(2));
-		assertEquals("client2",customer.getDisplayName());
-		
-		
+		GroupBO group1 = TestObjectFactory.createGroup("Group1",
+				GroupConstants.ACTIVE, center1.getSearchId() + ".1", center1,
+				new Date(System.currentTimeMillis()));
+		client = TestObjectFactory.createClient("client1",
+				ClientConstants.STATUS_ACTIVE, group.getSearchId() + ".1",
+				group, new Date(System.currentTimeMillis()));
+		ClientBO client2 = TestObjectFactory.createClient("client2",
+				ClientConstants.STATUS_CLOSED, group.getSearchId() + ".2",
+				group, new Date(System.currentTimeMillis()));
+		ClientBO client3 = TestObjectFactory.createClient("client3",
+				ClientConstants.STATUS_CANCELLED, group1.getSearchId() + ".1",
+				group1, new Date(System.currentTimeMillis()));
+		List<Integer> customerIds = customerPersistence.getChildrenForParent(
+				center.getSearchId(), Short.valueOf("3"));
+		assertEquals(3, customerIds.size());
+		CustomerBO customer = (CustomerBO) TestObjectFactory.getObject(
+				CustomerBO.class, customerIds.get(0));
+		assertEquals("Group", customer.getDisplayName());
+		customer = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+				customerIds.get(1));
+		assertEquals("client1", customer.getDisplayName());
+		customer = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+				customerIds.get(2));
+		assertEquals("client2", customer.getDisplayName());
+
 		TestObjectFactory.cleanUp(client3);
 		TestObjectFactory.cleanUp(client2);
 		TestObjectFactory.cleanUp(group1);
 		TestObjectFactory.cleanUp(center1);
 	}
-	
-	public void testGetCustomers() throws NumberFormatException, SystemException, ApplicationException {
+
+	public void testGetCustomers() throws NumberFormatException,
+			SystemException, ApplicationException {
 		center = createCenter("center");
-		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE, center.getSearchId()+".1", center, new Date(System
-				.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
+				center.getSearchId() + ".1", center, new Date(System
+						.currentTimeMillis()));
 		CenterBO center1 = createCenter("center11");
-		GroupBO group1 = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE, center1.getSearchId()+".1", center1, new Date(System
-				.currentTimeMillis()));
-		client = TestObjectFactory.createClient("client1",ClientConstants.STATUS_ACTIVE,group.getSearchId()+".1",group,new Date(System
-				.currentTimeMillis()));
-		ClientBO client2 = TestObjectFactory.createClient("client2",ClientConstants.STATUS_CLOSED,group.getSearchId()+".2",group,new Date(System
-				.currentTimeMillis()));
-		ClientBO client3 = TestObjectFactory.createClient("client3",ClientConstants.STATUS_CANCELLED,group1.getSearchId()+".1",group1,new Date(System
-				.currentTimeMillis()));
-		List<Integer> customerIds = customerPersistence.getCustomers(Short.valueOf("3"));
-		assertEquals(2,customerIds.size());
-	
+		GroupBO group1 = TestObjectFactory.createGroup("Group1",
+				GroupConstants.ACTIVE, center1.getSearchId() + ".1", center1,
+				new Date(System.currentTimeMillis()));
+		client = TestObjectFactory.createClient("client1",
+				ClientConstants.STATUS_ACTIVE, group.getSearchId() + ".1",
+				group, new Date(System.currentTimeMillis()));
+		ClientBO client2 = TestObjectFactory.createClient("client2",
+				ClientConstants.STATUS_CLOSED, group.getSearchId() + ".2",
+				group, new Date(System.currentTimeMillis()));
+		ClientBO client3 = TestObjectFactory.createClient("client3",
+				ClientConstants.STATUS_CANCELLED, group1.getSearchId() + ".1",
+				group1, new Date(System.currentTimeMillis()));
+		List<Integer> customerIds = customerPersistence.getCustomers(Short
+				.valueOf("3"));
+		assertEquals(2, customerIds.size());
+
 		TestObjectFactory.cleanUp(client3);
 		TestObjectFactory.cleanUp(client2);
 		TestObjectFactory.cleanUp(group1);
 		TestObjectFactory.cleanUp(center1);
 	}
-	
-	public void testGetCustomerChecklist() throws NumberFormatException, SystemException, ApplicationException {
-		
+
+	public void testGetCustomerChecklist() throws NumberFormatException,
+			SystemException, ApplicationException {
+
 		center = createCenter("center");
-		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE, "1.4.1", center, new Date(System
-				.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
+				"1.4.1", center, new Date(System.currentTimeMillis()));
 		client = TestObjectFactory.createClient("client1",
 				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
 						System.currentTimeMillis()));
-		CustomerCheckListBO checklistCenter = TestObjectFactory.createCustomerChecklist(center.getCustomerLevel().getId(),center.getCustomerStatus().getId(),CheckListConstants.STATUS_ACTIVE);
-		CustomerCheckListBO checklistClient = TestObjectFactory.createCustomerChecklist(client.getCustomerLevel().getId(),client.getCustomerStatus().getId(),CheckListConstants.STATUS_INACTIVE);
-		CustomerCheckListBO checklistGroup = TestObjectFactory.createCustomerChecklist(group.getCustomerLevel().getId(),group.getCustomerStatus().getId(),CheckListConstants.STATUS_ACTIVE);
+		CustomerCheckListBO checklistCenter = TestObjectFactory
+				.createCustomerChecklist(center.getCustomerLevel().getId(),
+						center.getCustomerStatus().getId(),
+						CheckListConstants.STATUS_ACTIVE);
+		CustomerCheckListBO checklistClient = TestObjectFactory
+				.createCustomerChecklist(client.getCustomerLevel().getId(),
+						client.getCustomerStatus().getId(),
+						CheckListConstants.STATUS_INACTIVE);
+		CustomerCheckListBO checklistGroup = TestObjectFactory
+				.createCustomerChecklist(group.getCustomerLevel().getId(),
+						group.getCustomerStatus().getId(),
+						CheckListConstants.STATUS_ACTIVE);
 		HibernateUtil.closeSession();
-		assertEquals(1 , customerPersistence.getStatusChecklist(center.getCustomerStatus().getId(),center.getCustomerLevel().getId()).size());
+		assertEquals(1, customerPersistence.getStatusChecklist(
+				center.getCustomerStatus().getId(),
+				center.getCustomerLevel().getId()).size());
 		client = (ClientBO) (HibernateUtil.getSessionTL().get(ClientBO.class,
 				new Integer(client.getCustomerId())));
 		group = (GroupBO) (HibernateUtil.getSessionTL().get(GroupBO.class,
 				new Integer(group.getCustomerId())));
 		center = (CenterBO) (HibernateUtil.getSessionTL().get(CenterBO.class,
 				new Integer(center.getCustomerId())));
-		checklistCenter = (CustomerCheckListBO)(HibernateUtil.getSessionTL().get(CheckListBO.class, new Short(checklistCenter.getChecklistId())));
-		checklistClient = (CustomerCheckListBO)(HibernateUtil.getSessionTL().get(CheckListBO.class, new Short(checklistClient.getChecklistId())));
-		checklistGroup = (CustomerCheckListBO)(HibernateUtil.getSessionTL().get(CheckListBO.class, new Short(checklistGroup.getChecklistId())));
+		checklistCenter = (CustomerCheckListBO) (HibernateUtil.getSessionTL()
+				.get(CheckListBO.class, new Short(checklistCenter
+						.getChecklistId())));
+		checklistClient = (CustomerCheckListBO) (HibernateUtil.getSessionTL()
+				.get(CheckListBO.class, new Short(checklistClient
+						.getChecklistId())));
+		checklistGroup = (CustomerCheckListBO) (HibernateUtil.getSessionTL()
+				.get(CheckListBO.class, new Short(checklistGroup
+						.getChecklistId())));
 		TestObjectFactory.cleanUp(checklistCenter);
 		TestObjectFactory.cleanUp(checklistClient);
 		TestObjectFactory.cleanUp(checklistGroup);
-				
+
 	}
-	
-	public void testRetrieveAllCustomerStatusList() throws NumberFormatException, SystemException, ApplicationException {
+
+	public void testRetrieveAllCustomerStatusList()
+			throws NumberFormatException, SystemException, ApplicationException {
 		center = createCenter();
-		assertEquals(2 , customerPersistence.retrieveAllCustomerStatusList(center.getCustomerLevel().getId()).size());
+		assertEquals(2, customerPersistence.retrieveAllCustomerStatusList(
+				center.getCustomerLevel().getId()).size());
 	}
 
-
-	public void testCustomerCountByOffice() throws Exception{
-		int count = customerPersistence.getCustomerCountForOffice(CustomerLevel.CENTER, Short.valueOf("3"));
+	public void testCustomerCountByOffice() throws Exception {
+		int count = customerPersistence.getCustomerCountForOffice(
+				CustomerLevel.CENTER, Short.valueOf("3"));
 		assertEquals(0, count);
 		center = createCenter();
-		count = customerPersistence.getCustomerCountForOffice(CustomerLevel.CENTER, Short.valueOf("3"));
+		count = customerPersistence.getCustomerCountForOffice(
+				CustomerLevel.CENTER, Short.valueOf("3"));
 		assertEquals(1, count);
 	}
-	
-	public void testGetAllCustomerNotes() throws Exception{
+
+	public void testGetAllCustomerNotes() throws Exception {
 		center = createCenter();
-		center.addCustomerNotes(TestObjectFactory.getCustomerNote("Test Note" , center));
+		center.addCustomerNotes(TestObjectFactory.getCustomerNote("Test Note",
+				center));
 		TestObjectFactory.updateObject(center);
-		assertEquals(1, customerPersistence.getAllCustomerNotes(center.getCustomerId()).getSize());
+		assertEquals(1, customerPersistence.getAllCustomerNotes(
+				center.getCustomerId()).getSize());
 		center = (CenterBO) (HibernateUtil.getSessionTL().get(CenterBO.class,
 				new Integer(center.getCustomerId())));
 	}
-	
-	public void testGetFormedByPersonnel() throws NumberFormatException, SystemException, ApplicationException {
+
+	public void testGetFormedByPersonnel() throws NumberFormatException,
+			SystemException, ApplicationException {
 		center = createCenter();
-		assertEquals(1 , customerPersistence.getFormedByPersonnel(ClientConstants.LOAN_OFFICER_LEVEL , center.getOffice().getOfficeId()).size());
+		assertEquals(1, customerPersistence.getFormedByPersonnel(
+				ClientConstants.LOAN_OFFICER_LEVEL,
+				center.getOffice().getOfficeId()).size());
 	}
-	
-	private CenterBO createCenter(){
+
+	public void testGetAllClosedAccounts() throws AccountException,
+			PersistenceException {
+		getCustomer();
+		groupAccount.changeStatus(AccountState.LOANACC_CANCEL.getValue(),
+				AccountStateFlag.LOAN_WITHDRAW.getValue(),
+				"WITHDRAW LOAN ACCOUNT");
+		clientAccount.changeStatus(AccountState.LOANACC_WRITTENOFF.getValue(),
+				null, "WITHDRAW LOAN ACCOUNT");
+		clientSavingsAccount.changeStatus(AccountState.SAVINGS_ACC_CANCEL
+				.getValue(), AccountStateFlag.SAVINGS_REJECTED.getValue(),
+				"WITHDRAW LOAN ACCOUNT");
+		TestObjectFactory.updateObject(groupAccount);
+		TestObjectFactory.updateObject(clientAccount);
+		TestObjectFactory.updateObject(clientSavingsAccount);
+		HibernateUtil.commitTransaction();
+		assertEquals(1, customerPersistence.getAllClosedAccount(
+				client.getCustomerId(), AccountTypes.LOANACCOUNT.getValue())
+				.size());
+		assertEquals(1, customerPersistence.getAllClosedAccount(
+				group.getCustomerId(), AccountTypes.LOANACCOUNT.getValue())
+				.size());
+		assertEquals(1, customerPersistence.getAllClosedAccount(
+				client.getCustomerId(), AccountTypes.SAVINGSACCOUNT.getValue())
+				.size());
+	}
+
+	private void getCustomer() {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		client = TestObjectFactory.createClient("Client", Short.valueOf("3"),
+				"1.1.1.1", group, new Date(System.currentTimeMillis()));
+		LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"),
+				new Date(System.currentTimeMillis()), Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), meeting);
+		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"),
+				new Date(System.currentTimeMillis()), Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), meeting);
+		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
+				group, Short.valueOf("5"),
+				new Date(System.currentTimeMillis()), loanOffering1);
+		clientAccount = TestObjectFactory.createLoanAccount("3243", client,
+				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				loanOffering2);
+		MeetingBO meetingIntCalc = TestObjectFactory
+				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		MeetingBO meetingIntPost = TestObjectFactory
+				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		SavingsOfferingBO savingsOffering = TestObjectFactory
+				.createSavingsOffering("SavingPrd1", Short.valueOf("2"),
+						new Date(System.currentTimeMillis()), Short
+								.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
+						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),
+						meetingIntCalc, meetingIntPost);
+		SavingsOfferingBO savingsOffering1 = TestObjectFactory
+				.createSavingsOffering("SavingPrd1", Short.valueOf("2"),
+						new Date(System.currentTimeMillis()), Short
+								.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
+						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),
+						meetingIntCalc, meetingIntPost);
+		centerSavingsAccount = TestObjectFactory.createSavingsAccount("432434",
+				center, Short.valueOf("16"), new Date(System
+						.currentTimeMillis()), savingsOffering);
+		clientSavingsAccount = TestObjectFactory.createSavingsAccount("432434",
+				client, Short.valueOf("16"), new Date(System
+						.currentTimeMillis()), savingsOffering1);
+	}
+
+	private CenterBO createCenter() {
 		return createCenter("Center_Active_test");
 	}
 
-	private CenterBO createCenter(String name){
+	private CenterBO createCenter(String name) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		return TestObjectFactory.createCenter(name, Short
-				.valueOf("13"), "1.4", meeting, new Date(System
-				.currentTimeMillis()));
+		return TestObjectFactory.createCenter(name, Short.valueOf("13"), "1.4",
+				meeting, new Date(System.currentTimeMillis()));
 	}
 }
