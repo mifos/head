@@ -166,7 +166,7 @@
 						<tr>
 							<td class="fontnormalbold"> 
 								<c:choose>
-									<c:when test="${spouseName.nameType == 1}">
+									<c:when test="${sessionScope.clientCustActionForm.spouseName.nameType == 1}">
 										<span class="fontnormalbold">
 										<mifos:mifoslabel name="client.SpouseLabel" bundle="ClientUIResources"></mifos:mifoslabel></span>
 									</c:when>

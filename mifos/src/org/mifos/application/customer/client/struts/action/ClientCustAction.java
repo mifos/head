@@ -58,13 +58,8 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerCustomFieldEntity;
-import org.mifos.application.customer.business.CustomerPositionEntity;
-import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
-import org.mifos.application.customer.center.business.CenterBO;
-import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
-import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientDetailEntity;
 import org.mifos.application.customer.client.business.ClientDetailView;
@@ -101,6 +96,7 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class ClientCustAction extends CustAction {
 
@@ -508,22 +504,14 @@ public class ClientCustAction extends CustAction {
 				for(CustomerCustomFieldEntity fieldEntity: client.getCustomFields())
 					if(fieldView.getFieldId().equals(fieldEntity.getFieldId()))
 						fieldEntity.setFieldValue(fieldView.getFieldValue());
-			
-			client.updateNameDetails(actionForm.getClientName());
-			/*System.out.println("-------Spouse getDisplayName detaiuls in action form: "+actionForm.getSpouseName().getDisplayName());
-			System.out.println("-------Spouse getNameType detaiuls in action form: "+actionForm.getSpouseName().getNameType());
-			System.out.println("-------Spouse getFirstName detaiuls in action form: "+actionForm.getSpouseName().getFirstName());
-			System.out.println("-------Spouse getMiddleName detaiuls in action form: "+actionForm.getSpouseName().getMiddleName());
-			System.out.println("-------Spouse getLastName detaiuls in action form: "+actionForm.getSpouseName().getLastName());
-*/
-			client.updateNameDetails(actionForm.getSpouseName());
-	/*		System.out.println("-------Spouse getDisplayName detaiuls: "+client.getSpouseName().getDisplayName());
-			System.out.println("-------Spouse getNameType detaiuls: "+client.getSpouseName().getNameType());
-			System.out.println("-------Spouse getFirstName detaiuls: "+client.getSpouseName().getName().getFirstName());
-			System.out.println("-------Spouse getMiddleName detaiuls: "+client.getSpouseName().getName().getMiddleName());
-			System.out.println("-------Spouse getLastName detaiuls: "+client.getSpouseName().getName().getLastName());
-*/			
+			client.getClientName().updateNameDetails(actionForm.getClientName());
+			client.getSpouseName().updateNameDetails(actionForm.getSpouseName());
 			client.setDisplayName(actionForm.getClientName().getDisplayName());
+			client.setDateOfBirth(getDateFromString(actionForm.getDateOfBirth(), getUserContext(request).getPereferedLocale()));
+			client.setGovernmentId(actionForm.getGovernmentId());
+			/*if(!StringUtils.isNullOrEmpty(actionForm.getPicture().getFileName())){
+				client.updatePicture(actionForm.getCustomerPicture());
+			}*/
 			client.setUserContext(getUserContext(request));
 			client.updateClientDetails(actionForm.getClientDetailView());
 			client.update();

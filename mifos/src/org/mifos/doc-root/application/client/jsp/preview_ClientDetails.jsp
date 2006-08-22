@@ -74,9 +74,7 @@
 	clientCustActionForm.action="clientCustAction.do?method=prevPersonalInfo";
 	clientCustActionForm.submit();
   }
-  function photopopup(){
-   window.open("clientCustAction.do?method=retrievePictureOnPreview",null,"height=200,width=200,status=no,scrollbars=no,toolbar=no,menubar=no,location=no");
-  }
+  
 </script>
 		<html-el:form action="clientCustAction.do?method=create">
 			<html-el:hidden property="input" value="create" />
@@ -197,10 +195,8 @@
 								<tr>
 									<td class="fontnormalbold">
 									 <c:if test="${sessionScope.noPicture eq 'No'}">
-									 	
-										<%-- <img src="pages/framework/images/timeline/bigarrow.gif"
-												width="150" height="100"> --%>
-									 <img action="/clientCustomersAction.do?method=retrievePictureOnPreview" height="100" width="150" /> 
+									 	 <img src="/Mifos/clientCustAction.do?method=retrievePictureOnPreview"
+											height="100" width="150" />
 										<br>
 									</c:if></td></tr>
 									<tr><td class="fontnormalbold"><mifos:mifoslabel name="client.Name"

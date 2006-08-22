@@ -143,7 +143,6 @@ public class ClientBO extends CustomerBO {
 					this, parentCustomer, Status.ACTIVE);
 			this.addCustomerHierarchy(customerHierarchyEntity);
 		}
-		generateSearchId(parentCustomer , officeId);
 		validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId);
 		if (customerStatus.getValue().equals(CustomerStatus.CLIENT_ACTIVE.getValue())){
 			if(!isClientUnderGroup()){
@@ -163,9 +162,11 @@ public class ClientBO extends CustomerBO {
 				}
 			}
 		}
+		
 		catch(ConfigurationException ce){
 			throw new CustomerException(ce);
 		}
+		generateSearchId(parentCustomer , officeId);
 	}
 
 	public Set<ClientNameDetailEntity> getNameDetailSet() {
@@ -460,15 +461,6 @@ public class ClientBO extends CustomerBO {
 	}
 
 	
-	public void updateNameDetails(ClientNameDetailView nameView){
-		for(ClientNameDetailEntity nameDetail : nameDetailSet){
-			if(nameDetail.getNameType().equals(nameView.getNameType())){
-				nameDetail.updateNameDetails(nameView);
-			}
-		}
-		
-	}
-
 	private void validateBranchTransfer(OfficeBO officeToTransfer)throws CustomerException{
 		if (officeToTransfer == null)
 			throw new CustomerException(CustomerConstants.INVALID_OFFICE);
@@ -499,4 +491,19 @@ public class ClientBO extends CustomerBO {
 		customerDetail.updateClientDetails(clientDetailView);
 		
 	}
+
+	/*public void updatePicture(InputStream picture) throws CustomerException{
+		try{
+			if(customerPicture !=null){
+				customerPicture.updatePicture(Hibernate.createBlob(picture));	
+				
+			}
+			else{
+				this.customerPicture = new CustomerPictureEntity(this,Hibernate.createBlob(picture));
+			}
+			 
+		} catch (IOException e) {
+			throw new CustomerException(e);
+		}
+	}*/
 }
