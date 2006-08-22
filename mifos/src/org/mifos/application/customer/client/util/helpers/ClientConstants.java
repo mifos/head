@@ -56,7 +56,7 @@ public interface ClientConstants {
 	public static final short CLIENT_CATEGORY_ID =2;
 	public static final short CLIENT_ENTITY_TYPE =1;
 	public static final short LOAN_OFFICER_LEVEL =1;
-	public static final short CLIENT_NAME_TYPE =3;
+	public static final Short CLIENT_NAME_TYPE =3;
 	public static final String CLIENTVO ="clientVO";
 	/**Request parameter names*/
 	public static final String SALUTATION_ENTITY  = "salutationEntity";

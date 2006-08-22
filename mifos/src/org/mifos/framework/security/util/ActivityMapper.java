@@ -931,7 +931,11 @@ public class ActivityMapper {
 		activityMap.put("/clientCustAction-editMFIInfo",SecurityConstants.CIENT_EDIT_MFI_INFORMATION);
 		activityMap.put("/clientCustAction-editPersonalInfo",
 				SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
-		activityMap.put("/clientCustAction-update",
+		activityMap.put("/clientCustAction-previewEditPersonalInfo",
+				SecurityConstants.VIEW);
+		activityMap.put("/clientCustAction-prevEditPersonalInfo",
+				SecurityConstants.VIEW);
+		activityMap.put("/clientCustAction-updatePersonalInfo",
 				SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
 		activityMap.put("/clientCustAction-updateMfi",
 				SecurityConstants.CIENT_EDIT_MFI_INFORMATION);

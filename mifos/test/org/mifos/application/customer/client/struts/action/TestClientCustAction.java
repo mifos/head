@@ -51,9 +51,14 @@ import java.util.Set;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
+import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.PositionEntity;
 import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.ClientDetailView;
+import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
@@ -68,7 +73,10 @@ import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.CustomFieldType;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -154,6 +162,21 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,request.getSession()));
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST,request.getSession()));
 			
+	}
+	
+	public void testLoadClientUnderGroup() throws Exception {
+			createParentCustomer();
+			setRequestPathInfo("/clientCustAction.do");
+			addRequestParameter("method", "load");
+			addRequestParameter("parentGroupId", group.getCustomerId().toString());
+			addRequestParameter("groupFlag", "1");
+			actionPerform();
+			verifyNoActionErrors();
+			verifyNoActionMessages();
+			verifyForward(ActionForwards.load_success.toString());
+						ClientCustActionForm actionForm = (ClientCustActionForm)request.getSession().getAttribute("clientCustActionForm");
+			assertEquals(actionForm.getFormedByPersonnelValue() , group.getCustomerFormedByPersonnel().getPersonnelId());
+		
 	}
 	
 	public void testFailureNextWithAllValuesNull() throws Exception {
@@ -633,8 +656,148 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 
 	}
 	
+	public void testEditPersonalInfo() throws Exception {		
+		
+		createAndSetClientInSession();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "editPersonalInfo");
+		addRequestParameter("officeId", "3");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.editPersonalInfo_success.toString());
+		assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,request.getSession()));
+		assertNotNull(SessionUtils.getAttribute(ClientConstants.SALUTATION_ENTITY, request.getSession()));
+		assertNotNull(SessionUtils.getAttribute(ClientConstants.MARITAL_STATUS_ENTITY, request.getSession()));
+		assertNotNull(SessionUtils.getAttribute(ClientConstants.CITIZENSHIP_ENTITY, request.getSession()));
+		assertNotNull(SessionUtils.getAttribute(ClientConstants.BUSINESS_ACTIVITIES_ENTITY, request.getSession()));
+		assertNotNull(SessionUtils.getAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY, request.getSession()));
+		assertNotNull(SessionUtils.getAttribute(ClientConstants.GENDER_ENTITY, request.getSession()));
+		assertNotNull(SessionUtils.getAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, request.getSession()));
+		assertNotNull(SessionUtils.getAttribute(ClientConstants.HANDICAPPED_ENTITY, request.getSession()));
+		assertNotNull(SessionUtils.getAttribute(ClientConstants.ETHINICITY_ENTITY, request.getSession()));
+		assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,request.getSession()));
+			
+	}
 	
+	public void testEditPersonalInfoPreviewFailure() throws Exception {		
+		
+		createAndSetClientInSession();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "editPersonalInfo");
+		addRequestParameter("officeId", "3");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.editPersonalInfo_success.toString());
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "previewEditPersonalInfo");
+		addRequestParameter("officeId", "3");
+		addRequestParameter("input", "editPersonalInfo");
+		addRequestParameter("clientName.salutation", "");
+		addRequestParameter("clientName.firstName", "");
+		addRequestParameter("clientName.lastName", "");
+		addRequestParameter("spouseName.firstName", "");
+		addRequestParameter("spouseName.lastName", "");
+		addRequestParameter("spouseName.nameType", "");
+		addRequestParameter("dateOfBirth", "");
+		addRequestParameter("clientDetailView.gender", "");
+		actionPerform();
+		assertEquals("Client salutation", 1, getErrrorSize(CustomerConstants.SALUTATION));				
+		assertEquals("Client first Name", 1, getErrrorSize(CustomerConstants.FIRST_NAME));				
+		assertEquals("Client last Name", 1, getErrrorSize(CustomerConstants.LAST_NAME));
+		assertEquals("spouse first Name", 1, getErrrorSize(CustomerConstants.SPOUSE_FIRST_NAME));
+		assertEquals("spouse last Name", 1, getErrrorSize(CustomerConstants.SPOUSE_LAST_NAME));
+		assertEquals("spouse type", 1, getErrrorSize(CustomerConstants.SPOUSE_TYPE));
+		assertEquals("Gender", 1, getErrrorSize(CustomerConstants.GENDER));
+		assertEquals("DOB", 1, getErrrorSize(CustomerConstants.DOB));
+		verifyInputForward();
+			
+	}
 	
+	public void testSuccessfulEditPreview() throws Exception {
+		createAndSetClientInSession();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "editPersonalInfo");
+		addRequestParameter("officeId", "3");
+		actionPerform();
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request.getSession());
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "previewEditPersonalInfo");	
+		addRequestParameter("clientName.firstName", "Client2");
+		int i = 0;
+		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
+			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
+			addRequestParameter("customField["+ i +"].fieldValue", "11");
+			i++;
+		}
+		actionPerform();
+		assertEquals(0, getErrrorSize());
+		verifyForward(ActionForwards.previewEditPersonalInfo_success.toString());
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+	}
+	
+	public void testSuccessfulUpdate() throws Exception {
+		createAndSetClientInSession();		
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "editPersonalInfo");
+		addRequestParameter("officeId", "3");
+		actionPerform();
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request.getSession());
+		
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "previewEditPersonalInfo");	
+		addRequestParameter("clientDetailView.ethinicity", "1");
+		int i = 0;
+		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
+			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
+			addRequestParameter("customField["+ i +"].fieldValue", "11");
+			addRequestParameter("customField["+ i +"].fieldType", "1");
+			i++;
+		}
+		actionPerform();
+		assertEquals(0, getErrrorSize());
+		verifyForward(ActionForwards.previewEditPersonalInfo_success.toString());
+		
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "updatePersonalInfo");
+		actionPerform();
+		verifyForward(ActionForwards.updatePersonalInfo_success.toString());
+		assertEquals(1, client.getCustomerDetail().getEthinicity().shortValue());
+		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
+		
+	}
+	private void createAndSetClientInSession() throws Exception{
+		String name = "Client 1";
+		Short officeId = 1;
+		Short personnel = 3;
+		meeting = getMeeting();
+		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(name),"Client","","1","");
+		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
+		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"));
+		client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(new Short("1")), null, null, new Address(), getCustomFields(), null, personnel, officeId, meeting,personnel, new java.util.Date(),
+				null,null,null,YesNoFlag.NO.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
+		client.save();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class, new Integer(client.getCustomerId()).intValue());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request.getSession());
+	}
+	
+	private List<CustomFieldView> getCustomFields() {
+		List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
+		fields.add(new CustomFieldView(Short.valueOf("5"), "value1", CustomFieldType.ALPHA_NUMERIC.getValue()));
+		fields.add(new CustomFieldView(Short.valueOf("6"), "value2", CustomFieldType.ALPHA_NUMERIC.getValue()));
+		return fields;
+	}
+	
+	private MeetingBO getMeeting() {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		meeting.setMeetingStartDate(new GregorianCalendar());
+		return meeting;
+	}
 	
 	
 }

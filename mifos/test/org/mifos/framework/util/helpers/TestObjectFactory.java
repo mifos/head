@@ -389,7 +389,7 @@ public class TestObjectFactory {
 		try {
 			Short office = new Short("3");
 			Short personnel = new Short("1");	
-			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(customerName),customerName,"middle",customerName,"secondLast");
+			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("3"),1,new StringBuilder(customerName),customerName,"middle",customerName,"secondLast");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),customerName,"middle",customerName,"secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"));
 			client = new ClientBO(getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(statusId), null, null, null, null, getFees(), personnel, office,meeting,personnel, new Date(),

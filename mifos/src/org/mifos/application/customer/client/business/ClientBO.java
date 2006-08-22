@@ -314,7 +314,57 @@ public class ClientBO extends CustomerBO {
 					CustomerConstants.CREATE_FAILED_EXCEPTION, he);
 		}
 	}
+
+	@Override
+	public void update() throws CustomerException {
+		try {
+			validateUpdate();
+			super.update();
+					
+		} catch (HibernateException he) {
+			throw new CustomerException(
+					CustomerConstants.CREATE_FAILED_EXCEPTION, he);
+		}
+	}
+
+	private void validateUpdate() throws CustomerException{
+		/*if(isDuplicacyCheckNeeded()){
+			checkForDuplicacy(getDisplayName() , dateOfBirth , governmentId  ,getCustomerId());
+		}*/
+		
+	}	
 	
+	/*public boolean isDuplicacyCheckNeeded()throws CustomerException{
+		
+		String oldDisplayName = (String)context.getSearchResultBasedOnName(CustomerConstants.CURRENT_CLIENT_NAME).getValue();
+		Date oldDOB = (Date)context.getSearchResultBasedOnName(CustomerConstants.CURRENT_DOB).getValue();
+		String oldGovernmentId = (String)context.getSearchResultBasedOnName(CustomerConstants.CURRENT_GOVT_ID).getValue();
+		String name= getDisplayName();
+		Date dateOfBirth = getDateOfBirth();
+		String govtId = getGovernmentId();
+		boolean returnValue = false;
+		//if both values of govt id is null then check if either name or DOB has changed. If so retrun true
+		if(ValidateMethods.isNullOrBlank(oldGovernmentId) && ValidateMethods.isNullOrBlank(govtId)){
+			if(!oldDisplayName.equals(name) || !oldDOB.equals(dateOfBirth)){
+				returnValue = true;
+			}
+		}
+		//if old value of govt id is null and a value is now entered for govt id or if the values of govt id are not the same return true
+		else if(
+				( ValidateMethods.isNullOrBlank(oldGovernmentId) && !ValidateMethods.isNullOrBlank(govtId))
+				||(!ValidateMethods.isNullOrBlank(govtId) && !ValidateMethods.isNullOrBlank(oldGovernmentId)&& !oldGovernmentId.equals(govtId))	
+				||(!ValidateMethods.isNullOrBlank(oldGovernmentId) && ValidateMethods.isNullOrBlank(govtId)))
+		{
+				returnValue =  true;
+		}
+		//if the values are the same return false
+		else if( !ValidateMethods.isNullOrBlank(govtId) && !ValidateMethods.isNullOrBlank(oldGovernmentId)&& oldGovernmentId.equals(govtId))	
+		{
+			returnValue =  false;
+		}
+		return returnValue ;
+	}*/
+
 	private void validateForDuplicateNameOrGovtId(String displayName, Date dateOfBirth, String governmentId)
 	throws CustomerException {
 		Integer custId = null;
@@ -409,12 +459,45 @@ public class ClientBO extends CustomerBO {
 		this.addCustomerMovement(newCustomerMovement);
 		super.update();
 	}
+
 	
+	public void updateNameDetails(ClientNameDetailView nameView){
+		for(ClientNameDetailEntity nameDetail : nameDetailSet){
+			if(nameDetail.getNameType().equals(nameView.getNameType())){
+				nameDetail.updateNameDetails(nameView);
+			}
+		}
+		
+	}
+
 	private void validateBranchTransfer(OfficeBO officeToTransfer)throws CustomerException{
 		if (officeToTransfer == null)
 			throw new CustomerException(CustomerConstants.INVALID_OFFICE);
 		
 		if(this.getOffice().getOfficeId().equals(officeToTransfer.getOfficeId()))
 			throw new CustomerException(CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER);
+	}
+	
+	public ClientNameDetailEntity getClientName(){
+		for(ClientNameDetailEntity nameDetail : nameDetailSet){
+			if(nameDetail.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE)){
+				return nameDetail;
+			}
+		}
+		return null;
+	}
+	
+	public ClientNameDetailEntity getSpouseName(){
+		for(ClientNameDetailEntity nameDetail : nameDetailSet){
+			if(!(nameDetail.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE))){
+				return nameDetail;
+			}
+		}
+		return null;
+	}
+
+	public void updateClientDetails(ClientDetailView clientDetailView) {
+		customerDetail.updateClientDetails(clientDetailView);
+		
 	}
 }

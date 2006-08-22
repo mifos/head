@@ -208,4 +208,18 @@ public class ClientDetailEntity extends PersistentObject {
 	public CustomerBO getClient() {
 		return client;
 	}
+
+	public void updateClientDetails(ClientDetailView view) {
+		this.ethinicity = view.getEthinicity();
+		this.citizenship = view.getCitizenship();
+		this.handicapped = view.getHandicapped();
+		this.businessActivities = view.getBusinessActivities();
+		this.maritalStatus = view.getMaritalStatus();
+		this.educationLevel = view.getEducationLevel();
+		this.numChildren = view.getNumChildren();
+		this.gender = view.getGender();
+		this.dateStarted = null;
+		this.handicappedDetails = null;
+		
+	}
 }

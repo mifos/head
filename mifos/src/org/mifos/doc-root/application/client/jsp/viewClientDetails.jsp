@@ -488,7 +488,7 @@
 								name="client.PersonalInformationHeading"
 								bundle="ClientUIResources"></mifos:mifoslabel></td>
 							<td width="50%" align="right" class="fontnormal"><html-el:link
-								action="clientCreationAction.do?method=editPersonalInfo">
+								action="clientCustAction.do?method=editPersonalInfo">
 								<mifos:mifoslabel name="client.EditPersonalInformationLink"
 									bundle="ClientUIResources"></mifos:mifoslabel>
 							</html-el:link></td>

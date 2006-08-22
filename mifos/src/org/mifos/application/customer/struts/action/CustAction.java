@@ -42,11 +42,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
+import org.mifos.application.customer.business.CustomerCustomFieldEntity;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -108,7 +110,38 @@ public class CustAction extends BaseAction {
 		}
 		actionForm.setCustomFields(customFields);
 	}
+	
+	protected List<CustomFieldView> createCustomFieldViews(
+			Set<CustomerCustomFieldEntity> customFieldEntities,
+			HttpServletRequest request) {
+		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
 
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request
+						.getSession());
+		Locale locale = getUserContext(request).getPereferedLocale();
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			for (CustomerCustomFieldEntity customFieldEntity : customFieldEntities) {
+				if (customFieldDef.getFieldId().equals(
+						customFieldEntity.getFieldId())) {
+					if (customFieldDef.getFieldType().equals(
+							CustomFieldType.DATE.getValue())) {
+						customFields.add(new CustomFieldView(customFieldEntity
+								.getFieldId(), DateHelper.getUserLocaleDate(
+								locale, customFieldEntity.getFieldValue()),
+								customFieldDef.getFieldType()));
+					} else {
+						customFields
+								.add(new CustomFieldView(customFieldEntity
+										.getFieldId(), customFieldEntity
+										.getFieldValue(), customFieldDef
+										.getFieldType()));
+					}
+				}
+			}
+		}
+		return customFields;
+	}
 	protected void loadCustomFieldDefinitions(EntityType entityType , HttpServletRequest request )
 			throws SystemException {
 		MasterDataService masterDataService = (MasterDataService) ServiceFactory

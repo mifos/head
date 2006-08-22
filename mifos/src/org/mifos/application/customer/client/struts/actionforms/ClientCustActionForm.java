@@ -236,7 +236,7 @@ public class ClientCustActionForm extends CustomerActionForm {
 	protected ActionErrors validateFields(HttpServletRequest request, String method) {
 		
 		ActionErrors errors = new ActionErrors();
-		if(  (method.equals(Methods.previewPersonalInfo.toString()) || method.equals(Methods.next.toString()))&& ( ClientConstants.INPUT_PERSONAL_INFO.equals(input) || ClientConstants.INPUT_EDIT_PERSONAL_INFO.equals(input) )){
+		if(  (method.equals(Methods.previewPersonalInfo.toString()) || method.equals(Methods.next.toString()) || method.equals(Methods.previewEditPersonalInfo.toString()))&& ( ClientConstants.INPUT_PERSONAL_INFO.equals(input) || ClientConstants.INPUT_EDIT_PERSONAL_INFO.equals(input) )){
 			validateClientandSpouseNames(errors);
 			validateDateOfBirth(request,errors);
 			validateGender(errors);
