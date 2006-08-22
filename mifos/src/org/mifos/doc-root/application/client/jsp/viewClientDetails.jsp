@@ -438,9 +438,9 @@
 											<br>
 										</c:when>
 										<c:otherwise>
-											<c:if test="${sessionScope.configurationLSM eq 'No'}">
+											<%--<c:if test="${sessionScope.configurationLSM eq 'No'}">--%>
 												<html-el:link
-													action="clientCreationAction.do?method=loadBranchTransfer">
+													action="clientTransferAction.do?method=loadBranches">
 													<mifos:mifoslabel name="client.EditLink"
 														bundle="ClientUIResources" />
 													<mifos:mifoslabel
@@ -448,7 +448,7 @@
 													<mifos:mifoslabel name="client.MembershipLink"
 														bundle="ClientUIResources" />
 												</html-el:link>
-											</c:if>
+											<%--</c:if>--%>
 											<br>
 
 											<c:choose>
@@ -626,8 +626,6 @@
 										value="${sessionScope.BusinessKey.customerAddressDetail.address.phoneNumber}" />
 								</c:if></span> <br>
 						</c:if>
-						</td>
-						</tr>
 						<tr>
 							<td height="23" colspan="2" class="fontnormalbold"><br>
 							<c:if test="${!empty sessionScope.BusinessKey.customFields}">
@@ -635,7 +633,7 @@
 									name="client.AdditionalInformationHeading"
 									bundle="ClientUIResources"></mifos:mifoslabel> </span>
 							</c:if> <span class="fontnormal"> <span class="fontnormal"><br>
-							</span> <c:forEach var="cf" items="${requestScope.customFields}">
+							</span> <c:forEach var="cf" items="${sessionScope.customFields}">
 								<c:forEach var="customField"
 									items="${sessionScope.BusinessKey.customFields}">
 									<c:if test="${cf.fieldId==customField.fieldId}">
@@ -668,7 +666,7 @@
 								<mifos:mifoslabel name="client.ChangeLogLink"
 									bundle="ClientUIResources"></mifos:mifoslabel>
 							</html-el:link><br>
-							</span> </span></td>
+							</span> </td>
 						</tr>
 					</table>
 					</td>

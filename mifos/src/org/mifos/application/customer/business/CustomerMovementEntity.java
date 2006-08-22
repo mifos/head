@@ -41,7 +41,6 @@ package org.mifos.application.customer.business;
 import java.util.Date;
 
 import org.mifos.application.office.business.OfficeBO;
-import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.util.helpers.Status;
 import org.mifos.framework.business.PersistentObject;
 
@@ -63,8 +62,6 @@ public class CustomerMovementEntity extends PersistentObject {
 
 	private final OfficeBO office;
 
-	private final PersonnelBO personnel;
-
 	/*
 	 * Adding a default constructor is hibernate's requirement and should not be
 	 * used to create a valid Object.
@@ -73,14 +70,12 @@ public class CustomerMovementEntity extends PersistentObject {
 		this.customerMovementId = null;
 		this.customer = null;
 		this.office = null;
-		this.personnel = null;
 		this.startDate = null;
 	}
 	
 	public CustomerMovementEntity(CustomerBO customer, Date startDate){
 		this.customer = customer;
 		this.office = customer.getOffice();
-		this.personnel = customer.getPersonnel();
 		this.startDate = startDate;
 		this.status = Status.ACTIVE.getValue();
 		this.customerMovementId = null;
@@ -102,15 +97,18 @@ public class CustomerMovementEntity extends PersistentObject {
 		return office;
 	}
 
-	public PersonnelBO getPersonnel() {
-		return personnel;
-	}
-	
 	public void updateStatus(Status status){
 		this.status = status.getValue();
 	}
 
 	public boolean isActive(){
 		return status.equals(Status.ACTIVE.getValue());
+	}
+	
+	public void makeInActive(Short updatedBy){
+		updateStatus(Status.INACTIVE);
+		setUpdatedBy(updatedBy);
+		setUpdatedDate(new Date());
+		setEndDate(new Date());
 	}
 }

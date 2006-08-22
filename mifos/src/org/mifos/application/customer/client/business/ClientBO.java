@@ -436,21 +436,20 @@ public class ClientBO extends CustomerBO {
 		  }
 	}
 	
-	public void updateBranch(OfficeBO officeToTransfer)throws CustomerException{
+	public void transferToBranch(OfficeBO officeToTransfer)throws CustomerException{
 		validateBranchTransfer(officeToTransfer);
 
-		if(getCustomerStatus().getId().equals(CustomerStatus.CLIENT_ACTIVE.getValue()))
+		if(isCustomerActive())
 			setCustomerStatus(new CustomerStatusEntity(CustomerStatus.CLIENT_HOLD));
 		
 		CustomerMovementEntity currentCustomerMovement = getActiveCustomerMovement();
-		if(currentCustomerMovement == null)
+		if(currentCustomerMovement == null){
 			currentCustomerMovement = new CustomerMovementEntity(this, getCreatedDate());
+			this.addCustomerMovement(currentCustomerMovement);
+		}
 		
-		currentCustomerMovement.updateStatus(Status.INACTIVE);
-		currentCustomerMovement.setEndDate(new Date());
-		currentCustomerMovement.setUpdatedBy(userContext.getId());
-		currentCustomerMovement.setUpdatedDate(new Date());
-		this.addCustomerMovement(currentCustomerMovement);
+		currentCustomerMovement.makeInActive(userContext.getId());
+		
 
 		this.setOffice(officeToTransfer);
 		this.setPersonnel(null);
@@ -474,7 +473,7 @@ public class ClientBO extends CustomerBO {
 		if (officeToTransfer == null)
 			throw new CustomerException(CustomerConstants.INVALID_OFFICE);
 		
-		if(this.getOffice().getOfficeId().equals(officeToTransfer.getOfficeId()))
+		if(isSameBranch(officeToTransfer))
 			throw new CustomerException(CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER);
 	}
 	

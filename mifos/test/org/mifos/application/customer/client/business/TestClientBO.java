@@ -24,7 +24,6 @@ import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
-import org.mifos.application.office.util.helpers.OperationMode;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosTestCase;
@@ -384,7 +383,7 @@ public class TestClientBO extends MifosTestCase {
 	public void testUpdateBranchFailure_OfficeNULL()throws Exception{
 		createInitialObjects();
 		try{
-			client.updateBranch(null);
+			client.transferToBranch(null);
 			assertTrue(false);
 		}catch(CustomerException ce){
 			assertTrue(true);
@@ -395,7 +394,7 @@ public class TestClientBO extends MifosTestCase {
 	public void testUpdateBranchFailure_TransferInSameOffice()throws Exception{
 		createInitialObjects();
 		try{
-			client.updateBranch(client.getOffice());
+			client.transferToBranch(client.getOffice());
 			assertTrue(false);
 		}catch(CustomerException ce){
 			assertTrue(true);
@@ -407,7 +406,7 @@ public class TestClientBO extends MifosTestCase {
 		createObjectsForClientTransfer();
 		assertNull(client.getActiveCustomerMovement());
 		
-		client.updateBranch(office);
+		client.transferToBranch(office);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		
@@ -423,7 +422,7 @@ public class TestClientBO extends MifosTestCase {
 		assertNull(client.getActiveCustomerMovement());
 		OfficeBO oldOffice = client.getOffice();
 		
-		client.updateBranch(office);
+		client.transferToBranch(office);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		
@@ -434,7 +433,7 @@ public class TestClientBO extends MifosTestCase {
 		assertEquals(office.getOfficeId(), currentMovement.getOffice().getOfficeId());
 		assertEquals(office.getOfficeId(), client.getOffice().getOfficeId());
 		
-		client.updateBranch(oldOffice);
+		client.transferToBranch(oldOffice);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		

@@ -38,7 +38,7 @@
 		</form-bean>
 		<!-- Edit Client Transfer Action form -->
 		<form-bean name="clientTransferActionForm"
-			type="org.mifos.application.customer.client.struts.actionforms.EditGrpMembershipActionForm">
+			type="org.mifos.application.customer.client.struts.actionforms.ClientTransferActionForm">
 		</form-bean>
 		<!-- Login Form -->
 		<form-bean name="mifosloginform"
@@ -544,33 +544,20 @@
 		</action>
 
 		<!-- Edit Client Transfer Action -->
-		<action path="/clientTransferAction"
-			type="org.mifos.application.customer.client.struts.action.EditGrpMembershipAction"
-			name="clientTransferActionForm" parameter="method"
-			input="/clientTransferAction.do?method=validate" validate="false"
+		<action path="/clientTransferAction" type="org.mifos.application.customer.client.struts.action.ClientTransferAction" name="clientTransferActionForm" parameter="method" input="/clientTransferAction.do?method=validate" validate="false"
 			scope="session">
 			<!--  Load forwards -->
-			<forward name="loadGroup_success"
-				path="/GroupAction.do?method=loadSearch" />
-			<forward name="loadBranchSearch_success"
-				path="/pages/application/client/jsp/choosebranch.jsp" />
+			<forward name="loadGroup_success" path="/GroupAction.do?method=loadSearch" />
+			<forward name="loadBranches_success" path="/pages/application/client/jsp/choosebranch.jsp" />
 			<!-- Preview Page Forwards -->
-			<forward name="confirmGroupTransfer_success"
-				path="/pages/application/client/jsp/confirmParentTransfer.jsp" />
-			<forward name="confirmBranchTransfer_success"
-				path="/pages/application/client/jsp/confirmBranchTransfer.jsp" />
-			<!-- Previous Page Forwards End -->
-			<forward name="update_success"
-				path="/clientCreationAction.do?method=get" />
-			<forward name="updateBranch_success"
-				path="/clientCreationAction.do?method=get" />
-			<forward name="updateBranch_failure"
-				path="/pages/application/client/jsp/confirmBranchTransfer.jsp" />
-			<forward name="update_failure"
-				path="/pages/application/client/jsp/confirmParentTransfer.jsp" />
+			<forward name="confirmGroupTransfer_success" path="/pages/application/client/jsp/confirmParentTransfer.jsp" />
+			<forward name="previewBranchTransfer_success" path="/pages/application/client/jsp/confirmbranchtransfer.jsp" />
+			<forward name="update_success" path="/clientCustAction.do?method=get" />
+			<forward name="updateBranch_success" path="/clientCreationAction.do?method=get" />
+			<forward name="transferToBranch_failure" path="/pages/application/client/jsp/confirmbranchtransfer.jsp" />
+			<forward name="update_failure" path="/pages/application/client/jsp/confirmParentTransfer.jsp" />
 			<!-- Cancel Page Forwards -->
-			<forward name="cancel_success"
-				path="/clientCreationAction.do?method=get" />
+			<forward name="cancel_success" path="/clientCustAction.do?method=get" />
 		</action>
 
 		<!-- Personnel action -->

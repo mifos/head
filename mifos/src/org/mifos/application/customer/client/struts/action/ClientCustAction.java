@@ -455,6 +455,7 @@ public class ClientCustAction extends CustAction {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
 		ClientBO clientBO = (ClientBO) customerService.getBySystemId(
 				actionForm.getGlobalCustNum(), CustomerLevel.CLIENT.getValue());
+		clientBO.setUserContext(getUserContext(request));
 		clientBO.getCustomerStatus().setLocaleId(
 				getUserContext(request).getLocaleId());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request
