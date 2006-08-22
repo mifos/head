@@ -77,5 +77,5 @@ while(rowid<$maxrow*$maxcol-1)
   
  
   end
- #groupobject.mifos_logout()
+ groupobject.mifos_logout()
 end
