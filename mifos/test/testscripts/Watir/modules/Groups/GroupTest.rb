@@ -71,10 +71,11 @@ while(rowid<$maxrow*$maxcol-1)
   groupobject.edit_group_data(gname)
   groupobject.edit_group_from_details_link
   groupobject.edit_group_from_details(edit_gname,edit_externalid,edit_address1,edit_address2,edit_address3,edit_city,edit_state,edit_country,edit_pcode,edit_phone,edit_custom1)  
+  groupobject.view_all_closed_accounts
   groupobject.edit_center_membership
   groupobject.edit_center_membership_select_center
-  groupobject.view_all_closed_accounts
+  
  
   end
-   groupobject.mifos_logout()
+ #groupobject.mifos_logout()
 end

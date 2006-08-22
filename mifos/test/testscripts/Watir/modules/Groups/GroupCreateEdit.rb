@@ -53,6 +53,7 @@ class GroupCreateEdit < TestClass
   #selecting center before creating group
   def select_center()
     begin
+    $ie.link(:text,"Clients & Accounts").click
     $ie.link(:text,"Create new Group").click
     dbquery("select office_id,display_name from office where status_id=1 and office_level_id=5 and  search_id like '"+@@search_id+"%'")
     @@office_id=dbresult[0]
@@ -127,7 +128,7 @@ class GroupCreateEdit < TestClass
      end
      $ie.text_field(:name,"displayName").set(gname)
      $ie.text_field(:name,"customField[0].fieldValue").set(customfield)
-     $ie.select_list(:name,"customerFormedById").select_value(@@personnel_id)
+     #$ie.select_list(:name,"customerFormedById").select_value(@@personnel_id)
      $ie.button(:value,"Preview").click 
      assert($ie.contains_text($group_review)) 
      $logger.log_results("mandatory checks when group name,Formed by,additional information entered","NA","NA","passed")
@@ -206,20 +207,19 @@ class GroupCreateEdit < TestClass
   
   @@name_group=gname
   $ie.text_field(:name,"displayName").set(gname)
-  $ie.select_list(:name,"customerFormedById").select_value(@@personnel_id)
   $ie.text_field(:name,"externalId").set(externalid)
   $ie.checkbox(:name,"trained","1").set
   $ie.text_field(:name,"trainedDateDD").set(gdate)
   $ie.text_field(:name,"trainedDateMM").set(gmonth)
   $ie.text_field(:name,"trainedDateYY").set(gyear)
-  $ie.text_field(:name,"customerAddressDetail.line1").set(address1)
-  $ie.text_field(:name,"customerAddressDetail.line2").set(address2)
-  $ie.text_field(:name,"customerAddressDetail.line3").set(address3)
-  $ie.text_field(:name,"customerAddressDetail.city").set(city)
-  $ie.text_field(:name,"customerAddressDetail.state").set(state)
-  $ie.text_field(:name,"customerAddressDetail.country").set(country)
-  $ie.text_field(:name,"customerAddressDetail.zip").set(pcode)
-  $ie.text_field(:name,"customerAddressDetail.phoneNumber").set(phone)
+  #$ie.text_field(:name,"customerAddressDetail.line1").set(address1)
+  #$ie.text_field(:name,"customerAddressDetail.line2").set(address2)
+  #$ie.text_field(:name,"customerAddressDetail.line3").set(address3)
+  #$ie.text_field(:name,"customerAddressDetail.city").set(city)
+  #$ie.text_field(:name,"customerAddressDetail.state").set(state)
+  #$ie.text_field(:name,"customerAddressDetail.country").set(country)
+  #$ie.text_field(:name,"customerAddressDetail.zip").set(pcode)
+  #$ie.text_field(:name,"customerAddressDetail.phoneNumber").set(phone)
   $ie.text_field(:name,"customField[0].fieldValue").set(custom1)
   fee_select_one_by_one()
   create_preview(gname,gdate,gmonth,gyear,externalid,address1,address2,address3,city,state,country,pcode,phone,custom1,status)
@@ -258,7 +258,7 @@ class GroupCreateEdit < TestClass
     end
   end
  def db_check(gname)
-    db_center=$dbh.real_query("select * from customer where display_name='"+gname+"' and loan_officer_id="+@@personnel_id+" and branch_id="+@@office_id)
+    db_center=$dbh.real_query("select * from customer where display_name='"+gname+"'")
     rowcount= db_center.num_rows
     if rowcount==0 then
     $logger.log_results("Data Base Check","NA","NA","failed") 
@@ -378,6 +378,10 @@ class GroupCreateEdit < TestClass
       assert($ie.contains_text($center_membership_select_center_confirm))
       $logger.log_results("Change Center Membership confirm page","N/A","N/A","Passed")    
       $ie.button(:value,"Submit").click
+      assert($ie.contains_text($change_log))
+      $logger.log_results("Center Mebership","Should Change Successfully","Changed","Passed")
+      rescue=>e
+      $logger.log_results("Center Mebership","Should Change Successfully","Changed","Failed")
       rescue=>e
       $logger.log_results("Change Center Membership confirm page","N/A","N/A","Failed")    
       end
