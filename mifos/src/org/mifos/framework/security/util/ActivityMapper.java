@@ -827,6 +827,8 @@ public class ActivityMapper {
 
 		activityMap.put("/customerAction-getAllActivity",
 				SecurityConstants.VIEW);
+		activityMap.put("/customerAction-getAllClosedAccounts",
+				SecurityConstants.VIEW);
 		
 		activityMap.put("/loanAccountAction-waiveChargeDue",
 				SecurityConstants.LOAN_WAIVE_FEE_INSTALLMENT);		

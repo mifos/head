@@ -340,9 +340,9 @@
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td width="69%" align="right" class="fontnormal"><span
-								class="fontnormal"> <html-el:link
-								href="closedaccsearchaction.do?method=search&searchNode(search_name)=AllClosedAccounts&customerId=${sessionScope.BusinessKey.customerId}&input=ViewClientClosedAccounts">
-                  View all closed accounts</html-el:link> </span></td>
+								class="fontnormal"> <a
+								href="customerAction.do?method=getAllClosedAccounts&customerId=<c:out value="${sessionScope.BusinessKey.customerId}"/>&type=client">
+                  <mifos:mifoslabel name="client.ClosedAccountsLink" bundle="ClientUIResources" /></a> </span></td>
 						</tr>
 					</table>
 

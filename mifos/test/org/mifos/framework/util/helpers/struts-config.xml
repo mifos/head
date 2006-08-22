@@ -1709,6 +1709,7 @@
        		<forward name="viewClientActivity" 	path="/pages/application/client/jsp/viewClientActivity.jsp"/>
        		<forward name="viewGroupActivity" 	path="/pages/application/group/jsp/viewGroupActivity.jsp"/>
        		<forward name="viewCenterActivity" 	path="/pages/application/center/jsp/viewCenterActivity.jsp"/>
+       		<forward name="viewAllClosedAccounts" path="/pages/application/customer/jsp/viewallclosedaccounts.jsp" />
   		</action>
   		<action path="/applyPaymentAction" type="org.mifos.application.accounts.struts.action.AccountApplyPaymentAction" name="applyPaymentActionForm" parameter="method" 
 			input="/applyPaymentAction.do?method=validate" scope="session" validate="true">

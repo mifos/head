@@ -61,7 +61,7 @@ public class AccountAppAction extends BaseAction {
 		if(method.equals("removeFees")||method.equals("getTrxnHistory")
 				|| method.equals("waiveChargeDue") || method.equals("waiveChargeOverDue")
 				|| method.equals("forwardWaiveChargeDue") || method.equals("forwardWaiveChargeOverDue")
-				|| method.equals("getAllActivity")) 
+				|| method.equals("getAllActivity") || method.equals("getAllClosedAccounts")) 
 			return true;
 		else
 			return false;
