@@ -119,6 +119,7 @@
 	<mapping resource="org/mifos/application/rolesandpermission/util/valueobjects/RoleActivities.hbm.xml" />
 
 	<!-- Product Definition -->
+	<mapping resource="org/mifos/application/productdefinition/business/PrdCategoryStatusEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/productdefinition/util/valueobjects/PrdCategory.hbm.xml" />
 	<mapping resource="org/mifos/application/productdefinition/util/valueobjects/PrdType.hbm.xml" />
 

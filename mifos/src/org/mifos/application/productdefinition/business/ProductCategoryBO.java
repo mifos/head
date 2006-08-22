@@ -38,44 +38,65 @@
 
 package org.mifos.application.productdefinition.business;
 
-import org.mifos.application.master.util.valueobjects.PrdCategoryStatus;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.application.productdefinition.exceptions.DuplicateProductCategoryException;
+import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
+import org.mifos.application.productdefinition.persistence.ProductCategoryPersistence;
+import org.mifos.application.productdefinition.util.helpers.PrdCategoryStatus;
+import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.StringUtils;
 
-/**
- * @author ashishsm
- * 
- */
 public class ProductCategoryBO extends BusinessObject {
 
-	private Short productCategoryID;
+	private final Short productCategoryID;
 
-	private ProductTypeEntity productType;
+	private final ProductTypeEntity productType;
+
+	private final OfficeBO office;
+
+	private final String globalPrdCategoryNum;
 
 	private String productCategoryName;
 
 	private String productCategoryDesc;
 
-	private OfficeBO office;
+	private PrdCategoryStatusEntity prdCategoryStatus;
+	
+	private MifosLogger prdLoanLogger=MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
 
-	private PrdCategoryStatus prdCategoryStatus;
+	protected ProductCategoryBO() {
+		productCategoryID = null;
+		productType = null;
+		office = null;
+		globalPrdCategoryNum = null;
+	}
 
-	private String globalPrdOfferingNum;
-
-	public ProductCategoryBO() {
-	}	
-	public ProductCategoryBO(UserContext userContext) {
+	public ProductCategoryBO(UserContext userContext,
+			ProductTypeEntity productType, String productCategoryName,
+			String productCategoryDesc) throws ProductDefinitionException {
 		super(userContext);
-
+		prdLoanLogger.debug("Creating product category");
+		validateProductCategoryName(productCategoryName);
+		this.productCategoryID = null;
+		this.productType = productType;
+		this.office = new OfficePersistence().getOffice(userContext
+				.getBranchId());
+		this.globalPrdCategoryNum = generatePrdCategoryNum();
+		this.productCategoryName = productCategoryName;
+		this.productCategoryDesc = productCategoryDesc;
+		this.prdCategoryStatus = new PrdCategoryStatusEntity(PrdCategoryStatus.ACTIVE);
+		setCreateDetails();
+		prdLoanLogger.debug("Creation of product category done");
 	}
 
 	public ProductTypeEntity getProductType() {
 		return productType;
-	}
-
-	public void setProductType(ProductTypeEntity productType) {
-		this.productType = productType;
 	}
 
 	public String getProductCategoryDesc() {
@@ -90,10 +111,6 @@ public class ProductCategoryBO extends BusinessObject {
 		return productCategoryID;
 	}
 
-	public void setProductCategoryID(Short productCategoryID) {
-		this.productCategoryID = productCategoryID;
-	}
-
 	public String getProductCategoryName() {
 		return productCategoryName;
 	}
@@ -102,29 +119,48 @@ public class ProductCategoryBO extends BusinessObject {
 		this.productCategoryName = productCategoryName;
 	}
 
-
-	private OfficeBO getOffice() {
-		return office;
-	}
-
-	private void setOffice(OfficeBO office) {
-		this.office = office;
-	}
-
-	public PrdCategoryStatus getPrdCategoryStatus() {
+	public PrdCategoryStatusEntity getPrdCategoryStatus() {
 		return prdCategoryStatus;
 	}
 
-	public void setPrdCategoryStatus(PrdCategoryStatus prdCategoryStatus) {
+	public void setPrdCategoryStatus(PrdCategoryStatusEntity prdCategoryStatus) {
 		this.prdCategoryStatus = prdCategoryStatus;
 	}
-
-	public String getGlobalPrdOfferingNum() {
-		return globalPrdOfferingNum;
+	
+	public String getGlobalPrdCategoryNum() {
+		return globalPrdCategoryNum;
 	}
 
-	public void setGlobalPrdOfferingNum(String globalPrdOfferingNum) {
-		this.globalPrdOfferingNum = globalPrdOfferingNum;
+	private String generatePrdCategoryNum() {
+		prdLoanLogger.debug("Generating new product category global number");
+		StringBuilder globalPrdOfferingNum = new StringBuilder();
+		globalPrdOfferingNum.append(userContext.getBranchId());
+		globalPrdOfferingNum.append("-");
+		Short maxPrdID = new ProductCategoryPersistence().getMaxPrdCategoryId();
+		globalPrdOfferingNum.append(StringUtils.lpad(String
+				.valueOf(maxPrdID != null ? maxPrdID + 1
+						: ProductDefinitionConstants.DEFAULTMAX), '0', 3));
+		prdLoanLogger.debug("Generation of new product category global number done");
+		return globalPrdOfferingNum.toString();
 	}
-
+	
+	private void validateProductCategoryName(String productCategoryName) throws ProductDefinitionException{
+		prdLoanLogger.debug("Checking for duplicate product category name");
+		if(!new ProductCategoryPersistence().getProductCategory(productCategoryName).equals(Integer.valueOf("0")))
+			throw new ProductDefinitionException(
+					ProductDefinitionConstants.DUPLCATEGORYNAME);
+	}
+	
+	public void updateProductCategory(String productCategoryName,
+			String productCategoryDesc,
+			PrdCategoryStatusEntity prdCategoryStatus)
+			throws ProductDefinitionException {
+		prdLoanLogger.debug("Updating product category name");
+		validateProductCategoryName(productCategoryName);
+		this.productCategoryName = productCategoryName;
+		this.productCategoryDesc = productCategoryDesc;
+		this.prdCategoryStatus = prdCategoryStatus;
+		prdLoanLogger.debug("Updating product category done");
+	}
+	
 }

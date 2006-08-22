@@ -13,7 +13,7 @@
          <version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null"/>
         <property name="latenessDays" column="LATENESS_DAYS" type="short"  not-null="false" />
         <property name="dormancyDays" column="DORMANCY_DAYS" type="short"  not-null="false" />
-        <many-to-one name="lookUpValue" column="PRD_TYPE_LOOKUP_ID" class="org.mifos.application.master.util.valueobjects.LookUpValue" cascade="none" update="false"/>
+        <many-to-one name="lookUpValue" column="PRD_TYPE_LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false"/>
         
      </class>
      <!--Get the lateness days value for a Loan product -->
@@ -24,9 +24,13 @@
 			]]>
     </query>
 
-      <query name="productdefenition.getDormancyDays">
+    <query name="productdefenition.getDormancyDays">
 		<![CDATA[select productType.dormancyDays from org.mifos.application.productdefinition.business.ProductTypeEntity productType 
 			where productType.productTypeID = :productTypeId]]>
+    </query>
+    
+    <query name="productdefenition.getProductTypes">
+		<![CDATA[from org.mifos.application.productdefinition.business.ProductTypeEntity pt order by pt.productTypeID]]>
     </query>
     
     

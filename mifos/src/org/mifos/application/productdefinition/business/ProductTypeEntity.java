@@ -38,49 +38,32 @@
 
 package org.mifos.application.productdefinition.business;
 
-import java.util.List;
+import java.util.Set;
 
-import org.mifos.application.master.util.valueobjects.LookUpValue;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.master.business.LookUpValueLocaleEntity;
+import org.mifos.framework.business.BusinessObject;
 
-/**
- * @author ashishsm
- * 
- */
 
-public class ProductTypeEntity extends PersistentObject {
+public class ProductTypeEntity extends BusinessObject {
 
 	private Short productTypeID;
 
-	private LookUpValue lookUpValue;
+	private LookUpValueEntity lookUpValue;
 
 	private Short latenessDays;
 
 	private Short dormancyDays;
 
-	private List<ProductTypeEntity> productTypeList;
-
-	private String value;
-
-	public ProductTypeEntity() {
+	protected ProductTypeEntity() {
 		super();
-		this.lookUpValue = new LookUpValue();
 	}
-
-	public ProductTypeEntity(Short productTypeID, String value,
-			Integer versionNo) {
-		super();
-		this.lookUpValue = new LookUpValue();
-		this.productTypeID = productTypeID;
-		this.value = value;
-		this.versionNo = versionNo;
-	}
-
-	public LookUpValue getLookUpValue() {
+	
+	public LookUpValueEntity getLookUpValue() {
 		return lookUpValue;
 	}
 
-	public void setLookUpValue(LookUpValue lookUpValue) {
+	public void setLookUpValue(LookUpValueEntity lookUpValue) {
 		this.lookUpValue = lookUpValue;
 	}
 
@@ -107,21 +90,15 @@ public class ProductTypeEntity extends PersistentObject {
 	public void setLatenessDays(Short latenessDays) {
 		this.latenessDays = latenessDays;
 	}
-
-	public List<ProductTypeEntity> getProductTypeList() {
-		return productTypeList;
+	
+	public String getName() {
+		String name=null;
+		Set<LookUpValueLocaleEntity> lookupSet = getLookUpValue().getLookUpValueLocales();
+		for(LookUpValueLocaleEntity entity : lookupSet){
+			if(entity.getLocaleId().equals(userContext.getLocaleId())){
+				name=entity.getLookUpValue();
+			}
+		}
+		return name;
 	}
-
-	public void setProductTypeList(List<ProductTypeEntity> productTypeList) {
-		this.productTypeList = productTypeList;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
-
 }

@@ -23,10 +23,8 @@
         <many-to-one name="productType" column="PRD_TYPE_ID" class="org.mifos.application.productdefinition.util.valueobjects.ProductType" cascade="none" not-null="true"/>
         <many-to-one name="prdCategoryStatus" column="STATE" class="org.mifos.application.master.util.valueobjects.PrdCategoryStatus" cascade="none" not-null="true"/>
     </class>
-    <query name="product.createduplcount"><![CDATA[select count(*) from org.mifos.application.productdefinition.util.valueobjects.ProductCategory pc where pc.productCategoryName=:productCategoryName]]></query>
     <query name="product.updateduplcount"><![CDATA[select count(*) from org.mifos.application.productdefinition.util.valueobjects.ProductCategory pc where pc.productCategoryName=:productCategoryName and pc.productCategoryID != (:productCategoryID)]]></query>
     <query name="product.searchcategories"><![CDATA[from org.mifos.application.productdefinition.util.valueobjects.ProductCategory pc order by pc.productType.productTypeID,pc.productCategoryName]]></query>
     <query name="product.getloancategories"><![CDATA[from org.mifos.application.productdefinition.util.valueobjects.ProductCategory pc where pc.productType.productTypeID=:productTypeID and pc.prdCategoryStatus.prdCategoryStatusId=:prdCategoryStatusId order by pc.productCategoryName]]></query>
-    <query name="product.maxprdcatid"><![CDATA[select max(pc.productCategoryID) from org.mifos.application.productdefinition.util.valueobjects.ProductCategory pc]]></query>    
     <query name="product.getallcategories"><![CDATA[from org.mifos.application.productdefinition.util.valueobjects.ProductCategory pc where pc.productType.productTypeID=:productTypeID order by pc.productCategoryName]]></query>
 </hibernate-mapping>
