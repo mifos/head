@@ -1,5 +1,14 @@
 package org.mifos.framework.struts.plugin.helper;
 
+import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.util.helpers.EntityType;
+
+/**
+    Together with {@link MasterDataEntity}
+ 	this class provides the old
+ 	way of handling entity types.  The new way
+ 	is {@link EntityType}.
+ 	*/
 public interface EntityMasterConstants {
 	public static Short Client=1;
 	public static Short LoanProduct=2;

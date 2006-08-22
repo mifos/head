@@ -5,11 +5,17 @@ package org.mifos.application.master.business;
 
 import java.util.Set;
 
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 
 /**
  * @author rohitr
  *
+ * Together with {@link EntityMasterConstants}
+ * this class provides the old
+ * way of handling entity types.  The new way
+ * is {@link EntityType}.
  */
 public abstract class MasterDataEntity extends PersistentObject {
 	private Short localeId;
