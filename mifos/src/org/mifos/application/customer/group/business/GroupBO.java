@@ -44,7 +44,6 @@ import java.util.List;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.exceptions.CustomerException;
-import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -107,12 +106,12 @@ public class GroupBO extends CustomerBO {
 			this.setCustomerActivationDate(this.getCreatedDate());
 	}
 
-	public boolean isCustomerActive() {
-		if (getCustomerStatus().getId().equals(GroupConstants.ACTIVE))
-			return true;
-		return false;
+	@Override
+	public boolean isActive() {
+		return getCustomerStatus().getId().equals(CustomerStatus.GROUP_ACTIVE.getValue());
 	}
 
+	@Override
 	public GroupPerformanceHistoryEntity getPerformanceHistory() {
 		return performanceHistory;
 	}
@@ -124,6 +123,7 @@ public class GroupBO extends CustomerBO {
 		this.performanceHistory = performanceHistory;
 	}
 
+	@Override
 	public void generatePortfolioAtRisk() throws PersistenceException,
 			ServiceException {
 		Money amount = getBalanceForAccountsAtRisk();

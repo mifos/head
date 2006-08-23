@@ -1938,7 +1938,7 @@ public class LoanBO extends AccountBO {
 			throw new AccountException(
 					AccountExceptionConstants.CREATEEXCEPTION);
 
-		if (!customer.isCustomerActive())
+		if (!customer.isActive())
 			throw new AccountException(
 					AccountExceptionConstants.CREATEEXCEPTION);
 		if (!loanOffering.getPrdStatus().getOfferingStatusId().equals(

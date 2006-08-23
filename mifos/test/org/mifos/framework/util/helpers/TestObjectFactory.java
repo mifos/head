@@ -294,6 +294,23 @@ public class TestObjectFactory {
 	}
 	
 	public static CenterBO createCenter(String customerName, Short statusId,
+			String searchId, MeetingBO meeting, Short officeId, Short personnelId, Date startDate) {
+		CenterBO center = null;
+		try {
+			if(meeting!=null)
+				meeting.setMeetingStartDate(new GregorianCalendar());
+			center = new CenterBO(getUserContext(), customerName, null, null, getFees(),  null, null, officeId, meeting, personnelId);
+			//center.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), center, startDate));
+			center.save();
+			HibernateUtil.commitTransaction();
+			//TODO: throw Exception
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return center;
+	}
+	
+	public static CenterBO createCenter(String customerName, Short statusId,
 			String searchId, MeetingBO meeting, Date startDate,List<FeeView> fees) {
 		CenterBO center = null;
 		try {
@@ -336,12 +353,12 @@ public class TestObjectFactory {
 			String searchId, CustomerBO parentCustomer, Date startDate) {
 		GroupBO group = null;
 		try {
-			Short office = new Short("3");
+			//Short office = new Short("3");
 			Short personnel = new Short("1");	
 			if(parentCustomer!=null && parentCustomer.getCustomerMeeting()!=null 
 					&& parentCustomer.getCustomerMeeting().getMeeting()!=null)
 				parentCustomer.getCustomerMeeting().getMeeting().setMeetingStartDate(new GregorianCalendar());
-			group = new GroupBO(getUserContext(), customerName, CustomerStatus.getStatus(statusId), null, null, null, null, getFees(), personnel, office, parentCustomer, searchId);
+			group = new GroupBO(getUserContext(), customerName, CustomerStatus.getStatus(statusId), null, null, null, null, getFees(), personnel, parentCustomer.getOffice().getOfficeId(), parentCustomer, searchId);
 			//group.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), group, startDate));
 			group.save();
 			HibernateUtil.commitTransaction();

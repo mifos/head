@@ -50,6 +50,7 @@ import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.exceptions.CustomerException;
@@ -156,6 +157,7 @@ public abstract class CustomerBO extends BusinessObject {
 		super(userContext);
 		customerHierarchies = new HashSet<CustomerHierarchyEntity>();
 		customerMovements = new HashSet<CustomerMovementEntity>();
+		customerPositions = new HashSet<CustomerPositionEntity>();
 		validateFields(displayName, customerStatus, officeId);
 		this.customFields = new HashSet<CustomerCustomFieldEntity>();
 		this.accounts = new HashSet<AccountBO>();
@@ -206,7 +208,6 @@ public abstract class CustomerBO extends BusinessObject {
 
 		this.accounts.add(createCustomerAccount(fees));
 
-		// TODO: write code to create customer hierarchy and add
 		this.setCreateDetails();
 	}
 
@@ -328,8 +329,12 @@ public abstract class CustomerBO extends BusinessObject {
 				.getAddress() : null;
 	}
 
-	public CustomerStatus getStatus() throws PropertyNotFoundException {
-		return CustomerStatus.getStatus(customerStatus.getId());
+	public CustomerStatus getStatus() throws  CustomerException{
+		try{
+			return CustomerStatus.getStatus(customerStatus.getId());
+		}catch(PropertyNotFoundException pnfe){
+			throw new CustomerException(pnfe);
+		}
 	}
 
 	public void save() throws CustomerException {
@@ -430,9 +435,15 @@ public abstract class CustomerBO extends BusinessObject {
 		this.customerMeeting = customerMeeting;
 	}
 
-	// TODO: write code to fetch active hierarchy for the customer
 	public CustomerHierarchyEntity getActiveCustomerHierarchy() {
-		return null;
+		CustomerHierarchyEntity hierarchy = null;
+		for(CustomerHierarchyEntity customerHierarchyEntity : customerHierarchies){
+			if(customerHierarchyEntity.isActive()){
+				hierarchy = customerHierarchyEntity;
+				break;
+			}
+		}
+		return hierarchy;
 	}
 
 	public void addCustomerHierarchy(CustomerHierarchyEntity hierarchy) {
@@ -442,11 +453,14 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 
 	public CustomerMovementEntity getActiveCustomerMovement() {
+		CustomerMovementEntity movement = null;
 		for(CustomerMovementEntity customerMovementEntity : customerMovements){
-			if(customerMovementEntity.isActive())
-				return customerMovementEntity;
+			if(customerMovementEntity.isActive()){
+				movement = customerMovementEntity;
+				break;
+			}
 		}
-		return null;
+		return movement;
 	}
 	
 	public void addCustomerMovement(CustomerMovementEntity customerMovement) {
@@ -570,7 +584,7 @@ public abstract class CustomerBO extends BusinessObject {
 		getCustomerAccount().adjustPmnt(adjustmentComment);
 	}
 
-	public abstract boolean isCustomerActive();
+	public abstract boolean isActive();
 
 
 
@@ -737,5 +751,37 @@ public abstract class CustomerBO extends BusinessObject {
 	
 	protected boolean isSameBranch(OfficeBO officeObj){
 		return this.office.getOfficeId().equals(officeObj.getOfficeId());
+	}
+	
+	public boolean hasAnyLoanAccountInUse(){
+		for (AccountBO account : getAccounts()) {
+			if (account.getAccountType().getAccountTypeId().equals(AccountTypes.LOANACCOUNT.getValue())) {
+				if(!(account.getAccountState().getId().equals(AccountState.LOANACC_CANCEL) 
+						|| account.getAccountState().getId().equals(AccountState.LOANACC_BADSTANDING)
+						|| account.getAccountState().getId().equals(AccountState.LOANACC_OBLIGATIONSMET)
+						|| account.getAccountState().getId().equals(AccountState.LOANACC_WRITTENOFF)))
+					return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean hasAnySavingsAccountInUse(){
+		for (AccountBO account : getAccounts()) {
+			if (account.getAccountType().getAccountTypeId().equals(AccountTypes.SAVINGSACCOUNT.getValue())) {
+				if(!(account.getAccountState().getId().equals(AccountState.SAVINGS_ACC_CANCEL) 
+						|| account.getAccountState().getId().equals(AccountState.SAVINGS_ACC_CLOSED)))
+					return true;
+			}
+		}
+		return false;
+	}
+	
+	public void resetPositionsAssignedToClient(Integer clientId){
+		if(getCustomerPositions()!=null){
+			for(CustomerPositionEntity position: getCustomerPositions())
+				if(position.getCustomer().getCustomerId().equals(clientId))
+					position.setCustomer(null);
+		}
 	}
 }

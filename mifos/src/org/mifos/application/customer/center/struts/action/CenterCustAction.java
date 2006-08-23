@@ -65,6 +65,7 @@ import org.mifos.application.customer.center.dao.CenterDAO;
 import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.center.util.valueobjects.Center;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.LinkParameters;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -88,7 +89,6 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
@@ -459,7 +459,7 @@ public class CenterCustAction extends BaseAction {
 	}
 
 	private void loadClients(HttpServletRequest request)
-			throws PropertyNotFoundException, SystemException {
+			throws CustomerException, SystemException {
 		CenterBO center = (CenterBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
 		List<CustomerBO> customerList = center.getChildren(CustomerLevel.CLIENT.getValue());

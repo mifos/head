@@ -71,10 +71,10 @@ public class CustomerHierarchyEntity extends PersistentObject {
 	}
 
 	public CustomerHierarchyEntity(CustomerBO customer,
-			CustomerBO parentCustomer, Status status) {
+			CustomerBO parentCustomer) {
 		this.customer = customer;
 		this.parentCustomer = parentCustomer;
-		this.status = status.getValue();
+		this.status = Status.ACTIVE.getValue();
 		this.hierarchyId = null;
 		this.createdDate = new Date();
 	}
@@ -101,5 +101,12 @@ public class CustomerHierarchyEntity extends PersistentObject {
 
 	public boolean isActive() {
 		return status.equals(Status.ACTIVE.getValue());
+	}
+	
+	public void makeInActive(Short updatedBy){
+		updateStatus(Status.INACTIVE);
+		setUpdatedBy(updatedBy);
+		setUpdatedDate(new Date());
+		setEndDate(new Date());
 	}
 }

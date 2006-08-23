@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
+import org.mifos.application.configuration.business.ConfigurationIntf;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
@@ -21,6 +22,7 @@ import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.exceptions.CustomerStateChangeException;
+import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -29,7 +31,6 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
-import org.mifos.application.util.helpers.Status;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -140,7 +141,7 @@ public class ClientBO extends CustomerBO {
 
 		if (parentCustomer != null) {
 			CustomerHierarchyEntity customerHierarchyEntity = new CustomerHierarchyEntity(
-					this, parentCustomer, Status.ACTIVE);
+					this, parentCustomer);
 			this.addCustomerHierarchy(customerHierarchyEntity);
 		}
 		validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId);
@@ -154,7 +155,7 @@ public class ClientBO extends CustomerBO {
 		try{
 			if(isClientUnderGroup()){
 				if (customerStatus.getValue().equals(CustomerStatus.CLIENT_ACTIVE.getValue()) || customerStatus.getValue().equals(CustomerStatus.CLIENT_PENDING.getValue())){
-					if(isGroupStatusLower(customerStatus.getValue() ,parentCustomer.getCustomerStatus().getId())){
+					if(isGroupStatusLower(parentCustomer.getStatus())){
 						throw new CustomerException(ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION ,new Object[] {
 								MifosConfiguration.getInstance().getLabel(ConfigurationConstants.GROUP,	this.getUserContext().getPereferedLocale()) ,
 								MifosConfiguration.getInstance().getLabel(ConfigurationConstants.CLIENT,	this.getUserContext().getPereferedLocale()) ,});
@@ -251,10 +252,9 @@ public class ClientBO extends CustomerBO {
 		new CustomerPersistence().createOrUpdate(this);
 	}
 
-	public boolean isCustomerActive() {
-		if (getCustomerStatus().getId().equals(ClientConstants.STATUS_ACTIVE))
-			return true;
-		return false;
+	@Override
+	public boolean isActive() {
+		return getCustomerStatus().getId().equals(CustomerStatus.CLIENT_ACTIVE.getValue());
 	}
 
 	public boolean isClientUnderGroup() {
@@ -404,20 +404,18 @@ public class ClientBO extends CustomerBO {
 		
 	}
 	
-	private boolean isGroupStatusLower(Short clientStatus , Short parentStatus ) {
-	
-		boolean isNotValid = false ;
-		if(clientStatus.equals(CustomerStatus.CLIENT_PENDING.getValue())){
-			if(parentStatus.equals(CustomerStatus.GROUP_PARTIAL.getValue())){
-				isNotValid = true;
+	private boolean isGroupStatusLower(CustomerStatus groupStatus ) throws CustomerException{
+		if(getStatus().equals(CustomerStatus.CLIENT_PENDING)){
+			if(groupStatus.equals(CustomerStatus.GROUP_PARTIAL))
+				return true;
+		}
+		else if(getStatus().equals(CustomerStatus.CLIENT_ACTIVE)){
+			if(groupStatus.equals(CustomerStatus.GROUP_PARTIAL) || 
+					groupStatus.equals(CustomerStatus.GROUP_PENDING)){
+				return true;
 			}
 		}
-		else if(clientStatus.equals(CustomerStatus.CLIENT_ACTIVE.getValue())){
-			if(parentStatus.equals(CustomerStatus.GROUP_PARTIAL.getValue()) || parentStatus.equals(CustomerStatus.GROUP_PENDING.getValue())){
-				isNotValid = true;
-			}
-		}
-		return isNotValid;
+		return false;
 	}
 	
 	private void generateSearchId(CustomerBO parentCustomer , Short officeId) throws CustomerException{
@@ -440,9 +438,51 @@ public class ClientBO extends CustomerBO {
 	public void transferToBranch(OfficeBO officeToTransfer)throws CustomerException{
 		validateBranchTransfer(officeToTransfer);
 
-		if(isCustomerActive())
+		if(isActive())
 			setCustomerStatus(new CustomerStatusEntity(CustomerStatus.CLIENT_HOLD));
 		
+		makeCustomerMovementEntries(officeToTransfer);		
+		this.setPersonnel(null);		
+		super.update();
+	}
+
+	
+	public void transferToGroup(GroupBO newParent)throws CustomerException{
+		validateGroupTransfer(newParent);
+
+		if(!isSameBranch(newParent.getOffice()))
+			makeCustomerMovementEntries(newParent.getOffice());
+		
+		CustomerBO oldParent = getParentCustomer();
+		
+		oldParent.setMaxChildCount(getParentCustomer().getMaxChildCount() - 1);
+		newParent.setMaxChildCount(newParent.getMaxChildCount()+1);
+		setSearchId(newParent.getSearchId()+ "."+ String.valueOf(newParent.getMaxChildCount()));
+		
+		setParentCustomer(newParent);
+
+		setPersonnel(newParent.getPersonnel());
+		getCustomerMeeting().setMeeting(newParent.getCustomerMeeting().getMeeting());
+		getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
+		
+		CustomerHierarchyEntity currentHierarchy = getActiveCustomerHierarchy();
+		currentHierarchy.makeInActive(userContext.getId());
+		
+		CustomerHierarchyEntity newHierarchy = new CustomerHierarchyEntity(this,newParent);
+		this.addCustomerHierarchy(newHierarchy);
+		oldParent.resetPositionsAssignedToClient(this.getCustomerId());
+		if(oldParent.getParentCustomer()!=null){
+			CustomerBO center = oldParent.getParentCustomer();
+			center.resetPositionsAssignedToClient(this.getCustomerId());
+			center.update();
+		}
+		oldParent.update();
+		newParent.update();
+		this.update();
+		
+	}
+	
+	private void makeCustomerMovementEntries(OfficeBO officeToTransfer){
 		CustomerMovementEntity currentCustomerMovement = getActiveCustomerMovement();
 		if(currentCustomerMovement == null){
 			currentCustomerMovement = new CustomerMovementEntity(this, getCreatedDate());
@@ -450,16 +490,46 @@ public class ClientBO extends CustomerBO {
 		}
 		
 		currentCustomerMovement.makeInActive(userContext.getId());
-		
-
 		this.setOffice(officeToTransfer);
-		this.setPersonnel(null);
-		
 		CustomerMovementEntity newCustomerMovement = new CustomerMovementEntity(this, new Date());
 		this.addCustomerMovement(newCustomerMovement);
-		super.update();
 	}
-
+	
+	private void validateGroupTransfer(GroupBO toGroup)throws CustomerException{
+		if (toGroup == null)
+			throw new CustomerException(CustomerConstants.INVALID_PARENT);
+		
+		if(isSameGroup(toGroup))
+			throw new CustomerException(CustomerConstants.ERRORS_SAME_PARENT_TRANSFER);
+		
+		validateForGroupStatus(toGroup.getStatus());
+		validateForActiveAccounts();		
+	}
+	
+	private void validateForGroupStatus(CustomerStatus groupStatus)throws CustomerException{
+		if(isGroupStatusLower(groupStatus)){
+			ConfigurationIntf labelConfig=MifosConfiguration.getInstance();
+			try{
+				Object[] args = new Object[]{labelConfig.getLabel(ConfigurationConstants.GROUP, userContext.getPereferedLocale()),
+						labelConfig.getLabel(ConfigurationConstants.CLIENT, userContext.getPereferedLocale())};
+				throw new CustomerException(ClientConstants.ERRORS_LOWER_GROUP_STATUS, args);
+			}catch(ConfigurationException ce){
+				new CustomerException(ce);
+			}	
+		}
+	}
+	
+	private void validateForActiveAccounts()throws CustomerException{
+		if(hasAnyLoanAccountInUse() || hasAnySavingsAccountInUse()){
+			ConfigurationIntf labelConfig=MifosConfiguration.getInstance();
+			try{
+				Object[] args = new Object[]{labelConfig.getLabel(ConfigurationConstants.GROUP, userContext.getPereferedLocale())};
+				throw new CustomerException(ClientConstants.ERRORS_ACTIVE_ACCOUNTS_PRESENT, args);
+			}catch(ConfigurationException ce){
+				new CustomerException(ce);
+			}	
+		}
+	}
 	
 	private void validateBranchTransfer(OfficeBO officeToTransfer)throws CustomerException{
 		if (officeToTransfer == null)
@@ -467,6 +537,10 @@ public class ClientBO extends CustomerBO {
 		
 		if(isSameBranch(officeToTransfer))
 			throw new CustomerException(CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER);
+	}
+	
+	private boolean isSameGroup(GroupBO group){
+		return getParentCustomer().getCustomerId().equals(group.getCustomerId());
 	}
 	
 	public ClientNameDetailEntity getClientName(){

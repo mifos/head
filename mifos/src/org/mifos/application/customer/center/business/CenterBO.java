@@ -37,7 +37,6 @@ public class CenterBO extends CustomerBO {
 		super();
 	}
 
-	// TODO: removed searchId from parameter and generate internally
 	public CenterBO(UserContext userContext, String displayName,
 			Address address, List<CustomFieldView> customFields,
 			List<FeeView> fees, String externalId, Date mfiJoiningDate,
@@ -59,11 +58,9 @@ public class CenterBO extends CustomerBO {
 		this.setCustomerActivationDate(this.getCreatedDate());
 	}
 
-	public boolean isCustomerActive() {
-		if (getCustomerStatus().getId().equals(
-				CustomerConstants.CENTER_ACTIVE_STATE))
-			return true;
-		return false;
+	@Override
+	public boolean isActive() {
+		return getCustomerStatus().getId().equals(CustomerStatus.CENTER_ACTIVE.getValue());
 	}
 
 	private void validateFields(String displayName, MeetingBO meeting,

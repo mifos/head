@@ -221,7 +221,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.center_detail_page.toString());
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class, center.getCustomerId());
-		assertFalse(center.isCustomerActive());
+		assertFalse(center.isActive());
 	}
 	
 	public void testLoadForClient(){
@@ -331,7 +331,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.client_detail_page.toString());
 		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class, client.getCustomerId());
-		assertFalse(client.isCustomerActive());
+		assertFalse(client.isActive());
 	}
 	
 	private void createInitialObjects() {

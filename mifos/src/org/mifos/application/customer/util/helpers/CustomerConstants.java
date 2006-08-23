@@ -224,6 +224,7 @@ public interface CustomerConstants {
 	public static final String INVALID_STATUS="errors.Customer.invalidStatus";
 	public static final String INVALID_NAME="errors.Customer.invalidName";
 	public static final String INVALID_OFFICE="errors.Customer.invalidOffice";
+	public static final String INVALID_PARENT="errors.Customer.invalidParent";
 
 	public final String TRANSITION_CONFIG_FILE_PATH_CENTER="org/mifos/framework/util/resources/stateMachine/StateMachine_center.xml";	
 	public final String TRANSITION_CONFIG_FILE_PATH_CLIENT="org/mifos/framework/util/resources/stateMachine/StateMachine_client.xml";
@@ -244,6 +245,7 @@ public interface CustomerConstants {
 	public static final String ERRORS_DUPLICATE_PERIODIC_FEE="errors.Customer.duplicatePeriodicFee";
 	public static final String ERRORS_SPECIFY_FEE_AMOUNT="errors.Customer.specifyFeeAmount";
 	public static final String ERRORS_SAME_BRANCH_TRANSFER="errors.Customer.sameBranchTransfer";
+	public static final String ERRORS_SAME_PARENT_TRANSFER="errors.Customer.sameParentTransferException";
 	public static final String ERRORS_MANDATORY="errors.mandatory";
 	public static final String ERRORS_SELECT="errors.requiredSelect";
 	public static final String SALUTATION = "Salutation";

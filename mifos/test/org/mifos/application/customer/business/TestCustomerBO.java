@@ -207,6 +207,41 @@ public class TestCustomerBO extends MifosTestCase {
 				accountBO.getAccountId());
 	}
 
+	public void testHasAnyLoanAccountInUse() throws PersistenceException {
+		createInitialObjects();
+		accountBO = getLoanAccount(group, meeting);
+		TestObjectFactory.flushandCloseSession();
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		assertTrue(group.hasAnyLoanAccountInUse());
+		TestObjectFactory.flushandCloseSession();
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+	}
+	
+	public void testHasAnySavingsAccountInUse() throws PersistenceException {
+		accountBO = getSavingsAccount();
+		TestObjectFactory.flushandCloseSession();
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		assertTrue(client.hasAnySavingsAccountInUse());
+		TestObjectFactory.flushandCloseSession();
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+	}
+	
 	public void testgetSavingsBalance() throws Exception {
 		SavingsBO savings = getSavingsAccount();
 		savings.setSavingsBalance(new Money("1000"));

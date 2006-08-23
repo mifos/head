@@ -222,7 +222,7 @@ public class CustomerAccountBO extends AccountBO {
 	}
 
 	public boolean isAdjustPossibleOnLastTrxn() {
-		if (!(getCustomer().isCustomerActive())) {
+		if (!(getCustomer().isActive())) {
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 					"State is not active hence adjustment is not possible");
 			return false;
