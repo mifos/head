@@ -738,7 +738,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		verifyNoActionMessages();
 	}
 	
-	public void testSuccessfulUpdate() throws Exception {
+	public void testSuccessfulUpdatePersonalInfo() throws Exception {
 		createAndSetClientInSession();		
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "editPersonalInfo");
@@ -768,6 +768,130 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
 		
 	}
+	
+	public void testEditMfiInfoForClientInBranch() throws Exception {		
+		
+		createAndSetClientInSession();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "editMfiInfo");
+		addRequestParameter("officeId", "3");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.editMfiInfo_success.toString());
+		assertNotNull(SessionUtils.getAttribute(CustomerConstants.LOAN_OFFICER_LIST ,request.getSession()));
+				
+	}
+	
+	public void testEditMfiInfoForClientUnderGroup() throws Exception {		
+		
+		createClientWithGroupAndSetInSession();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "editMfiInfo");
+		addRequestParameter("officeId", "3");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.editMfiInfo_success.toString());
+		assertNull(SessionUtils.getAttribute(CustomerConstants.LOAN_OFFICER_LIST ,request.getSession()));
+				
+	}
+	
+	public void testPreviewEditMfiInfo() throws Exception {		
+		
+		createClientWithGroupAndSetInSession();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "previewEditMfiInfo");
+		addRequestParameter("officeId", "3");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.previewEditMfiInfo_success.toString());
+						
+	}
+	
+	public void testPrevEditMfiInfo() throws Exception {		
+		
+		createClientWithGroupAndSetInSession();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "prevEditMfiInfo");
+		addRequestParameter("officeId", "3");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.prevEditMfiInfo_success.toString());
+						
+	}
+	
+	public void testUpdateMfiInfo() throws Exception {		
+		
+		createClientWithGroupAndSetInSession();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "editMfiInfo");
+		actionPerform();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "previewEditMfiInfo");
+		addRequestParameter("trained", "0");
+		actionPerform();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "updateMfiInfo");
+		addRequestParameter("externalId", "3");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.updateMfiInfo_success.toString());
+		assertEquals("3", client.getExternalId());
+		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());				
+	}
+	
+	public void testUpdateMfiInfoWithTrained() throws Exception {		
+		
+		createClientWithGroupAndSetInSession();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "editMfiInfo");
+		actionPerform();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "previewEditMfiInfo");
+		addRequestParameter("trained", "1");
+		addRequestParameter("trainedDate", "03/21/2006");
+		addRequestParameter("externalId", "3");
+		actionPerform();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "updateMfiInfo");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.updateMfiInfo_success.toString());
+		assertEquals("3", client.getExternalId());
+		assertTrue(client.isTrained());
+		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());				
+	}
+	
+	public void testUpdateMfiInfoWithLoanOfficer() throws Exception {		
+		
+		createAndSetClientInSession();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "editMfiInfo");
+		actionPerform();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "previewEditMfiInfo");
+		addRequestParameter("trained", "1");
+		addRequestParameter("trainedDate", "03/21/2006");
+		addRequestParameter("externalId", "3");
+		addRequestParameter("loanOfficerId", "3");
+		actionPerform();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "updateMfiInfo");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.updateMfiInfo_success.toString());
+		assertEquals("3", client.getExternalId());
+		assertTrue(client.isTrained());
+		assertEquals(3 , client.getPersonnel().getPersonnelId().shortValue());
+		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());				
+	}
+
 	private void createAndSetClientInSession() throws Exception{
 		String name = "Client 1";
 		Short officeId = 1;
@@ -781,6 +905,17 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		client.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
+		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class, new Integer(client.getCustomerId()).intValue());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request.getSession());
+	}
+	
+	private void createClientWithGroupAndSetInSession() throws Exception{
+		String name = "Client 1";
+		createParentCustomer();
+		client = TestObjectFactory.createClient(name,CustomerStatus.CLIENT_ACTIVE.getValue(),group,new Date());
+		HibernateUtil.closeSession();
+		center = (CenterBO)TestObjectFactory.getObject(CenterBO.class, new Integer(center.getCustomerId()).intValue());
+		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class, new Integer(group.getCustomerId()).intValue());
 		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class, new Integer(client.getCustomerId()).intValue());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request.getSession());
 	}

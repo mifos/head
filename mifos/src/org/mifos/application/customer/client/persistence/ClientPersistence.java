@@ -39,14 +39,19 @@
 package org.mifos.application.customer.client.persistence;
 
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Blob;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
@@ -59,10 +64,11 @@ public class ClientPersistence extends Persistence {
 		return client;
 	}
 	
-	public boolean checkForDuplicacyOnGovtId(String governmentId) {
+	public boolean checkForDuplicacyOnGovtId(String governmentId , Integer customerId) {
 			Map<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put("LEVEL_ID", CustomerConstants.CLIENT_LEVEL_ID);
 			queryParameters.put("GOVT_ID",governmentId);
+			queryParameters.put("customerId", customerId);
 			List queryResult = executeNamedQuery(NamedQueryConstants.GET_CLIENT_BASEDON_GOVTID, queryParameters);
 			return ((Integer)queryResult.get(0)).intValue()>0;
 	}
@@ -76,6 +82,15 @@ public class ClientPersistence extends Persistence {
 			List queryResult = executeNamedQuery(NamedQueryConstants.GET_CLIENT_BASEDON_NAME_DOB, queryParameters);
 			return ((Integer)queryResult.get(0)).intValue()>0;
 			
+	}
+
+	public Blob createBlob(InputStream picture) throws CustomerException{
+		try{
+			return Hibernate.createBlob(picture);
+		}
+		catch(IOException ioe){
+			throw new CustomerException(ioe);
+		}
 	}
 	
 }

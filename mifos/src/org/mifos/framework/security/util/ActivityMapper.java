@@ -932,7 +932,6 @@ public class ActivityMapper {
 		activityMap.put("/clientCustAction-loadMeeting-ClientCreate",
 				SecurityConstants.MEETING_CREATE_CLIENT_MEETING);
 		activityMap.put("/clientCustAction-get", SecurityConstants.VIEW);
-		activityMap.put("/clientCustAction-editMFIInfo",SecurityConstants.CIENT_EDIT_MFI_INFORMATION);
 		activityMap.put("/clientCustAction-editPersonalInfo",
 				SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
 		activityMap.put("/clientCustAction-previewEditPersonalInfo",
@@ -941,7 +940,13 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/clientCustAction-updatePersonalInfo",
 				SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
-		activityMap.put("/clientCustAction-updateMfi",
+		activityMap.put("/clientCustAction-editMfiInfo",
+				SecurityConstants.CIENT_EDIT_MFI_INFORMATION);
+		activityMap.put("/clientCustAction-previewEditMfiInfo",
+				SecurityConstants.VIEW);
+		activityMap.put("/clientCustAction-prevEditMfiInfo",
+				SecurityConstants.VIEW);
+		activityMap.put("/clientCustAction-updateMfiInfo",
 				SecurityConstants.CIENT_EDIT_MFI_INFORMATION);
 		activityMap.put("/clientCustAction-loadMeeting-Client",
 				SecurityConstants.MEETING_UPDATE_CLIENT_MEETING);

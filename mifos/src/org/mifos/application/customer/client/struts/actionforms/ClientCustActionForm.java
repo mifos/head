@@ -251,6 +251,11 @@ public class ClientCustActionForm extends CustomerActionForm {
 			validateForFeeAssignedWithoutMeeting(request,errors);
 			validateTrained(request, errors);
 		}
+		
+		if(method.equals(Methods.previewEditMfiInfo.toString()) ){
+			validateConfigurableMandatoryFields(request,errors,EntityType.CLIENT);
+			validateTrained(request, errors);
+		}
 		return errors;
 	}
 

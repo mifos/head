@@ -358,7 +358,7 @@
 							<td width="63%" height="23" class="headingorange"><mifos:mifoslabel
 								name="client.MFIInformationHeading" bundle="ClientUIResources"></mifos:mifoslabel></td>
 							<td width="37%" align="right" class="fontnormal"><html-el:link
-								action="clientCreationAction.do?method=editMFIInfo">
+								action="clientCustAction.do?method=editMfiInfo">
 								<mifos:mifoslabel name="client.EditMfiInformationLink"
 									bundle="ClientUIResources"></mifos:mifoslabel>
 							</html-el:link></td>

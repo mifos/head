@@ -79,6 +79,7 @@ import org.mifos.application.master.business.SpouseFatherLookupEntity;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -263,7 +264,6 @@ public class ClientCustAction extends CustAction {
 	public ActionForward retrievePictureOnPreview(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		System.out.println("Inside retrieve picture on preview");
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
 		InputStream in = actionForm.getPicture().getInputStream();
 		in.mark(0);
@@ -507,14 +507,18 @@ public class ClientCustAction extends CustAction {
 			client.getClientName().updateNameDetails(actionForm.getClientName());
 			client.getSpouseName().updateNameDetails(actionForm.getSpouseName());
 			client.setDisplayName(actionForm.getClientName().getDisplayName());
+			client.setFirstName(actionForm.getClientName().getFirstName());
+			client.setLastName(actionForm.getClientName().getLastName() );
+			client.setSecondLastName(actionForm.getClientName().getSecondLastName());
 			client.setDateOfBirth(getDateFromString(actionForm.getDateOfBirth(), getUserContext(request).getPereferedLocale()));
 			client.setGovernmentId(actionForm.getGovernmentId());
-			/*if(!StringUtils.isNullOrEmpty(actionForm.getPicture().getFileName())){
+			
+			if(actionForm.getPicture() !=null && !StringUtils.isNullOrEmpty(actionForm.getPicture().getFileName())){
 				client.updatePicture(actionForm.getCustomerPicture());
-			}*/
+			}
 			client.setUserContext(getUserContext(request));
 			client.updateClientDetails(actionForm.getClientDetailView());
-			client.update();
+			client.updatePersonalInfo();
 		} catch (ApplicationException ae) {
 				ae.printStackTrace();
 				ActionErrors errors = new ActionErrors();
@@ -527,11 +531,73 @@ public class ClientCustAction extends CustAction {
 		return mapping.findForward(ActionForwards.updatePersonalInfo_success.toString());
 	}
 	
+	public ActionForward editMfiInfo(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		ClientCustActionForm actionForm = (ClientCustActionForm) form;
+		clearActionForm(actionForm);
+		ClientBO client = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request.getSession());
+		ClientBO clientBO = (ClientBO) customerService.getBySystemId(client.getGlobalCustNum(),CustomerLevel.CLIENT.getValue());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,clientBO, request.getSession());
+		if(!client.isClientUnderGroup())
+			loadUpdateMfiMasterData(client.getOffice().getOfficeId(), request);
+		setValuesForMfiEditInActionForm(actionForm, request);
+		return mapping.findForward(ActionForwards.editMfiInfo_success.toString());
+	}
+	
+	
+	public ActionForward previewEditMfiInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse httpservletresponse)
+	throws Exception
+	{
+		return mapping.findForward(ActionForwards.previewEditMfiInfo_success.toString());
+	}
+	
+	public ActionForward prevEditMfiInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse httpservletresponse)
+	throws Exception
+	{
+		return mapping.findForward(ActionForwards.prevEditMfiInfo_success.toString());
+	}
+	
+	@CloseSession
+	public ActionForward updateMfiInfo(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		try{
+			ClientBO client = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request.getSession());
+			ClientCustActionForm actionForm = (ClientCustActionForm) form;
+			client.setExternalId(actionForm.getExternalId());
+			if(actionForm.getTrainedValue().equals(YesNoFlag.YES.getValue()))
+				client.setTrained(true);
+			else
+				client.setTrained(false);
+			client.setTrainedDate(getDateFromString(actionForm.getTrainedDate(), getUserContext(request).getPereferedLocale()));
+			if(actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())){ 
+					if(actionForm.getLoanOfficerIdValue()!=null){
+						client.setPersonnel(getPersonnelBusinessService().getPersonnel(actionForm.getLoanOfficerIdValue()));
+					}
+					else
+						client.setPersonnel(null);
+			}
+			client.setUserContext(getUserContext(request));
+			client.update();
+		} catch (ApplicationException ae) {
+				ae.printStackTrace();
+				ActionErrors errors = new ActionErrors();
+				errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae
+						.getValues()));
+				request.setAttribute(Globals.ERROR_KEY, errors);
+				return mapping
+						.findForward(ActionForwards.updateMfiInfo_failure.toString());
+			}
+		return mapping.findForward(ActionForwards.updateMfiInfo_success.toString());
+	}
 	private void setValuesInActionForm(ClientCustActionForm actionForm, HttpServletRequest request) {
 		ClientBO client = (ClientBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
-		actionForm.setLoanOfficerId(client.getPersonnel().getPersonnelId()
+		if(client.getPersonnel() !=null){
+			actionForm.setLoanOfficerId(client.getPersonnel().getPersonnelId()
 				.toString());
+		}
 		actionForm.setCustomerId(client.getCustomerId().toString());
 		actionForm.setGlobalCustNum(client.getGlobalCustNum());
 		actionForm.setExternalId(client.getExternalId());
@@ -549,6 +615,34 @@ public class ClientCustAction extends CustAction {
 		actionForm.setGovernmentId(client.getGovernmentId()) ;
 		actionForm.setDateOfBirth(DateHelper.getUserLocaleDate(getUserContext(request).getPereferedLocale(), client.getDateOfBirth().toString()));
 		
+	}
+	
+	private void setValuesForMfiEditInActionForm(ClientCustActionForm actionForm, HttpServletRequest request) {
+	ClientBO client = (ClientBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request.getSession());
+		if(client.getPersonnel() !=null){	
+			actionForm.setLoanOfficerId(client.getPersonnel().getPersonnelId()
+					.toString());
+		}
+		actionForm.setCustomerId(client.getCustomerId().toString());
+		actionForm.setGlobalCustNum(client.getGlobalCustNum());
+		actionForm.setExternalId(client.getExternalId());
+		if(client.isClientUnderGroup()){
+			actionForm.setGroupFlag(ClientConstants.YES);
+			actionForm.setParentGroup(client.getParentCustomer());
+		}
+		else
+			actionForm.setGroupFlag(ClientConstants.NO);
+		if(client.isTrained())
+			actionForm.setTrained(ClientConstants.YES);
+		else
+			actionForm.setTrained(ClientConstants.NO);
+		if (client.getTrainedDate() != null)
+			actionForm.setTrainedDate(DateHelper.getUserLocaleDate(getUserContext(request).getPereferedLocale(), client.getTrainedDate().toString()));
+	}
+
+	private void loadUpdateMfiMasterData(Short officeId, HttpServletRequest request) throws Exception{
+		loadLoanOfficers(officeId , request);
 	}
 
 	private ClientDetailView createClientDetailView(ClientDetailEntity customerDetail) {
@@ -663,5 +757,9 @@ public class ClientCustAction extends CustAction {
 			if (entity.getId().equals(value))
 				return entity;
 		return null;
+	}
+	private PersonnelBusinessService getPersonnelBusinessService()throws ServiceException{
+		return (PersonnelBusinessService) ServiceFactory.getInstance()
+		.getBusinessService(BusinessServiceName.Personnel);
 	}
 }

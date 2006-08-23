@@ -1030,7 +1030,8 @@
 			<forward name="previewEditPersonalInfo_failure" path="/pages/application/client/jsp/edit_ClientPersonalInfo.jsp" />
 			<forward name="previewEditMfiInfo_success" path="/pages/application/client/jsp/preview_EditClientMfiInfo.jsp" />
 			<forward name="previewEditMfiInfo_failure" path="/pages/application/client/jsp/edit_ClientMfiInfo.jsp" />
-			<!-- Preview Page Forwards End -->
+			 
+			 <!-- Preview Page Forwards End -->
 			<!-- Previous Page Forwards -->
 			<forward name="prevPersonalInfo_success" path="/pages/application/client/jsp/create_ClientPersonalInfo.jsp" />
 			<forward name="prevEditPersonalInfo_success" path="/pages/application/client/jsp/edit_ClientPersonalInfo.jsp" />
@@ -1043,7 +1044,9 @@
 			<forward name="editPersonalInfo_success" path="/pages/application/client/jsp/edit_ClientPersonalInfo.jsp" />
 			<forward name="editMfiInfo_success" path="/pages/application/client/jsp/edit_ClientMfiInfo.jsp" />
 			<forward name="updatePersonalInfo_success" path="/clientCustAction.do?method=get" />
-			<forward name="updatePersonalInfo_failure" path="/pages/application/client/jsp/previewEditClientPersonalInfo.jsp" />
+			<forward name="updatePersonalInfo_failure" path="/pages/application/client/jsp/preview_EditClientPersonalInfo.jsp" />
+			<forward name="updateMfiInfo_success" path="/clientCustAction.do?method=get" />
+			<forward name="updateMfiInfo_failure" path="/pages/application/client/jsp/preview_EditClientMfiInfo.jsp" />
 			<forward name="loadStatus_success" path="/clientStatusAction.do?method=load" />
 			<forward name="loadTransfer_success" path="/clientTransferAction.do?method=loadGroupTransfer" />
 			<forward name="loadBranchTransfer_success" path="/clientTransferAction.do?method=loadTransfer" />

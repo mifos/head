@@ -88,8 +88,11 @@
 			<property name="governmentId" column="GOVERNMENT_ID" type="string" />
 			<property name="dateOfBirth" column="DATE_OF_BIRTH" type="date" />
 			<property name="groupFlag" column="GROUP_FLAG" type="short" access="field"/>
+			<property name="firstName" column="FIRST_NAME" access="field" />
+	        <property name="lastName" column="LAST_NAME" access="field" />
+    	    <property name="secondLastName" column="SECOND_LAST_NAME" access="field" />
 			<one-to-one name="customerDetail" class="org.mifos.application.customer.client.business.ClientDetailEntity" cascade="all" lazy="true" />
-			<one-to-one name="customerPicture" class="org.mifos.application.customer.client.business.CustomerPictureEntity" cascade="all" lazy="true" />
+			<one-to-one name="customerPicture" class="org.mifos.application.customer.client.business.CustomerPictureEntity" cascade="all" lazy="true" property-ref="customer" />
 			<set name="nameDetailSet" cascade="all">
 				<key column="CUSTOMER_ID" />
 				<one-to-many class="org.mifos.application.customer.client.business.ClientNameDetailEntity" />
@@ -180,7 +183,7 @@
 	    <![CDATA[select count(*) from org.mifos.application.customer.business.CustomerBO as customer where customer.customerLevel.id =:LEVEL_ID and customer.office.officeId =:OFFICE_ID]]>
     </query>
     <query name="Customer.getClientBasedOnGovtId">
-	    <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client where client.customerLevel.id =:LEVEL_ID and client.governmentId =:GOVT_ID]]>
+	    <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client where (client.customerLevel.id =:LEVEL_ID and client.governmentId =:GOVT_ID and :customerId = 0) or (:customerId != 0 and client.customerLevel.id =:LEVEL_ID and client.governmentId =:GOVT_ID and client.customerId !=:customerId)]]>
     </query>					  
 	<query name="Customer.getClientBasedOnNameAndDateOfBirth">
 	    <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client where (client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth =:DATE_OFBIRTH and :customerId = 0) or (:customerId != 0 and client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth =:DATE_OFBIRTH and client.customerId !=:customerId)]]>

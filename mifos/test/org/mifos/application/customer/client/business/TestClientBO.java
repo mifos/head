@@ -381,8 +381,10 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	public void testSuccessfulCreateClientInBranch() throws Exception {		
-		String name = "Client 1";
-		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(name),"Client","","1","");
+		String firstName = "Client";
+		String lastName = "Last";
+		String displayName = "Client Last";
+		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("3"),1,new StringBuilder(displayName),firstName,"",lastName ,"");
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"));
 		client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(new Short("1")), null, null, null, getCustomFields(), null, personnel, officeId, meeting,personnel, null,
@@ -391,7 +393,9 @@ public class TestClientBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
-		assertEquals(name, client.getDisplayName());
+		assertEquals(displayName, client.getDisplayName());
+		assertEquals(firstName, client.getFirstName());
+		assertEquals(lastName, client.getLastName());
 		assertEquals(officeId, client.getOffice().getOfficeId());			
 	}
 	

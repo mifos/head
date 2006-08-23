@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.mifos.application.configuration.business.ConfigurationIntf;
 import org.mifos.application.configuration.business.MifosConfiguration;
@@ -56,7 +55,10 @@ public class ClientBO extends CustomerBO {
 	private final ClientPerformanceHistoryEntity performanceHistory;
 
 	private Short groupFlag;
-
+	private String firstName;
+	private String lastName;
+	private String secondLastName;
+	
 	private ClientDetailEntity customerDetail;
 
 	protected ClientBO() {
@@ -123,18 +125,24 @@ public class ClientBO extends CustomerBO {
 		this.performanceHistory = new ClientPerformanceHistoryEntity(this);
 		this.dateOfBirth = dateOfBirth;
 		this.governmentId = governmentId;
-		this.trained = trained;
+		if(trained!=null)
+			this.trained = trained;
+		else
+			this.trained = YesNoFlag.NO.getValue();
 		this.trainedDate = trainedDate;
 		this.groupFlag = groupFlag;
+		this.firstName = clientNameDetailView.getFirstName();
+		this.lastName = clientNameDetailView.getLastName();
+		this.secondLastName = clientNameDetailView.getSecondLastName();
 		this.addNameDetailSet(new ClientNameDetailEntity(this, null,
 				clientNameDetailView));
 		this.addNameDetailSet(new ClientNameDetailEntity(this, null,
 				spouseNameDetailView));
 		this.customerDetail = new ClientDetailEntity(this, clientDetailView);
 		try {
-			if (picture != null)
-				this.customerPicture = new CustomerPictureEntity(this,
-						Hibernate.createBlob(picture));
+			if (picture !=null && picture.available() > 0)
+				this.customerPicture = new CustomerPictureEntity(this,new ClientPersistence().createBlob(picture));
+						
 		} catch (IOException e) {
 			throw new CustomerException(e);
 		}
@@ -227,6 +235,30 @@ public class ClientBO extends CustomerBO {
 		this.customerDetail = customerDetail;
 	}
 
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getSecondLastName() {
+		return secondLastName;
+	}
+
+	public void setSecondLastName(String secondLastName) {
+		this.secondLastName = secondLastName;
+	}
+
 	public void addClientAttendance(ClientAttendanceBO clientAttendance) {
 		clientAttendance.setCustomer(this);
 		clientAttendances.add(clientAttendance);
@@ -316,10 +348,9 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 
-	@Override
-	public void update() throws CustomerException {
+	public void updatePersonalInfo() throws CustomerException {
 		try {
-			validateUpdate();
+			validateForDuplicateNameOrGovtId(getDisplayName(), this.dateOfBirth ,this.governmentId);
 			super.update();
 					
 		} catch (HibernateException he) {
@@ -328,13 +359,6 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 
-	private void validateUpdate() throws CustomerException{
-		/*if(isDuplicacyCheckNeeded()){
-			checkForDuplicacy(getDisplayName() , dateOfBirth , governmentId  ,getCustomerId());
-		}*/
-		
-	}	
-	
 	/*public boolean isDuplicacyCheckNeeded()throws CustomerException{
 		
 		String oldDisplayName = (String)context.getSearchResultBasedOnName(CustomerConstants.CURRENT_CLIENT_NAME).getValue();
@@ -383,7 +407,7 @@ public class ClientBO extends CustomerBO {
 		
 			if(!StringUtils.isNullOrEmpty(governmentId)){
 				try{
-					if(clientPersistence.checkForDuplicacyOnGovtId(governmentId) == true){
+					if(clientPersistence.checkForDuplicacyOnGovtId(governmentId , customerId) == true){
 						Object[] values = new Object[2];
 						values[0] = governmentId;
 						values[1]=MifosConfiguration.getInstance().getLabel(ConfigurationConstants.GOVERNMENT_ID,userContext.getPereferedLocale());
@@ -566,18 +590,12 @@ public class ClientBO extends CustomerBO {
 		
 	}
 
-	/*public void updatePicture(InputStream picture) throws CustomerException{
-		try{
-			if(customerPicture !=null){
-				customerPicture.updatePicture(Hibernate.createBlob(picture));	
-				
-			}
-			else{
-				this.customerPicture = new CustomerPictureEntity(this,Hibernate.createBlob(picture));
-			}
-			 
-		} catch (IOException e) {
-			throw new CustomerException(e);
-		}
-	}*/
+	public void updatePicture(InputStream picture) throws CustomerException{
+		ClientPersistence clientPersistence = new ClientPersistence();
+		if(customerPicture != null)
+				customerPicture.setPicture(clientPersistence.createBlob(picture));	
+		else
+			this.customerPicture = new CustomerPictureEntity(this,clientPersistence.createBlob(picture));
+			
+	}
 }

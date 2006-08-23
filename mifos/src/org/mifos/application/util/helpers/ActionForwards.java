@@ -44,5 +44,5 @@ public enum ActionForwards {
 	chooseOffice_success, loadMeeting_success,center_detail_page,getPrdOfferigs_success,schedulePreview_success, group_detail_page, client_detail_page, editcancel_success,manageprevious_success, manageprevious_failure,
 	loadBranches_success, loadParents_success, previewBranchTransfer_success, previewParentTransfer_success, transferToBranch_failure,
 	managepreview_success, managepreview_failure, next_success, prevPersonalInfo_success, prevMFIInfo_success, cancelCreate_success, cancelEdit_success, getPicture_success, previewPersonalInfo_success, viewAllClosedAccounts,edit_success, editPersonalInfo_success, previewEditPersonalInfo_success, prevEditPersonalInfo_success, updatePersonalInfo_failure, updatePersonalInfo_success,
-	cancelEdit_failure,cancelCreate_failure;
+	cancelEdit_failure,cancelCreate_failure, editMfiInfo_success, previewEditMfiInfo_success,previewEditMfiInfo_failure, prevEditMfiInfo_success, updateMfiInfo_failure, updateMfiInfo_success;
 }
