@@ -74,6 +74,7 @@ import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -320,6 +321,13 @@ public class BulkEntryAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return mapping.findForward(BulkEntryConstants.PREVIUOSSUCCESS);
+	}
+	
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward cancel(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(ActionForwards.cancel_success.toString());
 	}
 
 	public ActionForward validate(ActionMapping mapping, ActionForm form,

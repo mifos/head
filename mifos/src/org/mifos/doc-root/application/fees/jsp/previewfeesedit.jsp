@@ -47,37 +47,8 @@
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
-
-		<script>
-			function fnOnCancel(Id){
-				document.feeactionform.method.value="get";
-				document.feeactionform.feeIdTemp.value=Id;
-				document.feeactionform.action="feeaction.do";
-				document.feeactionform.submit();
-			}
-			function fnOnAdmin(form){
-				form.method.value="load";
-				form.action="AdminAction.do";
-				form.submit();
-			}
-			function fnOnSubmit(){
-				document.feeactionform.method.value="update";
-				document.feeactionform.action="feeaction.do";
-				document.feeactionform.submit();
-			}
-			function fnOnEditFeeInformation(form){
-				form.method.value="editPrevious";
-				form.action="feeaction.do";
-				form.submit();
-			}
-			function fnOnView(form){
-				form.method.value="viewAll";
-				form.action="feeaction.do";
-				form.submit();
-			}
-		</script>
+		<script src="pages/application/fees/js/Fees.js"></script>
 		<html-el:form action="/feeaction.do" onsubmit="return func_disableSubmitBtn('submitBtn');">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -89,7 +60,7 @@
 							</html-el:link> / <html-el:link href="javascript:fnOnView(feeactionform)">
 								<mifos:mifoslabel name="Fees.viewfees">
 								</mifos:mifoslabel>
-							</html-el:link> / <html-el:link href="javascript:fnOnCancel(${BusinessKey.feeId})">
+							</html-el:link> / <html-el:link href="javascript:fnOnEditView(${BusinessKey.feeId})">
 								<c:out value="${BusinessKey.feeName}" />
 							</html-el:link> </span>
 					</td>
@@ -152,7 +123,7 @@
 
 									<span class="fontnormal"> </span>
 
-									<html-el:button property="editBtn" styleClass="insidebuttn" onclick="javascript:fnOnEditFeeInformation(feeactionform)">
+									<html-el:button property="editBtn" styleClass="insidebuttn" onclick="javascript:fnOnEditPreviousFeeInformation(feeactionform)">
 										<mifos:mifoslabel name="Fees.edit" />
 									</html-el:button>
 								</td>
@@ -173,7 +144,7 @@
 										<mifos:mifoslabel name="Fees.submit" />
 									</html-el:submit>
 									&nbsp;
-									<html-el:button property="cancelBtn" styleClass="cancelbuttn" style="width:65px" onclick="javascript:fnOnCancel(${BusinessKey.feeId})">
+									<html-el:button property="cancelBtn" styleClass="cancelbuttn" style="width:65px" onclick="javascript:fnOnEditCancel(${BusinessKey.feeId})">
 										<mifos:mifoslabel name="Fees.cancel" />
 									</html-el:button>
 								</td>
@@ -181,6 +152,7 @@
 							<html-el:hidden property="method" value="update" />
 							<html-el:hidden property="input" value="previewEditFees" />
 							<html-el:hidden property="feeIdTemp" value="${BusinessKey.feeId}" />
+							<html-el:hidden property="feeId" value="${BusinessKey.feeId}" />
 							<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 						</table>
 						<br>

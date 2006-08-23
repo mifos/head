@@ -52,12 +52,11 @@
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-
 		<script language="javascript">
 		<!--
 			function fnCancel(form) {
-				form.method.value="load";
-				form.action="CustomerSearchAction.do";
+				form.method.value="cancel";
+				form.action="bulkentryaction.do";
 				form.submit();
 			}
 			
@@ -67,12 +66,10 @@
 				form.submit();
 			}
 			
-			function fun_submit()
-					{
-						func_disableSubmitBtn("submitBttn");
-							return true;
-					}
-			
+			function fun_submit() {
+				func_disableSubmitBtn("submitBttn");
+				return true;
+			}
 		//-->
 		</script>
 		<script SRC="pages/framework/js/CommonUtilities.js"></script>

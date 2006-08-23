@@ -53,8 +53,8 @@
 		<script language="javascript">
 		<!--
 			function fnCancel(form) {
-				form.method.value="load";
-				form.action="CustomerSearchAction.do";
+				form.method.value="cancel";
+				form.action="bulkentryaction.do";
 				form.submit();
 			}
 			

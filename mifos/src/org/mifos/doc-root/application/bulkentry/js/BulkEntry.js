@@ -38,8 +38,8 @@
 
  */
 function fnCancel(form) {
-    form.method.value = "load";
-    form.action = "CustomerSearchAction.do";
+    form.method.value = "cancel";
+    form.action = "bulkentryaction.do";
     form.submit();
 }
 function adjustGroupTotalForLoan(columns, size, loanProductSize, savingsProductSize) {
@@ -121,7 +121,6 @@ function setTotalsForGroup(loanProductSize, savingsProductSize, size) {
     document.getElementsByName("otherColl")[0].value = otherColl;
     document.getElementsByName("loanDisb")[0].value = loanDisb;
     document.getElementsByName("Withdrawals")[0].value = withDrawals;
-    
     document.getElementsByName("totColl")[0].value = totColl;
     document.getElementsByName("totIssue")[0].value = totIssue;
     document.getElementsByName("netCash")[0].value = totColl - totIssue;

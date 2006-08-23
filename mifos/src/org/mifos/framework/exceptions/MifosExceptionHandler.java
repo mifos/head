@@ -74,6 +74,7 @@ public class MifosExceptionHandler extends ExceptionHandler {
 	 * 
 	 * @see org.apache.struts.action.ExceptionHandler#logException(java.lang.Exception)
 	 */
+	@Override
 	protected void logException(Exception e) {
 		if (e instanceof ApplicationException) {
 			ApplicationException appException = (ApplicationException) e;
@@ -104,6 +105,7 @@ public class MifosExceptionHandler extends ExceptionHandler {
 	 *      javax.servlet.http.HttpServletRequest,
 	 *      javax.servlet.http.HttpServletResponse)
 	 */
+	@Override
 	public ActionForward execute(Exception ex, ExceptionConfig ae,
 			ActionMapping mapping, ActionForm formInstance,
 			HttpServletRequest request, HttpServletResponse response)
@@ -117,6 +119,10 @@ public class MifosExceptionHandler extends ExceptionHandler {
 			forwardToBeReturned = new ActionForward(ae.getPath());
 			error = new ActionMessage(((SystemException) ex).getKey(),
 					((SystemException) ex).getValues());
+		} else if (ex instanceof PageExpiredException) {
+			forwardToBeReturned = new ActionForward(ae.getPath());
+			error = new ActionMessage(((PageExpiredException) ex).getKey(),
+					((PageExpiredException) ex).getValues());
 		} else if (ex instanceof ApplicationException) {
 			error = new ActionMessage(((ApplicationException) ex).getKey(),
 					((ApplicationException) ex).getValues());

@@ -47,23 +47,9 @@
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 		<script>
-				function fnOnAdmin(form){
-					form.method.value="load";
-					form.action="AdminAction.do";
-					form.submit();
-				}
-				function fnOnNewFee(form){
-					form.method.value="load";
-					form.action="feeaction.do";
-					form.submit();
-				}
-				function fnOnView(Id){
-					document.feeactionform.feeId.value=Id;
-					document.feeactionform.method.value="get";
-					document.feeactionform.action="feeaction.do";
-					document.feeactionform.submit();
-				}
+				
 			</script>
+			<script src="pages/application/fees/js/Fees.js"></script>
 		<html-el:form action="/feeaction.do">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -101,7 +87,7 @@
 													<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
 												</td>
 												<td width="99%">
-													<html-el:link href="javascript:fnOnView(${productFee.feeId})">
+													<html-el:link href="javascript:fnOnEditView(${productFee.feeId})">
 														<c:out value="${productFee.feeName}" />
 													</html-el:link>
 													(
@@ -128,7 +114,7 @@
 													<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
 												</td>
 												<td width="99%">
-													<html-el:link href="javascript:fnOnView(${clientFee.feeId})">
+													<html-el:link href="javascript:fnOnEditView(${clientFee.feeId})">
 														<c:out value="${clientFee.feeName}" />
 													</html-el:link>
 													(
@@ -146,6 +132,7 @@
 							</tr>
 							<html-el:hidden property="method" value="get" />
 							<html-el:hidden property="feeId" value="" />
+							<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 						</table>
 						<br>
 					</td>

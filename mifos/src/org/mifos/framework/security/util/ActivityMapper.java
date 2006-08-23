@@ -530,6 +530,8 @@ public class ActivityMapper {
 		activityMap.put("/feeaction-previous", SecurityConstants.VIEW);
 		activityMap.put("/feeaction-editPrevious", SecurityConstants.VIEW);
 		activityMap.put("/feeaction-viewAll", SecurityConstants.VIEW);
+		activityMap.put("/feeaction-cancelCreate", SecurityConstants.VIEW);
+		activityMap.put("/feeaction-cancelEdit", SecurityConstants.VIEW);
 		// checklist mapping
 
 		activityMap.put("/checkListAction-loadall", SecurityConstants.VIEW);

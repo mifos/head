@@ -46,25 +46,7 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-		<script>
-			function fnOnAdmin(form){
-				form.method.value="load";
-				form.action="AdminAction.do";
-				form.submit();
-			}
-			
-			function fnOnView(form){
-				form.method.value="viewAll";
-				form.action="feeaction.do";
-				form.submit();
-			}
-			
-			function fnOnEditFeeInformation(form){
-				form.method.value="manage";
-				form.action="feeaction.do";
-				form.submit();
-			}
-		</script>
+		<script src="pages/application/fees/js/Fees.js"></script>
 		<html-el:form action="/feeaction.do">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">

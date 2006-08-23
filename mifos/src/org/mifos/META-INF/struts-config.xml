@@ -123,6 +123,7 @@
 	<global-exceptions>
 		<exception type="org.mifos.framework.exceptions.SystemException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.SystemException" scope="request" path="/pages/framework/jsp/error.jsp" />
 		<exception type="org.mifos.framework.exceptions.ApplicationException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.ApplicationException" scope="request" />
+		<exception type="org.mifos.framework.exceptions.PageExpiredException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.PageExpiredException" scope="request" path="/pages/framework/jsp/pageexpirederror.jsp"/>
 	</global-exceptions>
 
 	<global-forwards>
@@ -670,6 +671,10 @@
 			<forward name="update_failure" path="/pages/application/fees/jsp/previewfeesedit.jsp" />
 			<forward name="get_success" path="/pages/application/fees/jsp/FeeDetails.jsp" />
 			<forward name="viewAll_success" path="/pages/application/fees/jsp/ViewEditFees.jsp" />
+			<forward name="cancelCreate_success" path="/AdminAction.do?method=load" />
+			<forward name="cancelCreate_failure" path="/pages/application/fees/jsp/previewfeescreate.jsp" />
+			<forward name="cancelEdit_success" path="/feeaction.do?method=get" />
+			<forward name="cancelEdit_failure" path="/pages/application/fees/jsp/previewfeesedit.jsp" />
 		</action>
 		<!-- closed acc search action -->
 		<action path="/closedaccsearchaction" type="org.mifos.application.accounts.struts.action.ClosedAccSearchAction" name="closedaccsearchactionform" parameter="method" input="/clientCreationAction.do?method=validate" validate="false">
@@ -776,6 +781,7 @@
 			<forward name="create_failure" path="/pages/application/bulkentry/jsp/bulkentryconfirmation.jsp" />
 			<forward name="previuos_success" path="/pages/application/bulkentry/jsp/bulkentry_data.jsp" />
 			<forward name="preview_failure" path="/pages/application/bulkentry/jsp/bulkentry_data.jsp" />
+			<forward name="cancel_success" path="/CustomerSearchAction.do?method=load" />
 		</action>
 		<!-- Ends-->
 		<!-- New Account Action  -->

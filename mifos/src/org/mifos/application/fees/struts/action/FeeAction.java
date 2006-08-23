@@ -148,6 +148,11 @@ public class FeeAction extends BaseAction {
 			else if (method.equals(Methods.editPrevious.toString())
 					|| method.equals(Methods.update.toString()))
 				forward = ActionForwards.editprevious_failure;
+			else if (method.equals(Methods.cancelCreate.toString()))
+				forward = ActionForwards.cancelCreate_failure;
+			else if (method.equals(Methods.cancelEdit.toString())) {
+				forward = ActionForwards.cancelEdit_failure;
+			}
 		}
 		return mapping.findForward(forward.toString());
 	}
@@ -240,6 +245,22 @@ public class FeeAction extends BaseAction {
 		SessionUtils.setAttribute(FeeConstants.PRODUCT_FEES, productFees,
 				request);
 		return mapping.findForward(ActionForwards.viewAll_success.toString());
+	}
+
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward cancelCreate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(ActionForwards.cancelCreate_success
+				.toString());
+	}
+
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward cancelEdit(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping
+				.findForward(ActionForwards.cancelEdit_success.toString());
 	}
 
 	private FeeBO createFee(FeeActionForm actionForm, HttpServletRequest request)

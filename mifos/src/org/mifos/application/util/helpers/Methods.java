@@ -39,6 +39,7 @@ package org.mifos.application.util.helpers;
 
 public enum Methods {
 	method, preview, editPreview, create, cancel, load, previous, searchNext, searchPrev, search, get, update,
-	getPrdOfferings,schedulePreview, manage, managePreview,editPrevious,validate, next, previewPersonalInfo,loadParent,edit, previewEditPersonalInfo;
+	getPrdOfferings,schedulePreview, manage, managePreview,editPrevious,validate, next, previewPersonalInfo,loadParent,edit, previewEditPersonalInfo,
+	cancelCreate,cancelEdit;
 
 }
