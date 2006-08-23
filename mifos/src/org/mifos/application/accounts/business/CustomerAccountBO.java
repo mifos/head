@@ -420,7 +420,7 @@ public class CustomerAccountBO extends AccountBO {
 				.getRepaymentScheduler();
 
 		MeetingBO meetingBO = getCustomer().getCustomerMeeting().getMeeting();
-		Meeting meeting = convertM2StyleToM1(meetingBO);
+		Meeting meeting = convertMeeting(meetingBO);
 		meeting.setMeetingStartDate(DateUtils.getFistDayOfNextYear(Calendar
 				.getInstance()));
 		repaymntScheduleInputs.setMeeting(meeting);

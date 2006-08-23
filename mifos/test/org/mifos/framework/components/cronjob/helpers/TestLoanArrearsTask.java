@@ -86,7 +86,7 @@ public class TestLoanArrearsTask extends MifosTestCase{
 		loanAccount = new AccountPersistanceService().getAccount(loanAccount.getAccountId());
 		
 		assertEquals(Short.valueOf(AccountStates.LOANACC_BADSTANDING),loanAccount.getAccountState().getId());
-		assertEquals(statusChangeHistorySize+1,loanAccount.accountStatusChangeHistory.size());
+		assertEquals(statusChangeHistorySize+1,loanAccount.getAccountStatusChangeHistory().size());
 		
 		
 		}

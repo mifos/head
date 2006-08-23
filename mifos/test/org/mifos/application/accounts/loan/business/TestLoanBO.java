@@ -729,7 +729,7 @@ public class TestLoanBO extends MifosTestCase {
 		assertEquals(Short.valueOf(AccountStates.LOANACC_BADSTANDING),
 				accountBO.getAccountState().getId());
 		assertEquals(statusChangeHistorySize + 1,
-				accountBO.accountStatusChangeHistory.size());
+				accountBO.getAccountStatusChangeHistory().size());
 	}
 
 	public void testChangedStatusOnPayment() throws AccountException,

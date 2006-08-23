@@ -168,10 +168,10 @@ public class LoanAccountAction extends AccountAppAction {
 			HttpServletResponse response) throws Exception {
 		String globalAccountNum = request.getParameter("globalAccountNum");
 		LoanBO loanBO = loanBusinessService.findBySystemId(globalAccountNum);
-		Hibernate.initialize(loanBO.accountStatusChangeHistory);
+		Hibernate.initialize(loanBO.getAccountStatusChangeHistory());
 		loanBO.setUserContext(getUserContext(request));
 		List<AccountStatusChangeHistoryEntity> accStatusChangeHistory = new ArrayList<AccountStatusChangeHistoryEntity>(
-				loanBO.accountStatusChangeHistory);
+				loanBO.getAccountStatusChangeHistory());
 		SessionUtils.setAttribute(LoanConstants.STATUS_HISTORY,
 				accStatusChangeHistory, request.getSession());
 		return mapping.findForward(ActionForwards.viewStatusHistory.toString());

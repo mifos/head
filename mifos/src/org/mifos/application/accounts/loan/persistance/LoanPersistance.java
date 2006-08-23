@@ -147,8 +147,8 @@ public class LoanPersistance extends Persistence {
 				 List<LoanBO> loanAccounts =  executeNamedQuery(NamedQueryConstants.GETLOANACOUNTSINARREARS, queryParameters);
 				 
 					for (LoanBO loanBO : loanAccounts) {
-						if(loanBO.accountStatusChangeHistory != null && loanBO.accountStatusChangeHistory.size() > 0) 
-							Hibernate.initialize(loanBO.accountStatusChangeHistory);
+						if(loanBO.getAccountStatusChangeHistory() != null && loanBO.getAccountStatusChangeHistory().size() > 0) 
+							Hibernate.initialize(loanBO.getAccountStatusChangeHistory());
 					}
 					return loanAccounts;
 					}catch(HibernateException he){
