@@ -207,7 +207,13 @@ public class GroupBO extends CustomerBO {
 	}
 	
 	@Override
-	protected void validateStatusChange(Short newStatusId) throws ApplicationException, SystemException{
+	protected void validateStatusChange(Short newStatusId) throws CustomerException{
 		
+	}
+	
+	@Override
+	protected boolean checkNewStatusIsFirstTimeActive(Short oldStatus,
+			Short newStatusId) {
+		return false;
 	}
 }

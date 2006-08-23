@@ -16,11 +16,11 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
 import org.mifos.application.customer.business.CustomerMovementEntity;
+import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
-import org.mifos.application.customer.exceptions.CustomerStateChangeException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -30,9 +30,9 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -294,30 +294,92 @@ public class ClientBO extends CustomerBO {
 	}
 
 	@Override
-	protected void validateStatusChange(Short newStatusId)
-			throws ApplicationException, SystemException {
+	protected void validateStatusChange(Short newStatusId) throws CustomerException{
 		if ((newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue()) || newStatusId
 				.equals(CustomerStatus.CLIENT_PENDING.getValue()))
 				&& this.isClientUnderGroup()) {
 			if (checkGroupStatus(newStatusId, this.getParentCustomer()
 					.getCustomerStatus().getId())) {
-				throw new CustomerStateChangeException(
-						ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION,
-						new Object[] {
-								MifosConfiguration.getInstance().getLabel(
-										ConfigurationConstants.GROUP,
-										this.getUserContext().getPereferedLocale()),
-										MifosConfiguration.getInstance().getLabel(
-										ConfigurationConstants.CLIENT,
-										this.getUserContext().getPereferedLocale()) });
+				try {
+					throw new CustomerException(
+							ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION,
+							new Object[] {
+									MifosConfiguration.getInstance().getLabel(
+											ConfigurationConstants.GROUP,
+											this.getUserContext().getPereferedLocale()),
+											MifosConfiguration.getInstance().getLabel(
+											ConfigurationConstants.CLIENT,
+											this.getUserContext().getPereferedLocale()) });
+				}catch (ConfigurationException ce) {
+					ce.printStackTrace();
+					throw new CustomerException(ce);
+				}
 			}
 		}else if (newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue())) {
 			if (getActiveAndApprovedLoanAccounts(new java.util.Date()).size() > 0
 					|| getActiveSavingsAccounts().size() > 0) {
-				throw new CustomerStateChangeException(
+				throw new CustomerException(
 						CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
 			}
 		}
+		if(newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue()))
+			checkIfClientCanBeActive(newStatusId);
+		
+		if(isClientUnderGroup() && (newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue()) ||newStatusId.equals(CustomerStatus.CLIENT_CANCELLED.getValue()))){
+			checkIfClientIsAssignedPosition(getParentCustomer().getCustomerId() , getCustomerId());
+			if(getParentCustomer().getParentCustomer()!=null ){
+				checkIfClientIsAssignedPosition(getParentCustomer().getParentCustomer().getCustomerId() , getCustomerId());
+			}
+		}
+	}
+	
+	private void checkIfClientCanBeActive(Short newStatus) throws CustomerException{
+		boolean loanOfficerActive = false;
+		boolean branchInactive = false;
+		short officeId = getOffice().getOfficeId();
+			if(getPersonnel()==null || getPersonnel().getPersonnelId()==null){
+				throw new CustomerException(ClientConstants.CLIENT_LOANOFFICER_NOT_ASSIGNED);
+			}
+			if(getCustomerMeeting()==null||getCustomerMeeting().getMeeting()==null){
+				throw new CustomerException(GroupConstants.MEETING_NOT_ASSIGNED);
+			}
+			if( getPersonnel() !=null){
+				loanOfficerActive =new OfficePersistence().hasActivePeronnel(officeId);
+			}
+			 
+			branchInactive = new OfficePersistence().isBranchInactive(officeId);
+			if(loanOfficerActive ==false){
+				try {
+					throw new CustomerException(CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION,new Object[]{MifosConfiguration.getInstance().getLabel(ConfigurationConstants.BRANCHOFFICE,getUserContext().getPereferedLocale())});
+				}catch (ConfigurationException ce) {
+					throw new CustomerException(ce);
+				}
+								
+			}
+			if(branchInactive ==true){
+				try {
+					throw new CustomerException(CustomerConstants.CUSTOMER_BRANCH_INACTIVE_EXCEPTION,new Object[]{MifosConfiguration.getInstance().getLabel(ConfigurationConstants.BRANCHOFFICE,getUserContext().getPereferedLocale())});
+				} catch (ConfigurationException ce) {
+					throw new CustomerException(ce);
+				}
+				
+			}
+	}
+	
+	private boolean checkIfClientIsAssignedPosition(Integer parentCustomerId, Integer customerId) throws CustomerException {
+		List<CustomerPositionEntity> customerPositionEntityList;
+		try {
+			customerPositionEntityList = new CustomerPersistence().getClientAssignedPositions(parentCustomerId,customerId);
+		  if(null!=customerPositionEntityList){
+				 for(int i=0;i<customerPositionEntityList.size();i++){
+					 CustomerPositionEntity clientPosition = (CustomerPositionEntity)customerPositionEntityList.get(i); 
+					 clientPosition.setCustomer(null);
+				 }
+			  }
+		} catch (SystemException e) {
+			throw new CustomerException(e);
+		}
+		return false;
 	}
 
 	private boolean checkGroupStatus(Short newStatusId, Short parentStatus) {
@@ -334,6 +396,16 @@ public class ClientBO extends CustomerBO {
 			}
 		}
 		return isNotValid;
+	}
+
+	@Override
+	protected boolean checkNewStatusIsFirstTimeActive(Short oldStatus,
+			Short newStatusId) {
+		if ((oldStatus.equals(CustomerStatus.CLIENT_PARTIAL.getValue()) || oldStatus
+				.equals(CustomerStatus.CLIENT_PENDING.getValue()))
+				&& newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue()))
+			return true;
+		return false;
 	}
 
 	@Override

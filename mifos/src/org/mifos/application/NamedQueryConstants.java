@@ -393,6 +393,7 @@ public interface NamedQueryConstants {
 	public String GET_CENTER_BY_SYSTEMID="customer.findCenterSystemId";
 	public String GET_GROUP_BY_SYSTEMID="customer.findGroupSystemId";
 	public String GET_CLIENT_BY_SYSTEMID="customer.findClientSystemId";
+	public String GETACTIVELOANOFFICER="customer.findActiveLoanOfficef";
 	
 	
 	//number of meetings attended and missed
@@ -483,7 +484,7 @@ public interface NamedQueryConstants {
 	public String GETCHILDERN="getChlidren";
 	public String MASTERDATA_MIFOS_ENTITY_NAME="masterdata.mifosEntityName";
 	public String GET_CUSTOMER_PICTURE="Customer.getPicture";
-	
+	public String GETOFFICEINACTIVE="getCountInactiveOffice";
 	public String GET_PRD_TYPES="productdefenition.getProductTypes";
-
+	public String CUSTOMER_CLIENTPOSITION="Customer.clientPosition";
 }

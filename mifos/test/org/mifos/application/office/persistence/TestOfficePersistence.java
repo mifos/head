@@ -114,4 +114,8 @@ public class TestOfficePersistence extends MifosTestCase {
 	public void testGetSearchId() {
 		assertEquals("1.1", officePersistence.getSearchId(Short.valueOf("1")));
 	}
+	
+	public void testIsBranchInactive() {
+		assertFalse(officePersistence.isBranchInactive(Short.valueOf("3")));
+	}
 }

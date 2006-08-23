@@ -6,6 +6,7 @@ import java.util.GregorianCalendar;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanPerformanceHistoryEntity;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
@@ -17,6 +18,7 @@ import org.mifos.application.customer.center.exception.StateChangeException;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.exceptions.CustomerStateChangeException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
@@ -266,13 +268,13 @@ public class TestCustomerBO extends MifosTestCase {
 		TestObjectFactory.cleanUp(savings);
 	}
 
-	public void testValidateStatusWithActiveGroups() throws Exception {
+	public void testValidateStatusWithActiveGroups() throws CustomerException, AccountException{
 		createInitialObjects();
 		Short newStatusId = CustomerStatus.CENTER_INACTIVE.getValue();
 		try {
 			center.changeStatus(newStatusId, null, "Test");
 			// assertFalse(true);
-		} catch (StateChangeException sce) {
+		} catch (CustomerException sce) {
 			assertTrue(true);
 			assertEquals(sce.getKey(),
 					CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION);
@@ -295,7 +297,7 @@ public class TestCustomerBO extends MifosTestCase {
 		try {
 			client.changeStatus(newStatusId, null, "Test");
 			assertFalse(true);
-		} catch (CustomerStateChangeException sce) {
+		} catch (CustomerException sce) {
 			assertTrue(true);
 			assertEquals(sce.getKey(),
 					ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION);
@@ -322,7 +324,7 @@ public class TestCustomerBO extends MifosTestCase {
 		try {
 			client.changeStatus(newStatusId, null, "Test");
 			assertFalse(true);
-		} catch (CustomerStateChangeException sce) {
+		} catch (CustomerException sce) {
 			assertTrue(true);
 			assertEquals(sce.getKey(),
 					CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);

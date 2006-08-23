@@ -162,6 +162,7 @@ public abstract class CustomerBO extends BusinessObject {
 		this.customFields = new HashSet<CustomerCustomFieldEntity>();
 		this.accounts = new HashSet<AccountBO>();
 		this.customerNotes = new HashSet<CustomerNoteEntity>();
+		this.customerPositions = new HashSet<CustomerPositionEntity>();
 		this.office = new OfficePersistence().getOffice(officeId);
 		this.externalId = externalId;
 		this.mfiJoiningDate = mfiJoiningDate;
@@ -204,7 +205,7 @@ public abstract class CustomerBO extends BusinessObject {
 		this.blackListed = YesNoFlag.NO.getValue();
 		this.customerId = null;
 		this.historicalData = null;
-		this.customerFlags = null;
+		this.customerFlags = new HashSet<CustomerFlagDetailEntity>();
 
 		this.accounts.add(createCustomerAccount(fees));
 
@@ -564,8 +565,8 @@ public abstract class CustomerBO extends BusinessObject {
 		this.customFields.add(customerCustomFieldView);
 	}
 
-	public List<CustomerBO> getChildren(Short customerLevel)
-			throws SystemException {
+	public List<CustomerBO> getChildren(Short customerLevel) throws PersistenceException
+			{
 		return new CustomerPersistence().getChildrenForParent(getSearchId(),
 				getOffice().getOfficeId(), customerLevel);
 	}
@@ -712,8 +713,8 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 
 	public void changeStatus(Short newStatusId, Short flagId, String comment)
-			throws SecurityException, PersistenceException,
-			ApplicationException, SystemException {
+			throws	CustomerException, AccountException{
+		Short oldStatus = getCustomerStatus().getId();
 		validateStatusChange(newStatusId);
 		MasterPersistence masterPersistence = new MasterPersistence();
 		CustomerStatusEntity customerStatus = (CustomerStatusEntity) masterPersistence
@@ -732,10 +733,15 @@ public abstract class CustomerBO extends BusinessObject {
 					.getLocaleId());
 			this.addCustomerFlag(customerStatusFlagEntity);
 		}
+		if (checkNewStatusIsFirstTimeActive(oldStatus, newStatusId))
+			this.getCustomerAccount().generateCustomerFeeSchedule();
 	}
 
+	protected abstract boolean checkNewStatusIsFirstTimeActive(Short oldStatus,
+			Short newStatusId);
+
 	protected abstract void validateStatusChange(Short newStatusId)
-			throws ApplicationException, SystemException;
+			throws CustomerException;
 
 	public void addCustomerNotes(CustomerNoteEntity customerNote) {
 		this.customerNotes.add(customerNote);

@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.configuration.business.MifosConfiguration;
+import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
@@ -77,29 +78,41 @@ public class CenterBO extends CustomerBO {
 
 	@Override
 	protected void validateStatusChange(Short newStatusId)
-			throws ApplicationException, SystemException {
+			throws CustomerException {
 		if (newStatusId.equals(CustomerStatus.CENTER_INACTIVE.getValue())) {
 			if (getActiveAndApprovedLoanAccounts(new Date()).size() > 0
 					|| getActiveSavingsAccounts().size() > 0) {
-				throw new CustomerStateChangeException(
+				throw new CustomerException(
 						CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
 			}
-			if (getChildren(CustomerLevel.GROUP.getValue()).size() > 0) {
-				throw new StateChangeException(
-						CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
-						new Object[] { MifosConfiguration.getInstance()
-								.getLabel(
-										ConfigurationConstants.GROUP,
-										this.getUserContext()
-												.getPereferedLocale()) });
+			try {
+				if (getChildren(CustomerLevel.GROUP.getValue()).size() > 0) {
+					throw new CustomerException(
+							CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
+							new Object[] { MifosConfiguration.getInstance()
+									.getLabel(
+											ConfigurationConstants.GROUP,
+											this.getUserContext()
+													.getPereferedLocale()) });
+				}
+			} catch (PersistenceException pe) {
+				throw new CustomerException(pe);
+			}  catch (ConfigurationException ce) {
+				throw new CustomerException(ce);
 			}
 		} else if (newStatusId.equals(CustomerStatus.CENTER_ACTIVE.getValue())) {
 			if (getPersonnel() == null
 					|| getPersonnel().getPersonnelId() == null) {
-				throw new CustomerStateChangeException(
+				throw new CustomerException(
 						ClientConstants.CLIENT_LOANOFFICER_NOT_ASSIGNED);
 			}
 		}
 
+	}
+	//TODO
+	@Override
+	protected boolean checkNewStatusIsFirstTimeActive(Short oldStatus,
+			Short newStatusId) {
+		return false;
 	}
 }

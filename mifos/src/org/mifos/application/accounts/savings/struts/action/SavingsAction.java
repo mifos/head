@@ -144,6 +144,7 @@ public class SavingsAction extends AccountAppAction {
 		doCleanUp(form, request);
 		CustomerBO customer = getCustomer(new Integer(
 				((SavingsActionForm) form).getCustomerId()));
+		Hibernate.initialize(customer.getOffice());
 		SavingsBO savings = (SavingsBO) request.getSession().getAttribute(
 				Constants.BUSINESS_KEY);
 		savings.setCustomer(customer);

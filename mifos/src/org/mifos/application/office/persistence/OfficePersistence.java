@@ -141,6 +141,19 @@ public class OfficePersistence extends Persistence {
 		}
 		return false;
 	}
+	
+	public boolean isBranchInactive(short officeId) {
+
+		HashMap<String , Object> queryParameters = new HashMap<String , Object>();
+		queryParameters.put("OFFICE_ID",officeId);
+		queryParameters.put("STATUS_ID",OfficeConstants.INACTIVE);
+		List queryResult = executeNamedQuery(NamedQueryConstants.GETOFFICEINACTIVE,queryParameters);	
+		if(queryResult !=null && queryResult.size()!=0){
+			return (Integer)queryResult.get(0)>0?true:false;
+		}
+		return false;
+	}
+	
 	public List<OfficeView> getActiveParents(OfficeLevel level,Short localeId){
 		HashMap<String , Object> queryParameters = new HashMap<String , Object>();
 		queryParameters.put("LEVEL_ID",level.getValue());

@@ -23,11 +23,14 @@ import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.checklist.util.resources.CheckListConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
+import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.CustomerView;
+import org.mifos.application.customer.business.PositionEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -807,6 +810,17 @@ public class TestCustomerPersistence extends MifosTestCase {
 		assertEquals(1, customerPersistence.getAllClosedAccount(
 				client.getCustomerId(), AccountTypes.SAVINGSACCOUNT.getValue())
 				.size());
+	}
+	
+	public void testGetClientAssignedPositions() throws CustomerException, PersistenceException {
+		getCustomer(CustomerStatus.CENTER_ACTIVE.getValue().toString(),CustomerStatus.GROUP_ACTIVE.getValue().toString(),CustomerStatus.CLIENT_ACTIVE.getValue().toString());
+		CustomerPositionEntity customerPositionEntity = new CustomerPositionEntity(new PositionEntity(Short.valueOf("1")),client,client.getParentCustomer());
+		client.addCustomerPosition(customerPositionEntity);
+		client.update();
+		HibernateUtil.commitTransaction();
+		
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
+		assertEquals("Client has assigned position of Kendra Leader with position id 1",1,((CustomerPositionEntity)customerPersistence.getClientAssignedPositions(client.getParentCustomer().getCustomerId(),client.getCustomerId()).get(0)).getCustomerPositionId().intValue());
 	}
 
 	private void getCustomer() {

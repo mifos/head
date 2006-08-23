@@ -44,12 +44,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.struts.Globals;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
@@ -57,6 +54,7 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.struts.actionforms.EditCustomerStatusActionForm;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -147,8 +145,8 @@ public class EditCustomerStatusAction extends BaseAction {
 	}
 
 	public ActionForward update(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+			HttpServletRequest request, HttpServletResponse response) throws ApplicationException
+			 {
 		EditCustomerStatusActionForm editStatusActionForm = (EditCustomerStatusActionForm) form;
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
@@ -156,28 +154,17 @@ public class EditCustomerStatusAction extends BaseAction {
 				.valueOf(editStatusActionForm.getCustomerId()));
 		customerBO.setUserContext(userContext);
 		customerBO.getCustomerStatus().setLocaleId(userContext.getLocaleId());
-		try {
-			Short flagId = null;
-			Short newStatusId = null;
-			if (StringUtils
-					.isNullAndEmptySafe(editStatusActionForm.getFlagId()))
-				flagId = Short.valueOf(editStatusActionForm.getFlagId());
-			if (StringUtils.isNullAndEmptySafe(editStatusActionForm
-					.getNewStatusId()))
-				newStatusId = Short.valueOf(editStatusActionForm
-						.getNewStatusId());
-			checkPermission(customerBO, request, newStatusId, flagId);
-			customerBO.changeStatus(newStatusId, flagId, editStatusActionForm
-					.getNotes());
-			customerBO.update();
-		} catch (ApplicationException ae) {
-			ActionErrors errors = new ActionErrors();
-			errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae
-					.getValues()));
-			request.setAttribute(Globals.ERROR_KEY, errors);
-			return mapping
-					.findForward(ActionForwards.update_failure.toString());
-		}
+		Short flagId = null;
+		Short newStatusId = null;
+		if (StringUtils.isNullAndEmptySafe(editStatusActionForm.getFlagId()))
+			flagId = Short.valueOf(editStatusActionForm.getFlagId());
+		if (StringUtils.isNullAndEmptySafe(editStatusActionForm
+				.getNewStatusId()))
+			newStatusId = Short.valueOf(editStatusActionForm.getNewStatusId());
+		checkPermission(customerBO, request, newStatusId, flagId);
+		customerBO.changeStatus(newStatusId, flagId, editStatusActionForm
+				.getNotes());
+		customerBO.update();
 		SessionUtils.setAttribute(SavingsConstants.NEW_FLAG_NAME,
 				SessionUtils.getAttribute(SavingsConstants.FLAG_NAME, request
 						.getSession()), request.getSession());
@@ -204,7 +191,7 @@ public class EditCustomerStatusAction extends BaseAction {
 		SessionUtils.setAttribute(SavingsConstants.STATUS_CHECK_LIST,
 				checklist, session);
 		if (StringUtils.isNullAndEmptySafe(editCustomerStatusActionForm
-				.getNewStatusId())){
+				.getNewStatusId())) {
 			newStatusName = customerService.getStatusName(userContext
 					.getLocaleId(), Short.valueOf(editCustomerStatusActionForm
 					.getNewStatusId()), getLevelIdBasedOnCustomer(customerBO));
@@ -214,7 +201,7 @@ public class EditCustomerStatusAction extends BaseAction {
 		if (StringUtils.isNullAndEmptySafe(editCustomerStatusActionForm
 				.getNewStatusId())
 				&& isNewStatusCancelledOrClosed(Short
-						.valueOf(editCustomerStatusActionForm.getNewStatusId()))){
+						.valueOf(editCustomerStatusActionForm.getNewStatusId()))) {
 			flagName = customerService.getFlagName(userContext.getLocaleId(),
 					new Short(editCustomerStatusActionForm.getFlagId()),
 					getLevelIdBasedOnCustomer(customerBO));
@@ -226,8 +213,7 @@ public class EditCustomerStatusAction extends BaseAction {
 
 	private boolean isNewStatusCancelledOrClosed(Short newStatusId) {
 		return newStatusId.equals(CustomerStatus.CLIENT_CANCELLED.getValue())
-				|| newStatusId.equals(CustomerStatus.CLIENT_CLOSED
-						.getValue())
+				|| newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue())
 				|| newStatusId
 						.equals(CustomerStatus.GROUP_CANCELLED.getValue())
 				|| newStatusId.equals(CustomerStatus.GROUP_CLOSED.getValue());

@@ -97,7 +97,6 @@ import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -138,10 +137,13 @@ public class CustomerAccountBO extends AccountBO {
 						.getCustomerLevel().isCenter()
 						&& customer.getCustomerStatus().getId().equals(
 								CustomerStatus.CENTER_ACTIVE.getValue()))) {
-
 			generateMeetingSchedule();
 
 		}
+	}
+	
+	public void generateCustomerFeeSchedule() throws AccountException{
+		generateCustomerFeeSchedule(getCustomer());
 	}
 	
 	private void generateFeeSchedule(MeetingBO meeting)throws AccountException{
@@ -684,7 +686,7 @@ public class CustomerAccountBO extends AccountBO {
 	}
 	
 	private void generateMeetingSchedule() throws AccountException
-	{
+	{	
 		List<InstallmentDate> installmentDates = getInstallmentDates(getCustomer().getCustomerMeeting().getMeeting(),(short)0,(short)0);
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("RepamentSchedular:getRepaymentSchedule , installment dates obtained ");
 		List<FeeInstallment> feeInstallmentList = mergeFeeInstallments(getFeeInstallment(installmentDates));

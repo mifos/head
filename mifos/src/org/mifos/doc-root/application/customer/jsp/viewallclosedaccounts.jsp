@@ -156,7 +156,7 @@
 													src="pages/framework/images/status_closedblack.gif"
 													width="8" height="9">&nbsp;<c:out
 													value="${closedSavingsAccount.accountState.name}" />
-													<c:forEach var="flagSet" items="${closedAccount.accountFlags}">-
+													<c:forEach var="flagSet" items="${closedSavingsAccount.accountFlags}">-
 													<c:out value="${flagSet.flag.name}" />
 													</c:forEach></span></span></td>
 											</tr>
