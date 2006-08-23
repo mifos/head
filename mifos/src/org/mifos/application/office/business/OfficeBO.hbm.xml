@@ -11,7 +11,7 @@
 			<generator class="native" />
 		</id>
 		<version name="versionNo" column="VERSION_NO" type="integer" />
-		<property name="searchId" column="SEARCH_ID" type="string" />
+		<property name="searchId" column="SEARCH_ID" type="string" access="field"/>
 		<property name="officeName" column="DISPLAY_NAME" type="string" />
 		<property name="createdDate" column="CREATED_DATE" type="date" />
 		<property name="updatedDate" column="UPDATED_DATE" type="date" />
@@ -28,6 +28,10 @@
 		<set name="customFields" cascade="all" inverse="true"  table="OFFICE_CUSTOM_FIELD">
 			<key column="OFFICE_ID" />
 			<one-to-many class="org.mifos.application.office.business.OfficeCustomFieldEntity" />
+		</set>
+		<set name="children"  inverse="true" access="field" lazy="false">
+			<key column="PARENT_OFFICE_ID" />
+			<one-to-many class="org.mifos.application.office.business.OfficeBO" />
 		</set>
 
 		<one-to-one name="address"	class="org.mifos.application.office.business.OfficeAddressEntity"	cascade="all" property-ref="office" lazy="true" />
@@ -52,10 +56,10 @@
             <![CDATA[select count(*) from org.mifos.application.office.business.OfficeBO o where o.parentOffice.officeId=:OFFICE_ID ]]>
     </query>
     <query name="office.getOfficeWithName">
-            <![CDATA[select count(*) from org.mifos.application.office.business.OfficeBO o where o.parentOffice.officeName=:OFFICE_NAME ]]>
+            <![CDATA[select count(*) from org.mifos.application.office.business.OfficeBO o where o.officeName=:OFFICE_NAME ]]>
     </query>
     <query name="office.getOfficeWithShortName">
-            <![CDATA[select count(*) from org.mifos.application.office.business.OfficeBO o where o.parentOffice.shortName=:SHORT_NAME ]]>
+            <![CDATA[select count(*) from org.mifos.application.office.business.OfficeBO o where o.shortName=:SHORT_NAME ]]>
     </query> 
         <query name="getCountOfActiveChildren">
             <![CDATA[select count(*) from org.mifos.application.office.business.OfficeBO o where o.parentOffice.officeId=:OFFICE_ID and o.status.id=1]]>
@@ -68,6 +72,9 @@
     </query>       
     <query name="masterdata.officestatus">
         <![CDATA[select new org.mifos.application.office.business.OfficeView(os.id,lvl.lookUpValue) from org.mifos.application.office.business.OfficeStatusEntity os ,org.mifos.application.master.business.LookUpValueLocaleEntity lvl where lvl.lookUpId=os.lookUpValue.lookUpId and lvl.localeId = :LOCALE_ID   ]]>
+    </query>       
+    <query name="getChlidren">
+        <![CDATA[from org.mifos.application.office.business.OfficeBO o where  o.parentOffice.officeId=:OFFICE_ID  ]]>
     </query>       
     
 </hibernate-mapping>

@@ -1071,8 +1071,11 @@
 			<forward name="create_failure" path="/pages/application/office/jsp/preview_new_office.jsp" />
 			<forward name="get_success" path="/pages/application/office/jsp/viewOfficeDetails.jsp" />
 			<forward name="edit_success" path="/pages/application/office/jsp/editoffice.jsp" />
-			<forward name="editpreview_success" path="/pages/application/office/jsp/preview_office.jsp" />
-			
+			<forward name="editpreview_success" path="/pages/application/office/jsp/edit_preview_office.jsp" />
+			<forward name="editpreview_failure" path="/pages/application/office/jsp/editoffice.jsp" />
+			<forward name="editprevious_success" path="/pages/application/office/jsp/editoffice.jsp" />
+			<forward name="update_success" path="/offAction.do?method=get" />
+			<forward name="update_failure" path="/pages/application/office/jsp/edit_preview_office.jsp" />
 		</action>
 
 	    <!-- offAction End-->

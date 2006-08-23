@@ -1845,6 +1845,11 @@
 			<forward name="create_success" path="/pages/application/office/jsp/CreateNewOffice.jsp" />
 			<forward name="create_failure" path="/pages/application/office/jsp/CreateNewOffice.jsp" />
 			<forward name="edit_success" path="/pages/application/office/jsp/editOffice.jsp" />
+			<forward name="editpreview_success" path="/pages/application/office/jsp/my.jsp" />
+			<forward name="editpreview_failure" path="/pages/application/office/jsp/editoffice.jsp" />
+			<forward name="editprevious_success" path="/pages/application/office/jsp/editoffice.jsp" />
+			<forward name="update_success" path="/offAction.do?method=get" />
+			<forward name="update_failure" path="/pages/application/office/jsp/my.jsp" />
 			
 		</action>
 

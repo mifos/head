@@ -78,12 +78,40 @@ public class TestOfficePersistence extends MifosTestCase {
 		}
 
 	}
-	public void testGetActiveLevels(){
-		
-		assertEquals(4,officePersistence.getActiveLevels(Short.valueOf("1")).size());
-		
+
+	public void testGetActiveLevels() {
+
+		assertEquals(4, officePersistence.getActiveLevels(Short.valueOf("1"))
+				.size());
+
 	}
-	public void testGetStatusList(){
-		assertEquals(2,officePersistence.getStatusList(Short.valueOf("1")).size());
+
+	public void testGetActiveLevelsFailure() {
+
+		assertEquals(null, officePersistence.getActiveLevels(Short
+				.valueOf("-1")));
+
+	}
+
+	public void testGetStatusList() {
+		assertEquals(2, officePersistence.getStatusList(Short.valueOf("1"))
+				.size());
+	}
+
+	public void testGetStatusListFailure() {
+		assertEquals(null, officePersistence.getStatusList(Short.valueOf("-1")));
+	}
+
+	public void testGetChildern() {
+		assertEquals(1, officePersistence.getChildern(Short.valueOf("1"))
+				.size());
+	}
+
+	public void testGetChildern_failure() {
+		assertEquals(null, officePersistence.getChildern(Short.valueOf("-1")));
+	}
+
+	public void testGetSearchId() {
+		assertEquals("1.1", officePersistence.getSearchId(Short.valueOf("1")));
 	}
 }

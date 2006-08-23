@@ -23,13 +23,14 @@ function goToCancelPage(){
   }	
    function submitViewOfficesLink(){
 	document.offActionForm.method.value="loadall";
-		
+	document.offActionForm.action="OfficeAction.do";	
 		
 	offActionForm.submit();
   }
 function getOffice(officeid){
 	document.offActionForm.method.value="get";
 	document.offActionForm.officeId.value=officeid;	
+	document.offActionForm.action="offAction.do";
 	offActionForm.submit();
   }  
    function  submitAdminLink()
@@ -49,7 +50,7 @@ function getOffice(officeid){
 						href="javascript:submitViewOfficesLink()">
 						<mifos:mifoslabel name="Office.labelLinkViewOffices" />
 					</html-el:link> / <html-el:link
-						href="javascript:getOffice(${BusinessKey.officeId})">
+						href="javascript:getOffice(${offActionForm.officeId})">
 						<c:out value="${BusinessKey.officeName}"></c:out>
 					</html-el:link> </span></td>
 				</tr>
@@ -84,13 +85,13 @@ function getOffice(officeid){
 							<td width="20%" align="right"><mifos:mifoslabel
 								name="Office.labelOfficeName" mandatory="yes" /></td>
 							<td width="80%"><mifos:mifosalphanumtext property="officeName"
-								maxlength="200" value="${BusinessKey.officeName}"></mifos:mifosalphanumtext></td>
+								maxlength="200" name="offActionForm" ></mifos:mifosalphanumtext></td>
 						</tr>
 						<tr class="fontnormal">
 							<td align="right"><mifos:mifoslabel
 								name="Office.labelOfficeShortName" mandatory="yes" /></td>
 							<td><mifos:mifosalphanumtext property="shortName" size="4"
-								maxlength="4" value="${BusinessKey.shortName}"></mifos:mifosalphanumtext></td>
+								maxlength="4" name="offActionForm"></mifos:mifosalphanumtext></td>
 						</tr>
 						<tr class="fontnormal">
 							<td align="right"><mifos:mifoslabel name="Office.labelOfficeType"
@@ -107,7 +108,7 @@ function getOffice(officeid){
 							<td><c:if test="${not empty Parents}">
 								<mifos:select name="officeActionForm"
 									property="formParentOffice" size="1"
-									value="${BusinessKey.parentOffice.officeId}">
+									value="${offActionForm.parentOfficeId}">
 									<html-el:options collection="Parents" property="officeId"
 										labelProperty="displayName" />
 								</mifos:select>
@@ -127,10 +128,10 @@ function getOffice(officeid){
 								name="Office.labelChangeStatus" /></td>
 							<td width="80%"><c:choose>
 								<c:when
-									test='${BusinessKey.officeLevel==OfficeLevel.HEADOFFICE}'>
+									test='${offActionForm.officeLevel==OfficeLevel.HEADOFFICE}'>
 									<html-el:select name="offActionForm" disabled="true"
 										property="officeStatus" size="1"
-										value="${BusinessKey.status.id}">
+										value="${offActionForm.officeStatus}">
 										<html-el:options collection="OfficeStatusList"
 											property="levelId" labelProperty="levelName" />
 									</html-el:select>
@@ -138,7 +139,7 @@ function getOffice(officeid){
 								</c:when>
 								<c:otherwise>
 									<html-el:select name="officeActionForm" property="officeStatus"
-										size="1" value="${BusinessKey.status.id}">
+										size="1" value="${offActionForm.officeStatus}">
 										<html-el:options collection="OfficeStatusList"
 											property="levelId" labelProperty="levelName" />
 									</html-el:select>
@@ -160,7 +161,7 @@ function getOffice(officeid){
 								bundle="OfficeUIResources"/>:</td>
 							<td width="80%"><mifos:mifosalphanumtext
 								property="address.line1"
-								value="${BusinessKey.address.address.line1}"
+								value="${offActionForm.address.line1}"
 								maxlength="200"></mifos:mifosalphanumtext></td>
 						</tr>
 						<tr class="fontnormal">
@@ -168,7 +169,7 @@ function getOffice(officeid){
 								name="${ConfigurationConstants.ADDRESS2}"
 								bundle="OfficeUIResources"/>:</td>
 							<td><mifos:mifosalphanumtext property="address.line2"
-								value="${BusinessKey.address.address.line2}"
+								value="${offActionForm.address.line2}"
 								maxlength="200"></mifos:mifosalphanumtext></td>
 						</tr>
 						<tr class="fontnormal" id="Office.Address3">
@@ -177,7 +178,7 @@ function getOffice(officeid){
 								bundle="OfficeUIResources" keyhm="Office.Address3"
 								isColonRequired="yes"></mifos:mifoslabel>:</td>
 							<td><mifos:mifosalphanumtext property="address.line3"
-								value="${BusinessKey.address.address.line3}"
+								value="${offActionForm.address.line3}"
 								maxlength="200" keyhm="Office.Address3">
 							</mifos:mifosalphanumtext></td>
 						</tr>
@@ -185,7 +186,7 @@ function getOffice(officeid){
 							<td align="right"><mifos:mifoslabel
 								name="${ConfigurationConstants.CITY}" bundle="OfficeUIResources"/>:</td>
 							<td><mifos:mifosalphanumtext property="address.city"
-								value="${BusinessKey.address.address.city}" maxlength="100"/>
+								value="${offActionForm.address.city}" maxlength="100"/>
 							</td>
 						</tr>
 						<tr class="fontnormal">
@@ -193,14 +194,14 @@ function getOffice(officeid){
 								name="${ConfigurationConstants.STATE}" bundle="OfficeUIResources"
 								keyhm="Office.State" isColonRequired="yes"/></td>
 							<td><mifos:mifosalphanumtext property="address.state"
-								value="${BusinessKey.address.address.state}" maxlength="100"
+								value="${offActionForm.address.state}" maxlength="100"
 								keyhm="Office.State"/></td>
 						</tr>
 						<tr class="fontnormal">
 							<td align="right"><mifos:mifoslabel name="Office.labelCountry"
 								 keyhm="Office.Country"/></td>
 							<td><mifos:mifosalphanumtext property="address.country"
-								value="${BusinessKey.address.address.country}" maxlength="100"
+								value="${offActionForm.address.country}" maxlength="100"
 								keyhm="Office.Country"/></td>
 						</tr>
 						<tr class="fontnormal">
@@ -209,7 +210,7 @@ function getOffice(officeid){
 								bundle="OfficeUIResources" keyhm="Office.PostalCode"
 								isColonRequired="yes"/></td>
 							<td><mifos:mifosalphanumtext property="address.postalCode"
-								value="${BusinessKey.address.address.zip}"
+								value="${offActionForm.address.zip}"
 								maxlength="20" keyhm="Office.PostalCode"/>
 							</td>
 						</tr>
@@ -218,7 +219,7 @@ function getOffice(officeid){
 								/></td>
 
 							<td><mifos:mifosalphanumtext property="address.telephoneNo"
-								value="${BusinessKey.address.address.phoneNumber}"
+								value="${offActionForm.address.phoneNumber}"
 								maxlength="20"/></td>
 						</tr>
 					</table>
@@ -296,6 +297,7 @@ function getOffice(officeid){
 			<br>
 			<br>
 			<html-el:hidden property="method" value="editpreview" />
+			<html-el:hidden property="officeId" value="${BusinessKey.officeId}" />
 		</html-el:form>
 
 	</tiles:put>

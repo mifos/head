@@ -5,10 +5,13 @@ import java.util.List;
 
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficeView;
+import org.mifos.application.office.util.helpers.OfficeLevel;
+import org.mifos.application.office.util.helpers.OperationMode;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -132,6 +135,40 @@ public class TestOfficeAction extends MifosMockStrutsTestCase {
 		
 	}
 	public void testEditPreview(){
-		
+		setRequestPathInfo("/offAction.do");
+		addRequestParameter("method", Methods.editpreview.toString());
+		actionPerform();
+		verifyInputForward();
 	}
+	public void testEditPrevious(){
+		setRequestPathInfo("/offAction.do");
+		addRequestParameter("method", Methods.editprevious.toString());
+		actionPerform();
+		verifyForward(ActionForwards.editprevious_success.toString());
+	}
+	public void testUpdate()throws Exception{
+		setRequestPathInfo("/offAction.do");
+		addRequestParameter("method", Methods.update.toString());
+		
+		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+
+		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE,
+				parent, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
+		officeBO.save();
+		TestObjectFactory.flushandCloseSession();
+		officeBO = TestObjectFactory.getOffice(officeBO.getOfficeId());
+		request.getSession().setAttribute(Constants.BUSINESS_KEY,officeBO);
+		addRequestParameter("officeName","RAJOFFICE");
+		addRequestParameter("shortName","OFFI");
+		addRequestParameter("officeLevel",officeBO.getOfficeLevel().getValue().toString());
+		addRequestParameter("parentOfficeId",officeBO.getParentOffice().getOfficeId().toString());
+		addRequestParameter("officeStatus",officeBO.getOfficeStatus().getValue().toString());
+		actionPerform();
+		verifyForward(ActionForwards.update_success.toString());
+		TestObjectFactory.flushandCloseSession();
+		officeBO = TestObjectFactory.getOffice(officeBO.getOfficeId());
+		assertEquals("RAJOFFICE",officeBO.getOfficeName());
+		assertEquals("OFFI",officeBO.getShortName());
+		TestObjectFactory.cleanUp(officeBO);
+	}	
 }

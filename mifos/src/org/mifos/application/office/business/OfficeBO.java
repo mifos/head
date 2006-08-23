@@ -3,6 +3,7 @@ package org.mifos.application.office.business;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -33,6 +34,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.StringUtils;
 
+import com.sun.corba.se.impl.ior.NewObjectKeyTemplateBase;
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 
 public class OfficeBO extends BusinessObject {
@@ -62,6 +64,8 @@ public class OfficeBO extends BusinessObject {
 	private String shortName;
 
 	private OfficeAddressEntity address;
+
+	private Set<OfficeBO> children;
 
 	public OfficeBO() {
 		super();
@@ -134,11 +138,12 @@ public class OfficeBO extends BusinessObject {
 			throw new OfficeException(e);
 		}
 	}
-	public OfficeStatusEntity getStatus(){
+
+	public OfficeStatusEntity getStatus() {
 		return this.status;
 	}
 
-	public OfficeLevelEntity getLevel(){
+	public OfficeLevelEntity getLevel() {
 		return this.level;
 	}
 
@@ -173,11 +178,6 @@ public class OfficeBO extends BusinessObject {
 	public String getSearchId() {
 		return searchId;
 	}
-
-	public void setSearchId(String searchId) {
-		this.searchId = searchId;
-	}
-
 	public String getShortName() {
 		return shortName;
 	}
@@ -194,7 +194,7 @@ public class OfficeBO extends BusinessObject {
 		return address;
 	}
 
-	public Set getCustomFields() {
+	public Set<OfficeCustomFieldEntity> getCustomFields() {
 		return customFields;
 	}
 
@@ -260,7 +260,7 @@ public class OfficeBO extends BusinessObject {
 			for (int i = officeGlobelNo.length(); i < 4; i++) {
 				temp.append("0");
 			}
-			
+
 			return officeGlobelNo = temp.append(officeGlobelNo).toString();
 		} catch (ParseException e) {
 			throw new OfficeException(e);
@@ -283,7 +283,6 @@ public class OfficeBO extends BusinessObject {
 		this.globalOfficeNum = generateOfficeGlobalNo();
 		this.searchId = generateSearchId();
 		new OfficePersistence().createOrUpdate(this);
-
 		// if we are here it means office created sucessfully
 		// we need to update hierarchy manager cache
 		OfficeSearch os = new OfficeSearch(getOfficeId(), getSearchId(),
@@ -305,13 +304,12 @@ public class OfficeBO extends BusinessObject {
 				} else {
 					canActivateOffice();
 				}
-				
-				//still here we can update the status
+				// still here we can update the status
 				MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.MasterDataService);
-				this.status= (OfficeStatusEntity)masterPersistenceService.findById(OfficeStatusEntity.class,status.getValue());
-
+						.getInstance().getPersistenceService(
+								PersistenceServiceName.MasterDataService);
+				this.status = (OfficeStatusEntity) masterPersistenceService
+						.findById(OfficeStatusEntity.class, status.getValue());
 			}
 		} catch (ServiceException e) {
 			throw new OfficeException(e);
@@ -334,23 +332,138 @@ public class OfficeBO extends BusinessObject {
 		if (parentOffice.getOfficeStatus().equals(OfficeStatus.INACTIVE))
 			throw new OfficeException(OfficeConstants.KEYPARENTNOTACTIVE);
 	}
-	public  void update(String newName,String newShortName,OfficeStatus newStatus,OfficeLevel newLevel,OfficeBO newParent) throws OfficeException{
+
+	public void update(String newName, String newShortName,
+			OfficeStatus newStatus, OfficeLevel newLevel, OfficeBO newParent, Address address, List<CustomFieldView> customFileds)
+			throws OfficeException {
 		changeOfficeName(newName);
 		changeOfficeShortName(newShortName);
 		changeStatus(newStatus);
+		updateParent(newParent);
+		updateLevel(newLevel);
+		updateAddress(address);
+		updateCustomFields(customFileds);
+		setUpdateDetails();
+		new OfficePersistence().createOrUpdate(this);
 	}
-	private void changeOfficeName(String newName) throws OfficeException{
-		
-		if(! this.officeName.equalsIgnoreCase(newName)){
+
+	private void changeOfficeName(String newName) throws OfficeException {
+
+		if (!this.officeName.equalsIgnoreCase(newName)) {
 			if (new OfficePersistence().isOfficeNameExist(newName))
 				throw new OfficeException(OfficeConstants.OFFICENAMEEXIST);
+			this.officeName = newName;
 		}
 	}
-	private void changeOfficeShortName(String newShortName) throws OfficeException{
-		
-		if(! this.officeName.equalsIgnoreCase(newShortName)){
+
+	private void changeOfficeShortName(String newShortName)
+			throws OfficeException {
+
+		if (!this.shortName.equalsIgnoreCase(newShortName)) {
 			if (new OfficePersistence().isOfficeShortNameExist(newShortName))
 				throw new OfficeException(OfficeConstants.OFFICESHORTNAMEEXIST);
+			this.shortName = newShortName;
+		}
+	}
+
+	private void updateParent(OfficeBO parentOffice) {
+
+		if (parentOffice != null) {
+			if (this.parentOffice != null) {
+				if (!this.parentOffice.getOfficeId().equals(
+						parentOffice.getOfficeId())) {
+
+					// TODO : check the code of updating searchid's
+					// remove this child from old parent
+					this.parentOffice.removeChild(this);
+					parentOffice.addChild(this);
+					updateSearchId(parentOffice.getSearchId() + "."
+							+ (parentOffice.getChildren().size()));
+					this.parentOffice.updateSearchId(this.parentOffice
+							.getSearchId());
+					this.parentOffice = parentOffice;
+				}
+			}
+		}
+	}
+
+	public Set<OfficeBO> getChildren() {
+		return children;
+	}
+
+	private void removeChild(OfficeBO office) {
+		children.remove(office);
+	}
+
+	private void addChild(OfficeBO office) {
+		children.add(office);
+	}
+
+	private void updateSearchId(String searchId) {
+
+		this.searchId = searchId;
+		int i = 1;
+		if (this.children != null) {
+			Iterator iter = this.children.iterator();
+			while (iter.hasNext()) {
+				OfficeBO element = (OfficeBO) iter.next();
+				element.updateSearchId(this.searchId + "." + i);
+				i++;
+
+			}
+
+		}
+
+	}
+
+	private void updateLevel(OfficeLevel level) throws OfficeException {
+		try {
+			if (this.getOfficeLevel() != level) {
+				// TODO: pass proper key
+				if (!canUpdateLevel(level))
+					throw new OfficeException();
+				MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
+						.getInstance().getPersistenceService(
+								PersistenceServiceName.MasterDataService);
+				this.level = (OfficeLevelEntity) masterPersistenceService
+						.findById(OfficeLevelEntity.class, level.getValue());
+			}
+		} catch (ServiceException e) {
+			throw new OfficeException(e);
+		}
+	}
+
+	private boolean canUpdateLevel(OfficeLevel level) throws OfficeException {
+		if (this.getOfficeLevel().getValue() > level.getValue())
+			return true;
+		else {
+			for (OfficeBO office : this.children) {
+				if (office.getLevel().getId() <= level.getValue())
+					return false;
+			}
+			return true;
+		}
+	}
+	private void updateAddress(Address address){
+		if(this.address!=null&&address!=null)
+			this.address.setAddress(address);
+		else if (this.address==null&&address!=null){
+			this.address = new OfficeAddressEntity(this,address);
+		}
+	}
+	private void updateCustomFields(List<CustomFieldView> customfields){
+		if(this.customFields !=null&&customfields!=null){
+			for(CustomFieldView fieldView : customfields)
+				for(OfficeCustomFieldEntity fieldEntity: this.customFields)
+					if(fieldView.getFieldId().equals(fieldEntity.getFieldId()))
+						fieldEntity.setFieldValue(fieldView.getFieldValue());
+		}
+		else if (this.customFields ==null&&customfields!=null){
+			this.customFields = new HashSet<OfficeCustomFieldEntity>();
+			for (CustomFieldView view : customfields) {
+				this.customFields.add(new OfficeCustomFieldEntity(view
+						.getFieldValue(), view.getFieldId(), this));
+			}
 		}
 	}
 }

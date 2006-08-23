@@ -203,7 +203,7 @@ public class OffActionForm extends BaseActionForm {
 			HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();
 		String method = request.getParameter("method");
-		if (method.equals(Methods.preview.toString())) {
+		if (method.equals(Methods.preview.toString()) ||method.equals(Methods.editpreview.toString())) {
 			verifyFields(errors, getUserContext(request));
 			validateCustomFields(request, errors);
 			errors.add(super.validate(mapping, request));
@@ -222,6 +222,8 @@ public class OffActionForm extends BaseActionForm {
 		this.officeId = officeBO.getOfficeId().toString();
 		this.officeLevel = officeBO.getOfficeLevel().getValue().toString();
 		this.officeStatus = officeBO.getOfficeStatus().getValue().toString();
+		this.officeName=officeBO.getOfficeName();
+		this.shortName=officeBO.getShortName();
 		if (officeBO.getAddress() != null
 				&& officeBO.getAddress().getAddress() != null) {
 			this.address

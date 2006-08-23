@@ -89,7 +89,7 @@ function goToCancelPage(){
 										name="Office.labelOfficeName" /> <span class="fontnormal"> <c:out
 										value="${offActionForm.officeName}"></c:out> <br>
 									</span> <mifos:mifoslabel name="Office.labelOfficeShortName" /><span
-										class="fontnormal"> <c:out value="${offActionForm.officeName}"></c:out><br>
+										class="fontnormal"> <c:out value="${offActionForm.shortName}"></c:out><br>
 									</span><mifos:mifoslabel name="Office.labelOfficeType" />
 									<span class="fontnormal"> <!--  code for setting the correct value for type-->
 

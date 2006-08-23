@@ -11,13 +11,17 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
+import org.mifos.application.customer.business.CustomerCustomFieldEntity;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.business.OfficeCustomFieldEntity;
 import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.struts.actionforms.OffActionForm;
+import org.mifos.application.office.struts.actionforms.OfficeActionForm;
 import org.mifos.application.office.util.helpers.OfficeLevel;
+import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.office.util.helpers.OperationMode;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -196,15 +200,46 @@ public class OffAction extends BaseAction {
 	public ActionForward edit(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		OffActionForm offActionForm= (OffActionForm)form;
 		loadofficeLevels(request);
-		loadParents(request,(OffActionForm)form);
-		loadCreateCustomFields((OffActionForm)form, request);
+		loadParents(request,offActionForm);
+		loadCreateCustomFields(offActionForm, request);
 		loadOfficeStatus(request);
 		return mapping.findForward(ActionForwards.edit_success.toString());
 	}
-	public ActionForward editPreview(ActionMapping mapping, ActionForm form,
+	public ActionForward editpreview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return mapping.findForward(ActionForwards.editpreview_success.toString());
-	}		
+	}
+	public ActionForward editprevious(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(ActionForwards.editprevious_success.toString());
+	}
+	public ActionForward update(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		OffActionForm offActionForm = (OffActionForm)form;
+		OfficeBO sessionOffice = (OfficeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,request.getSession());
+		
+		HibernateUtil.closeandFlushSession();
+		OfficeBO office = ((OfficeBusinessService) getService()).getOffice(Short
+				.valueOf(sessionOffice.getOfficeId()));
+		office.setVersionNo(sessionOffice.getVersionNo());
+		
+		office.setUserContext(getUserContext(request));
+		
+		OfficeStatus newStatus=OfficeStatus.ACTIVE;
+		if(getShortValue(offActionForm.getOfficeStatus())!=null)
+		 newStatus = OfficeStatus.getOfficeStatus(getShortValue(offActionForm.getOfficeStatus()));
+		OfficeLevel newlevel = OfficeLevel
+		.getOfficeLevel(getShortValue(offActionForm.getOfficeLevel()));
+		OfficeBO parentOffice=null;
+		if(getShortValue(offActionForm.getParentOfficeId())!=null)
+			parentOffice= ((OfficeBusinessService) getService())
+		.getOffice(getShortValue(offActionForm.getParentOfficeId()));
+		office.update(offActionForm.getOfficeName(),offActionForm.getShortName(),newStatus,newlevel,parentOffice,offActionForm.getAddress(),offActionForm.getCustomFields());
+		return mapping.findForward(ActionForwards.update_success.toString());
+	}
 }
