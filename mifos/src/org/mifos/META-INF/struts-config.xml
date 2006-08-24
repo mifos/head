@@ -1094,6 +1094,7 @@
 			<forward name="editprevious_success" path="/pages/application/office/jsp/editoffice.jsp" />
 			<forward name="update_success" path="/offAction.do?method=get" />
 			<forward name="update_failure" path="/pages/application/office/jsp/edit_preview_office.jsp" />
+			<forward name="search_success" path="/pages/application/office/jsp/viewOffices.jsp" />
 		</action>
 	    <!-- offAction End-->
 	    <!-- M2 Product Category -->

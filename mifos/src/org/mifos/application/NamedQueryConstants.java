@@ -424,6 +424,8 @@ public interface NamedQueryConstants {
 	public String GET_ACCOUNT_STATES = "accounts.getStates";
 	public String GET_CUSTOMER_STATES = "customer.getStates";
 	public String GET_ALL_OFFICES = "office.getAllOffices";
+	public final String GET_OFFICES_TILL_BRANCHOFFICE="office.getOfficesTillBranchOffice";
+	public final String GET_BRANCH_OFFICES="office.getBranchOffices";
 	
 	public String GET_MANDATORY_FIELD_List="getMandatoryFieldList";
 	public String GET_FIELD_LIST="getFieldList";

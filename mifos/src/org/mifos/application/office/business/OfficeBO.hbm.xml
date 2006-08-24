@@ -79,4 +79,10 @@
     <query name="getCountInactiveOffice">
             <![CDATA[select count(*) from org.mifos.application.office.business.OfficeBO office where office.officeId = :OFFICE_ID and office.status.id = :STATUS_ID ]]>
     </query>
+     <query name="office.getOfficesTillBranchOffice">
+            <![CDATA[from org.mifos.application.office.business.OfficeBO  o where o.level.id != :branchOffice order by o.level.id,o.officeName ]]>
+    </query>
+    <query name="office.getBranchOffices">
+            <![CDATA[from org.mifos.application.office.business.OfficeBO  o where o.level.id = :branchOffice order by o.parentOffice.officeName,o.officeName ]]>
+    </query>
 </hibernate-mapping>

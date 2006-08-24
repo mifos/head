@@ -22,8 +22,8 @@ function goToCancelPage(){
 		offActionForm.submit();		
   }	
    function submitViewOfficesLink(){
-	document.offActionForm.method.value="loadall";
-	document.offActionForm.action="OfficeAction.do";	
+	document.offActionForm.method.value="getAllOffices";
+	document.offActionForm.action="offAction.do";	
 		
 	offActionForm.submit();
   }

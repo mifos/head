@@ -171,6 +171,8 @@ public class ActivityMapper {
 				SecurityConstants.OFFICE_EDIT_OFFICE);
 		activityMap.put("/offAction-update",
 				SecurityConstants.OFFICE_EDIT_OFFICE);
+		activityMap.put("/offAction-getAllOffices",
+				SecurityConstants.VIEW);
 
 		// roles and permission related mappings
 		activityMap.put("/manageRolesAndPermission-manage",

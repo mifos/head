@@ -63,8 +63,7 @@ public interface OfficeConstants {
 	public final String OLDHIERARCHYLIST="OldHierarchyList";
 	public final String OFFICESTILLBRANCHOFFICESLIST="OfficesTillBranchOffices";
 	public final String OFFICESBRANCHOFFICESLIST="OfficesBranchOffices";	
-	public final String CUSTOM_FIELDS ="customFields";	
-	
+	public final String CUSTOM_FIELDS ="customFields";
 	
 	
 	//custom methods 
@@ -167,5 +166,10 @@ public interface OfficeConstants {
 	
 	public static final String ENTERADDTIONALINFO="error.office.provideadditionalInformation";
 	public static final String OFFICE_LEVELS="officelevels";
+	public static final String GET_HEADOFFICE ="headOfficeList";
+	public static final String GET_REGIONALOFFICE ="regionalOfficeList";
+	public static final String GET_SUBREGIONALOFFICE ="divisionalOfficeList";
+	public static final String GET_AREAOFFICE ="areaOfficeList";
+	public static final String GET_BRANCHOFFICE ="branchOfficeList";
 	
 }

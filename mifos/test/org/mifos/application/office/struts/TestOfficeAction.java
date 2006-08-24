@@ -16,6 +16,7 @@ import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestOfficeAction extends MifosMockStrutsTestCase {
@@ -40,6 +41,18 @@ public class TestOfficeAction extends MifosMockStrutsTestCase {
 		ActivityContext ac = new ActivityContext((short) 0, userContext
 				.getBranchId().shortValue(), userContext.getId().shortValue());
 		request.getSession(false).setAttribute("ActivityContext", ac);
+	}
+	
+	public void testGetAllOffices(){
+		setRequestPathInfo("/offAction.do");
+		addRequestParameter("method", "getAllOffices");
+		actionPerform();
+		verifyForward(ActionForwards.search_success.toString());
+		assertEquals(1,((List<OfficeBO>)SessionUtils.getAttribute(OfficeConstants.GET_HEADOFFICE, request.getSession())).size());
+		assertNull(SessionUtils.getAttribute(OfficeConstants.GET_REGIONALOFFICE, request.getSession()));
+		assertNull(SessionUtils.getAttribute(OfficeConstants.GET_SUBREGIONALOFFICE, request.getSession()));
+		assertEquals(1,((List)SessionUtils.getAttribute(OfficeConstants.GET_BRANCHOFFICE, request.getSession())).size());
+		assertEquals(1,((List)SessionUtils.getAttribute(OfficeConstants.GET_AREAOFFICE, request.getSession())).size());
 	}
 
 	public void testLoad() {
@@ -170,5 +183,7 @@ public class TestOfficeAction extends MifosMockStrutsTestCase {
 		assertEquals("RAJOFFICE",officeBO.getOfficeName());
 		assertEquals("OFFI",officeBO.getShortName());
 		TestObjectFactory.cleanUp(officeBO);
-	}	
+	}
+
+	
 }

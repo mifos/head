@@ -31,4 +31,11 @@ public class OfficeBusinessService extends BusinessService {
 	public List<OfficeView> getStatusList(Short localeId){
 		return officePersistence.getStatusList(localeId);
 	}
+	public List<OfficeBO> getOfficesTillBranchOffice(){
+		return officePersistence.getOfficesTillBranchOffice();
+	}
+	public List<OfficeBO> getBranchOffices(){
+		return officePersistence.getBranchOffices();
+	}
+	
 }

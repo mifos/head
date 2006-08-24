@@ -118,4 +118,12 @@ public class TestOfficePersistence extends MifosTestCase {
 	public void testIsBranchInactive() {
 		assertFalse(officePersistence.isBranchInactive(Short.valueOf("3")));
 	}
+	
+	public void testGetBranchOffices() {
+		assertEquals(1,officePersistence.getBranchOffices().size());
+	}
+	
+	public void testGetOfficesTillBranchOffice() {
+		assertEquals(2,officePersistence.getOfficesTillBranchOffice().size());
+	}
 }

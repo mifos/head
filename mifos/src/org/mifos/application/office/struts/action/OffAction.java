@@ -11,15 +11,12 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
-import org.mifos.application.customer.business.CustomerCustomFieldEntity;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.office.business.OfficeBO;
-import org.mifos.application.office.business.OfficeCustomFieldEntity;
 import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.struts.actionforms.OffActionForm;
-import org.mifos.application.office.struts.actionforms.OfficeActionForm;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.office.util.helpers.OperationMode;
@@ -32,6 +29,7 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
@@ -106,6 +104,49 @@ public class OffAction extends BaseAction {
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, officeBO, request
 				.getSession());
 		return mapping.findForward(ActionForwards.create_success.toString());
+	}
+	
+	public ActionForward getAllOffices(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		
+		UserContext userContext = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
+		List<OfficeBO> officeList=getOffices(userContext, ((OfficeBusinessService) getService()).getOfficesTillBranchOffice());
+		SessionUtils.setAttribute(OfficeConstants.GET_HEADOFFICE, getOffice(officeList,OfficeLevel.HEADOFFICE), request.getSession());
+		SessionUtils.setAttribute(OfficeConstants.GET_REGIONALOFFICE, getOffice(officeList,OfficeLevel.REGIONALOFFICE), request.getSession());
+		SessionUtils.setAttribute(OfficeConstants.GET_SUBREGIONALOFFICE, getOffice(officeList,OfficeLevel.SUBREGIONALOFFICE), request.getSession());
+		SessionUtils.setAttribute(OfficeConstants.GET_AREAOFFICE, getOffice(officeList,OfficeLevel.AREAOFFICE), request.getSession());
+		SessionUtils.setAttribute(OfficeConstants.GET_BRANCHOFFICE, getOffices(
+				userContext, ((OfficeBusinessService) getService())
+						.getBranchOffices()), request.getSession());
+		return mapping.findForward(ActionForwards.search_success.toString());
+	}
+	
+	
+	private List<OfficeBO> getOffice(List<OfficeBO> officeList, OfficeLevel officeLevel) throws OfficeException{
+		if(officeList!=null){
+			List<OfficeBO> newOfficeList=new ArrayList<OfficeBO>();
+			for(OfficeBO officeBO : officeList){
+				if(officeBO.getOfficeLevel().equals(officeLevel)){
+					newOfficeList.add(officeBO);
+				}
+			}
+			if(newOfficeList.isEmpty())
+				return null;
+			return newOfficeList;
+		}
+		return null;	
+	}
+	
+	private List<OfficeBO> getOffices(UserContext userContext,List<OfficeBO> officeList) throws Exception{
+		if(officeList!=null){
+			for(OfficeBO officeBO : officeList){
+				officeBO.getLevel().setLocaleId(userContext.getLocaleId());
+				officeBO.getStatus().setLocaleId(userContext.getLocaleId());
+			}
+		}
+		return officeList;
 	}
 
 	private void loadParents(HttpServletRequest request, OffActionForm form)

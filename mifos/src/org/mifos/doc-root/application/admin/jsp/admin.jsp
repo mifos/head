@@ -96,7 +96,7 @@
 								src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
 							<td width="97%"><html-el:link
-								action="/OfficeAction.do?method=loadall"><mifos:mifoslabel name="admin.viewoff" /></html-el:link>
+								action="/offAction.do?method=getAllOffices"><mifos:mifoslabel name="admin.viewoff" /></html-el:link>
 							| <html-el:link action="/offAction.do?method=load"><mifos:mifoslabel name="admin.defnewoff" /></html-el:link></td>
 						</tr>
 						<tr class="fontnormal">

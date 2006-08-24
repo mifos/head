@@ -195,4 +195,24 @@ public class OfficePersistence extends Persistence {
 		}
 		return null;
 	}
+	public List<OfficeBO> getOfficesTillBranchOffice(){
+		HashMap<String , Object> queryParameters = new HashMap<String , Object>();
+		queryParameters.put("branchOffice",OfficeLevel.BRANCHOFFICE.getValue());
+		List<OfficeBO> queryResult = executeNamedQuery(NamedQueryConstants.GET_OFFICES_TILL_BRANCHOFFICE,queryParameters);	
+		if(queryResult !=null && queryResult.size()!=0){
+			return queryResult; 
+		}
+		return null;
+	}
+	
+	public List<OfficeBO> getBranchOffices(){
+		HashMap<String , Object> queryParameters = new HashMap<String , Object>();
+		queryParameters.put("branchOffice",OfficeLevel.BRANCHOFFICE.getValue());
+		List<OfficeBO> queryResult = executeNamedQuery(NamedQueryConstants.GET_BRANCH_OFFICES,queryParameters);	
+		if(queryResult !=null && queryResult.size()!=0){
+			return queryResult; 
+		}
+		return null;
+	}
+	
 }

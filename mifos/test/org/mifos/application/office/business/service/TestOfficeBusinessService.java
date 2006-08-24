@@ -30,4 +30,12 @@ public class TestOfficeBusinessService extends MifosTestCase {
 	public void testGetStatusList(){
 		assertEquals(2,officeBusinessService.getStatusList(Short.valueOf("1")).size());
 	}
+
+	public void testGetBranchOffices() {
+		assertEquals(1,officeBusinessService.getBranchOffices().size());
+	}
+	
+	public void testGetOfficesTillBranchOffice() {
+		assertEquals(2,officeBusinessService.getOfficesTillBranchOffice().size());
+	}
 }
