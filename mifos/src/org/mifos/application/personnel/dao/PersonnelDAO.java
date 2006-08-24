@@ -295,6 +295,7 @@ public class PersonnelDAO extends DAO {
 			  personnelMovement.setEndDate(personnel.getPersonnelDetails().getDateOfLeavingBranch());
 			  personnelMovement.setStartDate(personnel.getPersonnelDetails().getDateOfJoiningBranch());
 			  personnelMovement.setOfficeId(personnel.getOffice().getOfficeId());
+			  personnel.getPersonnelDetails().setDateOfJoiningBranch(new PersonnelHelper().getCurrentDate());
 			  personnelMovement.setVersionNo((short)0);
 			  logger.info("transferring personnel with id: "+ personnel.getPersonnelId()+" in office with id: "+ personnel.getOffice().getOfficeId());
 		  }

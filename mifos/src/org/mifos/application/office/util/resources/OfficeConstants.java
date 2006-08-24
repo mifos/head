@@ -156,6 +156,7 @@ public interface OfficeConstants {
 	public static final String OFFICE_NAME="Office.officeName";
 	public static final String OFFICESHORTNAME="Office.officeShortName";
 	public static final String OFFICELEVEL="Office.officeLevel";
+	public static final String OFFICETYPE="Office.officeType";
 	public static final String OFFICEOPERATIONMODE="Office.operationMode";
 	public static final String PARENTOFFICE="Office.parentOffice";
 	

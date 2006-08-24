@@ -87,7 +87,7 @@ public class TestOfficeAction extends MifosMockStrutsTestCase {
 		assertEquals("Office Short  Name", 1,
 				getErrrorSize(OfficeConstants.OFFICESHORTNAME));
 		assertEquals("Office level", 1,
-				getErrrorSize(OfficeConstants.OFFICELEVEL));
+				getErrrorSize(OfficeConstants.OFFICETYPE));
 		assertEquals("Office parent", 1,
 				getErrrorSize(OfficeConstants.PARENTOFFICE));
 		verifyInputForward();

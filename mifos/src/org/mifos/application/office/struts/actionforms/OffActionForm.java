@@ -147,9 +147,9 @@ public class OffActionForm extends BaseActionForm {
 							getLocaleString(OfficeConstants.OFFICESHORTNAME,
 									userContext)));
 		if (StringUtils.isNullOrEmpty(officeLevel))
-			actionErrors.add(OfficeConstants.OFFICELEVEL, new ActionMessage(
+			actionErrors.add(OfficeConstants.OFFICETYPE, new ActionMessage(
 					OfficeConstants.ERRORMANDATORYFIELD, getLocaleString(
-							OfficeConstants.OFFICELEVEL, userContext)));
+							OfficeConstants.OFFICETYPE, userContext)));
 		if (StringUtils.isNullOrEmpty(parentOfficeId))
 			actionErrors.add(OfficeConstants.PARENTOFFICE, new ActionMessage(
 					OfficeConstants.ERRORMANDATORYFIELD, getLocaleString(
@@ -185,16 +185,21 @@ public class OffActionForm extends BaseActionForm {
 				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request
 						.getSession());
 		for (CustomFieldView customField : customFields) {
+			boolean isErrorFound = false;
 			for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
 				if (customField.getFieldId()
 						.equals(customFieldDef.getFieldId())
-						&& customFieldDef.isMandatory()) {
-					if (StringUtils.isNullOrEmpty(customField.getFieldValue()))
+						&& customFieldDef.isMandatory()) 
+					if (StringUtils.isNullOrEmpty(customField.getFieldValue())){
 						errors.add(CustomerConstants.CUSTOM_FIELD,
 								new ActionMessage(
 										OfficeConstants.ENTERADDTIONALINFO));
-				}
+						isErrorFound = true;
+						break;
+					}
 			}
+			if(isErrorFound)
+				break;
 		}
 	}
 
