@@ -38,15 +38,10 @@
 package org.mifos.application.office.business;
 
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.office.persistence.OfficeHierarchyPersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 
-/**
- * This class represet the OfficeLevel in the system e.g. headoffice
- * 
- * @author rajenders
- * 
- */
 public class OfficeLevelEntity extends MasterDataEntity {
 
 	private final OfficeLevelEntity parent;
@@ -60,7 +55,6 @@ public class OfficeLevelEntity extends MasterDataEntity {
 	protected OfficeLevelEntity() {
 		parent = null;
 		child = null;
-
 	}
 
 	public OfficeLevelEntity(OfficeLevel level) {
@@ -95,5 +89,12 @@ public class OfficeLevelEntity extends MasterDataEntity {
 
 	public OfficeLevel getLevel() throws PropertyNotFoundException {
 		return OfficeLevel.getOfficeLevel(this.getId());
+	}
+
+	public void update(boolean configured) {
+		if ((configured && !isConfigured()) || (!configured && isConfigured())) {
+			addConfigured(configured);
+			new OfficeHierarchyPersistence().createOrUpdate(this);
+		}
 	}
 }

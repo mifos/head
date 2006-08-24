@@ -489,5 +489,7 @@ public interface NamedQueryConstants {
 	public String CUSTOMER_CLIENTPOSITION="Customer.clientPosition";
 	public String GET_PRODUCTCATEGORY="productdefenition.getProductCategory";
 	public String GET_PRDCATEGORYSTATUS="productdefenition.prdcategorystatus";
+	
+	public String GET_OFFICE_LEVELS="officeLevel.getOfficeLevels";
 
 }

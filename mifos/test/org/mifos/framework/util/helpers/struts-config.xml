@@ -225,6 +225,8 @@
 		<form-bean name="clientCustActionForm" type="org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm"></form-bean>
 		<!-- M2 Product Category -->
 		<form-bean name="productCategoryActionForm" type="org.mifos.application.productdefinition.struts.actionforms.PrdCategoryActionForm"></form-bean>
+		<!-- Office Hierarchy Action form -->
+		<form-bean name="offhierarchyactionform" type="org.mifos.application.office.struts.actionforms.OffHierarchyActionForm"></form-bean>
 		
 	</form-beans>
 	<global-exceptions>
@@ -236,6 +238,7 @@
 			type="org.mifos.framework.exceptions.ApplicationException"
 			handler="org.mifos.framework.exceptions.MifosExceptionHandler"
 			key="exception.framework.ApplicationException" scope="request" />
+		<exception type="org.mifos.framework.exceptions.PageExpiredException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.PageExpiredException" scope="request" path="/pages/framework/jsp/pageexpirederror.jsp"/>
 	</global-exceptions>
 
 	<global-forwards>
@@ -1876,6 +1879,15 @@
 			<forward name="update_failure" path="/pages/application/productdefinition/jsp/ManageProductCategoryPreview.jsp"></forward>
 			<forward name="search_success" path="/pages/application/productdefinition/jsp/ViewProductCategories.jsp"></forward>
 		</action>
+		<!-- off hierarchy Action start-->
+		<action path="/offhierarchyaction" type="org.mifos.application.office.struts.action.OffHierarchyAction" 
+		name="offhierarchyactionform" parameter="method" scope="session"
+			input="/offhierarchyaction.do?method=validate" validate="true">
+			<forward name="load_success" path="/pages/application/office/jsp/offhierarchy.jsp" />
+			<forward name="update_success" path="/AdminAction.do?method=load" />
+			<forward name="cancel_success" path="/AdminAction.do?method=load" />
+		</action>
+	    <!-- off hierarchy Action End-->
 		
 
 	<!-- offAction End-->

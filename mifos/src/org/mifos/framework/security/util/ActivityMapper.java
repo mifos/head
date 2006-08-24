@@ -149,6 +149,10 @@ public class ActivityMapper {
 		activityMap.put("/OfficeHierarchyAction-update",
 				SecurityConstants.OFFICE_EDIT_OFFICE);
 		
+		activityMap.put("/offhierarchyaction-cancel", SecurityConstants.VIEW);
+		activityMap.put("/offhierarchyaction-load", SecurityConstants.VIEW);
+		activityMap.put("/offhierarchyaction-update",SecurityConstants.OFFICE_EDIT_OFFICE);
+		
 		//m2 office action 
 		activityMap.put("/offAction-load",
 				SecurityConstants.OFFICE_CREATE_OFFICE);

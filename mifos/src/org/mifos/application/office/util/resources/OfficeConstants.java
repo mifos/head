@@ -165,5 +165,6 @@ public interface OfficeConstants {
 	public static final String OFFICESHORTNAMEEXIST="error.office.duplicateShortName";
 	
 	public static final String ENTERADDTIONALINFO="error.office.provideadditionalInformation";
+	public static final String OFFICE_LEVELS="officelevels";
 	
 }

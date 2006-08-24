@@ -20,4 +20,7 @@
 		<many-to-one name="parent" class="org.mifos.application.office.business.OfficeLevelEntity" column="PARENT_LEVEL_ID" unique="true" cascade="all" access="field"/>
 		<one-to-one name="child" class="org.mifos.application.office.business.OfficeLevelEntity" cascade="none" lazy="true" property-ref="parent" access="field"/>
 	</class>
+	 <query name="officeLevel.getOfficeLevels">
+        <![CDATA[from org.mifos.application.office.business.OfficeLevelEntity officeLevel order by officeLevel.id]]>
+    </query> 
 </hibernate-mapping>

@@ -120,6 +120,8 @@
 		<form-bean name="clientCustActionForm" type="org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm"></form-bean>
 		<!-- M2 Product Category -->
 		<form-bean name="productCategoryActionForm" type="org.mifos.application.productdefinition.struts.actionforms.PrdCategoryActionForm"></form-bean>
+		<!-- Office Hierarchy Action form -->
+		<form-bean name="offhierarchyactionform" type="org.mifos.application.office.struts.actionforms.OffHierarchyActionForm"></form-bean>
 	</form-beans>
 
 	<global-exceptions>
@@ -1102,7 +1104,15 @@
 			<forward name="search_success" path="/pages/application/productdefinition/jsp/ViewProductCategories.jsp"></forward>
 		</action>
 	    
-		
+		<!-- off hierarchy Action start-->
+		<action path="/offhierarchyaction" type="org.mifos.application.office.struts.action.OffHierarchyAction" 
+		name="offhierarchyactionform" parameter="method" scope="session"
+			input="/offhierarchyaction.do?method=validate" validate="true">
+			<forward name="load_success" path="/pages/application/office/jsp/offhierarchy.jsp" />
+			<forward name="update_success" path="/AdminAction.do?method=load" />
+			<forward name="cancel_success" path="/AdminAction.do?method=load" />
+		</action>
+	    <!-- off hierarchy Action End-->
 		
 	</action-mappings>
 
