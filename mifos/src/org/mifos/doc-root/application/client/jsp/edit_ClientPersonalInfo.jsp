@@ -316,7 +316,7 @@
 							<table width="100%" border="0" cellspacing="0" cellpadding="0">
 								<tr class="fontnormal">
 								  <td width="14%"><mifos:mifoslabel name="client.Relationship" bundle="ClientUIResources"></mifos:mifoslabel> 
-									<mifos:select	style="width:80px;" onchange="CheckMaritalStatus()" name="clientCustActionForm"
+									<mifos:select	style="width:80px;" name="clientCustActionForm"
 										property="spouseName.nameType" size="1">
 										<html-el:options collection="spouseEntity" property="id" labelProperty="name" />
 									</mifos:select>
