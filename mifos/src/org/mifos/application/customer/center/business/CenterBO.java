@@ -11,11 +11,10 @@ import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.center.exception.StateChangeException;
+import org.mifos.application.customer.business.CustomerPerformanceHistory;
 import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
-import org.mifos.application.customer.exceptions.CustomerStateChangeException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -23,9 +22,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.business.util.Address;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 
 /**
@@ -114,5 +111,10 @@ public class CenterBO extends CustomerBO {
 	protected boolean checkNewStatusIsFirstTimeActive(Short oldStatus,
 			Short newStatusId) {
 		return false;
+	}
+
+	@Override
+	public CustomerPerformanceHistory getPerformanceHistory() {
+		return null;
 	}
 }

@@ -1106,7 +1106,7 @@ public class TestLoanBO extends MifosTestCase {
 		UserContext uc = TestObjectFactory.getUserContext();
 		Money totalRepaymentAmount = loanBO.getTotalEarlyRepayAmount();
 		Integer noOfActiveLoans = ((ClientPerformanceHistoryEntity) ((LoanBO) accountBO)
-				.getCustomer().getCustomerPerformanceHistory())
+				.getCustomer().getPerformanceHistory())
 				.getNoOfActiveLoans();
 		LoanPerformanceHistoryEntity loanPerfHistory = ((LoanBO) accountBO)
 				.getPerformanceHistory();
@@ -1124,7 +1124,7 @@ public class TestLoanBO extends MifosTestCase {
 				.intValue());
 
 		ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) ((LoanBO) accountBO)
-				.getCustomer().getCustomerPerformanceHistory();
+				.getCustomer().getPerformanceHistory();
 		assertEquals(Integer.valueOf(1), clientPerfHistory.getLoanCycleNumber());
 		assertEquals(noOfActiveLoans - 1, clientPerfHistory
 				.getNoOfActiveLoans().intValue());
@@ -1144,7 +1144,7 @@ public class TestLoanBO extends MifosTestCase {
 		UserContext uc = TestObjectFactory.getUserContext();
 		loanBO.setUserContext(uc);
 		ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) ((LoanBO) accountBO)
-				.getCustomer().getCustomerPerformanceHistory();
+				.getCustomer().getPerformanceHistory();
 		Integer noOfActiveLoans = clientPerfHistory.getNoOfActiveLoans();
 		Integer loanCycleNumber = clientPerfHistory.getLoanCycleNumber();
 		loanBO.writeOff("Loan Written Off");
@@ -1157,7 +1157,7 @@ public class TestLoanBO extends MifosTestCase {
 				AccountBO.class, accountBO.getAccountId());
 		LoanBO loan = (LoanBO) accountBO;
 		clientPerfHistory = (ClientPerformanceHistoryEntity) ((LoanBO) accountBO)
-				.getCustomer().getCustomerPerformanceHistory();
+				.getCustomer().getPerformanceHistory();
 		assertEquals(loanCycleNumber - 1, clientPerfHistory
 				.getLoanCycleNumber().intValue());
 		assertEquals(noOfActiveLoans - 1, clientPerfHistory
@@ -1172,7 +1172,7 @@ public class TestLoanBO extends MifosTestCase {
 				startDate, 3);
 
 		ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) ((LoanBO) accountBO)
-				.getCustomer().getCustomerPerformanceHistory();
+				.getCustomer().getPerformanceHistory();
 		Integer noOfActiveLoans = clientPerfHistory.getNoOfActiveLoans();
 		Integer loanCycleNumber = clientPerfHistory.getLoanCycleNumber();
 		((LoanBO) accountBO).disburseLoan("1234", startDate,
@@ -1206,7 +1206,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) ((LoanBO) accountBO)
-				.getCustomer().getCustomerPerformanceHistory();
+				.getCustomer().getPerformanceHistory();
 		Integer noOfActiveLoans = clientPerfHistory.getNoOfActiveLoans();
 		((LoanBO) accountBO).handleArrears();
 		HibernateUtil.commitTransaction();
@@ -1218,7 +1218,7 @@ public class TestLoanBO extends MifosTestCase {
 				AccountBO.class, accountBO.getAccountId());
 		LoanBO loan = (LoanBO) accountBO;
 		clientPerfHistory = (ClientPerformanceHistoryEntity) ((LoanBO) accountBO)
-				.getCustomer().getCustomerPerformanceHistory();
+				.getCustomer().getPerformanceHistory();
 		assertEquals(noOfActiveLoans + 1, clientPerfHistory
 				.getNoOfActiveLoans().intValue());
 	}
@@ -1237,7 +1237,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) ((LoanBO) accountBO)
-				.getCustomer().getCustomerPerformanceHistory();
+				.getCustomer().getPerformanceHistory();
 		Integer noOfActiveLoans = clientPerfHistory.getNoOfActiveLoans();
 		LoanPerformanceHistoryEntity loanPerfHistory = ((LoanBO) accountBO)
 				.getPerformanceHistory();
@@ -1247,7 +1247,7 @@ public class TestLoanBO extends MifosTestCase {
 		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				client.getCustomerId());
 		clientPerfHistory = (ClientPerformanceHistoryEntity) loan.getCustomer()
-				.getCustomerPerformanceHistory();
+				.getPerformanceHistory();
 		assertEquals(noOfActiveLoans - 1, clientPerfHistory
 				.getNoOfActiveLoans().intValue());
 		assertEquals(noOfPayments + 1, loan.getPerformanceHistory()
@@ -1261,7 +1261,7 @@ public class TestLoanBO extends MifosTestCase {
 				.valueOf("3"), startDate, 3);
 
 		GroupPerformanceHistoryEntity groupPerformanceHistoryEntity = (GroupPerformanceHistoryEntity) ((LoanBO) accountBO)
-				.getCustomer().getCustomerPerformanceHistory();
+				.getCustomer().getPerformanceHistory();
 		((LoanBO) accountBO).disburseLoan("1234", startDate,
 				Short.valueOf("1"), accountBO.getPersonnel(), startDate, Short
 						.valueOf("1"));

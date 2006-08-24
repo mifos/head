@@ -374,16 +374,6 @@ public abstract class CustomerBO extends BusinessObject {
 		return null;
 	}
 
-	public List<LoanBO> getLoanAccounts() {
-		List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
-		for (AccountBO account : accounts) {
-			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOANACCOUNT.getValue()))
-				loanAccounts.add((LoanBO) account);
-		}
-		return loanAccounts;
-	}
-
 	public List<LoanBO> getActiveAndApprovedLoanAccounts(Date transactionDate) {
 		List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
 		for (AccountBO account : accounts) {
@@ -485,13 +475,10 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 
 	private void setHistoricalData(CustomerHistoricalDataEntity historicalData) {
-
 		if (historicalData != null) {
 			historicalData.setMfiJoiningDate(mfiJoiningDate);
 		}
-
 		this.historicalData = historicalData;
-
 	}
 
 	public void setCustomerHistoricalData(
@@ -653,13 +640,7 @@ public abstract class CustomerBO extends BusinessObject {
 		return new Money();
 	}
 
-	public CustomerPerformanceHistory getCustomerPerformanceHistory() {
-		return getPerformanceHistory();
-	}
-
-	protected CustomerPerformanceHistory getPerformanceHistory() {
-		return null;
-	}
+	public abstract CustomerPerformanceHistory getPerformanceHistory();
 
 	public Money getSavingsBalance() {
 		Money amount = new Money();
