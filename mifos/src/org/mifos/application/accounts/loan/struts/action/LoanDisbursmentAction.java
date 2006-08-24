@@ -4,7 +4,6 @@
 package org.mifos.application.accounts.loan.struts.action;
 
 import java.util.Date;
-import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -108,13 +107,6 @@ public class LoanDisbursmentAction extends BaseAction {
 					receiptDate, Short.valueOf("1"));
 		// loan.disburseLoan(actionForm.getReceiptId(),trxnDate,Short.valueOf(actionForm.getPaymentTypeId()),uc.getId(),receiptDate,Short.valueOf(actionForm.getPaymentModeOfPayment()));
 		return mapping.findForward(Constants.UPDATE_SUCCESS);
-	}
-
-	private Date getDateFromString(String strDate, Locale locale) {
-		Date date = null;
-		if (strDate != null && strDate != "")
-			date = new Date(DateHelper.getLocaleDate(locale, strDate).getTime());
-		return date;
 	}
 
 	private LoanBusinessService getLoanBusinessService()

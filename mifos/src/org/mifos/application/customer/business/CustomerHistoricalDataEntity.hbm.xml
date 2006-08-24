@@ -12,9 +12,18 @@
         </id>
         <version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null"/>
         <property name="productName" column="PRODUCT_NAME" />
-        <property name="loanAmount" column="LOAN_AMOUNT"    />
-        <property name="totalAmountPaid" column="TOTAL_AMOUNT_PAID"  />
-        <property name="interestPaid" column="INTEREST_PAID" />
+        <property name="loanAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<column name="LOAN_AMOUNT_CURRENCY_ID" />
+			<column name="LOAN_AMOUNT" />
+		</property>
+        <property name="totalAmountPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<column name="TOTAL_AMOUNT_PAID_CURRENCY_ID" />
+			<column name="TOTAL_AMOUNT_PAID" />
+		</property>
+		<property name="interestPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<column name="INTEREST_PAID_CURRENCY_ID" />
+			<column name="INTEREST_PAID" />
+		</property>
         <property name="missedPaymentsCount" column="MISSED_PAYMENTS_COUNT" />
 	    <property name="totalPaymentsCount" column="TOTAL_PAYMENTS_COUNT" />
 	    <property name="notes" column="NOTES"    />

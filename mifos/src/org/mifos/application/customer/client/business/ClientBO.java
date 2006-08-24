@@ -311,7 +311,6 @@ public class ClientBO extends CustomerBO {
 											ConfigurationConstants.CLIENT,
 											this.getUserContext().getPereferedLocale()) });
 				}catch (ConfigurationException ce) {
-					ce.printStackTrace();
 					throw new CustomerException(ce);
 				}
 			}

@@ -3,7 +3,6 @@ package org.mifos.application.accounts.savings.struts.action;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -240,13 +239,6 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 		}
 		return paymentData;
 
-	}
-
-	private Date getDateFromString(String strDate, Locale locale) {
-		Date date = null;
-		if (strDate != null && strDate != "")
-			date = new Date(DateHelper.getLocaleDate(locale, strDate).getTime());
-		return date;
 	}
 
 	public ActionForward validate(ActionMapping mapping, ActionForm form,

@@ -38,7 +38,6 @@
 package org.mifos.application.accounts.struts.action;
 
 import java.util.Date;
-import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -154,13 +153,6 @@ public class AccountApplyPaymentAction extends BaseAction {
 		return mapping
 				.findForward(getForward(((AccountApplyPaymentActionForm) form)
 						.getInput()));
-	}
-
-	private Date getDateFromString(String strDate, Locale locale) {
-		Date date = null;
-		if (strDate != null && strDate != "")
-			date = new Date(DateHelper.getLocaleDate(locale, strDate).getTime());
-		return date;
 	}
 
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,

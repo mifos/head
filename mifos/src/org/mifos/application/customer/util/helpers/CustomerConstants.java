@@ -44,6 +44,9 @@ public interface CustomerConstants {
 	public static final String CUSTOMER_NOTE_ACTION="CustomerNoteAction";
 	public static final String CUSTOMER_HISTORICAL_DATA_ACTION="CustomerHistoricalDataAction";
 	public static final String CUSTOMER_HISTORICAL_DATA_VO="CustomerHistoricalDataVO";
+	public static final String CUSTOMER_HISTORICAL_DATA="customerHistoricalData";
+	public static final String MFIJOININGDATE="mfiJoiningDate";
+	public static final String CUSTOMERHISTORICALDATAACTIONFORM="custHistoricalDataActionForm";
 	public static final String CUSTOMER_NOTE_VO="CustomerNoteVO";
 	public static final String PERSONNEL_NAME="personnelName";
 	public static final String GLOBAL_CUST_NUM="globalCustNum";

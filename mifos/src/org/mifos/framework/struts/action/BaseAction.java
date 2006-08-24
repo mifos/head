@@ -1,6 +1,7 @@
 package org.mifos.framework.struts.action;
 
 import java.lang.reflect.Method;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -29,6 +30,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -271,5 +273,12 @@ public abstract class BaseAction extends DispatchAction {
 			return "1";
 		return "0";
 
+	}
+	
+	protected Date getDateFromString(String strDate, Locale locale) {
+		Date date = null;
+		if (StringUtils.isNullAndEmptySafe(strDate))
+			date = new Date(DateHelper.getLocaleDate(locale, strDate).getTime());
+		return date;
 	}
 }// :~

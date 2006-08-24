@@ -39,7 +39,6 @@
 package org.mifos.application.customer.center.struts.action;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -518,13 +517,6 @@ public class CenterCustAction extends BaseAction {
 		clearActionForm(actionForm);
 		SessionUtils.setAttribute(CenterConstants.CENTER_MEETING, null, request
 				.getSession());
-	}
-
-	private Date getDateFromString(String strDate, Locale locale) {
-		Date date = null;
-		if (StringUtils.isNullAndEmptySafe(strDate))
-			date = new Date(DateHelper.getLocaleDate(locale, strDate).getTime());
-		return date;
 	}
 
 	private void clearActionForm(CenterCustActionForm actionForm) {

@@ -341,7 +341,7 @@
 						<tr>
 							<td width="69%" align="right" class="fontnormal"><span
 								class="fontnormal"> <a
-								href="customerAction.do?method=getAllClosedAccounts&customerId=<c:out value="${sessionScope.BusinessKey.customerId}"/>&type=client">
+								href="customerAction.do?method=getAllClosedAccounts&customerId=<c:out value="${sessionScope.BusinessKey.customerId}"/>">
                   <mifos:mifoslabel name="client.ClosedAccountsLink" bundle="ClientUIResources" /></a> </span></td>
 						</tr>
 					</table>
@@ -658,7 +658,7 @@
 							</c:forEach> <br>
 							<!-- Bug Id 27210. Added code to pass the created date as parameter-->
 
-							<a href="CustomerHistoricalDataAction.do?method=get&input=Client"><mifos:mifoslabel
+							<a href="custHistoricalDataAction.do?method=get&globalCustNum=<c:out value="${sessionScope.BusinessKey.globalCustNum}"/>"><mifos:mifoslabel
 								name="client.HistoricalDataLink" bundle="ClientUIResources"></mifos:mifoslabel>
 							</a> <br>
 							<html-el:link

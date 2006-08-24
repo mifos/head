@@ -40,6 +40,7 @@ package org.mifos.application.customer.business;
 import java.util.Date;
 
 import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.util.helpers.Money;
 
 /**
  * This class encapsulate the customer historical data
@@ -52,11 +53,11 @@ public class CustomerHistoricalDataEntity extends PersistentObject {
 
 	private String productName;
 
-	private Double loanAmount;
+	private Money loanAmount;
 
-	private Double totalAmountPaid;
+	private Money totalAmountPaid;
 
-	private Double interestPaid;
+	private Money interestPaid;
 
 	private Integer missedPaymentsCount;
 
@@ -79,7 +80,7 @@ public class CustomerHistoricalDataEntity extends PersistentObject {
 		this.customer = null;
 	}
 
-	protected CustomerHistoricalDataEntity(CustomerBO customer) {
+	public CustomerHistoricalDataEntity(CustomerBO customer) {
 		this.customer = customer;
 		this.historicalId = null;
 	}
@@ -108,19 +109,19 @@ public class CustomerHistoricalDataEntity extends PersistentObject {
 		return loanCycleNumber;
 	}
 
-	public void setTotalAmountPaid(Double totalAmountPaid) {
+	public void setTotalAmountPaid(Money totalAmountPaid) {
 		this.totalAmountPaid = totalAmountPaid;
 	}
 
-	public Double getTotalAmountPaid() {
+	public Money getTotalAmountPaid() {
 		return totalAmountPaid;
 	}
 
-	public void setInterestPaid(Double interestPaid) {
+	public void setInterestPaid(Money interestPaid) {
 		this.interestPaid = interestPaid;
 	}
 
-	public Double getInterestPaid() {
+	public Money getInterestPaid() {
 		return interestPaid;
 	}
 
@@ -148,11 +149,11 @@ public class CustomerHistoricalDataEntity extends PersistentObject {
 		return productName;
 	}
 
-	public void setLoanAmount(Double loanAmount) {
+	public void setLoanAmount(Money loanAmount) {
 		this.loanAmount = loanAmount;
 	}
 
-	public Double getLoanAmount() {
+	public Money getLoanAmount() {
 		return loanAmount;
 	}
 }

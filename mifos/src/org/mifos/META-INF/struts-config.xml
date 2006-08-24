@@ -48,6 +48,7 @@
 		<form-bean name="customerNoteActionForm" type="org.mifos.application.customer.struts.actionforms.CustomerNoteActionForm"></form-bean>
 		<!-- Customer Historical Data Action Form -->
 		<form-bean name="customerHistoricalDataActionForm" type="org.mifos.application.customer.struts.actionforms.CustomerHistoricalDataActionForm"></form-bean>
+		<form-bean name="custHistoricalDataActionForm" type="org.mifos.application.customer.struts.actionforms.CustHistoricalDataActionForm"></form-bean>
 		<!-- roles and permission -->
 		<form-bean name="rolesandPermissionActionForm" type="org.mifos.application.rolesandpermission.struts.actionforms.RolesandPermissionActionForm" />
 		<!-- office form beans -->
@@ -400,6 +401,16 @@
 			<forward name="group_details_page" path="/GroupAction.do?method=get" />
 			<forward name="center_details_page" path="/centerAction.do?method=get" />
 			<forward name="client_details_page" path="/clientCreationAction.do?method=get" />
+		</action>
+		<action path="/custHistoricalDataAction" type="org.mifos.application.customer.struts.action.CustHistoricalDataAction" name="custHistoricalDataActionForm" parameter="method" validate="true"
+			input="/custHistoricalDataAction.do?method=validate" scope="session">
+			<forward name="get_success" path="/pages/application/customer/jsp/customer_historicaldata.jsp" />
+			<forward name="load_success" path="/pages/application/customer/jsp/customer_edithistoricaldata.jsp" />
+			<forward name="preview_success" path="/pages/application/customer/jsp/customer_previewhistoricaldata.jsp" />
+			<forward name="previous_success" path="/pages/application/customer/jsp/customer_edithistoricaldata.jsp" />
+			<forward name="update_success" path="/custHistoricalDataAction.do?method=get" />
+			<forward name="group_detail_page" path="/GroupAction.do?method=get" />
+			<forward name="client_detail_page" path="/clientCustAction.do?method=get" />
 		</action>
 		<!-- Login Action -->
 		<action path="/mifoslogin" name="mifosloginform" type="org.mifos.application.login.struts.action.MifosLoginAction" input="/mifoslogin.do?method=validate" parameter="method" validate="true" scope="request">

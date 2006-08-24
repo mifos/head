@@ -475,21 +475,18 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 
 	private void setHistoricalData(CustomerHistoricalDataEntity historicalData) {
-		if (historicalData != null) {
-			historicalData.setMfiJoiningDate(mfiJoiningDate);
-		}
-		this.historicalData = historicalData;
+		this.historicalData = historicalData;		
 	}
-
-	public void setCustomerHistoricalData(
-			CustomerHistoricalDataEntity historicalData) {
-		if (historicalData != null) {
-			this.mfiJoiningDate = historicalData.getMfiJoiningDate();
-		}
-		setHistoricalData(historicalData);
+	
+	public void updateHistoricalData(CustomerHistoricalDataEntity historicalData) {
+		if (historicalData != null) 
+			mfiJoiningDate = historicalData.getMfiJoiningDate();
+		this.historicalData = historicalData;	
 	}
-
+	
 	public CustomerHistoricalDataEntity getHistoricalData() {
+		if(historicalData != null)
+			historicalData.setMfiJoiningDate(mfiJoiningDate);
 		return historicalData;
 	}
 
