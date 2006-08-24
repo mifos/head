@@ -144,7 +144,7 @@ function goToEditPage(){
                   		<mifos:mifoslabel name="Center.Selected" bundle="CenterUIResources"/>
                   		<mifos:mifoslabel name="Center.Colon" bundle="CenterUIResources"/>
 </span>
-                  	 <c:out value="${requestScope.centerCustActionForm.officeName}"/></td>
+                  	 <c:out value="${sessionScope.centerCustActionForm.officeName}"/></td>
                 </tr>
               </table>
                              

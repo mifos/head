@@ -87,7 +87,7 @@
                   <span class="heading"><c:out value="${sessionScope.BusinessKey.displayName}"/> 
                   - </span>
                   <mifos:mifoslabel name="Center.Preview" bundle="CenterUIResources"/>
-                  <mifos:mifoslabel name="${Configuration.Constants.CENTER}"/>
+                  <mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/>
                   <mifos:mifoslabel name="Center.Information" bundle="CenterUIResources"/>
                   
               </td>
@@ -207,7 +207,7 @@
             
             <tr id="Center.PhoneNumber">
              <td width="100%" class="fontnormal">
-             <br><br>   
+             <br>   
              <span class="fontnormalbold">          		
             		<mifos:mifoslabel name="Center.Telephone" bundle="CenterUIResources" keyhm="Center.PhoneNumber" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> 
             		<span class="fontnormal"><c:out value="${sessionScope.centerCustActionForm.address.phoneNumber}"/> </span>            		
@@ -217,7 +217,7 @@
             		
 			 <tr>
              <td width="100%" class="fontnormal">  
-             <br><br>    
+             <br>   
 			        <span class="fontnormalbold">
 					<mifos:mifoslabel name="Center.AdditionalInformationHeading" bundle="CenterUIResources"></mifos:mifoslabel> 
 					<span class="fontnormalbold"><br>

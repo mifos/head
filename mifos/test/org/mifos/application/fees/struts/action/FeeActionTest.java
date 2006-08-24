@@ -260,6 +260,29 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		verifyInputForward();
 	}
 
+	public void testFailurePreviewWith_RateAndAmountEnteredWithoutFormula()
+	throws Exception {
+		setRequestPathInfo("/feeaction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("feeName", "LoanFee");
+		addRequestParameter("categoryType", FeeCategory.LOAN.getValue()
+				.toString());
+		addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC
+				.getValue().toString());
+		addRequestParameter("feeRecurrenceType", MeetingFrequency.WEEKLY
+				.getValue().toString());
+		addRequestParameter("weekRecurAfter", "2");
+		addRequestParameter("amount", "200");
+		addRequestParameter("rate", "10");
+		addRequestParameter("glCode", GLOCDE_ID);
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		
+		assertEquals(1, getErrrorSize());
+		assertEquals("Fee Rate or Formula", 1, getErrrorSize(FeeConstants.RATE_OR_AMOUNT));
+		verifyInputForward();
+	}
+	
 	public void testFailurePreviewWith_AmountNotNull() throws Exception {
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
@@ -560,6 +583,25 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		verifyInputForward();
 	}
 
+	public void testFailureEditPreviewForZeroAmount() throws PageExpiredException {
+		fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee",
+				FeeCategory.ALLCUSTOMERS, "100", FeePayment.UPFRONT);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
+		setRequestPathInfo("/feeaction.do");
+		addRequestParameter("method", "manage");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		setRequestPathInfo("/feeaction.do");
+		addRequestParameter("method", "editPreview");
+		addRequestParameter("amount", "0");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		assertEquals(1, getErrrorSize());
+		assertEquals("Fee Amount", 1, getErrrorSize("amount"));
+		verifyInputForward();
+	}
+	
 	public void testFailureEditPreviewForRate() throws Exception {
 		fee = TestObjectFactory.createOneTimeRateFee("One Time Fee",
 				FeeCategory.ALLCUSTOMERS, 24.0, FeeFormula.AMOUNT,

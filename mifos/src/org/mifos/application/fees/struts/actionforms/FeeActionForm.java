@@ -255,8 +255,7 @@ public class FeeActionForm extends BaseActionForm {
 	}
 
 	public Double getRateValue() {
-		return StringUtils.isNullAndEmptySafe(rate) ? Double.valueOf(rate)
-				: null;
+		return getDoubleValue(rate);
 	}
 
 	public String getWeekRecurAfter() {
@@ -321,27 +320,31 @@ public class FeeActionForm extends BaseActionForm {
 	private void validateForPreview(ActionErrors errors) {
 		if (StringUtils.isNullAndEmptySafe(categoryType) && isCategoryLoan()) {
 			validateForPreviewLoanCategory(errors);
-		} else if (getAmountValue().equals(new Money())) {
+		} else if (!isAmountValid()) {
 			addError(errors, FeeConstants.AMOUNT,
 					FeeConstants.ERRORS_SPECIFY_VALUE);
 		}
 	}
 
 	private void validateForPreviewLoanCategory(ActionErrors errors) {
-		if (isBothRateAndAmountEmpty() || isBothRateAndAmountNotEmpty())
+
+		if((!isAmountValid() && !isRateOrFormulaValid())
+				|| (isAmountValid() && isRateOrFormulaValid()))
 			addError(errors, FeeConstants.RATE_OR_AMOUNT,
 					FeeConstants.ERRORS_SPECIFY_AMOUNT_OR_RATE);
-		if (isRateEmptyAndFormulaNotNull() || isRateNotEmptyAndFormulaNull())
-			addError(errors, FeeConstants.RATE_AND_FORMULA,
-					FeeConstants.ERRORS_SPECIFY_RATE_AND_FORMULA);
+		else
+			if((!isRateValid() && isFormulaValid())
+					||(isRateValid() && !isFormulaValid()))
+					addError(errors, FeeConstants.RATE_AND_FORMULA,
+							FeeConstants.ERRORS_SPECIFY_RATE_AND_FORMULA);
 	}
 
 	private void validateForEditPreview(ActionErrors errors) {
 		if (StringUtils.isNullAndEmptySafe(feeFormula)) {
-			if (!StringUtils.isNullAndEmptySafe(rate))
+			if (!isRateValid())
 				addError(errors, FeeConstants.RATE_AND_FORMULA,
 						FeeConstants.ERRORS_SPECIFY_RATE_AND_FORMULA);
-		} else if (!StringUtils.isNullAndEmptySafe(amount))
+		} else if (!isAmountValid())
 			addError(errors, FeeConstants.AMOUNT,
 					FeeConstants.ERRORS_SPECIFY_VALUE);
 
@@ -350,25 +353,20 @@ public class FeeActionForm extends BaseActionForm {
 					FeeConstants.ERRORS_SELECT_STATUS);
 	}
 
-	private boolean isBothRateAndAmountEmpty() {
-		return !StringUtils.isNullAndEmptySafe(rate)
-				&& !StringUtils.isNullAndEmptySafe(amount);
+	
+	private boolean isRateValid() {
+		return getRateValue()!=null && getRateValue()>0; 
 	}
-
-	private boolean isBothRateAndAmountNotEmpty() {
-		return StringUtils.isNullAndEmptySafe(rate)
-				&& StringUtils.isNullAndEmptySafe(amount)
-				|| StringUtils.isNullAndEmptySafe(feeFormula)
-				&& StringUtils.isNullAndEmptySafe(amount);
+	
+	private boolean isRateOrFormulaValid(){
+		return isRateValid() || isFormulaValid();
 	}
-
-	private boolean isRateEmptyAndFormulaNotNull() {
-		return (!StringUtils.isNullAndEmptySafe(rate) && StringUtils
-				.isNullAndEmptySafe(feeFormula));
+	
+	private boolean isFormulaValid(){
+		return StringUtils.isNullAndEmptySafe(feeFormula);
 	}
-
-	private boolean isRateNotEmptyAndFormulaNull() {
-		return (StringUtils.isNullAndEmptySafe(rate) && !StringUtils
-				.isNullAndEmptySafe(feeFormula));
-	}
+	
+	private boolean isAmountValid(){
+		return getAmountValue().getAmountDoubleValue()>0.0;
+	}	
 }

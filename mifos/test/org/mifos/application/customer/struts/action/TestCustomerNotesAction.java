@@ -295,6 +295,7 @@ private UserContext userContext;
 		verifyForward(ActionForwards.client_detail_page.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
+		assertEquals(1, client.getRecentCustomerNotes().size());
 		assertEquals(1, client.getCustomerNotes().size());
 		client = (ClientBO) (HibernateUtil.getSessionTL().get(ClientBO.class,
 				new Integer(client.getCustomerId())));
