@@ -118,6 +118,8 @@
 		<form-bean name="customerNotesActionForm" type="org.mifos.application.customer.struts.actionforms.CustomerNotesActionForm" />
 		<!-- Client Action form -->
 		<form-bean name="clientCustActionForm" type="org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm"></form-bean>
+		<!-- M2 Product Category -->
+		<form-bean name="productCategoryActionForm" type="org.mifos.application.productdefinition.struts.actionforms.PrdCategoryActionForm"></form-bean>
 	</form-beans>
 
 	<global-exceptions>
@@ -1080,8 +1082,26 @@
 			<forward name="update_success" path="/offAction.do?method=get" />
 			<forward name="update_failure" path="/pages/application/office/jsp/edit_preview_office.jsp" />
 		</action>
-
 	    <!-- offAction End-->
+	    <!-- M2 Product Category -->
+		<action path="/productCategoryAction" name="productCategoryActionForm" type="org.mifos.application.productdefinition.struts.action.PrdCategoryAction" input="/productCategoryAction.do?method=validate" parameter="method" validate="true" scope="session">
+			
+			<forward name="load_success" path="/pages/application/productdefinition/jsp/CreateProductCategory.jsp"></forward>
+			<forward name="previous_success" path="/pages/application/productdefinition/jsp/CreateProductCategory.jsp"></forward>
+			<forward name="preview_success" path="/pages/application/productdefinition/jsp/CreateProductCategoryPreview.jsp"></forward>
+			<forward name="create_success" path="/pages/application/productdefinition/jsp/CreateProductCategoryConfirm.jsp"></forward>
+			<forward name="get_success" path="/pages/application/productdefinition/jsp/ProductCategoryDetails.jsp"></forward>
+			<forward name="manage_success" path="/pages/application/productdefinition/jsp/ManageProductCategory.jsp"></forward>
+			<forward name="editprevious_success" path="/pages/application/productdefinition/jsp/ManageProductCategory.jsp"></forward>
+			<forward name="editpreview_success" path="/pages/application/productdefinition/jsp/ManageProductCategoryPreview.jsp"></forward>
+			<forward name="update_success" path="/productCategoryAction.do?method=get"></forward>
+			<forward name="preview_failure" path="/pages/application/productdefinition/jsp/CreateProductCategory.jsp"></forward>
+			<forward name="create_failure" path="/pages/application/productdefinition/jsp/CreateProductCategoryPreview.jsp"></forward>
+			<forward name="managepreview_failure" path="/pages/application/productdefinition/jsp/ManageProductCategory.jsp"></forward>
+			<forward name="update_failure" path="/pages/application/productdefinition/jsp/ManageProductCategoryPreview.jsp"></forward>
+			<forward name="search_success" path="/pages/application/productdefinition/jsp/ViewProductCategories.jsp"></forward>
+		</action>
+	    
 		
 		
 	</action-mappings>

@@ -487,4 +487,7 @@ public interface NamedQueryConstants {
 	public String GETOFFICEINACTIVE="getCountInactiveOffice";
 	public String GET_PRD_TYPES="productdefenition.getProductTypes";
 	public String CUSTOMER_CLIENTPOSITION="Customer.clientPosition";
+	public String GET_PRODUCTCATEGORY="productdefenition.getProductCategory";
+	public String GET_PRDCATEGORYSTATUS="productdefenition.prdcategorystatus";
+
 }

@@ -82,7 +82,7 @@ public class ProductCategoryBO extends BusinessObject {
 			String productCategoryDesc) throws ProductDefinitionException {
 		super(userContext);
 		prdLoanLogger.debug("Creating product category");
-		validateProductCategoryName(productCategoryName);
+		validateDuplicateProductCategoryName(productCategoryName);
 		this.productCategoryID = null;
 		this.productType = productType;
 		this.office = new OfficePersistence().getOffice(userContext
@@ -144,23 +144,36 @@ public class ProductCategoryBO extends BusinessObject {
 		return globalPrdOfferingNum.toString();
 	}
 	
-	private void validateProductCategoryName(String productCategoryName) throws ProductDefinitionException{
+	private void validateDuplicateProductCategoryName(String productCategoryName) throws ProductDefinitionException{
 		prdLoanLogger.debug("Checking for duplicate product category name");
 		if(!new ProductCategoryPersistence().getProductCategory(productCategoryName).equals(Integer.valueOf("0")))
 			throw new ProductDefinitionException(
 					ProductDefinitionConstants.DUPLCATEGORYNAME);
 	}
 	
+	private void validateDuplicateProductCategoryName(String productCategoryName,Short productCategoryId) throws ProductDefinitionException{
+		prdLoanLogger.debug("Checking for duplicate product category name");
+		if(!new ProductCategoryPersistence().getProductCategory(productCategoryName,productCategoryId).equals(Integer.valueOf("0")))
+			throw new ProductDefinitionException(
+					ProductDefinitionConstants.DUPLCATEGORYNAME);
+	}
+	
+	
 	public void updateProductCategory(String productCategoryName,
 			String productCategoryDesc,
 			PrdCategoryStatusEntity prdCategoryStatus)
 			throws ProductDefinitionException {
 		prdLoanLogger.debug("Updating product category name");
-		validateProductCategoryName(productCategoryName);
+		validateDuplicateProductCategoryName(productCategoryName,productCategoryID);
 		this.productCategoryName = productCategoryName;
 		this.productCategoryDesc = productCategoryDesc;
 		this.prdCategoryStatus = prdCategoryStatus;
+		new ProductCategoryPersistence().createOrUpdate(this);
 		prdLoanLogger.debug("Updating product category done");
+	}
+	
+	public void save() throws ProductDefinitionException{
+		new ProductCategoryPersistence().createOrUpdate(this);
 	}
 	
 }

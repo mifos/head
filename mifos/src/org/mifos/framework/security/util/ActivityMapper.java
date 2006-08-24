@@ -465,19 +465,21 @@ public class ActivityMapper {
 
 		// product categories mapping
 
-		activityMap.put("/mifosproddefaction-load",
+		activityMap.put("/productCategoryAction-load",
 				SecurityConstants.DEFINE_NEW_PRODUCT_CATEGORIES);
-		activityMap.put("/mifosproddefaction-preview", SecurityConstants.VIEW);
-		activityMap.put("/mifosproddefaction-create",
+		activityMap.put("/productCategoryAction-createPreview", SecurityConstants.VIEW);
+		activityMap.put("/productCategoryAction-create",
 				SecurityConstants.DEFINE_NEW_PRODUCT_CATEGORIES);
-		activityMap.put("/mifosproddefaction-search", SecurityConstants.VIEW);
-		activityMap.put("/mifosproddefaction-previous", SecurityConstants.VIEW);
-		activityMap.put("/mifosproddefaction-get", SecurityConstants.VIEW);
-		activityMap.put("/mifosproddefaction-manage",
+		activityMap.put("/productCategoryAction-get", SecurityConstants.VIEW);
+		activityMap.put("/productCategoryAction-managePreview", SecurityConstants.VIEW);
+		activityMap.put("/productCategoryAction-manage",
 				SecurityConstants.EDIT_PRODUCT_CATEGORIES);
-		activityMap.put("/mifosproddefaction-update",
+		activityMap.put("/productCategoryAction-update",
 				SecurityConstants.EDIT_PRODUCT_CATEGORIES);
-
+		activityMap.put("/productCategoryAction-getAllCategories", SecurityConstants.VIEW);
+		activityMap.put("/productCategoryAction-createPrevious", SecurityConstants.VIEW);
+		activityMap.put("/productCategoryAction-managePrevious", SecurityConstants.VIEW);
+		
 		// saving product mappeings
 		activityMap.put("/savingsprdaction-search", SecurityConstants.VIEW);
 		activityMap.put("/savingsprdaction-load",

@@ -303,9 +303,10 @@
 		<!-- meeting form -->
 
 		<!-- office Form -->
+		
 		<!-- product definition-->
-		<form name="/mifosproddefaction">
-			<field property="productType.productTypeID"
+		<form name="/productCategoryAction">
+			<field property="productType"
 				depends="required">
 				<msg name="required" key="errors.select"
 					bundle="ProductDefUIResources" />
@@ -336,7 +337,7 @@
 					<var-value>500</var-value>
 				</var>
 			</field>
-			<field property="prdCategoryStatus.prdCategoryStatusId"
+			<field property="productCategoryStatus"
 				depends="required">
 				<msg name="required" key="errors.select"
 					bundle="ProductDefUIResources" />

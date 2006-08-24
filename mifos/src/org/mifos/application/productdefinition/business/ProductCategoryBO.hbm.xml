@@ -23,6 +23,9 @@
         <many-to-one name="office" column="OFFICE_ID" class="org.mifos.application.office.business.OfficeBO" access="field"/>
     </class>
     
+    <query name="product.searchcategories"><![CDATA[from org.mifos.application.productdefinition.business.ProductCategoryBO pc order by pc.productType.productTypeID,pc.productCategoryName]]></query>
+    <query name="product.updateduplcount"><![CDATA[select count(*) from org.mifos.application.productdefinition.business.ProductCategoryBO pc where pc.productCategoryName=:productCategoryName and pc.productCategoryID != (:productCategoryID)]]></query>
     <query name="product.maxprdcatid"><![CDATA[select max(pc.productCategoryID) from org.mifos.application.productdefinition.business.ProductCategoryBO pc]]></query>    
     <query name="product.createduplcount"><![CDATA[select count(*) from org.mifos.application.productdefinition.business.ProductCategoryBO pc where pc.productCategoryName=:productCategoryName]]></query>
+    <query name="productdefenition.getProductCategory"><![CDATA[from org.mifos.application.productdefinition.business.ProductCategoryBO pc where pc.globalPrdCategoryNum=:globalNum]]></query>
 </hibernate-mapping>

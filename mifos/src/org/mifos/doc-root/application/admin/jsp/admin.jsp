@@ -158,9 +158,9 @@
 								src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
 							<td width="97%"><html-el:link
-								href="mifosproddefaction.do?method=search&searchNode(search_name)=ProductCategories&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+								href="productCategoryAction.do?method=getAllCategories&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 								<mifos:mifoslabel name="admin.viewprdcat" /></html-el:link> | <html-el:link
-								href="mifosproddefaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+								href="productCategoryAction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 								<mifos:mifoslabel name="admin.defnewcat" /></html-el:link></td>
 						</tr>
 						<tr class="fontnormal">

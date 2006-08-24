@@ -10,6 +10,7 @@ import org.mifos.application.productdefinition.business.TestSavingsOfferingBO;
 import org.mifos.application.productdefinition.persistence.TestProductCategoryPersistence;
 import org.mifos.application.productdefinition.persistence.TestProductDefinitionPersistence;
 import org.mifos.application.productdefinition.persistence.service.TestProductDefinitionPersistenceService;
+import org.mifos.application.productdefinition.struts.action.TestPrdCategoryAction;
 import org.mifos.framework.MifosTestSuite;
 
 public class ProductDefinitionTestSuite extends MifosTestSuite {
@@ -27,6 +28,7 @@ public class ProductDefinitionTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(TestProductCategoryBO.class);
 		testSuite.addTestSuite(TestProductCategoryBusinessService.class);
 		testSuite.addTestSuite(TestProductCategoryPersistence.class);
+		testSuite.addTestSuite(TestPrdCategoryAction.class);
 		return testSuite;
 	}
 	
