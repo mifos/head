@@ -255,6 +255,6 @@ public interface CustomerConstants {
 	public static final String GENDER = "Gender";
 	public static final String SPOUSE_FIRST_NAME = "Spouse/Father First Name";
 	public static final String SPOUSE_LAST_NAME = "Spouse/Father Last Name";
-	public static final String SPOUSE_TYPE = "Spouse/Father type";
+	public static final String SPOUSE_TYPE = "Spouse/Father Relationship";
 	public static final String FORMED_BY_LOANOFFICER = "Formed By Loan officer";
 }
