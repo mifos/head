@@ -210,8 +210,8 @@ public class EditCustomerStatusActionForm extends ValidatorActionForm {
 			errors.add(CustomerConstants.MANDATORY_SELECT, new ActionMessage(CustomerConstants.MANDATORY_SELECT, CustomerConstants.FLAG_FIELD));
 		if (StringUtils.isNullOrEmpty(notes))
 			errors.add(CustomerConstants.MANDATORY_TEXTBOX, new ActionMessage(CustomerConstants.MANDATORY_TEXTBOX, CustomerConstants.NOTES_FIELD));
-		else if (notes.length() > LoanConstants.COMMENT_LENGTH)
-			errors.add(CustomerConstants.MAXIMUM_LENGTH, new ActionMessage(CustomerConstants.MAXIMUM_LENGTH, CustomerConstants.NOTES_FIELD,LoanConstants.COMMENT_LENGTH));
+		else if (notes.length() > CustomerConstants.COMMENT_LENGTH)
+			errors.add(CustomerConstants.MAXIMUM_LENGTH, new ActionMessage(CustomerConstants.MAXIMUM_LENGTH, CustomerConstants.NOTES_FIELD,CustomerConstants.COMMENT_LENGTH));
 		return errors;
 	}
 

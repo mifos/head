@@ -132,6 +132,22 @@ private UserContext userContext;
 		verifyInputForward();
 	}
 
+	public void testFailurePreviewWithNotesValueExceedingMaxLength() throws Exception {
+		setRequestPathInfo("/customerNotesAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("comment", "Testing for comment length exceeding by 500 characters" +
+				"Testing for comment length exceeding by 500 characters" +"Testing for comment length exceeding by 500 characters" +
+				"Testing for comment length exceeding by 500 characters" +"Testing for comment length exceeding by 500 characters " +
+				"Testing for comment length exceeding by 500 characters " +"Testing for comment length exceeding by 500 characters" +
+				"Testing for comment length exceeding by 500 characters" +"Testing for comment length exceeding by 500 characters" +
+				"Testing for comment length exceeding by 500 characters" +"Testing for comment length exceeding by 500 characters");
+		getRequest().getSession().setAttribute("security_param","Center");
+		actionPerform();
+		assertEquals(1, getErrrorSize());
+		assertEquals("Notes",1, getErrrorSize(CustomerConstants.MAXIMUM_LENGTH));
+		verifyInputForward();
+	}
+
 	public void testPreviewSuccess() {
 		createInitialObjects();
 		setRequestPathInfo("/customerNotesAction.do");

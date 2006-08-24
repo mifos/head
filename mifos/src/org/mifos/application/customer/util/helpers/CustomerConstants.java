@@ -234,7 +234,7 @@ public interface CustomerConstants {
 	public static final String STATUS_FIELD="status";
 	public static final String MANDATORY_TEXTBOX="errors.mandatory_textbox";
 	public static final String MANDATORY_SELECT="errors.mandatoryselect";
-	public static final String MAXIMUM_LENGTH="errors.maximumlength";
+	public static final String MAXIMUM_LENGTH="errors.maxlength";
 
 
 	public static final String ERRORS_DUPLICATE_CUSTOMER="errors.Customer.duplicateCustomer";

@@ -163,7 +163,24 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 				getErrrorSize(CustomerConstants.MANDATORY_TEXTBOX));
 		verifyInputForward();
 	}
-
+	
+	public void testFailurePreviewWithNotesValueExceedingMaxLength() throws Exception {
+		setRequestPathInfo("/editCustomerStatusAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("newStatusId", "14");
+		addRequestParameter("flagId", "");
+		addRequestParameter("notes", "Testing for comment length exceeding by 500 characters" +
+							"Testing for comment length exceeding by 500 characters" +"Testing for comment length exceeding by 500 characters" +
+							"Testing for comment length exceeding by 500 characters" +"Testing for comment length exceeding by 500 characters " +
+							"Testing for comment length exceeding by 500 characters " +"Testing for comment length exceeding by 500 characters" +
+							"Testing for comment length exceeding by 500 characters" +"Testing for comment length exceeding by 500 characters" +
+							"Testing for comment length exceeding by 500 characters" +"Testing for comment length exceeding by 500 characters");
+		getRequest().getSession().setAttribute("security_param","Center");
+		actionPerform();
+		assertEquals(1, getErrrorSize());
+		assertEquals("Notes",1, getErrrorSize(CustomerConstants.MAXIMUM_LENGTH));
+		verifyInputForward();
+	}
 	public void testPreviewSuccess() {
 		createInitialObjects();
 		setRequestPathInfo("/editCustomerStatusAction.do");

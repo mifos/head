@@ -133,13 +133,13 @@ public class CustomerNotesActionForm extends SearchActionForm {
 			}
 			errors.add(CustomerConstants.ERROR_MANDATORY_TEXT_AREA, new ActionMessage(
 					CustomerConstants.ERROR_MANDATORY_TEXT_AREA , CustomerConstants.NOTES_FIELD));
-		} else if (getComment().length() > AccountConstants.COMMENT_LENGTH) {
+		} else if (getComment().length() > CustomerConstants.COMMENT_LENGTH) {
 			if (null == errors) {
 				errors = new ActionErrors();
 			}
 			errors.add(CustomerConstants.MAXIMUM_LENGTH, new ActionMessage(
 					CustomerConstants.MAXIMUM_LENGTH, CustomerConstants.NOTES_FIELD,
-					AccountConstants.COMMENT_LENGTH));
+					CustomerConstants.COMMENT_LENGTH));
 		}
 		return errors;
 	}
