@@ -1,12 +1,16 @@
 package org.mifos.application.customer.client.struts.action;
 
 import java.net.URISyntaxException;
+import java.sql.Date;
 import java.util.GregorianCalendar;
 
+import org.mifos.application.customer.business.CustomerHierarchyEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.customer.util.valueobjects.CustomerSearchInput;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.util.helpers.OfficeLevel;
@@ -20,11 +24,14 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 	private CenterBO center;
 	private GroupBO group;
+	private CenterBO center1;
+	private GroupBO group1;
 	private ClientBO client;
 	private OfficeBO office;
 	
@@ -58,7 +65,9 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 	protected void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
+		TestObjectFactory.cleanUp(group1);
 		TestObjectFactory.cleanUp(center);
+		TestObjectFactory.cleanUp(center1);
 		TestObjectFactory.cleanUp(office);
 	}
 
@@ -120,9 +129,87 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 		verifyNoActionMessages();
 	}
 	
+	public void testLoad_updateParent() throws Exception {
+		setRequestPathInfo("/clientTransferAction.do");
+		addRequestParameter("method", "loadParents");
+		actionPerform();
+		verifyForward(ActionForwards.loadParents_success.toString());
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		CustomerSearchInput clientSearchInput = (CustomerSearchInput)SessionUtils.getAttribute(CustomerConstants.CUSTOMER_SEARCH_INPUT,request.getSession());
+		assertNotNull(clientSearchInput);
+		assertEquals(TestObjectFactory.getUserContext().getBranchId(),clientSearchInput.getOfficeId());
+	}
+	
+	public void testPreview_transferToParent() throws Exception {
+		createObjectsForTransferringClientInGroup();
+		setRequestPathInfo("/clientTransferAction.do");
+		addRequestParameter("method", "previewParentTransfer");
+		addRequestParameter("parentGroupId", client.getParentCustomer().getCustomerId().toString());
+		addRequestParameter("parentGroupName", client.getParentCustomer().getDisplayName());
+		actionPerform();
+		verifyForward(ActionForwards.previewParentTransfer_success.toString());
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+	}
+	
+	public void testFailure_transferToParent() throws Exception {
+	
+		createObjectsForTransferringClientInGroup();
+		request.getSession().setAttribute(Constants.BUSINESS_KEY, client);
+		setRequestPathInfo("/clientTransferAction.do");
+		addRequestParameter("method", "updateParent");
+		addRequestParameter("parentGroupId", client.getParentCustomer().getCustomerId().toString());
+		addRequestParameter("parentGroupName", client.getParentCustomer().getDisplayName());
+		actionPerform();
+		verifyForward(ActionForwards.updateParent_failure.toString());
+		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		group1 = (GroupBO)TestObjectFactory.getObject(GroupBO.class,group1.getCustomerId());
+		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
+	}
+	
+	public void testSuccessful_transferToParent() throws Exception {
+		createObjectsForTransferringClientInGroup();
+		request.getSession().setAttribute(Constants.BUSINESS_KEY, client);
+		setRequestPathInfo("/clientTransferAction.do");
+		addRequestParameter("method", "updateParent");
+		addRequestParameter("parentGroupId", group1.getCustomerId().toString());
+		addRequestParameter("parentGroupName", group1.getDisplayName());
+		actionPerform();
+		verifyForward(ActionForwards.update_success.toString());
+		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
+		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		group1 = (GroupBO)TestObjectFactory.getObject(GroupBO.class,group1.getCustomerId());
+		center = (CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+		assertEquals(group1.getCustomerId(),client.getParentCustomer().getCustomerId());
+		assertEquals(0, group.getMaxChildCount().intValue());
+		assertEquals(1, group1.getMaxChildCount().intValue());
+		assertEquals(center1.getSearchId()+".1.1", client.getSearchId());
+		CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();
+		assertEquals(group1.getCustomerId(),currentHierarchy.getParentCustomer().getCustomerId());
+	}
+	
 	private void createObjectsForClientTransfer()throws Exception{
 		office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory.getOffice(Short.valueOf("1")), "customer_office", "cust");
 		client = TestObjectFactory.createClient("client_to_transfer",getMeeting(),CustomerStatus.CLIENT_ACTIVE.getValue(), new java.util.Date());
+		HibernateUtil.closeSession();
+	}
+	
+	private void createObjectsForTransferringClientInGroup()throws Exception{
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		MeetingBO meeting1 = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", CustomerStatus.CENTER_ACTIVE.getValue(),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", CustomerStatus.GROUP_ACTIVE.getValue(),
+				center.getSearchId()+".1", center, new Date(System.currentTimeMillis()));
+		center1 = TestObjectFactory.createCenter("Center1", CustomerStatus.CENTER_ACTIVE.getValue(),
+				"1.1", meeting1, new Date(System.currentTimeMillis()));
+		group1 = TestObjectFactory.createGroup("Group2", CustomerStatus.GROUP_ACTIVE.getValue(),
+				center1.getSearchId()+".1", center1, new Date(System.currentTimeMillis()));
+		client = TestObjectFactory.createClient("Client11", CustomerStatus.CLIENT_ACTIVE.getValue(),
+				group.getSearchId()+".1", group, new Date(System.currentTimeMillis()));
 		HibernateUtil.closeSession();
 	}
 	

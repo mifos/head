@@ -43,6 +43,7 @@
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
+<%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 
 <tiles:insert definition=".detailsCustomer">
 	<tiles:put name="body" type="string">
@@ -55,30 +56,16 @@
 	clientTransferActionForm.submit();
   }
 </script>
-		<html-el:form action="clientTransferAction.do?method=update"
+		<html-el:form action="clientTransferAction.do?method=updateParent"
 			onsubmit="func_disableSubmitBtn('submitButton');">
 
 
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt"> <a
-						href="CustomerSearchAction.do?method=getOfficeHomePage&officeId=<c:out value="${sessionScope.linkValues.customerOfficeId}"/>&officeName=<c:out value="${sessionScope.linkValues.customerOfficeName}"/>&loanOfficerId=<c:out value="${requestScope.Context.userContext.id}"/>">
-					<c:out value="${sessionScope.linkValues.customerOfficeName}" /></a>
-					/ </span> <c:if
-						test="${!empty sessionScope.linkValues.customerCenterName}">
-						<span class="fontnormal8pt"> <a
-							href="centerAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.customerCenterGCNum}"/>">
-						<c:out value="${sessionScope.linkValues.customerCenterName}" /> </a>
-						/ </span>
-					</c:if> <c:if
-						test="${!empty sessionScope.linkValues.customerParentName}">
-						<span class="fontnormal8pt"> <a
-							href="GroupAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.customerParentGCNum}"/>">
-						<c:out value="${sessionScope.linkValues.customerParentName}" /> </a>
-						/ </span>
-					</c:if> <!-- Name of the client --> <span class="fontnormal8pt"> <a
-						href="clientCreationAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.globalCustNum}"/>">
-					<c:out value="${sessionScope.linkValues.customerName}" /> </a> </span>
+					<td class="bluetablehead05">
+						<span class="fontnormal8pt"> 
+							<customtags:headerLink/>
+						</span>
 					</td>
 				</tr>
 			</table>
@@ -88,7 +75,7 @@
 					<table width="95%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td class="headingorange"><span class="heading"> <c:out
-								value="${sessionScope.linkValues.customerName}" /> - </span> <mifos:mifoslabel
+								value="${sessionScope.BusinessKey.displayName}" /> - </span> <mifos:mifoslabel
 								name="client.EditLink" bundle="ClientUIResources"></mifos:mifoslabel>
 							<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>
 							<mifos:mifoslabel name="client.MembershipLink"
@@ -116,7 +103,7 @@
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal"><br>
 							</span>Change Group Membership: <span class="fontnormal"><c:out
-								value="${requestScope.clientTransferVO.parentGroupName}" /> <br>
+								value="${sessionScope.clientTransferActionForm.parentGroupName}" /> <br>
 							</span></td>
 						</tr>
 					</table>

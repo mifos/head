@@ -279,15 +279,15 @@
 		<action path="/clientTransferAction" type="org.mifos.application.customer.client.struts.action.ClientTransferAction" name="clientTransferActionForm" parameter="method" input="/clientTransferAction.do?method=validate" validate="false"
 			scope="session">
 			<!--  Load forwards -->
-			<forward name="loadGroup_success" path="/GroupAction.do?method=loadSearch" />
+			<forward name="loadParents_success" path="/GroupAction.do?method=loadSearch" />
 			<forward name="loadBranches_success" path="/pages/application/client/jsp/choosebranch.jsp" />
 			<!-- Preview Page Forwards -->
-			<forward name="confirmGroupTransfer_success" path="/pages/application/client/jsp/confirmParentTransfer.jsp" />
+			<forward name="previewParentTransfer_success" path="/pages/application/client/jsp/confirmParentTransfer.jsp" />
 			<forward name="previewBranchTransfer_success" path="/pages/application/client/jsp/confirmbranchtransfer.jsp" />
 			<forward name="update_success" path="/clientCustAction.do?method=get" />
-			<forward name="updateBranch_success" path="/clientCreationAction.do?method=get" />
+			<!-- Failure Forwards -->
 			<forward name="transferToBranch_failure" path="/pages/application/client/jsp/confirmbranchtransfer.jsp" />
-			<forward name="update_failure" path="/pages/application/client/jsp/confirmParentTransfer.jsp" />
+			<forward name="updateParent_failure" path="/pages/application/client/jsp/confirmParentTransfer.jsp" />
 			<!-- Cancel Page Forwards -->
 			<forward name="cancel_success" path="/clientCustAction.do?method=get" />
 		</action>

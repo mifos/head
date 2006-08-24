@@ -538,7 +538,8 @@ public class ClientBO extends CustomerBO {
 			setCustomerStatus(new CustomerStatusEntity(CustomerStatus.CLIENT_HOLD));
 		
 		makeCustomerMovementEntries(officeToTransfer);		
-		this.setPersonnel(null);		
+		this.setPersonnel(null);
+		generateSearchId(null,officeToTransfer.getOfficeId());
 		super.update();
 	}
 
@@ -556,10 +557,22 @@ public class ClientBO extends CustomerBO {
 		setSearchId(newParent.getSearchId()+ "."+ String.valueOf(newParent.getMaxChildCount()));
 		
 		setParentCustomer(newParent);
-
 		setPersonnel(newParent.getPersonnel());
-		getCustomerMeeting().setMeeting(newParent.getCustomerMeeting().getMeeting());
-		getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
+		
+		if(newParent.getCustomerMeeting()!=null){
+			if(getCustomerMeeting()!=null)
+				getCustomerMeeting().setMeeting(newParent.getCustomerMeeting().getMeeting());
+			else
+				setCustomerMeeting(createCustomerMeeting(newParent.getCustomerMeeting().getMeeting()));
+			getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
+		}
+		else{
+			if(getCustomerMeeting()!=null){
+				//TODO: delete meeting
+				//getCustomerMeeting().setMeeting(null);
+			}
+				
+		}
 		
 		CustomerHierarchyEntity currentHierarchy = getActiveCustomerHierarchy();
 		currentHierarchy.makeInActive(userContext.getId());
@@ -570,12 +583,13 @@ public class ClientBO extends CustomerBO {
 		if(oldParent.getParentCustomer()!=null){
 			CustomerBO center = oldParent.getParentCustomer();
 			center.resetPositionsAssignedToClient(this.getCustomerId());
+			center.setUserContext(getUserContext());
 			center.update();
 		}
+		oldParent.setUserContext(getUserContext());
 		oldParent.update();
 		newParent.update();
-		this.update();
-		
+		this.update();		
 	}
 	
 	private void makeCustomerMovementEntries(OfficeBO officeToTransfer){

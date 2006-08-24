@@ -707,7 +707,7 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 	}
 
-	private CustomerMeetingEntity createCustomerMeeting(MeetingBO meeting) {
+	protected CustomerMeetingEntity createCustomerMeeting(MeetingBO meeting) {
 		return meeting != null ? new CustomerMeetingEntity(this, meeting)
 				: null;
 	}
@@ -786,7 +786,7 @@ public abstract class CustomerBO extends BusinessObject {
 	public void resetPositionsAssignedToClient(Integer clientId){
 		if(getCustomerPositions()!=null){
 			for(CustomerPositionEntity position: getCustomerPositions())
-				if(position.getCustomer().getCustomerId().equals(clientId))
+				if(position.getCustomer()!=null && position.getCustomer().getCustomerId().equals(clientId))
 					position.setCustomer(null);
 		}
 	}

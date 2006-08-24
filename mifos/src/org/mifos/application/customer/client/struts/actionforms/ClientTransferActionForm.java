@@ -44,6 +44,8 @@ public class ClientTransferActionForm extends BaseActionForm{
 
 	private String officeId;
 	private String officeName;
+	private String parentGroupId;
+	private String parentGroupName;
 	
 	public String getOfficeId() {
 		return officeId;
@@ -61,7 +63,27 @@ public class ClientTransferActionForm extends BaseActionForm{
 		this.officeName = officeName;
 	}
 	
+	public String getParentGroupId() {
+		return parentGroupId;
+	}
+
+	public void setParentGroupId(String parentGroupId) {
+		this.parentGroupId = parentGroupId;
+	}
+
+	public String getParentGroupName() {
+		return parentGroupName;
+	}
+
+	public void setParentGroupName(String parentGroupName) {
+		this.parentGroupName = parentGroupName;
+	}
+	
 	public Short getOfficeIdValue() {
 		return getShortValue(officeId);
+	}
+
+	public Integer getParentGroupIdValue() {
+		return getIntegerValue(parentGroupId);
 	}
 }

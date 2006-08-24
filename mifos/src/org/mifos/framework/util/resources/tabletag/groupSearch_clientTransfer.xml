@@ -23,7 +23,7 @@
 		<parameters>
 			<parameter name="parentGroupId" value="groupId" valuetype="method"/>
 			<parameter name="parentGroupName" value="groupName" valuetype="method"/>
-			<parameter name="method" value="confirmGroupTransfer" valuetype="string"/>
+			<parameter name="method" value="previewParentTransfer" valuetype="string"/>
 		</parameters>
 	</column>
 </row>

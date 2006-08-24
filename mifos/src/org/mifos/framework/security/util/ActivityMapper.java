@@ -437,13 +437,11 @@ public class ActivityMapper {
 		activityMap.put("/clientStatusAction-previous", SecurityConstants.VIEW);
 		activityMap.put("/clientStatusAction-update", SecurityConstants.VIEW);
 
-		activityMap.put("/clientTransferAction-loadGroupTransfer",
-				SecurityConstants.VIEW);
+		activityMap.put("/clientTransferAction-loadParents",SecurityConstants.CIENT_CHANGE_GROUP_MEMBERSHIP);
 		activityMap.put("/clientTransferAction-loadBranches",SecurityConstants.CIENT_TRANSFER_THE_CLIENT);
 		activityMap.put("/clientTransferAction-previewBranchTransfer",SecurityConstants.VIEW);
-		activityMap.put("/clientTransferAction-confirmGroupTransfer",
-				SecurityConstants.VIEW);
-		activityMap.put("/clientTransferAction-update",	SecurityConstants.CIENT_CHANGE_GROUP_MEMBERSHIP);	
+		activityMap.put("/clientTransferAction-previewParentTransfer",SecurityConstants.VIEW);
+		activityMap.put("/clientTransferAction-updateParent",	SecurityConstants.CIENT_CHANGE_GROUP_MEMBERSHIP);	
 		activityMap.put("/clientTransferAction-transferToBranch",SecurityConstants.CIENT_TRANSFER_THE_CLIENT);
 
 		// meeting action

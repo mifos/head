@@ -428,7 +428,7 @@
 									<c:choose>
 										<c:when test="${sessionScope.BusinessKey.clientUnderGroup}">
 											<html-el:link
-												action="clientCreationAction.do?method=loadTransfer">
+												action="clientTransferAction.do?method=loadParents">
 												<mifos:mifoslabel name="client.EditLink"
 													bundle="ClientUIResources" />
 												<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />

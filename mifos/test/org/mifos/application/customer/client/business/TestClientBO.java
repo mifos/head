@@ -474,6 +474,29 @@ public class TestClientBO extends MifosTestCase {
 		
 	}
 	
+	public void testSuccessfulTransferToGroupWithoutMeeting()throws Exception{
+		try{
+			createObjectsForTranferToGroup_WithoutMeeting();
+		
+		client.transferToGroup(group1);
+
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		group1 = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group1.getCustomerId());
+		
+		assertEquals(group1.getCustomerId(),client.getParentCustomer().getCustomerId());
+		assertEquals(0, group.getMaxChildCount().intValue());
+		assertEquals(1, group1.getMaxChildCount().intValue());
+
+		CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();
+		assertEquals(group1.getCustomerId(),currentHierarchy.getParentCustomer().getCustomerId());
+		
+	}
 	public void testSuccessfulTransferToGroupInDifferentBranch()throws Exception{
 		createObjectsForTranferToGroup_DifferentBranch();
 		PositionEntity position  = (PositionEntity) new MasterPersistence().retrieveMasterEntities(PositionEntity.class, Short.valueOf("1")).get(0);
@@ -592,6 +615,15 @@ public class TestClientBO extends MifosTestCase {
 		return TestObjectFactory.createSavingsAccount("000100000000017",
 				customer, AccountStates.SAVINGS_ACC_APPROVED, new Date(System
 						.currentTimeMillis()), savingsOffering);
+	}
+	
+	private void createObjectsForTranferToGroup_WithoutMeeting()throws Exception{
+		group = TestObjectFactory.createGroup("Group", CustomerStatus.GROUP_PENDING.getValue(),
+				"1.1", null);
+		group1 = TestObjectFactory.createGroup("Group2", CustomerStatus.GROUP_PENDING.getValue(),
+				"1.2", getMeeting());
+		client = TestObjectFactory.createClient("new client" ,CustomerStatus.CLIENT_PARTIAL.getValue(), group, new java.util.Date());
+		HibernateUtil.closeSession();
 	}
 	
 	private void createObjectsForTranferToGroup_SameBranch(CustomerStatus groupStatus)throws Exception{

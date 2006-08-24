@@ -44,9 +44,13 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.hibernate.LockMode;
+import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.client.business.service.ClientBusinessService;
 import org.mifos.application.customer.client.struts.actionforms.ClientTransferActionForm;
+import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.valueobjects.CustomerSearchInput;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -64,74 +68,95 @@ public class ClientTransferAction extends BaseAction {
 
 	@Override
 	protected BusinessService getService() throws ServiceException {
-		return getClientBusinessService();
+		return getCustomerBusinessService();
 	}
 
-	private ClientBusinessService getClientBusinessService()
-			throws ServiceException {
-		return (ClientBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Client);
-	}
-	
 	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
 	}
-	
+
 	public ActionForward loadBranches(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		return mapping.findForward(ActionForwards.loadBranches_success.toString());
+		return mapping.findForward(ActionForwards.loadBranches_success
+				.toString());
 	}
-	
-	public ActionForward previewBranchTransfer(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		return mapping.findForward(ActionForwards.previewBranchTransfer_success.toString());
+
+	public ActionForward previewBranchTransfer(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		return mapping.findForward(ActionForwards.previewBranchTransfer_success
+				.toString());
 	}
-	
+
 	@CloseSession
-	public ActionForward transferToBranch(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		ClientTransferActionForm actionForm = (ClientTransferActionForm)form;
-		OfficeBO officeToTransfer = getOfficelBusinessService().getOffice(actionForm.getOfficeIdValue());
+	public ActionForward transferToBranch(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		ClientTransferActionForm actionForm = (ClientTransferActionForm) form;
+		OfficeBO officeToTransfer = getOfficelBusinessService().getOffice(
+				actionForm.getOfficeIdValue());
 		ClientBO client = (ClientBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
 		HibernateUtil.getSessionTL().lock(client, LockMode.NONE);
 		client.transferToBranch(officeToTransfer);
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
-	
+
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return mapping.findForward(ActionForwards.cancel_success.toString());
 	}
-	
-	/*TODO To be used when transferring client for a different book
-	 * 
-	 * public ActionForward loadParents(ActionMapping mapping, ActionForm form,
+
+	public ActionForward loadParents(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		return mapping.findForward(ActionForwards.loadParents_success.toString());
+		CustomerSearchInput clientSearchInput = new CustomerSearchInput();
+		clientSearchInput.setOfficeId(getUserContext(request).getBranchId());
+		clientSearchInput
+				.setCustomerInputPage(ClientConstants.INPUT_GROUP_TRANSFER);
+		SessionUtils.setAttribute(CustomerConstants.CUSTOMER_SEARCH_INPUT,
+				clientSearchInput, request.getSession());
+		return mapping.findForward(ActionForwards.loadParents_success
+				.toString());
 	}
-	
-	public ActionForward previewParentTransfer(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		return mapping.findForward(ActionForwards.previewParentTransfer_success.toString());
+
+	public ActionForward previewParentTransfer(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		return mapping.findForward(ActionForwards.previewParentTransfer_success
+				.toString());
 	}
-	
+
 	@CloseSession
 	public ActionForward updateParent(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		ClientTransferActionForm actionForm = (ClientTransferActionForm) form;
+		GroupBO transferToGroup = (GroupBO) getCustomerBusinessService().getCustomer(actionForm.getParentGroupIdValue());
+		transferToGroup.setUserContext(getUserContext(request));
+		ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request.getSession());
+		ClientBO client = (ClientBO)getCustomerBusinessService().getCustomer(clientInSession.getCustomerId());
+		client.setVersionNo(clientInSession.getVersionNo());
+		client.setUserContext(getUserContext(request));
+		client.transferToGroup(transferToGroup);
+		client = null;
+		transferToGroup = null;
 		return mapping.findForward(ActionForwards.update_success.toString());
-	}*/
-	
-	private OfficeBusinessService getOfficelBusinessService()throws ServiceException{
+	}
+
+	private OfficeBusinessService getOfficelBusinessService()
+			throws ServiceException {
 		return (OfficeBusinessService) ServiceFactory.getInstance()
-		.getBusinessService(BusinessServiceName.Office);
+				.getBusinessService(BusinessServiceName.Office);
+	}
+
+	private CustomerBusinessService getCustomerBusinessService()
+			throws ServiceException {
+		return (CustomerBusinessService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.Customer);
 	}
 }

@@ -369,6 +369,23 @@ public class TestObjectFactory {
 		return group;
 	}
 
+	public static GroupBO createGroup(String customerName, Short statusId,
+			String searchId, MeetingBO meeting) {
+		GroupBO group = null;
+		try {
+			Short office = new Short("3");
+			Short personnel = new Short("1");	
+			group = new GroupBO(getUserContext(), customerName, CustomerStatus.getStatus(statusId), null, null, null, null, getFees(), personnel, office, meeting, personnel, searchId);
+			//group.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), group, startDate));
+			group.save();
+			HibernateUtil.commitTransaction();
+			//TODO: throw Exception
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return group;
+	}
+	
 	public static ClientBO createClient(String customerName, Short statusId,String searchId,
 			CustomerBO parentCustomer, Date startDate) {
 		ClientBO client = null;
