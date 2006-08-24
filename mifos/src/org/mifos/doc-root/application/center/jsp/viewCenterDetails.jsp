@@ -374,9 +374,9 @@
 									isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
 								<span class="fontnormal"><br>
 								</span>
-								<c:if test="${!empty sessionScope.BusinessKey.displayAddress}">
+								<c:if test="${!empty sessionScope.BusinessKey.customerAddressDetail.address.displayAddress}">
 									<span class="fontnormal"> <c:out
-										value="${sessionScope.BusinessKey.displayAddress}" /><br>
+										value="${sessionScope.BusinessKey.customerAddressDetail.address.displayAddress}" /><br>
 									</span>
 								</c:if>
 								<c:if
@@ -431,7 +431,7 @@
 									/> <br>
 								</span>
 							</c:if> <span class="fontnormal"> <c:forEach var="cf"
-								items="${requestScope.customFields}">
+								items="${sessionScope.customFields}">
 								<c:forEach var="customField"
 									items="${sessionScope.BusinessKey.customFields}">
 									<c:if test="${cf.fieldId==customField.fieldId}">

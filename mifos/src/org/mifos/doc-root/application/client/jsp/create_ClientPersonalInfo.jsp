@@ -105,12 +105,12 @@
 	bAlreadySelected = false;
 
 	function CheckMaritalStatus(){
-		var sMaritalStatusValue = document.forms["clientCustActionForm"].elements["customerNameDetail[1].nameType"].value;
+		var sMaritalStatusValue = document.forms["clientCustActionForm"].elements["spouseName.nameType"].value;
 		if(bAlreadySelected==false) {
 			if(sMaritalStatusValue=='1')
-				document.forms["clientCustActionForm"].elements["customerDetail.maritalStatus"].value=66;
+				document.forms["clientCustActionForm"].elements["clientDetailView.maritalStatus"].value=66;
 			else
-				document.forms["clientCustActionForm"].elements["customerDetail.maritalStatus"].value='';
+				document.forms["clientCustActionForm"].elements["clientDetailView.maritalStatus"].value='';
 		}
 	}
 

@@ -575,9 +575,9 @@
 									isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <span
 									class="fontnormal"><br>
 								</span> <c:if
-									test="${!empty sessionScope.BusinessKey.displayAddress}">
+									test="${!empty sessionScope.BusinessKey.customerAddressDetail.address.displayAddress}">
 									<span class="fontnormal"> <c:out
-										value="${sessionScope.BusinessKey.displayAddress}" /> </span>
+										value="${sessionScope.BusinessKey.customerAddressDetail.address.displayAddress}" /> </span>
 								</c:if></td>
 							</tr>
 							<tr id="Client.City">
