@@ -366,7 +366,7 @@
 			<forward name="search_success" path="/pages/application/group/jsp/groupsearchresults.jsp" />
 			<forward name="search_failure" path="/pages/application/group/jsp/groupsearchresults.jsp" />
 			<forward name="search_failure_transfer" path="/pages/application/group/jsp/groupsearch.jsp" />
-			<forward name="client_details_page" path="/clientCreationAction.do?method=get" />
+			<forward name="client_details_page" path="/clientCustAction.do?method=get" />
 			<!--Cancel forwards-->
 			<forward name="cancel_create" path="/CustomerSearchAction.do?method=load" />
 			<forward name="cancel_manage" path="/GroupAction.do?method=get" />

@@ -40,36 +40,16 @@
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
-
+<%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 
 <html-el:form action="GroupAction.do?method=search">
      <table width="95%" border="0" cellpadding="0" cellspacing="0">
       <tr>
-        <td class="bluetablehead05">
-        		<span class="fontnormal8pt">
-	            	 <a href="CustomerSearchAction.do?method=getOfficeHomePage&officeId=<c:out value="${sessionScope.linkValues.customerOfficeId}"/>&officeName=<c:out value="${sessionScope.linkValues.customerOfficeName}"/>&loanOfficerId=<c:out value="${requestScope.Context.userContext.id}"/>">
-	           				<c:out value="${sessionScope.linkValues.customerOfficeName}"/>            	
-           			</a> /
+	        <td class="bluetablehead05">
+		        <span class="fontnormal8pt">
+	            	 <customtags:headerLink/>	            	
 	            </span>
-	            <c:if test="${!empty sessionScope.linkValues.customerCenterName}">
-	               <span class="fontnormal8pt">
-	               	<a href="centerAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.customerCenterGCNum}"/>">
-				       	<c:out value="${sessionScope.linkValues.customerCenterName}"/>
-			       	</a>  /  </span>
-		    	</c:if>
-	           <c:if test="${!empty sessionScope.linkValues.customerParentName}">
-	               <span class="fontnormal8pt">
-	               	<a href="GroupAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.customerParentGCNum}"/>">
-				       	<c:out value="${sessionScope.linkValues.customerParentName}"/>
-			       	</a>  /  </span>
-		    	</c:if>
-	            <!-- Name of the client -->
-	            <span class="fontnormal8pt">
-	            	<a href="clientCreationAction.do?method=get&customerId=<c:out value="${sessionScope.linkValues.customerId}"/>">
-				       	<c:out value="${sessionScope.linkValues.customerName}"/>
-			       	</a>
-	            	
-	            </span></td>
+	        </td>
       </tr>
     </table>
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -78,7 +58,7 @@
                 <tr>
                   <td width="62%" class="headingorange">
                   <span class="heading">
-                  <c:out value="${sessionScope.linkValues.customerName}"/>
+                  <c:out value="${sessionScope.BusinessKey.displayName}"/>
                   </span> - <mifos:mifoslabel name="Group.change"/> 
                   <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/>
                   <mifos:mifoslabel name="Group.membership"/></td>
