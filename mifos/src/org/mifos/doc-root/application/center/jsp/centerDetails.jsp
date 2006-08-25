@@ -567,6 +567,7 @@
 <html-el:hidden property="input" value="ViewCenterCharges"/>
 <html-el:hidden property="customerId" value="${requestScope.centerVO.customerId}"/> 
 <html-el:hidden property="statusId" value="${statusID}"/>
+<html-el:hidden property="globalCustNum" value="${sessionScope.BusinessKey.globalCustNum}" />
 </html-el:form>
 </tiles:put>
 </tiles:insert>

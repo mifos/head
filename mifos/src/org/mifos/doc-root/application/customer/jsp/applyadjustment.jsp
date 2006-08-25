@@ -53,6 +53,11 @@
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<SCRIPT>
+	function ViewDetails(){
+		closedaccsearchactionform.submit();
+	}
+</SCRIPT>
 		<SCRIPT SRC="pages/application/customer/js/applyadjustment.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<html-el:form method="post" action="custApplyAdjustment.do"
@@ -60,26 +65,20 @@
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt">
-					<customtags:headerLink selfLink="true"/>
-					<c:choose>
-								<c:when test="${param.input=='ViewClientCharges'}">
-									<html-el:link href="closedaccsearchaction.do?method=search&input=ViewClientCharges&searchNode(search_name)=ClientChargesDetails">
-										/&nbsp;<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /><mifos:mifoslabel name="accounts.charges" />
-									</html-el:link> 
-								</c:when>
-								<c:when test="${param.input=='ViewGroupCharges'}">
-									<html-el:link href="closedaccsearchaction.do?method=search&input=ViewGroupCharges&searchNode(search_name)=ClientChargesDetails">
-										/&nbsp;<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /><mifos:mifoslabel name="accounts.charges" />
-									</html-el:link> 
-								</c:when>
-								<c:when test="${param.input=='ViewCenterCharges'}">
-									<html-el:link href="closedaccsearchaction.do?method=search&input=ViewCenterCharges&searchNode(search_name)=ClientChargesDetails">
-										/&nbsp;<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /><mifos:mifoslabel name="accounts.charges" />
-									</html-el:link> 
-								</c:when>
-								<c:otherwise>
-								</c:otherwise>
-							</c:choose></span></td>
+					<customtags:headerLink/>
+					<html-el:link href="javascript:ViewDetails()">/
+								<c:if test="${param.input == 'ViewCenterCharges'}">
+									<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
+								</c:if>
+								<c:if test="${param.input == 'ViewGroupCharges'}">
+									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
+								</c:if>
+								<c:if test="${param.input == 'ViewClientCharges'}">
+									<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
+								</c:if>
+								<mifos:mifoslabel name="Center.Charges"
+									bundle="CenterUIResources" />
+							</html-el:link></span></td>
 				</tr>
 			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -241,8 +240,23 @@
 			<html-el:hidden property="securityParamInput" value="${param.securityParamInput}" />
 			<html-el:hidden property="statusId" value="${param.statusId}"/> 
 			<mifos:SecurityParam property="${param.securityParamInput}" />
+			<html-el:hidden property="searchNode(search_name)"
+				value="ClientChargesDetails" />
 		</html-el:form>
-
+		<html-el:form action="closedaccsearchaction.do?method=search">
+			<html-el:hidden property="searchNode(search_name)"
+				value="ClientChargesDetails" />
+			<html-el:hidden property="prdOfferingName"
+				value="${param.prdOfferingName}" />
+			<html-el:hidden property="globalAccountNum"
+				value="${param.globalAccountNum}" />
+			<html-el:hidden property="accountId" value="${param.accountId}" />
+			<html-el:hidden property="accountType" value="${param.accountType}" />
+			<html-el:hidden property="input" value="${param.input}" />
+			<html-el:hidden property="statusId" value="${param.statusId}" />
+			<html-el:hidden property="searchInput" value="${param.searchInput}" />
+			<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />
+		</html-el:form>
 
 	</tiles:put>
 </tiles:insert>

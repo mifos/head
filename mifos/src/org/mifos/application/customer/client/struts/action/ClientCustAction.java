@@ -42,7 +42,6 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -56,6 +55,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerCustomFieldEntity;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
@@ -144,7 +146,8 @@ public class ClientCustAction extends CustAction {
 					.valueOf(actionForm.getParentGroupId())));
 			actionForm.setOfficeId(actionForm.getParentGroup().getOffice()
 					.getOfficeId().toString());
-			actionForm.setFormedByPersonnel(actionForm.getParentGroup().getPersonnel().getPersonnelId().toString());
+			actionForm.setFormedByPersonnel(actionForm.getParentGroup()
+					.getPersonnel().getPersonnelId().toString());
 		}
 		loadCreateMasterData(actionForm, request);
 		return mapping.findForward(ActionForwards.load_success.toString());
@@ -196,30 +199,45 @@ public class ClientCustAction extends CustAction {
 			HttpServletRequest request) throws ApplicationException,
 			SystemException {
 		Short officeId = null;
-		loadMasterDataEntities(actionForm , request);
+		loadMasterDataEntities(actionForm, request);
 		loadCreateCustomFields(actionForm, EntityType.CLIENT, request);
 		loadFees(actionForm, request);
-		if(actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())){
-			loadLoanOfficers(actionForm.getOfficeIdValue() ,request);
+		if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
+			loadLoanOfficers(actionForm.getOfficeIdValue(), request);
 			officeId = actionForm.getOfficeIdValue();
-		}else
+		} else
 			officeId = actionForm.getParentGroup().getOffice().getOfficeId();
 		loadFormedByPersonnel(officeId, request);
 	}
-	
-	private void loadMasterDataEntities(ClientCustActionForm actionForm, HttpServletRequest request) throws ApplicationException, SystemException {
-		SessionUtils.setAttribute(ClientConstants.SALUTATION_ENTITY,	customerService.retrieveMasterEntities(
-				MasterConstants.SALUTATION, getUserContext(request).getLocaleId()), request.getSession());
-		SessionUtils.setAttribute(ClientConstants.MARITAL_STATUS_ENTITY,	customerService.retrieveMasterEntities(
-						MasterConstants.MARITAL_STATUS, getUserContext(request).getLocaleId()), request.getSession());
-		SessionUtils.setAttribute(ClientConstants.CITIZENSHIP_ENTITY,	customerService.retrieveMasterEntities(
-				MasterConstants.CITIZENSHIP, getUserContext(request).getLocaleId()), request.getSession());
-		SessionUtils.setAttribute(ClientConstants.BUSINESS_ACTIVITIES_ENTITY,	customerService.retrieveMasterEntities(
-				MasterConstants.BUSINESS_ACTIVITIES, getUserContext(request).getLocaleId()), request.getSession());
-		SessionUtils.setAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY,	customerService.retrieveMasterEntities(
-				MasterConstants.EDUCATION_LEVEL, getUserContext(request).getLocaleId()), request.getSession());
-		SessionUtils.setAttribute(ClientConstants.GENDER_ENTITY,	customerService.retrieveMasterEntities(
-				MasterConstants.GENDER, getUserContext(request).getLocaleId()), request.getSession());
+
+	private void loadMasterDataEntities(ClientCustActionForm actionForm,
+			HttpServletRequest request) throws ApplicationException,
+			SystemException {
+		SessionUtils.setAttribute(ClientConstants.SALUTATION_ENTITY,
+				customerService.retrieveMasterEntities(
+						MasterConstants.SALUTATION, getUserContext(request)
+								.getLocaleId()), request.getSession());
+		SessionUtils.setAttribute(ClientConstants.MARITAL_STATUS_ENTITY,
+				customerService.retrieveMasterEntities(
+						MasterConstants.MARITAL_STATUS, getUserContext(request)
+								.getLocaleId()), request.getSession());
+		SessionUtils.setAttribute(ClientConstants.CITIZENSHIP_ENTITY,
+				customerService.retrieveMasterEntities(
+						MasterConstants.CITIZENSHIP, getUserContext(request)
+								.getLocaleId()), request.getSession());
+		SessionUtils.setAttribute(ClientConstants.BUSINESS_ACTIVITIES_ENTITY,
+				customerService.retrieveMasterEntities(
+						MasterConstants.BUSINESS_ACTIVITIES, getUserContext(
+								request).getLocaleId()), request.getSession());
+		SessionUtils.setAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY,
+				customerService.retrieveMasterEntities(
+						MasterConstants.EDUCATION_LEVEL,
+						getUserContext(request).getLocaleId()), request
+						.getSession());
+		SessionUtils.setAttribute(ClientConstants.GENDER_ENTITY,
+				customerService.retrieveMasterEntities(MasterConstants.GENDER,
+						getUserContext(request).getLocaleId()), request
+						.getSession());
 
 		SessionUtils.setAttribute(ClientConstants.SALUTATION_ENTITY,
 				customerService.retrieveMasterEntities(
@@ -283,15 +301,18 @@ public class ClientCustAction extends CustAction {
 		return mapping.findForward(forward);
 	}
 
-	
-	public ActionForward previewPersonalInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse httpservletresponse)
-	throws Exception
-	{
+	public ActionForward previewPersonalInfo(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse httpservletresponse) throws Exception {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
-		actionForm.setAge(new CustomerHelper().calculateAge(DateHelper.getLocaleDate(getUserContext(request).getPereferedLocale(), actionForm.getDateOfBirth())));
-		return mapping.findForward(ActionForwards.previewPersonalInfo_success.toString());
+		actionForm.setAge(new CustomerHelper().calculateAge(DateHelper
+				.getLocaleDate(getUserContext(request).getPereferedLocale(),
+						actionForm.getDateOfBirth())));
+		return mapping.findForward(ActionForwards.previewPersonalInfo_success
+				.toString());
 
 	}
+
 	public ActionForward prevPersonalInfo(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse httpservletresponse) throws Exception {
@@ -306,7 +327,6 @@ public class ClientCustAction extends CustAction {
 				.toString());
 	}
 
-	
 	public ActionForward prevMeeting(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -449,8 +469,8 @@ public class ClientCustAction extends CustAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
-		ClientBO clientBO = (ClientBO) customerService.getBySystemId(
-				actionForm.getGlobalCustNum(), CustomerLevel.CLIENT.getValue());
+		ClientBO clientBO = (ClientBO) customerService.getBySystemId(actionForm
+				.getGlobalCustNum(), CustomerLevel.CLIENT.getValue());
 		clientBO.setUserContext(getUserContext(request));
 		clientBO.getCustomerStatus().setLocaleId(
 				getUserContext(request).getLocaleId());
@@ -461,167 +481,209 @@ public class ClientCustAction extends CustAction {
 		setSpouseOrFatherName(request, clientBO);
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
-	
-	public ActionForward editPersonalInfo(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+
+	public ActionForward editPersonalInfo(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
 		clearActionForm(actionForm);
-		ClientBO client = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request.getSession());
-		ClientBO clientBO = (ClientBO) customerService.getBySystemId(client.getGlobalCustNum(),CustomerLevel.CLIENT.getValue());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY,clientBO, request.getSession());
+		ClientBO client = (ClientBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request.getSession());
+		ClientBO clientBO = (ClientBO) customerService.getBySystemId(client
+				.getGlobalCustNum(), CustomerLevel.CLIENT.getValue());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request
+				.getSession());
 		loadUpdateMasterData(actionForm, request);
 		setValuesInActionForm(actionForm, request);
-		return mapping.findForward(ActionForwards.editPersonalInfo_success.toString());
+		return mapping.findForward(ActionForwards.editPersonalInfo_success
+				.toString());
 	}
-	
-	public ActionForward previewEditPersonalInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse httpservletresponse)
-	throws Exception
-	{
+
+	public ActionForward previewEditPersonalInfo(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse httpservletresponse) throws Exception {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
-		actionForm.setAge(new CustomerHelper().calculateAge(DateHelper.getLocaleDate(getUserContext(request).getPereferedLocale(), actionForm.getDateOfBirth())));
-		return mapping.findForward(ActionForwards.previewEditPersonalInfo_success.toString());
+		actionForm.setAge(new CustomerHelper().calculateAge(DateHelper
+				.getLocaleDate(getUserContext(request).getPereferedLocale(),
+						actionForm.getDateOfBirth())));
+		return mapping
+				.findForward(ActionForwards.previewEditPersonalInfo_success
+						.toString());
 	}
-	
-	public ActionForward prevEditPersonalInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse httpservletresponse)
-	throws Exception
-	{
+
+	public ActionForward prevEditPersonalInfo(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse httpservletresponse) throws Exception {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
-		actionForm.setAge(new CustomerHelper().calculateAge(DateHelper.getLocaleDate(getUserContext(request).getPereferedLocale(), actionForm.getDateOfBirth())));
-		return mapping.findForward(ActionForwards.prevEditPersonalInfo_success.toString());
+		actionForm.setAge(new CustomerHelper().calculateAge(DateHelper
+				.getLocaleDate(getUserContext(request).getPereferedLocale(),
+						actionForm.getDateOfBirth())));
+		return mapping.findForward(ActionForwards.prevEditPersonalInfo_success
+				.toString());
 	}
-	
+
 	@CloseSession
-	public ActionForward updatePersonalInfo(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws ApplicationException {
-		try{
-			ClientBO client = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request.getSession());
+	public ActionForward updatePersonalInfo(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws ApplicationException {
+		try {
+			ClientBO client = (ClientBO) SessionUtils.getAttribute(
+					Constants.BUSINESS_KEY, request.getSession());
 			ClientCustActionForm actionForm = (ClientCustActionForm) form;
 			client.updateAddress(actionForm.getAddress());
-			convertCustomFieldDateToUniformPattern(actionForm.getCustomFields(), getUserContext(request).getPereferedLocale());
-			for(CustomFieldView fieldView : actionForm.getCustomFields())
-				for(CustomerCustomFieldEntity fieldEntity: client.getCustomFields())
-					if(fieldView.getFieldId().equals(fieldEntity.getFieldId()))
+			convertCustomFieldDateToUniformPattern(
+					actionForm.getCustomFields(), getUserContext(request)
+							.getPereferedLocale());
+			for (CustomFieldView fieldView : actionForm.getCustomFields())
+				for (CustomerCustomFieldEntity fieldEntity : client
+						.getCustomFields())
+					if (fieldView.getFieldId().equals(fieldEntity.getFieldId()))
 						fieldEntity.setFieldValue(fieldView.getFieldValue());
-			client.getClientName().updateNameDetails(actionForm.getClientName());
-			client.getSpouseName().updateNameDetails(actionForm.getSpouseName());
+			client.getClientName()
+					.updateNameDetails(actionForm.getClientName());
+			client.getSpouseName()
+					.updateNameDetails(actionForm.getSpouseName());
 			client.setDisplayName(actionForm.getClientName().getDisplayName());
 			client.setFirstName(actionForm.getClientName().getFirstName());
-			client.setLastName(actionForm.getClientName().getLastName() );
-			client.setSecondLastName(actionForm.getClientName().getSecondLastName());
-			client.setDateOfBirth(getDateFromString(actionForm.getDateOfBirth(), getUserContext(request).getPereferedLocale()));
+			client.setLastName(actionForm.getClientName().getLastName());
+			client.setSecondLastName(actionForm.getClientName()
+					.getSecondLastName());
+			client.setDateOfBirth(getDateFromString(
+					actionForm.getDateOfBirth(), getUserContext(request)
+							.getPereferedLocale()));
 			client.setGovernmentId(actionForm.getGovernmentId());
-			
-			if(actionForm.getPicture() !=null && !StringUtils.isNullOrEmpty(actionForm.getPicture().getFileName())){
+
+			if (actionForm.getPicture() != null
+					&& !StringUtils.isNullOrEmpty(actionForm.getPicture()
+							.getFileName())) {
 				client.updatePicture(actionForm.getCustomerPicture());
 			}
 			client.setUserContext(getUserContext(request));
 			client.updateClientDetails(actionForm.getClientDetailView());
 			client.updatePersonalInfo();
 		} catch (ApplicationException ae) {
-				ae.printStackTrace();
-				ActionErrors errors = new ActionErrors();
-				errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae
-						.getValues()));
-				request.setAttribute(Globals.ERROR_KEY, errors);
-				return mapping
-						.findForward(ActionForwards.updatePersonalInfo_failure.toString());
-			}
-		return mapping.findForward(ActionForwards.updatePersonalInfo_success.toString());
+			ae.printStackTrace();
+			ActionErrors errors = new ActionErrors();
+			errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae
+					.getValues()));
+			request.setAttribute(Globals.ERROR_KEY, errors);
+			return mapping
+					.findForward(ActionForwards.updatePersonalInfo_failure
+							.toString());
+		}
+		return mapping.findForward(ActionForwards.updatePersonalInfo_success
+				.toString());
 	}
-	
+
 	public ActionForward editMfiInfo(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
 		clearActionForm(actionForm);
-		ClientBO client = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request.getSession());
-		ClientBO clientBO = (ClientBO) customerService.getBySystemId(client.getGlobalCustNum(),CustomerLevel.CLIENT.getValue());
+		ClientBO client = (ClientBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request.getSession());
+		ClientBO clientBO = (ClientBO) customerService.getBySystemId(client
+				.getGlobalCustNum(), CustomerLevel.CLIENT.getValue());
 		client = null;
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY,clientBO, request.getSession());
-		if(!clientBO.isClientUnderGroup())
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request
+				.getSession());
+		if (!clientBO.isClientUnderGroup())
 			loadUpdateMfiMasterData(clientBO.getOffice().getOfficeId(), request);
 		setValuesForMfiEditInActionForm(actionForm, request);
-		return mapping.findForward(ActionForwards.editMfiInfo_success.toString());
+		return mapping.findForward(ActionForwards.editMfiInfo_success
+				.toString());
 	}
-	
-	
-	public ActionForward previewEditMfiInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse httpservletresponse)
-	throws Exception
-	{
-		return mapping.findForward(ActionForwards.previewEditMfiInfo_success.toString());
+
+	public ActionForward previewEditMfiInfo(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse httpservletresponse) throws Exception {
+		return mapping.findForward(ActionForwards.previewEditMfiInfo_success
+				.toString());
 	}
-	
-	public ActionForward prevEditMfiInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse httpservletresponse)
-	throws Exception
-	{
-		return mapping.findForward(ActionForwards.prevEditMfiInfo_success.toString());
+
+	public ActionForward prevEditMfiInfo(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse httpservletresponse) throws Exception {
+		return mapping.findForward(ActionForwards.prevEditMfiInfo_success
+				.toString());
 	}
-	
+
 	@CloseSession
 	public ActionForward updateMfiInfo(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		try{
-			ClientBO client = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request.getSession());
+		try {
+			ClientBO client = (ClientBO) SessionUtils.getAttribute(
+					Constants.BUSINESS_KEY, request.getSession());
 			ClientCustActionForm actionForm = (ClientCustActionForm) form;
 			client.setExternalId(actionForm.getExternalId());
-			if(actionForm.getTrainedValue() !=null && actionForm.getTrainedValue().equals(YesNoFlag.YES.getValue()))
+			if (actionForm.getTrainedValue() != null
+					&& actionForm.getTrainedValue().equals(
+							YesNoFlag.YES.getValue()))
 				client.setTrained(true);
 			else
 				client.setTrained(false);
-			client.setTrainedDate(getDateFromString(actionForm.getTrainedDate(), getUserContext(request).getPereferedLocale()));
-			if(actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())){ 
-					if(actionForm.getLoanOfficerIdValue()!=null){
-						client.setPersonnel(getPersonnelBusinessService().getPersonnel(actionForm.getLoanOfficerIdValue()));
-					}
-					else
-						client.setPersonnel(null);
+			client.setTrainedDate(getDateFromString(
+					actionForm.getTrainedDate(), getUserContext(request)
+							.getPereferedLocale()));
+			if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
+				if (actionForm.getLoanOfficerIdValue() != null) {
+					client.setPersonnel(getPersonnelBusinessService()
+							.getPersonnel(actionForm.getLoanOfficerIdValue()));
+				} else
+					client.setPersonnel(null);
 			}
 			client.setUserContext(getUserContext(request));
 			client.update();
 		} catch (ApplicationException ae) {
-				ae.printStackTrace();
-				ActionErrors errors = new ActionErrors();
-				errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae
-						.getValues()));
-				request.setAttribute(Globals.ERROR_KEY, errors);
-				return mapping
-						.findForward(ActionForwards.updateMfiInfo_failure.toString());
-			}
-		return mapping.findForward(ActionForwards.updateMfiInfo_success.toString());
+			ae.printStackTrace();
+			ActionErrors errors = new ActionErrors();
+			errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae
+					.getValues()));
+			request.setAttribute(Globals.ERROR_KEY, errors);
+			return mapping.findForward(ActionForwards.updateMfiInfo_failure
+					.toString());
+		}
+		return mapping.findForward(ActionForwards.updateMfiInfo_success
+				.toString());
 	}
-	private void setValuesInActionForm(ClientCustActionForm actionForm, HttpServletRequest request) {
+
+	private void setValuesInActionForm(ClientCustActionForm actionForm,
+			HttpServletRequest request) {
 		ClientBO client = (ClientBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
-		if(client.getPersonnel() !=null){
+		if (client.getPersonnel() != null) {
 			actionForm.setLoanOfficerId(client.getPersonnel().getPersonnelId()
-				.toString());
+					.toString());
 		}
 		actionForm.setCustomerId(client.getCustomerId().toString());
 		actionForm.setGlobalCustNum(client.getGlobalCustNum());
 		actionForm.setExternalId(client.getExternalId());
 		actionForm.setAddress(client.getAddress());
-		actionForm.setCustomFields(createCustomFieldViews(client.getCustomFields(), request));
-		for(ClientNameDetailView nameView : createNameViews(client.getNameDetailSet())){
-			if(nameView.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE)){
+		actionForm.setCustomFields(createCustomFieldViews(client
+				.getCustomFields(), request));
+		for (ClientNameDetailView nameView : createNameViews(client
+				.getNameDetailSet())) {
+			if (nameView.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE)) {
 				actionForm.setClientName(nameView);
-			}
-			else{
+			} else {
 				actionForm.setSpouseName(nameView);
 			}
 		}
-		actionForm.setClientDetailView(createClientDetailView(client.getCustomerDetail()));
-		actionForm.setGovernmentId(client.getGovernmentId()) ;
-		actionForm.setDateOfBirth(DateHelper.getUserLocaleDate(getUserContext(request).getPereferedLocale(), client.getDateOfBirth().toString()));
-		
+		actionForm.setClientDetailView(createClientDetailView(client
+				.getCustomerDetail()));
+		actionForm.setGovernmentId(client.getGovernmentId());
+		actionForm.setDateOfBirth(DateHelper.getUserLocaleDate(getUserContext(
+				request).getPereferedLocale(), client.getDateOfBirth()
+				.toString()));
+
 	}
-	
-	private void setValuesForMfiEditInActionForm(ClientCustActionForm actionForm, HttpServletRequest request) {
-	ClientBO client = (ClientBO) SessionUtils.getAttribute(
+
+	private void setValuesForMfiEditInActionForm(
+			ClientCustActionForm actionForm, HttpServletRequest request) {
+		ClientBO client = (ClientBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
-		if(client.getPersonnel() !=null){	
+		if (client.getPersonnel() != null) {
 			actionForm.setLoanOfficerId(client.getPersonnel().getPersonnelId()
 					.toString());
 			client.getPersonnel().getDisplayName();
@@ -629,57 +691,76 @@ public class ClientCustAction extends CustAction {
 		actionForm.setCustomerId(client.getCustomerId().toString());
 		actionForm.setGlobalCustNum(client.getGlobalCustNum());
 		actionForm.setExternalId(client.getExternalId());
-		if(client.isClientUnderGroup()){
+		if (client.isClientUnderGroup()) {
 			actionForm.setGroupFlag(ClientConstants.YES);
 			actionForm.setParentGroup(client.getParentCustomer());
-		}
-		else
+		} else
 			actionForm.setGroupFlag(ClientConstants.NO);
-		if(client.isTrained())
+		if (client.isTrained())
 			actionForm.setTrained(ClientConstants.YES);
 		else
 			actionForm.setTrained(ClientConstants.NO);
 		if (client.getTrainedDate() != null)
-			actionForm.setTrainedDate(DateHelper.getUserLocaleDate(getUserContext(request).getPereferedLocale(), client.getTrainedDate().toString()));
+			actionForm.setTrainedDate(DateHelper.getUserLocaleDate(
+					getUserContext(request).getPereferedLocale(), client
+							.getTrainedDate().toString()));
 	}
 
-	private void loadUpdateMfiMasterData(Short officeId, HttpServletRequest request) throws Exception{
-		loadLoanOfficers(officeId , request);
+	private void loadUpdateMfiMasterData(Short officeId,
+			HttpServletRequest request) throws Exception {
+		loadLoanOfficers(officeId, request);
 	}
 
-	private ClientDetailView createClientDetailView(ClientDetailEntity customerDetail) {
-		return new ClientDetailView(customerDetail.getEthinicity(), customerDetail.getCitizenship(),
-				customerDetail.getHandicapped(), customerDetail.getBusinessActivities(),
-				customerDetail.getMaritalStatus(), customerDetail.getEducationLevel(),customerDetail.getNumChildren() ,
-				customerDetail.getGender() );
+	private ClientDetailView createClientDetailView(
+			ClientDetailEntity customerDetail) {
+		return new ClientDetailView(customerDetail.getEthinicity(),
+				customerDetail.getCitizenship(), customerDetail
+						.getHandicapped(), customerDetail
+						.getBusinessActivities(), customerDetail
+						.getMaritalStatus(),
+				customerDetail.getEducationLevel(), customerDetail
+						.getNumChildren(), customerDetail.getGender());
 	}
-	private List<ClientNameDetailView> createNameViews(Set<ClientNameDetailEntity> nameDetailSet) {
+
+	private List<ClientNameDetailView> createNameViews(
+			Set<ClientNameDetailEntity> nameDetailSet) {
 		List<ClientNameDetailView> clientNameDetailViews = new ArrayList<ClientNameDetailView>();
-		for(ClientNameDetailEntity clientNameDetail : nameDetailSet){
+		for (ClientNameDetailEntity clientNameDetail : nameDetailSet) {
 			clientNameDetailViews.add(createNameViewObject(clientNameDetail));
 		}
-		return clientNameDetailViews; 
+		return clientNameDetailViews;
 	}
-	private ClientNameDetailView createNameViewObject( ClientNameDetailEntity clientNameDetail){
-		ClientNameDetailView nameView = new ClientNameDetailView(clientNameDetail.getNameType(), clientNameDetail.getSalutation(),
-		new StringBuilder(clientNameDetail.getDisplayName()), clientNameDetail.getName().getFirstName(), clientNameDetail.getName().getMiddleName(),
-		clientNameDetail.getName().getLastName(), clientNameDetail.getName().getSecondLastName());		
+
+	private ClientNameDetailView createNameViewObject(
+			ClientNameDetailEntity clientNameDetail) {
+		ClientNameDetailView nameView = new ClientNameDetailView(
+				clientNameDetail.getNameType(), clientNameDetail
+						.getSalutation(), new StringBuilder(clientNameDetail
+						.getDisplayName()), clientNameDetail.getName()
+						.getFirstName(), clientNameDetail.getName()
+						.getMiddleName(), clientNameDetail.getName()
+						.getLastName(), clientNameDetail.getName()
+						.getSecondLastName());
 		return nameView;
 	}
-	private void loadUpdateMasterData(ClientCustActionForm actionForm, HttpServletRequest request) throws ApplicationException , SystemException {
-		loadMasterDataEntities(actionForm , request);
-		loadCustomFieldDefinitions(EntityType.CLIENT , request);
-		
+
+	private void loadUpdateMasterData(ClientCustActionForm actionForm,
+			HttpServletRequest request) throws ApplicationException,
+			SystemException {
+		loadMasterDataEntities(actionForm, request);
+		loadCustomFieldDefinitions(EntityType.CLIENT, request);
+
 	}
+
 	private void loadMasterDataForDetailsPage(HttpServletRequest request,
 			ClientBO clientBO) throws SystemException {
+		Short localeId = getUserContext(request).getLocaleId();
 		SessionUtils.setAttribute(ClientConstants.AGE, new CustomerHelper()
 				.calculateAge(new java.sql.Date((clientBO.getDateOfBirth())
 						.getTime())), request.getSession());
 		SessionUtils.setAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
-				getMasterEntities(SpouseFatherLookupEntity.class,
-						getUserContext(request).getLocaleId()), request
-						.getSession());
+				getMasterEntities(SpouseFatherLookupEntity.class, localeId),
+				request.getSession());
 		SessionUtils.setAttribute(CustomerConstants.CUSTOMERPERFORMANCE,
 				customerService
 						.numberOfMeetings(true, clientBO.getCustomerId()),
@@ -691,40 +772,53 @@ public class ClientCustAction extends CustAction {
 				.setAttribute(ClientConstants.LOANCYCLECOUNTER, customerService
 						.fetchLoanCycleCounter(clientBO.getCustomerId()),
 						request.getSession());
-		SessionUtils.setAttribute(ClientConstants.CUSTOMERACTIVELOANACCOUNTS,
-				clientBO.getActiveAndApprovedLoanAccounts(new Date()), request
-						.getSession());
+		List<LoanBO> loanAccounts = clientBO.getLoanAccountsInUse();
+		List<SavingsBO> savingsAccounts = clientBO.getSavingAccountsInUse();
+		setLocaleIdToLoanStatus(loanAccounts, localeId);
+		setLocaleIdToSavingsStatus(savingsAccounts, localeId);
+		SessionUtils.setAttribute(ClientConstants.CUSTOMERLOANACCOUNTSINUSE,
+				loanAccounts, request.getSession());
+		SessionUtils.setAttribute(ClientConstants.CUSTOMERSAVINGSACCOUNTSINUSE,
+				savingsAccounts, request.getSession());
 		SessionUtils.setAttribute(
 				ClientConstants.BUSINESS_ACTIVITIES_ENTITY_NAME,
 				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
-						.getBusinessActivities(), getUserContext(request)
-						.getLocaleId()), request.getSession());
+						.getBusinessActivities(), localeId), request
+						.getSession());
 		SessionUtils.setAttribute(ClientConstants.HANDICAPPED_ENTITY_NAME,
 				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
-						.getHandicapped(), getUserContext(request)
-						.getLocaleId()), request.getSession());
+						.getHandicapped(), localeId), request.getSession());
 		SessionUtils.setAttribute(ClientConstants.MARITAL_STATUS_ENTITY_NAME,
 				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
-						.getMaritalStatus(), getUserContext(request)
-						.getLocaleId()), request.getSession());
+						.getMaritalStatus(), localeId), request.getSession());
 		SessionUtils.setAttribute(ClientConstants.CITIZENSHIP_ENTITY_NAME,
 				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
-						.getCitizenship(), getUserContext(request)
-						.getLocaleId()), request.getSession());
-		SessionUtils
-				.setAttribute(ClientConstants.ETHINICITY_ENTITY_NAME,
-						getNameForBusinessActivityEntity(clientBO
-								.getCustomerDetail().getEthinicity(),
-								getUserContext(request).getLocaleId()), request
-								.getSession());
+						.getCitizenship(), localeId), request.getSession());
+		SessionUtils.setAttribute(ClientConstants.ETHINICITY_ENTITY_NAME,
+				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
+						.getEthinicity(), localeId), request.getSession());
 		SessionUtils.setAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY_NAME,
 				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
-						.getEducationLevel(), getUserContext(request)
-						.getLocaleId()), request.getSession());
+						.getEducationLevel(), localeId), request.getSession());
 		SessionUtils.setAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
-				getMasterEntities(SpouseFatherLookupEntity.class,
-						getUserContext(request).getLocaleId()), request
-						.getSession());
+				getMasterEntities(SpouseFatherLookupEntity.class, localeId),
+				request.getSession());
+	}
+
+	private void setLocaleIdToLoanStatus(List<LoanBO> accountList,
+			Short localeId) {
+		for (LoanBO accountBO : accountList)
+			setLocaleForAccount((AccountBO) accountBO, localeId);
+	}
+
+	private void setLocaleIdToSavingsStatus(List<SavingsBO> accountList,
+			Short localeId) {
+		for (SavingsBO accountBO : accountList)
+			setLocaleForAccount((AccountBO) accountBO, localeId);
+	}
+
+	private void setLocaleForAccount(AccountBO account, Short localeId) {
+		account.getAccountState().setLocaleId(localeId);
 	}
 
 	private String getNameForBusinessActivityEntity(Integer entityId,
@@ -737,7 +831,8 @@ public class ClientCustAction extends CustAction {
 	}
 
 	private void setSpouseOrFatherName(HttpServletRequest request,
-			ClientBO clientBO) throws NumberFormatException, PersistenceException, ServiceException {
+			ClientBO clientBO) throws NumberFormatException,
+			PersistenceException, ServiceException {
 		for (ClientNameDetailEntity clientNameDetailEntity : clientBO
 				.getNameDetailSet()) {
 			if (clientNameDetailEntity.getNameType().shortValue() != ClientConstants.CLIENT_NAME_TYPE) {
@@ -745,12 +840,17 @@ public class ClientCustAction extends CustAction {
 						ClientConstants.SPOUSE_FATHER_NAME_VALUE,
 						clientNameDetailEntity.getDisplayName(), request
 								.getSession());
-				SessionUtils.setAttribute(ClientConstants.SPOUSE_FATHER_VALUE,findMasterEntity(request.getSession(),ClientConstants.SPOUSE_FATHER_ENTITY,clientNameDetailEntity.getNameType()).getName(), request.getSession());
+				SessionUtils
+						.setAttribute(ClientConstants.SPOUSE_FATHER_VALUE,
+								findMasterEntity(request.getSession(),
+										ClientConstants.SPOUSE_FATHER_ENTITY,
+										clientNameDetailEntity.getNameType())
+										.getName(), request.getSession());
 				break;
 			}
 		}
 	}
-	
+
 	private MasterDataEntity findMasterEntity(HttpSession session,
 			String collectionName, Short value) {
 		List<MasterDataEntity> entities = (List<MasterDataEntity>) SessionUtils
@@ -760,8 +860,10 @@ public class ClientCustAction extends CustAction {
 				return entity;
 		return null;
 	}
-	private PersonnelBusinessService getPersonnelBusinessService()throws ServiceException{
+
+	private PersonnelBusinessService getPersonnelBusinessService()
+			throws ServiceException {
 		return (PersonnelBusinessService) ServiceFactory.getInstance()
-		.getBusinessService(BusinessServiceName.Personnel);
+				.getBusinessService(BusinessServiceName.Personnel);
 	}
 }

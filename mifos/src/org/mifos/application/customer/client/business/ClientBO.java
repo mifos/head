@@ -40,6 +40,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
@@ -408,8 +409,10 @@ public class ClientBO extends CustomerBO {
 			Short newStatusId) {
 		if ((oldStatus.equals(CustomerStatus.CLIENT_PARTIAL.getValue()) || oldStatus
 				.equals(CustomerStatus.CLIENT_PENDING.getValue()))
-				&& newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue()))
+				&& newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue())) {
+			this.setCustomerActivationDate(new Date());
 			return true;
+		}
 		return false;
 	}
 

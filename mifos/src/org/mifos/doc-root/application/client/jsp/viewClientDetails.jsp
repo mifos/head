@@ -190,7 +190,7 @@
 							</tr>
 						</c:if>
 					</table>
-					<c:if test="${!empty sessionScope.customerActiveLoanAccounts}">
+					<c:if test="${!empty sessionScope.customerLoanAccountsInUse}">
 						<table width="96%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
 								<td width="63%" align="left" valign="top"
@@ -205,7 +205,7 @@
 								<span class="fontnormal"></span>
 								<table width="95%" border="0" align="center" cellpadding="0"
 									cellspacing="0">
-									<c:forEach items="${sessionScope.customerActiveLoanAccounts}"
+									<c:forEach items="${sessionScope.customerLoanAccountsInUse}"
 										var="loan">
 										<tr>
 											<td>
@@ -248,7 +248,7 @@
 							</tr>
 						</table>
 					</c:if> <c:if
-						test="${!empty sessionScope.BusinessKey.activeSavingsAccounts}">
+						test="${!empty sessionScope.customerSavingsAccountsInUse}">
 						<table width="96%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
 								<td width="63%" align="left" valign="top"
@@ -264,7 +264,7 @@
 								<table width="95%" border="0" align="center" cellpadding="0"
 									cellspacing="0">
 									<c:forEach
-										items="${sessionScope.BusinessKey.activeSavingsAccounts}"
+										items="${sessionScope.customerSavingsAccountsInUse}"
 										var="savings">
 										<tr>
 											<td>
@@ -379,7 +379,7 @@
 								name="client.ClientStartDate" bundle="ClientUIResources"></mifos:mifoslabel>:
 							<!-- Bug Id 27911. Changed the all the dates in the clientDetails.jsp to display as per client Locale-->
 							<c:out
-								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.createdDate)}" />
+								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.customerActivationDate)}" />
 							<br>
 							</span> <span class="fontnormal"><mifos:mifoslabel
 								name="client.FormedBy" bundle="ClientUIResources"></mifos:mifoslabel></span>
@@ -820,6 +820,7 @@
 				value="${sessionScope.BusinessKey.customerId}" />
 			<html-el:hidden property="statusId"
 				value="${sessionScope.BusinessKey.customerStatus.id}" />
+				<html-el:hidden property="globalCustNum" value="${sessionScope.BusinessKey.globalCustNum}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

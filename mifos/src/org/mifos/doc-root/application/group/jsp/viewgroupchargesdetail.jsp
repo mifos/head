@@ -48,11 +48,11 @@
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom" %>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
-
+<%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
-    <table width="95%" border="0" cellpadding="0" cellspacing="0">
+ <%--   <table width="95%" border="0" cellpadding="0" cellspacing="0">
       <tr>
         <td class="bluetablehead05">
                   <span class="fontnormal8pt">
@@ -74,7 +74,14 @@
 			<mifos:mifoslabel name="Group.charges" bundle="GroupUIResources"/>
 		</span></td>
       </tr>
-    </table>
+    </table>--%>
+    <table width="95%" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink />/
+				</span><span class="fontnormal8ptbold"> <mifos:mifoslabel
+					name="${ConfigurationConstants.GROUP}" /> <mifos:mifoslabel name="Group.charges" bundle="GroupUIResources"/></span></td>
+			</tr>
+		</table>
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td width="70%" height="24" align="left" valign="top" class="paddingL15T15">
@@ -112,7 +119,7 @@
 		            </c:if>
 		            <c:if test="${param.statusId == 7 || param.statusId == 8 || param.statusId == 9 || param.statusId == 10}">
 	                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	                    <html-el:link href="applyChargeAction.do?method=load&accountId=${param.accountId}&input=ViewGroupCharges&prdOfferingName=${param.prdOfferingName}&headingInput=ViewGroupCharges&searchInput=ClientChargesDetails&statusId=${param.statusId}">
+	                    <html-el:link href="applyChargeAction.do?method=load&accountId=${param.accountId}&input=ViewGroupCharges&globalCustNum=${sessionScope.linkValues.globalCustNum}&prdOfferingName=${param.prdOfferingName}&headingInput=ViewGroupCharges&searchInput=ClientChargesDetails&statusId=${param.statusId}">
 	                    <mifos:mifoslabel name="client.ApplyCharges" bundle="ClientUIResources"/>
 	                    </html-el:link>
 	                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -134,7 +141,7 @@
 					<c:out value='${requestScope.Context.businessResults["ClientFeeChargeDue"].amountDoubleValue}'/>
                     </span>
                     <c:if test='${requestScope.Context.businessResults["ClientFeeChargeDue"].amountDoubleValue != 0.0}'>
-    	                  <html-el:link href="customerAction.do?method=waiveChargeDue&statusId=${param.statusId}&type=Group&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}">
+    	                  <html-el:link href="customerAction.do?method=waiveChargeDue&globalCustNum=${param.globalCustNum}&accountType=${param.accountType}&prdOfferingName=${param.prdOfferingName}&statusId=${param.statusId}&type=Group&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}">
 		              	<mifos:mifoslabel name="client.waive" bundle="ClientUIResources"/>
 	    		          </html-el:link>
 	    		    </c:if>
@@ -144,7 +151,7 @@
 <c:out value='${requestScope.Context.businessResults["ClientFeeChargeOverDue"].amountDoubleValue}'/>
 						</span>
 						<c:if  test='${requestScope.Context.businessResults["ClientFeeChargeOverDue"].amountDoubleValue != 0.0}'>
-                 <html-el:link href="customerAction.do?method=waiveChargeOverDue&statusId=${param.statusId}&type=Group&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}">
+                 <html-el:link href="customerAction.do?method=waiveChargeOverDue&globalCustNum=${param.globalCustNum}&accountType=${param.accountType}&prdOfferingName=${param.prdOfferingName}&statusId=${param.statusId}&type=Group&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}">
 					<mifos:mifoslabel name="client.waive" bundle="ClientUIResources"/>
 	              </html-el:link>
 	              </c:if>
@@ -166,7 +173,7 @@
 <!-- c:out value='${requestScope.Context.businessResults["UpcomingChargesDate"]}'/-->
                  </td>
                 <td width="70%" align="right" class="fontnormal">
-                        <html-el:link href="accountAppAction.do?method=getTrxnHistory&statusId=${param.statusId}&input=ViewGroupCharges&globalAccountNum=${param.globalAccountNum}&accountId=${param.accountId}&accountType=${param.accountType}&prdOfferingName=${param.prdOfferingName}&headingInput=ViewGroupCharges&searchInput=ClientChargesDetails">
+                        <html-el:link href="accountAppAction.do?method=getTrxnHistory&statusId=${param.statusId}&globalCustNum=${param.globalCustNum}&input=ViewGroupCharges&globalAccountNum=${param.globalAccountNum}&accountId=${param.accountId}&accountType=${param.accountType}&prdOfferingName=${param.prdOfferingName}&headingInput=ViewGroupCharges&searchInput=ClientChargesDetails">
                     	<mifos:mifoslabel name="Center.TransactionHistory" />
                     	</html-el:link>
                 
@@ -203,7 +210,7 @@
                 
                 <td width="30%"><c:out value="${recurrenceFees.amount}"/>&nbsp;&nbsp;(<c:out value="${recurrenceFees.meeting.simpleMeetingSchedule}"/>)</td>
                 <td width="55%">
-				<html-el:link href="accountAppAction.do?method=removeFees&statusId=${param.statusId}&feeId=${recurrenceFees.feeId}&accountId=${recurrenceFees.accountId}&fromPage=group&globalAccountNum=${param.globalAccountNum}"> 
+				<html-el:link href="accountAppAction.do?method=removeFees&globalCustNum=${param.globalCustNum}&statusId=${param.statusId}&feeId=${recurrenceFees.feeId}&accountId=${recurrenceFees.accountId}&fromPage=group&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&prdOfferingName=${param.prdOfferingName}"> 
                 <mifos:mifoslabel  name="Group.remove"/>
                 </html-el:link></td>
               </tr>
@@ -219,5 +226,6 @@
 			<html-el:hidden property="headingInput" value="ViewGroupCharges"/>
 			<mifos:SecurityParam property="Group" />
 			<html-el:hidden property="statusId" value="${param.statusId}"/> 
+			<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />
 </tiles:put>
 </tiles:insert>      

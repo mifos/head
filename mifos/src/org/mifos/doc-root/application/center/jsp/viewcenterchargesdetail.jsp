@@ -61,8 +61,7 @@
 	           <customtags:headerLink/> 
 	            </span>
 	            <!-- Center Charges -->
-	            <span class="fontnormal8ptbold">
-	            
+	            <span class="fontnormal8ptbold">/
 	            <mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/>
 	                 <mifos:mifoslabel name="Center.Charges" bundle="CenterUIResources"/>
 	            </span>
@@ -98,7 +97,7 @@
 	                    	<mifos:mifoslabel name="Center.ApplyAdjustment" bundle="CenterUIResources"/>
 	                    </html-el:link>
 	                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	                    <html-el:link href="applyChargeAction.do?method=load&accountId=${param.accountId}&prdOfferingName=${sessionScope.linkValues.customerName}&input=ViewCenterCharges&statusId=${param.statusId}">
+	                    <html-el:link href="applyChargeAction.do?method=load&accountId=${param.accountId}&globalCustNum=${sessionScope.linkValues.globalCustNum}&prdOfferingName=${sessionScope.linkValues.customerName}&input=ViewCenterCharges&statusId=${param.statusId}&input=ViewCenterCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}">
 	                    	<mifos:mifoslabel name="Center.ApplyCharges" />
 						</html-el:link>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -119,7 +118,7 @@
 						<c:out value='${requestScope.Context.businessResults["ClientFeeChargeDue"].amountDoubleValue}'/>
                     </span>
  					<c:if test='${requestScope.Context.businessResults["ClientFeeChargeDue"].amountDoubleValue != 0.0}'>
-                  <html-el:link href="customerAction.do?method=waiveChargeDue&statusId=${param.statusId}&type=Center&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}">
+                  <html-el:link href="customerAction.do?method=waiveChargeDue&globalCustNum=${param.globalCustNum}&accountType=${param.accountType}&prdOfferingName=${param.prdOfferingName}&statusId=${param.statusId}&type=Center&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}">
 	              	<mifos:mifoslabel name="client.waive" bundle="ClientUIResources"/>
 	              </html-el:link>
 	              </c:if>
@@ -129,7 +128,7 @@
 						<c:out value='${requestScope.Context.businessResults["ClientFeeChargeOverDue"].amountDoubleValue}'/>
 					</span>
 					<c:if test='${requestScope.Context.businessResults["ClientFeeChargeOverDue"].amountDoubleValue != 0.0}'>
-				  <html-el:link href="customerAction.do?method=waiveChargeOverDue&statusId=${param.statusId}&type=Center&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}">
+				  <html-el:link href="customerAction.do?method=waiveChargeOverDue&globalCustNum=${param.globalCustNum}&accountType=${param.accountType}&prdOfferingName=${param.prdOfferingName}&statusId=${param.statusId}&type=Center&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}">
 					<mifos:mifoslabel name="client.waive" bundle="ClientUIResources"/>
 	              </html-el:link>
 	              </c:if>
@@ -149,7 +148,7 @@
 					(<c:out value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,requestScope.Context.businessResults["UpcomingChargesDate"])}' />)
                  </td>
                 <td width="70%" align="right" class="fontnormal">
-                    <html-el:link href="accountAppAction.do?method=getTrxnHistory&statusId=${param.statusId}&input=ViewCenterCharges&globalAccountNum=${param.globalAccountNum}&accountId=${param.accountId}&accountType=${param.accountType}&prdOfferingName=${sessionScope.linkValues.customerName}&headingInput=ViewCenterCharges&searchInput=ClientChargesDetails">
+                    <html-el:link href="accountAppAction.do?method=getTrxnHistory&statusId=${param.statusId}&globalCustNum=${param.globalCustNum}&input=ViewCenterCharges&globalAccountNum=${param.globalAccountNum}&accountId=${param.accountId}&accountType=${param.accountType}&prdOfferingName=${sessionScope.linkValues.customerName}&headingInput=ViewCenterCharges&searchInput=ClientChargesDetails">
                     	<mifos:mifoslabel name="Center.TransactionHistory" />
 					</html-el:link>
  				</td>
@@ -183,7 +182,7 @@
                 <td width="30%"><c:out value="${recurrenceFees.amount}"/>
                 &nbsp;&nbsp;(<c:out value="${recurrenceFees.meeting.simpleMeetingSchedule}"/>)</td>
                 <td width="55%">               
-               <html-el:link href="accountAppAction.do?method=removeFees&statusId=${param.statusId}&feeId=${recurrenceFees.feeId}&accountId=${recurrenceFees.accountId}&fromPage=center&globalAccountNum=${param.globalAccountNum}"> 
+               <html-el:link href="accountAppAction.do?method=removeFees&statusId=${param.statusId}&feeId=${recurrenceFees.feeId}&globalCustNum=${param.globalCustNum}&accountId=${recurrenceFees.accountId}&fromPage=center&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&prdOfferingName=${param.prdOfferingName}"> 
 				<mifos:mifoslabel name="Center.remove" bundle="CenterUIResources"/></td>
                 </html-el:link>
                 </td>
@@ -194,6 +193,7 @@
       </table> 
       		<html-el:hidden property="searchNode(search_name)" value="ClientChargesDetails"/>  
 			<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}" />
+			<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />
 			<html-el:hidden property="accountId" value="${param.accountId}" />
 			<html-el:hidden property="accountType" value="${param.accountType}" /> 
 			<html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}"/>

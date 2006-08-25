@@ -737,26 +737,36 @@ public abstract class CustomerBO extends BusinessObject {
 		return this.office.getOfficeId().equals(officeObj.getOfficeId());
 	}
 	
+	public List<LoanBO> getLoanAccountsInUse(){
+		List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
+		for (AccountBO account : getAccounts()) {
+			if (isLoanAccount(account) && isLoanAccountInUse(account))
+					loanAccounts.add((LoanBO)account);
+		}
+		return loanAccounts;
+	}	
+	
+	public List<SavingsBO> getSavingAccountsInUse(){
+		List<SavingsBO> savingAccounts = new ArrayList<SavingsBO>();
+		for (AccountBO account : getAccounts()) {
+			if (isSavingsAccount(account) && isSavingsAccountInUse(account))
+				savingAccounts.add((SavingsBO)account);
+		}
+		return savingAccounts;
+	}
+	
 	public boolean hasAnyLoanAccountInUse(){
 		for (AccountBO account : getAccounts()) {
-			if (account.getAccountType().getAccountTypeId().equals(AccountTypes.LOANACCOUNT.getValue())) {
-				if(!(account.getAccountState().getId().equals(AccountState.LOANACC_CANCEL) 
-						|| account.getAccountState().getId().equals(AccountState.LOANACC_BADSTANDING)
-						|| account.getAccountState().getId().equals(AccountState.LOANACC_OBLIGATIONSMET)
-						|| account.getAccountState().getId().equals(AccountState.LOANACC_WRITTENOFF)))
+			if (isLoanAccount(account) && isLoanAccountInUse(account))
 					return true;
-			}
 		}
 		return false;
 	}
 	
 	public boolean hasAnySavingsAccountInUse(){
 		for (AccountBO account : getAccounts()) {
-			if (account.getAccountType().getAccountTypeId().equals(AccountTypes.SAVINGSACCOUNT.getValue())) {
-				if(!(account.getAccountState().getId().equals(AccountState.SAVINGS_ACC_CANCEL) 
-						|| account.getAccountState().getId().equals(AccountState.SAVINGS_ACC_CLOSED)))
-					return true;
-			}
+			if (isSavingsAccount(account) && isSavingsAccountInUse(account))
+				return true;
 		}
 		return false;
 	}
@@ -767,5 +777,25 @@ public abstract class CustomerBO extends BusinessObject {
 				if(position.getCustomer()!=null && position.getCustomer().getCustomerId().equals(clientId))
 					position.setCustomer(null);
 		}
+	}
+	
+	private boolean isLoanAccount(AccountBO account){
+		return account.getAccountType().getAccountTypeId().equals(AccountTypes.LOANACCOUNT.getValue());
+	}
+	
+	private boolean isSavingsAccount(AccountBO account){
+		return account.getAccountType().getAccountTypeId().equals(AccountTypes.SAVINGSACCOUNT.getValue());
+	}
+	
+	private boolean isLoanAccountInUse(AccountBO account){
+		return !(account.getAccountState().getId().equals(AccountState.LOANACC_CANCEL.getValue()) 
+				|| account.getAccountState().getId().equals(AccountState.LOANACC_BADSTANDING.getValue())
+				|| account.getAccountState().getId().equals(AccountState.LOANACC_OBLIGATIONSMET.getValue())
+				|| account.getAccountState().getId().equals(AccountState.LOANACC_WRITTENOFF.getValue()));
+	}
+	
+	private boolean isSavingsAccountInUse(AccountBO account){
+		return !(account.getAccountState().getId().equals(AccountState.SAVINGS_ACC_CANCEL.getValue()) 
+				|| account.getAccountState().getId().equals(AccountState.SAVINGS_ACC_CLOSED.getValue()));
 	}
 }

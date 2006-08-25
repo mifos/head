@@ -54,7 +54,6 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.struts.actionforms.EditCustomerStatusActionForm;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -145,8 +144,8 @@ public class EditCustomerStatusAction extends BaseAction {
 	}
 
 	public ActionForward update(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) throws ApplicationException
-			 {
+			HttpServletRequest request, HttpServletResponse response)
+			throws ApplicationException {
 		EditCustomerStatusActionForm editStatusActionForm = (EditCustomerStatusActionForm) form;
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
@@ -263,7 +262,7 @@ public class EditCustomerStatusAction extends BaseAction {
 
 	private void checkPermission(CustomerBO customerBO,
 			HttpServletRequest request, Short newStatusId, Short flagId) {
-		if (null != customerBO.getPersonnel().getPersonnelId())
+		if (null != customerBO.getPersonnel())
 			customerService.checkPermissionForStatusChange(newStatusId,
 					getUserContext(request), flagId, customerBO.getOffice()
 							.getOfficeId(), customerBO.getPersonnel()

@@ -137,15 +137,17 @@
       </table>
 <html-el:hidden property="statusId" value="${param.statusId}"/>  
 <html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}"/>
+<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />
 </html-el:form>
 <html-el:form  action="closedaccsearchaction.do?method=search">
-<html-el:hidden property="searchNode(search_name)" value="${param.searchInput}"/>
+<html-el:hidden property="searchNode(search_name)" value="ClientChargesDetails"/>
 <html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}"/> 
 <html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}"/> 
 <html-el:hidden property="accountId" value="${param.accountId}"/> 
 <html-el:hidden property="accountType" value="${param.accountType}"/> 
 <html-el:hidden property="input" value="${param.input}"/> 
 <html-el:hidden property="statusId" value="${param.statusId}"/>
+<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />
 </html-el:form>
 </tiles:put>
 </tiles:insert>        

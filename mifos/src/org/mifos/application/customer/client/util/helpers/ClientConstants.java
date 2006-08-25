@@ -199,6 +199,7 @@ public interface ClientConstants {
 	
 	public static final String AGE = "age";
 	public static final String LOANCYCLECOUNTER = "loanCycleCounter";
-	public static final String CUSTOMERACTIVELOANACCOUNTS = "customerActiveLoanAccounts";
+	public static final String CUSTOMERLOANACCOUNTSINUSE = "customerLoanAccountsInUse";
+	public static final String CUSTOMERSAVINGSACCOUNTSINUSE = "customerSavingsAccountsInUse";
 
 }

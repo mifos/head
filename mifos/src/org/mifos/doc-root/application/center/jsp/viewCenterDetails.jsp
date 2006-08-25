@@ -599,6 +599,7 @@
 			<html-el:hidden property="customerId"
 				value="${sessionScope.BusinessKey.customerId}" />
 			<html-el:hidden property="statusId" value="${statusID}" />
+			<html-el:hidden property="globalCustNum" value="${sessionScope.BusinessKey.globalCustNum}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

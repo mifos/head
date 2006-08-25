@@ -3,6 +3,7 @@ package org.mifos.application.customer.business;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -14,12 +15,10 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.center.business.CenterBO;
-import org.mifos.application.customer.center.exception.StateChangeException;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
-import org.mifos.application.customer.exceptions.CustomerStateChangeException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
@@ -209,6 +208,47 @@ public class TestCustomerBO extends MifosTestCase {
 				accountBO.getAccountId());
 	}
 
+	public void testGetLoanAccountInUse() throws PersistenceException {
+		createInitialObjects();
+		accountBO = getLoanAccount(group, meeting);
+		TestObjectFactory.flushandCloseSession();
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		List<LoanBO> loans = group.getLoanAccountsInUse();
+		assertEquals(1,loans.size());
+		assertEquals(accountBO.getAccountId(),loans.get(0).getAccountId());
+		TestObjectFactory.flushandCloseSession();
+		
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+	}
+	
+	public void testGetSavingsAccountInUse() throws PersistenceException {
+		accountBO = getSavingsAccount();
+		TestObjectFactory.flushandCloseSession();
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		List<SavingsBO> savings = client.getSavingAccountsInUse();
+		assertEquals(1,savings.size());
+		assertEquals(accountBO.getAccountId(),savings.get(0).getAccountId());
+		TestObjectFactory.flushandCloseSession();
+		
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+	}
+	
 	public void testHasAnyLoanAccountInUse() throws PersistenceException {
 		createInitialObjects();
 		accountBO = getLoanAccount(group, meeting);

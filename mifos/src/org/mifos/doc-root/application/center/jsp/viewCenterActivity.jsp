@@ -49,7 +49,7 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom" %>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@taglib uri="/loan/loanfunctions" prefix="loanfn"%>
-
+<%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
@@ -58,30 +58,20 @@
 		function fun_cancel(){
 			closedaccsearchactionform.submit();
 		}
-
+	function ViewDetails(){
+			closedaccsearchactionform.submit();
+	}
 </script>
-    <table width="95%" border="0" cellpadding="0" cellspacing="0">
-          <tr>
-            <td class="bluetablehead05">
-	            <span class="fontnormal8pt">
-	            	<a href="CustomerSearchAction.do?method=getOfficeHomePage&officeId=<c:out value="${sessionScope.linkValues.customerOfficeId}"/>&officeName=<c:out value="${sessionScope.linkValues.customerOfficeName}"/>&loanOfficerId=<c:out value="${requestScope.Context.userContext.id}"/>">
-	            	<c:out value="${sessionScope.linkValues.customerOfficeName}"/></a>   /
-	            </span>
-	            <!-- Name of the client -->
-	            <span class="fontnormal8pt">
-	            <a href="centerAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.globalCustNum}"/>">
-	           				<c:out value="${sessionScope.linkValues.customerName}"/>            	
-           			</a>/
-	            </span>
-	            <!-- Center Charges -->
-	            <span class="fontnormal8ptbold">
-	            
-	            <mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/>
-	                 <mifos:mifoslabel name="Center.Charges" bundle="CenterUIResources"/>
-	            </span>
-	         </td>
-          </tr>
-        </table>
+        <table width="95%" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink/> 
+				<html-el:link href="javascript:ViewDetails()">/
+	          	  <mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/>
+	          		<mifos:mifoslabel name="Center.Charges" bundle="CenterUIResources"/>
+	          	</html-el:link></span>
+				</td>
+			</tr>
+		</table>
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td width="70%" height="24" align="left" valign="top" class="paddingL15T15"><table width="96%" border="0" cellpadding="3" cellspacing="0">
@@ -107,11 +97,15 @@
 	                	<span class="fontnormalbold">
 	                	<mifos:mifoslabel name="Center.ApplyTransaction" bundle="CenterUIResources"/></span>
 	                	&nbsp;&nbsp;&nbsp;&nbsp;
+	                	<html-el:link href="applyPaymentAction.do?method=load&searchInput=ClientChargesDetails&statusId=${param.statusId}&globalCustNum=${sessionScope.linkValues.globalCustNum}&prdOfferingName=${sessionScope.linkValues.customerName}&input=ViewCenterCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&securityParamInput=Center">
+	                    	<mifos:mifoslabel name="accounts.apply_payment" />
+	                    </html-el:link>
+	                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	                    <html-el:link href="custApplyAdjustment.do?method=loadAdjustment&statusId=${param.statusId}&globalCustNum=${sessionScope.linkValues.globalCustNum}&prdOfferingName=${sessionScope.linkValues.customerName}&input=ViewCenterCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&securityParamInput=Center">
 	                    	<mifos:mifoslabel name="Center.ApplyAdjustment" bundle="CenterUIResources"/>
 	                    </html-el:link>
 	                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	                    <html-el:link href="AccountsApplyChargesAction.do?method=load&statusId=${param.statusId}&globalCustNum=${sessionScope.linkValues.globalCustNum}&prdOfferingName=${sessionScope.linkValues.customerName}&input=ViewCenterCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}">
+	                    <html-el:link href="applyChargeAction.do?method=load&statusId=${param.statusId}&globalCustNum=${sessionScope.linkValues.globalCustNum}&prdOfferingName=${sessionScope.linkValues.customerName}&input=ViewCenterCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}">
 	                    	<mifos:mifoslabel name="Center.ApplyCharges" />
 						</html-el:link>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -143,6 +137,7 @@
 			<html-el:hidden property="headingInput" value="ViewCenterCharges"/>
 			<html-el:hidden property="searchInput" value="ClientChargesDetails"/>
 			<html-el:hidden property="statusId" value="${param.statusId}"/>
+			<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />
 		</html-el:form>
 		<mifos:SecurityParam property="Center" />
 </tiles:put>

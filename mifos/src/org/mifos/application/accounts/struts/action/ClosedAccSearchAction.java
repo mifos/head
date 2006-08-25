@@ -45,7 +45,12 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.accounts.struts.actionforms.ClosedAccSearchActionForm;
 import org.mifos.application.accounts.util.helpers.ClosedAccSearchConstants;
+import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.service.CustomerBusinessService;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.framework.struts.action.MifosSearchAction;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.SessionUtils;
 
 /**
  * @author mohammedn
@@ -67,6 +72,15 @@ public class ClosedAccSearchAction extends MifosSearchAction {
 		return ClosedAccSearchConstants.GETPATHCLOSEDACCSEARCH;
 	}
 
+	@Override
+	public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		ActionForward forward = super.search(mapping,form,request,response);
+		String globalCustNum = request.getParameter(CustomerConstants.GLOBAL_CUST_NUM);
+		CustomerBO customerBO = new CustomerBusinessService().findBySystemId(globalCustNum);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,customerBO,request.getSession());
+		return forward;		
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.mifos.framework.struts.action.MifosBaseAction#search(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
@@ -101,7 +115,6 @@ public class ClosedAccSearchAction extends MifosSearchAction {
 			return mapping.findForward(ClosedAccSearchConstants.SEARCH_CLIENT_CLOSED_ACCOUNT_SUCCESS);
 		}
 		if(input != null &&input.equals(ClosedAccSearchConstants.VIEW_CENTER_CLOSED_ACCOUNTS)) {
-			System.out.println("**************************mapping.findForward(ClosedAccSearchConstants.SEARCH_CENTER_CLOSED_ACCOUNT_SUCCESS)::::"+mapping.findForward(ClosedAccSearchConstants.SEARCH_CENTER_CLOSED_ACCOUNT_SUCCESS));
 			return mapping.findForward(ClosedAccSearchConstants.SEARCH_CENTER_CLOSED_ACCOUNT_SUCCESS);
 		}
 		

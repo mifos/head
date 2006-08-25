@@ -49,7 +49,7 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom" %>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@taglib uri="/loan/loanfunctions" prefix="loanfn"%>
-
+<%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
@@ -58,9 +58,11 @@
 		function fun_cancel(){
 			closedaccsearchactionform.submit();
 		}
-
+function ViewDetails(){
+			closedaccsearchactionform.submit();
+	}
 </script>
-    <table width="95%" border="0" cellpadding="0" cellspacing="0">
+<%--    <table width="95%" border="0" cellpadding="0" cellspacing="0">
           <tr>
             <td class="bluetablehead05">
 	            <span class="fontnormal8pt">
@@ -81,7 +83,17 @@
 	            </span>
 	         </td>
           </tr>
-        </table>
+        </table>--%>
+      <table width="95%" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink/> 
+				<html-el:link href="javascript:ViewDetails()">/
+	          	   <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/>   
+			<mifos:mifoslabel name="Group.charges" bundle="GroupUIResources"/>
+	          	</html-el:link></span>
+				
+			</tr>
+		</table>
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td width="70%" height="24" align="left" valign="top" class="paddingL15T15"><table width="96%" border="0" cellpadding="3" cellspacing="0">
@@ -106,6 +118,10 @@
 	                <td bgcolor="#F0D4A5" style="padding-left:10px; padding-bottom:3px;">
 	                	<span class="fontnormalbold">
 	                	<mifos:mifoslabel name="Center.ApplyTransaction" bundle="CenterUIResources"/></span>
+	                &nbsp;&nbsp;&nbsp;&nbsp;
+	                	<html-el:link href="applyPaymentAction.do?method=load&searchInput=ClientChargesDetails&statusId=${param.statusId}&globalCustNum=${sessionScope.linkValues.globalCustNum}&prdOfferingName=${param.prdOfferingName}&input=ViewGroupCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&securityParamInput=Group">
+	                    	<mifos:mifoslabel name="accounts.apply_payment" />
+	                    </html-el:link>
 	                <c:if test="${param.statusId == 9 || param.statusId == 10}">
 	                	&nbsp;&nbsp;&nbsp;&nbsp;
 	                    <html-el:link href="custApplyAdjustment.do?method=loadAdjustment&statusId=${param.statusId}&globalCustNum=${sessionScope.linkValues.globalCustNum}&prdOfferingName=${sessionScope.linkValues.customerName}&input=ViewGroupCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&securityParamInput=Group">
@@ -114,7 +130,7 @@
 	                 </c:if>
 		            <c:if test="${param.statusId == 7 || param.statusId == 8 || param.statusId == 9 || param.statusId == 10}">
 	                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	                    <html-el:link href="AccountsApplyChargesAction.do?method=load&statusId=${param.statusId}&globalCustNum=${sessionScope.linkValues.globalCustNum}&prdOfferingName=${sessionScope.linkValues.customerName}&input=ViewGroupCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}">
+	                    <html-el:link href="applyChargeAction.do?method=load&statusId=${param.statusId}&globalCustNum=${sessionScope.linkValues.globalCustNum}&prdOfferingName=${sessionScope.linkValues.customerName}&input=ViewGroupCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}">
 	                    	<mifos:mifoslabel name="Center.ApplyCharges" />
 						</html-el:link>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -148,6 +164,7 @@
 			<html-el:hidden property="headingInput" value="ViewGroupCharges"/>
 			<mifos:SecurityParam property="Group" />
 			<html-el:hidden property="statusId" value="${param.statusId}"/>
+			<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />
 		</html-el:form>
 </tiles:put>
 </tiles:insert>      
