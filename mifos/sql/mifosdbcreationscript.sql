@@ -9,7 +9,7 @@ CREATE TABLE LOGMESSAGES (
   LINE_NUMBER varchar(50) default NULL,
   MESSAGE text,
   DATE varchar(50) default NULL,
-  TIME timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  TIME timestamp default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL,
   USERID varchar(25) default NULL,
   OFFICEID varchar(25) default NULL,
   PRIMARY KEY  (LOG_ID)
