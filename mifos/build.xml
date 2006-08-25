@@ -176,7 +176,7 @@
 
 	<target name="run_test" depends="compile,copy_files,compile_test,copy_test_files,build_test_db" 
 		description="Run tests. Does not initiate clean build">
-		<junit printsummary="on" fork="true" maxmemory="300M" 
+		<junit printsummary="on" fork="true" maxmemory="400M" 
 			failureproperty="tests.failure">
 			<classpath>
 				<path refid="class.path"/>
@@ -255,7 +255,7 @@
 	</target>
 
 	<target name="coverage" depends="instrument" description="Compiles source, test, runs test cases and generates a coverage report">
-		<junit printsummary="on" fork="true" maxmemory="200M" failureproperty="tests.instrument.failure">
+		<junit printsummary="on" fork="true" maxmemory="400M" failureproperty="tests.instrument.failure">
 
 			<sysproperty key="net.sourceforge.cobertura.datafile" file="${dist.dir}/mifos_cobertura.ser" />
 
