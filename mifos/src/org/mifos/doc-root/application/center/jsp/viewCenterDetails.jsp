@@ -112,7 +112,7 @@
 								<c:when test="${!empty sessionScope.groups}">
 									<c:forEach var="group" items="${sessionScope.groups}">
 										<span class="fontnormal"> <a
-											href="GroupAction.do?method=get&globalCustNum=<c:out value="${sessionScope.globalCustNum}"/>&recordOfficeId=${sessionScope.BusinessKey.office.officeId}&recordLoanOfficerId=${sessionScope.BusinessKey.personnel.personnelId}">
+											href="GroupAction.do?method=get&globalCustNum=<c:out value="${group.globalCustNum}"/>&recordOfficeId=${sessionScope.BusinessKey.office.officeId}&recordLoanOfficerId=${sessionScope.BusinessKey.personnel.personnelId}">
 										<c:out value="${group.displayName}" /></a><br>
 										</span>
 									</c:forEach>

@@ -72,7 +72,7 @@ function  submitAdminLink()
 					<table width="93%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<font class="fontnormalRedBold"><html-el:errors
-								bundle="OfficeResources" /> </font>
+								bundle="OfficeUIResources" /> </font>
 						</tr>
 						<tr>
 							<!-- actual information starts from here -->
@@ -104,7 +104,7 @@ function  submitAdminLink()
 							<span class="fontnormalbold"> </span><mifos:mifoslabel
 								name="Office.labelStatus" />:<span
 								class="fontnormal"> <c:forEach var="status"
-								items="${OfficeStatusList}">
+								items="${sessionScope.OfficeStatusList}">
 								<c:if test="${status.levelId  ==offActionForm.officeStatus}">
 									<c:out value="${status.levelName}"></c:out>
 								</c:if>

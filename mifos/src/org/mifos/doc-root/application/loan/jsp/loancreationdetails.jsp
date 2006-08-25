@@ -54,11 +54,14 @@
 
 		<SCRIPT>
 				function intDedAtDisb() {
-					if(document.getElementsByName("intDedDisbursement")[0].checked==true) {
-						document.getElementsByName("gracePeriodDuration")[0].value="0";
+					if(document.getElementsByName("gracePeriodTypeId")[0].value==1) {
 						document.getElementsByName("gracePeriodDuration")[0].disabled=true;
-					}else{
-						document.getElementsByName("gracePeriodDuration")[0].disabled=false;
+					} else  {
+						if(document.getElementsByName("intDedDisbursement")[0].checked==true) {
+							document.getElementsByName("gracePeriodDuration")[0].disabled=true;
+						}else{
+							document.getElementsByName("gracePeriodDuration")[0].disabled=false;
+						}
 					}
 				}
 				
@@ -558,11 +561,11 @@
 												<td width="50%" class="fontnormal">
 													<mifos:mifosdecimalinput property='selectedFee[${ctr2}].amount' />
 													<SPAN id="feeFormulaSpan${loopStatus2.index}" class="fontnormal"></SPAN>
-													
+
 												</td>
-												
-													
-												
+
+
+
 												<c:if test="${ctr2 == 0}">
 													<c:forEach var="fee" items="${sessionScope.additionalFeeList}" varStatus="loopStatus3">
 														<bean:define id="ctr3" toScope="request">
@@ -603,6 +606,7 @@
 				</tr>
 			</table>
 			<html-el:hidden property="method" value="schedulePreview" />
+			<html-el:hidden property="gracePeriodTypeId" value="${sessionScope.loanOffering.gracePeriodType.id}" />
 			<script>intDedAtDisb();</script>
 		</html-el:form>
 	</tiles:put>

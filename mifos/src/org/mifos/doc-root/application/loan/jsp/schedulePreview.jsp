@@ -161,8 +161,7 @@
 												<mifos:mifoslabel name="loan.amt" />
 												:&nbsp; <span class="fontnormal"> <c:out value="${sessionScope.BusinessKey.loanAmount}" /> <br> </span>
 												<mifos:mifoslabel name="loan.proposed_date" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.disbursementDate)}" /> <br> </span> <span class="fontnormal"> <br> </span> <span
-													class="fontnormal"> <br> </span> <span class="fontnormal"> <br> </span>
+												:&nbsp; <span class="fontnormal"> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.disbursementDate)}" /> <br> </span> <span class="fontnormal"> <br> </span>
 												<c:forEach items="${sessionScope.BusinessKey.accountFees}" var="feesSet">
 													<c:if test="${feesSet.timeOfDisbursement}">
 														<table cellpadding="0" cellspacing="0">
