@@ -162,20 +162,22 @@
 								</tr>
 							</table>
 						</c:if>
-						<table width="96%" border="0" cellpadding="3" cellspacing="0">
-			            	<tr>		                
-			                	<td width="42%" align="right" class="fontnormal">
-			                		<span class="fontnormal">
-					                  	<html-el:link href="loanAccountAction.do?method=getInstallmentDetails&accountId=${sessionScope.BusinessKey.accountId}&prdOfferingName=${sessionScope.BusinessKey.loanOffering.prdOfferingName}
-					                  	&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}&accountType=${sessionScope.BusinessKey.accountType.accountTypeId}
-					                  	&accountStateId=${sessionScope.BusinessKey.accountState.id}&recordOfficeId=${sessionScope.BusinessKey.office.officeId}
-					                  	&recordLoanOfficerId=${sessionScope.BusinessKey.personnel.personnelId}&lastPaymentAction=${sessionScope.lastPaymentAction}"> 
-											<mifos:mifoslabel name="loan.view_installment_details" />								
-										</html-el:link>
-									</span>
-				            	</td>
-			                </tr>		               
-			            </table>
+						<c:if test="${sessionScope.BusinessKey.accountState.id == 5 || sessionScope.BusinessKey.accountState.id == 9}">
+							<table width="96%" border="0" cellpadding="3" cellspacing="0">
+				            	<tr>		                
+				                	<td width="42%" align="right" class="fontnormal">
+				                		<span class="fontnormal">
+						                  	<html-el:link href="loanAccountAction.do?method=getInstallmentDetails&accountId=${sessionScope.BusinessKey.accountId}&prdOfferingName=${sessionScope.BusinessKey.loanOffering.prdOfferingName}
+						                  	&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}&accountType=${sessionScope.BusinessKey.accountType.accountTypeId}
+						                  	&accountStateId=${sessionScope.BusinessKey.accountState.id}&recordOfficeId=${sessionScope.BusinessKey.office.officeId}
+						                  	&recordLoanOfficerId=${sessionScope.BusinessKey.personnel.personnelId}&lastPaymentAction=${sessionScope.lastPaymentAction}"> 
+												<mifos:mifoslabel name="loan.view_installment_details" />								
+											</html-el:link>
+										</span>
+					            	</td>
+				                </tr>		               
+				            </table>
+			            </c:if>
 						<table width="96%" border="0" cellpadding="3" cellspacing="0">
 							<tr class="drawtablerow">
 								<td width="24%">&nbsp;</td>

@@ -10,6 +10,7 @@ import java.util.Set;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -94,7 +95,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		assertEquals("Size of the status list should be 2",2,((List<AccountStateEntity>)SessionUtils.getAttribute(SavingsConstants.STATUS_LIST,request.getSession())).size());
 	}
 	
-	public void testPreview() {
+	public void testPreviewSuccess() {
 		createInitialObjects();
 		accountBO = getLoanAccount(client,meeting);
 		
@@ -120,6 +121,30 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		assertEquals("Closed- Rescheduled",(String)SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME,request.getSession()));
 		assertNull("Since new Status is not cancel,so flag should be null.",SessionUtils.getAttribute(SavingsConstants.FLAG_NAME,request.getSession()));
+	}
+	
+	public void testPreviewFailure() {
+		createInitialObjects();
+		accountBO = getLoanAccount(client,meeting);
+		
+		setRequestPathInfo("/editStatusAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("input", "loan");
+		addRequestParameter("accountId", accountBO.getAccountId().toString());
+		actionPerform();
+		verifyForward("load_success");
+		assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST,request.getSession()));
+		assertEquals("Size of the status list should be 2",2,((List<AccountStateEntity>)SessionUtils.getAttribute(SavingsConstants.STATUS_LIST,request.getSession())).size());
+		
+		setRequestPathInfo("/editStatusAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("input", "loan");
+		addRequestParameter("accountTypeId", accountBO.getAccountType().getAccountTypeId().toString());
+		addRequestParameter("newStatusId", "8");
+		addRequestParameter("flagId", "1");
+		actionPerform();
+		assertEquals(1, getErrrorSize());
+		verifyActionErrors(new String[] { LoanConstants.MANDATORY_TEXTBOX });
 	}
 	
 	public void testPrevious() {
@@ -179,41 +204,6 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 	}
-/*	
-	public void testUpdateFailure() {
-		createInitialObjects();
-		accountBO = getLoanAccount(client,meeting);
-		
-		setRequestPathInfo("/editStatusAction.do");
-		addRequestParameter("method", "load");
-		addRequestParameter("input", "loan");
-		addRequestParameter("accountId", accountBO.getAccountId().toString());
-		actionPerform();
-		verifyForward("load_success");
-		assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST,request.getSession()));
-		assertEquals("Size of the status list should be 2",2,((List<AccountStateEntity>)SessionUtils.getAttribute(SavingsConstants.STATUS_LIST,request.getSession())).size());
-		
-		setRequestPathInfo("/editStatusAction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter("input", "loan");
-		addRequestParameter("notes", "Test");
-		addRequestParameter("accountTypeId", accountBO.getAccountType().getAccountTypeId().toString());
-		addRequestParameter("newStatusId", "8");
-		addRequestParameter("flagId", "1");
-		actionPerform();
-		verifyForward("preview_success");
-		
-		setRequestPathInfo("/editStatusAction.do");
-		addRequestParameter("method", "update");
-		addRequestParameter("notes", "Test");
-		addRequestParameter("accountTypeId", accountBO.getAccountType().getAccountTypeId().toString());
-		addRequestParameter("newStatusId", "10");
-		addRequestParameter("flagId", "1");
-		actionPerform();
-		verifyForward("update_failure");
-		verifyActionErrors(new String[] { "error.statuschangenotallowed" });
-	}
-	*/
 	
 	private void createInitialObjects() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory

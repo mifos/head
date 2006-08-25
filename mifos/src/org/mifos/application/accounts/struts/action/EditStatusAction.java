@@ -14,6 +14,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
@@ -89,30 +90,20 @@ public class EditStatusAction extends BaseAction {
 	}
 	
 	public ActionForward update(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+			HttpServletRequest request, HttpServletResponse response) throws NumberFormatException, ServiceException, SystemException, ApplicationException{
 		EditStatusActionForm editStatusActionForm = (EditStatusActionForm) form;
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
 		AccountBO accountBO = getAccountBusinessService().getAccount(Integer.valueOf(editStatusActionForm.getAccountId()));
 		accountBO.setUserContext(userContext);
 		accountBO.getAccountState().setLocaleId(userContext.getLocaleId());
-		try {
-			Short flagId = null;
-			Short newStatusId = null;
-			if(StringUtils.isNullAndEmptySafe(editStatusActionForm.getFlagId()))
-				flagId = Short.valueOf(editStatusActionForm.getFlagId());
-			if(StringUtils.isNullAndEmptySafe(editStatusActionForm.getNewStatusId()))
-				newStatusId = Short.valueOf(editStatusActionForm.getNewStatusId());
-			accountBO.changeStatus(newStatusId,flagId,editStatusActionForm.getNotes());
-			accountBO.update();
-			HibernateUtil.commitTransaction();
-		} catch (Exception e) {
-			ActionErrors errors = new ActionErrors();
-			errors.add(SavingsConstants.STATUS_CHANGE_NOT_ALLOWED,	new ActionMessage(SavingsConstants.STATUS_CHANGE_NOT_ALLOWED));
-			request.setAttribute(Globals.ERROR_KEY, errors);
-			HibernateUtil.rollbackTransaction();
-			return mapping.findForward(ActionForwards.update_failure.toString());
-		}
+		Short flagId = null;
+		Short newStatusId = null;
+		if(StringUtils.isNullAndEmptySafe(editStatusActionForm.getFlagId()))
+			flagId = Short.valueOf(editStatusActionForm.getFlagId());
+		if(StringUtils.isNullAndEmptySafe(editStatusActionForm.getNewStatusId()))
+			newStatusId = Short.valueOf(editStatusActionForm.getNewStatusId());
+		accountBO.changeStatus(newStatusId,flagId,editStatusActionForm.getNotes());
+		accountBO.update();
 		SessionUtils.setAttribute(SavingsConstants.NEW_FLAG_NAME,SessionUtils.getAttribute(SavingsConstants.FLAG_NAME, request.getSession()), request.getSession());
 		return mapping.findForward(getDetailAccountPage(form));
 	}

@@ -159,15 +159,15 @@ public class EditStatusActionForm extends ValidatorActionForm {
 	private ActionErrors handleStatusPreviewValidations(
 			HttpServletRequest request, ActionErrors errors) {
 		if (!StringUtils.isNullSafe(newStatusId))
-			addError(errors, LoanConstants.MANDATORY,
+			addError(errors, LoanConstants.MANDATORY,LoanConstants.MANDATORY,
 					AccountConstants.STATUS);
 		else if (isNewStatusHasFlag() && !StringUtils.isNullAndEmptySafe(flagId))
-			addError(errors, LoanConstants.MANDATORY_SELECT,
+			addError(errors, LoanConstants.MANDATORY_SELECT,LoanConstants.MANDATORY_SELECT,
 					SavingsConstants.FLAG);
 		if (StringUtils.isNullOrEmpty(notes))
-			addError(errors, LoanConstants.MANDATORY_TEXTBOX, AccountConstants.NOTES);
+			addError(errors, LoanConstants.MANDATORY_TEXTBOX,LoanConstants.MANDATORY_TEXTBOX, AccountConstants.NOTES);
 		else if (notes.length() > LoanConstants.COMMENT_LENGTH)
-			addError(errors, LoanConstants.MAX_LENGTH,
+			addError(errors, LoanConstants.MAX_LENGTH,LoanConstants.MAX_LENGTH,
 					AccountConstants.NOTES, String
 							.valueOf(LoanConstants.COMMENT_LENGTH));
 		return errors;
