@@ -85,4 +85,7 @@
     <query name="office.getBranchOffices">
             <![CDATA[from org.mifos.application.office.business.OfficeBO  o where o.level.id = :branchOffice order by o.parentOffice.officeName,o.officeName ]]>
     </query>
+        <query name="office.getAllBranches">
+            <![CDATA[select new org.mifos.application.office.business.OfficeView(office.officeId, office.officeName, office.versionNo) from org.mifos.application.office.business.OfficeBO office where office.level.id = :LEVEL_ID]]>
+    </query>
 </hibernate-mapping>

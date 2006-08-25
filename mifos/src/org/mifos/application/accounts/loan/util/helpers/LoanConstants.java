@@ -154,4 +154,6 @@ public interface LoanConstants {
 	public static final String ERRORS_SPECIFY_FEE_AMOUNT="errors.loan.specifyFeeAmount";
 	public static final String FEE ="Fee";
 	public static final String PROPOSEDDISBDATE ="proposedDisbDate";
+	
+	public static final String NOSEARCHRESULTS ="errors.nosearchresults";
 }

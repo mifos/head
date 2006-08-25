@@ -15,7 +15,6 @@ import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.loan.persistance.service.LoanPersistenceService;
 import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.master.business.BusinessActivityEntity;
-import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.business.BusinessObject;
@@ -153,5 +152,14 @@ public class LoanBusinessService extends BusinessService {
 	
 	public List<BusinessActivityEntity> retrieveMasterEntities(String entityName, Short localeId) throws PersistenceException {
 		return new MasterPersistence().retrieveMasterEntities(entityName,localeId);
+	}
+	
+	public List<LoanBO> getSearchResults(String officeId,
+			 String personnelId,
+			 String type,
+			 String currentStatus){
+		LoanPersistance serviceImpl = new LoanPersistance();
+		return serviceImpl.getSearchResults(officeId, personnelId, type, currentStatus);
+	
 	}
 }

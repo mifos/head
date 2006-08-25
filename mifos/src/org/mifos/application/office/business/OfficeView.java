@@ -46,6 +46,11 @@ public class OfficeView extends View{
 		this.levelName = levelName;
 		this.versionNo = versionNo;
 	}
+	public OfficeView(Short officeId, String officeName, Integer versionNo) {
+		this.officeId = officeId;
+		this.officeName = officeName;
+		this.versionNo = versionNo;
+	}
 	public String getLevelName() {
 		return levelName;
 	}

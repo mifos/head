@@ -493,5 +493,7 @@ public interface NamedQueryConstants {
 	public String GET_PRDCATEGORYSTATUS="productdefenition.prdcategorystatus";
 	
 	public String GET_OFFICE_LEVELS="officeLevel.getOfficeLevels";
-
+	//Change Account Status
+	public String GET_ALL_BRANCHES="office.getAllBranches";
+	public String GET_SEARCH_RESULTS="account.getSearchResults";
 }

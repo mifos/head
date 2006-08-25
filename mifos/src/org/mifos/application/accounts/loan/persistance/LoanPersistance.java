@@ -211,4 +211,16 @@ public class LoanPersistance extends Persistence {
 		loanOffering.getGracePeriodType().setLocaleId(localeId);
 		return loanOffering;
 	}
+	
+	public List<LoanBO> getSearchResults(String officeId,
+			 String personnelId,
+			 String type,
+			 String currentStatus){
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("OFFICE_ID",officeId);
+		queryParameters.put("PERSONNEL_ID",personnelId);
+		queryParameters.put("CURRENT_STATUS",currentStatus);
+		return executeNamedQuery(NamedQueryConstants.GET_SEARCH_RESULTS,
+				queryParameters);
+	}
 }

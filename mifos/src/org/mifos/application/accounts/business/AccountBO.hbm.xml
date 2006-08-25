@@ -353,4 +353,11 @@
 	<query name="accounts.updateSchedule">
 		<![CDATA[update SavingsScheduleEntity actionDate set actionDate.deposit=:amount where actionDate.account.accountId=:accountId]]>
 	</query>
+	
+	<query name="account.getSearchResults">
+		<![CDATA[from org.mifos.application.accounts.loan.business.LoanBO loanAccount
+				where loanAccount.accountState.id = :CURRENT_STATUS
+				and loanAccount.office.officeId = :OFFICE_ID
+				and loanAccount.personnel.personnelId = :PERSONNEL_ID]]>
+	</query>
 </hibernate-mapping>

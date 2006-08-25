@@ -123,6 +123,9 @@
 		<form-bean name="productCategoryActionForm" type="org.mifos.application.productdefinition.struts.actionforms.PrdCategoryActionForm"></form-bean>
 		<!-- Office Hierarchy Action form -->
 		<form-bean name="offhierarchyactionform" type="org.mifos.application.office.struts.actionforms.OffHierarchyActionForm"></form-bean>
+		<!-- Change Account Status-->
+		<form-bean name="accountStatusActionForm" type="org.mifos.application.accounts.loan.struts.actionforms.AccountStatusActionForm"></form-bean>
+		
 	</form-beans>
 
 	<global-exceptions>
@@ -136,6 +139,20 @@
 	</global-forwards>
 
 	<action-mappings>
+		<action path="/ChangeAccountStatus"
+				type="org.mifos.application.accounts.loan.struts.action.AccountStatusAction" 
+				name="accountStatusActionForm" 
+				parameter="method"
+				validate="true"
+				input="/ChangeAccountStatus.do?method=validate"
+				scope="session">
+			<forward name="changeAccountStatus_success" path="/pages/application/loan/jsp/changeaccountstatus.jsp" />
+			<forward name="searchResults_failure" path="/pages/application/loan/jsp/changeaccountstatus.jsp" />
+			<forward name="changeAccountStatusSearch_success" path="/pages/application/loan/jsp/statussearchresults.jsp" />
+			<forward name="changeAccountStatusSearch_failure" path="/pages/application/loan/jsp/statussearchresults.jsp" />
+			<forward name="changeAccountStatusConfirmation_success" path="/pages/application/loan/jsp/confirmation.jsp" />
+			<forward name="changeAccountStatusConfirmation_failure" path="/pages/application/loan/jsp/confirmation.jsp" />
+		</action>
 		<action path="/client_ClientSearchAction" type="org.mifos.application.client.struts.action.ClientSearchAction" name="clientActionForm" parameter="method" input="/client_ClientSearchAction.do?method=validate" validate="true">
 			<forward name="load_success" path="/WEB-INF/pages/application/client/jsp/clientsearch.jsp" />
 			<forward name="failure" path="/error.jsp" />
@@ -1169,6 +1186,8 @@
 	<message-resources key="bulkEntryUIResources" parameter="org.mifos.application.bulkentry.util.resources.BulkEntryUIResources" />
 	<!-- Reports resources -->
 	<message-resources key="reportsUIResources" parameter="org.mifos.application.reports.util.resources.ReportsUIResources" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />
+	<!-- Change Account Status resources -->
+	<message-resources key="accountStatusUIResources" parameter="org.mifos.application.accounts.loan.util.resources.AccountStatusUIResources"></message-resources>
 
 	<plug-in className="org.mifos.framework.struts.plugin.InitializerPlugin">
 		<set-property property="hibernatePropertiesPath" value="conf/hibernate.properties" />

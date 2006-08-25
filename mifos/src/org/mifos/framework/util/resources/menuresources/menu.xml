@@ -141,6 +141,21 @@
 					<linkvalue>	AccountsSearchAction.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=loan</linkvalue>
 				</menuitem>		
 			</menugroup>
+			<menugroup>
+				<displayname> 
+						<namefragment>label.manage</namefragment> 
+						<namefragment>label.accountSmall</namefragment>
+						<namefragment>label.status</namefragment>
+				</displayname>
+				<menuitem>
+					<displayname> 
+						<namefragment>label.change</namefragment> 
+						<namefragment>label.accountSmall</namefragment>  
+						<namefragment>label.status</namefragment>
+					</displayname>
+					<linkvalue>ChangeAccountStatus.do?method=load</linkvalue>
+				</menuitem>
+			</menugroup>
 	</topmenutab>
 </mifosmenu>
 

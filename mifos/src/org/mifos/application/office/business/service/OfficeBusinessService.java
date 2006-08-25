@@ -8,6 +8,8 @@ import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 
 public class OfficeBusinessService extends BusinessService {
@@ -37,5 +39,7 @@ public class OfficeBusinessService extends BusinessService {
 	public List<OfficeBO> getBranchOffices(){
 		return officePersistence.getBranchOffices();
 	}
-	
+	public List<OfficeView> getAllBranches() throws SystemException,ApplicationException{
+		return officePersistence.getAllBranches();
+	}
 }

@@ -215,4 +215,15 @@ public class OfficePersistence extends Persistence {
 		return null;
 	}
 	
+	public List<OfficeView> getAllBranches()throws PersistenceException{
+		List<OfficeView> branchList = null;
+		try {
+			HashMap<String , Object> queryParameters = new HashMap<String , Object>();
+			queryParameters.put("LEVEL_ID",OfficeLevel.BRANCHOFFICE.getValue());
+			branchList = executeNamedQuery(NamedQueryConstants.GET_ALL_BRANCHES,queryParameters);
+		}catch (HibernateException he) {
+			throw new PersistenceException(he);
+		}
+		return branchList;
+	}
 }
