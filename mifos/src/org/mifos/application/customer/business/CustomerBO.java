@@ -728,8 +728,7 @@ public abstract class CustomerBO extends BusinessObject {
 
 	private CustomerNoteEntity createCustomerNotes(String comment){
 		CustomerNoteEntity customerNote = new CustomerNoteEntity(comment,
-				new java.sql.Date(System.currentTimeMillis()), this
-						.getPersonnel(), this);
+				new java.sql.Date(System.currentTimeMillis()), new PersonnelPersistence().getPersonnel(getUserContext().getId()), this);
 		return customerNote;
 	}
 	

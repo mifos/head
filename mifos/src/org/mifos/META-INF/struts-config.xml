@@ -1039,7 +1039,7 @@
 			<forward name="previous_success" path="/pages/application/customer/jsp/addCustomerNotes.jsp" />
 			<forward name="group_detail_page" path="/GroupAction.do?method=get" />
 			<forward name="center_detail_page" path="/centerCustAction.do?method=get" />
-			<forward name="client_detail_page" path="/clientCreationAction.do?method=get" />
+			<forward name="client_detail_page" path="/clientCustAction.do?method=get" />
 		</action>
 		
 		<!-- Client Creation Action -->
