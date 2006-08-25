@@ -35,7 +35,7 @@ function goToCancelPage(){
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td width="83%" class="headingorange"><span class="heading"><c:out
-								value="${sessionScope.notesActionForm.prdOfferingName}" />&nbsp;#<c:out
+								value="${sessionScope.notesActionForm.prdOfferingName}" /> # <c:out
 								value="${sessionScope.notesActionForm.globalAccountNum}" /> - </span><mifos:mifoslabel
 								name="Account.AddNote" bundle="accountsUIResources" /></td>
 						</tr>

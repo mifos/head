@@ -26,7 +26,7 @@
             	<tr>
               		<td width="83%" class="headingorange">
 						<span class="heading">
-							<c:out value="${sessionScope.notesActionForm.prdOfferingName}"/> &nbsp;#<c:out
+							<c:out value="${sessionScope.notesActionForm.prdOfferingName}"/> # <c:out
 								value="${sessionScope.notesActionForm.globalAccountNum}" /> - 
 						</span>
 						<mifos:mifoslabel name="Account.Notes" bundle="accountsUIResources"></mifos:mifoslabel>
