@@ -83,7 +83,7 @@
 						<mifos:mifoslabel name="product.viewprdcat"
 							bundle="ProductDefUIResources" />
 					</html-el:link> / <html-el:link href="javascript:fnGet()">
-						<c:out value="${productCategoryActionForm.productCategoryName}" />
+						<c:out value="${sessionScope.BusinessKey.productCategoryName}" />
 					</html-el:link></span></td>
 				</tr>
 			</table>
@@ -93,7 +93,7 @@
 					<table width="93%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td class="headingorange"><span class="heading"><c:out
-								value="${productCategoryActionForm.productCategoryName}" /> - </span><mifos:mifoslabel
+								value="${sessionScope.BusinessKey.productCategoryName}" /> - </span><mifos:mifoslabel
 								name="product.buteditcat" bundle="ProductDefUIResources" /></td>
 						</tr>
 						<tr>

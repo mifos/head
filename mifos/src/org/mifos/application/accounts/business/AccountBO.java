@@ -1133,10 +1133,6 @@ public class AccountBO extends BusinessObject {
 		}
 	}
 
-	protected Money getAccountFeeAmount(AccountFeesEntity accountFeesEntity) {
-		return accountFeesEntity.getFeeAmount();
-	}
-
 	protected AccountFees getAccountFees(Integer accountFeeId) {
 		AccountFees accountFees = new AccountFees();
 		Session session = null;
@@ -1334,7 +1330,7 @@ public class AccountBO extends BusinessObject {
 
 	private FeeInstallment handleOneTime(AccountFeesEntity accountFee,
 			List<InstallmentDate> installmentDates) {
-		Money accountFeeAmount = getAccountFeeAmount(accountFee);
+		Money accountFeeAmount = accountFee.getAccountFeeAmount();
 		Date feeDate = installmentDates.get(0).getInstallmentDueDate();
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"FeeInstallmentGenerator:handleOneTime fee start date "

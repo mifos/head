@@ -386,7 +386,7 @@ public class LoanBO extends AccountBO {
 
 	@Override
 	public void roundInstallments(List<Short> installmentIdList) {
-		if (!getLoanOffering().isPrincipalDueInLastInstallment()) {
+		if (!isPricipalAmountZero()) {
 			LoanScheduleEntity lastAccountActionDate = (LoanScheduleEntity) getLastInstallmentAccountAction();
 			Money diffAmount = new Money();
 			int count = 0;
@@ -1181,8 +1181,7 @@ public class LoanBO extends AccountBO {
 		}
 	}
 
-	@Override
-	protected final Money getAccountFeeAmount(AccountFeesEntity accountFees) {
+	private Money getAccountFeeAmount(AccountFeesEntity accountFees,Money loanInterest) {
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"FeeInstallmentGenerator:getAccountFeeAmount rate flat flag..");
 
@@ -1201,12 +1200,11 @@ public class LoanBO extends AccountBO {
 		} else if (accountFees.getFees().getFeeType().equals(
 				RateAmountFlag.RATE)) {
 			accountFeeAmount = new Money(getRateBasedOnFormula(feeAmount,
-					((RateFeeBO) accountFees.getFees()).getFeeFormula()));
+					((RateFeeBO) accountFees.getFees()).getFeeFormula(),loanInterest));
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 					"FeeInstallmentGenerator:getAccountFeeAmount feeAmount Formula.."
 							+ feeAmount);
 		}
-		accountFees.setAccountFeeAmount(accountFeeAmount);
 		return accountFeeAmount;
 	}
 
@@ -1214,7 +1212,7 @@ public class LoanBO extends AccountBO {
 	protected final List<FeeInstallment> handlePeriodic(
 			AccountFeesEntity accountFees,
 			List<InstallmentDate> installmentDates) throws AccountException {
-		Money accountFeeAmount = getAccountFeeAmount(accountFees);
+		Money accountFeeAmount = accountFees.getAccountFeeAmount();
 		MeetingBO feeMeetingFrequency = accountFees.getFees().getFeeFrequency()
 				.getFeeMeetingFrequency();
 		List<Date> feeDates = getFeeDates(feeMeetingFrequency, installmentDates);
@@ -1270,18 +1268,15 @@ public class LoanBO extends AccountBO {
 			return (short) (getGracePeriodDuration() + 1);
 	}
 
-	private String getRateBasedOnFormula(Double rate, FeeFormulaEntity formula) {
-		Money loanAmount = getLoanAmount();
-		Double loanInterest = getInterestRate();
+	private String getRateBasedOnFormula(Double rate, FeeFormulaEntity formula,Money loanInterest) {
 		Double amountToCalculateOn = 1.0;
 		if (formula.getId().equals(FeeFormula.AMOUNT.getValue())) {
 			amountToCalculateOn = loanAmount.getAmountDoubleValue();
 		} else if (formula.getId().equals(
 				FeeFormula.AMOUNT_AND_INTEREST.getValue())) {
-			amountToCalculateOn = loanAmount.getAmountDoubleValue()
-					+ loanInterest;
+			amountToCalculateOn = (loanAmount.add(loanInterest)).getAmountDoubleValue();
 		} else if (formula.getId().equals(FeeFormula.INTEREST.getValue())) {
-			amountToCalculateOn = loanInterest;
+			amountToCalculateOn = loanInterest.getAmountDoubleValue();
 		}
 		Double rateAmount = (rate * amountToCalculateOn) / 100;
 		return rateAmount.toString();
@@ -1300,16 +1295,19 @@ public class LoanBO extends AccountBO {
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 				.debug(
 						"RepamentSchedular:getRepaymentSchedule , installment dates obtained ");
-		List<EMIInstallment> EMIInstallments = generateEMI(installmentDates
-				.get(installmentDates.size() - 1).getInstallmentDueDate());
+		Money loanInterest = getLoanInterest(installmentDates.get(
+				installmentDates.size() - 1).getInstallmentDueDate());
+		List<EMIInstallment> EMIInstallments = generateEMI(loanInterest);
 		MifosLogManager
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 				.debug(
 						"RepamentSchedular:getRepaymentSchedule , emi installment  obtained ");
 		validateSize(installmentDates, EMIInstallments);
 		List<FeeInstallment> feeInstallment = new ArrayList<FeeInstallment>();
-		if (getAccountFees().size() != 0)
+		if (getAccountFees().size() != 0){
+			populateAccountFeeAmount(loanInterest);
 			feeInstallment = mergeFeeInstallments(getFeeInstallment(installmentDates));
+		}
 		MifosLogManager
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 				.debug(
@@ -1322,6 +1320,12 @@ public class LoanBO extends AccountBO {
 						"RepamentSchedular:getRepaymentSchedule , repayment schedule generated  ");
 		roundInstallments(installmentDates.get(installmentDates.size() - 1)
 				.getInstallmentId());
+	}
+	
+	private void populateAccountFeeAmount(Money loanInterest){
+		for(AccountFeesEntity  accountFeesEntity :  getAccountFees()){
+			accountFeesEntity.setAccountFeeAmount(getAccountFeeAmount(accountFeesEntity,loanInterest));
+		}
 	}
 
 	private void roundInstallments(Short lastInstallmentId) {
@@ -1372,7 +1376,6 @@ public class LoanBO extends AccountBO {
 
 	private Money getFlatInterestAmount(Date installmentEndDate)
 			throws AccountException {
-		Money principal = getLoanAmount();
 		Double interestRate = getInterestRate();
 		Double durationInYears = getTotalDurationInYears(installmentEndDate);
 		Money interestRateM = new Money(Double.toString(interestRate));
@@ -1380,7 +1383,7 @@ public class LoanBO extends AccountBO {
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"FlatInterestCalculator:getInterest duration in years..."
 						+ durationInYears);
-		Money interest = principal.multiply(
+		Money interest = getLoanAmount().multiply(
 				interestRateM.multiply(durationInYearsM)).divide(
 				new Money(Double.toString(100)));
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
@@ -1550,9 +1553,8 @@ public class LoanBO extends AccountBO {
 			throw new AccountException(AccountConstants.DATES_MISMATCH);
 	}
 
-	private List<EMIInstallment> generateEMI(Date installmentEndDate)
+	private List<EMIInstallment> generateEMI(Money loanInterest)
 			throws AccountException {
-		Money loanInterest = getLoanInterest(installmentEndDate);
 		if (isInterestDeductedAtDisbursement()
 				&& !getLoanOffering().isPrincipalDueInLastInstallment())
 			return interestDeductedAtDisbursement(loanInterest);
