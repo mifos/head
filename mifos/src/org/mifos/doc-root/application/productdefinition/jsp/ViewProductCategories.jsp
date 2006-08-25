@@ -88,14 +88,27 @@
 								href="javascript:fnLoad()">
 								<mifos:mifoslabel name="product.addnewprdcat"
 									bundle="ProductDefUIResources" />
-							</html-el:link><br>
+							</html-el:link>
 														<font class="fontnormalRedBold"><html-el:errors
 								bundle="ProductDefUIResources" /> </font>
 							
 							</span> <c:set var="id" /> <c:forEach var="productCategory"
 								items="${sessionScope.ProductCategoryList}">
+								<c:if	test="${empty id}">
+									<c:set var="id"
+										value="${productCategory.productType.productTypeID}" />
+									<table width="95%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td width="61%">
+											   <span class="fontnormalbold"> 
+												 <c:out value="${productCategory.productType.name}" />
+											   </span>
+											 </td>
+										</tr>
+									</table>
+								</c:if>
 								<c:if
-									test="${id==null || id != productCategory.productType.productTypeID}">
+									test="${!empty id && id != productCategory.productType.productTypeID}">
 									<c:set var="id"
 										value="${productCategory.productType.productTypeID}" />
 									<br>

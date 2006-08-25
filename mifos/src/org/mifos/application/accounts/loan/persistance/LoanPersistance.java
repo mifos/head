@@ -223,4 +223,11 @@ public class LoanPersistance extends Persistence {
 		return executeNamedQuery(NamedQueryConstants.GET_SEARCH_RESULTS,
 				queryParameters);
 	}
+	
+	public void deleteInstallments(Set<AccountActionDateEntity> accountActionDates){
+		Session session = HibernateUtil.getSessionTL();
+		for (AccountActionDateEntity entity : accountActionDates) {
+			session.delete(entity);
+		}
+	}
 }

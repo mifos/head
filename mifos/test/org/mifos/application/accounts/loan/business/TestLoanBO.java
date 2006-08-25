@@ -2840,4 +2840,61 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	
+	public void testDisburseLoanWithAllTypeOfFees() throws NumberFormatException, InvalidUserException, PropertyNotFoundException, SystemException, ApplicationException {
+		MeetingBO meeting = TestObjectFactory.getMeetingHelper(2,2,4);
+		meeting.setMeetingStartDate(Calendar.getInstance());
+		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(new Short("1"));
+		TestObjectFactory.createMeeting(meeting);
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"),
+				new Date(System.currentTimeMillis()), Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("3"), Short.valueOf("1"), Short.valueOf("0"),
+				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
+		
+		Calendar disbursementDate = new GregorianCalendar();
+		int year = disbursementDate.get(Calendar.YEAR);
+		int month = disbursementDate.get(Calendar.MONTH);
+		int day = disbursementDate.get(0);
+		disbursementDate = new GregorianCalendar(year, month+1,day);
+		List<FeeView> feeViewList=new ArrayList<FeeView>();
+		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee",
+				FeeCategory.LOAN, Double.valueOf("20"),FeeFormula.AMOUNT, FeePayment.UPFRONT);
+		feeViewList.add(new FeeView(upfrontFee));
+		FeeBO disbursementFee = TestObjectFactory.createOneTimeRateFee("Disbursment Fee",
+				FeeCategory.LOAN,Double.valueOf("30"), FeeFormula.AMOUNT_AND_INTEREST,FeePayment.TIME_OF_DISBURSMENT);
+		feeViewList.add(new FeeView(disbursementFee));
+		FeeBO firstRepaymentFee = TestObjectFactory.createOneTimeRateFee("First Repayment Fee",
+				FeeCategory.LOAN,Double.valueOf("40"),FeeFormula.INTEREST, FeePayment.TIME_OF_FIRSTLOANREPAYMENT);
+		feeViewList.add(new FeeView(firstRepaymentFee));
+		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
+				FeeCategory.LOAN, "100", MeetingFrequency.MONTHLY, Short
+						.valueOf("1"));
+		feeViewList.add(new FeeView(periodicFee));
+	    accountBO=new LoanBO(TestObjectFactory.getUserContext(), loanOffering, group,
+				AccountState.getStatus(Short.valueOf("5")),	new Money("300.0"),
+				Short.valueOf("6"),disbursementDate.getTime(),false,1.2,(short) 0,
+				new Fund(),feeViewList);
+	    new TestObjectPersistence().persist(accountBO);
+	    
+	    disbursementDate = new GregorianCalendar();
+		year = disbursementDate.get(Calendar.YEAR);
+		month = disbursementDate.get(Calendar.MONTH);
+		day = disbursementDate.get(0);
+		disbursementDate = new GregorianCalendar(year, month+3,day);
+	    ((LoanBO) accountBO).disburseLoan("1234", disbursementDate.getTime(),
+				Short.valueOf("1"), accountBO.getPersonnel(), disbursementDate.getTime(), Short
+						.valueOf("1"));
+		Session session = HibernateUtil.getSessionTL();
+		HibernateUtil.startTransaction();
+		session.save(accountBO);
+		HibernateUtil.getTransaction().commit();
+	}
+	   
+
+	
 }

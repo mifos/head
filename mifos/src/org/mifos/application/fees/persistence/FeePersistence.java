@@ -45,6 +45,7 @@ import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.fees.business.ApplicableAccountsTypeEntity;
 import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.business.RateFeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -113,5 +114,10 @@ public class FeePersistence extends Persistence {
 		return executeNamedQuery(
 				NamedQueryConstants.GET_ALL_APPLICABLE_FEE_FOR_LOAN_CREATION,
 				queryParameters);
+	}
+	
+	public RateFeeBO getRateFee(Short feeId) {
+		Session session = HibernateUtil.getSessionTL();
+		return (RateFeeBO) session.get(RateFeeBO.class, feeId);
 	}
 }

@@ -1199,8 +1199,9 @@ public class LoanBO extends AccountBO {
 							+ feeAmount);
 		} else if (accountFees.getFees().getFeeType().equals(
 				RateAmountFlag.RATE)) {
+			RateFeeBO rateFeeBO=(RateFeeBO)new FeePersistence().getRateFee(accountFees.getFees().getFeeId());
 			accountFeeAmount = new Money(getRateBasedOnFormula(feeAmount,
-					((RateFeeBO) accountFees.getFees()).getFeeFormula(),loanInterest));
+					rateFeeBO.getFeeFormula(),loanInterest));
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 					"FeeInstallmentGenerator:getAccountFeeAmount feeAmount Formula.."
 							+ feeAmount);
@@ -1339,10 +1340,6 @@ public class LoanBO extends AccountBO {
 					lastAccountActionDate = loanScheduleEntity;
 					continue;
 				}
-				if (isInterestDeductedAtDisbursement()
-						&& loanScheduleEntity.getInstallmentId().equals(
-								Short.valueOf("1")))
-					continue;
 				Money totalAmount = loanScheduleEntity.getTotalDueWithFees();
 				Money roundedTotalAmount = Money.round(totalAmount);
 				loanScheduleEntity.setPrincipal(loanScheduleEntity
@@ -2096,10 +2093,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	private void regeneratePaymentSchedule() throws AccountException {
-		Session session = HibernateUtil.getSessionTL();
-		for (AccountActionDateEntity entity : this.getAccountActionDates()) {
-			session.delete(entity);
-		}
+		new LoanPersistance().deleteInstallments(this.getAccountActionDates());
 		this.resetAccountActionDates();
 		Calendar date = new GregorianCalendar();
 		date.setTime(disbursementDate);
