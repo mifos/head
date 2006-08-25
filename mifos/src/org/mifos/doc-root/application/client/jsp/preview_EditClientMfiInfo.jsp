@@ -112,7 +112,10 @@
 							<c:if test="${sessionScope.clientCustActionForm.groupFlag eq '1'}">
 								<span class="fontnormalbold"> <mifos:mifoslabel	name="client.LoanOfficer" bundle="ClientUIResources"></mifos:mifoslabel></span>
 								<span class="fontnormal">
-									<c:out value="${sessionScope.clientCustActionForm.parentGroup.personnel.displayName}" /><br>
+									<c:if test="${!empty sessionScope.BusinessKey.personnel}">
+										<c:out value="${sessionScope.BusinessKey.personnel.displayName}" />
+									</c:if>
+									<br>
 								</span>
 								<span class="fontnormalbold"> 
 									<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /> 

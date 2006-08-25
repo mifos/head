@@ -53,9 +53,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.PositionEntity;
 import org.mifos.application.customer.center.business.CenterBO;
-import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientDetailView;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
@@ -844,6 +842,28 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());				
 	}
 	
+	public void testUpdateMfiInfoWithoutTrained_ClientInBranch() throws Exception {			
+		createAndSetClientInSession();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "editMfiInfo");
+		actionPerform();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "previewEditMfiInfo");
+		addRequestParameter("trained", "");
+		addRequestParameter("trainedDate", "03/21/2006");
+		addRequestParameter("externalId", "3");
+		actionPerform();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "updateMfiInfo");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.updateMfiInfo_success.toString());
+		assertEquals("3", client.getExternalId());
+		assertFalse(client.isTrained());
+		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());				
+	}
+
 	public void testUpdateMfiInfoWithTrained() throws Exception {		
 		
 		createClientWithGroupAndSetInSession();

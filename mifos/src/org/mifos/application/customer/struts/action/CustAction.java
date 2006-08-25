@@ -39,7 +39,6 @@
 package org.mifos.application.customer.struts.action;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -50,7 +49,6 @@ import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerCustomFieldEntity;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
-import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.struts.actionforms.CustomerActionForm;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -82,7 +80,6 @@ public class CustAction extends BaseAction {
 	
 	@Override
 	protected BusinessService getService() throws ServiceException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
@@ -142,6 +139,7 @@ public class CustAction extends BaseAction {
 		}
 		return customFields;
 	}
+	
 	protected void loadCustomFieldDefinitions(EntityType entityType , HttpServletRequest request )
 			throws SystemException {
 		MasterDataService masterDataService = (MasterDataService) ServiceFactory
@@ -193,13 +191,6 @@ public class CustAction extends BaseAction {
 				personnelList, request.getSession());
 	}
 	
-	protected Date getDateFromString(String strDate, Locale locale) {
-		Date date = null;
-		if (StringUtils.isNullAndEmptySafe(strDate))
-			date = new Date(DateHelper.getLocaleDate(locale, strDate).getTime());
-		return date;
-	}
-	
 	protected void convertCustomFieldDateToUniformPattern(
 			List<CustomFieldView> customFields, Locale locale) {		
 		for (CustomFieldView customField : customFields) {
@@ -213,11 +204,8 @@ public class CustAction extends BaseAction {
 		if(!isPermissionAllowed(newState,userContext,flagSelected,recordOfficeId,recordLoanOfficerId))
 			  throw new SecurityException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED); 	 
 	}
+	
 	protected boolean isPermissionAllowed(Short newState,UserContext userContext,Short flagSelected,Short recordOfficeId,Short recordLoanOfficerId){
-		
 		return ActivityMapper.getInstance().isSavePermittedForCustomer(newState.shortValue(),userContext,recordOfficeId,recordLoanOfficerId);
 	}
-
-
-
 }

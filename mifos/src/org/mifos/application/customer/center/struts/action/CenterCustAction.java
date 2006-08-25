@@ -40,7 +40,6 @@ package org.mifos.application.customer.center.struts.action;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -66,6 +65,7 @@ import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.center.util.valueobjects.Center;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.LinkParameters;
+import org.mifos.application.customer.struts.action.CustAction;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -77,7 +77,6 @@ import org.mifos.application.fees.exceptions.FeeException;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.CustomFieldType;
@@ -91,7 +90,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
@@ -99,7 +97,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
-public class CenterCustAction extends BaseAction {
+public class CenterCustAction extends CustAction {
 	@Override
 	protected BusinessService getService() throws ServiceException {
 		return getCenterBusinessService();
@@ -171,9 +169,9 @@ public class CenterCustAction extends BaseAction {
 						.getPereferedLocale()), actionForm.getOfficeIdValue(),
 				meeting, actionForm.getLoanOfficerIdValue());
 		center.save();
-
 		actionForm.setCustomerId(center.getCustomerId().toString());
 		actionForm.setGlobalCustNum(center.getGlobalCustNum());
+		center = null;
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
@@ -184,13 +182,13 @@ public class CenterCustAction extends BaseAction {
 		CenterBO center = (CenterBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
 		CenterBO centerBO = getCenterBusinessService().getCenter(center.getCustomerId());
-		
+		center = null;
 		
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,centerBO
 				, request
 						.getSession());
-		loadUpdateMasterData(center.getOffice().getOfficeId(), request);
-		setValuesInActionForm((CenterCustActionForm) form, request);
+		loadUpdateMasterData(centerBO.getOffice().getOfficeId(), request);
+		setValuesInActionForm((CenterCustActionForm) form, request);		
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
 
@@ -231,39 +229,6 @@ public class CenterCustAction extends BaseAction {
 				}
 			}
 		return customerPositions;
-	}
-
-	private List<CustomFieldView> createCustomFieldViews(
-			Set<CustomerCustomFieldEntity> customFieldEntities,
-			HttpServletRequest request) {
-		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
-
-		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request
-						.getSession());
-
-		Locale locale = getUserContext(request).getPereferedLocale();
-		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-			for (CustomerCustomFieldEntity customFieldEntity : customFieldEntities) {
-				if (customFieldDef.getFieldId().equals(
-						customFieldEntity.getFieldId())) {
-					if (customFieldDef.getFieldType().equals(
-							CustomFieldType.DATE.getValue())) {
-						customFields.add(new CustomFieldView(customFieldEntity
-								.getFieldId(), DateHelper.getUserLocaleDate(
-								locale, customFieldEntity.getFieldValue()),
-								customFieldDef.getFieldType()));
-					} else {
-						customFields
-								.add(new CustomFieldView(customFieldEntity
-										.getFieldId(), customFieldEntity
-										.getFieldValue(), customFieldDef
-										.getFieldType()));
-					}
-				}
-			}
-		}
-		return customFields;
 	}
 
 	public ActionForward editPreview(ActionMapping mapping, ActionForm form,
@@ -381,19 +346,6 @@ public class CenterCustAction extends BaseAction {
 		loadClients(request);
 	}
 
-	private void loadLoanOfficers(Short officeId, HttpServletRequest request)
-			throws ServiceException {
-		PersonnelBusinessService personnelService = (PersonnelBusinessService) ServiceFactory
-				.getInstance()
-				.getBusinessService(BusinessServiceName.Personnel);
-		UserContext userContext = getUserContext(request);
-		List<PersonnelView> personnelList = personnelService
-				.getActiveLoanOfficersInBranch(officeId, userContext.getId(),
-						userContext.getLevelId());
-		SessionUtils.setAttribute(CustomerConstants.LOAN_OFFICER_LIST,
-				personnelList, request.getSession());
-	}
-
 	private void loadCreateCustomFields(CenterCustActionForm actionForm,
 			HttpServletRequest request) throws SystemException {
 		loadCustomFieldDefinitions(request);
@@ -501,15 +453,6 @@ public class CenterCustAction extends BaseAction {
 	  SessionUtils.setAttribute(CustomerConstants.LINK_VALUES,getLinkValues(center),request
 						.getSession());
 		return mapping.findForward(ActionForwards.get_success.toString());
-	}
-
-	private void convertCustomFieldDateToUniformPattern(
-			List<CustomFieldView> customFields, Locale locale) {		
-		for (CustomFieldView customField : customFields) {
-			if (customField.getFieldType().equals(CustomFieldType.DATE.getValue()) && StringUtils.isNullAndEmptySafe(customField
-					.getFieldValue()))
-					customField.convertDateToUniformPattern(locale);
-		}
 	}
 
 	private void doCleanUp(CenterCustActionForm actionForm,

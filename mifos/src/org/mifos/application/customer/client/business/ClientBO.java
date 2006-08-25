@@ -33,6 +33,9 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -60,7 +63,8 @@ public class ClientBO extends CustomerBO {
 	private String secondLastName;
 	
 	private ClientDetailEntity customerDetail;
-
+	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER);
+	
 	protected ClientBO() {
 		super();
 		this.nameDetailSet = new HashSet<ClientNameDetailEntity>();
@@ -295,6 +299,7 @@ public class ClientBO extends CustomerBO {
 
 	@Override
 	protected void validateStatusChange(Short newStatusId) throws CustomerException{
+		logger.debug("In ClientBO::validateStatusChange(), customerId: " + getCustomerId());
 		if ((newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue()) || newStatusId
 				.equals(CustomerStatus.CLIENT_PENDING.getValue()))
 				&& this.isClientUnderGroup()) {
@@ -330,6 +335,7 @@ public class ClientBO extends CustomerBO {
 				checkIfClientIsAssignedPosition(getParentCustomer().getParentCustomer().getCustomerId() , getCustomerId());
 			}
 		}
+		logger.debug("In ClientBO::validateStatusChange(), successfully validated status, customerId: " + getCustomerId());
 	}
 	
 	private void checkIfClientCanBeActive(Short newStatus) throws CustomerException{
@@ -532,7 +538,7 @@ public class ClientBO extends CustomerBO {
 	
 	public void transferToBranch(OfficeBO officeToTransfer)throws CustomerException{
 		validateBranchTransfer(officeToTransfer);
-
+		logger.debug("In ClientBO::transferToBranch(), transfering customerId: " + getCustomerId() +  "to branch : "+ officeToTransfer.getOfficeId());
 		if(isActive())
 			setCustomerStatus(new CustomerStatusEntity(CustomerStatus.CLIENT_HOLD));
 		
@@ -540,11 +546,13 @@ public class ClientBO extends CustomerBO {
 		this.setPersonnel(null);
 		generateSearchId(null,officeToTransfer.getOfficeId());
 		super.update();
+		logger.debug("In ClientBO::transferToBranch(), successfully transfered, customerId :" + getCustomerId());  
 	}
 
 	
 	public void transferToGroup(GroupBO newParent)throws CustomerException{
 		validateGroupTransfer(newParent);
+		logger.debug("In ClientBO::transferToGroup(), transfering customerId: " + getCustomerId() +  "to Group Id : "+ newParent.getCustomerId());
 
 		if(!isSameBranch(newParent.getOffice()))
 			makeCustomerMovementEntries(newParent.getOffice());
@@ -589,6 +597,7 @@ public class ClientBO extends CustomerBO {
 		oldParent.update();
 		newParent.update();
 		this.update();		
+		logger.debug("In ClientBO::transferToGroup(), successfully transfered, customerId :" + getCustomerId());
 	}
 	
 	private void makeCustomerMovementEntries(OfficeBO officeToTransfer){

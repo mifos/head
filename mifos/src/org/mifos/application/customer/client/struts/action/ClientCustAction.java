@@ -538,9 +538,10 @@ public class ClientCustAction extends CustAction {
 		clearActionForm(actionForm);
 		ClientBO client = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request.getSession());
 		ClientBO clientBO = (ClientBO) customerService.getBySystemId(client.getGlobalCustNum(),CustomerLevel.CLIENT.getValue());
+		client = null;
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,clientBO, request.getSession());
-		if(!client.isClientUnderGroup())
-			loadUpdateMfiMasterData(client.getOffice().getOfficeId(), request);
+		if(!clientBO.isClientUnderGroup())
+			loadUpdateMfiMasterData(clientBO.getOffice().getOfficeId(), request);
 		setValuesForMfiEditInActionForm(actionForm, request);
 		return mapping.findForward(ActionForwards.editMfiInfo_success.toString());
 	}
@@ -566,7 +567,7 @@ public class ClientCustAction extends CustAction {
 			ClientBO client = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request.getSession());
 			ClientCustActionForm actionForm = (ClientCustActionForm) form;
 			client.setExternalId(actionForm.getExternalId());
-			if(actionForm.getTrainedValue().equals(YesNoFlag.YES.getValue()))
+			if(actionForm.getTrainedValue() !=null && actionForm.getTrainedValue().equals(YesNoFlag.YES.getValue()))
 				client.setTrained(true);
 			else
 				client.setTrained(false);
@@ -623,6 +624,7 @@ public class ClientCustAction extends CustAction {
 		if(client.getPersonnel() !=null){	
 			actionForm.setLoanOfficerId(client.getPersonnel().getPersonnelId()
 					.toString());
+			client.getPersonnel().getDisplayName();
 		}
 		actionForm.setCustomerId(client.getCustomerId().toString());
 		actionForm.setGlobalCustNum(client.getGlobalCustNum());

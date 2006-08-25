@@ -22,6 +22,9 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.business.util.Address;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
 
@@ -31,10 +34,12 @@ import org.mifos.framework.security.util.UserContext;
  */
 public class CenterBO extends CustomerBO {
 
+	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CENTERLOGGER);
+	
 	protected CenterBO() {
 		super();
 	}
-
+	
 	public CenterBO(UserContext userContext, String displayName,
 			Address address, List<CustomFieldView> customFields,
 			List<FeeView> fees, String externalId, Date mfiJoiningDate,
@@ -76,6 +81,7 @@ public class CenterBO extends CustomerBO {
 	@Override
 	protected void validateStatusChange(Short newStatusId)
 			throws CustomerException {
+		logger.debug("In CenterBO::validateStatusChange(), customerId: " + getCustomerId());
 		if (newStatusId.equals(CustomerStatus.CENTER_INACTIVE.getValue())) {
 			if (getActiveAndApprovedLoanAccounts(new Date()).size() > 0
 					|| getActiveSavingsAccounts().size() > 0) {
@@ -104,8 +110,9 @@ public class CenterBO extends CustomerBO {
 						ClientConstants.CLIENT_LOANOFFICER_NOT_ASSIGNED);
 			}
 		}
-
+		logger.debug("In CenterBO::validateStatusChange(), successfully validated status, customerId: " + getCustomerId());
 	}
+	
 	//TODO
 	@Override
 	protected boolean checkNewStatusIsFirstTimeActive(Short oldStatus,
