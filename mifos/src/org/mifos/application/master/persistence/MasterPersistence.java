@@ -77,8 +77,9 @@ public EntityMaster getLookUpEntity(String entityName,Short localeId) throws App
 
 
 
-	private List<LookUpMaster> lookUpValue(String entityName,Short localeId,String classPath,String column,
-				Session session){
+	private List<LookUpMaster> lookUpValue(
+			String entityName, Short localeId, String classPath, String column,
+			Session session) {
 
 		String q="select new org.mifos.application.master.util.valueobjects.LookUpMaster(mainTable.";
 		String q2=" ,lookup.lookUpId,lookupvalue.lookUpValue) from org.mifos.application.master.util.valueobjects.LookUpValue lookup,org.mifos.application.master.util.valueobjects.LookUpValueLocale lookupvalue,";
@@ -89,7 +90,7 @@ public EntityMaster getLookUpEntity(String entityName,Short localeId) throws App
 		Query queryEntity = session.createQuery(q);
 		queryEntity.setString(0,entityName);
 		queryEntity.setShort(1,localeId);
-		 List<LookUpMaster> entityList =  queryEntity.list();
+		List<LookUpMaster> entityList =  queryEntity.list();
 		return entityList;
 	}
 		
@@ -97,7 +98,8 @@ public EntityMaster getLookUpEntity(String entityName,Short localeId) throws App
 		return (MasterDataEntity)HibernateUtil.getSessionTL().get(clazz,pk);
 	}
 	
-	public List<PaymentTypeEntity> retrievePaymentTypes(Short localeId)throws PersistenceException{
+	public List<PaymentTypeEntity> retrievePaymentTypes(Short localeId)
+	throws PersistenceException{
 		try{
 			Session session = HibernateUtil.getSessionTL();
 			List<PaymentTypeEntity> paymentTypes = session.createQuery("from org.mifos.application.master.business.PaymentTypeEntity").list();
@@ -161,7 +163,8 @@ public EntityMaster getLookUpEntity(String entityName,Short localeId) throws App
 		}
 	}
 	
-	public List<BusinessActivityEntity> retrieveMasterEntities(String entityName, Short localeId)throws PersistenceException {
+	public List<BusinessActivityEntity> retrieveMasterEntities(
+			String entityName, Short localeId) throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("entityType",entityName);
 		queryParameters.put("localeId",localeId);
@@ -174,7 +177,8 @@ public EntityMaster getLookUpEntity(String entityName,Short localeId) throws App
 		return queryResult;
 	}
 	
-	public String retrieveMasterEntities(Integer entityId, Short localeId)throws PersistenceException {
+	public String retrieveMasterEntities(Integer entityId, Short localeId)
+	throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("lookUpId",entityId);
 		queryParameters.put("localeId",localeId);
