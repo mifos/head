@@ -104,7 +104,7 @@
 								name="loan.amt" />:&nbsp; <span class="fontnormal"> <c:out
 								value="${sessionScope.loanAccountActionForm.loanAmount}" /> </span><br>
 							<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel
-								name="loan.interest_rate" />:&nbsp; <span class="fontnormal"> <c:out
+								name="loan.int_rate" />:&nbsp; <span class="fontnormal"> <c:out
 								value="${sessionScope.loanAccountActionForm.interestRate}" /> </span><br>
 							<mifos:mifoslabel name="loan.definst" />:&nbsp; <span
 								class="fontnormal"> <c:out

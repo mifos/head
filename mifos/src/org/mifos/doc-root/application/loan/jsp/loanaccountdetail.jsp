@@ -294,7 +294,7 @@
 							<c:out value="${sessionScope.BusinessKey.interestType.name}" />
 							<br>
 							<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" />
-							<mifos:mifoslabel name="loan.interest_amount" />:&nbsp;<span
+							<mifos:mifoslabel name="loan.int_rate" />:&nbsp;<span
 								class="fontnormal"><c:out
 								value="${sessionScope.BusinessKey.interestRate}" />%&nbsp;<mifos:mifoslabel
 								name="loan.apr" /> </span><br>

@@ -117,7 +117,7 @@
 								value="${sessionScope.loanAccountActionForm.interestRate}" decimalFmt="10.5" /> <mifos:mifoslabel
 								name="loan.allowed_interest1" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel
-								name="loan.allowed_interest2" />&nbsp; <c:out
+								name="loan.int_rate" />&nbsp; <c:out
 								value="${sessionScope.BusinessKey.loanOffering.minInterestRate}" />&nbsp;
 							- &nbsp; <c:out
 								value="${sessionScope.BusinessKey.loanOffering.maxInterestRate}" />
