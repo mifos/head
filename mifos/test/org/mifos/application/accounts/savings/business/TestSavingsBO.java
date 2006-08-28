@@ -63,7 +63,7 @@ import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SecurityException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -693,7 +693,7 @@ public class TestSavingsBO extends MifosTestCase {
 	}
 
 	public void testSuccessfulApplyPaymentWhenNoDepositDue()
-			throws AccountException, SystemException {
+			throws AccountException, SystemException, PersistenceException {
 		createInitialObjects();
 		savingsOffering = helper.createSavingsOffering();
 		savings = helper.createSavingsAccount("000X00000000013",
@@ -3978,7 +3978,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	}
 
-	private void addNotes(String comment) throws SystemException {
+	private void addNotes(String comment) throws SystemException, AccountException {
 		java.sql.Date currentDate = new java.sql.Date(System
 				.currentTimeMillis());
 		PersonnelBO personnelBO = ((PersonnelPersistenceService) ServiceFactory

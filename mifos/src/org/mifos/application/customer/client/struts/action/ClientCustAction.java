@@ -70,6 +70,7 @@ import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.business.service.ClientBusinessService;
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.struts.action.CustAction;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerHelper;
@@ -753,14 +754,16 @@ public class ClientCustAction extends CustAction {
 	}
 
 	private void loadMasterDataForDetailsPage(HttpServletRequest request,
-			ClientBO clientBO) throws SystemException {
+			ClientBO clientBO) throws SystemException, CustomerException {
+		try {
 		Short localeId = getUserContext(request).getLocaleId();
 		SessionUtils.setAttribute(ClientConstants.AGE, new CustomerHelper()
 				.calculateAge(new java.sql.Date((clientBO.getDateOfBirth())
 						.getTime())), request.getSession());
-		SessionUtils.setAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
-				getMasterEntities(SpouseFatherLookupEntity.class, localeId),
-				request.getSession());
+		
+			SessionUtils.setAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
+					getMasterEntities(SpouseFatherLookupEntity.class, localeId),
+					request.getSession());
 		SessionUtils.setAttribute(CustomerConstants.CUSTOMERPERFORMANCE,
 				customerService
 						.numberOfMeetings(true, clientBO.getCustomerId()),
@@ -803,6 +806,9 @@ public class ClientCustAction extends CustAction {
 		SessionUtils.setAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
 				getMasterEntities(SpouseFatherLookupEntity.class, localeId),
 				request.getSession());
+		} catch (PersistenceException e) {
+			throw new CustomerException(e);
+		}
 	}
 
 	private void setLocaleIdToLoanStatus(List<LoanBO> accountList,

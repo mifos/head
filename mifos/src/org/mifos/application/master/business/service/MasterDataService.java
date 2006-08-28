@@ -97,14 +97,22 @@ public class MasterDataService extends BusinessService {
 	}
 
 	public List<PaymentTypeEntity> retrievePaymentTypes(Short localeId)
-			throws SystemException {
-		return masterPersistenceService.retrievePaymentTypes(localeId);
+			throws SystemException, ApplicationException {
+		try {
+			return masterPersistenceService.retrievePaymentTypes(localeId);
+		} catch (PersistenceException e) {
+			throw new ApplicationException(e);
+		}
 	}
 
 	public List<PaymentTypeEntity> getSupportedPaymentModes(Short localeId,
-			Short transactionTypeId) throws SystemException {
-		return masterPersistenceService.getSupportedPaymentModes(localeId,
-				transactionTypeId);
+			Short transactionTypeId) throws SystemException, ApplicationException {
+		try {
+			return masterPersistenceService.getSupportedPaymentModes(localeId,
+					transactionTypeId);
+		} catch (PersistenceException e) {
+			throw new ApplicationException(e);
+		}
 	}
 
 	public List<MasterDataEntity> retrieveMasterEntities(Class entityName,
@@ -114,8 +122,12 @@ public class MasterDataService extends BusinessService {
 	}
 	
 	public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition(
-			EntityType entityType) throws SystemException {
-		return new MasterPersistence().retrieveCustomFieldsDefinition(entityType);
+			EntityType entityType) throws SystemException, ApplicationException {
+		try {
+			return new MasterPersistence().retrieveCustomFieldsDefinition(entityType);
+		} catch (PersistenceException e) {
+			throw new ApplicationException(e);
+		}
 	}
 	
 	public String retrieveMasterEntities(Integer entityId, Short localeId) throws PersistenceException {

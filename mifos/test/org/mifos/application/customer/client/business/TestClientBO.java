@@ -38,6 +38,7 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -78,7 +79,7 @@ public class TestClientBO extends MifosTestCase {
 		super.tearDown();
 	}
 
-	public void testAddClientAttendance() {
+	public void testAddClientAttendance() throws PersistenceException {
 		createInitialObjects();
 		java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
 		client.addClientAttendance(getClientAttendance(meetingDate));
@@ -91,7 +92,7 @@ public class TestClientBO extends MifosTestCase {
 				.getClientAttendances().size(), 1);
 	}
 
-	public void testGetClientAttendanceForMeeting() {
+	public void testGetClientAttendanceForMeeting() throws PersistenceException {
 		createInitialObjects();
 		java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
 		client.addClientAttendance(getClientAttendance(meetingDate));
@@ -108,7 +109,7 @@ public class TestClientBO extends MifosTestCase {
 	}
 
 	public void testHandleAttendance() throws NumberFormatException,
-			ServiceException {
+			ServiceException, CustomerException {
 		createInitialObjects();
 		java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
 		client.handleAttendance(meetingDate, Short.valueOf("1"));
@@ -131,7 +132,7 @@ public class TestClientBO extends MifosTestCase {
 	}
 
 	public void testHandleAttendanceForDifferentDates()
-			throws NumberFormatException, ServiceException {
+			throws NumberFormatException, ServiceException, CustomerException {
 		createInitialObjects();
 		java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
 		client.handleAttendance(meetingDate, Short.valueOf("1"));

@@ -22,6 +22,7 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.authorization.HierarchyManager;
@@ -282,7 +283,11 @@ public class OfficeBO extends BusinessObject {
 
 		this.globalOfficeNum = generateOfficeGlobalNo();
 		this.searchId = generateSearchId();
-		new OfficePersistence().createOrUpdate(this);
+		try {
+			new OfficePersistence().createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new OfficeException(e);
+		}
 		// if we are here it means office created sucessfully
 		// we need to update hierarchy manager cache
 		OfficeSearch os = new OfficeSearch(getOfficeId(), getSearchId(),
@@ -344,7 +349,11 @@ public class OfficeBO extends BusinessObject {
 		updateAddress(address);
 		updateCustomFields(customFileds);
 		setUpdateDetails();
-		new OfficePersistence().createOrUpdate(this);
+		try {
+			new OfficePersistence().createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new OfficeException(e);
+		}
 	}
 
 	private void changeOfficeName(String newName) throws OfficeException {

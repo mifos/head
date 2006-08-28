@@ -270,7 +270,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	}
 
 	public void testGetCenterPerformanceHistory() throws AccountException,
-			SystemException {
+			SystemException, NumberFormatException, PersistenceException {
 		Money totalLoan = new Money();
 		Money totalSavings = new Money();
 		Money totalPortfolioAtRisk = new Money();
@@ -605,7 +605,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	}
 
 	private void changeFirstInstallmentDateToPastDate(AccountBO accountBO)
-			throws ServiceException {
+			throws ServiceException, AccountException {
 		AccountPersistanceService accountPersistanceService = (AccountPersistanceService) ServiceFactory
 				.getInstance().getPersistenceService(
 						PersistenceServiceName.Account);

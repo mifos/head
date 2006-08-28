@@ -45,6 +45,8 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetPersistence;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.service.PersistenceService;
 
 /**
@@ -79,12 +81,12 @@ public class CollectionSheetPersistenceService extends PersistenceService{
 		
 	}
 
-	public void create(CollectionSheetBO collectionSheet) {
+	public void create(CollectionSheetBO collectionSheet) throws ApplicationException {
 		collectionSheetPersistence.createOrUpdate(collectionSheet);
 		
 	}
 
-	public void update(CollectionSheetBO collectionSheet) {
+	public void update(CollectionSheetBO collectionSheet) throws ApplicationException {
 		collectionSheetPersistence.createOrUpdate(collectionSheet);
 		
 	}

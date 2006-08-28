@@ -97,6 +97,7 @@ import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -288,7 +289,7 @@ public class CustomerAccountBO extends AccountBO {
 	}
 
 	@Override
-	public void waiveAmountDue(WaiveEnum chargeType){
+	public void waiveAmountDue(WaiveEnum chargeType) throws AccountException{
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
 		AccountActionDateEntity accountActionDateEntity = accountActionDateList
 				.get(accountActionDateList.size() - 1);
@@ -298,11 +299,15 @@ public class CustomerAccountBO extends AccountBO {
 			addCustomerActivity(buildCustomerActivity(chargeWaived,
 					"Amnt waived", userContext.getId()));
 		}
-		(new AccountPersistence()).createOrUpdate(this);
+		try {
+			(new AccountPersistence()).createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 
 	@Override
-	public void waiveAmountOverDue(WaiveEnum chargeType){
+	public void waiveAmountOverDue(WaiveEnum chargeType) throws AccountException{
 		Money chargeWaived = new Money();
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
 		accountActionDateList.remove(accountActionDateList.size() - 1);
@@ -315,7 +320,11 @@ public class CustomerAccountBO extends AccountBO {
 			addCustomerActivity(buildCustomerActivity(chargeWaived,
 					"Amnt waived", userContext.getId()));
 		}
-		(new AccountPersistence()).createOrUpdate(this);
+		try {
+			(new AccountPersistence()).createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 
 	public void applyPeriodicFees(Date date) throws AccountException{
@@ -338,7 +347,11 @@ public class CustomerAccountBO extends AccountBO {
 
 						updateAccountActivity(((AmountFeeBO) feesBO)
 								.getFeeAmount(), null, description);
-						(new AccountPersistence()).createOrUpdate(this);
+						try {
+							(new AccountPersistence()).createOrUpdate(this);
+						} catch (PersistenceException e) {
+							throw new AccountException(e);
+						}
 					}
 				}
 				break;

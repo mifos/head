@@ -278,7 +278,7 @@ public class ClientBO extends CustomerBO {
 	}
 
 	public void handleAttendance(Date meetingDate, Short attendance)
-			throws ServiceException {
+			throws ServiceException, CustomerException {
 		ClientAttendanceBO clientAttendance = getClientAttendanceForMeeting(meetingDate);
 		if (clientAttendance == null) {
 			clientAttendance = new ClientAttendanceBO();
@@ -286,7 +286,11 @@ public class ClientBO extends CustomerBO {
 			addClientAttendance(clientAttendance);
 		}
 		clientAttendance.setAttendance(attendance);
-		new CustomerPersistence().createOrUpdate(this);
+		try {
+			new CustomerPersistence().createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new CustomerException(e);
+		}
 	}
 
 	@Override
@@ -382,7 +386,7 @@ public class ClientBO extends CustomerBO {
 					 clientPosition.setCustomer(null);
 				 }
 			  }
-		} catch (SystemException e) {
+		} catch (PersistenceException e) {
 			throw new CustomerException(e);
 		}
 		return false;
@@ -425,6 +429,9 @@ public class ClientBO extends CustomerBO {
 		} catch (HibernateException he) {
 			throw new CustomerException(
 					CustomerConstants.CREATE_FAILED_EXCEPTION, he);
+		} catch (PersistenceException e) {
+			throw new CustomerException(
+					CustomerConstants.CREATE_FAILED_EXCEPTION, e);
 		}
 	}
 

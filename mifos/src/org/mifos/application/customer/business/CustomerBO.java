@@ -348,6 +348,9 @@ public abstract class CustomerBO extends BusinessObject {
 		} catch (HibernateException he) {
 			throw new CustomerException(
 					CustomerConstants.CREATE_FAILED_EXCEPTION, he);
+		} catch (PersistenceException e) {
+			throw new CustomerException(
+					CustomerConstants.CREATE_FAILED_EXCEPTION, e);
 		}
 	}
 
@@ -358,6 +361,9 @@ public abstract class CustomerBO extends BusinessObject {
 		} catch (HibernateException he) {
 			throw new CustomerException(
 					CustomerConstants.UPDATE_FAILED_EXCEPTION, he);
+		} catch (PersistenceException e) {
+			throw new CustomerException(
+					CustomerConstants.UPDATE_FAILED_EXCEPTION, e);
 		}
 	}
 

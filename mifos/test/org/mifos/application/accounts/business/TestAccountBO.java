@@ -350,7 +350,7 @@ public class TestAccountBO extends TestAccount {
 				.getAccountId());
 	}
 
-	public void testGetPeriodicFeeList() {
+	public void testGetPeriodicFeeList() throws PersistenceException {
 		AccountFeesEntity accountOneTimeFee = new AccountFeesEntity();
 		accountOneTimeFee.setAccount(accountBO);
 		accountOneTimeFee.setAccountFeeAmount(new Money("1.0"));

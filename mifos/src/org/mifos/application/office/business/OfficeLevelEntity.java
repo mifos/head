@@ -38,8 +38,10 @@
 package org.mifos.application.office.business;
 
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.persistence.OfficeHierarchyPersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 public class OfficeLevelEntity extends MasterDataEntity {
@@ -91,10 +93,14 @@ public class OfficeLevelEntity extends MasterDataEntity {
 		return OfficeLevel.getOfficeLevel(this.getId());
 	}
 
-	public void update(boolean configured) {
+	public void update(boolean configured) throws OfficeException {
 		if ((configured && !isConfigured()) || (!configured && isConfigured())) {
 			addConfigured(configured);
-			new OfficeHierarchyPersistence().createOrUpdate(this);
+			try {
+				new OfficeHierarchyPersistence().createOrUpdate(this);
+			} catch (PersistenceException e) {
+				throw new OfficeException(e);
+			}
 		}
 	}
 }

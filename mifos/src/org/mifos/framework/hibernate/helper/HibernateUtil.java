@@ -38,11 +38,11 @@
 package org.mifos.framework.hibernate.helper;
 
 import org.hibernate.*;
-import org.hibernate.Interceptor;
 
 import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.exceptions.ConnectionNotFoundException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor; 
 import org.mifos.framework.components.audit.util.helpers.LogInfo;
@@ -178,10 +178,16 @@ public class HibernateUtil {
 	  }
 
 	public static Session getSessionTL() {
-		if (threadLocal.get() == null) {
-			threadLocal.set(new SessionHolder(sessionFactory.openSession()));
+		try {
+			if (threadLocal.get() == null) {
+				threadLocal
+						.set(new SessionHolder(sessionFactory.openSession()));
+			}
+		} catch (HibernateException he) {
+			throw new ConnectionNotFoundException(he);
 		}
 		return threadLocal.get().getSession();
+
 	}
 
 	public static Transaction startTransaction() {

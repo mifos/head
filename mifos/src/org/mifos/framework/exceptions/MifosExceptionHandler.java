@@ -115,6 +115,11 @@ public class MifosExceptionHandler extends ExceptionHandler {
 		String input = null;
 		String parameter = null;
 		ActionMessage error = null;
+		if (ex instanceof ConnectionNotFoundException) {
+			forwardToBeReturned = new ActionForward(ae.getPath());
+			error = new ActionMessage(((ConnectionNotFoundException) ex).getKey(),
+					((ConnectionNotFoundException) ex).getValues());
+		} 
 		if (ex instanceof SystemException) {
 			forwardToBeReturned = new ActionForward(ae.getPath());
 			error = new ActionMessage(((SystemException) ex).getKey(),

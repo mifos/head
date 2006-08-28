@@ -47,6 +47,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.office.business.OfficeLevelEntity;
 import org.mifos.application.office.business.service.OfficeHierarchyBusinessService;
+import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.struts.actionforms.OffHierarchyActionForm;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.resources.OfficeConstants;
@@ -133,7 +134,7 @@ public class OffHierarchyAction extends BaseAction {
 	private void updateConfiguredData(
 			OffHierarchyActionForm officeHierarchyActionForm,
 			List<OfficeLevelEntity> officeLevels)
-			throws PropertyNotFoundException {
+			throws PropertyNotFoundException, OfficeException {
 		for (OfficeLevelEntity officeLevelEntity : officeLevels) {
 			if (officeLevelEntity.getLevel().equals(OfficeLevel.REGIONALOFFICE))
 				officeLevelEntity.update(officeHierarchyActionForm

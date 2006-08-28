@@ -48,7 +48,6 @@ import org.mifos.application.accounts.business.LoanAccountView;
 import org.mifos.application.accounts.business.LoanAccountsProductView;
 import org.mifos.application.accounts.business.SavingsAccountView;
 import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.persistance.service.LoanPersistenceService;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
@@ -66,6 +65,7 @@ import org.mifos.application.bulkentry.exceptions.BulkEntryAccountUpdateExceptio
 import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistanceService;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
@@ -73,7 +73,6 @@ import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -241,6 +240,9 @@ public class BulkEntryBusinessService extends BusinessService {
 			client.handleAttendance(meetingDate, attendance);
 		} catch (ServiceException se) {
 			throw new BulkEntryAccountUpdateException("errors.update", se,
+					new String[] { client.getGlobalCustNum() });
+		} catch (CustomerException e) {
+			throw new BulkEntryAccountUpdateException("errors.update", e,
 					new String[] { client.getGlobalCustNum() });
 		}
 	}

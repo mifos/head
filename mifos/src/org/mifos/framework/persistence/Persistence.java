@@ -14,6 +14,7 @@ import org.hibernate.Session;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.HibernateProcessException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public abstract class Persistence {
@@ -32,10 +33,14 @@ public abstract class Persistence {
 		HibernateUtil.closeSession();
 	}	
 	
-	public Object createOrUpdate(Object object)throws HibernateException {
+	public Object createOrUpdate(Object object)throws PersistenceException {
 		Session session=HibernateUtil.getSessionTL();
 		HibernateUtil.startTransaction();
+		try {
 		session.saveOrUpdate(object);
+		} catch(HibernateException he) {
+			throw new PersistenceException(he);
+		}
 		return object;
 	}
 	

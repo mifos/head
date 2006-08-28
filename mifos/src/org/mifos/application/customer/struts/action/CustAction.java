@@ -50,6 +50,7 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerCustomFieldEntity;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.struts.actionforms.CustomerActionForm;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fees.business.FeeBO;
@@ -64,6 +65,8 @@ import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SecurityException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -84,7 +87,7 @@ public class CustAction extends BaseAction {
 	}
 	
 	protected void loadCreateCustomFields(CustomerActionForm actionForm, EntityType entityType,
-			HttpServletRequest request) throws SystemException {
+			HttpServletRequest request) throws SystemException, ApplicationException {
 		loadCustomFieldDefinitions(entityType ,request);
 		// Set Default values for custom fields
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
@@ -141,7 +144,7 @@ public class CustAction extends BaseAction {
 	}
 	
 	protected void loadCustomFieldDefinitions(EntityType entityType , HttpServletRequest request )
-			throws SystemException {
+			throws SystemException, ApplicationException {
 		MasterDataService masterDataService = (MasterDataService) ServiceFactory
 				.getInstance().getBusinessService(
 						BusinessServiceName.MasterDataService);
@@ -172,9 +175,14 @@ public class CustAction extends BaseAction {
 	}
 	
 	protected void loadFormedByPersonnel(Short officeId,
-			HttpServletRequest request) throws SystemException{
+			HttpServletRequest request) throws SystemException, CustomerException{
 		CustomerBusinessService customerService = (CustomerBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Customer);
-		List<PersonnelView> formedByPersonnel = customerService.getFormedByPersonnel(ClientConstants.LOAN_OFFICER_LEVEL, officeId);
+		List<PersonnelView> formedByPersonnel;
+		try {
+			formedByPersonnel = customerService.getFormedByPersonnel(ClientConstants.LOAN_OFFICER_LEVEL, officeId);
+		} catch (PersistenceException e) {
+			throw new CustomerException(e);
+		} 
 		SessionUtils.setAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST,	formedByPersonnel, request.getSession());
 		
 	}

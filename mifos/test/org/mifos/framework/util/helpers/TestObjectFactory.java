@@ -93,16 +93,13 @@ import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.customer.business.CustomerNoteEntity;
-import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientDetailView;
-import org.mifos.application.customer.client.business.ClientNameDetailEntity;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
@@ -151,7 +148,6 @@ import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.business.util.Address;
-import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.scheduler.Constants;
 import org.mifos.framework.components.scheduler.ScheduleDataIntf;
 import org.mifos.framework.components.scheduler.ScheduleInputsIntf;
@@ -196,8 +192,10 @@ public class TestObjectFactory {
 	}
 
 	public static void removeObject(PersistentObject obj) {
-		if (obj != null)
+		if (obj != null) {
 			testObjectPersistence.removeObject(obj);
+			obj = null;
+		}
 	}
 
 	/**

@@ -51,8 +51,6 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -71,7 +69,6 @@ import org.mifos.application.accounts.loan.exceptions.LoanExceptionConstants;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.loan.util.helpers.EMIInstallment;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
@@ -126,8 +123,8 @@ import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
@@ -176,7 +173,7 @@ public class LoanBO extends AccountBO {
 
 	private String stateSelected;
 
-	public Set<LoanActivityEntity> loanActivityDetails;
+	private Set<LoanActivityEntity> loanActivityDetails;
 
 	protected LoanBO() {
 		super();
@@ -477,7 +474,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	@Override
-	public void waiveAmountDue(WaiveEnum waiveType) {
+	public void waiveAmountDue(WaiveEnum waiveType) throws AccountException {
 		if (waiveType.equals(WaiveEnum.FEES)) {
 			waiveFeeAmountDue();
 		} else if (waiveType.equals(WaiveEnum.PENALTY)) {
@@ -486,7 +483,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	@Override
-	public void waiveAmountOverDue(WaiveEnum waiveType) {
+	public void waiveAmountOverDue(WaiveEnum waiveType) throws AccountException {
 		if (waiveType.equals(WaiveEnum.FEES)) {
 			waiveFeeAmountOverDue();
 		} else if (waiveType.equals(WaiveEnum.PENALTY)) {
@@ -792,10 +789,14 @@ public class LoanBO extends AccountBO {
 		// Client performance entry
 		updateCustomerHistoryOnRepayment(totalAmount);
 
-		new LoanPersistance().createOrUpdate(this);
+		try {
+			new LoanPersistance().createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 
-	public void handleArrears() {
+	public void handleArrears() throws AccountException {
 		MasterPersistence masterPersistence = new MasterPersistence();
 		AccountStateEntity stateEntity = (AccountStateEntity) masterPersistence
 				.findById(AccountStateEntity.class,
@@ -813,7 +814,11 @@ public class LoanBO extends AccountBO {
 		// Client performance entry
 		updateCustomerHistoryOnArrears();
 
-		new LoanPersistance().createOrUpdate(this);
+		try {
+			new LoanPersistance().createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 
 	public boolean isLastInstallment(Short installmentId) {
@@ -855,10 +860,14 @@ public class LoanBO extends AccountBO {
 		// Client performance entry
 		updateCustomerHistoryOnWriteOff();
 
-		(new AccountPersistence()).createOrUpdate(this);
+		try {
+			new LoanPersistance().createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 
-	public void waiveFeeAmountDue() {
+	public void waiveFeeAmountDue() throws AccountException {
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
 		LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountActionDateList
 				.get(accountActionDateList.size() - 1);
@@ -868,10 +877,14 @@ public class LoanBO extends AccountBO {
 					+ chargeWaived + " waived");
 			updateTotalFeeAmount(chargeWaived);
 		}
-		(new AccountPersistence()).createOrUpdate(this);
+		try {
+			new LoanPersistance().createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 
-	public void waivePenaltyAmountDue() {
+	public void waivePenaltyAmountDue() throws AccountException {
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
 		LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountActionDateList
 				.get(accountActionDateList.size() - 1);
@@ -881,10 +894,14 @@ public class LoanBO extends AccountBO {
 					+ chargeWaived + " waived");
 			updateTotalPenaltyAmount(chargeWaived);
 		}
-		(new AccountPersistence()).createOrUpdate(this);
+		try {
+			new LoanPersistance().createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 
-	public void waiveFeeAmountOverDue() {
+	public void waiveFeeAmountOverDue() throws AccountException {
 		Money chargeWaived = new Money();
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
 		accountActionDateList.remove(accountActionDateList.size() - 1);
@@ -898,10 +915,14 @@ public class LoanBO extends AccountBO {
 					+ chargeWaived + " waived");
 			updateTotalFeeAmount(chargeWaived);
 		}
-		(new AccountPersistence()).createOrUpdate(this);
+		try {
+			new LoanPersistance().createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 
-	public void waivePenaltyAmountOverDue() {
+	public void waivePenaltyAmountOverDue() throws AccountException {
 		Money chargeWaived = new Money();
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
 		accountActionDateList.remove(accountActionDateList.size() - 1);
@@ -915,7 +936,11 @@ public class LoanBO extends AccountBO {
 					+ chargeWaived + " waived");
 			updateTotalPenaltyAmount(chargeWaived);
 		}
-		(new AccountPersistence()).createOrUpdate(this);
+		try {
+			new LoanPersistance().createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 
 	public Money getAmountTobePaidAtdisburtail(Date disbursalDate) {
@@ -982,9 +1007,9 @@ public class LoanBO extends AccountBO {
 	public void save() throws AccountException {
 		try {
 			new LoanPersistance().createOrUpdate(this);
-		} catch (HibernateException he) {
+		} catch (PersistenceException e) {
 			throw new AccountException(
-					AccountExceptionConstants.CREATEEXCEPTION, he);
+					AccountExceptionConstants.CREATEEXCEPTION, e);
 		}
 	}
 

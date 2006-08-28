@@ -26,6 +26,7 @@ import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -164,7 +165,7 @@ public class OffAction extends BaseAction {
 	}
 
 	private void loadCreateCustomFields(OffActionForm actionForm,
-			HttpServletRequest request) throws SystemException {
+			HttpServletRequest request) throws SystemException, ApplicationException {
 		loadCustomFieldDefinitions(request);
 		// Set Default values for custom fields
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
@@ -189,7 +190,7 @@ public class OffAction extends BaseAction {
 	}
 
 	private void loadCustomFieldDefinitions(HttpServletRequest request)
-			throws SystemException {
+			throws SystemException, ApplicationException {
 		MasterDataService masterDataService = (MasterDataService) ServiceFactory
 				.getInstance().getBusinessService(
 						BusinessServiceName.MasterDataService);

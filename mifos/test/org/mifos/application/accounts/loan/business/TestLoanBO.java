@@ -29,7 +29,6 @@ import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
@@ -50,7 +49,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.GracePeriodTypeConstants;
-import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -70,8 +68,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import sun.security.action.GetLongAction;
 
 public class TestLoanBO extends MifosTestCase {
 	protected AccountBO accountBO = null;
@@ -716,7 +712,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO.getAccountPayments().clear();
 	}
 
-	public void testHandleArrears() throws ServiceException {
+	public void testHandleArrears() throws ServiceException, AccountException {
 		accountBO = getLoanAccount();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();

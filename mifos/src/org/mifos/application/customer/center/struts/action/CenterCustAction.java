@@ -347,7 +347,7 @@ public class CenterCustAction extends CustAction {
 	}
 
 	private void loadCreateCustomFields(CenterCustActionForm actionForm,
-			HttpServletRequest request) throws SystemException {
+			HttpServletRequest request) throws SystemException, ApplicationException {
 		loadCustomFieldDefinitions(request);
 		// Set Default values for custom fields
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
@@ -372,7 +372,7 @@ public class CenterCustAction extends CustAction {
 	}
 
 	private void loadCustomFieldDefinitions(HttpServletRequest request)
-			throws SystemException {
+			throws SystemException, ApplicationException {
 		MasterDataService masterDataService = (MasterDataService) ServiceFactory
 				.getInstance().getBusinessService(
 						BusinessServiceName.MasterDataService);
@@ -413,7 +413,12 @@ public class CenterCustAction extends CustAction {
 			throws CustomerException, SystemException {
 		CenterBO center = (CenterBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
-		List<CustomerBO> customerList = center.getChildren(CustomerLevel.CLIENT.getValue());
+		List<CustomerBO> customerList;
+		try {
+			customerList = center.getChildren(CustomerLevel.CLIENT.getValue());
+		} catch (PersistenceException e) {
+			throw new CustomerException(e);
+		}
 		List<CustomerBO> customerListToPopulate = new ArrayList<CustomerBO>();
 		for(CustomerBO customer: customerList){
 			if(!(customer.getStatus().equals(CustomerStatus.CLIENT_CANCELLED) || customer.getStatus().equals(CustomerStatus.CLIENT_CLOSED)))

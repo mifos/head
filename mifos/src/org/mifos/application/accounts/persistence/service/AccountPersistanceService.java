@@ -10,6 +10,8 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStateFlagEntity;
+import org.mifos.application.accounts.exceptions.AccountException;
+import org.mifos.application.accounts.exceptions.AccountExceptionConstants;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.checklist.util.valueobjects.CheckListMaster;
 import org.mifos.framework.exceptions.HibernateProcessException;
@@ -29,8 +31,12 @@ public class AccountPersistanceService extends PersistenceService {
 		return accountPersistence.updateAccount(account);
 	}
 	
-	public AccountBO update(AccountBO account) {
-		return (AccountBO)accountPersistence.createOrUpdate(account);
+	public AccountBO update(AccountBO account) throws AccountException {
+		try {
+			return (AccountBO)accountPersistence.createOrUpdate(account);
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 	
 	public AccountBO loadBusinessObject(Integer accountId) throws PersistenceException{

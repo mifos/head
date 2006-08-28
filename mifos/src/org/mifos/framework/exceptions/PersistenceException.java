@@ -38,19 +38,12 @@
 
 package org.mifos.framework.exceptions;
 
-/**
- * This is exception thrown by persistence clases.
- * @author navitas
- */
-public class PersistenceException extends SystemException{
+public class PersistenceException extends ApplicationException {
 	
-	/** Simple Constructor for PersistenceException*/
 	public PersistenceException() {
 		super();
 	}
-	/** Constructor for PersistenceException
-	 * @param cause
-	 */
+
 	public PersistenceException(Throwable cause) {
 		super(cause);
 	}
@@ -59,9 +52,6 @@ public class PersistenceException extends SystemException{
 		super(key);
 	}
 
-	/** Constructor for PersistenceException
-	 * @param cause
-	 */
 	public PersistenceException(String key ,Throwable cause) {
 		super(key , cause);
 	}

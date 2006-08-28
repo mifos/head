@@ -46,12 +46,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.persistence.service.OfficePersistenceService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SecurityException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.Observer;
 import org.mifos.framework.security.util.OfficeCacheView;
@@ -141,8 +144,13 @@ public class HierarchyManager implements Observer {
 		return officeCacheList;
 	}
 	
-	public void init() throws SystemException {
-		List<OfficeCacheView> officeList = ((OfficePersistenceService) ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.Office)).getAllOffices();
+	public void init() throws SystemException, OfficeException {
+		List<OfficeCacheView> officeList;
+		try {
+			officeList = ((OfficePersistenceService) ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.Office)).getAllOffices();
+		} catch (PersistenceException e) {
+			throw new OfficeException(e);
+		} 
 		for (int i = 0; i < officeList.size(); i++)
 			addToMap(officeList.get(i));
 	}

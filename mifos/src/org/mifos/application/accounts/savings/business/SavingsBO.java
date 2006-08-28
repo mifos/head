@@ -443,22 +443,30 @@ public class SavingsBO extends AccountBO {
 						this.getAccountState(), this.getAccountState(),
 						(new PersonnelPersistence()).getPersonnel(
 								userContext.getId())));
-		(new SavingsPersistence()).createOrUpdate(this);
+		try {
+			(new SavingsPersistence()).createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 		logger.info("In SavingsBO::save(), Successfully saved , accountId: "
 				+ getAccountId());
 	}
 
-	public void update(){
+	public void update() throws AccountException{
 		logger.debug("In SavingsBO::update(), accountId: " + getAccountId());
 		this.setUpdatedBy(userContext.getId());
 		this.setUpdatedDate(new Date());
-		(new SavingsPersistence()).createOrUpdate(this);
+		try {
+			(new SavingsPersistence()).createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 		logger
 				.info("In SavingsBO::update(), successfully updated , accountId: "
 						+ getAccountId());
 	}
 
-	public void updateAndGenerateSchedule() {
+	public void updateAndGenerateSchedule() throws AccountException {
 		logger.debug("In SavingsBO::updateSchedule(), accountId: "
 				+ getAccountId());
 		for (AccountActionDateEntity accountDate : this.getAccountActionDates()) {
@@ -526,7 +534,11 @@ public class SavingsBO extends AccountBO {
 			makeEntriesForInterestPosting(interestPosted, paymentType,
 					getCustomer(), null);
 			getSavingsPerformance().setTotalInterestDetails(interestPosted);
-			(new SavingsPersistence()).createOrUpdate(this);
+			try {
+				(new SavingsPersistence()).createOrUpdate(this);
+			} catch (PersistenceException e) {
+				throw new AccountException(e);
+			}
 			logger.info("In SavingsBO::postInterest(), accountId: "
 					+ getAccountId() + ", Interest Of Amount: "
 					+ interestPosted + " successfully");
@@ -546,7 +558,11 @@ public class SavingsBO extends AccountBO {
 		} catch (SchedulerException e) {
 			throw new AccountException(e);
 		}
-		(new SavingsPersistence()).createOrUpdate(this);
+		try {
+			(new SavingsPersistence()).createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 		logger.info("In SavingsBO::updateInterestAccrued(), accountId: "
 				+ getAccountId() + ", Interest Amount: " + interestCalculated
 				+ " calculated.");
@@ -905,7 +921,7 @@ public class SavingsBO extends AccountBO {
 				try {
 					children = getCustomer().getChildren(
 							CustomerConstants.CLIENT_LEVEL_ID);
-				} catch (SystemException e) {
+				} catch (PersistenceException e) {
 					throw new AccountException(e);
 				}
 				for (CustomerBO customer : children) {
@@ -1135,7 +1151,11 @@ public class SavingsBO extends AccountBO {
 			} catch (PersistenceException e) {
 				throw new AccountException(e);
 			}
-		(new SavingsPersistence()).createOrUpdate(this);
+		try {
+			(new SavingsPersistence()).createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 
 	public List<AccountStateEntity> getStatusList() {
@@ -1941,7 +1961,11 @@ public class SavingsBO extends AccountBO {
 		for (AccountActionDateEntity accountActionDate : nextInstallments) {
 			((SavingsScheduleEntity) accountActionDate).waiveDepositDue();
 		}
-		(new SavingsPersistence()).createOrUpdate(this);
+		try {
+			(new SavingsPersistence()).createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 
 	public void waiveAmountOverDue() throws AccountException {
@@ -1954,7 +1978,11 @@ public class SavingsBO extends AccountBO {
 		for (AccountActionDateEntity accountActionDate : installmentsInArrears) {
 			((SavingsScheduleEntity) accountActionDate).waiveDepositDue();
 		}
-		(new SavingsPersistence()).createOrUpdate(this);
+		try {
+			(new SavingsPersistence()).createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 		
 	}
 
@@ -2003,7 +2031,7 @@ public class SavingsBO extends AccountBO {
 				try {
 					children = getCustomer().getChildren(
 							CustomerConstants.CLIENT_LEVEL_ID);
-				} catch (SystemException e) {
+				} catch (PersistenceException e) {
 					throw new AccountException(e);
 				}
 				for (Date date : meetingDates) {
@@ -2122,7 +2150,7 @@ public class SavingsBO extends AccountBO {
 				try {
 					children = getCustomer().getChildren(
 							CustomerConstants.CLIENT_LEVEL_ID);
-				} catch (SystemException e) {
+				} catch (PersistenceException e) {
 					throw new AccountException(e);
 				}
 				for (CustomerBO customer : children) {

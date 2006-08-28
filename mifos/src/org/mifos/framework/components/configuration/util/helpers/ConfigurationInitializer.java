@@ -68,7 +68,9 @@ import org.mifos.framework.components.configuration.cache.CacheRepository;
 import org.mifos.framework.components.configuration.cache.Key;
 import org.mifos.framework.components.configuration.cache.OfficeCache;
 import org.mifos.framework.components.configuration.persistence.service.ConfigurationPersistenceService;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ConstantsNotLoadedException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StartUpException;
 import org.mifos.framework.exceptions.SystemException;
@@ -109,14 +111,19 @@ public class ConfigurationInitializer {
 		return new Cache(systemConfigMap);
 	}
 		  
-	protected OfficeCache createOfficeCache() throws SystemException{		
+	protected OfficeCache createOfficeCache() throws SystemException, ApplicationException{		
 		Map<Key,Object> officeConfigMap = new HashMap<Key,Object>();
 		List<ConfigEntity> systemConfigList= getDBService().getOfficeConfiguration();
 		for(int i=0; i< systemConfigList.size(); i++){
 			createOfficeCache(officeConfigMap,systemConfigList.get(i));
 		}
 		
-		List<CustomerStatusEntity> customerOptionalStates = new CustomerPersistence().getCustomerStates(ConfigConstants.OPTIONAL_FLAG);
+		List<CustomerStatusEntity> customerOptionalStates;
+		try {
+			customerOptionalStates = new CustomerPersistence().getCustomerStates(ConfigConstants.OPTIONAL_FLAG);
+		} catch (PersistenceException e) {
+			throw new ApplicationException(e);
+		}
 		setCustomerOptionalStates(officeConfigMap,customerOptionalStates);
 		
 		List<AccountStateEntity> accountOptionalStates =((AccountPersistanceService) ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.Account)).getAccountStates(ConfigConstants.OPTIONAL_FLAG);
@@ -153,7 +160,7 @@ public class ConfigurationInitializer {
 			officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),ConfigConstants.WEEK_OFF_LIST),weekOffList);
 	}
 	
-	private void setLateNessAndDormancyDaysForAccount(Map<Key,Object> officeConfigMap)throws SystemException{
+	private void setLateNessAndDormancyDaysForAccount(Map<Key,Object> officeConfigMap)throws SystemException,ApplicationException{
 		Short latenessDays=((LoansPrdPersistenceService) ServiceFactory.getInstance().
 				getPersistenceService(PersistenceServiceName.LoansProduct)).retrieveLatenessForPrd();
 		Short dormancyDays=((SavingsPrdPersistenceService) ServiceFactory.getInstance().
@@ -238,6 +245,8 @@ public class ConfigurationInitializer {
 			cacheRepository.setOfficeCache(createOfficeCache());
 		}catch(SystemException se){
 			throw new StartUpException(se);
+		} catch (ApplicationException e) {
+			throw new StartUpException(e);
 		}
 	}	
 	

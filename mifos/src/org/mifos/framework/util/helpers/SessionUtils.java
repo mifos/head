@@ -48,8 +48,6 @@ import org.mifos.framework.exceptions.PageExpiredException;
 
 /**
  * This class has helper methods to set attributes in session and retrieve them.
- * @author ashishsm
- *
  */
 public class SessionUtils {
 	
@@ -222,4 +220,15 @@ public class SessionUtils {
 				.getAttribute(Constants.FLOWMANAGER);
 		return flowManager.getFromFlow(currentFlowKey, key);
 	}
+	
+	public static void removeAttribute(String key, HttpSession session) {
+		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+				"Clean up in session utils has been called");
+		Object obj = session.getAttribute(key);
+		session.removeAttribute(key);
+		obj = null;
+		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+				"The attribute being removed from session is" + key);
+	}
+	
 }

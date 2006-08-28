@@ -51,6 +51,7 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.CustomerView;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.LoanCycleCounter;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
@@ -188,8 +189,12 @@ public class CustomerPersistenceService extends PersistenceService {
 		return serviceImpl.numberOfMeetings(isPresent, customerId);
 	}
 
-	public void update(CustomerBO customer) {
-		serviceImpl.createOrUpdate(customer);
+	public void update(CustomerBO customer) throws CustomerException {
+		try {
+			serviceImpl.createOrUpdate(customer);
+		} catch (PersistenceException e) {
+			throw new CustomerException(e);
+		}
 	}
 
 	public List<CustomerStatusEntity> getCustomerStates(Short optionalFlag)

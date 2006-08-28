@@ -121,9 +121,9 @@ public class AccountBO extends BusinessObject {
 
 	protected String globalAccountNum;
 
-	protected CustomerBO customer;
-
 	protected AccountType accountType;
+
+	protected CustomerBO customer;
 
 	protected OfficeBO office;
 
@@ -198,61 +198,12 @@ public class AccountBO extends BusinessObject {
 		return accountId;
 	}
 
-	public Set<AccountActionDateEntity> getAccountActionDates() {
-		return accountActionDates;
-	}
-
-	public Set<AccountNotesEntity> getAccountNotes() {
-		return accountNotes;
-	}
-
-	private void setAccountNotes(Set<AccountNotesEntity> accountNotes) {
-		this.accountNotes = accountNotes;
-	}
-
-	private void setAccountActionDates(
-			Set<AccountActionDateEntity> accountActionDates) {
-		this.accountActionDates = accountActionDates;
-	}
-
-	public Set<AccountFeesEntity> getAccountFees() {
-		return accountFees;
-	}
-
-	private void setAccountFees(Set<AccountFeesEntity> accountFees) {
-		this.accountFees = accountFees;
-	}
-
-	public Set<AccountPaymentEntity> getAccountPayments() {
-		return accountPayments;
-	}
-
-	public void setAccountPayments(Set<AccountPaymentEntity> accountPayments) {
-		this.accountPayments = accountPayments;
-	}
-
-	public AccountStateEntity getAccountState() {
-		return accountState;
-	}
-
-	public void setAccountState(AccountStateEntity accountState) {
-		this.accountState = accountState;
-	}
-
-	public AccountType getAccountType() {
-		return accountType;
-	}
-
 	public String getGlobalAccountNum() {
 		return globalAccountNum;
 	}
 
-	public Date getClosedDate() {
-		return closedDate;
-	}
-
-	public void setClosedDate(Date closedDate) {
-		this.closedDate = closedDate;
+	public AccountType getAccountType() {
+		return accountType;
 	}
 
 	public CustomerBO getCustomer() {
@@ -267,23 +218,52 @@ public class AccountBO extends BusinessObject {
 		return personnel;
 	}
 
+	public Set<AccountNotesEntity> getAccountNotes() {
+		return accountNotes;
+	}
+
 	public Set<AccountStatusChangeHistoryEntity> getAccountStatusChangeHistory() {
 		return accountStatusChangeHistory;
 	}
 
-	private void setAccountStatusChangeHistory(
-			Set<AccountStatusChangeHistoryEntity> accountStatusChangeHistory) {
-		this.accountStatusChangeHistory = accountStatusChangeHistory;
+	public AccountStateEntity getAccountState() {
+		return accountState;
 	}
 
-	public void addAccountStatusChangeHistory(
-			AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity) {
-		accountStatusChangeHistoryEntity.setAccount(this);
-		this.accountStatusChangeHistory.add(accountStatusChangeHistoryEntity);
+	public Set<AccountFlagMapping> getAccountFlags() {
+		return accountFlags;
+	}
+
+	public Set<AccountFeesEntity> getAccountFees() {
+		return accountFees;
+	}
+
+	public Set<AccountActionDateEntity> getAccountActionDates() {
+		return accountActionDates;
+	}
+
+	public Set<AccountPaymentEntity> getAccountPayments() {
+		return accountPayments;
 	}
 
 	public Set<AccountCustomFieldEntity> getAccountCustomFields() {
 		return accountCustomFields;
+	}
+
+	public Date getClosedDate() {
+		return closedDate;
+	}
+
+	public void setAccountPayments(Set<AccountPaymentEntity> accountPayments) {
+		this.accountPayments = accountPayments;
+	}
+
+	public void setAccountState(AccountStateEntity accountState) {
+		this.accountState = accountState;
+	}
+
+	public void setClosedDate(Date closedDate) {
+		this.closedDate = closedDate;
 	}
 
 	/*
@@ -304,10 +284,15 @@ public class AccountBO extends BusinessObject {
 		}
 	}
 
+	public void addAccountStatusChangeHistory(
+			AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity) {
+		accountStatusChangeHistoryEntity.setAccount(this);
+		this.accountStatusChangeHistory.add(accountStatusChangeHistoryEntity);
+	}
+
 	public void addAccountFees(AccountFeesEntity fees) {
 		fees.setAccount(this);
 		accountFees.add(fees);
-		setAccountFees(accountFees);
 	}
 
 	public void addAccountActionDate(AccountActionDateEntity accountAction) {
@@ -328,14 +313,6 @@ public class AccountBO extends BusinessObject {
 		accountNotes.add(notes);
 	}
 
-	public Set<AccountFlagMapping> getAccountFlags() {
-		return accountFlags;
-	}
-
-	private void setAccountFlags(Set<AccountFlagMapping> accountFlags) {
-		this.accountFlags = accountFlags;
-	}
-
 	public void addAccountFlag(AccountStateFlagEntity flagDetail) {
 		AccountFlagMapping flagMap = new AccountFlagMapping();
 		flagMap.setCreatedBy(this.getUserContext().getId());
@@ -349,16 +326,20 @@ public class AccountBO extends BusinessObject {
 		AccountPaymentEntity accountPayment = makePayment(paymentData);
 		addAccountPayment(accountPayment);
 		buildFinancialEntries(accountPayment.getAccountTrxns());
-		(new AccountPersistence()).createOrUpdate(this);
+		try {
+			(new AccountPersistence()).createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 
 	public final void removeFees(Short feeId, Short personnelId)
 			throws AccountException {
-		List<Short> installmentIdList = getApplicableInstallmentIdsForRemoveFees();
+		List<Short> installmentIds = getApplicableInstallmentIdsForRemoveFees();
 		Money totalFeeAmount = new Money();
-		if (installmentIdList != null && installmentIdList.size() != 0
+		if (installmentIds != null && installmentIds.size() != 0
 				&& isFeeActive(feeId)) {
-			totalFeeAmount = updateAccountActionDateEntity(installmentIdList,
+			totalFeeAmount = updateAccountActionDateEntity(installmentIds,
 					feeId);
 			updateAccountFeesEntity(feeId);
 			updateTotalFeeAmount(totalFeeAmount);
@@ -366,7 +347,7 @@ public class AccountBO extends BusinessObject {
 			String description = feesBO.getFeeName() + " "
 					+ AccountConstants.FEES_REMOVED;
 			updateAccountActivity(totalFeeAmount, personnelId, description);
-			roundInstallments(installmentIdList);
+			roundInstallments(installmentIds);
 		}
 
 	}
@@ -381,7 +362,12 @@ public class AccountBO extends BusinessObject {
 			updateInstallmentAfterAdjustment(reversedTrxns);
 			buildFinancialEntries(new HashSet(reversedTrxns));
 			updatePerformanceHistoryOnAdjustment(reversedTrxns.size());
-			(new AccountPersistence()).createOrUpdate(this);
+			try {
+				(new AccountPersistence()).createOrUpdate(this);
+			} catch (PersistenceException e) {
+				throw new AccountException(
+						AccountExceptionConstants.CANNOTADJUST, e);
+			}
 		} else
 			throw new AccountException(AccountExceptionConstants.CANNOTADJUST);
 	}
@@ -397,7 +383,11 @@ public class AccountBO extends BusinessObject {
 			regenerateFutureInstallments((short) (accountActionDateEntity
 					.getInstallmentId().intValue() + 1));
 			meeting.setMeetingStartDate(meetingStartDate);
-			(new AccountPersistence()).createOrUpdate(this);
+			try {
+				(new AccountPersistence()).createOrUpdate(this);
+			} catch (PersistenceException e) {
+				throw new AccountException(e);
+			}
 		}
 	}
 
@@ -454,14 +444,11 @@ public class AccountBO extends BusinessObject {
 	}
 
 	public void updateAccountFeesEntity(Short feeId) {
-		Set<AccountFeesEntity> accountFeesEntitySet = this.getAccountFees();
-		for (AccountFeesEntity accountFeesEntity : accountFeesEntitySet) {
-			if (accountFeesEntity.getFees().getFeeId().equals(feeId)) {
-				accountFeesEntity.changeFeesStatus(
-						AccountConstants.INACTIVE_FEES, new Date(System
-								.currentTimeMillis()));
-				accountFeesEntity.setLastAppliedDate(null);
-			}
+		AccountFeesEntity accountFees = getAccountFees(feeId);
+		if (accountFees != null) {
+			accountFees.changeFeesStatus(AccountConstants.INACTIVE_FEES,
+					new Date(System.currentTimeMillis()));
+			accountFees.setLastAppliedDate(null);
 		}
 	}
 
@@ -484,27 +471,17 @@ public class AccountBO extends BusinessObject {
 	}
 
 	public FeeBO getAccountFeesObject(Short feeId) {
-		Set<AccountFeesEntity> accountFeesEntitySet = this.getAccountFees();
-		for (AccountFeesEntity accountFeesEntity : accountFeesEntitySet) {
-			if (accountFeesEntity.getFees().getFeeId().equals(feeId)) {
-				return accountFeesEntity.getFees();
-			}
-		}
+		AccountFeesEntity accountFees = getAccountFees(feeId);
+		if (accountFees != null)
+			return accountFees.getFees();
 		return null;
 	}
 
 	public Boolean isFeeActive(Short feeId) {
-		Set<AccountFeesEntity> accountFeesEntitySet = this.getAccountFees();
-		for (AccountFeesEntity accountFeesEntity : accountFeesEntitySet) {
-			if (accountFeesEntity.getFees().getFeeId().equals(feeId)) {
-				if (accountFeesEntity.getFeeStatus() == null
-						|| accountFeesEntity.getFeeStatus().equals(
-								AccountConstants.ACTIVE_FEES)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		AccountFeesEntity accountFees = getAccountFees(feeId);
+		return accountFees.getFeeStatus() == null
+				|| accountFees.getFeeStatus().equals(
+						AccountConstants.ACTIVE_FEES);
 	}
 
 	public Money removeSign(Money amount) {
@@ -639,7 +616,6 @@ public class AccountBO extends BusinessObject {
 						nextAccountAction = accountAction;
 			}
 		}
-
 		return nextAccountAction;
 	}
 
@@ -732,10 +708,13 @@ public class AccountBO extends BusinessObject {
 		return notes;
 	}
 
-	public void update() {
-		this.setUpdatedBy(userContext.getId());
-		this.setUpdatedDate(new Date());
-		(new AccountPersistence()).createOrUpdate(this);
+	public void update() throws AccountException {
+		setUpdateDetails();
+		try {
+			(new AccountPersistence()).createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 
 	public void updateAccountActivity(Money totalFeeAmount, Short personnelId,
@@ -886,17 +865,10 @@ public class AccountBO extends BusinessObject {
 			throw new AccountException(e);
 		}
 		return repaymentSchedule;
-
 	}
 
 	protected final Boolean isFeeAlreadyApplied(FeeBO fee) {
-		if (getAccountFees() != null)
-			for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
-				if (accountFeesEntity.getFees().getFeeId().equals(
-						fee.getFeeId()))
-					return true;
-			}
-		return false;
+		return getAccountFees(fee.getFeeId()) != null;
 	}
 
 	protected final AccountFeesEntity getAccountFee(FeeBO fee, Money charge) {
@@ -931,35 +903,34 @@ public class AccountBO extends BusinessObject {
 		return installmentDates;
 	}
 
-	protected final Meeting convertMeeting(MeetingBO M2meeting) {
+	protected final Meeting convertMeeting(MeetingBO meeting) {
 		Meeting meetingToReturn = new Meeting();
-		meetingToReturn.setMeetingStartDate(M2meeting.getMeetingStartDate());
+		meetingToReturn.setMeetingStartDate(meeting.getMeetingStartDate());
 		meetingToReturn.setMeetingPlace("");
 		MeetingType meetingType = new MeetingType();
-		meetingType.setMeetingTypeId(M2meeting.getMeetingType()
+		meetingType.setMeetingTypeId(meeting.getMeetingType()
 				.getMeetingTypeId());
 		meetingToReturn.setMeetingType(meetingType);
 
 		MeetingRecurrence meetingRecToReturn = new MeetingRecurrence();
-		meetingRecToReturn.setDayNumber(M2meeting.getMeetingDetails()
+		meetingRecToReturn.setDayNumber(meeting.getMeetingDetails()
 				.getMeetingRecurrence().getDayNumber());
-		if (M2meeting.getMeetingDetails().getMeetingRecurrence()
-				.getRankOfDays() != null) {
-			meetingRecToReturn.setRankOfDays(M2meeting.getMeetingDetails()
+		if (meeting.getMeetingDetails().getMeetingRecurrence().getRankOfDays() != null) {
+			meetingRecToReturn.setRankOfDays(meeting.getMeetingDetails()
 					.getMeetingRecurrence().getRankOfDays().getRankOfDayId());
 		}
-		if (M2meeting.getMeetingDetails().getMeetingRecurrence().getWeekDay() != null) {
-			meetingRecToReturn.setWeekDay(M2meeting.getMeetingDetails()
+		if (meeting.getMeetingDetails().getMeetingRecurrence().getWeekDay() != null) {
+			meetingRecToReturn.setWeekDay(meeting.getMeetingDetails()
 					.getMeetingRecurrence().getWeekDay().getWeekDayId());
 		}
 
 		MeetingDetails meetingDetailsToReturn = new MeetingDetails();
 		meetingDetailsToReturn.setMeetingRecurrence(meetingRecToReturn);
-		meetingDetailsToReturn.setRecurAfter(M2meeting.getMeetingDetails()
+		meetingDetailsToReturn.setRecurAfter(meeting.getMeetingDetails()
 				.getRecurAfter());
 
 		RecurrenceType recurrenceType = new RecurrenceType();
-		recurrenceType.setRecurrenceId(M2meeting.getMeetingDetails()
+		recurrenceType.setRecurrenceId(meeting.getMeetingDetails()
 				.getRecurrenceType().getRecurrenceId());
 
 		meetingDetailsToReturn.setRecurrenceType(recurrenceType);
@@ -1401,6 +1372,7 @@ public class AccountBO extends BusinessObject {
 			throw new SecurityException(
 					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
 	}
+
 	private boolean isPermissionAllowed(Short newState,
 			UserContext userContext, Short flagSelected, Short recordOfficeId,
 			Short recordLoanOfficerId) {

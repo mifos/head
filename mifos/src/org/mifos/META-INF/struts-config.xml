@@ -132,6 +132,7 @@
 		<exception type="org.mifos.framework.exceptions.SystemException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.SystemException" scope="request" path="/pages/framework/jsp/error.jsp" />
 		<exception type="org.mifos.framework.exceptions.ApplicationException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.ApplicationException" scope="request" />
 		<exception type="org.mifos.framework.exceptions.PageExpiredException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.PageExpiredException" scope="request" path="/pages/framework/jsp/pageexpirederror.jsp"/>
+		<exception type="org.mifos.framework.exceptions.ConnectionNotFoundException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.ConnectionNotFoundException" scope="request" path="/pages/framework/jsp/error.jsp" />
 	</global-exceptions>
 
 	<global-forwards>

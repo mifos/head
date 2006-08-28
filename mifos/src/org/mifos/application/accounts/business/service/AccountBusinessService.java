@@ -3,7 +3,6 @@ package org.mifos.application.accounts.business.service;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 import org.hibernate.StaleObjectStateException;
 import org.mifos.application.accounts.business.AccountActionEntity;
@@ -12,17 +11,15 @@ import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStateFlagEntity;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.business.TransactionHistoryView;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.exceptions.AccountExceptionConstants;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.ApplicableCharge;
-import org.mifos.application.accounts.util.valueobjects.Account;
-import org.mifos.application.accounts.util.valueobjects.AccountApplyChargesMaster;
 import org.mifos.application.checklist.util.valueobjects.CheckListMaster;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -34,9 +31,7 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
-import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -96,8 +91,13 @@ public class AccountBusinessService extends BusinessService {
 		return  getDBService().getAccount(accountId);
 	}
 	
-	public AccountActionEntity getAccountAction(Short actionType, Short localeId)throws SystemException{
-		AccountActionEntity accountAction = getDBService().getAccountAction(actionType);
+	public AccountActionEntity getAccountAction(Short actionType, Short localeId)throws SystemException, AccountException{
+		AccountActionEntity accountAction = null;
+		try {
+			accountAction = getDBService().getAccountAction(actionType);
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		} 
 		accountAction.setLocaleId(localeId);
 		return accountAction;
 	}

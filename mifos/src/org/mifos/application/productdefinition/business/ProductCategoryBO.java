@@ -40,7 +40,6 @@ package org.mifos.application.productdefinition.business;
 
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
-import org.mifos.application.productdefinition.exceptions.DuplicateProductCategoryException;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.persistence.ProductCategoryPersistence;
 import org.mifos.application.productdefinition.util.helpers.PrdCategoryStatus;
@@ -49,6 +48,7 @@ import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.StringUtils;
 
@@ -168,12 +168,20 @@ public class ProductCategoryBO extends BusinessObject {
 		this.productCategoryName = productCategoryName;
 		this.productCategoryDesc = productCategoryDesc;
 		this.prdCategoryStatus = prdCategoryStatus;
-		new ProductCategoryPersistence().createOrUpdate(this);
+		try {
+			new ProductCategoryPersistence().createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new ProductDefinitionException(e);
+		}
 		prdLoanLogger.debug("Updating product category done");
 	}
 	
 	public void save() throws ProductDefinitionException{
-		new ProductCategoryPersistence().createOrUpdate(this);
+		try {
+			new ProductCategoryPersistence().createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new ProductDefinitionException(e);
+		}
 	}
 	
 }
