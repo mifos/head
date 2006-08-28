@@ -341,7 +341,7 @@
 						<tr>
 							<td width="69%" align="right" class="fontnormal"><span
 								class="fontnormal"> <a
-								href="customerAction.do?method=getAllClosedAccounts&customerId=<c:out value="${sessionScope.BusinessKey.customerId}"/>">
+								href="customerAction.do?method=getAllClosedAccounts&customerId=<c:out value="${sessionScope.BusinessKey.customerId}"/>&type=client">
                   <mifos:mifoslabel name="client.ClosedAccountsLink" bundle="ClientUIResources" /></a> </span></td>
 						</tr>
 					</table>
