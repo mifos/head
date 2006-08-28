@@ -229,15 +229,9 @@ public class TestAccountActionDateEntity extends TestAccount {
 				"Periodic Fee", FeeCategory.LOAN, "100",
 				MeetingFrequency.WEEKLY, Short.valueOf("1"));
 
-		AccountFeesEntity accountFeesEntity = new AccountFeesEntity();
-		accountFeesEntity.setAccount(group.getCustomerAccount());
-		accountFeesEntity.setAccountFeeAmount(((AmountFeeBO) periodicFee)
-				.getFeeAmount());
-		accountFeesEntity.setFeeAmount(((AmountFeeBO) periodicFee)
-				.getFeeAmount());
-		accountFeesEntity.setFees(periodicFee);
-		accountFeesEntity.setLastAppliedDate(new Date(System
-				.currentTimeMillis()));
+		AccountFeesEntity accountFeesEntity = new AccountFeesEntity(group.getCustomerAccount(),periodicFee,((AmountFeeBO) periodicFee)
+				.getFeeAmount().getAmountDoubleValue(),null,null,new Date(System
+						.currentTimeMillis()));
 		group.getCustomerAccount().addAccountFees(accountFeesEntity);
 		TestObjectFactory.updateObject(group);
 

@@ -119,7 +119,7 @@ public class CustomerAccountBO extends AccountBO {
 		if(fees !=null){
 			for(FeeView feeView: fees){
 				FeeBO fee = new FeePersistence().getFee(feeView.getFeeIdValue());
-				this.addAccountFees(new AccountFeesEntity(this,fee, new Money(feeView.getAmount())));
+				this.addAccountFees(new AccountFeesEntity(this,fee, new Double(feeView.getAmount())));
 			}
 			generateCustomerFeeSchedule(customer);
 		}
@@ -501,23 +501,24 @@ public class CustomerAccountBO extends AccountBO {
 	}
 	
 	@Override
-	public void applyCharge(Short feeId, Money charge)
+	public void applyCharge(Short feeId, Double charge)
 			throws AccountException {
 		if(!isCustomerValid())
 			addFeeToAccountFee(feeId,charge);
 		else{
 			List<AccountActionDateEntity> dueInstallments = getDueInstallments();
+			Money chargeAmount=new Money(String.valueOf(charge));
 			if (!dueInstallments.isEmpty()) {
 				if (feeId.equals(Short.valueOf(AccountConstants.MISC_FEES))
 						|| feeId.equals(Short
 								.valueOf(AccountConstants.MISC_PENALTY))) {
-					applyMiscCharge(feeId, charge, dueInstallments.get(0));
+					applyMiscCharge(feeId, chargeAmount, dueInstallments.get(0));
 				} else {
 					FeeBO fee = new FeePersistence().getFee(feeId);
 					if (fee.getFeeFrequency().getFeePayment() != null) {
-						applyOneTimeFee(fee, charge, dueInstallments.get(0));
+						applyOneTimeFee(fee, chargeAmount, dueInstallments.get(0));
 					} else {
-						applyPeriodicFee(fee,charge,getDueInstallments());
+						applyPeriodicFee(fee,chargeAmount,getDueInstallments());
 					}
 				}
 			} else {
@@ -526,7 +527,7 @@ public class CustomerAccountBO extends AccountBO {
 		}
 	}
 	
-	private void addFeeToAccountFee(Short feeId,Money charge){
+	private void addFeeToAccountFee(Short feeId,Double charge){
 		FeeBO fee = new FeePersistence().getFee(feeId);
 		AccountFeesEntity accountFee=null;
 		if((fee.isPeriodic() && !isFeeAlreadyApplied(fee)) || !fee.isPeriodic()){
@@ -539,7 +540,7 @@ public class CustomerAccountBO extends AccountBO {
 	
 	private void applyPeriodicFee(FeeBO fee, Money charge,List<AccountActionDateEntity> dueInstallments)
 			throws AccountException {
-		AccountFeesEntity accountFee = getAccountFee(fee, charge);
+		AccountFeesEntity accountFee = getAccountFee(fee,charge.getAmountDoubleValue());
 		Map<Short, Money> feeInstallmentMap = getFeeInstallmentMap(accountFee,
 				dueInstallments.get(0).getActionDate());
 		Money totalFeeAmountApplied = applyFeeToInstallments(feeInstallmentMap,
@@ -551,7 +552,7 @@ public class CustomerAccountBO extends AccountBO {
 	private void applyOneTimeFee(FeeBO fee, Money charge, AccountActionDateEntity accountActionDateEntity)
 			throws AccountException {
 		CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDateEntity;
-		AccountFeesEntity accountFee = new AccountFeesEntity(this, fee, charge,
+		AccountFeesEntity accountFee = new AccountFeesEntity(this, fee, charge.getAmountDoubleValue(),
 				FeeStatus.ACTIVE.getValue(), new Date(System
 						.currentTimeMillis()), null);
 		Map<Short, Money> feeInstallmentMap = getFeeInstallmentMap(accountFee,

@@ -71,9 +71,4 @@ public class AccountTestSuite extends MifosTestSuite {
 	}
 	
 	
-
-	 
-
-
-	
 }

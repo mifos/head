@@ -351,15 +351,10 @@ public class TestAccountBO extends TestAccount {
 	}
 
 	public void testGetPeriodicFeeList() throws PersistenceException {
-		AccountFeesEntity accountOneTimeFee = new AccountFeesEntity();
-		accountOneTimeFee.setAccount(accountBO);
-		accountOneTimeFee.setAccountFeeAmount(new Money("1.0"));
-		accountOneTimeFee.setFeeAmount(new Money("1.0"));
 		FeeBO oneTimeFee = TestObjectFactory.createOneTimeAmountFee(
 				"One Time Fee", FeeCategory.LOAN, "20",
 				FeePayment.TIME_OF_DISBURSMENT);
-
-		accountOneTimeFee.setFees(oneTimeFee);
+		AccountFeesEntity accountOneTimeFee = new AccountFeesEntity(accountBO,oneTimeFee,new Double("1.0"));
 		accountBO.addAccountFees(accountOneTimeFee);
 		accountPersistence.createOrUpdate(accountBO);
 		TestObjectFactory.flushandCloseSession();

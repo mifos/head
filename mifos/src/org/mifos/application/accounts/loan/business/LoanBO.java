@@ -563,13 +563,13 @@ public class LoanBO extends AccountBO {
 	}
 
 	@Override
-	public void applyCharge(Short feeId, Money charge) throws AccountException {
+	public void applyCharge(Short feeId, Double charge) throws AccountException {
 		List<AccountActionDateEntity> dueInstallments = getDueInstallments();
 		if (!dueInstallments.isEmpty()) {
 			if (feeId.equals(Short.valueOf(AccountConstants.MISC_FEES))
 					|| feeId.equals(Short
 							.valueOf(AccountConstants.MISC_PENALTY))) {
-				applyMiscCharge(feeId, charge, dueInstallments.get(0));
+				applyMiscCharge(feeId,new Money(String.valueOf(charge)), dueInstallments.get(0));
 			} else {
 				FeeBO fee = new FeePersistence().getFee(feeId);
 				if (fee.getFeeFrequency().getFeePayment() != null) {
@@ -1211,7 +1211,7 @@ public class LoanBO extends AccountBO {
 				"FeeInstallmentGenerator:getAccountFeeAmount rate flat flag..");
 
 		Money accountFeeAmount = new Money();
-		Double feeAmount = accountFees.getFeeAmount().getAmountDoubleValue();
+		Double feeAmount = accountFees.getFeeAmount();
 
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"FeeInstallmentGenerator:getAccountFeeAmount feeAmount.."
@@ -1764,7 +1764,7 @@ public class LoanBO extends AccountBO {
 		return isValid;
 	}
 
-	private void applyPeriodicFee(FeeBO fee, Money charge,
+	private void applyPeriodicFee(FeeBO fee, Double charge,
 			List<AccountActionDateEntity> dueInstallments)
 			throws AccountException {
 		AccountFeesEntity accountFee = getAccountFee(fee, charge);
@@ -1778,7 +1778,7 @@ public class LoanBO extends AccountBO {
 				+ " applied");
 	}
 
-	private void applyOneTimeFee(FeeBO fee, Money charge,
+	private void applyOneTimeFee(FeeBO fee, Double charge,
 			AccountActionDateEntity accountActionDateEntity)
 			throws AccountException {
 		LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;

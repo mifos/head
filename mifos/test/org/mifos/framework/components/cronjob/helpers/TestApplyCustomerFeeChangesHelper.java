@@ -56,15 +56,10 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 
 		CustomerAccountBO customerAccount = center.getCustomerAccount();
 		Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
-		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity();
-		accountPeriodicFee.setAccount(center.getCustomerAccount());
-		accountPeriodicFee.setAccountFeeAmount(new Money("10.0"));
-		accountPeriodicFee.setFeeAmount(new Money("10.0"));
 		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee(
 				"Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
 				MeetingFrequency.WEEKLY, Short.valueOf("2"));
-
-		accountPeriodicFee.setFees(trainingFee);
+		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(),trainingFee,new Double("10.0"));
 		accountFeeSet.add(accountPeriodicFee);
 		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) customerAccount
 				.getAccountActionDate(Short.valueOf("1"));
@@ -106,14 +101,10 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 
 		CustomerAccountBO customerAccount = center.getCustomerAccount();
 		Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
-		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity();
-		accountPeriodicFee.setAccount(center.getCustomerAccount());
-		accountPeriodicFee.setAccountFeeAmount(new Money("10.0"));
-		accountPeriodicFee.setFeeAmount(new Money("10.0"));
 		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee(
 				"Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
 				MeetingFrequency.WEEKLY, Short.valueOf("2"));
-		accountPeriodicFee.setFees(trainingFee);
+		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(),trainingFee,new Double("10.0"));
 		accountFeeSet.add(accountPeriodicFee);
 		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) customerAccount
 				.getAccountActionDate(Short.valueOf("1"));
@@ -150,14 +141,10 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 	public void testExecuteStatusInactiveAndAmountUpdated() throws Exception {
 		CustomerAccountBO customerAccount = center.getCustomerAccount();
 		Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
-		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity();
-		accountPeriodicFee.setAccount(center.getCustomerAccount());
-		accountPeriodicFee.setAccountFeeAmount(new Money("10.0"));
-		accountPeriodicFee.setFeeAmount(new Money("10.0"));
 		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee(
 				"Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
 				MeetingFrequency.WEEKLY, Short.valueOf("2"));
-		accountPeriodicFee.setFees(trainingFee);
+		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(),trainingFee,((AmountFeeBO)trainingFee).getFeeAmount().getAmountDoubleValue());
 		accountFeeSet.add(accountPeriodicFee);
 		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) customerAccount
 				.getAccountActionDate(Short.valueOf("1"));
@@ -203,14 +190,10 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 	public void testExecuteStatusInactiveToActive() throws Exception {
 		CustomerAccountBO customerAccount = center.getCustomerAccount();
 		Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
-		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity();
-		accountPeriodicFee.setAccount(center.getCustomerAccount());
-		accountPeriodicFee.setAccountFeeAmount(new Money("10.0"));
-		accountPeriodicFee.setFeeAmount(new Money("10.0"));
 		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee(
 				"Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
 				MeetingFrequency.WEEKLY, Short.valueOf("2"));
-		accountPeriodicFee.setFees(trainingFee);
+		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(),trainingFee,((AmountFeeBO)trainingFee).getFeeAmount().getAmountDoubleValue());
 		accountPeriodicFee.setFeeStatus(Short.valueOf("2"));
 		accountFeeSet.add(accountPeriodicFee);
 		trainingFee.updateStatus(FeeStatus.INACTIVE);
@@ -245,14 +228,10 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 
 		CustomerAccountBO customerAccount = center.getCustomerAccount();
 		Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
-		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity();
-		accountPeriodicFee.setAccount(center.getCustomerAccount());
-		accountPeriodicFee.setAccountFeeAmount(new Money("10.0"));
-		accountPeriodicFee.setFeeAmount(new Money("10.0"));
 		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee(
 				"Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
 				MeetingFrequency.WEEKLY, Short.valueOf("2"));
-		accountPeriodicFee.setFees(trainingFee);
+		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(),trainingFee,((AmountFeeBO)trainingFee).getFeeAmount().getAmountDoubleValue());
 		accountPeriodicFee.setFeeStatus(Short.valueOf("2"));
 		accountFeeSet.add(accountPeriodicFee);
 		trainingFee.updateStatus(FeeStatus.INACTIVE);
@@ -297,24 +276,14 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		CustomerAccountBO groupAccount = group.getCustomerAccount();
 		Set<AccountFeesEntity> accountFeeSet = centerAccount.getAccountFees();
 		Set<AccountFeesEntity> groupFeeSet = groupAccount.getAccountFees();
-
-		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity();
-		accountPeriodicFee.setAccount(center.getCustomerAccount());
-		accountPeriodicFee.setAccountFeeAmount(new Money("10.0"));
-		accountPeriodicFee.setFeeAmount(new Money("10.0"));
-
-		AccountFeesEntity groupaccountPeriodicFee = new AccountFeesEntity();
-		groupaccountPeriodicFee.setAccount(group.getCustomerAccount());
-		groupaccountPeriodicFee.setAccountFeeAmount(new Money("10.0"));
-		groupaccountPeriodicFee.setFeeAmount(new Money("10.0"));
-
+		
 		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee(
 				"Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
 				MeetingFrequency.WEEKLY, Short.valueOf("2"));
 
-		accountPeriodicFee.setFees(trainingFee);
+		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(),trainingFee,((AmountFeeBO)trainingFee).getFeeAmount().getAmountDoubleValue());
 
-		groupaccountPeriodicFee.setFees(trainingFee);
+		AccountFeesEntity groupaccountPeriodicFee = new AccountFeesEntity(group.getCustomerAccount(),trainingFee,((AmountFeeBO)trainingFee).getFeeAmount().getAmountDoubleValue());
 
 		accountFeeSet.add(accountPeriodicFee);
 		groupFeeSet.add(groupaccountPeriodicFee);
@@ -368,12 +337,6 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 				.getAccountFeesAction(groupaccountPeriodicFee.getAccountFeeId());
 		assertEquals(5.0, groupaccountFeesAction.getFeeAmount()
 				.getAmountDoubleValue());
-
-		List<FeeBO> feeList = new ArrayList<FeeBO>();
-		for (AccountFeesEntity accountFees : groupAccount.getAccountFees()) {
-			feeList.add(accountFees.getFees());
-			accountFees.setFees(null);
-		}
 
 	}
 }

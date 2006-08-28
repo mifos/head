@@ -131,7 +131,7 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 	private void updateAccountFee(AccountFeesEntity fee, FeeBO feeBO) {
 		fee.changeFeesStatus(FeeStatus.INACTIVE.getValue(), new Date(System
 				.currentTimeMillis()));
-		fee.setFeeAmount(((AmountFeeBO) feeBO).getFeeAmount());
+		fee.setFeeAmount(((AmountFeeBO) feeBO).getFeeAmount().getAmountDoubleValue());
 		fee.setAccountFeeAmount(((AmountFeeBO) feeBO).getFeeAmount());
 	}
 

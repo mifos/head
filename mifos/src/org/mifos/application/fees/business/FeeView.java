@@ -60,8 +60,8 @@ public class FeeView extends View{
 		return amount;
 	}
 	
-	public Money getAmountMoney() {
-		return new Money(amount);
+	public Double getAmountMoney() {
+		return new Double(amount);
 	}
 	
 	public void setAmount(String amount) {

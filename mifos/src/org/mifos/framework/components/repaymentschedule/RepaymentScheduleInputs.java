@@ -326,7 +326,7 @@ public class RepaymentScheduleInputs implements RepaymentScheduleInputsIfc {
 	private AccountFees getAccountFees(AccountFeesEntity afe){
 		AccountFees af = new AccountFees();
 		af.setAccountFeeAmount(afe.getAccountFeeAmount());
-		af.setFeeAmount(afe.getFeeAmount().getAmountDoubleValue());
+		af.setFeeAmount(afe.getFeeAmount());
 		af.setFees(getFees(afe.getFees()));
 		return af;
 	}

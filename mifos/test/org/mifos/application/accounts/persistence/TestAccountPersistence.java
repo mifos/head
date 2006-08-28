@@ -90,10 +90,7 @@ public class TestAccountPersistence extends TestAccount {
 		
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"ClientPeridoicFee", FeeCategory.CENTER, "5", MeetingFrequency.WEEKLY, Short.valueOf("1"));
-		AccountFeesEntity accountFee = new AccountFeesEntity();
-		accountFee.setFeeAmount(((AmountFeeBO)periodicFee).getFeeAmount());
-		accountFee.setAccountFeeAmount(((AmountFeeBO)periodicFee).getFeeAmount());
-		accountFee.setFees(periodicFee);
+		AccountFeesEntity accountFee = new AccountFeesEntity(center.getCustomerAccount(),periodicFee,((AmountFeeBO)periodicFee).getFeeAmount().getAmountDoubleValue());
 		CustomerAccountBO customerAccount = center.getCustomerAccount();
 		customerAccount.addAccountFees(accountFee);
 		TestObjectFactory.updateObject( customerAccount);

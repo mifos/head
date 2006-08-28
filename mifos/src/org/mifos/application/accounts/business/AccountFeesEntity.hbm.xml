@@ -9,16 +9,12 @@
 	<class
 		name="org.mifos.application.accounts.business.AccountFeesEntity"
 		table="ACCOUNT_FEES" >
-		<id name="accountFeeId" column="ACCOUNT_FEE_ID"
-			type="integer">
+		<id name="accountFeeId" column="ACCOUNT_FEE_ID" type="integer" access="field">
 			<generator class="native" />
 		</id>
 		<version name="versionNo" column="VERSION_NO" type="integer"
 			unsaved-value="null" />
-		<property name="feeAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-		 <column name="FEE_AMNT_CURRENCY_ID" /> 
-		 <column name="FEE_AMNT" />
-		</property>
+		<property name="feeAmount" column="FEE_AMNT" />
 		<property name="accountFeeAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
 		 <column name="ACCOUNT_FEE_AMNT_CURRENCY_ID" /> 
 		 <column name="ACCOUNT_FEE_AMNT" />
@@ -28,10 +24,10 @@
 		<property name="lastAppliedDate" column="LAST_APPLIED_DATE" />
 		<many-to-one name="account" column="ACCOUNT_ID"
 			class="org.mifos.application.accounts.business.AccountBO"
-			 lazy="false" />
+			 lazy="false" access="field"/>
 		<many-to-one name="fees" column="FEE_ID" 
 			class="org.mifos.application.fees.business.FeeBO"
-			 unique="true" lazy="true" fetch="join" />
+			 unique="true" lazy="true" fetch="join" access="field"/>
 
 	</class>
 		<query name="getCustomerAccountsForFee">

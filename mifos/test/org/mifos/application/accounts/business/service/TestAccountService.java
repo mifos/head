@@ -272,7 +272,7 @@ public class TestAccountService extends MifosTestCase {
         
   		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee",
 					FeeCategory.LOAN, Double.valueOf("20"),FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		AccountFeesEntity accountUpfrontFee = new AccountFeesEntity(accountBO,upfrontFee,new Money("20.0"),
+		AccountFeesEntity accountUpfrontFee = new AccountFeesEntity(accountBO,upfrontFee,new Double("20.0"),
 				FeeStatus.ACTIVE.getValue(), null,loanScheduleEntity.getActionDate());
 		accountBO.addAccountFees(accountUpfrontFee);
 		AccountFeesActionDetailEntity accountUpfrontFeesaction = new LoanFeeScheduleEntity(
@@ -285,7 +285,7 @@ public class TestAccountService extends MifosTestCase {
 		loanScheduleEntity=(LoanScheduleEntity)accountBO.getAccountActionDate(Short.valueOf("1"));
 		FeeBO timeOfDisbursmentFees = TestObjectFactory.createOneTimeAmountFee("Disbursment Fee",
 				FeeCategory.LOAN, "30", FeePayment.TIME_OF_DISBURSMENT);
-		AccountFeesEntity accountDisbursmentFee = new AccountFeesEntity(accountBO,timeOfDisbursmentFees,new Money("30.0"),
+		AccountFeesEntity accountDisbursmentFee = new AccountFeesEntity(accountBO,timeOfDisbursmentFees,new Double("30.0"),
 				FeeStatus.ACTIVE.getValue(), null,loanScheduleEntity.getActionDate());
 		accountBO.addAccountFees(accountDisbursmentFee);
 		AccountFeesActionDetailEntity accountDisbursmentFeesaction = new LoanFeeScheduleEntity(
@@ -298,7 +298,7 @@ public class TestAccountService extends MifosTestCase {
 		loanScheduleEntity=(LoanScheduleEntity)accountBO.getAccountActionDate(Short.valueOf("1"));
 		FeeBO firstLoanRepaymentFee  = TestObjectFactory.createOneTimeAmountFee("First Loan Repayment Fee",
 				FeeCategory.LOAN, "40", FeePayment.TIME_OF_FIRSTLOANREPAYMENT);
-		AccountFeesEntity accountFirstLoanRepaymentFee = new AccountFeesEntity(accountBO,firstLoanRepaymentFee,new Money("40.0"),
+		AccountFeesEntity accountFirstLoanRepaymentFee = new AccountFeesEntity(accountBO,firstLoanRepaymentFee,new Double("40.0"),
 				FeeStatus.ACTIVE.getValue(), null,loanScheduleEntity.getActionDate());
 		accountBO.addAccountFees(accountFirstLoanRepaymentFee);
 		AccountFeesActionDetailEntity accountTimeOfFirstLoanRepaymentFeesaction = new LoanFeeScheduleEntity(
@@ -311,7 +311,7 @@ public class TestAccountService extends MifosTestCase {
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
 				FeeCategory.LOAN, "200", MeetingFrequency.WEEKLY, Short
 						.valueOf("1"));
-		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(accountBO,periodicFee,new Money("200.0"),
+		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(accountBO,periodicFee,new Double("200.0"),
 				FeeStatus.INACTIVE.getValue(), null,null);
 		accountBO.addAccountFees(accountPeriodicFee);
 		TestObjectFactory.updateObject(accountBO);
@@ -329,7 +329,7 @@ public class TestAccountService extends MifosTestCase {
         
   		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee",
 					FeeCategory.CENTER, Double.valueOf("20"),FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		AccountFeesEntity accountUpfrontFee = new AccountFeesEntity(customerAccountBO,upfrontFee,new Money("20.0"),
+		AccountFeesEntity accountUpfrontFee = new AccountFeesEntity(customerAccountBO,upfrontFee,new Double("20.0"),
 				FeeStatus.ACTIVE.getValue(), null,customerScheduleEntity.getActionDate());
 		customerAccountBO.addAccountFees(accountUpfrontFee);
 		AccountFeesActionDetailEntity accountUpfrontFeesaction = new CustomerFeeScheduleEntity(
@@ -342,7 +342,7 @@ public class TestAccountService extends MifosTestCase {
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
 				FeeCategory.ALLCUSTOMERS, "200", MeetingFrequency.WEEKLY, Short
 						.valueOf("1"));
-		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(customerAccountBO,periodicFee,new Money("200.0"),
+		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(customerAccountBO,periodicFee,new Double("200.0"),
 				FeeStatus.INACTIVE.getValue(), null,null);
 		customerAccountBO.addAccountFees(accountPeriodicFee);
 		TestObjectFactory.updateObject(center);

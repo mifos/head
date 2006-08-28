@@ -291,7 +291,6 @@ public class AccountBO extends BusinessObject {
 	}
 
 	public void addAccountFees(AccountFeesEntity fees) {
-		fees.setAccount(this);
 		accountFees.add(fees);
 	}
 
@@ -753,7 +752,7 @@ public class AccountBO extends BusinessObject {
 		return false;
 	}
 
-	public void applyCharge(Short feeId, Money charge) throws AccountException {
+	public void applyCharge(Short feeId, Double charge) throws AccountException {
 	}
 
 	protected final void buildFinancialEntries(
@@ -871,7 +870,7 @@ public class AccountBO extends BusinessObject {
 		return getAccountFees(fee.getFeeId()) != null;
 	}
 
-	protected final AccountFeesEntity getAccountFee(FeeBO fee, Money charge) {
+	protected final AccountFeesEntity getAccountFee(FeeBO fee, Double charge) {
 		AccountFeesEntity accountFee = null;
 		if (fee.isPeriodic() && isFeeAlreadyApplied(fee)) {
 			accountFee = getAccountFees(fee.getFeeId());

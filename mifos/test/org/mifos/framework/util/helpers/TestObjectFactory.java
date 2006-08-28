@@ -699,14 +699,10 @@ public class TestObjectFactory {
 		} catch (SystemException e) {
 		} catch (ApplicationException e) {
 		}
-		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity();
-		accountPeriodicFee.setAccount(loan);
-		accountPeriodicFee.setAccountFeeAmount(new Money(currency, "100.0"));
-		accountPeriodicFee.setFeeAmount(new Money(currency, "100.0"));
 		FeeBO maintanenceFee = createPeriodicAmountFee("Mainatnence Fee",
 				FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY, Short
 						.valueOf("1"));
-		accountPeriodicFee.setFees(maintanenceFee);
+		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(loan,maintanenceFee,((AmountFeeBO)maintanenceFee).getFeeAmount().getAmountDoubleValue());	
 		loan.addAccountFees(accountPeriodicFee);
 		loan.setLoanMeeting(meeting);
 		short i = 0;
@@ -1559,14 +1555,10 @@ public class TestObjectFactory {
 			} catch (SystemException e) {
 			} catch (ApplicationException e) {
 			}
-		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity();
-		accountPeriodicFee.setAccount(loan);
-		accountPeriodicFee.setAccountFeeAmount(new Money(currency, "10.0"));
-		accountPeriodicFee.setFeeAmount(new Money(currency, "10.0"));
 		FeeBO maintanenceFee = createPeriodicAmountFee("Mainatnence Fee",
 				FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY, Short
 						.valueOf("1"));
-		accountPeriodicFee.setFees(maintanenceFee);
+		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(loan,maintanenceFee,new Double("10.0"));
 		loan.addAccountFees(accountPeriodicFee);
 		AccountFeesEntity accountDisbursementFee = null;
 		FeeBO disbursementFee = null;
@@ -1574,24 +1566,14 @@ public class TestObjectFactory {
 		FeeBO disbursementFee2 = null;
 
 		if (disbursalType == 1 || disbursalType == 2) {
-			accountDisbursementFee = new AccountFeesEntity();
-			accountDisbursementFee.setAccountFeeAmount(new Money(currency,
-					"10.0"));
-			accountDisbursementFee.setFeeAmount(new Money(currency, "10.0"));
 			disbursementFee = createOneTimeAmountFee("Disbursement Fee 1",
 					FeeCategory.LOAN, "10", FeePayment.TIME_OF_DISBURSMENT);
-			accountDisbursementFee.setFees(disbursementFee);
-			accountDisbursementFee.setAccount(loan);
+			accountDisbursementFee = new AccountFeesEntity(loan,disbursementFee,new Double("10.0"));
 			loan.addAccountFees(accountDisbursementFee);
 
-			accountDisbursementFee2 = new AccountFeesEntity();
-			accountDisbursementFee2.setAccountFeeAmount(new Money(currency,
-					"20.0"));
-			accountDisbursementFee2.setFeeAmount(new Money(currency, "20.0"));
 			disbursementFee2 = createOneTimeAmountFee("Disbursement Fee 2",
 					FeeCategory.LOAN, "20", FeePayment.TIME_OF_DISBURSMENT);
-			accountDisbursementFee2.setFees(disbursementFee2);
-			accountDisbursementFee2.setAccount(loan);
+			accountDisbursementFee2 = new AccountFeesEntity(loan,disbursementFee2,new Double("20.0"));
 			loan.addAccountFees(accountDisbursementFee2);
 		}
 		loan.setLoanMeeting(meeting);

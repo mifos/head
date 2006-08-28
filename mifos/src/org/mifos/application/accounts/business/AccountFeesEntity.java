@@ -62,88 +62,71 @@ import org.mifos.framework.util.helpers.Money;
  */
 public class AccountFeesEntity extends PersistentObject {
 
-	public AccountFeesEntity() {
-		super();
+	private final Integer accountFeeId;
 
-	}
-	
-	public AccountFeesEntity(AccountBO account, FeeBO fee, Money feeAmount){
-		this.account = account;
-		this.fees = fee;
-		this.feeAmount = feeAmount;
-		this.accountFeeAmount = feeAmount;
-	}
-	
-	private Integer accountFeeId;
+	private final AccountBO account;
 
-	private AccountBO account;
-
-	private FeeBO fees;
+	private final FeeBO fees;
 
 	private Money accountFeeAmount;
 
-	private Money feeAmount;
+	private Double feeAmount;
 
 	private Short feeStatus;
 
 	private Date statusChangeDate;
 
 	private Date lastAppliedDate;
+	
+	protected AccountFeesEntity() {
+		super();
+		accountFeeId=null;
+		account=null;
+		fees=null;
 
-	public AccountBO getAccount() {
-		return account;
+	}
+
+	public AccountFeesEntity(AccountBO account, FeeBO fee, Double feeAmount){
+		accountFeeId=null;
+		this.account = account;
+		this.fees = fee;
+		this.feeAmount = feeAmount;
+		this.accountFeeAmount = new Money(String.valueOf(feeAmount));
 	}
 	
-	public AccountFeesEntity(AccountBO account, FeeBO fees, Money feeAmount,
+	public AccountFeesEntity(AccountBO account, FeeBO fees, Double feeAmount,
 			Short feeStatus, Date statusChangeDate, Date lastAppliedDate) {
+		accountFeeId=null;
 		this.account = account;
 		this.fees = fees;
-		this.accountFeeAmount = feeAmount;
+		this.accountFeeAmount = new Money(String.valueOf(feeAmount));
 		this.feeAmount = feeAmount;
 		this.feeStatus = feeStatus;
 		this.statusChangeDate = statusChangeDate;
 		this.lastAppliedDate = lastAppliedDate;
 	}
-
-	public void setAccount(AccountBO account) {
-		this.account = account;
+	
+	public AccountBO getAccount() {
+		return account;
 	}
 
 	public Integer getAccountFeeId() {
 		return accountFeeId;
 	}
 
-	public void setAccountFeeId(Integer accountFeeId) {
-		this.accountFeeId = accountFeeId;
-	}
-
-	/**
-	 * @return Returns the accountFeeAmount.
-	 */
 	public Money getAccountFeeAmount() {
 		return accountFeeAmount;
 	}
 
-	/**
-	 * @param accountFeeAmount
-	 *            The accountFeeAmount to set.
-	 */
 	public void setAccountFeeAmount(Money accountFeeAmount) {
 		this.accountFeeAmount = accountFeeAmount;
 	}
 
-	/**
-	 * @return Returns the feeAmount.
-	 */
-	public Money getFeeAmount() {
+	public Double getFeeAmount() {
 		return feeAmount;
 	}
 
-	/**
-	 * @param feeAmount
-	 *            The feeAmount to set.
-	 */
-	public void setFeeAmount(Money feeAmount) {
+	public void setFeeAmount(Double feeAmount) {
 		this.feeAmount = feeAmount;
 	}
 
@@ -151,36 +134,18 @@ public class AccountFeesEntity extends PersistentObject {
 		return fees;
 	}
 
-	public void setFees(FeeBO fees) {
-		this.fees = fees;
-	}
-
-	/**
-	 * @return Returns the feeStatus.
-	 */
 	public Short getFeeStatus() {
 		return feeStatus;
 	}
 
-	/**
-	 * @param feeStatus
-	 *            The feeStatus to set.
-	 */
 	public void setFeeStatus(Short feeStatus) {
 		this.feeStatus = feeStatus;
 	}
 
-	/**
-	 * @return Returns the statusChangeDate.
-	 */
 	public Date getStatusChangeDate() {
 		return statusChangeDate;
 	}
 
-	/**
-	 * @param statusChangeDate
-	 *            The statusChangeDate to set.
-	 */
 	public void setStatusChangeDate(Date statusChangeDate) {
 		this.statusChangeDate = statusChangeDate;
 	}

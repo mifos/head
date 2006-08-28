@@ -1557,9 +1557,9 @@ public class TestLoanBO extends MifosTestCase {
 		for (AccountFeesEntity accountFees : loan.getAccountFees()) {
 			if (accountFees.getFees().getFeeName()
 					.equals("One Time Amount Fee"))
-				assertEquals(new Money("120.0"), accountFees.getFeeAmount());
+				assertEquals(new Double("120.0"), accountFees.getFeeAmount());
 			else
-				assertEquals(new Money("10.0"), accountFees.getFeeAmount());
+				assertEquals(new Double("10.0"), accountFees.getFeeAmount());
 		}
 		for (AccountActionDateEntity accountActionDate : loan
 				.getAccountActionDates()) {
@@ -1623,9 +1623,9 @@ public class TestLoanBO extends MifosTestCase {
 		for (AccountFeesEntity accountFees : loan.getAccountFees()) {
 			if (accountFees.getFees().getFeeName()
 					.equals("One Time Amount Fee"))
-				assertEquals(new Money("120.0"), accountFees.getFeeAmount());
+				assertEquals(new Double("120.0"), accountFees.getFeeAmount());
 			else
-				assertEquals(new Money("10.0"), accountFees.getFeeAmount());
+				assertEquals(new Double("10.0"), accountFees.getFeeAmount());
 		}
 		for (AccountActionDateEntity accountActionDate : loan
 				.getAccountActionDates()) {
@@ -1665,9 +1665,9 @@ public class TestLoanBO extends MifosTestCase {
 		for (AccountFeesEntity accountFees : loan.getAccountFees()) {
 			if (accountFees.getFees().getFeeName()
 					.equals("One Time Amount Fee"))
-				assertEquals(new Money("120.0"), accountFees.getFeeAmount());
+				assertEquals(new Double("120.0"), accountFees.getFeeAmount());
 			else
-				assertEquals(new Money("10.0"), accountFees.getFeeAmount());
+				assertEquals(new Double("10.0"), accountFees.getFeeAmount());
 		}
 		for (AccountActionDateEntity accountActionDate : loan
 				.getAccountActionDates()) {
@@ -1708,9 +1708,9 @@ public class TestLoanBO extends MifosTestCase {
 		for (AccountFeesEntity accountFees : loan.getAccountFees()) {
 			if (accountFees.getFees().getFeeName()
 					.equals("One Time Amount Fee"))
-				assertEquals(new Money("120.0"), accountFees.getFeeAmount());
+				assertEquals(new Double("120.0"), accountFees.getFeeAmount());
 			else
-				assertEquals(new Money("10.0"), accountFees.getFeeAmount());
+				assertEquals(new Double("10.0"), accountFees.getFeeAmount());
 		}
 		for (AccountActionDateEntity accountActionDate : loan
 				.getAccountActionDates()) {
@@ -1751,9 +1751,9 @@ public class TestLoanBO extends MifosTestCase {
 		for (AccountFeesEntity accountFees : loan.getAccountFees()) {
 			if (accountFees.getFees().getFeeName()
 					.equals("One Time Amount Fee"))
-				assertEquals(new Money("120.0"), accountFees.getFeeAmount());
+				assertEquals(new Double("120.0"), accountFees.getFeeAmount());
 			else
-				assertEquals(new Money("10.0"), accountFees.getFeeAmount());
+				assertEquals(new Double("10.0"), accountFees.getFeeAmount());
 		}
 		for (AccountActionDateEntity accountActionDate : loan
 				.getAccountActionDates()) {
@@ -1841,7 +1841,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
 		UserContext uc = TestObjectFactory.getUserContext();
 		accountBO.setUserContext(uc);
-		accountBO.applyCharge(Short.valueOf("-1"),new Money("33"));
+		accountBO.applyCharge(Short.valueOf("-1"),new Double("33"));
 		for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
 			LoanScheduleEntity loanScheduleEntity=(LoanScheduleEntity)accountActionDateEntity;
 			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("2")))
@@ -1864,7 +1864,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
 		UserContext uc = TestObjectFactory.getUserContext();
 		accountBO.setUserContext(uc);
-		accountBO.applyCharge(periodicFee.getFeeId(),((AmountFeeBO)periodicFee).getFeeAmount());
+		accountBO.applyCharge(periodicFee.getFeeId(),((AmountFeeBO)periodicFee).getFeeAmount().getAmountDoubleValue());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
@@ -1898,7 +1898,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
 		UserContext uc = TestObjectFactory.getUserContext();
 		accountBO.setUserContext(uc);
-		accountBO.applyCharge(upfrontFee.getFeeId(),new Money(((RateFeeBO)upfrontFee).getRate().toString()));
+		accountBO.applyCharge(upfrontFee.getFeeId(),((RateFeeBO)upfrontFee).getRate());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
@@ -2362,13 +2362,13 @@ public class TestLoanBO extends MifosTestCase {
 	   for(AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()){
 		   if(accountFeesEntity.getFees().getFeeName().equals("Upfront Fee")){
 			   assertEquals(new Money("60.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Money("20.0"),accountFeesEntity.getFeeAmount());
+			   assertEquals(new Double("20.0"),accountFeesEntity.getFeeAmount());
 		   }else if(accountFeesEntity.getFees().getFeeName().equals("Disbursment Fee")){
 			   assertEquals(new Money("30.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Money("30.0"),accountFeesEntity.getFeeAmount());
+			   assertEquals(new Double("30.0"),accountFeesEntity.getFeeAmount());
 		   }else{
 			   assertEquals(new Money("100.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Money("100.0"),accountFeesEntity.getFeeAmount());
+			   assertEquals(new Double("100.0"),accountFeesEntity.getFeeAmount());
 		   }
 	   }
 	   LoanSummaryEntity loanSummaryEntity =  ((LoanBO)accountBO).getLoanSummary();
@@ -2453,13 +2453,13 @@ public class TestLoanBO extends MifosTestCase {
 	   for(AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()){
 		   if(accountFeesEntity.getFees().getFeeName().equals("Upfront Fee")){
 			   assertEquals(new Money("60.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Money("20.0"),accountFeesEntity.getFeeAmount());
+			   assertEquals(new Double("20.0"),accountFeesEntity.getFeeAmount());
 		   }else if(accountFeesEntity.getFees().getFeeName().equals("Disbursment Fee")){
 			   assertEquals(new Money("30.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Money("30.0"),accountFeesEntity.getFeeAmount());
+			   assertEquals(new Double("30.0"),accountFeesEntity.getFeeAmount());
 		   }else{
 			   assertEquals(new Money("100.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Money("100.0"),accountFeesEntity.getFeeAmount());
+			   assertEquals(new Double("100.0"),accountFeesEntity.getFeeAmount());
 		   }
 	   }
 	   LoanSummaryEntity loanSummaryEntity =  ((LoanBO)accountBO).getLoanSummary();
@@ -2544,13 +2544,13 @@ public class TestLoanBO extends MifosTestCase {
 	   for(AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()){
 		   if(accountFeesEntity.getFees().getFeeName().equals("Upfront Fee")){
 			   assertEquals(new Money("60.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Money("20.0"),accountFeesEntity.getFeeAmount());
+			   assertEquals(new Double("20.0"),accountFeesEntity.getFeeAmount());
 		   }else if(accountFeesEntity.getFees().getFeeName().equals("Disbursment Fee")){
 			   assertEquals(new Money("30.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Money("30.0"),accountFeesEntity.getFeeAmount());
+			   assertEquals(new Double("30.0"),accountFeesEntity.getFeeAmount());
 		   }else{
 			   assertEquals(new Money("100.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Money("100.0"),accountFeesEntity.getFeeAmount());
+			   assertEquals(new Double("100.0"),accountFeesEntity.getFeeAmount());
 		   }
 	   }
 	   LoanSummaryEntity loanSummaryEntity =  ((LoanBO)accountBO).getLoanSummary();
@@ -2635,13 +2635,13 @@ public class TestLoanBO extends MifosTestCase {
 	   for(AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()){
 		   if(accountFeesEntity.getFees().getFeeName().equals("Upfront Fee")){
 			   assertEquals(new Money("60.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Money("20.0"),accountFeesEntity.getFeeAmount());
+			   assertEquals(new Double("20.0"),accountFeesEntity.getFeeAmount());
 		   }else if(accountFeesEntity.getFees().getFeeName().equals("Disbursment Fee")){
 			   assertEquals(new Money("30.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Money("30.0"),accountFeesEntity.getFeeAmount());
+			   assertEquals(new Double("30.0"),accountFeesEntity.getFeeAmount());
 		   }else{
 			   assertEquals(new Money("100.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Money("100.0"),accountFeesEntity.getFeeAmount());
+			   assertEquals(new Double("100.0"),accountFeesEntity.getFeeAmount());
 		   }
 	   }
 	   LoanSummaryEntity loanSummaryEntity =  ((LoanBO)accountBO).getLoanSummary();
@@ -2725,13 +2725,13 @@ public class TestLoanBO extends MifosTestCase {
 	   for(AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()){
 		   if(accountFeesEntity.getFees().getFeeName().equals("Upfront Fee")){
 			   assertEquals(new Money("60.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Money("20.0"),accountFeesEntity.getFeeAmount());
+			   assertEquals(new Double("20.0"),accountFeesEntity.getFeeAmount());
 		   }else if(accountFeesEntity.getFees().getFeeName().equals("Disbursment Fee")){
 			   assertEquals(new Money("30.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Money("30.0"),accountFeesEntity.getFeeAmount());
+			   assertEquals(new Double("30.0"),accountFeesEntity.getFeeAmount());
 		   }else{
 			   assertEquals(new Money("100.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Money("100.0"),accountFeesEntity.getFeeAmount());
+			   assertEquals(new Double("100.0"),accountFeesEntity.getFeeAmount());
 		   }
 	   }
 	   LoanSummaryEntity loanSummaryEntity =  ((LoanBO)accountBO).getLoanSummary();
@@ -2816,16 +2816,16 @@ public class TestLoanBO extends MifosTestCase {
 	   for(AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()){
 		  if(accountFeesEntity.getFees().getFeeName().equals("Upfront Fee")){
 			   assertEquals(new Money("60.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Money("20.0"),accountFeesEntity.getFeeAmount());
+			   assertEquals(new Double("20.0"),accountFeesEntity.getFeeAmount());
 		   }else if(accountFeesEntity.getFees().getFeeName().equals("Disbursment Fee")){
 			   assertEquals(new Money("91.1"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Money("30.0"),accountFeesEntity.getFeeAmount());
+			   assertEquals(new Double("30.0"),accountFeesEntity.getFeeAmount());
 		   }else if(accountFeesEntity.getFees().getFeeName().equals("First Repayment Fee")){
 			   assertEquals(new Money("1.4"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Money("40.0"),accountFeesEntity.getFeeAmount());
+			   assertEquals(new Double("40.0"),accountFeesEntity.getFeeAmount());
 		   }else{
 			   assertEquals(new Money("100.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Money("100.0"),accountFeesEntity.getFeeAmount());
+			   assertEquals(new Double("100.0"),accountFeesEntity.getFeeAmount());
 		   }
 	   }
 	   LoanSummaryEntity loanSummaryEntity =  ((LoanBO)accountBO).getLoanSummary();

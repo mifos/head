@@ -426,15 +426,9 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		FeeBO fee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
 				FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY, Short
 						.valueOf("1"));
-		AccountFeesEntity accountFeesEntity = new AccountFeesEntity();
-		accountFeesEntity.setAccount(group.getCustomerAccount());
-		accountFeesEntity.setAccountFeeAmount(((AmountFeeBO) fee)
-				.getFeeAmount());
-		accountFeesEntity.setFeeAmount(((AmountFeeBO) fee).getFeeAmount());
-		accountFeesEntity.setFees(fee);
-		accountFeesEntity.setLastAppliedDate(new Date(System
-				.currentTimeMillis()));
-
+		AccountFeesEntity accountFeesEntity = new AccountFeesEntity(group.getCustomerAccount(),fee,
+				((AmountFeeBO) fee).getFeeAmount().getAmountDoubleValue(),null,null,new Date(System
+						.currentTimeMillis()));
 		group.getCustomerAccount().addAccountFees(accountFeesEntity);
 
 		TestObjectFactory.updateObject(group);
@@ -685,7 +679,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		customerAccountBO=group.getCustomerAccount();
 		UserContext uc = TestObjectFactory.getUserContext();
 		customerAccountBO.setUserContext(uc);
-		customerAccountBO.applyCharge(Short.valueOf("-1"),new Money("33"));
+		customerAccountBO.applyCharge(Short.valueOf("-1"),new Double("33"));
 		Money amount=new Money();
 		for(AccountActionDateEntity accountActionDateEntity : customerAccountBO.getAccountActionDates()){
 			CustomerScheduleEntity customerScheduleEntity=(CustomerScheduleEntity)accountActionDateEntity;
@@ -718,7 +712,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 						.valueOf("2"));
 		UserContext uc = TestObjectFactory.getUserContext();
 		customerAccountBO.setUserContext(uc);
-		customerAccountBO.applyCharge(periodicFee.getFeeId(),((AmountFeeBO)periodicFee).getFeeAmount());
+		customerAccountBO.applyCharge(periodicFee.getFeeId(),((AmountFeeBO)periodicFee).getFeeAmount().getAmountDoubleValue());
 		HibernateUtil.commitTransaction();
 		Date lastAppliedDate=null;
 		Money amount =new Money();
@@ -756,7 +750,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 						.valueOf("2"));
 		UserContext uc = TestObjectFactory.getUserContext();
 		customerAccountBO.setUserContext(uc);
-		customerAccountBO.applyCharge(periodicFee.getFeeId(),((AmountFeeBO)periodicFee).getFeeAmount());
+		customerAccountBO.applyCharge(periodicFee.getFeeId(),((AmountFeeBO)periodicFee).getFeeAmount().getAmountDoubleValue());
 		HibernateUtil.commitTransaction();
 		AccountFeesEntity accountFeesEntity=customerAccountBO.getAccountFees(periodicFee.getFeeId());
 		assertEquals(FeeStatus.INACTIVE.getValue(),accountFeesEntity.getFeeStatus());
@@ -778,7 +772,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				FeeCategory.ALLCUSTOMERS, "20",FeePayment.UPFRONT);
 		UserContext uc = TestObjectFactory.getUserContext();
 		customerAccountBO.setUserContext(uc);
-		customerAccountBO.applyCharge(upfrontFee.getFeeId(),((AmountFeeBO)upfrontFee).getFeeAmount());;
+		customerAccountBO.applyCharge(upfrontFee.getFeeId(),((AmountFeeBO)upfrontFee).getFeeAmount().getAmountDoubleValue());
 		HibernateUtil.commitTransaction();
 		Date lastAppliedDate=null;
 		Money amount =new Money();

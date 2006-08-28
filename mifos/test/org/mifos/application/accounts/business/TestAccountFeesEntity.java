@@ -73,12 +73,8 @@ public class TestAccountFeesEntity extends MifosTestCase {
 		accountPersistence = new AccountPersistence();
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1,1,4,2));
         center=TestObjectFactory.createCenter("Center",Short.valueOf("13"),"1.1",meeting,new Date(System.currentTimeMillis()));
-        AccountFeesEntity accountPeriodicFee = new AccountFeesEntity();
-		accountPeriodicFee.setAccount(center.getCustomerAccount());
-		accountPeriodicFee.setAccountFeeAmount(new Money("100.0"));
-		accountPeriodicFee.setFeeAmount(new Money("100.0"));
-		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee("Training_Fee", FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY, Short.valueOf("2"));
-		accountPeriodicFee.setFees(trainingFee);
+        FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee("Training_Fee", FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY, Short.valueOf("2"));
+        AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(),trainingFee,new Double("100.0"));
 		center.getCustomerAccount().getAccountFees().add(accountPeriodicFee);
         Date currentDate=DateUtils.getCurrentDateWithoutTimeStamp();
         Calendar calendar = new GregorianCalendar();
