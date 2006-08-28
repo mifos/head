@@ -2,7 +2,7 @@ package org.mifos.framework.components.cronjobs.helpers;
 
 import java.util.List;
 
-import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.framework.components.cronjobs.TaskHelper;
@@ -18,8 +18,8 @@ public class PortfolioAtRiskHelper extends TaskHelper {
 			if(customerIds!=null && !customerIds.isEmpty())
 				for(Integer customerId :  customerIds){
 					try{
-						CustomerBO customer = (CustomerBO)HibernateUtil.getSessionTL().get(CustomerBO.class,customerId);
-						customer.generatePortfolioAtRisk();
+						GroupBO group = (GroupBO)new CustomerPersistence().getCustomer(customerId);
+						group.generatePortfolioAtRisk();
 						HibernateUtil.commitTransaction();
 					}			
 					catch(Exception e){

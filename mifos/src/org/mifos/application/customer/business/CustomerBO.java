@@ -72,7 +72,6 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
@@ -212,10 +211,6 @@ public abstract class CustomerBO extends BusinessObject {
 		this.setCreateDetails();
 	}
 
-//	public boolean isBlackList() {
-//		return blackListed.equals(YesNoFlag.YES.getValue());
-//	}
-
 	public Integer getCustomerId() {
 		return customerId;
 	}
@@ -288,7 +283,7 @@ public abstract class CustomerBO extends BusinessObject {
 		return this.searchId;
 	}
 
-	public void setSearchId(String searchId) {
+	protected void setSearchId(String searchId) {
 		this.searchId = searchId;
 	}
 
@@ -576,12 +571,6 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 
 	public abstract boolean isActive();
-
-
-
-	public void generatePortfolioAtRisk() throws PersistenceException,
-			ServiceException {
-	}
 
 	public Money getBalanceForAccountsAtRisk() {
 		Money amount = new Money();

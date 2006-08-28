@@ -89,6 +89,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		super.setUp();
 	}
 
+	@Override
 	public void tearDown() {
 		TestObjectFactory.cleanUp(centerSavingsAccount);
 		TestObjectFactory.cleanUp(groupSavingsAccount);
@@ -833,6 +834,21 @@ public class TestCustomerPersistence extends MifosTestCase {
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		assertEquals(newLO.getPersonnelId(), group.getPersonnel().getPersonnelId());
 		assertEquals(newLO.getPersonnelId(), client.getPersonnel().getPersonnelId());
+	}
+	
+	public void testDeleteMeeting(){
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		client = TestObjectFactory.createClient("myClient", meeting, CustomerStatus.CLIENT_PENDING.getValue(), new java.util.Date());
+		HibernateUtil.closeSession();
+		
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		customerPersistence.deleteMeeting(client);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		assertNull(client.getCustomerMeeting());
 	}
 	
 	private void getCustomer() {

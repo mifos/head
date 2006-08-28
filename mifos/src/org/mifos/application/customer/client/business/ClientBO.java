@@ -38,9 +38,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
@@ -59,11 +57,15 @@ public class ClientBO extends CustomerBO {
 	private final ClientPerformanceHistoryEntity performanceHistory;
 
 	private Short groupFlag;
+	
 	private String firstName;
+	
 	private String lastName;
+	
 	private String secondLastName;
 	
 	private ClientDetailEntity customerDetail;
+	
 	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER);
 	
 	protected ClientBO() {
@@ -144,13 +146,7 @@ public class ClientBO extends CustomerBO {
 		this.addNameDetailSet(new ClientNameDetailEntity(this, null,
 				spouseNameDetailView));
 		this.customerDetail = new ClientDetailEntity(this, clientDetailView);
-		try {
-			if (picture !=null && picture.available() > 0)
-				this.customerPicture = new CustomerPictureEntity(this,new ClientPersistence().createBlob(picture));
-						
-		} catch (IOException e) {
-			throw new CustomerException(e);
-		}
+		createPicture(picture);		
 
 		if (parentCustomer != null) {
 			CustomerHierarchyEntity customerHierarchyEntity = new CustomerHierarchyEntity(
@@ -183,6 +179,8 @@ public class ClientBO extends CustomerBO {
 		generateSearchId(parentCustomer , officeId);
 	}
 
+
+	
 	public Set<ClientNameDetailEntity> getNameDetailSet() {
 		return nameDetailSet;
 	}
@@ -477,6 +475,188 @@ public class ClientBO extends CustomerBO {
 		return returnValue ;
 	}*/
 
+
+	
+	public void transferToBranch(OfficeBO officeToTransfer)throws CustomerException{
+		validateBranchTransfer(officeToTransfer);
+		logger.debug("In ClientBO::transferToBranch(), transfering customerId: " + getCustomerId() +  "to branch : "+ officeToTransfer.getOfficeId());
+		if(isActive())
+			setCustomerStatus(new CustomerStatusEntity(CustomerStatus.CLIENT_HOLD));
+		
+		makeCustomerMovementEntries(officeToTransfer);		
+		this.setPersonnel(null);
+		generateSearchId(null,officeToTransfer.getOfficeId());
+		super.update();
+		logger.debug("In ClientBO::transferToBranch(), successfully transfered, customerId :" + getCustomerId());  
+	}
+	
+	public void transferToGroup(GroupBO newParent)throws CustomerException{
+		validateGroupTransfer(newParent);
+		logger.debug("In ClientBO::transferToGroup(), transfering customerId: " + getCustomerId() +  "to Group Id : "+ newParent.getCustomerId());
+
+		if(!isSameBranch(newParent.getOffice()))
+			makeCustomerMovementEntries(newParent.getOffice());
+		
+		CustomerBO oldParent = getParentCustomer();
+		
+		oldParent.setMaxChildCount(getParentCustomer().getMaxChildCount() - 1);
+		newParent.setMaxChildCount(newParent.getMaxChildCount()+1);
+		setSearchId(newParent.getSearchId()+ "."+ String.valueOf(newParent.getMaxChildCount()));
+		
+		setParentCustomer(newParent);
+		setPersonnel(newParent.getPersonnel());
+		
+		if(newParent.getCustomerMeeting()!=null){
+			if(getCustomerMeeting()!=null)
+				getCustomerMeeting().setMeeting(newParent.getCustomerMeeting().getMeeting());
+			else
+				setCustomerMeeting(createCustomerMeeting(newParent.getCustomerMeeting().getMeeting()));
+			getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
+		}
+		else{
+			if(getCustomerMeeting()!=null)
+				new CustomerPersistence().deleteMeeting(this);
+		}
+		
+		CustomerHierarchyEntity currentHierarchy = getActiveCustomerHierarchy();
+		currentHierarchy.makeInActive(userContext.getId());
+		
+		CustomerHierarchyEntity newHierarchy = new CustomerHierarchyEntity(this,newParent);
+		this.addCustomerHierarchy(newHierarchy);
+		oldParent.resetPositionsAssignedToClient(this.getCustomerId());
+		if(oldParent.getParentCustomer()!=null){
+			CustomerBO center = oldParent.getParentCustomer();
+			center.resetPositionsAssignedToClient(this.getCustomerId());
+			center.setUserContext(getUserContext());
+			center.update();
+		}
+		oldParent.setUserContext(getUserContext());
+		oldParent.update();
+		newParent.update();
+		this.update();		
+		logger.debug("In ClientBO::transferToGroup(), successfully transfered, customerId :" + getCustomerId());
+	}	
+	
+	public ClientNameDetailEntity getClientName(){
+		for(ClientNameDetailEntity nameDetail : nameDetailSet){
+			if(nameDetail.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE)){
+				return nameDetail;
+			}
+		}
+		return null;
+	}
+	
+	public ClientNameDetailEntity getSpouseName(){
+		for(ClientNameDetailEntity nameDetail : nameDetailSet){
+			if(!(nameDetail.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE))){
+				return nameDetail;
+			}
+		}
+		return null;
+	}
+
+	public void updateClientDetails(ClientDetailView clientDetailView) {
+		customerDetail.updateClientDetails(clientDetailView);
+		
+	}
+
+	public void updatePicture(InputStream picture) throws CustomerException{
+		ClientPersistence clientPersistence = new ClientPersistence();
+		if(customerPicture != null)
+				customerPicture.setPicture(clientPersistence.createBlob(picture));	
+		else
+			this.customerPicture = new CustomerPictureEntity(this,clientPersistence.createBlob(picture));
+			
+	}
+	
+	private void createPicture(InputStream picture)throws CustomerException{
+		try {
+			if (picture !=null && picture.available() > 0)
+				this.customerPicture = new CustomerPictureEntity(this,new ClientPersistence().createBlob(picture));
+						
+		} catch (IOException e) {
+			throw new CustomerException(e);
+		}
+	}
+	
+	private void validateForActiveAccounts()throws CustomerException{
+		if(hasAnyLoanAccountInUse() || hasAnySavingsAccountInUse()){
+			ConfigurationIntf labelConfig=MifosConfiguration.getInstance();
+			try{
+				Object[] args = new Object[]{labelConfig.getLabel(ConfigurationConstants.GROUP, userContext.getPereferedLocale())};
+				throw new CustomerException(ClientConstants.ERRORS_ACTIVE_ACCOUNTS_PRESENT, args);
+			}catch(ConfigurationException ce){
+				new CustomerException(ce);
+			}	
+		}
+	}
+	
+	private void validateBranchTransfer(OfficeBO officeToTransfer)throws CustomerException{
+		if (officeToTransfer == null)
+			throw new CustomerException(CustomerConstants.INVALID_OFFICE);
+		
+		if(isSameBranch(officeToTransfer))
+			throw new CustomerException(CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER);
+	}
+	
+	private boolean isSameGroup(GroupBO group){
+		return getParentCustomer().getCustomerId().equals(group.getCustomerId());
+	}
+	
+	private void makeCustomerMovementEntries(OfficeBO officeToTransfer){
+		CustomerMovementEntity currentCustomerMovement = getActiveCustomerMovement();
+		if(currentCustomerMovement == null){
+			currentCustomerMovement = new CustomerMovementEntity(this, getCreatedDate());
+			this.addCustomerMovement(currentCustomerMovement);
+		}
+		
+		currentCustomerMovement.makeInActive(userContext.getId());
+		this.setOffice(officeToTransfer);
+		CustomerMovementEntity newCustomerMovement = new CustomerMovementEntity(this, new Date());
+		this.addCustomerMovement(newCustomerMovement);
+	}
+	
+	private void validateGroupTransfer(GroupBO toGroup)throws CustomerException{
+		if (toGroup == null)
+			throw new CustomerException(CustomerConstants.INVALID_PARENT);
+		
+		if(isSameGroup(toGroup))
+			throw new CustomerException(CustomerConstants.ERRORS_SAME_PARENT_TRANSFER);
+		
+		validateForGroupStatus(toGroup.getStatus());
+		validateForActiveAccounts();		
+	}
+	
+	private void validateForGroupStatus(CustomerStatus groupStatus)throws CustomerException{
+		if(isGroupStatusLower(groupStatus)){
+			ConfigurationIntf labelConfig=MifosConfiguration.getInstance();
+			try{
+				Object[] args = new Object[]{labelConfig.getLabel(ConfigurationConstants.GROUP, userContext.getPereferedLocale()),
+						labelConfig.getLabel(ConfigurationConstants.CLIENT, userContext.getPereferedLocale())};
+				throw new CustomerException(ClientConstants.ERRORS_LOWER_GROUP_STATUS, args);
+			}catch(ConfigurationException ce){
+				new CustomerException(ce);
+			}	
+		}
+	}
+	
+	private void generateSearchId(CustomerBO parentCustomer , Short officeId) throws CustomerException{
+		int count;
+		if (parentCustomer != null) {
+			this.setSearchId(parentCustomer.getSearchId()+ "."+ String.valueOf(parentCustomer.getMaxChildCount() + 1));
+			parentCustomer.setMaxChildCount(parentCustomer.getMaxChildCount() + 1);
+		}
+		else{
+			try { 
+			count = new CustomerPersistence().getCustomerCountForOffice(CustomerLevel.CLIENT, officeId);
+			} catch (PersistenceException pe) {
+				throw new CustomerException(pe);
+			} 
+			String searchId=GroupConstants.PREFIX_SEARCH_STRING + ++count;
+			this.setSearchId(searchId);
+		  }
+	}
+	
 	private void validateForDuplicateNameOrGovtId(String displayName, Date dateOfBirth, String governmentId)
 	throws CustomerException {
 		Integer custId = null;
@@ -527,179 +707,5 @@ public class ClientBO extends CustomerBO {
 			}
 		}
 		return false;
-	}
-	
-	private void generateSearchId(CustomerBO parentCustomer , Short officeId) throws CustomerException{
-		int count;
-		if (parentCustomer != null) {
-			this.setSearchId(parentCustomer.getSearchId()+ "."+ String.valueOf(parentCustomer.getMaxChildCount() + 1));
-			parentCustomer.setMaxChildCount(parentCustomer.getMaxChildCount() + 1);
-		}
-		else{
-			try { 
-			count = new CustomerPersistence().getCustomerCountForOffice(CustomerLevel.CLIENT, officeId);
-			} catch (PersistenceException pe) {
-				throw new CustomerException(pe);
-			} 
-			String searchId=GroupConstants.PREFIX_SEARCH_STRING + ++count;
-			this.setSearchId(searchId);
-		  }
-	}
-	
-	public void transferToBranch(OfficeBO officeToTransfer)throws CustomerException{
-		validateBranchTransfer(officeToTransfer);
-		logger.debug("In ClientBO::transferToBranch(), transfering customerId: " + getCustomerId() +  "to branch : "+ officeToTransfer.getOfficeId());
-		if(isActive())
-			setCustomerStatus(new CustomerStatusEntity(CustomerStatus.CLIENT_HOLD));
-		
-		makeCustomerMovementEntries(officeToTransfer);		
-		this.setPersonnel(null);
-		generateSearchId(null,officeToTransfer.getOfficeId());
-		super.update();
-		logger.debug("In ClientBO::transferToBranch(), successfully transfered, customerId :" + getCustomerId());  
-	}
-
-	
-	public void transferToGroup(GroupBO newParent)throws CustomerException{
-		validateGroupTransfer(newParent);
-		logger.debug("In ClientBO::transferToGroup(), transfering customerId: " + getCustomerId() +  "to Group Id : "+ newParent.getCustomerId());
-
-		if(!isSameBranch(newParent.getOffice()))
-			makeCustomerMovementEntries(newParent.getOffice());
-		
-		CustomerBO oldParent = getParentCustomer();
-		
-		oldParent.setMaxChildCount(getParentCustomer().getMaxChildCount() - 1);
-		newParent.setMaxChildCount(newParent.getMaxChildCount()+1);
-		setSearchId(newParent.getSearchId()+ "."+ String.valueOf(newParent.getMaxChildCount()));
-		
-		setParentCustomer(newParent);
-		setPersonnel(newParent.getPersonnel());
-		
-		if(newParent.getCustomerMeeting()!=null){
-			if(getCustomerMeeting()!=null)
-				getCustomerMeeting().setMeeting(newParent.getCustomerMeeting().getMeeting());
-			else
-				setCustomerMeeting(createCustomerMeeting(newParent.getCustomerMeeting().getMeeting()));
-			getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
-		}
-		else{
-			if(getCustomerMeeting()!=null){
-				//TODO: delete meeting
-				//getCustomerMeeting().setMeeting(null);
-			}
-				
-		}
-		
-		CustomerHierarchyEntity currentHierarchy = getActiveCustomerHierarchy();
-		currentHierarchy.makeInActive(userContext.getId());
-		
-		CustomerHierarchyEntity newHierarchy = new CustomerHierarchyEntity(this,newParent);
-		this.addCustomerHierarchy(newHierarchy);
-		oldParent.resetPositionsAssignedToClient(this.getCustomerId());
-		if(oldParent.getParentCustomer()!=null){
-			CustomerBO center = oldParent.getParentCustomer();
-			center.resetPositionsAssignedToClient(this.getCustomerId());
-			center.setUserContext(getUserContext());
-			center.update();
-		}
-		oldParent.setUserContext(getUserContext());
-		oldParent.update();
-		newParent.update();
-		this.update();		
-		logger.debug("In ClientBO::transferToGroup(), successfully transfered, customerId :" + getCustomerId());
-	}
-	
-	private void makeCustomerMovementEntries(OfficeBO officeToTransfer){
-		CustomerMovementEntity currentCustomerMovement = getActiveCustomerMovement();
-		if(currentCustomerMovement == null){
-			currentCustomerMovement = new CustomerMovementEntity(this, getCreatedDate());
-			this.addCustomerMovement(currentCustomerMovement);
-		}
-		
-		currentCustomerMovement.makeInActive(userContext.getId());
-		this.setOffice(officeToTransfer);
-		CustomerMovementEntity newCustomerMovement = new CustomerMovementEntity(this, new Date());
-		this.addCustomerMovement(newCustomerMovement);
-	}
-	
-	private void validateGroupTransfer(GroupBO toGroup)throws CustomerException{
-		if (toGroup == null)
-			throw new CustomerException(CustomerConstants.INVALID_PARENT);
-		
-		if(isSameGroup(toGroup))
-			throw new CustomerException(CustomerConstants.ERRORS_SAME_PARENT_TRANSFER);
-		
-		validateForGroupStatus(toGroup.getStatus());
-		validateForActiveAccounts();		
-	}
-	
-	private void validateForGroupStatus(CustomerStatus groupStatus)throws CustomerException{
-		if(isGroupStatusLower(groupStatus)){
-			ConfigurationIntf labelConfig=MifosConfiguration.getInstance();
-			try{
-				Object[] args = new Object[]{labelConfig.getLabel(ConfigurationConstants.GROUP, userContext.getPereferedLocale()),
-						labelConfig.getLabel(ConfigurationConstants.CLIENT, userContext.getPereferedLocale())};
-				throw new CustomerException(ClientConstants.ERRORS_LOWER_GROUP_STATUS, args);
-			}catch(ConfigurationException ce){
-				new CustomerException(ce);
-			}	
-		}
-	}
-	
-	private void validateForActiveAccounts()throws CustomerException{
-		if(hasAnyLoanAccountInUse() || hasAnySavingsAccountInUse()){
-			ConfigurationIntf labelConfig=MifosConfiguration.getInstance();
-			try{
-				Object[] args = new Object[]{labelConfig.getLabel(ConfigurationConstants.GROUP, userContext.getPereferedLocale())};
-				throw new CustomerException(ClientConstants.ERRORS_ACTIVE_ACCOUNTS_PRESENT, args);
-			}catch(ConfigurationException ce){
-				new CustomerException(ce);
-			}	
-		}
-	}
-	
-	private void validateBranchTransfer(OfficeBO officeToTransfer)throws CustomerException{
-		if (officeToTransfer == null)
-			throw new CustomerException(CustomerConstants.INVALID_OFFICE);
-		
-		if(isSameBranch(officeToTransfer))
-			throw new CustomerException(CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER);
-	}
-	
-	private boolean isSameGroup(GroupBO group){
-		return getParentCustomer().getCustomerId().equals(group.getCustomerId());
-	}
-	
-	public ClientNameDetailEntity getClientName(){
-		for(ClientNameDetailEntity nameDetail : nameDetailSet){
-			if(nameDetail.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE)){
-				return nameDetail;
-			}
-		}
-		return null;
-	}
-	
-	public ClientNameDetailEntity getSpouseName(){
-		for(ClientNameDetailEntity nameDetail : nameDetailSet){
-			if(!(nameDetail.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE))){
-				return nameDetail;
-			}
-		}
-		return null;
-	}
-
-	public void updateClientDetails(ClientDetailView clientDetailView) {
-		customerDetail.updateClientDetails(clientDetailView);
-		
-	}
-
-	public void updatePicture(InputStream picture) throws CustomerException{
-		ClientPersistence clientPersistence = new ClientPersistence();
-		if(customerPicture != null)
-				customerPicture.setPicture(clientPersistence.createBlob(picture));	
-		else
-			this.customerPicture = new CustomerPictureEntity(this,clientPersistence.createBlob(picture));
-			
 	}
 }

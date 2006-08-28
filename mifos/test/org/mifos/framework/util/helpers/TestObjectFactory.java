@@ -400,7 +400,7 @@ public class TestObjectFactory {
 					null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 		//	client.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), client, startDate));
 			//to be removed later
-			client.setSearchId(searchId);
+			//client.setSearchId(searchId);
 			/*Name name = new Name();
 			name.setFirstName(customerName);
 			name.setLastName(customerName);

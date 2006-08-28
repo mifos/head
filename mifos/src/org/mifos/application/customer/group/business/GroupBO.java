@@ -123,7 +123,7 @@ public class GroupBO extends CustomerBO {
 		this.performanceHistory = performanceHistory;
 	}
 
-	@Override
+
 	public void generatePortfolioAtRisk() throws PersistenceException,
 			ServiceException {
 		Money amount = getBalanceForAccountsAtRisk();

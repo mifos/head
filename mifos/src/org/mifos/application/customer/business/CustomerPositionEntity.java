@@ -1,6 +1,6 @@
 /**
 
- * CustomerPosition.java    version: xxx
+ * CustomerPositionEntity.java    version: xxx
 
 
 
@@ -38,7 +38,6 @@
 
 package org.mifos.application.customer.business;
 
-import org.mifos.application.master.util.valueobjects.Position;
 import org.mifos.framework.business.PersistentObject;
 
 /**
@@ -79,9 +78,5 @@ public class CustomerPositionEntity extends PersistentObject {
 
 	public PositionEntity getPosition() {
 		return position;
-	}
-
-	public Integer getCustomerPositionId() {
-		return customerPositionId;
 	}
 }
