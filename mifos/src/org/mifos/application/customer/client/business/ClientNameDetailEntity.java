@@ -69,19 +69,6 @@ public class ClientNameDetailEntity extends PersistentObject {
 		this.name = null;
 	}
 
-	public ClientNameDetailEntity(ClientBO client, Short nameType,
-			Integer salutation, String secondMiddleName, String displayName,
-			Name name) {
-		super();
-		this.customerNameId = null;
-		this.client = client;
-		this.nameType = nameType;
-		this.salutation = salutation;
-		this.secondMiddleName = secondMiddleName;
-		this.displayName = displayName;
-		this.name = name;
-	}
-	
 	public ClientNameDetailEntity(ClientBO client, String secondMiddleName, ClientNameDetailView view) {
 		super();
 		this.customerNameId = null;

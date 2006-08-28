@@ -9,7 +9,9 @@ import java.util.List;
 
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomFieldView;
+import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
@@ -19,6 +21,7 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -27,7 +30,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CenterBOTest extends MifosTestCase {
 	private CenterBO center;
-
+	
+	private GroupBO group;
+	
+	private ClientBO client;
+	
 	private Short officeId = 1;
 
 	private Short personnel = 3;
@@ -42,6 +49,8 @@ public class CenterBOTest extends MifosTestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
+		TestObjectFactory.cleanUp(client);
+		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		HibernateUtil.closeSession();
 	}
@@ -176,6 +185,35 @@ public class CenterBOTest extends MifosTestCase {
 		
 	}
 
+	public void testUpdateLOsForAllChildren() throws CustomerException{
+		createCustomers();
+		assertEquals(center.getPersonnel().getPersonnelId(), group.getPersonnel().getPersonnelId());
+		assertEquals(center.getPersonnel().getPersonnelId(), client.getPersonnel().getPersonnelId());
+		PersonnelBO newLO = TestObjectFactory.getPersonnel(Short.valueOf("2"));
+		HibernateUtil.closeSession();
+		center.setPersonnel(newLO);
+		center.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		assertEquals(newLO.getPersonnelId(), center.getPersonnel().getPersonnelId());
+		assertEquals(newLO.getPersonnelId(), group.getPersonnel().getPersonnelId());
+		assertEquals(newLO.getPersonnelId(), client.getPersonnel().getPersonnelId());
+	}
+	
+	private void createCustomers() {
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting, new Date(System
+				.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", CustomerStatus.GROUP_ACTIVE.getValue(), center.getSearchId() + ".1", center,
+				new Date(System.currentTimeMillis()));
+		client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE.getValue(), group.getSearchId() + ".1", group,
+				new Date(System.currentTimeMillis()));
+	}
+	
 	private MeetingBO getMeeting() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));

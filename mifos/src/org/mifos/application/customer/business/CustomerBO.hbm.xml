@@ -36,17 +36,7 @@
 		<many-to-one name="parentCustomer" column="PARENT_CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" cascade="none" insert="true" unique="true" update="true" lazy="true" />
 		<one-to-one name="historicalData" class="org.mifos.application.customer.business.CustomerHistoricalDataEntity" cascade="all" lazy="true" property-ref="customer" />
 		<one-to-one name="customerMeeting" class="org.mifos.application.customer.business.CustomerMeetingEntity" cascade="all" lazy="true" property-ref="customer" />
-		<!--<set name="customFields" lazy="false"
-			table="CUSTOMER_CUSTOM_FIELD">
-			<key column="CUSTOMER_ID" />
-			<composite-element
-			class="org.mifos.application.customer.business.CustomerCustomFieldEntity">
-			
-			<property name="fieldId" column="FIELD_ID"
-			not-null="true" />
-			<property name="fieldValue" column="FIELD_VALUE" />
-			</composite-element>
-			</set> -->
+	
 		<set name="customFields" cascade="all" lazy="true" access="field">
 			<key column="CUSTOMER_ID" update="false" />
 			<one-to-many class="org.mifos.application.customer.business.CustomerCustomFieldEntity" />
@@ -188,6 +178,11 @@
 	<query name="Customer.getClientBasedOnNameAndDateOfBirth">
 	    <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client where (client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth =:DATE_OFBIRTH and :customerId = 0) or (:customerId != 0 and client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth =:DATE_OFBIRTH and client.customerId !=:customerId)]]>
     </query>
+    
+    <query name="Customer.getLOForCustomer">
+	    <![CDATA[select customer.personnel.personnelId from org.mifos.application.customer.business.CustomerBO as customer where customer.customerId =:CUSTOMER_ID)]]>
+    </query>  
+    
     	<query name="customer.viewallclosedaccounts">
 		<![CDATA[from org.mifos.application.accounts.business.AccountBO account where account.customer.customerId=:customerId
 					and account.accountType.accountTypeId=:accountTypeId and account.accountState.id in(6,7,8,10,15,17) ]]>

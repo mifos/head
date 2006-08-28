@@ -37,6 +37,7 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
@@ -119,9 +120,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 	public void testActiveCustomersUnderParent() throws Exception {
 		CustomerPersistence customerPersistence = new CustomerPersistence();
-		client = getCustomer("13", "9", "3");
-		group = client.getParentCustomer();
-		center = client.getParentCustomer().getParentCustomer();
+		createCustomers(CustomerStatus.CENTER_ACTIVE, CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
 		List<CustomerView> customers = customerPersistence
 				.getChildrenForParent(center.getCustomerId(), center
 						.getSearchId(), center.getOffice().getOfficeId());
@@ -130,9 +129,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 	public void testOnHoldCustomersUnderParent() throws Exception {
 		CustomerPersistence customerPersistence = new CustomerPersistence();
-		client = getCustomer("13", "10", "4");
-		group = client.getParentCustomer();
-		center = client.getParentCustomer().getParentCustomer();
+		createCustomers(CustomerStatus.CENTER_ACTIVE,CustomerStatus.GROUP_HOLD, CustomerStatus.CLIENT_HOLD);
 		List<CustomerView> customers = customerPersistence
 				.getChildrenForParent(center.getCustomerId(), center
 						.getSearchId(), center.getOffice().getOfficeId());
@@ -186,20 +183,15 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 	}
 
-	private CustomerBO getCustomer(String centerStatus, String groupStatus,
-			String clientStatus) {
+	private void createCustomers(CustomerStatus centerStatus, CustomerStatus groupStatus, CustomerStatus clientStatus) {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short
-				.valueOf(centerStatus), "1.1", meeting, new Date(System
+		center = TestObjectFactory.createCenter("Center", centerStatus.getValue(), "1.1", meeting, new Date(System
 				.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", Short
-				.valueOf(groupStatus), center.getSearchId() + ".1", center,
+		group = TestObjectFactory.createGroup("Group", groupStatus.getValue(), center.getSearchId() + ".1", center,
 				new Date(System.currentTimeMillis()));
-		client = TestObjectFactory.createClient("Client", Short
-				.valueOf(clientStatus), group.getSearchId() + ".1", group,
+		client = TestObjectFactory.createClient("Client", clientStatus.getValue(), group.getSearchId() + ".1", group,
 				new Date(System.currentTimeMillis()));
-		return client;
 	}
 
 	private static java.util.Date getMeetingDates(MeetingBO meeting) {
@@ -813,16 +805,36 @@ public class TestCustomerPersistence extends MifosTestCase {
 	}
 	
 	public void testGetClientAssignedPositions() throws CustomerException, PersistenceException {
-		getCustomer(CustomerStatus.CENTER_ACTIVE.getValue().toString(),CustomerStatus.GROUP_ACTIVE.getValue().toString(),CustomerStatus.CLIENT_ACTIVE.getValue().toString());
+		createCustomers(CustomerStatus.CENTER_ACTIVE,CustomerStatus.GROUP_ACTIVE,CustomerStatus.CLIENT_ACTIVE);
 		CustomerPositionEntity customerPositionEntity = new CustomerPositionEntity(new PositionEntity(Short.valueOf("1")),client,client.getParentCustomer());
 		client.addCustomerPosition(customerPositionEntity);
 		client.update();
 		HibernateUtil.commitTransaction();
-		
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
-		assertEquals("Client has assigned position of Kendra Leader with position id 1",1,((CustomerPositionEntity)customerPersistence.getClientAssignedPositions(client.getParentCustomer().getCustomerId(),client.getCustomerId()).get(0)).getCustomerPositionId().intValue());
+		assertEquals("Client has assigned position of Kendra Leader with position id 1",client.getCustomerId(),((CustomerPositionEntity)customerPersistence.getClientAssignedPositions(client.getParentCustomer().getCustomerId(),client.getCustomerId()).get(0)).getCustomer().getCustomerId());
 	}
 
+	public void testGetLOForCustomer() throws PersistenceException {
+		createCustomers(CustomerStatus.CENTER_ACTIVE,CustomerStatus.GROUP_ACTIVE,CustomerStatus.CLIENT_ACTIVE);
+		Short LO = customerPersistence.getLoanOfficerForCustomer(center.getCustomerId());
+		assertEquals(center.getPersonnel().getPersonnelId(), LO);
+	}
+	
+	public void testUpdateLOsForAllChildren(){
+		createCustomers(CustomerStatus.CENTER_ACTIVE,CustomerStatus.GROUP_ACTIVE,CustomerStatus.CLIENT_ACTIVE);
+		assertEquals(center.getPersonnel().getPersonnelId(), group.getPersonnel().getPersonnelId());
+		assertEquals(center.getPersonnel().getPersonnelId(), client.getPersonnel().getPersonnelId());
+		PersonnelBO newLO = TestObjectFactory.getPersonnel(Short.valueOf("2"));
+		new CustomerPersistence().updateLOsForAllChildren(newLO.getPersonnelId(), center.getSearchId(),center.getOffice().getOfficeId());
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		assertEquals(newLO.getPersonnelId(), group.getPersonnel().getPersonnelId());
+		assertEquals(newLO.getPersonnelId(), client.getPersonnel().getPersonnelId());
+	}
+	
 	private void getCustomer() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -874,6 +886,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 						.currentTimeMillis()), savingsOffering1);
 	}
 
+	
 	private CenterBO createCenter() {
 		return createCenter("Center_Active_test");
 	}

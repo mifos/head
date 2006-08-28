@@ -78,7 +78,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -593,5 +592,22 @@ public class CustomerPersistence extends Persistence {
 		}catch (HibernateException he) {
 			throw new PersistenceException(he);
 		}
+	}
+	
+	public Short getLoanOfficerForCustomer(Integer customerId)throws PersistenceException{
+		try{
+			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("CUSTOMER_ID", customerId);
+			List queryResult = executeNamedQuery(NamedQueryConstants.GET_LO_FOR_CUSTOMER,queryParameters);
+			return (Short)queryResult.get(0);
+		}catch (HibernateException he) {
+			throw new PersistenceException(he);
+		}
+	}
+	
+	public void updateLOsForAllChildren(Short parentLO, String parentSearchId, Short parentOfficeId){
+		String hql="update Customer customer set customer.personnelId="+parentLO+" where customer.searchId like '"+parentSearchId+".%' and customer.office.officeId="+parentOfficeId;
+		Session session = HibernateUtil.getSessionTL();
+		session.createQuery(hql).executeUpate();
 	}
 }

@@ -113,7 +113,13 @@ public class CenterBO extends CustomerBO {
 		logger.debug("In CenterBO::validateStatusChange(), successfully validated status, customerId: " + getCustomerId());
 	}
 	
-	//TODO
+	@Override
+	public void update() throws CustomerException {
+		if(isLOChanged())
+			new CustomerPersistence().updateLOsForAllChildren(getPersonnel().getPersonnelId(), getSearchId(), getOffice().getOfficeId());
+		super.update();
+	}
+	
 	@Override
 	protected boolean checkNewStatusIsFirstTimeActive(Short oldStatus,
 			Short newStatusId) {
@@ -124,4 +130,15 @@ public class CenterBO extends CustomerBO {
 	public CustomerPerformanceHistory getPerformanceHistory() {
 		return null;
 	}
+	
+	private boolean isLOChanged()throws CustomerException{
+		try{
+			Short oldLO = new CustomerPersistence().getLoanOfficerForCustomer(getCustomerId());
+			return !oldLO.equals(getPersonnel().getPersonnelId());
+		}catch(PersistenceException pe){
+			throw new CustomerException(pe);
+		}
+	}
+	
+	
 }

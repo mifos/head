@@ -63,10 +63,6 @@ public class CustomerFlagDetailEntity extends PersistentObject {
 		this.customerFlagId = null;
 	}
 
-	public Integer getCustomerFlagId() {
-		return customerFlagId;
-	}
-
 	public CustomerStatusFlagEntity getStatusFlag() {
 		return statusFlag;
 	}

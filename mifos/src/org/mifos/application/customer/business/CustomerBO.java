@@ -207,14 +207,14 @@ public abstract class CustomerBO extends BusinessObject {
 		this.historicalData = null;
 		this.customerFlags = new HashSet<CustomerFlagDetailEntity>();
 
-		this.accounts.add(createCustomerAccount(fees));
+		this.addCustomerAccount(createCustomerAccount(fees));
 
 		this.setCreateDetails();
 	}
 
-	public boolean isBlackList() {
-		return blackListed.equals(YesNoFlag.YES.getValue());
-	}
+//	public boolean isBlackList() {
+//		return blackListed.equals(YesNoFlag.YES.getValue());
+//	}
 
 	public Integer getCustomerId() {
 		return customerId;
@@ -366,12 +366,13 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 
 	public CustomerAccountBO getCustomerAccount() {
+		CustomerAccountBO customerAccount = null;
 		for (AccountBO account : accounts) {
 			if (account.getAccountType().getAccountTypeId().equals(
 					Short.valueOf(AccountTypes.CUSTOMERACCOUNT.getValue())))
-				return (CustomerAccountBO) account;
+				customerAccount = (CustomerAccountBO) account;
 		}
-		return null;
+		return customerAccount;
 	}
 
 	public List<LoanBO> getActiveAndApprovedLoanAccounts(Date transactionDate) {
@@ -526,8 +527,7 @@ public abstract class CustomerBO extends BusinessObject {
 		return accounts;
 	}
 
-	public void addCustomerAccount(CustomerAccountBO customerAccount) {
-		customerAccount.setCustomer(this);
+	private void addCustomerAccount(CustomerAccountBO customerAccount) {
 		this.accounts.add(customerAccount);
 	}
 
@@ -545,9 +545,9 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 	}
 
-	public void setCustomField(CustomerCustomFieldEntity customerCustomFieldView) {
-		this.customFields.add(customerCustomFieldView);
-	}
+//	public void setCustomField(CustomerCustomFieldEntity customerCustomFieldView) {
+//		this.customFields.add(customerCustomFieldView);
+//	}
 
 	public List<CustomerBO> getChildren(Short customerLevel) throws PersistenceException
 			{

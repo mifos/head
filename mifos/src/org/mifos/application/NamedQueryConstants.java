@@ -492,6 +492,8 @@ public interface NamedQueryConstants {
 	public String GET_PRODUCTCATEGORY="productdefenition.getProductCategory";
 	public String GET_PRDCATEGORYSTATUS="productdefenition.prdcategorystatus";
 	
+	//M2 center
+	public String GET_LO_FOR_CUSTOMER="Customer.getLOForCustomer";
 	public String GET_OFFICE_LEVELS="officeLevel.getOfficeLevels";
 	//Change Account Status
 	public String GET_ALL_BRANCHES="office.getAllBranches";
