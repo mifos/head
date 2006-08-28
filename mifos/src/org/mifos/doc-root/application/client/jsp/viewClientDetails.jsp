@@ -661,11 +661,11 @@
 							<a href="custHistoricalDataAction.do?method=get&globalCustNum=<c:out value="${sessionScope.BusinessKey.globalCustNum}"/>"><mifos:mifoslabel
 								name="client.HistoricalDataLink" bundle="ClientUIResources"></mifos:mifoslabel>
 							</a> <br>
-							<html-el:link
+							<%--<html-el:link
 								href="closedaccsearchaction.do?method=search&searchNode(search_name)=ChangeLogDetails&input=ViewClientLog&customerId=${sessionScope.BusinessKey.customerId}&entityTypeId=1&createdDate=${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.createdDate)}">
 								<mifos:mifoslabel name="client.ChangeLogLink"
 									bundle="ClientUIResources"></mifos:mifoslabel>
-							</html-el:link><br>
+							</html-el:link><br>--%>
 							</span> </td>
 						</tr>
 					</table>

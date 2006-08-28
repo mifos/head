@@ -413,10 +413,7 @@
 						<tr>
 							<td class="fontnormal"><%--
 									<html-el:link href="transaction_history_loanAccount.htm"> <mifos:mifoslabel name="loan.view_transc_history" />
-									</html-el:link><br>--%> <span class="fontnormal"> <html-el:link
-								href="#">
-								<mifos:mifoslabel name="loan.view_change_log" />
-							</html-el:link> <br>
+									</html-el:link><br>--%> <span class="fontnormal"> 
 							<html-el:link href="loanAccountAction.do?method=viewStatusHistory&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}">
 								<mifos:mifoslabel name="loan.view_status_history" />
 							</html-el:link><br>
