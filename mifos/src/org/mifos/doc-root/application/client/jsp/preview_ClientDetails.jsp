@@ -391,9 +391,10 @@
 									</span>
 									<c:forEach var="LO" items="${sessionScope.loanOfficers}">
 										<c:if test = "${LO.personnelId == sessionScope.clientCustActionForm.loanOfficerId}">
-												<span class="fontnormal"><c:out value="${LO.displayName}"/><br></span>
+												<span class="fontnormal"><c:out value="${LO.displayName}"/></span>
 										</c:if>
 									</c:forEach>
+									<br>
 									</c:if>
 									<c:if test="${sessionScope.clientCustActionForm.groupFlag eq '1'}">
 										<span class="fontnormalbold"> <mifos:mifoslabel	name="client.LoanOfficer" bundle="ClientUIResources"></mifos:mifoslabel></span>
