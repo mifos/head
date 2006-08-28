@@ -182,7 +182,15 @@
 									<td class="fontnormal"><span class="fontnormalbold"> <mifos:mifoslabel
 										name="${ConfigurationConstants.BRANCHOFFICE}" /> <mifos:mifoslabel
 										name="client.BranchSelected" bundle="ClientUIResources"></mifos:mifoslabel></span>
-									<c:out value="${sessionScope.clientCustActionForm.officeName}" /></td>
+									<c:choose>
+										<c:when	test="${sessionScope.clientCustActionForm.groupFlag eq '1'}">
+											<c:out value="${sessionScope.clientCustActionForm.parentGroup.office.officeName}" />
+										</c:when>
+										<c:otherwise>
+											<c:out value="${sessionScope.clientCustActionForm.officeName}" />
+										</c:otherwise>
+										</c:choose>
+									</td>
 								</tr>
 							</table>
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
