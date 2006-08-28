@@ -72,7 +72,7 @@
 	function changelog(form) {
 		form.method.value="search";
 		form.input.value="ChangeLog";
-		document.getElementById("searchNode(search_name)").value="ChangeLogDetails";
+		document.getElementById("SavingsProduct.SearchName").value="ChangeLogDetails";
 		form.action="savingsprdaction.do?searchNode(search_name)=ChangeLogDetails";
 		form.submit();
 	}
@@ -308,7 +308,7 @@
 				<html-el:hidden property="method" value="manage" />
 				<html-el:hidden property="input" />
 				<html-el:hidden property="prdCategory.productCategoryID" value="${requestScope.Context.valueObject.prdCategory.productCategoryID}" />
-				<html-el:hidden property="searchNode(search_name)" value="SavingsProducts" />
+				<html-el:hidden property="searchNode(search_name)" styleId="SavingsProduct.SearchName" value="SavingsProducts" />
 				<html-el:hidden property="prdOfferingName" value="${requestScope.Context.valueObject.prdOfferingName}" />
 				<html-el:hidden property="prdOfferingId" value="${requestScope.Context.valueObject.prdOfferingId}" />
 			</table>
