@@ -237,19 +237,21 @@ public class ClientCustActionForm extends CustomerActionForm {
 		
 		ActionErrors errors = new ActionErrors();
 		if(  (method.equals(Methods.previewPersonalInfo.toString()) || method.equals(Methods.next.toString()) || method.equals(Methods.previewEditPersonalInfo.toString()))&& ( ClientConstants.INPUT_PERSONAL_INFO.equals(input) || ClientConstants.INPUT_EDIT_PERSONAL_INFO.equals(input) )){
-			validateClientandSpouseNames(errors);
+			validateClientNames(errors);
 			validateDateOfBirth(request,errors);
 			validateGender(errors);
+			validateSpouseNames(errors);
 			validateConfigurableMandatoryFields(request,errors,EntityType.CLIENT);
 			validateCustomFields(request,errors);
 			validatePicture(request, errors);
 		}
 		if(method.equals(Methods.preview.toString()) && ClientConstants.INPUT_MFI_INFO.equals(input) ){
-			validateConfigurableMandatoryFields(request,errors,EntityType.CLIENT);
 			validateFormedByPersonnel(errors);
+			validateConfigurableMandatoryFields(request,errors,EntityType.CLIENT);
+			validateTrained(request, errors);
 			validateFees(request, errors);
 			validateForFeeAssignedWithoutMeeting(request,errors);
-			validateTrained(request, errors);
+			
 		}
 		
 		if(method.equals(Methods.previewEditMfiInfo.toString()) ){
@@ -286,13 +288,17 @@ public class ClientCustActionForm extends CustomerActionForm {
 			errors.add(CustomerConstants.GENDER, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, CustomerConstants.GENDER));		
 	}
 	
-	private void validateClientandSpouseNames(ActionErrors errors) {
+	private void validateClientNames(ActionErrors errors) {
 		if (clientName.getSalutation() == null)
 			errors.add(CustomerConstants.SALUTATION, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, CustomerConstants.SALUTATION));		
 		if (StringUtils.isNullOrEmpty(clientName.getFirstName()))
 			errors.add(CustomerConstants.FIRST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, CustomerConstants.FIRST_NAME));
 		if (StringUtils.isNullOrEmpty(clientName.getLastName()))
 			errors.add(CustomerConstants.LAST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, CustomerConstants.LAST_NAME));
+		
+	}
+
+	private void validateSpouseNames(ActionErrors errors) {
 		if (spouseName.getNameType() == null)
 			errors.add(CustomerConstants.SPOUSE_TYPE, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, CustomerConstants.SPOUSE_TYPE));		
 		if (StringUtils.isNullOrEmpty(spouseName.getFirstName()))
