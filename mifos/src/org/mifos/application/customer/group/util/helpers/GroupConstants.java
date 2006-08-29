@@ -126,7 +126,7 @@ public interface GroupConstants {
 	
 	public static final String OLD_STATUS="oldStatus";
 	public static final String STATUS_LIST="statusList";
-	
+
 	//actions-methods
 	public static final String HIERARCHY_CHECK_METHOD="hierarchyCheck";
 	public static final String UPDATE_BRANCH_METHOD="updateBranch";
@@ -232,5 +232,6 @@ public interface GroupConstants {
 	
 	public static final int MAX_ADDRESS_LINE_LENGTH=200;
 	public static final int MAX_FIELD_LENGTH=100;
-	
+	public static final String TRAINED = "1";
+	public static final String NOT_TRAINED = "0";
 }

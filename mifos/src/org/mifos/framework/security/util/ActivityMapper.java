@@ -980,7 +980,13 @@ public class ActivityMapper {
 		activityMap.put("/ChangeAccountStatus-update", SecurityConstants.VIEW);
 		activityMap.put("/ChangeAccountStatus-getLoanOfficers", SecurityConstants.VIEW);
 		
-
+		// Group related mappings for M2
+		activityMap.put("/groupCustAction-getDetails", SecurityConstants.VIEW);
+		activityMap.put("/groupCustAction-get", SecurityConstants.VIEW);
+		activityMap.put("/groupCustAction-manage",SecurityConstants.GROUP_EDIT_GROUP);
+		activityMap.put("/groupCustAction-managePreview",SecurityConstants.VIEW);
+		activityMap.put("/groupCustAction-managePrevious",SecurityConstants.VIEW);
+		activityMap.put("/groupCustAction-update",SecurityConstants.GROUP_EDIT_GROUP);
 	}
 
 	private static ActivityMapper instance = new ActivityMapper();

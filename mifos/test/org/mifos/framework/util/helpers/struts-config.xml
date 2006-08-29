@@ -228,6 +228,8 @@
 		<form-bean name="productCategoryActionForm" type="org.mifos.application.productdefinition.struts.actionforms.PrdCategoryActionForm"></form-bean>
 		<!-- Office Hierarchy Action form -->
 		<form-bean name="offhierarchyactionform" type="org.mifos.application.office.struts.actionforms.OffHierarchyActionForm"></form-bean>
+		<!-- Office Hierarchy Action form -->
+		<form-bean name="groupCustActionForm" type="org.mifos.application.customer.group.struts.actionforms.GroupCustActionForm"></form-bean>
 		
 	</form-beans>
 	<global-exceptions>
@@ -1903,6 +1905,29 @@
 		
 
 	<!-- offAction End-->
+	<!-- Group action M2 style-->
+		<action path="/groupCustAction"
+			type="org.mifos.application.customer.group.struts.action.GroupCustAction"
+			name="groupCustActionForm" parameter="method" validate="false"
+			input="/groupCustAction.do?method=validate" scope="session">
+			<forward name="manage_success"
+				path="/pages/application/group/jsp/edit_groupdetails.jsp" />
+			<forward name="PreviewManageGroup"
+				path="/pages/application/group/jsp/group_detailspreview.jsp" />
+			<forward name="update_success"
+				path="/groupCustAction.do?method=get" />
+			<forward name="update_failure"
+				path="/pages/application/group/jsp/group_detailspreview.jsp" />
+			<!--Cancel forwards-->
+			<forward name="cancel_create"
+				path="/CustomerSearchAction.do?method=load" />
+			<forward name="cancel_manage"
+				path="/groupCustAction.do?method=get" />
+			<!--failure forwards-->
+			<forward name="ManageGroup_failure"
+				path="/pages/application/group/jsp/edit_groupdetails.jsp" />
+			
+		</action>
 		
 	</action-mappings>
 

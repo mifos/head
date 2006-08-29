@@ -193,7 +193,7 @@ public class CenterCustAction extends CustAction {
 	}
 
 	private void setValuesInActionForm(CenterCustActionForm actionForm,
-			HttpServletRequest request) {
+			HttpServletRequest request) throws Exception{ 
 		CenterBO center = (CenterBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
 		actionForm.setLoanOfficerId(center.getPersonnel().getPersonnelId()
@@ -212,23 +212,6 @@ public class CenterCustAction extends CustAction {
 				.getCustomerPositions(), request));
 		actionForm.setCustomFields(createCustomFieldViews(center
 				.getCustomFields(), request));
-	}
-
-	private List<CustomerPositionView> createCustomerPositionViews(
-			Set<CustomerPositionEntity> custPosEntities, HttpServletRequest request) {
-		List<PositionEntity> positions = (List<PositionEntity>)SessionUtils.getAttribute(CustomerConstants.POSITIONS, request.getSession());
-		List<CustomerPositionView> customerPositions = new ArrayList<CustomerPositionView>();
-		for(PositionEntity position: positions)
-			for (CustomerPositionEntity entity : custPosEntities){
-				if(position.getId().equals(entity.getPosition().getId())){
-					if(entity.getCustomer()!=null)
-						customerPositions.add(new CustomerPositionView(entity.getCustomer()
-							.getCustomerId(), entity.getPosition().getId()));
-					else
-						customerPositions.add(new CustomerPositionView(null, entity.getPosition().getId()));
-				}
-			}
-		return customerPositions;
 	}
 
 	public ActionForward editPreview(ActionMapping mapping, ActionForm form,
@@ -402,31 +385,6 @@ public class CenterCustAction extends CustAction {
 				additionalFees, request.getSession());
 	}
 
-	private void loadPositions(HttpServletRequest request)
-			throws PersistenceException, ServiceException {
-		SessionUtils.setAttribute(CustomerConstants.POSITIONS,
-				getMasterEntities(PositionEntity.class, getUserContext(request)
-						.getLocaleId()), request.getSession());
-	}
-
-	private void loadClients(HttpServletRequest request)
-			throws CustomerException, SystemException {
-		CenterBO center = (CenterBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
-		List<CustomerBO> customerList;
-		try {
-			customerList = center.getChildren(CustomerLevel.CLIENT.getValue());
-		} catch (PersistenceException e) {
-			throw new CustomerException(e);
-		}
-		List<CustomerBO> customerListToPopulate = new ArrayList<CustomerBO>();
-		for(CustomerBO customer: customerList){
-			if(!(customer.getStatus().equals(CustomerStatus.CLIENT_CANCELLED) || customer.getStatus().equals(CustomerStatus.CLIENT_CLOSED)))
-				customerListToPopulate.add(customer);
-		}
-		SessionUtils.setAttribute(CustomerConstants.CLIENT_LIST, customerListToPopulate , request
-				.getSession());
-	}
 	public ActionForward get(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {

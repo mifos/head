@@ -86,8 +86,6 @@ public class ClientCustActionForm extends CustomerActionForm {
 	private String parentGroupId;
 	private String governmentId;
 	private String dateOfBirth;
-	private String trained;
-	private String trainedDate;
 	private String nextOrPreview;
 	private FormFile picture;
 	private InputStream customerPicture;
@@ -175,26 +173,6 @@ public class ClientCustActionForm extends CustomerActionForm {
 
 	public FormFile getPicture() {
 		return picture;
-	}
-
-	public String getTrained() {
-		return trained;
-	}
-	
-	public Short getTrainedValue() {
-		return getShortValue(trained);
-	}
-
-	public void setTrained(String trained) {
-		this.trained = trained;
-	}
-
-	public String getTrainedDate() {
-		return trainedDate;
-	}
-
-	public void setTrainedDate(String trainedDate) {
-		this.trainedDate = trainedDate;
 	}
 
 	public String getNextOrPreview() {
@@ -317,29 +295,6 @@ public class ClientCustActionForm extends CustomerActionForm {
 		
 	}
 	
-	private void validateTrained(HttpServletRequest request ,ActionErrors errors) {
-		
-		if(request.getParameter("trained")==null) {
-			trained=null;
-		}
-		else if( trained.equals("1")){
-			if(ValidateMethods.isNullOrBlank(trainedDate)){
-				if(errors == null){
-					errors = new ActionErrors();
-				}
-				errors.add(ClientConstants.TRAINED_DATE_MANDATORY,new ActionMessage(ClientConstants.TRAINED_DATE_MANDATORY));
-			}
-	
-		}
-		//if training date is entered and trained is not selected, throw an error
-		if(!ValidateMethods.isNullOrBlank(trainedDate)&&ValidateMethods.isNullOrBlank(trained)){
-			if(errors == null){
-				errors = new ActionErrors();
-			}
-			errors.add(ClientConstants.TRAINED_CHECKED,new ActionMessage(ClientConstants.TRAINED_CHECKED));
-		}
-		
-	}
 	@Override
 	public void checkForMandatoryFields(Short entityId, ActionErrors errors, HttpServletRequest request) {
 		Map<Short,List<FieldConfigurationEntity>> entityMandatoryFieldMap=(Map<Short,List<FieldConfigurationEntity>>)request.getSession().getServletContext().getAttribute(Constants.FIELD_CONFIGURATION);

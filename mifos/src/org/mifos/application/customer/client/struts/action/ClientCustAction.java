@@ -650,7 +650,7 @@ public class ClientCustAction extends CustAction {
 	}
 
 	private void setValuesInActionForm(ClientCustActionForm actionForm,
-			HttpServletRequest request) {
+			HttpServletRequest request) throws  Exception {
 		ClientBO client = (ClientBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
 		if (client.getPersonnel() != null) {

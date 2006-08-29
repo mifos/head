@@ -5,7 +5,7 @@ public enum EntityType {
 	PERSONNEL(Short.valueOf("17")), 
 	CENTER(Short.valueOf("20")), 
 	CLIENT(Short.valueOf("1")),
-	OFFICE(Short.valueOf("15"));
+	OFFICE(Short.valueOf("15")), GROUP(Short.valueOf("12"));
 
 	Short value;
 

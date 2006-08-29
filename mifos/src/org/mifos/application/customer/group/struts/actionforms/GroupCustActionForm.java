@@ -1,6 +1,6 @@
 /**
 
-* CenterActionForm    version: 1.0
+* GroupCustActionForm.java version: 1.0
 
 
 
@@ -35,32 +35,26 @@
 *
 
 */
-package org.mifos.application.customer.center.struts.actionforms;
+
+package org.mifos.application.customer.group.struts.actionforms;
+
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
+import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.struts.actionforms.CustomerActionForm;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 
-public class CenterCustActionForm extends CustomerActionForm{
-	
+public class GroupCustActionForm extends CustomerActionForm {
+
 	@Override
-	protected ActionErrors validateFields(HttpServletRequest request, String method){
+	protected ActionErrors validateFields(HttpServletRequest request, String method) {
+		
 		ActionErrors errors = new ActionErrors();
-		if(method.equals(Methods.preview.toString())){		
-			validateName(errors);
-			validateLO(errors);
-			validateMeeting(request, errors);
-			validateConfigurableMandatoryFields(request,errors,EntityType.CENTER);
-			validateCustomFields(request,errors);
-			validateFees(request, errors);
-		}else if (method.equals(Methods.editPreview.toString())){
-			validateLO(errors);
-			validateConfigurableMandatoryFields(request,errors,EntityType.CENTER);
-			validateCustomFields(request,errors);
-		}
 		return errors;
 	}
+
+
 }

@@ -35,6 +35,8 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Flow;
+import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -43,6 +45,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 	private CenterBO center;
 	private GroupBO group;
 	private ClientBO client;
+	private String flowKey;
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -62,6 +65,12 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 		ActivityContext ac = new ActivityContext((short) 0, userContext
 				.getBranchId().shortValue(), userContext.getId().shortValue());
 		request.getSession(false).setAttribute("ActivityContext", ac);
+		Flow flow = new Flow();
+		flowKey = String.valueOf(System.currentTimeMillis());
+		FlowManager flowManager = new FlowManager();
+		flowManager.addFLow(flowKey, flow);
+		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
+				flowManager);
 		EntityMasterData.getInstance().init();
 		FieldConfigItf fieldConfigItf=FieldConfigImplementer.getInstance();
 		fieldConfigItf.init();		

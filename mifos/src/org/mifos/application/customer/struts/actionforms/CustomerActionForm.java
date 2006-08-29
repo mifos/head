@@ -50,7 +50,10 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
+import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
+import org.mifos.application.customer.center.util.helpers.ValidateMethods;
+import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.login.util.helpers.LoginConstants;
@@ -89,6 +92,10 @@ public abstract class CustomerActionForm extends BaseActionForm{
 	
 	private String formedByPersonnel;
 	
+	private String trained;
+	
+	private String trainedDate;
+	
 	private List<FeeView> defaultFees;
 
 	private List<FeeView> additionalFees;
@@ -96,6 +103,8 @@ public abstract class CustomerActionForm extends BaseActionForm{
 	private String selectedFeeAmntList;
 	
 	private List<CustomFieldView> customFields;
+	
+	private List<CustomerPositionView> customerPositions;
 	
 	public CustomerActionForm() {
 		address = new Address();
@@ -239,6 +248,26 @@ public abstract class CustomerActionForm extends BaseActionForm{
 		return getShortValue(formedByPersonnel);
 	}
 	
+	public String getTrained() {
+		return trained;
+	}
+	
+	public Short getTrainedValue() {
+		return getShortValue(trained);
+	}
+
+	public void setTrained(String trained) {
+		this.trained = trained;
+	}
+
+	public String getTrainedDate() {
+		return trainedDate;
+	}
+
+	public void setTrainedDate(String trainedDate) {
+		this.trainedDate = trainedDate;
+	}
+	
 	public CustomFieldView getCustomField(int i){
 		while(i>=customFields.size()){
 			customFields.add(new CustomFieldView());
@@ -289,6 +318,21 @@ public abstract class CustomerActionForm extends BaseActionForm{
 			}
 		}
 		super.reset(mapping, request);
+	}
+	
+	public List<CustomerPositionView> getCustomerPositions() {
+		return customerPositions;
+	}
+
+	public void setCustomerPositions(List<CustomerPositionView> customerPositions) {
+		this.customerPositions = customerPositions;
+	}
+
+	public CustomerPositionView getCustomerPosition(int index) {		
+		while(index>=customerPositions.size()){
+			customerPositions.add(new CustomerPositionView());
+		}
+		return (CustomerPositionView)customerPositions.get(index);
 	}
 	
 	@Override
@@ -377,6 +421,30 @@ public abstract class CustomerActionForm extends BaseActionForm{
 				break;
 			}
 		}
+	}
+	
+	protected void validateTrained(HttpServletRequest request ,ActionErrors errors) {
+		
+		if(request.getParameter("trained")==null) {
+			trained=null;
+		}
+		else if( trained.equals("1")){
+			if(ValidateMethods.isNullOrBlank(trainedDate)){
+				if(errors == null){
+					errors = new ActionErrors();
+				}
+				errors.add(ClientConstants.TRAINED_DATE_MANDATORY,new ActionMessage(ClientConstants.TRAINED_DATE_MANDATORY));
+			}
+	
+		}
+		//if training date is entered and trained is not selected, throw an error
+		if(!ValidateMethods.isNullOrBlank(trainedDate)&&ValidateMethods.isNullOrBlank(trained)){
+			if(errors == null){
+				errors = new ActionErrors();
+			}
+			errors.add(ClientConstants.TRAINED_CHECKED,new ActionMessage(ClientConstants.TRAINED_CHECKED));
+		}
+		
 	}
 	
 	private boolean isSelectedFeePeriodic(FeeView selectedFee, List<FeeView> additionalFeeList){
