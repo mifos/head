@@ -66,8 +66,8 @@ public class TestSavingsIntCalcHelper extends MifosTestCase{
 		TestObjectFactory.cleanUp(savings2);
 		TestObjectFactory.cleanUp(savings3);
 		TestObjectFactory.cleanUp(savings4);
-		TestObjectFactory.cleanUp(center);
 		TestObjectFactory.cleanUp(group);
+		TestObjectFactory.cleanUp(center);		
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}

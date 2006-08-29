@@ -24,6 +24,7 @@ public class TestTagGenerator extends MifosTestCase{
 	private SavingsOfferingBO savingsOffering;
 	private UserContext userContext;
 	
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		userContext = new UserContext();
@@ -39,11 +40,12 @@ public class TestTagGenerator extends MifosTestCase{
 		userContext.setBranchGlobalNum("0001");
 	}
 	
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		TestObjectFactory.cleanUp(savings);
-		TestObjectFactory.cleanUp(center);
 		TestObjectFactory.cleanUp(group);
+		TestObjectFactory.cleanUp(center);		
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}

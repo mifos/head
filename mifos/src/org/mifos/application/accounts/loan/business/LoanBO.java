@@ -373,7 +373,20 @@ public class LoanBO extends AccountBO {
 	public void addLoanActivity(LoanActivityEntity loanActivity) {
 		this.loanActivityDetails.add(loanActivity);
 	}
-
+	
+	@Override
+	public AccountTypes getType(){
+		return AccountTypes.LOANACCOUNT;
+	}
+	
+	@Override
+	public boolean isOpen(){
+		return !(getAccountState().getId().equals(AccountState.LOANACC_CANCEL.getValue()) 
+				|| getAccountState().getId().equals(AccountState.LOANACC_BADSTANDING.getValue())
+				|| getAccountState().getId().equals(AccountState.LOANACC_OBLIGATIONSMET.getValue())
+				|| getAccountState().getId().equals(AccountState.LOANACC_WRITTENOFF.getValue()));
+	}
+	
 	@Override
 	public void updateTotalFeeAmount(Money totalFeeAmount) {
 		LoanSummaryEntity loanSummaryEntity = this.getLoanSummary();

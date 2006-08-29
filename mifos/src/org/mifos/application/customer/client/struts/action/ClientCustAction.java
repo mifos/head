@@ -624,6 +624,7 @@ public class ClientCustAction extends CustAction {
 				client.setTrained(true);
 			else
 				client.setTrained(false);
+			
 			client.setTrainedDate(getDateFromString(
 					actionForm.getTrainedDate(), getUserContext(request)
 							.getPereferedLocale()));
@@ -775,8 +776,8 @@ public class ClientCustAction extends CustAction {
 				.setAttribute(ClientConstants.LOANCYCLECOUNTER, customerService
 						.fetchLoanCycleCounter(clientBO.getCustomerId()),
 						request.getSession());
-		List<LoanBO> loanAccounts = clientBO.getLoanAccountsInUse();
-		List<SavingsBO> savingsAccounts = clientBO.getSavingAccountsInUse();
+		List<LoanBO> loanAccounts = clientBO.getOpenLoanAccounts();
+		List<SavingsBO> savingsAccounts = clientBO.getOpenSavingAccounts();
 		setLocaleIdToLoanStatus(loanAccounts, localeId);
 		setLocaleIdToSavingsStatus(savingsAccounts, localeId);
 		SessionUtils.setAttribute(ClientConstants.CUSTOMERLOANACCOUNTSINUSE,

@@ -68,6 +68,7 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -333,6 +334,17 @@ public class SavingsBO extends AccountBO {
 		savingsActivityDetails.add(savingsActivity);
 	}
 
+	@Override
+	public AccountTypes getType(){
+		return AccountTypes.SAVINGSACCOUNT;
+	}
+	
+	@Override
+	public boolean isOpen(){
+		return !(getAccountState().getId().equals(AccountState.SAVINGS_ACC_CANCEL.getValue()) 
+				|| getAccountState().getId().equals(AccountState.SAVINGS_ACC_CLOSED.getValue()));
+	}
+	
 	private void setSavingsOfferingDetails() {
 		setMinAmntForInt(getSavingsOffering().getMinAmntForInt());
 		setInterestRate(getSavingsOffering().getInterestRate());

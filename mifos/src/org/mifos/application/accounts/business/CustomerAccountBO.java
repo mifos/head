@@ -143,6 +143,11 @@ public class CustomerAccountBO extends AccountBO {
 		}
 	}
 	
+	@Override
+	public AccountTypes getType(){
+		return AccountTypes.CUSTOMERACCOUNT;
+	}
+	
 	public void generateCustomerFeeSchedule() throws AccountException{
 		generateCustomerFeeSchedule(getCustomer());
 	}

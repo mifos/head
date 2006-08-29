@@ -606,8 +606,8 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		CustomerPositionEntity customerPositionEntity = new CustomerPositionEntity(
 				new PositionEntity(Short.valueOf("1")), client, client
 						.getParentCustomer());
-		client.addCustomerPosition(customerPositionEntity);
-		client.update();
+		group.addCustomerPosition(customerPositionEntity);
+		group.update();
 		HibernateUtil.commitTransaction();
 		setRequestPathInfo("/editCustomerStatusAction.do");
 		addRequestParameter("method", "load");
@@ -639,7 +639,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		assertEquals("Since new Status is Closed,so flag should be Duplicate.",
 				"Duplicate", SessionUtils.getAttribute(
 						SavingsConstants.FLAG_NAME, request.getSession()));
-		for (CustomerPositionEntity customerPosition : client
+		for (CustomerPositionEntity customerPosition : group
 				.getCustomerPositions()) {
 			assertNotNull(customerPosition.getCustomer());
 			break;
@@ -657,7 +657,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 			assertFalse(customerFlagDetailEntity.getStatusFlag().isBlackListed());
 			break;
 		}
-		for (CustomerPositionEntity customerPosition : client
+		for (CustomerPositionEntity customerPosition : group
 				.getCustomerPositions()) {
 			assertNull(customerPosition.getCustomer());
 			break;

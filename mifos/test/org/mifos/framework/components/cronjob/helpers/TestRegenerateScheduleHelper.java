@@ -22,7 +22,6 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
@@ -35,7 +34,6 @@ import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -90,8 +88,9 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		createdBy = new PersonnelPersistence()
 				.getPersonnel(userContext.getId());
 	}
-
-	public void tearDown() {
+	
+	@Override
+	public void tearDown()throws Exception {
 		TestObjectFactory.cleanUp(savings);
 		TestObjectFactory.cleanUp(accountBO);
 		TestObjectFactory.cleanUp(client);
@@ -101,7 +100,7 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		TestObjectFactory.cleanUp(center);
 		regenerateScheduleHelper=null;
 		HibernateUtil.closeSession();
-
+		super.tearDown();
 	}
 
 	public void testExcuteWithCustomerAccounts() throws NumberFormatException, SystemException, ApplicationException {
@@ -123,13 +122,17 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 				.currentTimeMillis()));
 		ClientBO client3 = TestObjectFactory.createClient("client3",ClientConstants.STATUS_CANCELLED,group1.getSearchId()+".1",group1,new Date(System
 				.currentTimeMillis()));
-		
 		center.getCustomerMeeting().getMeeting().getMeetingDetails().setRecurAfter(Short.valueOf("2"));
 		center.getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
 		SchedulerIntf scheduler = SchedulerHelper.getScheduler(center.getCustomerMeeting().getMeeting());
 		List<java.util.Date> meetingDates = scheduler.getAllDates();
 		TestObjectFactory.updateObject(center);
 		TestObjectFactory.flushandCloseSession();
+		
+		
+		regenerateScheduleHelper.execute(System.currentTimeMillis());
+		HibernateUtil.closeSession();
+		
 		center=(CustomerBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
 		group=(CustomerBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
 		center1=(CenterBO)TestObjectFactory.getObject(CenterBO.class,center1.getCustomerId());
@@ -137,9 +140,7 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		client=(CustomerBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
 		client2=(ClientBO)TestObjectFactory.getObject(ClientBO.class,client2.getCustomerId());
 		client3=(ClientBO)TestObjectFactory.getObject(ClientBO.class,client3.getCustomerId());
-		
-		regenerateScheduleHelper.execute(System.currentTimeMillis());
-		
+
 		for(AccountActionDateEntity actionDateEntity : center.getCustomerAccount().getAccountActionDates()){
 			if(actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
 				assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()),DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
@@ -154,12 +155,10 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 				assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(2).getTime()),DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
 		}
 		assertEquals(YesNoFlag.NO.getValue(),center.getCustomerMeeting().getUpdatedFlag());
-
 		TestObjectFactory.cleanUp(client3);
 		TestObjectFactory.cleanUp(client2);
 		TestObjectFactory.cleanUp(group1);
 		TestObjectFactory.cleanUp(center1);
-		
 	}
 	
 	

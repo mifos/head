@@ -755,6 +755,14 @@ public class AccountBO extends BusinessObject {
 	public void applyCharge(Short feeId, Double charge) throws AccountException {
 	}
 
+	public AccountTypes getType(){
+		return null;
+	}
+	
+	public boolean isOpen(){
+		return true;
+	}
+	
 	protected final void buildFinancialEntries(
 			Set<AccountTrxnEntity> accountTrxns) throws AccountException {
 		try {

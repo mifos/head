@@ -805,16 +805,6 @@ public class TestCustomerPersistence extends MifosTestCase {
 				.size());
 	}
 	
-	public void testGetClientAssignedPositions() throws CustomerException, PersistenceException {
-		createCustomers(CustomerStatus.CENTER_ACTIVE,CustomerStatus.GROUP_ACTIVE,CustomerStatus.CLIENT_ACTIVE);
-		CustomerPositionEntity customerPositionEntity = new CustomerPositionEntity(new PositionEntity(Short.valueOf("1")),client,client.getParentCustomer());
-		client.addCustomerPosition(customerPositionEntity);
-		client.update();
-		HibernateUtil.commitTransaction();
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
-		assertEquals("Client has assigned position of Kendra Leader with position id 1",client.getCustomerId(),((CustomerPositionEntity)customerPersistence.getClientAssignedPositions(client.getParentCustomer().getCustomerId(),client.getCustomerId()).get(0)).getCustomer().getCustomerId());
-	}
-
 	public void testGetLOForCustomer() throws PersistenceException {
 		createCustomers(CustomerStatus.CENTER_ACTIVE,CustomerStatus.GROUP_ACTIVE,CustomerStatus.CLIENT_ACTIVE);
 		Short LO = customerPersistence.getLoanOfficerForCustomer(center.getCustomerId());
@@ -848,7 +838,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		HibernateUtil.closeSession();
 		
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
-		assertNull(client.getCustomerMeeting());
+		assertNull(client.getCustomerMeeting());	
 	}
 	
 	private void getCustomer() {

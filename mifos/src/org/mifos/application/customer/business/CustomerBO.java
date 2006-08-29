@@ -44,13 +44,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.hibernate.HibernateException;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.exceptions.CustomerException;
@@ -71,7 +69,6 @@ import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
@@ -94,9 +91,9 @@ public abstract class CustomerBO extends BusinessObject {
 
 	private String externalId;
 
-	protected Short trained;
+	private Short trained;
 
-	protected Date trainedDate;
+	private Date trainedDate;
 
 	private Date mfiJoiningDate;
 
@@ -122,7 +119,7 @@ public abstract class CustomerBO extends BusinessObject {
 
 	private PersonnelBO personnel;
 
-	private PersonnelBO formedByPersonnel;
+	private final PersonnelBO formedByPersonnel;
 
 	private OfficeBO office;
 
@@ -138,13 +135,14 @@ public abstract class CustomerBO extends BusinessObject {
 
 	private Short blackListed;
 
-	public Set<CustomerNoteEntity> customerNotes;
+	private Set<CustomerNoteEntity> customerNotes;
 
 	protected CustomerBO() {
 		super();
 		this.customerId = null;
 		this.globalCustNum = null;
 		this.customerLevel = null;
+		this.formedByPersonnel = null;
 	}
 
 	protected CustomerBO(UserContext userContext, String displayName,
@@ -168,37 +166,23 @@ public abstract class CustomerBO extends BusinessObject {
 		this.displayName = displayName;
 		this.customerLevel = new CustomerLevelEntity(customerLevel);
 
-		if (address != null) {
-			this.customerAddressDetail = new CustomerAddressDetailEntity(this,
-					address);
-			this.displayAddress = this.customerAddressDetail
-					.getDisplayAddress();
-		}
-
-		if (parentCustomer != null)
-			this.personnel = parentCustomer.getPersonnel();
-		else if (loanOfficerId != null)
-			this.personnel = new PersonnelPersistence()
-					.getPersonnel(loanOfficerId);
-
-		if (parentCustomer != null
-				&& parentCustomer.getCustomerMeeting() != null)
-			this.customerMeeting = createCustomerMeeting(parentCustomer
-					.getCustomerMeeting().getMeeting());
+		createAddress(address);
+		
+		if(parentCustomer!=null)
+			inheritDetailsFromParent(parentCustomer);
 		else
-			this.customerMeeting = createCustomerMeeting(meeting);
+			setLoanOfficerAndMeeting(loanOfficerId, meeting);	
 
 		if (formedBy != null)
 			this.formedByPersonnel = new PersonnelPersistence()
 					.getPersonnel(formedBy);
+		else
+			this.formedByPersonnel = null;
 
 		this.parentCustomer = parentCustomer;
 
-		if (customFields != null)
-			for (CustomFieldView customField : customFields)
-				addCustomField(new CustomerCustomFieldEntity(customField
-						.getFieldId(), customField.getFieldValue(), this));
-
+		createCustomFields(customFields);
+		
 		this.customerStatus = new CustomerStatusEntity(customerStatus);
 		this.maxChildCount = 0;
 		this.blackListed = YesNoFlag.NO.getValue();
@@ -230,25 +214,25 @@ public abstract class CustomerBO extends BusinessObject {
 	public void setPersonnel(PersonnelBO personnel) {
 		this.personnel = personnel;
 	}
-
+	
+	public String getDisplayName() {
+		return this.displayName;
+	}
+	
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+	
 	public CustomerStatusEntity getCustomerStatus() {
 		return customerStatus;
-	}
+	}		
 
 	public void setCustomerStatus(CustomerStatusEntity customerStatus) {
 		this.customerStatus = customerStatus;
 	}
 
-	public String getDisplayName() {
-		return this.displayName;
-	}
-
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
-
 	public String getDisplayAddress() {
-		return this.displayAddress;
+		return displayAddress;
 	}
 
 	public void setDisplayAddress(String displayAddress) {
@@ -263,14 +247,10 @@ public abstract class CustomerBO extends BusinessObject {
 		this.externalId = externalId;
 	}
 
-	public void setTrained(boolean trained) {
-		this.trained = (short) (trained ? 1 : 0);
+	protected void setTrained(Short trained) {
+		this.trained = trained;
 	}
-
-	public boolean isTrained() {
-		return trained.equals(YesNoFlag.YES.getValue());
-	}
-
+	
 	public Date getTrainedDate() {
 		return this.trainedDate;
 	}
@@ -286,15 +266,35 @@ public abstract class CustomerBO extends BusinessObject {
 	protected void setSearchId(String searchId) {
 		this.searchId = searchId;
 	}
-
+	
 	public Integer getMaxChildCount() {
 		return this.maxChildCount;
 	}
 
-	public void setMaxChildCount(Integer maxChildCount) {
-		this.maxChildCount = maxChildCount;
+	public Date getMfiJoiningDate() {
+		return mfiJoiningDate;
 	}
 
+	public void setMfiJoiningDate(Date mfiJoiningDate) {
+		this.mfiJoiningDate = mfiJoiningDate;
+	}
+
+	public Date getCustomerActivationDate() {
+		return customerActivationDate;
+	}
+	
+	protected void setCustomerActivationDate(Date customerActivationDate) {
+		this.customerActivationDate = customerActivationDate;
+	}
+	
+	public void setParentCustomer(CustomerBO parentCustomer) {
+		this.parentCustomer = parentCustomer;
+	}
+
+	public CustomerBO getParentCustomer() {
+		return parentCustomer;
+	}
+	
 	public CustomerAddressDetailEntity getCustomerAddressDetail() {
 		return customerAddressDetail;
 	}
@@ -312,24 +312,89 @@ public abstract class CustomerBO extends BusinessObject {
 		this.office = office;
 	}
 
+	public CustomerMeetingEntity getCustomerMeeting() {
+		return customerMeeting;
+	}
+
+	public void setCustomerMeeting(CustomerMeetingEntity customerMeeting) {
+		this.customerMeeting = customerMeeting;
+	}
+	
+	public Set<AccountBO> getAccounts() {
+		return accounts;
+	}	
+	
+	public Set<CustomerCustomFieldEntity> getCustomFields() {
+		return customFields;
+	}
+	
+	public Set<CustomerPositionEntity> getCustomerPositions() {
+		return customerPositions;
+	}
+	
+	public Set<CustomerFlagDetailEntity> getCustomerFlags() {
+		return customerFlags;
+	}
+	
 	public Set<CustomerNoteEntity> getCustomerNotes() {
 		return customerNotes;
 	}
 
-	private void setCustomerNotes(Set<CustomerNoteEntity> customerNotes) {
-		this.customerNotes = customerNotes;
+	public PersonnelBO getCustomerFormedByPersonnel() {
+		return formedByPersonnel;
 	}
-
+	
+	public void setTrained(boolean trained) {
+		this.trained = (short) (trained ? 1 : 0);
+	}
+	
+	public void addCustomerHierarchy(CustomerHierarchyEntity hierarchy) {
+		if (hierarchy != null) {
+			this.customerHierarchies.add(hierarchy);
+		}
+	}
+	
+	public void addCustomerPosition(CustomerPositionEntity customerPosition) {
+		this.customerPositions.add(customerPosition);
+	}	
+	
+	public void addCustomerMovement(CustomerMovementEntity customerMovement) {
+		if (customerMovement != null) {
+			this.customerMovements.add(customerMovement);
+		}
+	}
+	
+	public void addCustomField(CustomerCustomFieldEntity customField) {
+		if (customField != null) {
+			this.customFields.add(customField);
+		}
+	}
+	
+	public void addCustomerNotes(CustomerNoteEntity customerNote) {
+		this.customerNotes.add(customerNote);
+	}
+	
+	public void addCustomerFlag(CustomerStatusFlagEntity customerStatusFlagEntity) {
+		CustomerFlagDetailEntity customerFlag = new CustomerFlagDetailEntity(
+				this, customerStatusFlagEntity);
+		customerFlag.setCreatedBy(this.getUserContext().getId());
+		customerFlag.setCreatedDate(new Date());
+		this.customerFlags.add(customerFlag);
+	}
+	
+	public boolean isTrained() {
+		return trained.equals(YesNoFlag.YES.getValue());
+	}
+	
 	public Address getAddress() {
 		return customerAddressDetail != null ? customerAddressDetail
 				.getAddress() : null;
 	}
 
 	public CustomerStatus getStatus(){
-		return CustomerStatus.getStatus(customerStatus.getId());
-	
+		return CustomerStatus.getStatus(customerStatus.getId());	
 	}
-
+	
 	public void save() throws CustomerException {
 		try {
 			new CustomerPersistence().createOrUpdate(this);
@@ -337,9 +402,6 @@ public abstract class CustomerBO extends BusinessObject {
 					getOffice().getGlobalOfficeNum(), getCustomerId());
 			globalCustNum = (gCustNum);
 			new CustomerPersistence().createOrUpdate(this);
-		} catch (HibernateException he) {
-			throw new CustomerException(
-					CustomerConstants.CREATE_FAILED_EXCEPTION, he);
 		} catch (PersistenceException e) {
 			throw new CustomerException(
 					CustomerConstants.CREATE_FAILED_EXCEPTION, e);
@@ -350,9 +412,6 @@ public abstract class CustomerBO extends BusinessObject {
 		try {
 			setUpdateDetails();
 			new CustomerPersistence().createOrUpdate(this);
-		} catch (HibernateException he) {
-			throw new CustomerException(
-					CustomerConstants.UPDATE_FAILED_EXCEPTION, he);
 		} catch (PersistenceException e) {
 			throw new CustomerException(
 					CustomerConstants.UPDATE_FAILED_EXCEPTION, e);
@@ -417,14 +476,6 @@ public abstract class CustomerBO extends BusinessObject {
 		return notes;
 	}
 
-	public CustomerMeetingEntity getCustomerMeeting() {
-		return customerMeeting;
-	}
-
-	public void setCustomerMeeting(CustomerMeetingEntity customerMeeting) {
-		this.customerMeeting = customerMeeting;
-	}
-
 	public CustomerHierarchyEntity getActiveCustomerHierarchy() {
 		CustomerHierarchyEntity hierarchy = null;
 		for(CustomerHierarchyEntity customerHierarchyEntity : customerHierarchies){
@@ -434,12 +485,6 @@ public abstract class CustomerBO extends BusinessObject {
 			}
 		}
 		return hierarchy;
-	}
-
-	public void addCustomerHierarchy(CustomerHierarchyEntity hierarchy) {
-		if (hierarchy != null) {
-			this.customerHierarchies.add(hierarchy);
-		}
 	}
 
 	public CustomerMovementEntity getActiveCustomerMovement() {
@@ -453,30 +498,7 @@ public abstract class CustomerBO extends BusinessObject {
 		return movement;
 	}
 	
-	public void addCustomerMovement(CustomerMovementEntity customerMovement) {
-		if (customerMovement != null) {
-			this.customerMovements.add(customerMovement);
-		}
-	}
-	
-	public Set<CustomerPositionEntity> getCustomerPositions() {
-		return customerPositions;
-	}
 
-	private void setCustomerPositions(
-			Set<CustomerPositionEntity> customerPositions) {
-		this.customerPositions = customerPositions;
-
-	}
-
-	public void addCustomerPosition(CustomerPositionEntity customerPosition) {
-		this.customerPositions.add(customerPosition);
-	}
-
-	private void setHistoricalData(CustomerHistoricalDataEntity historicalData) {
-		this.historicalData = historicalData;		
-	}
-	
 	public void updateHistoricalData(CustomerHistoricalDataEntity historicalData) {
 		if (historicalData != null) 
 			mfiJoiningDate = historicalData.getMfiJoiningDate();
@@ -488,79 +510,14 @@ public abstract class CustomerBO extends BusinessObject {
 			historicalData.setMfiJoiningDate(mfiJoiningDate);
 		return historicalData;
 	}
-
-	public Set<CustomerFlagDetailEntity> getCustomerFlags() {
-		return customerFlags;
-	}
-
-	private void setCustomerFlags(Set<CustomerFlagDetailEntity> customerFlag) {
-		this.customerFlags = customerFlag;
-	}
-
-	public void addCustomerFlag(CustomerStatusFlagEntity customerStatusFlagEntity) {
-		CustomerFlagDetailEntity customerFlag = new CustomerFlagDetailEntity(
-				this, customerStatusFlagEntity);
-		customerFlag.setCreatedBy(this.getUserContext().getId());
-		customerFlag.setCreatedDate(new Date());
-		this.customerFlags.add(customerFlag);
-	}
-
-	public Date getMfiJoiningDate() {
-		return mfiJoiningDate;
-	}
-
-	public void setMfiJoiningDate(Date mfiJoiningDate) {
-		this.mfiJoiningDate = mfiJoiningDate;
-	}
-
-	public void setParentCustomer(CustomerBO parentCustomer) {
-		this.parentCustomer = parentCustomer;
-	}
-
-	public CustomerBO getParentCustomer() {
-		return parentCustomer;
-	}
-
-	public Set<AccountBO> getAccounts() {
-		return accounts;
-	}
-
-	private void addCustomerAccount(CustomerAccountBO customerAccount) {
-		this.accounts.add(customerAccount);
-	}
-
-	public Date getCustomerActivationDate() {
-		return customerActivationDate;
-	}
-
-	public Set<CustomerCustomFieldEntity> getCustomFields() {
-		return customFields;
-	}
-
-	public void addCustomField(CustomerCustomFieldEntity customField) {
-		if (customField != null) {
-			this.customFields.add(customField);
-		}
-	}
-
-//	public void setCustomField(CustomerCustomFieldEntity customerCustomFieldView) {
-//		this.customFields.add(customerCustomFieldView);
-//	}
-
+	
 	public List<CustomerBO> getChildren(Short customerLevel) throws PersistenceException
 			{
 		return new CustomerPersistence().getChildrenForParent(getSearchId(),
 				getOffice().getOfficeId(), customerLevel);
 	}
 
-	public PersonnelBO getCustomerFormedByPersonnel() {
-		return formedByPersonnel;
-	}
-
-	public void setCustomerFormedByPersonnel(
-			PersonnelBO customerFormedByPersonnel) {
-		this.formedByPersonnel = customerFormedByPersonnel;
-	}
+	
 
 	public void adjustPmnt(String adjustmentComment)
 			throws ApplicationException, SystemException {
@@ -643,47 +600,8 @@ public abstract class CustomerBO extends BusinessObject {
 		return amount;
 	}
 
-	public void setCustomerActivationDate(Date customerActivationDate) {
-		this.customerActivationDate = customerActivationDate;
-	}
-
-	private void validateFields(String displayName,
-			CustomerStatus customerStatus, Short officeId)
-			throws CustomerException {
-		if (StringUtils.isNullOrEmpty(displayName))
-			throw new CustomerException(CustomerConstants.INVALID_NAME);
-		if (customerStatus == null)
-			throw new CustomerException(CustomerConstants.INVALID_STATUS);
-		if (officeId == null)
-			throw new CustomerException(CustomerConstants.INVALID_OFFICE);
-	}
-
-	protected void validateMeeting(MeetingBO meeting) throws CustomerException {
-		if (meeting == null)
-			throw new CustomerException(CustomerConstants.INVALID_MEETING);
-	}
-
-	protected void validateLO(Short loanOfficerId) throws CustomerException {
-		if (loanOfficerId == null)
-			throw new CustomerException(CustomerConstants.INVALID_LOAN_OFFICER);
-	}
-
-	private CustomerAccountBO createCustomerAccount(List<FeeView> fees)
-			throws CustomerException {
-		try {
-			return new CustomerAccountBO(userContext, this, fees);
-		} catch (AccountException ae) {
-			throw new CustomerException(ae);
-		}
-	}
-
-	protected CustomerMeetingEntity createCustomerMeeting(MeetingBO meeting) {
-		return meeting != null ? new CustomerMeetingEntity(this, meeting)
-				: null;
-	}
-
 	public void changeStatus(Short newStatusId, Short flagId, String comment)
-			throws	CustomerException, AccountException{
+	throws	CustomerException, AccountException{
 		Short oldStatus = getCustomerStatus().getId();
 		validateStatusChange(newStatusId);
 		MasterPersistence masterPersistence = new MasterPersistence();
@@ -706,57 +624,36 @@ public abstract class CustomerBO extends BusinessObject {
 		if (checkNewStatusIsFirstTimeActive(oldStatus, newStatusId))
 			this.getCustomerAccount().generateCustomerFeeSchedule();
 	}
-
-	protected abstract boolean checkNewStatusIsFirstTimeActive(Short oldStatus,
-			Short newStatusId);
-
-	protected abstract void validateStatusChange(Short newStatusId)
-			throws CustomerException;
-
-	public void addCustomerNotes(CustomerNoteEntity customerNote) {
-		this.customerNotes.add(customerNote);
-
-	}
-
-	private CustomerNoteEntity createCustomerNotes(String comment){
-		CustomerNoteEntity customerNote = new CustomerNoteEntity(comment,
-				new java.sql.Date(System.currentTimeMillis()), new PersonnelPersistence().getPersonnel(getUserContext().getId()), this);
-		return customerNote;
-	}
-	
-	protected boolean isSameBranch(OfficeBO officeObj){
-		return this.office.getOfficeId().equals(officeObj.getOfficeId());
-	}
-	
-	public List<LoanBO> getLoanAccountsInUse(){
+		
+	public List<LoanBO> getOpenLoanAccounts(){
 		List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
 		for (AccountBO account : getAccounts()) {
-			if (isLoanAccount(account) && isLoanAccountInUse(account))
+			if (account.getType().equals(AccountTypes.LOANACCOUNT) && account.isOpen())
 					loanAccounts.add((LoanBO)account);
 		}
 		return loanAccounts;
 	}	
 	
-	public List<SavingsBO> getSavingAccountsInUse(){
+	public List<SavingsBO> getOpenSavingAccounts(){
 		List<SavingsBO> savingAccounts = new ArrayList<SavingsBO>();
 		for (AccountBO account : getAccounts()) {
-			if (isSavingsAccount(account) && isSavingsAccountInUse(account))
+			if (account.getType().equals(AccountTypes.SAVINGSACCOUNT) && account.isOpen())
 				savingAccounts.add((SavingsBO)account);
 		}
 		return savingAccounts;
 	}
 	
-	public boolean hasAnyLoanAccountInUse(){
+	public boolean isAnyLoanAccountOpen(){
 		for (AccountBO account : getAccounts()) {
-			if (isLoanAccount(account) && isLoanAccountInUse(account))
+			if (account.getType().equals(AccountTypes.LOANACCOUNT) && account.isOpen())
 					return true;
 		}
 		return false;
 	}
 	
-	public boolean hasAnySavingsAccountInUse(){
+	public boolean isAnySavingsAccountOpen(){
 		for (AccountBO account : getAccounts()) {
-			if (isSavingsAccount(account) && isSavingsAccountInUse(account))
+			if (account.getType().equals(AccountTypes.SAVINGSACCOUNT) && account.isOpen())
 				return true;
 		}
 		return false;
@@ -770,23 +667,99 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 	}
 	
-	private boolean isLoanAccount(AccountBO account){
-		return account.getAccountType().getAccountTypeId().equals(AccountTypes.LOANACCOUNT.getValue());
+	public void incrementMaxChildCount(){
+		this.maxChildCount = this.getMaxChildCount().intValue()+1;
 	}
 	
-	private boolean isSavingsAccount(AccountBO account){
-		return account.getAccountType().getAccountTypeId().equals(AccountTypes.SAVINGSACCOUNT.getValue());
+	public void decrementMaxChildCount(){
+		this.maxChildCount=this.getMaxChildCount().intValue()-1;
 	}
 	
-	private boolean isLoanAccountInUse(AccountBO account){
-		return !(account.getAccountState().getId().equals(AccountState.LOANACC_CANCEL.getValue()) 
-				|| account.getAccountState().getId().equals(AccountState.LOANACC_BADSTANDING.getValue())
-				|| account.getAccountState().getId().equals(AccountState.LOANACC_OBLIGATIONSMET.getValue())
-				|| account.getAccountState().getId().equals(AccountState.LOANACC_WRITTENOFF.getValue()));
+	protected void validateMeeting(MeetingBO meeting) throws CustomerException {
+		if (meeting == null)
+			throw new CustomerException(CustomerConstants.INVALID_MEETING);
+	}
+
+	protected void validateLO(Short loanOfficerId) throws CustomerException {
+		if (loanOfficerId == null)
+			throw new CustomerException(CustomerConstants.INVALID_LOAN_OFFICER);
+	}
+
+	protected CustomerMeetingEntity createCustomerMeeting(MeetingBO meeting) {
+		return meeting != null ? new CustomerMeetingEntity(this, meeting)
+				: null;
+	}
+
+	protected abstract boolean checkNewStatusIsFirstTimeActive(Short oldStatus,
+			Short newStatusId);
+
+	protected abstract void validateStatusChange(Short newStatusId)
+			throws CustomerException;
+
+	
+	
+	protected boolean isSameBranch(OfficeBO officeObj){
+		return this.office.getOfficeId().equals(officeObj.getOfficeId());
 	}
 	
-	private boolean isSavingsAccountInUse(AccountBO account){
-		return !(account.getAccountState().getId().equals(AccountState.SAVINGS_ACC_CANCEL.getValue()) 
-				|| account.getAccountState().getId().equals(AccountState.SAVINGS_ACC_CLOSED.getValue()));
+	private void createAddress(Address address){
+		if (address != null) {
+			this.customerAddressDetail = new CustomerAddressDetailEntity(this,
+					address);
+			this.displayAddress = this.customerAddressDetail
+					.getDisplayAddress();
+		}
+	}
+	
+	private CustomerAccountBO createCustomerAccount(List<FeeView> fees)
+	throws CustomerException {
+		try {
+			return new CustomerAccountBO(userContext, this, fees);
+		} catch (AccountException ae) {
+			throw new CustomerException(ae);
+		}
+	}
+	
+	private void createCustomFields(List<CustomFieldView> customFields){
+		if (customFields != null)
+			for (CustomFieldView customField : customFields)
+				addCustomField(new CustomerCustomFieldEntity(customField
+						.getFieldId(), customField.getFieldValue(), this));
+	}
+	
+	private void inheritDetailsFromParent(CustomerBO parentCustomer){
+		this.personnel = parentCustomer.getPersonnel();
+		if(parentCustomer.getCustomerMeeting()!=null)
+			this.customerMeeting = createCustomerMeeting(parentCustomer
+					.getCustomerMeeting().getMeeting());
+		this.addCustomerHierarchy(new CustomerHierarchyEntity(this, parentCustomer));
+	}
+	
+	private void setLoanOfficerAndMeeting(Short loanOfficerId, MeetingBO meeting){
+		if (loanOfficerId != null)
+			this.personnel = new PersonnelPersistence()
+					.getPersonnel(loanOfficerId);
+		this.customerMeeting = createCustomerMeeting(meeting);
+	}
+	
+	private CustomerNoteEntity createCustomerNotes(String comment){
+		CustomerNoteEntity customerNote = new CustomerNoteEntity(comment,
+				new java.sql.Date(System.currentTimeMillis()), new PersonnelPersistence().getPersonnel(getUserContext().getId()), this);
+		return customerNote;
+	}
+	
+	private void addCustomerAccount(CustomerAccountBO customerAccount) {
+		this.accounts.add(customerAccount);
+	}
+	
+	private void validateFields(String displayName,
+			CustomerStatus customerStatus, Short officeId)
+			throws CustomerException {
+		if (StringUtils.isNullOrEmpty(displayName))
+			throw new CustomerException(CustomerConstants.INVALID_NAME);
+		if (customerStatus == null)
+			throw new CustomerException(CustomerConstants.INVALID_STATUS);
+		if (officeId == null)
+			throw new CustomerException(CustomerConstants.INVALID_OFFICE);
 	}
 }

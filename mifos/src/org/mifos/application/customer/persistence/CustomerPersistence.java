@@ -57,7 +57,6 @@ import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.checklist.util.resources.CheckListConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
-import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -575,19 +574,6 @@ public class CustomerPersistence extends Persistence {
 			queryParameters.put("customerId", customerId);
 			queryParameters.put("accountTypeId", accountTypeId);
 			List queryResult = executeNamedQuery(NamedQueryConstants.VIEWALLCLOSEDACCOUNTS, queryParameters);
-			return queryResult;
-		}catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
-	}
-	
-	public List<CustomerPositionEntity> getClientAssignedPositions(Integer parentCustomerId, Integer customerId)
-			throws PersistenceException {
-		try {
-			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("CUSTOMER_ID", customerId);
-			queryParameters.put("PARENT_CUSTOMER_ID", parentCustomerId);
-			List queryResult = executeNamedQuery(NamedQueryConstants.CUSTOMER_CLIENTPOSITION,queryParameters);
 			return queryResult;
 		}catch (HibernateException he) {
 			throw new PersistenceException(he);
