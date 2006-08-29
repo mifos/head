@@ -325,14 +325,17 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 		verifyInputForward();
 	}
 	
-	public void testFailureEditPreviewWith_MandatoryCustomFieldNull() throws Exception {
+	public void testFailureEditPreviewWith_MandatoryCustomFieldNull() 
+	throws Exception {
 		createAndSetCenterInSession();
 		setRequestPathInfo("/centerCustAction.do");
 		addRequestParameter("method", "manage");
 		addRequestParameter("officeId", "3");
 		actionPerform();
 		
-		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request.getSession());
+		List<CustomFieldDefinitionEntity> customFieldDefs = 
+			(List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(
+				CustomerConstants.CUSTOM_FIELDS_LIST, request.getSession());
 		boolean isCustomFieldMandatory = false;
 		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
 			if(customFieldDef.isMandatory()){
@@ -346,15 +349,18 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 		addRequestParameter("loanOfficerId", "");
 		int i = 0;
 		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
-			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
+			addRequestParameter("customField["+ i +"].fieldId", 
+				customFieldDef.getFieldId().toString());
 			addRequestParameter("customField["+ i +"].fieldValue", "");
 			i++;
 		}
 		actionPerform();
 		if(isCustomFieldMandatory)
-			assertEquals("CustomField", 1, getErrrorSize(CustomerConstants.CUSTOM_FIELD));	
+			assertEquals("CustomField", 1, 
+				getErrrorSize(CustomerConstants.CUSTOM_FIELD));	
 		else
-			assertEquals("CustomField", 0, getErrrorSize(CustomerConstants.CUSTOM_FIELD));	
+			assertEquals("CustomField", 0, 
+				getErrrorSize(CustomerConstants.CUSTOM_FIELD));	
 		verifyInputForward();
 	}
 	
@@ -366,14 +372,17 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 		addRequestParameter("officeId", "3");
 		actionPerform();
 		
-		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request.getSession());
+		List<CustomFieldDefinitionEntity> customFieldDefs = 
+			(List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(
+				CustomerConstants.CUSTOM_FIELDS_LIST, request.getSession());
 		setRequestPathInfo("/centerCustAction.do");
 		addRequestParameter("method", "editPreview");	
 		addRequestParameter("displayName", "center");
 		addRequestParameter("loanOfficerId", "1");
 		int i = 0;
 		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
-			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
+			addRequestParameter("customField["+ i +"].fieldId", 
+				customFieldDef.getFieldId().toString());
 			addRequestParameter("customField["+ i +"].fieldValue", "11");
 			i++;
 		}
@@ -387,11 +396,16 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 	}
 	
 	public void testSuccessfulUpdate() throws Exception {
-		center = new CenterBO(TestObjectFactory.getUserContext(),"center", new Address(), null, null, null, null, Short.valueOf("3"), getMeeting(), Short.valueOf("1") );
+		center = new CenterBO(
+			TestObjectFactory.getUserContext(),"center", 
+			new Address(), null, null, null, null, Short.valueOf("3"), 
+			getMeeting(), Short.valueOf("1") );
 		center.save();
 		HibernateUtil.closeSession();
-		center = (CenterBO)TestObjectFactory.getObject(CenterBO.class, new Integer(center.getCustomerId()).intValue());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, center, request.getSession());
+		center = (CenterBO)TestObjectFactory.getObject(
+			CenterBO.class, new Integer(center.getCustomerId()).intValue());
+		SessionUtils.setAttribute(
+			Constants.BUSINESS_KEY, center, request.getSession());
 		
 		createGroupAndClient();
 		setRequestPathInfo("/centerCustAction.do");
@@ -437,10 +451,14 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 	
 	private void createAndSetCenterInSession(){
 		String name = "manage_center";
-		center = TestObjectFactory.createCenter(name, CustomerStatus.CENTER_ACTIVE.getValue(), "", getMeeting(), new Date());
+		center = TestObjectFactory.createCenter(
+			name, CustomerStatus.CENTER_ACTIVE.getValue(), "", getMeeting(), 
+			new Date());
 		HibernateUtil.closeSession();
-		center = (CenterBO)TestObjectFactory.getObject(CenterBO.class, new Integer(center.getCustomerId()).intValue());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, center, request.getSession());
+		center = (CenterBO)TestObjectFactory.getObject(
+			CenterBO.class, new Integer(center.getCustomerId()).intValue());
+		SessionUtils.setAttribute(
+			Constants.BUSINESS_KEY, center, request.getSession());
 	}
 	
 

@@ -333,7 +333,8 @@ public class CenterCustAction extends CustAction {
 			HttpServletRequest request) throws SystemException, ApplicationException {
 		loadCustomFieldDefinitions(request);
 		// Set Default values for custom fields
-		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+		List<CustomFieldDefinitionEntity> customFieldDefs = 
+			(List<CustomFieldDefinitionEntity>) SessionUtils
 				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request
 						.getSession());
 		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();

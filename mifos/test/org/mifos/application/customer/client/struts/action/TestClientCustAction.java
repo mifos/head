@@ -951,8 +951,10 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 	
 	private List<CustomFieldView> getCustomFields() {
 		List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
-		fields.add(new CustomFieldView(Short.valueOf("5"), "value1", CustomFieldType.ALPHA_NUMERIC.getValue()));
-		fields.add(new CustomFieldView(Short.valueOf("6"), "value2", CustomFieldType.ALPHA_NUMERIC.getValue()));
+		fields.add(new CustomFieldView(Short.valueOf("5"), 
+			"value1", CustomFieldType.ALPHA_NUMERIC.getValue()));
+		fields.add(new CustomFieldView(Short.valueOf("6"), 
+			"value2", CustomFieldType.ALPHA_NUMERIC.getValue()));
 		return fields;
 	}
 	

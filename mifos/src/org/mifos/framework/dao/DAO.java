@@ -39,62 +39,47 @@
 package org.mifos.framework.dao;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-
-import javax.naming.InitialContext;
-import javax.naming.Context;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-
-
-import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.util.helpers.ExceptionConstants;
-import org.mifos.framework.hibernate.helper.HibernateConstants;
-import org.mifos.framework.util.valueobjects.ValueObject;
-
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.dao.helpers.DataTypeConstants;
-import org.mifos.framework.dao.helpers.MasterDataRetriever;
-
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.ConcurrencyException;
-import org.mifos.framework.exceptions.DBConnectionFailedException;
-
-import org.mifos.framework.exceptions.HibernateProcessException;
-import org.mifos.framework.exceptions.SystemException;
-
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.StaleObjectStateException;
 import org.hibernate.Transaction;
-
-
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.dao.helpers.DataTypeConstants;
+import org.mifos.framework.dao.helpers.MasterDataRetriever;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.ConcurrencyException;
+import org.mifos.framework.exceptions.DBConnectionFailedException;
+import org.mifos.framework.exceptions.HibernateProcessException;
+import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.helper.HibernateConstants;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.util.helpers.ExceptionConstants;
+import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * All DAO's in the system extend from this <code>DAO</code> class.
  * It has methods with default implementations for create/update on hibernate, these methods can be overridden if required.
  */
-public  class DAO
+public class DAO
 {
-	
-	
+
 	/**
-	 * It updates the ValueObject instance passed in the Context object in the database. This method gets the hibernate session , starts a transaction , calls update on hibernate session and then commits and closes the hibernate session , this method can be over-ridden for any other different behaviour for update
-	 * @param context
-	 * @throws HibernateProcessException
+	 * It updates the ValueObject instance passed in the Context object in 
+	 * the database. This method gets the hibernate session , starts a transaction , 
+	 * calls update on hibernate session and then commits and 
+	 * closes the hibernate session , 
+	 * this method can be over-ridden for any other different behaviour for update
 	 */
-	public void update(org.mifos.framework.util.valueobjects.Context context) throws ApplicationException,SystemException
+	public void update(org.mifos.framework.util.valueobjects.Context context) 
+	throws ApplicationException,SystemException
 	{
-		
 		Transaction tx = null;
 		Session session = null;
 		try {
@@ -104,7 +89,6 @@ public  class DAO
 			session.update(context.getValueObject());
 			
 			tx.commit();
-			
 		}
 		catch (StaleObjectStateException sse)
 		{
@@ -210,29 +194,28 @@ public  class DAO
   	 * to log statements in the database.
 	 * @return Connection
   	 */
-	public static Connection getConnection()  throws DBConnectionFailedException{
+	public static Connection getConnection() throws DBConnectionFailedException {
 		Connection con = null;
   		try {
 			con = HibernateUtil.getSession().connection();
-		} catch(Exception e){
+		} catch (Exception e){
   			throw new DBConnectionFailedException(e);
   		}
   		return con;
   	}
 
-	public MasterDataRetriever getMasterDataRetriever()throws HibernateProcessException{
+	public MasterDataRetriever getMasterDataRetriever()
+	throws HibernateProcessException {
 		return new MasterDataRetriever();
 	}
 	
 	
 	/**
-	 * This method executes the query specified by opening a new session and later closes the session after 
-	 * executing the query.
-	 * @param queryName
-	 * @return
-	 * @throws SystemException
+	 * This method executes the query specified by opening a new session and 
+	 * later closes the session after executing the query.
 	 */
-	public static List executeNamedQuery(String queryName,HashMap queryParameters)throws SystemException{
+	public static List executeNamedQuery(String queryName,HashMap queryParameters)
+	throws SystemException{
 		Session session = HibernateUtil.getSession();
 		List returnList = null;
 		try{
@@ -248,13 +231,12 @@ public  class DAO
 	}
 	
 	/**
-	 * This method takes a session a query name and executes the same without closing the session after executing the query.
-	 * @param queryName
-	 * @param session
-	 * @return
-	 * @throws HibernateException
+	 * This method takes a session a query name and executes the same 
+	 * without closing the session after executing the query.
 	 */
-	public static List executeNamedQuery(String queryName,HashMap queryParameters,Session session)throws HibernateException{
+	public static List executeNamedQuery(
+		String queryName, HashMap queryParameters, Session session)
+	throws HibernateException {
 		Query query = null;
 		List returnList = null;
 		if(null != session){
@@ -272,10 +254,9 @@ public  class DAO
 	
 	/**
 	 * This methods sets the parameters to the query passed.
-	 * @param query
-	 * @param queryName
 	 */
-	public  static void setParametersInQuery(Query query,String queryName,HashMap queryParameters) {
+	public  static void setParametersInQuery(
+		Query query, String queryName, HashMap queryParameters) {
 		
 		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("Check if query object and queryParameters are not null for query with name  " + queryName );
 		if(null != query && null != queryParameters){
@@ -291,24 +272,21 @@ public  class DAO
 				MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("The parameter key  for query with name  " + queryName  + " is " + key);
 				query.setParameter(key, queryParameters.get(key));
 			}
-			
-			
 		}
-		
 	}
 	
-	
-	
 	/**
-	 * This returns entity corresponding to the name and primary key passed.It uses session.get provided by Hibernate to load the object and hence
-	 * will not initialize the associated entities.If that behaviour is desired use the other overloaded method.
+	 * This returns entity corresponding to the name and primary key passed.
+	 * It uses session.get provided by Hibernate to load the object and hence
+	 * will not initialize the associated entities.  If that behaviour is desired 
+	 * use the other overloaded method.
 	 * @param entityName- Fully Qualified class name of the entity which is to be retireved.
 	 * @param primaryKey - An object representing the primary key.
 	 * @param dataType - An enum which indicates the data type of the pk.
-	 * @return
-	 * @throws SystemException
 	 */
-	public static ValueObject getEntity(String entityName ,Object primaryKey,DataTypeConstants dataType)throws SystemException,ApplicationException{
+	public static ValueObject getEntity(
+		String entityName, Object primaryKey, DataTypeConstants dataType)
+	throws SystemException, ApplicationException {
 		Session session =null;
 		ValueObject entity = null;
 		
@@ -335,8 +313,6 @@ public  class DAO
 	 * @param primaryKey - An object representing the primary key.
 	 * @param dataType - An enum which indicates the data type of the pk.
 	 * @param session  - Hibernate session which has open database connection.
-	 * @return
-	 * @throws SystemException
 	 */
 	public static ValueObject getEntity(String entityName ,Object primaryKey,DataTypeConstants dataType,Session session)throws ApplicationException{
 		
