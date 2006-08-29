@@ -1917,13 +1917,27 @@ public class TestLoanBO extends MifosTestCase {
 		Date lastAppliedDate=null;
 		for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
 			LoanScheduleEntity loanScheduleEntity=(LoanScheduleEntity)accountActionDateEntity;
-			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("2")))
+			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("2"))){
 				assertEquals(2,loanScheduleEntity.getAccountFeesActionDetails().size());
-			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("4")))
+				for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : loanScheduleEntity.getAccountFeesActionDetails()){
+					if(accountFeesActionDetailEntity.getFee().getFeeName().equals("Periodic Fee"))
+						assertEquals(new Double("200"),accountFeesActionDetailEntity.getFeeAmount().getAmountDoubleValue());
+				}
+			}
+			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("4"))){
 				assertEquals(2,loanScheduleEntity.getAccountFeesActionDetails().size());
+				for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : loanScheduleEntity.getAccountFeesActionDetails()){
+					if(accountFeesActionDetailEntity.getFee().getFeeName().equals("Periodic Fee"))
+						assertEquals(new Double("200"),accountFeesActionDetailEntity.getFeeAmount().getAmountDoubleValue());
+				}
+			}
 			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("6"))){
 				assertEquals(2,loanScheduleEntity.getAccountFeesActionDetails().size());
 				lastAppliedDate=loanScheduleEntity.getActionDate();
+				for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : loanScheduleEntity.getAccountFeesActionDetails()){
+					if(accountFeesActionDetailEntity.getFee().getFeeName().equals("Periodic Fee"))
+						assertEquals(new Double("200"),accountFeesActionDetailEntity.getFeeAmount().getAmountDoubleValue());
+				}
 			}
 		}
 		assertEquals(intialTotalFeeAmount.add(new Money("600.0")),((LoanBO)accountBO).getLoanSummary().getOriginalFees());
@@ -2966,4 +2980,36 @@ public class TestLoanBO extends MifosTestCase {
 					true);
 		}
 	}	
+
+	public void testApplyTimeOfFirstRepaymentFee() throws Exception{
+		accountBO = getLoanAccount();
+		Money intialTotalFeeAmount=((LoanBO)accountBO).getLoanSummary().getOriginalFees();
+		TestObjectFactory.flushandCloseSession();
+		FeeBO oneTimeFee = TestObjectFactory.createOneTimeRateFee("Onetime Fee",
+				FeeCategory.LOAN, new Double("0.09"),FeeFormula.AMOUNT,FeePayment.TIME_OF_FIRSTLOANREPAYMENT);
+		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
+		UserContext uc = TestObjectFactory.getUserContext();
+		accountBO.setUserContext(uc);
+		accountBO.applyCharge(oneTimeFee.getFeeId(),((RateFeeBO)oneTimeFee).getRate());
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
+		for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
+			LoanScheduleEntity loanScheduleEntity=(LoanScheduleEntity)accountActionDateEntity;
+			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("2"))){
+				assertEquals(2,loanScheduleEntity.getAccountFeesActionDetails().size());
+				for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : loanScheduleEntity.getAccountFeesActionDetails()){
+					if(accountFeesActionDetailEntity.getFee().getFeeName().equals("Onetime Fee"))
+						assertEquals(new Money("0.3"),accountFeesActionDetailEntity.getFeeAmount());
+				}
+			}
+		}
+		assertEquals(intialTotalFeeAmount.add(new Money("0.3")),((LoanBO)accountBO).getLoanSummary().getOriginalFees());
+		LoanActivityEntity loanActivityEntity=((LoanActivityEntity)(((LoanBO)accountBO).getLoanActivityDetails().toArray())[0]);
+		assertEquals(oneTimeFee.getFeeName()+" applied",loanActivityEntity.getComments());
+		assertEquals(((LoanBO)accountBO).getLoanSummary().getOriginalFees(),loanActivityEntity.getFeeOutstanding());
+		AccountFeesEntity accountFeesEntity=accountBO.getAccountFees(oneTimeFee.getFeeId());
+		assertEquals(FeeStatus.ACTIVE.getValue(),accountFeesEntity.getFeeStatus());
+	}
+	
 }

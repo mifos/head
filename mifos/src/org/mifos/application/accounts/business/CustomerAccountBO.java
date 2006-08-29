@@ -604,8 +604,8 @@ public class CustomerAccountBO extends AccountBO {
 						.add(feeInstallmentMap.get(customerScheduleEntity
 								.getInstallmentId()));
 				AccountFeesActionDetailEntity accountFeesActionDetailEntity = new CustomerFeeScheduleEntity(
-						customerScheduleEntity, fee, accountFee,
-						totalFeeAmountApplied);
+						customerScheduleEntity, fee, accountFee,feeInstallmentMap.get(customerScheduleEntity
+								.getInstallmentId()));
 				customerScheduleEntity
 						.addAccountFeesAction(accountFeesActionDetailEntity);
 			}

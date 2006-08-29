@@ -310,18 +310,6 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		userContext = TestObjectFactory.getUserContext();
 		customerAccountBO = group.getCustomerAccount();
 		customerAccountBO.setUserContext(userContext);
-		for (AccountActionDateEntity accountAction : customerAccountBO
-				.getAccountActionDates()) {
-			CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) accountAction;
-			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
-					.getAccountFeesActionDetails()) {
-				System.out.println("fees : "
-						+ accountFeesActionDetailEntity.getFee().getFeeId());
-				System.out.println("fees : "
-						+ accountFeesActionDetailEntity.getFeeAmount());
-
-			}
-		}
 		customerAccountBO.waiveAmountOverDue(WaiveEnum.ALL);
 		for (AccountActionDateEntity accountAction : customerAccountBO
 				.getAccountActionDates()) {
@@ -722,6 +710,10 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				assertEquals(1,customerScheduleEntity.getAccountFeesActionDetails().size());
 				amount=amount.add(new Money("200"));
 				lastAppliedDate=customerScheduleEntity.getActionDate();
+				for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : customerScheduleEntity.getAccountFeesActionDetails()){
+					if(accountFeesActionDetailEntity.getFee().getFeeName().equals("Periodic Fee"))
+						assertEquals(new Double("200"),accountFeesActionDetailEntity.getFeeAmount().getAmountDoubleValue());
+				}
 			}
 		}
 		if(customerAccountBO.getCustomerActivitDetails()!=null){

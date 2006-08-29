@@ -1861,8 +1861,8 @@ public class LoanBO extends AccountBO {
 						.add(feeInstallmentMap.get(loanScheduleEntity
 								.getInstallmentId()));
 				AccountFeesActionDetailEntity accountFeesActionDetailEntity = new LoanFeeScheduleEntity(
-						loanScheduleEntity, fee, accountFee,
-						totalFeeAmountApplied);
+						loanScheduleEntity, fee, accountFee,feeInstallmentMap.get(loanScheduleEntity
+								.getInstallmentId()));
 				loanScheduleEntity
 						.addAccountFeesAction(accountFeesActionDetailEntity);
 			}
