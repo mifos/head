@@ -120,7 +120,6 @@ public class AccountTrxnBusinessProcessor extends MifosBusinessProcessor {
 				pmnt.setAccountType(accountType);
 			//AccountPayment pmnt = new AccountPayment();
 
-			pmnt.setResultName(AccountConstants.ACCOUNT_PAYMENT_KEY);
 			context.setValueObject(pmnt);
 			context.addBusinessResults(AccountConstants.ACCOUNT_ACTION_DATE_KEY, acctDate);
 

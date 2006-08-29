@@ -41,7 +41,6 @@ public class Adjustment extends ValueObject {
 	 */
 	public Adjustment() {
 		super();
-		this.setResultName("Adjustment");
 	}
 
 	/**
@@ -100,7 +99,9 @@ public class Adjustment extends ValueObject {
 		this.note = note;
 	}
 
-	
-	
+	@Override
+	public String getResultName() {
+		return "Adjustment";
+	}
 
 }

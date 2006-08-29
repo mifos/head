@@ -247,6 +247,7 @@ public class Fees extends ValueObject {
 		this.categoryId = categoryId;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		Fees fees = (Fees) obj;
 		if (this.globalFeeNum.equals(fees.getGlobalFeeNum())) {
@@ -256,6 +257,7 @@ public class Fees extends ValueObject {
 		}
 	}
 
+	@Override
 	public String getResultName() {
 		return FeeConstants.FEES;
 	}

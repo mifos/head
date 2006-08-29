@@ -31,7 +31,6 @@ public class LoanDisbursment extends ValueObject{
 	 */
 	public LoanDisbursment() {
 		super();
-		this.setResultName("LoanDisbursment");
 	}
 	
 	/**
@@ -146,7 +145,9 @@ public class LoanDisbursment extends ValueObject{
 		this.accountId = accountId;
 	}
 
-		
-	
-	
+	@Override
+	public String getResultName() {
+		return "LoanDisbursment";
+	}
+
 }

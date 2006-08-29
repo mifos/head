@@ -50,13 +50,6 @@ import org.mifos.framework.util.helpers.Money;
  *
  */
 public class LoanOffering extends PrdOffering {
-	/**
-	 * default constructor
-	 */
-	public LoanOffering() {
-		super();
-		this.setResultName("LoanOffering");
-	}
 	
 	/**
 	 * serial version UID for serialization
@@ -629,6 +622,9 @@ public class LoanOffering extends PrdOffering {
 		this.principalGLCode = principalGLCode;
 	}
 
-	
+	@Override
+	public String getResultName() {
+		return "LoanOffering";
+	}
 
 }

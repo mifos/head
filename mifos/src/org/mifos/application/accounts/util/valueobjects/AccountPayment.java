@@ -41,6 +41,7 @@ import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.master.util.valueobjects.Currency;
 import org.mifos.application.productdefinition.util.valueobjects.PaymentType;
 import org.mifos.framework.util.helpers.Money;
@@ -69,7 +70,6 @@ public class AccountPayment extends ValueObject{
 	
 	public AccountPayment(){
 		super();
-		this.setResultName("accountPayment");
 	}
 	
 	/**
@@ -199,9 +199,10 @@ public class AccountPayment extends ValueObject{
 	public void setReceiptDate(Date receiptDate) {
 		this.receiptDate = receiptDate;
 	}
-	
-	
-	
-	
+
+	@Override
+	public String getResultName() {
+		return AccountConstants.ACCOUNT_PAYMENT_KEY;
+	}
 	
 }

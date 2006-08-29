@@ -6,16 +6,10 @@ import java.io.Serializable;
  * This is the interface which would be implemented by all the ValueObjects and
  * this interface will inturn extend serializable interface
  */
-public class ValueObject implements Serializable, ReturnType {
+public abstract class ValueObject implements Serializable, ReturnType {
 
-	private String resultName;
-	
 	public String getResultName() {
-		return this.resultName;
+		return null;
 	}
 
-	public void setResultName(String name) {
-		this.resultName = name;
-	}
-	
 }

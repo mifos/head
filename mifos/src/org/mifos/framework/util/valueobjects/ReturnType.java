@@ -7,5 +7,4 @@ package org.mifos.framework.util.valueobjects;
  */
 public interface ReturnType {
 	public String getResultName();
-	public void setResultName(String name);
 }

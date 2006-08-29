@@ -68,7 +68,6 @@ public class AccountFees extends ValueObject{
 	 */
 	public AccountFees() {
 		super();
-		setResultName("accountFees");
 	}
 	
 	private java.lang.Integer accountFeeId;
@@ -271,6 +270,10 @@ public class AccountFees extends ValueObject{
 	public void setLastAppliedDate(Date lastAppliedDate) {
 		this.lastAppliedDate = lastAppliedDate;
 	}
-	
-	
+
+	@Override
+	public String getResultName() {
+		return "accountFees";
+	}
+		
 }

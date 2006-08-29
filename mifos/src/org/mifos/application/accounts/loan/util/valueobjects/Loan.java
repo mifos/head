@@ -22,7 +22,6 @@ public class Loan extends Account{
 	
 	
 	public Loan(){
-		super.setResultName("loan");
 		// this is being initialized here because this field is not there in the action form.
 		// it comes from prdOffering.
 		this.loanPenaltySet = new HashSet<LoanPenalty>();
@@ -566,7 +565,9 @@ public class Loan extends Account{
 		this.performanceHistory = performanceHistory;
 	}
 
-	
-	
-	
+	@Override
+	public String getResultName() {
+		return "loan";
+	}
+
 }

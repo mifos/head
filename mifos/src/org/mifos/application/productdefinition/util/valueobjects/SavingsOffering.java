@@ -51,13 +51,7 @@ import org.mifos.framework.util.helpers.Money;
  *
  */
 public class SavingsOffering extends PrdOffering {
-	/**
-	 * default constructor
-	 */
-	public SavingsOffering() {
-		super();
-		this.setResultName("SavingsOffering");
-	}
+
 	/**
 	 * serial version UID for serialization
 	 */
@@ -268,6 +262,10 @@ public class SavingsOffering extends PrdOffering {
 	public void setInterestGLCode(GLCodeEntity interestGLCode) {
 		this.interestGLCode = interestGLCode;
 	}
-	
+
+	@Override
+	public String getResultName() {
+		return "SavingsOffering";
+	}
 	
 }

@@ -49,15 +49,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
  */
 public class ProductCategory extends ValueObject {
 
-	//-----------------------Constructors----------	
-	/**
-	 *Default Constructor 
-	 */
-	public ProductCategory() {
-		super();
-		this.setResultName("ProductCategory");
-	}
-
 	//-----------------------Instance Variables----------
 	
 	/**
@@ -246,6 +237,11 @@ public class ProductCategory extends ValueObject {
 	 */
 	public void setGlobalPrdOfferingNum(java.lang.String globalPrdOfferingNum) {
 		this.globalPrdOfferingNum = globalPrdOfferingNum;
+	}
+
+	@Override
+	public String getResultName() {
+		return "ProductCategory";
 	}
 	
 }
