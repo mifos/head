@@ -1517,12 +1517,58 @@ public class TestLoanBO extends MifosTestCase {
 
 		TestObjectFactory.removeObject(loanOffering);
 	}
+	
+	public void testBuildLoanWithValidDisbDate()
+			throws NumberFormatException, AccountException, Exception {
+		createInitialCustomers();
+		LoanOfferingBO loanOffering = createLoanOffering(false);
+		Date disbursementDate = new Date(System.currentTimeMillis());
+
+		try {
+			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+					loanOffering, group, AccountState.LOANACC_APPROVED,
+					new Money("300.0"), Short.valueOf("6"), disbursementDate,
+					false, 10.0, (short) 0, new Fund(),
+					new ArrayList<FeeView>());
+			assertTrue(
+					"The Loan object is created for valid disbursement date",
+					true);
+		} catch (AccountException ae) {
+			assertFalse(
+					"The Loan object is created for valid disbursement date",
+					true);
+		}
+		TestObjectFactory.removeObject(loanOffering);
+	}
 
 	public void testBuildLoanWithInvalidDisbDate()
 			throws NumberFormatException, AccountException, Exception {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false);
-		Date disbursementDate = offSetCurrentDate(3);
+		Date disbursementDate = incrementCurrentDate(3);
+
+		try {
+			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+					loanOffering, group, AccountState.LOANACC_APPROVED,
+					new Money("300.0"), Short.valueOf("6"), disbursementDate,
+					false, 10.0, (short) 0, new Fund(),
+					new ArrayList<FeeView>());
+			assertFalse(
+					"The Loan object is created for invalid disbursement date",
+					true);
+		} catch (AccountException ae) {
+			assertTrue(
+					"The Loan object is created for invalid disbursement date",
+					true);
+		}
+		TestObjectFactory.removeObject(loanOffering);
+	}
+	
+	public void testBuildLoanWithDisbDateOlderThanCurrentDate()
+			throws NumberFormatException, AccountException, Exception {
+		createInitialCustomers();
+		LoanOfferingBO loanOffering = createLoanOffering(false);
+		Date disbursementDate = offSetCurrentDate(15);
 
 		try {
 			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
@@ -2028,7 +2074,6 @@ public class TestLoanBO extends MifosTestCase {
 		}
 
 	}
-	
 	private AccountBO getLoanAccount() {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
@@ -2890,7 +2935,35 @@ public class TestLoanBO extends MifosTestCase {
 		session.save(accountBO);
 		HibernateUtil.getTransaction().commit();
 	}
-	   
-
 	
+	public void testUpdateLoanFailure() {
+		accountBO = getLoanAccount();	
+		accountBO.setAccountState(new AccountStateEntity(AccountState.LOANACC_PENDINGAPPROVAL));
+		((LoanBO)accountBO).setDisbursementDate(offSetCurrentDate(15));
+		try{
+			((LoanBO)accountBO).updateLoan();
+			assertFalse(
+					"The Loan object is created for invalid disbursement date",
+					true);
+		} catch (AccountException ae) {
+			assertTrue(
+					"The Loan object is created for invalid disbursement date",
+					true);
+		}
+	}
+	
+	public void testUpdateLoanSuccess() {
+		accountBO = getLoanAccount();
+		((LoanBO)accountBO).setCollateralNote("Loan account updated");
+		try{
+			((LoanBO)accountBO).updateLoan();
+			assertTrue(
+					"The Loan object is created for valid disbursement date",
+					true);
+		} catch (AccountException ae) {
+			assertFalse(
+					"The Loan object is created for valid disbursement date",
+					true);
+		}
+	}	
 }

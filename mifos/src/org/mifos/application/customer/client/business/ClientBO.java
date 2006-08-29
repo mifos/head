@@ -164,7 +164,7 @@ public class ClientBO extends CustomerBO {
 		try{
 			if(isClientUnderGroup()){
 				if (customerStatus.getValue().equals(CustomerStatus.CLIENT_ACTIVE.getValue()) || customerStatus.getValue().equals(CustomerStatus.CLIENT_PENDING.getValue())){
-					if(isGroupStatusLower(parentCustomer.getStatus())){
+					if(isGroupStatusLower(getStatus(),parentCustomer.getStatus())){
 						throw new CustomerException(ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION ,new Object[] {
 								MifosConfiguration.getInstance().getLabel(ConfigurationConstants.GROUP,	this.getUserContext().getPereferedLocale()) ,
 								MifosConfiguration.getInstance().getLabel(ConfigurationConstants.CLIENT,	this.getUserContext().getPereferedLocale()) ,});
@@ -306,7 +306,7 @@ public class ClientBO extends CustomerBO {
 		if ((newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue()) || newStatusId
 				.equals(CustomerStatus.CLIENT_PENDING.getValue()))
 				&& this.isClientUnderGroup()) {
-			if (checkGroupStatus(newStatusId, this.getParentCustomer()
+			if (isGroupStatusLower(newStatusId, this.getParentCustomer()
 					.getCustomerStatus().getId())) {
 				try {
 					throw new CustomerException(
@@ -388,22 +388,6 @@ public class ClientBO extends CustomerBO {
 			throw new CustomerException(e);
 		}
 		return false;
-	}
-
-	private boolean checkGroupStatus(Short newStatusId, Short parentStatus) {
-		boolean isNotValid = false;
-		if (newStatusId.equals(CustomerStatus.CLIENT_PENDING.getValue())) {
-			if (parentStatus.equals(CustomerStatus.GROUP_PARTIAL.getValue())) {
-				isNotValid = true;
-			}
-		} else if (newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue())) {
-			if (parentStatus.equals(CustomerStatus.GROUP_PARTIAL.getValue())
-					|| parentStatus.equals(CustomerStatus.GROUP_PENDING
-							.getValue())) {
-				isNotValid = true;
-			}
-		}
-		return isNotValid;
 	}
 
 	@Override
@@ -628,7 +612,7 @@ public class ClientBO extends CustomerBO {
 	}
 	
 	private void validateForGroupStatus(CustomerStatus groupStatus)throws CustomerException{
-		if(isGroupStatusLower(groupStatus)){
+		if(isGroupStatusLower(getStatus(),groupStatus)){
 			ConfigurationIntf labelConfig=MifosConfiguration.getInstance();
 			try{
 				Object[] args = new Object[]{labelConfig.getLabel(ConfigurationConstants.GROUP, userContext.getPereferedLocale()),
@@ -695,17 +679,21 @@ public class ClientBO extends CustomerBO {
 		
 	}
 	
-	private boolean isGroupStatusLower(CustomerStatus groupStatus ) throws CustomerException{
-		if(getStatus().equals(CustomerStatus.CLIENT_PENDING)){
+	private boolean isGroupStatusLower(CustomerStatus clientStatus, CustomerStatus groupStatus ){
+		if(clientStatus.equals(CustomerStatus.CLIENT_PENDING)){
 			if(groupStatus.equals(CustomerStatus.GROUP_PARTIAL))
 				return true;
 		}
-		else if(getStatus().equals(CustomerStatus.CLIENT_ACTIVE)){
+		else if(clientStatus.equals(CustomerStatus.CLIENT_ACTIVE)){
 			if(groupStatus.equals(CustomerStatus.GROUP_PARTIAL) || 
 					groupStatus.equals(CustomerStatus.GROUP_PENDING)){
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	private boolean isGroupStatusLower(Short clientStatusId, Short parentStatus){
+		return isGroupStatusLower(CustomerStatus.getStatus(clientStatusId), CustomerStatus.getStatus(parentStatus));			
 	}
 }

@@ -1022,6 +1022,9 @@ public class LoanBO extends AccountBO {
 						AccountState.LOANACC_PARTIALAPPLICATION.getValue())
 				|| getAccountState().getId().equals(
 						AccountState.LOANACC_PENDINGAPPROVAL.getValue())) {
+			if(isDisbursementDateLessThanCurrentDate(disbursementDate))
+				throw new AccountException(
+						LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
 			regeneratePaymentSchedule();
 		}
 		update();
@@ -1763,6 +1766,13 @@ public class LoanBO extends AccountBO {
 		}
 		return isValid;
 	}
+	
+	private boolean isDisbursementDateLessThanCurrentDate(Date disbursementDate) {
+		if (DateUtils.getDateWithoutTimeStamp(disbursementDate.getTime())
+				.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) < 0)
+			return true;
+		return false;
+	}
 
 	private void applyPeriodicFee(FeeBO fee, Double charge,
 			List<AccountActionDateEntity> dueInstallments)
@@ -1969,6 +1979,9 @@ public class LoanBO extends AccountBO {
 				ProductDefinitionConstants.LOANACTIVE))
 			throw new AccountException(
 					AccountExceptionConstants.CREATEEXCEPTION);
+		if(isDisbursementDateLessThanCurrentDate(disbursementDate))
+			throw new AccountException(
+					LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
 	}
 
 	private void buildAccountFee(List<FeeView> feeViews) {

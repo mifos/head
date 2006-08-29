@@ -325,12 +325,9 @@ public abstract class CustomerBO extends BusinessObject {
 				.getAddress() : null;
 	}
 
-	public CustomerStatus getStatus() throws  CustomerException{
-		try{
-			return CustomerStatus.getStatus(customerStatus.getId());
-		}catch(PropertyNotFoundException pnfe){
-			throw new CustomerException(pnfe);
-		}
+	public CustomerStatus getStatus(){
+		return CustomerStatus.getStatus(customerStatus.getId());
+	
 	}
 
 	public void save() throws CustomerException {

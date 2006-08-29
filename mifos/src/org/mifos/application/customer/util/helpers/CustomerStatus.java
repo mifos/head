@@ -1,6 +1,5 @@
 package org.mifos.application.customer.util.helpers;
 
-import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 
 public enum CustomerStatus {
@@ -20,10 +19,10 @@ public enum CustomerStatus {
 		return value;
 	}
 	
-	public static CustomerStatus getStatus(Short value)throws PropertyNotFoundException{
+	public static CustomerStatus getStatus(Short value){
 		for(CustomerStatus status : CustomerStatus.values())
 			if(status.getValue().equals(value))
 				return status;
-		throw new PropertyNotFoundException("CustomerStatus");
+		return null;
 	}
 }

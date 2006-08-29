@@ -17,10 +17,6 @@ public class CustomerStatusFlagEntity extends MasterDataEntity {
 		super();
 	}
 
-	protected CustomerStatusFlagEntity(CustomerStatusFlag statusFlag) {
-		super(statusFlag.getValue());
-	}
-
 	public CustomerStatusEntity getCustomerStatus() {
 		return customerStatus;
 	}

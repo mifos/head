@@ -46,6 +46,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerFlagDetailEntity;
 import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.PositionEntity;
@@ -62,6 +63,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -444,6 +446,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		assertTrue(client.isActive());
 		assertFalse(((ClientBO) client).getCustomerAccount()
 				.getAccountActionDates().isEmpty());
+		assertEquals("ActivationDate should be the current date.",DateUtils.getDateWithoutTimeStamp(new java.util.Date().getTime()),DateUtils.getDateWithoutTimeStamp(client.getCustomerActivationDate().getTime()));
 	}
 
 	public void testUpdateStatusForClientForActiveLoanOfficer()
@@ -650,6 +653,10 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				client.getCustomerId());
 		assertFalse(client.isActive());
+		for(CustomerFlagDetailEntity customerFlagDetailEntity : client.getCustomerFlags()) {
+			assertFalse(customerFlagDetailEntity.getStatusFlag().isBlackListed());
+			break;
+		}
 		for (CustomerPositionEntity customerPosition : client
 				.getCustomerPositions()) {
 			assertNull(customerPosition.getCustomer());

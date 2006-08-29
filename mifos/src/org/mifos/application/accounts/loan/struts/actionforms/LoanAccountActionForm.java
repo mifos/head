@@ -419,7 +419,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 		if (StringUtils.isNullOrEmpty(getDisbursementDate())) {
 			addError(errors, "Proposed/Actual disbursal date",
 					"errors.validandmandatory",
-					"Proposed/Actual disbursal date");
+					"disbursal date");
 		}
 		if (((!isInterestDedAtDisbValue()) && StringUtils
 				.isNullOrEmpty(getGracePeriodDuration()))
