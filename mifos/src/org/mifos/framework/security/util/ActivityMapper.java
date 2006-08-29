@@ -984,8 +984,8 @@ public class ActivityMapper {
 		activityMap.put("/groupCustAction-getDetails", SecurityConstants.VIEW);
 		activityMap.put("/groupCustAction-get", SecurityConstants.VIEW);
 		activityMap.put("/groupCustAction-manage",SecurityConstants.GROUP_EDIT_GROUP);
-		activityMap.put("/groupCustAction-managePreview",SecurityConstants.VIEW);
-		activityMap.put("/groupCustAction-managePrevious",SecurityConstants.VIEW);
+		activityMap.put("/groupCustAction-previewManage",SecurityConstants.VIEW);
+		activityMap.put("/groupCustAction-previousManage",SecurityConstants.VIEW);
 		activityMap.put("/groupCustAction-update",SecurityConstants.GROUP_EDIT_GROUP);
 	}
 
