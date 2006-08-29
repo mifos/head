@@ -14,6 +14,7 @@ public enum BusinessServiceName {
 	Personnel("org.mifos.application.personnel.business.service.PersonnelBusinessService"),
 	Center("org.mifos.application.customer.center.business.service.CenterBusinessService"), 
 	Client("org.mifos.application.customer.client.business.service.ClientBusinessService"),
+	Group("org.mifos.application.customer.group.business.service.GroupBusinessService"),
 	Office("org.mifos.application.office.business.service.OfficeBusinessService"),
 	OfficeHierarchy("org.mifos.application.office.business.service.OfficeHierarchyBusinessService");
 
