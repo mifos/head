@@ -82,4 +82,13 @@ public class FlowManager {
 	public void removeFlow(String key) {
 		flowData.remove(key);
 	}
+	
+	public void removeFromFlow(String flowKey, String key)
+			throws PageExpiredException {
+		if (!isFlowValid(flowKey))
+			throw new PageExpiredException(
+					ExceptionConstants.PAGEEXPIREDEXCEPTION);
+		Flow flow = getFlow(flowKey.toString());
+		flow.removeFromSession(key);
+	}
 }

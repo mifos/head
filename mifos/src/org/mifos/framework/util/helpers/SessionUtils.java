@@ -42,6 +42,7 @@ import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -204,8 +205,23 @@ public class SessionUtils {
 		HttpSession session = request.getSession();
 		FlowManager flowManager = (FlowManager) session
 				.getAttribute(Constants.FLOWMANAGER);
-		flowManager.addToFlow(currentFlowKey, key, value);
+		try {
+			flowManager.addToFlow(currentFlowKey, key, value);
+		} catch (PageExpiredException pe) {
+			// TODO remove this. This is for backward compability for center and
+			// client modules.
+			if (CustomerConstants.CUSTOM_FIELDS_LIST.equals(key)
+					|| CustomerConstants.ADDITIONAL_FEES_LIST.equals(key)
+					|| CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST.equals(key)
+					|| CustomerConstants.LOAN_OFFICER_LIST.equals(key)
+					|| CustomerConstants.CLIENT_LIST.equals(key)
+					|| CustomerConstants.POSITIONS.equals(key)) {
+				session.setAttribute(key, value);
 
+			} else {
+				throw pe;
+			}
+		}
 	}
 
 	public static Object getAttribute(String key, HttpServletRequest request)
@@ -218,9 +234,40 @@ public class SessionUtils {
 		HttpSession session = request.getSession();
 		FlowManager flowManager = (FlowManager) session
 				.getAttribute(Constants.FLOWMANAGER);
-		return flowManager.getFromFlow(currentFlowKey, key);
+		try {
+			return flowManager.getFromFlow(currentFlowKey, key);
+		} catch (PageExpiredException pe) {
+			// TODO remove this. This is for backward compability for center and
+			// client modules.
+			if (CustomerConstants.CUSTOM_FIELDS_LIST.equals(key)
+					|| CustomerConstants.ADDITIONAL_FEES_LIST.equals(key)
+					|| CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST.equals(key)
+					|| CustomerConstants.LOAN_OFFICER_LIST.equals(key)
+					|| CustomerConstants.CLIENT_LIST.equals(key)
+					|| CustomerConstants.POSITIONS.equals(key)) {
+				return session.getAttribute(key);
+
+			} else {
+				throw pe;
+			}
+		}
 	}
-	
+
+	public static void removeAttribute(String key, HttpServletRequest request)
+			throws PageExpiredException {
+		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+				"Clean up in session utils has been called");
+		String currentFlowKey = (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY);
+		HttpSession session = request.getSession();
+		FlowManager flowManager = (FlowManager) session
+				.getAttribute(Constants.FLOWMANAGER);
+
+		flowManager.removeFromFlow(currentFlowKey, key);
+		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+				"The attribute being removed from session is" + key);
+	}
+
 	public static void removeAttribute(String key, HttpSession session) {
 		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
 				"Clean up in session utils has been called");
