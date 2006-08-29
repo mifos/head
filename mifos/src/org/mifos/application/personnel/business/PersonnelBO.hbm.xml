@@ -8,70 +8,71 @@
 
 	<class name="org.mifos.application.personnel.business.PersonnelBO"
 		table="PERSONNEL">
-		<id name="personnelId" column="PERSONNEL_ID" type="short">
+		<id name="personnelId" column="PERSONNEL_ID" type="short"
+			access="field">
 			<generator class="native" />
 		</id>
 		<version name="versionNo" column="VERSION_NO" type="integer"
 			unsaved-value="negative" />
 		<many-to-one name="level" column="LEVEL_ID"
 			class="org.mifos.application.personnel.business.PersonnelLevelEntity"
-			unique="true" lazy="false" />
+			unique="true" lazy="false" access="field"/>
 		<many-to-one name="office" column="OFFICE_ID"
 			class="org.mifos.application.office.business.OfficeBO" unique="true"
-			lazy="false" />
+			lazy="false" access="field"/>
 		<many-to-one name="preferredLocale" column="PREFERRED_LOCALE"
-			class="org.mifos.application.master.util.valueobjects.SupportedLocales" />
+			class="org.mifos.application.master.util.valueobjects.SupportedLocales" access="field"/>
 		<one-to-one name="personnelDetails"
 			class="org.mifos.application.personnel.business.PersonnelDetailsEntity"
 			cascade="all" lazy="false" />
 
 		<property name="globalPersonnelNum"
-			column="GLOBAL_PERSONNEL_NUM" type="string" />
+			column="GLOBAL_PERSONNEL_NUM" type="string" access="field"/>
 		<property name="displayName" column="DISPLAY_NAME"
-			type="string" />
-		<property name="personnelStatus" column="PERSONNEL_STATUS"
-			type="short" />
-		<property name="title" column="TITLE" type="integer" />
-		<property name="searchId" column="SEARCH_ID" type="string" />
+			type="string" access="field" />
+		<many-to-one name="status" column="PERSONNEL_STATUS"
+			class="org.mifos.application.personnel.business.PersonnelStatusEntity" access="field"/>
+		<property name="title" column="TITLE" type="integer" access="field"/>
+		<property name="searchId" column="SEARCH_ID" type="string"
+			access="field" />
 		<property name="maxChildCount" column="MAX_CHILD_COUNT"
-			type="integer" />
+			type="integer" access="field"/>
 		<property name="encriptedPassword" column="PASSWORD"
-			type="binary" />
-		<property name="userName" column="LOGIN_NAME" type="string" />
-		<property name="emailId" column="EMAIL_ID" type="string" />
+			type="binary" access="field" />
+		<property name="userName" column="LOGIN_NAME" type="string" access="field"/>
+		<property name="emailId" column="EMAIL_ID" type="string" access="field"/>
 		<property name="passwordChanged" column="PASSWORD_CHANGED"
-			type="short" />
+			type="short" access="field"/>
 		<property name="createdBy" column="CREATED_BY" type="short" />
-		<property name="createdDate" column="CREATED_DATE" type="date" />
+		<property name="createdDate" column="CREATED_DATE" type="date" access="field"/>
 		<property name="updatedBy" column="UPDATED_BY" type="short" />
 		<property name="updatedDate" column="UPDATED_DATE" type="date" />
-		<property name="lastLogin" column="LAST_LOGIN" type="date" />
-		<property name="locked" column="LOCKED" type="short" />
-		<property name="noOfTries" column="NO_OF_TRIES" type="short" />
-		<set name="customFields" lazy="false"
-			table="PERSONNEL_CUSTOM_FIELD">
-			<key column="PERSONNEL_ID" />
-			<composite-element
-				class="org.mifos.application.personnel.business.PersonnelCustomFieldView">
-				<property name="fieldId" column="FIELD_ID"
-					not-null="true" />
-				<property name="fieldValue" column="FIELD_VALUE" />
-			</composite-element>
-		</set>
+		<property name="lastLogin" column="LAST_LOGIN" type="date" access="field"/>
+		<property name="locked" column="LOCKED" type="short"
+			access="field" />
+		<property name="noOfTries" column="NO_OF_TRIES" type="short" access="field"/>
 		<set name="personnelRoles" cascade="all" inverse="true"
 			lazy="false">
 			<key column="PERSONNEL_ID" />
 			<one-to-many
 				class="org.mifos.application.personnel.business.PersonnelRoleEntity" />
 		</set>
+		<set name="customFields" cascade="all" inverse="true"
+			table="PERSONNEL_CUSTOM_FIELD">
+			<key column="PERSONNEL_ID" />
+			<one-to-many
+				class="org.mifos.application.personnel.business.PersonnelCustomFieldEntity" />
+		</set>
 	</class>
 	<!-- This query obtains all the active loan officers under a particular office -->
 	<query name="masterdata.activeloanofficers">
-		<![CDATA[select new org.mifos.application.personnel.business.PersonnelView(personnel.personnelId,personnel.displayName) from org.mifos.application.personnel.business.PersonnelBO as personnel where ((personnel.personnelId=:userId and :userLevelId=:levelId) or (:userLevelId!=:levelId and personnel.level.levelId = :levelId)) and personnel.office.officeId =:officeId and personnel.personnelStatus =:statusId order by personnel.displayName]]>
+		<![CDATA[select new org.mifos.application.personnel.business.PersonnelView(personnel.personnelId,personnel.displayName) from org.mifos.application.personnel.business.PersonnelBO as personnel where ((personnel.personnelId=:userId and :userLevelId=:levelId) or (:userLevelId!=:levelId and personnel.level.id = :levelId)) and personnel.office.officeId =:officeId and personnel.status.id =:statusId order by personnel.displayName]]>
 	</query>
-	<query name="personnel.formedByLoanOfficers"><![CDATA[select new org.mifos.application.personnel.business.PersonnelView(personnel.personnelId,personnel.displayName) from org.mifos.application.personnel.business.PersonnelBO as personnel where personnel.level.levelId = :levelId and personnel.office.officeId =:officeId and personnel.personnelStatus =:statusId]]></query>
+	<query name="personnel.formedByLoanOfficers">
+		<![CDATA[select new org.mifos.application.personnel.business.PersonnelView(personnel.personnelId,personnel.displayName) from org.mifos.application.personnel.business.PersonnelBO as personnel where personnel.level.id = :levelId and personnel.office.officeId =:officeId and personnel.status.id =:statusId]]>
+	</query>
 	<query name="getCountActivePersonnel">
-		<![CDATA[select count(*)  from org.mifos.application.personnel.business.PersonnelBO as personnel where  personnel.office.officeId =:OFFICE_ID and personnel.personnelStatus =:STATUS_ID]]>
+		<![CDATA[select count(*)  from org.mifos.application.personnel.business.PersonnelBO as personnel where  personnel.office.officeId =:OFFICE_ID and personnel.status.id =:STATUS_ID]]>
 	</query>
-	
+
 </hibernate-mapping>

@@ -177,6 +177,7 @@
 	<mapping resource="org/mifos/application/personnel/business/PersonnelNotesEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/personnel/business/PersonnelRoleEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/personnel/business/PersonnelStatusEntity.hbm.xml" />
+	<mapping resource="org/mifos/application/personnel/business/PersonnelCustomFieldEntity.hbm.xml" />
 
 	<!-- M2 style objects for customer-->
 
@@ -318,6 +319,8 @@
 		resource="org/mifos/application/customer/util/valueobjects/CustomerFeesActionDetail.hbm.xml" />
 	<mapping
 		resource="org/mifos/application/customer/client/business/CustomerPictureEntity.hbm.xml" />
+		
+		
 </session-factory>
 
 </hibernate-configuration>  

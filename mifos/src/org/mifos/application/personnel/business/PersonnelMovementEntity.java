@@ -2,21 +2,26 @@ package org.mifos.application.personnel.business;
 
 import java.util.Date;
 
+import org.mifos.application.office.business.OfficeBO;
 import org.mifos.framework.business.PersistentObject;
 
 public class PersonnelMovementEntity extends PersistentObject {
 
-	private Short personnelMovementId;
+	private final Short personnelMovementId;
 
-	private Short personnelId;
+	private final PersonnelBO personnel;
 
-	private Short officeId;
-	
-	private Date startDate;
+	private OfficeBO office;
+
+	private final Date startDate;
 
 	private Date endDate;
 
-	public PersonnelMovementEntity() {
+	protected PersonnelMovementEntity() {
+		super();
+		this.personnelMovementId=null;
+		this.personnel=null;
+		this.startDate=null;
 	}
 
 	public Date getEndDate() {
@@ -26,37 +31,20 @@ public class PersonnelMovementEntity extends PersistentObject {
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
-
-	public Short getOfficeId() {
-		return officeId;
-	}
-
-	public void setOfficeId(Short officeId) {
-		this.officeId = officeId;
-	}
-
-	public Short getPersonnelId() {
-		return personnelId;
-	}
-
-	public void setPersonnelId(Short personnelId) {
-		this.personnelId = personnelId;
-	}
-
 	public Short getPersonnelMovementId() {
 		return personnelMovementId;
 	}
-
-	public void setPersonnelMovementId(Short personnelMovementId) {
-		this.personnelMovementId = personnelMovementId;
-	}
-
 	public Date getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
+	public PersonnelMovementEntity(PersonnelBO personnel, OfficeBO office) {
+		super();
+		this.personnel = personnel;
+		this.office = office;
+		this.personnelMovementId=null;
+		this.startDate=new Date(System.currentTimeMillis());
+		this.createdDate=new Date(System.currentTimeMillis());
+		this.createdBy=personnel.getPersonnelId();
 	}
-
 }

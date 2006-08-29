@@ -7,15 +7,15 @@
 <hibernate-mapping>
 
     <class name="org.mifos.application.personnel.business.PersonnelMovementEntity" table="PERSONNEL_MOVEMENT">
-        <id name="personnelMovementId" column="PERSONNEL_MOVEMENT_ID" type="short">
+        <id name="personnelMovementId" column="PERSONNEL_MOVEMENT_ID" type="short" access="field">
             <generator class="native"/>
         </id>
 		<version name="versionNo" column="VERSION_NO" type="short" unsaved-value="negative"/>
-        <property name="personnelId" column="PERSONNEL_ID" type="short" />
-        <property name="officeId" column="OFFICE_ID" type="short" />
-        <property name="startDate" column="START_DATE" type="date" />                                        
+        <property name="startDate" column="START_DATE" type="date" access="field"/>                                        
         <property name="endDate" column="END_DATE" type="date" />                                        
-        <property name="createdBy" column="CREATED_BY" type="short" />                                     
-        <property name="createdDate" column="CREATED_DATE" type="date" />       
+        <property name="createdBy" column="CREATED_BY" type="short" access="field"/>                                     
+        <property name="createdDate" column="CREATED_DATE" type="date" access="field"/>      
+        <many-to-one name="personnel"  column="PERSONNEL_ID" class="org.mifos.application.personnel.business.PersonnelBO" cascade="none" access="field"/>
+        <many-to-one name="office"  column="OFFICE_ID" class="org.mifos.application.office.business.OfficeBO" cascade="none" access="field"/>
     </class>
 </hibernate-mapping>

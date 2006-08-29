@@ -52,12 +52,11 @@ import org.mifos.framework.business.util.Name;
  */
 public class PersonnelDetailsEntity extends PersistentObject {
 
-
 	private Name name;
-	
+
 	private String governmentIdNumber;
 
-	private Date dob;
+	private final Date dob;
 
 	private Integer maritalStatus;
 
@@ -69,11 +68,10 @@ public class PersonnelDetailsEntity extends PersistentObject {
 
 	private Date dateOfLeavingBranch;
 
+	private final Short personnelId;
 
-	private Short personnelId;
+	private final PersonnelBO personnel;
 
-	private PersonnelBO personnel;
-	
 	private Address address;
 
 	public Address getAddress() {
@@ -84,17 +82,15 @@ public class PersonnelDetailsEntity extends PersistentObject {
 		this.address = address;
 	}
 
-	public PersonnelDetailsEntity() {
+	protected PersonnelDetailsEntity() {
 		super();
-
+		this.dob = null;
+		this.personnelId = null;
+		this.personnel = null;
 	}
 
 	public PersonnelBO getPersonnel() {
 		return personnel;
-	}
-
-	public void setPersonnel(PersonnelBO personnel) {
-		this.personnel = personnel;
 	}
 
 	public Date getDateOfJoiningBranch() {
@@ -117,10 +113,6 @@ public class PersonnelDetailsEntity extends PersistentObject {
 		return dob;
 	}
 
-	public void setDob(Date dob) {
-		this.dob = dob;
-	}
-
 	public Date getDateOfJoiningMFI() {
 		return dateOfJoiningMFI;
 	}
@@ -128,7 +120,6 @@ public class PersonnelDetailsEntity extends PersistentObject {
 	public void setDateOfJoiningMFI(Date dateOfJoiningMFI) {
 		this.dateOfJoiningMFI = dateOfJoiningMFI;
 	}
-
 
 	public Integer getGender() {
 		return gender;
@@ -146,7 +137,6 @@ public class PersonnelDetailsEntity extends PersistentObject {
 		this.governmentIdNumber = governmentIdNumber;
 	}
 
-
 	public Integer getMaritalStatus() {
 		return maritalStatus;
 	}
@@ -155,21 +145,30 @@ public class PersonnelDetailsEntity extends PersistentObject {
 		this.maritalStatus = maritalStatus;
 	}
 
-
-	public Short getPersonnelId() {
-		return personnelId;
-	}
-
-	public void setPersonnelId(Short personnelId) {
-		this.personnelId = personnelId;
-	}
-
 	public Name getName() {
 		return name;
 	}
 
 	public void setName(Name name) {
 		this.name = name;
+	}
+
+	public PersonnelDetailsEntity(Name name, String governmentIdNumber,
+			Date dob, Integer maritalStatus, Integer gender,
+			Date dateOfJoiningMFI, Date dateOfJoiningBranch,
+			Date dateOfLeavingBranch, PersonnelBO personnel, Address address) {
+		super();
+		this.name = name;
+		this.governmentIdNumber = governmentIdNumber;
+		this.dob = dob;
+		this.maritalStatus = maritalStatus;
+		this.gender = gender;
+		this.dateOfJoiningMFI = dateOfJoiningMFI;
+		this.dateOfJoiningBranch = dateOfJoiningBranch;
+		this.dateOfLeavingBranch = dateOfLeavingBranch;
+		this.personnelId = null;
+		this.personnel = personnel;
+		this.address = address;
 	}
 
 }

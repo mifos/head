@@ -7,7 +7,7 @@
 <hibernate-mapping>
 
     <class name="org.mifos.application.personnel.business.PersonnelDetailsEntity" table="PERSONNEL_DETAILS">
-   	    <id name="personnelId" column="PERSONNEL_ID" type="short">
+   	    <id name="personnelId" column="PERSONNEL_ID" type="short" access="field">
             <generator class="foreign">
             	<param name="property">personnel</param>
             </generator>
@@ -20,7 +20,7 @@
 	        <property name="secondLastName" column="SECOND_LAST_NAME" type="string"   />
 		</component>
         <property name="governmentIdNumber" column="GOVERNMENT_ID_NUMBER" type="string" />
-        <property name="dob" column="DOB" type="date" />
+        <property name="dob" column="DOB" type="date" access="field"/>
         <property name="maritalStatus" column="MARITAL_STATUS" type="integer" />
         <property name="gender" column="GENDER" type="integer" />
         <property name="dateOfJoiningMFI" column="DATE_OF_JOINING_MFI" type="date" />     
@@ -36,7 +36,7 @@
 	        <property name="zip" column="POSTAL_CODE" type="string"   />
      		<property name="phoneNumber" column="TELEPHONE" type="string"  />
         </component>
-		<one-to-one name="personnel" class="org.mifos.application.personnel.business.PersonnelBO" cascade="all" />
+		<one-to-one name="personnel" class="org.mifos.application.personnel.business.PersonnelBO" cascade="all" access="field"/>
     </class>
     	 
 </hibernate-mapping>

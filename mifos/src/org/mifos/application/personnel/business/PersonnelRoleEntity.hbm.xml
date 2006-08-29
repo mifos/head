@@ -7,10 +7,10 @@
 <hibernate-mapping>
 
     <class name="org.mifos.application.personnel.business.PersonnelRoleEntity" table="PERSONNEL_ROLE">
-        <id name="personnelRoleId" column="PERSONNEL_ROLE_ID" type="integer" unsaved-value="-1" >
+        <id name="personnelRoleId" column="PERSONNEL_ROLE_ID" type="integer" unsaved-value="-1" access="field">
                 <generator class="native"/>
         </id>
-     	<many-to-one name="personnel" column="PERSONNEL_ID" class="org.mifos.application.personnel.business.PersonnelBO"  unique="true" />
-        <many-to-one  name="role"  column="ROLE_ID" class="org.mifos.application.rolesandpermission.util.valueobjects.Role" lazy="false" unique="true" />
+     	<many-to-one name="personnel" column="PERSONNEL_ID" class="org.mifos.application.personnel.business.PersonnelBO"  unique="true" access="field"/>
+        <many-to-one  name="role"  column="ROLE_ID" class="org.mifos.application.rolesandpermission.util.valueobjects.Role" lazy="false" unique="true" access="field"/>
    </class>
 </hibernate-mapping>
