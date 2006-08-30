@@ -39,6 +39,7 @@
 package org.mifos.application.customer.center.struts.action;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,8 +51,6 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerCustomFieldEntity;
-import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.business.PositionEntity;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
@@ -231,64 +230,12 @@ public class CenterCustAction extends CustAction {
 		CenterBO center = (CenterBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
 		CenterCustActionForm actionForm = (CenterCustActionForm) form;
-		if(!center.getPersonnel().getPersonnelId().equals(actionForm.getLoanOfficerIdValue()))
-			   center.setPersonnel(getPersonnelBusinessService().getPersonnel(actionForm.getLoanOfficerIdValue()));
-		center.setExternalId(actionForm.getExternalId());
+		Date mfiJoiningDate = null; 
 		if(actionForm.getMfiJoiningDate()!=null)
-			center.setMfiJoiningDate(getDateFromString(actionForm.getMfiJoiningDate(), getUserContext(request)
-				.getPereferedLocale()));
-		center.updateAddress(actionForm.getAddress());
-		convertCustomFieldDateToUniformPattern(actionForm.getCustomFields(), getUserContext(request).getPereferedLocale());
-		for(CustomFieldView fieldView : actionForm.getCustomFields())
-			for(CustomerCustomFieldEntity fieldEntity: center.getCustomFields())
-				if(fieldView.getFieldId().equals(fieldEntity.getFieldId()))
-					fieldEntity.setFieldValue(fieldView.getFieldValue());
-		
-		for(CustomerPositionView positionView: actionForm.getCustomerPositions()){
-			boolean isPositionFound = false;
-			for(CustomerPositionEntity positionEntity: center.getCustomerPositions()){
-				if(positionView.getPositionId().equals(positionEntity.getPosition().getId())){
-					positionEntity.setCustomer(findClientObject(request, positionView.getCustomerId()));
-					isPositionFound = true;
-					break;
-				}
-				
-			}
-			if(!isPositionFound){
-				center.addCustomerPosition(new CustomerPositionEntity(findPosition(request,positionView.getPositionId()),findClientObject(request,positionView.getCustomerId()), center));
-			}
-		}
-		
-		center.setUserContext(getUserContext(request));
-		center.update();
+			mfiJoiningDate = getDateFromString(actionForm.getMfiJoiningDate(), getUserContext(request)
+				.getPereferedLocale());
+		center.update(getUserContext(request), actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(), mfiJoiningDate, actionForm.getAddress(), actionForm.getCustomFields(), actionForm.getCustomerPositions());
 		return mapping.findForward(ActionForwards.update_success.toString());
-	}
-
-	private CustomerBO findClientObject(HttpServletRequest request, Integer customerId){
-		if(customerId!=null){
-			List<CustomerBO> clientList = (List<CustomerBO>) SessionUtils.getAttribute(CustomerConstants.CLIENT_LIST, request.getSession());
-			for(CustomerBO customer: clientList){
-				if(customer.getCustomerId().equals(customerId))
-					return customer;
-			}
-		}
-		return null;
-	}
-	
-	private PositionEntity findPosition(HttpServletRequest request, Short positionId){
-		if(positionId!=null){
-			List<PositionEntity> positions = (List<PositionEntity>) SessionUtils.getAttribute(CustomerConstants.POSITIONS, request.getSession());
-			for(PositionEntity position : positions){
-				if(position.getId().equals(positionId))
-					return position;
-			}
-		}
-		return null;
-	}
-
-	private PersonnelBusinessService getPersonnelBusinessService()throws ServiceException{
-		return (PersonnelBusinessService) ServiceFactory.getInstance()
-		.getBusinessService(BusinessServiceName.Personnel);
 	}
 	
 	public ActionForward validate(ActionMapping mapping, ActionForm form,

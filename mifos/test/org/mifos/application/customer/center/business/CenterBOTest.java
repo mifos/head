@@ -24,6 +24,7 @@ import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.business.util.Address;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -185,6 +186,39 @@ public class CenterBOTest extends MifosTestCase {
 		
 	}
 
+	public void testUpdateFailure() throws Exception {
+		createCustomers();
+		try{
+			center.update(TestObjectFactory.getUserContext(), null, "1234", null, null, null, null);
+		}catch(CustomerException ce){
+			assertEquals(ce.getKey(), CustomerConstants.INVALID_LOAN_OFFICER);
+		}
+	}
+	
+	public void testSuccessfulUpdate() throws Exception {
+		createCustomers();		
+		Date mfiJoiningDate = getDate("11/12/2005");
+		String city ="Bangalore";
+		String addressLine1="Aditi";
+		String externalId = "1234";
+		Address address = new Address();
+		address.setCity(city);
+		address.setLine1(addressLine1);
+		
+		center.update(TestObjectFactory.getUserContext(), personnel, externalId, mfiJoiningDate, address, null, null);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		
+		assertEquals(city, center.getCustomerAddressDetail().getAddress().getCity());
+		assertEquals(addressLine1, center.getCustomerAddressDetail().getAddress().getLine1());
+		assertEquals(externalId, center.getExternalId());
+		assertEquals(mfiJoiningDate, DateUtils.getDateWithoutTimeStamp(center.getMfiJoiningDate().getTime()));
+		assertEquals(personnel, center.getPersonnel().getPersonnelId());
+	}
+	
 	public void testUpdateLOsForAllChildren() throws CustomerException{
 		createCustomers();
 		assertEquals(center.getPersonnel().getPersonnelId(), group.getPersonnel().getPersonnelId());

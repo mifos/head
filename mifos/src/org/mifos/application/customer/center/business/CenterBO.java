@@ -12,6 +12,7 @@ import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistory;
+import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
@@ -114,6 +115,16 @@ public class CenterBO extends CustomerBO {
 		if(isLOChanged())
 			new CustomerPersistence().updateLOsForAllChildren(getPersonnel().getPersonnelId(), getSearchId(), getOffice().getOfficeId());
 		super.update();
+	}
+	
+	public void update(UserContext userContext, Short loanOfficerId, String externalId, Date mfiJoiningDate, Address address,  List<CustomFieldView> customFields, List<CustomerPositionView> customerPositions) throws CustomerException {
+		validateFieldsForUpdate(loanOfficerId);
+		setMfiJoiningDate(mfiJoiningDate);
+		super.update(userContext, loanOfficerId, externalId, address, customFields, customerPositions);
+	}
+	
+	protected void validateFieldsForUpdate(Short loanOfficerId)throws CustomerException{
+		validateLO(loanOfficerId);
 	}
 	
 	@Override

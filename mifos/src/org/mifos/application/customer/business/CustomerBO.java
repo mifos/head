@@ -64,6 +64,7 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.util.Address;
@@ -416,8 +417,22 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 	}
 
+	public void update(UserContext userContext, Short loanOfficerId, String externalId, Address address,  List<CustomFieldView> customFields, List<CustomerPositionView> customerPositions) throws CustomerException {
+		this.setUserContext(userContext);
+		this.setExternalId(externalId);
+		updateLoanOfficer(loanOfficerId);
+		updateAddress(address);
+		updateCustomFields(customFields);
+		updateCustomerPositions(customerPositions);
+		this.update();
+	}
+	
+	
 	public void updateAddress(Address address) throws CustomerException {
-		getCustomerAddressDetail().setAddress(address);
+		if(getCustomerAddressDetail()==null)
+			setCustomerAddressDetail(new CustomerAddressDetailEntity(this, address));
+		else			
+			getCustomerAddressDetail().setAddress(address);
 	}
 
 	public CustomerAccountBO getCustomerAccount() {
@@ -694,10 +709,47 @@ public abstract class CustomerBO extends BusinessObject {
 	protected abstract void validateStatusChange(Short newStatusId)
 			throws CustomerException;
 
-	
-	
 	protected boolean isSameBranch(OfficeBO officeObj){
 		return this.office.getOfficeId().equals(officeObj.getOfficeId());
+	}
+	
+	protected void updateCustomFields(List<CustomFieldView> customFields){
+		if(customFields!=null){
+			for(CustomFieldView fieldView : customFields){
+				if (fieldView.getFieldType().equals(CustomFieldType.DATE.getValue()) && StringUtils.isNullAndEmptySafe(fieldView
+						.getFieldValue()))
+					fieldView.convertDateToUniformPattern(getUserContext().getPereferedLocale());
+				for(CustomerCustomFieldEntity fieldEntity: getCustomFields())
+					if(fieldView.getFieldId().equals(fieldEntity.getFieldId()))
+						fieldEntity.setFieldValue(fieldView.getFieldValue());
+			}
+		}
+	}
+	
+	protected void updateCustomerPositions(List<CustomerPositionView> customerPositions){
+		if(customerPositions!=null){
+			for(CustomerPositionView positionView: customerPositions){
+				boolean isPositionFound = false;
+				for(CustomerPositionEntity positionEntity: getCustomerPositions()){
+					if(positionView.getPositionId().equals(positionEntity.getPosition().getId())){
+						positionEntity.setCustomer(getCustomer(positionView.getCustomerId()));
+						isPositionFound = true;
+						break;
+					}			
+				}
+				if(!isPositionFound){
+					addCustomerPosition(new CustomerPositionEntity(new PositionEntity(positionView.getPositionId()),getCustomer(positionView.getCustomerId()), this));
+				}
+			}
+		}
+	}
+	
+	protected void updateLoanOfficer(Short loanOfficerId){
+		if(loanOfficerId != null && !loanOfficerId.equals(getPersonnel().getPersonnelId())){
+			this.personnel = new PersonnelPersistence()
+			.getPersonnel(loanOfficerId);
+			new CustomerPersistence().updateLOsForAllChildren(getPersonnel().getPersonnelId(), getSearchId(), getOffice().getOfficeId());
+		}
 	}
 	
 	private void createAddress(Address address){
@@ -731,7 +783,7 @@ public abstract class CustomerBO extends BusinessObject {
 			this.customerMeeting = createCustomerMeeting(parentCustomer
 					.getCustomerMeeting().getMeeting());
 		this.addCustomerHierarchy(new CustomerHierarchyEntity(this, parentCustomer));
-	}
+	}	
 	
 	private void setLoanOfficerAndMeeting(Short loanOfficerId, MeetingBO meeting){
 		if (loanOfficerId != null)
@@ -759,5 +811,9 @@ public abstract class CustomerBO extends BusinessObject {
 			throw new CustomerException(CustomerConstants.INVALID_STATUS);
 		if (officeId == null)
 			throw new CustomerException(CustomerConstants.INVALID_OFFICE);
+	}
+	
+	private CustomerBO getCustomer(Integer customerId){
+		return customerId!=null ? new CustomerPersistence().getCustomer(customerId) : null;
 	}
 }
