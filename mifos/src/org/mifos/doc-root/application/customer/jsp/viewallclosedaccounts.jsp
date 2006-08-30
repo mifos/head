@@ -191,7 +191,7 @@
 					<c:if test="${param.type=='client'}">
 						<c:set var="formAction" value="clientCustAction.do?method=get"/>
 					</c:if>
-					<c:if test="${param.type=='center'}">
+					<c:if test="${param.type=='group'}">
 						<c:set var="formAction" value="centerCustAction.do?method=get"/>
 					</c:if>		
 					<html-el:form action="${formAction}" >

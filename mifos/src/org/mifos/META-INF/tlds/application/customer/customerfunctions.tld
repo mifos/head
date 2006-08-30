@@ -22,6 +22,17 @@
       &lt;c:out value="${fn:getClientPositions(object,object)}">
     </example>
   </function>
+    <function>
+    <description>
+     This takes a collection of customerposition and returns the , separated position names for a client as a String
+    </description>
+    <name>getClientPosition</name>
+    <function-class>org.mifos.application.customer.struts.uihelpers.CustomerUIHelperFn</function-class>
+    <function-signature>java.lang.String getClientPosition(java.lang.Object,java.lang.Object)</function-signature>
+    <example>
+      &lt;c:out value="${fn:getClientPosition(object,object)}">
+    </example>
+  </function>
   
    
   </taglib>

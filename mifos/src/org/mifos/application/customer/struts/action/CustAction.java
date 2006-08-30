@@ -264,4 +264,13 @@ public class CustAction extends BaseAction {
 	}
 	SessionUtils.setAttribute(CustomerConstants.CLIENT_LIST, customerListToPopulate , request);
 	}
+	
+	protected CustomerBusinessService getCustomerBusinessService() throws CustomerException{
+		try {
+			return (CustomerBusinessService) ServiceFactory.getInstance()
+					.getBusinessService(BusinessServiceName.Customer);
+		} catch (ServiceException se) {
+			throw new CustomerException(se);
+		}
+	}
 }

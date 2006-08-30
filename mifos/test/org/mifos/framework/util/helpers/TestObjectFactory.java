@@ -93,6 +93,7 @@ import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.customer.business.CustomerNoteEntity;
+import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -100,6 +101,7 @@ import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientDetailView;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
@@ -2003,6 +2005,15 @@ public class TestObjectFactory {
 			session.lock(office, LockMode.NONE);
 			session.delete(office);
 			transaction.commit();
+		}
+	}
+	
+	public static void removeCustomerFromPosition(CustomerBO customer) throws CustomerException {
+		if(customer != null) {
+			for(CustomerPositionEntity customerPositionEntity : customer.getCustomerPositions())
+				customerPositionEntity.setCustomer(null);
+			customer.update();
+			HibernateUtil.commitTransaction();
 		}
 	}
 }

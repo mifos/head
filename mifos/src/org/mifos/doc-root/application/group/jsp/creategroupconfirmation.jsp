@@ -81,7 +81,7 @@
                             </span>
                      <c:choose>
                         <c:when test="${!empty requestScope.GroupVO.personnel and !empty requestScope.GroupVO.personnel.personnelId}">
-                            <a href="GroupAction.do?method=get&globalCustNum=${requestScope.GroupVO.globalCustNum}&recordOfficeId=${requestScope.GroupVO.office.officeId}&recordLoanOfficerId=${requestScope.GroupVO.personnel.personnelId}">
+                            <a href="groupCustAction.do?method=get&globalCustNum=${requestScope.GroupVO.globalCustNum}&recordOfficeId=${requestScope.GroupVO.office.officeId}&recordLoanOfficerId=${requestScope.GroupVO.personnel.personnelId}">
                             <mifos:mifoslabel name="Group.view" bundle="GroupUIResources"></mifos:mifoslabel>
 						    <mifos:mifoslabel name="${ConfigurationConstants.GROUP}" ></mifos:mifoslabel>
                             <mifos:mifoslabel name="Group.details" bundle="GroupUIResources"></mifos:mifoslabel>
@@ -90,7 +90,7 @@
                             </a>
                        </c:when>
                        <c:otherwise>
-                       		<a href="GroupAction.do?method=get&globalCustNum=${requestScope.GroupVO.globalCustNum}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+                       		<a href="groupCustAction.do?method=get&globalCustNum=${requestScope.GroupVO.globalCustNum}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
                             <mifos:mifoslabel name="Group.view" bundle="GroupUIResources"></mifos:mifoslabel>
 						    <mifos:mifoslabel name="${ConfigurationConstants.GROUP}" ></mifos:mifoslabel>
                             <mifos:mifoslabel name="Group.details" bundle="GroupUIResources"></mifos:mifoslabel>

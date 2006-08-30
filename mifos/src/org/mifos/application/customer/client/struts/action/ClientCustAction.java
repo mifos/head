@@ -60,7 +60,6 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerCustomFieldEntity;
-import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientDetailEntity;
@@ -104,13 +103,6 @@ import org.mifos.framework.util.helpers.StringUtils;
 
 public class ClientCustAction extends CustAction {
 
-	private CustomerBusinessService customerService;
-
-	public ClientCustAction() throws ServiceException {
-		customerService = (CustomerBusinessService) ServiceFactory
-				.getInstance().getBusinessService(BusinessServiceName.Customer);
-	}
-
 	@Override
 	protected BusinessService getService() throws ServiceException {
 		return getClientBusinessService();
@@ -143,7 +135,7 @@ public class ClientCustAction extends CustAction {
 		doCleanUp(actionForm, request);
 		request.getSession().removeAttribute(ClientConstants.CLIENT_MEETING);
 		if (actionForm.getGroupFlagValue().equals(YesNoFlag.YES.getValue())) {
-			actionForm.setParentGroup(customerService.getCustomer(Integer
+			actionForm.setParentGroup(getCustomerBusinessService().getCustomer(Integer
 					.valueOf(actionForm.getParentGroupId())));
 			actionForm.setOfficeId(actionForm.getParentGroup().getOffice()
 					.getOfficeId().toString());
@@ -215,28 +207,28 @@ public class ClientCustAction extends CustAction {
 			HttpServletRequest request) throws ApplicationException,
 			SystemException {
 		SessionUtils.setAttribute(ClientConstants.SALUTATION_ENTITY,
-				customerService.retrieveMasterEntities(
+				getCustomerBusinessService().retrieveMasterEntities(
 						MasterConstants.SALUTATION, getUserContext(request)
 								.getLocaleId()), request.getSession());
 		SessionUtils.setAttribute(ClientConstants.MARITAL_STATUS_ENTITY,
-				customerService.retrieveMasterEntities(
+				getCustomerBusinessService().retrieveMasterEntities(
 						MasterConstants.MARITAL_STATUS, getUserContext(request)
 								.getLocaleId()), request.getSession());
 		SessionUtils.setAttribute(ClientConstants.CITIZENSHIP_ENTITY,
-				customerService.retrieveMasterEntities(
+				getCustomerBusinessService().retrieveMasterEntities(
 						MasterConstants.CITIZENSHIP, getUserContext(request)
 								.getLocaleId()), request.getSession());
 		SessionUtils.setAttribute(ClientConstants.BUSINESS_ACTIVITIES_ENTITY,
-				customerService.retrieveMasterEntities(
+				getCustomerBusinessService().retrieveMasterEntities(
 						MasterConstants.BUSINESS_ACTIVITIES, getUserContext(
 								request).getLocaleId()), request.getSession());
 		SessionUtils.setAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY,
-				customerService.retrieveMasterEntities(
+				getCustomerBusinessService().retrieveMasterEntities(
 						MasterConstants.EDUCATION_LEVEL,
 						getUserContext(request).getLocaleId()), request
 						.getSession());
 		SessionUtils.setAttribute(ClientConstants.GENDER_ENTITY,
-				customerService.retrieveMasterEntities(MasterConstants.GENDER,
+				getCustomerBusinessService().retrieveMasterEntities(MasterConstants.GENDER,
 						getUserContext(request).getLocaleId()), request
 						.getSession());
 		SessionUtils.setAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
@@ -244,11 +236,11 @@ public class ClientCustAction extends CustAction {
 						getUserContext(request).getLocaleId()), request
 						.getSession());
 		SessionUtils.setAttribute(ClientConstants.HANDICAPPED_ENTITY,
-				customerService.retrieveMasterEntities(
+				getCustomerBusinessService().retrieveMasterEntities(
 						MasterConstants.HANDICAPPED, getUserContext(request)
 								.getLocaleId()), request.getSession());
 		SessionUtils.setAttribute(ClientConstants.ETHINICITY_ENTITY,
-				customerService.retrieveMasterEntities(
+				getCustomerBusinessService().retrieveMasterEntities(
 						MasterConstants.ETHINICITY, getUserContext(request)
 								.getLocaleId()), request.getSession());
 	}
@@ -444,7 +436,7 @@ public class ClientCustAction extends CustAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
-		ClientBO clientBO = (ClientBO) customerService.getBySystemId(actionForm
+		ClientBO clientBO = (ClientBO) getCustomerBusinessService().getBySystemId(actionForm
 				.getGlobalCustNum(), CustomerLevel.CLIENT.getValue());
 		clientBO.setUserContext(getUserContext(request));
 		clientBO.getCustomerStatus().setLocaleId(
@@ -465,7 +457,7 @@ public class ClientCustAction extends CustAction {
 		clearActionForm(actionForm);
 		ClientBO client = (ClientBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
-		ClientBO clientBO = (ClientBO) customerService.getBySystemId(client
+		ClientBO clientBO = (ClientBO) getCustomerBusinessService().getBySystemId(client
 				.getGlobalCustNum(), CustomerLevel.CLIENT.getValue());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request
 				.getSession());
@@ -559,7 +551,7 @@ public class ClientCustAction extends CustAction {
 		clearActionForm(actionForm);
 		ClientBO client = (ClientBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
-		ClientBO clientBO = (ClientBO) customerService.getBySystemId(client
+		ClientBO clientBO = (ClientBO) getCustomerBusinessService().getBySystemId(client
 				.getGlobalCustNum(), CustomerLevel.CLIENT.getValue());
 		client = null;
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request
@@ -742,14 +734,14 @@ public class ClientCustAction extends CustAction {
 					getMasterEntities(SpouseFatherLookupEntity.class, localeId),
 					request.getSession());
 		SessionUtils.setAttribute(CustomerConstants.CUSTOMERPERFORMANCE,
-				customerService
+				getCustomerBusinessService()
 						.numberOfMeetings(true, clientBO.getCustomerId()),
 				request.getSession());
 		SessionUtils.setAttribute(CustomerConstants.CUSTOMERPERFORMANCEHISTORY,
-				customerService.numberOfMeetings(false, clientBO
+				getCustomerBusinessService().numberOfMeetings(false, clientBO
 						.getCustomerId()), request.getSession());
 		SessionUtils
-				.setAttribute(ClientConstants.LOANCYCLECOUNTER, customerService
+				.setAttribute(ClientConstants.LOANCYCLECOUNTER, getCustomerBusinessService()
 						.fetchLoanCycleCounter(clientBO.getCustomerId()),
 						request.getSession());
 		List<LoanBO> loanAccounts = clientBO.getOpenLoanAccounts();

@@ -40,14 +40,18 @@ package org.mifos.application.customer.struts.uihelpers;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
+import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.util.valueobjects.CustomerMaster;
 import org.mifos.application.customer.util.valueobjects.CustomerPositionDisplay;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 
 /**
- * This class has got helper functions which could be called from jsp as part of jsp2.0 specifications.
+ * This class has got helper functions which could be called from jsp as part of
+ * jsp2.0 specifications.
  */
 public class CustomerUIHelperFn {
 
@@ -56,48 +60,108 @@ public class CustomerUIHelperFn {
 	 */
 	public CustomerUIHelperFn() {
 		super();
-		
+
 	}
-	
+
 	/**
-	 * It returns a comma seperated string of titles a client is assigned to in the group.  
-	 * @param object list of CustomerPositionDisplay
-	 * @param object instance of customermaster
+	 * It returns a comma seperated string of titles a client is assigned to in
+	 * the group.
+	 * 
+	 * @param object
+	 *            list of CustomerPositionDisplay
+	 * @param object
+	 *            instance of customermaster
 	 * @return String
 	 */
-	public static String getClientPositions(Object customerPositions,Object customerMaster) {
-		MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER).debug("Inside UI helper function getClientPositions");
-		StringBuilder stringBuilder=new StringBuilder();
-		if(customerPositions !=null && customerMaster!=null) {
-			MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER).debug("Iterating over customerPositions list");
-			List customerPositionList=(List)customerPositions;
-			String positionNames[]=new String[customerPositionList.size()];
-			int i=0;
-			for(Iterator<CustomerPositionDisplay> iter=customerPositionList.iterator();iter.hasNext();) {
+	public static String getClientPositions(Object customerPositions,
+			Object customerMaster) {
+		MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER).debug(
+				"Inside UI helper function getClientPositions");
+		StringBuilder stringBuilder = new StringBuilder();
+		if (customerPositions != null && customerMaster != null) {
+			MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER).debug(
+					"Iterating over customerPositions list");
+			List customerPositionList = (List) customerPositions;
+			String positionNames[] = new String[customerPositionList.size()];
+			int i = 0;
+			for (Iterator<CustomerPositionDisplay> iter = customerPositionList
+					.iterator(); iter.hasNext();) {
 				CustomerPositionDisplay custpos = iter.next();
-				CustomerMaster custMast=(CustomerMaster)customerMaster;
-				if(null != custpos && custpos.getCustomerId()!=null && custMast.getCustomerId()!=null){
-					if(custpos.getCustomerId().intValue()==(custMast).getCustomerId().intValue()){
+				CustomerMaster custMast = (CustomerMaster) customerMaster;
+				if (null != custpos && custpos.getCustomerId() != null
+						&& custMast.getCustomerId() != null) {
+					if (custpos.getCustomerId().intValue() == (custMast)
+							.getCustomerId().intValue()) {
 						String posName = custpos.getPositionName();
-						MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER).debug("The position name is " + posName);
-						positionNames[i]=posName;
+						MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER)
+								.debug("The position name is " + posName);
+						positionNames[i] = posName;
 						i++;
 					}
 				}
 			}
-			for(;i<positionNames.length;i++){
-				positionNames[i]=null;
+			for (; i < positionNames.length; i++) {
+				positionNames[i] = null;
 			}
 			stringBuilder.append("(");
-			for(int j=0;j<positionNames.length;j++){
-				if(positionNames[j]!=null && positionNames[j]!="")
+			for (int j = 0; j < positionNames.length; j++) {
+				if (positionNames[j] != null && positionNames[j] != "")
 					stringBuilder.append(positionNames[j]);
-				if(j+1<positionNames.length && positionNames[j+1]!=null && positionNames[j+1]!="")
+				if (j + 1 < positionNames.length
+						&& positionNames[j + 1] != null
+						&& positionNames[j + 1] != "")
 					stringBuilder.append(",");
 			}
 			stringBuilder.append(")");
 		}
-		if(stringBuilder.toString().equals("()"))
+		if (stringBuilder.toString().equals("()"))
+			return "";
+		else
+			return stringBuilder.toString();
+	}
+
+	public static String getClientPosition(Object customerPositions,
+			Object customer) {
+		MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER).debug(
+				"Inside UI helper function getClientPositions");
+		StringBuilder stringBuilder = new StringBuilder();
+		if (customerPositions != null && customer != null) {
+			MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER).debug(
+					"Iterating over customerPositions list");
+			Set<CustomerPositionEntity> customerPositionList = (Set<CustomerPositionEntity>) customerPositions;
+			String positionNames[] = new String[customerPositionList.size()];
+			int i = 0;
+			for (CustomerPositionEntity customerPositionEntity : customerPositionList) {
+				CustomerBO customerBO = (CustomerBO) customer;
+				if (null != customerPositionEntity
+						&& customerPositionEntity.getCustomer() != null
+						&& customerBO != null) {
+					if (customerPositionEntity.getCustomer().getCustomerId()
+							.equals((customerBO).getCustomerId())) {
+						String posName = customerPositionEntity.getPosition()
+								.getName();
+						MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER)
+								.debug("The position name is " + posName);
+						positionNames[i] = posName;
+						i++;
+					}
+				}
+			}
+			for (; i < positionNames.length; i++) {
+				positionNames[i] = null;
+			}
+			stringBuilder.append("(");
+			for (int j = 0; j < positionNames.length; j++) {
+				if (positionNames[j] != null && positionNames[j] != "")
+					stringBuilder.append(positionNames[j]);
+				if (j + 1 < positionNames.length
+						&& positionNames[j + 1] != null
+						&& positionNames[j + 1] != "")
+					stringBuilder.append(",");
+			}
+			stringBuilder.append(")");
+		}
+		if (stringBuilder.toString().equals("()"))
 			return "";
 		else
 			return stringBuilder.toString();

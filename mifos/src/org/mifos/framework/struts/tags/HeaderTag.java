@@ -39,12 +39,16 @@
 package org.mifos.framework.struts.tags;
 
 import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.taggenerator.TagGenerator;
-import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.SessionUtils;
 
 /**
  * This tag class is used to display header links on the top of the jsp page.
@@ -65,7 +69,13 @@ public class HeaderTag extends TagSupport {
 	}
 	
 	public int doStartTag() throws JspException {
-		BusinessObject obj=(BusinessObject)pageContext.getSession().getAttribute(Constants.BUSINESS_KEY);
+		BusinessObject obj=null;
+		try {
+			obj = (BusinessObject)SessionUtils.getAttribute(Constants.BUSINESS_KEY,(HttpServletRequest)pageContext.getRequest());
+		} catch (PageExpiredException pex) {
+			obj=(BusinessObject)pageContext.getSession().getAttribute(Constants.BUSINESS_KEY);
+		}
+			
 		String linkStr;
 		if(selfLink!=null && selfLink!="")
 			linkStr = TagGenerator.createHeaderLinks(obj,Boolean.getBoolean(selfLink));

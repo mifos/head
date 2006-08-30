@@ -101,8 +101,7 @@ public class CustomerBusinessService extends BusinessService {
 		return new CustomerPersistence().getBySystemId(globalCustNum, levelId);
 	}
 
-	public List<LoanCycleCounter> fetchLoanCycleCounter(Integer customerId)
-			throws SystemException {
+	public List<LoanCycleCounter> fetchLoanCycleCounter(Integer customerId){
 		return new CustomerPersistence().fetchLoanCycleCounter(customerId);
 
 	}

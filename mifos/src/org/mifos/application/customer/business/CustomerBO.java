@@ -524,13 +524,24 @@ public abstract class CustomerBO extends BusinessObject {
 		return historicalData;
 	}
 	
-	public List<CustomerBO> getChildren(Short customerLevel) throws PersistenceException
-			{
+	public List<CustomerBO> getChildren(Short customerLevel)
+			throws PersistenceException {
 		return new CustomerPersistence().getChildrenForParent(getSearchId(),
 				getOffice().getOfficeId(), customerLevel);
 	}
 
-	
+	public List<CustomerBO> getAllCustomerOtherThanCancelledAndClosed(
+			CustomerLevel customerLevel) throws PersistenceException {
+		List<CustomerBO> customerListOtherThanCancelledAndClosed = new ArrayList<CustomerBO>();
+		CustomerStatus cancelStatus = customerLevel
+				.equals(CustomerLevel.CLIENT) ? CustomerStatus.CLIENT_CANCELLED
+				: CustomerStatus.GROUP_CANCELLED;
+		for (CustomerBO customerBO : getChildren(customerLevel.getValue()))
+			if (!customerBO.getCustomerStatus().getId().equals(
+					cancelStatus.getValue()))
+				customerListOtherThanCancelledAndClosed.add(customerBO);
+		return customerListOtherThanCancelledAndClosed;
+	}
 
 	public void adjustPmnt(String adjustmentComment)
 			throws ApplicationException, SystemException {
