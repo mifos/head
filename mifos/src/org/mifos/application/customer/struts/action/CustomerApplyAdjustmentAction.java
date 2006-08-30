@@ -34,10 +34,10 @@ public class CustomerApplyAdjustmentAction extends BaseAction {
 	}
 	
 	public ActionForward loadAdjustment(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
-		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
 		CustomerApplyAdjustmentActionForm applyAdjustmentActionForm = (CustomerApplyAdjustmentActionForm)form;
 		resetActionFormFields(applyAdjustmentActionForm);
 		CustomerBO customerBO = ((CustomerBusinessService) getService()).findBySystemId(applyAdjustmentActionForm.getGlobalCustNum());
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request.getSession());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,customerBO,request.getSession());
 		request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_LOAD_ADJUSTMENT);
 		if(null == customerBO.getCustomerAccount().getLastPmnt() || customerBO.getCustomerAccount().getLastPmntAmnt() == 0){
@@ -51,6 +51,7 @@ public class CustomerApplyAdjustmentAction extends BaseAction {
 		request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_PREVIEW_ADJUSTMENT);
 		CustomerApplyAdjustmentActionForm applyAdjustmentActionForm = (CustomerApplyAdjustmentActionForm)form;
 		CustomerBO customerBO = ((CustomerBusinessService) getService()).findBySystemId(applyAdjustmentActionForm.getGlobalCustNum());
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request.getSession());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,customerBO,request.getSession());
 		if(null == customerBO.getCustomerAccount().getLastPmnt() || customerBO.getCustomerAccount().getLastPmntAmnt() == 0){
 			request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_LOAD_ADJUSTMENT);
@@ -65,6 +66,7 @@ public class CustomerApplyAdjustmentAction extends BaseAction {
 		request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_APPLY_ADJUSTMENT);
 		CustomerApplyAdjustmentActionForm applyAdjustmentActionForm = (CustomerApplyAdjustmentActionForm)form;
 		CustomerBO customerBO = ((CustomerBusinessService) getService()).findBySystemId(applyAdjustmentActionForm.getGlobalCustNum());
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request.getSession());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,customerBO,request.getSession());
 		if(null == customerBO.getCustomerAccount().getLastPmnt() || customerBO.getCustomerAccount().getLastPmntAmnt() == 0){
 			request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_PREVIEW_ADJUSTMENT);
@@ -117,6 +119,7 @@ public class CustomerApplyAdjustmentAction extends BaseAction {
 		return mapping.findForward(forward);
 	}
 	
+	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method)  {
 		return true;
 		

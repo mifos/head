@@ -239,33 +239,6 @@ public class ClientCustAction extends CustAction {
 				customerService.retrieveMasterEntities(MasterConstants.GENDER,
 						getUserContext(request).getLocaleId()), request
 						.getSession());
-
-		SessionUtils.setAttribute(ClientConstants.SALUTATION_ENTITY,
-				customerService.retrieveMasterEntities(
-						MasterConstants.SALUTATION, getUserContext(request)
-								.getLocaleId()), request.getSession());
-		SessionUtils.setAttribute(ClientConstants.MARITAL_STATUS_ENTITY,
-				customerService.retrieveMasterEntities(
-						MasterConstants.MARITAL_STATUS, getUserContext(request)
-								.getLocaleId()), request.getSession());
-		SessionUtils.setAttribute(ClientConstants.CITIZENSHIP_ENTITY,
-				customerService.retrieveMasterEntities(
-						MasterConstants.CITIZENSHIP, getUserContext(request)
-								.getLocaleId()), request.getSession());
-		SessionUtils.setAttribute(ClientConstants.BUSINESS_ACTIVITIES_ENTITY,
-				customerService.retrieveMasterEntities(
-						MasterConstants.BUSINESS_ACTIVITIES, getUserContext(
-								request).getLocaleId()), request.getSession());
-		SessionUtils.setAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY,
-				customerService.retrieveMasterEntities(
-						MasterConstants.EDUCATION_LEVEL,
-						getUserContext(request).getLocaleId()), request
-						.getSession());
-		SessionUtils.setAttribute(ClientConstants.GENDER_ENTITY,
-				customerService.retrieveMasterEntities(MasterConstants.GENDER,
-						getUserContext(request).getLocaleId()), request
-						.getSession());
-
 		SessionUtils.setAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
 				getMasterEntities(SpouseFatherLookupEntity.class,
 						getUserContext(request).getLocaleId()), request
@@ -417,6 +390,7 @@ public class ClientCustAction extends CustAction {
 			client.save();
 			actionForm.setCustomerId(client.getCustomerId().toString());
 			actionForm.setGlobalCustNum(client.getGlobalCustNum());
+			client = null;
 		} catch (ApplicationException ae) {
 			ae.printStackTrace();
 			ActionErrors errors = new ActionErrors();
@@ -475,6 +449,7 @@ public class ClientCustAction extends CustAction {
 		clientBO.setUserContext(getUserContext(request));
 		clientBO.getCustomerStatus().setLocaleId(
 				getUserContext(request).getLocaleId());
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request.getSession());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request
 				.getSession());
 		request.getSession().removeAttribute(ClientConstants.AGE);
@@ -494,6 +469,7 @@ public class ClientCustAction extends CustAction {
 				.getGlobalCustNum(), CustomerLevel.CLIENT.getValue());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request
 				.getSession());
+		client = null;
 		loadUpdateMasterData(actionForm, request);
 		setValuesInActionForm(actionForm, request);
 		return mapping.findForward(ActionForwards.editPersonalInfo_success

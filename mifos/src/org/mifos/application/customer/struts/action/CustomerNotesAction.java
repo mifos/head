@@ -92,11 +92,11 @@ public class CustomerNotesAction extends SearchAction {
 	
 	public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
 		clearActionForm(form);
-		UserContext userContext = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
+		UserContext userContext = getUserContext(request);
 		CustomerBO customerBO = customerBusinessService.getCustomer(Integer.valueOf(((CustomerNotesActionForm) form).getCustomerId()));
 		customerBO.setUserContext(userContext);
 		setFormAttributes(userContext, form,customerBO);
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request.getSession());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request.getSession());
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
@@ -117,13 +117,14 @@ public class CustomerNotesAction extends SearchAction {
 		ActionForward forward = null;
 		CustomerNotesActionForm notesActionForm = (CustomerNotesActionForm) form;
 		CustomerBO customerBO = customerBusinessService.getCustomer(Integer.valueOf(((CustomerNotesActionForm) form).getCustomerId()));
-		UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+		UserContext uc = getUserContext(request);
 		PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(uc.getId());
 		CustomerNoteEntity customerNote = new CustomerNoteEntity(notesActionForm.getComment(), new java.sql.Date(System.currentTimeMillis()),personnelBO,customerBO);
 		customerBO.addCustomerNotes(customerNote);
 		customerBO.setUserContext(uc);
 		customerBO.update();
 		forward = mapping.findForward(getDetailCustomerPage(notesActionForm));
+		customerBO = null;
 		return forward;
 	}
 	
@@ -171,16 +172,11 @@ public class CustomerNotesAction extends SearchAction {
 		notesActionForm.setGlobalCustNum(customerBO.getGlobalCustNum());
 		notesActionForm.setCustomerName(customerBO.getDisplayName());
 		notesActionForm.setCommentDate(DateHelper.getCurrentDate(userContext.getPereferedLocale()));
-		if(customerBO instanceof CenterBO) {
-			//notesActionForm.setSecurityParamInput("Center");
+		if(customerBO instanceof CenterBO) 
 			notesActionForm.setInput("center");
-		}else if(customerBO instanceof GroupBO) {
-		//	notesActionForm.setSecurityParamInput("Group");
+		else if(customerBO instanceof GroupBO) 
 			notesActionForm.setInput("group");
-		}else if(customerBO instanceof ClientBO) {
-		///	notesActionForm.setSecurityParamInput("Client");
+		else if(customerBO instanceof ClientBO) 
 			notesActionForm.setInput("client");
-		}
 	}
-
 }

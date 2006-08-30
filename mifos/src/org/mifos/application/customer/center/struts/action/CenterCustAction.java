@@ -40,7 +40,6 @@ package org.mifos.application.customer.center.struts.action;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -63,12 +62,10 @@ import org.mifos.application.customer.center.dao.CenterDAO;
 import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.center.util.valueobjects.Center;
-import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.LinkParameters;
 import org.mifos.application.customer.struts.action.CustAction;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
-import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.valueobjects.Customer;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
@@ -86,7 +83,6 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
@@ -391,7 +387,7 @@ public class CenterCustAction extends CustAction {
 			throws Exception {
 		CenterCustActionForm actionForm = (CenterCustActionForm) form;
 		
-		
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request.getSession());
 		CustomerBusinessService customerBusinessService = ((CustomerBusinessService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.Customer));
 		CenterBO centerBO =(CenterBO) customerBusinessService.getBySystemId(actionForm.getGlobalCustNum(),CustomerLevel.CENTER.getValue());

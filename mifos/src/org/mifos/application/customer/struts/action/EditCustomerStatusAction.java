@@ -103,8 +103,7 @@ public class EditCustomerStatusAction extends BaseAction {
 			throws Exception {
 		logger.debug("In EditSavingsStatusAction:load()");
 		doCleanUp(form, request);
-		UserContext userContext = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
+		UserContext userContext = getUserContext(request);
 		CustomerBO customerBO = customerService
 				.getCustomer(Integer
 						.valueOf(((EditCustomerStatusActionForm) form)
@@ -116,6 +115,7 @@ public class EditCustomerStatusAction extends BaseAction {
 				getLevelIdBasedOnCustomer(customerBO));
 		setFormAttributes(form, customerBO);
 		customerBO.getCustomerStatus().setLocaleId(userContext.getLocaleId());
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request.getSession());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request
 				.getSession());
 
@@ -131,8 +131,7 @@ public class EditCustomerStatusAction extends BaseAction {
 			throws Exception, NumberFormatException {
 		CustomerBO customerBO = (CustomerBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
-		UserContext userContext = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
+		UserContext userContext = getUserContext(request);
 		setStatusDetails(form, customerBO, request.getSession(), userContext);
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
@@ -147,8 +146,7 @@ public class EditCustomerStatusAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws ApplicationException {
 		EditCustomerStatusActionForm editStatusActionForm = (EditCustomerStatusActionForm) form;
-		UserContext userContext = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
+		UserContext userContext = getUserContext(request);
 		CustomerBO customerBO = customerService.getCustomer(Integer
 				.valueOf(editStatusActionForm.getCustomerId()));
 		customerBO.setUserContext(userContext);
@@ -167,6 +165,7 @@ public class EditCustomerStatusAction extends BaseAction {
 		SessionUtils.setAttribute(SavingsConstants.NEW_FLAG_NAME,
 				SessionUtils.getAttribute(SavingsConstants.FLAG_NAME, request
 						.getSession()), request.getSession());
+		customerBO = null;
 		return mapping.findForward(getDetailAccountPage(form));
 	}
 

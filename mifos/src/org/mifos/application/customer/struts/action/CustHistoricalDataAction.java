@@ -40,12 +40,12 @@ public class CustHistoricalDataAction extends BaseAction {
 
 	public ActionForward get(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-			throws PersistenceException, ServiceException {
-		request.getSession().removeAttribute(Constants.BUSINESS_KEY);
+			throws PersistenceException, ServiceException {		
 		CustomerBO customerBO = new CustomerBusinessService()
 				.findBySystemId(request
 						.getParameter(CustomerConstants.GLOBAL_CUST_NUM));
 		customerBO.setUserContext(getUserContext(request));
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request.getSession());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request
 				.getSession());
 		setTypeForGet(customerBO, form);
