@@ -127,7 +127,5 @@ public class TestOfficePersistence extends MifosTestCase {
 		assertEquals(2,officePersistence.getOfficesTillBranchOffice().size());
 	}
 	
-	public void testGetAllBranches() throws Exception{
-		assertEquals(Integer.valueOf("1").intValue(),officePersistence.getAllBranches().size());
-	}
+
 }

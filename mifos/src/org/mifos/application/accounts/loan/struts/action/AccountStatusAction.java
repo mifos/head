@@ -1,41 +1,40 @@
 /**
- 
+
  * ApplyChargesAction.java    version: xxx
- 
- 
- 
+
+
+
  * Copyright (c) 2005-2006 Grameen Foundation USA
- 
+
  * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
- 
+
  * All rights reserved.
- 
- 
- 
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
- 
+
+
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
+
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
- 
+
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
- 
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
- 
- * and how it is applied. 
- 
- *
- 
- */
+ * See the License for the specific language governing permissions and limitations under the
 
+ * License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
+
+ * and how it is applied.
+
+ *
+
+ */
 package org.mifos.application.accounts.loan.struts.action;
 
 import java.util.ArrayList;
@@ -53,7 +52,8 @@ import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.struts.actionforms.AccountStatusActionForm;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.business.service.MasterDataService;
-import org.mifos.application.office.business.service.OfficeBusinessService;
+import org.mifos.application.office.business.OfficeView;
+import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -68,174 +68,185 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.SessionUtils;
 
+
 public class AccountStatusAction extends BaseAction {
+    private MasterDataService masterService;
+    private LoanBusinessService loanService;
 
-	private MasterDataService masterService;
+    public AccountStatusAction() {
+        super();
+    }
 
-	private LoanBusinessService loanService;
+    @Override
+    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+        return true;
+    }
 
-	public AccountStatusAction() {
-		super();
-	}
+    @Override
+    protected BusinessService getService() throws ServiceException {
+        return ServiceFactory.getInstance()
+                             .getBusinessService(BusinessServiceName.Office);
+    }
 
-	@Override
-	protected boolean skipActionFormToBusinessObjectConversion(String method) {
-		return true;
-	}
+    public ActionForward load(ActionMapping mapping, ActionForm form,
+        HttpServletRequest request, HttpServletResponse httpservletresponse)
+        throws Exception {
+        cleanUp(form, request);
 
-	@Override
-	protected BusinessService getService() throws ServiceException {
-		return ServiceFactory.getInstance().getBusinessService(
-				BusinessServiceName.Office);
-	}
+        try {
+            masterService = (MasterDataService) ServiceFactory.getInstance()
+                                                              .getBusinessService(BusinessServiceName.MasterDataService);
 
-	public ActionForward load(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse httpservletresponse)
-			throws Exception {
-		cleanUp(form, request);
-		List branchList = getAllBranches();
-		List<PersonnelView> loanOfficers = new ArrayList<PersonnelView>();
-		SessionUtils.setAttribute("allBranches", branchList, request
-				.getSession());
-		SessionUtils.setAttribute("loanOfficers", loanOfficers, request
-				.getSession());
-		return mapping.findForward(ActionForwards.changeAccountStatus_success
-				.toString());
-	}
+            UserContext userContext = getUserContext(request);
+            List<OfficeView> activeBranches = masterService.getActiveBranches(userContext.getBranchId());
 
-	public ActionForward searchResults(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse httpservletresponse)
-			throws AccountException {
-		AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
+            SessionUtils.setAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST,
+                activeBranches, request.getSession());
 
-		List<LoanBO> searchResults;
-		try {
-			searchResults = getSearchResults(accountStatusActionForm
-					.getOfficeId(), accountStatusActionForm.getPersonnelId(),
-					accountStatusActionForm.getType(), accountStatusActionForm
-							.getCurrentStatus());
-		} catch (ServiceException e) {
-			throw new AccountException(e);
-		}
-		for (LoanBO loanBO : searchResults)
-			loanBO.getAccountState().setLocaleId(
-					getUserContext(request).getLocaleId());
+            if (activeBranches.size() == 1) {
+                List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(userContext,
+                        activeBranches.get(0).getOfficeId());
+                SessionUtils.setAttribute("loanOfficers", loanOfficers,
+                    request.getSession());
+            } else {
+                SessionUtils.setAttribute("loanOfficers",
+                    new ArrayList<PersonnelView>(), request.getSession());
+            }
+        } catch (Exception e) {
+        }
 
-		if ((searchResults == null) || (searchResults.size() == 0)) {
-			throw new AccountException(LoanConstants.NOSEARCHRESULTS);
-		}
+        return mapping.findForward(ActionForwards.changeAccountStatus_success.toString());
+    }
 
-		SessionUtils.setAttribute("searchResults", searchResults, request
-				.getSession());
+    public ActionForward searchResults(ActionMapping mapping, ActionForm form,
+        HttpServletRequest request, HttpServletResponse httpservletresponse)
+        throws AccountException {
+        AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
 
-		return mapping
-				.findForward(ActionForwards.changeAccountStatusSearch_success
-						.toString());
-	}
+        List<LoanBO> searchResults;
 
-	public ActionForward update(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse httpservletresponse)
-			throws Exception {
-		AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
+        try {
+            searchResults = getSearchResults(accountStatusActionForm.getOfficeId(),
+                    accountStatusActionForm.getPersonnelId(),
+                    accountStatusActionForm.getType(),
+                    accountStatusActionForm.getCurrentStatus());
+        } catch (ServiceException e) {
+            throw new AccountException(e);
+        }
 
-		List accountList = updateAccountsStatus(accountStatusActionForm
-				.getAccountRecords(), accountStatusActionForm.getNewStatus(),
-				accountStatusActionForm.getComments(), getUserContext(request));
+        for (LoanBO loanBO : searchResults)
+            loanBO.getAccountState()
+                  .setLocaleId(getUserContext(request).getLocaleId());
 
-		SessionUtils.setAttribute("accountsList", accountList, request
-				.getSession());
+        if ((searchResults == null) || (searchResults.size() == 0)) {
+            throw new AccountException(LoanConstants.NOSEARCHRESULTS);
+        }
 
-		MifosLogManager.getLogger(LoggerConstants.CUSTOMERSEARCHLOGGER).debug(
-				"inside change status function");
-		return mapping
-				.findForward(ActionForwards.changeAccountStatusConfirmation_success
-						.toString());
-	}
+        SessionUtils.setAttribute("searchResults", searchResults,
+            request.getSession());
 
-	public ActionForward getLoanOfficers(ActionMapping mapping,
-			ActionForm form, HttpServletRequest request,
-			HttpServletResponse httpservletresponse) throws Exception {
-		AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
-		Short officeId = Short.valueOf(accountStatusActionForm.getOfficeId());
-		List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(
-				getUserContext(request), officeId);
-		SessionUtils.setAttribute("loanOfficers", loanOfficers, request
-				.getSession());
-		return mapping.findForward(ActionForwards.changeAccountStatus_success
-				.toString());
-	}
+        return mapping.findForward(ActionForwards.changeAccountStatusSearch_success.toString());
+    }
 
-	public ActionForward validate(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse httpservletresponse)
-			throws Exception {
-		String method = (String) request.getAttribute("methodCalled");
-		if (method.equalsIgnoreCase(Methods.searchResults.toString()))
-			return mapping
-					.findForward(ActionForwards.changeAccountStatus_success
-							.toString());
-		if (method.equalsIgnoreCase(Methods.update.toString()))
-			return mapping
-					.findForward(ActionForwards.changeAccountStatusSearch_success
-							.toString());
-		return null;
-	}
+    public ActionForward update(ActionMapping mapping, ActionForm form,
+        HttpServletRequest request, HttpServletResponse httpservletresponse)
+        throws Exception {
+        AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
 
-	private List getAllBranches() throws Exception {
-		return ((OfficeBusinessService) getService()).getAllBranches();
-	}
+        List accountList = updateAccountsStatus(accountStatusActionForm.getAccountRecords(),
+                accountStatusActionForm.getNewStatus(),
+                accountStatusActionForm.getComments(), getUserContext(request));
 
-	private List<PersonnelView> loadLoanOfficersForBranch(
-			UserContext userContext, Short officeId) throws ServiceException {
-		masterService = (MasterDataService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.MasterDataService);
-		return masterService.getListOfActiveLoanOfficers(
-				PersonnelConstants.LOAN_OFFICER, officeId, userContext.getId(),
-				userContext.getLevelId());
-	}
+        SessionUtils.setAttribute("accountsList", accountList,
+            request.getSession());
 
-	private List<LoanBO> getSearchResults(String officeId, String personnelId,
-			String type, String currentStatus) throws ServiceException {
-		loanService = (LoanBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Loan);
-		return loanService.getSearchResults(officeId, personnelId, type,
-				currentStatus);
+        MifosLogManager.getLogger(LoggerConstants.CUSTOMERSEARCHLOGGER)
+                       .debug("inside change status function");
 
-	}
+        return mapping.findForward(ActionForwards.changeAccountStatusConfirmation_success.toString());
+    }
 
-	private List updateAccountsStatus(List<String> accountList,
-			String newStatus, String comments, UserContext userContext)
-			throws NumberFormatException, Exception {
-		loanService = (LoanBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Loan);
+    public ActionForward getLoanOfficers(ActionMapping mapping,
+        ActionForm form, HttpServletRequest request,
+        HttpServletResponse httpservletresponse) throws Exception {
+        AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
+        Short officeId = Short.valueOf(accountStatusActionForm.getOfficeId());
+        List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(getUserContext(
+                    request), officeId);
+        SessionUtils.setAttribute("loanOfficers", loanOfficers,
+            request.getSession());
 
-		List accountNumbers = new ArrayList();
+        return mapping.findForward(ActionForwards.changeAccountStatus_success.toString());
+    }
 
-		for (String accountId : accountList) {
-			if (accountId != "") {
-				LoanBO loanBO = loanService.getAccount(Integer
-						.parseInt(accountId));
+    public ActionForward validate(ActionMapping mapping, ActionForm form,
+        HttpServletRequest request, HttpServletResponse httpservletresponse)
+        throws Exception {
+        String method = (String) request.getAttribute("methodCalled");
 
-				accountNumbers.add(loanBO.getGlobalAccountNum());
-				loanBO.setUserContext(userContext);
-				loanBO.changeStatus(getShortValue(newStatus), null, comments);
-				loanBO.update();
-			}
-		}
-		return accountNumbers;
-	}
+        if (method.equalsIgnoreCase(Methods.searchResults.toString())) {
+            return mapping.findForward(ActionForwards.changeAccountStatus_success.toString());
+        }
 
-	private void cleanUp(ActionForm form, HttpServletRequest request) {
-		AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
-		accountStatusActionForm.setAccountRecords(new ArrayList<String>());
-		accountStatusActionForm.setComments("");
-		accountStatusActionForm.setCurrentStatus("");
-		accountStatusActionForm.setLoadOfficer("");
-		accountStatusActionForm.setNewStatus("");
-		accountStatusActionForm.setOfficeId("");
-		accountStatusActionForm.setOfficeName("");
-		accountStatusActionForm.setPersonnelId("");
-		accountStatusActionForm.setType("");
-		request.setAttribute("session", null);
+        if (method.equalsIgnoreCase(Methods.update.toString())) {
+            return mapping.findForward(ActionForwards.changeAccountStatusSearch_success.toString());
+        }
 
-	}
+        return null;
+    }
+
+    private List<PersonnelView> loadLoanOfficersForBranch(
+        UserContext userContext, Short officeId) throws ServiceException {
+        masterService = (MasterDataService) ServiceFactory.getInstance()
+                                                          .getBusinessService(BusinessServiceName.MasterDataService);
+
+        return masterService.getListOfActiveLoanOfficers(PersonnelConstants.LOAN_OFFICER,
+            officeId, userContext.getId(), userContext.getLevelId());
+    }
+
+    private List<LoanBO> getSearchResults(String officeId, String personnelId,
+        String type, String currentStatus) throws ServiceException {
+        loanService = (LoanBusinessService) ServiceFactory.getInstance()
+                                                          .getBusinessService(BusinessServiceName.Loan);
+
+        return loanService.getSearchResults(officeId, personnelId, type,
+            currentStatus);
+    }
+
+    private List updateAccountsStatus(List<String> accountList,
+        String newStatus, String comments, UserContext userContext)
+        throws NumberFormatException, Exception {
+        loanService = (LoanBusinessService) ServiceFactory.getInstance()
+                                                          .getBusinessService(BusinessServiceName.Loan);
+
+        List accountNumbers = new ArrayList();
+
+        for (String accountId : accountList) {
+            if (accountId != "") {
+                LoanBO loanBO = loanService.getAccount(Integer.parseInt(
+                            accountId));
+
+                accountNumbers.add(loanBO.getGlobalAccountNum());
+                loanBO.setUserContext(userContext);
+                loanBO.changeStatus(getShortValue(newStatus), null, comments);
+                loanBO.update();
+            }
+        }
+
+        return accountNumbers;
+    }
+
+    private void cleanUp(ActionForm form, HttpServletRequest request) {
+        AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
+        accountStatusActionForm.setAccountRecords(new ArrayList<String>());
+        accountStatusActionForm.setComments("");
+        accountStatusActionForm.setCurrentStatus("");
+        accountStatusActionForm.setLoadOfficer("");
+        accountStatusActionForm.setNewStatus("");
+        accountStatusActionForm.setOfficeId("");
+        accountStatusActionForm.setOfficeName("");
+        accountStatusActionForm.setPersonnelId("");
+        accountStatusActionForm.setType("");
+        request.setAttribute("session", null);
+    }
 }

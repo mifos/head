@@ -66,7 +66,7 @@
 							</td>	
 							<td>
 							<mifos:select style="width:136px;" property="officeId" onchange="getLoanOfficers(this.form)" >
-								<html-el:options  collection="allBranches" property="officeId" labelProperty="officeName" />
+								<html-el:options  collection="OfficesBranchOffices" property="officeId" labelProperty="officeName" />
 							</mifos:select> 
 							</td>
 						</tr>

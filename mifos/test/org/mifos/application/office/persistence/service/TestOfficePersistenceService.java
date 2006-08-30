@@ -48,10 +48,5 @@ public class TestOfficePersistenceService extends MifosTestCase {
 		
 		assertEquals(1,dbService.getChildCount(Short.valueOf("1")).intValue());
 	}
-	public void testGetAllBranches() throws PersistenceException{
-		OfficePersistence officePersistence = new OfficePersistence();
-		List<OfficeView> officeList = officePersistence.getAllBranches();
-		
-		assertEquals(1,officeList.size());
-	}
+
 }
