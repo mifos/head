@@ -37,6 +37,7 @@ package org.mifos.application;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.mifos.application.customer.business.CustomFieldViewTest;
 import org.mifos.framework.MifosTestSuite;
 import org.mifos.framework.components.interestcalculator.FlatInterestCalculatorTest;
 import org.mifos.framework.util.helpers.MoneyTest;
@@ -52,6 +53,7 @@ public class FastTests extends MifosTestSuite {
 		TestSuite suite = new FastTests();
 		suite.addTestSuite(FlatInterestCalculatorTest.class);
 		suite.addTestSuite(MoneyTest.class);
+		suite.addTestSuite(CustomFieldViewTest.class);
 		return suite;
 	}
 

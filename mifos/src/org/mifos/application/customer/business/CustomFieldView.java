@@ -88,13 +88,25 @@ public class CustomFieldView extends View {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		return this.fieldId.equals(((CustomFieldView) obj).getFieldId());
+	public int hashCode() {
+		return fieldId == null ? 0 : fieldId.hashCode();
 	}
 
 	@Override
-	public int hashCode() {
-		return fieldId.hashCode();
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final CustomFieldView other = (CustomFieldView) obj;
+		if (fieldId == null) {
+			if (other.fieldId != null)
+				return false;
+		} else if (!fieldId.equals(other.fieldId))
+			return false;
+		return true;
 	}
 
 	public void convertDateToUniformPattern(Locale currentLocale) {
