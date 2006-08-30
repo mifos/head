@@ -46,8 +46,8 @@ import java.util.Set;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
+import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntryLoanInstallmentView;
 import org.mifos.framework.util.helpers.Money;
 
@@ -116,11 +116,12 @@ public class LoanPaymentData extends AccountPaymentData {
 	public LoanPaymentData(AccountActionDateEntity accountActionDate) {
 		super(accountActionDate);
 		LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
-		setPrincipalPaid(loanScheduleEntity.getPrincipal());
-		setInterestPaid(loanScheduleEntity.getInterest());
-		setPenaltyPaid(loanScheduleEntity.getPenalty());
-		setMiscFeePaid(loanScheduleEntity.getMiscFee());
-		setMiscPenaltyPaid(loanScheduleEntity.getMiscPenalty());
+		setPrincipalPaid(loanScheduleEntity.getPrincipalDue());
+		setInterestPaid(loanScheduleEntity.getInterestDue());
+		setPenaltyPaid(loanScheduleEntity.getPenalty().subtract(
+				loanScheduleEntity.getPenaltyPaid()));
+		setMiscFeePaid(loanScheduleEntity.getMiscFeeDue());
+		setMiscPenaltyPaid(loanScheduleEntity.getMiscPenaltyDue());
 		Map<Short, Money> feesPaid = new HashMap<Short, Money>();
 		Set<AccountFeesActionDetailEntity> accountFeesActionDetails = loanScheduleEntity
 				.getAccountFeesActionDetails();
@@ -132,15 +133,16 @@ public class LoanPaymentData extends AccountPaymentData {
 								.getAmountDoubleValue() != 0)
 					feesPaid.put(accountFeesActionDetailEntity.getFee()
 							.getFeeId(), accountFeesActionDetailEntity
-							.getFeeAmount());
+							.getFeeDue());
 			}
 		}
 		setFeesPaid(feesPaid);
+		setPaymentStatus(PaymentStatus.PAID.getValue());
 	}
 
 	public LoanPaymentData(BulkEntryInstallmentView bulkEntryAccountAction) {
 		super(bulkEntryAccountAction);
-		BulkEntryLoanInstallmentView installmentView = (BulkEntryLoanInstallmentView)bulkEntryAccountAction;
+		BulkEntryLoanInstallmentView installmentView = (BulkEntryLoanInstallmentView) bulkEntryAccountAction;
 		setPrincipalPaid(installmentView.getPrincipal());
 		setInterestPaid(installmentView.getInterest());
 		setPenaltyPaid(installmentView.getPenalty());
@@ -161,6 +163,56 @@ public class LoanPaymentData extends AccountPaymentData {
 			}
 		}
 		setFeesPaid(feesPaid);
+		
+	}
+
+	public LoanPaymentData(AccountActionDateEntity accountActionDate,
+			Money total) {
+		super(accountActionDate);
+		LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
+		setMiscPenaltyPaid(getLowest(total, loanScheduleEntity
+				.getMiscPenaltyDue()));
+		total = total.subtract(getMiscPenaltyPaid());
+
+		setPenaltyPaid(getLowest(total, (loanScheduleEntity.getPenalty()
+				.subtract(loanScheduleEntity.getPenaltyPaid()))));
+		total = total.subtract(getPenaltyPaid());
+
+		setMiscFeePaid(getLowest(total, loanScheduleEntity.getMiscFeeDue()));
+		total = total.subtract(getMiscFeePaid());
+
+		Map<Short, Money> feesPaid = new HashMap<Short, Money>();
+		Set<AccountFeesActionDetailEntity> accountFeesActionDetails = loanScheduleEntity
+				.getAccountFeesActionDetails();
+		if (accountFeesActionDetails != null
+				&& accountFeesActionDetails.size() > 0) {
+			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
+				Money feeAmount = getLowest(total,
+						accountFeesActionDetailEntity.getFeeDue());
+				feesPaid.put(accountFeesActionDetailEntity.getFee().getFeeId(),
+						feeAmount);
+				total = total.subtract(feeAmount);
+			}
+		}
+		setFeesPaid(feesPaid);
+
+		setInterestPaid(getLowest(total, loanScheduleEntity.getInterestDue()));
+		total = total.subtract(getInterestPaid());
+
+		setPrincipalPaid(getLowest(total, loanScheduleEntity.getPrincipalDue()));
+		if (total.getAmountDoubleValue() >= loanScheduleEntity
+				.getPrincipalDue().getAmountDoubleValue())
+			setPaymentStatus(PaymentStatus.PAID.getValue());
+		else
+			setPaymentStatus(PaymentStatus.UNPAID.getValue());
+	}
+
+	public Money getTotalPaidAmount() {
+		return getTotalPaidAmnt().add(getTotalFees());
+	}
+
+	public Money getTotalAmountPaid() {
+		return getTotalPaidAmnt().add(getTotalFeePaid());
 	}
 
 	public Money getTotalPaidAmnt() {
@@ -168,10 +220,6 @@ public class LoanPaymentData extends AccountPaymentData {
 		return totalAmount.add(getInterestPaid()).add(getPenaltyPaid()).add(
 				getPrincipalPaid()).add(getMiscFeePaid()).add(
 				getMiscPenaltyPaid());
-	}
-
-	public Money getTotalPaidAmount() {
-		return getTotalPaidAmnt().add(getTotalFees());
 	}
 
 	public Money getTotalFees() {
@@ -188,5 +236,21 @@ public class LoanPaymentData extends AccountPaymentData {
 			}
 		}
 		return totalAmount;
+	}
+
+	public Money getTotalFeePaid() {
+		Money totalFeePaid = new Money();
+		if (!getFeesPaid().isEmpty())
+			for (Short feeId : getFeesPaid().keySet()) {
+				totalFeePaid = totalFeePaid.add(getFeesPaid().get(feeId));
+			}
+		return totalFeePaid;
+	}
+
+	private Money getLowest(Money money1, Money money2) {
+		if (money1.getAmountDoubleValue() > money2.getAmountDoubleValue())
+			return money2;
+		else
+			return money1;
 	}
 }

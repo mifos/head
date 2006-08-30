@@ -115,4 +115,7 @@ public abstract class AccountActionDateEntity extends PersistentObject {
 		return getActionDate().compareTo(date);
 	}
 
+	public boolean isPaid() {
+		return paymentStatus.shortValue() == PaymentStatus.PAID.getValue().shortValue();
+	}
 }

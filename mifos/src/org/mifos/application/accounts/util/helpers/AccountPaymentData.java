@@ -39,17 +39,15 @@
 package org.mifos.application.accounts.util.helpers;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
-import org.mifos.framework.util.helpers.Money;
 
 public abstract class AccountPaymentData {
 
 	private Short installmentId;
 
 	private Short paymentStatus;
-	
-	private AccountActionDateEntity accountActionDateEntity=null;
+
+	private AccountActionDateEntity accountActionDateEntity = null;
 
 	public Short getInstallmentId() {
 		return installmentId;
@@ -58,15 +56,14 @@ public abstract class AccountPaymentData {
 	protected void setInstallmentId(Short installmentId) {
 		this.installmentId = installmentId;
 	}
-	
-	public void  setAccountActionDate(AccountActionDateEntity accountActionDateEntity)
-	{
-		this.accountActionDateEntity=accountActionDateEntity;
+
+	public void setAccountActionDate(
+			AccountActionDateEntity accountActionDateEntity) {
+		this.accountActionDateEntity = accountActionDateEntity;
 	}
-	
-	public AccountActionDateEntity getAccountActionDate()
-	{
-		return accountActionDateEntity;	
+
+	public AccountActionDateEntity getAccountActionDate() {
+		return accountActionDateEntity;
 	}
 
 	public Short getPaymentStatus() {
@@ -80,7 +77,6 @@ public abstract class AccountPaymentData {
 	public AccountPaymentData(AccountActionDateEntity accountActionDate) {
 		if (accountActionDate != null)
 			setInstallmentId(accountActionDate.getInstallmentId());
-		setPaymentStatus(PaymentStatus.PAID.getValue());
 		this.accountActionDateEntity = accountActionDate;
 	}
 
@@ -89,6 +85,8 @@ public abstract class AccountPaymentData {
 			setInstallmentId(bulkEntryAccountAction.getInstallmentId());
 		setPaymentStatus(PaymentStatus.PAID.getValue());
 	}
-	
-	
+
+	public boolean isPaid() {
+		return paymentStatus.shortValue() == PaymentStatus.PAID.getValue().shortValue();
+	}
 }

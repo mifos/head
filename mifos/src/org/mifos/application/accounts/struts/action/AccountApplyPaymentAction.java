@@ -173,13 +173,10 @@ public class AccountApplyPaymentAction extends BaseAction {
 		paymentData.setRecieptNum(receiptId);
 		for (AccountActionDateEntity installment : account
 				.getTotalInstallmentsDue()) {
-			AccountPaymentData accountPaymentData = null;
-			if (account instanceof LoanBO) {
-				accountPaymentData = new LoanPaymentData(installment);
-			} else if (account instanceof CustomerAccountBO) {
-				accountPaymentData = new CustomerAccountPaymentData(installment);
+			if (account instanceof CustomerAccountBO) {
+				paymentData.addAccountPaymentData(new CustomerAccountPaymentData(installment));
 			}
-			paymentData.addAccountPaymentData(accountPaymentData);
+			
 		}
 		return paymentData;
 	}

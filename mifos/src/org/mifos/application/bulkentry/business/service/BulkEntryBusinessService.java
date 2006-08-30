@@ -56,7 +56,6 @@ import org.mifos.application.accounts.savings.persistence.service.SavingsPersist
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
-import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.bulkentry.business.BulkEntryBO;
@@ -325,10 +324,6 @@ public class BulkEntryBusinessService extends BusinessService {
 				getPersonnel(personnelId), paymentId, transactionDate);
 		paymentData.setRecieptDate(receiptDate);
 		paymentData.setRecieptNum(recieptNum);
-		for (BulkEntryInstallmentView actionDate : accountActions) {
-			LoanPaymentData loanPaymentData = new LoanPaymentData(actionDate);
-			paymentData.addAccountPaymentData(loanPaymentData);
-		}
 		return paymentData;
 	}
 

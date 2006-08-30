@@ -41,7 +41,6 @@ package org.mifos.application.accounts.business;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.framework.business.View;
 
 public class LoanAccountsProductView extends View {
@@ -145,13 +144,18 @@ public class LoanAccountsProductView extends View {
 	}
 
 	public boolean isDisburseLoanAccountPresent() {
-		for (LoanAccountView loanAccountView : loanAccountViews) {
-			if (loanAccountView.getAccountSate().shortValue() == AccountStates.LOANACC_APPROVED
-					|| loanAccountView.getAccountSate().shortValue() == AccountStates.LOANACC_DBTOLOANOFFICER) {
+		for (LoanAccountView loanAccountView : loanAccountViews)
+			if (loanAccountView.isDisbursalAccount())
 				return true;
-			}
-		}
 		return false;
 	}
-
+	
+	public Double getTotalDisbursalAmountDue() {
+		Double totalAmount = 0.0;
+		for (LoanAccountView loanAccountView : loanAccountViews) {
+			if (loanAccountView.isDisbursalAccount())
+				totalAmount = totalAmount + loanAccountView.getTotalAmountDue();
+		}
+		return totalAmount;
+	}
 }

@@ -211,15 +211,20 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "create");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		verifyActionErrors(new String[] { "errors.update" });
+		
 
-		clientAccount.getAccountPayments().clear();
+		groupAccount = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+				groupAccount.getAccountId());
+		clientAccount = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+				clientAccount.getAccountId());
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
 		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
 		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				client.getCustomerId());
+		
+		verifyActionErrors(new String[] { "errors.update" });
 	}
 
 	public void testSuccessfulPreview() throws PageExpiredException {
@@ -269,6 +274,252 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		verifyActionErrors(new String[] { "errors.invalidamount",
 				"errors.invalidamount" });
 	}
+	
+	public void testLoad() throws PageExpiredException {
+		setRequestPathInfo("/bulkentryaction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyForward("load_success");
+		assertEquals("The value for isBackDated Trxn Allowed", SessionUtils
+				.getAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
+						request), Constants.NO);
+		assertEquals("The value for isCenter Heirarchy Exists", SessionUtils
+				.getAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
+						request), Constants.YES);
+	}
+
+	public void testLoadForNonLoanOfficerInBranch() throws PageExpiredException {
+		userContext.setBranchId(Short.valueOf("3"));
+		userContext.setId(Short.valueOf("2"));
+		userContext.setLevelId(Short.valueOf("2"));
+		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+		setRequestPathInfo("/bulkentryaction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyForward("load_success");
+		assertEquals("The value for isBackDated Trxn Allowed", SessionUtils
+				.getAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
+						request), Constants.NO);
+	}
+
+	public void testLoadPersonnel() throws PageExpiredException {
+		setRequestPathInfo("/bulkentryaction.do");
+		addRequestParameter("method", "loadLoanOfficers");
+		addRequestParameter("officeId", "3");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyForward("load_success");
+		List<PersonnelView> loanOfficerList = (List<PersonnelView>) SessionUtils
+				.getAttribute(CustomerConstants.LOAN_OFFICER_LIST, request);
+		assertEquals(1, loanOfficerList.size());
+	}
+
+	public void testLoadCustomers() throws PageExpiredException {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active", Short
+				.valueOf("13"), "1.1", meeting, new Date(System
+				.currentTimeMillis()));
+		setRequestPathInfo("/bulkentryaction.do");
+		addRequestParameter("method", "loadCustomerList");
+		addRequestParameter("officeId", "3");
+		addRequestParameter("loanOfficerId", "1");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyForward("load_success");
+		List<CustomerView> parentCustomerList = (List<CustomerView>) SessionUtils
+				.getAttribute(BulkEntryConstants.CUSTOMERSLIST, request);
+		assertEquals(1, parentCustomerList.size());
+		assertEquals("The value for isCenter Heirarchy Exists", SessionUtils
+				.getAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
+						request), Constants.YES);
+	}
+
+	public void testGetLastMeetingDateForCustomer() throws PageExpiredException {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active", Short
+				.valueOf("13"), "1.1", meeting, new Date(System
+				.currentTimeMillis()));
+		setRequestPathInfo("/bulkentryaction.do");
+		addRequestParameter("method", "getLastMeetingDateForCustomer");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter("officeId", "3");
+		addRequestParameter("loanOfficerId", "1");
+		addRequestParameter("customerId", String.valueOf(center.getCustomerId()
+				.intValue()));
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward("load_success");
+		if (Configuration.getInstance().getAccountConfig(
+				Short.valueOf(center.getOffice().getOfficeId()))
+				.isBackDatedTxnAllowed()) {
+			assertEquals("The value for isBackDated Trxn Allowed", SessionUtils
+					.getAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
+							request), Constants.YES);
+			assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(
+					getMeetingDates(meeting).getTime()).getTime()).toString(),
+					SessionUtils.getAttribute("LastMeetingDate", request)
+							.toString());
+			assertEquals(DateHelper.getUserLocaleDate(getUserLocale(request),
+					new java.sql.Date(DateUtils.getDateWithoutTimeStamp(
+							getMeetingDates(meeting).getTime()).getTime())
+							.toString()), ((BulkEntryActionForm) request
+					.getSession().getAttribute(
+							BulkEntryConstants.BULKENTRYACTIONFORM))
+					.getTransactionDate());
+		} else {
+			assertEquals("The value for isBackDated Trxn Allowed", SessionUtils
+					.getAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
+							request), Constants.NO);
+			assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(
+					getMeetingDates(meeting).getTime()).getTime()).toString(),
+					SessionUtils.getAttribute("LastMeetingDate", request)
+							.toString());
+			assertEquals(DateHelper.getUserLocaleDate(getUserLocale(request),
+					new java.sql.Date(DateUtils
+							.getCurrentDateWithoutTimeStamp().getTime())
+							.toString()), ((BulkEntryActionForm) request
+					.getSession().getAttribute(
+							BulkEntryConstants.BULKENTRYACTIONFORM))
+					.getTransactionDate());
+		}
+	}
+
+	public void testSuccessfulGet() throws Exception {
+		MasterDataService masterService = (MasterDataService) ServiceFactory
+				.getInstance().getBusinessService(
+						BusinessServiceName.MasterDataService);
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		Date startDate = new Date(System.currentTimeMillis());
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, startDate);
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, startDate);
+		client = TestObjectFactory.createClient("Client", Short.valueOf("3"),
+				"1.1.1.1", group, new Date(System.currentTimeMillis()));
+		account = getLoanAccount(group, meeting);
+		SavingsOfferingBO savingsOffering1 = createSavingsOffering("SavingPrd1");
+		SavingsOfferingBO savingsOffering2 = createSavingsOffering("SavingPrd2");
+		SavingsOfferingBO savingsOffering3 = createSavingsOffering("SavingPrd3");
+
+		centerSavingsAccount = TestObjectFactory.createSavingsAccount(
+				"43244334", center, Short.valueOf("16"), startDate,
+				savingsOffering1);
+		groupSavingsAccount = TestObjectFactory.createSavingsAccount(
+				"43234434", group, Short.valueOf("16"), startDate,
+				savingsOffering2);
+		clientSavingsAccount = TestObjectFactory.createSavingsAccount(
+				"43245434", client, Short.valueOf("16"), startDate,
+				savingsOffering3);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils
+				.setAttribute(
+						BulkEntryConstants.PAYMENT_TYPES_LIST,
+						masterService
+								.getMasterData(
+										MasterConstants.PAYMENT_TYPE,
+										userContext.getLocaleId(),
+										"org.mifos.application.productdefinition.util.valueobjects.PaymentType",
+										"paymentTypeId").getLookUpMaster(),
+						request);
+		SessionUtils.setAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
+				Constants.YES, request);
+
+		setMasterListInSession(center.getCustomerId());
+		setRequestPathInfo("/bulkentryaction.do");
+		addRequestParameter("method", "get");
+		addRequestParameter("officeId", "3");
+		addRequestParameter("loanOfficerId", "3");
+		addRequestParameter("paymentId", "1");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+		Calendar meetinDateCalendar = new GregorianCalendar();
+		meetinDateCalendar.setTime(getMeetingDates(meeting));
+		int year = meetinDateCalendar.get(Calendar.YEAR);
+		int month = meetinDateCalendar.get(Calendar.MONTH);
+		int day = meetinDateCalendar.get(Calendar.DAY_OF_MONTH);
+		meetinDateCalendar = new GregorianCalendar(year, month, day);
+		SessionUtils.setAttribute("LastMeetingDate", new java.sql.Date(
+				meetinDateCalendar.getTimeInMillis()), request);
+		addRequestParameter("transactionDate", (month + 1) + "/" + day + "/"
+				+ year);
+		addRequestParameter("receiptId", "1");
+		addRequestParameter("receiptDate", "03/20/2006");
+		addRequestParameter("customerId", String.valueOf(center.getCustomerId()
+				.intValue()));
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward("get_success");
+	}
+
+	
+
+	public void testFailureGet() throws PageExpiredException {
+		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
+				request);
+		SessionUtils.setAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
+				Constants.YES, request);
+		setRequestPathInfo("/bulkentryaction.do");
+		addRequestParameter("method", "get");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyActionErrors(new String[] { "errors.mandatoryenter",
+				"errors.mandatoryselect", "errors.mandatoryselect",
+				"errors.mandatoryselect", "errors.mandatoryselect" });
+	}
+	
+	public void testFailurePreviewForEmptyAmount() throws PageExpiredException {
+		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
+				request);
+		setRequestPathInfo("/bulkentryaction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("enteredAmount[0][0]", "");
+		addRequestParameter("enteredAmount[0][1]", "");
+		addRequestParameter("enteredAmount[0][2]", "");
+		addRequestParameter("enteredAmount[1][0]", "");
+		addRequestParameter("enteredAmount[1][1]", "");
+		addRequestParameter("enteredAmount[1][2]", "");
+		addRequestParameter("enteredAmount[2][0]", "");
+		addRequestParameter("enteredAmount[2][1]", "");
+		addRequestParameter("enteredAmount[2][2]", "");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyActionErrors(new String[] { "errors.invalidamount",
+				"errors.invalidamount" });
+	}
+
+	public void testFailurePreviewForCharAmount() throws PageExpiredException {
+		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
+				request);
+		setRequestPathInfo("/bulkentryaction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("enteredAmount[0][0]", "abc");
+		addRequestParameter("enteredAmount[0][1]", "abc");
+		addRequestParameter("enteredAmount[0][2]", "abc");
+		addRequestParameter("enteredAmount[1][0]", "abc");
+		addRequestParameter("enteredAmount[1][1]", "abc");
+		addRequestParameter("enteredAmount[1][2]", "abc");
+		addRequestParameter("enteredAmount[2][0]", "abc");
+		addRequestParameter("enteredAmount[2][1]", "abc");
+		addRequestParameter("enteredAmount[2][2]", "abc");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyActionErrors(new String[] { "errors.invalidamount",
+				"errors.invalidamount" });
+	}
+
 
 	private BulkEntryBO getSuccessfulBulkEntry() {
 
@@ -497,240 +748,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		return customerAccountView;
 	}
 
-	public void testLoad() throws PageExpiredException {
-		setRequestPathInfo("/bulkentryaction.do");
-		addRequestParameter("method", "load");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyForward("load_success");
-		assertEquals("The value for isBackDated Trxn Allowed", SessionUtils
-				.getAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
-						request), Constants.NO);
-		assertEquals("The value for isCenter Heirarchy Exists", SessionUtils
-				.getAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
-						request), Constants.YES);
-	}
-
-	public void testLoadForNonLoanOfficerInBranch() throws PageExpiredException {
-		userContext.setBranchId(Short.valueOf("3"));
-		userContext.setId(Short.valueOf("2"));
-		userContext.setLevelId(Short.valueOf("2"));
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		setRequestPathInfo("/bulkentryaction.do");
-		addRequestParameter("method", "load");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyForward("load_success");
-		assertEquals("The value for isBackDated Trxn Allowed", SessionUtils
-				.getAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
-						request), Constants.NO);
-	}
-
-	public void testLoadPersonnel() throws PageExpiredException {
-		setRequestPathInfo("/bulkentryaction.do");
-		addRequestParameter("method", "loadLoanOfficers");
-		addRequestParameter("officeId", "3");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyForward("load_success");
-		List<PersonnelView> loanOfficerList = (List<PersonnelView>) SessionUtils
-				.getAttribute(CustomerConstants.LOAN_OFFICER_LIST, request);
-		assertEquals(1, loanOfficerList.size());
-	}
-
-	public void testLoadCustomers() throws PageExpiredException {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active", Short
-				.valueOf("13"), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
-		setRequestPathInfo("/bulkentryaction.do");
-		addRequestParameter("method", "loadCustomerList");
-		addRequestParameter("officeId", "3");
-		addRequestParameter("loanOfficerId", "1");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyForward("load_success");
-		List<CustomerView> parentCustomerList = (List<CustomerView>) SessionUtils
-				.getAttribute(BulkEntryConstants.CUSTOMERSLIST, request);
-		assertEquals(1, parentCustomerList.size());
-		assertEquals("The value for isCenter Heirarchy Exists", SessionUtils
-				.getAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
-						request), Constants.YES);
-	}
-
-	public void testGetLastMeetingDateForCustomer() throws PageExpiredException {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active", Short
-				.valueOf("13"), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
-		setRequestPathInfo("/bulkentryaction.do");
-		addRequestParameter("method", "getLastMeetingDateForCustomer");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		addRequestParameter("officeId", "3");
-		addRequestParameter("loanOfficerId", "1");
-		addRequestParameter("customerId", String.valueOf(center.getCustomerId()
-				.intValue()));
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward("load_success");
-		if (Configuration.getInstance().getAccountConfig(
-				Short.valueOf(center.getOffice().getOfficeId()))
-				.isBackDatedTxnAllowed()) {
-			assertEquals("The value for isBackDated Trxn Allowed", SessionUtils
-					.getAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
-							request), Constants.YES);
-			assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(
-					getMeetingDates(meeting).getTime()).getTime()).toString(),
-					SessionUtils.getAttribute("LastMeetingDate", request)
-							.toString());
-			assertEquals(DateHelper.getUserLocaleDate(getUserLocale(request),
-					new java.sql.Date(DateUtils.getDateWithoutTimeStamp(
-							getMeetingDates(meeting).getTime()).getTime())
-							.toString()), ((BulkEntryActionForm) request
-					.getSession().getAttribute(
-							BulkEntryConstants.BULKENTRYACTIONFORM))
-					.getTransactionDate());
-		} else {
-			assertEquals("The value for isBackDated Trxn Allowed", SessionUtils
-					.getAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
-							request), Constants.NO);
-			assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(
-					getMeetingDates(meeting).getTime()).getTime()).toString(),
-					SessionUtils.getAttribute("LastMeetingDate", request)
-							.toString());
-			assertEquals(DateHelper.getUserLocaleDate(getUserLocale(request),
-					new java.sql.Date(DateUtils
-							.getCurrentDateWithoutTimeStamp().getTime())
-							.toString()), ((BulkEntryActionForm) request
-					.getSession().getAttribute(
-							BulkEntryConstants.BULKENTRYACTIONFORM))
-					.getTransactionDate());
-		}
-	}
-
-	public void testSuccessfulGet() throws Exception {
-		MasterDataService masterService = (MasterDataService) ServiceFactory
-				.getInstance().getBusinessService(
-						BusinessServiceName.MasterDataService);
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
-		Date startDate = new Date(System.currentTimeMillis());
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, startDate);
-		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
-				"1.1.1", center, startDate);
-		client = TestObjectFactory.createClient("Client", Short.valueOf("3"),
-				"1.1.1.1", group, new Date(System.currentTimeMillis()));
-		account = getLoanAccount(group, meeting);
-		SavingsOfferingBO savingsOffering1 = createSavingsOffering("SavingPrd1");
-		SavingsOfferingBO savingsOffering2 = createSavingsOffering("SavingPrd2");
-		SavingsOfferingBO savingsOffering3 = createSavingsOffering("SavingPrd3");
-
-		centerSavingsAccount = TestObjectFactory.createSavingsAccount(
-				"43244334", center, Short.valueOf("16"), startDate,
-				savingsOffering1);
-		groupSavingsAccount = TestObjectFactory.createSavingsAccount(
-				"43234434", group, Short.valueOf("16"), startDate,
-				savingsOffering2);
-		clientSavingsAccount = TestObjectFactory.createSavingsAccount(
-				"43245434", client, Short.valueOf("16"), startDate,
-				savingsOffering3);
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils
-				.setAttribute(
-						BulkEntryConstants.PAYMENT_TYPES_LIST,
-						masterService
-								.getMasterData(
-										MasterConstants.PAYMENT_TYPE,
-										userContext.getLocaleId(),
-										"org.mifos.application.productdefinition.util.valueobjects.PaymentType",
-										"paymentTypeId").getLookUpMaster(),
-						request);
-		SessionUtils.setAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
-				Constants.YES, request);
-
-		setMasterListInSession(center.getCustomerId());
-		setRequestPathInfo("/bulkentryaction.do");
-		addRequestParameter("method", "get");
-		addRequestParameter("officeId", "3");
-		addRequestParameter("loanOfficerId", "3");
-		addRequestParameter("paymentId", "1");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-
-		Calendar meetinDateCalendar = new GregorianCalendar();
-		meetinDateCalendar.setTime(getMeetingDates(meeting));
-		int year = meetinDateCalendar.get(Calendar.YEAR);
-		int month = meetinDateCalendar.get(Calendar.MONTH);
-		int day = meetinDateCalendar.get(Calendar.DAY_OF_MONTH);
-		meetinDateCalendar = new GregorianCalendar(year, month, day);
-		SessionUtils.setAttribute("LastMeetingDate", new java.sql.Date(
-				meetinDateCalendar.getTimeInMillis()), request);
-		addRequestParameter("transactionDate", (month + 1) + "/" + day + "/"
-				+ year);
-		addRequestParameter("receiptId", "1");
-		addRequestParameter("receiptDate", "03/20/2006");
-		addRequestParameter("customerId", String.valueOf(center.getCustomerId()
-				.intValue()));
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward("get_success");
-	}
-
-	private SavingsOfferingBO createSavingsOffering(String offeringName) {
-		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		return TestObjectFactory.createSavingsOffering(offeringName, Short
-				.valueOf("2"), new Date(System.currentTimeMillis()), Short
-				.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0,
-				Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc,
-				meetingIntPost);
-	}
-
-	private void setMasterListInSession(Integer customerId)
-			throws PageExpiredException {
-		OfficeView office = new OfficeView(Short.valueOf("3"), "Branch",
-				OfficeConstants.BRANCHOFFICE, Integer.valueOf("0"));
-		List<OfficeView> branchOfficesList = new ArrayList<OfficeView>();
-		branchOfficesList.add(office);
-		SessionUtils.setAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST,
-				branchOfficesList, request);
-
-		PersonnelView personnel = new PersonnelView(Short.valueOf("3"), "John");
-		List<PersonnelView> personnelList = new ArrayList<PersonnelView>();
-		personnelList.add(personnel);
-		SessionUtils.setAttribute(CustomerConstants.LOAN_OFFICER_LIST,
-				personnelList, request);
-
-		CustomerView parentCustomer = new CustomerView(customerId,
-				"Center_Active", Short
-						.valueOf(CustomerConstants.CENTER_LEVEL_ID), "1.1");
-		List<CustomerView> customerList = new ArrayList<CustomerView>();
-		customerList.add(parentCustomer);
-		SessionUtils.setAttribute(BulkEntryConstants.CUSTOMERSLIST,
-				customerList, request);
-	}
-
-	public void testFailureGet() throws PageExpiredException {
-		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
-				request);
-		SessionUtils.setAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
-				Constants.YES, request);
-		setRequestPathInfo("/bulkentryaction.do");
-		addRequestParameter("method", "get");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyActionErrors(new String[] { "errors.mandatoryenter",
-				"errors.mandatoryselect", "errors.mandatoryselect",
-				"errors.mandatoryselect", "errors.mandatoryselect" });
-	}
+	
 
 	private AccountBO getLoanAccount(CustomerBO group, MeetingBO meeting) {
 
@@ -769,50 +787,42 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		return dates.get(dates.size() - 1);
 	}
 
-	public void testFailurePreviewForEmptyAmount() throws PageExpiredException {
-		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
-				request);
-		setRequestPathInfo("/bulkentryaction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter("enteredAmount[0][0]", "");
-		addRequestParameter("enteredAmount[0][1]", "");
-		addRequestParameter("enteredAmount[0][2]", "");
-		addRequestParameter("enteredAmount[1][0]", "");
-		addRequestParameter("enteredAmount[1][1]", "");
-		addRequestParameter("enteredAmount[1][2]", "");
-		addRequestParameter("enteredAmount[2][0]", "");
-		addRequestParameter("enteredAmount[2][1]", "");
-		addRequestParameter("enteredAmount[2][2]", "");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyActionErrors(new String[] { "errors.invalidamount",
-				"errors.invalidamount" });
+	private SavingsOfferingBO createSavingsOffering(String offeringName) {
+		MeetingBO meetingIntCalc = TestObjectFactory
+				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		MeetingBO meetingIntPost = TestObjectFactory
+				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		return TestObjectFactory.createSavingsOffering(offeringName, Short
+				.valueOf("2"), new Date(System.currentTimeMillis()), Short
+				.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0,
+				Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc,
+				meetingIntPost);
 	}
 
-	public void testFailurePreviewForCharAmount() throws PageExpiredException {
-		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
-				request);
-		setRequestPathInfo("/bulkentryaction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter("enteredAmount[0][0]", "abc");
-		addRequestParameter("enteredAmount[0][1]", "abc");
-		addRequestParameter("enteredAmount[0][2]", "abc");
-		addRequestParameter("enteredAmount[1][0]", "abc");
-		addRequestParameter("enteredAmount[1][1]", "abc");
-		addRequestParameter("enteredAmount[1][2]", "abc");
-		addRequestParameter("enteredAmount[2][0]", "abc");
-		addRequestParameter("enteredAmount[2][1]", "abc");
-		addRequestParameter("enteredAmount[2][2]", "abc");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyActionErrors(new String[] { "errors.invalidamount",
-				"errors.invalidamount" });
-	}
+	private void setMasterListInSession(Integer customerId)
+			throws PageExpiredException {
+		OfficeView office = new OfficeView(Short.valueOf("3"), "Branch",
+				OfficeConstants.BRANCHOFFICE, Integer.valueOf("0"));
+		List<OfficeView> branchOfficesList = new ArrayList<OfficeView>();
+		branchOfficesList.add(office);
+		SessionUtils.setAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST,
+				branchOfficesList, request);
 
+		PersonnelView personnel = new PersonnelView(Short.valueOf("3"), "John");
+		List<PersonnelView> personnelList = new ArrayList<PersonnelView>();
+		personnelList.add(personnel);
+		SessionUtils.setAttribute(CustomerConstants.LOAN_OFFICER_LIST,
+				personnelList, request);
+
+		CustomerView parentCustomer = new CustomerView(customerId,
+				"Center_Active", Short
+						.valueOf(CustomerConstants.CENTER_LEVEL_ID), "1.1");
+		List<CustomerView> customerList = new ArrayList<CustomerView>();
+		customerList.add(parentCustomer);
+		SessionUtils.setAttribute(BulkEntryConstants.CUSTOMERSLIST,
+				customerList, request);
+	}
+	
 	private Locale getUserLocale(HttpServletRequest request) {
 		Locale locale = null;
 		HttpSession session = request.getSession();

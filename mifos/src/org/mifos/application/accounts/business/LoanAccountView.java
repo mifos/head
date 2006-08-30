@@ -41,7 +41,7 @@ package org.mifos.application.accounts.business;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntryLoanInstallmentView;
 import org.mifos.framework.business.View;
@@ -147,7 +147,9 @@ public class LoanAccountView extends View {
 	}
 
 	public boolean isDisbursalAccount() {
-		return getAccountSate().shortValue() == AccountStates.LOANACC_APPROVED
-				|| getAccountSate().shortValue() == AccountStates.LOANACC_DBTOLOANOFFICER;
+		return getAccountSate()
+				.equals(AccountState.LOANACC_APPROVED.getValue())
+				|| getAccountSate().equals(
+						AccountState.LOANACC_DBTOLOANOFFICER.getValue());
 	}
 }

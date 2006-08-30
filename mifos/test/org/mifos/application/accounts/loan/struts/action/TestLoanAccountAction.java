@@ -29,7 +29,6 @@ import org.mifos.application.accounts.persistence.service.AccountPersistanceServ
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -760,10 +759,6 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				accountBO.getPersonnel(), Short.valueOf("1"), startDate);
 		paymentData.setRecieptDate(startDate);
 		paymentData.setRecieptNum("5435345");
-		AccountActionDateEntity actionDate = accountBO
-				.getAccountActionDate(Short.valueOf("1"));
-		LoanPaymentData loanPaymentData = new LoanPaymentData(actionDate);
-		paymentData.addAccountPaymentData(loanPaymentData);
 		accountBO.applyPayment(paymentData);
 		HibernateUtil.commitTransaction();
 	}

@@ -1889,10 +1889,6 @@ public class TestObjectFactory {
 		paymentData.setCustomer(customer);
 		paymentData.setRecieptDate(receiptDate);
 		paymentData.setRecieptNum(recieptNum);
-		for (AccountActionDateEntity actionDate : accountActions) {
-			LoanPaymentData loanPaymentData = new LoanPaymentData(actionDate);
-			paymentData.addAccountPaymentData(loanPaymentData);
-		}
 		return paymentData;
 	}
 

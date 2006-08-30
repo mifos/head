@@ -103,7 +103,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 		Date currentDate = new Date(System.currentTimeMillis());
 		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
 				accntActionDates, new Money(TestObjectFactory.getMFICurrency(),
-						"1000.0"), null, account.getPersonnel(), "423423",
+						"100.0"), null, account.getPersonnel(), "423423",
 				Short.valueOf("1"), currentDate, currentDate);
 		try {
 			account.applyPayment(paymentData);
@@ -146,7 +146,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 		Date currentDate = new Date(System.currentTimeMillis());
 		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
 				accntActionDates, new Money(TestObjectFactory.getMFICurrency(),
-						"1000.0"), null, account.getPersonnel(), "423423",
+						"100.0"), null, account.getPersonnel(), "423423",
 				Short.valueOf("1"), currentDate, currentDate);
 
 		account.applyPayment(paymentData);
@@ -189,7 +189,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 		Date currentDate = new Date(System.currentTimeMillis());
 		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
 				accntActionDates, new Money(TestObjectFactory.getMFICurrency(),
-						"1000.0"), null, account.getPersonnel(), "423423",
+						"3000.0"), null, account.getPersonnel(), "423423",
 				Short.valueOf("1"), currentDate, currentDate);
 
 		try {
@@ -200,6 +200,6 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 			assertEquals(be.getKey(), "errors.update");
 			assertTrue(true);
 		}
-
+		
 	}
 }

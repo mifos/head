@@ -120,7 +120,7 @@ public class TestAccountService extends MifosTestCase {
 		accntActionDates.addAll(loan.getAccountActionDates());
 		PaymentData accountPaymentDataView = TestObjectFactory
 				.getLoanAccountPaymentData(accntActionDates, TestObjectFactory
-						.getMoneyForMFICurrency(0), null, loan.getPersonnel(),
+						.getMoneyForMFICurrency(100), null, loan.getPersonnel(),
 						"receiptNum", Short.valueOf("1"), currentDate,
 						currentDate);
 		

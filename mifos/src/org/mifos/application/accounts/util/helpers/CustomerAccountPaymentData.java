@@ -102,6 +102,7 @@ public class CustomerAccountPaymentData extends AccountPaymentData {
 		}
 		this.accountActionDateEntity = accountAction;
 		setFeesPaid(feesPaid);
+		setPaymentStatus(PaymentStatus.PAID.getValue());
 	}
 
 	public CustomerAccountPaymentData(

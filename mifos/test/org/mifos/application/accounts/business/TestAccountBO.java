@@ -49,7 +49,6 @@ import org.hibernate.HibernateException;
 import org.mifos.application.accounts.TestAccount;
 import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.business.LoanPerformanceHistoryEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanSummaryEntity;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
@@ -66,12 +65,10 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
@@ -222,7 +219,7 @@ public class TestAccountBO extends TestAccount {
 		accntActionDates.addAll(loan.getAccountActionDates());
 		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
 				accntActionDates, TestObjectFactory
-						.getMoneyForMFICurrency(212 * 6), null, loan
+						.getMoneyForMFICurrency(700), null, loan
 						.getPersonnel(), "receiptNum", Short.valueOf("1"),
 				currentDate, currentDate);
 		loan.applyPayment(paymentData);
@@ -231,7 +228,7 @@ public class TestAccountBO extends TestAccount {
 		TestObjectFactory.flushandCloseSession();
 		assertEquals(
 				"The amount returned for the payment should have been 1272",
-				1272.0, loan.getLastPmntAmnt());
+				700.0, loan.getLastPmntAmnt());
 		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
 				loan.getAccountId());
 	}
@@ -280,7 +277,7 @@ public class TestAccountBO extends TestAccount {
 		accntActionDates.addAll(loan.getAccountActionDates());
 		PaymentData accountPaymentDataView = TestObjectFactory
 				.getLoanAccountPaymentData(accntActionDates, TestObjectFactory
-						.getMoneyForMFICurrency(212 * 6), null, loan
+						.getMoneyForMFICurrency(712), null, loan
 						.getPersonnel(), "receiptNum", Short.valueOf("1"),
 						currentDate, currentDate);
 		loan.applyPayment(accountPaymentDataView);
@@ -330,7 +327,7 @@ public class TestAccountBO extends TestAccount {
 		accntActionDates.addAll(loan.getAccountActionDates());
 		PaymentData accountPaymentDataView = TestObjectFactory
 				.getLoanAccountPaymentData(accntActionDates, TestObjectFactory
-						.getMoneyForMFICurrency(0), null, loan.getPersonnel(),
+						.getMoneyForMFICurrency(100), null, loan.getPersonnel(),
 						"receiptNum", Short.valueOf("1"), currentDate,
 						currentDate);
 		loan.applyPayment(accountPaymentDataView);
@@ -533,7 +530,7 @@ public class TestAccountBO extends TestAccount {
 		}
 		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
 				accntActionDates, TestObjectFactory
-						.getMoneyForMFICurrency(212 * 5), null, accountBO
+						.getMoneyForMFICurrency(700), null, accountBO
 						.getPersonnel(), "receiptNum", Short.valueOf("1"),
 				currentDate, currentDate);
 		accountBO.applyPayment(paymentData);

@@ -87,6 +87,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	 *
 	 * @see junit.framework.MifosTestCase#setUp()
 	 */
+	@Override
 	public void setUp()throws Exception{
 		super.setUp();
 		try {	setServletConfigFile("WEB-INF/web.xml");
@@ -129,9 +130,11 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 				.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", group, Short
+		LoanBO loan = TestObjectFactory.createLoanAccount("42423142341", group, Short
 				.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);
+		HibernateUtil.closeSession();
+		return (LoanBO)TestObjectFactory.getObject(LoanBO.class,loan.getAccountId());
 	}
 
 	private void applyPayment(LoanBO loan,double amnt)throws Exception{
@@ -149,7 +152,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 
 	public void testLoadAdjustment()throws Exception {
 		loan =(LoanBO)getLoanAccount();
-		applyPayment(loan,212*6);
+		applyPayment(loan,700);
 
 		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
 
@@ -164,7 +167,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 
 	public void testPreviewAdjustment()throws Exception{
 		loan =(LoanBO)getLoanAccount();
-		applyPayment(loan,212*6);
+		applyPayment(loan,700);
 		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
 		setRequestPathInfo("/applyAdjustment");
 		addRequestParameter("method", "previewAdjustment");
@@ -177,7 +180,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 
 	public void testApplyAdjustment()throws Exception{
 		loan =(LoanBO)getLoanAccount();
-		applyPayment(loan,212*6);
+		applyPayment(loan,700);
 		TestObjectFactory.updateObject(loan);
 		TestObjectFactory.flushandCloseSession();
 		setRequestPathInfo("/applyAdjustment");
@@ -229,8 +232,8 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testValidation()throws Exception{
-		loan =(LoanBO)getLoanAccount();
-		applyPayment(loan,212*6);
+		loan =(LoanBO)createLoanAccount();
+		applyPayment(loan,700);
 		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
 		setRequestPathInfo("/applyAdjustment");
 		addRequestParameter("method", "previewAdjustment");
@@ -240,7 +243,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	} 
 	
 	public void testValidationAdjustmentNoteSize()throws Exception{
-		loan =(LoanBO)getLoanAccount();
+		loan =(LoanBO)createLoanAccount();
 		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
 		setRequestPathInfo("/applyAdjustment");
 		addRequestParameter("method", "previewAdjustment");
@@ -250,6 +253,24 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		verifyActionErrors(new String[]{"errors.adjustmentNoteTooBig"});
 	}
 
+	private AccountBO createLoanAccount() {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"),
+				new Date(System.currentTimeMillis()), Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+				.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), meeting);
+		return TestObjectFactory.createLoanAccount("42423142341", group, Short
+				.valueOf("5"), new Date(System.currentTimeMillis()),
+				loanOffering);
+	}
+	
 	@Override
 	protected void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(loan);

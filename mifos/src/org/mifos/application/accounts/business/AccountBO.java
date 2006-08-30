@@ -105,6 +105,7 @@ import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityMapper;
@@ -533,21 +534,29 @@ public class AccountBO extends BusinessObject {
 
 	public List<AccountActionDateEntity> getApplicableIdsForFutureInstallments() {
 		List<AccountActionDateEntity> futureActionDateList = new ArrayList<AccountActionDateEntity>();
-		AccountActionDateEntity accountActionDate = null;
-		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
-			if (accountActionDateEntity.getPaymentStatus().equals(
-					PaymentStatus.UNPAID.getValue())) {
-				if (accountActionDateEntity.compareDate(DateUtils
-						.getCurrentDateWithoutTimeStamp()) >= 0) {
-					if (accountActionDate == null) {
-						accountActionDate = accountActionDateEntity;
-					} else if (!accountActionDate.getInstallmentId().equals(
-							(accountActionDateEntity.getInstallmentId())))
-						futureActionDateList.add(accountActionDateEntity);
+		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
+		if (nextInstallment != null) {
+			for (AccountActionDateEntity accountActionDate : getAccountActionDates()) {
+				if (accountActionDate.getPaymentStatus().equals(
+						PaymentStatus.UNPAID.getValue())) {
+					if (accountActionDate.getInstallmentId() > nextInstallment
+							.getInstallmentId())
+						futureActionDateList.add(accountActionDate);
 				}
 			}
 		}
 		return futureActionDateList;
+	}
+	
+	protected List<AccountActionDateEntity> getApplicableIdsForDueInstallments() {
+		List<AccountActionDateEntity> dueActionDateList = new ArrayList<AccountActionDateEntity>();
+		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
+		if (nextInstallment == null || !nextInstallment.isPaid()) {
+			dueActionDateList.addAll(getDetailsOfInstallmentsInArrears());
+			if (nextInstallment != null)
+				dueActionDateList.add(nextInstallment);
+		}
+		return dueActionDateList;
 	}
 
 	public List<AccountActionDateEntity> getPastInstallments() {
@@ -629,16 +638,12 @@ public class AccountBO extends BusinessObject {
 	}
 
 	public Money getTotalPaymentDue() {
-		Money totalAmt = getTotalAmountInArrears();
-		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
-		if (nextInstallment != null
-				&& nextInstallment.getPaymentStatus().equals(
-						PaymentStatus.UNPAID.getValue())
-				&& DateUtils.getDateWithoutTimeStamp(
-						nextInstallment.getActionDate().getTime()).equals(
-						DateUtils.getCurrentDateWithoutTimeStamp()))
-			totalAmt = totalAmt.add(getDueAmount(nextInstallment));
-		return totalAmt;
+		Money amount = new Money();
+		for (AccountActionDateEntity accountActionDateEntity : getApplicableIdsForDueInstallments()) {
+			amount = amount.add(((LoanScheduleEntity) accountActionDateEntity)
+					.getTotalDueWithFees());
+		}
+		return amount;
 	}
 
 	public Money getTotalAmountInArrears() {
@@ -716,6 +721,15 @@ public class AccountBO extends BusinessObject {
 		}
 	}
 
+	
+	public AccountState getState() throws AccountException  {
+		try {
+			return AccountState.getStatus(getAccountState().getId());
+		} catch (PropertyNotFoundException e) {
+			throw new AccountException(e);
+		}
+	}
+	
 	public void updateAccountActivity(Money totalFeeAmount, Short personnelId,
 			String description) {
 	}
@@ -1043,40 +1057,7 @@ public class AccountBO extends BusinessObject {
 		return newFeeInstallmentList;
 	}
 
-	protected List<AccountActionDateEntity> getApplicableIdsForDueInstallments() {
-		List<AccountActionDateEntity> dueActionDateList = new ArrayList<AccountActionDateEntity>();
-		if (isCurrentDateEquallToInstallmentDate()) {
-			for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
-				if (accountActionDateEntity.getPaymentStatus().equals(
-						PaymentStatus.UNPAID.getValue())) {
-					if (accountActionDateEntity.compareDate(DateUtils
-							.getCurrentDateWithoutTimeStamp()) <= 0) {
-						dueActionDateList.add(accountActionDateEntity);
-					}
-				}
-			}
-		} else {
-			Boolean flag = true;
-			for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
-				if (accountActionDateEntity.getPaymentStatus().equals(
-						PaymentStatus.UNPAID.getValue())) {
-					if (accountActionDateEntity.compareDate(DateUtils
-							.getCurrentDateWithoutTimeStamp()) < 0) {
-						dueActionDateList.add(accountActionDateEntity);
-					} else if (flag == true
-							&& accountActionDateEntity
-									.getActionDate()
-									.compareTo(
-											DateUtils
-													.getCurrentDateWithoutTimeStamp()) > 0) {
-						dueActionDateList.add(accountActionDateEntity);
-						flag = false;
-					}
-				}
-			}
-		}
-		return dueActionDateList;
-	}
+	
 
 	protected boolean isCurrentDateEquallToInstallmentDate() {
 		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {

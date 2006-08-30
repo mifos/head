@@ -189,6 +189,10 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 	public Money getMiscPenaltyPaid() {
 		return miscPenaltyPaid;
 	}
+	
+	public Money getMiscPenaltyDue() {
+		return getMiscPenalty().subtract(getMiscPenaltyPaid());
+	}
 
 	public void setMiscPenaltyPaid(Money miscPenaltyPaid) {
 		this.miscPenaltyPaid = miscPenaltyPaid;
