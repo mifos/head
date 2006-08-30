@@ -226,7 +226,7 @@ public interface CustomerConstants {
 	public static final String INVALID_OFFICE="errors.Customer.invalidOffice";
 	public static final String INVALID_PARENT="errors.Customer.invalidParent";
 
-	public final String TRANSITION_CONFIG_FILE_PATH_CENTER="org/mifos/framework/util/resources/stateMachine/StateMachine_center.xml";	
+	public final String TRANSITION_CONFIG_FILE_PATH_CENTER="org/mifos/framework/util/resources/stateMachine/StateMachine_center.xml";
 	public final String TRANSITION_CONFIG_FILE_PATH_CLIENT="org/mifos/framework/util/resources/stateMachine/StateMachine_client.xml";
 	
 	public static final String NOTES_FIELD="notes";
@@ -235,8 +235,6 @@ public interface CustomerConstants {
 	public static final String MANDATORY_TEXTBOX="errors.mandatory_textbox";
 	public static final String MANDATORY_SELECT="errors.mandatoryselect";
 	public static final String MAXIMUM_LENGTH="errors.maxlength";
-
-
 	public static final String ERRORS_DUPLICATE_CUSTOMER="errors.Customer.duplicateCustomer";
 	public static final String ERRORS_SPECIFY_NAME="errors.Customer.specifyName";
 	public static final String ERRORS_SELECT_LOAN_OFFICER="errors.Customer.specifyLoanOfficer";
@@ -257,4 +255,7 @@ public interface CustomerConstants {
 	public static final String SPOUSE_LAST_NAME = "Spouse/Father Last Name";
 	public static final String SPOUSE_TYPE = "Spouse/Father Relationship";
 	public static final String FORMED_BY_LOANOFFICER = "Formed By Loan officer";
+	public static final String TRAINED_CHECKED = "errors.TrainedCheckbox";
+	public static final String TRAINED_DATE_MANDATORY = "errors.TrainedDateNeeded";	
+
 }

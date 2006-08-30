@@ -61,8 +61,11 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
@@ -336,19 +339,27 @@ public abstract class CustomerActionForm extends BaseActionForm{
 	}
 	
 	@Override
-	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request){
 		String method = request.getParameter("method");
+		request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
 		ActionErrors errors = null;
-		errors = validateFields(request, method);
+		try{
+			errors = validateFields(request, method);
+		}
+		catch(ApplicationException ae){
+			errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae
+					.getValues()));
+		}
 		if (null != errors && !errors.isEmpty()) {
 			request.setAttribute(Globals.ERROR_KEY, errors);
 			request.setAttribute("methodCalled", method);
+			
 		}
 		errors.add(super.validate(mapping,request));
 		return errors;
 	}
 	
-	protected abstract ActionErrors validateFields(HttpServletRequest request, String method);
+	protected abstract ActionErrors validateFields(HttpServletRequest request, String method)throws ApplicationException;
 	
 	protected void validateName(ActionErrors errors){
 		if (StringUtils.isNullOrEmpty(getDisplayName()))
@@ -375,8 +386,8 @@ public abstract class CustomerActionForm extends BaseActionForm{
 		checkForMandatoryFields(entityType.getValue(), errors, request);
 	}
 	
-	protected  void validateCustomFields(HttpServletRequest request, ActionErrors errors){
-		List<CustomFieldDefinitionEntity> customFieldDefs =(List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request.getSession());
+	protected  void validateCustomFields(HttpServletRequest request, ActionErrors errors)throws ApplicationException{
+		List<CustomFieldDefinitionEntity> customFieldDefs =(List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
 		for(CustomFieldView customField : customFields){
 			boolean isErrorFound = false;
 			for(CustomFieldDefinitionEntity customFieldDef : customFieldDefs){
@@ -433,7 +444,7 @@ public abstract class CustomerActionForm extends BaseActionForm{
 				if(errors == null){
 					errors = new ActionErrors();
 				}
-				errors.add(ClientConstants.TRAINED_DATE_MANDATORY,new ActionMessage(ClientConstants.TRAINED_DATE_MANDATORY));
+				errors.add(CustomerConstants.TRAINED_DATE_MANDATORY,new ActionMessage(CustomerConstants.TRAINED_DATE_MANDATORY));
 			}
 	
 		}
@@ -442,7 +453,7 @@ public abstract class CustomerActionForm extends BaseActionForm{
 			if(errors == null){
 				errors = new ActionErrors();
 			}
-			errors.add(ClientConstants.TRAINED_CHECKED,new ActionMessage(ClientConstants.TRAINED_CHECKED));
+			errors.add(CustomerConstants.TRAINED_CHECKED,new ActionMessage(CustomerConstants.TRAINED_CHECKED));
 		}
 		
 	}

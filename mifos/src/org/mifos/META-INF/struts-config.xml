@@ -1151,10 +1151,11 @@
 			type="org.mifos.application.customer.group.struts.action.GroupCustAction"
 			name="groupCustActionForm" parameter="method" validate="true"
 			input="/groupCustAction.do?method=validate" scope="session">
-			<forward name="manage_success"
-				path="/pages/application/group/jsp/edit_groupdetails.jsp" />
-			<forward name="PreviewManageGroup"
-				path="/pages/application/group/jsp/group_detailspreview.jsp" />
+			<forward name="manage_success" path="/pages/application/group/jsp/edit_groupdetails.jsp" />
+			<forward name="previewManage_success" path="/pages/application/group/jsp/preview_editgroupdetails.jsp" />
+			<forward name="previewManage_failure" path="/pages/application/group/jsp/edit_groupdetails.jsp" />
+			<forward name="previousManage_success" path="/pages/application/group/jsp/edit_groupdetails.jsp" />
+			
 			<forward name="update_success"
 				path="/groupCustAction.do?method=get" />
 			<forward name="update_failure"
@@ -1164,9 +1165,7 @@
 				path="/CustomerSearchAction.do?method=load" />
 			<forward name="cancel_manage"
 				path="/groupCustAction.do?method=get" />
-			<!--failure forwards-->
-			<forward name="ManageGroup_failure"
-				path="/pages/application/group/jsp/edit_groupdetails.jsp" />
+			
 			
 		</action>
 		

@@ -71,6 +71,7 @@ import org.mifos.application.customer.group.util.helpers.LinkParameters;
 import org.mifos.application.customer.group.util.valueobjects.Group;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerHelper;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.valueobjects.CustomFieldDefinition;
 import org.mifos.application.customer.util.valueobjects.Customer;
 import org.mifos.application.customer.util.valueobjects.CustomerAddressDetail;
@@ -83,6 +84,7 @@ import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.personnel.util.valueobjects.Personnel;
 import org.mifos.application.personnel.util.valueobjects.PersonnelMaster;
+import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -94,6 +96,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.MifosSearchAction;
 import org.mifos.framework.struts.tags.DateHelper;
+import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -264,7 +267,7 @@ public class GroupAction extends MifosSearchAction {
 	 */
 	@TransactionDemarcate(saveToken = true)
 	public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
-	  	ActionForward forward =super.get(mapping,form,request,response);
+		ActionForward forward =super.get(mapping,form,request,response);
 	    Context context=(Context)request.getAttribute(Constants.CONTEXT);
 	    Group group = (Group)context.getValueObject();
 	    SessionUtils.setAttribute(GroupConstants.IS_GROUP_LOAN_ALLOWED,Configuration.getInstance().getCustomerConfig(group.getOffice().getOfficeId()).canGroupApplyForLoan(),request.getSession());
@@ -273,6 +276,8 @@ public class GroupAction extends MifosSearchAction {
 	    
 	    Integer customerId = group.getCustomerId();
 	    GroupBO groupBO = (GroupBO) new CustomerBusinessService().getCustomer(customerId);
+	    SessionUtils.setAttribute(Constants.BUSINESS_KEY, groupBO, request.getSession());
+	    
 	    GroupPerformanceHistoryEntity groupPerfHistoryEntity = groupBO.getPerformanceHistory();
 	    SessionUtils.setAttribute(GroupConstants.GROUP_PERFORMANCE_VO,groupPerfHistoryEntity,request.getSession());
 	    return forward;

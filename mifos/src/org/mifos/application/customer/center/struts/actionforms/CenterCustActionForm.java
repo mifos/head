@@ -43,11 +43,12 @@ import org.apache.struts.action.ActionErrors;
 import org.mifos.application.customer.struts.actionforms.CustomerActionForm;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.framework.exceptions.ApplicationException;
 
 public class CenterCustActionForm extends CustomerActionForm{
 	
 	@Override
-	protected ActionErrors validateFields(HttpServletRequest request, String method){
+	protected ActionErrors validateFields(HttpServletRequest request, String method) throws ApplicationException{
 		ActionErrors errors = new ActionErrors();
 		if(method.equals(Methods.preview.toString())){		
 			validateName(errors);

@@ -69,6 +69,7 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationHelper;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 import org.mifos.framework.util.helpers.Constants;
@@ -211,7 +212,7 @@ public class ClientCustActionForm extends CustomerActionForm {
 	}
 
 	@Override
-	protected ActionErrors validateFields(HttpServletRequest request, String method) {
+	protected ActionErrors validateFields(HttpServletRequest request, String method) throws ApplicationException{
 		
 		ActionErrors errors = new ActionErrors();
 		if(  (method.equals(Methods.previewPersonalInfo.toString()) || method.equals(Methods.next.toString()) || method.equals(Methods.previewEditPersonalInfo.toString()))&& ( ClientConstants.INPUT_PERSONAL_INFO.equals(input) || ClientConstants.INPUT_EDIT_PERSONAL_INFO.equals(input) )){

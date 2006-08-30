@@ -318,7 +318,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		addRequestParameter("input", "mfiInfo");
 		actionPerform();
 		assertEquals(1, getErrrorSize());
-		assertEquals("Client Trained date not present", 1, getErrrorSize(ClientConstants.TRAINED_DATE_MANDATORY  ));
+		assertEquals("Client Trained date not present", 1, getErrrorSize(CustomerConstants.TRAINED_DATE_MANDATORY  ));
 		
 	}
 	

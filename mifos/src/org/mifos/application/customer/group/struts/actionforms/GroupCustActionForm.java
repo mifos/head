@@ -46,13 +46,21 @@ import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.struts.actionforms.CustomerActionForm;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.util.helpers.Constants;
 
 public class GroupCustActionForm extends CustomerActionForm {
 
 	@Override
-	protected ActionErrors validateFields(HttpServletRequest request, String method) {
+	protected ActionErrors validateFields(HttpServletRequest request, String method)throws ApplicationException {
 		
 		ActionErrors errors = new ActionErrors();
+		if(method.equals(Methods.previewManage.toString())){		
+			validateName(errors);
+			validateTrained(request, errors);
+			validateConfigurableMandatoryFields(request,errors,EntityType.CENTER);
+			validateCustomFields(request,errors);
+		}
 		return errors;
 	}
 

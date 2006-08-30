@@ -52,6 +52,7 @@ import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -131,21 +132,93 @@ public class GroupActionTest extends MifosMockStrutsTestCase{
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "manage");
 		addRequestParameter("officeId", "3");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.manage_success.toString());
-		//assertNotNull(SessionUtils.getAttribute(CustomerConstants.LOAN_OFFICER_LIST, request.getSession()));
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,request));
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.CLIENT_LIST,request));
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.POSITIONS,request));
 	}
 	
+	public void testPreviewManageFailureForName() throws Exception {
+		createGroupWithCenterAndSetInSession();
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "manage");
+		addRequestParameter("officeId", "3");
+		actionPerform();
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "previewManage");
+		addRequestParameter("officeId", "3");
+		addRequestParameter("displayName", "");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String)request.getAttribute(Constants.CURRENTFLOWKEY));
+		int i = 0;
+		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
+			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
+			addRequestParameter("customField["+ i +"].fieldValue", "Req");
+			i++;
+		}
+		addRequestParameter("trained", "1");
+		addRequestParameter("trainedDate", "03/20/2006");
+		actionPerform();
+		assertEquals(1, getErrrorSize());
+		assertEquals("Group Name not present", 1, getErrrorSize(CustomerConstants.NAME  ));
+		
+	}
 	
+	public void testPreviewManageFailureForTrainedDate() throws Exception {
+		createGroupWithCenterAndSetInSession();
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "manage");
+		addRequestParameter("officeId", "3");
+		actionPerform();
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "previewManage");
+		addRequestParameter("officeId", "3");
+		addRequestParameter("displayName", "group");
+		int i = 0;
+		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
+			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
+			addRequestParameter("customField["+ i +"].fieldValue", "Req");
+			i++;
+		}
+		addRequestParameter("trained", "1");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String)request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		assertEquals(1, getErrrorSize());
+		assertEquals("Group Trained date not present", 1, getErrrorSize(CustomerConstants.TRAINED_DATE_MANDATORY  ));
+		
+	}
+	
+	public void testPreviewManageFailureForTrained() throws Exception {
+		createGroupWithCenterAndSetInSession();
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "manage");
+		addRequestParameter("officeId", "3");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "previewManage");
+		addRequestParameter("officeId", "3");
+		addRequestParameter("displayName", "group");
+		int i = 0;
+		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
+			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
+			addRequestParameter("customField["+ i +"].fieldValue", "Req");
+			i++;
+		}
+		addRequestParameter("trainedDate", "03/20/2006");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String)request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		assertEquals(1, getErrrorSize());
+		assertEquals("Group Trained checkbox not checked ", 1, getErrrorSize(CustomerConstants.TRAINED_CHECKED  ));
+		
+	}
 	
 	private void createAndSetGroupInSession(){
-		String name = "manage_group";
 		group = TestObjectFactory.createGroup("group", CustomerStatus.GROUP_ACTIVE.getValue(), "1.1", getMeeting());
 		HibernateUtil.closeSession();
 		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class, new Integer(group.getCustomerId()).intValue());
@@ -153,7 +226,6 @@ public class GroupActionTest extends MifosMockStrutsTestCase{
 	}
 	
 	private void createGroupWithCenterAndSetInSession() throws Exception{
-		String name = "Client 1";
 		createParentCustomer();
 		group = TestObjectFactory.createGroup("group", CustomerStatus.GROUP_ACTIVE.getValue(), center.getSearchId()+".1", center, new Date());
 		HibernateUtil.closeSession();

@@ -39,6 +39,7 @@
 package org.mifos.application.customer.group.struts.action;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,7 +50,10 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
+import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.group.struts.actionforms.GroupActionForm;
 import org.mifos.application.customer.group.struts.actionforms.GroupCustActionForm;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.struts.action.CustAction;
@@ -66,9 +70,11 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.framework.util.valueobjects.Context;
 
 public class GroupCustAction extends CustAction {
 
@@ -85,7 +91,8 @@ public class GroupCustAction extends CustAction {
 	
 	@Override
 	protected BusinessService getService() throws ServiceException {
-		return customerService;
+		return (CustomerBusinessService) ServiceFactory
+		.getInstance().getBusinessService(BusinessServiceName.Customer);
 	}
 
 	@TransactionDemarcate(saveToken = true)
@@ -106,6 +113,31 @@ public class GroupCustAction extends CustAction {
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
 	
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward previewManage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
+		return mapping.findForward(ActionForwards.previewManage_success.toString());
+	}
+	
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward previousManage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
+		return mapping.findForward(ActionForwards.previousManage_success.toString());
+	}
+	
+	@CloseSession
+	public ActionForward update(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		GroupBO group = (GroupBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request.getSession());
+		CenterCustActionForm actionForm = (CenterCustActionForm) form;
+		Date trainedDate = null; 
+		if(actionForm.getTrainedDate()!=null)
+			trainedDate = getDateFromString(actionForm.getTrainedDate(), getUserContext(request)
+				.getPereferedLocale());
+			
+		//group.update(getUserContext(request),actionForm.getDisplayName(), actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(),actionForm.getTrained(),trainedDate, actionForm.getAddress(), actionForm.getCustomFields(), actionForm.getCustomerPositions());
+		return mapping.findForward(ActionForwards.update_success.toString());
+	}
+	
 	private void loadUpdateMasterData(Short officeId, HttpServletRequest request)throws ApplicationException, SystemException {
 		 if(!Configuration.getInstance().getCustomerConfig(getUserContext(request).getBranchId()).isCenterHierarchyExists()){
 			 loadLoanOfficers(officeId, request);
@@ -123,6 +155,7 @@ public class GroupCustAction extends CustAction {
 			actionForm.setLoanOfficerId(group.getPersonnel().getPersonnelId()
 					.toString());
 		}
+		actionForm.setDisplayName(group.getDisplayName());
 		actionForm.setCustomerId(group.getCustomerId().toString());
 		actionForm.setGlobalCustNum(group.getGlobalCustNum());
 		actionForm.setExternalId(group.getExternalId());
@@ -137,10 +170,9 @@ public class GroupCustAction extends CustAction {
 			actionForm.setTrained(GroupConstants.NOT_TRAINED);
 		if (group.getTrainedDate() != null)
 			actionForm.setTrainedDate(DateHelper.getUserLocaleDate(
-					getUserContext(request).getPereferedLocale(), group.getTrainedDate().toString()));
-*/	}
-
-	
+					getUserContext(request).getPereferedLocale(), group.getTrainedDate().toString()));*/
+	}
+		
 	private void clearActionForm(GroupCustActionForm actionForm) {
 		actionForm.setDefaultFees(new ArrayList<FeeView>());
 		actionForm.setAdditionalFees(new ArrayList<FeeView>());
@@ -156,5 +188,12 @@ public class GroupCustAction extends CustAction {
 		actionForm.setTrained(null);
 		actionForm.setTrainedDate(null);
 		actionForm.setFormedByPersonnel(null);
+	}
+	
+	public ActionForward validate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		String method = (String) request.getAttribute("methodCalled");
+		return mapping.findForward(method + "_failure");
 	}
 }
