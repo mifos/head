@@ -145,6 +145,7 @@ public class SavingsAction extends AccountAppAction {
 		CustomerBO customer = getCustomer(new Integer(
 				((SavingsActionForm) form).getCustomerId()));
 		Hibernate.initialize(customer.getOffice());
+		Hibernate.initialize(customer.getPersonnel());
 		SavingsBO savings = (SavingsBO) request.getSession().getAttribute(
 				Constants.BUSINESS_KEY);
 		savings.setCustomer(customer);
