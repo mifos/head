@@ -43,19 +43,11 @@ import org.mifos.framework.exceptions.ApplicationException;
 /**
  * This exception is thrown whenever while creating a product instance a fee type is associated which does not have a freq 
  * whole number multiple or factor of repayment frequency.
- * @author ashishsm
- *
  */
 public class RepmntFeeFreqMisMatchException extends ApplicationException {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 56356789790890671L;
 
-	/**
-	 * 
-	 */
 	public RepmntFeeFreqMisMatchException() {
 		super();
 		// TODO Auto-generated constructor stub

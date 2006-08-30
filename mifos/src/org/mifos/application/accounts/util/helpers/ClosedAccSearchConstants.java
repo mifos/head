@@ -37,10 +37,6 @@
  */
 package org.mifos.application.accounts.util.helpers;
 
-/**
- * @author mohammedn
- *
- */
 public interface ClosedAccSearchConstants {
 	
 	public String CLOSEDACCOUNTSLIST="ClosedAccountsList";

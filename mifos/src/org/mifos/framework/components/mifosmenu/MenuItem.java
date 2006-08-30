@@ -39,8 +39,6 @@
 package org.mifos.framework.components.mifosmenu;
 
 /**
- * @author navitas
- * Created on Sep 05, 2005
  * It stores menuitems for a menugroup.
  */
 public class MenuItem {

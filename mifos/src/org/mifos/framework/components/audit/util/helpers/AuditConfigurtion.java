@@ -63,8 +63,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 
 /**
  * This class will be replaced by a configuration file in M2
- * @author krishankg
- *
  */
 public class AuditConfigurtion {
 

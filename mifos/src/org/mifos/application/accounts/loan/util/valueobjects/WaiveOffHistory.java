@@ -7,10 +7,6 @@ import java.util.Date;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author krishankg
- *
- */
 public class WaiveOffHistory extends ValueObject {
 	
 	private Integer waiveOffId; 

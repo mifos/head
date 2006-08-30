@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * @author navitas
- * Created on Aug 12, 2005
  * It provides methods related to weekoff and holiday mgmt.
  * This servers as helper class to DayScheduler, WeekScheduler and MonthScheduler
  */

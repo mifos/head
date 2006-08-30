@@ -44,8 +44,6 @@ import org.mifos.framework.business.PersistentObject;
  * Whether this currency has been chosen as the default currency for the MFI. This class is immutable and hence all the
  * setter methods are private. The class is final and the mapping for this class specifies lazy=false so that hibernate
  * doesnt initialize a proxy
- * @author sumeethaec
- *
  */
 public final class MifosCurrency extends PersistentObject {
 	

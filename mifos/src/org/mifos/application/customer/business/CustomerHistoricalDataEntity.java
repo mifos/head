@@ -44,8 +44,6 @@ import org.mifos.framework.util.helpers.Money;
 
 /**
  * This class encapsulate the customer historical data
- * 
- * @author navitas
  */
 public class CustomerHistoricalDataEntity extends PersistentObject {
 

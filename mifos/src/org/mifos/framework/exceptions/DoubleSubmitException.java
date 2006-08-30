@@ -41,59 +41,31 @@ package org.mifos.framework.exceptions;
  * This exception is thrown whenever there is a double submit detected.
  * It indicates that some request which is not idempotent was subitted to the 
  * server more than once.
- * @author ashishsm
- *
  */
 public class DoubleSubmitException extends ApplicationException {
 
-	/**
-	 * 
-	 */
 	public DoubleSubmitException() {
 		super();
-		
 	}
 
-	/**
-	 * @param values
-	 */
 	public DoubleSubmitException(Object[] values) {
 		super(values);
-		
 	}
 
-	/**
-	 * @param cause
-	 */
 	public DoubleSubmitException(Throwable cause) {
 		super(cause);
-		
 	}
 
-	/**
-	 * @param key
-	 */
 	public DoubleSubmitException(String key) {
 		super(key);
-		
 	}
 
-	/**
-	 * @param key
-	 * @param values
-	 */
 	public DoubleSubmitException(String key, Object[] values) {
 		super(key, values);
-		
 	}
 
-	/**
-	 * @param key
-	 * @param cause
-	 */
 	public DoubleSubmitException(String key, Throwable cause) {
 		super(key, cause);
-		
 	}
 
 }

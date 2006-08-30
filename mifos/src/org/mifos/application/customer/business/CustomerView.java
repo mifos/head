@@ -40,10 +40,6 @@ package org.mifos.application.customer.business;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.framework.business.View;
 
-/**
- * @author sumeethaec
- * 
- */
 public class CustomerView extends View {
 
 	private Integer customerId;

@@ -42,21 +42,15 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class is used as ValueObject for Applying Charges for customers.
- * @author ashishsm
- *
  */
 public class ApplyCharges extends ValueObject {
 
-	/**
-	 * 
-	 */
 	public ApplyCharges() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
 	/**
-	 * 
 	 * This indicates the level of the customer for which charges are being applied.
 	 * It gets its value when action form to value object conversion happens.
 	 */

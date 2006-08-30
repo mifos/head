@@ -51,25 +51,16 @@ import org.mifos.framework.struts.action.MifosBaseAction;
 
 /**
  * This class is used as Action class for Applying Charges for customers.
- * @author ashishsm
- *
  */
 public class ApplyChargesAction extends MifosBaseAction {
 	
-	/**
-	 * 
-	 */
 	public ApplyChargesAction() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.struts.action.MifosBaseAction#getPath()
-	 */
-	
+	@Override
 	protected String getPath() {
-		
 		return null;
 	}
 	

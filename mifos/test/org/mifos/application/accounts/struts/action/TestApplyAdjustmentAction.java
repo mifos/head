@@ -65,8 +65,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 /**
  * This class tests methods of ApplyAdjustment action class.
- * @author ashishsm
- *
  */
 public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	private CenterBO center;

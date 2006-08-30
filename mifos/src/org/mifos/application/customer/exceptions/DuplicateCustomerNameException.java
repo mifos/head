@@ -40,7 +40,6 @@ package org.mifos.application.customer.exceptions;
 import org.mifos.framework.exceptions.ApplicationException;
 /**
  * This exception is thrown when duplicate customer name is found in the database
- * @author navitas
  */
 
 public class DuplicateCustomerNameException extends ApplicationException{

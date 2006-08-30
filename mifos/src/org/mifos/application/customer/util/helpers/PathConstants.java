@@ -38,10 +38,6 @@
 
 package org.mifos.application.customer.util.helpers;
 
-/**
- * @author sumeethaec
- *
- */
 public interface PathConstants {
 	String CLIENT_CREATION = "ClientCreationAction";
 	String CLIENT_STATUS_CHANGE = "ClientStatusAction";

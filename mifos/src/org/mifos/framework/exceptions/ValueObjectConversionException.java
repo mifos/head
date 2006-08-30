@@ -41,8 +41,6 @@ package org.mifos.framework.exceptions;
 
 /**
  * This Exception is thrown when we try to convert action form to a value object.
- * @author ashishsm
- *
  */
 public class ValueObjectConversionException extends SystemException {
 

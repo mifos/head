@@ -38,41 +38,26 @@
 
 package org.mifos.framework.exceptions;
 
-/**
- * @author ashishsm
- *
- */
 public class ConcurrencyException extends ApplicationException {
 
-	/**
-	 * 
-	 */
 	public ConcurrencyException() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @param values
-	 */
 	public ConcurrencyException(Object[] values) {
 		super(values);
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @param cause
-	 */
 	public ConcurrencyException(Throwable cause) {
 		super(cause);
 		
 	}
-	
 
 	public ConcurrencyException(String key,Throwable cause) 
 	{
 		super(key,cause);
-		
 	}
 	
 }

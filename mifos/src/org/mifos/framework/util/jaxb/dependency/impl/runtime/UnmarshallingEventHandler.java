@@ -19,9 +19,6 @@ import org.xml.sax.SAXException;
  * and that problem is not reported. It is the responsibility of the caller
  * of this interface to report it to the client's ValidationEventHandler
  * and re-wrap it into UnmarshalException.
- * 
- * @author
- *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public interface UnmarshallingEventHandler {
     

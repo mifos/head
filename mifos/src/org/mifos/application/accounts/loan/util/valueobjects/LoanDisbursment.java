@@ -4,10 +4,6 @@ import java.sql.Date;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author krishankg
- *
- */
 public class LoanDisbursment extends ValueObject{
 
 	private Integer accountId;

@@ -62,8 +62,6 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 
 /**
- * @author rajenders
- *
  * AuthrizationManager Acts as authorization Service it is singleton class and
  * it's object got created during the initilization phase .This object keep a
  * Hashmap of activities to roles and keep this hashmap synchrozinised with the

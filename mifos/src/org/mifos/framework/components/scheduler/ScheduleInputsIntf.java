@@ -3,8 +3,6 @@ package org.mifos.framework.components.scheduler;
 import java.util.Date;
 
 /**
- * @author navitas
- * Created on Aug 12, 2005
  * It defines Inputs which vary across different schedules. e.g. startDate, endDate, recurrence details etc. 
  */
 public interface ScheduleInputsIntf {

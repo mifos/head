@@ -23,9 +23,6 @@ import com.sun.xml.bind.Messages;
  * Keeps the information about the grammar as a whole.
  * 
  * This object is immutable and thread-safe.
- *
- * @author
- *  <a href="mailto:kohsuke.kawaguchi@sun.com">Kohsuke KAWAGUCHI</a>
  */
 public class GrammarInfoImpl implements GrammarInfo
 {

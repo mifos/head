@@ -41,8 +41,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class encapsulate the RecurrenceType for a meeting 
- * @author rajenders
- *
  */
 public class RecurrenceType extends ValueObject {
 	private static final long serialVersionUID = 5555555555l;

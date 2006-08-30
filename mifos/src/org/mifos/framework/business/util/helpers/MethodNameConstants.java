@@ -3,10 +3,6 @@
  */
 package org.mifos.framework.business.util.helpers;
 
-/**
- * @author rohitr
- *
- */
 public interface MethodNameConstants {
 	
 	public static final String METHOD= "method";

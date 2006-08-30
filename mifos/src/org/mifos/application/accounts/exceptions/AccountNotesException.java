@@ -41,7 +41,6 @@ package org.mifos.application.accounts.exceptions;
 import org.mifos.framework.exceptions.ApplicationException;
 /**
  * This is general exception for the account notes
- * @author navitas
  */
 public class AccountNotesException extends ApplicationException{
 	

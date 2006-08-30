@@ -47,10 +47,6 @@ import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.office.util.valueobjects.OfficeLevel;
 import org.mifos.framework.struts.actionforms.MifosActionForm;
 
-/**
- * @author rajenders
- *
- */
 public class OfficeHierarchyActionForm extends MifosActionForm {
 
 	private static final long serialVersionUID=0;

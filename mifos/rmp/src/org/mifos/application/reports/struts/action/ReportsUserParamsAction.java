@@ -70,8 +70,6 @@ import org.mifos.application.reports.struts.actionforms.ReportsUserParamsActionF
 
 /**
  * Control Class for Report Params 
- * @author zankar
- *
  */
 public class ReportsUserParamsAction extends BaseAction {
 	

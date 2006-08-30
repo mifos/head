@@ -13,8 +13,6 @@ import com.sun.xml.bind.JAXBObject;
 /**
  * For a generated class to be serializable, it has to
  * implement this interface.
- * 
- * @author Kohsuke Kawaguchi
  */
 public interface XMLSerializable extends JAXBObject
 {

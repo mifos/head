@@ -39,11 +39,6 @@ package org.mifos.application.office.util.helpers;
 
 import org.mifos.framework.business.View;
 
-/**
- * 
- * @author rajenders
- * 
- */
 public class ParentOfficeView extends View {
 
 	private Short levelId;

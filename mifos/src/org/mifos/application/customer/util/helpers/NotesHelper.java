@@ -53,10 +53,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.QueryResultDTOImpl;
-/**
- * @author navitas
- *
- */
+
 public class NotesHelper {
 
 	public static java.util.List  getLatestNotes(int count, Integer customerId) throws ApplicationException,SystemException

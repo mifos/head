@@ -9,10 +9,6 @@ import java.util.Locale;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author mohammedn
- *
- */
 public class ClientChangeLog extends ValueObject {
 	/**
 	 * 

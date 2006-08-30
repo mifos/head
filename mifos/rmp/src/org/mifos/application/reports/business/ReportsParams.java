@@ -44,7 +44,6 @@ import org.mifos.framework.security.util.UserContext;
 
 /**
  * This class encapsulates the Reports Parameters with Reports Datasource
- * @author zankar
  */
 public class ReportsParams extends BusinessObject
 {

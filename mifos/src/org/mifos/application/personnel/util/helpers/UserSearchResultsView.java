@@ -42,9 +42,6 @@ import org.mifos.framework.business.View;
 /**
  * This obect denotes instance of search result, that will be obtained after
  * user search.
- * 
- * @author navitas
- * 
  */
 public class UserSearchResultsView extends View {
 

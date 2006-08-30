@@ -37,7 +37,6 @@
  */
 package org.mifos.framework.struts.action;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,10 +52,6 @@ import org.mifos.framework.util.helpers.MethodInvoker;
 import org.mifos.framework.util.helpers.ResourceConstants;
 import org.mifos.framework.util.valueobjects.Context;
 
-/**
- * @author rajenders
- *
- */
 public abstract class MifosSearchWizardAction extends MifosSearchAction {
 
 	protected abstract String getPath();

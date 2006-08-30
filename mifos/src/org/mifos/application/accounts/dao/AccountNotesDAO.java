@@ -57,7 +57,6 @@ import org.mifos.framework.exceptions.SystemException;
 
 /**
  * This class denotes the DAO layer for the AccountNote.
- * @author navitas
  */
 public class AccountNotesDAO extends DAO {
 

@@ -53,10 +53,6 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
-/**
- * @author rajenders
- * 
- */
 public class FeePersistence extends Persistence {
 
 	public FeeBO getFee(Short feeId) {

@@ -39,8 +39,6 @@ package org.mifos.framework.util.helpers;
 
 /**
  * This interface has all the constants used in the system.
- *  @author ashishsm
- *
  */
 public interface Constants {
 	public final static String DELEGATOR = "Delegator";

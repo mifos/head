@@ -49,9 +49,6 @@ import com.sun.xml.bind.marshaller.XMLWriter;
 
 /**
  * Implementation of {@link Marshaller} interface for JAXB RI.
- * 
- * @author Kohsuke Kawaguchi
- * @author Vivek Pandey
  */
 public class MarshallerImpl extends AbstractMarshallerImpl
 {

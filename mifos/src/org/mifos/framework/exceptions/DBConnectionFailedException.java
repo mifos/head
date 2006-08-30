@@ -39,9 +39,8 @@ package org.mifos.framework.exceptions;
 
 
 /**
- * This exception is thrown from the DAO when attempting to get the connection using the datasource fails.
- * @author ashishsm
- *
+ * This exception is thrown from the DAO when attempting to get 
+ * the connection using the datasource fails.
  */
 public class DBConnectionFailedException extends SystemException {
 

@@ -48,8 +48,6 @@ import org.mifos.framework.components.logger.MifosLogManager;
 
 /**
  * This class has got helper functions which could be called from jsp as part of jsp2.0 specifications.
- * @author navitas
- *
  */
 public class CustomerUIHelperFn {
 

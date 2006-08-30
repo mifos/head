@@ -40,11 +40,6 @@ package org.mifos.application.productdefinition.business;
 
 import org.mifos.framework.security.util.UserContext;
 
-
-/**
- * @author ashishsm
- *
- */
 public class InsuranceOfferingBO extends PrdOfferingBO {
 	public InsuranceOfferingBO(UserContext userContext) {
 		super(userContext);

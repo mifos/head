@@ -49,8 +49,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class acts as base class for all types of accounts.
- * @author ashishsm
- *
  */
 public class Account extends ValueObject{
 	

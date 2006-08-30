@@ -44,9 +44,7 @@ import org.apache.struts.action.ActionForward;
 /**
  * This class will hold the attributes for the current activity
  * which user want to perform in the system .User has to set the attributes
- * and the pass the same to the Authorization manager for verification  
- * @author rajenders
- *
+ * and the pass the same to the Authorization manager for verification
  */
 public class ActivityContext implements Serializable {
 	/**

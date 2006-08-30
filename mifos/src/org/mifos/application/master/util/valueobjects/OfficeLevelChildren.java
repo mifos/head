@@ -41,8 +41,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class represnt the office childern master data 
- * @author rajenders
- *
  */
 public class OfficeLevelChildren extends ValueObject
 {

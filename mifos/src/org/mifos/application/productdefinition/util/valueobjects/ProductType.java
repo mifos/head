@@ -43,16 +43,8 @@ import java.util.List;
 import org.mifos.application.master.util.valueobjects.LookUpValue;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
-
 public class ProductType extends ValueObject {
 	//-----------------------Constructors----------
-	/**
-	 * Default Constructor 
-	 */
 	public ProductType() {
 		super();
 		this.lookUpValue=new LookUpValue();

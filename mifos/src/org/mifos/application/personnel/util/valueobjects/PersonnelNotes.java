@@ -47,8 +47,6 @@ import org.mifos.application.personnel.util.helpers.PersonnelConstants;
  * This class is used as value object for the PersonnelNotesAction.
  * It represents the notes entered for a personnel.
  * It has a one to many association with the personnel. 
- * @author ashishsm
- *
  */
 public class PersonnelNotes extends ValueObject{
 

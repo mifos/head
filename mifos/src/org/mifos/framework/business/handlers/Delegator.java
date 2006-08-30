@@ -45,12 +45,10 @@ import org.mifos.framework.util.valueobjects.Context;
 
 
 /**
- * This is the class which is used to delegate calls from the action class to the respective businessprocessor.
- * @author ashishsm
- *
+ * This is the class which is used to delegate calls from the action class 
+ * to the respective businessprocessor.
  */
 public class Delegator {
-
 	
 	private String businessProcessorImplementation;
 

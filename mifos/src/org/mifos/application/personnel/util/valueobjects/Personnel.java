@@ -52,9 +52,8 @@ import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 	
 /**
  * This is the personnel valueobject which would be persisted in the database.
- * This is has got associations with other objects which are present in it as composition.
- * @author ashishsm
- *
+ * This is has got associations with other objects which are present in it as 
+ * composition.
  */
 public class Personnel extends ValueObject {
 	

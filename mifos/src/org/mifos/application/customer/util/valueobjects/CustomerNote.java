@@ -51,7 +51,6 @@ import org.mifos.application.customer.util.valueobjects.Customer;
  * A class that represents a row in the 'customer_note' table.
  * This class may be customized as it is never re-generated
  * after being created.
- * @author ashishsm
  */
 public class CustomerNote extends ValueObject{
    /**

@@ -40,18 +40,10 @@ package org.mifos.application.master.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class FreqOfDeposists extends ValueObject{
 	
-	/**
-	 * 
-	 */
 	public FreqOfDeposists() {
 		super();
-		
 	}
 	
 	/** The composite primary key value. */

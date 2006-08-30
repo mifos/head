@@ -40,20 +40,10 @@ package org.mifos.application.productdefinition.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class ProductStatus extends ValueObject {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1573453765466441L;
 
-	/**
-	 * 
-	 */
 	public ProductStatus() {
 		super();
 		// TODO Auto-generated constructor stub

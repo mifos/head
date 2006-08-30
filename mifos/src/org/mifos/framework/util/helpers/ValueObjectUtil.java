@@ -59,8 +59,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * Helper class which has methods to operate upon valueobjects.
- * @author ashishsm
- *
  */
 public class ValueObjectUtil {
 	

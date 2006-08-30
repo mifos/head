@@ -37,11 +37,8 @@
  */
 package org.mifos.application.admin.util.resources;
 
-/**
- * @author rajenders
- *
- */
 public interface AdminConstants {
+
 	public static final String ADMINDENDENCY="Admin";
 
 }

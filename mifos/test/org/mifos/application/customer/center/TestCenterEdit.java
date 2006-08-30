@@ -22,28 +22,19 @@ import org.mifos.framework.util.helpers.ResourceLoader;
 
 import servletunit.struts.MockStrutsTestCase;
 
-/**
- * @author mohammedn
- *
- */
 public class TestCenterEdit extends MockStrutsTestCase {
 
-	/**
-	 *
-	 */
 	public TestCenterEdit() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @param arg0
-	 */
 	public TestCenterEdit(String arg0) {
 		super(arg0);
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		try {

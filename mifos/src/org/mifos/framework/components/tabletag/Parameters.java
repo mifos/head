@@ -49,8 +49,6 @@ import org.mifos.framework.exceptions.TableTagException;
 
 /**
  * This class renders the value of parameters required for display name link.
- * @author rohitr
- * 
  */
 public class Parameters {
 

@@ -44,11 +44,8 @@ import javax.servlet.jsp.PageContext;
 import org.apache.struts.taglib.html.SelectTag;
 
 /**
- * 
  * Custom tag that represents an HTML select element, associated with a
  * bean property specified by our attributes.  
- * 
- * @author mohammedn
  */
 public class MifosMasterSelectTag extends SelectTag {
 

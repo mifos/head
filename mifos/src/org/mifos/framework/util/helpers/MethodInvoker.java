@@ -53,14 +53,10 @@ import org.mifos.framework.util.valueobjects.Context;
  * This is a helper class used to invoke methods by reflection.It has two variants of the same method:
  * One which throws exceptions if the specified method is not found 
  * and another which swallows the exception if the method is not found 
- * but both of these methods do throw the exception thrown by the underlying method which is invoked. 
- * @author ashishsm
- *
+ * but both of these methods do throw the exception thrown by the underlying 
+ * method which is invoked. 
  */
 public class MethodInvoker {
-
-	
-	
 	
 /**
  * Invokes the method specified on the object. It throws <code>MethodInvocationException</code> if the method we are trying to invoke is not available or inaccessible.

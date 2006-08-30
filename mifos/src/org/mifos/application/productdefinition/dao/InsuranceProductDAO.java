@@ -46,28 +46,18 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.valueobjects.Context;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class InsuranceProductDAO extends DAO {
 
-	/**
-	 * 
-	 */
 	public InsuranceProductDAO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
 	/** Create the insurance product instance.
-	 * @see org.mifos.framework.dao.DAO#create(org.mifos.framework.util.valueobjects.Context)
 	 */
+	@Override
 	public void create(Context context)throws SystemException,ApplicationException{
-		
 	}
-	
-
 	
 	/**
 	 * Checks if the product with the specified name already exists in the database.

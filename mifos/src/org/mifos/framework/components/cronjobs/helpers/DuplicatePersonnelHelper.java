@@ -38,24 +38,15 @@
 
 package org.mifos.framework.components.cronjobs.helpers ;
 
-import java.sql.Date;
 import java.util.Iterator;
 
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
-import org.mifos.application.customer.util.valueobjects.CustomerHierarchy;
 import org.mifos.framework.components.cronjobs.TaskHelper;
 import org.mifos.framework.components.cronjobs.valueobjects.TempTable;
 import org.mifos.framework.exceptions.HibernateProcessException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
-/**
- * @author krishankg
- *
- */
 public class DuplicatePersonnelHelper extends TaskHelper{
 
 	@Override

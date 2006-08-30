@@ -53,10 +53,6 @@ import org.mifos.application.customer.center.util.helpers.ValidateMethods;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.util.helpers.Constants;
 
-/**
- * @author rohitr
- * 
- */
 public class EditSavingsStatusActionForm extends AccountAppActionForm {
 
 	private static final long serialVersionUID = 1456L;

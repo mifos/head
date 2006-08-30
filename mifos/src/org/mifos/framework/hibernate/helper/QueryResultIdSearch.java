@@ -46,10 +46,7 @@ import org.mifos.application.customer.util.valueobjects.CustomerSearch;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.SystemException;
-/**
- * @author imtiyazmb
- *
- */
+
 public class QueryResultIdSearch extends QueryResultSearchDTOImpl {
 
 	java.util.List list = null ;

@@ -15,10 +15,6 @@ import org.mifos.framework.components.tabletag.TableTagConstants;
 import org.mifos.framework.struts.action.MifosBaseAction;
 import org.mifos.framework.util.helpers.SessionUtils;
 
-/**
- * @author rohitr
- *
- */
 public abstract class MifosSearchAction extends MifosBaseAction {
 	
 	public MifosSearchAction() {

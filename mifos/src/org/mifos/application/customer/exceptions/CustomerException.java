@@ -41,7 +41,6 @@ package org.mifos.application.customer.exceptions;
 import org.mifos.framework.exceptions.ApplicationException;
 /**
  * This is general exception for the customer(group/client/center)
- * @author navitas
  */
 public class CustomerException extends ApplicationException{
 	

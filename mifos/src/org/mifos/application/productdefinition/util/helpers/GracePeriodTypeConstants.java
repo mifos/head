@@ -41,8 +41,6 @@ package org.mifos.application.productdefinition.util.helpers;
 /**
  * This interface lists the grace period types in the system.
  * The values are same as that in the database.
- * @author ashishsm
- *
  */
 public interface GracePeriodTypeConstants {
 	public final Short NONE = 1;

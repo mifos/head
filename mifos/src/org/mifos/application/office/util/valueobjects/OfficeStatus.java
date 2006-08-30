@@ -43,8 +43,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class represent the office status 
- * @author rajenders
- *
  */
 public class OfficeStatus extends ValueObject
 {

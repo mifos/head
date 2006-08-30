@@ -41,7 +41,6 @@ package org.mifos.application.personnel.exceptions;
 import org.mifos.framework.exceptions.ApplicationException;
 /**
  * This is is thrown when personnel is already present in the database
- * @author navitas
  */
 public class DuplicateUserException extends ApplicationException{
 	

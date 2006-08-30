@@ -64,8 +64,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
  * query after it returns the results of the first query.
  * If there was an exception while retrieving the master data this object
  * should be discarded and a new object should be created.
- * @author ashishsm
- *
  */
 public class MasterDataRetriever {
 

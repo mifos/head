@@ -40,22 +40,14 @@ package org.mifos.application.accounts.loan.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class LoanPenalty extends ValueObject {
 
-	/**
-	 * 
-	 */
 	public LoanPenalty() {
 		super();
-		
 	}
 	
 	
-/** The composite primary key value. */
+    /** The composite primary key value. */
     private java.lang.Integer loanPenaltyId;
 
     /** The value of the loanAccount association. */

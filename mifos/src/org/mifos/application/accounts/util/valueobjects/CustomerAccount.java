@@ -38,18 +38,10 @@
 
 package org.mifos.application.accounts.util.valueobjects;
 
-/**
- * @author ashishsm
- *
- */
 public class CustomerAccount extends Account {
 
-	/**
-	 * 
-	 */
 	public CustomerAccount() {
 		super();
-		
 	}
 
 }

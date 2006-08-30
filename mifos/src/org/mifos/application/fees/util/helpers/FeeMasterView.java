@@ -40,10 +40,6 @@ package org.mifos.application.fees.util.helpers;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.business.View;
 
-/**
- * @author sumeethaec
- * 
- */
 public class FeeMasterView extends View {
 
 	private Short feeId;

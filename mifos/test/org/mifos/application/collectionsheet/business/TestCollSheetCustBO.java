@@ -52,10 +52,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-/**
- * @author ashishsm
- * 
- */
 public class TestCollSheetCustBO extends MifosTestCase {
 
 	private AccountBO accountBO;

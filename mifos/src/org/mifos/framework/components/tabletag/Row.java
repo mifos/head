@@ -46,15 +46,9 @@ import org.mifos.framework.exceptions.TableTagException;
 
 /**
  * This class renders the row to the table.
- * 
- * @author rohitr
- * 
  */
 public class Row {
 
-	/**
-	 * Default constructor
-	 */
 	public Row() {
 		super();
 	}

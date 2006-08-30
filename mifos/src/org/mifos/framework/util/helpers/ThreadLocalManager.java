@@ -41,9 +41,8 @@ package org.mifos.framework.util.helpers;
 
 /**
  * This is used to store values local to the thread .
- * This internally used InheritableThreadLocal so that all the values set for the parent thread are also available to the child threads.
- * @author ashishsm
- *
+ * This internally used InheritableThreadLocal so that all the 
+ * values set for the parent thread are also available to the child threads.
  */
 public class ThreadLocalManager {
 	

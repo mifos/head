@@ -47,8 +47,6 @@ import org.mifos.framework.exceptions.TableTagException;
 
 /**
  * This class renders the display name
- * @author rohitr
- * 
  */
 public class DisplayName {
 

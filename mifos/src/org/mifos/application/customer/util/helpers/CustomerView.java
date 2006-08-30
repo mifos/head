@@ -39,10 +39,6 @@ package org.mifos.application.customer.util.helpers;
 
 import org.mifos.framework.business.View;
 
-/**
- * @author sumeethaec
- * 
- */
 public class CustomerView extends View {
 
 	private Integer customerId;

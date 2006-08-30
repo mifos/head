@@ -39,9 +39,8 @@
 package org.mifos.application;
 
 /**
- * This class holds the names of named queries which are used for master data retrieval.
- * @author ashishsm
- *
+ * This class holds the names of named queries which are used for master data 
+ * retrieval.
  */
 public interface NamedQueryConstants {
 	// for fee (create fee)

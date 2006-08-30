@@ -67,7 +67,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 
 /**
  * This class is helper class for group module.
- * @author navitas
  */
 
 public class GroupHelper {

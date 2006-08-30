@@ -37,14 +37,8 @@
  */
 package org.mifos.framework.components.stateMachineFactory;
 
-import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 
-/**
- * @author rohitr
- *
- */
 public interface StateMachine {
 	
 	public void initialize(Short localeId, Short officeId, Short prdTypeId, Short levelId) throws StatesInitializationException;

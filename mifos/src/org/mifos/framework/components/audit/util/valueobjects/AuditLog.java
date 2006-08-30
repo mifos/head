@@ -46,7 +46,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 /**
  * Class that contains the changed module details and a collection of changed
  * fields
- * @author rajitha
  */
 
 public class AuditLog extends ValueObject {

@@ -54,15 +54,8 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DecimalFieldHelper;
 import org.mifos.framework.util.helpers.MethodInvoker;
 
-/**
- * @author ashishsm
- *
- */
 public class DecimalFormatValidatorCollection {
 	
-	/**
-	 * 
-	 */
 	public DecimalFormatValidatorCollection() {
 		super();
 		// TODO Auto-generated constructor stub

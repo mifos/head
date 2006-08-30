@@ -81,9 +81,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 
 /**
  * This class is the Action Form for the Loan Product Offering.
- * 
- * @author ashishsm
- * 
  */
 public class LoanProductActionForm extends MifosSearchActionForm {
 

@@ -40,18 +40,10 @@ package org.mifos.application.master.util.valueobjects;
 
 import java.util.Set;
 
-import org.mifos.application.customer.util.valueobjects.CustomFieldDefinition;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class LookUpEntity extends ValueObject {
 
-	/**
-	 *
-	 */
 	public LookUpEntity() {
 		super();
 		// TODO Auto-generated constructor stub

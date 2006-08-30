@@ -45,19 +45,11 @@ import org.mifos.framework.struts.actionforms.MifosActionForm;
 
 /**
  * This class might need to have list of value objects in it.
- * @author ashishsm
- *
  */
 public class AccountProcessFlowActionForm extends MifosActionForm {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 97784575656663211L;
 
-	/**
-	 * 
-	 */
 	public AccountProcessFlowActionForm() {
 		super();
 		// TODO Auto-generated constructor stub

@@ -71,10 +71,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.application.reports.business.ReportsJasperMap;
 /**
  * Control Class for Uploading Report
- * @author zankar
- *
  */
-
 
 public class ReportsUploadAction extends BaseAction{
 	 

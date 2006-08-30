@@ -84,7 +84,6 @@ import org.mifos.application.rolesandpermission.util.valueobjects.Role;
  * This denotes the action class for the personnel module. It uses the base class functions to create, update. 
  * In addition includes methods to loadSearch etc.
  * It also includes implementations for cancel and validate
- * @author navitas
  */
 public class PersonnelAction extends MifosSearchAction{
 	

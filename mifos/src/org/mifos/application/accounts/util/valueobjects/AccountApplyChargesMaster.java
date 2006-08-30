@@ -43,8 +43,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 /**
  * This class encpsulate the fee related information that we need to show on applycharges 
  * page 
- * @author rajenders
- *
  */
 public class AccountApplyChargesMaster extends ValueObject{
 	

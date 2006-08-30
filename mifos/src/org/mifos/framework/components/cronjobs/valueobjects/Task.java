@@ -39,14 +39,9 @@
 package org.mifos.framework.components.cronjobs.valueobjects;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author krishankg
- *
- */
 public class Task extends ValueObject{
 	
 	private Integer id;

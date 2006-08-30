@@ -1,40 +1,18 @@
 package org.mifos.framework.components.compression;
 
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.PropertyResourceBundle;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.Filter;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletRequest;
 import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-
+import javax.servlet.http.HttpServletResponse;
 
 /**
- * <p>
- * Title: RedirectFilter
- * </p>
- * 
- * <p>
  * Description: Filters all requests that are not coming thru controller
  * servlet.
- * </p>
- * 
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * 
- * <p>
- * Company: Aditi Technologies Pvt Ltd.
- * </p>
- * 
- * @author srinivasakv
- * @version 1.0
  */
 public class CompressFilter implements Filter {
 

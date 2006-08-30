@@ -38,10 +38,8 @@
 
 package org.mifos.framework.exceptions;
 
-import org.mifos.framework.exceptions.ApplicationException;
 /**
  * This is exception thrown by persistence clases.
- * @author navitas
  */
 public class ServiceException extends SystemException{
 	

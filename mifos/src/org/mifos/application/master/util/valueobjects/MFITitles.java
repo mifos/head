@@ -5,10 +5,6 @@ package org.mifos.application.master.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author sumeethaec
- *
- */
 public class MFITitles extends ValueObject {
 	private Integer titleId;
 	private String titleName;

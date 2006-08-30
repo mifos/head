@@ -44,18 +44,13 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 /**
  * This class acts as value object for loan summary.This is used to 
  * show values on detail page of a loan account and it maps to Loan_Summary table.
- * @author ashishsm
- *
  */
 public class LoanSummary extends ValueObject {
 	
-	/**
-	 * 
-	 */
 	public LoanSummary() {
 		super();
-		
 	}
+
 	private Integer accountId;
 	private Loan loan;
 	

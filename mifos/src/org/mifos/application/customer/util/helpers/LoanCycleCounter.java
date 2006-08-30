@@ -7,10 +7,6 @@ import java.io.Serializable;
 
 import org.mifos.framework.util.valueobjects.ReturnType;
 
-/**
- * @author ashishsm
- *
- */
 public class LoanCycleCounter  implements Serializable{
 
 	private String offeringName;

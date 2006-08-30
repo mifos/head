@@ -54,10 +54,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.valueobjects.Context;
 
-/**
- * @author ashishsm
- * 
- */
 public class FeesAction extends MifosBaseAction {
 
 	public FeesAction() {

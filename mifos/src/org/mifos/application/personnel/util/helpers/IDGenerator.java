@@ -39,9 +39,8 @@
 package org.mifos.application.personnel.util.helpers;
 
 /**
- * This class is used for ID generation based on the predefined algorithm for generating ids for the personnel.
- * @author ashishsm
- *
+ * This class is used for ID generation based on the predefined algorithm 
+ * for generating ids for the personnel.
  */
 public class IDGenerator {
 	

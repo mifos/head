@@ -45,7 +45,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class represent association between role and activities
- * @author rajenders
  */
 public class RoleActivity extends ValueObject{
 	

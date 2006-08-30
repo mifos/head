@@ -80,8 +80,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 
 /**
  * This class acts as DAO for edit client status module.
- * @author ashishsm
- *
  */
 public class EditClientStatusDAO extends DAO {
 

@@ -42,9 +42,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class encapsulate the MeetingRecurrence details
- * 
- * @author rajenders
- * 
  */
 public class MeetingRecurrenceEntity extends PersistentObject {
 

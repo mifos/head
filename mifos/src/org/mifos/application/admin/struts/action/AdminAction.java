@@ -40,15 +40,8 @@ package org.mifos.application.admin.struts.action;
 import org.mifos.application.admin.util.resources.AdminConstants;
 import org.mifos.framework.struts.action.MifosBaseAction;
 
-/**
- * @author rajenders
- *
- */
 public class AdminAction extends MifosBaseAction {
 
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.struts.action.MifosBaseAction#getPath()
-	 */
 	@Override
 	protected String getPath() {
 		return AdminConstants.ADMINDENDENCY;

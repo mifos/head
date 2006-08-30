@@ -28,8 +28,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.mifos.framework.exceptions.ResourceBundleNotFoundException;
-/**	@author sumeethaec
- *  Created Date: 02-08-05
+/**	
  *  This class is a singleton whose instance will return the resource bundle for a particular locale
  */ 
 

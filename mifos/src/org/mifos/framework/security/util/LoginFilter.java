@@ -59,8 +59,6 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 /**
- * @author rajenders
- * 
  * LoginFitter class fiter's all the request other then login page if user is
  * not login and forces user to login to mifos
  */

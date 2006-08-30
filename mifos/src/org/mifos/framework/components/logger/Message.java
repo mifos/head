@@ -24,8 +24,7 @@
  */
 package org.mifos.framework.components.logger;
 
-/**	@author sumeethaec
- *  Created Date: 28-07-05
+/**	
  *  This class represents the log message to be logged in case of a direct statement
  *  and not using a resource bundle.
  */

@@ -1,8 +1,6 @@
 package org.mifos.framework.components.scheduler;
 
 /**
- * @author navitas
- * Created on Aug 12, 2005
  * It is a common Interface to all scheudle data classes, needed by scheduler to generate schedules.
  */
 public interface ScheduleDataIntf {

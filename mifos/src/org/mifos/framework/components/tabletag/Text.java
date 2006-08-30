@@ -49,8 +49,6 @@ import org.mifos.framework.exceptions.TableTagException;
 
 /**
  * This class renders text if display name is text only.
- * @author rohitr
- * 
  */
 public class Text {
 

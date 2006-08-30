@@ -43,9 +43,6 @@ import org.mifos.framework.business.PersistentObject;
 
 /**
  * This class encapsulate the prd state
- * 
- * @author ashishsm
- * 
  */
 public class PrdStateEntity extends PersistentObject {
 

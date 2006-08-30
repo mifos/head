@@ -51,9 +51,6 @@ import org.mifos.framework.components.cronjobs.valueobjects.Task;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
-/**
- * @author krishankg
- */
 public class ProductStatusHelper extends TaskHelper {
 
 	@Override

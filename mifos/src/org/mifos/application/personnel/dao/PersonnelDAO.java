@@ -89,7 +89,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 
 /**
  * This class denotes the DAO layer for the Personnel module.
- * @author ashishsm
  */
 public class PersonnelDAO extends DAO {
 	/**An insatnce of the logger which is used to log statements */

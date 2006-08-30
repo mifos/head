@@ -39,10 +39,6 @@ package org.mifos.application.checklist.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.SearchResults;
 
-/**
- * @author imtiyazmb
- * 
- */
 public class CheckListSearchMaster extends SearchResults {
 
 	/**

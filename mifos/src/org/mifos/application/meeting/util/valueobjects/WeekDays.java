@@ -43,8 +43,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class encapsulate the weekDay
- * @author rajenders
- *
  */
 public class WeekDays extends ValueObject {
 	private static final long serialVersionUID = 5555555555l;

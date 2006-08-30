@@ -65,9 +65,6 @@ import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 /**
  * OfficeAction is the class which encapsulates all the struts action for the
  * office module
- * 
- * @author rajenders
- * 
  */
 public class OfficeAction extends MifosBaseAction {
 

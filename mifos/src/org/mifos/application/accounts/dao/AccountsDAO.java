@@ -48,26 +48,17 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.dao.DAO;
 import org.mifos.framework.exceptions.SystemException;
 
-/**
- * @author ashishsm
- *
- */
 public class AccountsDAO extends DAO {
 
-	/**
-	 * 
-	 */
 	public AccountsDAO() {
 		super();
-		
 	}
 	
 	/**
-	 * This retrieves the states which are currently in use.If there are no such states it returns null.
-	 * @return
-	 * @throws SystemException
+	 * This retrieves the states which are currently in use.
+	 * If there are no such states it returns null.
 	 */
-	public List getStatesCurrentlyInUse(Short prdTypeId)throws SystemException{
+	public List getStatesCurrentlyInUse(Short prdTypeId) throws SystemException {
 		List statesToReturn = null;
 		//preparing parametes to pass.
 		HashMap queryParameters = new HashMap();

@@ -41,9 +41,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This object would be used to keep the copy of some fields of the role object
- * 
- * @author rajenders
- * 
  */
 public class RoleSubObject extends ValueObject {
 

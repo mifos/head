@@ -63,8 +63,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
  * This class encapsulate all the business logic related to the managning roles
  * and permission module i.e. functionality related to creation updation of
  * roles and permission
- * 
- * @author rajenders
  */
 public class RolesandPermissionBusinessProcessor extends MifosBusinessProcessor {
 

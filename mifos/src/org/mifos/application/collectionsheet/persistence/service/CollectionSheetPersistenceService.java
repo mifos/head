@@ -49,10 +49,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.service.PersistenceService;
 
-/**
- * @author ashishsm
- *
- */
 public class CollectionSheetPersistenceService extends PersistenceService{
 	
 	CollectionSheetPersistence collectionSheetPersistence = new CollectionSheetPersistence();

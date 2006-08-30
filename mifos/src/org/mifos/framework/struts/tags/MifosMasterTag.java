@@ -48,8 +48,6 @@ import org.apache.struts.taglib.html.Constants;
  * Composite custom tag containing input types text,button and select. 
  * The values entered in text box are added to the select box
  * using add button. The values in the select box are editable using edit button.
- *  
- * @author mohammedn
  */
 public class MifosMasterTag extends BodyTagSupport {
 

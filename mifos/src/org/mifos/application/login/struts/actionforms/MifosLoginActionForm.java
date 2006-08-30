@@ -48,9 +48,6 @@ import org.mifos.framework.util.helpers.Constants;
 
 /**
  * This class is the ActionForm associated with the Login Action.
- * 
- * @author mohammedn
- * 
  */
 public class MifosLoginActionForm extends MifosActionForm {
 	

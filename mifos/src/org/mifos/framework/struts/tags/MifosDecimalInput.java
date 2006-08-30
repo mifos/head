@@ -48,7 +48,6 @@ import org.mifos.framework.util.helpers.LabelTagUtils;
  * MifosDecimalInput is custom input tag which takes only the decimal character
  * based on the user locale  .This tag uses two javascript files 
  * in which one is conversion file and another is userpreferredlocale file
- * @author imtiyazmb
  */
 public class MifosDecimalInput extends ELTextTag {
     

@@ -56,8 +56,6 @@ import org.mifos.framework.util.valueobjects.Context;
 /**
  * This is the business processor for the AccountNotes. 
  * It takes care of handling all the business logic for the AccountNotes module
- * @author ashishsm
- *
  */
 public class AccountNotesBusinessProcessor extends MifosBusinessProcessor {
 

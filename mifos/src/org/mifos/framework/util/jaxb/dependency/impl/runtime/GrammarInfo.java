@@ -13,9 +13,6 @@ import javax.xml.bind.JAXBException;
  * Keeps the information about the grammar as a whole.
  * 
  * Implementation of this interface is provided by the generated code.
- *
- * @author
- *  <a href="mailto:kohsuke.kawaguchi@sun.com">Kohsuke KAWAGUCHI</a>
  */
 public interface GrammarInfo
 {

@@ -62,12 +62,6 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
-/**
- * 
- * @author zankar
- *
- */
-
 public class ReportsPersistenceService extends PersistenceService {
 	
 	private ReportsPersistence reportsPersistence ;

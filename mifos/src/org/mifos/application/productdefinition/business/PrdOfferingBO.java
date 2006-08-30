@@ -52,9 +52,6 @@ import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 /**
  * This is main business object for product offering this is extended to loan
  * offering or saving offering
- * 
- * @author ashishsm
- * 
  */
 public class PrdOfferingBO extends BusinessObject {
 

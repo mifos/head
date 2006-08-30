@@ -41,8 +41,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class represent the custom fields for the office
- * @author rajenders
- *
  */
 public class OfficeCustomField extends ValueObject {
 	private static final long serialVersionUID = 66666l;

@@ -44,8 +44,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class acts as a value object for editing group membership of a client.
- * @author ashishsm
- *
  */
 public class EditGrpMembership extends ValueObject {
 

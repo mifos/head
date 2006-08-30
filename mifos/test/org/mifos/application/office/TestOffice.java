@@ -3,11 +3,6 @@
  */
 package org.mifos.application.office;
 
-/**
- * @author krishankg
- *
- */
-
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,8 +20,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
 
 import servletunit.struts.MockStrutsTestCase;
-
-
 
 public class TestOffice extends MockStrutsTestCase{
 

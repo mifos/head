@@ -44,18 +44,13 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 
 /**
- * This class has one method validate which validates the double value against the format passed. 
- * @author ashishsm
- *
+ * This class has one method validate which validates the double value 
+ * against the format passed. 
  */
 public class DecimalFieldHelper {
 
-	/**
-	 * 
-	 */
 	public DecimalFieldHelper() {
 		super();
-		
 	}
 	
 	/**

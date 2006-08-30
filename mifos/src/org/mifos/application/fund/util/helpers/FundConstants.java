@@ -37,10 +37,7 @@
  */
 
 package org.mifos.application.fund.util.helpers;
-/**
- * @author imtiyazmb
- *
- */
+
 public interface FundConstants {	
 	public static final String GLCODELIST="glCodeList";
 	public final String FUNDSPATH = "funds";

@@ -64,15 +64,9 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 /**
  * This class is used to make the databse related calls in the creation and update of
  * product category.
- * 
- * @author mohammedn
- * 
  */
 public class ProductCategoryDAO extends DAO {
 
-	/**
-	 * Default Constructor
-	 */
 	public ProductCategoryDAO() {
 	}
 

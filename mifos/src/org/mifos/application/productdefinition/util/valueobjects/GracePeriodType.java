@@ -40,16 +40,8 @@ package org.mifos.application.productdefinition.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-
-/**
- * @author ashishsm
- *
- */
 public class GracePeriodType extends ValueObject{
 
-	/**
-	 * default constructor
-	 */
 	public GracePeriodType() {
 		super();
 	}

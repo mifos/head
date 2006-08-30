@@ -38,10 +38,6 @@
 
 package org.mifos.application.accounts.util.helpers;
 
-/**
- * @author ashishsm
- *
- */
 public interface AccountStates {
 
 	public final short CUSTOMERACCOUNT_ACTIVE = 11;

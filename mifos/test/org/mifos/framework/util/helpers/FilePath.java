@@ -40,9 +40,8 @@ package org.mifos.framework.util.helpers;
 /**
  * This interface has all file paths defined as constants.
  * These paths are relative to the context of the application.
- * So any body who wants to access an file should get the relative path from this file.
- * @author ashishsm
- *
+ * So any body who wants to access an file should get the 
+ * relative path from this file.
  */
 public interface FilePath {
 

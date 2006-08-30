@@ -39,14 +39,8 @@ package org.mifos.application.accounts.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author mohammedn
- *
- */
 public class ClosedAccSearch extends ValueObject {
-	/**
-	 * default constructor
-	 */
+
 	public ClosedAccSearch() {
 	}
 	

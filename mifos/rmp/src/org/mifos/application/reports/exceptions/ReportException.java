@@ -43,7 +43,6 @@ package org.mifos.application.reports.exceptions;
 import org.mifos.framework.exceptions.ApplicationException;
 /**
  * This is general exception for the report
- * @author zankar
  */
 public class ReportException extends ApplicationException{
 	

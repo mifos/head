@@ -44,9 +44,6 @@ import org.apache.struts.taglib.html.BaseFieldTag;
 
 /**
  * Custom tag for input fields of type "text"
- * 
- * @author mohammedn
- * 
  */
 public class MifosMasterTextTag extends BaseFieldTag {
 	

@@ -35,9 +35,6 @@ import com.sun.xml.bind.util.AttributesImpl;
  * 
  * This object converts SAX events into unmarshaller events and
  * cooridnates the entire unmarshalling process.
- *
- * @author
- *  <a href="mailto:kohsuke.kawaguchi@sun.com">Kohsuke KAWAGUCHI</a>
  */
 public class SAXUnmarshallerHandlerImpl
     implements SAXUnmarshallerHandler, UnmarshallingContext

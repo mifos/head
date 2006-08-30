@@ -41,24 +41,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * It is returned by the (@link XMLReader} whenever <code>getElement()</code> method is invoked on it.
+ * It is returned by the (@link XMLReader} whenever <code>getElement()</code> 
+ * method is invoked on it.
  * It wraps the elements read from the xml in hashmap.
- * @author ashishsm
- *
  */
 public class MifosNode {
-	
 	
 	/**
 	 * It stores the elements obtained by reading the xml files as key value pairs.
 	 */
 	protected Map nodes = new HashMap(); 
 	
-	/**
-	 * 
-	 */
 	public MifosNode(){
-		
 	}
 	
 	/**
@@ -69,11 +63,7 @@ public class MifosNode {
 		this.nodes = nodes;
 	}
 	
-	
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	@Override
 	public String toString(){
 		return "org.mifos.framework.util.helpers.Node";
 	}
@@ -90,8 +80,6 @@ public class MifosNode {
 	 * Puts elements in the existing hashmap of elements as key value pairs.
 	 * It puts the element key in lower case, so that retrieval can be case-insensitive .
 	 * So if two elements have the same key which differ only in case the first key would be lost as it would be overridden by the last entry.
-	 * @param key
-	 * @param value
 	 */
 	public void putElement(String key,String value){
 		nodes.put(key.toLowerCase(), value);

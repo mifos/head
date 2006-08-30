@@ -38,26 +38,20 @@
 
 package org.mifos.application.fees.util.valueobjects;
 
-import org.mifos.application.master.util.valueobjects.LookUpEntity;
-import org.mifos.framework.util.valueobjects.ValueObject;
-import java.util.*;
+import java.util.Set;
 
-/**
- * @author ashishsm
- *
- */
+import org.mifos.framework.util.valueobjects.ValueObject;
+
 public class FeeFormula extends ValueObject {
 
 	public FeeFormula() {
 	}
-
 	
 	private Short feeFormulaId;
 
 	private Integer lookUpId;
 
 	private Set lookUpValueLocale;
-
 	
 	public Short getFeeFormulaId() {
 		return feeFormulaId;

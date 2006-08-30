@@ -41,10 +41,6 @@ package org.mifos.framework.components.cronjobs.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author krishankg
- *
- */
 public class TempTable extends ValueObject{
 	
 	private Short id;

@@ -106,8 +106,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 /**
  * This denotes the action class for the center module. It uses the base class functions of create, update. In addition
  * it includes methods to update status, to load center search pages, and implementations for preview, cancel and validate
- * @author sumeethaec
- *
  */
 public class CenterAction extends MifosSearchAction{
 

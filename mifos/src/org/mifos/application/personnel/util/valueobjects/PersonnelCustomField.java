@@ -41,9 +41,8 @@ package org.mifos.application.personnel.util.valueobjects;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
- * This object has the values for a personnel's custom fields.This has an association with the personnel object.  
- * @author ashishsm
- *
+ * This object has the values for a personnel's custom fields.
+ * This has an association with the personnel object.  
  */
 public class PersonnelCustomField extends ValueObject{
 

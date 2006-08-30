@@ -64,8 +64,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 
 /**
  * This class is used as BusinessProcessor to search for customers.
- * @author ashishsm
- *
  */
 
 public class CustomerSearchBusinessProcessor extends MifosBusinessProcessor {

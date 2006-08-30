@@ -49,8 +49,6 @@ import org.mifos.framework.struts.action.MifosBaseAction;
 
 /**
  * This class is used as Action for viewing all closed accounts of a customer.
- * @author ashishsm
- *
  */
 public class ViewClosedAccountsAction extends MifosBaseAction {
 	

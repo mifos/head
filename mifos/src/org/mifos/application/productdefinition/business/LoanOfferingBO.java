@@ -45,19 +45,13 @@ import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.util.valueobjects.Currency;
 import org.mifos.application.master.util.valueobjects.InterestCalcRule;
-import org.mifos.application.master.util.valueobjects.InterestTypes;
 import org.mifos.application.master.util.valueobjects.YesNoMaster;
 import org.mifos.application.penalty.util.valueobjects.Penalty;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.security.util.UserContext;
 
-/**
- * @author ashishsm
- * 
- */
 public class LoanOfferingBO extends PrdOfferingBO {
-
 
 	private GracePeriodTypeEntity gracePeriodType;
 

@@ -44,9 +44,6 @@ import org.mifos.framework.business.PersistentObject;
 /**
  * This class acts as value object for LoanOfferingFund. This denotes the funds
  * for loan offering.
- * 
- * @author ashishsm
- * 
  */
 public class LoanOfferingFundEntity extends PersistentObject {
 

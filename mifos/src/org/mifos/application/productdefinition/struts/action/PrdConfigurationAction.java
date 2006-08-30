@@ -50,15 +50,9 @@ import org.mifos.framework.struts.action.MifosBaseAction;
 /**
  * This class is the Action for Product configuration.It contains method to delegate to the
  * business processor and then to forward the response to the specified pages.
- * 
-* @author ashishsm
-* 
-*/
+ */
 public class PrdConfigurationAction extends MifosBaseAction {
 
-	/**
-	 *default constructor 
-	 */
 	public PrdConfigurationAction() {
 	}
 

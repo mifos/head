@@ -44,9 +44,10 @@ import org.mifos.application.rolesandpermission.util.valueobjects.Role;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
- * This represents the roles assigned to a personnel.This is mapped as entity type in the database and have a one to many association with the personnel and also one to many association with th roles.
- * @author ashishsm
- *
+ * This represents the roles assigned to a personnel.
+ * This is mapped as entity type in the database and have 
+ * a one to many association with the personnel and also 
+ * one to many association with th roles.
  */
 public class PersonnelRole extends ValueObject{
 

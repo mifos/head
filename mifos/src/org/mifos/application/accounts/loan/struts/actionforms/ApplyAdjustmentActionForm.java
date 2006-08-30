@@ -12,10 +12,6 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.struts.actionforms.MifosActionForm;
 import org.mifos.framework.util.helpers.Constants;
 
-/**
- * @author krishankg
- *
- */
 public class ApplyAdjustmentActionForm extends MifosActionForm{
 
 	private String accountId;

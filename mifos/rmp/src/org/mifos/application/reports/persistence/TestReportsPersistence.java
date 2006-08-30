@@ -55,8 +55,6 @@ import org.mifos.framework.security.util.UserContext;
 
 /**
  * This class hosts the test cases for ReportsPersistence.
- * @author zankar
- *
  */
 public class TestReportsPersistence extends TestCase {
 	

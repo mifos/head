@@ -3,15 +3,8 @@
  */
 package org.mifos.framework.components.tabletag;
 
-/**
- * @author rohitr
- *
- */
 public class Fragment {
 
-	/**
-	 * 
-	 */
 	public Fragment() {
 	}
 	

@@ -39,9 +39,8 @@
 package org.mifos.framework.exceptions;
 
 /**
- * This Exception is thrown when the Action class tries to create a searchObject and fails to do so.
- * @author ashishsm
- *
+ * This Exception is thrown when the Action class tries to create a 
+ * searchObject and fails to do so.
  */
 public class SearchObjectNotCreatedException extends
 		ResourceNotCreatedException {

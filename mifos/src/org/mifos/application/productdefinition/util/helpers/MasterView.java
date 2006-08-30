@@ -44,9 +44,6 @@ import org.mifos.framework.business.View;
  * need only certain details of the object hence instead of loading the entire
  * object we can load only this object using a query. E.g. yes no master we are
  * storing id of yes and locale specifice string represent the yes
- * 
- * @author mohammedn
- * 
  */
 public class MasterView extends View {
 

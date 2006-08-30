@@ -58,9 +58,6 @@ import org.mifos.framework.security.util.ActivityContext;
  * Exception handler per action class which will again extend from this
  * MifosExceptionHandler . In this class the methods are overridden to perform
  * the custom exception handling.
- * 
- * @author ashishsm
- * 
  */
 public class MifosExceptionHandler extends ExceptionHandler {
 

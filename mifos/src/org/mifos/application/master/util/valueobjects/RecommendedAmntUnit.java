@@ -40,20 +40,10 @@ package org.mifos.application.master.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class RecommendedAmntUnit extends ValueObject{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 54325334253453241L;
 
-	/**
-	 * 
-	 */
 	public RecommendedAmntUnit() {
 	}
 	

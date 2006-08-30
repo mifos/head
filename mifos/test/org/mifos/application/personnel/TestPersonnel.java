@@ -15,7 +15,6 @@ import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.util.valueobjects.EntityMaster;
 import org.mifos.application.office.util.valueobjects.Office;
 import org.mifos.application.personnel.util.valueobjects.Personnel;
-import org.mifos.application.productdefinition.util.valueobjects.ProductCategory;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -25,28 +24,17 @@ import org.mifos.framework.util.valueobjects.Context;
 
 import servletunit.struts.MockStrutsTestCase;
 
-/**
- * @author mohammedn
- *
- */
 public class TestPersonnel extends MockStrutsTestCase {
 
-	/**
-	 *
-	 */
 	public TestPersonnel() {
 		super();
-
 	}
 
-	/**
-	 * @param testName
-	 */
 	public TestPersonnel(String testName) {
 		super(testName);
-
 	}
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		try {
@@ -72,6 +60,7 @@ public class TestPersonnel extends MockStrutsTestCase {
 		request.getSession(false).setAttribute(LoginConstants.ACTIVITYCONTEXT,ac);
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}

@@ -4,8 +4,6 @@ import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
 /**
- * @author navitas
- * Created on Aug 12, 2005
  * Factory to generate SchedulerException class instances.
  */
 public class SchedulerExceptionFactory {

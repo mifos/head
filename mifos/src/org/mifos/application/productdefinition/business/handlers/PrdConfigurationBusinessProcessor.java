@@ -53,15 +53,9 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 /**
  * This class contains the business logic related to configuration  of the 
  * products.
- * 
- * @author mohammedn
- * 
  */
 public class PrdConfigurationBusinessProcessor extends MifosBusinessProcessor {
 
-	/**
-	 * Default Constructor
-	 */
 	public PrdConfigurationBusinessProcessor() {
 	}
 

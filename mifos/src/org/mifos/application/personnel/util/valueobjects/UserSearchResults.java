@@ -40,9 +40,8 @@ package org.mifos.application.personnel.util.valueobjects;
 import java.io.Serializable;
 
 /**
- * This obect denotes instance of search result, that will be obtained after user search.  
- * @author navitas
- *
+ * This obect denotes instance of search result, that will be obtained 
+ * after user search.  
  */
 public class UserSearchResults implements Serializable{
 	

@@ -42,8 +42,6 @@ import org.mifos.framework.struts.actionforms.MifosActionForm;
 
 /**
  * This class is used as ActionForm for Applying Charges for customers.
- * @author ashishsm
- *
  */
 public class ApplyChargesActionForm extends MifosActionForm {
 

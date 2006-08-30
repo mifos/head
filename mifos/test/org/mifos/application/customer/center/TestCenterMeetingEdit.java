@@ -10,7 +10,6 @@ import org.hibernate.Session;
 import org.mifos.application.customer.center.util.valueobjects.Center;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
-import org.mifos.application.personnel.util.valueobjects.Personnel;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -18,32 +17,20 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
 
 import servletunit.struts.MockStrutsTestCase;
-/**
- *
- */
 
-/**
- * @author mohammedn
- *
- */
 public class TestCenterMeetingEdit extends MockStrutsTestCase {
 
-	/**
-	 *
-	 */
 	public TestCenterMeetingEdit() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @param arg0
-	 */
 	public TestCenterMeetingEdit(String arg0) {
 		super(arg0);
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		try {

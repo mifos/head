@@ -38,39 +38,23 @@
 
 package org.mifos.framework.exceptions;
 
-/**
- * @author ashishsm
- *
- */
 public class MasterDataRetrieverException extends ApplicationException {
 
-	/**
-	 * 
-	 */
 	public MasterDataRetrieverException() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @param values
-	 */
 	public MasterDataRetrieverException(Object[] values) {
 		super(values);
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @param cause
-	 */
 	public MasterDataRetrieverException(Throwable cause) {
 		super(cause);
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @param key
-	 */
 	public MasterDataRetrieverException(String key) {
 		super(key);
 		// TODO Auto-generated constructor stub

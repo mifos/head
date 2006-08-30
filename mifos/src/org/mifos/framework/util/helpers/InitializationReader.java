@@ -47,15 +47,10 @@ import org.mifos.framework.util.jaxb.initialization.ParameterType;
 
 /**
  * This class is used to read Initialization.xml
- * @author ashishsm
- *
  */
 public class InitializationReader extends XMLReader {
 
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.util.helpers.XMLReader#getElement(java.io.File, java.lang.String)
-	 */
-	
+	@Override
 	public MifosNode getElement(File f, String elementName) throws XMLReaderException{
 		Object rootNode = null;
 		Initialization initializations = null;

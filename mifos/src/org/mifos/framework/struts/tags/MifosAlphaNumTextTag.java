@@ -51,10 +51,7 @@ import org.mifos.framework.util.helpers.LabelTagUtils;
 /**
  * Custom tag for input fields of type "text". The tag allows only AlphaNumeric 
  * values of the Locale
- *
- * @author mohammedn
- * 
-*/
+ */
 public class MifosAlphaNumTextTag extends ELTextTag {
 	
 	/**

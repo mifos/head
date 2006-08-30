@@ -50,9 +50,6 @@ import javax.servlet.jsp.tagext.*;
 /**
  * Custom tag for input fields of type "img". The tag 
  * selects properties file according to the attribute mentioned in the tag.  
-
- * @author imtiyazmb
- * @version 1.0
  */
 
 public class MifosImageTag extends TagSupport

@@ -46,10 +46,6 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
- * @author ashishsm
- *
- */
-/**
  * A class that represents a row in the 'fees' table.
  * This class may be customized as it is never re-generated
  * after being created.

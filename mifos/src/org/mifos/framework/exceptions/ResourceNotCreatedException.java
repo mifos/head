@@ -41,9 +41,8 @@ package org.mifos.framework.exceptions;
 import org.mifos.framework.exceptions.SystemException;
 
 /**
- * This exception is thrown whenever we try to create an instance of a resource and unable to do so.
- * @author ashishsm
- *
+ * This exception is thrown whenever we try to create an instance of a resource 
+ * and unable to do so.
  */
 public class ResourceNotCreatedException extends SystemException {
 

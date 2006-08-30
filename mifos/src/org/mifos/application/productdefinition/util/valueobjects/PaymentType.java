@@ -40,15 +40,8 @@ package org.mifos.application.productdefinition.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class PaymentType extends ValueObject{
 
-	/**
-	 * 
-	 */
 	public PaymentType() {
 		super();
 	}

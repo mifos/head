@@ -51,8 +51,6 @@ import org.mifos.framework.exceptions.XMLReaderException;
 
 /**
  * This class is used to read the xml using JAXB.
- * @author ashishsm
- *
  */
 public abstract class XMLReader {
 	

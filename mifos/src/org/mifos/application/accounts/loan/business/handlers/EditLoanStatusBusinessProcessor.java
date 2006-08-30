@@ -74,8 +74,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 
 /**
  * This class acts as businessProcessor for creating/updating loan accounts.
- * @author ashishsm
- *
  */
 
 public class EditLoanStatusBusinessProcessor extends MifosBusinessProcessor{

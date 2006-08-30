@@ -25,9 +25,8 @@
 package org.mifos.framework.components.logger;
 import java.util.Locale;
 
-/**	@author sumeethaec
- *  Created Date: 17-08-05
- *  Class contains functions to to obtain values common across an application 
+/**	
+ * Functions to to obtain values common across an application 
  */
 public class ApplicationConfig {
 

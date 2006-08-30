@@ -59,8 +59,6 @@ import org.mifos.application.rolesandpermission.util.valueobjects.Role;
 
 /**
  * This class is used as helper class to personnel component
- * @author ashishsm
- *
  */
 public class PersonnelHelper {
 	

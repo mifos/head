@@ -40,10 +40,6 @@ package org.mifos.application.fees.business;
 import org.mifos.application.fees.util.helpers.FeeLevel;
 import org.mifos.framework.business.PersistentObject;
 
-/**
- * @author Krishankg
- * 
- */
 public class FeeLevelEntity extends PersistentObject {
 
 	private final Short feeLevelId;

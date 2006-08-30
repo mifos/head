@@ -41,7 +41,6 @@ package org.mifos.application.personnel.exceptions;
 import org.mifos.framework.exceptions.ApplicationException;
 /**
  * This is is thrown when personnel transfer across difrent office is not possible
- * @author navitas
  */
 public class TransferNotPossibleException extends ApplicationException{
 	

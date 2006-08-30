@@ -3,10 +3,6 @@
  */
 package org.mifos.framework.struts.plugin.valueObjects;
 
-/**
- * @author krishankg
- *
- */
 public class EntityMaster {
 	
 	private Short id;

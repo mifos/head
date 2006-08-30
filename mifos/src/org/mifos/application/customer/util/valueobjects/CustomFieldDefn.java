@@ -5,10 +5,6 @@ package org.mifos.application.customer.util.valueobjects;
 
 import org.mifos.application.master.util.valueobjects.LookUpEntity;
 
-/**
- * @author sumeethaec
- *
- */
 public class CustomFieldDefn {
 
 	/**Denotes the field Id which identifes the custom field definition*/

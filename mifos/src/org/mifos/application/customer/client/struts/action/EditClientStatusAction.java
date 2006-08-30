@@ -62,8 +62,6 @@ import org.mifos.framework.util.valueobjects.Context;
 
 /**
  * This class acts as Action for edit client status module.
- * @author ashishsm
- *
  */
 public class EditClientStatusAction extends MifosBaseAction {
 /**An insatnce of the logger which is used to log statements */

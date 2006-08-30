@@ -74,10 +74,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 
-/**
- * @author ashishsm
- * 
- */
 public class MifosRequestProcessor extends TilesRequestProcessor {
 
 	private ActivityContext setActivityContextFromRequest(

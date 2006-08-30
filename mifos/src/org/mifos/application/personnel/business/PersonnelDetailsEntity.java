@@ -46,9 +46,6 @@ import org.mifos.framework.business.util.Name;
 
 /**
  * This obect has values for extra fields of a personnel.
- * 
- * @author ashishsm
- * 
  */
 public class PersonnelDetailsEntity extends PersistentObject {
 

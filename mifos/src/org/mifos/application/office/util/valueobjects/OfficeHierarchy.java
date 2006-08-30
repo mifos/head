@@ -44,8 +44,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class is value object for the officeHierarchy
- * @author rajenders
- *
  */
 public class OfficeHierarchy extends ValueObject{
 	private static final long serialVersionUID=666666666666l;

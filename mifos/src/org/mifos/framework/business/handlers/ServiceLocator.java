@@ -44,11 +44,8 @@ import org.mifos.framework.exceptions.ResourceNotCreatedException;
 /**
  * ServiceLocator is used to return the BusinessProcessor object corresponding
  * to the path passed as parameter to the getBusinessProcessor() method. 
- * @author ashishsm
- * 
  */
 public interface ServiceLocator {
-
 	
 	/**
 	 * Returns the object of class which implements the BusinessProcessor interface.

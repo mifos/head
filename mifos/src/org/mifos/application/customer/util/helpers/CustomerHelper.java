@@ -103,7 +103,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 /**
  * This class is a helper class to customer (i.e. client/group/center).
  * This includes commom methods for customer that can be used by client,group or center.
- * @author navitas
  */
 
 public class CustomerHelper {

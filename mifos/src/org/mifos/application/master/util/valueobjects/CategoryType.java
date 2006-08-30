@@ -40,15 +40,8 @@ package org.mifos.application.master.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class CategoryType extends ValueObject{
 
-	/**
-	 * 
-	 */
 	public CategoryType() {
 		super();
 		// TODO Auto-generated constructor stub

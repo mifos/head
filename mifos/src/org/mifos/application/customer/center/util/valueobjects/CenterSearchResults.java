@@ -5,10 +5,6 @@ package org.mifos.application.customer.center.util.valueobjects;
 
 import java.io.Serializable;
 
-/**
- * @author sumeethaec
- *
- */
 public class CenterSearchResults implements Serializable {
 	/**Denotes the office id on which the search is conducted*/
 	private short parentOfficeId;

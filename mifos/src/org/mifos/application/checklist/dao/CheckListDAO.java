@@ -71,9 +71,6 @@ import org.mifos.framework.util.valueobjects.Context;
 /**
  * CheckListDAO contains code for getting master data and setter methods for
  * CheckList Module
- * 
- * @author imtiyazmb 
- * 
  */
 
 public class CheckListDAO extends DAO {

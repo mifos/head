@@ -40,10 +40,6 @@ package org.mifos.application.fees.util.helpers;
 
 import org.mifos.framework.business.View;
 
-/**
- * @author Krishankg
- *
- */
 public class ViewFeesView extends View {
 
 	private Short feeId;

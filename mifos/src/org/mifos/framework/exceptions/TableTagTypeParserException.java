@@ -3,16 +3,10 @@
  */
 package org.mifos.framework.exceptions;
 
-/**
- * @author rohitr
- *
- */
 public class TableTagTypeParserException extends SystemException {
 	
 	private static final long serialVersionUID = 17456575695856234L;
-	/**
-	 * 
-	 */
+
 	public TableTagTypeParserException() {
 		super();
 		// TODO Auto-generated constructor stub

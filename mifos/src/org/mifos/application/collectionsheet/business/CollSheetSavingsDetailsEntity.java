@@ -49,11 +49,6 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 
-
-/**
- * @author ashishsm
- *
- */
 public class CollSheetSavingsDetailsEntity extends PersistentObject {
 
 	CollectionSheetPersistenceService collSheetPersistService;

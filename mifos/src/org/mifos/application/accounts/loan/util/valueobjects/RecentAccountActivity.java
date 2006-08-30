@@ -47,21 +47,14 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class is used to show recent account activity on loan account details page.
- * @author ashishsm
- *
  */
 
 
 public class RecentAccountActivity extends ValueObject {
 
-	/**
-	 * 
-	 */
 	public RecentAccountActivity() {
 		super();
-		
 	}
-	
 	
 	/**
 	 * This constructor is used to create the object through named query.

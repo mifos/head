@@ -4,11 +4,10 @@ import java.util.List;
 import java.util.Date;
 
 /**
- * @author navitas
- * Created on Aug 12, 2005
  * Returns different schedules based on day/week/month recurrence.
  * It is a scheduler interface to user.
- * It delegates method calls to DayScheduler, WeekScheduler or MonthScheduler based on the type of recurrence choosed.
+ * It delegates method calls to DayScheduler, WeekScheduler or 
+ * MonthScheduler based on the type of recurrence choosed.
  */
 
 public interface SchedulerIntf {

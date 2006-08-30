@@ -32,10 +32,6 @@ import javax.servlet.http.HttpServletResponseWrapper;
 /**
  * Implementation of <b>HttpServletResponseWrapper</b> that works with
  * the CompressionServletResponseStream implementation..
- *
- * @author Amy Roh
- * @author Dmitri Valdin
- * @version $Revision: 1.3 $, $Date: 2004/03/18 16:40:33 $
  */
 
 public class CompressionServletResponseWrapper extends HttpServletResponseWrapper {
@@ -251,7 +247,6 @@ public class CompressionServletResponseWrapper extends HttpServletResponseWrappe
 
     /**
      * Returns character from content type. This method was taken from tomcat.
-     * @author rajo
      */
     private static String getCharsetFromContentType(String type) {
 

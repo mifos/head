@@ -3,10 +3,6 @@
  */
 package org.mifos.framework.components.audit.util.helpers;
 
-/**
- * @author krishankg
- *
- */
 public class EntityName {
 	
 	String name=null;

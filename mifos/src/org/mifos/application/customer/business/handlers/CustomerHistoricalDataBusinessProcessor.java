@@ -59,7 +59,6 @@ import org.mifos.application.personnel.util.valueobjects.Personnel;
 /** 
  *  This is the business processor for the Customer Historical Data module. 
  *  It takes care of handling all the business logic related to customer historical data
- *  @author navitas
  */
 public class CustomerHistoricalDataBusinessProcessor extends MifosBusinessProcessor {
 

@@ -45,9 +45,6 @@ import org.apache.struts.taglib.html.ButtonTag;
 
 /**
  * Renders an HTML BUTTON tag within the Struts framework.
- * 
- * @author mohammedn
- * 
  */
 public class MifosMasterButtonTag extends ButtonTag {
 

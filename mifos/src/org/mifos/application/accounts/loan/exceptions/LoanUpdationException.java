@@ -41,9 +41,8 @@ package org.mifos.application.accounts.loan.exceptions;
 import org.mifos.framework.exceptions.ApplicationException;
 
 /**
- * This exception is thrown whenever there is an hibernate exception while updating the loan account.
- * @author ashishsm
- *
+ * This exception is thrown whenever there is an hibernate exception while 
+ * updating the loan account.
  */
 public class LoanUpdationException extends ApplicationException {
 

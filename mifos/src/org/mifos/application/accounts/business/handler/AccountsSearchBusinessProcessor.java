@@ -52,8 +52,6 @@ import org.mifos.framework.util.valueobjects.Context;
 
 /**
  * This class business logic related to the accounts
- * @author rajenders
- *
  */
 public class AccountsSearchBusinessProcessor extends MifosBusinessProcessor {
 	

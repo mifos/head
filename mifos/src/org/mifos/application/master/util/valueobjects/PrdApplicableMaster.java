@@ -40,20 +40,11 @@ package org.mifos.application.master.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class PrdApplicableMaster extends ValueObject {
-	/**
-	 * 
-	 */
+
 	public PrdApplicableMaster() {
 	}
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 633657567657864781L;
 	
 /** The composite primary key value. */

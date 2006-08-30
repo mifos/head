@@ -61,8 +61,6 @@ import junit.framework.TestCase;
 
 /**
  * This class hosts the test cases for ReportsBusinessService.
- * @author zankar
- *
  */
 public class TestReportsBusinessService extends TestCase {
 	

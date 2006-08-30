@@ -39,14 +39,8 @@ package org.mifos.application.accounts.struts.actionforms;
 
 import org.mifos.framework.struts.actionforms.MifosSearchActionForm;
 
-/**
- * @author mohammedn
- *
- */
 public class ClosedAccSearchActionForm extends MifosSearchActionForm {
-	/**
-	 * default constructor
-	 */
+
 	public ClosedAccSearchActionForm() {
 	}
 	

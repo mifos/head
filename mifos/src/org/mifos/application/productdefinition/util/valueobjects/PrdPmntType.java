@@ -40,17 +40,8 @@ package org.mifos.application.productdefinition.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-
-
-/**
- * @author ashishsm
- *
- */
 public class PrdPmntType extends ValueObject{
 
-	/**
-	 * 
-	 */
 	public PrdPmntType() {
 		super();
 		// TODO Auto-generated constructor stub

@@ -39,8 +39,6 @@
 package org.mifos.framework.components.mifosmenu;
 
 /**
- * @author navitas
- * Created on Sep 05, 2005
  * It stores a left menu for a top row menu tab.
  */
 public class Menu {

@@ -28,11 +28,6 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 
-
-/**
- * @author krishankg
- *
- */
 public class AccountAppAction extends BaseAction {
 
 	AccountBusinessService accountBusinessService=null;

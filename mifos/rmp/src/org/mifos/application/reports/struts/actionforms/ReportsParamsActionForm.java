@@ -48,9 +48,6 @@ import org.mifos.framework.util.helpers.Constants;
 
 /**
  * This class is the ActionForm associated with the ReportParams Action.
- * 
- * @author zankar
- * 
  */
 public class ReportsParamsActionForm extends MifosActionForm {
 	

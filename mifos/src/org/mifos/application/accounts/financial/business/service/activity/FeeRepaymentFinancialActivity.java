@@ -44,10 +44,6 @@ import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.financial.business.service.activity.accountingentry.BaseAccountingEntry;
 import org.mifos.application.accounts.financial.business.service.activity.accountingentry.FeesAccountingEntry;
 
-/**
- * @author rajenders
- *
- */
 public class FeeRepaymentFinancialActivity extends BaseFinancialActivity {
 
 	public FeeRepaymentFinancialActivity(AccountTrxnEntity accountTrxn) {

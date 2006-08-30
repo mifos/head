@@ -62,9 +62,6 @@ import org.mifos.framework.business.util.helpers.MethodNameConstants;
 /**
  * CheckListActionForm class contains all getter and setter methods for
  * CheckList Module
- * 
- * @author imtiyazmb
- * 
  */
 
 public class CheckListActionForm extends ValidatorActionForm {

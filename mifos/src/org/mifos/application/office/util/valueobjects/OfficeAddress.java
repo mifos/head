@@ -42,8 +42,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class represent the address for the office
- * @author rajenders
- *
  */
 public class OfficeAddress extends ValueObject {
 	private static final long serialVersionUID= 888888888888l;

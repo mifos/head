@@ -82,7 +82,6 @@ import org.mifos.framework.util.valueobjects.Context;
 /**
  * This class denotes the form bean for the group.
  * It consists of the fields for which the user inputs values
- * @author navitas
  */
 public class GroupActionForm extends MifosSearchActionForm{
 	

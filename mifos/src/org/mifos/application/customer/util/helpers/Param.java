@@ -37,11 +37,6 @@
  */
 package org.mifos.application.customer.util.helpers;
 
-
-/**
- * @author imtiyazmb
- *
- */
 public class Param {
 	private String  paramType ;
 	

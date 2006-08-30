@@ -44,10 +44,6 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.util.helpers.Status;
 import org.mifos.framework.business.PersistentObject;
 
-/**
- * @author sumeethaec
- * 
- */
 public class CustomerMovementEntity extends PersistentObject {
 
 	private final Integer customerMovementId;

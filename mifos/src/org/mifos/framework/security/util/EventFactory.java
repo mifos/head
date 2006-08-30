@@ -40,10 +40,6 @@ package org.mifos.framework.security.util;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 
-/**
- * @author rajenders
- *
- */
 public class EventFactory {
 	/**
 	 * This would hold the EventFactory instance

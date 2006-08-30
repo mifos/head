@@ -42,11 +42,6 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 
-/**
- * @author ashishsm
- * 
- */
-
 public class CategoryTypeEntity extends MasterDataEntity {
 
 	protected CategoryTypeEntity() {

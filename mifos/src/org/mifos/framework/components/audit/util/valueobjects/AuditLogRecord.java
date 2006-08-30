@@ -45,7 +45,6 @@ import java.util.Iterator;
 
 /**
  * Class which contains the details of the audited field.
- * @author rajitha
  */
 public class AuditLogRecord {
 

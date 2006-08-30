@@ -42,9 +42,6 @@ import org.mifos.framework.business.PersistentObject;
 
 /**
  * This class represents the each prd status
- * 
- * @author ashishsm
- * 
  */
 public class PrdStatusEntity extends PersistentObject {
 

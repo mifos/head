@@ -42,9 +42,7 @@
 package org.mifos.framework.struts.tags;
 
 /**
- * @author rajenders
  * class RawButton represent the html button on the screen 
- * 
  */
 public class RawButton {
 	/**

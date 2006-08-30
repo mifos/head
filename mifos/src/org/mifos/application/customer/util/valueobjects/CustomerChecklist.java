@@ -5,10 +5,6 @@ package org.mifos.application.customer.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author sumeethaec
- *
- */
 public class CustomerChecklist extends ValueObject {
 	private int checklistId;
 	private String text;

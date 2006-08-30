@@ -57,7 +57,6 @@ import org.mifos.application.customer.util.valueobjects.CustomerNote;
 
 /**
  * This class denotes the DAO layer for the CustomerNote module.
- * @author navitas
  */
 public class CustomerNoteDAO extends DAO {
 	

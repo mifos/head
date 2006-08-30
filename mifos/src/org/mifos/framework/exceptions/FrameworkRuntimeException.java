@@ -41,8 +41,6 @@ import org.mifos.framework.util.helpers.ExceptionConstants;
 
 /**
  * This class is a RunTimeException for the framework.
- * @author ashishsm
- *
  */
 public class FrameworkRuntimeException extends RuntimeException {
 /** 

@@ -5,10 +5,6 @@ package org.mifos.application.accounts.loan.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author krishankg
- *
- */
 public class Adjustment extends ValueObject {
 	
 	private Integer accountId;

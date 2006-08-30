@@ -65,8 +65,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 /**
  * This class is for role and permission action it is get called for managing
  * the roles and permission
- * 
- * @author rajenders
  */
 public class RolesandPermissionAction extends MifosBaseAction {
 

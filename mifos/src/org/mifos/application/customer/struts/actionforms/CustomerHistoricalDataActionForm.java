@@ -51,7 +51,6 @@ import org.mifos.framework.util.helpers.Money;
 /**
  * This class denotes the form bean for the CustomerHistoricalData.
  * It consists of the fields for which the user inputs values
- * @author navitas
  */
 public class CustomerHistoricalDataActionForm extends MifosActionForm{
 	

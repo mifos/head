@@ -60,8 +60,6 @@ import org.mifos.framework.util.helpers.Constants;
 
 /**
  * Authenticator class performs the authentication for the user
- * 
- * @author rajenders
  */
 public class Authenticator {
 	private static final Authenticator authenticator = new Authenticator();

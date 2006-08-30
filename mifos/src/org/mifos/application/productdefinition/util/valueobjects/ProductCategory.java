@@ -43,10 +43,6 @@ import java.sql.Date;
 import org.mifos.application.master.util.valueobjects.PrdCategoryStatus;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class ProductCategory extends ValueObject {
 
 	//-----------------------Instance Variables----------

@@ -42,9 +42,6 @@ package org.mifos.application.customer.center.util.helpers;
  * This class is used to generate the global customer number or the system id for the customer.The global customer 
  * number for a customer is a combination of the globalcustomer number of the office to which the customer belongs,
  * its level and the max count of the number of customers under that office
- * 
- * @author sumeethaec
- *
  */
 public class IdGenerator {
 	

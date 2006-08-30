@@ -61,9 +61,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 /**
  * This class hosts the test cases for CustomerBusinessService.
- * 
- * @author ashishsm
- * 
  */
 public class TestCustomerBusinessService extends MifosTestCase {
 	private CustomerBO center;

@@ -20,9 +20,6 @@ import com.sun.xml.bind.validator.Locator;
 /**
  * Receives errors through {@link ErrorHandler} and reports to the
  * {@link SAXUnmarshallerHandler}.
- * 
- * @author
- *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public class ErrorHandlerAdaptor implements ErrorHandler {
     

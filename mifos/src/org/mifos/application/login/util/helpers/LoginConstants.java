@@ -3,10 +3,6 @@
  */
 package org.mifos.application.login.util.helpers;
 
-/**
- * @author mohammedn
- *
- */
 public interface LoginConstants {
 	
 	public String FIRSTLOGIN="login_success_first";

@@ -44,8 +44,6 @@ import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 
 /**
  * This class is used to generate the officeGlobel no for the new office for the 
- * @author rajenders
- *
  */
 public class OfficeIDGenerator {
 	

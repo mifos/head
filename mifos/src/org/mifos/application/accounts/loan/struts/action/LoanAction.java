@@ -42,8 +42,6 @@ import org.mifos.framework.util.valueobjects.Context;
 
 /**
  *  This class is the Action class for creating/updating loan accounts.
- *  @author amt
- *
  */
 
 public class LoanAction extends AccountAction{

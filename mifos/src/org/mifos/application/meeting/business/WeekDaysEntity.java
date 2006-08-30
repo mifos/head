@@ -46,9 +46,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class encapsulate the weekDay
- * 
- * @author rajenders
- * 
  */
 public class WeekDaysEntity extends PersistentObject {
 	

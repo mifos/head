@@ -40,8 +40,6 @@ package org.mifos.application.accounts.util.helpers;
 
 /**
  * This class gives path constants for accounts modules.
- * @author ashishsm
- *
  */
 public interface PathConstants {
 	public final String LOANACCOUNTSPATH = "loanAccounts";

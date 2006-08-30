@@ -11,8 +11,6 @@ package org.mifos.framework.util.jaxb.dependency.impl.runtime;
 /**
  * Generated classes have to implement this interface for it
  * to be unmarshallable.
- * 
- * @author      Kohsuke KAWAGUCHI
  */
 public interface UnmarshallableObject
 {

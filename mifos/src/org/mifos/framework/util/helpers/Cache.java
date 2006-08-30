@@ -44,10 +44,6 @@ import org.mifos.framework.components.tabletag.TableTagConstants;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 
-/**
- * @author rohitr
- *
- */
 public class Cache {
 
 	/** Variable to hold the data with key-value pair */

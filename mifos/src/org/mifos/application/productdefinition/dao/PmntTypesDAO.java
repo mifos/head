@@ -47,15 +47,8 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.valueobjects.Context;
 import org.mifos.framework.util.valueobjects.SearchResults;
 
-/**
- * @author ashishsm
- *
- */
 public class PmntTypesDAO extends DAO {
 
-	/**
-	 * 
-	 */
 	public PmntTypesDAO() {
 		super();
 		// TODO Auto-generated constructor stub

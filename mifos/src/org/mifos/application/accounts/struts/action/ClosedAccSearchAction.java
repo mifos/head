@@ -52,15 +52,8 @@ import org.mifos.framework.struts.action.MifosSearchAction;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 
-/**
- * @author mohammedn
- *
- */
 public class ClosedAccSearchAction extends MifosSearchAction {
 
-	/**
-	 * default constructor
-	 */
 	public ClosedAccSearchAction() {
 	}
 

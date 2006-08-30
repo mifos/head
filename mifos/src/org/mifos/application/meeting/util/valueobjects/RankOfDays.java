@@ -43,8 +43,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class would encapsulate the rank for a given day
- * @author rajenders
- *
  */
 public class RankOfDays extends ValueObject {
 	private static final long serialVersionUID = 44l;

@@ -45,10 +45,7 @@ import org.mifos.application.master.util.valueobjects.InterestCalcRule;
 import org.mifos.application.master.util.valueobjects.InterestTypes;
 import org.mifos.application.penalty.util.valueobjects.Penalty;
 import org.mifos.framework.util.helpers.Money;
-/**
- * @author ashishsm
- *
- */
+
 public class LoanOffering extends PrdOffering {
 	
 	/**

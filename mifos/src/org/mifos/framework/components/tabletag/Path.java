@@ -37,15 +37,8 @@
  */
 package org.mifos.framework.components.tabletag;
 
-/**
- * @author rohitr
- *
- */
 public class Path {
 
-	/**
-	 * 
-	 */
 	public Path() {
 		super();
 		// TODO Auto-generated constructor stub

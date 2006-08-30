@@ -35,9 +35,6 @@ import com.sun.xml.bind.validator.SAXLocator;
  * <p>
  * This class can be extended by the generated code to provide
  * type-safe unmarshall methods.
- *
- * @author
- *  <a href="mailto:kohsuke.kawaguchi@sun.com">Kohsuke KAWAGUCHI</a>
  */
 public class UnmarshallerImpl extends AbstractUnmarshallerImpl
 {

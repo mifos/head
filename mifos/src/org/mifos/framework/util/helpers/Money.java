@@ -51,9 +51,6 @@ import org.mifos.framework.components.configuration.business.Configuration;
  * deals with only one currency but later it can be extended to handle currency
  * conversions while performing operations.This is an immutable class as the
  * money object is not supposed to be modified .
- * 
- * @author ashishsm
- * 
  */
 public final class Money implements Serializable {
 

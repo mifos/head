@@ -53,9 +53,6 @@ import org.mifos.framework.util.helpers.Constants;
 /**
  * FundActionForm class contains all getter and setter methods for
  * Fund Module
- * 
- * @author imtiyazmb
- * 
  */
 
 public class FundActionForm extends MifosActionForm {	

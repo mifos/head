@@ -39,19 +39,17 @@
 package org.mifos.framework.struts.tags;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
+
 import org.apache.struts.taglib.TagUtils;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 
 
 /**
- * @author rohitr This class renders the listbox with anchors in it on
- *         screen
- * @version 1.0
- * @since   1.5
+ * This class renders the listbox with anchors in it on screen
  */
 
 public class MifosListBox extends BodyTagSupport {

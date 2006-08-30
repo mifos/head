@@ -87,10 +87,6 @@ import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.util.valueobjects.Context;
 import org.mifos.framework.util.valueobjects.SearchResults;
 
-/**
- * @author sumeethaec
- *
- */
 public class CenterBusinessProcessor extends MifosBusinessProcessor {
 	/**An insatnce of the logger which is used to log statements */
 	private  MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CENTERLOGGER);

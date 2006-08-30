@@ -98,11 +98,6 @@ import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.valueobjects.Context;
 import org.mifos.framework.util.valueobjects.SearchResults;
 
-
-/**
- * @author sumeethaec
- *
- */
 public class CenterDAO extends DAO {
 	/**An insatnce of the logger which is used to log statements */
 	private MifosLogger logger =MifosLogManager.getLogger(LoggerConstants.CENTERLOGGER);

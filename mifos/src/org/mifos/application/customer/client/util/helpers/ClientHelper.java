@@ -59,10 +59,6 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.DAOFactory;
 
-/**
- * @author sumeethaec
- *
- */
 public class ClientHelper {
 	public static int calculateAge(String userDateOfBirth , Locale locale){
 

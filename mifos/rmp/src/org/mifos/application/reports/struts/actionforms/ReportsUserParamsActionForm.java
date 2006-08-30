@@ -48,30 +48,18 @@ import org.mifos.framework.util.helpers.Constants;
 
 /**
  * This class is the ActionForm associated with the ReportParams Action.
- * 
- * @author zankar
- * 
  */
 public class ReportsUserParamsActionForm extends MifosActionForm {
 	
-	
-	
-	/**
-	 * Default constructor
-	 */
 	public ReportsUserParamsActionForm() {
 		super();
 	}
-
-	
 	
 	private int reportId;
 	private String applPath;
 	private String expFormat;
 	private String expFileName;
 
-    
-	
 	/**
 	 * The reset method is used to reset all the values to null.
 	 * @see org.apache.struts.validator.ValidatorForm#reset(org.apache.struts.action.ActionMapping,

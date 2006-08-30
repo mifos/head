@@ -39,8 +39,6 @@
 package org.mifos.framework.components.mifosmenu;
 
 /**
- * @author navitas
- * Created on Aug 12, 2005
  * Interface to hold constants used in Menu Handler.
  */
 public interface MenuConstants{

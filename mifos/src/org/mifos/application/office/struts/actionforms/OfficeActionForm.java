@@ -70,9 +70,6 @@ import org.mifos.framework.util.valueobjects.Context;
 /**
  * This class represents the action form for the office module it contains all
  * important fields for the office
- * 
- * @author rajenders
- * 
  */
 public class OfficeActionForm extends MifosActionForm {
 

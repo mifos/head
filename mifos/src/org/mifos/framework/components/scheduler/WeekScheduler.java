@@ -4,8 +4,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * @author navitas
- * Created on Aug 12, 2005
  * Generates schedules based on week recurrence.
  * To generate schedule dates it works on scheduleInputs which wraps WeekData instance, startDate, endDate and occurrences. 
  */

@@ -5,20 +5,10 @@ package org.mifos.application.productdefinition.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author mohammedn
- *
- */
 public class AccountProcessFlow extends ValueObject {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 6542679008754641L;
 
-	/**
-	 * 
-	 */
 	public AccountProcessFlow() {
 		super();
 		// TODO Auto-generated constructor stub

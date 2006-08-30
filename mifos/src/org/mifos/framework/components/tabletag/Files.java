@@ -37,15 +37,8 @@
  */
 package org.mifos.framework.components.tabletag;
 
-/**
- * @author rohitr
- *
- */
 public class Files {
 	private FileName[] fileName;
-	/**
-	 * Default constructor
-	 */
 	public Files() {
 	}
 

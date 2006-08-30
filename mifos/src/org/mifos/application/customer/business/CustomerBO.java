@@ -76,8 +76,6 @@ import org.mifos.framework.util.helpers.StringUtils;
 
 /**
  * A class that represents a customer entity after being created.
- * 
- * @author navitas
  */
 public abstract class CustomerBO extends BusinessObject {
 

@@ -66,10 +66,6 @@ import org.mifos.application.personnel.util.valueobjects.PersonnelCustomField;
 import org.mifos.application.personnel.util.valueobjects.PersonnelDetails;
 import org.mifos.application.personnel.util.valueobjects.PersonnelLevel;
 
-/**
- * @author ashishsm
- *
- */
 public class PersonnelActionForm extends MifosSearchActionForm{
 	
 	/** The personnel details object for the personnel */

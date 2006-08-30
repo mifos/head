@@ -83,8 +83,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 
 /**
  * This class acts as a DAO for editing group membership of a client.
- * @author ashishsm
- *
  */
 public class EditGrpMembershipDAO extends DAO {
 

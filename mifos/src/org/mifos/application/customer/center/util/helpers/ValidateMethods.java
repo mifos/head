@@ -41,8 +41,6 @@ package org.mifos.application.customer.center.util.helpers;
 /**
  * This class contains methods which can be used to validate certain fields. Contsins methods to check if a particuar value 
  * is either null or blank
- * @author sumeethaec
- *
  */
 public class ValidateMethods {
 	

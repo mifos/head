@@ -42,8 +42,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class depicts the different account types.
- * @author ashishsm
- *
  */
 public class AccountType extends ValueObject {
 

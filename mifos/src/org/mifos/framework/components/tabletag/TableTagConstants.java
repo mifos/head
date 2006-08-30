@@ -37,10 +37,6 @@
  */
 package org.mifos.framework.components.tabletag;
 
-/**
- * @author rohitr
- * 
- */
 public interface TableTagConstants {
 	
 	public static final String TABLE = "table";

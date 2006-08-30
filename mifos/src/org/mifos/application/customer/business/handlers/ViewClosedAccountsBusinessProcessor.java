@@ -45,8 +45,6 @@ import org.mifos.framework.util.valueobjects.Context;
 
 /**
  * This class is used as BusinessProcessor for viewing all closed accounts of a customer.
- * @author ashishsm
- *
  */
 public class ViewClosedAccountsBusinessProcessor extends MifosBusinessProcessor {
 

@@ -3,10 +3,6 @@
  */
 package org.mifos.framework.exceptions;
 
-/**
- * @author rohitr
- *
- */
 public class TableTagException extends ApplicationException {
 	
 	public TableTagException() {
@@ -20,17 +16,11 @@ public class TableTagException extends ApplicationException {
 		super(th);
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.exceptions.ApplicationException#getKey()
-	 */
 	@Override
 	public String getKey() {
 		return "exception.framework.TableTagException";
 	}
 
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.exceptions.ApplicationException#getValues()
-	 */
 	@Override
 	public Object[] getValues() {
 		// TODO Auto-generated method stub

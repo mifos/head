@@ -42,8 +42,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 /**
  * This office exception is thrown when we have duplicate office name 
  * or office short name 
- * @author rajenders
- *
  */
 public class DuplicateOfficeException extends ApplicationException {
 	private static final long serialVersionUID=0l;

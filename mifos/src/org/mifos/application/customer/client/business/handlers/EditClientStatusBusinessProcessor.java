@@ -78,8 +78,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 
 /**
  * This class acts as Business Processor for edit client status module.
- * @author ashishsm
- *
  */
 public class EditClientStatusBusinessProcessor extends MifosBusinessProcessor {
 /**An insatnce of the logger which is used to log statements */

@@ -39,8 +39,6 @@ package org.mifos.framework.security.util;
 
 /**
  * This class encapsulate the officechange event
- * @author rajenders
- *
  */
 public class OfficeChangeEvent implements SecurityEvent {
 

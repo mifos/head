@@ -46,15 +46,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.framework.struts.action.MifosBaseAction;
 
-/**
- * @author ashishsm
- *
- */
 public class PaymentTypesAction extends MifosBaseAction {
 
-	/**
-	 * 
-	 */
 	public PaymentTypesAction() {
 		super();
 		// TODO Auto-generated constructor stub

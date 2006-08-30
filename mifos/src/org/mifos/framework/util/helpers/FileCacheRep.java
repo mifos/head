@@ -8,10 +8,6 @@ import java.util.Map;
 
 import org.mifos.framework.components.tabletag.Table;
 
-/**
- * @author rohitr
- *
- */
 public class FileCacheRep {
 	private Map<String,Table> fileCache=null; 
 	
@@ -19,9 +15,7 @@ public class FileCacheRep {
 	public static FileCacheRep getInstance() {
 		return cacheRep;
 	}
-	/**
-	 * 
-	 */
+
 	private FileCacheRep() {
 		fileCache=new HashMap<String,Table>();
 	}

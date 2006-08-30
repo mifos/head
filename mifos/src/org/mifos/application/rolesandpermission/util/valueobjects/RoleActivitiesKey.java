@@ -45,8 +45,6 @@ import java.io.Serializable;
 
 /**
  * Key for roleActivity class
- * @author rajenders
- * 
  */
 public class RoleActivitiesKey implements Serializable {
 

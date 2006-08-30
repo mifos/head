@@ -27,10 +27,9 @@ package org.mifos.framework.components.logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.helpers.PatternParser;
 /**
- * This class extends from the pattern layout. This class overrides the createPatternParser method which returns an instance
+ * This class extends from the pattern layout. This class overrides the 
+ * createPatternParser method which returns an instance
  * of the MifosPatternParser.
- * @author sumeethaec
- *
  */
 public class MifosPatternLayout extends PatternLayout {
 	/**

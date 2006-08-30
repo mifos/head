@@ -1,8 +1,6 @@
 package org.mifos.framework.components.scheduler;
 
 /**
- * @author navitas
- * Created on Aug 12, 2005
  * It holds and validate data related to month recurrence.
  */
 public class MonthData extends ScheduleData {

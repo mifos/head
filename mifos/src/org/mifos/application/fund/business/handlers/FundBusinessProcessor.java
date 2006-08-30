@@ -55,8 +55,6 @@ import org.mifos.framework.util.valueobjects.Context;
 
 /**
  * FundBusinessProcessor contains the business logic for funds
- * @author imtiyazmb
- *
  */
 
 public class FundBusinessProcessor extends MifosBusinessProcessor {

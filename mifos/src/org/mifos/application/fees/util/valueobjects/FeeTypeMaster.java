@@ -40,15 +40,8 @@ package org.mifos.application.fees.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class FeeTypeMaster extends ValueObject {
 
-	/**
-	 * 
-	 */
 	public FeeTypeMaster() {
 		super();
 		// TODO Auto-generated constructor stub

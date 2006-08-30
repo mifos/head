@@ -67,9 +67,6 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 /**
  * This class encupsulate all the funcionality requied by security module to
  * perform its duties i.e getting the list of activityroles etc
- * 
- * @author rajenders
- * 
  */
 
 public class SecurityHelper {

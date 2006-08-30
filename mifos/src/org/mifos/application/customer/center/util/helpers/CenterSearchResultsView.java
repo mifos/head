@@ -5,10 +5,6 @@ package org.mifos.application.customer.center.util.helpers;
 
 import java.io.Serializable;
 
-/**
- * @author sumeethaec
- *
- */
 public class CenterSearchResultsView implements Serializable {
 
 	private short parentOfficeId;

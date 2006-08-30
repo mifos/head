@@ -38,44 +38,29 @@
 
 package org.mifos.framework.exceptions;
 
-/**
- * @author ashishsm
- *
- */
 public class HibernateSystemException extends SystemException {
 
-	/**
-	 *
-	 */
 	public HibernateSystemException() {
 		super();
 
 	}
 
-	/**
-	 * @param cause
-	 */
 	public HibernateSystemException(Throwable cause) {
 		super(cause);
 
 	}
 
-	/**
-	 * @param values
-	 */
 	public HibernateSystemException(Object[] values) {
 		super(values);
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @param values
-	 * @param cause
-	 */
 	public HibernateSystemException(Object[] values, Throwable cause) {
 		super(values, cause);
 		// TODO Auto-generated constructor stub
 	}
+
+	@Override
 	public String getKey(){
 		return "exception.framework.SystemException.HibernateConnectionException";
 	}

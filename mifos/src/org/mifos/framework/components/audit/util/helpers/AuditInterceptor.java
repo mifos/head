@@ -38,20 +38,16 @@
 
 package org.mifos.framework.components.audit.util.helpers;
 
-import java.lang.String;
-import java.lang.Object;
+import java.io.Serializable;
+import java.sql.Date;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.config.ModuleConfig;
 import org.hibernate.EntityMode;
-import org.hibernate.HibernateException;
 import org.hibernate.Interceptor;
-import org.hibernate.Query;
-import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.metadata.ClassMetadata;
-import org.hibernate.proxy.HibernateProxy;
-import org.hibernate.proxy.LazyInitializer;
 import org.hibernate.type.Type;
 import org.mifos.framework.components.audit.dao.AuditLogDAO;
 import org.mifos.framework.components.audit.util.valueobjects.AuditLog;
@@ -59,28 +55,8 @@ import org.mifos.framework.components.audit.util.valueobjects.AuditLogRecord;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.exceptions.HibernateProcessException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
-import org.mifos.framework.struts.plugin.valueObjects.EntityMaster;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 
-import java.sql.Date;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.io.Serializable;
-import java.util.Iterator;
-import java.lang.Boolean;
-
-/**
- * @author krishankg
- *
- */
 public class AuditInterceptor implements Interceptor {
 
 	private LogInfo logInfo = null;

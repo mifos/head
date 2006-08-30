@@ -42,8 +42,6 @@ import java.io.Serializable;
 
 /**
  * This class is helper class that keeps data when group is transferred across office.
- * @author navitas
- *
  */
 public class GroupTransferInput implements Serializable{
 	

@@ -29,10 +29,6 @@ import org.mifos.application.accounts.struts.action.TestEditStatusAction;
 import org.mifos.application.accounts.struts.action.TestNotesAction;
 import org.mifos.framework.MifosTestSuite;
 
-/**
- * @author krishankg
- *
- */
 public class AccountTestSuite extends MifosTestSuite {
 	
 	AccountTestSuite() throws Exception{

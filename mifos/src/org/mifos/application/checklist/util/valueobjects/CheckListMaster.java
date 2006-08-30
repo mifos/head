@@ -40,10 +40,6 @@ package org.mifos.application.checklist.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author imtiyazmb
- *
- */
 public class CheckListMaster extends ValueObject {
 
 	/**

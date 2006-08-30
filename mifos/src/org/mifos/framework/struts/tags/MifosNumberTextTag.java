@@ -48,9 +48,6 @@ import org.mifos.framework.util.helpers.LabelTagUtils;
 /**
  * Custom tag for input fields of type "text". The tag allows only Numeric 
  * values of the Locale
- * 
- * @author mohammedn
- * 
  */
 public class MifosNumberTextTag extends ELTextTag {
 	

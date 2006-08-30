@@ -48,13 +48,8 @@ import org.mifos.framework.util.helpers.Constants;
 
 /**
  * This class is the ActionForm associated with the Reports Upload Action.
- * 
- * @author zankar
- * 
  */
 public class ReportsUploadActionForm extends MifosActionForm {
-	
-	
 	
 	/**
 	 * Default constructor
@@ -62,9 +57,5 @@ public class ReportsUploadActionForm extends MifosActionForm {
 	public ReportsUploadActionForm() {
 		super();
 	}
-
-	
-	
 	
 }
-

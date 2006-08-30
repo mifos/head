@@ -43,9 +43,6 @@ import java.util.Date;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.PersistentObject;
 
-/**
- * @author navitas
- */
 public class CustomerNoteEntity extends PersistentObject {
 
 	private final Integer commentId;

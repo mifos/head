@@ -14,8 +14,6 @@ import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.accounts.util.valueobjects.AccountFees;
-import org.mifos.application.accounts.util.valueobjects.CustomerAccount;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
@@ -27,10 +25,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-/**
- * @author krishankg
- *
- */
 public class TestAccountPersistence extends TestAccount {			
 	
 	private AccountPersistence accountPersistence=new AccountPersistence();

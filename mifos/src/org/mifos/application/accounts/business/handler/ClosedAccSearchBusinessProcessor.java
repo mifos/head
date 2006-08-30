@@ -64,10 +64,6 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.valueobjects.Context;
 import org.mifos.framework.util.valueobjects.SearchResults;
 
-/**
- * @author mohammedn
- *
- */
 public class ClosedAccSearchBusinessProcessor extends MifosBusinessProcessor {
 
 	/**

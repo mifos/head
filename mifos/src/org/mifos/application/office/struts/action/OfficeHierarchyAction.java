@@ -51,8 +51,6 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 /**
  * This class represent the office hierarchy action it is used to
  * configure and unconfigure the officeLevels in the system
- * @author rajenders
- *
  */
 public class OfficeHierarchyAction extends MifosBaseAction {
 

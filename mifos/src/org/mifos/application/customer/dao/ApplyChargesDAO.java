@@ -46,8 +46,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 
 /**
  * This class is used as DAO for Applying Charges for customers.
- * @author ashishsm
- *
  */
 public class ApplyChargesDAO extends DAO {
 

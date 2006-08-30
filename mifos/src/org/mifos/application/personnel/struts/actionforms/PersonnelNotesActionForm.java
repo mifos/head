@@ -50,7 +50,6 @@ import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 /**
  * This class denotes the form bean for the Personnel Note.
  * It consists of the fields for which the user inputs values
- * @author navitas
  */
 public class PersonnelNotesActionForm extends MifosSearchActionForm{
 	

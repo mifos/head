@@ -39,10 +39,6 @@ package org.mifos.application.accounts.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author rajenders
- *
- */
 public class AccountSearch extends ValueObject {
 	private static final long serialVersionUID =222l;
 	private String input;

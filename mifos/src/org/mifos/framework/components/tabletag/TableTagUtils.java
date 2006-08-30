@@ -52,8 +52,6 @@ import org.mifos.framework.util.helpers.LabelTagUtils;
 
 /**
  * This class renders the utility functions.
- * @author rohitr
- *
  */
 
 public class TableTagUtils {

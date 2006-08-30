@@ -61,8 +61,6 @@ import org.mifos.application.reports.business.ReportsParams;
 import org.mifos.application.reports.business.ReportsParamsValue;
 /**
  * Control Class for Report Params 
- * @author zankar
- *
  */
 public class ReportsParamsAction extends BaseAction {
 	

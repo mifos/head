@@ -46,14 +46,10 @@ import org.mifos.framework.util.jaxb.dependency.DependencyType;
 
 /**
  * Reads the Dependency.xml file.
- * @author ashishsm
- *
  */
 public class DependenciesReader extends XMLReader {
 	
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.util.helpers.XMLReader#getElement(java.io.File, java.lang.String)
-	 */
+	@Override
 	public MifosNode getElement(File f, String elementName)throws XMLReaderException {
 		Object rootNode = null;
 		Dependencies dependencies = null;

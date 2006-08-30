@@ -42,11 +42,6 @@ import org.mifos.application.master.util.valueobjects.LookUpEntity;
 import org.mifos.framework.util.valueobjects.ValueObject;
 import java.util.Set;
 
-/**
- * @author ashishsm
- *
- */
-
 public class CategoryType extends ValueObject {
 
 	public CategoryType() {

@@ -52,8 +52,6 @@ import org.mifos.framework.components.logger.MifosLogManager;
 
 /**
  * This tag class is used to display header links on the loan account related pages
- * @author ashishsm
- *
  */
 public class LoanHeaderTag extends TagSupport {
 

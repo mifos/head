@@ -62,9 +62,6 @@ import org.mifos.framework.util.helpers.Money;
 
 /**
  * This class acts as action form for loan accounts.
- * 
- * @author ashishsm
- * 
  */
 public class LoanActionForm extends AccountActionForm {
 

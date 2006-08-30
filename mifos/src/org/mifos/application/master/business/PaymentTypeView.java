@@ -5,10 +5,6 @@ package org.mifos.application.master.business;
 
 import org.mifos.framework.business.View;
 
-/**
- * @author rohitr
- *
- */
 public class PaymentTypeView extends View {
 
 	private Short paymentTypeId;

@@ -68,9 +68,6 @@ import org.mifos.framework.util.valueobjects.Context;
 /**
  * Fund action class through which all actions related to fund module
  * happen
- * 
- * @author imtiyazmb
- * 
  */
 
 public class FundAction extends MifosBaseAction {

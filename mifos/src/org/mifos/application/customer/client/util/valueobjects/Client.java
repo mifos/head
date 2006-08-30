@@ -13,8 +13,6 @@ import org.mifos.framework.components.logger.MifosLogger;
 
 /**
  * This class acts as valueObject for clients module
- * @author ashishsm
- *
  */
 public class Client extends Customer {
 	

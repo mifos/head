@@ -6,10 +6,6 @@ package org.mifos.framework.components.audit.util.helpers;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author krishankg
- *
- */
 public class LogValueMap {
 	
 	private Map valueMap;

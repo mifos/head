@@ -39,14 +39,8 @@
 
 package org.mifos.framework.security.util;
 
-
-
 /**
- * @author rajenders
- * 
  * RoleChangeEvent
- * 
- * 
  */
 public class RoleChangeEvent implements SecurityEvent {
 	/**

@@ -48,8 +48,6 @@ import org.mifos.application.personnel.util.valueobjects.Personnel;
  * This class is used as value object for the AccountNotesAction.
  * It represents the notes entered for an account.
  * It has a one to many association with the account. 
- * @author ashishsm
- *
  */
 public class AccountNotes extends ValueObject{
 

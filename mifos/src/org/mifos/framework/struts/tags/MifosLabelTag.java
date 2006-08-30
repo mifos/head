@@ -55,9 +55,6 @@ import org.mifos.framework.util.valueobjects.Context;
  * Custom tag that represents type label. The tag adds a * if the corresponding
  * field assaociated is mandatory. The tag has a currency of the Locale
  * associated with it based on our attributes.
- * 
- * @author mohammedn
- * 
  */
 public class MifosLabelTag extends BodyTagSupport {
 

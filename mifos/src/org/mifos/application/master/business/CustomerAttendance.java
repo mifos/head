@@ -5,10 +5,6 @@ package org.mifos.application.master.business;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author mohammedn
- *
- */
 public class CustomerAttendance extends ValueObject {
 	
 	public CustomerAttendance() {

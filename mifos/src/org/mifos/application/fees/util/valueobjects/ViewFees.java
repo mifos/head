@@ -40,10 +40,6 @@ package org.mifos.application.fees.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author Krishankg
- *
- */
 public class ViewFees extends ValueObject {
 
 	private Short feeId;

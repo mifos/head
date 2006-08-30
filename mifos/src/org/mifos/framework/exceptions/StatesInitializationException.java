@@ -37,20 +37,10 @@
  */
 package org.mifos.framework.exceptions;
 
-/**
- * @author rohitr
- *
- */
 public class StatesInitializationException extends SystemException {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1345L;
 
-	/**
-	 * 
-	 */
 	public StatesInitializationException() {
 		super();
 		// TODO Auto-generated constructor stub

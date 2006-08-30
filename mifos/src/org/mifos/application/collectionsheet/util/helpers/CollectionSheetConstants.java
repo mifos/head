@@ -37,10 +37,6 @@
  */
 package org.mifos.application.collectionsheet.util.helpers;
 
-/**
- * @author ashishsm
- *
- */
 public interface CollectionSheetConstants {
 	
 	// states in which collection sheet generation can be at any given point in time.
@@ -51,7 +47,5 @@ public interface CollectionSheetConstants {
 	// parameters for query
 	public static final String MEETING_DATE = "meeting_date";
 	public static final Short FIRST_INSTALLMENT = 1;
-	
-	
 	
 }

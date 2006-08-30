@@ -42,10 +42,10 @@ package org.mifos.framework.business.handlers;
 
 
 /**
- * Used to return the desired instance of the ServiceLocator and then ServiceLocator in turn returns the correct BusinessProcessor.
- * The service locator type to return is decided based on the <code>businessProcessorImplementation</code> parameter passed to the method.
- * @author ashishsm
- *
+ * Used to return the desired instance of the ServiceLocator and then 
+ * ServiceLocator in turn returns the correct BusinessProcessor.
+ * The service locator type to return is decided based on the 
+ * <code>businessProcessorImplementation</code> parameter passed to the method.
  */
 public class ServiceLocatorFactory {
 
@@ -56,8 +56,6 @@ public class ServiceLocatorFactory {
 	
 	/**
 	 * An enum of ServiceLocatorTypes possible in the system 
-	 * @author ashishsm
-	 *
 	 */
 	private enum ServiceLocatorTypes {MifosSession,MifosPlainJava};
 	

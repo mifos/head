@@ -44,7 +44,6 @@ import org.mifos.application.customer.util.valueobjects.Customer;
 /**
  * This class denotes the Group (row in customer table) object and all attributes associated with it.
  * It has a composition of other objects like Custom fields, fees, personnel etc., since it inherits from Customer
- * @author navitas
  */
 public class Group extends Customer {
 	

@@ -46,17 +46,11 @@ import java.io.Serializable;
  * from request processor after successful completion of action processing.
  * This is used to handle scenarios where in case of exception we need to go back o the same page
  * with request having all old values.
- * @author ashishsm
- *
  */
 public class PreviousRequestValues implements Serializable {
 
-	/**
-	 * 
-	 */
 	public PreviousRequestValues() {
 		super();
-		
 	}
 	
 	private HashMap<String,Object> previousRequestValueMap = new HashMap<String,Object>();

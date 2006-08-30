@@ -38,10 +38,6 @@
 
 package org.mifos.application.customer.client.util.helpers;
 
-/**
- * @author sumeethaec
- *
- */
 public interface ClientConstants {
 	
 	/**Forwards*/

@@ -47,23 +47,15 @@ import org.mifos.framework.util.valueobjects.Context;
 
 /**
  * This class encapsulate all the business logic related to meeting module 
- * @author rajenders
- * 
  */
 public class MeetingBusinessProcessor extends MifosBusinessProcessor {
 
-	
 	/**
 	 * This function is called to create the meeting .This function is kept intentionally
 	 * blank as we do not wnat the framework to call the create method ,because we do not want 
 	 * to create the meeting right now .It will be created by the modules who use this module
 	 */
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.mifos.framework.business.handlers.MifosBusinessProcessor#create(org.mifos.framework.util.valueobjects.Context)
-	 */
 	@Override
 	public void create(Context context) throws SystemException,
 			ApplicationException {

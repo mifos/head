@@ -40,15 +40,8 @@ package org.mifos.application.productdefinition.struts.actionforms;
 
 import org.mifos.framework.struts.actionforms.MifosActionForm;
 
-/**
- * @author ashishsm
- *
- */
 public class InsuranceProductActionForm extends MifosActionForm {
 
-	/**
-	 * 
-	 */
 	public InsuranceProductActionForm() {
 		super();
 		// TODO Auto-generated constructor stub

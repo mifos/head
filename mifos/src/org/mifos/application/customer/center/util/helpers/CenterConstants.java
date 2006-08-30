@@ -39,8 +39,6 @@ package org.mifos.application.customer.center.util.helpers;
 
 /**
  * This interface contains all the constants used within the center module
- * @author sumeethaec
- *
  */
 public interface CenterConstants {
 	

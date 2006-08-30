@@ -45,8 +45,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 /**
  * This class maps to customer_picture table of the database, which is used to store
  * customer picture as a blob.
- * @author ashishsm
- *
  */
 public class CustomerPicture extends ValueObject {
 

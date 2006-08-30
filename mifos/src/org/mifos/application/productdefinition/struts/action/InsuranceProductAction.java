@@ -46,15 +46,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.framework.struts.action.MifosBaseAction;
 
-/**
- * @author ashishsm
- *
- */
 public class InsuranceProductAction extends MifosBaseAction {
 	
-	/**
-	 * 
-	 */
 	public InsuranceProductAction() {
 		super();
 		// TODO Auto-generated constructor stub

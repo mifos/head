@@ -43,8 +43,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class encapsulate the customer meeting
- * @author rajenders
- *
  */
 public class CustomerMeeting extends ValueObject {
 	private static final long serialVersionUID = 444444444444444l;

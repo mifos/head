@@ -105,7 +105,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
  * This denotes the action class for the group module. It uses the base class functions to create, update.
  * In addition includes methods to update status, update parent etc.
  * It also includes implementations for preview, cancel and validate
- * @author navitas
  */
 
 public class GroupAction extends MifosSearchAction {

@@ -40,16 +40,10 @@ package org.mifos.application.master.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author sumeethaec
- *
- */
 public class SpouseFatherLookup extends ValueObject {
 	private java.lang.Integer spouseFatherId;
-  
 
     private Integer lookUpId;
-
 
 	/**
 	 * Method which returns the lookUpId	

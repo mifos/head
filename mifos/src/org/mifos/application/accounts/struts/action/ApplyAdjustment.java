@@ -62,8 +62,6 @@ import org.mifos.framework.util.helpers.SessionUtils;
 /**
  * This is the action class for applying adjustment.
  * This action is to be merged with AccountAction once an AccountAction for M2 is done.
- * @author ashishsm
- *
  */
 public class ApplyAdjustment extends BaseAction {
 

@@ -39,14 +39,9 @@ package org.mifos.application.office.util.valueobjects;
 
 import java.io.Serializable;
 
-/**
- * @author rajenders
- *
- */
 public class ParentOffice implements Serializable{
 	
 	private static final long serialVersionUID=993;
-
 
 	private Short levelId;
 	private String levelName;

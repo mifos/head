@@ -48,7 +48,6 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @author rajenders
  * This class represent the string representation of the select tag
  */
 public class RawSelect {

@@ -26,14 +26,11 @@ import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-/**
- * @author krishankg
- * 
- */
 public class TestAccountActionDateEntity extends TestAccount {
 
 	private TestObjectPersistence testObjectPersistence;
 
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		testObjectPersistence = new TestObjectPersistence();

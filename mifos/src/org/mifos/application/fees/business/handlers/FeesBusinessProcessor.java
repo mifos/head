@@ -38,29 +38,21 @@
 
 package org.mifos.application.fees.business.handlers;
 
-
-
 import java.util.Date;
 
 import org.mifos.application.fees.dao.FeesDAO;
+import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeeStatus;
-import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.framework.business.handlers.MifosBusinessProcessor;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.valueobjects.Context;
 
-/**
- * @author ashishsm
- *
- */
 public class FeesBusinessProcessor extends MifosBusinessProcessor {
 
-	
 	public FeesBusinessProcessor() {
 		super();
 	}

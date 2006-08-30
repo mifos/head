@@ -46,9 +46,6 @@ import org.mifos.framework.business.util.helpers.HeaderObject;
 
 /**
  * This class is used to build header for loan account pages.
- * 
- * @author ashishsm
- *
  */
 public class LoanHeaderObject implements HeaderObject,Serializable {
 

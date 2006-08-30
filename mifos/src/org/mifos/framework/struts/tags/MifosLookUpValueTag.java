@@ -55,18 +55,13 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 
 /**
  * This tag displays values based on the ID passed assuming that an object
- * which has the corresponding loacale specific name is set in the context with the name passed as attribute. 
- * @author ashishsm
- *
+ * which has the corresponding loacale specific name is set in the context 
+ * with the name passed as attribute. 
  */
 public class MifosLookUpValueTag extends TagSupport {
 	
-	/**
-	 * 
-	 */
 	public MifosLookUpValueTag() {
 		super();
-		
 	}
 	
 	/**

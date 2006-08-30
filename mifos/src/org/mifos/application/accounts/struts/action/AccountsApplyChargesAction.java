@@ -58,10 +58,6 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.valueobjects.Context;
 
-/**
- * @author rajenders
- * 
- */
 public class AccountsApplyChargesAction extends MifosBaseAction {
 
 	/*

@@ -41,22 +41,10 @@ package org.mifos.application.master.util.valueobjects;
 import org.mifos.application.productdefinition.util.valueobjects.ProductType;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class InterestTypes extends ValueObject {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4234324231L;
 
-
-
-	/**
-	 * 
-	 */
 	public InterestTypes() {
 		super();
 		// TODO Auto-generated constructor stub

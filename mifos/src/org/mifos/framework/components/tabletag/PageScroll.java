@@ -41,8 +41,6 @@ import java.util.ResourceBundle;
 
 /**
  * This class renders the page scroll property of the page like previous and next links.
- * @author rohitr
- *
  */
 public class PageScroll {
 

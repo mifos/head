@@ -45,9 +45,6 @@ import org.mifos.framework.business.PersistentObject;
 
 /**
  * This class encapsulate the customer meeting
- * 
- * @author rajenders
- * 
  */
 public class CustomerMeetingEntity extends PersistentObject {
 

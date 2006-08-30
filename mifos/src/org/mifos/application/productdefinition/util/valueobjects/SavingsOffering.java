@@ -46,10 +46,6 @@ import org.mifos.application.master.util.valueobjects.RecommendedAmntUnit;
 import org.mifos.application.master.util.valueobjects.SavingsType;
 import org.mifos.framework.util.helpers.Money;
 
-/**
- * @author ashishsm
- *
- */
 public class SavingsOffering extends PrdOffering {
 
 	/**

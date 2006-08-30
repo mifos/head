@@ -57,15 +57,9 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 /**
  * This class is used to make the databse related calls in product configuration.
- * 
- * @author mohammedn
- *
  */
 public class PrdConfigurationDAO extends DAO {
 
-	/**
-	 * default constructor
-	 */
 	public PrdConfigurationDAO() {
 	}
 	

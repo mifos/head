@@ -38,9 +38,9 @@
 package org.mifos.framework.exceptions;
 
 /**
- * These are the type of exception which are based out of some BusinessLogic where the user needs to be notified about it and then the user will take certain action based on that.
- * @author ashishsm
- *
+ * These are the type of exception which are based out of some BusinessLogic 
+ * where the user needs to be notified about it and then the user will take 
+ * certain action based on that.
  */
 public class ApplicationException extends Exception {
 	

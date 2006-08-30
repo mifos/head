@@ -37,10 +37,7 @@
  */
 
 package org.mifos.application.customer.group.util.helpers;
-/**
- * @author navitas
- *
- */
+
 public interface GroupConstants {
 	
 	public static final String BP_RESULT="result";

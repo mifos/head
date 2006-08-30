@@ -46,9 +46,6 @@ import org.apache.struts.validator.ValidatorActionForm;
 
 /**
  * This class is the action form for Applying adjustments.
- * 
- * @author ashishsm
- *
  */
 public class ApplyAdjustmentActionForm extends ValidatorActionForm {
 	private String input;

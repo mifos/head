@@ -42,8 +42,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * The class is the ValueObject for the Login.
- * @author mohammedn
- * 
  */
 public class MifosLoginValueObject extends ValueObject {
 

@@ -40,12 +40,9 @@
 package org.mifos.framework.security.util;
 
 /**
- * @author rajenders
- * 
  * SecurityEvent interface is implemented by the security related events
  * e.g. RoleChangeEvent and the ActivityChangeEvent which are used to synchronize
  * the cache kept by the AuthorizationManager 
- * 
  */
 public interface SecurityEvent {
     

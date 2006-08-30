@@ -37,14 +37,8 @@ package org.mifos.application.checklist.exceptions;
 
 import org.mifos.framework.exceptions.ApplicationException;
 
-/**
- * @author imtiyazmb
- *
- */
 public class CheckListException extends ApplicationException {
-	/**
-	 *default constructor 
-	 */
+
 	public CheckListException() {
 		super();
 	}

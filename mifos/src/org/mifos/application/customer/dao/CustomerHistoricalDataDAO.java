@@ -54,7 +54,6 @@ import org.mifos.framework.util.valueobjects.Context;
 
 /**
  * This class denotes the DAO layer for the CustomerHistoricalData module.
- * @author navitas
  */
 public class CustomerHistoricalDataDAO extends DAO {
 

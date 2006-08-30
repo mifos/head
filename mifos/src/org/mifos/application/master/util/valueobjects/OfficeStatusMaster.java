@@ -42,13 +42,10 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class represent officeStatus master data 
- * @author rajenders
- *
  */
 public class OfficeStatusMaster extends ValueObject
 {
 	private static final long serialVersionUID=9876;
-
 
 	/**
 	 * This would hold the statusId for the office 

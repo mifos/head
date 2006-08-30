@@ -42,7 +42,6 @@ import java.lang.String;
 
 /** 
  *   This interface stores contants required for the audit component.
- *  @author ashishsm
  */
 public interface AuditConstants {
  

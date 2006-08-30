@@ -41,8 +41,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 
 /**
  * This class represent the meeting exception 
- * @author rajenders
- *
  */
 public class MeetingException extends ApplicationException {
 	private static final long   serialVersionUID=000l;

@@ -43,8 +43,6 @@ import org.mifos.framework.struts.actionforms.MifosSearchActionForm;
 
 /**
  * This class acts as an ActionForm for editing group membership of a client.
- * @author ashishsm
- *
  */
 public class EditGrpMembershipActionForm extends MifosSearchActionForm {
 

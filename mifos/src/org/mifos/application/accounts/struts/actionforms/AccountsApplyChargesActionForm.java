@@ -47,10 +47,6 @@ import org.mifos.framework.struts.actionforms.MifosActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 
-/**
- * @author rajenders
- *
- */
 public class AccountsApplyChargesActionForm extends MifosActionForm {
 	
 	private static final long serialVersionUID=8844444456456456l;

@@ -15,8 +15,6 @@ import org.mifos.framework.util.helpers.StringUtils;
 
 /** 
  *  This class is used to generate ids for accounts.
- *  @author amit
- *  
  */
 public class IDGenerator {
 	 /**

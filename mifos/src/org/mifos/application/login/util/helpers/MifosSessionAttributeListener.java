@@ -48,15 +48,10 @@ import org.mifos.framework.components.logger.MifosLogManager;
 /**
  * This class is the implementation class for the HttpSessionAttributeListener. This class is used to
  * clean the Session Attributes when Session is made invalid.
- * 
- * @author mohammedn
  */
 public class MifosSessionAttributeListener implements
 		HttpSessionAttributeListener {
 
-	/**
-	 * Default Constructor
-	 */
 	public MifosSessionAttributeListener() {
 	}
 

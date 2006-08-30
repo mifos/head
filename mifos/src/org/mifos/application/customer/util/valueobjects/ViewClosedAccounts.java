@@ -43,14 +43,9 @@ import org.mifos.framework.util.valueobjects.MifosSearchValueObject;
 
 /**
  * This class is used as ValueObject for viewing all closed accounts of a customer.
- * @author ashishsm
- *
  */
 public class ViewClosedAccounts extends MifosSearchValueObject {
 
-	/**
-	 * 
-	 */
 	public ViewClosedAccounts() {
 		super();
 		// TODO Auto-generated constructor stub

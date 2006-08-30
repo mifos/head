@@ -54,9 +54,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 
 /**
  * This class contails the utility function for role and permission module
- * 
- * @author rajenders
- * 
  */
 public class RolesAndPermissionHelper {
 	

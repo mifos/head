@@ -59,15 +59,9 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 /**
  * This class contains the business logic related to creation,updation of the 
  * product category.
- * 
- * @author mohammedn
- * 
  */
 public class ProductCategoryBusinessProcessor extends MifosBusinessProcessor {
 
-	/**
-	 * Default Constructor
-	 */
 	public ProductCategoryBusinessProcessor() {
 	}
 	

@@ -68,8 +68,6 @@ import org.mifos.framework.util.valueobjects.Context;
 /**
  * This is the Action associated with Login. The class extends from {<@linkMifosBaseAction}.
  * It overrides method {<@link getPath()} and {<@link appendToMap()} from MifosBaseAction.
- *
- *@author mohammedn 
  */
 public class MifosLoginAction extends MifosBaseAction {
 	

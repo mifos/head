@@ -10,10 +10,6 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.StateEntity;
 import org.mifos.application.productdefinition.util.valueobjects.ProductType;
 
-/**
- * @author rohitr
- *
- */
 public class AccountStateEntity extends StateEntity {
 
 	private static final long serialVersionUID = 13465L;

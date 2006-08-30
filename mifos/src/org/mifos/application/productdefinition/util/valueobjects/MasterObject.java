@@ -42,33 +42,19 @@ import java.io.Serializable;
 /**
  * This is a helper class which would be used to retrieve master data when we need only certain details of
  * the object hence instead of loading the entire object we can load only this object using a query.
- * 
- * @author mohammedn
- *
  */
 public class MasterObject implements Serializable {
-	/**
-	 *Default Constructor 
-	 */
+
 	public MasterObject() {
 		super();
 	}
-	/**
-	 * Constructor 
-	 * @param id
-	 * @param name
-	 */
+
 	public MasterObject(Short id,String name) {
 		super();
 		this.id=id;
 		this.name=name;
 	}
-	/**
-	 * Constructor 
-	 * @param id
-	 * @param name
-	 * @param versionNo
-	 */
+
 	public MasterObject(Short id,String name,Integer versionNo) {
 		super();
 		this.id=id;

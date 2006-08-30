@@ -95,8 +95,6 @@ import org.mifos.framework.util.valueobjects.Context;
 
 /**
  * This class acts as a BusinessProcessor to create/update a client.
- * @author ashishsm
- *
  */
 public class ClientCreationBusinessProcessor extends MifosBusinessProcessor {
 

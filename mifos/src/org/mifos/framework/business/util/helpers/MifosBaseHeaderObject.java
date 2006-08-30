@@ -41,11 +41,11 @@ package org.mifos.framework.business.util.helpers;
 import java.util.HashMap;
 
 /**
- * This class acts as base header object class which has a hashMap storing key and value.
- * This is used to display header links on the UI. A new Instance of this class should be created and 
+ * This class acts as base header object class which has a hashMap storing 
+ * key and value.
+ * This is used to display header links on the UI. A new Instance 
+ * of this class should be created and 
  * returned from fetchHeader method of the business processor.
- * @author ashishsm
- *
  */
 public class MifosBaseHeaderObject implements HeaderObject {
 	

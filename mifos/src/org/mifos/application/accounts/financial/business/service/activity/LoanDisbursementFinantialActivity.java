@@ -44,10 +44,6 @@ import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.financial.business.service.activity.accountingentry.BaseAccountingEntry;
 import org.mifos.application.accounts.financial.business.service.activity.accountingentry.DisbursementAccountingEntry;
 
-/**
- * @author rajenders
- *
- */
 public class LoanDisbursementFinantialActivity extends BaseFinancialActivity {
 
 	public LoanDisbursementFinantialActivity(AccountTrxnEntity accountTrxn) {

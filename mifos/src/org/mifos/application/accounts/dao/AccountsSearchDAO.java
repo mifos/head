@@ -51,10 +51,6 @@ import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.valueobjects.Context;
 
-/**
- * @author rajenders
- * 
- */
 public class AccountsSearchDAO extends DAO {
 
 	public QueryResult search(String comingFrom, String searchString,

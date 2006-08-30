@@ -40,17 +40,8 @@ package org.mifos.application.master.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class Currency extends ValueObject {
 	
-	
-
-	/**
-	 * 
-	 */
 	public Currency() {
 		super();
 		// TODO Auto-generated constructor stub

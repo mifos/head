@@ -37,10 +37,6 @@
  */
 package org.mifos.application.customer.util.valueobjects;
 
-/**
- * @author sumeethaec
- *
- */
 public class CustomerMaster {
 
 	/** The composite primary key value. */

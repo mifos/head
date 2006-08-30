@@ -45,10 +45,6 @@ import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class AccountFees extends ValueObject{
 	
 	/**

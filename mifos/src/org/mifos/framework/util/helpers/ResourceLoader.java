@@ -42,10 +42,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
- * This class is used to load resources like xml file,resource bundles,properties files etc.
+ * This class is used to load resources like xml file,resource bundles,
+ * properties files etc.
  * It used Class loader to load these files.
- * @author ashishsm
- *
  */
 public class ResourceLoader {
 

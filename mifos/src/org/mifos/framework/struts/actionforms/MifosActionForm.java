@@ -41,7 +41,6 @@ package org.mifos.framework.struts.actionforms;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.PropertyResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -51,8 +50,6 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.validator.ValidatorActionForm;
-import org.mifos.application.configuration.business.MifosConfiguration;
-import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
@@ -65,14 +62,8 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.MethodInvoker;
 
-/**
- * @author ashishsm
- * 
- */
 public class MifosActionForm extends ValidatorActionForm {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 543543667657661L;
 	public String input;
 

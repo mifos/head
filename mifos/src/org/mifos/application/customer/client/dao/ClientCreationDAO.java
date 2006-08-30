@@ -101,9 +101,6 @@ import org.mifos.framework.util.valueobjects.Context;
 
 /**
  * This class acts as DAO for creating/updating a client.
- *
- * @author ashishsm
- *
  */
 public class ClientCreationDAO extends DAO {
 

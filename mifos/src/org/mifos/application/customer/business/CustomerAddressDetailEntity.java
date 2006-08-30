@@ -43,9 +43,6 @@ import org.mifos.framework.business.util.Address;
 
 /**
  * This class encapsulate the details of the customer address
- * 
- * @author ashishsm
- * 
  */
 public class CustomerAddressDetailEntity extends PersistentObject {
 

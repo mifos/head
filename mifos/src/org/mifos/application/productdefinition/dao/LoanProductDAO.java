@@ -95,15 +95,9 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 /**
  * This class is used to make the databse related calls in the creation and
  * update of loan product.
- * 
- * @author mohammedn
- * 
  */
 public class LoanProductDAO extends PrdOfferingDAO {
 
-	/**
-	 * default constructor
-	 */
 	public LoanProductDAO() {
 	}
 

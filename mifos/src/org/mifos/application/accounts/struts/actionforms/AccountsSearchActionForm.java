@@ -53,10 +53,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.struts.actionforms.MifosSearchActionForm;
 import org.mifos.framework.util.helpers.Constants;
 
-/**
- * @author rajenders
- *
- */
 public class AccountsSearchActionForm extends MifosSearchActionForm {
 	private static final long serialVersionUID=8844444444444444444l;
 	private String searchType;

@@ -44,9 +44,6 @@ import org.mifos.framework.business.util.Address;
 
 /**
  * This class represent the address for the office
- * 
- * @author rajenders
- * 
  */
 public class OfficeAddressEntity extends PersistentObject {
 	

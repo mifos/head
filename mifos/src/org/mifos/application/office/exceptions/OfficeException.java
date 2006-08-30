@@ -40,10 +40,9 @@ package org.mifos.application.office.exceptions;
 import org.mifos.framework.exceptions.ApplicationException;
 
 /**
- * @author rajenders
- * This exception represent the office exception and thrown when some error condtion occour in the 
+ * This exception represent the office exception and thrown when some 
+ * error condtion occour in the 
  * office module
- *
  */
 public class OfficeException extends ApplicationException {
 	private static final long serialVersionUID=0l;

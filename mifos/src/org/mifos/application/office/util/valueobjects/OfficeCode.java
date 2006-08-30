@@ -43,9 +43,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class represent the office code for the office
- * 
- * @author rajenders
- * 
  */
 public class OfficeCode extends ValueObject {
 	private static final long serialVersionUID = 666666666666l;

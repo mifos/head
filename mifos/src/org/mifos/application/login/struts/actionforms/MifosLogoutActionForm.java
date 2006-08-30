@@ -42,9 +42,6 @@ import org.mifos.framework.struts.actionforms.MifosActionForm;
 
 /**
  * This class is the ActionForm associated with the Logout Action.
- * 
- * @author mohammedn
- * 
  */
 public class MifosLogoutActionForm extends MifosActionForm {
 	

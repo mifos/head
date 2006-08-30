@@ -39,53 +39,28 @@
 
 package org.mifos.framework.exceptions;
 
-/**
- * @author rajenders
- * 
- * EncryptionException
- * 
- * 
- */
 public class EncryptionException extends ApplicationException {
 
-	/**
-	 * 
-	 */
 	public EncryptionException() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @param key
-	 * @param values
-	 */
 	public EncryptionException(String key, Object[] values) {
 		super(key, values);
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * 
-	 */
 	public EncryptionException(String key) {
 		super(key);
 	}
 
-	/**
-	 * @param values
-	 */
 	public EncryptionException(Object[] values) {
 		super(values);
-
 	}
 
-	/**
-	 * @param cause
-	 */
 	public EncryptionException(Throwable cause) {
 		super(cause);
-
 	}
 
 }

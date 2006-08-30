@@ -51,21 +51,16 @@ import org.mifos.framework.util.helpers.Constants;
 
 /**
  * This class is used as value object to create PrdCategory object, this is only used to unit test MifosBaseAction.
- * @author ashishsm
- *
  */
 public class PrdCategoryTestActionForm extends MifosActionForm {
 
-	/**
-	 * 
-	 */
 	public PrdCategoryTestActionForm() {
 		super();
-this.productType = new ProductType();
+		this.productType = new ProductType();
 		this.prdCategoryStatus=new PrdCategoryStatus();
 	}
 	
-private Short productCategoryID;
+	private Short productCategoryID;
 	/**
 	 * product type of product category
 	 */

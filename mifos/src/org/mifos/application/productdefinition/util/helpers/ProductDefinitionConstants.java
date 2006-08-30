@@ -41,9 +41,6 @@ package org.mifos.application.productdefinition.util.helpers;
 /**
  * This interface contains all the definition of all constants required for 
  * product definition
- * 
- * @author mohammedn
- *
  */
 public interface ProductDefinitionConstants {
 	

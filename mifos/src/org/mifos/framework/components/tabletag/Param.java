@@ -3,15 +3,8 @@
  */
 package org.mifos.framework.components.tabletag;
 
-/**
- * @author rohitr
- *
- */
 public class Param {
 
-	/**
-	 * 
-	 */
 	public Param() {
 		super();
 		// TODO Auto-generated constructor stub

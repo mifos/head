@@ -59,8 +59,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 /**
  * This class has hepler function which are called during verious office 
  * functions
- * @author rajenders
- *
  */
 public class OfficeHelper {
 	

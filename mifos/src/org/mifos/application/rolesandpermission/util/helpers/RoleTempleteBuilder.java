@@ -54,9 +54,6 @@ import org.mifos.framework.components.logger.MifosLogManager;
 /**
  * This class build the templete for the activities in the system so that user
  * can create of see what all activities are associated with the given role
- * 
- * @author rajenders
- * 
  */
 public class RoleTempleteBuilder {
 

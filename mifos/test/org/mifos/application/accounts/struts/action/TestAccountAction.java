@@ -29,10 +29,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 import org.mifos.framework.MifosMockStrutsTestCase;
 
-/**
- * @author krishankg
- *
- */
 public class TestAccountAction extends MifosMockStrutsTestCase {
 
 	protected AccountBO accountBO = null;
@@ -42,6 +38,7 @@ public class TestAccountAction extends MifosMockStrutsTestCase {
 	private CustomerBO group = null;
 
 	// success
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		try {

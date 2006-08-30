@@ -26,13 +26,10 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-/**
- * @author krishankg
- * 
- */
 public class TestAccountPersistenceService extends TestAccount {
 
-	AccountPersistanceService accountPersistenceService = new AccountPersistanceService();
+	AccountPersistanceService accountPersistenceService = 
+		new AccountPersistanceService();
 
 	public void testSuccessloadBusinessObjectService() {
 		AccountBO accountObject = null;

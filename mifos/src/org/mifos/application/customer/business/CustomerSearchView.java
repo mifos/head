@@ -46,9 +46,6 @@ import org.mifos.framework.business.View;
 
 /**
  * This class acts a valueobject for searching customers.
- * 
- * @author ashishsm
- * 
  */
 public class CustomerSearchView extends View {
 

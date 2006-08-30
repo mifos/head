@@ -61,10 +61,6 @@ import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.framework.struts.actionforms.MifosActionForm;
 import org.mifos.framework.util.helpers.Constants;
 
-/**
- * @author ashishsm
- * 
- */
 public class FeesActionForm extends MifosActionForm {
 
 	private String feeName;

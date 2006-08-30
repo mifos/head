@@ -43,14 +43,8 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class PrdOfferingFees extends ValueObject {
-	/**
-	 * Default Constructor 
-	 */
+
 	public PrdOfferingFees() {
 	}
 	/**

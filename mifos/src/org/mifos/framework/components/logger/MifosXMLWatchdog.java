@@ -28,8 +28,7 @@ package org.mifos.framework.components.logger;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.helpers.FileWatchdog;
 
-/**	@author sumeethaec
- *  Created Date: 02-08-05
+/**	
  *  This class inherits from the FileWatchdog of log4j and is used to monitor the log4j configuration file for any changes.
  */ 
 

@@ -46,8 +46,6 @@ import org.mifos.framework.exceptions.TableTagException;
 
 /**
  * This class renders the columns.
- * @author rohitr
- * 	
  */
 
 public class Column {

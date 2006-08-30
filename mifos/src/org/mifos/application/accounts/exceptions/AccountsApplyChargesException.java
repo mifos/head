@@ -39,10 +39,6 @@ package org.mifos.application.accounts.exceptions;
 
 import org.mifos.framework.exceptions.ApplicationException;
 
-/**
- * @author rajenders
- *
- */
 public class AccountsApplyChargesException extends ApplicationException {
 	private static final long serialVersionUID=999999l;
 

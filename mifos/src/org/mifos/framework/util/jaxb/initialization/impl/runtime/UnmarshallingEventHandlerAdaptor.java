@@ -22,9 +22,6 @@ import org.xml.sax.SAXException;
  * Note that the SAXException returned by the ContentHandler is
  * unreported. So we have to catch them and report it, then rethrow
  * it if necessary. 
- * 
- * @author
- *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public class UnmarshallingEventHandlerAdaptor implements UnmarshallingEventHandler {
     

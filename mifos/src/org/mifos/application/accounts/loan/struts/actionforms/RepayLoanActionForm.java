@@ -19,10 +19,6 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 
-/**
- * @author krishankg
- *
- */
 public class RepayLoanActionForm extends ValidatorActionForm {
 
 	private String accountId;

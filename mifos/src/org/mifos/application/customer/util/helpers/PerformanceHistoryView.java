@@ -5,10 +5,6 @@ package org.mifos.application.customer.util.helpers;
 
 import org.mifos.framework.business.View;
 
-/**
- * @author sumeethaec
- * 
- */
 public class PerformanceHistoryView extends View {
 	private int numberOfGroups;
 

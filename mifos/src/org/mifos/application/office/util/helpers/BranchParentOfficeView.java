@@ -44,9 +44,6 @@ import org.mifos.framework.business.View;
 /**
  * This class is used to get the leaf level offices i.e branch offices along
  * with the parent for that list
- * 
- * @author rajenders
- * 
  */
 public class BranchParentOfficeView extends View {
 	

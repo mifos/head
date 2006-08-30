@@ -17,9 +17,6 @@ import org.xml.sax.SAXException;
 /**
  * Receives SAX2 events and send the equivalent events to
  * {@link com.sun.xml.bind.serializer.XMLSerializer}
- * 
- * @author
- *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public class ContentHandlerAdaptor implements ContentHandler {
 

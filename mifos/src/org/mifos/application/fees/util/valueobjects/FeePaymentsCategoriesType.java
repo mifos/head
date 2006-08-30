@@ -41,10 +41,6 @@ package org.mifos.application.fees.util.valueobjects;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
- * @author ashishsm
- *
- */
-/**
  * A class that represents a row in the 'fee_payments_categories_type' table. 
  * This class may be customized as it is never re-generated 
  * after being created.

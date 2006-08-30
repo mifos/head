@@ -65,8 +65,6 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 
 /**
  * This class is used as DAO to search for customers.
- * @author ashishsm
- *
  */
 public class CustomerSearchDAO extends DAO {
 

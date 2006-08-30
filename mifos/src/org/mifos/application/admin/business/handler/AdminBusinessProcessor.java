@@ -46,10 +46,6 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.valueobjects.Context;
 
-/**
- * @author rajenders
- *
- */
 public class AdminBusinessProcessor extends MifosBusinessProcessor {
 
 	public void loadInitial(Context context)throws SystemException,ApplicationException{

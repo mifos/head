@@ -56,8 +56,6 @@ import org.mifos.framework.util.valueobjects.Context;
 
 /**
  * CheckListBusinessProcessor contains the business logic for checklist 
- * @author imtiyazmb
- *
  */
 
 public class CheckListBusinessProcessor extends MifosBusinessProcessor {

@@ -37,10 +37,6 @@
  */
 package org.mifos.framework.components.stateMachineFactory;
 
-/**
- * @author rohitr
- *
- */
 public interface StateMachineConstants {
 	public final short PARIAL_APPLICATION=1;
 	public final short PENDING_APPROVAL=2;

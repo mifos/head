@@ -56,8 +56,6 @@ import org.mifos.framework.util.valueobjects.Context;
 /**
  * This class acts as base class for account related actions like 
  * loan action etc.
- * @author ashishsm
- *
  */
 public abstract class AccountAction extends MifosSearchWizardAction {
 	

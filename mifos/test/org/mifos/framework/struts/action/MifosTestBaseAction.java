@@ -38,34 +38,21 @@
 
 package org.mifos.framework.struts.action;
 
-
-
 /**
  * This class will be used to test MifosBaseAction because MifosBaseAction 
  * is an abstract class , hence this class extends MifosBaseAction and implements the 
- * abstract method getPath() which actually returns the path in the dependency file being used for testing.
- * @author ashishsm
- *
+ * abstract method getPath() which actually returns the path in the dependency 
+ * file being used for testing.
  */
 public class MifosTestBaseAction extends MifosBaseAction {
 
-	/**
-	 * 
-	 */
 	public MifosTestBaseAction() {
 		super();
-		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.struts.action.MifosBaseAction#getPath()
-	 */
-	
+	@Override
 	protected String getPath() {
-		
 		return "FrameworkActionTestPath";
 	}
-	
-
 
 }

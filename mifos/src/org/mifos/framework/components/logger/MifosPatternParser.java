@@ -33,8 +33,6 @@ import org.apache.log4j.spi.LoggingEvent;
 /**
  * This class extends from the pattern parser. This class overrides the finalizeConverter method to enable the logging 
  * of the class name, method name and line number from where the log statement was issued with respect to the mifos logger
- * @author sumeethaec
- *
  */
 public class MifosPatternParser extends PatternParser {
 	static final int FULL_LOCATION_CONVERTER = 1000;

@@ -43,7 +43,6 @@ import org.mifos.framework.util.helpers.BusinessProcessorFactory;
 
 
 /**
- * @author ashishsm
  * This class implements the ServiceLoator interface and hence 
  * implements the getBusinessProcessor() method. 
  * This specific implementation of ServiceLocator would be used based 

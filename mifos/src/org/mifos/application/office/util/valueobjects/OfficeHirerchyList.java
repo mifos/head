@@ -45,8 +45,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class represents the list current officeLevels in the system
- * @author rajenders
- *
  */
 public class OfficeHirerchyList extends ValueObject {
 	

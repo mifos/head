@@ -46,14 +46,9 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 
 /**
  * This class is used as Business Processor for Applying Charges for customers.
- * @author ashishsm
- *
  */
 public class ApplyChargesBusinessProcessor extends MifosBusinessProcessor {
 
-	/**
-	 * 
-	 */
 	public ApplyChargesBusinessProcessor() {
 		super();
 		

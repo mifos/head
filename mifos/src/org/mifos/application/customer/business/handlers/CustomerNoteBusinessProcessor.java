@@ -58,7 +58,6 @@ import org.mifos.application.personnel.util.valueobjects.Personnel;
 /**
  *  This is the business processor for the Customer Note module.
  *  It takes care of handling all the business logic related to customer note
- *  @author navitas
  */
 public class CustomerNoteBusinessProcessor extends MifosBusinessProcessor {
 

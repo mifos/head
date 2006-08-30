@@ -39,8 +39,6 @@ package org.mifos.framework.util.helpers;
 
 /**
  * Stores the resource constants which would be used in the jsp as well.
- * @author ashishsm
- *
  */
 public interface ResourceConstants {
 	public String CREATE = "button.create";

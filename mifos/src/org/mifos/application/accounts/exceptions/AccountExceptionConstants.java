@@ -40,8 +40,6 @@ package org.mifos.application.accounts.exceptions;
 
 /**
  * This interface stores keys for accounts related exceptions.
- * @author ashishsm
- *
  */
 public interface AccountExceptionConstants {
 	public final String IDGenerationException = "exception.accounts.ApplicationException.IDGenerationException";

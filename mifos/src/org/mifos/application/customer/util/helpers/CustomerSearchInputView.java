@@ -42,9 +42,6 @@ import org.mifos.framework.business.View;
 
 /**
  * This class is helper class and provides input for center search
- * 
- * @author navitas
- * 
  */
 public class CustomerSearchInputView extends View {
 

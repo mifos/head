@@ -41,8 +41,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * Thsi class would hold the account search results
- * @author rajenders
- *
  */
 public class AccountSearchResults extends ValueObject{
 

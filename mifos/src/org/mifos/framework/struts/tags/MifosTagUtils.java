@@ -37,10 +37,6 @@
  */
 package org.mifos.framework.struts.tags;
 
-/**
- * @author rajenders
- *
- */
 public class MifosTagUtils {
 
 	/**

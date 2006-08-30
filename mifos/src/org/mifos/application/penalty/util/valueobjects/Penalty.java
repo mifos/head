@@ -41,20 +41,10 @@ package org.mifos.application.penalty.util.valueobjects;
 import org.mifos.application.productdefinition.util.valueobjects.ProductType;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class Penalty extends ValueObject {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 43241554536556541L;
 
-	/**
-	 * 
-	 */
 	public Penalty() {
 		super();
 	}

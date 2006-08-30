@@ -17,14 +17,8 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.struts.actionforms.MifosSearchActionForm;
 import org.mifos.framework.util.helpers.Constants;
 
-/**
- * @author mohammedn
- *
- */
 public class PrdConfigurationActionForm extends MifosSearchActionForm {
-	/**
-	 * default constructor
-	 */
+
 	public PrdConfigurationActionForm() {
 		super();
 		productTypeList=new ArrayList<ProductType>();

@@ -42,10 +42,6 @@ import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 
-/**
- * @author rajenders
- *
- */
 public class EventManger {
 	
 	/**

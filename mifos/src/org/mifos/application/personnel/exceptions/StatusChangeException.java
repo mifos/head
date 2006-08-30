@@ -41,7 +41,6 @@ package org.mifos.application.personnel.exceptions;
 import org.mifos.framework.exceptions.ApplicationException;
 /**
  * This is general exception for the personnel
- * @author navitas
  */
 public class StatusChangeException extends ApplicationException{
 	

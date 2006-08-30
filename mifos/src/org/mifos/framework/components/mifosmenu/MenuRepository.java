@@ -42,8 +42,6 @@ import java.util.HashMap;
 import java.util.Locale;
 
 /**
- * @author navitas
- * Created on Sep 07, 2005
  * It is repository to store locale based menu objects
  */
 public class MenuRepository {

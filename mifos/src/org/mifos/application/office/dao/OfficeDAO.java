@@ -82,9 +82,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 
 /**
  * This class handles the databse interaction for the office module
- * 
- * @author rajenders
- * 
  */
 public class OfficeDAO extends DAO {
 

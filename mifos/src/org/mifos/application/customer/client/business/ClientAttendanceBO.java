@@ -46,9 +46,6 @@ import org.mifos.framework.business.BusinessObject;
 /**
  * This class is the value object for storing the attendance details of the
  * customer.
- * 
- * @author mohammedn
- * 
  */
 public class ClientAttendanceBO extends BusinessObject {
 

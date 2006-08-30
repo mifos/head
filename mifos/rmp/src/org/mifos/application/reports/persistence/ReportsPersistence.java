@@ -64,11 +64,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.reports.exceptions.ReportException;
-/**
- * 
- * @author zankar
- *
- */
+
 public class ReportsPersistence extends Persistence {	
 	
 	public ReportsPersistence(){

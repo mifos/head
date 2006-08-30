@@ -16,10 +16,6 @@ import org.mifos.framework.struts.action.MifosBaseAction;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.valueobjects.Context;
 
-/**
- * @author krishankg
- *
- */
 public class ApplyAdjustmentAction extends MifosBaseAction {
 
 	/* (non-Javadoc)

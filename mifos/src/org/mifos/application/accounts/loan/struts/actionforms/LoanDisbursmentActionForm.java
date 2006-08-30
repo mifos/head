@@ -16,10 +16,6 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.util.helpers.Money;
 
-/**
- * @author krishankg
- * 
- */
 public class LoanDisbursmentActionForm extends AccountApplyPaymentActionForm {
 
 	private Money loanAmount;

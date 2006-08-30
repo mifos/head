@@ -37,43 +37,24 @@ package org.mifos.application.productdefinition.exceptions;
 
 import org.mifos.framework.exceptions.ApplicationException;
 
-/**
- * @author mohammedn
- *
- */
 public class ProductDefinitionException extends ApplicationException {
-	/**
-	 *default constructor 
-	 */
+
 	public ProductDefinitionException() {
 		super();
 	}
 
-	/**
-	 * @param values
-	 */
 	public ProductDefinitionException(Object[] values) {
 		super(values);
 	}
 
-	/**
-	 * @param cause
-	 */
 	public ProductDefinitionException(Throwable cause) {
 		super(cause);
 	}
 
-	/**
-	 * @param key
-	 */
 	public ProductDefinitionException(String key) {
 		super(key);
 	}
 
-	/**
-	 * @param key
-	 * @param values
-	 */
 	public ProductDefinitionException(String key, Object[] values) {
 		super(key, values);
 	}

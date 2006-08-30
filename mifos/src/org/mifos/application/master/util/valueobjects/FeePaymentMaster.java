@@ -40,25 +40,15 @@ package org.mifos.application.master.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class FeePaymentMaster extends ValueObject {
 
 	private Short feePaymentId;
 	private String feePaymentName;
 
-
-	/**
-	 *
-	 */
 	public FeePaymentMaster(Short feePaymentId,String feePaymentName)
 	{
 		this.feePaymentId = feePaymentId;
 		this.feePaymentName = feePaymentName;
-
-
 	}
 
 	/**

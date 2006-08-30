@@ -48,9 +48,8 @@ import java.lang.annotation.Target;
  * in the session or removed from the session.
  * 1.saveToken - It saves a new token in the session.
  * 2.validateAndResetToken - It validates the token and then resets the token.
- * 3.joinToken - It checks if the token is present it does nothing else it saves a new token in the session.
- * @author ashishsm
- *
+ * 3.joinToken - It checks if the token is present it does nothing else it 
+ * saves a new token in the session.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

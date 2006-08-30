@@ -38,15 +38,8 @@
 
 package org.mifos.application.master.util.valueobjects;
 
-/**
- * @author ashishsm
- *
- */
 public class PrdCategoryStatus {
 
-	/**
-	 * 
-	 */
 	public PrdCategoryStatus() {
 		super();
 	}

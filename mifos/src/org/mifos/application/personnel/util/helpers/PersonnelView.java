@@ -44,9 +44,6 @@ import org.mifos.framework.business.PersistentObject;
  * This represents a lightweight personnel object which could be used in places
  * where entire personnel object would be an overhead . for e.g. displaying a
  * list of personnels in a combo box in the UI.
- * 
- * @author ashishsm
- * 
  */
 public class PersonnelView extends PersistentObject {
 

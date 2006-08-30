@@ -40,15 +40,8 @@ package org.mifos.application.customer.center.exception;
 
 import org.mifos.framework.exceptions.ApplicationException;
 
-/**
- * @author ashishsm
- *
- */
 public class StateChangeException extends ApplicationException {
 
-	/**
-	 * 
-	 */
 	public StateChangeException() {
 		super();
 		// TODO Auto-generated constructor stub

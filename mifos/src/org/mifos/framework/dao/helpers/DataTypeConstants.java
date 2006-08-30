@@ -40,8 +40,6 @@ package org.mifos.framework.dao.helpers;
 
 /**
  * This enum is used as exhaustive list of DataTypes . 
- * @author ashishsm
- *
  */
 public enum DataTypeConstants {
 	Integer,

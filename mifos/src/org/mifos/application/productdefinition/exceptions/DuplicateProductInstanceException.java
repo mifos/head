@@ -43,24 +43,12 @@ import org.mifos.framework.exceptions.ApplicationException;
 /**
  * This exception would be thrown whenver the product with the same name already exists.
  * The key of the message should be set using the parameterized constructor.
- * @author ashishsm
- *
  */
 public class DuplicateProductInstanceException extends ApplicationException {
 
-	
-
-	/**
-	 *	default constructor 
-	 */
 	public DuplicateProductInstanceException() {
 	}
 	
-	/**
-	 * constructor
-	 * 
-	 * @param key - Asssigns a key to the instance variable of the same name. 
-	 */
 	public DuplicateProductInstanceException(String key) {
 		this.key = key;
 	}

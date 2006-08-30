@@ -40,12 +40,8 @@
 package org.mifos.framework.security.util;
 
 /**
- * @author rajenders
- * 
  * Observer interface will be implemeneted by all the observer
  * who wants to look for the role or activity change events
- * 
- * 
  */
 public interface Observer {
 	/**

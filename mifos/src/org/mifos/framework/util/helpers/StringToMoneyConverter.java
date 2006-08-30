@@ -46,8 +46,6 @@ import org.mifos.framework.components.configuration.business.SystemConfiguration
  * This class is used by bean utils to convert string to money object.
  * This converter can be registered with BeanUtils so that it can convert
  * string to money.
- * @author ashishsm
- *
  */
 public class StringToMoneyConverter implements Converter {
 

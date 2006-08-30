@@ -43,14 +43,9 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 /**
  * This is a helper class which would be used when we need only certain details of a product offering
  * hence instead of loading the entire product offering object we can load only this object using a query. 
- * @author ashishsm
- *
  */
 public class PrdOfferingMaster extends ValueObject {
 
-	/**
-	 * 
-	 */
 	public PrdOfferingMaster() {
 		super();
 		

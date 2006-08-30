@@ -41,15 +41,8 @@ package org.mifos.framework.struts.actionforms;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author ashishsm
- *
- */
 public class MifosSearchActionForm extends MifosActionForm {
 
-	/**
-	 * 
-	 */
 	public MifosSearchActionForm() {
 		super();
 		// TODO Auto-generated constructor stub

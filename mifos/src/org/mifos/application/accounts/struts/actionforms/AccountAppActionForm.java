@@ -11,13 +11,6 @@ import java.util.Set;
 import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.accounts.business.AccountCustomFieldEntity;
 
-
-
-
-/**
- * @author krishankg
- *
- */
 public class AccountAppActionForm extends ValidatorActionForm{
 	private String accountId;
 	private String customerId;

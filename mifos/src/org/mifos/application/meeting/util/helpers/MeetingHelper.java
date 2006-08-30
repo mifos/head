@@ -16,15 +16,8 @@ import org.mifos.application.meeting.util.valueobjects.MeetingRecurrence;
 import org.mifos.application.meeting.util.valueobjects.MeetingType;
 import org.mifos.application.meeting.util.valueobjects.RecurrenceType;
 
-/**
- * @author mohammedn
- * 
- */
 public class MeetingHelper {
 
-	/**
-	 * Default constructor
-	 */
 	public MeetingHelper() {
 		super();
 	}

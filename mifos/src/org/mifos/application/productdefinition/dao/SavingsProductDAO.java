@@ -94,15 +94,9 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 /**
  * This class is used to make the databse related calls in the creation and
  * update of savings product.
- * 
- * @author mohammedn
- * 
  */
 public class SavingsProductDAO extends PrdOfferingDAO {
 
-	/**
-	 * Default Constructor
-	 */
 	public SavingsProductDAO() {
 	}
 

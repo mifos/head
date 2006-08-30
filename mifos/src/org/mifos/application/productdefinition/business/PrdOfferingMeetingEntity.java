@@ -41,10 +41,6 @@ package org.mifos.application.productdefinition.business;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.business.PersistentObject;
 
-/**
- * @author mohammedn
- * 
- */
 public class PrdOfferingMeetingEntity extends PersistentObject {
 
 	private Short prdOfferingMeetingId;

@@ -36,15 +36,9 @@
 
  */
 package org.mifos.framework.exceptions;
-/**
- * @author mohammedn
- *
- */
+
 public class TableTagParseException  extends ApplicationException {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1745657569585623432L;
 
 	public TableTagParseException() {

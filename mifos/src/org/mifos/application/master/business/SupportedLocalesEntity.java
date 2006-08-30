@@ -40,10 +40,6 @@ package org.mifos.application.master.business;
 
 import org.mifos.framework.business.PersistentObject;
 
-/**
- * @author ashishsm
- * 
- */
 public class SupportedLocalesEntity extends PersistentObject {
 
 	private Short localeId;

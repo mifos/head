@@ -42,7 +42,6 @@ import org.mifos.framework.business.View;
 
 /**
  * This class represent the custom fields for the office
- * @author rajenders
  */
 public class OfficeCustomFieldEntity extends PersistentObject {
 	

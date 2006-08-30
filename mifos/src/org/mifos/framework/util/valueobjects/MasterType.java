@@ -38,10 +38,6 @@
 
 package org.mifos.framework.util.valueobjects;
 
-/**
- * @author ashishsm
- *
- */
 public interface MasterType extends ReturnType {
 	public Object getValue();
 	public void setValue(Object value);

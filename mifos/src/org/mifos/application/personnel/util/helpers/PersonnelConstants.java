@@ -39,8 +39,6 @@ package org.mifos.application.personnel.util.helpers;
 
 /**
  * This is the interface that holds the constants for the personnel
- * @author navitas
- *
  */
 public interface PersonnelConstants {
 	public static final String PERSONNEL  ="Personnel";

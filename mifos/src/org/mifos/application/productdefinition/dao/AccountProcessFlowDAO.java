@@ -45,18 +45,10 @@ import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.valueobjects.Context;
 
-/**
- * @author ashishsm
- *
- */
 public class AccountProcessFlowDAO extends DAO {
 
-	/**
-	 * 
-	 */
 	public AccountProcessFlowDAO() {
 		super();
-		
 	}
 	
 	/**

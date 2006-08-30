@@ -44,7 +44,6 @@ import org.mifos.framework.security.util.UserContext;
 
 /**
  * This class encapsulates the Reports Parameters Map with Reports Parameter
- * @author zankar
  */
 public class ReportsParamsMap extends BusinessObject
 {

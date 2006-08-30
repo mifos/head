@@ -47,16 +47,8 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.framework.struts.action.MifosBaseAction;
 
-
-/**
- * @author ashishsm
- *
- */
 public class PmtTypesAction extends MifosBaseAction {
 
-	/**
-	 * 
-	 */
 	public PmtTypesAction() {
 		super();
 		// TODO Auto-generated constructor stub

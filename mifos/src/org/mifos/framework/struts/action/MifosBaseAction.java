@@ -94,8 +94,6 @@ import org.mifos.framework.components.tabletag.TableTagConstants;
  * of all methods like create,update,delete etc.
  * Any person willing to have custom implementation of these methods will have to
  * override these methods in the derived class.
- * @author ashishsm
- *
  */
 public abstract class MifosBaseAction extends LookupDispatchAction {
 	
@@ -806,8 +804,6 @@ public abstract class MifosBaseAction extends LookupDispatchAction {
 	 * @return - String which uniquely identifies the dependency element in Dependency.xml
 	 */
 	protected abstract String getPath();
-	
-	
 	
 	/**
 	 * This gets the delegator object from the application context.It was set in the application context by the initializer plugin.

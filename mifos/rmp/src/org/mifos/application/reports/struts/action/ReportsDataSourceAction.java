@@ -60,9 +60,7 @@ import org.mifos.application.reports.struts.actionforms.ReportsParamsActionForm;
 import org.mifos.application.reports.business.ReportsDataSource;
 
 /**
- * Control Class for Report DataSource 
- * @author zankar
- *
+ * Control Class for Report DataSource
  */
 public class ReportsDataSourceAction extends BaseAction {
 	

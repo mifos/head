@@ -46,20 +46,12 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 
 /**
  * This is a singleton which acts as cache for the master data.
- * @author ashishsm
- *
- */
-/**
- * @author ashishsm
- *
  */
 public class MasterDataRepository {
 	
 	private static MasterDataRepository instance = new MasterDataRepository();
 	
-	
 	private WeakHashMap<String,SearchResults> masterDataCache;
-	
 	
 	/**
 	 * This returns an instance of the MasterDataRepository.

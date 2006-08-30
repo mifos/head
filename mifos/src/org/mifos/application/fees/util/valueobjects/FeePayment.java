@@ -38,14 +38,10 @@
 
 package org.mifos.application.fees.util.valueobjects;
 
-import org.mifos.application.master.util.valueobjects.LookUpEntity;
-import org.mifos.framework.util.valueobjects.ValueObject;
-import java.util.*;
+import java.util.Set;
 
-/**
- * @author ashishsm
- *
- */
+import org.mifos.framework.util.valueobjects.ValueObject;
+
 /**
  * A class that represents a row in the 'fee_payment' table.
  * This class may be customized as it is never re-generated

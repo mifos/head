@@ -38,32 +38,19 @@
 
 package org.mifos.framework.components.cronjobs;
 
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import org.mifos.framework.util.helpers.ResourceLoader;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.w3c.dom.*;
-import org.xml.sax.*;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import org.mifos.framework.components.cronjobs.MifosTask;
-import org.mifos.framework.exceptions.XMLReaderException;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 
-/**
- * @author krishankg
- *
- */
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.mifos.framework.util.helpers.ResourceLoader;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
+
 public class MifosScheduler extends Timer {
 
 	Timer timer=null;

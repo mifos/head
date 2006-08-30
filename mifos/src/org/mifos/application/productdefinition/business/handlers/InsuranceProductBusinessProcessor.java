@@ -43,15 +43,8 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.valueobjects.Context;
 
-/**
- * @author ashishsm
- *
- */
 public class InsuranceProductBusinessProcessor extends MifosBusinessProcessor {
 
-	/**
-	 * 
-	 */
 	public InsuranceProductBusinessProcessor() {
 		super();
 		// TODO Auto-generated constructor stub

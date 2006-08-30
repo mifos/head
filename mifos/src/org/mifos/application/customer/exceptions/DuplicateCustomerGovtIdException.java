@@ -40,18 +40,10 @@ package org.mifos.application.customer.exceptions;
 
 import org.mifos.framework.exceptions.ApplicationException;
 
-/**
- * @author sumeethaec
- *
- */
 public class DuplicateCustomerGovtIdException extends ApplicationException {
 
-	/**
-	 * 
-	 */
 	public DuplicateCustomerGovtIdException() {
 		super();
-		
 	}
 
 	/**

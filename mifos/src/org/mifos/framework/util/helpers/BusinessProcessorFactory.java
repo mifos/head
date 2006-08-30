@@ -49,10 +49,9 @@ import org.mifos.framework.util.helpers.ResourceFactory;
 
 
 /**
- * This is a singleton BusinessProcessorFactory and is used to return an instance of the corresponding 
+ * This is a singleton BusinessProcessorFactory and is used to return 
+ * an instance of the corresponding 
  * {@link BusinessProcessor} based on the path passed to it as parameter 
- * @author ashishsm
- *
  */
 public class BusinessProcessorFactory extends ResourceFactory {
 	

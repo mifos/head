@@ -41,7 +41,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 
 /**
  * This exception is thrown when customer is not found in the database
- * @author navitas
  */
 public class CustomerNotFoundException extends ApplicationException{
 

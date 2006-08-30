@@ -42,23 +42,12 @@ import org.mifos.framework.exceptions.ApplicationException;
 
 /**
  * This clas is used when a duplicate product category exists. 
- * 
- * @author ashishsm
- *
  */
 public class DuplicateProductCategoryException extends ApplicationException {
-
 	
-	/**
-	 * default constructor
-	 */
 	public DuplicateProductCategoryException() {
 	}
 	
-	/**
-	 * constructor 
-	 * @param key
-	 */
 	public DuplicateProductCategoryException(String key) {
 		super(key);
 	}

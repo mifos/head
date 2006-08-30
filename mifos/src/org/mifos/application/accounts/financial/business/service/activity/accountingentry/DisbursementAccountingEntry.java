@@ -46,10 +46,6 @@ import org.mifos.application.accounts.financial.util.helpers.FinancialActionCons
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.application.accounts.loan.business.LoanBO;
 
-/**
- * @author rajenders
- *
- */
 public class DisbursementAccountingEntry extends BaseAccountingEntry {
 
 	@Override

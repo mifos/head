@@ -50,11 +50,6 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.helpers.Money;
 
-
-/**
- * @author ashishsm
- *
- */
 public class CollSheetCustBO extends BusinessObject {
 	
 	private Long collSheetCustId ;

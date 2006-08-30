@@ -68,8 +68,6 @@ import org.xml.sax.SAXParseException;
 import com.sun.org.apache.xml.internal.utils.DefaultErrorHandler;
 
 /**
- * @author navitas
- * Created on Sep 05, 2005
  * It parses xml, builds and return crude menu for application
  */
 public class MenuParser {

@@ -41,15 +41,8 @@ package org.mifos.framework.util.valueobjects;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author ashishsm
- *
- */
 public class MifosSearchValueObject extends ValueObject {
 
-	/**
-	 * 
-	 */
 	public MifosSearchValueObject() {
 		super();
 		// TODO Auto-generated constructor stub

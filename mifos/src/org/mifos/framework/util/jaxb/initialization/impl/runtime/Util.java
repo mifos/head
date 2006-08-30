@@ -18,11 +18,6 @@ import com.sun.xml.bind.Messages;
 import com.sun.xml.bind.serializer.AbortSerializationException;
 import com.sun.xml.bind.util.ValidationEventLocatorExImpl;
 
-/**
- * 
- * @author
- *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
- */
 public class Util {
     /**
      * Reports a print conversion error while marshalling.

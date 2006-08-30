@@ -45,8 +45,6 @@ import org.mifos.framework.business.PersistentObject;
 
 /**
  * This class encapsulate the customer hierarchy
- * 
- * @author ashishsm
  */
 public class CustomerHierarchyEntity extends PersistentObject {
 

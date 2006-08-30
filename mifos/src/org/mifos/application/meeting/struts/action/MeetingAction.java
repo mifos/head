@@ -73,10 +73,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.valueobjects.Context;
 
-/**
- * @author rajenders
- * 
- */
 public class MeetingAction extends MifosBaseAction {
 
 	// get the logger for logging

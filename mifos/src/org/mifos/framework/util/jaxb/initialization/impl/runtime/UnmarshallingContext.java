@@ -27,9 +27,6 @@ import com.sun.xml.bind.unmarshaller.Tracer;
  * Errors detected by the AbstractUnmarshallingEventHandlerImpl-derived classes should
  * be either thrown as {@link UnrepotedException} or reported through
  * the handleEvent method of this interface.
- *
- * @author
- *  <a href="mailto:kohsuke.kawaguchi@sun.com">Kohsuke KAWAGUCHI</a>
  */
 public interface UnmarshallingContext extends NamespaceContext
 {

@@ -39,9 +39,6 @@ package org.mifos.application.meeting.util.resources;
 
 /**
  * This class contains all the constants related to the meeting module
- * 
- * @author rajenders
- * 
  */
 public interface MeetingConstants {
 

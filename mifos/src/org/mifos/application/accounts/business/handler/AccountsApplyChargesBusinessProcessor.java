@@ -102,9 +102,6 @@ import org.mifos.framework.util.valueobjects.Context;
 
 /**
  * This is business processor for the apply charges in account
- * 
- * @author rajenders
- * 
  */
 public class AccountsApplyChargesBusinessProcessor extends
 		MifosBusinessProcessor {

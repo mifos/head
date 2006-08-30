@@ -42,14 +42,8 @@ import org.mifos.application.master.util.valueobjects.PrdApplicableMaster;
 import org.mifos.application.office.util.valueobjects.Office;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class PrdOffering extends ValueObject {
-	/**
-	 * default constructor
-	 */
+
 	public PrdOffering() {
 		super();
 	}

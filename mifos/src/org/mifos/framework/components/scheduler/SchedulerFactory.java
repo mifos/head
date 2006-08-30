@@ -1,8 +1,6 @@
 package org.mifos.framework.components.scheduler;
 
 /**
- * @author navitas
- * Created on Aug 12, 2005
  * Factory to generate ScheduleData , ScheduleInputs and Scheduler instances.
  */
 public class SchedulerFactory {

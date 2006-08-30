@@ -39,8 +39,6 @@ package org.mifos.application.office.util.helpers;
 
 /**
  *  Helper Object for keeping some fields backup
- * @author rajenders
- *
  */
 public class OfficeSubObject {
 	

@@ -68,15 +68,9 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 /**
  * This class contains the business logic related to creation,updation of the 
  * savings product.
- * 
- * @author mohammedn
- * 
  */
 public class SavingsProductBusinessProcessor extends MifosBusinessProcessor {
 
-	/**
-	 *Default Constructor 
-	 */
 	public SavingsProductBusinessProcessor() {
 	}
 	

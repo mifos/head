@@ -42,15 +42,8 @@ import java.sql.Date;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class ProductInstance extends ValueObject {
 
-	/**
-	 * 
-	 */
 	public ProductInstance() {
 		super();
 		

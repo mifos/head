@@ -69,16 +69,10 @@ import org.mifos.framework.util.helpers.Money;
 /**
  * This class is the Action Form associated with Savings Product Definition. It
  * extends from MifosSearchActionForm
- * 
- * @author mohammedn
- * 
  */
 public class SavingsProductActionForm extends MifosSearchActionForm {
 
 	// ----------------------constructors----------------
-	/**
-	 * Default Constructor
-	 */
 	public SavingsProductActionForm() {
 		super();
 		this.prdCategory = new ProductCategory();

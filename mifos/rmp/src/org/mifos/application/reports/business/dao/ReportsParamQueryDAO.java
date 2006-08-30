@@ -54,7 +54,6 @@ import org.mifos.application.reports.business.ReportsParams;
 
  /**
  * This class encapsulates the Reports Parameters Query
- * @author zankar
  */
  
 public class ReportsParamQueryDAO {

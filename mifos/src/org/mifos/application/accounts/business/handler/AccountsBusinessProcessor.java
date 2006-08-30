@@ -62,8 +62,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
 * This class acts as base class for business processors of all account types.
-* @author ashishsm
-*
 */
 public class AccountsBusinessProcessor extends MifosBusinessProcessor {
 	

@@ -12,9 +12,6 @@ import org.xml.sax.SAXException;
 
 /**
  * UnmarshallingEventHandler implementation that discards the whole sub-tree.
- * 
- * @author
- *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 class Discarder implements UnmarshallingEventHandler {
     

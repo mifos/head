@@ -59,8 +59,6 @@ import org.mifos.framework.util.helpers.Constants;
 /**
  * This class represents the actionform for the role and permission group of
  * actions
- *
- * @author rajenders
  */
 public class RolesandPermissionActionForm extends MifosActionForm {
 

@@ -41,10 +41,6 @@ package org.mifos.application.fees.business;
 import org.mifos.application.fees.util.helpers.FeeFormula;
 import org.mifos.application.master.business.MasterDataEntity;
 
-/**
- * @author ashishsm
- * 
- */
 public class FeeFormulaEntity extends MasterDataEntity {
 
 	protected FeeFormulaEntity() {

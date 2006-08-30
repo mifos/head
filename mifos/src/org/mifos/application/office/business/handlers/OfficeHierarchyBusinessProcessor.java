@@ -56,8 +56,6 @@ import org.mifos.framework.util.valueobjects.Context;
 /**
  * This class encapsulate the business logic related to the OfficeHierarchy
  * configuration and updation of office hierarchy configuration
- * @author rajenders
- * 
  */
 public class OfficeHierarchyBusinessProcessor extends MifosBusinessProcessor {
 	

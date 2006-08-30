@@ -39,8 +39,6 @@ package org.mifos.framework.security.util.resources;
 
 /**
  * This inteface will hold all the constants used related to the security
- * @author rajenders
- *
  */
 public interface SecurityConstants {
 	public final  String NOSUCHALGORITHM="security.error.noSuchAlgorithm";

@@ -59,8 +59,6 @@ import org.mifos.framework.util.valueobjects.Context;
 /**
  * This is the business processor for the PersonnelNotes. 
  * It takes care of handling all the business logic for the PersonnelNotes module
- * @author ashishsm
- *
  */
 public class PersonnelNotesBusinessProcessor extends MifosBusinessProcessor {
 	/**An insatnce of the logger which is used to log statements */

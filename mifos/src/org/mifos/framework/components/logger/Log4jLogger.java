@@ -30,8 +30,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 
-/**	@author sumeethaec
- *  Created Date: 28-07-05
+/**	
  *  This class contains a logger object log the messages. 
  *  Also contains functions to log the messages at different levels 
  */ 

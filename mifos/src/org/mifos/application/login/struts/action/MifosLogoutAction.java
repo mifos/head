@@ -23,8 +23,6 @@ import org.mifos.framework.struts.action.MifosBaseAction;
 
 /**
  * This class is the Action for the Logout.
- * 
- * @author mohammedn
  */
 public class MifosLogoutAction extends MifosBaseAction {
 

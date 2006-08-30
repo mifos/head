@@ -30,8 +30,6 @@ import com.sun.xml.bind.validator.Messages;
 /**
  * XMLSerializer that calls the native interface of MSV and performs validation.
  * Used in a pair with a ValidationContext.
- * 
- * @author  Kohsuke Kawaguchi
  */
 public class MSVValidator implements XMLSerializer, IDContextProvider2
 {

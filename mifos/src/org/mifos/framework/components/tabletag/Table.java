@@ -46,15 +46,10 @@ import org.mifos.framework.exceptions.TableTagException;
 
 /**
  * This class renders the table
- * @author rohitr
- * 
  */
 
 public class Table {
 
-	/**
-	 * Default constructor
-	 */
 	public Table() {
 		super();
 	}

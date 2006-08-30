@@ -43,12 +43,9 @@ import java.util.List;
 /**
  * This class is used to get the leaf level offices i.e branch offices
  * along with the parent for that list
- * @author rajenders
- *
  */
 public class BranchParentOffice implements Serializable{
 	private static final long serialVersionUID=9222;
-
 
 	/**
 	 * This would hold the branch list parentId's

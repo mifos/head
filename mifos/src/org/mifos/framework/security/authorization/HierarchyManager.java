@@ -54,7 +54,6 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SecurityException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.Observer;
 import org.mifos.framework.security.util.OfficeCacheView;
@@ -66,10 +65,6 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 
-/**
- * @author rajenders
- *
- */
 public class HierarchyManager implements Observer {
 	/**
 	 * This would hold the office id to searchid mapping

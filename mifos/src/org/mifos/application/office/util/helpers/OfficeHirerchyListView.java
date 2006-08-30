@@ -45,9 +45,6 @@ import org.mifos.framework.business.View;
 
 /**
  * This class represents the list current officeLevels in the system
- * 
- * @author rajenders
- * 
  */
 public class OfficeHirerchyListView extends View {
 

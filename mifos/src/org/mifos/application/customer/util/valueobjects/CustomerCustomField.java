@@ -40,19 +40,12 @@ package org.mifos.application.customer.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class CustomerCustomField extends ValueObject {
 
-	/**
-	 *
-	 */
 	public CustomerCustomField() {
 		super();
-		
 	}
+
 	private Integer customerCustomFieldId;
 	private Customer customer;
 	private Short fieldId;

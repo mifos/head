@@ -2,10 +2,6 @@ package org.mifos.application.productdefinition.util.helpers;
 
 import org.mifos.framework.business.View;
 
-/**
- * @author mohammedn
- * 
- */
 public class AccountProcessFlowView extends View {
 
 	private String clientsSubmitApproval;

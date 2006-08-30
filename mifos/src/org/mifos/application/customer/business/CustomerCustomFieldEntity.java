@@ -42,8 +42,6 @@ import org.mifos.framework.business.PersistentObject;
 
 /**
  * This class encpsulate the custom field for the customer
- * 
- * @author ashishsm
  */
 public class CustomerCustomFieldEntity extends PersistentObject {
 

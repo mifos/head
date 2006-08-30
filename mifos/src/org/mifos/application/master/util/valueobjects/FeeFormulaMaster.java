@@ -40,25 +40,15 @@ package org.mifos.application.master.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class FeeFormulaMaster extends ValueObject {
 
 	private Short feeFormulaId;
 	private String feeFormulaName;
 
-
-	/**
-	 *
-	 */
 	public FeeFormulaMaster(Short feeFormulaId,String feeFormulaName)
 	{
 		this.feeFormulaId = feeFormulaId;
 		this.feeFormulaName = feeFormulaName;
-
-
 	}
 
 	/**

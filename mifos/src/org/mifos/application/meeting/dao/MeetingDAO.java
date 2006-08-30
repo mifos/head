@@ -81,9 +81,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 
 /**
  * This class encapsulate all database access logic related meeting module
- * 
- * @author rajenders
- * 
  */
 public class MeetingDAO extends DAO {
 	

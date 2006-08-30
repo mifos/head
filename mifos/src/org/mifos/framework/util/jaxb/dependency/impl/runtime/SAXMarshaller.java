@@ -35,8 +35,6 @@ import com.sun.xml.bind.serializer.Util;
  * To marshal an object, create an instance of SAXMarshaller
  * and call the serializeElements method of the XMLSerializable
  * object that you want to marshal.
- * 
- * @author  Kohsuke Kawaguchi
  */
 public class SAXMarshaller implements XMLSerializer
 {

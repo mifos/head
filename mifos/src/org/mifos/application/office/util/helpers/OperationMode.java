@@ -41,9 +41,6 @@ import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 /**
  * Represent the operating mode of the office
- * 
- * @author rajenders
- * 
  */
 public enum OperationMode {
 	LOCAL_SERVER(Short.valueOf("0")), REMOTE_SERVER(Short.valueOf("1"));

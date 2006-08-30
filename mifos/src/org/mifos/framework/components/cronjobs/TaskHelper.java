@@ -38,26 +38,17 @@
 
 package org.mifos.framework.components.cronjobs;
 
-
-
 import java.sql.Timestamp;
-import java.util.Date;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.framework.components.cronjobs.valueobjects.Task;
 import org.mifos.framework.dao.DAO;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
-
-/**
- * @author krishankg
- *
- */
 public abstract class TaskHelper extends DAO {
 
 	public MifosTask mifosTask;

@@ -41,10 +41,6 @@ package org.mifos.application.customer.util.valueobjects;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
- * @author ashishsm
- *
- */
-/**
  * A class that represents a row in the 'customer_name_detail' table.
  * This class may be customized as it is never re-generated
  * after being created.

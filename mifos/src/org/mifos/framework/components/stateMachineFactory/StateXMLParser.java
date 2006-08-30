@@ -60,10 +60,6 @@ import org.xml.sax.SAXParseException;
 
 import com.sun.org.apache.xml.internal.utils.DefaultErrorHandler;
 
-/**
- * @author rohitr
- *
- */
 public class StateXMLParser {
 
 	private StateXMLParser() {

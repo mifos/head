@@ -109,8 +109,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 
 /**
  * This class acts as Action for creating/updating a client.
- * @author ashishsm
- *
  */
 public class ClientCreationAction extends MifosWizardAction {
 

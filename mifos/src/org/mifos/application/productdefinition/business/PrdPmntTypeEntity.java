@@ -41,10 +41,6 @@ package org.mifos.application.productdefinition.business;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.framework.business.PersistentObject;
 
-/**
- * @author ashishsm
- * 
- */
 public class PrdPmntTypeEntity extends PersistentObject {
 
 	private Short prdPmntTypeId;

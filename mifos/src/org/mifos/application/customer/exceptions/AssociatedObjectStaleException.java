@@ -40,10 +40,6 @@ package org.mifos.application.customer.exceptions;
 
 import org.mifos.framework.exceptions.ApplicationException;
 
-/**
- * @author sumeethaec
- *
- */
 public class AssociatedObjectStaleException extends ApplicationException {
 	
 	public AssociatedObjectStaleException() {

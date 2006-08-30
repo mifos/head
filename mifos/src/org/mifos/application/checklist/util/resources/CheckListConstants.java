@@ -37,10 +37,6 @@
 */
 package org.mifos.application.checklist.util.resources;
 
-/**
- * @author imtiyazmb
- *
- */
 public interface CheckListConstants {
 
 	//custom methods 

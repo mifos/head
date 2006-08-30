@@ -40,8 +40,8 @@ package org.mifos.application.customer.exceptions;
 import org.mifos.framework.exceptions.ApplicationException;
 
 /**
- * This exception is thrown when customer cannot be transferred to diffetent office or center
- * @author navitas
+ * This exception is thrown when customer cannot be transferred to different 
+ * office or center
  */
 public class CustomerTransferException extends ApplicationException {
 	

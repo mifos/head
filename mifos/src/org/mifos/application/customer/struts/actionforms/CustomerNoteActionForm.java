@@ -48,7 +48,6 @@ import org.mifos.framework.util.helpers.Constants;
 /**
  * This class denotes the form bean for the Customer Note.
  * It consists of the fields for which the user inputs values
- * @author navitas
  */
 public class CustomerNoteActionForm extends MifosSearchActionForm{
 	

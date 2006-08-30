@@ -41,8 +41,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class is used to reprsent the office code 
- * @author rajenders
- *
  */
 public class OfficeCodeMaster extends ValueObject
 {

@@ -72,10 +72,9 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 
 /**
  * This is the test class for testing methods of MifosBaseAction class.
- * It is expected that before running the test cases in this file, one must have the certain users
+ * It is expected that before running the test cases in this file, 
+ * one must have the certain users
  * and a branch office are present in the system.
- * @author ashishsm
- *
  */
 public class MifosBaseActionTest extends MifosMockStrutsTestCase {
 
@@ -104,7 +103,8 @@ public class MifosBaseActionTest extends MifosMockStrutsTestCase {
 	 *
 	 * @see junit.framework.MifosTestCase#setUp()
 	 */
-	public void setUp()throws Exception{
+	@Override
+	public void setUp() throws Exception{
 		super.setUp();
 		try {
 			//System.out.println("Indside the method setting the web.xml" + ResourceLoader.getURI("/org/mifos/META-INF/web.xml").getPath());

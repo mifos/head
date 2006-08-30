@@ -42,9 +42,6 @@ import org.mifos.framework.struts.actionforms.MifosActionForm;
 
 /**
  * This class is the ActionForm associated with the ReportParamsMap Action.
- * 
- * @author zankar
- * 
  */
 public class ReportsParamsMapActionForm extends MifosActionForm {
 	

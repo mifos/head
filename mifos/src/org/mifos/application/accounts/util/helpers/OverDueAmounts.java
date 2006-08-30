@@ -9,8 +9,6 @@ import org.mifos.framework.util.helpers.Money;
 
 /**
  * This class acts as wrapper class for overdue amounts.
- * @author ashishsm
- *
  */
 public class OverDueAmounts  {
 	private Money principalOverDue ;

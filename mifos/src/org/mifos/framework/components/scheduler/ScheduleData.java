@@ -1,8 +1,6 @@
 package org.mifos.framework.components.scheduler;
 
 /**
- * @author navitas
- * Created on Aug 12, 2005
  * It is an abstract class which implements ScheduleDataIntf and acts as an adapter class.
  * Other classes extending ScheduleData class implements methods respective to them.
  */

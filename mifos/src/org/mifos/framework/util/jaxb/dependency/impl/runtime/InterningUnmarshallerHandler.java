@@ -17,9 +17,6 @@ import com.sun.xml.bind.unmarshaller.InterningXMLReader;
 /**
  * Filter {@link SAXUnmarshallerHandler} that interns all the Strings
  * in the SAX events. 
- * 
- * @author
- *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 final class InterningUnmarshallerHandler extends InterningXMLReader implements SAXUnmarshallerHandler {
     

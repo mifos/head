@@ -36,10 +36,7 @@
 
  */
 package org.mifos.application.customer.util.helpers;
-/**
- * @author navitas
- *
- */
+
 public interface CustomerConstants {
 	public static final String CUSTOMER_NOTE_ACTION="CustomerNoteAction";
 	public static final String CUSTOMER_HISTORICAL_DATA_ACTION="CustomerHistoricalDataAction";

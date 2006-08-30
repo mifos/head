@@ -60,8 +60,6 @@ import org.mifos.application.reports.business.ReportsParamsMap;
 import org.mifos.application.reports.business.ReportsParamsMapValue;
 /**
  * Control Class for Report Params 
- * @author zankar
- *
  */
 public class ReportsParamsMapAction extends BaseAction {
 	

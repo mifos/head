@@ -40,10 +40,6 @@ package org.mifos.application.customer.client.exceptions;
 
 import org.mifos.framework.exceptions.ApplicationException;
 
-/**
- * @author ashishsm
- *
- */
 public class DuplicateClientException extends ApplicationException {
 
 	/**

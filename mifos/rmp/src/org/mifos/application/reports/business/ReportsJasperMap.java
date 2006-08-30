@@ -43,7 +43,6 @@ import org.mifos.framework.security.util.UserContext;
 
 /**
  * This class encapsulates mapping between Jasper file and Reports
- * @author zankar
  */
 
 public class ReportsJasperMap extends BusinessObject {

@@ -44,10 +44,6 @@ import org.mifos.application.office.util.valueobjects.Office;
 import org.mifos.application.personnel.util.valueobjects.Personnel;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author sumeethaec
- *
- */
 public class CustomerMovement extends ValueObject{
 	private Integer customerMovementId;
 	private Short status;

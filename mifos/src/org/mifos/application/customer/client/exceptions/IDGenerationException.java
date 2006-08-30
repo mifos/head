@@ -40,15 +40,8 @@ package org.mifos.application.customer.client.exceptions;
 
 import org.mifos.framework.exceptions.ApplicationException;
 
-/**
- * @author ashishsm
- *
- */
 public class IDGenerationException extends ApplicationException {
 
-	/**
-	 * 
-	 */
 	public IDGenerationException() {
 		super();
 		// TODO Auto-generated constructor stub

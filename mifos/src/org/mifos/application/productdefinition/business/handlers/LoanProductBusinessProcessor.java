@@ -76,15 +76,9 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 /**
  * This class contains the business logic related to creation,updation of the 
  * laon product.
- * 
- * @author mohammedn
- * 
  */
 public class LoanProductBusinessProcessor extends MifosBusinessProcessor {
 
-	/**
-	 * default constructor
-	 */
 	public LoanProductBusinessProcessor() {
 	}
 	

@@ -66,8 +66,8 @@ import org.apache.struts.taglib.TagUtils;
 
 
 /**
- * @author rajenders This class is mifos Select tag which renders the tag on the
- *         screen
+ * This class is mifos Select tag which renders the tag on the
+ * screen
  *  User should call the javascript the function transferData(outSel) onclick event of
  *  submit button passing the refrence of the output list i.e. whatever he has given
  *  as property1 above e.g. <html:submit onclick="transferData(this.form.outList)"/>
@@ -493,8 +493,8 @@ public class MifosCompositeSelect extends BodyTagSupport {
     }
 
     /**
-     * @author rajenders This function Add the javascript to the tag for moving
-     *         the data between the lists
+     * This function Add the javascript to the tag for moving
+     * the data between the lists
      * @param results   StringBuffer object to hold the string representation of the
      *            tag
      */

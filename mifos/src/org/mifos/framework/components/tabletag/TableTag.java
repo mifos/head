@@ -67,9 +67,6 @@ import org.mifos.framework.util.valueobjects.Context;
 
 /**
  * This class renders the table list.
- *
- * @author rohitr
- * @version 1.0
  */
 public class TableTag extends BodyTagSupport {
 

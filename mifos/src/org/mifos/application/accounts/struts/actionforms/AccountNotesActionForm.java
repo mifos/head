@@ -50,7 +50,6 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 /**
  * This class denotes the form bean for the Account Note.
  * It consists of the fields for which the user inputs values
- * @author navitas
  */
 public class AccountNotesActionForm extends MifosSearchActionForm{
 	

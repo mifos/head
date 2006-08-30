@@ -46,8 +46,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * Used to return instances of ValueObject.
- * @author ashishsm
- *
  */
 public class ValueObjectFactory extends ResourceFactory {
 

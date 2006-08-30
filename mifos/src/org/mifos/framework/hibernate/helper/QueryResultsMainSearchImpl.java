@@ -3,17 +3,11 @@
  */
 package org.mifos.framework.hibernate.helper;
 
-import java.util.List;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.customer.util.valueobjects.CustomerSearch;
 import org.mifos.framework.exceptions.HibernateSearchException;
 
-/**
- * @author imtiyazmb
- *
- */
 public class QueryResultsMainSearchImpl extends QueryResultSearchDTOImpl {
 	
 	 public java.util.List get(int position, int noOfObjects) throws HibernateSearchException

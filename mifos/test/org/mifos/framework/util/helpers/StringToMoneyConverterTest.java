@@ -42,26 +42,22 @@ import org.mifos.framework.MifosTestCase;
 
 /**
  * This class is used to test StringToMoneyConverter.
- * @author ashishsm
- *
  */
 public class StringToMoneyConverterTest extends MifosTestCase {
-	
 	
 	public StringToMoneyConverterTest(){
 		
 	}
 	
 	/**
-	 *This method creates a money object with MFI currency because as of now the converter creates 
+	 *This method creates a money object with MFI currency because 
+	 *as of now the converter creates 
 	 *a new Money object with the currency set to MFI currency.
 	 */
 	public void testConvert(){
-		
 		Converter stringToMoney = new StringToMoneyConverter();
 		Money money = new Money(TestObjectFactory.getMFICurrency(),"142.34");
 		assertEquals("testing StringToMoneyConverter should have returned a Money object.",money, (Money)stringToMoney.convert(Money.class, "142.34"));
-		
 	}
 	
 	/**

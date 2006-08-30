@@ -94,9 +94,6 @@ import org.mifos.framework.util.helpers.StringToMoneyConverter;
  * This is the plugin which is called when the system starts up for the first
  * time. It initializes various things in the system like the logger,reads the
  * initialization.xml and confiures the application
- * 
- * @author ashishsm
- * 
  */
 public class InitializerPlugin implements PlugIn {
 

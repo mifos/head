@@ -47,10 +47,6 @@ import org.mifos.application.accounts.struts.actionforms.AccountsSearchActionFor
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.framework.struts.action.MifosSearchAction;
 
-/**
- * @author rajenders
- *
- */
 public class AccountsSearchAction extends MifosSearchAction {
 
 	/* (non-Javadoc)

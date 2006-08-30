@@ -41,8 +41,6 @@ import org.mifos.framework.business.View;
 
 /**
  * This class holds tha data related to Group Search
- * @author navita
- *
  */
 public class GroupSearchResultsView extends  View{
 

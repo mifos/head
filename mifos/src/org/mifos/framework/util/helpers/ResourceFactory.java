@@ -51,9 +51,9 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 
 /**
- * Base class for all factories in the class. it has got default implementations for methods to read the xml and put them in cache.
- * @author ashishsm
- *
+ * Base class for all factories in the class. 
+ * it has got default implementations for methods to read the xml and 
+ * put them in cache.
  */
 public abstract class ResourceFactory 
 {

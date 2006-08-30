@@ -46,16 +46,9 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class acts a valueobject for searching customers.
- * @author ashishsm
- *
  */
 public class CustomerSearch extends ValueObject {
 	
-
-	
-	/**
-	 * 
-	 */
 	public CustomerSearch() {
 		super();
 	}

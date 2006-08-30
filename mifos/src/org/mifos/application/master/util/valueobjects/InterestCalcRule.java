@@ -40,24 +40,11 @@ package org.mifos.application.master.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class InterestCalcRule extends ValueObject{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 64536467567561L;
 
-
-
-	/**
-	 * 
-	 */
 	public InterestCalcRule() {
-		
 	}
 	
 /** The composite primary key value. */

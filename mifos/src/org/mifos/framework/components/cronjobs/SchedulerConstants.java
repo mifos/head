@@ -38,10 +38,6 @@
 
 package org.mifos.framework.components.cronjobs;
 
-/**
- * @author krishankg
- *
- */
 public interface SchedulerConstants {
 
 	public static final String PATH="org/mifos/framework/util/resources/cronjobs/task.xml";

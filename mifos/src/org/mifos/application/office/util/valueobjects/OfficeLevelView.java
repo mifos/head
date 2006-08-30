@@ -6,10 +6,6 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * @author rajenders
- *
- */
 public class OfficeLevelView implements Serializable{
 	public static final long serialVersionUID=033;
 

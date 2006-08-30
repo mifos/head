@@ -66,8 +66,6 @@ import org.mifos.framework.util.valueobjects.Context;
 
 /**
 * This class is used as Action to search for customers.
-* @author ashishsm
-*
 */
 public class CustomerSearchAction extends MifosSearchAction {
 

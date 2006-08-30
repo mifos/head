@@ -40,8 +40,6 @@ package org.mifos.framework.exceptions;
 
 /**
  * This exception is thrown when we try to read the xml files in the System.
- * @author ashishsm
- *
  */
 public class XMLReaderException extends SystemException {
 	

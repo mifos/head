@@ -37,15 +37,8 @@
  */
 package org.mifos.framework.exceptions;
 
-/**
- * @author rajenders
- *
- */
 public class SecurityException extends ApplicationException{
 
-	/**
-	 * 
-	 */
 	public SecurityException() {
 		super();
 		// TODO Auto-generated constructor stub

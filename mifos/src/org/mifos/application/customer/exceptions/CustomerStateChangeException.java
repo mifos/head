@@ -41,7 +41,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 
 /**
  * This exception is thrown when customer state can not be changed
- * @author navitas
  */
 public class CustomerStateChangeException extends ApplicationException{
 	

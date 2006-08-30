@@ -21,8 +21,6 @@ import org.mifos.application.master.business.SupportedLocalesEntity;
 /**
  * This class encapsulate all the configuration related funtionality in system
  * e.g. Label configuration
- * 
- * @author rajenders
  */
 
 public class MifosConfiguration implements ConfigurationIntf {

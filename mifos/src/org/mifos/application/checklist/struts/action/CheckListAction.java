@@ -61,9 +61,6 @@ import org.mifos.framework.util.valueobjects.Context;
 /**
  * Checklist action class through which all actions related to check list module
  * happen
- * 
- * @author imtiyazmb
- * 
  */
 
 public class CheckListAction extends MifosBaseAction {

@@ -42,9 +42,6 @@ import org.mifos.framework.business.PersistentObject;
 
 /**
  * This class encapsulate the type of the meeting e.g loan meeting
- * 
- * @author rajenders
- * 
  */
 public class MeetingTypeEntity extends PersistentObject {
 

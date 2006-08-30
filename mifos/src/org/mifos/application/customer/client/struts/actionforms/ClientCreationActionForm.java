@@ -93,8 +93,6 @@ import org.mifos.framework.util.valueobjects.Context;
 
 /**
  * This class acts as ActionForm for creating/updating a client.
- * @author ashishsm
- *
  */
 public class ClientCreationActionForm extends MifosActionForm {
 	private ConfigurationIntf labelConfig=MifosConfiguration.getInstance();

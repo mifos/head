@@ -47,8 +47,6 @@ import org.mifos.framework.exceptions.SystemException;
 /**
  * EncryptionService will provide the encryption services to the system it
  * mainly provides encrypt and decrypt method
- * 
- * @author rajenders
  */
 public class EncryptionService {
 

@@ -42,8 +42,6 @@ package org.mifos.framework.exceptions;
 /**
  * This is exception is thrown if the application tries to look for a ResourceBundle 
  * which is not present.
- * @author ashishsm
- *
  */
 public class ResourceBundleNotFoundException extends SystemException {
 

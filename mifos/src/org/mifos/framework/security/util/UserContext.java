@@ -43,9 +43,6 @@ import java.util.Locale;
 import java.util.Set;
 import java.io.Serializable;
 
-/**
- * @author rajenders Window - Preferences - Java - Code Style - Code Templates
- */
 public class UserContext implements Serializable{
 
 	/**

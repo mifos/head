@@ -42,9 +42,6 @@ import org.mifos.framework.business.PersistentObject;
 
 /**
  * This class encapsulate the RecurrenceType for a meeting
- * 
- * @author rajenders
- * 
  */
 public class RecurrenceTypeEntity extends PersistentObject {
 	

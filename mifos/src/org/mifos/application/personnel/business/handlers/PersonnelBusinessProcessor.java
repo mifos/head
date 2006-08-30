@@ -91,8 +91,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 /**
  * This is the business processor for the Personnel module. 
  * It takes care of handling all the business logic for the Personnel module
- * @author ashishsm
- *
  */
 public class PersonnelBusinessProcessor extends MifosBusinessProcessor {
 	/**An insatnce of the logger which is used to log statements */

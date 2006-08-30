@@ -58,8 +58,6 @@ import org.mifos.framework.struts.tags.MifosPropertyMessageResources;
  * Label based on the Locale. The class is also used to determine whether the
  * eleemnt is configurable mandatory and also to obtain the currency of the
  * Locale, if the element is of type currency.
- * 
- * @author mohammedn
  */
 public class LabelTagUtils {
 

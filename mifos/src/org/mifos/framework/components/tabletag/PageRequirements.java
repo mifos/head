@@ -3,16 +3,8 @@
  */
 package org.mifos.framework.components.tabletag;
 
-/**
- * @author rohitr
- *
- */
 public class PageRequirements {
 
-	
-	/**
-	 * 
-	 */
 	public PageRequirements() {
 		super();
 		// TODO Auto-generated constructor stub

@@ -50,18 +50,11 @@ import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstan
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
-/**
- * @author ashishsm
- *
- */
 public class CollectionSheetPersistence extends Persistence{
-
 	
 	public CollectionSheetPersistence() {
 		super();
-		
 	}
-	
 		
 	/**
 	 * @return - Returs a list of accountActionDate objects,where there objects are obtained by running a query.

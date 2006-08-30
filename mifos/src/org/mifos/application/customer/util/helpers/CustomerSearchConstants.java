@@ -38,10 +38,6 @@
 
 package org.mifos.application.customer.util.helpers;
 
-/**
- * @author mohammedn
- *
- */
 public interface CustomerSearchConstants {
 
 	public String GETPATHCUSTOMERSEARCH="CustomerSearchAction";

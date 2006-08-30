@@ -38,17 +38,11 @@
 
 package org.mifos.application.productdefinition.business;
 
-import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- * 
- */
 public class PrdOfferingFeesEntity extends PersistentObject {
 
 	private LoanOfferingBO loanOffering;

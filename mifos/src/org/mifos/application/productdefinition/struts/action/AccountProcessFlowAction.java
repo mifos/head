@@ -48,23 +48,13 @@ import org.mifos.application.productdefinition.struts.actionforms.AccountProcess
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.framework.struts.action.MifosBaseAction;
 
-/**
- * @author ashishsm
- *
- */
 public class AccountProcessFlowAction extends MifosBaseAction {
 
-	/**
-	 * 
-	 */
 	public AccountProcessFlowAction() {
 		super();
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.struts.action.MifosBaseAction#getPath()
-	 */
 	@Override
 	protected String getPath() {
 		

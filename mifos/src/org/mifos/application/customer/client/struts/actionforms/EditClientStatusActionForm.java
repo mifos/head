@@ -53,8 +53,6 @@ import org.mifos.framework.util.helpers.Constants;
 
 /**
  * This class acts as ActionForm for edit client status module.
- * @author ashishsm
- *
  */
 public class EditClientStatusActionForm extends MifosActionForm {
 

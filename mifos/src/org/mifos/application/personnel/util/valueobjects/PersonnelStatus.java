@@ -43,8 +43,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This obect denotes status of the personnel.  
- * @author navitas
- *
  */
 public class PersonnelStatus extends ValueObject{
 	

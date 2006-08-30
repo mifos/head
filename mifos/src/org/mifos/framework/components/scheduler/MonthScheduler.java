@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
- * @author navitas
- * Created on Aug 12, 2005
  * Generates schedules based on month recurrence.
  * To generate schedule dates it works on scheduleInputs which wraps MonthData instance, startDate, endDate and occurrences. 
  */

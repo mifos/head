@@ -36,16 +36,8 @@
 
  */
 
-
 package org.mifos.framework.exceptions;
 
-/**
- * @author rajenders
- * 
- * InvalidUserException
- * 
- * 
- */
 public class InvalidUserException extends ApplicationException {
 	public InvalidUserException() {
 		super();

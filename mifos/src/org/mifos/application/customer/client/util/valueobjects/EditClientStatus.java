@@ -44,8 +44,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class acts as valueobject for edit client status module.
- * @author ashishsm
- *
  */
 public class EditClientStatus extends ValueObject {
 

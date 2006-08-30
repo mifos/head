@@ -48,8 +48,6 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.LabelTagUtils;
 
 /**
- * @author navitas
- * Created on Sep 05, 2005
  * It accepts top menu tab name and accordingly generates and displays left menu.
  */
 public class MenuTag extends BaseHandlerTag{

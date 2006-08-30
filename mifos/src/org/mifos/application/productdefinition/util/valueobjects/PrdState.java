@@ -41,15 +41,8 @@ package org.mifos.application.productdefinition.util.valueobjects;
 import org.mifos.application.master.util.valueobjects.LookUpValue;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class PrdState extends ValueObject{
 
-	/**
-	 * Default Constructor 
-	 */
 	public PrdState() {
 	}
 	/**

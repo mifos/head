@@ -108,9 +108,7 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 
 /**
  * This class denotes the DAO layer for the group module.
- * @author navitas
  */
-
 
 public class GroupDAO extends DAO {
 	/**An instance of the logger which is used to log statements */

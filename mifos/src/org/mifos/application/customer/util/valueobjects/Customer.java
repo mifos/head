@@ -60,10 +60,6 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
- * @author ashishsm
- *
- */
-/**
  * A class that represents a row in the 'customer' table.
  * This class may be customized as it is never re-generated
  * after being created.

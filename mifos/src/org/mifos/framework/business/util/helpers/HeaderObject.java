@@ -43,8 +43,6 @@ import java.io.Serializable;
 /**
  * This is an interface which any class used for showing headers  on the UI  should implement.
  * This is just a marker interface.
- * @author ashishsm
- *
  */
 public interface HeaderObject extends Serializable{
 	

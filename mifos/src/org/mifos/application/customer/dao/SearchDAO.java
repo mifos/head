@@ -63,10 +63,7 @@ import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.QueryResultIdSearch;
 import org.mifos.framework.hibernate.helper.QueryResultLoanAccountIdSearch;
-/**
- * @author imtiyazmb
- *
- */
+
 public class SearchDAO {
 	
 	public QueryResult queryResult = null;

@@ -5,10 +5,6 @@ package org.mifos.application.customer.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author sumeethaec
- *
- */
 public class CollectionSheet extends ValueObject {
 
 	private int collectionSheetType;

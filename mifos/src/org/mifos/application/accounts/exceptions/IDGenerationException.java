@@ -43,8 +43,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 /**
  * This class indicates that there was an exception while generating
  * global account number(account system id) 
- * @author ashishsm
- *
  */
 public class IDGenerationException extends ApplicationException {
 

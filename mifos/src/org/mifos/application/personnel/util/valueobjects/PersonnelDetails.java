@@ -44,8 +44,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This obect has values for extra fields of a personnel.  
- * @author ashishsm
- *
  */
 public class PersonnelDetails extends ValueObject{
 

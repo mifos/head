@@ -56,10 +56,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
-/**
- * @author ashishsm
- * 
- */
 public class AccountFeesEntity extends PersistentObject {
 
 	private final Integer accountFeeId;

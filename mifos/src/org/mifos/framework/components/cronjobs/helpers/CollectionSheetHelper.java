@@ -57,14 +57,16 @@ import org.mifos.framework.util.helpers.PersistenceServiceName;
 
 /**
  * This is the helper class which is invoked by the collection sheet task.
- * The execute method of this class is called by the task.This class generates the collection sheet
+ * The execute method of this class is called by the task.This class generates 
+ * the collection sheet
  * for the next day , it does that by adding a day to the date when it runs.
- * But it would not take care of the situation where lets say it is scheduled to run at 8:00 p.m.
- * every day and generate collection sheet data for the next date but lets say due to some reason this gets delayed 
- * and runs after 0:00 hrs in which it would generate collection sheet data for the next day and todays data would 
+ * But it would not take care of the situation where lets say it is scheduled 
+ * to run at 8:00 p.m.
+ * every day and generate collection sheet data for the next date but lets 
+ * say due to some reason this gets delayed 
+ * and runs after 0:00 hrs in which it would generate collection sheet data 
+ * for the next day and todays data would 
  * be lost.
- * @author ashishsm
- *
  */
 public class CollectionSheetHelper extends TaskHelper {
 

@@ -40,8 +40,6 @@ package org.mifos.framework.exceptions;
 
 /**
  * This exception is thrown by {@link MethodInvoker} when it attempts to invoke any method which is not present or is inaccessible. 
- * @author ashishsm
- *
  */
 public class MethodInvocationException extends SystemException {
 
@@ -65,6 +63,7 @@ public class MethodInvocationException extends SystemException {
 		// TODO Auto-generated constructor stub
 	}
 	
+	@Override
 	public String getKey(){
 		return "exception.framework.SystemException.MethodInvocationException";
 	}

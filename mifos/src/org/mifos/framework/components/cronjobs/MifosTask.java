@@ -40,12 +40,7 @@ package org.mifos.framework.components.cronjobs;
 
 import java.util.TimerTask;
 
-/**
- * @author krishankg
- *
- */
 public class MifosTask extends TimerTask {
-
 
 	public TaskHelper helper;
 

@@ -38,16 +38,9 @@
 
 package org.mifos.framework.components.tabletag;
 
-//import org.mifos.framework.components.logger.LoggerConstants;
-//import org.mifos.framework.components.logger.MifosLogManager;
-//import org.mifos.framework.components.logger.MifosLogger;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXParseException;
 
-/**
- * @author mohammedn
- *
- */
 public class TableTagErrorHandler implements ErrorHandler {
 	
 	//MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);

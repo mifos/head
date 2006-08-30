@@ -3,10 +3,6 @@
  */
 package org.mifos.application.accounts.loan.util.valueobjects;
 
-/**
- * @author krishankg
- *
- */
 public class Waive {
 	
 	private Integer accountId;

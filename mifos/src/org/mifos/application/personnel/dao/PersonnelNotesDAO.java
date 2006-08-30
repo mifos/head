@@ -58,8 +58,6 @@ import org.mifos.application.personnel.util.valueobjects.PersonnelNotes;
 
 /**
  * This class denotes the DAO layer for the PersonnelNote.
- * @author ashishsm
- *
  */
 public class PersonnelNotesDAO extends DAO {
 

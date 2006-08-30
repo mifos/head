@@ -40,10 +40,6 @@ package org.mifos.application.productdefinition.business;
 
 import org.mifos.application.master.business.MasterDataEntity;
 
-/**
- * @author ashishsm
- * 
- */
 public class GracePeriodTypeEntity extends MasterDataEntity {
 
 	public GracePeriodTypeEntity() {

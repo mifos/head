@@ -174,13 +174,11 @@ import org.mifos.framework.security.util.UserContext;
  * meant to be modified and the method that starts with "create" creates a new
  * object inserts it into the database and returns that hence these objects are
  * meant to be cleaned up by the user.
- * 
- * @author ashishsm
- * 
  */
 public class TestObjectFactory {
 
-	private static TestObjectPersistence testObjectPersistence = new TestObjectPersistence();
+	private static TestObjectPersistence testObjectPersistence = 
+		new TestObjectPersistence();
 
 	/**
 	 * @return - Returns the office created by test data scripts. If the row

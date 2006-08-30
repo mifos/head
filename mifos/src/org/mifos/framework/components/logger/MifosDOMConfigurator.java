@@ -24,16 +24,10 @@
  */
 package org.mifos.framework.components.logger;
 
-import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import org.apache.log4j.spi.LoggerRepository;
 import org.apache.log4j.xml.DOMConfigurator;
-import org.mifos.framework.util.helpers.ResourceLoader;
 
-/**	@author sumeethaec
- *  Created Date: 02-08-05
+/**	
  *  Class contains functions to configure the logger by reading the configuration files
  */
 public class  MifosDOMConfigurator extends DOMConfigurator{

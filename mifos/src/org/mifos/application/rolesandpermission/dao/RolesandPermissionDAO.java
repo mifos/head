@@ -69,9 +69,6 @@ import org.mifos.framework.util.valueobjects.Context;
 /**
  * RolesandPermissionDAO is used for data retrival for the roleandpermission
  * module it has functions for populating ui from master data
- * 
- * @author rajenders
- * 
  */
 public class RolesandPermissionDAO extends DAO {
 	

@@ -59,15 +59,9 @@ import org.mifos.framework.util.valueobjects.Context;
 /**
  * The class is the Business Processor associated with Login.It extends from
  * MifosBusinessProcessor.
- * 
- * @author mohammedn
- * 
  */
 public class MifosLoginBusinessProcessor extends MifosBusinessProcessor {
 
-	/**
-	 * Default Constructor
-	 */
 	public MifosLoginBusinessProcessor() {
 		super();
 	}

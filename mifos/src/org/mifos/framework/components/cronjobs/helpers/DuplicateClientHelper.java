@@ -39,9 +39,7 @@
 package org.mifos.framework.components.cronjobs.helpers;
 
 import java.util.Iterator;
-import java.util.List;
 
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.framework.components.cronjobs.TaskHelper;
@@ -49,10 +47,6 @@ import org.mifos.framework.components.cronjobs.valueobjects.TempTable;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
-/**
- * @author krishankg
- *
- */
 public class DuplicateClientHelper extends TaskHelper {
 
 	@Override

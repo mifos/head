@@ -39,30 +39,21 @@ package org.mifos.application.fees.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-
-/**
- * @author Krishankg
- *
- */
 public class FeeLevel extends ValueObject
 {
 
 	private Fees feeId;
 	private Short levelId;
 	private Short feeLevelId;
-
     
     public FeeLevel()
     {
     }
-
     
     public void setFeeLevelId(Short feeLevelId)
     {
              this.feeLevelId = feeLevelId;
     }
-
-   
     
     public void setLevelId(Short levelId)
     {

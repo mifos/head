@@ -40,9 +40,8 @@ package org.mifos.framework.exceptions;
 import org.mifos.framework.exceptions.SystemException;
 
 /**
- * This Exception is thrown from the {@link InitializerPlugin} when any of the attempted initializations fail.
- * @author ashishsm
- *
+ * This Exception is thrown from the {@link InitializerPlugin} when 
+ * any of the attempted initializations fail.
  */
 public class AppNotConfiguredException extends SystemException {
 

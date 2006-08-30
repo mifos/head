@@ -88,9 +88,6 @@ import org.mifos.framework.util.valueobjects.Context;
 
 /**
  * This is dao for the AccountsApplyCharges action
- * 
- * @author rajenders
- * 
  */
 public class AccountsApplyChargesDAO extends DAO {
 

@@ -112,7 +112,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 /** 
  *  This is the business processor for the group module. 
  *  It takes care of handling all the business logic for the group module
- *  @author navitas
  */
 public class GroupBusinessProcessor extends MifosBusinessProcessor {
 	/**An instance of the customerhelper class */

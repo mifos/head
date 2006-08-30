@@ -42,9 +42,8 @@ import org.mifos.framework.struts.actionforms.MifosActionForm;
 
 /**
  * This class needs to have objects corresponding to the value object as well as 
- * corresponding to the UI because in the UI we would need differnt maps to fill the UI controls.
- * @author ashishsm
- *
+ * corresponding to the UI because in the UI we would need differnt maps to fill 
+ * the UI controls.
  */
 public class PmntTypesActionForm extends MifosActionForm {
 

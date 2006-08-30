@@ -42,9 +42,6 @@ import java.io.Serializable;
 
 /**
  * This class represent a branch office
- * 
- * @author rajenders
- * 
  */
 public class BranchOffice implements Serializable{
 	

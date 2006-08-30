@@ -48,8 +48,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 /**
  * This class represents the main value object for the office module
  * used to create update office record in the database
- * @author rajenders
- *
  */
 public class Office extends ValueObject
 {

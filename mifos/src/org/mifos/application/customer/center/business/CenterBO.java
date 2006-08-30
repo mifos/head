@@ -28,10 +28,6 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
 
-/**
- * @author sumeethaec
- * 
- */
 public class CenterBO extends CustomerBO {
 
 	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CENTERLOGGER);

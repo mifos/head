@@ -52,13 +52,9 @@ import org.mifos.framework.util.helpers.Constants;
 
 /**
  * This class is used as ActionForm to search for customers.
- * @author ashishsm
- *
  */
 public class CustomerSearchActionForm extends MifosSearchActionForm {
-	/**
-	 * default constructor 
-	 */
+
 	public CustomerSearchActionForm() {
 	}
 	

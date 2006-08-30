@@ -42,8 +42,6 @@ import java.io.Serializable;
 
 /**
  * This class is helper class and provides input for center search
- * @author navitas
- *
  */
 public class CustomerSearchInput implements Serializable {
 	

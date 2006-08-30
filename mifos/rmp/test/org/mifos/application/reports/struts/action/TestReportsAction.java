@@ -49,8 +49,6 @@ import java.util.Locale;
 import java.util.Set;
 /**
  * Test Case for ReportsAction
- * @author zankar
- *
  */
 public class TestReportsAction extends MockStrutsTestCase {
 	private UserContext userContext ;

@@ -40,11 +40,7 @@
 package org.mifos.framework.security.util;
 
 /**
- * @author rajenders
- * 
  * ActivityChangeEvent
- * 
- * 
  */
 public class ActivityChangeEvent implements SecurityEvent {
 	

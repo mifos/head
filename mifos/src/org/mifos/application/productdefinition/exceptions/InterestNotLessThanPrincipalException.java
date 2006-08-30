@@ -44,19 +44,11 @@ import org.mifos.framework.exceptions.ApplicationException;
  * This exception is thrown in case of Loan product instance definition 
  * when interest is deducted at disbursement to indicate that principal left after
  * deducting disbursement is not less than principal.
- * @author ashishsm
- *
  */
 public class InterestNotLessThanPrincipalException extends ApplicationException {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 774586797890707231L;
 
-	/**
-	 * 
-	 */
 	public InterestNotLessThanPrincipalException() {
 		super();
 		// TODO Auto-generated constructor stub

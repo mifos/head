@@ -39,8 +39,6 @@
 package org.mifos.framework.components.mifosmenu;
 
 /**
- * @author navitas
- * Created on Sep 05, 2005
  * It stores menugroups for a left menu.
  */
 public class MenuGroup {

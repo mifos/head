@@ -67,9 +67,6 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 /**
  * This class holds all the business logic related to the office module .All
  * validations are done in the functions starts with initial
- * 
- * @author rajenders
- * 
  */
 public class OfficeBusinessProcessor extends MifosBusinessProcessor {
 

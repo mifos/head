@@ -79,10 +79,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.SessionUtils;
 
-/**
- * @author rohitr
- * 
- */
 public class EditSavingsStatusAction extends AccountAppAction {
 
 	private SavingsBusinessService savingsService;

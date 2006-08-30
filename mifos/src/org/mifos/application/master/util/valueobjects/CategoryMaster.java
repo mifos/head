@@ -40,25 +40,15 @@ package org.mifos.application.master.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class CategoryMaster extends ValueObject {
 
 	private Short categoryId;
 	private String categoryName;
 
-
-	/**
-	 *
-	 */
 	public CategoryMaster(Short categoryId,String categoryName)
 	{
 		this.categoryId = categoryId;
 		this.categoryName = categoryName;
-
-
 	}
 
 	/**

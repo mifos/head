@@ -58,10 +58,6 @@ import org.xml.sax.SAXParseException;
 
 import com.sun.org.apache.xml.internal.utils.DefaultErrorHandler;
 
-/**
- * @author mohammedn
- * 
- */
 public class TableTagParser {
 
 	private TableTagParser() {

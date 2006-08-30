@@ -25,10 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Implementation of <b>ServletOutputStream</b> that works with
  * the CompressionServletResponseWrapper implementation.
- *
- * @author Amy Roh
- * @author Dmitri Valdin
- * @version $Revision: 1.3 $, $Date: 2004/03/18 16:40:33 $
  */
 
 public class CompressionResponseStream

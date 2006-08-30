@@ -34,8 +34,7 @@ import org.mifos.framework.exceptions.LoggerConfigurationException;
 import org.mifos.framework.exceptions.ResourceBundleNotFoundException;
 import org.mifos.framework.util.helpers.ResourceLoader;
 
-/**	@author sumeethaec
- *  Created Date: 28-07-05
+/**	
  *  A class with static methods to obtain instances of the logger. It also keeps a HashMap of the actual logger instances per module
  */
 public class MifosLogManager {

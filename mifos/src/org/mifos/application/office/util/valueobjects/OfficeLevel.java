@@ -43,8 +43,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class represet the OfficeLevel in the system e.g. headoffice
- * @author rajenders
- *
  */
 public class OfficeLevel extends ValueObject{
 	private static final long serialVersionUID=666666666666l;

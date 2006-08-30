@@ -42,10 +42,6 @@ import org.mifos.application.customer.util.valueobjects.CustomerState;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
- * @author imtiyazmb
- * 
- */
-/**
  * A class that represents a row in the 'customer_checklist' table. This class
  * may be customized as it is never re-generated after being created.
  */

@@ -53,11 +53,8 @@ import org.mifos.framework.util.helpers.Constants;
 /**
  * This denotes the action class for the account notes module. It uses the base class functions to create, update. 
  * It also includes implementations for cancel and validate
- * @author navitas
  */
 public class AccountNotesAction extends MifosSearchAction {
-
-	
 
   /** 
    *  Returns the path which uniquely identifies the element in the dependency.xml.

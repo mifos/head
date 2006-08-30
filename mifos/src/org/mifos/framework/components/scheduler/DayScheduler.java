@@ -5,8 +5,6 @@ import java.util.Date;
 
 
 /**
- * @author navitas
- * Created on Aug 12, 2005
  * Generates schedules based on day recurrence.
  * To generate schedule dates it works on scheduleInputs which wraps has DayData instance, startDate, endDate and occurrences. 
  */
@@ -20,6 +18,7 @@ public class DayScheduler extends AbstractScheduler{
 	 * @param startDate a date after which the next schedule date is to be calculated.
 	 * @return next schedule date 
 	 */
+	@Override
 	protected Date getNextDate(Date startDate) throws SchedulerException{
 		gc.setTime(startDate);
 		//apply recurrence to startDate

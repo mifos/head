@@ -20,15 +20,8 @@ import org.xml.sax.SAXParseException;
 
 import com.sun.org.apache.xml.internal.utils.DefaultErrorHandler;
 
-/**
- * @author rohitr
- *
- */
 public class TypeParser {
 
-	/**
-	 * 
-	 */
 	public TypeParser() {
 		super();
 		// TODO Auto-generated constructor stub

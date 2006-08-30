@@ -48,7 +48,6 @@ import org.mifos.application.customer.util.valueobjects.Customer;
 
 /**
  * A class that represents a row in the 'customer_historicaldata' table.
- * @author navitas
  */
 public class CustomerHistoricalData extends ValueObject{
 	

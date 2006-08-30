@@ -75,7 +75,6 @@ import org.mifos.framework.util.helpers.PersistenceServiceName;
 
 /**
  * This class encapsulates all the business logic related to report module 
- * @author zankar
  */
 
 public class ReportsBusinessService extends BusinessService{

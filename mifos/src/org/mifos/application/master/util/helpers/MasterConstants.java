@@ -38,10 +38,6 @@
 
 package org.mifos.application.master.util.helpers;
 
-/**
- * @author sumeethaec
- *
- */
 public interface MasterConstants {
 	public static final String SALUTATION="Salutation";
 	public static final String MARITAL_STATUS="MaritalStatus";

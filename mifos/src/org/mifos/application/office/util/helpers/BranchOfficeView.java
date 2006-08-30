@@ -42,7 +42,6 @@ import org.mifos.framework.business.View;
 
 /**
  * This class represent a branch office
- * @author rajenders
  */
 public class BranchOfficeView extends View {
 

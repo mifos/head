@@ -14,11 +14,6 @@ import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.struts.plugin.valueObjects.EntityMaster;
 
-
-/**
- * @author krishankg
- *
- */
 public final class EntityMasterData {
 
 	public static Map<Object,Object> entityMap=new HashMap<Object,Object>();

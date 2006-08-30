@@ -44,9 +44,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class encapsulate the meeting
- * 
- * @author rajenders
- * 
  */
 public class Meeting extends ValueObject {
 	private static final long serialVersionUID = 44l;

@@ -76,8 +76,6 @@ import org.mifos.framework.util.valueobjects.Context;
 
 /**
  * This class denotes the form bean for the center. It consists of the fields for which the user inputs values
- * @author sumeethaec
- *
  */
 
 public class CenterActionForm extends  MifosSearchActionForm {

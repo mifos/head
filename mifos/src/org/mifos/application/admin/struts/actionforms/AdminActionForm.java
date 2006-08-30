@@ -39,10 +39,6 @@ package org.mifos.application.admin.struts.actionforms;
 
 import org.mifos.framework.struts.actionforms.MifosActionForm;
 
-/**
- * @author rajenders
- *
- */
 public class AdminActionForm extends MifosActionForm {
 
 }

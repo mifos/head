@@ -42,43 +42,21 @@ import org.mifos.framework.exceptions.ApplicationException;
 
 /**
  * This exception would be thrown if the ID could not be generated.It is a type of ApplicationException.
- * @author ashishsm
- *
  */
 public class IDGenerationException extends ApplicationException {
 
-	
-
-	/**
-	 * default constructor
-	 */
 	public IDGenerationException() {
 		super();
 	}
 
-	/**
-	 * constructor
-	 * 
-	 * @param values
-	 */
 	public IDGenerationException(Object[] values) {
 		super(values);
 	}
 
-	/**
-	 * constructor
-	 * 
-	 * @param cause
-	 */
 	public IDGenerationException(Throwable cause) {
 		super(cause);
 	}
 
-	/**
-	 * constructor
-	 * 
-	 * @param key
-	 */
 	public IDGenerationException(String key) {
 		super(key);
 	}

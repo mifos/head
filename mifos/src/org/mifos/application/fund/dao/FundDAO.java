@@ -66,17 +66,12 @@ import org.mifos.framework.util.valueobjects.SearchResults;
 /**
  * FundDAO contains code for getting master data and methods which make database calls for creating or updating and 
  * retrieving information corresponding to the Fund module 
- * 
- * @author imtiyazmb 
- * 
  */
 
 public class FundDAO extends DAO {
 
 	/**An instance of the logger which is used to log statements */
 	private MifosLogger logger =MifosLogManager.getLogger(LoggerConstants.FUNDLOGGER);
-
-
 	
 	/**
 	 * This method retrieves the list of glCodes

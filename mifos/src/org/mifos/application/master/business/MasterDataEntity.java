@@ -10,8 +10,6 @@ import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 
 /**
- * @author rohitr
- *
  * Together with {@link EntityMasterConstants}
  * this class provides the old
  * way of handling entity types.  The new way

@@ -41,7 +41,6 @@ import java.io.Serializable;
 
 /**
  * This class is the helper class to show links at top of the jsp pages
- * @author navitas
  */
 public class LinkParameters implements Serializable {
 	

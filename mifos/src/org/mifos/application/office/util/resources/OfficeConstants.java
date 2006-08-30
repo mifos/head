@@ -37,10 +37,6 @@
  */
 package org.mifos.application.office.util.resources;
 
-/**
- * @author rajenders
- *
- */
 public interface OfficeConstants {
 	
 	//dependency names 

@@ -41,9 +41,7 @@ import org.hibernate.Session;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeFrequencyTypeEntity;
-import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.util.valueobjects.Currency;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
@@ -53,12 +51,8 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 /**
  * This class is used to persist objects created by TestObjectFactory.
- * @author ashishsm
- *
  */
 public class TestObjectPersistence {
-	
-	
 	
 	/**
 	 * @return - Returns the personnel created by master data scripts.
@@ -66,7 +60,6 @@ public class TestObjectPersistence {
 	 * If the row does not already exist in the database it returns null.
 	 */
 	public PersonnelBO getPersonnel(Short personnelId) {
-		
 		Session session = HibernateUtil.getSessionTL();
 		return (PersonnelBO)session.get(PersonnelBO.class,personnelId );
 	}

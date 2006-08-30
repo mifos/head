@@ -41,14 +41,8 @@ package org.mifos.application.productdefinition.util.valueobjects;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author mohammedn
- *
- */
 public class PrdOfferingMeeting extends ValueObject {
-	/**
-	 * Default Constructor 
-	 */
+
 	public PrdOfferingMeeting() {
 	}
 	/**

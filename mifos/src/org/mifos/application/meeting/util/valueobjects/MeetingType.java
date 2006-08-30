@@ -39,10 +39,6 @@ package org.mifos.application.meeting.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author rajenders
- *
- */
 public class MeetingType extends ValueObject {
 	private static final long serialVersionUID = 5555555555l;
 	/**

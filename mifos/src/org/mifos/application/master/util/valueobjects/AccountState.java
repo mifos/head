@@ -42,8 +42,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class depicts the different state an account can be.
- * @author ashishsm
- *
  */
 public class AccountState extends ValueObject {
 

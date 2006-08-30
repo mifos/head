@@ -39,50 +39,29 @@ package org.mifos.application.rolesandpermission.exceptions;
 
 import org.mifos.framework.exceptions.ApplicationException;
 
-/**
- * @author rajenders
- * 
- */
 public class RoleAndPermissionException extends ApplicationException {
 	private static final long serialVersionUID = 876543222l;
 
-	/**
-	 * 
-	 */
 	public RoleAndPermissionException() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @param values
-	 */
 	public RoleAndPermissionException(Object[] values) {
 		super(values);
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @param key
-	 * @param values
-	 */
 	public RoleAndPermissionException(String key, Object[] values) {
 		super(key, values);
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @param key
-	 * @param cause
-	 */
 	public RoleAndPermissionException(String key, Throwable cause) {
 		super(key, cause);
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @param cause
-	 */
 	public RoleAndPermissionException(Throwable cause) {
 		super(cause);
 		// TODO Auto-generated constructor stub

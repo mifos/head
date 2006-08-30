@@ -45,8 +45,6 @@ import org.mifos.framework.business.PersistentObject;
 
 /**
  * This class encapsulate the notes associated with account
- * 
- * @author ashishsm
  */
 public class AccountNotesEntity extends PersistentObject {
 

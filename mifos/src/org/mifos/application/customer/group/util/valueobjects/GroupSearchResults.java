@@ -41,8 +41,6 @@ import java.io.Serializable;
 
 /**
  * This class holds tha data related to Group Search
- * @author navita
- *
  */
 public class GroupSearchResults implements Serializable{
 	/**Denotes the office name to whicht he center belongs*/

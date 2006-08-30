@@ -50,9 +50,6 @@ import com.sun.xml.bind.serializer.AbortSerializationException;
  * <p>
  * Also observe that the namespace declarations are allowed only between
  * "startElement" and "endAttributes".
- * 
- * 
- * @author  Kohsuke Kawaguchi
  */
 public interface XMLSerializer
 {

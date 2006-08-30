@@ -68,8 +68,6 @@ import org.mifos.framework.util.valueobjects.Context;
 
 /**
  * This class acts as an Action class for editing group membership of a client.
- * @author ashishsm
- *
  */
 public class EditGrpMembershipAction extends MifosSearchAction {
 

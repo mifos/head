@@ -50,14 +50,8 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.struts.actionforms.MifosSearchActionForm;
 import org.mifos.framework.util.helpers.Constants;
 
-/**
- * @author ashishsm
- *
- */
 public class ProductCategoryActionForm extends MifosSearchActionForm {
-	/**
-	 * Default Constructor
-	 */
+
 	public ProductCategoryActionForm() {
 		this.productType = new ProductType();
 		this.prdCategoryStatus=new PrdCategoryStatus();

@@ -42,8 +42,6 @@ import org.mifos.framework.business.View;
 
 /**
  * This class denotes the data related to performance history of the group.
- * 
- * @author navitas
  */
 
 public class GroupPerformanceHistoryView extends View {

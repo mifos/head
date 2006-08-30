@@ -40,15 +40,8 @@ package org.mifos.application.master.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class CollateralType extends ValueObject {
 
-	/**
-	 * 
-	 */
 	public CollateralType() {
 		super();
 		// TODO Auto-generated constructor stub

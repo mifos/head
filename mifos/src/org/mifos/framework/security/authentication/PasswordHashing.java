@@ -14,8 +14,6 @@ import org.mifos.framework.exceptions.SystemException;
 
 /**
  * This class encapsulate all the logic related to password hashing 
- * @author rajenders
- *
  */
 public class PasswordHashing 
 {

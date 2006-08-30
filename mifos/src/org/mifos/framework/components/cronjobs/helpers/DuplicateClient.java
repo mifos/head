@@ -40,10 +40,6 @@ package org.mifos.framework.components.cronjobs.helpers;
 
 import org.mifos.framework.components.cronjobs.MifosTask;
 
-/**
- * @author krishankg
- *
- */
 public class DuplicateClient extends MifosTask {
 
 	@Override

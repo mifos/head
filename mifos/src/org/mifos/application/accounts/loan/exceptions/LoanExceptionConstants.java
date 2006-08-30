@@ -41,8 +41,6 @@ package org.mifos.application.accounts.loan.exceptions;
 /**
  * This is the interface which has the key for all the exceptions thrown
  * from loan module.
- * @author ashishsm
- *
  */
 public interface LoanExceptionConstants {
 	public final String INVALIDDISBURSEMENTDATE = "exceptions.application.loan.invalidDisbursementDate";

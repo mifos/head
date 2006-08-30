@@ -60,10 +60,9 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 
 /**
  * This class is used to test methods of InitializerPlugin.
- * To do this it tries to call load method of MifosProductDefinition, becuase with out calling any
+ * To do this it tries to call load method of MifosProductDefinition, 
+ * becuase with out calling any
  * method on any action it does not load the plugin.
- * @author ashishsm
- *
  */
 public class InitializerPluginTest extends MifosMockStrutsTestCase {
 
@@ -89,7 +88,8 @@ public class InitializerPluginTest extends MifosMockStrutsTestCase {
 	 *
 	 * @see junit.framework.MifosTestCase#setUp()
 	 */
-	public void setUp()throws Exception{
+	@Override
+	public void setUp() throws Exception{
 		super.setUp();
 		try {
 

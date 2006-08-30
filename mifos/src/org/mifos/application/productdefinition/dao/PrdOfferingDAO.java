@@ -62,14 +62,9 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 /**
  * This class acts as a base class for product offering daos and has methods 
  * common to all of them.
- * @author ashishsm
- *
  */
 public class PrdOfferingDAO extends DAO {
 
-	/**
-	 * Default Constructor
-	 */
 	public PrdOfferingDAO() {
 	}
 	

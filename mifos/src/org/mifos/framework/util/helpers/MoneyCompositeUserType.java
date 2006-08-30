@@ -55,10 +55,9 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 /**
- * This class denotes a composite user type that ahs been created for the Money class. This has been done so that the
+ * This class denotes a composite user type that has been 
+ * created for the Money class. This has been done so that the
  * Money object can be persisted by Hibernate
- * @author sumeethaec
- *
  */
 public class MoneyCompositeUserType implements CompositeUserType {
 

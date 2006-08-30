@@ -7,15 +7,8 @@ import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author mohammedn
- *
- */
 public class ClientUpcomingFeecahrges extends ValueObject {
 
-	/**
-	 * 
-	 */
 	public ClientUpcomingFeecahrges() {
 	}
 	

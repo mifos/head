@@ -38,8 +38,6 @@
 
 package org.mifos.application.customer.util.valueobjects;
 
-
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -53,10 +51,6 @@ import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 /**
  * A class that represents a row in the 'custom_field_definition' table.
  * This class may be customized as it is never re-generated

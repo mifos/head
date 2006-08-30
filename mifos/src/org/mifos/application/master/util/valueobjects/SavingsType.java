@@ -40,20 +40,10 @@ package org.mifos.application.master.util.valueobjects;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class SavingsType extends ValueObject {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4353454325341L;
 
-	/**
-	 * 
-	 */
 	public SavingsType() {
 	}
 	

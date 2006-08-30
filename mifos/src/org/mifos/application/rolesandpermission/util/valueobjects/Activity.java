@@ -50,7 +50,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class maps the activity table in the system 
- * @author rajenders
  */
 public class Activity extends ValueObject {
 

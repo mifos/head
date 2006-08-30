@@ -3,10 +3,6 @@
  */
 package org.mifos.application.customer.util.valueobjects;
 
-/**
- * @author sumeethaec
- *
- */
 public class PerformanceHistory {
 	private int numberOfGroups;
 	private int numberOfClients;

@@ -23,26 +23,17 @@ import org.mifos.framework.util.valueobjects.Context;
 
 import servletunit.struts.MockStrutsTestCase;
 
-/**
- * @author mohammedn
- *
- */
 public class TestLoanProduct extends MockStrutsTestCase {
 
-	/**
-	 *
-	 */
 	public TestLoanProduct() {
 		super();
 	}
 
-	/**
-	 * @param testName
-	 */
 	public TestLoanProduct(String testName) {
 		super(testName);
 	}
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		try {
@@ -69,6 +60,7 @@ public class TestLoanProduct extends MockStrutsTestCase {
 		request.getSession(false).setAttribute(LoginConstants.ACTIVITYCONTEXT,ac);
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}

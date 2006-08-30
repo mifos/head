@@ -37,8 +37,6 @@
 */
 package org.mifos.application.collectionsheet;
 
-
-
 import org.mifos.application.collectionsheet.business.TestCollSheetBO;
 import org.mifos.application.collectionsheet.business.TestCollSheetCustBO;
 import org.mifos.application.collectionsheet.business.TestCollSheetSavingsDetailsEntity;
@@ -48,19 +46,12 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-/**
- * @author ashishsm
- *
- */
 public class CollectionSheetTestSuite extends MifosTestSuite{
 public static void main (String[] args)
 	{
 		Test testSuite = suite();
 		
 		TestRunner.run (testSuite);
-		
-		
-
 	}
 	
 

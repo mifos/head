@@ -17,9 +17,6 @@ import java.util.StringTokenizer;
 
 import org.mifos.framework.exceptions.ApplicationException;
 
-/**
- * @author navitas
- */
 public class DateHelper {
 
 	private final static String dbFormat = "yyyy-MM-dd";

@@ -53,10 +53,6 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.struts.actionforms.MifosActionForm;
 import org.mifos.framework.util.helpers.Constants;
 
-/**
- * @author rajenders
- * 
- */
 public class MeetingActionForm extends MifosActionForm {
 	private static final long serialVersionUID = 44l;
 

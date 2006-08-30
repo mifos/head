@@ -37,44 +37,23 @@
 */
 package org.mifos.application.accounts.loan.struts.action;
 
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.mifos.application.accounts.loan.business.LoanActivityView;
-import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.struts.action.AccountAppAction;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.business.util.helpers.MethodNameConstants;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.SessionUtils;
 
-/**
- * @author rohitr
- *
- */
 public class LoanActivityAction extends AccountAppAction {
 	
 	private LoanBusinessService loanService;
-	private  MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+//	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 	
 	public LoanActivityAction()throws ServiceException {
 		loanService = (LoanBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Loan);
 	}
 	
+	@Override
 	protected BusinessService getService() {
 		return loanService;
 	}	

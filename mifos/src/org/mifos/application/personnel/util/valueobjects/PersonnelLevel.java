@@ -42,8 +42,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This represents the master data of defined personnel levels in the system.
- * @author ashishsm
- *
  */
 public class PersonnelLevel extends ValueObject{
 

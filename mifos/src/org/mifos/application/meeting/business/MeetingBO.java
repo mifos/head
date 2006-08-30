@@ -47,12 +47,8 @@ import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 
 /**
  * This class encapsulate the meeting
- * 
- * @author rajenders
- * 
  */
 public class MeetingBO extends BusinessObject {
-
 	
 	private Integer meetingId;
 

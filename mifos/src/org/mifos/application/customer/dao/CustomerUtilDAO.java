@@ -92,10 +92,6 @@ import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.valueobjects.ReturnType;
 import org.mifos.framework.util.valueobjects.SearchResults;
 
-/**
- * @author sumeethaec
- * 
- */
 public class CustomerUtilDAO extends DAO {
 	/**
 	 * This method retrieves the list of loan officers under the office the

@@ -42,8 +42,6 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This is place holder value object for apply charges action 
- * @author rajenders
- *
  */
 public class AccountsApplyCharges extends ValueObject {
 	private static final long serialVersionUID =22233l;

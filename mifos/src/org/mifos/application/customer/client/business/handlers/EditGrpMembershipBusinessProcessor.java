@@ -70,8 +70,6 @@ import org.mifos.framework.util.valueobjects.Context;
 
 /**
  * This class acts as a Business Processor for editing group membership of a client.
- * @author ashishsm
- *
  */
 public class EditGrpMembershipBusinessProcessor extends MifosBusinessProcessor {
 

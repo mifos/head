@@ -3,10 +3,6 @@
  */
 package org.mifos.application.rolesandpermission.util.helpers;
 
-/**
- * @author sumeethaec
- *
- */
 public interface RolesAndPermissionConstants {
 	public final static  int ZERO =0;
 	public final static  int ONE =1;	

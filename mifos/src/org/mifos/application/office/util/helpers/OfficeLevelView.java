@@ -8,8 +8,6 @@ import org.mifos.framework.business.View;
 
 /**
  * It is helper class used for showing the list of offices
- * @author rajenders
- * 
  */
 public class OfficeLevelView extends View {
 	

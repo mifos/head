@@ -46,9 +46,6 @@ import org.mifos.framework.util.helpers.Constants;
 
 /**
  * This class represent custome field defination entity
- * 
- * @author ashishsm
- * 
  */
 
 public class CustomFieldDefinitionEntity extends PersistentObject {

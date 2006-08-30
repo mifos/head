@@ -50,19 +50,11 @@ import org.mifos.framework.util.helpers.DecimalFieldHelper;
 
 /**
  * This is a custom validator class used to validate the format of the decimal field.
- * @author ashishsm
- *
  */
 public class DecimalFormatValidator {
 	
-	
-	
-	/**
-	 * 
-	 */
 	public DecimalFormatValidator() {
 		super();
-		
 	}
 
 	/**

@@ -44,9 +44,6 @@ import org.mifos.framework.business.BusinessObject;
 
 /**
  * This class is value object for the officeHierarchy
- * 
- * @author rajenders
- * 
  */
 public class OfficeHierarchyEntity extends BusinessObject {
 

@@ -6,10 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * @author navitas
- * Created on Aug 12, 2005
  * Returns different schedules based on day/week/month recurrence.
- * It delegates method calls to DayScheduler, WeekScheduler or MonthScheduler based on the type of recurrence choosed.
+ * It delegates method calls to DayScheduler, WeekScheduler or 
+ * MonthScheduler based on the type of recurrence choosed.
  */
 
 public class Scheduler implements SchedulerIntf {

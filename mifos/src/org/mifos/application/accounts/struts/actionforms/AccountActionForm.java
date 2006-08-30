@@ -51,19 +51,12 @@ import org.mifos.framework.struts.actionforms.MifosSearchActionForm;
 
 /**
  * This class acts as base action form class for all types of accounts.
- * @author ashishsm
- *
  */
 public class AccountActionForm extends MifosSearchActionForm {
 
-	/**
-	 *
-	 */
 	public AccountActionForm() {
 		super();
 		customer = new Customer();
-
-
 	}
 
 

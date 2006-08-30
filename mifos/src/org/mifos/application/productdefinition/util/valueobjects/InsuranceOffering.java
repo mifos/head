@@ -38,15 +38,8 @@
 
 package org.mifos.application.productdefinition.util.valueobjects;
 
-/**
- * @author ashishsm
- *
- */
 public class InsuranceOffering extends PrdOffering {
 
-	/**
-	 * 
-	 */
 	public InsuranceOffering() {
 		super();
 		// TODO Auto-generated constructor stub

@@ -47,15 +47,10 @@ import org.mifos.framework.exceptions.TableTagException;
 
 /**
  * This class renders the link to the display name.
- * @author rohitr
- * 
  */
 public class Link {
-	
-	
 
 	/**
-	 * 
 	 * @param displayname	name to be displayed
 	 * @param action		action to be taken
 	 * @param param			parameters passed for that action

@@ -56,7 +56,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 /**
  * Has methods to create, get and delete audit log details.
- * @author rajitha
  */
 public class AuditLogDAO {
 

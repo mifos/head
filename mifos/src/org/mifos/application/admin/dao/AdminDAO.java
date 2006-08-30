@@ -39,10 +39,6 @@ package org.mifos.application.admin.dao;
 
 import org.mifos.framework.dao.DAO;
 
-/**
- * @author rajenders
- *
- */
 public class AdminDAO extends DAO {
 
 }

@@ -40,10 +40,6 @@ package org.mifos.application.productdefinition.util.helpers;
 
 import org.mifos.application.productdefinition.exceptions.IDGenerationException;
 
-/**
- * @author ashishsm
- *
- */
 public class IDGenerator {
 	static short prdCategoryId=0;
 	

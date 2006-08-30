@@ -44,14 +44,9 @@ import org.mifos.framework.struts.actionforms.MifosSearchActionForm;
  * This class is used as ActionForm for viewing all closed accounts of a customer.
  * It inherits a search Node Map from MifosSearchActionForm, which is used to store search parameters 
  * coming from UI.  
- * @author ashishsm
- *
  */
 public class ViewClosedAccountsActionForm extends MifosSearchActionForm {
 
-	/**
-	 * 
-	 */
 	public ViewClosedAccountsActionForm() {
 		super();
 		// TODO Auto-generated constructor stub

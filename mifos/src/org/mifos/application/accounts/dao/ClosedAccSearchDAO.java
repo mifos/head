@@ -64,15 +64,8 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.valueobjects.SearchResults;
 
-/**
- * @author mohammedn
- * 
- */
 public class ClosedAccSearchDAO extends DAO {
 
-	/**
-	 * default constructor
-	 */
 	public ClosedAccSearchDAO() {
 	}
 

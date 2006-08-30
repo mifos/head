@@ -48,8 +48,6 @@ import org.mifos.framework.exceptions.ApplicationException;
  * is creating new role in the system and that role already exist in the system.
  * This exception is also thrown if the user is trying to modufy the role and he
  * Changes the name of the role and the changed name already exist in the system
- * @author rajenders
- *
  */
 public class RoleAlreadyExist extends ApplicationException {
 	

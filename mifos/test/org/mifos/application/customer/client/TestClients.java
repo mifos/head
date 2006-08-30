@@ -11,8 +11,6 @@ import java.util.Set;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.mifos.application.customer.center.util.valueobjects.Center;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.client.util.valueobjects.Client;
 import org.mifos.application.customer.group.util.valueobjects.Group;
 import org.mifos.application.login.util.helpers.LoginConstants;
@@ -22,31 +20,20 @@ import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
-import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.valueobjects.Context;
 
 import servletunit.struts.MockStrutsTestCase;
 
-/**
- * @author mohammedn
- *
- */
 public class TestClients extends MockStrutsTestCase {
 
-	/**
-	 *
-	 */
 	public TestClients() {
 		super();
 	}
 
-	/**
-	 * @param arg0
-	 */
 	public TestClients(String testName) {
 		super(testName);
 	}
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		try {

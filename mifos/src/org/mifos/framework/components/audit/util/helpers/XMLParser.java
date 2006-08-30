@@ -3,45 +3,21 @@
  */
 package org.mifos.framework.components.audit.util.helpers;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 
-import org.mifos.framework.components.cronjobs.SchedulerConstants;
-import org.mifos.framework.components.customTableTag.ActionParam;
-import org.mifos.framework.components.customTableTag.Column;
-import org.mifos.framework.components.customTableTag.ColumnDetails;
-import org.mifos.framework.components.customTableTag.HeaderDetails;
-import org.mifos.framework.components.customTableTag.LinkDetails;
-import org.mifos.framework.components.customTableTag.Row;
 import org.mifos.framework.components.customTableTag.Table;
-import org.mifos.framework.components.customTableTag.TableTagConstants;
-import org.mifos.framework.components.customTableTag.TableTagParser;
-import org.mifos.framework.exceptions.TableTagParseException;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
-import com.sun.org.apache.xml.internal.utils.DefaultErrorHandler;
-
-/**
- * @author krishankg
- * 
- */
 public class XMLParser {
 
 	private static XMLParser instance = new XMLParser();

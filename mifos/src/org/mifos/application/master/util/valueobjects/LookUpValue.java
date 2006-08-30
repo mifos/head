@@ -42,10 +42,6 @@ import java.util.Set;
 import java.io.Serializable;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-/**
- * @author ashishsm
- *
- */
 public class LookUpValue extends ValueObject{
 
 	private Integer lookUpId;

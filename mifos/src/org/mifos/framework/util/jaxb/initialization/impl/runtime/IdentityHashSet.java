@@ -10,9 +10,6 @@ package org.mifos.framework.util.jaxb.initialization.impl.runtime;
 /**
  * A set of {@link Object}s that uses the == (instead of equals)
  * for the comparison.
- * 
- * @author
- *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 final class IdentityHashSet {
     /** The hash table data. */
