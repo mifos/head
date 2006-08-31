@@ -69,7 +69,6 @@ public class TestRepayLoanAction extends MifosMockStrutsTestCase {
 	}
 	
 	protected void tearDown() throws Exception {
-		super.tearDown();
 		accountBO=(AccountBO)HibernateUtil.getSessionTL().get(AccountBO.class,accountBO.getAccountId());
 		group=(CustomerBO)HibernateUtil.getSessionTL().get(CustomerBO.class,group.getCustomerId());
 		center=(CustomerBO)HibernateUtil.getSessionTL().get(CustomerBO.class,center.getCustomerId());
@@ -77,6 +76,7 @@ public class TestRepayLoanAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		HibernateUtil.closeSession();
+		super.tearDown();
 	}
 	
 	public void testLoadRepayment() throws HibernateProcessException{

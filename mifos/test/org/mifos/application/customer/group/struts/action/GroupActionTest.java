@@ -65,6 +65,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -96,6 +97,8 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 	private LoanBO loanBO;
 
 	private SavingsBO savingsBO;
+	
+	private UserContext userContext;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -109,7 +112,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
-		UserContext userContext = TestObjectFactory.getUserContext();
+		userContext = TestObjectFactory.getUserContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
@@ -138,11 +141,47 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-
 		HibernateUtil.closeSession();
+		userContext = null;
 		super.tearDown();
 	}
 
+	public void testHierarchyCheck()throws Exception{
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "hierarchyCheck");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		
+		boolean isCenterHierarchyExists = Configuration.getInstance().getCustomerConfig(userContext.getBranchId()).isCenterHierarchyExists();
+		if(isCenterHierarchyExists)
+			verifyForward(ActionForwards.loadCenterSearch.toString());
+		else
+			verifyForward(ActionForwards.loadCreateGroup.toString());
+	}
+	
+	public void testLoad()throws Exception{
+		createParentCustomer();
+		HibernateUtil.closeSession();
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("centerId", center.getCustomerId().toString());
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.load_success.toString());
+		
+		boolean isCenterHierarchyExists = Configuration.getInstance().getCustomerConfig(userContext.getBranchId()).isCenterHierarchyExists();
+		if(!isCenterHierarchyExists){
+			assertNotNull(SessionUtils.getAttribute(CustomerConstants.LOAN_OFFICER_LIST, request));	
+		}
+		assertNotNull(SessionUtils.getAttribute(GroupConstants.CENTER_HIERARCHY_EXIST,request));
+		assertNotNull(SessionUtils.getAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST,request));
+		assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,request));
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());	
+	}
+	
+	
 	public void testGet() throws Exception {
 		createCustomers();
 		CustomerPositionEntity customerPositionEntity = new CustomerPositionEntity(

@@ -42,15 +42,42 @@ package org.mifos.application.customer.group.struts.actionforms;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.struts.actionforms.CustomerActionForm;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.util.helpers.Constants;
 
 public class GroupCustActionForm extends CustomerActionForm {
 
+	private CustomerBO parentCustomer;
+	private String centerId;
+	private String parentOfficeId;
+	
+	public String getCenterId() {
+		return centerId;
+	}
+
+	public void setCenterId(String centerId) {
+		this.centerId = centerId;
+	}
+
+	public CustomerBO getParentCustomer() {
+		return parentCustomer;
+	}
+
+	public void setParentCustomer(CustomerBO parentCustomer) {
+		this.parentCustomer = parentCustomer;
+	}
+
+	public String getParentOfficeId() {
+		return parentOfficeId;
+	}
+
+	public void setParentOfficeId(String parentOfficeId) {
+		this.parentOfficeId = parentOfficeId;
+	}
+	
 	@Override
 	protected ActionErrors validateFields(HttpServletRequest request, String method)throws ApplicationException {
 		
@@ -63,6 +90,8 @@ public class GroupCustActionForm extends CustomerActionForm {
 		}
 		return errors;
 	}
+
+	
 
 
 }

@@ -38,9 +38,16 @@
 
 package org.mifos.framework;
 
+import java.util.Enumeration;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
+import org.mifos.framework.util.helpers.TestObjectFactory;
 
 import servletunit.struts.MockStrutsTestCase;
 
@@ -62,4 +69,60 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 		ActionErrors errors = (ActionErrors)request.getAttribute(Globals.ERROR_KEY);
 		return (errors == null || errors.isEmpty()) ? 0 : errors.size();
 	}
+	
+	@Override
+	protected void tearDown() throws Exception {		
+		doCleanUp(request);
+		doCleanUp(request.getSession());
+		TestObjectFactory.cleanUpTestObjects();
+		super.tearDown();
+		
+		
+	}
+	public  void doCleanUp(HttpSession session){
+		Enumeration keys = session.getAttributeNames();
+		String attributeKey = null;
+		if(null != keys ){
+			while(keys.hasMoreElements()){
+				
+				attributeKey = (String)keys.nextElement();
+				
+				Object obj = session.getAttribute(attributeKey);
+					session.removeAttribute(attributeKey);
+				if(obj.getClass().getName().equals("java.util.ArrayList"))
+				{
+					
+					List l = (List)obj;
+
+					while(l.size() != 0)
+					{
+						Object o = l.get(0);
+						l.remove(0);
+						o = null;
+					}
+				}
+					obj = null;	
+	
+			}// end-while
+		}// end-if
+		session = null;
+	}// end-doCleanUp
+
+	public  void doCleanUp(HttpServletRequest request){
+		Enumeration keys = request.getAttributeNames();
+		String attributeKey = null;
+		if(null != keys ){
+			while(keys.hasMoreElements()){
+				
+				attributeKey = (String)keys.nextElement();
+				Object obj = request.getAttribute(attributeKey);
+				
+				request.removeAttribute(attributeKey);
+				obj = null;
+	
+			}// end-while
+		}// end-if
+		request = null;
+	}// end-doCleanUp
+
 }

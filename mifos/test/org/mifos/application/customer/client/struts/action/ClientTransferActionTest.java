@@ -69,6 +69,8 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 		TestObjectFactory.cleanUp(center);
 		TestObjectFactory.cleanUp(center1);
 		TestObjectFactory.cleanUp(office);
+		HibernateUtil.closeSession();
+		super.tearDown();
 	}
 
 	public void testLoad_transferToBranch() throws Exception {

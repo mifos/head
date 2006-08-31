@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -46,6 +47,12 @@ public class TestReportsAction extends MifosMockStrutsTestCase {
 
 	}
 
+	@Override
+	protected void tearDown() throws Exception{
+		HibernateUtil.closeSession();
+		super.tearDown();
+	}
+	
 	public void testVerifyForwardOfReport() {
 		addRequestParameter("viewPath", "report_designer");
 		setRequestPathInfo("/reportsAction.do");

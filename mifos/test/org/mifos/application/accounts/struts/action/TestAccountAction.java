@@ -72,12 +72,13 @@ public class TestAccountAction extends MifosMockStrutsTestCase {
 
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
 		TestObjectFactory.cleanUp(accountBO);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		HibernateUtil.closeSession();
+		super.tearDown();
 	}
 
 	public void testSuccessfulRemoveFees() {

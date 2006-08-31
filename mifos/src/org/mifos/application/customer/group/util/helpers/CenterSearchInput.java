@@ -51,6 +51,12 @@ public class CenterSearchInput implements Serializable{
 	/** Denotes for officeId for which centers are to be searched*/
 	private Short officeId;
 
+	public CenterSearchInput(){}
+	
+	public CenterSearchInput(Short officeId, String input){
+		this.officeId = officeId;
+		this.groupInput = input;
+	}
 	/**
      * Return the value of the groupInput attribute.
      * @return String

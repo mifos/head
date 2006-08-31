@@ -22,6 +22,8 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 public class TestOfficeAction extends MifosMockStrutsTestCase {
 	
 	private UserContext userContext ;
+	
+	@Override
 	protected void setUp() throws Exception {
 		
 		super.setUp();
@@ -41,6 +43,12 @@ public class TestOfficeAction extends MifosMockStrutsTestCase {
 		ActivityContext ac = new ActivityContext((short) 0, userContext
 				.getBranchId().shortValue(), userContext.getId().shortValue());
 		request.getSession(false).setAttribute("ActivityContext", ac);
+	}
+	
+	@Override
+	protected void tearDown()throws Exception{			
+		HibernateUtil.closeSession();
+		super.tearDown();
 	}
 	
 	public void testGetAllOffices(){

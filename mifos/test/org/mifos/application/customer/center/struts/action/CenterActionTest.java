@@ -83,6 +83,8 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
+		HibernateUtil.closeSession();
+		super.tearDown();
 	}
 
 	public void testLoad() throws Exception {

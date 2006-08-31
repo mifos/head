@@ -167,6 +167,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.authentication.EncryptionService;
+import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 
 /**
@@ -192,7 +193,7 @@ public class TestObjectFactory {
 	 *         created are 1- Head Office , 2 - Area Office , 3 - BranchOffice.
 	 */
 	public static OfficeBO getOffice(Short officeId) {
-		return testObjectPersistence.getOffice(officeId);
+		return (OfficeBO)addObject(testObjectPersistence.getOffice(officeId));
 	}
 
 	public static void removeObject(PersistentObject obj) {
@@ -210,7 +211,7 @@ public class TestObjectFactory {
 	 */
 
 	public static PersonnelBO getPersonnel(Short personnelId) {
-		return testObjectPersistence.getPersonnel(personnelId);
+		return (PersonnelBO)addObject(testObjectPersistence.getPersonnel(personnelId));
 	}
 
 	/**
@@ -292,6 +293,7 @@ public class TestObjectFactory {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		addObject(center);
 		return center;
 	}
 	
@@ -309,6 +311,7 @@ public class TestObjectFactory {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		addObject(center);
 		return center;
 	}
 	
@@ -327,6 +330,7 @@ public class TestObjectFactory {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		addObject(center);
 		return center;
 	}
 		
@@ -385,6 +389,7 @@ public class TestObjectFactory {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		addObject(group);
 		return group;
 	}
 	
@@ -410,6 +415,7 @@ public class TestObjectFactory {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		addObject(group);
 		return group;
 	}
 	
@@ -442,6 +448,7 @@ public class TestObjectFactory {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		addObject(client);
 		return client;
 	}
 	
@@ -460,6 +467,7 @@ public class TestObjectFactory {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		addObject(client);
 		return client;
 	}
 	
@@ -482,6 +490,7 @@ public class TestObjectFactory {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		addObject(client);
 		return client;
 	}
 
@@ -583,7 +592,7 @@ public class TestObjectFactory {
 				.getSessionTL().get(GLCodeEntity.class, Short.valueOf("21"));
 		loanOffering.setInterestGLcode(glCodeInterest);
 		loanOffering.setPenaltyGLcode(glCodePrincipal);
-		return (LoanOfferingBO) testObjectPersistence.persist(loanOffering);
+		return (LoanOfferingBO) addObject(testObjectPersistence.persist(loanOffering));
 
 	}
 	
@@ -685,13 +694,13 @@ public class TestObjectFactory {
 				.getSessionTL().get(GLCodeEntity.class, Short.valueOf("21"));
 		loanOffering.setInterestGLcode(glCodeInterest);
 		loanOffering.setPenaltyGLcode(glCodePrincipal);
-		return (LoanOfferingBO) testObjectPersistence.persist(loanOffering);
+		return (LoanOfferingBO) addObject(testObjectPersistence.persist(loanOffering));
 
 	}
 
 
 	public static ProductCategoryBO getLoanPrdCategory() {
-		return testObjectPersistence.getLoanPrdCategory();
+		return (ProductCategoryBO) addObject(testObjectPersistence.getLoanPrdCategory());
 	}
 
 	/**
@@ -756,7 +765,7 @@ public class TestObjectFactory {
 		loanSummary.setOriginalPrincipal(new Money(currency, "300.0"));
 		loanSummary.setOriginalInterest(new Money(currency, "36.0"));
 
-		return (LoanBO) testObjectPersistence.persist(loan);
+		return (LoanBO)addObject(testObjectPersistence.persist(loan));
 	}
 
 	public static SavingsOfferingBO createSavingsOffering(String name,
@@ -827,8 +836,8 @@ public class TestObjectFactory {
 		savingsOffering.setDepositGLCode(glCodeEntity);
 		savingsOffering.setInterestGLCode(glCodeEntity);
 
-		return (SavingsOfferingBO) testObjectPersistence
-				.persist(savingsOffering);
+		return (SavingsOfferingBO) addObject(testObjectPersistence
+				.persist(savingsOffering));
 	}
 
 	public static SavingsBO createSavingsAccount(String globalNum,
@@ -874,7 +883,7 @@ public class TestObjectFactory {
 			savings.addAccountActionDate(actionDate);
 		}
 		HibernateUtil.commitTransaction();
-		return (SavingsBO) getObject(SavingsBO.class, savings.getAccountId());
+		return (SavingsBO) addObject(getObject(SavingsBO.class, savings.getAccountId()));
 	}
 
 	public static SavingsBO createSavingsAccount(String globalNum,
@@ -911,7 +920,7 @@ public class TestObjectFactory {
 		} catch (ApplicationException e) {
 			e.printStackTrace();
 		}
-		return (SavingsBO) getObject(SavingsBO.class, savings.getAccountId());
+		return (SavingsBO) addObject(getObject(SavingsBO.class, savings.getAccountId()));
 	}
 
 	public static MeetingBO createLoanMeeting(MeetingBO customerMeeting) {
@@ -1039,7 +1048,7 @@ public class TestObjectFactory {
 
 		} catch (Exception e) {
 		}
-		return testObjectPersistence.createFee(fee);
+		return (FeeBO)addObject(testObjectPersistence.createFee(fee));
 	}
 
 	public static FeeBO createOneTimeAmountFee(String feeName,
@@ -1057,7 +1066,7 @@ public class TestObjectFactory {
 
 		} catch (Exception e) {
 		}
-		return testObjectPersistence.createFee(fee);
+		return (FeeBO)addObject(testObjectPersistence.createFee(fee));
 	}
 
 	public static FeeBO createOneTimeRateFee(String feeName,
@@ -1076,7 +1085,7 @@ public class TestObjectFactory {
 
 		} catch (Exception e) {
 		}
-		return testObjectPersistence.createFee(fee);
+		return (FeeBO)addObject(testObjectPersistence.createFee(fee));
 	}
 
 	/**
@@ -1125,7 +1134,7 @@ public class TestObjectFactory {
 	}
 
 	public static MeetingBO createMeeting(MeetingBO meeting) {
-		return (MeetingBO) testObjectPersistence.persist(meeting);
+		return (MeetingBO) addObject(testObjectPersistence.persist(meeting));
 	}
 
 	/**
@@ -1452,6 +1461,63 @@ public class TestObjectFactory {
 		testObjectPersistence.update(obj);
 	}
 
+	private static UserContext userContext;
+	public static UserContext getContext()
+	{
+		try
+		{
+			if(userContext == null)
+			{
+				userContext = getUserContext();
+			}
+			return userContext;
+		}
+		catch(Exception e)
+		{
+			
+		}
+		return null;
+	}
+	
+	private static ActivityContext ac;
+	public  static ActivityContext getActivityContext()
+	{
+		if(ac == null)
+		{
+			UserContext uc = getContext();
+			 ac = new ActivityContext((short) 0, uc
+				.getBranchId().shortValue(), uc.getId().shortValue());
+		}
+		return ac;
+
+	}
+
+	private static final ThreadLocal<TestObjectsHolder> threadLocal = new ThreadLocal<TestObjectsHolder>();
+	
+	public static Object addObject(Object obj)
+	{
+		TestObjectsHolder holder   = threadLocal.get();
+		if(holder == null)
+		{
+			holder = new TestObjectsHolder();
+			threadLocal.set(holder);
+		}
+		holder.addObject(obj);
+		
+		return obj;
+	}
+	
+	public static void cleanUpTestObjects()
+	{
+		TestObjectsHolder holder   = threadLocal.get();
+		if(holder != null)
+		   holder.removeObjects();
+		
+		holder = null;
+		threadLocal.set(null);
+		
+	}
+
 	public static UserContext getUserContext() throws SystemException, InvalidUserException, ApplicationException  {
 		byte[] password = EncryptionService.getInstance()
 				.createEncryptedPassword("mifos");
@@ -1468,12 +1534,12 @@ public class TestObjectFactory {
 	}
 
 	public static Object getObject(Class clazz, Integer pk) {
-		return testObjectPersistence.getObject(clazz, pk);
+		return addObject(testObjectPersistence.getObject(clazz, pk));
 
 	}
 
 	public static Object getObject(Class clazz, Short pk) {
-		return testObjectPersistence.getObject(clazz, pk);
+		return addObject(testObjectPersistence.getObject(clazz, pk));
 
 	}
 
@@ -1713,7 +1779,7 @@ public class TestObjectFactory {
 		loanSummary.setOriginalPrincipal(new Money(currency, "300.0"));
 		loanSummary.setOriginalInterest(new Money(currency, "36.0"));
 		
-		return (LoanBO) testObjectPersistence.persist(loan);
+		return (LoanBO) addObject(testObjectPersistence.persist(loan));
 	}
 
 	private static void deleteAccountWithoutDeletetingProduct(
@@ -2013,7 +2079,7 @@ public class TestObjectFactory {
 	public static CustomerNoteEntity getCustomerNote (String comment , CustomerBO customer){
 		java.sql.Date commentDate = new java.sql.Date(System.currentTimeMillis());
 		CustomerNoteEntity notes = new CustomerNoteEntity(comment, commentDate , customer.getPersonnel() , customer );
-		return notes;
+		return (CustomerNoteEntity)addObject(notes);
 	}
 	
 	public static OfficeBO createOffice(OfficeLevel level, OfficeBO parentOffice, String officeName, String shortName)throws Exception{
@@ -2021,8 +2087,9 @@ public class TestObjectFactory {
 				OperationMode.REMOTE_SERVER);
 		officeBO.save();
 		HibernateUtil.commitTransaction();
-		return officeBO;
+		return (OfficeBO)addObject(officeBO);
 	}
+	
 	public static void cleanUp(OfficeBO office){
 		if(office!=null){
 			Session session= HibernateUtil.getSessionTL();

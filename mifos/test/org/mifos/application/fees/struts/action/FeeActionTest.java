@@ -115,7 +115,8 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		TestObjectFactory.cleanUp(fee1);
 		TestObjectFactory.cleanUp(fee2);
 		TestObjectFactory.cleanUp(fee3);
-		super.tearDown();
+		HibernateUtil.closeSession();
+		super.tearDown();		
 	}
 
 	public void testLoad() throws Exception {

@@ -72,12 +72,15 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 
 	}
 	
+	@Override
 	public void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(savings);
 		TestObjectFactory.cleanUp(client1);
 		TestObjectFactory.cleanUp(client2);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
+		HibernateUtil.closeSession();
+		super.tearDown();
 	}
 	
 	public void testSuccessfullLoad() throws Exception {

@@ -61,10 +61,12 @@ public class TestPrdCategoryAction extends MifosMockStrutsTestCase{
 		
 	}
 	
+	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
 		productCategoryPersistence=null;
 		userContext=null;
+		HibernateUtil.closeSession();
+		super.tearDown();
 	}
 	
 	

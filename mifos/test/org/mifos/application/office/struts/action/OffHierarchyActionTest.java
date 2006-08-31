@@ -97,6 +97,12 @@ public class OffHierarchyActionTest extends MifosMockStrutsTestCase {
 				flowManager);
 	}
 
+	@Override
+	protected void tearDown()throws Exception{			
+		HibernateUtil.closeSession();
+		super.tearDown();
+	}
+	
 	public void testLoad() throws PageExpiredException {
 		setRequestPathInfo("/offhierarchyaction.do");
 		addRequestParameter("method", "load");

@@ -54,13 +54,12 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerPositionView;
-import org.mifos.application.customer.center.util.helpers.CenterConstants;
-import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.business.service.GroupBusinessService;
 import org.mifos.application.customer.group.struts.actionforms.GroupCustActionForm;
+import org.mifos.application.customer.group.util.helpers.CenterSearchInput;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.struts.action.CustAction;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -81,7 +80,6 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
-import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -99,7 +97,60 @@ public class GroupCustAction extends CustAction {
 	protected BusinessService getService() throws ServiceException {
 		return getGroupBusinessService();
 	}
+	
+	public ActionForward hierarchyCheck(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		ActionForwards actionForward = null;
+		boolean isCenterHierarchyExists = Configuration.getInstance().getCustomerConfig(
+				getUserContext(request).getBranchId())
+				.isCenterHierarchyExists(); 
+		if(isCenterHierarchyExists){
+			CenterSearchInput searchInputs = new CenterSearchInput(getUserContext(request).getBranchId(), GroupConstants.CREATE_NEW_GROUP);
+			SessionUtils.setAttribute(GroupConstants.CENTER_SEARCH_INPUT, searchInputs, request.getSession());
+			actionForward = ActionForwards.loadCenterSearch;
+		}else
+			actionForward = ActionForwards.loadCreateGroup;
+		
+		return mapping.findForward(actionForward.toString());
+	}
+	
+	public ActionForward chooseOffice(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(ActionForwards.chooseOffice_success
+				.toString());
+	}
+	
+	@TransactionDemarcate (saveToken = true)
+	public ActionForward load(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		GroupCustActionForm actionForm = (GroupCustActionForm) form;
+		doCleanUp(actionForm, request);
+		boolean isCenterHierarchyExists = Configuration.getInstance().getCustomerConfig(
+				getUserContext(request).getBranchId())
+				.isCenterHierarchyExists();
+		if(isCenterHierarchyExists){
+			actionForm.setParentCustomer(getCustomerBusinessService().getCustomer(Integer
+					.valueOf(actionForm.getCenterId())));
+			actionForm.setOfficeId(actionForm.getParentCustomer().getOffice().getOfficeId().toString());
+		}
+		loadCreateMasterData(actionForm, request, isCenterHierarchyExists);
 
+		SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST,
+				isCenterHierarchyExists, request);		
+		return mapping.findForward(ActionForwards.load_success.toString());
+	}
+	
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward loadMeeting(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(ActionForwards.loadMeeting_success
+				.toString());
+	}
+	
 	@TransactionDemarcate(saveToken = true)
 	public ActionForward get(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -229,6 +280,15 @@ public class GroupCustAction extends CustAction {
 		}
 	}
 
+	private void loadCreateMasterData(GroupCustActionForm actionForm,
+			HttpServletRequest request, boolean isCenterHierarchyExists) throws Exception {
+		loadCreateCustomFields(actionForm, EntityType.GROUP, request);
+		loadFees(actionForm, request);
+		if(!isCenterHierarchyExists)
+			loadLoanOfficers(actionForm.getOfficeIdValue(), request);		
+		loadFormedByPersonnel(actionForm.getOfficeIdValue(), request);		
+	}
+	
 	private void setLocaleIdToLoanStatus(List<LoanBO> accountList,
 			Short localeId) {
 		for (LoanBO accountBO : accountList)
@@ -296,6 +356,12 @@ public class GroupCustAction extends CustAction {
 		 
 	}
 
+	private void doCleanUp(GroupCustActionForm actionForm,
+			HttpServletRequest request) {
+		clearActionForm(actionForm);
+		SessionUtils.removeAttribute(GroupConstants.GROUP_MEETING, request.getSession());
+	}
+	
 	private void clearActionForm(GroupCustActionForm actionForm) {
 		actionForm.setDefaultFees(new ArrayList<FeeView>());
 		actionForm.setAdditionalFees(new ArrayList<FeeView>());

@@ -276,6 +276,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.cleanUp(loan);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
+		HibernateUtil.closeSession();
 		super.tearDown();
 	}
 
