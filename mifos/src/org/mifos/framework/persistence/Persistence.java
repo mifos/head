@@ -73,7 +73,20 @@ public abstract class Persistence {
 		}
 		return returnList;
 	}
-	
+	public static Object execUniqueResultNamedQuery(String queryName,Map queryParameters)throws HibernateException{
+		Query query = null;
+		Session session = HibernateUtil.getSessionTL();
+		if(null != session){
+			query = session.getNamedQuery(queryName);
+			MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("The query object for the query with the name  " + queryName + " has been obtained");
+		}
+		
+		setParametersInQuery(query,queryName, queryParameters);
+		if(null != query){
+			return  query.uniqueResult();
+		}
+		return null;
+	}	
 	
 	/**
 	 * This methods sets the parameters to the query passed.

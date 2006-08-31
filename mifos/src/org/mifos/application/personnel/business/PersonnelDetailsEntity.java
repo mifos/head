@@ -40,9 +40,11 @@ package org.mifos.application.personnel.business;
 
 import java.util.Date;
 
+import org.mifos.application.personnel.util.valueobjects.PersonnelDetails;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.util.helpers.StringUtils;
 
 /**
  * This obect has values for extra fields of a personnel.
@@ -153,7 +155,7 @@ public class PersonnelDetailsEntity extends PersistentObject {
 	public PersonnelDetailsEntity(Name name, String governmentIdNumber,
 			Date dob, Integer maritalStatus, Integer gender,
 			Date dateOfJoiningMFI, Date dateOfJoiningBranch,
-			Date dateOfLeavingBranch, PersonnelBO personnel, Address address) {
+			 PersonnelBO personnel, Address address) {
 		super();
 		this.name = name;
 		this.governmentIdNumber = governmentIdNumber;
@@ -162,10 +164,12 @@ public class PersonnelDetailsEntity extends PersistentObject {
 		this.gender = gender;
 		this.dateOfJoiningMFI = dateOfJoiningMFI;
 		this.dateOfJoiningBranch = dateOfJoiningBranch;
-		this.dateOfLeavingBranch = dateOfLeavingBranch;
-		this.personnelId = null;
+		this.personnelId = personnel.getPersonnelId();
 		this.personnel = personnel;
 		this.address = address;
 	}
-
+	
+	public String getDisplayName(){
+		return name.getDisplayName();
+	}
 }

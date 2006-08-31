@@ -55,6 +55,10 @@ public class SupportedLocalesEntity extends PersistentObject {
 	public SupportedLocalesEntity() {
 		super();
 	}
+	public SupportedLocalesEntity(Short localeId) {
+		super();
+		this.localeId=localeId;
+	}
 
 	public CountryEntity getCountry() {
 		return country;

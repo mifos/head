@@ -496,4 +496,9 @@ public interface NamedQueryConstants {
 	//Change Account Status
 	public String GET_ALL_BRANCHES="office.getAllBranches";
 	public String GET_SEARCH_RESULTS="account.getSearchResults";
+	
+	//M2 personnel
+	public String GET_PERSONNEL_WITH_NAME="getCountByName";
+	public String GET_PERSONNEL_WITH_GOVERNMENTID="getCountByGovernmentId";
+	public String GET_PERSONNEL_WITH_DOB_AND_DISPLAYNAME="getCountByDobAndDisplayName";
 }

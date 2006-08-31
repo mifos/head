@@ -3,12 +3,29 @@ package org.mifos.application.personnel.business;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.mifos.application.customer.business.CustomFieldView;
+import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.util.valueobjects.SupportedLocales;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.personnel.exceptions.PersonnelException;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
+import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.util.Address;
+import org.mifos.framework.business.util.Name;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.EncryptionException;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.security.authentication.EncryptionService;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class PersonnelBO extends BusinessObject {
 
@@ -16,7 +33,7 @@ public class PersonnelBO extends BusinessObject {
 
 	private PersonnelLevelEntity level;
 
-	private final String globalPersonnelNum;
+	private String globalPersonnelNum;
 
 	private OfficeBO office;
 
@@ -26,13 +43,11 @@ public class PersonnelBO extends BusinessObject {
 
 	private PersonnelStatusEntity status;
 
-	private SupportedLocales preferredLocale;
+	private SupportedLocalesEntity preferredLocale;
 
 	private String searchId;
 
 	private Integer maxChildCount;
-
-	private String password;
 
 	private byte[] encriptedPassword;
 
@@ -54,14 +69,54 @@ public class PersonnelBO extends BusinessObject {
 
 	private Set<PersonnelCustomFieldEntity> customFields;
 
+	private MifosLogger logger;
+
 	protected PersonnelBO() {
 		this.level = null;
 		this.personnelDetails = new PersonnelDetailsEntity();
-		this.preferredLocale = new SupportedLocales();
+		this.preferredLocale = new SupportedLocalesEntity();
 		this.customFields = new HashSet<PersonnelCustomFieldEntity>();
 		this.personnelId = null;
-		this.globalPersonnelNum = null;
 		this.userName = null;
+
+	}
+
+	public PersonnelBO(PersonnelLevel level, OfficeBO office,
+			Integer title, Short preferredLocale, String password,
+			String userName, String emailId, Set<PersonnelRoleEntity> personnelRoles,
+			List<CustomFieldView> customFields,
+			Name name, String governmentIdNumber,
+			Date dob, Integer maritalStatus, Integer gender,
+			Date dateOfJoiningMFI, Date dateOfJoiningBranch, Address address,
+			Short createdBy) throws PersonnelException {
+		super();
+		setCreateDetails(createdBy,new Date());
+		logger = MifosLogManager.getLogger(LoggerConstants.PERSONNEL_LOGGER);
+		this.displayName = name.getDisplayName();
+		verifyFields(userName, governmentIdNumber, dob);
+		this.level = new PersonnelLevelEntity(level);
+		this.office = office;
+		this.title = title;
+		this.preferredLocale = new SupportedLocalesEntity(preferredLocale);
+		this.userName = userName;
+		this.emailId = emailId;
+		this.personnelDetails = new PersonnelDetailsEntity(name,
+				governmentIdNumber, dob, maritalStatus, gender,
+				dateOfJoiningMFI, dateOfJoiningBranch, this, address);
+		this.personnelRoles = personnelRoles;
+		this.customFields = new HashSet<PersonnelCustomFieldEntity>();
+		this.personnelId = null;
+		this.globalPersonnelNum = "XX";
+		if (customFields != null)
+			for (CustomFieldView view : customFields) {
+				this.customFields.add(new PersonnelCustomFieldEntity(view
+						.getFieldValue(), view.getFieldId(), this));
+			}
+		this.passwordChanged = Constants.NO;
+		this.unLock();
+		this.noOfTries = Constants.NO;
+		this.encriptedPassword = getEncryptedPassword(password);
+
 	}
 
 	public Set<PersonnelCustomFieldEntity> getCustomFields() {
@@ -96,10 +151,6 @@ public class PersonnelBO extends BusinessObject {
 		return office;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
 	public boolean isPasswordChanged() {
 		return this.passwordChanged > 0;
 	}
@@ -116,7 +167,7 @@ public class PersonnelBO extends BusinessObject {
 		return personnelId;
 	}
 
-	public SupportedLocales getPreferredLocale() {
+	public SupportedLocalesEntity getPreferredLocale() {
 		return preferredLocale;
 	}
 
@@ -167,5 +218,75 @@ public class PersonnelBO extends BusinessObject {
 
 	public PersonnelStatusEntity getStatus() {
 		return status;
+	}
+
+	public void save() throws PersonnelException {
+		try {
+			PersonnelPersistence persistence = new PersonnelPersistence();
+			persistence.createOrUpdate(this);
+			this.globalPersonnelNum = generateGlobalPersonnelNum(this.office
+					.getGlobalOfficeNum(), this.personnelId);
+			persistence.createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new PersonnelException(e);
+
+		}
+	}
+
+	private String generateGlobalPersonnelNum(String officeGlobalNum,
+			int maxPersonnelId) {
+		logger.debug("Passed office global no is : ".concat(officeGlobalNum)
+				.concat(" and maxpersonnelid is : " + maxPersonnelId));
+		String userId = "";
+		int numberOfZeros = 5 - String.valueOf(maxPersonnelId).length();
+		for (int i = 0; i < numberOfZeros; i++) {
+			userId = userId + "0";
+		}
+		userId = userId + maxPersonnelId;
+		String userGlobalNum = officeGlobalNum + "-" + userId;
+		logger.debug("Generated userGlobalNum is : ".concat(userGlobalNum));
+		return userGlobalNum;
+	}
+
+	private byte[] getEncryptedPassword(String password)
+			throws PersonnelException {
+		byte[] encryptedPassword = null;
+		try {
+			logger.debug("Passed password string is : " + password);
+			encryptedPassword = EncryptionService.getInstance()
+					.createEncryptedPassword(password);
+			logger.debug("got Encripted Password from EncryptionService");
+
+		} catch (EncryptionException e) {
+			throw new PersonnelException(e);
+		} catch (SystemException e) {
+			throw new PersonnelException(e);
+		}
+
+		return encryptedPassword;
+	}
+
+	private void verifyFields(String userName, String governmentIdNumber,
+			Date dob) throws PersonnelException {
+
+		PersonnelPersistence persistence = new PersonnelPersistence();
+		if (StringUtils.isNullOrEmpty(userName))
+			throw new PersonnelException(
+					PersonnelConstants.ERRORMANDATORY);
+		if (persistence.isUserExist(userName))
+			throw new PersonnelException(PersonnelConstants.DUPLICATE_USER,
+					new Object[] { userName });
+		if (!StringUtils.isNullOrEmpty(governmentIdNumber)) {
+			if (persistence.isUserExistWithGovernmentId(governmentIdNumber))
+				throw new PersonnelException(
+						PersonnelConstants.DUPLICATE_GOVT_ID,
+						new Object[] { governmentIdNumber });
+		} else {
+			if (persistence.isUserExist(displayName, dob))
+				throw new PersonnelException(
+						PersonnelConstants.DUPLICATE_USER_NAME_OR_DOB,
+						new Object[] { displayName });
+		}
+
 	}
 }

@@ -90,6 +90,7 @@ import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.business.CollSheetLnDetailsEntity;
 import org.mifos.application.collectionsheet.business.CollSheetSavingsDetailsEntity;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
+import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.customer.business.CustomerNoteEntity;
@@ -138,6 +139,8 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OperationMode;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.business.PersonnelRoleEntity;
+import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity;
@@ -150,6 +153,7 @@ import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.business.util.Address;
+import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.scheduler.Constants;
 import org.mifos.framework.components.scheduler.ScheduleDataIntf;
 import org.mifos.framework.components.scheduler.ScheduleInputsIntf;
@@ -2011,5 +2015,35 @@ public class TestObjectFactory {
 			customer.update();
 			HibernateUtil.commitTransaction();
 		}
+	}
+	public static void cleanUp(PersonnelBO personnel){
+		if(personnel!=null){
+			Session session= HibernateUtil.getSessionTL();
+			Transaction transaction = HibernateUtil.startTransaction();
+			session.lock(personnel, LockMode.NONE);
+			session.delete(personnel);
+			transaction.commit();
+		}
+	}
+	
+	public static void createPersonnel(PersonnelLevel level,
+			OfficeBO office, Integer title, Short preferredLocale,
+			String password, String userName, String emailId,
+			Set<PersonnelRoleEntity> personnelRoles,
+			List<CustomFieldView> customFields, Name name,
+			String governmentIdNumber, Date dob, Integer maritalStatus,
+			Integer gender, Date dateOfJoiningMFI, Date dateOfJoiningBranch,
+			Address address) throws Exception{
+		PersonnelBO personnelBO = new  PersonnelBO(level,  office,
+				title,preferredLocale,password,
+				userName,emailId,personnelRoles,
+				customFields,
+				name,governmentIdNumber,
+				dob,maritalStatus,gender,
+				dateOfJoiningMFI,dateOfJoiningBranch,address,
+				null);
+		
+		personnelBO.save();
+		HibernateUtil.commitTransaction();
 	}
 }

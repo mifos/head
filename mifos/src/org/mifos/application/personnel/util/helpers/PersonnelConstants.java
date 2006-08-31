@@ -154,4 +154,10 @@ public interface PersonnelConstants {
 	public static final String PASSWORD_MASK="errors.spacesmask";
 	public static final String USER_CHANGE_LOG_ERROR="error.userchangelog";
 	public static final String ERROR_MASTERDATA="error.masterdata";
+	
+	//M2 Constants
+	public static final String PERSONNELUIRESOURCESPATH="org/mifos/application/personnel/util/resources/PersonnelUIResources";
+	public static final String ERRORMANDATORY="errors.mandatory";
+	public static final String  USERNAME="Personnel.UserNameLabel";
+	
 }

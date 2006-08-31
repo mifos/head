@@ -20,7 +20,19 @@ public class Address {
 	private String zip;
 
 	private String phoneNumber;
-	
+
+	public Address(String line1, String line2, String line3, String city, String state, String country, String zip, String phoneNumber) {
+		super();
+		this.line1 = line1;
+		this.line2 = line2;
+		this.line3 = line3;
+		this.city = city;
+		this.state = state;
+		this.country = country;
+		this.zip = zip;
+		this.phoneNumber = phoneNumber;
+	}
+
 	public Address() {
 		super();
 	}
@@ -108,4 +120,5 @@ public class Address {
 		}
 		return displayAddress;
 	}
+
 }

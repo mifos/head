@@ -1,5 +1,8 @@
 package org.mifos.framework.business.util;
 
+import org.mifos.application.personnel.util.valueobjects.PersonnelDetails;
+import org.mifos.framework.util.helpers.StringUtils;
+
 public class Name {
 	
 	private String firstName;
@@ -70,5 +73,16 @@ public class Name {
 		this.secondLastName = secondLastName;
 		this.lastName = lastName;
 	}
-
+	public String getDisplayName(){
+		StringBuffer displayName=new StringBuffer("");
+		if(!StringUtils.isNullOrEmpty(firstName))
+			displayName.append(firstName);
+		if(!StringUtils.isNullOrEmpty(middleName))
+			displayName.append(" ").append(middleName);
+		if(!StringUtils.isNullOrEmpty(secondLastName))
+			displayName.append(" ").append(secondLastName);
+		if(!StringUtils.isNullOrEmpty(lastName))
+			displayName.append(" ").append(lastName);
+		return displayName.toString();
+	}
 }

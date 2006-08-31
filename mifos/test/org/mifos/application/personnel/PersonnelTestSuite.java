@@ -1,27 +1,26 @@
 package org.mifos.application.personnel;
 
-import junit.framework.TestResult;
+import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class PersonnelTestSuite extends TestSuite{
+import org.mifos.application.personnel.business.TestPersonnelBO;
+import org.mifos.application.personnel.business.TestPersonnelStatusEntity;
+import org.mifos.application.personnel.persistence.TestPersonnelPersistence;
+import org.mifos.application.personnel.persistence.service.TestPersonnelPersistenceService;
+import org.mifos.framework.MifosTestSuite;
 
-	
-	
-	public PersonnelTestSuite(String arg0) {
-		super(arg0);
-		this.addTest(new TestPersonnel("Personnel"));
-	}
-
+public class PersonnelTestSuite extends MifosTestSuite {
 	public PersonnelTestSuite() {
 		super();
-		this.addTest(new TestPersonnel("Personnel"));
 	}
 
-	
-	public static void main(String[] args){
-		TestSuite suite = new TestSuite();
-		suite.addTest(new TestPersonnel("Personnel"));
-		suite.run(new TestResult());
+	public static Test suite() throws Exception {
+		TestSuite testSuite = new PersonnelTestSuite();
+		testSuite.addTestSuite(TestPersonnelStatusEntity.class);
+		testSuite.addTestSuite(TestPersonnelPersistence.class);
+		testSuite.addTestSuite(TestPersonnelPersistenceService.class);
+		testSuite.addTestSuite(TestPersonnelBO.class);
+		return testSuite;
 	}
 
 }

@@ -21,7 +21,7 @@
 			class="org.mifos.application.office.business.OfficeBO" unique="true"
 			lazy="false" access="field"/>
 		<many-to-one name="preferredLocale" column="PREFERRED_LOCALE"
-			class="org.mifos.application.master.util.valueobjects.SupportedLocales" access="field"/>
+			class="org.mifos.application.master.business.SupportedLocalesEntity" access="field" insert="false" cascade="none"/>
 		<one-to-one name="personnelDetails"
 			class="org.mifos.application.personnel.business.PersonnelDetailsEntity"
 			cascade="all" lazy="false" />
@@ -73,6 +73,15 @@
 	</query>
 	<query name="getCountActivePersonnel">
 		<![CDATA[select count(*)  from org.mifos.application.personnel.business.PersonnelBO as personnel where  personnel.office.officeId =:OFFICE_ID and personnel.status.id =:STATUS_ID]]>
+	</query>
+	<query name="getCountByName">
+		<![CDATA[select count(*)  from org.mifos.application.personnel.business.PersonnelBO as personnel where  personnel.userName = :USER_NAME]]>
+	</query>
+	<query name="getCountByGovernmentId">
+		<![CDATA[select count(*)  from org.mifos.application.personnel.business.PersonnelBO as personnel where  personnel.personnelDetails.governmentIdNumber = :GOVT_ID]]>
+	</query>
+	<query name="getCountByDobAndDisplayName">
+		<![CDATA[select count(*)  from org.mifos.application.personnel.business.PersonnelBO as personnel where  personnel.displayName = :DISPLAY_NAME and personnel.personnelDetails.dob =:DOB]]>
 	</query>
 
 </hibernate-mapping>
