@@ -669,7 +669,6 @@ public class AccountBO extends BusinessObject {
 	}
 
 	public boolean isTrxnDateValid(Date trxnDate) throws AccountException {
-		try {
 			if (Configuration.getInstance().getAccountConfig(
 					getOffice().getOfficeId()).isBackDatedTxnAllowed()) {
 				Date meetingDate = new CustomerPersistence()
@@ -684,9 +683,7 @@ public class AccountBO extends BusinessObject {
 				} else
 					return false;
 			}
-		} catch (ApplicationException ae) {
-			throw new AccountException(ae);
-		}
+		
 		return trxnDate.equals(DateUtils.getCurrentDateWithoutTimeStamp());
 	}
 

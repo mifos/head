@@ -68,7 +68,6 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -92,12 +91,12 @@ public class CustomerBusinessService extends BusinessService {
 	}
 
 	public CustomerBO findBySystemId(String globalCustNum)
-			throws PersistenceException, ServiceException {
+			throws PersistenceException {
 		return new CustomerPersistence().findBySystemId(globalCustNum);
 	}
 
 	public CustomerBO getBySystemId(String globalCustNum, Short levelId)
-			throws PersistenceException, ServiceException {
+			throws PersistenceException {
 		return new CustomerPersistence().getBySystemId(globalCustNum, levelId);
 	}
 
@@ -107,19 +106,18 @@ public class CustomerBusinessService extends BusinessService {
 	}
 
 	public CustomerPerformanceHistoryView getLastLoanAmount(Integer customerId)
-			throws PersistenceException, ServiceException {
+			throws PersistenceException {
 		return new CustomerPersistence().getLastLoanAmount(customerId);
 	}
 
 	public CustomerPerformanceHistoryView numberOfMeetings(boolean isPresent,
-			Integer customerId) throws HibernateProcessException,
-			ServiceException {
+			Integer customerId) throws PersistenceException {
 		return new CustomerPersistence()
 				.numberOfMeetings(isPresent, customerId);
 	}
 
 	public double getLastTrxnAmnt(String globalCustNum)
-			throws PersistenceException, ServiceException {
+			throws PersistenceException{
 		return findBySystemId(globalCustNum).getCustomerAccount()
 				.getLastPmntAmnt();
 	}
@@ -178,14 +176,13 @@ public class CustomerBusinessService extends BusinessService {
 	}
 
 	private List<AccountBO> getAccountsForCustomer(String searchId,
-			Short officeId, Short accountTypeId) throws PersistenceException,
-			ServiceException {
+			Short officeId, Short accountTypeId) throws PersistenceException{
 		return new CustomerPersistence().retrieveAccountsUnderCustomer(
 				searchId, officeId, accountTypeId);
 	}
 
 	private Money getTotalOutstandingLoan(List<AccountBO> accountList)
-			throws PersistenceException, ServiceException {
+			throws PersistenceException {
 		Money total = new Money();
 		for (AccountBO accountBO : accountList) {
 			LoanBO loanBO = (LoanBO) accountBO;
@@ -202,7 +199,7 @@ public class CustomerBusinessService extends BusinessService {
 	}
 
 	private Money getPortfolioAtRisk(List<AccountBO> accountList)
-			throws PersistenceException, ServiceException {
+			throws PersistenceException {
 		Money amount = new Money();
 		for (AccountBO account : accountList) {
 			if (account.getAccountType().getAccountTypeId().equals(
@@ -219,7 +216,7 @@ public class CustomerBusinessService extends BusinessService {
 	}
 
 	private Money getBalanceForPortfolioAtRisk(List<AccountBO> accountList)
-			throws PersistenceException, ServiceException {
+			throws PersistenceException {
 		Money amount = new Money();
 		for (AccountBO account : accountList) {
 			if (account.getAccountType().getAccountTypeId().equals(
@@ -233,7 +230,7 @@ public class CustomerBusinessService extends BusinessService {
 	}
 
 	private Money getTotalSavings(List<AccountBO> accountList)
-			throws PersistenceException, ServiceException {
+			throws PersistenceException {
 		Money total = new Money();
 		for (AccountBO accountBO : accountList) {
 			SavingsBO savingsBO = (SavingsBO) accountBO;
@@ -243,8 +240,7 @@ public class CustomerBusinessService extends BusinessService {
 	}
 
 	private List<CustomerBO> getCustomer(String searchId, Short officeId,
-			Short customerLevelId) throws PersistenceException,
-			ServiceException {
+			Short customerLevelId) throws PersistenceException {
 		return new CustomerPersistence().getAllChildrenForParent(searchId,
 				officeId, customerLevelId);
 	}
@@ -261,8 +257,7 @@ public class CustomerBusinessService extends BusinessService {
 	}
 
 	public CenterPerformanceHistory getCenterPerformanceHistory(
-			String searchId, Short officeId) throws PersistenceException,
-			ServiceException {
+			String searchId, Short officeId) throws PersistenceException {
 		List<CustomerBO> centerChildren = getCustomer(searchId, officeId,
 				CustomerConstants.CENTER_LEVEL_ID);
 		List<CustomerBO> groups = getChildList(centerChildren,
@@ -295,14 +290,13 @@ public class CustomerBusinessService extends BusinessService {
 	}
 
 	public List<CustomerCheckListBO> getStatusChecklist(Short statusId,
-			Short customerLevelId) throws PersistenceException,
-			ServiceException {
+			Short customerLevelId) throws PersistenceException{
 		return new CustomerPersistence().getStatusChecklist(statusId,
 				customerLevelId);
 	}
 
 	public List<CustomerStatusEntity> retrieveAllCustomerStatusList(
-			Short levelId) throws PersistenceException, ServiceException {
+			Short levelId) throws PersistenceException {
 		return new CustomerPersistence().retrieveAllCustomerStatusList(levelId);
 	}
 
@@ -348,7 +342,7 @@ public class CustomerBusinessService extends BusinessService {
 	}
 
 	public List<PersonnelView> getFormedByPersonnel(Short levelId,
-			Short officeId) throws PersistenceException, ServiceException {
+			Short officeId) throws PersistenceException {
 		return new CustomerPersistence()
 				.getFormedByPersonnel(levelId, officeId);
 	}
