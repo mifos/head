@@ -6,6 +6,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.mifos.application.customer.business.CustomFieldView;
+import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
@@ -227,6 +228,87 @@ private CenterBO center;
 		assertEquals("1.1", group.getSearchId());
 	}
 	
+	public void testSuccessfulUpdate_Group_UnderBranch() throws Exception {	
+		String name = "Group_underBranch";
+		String newName = "Group_NameChanged";
+		group=createGroupUnderBranch(name,CustomerStatus.GROUP_ACTIVE);
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		assertEquals(name, group.getDisplayName());
+		group.update(TestObjectFactory.getUserContext(),newName,personnel," ",Short.valueOf("1"),new Date(),TestObjectFactory.getAddressHelper(),getCustomFields(),new ArrayList<CustomerPositionView>());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		assertEquals(newName, group.getDisplayName());
+		assertTrue(group.isTrained());
+		
+	}
+	
+	public void testSuccessfulUpdate_Group_UnderCenter() throws Exception {	
+		String name = "Group_underBranch";
+		String newName = "Group_NameChanged";
+		createCenter();
+		createGroup(name);
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		assertEquals(name, group.getDisplayName());
+		group.update(TestObjectFactory.getUserContext(),newName,personnel," ",Short.valueOf("1"),new Date(),TestObjectFactory.getAddressHelper(),getCustomFields(),new ArrayList<CustomerPositionView>());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		assertEquals(newName, group.getDisplayName());
+		assertTrue(group.isTrained());
+		
+	}
+	
+	public void testFailureUpdate_ActiveGroup_WithoutLoanOfficer() throws Exception {	
+		String name = "Group_underBranch";
+		String newName = "Group_NameChanged";
+		group = createGroupUnderBranch(name,CustomerStatus.GROUP_ACTIVE);
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		assertEquals(name, group.getDisplayName());
+		try{
+		group.update(TestObjectFactory.getUserContext(),newName,null," ",Short.valueOf("1"),new Date(),TestObjectFactory.getAddressHelper(),getCustomFields(),new ArrayList<CustomerPositionView>());
+		assertFalse(true);
+		}
+		catch(CustomerException ce){
+			assertTrue(true);
+			assertEquals(CustomerConstants.INVALID_LOAN_OFFICER ,ce.getKey());
+		}
+		
+	}
+	
+	public void testFailureUpdate_OnHoldGroup_WithoutLoanOfficer() throws Exception {	
+		String name = "Group_underBranch";
+		String newName = "Group_NameChanged";
+		group = createGroupUnderBranch(name,CustomerStatus.GROUP_HOLD);
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		assertEquals(name, group.getDisplayName());
+		try{
+		group.update(TestObjectFactory.getUserContext(),newName,null," ",Short.valueOf("1"),new Date(),TestObjectFactory.getAddressHelper(),getCustomFields(),new ArrayList<CustomerPositionView>());
+		assertFalse(true);
+		}
+		catch(CustomerException ce){
+			assertTrue(true);
+			assertEquals(CustomerConstants.INVALID_LOAN_OFFICER ,ce.getKey());
+		}
+		
+	}
+	
+	public void testFailureUpdate_Group_WithDuplicateName() throws Exception {	
+		String name = "Group_underBranch";
+		String newName = "Group_NameChanged";
+		group = createGroupUnderBranch(name,CustomerStatus.GROUP_ACTIVE);
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		group1 = createGroupUnderBranch(newName ,CustomerStatus.GROUP_ACTIVE);
+		group1 = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group1.getCustomerId());
+		assertEquals(name, group.getDisplayName());
+		assertEquals(newName, group1.getDisplayName());
+		try{
+		group1.update(TestObjectFactory.getUserContext(),name,personnel," ",Short.valueOf("1"),new Date(),TestObjectFactory.getAddressHelper(),getCustomFields(),new ArrayList<CustomerPositionView>());
+		assertFalse(true);
+		}
+		catch(CustomerException ce){
+			assertTrue(true);
+			assertEquals(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER ,ce.getKey());
+		}
+		
+	}
+	
 	private void createCenter(){
 		meeting = getMeeting();
 		center = TestObjectFactory.createCenter("Center", CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting, new Date(System
@@ -235,6 +317,11 @@ private CenterBO center;
 	
 	private void createGroup(String name){		
 		group = TestObjectFactory.createGroupUnderCenter(name, CustomerStatus.GROUP_ACTIVE, center);
+	}
+	
+	private GroupBO createGroupUnderBranch(String name , CustomerStatus customerStatus){		
+		meeting = getMeeting();
+		return TestObjectFactory.createGroupUnderBranch(name, customerStatus,officeId, meeting,personnel);
 	}
 	
 	private MeetingBO getMeeting() {

@@ -300,7 +300,7 @@ public class GroupBO extends CustomerBO {
 	}
 
 	public void update(UserContext userContext, String displayName, Short loanOfficerId, String externalId, Short trained, Date trainedDate, Address address, List<CustomFieldView> customFields, List<CustomerPositionView> customerPositions)throws CustomerException {
-		validateFieldsForUpdate(loanOfficerId);
+		validateFieldsForUpdate(displayName, loanOfficerId);
 		if(trained!=null)
 			setTrained(trained);
 		else
@@ -309,13 +309,16 @@ public class GroupBO extends CustomerBO {
 		if(!Configuration.getInstance().getCustomerConfig(userContext.getBranchId()).isCenterHierarchyExists()){
 			updateLoanOfficer(loanOfficerId);
 		}
+		setDisplayName(displayName);
 		super.update(userContext,externalId,address,customFields,customerPositions);
 	}
 	
-	protected void validateFieldsForUpdate(Short loanOfficerId)throws CustomerException{
+	protected void validateFieldsForUpdate(String displayName ,Short loanOfficerId)throws CustomerException{
 		if(getCustomerStatus().getId().equals(CustomerStatus.GROUP_ACTIVE.getValue()) || getCustomerStatus().getId().equals(CustomerStatus.GROUP_HOLD.getValue()) ){
 			validateLO(loanOfficerId);	
 		}
+		if(!getDisplayName().equals(displayName))
+			validateForDuplicateName(displayName);
 		
 	}
 }

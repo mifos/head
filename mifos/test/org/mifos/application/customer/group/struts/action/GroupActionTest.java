@@ -39,6 +39,7 @@
 package org.mifos.application.customer.group.struts.action;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -49,6 +50,7 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
+import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.PositionEntity;
@@ -363,7 +365,8 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		
 	}
 	
-	/*public void testUpdateSuccess() throws Exception {
+	public void testUpdateSuccess() throws Exception {
+		String newDisplayName ="group_01";
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createGroupWithCenterAndSetInSession();
 		setRequestPathInfo("/groupCustAction.do");
@@ -375,10 +378,11 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "previewManage");
 		addRequestParameter("officeId", "3");
-		addRequestParameter("displayName", "group_01");
+		addRequestParameter("displayName", newDisplayName);
 		int i = 0;
 		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
 			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
+			addRequestParameter("customField["+ i +"].fieldType", customFieldDef.getFieldType().toString());
 			addRequestParameter("customField["+ i +"].fieldValue", "Req");
 			i++;
 		}
@@ -396,9 +400,48 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, new Integer(group.getCustomerId()).intValue());
+		assertTrue(group.isTrained());
+		assertEquals(newDisplayName ,group.getDisplayName());
+	}
+	
+	public void testUpdateSuccessWithoutTrained() throws Exception {
+		String newDisplayName ="group_01";
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		createGroupWithCenterAndSetInSession();
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "manage");
+		addRequestParameter("officeId", "3");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "previewManage");
+		addRequestParameter("officeId", "3");
+		addRequestParameter("displayName", newDisplayName);
+		int i = 0;
+		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
+			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
+			addRequestParameter("customField["+ i +"].fieldType", customFieldDef.getFieldType().toString());
+			addRequestParameter("customField["+ i +"].fieldValue", "Req");
+			i++;
+		}
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String)request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.previewManage_success.toString());
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "update");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String)request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.update_success.toString());
+		assertTrue(!group.isTrained());
+		assertEquals(newDisplayName ,group.getDisplayName());
 		
-		
-	}*/
+	}
 	
 	public void testCancelSuccess() throws Exception {
 		setRequestPathInfo("/groupCustAction.do");
@@ -415,9 +458,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 
 	private void createGroupWithCenterAndSetInSession() throws Exception {
 		createParentCustomer();
-		group = TestObjectFactory.createGroup("group",
-				CustomerStatus.GROUP_ACTIVE.getValue(), center.getSearchId()
-						+ ".1", center, new Date());
+		group = TestObjectFactory.createGroupUnderCenter("group",CustomerStatus.GROUP_ACTIVE, center);
 		HibernateUtil.closeSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,
 				new Integer(center.getCustomerId()).intValue());

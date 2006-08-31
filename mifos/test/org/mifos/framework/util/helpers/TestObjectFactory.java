@@ -339,6 +339,14 @@ public class TestObjectFactory {
 		return fees;
 	}
 	
+	public static List<CustomFieldView> getCustomFields(){
+		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();		
+		CustomFieldView fee = new CustomFieldView(Short.valueOf("1"),"Custom",Short.valueOf("1"));
+		customFields.add(fee);
+		return customFields;
+	}
+	
+	
 	/**
 	 * This is just a helper method which returns a address object , this is
 	 * just a helper it does not persist any data.
@@ -359,7 +367,7 @@ public class TestObjectFactory {
 
 	public static GroupBO createGroupUnderCenter(String customerName, CustomerStatus customerStatus, CustomerBO parentCustomer){
 		Short formedBy = new Short("1");	
-		return createGroupUnderCenter(customerName, customerStatus, null, false, null, null, null, getFees(), formedBy, parentCustomer);
+		return createGroupUnderCenter(customerName, customerStatus, null, false, null, null, getCustomFields(), getFees(), formedBy, parentCustomer);
 	}
 	
 	public static GroupBO createGroupUnderCenter(String customerName, CustomerStatus customerStatus, String externalId, boolean trained, Date trainedDate, Address address,

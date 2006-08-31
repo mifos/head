@@ -166,13 +166,14 @@ public class GroupCustAction extends CustAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		GroupBO group = (GroupBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
+				Constants.BUSINESS_KEY, request);
 		GroupCustActionForm actionForm = (GroupCustActionForm) form;
 
 		Date trainedDate = null; 
 		if(actionForm.getTrainedDate()!=null)
 			trainedDate = getDateFromString(actionForm.getTrainedDate(), getUserContext(request)
 				.getPereferedLocale());
+		
 		group.update(getUserContext(request),actionForm.getDisplayName(), actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(),actionForm.getTrainedValue(),trainedDate, actionForm.getAddress(), actionForm.getCustomFields(), actionForm.getCustomerPositions());
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
@@ -284,14 +285,14 @@ public class GroupCustAction extends CustAction {
 				.getCustomerPositions(), request));
 		actionForm.setCustomFields(createCustomFieldViews(group
 				.getCustomFields(), request));
-		/*if (group.isTrained()) 
+		if (group.isTrained()) 
 			  actionForm.setTrained(GroupConstants.TRAINED);
 		else 
 			 actionForm.setTrained(GroupConstants.NOT_TRAINED); 
 		if(group.getTrainedDate() != null){
 			  actionForm.setTrainedDate(DateHelper.getUserLocaleDate(getUserContext(request).getPereferedLocale(),
 		      group.getTrainedDate().toString()));
-		}*/
+		}
 		 
 	}
 
