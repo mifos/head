@@ -86,7 +86,7 @@ public class CenterBO extends CustomerBO {
 						CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
 			}
 			try {
-				if (getChildren(CustomerLevel.GROUP.getValue()).size() > 0) {
+				if (getAllCustomerOtherThanCancelledAndClosed(CustomerLevel.GROUP).size() > 0) {
 					throw new CustomerException(
 							CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
 							new Object[] { MifosConfiguration.getInstance()
@@ -120,7 +120,8 @@ public class CenterBO extends CustomerBO {
 	public void update(UserContext userContext, Short loanOfficerId, String externalId, Date mfiJoiningDate, Address address,  List<CustomFieldView> customFields, List<CustomerPositionView> customerPositions) throws CustomerException {
 		validateFieldsForUpdate(loanOfficerId);
 		setMfiJoiningDate(mfiJoiningDate);
-		super.update(userContext, loanOfficerId, externalId, address, customFields, customerPositions);
+		updateLoanOfficer(loanOfficerId);
+		super.update(userContext, externalId, address, customFields, customerPositions);
 	}
 	
 	protected void validateFieldsForUpdate(Short loanOfficerId)throws CustomerException{

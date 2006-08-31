@@ -417,10 +417,9 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 	}
 
-	public void update(UserContext userContext, Short loanOfficerId, String externalId, Address address,  List<CustomFieldView> customFields, List<CustomerPositionView> customerPositions) throws CustomerException {
+	public void update(UserContext userContext, String externalId, Address address,  List<CustomFieldView> customFields, List<CustomerPositionView> customerPositions) throws CustomerException {
 		this.setUserContext(userContext);
 		this.setExternalId(externalId);
-		updateLoanOfficer(loanOfficerId);
 		updateAddress(address);
 		updateCustomFields(customFields);
 		updateCustomerPositions(customerPositions);
@@ -756,11 +755,14 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 	
 	protected void updateLoanOfficer(Short loanOfficerId){
-		if(loanOfficerId != null && !loanOfficerId.equals(getPersonnel().getPersonnelId())){
-			this.personnel = new PersonnelPersistence()
-			.getPersonnel(loanOfficerId);
-			new CustomerPersistence().updateLOsForAllChildren(getPersonnel().getPersonnelId(), getSearchId(), getOffice().getOfficeId());
-		}
+		if(loanOfficerId == null)
+			this.personnel = null;
+		else
+			if(getPersonnel()==null || !loanOfficerId.equals(getPersonnel().getPersonnelId())){
+				this.personnel = new PersonnelPersistence()
+				.getPersonnel(loanOfficerId);
+				new CustomerPersistence().updateLOsForAllChildren(getPersonnel().getPersonnelId(), getSearchId(), getOffice().getOfficeId());
+			}
 	}
 	
 	private void createAddress(Address address){

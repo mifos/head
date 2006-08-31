@@ -54,7 +54,8 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerPositionView;
-import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
+import org.mifos.application.customer.center.util.helpers.CenterConstants;
+import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
@@ -70,11 +71,15 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -83,6 +88,8 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class GroupCustAction extends CustAction {
 
+	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER);
+	
 	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
@@ -97,6 +104,7 @@ public class GroupCustAction extends CustAction {
 	public ActionForward get(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws PageExpiredException, CustomerException {
+		logger.debug("In GroupCustAction get method " );
 		GroupCustActionForm actionForm = (GroupCustActionForm) form;
 		GroupBO groupBO;
 		try {
@@ -114,24 +122,26 @@ public class GroupCustAction extends CustAction {
 				.getLocaleId());
 		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, groupBO, request);
+		logger.debug("Exiting GroupCustAction get method " );
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
 
-	@TransactionDemarcate(saveToken = true)
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward manage(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		clearActionForm((GroupCustActionForm) form);
 		GroupBO group = (GroupBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
+				Constants.BUSINESS_KEY, request);
+		logger.debug("Entering GroupCustAction manage method and customer id: "+ group.getGlobalCustNum());
 		GroupBO groupBO = (GroupBO) getCustomerBusinessService().getBySystemId(
 				group.getGlobalCustNum(), CustomerLevel.GROUP.getValue());
 		group = null;
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, groupBO, request
-				.getSession());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, groupBO, request);
 
-		loadUpdateMasterData(groupBO.getOffice().getOfficeId(), request);
+		loadUpdateMasterData(request,groupBO);
 		setValuesInActionForm((GroupCustActionForm) form, request);
+		logger.debug("Exiting GroupCustAction manage method ");
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
 
@@ -151,24 +161,32 @@ public class GroupCustAction extends CustAction {
 				.toString());
 	}
 
-	@CloseSession
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		GroupBO group = (GroupBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
-		CenterCustActionForm actionForm = (CenterCustActionForm) form;
-		Date trainedDate = null;
-		if (actionForm.getTrainedDate() != null)
-			trainedDate = getDateFromString(actionForm.getTrainedDate(),
-					getUserContext(request).getPereferedLocale());
+		GroupCustActionForm actionForm = (GroupCustActionForm) form;
 
-		// group.update(getUserContext(request),actionForm.getDisplayName(),
-		// actionForm.getLoanOfficerIdValue(),
-		// actionForm.getExternalId(),actionForm.getTrained(),trainedDate,
-		// actionForm.getAddress(), actionForm.getCustomFields(),
-		// actionForm.getCustomerPositions());
+		Date trainedDate = null; 
+		if(actionForm.getTrainedDate()!=null)
+			trainedDate = getDateFromString(actionForm.getTrainedDate(), getUserContext(request)
+				.getPereferedLocale());
+		group.update(getUserContext(request),actionForm.getDisplayName(), actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(),actionForm.getTrainedValue(),trainedDate, actionForm.getAddress(), actionForm.getCustomFields(), actionForm.getCustomerPositions());
 		return mapping.findForward(ActionForwards.update_success.toString());
+	}
+	
+	public ActionForward cancel(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		String forward = null;
+		GroupCustActionForm actionForm = (GroupCustActionForm) form;
+		String fromPage = actionForm.getInput();
+		if (fromPage.equals(GroupConstants.MANAGE_GROUP) || fromPage.equals(GroupConstants.PREVIEW_MANAGE_GROUP)){
+			forward=ActionForwards.cancelEdit_success.toString();
+		}
+		return mapping.findForward(forward);
 	}
 
 	private void loadMasterDataForDetailsPage(HttpServletRequest request,
@@ -238,22 +256,21 @@ public class GroupCustAction extends CustAction {
 				.getBusinessService(BusinessServiceName.Group);
 	}
 
-	private void loadUpdateMasterData(Short officeId, HttpServletRequest request)
+	private void loadUpdateMasterData(HttpServletRequest request, GroupBO group)
 			throws ApplicationException, SystemException {
 		if (!Configuration.getInstance().getCustomerConfig(
 				getUserContext(request).getBranchId())
 				.isCenterHierarchyExists()) {
-			loadLoanOfficers(officeId, request);
+			loadLoanOfficers(group.getOffice().getOfficeId(), request);
 		}
 		loadCustomFieldDefinitions(EntityType.GROUP, request);
 		loadPositions(request);
-		loadClients(request);
+		loadClients(request,group);
 	}
 
 	private void setValuesInActionForm(GroupCustActionForm actionForm,
 			HttpServletRequest request) throws Exception {
-		GroupBO group = (GroupBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
+		GroupBO group = (GroupBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 		if (group.getPersonnel() != null) {
 			actionForm.setLoanOfficerId(group.getPersonnel().getPersonnelId()
 					.toString());
@@ -267,14 +284,15 @@ public class GroupCustAction extends CustAction {
 				.getCustomerPositions(), request));
 		actionForm.setCustomFields(createCustomFieldViews(group
 				.getCustomFields(), request));
-		/*
-		 * if (group.isTrained()) actionForm.setTrained(GroupConstants.TRAINED);
-		 * else actionForm.setTrained(GroupConstants.NOT_TRAINED); if
-		 * (group.getTrainedDate() != null)
-		 * actionForm.setTrainedDate(DateHelper.getUserLocaleDate(
-		 * getUserContext(request).getPereferedLocale(),
-		 * group.getTrainedDate().toString()));
-		 */
+		/*if (group.isTrained()) 
+			  actionForm.setTrained(GroupConstants.TRAINED);
+		else 
+			 actionForm.setTrained(GroupConstants.NOT_TRAINED); 
+		if(group.getTrainedDate() != null){
+			  actionForm.setTrainedDate(DateHelper.getUserLocaleDate(getUserContext(request).getPereferedLocale(),
+		      group.getTrainedDate().toString()));
+		}*/
+		 
 	}
 
 	private void clearActionForm(GroupCustActionForm actionForm) {

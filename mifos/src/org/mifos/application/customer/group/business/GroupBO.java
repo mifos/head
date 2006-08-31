@@ -43,6 +43,7 @@ import java.util.List;
 
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -50,7 +51,9 @@ import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
+import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -213,5 +216,25 @@ public class GroupBO extends CustomerBO {
 	protected boolean checkNewStatusIsFirstTimeActive(Short oldStatus,
 			Short newStatusId) {
 		return false;
+	}
+
+	public void update(UserContext userContext, String displayName, Short loanOfficerId, String externalId, Short trained, Date trainedDate, Address address, List<CustomFieldView> customFields, List<CustomerPositionView> customerPositions)throws CustomerException {
+		validateFieldsForUpdate(loanOfficerId);
+		if(trained!=null)
+			setTrained(trained);
+		else
+			setTrained(YesNoFlag.NO.getValue());
+		setTrainedDate(trainedDate);
+		if(!Configuration.getInstance().getCustomerConfig(userContext.getBranchId()).isCenterHierarchyExists()){
+			updateLoanOfficer(loanOfficerId);
+		}
+		super.update(userContext,externalId,address,customFields,customerPositions);
+	}
+	
+	protected void validateFieldsForUpdate(Short loanOfficerId)throws CustomerException{
+		if(getCustomerStatus().getId().equals(CustomerStatus.GROUP_ACTIVE.getValue()) || getCustomerStatus().getId().equals(CustomerStatus.GROUP_HOLD.getValue()) ){
+			validateLO(loanOfficerId);	
+		}
+		
 	}
 }

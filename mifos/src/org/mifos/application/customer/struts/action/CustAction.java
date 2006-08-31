@@ -247,22 +247,15 @@ public class CustAction extends BaseAction {
 					.getLocaleId()), request);
 	}
 	
-	protected void loadClients(HttpServletRequest request)
-		throws CustomerException, SystemException, ApplicationException{
-	CustomerBO customerBO = (CustomerBO) SessionUtils.getAttribute(
-			Constants.BUSINESS_KEY, request.getSession());
+	protected void loadClients(HttpServletRequest request , CustomerBO customerBO)
+		throws  SystemException, ApplicationException{
 	List<CustomerBO> customerList;
 	try {
-		customerList = customerBO.getChildren(CustomerLevel.CLIENT.getValue());
+		customerList = customerBO.getAllCustomerOtherThanCancelledAndClosed(CustomerLevel.CLIENT);
 	} catch (PersistenceException e) {
 		throw new CustomerException(e);
 	}
-	List<CustomerBO> customerListToPopulate = new ArrayList<CustomerBO>();
-	for(CustomerBO customer: customerList){
-		if(!(customer.getStatus().equals(CustomerStatus.CLIENT_CANCELLED) || customer.getStatus().equals(CustomerStatus.CLIENT_CLOSED)))
-			customerListToPopulate.add(customer);
-	}
-	SessionUtils.setAttribute(CustomerConstants.CLIENT_LIST, customerListToPopulate , request);
+	SessionUtils.setAttribute(CustomerConstants.CLIENT_LIST, customerList , request);
 	}
 	
 	protected CustomerBusinessService getCustomerBusinessService() throws CustomerException{

@@ -182,7 +182,7 @@ public class CenterCustAction extends CustAction {
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,centerBO
 				, request
 						.getSession());
-		loadUpdateMasterData(centerBO.getOffice().getOfficeId(), request);
+		loadUpdateMasterData(request , centerBO);
 		setValuesInActionForm((CenterCustActionForm) form, request);		
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
@@ -264,12 +264,12 @@ public class CenterCustAction extends CustAction {
 		loadFees(actionForm, request);
 	}
 
-	private void loadUpdateMasterData(Short officeId, HttpServletRequest request)
+	private void loadUpdateMasterData(HttpServletRequest request ,CenterBO center)
 			throws ApplicationException, SystemException {
-		loadLoanOfficers(officeId, request);
+		loadLoanOfficers(center.getOffice().getOfficeId(), request);
 		loadCustomFieldDefinitions(request);
 		loadPositions(request);
-		loadClients(request);
+		loadClients(request,center);
 	}
 
 	private void loadCreateCustomFields(CenterCustActionForm actionForm,

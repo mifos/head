@@ -1157,15 +1157,12 @@
 			<forward name="previewManage_failure" path="/pages/application/group/jsp/edit_groupdetails.jsp" />
 			<forward name="previousManage_success" path="/pages/application/group/jsp/edit_groupdetails.jsp" />
 			
-			<forward name="update_success"
-				path="/groupCustAction.do?method=get" />
-			<forward name="update_failure"
-				path="/pages/application/group/jsp/group_detailspreview.jsp" />
+			<forward name="update_success" path="/groupCustAction.do?method=get" />
+			<forward name="update_failure" path="/pages/application/group/jsp/preview_editgroupdetails.jsp" />
+			
 			<!--Cancel forwards-->
-			<forward name="cancel_create"
-				path="/CustomerSearchAction.do?method=load" />
-			<forward name="cancel_manage"
-				path="/groupCustAction.do?method=get" />
+			<forward name="cancelEdit_success" path="/groupCustAction.do?method=get" />
+			<forward name="cancel_create" path="/CustomerSearchAction.do?method=load" />
 			
 			
 		</action>
