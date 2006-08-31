@@ -154,6 +154,10 @@
 	    <![CDATA[select count(*) from org.mifos.application.customer.center.business.CenterBO as center where center.displayName=:DISPLAY_NAME]]>
     </query>
     
+     <query name="Customer.getGroupCountByGroupNameAndOffice">
+	     <![CDATA[select count(*) from org.mifos.application.customer.group.business.GroupBO as gp where gp.displayName=:DISPLAY_NAME and gp.office.officeId=:OFFICE_ID]]>
+     </query> 
+        
 	<query name="customer.findGroupSystemId">
 		<![CDATA[from org.mifos.application.customer.group.business.GroupBO as groups where groups.globalCustNum = :globalCustNum ]]>
 	</query>

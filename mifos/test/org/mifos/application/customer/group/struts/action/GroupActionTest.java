@@ -412,17 +412,6 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		
 	}
 	
-	
-	private void createAndSetGroupInSession() {
-		group = TestObjectFactory.createGroup("group",
-				CustomerStatus.GROUP_ACTIVE.getValue(), "1.1", getMeeting());
-
-		HibernateUtil.closeSession();
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class,
-				new Integer(group.getCustomerId()).intValue());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, center, request
-				.getSession());
-	}
 
 	private void createGroupWithCenterAndSetInSession() throws Exception {
 		createParentCustomer();

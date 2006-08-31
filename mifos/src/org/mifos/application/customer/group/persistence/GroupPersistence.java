@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.framework.persistence.Persistence;
 
 public class GroupPersistence extends Persistence {
@@ -23,4 +24,11 @@ public class GroupPersistence extends Persistence {
 		return group;
 	}
 
+	public boolean isGroupExists(String name, Short officeId){
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put(CustomerConstants.DISPLAY_NAME, name);
+		queryParameters.put(CustomerConstants.OFFICE_ID, officeId);
+		List queryResult = executeNamedQuery(NamedQueryConstants.GET_GROUP_COUNT_BY_NAME, queryParameters);
+		return ((Integer)queryResult.get(0)).intValue()>0;
+	}
 }

@@ -283,10 +283,6 @@ public class CenterBOTest extends MifosTestCase {
 		for(FeeView fee :feesToRemove){
 			TestObjectFactory.cleanUp(new FeePersistence().getFee(fee.getFeeIdValue()));
 		}
-	}
+	}	
 	
-	public Date getDate(String date)throws ParseException{
-		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		return df.parse(date);
-	}
 }

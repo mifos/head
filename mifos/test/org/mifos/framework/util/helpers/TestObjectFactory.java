@@ -351,17 +351,26 @@ public class TestObjectFactory {
 		return address;
 	}
 
+	//TODO: change references and remove this method
 	public static GroupBO createGroup(String customerName, Short statusId,
 			String searchId, CustomerBO parentCustomer, Date startDate) {
+		return createGroupUnderCenter(customerName, CustomerStatus.getStatus(statusId), parentCustomer);
+	}
+
+	public static GroupBO createGroupUnderCenter(String customerName, CustomerStatus customerStatus, CustomerBO parentCustomer){
+		Short formedBy = new Short("1");	
+		return createGroupUnderCenter(customerName, customerStatus, null, false, null, null, null, getFees(), formedBy, parentCustomer);
+	}
+	
+	public static GroupBO createGroupUnderCenter(String customerName, CustomerStatus customerStatus, String externalId, boolean trained, Date trainedDate, Address address,
+			List<CustomFieldView> customFields, List<FeeView> fees,
+			Short formedById, CustomerBO parentCustomer){
 		GroupBO group = null;
 		try {
-			//Short office = new Short("3");
-			Short personnel = new Short("1");	
 			if(parentCustomer!=null && parentCustomer.getCustomerMeeting()!=null 
 					&& parentCustomer.getCustomerMeeting().getMeeting()!=null)
 				parentCustomer.getCustomerMeeting().getMeeting().setMeetingStartDate(new GregorianCalendar());
-			group = new GroupBO(getUserContext(), customerName, CustomerStatus.getStatus(statusId), null, null, null, null, getFees(), personnel, parentCustomer.getOffice().getOfficeId(), parentCustomer, searchId);
-			//group.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), group, startDate));
+			group = new GroupBO(getUserContext(), customerName, customerStatus, externalId, trained, trainedDate, address, customFields, fees, formedById, parentCustomer);
 			group.save();
 			HibernateUtil.commitTransaction();
 			//TODO: throw Exception
@@ -370,15 +379,23 @@ public class TestObjectFactory {
 		}
 		return group;
 	}
-
-	public static GroupBO createGroup(String customerName, Short statusId,
-			String searchId, MeetingBO meeting) {
+	
+	public static GroupBO createGroupUnderBranch(String customerName,
+			CustomerStatus customerStatus, Short officeId, MeetingBO meeting,
+			Short loanOfficerId){
+		Short formedBy = new Short("1");
+		return createGroupUnderBranch(customerName, customerStatus, null, false, null, null, null, getFees(), formedBy, officeId, meeting, loanOfficerId);
+	}
+	
+	public static GroupBO createGroupUnderBranch(String customerName,
+			CustomerStatus customerStatus, String externalId, boolean trained,
+			Date trainedDate, Address address,
+			List<CustomFieldView> customFields, List<FeeView> fees,
+			Short formedById, Short officeId, MeetingBO meeting,
+			Short loanOfficerId){
 		GroupBO group = null;
 		try {
-			Short office = new Short("3");
-			Short personnel = new Short("1");	
-			group = new GroupBO(getUserContext(), customerName, CustomerStatus.getStatus(statusId), null, null, null, null, getFees(), personnel, office, meeting, personnel, searchId);
-			//group.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), group, startDate));
+			group = new GroupBO(getUserContext(), customerName, customerStatus, externalId, trained, trainedDate, address, customFields, fees, formedById, officeId, meeting, loanOfficerId);
 			group.save();
 			HibernateUtil.commitTransaction();
 			//TODO: throw Exception

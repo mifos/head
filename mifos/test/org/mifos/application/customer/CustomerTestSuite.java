@@ -12,6 +12,7 @@ import org.mifos.application.customer.client.business.TestClientBO;
 import org.mifos.application.customer.client.struts.action.ClientTransferActionTest;
 import org.mifos.application.customer.client.struts.action.TestClientCustAction;
 import org.mifos.application.customer.group.TestGroupBO;
+import org.mifos.application.customer.group.business.GroupBOTest;
 import org.mifos.application.customer.group.business.service.GroupBusinessServiceTest;
 import org.mifos.application.customer.group.persistence.GroupPersistenceTest;
 import org.mifos.application.customer.group.struts.action.GroupActionTest;
@@ -63,6 +64,7 @@ public class CustomerTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(GroupBusinessServiceTest.class);
 		testSuite.addTestSuite(GroupPersistenceTest.class);
 		testSuite.addTestSuite(GroupActionTest.class);
+		testSuite.addTestSuite(GroupBOTest.class);
 		return testSuite;
 		
 	}

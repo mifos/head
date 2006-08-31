@@ -126,6 +126,7 @@ public class ClientBO extends CustomerBO {
 		super(userContext, displayName, CustomerLevel.CLIENT, customerStatus,
 				externalId, mfiJoiningDate, address, customFields, fees,
 				formedById, officeId, parentCustomer, meeting, loanOfficerId);
+		validateOffice(officeId);
 		nameDetailSet = new HashSet<ClientNameDetailEntity>();
 		clientAttendances = new HashSet<ClientAttendanceBO>();
 		this.performanceHistory = new ClientPerformanceHistoryEntity(this);

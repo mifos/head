@@ -45,6 +45,8 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.group.persistence.GroupPersistence;
+import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -54,10 +56,8 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 
@@ -74,42 +74,50 @@ public class GroupBO extends CustomerBO {
 		super();
 	}
 
-	// TODO: removed searchId from parameter and generate internally
 	public GroupBO(UserContext userContext, String displayName,
-			CustomerStatus customerStatus, String externalId, Date mfiJoiningDate, Address address,
+			CustomerStatus customerStatus, String externalId, boolean trained,
+			Date trainedDate, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
-			Short formedById, Short officeId, CustomerBO parentCustomer,
-			String searchId) throws CustomerException {
-		this(userContext, displayName, customerStatus, externalId, mfiJoiningDate, address, customFields,
-				fees, formedById, officeId, parentCustomer, null, null, searchId);
+			Short formedById, CustomerBO parentCustomer)
+			throws CustomerException {
+		this(userContext, displayName, customerStatus, externalId, trained,
+				trainedDate, address, customFields, fees, formedById, null,
+				parentCustomer, null, null);
+		validateFieldsForGroupUnderCenter(parentCustomer);
+		setValues(trained, trainedDate);
 	}
 
 	public GroupBO(UserContext userContext, String displayName,
-			CustomerStatus customerStatus, String externalId, Date mfiJoiningDate, Address address,
+			CustomerStatus customerStatus, String externalId, boolean trained,
+			Date trainedDate, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
 			Short formedById, Short officeId, MeetingBO meeting,
-			Short loanOfficerId, String searchId) throws CustomerException{
-		this(userContext, displayName, customerStatus, externalId, mfiJoiningDate, address, customFields,
-				fees, formedById, officeId, null, meeting, loanOfficerId, searchId);
+			Short loanOfficerId) throws CustomerException {
+		this(userContext, displayName, customerStatus, externalId, trained,
+				trainedDate, address, customFields, fees, formedById, officeId,
+				null, meeting, loanOfficerId);
+		validateFieldsForGroupUnderOffice(loanOfficerId, meeting, officeId);
+		setValues(trained, trainedDate);
 	}
 
 	private GroupBO(UserContext userContext, String displayName,
-			CustomerStatus customerStatus, String externalId, Date mfiJoiningDate, Address address,
+			CustomerStatus customerStatus, String externalId, boolean trained,
+			Date trainedDate, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
 			Short formedById, Short officeId, CustomerBO parentCustomer,
-			MeetingBO meeting, Short loanOfficerId, String searchId)
-			throws CustomerException{
-		super(userContext, displayName, CustomerLevel.GROUP, customerStatus, externalId, mfiJoiningDate,
-				address, customFields, fees, formedById, officeId, parentCustomer,
-				meeting, loanOfficerId);
-		this.setSearchId(searchId);
-		if (customerStatus.equals(CustomerStatus.GROUP_ACTIVE.getValue()))
-			this.setCustomerActivationDate(this.getCreatedDate());
+			MeetingBO meeting, Short loanOfficerId) throws CustomerException {
+		super(userContext, displayName, CustomerLevel.GROUP, customerStatus,
+				externalId, null, address, customFields, fees, formedById,
+				officeId, parentCustomer, meeting, loanOfficerId);
+		validateFields(displayName, formedById, trained, trainedDate);
 	}
 
+	
+	
 	@Override
 	public boolean isActive() {
-		return getCustomerStatus().getId().equals(CustomerStatus.GROUP_ACTIVE.getValue());
+		return getCustomerStatus().getId().equals(
+				CustomerStatus.GROUP_ACTIVE.getValue());
 	}
 
 	@Override
@@ -124,13 +132,24 @@ public class GroupBO extends CustomerBO {
 		this.performanceHistory = performanceHistory;
 	}
 
-
+	@Override
+	public void save() throws CustomerException {
+		super.save();
+		try {
+			if(this.getParentCustomer() !=null)
+				new CustomerPersistence().createOrUpdate(this.getParentCustomer());
+		} catch (PersistenceException pe) {
+			throw new CustomerException(
+					CustomerConstants.CREATE_FAILED_EXCEPTION, pe);
+		}
+	}
+	
 	public void generatePortfolioAtRisk() throws PersistenceException,
 			ServiceException {
 		Money amount = getBalanceForAccountsAtRisk();
-		List<CustomerBO> clients = new CustomerPersistence().getAllChildrenForParent(
-				getSearchId(), getOffice().getOfficeId(),
-				CustomerConstants.GROUP_LEVEL_ID);
+		List<CustomerBO> clients = new CustomerPersistence()
+				.getAllChildrenForParent(getSearchId(), getOffice()
+						.getOfficeId(), CustomerConstants.GROUP_LEVEL_ID);
 		if (clients != null && !clients.isEmpty()) {
 			for (CustomerBO client : clients) {
 				amount = amount.add(client.getBalanceForAccountsAtRisk());
@@ -150,9 +169,9 @@ public class GroupBO extends CustomerBO {
 	public Money getTotalOutStandingLoanAmount() throws PersistenceException,
 			ServiceException {
 		Money amount = getOutstandingLoanAmount();
-		List<CustomerBO> clients = new CustomerPersistence().getAllChildrenForParent(
-				getSearchId(), getOffice().getOfficeId(),
-				CustomerConstants.GROUP_LEVEL_ID);
+		List<CustomerBO> clients = new CustomerPersistence()
+				.getAllChildrenForParent(getSearchId(), getOffice()
+						.getOfficeId(), CustomerConstants.GROUP_LEVEL_ID);
 		if (clients != null && !clients.isEmpty()) {
 			for (CustomerBO client : clients) {
 				amount = amount.add(client.getOutstandingLoanAmount());
@@ -165,9 +184,9 @@ public class GroupBO extends CustomerBO {
 			ServiceException {
 		Money amountForActiveAccount = new Money();
 		Integer countOfActiveLoans = 0;
-		List<CustomerBO> clients = new CustomerPersistence().getAllChildrenForParent(
-				getSearchId(), getOffice().getOfficeId(),
-				CustomerConstants.GROUP_LEVEL_ID);
+		List<CustomerBO> clients = new CustomerPersistence()
+				.getAllChildrenForParent(getSearchId(), getOffice()
+						.getOfficeId(), CustomerConstants.GROUP_LEVEL_ID);
 		if (clients != null && !clients.isEmpty()) {
 			for (CustomerBO client : clients) {
 				amountForActiveAccount = amountForActiveAccount.add(client
@@ -185,9 +204,9 @@ public class GroupBO extends CustomerBO {
 	public Money getTotalSavingsBalance() throws PersistenceException,
 			ServiceException {
 		Money amount = getSavingsBalance();
-		List<CustomerBO> clients = new CustomerPersistence().getAllChildrenForParent(
-				getSearchId(), getOffice().getOfficeId(),
-				CustomerConstants.GROUP_LEVEL_ID);
+		List<CustomerBO> clients = new CustomerPersistence()
+				.getAllChildrenForParent(getSearchId(), getOffice()
+						.getOfficeId(), CustomerConstants.GROUP_LEVEL_ID);
 		if (clients != null && !clients.isEmpty()) {
 			for (CustomerBO client : clients) {
 				amount = amount.add(client.getSavingsBalance());
@@ -198,24 +217,86 @@ public class GroupBO extends CustomerBO {
 
 	public Integer getActiveOnHoldChildrenOfGroup()
 			throws PersistenceException, ServiceException {
-		List<CustomerBO> clients = new CustomerPersistence().getAllChildrenForParent(
-				getSearchId(), getOffice().getOfficeId(),
-				CustomerConstants.GROUP_LEVEL_ID);
+		List<CustomerBO> clients = new CustomerPersistence()
+				.getAllChildrenForParent(getSearchId(), getOffice()
+						.getOfficeId(), CustomerConstants.GROUP_LEVEL_ID);
 		if (clients != null && !clients.isEmpty()) {
 			return Integer.valueOf(clients.size());
 		}
 		return Integer.valueOf(0);
 	}
-	
+
 	@Override
-	protected void validateStatusChange(Short newStatusId) throws CustomerException{
-		
+	protected void validateStatusChange(Short newStatusId)
+			throws CustomerException {
+
 	}
-	
+
 	@Override
 	protected boolean checkNewStatusIsFirstTimeActive(Short oldStatus,
 			Short newStatusId) {
 		return false;
+	}
+
+	private String generateSearchId() throws CustomerException {
+		String searchId = null;
+		if (getParentCustomer() != null) {
+			getParentCustomer().incrementMaxChildCount();
+			searchId = getParentCustomer().getSearchId() + "."
+					+ getParentCustomer().getMaxChildCount();
+		} else {
+			try {
+				int customerCount = new CustomerPersistence()
+						.getCustomerCountForOffice(CustomerLevel.GROUP,
+								getOffice().getOfficeId());
+				searchId = GroupConstants.PREFIX_SEARCH_STRING
+						+ String.valueOf(customerCount + 1);
+			} catch (PersistenceException pe) {
+				throw new CustomerException(pe);
+			}
+		}
+		return searchId;
+	}
+	
+	private void validateFields(String displayName, Short formedBy, boolean trained, Date trainedDate)throws CustomerException{
+		validateFormedBy(formedBy);
+		if((trained && trainedDate==null) || (!trained && trainedDate!=null))
+			throw new CustomerException(CustomerConstants.INVALID_TRAINED_OR_TRAINEDDATE);
+		validateForDuplicateName(displayName);
+	}
+	
+	
+	private void validateFormedBy(Short formedBy) throws CustomerException{
+		if(formedBy == null)
+			throw new CustomerException(CustomerConstants.INVALID_FORMED_BY);
+		
+	}
+
+	private void validateForDuplicateName(String displayName)throws CustomerException{
+		if(getOffice()!=null && new GroupPersistence().isGroupExists(displayName, getOffice().getOfficeId()))
+			throw new CustomerException(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER);
+	}
+	
+	private void validateFieldsForGroupUnderCenter(CustomerBO parentCustomer)throws CustomerException{
+		if(parentCustomer == null)
+			throw new CustomerException(CustomerConstants.INVALID_PARENT);
+	}
+	
+	private void validateFieldsForGroupUnderOffice(Short loanOfficerId, MeetingBO meeting, Short officeId)throws CustomerException{
+		validateOffice(officeId);
+		if (isActive()){			
+			validateLO(loanOfficerId);
+			validateMeeting(meeting);			
+		}		
+	}
+	
+	private void setValues(boolean trained, Date trainedDate)throws CustomerException{
+		this.setSearchId(generateSearchId());
+		this.setTrained(trained);
+		if(trained)
+			this.setTrainedDate(trainedDate);
+		if (getStatus().equals(CustomerStatus.GROUP_ACTIVE))
+			this.setCustomerActivationDate(this.getCreatedDate());
 	}
 
 	public void update(UserContext userContext, String displayName, Short loanOfficerId, String externalId, Short trained, Date trainedDate, Address address, List<CustomFieldView> customFields, List<CustomerPositionView> customerPositions)throws CustomerException {

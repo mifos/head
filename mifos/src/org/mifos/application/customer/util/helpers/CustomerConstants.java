@@ -213,6 +213,7 @@ public interface CustomerConstants {
 	
 	//-------------------------------------------constants for M2 Migration
 	public static final String DISPLAY_NAME="DISPLAY_NAME";
+	public static final String OFFICE_ID="OFFICE_ID";
 	public static final String NAME="Name";
 	public static final String LOAN_OFFICER="LoanOfficer";
 	public static final String MEETING = "Meeting";
@@ -225,6 +226,7 @@ public interface CustomerConstants {
 	public static final String INVALID_NAME="errors.Customer.invalidName";
 	public static final String INVALID_OFFICE="errors.Customer.invalidOffice";
 	public static final String INVALID_PARENT="errors.Customer.invalidParent";
+	public static final String INVALID_TRAINED_OR_TRAINEDDATE="errors.Customer.invalidTrainedOrTrainedDate";
 
 	public final String TRANSITION_CONFIG_FILE_PATH_CENTER="org/mifos/framework/util/resources/stateMachine/StateMachine_center.xml";
 	public final String TRANSITION_CONFIG_FILE_PATH_CLIENT="org/mifos/framework/util/resources/stateMachine/StateMachine_client.xml";

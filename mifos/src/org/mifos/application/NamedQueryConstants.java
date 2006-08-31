@@ -435,6 +435,7 @@ public interface NamedQueryConstants {
 	public String GET_UPDATED_CUSTOMER_MEETINGS="getUpdatedMeetings";
 	public String GET_MISSED_DEPOSITS_PAID_AFTER_DUEDATE="accounts.countOfMissedDepositsPaidAfterDueDate";
 	public String GET_CENTER_COUNT_BY_NAME="Customer.getCenterCount";
+	public String GET_GROUP_COUNT_BY_NAME="Customer.getGroupCountByGroupNameAndOffice";
 	 
 	//fee related m2
 	public String GET_UPDATED_FEES_FOR_CUSTOMERS="getUpdatedFeesForCustomers";

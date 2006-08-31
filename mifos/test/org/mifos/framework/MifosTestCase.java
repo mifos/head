@@ -37,10 +37,13 @@
  */
 package org.mifos.framework;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import junit.framework.ComparisonFailure;
 import junit.framework.TestCase;
 
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 
@@ -58,5 +61,10 @@ public class MifosTestCase extends TestCase {
 		if(one.equals(two))
 			return;
 		 throw new ComparisonFailure(s,one.toString(),two.toString());
+	}
+	
+	public Date getDate(String date)throws ParseException{
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		return df.parse(date);
 	}
 }

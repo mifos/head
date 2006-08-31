@@ -632,19 +632,20 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	private void createObjectsForTranferToGroup_WithMeeting()throws Exception{
-		group = TestObjectFactory.createGroup("Group", CustomerStatus.GROUP_PENDING.getValue(),
-				"1.1", null);
-		group1 = TestObjectFactory.createGroup("Group2", CustomerStatus.GROUP_PENDING.getValue(),
-				"1.2", getMeeting());
+		Short officeId = new Short("3");
+		Short personnel = new Short("1");
+		group = TestObjectFactory.createGroupUnderBranch("Group", CustomerStatus.GROUP_PENDING, officeId, null, personnel);
+		group1 = TestObjectFactory.createGroupUnderBranch("Group2", CustomerStatus.GROUP_PENDING,officeId, getMeeting(), personnel);
 		client = TestObjectFactory.createClient("new client" ,CustomerStatus.CLIENT_PARTIAL.getValue(), group, new java.util.Date());
 		HibernateUtil.closeSession();
 	}
 	
 	private void createObjectsForTranferToGroup_WithoutMeeting()throws Exception{
-		group = TestObjectFactory.createGroup("Group", CustomerStatus.GROUP_PENDING.getValue(),
-				"1.1", getMeeting());
-		group1 = TestObjectFactory.createGroup("Group2", CustomerStatus.GROUP_PENDING.getValue(),
-				"1.2", null);
+		Short officeId = new Short("3");
+		Short personnel = new Short("1");
+		group = TestObjectFactory.createGroupUnderBranch("Group", CustomerStatus.GROUP_PENDING,
+				officeId, getMeeting(), personnel);
+		group1 = TestObjectFactory.createGroupUnderBranch("Group2", CustomerStatus.GROUP_PENDING, officeId,null, personnel);
 		client = TestObjectFactory.createClient("new client" ,CustomerStatus.CLIENT_PARTIAL.getValue(), group, new java.util.Date());
 		HibernateUtil.closeSession();
 	}

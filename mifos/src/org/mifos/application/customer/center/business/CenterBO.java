@@ -46,7 +46,7 @@ public class CenterBO extends CustomerBO {
 				CustomerStatus.CENTER_ACTIVE, externalId, mfiJoiningDate,
 				address, customFields, fees, null, office, null, meeting,
 				loanOfficerId);
-		this.validateFields(displayName, meeting, loanOfficerId);
+		validateFields(displayName, meeting, loanOfficerId, office);
 		int count;
 		try {
 			count = new CustomerPersistence().getCustomerCountForOffice(
@@ -64,7 +64,7 @@ public class CenterBO extends CustomerBO {
 	}
 
 	private void validateFields(String displayName, MeetingBO meeting,
-			Short personnel) throws CustomerException {
+			Short personnel, Short officeId) throws CustomerException {
 		if (new CenterPersistence().isCenterExists(displayName)) {
 			Object[] values = new Object[1];
 			values[0] = displayName;
@@ -73,6 +73,7 @@ public class CenterBO extends CustomerBO {
 		}
 		validateMeeting(meeting);
 		validateLO(personnel);
+		validateOffice(officeId);
 	}
 
 	@Override
