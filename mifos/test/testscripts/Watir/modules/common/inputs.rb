@@ -331,29 +331,7 @@ $savings_dupl_short_name_message="The short name already exists in the applicati
 $savings_dupl_inst_name_message="The Product instance name already exists in the application. Please specify a different Name."
 #Error message for field validation End
 #SavingProduct End
-#ProductCategory Start
 
-$productcategory_created_msg = "You have successfully added a new product category"                            
-$productcategory_view_detail_msg = "View category details now "
-$create_productcategory_msg = "Define a new product category"
-
-$review_productcategory_info = "Define new category - Review & submit"
-$new_productcategory_link = "Define new category"
-$view_productcategory_link = "View product categories"
-$new_productcategory_page_msg = "Define new category - Enter Product category information"
-$edit_productcategory_link = "Edit category information"
-
-# Validation messages for new ProductCategory
-$productcategory_product_type_msg = "Please select a Product Type."
-$productcategory_category_name_msg = "Please specify the Category Name."
-#end of  Validation messages for new ProductCategory
-
-#Error message for field validation Start
-$productcategory_valid_category_name_msg = "The length of Category Name can not be greater than 100 character(s)."
-$duplicate_categoryname_msg = "The product category name already exists in the application. Please specify a different Name."
-$productcategory_valid_description_name_msg ="The length of Category Description can not be greater than 500 character(s)."
-#Error message for field validation End
-#ProductCategory End
 #Funds Start
 $review_funds_info = "Define new fund - Review & Submit"
 $new_funds_link = "Define new fund"

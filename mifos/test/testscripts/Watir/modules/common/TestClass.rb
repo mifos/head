@@ -71,9 +71,10 @@ class TestClass
 	   @@message_error
 	end
 	def string_replace_message(error_message,string_to_replace,replace_string)
-	   error_message[string_to_replace]=replace_string
-	   error_message.squeeze(" ")
-	   error_message
+	   error=error_message.clone
+	   error[string_to_replace]=replace_string
+	   error.squeeze(" ")
+	   error
 	end   
 	#def New_error_message
 	#   @@message_error
