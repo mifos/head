@@ -34,20 +34,21 @@ import org.apache.log4j.Logger;
  *  This class contains a logger object log the messages. 
  *  Also contains functions to log the messages at different levels 
  */ 
-public class Log4jLogger implements MifosLogger {
+public class Log4jLogger extends MifosLogger {
 
 	/**logger to log the statements*/
-	private Logger logger=null;
+	private Logger logger = null;
 		
 	/**
 	 * Constructor: 
 	 * Obtains an instance of the logger with a specified name. 
-	 * <!-->Root logger is "org.mifos"
+	 * Root logger is "org.mifos"
 	 * @param name The name of the Logger
 	 */
 	public Log4jLogger(String name) {
 		logger = Logger.getLogger(name);
-	}//end-constructor
+	}
+
 	/**
 	 * Constructor: 
 	 * Obtains an instance of the logger with a specified name. 
@@ -55,139 +56,26 @@ public class Log4jLogger implements MifosLogger {
 	 * @param name The name of the Logger
 	 * @param resourceBundle The resource bundle associated with the logger
 	 */
-	public Log4jLogger(String name , ResourceBundle resourceBundle) {
+	public Log4jLogger(String name, ResourceBundle resourceBundle) {
 		logger = Logger.getLogger(name);
 		//sets the resource bundle for the logger
 		logger.setResourceBundle(resourceBundle);
-	}//end-constructor 
+	}
 	
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.components.logger.MifosLogger#debug(java.lang.String, boolean, java.lang.Object[])
-	 */
-	public void debug(String key, boolean asString ,Object[] args){
-		logMessage(Level.DEBUG ,key, asString , args,null);
-		
-	}//end-method debug
-	
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.components.logger.MifosLogger#debug(java.lang.String)
-	 */
-	public void debug(String message){
-		logMessage(Level.DEBUG ,message, false , null ,null);
-		 
-	}//end-method debug
-	
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.components.logger.MifosLogger#info(java.lang.String, boolean, java.lang.Object[])
-	 */
-	
-	public void info(String key, boolean asString , Object[] args){
-		logMessage(Level.INFO ,key, asString , args,null);
-	}//end-method info
-	
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.components.logger.MifosLogger#info(java.lang.String)
-	 */
-	
-	public void info(String message){
-		logMessage(Level.INFO ,message, false , null ,null);
-	}//end-method info
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.components.logger.MifosLogger#warn(java.lang.String, boolean, java.lang.Object[])
-	 */
-	public void warn(String key, boolean asString , Object[] args){
-		
-		logMessage(Level.WARN ,key, asString , args , null);
-		
-	}	//end-method warn
-	
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.components.logger.MifosLogger#warn(java.lang.String)
-	 */
-	
-	public void warn(String message){
-		logMessage(Level.WARN ,message, false , null ,null);
-	}//end-method warn
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.components.logger.MifosLogger#warn(java.lang.String, boolean, java.lang.Object[], java.lang.Throwable)
-	 */
-	public void warn(String key, boolean asString , Object[] args , Throwable t){
-	
-		logMessage(Level.WARN ,key, asString , args ,t);
-	}//end-method warn	
-	
-	
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.components.logger.MifosLogger#error(java.lang.String, boolean, java.lang.Object[])
-	 */
-	public void error(String key, boolean asString , Object[] args){
-		
-		logMessage(Level.ERROR ,key, asString , args , null);
-	}	//end-method error
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.components.logger.MifosLogger#error(java.lang.String, boolean, java.lang.Object[], java.lang.Throwable)
-	 */
-	public void error(String key, boolean asString , Object[] args,Throwable t){
-		logMessage(Level.ERROR ,key, asString , args ,t);
-		
-	}	//end-method error
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.components.logger.MifosLogger#error(java.lang.String)
-	 */
-	public void error(String message){
-		logMessage(Level.ERROR ,message, false , null ,null);
-	}//end-method error
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.components.logger.MifosLogger#fatal(java.lang.String, boolean, java.lang.Object[])
-	 */
-	public void fatal(String key, boolean asString , Object[] args){
-		
-		logMessage(Level.FATAL ,key, asString , args , null);
-		
-		
-	}//end-method fatal
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.components.logger.MifosLogger#fatal(java.lang.String, boolean, java.lang.Object[], java.lang.Throwable)
-	 */
-	public void fatal(String key, boolean asString , Object[] args,Throwable t){
-		
-		logMessage(Level.FATAL ,key, asString , args ,t);
-	}//end-method fatal
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.components.logger.MifosLogger#fatal(java.lang.String)
-	 */
-	public void fatal(String message){
-		logMessage(Level.FATAL ,message, false , null ,null);
-	}//end-method fatal
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.components.logger.MifosLogger#getUserID()
-	 */
+	@Override
 	public String getUserID(){
 		return ApplicationConfig.getUserId();
-	}//end-method getUserID
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.components.logger.MifosLogger#getOfficeID()
-	 */
+	}
+
+	@Override
 	public String getOfficeID(){
 		return ApplicationConfig.getOfficeId();
+	}
 	
-	}//end-method getOfficeID
-	
-	/**
-	 * Function to log statements with the designated Level
-	 * @param level Level with which the message should be logged
-	 * @param key Key present in the resource bundle. If asString parameter is false
-	 * 			   then this is treated as the string to be displayed
-	 * @param asString Boolean value which decides if the parameter "key" should be 
-	 * 					treated as a key in the resource bundle or as a string
-	 * @param args List of parameters which can be used to replace placeholders 
-	 * 				in a message. 
-	 * @param t Throwable object containing the exception
-	 */
-	private void logMessage(Level level, String key,  boolean asString , Object[] args, Throwable t){
-		
-		if(!asString){
-			
+	@Override
+	protected void logMessage(Level level, String key, boolean asString, 
+			Object[] args, Throwable t) {
+		if (!asString) {
 			//creating message object. the userId and the officeID will be appended to the message string
 			Message m = new Message(key, getUserID(),getOfficeID());
 			
@@ -198,20 +86,20 @@ public class Log4jLogger implements MifosLogger {
 			//and the place holders are replaced. The userId and OfficeId are also attached to the list of arguments. 
 			//If the log statement doesnt have any placeholders then the argument list contains only the userid and office id 
 			int length = 0;
-			if(args!=null && args.length!=0 )
+			if (args!=null && args.length != 0)
 				length=args.length;
 			
 			Object[] args1=new Object[length+2];
 			//copies the list of arguments to new array and the userid and office are attached
-			if(args!=null && args.length!=0 )
-				System.arraycopy(args,0,args1,0,length);
+			if (args!=null && args.length != 0)
+				System.arraycopy(args, 0, args1, 0, length);
 			
 			args1[length] = getUserID();
 			args1[length+1] = getOfficeID();
 			
-			logger.l7dlog(level , key, args1, t );
+			logger.l7dlog(level, key, args1, t );
 			
 		}
-	}//end-method logMessage
+	}
 	
 }

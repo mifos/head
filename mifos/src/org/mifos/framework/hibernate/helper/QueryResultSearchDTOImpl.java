@@ -39,18 +39,22 @@ package org.mifos.framework.hibernate.helper;
 
 import java.util.List;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.customer.util.helpers.Param;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 
 /**
- *  This is the class that is returned on a search operation. Search would typically result in a set of search result objects , these search result objects would be obtained through hibernate scroll for pagination in the front end , the associate hibernate session would be held in this object , a call to close from the front end on this interface would result in the hibernate session object getting closed.
+ *  This is the class that is returned on a search operation. 
+ *  Search would typically result in a set of search result objects , 
+ *  these search result objects would be obtained through hibernate 
+ *  scroll for pagination in the front end , 
+ *  the associate hibernate session would be held in this object , 
+ *  a call to close from the front end on this interface would result 
+ *  in the hibernate session object getting closed.
  */
 
 public class QueryResultSearchDTOImpl extends QueryResultDTOImpl
@@ -59,12 +63,10 @@ public class QueryResultSearchDTOImpl extends QueryResultDTOImpl
   java.util.List list = new java.util.ArrayList(); 
   private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER);
   
- /**
-	  * Set the query inputs which will be used for query execution
-	  * @param queryInputs
-     */
-  public void setQueryInputs(QueryInputs queryInputs) throws HibernateSearchException
-  {	 
+    /** Set the query inputs which will be used for query execution */
+    @Override
+    public void setQueryInputs(QueryInputs queryInputs) throws HibernateSearchException
+    {
 	  if(queryInputs == null)
 		  throw new HibernateSearchException(HibernateConstants.SEARCH_INPUTNULL);
 
@@ -78,18 +80,13 @@ public class QueryResultSearchDTOImpl extends QueryResultDTOImpl
   }
 
 
- /**
-     * Returns the requested set of search result objects based on the pagination at the front end.
-     *@param position,noOfObjects
-     * @return List
- * @throws HibernateProcessException 
- * @throws HibernateProcessException 
- * @throws HibernateProcessException 
-     */
-
-
-
-    public java.util.List get(int position, int noOfObjects) throws HibernateSearchException
+    /**
+	 * Returns the requested set of search result objects based on the
+	 * pagination at the front end.
+	 */
+    @Override
+	public java.util.List get(int position, int noOfObjects) 
+    throws HibernateSearchException
     {   
     	Session session = null;
     	java.util.List returnList = new java.util.ArrayList();
@@ -133,11 +130,11 @@ public class QueryResultSearchDTOImpl extends QueryResultDTOImpl
 	   return returnList;
 	 }
     
-/**
+    /**
      * Returns the records valid for the query
-     * @return int
      */
-    public int getSize() throws HibernateSearchException
+    @Override
+	public int getSize() throws HibernateSearchException
     {    
     	Session session = null;
     	try

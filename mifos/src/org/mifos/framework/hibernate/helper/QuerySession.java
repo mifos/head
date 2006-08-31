@@ -37,12 +37,10 @@
  */
 package org.mifos.framework.hibernate.helper;
 
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.hibernate.Session;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.HibernateProcessException;
-import org.hibernate.Session;
-import java.sql.Connection;
 
 
 /**
