@@ -456,9 +456,7 @@ public class LoanBO extends AccountBO {
 			for (AccountTrxnEntity accntTrxn : accountPayment.getAccountTrxns()) {
 				LoanTrxnDetailEntity lntrxn = (LoanTrxnDetailEntity) accntTrxn;
 				if (lntrxn.getInstallmentId().equals(Short.valueOf("0"))
-						|| (lntrxn.getInstallmentId()
-								.equals(Short.valueOf("1")) && lntrxn
-								.getPrincipalAmount().getAmountDoubleValue() == 0.0)) {
+						|| isAdjustmentForInterestDedAtDisb(lntrxn.getInstallmentId())) {
 					return false;
 				}
 			}
@@ -468,8 +466,6 @@ public class LoanBO extends AccountBO {
 		}
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"Adjustment is not possible ");
-		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-		"Adjustment is not possible------------------------------------- ");
 		return false;
 	}
 
@@ -1119,9 +1115,12 @@ public class LoanBO extends AccountBO {
 				// Client performance entry
 				updateCustomerHistoryOnPayment();
 			}
+			java.sql.Date paymentDate = new java.sql.Date(paymentData
+					.getTransactionDate().getTime());
+			if(!accountPaymentData.isPaid())
+				paymentDate=null;
 			LoanPaymentData loanPaymentData = (LoanPaymentData) accountPaymentData;
-			accountAction.setPaymentDetails(loanPaymentData, new java.sql.Date(
-					paymentData.getTransactionDate().getTime()));
+			accountAction.setPaymentDetails(loanPaymentData, paymentDate);
 			accountPaymentData.setAccountActionDate(accountAction);
 			LoanTrxnDetailEntity accountTrxnBO = new LoanTrxnDetailEntity(
 					accountPayment, loanPaymentData,
@@ -1131,7 +1130,7 @@ public class LoanBO extends AccountBO {
 							.findById(AccountActionEntity.class,
 									AccountActionTypes.LOAN_REPAYMENT
 											.getValue()), loanPaymentData
-							.getTotalPaidAmnt(), "Payment rcvd.");
+							.getTotalAmountPaid(), "Payment rcvd.");
 			accountPayment.addAcountTrxn(accountTrxnBO);
 
 			loanSummary.updatePaymentDetails(
@@ -2312,7 +2311,7 @@ public class LoanBO extends AccountBO {
 	
 	private void handlePartialPayment(PaymentData paymentData) {
 		Money totalAmount = paymentData.getTotalAmount();
-		for (AccountActionDateEntity accountActionDate : getApplicableIdsForDueInstallments()) {
+		for (AccountActionDateEntity accountActionDate : getDetailsOfInstallmentsInArrears()) {
 			if (totalAmount.getAmountDoubleValue() > 0.0) {
 				LoanPaymentData loanPayment = new LoanPaymentData(
 						accountActionDate, totalAmount);
@@ -2321,19 +2320,53 @@ public class LoanBO extends AccountBO {
 						.getTotalAmountPaid());
 			}
 		}
+		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
+		if (nextInstallment != null
+				&& nextInstallment.getPaymentStatus().equals(
+						PaymentStatus.UNPAID.getValue())
+				&& DateUtils.getDateWithoutTimeStamp(
+						nextInstallment.getActionDate().getTime()).equals(
+						DateUtils.getCurrentDateWithoutTimeStamp()))
+			paymentData.addAccountPaymentData(new LoanPaymentData(
+					nextInstallment, totalAmount));
 	}
 
 	private void handleFullPayment(PaymentData paymentData) {
-		for (AccountActionDateEntity accountActionDate : getApplicableIdsForDueInstallments()) {
+		for (AccountActionDateEntity accountActionDate : getDetailsOfInstallmentsInArrears()) {
 			paymentData.addAccountPaymentData(new LoanPaymentData(
 					accountActionDate));
 		}
+		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
+		if (nextInstallment != null
+				&& nextInstallment.getPaymentStatus().equals(
+						PaymentStatus.UNPAID.getValue())
+				&& DateUtils.getDateWithoutTimeStamp(
+						nextInstallment.getActionDate().getTime()).equals(
+						DateUtils.getCurrentDateWithoutTimeStamp()))
+			paymentData.addAccountPaymentData(new LoanPaymentData(
+					nextInstallment));
 	}
 
 	private void handleFuturePayment(PaymentData paymentData) {
 		Money totalAmount = paymentData.getTotalAmount();
-		for (AccountActionDateEntity accountActionDate : getApplicableIdsForDueInstallments()) {
+		for (AccountActionDateEntity accountActionDate : getDetailsOfInstallmentsInArrears()) {
 			LoanPaymentData loanPayment = new LoanPaymentData(accountActionDate);
+			paymentData.addAccountPaymentData(loanPayment);
+			totalAmount = totalAmount
+					.subtract(loanPayment.getTotalAmountPaid());
+		}
+		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
+		if (nextInstallment != null
+				&& nextInstallment.getPaymentStatus().equals(
+						PaymentStatus.UNPAID.getValue())
+				&& totalAmount.getAmountDoubleValue() > 0.0) {
+			LoanPaymentData loanPayment;
+			if (DateUtils.getDateWithoutTimeStamp(
+					nextInstallment.getActionDate().getTime()).equals(
+					DateUtils.getCurrentDateWithoutTimeStamp()))
+				loanPayment = new LoanPaymentData(nextInstallment);
+			else
+				loanPayment = new LoanPaymentData(nextInstallment, totalAmount);
 			paymentData.addAccountPaymentData(loanPayment);
 			totalAmount = totalAmount
 					.subtract(loanPayment.getTotalAmountPaid());
@@ -2369,5 +2402,10 @@ public class LoanBO extends AccountBO {
 					.getTotalDueWithFees());
 		}
 		return amount;
+	}
+	
+	private boolean isAdjustmentForInterestDedAtDisb(Short installmentId) {
+		return installmentId.equals(Short.valueOf("1"))
+				&& isInterestDeductedAtDisbursement();
 	}
 }

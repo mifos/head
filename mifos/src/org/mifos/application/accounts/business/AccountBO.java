@@ -638,12 +638,16 @@ public class AccountBO extends BusinessObject {
 	}
 
 	public Money getTotalPaymentDue() {
-		Money amount = new Money();
-		for (AccountActionDateEntity accountActionDateEntity : getApplicableIdsForDueInstallments()) {
-			amount = amount.add(((LoanScheduleEntity) accountActionDateEntity)
-					.getTotalDueWithFees());
-		}
-		return amount;
+		Money totalAmt = getTotalAmountInArrears();
+		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
+		if (nextInstallment != null
+				&& nextInstallment.getPaymentStatus().equals(
+						PaymentStatus.UNPAID.getValue())
+				&& DateUtils.getDateWithoutTimeStamp(
+						nextInstallment.getActionDate().getTime()).equals(
+						DateUtils.getCurrentDateWithoutTimeStamp()))
+			totalAmt = totalAmt.add(getDueAmount(nextInstallment));
+		return totalAmt;
 	}
 
 	public Money getTotalAmountInArrears() {

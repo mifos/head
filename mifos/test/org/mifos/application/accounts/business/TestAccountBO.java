@@ -234,6 +234,7 @@ public class TestAccountBO extends TestAccount {
 	}
 
 	public void testLoanAdjustment() throws Exception {
+		HibernateUtil.closeSession();
 		Date currentDate = new Date(System.currentTimeMillis());
 		LoanBO loan = (LoanBO) accountBO;
 		loan.setUserContext(TestObjectFactory.getUserContext());
@@ -241,13 +242,21 @@ public class TestAccountBO extends TestAccount {
 		accntActionDates.add(loan.getAccountActionDate(Short.valueOf("1")));
 		PaymentData accountPaymentDataView = TestObjectFactory
 				.getLoanAccountPaymentData(accntActionDates, TestObjectFactory
-						.getMoneyForMFICurrency(212), null,
+						.getMoneyForMFICurrency(216), null,
 						loan.getPersonnel(), "receiptNum", Short.valueOf("1"),
 						currentDate, currentDate);
 		loan.applyPayment(accountPaymentDataView);
 
-		TestObjectFactory.updateObject(loan);
-		TestObjectFactory.flushandCloseSession();
+		HibernateUtil.commitTransaction();
+		loan = (LoanBO)TestObjectFactory.getObject(LoanBO.class,loan.getAccountId());
+		
+		loan.applyPayment(TestObjectFactory
+				.getLoanAccountPaymentData(null, TestObjectFactory
+						.getMoneyForMFICurrency(600), null,
+						loan.getPersonnel(), "receiptNum", Short.valueOf("1"),
+						currentDate, currentDate));
+		HibernateUtil.commitTransaction();
+		loan = (LoanBO)TestObjectFactory.getObject(LoanBO.class,loan.getAccountId());
 		loan.adjustPmnt("loan account has been adjusted by test code");
 
 		TestObjectFactory.updateObject(loan);
@@ -263,7 +272,8 @@ public class TestAccountBO extends TestAccount {
 		assertEquals(
 				"The installment adjusted should now be marked unpaid(due).",
 				installment.getPaymentStatus(), PaymentStatus.UNPAID.getValue());
-
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				loan.getAccountId());
 	}
 
 	public void testAdjustmentForClosedAccnt() throws Exception {
@@ -520,24 +530,23 @@ public class TestAccountBO extends TestAccount {
 				AccountBO.class, accountBO.getAccountId());
 
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
-		int count = 0;
-		for (AccountActionDateEntity accountActionDateEntity : accountBO
-				.getAccountActionDates()) {
-			if (count == 5)
-				break;
-			accntActionDates.add(accountActionDateEntity);
-			count++;
-		}
 		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
 				accntActionDates, TestObjectFactory
-						.getMoneyForMFICurrency(700), null, accountBO
+						.getMoneyForMFICurrency(212), null, accountBO
 						.getPersonnel(), "receiptNum", Short.valueOf("1"),
 				currentDate, currentDate);
 		accountBO.applyPayment(paymentData);
 
 		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		LoanBO loan = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+				accountBO.getAccountId());
 
+		loan.applyPayment(TestObjectFactory.getLoanAccountPaymentData(null,
+				TestObjectFactory.getMoneyForMFICurrency(600), null, loan
+						.getPersonnel(), "receiptNum", Short.valueOf("1"),
+				currentDate, currentDate));
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
 		accountBO.setUserContext(TestObjectFactory.getUserContext());
@@ -551,7 +560,7 @@ public class TestAccountBO extends TestAccount {
 				.getCustomerId());
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		assertEquals(0, ((LoanBO) accountBO).getPerformanceHistory()
+		assertEquals(1, ((LoanBO) accountBO).getPerformanceHistory()
 				.getNoOfPayments().intValue());
 
 	}

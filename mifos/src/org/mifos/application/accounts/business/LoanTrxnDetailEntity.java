@@ -203,11 +203,12 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 				.getAccountFeesActionDetails()) {
 			if (loanPaymentDataView.getFeesPaid().containsKey(
 					accountFeesActionDetail.getFee().getFeeId())) {
-				accountFeesActionDetail.makePayment(loanPaymentDataView
-						.getFeesPaid().get(
-								accountFeesActionDetail.getFee().getFeeId()));
+				Money feeAmount = loanPaymentDataView.getFeesPaid().get(
+						accountFeesActionDetail.getFee().getFeeId());
+				accountFeesActionDetail.makePayment(feeAmount);
 				FeesTrxnDetailEntity feesTrxnDetailBO = new FeesTrxnDetailEntity();
-				feesTrxnDetailBO.makePayment(accountFeesActionDetail);
+				feesTrxnDetailBO.setFeeDetails(accountFeesActionDetail
+						.getAccountFee(), feeAmount);
 				addFeesTrxnDetail(feesTrxnDetailBO);
 			}
 		}

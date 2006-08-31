@@ -128,8 +128,8 @@ public class AccountFeesActionDetailEntity extends PersistentObject {
 
 	public Money waiveCharges() {
 		Money chargeWaived = new Money();
-		chargeWaived = chargeWaived.add(getFeeAmount());
-		setFeeAmount(new Money());
+		chargeWaived = chargeWaived.add(getFeeDue());
+		setFeeAmount(getFeeAmountPaid());
 		return chargeWaived;
 	}
 

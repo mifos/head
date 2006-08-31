@@ -223,11 +223,16 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 
 	public void setPaymentDetails(LoanPaymentData loanPaymentData,
 			Date paymentDate) {
-		this.principalPaid = loanPaymentData.getPrincipalPaid();
-		this.interestPaid = loanPaymentData.getInterestPaid();
-		this.penaltyPaid = loanPaymentData.getPenaltyPaid();
-		this.miscFeePaid = loanPaymentData.getMiscFeePaid();
-		this.miscPenaltyPaid = loanPaymentData.getMiscPenaltyPaid();
+		this.principalPaid = this.principalPaid.add(loanPaymentData
+				.getPrincipalPaid());
+		this.interestPaid = this.interestPaid.add(loanPaymentData
+				.getInterestPaid());
+		this.penaltyPaid = this.penaltyPaid.add(loanPaymentData
+				.getPenaltyPaid());
+		this.miscFeePaid = this.miscFeePaid.add(loanPaymentData
+				.getMiscFeePaid());
+		this.miscPenaltyPaid = this.miscPenaltyPaid.add(loanPaymentData
+				.getMiscPenaltyPaid());
 		this.paymentStatus = loanPaymentData.getPaymentStatus();
 		this.paymentDate = paymentDate;
 	}
@@ -297,7 +302,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 
 	public Money waiveFeeCharges() {
 		Money chargeWaived = new Money();
-		chargeWaived = chargeWaived.add(getMiscFee());
+		chargeWaived = chargeWaived.add(getMiscFeeDue());
 		setMiscFee(new Money());
 		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : getAccountFeesActionDetails()) {
 			chargeWaived = chargeWaived.add(accountFeesActionDetailEntity

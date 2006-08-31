@@ -53,7 +53,6 @@ import org.mifos.application.accounts.loan.persistance.service.LoanPersistenceSe
 import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.service.SavingsPersistenceService;
-import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -175,7 +174,7 @@ public class BulkEntryBusinessService extends BusinessService {
 		for (LoanAccountView accountView : loanAccountsProductView
 				.getLoanAccountViews()) {
 			Integer accountId = accountView.getAccountId();
-			if (isDisbursalAccount(accountView)) {
+			if (accountView.isDisbursalAccount()) {
 				saveLoanDisbursement(accountId, personnelId, recieptId,
 						paymentId, transactionDate, loanAccountsProductView
 								.getDisBursementAmountEntered(), receiptDate);
@@ -292,10 +291,18 @@ public class BulkEntryBusinessService extends BusinessService {
 			throws BulkEntryAccountUpdateException {
 		Double amount = Double.valueOf(loanAccountsProductView
 				.getEnteredAmount());
-		if (amount > 0) {
-			Money enteredAmount = new Money(Configuration.getInstance()
-					.getSystemConfig().getCurrency(), loanAccountView
-					.getTotalAmountDue());
+		System.out.println("In bulk business list size-----------" +loanAccountsProductView.getLoanAccountViews().size());
+		System.out.println("In bulk business amount-----------" +amount +"---" + (amount>0.0));
+		if (amount > 0.0) {
+			Money enteredAmount = new Money();
+			if (loanAccountsProductView.getLoanAccountViews().size() > 1)
+				enteredAmount = new Money(Configuration.getInstance()
+						.getSystemConfig().getCurrency(), String
+						.valueOf(loanAccountView.getTotalAmountDue()));
+			else
+				enteredAmount = new Money(Configuration.getInstance()
+						.getSystemConfig().getCurrency(),
+						loanAccountsProductView.getEnteredAmount());
 			PaymentData paymentData = getLoanAccountPaymentData(loanAccountView
 					.getAccountTrxnDetails(), enteredAmount, personnelId,
 					recieptId, paymentId, receiptDate, transactionDate);
@@ -307,13 +314,6 @@ public class BulkEntryBusinessService extends BusinessService {
 						new String[] { account.getGlobalAccountNum() });
 			}
 		}
-	}
-
-	private boolean isDisbursalAccount(LoanAccountView loanAccountView) {
-		short accountSate = loanAccountView.getAccountSate().shortValue();
-		return accountSate == AccountStates.LOANACC_APPROVED
-				|| accountSate == AccountStates.LOANACC_DBTOLOANOFFICER;
-
 	}
 
 	private PaymentData getLoanAccountPaymentData(

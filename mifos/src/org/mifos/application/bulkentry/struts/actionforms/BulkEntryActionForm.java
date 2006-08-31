@@ -271,91 +271,95 @@ public class BulkEntryActionForm extends ActionForm {
 		}
 		for (LoanAccountsProductView accountView : parent
 				.getLoanAccountDetails()) {
-			Double enteredAmount = 0.0;
-			if (null != accountView.getEnteredAmount()
-					&& accountView.isValidAmountEntered())
-				enteredAmount = Double.valueOf(accountView.getEnteredAmount());
-			Double enteredDisbursalAmount = 0.0;
-			if (null != accountView.getDisBursementAmountEntered()
-					&& accountView.isValidDisbursementAmount())
-				enteredDisbursalAmount = Double.valueOf(accountView
-						.getDisBursementAmountEntered());
-			Double totalDueAmount = accountView.getTotalAmountDue();
-			Double totalDisburtialAmount = accountView.getTotalDisburseAmount();
-			if (totalDueAmount.doubleValue() <= 0.0
-					&& totalDisburtialAmount > 0.0) {
-				if (!accountView.isValidDisbursementAmount()
-						|| (!enteredDisbursalAmount
-								.equals(totalDisburtialAmount) && !enteredDisbursalAmount
-								.equals(0.0)))
-					errors
-							.add(
-									BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
-									new ActionMessage(
-											BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
-											accountView
-													.getPrdOfferingShortName(),
-											parent.getCustomerDetail()
-													.getDisplayName()));
-			}
-			if (totalDisburtialAmount <= 0.0 && totalDueAmount > 0.0) {
-				if (!accountView.isValidAmountEntered()
-						|| (!enteredAmount.equals(totalDueAmount) && !enteredAmount
-								.equals(0.0)))
-					errors
-							.add(
-									BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
-									new ActionMessage(
-											BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
-											accountView
-													.getPrdOfferingShortName(),
-											parent.getCustomerDetail()
-													.getDisplayName()));
-			}
-			if (totalDueAmount.doubleValue() > 0.0
-					&& totalDisburtialAmount > 0.0) {
-				if (!accountView.isValidAmountEntered()
-						|| !accountView.isValidDisbursementAmount()
-						|| (accountView.getEnteredAmount() == null)
-						|| (accountView.getDisBursementAmountEntered() == null)
-						|| (enteredAmount.equals(0.0) && !enteredDisbursalAmount
-								.equals(0.0))
-						|| (enteredDisbursalAmount.equals(0.0) && !enteredAmount
-								.equals(0.0))
-						|| (enteredDisbursalAmount
-								.equals(totalDisburtialAmount) && !enteredAmount
-								.equals(totalDueAmount))
-						|| (enteredAmount.equals(totalDueAmount) && !enteredDisbursalAmount
-								.equals(totalDisburtialAmount))
-						|| (!enteredAmount.equals(totalDueAmount)
-								&& !enteredDisbursalAmount
-										.equals(totalDisburtialAmount)
-								&& !enteredDisbursalAmount.equals(0.0) && !enteredAmount
-								.equals(0.0)))
-					errors
-							.add(
-									BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
-									new ActionMessage(
-											BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
-											accountView
-													.getPrdOfferingShortName(),
-											parent.getCustomerDetail()
-													.getDisplayName()));
-			}
-			if (totalDisburtialAmount <= 0.0 && totalDueAmount <= 0.0) {
-				if (!accountView.isValidAmountEntered()
-						|| !accountView.isValidDisbursementAmount()
-						|| (!enteredDisbursalAmount.equals(0.0) && !enteredAmount
-								.equals(0.0)))
-					errors
-							.add(
-									BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
-									new ActionMessage(
-											BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
-											accountView
-													.getPrdOfferingShortName(),
-											parent.getCustomerDetail()
-													.getDisplayName()));
+			if (accountView.isDisburseLoanAccountPresent() || accountView.getLoanAccountViews().size() > 1) {
+				Double enteredAmount = 0.0;
+				if (null != accountView.getEnteredAmount()
+						&& accountView.isValidAmountEntered())
+					enteredAmount = Double.valueOf(accountView
+							.getEnteredAmount());
+				Double enteredDisbursalAmount = 0.0;
+				if (null != accountView.getDisBursementAmountEntered()
+						&& accountView.isValidDisbursementAmount())
+					enteredDisbursalAmount = Double.valueOf(accountView
+							.getDisBursementAmountEntered());
+				Double totalDueAmount = accountView.getTotalAmountDue();
+				Double totalDisburtialAmount = accountView
+						.getTotalDisburseAmount();
+				if (totalDueAmount.doubleValue() <= 0.0
+						&& totalDisburtialAmount > 0.0) {
+					if (!accountView.isValidDisbursementAmount()
+							|| (!enteredDisbursalAmount
+									.equals(totalDisburtialAmount) && !enteredDisbursalAmount
+									.equals(0.0)))
+						errors
+								.add(
+										BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
+										new ActionMessage(
+												BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
+												accountView
+														.getPrdOfferingShortName(),
+												parent.getCustomerDetail()
+														.getDisplayName()));
+				}
+				if (totalDisburtialAmount <= 0.0 && totalDueAmount > 0.0) {
+					if (!accountView.isValidAmountEntered()
+							|| (!enteredAmount.equals(totalDueAmount) && !enteredAmount
+									.equals(0.0)))
+						errors
+								.add(
+										BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
+										new ActionMessage(
+												BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
+												accountView
+														.getPrdOfferingShortName(),
+												parent.getCustomerDetail()
+														.getDisplayName()));
+				}
+				if (totalDueAmount.doubleValue() > 0.0
+						&& totalDisburtialAmount > 0.0) {
+					if (!accountView.isValidAmountEntered()
+							|| !accountView.isValidDisbursementAmount()
+							|| (accountView.getEnteredAmount() == null)
+							|| (accountView.getDisBursementAmountEntered() == null)
+							|| (enteredAmount.equals(0.0) && !enteredDisbursalAmount
+									.equals(0.0))
+							|| (enteredDisbursalAmount.equals(0.0) && !enteredAmount
+									.equals(0.0))
+							|| (enteredDisbursalAmount
+									.equals(totalDisburtialAmount) && !enteredAmount
+									.equals(totalDueAmount))
+							|| (enteredAmount.equals(totalDueAmount) && !enteredDisbursalAmount
+									.equals(totalDisburtialAmount))
+							|| (!enteredAmount.equals(totalDueAmount)
+									&& !enteredDisbursalAmount
+											.equals(totalDisburtialAmount)
+									&& !enteredDisbursalAmount.equals(0.0) && !enteredAmount
+									.equals(0.0)))
+						errors
+								.add(
+										BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
+										new ActionMessage(
+												BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
+												accountView
+														.getPrdOfferingShortName(),
+												parent.getCustomerDetail()
+														.getDisplayName()));
+				}
+				if (totalDisburtialAmount <= 0.0 && totalDueAmount <= 0.0) {
+					if (!accountView.isValidAmountEntered()
+							|| !accountView.isValidDisbursementAmount()
+							|| !enteredDisbursalAmount.equals(0.0) || !enteredAmount
+									.equals(0.0))
+						errors
+								.add(
+										BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
+										new ActionMessage(
+												BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
+												accountView
+														.getPrdOfferingShortName(),
+												parent.getCustomerDetail()
+														.getDisplayName()));
+				}
 			}
 		}
 		for (SavingsAccountView savingsAccountView : parent

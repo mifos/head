@@ -259,17 +259,8 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		addRequestParameter("method", "preview");
-		addRequestParameter("enteredAmount[0][0]", "10.0");
-		addRequestParameter("enteredAmount[0][1]", "10.0");
-		addRequestParameter("enteredAmount[0][2]", "10.0");
-		addRequestParameter("enteredAmount[1][0]", "10.0");
-		addRequestParameter("enteredAmount[1][1]", "10.0");
-		addRequestParameter("enteredAmount[1][2]", "10.0");
-		addRequestParameter("enteredAmount[2][0]", "10.0");
-		addRequestParameter("enteredAmount[2][1]", "10.0");
-		addRequestParameter("enteredAmount[2][2]", "10.0");
-		addRequestParameter("withDrawalAmountEntered[2][0]", "100.0");
-		addRequestParameter("depositAmountEntered[2][0]", "100.0");
+		addRequestParameter("customerAccountAmountEntered[0][6]", "");
+		addRequestParameter("customerAccountAmountEntered[1][6]", "abc");
 		actionPerform();
 		verifyActionErrors(new String[] { "errors.invalidamount",
 				"errors.invalidamount" });
@@ -483,15 +474,8 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				request);
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "preview");
-		addRequestParameter("enteredAmount[0][0]", "");
-		addRequestParameter("enteredAmount[0][1]", "");
-		addRequestParameter("enteredAmount[0][2]", "");
-		addRequestParameter("enteredAmount[1][0]", "");
-		addRequestParameter("enteredAmount[1][1]", "");
-		addRequestParameter("enteredAmount[1][2]", "");
-		addRequestParameter("enteredAmount[2][0]", "");
-		addRequestParameter("enteredAmount[2][1]", "");
-		addRequestParameter("enteredAmount[2][2]", "");
+		addRequestParameter("customerAccountAmountEntered[0][6]", "");
+		addRequestParameter("customerAccountAmountEntered[1][6]", "");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyActionErrors(new String[] { "errors.invalidamount",
@@ -505,15 +489,8 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				request);
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "preview");
-		addRequestParameter("enteredAmount[0][0]", "abc");
-		addRequestParameter("enteredAmount[0][1]", "abc");
-		addRequestParameter("enteredAmount[0][2]", "abc");
-		addRequestParameter("enteredAmount[1][0]", "abc");
-		addRequestParameter("enteredAmount[1][1]", "abc");
-		addRequestParameter("enteredAmount[1][2]", "abc");
-		addRequestParameter("enteredAmount[2][0]", "abc");
-		addRequestParameter("enteredAmount[2][1]", "abc");
-		addRequestParameter("enteredAmount[2][2]", "abc");
+		addRequestParameter("customerAccountAmountEntered[0][6]", "abc");
+		addRequestParameter("customerAccountAmountEntered[1][6]", "abc");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyActionErrors(new String[] { "errors.invalidamount",

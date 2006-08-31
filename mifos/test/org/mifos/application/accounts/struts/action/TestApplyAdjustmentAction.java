@@ -180,6 +180,9 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 
 	public void testApplyAdjustment()throws Exception{
 		loan =(LoanBO)getLoanAccount();
+		applyPayment(loan,212);
+		loan =(LoanBO) TestObjectFactory.getObject(AccountBO.class,
+				loan.getAccountId());
 		applyPayment(loan,700);
 		TestObjectFactory.updateObject(loan);
 		TestObjectFactory.flushandCloseSession();
