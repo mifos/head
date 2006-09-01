@@ -229,6 +229,7 @@ public class GroupCustAction extends CustAction {
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 	
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {

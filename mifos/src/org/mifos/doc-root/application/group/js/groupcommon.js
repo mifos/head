@@ -1,4 +1,4 @@
 function goToCancelPage(groupActionForm){
-	groupActionForm.action="GroupAction.do?method=cancel";
+	groupActionForm.action="groupCustAction.do?method=cancel";
 	groupActionForm.submit();
   }

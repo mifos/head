@@ -60,6 +60,7 @@ function meetingpopup(){
 	}
 </script>
 		<html-el:form action="groupCustAction.do">
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<c:set
 				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
 				var="BusinessKey" />
@@ -403,7 +404,7 @@ function meetingpopup(){
 								name="Group.groupinformation" bundle="GroupUIResources"></mifos:mifoslabel>
 							</td>
 							<td width="37%" align="right" class="fontnormal"><html-el:link
-								action="GroupAction.do?method=manage">
+								action="groupCustAction.do?method=manage&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="Group.edit" bundle="GroupUIResources"></mifos:mifoslabel>
 								<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>
 								<mifos:mifoslabel name="Group.groupinformation"
@@ -777,8 +778,6 @@ function meetingpopup(){
 			</table>
 			<br>
 			<br>
-			<html-el:hidden property="currentFlowKey"
-				value="${requestScope.currentFlowKey}" />
 			<mifos:SecurityParam property="Group" />
 			<html-el:hidden property="customerId"
 				value="${BusinessKey.customerId}" />

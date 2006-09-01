@@ -483,9 +483,11 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 	}
 	
 	public void testCancelSuccess() throws Exception {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "cancel");
 		addRequestParameter("input", GroupConstants.PREVIEW_MANAGE_GROUP);
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String)request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
