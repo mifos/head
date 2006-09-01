@@ -333,5 +333,10 @@ class TestClass
 	  exit
     end
   end  
+  def remove_li_tag(message)
+    message_to_remove=message.clone
+    message_to_remove["<li>"]=""
+    message_to_remove["</li>"]=""
+  end
   
 end
