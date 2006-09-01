@@ -7,25 +7,42 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.mifos.application.customer.business.CustomFieldView;
+import org.mifos.application.customer.business.CustomerAddressDetailEntity;
+import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerPositionView;
+import org.mifos.application.customer.business.CustomerView;
+import org.mifos.application.customer.exceptions.AssociatedObjectStaleException;
+import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.util.valueobjects.SupportedLocales;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.util.helpers.OfficeLevel;
+import org.mifos.application.office.util.helpers.OfficeStatus;
+import org.mifos.application.personnel.exceptions.HierarchyChangeException;
 import org.mifos.application.personnel.exceptions.PersonnelException;
+import org.mifos.application.personnel.exceptions.StatusChangeException;
+import org.mifos.application.personnel.exceptions.TransferNotPossibleException;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
+import org.mifos.application.personnel.util.helpers.PersonnelStatus;
+import org.mifos.application.personnel.util.valueobjects.Personnel;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.EncryptionException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.authentication.EncryptionService;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.valueobjects.Context;
 
 public class PersonnelBO extends BusinessObject {
 
@@ -287,6 +304,90 @@ public class PersonnelBO extends BusinessObject {
 						PersonnelConstants.DUPLICATE_USER_NAME_OR_DOB,
 						new Object[] { displayName });
 		}
-
 	}
+	
+	/*public void update(UserContext userContext ,PersonnelStatus newStatus,PersonnelLevel newLevel, Short officeId,  Name name, Integer maritalStatus, Integer gender, Address address,  List<CustomFieldView> customFields) throws PersonnelException {
+			validateForUpdate(newStatus,officeId,newLevel);
+			this.setUserContext(userContext);
+			updateCustomFields(customFields);
+			Date dateOfJoiningBranch = null;
+			if(!officeId.equals(this.getOffice() .getOfficeId())){
+				dateOfJoiningBranch = new Date();
+			}
+			updatePersonnelDetails(name, maritalStatus, gender, address,dateOfJoiningBranch);
+	}*/
+	
+	public void updatePersonnelDetails(Name name, Integer maritalStatus, Integer gender, Address address, Date dateOfJoiningBranch ) throws PersonnelException {
+		if(getPersonnelDetails()==null){
+			getPersonnelDetails().updateDetails(name,maritalStatus, gender, address,dateOfJoiningBranch);
+			getPersonnelDetails().setAddress(address);
+			getPersonnelDetails().setName(name);
+			getPersonnelDetails().setAddress(address);
+			getPersonnelDetails().setAddress(address);
+		
+		}
+	}
+	
+	private void validateForUpdate(PersonnelStatus newStatus , Short newOffice, PersonnelLevel newLevel)throws PersonnelException{
+		
+		if(!level.getId().equals(newLevel))
+			validateUserHierarchyChange(newLevel, newOffice);
+		if( !office.getOfficeId().equals(newOffice)){
+			validateOfficeTransfer(newOffice, newLevel);
+		}
+		if(!status.getId().equals(newStatus)){
+			validateStatusChange(newStatus, newLevel,newOffice);
+		}
+		
+	}	
+	
+	private void validateStatusChange(PersonnelStatus newStatus, PersonnelLevel newLevel, Short newOffice) throws PersonnelException{
+		if( status.getId().equals(PersonnelStatus.ACTIVE) && newStatus.equals(PersonnelStatus.INACTIVE) && newLevel.equals(PersonnelLevel.LOAN_OFFICER)){
+			if(new PersonnelPersistence().getActiveChildrenForLoanOfficer(personnelId, office.getOfficeId())){
+				Object values[]=new Object[1];
+				values[0]=globalPersonnelNum;
+				throw new PersonnelException(PersonnelConstants.STATUS_CHANGE_EXCEPTION,values);
+			}
+		}
+		else if( status.getId().equals(PersonnelStatus.INACTIVE) && newStatus.equals(PersonnelStatus.ACTIVE)&& !(office.isActive())){
+			Object values[]=new Object[1];
+			values[0]=office.getOfficeId();
+			throw new PersonnelException(PersonnelConstants.INACTIVE_BRANCH,values);
+		}
+		
+	}
+	
+	private void validateOfficeTransfer(Short newOfficeId ,PersonnelLevel newLevel)throws PersonnelException {
+		if(newLevel.equals(PersonnelLevel.LOAN_OFFICER)){
+			if(!newOfficeId.equals(OfficeLevel.BRANCHOFFICE.getValue() )){
+				Object values[]=new Object[1];
+				values[0]=globalPersonnelNum;
+				throw new PersonnelException(PersonnelConstants.LO_ONLY_IN_BRANCHES,values);
+			}
+		}
+		if(new PersonnelPersistence().getActiveChildrenForLoanOfficer(personnelId, office.getOfficeId())){
+				Object values[]=new Object[1];
+				values[0]=globalPersonnelNum;
+				throw new PersonnelException(PersonnelConstants.TRANSFER_NOT_POSSIBLE_EXCEPTION,values);
+		}
+		
+	}
+	
+	private void validateUserHierarchyChange(PersonnelLevel newLevel , Short officeId)throws PersonnelException{
+		if(level.getId().equals(PersonnelLevel.LOAN_OFFICER.getValue()) && newLevel.equals(PersonnelLevel.NON_LOAN_OFFICER)){
+			if(new PersonnelPersistence().getAllChildrenForLoanOfficer(personnelId, getOffice().getOfficeId())){
+				Object values[]=new Object[1];
+				values[0]=globalPersonnelNum;
+				throw new PersonnelException(PersonnelConstants.HIERARCHY_CHANGE_EXCEPTION,values);
+			}
+		}
+		else if(level.getId().equals(PersonnelLevel.NON_LOAN_OFFICER.getValue()) && newLevel.equals(PersonnelLevel.LOAN_OFFICER) && (!officeId.equals(OfficeLevel.BRANCHOFFICE))){
+				Object values[]=new Object[1];
+				values[0]=globalPersonnelNum;
+				throw new PersonnelException(PersonnelConstants.LO_ONLY_IN_BRANCHES,values);
+			
+		}
+		
+	}
+	
 }

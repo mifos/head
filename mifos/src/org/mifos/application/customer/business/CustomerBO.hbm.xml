@@ -190,5 +190,11 @@
     	<query name="customer.viewallclosedaccounts">
 		<![CDATA[from org.mifos.application.accounts.business.AccountBO account where account.customer.customerId=:customerId
 					and account.accountType.accountTypeId=:accountTypeId and account.accountState.id in(6,7,8,10,15,17) ]]>
-	</query>				      	  
+	</query>	
+	<query name="Customer.getActiveCustomersForLO">
+	        	   <![CDATA[select count(*) from org.mifos.application.customer.business.CustomerBO as customer where customer.personnel.personnelId=:userId and customer.office.officeId=:officeId and customer.customerStatus.id not in (5,6,11,12,14) ]]>
+    </query>
+    <query name="Customer.getAllCustomersForLO">
+	        	   <![CDATA[select count(*) from org.mifos.application.customer.business.CustomerBO as customer where customer.personnel.personnelId=:userId and customer.office.officeId=:officeId ]]>
+    </query> 			      	  
 </hibernate-mapping>

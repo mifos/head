@@ -172,4 +172,14 @@ public class PersonnelDetailsEntity extends PersistentObject {
 	public String getDisplayName(){
 		return name.getDisplayName();
 	}
+
+	public void updateDetails(Name name, Integer maritalStatus, Integer gender, Address address, Date dateOfJoiningBranch) {
+		setName(name);
+		setMaritalStatus(maritalStatus);
+		setGender(gender);
+		setAddress(address);
+		if(dateOfJoiningBranch !=null){
+			setDateOfJoiningBranch(dateOfJoiningBranch);
+		}
+	}
 }

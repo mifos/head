@@ -77,6 +77,7 @@ public class TestOfficeBO extends MifosTestCase {
 		assertEquals("abcd", officeBO.getOfficeName());
 		assertEquals("abcd", officeBO.getShortName());
 		assertEquals(OperationMode.REMOTE_SERVER, officeBO.getMode());
+		assertTrue(officeBO.isActive());
 		TestObjectFactory.cleanUp(officeBO);
 	}
 

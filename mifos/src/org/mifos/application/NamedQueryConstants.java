@@ -502,4 +502,6 @@ public interface NamedQueryConstants {
 	public String GET_PERSONNEL_WITH_NAME="getCountByName";
 	public String GET_PERSONNEL_WITH_GOVERNMENTID="getCountByGovernmentId";
 	public String GET_PERSONNEL_WITH_DOB_AND_DISPLAYNAME="getCountByDobAndDisplayName";
+	public String GET_ACTIVE_CUSTOMERS_FOR_LO ="Customer.getActiveCustomersForLO";
+	public String GET_ALL_CUSTOMERS_FOR_LO ="Customer.getAllCustomersForLO";
 }

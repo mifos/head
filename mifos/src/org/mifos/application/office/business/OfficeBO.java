@@ -337,6 +337,12 @@ public class OfficeBO extends BusinessObject {
 		if (parentOffice.getOfficeStatus().equals(OfficeStatus.INACTIVE))
 			throw new OfficeException(OfficeConstants.KEYPARENTNOTACTIVE);
 	}
+	
+	public boolean isActive() {
+
+		return getStatus().getId().equals(OfficeStatus.ACTIVE.getValue());
+			
+	}
 
 	public void update(String newName, String newShortName,
 			OfficeStatus newStatus, OfficeLevel newLevel, OfficeBO newParent, Address address, List<CustomFieldView> customFileds)

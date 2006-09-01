@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
@@ -62,6 +63,30 @@ public class PersonnelPersistence extends Persistence {
 		if(count!=null ){
 			return count>0?true:false;
 		}
+		return false;
+	}
+
+	public boolean getActiveChildrenForLoanOfficer(Short personnelId, Short officeId) {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("userId", personnelId);
+		queryParameters.put("officeId",officeId);
+		Integer count = (Integer)execUniqueResultNamedQuery(NamedQueryConstants.GET_ACTIVE_CUSTOMERS_FOR_LO,queryParameters);
+		if(count!=null ){
+			return count>0?true:false;
+		}
+		
+		return false;
+	}
+	
+	public boolean getAllChildrenForLoanOfficer(Short personnelId, Short officeId) {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("userId", personnelId);
+		queryParameters.put("officeId",officeId);
+		Integer count = (Integer)execUniqueResultNamedQuery(NamedQueryConstants.GET_ALL_CUSTOMERS_FOR_LO,queryParameters);
+		if(count!=null ){
+			return count>0?true:false;
+		}
+		
 		return false;
 	}
 }
