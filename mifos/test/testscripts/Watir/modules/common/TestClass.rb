@@ -63,7 +63,7 @@ class TestClass
 		end
 	end
 	def string_replace(error_message,string_to_replace,replace_string)
-	   @@message_error=error_message
+	   @@message_error=error_message.clone
 	   @@message_error["<li>"]=""	   
 	   @@message_error["</li>"]=""
 	   @@message_error[string_to_replace]=replace_string
