@@ -1,5 +1,6 @@
 package org.mifos.framework.struts.actionforms;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -15,6 +16,7 @@ import org.mifos.framework.components.fieldConfiguration.business.FieldConfigura
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationHelper;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -94,4 +96,10 @@ public class BaseActionForm extends ValidatorActionForm {
 		errors.add(property, new ActionMessage(key, arg));
 	}
 
+	protected Date getDateFromString(String strDate, Locale locale) {
+		Date date = null;
+		if (StringUtils.isNullAndEmptySafe(strDate))
+			date = new Date(DateHelper.getLocaleDate(locale, strDate).getTime());
+		return date;
+	}
 }

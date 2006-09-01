@@ -1914,7 +1914,12 @@
 			<forward name="loadCenterSearch" path="/centerAction.do?method=loadSearch" />
 			<forward name="chooseOffice_success" path="/pages/application/group/jsp/branchlist.jsp" />
 			<forward name="load_success" path="/pages/application/group/jsp/creategroup.jsp" />
-			<forward name="loadMeeting_success" path="/MeetingAction.do?method=load&amp;input=Group" />
+			<forward name="loadMeeting_success" path="/MeetingAction.do?method=load&amp;input=Group" />			
+			<forward name="preview_success" path="/pages/application/group/jsp/previewgroup.jsp" />
+			<forward name="preview_failure" path="/pages/application/group/jsp/creategroup.jsp" />
+			<forward name="previous_success" path="/pages/application/group/jsp/creategroup.jsp" />
+			<forward name="create_success" path="/pages/application/group/jsp/creategroupconfirmation.jsp" />
+			<forward name="create_failure" path="/pages/application/group/jsp/previewgroup.jsp" />
 			
 			<forward name="get_success" path="/pages/application/group/jsp/viewgroupdetails.jsp" />
 			<forward name="manage_success" path="/pages/application/group/jsp/edit_groupdetails.jsp" />

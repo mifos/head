@@ -79,19 +79,21 @@ public class GroupCustActionForm extends CustomerActionForm {
 	}
 	
 	@Override
-	protected ActionErrors validateFields(HttpServletRequest request, String method)throws ApplicationException {
-		
+	protected ActionErrors validateFields(HttpServletRequest request, String method)throws ApplicationException {		
 		ActionErrors errors = new ActionErrors();
-		if(method.equals(Methods.previewManage.toString())){		
-			validateName(errors);
-			validateTrained(request, errors);
-			validateConfigurableMandatoryFields(request,errors,EntityType.CENTER);
-			validateCustomFields(request,errors);
+		if(method.equals(Methods.previewManage.toString())){
+			validateCommonFields(request, errors);
+		}else if(method.equals(Methods.preview.toString())){
+			validateCommonFields(request, errors);
+			validateFees(request,errors);
 		}
 		return errors;
 	}
-
 	
-
-
+	private void validateCommonFields(HttpServletRequest request, ActionErrors errors)throws ApplicationException{
+		validateName(errors);
+		validateTrained(request, errors);
+		validateConfigurableMandatoryFields(request,errors,EntityType.GROUP);
+		validateCustomFields(request,errors);
+	}
 }

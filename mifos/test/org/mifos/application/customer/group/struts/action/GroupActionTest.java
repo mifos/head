@@ -50,17 +50,23 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
-import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.PositionEntity;
 import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.group.struts.actionforms.GroupCustActionForm;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.fees.business.AmountFeeBO;
+import org.mifos.application.fees.business.FeeView;
+import org.mifos.application.fees.persistence.FeePersistence;
+import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -99,6 +105,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 	private SavingsBO savingsBO;
 	
 	private UserContext userContext;
+	private Short officeId  = 3;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -146,6 +153,15 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		super.tearDown();
 	}
 
+	public void testChooseOffice()throws Exception{
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "chooseOffice");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.chooseOffice_success.toString());
+	}
+
 	public void testHierarchyCheck()throws Exception{
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "hierarchyCheck");
@@ -178,9 +194,353 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		assertNotNull(SessionUtils.getAttribute(GroupConstants.CENTER_HIERARCHY_EXIST,request));
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST,request));
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,request));
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());	
+		CenterBO oldCenter = center;
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());
+		oldCenter =  null;	
 	}
 	
+	public void testLoadMeeting()throws Exception{
+		createParentCustomer();
+		HibernateUtil.closeSession();
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("centerId", center.getCustomerId().toString());
+		actionPerform();
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "loadMeeting");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		getRequest().getSession().setAttribute("security_param", "GroupCreate");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.loadMeeting_success.toString());
+		CenterBO oldCenter = center;
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());
+		oldCenter =  null;
+	}
+	
+	public void testPreviewFailure_With_Name_Null()throws Exception{
+		createParentCustomer();
+		HibernateUtil.closeSession();
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("centerId", center.getCustomerId().toString());
+		actionPerform();
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		assertEquals("Group Name", 1, getErrrorSize(CustomerConstants.NAME));
+		verifyInputForward();		
+		CenterBO oldCenter = center;
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
+		oldCenter =  null;
+	}
+
+	public void testPreviewFailure_TrainedWithoutTrainedDate()throws Exception{
+		createParentCustomer();
+		HibernateUtil.closeSession();
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("centerId", center.getCustomerId().toString());
+		actionPerform();
+		
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("displayName", "group");		
+		addRequestParameter("trained", "1");
+		addRequestParameter("status", CustomerStatus.GROUP_PENDING.getValue().toString());
+		addRequestParameter("formedByPersonnel", center.getPersonnel().getPersonnelId().toString());	
+		
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		int i = 0;
+		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
+			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
+			addRequestParameter("customField["+ i +"].fieldValue", "11");
+			i++;
+		}
+		actionPerform();
+		assertEquals("Trained Date", 1, getErrrorSize(CustomerConstants.TRAINED_DATE_MANDATORY));
+		verifyInputForward();		
+		CenterBO oldCenter = center;
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
+		oldCenter =  null;
+		
+	}
+	
+	public void testFailurePreview_WithoutMandatoryCustomField_IfAny() throws Exception{
+		createParentCustomer();
+		HibernateUtil.closeSession();
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("centerId", center.getCustomerId().toString());
+		actionPerform();
+		
+		
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		boolean isCustomFieldMandatory = false;
+		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
+			if(customFieldDef.isMandatory()){
+				isCustomFieldMandatory = true;
+				break;
+			}
+		}
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		addRequestParameter("displayName", "group");		
+		addRequestParameter("status", CustomerStatus.GROUP_PENDING.getValue().toString());
+		addRequestParameter("formedByPersonnel", center.getPersonnel().getPersonnelId().toString());		
+		int i = 0;
+		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
+			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
+			addRequestParameter("customField["+ i +"].fieldValue", "");
+			i++;
+		}
+		actionPerform();
+		
+		if(isCustomFieldMandatory){
+			assertEquals("CustomField", 1, getErrrorSize(CustomerConstants.CUSTOM_FIELD));
+			verifyInputForward();
+		}
+		else{
+			assertEquals("CustomField", 0, getErrrorSize(CustomerConstants.CUSTOM_FIELD));
+			verifyForward(ActionForwards.preview_success.toString());
+		}
+		CenterBO oldCenter = center;
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
+		oldCenter =  null;
+	}
+	
+	public void testFailurePreview_WithDuplicateFee() throws Exception{
+		List<FeeView> feesToRemove = getFees();
+		createParentCustomer();
+		HibernateUtil.closeSession();
+		
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("centerId", center.getCustomerId().toString());
+		actionPerform();
+		List<FeeView> feeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
+		FeeView fee = feeList.get(0);
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "preview");		
+		addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
+		addRequestParameter("selectedFee[0].amount", "100");
+		addRequestParameter("selectedFee[1].feeId", fee.getFeeId());
+		addRequestParameter("selectedFee[1].amount", "150");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		assertEquals("Fee", 1, getErrrorSize(CustomerConstants.FEE));
+		verifyInputForward();
+		removeFees(feesToRemove);
+		CenterBO oldCenter = center;
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
+		oldCenter =  null;
+	}
+	
+	public void testFailurePreview_WithFee_WithoutFeeAmount() throws Exception{
+		List<FeeView> feesToRemove = getFees();
+		createParentCustomer();
+		HibernateUtil.closeSession();
+		
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("centerId", center.getCustomerId().toString());
+		actionPerform();
+		List<FeeView> feeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
+		FeeView fee = feeList.get(0);
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "preview");		
+		addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
+		addRequestParameter("selectedFee[0].amount", "");		
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		assertEquals("Fee", 1, getErrrorSize(CustomerConstants.FEE));
+		verifyInputForward();
+		removeFees(feesToRemove);
+		CenterBO oldCenter = center;
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
+		oldCenter =  null;
+	}
+
+	public void testSuccessfulPreview() throws Exception{
+		List<FeeView> feesToRemove = getFees();
+		createParentCustomer();		
+		HibernateUtil.closeSession();
+		
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("centerId", center.getCustomerId().toString());
+		actionPerform();
+		
+		List<FeeView> feeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
+		FeeView fee = feeList.get(0);
+		
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		addRequestParameter("displayName", "group");		
+		addRequestParameter("status", CustomerStatus.GROUP_PENDING.getValue().toString());
+		addRequestParameter("formedByPersonnel", center.getPersonnel().getPersonnelId().toString());	
+		int i = 0;
+		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
+			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
+			addRequestParameter("customField["+ i +"].fieldValue", "11");
+			i++;
+		}
+		addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
+		addRequestParameter("selectedFee[0].amount", fee.getAmount());
+		actionPerform();
+		assertEquals(0, getErrrorSize());
+		verifyForward(ActionForwards.preview_success.toString());
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		HibernateUtil.closeSession();
+		removeFees(feesToRemove);
+		
+		CenterBO oldCenter = center;
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
+		oldCenter =  null;
+	}
+	
+	public void testSuccessfulPrevious() throws Exception {
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "previous");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyForward(ActionForwards.previous_success.toString());
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+	}
+	
+	public void testSuccessfulCreate_UnderCenter() throws Exception {
+		createParentCustomer();		
+		HibernateUtil.closeSession();
+		
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("centerId", center.getCustomerId().toString());
+		actionPerform();
+		
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		addRequestParameter("displayName", "group");		
+		addRequestParameter("status", CustomerStatus.GROUP_PENDING.getValue().toString());
+		addRequestParameter("formedByPersonnel", center.getPersonnel().getPersonnelId().toString());
+		int i = 0;
+		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
+			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
+			addRequestParameter("customField["+ i +"].fieldValue", "11");
+			i++;
+		}		
+		actionPerform();
+		
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "create");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		
+		verifyNoActionErrors();		
+		verifyForward(ActionForwards.create_success.toString());
+		
+		GroupCustActionForm actionForm = (GroupCustActionForm)request.getSession().getAttribute("groupCustActionForm");
+		
+		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class, new Integer(actionForm.getCustomerId()).intValue());
+		center = (CenterBO)TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
+		actionForm.setParentCustomer(null);
+	}
+	
+	public void testSuccessfulCreate_UnderBranch() throws Exception {
+		createParentCustomer();		
+		HibernateUtil.closeSession();
+		
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("branchId", officeId.toString());
+		addRequestParameter("centerId", center.getCustomerId().toString());
+		actionPerform();
+		
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+				
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		addRequestParameter("displayName", "group");		
+		addRequestParameter("status", CustomerStatus.GROUP_PENDING.getValue().toString());
+		addRequestParameter("formedByPersonnel", center.getPersonnel().getPersonnelId().toString());
+		int i = 0;
+		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
+			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
+			addRequestParameter("customField["+ i +"].fieldValue", "11");
+			i++;
+		}		
+		actionPerform();
+		
+		SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST,Boolean.FALSE, request);
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "create");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		
+		verifyNoActionErrors();		
+		verifyForward(ActionForwards.create_success.toString());
+		
+		GroupCustActionForm actionForm = (GroupCustActionForm)request.getSession().getAttribute("groupCustActionForm");
+		
+		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class, new Integer(actionForm.getCustomerId()).intValue());
+		center = (CenterBO)TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
+		actionForm.setParentCustomer(null);
+	}
+	
+	public void testFailureCreate_DuplicateName() throws Exception {
+		createGroupWithCenter();
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("centerId", center.getCustomerId().toString());
+		actionPerform();
+		
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		addRequestParameter("displayName", "group");		
+		addRequestParameter("status", CustomerStatus.GROUP_PENDING.getValue().toString());
+		addRequestParameter("formedByPersonnel", center.getPersonnel().getPersonnelId().toString());		
+		int i = 0;
+		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
+			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
+			addRequestParameter("customField["+ i +"].fieldValue", "11");
+			i++;
+		}
+		actionPerform();
+		
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "create");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		
+		actionPerform();
+		verifyActionErrors(new String[]{CustomerConstants.ERRORS_DUPLICATE_CUSTOMER});
+		verifyForward(ActionForwards.create_failure.toString());
+		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		center = (CenterBO)TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
+		
+		GroupCustActionForm actionForm = (GroupCustActionForm)request.getSession().getAttribute("groupCustActionForm");
+		actionForm.setParentCustomer(null);
+	}
 	
 	public void testGet() throws Exception {
 		createCustomers();
@@ -372,7 +732,6 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 				getErrrorSize(CustomerConstants.TRAINED_CHECKED));
 
 	}
-
 	
 	public void testPreviewManageSuccess() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -491,16 +850,11 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		verifyForward(ActionForwards.cancelEdit_success.toString());
-		
-		
-	}
-	
+		verifyForward(ActionForwards.cancelEdit_success.toString());		
+	}	
 
 	private void createGroupWithCenterAndSetInSession() throws Exception {
-		createParentCustomer();
-		group = TestObjectFactory.createGroupUnderCenter("group",CustomerStatus.GROUP_ACTIVE, center);
-		HibernateUtil.closeSession();
+		createGroupWithCenter();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,
 				new Integer(center.getCustomerId()).intValue());
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class,
@@ -508,6 +862,12 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
 	}
 
+	private void createGroupWithCenter()throws Exception{
+		createParentCustomer();
+		group = TestObjectFactory.createGroupUnderCenter("group",CustomerStatus.GROUP_ACTIVE, center);
+		HibernateUtil.closeSession();
+	}
+	
 	private void createParentCustomer() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -552,5 +912,23 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		return TestObjectFactory.createSavingsAccount("000100000000017", group,
 				AccountStates.SAVINGS_ACC_APPROVED, new Date(System
 						.currentTimeMillis()), savingsOffering);
+	}
+	
+	private List<FeeView> getFees() {
+		List<FeeView> fees = new ArrayList<FeeView>();
+		AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory
+				.createPeriodicAmountFee("PeriodicAmountFee",
+						FeeCategory.GROUP, "200", MeetingFrequency.WEEKLY,
+						Short.valueOf("2"));
+		fees.add(new FeeView(fee1));
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		return fees;
+	}
+	
+	private void removeFees(List<FeeView> feesToRemove){
+		for(FeeView fee :feesToRemove){
+			TestObjectFactory.cleanUp(new FeePersistence().getFee(fee.getFeeIdValue()));
+		}
 	}
 }

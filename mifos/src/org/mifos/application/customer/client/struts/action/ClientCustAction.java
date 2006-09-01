@@ -329,17 +329,17 @@ public class ClientCustAction extends CustAction {
 			officeId = actionForm.getOfficeIdValue();
 		}
 		if (personnelId != null)
-			checkPermissionForCreate(actionForm.getStatusValue(),
+			checkPermissionForCreate(actionForm.getStatusValue().getValue(),
 					getUserContext(request), null, officeId, personnelId);
 		else
-			checkPermissionForCreate(actionForm.getStatusValue(),
+			checkPermissionForCreate(actionForm.getStatusValue().getValue(),
 					getUserContext(request), null, officeId, getUserContext(
 							request).getId());
 		try {
 			if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
 				client = new ClientBO(userContext, actionForm.getClientName()
-						.getDisplayName(), CustomerStatus.getStatus(actionForm
-						.getStatusValue()), actionForm.getExternalId(),
+						.getDisplayName(), actionForm
+						.getStatusValue(), actionForm.getExternalId(),
 						getDateFromString(actionForm.getMfiJoiningDate(),
 								userContext.getPereferedLocale()), actionForm
 								.getAddress(), customFields, actionForm
@@ -359,8 +359,8 @@ public class ClientCustAction extends CustAction {
 								.getCustomerPicture());
 			} else {
 				client = new ClientBO(userContext, actionForm.getClientName()
-						.getDisplayName(), CustomerStatus.getStatus(actionForm
-						.getStatusValue()), actionForm.getExternalId(),
+						.getDisplayName(), actionForm
+						.getStatusValue(), actionForm.getExternalId(),
 						getDateFromString(actionForm.getMfiJoiningDate(),
 								userContext.getPereferedLocale()), actionForm
 								.getAddress(), customFields, actionForm

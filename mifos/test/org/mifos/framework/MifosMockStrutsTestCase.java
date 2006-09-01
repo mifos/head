@@ -62,7 +62,7 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 	
 	protected int getErrrorSize(String field){
 		ActionErrors errors = (ActionErrors)request.getAttribute(Globals.ERROR_KEY);
-		return errors.size(field);
+		return errors!=null ? errors.size(field) : 0;
 	}
 	
 	protected int getErrrorSize(){

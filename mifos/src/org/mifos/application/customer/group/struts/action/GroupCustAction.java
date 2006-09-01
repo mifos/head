@@ -64,6 +64,7 @@ import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.struts.action.CustAction;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.fees.business.FeeView;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.service.BusinessService;
@@ -78,6 +79,7 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
@@ -151,6 +153,41 @@ public class GroupCustAction extends CustAction {
 				.toString());
 	}
 	
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward preview(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(ActionForwards.preview_success
+				.toString());
+	}
+	
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward previous(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(ActionForwards.previous_success
+				.toString());
+	}
+	
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward create(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		GroupCustActionForm actionForm = (GroupCustActionForm) form;
+		boolean isCenterHierarchyExists = (Boolean)SessionUtils.getAttribute(GroupConstants.CENTER_HIERARCHY_EXIST, request);
+		
+		GroupBO group ;
+		if(isCenterHierarchyExists)
+			group = createGroupWithCenter(actionForm, request);
+		else
+			group = createGroupWithoutCenter(actionForm, request);
+		
+		group.save();
+		actionForm.setCustomerId(group.getCustomerId().toString());
+		actionForm.setGlobalCustNum(group.getGlobalCustNum());
+		return mapping.findForward(ActionForwards.create_success.toString());
+	}	
+
 	@TransactionDemarcate(saveToken = true)
 	public ActionForward get(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -385,5 +422,36 @@ public class GroupCustAction extends CustAction {
 			throws Exception {
 		String method = (String) request.getAttribute("methodCalled");
 		return mapping.findForward(method + "_failure");
+	}
+	
+	private GroupBO createGroupWithoutCenter(GroupCustActionForm actionForm, HttpServletRequest request) throws Exception{
+		UserContext userContext = getUserContext(request);
+		Short personnelId = actionForm.getLoanOfficerIdValue()!=null ?actionForm.getLoanOfficerIdValue():userContext.getId();
+		checkPermissionForCreate(actionForm.getStatusValue().getValue(),
+				userContext, null, actionForm.getOfficeIdValue(), personnelId);
+		List<CustomFieldView> customFields = actionForm.getCustomFields();
+		convertCustomFieldDateToUniformPattern(customFields, userContext.getPereferedLocale());
+		MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(
+				GroupConstants.GROUP_MEETING, request.getSession());
+		GroupBO group = new GroupBO(userContext, actionForm.getDisplayName(), actionForm.getStatusValue(),
+				actionForm.getExternalId(), actionForm.isCustomerTrained(), actionForm.getTrainedDateValue(userContext.getPereferedLocale()),
+				actionForm.getAddress(), customFields, actionForm.getFeesToApply(), actionForm.getFormedByPersonnelValue(), 
+				actionForm.getOfficeIdValue(), meeting, actionForm.getLoanOfficerIdValue());
+		return group;
+	}
+
+	private GroupBO createGroupWithCenter(GroupCustActionForm actionForm, HttpServletRequest request) throws Exception{
+		UserContext userContext = getUserContext(request);
+		checkPermissionForCreate(actionForm.getStatusValue().getValue(),
+				userContext, null, actionForm.getParentCustomer().getOffice().getOfficeId(), 
+				actionForm.getParentCustomer().getPersonnel().getPersonnelId());
+		
+		List<CustomFieldView> customFields = actionForm.getCustomFields();
+		convertCustomFieldDateToUniformPattern(customFields, userContext.getPereferedLocale());
+		
+		GroupBO group = new GroupBO(userContext, actionForm.getDisplayName(), actionForm.getStatusValue(),
+				actionForm.getExternalId(), actionForm.isCustomerTrained(), actionForm.getTrainedDateValue(userContext.getPereferedLocale()),
+				actionForm.getAddress(), customFields, actionForm.getFeesToApply(), actionForm.getFormedByPersonnelValue(), actionForm.getParentCustomer());
+		return group;
 	}
 }

@@ -38,6 +38,7 @@
 package org.mifos.application.customer.struts.actionforms;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -53,8 +54,8 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.center.util.helpers.ValidateMethods;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -62,7 +63,6 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
@@ -244,9 +244,10 @@ public abstract class CustomerActionForm extends BaseActionForm{
 		return getShortValue(loanOfficerId);
 	}
 	
-	public Short getStatusValue() {
-			return getShortValue(status);
-		}
+	public CustomerStatus getStatusValue() {
+			return StringUtils.isNullAndEmptySafe(status)? CustomerStatus.getStatus(Short.valueOf(status)):null;
+	}
+	
 	public Short getFormedByPersonnelValue() {
 		return getShortValue(formedByPersonnel);
 	}
@@ -404,7 +405,7 @@ public abstract class CustomerActionForm extends BaseActionForm{
 		}
 	}
 	
-	protected  void validateFees(HttpServletRequest request, ActionErrors errors){
+	protected  void validateFees(HttpServletRequest request, ActionErrors errors)throws ApplicationException{
 		validateForFeeAmount(errors);
 		validateForDuplicatePeriodicFee(request, errors);
 	}
@@ -417,8 +418,8 @@ public abstract class CustomerActionForm extends BaseActionForm{
 		}
 	}
 	
-	protected void validateForDuplicatePeriodicFee(HttpServletRequest request, ActionErrors errors) {
-		List<FeeView> additionalFeeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request.getSession());
+	protected void validateForDuplicatePeriodicFee(HttpServletRequest request, ActionErrors errors) throws ApplicationException{
+		List<FeeView> additionalFeeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
 		for(FeeView selectedFee: getAdditionalFees()){
 			int count = 0;
 			for(FeeView duplicateSelectedfee: getAdditionalFees()){
@@ -435,11 +436,10 @@ public abstract class CustomerActionForm extends BaseActionForm{
 	}
 	
 	protected void validateTrained(HttpServletRequest request ,ActionErrors errors) {
-		
 		if(request.getParameter("trained")==null) {
 			trained=null;
 		}
-		else if( trained.equals("1")){
+		else if(isCustomerTrained()){
 			if(ValidateMethods.isNullOrBlank(trainedDate)){
 				if(errors == null){
 					errors = new ActionErrors();
@@ -463,6 +463,14 @@ public abstract class CustomerActionForm extends BaseActionForm{
 			if(fee.getFeeId().equals(selectedFee.getFeeId()))
 					return fee.isPeriodic();
 		return false;
+	}
+	
+	public boolean isCustomerTrained() {
+		return StringUtils.isNullAndEmptySafe(trained) && Short.valueOf(trained).equals(YesNoFlag.YES.getValue());
+	}
+	
+	public Date getTrainedDateValue(Locale locale) {
+		return getDateFromString(trainedDate, locale);
 	}
 	
 	protected Locale getUserLocale(HttpServletRequest request) {
