@@ -2465,9 +2465,10 @@ public class TestLoanBO extends MifosTestCase {
 	}
 	
 	public void testCreateNormalLoanAccountWithMonthlyInstallments() throws NumberFormatException, InvalidUserException, PropertyNotFoundException, SystemException, ApplicationException {
+		Short dayOfMonth = (short)1;
 		MeetingBO meeting = TestObjectFactory.getMeetingHelper(2,2,4);
 		meeting.setMeetingStartDate(Calendar.getInstance());
-		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(new Short("1"));
+		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(dayOfMonth);
 		TestObjectFactory.createMeeting(meeting);
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
@@ -2484,7 +2485,10 @@ public class TestLoanBO extends MifosTestCase {
 		int year = disbursementDate.get(Calendar.YEAR);
 		int month = disbursementDate.get(Calendar.MONTH);
 		int day = disbursementDate.get(0);
-		disbursementDate = new GregorianCalendar(year, month+1,day);
+		if(disbursementDate.get(Calendar.DAY_OF_MONTH) == dayOfMonth.intValue())
+			disbursementDate = new GregorianCalendar(year, month,day);
+		else
+			disbursementDate = new GregorianCalendar(year, month+1,day);
 	
 		List<FeeView> feeViewList=new ArrayList<FeeView>();
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee",
@@ -2558,11 +2562,11 @@ public class TestLoanBO extends MifosTestCase {
 	   assertEquals(new Money("0.0"),loanSummaryEntity.getOriginalPenalty());
 	}
 
-	
 	public void testDisburseLoanWithAllTypeOfFees() throws NumberFormatException, InvalidUserException, PropertyNotFoundException, SystemException, ApplicationException {
+		Short dayOfMonth = (short)1;
 		MeetingBO meeting = TestObjectFactory.getMeetingHelper(2,2,4);
 		meeting.setMeetingStartDate(Calendar.getInstance());
-		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(new Short("1"));
+		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(dayOfMonth);
 		TestObjectFactory.createMeeting(meeting);
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
@@ -2579,7 +2583,11 @@ public class TestLoanBO extends MifosTestCase {
 		int year = disbursementDate.get(Calendar.YEAR);
 		int month = disbursementDate.get(Calendar.MONTH);
 		int day = disbursementDate.get(0);
-		disbursementDate = new GregorianCalendar(year, month+1,day);
+		if(disbursementDate.get(Calendar.DAY_OF_MONTH) == dayOfMonth.intValue())
+			disbursementDate = new GregorianCalendar(year, month,day);
+		else
+			disbursementDate = new GregorianCalendar(year, month+1,day);
+	
 		List<FeeView> feeViewList=new ArrayList<FeeView>();
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee",
 				FeeCategory.LOAN, Double.valueOf("20"),FeeFormula.AMOUNT, FeePayment.UPFRONT);
@@ -2604,7 +2612,10 @@ public class TestLoanBO extends MifosTestCase {
 		year = disbursementDate.get(Calendar.YEAR);
 		month = disbursementDate.get(Calendar.MONTH);
 		day = disbursementDate.get(0);
-		disbursementDate = new GregorianCalendar(year, month+3,day);
+		if(disbursementDate.get(Calendar.DAY_OF_MONTH) == dayOfMonth.intValue())
+			disbursementDate = new GregorianCalendar(year, month+2,day);
+		else
+			disbursementDate = new GregorianCalendar(year, month+3,day);
 	    ((LoanBO) accountBO).disburseLoan("1234", disbursementDate.getTime(),
 				Short.valueOf("1"), accountBO.getPersonnel(), disbursementDate.getTime(), Short
 						.valueOf("1"));

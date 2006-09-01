@@ -236,7 +236,7 @@ public class TestAccountBO extends TestAccount {
 	public void testLoanAdjustment() throws Exception {
 		HibernateUtil.closeSession();
 		Date currentDate = new Date(System.currentTimeMillis());
-		LoanBO loan = (LoanBO) accountBO;
+		LoanBO loan = (LoanBO)TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
 		loan.setUserContext(TestObjectFactory.getUserContext());
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
 		accntActionDates.add(loan.getAccountActionDate(Short.valueOf("1")));
@@ -246,19 +246,20 @@ public class TestAccountBO extends TestAccount {
 						loan.getPersonnel(), "receiptNum", Short.valueOf("1"),
 						currentDate, currentDate);
 		loan.applyPayment(accountPaymentDataView);
-
 		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
 		loan = (LoanBO)TestObjectFactory.getObject(LoanBO.class,loan.getAccountId());
-		
+		loan.setUserContext(TestObjectFactory.getUserContext());
 		loan.applyPayment(TestObjectFactory
 				.getLoanAccountPaymentData(null, TestObjectFactory
 						.getMoneyForMFICurrency(600), null,
 						loan.getPersonnel(), "receiptNum", Short.valueOf("1"),
 						currentDate, currentDate));
 		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
 		loan = (LoanBO)TestObjectFactory.getObject(LoanBO.class,loan.getAccountId());
+		loan.setUserContext(TestObjectFactory.getUserContext());
 		loan.adjustPmnt("loan account has been adjusted by test code");
-
 		TestObjectFactory.updateObject(loan);
 		assertEquals("The amount returned for the payment should have been 0",
 				0.0, loan.getLastPmntAmnt());
