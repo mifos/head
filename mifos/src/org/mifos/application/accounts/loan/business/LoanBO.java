@@ -1089,7 +1089,8 @@ public class LoanBO extends AccountBO {
 				paymentData.getTotalAmount(), paymentData.getRecieptNum(),
 				paymentData.getRecieptDate(), new PaymentTypeEntity(paymentData
 						.getPaymentTypeId()));
-
+		java.sql.Date paymentDate = new java.sql.Date(paymentData
+				.getTransactionDate().getTime());
 		for (AccountPaymentData accountPaymentData : paymentData
 				.getAccountPayments()) {
 			LoanScheduleEntity accountAction = (LoanScheduleEntity) getAccountActionDate(accountPaymentData
@@ -1115,10 +1116,6 @@ public class LoanBO extends AccountBO {
 				// Client performance entry
 				updateCustomerHistoryOnPayment();
 			}
-			java.sql.Date paymentDate = new java.sql.Date(paymentData
-					.getTransactionDate().getTime());
-			if(!accountPaymentData.isPaid())
-				paymentDate=null;
 			LoanPaymentData loanPaymentData = (LoanPaymentData) accountPaymentData;
 			accountAction.setPaymentDetails(loanPaymentData, paymentDate);
 			accountPaymentData.setAccountActionDate(accountAction);

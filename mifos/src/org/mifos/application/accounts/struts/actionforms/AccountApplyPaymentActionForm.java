@@ -49,15 +49,16 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Money;
 
-public class AccountApplyPaymentActionForm extends ValidatorActionForm{
+public class AccountApplyPaymentActionForm extends BaseActionForm{
 	private String input;
 	private String transactionDate;
 	private Money amount;
@@ -106,6 +107,12 @@ public class AccountApplyPaymentActionForm extends ValidatorActionForm{
 				errors2 = validateDate(this.receiptDate,resources.getString("accounts.receiptdate"),request);
 				if( null!=errors2 &&!errors2.isEmpty())
 					errors.add(errors2);
+			}
+			String accountType = request.getParameter("accountType");
+			if(accountType != null && Short.valueOf(accountType).equals(AccountTypes.LOANACCOUNT.getValue())) {
+				if(amount ==null || amount.getAmountDoubleValue() <= 0.0) {
+					errors.add(AccountConstants.ERROR_MANDATORY,new ActionMessage(AccountConstants.ERROR_MANDATORY,resources.getString("accounts.amt")));
+				}
 			}
 		}
 		if (null != errors && !errors.isEmpty()) {

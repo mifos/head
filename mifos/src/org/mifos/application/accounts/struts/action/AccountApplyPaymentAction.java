@@ -50,12 +50,10 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActionForm;
-import org.mifos.application.accounts.util.helpers.AccountPaymentData;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
-import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -146,10 +144,15 @@ public class AccountApplyPaymentAction extends BaseAction {
 			throw new AccountException("errors.invalidTxndate");
 
 		account.setVersionNo(savedAccount.getVersionNo());
-		account.applyPayment(createPaymentData(account.getTotalPaymentDue(),
-				trxnDate, actionForm.getReceiptId(), receiptDate, Short
-						.valueOf(actionForm.getPaymentTypeId()), uc.getId(),
-				account));
+		Money amount = new Money();
+		if (account.getAccountType().getAccountTypeId().equals(
+				AccountTypes.LOANACCOUNT.getValue()))
+			amount = actionForm.getAmount();
+		else
+			amount = account.getTotalPaymentDue();
+		account.applyPayment(createPaymentData(amount, trxnDate, actionForm
+				.getReceiptId(), receiptDate, Short.valueOf(actionForm
+				.getPaymentTypeId()), uc.getId(), account));
 		return mapping
 				.findForward(getForward(((AccountApplyPaymentActionForm) form)
 						.getInput()));

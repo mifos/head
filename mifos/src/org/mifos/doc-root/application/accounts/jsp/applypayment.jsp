@@ -121,8 +121,18 @@
 							<td width="24%" align="right" class="fontnormal"><mifos:mifoslabel
 								mandatory="yes" name="accounts.amount" /> <mifos:mifoslabel
 								name="accounts.colon" /></td>
-							<td width="76%"><mifos:mifosdecimalinput property="amount"
-								disabled="true" name="applyPaymentActionForm" /></td>
+							<td width="76%">
+							<c:choose>
+								<c:when test="${param.accountType==1}">
+								<mifos:mifosdecimalinput property="amount"
+								name="applyPaymentActionForm" />
+								</c:when>
+								<c:otherwise>
+								<mifos:mifosdecimalinput property="amount"
+								disabled="true" name="applyPaymentActionForm" />
+								</c:otherwise>
+							</c:choose>
+							</td>
 						</tr>
 						<tr>
 							<td align="right" class="fontnormal"><mifos:mifoslabel
@@ -159,7 +169,7 @@
 						<tr>
 							<td align="center"><c:choose>
 								<c:when
-									test="${applyPaymentActionForm.amount == '0.0'||applyPaymentActionForm.amount=='0'}">
+									test="${(param.accountType!=1) && (applyPaymentActionForm.amount == '0.0'||applyPaymentActionForm.amount=='0')}">
 									<html-el:submit styleClass="buttn" disabled="true"
 										style="width:130px;" property="Preview">
 										<mifos:mifoslabel name="accounts.reviewtransaction">

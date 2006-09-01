@@ -133,10 +133,25 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		verifyForward(Constants.PREVIEW_SUCCESS);
 	}
 	
+	public void testApplyPaymentPreviewWithNoAmount(){
+		setRequestPathInfo("/applyPaymentAction");
+		String currentDate = DateHelper.getCurrentDate(userContext.getPereferedLocale());
+		addRequestParameter("receiptDate",currentDate);
+		addRequestParameter("transactionDate",currentDate);		
+		addRequestParameter("paymentTypeId","1");
+		addRequestParameter("method", "preview");
+		addRequestParameter("accountType", "1");
+		actionPerform();
+		verifyInputForward();
+	}
+	
 	public void testApplyPaymentForLoan()throws Exception{
 		accountBO = createLoanAccount();
 		accountBO.setAccountState(new AccountStateEntity(AccountStates.LOANACC_BADSTANDING));
 		request.getSession().setAttribute(Constants.BUSINESS_KEY,accountBO);
+		AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
+		accountApplyPaymentActionForm.setAmount(new Money("212"));
+		request.getSession().setAttribute("applyPaymentActionForm",accountApplyPaymentActionForm);
 		setRequestPathInfo("/applyPaymentAction");
 		addRequestParameter("input","loan");
 		addRequestParameter("method", "applyPayment");
@@ -158,6 +173,9 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		accountBO = createLoanAccount();
 		accountBO.setAccountState(new AccountStateEntity(AccountStates.LOANACC_BADSTANDING));
 		request.getSession().setAttribute(Constants.BUSINESS_KEY,accountBO);
+		AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
+		accountApplyPaymentActionForm.setAmount(new Money("212"));
+		request.getSession().setAttribute("applyPaymentActionForm",accountApplyPaymentActionForm);
 		setRequestPathInfo("/applyPaymentAction");
 		addRequestParameter("input","loan");
 		addRequestParameter("method", "applyPayment");
