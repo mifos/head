@@ -58,7 +58,6 @@ import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.struts.actionforms.CustomerActionForm;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
-import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
@@ -82,7 +81,6 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
-import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
@@ -259,11 +257,7 @@ public class CustAction extends BaseAction {
 	}
 	
 	protected CustomerBusinessService getCustomerBusinessService() throws CustomerException{
-		try {
 			return (CustomerBusinessService) ServiceFactory.getInstance()
 					.getBusinessService(BusinessServiceName.Customer);
-		} catch (ServiceException se) {
-			throw new CustomerException(se);
-		}
 	}
 }

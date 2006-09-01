@@ -71,7 +71,6 @@ import org.mifos.framework.components.configuration.persistence.service.Configur
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ConstantsNotLoadedException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StartUpException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Constants;
@@ -84,13 +83,13 @@ public class ConfigurationInitializer {
 	private OfficeBO headOffice;
 	private Map<String,String> officeConfigConstants;
 	
-	private ConfigurationPersistenceService getDBService() throws ServiceException {
+	private ConfigurationPersistenceService getDBService() {
 		if (dbService == null) 
 			dbService = (ConfigurationPersistenceService) ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.Configuration);
 		return dbService;
 	}
 
-	private OfficeBO getHeadOffice()throws ServiceException{
+	private OfficeBO getHeadOffice(){
 		if(headOffice==null)
 			headOffice=((OfficePersistenceService) ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.Office)).getHeadOffice();
 		return headOffice;	

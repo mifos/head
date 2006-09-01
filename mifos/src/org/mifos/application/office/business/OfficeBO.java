@@ -300,26 +300,20 @@ public class OfficeBO extends BusinessObject {
 	}
 
 	private void changeStatus(OfficeStatus status) throws OfficeException {
-		try {
+		if (!this.status.getId().equals(status.getValue())) {
 
-			if (!this.status.getId().equals(status.getValue())) {
-
-				if (status == OfficeStatus.INACTIVE) {
-					canInactivateOffice();
-				} else {
-					canActivateOffice();
-				}
-				// still here we can update the status
-				MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-						.getInstance().getPersistenceService(
-								PersistenceServiceName.MasterDataService);
-				this.status = (OfficeStatusEntity) masterPersistenceService
-						.findById(OfficeStatusEntity.class, status.getValue());
+			if (status == OfficeStatus.INACTIVE) {
+				canInactivateOffice();
+			} else {
+				canActivateOffice();
 			}
-		} catch (ServiceException e) {
-			throw new OfficeException(e);
+			// still here we can update the status
+			MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
+					.getInstance().getPersistenceService(
+							PersistenceServiceName.MasterDataService);
+			this.status = (OfficeStatusEntity) masterPersistenceService
+					.findById(OfficeStatusEntity.class, status.getValue());
 		}
-
 	}
 
 	private void canInactivateOffice() throws OfficeException {
@@ -432,19 +426,16 @@ public class OfficeBO extends BusinessObject {
 	}
 
 	private void updateLevel(OfficeLevel level) throws OfficeException {
-		try {
-			if (this.getOfficeLevel() != level) {
-				// TODO: pass proper key
-				if (!canUpdateLevel(level))
-					throw new OfficeException();
-				MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-						.getInstance().getPersistenceService(
-								PersistenceServiceName.MasterDataService);
-				this.level = (OfficeLevelEntity) masterPersistenceService
-						.findById(OfficeLevelEntity.class, level.getValue());
-			}
-		} catch (ServiceException e) {
-			throw new OfficeException(e);
+
+		if (this.getOfficeLevel() != level) {
+			// TODO: pass proper key
+			if (!canUpdateLevel(level))
+				throw new OfficeException();
+			MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
+					.getInstance().getPersistenceService(
+							PersistenceServiceName.MasterDataService);
+			this.level = (OfficeLevelEntity) masterPersistenceService.findById(
+					OfficeLevelEntity.class, level.getValue());
 		}
 	}
 

@@ -266,8 +266,8 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		assertEquals("Group_Active_test", groupBO.getDisplayName());
 	}
 
-	public void testGetCenterPerformanceHistory() throws AccountException,
-			SystemException, NumberFormatException, PersistenceException {
+	public void testGetCenterPerformanceHistory() throws ApplicationException,
+			SystemException, NumberFormatException {
 		Money totalLoan = new Money();
 		Money totalSavings = new Money();
 		Money totalPortfolioAtRisk = new Money();

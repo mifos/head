@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.ServiceUnavailableException;
 import org.mifos.framework.persistence.service.PersistenceService;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.ExceptionConstants;
@@ -20,34 +21,36 @@ public class ServiceFactory {
 		return instance;
 	}
 	
-	public BusinessService getBusinessService(BusinessServiceName key)throws ServiceException{
+	public BusinessService getBusinessService(BusinessServiceName key)throws ServiceUnavailableException{
 		if (!businessServicesMap.containsKey(key)){
 			try{
 				businessServicesMap.put(key,(BusinessService)Class.forName(key.getName()).newInstance());
 			}catch (ClassNotFoundException cnfe) {
-				throw new ServiceException(ExceptionConstants.SERVICEEXCEPTION,cnfe);
+				throw new ServiceUnavailableException(ExceptionConstants.SERVICEEXCEPTION,cnfe);
 			}
 			catch (InstantiationException ie) {
-				throw new ServiceException(ExceptionConstants.SERVICEEXCEPTION,ie);
+				throw new ServiceUnavailableException(ExceptionConstants.SERVICEEXCEPTION,ie);
 			}
 			catch (IllegalAccessException iae) {
-				throw new ServiceException(ExceptionConstants.SERVICEEXCEPTION,iae);
+				throw new ServiceUnavailableException(ExceptionConstants.SERVICEEXCEPTION,iae);
 			}
 		}
 		return businessServicesMap.get(key);
 	}
-	public PersistenceService getPersistenceService(PersistenceServiceName key)throws ServiceException{
+	
+	//TODO too be removed
+	public PersistenceService getPersistenceService(PersistenceServiceName key)throws ServiceUnavailableException{
 		if (!persistenceServicesMap.containsKey(key)){
 			try{
 				persistenceServicesMap.put(key,(PersistenceService)Class.forName(key.getName()).newInstance());
 			}catch (ClassNotFoundException cnfe) {
-				throw new ServiceException(ExceptionConstants.SERVICEEXCEPTION,cnfe);
+				throw new ServiceUnavailableException(ExceptionConstants.SERVICEEXCEPTION,cnfe);
 			}
 			catch (InstantiationException ie) {
-				throw new ServiceException(ExceptionConstants.SERVICEEXCEPTION,ie);
+				throw new ServiceUnavailableException(ExceptionConstants.SERVICEEXCEPTION,ie);
 			}
 			catch (IllegalAccessException iae) {
-				throw new ServiceException(ExceptionConstants.SERVICEEXCEPTION,iae);
+				throw new ServiceUnavailableException(ExceptionConstants.SERVICEEXCEPTION,iae);
 			}
 		}
 		return persistenceServicesMap.get(key);

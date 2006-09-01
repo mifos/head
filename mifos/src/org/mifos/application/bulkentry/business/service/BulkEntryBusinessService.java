@@ -91,7 +91,6 @@ public class BulkEntryBusinessService extends BusinessService {
 	private SavingsPersistenceService savingsPersistenceService;
 
 	public BulkEntryBusinessService() {
-		try {
 			bulkEntryPersistanceService = new BulkEntryPersistanceService();
 			customerPersistence = new CustomerPersistence();
 			accountPersistanceService = (AccountPersistanceService) ServiceFactory
@@ -104,9 +103,6 @@ public class BulkEntryBusinessService extends BusinessService {
 			savingsPersistenceService = (SavingsPersistenceService) ServiceFactory
 					.getInstance().getPersistenceService(
 							PersistenceServiceName.Savings);
-
-		} catch (ServiceException se) {
-		}
 	}
 
 	@Override

@@ -38,27 +38,18 @@
 
 package org.mifos.framework.exceptions;
 
-/**
- * This is exception thrown by persistence clases.
- */
-public class ServiceException extends SystemException{
-	
-	/** Simple Constructor for ServiceException*/
+public class ServiceException extends ApplicationException {
+
 	public ServiceException() {
 		super();
 	}
-	/** Constructor for ServiceException
-	 * @param cause
-	 */
+
 	public ServiceException(Throwable cause) {
 		super(cause);
 	}
-	
-	/** Constructor for ServiceException
-	 * @param cause
-	 */
-	public ServiceException(String key ,Throwable cause) {
-		super(key , cause);
+
+	public ServiceException(String key, Throwable cause) {
+		super(key, cause);
 	}
 
 }

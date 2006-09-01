@@ -87,7 +87,7 @@
 													<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
 												</td>
 												<td width="99%">
-													<html-el:link href="javascript:fnOnEditView(${productFee.feeId})">
+													<html-el:link href="javascript:fnGet(${productFee.feeId})">
 														<c:out value="${productFee.feeName}" />
 													</html-el:link>
 													(
@@ -114,7 +114,7 @@
 													<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
 												</td>
 												<td width="99%">
-													<html-el:link href="javascript:fnOnEditView(${clientFee.feeId})">
+													<html-el:link href="javascript:fnGet(${clientFee.feeId})">
 														<c:out value="${clientFee.feeName}" />
 													</html-el:link>
 													(

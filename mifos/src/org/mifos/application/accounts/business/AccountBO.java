@@ -787,9 +787,7 @@ public class AccountBO extends BusinessObject {
 			for (AccountTrxnEntity accountTrxn : accountTrxns) {
 				financialBusinessService.buildAccountingEntries(accountTrxn);
 			}
-		} catch (ServiceException se) {
-			throw new AccountException("errors.update", se);
-		} catch (FinancialException fe) {
+		} 	catch (FinancialException fe) {
 			throw new AccountException("errors.update", fe);
 		}
 	}

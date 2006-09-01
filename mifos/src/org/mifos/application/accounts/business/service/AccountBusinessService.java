@@ -91,12 +91,12 @@ public class AccountBusinessService extends BusinessService {
 		return  getDBService().getAccount(accountId);
 	}
 	
-	public AccountActionEntity getAccountAction(Short actionType, Short localeId)throws SystemException, AccountException{
+	public AccountActionEntity getAccountAction(Short actionType, Short localeId)throws ServiceException{
 		AccountActionEntity accountAction = null;
 		try {
 			accountAction = getDBService().getAccountAction(actionType);
 		} catch (PersistenceException e) {
-			throw new AccountException(e);
+			throw new ServiceException(e);
 		} 
 		accountAction.setLocaleId(localeId);
 		return accountAction;

@@ -723,7 +723,7 @@ public class ClientCustAction extends CustAction {
 	}
 
 	private void loadMasterDataForDetailsPage(HttpServletRequest request,
-			ClientBO clientBO) throws SystemException, CustomerException {
+			ClientBO clientBO) throws  ApplicationException {
 		try {
 		Short localeId = getUserContext(request).getLocaleId();
 		SessionUtils.setAttribute(ClientConstants.AGE, new CustomerHelper()

@@ -156,3 +156,9 @@ function fnOnEditPreviousFeeInformation(form) {
     form.action = "feeaction.do";
     form.submit();
 }
+function fnGet(Id) {
+    document.feeactionform.feeId.value = Id;
+    document.feeactionform.method.value = "get";
+    document.feeactionform.action = "feeaction.do";
+    document.feeactionform.submit();
+}
