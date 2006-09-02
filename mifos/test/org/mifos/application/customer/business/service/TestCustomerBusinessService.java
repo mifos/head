@@ -39,6 +39,7 @@ import org.mifos.application.customer.util.helpers.CustomerRecentActivityView;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.LoanCycleCounter;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.valueobjects.YesNoMaster;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -78,18 +79,21 @@ public class TestCustomerBusinessService extends MifosTestCase {
 
 	private CustomerBusinessService service;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		service = (CustomerBusinessService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.Customer);
 	}
 
-	public void tearDown() {
+	@Override
+	public void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(account);
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		HibernateUtil.closeSession();
+		super.tearDown();
 	}
 
 	protected LoanBO getLoanAccount() {
@@ -486,6 +490,16 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				.getUserContext().getLocaleId(), center.getCustomerStatus()
 				.getId(), CustomerLevel.CENTER.getValue());
 		assertEquals("Active", statusNameForCenter);
+		
+		AccountStateMachines.getInstance().initialize(
+				TestObjectFactory.getUserContext().getLocaleId(),
+				group.getOffice().getOfficeId(),
+				AccountTypes.CUSTOMERACCOUNT.getValue(),
+				CustomerLevel.GROUP.getValue());
+		String statusNameForGroup = service.getStatusName(TestObjectFactory
+				.getUserContext().getLocaleId(), group.getCustomerStatus()
+				.getId(), CustomerLevel.GROUP.getValue());
+		assertEquals("Active", statusNameForGroup);
 
 		AccountStateMachines.getInstance().initialize(
 				TestObjectFactory.getUserContext().getLocaleId(),
@@ -521,6 +535,16 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				.getUserContext().getLocaleId(), Short.valueOf("7"),
 				CustomerLevel.CLIENT.getValue());
 		assertEquals("Duplicate", flagNameForClient);
+		
+		AccountStateMachines.getInstance().initialize(
+				TestObjectFactory.getUserContext().getLocaleId(),
+				group.getOffice().getOfficeId(),
+				AccountTypes.CUSTOMERACCOUNT.getValue(),
+				CustomerLevel.GROUP.getValue());
+		String flagNameForGroup = service.getFlagName(TestObjectFactory
+				.getUserContext().getLocaleId(), Short.valueOf("14"),
+				CustomerLevel.GROUP.getValue());
+		assertEquals("Duplicate", flagNameForGroup);
 	}
 
 	public void testGetStatusList() throws StatesInitializationException,
@@ -535,6 +559,16 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				center.getCustomerStatus(), CustomerLevel.CENTER.getValue(),
 				TestObjectFactory.getUserContext().getLocaleId());
 		assertEquals(1, statusListForCenter.size());
+		
+		AccountStateMachines.getInstance().initialize(
+				TestObjectFactory.getUserContext().getLocaleId(),
+				group.getOffice().getOfficeId(),
+				AccountTypes.CUSTOMERACCOUNT.getValue(),
+				CustomerLevel.GROUP.getValue());
+		List<CustomerStatusEntity> statusListForGroup = service.getStatusList(
+				group.getCustomerStatus(), CustomerLevel.GROUP.getValue(),
+				TestObjectFactory.getUserContext().getLocaleId());
+		assertEquals(2, statusListForGroup.size());
 
 		AccountStateMachines.getInstance().initialize(
 				TestObjectFactory.getUserContext().getLocaleId(),
@@ -635,5 +669,14 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		client = TestObjectFactory.createClient("client",
 				CustomerStatus.CLIENT_ACTIVE.getValue(), "1.4.1.1", group,
 				new Date(System.currentTimeMillis()));
+	}
+	
+	private String getNameForMasterEntity(Integer lookupId,
+			Short localeId) throws PersistenceException, ServiceException {
+		if (lookupId != null)
+			return ((MasterDataService) ServiceFactory.getInstance()
+					.getBusinessService(BusinessServiceName.MasterDataService))
+					.retrieveMasterEntities(lookupId, localeId);
+		return "";
 	}
 }

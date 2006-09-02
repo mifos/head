@@ -41,6 +41,9 @@ package org.mifos.application.customer.group.business;
 import java.util.Date;
 import java.util.List;
 
+import org.mifos.application.configuration.business.MifosConfiguration;
+import org.mifos.application.configuration.exceptions.ConfigurationException;
+import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPositionView;
@@ -53,9 +56,13 @@ import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
@@ -69,6 +76,9 @@ import org.mifos.framework.util.helpers.Money;
 public class GroupBO extends CustomerBO {
 
 	private GroupPerformanceHistoryEntity performanceHistory;
+
+	private MifosLogger logger = MifosLogManager
+			.getLogger(LoggerConstants.GROUP_LOGGER);
 
 	protected GroupBO() {
 		super();
@@ -112,8 +122,6 @@ public class GroupBO extends CustomerBO {
 		validateFields(displayName, formedById, trained, trainedDate);
 	}
 
-	
-	
 	@Override
 	public boolean isActive() {
 		return getCustomerStatus().getId().equals(
@@ -136,14 +144,15 @@ public class GroupBO extends CustomerBO {
 	public void save() throws CustomerException {
 		super.save();
 		try {
-			if(this.getParentCustomer() !=null)
-				new CustomerPersistence().createOrUpdate(this.getParentCustomer());
+			if (this.getParentCustomer() != null)
+				new CustomerPersistence().createOrUpdate(this
+						.getParentCustomer());
 		} catch (PersistenceException pe) {
 			throw new CustomerException(
 					CustomerConstants.CREATE_FAILED_EXCEPTION, pe);
 		}
 	}
-	
+
 	public void generatePortfolioAtRisk() throws PersistenceException,
 			ServiceException {
 		Money amount = getBalanceForAccountsAtRisk();
@@ -226,16 +235,172 @@ public class GroupBO extends CustomerBO {
 		return Integer.valueOf(0);
 	}
 
+	public void update(UserContext userContext, String displayName,
+			Short loanOfficerId, String externalId, Short trained,
+			Date trainedDate, Address address,
+			List<CustomFieldView> customFields,
+			List<CustomerPositionView> customerPositions)
+			throws CustomerException {
+		validateFieldsForUpdate(displayName, loanOfficerId);
+		if (trained != null)
+			setTrained(trained);
+		else
+			setTrained(YesNoFlag.NO.getValue());
+		setTrainedDate(trainedDate);
+		if (!Configuration.getInstance().getCustomerConfig(
+				userContext.getBranchId()).isCenterHierarchyExists()) {
+			updateLoanOfficer(loanOfficerId);
+		}
+		setDisplayName(displayName);
+		super.update(userContext, externalId, address, customFields,
+				customerPositions);
+	}
+
 	@Override
 	protected void validateStatusChange(Short newStatusId)
 			throws CustomerException {
-
+		logger.debug("In GroupBO::validateStatusChange(), customerId: "
+				+ getCustomerId());
+		if (newStatusId.equals(CustomerStatus.GROUP_CLOSED.getValue()))
+			checkIfGroupCanBeClosed();
+		if (newStatusId.equals(CustomerStatus.GROUP_CANCELLED.getValue()))
+			checkIfGroupCanBeCancelled();
+		if (newStatusId.equals(CustomerStatus.GROUP_ACTIVE.getValue()))
+			checkIfGroupCanBeActive(newStatusId);
+		if (getCustomerStatus().getId().equals(
+				CustomerStatus.GROUP_CANCELLED.getValue())
+				&& newStatusId.equals(CustomerStatus.GROUP_PARTIAL.getValue())) {
+			handleValidationsForCancelToPartial();
+		}
+		logger
+				.debug("In ClientBO::validateStatusChange(), successfully validated status, customerId: "
+						+ getCustomerId());
 	}
 
 	@Override
 	protected boolean checkNewStatusIsFirstTimeActive(Short oldStatus,
 			Short newStatusId) {
+		if ((oldStatus.equals(CustomerStatus.GROUP_PARTIAL.getValue()) || oldStatus
+				.equals(CustomerStatus.GROUP_PENDING.getValue()))
+				&& newStatusId.equals(CustomerStatus.GROUP_ACTIVE.getValue())) {
+			this.setCustomerActivationDate(new Date());
+			return true;
+		}
 		return false;
+	}
+
+	private void checkIfGroupCanBeActive(Short groupStatusId)
+			throws CustomerException {
+		if (getParentCustomer() == null
+				|| getParentCustomer().getCustomerId() == null) {
+			if (getPersonnel() == null
+					|| getPersonnel().getPersonnelId() == null) {
+				throw new CustomerException(
+						GroupConstants.GROUP_LOANOFFICER_NOT_ASSIGNED);
+			}
+			if (getCustomerMeeting() == null
+					|| getCustomerMeeting().getMeeting() == null) {
+				throw new CustomerException(GroupConstants.MEETING_NOT_ASSIGNED);
+			}
+		}
+	}
+
+	private void handleValidationsForCancelToPartial() throws CustomerException {
+		if (getParentCustomer() != null
+				&& getParentCustomer().getCustomerId() != null) {
+			checkGroupCanBeChangedFromCancelToPartialIfCenterIsActive();
+		} else {
+			checkGroupCanBeChangedFromCancelToPartialIfOfficeIsActive();
+			if (getPersonnel() != null
+					&& getPersonnel().getPersonnelId() != null) {
+				checkGroupCanBeChangedFromCancelToPartialIfPersonnelActive();
+			}
+		}
+	}
+
+	private void checkGroupCanBeChangedFromCancelToPartialIfCenterIsActive()
+			throws CustomerException {
+		if (!getParentCustomer().isActive()) {
+			try {
+				throw new CustomerException(
+						GroupConstants.CENTER_INACTIVE,
+						new Object[] { MifosConfiguration.getInstance()
+								.getLabel(ConfigurationConstants.GROUP,
+										getUserContext().getPereferedLocale()) });
+			} catch (ConfigurationException ce) {
+				throw new CustomerException(ce);
+			}
+		}
+	}
+
+	private void checkGroupCanBeChangedFromCancelToPartialIfOfficeIsActive()
+			throws CustomerException {
+		if (new OfficePersistence().isBranchInactive(getOffice().getOfficeId())) {
+			try {
+				throw new CustomerException(
+						GroupConstants.BRANCH_INACTIVE,
+						new Object[] { MifosConfiguration.getInstance()
+								.getLabel(ConfigurationConstants.GROUP,
+										getUserContext().getPereferedLocale()) });
+			} catch (ConfigurationException ce) {
+				throw new CustomerException(ce);
+			}
+		}
+	}
+
+	private void checkGroupCanBeChangedFromCancelToPartialIfPersonnelActive()
+			throws CustomerException {
+		if (new OfficePersistence()
+				.hasActivePeronnel(getOffice().getOfficeId())) {
+			try {
+				throw new CustomerException(
+						GroupConstants.LOANOFFICER_INACTIVE,
+						new Object[] { MifosConfiguration.getInstance()
+								.getLabel(ConfigurationConstants.BRANCHOFFICE,
+										getUserContext().getPereferedLocale()) });
+			} catch (ConfigurationException ce) {
+				throw new CustomerException(ce);
+			}
+		}
+	}
+
+	private void checkIfGroupCanBeCancelled() throws CustomerException {
+		try {
+			if (getAllCustomerOtherThanCancelledAndClosed(CustomerLevel.CLIENT)
+					.size() > 0)
+				throw new CustomerException(
+						GroupConstants.GROUP_CLIENTS_ARE_ACTIVE,
+						new Object[] { MifosConfiguration.getInstance()
+								.getLabel(ConfigurationConstants.GROUP,
+										getUserContext().getPereferedLocale()) });
+		} catch (PersistenceException pe) {
+			throw new CustomerException(pe);
+		} catch (ConfigurationException ce) {
+			throw new CustomerException(ce);
+		}
+	}
+
+	private void checkIfGroupCanBeClosed() throws CustomerException {
+		if (getActiveLoanAccounts().size() > 0
+				|| getActiveSavingsAccounts().size() > 0) {
+			throw new CustomerException(
+					CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
+		}
+		try {
+			if (getAllCustomerOtherThanCancelledAndClosed(CustomerLevel.CLIENT)
+					.size() > 0)
+				throw new CustomerException(
+						CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
+						new Object[] { MifosConfiguration.getInstance()
+								.getLabel(
+										ConfigurationConstants.CLIENT,
+										this.getUserContext()
+												.getPereferedLocale()) });
+		} catch (PersistenceException pe) {
+			throw new CustomerException(pe);
+		} catch (ConfigurationException ce) {
+			throw new CustomerException(ce);
+		}
 	}
 
 	private String generateSearchId() throws CustomerException {
@@ -257,68 +422,67 @@ public class GroupBO extends CustomerBO {
 		}
 		return searchId;
 	}
-	
-	private void validateFields(String displayName, Short formedBy, boolean trained, Date trainedDate)throws CustomerException{
+
+	private void validateFields(String displayName, Short formedBy,
+			boolean trained, Date trainedDate) throws CustomerException {
 		validateFormedBy(formedBy);
-		if((trained && trainedDate==null) || (!trained && trainedDate!=null))
-			throw new CustomerException(CustomerConstants.INVALID_TRAINED_OR_TRAINEDDATE);
+		if ((trained && trainedDate == null)
+				|| (!trained && trainedDate != null))
+			throw new CustomerException(
+					CustomerConstants.INVALID_TRAINED_OR_TRAINEDDATE);
 		validateForDuplicateName(displayName);
 	}
-	
-	
-	private void validateFormedBy(Short formedBy) throws CustomerException{
-		if(formedBy == null)
+
+	private void validateFormedBy(Short formedBy) throws CustomerException {
+		if (formedBy == null)
 			throw new CustomerException(CustomerConstants.INVALID_FORMED_BY);
-		
+
 	}
 
-	private void validateForDuplicateName(String displayName)throws CustomerException{
-		if(getOffice()!=null && new GroupPersistence().isGroupExists(displayName, getOffice().getOfficeId()))
-			throw new CustomerException(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER);
+	private void validateForDuplicateName(String displayName)
+			throws CustomerException {
+		if (getOffice() != null
+				&& new GroupPersistence().isGroupExists(displayName,
+						getOffice().getOfficeId()))
+			throw new CustomerException(
+					CustomerConstants.ERRORS_DUPLICATE_CUSTOMER);
 	}
-	
-	private void validateFieldsForGroupUnderCenter(CustomerBO parentCustomer)throws CustomerException{
-		if(parentCustomer == null)
+
+	private void validateFieldsForGroupUnderCenter(CustomerBO parentCustomer)
+			throws CustomerException {
+		if (parentCustomer == null)
 			throw new CustomerException(CustomerConstants.INVALID_PARENT);
 	}
-	
-	private void validateFieldsForGroupUnderOffice(Short loanOfficerId, MeetingBO meeting, Short officeId)throws CustomerException{
+
+	private void validateFieldsForGroupUnderOffice(Short loanOfficerId,
+			MeetingBO meeting, Short officeId) throws CustomerException {
 		validateOffice(officeId);
-		if (isActive()){			
+		if (isActive()) {
 			validateLO(loanOfficerId);
-			validateMeeting(meeting);			
-		}		
+			validateMeeting(meeting);
+		}
 	}
-	
-	private void setValues(boolean trained, Date trainedDate)throws CustomerException{
+
+	private void setValues(boolean trained, Date trainedDate)
+			throws CustomerException {
 		this.setSearchId(generateSearchId());
 		this.setTrained(trained);
-		if(trained)
+		if (trained)
 			this.setTrainedDate(trainedDate);
 		if (getStatus().equals(CustomerStatus.GROUP_ACTIVE))
 			this.setCustomerActivationDate(this.getCreatedDate());
 	}
 
-	public void update(UserContext userContext, String displayName, Short loanOfficerId, String externalId, Short trained, Date trainedDate, Address address, List<CustomFieldView> customFields, List<CustomerPositionView> customerPositions)throws CustomerException {
-		validateFieldsForUpdate(displayName, loanOfficerId);
-		if(trained!=null)
-			setTrained(trained);
-		else
-			setTrained(YesNoFlag.NO.getValue());
-		setTrainedDate(trainedDate);
-		if(!Configuration.getInstance().getCustomerConfig(userContext.getBranchId()).isCenterHierarchyExists()){
-			updateLoanOfficer(loanOfficerId);
+	protected void validateFieldsForUpdate(String displayName,
+			Short loanOfficerId) throws CustomerException {
+		if (getCustomerStatus().getId().equals(
+				CustomerStatus.GROUP_ACTIVE.getValue())
+				|| getCustomerStatus().getId().equals(
+						CustomerStatus.GROUP_HOLD.getValue())) {
+			validateLO(loanOfficerId);
 		}
-		setDisplayName(displayName);
-		super.update(userContext,externalId,address,customFields,customerPositions);
-	}
-	
-	protected void validateFieldsForUpdate(String displayName ,Short loanOfficerId)throws CustomerException{
-		if(getCustomerStatus().getId().equals(CustomerStatus.GROUP_ACTIVE.getValue()) || getCustomerStatus().getId().equals(CustomerStatus.GROUP_HOLD.getValue()) ){
-			validateLO(loanOfficerId);	
-		}
-		if(!getDisplayName().equals(displayName))
+		if (!getDisplayName().equals(displayName))
 			validateForDuplicateName(displayName);
-		
+
 	}
 }

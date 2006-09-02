@@ -90,6 +90,11 @@
 	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
 	<priority value="ERROR"/> 
   </category>
+  
+  <category name="org.mifos.application.customer.business.CustomerBO" additivity="true"> 
+	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
+	<priority value="ERROR"/> 
+  </category>
 
     <!-- Category type org.mifos.application.personnel for Personnel  -->
   <category name="org.mifos.application.personnel" additivity="true"> 

@@ -105,8 +105,6 @@ import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.PropertyNotFoundException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
@@ -724,11 +722,7 @@ public class AccountBO extends BusinessObject {
 
 	
 	public AccountState getState() throws AccountException  {
-		try {
-			return AccountState.getStatus(getAccountState().getId());
-		} catch (PropertyNotFoundException e) {
-			throw new AccountException(e);
-		}
+		return AccountState.getStatus(getAccountState().getId());
 	}
 	
 	public void updateAccountActivity(Money totalFeeAmount, Short personnelId,

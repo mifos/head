@@ -229,6 +229,7 @@ public interface CustomerConstants {
 	public static final String INVALID_TRAINED_OR_TRAINEDDATE="errors.Customer.invalidTrainedOrTrainedDate";
 
 	public final String TRANSITION_CONFIG_FILE_PATH_CENTER="org/mifos/framework/util/resources/stateMachine/StateMachine_center.xml";
+	public final String TRANSITION_CONFIG_FILE_PATH_GROUP="org/mifos/framework/util/resources/stateMachine/StateMachine_group.xml";
 	public final String TRANSITION_CONFIG_FILE_PATH_CLIENT="org/mifos/framework/util/resources/stateMachine/StateMachine_client.xml";
 	
 	public static final String NOTES_FIELD="notes";

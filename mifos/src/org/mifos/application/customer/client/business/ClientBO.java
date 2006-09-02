@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.configuration.business.ConfigurationIntf;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
@@ -272,7 +271,8 @@ public class ClientBO extends CustomerBO {
 	}
 
 	@Override
-	public void changeStatus(Short newStatusId, Short flagId, String comment) throws CustomerException, AccountException{
+	public void changeStatus(Short newStatusId, Short flagId, String comment) throws CustomerException{
+		logger.debug("In ClientBO::changeStatus(), newStatusId: " + newStatusId);
 		super.changeStatus(newStatusId, flagId, comment);		
 		if(isClientUnderGroup() && (newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue()) ||newStatusId.equals(CustomerStatus.CLIENT_CANCELLED.getValue()))){
 			getParentCustomer().resetPositionsAssignedToClient(this.getCustomerId());
@@ -286,13 +286,14 @@ public class ClientBO extends CustomerBO {
 				center = null;
 			}
 		}
+		logger.debug("In ClientBO::changeStatus(), successfully changed status, newStatusId: " + newStatusId);
 	}
 
 	@Override
 	protected void validateStatusChange(Short newStatusId) throws CustomerException{
 		logger.debug("In ClientBO::validateStatusChange(), customerId: " + getCustomerId());
-		
-		checkIfClientStatusIsLower(newStatusId, getParentCustomer().getCustomerStatus().getId());
+		if(getParentCustomer()!=null)
+			checkIfClientStatusIsLower(newStatusId, getParentCustomer().getCustomerStatus().getId());
 		
 		if (newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue()))
 			checkIfClientCanBeClosed();
@@ -589,7 +590,7 @@ public class ClientBO extends CustomerBO {
 	}
 	
 	private void checkIfClientCanBeClosed()throws CustomerException{
-		if (getActiveAndApprovedLoanAccounts(new java.util.Date()).size() > 0
+		if (getActiveLoanAccounts().size() > 0
 				|| getActiveSavingsAccounts().size() > 0) {
 			throw new CustomerException(
 					CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);

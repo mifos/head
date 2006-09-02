@@ -25,7 +25,7 @@
 		<property name="maxChildCount" column="MAX_CHILD_COUNT" type="integer" access="field"/>
 		<property name="createdBy" column="CREATED_BY" />
 		<property name="updatedBy" column="UPDATED_BY" />
-		<property name="blackListed" column="BLACKLISTED" access="field"/>
+		<property name="blackListed" column="BLACKLISTED" type="short" access="field"/>
 		<property name="customerActivationDate" column="CUSTOMER_ACTIVATION_DATE " not-null="false" access="field"/>
 		<many-to-one name="customerStatus" column="STATUS_ID" class="org.mifos.application.customer.business.CustomerStatusEntity" insert="true" update="true" unique="true" lazy="true" />
 		<many-to-one name="customerLevel" column="CUSTOMER_LEVEL_ID" class="org.mifos.application.customer.business.CustomerLevelEntity" insert="true" update="true" unique="true" lazy="true" access="field"/>
@@ -65,7 +65,7 @@
 				class="org.mifos.application.customer.business.CustomerNoteEntity"
 				column="COMMENT_ID" />
 		</set>
-		<set name="customerFlags" cascade="all" lazy="true" access="field">
+		<set name="customerFlags" cascade="all,delete-orphan" lazy="true" access="field">
 			<key column="CUSTOMER_ID" not-null="true" />
 			<one-to-many class="org.mifos.application.customer.business.CustomerFlagDetailEntity" />
 		</set>

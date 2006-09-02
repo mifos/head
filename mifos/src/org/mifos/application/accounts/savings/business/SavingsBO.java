@@ -91,26 +91,17 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.components.interestcalculator.InterestCalculationException;
 import org.mifos.framework.components.interestcalculator.InterestCalculatorConstants;
-import org.mifos.framework.components.interestcalculator.InterestCalculatorFactory;
-import org.mifos.framework.components.interestcalculator.InterestCalculatorIfc;
-import org.mifos.framework.components.interestcalculator.InterestInputs;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.components.repaymentschedule.MeetingScheduleHelper;
 import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.ActivityContext;
@@ -120,7 +111,6 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 
 public class SavingsBO extends AccountBO {
 
@@ -1192,23 +1182,16 @@ public class SavingsBO extends AccountBO {
 		}
 	}
 
-	public String getStatusName(Short localeId, Short accountStateId)
-			throws AccountException {
-		try {
+	@Override
+	public String getStatusName(Short localeId, Short accountStateId){
 			return AccountStateMachines.getInstance().getStatusName(localeId,
 					accountStateId, AccountTypes.SAVINGSACCOUNT.getValue());
-		} catch (ApplicationException e) {
-			throw new AccountException(e);
-		}
 	}
 
-	public String getFlagName(Short flagId) throws AccountException {
-		try {
+	@Override
+	public String getFlagName(Short flagId){
 			return AccountStateMachines.getInstance().getFlagName(flagId,
 					AccountTypes.SAVINGSACCOUNT.getValue());
-		} catch (ApplicationException e) {
-			throw new AccountException(e);
-		}
 	}
 
 	private void setValuesForActiveState() throws AccountException{

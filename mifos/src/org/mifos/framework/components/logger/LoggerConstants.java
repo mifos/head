@@ -111,4 +111,6 @@ public interface LoggerConstants {
 	 * Logger for Collection Sheet Generation
 	 */
 	public String COLLECTIONSHEETLOGGER="org.mifos.application.collectionsheet";
+	
+	public String CUSTOMERLOGGER = "org.mifos.application.customer.business.CustomerBO";
 }

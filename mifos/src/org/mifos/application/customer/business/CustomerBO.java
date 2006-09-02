@@ -49,6 +49,7 @@ import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.exceptions.CustomerException;
@@ -68,6 +69,9 @@ import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.util.Address;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -135,6 +139,8 @@ public abstract class CustomerBO extends BusinessObject {
 	private Short blackListed;
 
 	private Set<CustomerNoteEntity> customerNotes;
+	
+	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CUSTOMERLOGGER);
 
 	protected CustomerBO() {
 		super();
@@ -379,14 +385,18 @@ public abstract class CustomerBO extends BusinessObject {
 	
 	public void addCustomerFlag(CustomerStatusFlagEntity customerStatusFlagEntity) {
 		CustomerFlagDetailEntity customerFlag = new CustomerFlagDetailEntity(
-				this, customerStatusFlagEntity);
-		customerFlag.setCreatedBy(this.getUserContext().getId());
-		customerFlag.setCreatedDate(new Date());
+				this, customerStatusFlagEntity,this.getUserContext().getId(),new Date());
 		this.customerFlags.add(customerFlag);
 	}
 	
 	public boolean isTrained() {
 		return trained.equals(YesNoFlag.YES.getValue());
+	}
+	
+	public boolean isBlackListed() {
+		if(blackListed != null)
+			return blackListed.equals(YesNoFlag.YES.getValue());
+		return false;
 	}
 	
 	public Address getAddress() {
@@ -478,6 +488,25 @@ public abstract class CustomerBO extends BusinessObject {
 				savingsAccounts.add((SavingsBO) account);
 		}
 		return savingsAccounts;
+	}
+	
+	public List<LoanBO> getActiveLoanAccounts() throws CustomerException {
+		List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
+		for (AccountBO account : accounts) {
+			if (account.getAccountType().getAccountTypeId().equals(
+					AccountTypes.LOANACCOUNT.getValue())) {
+				AccountState accountState;
+				try {
+					accountState = account.getState();
+				} catch (AccountException ae) {
+					throw new CustomerException(ae);
+				}
+			if(accountState.equals(AccountState.LOANACC_ACTIVEINGOODSTANDING) || accountState.equals(AccountState.LOANACC_APPROVED) || 
+					accountState.equals(AccountState.LOANACC_BADSTANDING) || accountState.equals(AccountState.LOANACC_DBTOLOANOFFICER))
+				loanAccounts.add((LoanBO) account);
+			}
+		}
+		return loanAccounts;
 	}
 
 	public List<CustomerNoteEntity> getRecentCustomerNotes() {
@@ -628,9 +657,14 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 
 	public void changeStatus(Short newStatusId, Short flagId, String comment)
-	throws	CustomerException, AccountException{
-		Short oldStatus = getCustomerStatus().getId();
+	throws	CustomerException{
+		logger.debug("In CustomerBO::changeStatus(), newStatusId: " + newStatusId);
+		Short oldStatusId = getCustomerStatus().getId();
 		validateStatusChange(newStatusId);
+		if(checkStatusChangeCancelToPartial(CustomerStatus.getStatus(oldStatusId),CustomerStatus.getStatus(newStatusId))) {
+			if(!isBlackListed())
+				getCustomerFlags().clear();
+		}
 		MasterPersistence masterPersistence = new MasterPersistence();
 		CustomerStatusEntity customerStatus = (CustomerStatusEntity) masterPersistence
 				.findById(CustomerStatusEntity.class, newStatusId);
@@ -647,9 +681,18 @@ public abstract class CustomerBO extends BusinessObject {
 			customerStatusFlagEntity.setLocaleId(this.getUserContext()
 					.getLocaleId());
 			this.addCustomerFlag(customerStatusFlagEntity);
+			if(customerStatusFlagEntity.isBlackListed())
+				blackListed = YesNoFlag.YES.getValue();
 		}
-		if (checkNewStatusIsFirstTimeActive(oldStatus, newStatusId))
-			this.getCustomerAccount().generateCustomerFeeSchedule();
+		if (checkNewStatusIsFirstTimeActive(oldStatusId, newStatusId)) {
+			try {
+				this.getCustomerAccount().generateCustomerFeeSchedule();
+			} catch (AccountException ae) {
+				throw new CustomerException(ae);
+			}
+		}
+		this.update();
+		logger.debug("In CustomerBO::changeStatus(), successfully changed status, newStatusId: " + newStatusId);
 	}
 		
 	public List<LoanBO> getOpenLoanAccounts(){
@@ -724,6 +767,14 @@ public abstract class CustomerBO extends BusinessObject {
 
 	protected abstract boolean checkNewStatusIsFirstTimeActive(Short oldStatus,
 			Short newStatusId);
+	private  boolean checkStatusChangeCancelToPartial(CustomerStatus oldStatus,
+			CustomerStatus newStatus){
+		if((oldStatus.equals(CustomerStatus.GROUP_CANCELLED) || oldStatus.equals(CustomerStatus.CLIENT_CANCELLED)) && 
+				(newStatus.equals(CustomerStatus.GROUP_PARTIAL) || newStatus.equals(CustomerStatus.CLIENT_PARTIAL))) {
+			return true;
+		}
+		return false;
+	}
 
 	protected abstract void validateStatusChange(Short newStatusId)
 			throws CustomerException;

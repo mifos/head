@@ -305,14 +305,12 @@ public class CustomerBusinessService extends BusinessService {
 		AccountStateMachines.getInstance().initialize(localeId, officeId,accountTypeId,levelId);
 	}
 
-	public String getStatusName(Short localeId, Short statusId, Short levelId)
-			throws ApplicationException, SystemException {
+	public String getStatusName(Short localeId, Short statusId, Short levelId){
 		return AccountStateMachines.getInstance().getCustomerStatusName(
 				localeId, statusId, levelId);
 	}
 
-	public String getFlagName(Short localeId,Short flagId, Short levelId)
-			throws ApplicationException, SystemException {
+	public String getFlagName(Short localeId,Short flagId, Short levelId){
 		return AccountStateMachines.getInstance().getCustomerFlagName(localeId,flagId,
 				levelId);
 	}
@@ -363,7 +361,7 @@ public class CustomerBusinessService extends BusinessService {
 
 	public boolean isPermissionAllowed(Short newState, UserContext userContext,
 			Short flagSelected, Short recordOfficeId, Short recordLoanOfficerId) {
-		return ActivityMapper.getInstance().isStateChangePermittedForAccount(
+		return ActivityMapper.getInstance().isStateChangePermittedForCustomer(
 				newState.shortValue(),
 				null != flagSelected ? flagSelected.shortValue() : 0,
 				userContext, recordOfficeId, recordLoanOfficerId);

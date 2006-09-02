@@ -5,136 +5,136 @@
 	<stateConfiguration configurationName="configuration 1">
 		<state>
 			<statename>PartialApplication</statename>
-			<stateid>1</stateid>
+			<stateid>7</stateid>
 			<possiblestates>
 				<possiblestate>
 						<statename>PendingApproval</statename>
-						<stateid>2</stateid>
+						<stateid>8</stateid>
 				</possiblestate>
 				<possiblestate>
 					<statename>Cancel</statename>
-					<stateid>5</stateid>
+					<stateid>11</stateid>
 				</possiblestate>
 			</possiblestates>
 		</state>
 		<state>
 			<statename>Cancel</statename>
-			<stateid>5</stateid>
+			<stateid>11</stateid>
 			<possiblestates>
 				<possiblestate>
 						<statename>PartialApplication</statename>
-						<stateid>1</stateid>
+						<stateid>7</stateid>
 				</possiblestate>
 			</possiblestates>
 		</state>		
 		<state>
 			<statename>PendingApproval</statename>
-			<stateid>2</stateid>
+			<stateid>8</stateid>
 			<possiblestates>
 				<possiblestate>
 					<statename>PartialApplication</statename>
-					<stateid>1</stateid>
+					<stateid>7</stateid>
 				</possiblestate>
 				<possiblestate>
 					<statename>Apporved</statename>
-					<stateid>3</stateid>
+					<stateid>9</stateid>
 				</possiblestate>
 				<possiblestate>
 					<statename>Cancel</statename>
-					<stateid>5</stateid>
+					<stateid>11</stateid>
 				</possiblestate>
 			</possiblestates>
 		</state>
 		<state>
 			<statename>Apporved</statename>
-			<stateid>3</stateid>
+			<stateid>9</stateid>
 			<possiblestates>
 				<possiblestate>
 					<statename>OnHold</statename>
-					<stateid>4</stateid>
+					<stateid>10</stateid>
 				</possiblestate>
 				<possiblestate>
 					<statename>Closed</statename>
-					<stateid>6</stateid>
+					<stateid>12</stateid>
 				</possiblestate>
 			</possiblestates>
 		</state>
 		<state>
 			<statename>OnHold</statename>
-			<stateid>4</stateid>
+			<stateid>10</stateid>
 			<possiblestates>
 				<possiblestate>
 					<statename>Apporved</statename>
-					<stateid>3</stateid>
+					<stateid>9</stateid>
 				</possiblestate>
 				<possiblestate>
 					<statename>Closed</statename>
-					<stateid>6</stateid>
+					<stateid>12</stateid>
 				</possiblestate>
 			</possiblestates>
 		</state>
 		<state>
 			<statename>Closed</statename>
-			<stateid>6</stateid>
+			<stateid>12</stateid>
 		</state>
 	</stateConfiguration>
 	
 		<stateConfiguration configurationName="configuration 2">
 		<state>
 			<statename>PartialApplication</statename>
-			<stateid>1</stateid>
+			<stateid>7</stateid>
 			<possiblestates>
 				<possiblestate>
 					<statename>Apporved</statename>
-					<stateid>3</stateid>
+					<stateid>9</stateid>
 				</possiblestate>
 				<possiblestate>
 					<statename>Cancel</statename>
-					<stateid>5</stateid>
+					<stateid>11</stateid>
 				</possiblestate>
 			</possiblestates>
 		</state>
 		<state>
 			<statename>Cancel</statename>
-			<stateid>5</stateid>
+			<stateid>11</stateid>
 			<possiblestates>
 				<possiblestate>
 						<statename>PartialApplication</statename>
-						<stateid>1</stateid>
+						<stateid>7</stateid>
 				</possiblestate>
 			</possiblestates>
 		</state>
 		<state>
 			<statename>Apporved</statename>
-			<stateid>3</stateid>
+			<stateid>9</stateid>
 			<possiblestates>
 				<possiblestate>
 					<statename>OnHold</statename>
-					<stateid>4</stateid>
+					<stateid>10</stateid>
 				</possiblestate>
 				<possiblestate>
 					<statename>Closed</statename>
-					<stateid>6</stateid>
+					<stateid>12</stateid>
 				</possiblestate>
 			</possiblestates>
 		</state>
 		<state>
 			<statename>OnHold</statename>
-			<stateid>4</stateid>
+			<stateid>10</stateid>
 			<possiblestates>
 				<possiblestate>
 					<statename>Apporved</statename>
-					<stateid>3</stateid>
+					<stateid>9</stateid>
 				</possiblestate>
 				<possiblestate>
 					<statename>Closed</statename>
-					<stateid>6</stateid>
+					<stateid>12</stateid>
 				</possiblestate>
 			</possiblestates>
 		</state>
 		<state>
 			<statename>Closed</statename>
-			<stateid>6</stateid>
+			<stateid>12</stateid>
 		</state>
 	</stateConfiguration>
 </statemaps>

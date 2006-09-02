@@ -217,7 +217,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 						.getSession()));
 	}
 
-	public void testUpdateCenterStatus() {
+/*	public void testUpdateCenterStatus() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
@@ -262,7 +262,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 				center.getCustomerId());
 		assertFalse(center.isActive());
 	}
-
+*/
 	public void testLoadForClient() {
 		createInitialObjects();
 		setRequestPathInfo("/editCustomerStatusAction.do");

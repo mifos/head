@@ -61,10 +61,10 @@ public enum AccountState {
 		return value;
 	}
 	
-	public static AccountState getStatus(Short value)throws PropertyNotFoundException{
+	public static AccountState getStatus(Short value){
 		for(AccountState status : AccountState.values())
 			if(status.getValue().equals(value))
 				return status;
-		throw new PropertyNotFoundException("AccountState");
+		return null;
 	}
 }

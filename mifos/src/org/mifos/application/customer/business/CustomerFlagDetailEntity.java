@@ -37,6 +37,9 @@
  */
 package org.mifos.application.customer.business;
 
+
+import java.util.Date;
+
 import org.mifos.framework.business.PersistentObject;
 
 /**
@@ -58,9 +61,11 @@ public class CustomerFlagDetailEntity extends PersistentObject {
 		this.statusFlag = null;
 	}
 
-	protected CustomerFlagDetailEntity(CustomerBO customer, CustomerStatusFlagEntity statusFlag) {
+	protected CustomerFlagDetailEntity(CustomerBO customer, CustomerStatusFlagEntity statusFlag, Short createdBy, Date createdDate) {
 		this.statusFlag= statusFlag;
 		this.customerFlagId = null;
+		this.createdBy = createdBy;
+		this.createdDate = createdDate;
 	}
 
 	public CustomerStatusFlagEntity getStatusFlag() {

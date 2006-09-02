@@ -556,24 +556,16 @@ public class LoanBO extends AccountBO {
 	}
 
 	@Override
-	public String getStatusName(Short localeId, Short accountStateId)
-			throws AccountException {
-		try {
+	public String getStatusName(Short localeId, Short accountStateId){
 			return AccountStateMachines.getInstance().getStatusName(localeId,
 					accountStateId, AccountTypes.LOANACCOUNT.getValue());
-		} catch (ApplicationException e) {
-			throw new AccountException(e);
-		}
 	}
 
 	@Override
-	public String getFlagName(Short flagId) throws AccountException {
-		try {
+	public String getFlagName(Short flagId){
 			return AccountStateMachines.getInstance().getFlagName(flagId,
 					AccountTypes.LOANACCOUNT.getValue());
-		} catch (ApplicationException e) {
-			throw new AccountException(e);
-		}
+
 	}
 
 	@Override

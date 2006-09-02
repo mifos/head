@@ -81,7 +81,7 @@ public class CenterBO extends CustomerBO {
 			throws CustomerException {
 		logger.debug("In CenterBO::validateStatusChange(), customerId: " + getCustomerId());
 		if (newStatusId.equals(CustomerStatus.CENTER_INACTIVE.getValue())) {
-			if (getActiveAndApprovedLoanAccounts(new Date()).size() > 0
+			if (getActiveLoanAccounts().size() > 0
 					|| getActiveSavingsAccounts().size() > 0) {
 				throw new CustomerException(
 						CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);

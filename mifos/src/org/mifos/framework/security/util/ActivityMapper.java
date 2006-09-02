@@ -904,13 +904,16 @@ public class ActivityMapper {
 		
 
 		//mapping for editing customer status
-		activityMap.put("/editCustomerStatusAction-load-Center", SecurityConstants.VIEW);
+		activityMap.put("/editCustomerStatusAction-load-Center", SecurityConstants.CENTER_EDIT_STATUS);
 		activityMap.put("/editCustomerStatusAction-preview", SecurityConstants.VIEW);
 		activityMap.put("/editCustomerStatusAction-previous", SecurityConstants.VIEW);
 		activityMap.put("/editCustomerStatusAction-update", SecurityConstants.VIEW);
-		activityMap.put("/editCustomerStatusAction-load-Group", SecurityConstants.VIEW);
 		activityMap.put("/editCustomerStatusAction-load-Client", SecurityConstants.VIEW);
-		
+		activityMap.put("/editCustomerStatusAction-loadStatus-Group", SecurityConstants.VIEW);
+		activityMap.put("/editCustomerStatusAction-previewStatus", SecurityConstants.VIEW);
+		activityMap.put("/editCustomerStatusAction-previousStatus", SecurityConstants.VIEW);
+		activityMap.put("/editCustomerStatusAction-updateStatus", SecurityConstants.VIEW);
+		activityMap.put("/editCustomerStatusAction-cancelStatus", SecurityConstants.VIEW);
 
 		activityMap.put("/notesAction-create-Loan",
 				SecurityConstants.LOAN_CAN_ADD_NOTES_TO_LOAN);
