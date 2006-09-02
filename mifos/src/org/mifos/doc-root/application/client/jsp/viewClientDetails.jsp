@@ -97,49 +97,13 @@
 								bundle="ClientUIResources" /> </font></td>
 						</tr>
 						<tr>
-							<td class="fontnormalbold"><span class="fontnormal"> <c:choose>
-								<%-- Partial Application --%>
-								<c:when
-									test="${sessionScope.BusinessKey.customerStatus.id == 1}">
-									<mifos:MifosImage id="partial" moduleName="customer.client" />
-
-								</c:when>
-								<%-- Pending Approval --%>
-								<c:when
-									test="${sessionScope.BusinessKey.customerStatus.id == 2}">
-									<mifos:MifosImage id="pending" moduleName="customer.client" />
-								</c:when>
-								<%-- Active --%>
-								<c:when
-									test="${sessionScope.BusinessKey.customerStatus.id == 3}">
-									<mifos:MifosImage id="active" moduleName="customer.client" />
-
-								</c:when>
-								<%-- On Hold --%>
-								<c:when
-									test="${sessionScope.BusinessKey.customerStatus.id == 4}">
-									<mifos:MifosImage id="hold" moduleName="customer.client" />
-
-								</c:when>
-								<%-- Cancelled --%>
-								<c:when
-									test="${sessionScope.BusinessKey.customerStatus.id == 5}">
-									<mifos:MifosImage id="cancelled" moduleName="customer.client" />
-
-								</c:when>
-								<%-- Closed --%>
-								<c:when
-									test="${sessionScope.BusinessKey.customerStatus.id == 6}">
-									<mifos:MifosImage id="closed" moduleName="customer.client" />
-								</c:when>
-
-								<c:otherwise>
-								</c:otherwise>
-							</c:choose> <c:out
+							<td class="fontnormalbold"><span class="fontnormal"> 
+							<mifoscustom:MifosImage
+								id="${BusinessKey.customerStatus.id}" moduleName="customer" /> <c:out
 								value="${sessionScope.BusinessKey.customerStatus.name}" /> <c:forEach
 								var="flagSet" items="${sessionScope.BusinessKey.customerFlags}">
 								<span class="fontnormal"> <c:if
-									test="${flagSet.statusFlag.blackListed}">
+									test="${sessionScope.BusinessKey.blackListed}">
 									<mifos:MifosImage id="blackListed" moduleName="customer.client" />
 								</c:if> <c:out value="${flagSet.statusFlag.name}" /> </span>
 							</c:forEach> </span><br>

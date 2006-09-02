@@ -44,14 +44,13 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.apache.struts.validator.ValidatorActionForm;
-import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.StringUtils;
 
-public class EditCustomerStatusActionForm extends ValidatorActionForm {
+public class EditCustomerStatusActionForm extends BaseActionForm {
 
 	private String customerId;
 
@@ -96,6 +95,10 @@ public class EditCustomerStatusActionForm extends ValidatorActionForm {
 	public String getCustomerId() {
 		return customerId;
 	}
+	
+	public Integer getCustomerIdValue() {
+		return getIntegerValue(customerId);
+	}
 
 	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
@@ -121,6 +124,10 @@ public class EditCustomerStatusActionForm extends ValidatorActionForm {
 	public String getFlagId() {
 		return flagId;
 	}
+	
+	public Short getFlagIdValue() {
+		return getShortValue(flagId);
+	}
 
 	public void setFlagId(String flagId) {
 		this.flagId = flagId;
@@ -137,6 +144,10 @@ public class EditCustomerStatusActionForm extends ValidatorActionForm {
 	public String getLevelId() {
 		return levelId;
 	}
+	
+	public Short getLevelIdValue() {
+		return getShortValue(levelId);
+	}
 
 	public void setLevelId(String levelId) {
 		this.levelId = levelId;
@@ -145,6 +156,10 @@ public class EditCustomerStatusActionForm extends ValidatorActionForm {
 
 	public String getNewStatusId() {
 		return newStatusId;
+	}
+	
+	public Short getNewStatusIdValue() {
+		return getShortValue(newStatusId);
 	}
 
 	public void setNewStatusId(String newStatusId) {
@@ -175,6 +190,10 @@ public class EditCustomerStatusActionForm extends ValidatorActionForm {
 			if ((Methods.preview.toString()).equals(methodCalled)) {
 				handleStatusPreviewValidations(request, errors);
 			} else if ((Methods.update.toString()).equals(methodCalled)) {
+				handleUpdateStatus(request, errors);
+			} else if ((Methods.previewStatus.toString()).equals(methodCalled)) {
+				handleStatusPreviewValidations(request, errors);
+			} else if ((Methods.updateStatus.toString()).equals(methodCalled)) {
 				handleUpdateStatus(request, errors);
 			}
 		}

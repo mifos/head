@@ -81,12 +81,12 @@ function meetingpopup(){
 							<td width="27%" rowspan="2" align="right" valign="top"
 								class="fontnormal"><c:if
 								test="${BusinessKey.customerStatus.id != CustomerStatus.GROUP_CLOSED.value}">
-								<html-el:link action="GroupAction.do?method=loadStatus">
+								<a href="editCustomerStatusAction.do?method=loadStatus&customerId=<c:out value="${BusinessKey.customerId}"/>&securityParamInput=Group&input=group&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="Group.edit" bundle="GroupUIResources"></mifos:mifoslabel>
 									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>
 									<mifos:mifoslabel name="Group.status1"
 										bundle="GroupUIResources"></mifos:mifoslabel>
-								</html-el:link>
+								</a>
 							</c:if></td>
 						</tr>
 						<tr>
@@ -99,7 +99,7 @@ function meetingpopup(){
 							<c:out value="${BusinessKey.customerStatus.name}" /> <c:forEach
 								var="flagSet" items="${BusinessKey.customerFlags}">
 								<span class="fontnormal"> <c:if
-									test="${flagSet.statusFlag.blackListed}">
+									test="${BusinessKey.blackListed}">
 									<mifoscustom:MifosImage id="blackListed" moduleName="customer" />
 								</c:if> <c:out value="${flagSet.statusFlag.name}" /> </span>
 							</c:forEach> <span class="fontnormal"><br>

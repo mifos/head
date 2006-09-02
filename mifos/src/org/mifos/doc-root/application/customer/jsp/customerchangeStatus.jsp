@@ -6,12 +6,13 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<script language="javascript">
 			function goToCancelPage(form){
-				form.action="editCustomerStatusAction.do?method=cancel";
+				form.action="editCustomerStatusAction.do?method=cancelStatus";
 				form.submit();
  			 }
 			function manageFlag(i) {
@@ -31,7 +32,10 @@
 				}
  			 }
 		</script>
-		<html-el:form action="editCustomerStatusAction.do?method=preview">
+		<html-el:form action="editCustomerStatusAction.do?method=previewStatus">
+			<c:set
+				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
+				var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -54,7 +58,7 @@
 							<td class="headingorange"><span class="fontnormalbold"> <mifos:mifoslabel
 								name="accounts.currentstatus" />:<mifoscustom:MifosImage
 								id="${sessionScope.editCustomerStatusActionForm.currentStatusId}"
-								moduleName="customer" /></span> <span class="fontnormal"><c:out value="${sessionScope.BusinessKey.customerStatus.name}" />
+								moduleName="customer" /></span> <span class="fontnormal"><c:out value="${BusinessKey.customerStatus.name}" />
 								</span></td>
 						</tr>
 						<tr><logic:messagesPresent>
@@ -76,7 +80,6 @@
 									<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
 								</c:if>
 							<mifos:mifoslabel name="Customer.ClickCancel2"></mifos:mifoslabel>
-								
 								</td>
 						</tr>
 						<tr>
@@ -92,7 +95,7 @@
 							</td>
 							<td align="left" valign="top">
 							<table width="95%" border="0" cellpadding="0" cellspacing="0">
-								<c:forEach var="status" items="${sessionScope.statusList}"	varStatus="loopStatus">
+								<c:forEach var="status" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'statusList')}" varStatus="loopStatus">
 										<bean:define id="ctr">
 										<c:out value="${loopStatus.index}" />
 									</bean:define>
@@ -103,15 +106,15 @@
 										<td width="98%"><c:out value="${status.name}" /></td>
 									</tr>
 								</c:forEach>
-								<c:forEach var="status" items="${sessionScope.statusList}">
+								<c:forEach var="status" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'statusList')}">
 									<c:if test="${status.id == CustomerStatus.CLIENT_CANCELLED.value || status.id == CustomerStatus.CLIENT_CLOSED.value ||status.id == CustomerStatus.GROUP_CANCELLED.value || status.id == CustomerStatus.GROUP_CLOSED.value}">
 										<tr class="fontnormal">
 											<td align="center">&nbsp;</td>
 											<td><mifos:mifoslabel name="Customer.SelectExplaination1" />
-												<c:if test="${sessionScope.editCustomerStatusActionForm.levelId == CustomerLevel.CLIENT.value}">
+												<c:if test="${sessionScope.editCustomerStatusActionForm.levelId == '1'}">
 													<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
 												</c:if>
-												<c:if test="${sessionScope.editCustomerStatusActionForm.levelId == CustomerLevel.GROUP.value}">
+												<c:if test="${sessionScope.editCustomerStatusActionForm.levelId == '2'}">
 													<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
 												</c:if>											
 												<mifos:mifoslabel name="Customer.SelectExplaination2" />
@@ -166,8 +169,8 @@
 					<br>
 					</td>
 				</tr>
-				
 			</table>
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 		<script language="javascript">
 				if(editCustomerStatusActionForm.newStatusId.length != undefined){

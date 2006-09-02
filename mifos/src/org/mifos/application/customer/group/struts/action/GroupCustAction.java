@@ -52,6 +52,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomFieldView;
+import org.mifos.application.customer.business.CustomerFlagDetailEntity;
 import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -347,6 +348,8 @@ public class GroupCustAction extends CustAction {
 		for (CustomerPositionEntity customerPositionEntity : groupBO
 				.getCustomerPositions())
 			customerPositionEntity.getPosition().setLocaleId(localeId);
+		for(CustomerFlagDetailEntity customerFlag : groupBO.getCustomerFlags())
+			customerFlag.getStatusFlag().setLocaleId(localeId);
 	}
 
 	private GroupBusinessService getGroupBusinessService()

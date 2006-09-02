@@ -60,6 +60,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerCustomFieldEntity;
+import org.mifos.application.customer.business.CustomerFlagDetailEntity;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientDetailEntity;
@@ -441,6 +442,8 @@ public class ClientCustAction extends CustAction {
 		clientBO.setUserContext(getUserContext(request));
 		clientBO.getCustomerStatus().setLocaleId(
 				getUserContext(request).getLocaleId());
+		for(CustomerFlagDetailEntity custFlag : clientBO.getCustomerFlags())
+			custFlag.getStatusFlag().setLocaleId(getUserContext(request).getLocaleId());
 		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request.getSession());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request
 				.getSession());

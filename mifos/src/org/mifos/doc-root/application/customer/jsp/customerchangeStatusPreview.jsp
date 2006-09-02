@@ -7,20 +7,21 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<script language="javascript">
 			  function goToCancelPage(form){
-				form.action="editCustomerStatusAction.do?method=cancel";
+				form.action="editCustomerStatusAction.do?method=cancelStatus";
 				form.submit();
 			  }
 			  function GoToEditPage(form){
-				form.action="editCustomerStatusAction.do?method=previous";
+				form.action="editCustomerStatusAction.do?method=previousStatus";
 				form.submit();
 			  }
 		</script>
-		<html-el:form action="editCustomerStatusAction?method=update">
+		<html-el:form action="editCustomerStatusAction?method=updateStatus">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -45,9 +46,9 @@
 							</span> <span class="fontnormal"> <mifoscustom:MifosImage
 								id="${sessionScope.editCustomerStatusActionForm.newStatusId}"
 								moduleName="customer" /><c:out
-								value="${sessionScope.newStatusName}" /> <c:if
-								test="${!empty sessionScope.flagName}">
-                     	- <c:out value="${sessionScope.flagName}" />
+								value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'newStatusName')}" /> <c:if
+								test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'flagName')}">
+                     	- <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'flagName')}" />
 							</c:if></span></td>
 						</tr>
 						<tr><logic:messagesPresent>
@@ -92,9 +93,9 @@
 						</c:if>
 					</table>
 					<br>
-					 <c:if test="${!empty sessionScope.checklist}">
+					 <c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checklist')}">
 						<table width="95%" border="0" cellpadding="3" cellspacing="0">
-							<c:forEach var="chklist" items="${sessionScope.checklist}">
+							<c:forEach var="chklist" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checklist')}">
 								<c:forEach var="chklistDetail" items="${chklist.checklistDetailSet}"> 
 									<bean:size collection="${chklist.checklistDetailSet}" id="listSize" />
 									<html-el:hidden property="chklistSize"	value="${pageScope.listSize}" />
@@ -138,9 +139,9 @@
 					</table>
 					<br>
 					</td>
-					
+				</tr>
+				<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 			</table>
-			
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

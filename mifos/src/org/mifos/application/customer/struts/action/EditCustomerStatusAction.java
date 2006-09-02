@@ -42,7 +42,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -54,6 +53,7 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.struts.actionforms.EditCustomerStatusActionForm;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -66,21 +66,27 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.StatesInitializationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class EditCustomerStatusAction extends BaseAction {
 
 	private CustomerBusinessService customerService;
 
 	private MifosLogger logger = MifosLogManager
-			.getLogger(LoggerConstants.CENTERLOGGER);
+			.getLogger(LoggerConstants.CUSTOMERNOTELOGGER);
 
 	public EditCustomerStatusAction() throws ServiceException {
 		customerService = (CustomerBusinessService) ServiceFactory
@@ -101,21 +107,14 @@ public class EditCustomerStatusAction extends BaseAction {
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		logger.debug("In EditSavingsStatusAction:load()");
+		logger.debug("In EditCustomerStatusAction:load()");
 		doCleanUp(form, request);
-		UserContext userContext = getUserContext(request);
 		CustomerBO customerBO = customerService
-				.getCustomer(Integer
-						.valueOf(((EditCustomerStatusActionForm) form)
-								.getCustomerId()));
-		customerBO.setUserContext(userContext);
-		customerService.initializeStateMachine(userContext.getLocaleId(),
-				customerBO.getOffice().getOfficeId(),
-				AccountTypes.CUSTOMERACCOUNT.getValue(),
-				getLevelIdBasedOnCustomer(customerBO));
-		setFormAttributes(form, customerBO);
-		customerBO.getCustomerStatus().setLocaleId(userContext.getLocaleId());
-		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request.getSession());
+				.getCustomer(((EditCustomerStatusActionForm) form)
+						.getCustomerIdValue());
+		loadInitialData(form, customerBO, getUserContext(request));
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request
+				.getSession());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request
 				.getSession());
 
@@ -129,83 +128,184 @@ public class EditCustomerStatusAction extends BaseAction {
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception, NumberFormatException {
+		logger.debug("In EditCustomerStatusAction:preview()");
 		CustomerBO customerBO = (CustomerBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
-		UserContext userContext = getUserContext(request);
-		setStatusDetails(form, customerBO, request.getSession(), userContext);
+		setStatusDetails(form, customerBO, request, getUserContext(request));
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 
 	public ActionForward previous(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-			throws Exception, NumberFormatException {
+			throws Exception {
+		logger.debug("In EditCustomerStatusAction:previous()");
 		return mapping.findForward(ActionForwards.previous_success.toString());
 	}
 
+	@CloseSession
 	public ActionForward update(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws ApplicationException {
-		EditCustomerStatusActionForm editStatusActionForm = (EditCustomerStatusActionForm) form;
-		UserContext userContext = getUserContext(request);
-		CustomerBO customerBO = customerService.getCustomer(Integer
-				.valueOf(editStatusActionForm.getCustomerId()));
-		customerBO.setUserContext(userContext);
-		customerBO.getCustomerStatus().setLocaleId(userContext.getLocaleId());
-		Short flagId = null;
-		Short newStatusId = null;
-		if (StringUtils.isNullAndEmptySafe(editStatusActionForm.getFlagId()))
-			flagId = Short.valueOf(editStatusActionForm.getFlagId());
-		if (StringUtils.isNullAndEmptySafe(editStatusActionForm
-				.getNewStatusId()))
-			newStatusId = Short.valueOf(editStatusActionForm.getNewStatusId());
-		checkPermission(customerBO, request, newStatusId, flagId);
-		customerBO.changeStatus(newStatusId, flagId, editStatusActionForm
-				.getNotes());
-		customerBO.update();
-		SessionUtils.setAttribute(SavingsConstants.NEW_FLAG_NAME,
-				SessionUtils.getAttribute(SavingsConstants.FLAG_NAME, request
-						.getSession()), request.getSession());
-		customerBO = null;
+			HttpServletRequest request, HttpServletResponse response) throws CustomerException{
+		logger.debug("In EditCustomerStatusAction:update()");
+		updateStatus(form, request);
 		return mapping.findForward(getDetailAccountPage(form));
 	}
 
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		logger.debug("In EditCustomerStatusAction:cancel()");
 		return mapping.findForward(getDetailAccountPage(form));
 	}
 
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward loadStatus(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("In EditCustomerStatusAction:load()");
+		doCleanUp(form, request);
+		CustomerBO customerBO = customerService
+				.getCustomer(((EditCustomerStatusActionForm) form)
+						.getCustomerIdValue());
+		loadInitialData(form, customerBO, getUserContext(request));
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request);
+
+		SessionUtils.setAttribute(SavingsConstants.STATUS_LIST, customerService
+				.getStatusList(customerBO.getCustomerStatus(),
+						getLevelIdBasedOnCustomer(customerBO), getUserContext(
+								request).getLocaleId()), request);
+		return mapping.findForward(ActionForwards.loadStatus_success.toString());
+	}
+
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward previewStatus(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception{
+		logger.debug("In EditCustomerStatusAction:preview()");
+		CustomerBO customerBO = (CustomerBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request);
+		setCustomerStatusDetails(form, customerBO, request,
+				getUserContext(request));
+		return mapping.findForward(ActionForwards.previewStatus_success.toString());
+	}
+
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward previousStatus(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("In EditCustomerStatusAction:previous()");
+		return mapping.findForward(ActionForwards.previousStatus_success.toString());
+	}
+
+	@CloseSession
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward updateStatus(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) throws CustomerException {
+		logger.debug("In EditCustomerStatusAction:update()");
+		updateStatus(form, request);
+		return mapping.findForward(getDetailAccountPage(form));
+	}
+
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward cancelStatus(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("In EditCustomerStatusAction:cancel()");
+		return mapping.findForward(getDetailAccountPage(form));
+	}
+
+	public ActionForward validate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response){
+		logger.debug("In EditCustomerStatusAction:validate()");
+		String method = (String) request
+				.getAttribute(SavingsConstants.METHODCALLED);
+		String forward = null;
+		if (method != null) {
+			if (method.equals(Methods.preview.toString()))
+				forward = ActionForwards.preview_failure.toString();
+			else if (method.equals(Methods.load.toString()))
+				forward = getDetailAccountPage(form);
+			else if (method.equals(Methods.update.toString()))
+				forward = ActionForwards.update_failure.toString();
+			else if (method.equals(Methods.previewStatus.toString()))
+				forward = ActionForwards.previewStatus_failure.toString();
+			else if (method.equals(Methods.loadStatus.toString()))
+				forward = getDetailAccountPage(form);
+			else if (method.equals(Methods.updateStatus.toString()))
+				forward = ActionForwards.updateStatus_failure.toString();
+		}
+		return mapping.findForward(forward);
+	}
+
 	private void setStatusDetails(ActionForm form, CustomerBO customerBO,
-			HttpSession session, UserContext userContext) throws Exception {
-		EditCustomerStatusActionForm editCustomerStatusActionForm = (EditCustomerStatusActionForm) form;
-		editCustomerStatusActionForm.setCommentDate(DateHelper
-				.getCurrentDate(userContext.getPereferedLocale()));
+			HttpServletRequest request, UserContext userContext) throws ApplicationException, SystemException{
+		EditCustomerStatusActionForm statusActionForm = (EditCustomerStatusActionForm) form;
+		statusActionForm.setCommentDate(DateHelper.getCurrentDate(userContext
+				.getPereferedLocale()));
 		String newStatusName = null;
 		String flagName = null;
 		List<CustomerCheckListBO> checklist = customerService
-				.getStatusChecklist(Short.valueOf(editCustomerStatusActionForm
-						.getNewStatusId()), Short
-						.valueOf(editCustomerStatusActionForm.getLevelId()));
+				.getStatusChecklist(statusActionForm.getNewStatusIdValue(),
+						statusActionForm.getLevelIdValue());
 		SessionUtils.setAttribute(SavingsConstants.STATUS_CHECK_LIST,
-				checklist, session);
-		if (StringUtils.isNullAndEmptySafe(editCustomerStatusActionForm
-				.getNewStatusId())) {
-			newStatusName = customerService.getStatusName(userContext
-					.getLocaleId(), Short.valueOf(editCustomerStatusActionForm
-					.getNewStatusId()), getLevelIdBasedOnCustomer(customerBO));
-		}
+				checklist, request.getSession());
+		newStatusName = getStatusName(customerBO, userContext.getLocaleId(),
+				statusActionForm.getNewStatusId(), statusActionForm
+						.getNewStatusIdValue());
+		flagName = getFlagName(customerBO, userContext.getLocaleId(),
+				statusActionForm.getNewStatusId(), statusActionForm
+						.getNewStatusIdValue(), statusActionForm
+						.getFlagIdValue());
 		SessionUtils.setAttribute(SavingsConstants.NEW_STATUS_NAME,
-				newStatusName, session);
-		if (StringUtils.isNullAndEmptySafe(editCustomerStatusActionForm
-				.getNewStatusId())
-				&& isNewStatusCancelledOrClosed(Short
-						.valueOf(editCustomerStatusActionForm.getNewStatusId()))) {
-			flagName = customerService.getFlagName(userContext.getLocaleId(),
-					new Short(editCustomerStatusActionForm.getFlagId()),
+				newStatusName, request.getSession());
+		SessionUtils.setAttribute(SavingsConstants.FLAG_NAME, flagName, request
+				.getSession());
+
+	}
+
+	private String getStatusName(CustomerBO customerBO, Short localeId,
+			String statusId, Short statusIdValue){
+		if (StringUtils.isNullAndEmptySafe(statusId)) {
+			return customerService.getStatusName(localeId, statusIdValue,
 					getLevelIdBasedOnCustomer(customerBO));
 		}
+		return null;
+	}
+
+	private String getFlagName(CustomerBO customerBO, Short localeId,
+			String statusId, Short statusIdValue, Short flagIdValue){
+		if (StringUtils.isNullAndEmptySafe(statusId)
+				&& isNewStatusCancelledOrClosed(statusIdValue)) {
+			return customerService.getFlagName(localeId, flagIdValue,
+					getLevelIdBasedOnCustomer(customerBO));
+		}
+		return null;
+	}
+
+	private void setCustomerStatusDetails(ActionForm form,
+			CustomerBO customerBO, HttpServletRequest request,
+			UserContext userContext) throws PageExpiredException, PersistenceException{
+		EditCustomerStatusActionForm statusActionForm = (EditCustomerStatusActionForm) form;
+		statusActionForm.setCommentDate(DateHelper.getCurrentDate(userContext
+				.getPereferedLocale()));
+		String newStatusName = null;
+		String flagName = null;
+		List<CustomerCheckListBO> checklist = customerService
+				.getStatusChecklist(statusActionForm.getNewStatusIdValue(),
+						statusActionForm.getLevelIdValue());
+		SessionUtils.setAttribute(SavingsConstants.STATUS_CHECK_LIST,
+				checklist, request);
+		newStatusName = getStatusName(customerBO, userContext.getLocaleId(),
+				statusActionForm.getNewStatusId(), statusActionForm
+						.getNewStatusIdValue());
+		flagName = getFlagName(customerBO, userContext.getLocaleId(),
+				statusActionForm.getNewStatusId(), statusActionForm
+						.getNewStatusIdValue(), statusActionForm
+						.getFlagIdValue());
+		SessionUtils.setAttribute(SavingsConstants.NEW_STATUS_NAME,
+				newStatusName, request);
 		SessionUtils
-				.setAttribute(SavingsConstants.FLAG_NAME, flagName, session);
+				.setAttribute(SavingsConstants.FLAG_NAME, flagName, request);
 
 	}
 
@@ -243,7 +343,6 @@ public class EditCustomerStatusAction extends BaseAction {
 		editCustomerStatusActionForm.setNotes(null);
 		editCustomerStatusActionForm.setNewStatusId(null);
 		editCustomerStatusActionForm.setFlagId(null);
-		request.getSession().removeAttribute(Constants.BUSINESS_KEY);
 	}
 
 	private String getDetailAccountPage(ActionForm form) {
@@ -283,20 +382,36 @@ public class EditCustomerStatusAction extends BaseAction {
 		return null;
 	}
 
-	public ActionForward validate(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		String method = (String) request
-				.getAttribute(SavingsConstants.METHODCALLED);
-		String forward = null;
-		if (method != null) {
-			if (method.equals(Methods.preview.toString()))
-				forward = ActionForwards.preview_failure.toString();
-			else if (method.equals(Methods.load.toString()))
-				forward = getDetailAccountPage(form);
-			else if (method.equals(Methods.update.toString()))
-				forward = ActionForwards.update_failure.toString();
-		}
-		return mapping.findForward(forward);
+	private void loadInitialData(ActionForm form, CustomerBO customerBO,
+			UserContext userContext) throws StatesInitializationException {
+		customerBO.setUserContext(userContext);
+		customerService.initializeStateMachine(userContext.getLocaleId(),
+				customerBO.getOffice().getOfficeId(),
+				AccountTypes.CUSTOMERACCOUNT.getValue(),
+				getLevelIdBasedOnCustomer(customerBO));
+		setFormAttributes(form, customerBO);
+		customerBO.getCustomerStatus().setLocaleId(userContext.getLocaleId());
+	}
+
+	private void updateStatus(ActionForm form, HttpServletRequest request)
+			throws CustomerException {
+		EditCustomerStatusActionForm editStatusActionForm = (EditCustomerStatusActionForm) form;
+		CustomerBO customerBO = customerService
+				.getCustomer(editStatusActionForm.getCustomerIdValue());
+		customerBO.setUserContext(getUserContext(request));
+		customerBO.getCustomerStatus().setLocaleId(
+				getUserContext(request).getLocaleId());
+		Short flagId = null;
+		Short newStatusId = null;
+		if (StringUtils.isNullAndEmptySafe(editStatusActionForm.getFlagId()))
+			flagId = editStatusActionForm.getFlagIdValue();
+		if (StringUtils.isNullAndEmptySafe(editStatusActionForm
+				.getNewStatusId()))
+			newStatusId = editStatusActionForm.getNewStatusIdValue();
+		if(!(customerBO instanceof CenterBO))
+			checkPermission(customerBO, request, newStatusId, flagId);
+		customerBO.changeStatus(newStatusId, flagId, editStatusActionForm
+				.getNotes());
+		customerBO = null;
 	}
 }

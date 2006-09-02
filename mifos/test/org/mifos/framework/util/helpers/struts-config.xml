@@ -1778,6 +1778,12 @@
 			<forward name="client_detail_page" path="/clientCustAction.do?method=get" />
 			<forward name="update_failure" path="/pages/application/customer/jsp/changeStatusPreview.jsp" />
 			<forward name="preview_failure" path="/pages/application/customer/jsp/changeStatus.jsp" />
+			<forward name="group_detail_page" path="/groupCustAction.do?method=get" />
+			<forward name="loadStatus_success" path="/pages/application/customer/jsp/customerchangeStatus.jsp" />
+			<forward name="previewStatus_success" path="/pages/application/customer/jsp/customerchangeStatusPreview.jsp" />
+			<forward name="previousStatus_success" path="/pages/application/customer/jsp/customerchangeStatus.jsp" />
+			<forward name="update_failure" path="/pages/application/customer/jsp/customerchangeStatusPreview.jsp" />
+			<forward name="previewStatus_failure" path="/pages/application/customer/jsp/customerchangeStatus.jsp" />
 		</action>
 		<action path="/applyChargeAction" type="org.mifos.application.accounts.struts.action.ApplyChargeAction" parameter="method" name="ApplyChargeActionForm" input="/applyChargeAction.do?method=validate" validate="true" scope="session">
 			<forward name="load_success" path="/pages/application/accounts/jsp/applyCharges.jsp"></forward>
