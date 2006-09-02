@@ -169,11 +169,11 @@ function goToCancelPage(){
 							/ <c:if
 								test="${!empty sessionScope.linkValues.customerParentName}">
 								<a
-									href="centerAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.customerParentGCNum}"/>">
+									href="centerCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.customerParentGCNum}"/>">
 								<c:out value="${sessionScope.linkValues.customerParentName}" />
 								</a> /  
 		    </c:if> <a
-								href="GroupAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.globalCustNum}"/>">
+								href="groupCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.globalCustNum}"/>">
 							<c:out value="${sessionScope.linkValues.customerName}" /> </a> </span></td>
 						</tr>
 					</table>

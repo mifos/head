@@ -169,6 +169,26 @@ public class TestCustomerAction extends MifosMockStrutsTestCase {
 						ClosedAccSearchConstants.CLOSEDSAVINGSACCOUNTSLIST,
 						request.getSession())).size());
 	}
+	
+	public void testGetAllClosedAccountsOfCenter() throws AccountException {
+		getCustomer();
+		centerSavingsAccount.changeStatus(AccountState.SAVINGS_ACC_CANCEL
+				.getValue(), AccountStateFlag.SAVINGS_REJECTED.getValue(),
+				"WITHDRAW SAVINGS ACCOUNT");
+		TestObjectFactory.updateObject(centerSavingsAccount);
+		HibernateUtil.commitTransaction();
+		setRequestPathInfo("/customerAction.do");
+		addRequestParameter("method", "getAllClosedAccounts");
+		addRequestParameter("customerId", center.getCustomerId().toString());
+		actionPerform();
+		verifyForward(ActionForwards.viewAllClosedAccounts.toString());
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		assertEquals("Size of closed savings accounts should be 1", 1,
+				((List<AccountBO>) SessionUtils.getAttribute(
+						ClosedAccSearchConstants.CLOSEDSAVINGSACCOUNTSLIST,
+						request.getSession())).size());
+	}
 
 	private void getCustomer() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory

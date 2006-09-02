@@ -251,11 +251,11 @@
 
 						<tr>
 							<td width="38%" align="right" class="fontnormal"><span
-								class="fontnormal"> <html-el:link
-								href="closedaccsearchaction.do?method=search&searchNode(search_name)=AllClosedAccounts&customerId=${sessionScope.BusinessKey.customerId}&input=ViewCenterClosedAccounts">
+								class="fontnormal"> <a
+								href="customerAction.do?method=getAllClosedAccounts&customerId=<c:out value="${sessionScope.BusinessKey.customerId}"/>&type=center">
 								<mifos:mifoslabel name="Group.viewallclosedaccounts"
 									bundle="GroupUIResources"></mifos:mifoslabel>
-							</html-el:link> </span></td>
+							</a> </span></td>
 						</tr>
 					</table>
 					<table width="50%" border="0" cellspacing="0" cellpadding="0">

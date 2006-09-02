@@ -52,12 +52,6 @@
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-		<script language="javascript">
-	function fnCancel(form){
-		form.action="closedaccsearchaction.do?method=cancel";
-		form.submit();
-	}
-</script>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink/> </span>
@@ -191,8 +185,11 @@
 					<c:if test="${param.type=='client'}">
 						<c:set var="formAction" value="clientCustAction.do?method=get"/>
 					</c:if>
-					<c:if test="${param.type=='group'}">
+					<c:if test="${param.type=='center'}">
 						<c:set var="formAction" value="centerCustAction.do?method=get"/>
+					</c:if>	
+					<c:if test="${param.type=='group'}">
+						<c:set var="formAction" value="groupCustAction.do?method=get"/>
 					</c:if>		
 					<html-el:form action="${formAction}" >
 						<table width="96%" border="0" cellpadding="0" cellspacing="0">

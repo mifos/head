@@ -53,10 +53,6 @@
 	function ViewDetails(){
 		closedaccsearchactionform.submit();
 	}
-  function GoToEditPage(){
-	centerActionForm.action="clientCreationAction.do?method=manage";
-	centerActionForm.submit();
-  }
   function photopopup(custId , custName){
 	
    window.open("clientCustAction.do?method=showPicture&customerId="+ custId + "&displayName=" + custName,null,"height=250,width=200,status=no,scrollbars=no,toolbar=no,menubar=no,location=no");
