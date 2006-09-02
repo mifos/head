@@ -10,6 +10,7 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
@@ -42,23 +43,27 @@ public class LoanRepaymentTag extends BodyTagSupport {
 					// topmost table
 					builder
 							.append("<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
-	
+
 					// Left side header
 					StringBuilder builderHeader1 = new StringBuilder();
-					builderHeader1.append(
-							"<tr><td width=\"6%\" class=\"drawtablerowbold\">"
-									+ getLabel("loan.no", locale) + "</td>")
+					builderHeader1
+							.append(
+									"<tr><td width=\"6%\" class=\"drawtablerowbold\">"
+											+ getLabel("loan.no", locale)
+											+ "</td>")
 							.append(
 									"<td width=\"18%\" class=\"drawtablerowbold\">"
 											+ getLabel("loan.due_date", locale)
-											+ "</td>").append(
+											+ "</td>")
+							.append(
 									"<td width=\"18%\" class=\"drawtablerowbold\">"
 											+ getLabel("loan.date_paid", locale)
-											+ "</td>").append(
+											+ "</td>")
+							.append(
 									"<td width=\"15%\" align=\"right\" class=\"drawtablerowbold\">"
 											+ getLabel("loan.principal", locale)
 											+ "</td>");
-	
+
 					builderHeader1
 							.append("<td width=\"14%\" align=\"right\" class=\"drawtablerowbold\">"
 									+ MifosConfiguration
@@ -66,7 +71,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 											.getLabel(
 													ConfigurationConstants.INTEREST,
 													locale) + "</td>");
-	
+
 					builderHeader1.append(
 							"<td width=\"14%\" align=\"right\" class=\"drawtablerowbold\">"
 									+ getLabel("loan.fees", locale) + "</td>")
@@ -74,61 +79,67 @@ public class LoanRepaymentTag extends BodyTagSupport {
 									"<td width=\"15%\" align=\"right\" class=\"drawtablerowbold\">"
 											+ getLabel("loan.total", locale)
 											+ "</td></tr>");
-	
+
 					for (AccountActionDateEntity acctDate : list) {
 						LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) acctDate;
 						totalPrincipal = totalPrincipal.add(loanScheduleEntity
 								.getPrincipal());
 						totalInterest = totalInterest.add(loanScheduleEntity
 								.getInterest());
-						totalFees = totalFees
-								.add(loanScheduleEntity.getTotalFees());
+						totalFees = totalFees.add(loanScheduleEntity
+								.getTotalScheduledFeeAmountWithMiscFee());
 					}
-	
+
 					// check if at least the first installment is paid
-					AccountActionDateEntity firstInstallment = list.get(0);
-	
+					LoanScheduleEntity firstInstallment = (LoanScheduleEntity) list
+							.get(0);
+
 					StringBuilder builder1 = new StringBuilder();
 					StringBuilder builder2 = new StringBuilder();
-	
+
 					StringBuilder builderHeader2 = new StringBuilder();
-	
-					if (firstInstallment.getPaymentStatus().equals(YesNoFlag.YES
-							.getValue())) {
+
+					if (firstInstallment.getTotalDueWithFees()
+							.getAmountDoubleValue() != firstInstallment
+							.getTotalScheduleAmountWithFees()
+							.getAmountDoubleValue()) {
 						twoTables = true;
-						// installments paid and running balance table is required
+						// installments paid and running balance table is
+						// required
 						builderHeader2
 								.append(
 										"<tr><td width=\"25%\" align=\"right\" class=\"drawtablerowbold\">"
-												+ getLabel("loan.principal", locale)
-												+ "</td>")
+												+ getLabel("loan.principal",
+														locale) + "</td>")
 								.append(
 										"<td width=\"25%\" align=\"right\" class=\"drawtablerowbold\">"
 												+ MifosConfiguration
 														.getInstance()
 														.getLabel(
 																ConfigurationConstants.INTEREST,
-																locale) + "</td>")
+																locale)
+												+ "</td>")
 								.append(
 										"<td width=\"25%\" align=\"right\" class=\"drawtablerowbold\">"
 												+ getLabel("loan.fees", locale)
-												+ "</td>").append(
+												+ "</td>")
+								.append(
 										"<td width=\"25%\" align=\"right\" class=\"drawtablerowbold\">"
 												+ getLabel("loan.total", locale)
 												+ "</td></tr>");
-	
+
 					}
-	
+
 					builder1
 							.append("<tr><td colspan=\"7\" class=\"drawtablerowbold\">&nbsp;</tr>");
 					builder2
 							.append("<tr><td colspan=\"4\" class=\"drawtablerowbold\">"
 									+ getLabel("loan.running_bal", locale)
 									+ "</tr>");
-	
+
 					builder1.append(builderHeader1.toString());
 					builder2.append(builderHeader2.toString());
-	
+
 					if (twoTables) {
 						builder1
 								.append("<tr><td colspan=\"7\" class=\"drawtablerowbold\">"
@@ -137,68 +148,85 @@ public class LoanRepaymentTag extends BodyTagSupport {
 						builder2
 								.append("<tr><td colspan=\"4\" class=\"drawtablerowbold\">&nbsp;</tr>");
 					}
-	
+
 					int index = 0;
+					boolean toContinue = true;
 					LoanScheduleEntity installment = (LoanScheduleEntity) list
 							.get(index);
 					while (index <= list.size() - 1
-							&& installment.getPaymentStatus().equals(YesNoFlag.YES
-									.getValue())) {
-						index++;
+							&& toContinue
+							&& installment.getTotalDueWithFees()
+									.getAmountDoubleValue() != installment
+									.getTotalScheduleAmountWithFees()
+									.getAmountDoubleValue()) {
+
 						if (index != list.size())
-							builder1.append(createInstallmentRow(installment));
+							builder1.append(createInstallmentRow(installment,
+									true));
 						builder2.append(createRunningBalanceRow(installment,
 								totalPrincipal, totalInterest, totalFees));
 						totalPrincipal = totalPrincipal.subtract(installment
-								.getPrincipal());
+								.getPrincipalPaid());
 						totalInterest = totalInterest.subtract(installment
-								.getInterest());
-						totalFees = totalFees.subtract(installment.getTotalFees());
-						if (index != list.size())
+								.getInterestPaid());
+						totalFees = totalFees.subtract(installment
+								.getTotalFeeAmountPaidWithMiscFee());
+						if (index != list.size()
+								&& installment.getPaymentStatus().equals(
+										PaymentStatus.PAID.getValue())) {
+							index++;
 							installment = (LoanScheduleEntity) list.get(index);
+
+						} else {
+							toContinue = false;
+						}
 					}
-	
+
 					boolean dueInstallments = false;
-					if (installment.getPaymentStatus().equals(YesNoFlag.NO.getValue())
+					if (installment.getPaymentStatus().equals(
+							PaymentStatus.UNPAID.getValue())
 							&& installment.getActionDate().getTime() <= new java.util.Date()
 									.getTime())
 						dueInstallments = true;
-	
+
 					if (dueInstallments) {
 						builder1
 								.append("<tr><td colspan=\"7\" class=\"drawtablerowbold\">"
 										+ getLabel("loan.instt_due", locale)
 										+ "</tr>");
 						while (index < list.size() - 1
-								&& installment.getPaymentStatus().equals(YesNoFlag.NO
-										.getValue())
+								&& installment.getPaymentStatus().equals(
+										YesNoFlag.NO.getValue())
 								&& installment.getActionDate().getTime() <= new java.util.Date()
 										.getTime()) {
 							index++;
-							builder1.append(createInstallmentRow(installment));
+							builder1.append(createInstallmentRow(installment,
+									false));
 							installment = (LoanScheduleEntity) list.get(index);
 						}
 					}
-	
+
 					boolean futureInstallments = false;
-					if (installment.getPaymentStatus().equals(YesNoFlag.NO.getValue())
+					if (installment.getPaymentStatus().equals(
+							PaymentStatus.UNPAID.getValue())
 							&& installment.getActionDate().getTime() > new java.util.Date()
 									.getTime())
 						futureInstallments = true;
 					if (futureInstallments) {
 						builder1
 								.append("<tr><td colspan=\"7\" class=\"drawtablerowbold\">"
-										+ getLabel("loan.future_install", locale)
-										+ "</tr>");
+										+ getLabel("loan.future_install",
+												locale) + "</tr>");
 						while (index < list.size() - 1) {
 							index++;
-							builder1.append(createInstallmentRow(installment));
+							builder1.append(createInstallmentRow(installment,
+									false));
 							installment = (LoanScheduleEntity) list.get(index);
 						}
 					}
 					// append the last transaction
-					builder1.append(createInstallmentRow(installment));
-	
+					builder1.append(createInstallmentRow(installment, false));
+
 					if (twoTables) {
 						// add a tr with 2 td for each of the 2 tables
 						builder
@@ -222,7 +250,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 										"<table width=\"95%\" border=\"0\" cellspacing=\"0\" cellpadding=\"5\">")
 								.append(builder1.toString()).append("</table>")
 								.append("</td>").append("</tr></table>");
-	
+
 					}
 					// // System.out.println(builder.toString());
 				}
@@ -236,7 +264,8 @@ public class LoanRepaymentTag extends BodyTagSupport {
 		return SKIP_BODY;
 	}
 
-	private String createInstallmentRow(LoanScheduleEntity installment) {
+	private String createInstallmentRow(LoanScheduleEntity installment,
+			boolean isPaymentMade) {
 		StringBuilder builder = new StringBuilder();
 		builder
 				.append("<tr><td width=\"6%\" class=\"drawtablerow\">")
@@ -249,29 +278,43 @@ public class LoanRepaymentTag extends BodyTagSupport {
 				.append("</td>")
 				.append("<td width=\"15%\" class=\"drawtablerow\">")
 				.append(
-						(installment.getPaymentDate() == null ? "-"
-								: DateHelper.getDBtoUserFormatString(
-										installment.getPaymentDate(), locale)))
+						(isPaymentMade && installment.getPaymentDate() != null ? DateHelper
+								.getDBtoUserFormatString(installment
+										.getPaymentDate(), locale)
+								: "-"))
 				.append("</td>")
 				.append(
 						"<td width=\"16%\" align=\"right\" class=\"drawtablerow\">")
-				.append(installment.getPrincipal())
+				.append(
+						isPaymentMade ? installment.getPrincipalPaid()
+								: installment.getPrincipalDue())
 				.append("</td>")
 				.append(
 						"<td width=\"15%\" align=\"right\" class=\"drawtablerow\">")
-				.append(installment.getInterest())
+				.append(
+						isPaymentMade ? installment.getInterestPaid()
+								: installment.getInterestDue())
 				.append("</td>")
 				.append(
 						"<td width=\"15%\" align=\"right\" class=\"drawtablerow\">")
-				.append(installment.getTotalFees())
+				.append(
+						isPaymentMade ? installment
+								.getTotalFeeAmountPaidWithMiscFee()
+								: installment.getTotalFeeDueWithMiscFeeDue())
 				.append("</td>")
 				.append(
 						"<td width=\"18%\" align=\"right\" class=\"drawtablerow\">")
 				.append(
-						installment.getPrincipal().add(
-								installment.getInterest()).add(
-								installment.getTotalFees())).append(
-						"</td></tr>");
+						isPaymentMade ? installment.getPrincipalPaid().add(
+								installment.getInterestPaid()).add(
+								installment.getTotalFeeAmountPaidWithMiscFee())
+								: installment
+										.getPrincipalDue()
+										.add(installment.getInterestDue())
+										.add(
+												installment
+														.getTotalFeeDueWithMiscFeeDue()))
+				.append("</td></tr>");
 		return builder.toString();
 	}
 
@@ -281,24 +324,30 @@ public class LoanRepaymentTag extends BodyTagSupport {
 		builder
 				.append(
 						"<tr><td width=\"25%\" align=\"right\" class=\"drawtablerow\">")
-				.append(totalPrincipal.subtract(installment.getPrincipal()))
+				.append(totalPrincipal.subtract(installment.getPrincipalPaid()))
 				.append("</td>")
 				.append(
 						"<td width=\"25%\" align=\"right\" class=\"drawtablerow\">")
-				.append(totalInterest.subtract(installment.getInterest()))
-				.append("</td>")
-				.append(
-						"<td width=\"25%\" align=\"right\" class=\"drawtablerow\">")
-				.append(totalFees.subtract(installment.getTotalFees()))
+				.append(totalInterest.subtract(installment.getInterestPaid()))
 				.append("</td>")
 				.append(
 						"<td width=\"25%\" align=\"right\" class=\"drawtablerow\">")
 				.append(
-						totalPrincipal.add(totalInterest).add(totalFees)
-								.subtract(installment.getPrincipal()).subtract(
-										installment.getInterest()).subtract(
-										installment.getTotalFees())).append(
-						"</td></tr>");
+						totalFees.subtract(installment
+								.getTotalFeeAmountPaidWithMiscFee()))
+				.append("</td>")
+				.append(
+						"<td width=\"25%\" align=\"right\" class=\"drawtablerow\">")
+				.append(
+						totalPrincipal
+								.add(totalInterest)
+								.add(totalFees)
+								.subtract(installment.getPrincipalPaid())
+								.subtract(installment.getInterestPaid())
+								.subtract(
+										installment
+												.getTotalFeeAmountPaidWithMiscFee()))
+				.append("</td></tr>");
 
 		return builder.toString();
 

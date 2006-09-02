@@ -221,6 +221,13 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		return getTotalDue().add(getTotalFeeDue());
 	}
 
+	public Money getTotalScheduleAmountWithFees() {
+		return getPrincipal().add(
+				getInterest().add(getPenalty()).add(
+						getTotalScheduledFeeAmountWithMiscFee()).add(
+						getMiscPenalty()));
+	}
+	
 	public void setPaymentDetails(LoanPaymentData loanPaymentData,
 			Date paymentDate) {
 		this.principalPaid = this.principalPaid.add(loanPaymentData
@@ -327,9 +334,31 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		}
 		return totalFees;
 	}
+	
+	public Money getTotalFeeAmountPaidWithMiscFee() {
+		Money totalFees = new Money();
+		for (AccountFeesActionDetailEntity obj : accountFeesActionDetails) {
+			totalFees = totalFees.add(obj.getFeeAmountPaid());
+		}
+		totalFees.add(getMiscFeePaid());
+		return totalFees;
+	}
+	
+	public Money getTotalScheduledFeeAmountWithMiscFee() {
+		Money totalFees = new Money();
+		for (AccountFeesActionDetailEntity obj : accountFeesActionDetails) {
+			totalFees = totalFees.add(obj.getFeeAmount());
+		}
+		totalFees.add(getMiscFee());
+		return totalFees;
+	}
 
 	public Money getTotalFees() {
 		return getMiscFee().add(getTotalFeeDue());
+	}
+	
+	public Money getTotalFeeDueWithMiscFeeDue() {
+		return getMiscFeeDue().add(getTotalFeeDue());
 	}
 
 	public Money removeFees(Short feeId) {
