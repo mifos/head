@@ -315,7 +315,12 @@ public class ActivityMapper {
 				SecurityConstants.PERSONNEL_UNLOCK_PERSONNEL);
 		activityMap.put("/PersonnelAction-unLockUserAccount",
 				SecurityConstants.PERSONNEL_UNLOCK_PERSONNEL);
-
+			//m2		 personnel related mappings
+		activityMap.put("/PersonAction-chooseOffice",
+				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
+		activityMap.put("/PersonAction-load",
+				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
+		
 		// for your settings link
 		activityMap.put("/PersonnelAction-getDetails", SecurityConstants.VIEW);
 		activityMap.put("/PersonnelAction-editPersonalInfo",

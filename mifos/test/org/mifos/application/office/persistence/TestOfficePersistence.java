@@ -4,11 +4,14 @@ import java.util.List;
 
 import org.mifos.framework.MifosTestCase;
 
+import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.authorization.HierarchyManager;
+
+import sun.security.action.GetBooleanAction;
 
 public class TestOfficePersistence extends MifosTestCase {
 	private OfficePersistence officePersistence = new OfficePersistence();
@@ -16,10 +19,10 @@ public class TestOfficePersistence extends MifosTestCase {
 	public void setUp() throws Exception {
 		HierarchyManager.getInstance().init();
 	}
-
-	public void tearDown() {
+	@Override
+	public void tearDown() throws Exception {
 		HibernateUtil.closeSession();
-
+		super.tearDown();
 	}
 
 	public void testGetActiveBranchesForHO() {
@@ -126,6 +129,13 @@ public class TestOfficePersistence extends MifosTestCase {
 	public void testGetOfficesTillBranchOffice() {
 		assertEquals(2,officePersistence.getOfficesTillBranchOffice().size());
 	}
-	
-
+	public void testGetOfficesTillBranchOfficeActive() {
+		assertEquals(2,officePersistence.getOfficesTillBranchOffice("1.1").size());
+	}
+	public void testGetBranchParents() {
+		List<OfficeBO> officeList = officePersistence.getBranchParents("1.1");
+		assertEquals(1,officeList.size());
+		assertEquals(1,((OfficeBO)officeList.get(0)).getChildren().size());
+		officeList=null;
+	}
 }

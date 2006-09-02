@@ -55,6 +55,7 @@ public interface PersonnelConstants {
 	public static final String PERSONNEL_NOTES="PersonnelNotes";
 	public static final String ROLES_LIST="rolesList";
 	public static final String OFFICE_LIST="officeList";
+	public static final String OFFICE="office";
 	public static final String PERSONNEL_ROLES_LIST="personnelRolesList";
 	public static final short  PERSONNEL_CUSTOM_FIELD_ENTITY_TYPE=17;
 	public static final String PERSONNEL_OFFICE="personnelOffice";

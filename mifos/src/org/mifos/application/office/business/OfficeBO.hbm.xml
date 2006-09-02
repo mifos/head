@@ -88,4 +88,11 @@
         <query name="office.getAllBranches">
             <![CDATA[select new org.mifos.application.office.business.OfficeView(office.officeId, office.officeName, office.versionNo) from org.mifos.application.office.business.OfficeBO office where office.level.id = :LEVEL_ID]]>
     </query>
+         <query name="office.getOfficesTillBranchOfficeActive">
+            <![CDATA[from org.mifos.application.office.business.OfficeBO  o where o.level.id != :LEVEL_ID  and o.searchId like :SEARCH_ID and o.status.id = :STATUS_ID order by o.level.id,o.officeName ]]>
+    </query>
+    <query name="office.getBranchParents">
+            <![CDATA[ select distinct o.parentOffice from org.mifos.application.office.business.OfficeBO  o where o.level.id = :LEVEL_ID and o.status.id = :STATUS_ID and o.searchId like :SEARCH_ID order by o.parentOffice.officeName,o.officeName ]]>
+    </query>
+    
 </hibernate-mapping>

@@ -96,6 +96,11 @@
 		<form-bean name="personnelActionForm"
 			type="org.mifos.application.personnel.struts.actionforms.PersonnelActionForm">
 		</form-bean>
+		
+		<!-- Person Action Form -->
+		<form-bean name="personActionForm"
+			type="org.mifos.application.personnel.struts.actionforms.PersonActionForm">
+		</form-bean>
 		<!-- Group Action Form -->
 		<form-bean name="groupActionForm"
 			type="org.mifos.application.customer.group.struts.actionforms.GroupActionForm">
@@ -626,7 +631,13 @@
 			<forward name="search_failure"
 				path="/pages/application/personnel/jsp/viewusers.jsp" />
 		</action>
-
+	   <action path="/PersonAction"
+			type="org.mifos.application.personnel.struts.action.PersonAction"
+			name="personActionForm" parameter="method" validate="true"
+			input="/PersonAction.do?method=validate" scope="session">
+			<forward name="chooseOffice_success" path="/pages/application/personnel/jsp/choose_office.jsp" />
+			<forward name="load_success" path="/pages/application/personnel/jsp/create_user.jsp" />	
+		</action>
 		<!-- Personnel Notes action -->
 		<action path="/PersonnelNotesAction"
 			type="org.mifos.application.personnel.struts.action.PersonnelNotesAction"
