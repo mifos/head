@@ -72,10 +72,6 @@ public class PrdOfferingMeetingEntity extends PersistentObject {
 		return prdOfferingMeetingId;
 	}
 
-	private Short getMeetingType() {
-		return meetingType;
-	}
-
 	public MeetingType getprdOfferingMeetingType()
 			throws ProductDefinitionException {
 		try {

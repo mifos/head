@@ -42,6 +42,7 @@ import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -234,11 +235,11 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	public void testGetPrdOfferingsApplicableForCustomer() {
 		createInitialObjects();
 		LoanOfferingBO loanOffering1 = getLoanOffering(
-				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+				PrdApplicableMaster.GROUPS.getValue().toString(), 1, 1);
 		LoanOfferingBO loanOffering2 = getLoanOffering(
-				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+				PrdApplicableMaster.GROUPS.getValue().toString(), 1, 1);
 		LoanOfferingBO loanOffering3 = getLoanOffering(
-				ProductDefinitionConstants.OFFERINGAPPLICABLETOCLIENTS, 1, 1);
+				PrdApplicableMaster.CLIENTS.getValue().toString(), 1, 1);
 
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getPrdOfferings");
@@ -261,15 +262,15 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	public void testGetPrdOfferingsApplicableForCustomersWithMeeting() {
 		createInitialObjects();
 		LoanOfferingBO loanOffering1 = getLoanOffering(
-				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+				PrdApplicableMaster.GROUPS.getValue().toString(), 1, 1);
 		LoanOfferingBO loanOffering2 = getLoanOffering(
-				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+				PrdApplicableMaster.GROUPS.getValue().toString(), 1, 1);
 		LoanOfferingBO loanOffering3 = getLoanOffering(
-				ProductDefinitionConstants.OFFERINGAPPLICABLETOCLIENTS, 1, 1);
+				PrdApplicableMaster.CLIENTS.getValue().toString(), 1, 1);
 		LoanOfferingBO loanOffering4 = getLoanOffering(
-				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 2, 1);
+				PrdApplicableMaster.GROUPS.getValue().toString(), 2, 1);
 		LoanOfferingBO loanOffering5 = getLoanOffering(
-				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 3);
+				PrdApplicableMaster.GROUPS.getValue().toString(), 1, 3);
 
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getPrdOfferings");
@@ -303,7 +304,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	
 	public void testLoadWithoutCustomer() {
 		LoanOfferingBO loanOffering = getLoanOffering(
-				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+				PrdApplicableMaster.GROUPS.getValue().toString(), 1, 1);
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId().toString());
@@ -331,7 +332,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	public void testLoad() {
 		createInitialObjects();
 		LoanOfferingBO loanOffering = getLoanOffering(
-				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+				PrdApplicableMaster.GROUPS.getValue().toString(), 1, 1);
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getPrdOfferings");
 		addRequestParameter("customerId", group.getCustomerId().toString());
@@ -357,7 +358,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	public void testLoadForMasterData() {
 		createInitialObjects();
 		LoanOfferingBO loanOffering = getLoanOffering(
-				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+				PrdApplicableMaster.GROUPS.getValue().toString(), 1, 1);
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getPrdOfferings");
 		addRequestParameter("customerId", group.getCustomerId().toString());
@@ -383,7 +384,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	public void testLoadWithFee() {
 		createInitialObjects();
 		LoanOfferingBO loanOffering = getLoanOffering(
-				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+				PrdApplicableMaster.GROUPS.getValue().toString(), 1, 1);
 		List<FeeBO> fees = getFee();
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getPrdOfferings");
@@ -433,7 +434,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	public void testSchedulePreviewWithoutData() {
 		createInitialObjects();
 		LoanOfferingBO loanOffering = getLoanOffering(
-				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+				PrdApplicableMaster.GROUPS.getValue().toString(), 1, 1);
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
 				request.getSession());
 		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
@@ -457,7 +458,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	public void testSchedulePreviewWithDataWithNoGracePer() {
 		createInitialObjects();
 		LoanOfferingBO loanOffering = getLoanOffering(
-				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+				PrdApplicableMaster.GROUPS.getValue().toString(), 1, 1);
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
 				request.getSession());
 		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
@@ -488,7 +489,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	public void testSchedulePreviewWithData() {
 		createInitialObjects();
 		LoanOfferingBO loanOffering = getLoanOffering(
-				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+				PrdApplicableMaster.GROUPS.getValue().toString(), 1, 1);
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
 				request.getSession());
 		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
@@ -521,7 +522,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	public void testSchedulePreviewWithDataForIntDedAtDisb() {
 		createInitialObjects();
 		LoanOfferingBO loanOffering = getLoanOffering(
-				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+				PrdApplicableMaster.GROUPS.getValue().toString(), 1, 1);
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
 				request.getSession());
 		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
@@ -554,7 +555,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	public void testCreate() {
 		createInitialObjects();
 		LoanOfferingBO loanOffering = getLoanOffering(
-				ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS, 1, 1);
+				PrdApplicableMaster.GROUPS.getValue().toString(), 1, 1);
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
 				request.getSession());
 		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,

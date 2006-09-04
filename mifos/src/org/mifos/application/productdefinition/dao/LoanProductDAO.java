@@ -159,7 +159,7 @@ public class LoanProductDAO extends PrdOfferingDAO {
 					ProductDefinitionConstants.LOCALEID, localeId);
 			masterDataRetriever.setParameter(
 					ProductDefinitionConstants.OFFERINGAPPLICENTERSID,
-					ProductDefinitionConstants.OFFERINGAPPLICABLETOCENTERS);
+					org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster.CENTERS.getValue());
 			return masterDataRetriever.retrieve();
 		} catch (HibernateProcessException hbe) {
 			throw new SystemException(hbe);

@@ -163,15 +163,6 @@ public interface ProductDefinitionConstants {
 	
 	public Short SAVINGSACTIVE=2;
 	public Short SAVINGSINACTIVE=5;
-	// PRD APPLICABLE MASTER
-	public String OFFERINGAPPLICABLETOCLIENTS = "1";
-	public String OFFERINGAPPLICABLETOGROUPS = "2";
-	public String OFFERINGAPPLICABLETOCENTERS = "3";
-	public String OFFERINGAPPLICABLETOALLCUSTOMERS = "4";
-	
-	//Interest Types
-	public Short DECLININGBALANCEINTEREST = 1;
-	public Short FLATINTERST = 2;
 
 	//Change Log
 	public Short LOANENTITYTYPEID=2;

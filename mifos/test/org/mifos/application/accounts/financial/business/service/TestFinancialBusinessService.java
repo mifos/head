@@ -174,8 +174,6 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		payment.addAcountTrxn(accountTrxn);
 		savings.setSavingsBalance(balanceAmount);
 		
-		GLCodeEntity glCodeEntity =(GLCodeEntity)HibernateUtil.getSessionTL().get(GLCodeEntity.class,Short.valueOf("31"));
-		savings.getSavingsOffering().setDepositGLCode(glCodeEntity);
 		FinancialBusinessService financialBusinessService = (FinancialBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Financial);
 		financialBusinessService.buildAccountingEntries(accountTrxn);
 		savings.update();
@@ -235,8 +233,6 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		payment.addAcountTrxn(accountTrxn);
 		savings.setSavingsBalance(balanceAmount);
 		
-		GLCodeEntity glCodeEntity =(GLCodeEntity)HibernateUtil.getSessionTL().get(GLCodeEntity.class,Short.valueOf("31"));
-		savings.getSavingsOffering().setDepositGLCode(glCodeEntity);
 		FinancialBusinessService financialBusinessService = (FinancialBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Financial);
 		financialBusinessService.buildAccountingEntries(accountTrxn);
 		savings.update();
@@ -278,8 +274,6 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		Money withdrawalAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(),"1000.7");
 		java.util.Date trxnDate=helper.getDate("20/05/2006");
 			
-		GLCodeEntity glCodeEntity =(GLCodeEntity)HibernateUtil.getSessionTL().get(GLCodeEntity.class,Short.valueOf("31"));
-		savings.getSavingsOffering().setDepositGLCode(glCodeEntity);
 		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,withdrawalAmount,new Money(),trxnDate, AccountConstants.ACTION_SAVINGS_WITHDRAWAL,savings,createdBy,group);
 		
 		assertEquals(Integer.valueOf(1).intValue(),payment.getAccountTrxns().size());
@@ -322,7 +316,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test", Short.valueOf("13"), "1.1", meeting, new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group_Active_test", Short.valueOf("9"), "1.1.1", center, new Date(System.currentTimeMillis()));
 		SavingsTestHelper helper = new SavingsTestHelper();
-		savingsOffering=helper.createSavingsOffering();
+		savingsOffering=helper.createSavingsOffering((short)31,(short)7);
 		savings = helper.createSavingsAccount("000100000000017",savingsOffering, group,AccountStates.SAVINGS_ACC_APPROVED, userContext);
 	}
 	

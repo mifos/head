@@ -1205,6 +1205,8 @@ public class SavingsBO extends AccountBO {
 		this.setActivationDate(new Date(new java.util.Date().getTime()));
 		this.generateDepositAccountActions();
 		try {
+			System.out.println("---"+getAccountId());
+			System.out.println("---"+getSavingsOffering().getPrdOfferingId());
 			this.setNextIntCalcDate(helper.getNextScheduleDate(getActivationDate(),
 					null, getTimePerForInstcalc()));
 			this.setNextIntPostDate(helper.getNextScheduleDate(getActivationDate(),

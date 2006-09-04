@@ -59,6 +59,11 @@ public class ProductTypeEntity extends BusinessObject {
 		super();
 	}
 	
+	public ProductTypeEntity(Short prdTypeId) {
+		super();
+		this.productTypeID = prdTypeId;
+	}
+	
 	public LookUpValueEntity getLookUpValue() {
 		return lookUpValue;
 	}

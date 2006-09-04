@@ -122,7 +122,6 @@ import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.util.valueobjects.InterestCalcRule;
-import org.mifos.application.master.util.valueobjects.PrdApplicableMaster;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingDetailsEntity;
 import org.mifos.application.meeting.business.MeetingRecurrenceEntity;
@@ -140,15 +139,18 @@ import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
+import org.mifos.application.productdefinition.business.ProductTypeEntity;
 import org.mifos.application.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsTypeEntity;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.util.helpers.GracePeriodTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.reports.business.ReportsBO;
@@ -543,9 +545,12 @@ public class TestObjectFactory {
 
 		PersonnelBO personnel = getPersonnel(new Short("1"));
 
-		PrdApplicableMaster prdApplicableMaster = new PrdApplicableMaster();
-		prdApplicableMaster.setPrdApplicableMasterId(applicableTo);
-
+		PrdApplicableMasterEntity prdApplicableMaster =null;
+		try {
+			prdApplicableMaster = new PrdApplicableMasterEntity(PrdApplicableMaster.getPrdApplicableMaster(applicableTo));
+		} catch (PropertyNotFoundException e) {
+			e.printStackTrace();
+		}
 		prdStatus = testObjectPersistence.retrievePrdStatus(offeringStatusId);
 
 		loanOffering.setPrdApplicableMaster(prdApplicableMaster);
@@ -641,8 +646,14 @@ public class TestObjectFactory {
 
 		PersonnelBO personnel = getPersonnel(new Short("1"));
 
-		PrdApplicableMaster prdApplicableMaster = new PrdApplicableMaster();
-		prdApplicableMaster.setPrdApplicableMasterId(applicableTo);
+		PrdApplicableMasterEntity prdApplicableMaster =null;
+		try {
+			prdApplicableMaster = new PrdApplicableMasterEntity(PrdApplicableMaster.getPrdApplicableMaster(applicableTo));
+		} catch (PropertyNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 
 		prdStatus = testObjectPersistence.retrievePrdStatus(offeringStatusId);
 
@@ -769,75 +780,85 @@ public class TestObjectFactory {
 			Double maxAmtWithdrawl, Double minAmtForInt, Short savingsTypeId,
 			Short intCalTypeId, MeetingBO intCalcMeeting,
 			MeetingBO intPostMeeting) {
+		return createSavingsOffering(name, applicableTo, startDate,
+				offeringStatusId, recommenededAmt, recomAmtUnitId, intRate,
+				maxAmtWithdrawl, minAmtForInt, savingsTypeId, intCalTypeId,
+				intCalcMeeting, intPostMeeting, (short) 7, (short) 7);
+	}
 
-		SavingsOfferingBO savingsOffering = new SavingsOfferingBO();
-		OfficeBO office = getOffice(new Short("3"));
-
-		PrdOfferingMeetingEntity timeForIntCalc = new PrdOfferingMeetingEntity(intCalcMeeting,savingsOffering,MeetingType.SAVINGSTIMEPERFORINTCALC);
-		PrdOfferingMeetingEntity timeForIntPost = new PrdOfferingMeetingEntity(intPostMeeting,savingsOffering,MeetingType.SAVINGSFRQINTPOSTACC);
-		savingsOffering.setTimePerForInstcalc(timeForIntCalc);
-		savingsOffering.setFreqOfPostIntcalc(timeForIntPost);
-
-		PrdStatusEntity prdStatus = new PrdStatusEntity();
-
-		PersonnelBO personnel = getPersonnel(new Short("1"));
-
-		PrdApplicableMaster prdApplicableMaster = new PrdApplicableMaster();
-		prdApplicableMaster.setPrdApplicableMasterId(applicableTo);
-
-		prdStatus = testObjectPersistence.retrievePrdStatus(offeringStatusId);
-		savingsOffering.setPrdApplicableMaster(prdApplicableMaster);
-		savingsOffering.setPrdCategory(getLoanPrdCategory());
-		savingsOffering.setPrdType(prdStatus.getPrdType());
-		savingsOffering.setOffice(office);
-		savingsOffering.setStartDate(startDate);
-		savingsOffering.setPrdOfferingName(name);
-		savingsOffering.setGlobalPrdOfferingNum(name);
-		savingsOffering.setDescription(name);
-		savingsOffering.setPrdOfferingShortName(name);
-		savingsOffering.setPrdStatus(prdStatus);
-		savingsOffering.setCreatedDate(new Date(System.currentTimeMillis()));
-		savingsOffering.setCreatedBy(personnel.getPersonnelId());
-		MifosCurrency currency = testObjectPersistence.getCurrency();
-		savingsOffering.setRecommendedAmount(new Money(recommenededAmt
-				.toString()));
-		RecommendedAmntUnitEntity amountUnit=null;
+	public static SavingsOfferingBO createSavingsOffering(String name,
+			Short applicableTo, Date startDate, Short offeringStatusId,
+			Double recommenededAmt, Short recomAmtUnitId, Double intRate,
+			Double maxAmtWithdrawl, Double minAmtForInt, Short savingsTypeId,
+			Short intCalTypeId, MeetingBO intCalcMeeting,
+			MeetingBO intPostMeeting, Short depGLCode, Short withGLCode) {
+		PrdApplicableMasterEntity prdApplicableMaster = null;
 		try {
-			amountUnit = new RecommendedAmntUnitEntity(RecommendedAmountUnit.getRecommendedAmountUnit(recomAmtUnitId));
+			prdApplicableMaster = new PrdApplicableMasterEntity(
+					PrdApplicableMaster.getPrdApplicableMaster(applicableTo));
 		} catch (PropertyNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		savingsOffering.setRecommendedAmntUnit(amountUnit);
 
-		savingsOffering.setInterestRate(intRate);
-		savingsOffering.setMaxAmntWithdrawl(new Money(maxAmtWithdrawl
-				.toString()));
-		savingsOffering.setMinAmntForInt(new Money(minAmtForInt.toString()));
-
-		SavingsTypeEntity savingsType=null;
+		SavingsTypeEntity savingsType = null;
 		try {
-			savingsType = new SavingsTypeEntity(SavingsType.getSavingsType(savingsTypeId));
+			savingsType = new SavingsTypeEntity(SavingsType
+					.getSavingsType(savingsTypeId));
 		} catch (PropertyNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		savingsOffering.setSavingsType(savingsType);
 
 		InterestCalcTypeEntity intCalType = null;
 		try {
-			intCalType = new InterestCalcTypeEntity(InterestCalcType.getInterestCalcType(intCalTypeId));
+			intCalType = new InterestCalcTypeEntity(InterestCalcType
+					.getInterestCalcType(intCalTypeId));
 		} catch (PropertyNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		savingsOffering.setInterestCalcType(intCalType);
+		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
+				.getSessionTL().get(GLCodeEntity.class, depGLCode);
+		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
+				.getSessionTL().get(GLCodeEntity.class, withGLCode);
+		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
+				.getObject(ProductCategoryBO.class, (short) 2);
+		SavingsOfferingBO savingsOffering = null;
+		try {
+			savingsOffering = new SavingsOfferingBO(getUserContext(), name,
+					name.substring(4), productCategory.getProductType(),
+					productCategory, prdApplicableMaster, startDate,
+					savingsType, intCalType, intCalcMeeting, intPostMeeting,
+					new Money(recommenededAmt.toString()), intRate,
+					depglCodeEntity, intglCodeEntity);
+		} catch (InvalidUserException e1) {
+			e1.printStackTrace();
+		} catch (ProductDefinitionException e1) {
+			e1.printStackTrace();
+		} catch (SystemException e1) {
+			e1.printStackTrace();
+		} catch (ApplicationException e1) {
+			e1.printStackTrace();
+		}
 
-		GLCodeEntity glCodeEntity = (GLCodeEntity) HibernateUtil.getSessionTL()
-				.get(GLCodeEntity.class, Short.valueOf("7"));
-		savingsOffering.setDepositGLCode(glCodeEntity);
-		savingsOffering.setInterestGLCode(glCodeEntity);
-
+		OfficeBO office = getOffice(new Short("3"));
+		PersonnelBO personnel = getPersonnel(new Short("1"));
+		PrdStatusEntity prdStatus = testObjectPersistence
+				.retrievePrdStatus(offeringStatusId);
+		savingsOffering.setOffice(office);
+		savingsOffering.setPrdStatus(prdStatus);
+		savingsOffering.setCreatedDate(new Date(System.currentTimeMillis()));
+		savingsOffering.setCreatedBy(personnel.getPersonnelId());
+		RecommendedAmntUnitEntity amountUnit = null;
+		try {
+			amountUnit = new RecommendedAmntUnitEntity(RecommendedAmountUnit
+					.getRecommendedAmountUnit(recomAmtUnitId));
+		} catch (PropertyNotFoundException e) {
+			e.printStackTrace();
+		}
+		savingsOffering.setRecommendedAmntUnit(amountUnit);
+		savingsOffering.setMaxAmntWithdrawl(new Money(maxAmtWithdrawl
+				.toString()));
+		savingsOffering.setMinAmntForInt(new Money(minAmtForInt.toString()));
+		System.out.println("Before---------------------------------");
 		return (SavingsOfferingBO) addObject(testObjectPersistence
 				.persist(savingsOffering));
 	}

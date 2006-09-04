@@ -178,7 +178,7 @@
 			prdOffering.prdOfferingId,prdOffering.prdOfferingName,prdOffering.globalPrdOfferingNum) 
 			from org.mifos.application.productdefinition.business.PrdOfferingBO prdOffering
 			where prdOffering.prdType.productTypeID = :prdTypeId and prdOffering.prdStatus = :prdStatus
-			and prdOffering.prdApplicableMaster.prdApplicableMasterId = :prdApplicableMaster 
+			and prdOffering.prdApplicableMaster.id = :prdApplicableMaster 
 			order by prdOffering.prdOfferingName
 		]]>
 	</query>

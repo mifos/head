@@ -41,6 +41,7 @@ import org.mifos.application.fees.util.valueobjects.FeeFrequency;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.master.util.valueobjects.FeeFormulaMaster;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
+import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.valueobjects.LoanOffering;
 import org.mifos.application.productdefinition.util.valueobjects.LoanOfferingFund;
@@ -159,23 +160,14 @@ public class LoanDAO extends AccountsDAO {
 				ProductDefinitionConstants.LOANACTIVE);
 
 		if (customer.getCustomerLevel().getLevelId().shortValue() == CustomerConstants.CLIENT_LEVEL_ID) {
-			queryParameters
-					.put(
-							new String("prdApplicableMaster1"),
-							Short
-									.valueOf(ProductDefinitionConstants.OFFERINGAPPLICABLETOCLIENTS));
+			queryParameters.put(new String("prdApplicableMaster1"),
+					PrdApplicableMaster.CLIENTS.getValue());
 		} else {
-			queryParameters
-					.put(
-							new String("prdApplicableMaster1"),
-							Short
-									.valueOf(ProductDefinitionConstants.OFFERINGAPPLICABLETOGROUPS));
+			queryParameters.put(new String("prdApplicableMaster1"),
+					PrdApplicableMaster.GROUPS.getValue());
 		}
-		queryParameters
-				.put(
-						new String("prdApplicableMaster2"),
-						Short
-								.valueOf(ProductDefinitionConstants.OFFERINGAPPLICABLETOALLCUSTOMERS));
+		queryParameters.put(new String("prdApplicableMaster2"),
+				PrdApplicableMaster.ALLCUSTOMERS.getValue());
 		queryParameters.put("customerId", customer.getCustomerId());
 		List<PrdOfferingMaster> prdOfferingMasterList = executeNamedQuery(
 				NamedQueryConstants.APPLICABLEPRODUCTOFFERINGS, queryParameters);

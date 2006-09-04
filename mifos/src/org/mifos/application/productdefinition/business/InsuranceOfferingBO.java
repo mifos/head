@@ -42,6 +42,6 @@ import org.mifos.framework.security.util.UserContext;
 
 public class InsuranceOfferingBO extends PrdOfferingBO {
 	public InsuranceOfferingBO(UserContext userContext) {
-		super(userContext);
+		super();
 	}
 }

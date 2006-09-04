@@ -13,7 +13,7 @@
 		<property name="endDate" column="END_DATE" type="date" />
 		<property name="prdOfferingName" column="PRD_OFFERING_NAME" type="string" />
 		<property name="prdOfferingShortName" column="PRD_OFFERING_SHORT_NAME" type="string" not-null="true" />
-		<property name="description" column="DESCRIPTION" type="string" not-null="true" />
+		<property name="description" column="DESCRIPTION" type="string" />
 		<property name="createdDate" column="CREATED_DATE" type="date" update="false" />
 		<property name="createdBy" column="CREATED_BY" update="false" />
 		<property name="updatedDate" column="UPDATED_DATE" type="date" />
@@ -23,7 +23,7 @@
 		<many-to-one name="prdCategory" column="PRD_CATEGORY_ID" class="org.mifos.application.productdefinition.business.ProductCategoryBO" cascade="none" />
 		<many-to-one name="prdStatus" column="OFFERING_STATUS_ID" class="org.mifos.application.productdefinition.business.PrdStatusEntity" />
 		<many-to-one name="prdType" column="PRD_TYPE_ID" class="org.mifos.application.productdefinition.business.ProductTypeEntity" />
-		<many-to-one name="prdApplicableMaster" column="PRD_APPLICABLE_MASTER_ID" class="org.mifos.application.master.util.valueobjects.PrdApplicableMaster" not-null="true" />
+		<many-to-one name="prdApplicableMaster" column="PRD_APPLICABLE_MASTER_ID" class="org.mifos.application.productdefinition.business.PrdApplicableMasterEntity" not-null="true" />
 
 		<joined-subclass name="org.mifos.application.productdefinition.business.LoanOfferingBO" table="LOAN_OFFERING">
 			<key column="PRD_OFFERING_ID" />
@@ -84,10 +84,10 @@
 			<many-to-one name="savingsType" column="SAVINGS_TYPE_ID" class="org.mifos.application.productdefinition.business.SavingsTypeEntity" not-null="true" />
 			<many-to-one name="interestCalcType" column="INTEREST_CALCULATION_TYPE_ID" class="org.mifos.application.productdefinition.business.InterestCalcTypeEntity" not-null="true" />
 
-			<many-to-one name="depositGLCode" column="DEPOSIT_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" lazy="true" insert="true" update="false" />
-			<many-to-one name="interestGLCode" column="INTEREST_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" lazy="true" insert="true" update="false" />
+			<many-to-one name="depositGLCode" column="DEPOSIT_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" lazy="true" insert="true" update="false" access="field" />
+			<many-to-one name="interestGLCode" column="INTEREST_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" lazy="true" insert="true" update="false" access="field" />
 
-			<set name="prdOfferingMeetings" cascade="all" inverse="true" table="PRD_OFFERING_MEETING" lazy="false" access="field">
+			<set name="prdOfferingMeetings" cascade="all,delete-orphan" inverse="true" table="PRD_OFFERING_MEETING" lazy="true" access="field" >
 				<key column="PRD_OFFERING_ID" />
 				<one-to-many class="org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity" />
 			</set>
@@ -96,7 +96,7 @@
 	</class>
 	<query name="loanOffering.getApplicableProduts">
 		<![CDATA[from org.mifos.application.productdefinition.business.LoanOfferingBO loanOffering 
-				where loanOffering.prdApplicableMaster.prdApplicableMasterId = :prdApplicableMaster and 
+				where loanOffering.prdApplicableMaster.id = :prdApplicableMaster and 
 				loanOffering.prdStatus.offeringStatusId = :prdStatus order by loanOffering.prdOfferingName]]>
 	</query>
 </hibernate-mapping>

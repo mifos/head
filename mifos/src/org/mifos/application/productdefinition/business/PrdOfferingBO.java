@@ -40,7 +40,6 @@ package org.mifos.application.productdefinition.business;
 
 import java.util.Date;
 
-import org.mifos.application.master.util.valueobjects.PrdApplicableMaster;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.security.util.UserContext;
@@ -61,7 +60,7 @@ public class PrdOfferingBO extends BusinessObject {
 
 	private PrdStatusEntity prdStatus;
 
-	private PrdApplicableMaster prdApplicableMaster;
+	private PrdApplicableMasterEntity prdApplicableMaster;
 
 	private Date startDate;
 
@@ -72,15 +71,29 @@ public class PrdOfferingBO extends BusinessObject {
 	private String description;
 
 	protected PrdOfferingBO() {
-
 		office = new OfficeBO();
 		prdCategory = new ProductCategoryBO();
 		prdStatus = new PrdStatusEntity();
-		prdApplicableMaster = new PrdApplicableMaster();
+		prdApplicableMaster = null;
 	}
-
+	
+	//TODO to be removed.
 	protected PrdOfferingBO(UserContext userContext) {
 		super(userContext);
+	}
+
+	protected PrdOfferingBO(UserContext userContext, String prdOfferingName,
+			String prdOfferingShortName, ProductTypeEntity prdType,
+			ProductCategoryBO prdCategory,
+			PrdApplicableMasterEntity prdApplicableMaster, Date startDate) {
+		super(userContext);
+		this.prdOfferingName = prdOfferingName;
+		this.prdOfferingShortName = prdOfferingShortName;
+		this.prdType = prdType;
+		this.prdCategory = prdCategory;
+		this.prdApplicableMaster = prdApplicableMaster;
+		this.startDate = startDate;
+		this.globalPrdOfferingNum = "43243";
 	}
 
 	public String getDescription() {
@@ -116,11 +129,11 @@ public class PrdOfferingBO extends BusinessObject {
 		this.office = office;
 	}
 
-	public PrdApplicableMaster getPrdApplicableMaster() {
+	public PrdApplicableMasterEntity getPrdApplicableMaster() {
 		return prdApplicableMaster;
 	}
 
-	public void setPrdApplicableMaster(PrdApplicableMaster prdApplicableMaster) {
+	public void setPrdApplicableMaster(PrdApplicableMasterEntity prdApplicableMaster) {
 		this.prdApplicableMaster = prdApplicableMaster;
 	}
 

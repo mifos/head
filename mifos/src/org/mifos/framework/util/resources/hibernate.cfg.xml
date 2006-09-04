@@ -225,6 +225,7 @@
 	<mapping resource="org/mifos/application/productdefinition/business/SavingsTypeEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/productdefinition/business/InterestCalcTypeEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/productdefinition/business/RecommendedAmntUnitEntity.hbm.xml" />
+	<mapping resource="org/mifos/application/productdefinition/business/PrdApplicableMasterEntity.hbm.xml" />	
 	<!--M2 style object for GLCODE-->
 	<mapping resource="org/mifos/application/accounts/financial/business/GLCodeEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/accounts/business/AccountBO.hbm.xml" />

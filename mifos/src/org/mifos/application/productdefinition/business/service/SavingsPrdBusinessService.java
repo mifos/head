@@ -51,7 +51,7 @@ public class SavingsPrdBusinessService extends BusinessService{
 	private SavingsPrdPersistenceService dbService;
 	
 	public BusinessObject getBusinessObject(UserContext userContext) {
-		return new SavingsOfferingBO(userContext);
+		return null;
 	}
 	
 	public SavingsOfferingBO getSavingsProduct(Short prdOfferingId)throws ServiceException,PersistenceException {

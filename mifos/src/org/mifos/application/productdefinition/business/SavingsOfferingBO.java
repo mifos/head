@@ -38,10 +38,12 @@
 
 package org.mifos.application.productdefinition.business;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.framework.security.util.UserContext;
@@ -65,17 +67,38 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 
 	private Double interestRate;
 
-	private GLCodeEntity depositGLCode;
+	private final GLCodeEntity depositGLCode;
 
-	private GLCodeEntity interestGLCode;
+	private final GLCodeEntity interestGLCode;
 
-	public SavingsOfferingBO() {
+	protected SavingsOfferingBO() {
+		depositGLCode = null;
+		interestGLCode = null;
 		prdOfferingMeetings = new HashSet<PrdOfferingMeetingEntity>();
 	}
 
-	public SavingsOfferingBO(UserContext userContext) {
-		super(userContext);
+	public SavingsOfferingBO(UserContext userContext, String prdOfferingName,
+			String prdOfferingShortName, ProductTypeEntity prdType,
+			ProductCategoryBO prdCategory,
+			PrdApplicableMasterEntity prdApplicableMaster, Date startDate,
+			SavingsTypeEntity savingsType,
+			InterestCalcTypeEntity interestCalcType,
+			MeetingBO timePerForInstcalc, MeetingBO freqOfPostIntcalc,
+			Money recommendedAmount, Double interestRate,
+			GLCodeEntity depositGLCode, GLCodeEntity interestGLCode) {
+		super(userContext, prdOfferingName, prdOfferingShortName, prdType,
+				prdCategory, prdApplicableMaster, startDate);
+		this.savingsType = savingsType;
+		this.interestCalcType = interestCalcType;
 		prdOfferingMeetings = new HashSet<PrdOfferingMeetingEntity>();
+		setTimePerForInstcalc(new PrdOfferingMeetingEntity(timePerForInstcalc,
+				this, MeetingType.SAVINGSTIMEPERFORINTCALC));
+		setFreqOfPostIntcalc(new PrdOfferingMeetingEntity(freqOfPostIntcalc,
+				this, MeetingType.SAVINGSFRQINTPOSTACC));
+		this.recommendedAmount = recommendedAmount;
+		this.interestRate = interestRate;
+		this.depositGLCode = depositGLCode;
+		this.interestGLCode = interestGLCode;
 	}
 
 	private Set<PrdOfferingMeetingEntity> getPrdOfferingMeetings() {
@@ -84,13 +107,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 
 	public PrdOfferingMeetingEntity getFreqOfPostIntcalc()
 			throws ProductDefinitionException {
-		if (getPrdOfferingMeetings() != null
-				&& getPrdOfferingMeetings().size() > 0)
-			for (PrdOfferingMeetingEntity prdOfferingMeeting : getPrdOfferingMeetings())
-				if (prdOfferingMeeting.getprdOfferingMeetingType().equals(
-						MeetingType.SAVINGSFRQINTPOSTACC))
-					return prdOfferingMeeting;
-		return null;
+		return getPrdOfferingMeeting(MeetingType.SAVINGSFRQINTPOSTACC);
 	}
 
 	public void setFreqOfPostIntcalc(PrdOfferingMeetingEntity freqOfPostIntcalc) {
@@ -99,13 +116,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 
 	public PrdOfferingMeetingEntity getTimePerForInstcalc()
 			throws ProductDefinitionException {
-		if (getPrdOfferingMeetings() != null
-				&& getPrdOfferingMeetings().size() > 0)
-			for (PrdOfferingMeetingEntity prdOfferingMeeting : getPrdOfferingMeetings())
-				if (prdOfferingMeeting.getprdOfferingMeetingType().equals(
-						MeetingType.SAVINGSTIMEPERFORINTCALC))
-					return prdOfferingMeeting;
-		return null;
+		return getPrdOfferingMeeting(MeetingType.SAVINGSTIMEPERFORINTCALC);
 	}
 
 	public void setTimePerForInstcalc(
@@ -174,16 +185,17 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 		return depositGLCode;
 	}
 
-	public void setDepositGLCode(GLCodeEntity depositGLCode) {
-		this.depositGLCode = depositGLCode;
-	}
-
 	public GLCodeEntity getInterestGLCode() {
 		return interestGLCode;
 	}
 
-	public void setInterestGLCode(GLCodeEntity interestGLCode) {
-		this.interestGLCode = interestGLCode;
+	private PrdOfferingMeetingEntity getPrdOfferingMeeting(
+			MeetingType meetingType) throws ProductDefinitionException {
+		if (getPrdOfferingMeetings() != null
+				&& getPrdOfferingMeetings().size() > 0)
+			for (PrdOfferingMeetingEntity prdOfferingMeeting : getPrdOfferingMeetings())
+				if (prdOfferingMeeting.getprdOfferingMeetingType().equals(meetingType))
+					return prdOfferingMeeting;
+		return null;
 	}
-
 }
