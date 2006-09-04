@@ -50,9 +50,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
-import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPositionView;
-import org.mifos.application.customer.business.PositionEntity;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.business.CenterPerformanceHistory;
@@ -73,7 +71,6 @@ import org.mifos.application.fees.exceptions.FeeException;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
@@ -94,7 +91,7 @@ import org.mifos.framework.util.helpers.StringUtils;
 
 public class CenterCustAction extends CustAction {
 	@Override
-	protected BusinessService getService() throws ServiceException {
+	protected BusinessService getService(){
 		return getCenterBusinessService();
 	}
 
@@ -103,8 +100,7 @@ public class CenterCustAction extends CustAction {
 		return true;
 	}
 
-	private CenterBusinessService getCenterBusinessService()
-			throws ServiceException {
+	private CenterBusinessService getCenterBusinessService(){
 		return (CenterBusinessService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.Center);
 	}

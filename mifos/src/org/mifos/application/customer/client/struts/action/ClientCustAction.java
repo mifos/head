@@ -75,7 +75,6 @@ import org.mifos.application.customer.struts.action.CustAction;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerHelper;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
-import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.SpouseFatherLookupEntity;
@@ -105,12 +104,11 @@ import org.mifos.framework.util.helpers.StringUtils;
 public class ClientCustAction extends CustAction {
 
 	@Override
-	protected BusinessService getService() throws ServiceException {
+	protected BusinessService getService(){
 		return getClientBusinessService();
 	}
 
-	private ClientBusinessService getClientBusinessService()
-			throws ServiceException {
+	private ClientBusinessService getClientBusinessService(){
 		return (ClientBusinessService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.Client);
 	}

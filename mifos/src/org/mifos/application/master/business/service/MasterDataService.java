@@ -122,7 +122,7 @@ public class MasterDataService extends BusinessService {
 	}
 	
 	public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition(
-			EntityType entityType) throws SystemException, ApplicationException {
+			EntityType entityType) throws ApplicationException {
 		try {
 			return new MasterPersistence().retrieveCustomFieldsDefinition(entityType);
 		} catch (PersistenceException e) {

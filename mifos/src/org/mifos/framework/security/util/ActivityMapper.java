@@ -630,6 +630,10 @@ public class ActivityMapper {
 		activityMap.put("/editStatusAction-preview", SecurityConstants.VIEW);
 		activityMap.put("/editStatusAction-previous", SecurityConstants.VIEW);
 		activityMap.put("/editStatusAction-update", SecurityConstants.VIEW);
+		
+		//mapping for custAction
+		activityMap.put("/custAction-getClosedAccounts", SecurityConstants.VIEW);
+		activityMap.put("/custAction-getBackToDetailsPage", SecurityConstants.VIEW);
 
 		// mapping for account notes
 		activityMap.put("/AccountNotesAction-load",

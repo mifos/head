@@ -56,7 +56,6 @@ import org.mifos.application.customer.business.CustomerFlagDetailEntity;
 import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
-import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.business.service.GroupBusinessService;
 import org.mifos.application.customer.group.struts.actionforms.GroupCustActionForm;
@@ -76,9 +75,6 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PageExpiredException;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
@@ -97,7 +93,7 @@ public class GroupCustAction extends CustAction {
 	}
 
 	@Override
-	protected BusinessService getService() throws ServiceException {
+	protected BusinessService getService(){
 		return getGroupBusinessService();
 	}
 	
@@ -192,16 +188,12 @@ public class GroupCustAction extends CustAction {
 	@TransactionDemarcate(saveToken = true)
 	public ActionForward get(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-			throws PageExpiredException, CustomerException {
+			throws Exception {
 		logger.debug("In GroupCustAction get method " );
 		GroupCustActionForm actionForm = (GroupCustActionForm) form;
 		GroupBO groupBO;
-		try {
-			groupBO = (GroupBO) getGroupBusinessService().getGroupBySystemId(
+		groupBO = (GroupBO) getGroupBusinessService().getGroupBySystemId(
 					actionForm.getGlobalCustNum());
-		} catch (ServiceException se) {
-			throw new CustomerException(se);
-		}
 		groupBO.setUserContext(getUserContext(request));
 		groupBO.getCustomerStatus().setLocaleId(
 				getUserContext(request).getLocaleId());
@@ -281,8 +273,7 @@ public class GroupCustAction extends CustAction {
 	}
 
 	private void loadMasterDataForDetailsPage(HttpServletRequest request,
-			GroupBO groupBO, Short localeId) throws PageExpiredException,
-			CustomerException {
+			GroupBO groupBO, Short localeId) throws Exception{
 		SessionUtils.setAttribute(GroupConstants.IS_GROUP_LOAN_ALLOWED,
 				Configuration.getInstance().getCustomerConfig(
 						groupBO.getOffice().getOfficeId())
@@ -302,7 +293,6 @@ public class GroupCustAction extends CustAction {
 				loanAccounts, request);
 		SessionUtils.setAttribute(GroupConstants.GROUPSAVINGSACCOUNTSINUSE,
 				savingsAccounts, request);
-		try {
 			SessionUtils
 					.setAttribute(
 							GroupConstants.CLIENT_LIST,
@@ -310,13 +300,6 @@ public class GroupCustAction extends CustAction {
 									.getAllCustomerOtherThanCancelledAndClosed(CustomerLevel.CLIENT),
 							request);
 			loadCustomFieldDefinitions(EntityType.GROUP, request);
-		} catch (PersistenceException pe) {
-			throw new CustomerException(pe);
-		} catch (SystemException se) {
-			throw new CustomerException(se);
-		} catch (ApplicationException ae) {
-			throw new CustomerException(ae);
-		}
 	}
 
 	private void loadCreateMasterData(GroupCustActionForm actionForm,
@@ -352,8 +335,7 @@ public class GroupCustAction extends CustAction {
 			customerFlag.getStatusFlag().setLocaleId(localeId);
 	}
 
-	private GroupBusinessService getGroupBusinessService()
-			throws ServiceException {
+	private GroupBusinessService getGroupBusinessService(){
 		return (GroupBusinessService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.Group);
 	}

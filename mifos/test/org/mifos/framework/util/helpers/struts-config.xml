@@ -233,7 +233,8 @@
 		<form-bean name="offhierarchyactionform" type="org.mifos.application.office.struts.actionforms.OffHierarchyActionForm"></form-bean>
 		<!-- Office Hierarchy Action form -->
 		<form-bean name="groupCustActionForm" type="org.mifos.application.customer.group.struts.actionforms.GroupCustActionForm"></form-bean>
-		
+		<!-- Customer Action form -->
+		<form-bean name="custActionForm" type="org.mifos.application.customer.struts.actionforms.CustActionForm"></form-bean>
 	</form-beans>
 	<global-exceptions>
 		<exception type="org.mifos.framework.exceptions.SystemException"
@@ -1930,8 +1931,18 @@
 			<forward name="cancel_create"
 				path="/CustomerSearchAction.do?method=load" />
 			<forward name="cancelEdit_success" path="/groupCustAction.do?method=get" />
+		</action>
+		
+		<!-- Customer action M2 style-->
+		<action path="/custAction"
+			type="org.mifos.application.customer.struts.action.CustAction"
+			name="custActionForm" parameter="method" validate="true"
+			input="/custAction.do?method=validate" scope="session">
 			
-			
+			<forward name="getAllClosedAccounts" path="/pages/application/customer/jsp/getallclosedaccounts.jsp" />
+			<forward name="client_detail_page" path="/clientCustAction.do?method=get" />
+			<forward name="group_detail_page" path="/groupCustAction.do?method=get" />
+			<forward name="center_detail_page" path="/centerCustAction.do?method=get" />
 		</action>
 		
 	</action-mappings>

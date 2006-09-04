@@ -361,7 +361,7 @@ function meetingpopup(){
 						<tr>
 							<td width="38%" align="right" class="fontnormal"><span
 								class="fontnormal"> <a
-								href="customerAction.do?method=getAllClosedAccounts&customerId=<c:out value="${BusinessKey.customerId}"/>&type=group">
+								href="custAction.do?method=getClosedAccounts&customerId=<c:out value="${BusinessKey.customerId}"/>&input=group&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 							<mifos:mifoslabel name="Group.viewallclosedaccounts"
 								bundle="GroupUIResources"></mifos:mifoslabel> </a> </span></td>
 						</tr>

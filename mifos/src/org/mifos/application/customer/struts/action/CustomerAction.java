@@ -51,6 +51,7 @@ public class CustomerAction extends AccountAppAction {
 		return mapping.findForward("view"+type+"Activity");
 	}
 	
+	//TODO:: Remove this method once back button is implemented throughout the application.
 	public ActionForward getAllClosedAccounts(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServiceException, PersistenceException {
 		logger.debug("In CustomerAction::getAllClosedAccounts()");
 		Integer customerId = Integer.valueOf(request.getParameter("customerId"));
