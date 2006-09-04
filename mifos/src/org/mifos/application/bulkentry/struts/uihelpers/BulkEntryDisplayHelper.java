@@ -56,6 +56,8 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.valueobjects.LookUpMaster;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.util.helpers.Money;
 
@@ -348,8 +350,7 @@ public class BulkEntryDisplayHelper {
 									.getRecommendedAmntUnit() || accountView
 									.getSavingsOffering()
 									.getRecommendedAmntUnit()
-									.getRecommendedAmntUnitId().equals(
-											Short.valueOf("1")));
+									.getId().equals(RecommendedAmountUnit.PERINDIVIDUAL.getValue()));
 				} else {
 					isIdMatched = prdOffering.getPrdOfferingId()
 							.equals(
@@ -633,8 +634,8 @@ public class BulkEntryDisplayHelper {
 					&& totalAmount.doubleValue() < accountView
 							.getTotalDepositDue().doubleValue()
 					&& accountView.getSavingsOffering().getSavingsType()
-							.getSavingsTypeId().equals(
-									ProductDefinitionConstants.MANDATORY)) {
+							.getId().equals(
+									SavingsType.MANDATORY.getValue())) {
 				builder.append("<font color=\"#FF0000\">" + amount + "</font>");
 			} else if ("".equals(amount)) {
 				builder.append("&nbsp;");

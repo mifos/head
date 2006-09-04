@@ -131,7 +131,7 @@
 			and (account.customer.customerId=actionDate.customer.customerId
 			or account.customer.customerLevel.id=3
 			or (account.customer.customerLevel.id=2 and 
-			account.savingsOffering.recommendedAmntUnit.recommendedAmntUnitId=1)) 
+			account.savingsOffering.recommendedAmntUnit.id=1)) 
 			order by account.customer.customerLevel.id,account.savingsOffering.prdOfferingShortName]]>
 	</query>
 	<query name="Customer.getChildren">

@@ -146,13 +146,6 @@ public interface ProductDefinitionConstants {
 	public Short LOANACTIVE=1;
 	public Short LOANINACTIVE=4;
 	
-	//Savings Type
-	public static final Short MANDATORY=1;
-	public static final Short VOLUNTARY=2;
-	
-	//Recommended amount Unit types
-	public Short PERINDIVIDUAL=1;
-	public Short COMPLETEGROUP=2;
 	
 	//Savings Product
 	public String GETPATHSAVINGSPRODUCT="SavingsProduct";
@@ -170,9 +163,6 @@ public interface ProductDefinitionConstants {
 	
 	public Short SAVINGSACTIVE=2;
 	public Short SAVINGSINACTIVE=5;
-	public Short SAVINGSTIMEPERINTCALCID =2;
-	public Short SAVINGSFRQINTPOSTACCID =3;
-	
 	// PRD APPLICABLE MASTER
 	public String OFFERINGAPPLICABLETOCLIENTS = "1";
 	public String OFFERINGAPPLICABLETOGROUPS = "2";
@@ -183,10 +173,6 @@ public interface ProductDefinitionConstants {
 	public Short DECLININGBALANCEINTEREST = 1;
 	public Short FLATINTERST = 2;
 
-	//Interest Calculation Types
-	public Short MINIMUM_BALANCE = 1;
-	public Short AVERAGE_BALANCE = 2;
-	
 	//Change Log
 	public Short LOANENTITYTYPEID=2;
 	public Short SAVINGSENTITYTYPEID=3;

@@ -78,17 +78,21 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.master.util.valueobjects.AccountType;
-import org.mifos.application.master.util.valueobjects.InterestCalcType;
-import org.mifos.application.master.util.valueobjects.RecommendedAmntUnit;
-import org.mifos.application.master.util.valueobjects.SavingsType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingDetailsEntity;
 import org.mifos.application.meeting.business.MeetingRecurrenceEntity;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
+import org.mifos.application.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.business.SavingsTypeEntity;
+import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
+import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.interestcalculator.InterestCalculatorConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -122,9 +126,9 @@ public class SavingsBO extends AccountBO {
 
 	private Date activationDate;
 
-	private RecommendedAmntUnit recommendedAmntUnit;
+	private RecommendedAmntUnitEntity recommendedAmntUnit;
 
-	private SavingsType savingsType;
+	private SavingsTypeEntity savingsType;
 
 	private Money interestToBePosted;
 
@@ -142,7 +146,7 @@ public class SavingsBO extends AccountBO {
 
 	private Double interestRate;
 
-	private InterestCalcType interestCalcType;
+	private InterestCalcTypeEntity interestCalcType;
 
 	private MeetingBO timePerForInstcalc;
 
@@ -202,19 +206,19 @@ public class SavingsBO extends AccountBO {
 		this.activationDate = activationDate;
 	}
 
-	public RecommendedAmntUnit getRecommendedAmntUnit() {
+	public RecommendedAmntUnitEntity getRecommendedAmntUnit() {
 		return recommendedAmntUnit;
 	}
 
-	public void setRecommendedAmntUnit(RecommendedAmntUnit recommendedAmntUnit) {
+	public void setRecommendedAmntUnit(RecommendedAmntUnitEntity recommendedAmntUnit) {
 		this.recommendedAmntUnit = recommendedAmntUnit;
 	}
 
-	public SavingsType getSavingsType() {
+	public SavingsTypeEntity getSavingsType() {
 		return savingsType;
 	}
 
-	public void setSavingsType(SavingsType savingsType) {
+	public void setSavingsType(SavingsTypeEntity savingsType) {
 		this.savingsType = savingsType;
 	}
 
@@ -270,7 +274,7 @@ public class SavingsBO extends AccountBO {
 	 * public MeetingBO getFreqOfPostIntcalc() { return freqOfPostIntcalc; }
 	 */
 
-	public InterestCalcType getInterestCalcType() {
+	public InterestCalcTypeEntity getInterestCalcType() {
 		return interestCalcType;
 	}
 
@@ -290,7 +294,7 @@ public class SavingsBO extends AccountBO {
 	 * private void setFreqOfPostIntcalc(MeetingBO freqOfPostIntcalc) {
 	 * this.freqOfPostIntcalc = freqOfPostIntcalc; }
 	 */
-	private void setInterestCalcType(InterestCalcType interestCalcType) {
+	private void setInterestCalcType(InterestCalcTypeEntity interestCalcType) {
 		this.interestCalcType = interestCalcType;
 	}
 
@@ -333,12 +337,16 @@ public class SavingsBO extends AccountBO {
 				|| getAccountState().getId().equals(AccountState.SAVINGS_ACC_CLOSED.getValue()));
 	}
 	
-	private void setSavingsOfferingDetails() {
+	private void setSavingsOfferingDetails() throws AccountException {
 		setMinAmntForInt(getSavingsOffering().getMinAmntForInt());
 		setInterestRate(getSavingsOffering().getInterestRate());
 		setInterestCalcType(getSavingsOffering().getInterestCalcType());
-		setTimePerForInstcalc(getMeeting(getSavingsOffering()
-				.getTimePerForInstcalc().getMeeting()));
+		try {
+			setTimePerForInstcalc(getMeeting(getSavingsOffering()
+					.getTimePerForInstcalc().getMeeting()));
+		} catch (ProductDefinitionException e) {
+			throw new AccountException(e);
+		}
 		// setFreqOfPostIntcalc(getMeeting(getSavingsOffering().getFreqOfPostIntcalc().getMeeting()));
 	}
 
@@ -483,9 +491,8 @@ public class SavingsBO extends AccountBO {
 
 	public boolean isMandatory() {
 		logger.debug("In SavingsBO::isMandatory(), savingTypeId: "
-				+ getSavingsType().getSavingsTypeId());
-		return getSavingsType().getSavingsTypeId().shortValue() == ProductDefinitionConstants.MANDATORY
-				.shortValue();
+				+ getSavingsType().getId());
+		return getSavingsType().getId().equals(SavingsType.MANDATORY.getValue());
 	}
 
 	public boolean isDepositScheduleBeRegenerated() {
@@ -520,6 +527,8 @@ public class SavingsBO extends AccountBO {
 						getLastIntPostDate(), getMeeting(getSavingsOffering()
 								.getFreqOfPostIntcalc().getMeeting())));
 			} catch (SchedulerException e) {
+				throw new AccountException(e);
+			} catch (ProductDefinitionException e) {
 				throw new AccountException(e);
 			}
 			PaymentTypeEntity paymentType=null;
@@ -599,12 +608,12 @@ public class SavingsBO extends AccountBO {
 			trxn = (trxn.getAccountPayment().getAmount().getAmountDoubleValue() > 0) ? getLastTrxnForPayment(trxn
 					.getAccountPayment())
 					: getLastTrxnForAdjustedPayment(trxn.getAccountPayment());
-			if (getInterestCalcType().getInterestCalculationTypeID().equals(
-					ProductDefinitionConstants.MINIMUM_BALANCE))
+			if (getInterestCalcType().getId().equals(
+					InterestCalcType.MINIMUM_BALANCE.getValue()))
 				principal = getMinimumBalance(fromDate, toDate, trxn,
 						adjustedTrxn);
-			else if (getInterestCalcType().getInterestCalculationTypeID()
-					.equals(ProductDefinitionConstants.AVERAGE_BALANCE))
+			else if (getInterestCalcType().getId()
+					.equals(InterestCalcType.AVERAGE_BALANCE.getValue()))
 				principal = getAverageBalance(fromDate, toDate, trxn,
 						adjustedTrxn);
 			// Do not Calculate interest if principal amount is less than the
@@ -892,8 +901,7 @@ public class SavingsBO extends AccountBO {
 			throws AccountException {
 		if (client.getCustomerMeeting().getMeeting() != null) {
 			if (!(getCustomer().getCustomerLevel().getId().shortValue() == CustomerConstants.GROUP_LEVEL_ID && getRecommendedAmntUnit()
-					.getRecommendedAmntUnitId().shortValue() == ProductDefinitionConstants.COMPLETEGROUP
-					.shortValue())) {
+					.getId().equals(RecommendedAmountUnit.COMPLETEGROUP.getValue()))) {
 				generateDepositAccountActions(client, client
 						.getCustomerMeeting().getMeeting());
 				this.update();
@@ -915,7 +923,7 @@ public class SavingsBO extends AccountBO {
 					CustomerConstants.CLIENT_LEVEL_ID)
 					|| (getCustomer().getCustomerLevel().getId().equals(
 							CustomerConstants.GROUP_LEVEL_ID) && getRecommendedAmntUnit()
-							.getRecommendedAmntUnitId().shortValue() == ProductDefinitionConstants.COMPLETEGROUP)) {
+							.getId().equals(RecommendedAmountUnit.COMPLETEGROUP.getValue()))) {
 				generateDepositAccountActions(getCustomer(), depositSchedule);
 			} else {
 				List<CustomerBO> children;
@@ -1052,8 +1060,8 @@ public class SavingsBO extends AccountBO {
 					depositAmount = enteredAmount;
 					enteredAmount = new Money();
 				}
-				if (getSavingsType().getSavingsTypeId().equals(
-						ProductDefinitionConstants.VOLUNTARY)
+				if (getSavingsType().getId().equals(
+						SavingsType.VOLUNTARY.getValue())
 						&& depositAmount.getAmountDoubleValue() > 0.0)
 					paymentStatus = PaymentStatus.PAID;
 				savingsBalance = savingsBalance.add(depositAmount);
@@ -1203,6 +1211,8 @@ public class SavingsBO extends AccountBO {
 					null, getMeeting(getSavingsOffering().getFreqOfPostIntcalc()
 							.getMeeting())));
 		} catch (SchedulerException e) {
+			throw new AccountException(e);
+		} catch (ProductDefinitionException e) {
 			throw new AccountException(e);
 		}
 	}
@@ -1970,7 +1980,7 @@ public class SavingsBO extends AccountBO {
 					CustomerConstants.CLIENT_LEVEL_ID)
 					|| (getCustomer().getCustomerLevel().getId().equals(
 							CustomerConstants.GROUP_LEVEL_ID) && getRecommendedAmntUnit()
-							.getRecommendedAmntUnitId().shortValue() == ProductDefinitionConstants.COMPLETEGROUP)) {
+							.getId().equals(RecommendedAmountUnit.COMPLETEGROUP.getValue()))) {
 				for (Date date : meetingDates) {
 					AccountActionDateEntity actionDate = helper
 							.createActionDateObject(this, getCustomer(),
@@ -2094,7 +2104,7 @@ public class SavingsBO extends AccountBO {
 					CustomerConstants.CLIENT_LEVEL_ID)
 					|| (customerBO.getCustomerLevel().getId().equals(
 							CustomerConstants.GROUP_LEVEL_ID) && getRecommendedAmntUnit()
-							.getRecommendedAmntUnitId().shortValue() == ProductDefinitionConstants.COMPLETEGROUP)) {
+							.getId().equals(RecommendedAmountUnit.COMPLETEGROUP.getValue()))) {
 				generateDepositAccountActions(customerBO, depositSchedule,
 						(short) (installment.getInstallmentId() + 1));
 			} else {

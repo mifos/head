@@ -1057,7 +1057,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		createInitialObjectsOfficeInactive(CustomerStatus.GROUP_CANCELLED,
 				CustomerStatus.CLIENT_CLOSED);
 		OfficeBO officeBO = group.getOffice();
-		officeBO.update(officeBO.getOfficeName(), officeBO.getOfficeName(),
+		officeBO.update(officeBO.getOfficeName(), officeBO.getShortName(),
 				OfficeStatus.INACTIVE, officeBO.getOfficeLevel(), officeBO
 						.getParentOffice(), null, null);
 		HibernateUtil.commitTransaction();

@@ -28,7 +28,7 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.business.service.BusinessService;
@@ -88,8 +88,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 		if (savings.getCustomer().getCustomerLevel().getId().shortValue() == CustomerConstants.CENTER_LEVEL_ID
 				|| (savings.getCustomer().getCustomerLevel().getId()
 						.shortValue() == CustomerConstants.GROUP_LEVEL_ID && savings
-						.getRecommendedAmntUnit().getRecommendedAmntUnitId()
-						.shortValue() == ProductDefinitionConstants.PERINDIVIDUAL))
+						.getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.PERINDIVIDUAL.getValue())))
 			SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, savings
 					.getCustomer().getChildren(
 							CustomerConstants.CLIENT_LEVEL_ID), request

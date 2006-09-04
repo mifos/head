@@ -11,7 +11,6 @@
 		<property name="globalPrdOfferingNum" column="GLOBAL_PRD_OFFERING_NUM" type="string" not-null="true" update="false" />
 		<property name="startDate" column="START_DATE" type="date" not-null="true" />
 		<property name="endDate" column="END_DATE" type="date" />
-		<property name="glcodeId" column="GLCODE_ID" type="short" />
 		<property name="prdOfferingName" column="PRD_OFFERING_NAME" type="string" />
 		<property name="prdOfferingShortName" column="PRD_OFFERING_SHORT_NAME" type="string" not-null="true" />
 		<property name="description" column="DESCRIPTION" type="string" not-null="true" />
@@ -81,14 +80,14 @@
 				<column name="MIN_AMNT_FOR_INT" />
 			</property>
 
-			<many-to-one name="recommendedAmntUnit" column="RECOMMENDED_AMNT_UNIT_ID" class="org.mifos.application.master.util.valueobjects.RecommendedAmntUnit" cascade="none" />
-			<many-to-one name="savingsType" column="SAVINGS_TYPE_ID" class="org.mifos.application.master.util.valueobjects.SavingsType" not-null="true" />
-			<many-to-one name="interestCalcType" column="INTEREST_CALCULATION_TYPE_ID" class="org.mifos.application.master.util.valueobjects.InterestCalcType" not-null="true" />
+			<many-to-one name="recommendedAmntUnit" column="RECOMMENDED_AMNT_UNIT_ID" class="org.mifos.application.productdefinition.business.RecommendedAmntUnitEntity" cascade="none" />
+			<many-to-one name="savingsType" column="SAVINGS_TYPE_ID" class="org.mifos.application.productdefinition.business.SavingsTypeEntity" not-null="true" />
+			<many-to-one name="interestCalcType" column="INTEREST_CALCULATION_TYPE_ID" class="org.mifos.application.productdefinition.business.InterestCalcTypeEntity" not-null="true" />
 
 			<many-to-one name="depositGLCode" column="DEPOSIT_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" lazy="true" insert="true" update="false" />
 			<many-to-one name="interestGLCode" column="INTEREST_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" lazy="true" insert="true" update="false" />
 
-			<set name="prdOfferingMeetings" cascade="all" inverse="true" table="PRD_OFFERING_MEETING" lazy="false">
+			<set name="prdOfferingMeetings" cascade="all" inverse="true" table="PRD_OFFERING_MEETING" lazy="false" access="field">
 				<key column="PRD_OFFERING_ID" />
 				<one-to-many class="org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity" />
 			</set>

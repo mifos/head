@@ -132,9 +132,6 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
 	public void setPrdOfferingMeeting(
 			PrdOfferingMeetingEntity prdOfferingMeeting) {
-		if (prdOfferingMeeting != null) {
-			prdOfferingMeeting.setPrdOffering(this);
-		}
 		this.prdOfferingMeeting = prdOfferingMeeting;
 	}
 

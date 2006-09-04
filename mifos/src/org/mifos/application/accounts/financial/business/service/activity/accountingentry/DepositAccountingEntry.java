@@ -44,7 +44,7 @@ import org.mifos.application.accounts.financial.util.helpers.FinancialActionCons
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.helpers.SavingsType;
 
 public class DepositAccountingEntry extends BaseAccountingEntry {
 
@@ -53,13 +53,13 @@ public class DepositAccountingEntry extends BaseAccountingEntry {
 				.getAccountTrxn();
 		SavingsBO savings = (SavingsBO) savingsTrxn.getAccount();
 		FinancialActionBO finActionDeposit = null;
-		if (savings.getSavingsType().getSavingsTypeId()
-				.equals(ProductDefinitionConstants.MANDATORY)) {
+		if (savings.getSavingsType().getId()
+				.equals(SavingsType.MANDATORY.getValue())) {
 			finActionDeposit = FinancialActionCache
 					.getFinancialAction(FinancialActionConstants.MANDATORYDEPOSIT);
 		}
-		if (savings.getSavingsType().getSavingsTypeId()
-				.equals(ProductDefinitionConstants.VOLUNTARY)) {
+		if (savings.getSavingsType().getId()
+				.equals(SavingsType.VOLUNTARY.getValue())) {
 			finActionDeposit = FinancialActionCache
 					.getFinancialAction(FinancialActionConstants.VOLUNTORYDEPOSIT);
 		}

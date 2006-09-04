@@ -45,7 +45,7 @@ import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.util.helpers.Money;
 
 public class WithdrawalAccountingEntry extends BaseAccountingEntry {
@@ -55,13 +55,13 @@ public class WithdrawalAccountingEntry extends BaseAccountingEntry {
 				.getAccountTrxn();
 		SavingsBO savings = (SavingsBO) savingsTrxn.getAccount();
 		FinancialActionBO finActionWithrawal = null;
-		if (savings.getSavingsType().getSavingsTypeId()
-				.equals(ProductDefinitionConstants.MANDATORY)) {
+		if (savings.getSavingsType().getId()
+				.equals(SavingsType.MANDATORY.getValue())) {
 			finActionWithrawal = FinancialActionCache
 					.getFinancialAction(FinancialActionConstants.MANDATORYWITHDRAWAL);
 		}
-		if (savings.getSavingsType().getSavingsTypeId()
-				.equals(ProductDefinitionConstants.VOLUNTARY)) {
+		if (savings.getSavingsType().getId()
+				.equals(SavingsType.VOLUNTARY.getValue())) {
 			finActionWithrawal = FinancialActionCache
 					.getFinancialAction(FinancialActionConstants.VOLUNTORYWITHDRAWAL);
 		}

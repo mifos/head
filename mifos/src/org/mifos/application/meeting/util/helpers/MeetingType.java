@@ -37,6 +37,8 @@
  */
 package org.mifos.application.meeting.util.helpers;
 
+import org.mifos.framework.exceptions.PropertyNotFoundException;
+
 public enum MeetingType {
 	LOANFREQUENCYOFINSTALLMENTS((short) 1), SAVINGSTIMEPERFORINTCALC((short) 2), SAVINGSFRQINTPOSTACC(
 			(short) 3), CUSTOMERMEETING((short) 4), FEEMEETING((short) 5);
@@ -49,5 +51,13 @@ public enum MeetingType {
 
 	public Short getValue() {
 		return value;
+	}
+
+	public static MeetingType getMeetingType(Short value)
+			throws PropertyNotFoundException {
+		for (MeetingType meetingType : MeetingType.values())
+			if (meetingType.getValue().equals(value))
+				return meetingType;
+		throw new PropertyNotFoundException("MeetingType");
 	}
 }

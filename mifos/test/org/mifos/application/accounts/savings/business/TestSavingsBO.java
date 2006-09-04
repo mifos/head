@@ -47,15 +47,19 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.util.valueobjects.InterestCalcType;
-import org.mifos.application.master.util.valueobjects.SavingsType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
+import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
+import org.mifos.application.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.business.SavingsTypeEntity;
+import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -426,8 +430,7 @@ public class TestSavingsBO extends MifosTestCase {
 	public void testCalculateInterestForClosureAvgBal() throws Exception {
 		createInitialObjects();
 		savingsOffering = helper.createSavingsOffering();
-		InterestCalcType intType = new InterestCalcType();
-		intType.setInterestCalculationTypeID(Short.valueOf("2"));
+		InterestCalcTypeEntity intType = new InterestCalcTypeEntity(InterestCalcType.AVERAGE_BALANCE);
 		savingsOffering.setInterestCalcType(intType);
 
 		savings = new SavingsBO(userContext);
@@ -462,8 +465,7 @@ public class TestSavingsBO extends MifosTestCase {
 			throws Exception {
 		createInitialObjects();
 		savingsOffering = helper.createSavingsOffering();
-		InterestCalcType intType = new InterestCalcType();
-		intType.setInterestCalculationTypeID(Short.valueOf("2"));
+		InterestCalcTypeEntity intType = new InterestCalcTypeEntity(InterestCalcType.AVERAGE_BALANCE);
 		savingsOffering.setInterestCalcType(intType);
 		savingsOffering.setMinAmntForInt(new Money("5000"));
 		savings = new SavingsBO(userContext);
@@ -1369,8 +1371,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 			// Adjust last deposit of 1200 to 2000.
 			Money amountAdjustedTo = new Money(currency, "2000.0");
-			SavingsType savingsType = new SavingsType();
-			savingsType.setSavingsTypeId(ProductDefinitionConstants.MANDATORY);
+			SavingsTypeEntity savingsType = new SavingsTypeEntity(SavingsType.MANDATORY);
 			savings.setSavingsType(savingsType);
 			savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
 
@@ -1461,8 +1462,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		// Adjust last deposit of 500 to 1200.
 		Money amountAdjustedTo = new Money(currency, "1200.0");
-		SavingsType savingsType = new SavingsType();
-		savingsType.setSavingsTypeId(ProductDefinitionConstants.MANDATORY);
+		SavingsTypeEntity savingsType = new SavingsTypeEntity(SavingsType.MANDATORY);
 		savings.setSavingsType(savingsType);
 		savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
 
@@ -1497,7 +1497,7 @@ public class TestSavingsBO extends MifosTestCase {
 			throws Exception {
 		createInitialObjects();
 		savingsOffering = helper.createSavingsOffering("prd1", Short
-				.valueOf("1"), ProductDefinitionConstants.MANDATORY);
+				.valueOf("1"), SavingsType.MANDATORY.getValue());
 		savings = helper.createSavingsAccount("000100000000017",
 				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
 				userContext);
@@ -2151,7 +2151,7 @@ public class TestSavingsBO extends MifosTestCase {
 			throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1",
-				ProductDefinitionConstants.VOLUNTARY, Short.valueOf("1"), "3",
+				SavingsType.VOLUNTARY.getValue(), Short.valueOf("1"), "3",
 				Short.valueOf("1"));
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
@@ -2196,7 +2196,7 @@ public class TestSavingsBO extends MifosTestCase {
 			throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1",
-				ProductDefinitionConstants.VOLUNTARY, Short.valueOf("2"), "3",
+				SavingsType.VOLUNTARY.getValue(), Short.valueOf("2"), "3",
 				Short.valueOf("1"));
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
@@ -2241,7 +2241,7 @@ public class TestSavingsBO extends MifosTestCase {
 			throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1",
-				ProductDefinitionConstants.VOLUNTARY, Short.valueOf("1"), "3",
+				SavingsType.VOLUNTARY.getValue(), Short.valueOf("1"), "3",
 				Short.valueOf("10"));
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
@@ -2294,7 +2294,7 @@ public class TestSavingsBO extends MifosTestCase {
 	public void testCalculateInterest_IntCalcFreqTenDays_avg() throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1",
-				ProductDefinitionConstants.VOLUNTARY, Short.valueOf("2"), "3",
+				SavingsType.VOLUNTARY.getValue(), Short.valueOf("2"), "3",
 				Short.valueOf("10"));
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
@@ -2385,7 +2385,7 @@ public class TestSavingsBO extends MifosTestCase {
 		try {
 			createInitialObjects();
 			savingsOffering = createSavingsOfferingForIntCalc("prd1",
-					ProductDefinitionConstants.VOLUNTARY, Short.valueOf("1"),
+					SavingsType.VOLUNTARY.getValue(), Short.valueOf("1"),
 					MeetingConstants.MONTHLY, Short.valueOf("1"));
 			savings = helper.createSavingsAccount(savingsOffering, group,
 					AccountStates.SAVINGS_ACC_APPROVED, userContext);
@@ -2458,7 +2458,7 @@ public class TestSavingsBO extends MifosTestCase {
 			throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1",
-				ProductDefinitionConstants.VOLUNTARY, Short.valueOf("2"),
+				SavingsType.VOLUNTARY.getValue(), Short.valueOf("2"),
 				MeetingConstants.MONTHLY, Short.valueOf("1"));
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
@@ -2543,7 +2543,7 @@ public class TestSavingsBO extends MifosTestCase {
 			throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1",
-				ProductDefinitionConstants.VOLUNTARY, Short.valueOf("1"),
+				SavingsType.VOLUNTARY.getValue(), Short.valueOf("1"),
 				MeetingConstants.MONTHLY, Short.valueOf("1"));
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
@@ -2637,7 +2637,7 @@ public class TestSavingsBO extends MifosTestCase {
 			throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1",
-				ProductDefinitionConstants.VOLUNTARY, Short.valueOf("2"),
+				SavingsType.VOLUNTARY.getValue(), Short.valueOf("2"),
 				MeetingConstants.MONTHLY, Short.valueOf("1"));
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
@@ -2732,7 +2732,7 @@ public class TestSavingsBO extends MifosTestCase {
 			throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1",
-				ProductDefinitionConstants.VOLUNTARY, Short.valueOf("1"),
+				SavingsType.VOLUNTARY.getValue(), Short.valueOf("1"),
 				MeetingConstants.MONTHLY, Short.valueOf("1"));
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
@@ -2812,7 +2812,7 @@ public class TestSavingsBO extends MifosTestCase {
 			throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1",
-				ProductDefinitionConstants.VOLUNTARY, Short.valueOf("2"),
+				SavingsType.VOLUNTARY.getValue(), Short.valueOf("2"),
 				MeetingConstants.MONTHLY, Short.valueOf("1"));
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
@@ -2893,7 +2893,7 @@ public class TestSavingsBO extends MifosTestCase {
 			throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1",
-				ProductDefinitionConstants.VOLUNTARY, Short.valueOf("1"),
+				SavingsType.VOLUNTARY.getValue(), Short.valueOf("1"),
 				MeetingConstants.MONTHLY, Short.valueOf("1"));
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
@@ -2983,7 +2983,7 @@ public class TestSavingsBO extends MifosTestCase {
 			throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1",
-				ProductDefinitionConstants.MANDATORY, Short.valueOf("2"),
+				SavingsType.MANDATORY.getValue(), Short.valueOf("2"),
 				MeetingConstants.MONTHLY, Short.valueOf("1"));
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
@@ -3125,7 +3125,7 @@ public class TestSavingsBO extends MifosTestCase {
 			throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1",
-				ProductDefinitionConstants.MANDATORY, Short.valueOf("2"),
+				SavingsType.MANDATORY.getValue(), Short.valueOf("2"),
 				MeetingConstants.MONTHLY, Short.valueOf("1"));
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
@@ -3268,7 +3268,7 @@ public class TestSavingsBO extends MifosTestCase {
 			throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1",
-				ProductDefinitionConstants.MANDATORY, Short.valueOf("1"),
+				SavingsType.MANDATORY.getValue(), Short.valueOf("1"),
 				MeetingConstants.MONTHLY, Short.valueOf("1"));
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
@@ -3409,7 +3409,7 @@ public class TestSavingsBO extends MifosTestCase {
 			throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1",
-				ProductDefinitionConstants.MANDATORY, Short.valueOf("1"),
+				SavingsType.MANDATORY.getValue(), Short.valueOf("1"),
 				MeetingConstants.MONTHLY, Short.valueOf("1"));
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
@@ -3511,7 +3511,7 @@ public class TestSavingsBO extends MifosTestCase {
 			throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1",
-				ProductDefinitionConstants.MANDATORY, Short.valueOf("2"),
+				SavingsType.MANDATORY.getValue(), Short.valueOf("2"),
 				MeetingConstants.MONTHLY, Short.valueOf("1"));
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
@@ -3987,8 +3987,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		SavingsOfferingBO savingsOfferingBO = SavingsTestHelper
 				.createSavingsOffering();
-		savingsOfferingBO.getRecommendedAmntUnit().setRecommendedAmntUnitId(
-				Short.valueOf("2"));
+		savingsOfferingBO.setRecommendedAmntUnit(new RecommendedAmntUnitEntity(RecommendedAmountUnit.COMPLETEGROUP));
 		SavingsBO savingsBO = SavingsTestHelper.createSavingsAccount(
 				savingsOfferingBO, group, Short.valueOf("16"),
 				TestObjectFactory.getUserContext());

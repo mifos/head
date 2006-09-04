@@ -62,6 +62,7 @@ import org.mifos.application.master.util.valueobjects.InterestCalcType;
 import org.mifos.application.master.util.valueobjects.PrdApplicableMaster;
 import org.mifos.application.master.util.valueobjects.RecommendedAmntUnit;
 import org.mifos.application.master.util.valueobjects.SavingsType;
+import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.meeting.util.valueobjects.MeetingDetails;
 import org.mifos.application.meeting.util.valueobjects.RecurrenceType;
@@ -400,11 +401,11 @@ public class SavingsProductDAO extends PrdOfferingDAO {
 						meeting.setMeetingDetails(new MeetingDetails());
 					}
 					if (prdOfferingMeeting.getMeetingType().equals(
-							ProductDefinitionConstants.SAVINGSTIMEPERINTCALCID)) {
+							MeetingType.SAVINGSTIMEPERFORINTCALC.getValue())) {
 						savingsOffering
 								.setTimePerForInstcalc(prdOfferingMeeting);
 					} else if (prdOfferingMeeting.getMeetingType().equals(
-							ProductDefinitionConstants.SAVINGSFRQINTPOSTACCID)) {
+							MeetingType.SAVINGSFRQINTPOSTACC.getValue())) {
 						savingsOffering
 								.setFreqOfPostIntcalc(prdOfferingMeeting);
 					}
@@ -519,11 +520,11 @@ public class SavingsProductDAO extends PrdOfferingDAO {
 						meeting.setMeetingDetails(new MeetingDetails());
 					}
 					if (prdOfferingMeeting.getMeetingType().equals(
-							ProductDefinitionConstants.SAVINGSTIMEPERINTCALCID)) {
+							MeetingType.SAVINGSTIMEPERFORINTCALC.getValue())) {
 						databaseSavingsOffering
 								.setTimePerForInstcalc(prdOfferingMeeting);
 					} else if (prdOfferingMeeting.getMeetingType().equals(
-							ProductDefinitionConstants.SAVINGSFRQINTPOSTACCID)) {
+							MeetingType.SAVINGSFRQINTPOSTACC.getValue())) {
 						databaseSavingsOffering
 								.setFreqOfPostIntcalc(prdOfferingMeeting);
 					}
@@ -539,7 +540,7 @@ public class SavingsProductDAO extends PrdOfferingDAO {
 						if (prdOfferingMeeting
 								.getMeetingType()
 								.equals(
-										ProductDefinitionConstants.SAVINGSTIMEPERINTCALCID)) {
+										MeetingType.SAVINGSTIMEPERFORINTCALC.getValue())) {
 							meeting.setMeetingId(databaseSavingsOffering
 									.getTimePerForInstcalc().getMeeting()
 									.getMeetingId());
@@ -575,7 +576,7 @@ public class SavingsProductDAO extends PrdOfferingDAO {
 						} else if (prdOfferingMeeting
 								.getMeetingType()
 								.equals(
-										ProductDefinitionConstants.SAVINGSFRQINTPOSTACCID)) {
+										MeetingType.SAVINGSFRQINTPOSTACC.getValue())) {
 							meeting.setMeetingId(databaseSavingsOffering
 									.getFreqOfPostIntcalc().getMeeting()
 									.getMeetingId());

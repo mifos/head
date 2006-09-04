@@ -56,6 +56,8 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.business.View;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.util.helpers.Money;
@@ -363,8 +365,7 @@ public class BulkEntryView extends View {
 		for (SavingsAccountView savingsAccountView : savingsAccountDetails) {
 			if (!(customerDetail.isCustomerGroup() && savingsAccountView
 					.getSavingsOffering().getRecommendedAmntUnit()
-					.getRecommendedAmntUnitId().equals(
-							ProductDefinitionConstants.PERINDIVIDUAL))) {
+					.getId().equals(RecommendedAmountUnit.PERINDIVIDUAL.getValue()))) {
 				addAccountActionToSavingsView(savingsAccountView, customerId,
 						transactionDate, bulkEntryAccountActionViews);
 			}
@@ -377,8 +378,8 @@ public class BulkEntryView extends View {
 			List<BulkEntryInstallmentView> bulkEntryAccountActionViews) {
 		boolean isMandatory = false;
 		if (savingsAccountView.getSavingsOffering().getSavingsType()
-				.getSavingsTypeId()
-				.equals(ProductDefinitionConstants.MANDATORY))
+				.getId()
+				.equals(SavingsType.MANDATORY.getValue()))
 			isMandatory = true;
 		List<BulkEntryInstallmentView> accountActionDetails = retrieveSavingsAccountActions(
 				savingsAccountView.getAccountId(), customerId,

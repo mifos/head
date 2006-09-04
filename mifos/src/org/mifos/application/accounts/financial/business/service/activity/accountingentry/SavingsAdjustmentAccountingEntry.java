@@ -46,7 +46,7 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.util.helpers.Money;
 
 public class SavingsAdjustmentAccountingEntry extends BaseAccountingEntry {
@@ -75,13 +75,13 @@ public class SavingsAdjustmentAccountingEntry extends BaseAccountingEntry {
 	private void adjustWithdrawal(SavingsBO savings,SavingsTrxnDetailEntity savingsTrxn)throws FinancialException{
 		FinancialActionBO finActionWithrawal = null;
 		
-		if (savings.getSavingsType().getSavingsTypeId()
-				.equals(ProductDefinitionConstants.MANDATORY)) {
+		if (savings.getSavingsType().getId()
+				.equals(SavingsType.MANDATORY.getValue())) {
 			finActionWithrawal = FinancialActionCache
 					.getFinancialAction(FinancialActionConstants.MANDATORYWITHDRAWAL_ADJUSTMENT);
 		}
-		if (savings.getSavingsType().getSavingsTypeId()
-				.equals(ProductDefinitionConstants.VOLUNTARY)) {
+		if (savings.getSavingsType().getId()
+				.equals(SavingsType.VOLUNTARY.getValue())) {
 			finActionWithrawal = FinancialActionCache
 					.getFinancialAction(FinancialActionConstants.VOLUNTORYWITHDRAWAL_ADJUSTMENT);
 		}
@@ -95,13 +95,13 @@ public class SavingsAdjustmentAccountingEntry extends BaseAccountingEntry {
 	
 	private void adjustDeposit(SavingsBO savings,SavingsTrxnDetailEntity savingsTrxn)throws FinancialException{
 		FinancialActionBO finActionDeposit = null;
-		if (savings.getSavingsType().getSavingsTypeId()
-				.equals(ProductDefinitionConstants.MANDATORY)) {
+		if (savings.getSavingsType().getId()
+				.equals(SavingsType.MANDATORY.getValue())) {
 			finActionDeposit = FinancialActionCache
 					.getFinancialAction(FinancialActionConstants.MANDATORYDEPOSIT_ADJUSTMENT);
 		}
-		if (savings.getSavingsType().getSavingsTypeId()
-				.equals(ProductDefinitionConstants.VOLUNTARY)) {
+		if (savings.getSavingsType().getId()
+				.equals(SavingsType.VOLUNTARY.getValue())) {
 			finActionDeposit = FinancialActionCache
 					.getFinancialAction(FinancialActionConstants.VOLUNTORYDEPOSIT_ADJUSTMENT);
 		}

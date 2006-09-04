@@ -40,6 +40,7 @@ package org.mifos.application.productdefinition.business;
 import java.sql.Date;
 
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.persistence.service.SavingsPrdPersistenceService;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -67,7 +68,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	}
 
 	public void testGetTimePerForIntCalcAndFreqPost()
-			throws PersistenceException {
+			throws PersistenceException, ProductDefinitionException {
 		savingsOffering = createSavingsOfferingBO();
 		savingsOffering = prdPersistenceService
 				.getSavingsProduct(savingsOffering.getPrdOfferingId());

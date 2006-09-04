@@ -39,27 +39,54 @@
 package org.mifos.application.productdefinition.business;
 
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 public class PrdOfferingMeetingEntity extends PersistentObject {
 
-	private Short prdOfferingMeetingId;
+	private final Short prdOfferingMeetingId;
 
 	private MeetingBO meeting;
 
-	private PrdOfferingBO prdOffering;
+	private final PrdOfferingBO prdOffering;
 
-	private Short meetingType;
+	private final Short meetingType;
 
-	public PrdOfferingMeetingEntity() {
+	protected PrdOfferingMeetingEntity() {
+		prdOfferingMeetingId = null;
+		prdOffering = null;
+		meetingType = null;
 	}
 
-	public Short getMeetingType() {
+	public PrdOfferingMeetingEntity(MeetingBO meeting,
+			PrdOfferingBO prdOffering, MeetingType meetingType) {
+		prdOfferingMeetingId = null;
+		this.meeting = meeting;
+		this.prdOffering = prdOffering;
+		this.meetingType = meetingType.getValue();
+	}
+
+	private Short getPrdOfferingMeetingId() {
+		return prdOfferingMeetingId;
+	}
+
+	private Short getMeetingType() {
 		return meetingType;
 	}
 
-	public void setMeetingType(Short meetingType) {
-		this.meetingType = meetingType;
+	public MeetingType getprdOfferingMeetingType()
+			throws ProductDefinitionException {
+		try {
+			return MeetingType.getMeetingType(meetingType);
+		} catch (PropertyNotFoundException e) {
+			throw new ProductDefinitionException(e);
+		}
+	}
+
+	public PrdOfferingBO getPrdOffering() {
+		return prdOffering;
 	}
 
 	public MeetingBO getMeeting() {
@@ -68,22 +95,6 @@ public class PrdOfferingMeetingEntity extends PersistentObject {
 
 	public void setMeeting(MeetingBO meeting) {
 		this.meeting = meeting;
-	}
-
-	public PrdOfferingBO getPrdOffering() {
-		return prdOffering;
-	}
-
-	public void setPrdOffering(PrdOfferingBO prdOffering) {
-		this.prdOffering = prdOffering;
-	}
-
-	public Short getPrdOfferingMeetingId() {
-		return prdOfferingMeetingId;
-	}
-
-	public void setPrdOfferingMeetingId(Short prdOfferingMeetingId) {
-		this.prdOfferingMeetingId = prdOfferingMeetingId;
 	}
 
 	@Override

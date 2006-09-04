@@ -52,6 +52,7 @@ import org.mifos.application.master.util.valueobjects.PrdApplicableMaster;
 import org.mifos.application.master.util.valueobjects.RecommendedAmntUnit;
 import org.mifos.application.master.util.valueobjects.SavingsType;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
+import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
@@ -210,11 +211,11 @@ public class SavingsProductActionForm extends MifosSearchActionForm {
 		if (null != freqOfInterest && !"".equals(freqOfInterest.trim())) {
 			meeting = MeetingHelper.geMeeting(Short
 					.toString(MeetingConstants.MONTH), freqOfInterest,
-					ProductDefinitionConstants.SAVINGSFRQINTPOSTACCID);
+					MeetingType.SAVINGSFRQINTPOSTACC.getValue());
 		}
 		this.freqOfPostIntcalc.setMeeting(meeting);
 		this.freqOfPostIntcalc
-				.setMeetingType(ProductDefinitionConstants.SAVINGSFRQINTPOSTACCID);
+				.setMeetingType(MeetingType.SAVINGSFRQINTPOSTACC.getValue());
 		return freqOfPostIntcalc;
 	}
 
@@ -235,11 +236,11 @@ public class SavingsProductActionForm extends MifosSearchActionForm {
 				&& !"".equals(timeForInterestCacl.trim())) {
 			meeting = MeetingHelper.geMeeting(recurTypeFortimeForInterestCacl,
 					timeForInterestCacl,
-					ProductDefinitionConstants.SAVINGSTIMEPERINTCALCID);
+					MeetingType.SAVINGSTIMEPERFORINTCALC.getValue());
 		}
 		this.timePerForInstcalc.setMeeting(meeting);
 		this.timePerForInstcalc
-				.setMeetingType(ProductDefinitionConstants.SAVINGSTIMEPERINTCALCID);
+				.setMeetingType(MeetingType.SAVINGSTIMEPERFORINTCALC.getValue());
 		return timePerForInstcalc;
 	}
 
@@ -591,7 +592,7 @@ public class SavingsProductActionForm extends MifosSearchActionForm {
 			if (ProductDefinitionConstants.PREVIEWMETHOD.equals(methodCalled)) {
 				if (savingsType.getSavingsTypeId() != null
 						&& savingsType.getSavingsTypeId().equals(
-								ProductDefinitionConstants.MANDATORY)
+								org.mifos.application.productdefinition.util.helpers.SavingsType.MANDATORY.getValue())
 						&& getRecommendedAmountDoubleValue() <= 0.0)
 					errors
 							.add(

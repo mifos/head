@@ -42,14 +42,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
-import org.mifos.application.master.util.valueobjects.InterestCalcType;
-import org.mifos.application.master.util.valueobjects.RecommendedAmntUnit;
-import org.mifos.application.master.util.valueobjects.SavingsType;
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 
 public class SavingsOfferingBO extends PrdOfferingBO {
+
+	private RecommendedAmntUnitEntity recommendedAmntUnit;
+
+	private SavingsTypeEntity savingsType;
+
+	private InterestCalcTypeEntity interestCalcType;
+
+	private final Set<PrdOfferingMeetingEntity> prdOfferingMeetings;
 
 	private Money recommendedAmount;
 
@@ -58,14 +64,6 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 	private Money minAmntForInt;
 
 	private Double interestRate;
-
-	private RecommendedAmntUnit recommendedAmntUnit;
-
-	private SavingsType savingsType;
-
-	private InterestCalcType interestCalcType;
-
-	private Set<PrdOfferingMeetingEntity> prdOfferingMeetings;
 
 	private GLCodeEntity depositGLCode;
 
@@ -80,56 +78,39 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 		prdOfferingMeetings = new HashSet<PrdOfferingMeetingEntity>();
 	}
 
-	public Set<PrdOfferingMeetingEntity> getPrdOfferingMeetings() {
+	private Set<PrdOfferingMeetingEntity> getPrdOfferingMeetings() {
 		return prdOfferingMeetings;
 	}
 
-	private void setPrdOfferingMeetings(
-			Set<PrdOfferingMeetingEntity> prdOfferingMeetings) {
-		this.prdOfferingMeetings = prdOfferingMeetings;
-	}
-
-	private void addPrdOfferingMeeting(
-			PrdOfferingMeetingEntity prdOfferingMeetingEntity) {
-		prdOfferingMeetingEntity.setPrdOffering(this);
-		this.prdOfferingMeetings.add(prdOfferingMeetingEntity);
-	}
-
-	public PrdOfferingMeetingEntity getFreqOfPostIntcalc() {
+	public PrdOfferingMeetingEntity getFreqOfPostIntcalc()
+			throws ProductDefinitionException {
 		if (getPrdOfferingMeetings() != null
 				&& getPrdOfferingMeetings().size() > 0)
 			for (PrdOfferingMeetingEntity prdOfferingMeeting : getPrdOfferingMeetings())
-				if (prdOfferingMeeting.getMeetingType().equals(
-						ProductDefinitionConstants.SAVINGSFRQINTPOSTACCID))
+				if (prdOfferingMeeting.getprdOfferingMeetingType().equals(
+						MeetingType.SAVINGSFRQINTPOSTACC))
 					return prdOfferingMeeting;
 		return null;
 	}
 
 	public void setFreqOfPostIntcalc(PrdOfferingMeetingEntity freqOfPostIntcalc) {
-		if (freqOfPostIntcalc != null) {
-			freqOfPostIntcalc
-					.setMeetingType(ProductDefinitionConstants.SAVINGSFRQINTPOSTACCID);
-			addPrdOfferingMeeting(freqOfPostIntcalc);
-		}
+		this.prdOfferingMeetings.add(freqOfPostIntcalc);
 	}
 
-	public PrdOfferingMeetingEntity getTimePerForInstcalc() {
+	public PrdOfferingMeetingEntity getTimePerForInstcalc()
+			throws ProductDefinitionException {
 		if (getPrdOfferingMeetings() != null
 				&& getPrdOfferingMeetings().size() > 0)
 			for (PrdOfferingMeetingEntity prdOfferingMeeting : getPrdOfferingMeetings())
-				if (prdOfferingMeeting.getMeetingType().equals(
-						ProductDefinitionConstants.SAVINGSTIMEPERINTCALCID))
+				if (prdOfferingMeeting.getprdOfferingMeetingType().equals(
+						MeetingType.SAVINGSTIMEPERFORINTCALC))
 					return prdOfferingMeeting;
 		return null;
 	}
 
 	public void setTimePerForInstcalc(
 			PrdOfferingMeetingEntity timePerForInstcalc) {
-		if (timePerForInstcalc != null) {
-			timePerForInstcalc
-					.setMeetingType(ProductDefinitionConstants.SAVINGSTIMEPERINTCALCID);
-			addPrdOfferingMeeting(timePerForInstcalc);
-		}
+		this.prdOfferingMeetings.add(timePerForInstcalc);
 	}
 
 	public Double getInterestRate() {
@@ -164,27 +145,28 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 		this.recommendedAmount = recommendedAmount;
 	}
 
-	public InterestCalcType getInterestCalcType() {
+	public InterestCalcTypeEntity getInterestCalcType() {
 		return interestCalcType;
 	}
 
-	public void setInterestCalcType(InterestCalcType interestCalcType) {
+	public void setInterestCalcType(InterestCalcTypeEntity interestCalcType) {
 		this.interestCalcType = interestCalcType;
 	}
 
-	public RecommendedAmntUnit getRecommendedAmntUnit() {
+	public RecommendedAmntUnitEntity getRecommendedAmntUnit() {
 		return recommendedAmntUnit;
 	}
 
-	public void setRecommendedAmntUnit(RecommendedAmntUnit recommendedAmntUnit) {
+	public void setRecommendedAmntUnit(
+			RecommendedAmntUnitEntity recommendedAmntUnit) {
 		this.recommendedAmntUnit = recommendedAmntUnit;
 	}
 
-	public SavingsType getSavingsType() {
+	public SavingsTypeEntity getSavingsType() {
 		return savingsType;
 	}
 
-	public void setSavingsType(SavingsType savingsType) {
+	public void setSavingsType(SavingsTypeEntity savingsType) {
 		this.savingsType = savingsType;
 	}
 

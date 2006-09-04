@@ -115,9 +115,9 @@
 			<property name="interIntCalcDate" column="INTER_INT_CALC_DATE" lazy="true" />
 
 			<many-to-one name="timePerForInstcalc" column="TIME_PER_FOR_INT_CALC" class="org.mifos.application.meeting.business.MeetingBO" cascade="all" insert="true" update="true" unique="true" lazy="true" />
-			<many-to-one name="interestCalcType" column="INTEREST_CALCULATION_TYPE_ID" class="org.mifos.application.master.util.valueobjects.InterestCalcType" lazy="true" />
-			<many-to-one name="recommendedAmntUnit" column="RECOMMENDED_AMNT_UNIT_ID" class="org.mifos.application.master.util.valueobjects.RecommendedAmntUnit" insert="true" update="false" cascade="none" lazy="true" />
-			<many-to-one name="savingsType" column="SAVINGS_TYPE_ID" class="org.mifos.application.master.util.valueobjects.SavingsType" insert="true" update="false" cascade="none" lazy="true" />
+			<many-to-one name="interestCalcType" column="INTEREST_CALCULATION_TYPE_ID" class="org.mifos.application.productdefinition.business.InterestCalcTypeEntity" lazy="true" />
+			<many-to-one name="recommendedAmntUnit" column="RECOMMENDED_AMNT_UNIT_ID" class="org.mifos.application.productdefinition.business.RecommendedAmntUnitEntity" insert="true" update="false" cascade="none" lazy="true" />
+			<many-to-one name="savingsType" column="SAVINGS_TYPE_ID" class="org.mifos.application.productdefinition.business.SavingsTypeEntity" insert="true" update="false" cascade="none" lazy="true" />
 			<many-to-one name="savingsOffering" column="PRD_OFFERING_ID" class="org.mifos.application.productdefinition.business.SavingsOfferingBO" unique="true" cascade="none" insert="true" update="false" lazy="true" />
 			<one-to-one name="savingsPerformance" class="org.mifos.application.accounts.savings.business.SavingsPerformanceEntity" cascade="all" lazy="true" property-ref="savings" />
 			<set name="savingsActivityDetails" cascade="all" inverse="true" table="SAVINGS_ACTIVITY_DETAILS" lazy="true" order-by="ID desc">

@@ -74,6 +74,7 @@ import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -509,9 +510,7 @@ public class BulkEntryAction extends BaseAction {
 										.equals(CustomerConstants.GROUP_LEVEL_ID) && accountView
 										.getSavingsOffering()
 										.getRecommendedAmntUnit()
-										.getRecommendedAmntUnitId()
-										.equals(
-												ProductDefinitionConstants.PERINDIVIDUAL))) {
+										.getId().equals(RecommendedAmountUnit.PERINDIVIDUAL.getValue()))) {
 							isCenterGroupIndvAccount = true;
 						}
 						bulkEntryBusinessService.saveSavingsDepositAccount(

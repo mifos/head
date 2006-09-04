@@ -42,53 +42,38 @@ import java.util.Date;
 
 import org.mifos.application.master.util.valueobjects.PrdApplicableMaster;
 import org.mifos.application.office.business.OfficeBO;
-import org.mifos.application.office.persistence.OfficePersistence;
-import org.mifos.application.office.util.helpers.OfficeLevel;
-import org.mifos.application.office.util.helpers.OperationMode;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 
-/**
- * This is main business object for product offering this is extended to loan
- * offering or saving offering
- */
 public class PrdOfferingBO extends BusinessObject {
 
 	private Short prdOfferingId;
-
-	private OfficeBO office;
-
-	private ProductCategoryBO prdCategory;
-
-	private PrdStatusEntity prdStatus;
-
-	private ProductTypeEntity prdType;
-
-	private PrdApplicableMaster prdApplicableMaster;
-
-	private String globalPrdOfferingNum;
-
-	private Date startDate;
-
-	private Date endDate;
-
-	private Short glcodeId;
-
-	private Short recurrenceId;
 
 	private String prdOfferingName;
 
 	private String prdOfferingShortName;
 
-	private Short clientOrGroups;
+	private String globalPrdOfferingNum;
+
+	private ProductTypeEntity prdType;
+
+	private ProductCategoryBO prdCategory;
+
+	private PrdStatusEntity prdStatus;
+
+	private PrdApplicableMaster prdApplicableMaster;
+
+	private Date startDate;
+
+	private Date endDate;
+
+	private OfficeBO office;
 
 	private String description;
-	
 
 	protected PrdOfferingBO() {
-		
-		office=new OfficeBO();
+
+		office = new OfficeBO();
 		prdCategory = new ProductCategoryBO();
 		prdStatus = new PrdStatusEntity();
 		prdApplicableMaster = new PrdApplicableMaster();
@@ -96,14 +81,6 @@ public class PrdOfferingBO extends BusinessObject {
 
 	protected PrdOfferingBO(UserContext userContext) {
 		super(userContext);
-	}
-
-	public Short getClientOrGroups() {
-		return clientOrGroups;
-	}
-
-	public void setClientOrGroups(Short clientOrGroups) {
-		this.clientOrGroups = clientOrGroups;
 	}
 
 	public String getDescription() {
@@ -122,14 +99,6 @@ public class PrdOfferingBO extends BusinessObject {
 		this.endDate = endDate;
 	}
 
-	public Short getGlcodeId() {
-		return glcodeId;
-	}
-
-	public void setGlcodeId(Short glcodeId) {
-		this.glcodeId = glcodeId;
-	}
-
 	public String getGlobalPrdOfferingNum() {
 		return globalPrdOfferingNum;
 	}
@@ -139,7 +108,7 @@ public class PrdOfferingBO extends BusinessObject {
 	}
 
 	public OfficeBO getOffice() {
-		
+
 		return office;
 	}
 
@@ -201,14 +170,6 @@ public class PrdOfferingBO extends BusinessObject {
 
 	public void setPrdType(ProductTypeEntity prdType) {
 		this.prdType = prdType;
-	}
-
-	public Short getRecurrenceId() {
-		return recurrenceId;
-	}
-
-	public void setRecurrenceId(Short recurrenceId) {
-		this.recurrenceId = recurrenceId;
 	}
 
 	public Date getStartDate() {
