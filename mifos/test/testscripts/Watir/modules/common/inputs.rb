@@ -189,65 +189,6 @@ $formula={"1"=>"Loan Amount","2"=>"LoanAmount+Service Charge","3"=>"Service Char
 $feestatus={"1"=>"Active","2"=>"InActive"}
 #fee end
 
-#LoanProduct Start
-$loanproduct_created_msg = "You have successfully added a new Loan product"
-$review_loanproduct_info = "Add a new Loan Product - Review & submit "
-$new_loanproduct_link = "Define new Loan product"
-$view_loanproduct_link = "View Loan products"
-$new_loanproduct_page_msg = "Add a new Loan Product - Enter Loan Product information"
-$edit_loanproduct_link = "Edit Loan product information"
-
-# Validation messages for new loan product
-$loanproduct_prd_inst_name_msg = "Please specify the Product instance name."
-$loanproduct_shortname_msg = "Please specify the Short name."
-$loanproduct_prd_category_msg = "Please select the Product category."
-$loanproduct_appl_for_msg = "Please specify the Applicable for."
-$loanproduct_interestrate_type_msg = "Please select the Interest rate type."
-$loanproduct_max_interestrate_msg = "Please specify the Max interest rate."
-$loanproduct_min_interestrate_msg = "Please specify the Min interest rate."
-$loanproduct_def_interestrate_msg= "Please specify the Default interest rate."
-
-$loanproduct_emi_frequency_months_msg = "Please specify a value greater than zero for months."
-$loanproduct_emi_frequency_weeks_msg = "Please specify a value greater than zero for weeks."
-
-$loanproduct_max_emi_msg = "Please specify the Max # of installments."
-$loanproduct_min_emi_msg = "Please specify the Min # of installments."
-$loanproduct_def_emi_msg = "Please specify the Default # of installments."
-$loanproduct_glcode_interest_msg = "Please select a GL code for interest."
-$loanproduct_glcode_principal_msg = "Please select a GL code for principal."
-$loanproduct_glcode_penalty_msg = "Please select a GL code for penalty."
-#end of  Validation messages for new loan product 
-
-#Error message for field validation Start
-$loanproduct_change_startdate_msg = "The start date cannot be changed. Either the product is active or the date specified is invalid."
-
-$loanproduct_max_interestrate_msg_size = "Max interest rate is greater than the allowable size."
-$loanproduct_min_interestrate_msg_size = "Min interest rate is greater than the allowable size."
-$loanproduct_def_interestrate_msg_size = "Default interest rate is greater than the allowable size."
-$loanproduct_valid_max_interestrate_msg = "Please specify a valid Max interest rate. Max interest rate should be greater than or equal Min interest rate."
-$loanproduct_valid_def_interestrate_msg = "Please specify valid Default interest rate. Default interest rate should be greater than or equal to Min interest rate and less than or equal to Max interest rate."
-
-
-$loanproduct_max_emi_error_msg = "Please specify a valid Max # of installments. Specify numbers only. Specify maximum of ten digits only."
-$loanproduct_min_emi_error_msg = "Please specify a valid Min # of installments. Specify numbers only. Specify maximum of ten digits only."
-$loanproduct_def_emi_error_msg = "Please specify a valid Default # of installments. Specify numbers only. Specify maximum of ten digits only."
-$loanproduct_valid_max_emi_msg = "Please specify a valid Max # of installments. Max # of installments should be greater than or equal Min # of installments."
-$loanproduct_valid_def_emi_msg = "Please specify valid Default # of installments. Default # of installments should be greater than or equal to Min # of installments and less than or equal to Max # of installments."
-
-$loanproduct_prd_inst_name_length_msg = "The length of Product instance name can not be greater than 50 character(s)."
-$loanproduct_shortname_space_msg = "Please do not specify [space] for Short name."
-
-$loanproduct_valid_max_ammount_msg = "Please specify a valid Max loan amount. Max loan amount should be greater than or equal Min loan amount."
-$loanproduct_valid_def_ammount_msg = "Please specify valid Default amount. Default amount should be greater than or equal to Min loan amount and less than or equal to Max loan amount."
-$loanproduct_min_ammount_msg = "Min loan amount is greater than the allowable size."
-$loanproduct_max_ammount_msg = "Max loan amount is greater than the allowable size."
-$loanproduct_def_ammount_msg = "Default amount is greater than the allowable size."
-$loanproduct_dupl_inst_name_msg="The Product Instance name already exists in the application. Please specify a different name."
-$loanproduct_dupl_short_name_msg="The short name already exists in the application. Please specify a different Name."
-$loanproduct_startdate_msg="The Start date can be anything between current date and 1 year prior to the current date."
-#Error message for field validation End
-
-#LoanProduct End
 #Loan Account start
 $loan_select_client="Create Loan Account - Select Member"
 $loan_select_loan_prd="Create Loan account -  Enter Loan account information"
@@ -343,3 +284,6 @@ $funds_FundName_msg = "Please specify Name."
 $funds_GLCode_msg = "Please select GL code."
 #end of  Validation messages for new Funds
 #Funds End
+
+#labels 
+$loan="loan"

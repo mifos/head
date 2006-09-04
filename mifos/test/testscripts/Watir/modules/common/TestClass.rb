@@ -29,7 +29,7 @@ class TestClass
 		if FileTest.exist?(filename) 
 		@@excel = WIN32OLE::new('excel.Application')
 		workbook = @@excel.Workbooks.Open(filename)
-		puts filename
+		#puts filename
 		worksheet = workbook.Worksheets(book)
 		rowval1=2
 		colval1=1
@@ -328,6 +328,7 @@ class TestClass
   def mifos_logout()
     begin
       $ie.link(:text,"Logout").click
+      $logger.log_results("Clicked Logout link","NA","NA","NA")
 	  #$ie.close
 	  clean_up()
 	  exit
