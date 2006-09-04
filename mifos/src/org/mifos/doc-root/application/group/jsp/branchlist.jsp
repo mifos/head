@@ -43,13 +43,13 @@
 <%@ taglib uri="/mifos/officetags" prefix="office"%>
 <script language="javascript">
   function goToCancelPage(){
-	groupActionForm.action="GroupAction.do?method=cancel";
-	groupActionForm.submit();
+	groupCustActionForm.action="groupCustAction.do?method=cancel";
+	groupCustActionForm.submit();
   }
 </script>
 <tiles:insert definition=".withoutmenu">
  <tiles:put name="body" type="string">
-<html-el:form action="GroupAction.do?method=preview">
+<html-el:form action="groupCustAction.do?method=preview">
 
    <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
       <tr>
@@ -102,9 +102,7 @@
                   <mifos:mifoslabel name="Group.createpagehead3" bundle="GroupUIResources"/> </td>
                 </tr>
               </table>
-              <br>
-              
-             <office:listOffices methodName="load" actionName="GroupAction.do" onlyBranchOffices="yes"/>
+             <office:listOffices methodName="load" actionName="groupCustAction.do" onlyBranchOffices="yes"/>
 
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
@@ -125,7 +123,7 @@
           </tr>
         </table>
       <br>
-<html-el:hidden property="input" value="CreateNewGroup"/> 
+<html-el:hidden property="input" value="createGroup"/> 
 </html-el:form>
 
 </tiles:put>

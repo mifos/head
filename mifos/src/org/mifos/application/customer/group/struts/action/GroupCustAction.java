@@ -62,8 +62,10 @@ import org.mifos.application.customer.group.struts.actionforms.GroupCustActionFo
 import org.mifos.application.customer.group.util.helpers.CenterSearchInput;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.struts.action.CustAction;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.fees.business.FeeView;
+import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
@@ -131,9 +133,9 @@ public class GroupCustAction extends CustAction {
 				getUserContext(request).getBranchId())
 				.isCenterHierarchyExists();
 		if(isCenterHierarchyExists){
-			actionForm.setParentCustomer(getCustomerBusinessService().getCustomer(Integer
-					.valueOf(actionForm.getCenterId())));
+			actionForm.setParentCustomer(getCustomerBusinessService().findBySystemId(actionForm.getCenterSystemId()));
 			actionForm.setOfficeId(actionForm.getParentCustomer().getOffice().getOfficeId().toString());
+			actionForm.setFormedByPersonnel(actionForm.getParentCustomer().getPersonnel().getPersonnelId().toString());
 		}
 		loadCreateMasterData(actionForm, request, isCenterHierarchyExists);
 
@@ -154,8 +156,9 @@ public class GroupCustAction extends CustAction {
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		return mapping.findForward(ActionForwards.preview_success
-				.toString());
+		boolean isPendingApprovalDefined = Configuration.getInstance().getCustomerConfig(getUserContext(request).getBranchId()).isPendingApprovalStateDefinedForGroup();
+		SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, isPendingApprovalDefined, request);
+		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 	
 	@TransactionDemarcate(joinToken = true)
@@ -182,6 +185,10 @@ public class GroupCustAction extends CustAction {
 		group.save();
 		actionForm.setCustomerId(group.getCustomerId().toString());
 		actionForm.setGlobalCustNum(group.getGlobalCustNum());
+		SessionUtils.setAttribute(GroupConstants.IS_GROUP_LOAN_ALLOWED,
+				Configuration.getInstance().getCustomerConfig(
+						group.getOffice().getOfficeId())
+						.canGroupApplyForLoan(), request);
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}	
 
@@ -263,13 +270,14 @@ public class GroupCustAction extends CustAction {
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		String forward = null;
+		ActionForwards forward = null;
 		GroupCustActionForm actionForm = (GroupCustActionForm) form;
 		String fromPage = actionForm.getInput();
 		if (fromPage.equals(GroupConstants.MANAGE_GROUP) || fromPage.equals(GroupConstants.PREVIEW_MANAGE_GROUP)){
-			forward=ActionForwards.cancelEdit_success.toString();
-		}
-		return mapping.findForward(forward);
+			forward=ActionForwards.cancelEdit_success;
+		}else if(fromPage.equals(GroupConstants.CREATE_GROUP))
+			forward=ActionForwards.cancelCreate_success;
+		return mapping.findForward(forward.toString());
 	}
 
 	private void loadMasterDataForDetailsPage(HttpServletRequest request,
@@ -305,7 +313,7 @@ public class GroupCustAction extends CustAction {
 	private void loadCreateMasterData(GroupCustActionForm actionForm,
 			HttpServletRequest request, boolean isCenterHierarchyExists) throws Exception {
 		loadCreateCustomFields(actionForm, EntityType.GROUP, request);
-		loadFees(actionForm, request);
+		loadFees(actionForm, request, FeeCategory.GROUP);
 		if(!isCenterHierarchyExists)
 			loadLoanOfficers(actionForm.getOfficeIdValue(), request);		
 		loadFormedByPersonnel(actionForm.getOfficeIdValue(), request);		

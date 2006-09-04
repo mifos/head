@@ -51,15 +51,16 @@ import org.mifos.framework.exceptions.ApplicationException;
 public class GroupCustActionForm extends CustomerActionForm {
 
 	private CustomerBO parentCustomer;
-	private String centerId;
+	private String centerSystemId;
 	private String parentOfficeId;
 	
-	public String getCenterId() {
-		return centerId;
+	
+	public String getCenterSystemId() {
+		return centerSystemId;
 	}
 
-	public void setCenterId(String centerId) {
-		this.centerId = centerId;
+	public void setCenterSystemId(String centerSystemId) {
+		this.centerSystemId = centerSystemId;
 	}
 
 	public CustomerBO getParentCustomer() {
@@ -85,6 +86,7 @@ public class GroupCustActionForm extends CustomerActionForm {
 			validateCommonFields(request, errors);
 		}else if(method.equals(Methods.preview.toString())){
 			validateCommonFields(request, errors);
+			validateFormedByPersonnel(errors);
 			validateFees(request,errors);
 		}
 		return errors;

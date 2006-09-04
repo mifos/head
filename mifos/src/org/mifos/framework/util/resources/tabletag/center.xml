@@ -11,7 +11,7 @@
 			<fragment-name name="parentOfficeName" type="method"/>
 		</displayname>
 	</column>
-	<column label="/" labeltype="string" boldlabel="true" type="link" action="GroupAction.do">
+	<column label="/" labeltype="string" boldlabel="true" type="link" action="groupCustAction.do">
 		<displayname bold="true">
 			<fragment-name name="centerName" type="method"/>
 		</displayname>

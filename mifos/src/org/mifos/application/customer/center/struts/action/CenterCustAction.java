@@ -257,7 +257,7 @@ public class CenterCustAction extends CustAction {
 			SystemException {
 		loadLoanOfficers(actionForm.getOfficeIdValue(), request);
 		loadCreateCustomFields(actionForm, request);
-		loadFees(actionForm, request);
+		loadFees(actionForm, request, FeeCategory.CENTER);
 	}
 
 	private void loadUpdateMasterData(HttpServletRequest request ,CenterBO center)
@@ -303,26 +303,6 @@ public class CenterCustAction extends CustAction {
 				.retrieveCustomFieldsDefinition(EntityType.CENTER);
 		SessionUtils.setAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,
 				customFieldDefs, request.getSession());
-	}
-
-	private void loadFees(CenterCustActionForm actionForm,
-			HttpServletRequest request) throws FeeException, ServiceException {
-		FeeBusinessService feeService = (FeeBusinessService) ServiceFactory
-				.getInstance().getBusinessService(
-						BusinessServiceName.FeesService);
-		List<FeeBO> fees = feeService
-				.retrieveCustomerFeesByCategaroyType(FeeCategory.CENTER);
-		List<FeeView> additionalFees = new ArrayList<FeeView>();
-		List<FeeView> defaultFees = new ArrayList<FeeView>();
-		for (FeeBO fee : fees) {
-			if (fee.isCustomerDefaultFee())
-				defaultFees.add(new FeeView(fee));
-			else
-				additionalFees.add(new FeeView(fee));
-		}
-		actionForm.setDefaultFees(defaultFees);
-		SessionUtils.setAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
-				additionalFees, request.getSession());
 	}
 
 	public ActionForward get(ActionMapping mapping, ActionForm form,

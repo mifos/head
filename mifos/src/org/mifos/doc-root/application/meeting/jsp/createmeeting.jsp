@@ -259,7 +259,7 @@ function goToCancelPage(){
 			<html-el:hidden property="method" value="create" />
 			<!-- hidden veriable which will set input veriable -->
 			<html-el:hidden property="input"  />
-
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>
 

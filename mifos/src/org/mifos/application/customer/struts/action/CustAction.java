@@ -211,13 +211,12 @@ public class CustAction extends BaseAction {
 				customFieldDefs, request);
 	}
 
-	protected void loadFees(CustomerActionForm actionForm,
-			HttpServletRequest request) throws ApplicationException {
+	protected void loadFees(CustomerActionForm actionForm, HttpServletRequest request, FeeCategory feeCategory) throws ApplicationException{
 		FeeBusinessService feeService = (FeeBusinessService) ServiceFactory
 				.getInstance().getBusinessService(
 						BusinessServiceName.FeesService);
 		List<FeeBO> fees = feeService
-				.retrieveCustomerFeesByCategaroyType(FeeCategory.CENTER);
+				.retrieveCustomerFeesByCategaroyType(feeCategory);
 		List<FeeView> additionalFees = new ArrayList<FeeView>();
 		List<FeeView> defaultFees = new ArrayList<FeeView>();
 		for (FeeBO fee : fees) {

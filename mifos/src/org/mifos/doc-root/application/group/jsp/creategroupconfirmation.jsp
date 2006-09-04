@@ -40,10 +40,10 @@
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
-<html-el:form action="GroupAction.do?method=get">
+<html-el:form action="groupCustAction.do?method=get">
 
     
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -66,9 +66,9 @@
 	                <mifos:mifoslabel name="Group.pleasenote" bundle="GroupUIResources"></mifos:mifoslabel>
                 <span class="fontnormal"> 
                 
-                <c:out value="${requestScope.GroupVO.displayName}"/>
+                <c:out value="${sessionScope.groupCustActionForm.displayName}"/>
 				<mifos:mifoslabel name="Group.createconfirmhead1" bundle="GroupUIResources"></mifos:mifoslabel>
-                    </span> <c:out value="${requestScope.GroupVO.globalCustNum}"/>
+                    </span> <c:out value="${sessionScope.groupCustActionForm.globalCustNum}"/>
                     <span class="fontnormal"><br>
       <mifos:mifoslabel name="Group.createconfirmhead2" bundle="GroupUIResources"></mifos:mifoslabel>
 	  <mifos:mifoslabel name="${ConfigurationConstants.GROUP}" ></mifos:mifoslabel>                 
@@ -79,26 +79,24 @@
       <br>
                             <br>
                             </span>
-                     <c:choose>
-                        <c:when test="${!empty requestScope.GroupVO.personnel and !empty requestScope.GroupVO.personnel.personnelId}">
-                            <a href="groupCustAction.do?method=get&globalCustNum=${requestScope.GroupVO.globalCustNum}&recordOfficeId=${requestScope.GroupVO.office.officeId}&recordLoanOfficerId=${requestScope.GroupVO.personnel.personnelId}">
-                            <mifos:mifoslabel name="Group.view" bundle="GroupUIResources"></mifos:mifoslabel>
-						    <mifos:mifoslabel name="${ConfigurationConstants.GROUP}" ></mifos:mifoslabel>
-                            <mifos:mifoslabel name="Group.details" bundle="GroupUIResources"></mifos:mifoslabel>
-                            <mifos:mifoslabel name="Group.now" bundle="GroupUIResources"></mifos:mifoslabel>
-                            
-                            </a>
-                       </c:when>
-                       <c:otherwise>
-                       		<a href="groupCustAction.do?method=get&globalCustNum=${requestScope.GroupVO.globalCustNum}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
-                            <mifos:mifoslabel name="Group.view" bundle="GroupUIResources"></mifos:mifoslabel>
-						    <mifos:mifoslabel name="${ConfigurationConstants.GROUP}" ></mifos:mifoslabel>
-                            <mifos:mifoslabel name="Group.details" bundle="GroupUIResources"></mifos:mifoslabel>
-                            <mifos:mifoslabel name="Group.now" bundle="GroupUIResources"></mifos:mifoslabel>
-
-                            </a>
-                       </c:otherwise>
-                    </c:choose>
+                    <c:choose>
+                        <c:when test="${!empty sessionScope.groupCustActionForm.loanOfficerId}">
+                        	<c:set var = "userId" value = "${sessionScope.groupCustActionForm.loanOfficerId}"/>
+		                   	<c:set var = "branchId" value = "${sessionScope.groupCustActionForm.officeId}"/>
+                        </c:when>
+                        <c:otherwise>
+			               	<c:set var = "userId" value = "${UserContext.id}"/>
+			               	<c:set var = "branchId" value = "${UserContext.branchId}"/>			               	
+                        </c:otherwise>
+                     </c:choose>
+                   
+	           		<a href="groupCustAction.do?method=get&globalCustNum=${sessionScope.groupCustActionForm.globalCustNum}&recordOfficeId=${branchId}&recordLoanOfficerId=${userId}&randomNUm=${sessionScope.randomNUm}">
+		                <mifos:mifoslabel name="Group.view" bundle="GroupUIResources"></mifos:mifoslabel>
+					    <mifos:mifoslabel name="${ConfigurationConstants.GROUP}" ></mifos:mifoslabel>
+	                    <mifos:mifoslabel name="Group.details" bundle="GroupUIResources"></mifos:mifoslabel>
+	                    <mifos:mifoslabel name="Group.now" bundle="GroupUIResources"></mifos:mifoslabel>
+                     </a>
+                     
                             <span class="fontnormal"><br>
                             <br>
                             </span><span class="fontnormalboldorange">
@@ -107,27 +105,27 @@
                             </span>
                             <br>
                             <!--  linkto create account will be shown only if group is in active state -->
-                      <c:if test="${requestScope.GroupVO.statusId == 9}">
+                      <c:if test="${sessionScope.groupCustActionForm.status == CustomerStatus.GROUP_ACTIVE.value}">
                             	<mifos:mifoslabel name="Group.createaccount" bundle="GroupUIResources"></mifos:mifoslabel>
                             	<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" ></mifos:mifoslabel>
                          <span class="fontnormal"><br>
-                            <html-el:link href="savingsAction.do?method=getPrdOfferings&customerId=${requestScope.GroupVO.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+                            <html-el:link href="savingsAction.do?method=getPrdOfferings&customerId=${sessionScope.groupCustActionForm.customerId}&recordOfficeId=${branchId}&recordLoanOfficerId=${userId}">
                             	<mifos:mifoslabel name="Group.createa" bundle="GroupUIResources"></mifos:mifoslabel>
                             	<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="GroupUIResources"></mifos:mifoslabel>
                             	<mifos:mifoslabel name="Group.account" bundle="GroupUIResources"></mifos:mifoslabel>
-                             </html-el:link><br>
-                             <c:if test="${sessionScope.isGroupLoanAllowed == true}">
-                            <html-el:link href="loanAction.do?method=getPrdOfferings&customer.customerId=${requestScope.GroupVO.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
-                            	<mifos:mifoslabel name="Group.createa" bundle="GroupUIResources"></mifos:mifoslabel>
-                            	<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="GroupUIResources"></mifos:mifoslabel>
-                            	<mifos:mifoslabel name="Group.account" bundle="GroupUIResources"></mifos:mifoslabel>
-                            </html-el:link><br>
+                             </html-el:link><br>                             
+                             <c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isGroupLoanAllowed') == true}">
+	                            <html-el:link href="loanAction.do?method=getPrdOfferings&customer.customerId=${sessionScope.groupCustActionForm.customerId}&recordOfficeId=${branchId}&recordLoanOfficerId=${userId}">
+	                            	<mifos:mifoslabel name="Group.createa" bundle="GroupUIResources"></mifos:mifoslabel>
+	                            	<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="GroupUIResources"></mifos:mifoslabel>
+	                            	<mifos:mifoslabel name="Group.account" bundle="GroupUIResources"></mifos:mifoslabel>
+	                            </html-el:link><br>
                             </c:if>
                             <br>
                          </span>
                       </c:if>
                       <span class="fontnormal">
-                          <a href="GroupAction.do?method=hierarchyCheck&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+                          <a href="groupCustAction.do?method=hierarchyCheck&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
                             	<mifos:mifoslabel name="Group.createa" bundle="GroupUIResources"> </mifos:mifoslabel>
                             	<mifos:mifoslabel name="Group.new" bundle="GroupUIResources"></mifos:mifoslabel>
                             	<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" bundle="GroupUIResources"></mifos:mifoslabel>

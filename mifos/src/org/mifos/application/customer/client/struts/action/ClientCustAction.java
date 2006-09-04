@@ -76,6 +76,7 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerHelper;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.fees.business.FeeView;
+import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.SpouseFatherLookupEntity;
 import org.mifos.application.master.business.service.MasterDataService;
@@ -193,7 +194,7 @@ public class ClientCustAction extends CustAction {
 		Short officeId = null;
 		loadMasterDataEntities(actionForm, request);
 		loadCreateCustomFields(actionForm, EntityType.CLIENT, request);
-		loadFees(actionForm, request);
+		loadFees(actionForm, request, FeeCategory.CLIENT);
 		if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
 			loadLoanOfficers(actionForm.getOfficeIdValue(), request);
 			officeId = actionForm.getOfficeIdValue();

@@ -157,6 +157,8 @@ public class MeetingAction extends MifosBaseAction {
 			}
 			else if (maf.input.equalsIgnoreCase(MeetingConstants.CENTER)) {
 				obj = SessionUtils.getAttribute(CenterConstants.CENTER_MEETING, request.getSession());
+			}else if (maf.input.equalsIgnoreCase(MeetingConstants.GROUP)) {
+				obj = SessionUtils.getAttribute(GroupConstants.GROUP_MEETING, request.getSession());
 			}
 			if(obj!=null)
 				meeting = MeetingHelper.convertMeetingM2toM1((MeetingBO)obj);
@@ -291,7 +293,9 @@ public class MeetingAction extends MifosBaseAction {
 			//Meeting is being stored in session for client create
 			SessionUtils.setAttribute(ClientConstants.CLIENT_MEETING, MeetingHelper.convertMeetingM1oM2(meeting), request.getSession());
 		}
-		else{
+		else if (maf.input.equalsIgnoreCase(MeetingConstants.GROUP)) {
+			SessionUtils.setAttribute(GroupConstants.GROUP_MEETING, MeetingHelper.convertMeetingM1oM2(meeting), request.getSession());
+		}else{
 			//Meeting is being stored in session for center create
 			SessionUtils.setAttribute(CenterConstants.CENTER_MEETING, MeetingHelper.convertMeetingM1oM2(meeting), request.getSession());
 		}

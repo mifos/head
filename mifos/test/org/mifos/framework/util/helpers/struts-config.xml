@@ -1928,8 +1928,7 @@
 			<forward name="update_success" path="/groupCustAction.do?method=get" />
 			<forward name="update_failure" path="/pages/application/group/jsp/preview_editgroupdetails.jsp" />
 			<!--Cancel forwards-->
-			<forward name="cancel_create"
-				path="/CustomerSearchAction.do?method=load" />
+			<forward name="cancelCreate_success" path="/CustomerSearchAction.do?method=load" />
 			<forward name="cancelEdit_success" path="/groupCustAction.do?method=get" />
 		</action>
 		

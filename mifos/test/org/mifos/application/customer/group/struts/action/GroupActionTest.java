@@ -54,7 +54,6 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.PositionEntity;
 import org.mifos.application.customer.center.business.CenterBO;
-import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.struts.actionforms.GroupCustActionForm;
@@ -181,7 +180,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		HibernateUtil.closeSession();
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "load");
-		addRequestParameter("centerId", center.getCustomerId().toString());
+		addRequestParameter("centerSystemId", center.getGlobalCustNum());
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -204,7 +203,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		HibernateUtil.closeSession();
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "load");
-		addRequestParameter("centerId", center.getCustomerId().toString());
+		addRequestParameter("centerSystemId", center.getGlobalCustNum());
 		actionPerform();
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "loadMeeting");
@@ -224,7 +223,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		HibernateUtil.closeSession();
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "load");
-		addRequestParameter("centerId", center.getCustomerId().toString());
+		addRequestParameter("centerSystemId", center.getGlobalCustNum());
 		actionPerform();
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "preview");
@@ -242,7 +241,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		HibernateUtil.closeSession();
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "load");
-		addRequestParameter("centerId", center.getCustomerId().toString());
+		addRequestParameter("centerSystemId", center.getGlobalCustNum());
 		actionPerform();
 		
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
@@ -275,7 +274,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		HibernateUtil.closeSession();
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "load");
-		addRequestParameter("centerId", center.getCustomerId().toString());
+		addRequestParameter("centerSystemId", center.getGlobalCustNum());
 		actionPerform();
 		
 		
@@ -322,7 +321,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "load");
-		addRequestParameter("centerId", center.getCustomerId().toString());
+		addRequestParameter("centerSystemId", center.getGlobalCustNum());
 		actionPerform();
 		List<FeeView> feeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
 		FeeView fee = feeList.get(0);
@@ -349,7 +348,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "load");
-		addRequestParameter("centerId", center.getCustomerId().toString());
+		addRequestParameter("centerSystemId", center.getGlobalCustNum());
 		actionPerform();
 		List<FeeView> feeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
 		FeeView fee = feeList.get(0);
@@ -374,7 +373,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "load");
-		addRequestParameter("centerId", center.getCustomerId().toString());
+		addRequestParameter("centerSystemId", center.getGlobalCustNum());
 		actionPerform();
 		
 		List<FeeView> feeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
@@ -404,7 +403,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		HibernateUtil.closeSession();
 		removeFees(feesToRemove);
-		
+		assertNotNull(SessionUtils.getAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED,request));
 		CenterBO oldCenter = center;
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
 		oldCenter =  null;
@@ -426,7 +425,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "load");
-		addRequestParameter("centerId", center.getCustomerId().toString());
+		addRequestParameter("centerSystemId", center.getGlobalCustNum());
 		actionPerform();
 		
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
@@ -468,7 +467,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("branchId", officeId.toString());
-		addRequestParameter("centerId", center.getCustomerId().toString());
+		addRequestParameter("centerSystemId", center.getGlobalCustNum());
 		actionPerform();
 		
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
@@ -508,7 +507,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		createGroupWithCenter();
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "load");
-		addRequestParameter("centerId", center.getCustomerId().toString());
+		addRequestParameter("centerSystemId", center.getGlobalCustNum());
 		actionPerform();
 		
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
@@ -851,6 +850,18 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.cancelEdit_success.toString());		
+	}	
+
+	public void testCancelSuccessForCreateGroup() throws Exception {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "cancel");
+		addRequestParameter("input", GroupConstants.CREATE_GROUP);
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String)request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.cancelCreate_success.toString());		
 	}	
 
 	private void createGroupWithCenterAndSetInSession() throws Exception {

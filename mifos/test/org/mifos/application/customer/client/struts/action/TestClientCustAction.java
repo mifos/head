@@ -615,7 +615,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		List<FeeView> fees = new ArrayList<FeeView>();
 		AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory
 				.createPeriodicAmountFee("PeriodicAmountFee",
-						FeeCategory.CENTER, "200", MeetingFrequency.WEEKLY,
+						FeeCategory.CLIENT, "200", MeetingFrequency.WEEKLY,
 						Short.valueOf("2"));
 		fees.add(new FeeView(fee1));
 		HibernateUtil.commitTransaction();

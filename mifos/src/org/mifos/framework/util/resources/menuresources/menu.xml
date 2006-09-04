@@ -14,7 +14,7 @@
 						<namefragment>label.createnew</namefragment> 
 						<namefragment>Group</namefragment> 
 					</displayname>
-					<linkvalue>GroupAction.do?method=hierarchyCheck&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
+					<linkvalue>groupCustAction.do?method=hierarchyCheck&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
 				</menuitem>
 				<menuitem>
 					<displayname> 
@@ -107,7 +107,7 @@
 						<namefragment>label.createnew</namefragment> 
 						<namefragment>Group</namefragment>
 					</displayname>
-					<linkvalue>GroupAction.do?method=hierarchyCheck&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
+					<linkvalue>groupCustAction.do?method=hierarchyCheck&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
 				</menuitem>
 				<menuitem>
 					<displayname> 

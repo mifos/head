@@ -231,7 +231,7 @@ public interface GroupConstants {
 	public static final int MAX_FIELD_LENGTH=100;
 	public static final String TRAINED = "1";
 	public static final String NOT_TRAINED = "0";
-	
+	public static final String CREATE_GROUP="createGroup";
 	public static final String GROUPLOANACCOUNTSINUSE = "groupLoanAccountsInUse";
 	public static final String GROUPSAVINGSACCOUNTSINUSE = "groupSavingsAccountsInUse";
 	
