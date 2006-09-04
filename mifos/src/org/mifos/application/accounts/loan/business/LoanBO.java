@@ -570,23 +570,26 @@ public class LoanBO extends AccountBO {
 
 	@Override
 	public void applyCharge(Short feeId, Double charge) throws AccountException {
-		List<AccountActionDateEntity> dueInstallments = getDueInstallments();
-		if (!dueInstallments.isEmpty()) {
-			if (feeId.equals(Short.valueOf(AccountConstants.MISC_FEES))
-					|| feeId.equals(Short
-							.valueOf(AccountConstants.MISC_PENALTY))) {
-				applyMiscCharge(feeId,new Money(String.valueOf(charge)), dueInstallments.get(0));
-			} else {
-				FeeBO fee = new FeePersistence().getFee(feeId);
-				if (fee.getFeeFrequency().getFeePayment() != null) {
-					applyOneTimeFee(fee, charge, dueInstallments.get(0));
-				} else {
-					applyPeriodicFee(fee, charge, getDueInstallments());
-				}
-			}
+		List<AccountActionDateEntity> dueInstallments =null;
+		if (feeId.equals(Short.valueOf(AccountConstants.MISC_FEES))
+				|| feeId.equals(Short
+						.valueOf(AccountConstants.MISC_PENALTY))) {
+			dueInstallments = getTotalDueInstallments();
+			if(dueInstallments.isEmpty()) 
+				throw new AccountException(AccountConstants.NOMOREINSTALLMENTS);
+			applyMiscCharge(feeId,new Money(String.valueOf(charge)), dueInstallments.get(0));
 			roundInstallments(getIdList(dueInstallments));
 		} else {
-			throw new AccountException(AccountConstants.NOMOREINSTALLMENTS);
+			dueInstallments = getDueInstallments();
+			if(dueInstallments.isEmpty()) 
+				throw new AccountException(AccountConstants.NOMOREINSTALLMENTS);
+			FeeBO fee = new FeePersistence().getFee(feeId);
+			if (fee.getFeeFrequency().getFeePayment() != null) {
+				applyOneTimeFee(fee, charge, dueInstallments.get(0));
+			} else {
+				applyPeriodicFee(fee, charge, getDueInstallments());
+			}
+			roundInstallments(getIdList(dueInstallments));
 		}
 	}
 
@@ -1340,7 +1343,7 @@ public class LoanBO extends AccountBO {
 		validateSize(installmentDates, EMIInstallments);
 		List<FeeInstallment> feeInstallment = new ArrayList<FeeInstallment>();
 		if (getAccountFees().size() != 0){
-			populateAccountFeeAmount(loanInterest);
+			populateAccountFeeAmount(getAccountFees(),loanInterest);
 			feeInstallment = mergeFeeInstallments(getFeeInstallment(installmentDates));
 		}
 		MifosLogManager
@@ -1357,8 +1360,8 @@ public class LoanBO extends AccountBO {
 				.getInstallmentId());
 	}
 	
-	private void populateAccountFeeAmount(Money loanInterest){
-		for(AccountFeesEntity  accountFeesEntity :  getAccountFees()){
+	private void populateAccountFeeAmount(Set<AccountFeesEntity> accountFees,Money loanInterest){
+		for(AccountFeesEntity  accountFeesEntity :  accountFees){
 			accountFeesEntity.setAccountFeeAmount(getAccountFeeAmount(accountFeesEntity,loanInterest));
 		}
 	}
@@ -1784,16 +1787,21 @@ public class LoanBO extends AccountBO {
 			List<AccountActionDateEntity> dueInstallments)
 			throws AccountException {
 		AccountFeesEntity accountFee = getAccountFee(fee, charge);
-		Map<Short, Money> feeInstallmentMap = getFeeInstallmentMap(accountFee,
-				dueInstallments.get(0).getActionDate());
-		Money totalFeeAmountApplied = applyFeeToInstallments(feeInstallmentMap,
-				dueInstallments, fee, accountFee);
+		Set<AccountFeesEntity> accountFeeSet=new HashSet<AccountFeesEntity>();
+		accountFeeSet.add(accountFee);
+		populateAccountFeeAmount(accountFeeSet,loanSummary.getOriginalInterest());
+		List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
+		for (AccountActionDateEntity accountActionDateEntity : dueInstallments)
+			installmentDates.add(new InstallmentDate(accountActionDateEntity.getInstallmentId(),accountActionDateEntity.getActionDate()));
+		List<FeeInstallment> feeInstallmentList = mergeFeeInstallments(handlePeriodic(accountFee,installmentDates));
+		Money totalFeeAmountApplied = applyFeeToInstallments(feeInstallmentList,
+				dueInstallments);
 		updateLoanSummary(fee.getFeeId(), totalFeeAmountApplied);
 		updateLoanActivity(fee.getFeeId(), totalFeeAmountApplied, fee
 				.getFeeName()
 				+ " applied");
 	}
-
+	
 	private void applyOneTimeFee(FeeBO fee, Double charge,
 			AccountActionDateEntity accountActionDateEntity)
 			throws AccountException {
@@ -1801,19 +1809,23 @@ public class LoanBO extends AccountBO {
 		AccountFeesEntity accountFee = new AccountFeesEntity(this, fee, charge,
 				FeeStatus.ACTIVE.getValue(), new Date(System
 						.currentTimeMillis()), null);
-		Map<Short, Money> feeInstallmentMap = getFeeInstallmentMap(accountFee,
-				loanScheduleEntity.getActionDate());
+		Set<AccountFeesEntity> accountFeeSet=new HashSet<AccountFeesEntity>();
+		accountFeeSet.add(accountFee);
+		populateAccountFeeAmount(accountFeeSet,loanSummary.getOriginalInterest());
 		List<AccountActionDateEntity> loanScheduleEntityList = new ArrayList<AccountActionDateEntity>();
 		loanScheduleEntityList.add(loanScheduleEntity);
-		Money totalFeeAmountApplied = applyFeeToInstallments(feeInstallmentMap,
-				loanScheduleEntityList, fee, accountFee);
+		List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
+		installmentDates.add(new InstallmentDate(accountActionDateEntity.getInstallmentId(),accountActionDateEntity.getActionDate()));
+		List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>(); 
+		feeInstallmentList.add(handleOneTime(accountFee,installmentDates));
+		Money totalFeeAmountApplied = applyFeeToInstallments(feeInstallmentList,loanScheduleEntityList);
 		filterTimeOfDisbursementFees(loanScheduleEntity, fee);
 		updateLoanSummary(fee.getFeeId(), totalFeeAmountApplied);
 		updateLoanActivity(fee.getFeeId(), totalFeeAmountApplied, fee
 				.getFeeName()
 				+ " applied");
 	}
-
+	
 	private void applyMiscCharge(Short chargeType, Money charge,
 			AccountActionDateEntity accountActionDateEntity) {
 		LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
@@ -1854,27 +1866,27 @@ public class LoanBO extends AccountBO {
 		addLoanActivity(loanActivityEntity);
 	}
 
-	private Money applyFeeToInstallments(Map<Short, Money> feeInstallmentMap,
-			List<AccountActionDateEntity> accountActionDateList, FeeBO fee,
-			AccountFeesEntity accountFee) {
+	private Money applyFeeToInstallments(List<FeeInstallment> feeInstallmentList,
+			List<AccountActionDateEntity> accountActionDateList) {
 		Date lastAppliedDate = null;
 		Money totalFeeAmountApplied = new Money();
+		AccountFeesEntity accountFeesEntity=null;
 		for (AccountActionDateEntity accountActionDateEntity : accountActionDateList) {
 			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
-			if (feeInstallmentMap.get(loanScheduleEntity.getInstallmentId()) != null) {
-				lastAppliedDate = loanScheduleEntity.getActionDate();
-				totalFeeAmountApplied = totalFeeAmountApplied
-						.add(feeInstallmentMap.get(loanScheduleEntity
-								.getInstallmentId()));
-				AccountFeesActionDetailEntity accountFeesActionDetailEntity = new LoanFeeScheduleEntity(
-						loanScheduleEntity, fee, accountFee,feeInstallmentMap.get(loanScheduleEntity
-								.getInstallmentId()));
-				loanScheduleEntity
-						.addAccountFeesAction(accountFeesActionDetailEntity);
-			}
+			for(FeeInstallment feeInstallment : feeInstallmentList)
+				if (feeInstallment.getInstallmentId().equals(loanScheduleEntity.getInstallmentId())){					lastAppliedDate = loanScheduleEntity.getActionDate();
+					totalFeeAmountApplied = totalFeeAmountApplied
+							.add(feeInstallment.getAccountFee());
+					AccountFeesActionDetailEntity accountFeesActionDetailEntity = new LoanFeeScheduleEntity(
+							loanScheduleEntity, feeInstallment.getAccountFeesEntity().getFees(), feeInstallment.getAccountFeesEntity(),
+							feeInstallment.getAccountFee());
+					loanScheduleEntity
+							.addAccountFeesAction(accountFeesActionDetailEntity);
+					accountFeesEntity=feeInstallment.getAccountFeesEntity();
+				}
 		}
-		accountFee.setLastAppliedDate(lastAppliedDate);
-		addAccountFees(accountFee);
+		accountFeesEntity.setLastAppliedDate(lastAppliedDate);
+		addAccountFees(accountFeesEntity);
 		return totalFeeAmountApplied;
 	}
 

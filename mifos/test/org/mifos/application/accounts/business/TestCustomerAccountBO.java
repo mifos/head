@@ -671,6 +671,42 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		Money amount=new Money();
 		for(AccountActionDateEntity accountActionDateEntity : customerAccountBO.getAccountActionDates()){
 			CustomerScheduleEntity customerScheduleEntity=(CustomerScheduleEntity)accountActionDateEntity;
+			if(customerScheduleEntity.getInstallmentId().equals(Short.valueOf("1"))){
+				amount=customerScheduleEntity.getMiscFee();
+				assertEquals(new Money("33.0"),customerScheduleEntity.getMiscFee());
+			}
+		}
+		if(customerAccountBO.getCustomerActivitDetails()!=null){
+			CustomerActivityEntity customerActivityEntity=((CustomerActivityEntity)(customerAccountBO.getCustomerActivitDetails().toArray())[0]);
+			assertEquals(AccountConstants.MISC_FEES_APPLIED,customerActivityEntity.getDescription());
+			assertEquals(amount,customerActivityEntity.getAmount());
+		}
+	}
+	
+	public void testApplyMiscChargeWithFirstInstallmentPaid() throws Exception{
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active_test", CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting, new Date(System
+				.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group_Active_test", CustomerStatus.GROUP_ACTIVE.getValue(), "1.1.1", center, new Date(System
+				.currentTimeMillis()));
+		
+		TestObjectFactory.flushandCloseSession();
+		center=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
+		group=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
+		customerAccountBO=group.getCustomerAccount();
+		for(AccountActionDateEntity accountActionDateEntity : customerAccountBO.getAccountActionDates()){
+			CustomerScheduleEntity customerScheduleEntity=(CustomerScheduleEntity)accountActionDateEntity;
+			if(customerScheduleEntity.getInstallmentId().equals(Short.valueOf("1"))){
+				customerScheduleEntity.setPaymentStatus(PaymentStatus.PAID.getValue());
+			}
+		}
+		UserContext uc = TestObjectFactory.getUserContext();
+		customerAccountBO.setUserContext(uc);
+		customerAccountBO.applyCharge(Short.valueOf("-1"),new Double("33"));
+		Money amount=new Money();
+		for(AccountActionDateEntity accountActionDateEntity : customerAccountBO.getAccountActionDates()){
+			CustomerScheduleEntity customerScheduleEntity=(CustomerScheduleEntity)accountActionDateEntity;
 			if(customerScheduleEntity.getInstallmentId().equals(Short.valueOf("2"))){
 				amount=customerScheduleEntity.getMiscFee();
 				assertEquals(new Money("33.0"),customerScheduleEntity.getMiscFee());

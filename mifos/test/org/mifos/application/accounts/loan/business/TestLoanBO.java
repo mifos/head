@@ -1885,6 +1885,30 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO.applyCharge(Short.valueOf("-1"),new Double("33"));
 		for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
 			LoanScheduleEntity loanScheduleEntity=(LoanScheduleEntity)accountActionDateEntity;
+			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("1")))
+				assertEquals(new Money("33.0"),loanScheduleEntity.getMiscFee());
+		}
+		assertEquals(intialTotalFeeAmount.add(new Money("33.0")),((LoanBO)accountBO).getLoanSummary().getOriginalFees());
+		LoanActivityEntity loanActivityEntity=((LoanActivityEntity)(((LoanBO)accountBO).getLoanActivityDetails().toArray())[0]);
+		assertEquals(AccountConstants.MISC_FEES_APPLIED,loanActivityEntity.getComments());
+		assertEquals(((LoanBO)accountBO).getLoanSummary().getOriginalFees(),loanActivityEntity.getFeeOutstanding());
+	}
+	
+	public void testApplyMiscChargeWithFirstInstallmentPaid() throws Exception{
+		accountBO = getLoanAccount();
+		Money intialTotalFeeAmount=((LoanBO)accountBO).getLoanSummary().getOriginalFees();
+		TestObjectFactory.flushandCloseSession();
+		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
+		for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
+			LoanScheduleEntity loanScheduleEntity=(LoanScheduleEntity)accountActionDateEntity;
+			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("1")))
+				loanScheduleEntity.setPaymentStatus(PaymentStatus.PAID.getValue());
+		}
+		UserContext uc = TestObjectFactory.getUserContext();
+		accountBO.setUserContext(uc);
+		accountBO.applyCharge(Short.valueOf("-1"),new Double("33"));
+		for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
+			LoanScheduleEntity loanScheduleEntity=(LoanScheduleEntity)accountActionDateEntity;
 			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("2")))
 				assertEquals(new Money("33.0"),loanScheduleEntity.getMiscFee());
 		}

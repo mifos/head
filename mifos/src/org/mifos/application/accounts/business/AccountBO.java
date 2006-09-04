@@ -821,6 +821,20 @@ public class AccountBO extends BusinessObject {
 		}
 		return dueInstallmentList;
 	}
+	
+	protected final List<AccountActionDateEntity> getTotalDueInstallments() {
+		List<AccountActionDateEntity> dueInstallmentList = new ArrayList<AccountActionDateEntity>();
+		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
+			if (accountActionDateEntity.getPaymentStatus().equals(
+					PaymentStatus.UNPAID.getValue())) {
+				if (accountActionDateEntity.compareDate(DateUtils
+						.getCurrentDateWithoutTimeStamp()) >= 0) {
+					dueInstallmentList.add(accountActionDateEntity);
+				}
+			}
+		}
+		return dueInstallmentList;
+	}
 
 	protected final List<Short> getIdList(
 			List<AccountActionDateEntity> dueInstallments) {
@@ -828,56 +842,6 @@ public class AccountBO extends BusinessObject {
 		for (AccountActionDateEntity accountActionDateEntity : dueInstallments)
 			ids.add(accountActionDateEntity.getInstallmentId());
 		return ids;
-	}
-
-	protected final Map<Short, Money> getFeeInstallmentMap(
-			AccountFeesEntity accountFee, Date feeStartDate)
-			throws AccountException {
-		Set<AccountFeesEntity> accountFeeSet = new HashSet<AccountFeesEntity>();
-		accountFeeSet.add(accountFee);
-		RepaymentSchedule repaymentSchedule = getFeeInstallment(accountFeeSet,
-				feeStartDate);
-		List<org.mifos.framework.components.repaymentschedule.FeeInstallment> feeInstallmentList = repaymentSchedule
-				.getRepaymentFeeInstallment();
-		Map<Short, Money> feeInstallmentMap = new HashMap<Short, Money>();
-		for (Iterator<org.mifos.framework.components.repaymentschedule.FeeInstallment> iter = feeInstallmentList
-				.iterator(); iter.hasNext();) {
-			org.mifos.framework.components.repaymentschedule.FeeInstallment feeInstallment = iter
-					.next();
-			feeInstallmentMap.put(new Short(Integer.toString(feeInstallment
-					.getInstallmentId())), feeInstallment
-					.getSummaryAccountFeeInstallment().get(0)
-					.getAccountFeeAmount());
-			accountFee.setAccountFeeAmount(feeInstallment
-					.getSummaryAccountFeeInstallment().get(0).getAccountFee()
-					.getAccountFeeAmount());
-		}
-		return feeInstallmentMap;
-	}
-
-	protected final RepaymentSchedule getFeeInstallment(
-			Set<AccountFeesEntity> accountFeeSet, Date feeStartDate)
-			throws AccountException {
-		RepaymentScheduleInputsIfc inputs = RepaymentScheduleFactory
-				.getRepaymentScheduleInputs();
-		RepaymentScheduleIfc repaymentScheduler = RepaymentScheduleFactory
-				.getRepaymentScheduler();
-		Short accountType = this.getAccountType().getAccountTypeId();
-		if (accountType.equals(AccountTypes.LOANACCOUNT.getValue())) {
-			setLoanInput(inputs, feeStartDate);
-		} else if (accountType.equals(AccountTypes.CUSTOMERACCOUNT.getValue())) {
-			setCustomerInput(inputs, feeStartDate);
-		}
-		inputs.setAccountFeeEntity(accountFeeSet);
-		inputs.setFeeStartDate(feeStartDate);
-		RepaymentSchedule repaymentSchedule = null;
-		try {
-			repaymentScheduler.setRepaymentScheduleInputs(inputs);
-			repaymentSchedule = repaymentScheduler.getRepaymentSchedule();
-		} catch (RepaymentScheduleException e) {
-			throw new AccountException(e);
-		}
-		return repaymentSchedule;
 	}
 
 	protected final Boolean isFeeAlreadyApplied(FeeBO fee) {
@@ -1282,7 +1246,7 @@ public class AccountBO extends BusinessObject {
 		return null;
 	}
 
-	private FeeInstallment handleOneTime(AccountFeesEntity accountFee,
+	protected final FeeInstallment handleOneTime(AccountFeesEntity accountFee,
 			List<InstallmentDate> installmentDates) {
 		Money accountFeeAmount = accountFee.getAccountFeeAmount();
 		Date feeDate = installmentDates.get(0).getInstallmentDueDate();
