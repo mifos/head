@@ -16,6 +16,7 @@ import org.mifos.application.accounts.savings.business.SavingsTransactionHistory
 import org.mifos.application.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
@@ -549,9 +550,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 				savingsOffering, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
 		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountTypes.SAVINGSACCOUNT.getValue(),null);
-		savings.changeStatus(new AccountStateEntity(
-				AccountStates.SAVINGS_ACC_PENDINGAPPROVAL), helper
-				.getAccountNotes(savings), null, userContext);
+		savings.changeStatus(AccountState.SAVINGS_ACC_PENDINGAPPROVAL.getValue(), null, "notes");
 		assertEquals(AccountStates.SAVINGS_ACC_PENDINGAPPROVAL, savings
 				.getAccountState().getId().shortValue());
 		

@@ -199,8 +199,6 @@
 		<!-- savings accounts form beans -->				
 		<form-bean name="savingsActionForm"
 			type="org.mifos.application.accounts.savings.struts.actionforms.SavingsActionForm" />
-		<form-bean name="editSavingsStatusActionForm"
-			type="org.mifos.application.accounts.savings.struts.actionforms.EditSavingsStatusActionForm" />
 		<form-bean name="savingsClosureForm" 
 			type="org.mifos.application.accounts.savings.struts.actionforms.SavingsClosureActionForm"/>
 		<!-- Reports action form  -->				
@@ -278,24 +276,6 @@
        		<forward name="waiveAmount_success" path="/savingsAction.do?method=getDepositDueDetails" />
        		<forward name="getStatusHistory_success" path="/pages/application/savings/jsp/viewstatuschangehistory.jsp" />
  		</action>
- 		<!-- Edit savings status action start -->
-		<action path="/editSavingsAction" type="org.mifos.application.accounts.savings.struts.action.EditSavingsStatusAction" 
-      		name="editSavingsStatusActionForm" 
-       		parameter="method"	
-       		validate="true"
-       		input="/editSavingsAction.do?method=validate"
-       		scope="session">
-       		<forward name="load_success" path="/pages/application/savings/jsp/change_status_savingsAccount.jsp"/>
-       		<forward name="load_failure" path="/savingsAction.do?method=get"/>
-       		<forward name="cancel_success" path="/savingsAction.do?method=get"/>
-       		<forward name="preview_success" path="/pages/application/savings/jsp/checklists_savingsAccount.jsp"/>
-       		<forward name="previous_success" path="/pages/application/savings/jsp/change_status_savingsAccount.jsp"/>
-       		<forward name="cancel_success" path="/savingsAction.do?method=get"/>
-       		<forward name="update_failure" path="/pages/application/savings/jsp/checklists_savingsAccount.jsp"/>
-       		<forward name="update_success" path="/savingsAction.do?method=get" />       		       		       		       		
-       		<forward name="preview_failure" path="/pages/application/savings/jsp/change_status_savingsAccount.jsp" />       		       		       		
- 		</action>
-		<!-- Edit savings status action end -->
 		<action path="/client_ClientSearchAction"
 			type="org.mifos.application.client.struts.action.ClientSearchAction"
 			name="clientActionForm" parameter="method"

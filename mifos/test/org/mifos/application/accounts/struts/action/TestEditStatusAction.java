@@ -11,12 +11,16 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
+import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
@@ -38,6 +42,8 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 	private CustomerBO center;
 	
 	private MeetingBO meeting;
+	
+	private SavingsOfferingBO savingsOffering;
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -170,7 +176,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 	}
 	
-	public void testUpdateSuccess() {
+	public void testUpdateSuccessForLoan() {
 		createInitialObjects();
 		accountBO = getLoanAccount(client,meeting);
 		
@@ -200,7 +206,44 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter("newStatusId", "8");
 		addRequestParameter("flagId", "1");
 		actionPerform();
-		verifyForward("loan_detail_page");
+		verifyForward(ActionForwards.loan_detail_page.toString());
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+	}
+	
+	public void testUpdateSuccessForSavings() {
+		createInitialObjects();
+		savingsOffering = createSavingsOffering();
+		accountBO = createSavingsAccount("000X00000000019", savingsOffering,
+				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
+		
+		setRequestPathInfo("/editStatusAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("input", "savings");
+		addRequestParameter("accountId", accountBO.getAccountId().toString());
+		actionPerform();
+		verifyForward("load_success");
+		assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST,request.getSession()));
+		assertEquals("Size of the status list should be 2",2,((List<AccountStateEntity>)SessionUtils.getAttribute(SavingsConstants.STATUS_LIST,request.getSession())).size());
+		
+		setRequestPathInfo("/editStatusAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("input", "savings");
+		addRequestParameter("notes", "Test");
+		addRequestParameter("accountTypeId", accountBO.getAccountType().getAccountTypeId().toString());
+		addRequestParameter("newStatusId", "15");
+		addRequestParameter("flagId", "4");
+		actionPerform();
+		verifyForward("preview_success");
+		
+		setRequestPathInfo("/editStatusAction.do");
+		addRequestParameter("method", "update");
+		addRequestParameter("notes", "Test");
+		addRequestParameter("accountTypeId", accountBO.getAccountType().getAccountTypeId().toString());
+		addRequestParameter("newStatusId", "15");
+		addRequestParameter("flagId", "4");
+		actionPerform();
+		verifyForward(ActionForwards.savings_details_page.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 	}
@@ -227,5 +270,23 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		return TestObjectFactory.createLoanAccount("42423142341", customer, Short
 				.valueOf("5"), startDate, loanOffering);
 
+	}
+	
+	private SavingsOfferingBO createSavingsOffering() {
+		MeetingBO meetingIntCalc = TestObjectFactory
+				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		MeetingBO meetingIntPost = TestObjectFactory
+				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		return TestObjectFactory.createSavingsOffering("SavingPrd1", Short
+				.valueOf("2"), new Date(System.currentTimeMillis()), Short
+				.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0,
+				Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc,
+				meetingIntPost);
+	}
+
+	private SavingsBO createSavingsAccount(String globalAccountNum,
+			SavingsOfferingBO savingsOffering, short accountStateId) {
+		return TestObjectFactory.createSavingsAccount(globalAccountNum, group,
+				accountStateId, new Date(System.currentTimeMillis()), savingsOffering, userContext);
 	}
 }

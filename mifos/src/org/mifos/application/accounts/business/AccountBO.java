@@ -402,6 +402,7 @@ public class AccountBO extends BusinessObject {
 			checkPermissionForStatusChange(newStatusId, this.getUserContext(),
 					flagId, getOffice().getOfficeId(), this.getUserContext()
 							.getId());
+		activationDateHelper(newStatusId);
 		MasterPersistence masterPersistence = new MasterPersistence();
 		AccountStateEntity accountStateEntity = (AccountStateEntity) masterPersistence
 				.findById(AccountStateEntity.class, newStatusId);
@@ -423,9 +424,7 @@ public class AccountBO extends BusinessObject {
 		this.setAccountState(accountStateEntity);
 		this.addAccountNotes(accountNotesEntity);
 		if (accountStateFlagEntity != null) {
-			accountStateFlagEntity.setLocaleId(this.getUserContext()
-					.getLocaleId());
-			this.addAccountFlag(accountStateFlagEntity);
+			setFlag(accountStateFlagEntity);
 		}
 		if (newStatusId.equals(AccountState.LOANACC_CANCEL.getValue())
 				|| newStatusId.equals(AccountState.LOANACC_OBLIGATIONSMET
@@ -1204,6 +1203,9 @@ public class AccountBO extends BusinessObject {
 
 	protected void roundInstallments(List<Short> installmentIdList) {
 	}
+	
+	protected void activationDateHelper(Short newStatusId)
+	throws AccountException {}
 
 	private List<Short> getApplicableInstallmentIdsForRemoveFees() {
 		List<Short> installmentIdList = new ArrayList<Short>();
@@ -1361,6 +1363,17 @@ public class AccountBO extends BusinessObject {
 				newState.shortValue(),
 				null != flagSelected ? flagSelected.shortValue() : 0,
 				userContext, recordOfficeId, recordLoanOfficerId);
+	}
+	
+	private void setFlag(AccountStateFlagEntity accountStateFlagEntity) {
+		accountStateFlagEntity.setLocaleId(this.getUserContext().getLocaleId());
+		Iterator iter = this.getAccountFlags().iterator();
+		while (iter.hasNext()) {
+			AccountFlagMapping currentFlag = (AccountFlagMapping) iter.next();
+			if (!currentFlag.getFlag().isFlagRetained())
+				iter.remove();
+		}
+		this.addAccountFlag(accountStateFlagEntity);
 	}
 
 }

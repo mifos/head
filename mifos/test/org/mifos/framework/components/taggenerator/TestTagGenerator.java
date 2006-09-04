@@ -57,7 +57,7 @@ public class TestTagGenerator extends MifosTestCase{
 		assertEquals(true,createdLink.contains("TestBranchOffice"));
 		assertEquals(true,createdLink.contains("centerCustAction"));
 		assertEquals(true,createdLink.contains("Center_Active_test"));
-		assertEquals(true,createdLink.contains("GroupAction"));
+		assertEquals(true,createdLink.contains("groupCustAction"));
 		assertEquals(true,createdLink.contains("Group_Active_test"));
 		assertEquals(true,createdLink.contains("SavingPrd1"));
 	}
@@ -69,7 +69,7 @@ public class TestTagGenerator extends MifosTestCase{
 		assertEquals(true,createdLink.contains("TestBranchOffice"));
 		assertEquals(true,createdLink.contains("centerCustAction"));
 		assertEquals(true,createdLink.contains("Center_Active_test"));
-		assertEquals(true,createdLink.contains("GroupAction"));
+		assertEquals(true,createdLink.contains("groupCustAction"));
 		assertEquals(true,createdLink.contains("Group_Active_test"));
 		assertEquals(true,createdLink.contains("savingsAction"));
 	}

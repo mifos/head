@@ -94,7 +94,7 @@ public class CustomerTagGenerator extends TagGenerator{
 		if(customer.getCustomerLevel().getId().shortValue()==CustomerConstants.CENTER_LEVEL_ID)
 			return "centerCustAction.do?method=get&globalCustNum=";
 		else if (customer.getCustomerLevel().getId().shortValue()==CustomerConstants.GROUP_LEVEL_ID)
-			return "GroupAction.do?method=get&globalCustNum=";
+			return "groupCustAction.do?method=get&globalCustNum=";
 		else if (customer.getCustomerLevel().getId().shortValue()==CustomerConstants.CLIENT_LEVEL_ID)
 			return "clientCustAction.do?method=get&globalCustNum=";
 		return "";

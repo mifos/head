@@ -61,7 +61,6 @@ import org.mifos.framework.components.ComponentsTestSuite;
 import org.mifos.framework.components.configuration.ConfigurationTestSuite;
 import org.mifos.framework.components.cronjob.CronjobTestSuite;
 import org.mifos.framework.components.fieldConfiguration.FieldConfigurationTestSuite;
-import org.mifos.framework.struts.plugin.InitializerPluginTest;
 import org.mifos.framework.struts.plugin.TestConstPlugin;
 import org.mifos.framework.util.helpers.StringToMoneyConverterTest;
 
@@ -85,7 +84,6 @@ public class ApplicationTestSuite extends MifosTestSuite {
 		suite.addTest(FinancialTestSuite.suite());
 		suite.addTest(FastTests.suite());
 		suite.addTestSuite(StringToMoneyConverterTest.class);
-		suite.addTestSuite(InitializerPluginTest.class);
 		suite.addTest(ConfigurationTestSuite.suite());
 		suite.addTest(CronjobTestSuite.suite());
 		suite.addTest(LabelConfigurationTestSuite.suite());

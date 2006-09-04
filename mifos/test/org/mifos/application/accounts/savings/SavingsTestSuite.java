@@ -8,7 +8,6 @@ import org.mifos.application.accounts.savings.business.TestSavingsStateMachine;
 import org.mifos.application.accounts.savings.business.service.TestSavingsBusinessService;
 import org.mifos.application.accounts.savings.persistence.TestSavingsPersistence;
 import org.mifos.application.accounts.savings.persistence.service.TestSavingsPersistenceService;
-import org.mifos.application.accounts.savings.struts.action.TestEditSavingsStatusAction;
 import org.mifos.application.accounts.savings.struts.action.TestSavingsAction;
 import org.mifos.application.accounts.savings.struts.action.TestSavingsApplyAdjustmentAction;
 import org.mifos.application.accounts.savings.struts.action.TestSavingsClosureAction;
@@ -32,7 +31,6 @@ public class SavingsTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(TestSavingsClosureAction.class);
 		testSuite.addTestSuite(TestSavingsHelper.class);
 		testSuite.addTestSuite(TestSavingsStateMachine.class);
-		testSuite.addTestSuite(TestEditSavingsStatusAction.class);
 		testSuite.addTestSuite(TestSavingsApplyAdjustmentAction.class);
 		testSuite.addTestSuite(TestSavingsDepositWithdrawalAction.class);
 		return testSuite;

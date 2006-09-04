@@ -47,12 +47,6 @@
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-		<script language="javascript">
-  function editStatus(){
-  	editSavingsStatusActionForm.submit();
-  }
-  
-</script>
 		<html-el:form method="post" action="/savingsAction.do">
 
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -75,7 +69,7 @@
 								</td>
 								<td width="38%" rowspan="2" align="right" valign="top" class="fontnormal">
 									<c:if test="${sessionScope.BusinessKey.accountState.id != AccountStates.SAVINGS_ACC_CANCEL && sessionScope.BusinessKey.accountState.id != AccountStates.SAVINGS_ACC_CLOSED}">
-										<html-el:link href="javascript:editStatus()">
+										<html-el:link href="editStatusAction.do?method=load&accountId=${sessionScope.BusinessKey.accountId}">
 											<mifos:mifoslabel name="Savings.Edit" />
 											<mifos:mifoslabel name="Savings.account" />
 											<mifos:mifoslabel name="Savings.status" />
@@ -366,13 +360,6 @@
 			<mifos:SecurityParam property="Savings" />
 			<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}" />
 			<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}" />
-		</html-el:form>
-		<html-el:form action="editSavingsAction.do?method=load">
-			<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}" />
-			<html-el:hidden property="accountTypeId" value="${sessionScope.BusinessKey.accountType.accountTypeId}" />
-			<html-el:hidden property="accountName" value="${sessionScope.BusinessKey.savingsOffering.prdOfferingName}" />
-			<html-el:hidden property="currentStatusId" value="${sessionScope.BusinessKey.accountState.id}" />
-			<html-el:hidden value='${sessionScope.BusinessKey.globalAccountNum}' property="globalAccountNum" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

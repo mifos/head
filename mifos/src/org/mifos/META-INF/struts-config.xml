@@ -97,7 +97,6 @@
 		<form-bean name="accountAppActionForm" type="org.mifos.application.accounts.struts.actionforms.AccountAppActionForm"></form-bean>
 		<!-- savings accounts form beans -->
 		<form-bean name="savingsActionForm" type="org.mifos.application.accounts.savings.struts.actionforms.SavingsActionForm" />
-		<form-bean name="editSavingsStatusActionForm" type="org.mifos.application.accounts.savings.struts.actionforms.EditSavingsStatusActionForm" />
 		<form-bean name="savingsClosureForm" type="org.mifos.application.accounts.savings.struts.actionforms.SavingsClosureActionForm" />
 		<!-- Apply Adjustment action form  -->
 		<form-bean name="applyAdjustmentActionForm" type="org.mifos.application.accounts.struts.actionforms.ApplyAdjustmentActionForm" />
@@ -868,20 +867,6 @@
 			
 		</action>
 		<!-- Savings Accounts action end -->
-		<!-- Edit savings status action start -->
-		<action path="/editSavingsAction" type="org.mifos.application.accounts.savings.struts.action.EditSavingsStatusAction" name="editSavingsStatusActionForm" parameter="method" validate="true" input="/editSavingsAction.do?method=validate"
-			scope="session">
-			<forward name="load_success" path="/pages/application/savings/jsp/change_status_savingsAccount.jsp" />
-			<forward name="load_failure" path="/savingsAction.do?method=get" />
-			<forward name="cancel_success" path="/savingsAction.do?method=get" />
-			<forward name="preview_success" path="/pages/application/savings/jsp/checklists_savingsAccount.jsp" />
-			<forward name="previous_success" path="/pages/application/savings/jsp/change_status_savingsAccount.jsp" />
-			<forward name="cancel_success" path="/savingsAction.do?method=get" />
-			<forward name="update_failure" path="/pages/application/savings/jsp/checklists_savingsAccount.jsp" />
-			<forward name="update_success" path="/savingsAction.do?method=get" />
-			<forward name="preview_failure" path="/pages/application/savings/jsp/change_status_savingsAccount.jsp" />
-		</action>
-		<!-- Edit savings status action end -->
 		<!-- Apply Adjustment action -->
 		<action path="/applyAdjustment" type="org.mifos.application.accounts.struts.action.ApplyAdjustment" name="applyAdjustmentActionForm" parameter="method" validate="true" input="/pages/application/accounts/jsp/applyadjustment.jsp" scope="session">
 			<forward name="loadadjustment_success" path="/pages/application/accounts/jsp/applyadjustment.jsp" />

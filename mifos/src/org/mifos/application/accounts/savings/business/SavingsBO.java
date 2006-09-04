@@ -43,7 +43,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -51,7 +50,6 @@ import org.hibernate.HibernateException;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.AccountFlagMapping;
 import org.mifos.application.accounts.business.AccountNotesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
@@ -454,6 +452,7 @@ public class SavingsBO extends AccountBO {
 				+ getAccountId());
 	}
 
+	@Override
 	public void update() throws AccountException{
 		logger.debug("In SavingsBO::update(), accountId: " + getAccountId());
 		this.setUpdatedBy(userContext.getId());
@@ -1215,7 +1214,7 @@ public class SavingsBO extends AccountBO {
 						AccountTypes.SAVINGSACCOUNT.getValue());
 	}
 
-	private void activationDateHelper(Short newStatusId)
+	protected void activationDateHelper(Short newStatusId)
 			throws AccountException {
 		if (Configuration.getInstance().getAccountConfig(
 				getOffice().getOfficeId())
@@ -1230,48 +1229,6 @@ public class SavingsBO extends AccountBO {
 				setValuesForActiveState();
 			}
 		}
-	}
-
-	public void changeStatus(AccountStateEntity newState,
-			AccountNotesEntity accountNotesEntity,
-			AccountStateFlagEntity flagSelected, UserContext userContext)
-			throws AccountException {
-		// permission Check
-		checkPermissionForStatusChange(newState, userContext, flagSelected);
-
-		activationDateHelper(newState.getId());
-		if (null != flagSelected)
-			setFlag(flagSelected);
-		setStatus(newState, accountNotesEntity);
-		this.update();
-	}
-
-	private void setFlag(AccountStateFlagEntity accountStateFlagEntity) {
-		// remove all previous flags except the blacklisted ones denoted by
-		// retained flag
-		Iterator iter = this.getAccountFlags().iterator();
-		while (iter.hasNext()) {
-			AccountFlagMapping currentFlag = (AccountFlagMapping) iter.next();
-			if (!currentFlag.getFlag().isFlagRetained())
-				iter.remove();
-		}
-		this.addAccountFlag(accountStateFlagEntity);
-	}
-
-	private void setStatus(AccountStateEntity accountStateEntity,
-			AccountNotesEntity accountNotesEntity) {
-		AccountStateEntity accountState = this.getAccountState();
-		this.setAccountState(this
-				.retrieveAccountStateEntityMasterObject(accountStateEntity));
-		this.addAccountNotes(accountNotesEntity);
-		if (accountStateEntity.getId().equals(Short.valueOf("15"))
-				|| accountStateEntity.getId().equals(Short.valueOf("17")))
-			this.setClosedDate(new Date(System.currentTimeMillis()));
-		this
-				.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
-						accountState, this.getAccountState(),
-						(new PersonnelPersistence()).getPersonnel(
-								userContext.getId())));
 	}
 
 	public void adjustLastUserAction(Money amountAdjustedTo,

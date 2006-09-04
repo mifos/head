@@ -733,12 +733,6 @@ public class ActivityMapper {
 		activityMap.put("/savingsClosureAction-close",
 				SecurityConstants.SAVINGS_CLOSE_SAVINGS_ACCOUNT);
 
-		// mapping for edit savings account status
-		activityMap.put("/editSavingsAction-load", SecurityConstants.VIEW);
-		activityMap.put("/editSavingsAction-preview", SecurityConstants.VIEW);
-		activityMap.put("/editSavingsAction-previous", SecurityConstants.VIEW);
-		activityMap.put("/editSavingsAction-update", SecurityConstants.VIEW);
-
 		// savings accountadjustment
 		activityMap.put("/savingsApplyAdjustmentAction-load",
 				SecurityConstants.SAVINGS_APPLY_ADJUSTMENT);

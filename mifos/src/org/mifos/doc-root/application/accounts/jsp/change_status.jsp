@@ -52,7 +52,7 @@
 							<td class="headingorange"><span class="fontnormalbold"> <mifos:mifoslabel
 								name="accounts.currentstatus" bundle="accountsUIResources" />:<mifoscustom:MifosImage
 								id="${sessionScope.editStatusActionForm.currentStatusId}"
-								moduleName="accounts.loan" /></span> <span class="fontnormal"><c:out value="${sessionScope.BusinessKey.accountState.name}" />
+								moduleName="accounts" /></span> <span class="fontnormal"><c:out value="${sessionScope.BusinessKey.accountState.name}" />
 								</span></td>
 						</tr>
 						<tr><logic:messagesPresent>
