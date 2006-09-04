@@ -63,6 +63,10 @@
 			<one-to-many
 				class="org.mifos.application.personnel.business.PersonnelCustomFieldEntity" />
 		</set>
+		<set name="personnelMovements" cascade="all" lazy="true" access="field">
+			<key column="PERSONNEL_ID" update="false" />
+			<one-to-many class="org.mifos.application.personnel.business.PersonnelMovementEntity" />
+		</set>
 	</class>
 	<!-- This query obtains all the active loan officers under a particular office -->
 	<query name="masterdata.activeloanofficers">

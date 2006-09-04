@@ -29,6 +29,8 @@ public class PersonnelMovement extends ValueObject{
 	/**Denotes the the version number of the personnel movement record.*/
 	private Short versionNo;
 	
+	private Short status;
+
 	/**
      * Simple constructor of PersonnelMovement instances.
      */
@@ -160,6 +162,14 @@ public class PersonnelMovement extends ValueObject{
      */
 	public void setVersionNo(Short versionNo) {
 		this.versionNo = versionNo;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
 	}
 	
 }

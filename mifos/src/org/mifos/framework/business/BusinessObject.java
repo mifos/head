@@ -65,8 +65,8 @@ public abstract class BusinessObject extends PersistentObject{
 		setUpdatedDate(new Date());
 		setUpdatedBy(userContext.getId());
 	}
-	protected void setUpdateDetails(Short userId,Date date) {
-		setUpdatedDate(date);
+	protected void setUpdateDetails(Short userId) {
+		setUpdatedDate(new Date());
 		setUpdatedBy(userId);
 	}
 		

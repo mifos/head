@@ -10,8 +10,8 @@
         <id name="personnelMovementId" column="PERSONNEL_MOVEMENT_ID" type="short">
             <generator class="native"/>
         </id>
-		<version name="versionNo" column="VERSION_NO" type="short" unsaved-value="negative"/>
-        <property name="personnelId" column="PERSONNEL_ID" type="short" />
+		<property name="personnelId" column="PERSONNEL_ID" type="short" />
+        <property name="status" column="STATUS" type="short" access="field"/>
         <property name="officeId" column="OFFICE_ID" type="short" />
         <property name="startDate" column="START_DATE" type="date" />                                        
         <property name="endDate" column="END_DATE" type="date" />                                        

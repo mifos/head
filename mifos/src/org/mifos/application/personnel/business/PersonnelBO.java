@@ -3,46 +3,36 @@ package org.mifos.application.personnel.business;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.mifos.application.customer.business.CustomFieldView;
-import org.mifos.application.customer.business.CustomerAddressDetailEntity;
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerPositionView;
-import org.mifos.application.customer.business.CustomerView;
-import org.mifos.application.customer.exceptions.AssociatedObjectStaleException;
+import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.business.SupportedLocalesEntity;
-import org.mifos.application.master.util.valueobjects.SupportedLocales;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.util.helpers.OfficeLevel;
-import org.mifos.application.office.util.helpers.OfficeStatus;
-import org.mifos.application.personnel.exceptions.HierarchyChangeException;
 import org.mifos.application.personnel.exceptions.PersonnelException;
-import org.mifos.application.personnel.exceptions.StatusChangeException;
-import org.mifos.application.personnel.exceptions.TransferNotPossibleException;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.personnel.util.helpers.PersonnelStatus;
-import org.mifos.application.personnel.util.valueobjects.Personnel;
+import org.mifos.application.rolesandpermission.util.valueobjects.Role;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.EncryptionException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.authentication.EncryptionService;
-import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.StringUtils;
-import org.mifos.framework.util.valueobjects.Context;
 
 public class PersonnelBO extends BusinessObject {
 
@@ -85,9 +75,12 @@ public class PersonnelBO extends BusinessObject {
 	private Set<PersonnelRoleEntity> personnelRoles;
 
 	private Set<PersonnelCustomFieldEntity> customFields;
+	
+	private Set<PersonnelMovementEntity> personnelMovements;
 
 	private MifosLogger logger;
 
+	
 	protected PersonnelBO() {
 		this.level = null;
 		this.personnelDetails = new PersonnelDetailsEntity();
@@ -122,6 +115,7 @@ public class PersonnelBO extends BusinessObject {
 				dateOfJoiningMFI, dateOfJoiningBranch, this, address);
 		this.personnelRoles = personnelRoles;
 		this.customFields = new HashSet<PersonnelCustomFieldEntity>();
+		this.personnelMovements = new HashSet<PersonnelMovementEntity>();
 		this.personnelId = null;
 		this.globalPersonnelNum = "XX";
 		if (customFields != null)
@@ -133,7 +127,7 @@ public class PersonnelBO extends BusinessObject {
 		this.unLock();
 		this.noOfTries = Constants.NO;
 		this.encriptedPassword = getEncryptedPassword(password);
-
+		this.status = new PersonnelStatusEntity(PersonnelStatus.ACTIVE);
 	}
 
 	public Set<PersonnelCustomFieldEntity> getCustomFields() {
@@ -219,6 +213,11 @@ public class PersonnelBO extends BusinessObject {
 	public void setPersonnelRoles(Set<PersonnelRoleEntity> personnelRoles) {
 		this.personnelRoles = personnelRoles;
 	}
+	
+	public Set<PersonnelMovementEntity> getPersonnelMovements() {
+		return personnelMovements;
+	}
+
 
 	private void updateCustomFields(List<CustomFieldView> customfields) {
 		if (this.customFields != null && customfields != null) {
@@ -236,7 +235,12 @@ public class PersonnelBO extends BusinessObject {
 	public PersonnelStatusEntity getStatus() {
 		return status;
 	}
-
+	
+	public void addPersonnelMovement(PersonnelMovementEntity personnelMovement) {
+		if (personnelMovement != null) {
+			this.personnelMovements.add(personnelMovement);
+		}
+	}
 	public void save() throws PersonnelException {
 		try {
 			PersonnelPersistence persistence = new PersonnelPersistence();
@@ -269,11 +273,9 @@ public class PersonnelBO extends BusinessObject {
 			throws PersonnelException {
 		byte[] encryptedPassword = null;
 		try {
-			logger.debug("Passed password string is : " + password);
+
 			encryptedPassword = EncryptionService.getInstance()
 					.createEncryptedPassword(password);
-			logger.debug("got Encripted Password from EncryptionService");
-
 		} catch (EncryptionException e) {
 			throw new PersonnelException(e);
 		} catch (SystemException e) {
@@ -306,60 +308,82 @@ public class PersonnelBO extends BusinessObject {
 		}
 	}
 	
-	/*public void update(UserContext userContext ,PersonnelStatus newStatus,PersonnelLevel newLevel, Short officeId,  Name name, Integer maritalStatus, Integer gender, Address address,  List<CustomFieldView> customFields) throws PersonnelException {
-			validateForUpdate(newStatus,officeId,newLevel);
-			this.setUserContext(userContext);
-			updateCustomFields(customFields);
+	  
+	public void update(PersonnelStatus newStatus, PersonnelLevel newLevel, OfficeBO office, Integer title,Short preferredLocale,String password,String emailId,Set<Role> personnelRoles , List<CustomFieldView> customFields, Name name, Integer maritalStatus, Integer gender, Address address, Short updatedById) throws PersonnelException {
+			MasterPersistence masterPersistence = new MasterPersistence();	
+			validateForUpdate(newStatus,office,newLevel);
 			Date dateOfJoiningBranch = null;
-			if(!officeId.equals(this.getOffice() .getOfficeId())){
+			if(!this.office.getOfficeId().equals(office.getOfficeId())){
+				makePersonalMovementEntries(office,updatedById);
 				dateOfJoiningBranch = new Date();
+				
 			}
+			PersonnelStatusEntity personnelStatus = (PersonnelStatusEntity) masterPersistence.findById(PersonnelStatusEntity.class, newStatus.getValue());
+			this.status = personnelStatus;
+			PersonnelLevelEntity personnelLevel = (PersonnelLevelEntity) masterPersistence.findById(PersonnelLevelEntity.class, newLevel.getValue());
+			this.level = personnelLevel;
+			if(StringUtils.isNullAndEmptySafe(password)){
+				this.encriptedPassword = getEncryptedPassword(password);
+				this.unLock();
+				this.noOfTries = YesNoFlag.NO.getValue();
+				this.passwordChanged = YesNoFlag.YES.getValue();
+			}
+			this.emailId =emailId;
+			if(title!=null && title.intValue()==0){
+				this.title=null;
+			}
+			else
+				this.title = title;
+			this.personnelRoles = null;
 			updatePersonnelDetails(name, maritalStatus, gender, address,dateOfJoiningBranch);
-	}*/
+			updateCustomFields(customFields);
+			try {
+				setUpdateDetails(updatedById);
+				new PersonnelPersistence().createOrUpdate(this);
+				} catch (PersistenceException e) {
+				throw new PersonnelException(
+						CustomerConstants.UPDATE_FAILED_EXCEPTION, e);
+			}
+	}
 	
 	public void updatePersonnelDetails(Name name, Integer maritalStatus, Integer gender, Address address, Date dateOfJoiningBranch ) throws PersonnelException {
-		if(getPersonnelDetails()==null){
+		if(getPersonnelDetails()!=null){
 			getPersonnelDetails().updateDetails(name,maritalStatus, gender, address,dateOfJoiningBranch);
-			getPersonnelDetails().setAddress(address);
-			getPersonnelDetails().setName(name);
-			getPersonnelDetails().setAddress(address);
-			getPersonnelDetails().setAddress(address);
-		
 		}
 	}
 	
-	private void validateForUpdate(PersonnelStatus newStatus , Short newOffice, PersonnelLevel newLevel)throws PersonnelException{
+	private void validateForUpdate(PersonnelStatus newStatus , OfficeBO newOffice, PersonnelLevel newLevel)throws PersonnelException{
 		
-		if(!level.getId().equals(newLevel))
+		if(!level.getId().equals(newLevel.getValue()))
 			validateUserHierarchyChange(newLevel, newOffice);
-		if( !office.getOfficeId().equals(newOffice)){
+		if( !office.getOfficeId().equals(newOffice.getOfficeId())){
 			validateOfficeTransfer(newOffice, newLevel);
 		}
-		if(!status.getId().equals(newStatus)){
+		if(!status.getId().equals(newStatus.getValue())){
 			validateStatusChange(newStatus, newLevel,newOffice);
 		}
 		
 	}	
 	
-	private void validateStatusChange(PersonnelStatus newStatus, PersonnelLevel newLevel, Short newOffice) throws PersonnelException{
-		if( status.getId().equals(PersonnelStatus.ACTIVE) && newStatus.equals(PersonnelStatus.INACTIVE) && newLevel.equals(PersonnelLevel.LOAN_OFFICER)){
+	private void validateStatusChange(PersonnelStatus newStatus, PersonnelLevel newLevel, OfficeBO newOffice) throws PersonnelException{
+		if( status.getId().equals(PersonnelStatus.ACTIVE.getValue()) && newStatus.equals(PersonnelStatus.INACTIVE) && newLevel.equals(PersonnelLevel.LOAN_OFFICER)){
 			if(new PersonnelPersistence().getActiveChildrenForLoanOfficer(personnelId, office.getOfficeId())){
 				Object values[]=new Object[1];
 				values[0]=globalPersonnelNum;
 				throw new PersonnelException(PersonnelConstants.STATUS_CHANGE_EXCEPTION,values);
 			}
 		}
-		else if( status.getId().equals(PersonnelStatus.INACTIVE) && newStatus.equals(PersonnelStatus.ACTIVE)&& !(office.isActive())){
+		else if( status.getId().equals(PersonnelStatus.INACTIVE.getValue()) && newStatus.equals(PersonnelStatus.ACTIVE)&& !(newOffice.isActive())){
 			Object values[]=new Object[1];
-			values[0]=office.getOfficeId();
+			values[0]=newOffice.getOfficeId();
 			throw new PersonnelException(PersonnelConstants.INACTIVE_BRANCH,values);
 		}
 		
 	}
 	
-	private void validateOfficeTransfer(Short newOfficeId ,PersonnelLevel newLevel)throws PersonnelException {
+	private void validateOfficeTransfer(OfficeBO newOffice ,PersonnelLevel newLevel)throws PersonnelException {
 		if(newLevel.equals(PersonnelLevel.LOAN_OFFICER)){
-			if(!newOfficeId.equals(OfficeLevel.BRANCHOFFICE.getValue() )){
+			if(!newOffice.getLevel().getId().equals(OfficeLevel.BRANCHOFFICE.getValue() )){
 				Object values[]=new Object[1];
 				values[0]=globalPersonnelNum;
 				throw new PersonnelException(PersonnelConstants.LO_ONLY_IN_BRANCHES,values);
@@ -373,7 +397,7 @@ public class PersonnelBO extends BusinessObject {
 		
 	}
 	
-	private void validateUserHierarchyChange(PersonnelLevel newLevel , Short officeId)throws PersonnelException{
+	private void validateUserHierarchyChange(PersonnelLevel newLevel , OfficeBO officeId)throws PersonnelException{
 		if(level.getId().equals(PersonnelLevel.LOAN_OFFICER.getValue()) && newLevel.equals(PersonnelLevel.NON_LOAN_OFFICER)){
 			if(new PersonnelPersistence().getAllChildrenForLoanOfficer(personnelId, getOffice().getOfficeId())){
 				Object values[]=new Object[1];
@@ -381,13 +405,37 @@ public class PersonnelBO extends BusinessObject {
 				throw new PersonnelException(PersonnelConstants.HIERARCHY_CHANGE_EXCEPTION,values);
 			}
 		}
-		else if(level.getId().equals(PersonnelLevel.NON_LOAN_OFFICER.getValue()) && newLevel.equals(PersonnelLevel.LOAN_OFFICER) && (!officeId.equals(OfficeLevel.BRANCHOFFICE))){
+		else if(level.getId().equals(PersonnelLevel.NON_LOAN_OFFICER.getValue()) && newLevel.equals(PersonnelLevel.LOAN_OFFICER) && (!officeId.getLevel().getId().equals(OfficeLevel.BRANCHOFFICE.getValue()))){
 				Object values[]=new Object[1];
 				values[0]=globalPersonnelNum;
 				throw new PersonnelException(PersonnelConstants.LO_ONLY_IN_BRANCHES,values);
 			
 		}
 		
+	}
+	
+	public PersonnelMovementEntity getActiveCustomerMovement() {
+		PersonnelMovementEntity movement = null;
+		for(PersonnelMovementEntity personnelMovementEntity : personnelMovements){
+			if(personnelMovementEntity.isActive()){
+				movement = personnelMovementEntity;
+				break;
+			}
+		}
+		return movement;
+	}
+	
+	private void makePersonalMovementEntries(OfficeBO newOffice, Short updatedById){
+		PersonnelMovementEntity currentPersonnelMovement = getActiveCustomerMovement();
+		if(currentPersonnelMovement == null){
+			currentPersonnelMovement = new PersonnelMovementEntity(this, getCreatedDate());
+			this.addPersonnelMovement(currentPersonnelMovement);
+		}
+		
+		currentPersonnelMovement.makeInActive(updatedById);
+		this.office = newOffice;
+		PersonnelMovementEntity newPersonnelMovement = new PersonnelMovementEntity(this, new Date());
+		this.addPersonnelMovement(newPersonnelMovement);
 	}
 	
 }
