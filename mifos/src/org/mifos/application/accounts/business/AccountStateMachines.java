@@ -310,9 +310,6 @@ public class AccountStateMachines implements StateMachine {
 		logger.debug("In SavingsStateMachine::retrieveAllAccountStateList()");
 		try {
 			return accountBusinessService.retrieveAllAccountStateList(accountTypeId);
-		} catch (PersistenceException e) {
-			throw new ApplicationException(SavingsConstants.UNKNOWN_EXCEPTION,
-					e);
 		} catch (ServiceException e) {
 			throw new ApplicationException(SavingsConstants.UNKNOWN_EXCEPTION,
 					e);

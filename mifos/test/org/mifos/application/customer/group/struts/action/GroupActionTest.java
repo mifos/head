@@ -45,7 +45,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -568,9 +568,9 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 				new Integer(group.getCustomerId()).intValue());
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
 				new Integer(client.getCustomerId()).intValue());
-		loanBO = (LoanBO) new AccountPersistanceService().getAccount(loanBO
+		loanBO = (LoanBO) new AccountPersistence().getAccount(loanBO
 				.getAccountId());
-		savingsBO = (SavingsBO) new AccountPersistanceService()
+		savingsBO = (SavingsBO) new AccountPersistence()
 				.getAccount(savingsBO.getAccountId());
 
 		assertEquals("Size of active loan accounts should be 1", 1,
@@ -597,9 +597,9 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 				new Integer(group.getCustomerId()).intValue());
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
 				new Integer(client.getCustomerId()).intValue());
-		loanBO = (LoanBO) new AccountPersistanceService().getAccount(loanBO
+		loanBO = (LoanBO) new AccountPersistence().getAccount(loanBO
 				.getAccountId());
-		savingsBO = (SavingsBO) new AccountPersistanceService()
+		savingsBO = (SavingsBO) new AccountPersistence()
 				.getAccount(savingsBO.getAccountId());
 	}
 

@@ -10,9 +10,8 @@ import org.mifos.application.accounts.business.CustomerAccountView;
 import org.mifos.application.accounts.business.LoanAccountView;
 import org.mifos.application.accounts.business.LoanAccountsProductView;
 import org.mifos.application.accounts.business.SavingsAccountView;
-import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
@@ -24,7 +23,6 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -46,7 +44,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 
 	private SavingsBO clientSavingsAccount;
 
-	private AccountPersistanceService accountPersistanceService;
+	private AccountPersistence accountPersistence;
 
 	Date currentDate;
 
@@ -56,7 +54,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		bulkEntryBusinessService = (BulkEntryBusinessService) ServiceFactory
 				.getInstance().getBusinessService(
 						BusinessServiceName.BulkEntryService);
-		accountPersistanceService = new AccountPersistanceService();
+		accountPersistence = new AccountPersistence();
 		currentDate = new Date(System.currentTimeMillis());
 	}
 
@@ -119,7 +117,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		account = (LoanBO) accountPersistanceService.getAccount(account
+		account = (LoanBO) accountPersistence.getAccount(account
 				.getAccountId());
 		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
@@ -183,9 +181,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 
 	}
 
-	public void testSuccessfulSavingsAccountDeposit() throws AccountException,
-			SystemException, NumberFormatException,
-			BulkEntryAccountUpdateException {
+	public void testSuccessfulSavingsAccountDeposit() throws Exception {
 		createInitialObjects();
 		clientSavingsAccount = TestObjectFactory.createSavingsAccount(
 				"43245434", client, Short.valueOf("16"), new Date(System
@@ -199,7 +195,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 						.currentTimeMillis()), false, client.getCustomerId());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		clientSavingsAccount = (SavingsBO) accountPersistanceService
+		clientSavingsAccount = (SavingsBO) accountPersistence
 				.getAccount(clientSavingsAccount.getAccountId());
 		assertEquals("The balance for account", clientSavingsAccount
 				.getSavingsBalance().getAmountDoubleValue(), 100.0);
@@ -207,8 +203,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 	}
 
 	public void testSuccessfulSavingsAccountWithdrawal()
-			throws AccountException, SystemException, NumberFormatException,
-			BulkEntryAccountUpdateException {
+			throws Exception{
 		createSavingsAccountWithBal("100");
 		bulkEntryBusinessService.saveSavingsWithdrawalAccount(
 				getSavingsAccountView(clientSavingsAccount, "0", "100"), Short
@@ -217,7 +212,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 						.currentTimeMillis()), client.getCustomerId());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		clientSavingsAccount = (SavingsBO) accountPersistanceService
+		clientSavingsAccount = (SavingsBO) accountPersistence
 				.getAccount(clientSavingsAccount.getAccountId());
 		assertEquals("The balance for account", clientSavingsAccount
 				.getSavingsBalance().getAmountDoubleValue(), 0.0);
@@ -235,7 +230,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 
 	}
 
-	public void testRetrieveCustomerAccountActionDetails() {
+	public void testRetrieveCustomerAccountActionDetails() throws Exception {
 		createCenter();
 
 		assertNotNull(center.getCustomerAccount());
@@ -251,8 +246,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 				center.getCustomerId());
 	}
 
-	public void testSuccesulSaveCustomerAccount() throws NumberFormatException,
-			BulkEntryAccountUpdateException {
+	public void testSuccesulSaveCustomerAccount() throws Exception {
 		createCenter();
 
 		CustomerAccountBO customerAccount = center.getCustomerAccount();
@@ -275,7 +269,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 	}
 
 	public void testCustomerAccountInstallmentPayableOnlyOnce()
-			throws NumberFormatException, BulkEntryAccountUpdateException {
+			throws Exception {
 		CustomerAccountView customerAccountView = createCustomerAccountWithNoDue();
 
 		try {
@@ -397,7 +391,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 	}
 
 	private CustomerAccountView createCustomerAccountWithNoDue()
-			throws NumberFormatException, BulkEntryAccountUpdateException {
+			throws Exception {
 		createCenter();
 
 		CustomerAccountView customerAccountView = TestObjectFactory
@@ -412,12 +406,12 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		return customerAccountView;
 	}
 
-	private void makePaymentForallInstallments() {
+	private void makePaymentForallInstallments()throws Exception {
 		for (AccountActionDateEntity actionDate : account
 				.getAccountActionDates()) {
 			actionDate.setPaymentStatus(PaymentStatus.PAID.getValue());
 		}
 
-		accountPersistanceService.updateAccount(account);
+		accountPersistence.updateAccount(account);
 	}
 }

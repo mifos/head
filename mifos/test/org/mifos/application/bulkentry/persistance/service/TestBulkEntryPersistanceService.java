@@ -6,16 +6,13 @@ import java.util.List;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.PaymentData;
-import org.mifos.application.bulkentry.exceptions.BulkEntryAccountUpdateException;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -30,12 +27,12 @@ public class TestBulkEntryPersistanceService extends MifosTestCase {
 
 	private AccountBO account;
 
-	private AccountPersistanceService accountPersistanceService;
+	private AccountPersistence accountPersistence;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		accountPersistanceService = new AccountPersistanceService();
+		accountPersistence = new AccountPersistence();
 	}
 
 	@Override
@@ -48,7 +45,7 @@ public class TestBulkEntryPersistanceService extends MifosTestCase {
 		HibernateUtil.closeSession();
 	}
 
-	public void testGetAccount() {
+	public void testGetAccount() throws Exception{
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -67,14 +64,13 @@ public class TestBulkEntryPersistanceService extends MifosTestCase {
 				Short.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);
 		HibernateUtil.closeSession();
-		account = (LoanBO) accountPersistanceService.getAccount(account
+		account = (LoanBO) accountPersistence.getAccount(account
 				.getAccountId());
 		assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(),
 				"Loan");
 	}
 
-	public void testSuccessfulLoanUpdate() throws NumberFormatException,
-			BulkEntryAccountUpdateException, AccountException, SystemException {
+	public void testSuccessfulLoanUpdate() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active", Short
@@ -92,7 +88,7 @@ public class TestBulkEntryPersistanceService extends MifosTestCase {
 				Short.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);
 		HibernateUtil.closeSession();
-		account = (LoanBO) accountPersistanceService.getAccount(account
+		account = (LoanBO) accountPersistence.getAccount(account
 				.getAccountId());
 		assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(),
 				"Loan");

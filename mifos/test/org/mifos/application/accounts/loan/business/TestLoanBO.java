@@ -20,7 +20,7 @@ import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.business.LoanTrxnDetailEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
-import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -77,12 +77,12 @@ public class TestLoanBO extends MifosTestCase {
 
 	private CustomerBO client = null;
 
-	private AccountPersistanceService accountPersistanceService;
+	private AccountPersistence accountPersistence=null;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		accountPersistanceService = new AccountPersistanceService();
+		accountPersistence = new AccountPersistence();
 	}
 
 	@Override
@@ -486,7 +486,7 @@ public class TestLoanBO extends MifosTestCase {
 				.getAmountDoubleValue(), 212.0);
 	}
 
-	public void testGetTotalAmountDueForSingleInstallment() {
+	public void testGetTotalAmountDueForSingleInstallment() throws Exception {
 		accountBO = getLoanAccount();
 
 		AccountActionDateEntity accountActionDateEntity = accountBO
@@ -498,7 +498,7 @@ public class TestLoanBO extends MifosTestCase {
 				.getAmountDoubleValue(), 424.0);
 	}
 
-	public void testGetTotalAmountDueWithPayment() {
+	public void testGetTotalAmountDueWithPayment() throws Exception {
 		accountBO = getLoanAccount();
 
 		LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountBO
@@ -513,7 +513,7 @@ public class TestLoanBO extends MifosTestCase {
 				.getAmountDoubleValue(), 389.0);
 	}
 
-	public void testGetTotalAmountDueWithPaymentDone() {
+	public void testGetTotalAmountDueWithPaymentDone() throws Exception {
 		accountBO = getLoanAccount();
 
 		AccountActionDateEntity accountActionDateEntity = accountBO
@@ -527,7 +527,7 @@ public class TestLoanBO extends MifosTestCase {
 				.getAmountDoubleValue(), 212.0);
 	}
 
-	public void testGetTotalAmountDueForTwoInstallments() {
+	public void testGetTotalAmountDueForTwoInstallments() throws Exception {
 		accountBO = getLoanAccount();
 		AccountActionDateEntity accountActionDateEntity = accountBO
 				.getAccountActionDate((short) 1);
@@ -549,7 +549,7 @@ public class TestLoanBO extends MifosTestCase {
 				.getOustandingBalance().getAmountDoubleValue(), 336.0);
 	}
 
-	public void testGetOustandingBalancewithPayment() {
+	public void testGetOustandingBalancewithPayment() throws Exception {
 		accountBO = getLoanAccount();
 		LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
 				.getLoanSummary();
@@ -563,7 +563,7 @@ public class TestLoanBO extends MifosTestCase {
 				.getOustandingBalance().getAmountDoubleValue(), 306.0);
 	}
 
-	public void testGetNextMeetingDateAsCurrentDate() {
+	public void testGetNextMeetingDateAsCurrentDate() throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -584,14 +584,14 @@ public class TestLoanBO extends MifosTestCase {
 		int month = currentDateCalendar.get(Calendar.MONTH);
 		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
 		currentDateCalendar = new GregorianCalendar(year, month, day);
-		accountBO = new AccountPersistanceService().getAccount(accountBO
+		accountBO = accountPersistence.getAccount(accountBO
 				.getAccountId());
 		assertEquals(((LoanBO) accountBO).getNextMeetingDate().toString(),
 				new java.sql.Date(currentDateCalendar.getTimeInMillis())
 						.toString());
 	}
 
-	public void testGetNextMeetingDateAsFutureDate() {
+	public void testGetNextMeetingDateAsFutureDate() throws Exception{
 		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -616,8 +616,8 @@ public class TestLoanBO extends MifosTestCase {
 		currentDateCalendar = new GregorianCalendar(year, month, day - 1);
 		accountActionDateEntity.setActionDate(new java.sql.Date(
 				currentDateCalendar.getTimeInMillis()));
-		new AccountPersistanceService().updateAccount(accountBO);
-		accountBO = new AccountPersistanceService().getAccount(accountBO
+		accountPersistence.updateAccount(accountBO);
+		accountBO = accountPersistence.getAccount(accountBO
 				.getAccountId());
 		assertEquals(((LoanBO) accountBO).getNextMeetingDate().toString(),
 				accountBO.getAccountActionDate(Short.valueOf("2"))
@@ -630,7 +630,7 @@ public class TestLoanBO extends MifosTestCase {
 				.getAmountDoubleValue(), 0.0);
 	}
 
-	public void testGetTotalAmountInArrearsForSingleInstallmentDue() {
+	public void testGetTotalAmountInArrearsForSingleInstallmentDue() throws Exception {
 		accountBO = getLoanAccount();
 		AccountActionDateEntity accountActionDateEntity = accountBO
 				.getAccountActionDate((short) 1);
@@ -640,7 +640,7 @@ public class TestLoanBO extends MifosTestCase {
 				.getAmountDoubleValue(), 212.0);
 	}
 
-	public void testGetTotalAmountInArrearsWithPayment() {
+	public void testGetTotalAmountInArrearsWithPayment() throws Exception {
 		accountBO = getLoanAccount();
 
 		LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountBO
@@ -655,7 +655,7 @@ public class TestLoanBO extends MifosTestCase {
 				.getAmountDoubleValue(), 177.0);
 	}
 
-	public void testGetTotalAmountInArrearsWithPaymentDone() {
+	public void testGetTotalAmountInArrearsWithPaymentDone() throws Exception {
 		accountBO = getLoanAccount();
 
 		AccountActionDateEntity accountActionDateEntity = accountBO
@@ -667,7 +667,7 @@ public class TestLoanBO extends MifosTestCase {
 				.getAmountDoubleValue(), 0.0);
 	}
 
-	public void testGetTotalAmountDueForTwoInstallmentsDue() {
+	public void testGetTotalAmountDueForTwoInstallmentsDue() throws Exception {
 		accountBO = getLoanAccount();
 
 		AccountActionDateEntity accountActionDateEntity = accountBO
@@ -684,7 +684,7 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	public void testChangedStatusForLastInstallmentPaid()
-			throws AccountException, SystemException {
+			throws Exception {
 		accountBO = getLoanAccount();
 		Date startDate = new Date(System.currentTimeMillis());
 		java.sql.Date offSetDate = offSetCurrentDate(1);
@@ -2711,7 +2711,7 @@ public class TestLoanBO extends MifosTestCase {
 		assertEquals(FeeStatus.ACTIVE.getValue(),accountFeesEntity.getFeeStatus());
 	}
 	
-	public void testApplyPaymentForFullPayment() throws AccountException {
+	public void testApplyPaymentForFullPayment() throws Exception {
 		accountBO = getLoanAccount();
 		assertEquals(new Money("212.0"),((LoanBO) accountBO).getTotalPaymentDue());
 		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
@@ -2723,7 +2723,7 @@ public class TestLoanBO extends MifosTestCase {
 		assertEquals(new Money(),((LoanBO) accountBO).getTotalPaymentDue());
 	}
 	
-	public void testApplyPaymentForPartialPayment() throws AccountException {
+	public void testApplyPaymentForPartialPayment() throws Exception {
 		accountBO = getLoanAccount();
 		assertEquals(new Money("212.0"),((LoanBO) accountBO).getTotalPaymentDue());
 		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
@@ -2736,7 +2736,7 @@ public class TestLoanBO extends MifosTestCase {
 	}
 	
 	
-	public void testApplyPaymentForFuturePayment() throws AccountException {
+	public void testApplyPaymentForFuturePayment() throws Exception {
 		accountBO = getLoanAccount();
 
 		accountBO = saveAndFetch(accountBO);
@@ -2756,7 +2756,7 @@ public class TestLoanBO extends MifosTestCase {
 		assertEquals(new Money("112.0"), nextInstallment.getTotalDueWithFees());
 	}
 	
-	public void testApplyPaymentForCompletePayment() throws AccountException {
+	public void testApplyPaymentForCompletePayment() throws Exception {
 		accountBO = getLoanAccount();
 
 		accountBO = saveAndFetch(accountBO);
@@ -2777,7 +2777,7 @@ public class TestLoanBO extends MifosTestCase {
 		assertEquals(AccountState.LOANACC_OBLIGATIONSMET,accountBO.getState());
 	}
 	
-	public void testApplyPaymentForPaymentGretaterThanTotalDue()  {
+	public void testApplyPaymentForPaymentGretaterThanTotalDue() throws Exception  {
 		accountBO = getLoanAccount();
 
 		accountBO = saveAndFetch(accountBO);
@@ -3084,10 +3084,10 @@ public class TestLoanBO extends MifosTestCase {
 		}
 	}
 
-	private AccountBO saveAndFetch(AccountBO account) {
-		accountPersistanceService.updateAccount(account);
+	private AccountBO saveAndFetch(AccountBO account) throws Exception {
+		accountPersistence.updateAccount(account);
 		HibernateUtil.closeSession();
-		return accountPersistanceService.getAccount(account.getAccountId());
+		return accountPersistence.getAccount(account.getAccountId());
 	}
 
 	private java.sql.Date offSetCurrentDate(int noOfDays) {

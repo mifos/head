@@ -26,7 +26,7 @@ import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.exceptions.IDGenerationException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
-import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.persistence.service.SavingsPersistenceService;
 import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
@@ -57,7 +57,6 @@ import org.mifos.application.productdefinition.business.RecommendedAmntUnitEntit
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsTypeEntity;
 import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosTestCase;
@@ -69,7 +68,6 @@ import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
@@ -97,7 +95,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	private SavingsPersistenceService savingsService = new SavingsPersistenceService();
 
-	private AccountPersistanceService accountPersistanceService = new AccountPersistanceService();
+	private AccountPersistence accountPersistence = new AccountPersistence();
 
 	private MifosCurrency currency = Configuration.getInstance()
 			.getSystemConfig().getCurrency();
@@ -619,7 +617,7 @@ public class TestSavingsBO extends MifosTestCase {
 	}
 
 	public void testSuccessfulWithdraw() throws AccountException,
-			SystemException {
+			Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
@@ -634,8 +632,8 @@ public class TestSavingsBO extends MifosTestCase {
 				savingsOffering);
 
 		HibernateUtil.getSessionTL().flush();
-		savings = (SavingsBO) (new AccountPersistanceService()
-				.getAccount(savings.getAccountId()));
+		savings = (SavingsBO) accountPersistence
+				.getAccount(savings.getAccountId());
 		savings.setSavingsBalance(new Money(TestObjectFactory.getMFICurrency(),
 				"100.0"));
 		Money enteredAmount = new Money(currency, "100.0");
@@ -653,7 +651,7 @@ public class TestSavingsBO extends MifosTestCase {
 	}
 
 	public void testSuccessfulApplyPayment() throws AccountException,
-			SystemException {
+			Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
@@ -668,8 +666,8 @@ public class TestSavingsBO extends MifosTestCase {
 						.currentTimeMillis()), savingsOffering);
 
 		HibernateUtil.closeSession();
-		savings = (SavingsBO) (new AccountPersistanceService()
-				.getAccount(savings.getAccountId()));
+		savings = (SavingsBO) accountPersistence
+				.getAccount(savings.getAccountId());
 		savings.setSavingsBalance(new Money());
 
 		Money enteredAmount = new Money(currency, "100.0");
@@ -770,7 +768,7 @@ public class TestSavingsBO extends MifosTestCase {
 	}
 
 	public void testMaxWithdrawAmount() throws AccountException,
-			SystemException {
+			Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
@@ -785,8 +783,8 @@ public class TestSavingsBO extends MifosTestCase {
 				savingsOffering);
 
 		HibernateUtil.getSessionTL().flush();
-		savings = (SavingsBO) (new AccountPersistanceService()
-				.getAccount(savings.getAccountId()));
+		savings = (SavingsBO) accountPersistence
+				.getAccount(savings.getAccountId());
 		savings.setSavingsBalance(new Money(TestObjectFactory.getMFICurrency(),
 				"100.0"));
 		Money enteredAmount = new Money(currency, "300.0");
@@ -1855,7 +1853,7 @@ public class TestSavingsBO extends MifosTestCase {
 				0.0);
 	}
 
-	public void testGetTotalAmountInArrearsForSingleInstallmentDue() {
+	public void testGetTotalAmountInArrearsForSingleInstallmentDue() throws Exception {
 		savings = getSavingsAccount();
 		AccountActionDateEntity accountActionDateEntity = savings
 				.getAccountActionDate((short) 1);
@@ -1865,7 +1863,7 @@ public class TestSavingsBO extends MifosTestCase {
 				200.0);
 	}
 
-	public void testGetTotalAmountInArrearsWithPartialPayment() {
+	public void testGetTotalAmountInArrearsWithPartialPayment() throws Exception {
 		savings = getSavingsAccount();
 		SavingsScheduleEntity accountActionDateEntity = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
@@ -1877,7 +1875,7 @@ public class TestSavingsBO extends MifosTestCase {
 				180.0);
 	}
 
-	public void testGetTotalAmountInArrearsWithPaymentDone() {
+	public void testGetTotalAmountInArrearsWithPaymentDone() throws Exception {
 		savings = getSavingsAccount();
 
 		AccountActionDateEntity accountActionDateEntity = savings
@@ -1889,7 +1887,7 @@ public class TestSavingsBO extends MifosTestCase {
 				0.0);
 	}
 
-	public void testGetTotalAmountDueForTwoInstallmentsDue() {
+	public void testGetTotalAmountDueForTwoInstallmentsDue() throws Exception {
 		savings = getSavingsAccount();
 
 		AccountActionDateEntity accountActionDateEntity = savings
@@ -1910,7 +1908,7 @@ public class TestSavingsBO extends MifosTestCase {
 		assertEquals(savings.getTotalAmountDue().getAmountDoubleValue(), 200.0);
 	}
 
-	public void testGetTotalAmountDueForSingleInstallment() {
+	public void testGetTotalAmountDueForSingleInstallment() throws Exception {
 		savings = getSavingsAccount();
 
 		AccountActionDateEntity accountActionDateEntity = savings
@@ -1921,7 +1919,7 @@ public class TestSavingsBO extends MifosTestCase {
 		assertEquals(savings.getTotalAmountDue().getAmountDoubleValue(), 400.0);
 	}
 
-	public void testGetTotalAmountDueWithPartialPayment() {
+	public void testGetTotalAmountDueWithPartialPayment() throws Exception {
 		savings = getSavingsAccount();
 
 		SavingsScheduleEntity accountActionDateEntity = (SavingsScheduleEntity) savings
@@ -1933,7 +1931,7 @@ public class TestSavingsBO extends MifosTestCase {
 		assertEquals(savings.getTotalAmountDue().getAmountDoubleValue(), 380.0);
 	}
 
-	public void testGetTotalAmountDueWithPaymentDone() {
+	public void testGetTotalAmountDueWithPaymentDone() throws Exception {
 		savings = getSavingsAccount();
 
 		AccountActionDateEntity accountActionDateEntity = savings
@@ -1946,7 +1944,7 @@ public class TestSavingsBO extends MifosTestCase {
 		assertEquals(savings.getTotalAmountDue().getAmountDoubleValue(), 200.0);
 	}
 
-	public void testGetTotalAmountDueForTwoInstallments() {
+	public void testGetTotalAmountDueForTwoInstallments() throws Exception {
 		savings = getSavingsAccount();
 		AccountActionDateEntity accountActionDateEntity = savings
 				.getAccountActionDate((short) 1);
@@ -1981,7 +1979,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.getAmountDoubleValue(), 200.0);
 	}
 
-	public void testGetTotalAmountDueForNextInstallmentWithPartialPayment() {
+	public void testGetTotalAmountDueForNextInstallmentWithPartialPayment() throws Exception {
 		savings = getSavingsAccount();
 		SavingsScheduleEntity accountActionDateEntity = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
@@ -1992,7 +1990,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.getAmountDoubleValue(), 180.0);
 	}
 
-	public void testGetTotalAmountDueForNextInstallmentPaymentDone() {
+	public void testGetTotalAmountDueForNextInstallmentPaymentDone() throws Exception {
 		savings = getSavingsAccount();
 
 		AccountActionDateEntity accountActionDateEntity = savings
@@ -2009,7 +2007,7 @@ public class TestSavingsBO extends MifosTestCase {
 		assertEquals(savings.getDetailsOfInstallmentsInArrears().size(), 0);
 	}
 
-	public void testGetDetailsOfInstallmentsInArrearsForSingleInstallmentDue() {
+	public void testGetDetailsOfInstallmentsInArrearsForSingleInstallmentDue() throws Exception {
 		savings = getSavingsAccount();
 		AccountActionDateEntity accountActionDateEntity = savings
 				.getAccountActionDate((short) 1);
@@ -2018,7 +2016,7 @@ public class TestSavingsBO extends MifosTestCase {
 		assertEquals(savings.getDetailsOfInstallmentsInArrears().size(), 1);
 	}
 
-	public void testGetDetailsOfInstallmentsInArrearsWithPaymentDone() {
+	public void testGetDetailsOfInstallmentsInArrearsWithPaymentDone() throws Exception {
 		savings = getSavingsAccount();
 
 		AccountActionDateEntity accountActionDateEntity = savings
@@ -2029,7 +2027,7 @@ public class TestSavingsBO extends MifosTestCase {
 		assertEquals(savings.getDetailsOfInstallmentsInArrears().size(), 0);
 	}
 
-	public void testGetDetailsOfInstallmentsInArrearsForTwoInstallmentsDue() {
+	public void testGetDetailsOfInstallmentsInArrearsForTwoInstallmentsDue() throws Exception {
 		savings = getSavingsAccount();
 
 		AccountActionDateEntity accountActionDateEntity = savings
@@ -2045,7 +2043,7 @@ public class TestSavingsBO extends MifosTestCase {
 	}
 
 	public void testWaiveAmountOverDueForSingleInstallmentDue()
-			throws ServiceException, AccountException {
+			throws Exception {
 		savings = getSavingsAccount();
 		AccountActionDateEntity accountActionDateEntity = savings
 				.getAccountActionDate((short) 1);
@@ -2061,7 +2059,7 @@ public class TestSavingsBO extends MifosTestCase {
 	}
 
 	public void testWaiveAmountOverDueWithPartialPayment()
-			throws ServiceException, AccountException {
+			throws Exception {
 		savings = getSavingsAccount();
 		SavingsScheduleEntity accountActionDateEntity = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
@@ -2080,7 +2078,7 @@ public class TestSavingsBO extends MifosTestCase {
 	}
 
 	public void testWaiveAmountOverDueForTwoInstallmentsDue()
-			throws ServiceException, AccountException {
+			throws Exception {
 		savings = getSavingsAccount();
 
 		SavingsScheduleEntity accountActionDateEntity = (SavingsScheduleEntity) savings
@@ -2113,8 +2111,7 @@ public class TestSavingsBO extends MifosTestCase {
 		assertEquals(savings.getSavingsActivityDetails().size(), 1);
 	}
 
-	public void testWaiveAmountDueWithPartialPayment() throws ServiceException,
-			AccountException {
+	public void testWaiveAmountDueWithPartialPayment() throws Exception {
 		savings = getSavingsAccount();
 		SavingsScheduleEntity accountActionDateEntity = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
@@ -2366,9 +2363,9 @@ public class TestSavingsBO extends MifosTestCase {
 						.currentTimeMillis()), savingsOffering);
 	}
 
-	private AccountBO saveAndFetch(AccountBO account) {
-		accountPersistanceService.updateAccount(account);
-		return accountPersistanceService.getAccount(account.getAccountId());
+	private AccountBO saveAndFetch(AccountBO account) throws Exception{
+		accountPersistence.updateAccount(account);
+		return accountPersistence.getAccount(account.getAccountId());
 	}
 
 	private java.sql.Date offSetCurrentDate(int noOfDays) {

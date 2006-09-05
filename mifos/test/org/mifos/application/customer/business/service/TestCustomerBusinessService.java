@@ -14,9 +14,8 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountStateMachines;
 import org.mifos.application.accounts.business.CustomerActivityEntity;
-import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -57,7 +56,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 /**
@@ -270,8 +268,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		assertEquals("Group_Active_test", groupBO.getDisplayName());
 	}
 
-	public void testGetCenterPerformanceHistory() throws ApplicationException,
-			SystemException, NumberFormatException {
+	public void testGetCenterPerformanceHistory() throws Exception {
 		Money totalLoan = new Money();
 		Money totalSavings = new Money();
 		Money totalPortfolioAtRisk = new Money();
@@ -594,7 +591,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	}
 
 	private AccountBO getSavingsAccountWithBalance(CustomerBO customer,
-			MeetingBO meeting) throws AccountException, SystemException {
+			MeetingBO meeting) throws Exception{
 		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
@@ -609,7 +606,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		SavingsBO savingsBO = TestObjectFactory.createSavingsAccount("432434",
 				customer, Short.valueOf("16"), startDate, savingsOffering);
 		HibernateUtil.closeSession();
-		savingsBO = (SavingsBO) (new AccountPersistanceService()
+		savingsBO = (SavingsBO) (new AccountPersistence()
 				.getAccount(savingsBO.getAccountId()));
 		savingsBO.setSavingsBalance(new Money());
 		Money enteredAmount = new Money(currency, "100.0");
@@ -636,10 +633,8 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	}
 
 	private void changeFirstInstallmentDateToPastDate(AccountBO accountBO)
-			throws ServiceException, AccountException {
-		AccountPersistanceService accountPersistanceService = (AccountPersistanceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.Account);
+			throws Exception{
+		AccountPersistence accountPersistence = new AccountPersistence();
 		accountBO = (AccountBO) (HibernateUtil.getSessionTL().get(
 				AccountBO.class, new Integer(accountBO.getAccountId())));
 		Calendar currentDateCalendar = new GregorianCalendar();
@@ -653,7 +648,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 					currentDateCalendar.getTimeInMillis()));
 			break;
 		}
-		accountPersistanceService.update(accountBO);
+		accountPersistence.updateAccount(accountBO);
 		HibernateUtil.getTransaction().commit();
 	}
 

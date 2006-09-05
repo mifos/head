@@ -57,7 +57,7 @@ import org.mifos.application.accounts.loan.util.helpers.LoanHelpers;
 import org.mifos.application.accounts.loan.util.valueobjects.Loan;
 import org.mifos.application.accounts.loan.util.valueobjects.LoanActivity;
 import org.mifos.application.accounts.loan.util.valueobjects.LoanSummary;
-import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
@@ -96,6 +96,7 @@ import org.mifos.framework.components.repaymentschedule.RepaymentScheduleInputsI
 import org.mifos.framework.dao.DAO;
 import org.mifos.framework.dao.helpers.DataTypeConstants;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.valueobjects.Context;
@@ -264,7 +265,7 @@ public class AccountsApplyChargesBusinessProcessor extends
 									new Money(String.valueOf(aac
 											.getChargeAmount())));
 							customerActivityEntity
-									.setCustomerAccount((CustomerAccountBO) new AccountPersistanceService()
+									.setCustomerAccount((CustomerAccountBO) new AccountPersistence()
 											.getAccount(accountId));
 						} else {
 							customerActivityEntity = new CustomerActivityEntity(
@@ -275,7 +276,7 @@ public class AccountsApplyChargesBusinessProcessor extends
 									new Money(String.valueOf(aac
 											.getChargeAmount())));
 							customerActivityEntity
-									.setCustomerAccount((CustomerAccountBO) new AccountPersistanceService()
+									.setCustomerAccount((CustomerAccountBO) new AccountPersistence()
 											.getAccount(accountId));
 						}
 					}
@@ -730,7 +731,7 @@ public class AccountsApplyChargesBusinessProcessor extends
 				isPrincipalDueInLastInstallment, accountActionDateList);
 	}
 	
-	private CustomerActivityEntity updateCustomerDetails(Account account,List<AccountActionDate> accountActionDateList,Fees fee,Double amount,Short personnelId,AccountFees accountFees) {
+	private CustomerActivityEntity updateCustomerDetails(Account account,List<AccountActionDate> accountActionDateList,Fees fee,Double amount,Short personnelId,AccountFees accountFees) throws PersistenceException {
 		CustomerActivityEntity customerActivityEntity=null;
 		if(account instanceof CustomerAccount){
 			Short state=account.getCustomer().getStatusId();
@@ -742,7 +743,7 @@ public class AccountsApplyChargesBusinessProcessor extends
 				customerActivityEntity=new CustomerActivityEntity(new PersonnelPersistenceService().getPersonnel(personnelId),
 						fee.getFeeName()+" "+AccountConstants.FEES_APPLIED,
 						new Money(String.valueOf(amount)));
-				customerActivityEntity.setCustomerAccount((CustomerAccountBO)new AccountPersistanceService().getAccount(account.getAccountId()));
+				customerActivityEntity.setCustomerAccount((CustomerAccountBO)new AccountPersistence().getAccount(account.getAccountId()));
 			}
 			else{
 				for(AccountActionDate accountActionDate : accountActionDateList)

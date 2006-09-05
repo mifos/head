@@ -346,6 +346,11 @@ public class AccountBO extends BusinessObject {
 					+ AccountConstants.FEES_REMOVED;
 			updateAccountActivity(totalFeeAmount, personnelId, description);
 			roundInstallments(installmentIds);
+			try {
+				(new AccountPersistence()).createOrUpdate(this);
+			} catch (PersistenceException e) {
+				throw new AccountException(e);
+			}
 		}
 
 	}

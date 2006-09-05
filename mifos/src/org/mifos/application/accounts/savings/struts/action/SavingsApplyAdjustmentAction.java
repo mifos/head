@@ -47,7 +47,7 @@ import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
-import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.application.accounts.savings.struts.actionforms.SavingsApplyAdjustmentActionForm;
@@ -97,7 +97,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction{
 		AccountPaymentEntity lastPayment = savings.getLastPmnt();
 		if(null != lastPayment&& lastPayment.getAmount().getAmountDoubleValue()!=0 && (new SavingsHelper().getPaymentActionType(lastPayment).equals(AccountConstants.ACTION_SAVINGS_DEPOSIT) ||new SavingsHelper().getPaymentActionType(lastPayment).equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL))){
 			actionForm.setLastPaymentAmount(savings.getLastPmnt().getAmount());
-			AccountActionEntity accountAction = ((AccountPersistanceService) ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.Account)).getAccountAction(new SavingsHelper().getPaymentActionType(lastPayment));
+			AccountActionEntity accountAction = new AccountPersistence().getAccountAction(new SavingsHelper().getPaymentActionType(lastPayment));
 			accountAction.setLocaleId(uc.getLocaleId());
 			Hibernate.initialize(savings.getLastPmnt().getAccountTrxns());
 			SessionUtils.setAttribute(SavingsConstants.ACCOUNT_ACTION,accountAction,request.getSession());

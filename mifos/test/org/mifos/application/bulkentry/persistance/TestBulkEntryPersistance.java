@@ -49,7 +49,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 		HibernateUtil.closeSession();
 	}
 
-	public void testGetAccount() {
+	public void testGetAccount() throws Exception{
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -74,8 +74,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 				"Loan");
 	}
 
-	public void testSuccessfulApplyPayment() throws NumberFormatException,
-			BulkEntryAccountUpdateException, AccountException, SystemException {
+	public void testSuccessfulApplyPayment() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active", Short
@@ -116,8 +115,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 
 	}
 
-	public void testSuccessfulLoanUpdate() throws NumberFormatException,
-			BulkEntryAccountUpdateException, AccountException, SystemException {
+	public void testSuccessfulLoanUpdate() throws Exception {
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -155,8 +153,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 				.getAmountDoubleValue(), Double.valueOf("100.0"));
 	}
 
-	public void testFailureApplyPayment() throws NumberFormatException,
-			AccountException, SystemException {
+	public void testFailureApplyPayment() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active", Short

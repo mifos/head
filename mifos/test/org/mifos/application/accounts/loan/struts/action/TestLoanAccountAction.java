@@ -12,7 +12,6 @@ import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
-import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountNotesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
@@ -25,7 +24,7 @@ import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -43,7 +42,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -146,7 +144,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 			verifyForward("viewInstmentDetails_success");
 	}
 	
-	public void testGet() throws AccountException, SystemException{
+	public void testGet() throws Exception{
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
 		LoanBO loan = (LoanBO) accountBO;
@@ -707,7 +705,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.update_success.toString());
 	}
 	
-	private void modifyActionDateForFirstInstallment() {
+	private void modifyActionDateForFirstInstallment() throws Exception {
 		LoanScheduleEntity installment = (LoanScheduleEntity)accountBO.getAccountActionDate((short) 1);
 		installment.setPrincipal(new Money("20.0"));
 		installment.setPenalty(new Money("5.0"));
@@ -725,10 +723,10 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		return new java.sql.Date(currentDateCalendar.getTimeInMillis());
 	}
 	
-	private AccountBO saveAndFetch(AccountBO account) {
-		AccountPersistanceService accountPersistanceService = new AccountPersistanceService();
-		accountPersistanceService.updateAccount(account);
-		return accountPersistanceService.getAccount(account.getAccountId());
+	private AccountBO saveAndFetch(AccountBO account) throws Exception {
+		AccountPersistence accountPersistence = new AccountPersistence();
+		accountPersistence.updateAccount(account);
+		return accountPersistence.getAccount(account.getAccountId());
 	}
 	
 	private AccountNotesEntity createAccountNotes(String comment){

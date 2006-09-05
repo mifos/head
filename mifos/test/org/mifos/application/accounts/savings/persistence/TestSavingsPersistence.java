@@ -162,7 +162,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 		assertEquals(6, accountStateEntityList.size());
 	}
 
-	public void testGetStatusChecklist() {
+	public void testGetStatusChecklist() throws Exception{
 		createCheckList();
 		List statusCheckList = accountPersistence.getStatusChecklist(Short
 				.valueOf("13"), Short.valueOf("2"));

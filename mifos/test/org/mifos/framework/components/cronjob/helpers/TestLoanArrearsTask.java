@@ -7,24 +7,16 @@ import java.util.GregorianCalendar;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.framework.components.cronjobs.helpers.LoanArrearsTask;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.hibernate.HibernateStartUp;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.authorization.AuthorizationManager;
-import org.mifos.framework.security.authorization.HierarchyManager;
-import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.TestObjectFactory;
-
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.components.cronjobs.helpers.LoanArrearsTask;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestLoanArrearsTask extends MifosTestCase{
 	
@@ -86,7 +78,7 @@ public class TestLoanArrearsTask extends MifosTestCase{
 		
 		loanArrearTask.run();
 		
-		loanAccount = new AccountPersistanceService().getAccount(loanAccount.getAccountId());
+		loanAccount = new AccountPersistence().getAccount(loanAccount.getAccountId());
 		
 		assertEquals(Short.valueOf(AccountStates.LOANACC_BADSTANDING),loanAccount.getAccountState().getId());
 		assertEquals(statusChangeHistorySize+1,loanAccount.getAccountStatusChangeHistory().size());

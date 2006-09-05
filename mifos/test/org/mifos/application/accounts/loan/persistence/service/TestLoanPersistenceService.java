@@ -5,20 +5,18 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.mifos.framework.MifosTestCase;
-
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.LoanAccountView;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.persistance.service.LoanPersistenceService;
-import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -109,8 +107,8 @@ public class TestLoanPersistenceService extends MifosTestCase {
 			for(AccountActionDateEntity accountAction : loanAccount.getAccountActionDates()) {
 				accountAction.setActionDate(startDate);
 				}
-			new AccountPersistanceService().updateAccount(loanAccount);
-			loanAccount = new AccountPersistanceService().getAccount(loanAccount.getAccountId());
+			new AccountPersistence().updateAccount(loanAccount);
+			loanAccount = new AccountPersistence().getAccount(loanAccount.getAccountId());
 			list = loanPersistenceService.getLoanAccountsInArrears(latenessDays);
 			assertNotNull(list);
 			LoanBO testBO = (LoanBO) list.get(0);

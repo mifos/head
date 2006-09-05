@@ -57,6 +57,8 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.persistence.service.PersistenceService;
 import org.mifos.framework.util.helpers.DateUtils;
 
@@ -81,16 +83,25 @@ public class BulkEntryPersistanceService extends PersistenceService {
 	
 
 	public AccountBO getCustomerAccountWithAccountActionsInitialized(
-			Integer accountId) {
-		return new AccountPersistence()
-				.getCustomerAccountWithAccountActionsInitialized(accountId);
+			Integer accountId) throws ServiceException {
+		try {
+			return new AccountPersistence()
+					.getCustomerAccountWithAccountActionsInitialized(accountId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
 
 	public AccountBO getSavingsAccountWithAccountActionsInitialized(
-			Integer accountId) {
+			Integer accountId) throws ServiceException {
 		if (!bulkEntryCache.isAccountPresent(accountId)) {
-			AccountBO account = new AccountPersistence()
-					.getSavingsAccountWithAccountActionsInitialized(accountId);
+			AccountBO account;
+			try {
+				account = new AccountPersistence()
+						.getSavingsAccountWithAccountActionsInitialized(accountId);
+			} catch (PersistenceException e) {
+				throw new ServiceException(e);
+			}
 			bulkEntryCache.addAccount(accountId, account);
 			Set<AccountActionDateEntity> accountActionDates = account
 					.getAccountActionDates();
@@ -112,9 +123,13 @@ public class BulkEntryPersistanceService extends PersistenceService {
 	}
 
 	public AccountBO getLoanAccountWithAccountActionsInitialized(
-			Integer accountId) {
-		return new AccountPersistence()
-				.getLoanAccountWithAccountActionsInitialized(accountId);
+			Integer accountId) throws ServiceException {
+		try {
+			return new AccountPersistence()
+					.getLoanAccountWithAccountActionsInitialized(accountId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
 
 	public CustomerBO getCustomer(Integer customerId) {

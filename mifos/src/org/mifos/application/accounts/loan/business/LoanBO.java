@@ -48,7 +48,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
 import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
@@ -70,7 +69,7 @@ import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.loan.util.helpers.EMIInstallment;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.helpers.LoanPaymentTypes;
-import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
@@ -690,7 +689,11 @@ public class LoanBO extends AccountBO {
 		if (getPerformanceHistory() != null)
 			getPerformanceHistory().setLoanMaturityDate(
 					getLastInstallmentAccountAction().getActionDate());
-		new AccountPersistanceService().update(this);
+		try {
+			new AccountPersistence().createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 
 	public Money getTotalEarlyRepayAmount() {

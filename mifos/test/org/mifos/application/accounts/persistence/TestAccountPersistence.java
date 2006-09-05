@@ -62,7 +62,7 @@ public class TestAccountPersistence extends TestAccount {
 		assertNotNull(accountaction);
 	}
 	
-	public void testRetrieveCustomerAccountActionDetails() {
+	public void testRetrieveCustomerAccountActionDetails()  throws Exception{
 		assertNotNull(center.getCustomerAccount());
 		List<AccountActionDateEntity> actionDates = accountPersistence.retrieveCustomerAccountActionDetails(center.getCustomerAccount().getAccountId(),new java.sql.Date(System.currentTimeMillis()));
 		assertEquals("The size of the due insallments is ", actionDates.size(),1);
@@ -80,7 +80,7 @@ public class TestAccountPersistence extends TestAccount {
 		assertEquals(2,accountPersistence.getAccountsWithTodaysInstallment().size());		
 	}
 
-	public void testGetCustomerAccountsForFee(){
+	public void testGetCustomerAccountsForFee() throws Exception{
 		
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"ClientPeridoicFee", FeeCategory.CENTER, "5", MeetingFrequency.WEEKLY, Short.valueOf("1"));

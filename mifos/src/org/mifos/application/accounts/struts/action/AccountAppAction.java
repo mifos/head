@@ -66,7 +66,8 @@ public class AccountAppAction extends BaseAction {
 		Integer accountId=Integer.valueOf((String)request.getParameter("accountId"));		
 		Short feeId=Short.valueOf((String)request.getParameter("feeId"));		
 		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());		
-		accountBusinessService.removeFees(accountId,feeId,uc.getId());
+		AccountBO accountBO=accountBusinessService.getAccount(accountId);
+		accountBO.removeFees(feeId,uc.getId());
 		String fromPage = request.getParameter(CenterConstants.FROM_PAGE);
 		StringBuilder forward = new StringBuilder();
 		forward = forward.append(AccountConstants.REMOVE+"_"+fromPage +"_"+AccountConstants.CHARGES);		

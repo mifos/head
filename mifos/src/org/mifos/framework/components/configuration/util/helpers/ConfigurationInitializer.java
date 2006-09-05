@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerStatusEntity;
@@ -125,7 +125,7 @@ public class ConfigurationInitializer {
 		}
 		setCustomerOptionalStates(officeConfigMap,customerOptionalStates);
 		
-		List<AccountStateEntity> accountOptionalStates =((AccountPersistanceService) ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.Account)).getAccountStates(ConfigConstants.OPTIONAL_FLAG);
+		List<AccountStateEntity> accountOptionalStates =new AccountPersistence().getAccountStates(ConfigConstants.OPTIONAL_FLAG);
 		setAccountOptionalStates(officeConfigMap,accountOptionalStates);
 		
 		List<WeekDaysEntity> weekDaysList = getDBService().getWeekDaysList();

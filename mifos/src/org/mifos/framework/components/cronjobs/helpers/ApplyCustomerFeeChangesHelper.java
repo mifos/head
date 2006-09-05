@@ -8,7 +8,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
@@ -30,19 +30,19 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 	public void execute(long timeInMillis) {
 		try {
 			List fees = new FeePersistence().getUpdatedFeesForCustomer();
-			AccountPersistanceService accountPersistanceService = new AccountPersistanceService();
+			AccountPersistence accountPersistence = new AccountPersistence();
 			if (fees != null && fees.size() > 0) {
 				HibernateUtil.startTransaction();
 				for (Object fee : fees) {
 					FeeBO feeBO = (FeeBO) fee;
 					if (!feeBO.getFeeChangeType().equals(
 							FeeChangeType.NOT_UPDATED)) {
-						List<Integer> accounts = accountPersistanceService
+						List<Integer> accounts = accountPersistence
 								.getCustomerAccountsForFee(feeBO.getFeeId());
 						if (accounts != null && accounts.size() > 0) {
 							for (Integer accountId : accounts) {
 								updateAccountFee(accountId, feeBO,
-										accountPersistanceService);
+										accountPersistence);
 
 							}
 						}
@@ -61,9 +61,9 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 	}
 
 	private void updateAccountFee(Integer accountId, FeeBO feesBO,
-			AccountPersistanceService accountPersistanceService)
+			AccountPersistence accountPersistence)
 			throws NumberFormatException, SystemException, ApplicationException {
-		AccountBO accountBO = accountPersistanceService.getAccount(accountId);
+		AccountBO accountBO = accountPersistence.getAccount(accountId);
 		updateFee(accountBO.getAccountFees(feesBO.getFeeId()), feesBO,
 				accountBO);
 

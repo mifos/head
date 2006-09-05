@@ -143,7 +143,6 @@ import org.mifos.application.productdefinition.business.PrdApplicableMasterEntit
 import org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
-import org.mifos.application.productdefinition.business.ProductTypeEntity;
 import org.mifos.application.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsTypeEntity;
@@ -1915,7 +1914,7 @@ public class TestObjectFactory {
 		return paymentData;
 	}
 
-	public static CustomerAccountView getCustomerAccountView(CustomerBO customer) {
+	public static CustomerAccountView getCustomerAccountView(CustomerBO customer) throws Exception {
 		CustomerAccountView customerAccountView = new CustomerAccountView(
 				customer.getCustomerAccount().getAccountId());
 		List<AccountActionDateEntity> accountAction = getDueActionDatesForAccount(
@@ -1927,7 +1926,7 @@ public class TestObjectFactory {
 	}
 
 	public static List<AccountActionDateEntity> getDueActionDatesForAccount(
-			Integer accountId, java.sql.Date transactionDate) {
+			Integer accountId, java.sql.Date transactionDate) throws Exception{
 		List<AccountActionDateEntity> dueActionDates = new BulkEntryBusinessService()
 				.retrieveCustomerAccountActionDetails(accountId,
 						transactionDate);

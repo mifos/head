@@ -69,46 +69,6 @@ public class TestAccountService extends MifosTestCase {
 		accountPersistence = null;
 	}
 
-	public void testSuccessRemoveFees() {
-		AccountBusinessService accountBusinessService = new AccountBusinessService();
-		try {
-			accountBO=getLoanAccount();
-			Set<AccountFeesEntity> accountFeesEntitySet = accountBO
-					.getAccountFees();
-			UserContext uc = TestObjectFactory.getUserContext();
-			Iterator itr = accountFeesEntitySet.iterator();
-			while (itr.hasNext()) {
-				AccountFeesEntity accountFeesEntity = (AccountFeesEntity) itr
-						.next();
-				accountBusinessService.removeFees(accountBO.getAccountId(),
-						accountFeesEntity.getFees().getFeeId(), uc.getId());
-				assertTrue(true);
-			}
-		} catch (Exception e) {
-			assertTrue(false);
-		}
-	}
-
-	public void testFailureRemoveFees() {
-		AccountBusinessService accountBusinessService = new AccountBusinessService();
-		try {
-			accountBO=getLoanAccount();
-			UserContext uc = TestObjectFactory.getUserContext();
-			Set<AccountFeesEntity> accountFeesEntitySet = accountBO
-					.getAccountFees();
-			Iterator itr = accountFeesEntitySet.iterator();
-			while (itr.hasNext()) {
-				AccountFeesEntity accountFeesEntity = (AccountFeesEntity) itr
-						.next();
-				accountBusinessService.removeFees(Integer.valueOf("-1"),
-						accountFeesEntity.getFees().getFeeId(), uc.getId());
-				assertTrue(false);
-			}
-		} catch (Exception e) {
-			assertTrue(true);
-		}
-	}
-
 	public void testGetTrxnHistory() throws Exception {
 		AccountBusinessService accountBusinessService = new AccountBusinessService();
 		Date currentDate = new Date(System.currentTimeMillis());

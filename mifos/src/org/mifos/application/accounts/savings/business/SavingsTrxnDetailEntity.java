@@ -1,30 +1,14 @@
 package org.mifos.application.accounts.savings.business;
 
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.util.HashSet;
-
-import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
-import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
-import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
-import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
 import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.accounts.util.helpers.LoanPaymentData;
-import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 
 public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 	
@@ -153,13 +137,6 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 	}
 		
 
-	private AccountPersistanceService getAccountDBService()
-			throws ServiceException {
-		return (AccountPersistanceService) ServiceFactory.getInstance()
-				.getPersistenceService(PersistenceServiceName.Account);
-	}
-
-	
 	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment){
 		MasterPersistence masterPersistence = new MasterPersistence();
 		SavingsTrxnDetailEntity reverseAccntTrxn = null;

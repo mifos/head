@@ -89,8 +89,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		super.tearDown();
 	}
 
-	public void testSuccessfulMakePayment() throws AccountException,
-			SystemException {
+	public void testSuccessfulMakePayment() throws Exception {
 			createCenter();
 			CustomerAccountBO customerAccount = center.getCustomerAccount();
 			assertNotNull(customerAccount);
@@ -122,8 +121,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 	}
 	
-	public void testFailureMakePayment() throws AccountException,
-			SystemException {
+	public void testFailureMakePayment() throws Exception {
 		createCenter();
 		CustomerAccountBO customerAccount = center.getCustomerAccount();
 		assertNotNull(customerAccount);

@@ -6,7 +6,7 @@ import java.util.List;
 import org.mifos.application.accounts.business.CustomerAccountView;
 import org.mifos.application.accounts.business.LoanAccountsProductView;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistanceService;
 import org.mifos.application.customer.business.CustomerBO;
@@ -101,9 +101,9 @@ public class TestBulkEntryView extends MifosTestCase {
 				loanAccountsProductView.getTotalAmountDue().doubleValue(),
 				424.0);
 		HibernateUtil.closeSession();
-		account1 = (LoanBO) new AccountPersistanceService().getAccount(account1
+		account1 = (LoanBO) new AccountPersistence().getAccount(account1
 				.getAccountId());
-		account2 = (LoanBO) new AccountPersistanceService().getAccount(account2
+		account2 = (LoanBO) new AccountPersistence().getAccount(account2
 				.getAccountId());
 	}
 
@@ -155,9 +155,9 @@ public class TestBulkEntryView extends MifosTestCase {
 				loanAccountsProductView.getTotalDisburseAmount().doubleValue(),
 				300.0);
 		HibernateUtil.closeSession();
-		account1 = (LoanBO) new AccountPersistanceService().getAccount(account1
+		account1 = (LoanBO) new AccountPersistence().getAccount(account1
 				.getAccountId());
-		account2 = (LoanBO) new AccountPersistanceService().getAccount(account2
+		account2 = (LoanBO) new AccountPersistence().getAccount(account2
 				.getAccountId());
 	}
 
@@ -206,9 +206,9 @@ public class TestBulkEntryView extends MifosTestCase {
 				loanAccountsProductView.getTotalDisburseAmount().doubleValue(),
 				600.0);
 		HibernateUtil.closeSession();
-		account1 = (LoanBO) new AccountPersistanceService().getAccount(account1
+		account1 = (LoanBO) new AccountPersistence().getAccount(account1
 				.getAccountId());
-		account2 = (LoanBO) new AccountPersistanceService().getAccount(account2
+		account2 = (LoanBO) new AccountPersistence().getAccount(account2
 				.getAccountId());
 	}
 

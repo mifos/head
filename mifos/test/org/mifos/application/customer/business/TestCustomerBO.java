@@ -10,7 +10,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanPerformanceHistoryEntity;
-import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -117,7 +117,7 @@ public class TestCustomerBO extends MifosTestCase {
 		loanPerformanceHistory.setNoOfPayments(Integer.valueOf("3"));
 		loanPerformanceHistory.setLoanMaturityDate(currentDate);
 		TestObjectFactory.updateObject(loanBO);
-		loanBO = (LoanBO) new AccountPersistanceService().getAccount(loanBO
+		loanBO = (LoanBO) new AccountPersistence().getAccount(loanBO
 				.getAccountId());
 		assertEquals(Integer.valueOf("3"), loanBO.getPerformanceHistory()
 				.getNoOfPayments());

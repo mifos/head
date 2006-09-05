@@ -39,7 +39,7 @@ import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.loan.business.LoanFeeScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.persistence.service.AccountPersistanceService;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
@@ -615,8 +615,8 @@ public static void setFeeDetailEntity(
 	private static AccountFeesEntity getAccountFeesEntity(
 			Integer accountFeesEntityId) {
 		try {
-			AccountPersistanceService accountPersistanceService = new AccountPersistanceService();
-			return accountPersistanceService
+			AccountPersistence accountPersistence = new AccountPersistence();
+			return accountPersistence
 					.getAccountFeeEntity(accountFeesEntityId);
 		} catch (PersistenceException pe) {
 			return null;
