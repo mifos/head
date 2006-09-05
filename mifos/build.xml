@@ -19,6 +19,7 @@
 	<property name="build.test.dir" value="${build.dir}/test_pkg"/>
 	<property name="build.web-inf" value="${build.src.dir}/WEB-INF"/>
 	<property name="build.classes" value="${build.web-inf}/classes"/>
+	<property name="build.lib" value="${build.dir}/lib"/>
 	<property name="test.classes" value="${build.test.dir}/classes"/>
 
 	<property name="db.driver" value="com.mysql.jdbc.Driver"/>
@@ -154,6 +155,27 @@
 		</copy>
 		<!--copy file="lib/mysql-connector-java-3.1.7-bin.jar" todir="${env.JBOSS_HOME}/server/${webapplication.name}/lib/"/-->
 	</target>
+
+	<target name="lib" depends="compile" description="Build the mifos library">
+            <mkdir dir="${build.lib}"/>
+            <copy todir="${build.lib}">
+		<fileset dir="${build.classes}">
+		    <exclude name="**/struts/**"/>
+		</fileset>
+            </copy>
+            <jar basedir="${build.lib}"
+                 destfile="${dist.dir}/mifos-lib.jar"
+		 />
+	</target>
+
+	<!-- The lib-x target is only for bootstrapping the API. It should go away soon -->
+	<target name="lib-x" depends="copy_files">
+	  <delete file="${dist.dir}/mifos-x.jar"/>
+	  <jar basedir="${build.web-inf}/classes"
+	       destfile="${dist.dir}/mifos-x.jar"/>
+	</target>
+
+	<target name="api" depends="compile, copy_files, lib, lib-x" description="Build mifos API support"/>
 
 	<target name="copy_test_files">
 		<copy todir="${test.classes}">
