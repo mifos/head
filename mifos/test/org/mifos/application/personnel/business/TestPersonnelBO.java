@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -13,20 +12,21 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
-import org.mifos.application.customer.persistence.CustomerPersistence;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.util.helpers.OfficeLevel;
+import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.personnel.exceptions.PersonnelException;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.personnel.util.helpers.PersonnelStatus;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestPersonnelBO extends MifosTestCase {
@@ -133,18 +133,24 @@ public class TestPersonnelBO extends MifosTestCase {
 		}
 	}
 
-	/*public void testCreateSucess() throws Exception {
+	public void testCreateSucess() throws Exception {
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
 		customFieldView.add(new CustomFieldView(Short.valueOf("1"), "123456",
 				Short.valueOf("1")));
 		 Address address = new Address("abcd","abcd","abcd","abcd","abcd","abcd","abcd","abcd");
 		 Date date =new Date();
+		 
+		 
+		 
+		 
 		PersonnelBO personnel = new PersonnelBO(PersonnelLevel.NON_LOAN_OFFICER,
 				office, Integer.valueOf("1"), Short.valueOf("1"),
-				"ABCD", "RAJ", "rajendersaini@yahoo.com", null,
+				"ABCD", "RAJ", "rajendersaini@yahoo.com", ((PersonnelBusinessService) ServiceFactory.getInstance().getBusinessService(
+						BusinessServiceName.Personnel)).getRoles(),
 				customFieldView, name, "111111", date, Integer
 						.valueOf("1"), Integer.valueOf("1"), date, date, address, userContext.getId());
 		personnel.save();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeandFlushSession();
 		System.out.println("After save in testCreateSucess ");
 		PersonnelBO personnelSaved=(PersonnelBO)HibernateUtil.getSessionTL().get(PersonnelBO.class,personnel.getPersonnelId());
@@ -172,9 +178,10 @@ public class TestPersonnelBO extends MifosTestCase {
 			assertEquals(1,personnelCustomField.getFieldId().intValue());
 		}
 		
-		HibernateUtil.getSessionTL().delete(personnelSaved);
+		TestObjectFactory.cleanUp(personnelSaved);
+		
 	}
-	*/
+	
 	public void testUpdateFailureForBranchTransferWithActiveCustomer() throws Exception {
 		
 		createdBranchOffice = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE,office,"Office_BRanch1","OFB");

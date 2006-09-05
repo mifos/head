@@ -618,6 +618,11 @@
 			input="/PersonAction.do?method=validate" scope="session">
 			<forward name="chooseOffice_success" path="/pages/application/personnel/jsp/choose_office.jsp" />
 			<forward name="load_success" path="/pages/application/personnel/jsp/create_user.jsp" />	
+			<forward name="preview_success" path="/pages/application/personnel/jsp/createuser_preview.jsp" />	
+			<forward name="preview_failure" path="/pages/application/personnel/jsp/create_user.jsp" />	
+			<forward name="previous_success" path="/pages/application/personnel/jsp/create_user.jsp" />	
+			<forward name="create_success" path="/pages/application/personnel/jsp/create_user.jsp" />	
+			<forward name="create_failure" path="/pages/application/personnel/jsp/createuser_preview.jsp" />		
 		</action>
 		<!-- Personnel Notes action -->
 		<action path="/PersonnelNotesAction"

@@ -334,6 +334,12 @@ public class ActivityMapper {
 				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
 		activityMap.put("/PersonAction-load",
 				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
+		activityMap.put("/PersonAction-preview",
+				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
+		activityMap.put("/PersonAction-previous",
+				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
+		activityMap.put("/PersonAction-create",
+				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
 		
 		// for your settings link
 		activityMap.put("/PersonnelAction-getDetails", SecurityConstants.VIEW);

@@ -10,16 +10,17 @@
 		<script language="javascript">
 
   function goToCancelPage(){
-	personActionForm.action="PersonAction.do?method=cancel";
+	personActionForm.action="PersonAction.do";
+	personActionForm.method.value="cancel";
 	personActionForm.submit();
   }
  
 </script>
 
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
-		<html-el:form action="PersonAction.do?method=preview"
+		<html-el:form action="PersonAction.do"
 			onsubmit="return (validateMyForm(dateOfJoiningMFI,dateOfJoiningMFIFormat,dateOfJoiningMFIYY) && validateMyForm(dob,dobFormat,dobYY))"
-			focus="name.firstName">
+			focus="firstName">
 
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -164,9 +165,9 @@
 										name="Personnel.MaritalStatus" /></td>
 									<td><mifos:select name="personActionForm"
 										property="maritalStatus">
-											<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'maritalStatusList').lookUpMaster}" 
+											<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'maritalStatusList')}" 
 											var="maritalStatus">
-											<html-el:option value="${maritalStatus.id}">${maritalStatus.lookUpValue}</html-el:option>
+											<html-el:option value="${maritalStatus.id}">${maritalStatus.name}</html-el:option>
 											</c:forEach>
 											
 									</mifos:select></td>
@@ -176,9 +177,9 @@
 										mandatory="yes" /></td>
 									<td><mifos:select name="personActionForm"
 										property="gender">
-										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'genderList').lookUpMaster}" 
+										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'genderList')}" 
 											var="genderlist">
-											<html-el:option value="${genderlist.id}">${genderlist.lookUpValue}</html-el:option>
+											<html-el:option value="${genderlist.id}">${genderlist.name}</html-el:option>
 											</c:forEach>
 									</mifos:select></td>
 								</tr>
@@ -188,9 +189,9 @@
 									<td>
 									<mifos:select name="personActionForm"
 										property="preferredLocale">
-										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'languageList').lookUpMaster}" 
+										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'languageList')}" 
 											var="languagelist">
-											<html-el:option value="${languagelist.id}">${languagelist.lookUpValue}</html-el:option>
+											<html-el:option value="${languagelist.id}">${languagelist.name}</html-el:option>
 											</c:forEach>
 									</mifos:select></td>
 								</tr>
@@ -282,9 +283,9 @@
 									<td width="78%">
 										 <mifos:select
 										name="personActionForm" property="title">
-										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'titleList').lookUpMaster}" 
+										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'titleList')}" 
 											var="titlelist">
-											<html-el:option value="${titlelist.id}">${titlelist.lookUpValue}</html-el:option>
+											<html-el:option value="${titlelist.id}">${titlelist.name}</html-el:option>
 											</c:forEach>
 									</mifos:select> </td>
 								</tr>
@@ -295,9 +296,9 @@
 									<td>
 										<mifos:select
 										name="personActionForm" property="level">
-										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'personnelLevelList').lookUpMaster}" 
+										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'personnelLevelList')}" 
 											var="item">
-											<html-el:option value="${item.id}">${item.lookUpValue}</html-el:option>
+											<html-el:option value="${item.id}">${item.name}</html-el:option>
 											</c:forEach>
 									</mifos:select></td>
 								</tr>
@@ -306,7 +307,7 @@
 									<td align="right"><mifos:mifoslabel name="Personnel.Roles" /></td>
 									<td>
 									<c:set var="rolelist" scope="request" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'rolesList')}"/> 
-									
+									<c:set var="personnelRolesList" scope="request" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'personnelRolesList')}"/> 
 									<mifos:MifosSelect property="personnelRoles"
 										input="rolelist" output="personnelRolesList" property1="id"
 										property2="name" multiple="true">
@@ -325,26 +326,26 @@
 								<tr class="fontnormal">
 									<td width="22%" align="right"><mifos:mifoslabel
 										name="Personnel.UserName" mandatory="yes" /></td>
-									<td width="78%"><mifos:mifosalphanumtext property="userName" />
+									<td width="78%"><mifos:mifosalphanumtext property="loginName" name="personActionForm" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel name="Personnel.Password"
 										mandatory="yes" /></td>
-									<td><html-el:password property="password" style="width:136px;"
+									<td><html-el:password property="userPassword" name="personActionForm" style="width:136px;"
 										redisplay="false" /></td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
 										name="Personnel.ConfirmPassword" mandatory="yes" /></td>
 									<td><html-el:password property="passwordRepeat"
-										style="width:136px;" redisplay="false" /></td>
+										style="width:136px;" name="personActionForm" redisplay="false" /></td>
 								</tr>
 							</table>
 							<br>
 							
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
-								<c:if test="${!empty customFields}">
+								<c:if test="${!empty personActionForm.customFields} ">
 									<tr>
 										<td colspan="2" class="fontnormalbold"><mifos:mifoslabel
 											name="Personnel.AdditionalInfo"
@@ -353,7 +354,7 @@
 										</td>
 									</tr>
 								</c:if>
-								<c:forEach var="cf" items="${customFields}"
+								<c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}"
 									varStatus="loopStatus">
 									<bean:define id="ctr">
 										<c:out value="${loopStatus.index}" />
@@ -415,6 +416,7 @@
 				</tr> 
 			</table>
 			<html-el:hidden property="input" value="CreateUser" />
+			<html-el:hidden property="method" value="preview" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>

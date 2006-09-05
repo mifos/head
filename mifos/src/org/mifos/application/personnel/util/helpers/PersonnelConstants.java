@@ -132,7 +132,7 @@ public interface PersonnelConstants {
 	public static final String MARITAL_STATUS ="Marital Status";
 	public static final String LANGUAGE  ="Languages";
 	public static final String USERLEVLELS  ="User Levels";
-	
+	public static final String ROLEMASTERLIST  ="Roles";
 	public static final String USER_LIST="UserList";
 	public static final short PERSONNEL_ENTITY_TYPE=17;
 	public static final String LOGIN_ATTEMPTS_COUNT="loginAttemptsCount";

@@ -9,6 +9,8 @@ import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 
@@ -27,8 +29,12 @@ public class OfficeBusinessService extends BusinessService {
 		return officePersistence.getActiveLevels(localeId);
 		
 	}
-	public OfficeBO getOffice(Short officeId) {
-		return officePersistence.getOffice(officeId);
+	public OfficeBO getOffice(Short officeId) throws ServiceException{
+		try {
+			return officePersistence.getOffice(officeId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
 	public List<OfficeView> getStatusList(Short localeId){
 		return officePersistence.getStatusList(localeId);

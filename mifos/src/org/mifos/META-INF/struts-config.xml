@@ -353,7 +353,14 @@
 		</action>
 		<action path="/PersonAction"	type="org.mifos.application.personnel.struts.action.PersonAction"	name="personActionForm" parameter="method" validate="true"	input="/PersonAction.do?method=validate" scope="session">
 			<forward name="chooseOffice_success" path="/pages/application/personnel/jsp/choose_office.jsp" />
-			<forward name="load_success" path="/pages/application/personnel/jsp/create_user.jsp" />	
+			<forward name="load_success" path="/pages/application/personnel/jsp/create_user.jsp" />
+			<forward name="preview_success" path="/pages/application/personnel/jsp/createuser_preview.jsp" />	
+			<forward name="preview_failure" path="/pages/application/personnel/jsp/create_user.jsp" />	
+			<forward name="previous_success" path="/pages/application/personnel/jsp/create_user.jsp" />	
+			<forward name="create_success" path="/pages/application/personnel/jsp/createuser_confirmation.jsp" />	
+			<forward name="create_failure" path="/pages/application/personnel/jsp/createuser_preview.jsp" />		
+			<forward name="cancel_success" path="/AdminAction.do?method=load" />		
+				
 		</action>
 		
 		

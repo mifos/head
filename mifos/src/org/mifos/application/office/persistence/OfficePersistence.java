@@ -69,9 +69,15 @@ public class OfficePersistence extends Persistence {
 		
 	}
 	
-	public OfficeBO getOffice(Short officeId) {
+	public OfficeBO getOffice(Short officeId) throws PersistenceException {
+		
+		try{
 		Session session = HibernateUtil.getSessionTL();
 		return (OfficeBO)session.get(OfficeBO.class,officeId);
+		}
+		catch (HibernateException e) {
+			throw new PersistenceException(e);
+		}
 		
 	}
 	

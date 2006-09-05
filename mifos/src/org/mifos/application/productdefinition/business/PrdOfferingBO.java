@@ -102,6 +102,7 @@ public class PrdOfferingBO extends BusinessObject {
 			PrdApplicableMasterEntity prdApplicableMaster, Date startDate)
 			throws ProductDefinitionException {
 		super(userContext);
+		try{
 		vaildate(userContext, prdOfferingName, prdOfferingShortName,
 				prdCategory, prdApplicableMaster, startDate);
 		this.prdOfferingName = prdOfferingName;
@@ -114,6 +115,11 @@ public class PrdOfferingBO extends BusinessObject {
 		this.prdStatus = setStatus(startDate, prdType);
 		this.office = new OfficePersistence().getOffice(userContext
 				.getBranchId());
+		}
+		catch (PersistenceException e) {
+
+			throw new ProductDefinitionException(e);
+		}
 	}
 
 	public String getDescription() {

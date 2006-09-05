@@ -81,6 +81,7 @@ public class ProductCategoryBO extends BusinessObject {
 			ProductTypeEntity productType, String productCategoryName,
 			String productCategoryDesc) throws ProductDefinitionException {
 		super(userContext);
+		try{
 		prdLoanLogger.debug("Creating product category");
 		validateDuplicateProductCategoryName(productCategoryName);
 		this.productCategoryID = null;
@@ -93,6 +94,11 @@ public class ProductCategoryBO extends BusinessObject {
 		this.prdCategoryStatus = new PrdCategoryStatusEntity(PrdCategoryStatus.ACTIVE);
 		setCreateDetails();
 		prdLoanLogger.debug("Creation of product category done");
+		}
+		catch (PersistenceException e) {
+
+			throw new ProductDefinitionException(e);
+		}
 	}
 
 	public ProductTypeEntity getProductType() {

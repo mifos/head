@@ -56,19 +56,19 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		assertEquals(1, personnels.size());
 	}
 
-	public void testIsUserExistSucess() {
+	public void testIsUserExistSucess() throws Exception{
 		assertTrue(persistence.isUserExist("mifos"));
 	}
 
-	public void testIsUserExistFailure() {
+	public void testIsUserExistFailure() throws Exception{
 		assertFalse(persistence.isUserExist("XXX"));
 	}
 
-	public void testIsUserExistWithGovernmentIdSucess() {
+	public void testIsUserExistWithGovernmentIdSucess()throws Exception {
 		assertTrue(persistence.isUserExistWithGovernmentId("123"));
 	}
 
-	public void testIsUserExistWithGovernmentIdFailure() {
+	public void testIsUserExistWithGovernmentIdFailure()throws Exception {
 		assertFalse(persistence.isUserExistWithGovernmentId("XXX"));
 	}
 
@@ -79,12 +79,12 @@ public class TestPersonnelPersistence extends MifosTestCase {
 				.parse("1979-12-12")));
 	}
 
-	public void testIsUserExistWithDobAndDisplayNameFailure() {
+	public void testIsUserExistWithDobAndDisplayNameFailure() throws Exception{
 		assertFalse(persistence.isUserExist("mifos", new GregorianCalendar(
 				1989, 12, 12, 0, 0, 0).getTime()));
 	}
 	
-	public void testActiveCustomerUnderLO() {
+	public void testActiveCustomerUnderLO() throws Exception{
 		createCustomers(CustomerStatus.CENTER_ACTIVE.getValue() ,CustomerStatus.GROUP_ACTIVE,CustomerStatus.CLIENT_ACTIVE.getValue());
 		assertTrue(persistence.getActiveChildrenForLoanOfficer(Short.valueOf("1"), Short.valueOf("3")));
 	}

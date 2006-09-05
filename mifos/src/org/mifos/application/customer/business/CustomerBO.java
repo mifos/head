@@ -156,7 +156,9 @@ public abstract class CustomerBO extends BusinessObject {
 			List<CustomFieldView> customFields, List<FeeView> fees,
 			Short formedBy, Short officeId, CustomerBO parentCustomer,
 			MeetingBO meeting, Short loanOfficerId) throws CustomerException {
+		
 		super(userContext);
+		try{
 		customerHierarchies = new HashSet<CustomerHierarchyEntity>();
 		customerMovements = new HashSet<CustomerMovementEntity>();
 		customerPositions = new HashSet<CustomerPositionEntity>();
@@ -202,6 +204,10 @@ public abstract class CustomerBO extends BusinessObject {
 		this.addCustomerAccount(createCustomerAccount(fees));
 
 		this.setCreateDetails();
+		}
+		catch (PersistenceException e) {
+			throw new CustomerException(e);
+		}
 	}
 
 	public Integer getCustomerId() {

@@ -40,11 +40,9 @@ package org.mifos.application.personnel.business;
 
 import java.util.Date;
 
-import org.mifos.application.personnel.util.valueobjects.PersonnelDetails;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.util.helpers.StringUtils;
 
 /**
  * This obect has values for extra fields of a personnel.
@@ -73,19 +71,36 @@ public class PersonnelDetailsEntity extends PersistentObject {
 
 	private Address address;
 
+	protected PersonnelDetailsEntity() {
+		super();
+		this.dob = null;
+		this.personnelId = null;
+		this.personnel = null;
+	}
+
+	public PersonnelDetailsEntity(Name name, String governmentIdNumber,
+			Date dob, Integer maritalStatus, Integer gender,
+			Date dateOfJoiningMFI, Date dateOfJoiningBranch,
+			PersonnelBO personnel, Address address) {
+		super();
+		this.name = name;
+		this.governmentIdNumber = governmentIdNumber;
+		this.dob = dob;
+		this.maritalStatus = maritalStatus;
+		this.gender = gender;
+		this.dateOfJoiningMFI = dateOfJoiningMFI;
+		this.dateOfJoiningBranch = dateOfJoiningBranch;
+		this.personnelId = personnel.getPersonnelId();
+		this.personnel = personnel;
+		this.address = address;
+	}
+
 	public Address getAddress() {
 		return address;
 	}
 
 	public void setAddress(Address address) {
 		this.address = address;
-	}
-
-	protected PersonnelDetailsEntity() {
-		super();
-		this.dob = null;
-		this.personnelId = null;
-		this.personnel = null;
 	}
 
 	public PersonnelBO getPersonnel() {
@@ -152,33 +167,17 @@ public class PersonnelDetailsEntity extends PersistentObject {
 		this.name = name;
 	}
 
-	public PersonnelDetailsEntity(Name name, String governmentIdNumber,
-			Date dob, Integer maritalStatus, Integer gender,
-			Date dateOfJoiningMFI, Date dateOfJoiningBranch,
-			 PersonnelBO personnel, Address address) {
-		super();
-		this.name = name;
-		this.governmentIdNumber = governmentIdNumber;
-		this.dob = dob;
-		this.maritalStatus = maritalStatus;
-		this.gender = gender;
-		this.dateOfJoiningMFI = dateOfJoiningMFI;
-		this.dateOfJoiningBranch = dateOfJoiningBranch;
-		this.personnelId = personnel.getPersonnelId();
-		this.personnel = personnel;
-		this.address = address;
-	}
-	
-	public String getDisplayName(){
+	public String getDisplayName() {
 		return name.getDisplayName();
 	}
 
-	public void updateDetails(Name name, Integer maritalStatus, Integer gender, Address address, Date dateOfJoiningBranch) {
+	public void updateDetails(Name name, Integer maritalStatus, Integer gender,
+			Address address, Date dateOfJoiningBranch) {
 		setName(name);
 		setMaritalStatus(maritalStatus);
 		setGender(gender);
 		setAddress(address);
-		if(dateOfJoiningBranch !=null){
+		if (dateOfJoiningBranch != null) {
 			setDateOfJoiningBranch(dateOfJoiningBranch);
 		}
 	}

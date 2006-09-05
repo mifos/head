@@ -16,8 +16,10 @@ public class OfficePersistenceService extends PersistenceService {
 
 	private OfficePersistence serviceImpl = new OfficePersistence();
 
-	public OfficeBO getOffice(Short officeId) {
-		return serviceImpl.getOffice(officeId);
+	public OfficeBO getOffice(Short officeId) throws PersistenceException {
+		
+			return serviceImpl.getOffice(officeId);
+	
 	}
 	public List<OfficeView> getActiveBranches(Short officeId) {
 		return serviceImpl.getActiveOffices(officeId);

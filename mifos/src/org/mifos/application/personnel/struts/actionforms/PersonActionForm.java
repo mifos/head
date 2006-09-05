@@ -1,6 +1,8 @@
 package org.mifos.application.personnel.struts.actionforms;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
@@ -12,19 +14,25 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
-import org.mifos.application.personnel.util.helpers.PersonnelHelper;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
-import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 import org.mifos.framework.struts.tags.DateHelper;
+import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class PersonActionForm extends BaseActionForm {
+
+	private String input;
 
 	private String personnelId;
 
@@ -37,7 +45,7 @@ public class PersonActionForm extends BaseActionForm {
 	private String title;
 
 	private String passwordRepeat;
-	
+
 	private String firstName;
 
 	private String middleName;
@@ -45,10 +53,9 @@ public class PersonActionForm extends BaseActionForm {
 	private String lastName;
 
 	private String secondLastName;
-	
-	
-	private String password;
-	
+
+	private String userPassword;
+
 	private Address address;
 
 	private String status;
@@ -57,7 +64,7 @@ public class PersonActionForm extends BaseActionForm {
 
 	private String searchId;
 
-	private String userName;
+	private String loginName;
 
 	private String emailId;
 
@@ -79,9 +86,10 @@ public class PersonActionForm extends BaseActionForm {
 
 	public PersonActionForm() {
 		super();
-		
+
 		address = new Address();
-		
+		customFields = new ArrayList<CustomFieldView>();
+
 	}
 
 	public CustomFieldView getCustomField(int i) {
@@ -171,8 +179,6 @@ public class PersonActionForm extends BaseActionForm {
 		this.maritalStatus = maritalStatus;
 	}
 
-
-
 	public String getOfficeId() {
 		return officeId;
 	}
@@ -229,13 +235,7 @@ public class PersonActionForm extends BaseActionForm {
 		this.title = title;
 	}
 
-	public String getUserName() {
-		return userName;
-	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
 
 	public void clear() {
 		this.personnelId = null;
@@ -250,7 +250,8 @@ public class PersonActionForm extends BaseActionForm {
 		this.status = null;
 		this.preferredLocale = null;
 		this.searchId = null;
-		this.userName = null;
+		this.loginName = null;
+		this.userPassword = null;
 		this.emailId = null;
 		this.governmentIdNumber = null;
 		this.dob = null;
@@ -259,7 +260,8 @@ public class PersonActionForm extends BaseActionForm {
 		this.dateOfJoiningMFI = null;
 		this.dateOfJoiningBranch = null;
 		this.personnelRoles = null;
-		this.customFields = null;
+		address = new Address();
+		customFields = new ArrayList<CustomFieldView>();
 	}
 
 	public Address getAddress() {
@@ -270,13 +272,6 @@ public class PersonActionForm extends BaseActionForm {
 		this.address = address;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
 
 	public String getFirstName() {
 		return firstName;
@@ -317,6 +312,22 @@ public class PersonActionForm extends BaseActionForm {
 	public void setPasswordRepeat(String passwordRepeat) {
 		this.passwordRepeat = passwordRepeat;
 	}
+	
+	public String getAge(){
+		if (dob!=null&&!dob.equals("") ){
+			Date date = DateHelper.getDate(dob);
+			Calendar calendar = Calendar.getInstance();
+			return String.valueOf(DateHelper.DateDiffInYears(new java.sql.Date(date.getTime())));
+		}
+		else
+			return "";
+			
+	}
+	
+	public Name getName(){
+		return new Name(firstName,middleName,secondLastName,lastName);
+	}
+
 	@Override
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
@@ -334,56 +345,116 @@ public class PersonActionForm extends BaseActionForm {
 		return errors;
 
 	}
-	private ActionErrors checkForPassword(ActionErrors errors){
-		
-		//if password and confirm passowrd entries are made of only spaces, throw an exception
-		if(password.length()==passwordRepeat.length() && password.length()!=0 && password.trim().equals("")){
-			if(errors==null)
+
+	private ActionErrors checkForPassword(ActionErrors errors) {
+
+		// if password and confirm passowrd entries are made of only spaces,
+		// throw an exception
+		if (userPassword != null && passwordRepeat != null
+				&& userPassword.length() == passwordRepeat.length()
+				&& userPassword.length() != 0 && userPassword.trim().equals("")) {
+			if (errors == null)
 				errors = new ActionErrors();
-			errors.add(PersonnelConstants.PASSWORD_MASK,new ActionMessage(PersonnelConstants.PASSWORD_MASK,PersonnelConstants.PASSWORD));
+			errors.add(PersonnelConstants.PASSWORD_MASK, new ActionMessage(
+					PersonnelConstants.PASSWORD_MASK,
+					PersonnelConstants.PASSWORD));
 		}
-			
+
 		return errors;
 	}
+
 	/**
-	 * This is the helper method to check for extra validations e.g. date validations and password validations
-	 * needed at the time of create preview.
-	 * @param request 
+	 * This is the helper method to check for extra validations e.g. date
+	 * validations and password validations needed at the time of create
+	 * preview.
+	 * 
+	 * @param request
 	 */
-	private ActionErrors handleCreatePreviewValidations(HttpServletRequest request){
-		java.sql.Date sqlDOB=null;
-		ActionErrors errors=null;
-		if(!PersonnelHelper.isNullOrBlank(dob)) {
-			sqlDOB=DateHelper.getLocaleDate(getUserLocale(request),dob);
+	private ActionErrors handleCreatePreviewValidations(
+			HttpServletRequest request) {
+		
+		ActionErrors errors = null;
+		if (!StringUtils.isNullOrEmpty(dob)) {
+			
+			//sqlDOB = DateHelper.getLocaleDate(userContext.getPereferedLocale(), dob);
+			Date date = DateHelper.getDate(dob);
+			
+			System.out.println("passed date is "+date);
 			Calendar currentCalendar = new GregorianCalendar();
-			int year=currentCalendar.get(Calendar.YEAR);
-			int month=currentCalendar.get(Calendar.MONTH);
-			int day=currentCalendar.get(Calendar.DAY_OF_MONTH);
-			currentCalendar = new GregorianCalendar(year,month,day);
-			java.sql.Date currentDate=new java.sql.Date(currentCalendar.getTimeInMillis());
-			if(currentDate.compareTo(sqlDOB) < 0 ) {
-				errors=new ActionErrors();
-				errors.add(PersonnelConstants.INVALID_DOB,new ActionMessage(PersonnelConstants.INVALID_DOB));
+			int year = currentCalendar.get(Calendar.YEAR);
+			int month = currentCalendar.get(Calendar.MONTH);
+			int day = currentCalendar.get(Calendar.DAY_OF_MONTH);
+			currentCalendar = new GregorianCalendar(year, month, day);
+			Date currentDate = new Date(currentCalendar
+					.getTimeInMillis());
+			System.out.println("currentDate" +currentDate);
+			if (currentDate.compareTo(date) < 0) {
+				errors = new ActionErrors();
+				errors.add(PersonnelConstants.INVALID_DOB, new ActionMessage(
+						PersonnelConstants.INVALID_DOB));
 			}
 		}
-		if(errors==null){
-			errors=new ActionErrors();
+		if (errors == null) {
+			errors = new ActionErrors();
 		}
-		checkForMandatoryFields(EntityMasterConstants.Personnel,errors,request);
+
+		validateCustomFields(request, errors);
+
 		return checkForPassword(errors);
 	}
-	protected Locale getUserLocale(HttpServletRequest request) {
-		Locale locale=null;
-		HttpSession session= request.getSession();
-		if(session !=null) {
-			UserContext userContext= (UserContext)session.getAttribute(LoginConstants.USERCONTEXT);
-			if(null !=userContext) {
-				locale=userContext.getPereferedLocale();
-				if(null==locale) {
-					locale=userContext.getMfiLocale();
-				}
-			}
+
+	protected void validateCustomFields(HttpServletRequest request,
+			ActionErrors errors) {
+		List<CustomFieldDefinitionEntity> customFieldDefs = null;
+
+		try {
+			customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+					.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		} catch (PageExpiredException e) {
+			
+			//ignore it 
 		}
-		return locale;
+		if (customFieldDefs!=null)
+		for (CustomFieldView customField : customFields) {
+			boolean isErrorFound = false;
+			for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+				if (customField.getFieldId()
+						.equals(customFieldDef.getFieldId())
+						&& customFieldDef.isMandatory())
+					if (StringUtils.isNullOrEmpty(customField.getFieldValue())) {
+						errors.add(CustomerConstants.CUSTOM_FIELD,
+								new ActionMessage(
+										OfficeConstants.ENTERADDTIONALINFO));
+						isErrorFound = true;
+						break;
+					}
+			}
+			if (isErrorFound)
+				break;
+		}
+	}
+
+	public String getInput() {
+		return input;
+	}
+
+	public void setInput(String input) {
+		this.input = input;
+	}
+
+	public String getLoginName() {
+		return loginName;
+	}
+
+	public void setLoginName(String loginName) {
+		this.loginName = loginName;
+	}
+
+	public String getUserPassword() {
+		return userPassword;
+	}
+
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
 	}
 }

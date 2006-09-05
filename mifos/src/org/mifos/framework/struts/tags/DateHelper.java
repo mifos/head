@@ -65,6 +65,20 @@ public class DateHelper {
 		}
 		return returnDate;
 	}
+	public static Date getDate(String value) {
+		Date date=null;
+		if( value!=null && !value.equals("")){
+			try{
+
+				SimpleDateFormat dbSdf = new SimpleDateFormat("dd/MM/yyyy");
+				date = dbSdf.parse(value); //util date not sql
+			}catch(Exception parsee){
+				//TODO Exception handling and remove print stack trace
+				parsee.printStackTrace();
+			}
+		}
+		return date;
+	}
 	//Bug id 26765. Added the method convertToCurrentDateFormat and called it from this method
 	public static String getCurrentDate(Locale locale) {
 		Calendar currentCalendar = new GregorianCalendar();

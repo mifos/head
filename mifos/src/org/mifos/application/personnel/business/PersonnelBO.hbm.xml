@@ -63,9 +63,9 @@
 			<one-to-many
 				class="org.mifos.application.personnel.business.PersonnelCustomFieldEntity" />
 		</set>
-		<set name="personnelMovements" cascade="all" lazy="true" access="field">
+		<set name="personnelMovements" cascade="all" lazy="false" access="field">
 			<key column="PERSONNEL_ID" update="false" />
-			<one-to-many class="org.mifos.application.personnel.business.PersonnelMovementEntity" />
+			<one-to-many class="org.mifos.application.personnel.business.PersonnelMovementEntity"  />
 		</set>
 	</class>
 	<!-- This query obtains all the active loan officers under a particular office -->
@@ -86,6 +86,10 @@
 	</query>
 	<query name="getCountByDobAndDisplayName">
 		<![CDATA[select count(*)  from org.mifos.application.personnel.business.PersonnelBO as personnel where  personnel.displayName = :DISPLAY_NAME and personnel.personnelDetails.dob =:DOB]]>
+	</query>
+	
+	<query name="getPersonBySystemId">
+		<![CDATA[from org.mifos.application.personnel.business.PersonnelBO as personnel where personnel.globalPersonnelNum =:globalPersonnelNum]]>
 	</query>
 
 </hibernate-mapping>

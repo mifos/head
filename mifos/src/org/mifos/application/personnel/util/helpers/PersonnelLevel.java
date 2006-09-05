@@ -1,5 +1,7 @@
 package org.mifos.application.personnel.util.helpers;
 
+import org.mifos.framework.exceptions.PropertyNotFoundException;
+
 public enum PersonnelLevel {
 
 	LOAN_OFFICER(Short.valueOf("1")), NON_LOAN_OFFICER(Short.valueOf("2"));
@@ -14,4 +16,13 @@ public enum PersonnelLevel {
 		return value;
 	}
 
+	public static PersonnelLevel getPersonnelLevel(Short id)
+			throws PropertyNotFoundException {
+		for (PersonnelLevel level : PersonnelLevel.values()) {
+			if (level.value.equals(id))
+				return level;
+		}
+		// TODO: give proper message
+		throw new PropertyNotFoundException("CustomerLevel");
+	}
 }
