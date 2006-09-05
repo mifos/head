@@ -141,8 +141,7 @@ function goToEditPage(){
                 <tr>
                   <td class="fontnormal">
                   	<span class="fontnormalbold">                  		<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}"/><c:out value=" "/>
-                  		<mifos:mifoslabel name="Center.Selected" bundle="CenterUIResources"/>
-                  		<mifos:mifoslabel name="Center.Colon" bundle="CenterUIResources"/>
+                  		<mifos:mifoslabel name="Center.Selected" bundle="CenterUIResources" isColonRequired="yes"/>
 </span>
                   	 <c:out value="${sessionScope.centerCustActionForm.officeName}"/></td>
                 </tr>

@@ -216,8 +216,9 @@
 										<tr>
 											<td colspan="2" class="fontnormal">
 												<br>
-												<span class="fontnormalbold"> <mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /><c:out value=" " /> <mifos:mifoslabel name="Center.Selected" bundle="CenterUIResources" /> <mifos:mifoslabel name="Center.Colon"
-														bundle="CenterUIResources" /> </span>
+												<span class="fontnormalbold"> 
+												<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /><c:out value=" " /> <mifos:mifoslabel name="Center.Selected" bundle="CenterUIResources" isColonRequired="yes"/> 
+												</span>
 												<c:out value="${sessionScope.centerCustActionForm.officeName}" />
 												<br>
 												<br>
@@ -285,8 +286,7 @@
 										<!-- MFI Joining Date -->
 										<tr class="fontnormal">
 											<td align="right" class="fontnormal">
-												<mifos:mifoslabel name="Center.MfiJoiningDate" bundle="CenterUIResources" />
-												:
+												<mifos:mifoslabel name="Center.MfiJoiningDate" bundle="CenterUIResources" isColonRequired="yes"/>
 											</td>
 											<td valign="top">
 												<date:datetag property="mfiJoiningDate" />
@@ -365,7 +365,7 @@
 										<!-- Postal Code of address -->
 										<tr class="fontnormal">
 											<td align="right" class="fontnormal">
-												<mifos:mifoslabel keyhm="Center.PostalCode" name="${ConfigurationConstants.POSTAL_CODE}" />
+												<mifos:mifoslabel keyhm="Center.PostalCode" name="${ConfigurationConstants.POSTAL_CODE}" isColonRequired="yes"/>
 											</td>
 											<td>
 												<mifos:mifosalphanumtext keyhm="Center.PostalCode" name="centerCustActionForm" property="address.zip" maxlength="20" />
@@ -400,8 +400,7 @@
 											</bean:define>
 											<tr class="fontnormal">
 												<td width="21%" align="right">
-													<mifos:mifoslabel name="${cf.lookUpEntity.entityType}" mandatory="${cf.mandatoryStringValue}" bundle="CenterUIResources" />
-													:
+													<mifos:mifoslabel name="${cf.lookUpEntity.entityType}" mandatory="${cf.mandatoryStringValue}" bundle="CenterUIResources" isColonRequired="yes"/>
 												</td>
 												<td width="79%">
 													<html-el:hidden property='customField[${ctr}].fieldId' value="${cf.fieldId}"></html-el:hidden>
@@ -438,8 +437,7 @@
 											</bean:define>
 											<tr>
 												<td width="21%" align="right" class="fontnormal">
-													<c:out value="${adminFees.feeName}" />
-													:
+													<c:out value="${adminFees.feeName}" />:
 												</td>
 												<td width="79%" class="fontnormal">
 													<table width="500" border="0" cellspacing="0" cellpadding="0">
@@ -471,7 +469,6 @@
 																<html-el:checkbox property="defaultFee[${ctr1}].feeRemoved" value="1"></html-el:checkbox>
 																Check to Remove
 															</td>
-															<%--<c:out value="${adminFees.feeRemoved}" />--%>
 														</tr>
 													</table>
 												</td>
