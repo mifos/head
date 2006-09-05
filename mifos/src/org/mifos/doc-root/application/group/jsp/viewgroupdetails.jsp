@@ -48,12 +48,6 @@
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-
-		<!--<script>
-function meetingpopup(){
-	window.open("schedulemeetingpopup.htm",null,"height=400,width=800,status=yes,scrollbars=yes,toolbar=no,menubar=no,location=no");
-}
-</script>-->
 		<script language="javascript">
 	function ViewDetails(){
 		closedaccsearchactionform.submit();
@@ -227,7 +221,7 @@ function meetingpopup(){
 												<tr>
 													<td width="65%"><span class="fontnormal"> <html-el:link
 														href="loanAccountAction.do?globalAccountNum=${loan.globalAccountNum}&method=get&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}">
-														<c:out value="${loan.loanOffering.prdOfferingName}" />,Acct #<c:out
+														<c:out value="${loan.loanOffering.prdOfferingName}" />, <mifos:mifoslabel name="Group.acc" bundle="GroupUIResources" /><c:out
 															value="${loan.globalAccountNum}" />
 													</html-el:link> </span></td>
 													<td width="35%"><span class="fontnormal"> <mifoscustom:MifosImage
@@ -283,7 +277,7 @@ function meetingpopup(){
 												<tr>
 													<td width="65%"><span class="fontnormal"> <html-el:link
 														href="savingsAction.do?globalAccountNum=${savings.globalAccountNum}&method=get&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}">
-														<c:out value="${savings.savingsOffering.prdOfferingName}" />,Acct #<c:out
+														<c:out value="${savings.savingsOffering.prdOfferingName}" />, <mifos:mifoslabel name="Group.acc" bundle="GroupUIResources" /><c:out
 															value="${savings.globalAccountNum}" />
 													</html-el:link> </span></td>
 													<td width="35%"><span class="fontnormal"> <mifoscustom:MifosImage
@@ -742,8 +736,8 @@ function meetingpopup(){
 						</tr>
 						<tr>
 							<td class="paddingL10"><c:choose>
-								<c:when test="${!empty requestScope.notes}">
-									<c:forEach var="note" items="${requestScope.notes}">
+								<c:when test="${!empty BusinessKey.recentCustomerNotes}">
+									<c:forEach var="note" items="${BusinessKey.recentCustomerNotes}">
 										<span class="fontnormal8ptbold"> <c:out
 											value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,note.commentDate)}" />:
 										</span>
@@ -761,14 +755,14 @@ function meetingpopup(){
 						</tr>
 						<tr>
 							<td align="right" class="paddingleft05"><span
-								class="fontnormal8pt"> <c:if test="${!empty requestScope.notes}">
+								class="fontnormal8pt"> <c:if test="${!empty BusinessKey.customerNotes}">
 								<a
-									href="CustomerNoteAction.do?method=get&input=Group&security_param=Group">
+									href="customerNotesAction.do?method=search&customerId=<c:out value="${BusinessKey.customerId}"/>&globalAccountNum=<c:out value="${BusinessKey.globalCustNum}"/>&customerName=<c:out value="${BusinessKey.displayName}"/>&securityParamInput=Group&levelId=<c:out value="${BusinessKey.customerLevel.id}"/>&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="Group.seeallnotes"
 									bundle="GroupUIResources"></mifos:mifoslabel> </a>
 								<br>
 							</c:if> <a
-								href="CustomerNoteAction.do?method=load&input=Group&security_param=Group">
+								href="customerNotesAction.do?method=load&customerId=<c:out value="${BusinessKey.customerId}"/>&randomNUm=${sessionScope.randomNUm}">
 							<mifos:mifoslabel name="Group.addanote" bundle="GroupUIResources"></mifos:mifoslabel>
 							</a> </span></td>
 						</tr>

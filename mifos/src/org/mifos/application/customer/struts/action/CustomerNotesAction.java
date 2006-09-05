@@ -50,7 +50,6 @@ import org.mifos.application.customer.business.CustomerNoteEntity;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.struts.actionforms.CustomerNotesActionForm;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -63,37 +62,34 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 
 public class CustomerNotesAction extends SearchAction {
 
-	CustomerBusinessService  customerBusinessService=null;
-	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CUSTOMERLOGGER);
 	
-	public CustomerNotesAction() throws ServiceException {
-		customerBusinessService =(CustomerBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Customer);
-	}
-	
+	@Override
 	protected BusinessService getService() {
-		return customerBusinessService;
+		return getCustomerBusinessService();
 	}
 	
+	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
 	}
 	
 	public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
+		logger.debug("In CustomerNotesAction::load()");
 		clearActionForm(form);
 		UserContext userContext = getUserContext(request);
-		CustomerBO customerBO = customerBusinessService.getCustomer(Integer.valueOf(((CustomerNotesActionForm) form).getCustomerId()));
+		CustomerBO customerBO = getCustomerBusinessService().getCustomer(Integer.valueOf(((CustomerNotesActionForm) form).getCustomerId()));
 		customerBO.setUserContext(userContext);
 		setFormAttributes(userContext, form,customerBO);
 		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request.getSession());
@@ -102,21 +98,26 @@ public class CustomerNotesAction extends SearchAction {
 	}
 	
 	public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
-			return mapping.findForward(ActionForwards.preview_success.toString());
+		logger.debug("In CustomerNotesAction::preview()");
+		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 	
 	public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
+		logger.debug("In CustomerNotesAction::previous()");
 		return mapping.findForward(ActionForwards.previous_success.toString());
 	}
 	
 	public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
+		logger.debug("In CustomerNotesAction::cancel()");
 		return mapping.findForward(getDetailCustomerPage(form));
 	}
 	
-	public ActionForward create(ActionMapping mapping, ActionForm form,	HttpServletRequest request, HttpServletResponse response) throws CustomerException{
+	@CloseSession
+	public ActionForward create(ActionMapping mapping, ActionForm form,	HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("In CustomerNotesAction::create()");
 		ActionForward forward = null;
 		CustomerNotesActionForm notesActionForm = (CustomerNotesActionForm) form;
-		CustomerBO customerBO = customerBusinessService.getCustomer(Integer.valueOf(((CustomerNotesActionForm) form).getCustomerId()));
+		CustomerBO customerBO = getCustomerBusinessService().getCustomer(Integer.valueOf(((CustomerNotesActionForm) form).getCustomerId()));
 		UserContext uc = getUserContext(request);
 		PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(uc.getId());
 		CustomerNoteEntity customerNote = new CustomerNoteEntity(notesActionForm.getComment(), new java.sql.Date(System.currentTimeMillis()),personnelBO,customerBO);
@@ -162,11 +163,16 @@ public class CustomerNotesAction extends SearchAction {
 	}
 
 	@Override
-	protected QueryResult getSearchResult(ActionForm form)throws Exception {
-		return customerBusinessService.getAllCustomerNotes(Integer.valueOf(((CustomerNotesActionForm)form).getCustomerId()));
+	protected QueryResult getSearchResult(ActionForm form)throws ApplicationException{
+		return getCustomerBusinessService().getAllCustomerNotes(Integer.valueOf(((CustomerNotesActionForm)form).getCustomerId()));
 	}
 	
-	private void setFormAttributes(UserContext userContext , ActionForm form,CustomerBO customerBO ) throws ApplicationException, SystemException {
+	private CustomerBusinessService getCustomerBusinessService() {
+		return (CustomerBusinessService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.Customer);
+	}
+	
+	private void setFormAttributes(UserContext userContext , ActionForm form,CustomerBO customerBO ) throws ApplicationException{
 		CustomerNotesActionForm notesActionForm = (CustomerNotesActionForm) form;
 		notesActionForm.setLevelId(customerBO.getCustomerLevel().getId().toString());
 		notesActionForm.setGlobalCustNum(customerBO.getGlobalCustNum());

@@ -52,13 +52,13 @@
 			<mifos:mifoslabel name="Customer.Submit" ></mifos:mifoslabel>
 			<mifos:mifoslabel name="Customer.Edit" ></mifos:mifoslabel>
 			<mifos:mifoslabel name="Customer.ClickCancel1" />
-	            <c:if test="${sessionScope.customerNotesActionForm.levelId == '3'}">
+	            <c:if test="${sessionScope.customerNotesActionForm.levelId == CustomerLevel.CENTER.value}">
 					<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
 				</c:if>
-				<c:if test="${sessionScope.customerNotesActionForm.levelId == '2'}">
+				<c:if test="${sessionScope.customerNotesActionForm.levelId == CustomerLevel.GROUP.value}">
 					<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
 				</c:if>
-				<c:if test="${sessionScope.customerNotesActionForm.levelId == '1'}">
+				<c:if test="${sessionScope.customerNotesActionForm.levelId == CustomerLevel.CLIENT.value}">
 					<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
 				</c:if>
 			 <mifos:mifoslabel name="Customer.ClickCancel2" /> 

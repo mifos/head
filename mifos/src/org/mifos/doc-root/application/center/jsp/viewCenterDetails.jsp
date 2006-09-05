@@ -176,7 +176,7 @@
 												<tr>
 													<td width="65%"><span class="fontnormal"> <html-el:link
 														href="savingsAction.do?globalAccountNum=${savings.globalAccountNum}&method=get&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}">
-														<c:out value="${savings.savingsOffering.prdOfferingName}" />,Acct #<c:out
+														<c:out value="${savings.savingsOffering.prdOfferingName}" />, <mifos:mifoslabel name="Center.acc" bundle="CenterUIResources" /><c:out
 															value="${savings.globalAccountNum}" />
 													</html-el:link> </span></td>
 													<td width="35%"><span class="fontnormal"> <mifoscustom:MifosImage
@@ -563,13 +563,13 @@
 							<td align="right" class="paddingleft05"><span
 								class="fontnormal8pt"> <c:if test="${!empty sessionScope.BusinessKey.customerNotes}">
 								<html-el:link
-									href="customerNotesAction.do?method=search&customerId=${sessionScope.BusinessKey.customerId}&globalAccountNum=${sessionScope.BusinessKey.globalCustNum}&customerName=${sessionScope.BusinessKey.displayName}&securityParamInput=Center&levelId=${sessionScope.BusinessKey.customerLevel.id}">
+									href="customerNotesAction.do?method=search&customerId=${sessionScope.BusinessKey.customerId}&globalAccountNum=${sessionScope.BusinessKey.globalCustNum}&customerName=${sessionScope.BusinessKey.displayName}&securityParamInput=Center&levelId=${sessionScope.BusinessKey.customerLevel.id}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="center.SeeAllNotesLink"
 										bundle="CenterUIResources"></mifos:mifoslabel>
 								</html-el:link>
 								<br>
 							</c:if> <a
-								href="customerNotesAction.do?method=load&customerId=<c:out value="${sessionScope.BusinessKey.customerId}"/>">
+								href="customerNotesAction.do?method=load&customerId=<c:out value="${sessionScope.BusinessKey.customerId}"/>&randomNUm=${sessionScope.randomNUm}">
 							<mifos:mifoslabel name="Center.NotesLink"
 								/> </a> </span></td>
 						</tr>

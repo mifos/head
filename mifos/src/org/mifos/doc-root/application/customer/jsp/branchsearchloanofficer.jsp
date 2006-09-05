@@ -115,12 +115,12 @@
 									<c:forEach items="${requestScope.customerList}" var="customer">
 									<c:choose>
 									<c:when test='${requestScope.Context.businessResults["GrpHierExists"] eq true}'>
-										<html-el:link href='centerAction.do?method=getDetails&customerId=${customer.customerId}&searchId=${customer.searchId}&globalCustNum=${customer.globalCustNum}&recordLoanOfficerId=${recordLoanOfficerId}&recordOfficeId=${recordOfficeId}' >
+										<html-el:link href='centerCustAction.do?method=get&customerId=${customer.customerId}&searchId=${customer.searchId}&globalCustNum=${customer.globalCustNum}&recordLoanOfficerId=${recordLoanOfficerId}&recordOfficeId=${recordOfficeId}' >
 									<c:out value="${customer.displayName}"/>
 									</html-el:link><br>
 										</c:when>
 									<c:otherwise>
-									<html-el:link href='GroupAction.do?method=getDetails&customerId=${customer.customerId}&searchId=${customer.searchId}&globalCustNum=${customer.globalCustNum}&recordLoanOfficerId=${recordLoanOfficerId}&recordOfficeId=${recordOfficeId}' >
+									<html-el:link href='groupCustAction.do?method=get&customerId=${customer.customerId}&searchId=${customer.searchId}&globalCustNum=${customer.globalCustNum}&recordLoanOfficerId=${recordLoanOfficerId}&recordOfficeId=${recordOfficeId}' >
 									<c:out value="${customer.displayName}"/>
 									</html-el:link><br>
 									</c:otherwise>
@@ -202,12 +202,12 @@
 									<c:forEach items="${requestScope.customerList}" var="customer">
 									<c:choose>
 									<c:when test='${requestScope.Context.businessResults["GrpHierExists"] eq true}'>
-										<html-el:link href='centerAction.do?method=getDetails&customerId=${customer.customerId}&searchId=${customer.searchId}&globalCustNum=${customer.globalCustNum}&recordLoanOfficerId=${recordLoanOfficerId}&recordOfficeId=${recordOfficeId}' >
+										<html-el:link href='centerCustAction.do?method=get&customerId=${customer.customerId}&searchId=${customer.searchId}&globalCustNum=${customer.globalCustNum}&recordLoanOfficerId=${recordLoanOfficerId}&recordOfficeId=${recordOfficeId}' >
 									<c:out value="${customer.displayName}"/>
 									</html-el:link><br>
 										</c:when>
 									<c:otherwise>
-									<html-el:link href='GroupAction.do?method=getDetails&customerId=${customer.customerId}&searchId=${customer.searchId}&globalCustNum=${customer.globalCustNum}&recordLoanOfficerId=${recordLoanOfficerId}&recordOfficeId=${recordOfficeId}' >
+									<html-el:link href='groupCustAction.do?method=get&customerId=${customer.customerId}&searchId=${customer.searchId}&globalCustNum=${customer.globalCustNum}&recordLoanOfficerId=${recordLoanOfficerId}&recordOfficeId=${recordOfficeId}' >
 									<c:out value="${customer.displayName}"/>
 									</html-el:link><br>
 									</c:otherwise>

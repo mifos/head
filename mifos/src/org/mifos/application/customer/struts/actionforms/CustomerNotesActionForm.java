@@ -44,7 +44,6 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.customer.center.util.helpers.ValidateMethods;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.util.helpers.Methods;
@@ -111,6 +110,7 @@ public class CustomerNotesActionForm extends SearchActionForm {
 	public void setInput(String input) {
 		this.input = input;
 	}
+	@Override
 	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
 		String methodCalled = request.getParameter(Methods.method.toString());
 		ActionErrors errors = null;

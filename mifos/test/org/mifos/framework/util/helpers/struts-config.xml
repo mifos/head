@@ -1803,7 +1803,7 @@
 			<forward name="preview_failure" path="/pages/application/customer/jsp/addCustomerNotes.jsp" />
 			<forward name="create_failure" path="/pages/application/customer/jsp/previewCustomerNotes.jsp" />
 			<forward name="previous_success" path="/pages/application/customer/jsp/addCustomerNotes.jsp" />
-			<forward name="group_detail_page" path="/GroupAction.do?method=get" />
+			<forward name="group_detail_page" path="/groupCustAction.do?method=get" />
 			<forward name="center_detail_page" path="/centerAction.do?method=get" />
 			<forward name="client_detail_page" path="/clientCreationAction.do?method=get" />
 		</action>

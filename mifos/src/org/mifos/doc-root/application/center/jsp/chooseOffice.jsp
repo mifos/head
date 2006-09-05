@@ -12,12 +12,12 @@
 <script language="javascript">
 
   function goToCancelPage(){
-	centerActionForm.action="centerAction.do?method=cancel";
-	centerActionForm.submit();
+	centerCustActionForm.action="centerCustAction.do?method=cancel";
+	centerCustActionForm.submit();
   }
  
 </script>
-<html-el:form action="centerAction.do?method=load">
+<html-el:form action="centerCustAction.do">
     <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
       <tr>
         <td align="center" class="heading">&nbsp;</td>
@@ -104,7 +104,7 @@
           </tr>
         </table>
       <br>
-<html-el:hidden property="input" value="chooseOffice"/> 
+<html-el:hidden property="input" value="create"/> 
 </html-el:form>
 </tiles:put>
 </tiles:insert>

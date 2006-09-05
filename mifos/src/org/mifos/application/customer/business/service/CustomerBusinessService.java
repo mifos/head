@@ -66,7 +66,6 @@ import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -82,6 +81,7 @@ public class CustomerBusinessService extends BusinessService {
 
 	}
 
+	@Override
 	public BusinessObject getBusinessObject(UserContext userContext) {
 		return null;
 	}
@@ -329,7 +329,7 @@ public class CustomerBusinessService extends BusinessService {
 	}
 
 	public QueryResult getAllCustomerNotes(Integer customerId)
-			throws ApplicationException, SystemException {
+			throws ApplicationException{
 		return new CustomerPersistence().getAllCustomerNotes(customerId);
 	}
 
