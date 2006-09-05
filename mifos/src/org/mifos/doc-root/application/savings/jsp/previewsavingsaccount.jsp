@@ -99,7 +99,7 @@
                 	<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
                     <mifos:mifoslabel name="Savings.accountDetails"/><br>                    
                     <c:choose>
-	                  <c:when test="${sessionScope.BusinessKey.savingsOffering.savingsType.savingsTypeId == SavingsConstants.SAVINGS_MANDATORY}">
+	                  <c:when test="${sessionScope.BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
 	                  	<mifos:mifoslabel name="Savings.mandatoryAmountForDeposit" />: 
 	                  </c:when>
 	                  <c:otherwise>
@@ -110,12 +110,12 @@
                 <c:out value="${sessionScope.BusinessKey.recommendedAmount.amountDoubleValue}"/>
                     <c:choose>
 	                    <c:when test="${sessionScope.BusinessKey.customer.customerLevel.id==CustomerConstants.GROUP_LEVEL_ID}">
-	                    (<customtags:lookUpValue	id="${sessionScope.BusinessKey.savingsOffering.recommendedAmntUnit.recommendedAmntUnitId}"
+	                    (<customtags:lookUpValue	id="${sessionScope.BusinessKey.savingsOffering.recommendedAmntUnit.id}"
 							searchResultName="RecommendedAmtUnit" mapToSeperateMasterTable="true">
 						  </customtags:lookUpValue>)
 	                    </c:when>
 	                    <c:otherwise>
-	                      <customtags:lookUpValue	id="${sessionScope.BusinessKey.savingsOffering.recommendedAmntUnit.recommendedAmntUnitId}"
+	                      <customtags:lookUpValue	id="${sessionScope.BusinessKey.savingsOffering.recommendedAmntUnit.id}"
 							searchResultName="RecommendedAmtUnit" mapToSeperateMasterTable="true">
 						  </customtags:lookUpValue>
 	                    </c:otherwise>

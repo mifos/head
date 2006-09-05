@@ -143,7 +143,7 @@
                         <mifos:mifoslabel name="Savings.typeOfDeposits"/>:
                       </span>
                       <span class="fontnormal">
-	                      <customtags:lookUpValue	id="${sessionScope.BusinessKey.savingsOffering.savingsType.savingsTypeId}"
+	                      <customtags:lookUpValue	id="${sessionScope.BusinessKey.savingsOffering.savingsType.id}"
 							searchResultName="SavingsType" mapToSeperateMasterTable="true">
 						  </customtags:lookUpValue>
                       </span><br>
@@ -155,7 +155,7 @@
 		                <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}"/>
 		                <mifos:mifoslabel name="Savings.rateCalculation"/>:
                       </span> 
-		                  <customtags:lookUpValue	id="${sessionScope.BusinessKey.savingsOffering.interestCalcType.interestCalculationTypeID}"
+		                  <customtags:lookUpValue	id="${sessionScope.BusinessKey.savingsOffering.interestCalcType.id}"
 							searchResultName="IntCalTypes" mapToSeperateMasterTable="true">
 						  </customtags:lookUpValue>
                        <br>
@@ -195,7 +195,7 @@
                    
                     <span class="fontnormalbold">
                     <c:choose>
-	                  <c:when test="${sessionScope.BusinessKey.savingsOffering.savingsType.savingsTypeId == SavingsConstants.SAVINGS_MANDATORY}">
+	                  <c:when test="${sessionScope.BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
 	                  	<mifos:mifoslabel name="Savings.mandatoryAmountForDeposit"/>: 
 	                  </c:when>
 	                  <c:otherwise>
@@ -206,12 +206,12 @@
                     <span class="fontnormal"> <c:out value="${sessionScope.BusinessKey.recommendedAmount.amountDoubleValue}"/>                    
                     <c:choose>
 	                    <c:when test="${sessionScope.BusinessKey.customer.customerLevel.id==CustomerConstants.GROUP_LEVEL_ID}">
-	                    (<customtags:lookUpValue	id="${sessionScope.BusinessKey.savingsOffering.recommendedAmntUnit.recommendedAmntUnitId}"
+	                    (<customtags:lookUpValue	id="${sessionScope.BusinessKey.savingsOffering.recommendedAmntUnit.id}"
 							searchResultName="RecommendedAmtUnit" mapToSeperateMasterTable="true">
 						  </customtags:lookUpValue>)
 	                    </c:when>
 	                    <c:otherwise>
-	                      <customtags:lookUpValue	id="${sessionScope.BusinessKey.savingsOffering.recommendedAmntUnit.recommendedAmntUnitId}"
+	                      <customtags:lookUpValue	id="${sessionScope.BusinessKey.savingsOffering.recommendedAmntUnit.id}"
 							searchResultName="RecommendedAmtUnit" mapToSeperateMasterTable="true">
 						  </customtags:lookUpValue>
 	                    </c:otherwise>

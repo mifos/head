@@ -107,7 +107,7 @@
 								</td>
 								<td align="right" valign="top" class="fontnormal">
 									<c:if
-										test="${sessionScope.BusinessKey.savingsOffering.savingsType.savingsTypeId == SavingsConstants.SAVINGS_MANDATORY
+										test="${sessionScope.BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY
 												&& (sessionScope.BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_APPROVED ||
 												sessionScope.BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_INACTIVE)}">
 										<html-el:link href="savingsAction.do?method=getDepositDueDetails&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}">
@@ -152,7 +152,7 @@
 								<td height="23" class="fontnormal">
 									<p>
 										<span class="fontnormal"> <c:choose>
-												<c:when test="${sessionScope.BusinessKey.savingsOffering.savingsType.savingsTypeId == SavingsConstants.SAVINGS_MANDATORY}">
+												<c:when test="${sessionScope.BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
 													<mifos:mifoslabel name="Savings.mandatoryAmountForDeposit" />: 
 	                  </c:when>
 												<c:otherwise>
@@ -160,14 +160,14 @@
 	                  </c:otherwise>
 											</c:choose> <c:out value="${sessionScope.BusinessKey.recommendedAmount.amountDoubleValue}" /> <c:choose>
 												<c:when test="${sessionScope.BusinessKey.customer.customerLevel.id==CustomerConstants.GROUP_LEVEL_ID}">
-	                    (<customtags:lookUpValue id="${sessionScope.BusinessKey.recommendedAmntUnit.recommendedAmntUnitId}" searchResultName="RecommendedAmtUnit" mapToSeperateMasterTable="true">
+	                    (<customtags:lookUpValue id="${sessionScope.BusinessKey.recommendedAmntUnit.id}" searchResultName="RecommendedAmtUnit" mapToSeperateMasterTable="true">
 													</customtags:lookUpValue>)
 	                    </c:when>
 												<c:otherwise>
-													<customtags:lookUpValue id="${sessionScope.BusinessKey.recommendedAmntUnit.recommendedAmntUnitId}" searchResultName="RecommendedAmtUnit" mapToSeperateMasterTable="true">
+													<customtags:lookUpValue id="${sessionScope.BusinessKey.recommendedAmntUnit.id}" searchResultName="RecommendedAmtUnit" mapToSeperateMasterTable="true">
 													</customtags:lookUpValue>
 												</c:otherwise>
-											</c:choose> <br> <br> <mifos:mifoslabel name="Savings.typeOfDeposits" />: <customtags:lookUpValue id="${sessionScope.BusinessKey.savingsOffering.savingsType.savingsTypeId}" searchResultName="SavingsType" mapToSeperateMasterTable="true">
+											</c:choose> <br> <br> <mifos:mifoslabel name="Savings.typeOfDeposits" />: <customtags:lookUpValue id="${sessionScope.BusinessKey.savingsOffering.savingsType.id}" searchResultName="SavingsType" mapToSeperateMasterTable="true">
 											</customtags:lookUpValue> </span>
 										<br>
 										<mifos:mifoslabel name="Savings.maxAmountPerWithdrawl" />
@@ -292,7 +292,7 @@
                 <span class="fontnormal8pt">
                 <mifos:mifoslabel name="Savings.totalWithdrawls"/>:<c:out value="${sessionScope.BusinessKey.savingsPerformance.totalWithdrawals}" /> </span></td>
               </tr>  
-               <c:if test="${sessionScope.BusinessKey.savingsOffering.savingsType.savingsTypeId == SavingsConstants.SAVINGS_MANDATORY}">
+               <c:if test="${sessionScope.BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
                    <tr>
 	                <td class="paddingL10">
 	                <span class="fontnormal8pt">
