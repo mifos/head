@@ -291,6 +291,20 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/custHistoricalDataAction-update",
 				SecurityConstants.VIEW);
+		activityMap.put("/custHistoricalDataAction-loadHistoricalData-Group",
+				SecurityConstants.GROUP_ADD_EDIT_HISTORICAL_DATA);
+		activityMap.put("/custHistoricalDataAction-loadHistoricalData-Client",
+				SecurityConstants.CIENT_ADD_EDIT_HISTORICAL_DATA);
+		activityMap.put("/custHistoricalDataAction-getHistoricalData",
+				SecurityConstants.VIEW);
+		activityMap.put("/custHistoricalDataAction-previewHistoricalData",
+				SecurityConstants.VIEW);
+		activityMap.put("/custHistoricalDataAction-previousHistoricalData",
+				SecurityConstants.VIEW);
+		activityMap.put("/custHistoricalDataAction-updateHistoricalData",
+				SecurityConstants.VIEW);
+		activityMap.put("/custHistoricalDataAction-cancelHistoricalData",
+				SecurityConstants.VIEW);
 
 		// personnel related mappings
 		activityMap.put("/PersonnelAction-chooseOffice",

@@ -1,9 +1,11 @@
 package org.mifos.application.customer.struts.action;
 
 import java.sql.Date;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -12,24 +14,23 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerHistoricalDataEntity;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.struts.actionforms.CustHistoricalDataActionForm;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class CustHistoricalDataAction extends BaseAction {
 
 	@Override
-	protected BusinessService getService() throws ServiceException {
+	protected BusinessService getService() {
 		return new CustomerBusinessService();
 	}
 
@@ -40,12 +41,13 @@ public class CustHistoricalDataAction extends BaseAction {
 
 	public ActionForward get(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-			throws PersistenceException, ServiceException {		
+			throws Exception {
 		CustomerBO customerBO = new CustomerBusinessService()
 				.findBySystemId(request
 						.getParameter(CustomerConstants.GLOBAL_CUST_NUM));
 		customerBO.setUserContext(getUserContext(request));
-		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request.getSession());
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request
+				.getSession());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request
 				.getSession());
 		setTypeForGet(customerBO, form);
@@ -71,30 +73,36 @@ public class CustHistoricalDataAction extends BaseAction {
 	}
 
 	public ActionForward load(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) {
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		CustHistoricalDataActionForm historicalActionForm = (CustHistoricalDataActionForm) form;
 		CustomerHistoricalDataEntity customerHistoricalDataEntity = (CustomerHistoricalDataEntity) SessionUtils
 				.getAttribute(CustomerConstants.CUSTOMER_HISTORICAL_DATA,
 						request.getSession());
 		setFormAttributes(request, historicalActionForm,
 				customerHistoricalDataEntity);
+		historicalActionForm.setMfiJoiningDate(getMfiJoiningDate(
+				getUserContext(request).getPereferedLocale(), request
+						.getSession()));
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) {
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 
 	public ActionForward previous(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) {
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		return mapping.findForward(ActionForwards.previous_success.toString());
 	}
 
 	@CloseSession
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-			throws CustomerException {
+			throws Exception {
 		CustHistoricalDataActionForm historicalActionForm = (CustHistoricalDataActionForm) form;
 		CustomerBO customerBO = (CustomerBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
@@ -119,7 +127,110 @@ public class CustHistoricalDataAction extends BaseAction {
 	}
 
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) {
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(getDetailAccountPage(form));
+	}
+
+	@TransactionDemarcate(saveToken = true)
+	public ActionForward getHistoricalData(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		CustomerBO customerBO = new CustomerBusinessService()
+				.findBySystemId(request
+						.getParameter(CustomerConstants.GLOBAL_CUST_NUM));
+		customerBO.setUserContext(getUserContext(request));
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request);
+		setTypeForGet(customerBO, form);
+		CustomerHistoricalDataEntity customerHistoricalDataEntity = customerBO
+				.getHistoricalData();
+		if (customerHistoricalDataEntity == null)
+			customerHistoricalDataEntity = new CustomerHistoricalDataEntity(
+					customerBO);
+		String currentDate = DateHelper.getCurrentDate(getUserContext(request)
+				.getPereferedLocale());
+		SessionUtils
+				.setAttribute(
+						CustomerConstants.MFIJOININGDATE,
+						(customerHistoricalDataEntity.getMfiJoiningDate() == null ? DateHelper
+								.getLocaleDate(getUserContext(request)
+										.getPereferedLocale(), currentDate)
+								: new Date(customerHistoricalDataEntity
+										.getMfiJoiningDate().getTime())),
+						request);
+		SessionUtils.setAttribute(CustomerConstants.CUSTOMER_HISTORICAL_DATA,
+				customerHistoricalDataEntity, request);
+		return mapping.findForward(ActionForwards.getHistoricalData_success
+				.toString());
+	}
+
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward loadHistoricalData(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		CustHistoricalDataActionForm historicalActionForm = (CustHistoricalDataActionForm) form;
+		CustomerHistoricalDataEntity customerHistoricalDataEntity = (CustomerHistoricalDataEntity) SessionUtils
+				.getAttribute(CustomerConstants.CUSTOMER_HISTORICAL_DATA,
+						request);
+		setFormAttributes(request, historicalActionForm,
+				customerHistoricalDataEntity);
+		historicalActionForm.setMfiJoiningDate(getMfiJoiningDate(
+				getUserContext(request).getPereferedLocale(), request));
+		return mapping.findForward(ActionForwards.loadHistoricalData_success
+				.toString());
+	}
+
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward previewHistoricalData(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		return mapping.findForward(ActionForwards.previewHistoricalData_success
+				.toString());
+	}
+
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward previousHistoricalData(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		return mapping
+				.findForward(ActionForwards.previousHistoricalData_success
+						.toString());
+	}
+
+	@CloseSession
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward updateHistoricalData(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		CustHistoricalDataActionForm historicalActionForm = (CustHistoricalDataActionForm) form;
+		CustomerBO customerBO = (CustomerBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request);
+		CustomerHistoricalDataEntity customerHistoricalDataEntity = customerBO
+				.getHistoricalData();
+		if (customerHistoricalDataEntity == null) {
+			customerHistoricalDataEntity = new CustomerHistoricalDataEntity(
+					customerBO);
+			customerHistoricalDataEntity.setCreatedBy(customerBO
+					.getUserContext().getId());
+			customerHistoricalDataEntity.setCreatedDate(new java.util.Date());
+		} else {
+			customerHistoricalDataEntity.setUpdatedDate(new java.util.Date());
+			customerHistoricalDataEntity.setUpdatedBy(customerBO
+					.getUserContext().getId());
+		}
+		setCustomerHistoricalDataEntity(customerBO, historicalActionForm,
+				customerHistoricalDataEntity);
+		customerBO.updateHistoricalData(customerHistoricalDataEntity);
+		customerBO.update();
+		return mapping.findForward(ActionForwards.updateHistoricalData_success
+				.toString());
+	}
+
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward cancelHistoricalData(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 		return mapping.findForward(getDetailAccountPage(form));
 	}
 
@@ -165,10 +276,17 @@ public class CustHistoricalDataAction extends BaseAction {
 		historicalActionForm
 				.setTotalPaymentsCount(getStringValue(historicalDataEntity
 						.getTotalPaymentsCount()));
-		historicalActionForm.setMfiJoiningDate(DateHelper.getUserLocaleDate(
-				getUserContext(request).getPereferedLocale(), request
-						.getSession().getAttribute(
-								CustomerConstants.MFIJOININGDATE).toString()));
+	}
+
+	private String getMfiJoiningDate(Locale locale, HttpSession session) {
+		return DateHelper.getUserLocaleDate(locale, session.getAttribute(
+				CustomerConstants.MFIJOININGDATE).toString());
+	}
+
+	private String getMfiJoiningDate(Locale locale, HttpServletRequest request)
+			throws ApplicationException {
+		return DateHelper.getUserLocaleDate(locale, SessionUtils.getAttribute(
+				CustomerConstants.MFIJOININGDATE, request).toString());
 	}
 
 	private void setCustomerHistoricalDataEntity(CustomerBO customerBO,

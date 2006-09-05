@@ -638,7 +638,7 @@ function meetingpopup(){
 							</c:choose> <br>
 
 							<%--Historical data link--%> <span class="fontnormal"><a
-								href="custHistoricalDataAction.do?method=get&globalCustNum=<c:out value="${BusinessKey.globalCustNum}"/>">
+								href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${BusinessKey.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 							<mifos:mifoslabel name="Group.viewhistoricaldata"
 								bundle="GroupUIResources"></mifos:mifoslabel> </a> <br>
 							<%--	<html-el:link

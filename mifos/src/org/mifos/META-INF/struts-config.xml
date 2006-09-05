@@ -444,8 +444,13 @@
 			<forward name="preview_success" path="/pages/application/customer/jsp/customer_previewhistoricaldata.jsp" />
 			<forward name="previous_success" path="/pages/application/customer/jsp/customer_edithistoricaldata.jsp" />
 			<forward name="update_success" path="/custHistoricalDataAction.do?method=get" />
-			<forward name="group_detail_page" path="/GroupAction.do?method=get" />
+			<forward name="group_detail_page" path="/groupCustAction.do?method=get" />
 			<forward name="client_detail_page" path="/clientCustAction.do?method=get" />
+			<forward name="getHistoricalData_success" path="/pages/application/customer/jsp/cust_historicaldata.jsp" />
+			<forward name="loadHistoricalData_success" path="/pages/application/customer/jsp/cust_edithistoricaldata.jsp" />
+			<forward name="previewHistoricalData_success" path="/pages/application/customer/jsp/cust_previewhistoricaldata.jsp" />
+			<forward name="previousHistoricalData_success" path="/pages/application/customer/jsp/cust_edithistoricaldata.jsp" />
+			<forward name="updateHistoricalData_success" path="/custHistoricalDataAction.do?method=getHistoricalData" />
 		</action>
 		<!-- Login Action -->
 		<action path="/mifoslogin" name="mifosloginform" type="org.mifos.application.login.struts.action.MifosLoginAction" input="/mifoslogin.do?method=validate" parameter="method" validate="true" scope="request">
