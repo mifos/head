@@ -28,7 +28,7 @@ import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -189,7 +189,7 @@ public class LoanPersistance extends Persistence {
 			CustomerLevelEntity customerLevel) {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put(AccountConstants.PRDSTATUS,
-				ProductDefinitionConstants.LOANACTIVE);
+				PrdStatus.LOANACTIVE.getValue());
 		queryParameters.put(AccountConstants.PRODUCT_APPLICABLE_TO,
 				customerLevel.getProductApplicableType());
 		return executeNamedQuery(NamedQueryConstants.APPLICABLE_LOAN_OFFERINGS,

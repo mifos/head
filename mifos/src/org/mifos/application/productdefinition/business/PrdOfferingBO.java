@@ -41,8 +41,20 @@ package org.mifos.application.productdefinition.business;
 import java.util.Date;
 
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
+import org.mifos.application.productdefinition.persistence.PrdOfferingPersistence;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class PrdOfferingBO extends BusinessObject {
 
@@ -70,30 +82,38 @@ public class PrdOfferingBO extends BusinessObject {
 
 	private String description;
 
+	private MifosLogger prdLogger = MifosLogManager
+			.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
+
 	protected PrdOfferingBO() {
 		office = new OfficeBO();
 		prdCategory = new ProductCategoryBO();
 		prdStatus = new PrdStatusEntity();
 		prdApplicableMaster = null;
 	}
-	
-	//TODO to be removed.
+
+	// TODO to be removed.
 	protected PrdOfferingBO(UserContext userContext) {
 		super(userContext);
 	}
 
 	protected PrdOfferingBO(UserContext userContext, String prdOfferingName,
-			String prdOfferingShortName, ProductTypeEntity prdType,
-			ProductCategoryBO prdCategory,
-			PrdApplicableMasterEntity prdApplicableMaster, Date startDate) {
+			String prdOfferingShortName, ProductCategoryBO prdCategory,
+			PrdApplicableMasterEntity prdApplicableMaster, Date startDate)
+			throws ProductDefinitionException {
 		super(userContext);
+		vaildate(userContext, prdOfferingName, prdOfferingShortName,
+				prdCategory, prdApplicableMaster, startDate);
 		this.prdOfferingName = prdOfferingName;
 		this.prdOfferingShortName = prdOfferingShortName;
-		this.prdType = prdType;
 		this.prdCategory = prdCategory;
+		this.prdType = prdCategory.getProductType();
 		this.prdApplicableMaster = prdApplicableMaster;
 		this.startDate = startDate;
-		this.globalPrdOfferingNum = "43243";
+		this.globalPrdOfferingNum = generatePrdOfferingGlobalNum();
+		this.prdStatus = setStatus(startDate, prdType);
+		this.office = new OfficePersistence().getOffice(userContext
+				.getBranchId());
 	}
 
 	public String getDescription() {
@@ -133,7 +153,8 @@ public class PrdOfferingBO extends BusinessObject {
 		return prdApplicableMaster;
 	}
 
-	public void setPrdApplicableMaster(PrdApplicableMasterEntity prdApplicableMaster) {
+	public void setPrdApplicableMaster(
+			PrdApplicableMasterEntity prdApplicableMaster) {
 		this.prdApplicableMaster = prdApplicableMaster;
 	}
 
@@ -191,5 +212,72 @@ public class PrdOfferingBO extends BusinessObject {
 
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
+	}
+
+	private String generatePrdOfferingGlobalNum()
+			throws ProductDefinitionException {
+		prdLogger.debug("Generating new product Offering global number");
+		StringBuilder globalPrdOfferingNum = new StringBuilder();
+		globalPrdOfferingNum.append(userContext.getBranchId());
+		globalPrdOfferingNum.append("-");
+		Short maxPrdID = null;
+		try {
+			maxPrdID = new PrdOfferingPersistence().getMaxPrdOffering();
+		} catch (PersistenceException e) {
+			throw new ProductDefinitionException(e);
+		}
+		globalPrdOfferingNum.append(StringUtils.lpad(String
+				.valueOf(maxPrdID != null ? maxPrdID + 1
+						: ProductDefinitionConstants.DEFAULTMAX), '0', 3));
+		prdLogger
+				.debug("Generation of new product Offering global number done");
+		return globalPrdOfferingNum.toString();
+	}
+
+	private void vaildate(UserContext userContext, String prdOfferingName,
+			String prdOfferingShortName, ProductCategoryBO prdCategory,
+			PrdApplicableMasterEntity prdApplicableMaster, Date startDate)
+			throws ProductDefinitionException {
+		if (userContext == null
+				|| prdOfferingName == null
+				|| prdOfferingShortName == null
+				|| prdCategory == null
+				|| prdApplicableMaster == null
+				|| startDate == null
+				|| (prdOfferingShortName.length() > 4)
+				|| startDate.compareTo(DateUtils
+						.getCurrentDateWithoutTimeStamp()) < 0) {
+			throw new ProductDefinitionException("errors.create");
+		}
+	}
+
+	private PrdStatusEntity setStatus(Date startDate, ProductTypeEntity prdType)
+			throws ProductDefinitionException {
+		PrdStatus prdStatus = null;
+		if (startDate.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) == 0)
+			prdStatus = getActivePrdStatus(prdType);
+		else
+			prdStatus = getInActivePrdStatus(prdType);
+		try {
+			return new PrdOfferingPersistence().getPrdStatus(prdStatus);
+		} catch (PersistenceException e) {
+			throw new ProductDefinitionException(e);
+		}
+	}
+
+	private PrdStatus getActivePrdStatus(ProductTypeEntity prdType) {
+		if (prdType.getProductTypeID().equals(ProductType.LOAN.getValue()))
+			return PrdStatus.LOANACTIVE;
+		else
+			return PrdStatus.SAVINGSACTIVE;
+
+	}
+
+	private PrdStatus getInActivePrdStatus(ProductTypeEntity prdType) {
+		if (prdType.getProductTypeID().equals(ProductType.LOAN.getValue()))
+			return PrdStatus.LOANINACTIVE;
+		else
+			return PrdStatus.SAVINGSINACTIVE;
+
 	}
 }

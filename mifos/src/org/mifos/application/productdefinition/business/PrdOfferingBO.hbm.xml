@@ -99,4 +99,7 @@
 				where loanOffering.prdApplicableMaster.id = :prdApplicableMaster and 
 				loanOffering.prdStatus.offeringStatusId = :prdStatus order by loanOffering.prdOfferingName]]>
 	</query>
+	<query name="product.maxprdofferingid">
+		<![CDATA[select max(prd.prdOfferingId) from org.mifos.application.productdefinition.business.PrdOfferingBO prd]]>
+	</query>
 </hibernate-mapping>

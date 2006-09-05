@@ -45,6 +45,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.framework.components.cronjobs.TaskHelper;
 import org.mifos.framework.components.cronjobs.valueobjects.Task;
@@ -65,28 +66,28 @@ public class ProductStatusHelper extends TaskHelper {
 			
 			hqlUpdate = "update PrdOffering p set p.prdStatus =:activeLoanStatus where p.prdType=:loan and p.startDate=:currentDate";
 			query= session.createQuery(hqlUpdate);
-			query.setShort("activeLoanStatus", ProductDefinitionConstants.LOANACTIVE);
+			query.setShort("activeLoanStatus", PrdStatus.LOANACTIVE.getValue());
 			query.setShort("loan",ProductDefinitionConstants.LOANID);
 			query.setDate("currentDate", new Date(timeInMillis));
 			query.executeUpate();
 			
 		    hqlUpdate = "update PrdOffering p set p.prdStatus =:inActiveLoanStatus where p.prdType=:loan and p.endDate=:currentDate";
 			query= session.createQuery(hqlUpdate);
-			query.setShort("inActiveLoanStatus", ProductDefinitionConstants.LOANINACTIVE);
+			query.setShort("inActiveLoanStatus", PrdStatus.LOANINACTIVE.getValue());
 			query.setShort("loan",ProductDefinitionConstants.LOANID);
 			query.setDate("currentDate", new Date(timeInMillis));
 			query.executeUpate();
 			
 			hqlUpdate = "update PrdOffering p set p.prdStatus =:activeSavingStatus where p.prdType=:saving and p.startDate=:currentDate";
 			query= session.createQuery(hqlUpdate);
-			query.setShort("activeSavingStatus", ProductDefinitionConstants.SAVINGSACTIVE);
+			query.setShort("activeSavingStatus", PrdStatus.SAVINGSACTIVE.getValue());
 			query.setShort("saving",ProductDefinitionConstants.SAVINGSID);
 			query.setDate("currentDate", new Date(timeInMillis));
 			query.executeUpate();
 			
 			hqlUpdate = "update PrdOffering p set p.prdStatus =:inActiveSavingStatus where p.prdType=:saving and p.endDate=:currentDate";
 			query= session.createQuery(hqlUpdate);
-			query.setShort("inActiveSavingStatus", ProductDefinitionConstants.SAVINGSINACTIVE);
+			query.setShort("inActiveSavingStatus", PrdStatus.SAVINGSINACTIVE.getValue());
 			query.setShort("saving",ProductDefinitionConstants.SAVINGSID);
 			query.setDate("currentDate", new Date(timeInMillis));
 			query.executeUpate();

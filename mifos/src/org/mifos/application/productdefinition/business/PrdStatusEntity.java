@@ -40,9 +40,6 @@ package org.mifos.application.productdefinition.business;
 
 import org.mifos.framework.business.PersistentObject;
 
-/**
- * This class represents the each prd status
- */
 public class PrdStatusEntity extends PersistentObject {
 
 	private Short offeringStatusId;

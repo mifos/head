@@ -196,5 +196,8 @@
     </query>
     <query name="Customer.getAllCustomersForLO">
 	        	   <![CDATA[select count(*) from org.mifos.application.customer.business.CustomerBO as customer where customer.personnel.personnelId=:userId and customer.office.officeId=:officeId ]]>
-    </query> 			      	  
+    </query> 
+    <query name="Customer.getActiveCustomerWithSearchId">
+		<![CDATA[from org.mifos.application.customer.business.CustomerBO as customer where customer.searchId=:SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerStatus.id in (3,4,9,10,13) order by customer.customerActivationDate]]>
+	</query>	      	  
 </hibernate-mapping>

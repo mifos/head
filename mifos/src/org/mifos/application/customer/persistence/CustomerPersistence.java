@@ -102,16 +102,32 @@ public class CustomerPersistence extends Persistence {
 		}
 
 	}
+	
+	public CustomerBO getCustomerWithSearchId(String searchId,
+			Short officeId) throws PersistenceException {
+		try{
+			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("SEARCH_STRING", searchId);
+			queryParameters.put("OFFICE_ID", officeId);
+			List<CustomerBO> queryResult = executeNamedQuery(
+					NamedQueryConstants.ACTIVE_CUSTOMERS_WITH_SEARCH_ID,
+					queryParameters);
+			return queryResult.get(0);
+		}catch(HibernateException he){
+			throw new PersistenceException(he);
+		}
+	}
 
 	public List<CustomerBO> getCustomersUnderParent(String searchId,
 			Short officeId) throws PersistenceException {
 		try{
 			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("SEARCH_STRING", searchId + "%");
+			queryParameters.put("SEARCH_STRING", searchId + ".%");
 			queryParameters.put("OFFICE_ID", officeId);
 			List<CustomerBO> queryResult = executeNamedQuery(
 					NamedQueryConstants.ACTIVE_CUSTOMERS_UNDER_PARENT,
 					queryParameters);
+			queryResult.add(getCustomerWithSearchId(searchId,officeId));
 			return queryResult;
 		}catch(HibernateException he){
 			throw new PersistenceException(he);

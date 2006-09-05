@@ -1122,7 +1122,7 @@ public class LoanProductActionForm extends MifosSearchActionForm {
 				if (startingDate != null
 						&& currentDate.compareTo(startingDate) == 0) {
 					prdStatus
-							.setOfferingStatusId(ProductDefinitionConstants.LOANACTIVE);
+							.setOfferingStatusId(org.mifos.application.productdefinition.util.helpers.PrdStatus.LOANACTIVE.getValue());
 				}
 			}
 

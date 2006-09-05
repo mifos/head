@@ -450,7 +450,7 @@ public interface NamedQueryConstants {
 	public String RETRIEVE_CUSTOMER_FEES_BY_CATEGORY_TYPE="retrieveCustomerFeesByCategoryType";
 	public String RETRIEVE_CUSTOMER_FEES="retrieveCustomerFees";
 	public String RETRIEVE_PRODUCT_FEES="retrieveProductFees";
-	
+	public String ACTIVE_CUSTOMERS_WITH_SEARCH_ID = "Customer.getActiveCustomerWithSearchId";
 	
 	public String ALL_LOAN_SCHEDULE_DETAILS = "account.getAllInstallmentsForAllLoanAcounts";
 	public String ALL_SAVINGS_SCHEDULE_DETAILS = "account.getAllInstallmentsForAllSavingsAccounts";
@@ -506,4 +506,6 @@ public interface NamedQueryConstants {
 	public String GET_PERSONNEL_WITH_DOB_AND_DISPLAYNAME="getCountByDobAndDisplayName";
 	public String GET_ACTIVE_CUSTOMERS_FOR_LO ="Customer.getActiveCustomersForLO";
 	public String GET_ALL_CUSTOMERS_FOR_LO ="Customer.getAllCustomersForLO";
+	
+	public String PRODUCTOFFERING_MAX="product.maxprdofferingid";
 }

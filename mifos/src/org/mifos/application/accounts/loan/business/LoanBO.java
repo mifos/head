@@ -113,7 +113,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.GracePeriodTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.InterestTypeConstants;
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.interestcalculator.InterestCalculatorConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -1997,7 +1997,7 @@ public class LoanBO extends AccountBO {
 			throw new AccountException(
 					AccountExceptionConstants.CREATEEXCEPTION);
 		if (!loanOffering.getPrdStatus().getOfferingStatusId().equals(
-				ProductDefinitionConstants.LOANACTIVE))
+				PrdStatus.LOANACTIVE.getValue()))
 			throw new AccountException(
 					AccountExceptionConstants.CREATEEXCEPTION);
 		if(isDisbursementDateLessThanCurrentDate(disbursementDate))

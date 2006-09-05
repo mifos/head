@@ -823,11 +823,10 @@ public class TestObjectFactory {
 		SavingsOfferingBO savingsOffering = null;
 		try {
 			savingsOffering = new SavingsOfferingBO(getUserContext(), name,
-					name.substring(4), productCategory.getProductType(),
-					productCategory, prdApplicableMaster, startDate,
-					savingsType, intCalType, intCalcMeeting, intPostMeeting,
-					new Money(recommenededAmt.toString()), intRate,
-					depglCodeEntity, intglCodeEntity);
+					name.substring(0, 1), productCategory, prdApplicableMaster,
+					startDate, savingsType, intCalType, intCalcMeeting,
+					intPostMeeting, new Money(recommenededAmt.toString()),
+					intRate, depglCodeEntity, intglCodeEntity);
 		} catch (InvalidUserException e1) {
 			e1.printStackTrace();
 		} catch (ProductDefinitionException e1) {
@@ -857,7 +856,6 @@ public class TestObjectFactory {
 		savingsOffering.setMaxAmntWithdrawl(new Money(maxAmtWithdrawl
 				.toString()));
 		savingsOffering.setMinAmntForInt(new Money(minAmtForInt.toString()));
-		System.out.println("Before---------------------------------");
 		return (SavingsOfferingBO) addObject(testObjectPersistence
 				.persist(savingsOffering));
 	}

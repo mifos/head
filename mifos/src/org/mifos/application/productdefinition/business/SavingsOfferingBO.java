@@ -78,16 +78,17 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 	}
 
 	public SavingsOfferingBO(UserContext userContext, String prdOfferingName,
-			String prdOfferingShortName, ProductTypeEntity prdType,
-			ProductCategoryBO prdCategory,
+			String prdOfferingShortName, ProductCategoryBO prdCategory,
 			PrdApplicableMasterEntity prdApplicableMaster, Date startDate,
 			SavingsTypeEntity savingsType,
 			InterestCalcTypeEntity interestCalcType,
 			MeetingBO timePerForInstcalc, MeetingBO freqOfPostIntcalc,
 			Money recommendedAmount, Double interestRate,
-			GLCodeEntity depositGLCode, GLCodeEntity interestGLCode) {
-		super(userContext, prdOfferingName, prdOfferingShortName, prdType,
-				prdCategory, prdApplicableMaster, startDate);
+			GLCodeEntity depositGLCode, GLCodeEntity interestGLCode)
+			throws ProductDefinitionException {
+		super(userContext, prdOfferingName, prdOfferingShortName, prdCategory,
+				prdApplicableMaster, startDate);
+		setCreateDetails();
 		this.savingsType = savingsType;
 		this.interestCalcType = interestCalcType;
 		prdOfferingMeetings = new HashSet<PrdOfferingMeetingEntity>();
@@ -194,7 +195,8 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 		if (getPrdOfferingMeetings() != null
 				&& getPrdOfferingMeetings().size() > 0)
 			for (PrdOfferingMeetingEntity prdOfferingMeeting : getPrdOfferingMeetings())
-				if (prdOfferingMeeting.getprdOfferingMeetingType().equals(meetingType))
+				if (prdOfferingMeeting.getprdOfferingMeetingType().equals(
+						meetingType))
 					return prdOfferingMeeting;
 		return null;
 	}

@@ -143,8 +143,8 @@ public interface ProductDefinitionConstants {
 	public Short DEFAULTLOANGRACEPERIODTYPE =1;
 	public Short LOANFEESINACTIVEID=1;
 	public Short LOANCATEGORYIDVALUE=5;
-	public Short LOANACTIVE=1;
-	public Short LOANINACTIVE=4;
+	
+	
 	
 	
 	//Savings Product
@@ -161,9 +161,6 @@ public interface ProductDefinitionConstants {
 	public String SAVINGSPRDACTIONFORM="savingsprdactionform";
 	public String SAVINGSRECURRENCETYPELIST="SavingsRecurrenceTypeList";
 	
-	public Short SAVINGSACTIVE=2;
-	public Short SAVINGSINACTIVE=5;
-
 	//Change Log
 	public Short LOANENTITYTYPEID=2;
 	public Short SAVINGSENTITYTYPEID=3;

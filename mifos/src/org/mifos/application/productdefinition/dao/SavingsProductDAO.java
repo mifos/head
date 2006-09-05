@@ -488,7 +488,7 @@ public class SavingsProductDAO extends PrdOfferingDAO {
 					throw new ApplicationException(
 							ProductDefinitionConstants.STARTDATEUPDATEEXCEPTION);
 				if (savingsOffering.getStartDate().compareTo(currentDate) == 0) {
-					Short prdStatusId = ProductDefinitionConstants.SAVINGSACTIVE;
+					Short prdStatusId = org.mifos.application.productdefinition.util.helpers.PrdStatus.SAVINGSACTIVE.getValue();
 					SearchResults searchResultsPrdStatus = context
 							.getSearchResultBasedOnName(ProductDefinitionConstants.SAVINGSPRDSTATUSLIST);
 					List<MasterObject> prdStatusList = (List<MasterObject>) searchResultsPrdStatus

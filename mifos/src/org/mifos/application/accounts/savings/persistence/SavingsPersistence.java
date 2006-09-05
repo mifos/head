@@ -58,6 +58,7 @@ import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -83,7 +84,7 @@ public class SavingsPersistence extends Persistence {
 			queryParameters.put(AccountConstants.PRDTYPEID,
 					ProductDefinitionConstants.SAVINGSID);
 			queryParameters.put(AccountConstants.PRDSTATUS,
-					ProductDefinitionConstants.SAVINGSACTIVE);
+					PrdStatus.SAVINGSACTIVE.getValue());
 			queryParameters.put(AccountConstants.PRODUCT_APPLICABLE_TO,
 					customerLevel.getProductApplicableType());
 			return (List<PrdOfferingView>) executeNamedQuery(

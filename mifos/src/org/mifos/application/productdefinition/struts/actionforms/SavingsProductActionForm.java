@@ -661,7 +661,7 @@ public class SavingsProductActionForm extends MifosSearchActionForm {
 				if (startingDate != null
 						&& currentDate.compareTo(startingDate) == 0) {
 					prdStatus
-							.setOfferingStatusId(ProductDefinitionConstants.SAVINGSACTIVE);
+							.setOfferingStatusId(org.mifos.application.productdefinition.util.helpers.PrdStatus.SAVINGSACTIVE.getValue());
 				}
 			}
 

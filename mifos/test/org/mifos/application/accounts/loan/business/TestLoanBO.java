@@ -48,6 +48,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.GracePeriodTypeConstants;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -1325,7 +1326,7 @@ public class TestLoanBO extends MifosTestCase {
 	
 	public void testBuildForInactiveLoanOffering() throws NumberFormatException, InvalidUserException, SystemException, ApplicationException {
 		createInitialCustomers();
-		LoanOfferingBO loanOffering = createLoanOffering(false,ProductDefinitionConstants.LOANINACTIVE);
+		LoanOfferingBO loanOffering = createLoanOffering(false,PrdStatus.LOANINACTIVE.getValue());
 		try {
 			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(), loanOffering,
 					group, AccountState.LOANACC_APPROVED, new Money("300.0"),
@@ -1338,6 +1339,7 @@ public class TestLoanBO extends MifosTestCase {
 			assertTrue("The Loan object is not created for inactive loan offering",
 					true);
 		}
+		TestObjectFactory.removeObject(loanOffering);
 	}
 
 	public void testBuildLoanWithoutCustomer() throws NumberFormatException,
@@ -1387,7 +1389,7 @@ public class TestLoanBO extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),
 				new Date(System.currentTimeMillis()),
-				ProductDefinitionConstants.LOANACTIVE, 300.0, 1.2, Short
+				PrdStatus.LOANACTIVE.getValue(), 300.0, 1.2, Short
 						.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), Short.valueOf("0"), Short.valueOf("1"),
 				meeting);
@@ -1417,7 +1419,7 @@ public class TestLoanBO extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),
 				new Date(System.currentTimeMillis()),
-				ProductDefinitionConstants.LOANACTIVE, 300.0, 1.2, Short
+				PrdStatus.LOANACTIVE.getValue(), 300.0, 1.2, Short
 						.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), Short.valueOf("0"), Short.valueOf("1"),
 				meeting);
@@ -2827,7 +2829,7 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	private LoanOfferingBO createLoanOffering(boolean isPrincipalAtLastInst) {
-		return createLoanOffering(isPrincipalAtLastInst,ProductDefinitionConstants.LOANACTIVE);
+		return createLoanOffering(isPrincipalAtLastInst,PrdStatus.LOANACTIVE.getValue());
 	}
 	
 	private LoanOfferingBO createLoanOffering(boolean isPrincipalAtLastInst,Short statusId) {

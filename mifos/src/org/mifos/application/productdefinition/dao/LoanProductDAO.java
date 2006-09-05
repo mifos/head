@@ -602,7 +602,7 @@ public class LoanProductDAO extends PrdOfferingDAO {
 							ProductDefinitionConstants.STARTDATEUPDATEEXCEPTION);
 				}
 				if (loanOffering.getStartDate().compareTo(currentDate) == 0) {
-					Short prdStatusId = ProductDefinitionConstants.LOANACTIVE;
+					Short prdStatusId = org.mifos.application.productdefinition.util.helpers.PrdStatus.LOANACTIVE.getValue();
 					SearchResults searchResultsPrdStatus = context
 							.getSearchResultBasedOnName(ProductDefinitionConstants.LOANPRDSTATUSLIST);
 					List<MasterObject> prdStatusList = (List<MasterObject>) searchResultsPrdStatus

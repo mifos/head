@@ -42,6 +42,7 @@ import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.master.util.valueobjects.FeeFormulaMaster;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.valueobjects.LoanOffering;
 import org.mifos.application.productdefinition.util.valueobjects.LoanOfferingFund;
@@ -157,7 +158,7 @@ public class LoanDAO extends AccountsDAO {
 		queryParameters.put(LoanConstants.PRDTYPEID,
 				ProductDefinitionConstants.LOANID);
 		queryParameters.put(LoanConstants.PRDSTATUS,
-				ProductDefinitionConstants.LOANACTIVE);
+				PrdStatus.LOANACTIVE.getValue());
 
 		if (customer.getCustomerLevel().getLevelId().shortValue() == CustomerConstants.CLIENT_LEVEL_ID) {
 			queryParameters.put(new String("prdApplicableMaster1"),
