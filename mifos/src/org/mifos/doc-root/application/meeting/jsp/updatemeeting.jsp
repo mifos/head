@@ -134,7 +134,7 @@ function goToCancelPage(){
 		    	</c:if>
 	           <c:if test="${!empty sessionScope.linkValues.customerParentName}">
 	               <span class="fontnormal8pt">
-	               	<a href="GroupAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.customerParentGCNum}"/>">
+	               	<a href="groupCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.customerParentGCNum}"/>">
 				       	<c:out value="${sessionScope.linkValues.customerParentName}"/>
 			       	</a>  /  </span>
 		    	</c:if>
