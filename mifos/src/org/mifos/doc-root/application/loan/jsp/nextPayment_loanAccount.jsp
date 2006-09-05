@@ -80,7 +80,7 @@
 						</tr>
 						<tr>
 			                <td class="drawtablerowbold">
-			                <mifos:mifoslabel name="loan.original_installment" />
+			                <mifos:mifoslabel name="loan.current_installment" />
 			                </td>
 			                <td align="right" class="drawtablerow">&nbsp;</td>
 			                <td align="right" class="drawtablerow">&nbsp;</td>
