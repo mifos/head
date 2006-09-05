@@ -102,7 +102,8 @@
               <tr>
                 <td align="right" class="fontnormalbold"><mifos:mifoslabel name="Savings.dateOfTrxn"/>:</td>
                 <td class="fontnormal">
-                <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.accountPayment.paymentDate)}" />
+               <%-- <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.accountPayment.paymentDate)}" />--%>
+                <c:out value="${sessionScope.savingsClosureForm.trxnDate}"/>
                 </td>
               </tr>
               <tr>

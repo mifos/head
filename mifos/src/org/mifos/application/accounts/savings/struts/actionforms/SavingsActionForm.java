@@ -50,23 +50,23 @@ import org.mifos.application.accounts.struts.actionforms.AccountAppActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class SavingsActionForm extends AccountAppActionForm{
-	private Money recommendedAmount;
+	private String recommendedAmount;
 
 	public SavingsActionForm(){
 		super();
-		recommendedAmount=new Money();
 	}
 	
-	public Money getRecommendedAmount() {
+	public String getRecommendedAmount() {
 		return recommendedAmount;
 	}
 
-	public void setRecommendedAmount(Money recommendedAmount) {
+	public void setRecommendedAmount(String recommendedAmount) {
 		this.recommendedAmount = recommendedAmount;
 	}
-	
+
 	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
 		String method = request.getParameter("method");
 		ActionErrors errors = null;
@@ -81,7 +81,7 @@ public class SavingsActionForm extends AccountAppActionForm{
 			errors.add(super.validate(mapping,request));
 			if(method.equals("preview")||method.equals("editPreview")){
 				SavingsBO savings = (SavingsBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request.getSession());
-				if(savings.isMandatory() && getRecommendedAmount().getAmountDoubleValue()==0){
+				if(savings.isMandatory() && getRecommendedAmntValue().equals(new Money())){
 					//check for mandatory amount
 					errors.add(SavingsConstants.MANDATORY,new ActionMessage(SavingsConstants.MANDATORY,SavingsConstants.MANDATORY_AMOUNT));
 				}
@@ -96,6 +96,16 @@ public class SavingsActionForm extends AccountAppActionForm{
 	}
 	
 	public double getRecommendedAmntDoubleValue(){
-		return recommendedAmount.getAmountDoubleValue();
+		return getRecommendedAmntValue().getAmountDoubleValue();
+	}
+	
+	public Money getRecommendedAmntValue() {
+		return getMoney(recommendedAmount);
+	}
+	
+	private Money getMoney(String str) {
+		return (StringUtils.isNullAndEmptySafe(str) && !str.trim().equals(".")) ? new Money(
+				str)
+				: new Money();
 	}
 }

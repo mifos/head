@@ -60,6 +60,7 @@ public class SavingsClosureActionForm extends ValidatorActionForm{
 	private String receiptDate;
 	private String customerId;
 	private String paymentTypeId;
+	private String trxnDate;
 	private String notes;
 	
 	public SavingsClosureActionForm(){	}
@@ -104,6 +105,15 @@ public class SavingsClosureActionForm extends ValidatorActionForm{
 		this.receiptId = receiptId;
 	}
 	
+	public String getTrxnDate() {
+		return trxnDate;
+	}
+
+	public void setTrxnDate(String trxnDate) {
+		this.trxnDate = trxnDate;
+	}
+	
+	@Override
 	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
 		String method = request.getParameter("method");
 		ActionErrors errors = null;

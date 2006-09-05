@@ -76,6 +76,7 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 
@@ -135,6 +136,7 @@ public class SavingsClosureAction extends BaseAction {
 		logger.debug("In SavingsClosureAction::load(), Interest calculated:  "+ interestAmount.getAmountDoubleValue());
 		AccountPaymentEntity payment = new AccountPaymentEntity(savings,savings.getSavingsBalance().add(interestAmount),null,null,null);
 		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT,payment, request.getSession());
+		((SavingsClosureActionForm)form).setTrxnDate(DateHelper.getCurrentDate(uc.getPereferedLocale()));
 		return mapping.findForward("load_success");
 	}
 	

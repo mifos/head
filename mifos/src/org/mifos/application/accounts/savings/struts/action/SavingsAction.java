@@ -115,21 +115,7 @@ public class SavingsAction extends AccountAppAction {
 	}
 
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
-		if (method.equals("edit") || method.equals("create")
-				|| method.equals("update") || method.equals("previous")
-				|| method.equals("get") || method.equals("editPrevious")
-				|| method.equals("getRecentActivity")
-				|| method.equals("getTransactionHistory")
-				|| method.equals("getStatusHistory")
-				|| method.equals("getDepositDueDetails")
-				|| method.equals("waiveAmountDue")
-				|| method.equals("waiveAmountOverDue")) {
-			logger
-					.debug("In SavingsAction::skipActionFormToBusinessObjectConversion(), Skipping for Method: "
-							+ method);
-			return true;
-		} else
-			return false;
+		return true;
 	}
 
 	/**
@@ -238,6 +224,7 @@ public class SavingsAction extends AccountAppAction {
 		logger.debug("In SavingsAction::preview()");
 		SavingsBO savings = (SavingsBO) request.getSession().getAttribute(
 				Constants.BUSINESS_KEY);
+		savings.setRecommendedAmount(((SavingsActionForm)form).getRecommendedAmntValue());
 		SessionUtils.setAttribute(SavingsConstants.IS_PENDING_APPROVAL,
 				Configuration.getInstance().getAccountConfig(
 						savings.getCustomer().getOffice().getOfficeId())
@@ -339,6 +326,7 @@ public class SavingsAction extends AccountAppAction {
 		logger.debug("In SavingsAction::edit()");
 		SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
+		((SavingsActionForm)form).setRecommendedAmount(null);
 		if (savings.isDepositScheduleBeRegenerated())
 			SessionUtils.setAttribute(SavingsConstants.RECOMMENDED_AMOUNT,
 					savings.getRecommendedAmount(), request.getSession());
@@ -348,6 +336,9 @@ public class SavingsAction extends AccountAppAction {
 	public ActionForward editPreview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request.getSession());
+		savings.setRecommendedAmount(((SavingsActionForm)form).getRecommendedAmntValue());
 		logger.debug("In SavingsAction::editPreview()");
 		return mapping.findForward("editPreview_success");
 	}
