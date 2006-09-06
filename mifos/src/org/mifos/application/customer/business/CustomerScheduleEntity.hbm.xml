@@ -36,14 +36,14 @@
 		</property>
 
 		<many-to-one name="account" column="ACCOUNT_ID" class="org.mifos.application.accounts.business.AccountBO" unique="true" lazy="true" cascade="none" insert="true" update="true" access="field" />
-		<many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" lazy="true" access="field"/>
+		<many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" lazy="true" access="field" />
 		<set name="accountFeesActionDetails" cascade="all,delete-orphan" lazy="true" inverse="true" access="field">
 			<key column="ID" update="false" />
 			<one-to-many class="org.mifos.application.customer.business.CustomerFeeScheduleEntity" />
 		</set>
 
 	</class>
-	
+
 	<query name="account.getAllInstallmentsForAllCustomerAcounts">
 		<![CDATA[select new org.mifos.application.bulkentry.business.BulkEntryCustomerAccountInstallmentView(
 			accountAction.account.accountId,customer.customerId,accountAction.installmentId,
@@ -59,6 +59,22 @@
 			accountAction.account.accountId,accountAction.actionDate
 		]]>
 	</query>
-	
+
+	<query name="account.getAllInstallmentsForCustomerAcount">
+		<![CDATA[select new org.mifos.application.bulkentry.business.BulkEntryCustomerAccountInstallmentView(
+			accountAction.account.accountId,customer.customerId,accountAction.installmentId,
+			accountAction.actionDateId,accountAction.actionDate,
+			accountAction.miscFee,accountAction.miscFeePaid,
+			accountAction.miscPenalty,accountAction.miscPenaltyPaid
+			) from org.mifos.application.customer.business.CustomerScheduleEntity as accountAction,
+			org.mifos.application.customer.business.CustomerBO as customer 
+			where customer.customerId = accountAction.customer.customerId
+			and accountAction.actionDate <=:MEETING_DATE and accountAction.paymentStatus=:PAYMENT_STATUS
+			and customer.searchId=:SEARCH_STRING and customer.office.officeId = :OFFICE_ID and 
+			customer.customerStatus.id in (3,4,9,10,13) order by customer.customerId,
+			accountAction.account.accountId,accountAction.actionDate
+		]]>
+	</query>
+
 
 </hibernate-mapping>

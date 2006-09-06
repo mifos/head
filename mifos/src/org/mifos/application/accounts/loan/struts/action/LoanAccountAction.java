@@ -237,10 +237,14 @@ public class LoanAccountAction extends AccountAppAction {
 			HttpServletResponse response) throws Exception {
 		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
 		HttpSession session = request.getSession();
+		LoanOfferingBO loanOffering = new LoanBusinessService()
+				.getLoanOffering(((LoanOfferingBO) session
+						.getAttribute(LoanConstants.LOANOFFERING))
+						.getPrdOfferingId(), getUserContext(request)
+						.getLocaleId());
 		LoanBO loan = null;
 		try {
-			loan = new LoanBO(getUserContext(request), (LoanOfferingBO) session
-					.getAttribute(LoanConstants.LOANOFFERING),
+			loan = new LoanBO(getUserContext(request), loanOffering,
 					(CustomerBO) session
 							.getAttribute(LoanConstants.LOANACCOUNTOWNER),
 					AccountState.LOANACC_PARTIALAPPLICATION, loanActionForm

@@ -68,8 +68,8 @@ public class PrdConfigurationBusinessProcessor extends MifosBusinessProcessor {
 			ApplicationException {
 		try {
 			List<ProductType> producTypeList = ((PrdConfigurationDAO) getDAO(context
-					.getPath())).search(ProductDefinitionConstants.LOANID,
-					ProductDefinitionConstants.SAVINGSID);
+					.getPath())).search(org.mifos.application.productdefinition.util.helpers.ProductType.LOAN.getValue(),
+							org.mifos.application.productdefinition.util.helpers.ProductType.SAVINGS.getValue());
 			context.addAttribute(getSearchResults(ProductDefinitionConstants.PRODUCTTYPELIST,producTypeList));
 		} catch(ApplicationException ae) {
 			throw ae;

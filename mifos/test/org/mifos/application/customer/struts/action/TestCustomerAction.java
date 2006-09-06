@@ -222,13 +222,13 @@ public class TestCustomerAction extends MifosMockStrutsTestCase {
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		SavingsOfferingBO savingsOffering = TestObjectFactory
-				.createSavingsOffering("SavingPrd1", Short.valueOf("2"),
+				.createSavingsOffering("SavingPrd123","qwe2", Short.valueOf("2"),
 						new Date(System.currentTimeMillis()), Short
 								.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
 						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),
 						meetingIntCalc, meetingIntPost);
 		SavingsOfferingBO savingsOffering1 = TestObjectFactory
-				.createSavingsOffering("SavingPrd1", Short.valueOf("2"),
+				.createSavingsOffering("SavingP23rd1","4324", Short.valueOf("2"),
 						new Date(System.currentTimeMillis()), Short
 								.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
 						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),

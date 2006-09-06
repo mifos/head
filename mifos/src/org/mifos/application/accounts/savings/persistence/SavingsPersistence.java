@@ -60,6 +60,7 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -82,7 +83,7 @@ public class SavingsPersistence extends Persistence {
 							+ customerLevel.getId());
 			Map<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put(AccountConstants.PRDTYPEID,
-					ProductDefinitionConstants.SAVINGSID);
+					ProductType.SAVINGS.getValue());
 			queryParameters.put(AccountConstants.PRDSTATUS,
 					PrdStatus.SAVINGSACTIVE.getValue());
 			queryParameters.put(AccountConstants.PRODUCT_APPLICABLE_TO,

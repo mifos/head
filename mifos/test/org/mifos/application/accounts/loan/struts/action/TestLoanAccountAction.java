@@ -429,6 +429,56 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
 	}
 	
+	public void testSchedulePreview() {
+		createInitialObjects();
+		LoanOfferingBO loanOffering = getLoanOffering(
+				PrdApplicableMaster.GROUPS.getValue().toString(), 1, 1);
+		List<FeeBO> fees = getFee();
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "getPrdOfferings");
+		addRequestParameter("customerId", group.getCustomerId().toString());
+		actionPerform();
+
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("customerId", group.getCustomerId().toString());
+		addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId()
+				.toString());
+		actionPerform();
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("loanAmount", loanOffering.getDefaultLoanAmount()
+				.toString());
+		addRequestParameter("interestRate", loanOffering.getDefInterestRate()
+				.toString());
+		addRequestParameter("noOfInstallments", loanOffering
+				.getDefNoInstallments().toString());
+		addRequestParameter("disbursementDate", DateHelper
+				.getCurrentDate(((UserContext) request.getSession()
+						.getAttribute("UserContext")).getPereferedLocale()));
+		addRequestParameter("gracePeriodDuration", "1");
+		addRequestParameter("method", "schedulePreview");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.schedulePreview_success.toString());
+		
+		LoanBO loan = (LoanBO) request.getSession().getAttribute(
+				Constants.BUSINESS_KEY);
+		assertNotNull(loan);
+		
+		TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory
+				.getObject(LoanOfferingBO.class, loanOffering
+						.getPrdOfferingId()));
+		for (FeeBO fee : fees) {
+			TestObjectFactory.cleanUp((FeeBO) TestObjectFactory.getObject(
+					FeeBO.class, fee.getFeeId()));
+		}
+		
+		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+	
+	}
+
+	
 	public void testSchedulePreviewWithoutData() {
 		createInitialObjects();
 		LoanOfferingBO loanOffering = getLoanOffering(

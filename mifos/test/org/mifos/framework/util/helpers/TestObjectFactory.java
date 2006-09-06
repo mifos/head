@@ -147,9 +147,11 @@ import org.mifos.application.productdefinition.business.RecommendedAmntUnitEntit
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsTypeEntity;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
+import org.mifos.application.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.application.productdefinition.util.helpers.GracePeriodTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.reports.business.ReportsBO;
@@ -538,8 +540,6 @@ public class TestObjectFactory {
 
 		OfficeBO office = getOffice(new Short("3"));
 		PrdOfferingMeetingEntity prdOfferingMeeting = new PrdOfferingMeetingEntity(meeting,loanOffering,MeetingType.LOANFREQUENCYOFINSTALLMENTS);
-		PrdStatusEntity prdStatus = new PrdStatusEntity();
-
 		InterestTypesEntity interestTypes = new InterestTypesEntity(interestTypeId);
 
 		InterestCalcRule interestCalcRule = new InterestCalcRule();
@@ -553,7 +553,7 @@ public class TestObjectFactory {
 		} catch (PropertyNotFoundException e) {
 			e.printStackTrace();
 		}
-		prdStatus = testObjectPersistence.retrievePrdStatus(offeringStatusId);
+		PrdStatusEntity prdStatus = testObjectPersistence.retrievePrdStatus(offeringStatusId);
 
 		loanOffering.setPrdApplicableMaster(prdApplicableMaster);
 		loanOffering.setPrdCategory(getLoanPrdCategory());
@@ -639,8 +639,6 @@ public class TestObjectFactory {
 
 		OfficeBO office = getOffice(new Short("3"));
 		PrdOfferingMeetingEntity prdOfferingMeeting = new PrdOfferingMeetingEntity(meeting,loanOffering,MeetingType.LOANFREQUENCYOFINSTALLMENTS);
-		PrdStatusEntity prdStatus = new PrdStatusEntity();
-
 		InterestTypesEntity interestTypes = new InterestTypesEntity(interestTypeId);
 
 		InterestCalcRule interestCalcRule = new InterestCalcRule();
@@ -657,7 +655,7 @@ public class TestObjectFactory {
 		}
 		
 
-		prdStatus = testObjectPersistence.retrievePrdStatus(offeringStatusId);
+		PrdStatusEntity prdStatus = testObjectPersistence.retrievePrdStatus(offeringStatusId);
 
 		loanOffering.setPrdApplicableMaster(prdApplicableMaster);
 		loanOffering.setPrdCategory(getLoanPrdCategory());
@@ -782,13 +780,25 @@ public class TestObjectFactory {
 			Double maxAmtWithdrawl, Double minAmtForInt, Short savingsTypeId,
 			Short intCalTypeId, MeetingBO intCalcMeeting,
 			MeetingBO intPostMeeting) {
-		return createSavingsOffering(name, applicableTo, startDate,
+		return createSavingsOffering(name,name.substring(0, 1), applicableTo, startDate,
+				offeringStatusId, recommenededAmt, recomAmtUnitId, intRate,
+				maxAmtWithdrawl, minAmtForInt, savingsTypeId, intCalTypeId,
+				intCalcMeeting, intPostMeeting, (short) 7, (short) 7);
+	}
+	
+	public static SavingsOfferingBO createSavingsOffering(String name,String shortName,
+			Short applicableTo, Date startDate, Short offeringStatusId,
+			Double recommenededAmt, Short recomAmtUnitId, Double intRate,
+			Double maxAmtWithdrawl, Double minAmtForInt, Short savingsTypeId,
+			Short intCalTypeId, MeetingBO intCalcMeeting,
+			MeetingBO intPostMeeting) {
+		return createSavingsOffering(name,shortName, applicableTo, startDate,
 				offeringStatusId, recommenededAmt, recomAmtUnitId, intRate,
 				maxAmtWithdrawl, minAmtForInt, savingsTypeId, intCalTypeId,
 				intCalcMeeting, intPostMeeting, (short) 7, (short) 7);
 	}
 
-	public static SavingsOfferingBO createSavingsOffering(String name,
+	public static SavingsOfferingBO createSavingsOffering(String name,String shortName,
 			Short applicableTo, Date startDate, Short offeringStatusId,
 			Double recommenededAmt, Short recomAmtUnitId, Double intRate,
 			Double maxAmtWithdrawl, Double minAmtForInt, Short savingsTypeId,
@@ -817,6 +827,13 @@ public class TestObjectFactory {
 		} catch (PropertyNotFoundException e) {
 			e.printStackTrace();
 		}
+		RecommendedAmntUnitEntity amountUnit = null;
+		try {
+			amountUnit = new RecommendedAmntUnitEntity(RecommendedAmountUnit
+					.getRecommendedAmountUnit(recomAmtUnitId));
+		} catch (PropertyNotFoundException e) {
+			e.printStackTrace();
+		}
 		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, depGLCode);
 		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
@@ -826,9 +843,10 @@ public class TestObjectFactory {
 		SavingsOfferingBO savingsOffering = null;
 		try {
 			savingsOffering = new SavingsOfferingBO(getUserContext(), name,
-					name.substring(0, 1), productCategory, prdApplicableMaster,
-					startDate, savingsType, intCalType, intCalcMeeting,
-					intPostMeeting, new Money(recommenededAmt.toString()),
+					shortName, productCategory, prdApplicableMaster,
+					startDate, null,null,amountUnit,savingsType, intCalType, intCalcMeeting,
+					intPostMeeting, new Money(recommenededAmt.toString()),new Money(maxAmtWithdrawl
+							.toString()),new Money(minAmtForInt.toString()),
 					intRate, depglCodeEntity, intglCodeEntity);
 		} catch (InvalidUserException e1) {
 			e1.printStackTrace();
@@ -841,24 +859,10 @@ public class TestObjectFactory {
 		}
 
 		OfficeBO office = getOffice(new Short("3"));
-		PersonnelBO personnel = getPersonnel(new Short("1"));
 		PrdStatusEntity prdStatus = testObjectPersistence
 				.retrievePrdStatus(offeringStatusId);
 		savingsOffering.setOffice(office);
 		savingsOffering.setPrdStatus(prdStatus);
-		savingsOffering.setCreatedDate(new Date(System.currentTimeMillis()));
-		savingsOffering.setCreatedBy(personnel.getPersonnelId());
-		RecommendedAmntUnitEntity amountUnit = null;
-		try {
-			amountUnit = new RecommendedAmntUnitEntity(RecommendedAmountUnit
-					.getRecommendedAmountUnit(recomAmtUnitId));
-		} catch (PropertyNotFoundException e) {
-			e.printStackTrace();
-		}
-		savingsOffering.setRecommendedAmntUnit(amountUnit);
-		savingsOffering.setMaxAmntWithdrawl(new Money(maxAmtWithdrawl
-				.toString()));
-		savingsOffering.setMinAmntForInt(new Money(minAmtForInt.toString()));
 		return (SavingsOfferingBO) addObject(testObjectPersistence
 				.persist(savingsOffering));
 	}

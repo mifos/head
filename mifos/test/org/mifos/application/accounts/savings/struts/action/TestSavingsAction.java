@@ -8,7 +8,6 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountCustomFieldEntity;
-import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStateMachines;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsRecentActivityView;
@@ -100,8 +99,8 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 
 	public void testGetPrdOfferings() {
 		createInitialObjects();
-		savingsOffering1 = createSavingsOffering();
-		savingsOffering2 = createSavingsOffering();
+		savingsOffering1 = createSavingsOffering("sav prd1","prd1");
+		savingsOffering2 = createSavingsOffering("sav prd2","prd2");
 
 		addRequestParameter("customerId", group.getCustomerId().toString());
 		setRequestPathInfo("/savingsAction.do");
@@ -116,7 +115,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 
 	public void testSuccessfullLoad() {
 		createInitialObjects();
-		savingsOffering = createSavingsOffering();
+		savingsOffering = createSavingsOffering("sav prd1","prd1");
 		addRequestParameter("selectedPrdOfferingId", savingsOffering
 				.getPrdOfferingId().toString());
 
@@ -148,7 +147,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 
 	public void testScuccessfulReLoad() {
 		createInitialObjects();
-		savingsOffering = createSavingsOffering();
+		savingsOffering = createSavingsOffering("sav prd1","prd1");
 		addRequestParameter("selectedPrdOfferingId", savingsOffering
 				.getPrdOfferingId().toString());
 
@@ -171,7 +170,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 
 	public void testSuccessfulPreview() {
 		createInitialObjects();
-		savingsOffering = createSavingsOffering();
+		savingsOffering = createSavingsOffering("sav prd1","prd1");
 		SavingsBO savingsObj = new SavingsBO(userContext);
 		savingsObj.setCustomer(group);
 		savingsObj.setSavingsOffering(savingsOffering);
@@ -188,7 +187,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 
 	public void testSuccessfulPrevious() {
 		createInitialObjects();
-		savingsOffering = createSavingsOffering();
+		savingsOffering = createSavingsOffering("sav prd1","prd1");
 		SavingsBO savingsObj = new SavingsBO(userContext);
 		savingsObj.setCustomer(group);
 		savingsObj.setSavingsOffering(savingsOffering);
@@ -204,7 +203,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 	public void testSuccessfulSave() {
 
 		createInitialObjects();
-		savingsOffering = createSavingsOffering();
+		savingsOffering = createSavingsOffering("sav prd1","prd1");
 		// addRequestParameter("selectedPrdOfferingId",
 		// savingsOffering.getPrdOfferingId().toString());
 		addRequestParameter("stateSelected", Short
@@ -241,7 +240,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 	public void testSuccessfulSaveInActiveState() {
 
 		createInitialObjects();
-		savingsOffering = createSavingsOffering();
+		savingsOffering = createSavingsOffering("sav prd1","prd1");
 		// addRequestParameter("selectedPrdOfferingId",
 		// savingsOffering.getPrdOfferingId().toString());
 		addRequestParameter("stateSelected", Short
@@ -278,7 +277,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 
 	public void testSuccessfulGetBySystemId() {
 		createInitialObjects();
-		savingsOffering = createSavingsOffering();
+		savingsOffering = createSavingsOffering("sav prd1","prd1");
 		addRequestParameter("input", "preview");
 		savings = createSavingsAccount("000X00000000013", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
@@ -300,7 +299,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 
 	public void testSuccessfulEdit() {
 		createInitialObjects();
-		savingsOffering = createSavingsOffering();
+		savingsOffering = createSavingsOffering("sav prd1","prd1");
 		savings = createSavingsAccount("000X00000000014", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
@@ -314,7 +313,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 
 	public void testSuccessfulEditPrevious() {
 		createInitialObjects();
-		savingsOffering = createSavingsOffering();
+		savingsOffering = createSavingsOffering("sav prd1","prd1");
 		savings = createSavingsAccount("000X00000000016", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
@@ -328,7 +327,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 
 	public void testSuccessfulUpdate() {
 		createInitialObjects();
-		savingsOffering = createSavingsOffering();
+		savingsOffering = createSavingsOffering("sav prd1","prd1");
 		savings = createSavingsAccount("000X00000000017", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		savings.setCustomer(group);
@@ -349,7 +348,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 	public void testSuccessfulUpdateInActiveState() {
 
 		createInitialObjects();
-		savingsOffering = createSavingsOffering();
+		savingsOffering = createSavingsOffering("sav prd1","prd1");
 		savings = createSavingsAccount("000X00000000017", savingsOffering,
 				AccountStates.SAVINGS_ACC_APPROVED);
 		savings.setCustomer(group);
@@ -371,7 +370,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 
 	public void testMultipleCreatesInBetweenUpdate() throws Exception {
 		createInitialObjects();
-		savingsOffering = createSavingsOffering();
+		savingsOffering = createSavingsOffering("sav prd1","prd1");
 		addRequestParameter("stateSelected", Short
 				.toString(AccountStates.SAVINGS_ACC_PARTIALAPPLICATION));
 		savings = new SavingsBO(userContext);
@@ -407,7 +406,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		verifyForward("update_success");
 
 		// create another savings object
-		savingsOffering3 = createSavingsOffering();
+		savingsOffering3 = createSavingsOffering("sav prd2","prd2");
 		addRequestParameter("stateSelected", Short
 				.toString(AccountStates.SAVINGS_ACC_PARTIALAPPLICATION));
 		savings3 = new SavingsBO(userContext);
@@ -428,7 +427,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 
 	public void testSuccessfulGetRecentActivity() {
 		createInitialObjects();
-		savingsOffering = createSavingsOffering();
+		savingsOffering = createSavingsOffering("sav prd1","prd1");
 		savings = createSavingsAccount("000X00000000018", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
@@ -452,7 +451,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 
 	public void testSuccessfulGetTransactionHistory() {
 		createInitialObjects();
-		savingsOffering = createSavingsOffering();
+		savingsOffering = createSavingsOffering("sav prd1","prd1");
 		savings = createSavingsAccount("000X00000000019", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
@@ -477,7 +476,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 	public void testGetDepositDueDetails() throws Exception {
 
 		createInitialObjects();
-		savingsOffering = createSavingsOffering();
+		savingsOffering = createSavingsOffering("sav prd1","prd1");
 		savings = createSavingsAccount("000X00000000020", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		HibernateUtil.closeSession();
@@ -500,7 +499,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 
 	public void testWaiveAmountDue() throws Exception {
 		createInitialObjects();
-		savingsOffering = createSavingsOffering();
+		savingsOffering = createSavingsOffering("sav prd1","prd1");
 		savings = createSavingsAccount("000X00000000019", savingsOffering,
 				AccountStates.SAVINGS_ACC_APPROVED);
 		HibernateUtil.closeSession();
@@ -522,7 +521,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 
 	public void testWaiveAmountOverDue() throws Exception {
 		createInitialObjects();
-		savingsOffering = createSavingsOffering();
+		savingsOffering = createSavingsOffering("sav prd1","prd1");
 		savings = createSavingsAccount("000X00000000019", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		HibernateUtil.closeSession();
@@ -545,7 +544,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 	public void testSuccessfulGetStatusHistory() throws Exception{
 		SavingsTestHelper helper = new SavingsTestHelper();
 		createInitialObjects();
-		savingsOffering = helper.createSavingsOffering();
+		savingsOffering = helper.createSavingsOffering("asfddsf","213a");
 		savings = helper.createSavingsAccount("000100000000017",
 				savingsOffering, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
@@ -584,12 +583,12 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 				.currentTimeMillis()));
 	}
 
-	private SavingsOfferingBO createSavingsOffering() {
+	private SavingsOfferingBO createSavingsOffering(String prdOfferingName,String shortName) {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		return TestObjectFactory.createSavingsOffering("SavingPrd1", Short
+		return TestObjectFactory.createSavingsOffering(prdOfferingName, shortName,Short
 				.valueOf("2"), new Date(System.currentTimeMillis()), Short
 				.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0,
 				Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc,

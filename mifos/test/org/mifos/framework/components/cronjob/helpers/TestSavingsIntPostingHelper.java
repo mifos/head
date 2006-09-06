@@ -124,20 +124,20 @@ public class TestSavingsIntPostingHelper extends MifosTestCase {
 				.valueOf("9"), "1.1.1", center, new Date(System
 				.currentTimeMillis()));
 
-		savingsOffering1 = createSavingsOffering("prd1",Short.valueOf("1")); 
-		savingsOffering2 = createSavingsOffering("prd2",Short.valueOf("1"));
-		savingsOffering3 = createSavingsOffering("prd3",Short.valueOf("1"));
-		savingsOffering4 = createSavingsOffering("prd4",Short.valueOf("2"));
+		savingsOffering1 = createSavingsOffering("prd1","ssdr",Short.valueOf("1")); 
+		savingsOffering2 = createSavingsOffering("prd2","aser",Short.valueOf("1"));
+		savingsOffering3 = createSavingsOffering("prd3","zx23",Short.valueOf("1"));
+		savingsOffering4 = createSavingsOffering("prd4","wsas",Short.valueOf("2"));
 		savings1 = helper.createSavingsAccount(savingsOffering1, group, AccountStates.SAVINGS_ACC_APPROVED, userContext);
 		savings2 = helper.createSavingsAccount(savingsOffering2, group, AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
 		savings3 = helper.createSavingsAccount(savingsOffering3, group, AccountStates.SAVINGS_ACC_PENDINGAPPROVAL, userContext);
 		savings4 = helper.createSavingsAccount(savingsOffering4, group, AccountStates.SAVINGS_ACC_APPROVED, userContext);
 	}
 	
-	private SavingsOfferingBO createSavingsOffering(String offeringName, Short interestCalcType){
+	private SavingsOfferingBO createSavingsOffering(String offeringName, String shortName,Short interestCalcType){
 		MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getMeeting("2","2",Short.valueOf("2")));
 		MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getMeeting("2","2",Short.valueOf("3")));
-		return TestObjectFactory.createSavingsOffering(offeringName,Short.valueOf("2"),new Date(System.currentTimeMillis()),
+		return TestObjectFactory.createSavingsOffering(offeringName,shortName,Short.valueOf("2"),new Date(System.currentTimeMillis()),
 				Short.valueOf("2"),300.0,Short.valueOf("1"),12.0,200.0,200.0,Short.valueOf("2"),interestCalcType,meetingIntCalc,meetingIntPost);
 	}
 }

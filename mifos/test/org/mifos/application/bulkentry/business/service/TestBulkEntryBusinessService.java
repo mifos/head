@@ -151,7 +151,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		centerSavingsAccount = TestObjectFactory.createSavingsAccount("432434",
 				center, Short.valueOf("16"), new Date(System
 						.currentTimeMillis()),
-				createSavingsOffering("SavingPrd1"));
+				createSavingsOffering("SavingPrd1wa","qads"));
 
 		List<SavingsAccountView> savingsAccounts = bulkEntryBusinessService
 				.retrieveSavingsAccountInformationForCustomer(center
@@ -164,13 +164,13 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		createInitialObjects();
 		centerSavingsAccount = TestObjectFactory.createSavingsAccount(
 				"43244334", center, Short.valueOf("16"), currentDate,
-				createSavingsOffering("Center"));
+				createSavingsOffering("Center12","q1se"));
 		groupSavingsAccount = TestObjectFactory.createSavingsAccount(
 				"43234434", group, Short.valueOf("16"), currentDate,
-				createSavingsOffering("Group"));
+				createSavingsOffering("Group23","cvxs"));
 		clientSavingsAccount = TestObjectFactory.createSavingsAccount(
 				"43245434", client, Short.valueOf("16"), currentDate,
-				createSavingsOffering("Client"));
+				createSavingsOffering("Clienta1","qase"));
 
 		List<AccountActionDateEntity> centerActions = bulkEntryBusinessService
 				.retrieveSavingsAccountTransactionDetail(centerSavingsAccount
@@ -185,7 +185,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		createInitialObjects();
 		clientSavingsAccount = TestObjectFactory.createSavingsAccount(
 				"43245434", client, Short.valueOf("16"), new Date(System
-						.currentTimeMillis()), createSavingsOffering("Client"));
+						.currentTimeMillis()), createSavingsOffering("Client21","ased"));
 		HibernateUtil.closeSession();
 
 		bulkEntryBusinessService.saveSavingsDepositAccount(
@@ -204,7 +204,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 
 	public void testSuccessfulSavingsAccountWithdrawal()
 			throws Exception{
-		createSavingsAccountWithBal("100");
+		createSavingsAccountWithBal("100","Dfre1qw","xzsc");
 		bulkEntryBusinessService.saveSavingsWithdrawalAccount(
 				getSavingsAccountView(clientSavingsAccount, "0", "100"), Short
 						.valueOf("1"), "3424", (short) 1, new java.sql.Date(
@@ -364,23 +364,23 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		return accountView;
 	}
 
-	private SavingsOfferingBO createSavingsOffering(String offeringName) {
+	private SavingsOfferingBO createSavingsOffering(String offeringName,String shortName) {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		return TestObjectFactory.createSavingsOffering(offeringName, Short
+		return TestObjectFactory.createSavingsOffering(offeringName, shortName,Short
 				.valueOf("2"), currentDate, Short.valueOf("2"), 300.0,
 				(short) 1, 1.2, 200.0, 200.0, Short.valueOf("2"), (short) 1,
 				meetingIntCalc, meetingIntPost);
 	}
 
-	private void createSavingsAccountWithBal(String amount)
+	private void createSavingsAccountWithBal(String amount,String OfferingName,String shortName)
 			throws NumberFormatException, BulkEntryAccountUpdateException {
 		createInitialObjects();
 		clientSavingsAccount = TestObjectFactory.createSavingsAccount(
 				"43245434", client, Short.valueOf("16"), currentDate,
-				createSavingsOffering("Client"));
+				createSavingsOffering(OfferingName,shortName));
 		HibernateUtil.closeSession();
 
 		bulkEntryBusinessService.saveSavingsDepositAccount(

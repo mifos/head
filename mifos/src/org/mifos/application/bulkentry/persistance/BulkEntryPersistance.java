@@ -58,7 +58,7 @@ public class BulkEntryPersistance extends Persistence {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("MEETING_DATE", meetingDate);
 		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
-		queryParameters.put("SEARCH_STRING", searchString + '%');
+		queryParameters.put("SEARCH_STRING", searchString + ".%");
 		queryParameters.put("OFFICE_ID", officeId);
 		if (accountType.equals(AccountTypes.LOANACCOUNT)) {
 			return executeNamedQuery(
@@ -69,9 +69,12 @@ public class BulkEntryPersistance extends Persistence {
 					NamedQueryConstants.ALL_SAVINGS_SCHEDULE_DETAILS,
 					queryParameters);
 		} else if (accountType.equals(AccountTypes.CUSTOMERACCOUNT)) {
-			return executeNamedQuery(
+			List<BulkEntryInstallmentView> result = getBulkEntryActionViewForCustomerAccountWithSearchId(
+					meetingDate, searchString, officeId);
+			result.addAll(executeNamedQuery(
 					NamedQueryConstants.ALL_CUSTOMER_SCHEDULE_DETAILS,
-					queryParameters);
+					queryParameters));
+			return result;
 		}
 		return null;
 
@@ -84,17 +87,47 @@ public class BulkEntryPersistance extends Persistence {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("MEETING_DATE", meetingDate);
 		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
-		queryParameters.put("SEARCH_STRING", searchString + '%');
+		queryParameters.put("SEARCH_STRING", searchString + ".%");
 		queryParameters.put("OFFICE_ID", officeId);
 		if (accountType.equals(AccountTypes.LOANACCOUNT)) {
 			queryResult = executeNamedQuery(
 					NamedQueryConstants.ALL_LOAN_FEE_SCHEDULE_DETAILS,
 					queryParameters);
 		} else if (accountType.equals(AccountTypes.CUSTOMERACCOUNT)) {
-			queryResult = executeNamedQuery(
+			queryResult = getBulkEntryFeeActionViewForCustomerAccountWithSearchId(
+					meetingDate, searchString, officeId);
+			queryResult.addAll(executeNamedQuery(
 					NamedQueryConstants.ALL_CUSTOMER_FEE_SCHEDULE_DETAILS,
-					queryParameters);
+					queryParameters));
 		}
+		initializeFees(queryResult);
+		return queryResult;
+
+	}
+
+	public List<BulkEntryInstallmentView> getBulkEntryActionViewForCustomerAccountWithSearchId(
+			Date meetingDate, String searchString, Short officeId) {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("MEETING_DATE", meetingDate);
+		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
+		queryParameters.put("SEARCH_STRING", searchString);
+		queryParameters.put("OFFICE_ID", officeId);
+		return executeNamedQuery(NamedQueryConstants.CUSTOMER_SCHEDULE_DETAILS,
+				queryParameters);
+
+	}
+
+	public List<BulkEntryAccountFeeActionView> getBulkEntryFeeActionViewForCustomerAccountWithSearchId(
+			Date meetingDate, String searchString, Short officeId) {
+		List<BulkEntryAccountFeeActionView> queryResult = null;
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("MEETING_DATE", meetingDate);
+		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
+		queryParameters.put("SEARCH_STRING", searchString);
+		queryParameters.put("OFFICE_ID", officeId);
+		queryResult = executeNamedQuery(
+				NamedQueryConstants.CUSTOMER_FEE_SCHEDULE_DETAILS,
+				queryParameters);
 		initializeFees(queryResult);
 		return queryResult;
 

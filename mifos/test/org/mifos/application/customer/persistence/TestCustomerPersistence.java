@@ -526,14 +526,14 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 	}
 
-	private AccountBO getSavingsAccount(CustomerBO customer, MeetingBO meeting) {
+	private AccountBO getSavingsAccount(CustomerBO customer, MeetingBO meeting,String prdOfferingname,String shortName) {
 		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		SavingsOfferingBO savingsOffering = TestObjectFactory
-				.createSavingsOffering("SavingPrd1", Short.valueOf("2"),
+				.createSavingsOffering(prdOfferingname,shortName, Short.valueOf("2"),
 						new Date(System.currentTimeMillis()), Short
 								.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
 						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),
@@ -625,13 +625,13 @@ public class TestCustomerPersistence extends MifosTestCase {
 		ClientBO client3 = TestObjectFactory.createClient("client3",
 				ClientConstants.STATUS_CANCELLED, group1.getSearchId() + ".1",
 				group1, new Date(System.currentTimeMillis()));
-		account = getSavingsAccount(center, meeting);
-		AccountBO account1 = getSavingsAccount(client, meeting);
-		AccountBO account2 = getSavingsAccount(client2, meeting);
-		AccountBO account3 = getSavingsAccount(client3, meeting);
-		AccountBO account4 = getSavingsAccount(group1, meeting);
-		AccountBO account5 = getSavingsAccount(group, meeting);
-		AccountBO account6 = getSavingsAccount(center1, meeting);
+		account = getSavingsAccount(center, meeting,"Savings Prd1","Abc1");
+		AccountBO account1 = getSavingsAccount(client, meeting,"Savings Prd2","Abc2");
+		AccountBO account2 = getSavingsAccount(client2, meeting,"Savings Prd3","Abc3");
+		AccountBO account3 = getSavingsAccount(client3, meeting,"Savings Prd4","Abc4");
+		AccountBO account4 = getSavingsAccount(group1, meeting,"Savings Prd5","Abc5");
+		AccountBO account5 = getSavingsAccount(group, meeting,"Savings Prd6","Abc6");
+		AccountBO account6 = getSavingsAccount(center1, meeting,"Savings Prd7","Abc7");
 
 		List<AccountBO> savingsForCenter = customerPersistence
 				.retrieveAccountsUnderCustomer(center.getSearchId(), Short
@@ -940,13 +940,13 @@ public class TestCustomerPersistence extends MifosTestCase {
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		SavingsOfferingBO savingsOffering = TestObjectFactory
-				.createSavingsOffering("SavingPrd1", Short.valueOf("2"),
+				.createSavingsOffering("SavingPrd12","abc1", Short.valueOf("2"),
 						new Date(System.currentTimeMillis()), Short
 								.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
 						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),
 						meetingIntCalc, meetingIntPost);
 		SavingsOfferingBO savingsOffering1 = TestObjectFactory
-				.createSavingsOffering("SavingPrd1", Short.valueOf("2"),
+				.createSavingsOffering("SavingPrd11","abc2", Short.valueOf("2"),
 						new Date(System.currentTimeMillis()), Short
 								.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
 						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),

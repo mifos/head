@@ -52,7 +52,7 @@ public class TestProductDefinitionPersistenceService extends MifosTestCase{
 	
 	public void testGetSavingsAccount() throws Exception{
 		createInitialObjects();		
-		savingsOffering = helper.createSavingsOffering();
+		savingsOffering = helper.createSavingsOffering("fsaf6","ads6");
 		UserContext userContext = new UserContext();
 		userContext.setId(Short.valueOf("1"));
 		savings = helper.createSavingsAccount("000100000000017",savingsOffering,group,AccountStates.SAVINGS_ACC_APPROVED,userContext);

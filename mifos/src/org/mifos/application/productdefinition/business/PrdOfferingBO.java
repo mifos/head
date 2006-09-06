@@ -101,25 +101,37 @@ public class PrdOfferingBO extends BusinessObject {
 			String prdOfferingShortName, ProductCategoryBO prdCategory,
 			PrdApplicableMasterEntity prdApplicableMaster, Date startDate)
 			throws ProductDefinitionException {
+		this(userContext, prdOfferingName, prdOfferingShortName, prdCategory,
+				prdApplicableMaster, startDate, null, null);
+	}
+
+	protected PrdOfferingBO(UserContext userContext, String prdOfferingName,
+			String prdOfferingShortName, ProductCategoryBO prdCategory,
+			PrdApplicableMasterEntity prdApplicableMaster, Date startDate,
+			Date endDate, String description) throws ProductDefinitionException {
 		super(userContext);
-		try{
+		prdLogger.debug("creating product offering");
 		vaildate(userContext, prdOfferingName, prdOfferingShortName,
-				prdCategory, prdApplicableMaster, startDate);
+				prdCategory, prdApplicableMaster, startDate, endDate);
+		validateDuplicateProductOfferingName(prdOfferingName);
+		validateDuplicateProductOfferingShortName(prdOfferingShortName);
 		this.prdOfferingName = prdOfferingName;
 		this.prdOfferingShortName = prdOfferingShortName;
 		this.prdCategory = prdCategory;
 		this.prdType = prdCategory.getProductType();
 		this.prdApplicableMaster = prdApplicableMaster;
 		this.startDate = startDate;
+		this.endDate = endDate;
+		this.description = description;
 		this.globalPrdOfferingNum = generatePrdOfferingGlobalNum();
-		this.prdStatus = setStatus(startDate, prdType);
-		this.office = new OfficePersistence().getOffice(userContext
-				.getBranchId());
-		}
-		catch (PersistenceException e) {
-
+		this.prdStatus = getPrdStatus(startDate, prdType);
+		try {
+			this.office = new OfficePersistence().getOffice(userContext
+					.getBranchId());
+		} catch (PersistenceException e) {
 			throw new ProductDefinitionException(e);
 		}
+		prdLogger.debug("creating product offering done");
 	}
 
 	public String getDescription() {
@@ -235,15 +247,16 @@ public class PrdOfferingBO extends BusinessObject {
 		globalPrdOfferingNum.append(StringUtils.lpad(String
 				.valueOf(maxPrdID != null ? maxPrdID + 1
 						: ProductDefinitionConstants.DEFAULTMAX), '0', 3));
-		prdLogger
-				.debug("Generation of new product Offering global number done");
+		prdLogger.debug("Generation of new product Offering global number done"
+				+ globalPrdOfferingNum);
 		return globalPrdOfferingNum.toString();
 	}
 
 	private void vaildate(UserContext userContext, String prdOfferingName,
 			String prdOfferingShortName, ProductCategoryBO prdCategory,
-			PrdApplicableMasterEntity prdApplicableMaster, Date startDate)
-			throws ProductDefinitionException {
+			PrdApplicableMasterEntity prdApplicableMaster, Date startDate,
+			Date endDate) throws ProductDefinitionException {
+		prdLogger.debug("Validating the fields in Prd Offering");
 		if (userContext == null
 				|| prdOfferingName == null
 				|| prdOfferingShortName == null
@@ -252,26 +265,38 @@ public class PrdOfferingBO extends BusinessObject {
 				|| startDate == null
 				|| (prdOfferingShortName.length() > 4)
 				|| startDate.compareTo(DateUtils
-						.getCurrentDateWithoutTimeStamp()) < 0) {
+						.getCurrentDateWithoutTimeStamp()) < 0
+				|| (endDate != null && startDate.compareTo(endDate) >= 0)) {
 			throw new ProductDefinitionException("errors.create");
 		}
+		prdLogger.debug("Validation of the fields in Prd Offering done.");
 	}
 
-	private PrdStatusEntity setStatus(Date startDate, ProductTypeEntity prdType)
-			throws ProductDefinitionException {
+	private PrdStatusEntity getPrdStatus(Date startDate,
+			ProductTypeEntity prdType) throws ProductDefinitionException {
+		prdLogger
+				.debug("getting the Product status for prdouct offering with start date :"
+						+ startDate
+						+ " and product Type :"
+						+ prdType.getProductTypeID());
 		PrdStatus prdStatus = null;
 		if (startDate.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) == 0)
 			prdStatus = getActivePrdStatus(prdType);
 		else
 			prdStatus = getInActivePrdStatus(prdType);
 		try {
+			prdLogger.debug("getting the Product status for product status :"
+					+ prdStatus);
 			return new PrdOfferingPersistence().getPrdStatus(prdStatus);
 		} catch (PersistenceException e) {
 			throw new ProductDefinitionException(e);
 		}
+
 	}
 
 	private PrdStatus getActivePrdStatus(ProductTypeEntity prdType) {
+		prdLogger.debug("getting the Active Product status for product Type :"
+				+ prdType.getProductTypeID());
 		if (prdType.getProductTypeID().equals(ProductType.LOAN.getValue()))
 			return PrdStatus.LOANACTIVE;
 		else
@@ -280,10 +305,42 @@ public class PrdOfferingBO extends BusinessObject {
 	}
 
 	private PrdStatus getInActivePrdStatus(ProductTypeEntity prdType) {
+		prdLogger
+				.debug("getting the In Active Product status for product Type :"
+						+ prdType.getProductTypeID());
 		if (prdType.getProductTypeID().equals(ProductType.LOAN.getValue()))
 			return PrdStatus.LOANINACTIVE;
 		else
 			return PrdStatus.SAVINGSINACTIVE;
+	}
 
+	private void validateDuplicateProductOfferingName(String productOfferingName)
+			throws ProductDefinitionException {
+		prdLogger.debug("Checking for duplicate product offering name");
+		try {
+			if (!new PrdOfferingPersistence().getProductOfferingNameCount(
+					productOfferingName).equals(Integer.valueOf("0")))
+				throw new ProductDefinitionException(
+						ProductDefinitionConstants.DUPLCATEGORYNAME);
+		} catch (NumberFormatException e) {
+			throw new ProductDefinitionException(e);
+		} catch (PersistenceException e) {
+			throw new ProductDefinitionException(e);
+		}
+	}
+
+	private void validateDuplicateProductOfferingShortName(
+			String productOfferingShortName) throws ProductDefinitionException {
+		prdLogger.debug("Checking for duplicate product offering short name");
+		try {
+			if (!new PrdOfferingPersistence().getProductOfferingShortNameCount(
+					productOfferingShortName).equals(Integer.valueOf("0")))
+				throw new ProductDefinitionException(
+						ProductDefinitionConstants.DUPLCATEGORYNAME);
+		} catch (NumberFormatException e) {
+			throw new ProductDefinitionException(e);
+		} catch (PersistenceException e) {
+			throw new ProductDefinitionException(e);
+		}
 	}
 }

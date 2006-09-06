@@ -295,13 +295,13 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		ClientBO client3 = TestObjectFactory.createClient("client3",
 				CustomerStatus.CLIENT_ACTIVE.getValue(), group1.getSearchId()
 						+ ".1", group1, new Date(System.currentTimeMillis()));
-		account = getSavingsAccountWithBalance(center, meeting);
-		AccountBO account1 = getSavingsAccountWithBalance(client, meeting);
-		AccountBO account2 = getSavingsAccountWithBalance(client2, meeting);
-		AccountBO account3 = getSavingsAccountWithBalance(client3, meeting);
-		AccountBO account4 = getSavingsAccountWithBalance(group1, meeting);
-		AccountBO account5 = getSavingsAccountWithBalance(group, meeting);
-		AccountBO account6 = getSavingsAccountWithBalance(center1, meeting);
+		account = getSavingsAccountWithBalance(center, meeting,"savings prd123","xyz1");
+		AccountBO account1 = getSavingsAccountWithBalance(client, meeting,"savings prd1231","xyz2");
+		AccountBO account2 = getSavingsAccountWithBalance(client2, meeting,"savings prd1232","xyz3");
+		AccountBO account3 = getSavingsAccountWithBalance(client3, meeting,"savings prd1233","xyz4");
+		AccountBO account4 = getSavingsAccountWithBalance(group1, meeting,"savings prd1234","xyz5");
+		AccountBO account5 = getSavingsAccountWithBalance(group, meeting,"savings prd1235","xyz6");
+		AccountBO account6 = getSavingsAccountWithBalance(center1, meeting,"savings prd1236","xyz7");
 
 		AccountBO account7 = getLoanAccount(client, meeting);
 		changeFirstInstallmentDateToPastDate(account7);
@@ -591,14 +591,14 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	}
 
 	private AccountBO getSavingsAccountWithBalance(CustomerBO customer,
-			MeetingBO meeting) throws Exception{
+			MeetingBO meeting,String prdofferingName,String shortName) throws Exception{
 		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		SavingsOfferingBO savingsOffering = TestObjectFactory
-				.createSavingsOffering("SavingPrd1", Short.valueOf("2"),
+				.createSavingsOffering(prdofferingName,shortName, Short.valueOf("2"),
 						new Date(System.currentTimeMillis()), Short
 								.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
 						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),

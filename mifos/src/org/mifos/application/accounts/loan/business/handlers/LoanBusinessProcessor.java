@@ -49,6 +49,7 @@ import org.mifos.application.office.util.valueobjects.Office;
 import org.mifos.application.productdefinition.dao.LoanProductDAO;
 import org.mifos.application.productdefinition.util.helpers.GracePeriodTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.application.productdefinition.util.valueobjects.LoanOffering;
 import org.mifos.application.productdefinition.util.valueobjects.PrdOffering;
 import org.mifos.framework.business.util.helpers.HeaderObject;
@@ -418,7 +419,7 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 
 			// gets the states currently is use.
 			List statesInUse = loanDAO
-					.getStatesCurrentlyInUse(ProductDefinitionConstants.LOANID);
+					.getStatesCurrentlyInUse(ProductType.LOAN.getValue());
 
 			if (statesInUse != null && !statesInUse.isEmpty()) {
 				// check if pending approval is a valid state.

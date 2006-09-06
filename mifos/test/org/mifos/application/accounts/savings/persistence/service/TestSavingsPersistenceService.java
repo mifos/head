@@ -224,7 +224,7 @@ public class TestSavingsPersistenceService extends MifosTestCase {
 		createInitialObjects();
 		PersonnelBO createdBy = new PersonnelPersistence()
 				.getPersonnel(userContext.getId());
-		savingsOffering = helper.createSavingsOffering();
+		savingsOffering = helper.createSavingsOffering("sfdafdsf","asf1");
 
 		savings = new SavingsBO(userContext);
 		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
@@ -353,7 +353,7 @@ public class TestSavingsPersistenceService extends MifosTestCase {
 				"1.1", meeting, new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
-		savingsOffering = helper.createSavingsOffering("SavingPrd1", Short.valueOf("1"),Short.valueOf("1"));;
+		savingsOffering = helper.createSavingsOffering("SavingPrd1", "cvfg",Short.valueOf("1"),Short.valueOf("1"));;
 		savings = TestObjectFactory.createSavingsAccount("43245434", group,
 				Short.valueOf("16"), new Date(System.currentTimeMillis()),
 				savingsOffering);
@@ -383,7 +383,7 @@ public class TestSavingsPersistenceService extends MifosTestCase {
 				"1.1", meeting, new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
-		savingsOffering = helper.createSavingsOffering("SavingPrd1", Short.valueOf("1"),Short.valueOf("1"));;
+		savingsOffering = helper.createSavingsOffering("SavingPrd1","lvfg", Short.valueOf("1"),Short.valueOf("1"));;
 		savings = TestObjectFactory.createSavingsAccount("43245434", group,
 				Short.valueOf("16"), new Date(System.currentTimeMillis()),
 				savingsOffering);

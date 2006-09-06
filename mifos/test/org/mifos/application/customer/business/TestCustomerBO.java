@@ -230,7 +230,7 @@ public class TestCustomerBO extends MifosTestCase {
 	}
 	
 	public void testGetSavingsAccountInUse() throws PersistenceException {
-		accountBO = getSavingsAccount();
+		accountBO = getSavingsAccount("fsaf6","ads6");
 		TestObjectFactory.flushandCloseSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
@@ -268,7 +268,7 @@ public class TestCustomerBO extends MifosTestCase {
 	}
 	
 	public void testHasAnySavingsAccountInUse() throws PersistenceException {
-		accountBO = getSavingsAccount();
+		accountBO = getSavingsAccount("fsaf5","ads5");
 		TestObjectFactory.flushandCloseSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
@@ -285,7 +285,7 @@ public class TestCustomerBO extends MifosTestCase {
 	}
 	
 	public void testgetSavingsBalance() throws Exception {
-		SavingsBO savings = getSavingsAccount();
+		SavingsBO savings = getSavingsAccount("fsaf4","ads4");
 		savings.setSavingsBalance(new Money("1000"));
 		savings.update();
 		HibernateUtil.commitTransaction();
@@ -419,9 +419,9 @@ public class TestCustomerBO extends MifosTestCase {
 		}
 	}
 
-	private SavingsBO getSavingsAccount() {
+	private SavingsBO getSavingsAccount(String offeringName,String shortName) {
 		createInitialObjects();
-		savingsOffering = helper.createSavingsOffering();
+		savingsOffering = helper.createSavingsOffering(offeringName,shortName);
 		return TestObjectFactory.createSavingsAccount("000100000000017",
 				client, AccountStates.SAVINGS_ACC_APPROVED, new Date(System
 						.currentTimeMillis()), savingsOffering);

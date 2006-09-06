@@ -59,7 +59,7 @@ public class TestTagGenerator extends MifosTestCase{
 		assertEquals(true,createdLink.contains("Center_Active_test"));
 		assertEquals(true,createdLink.contains("groupCustAction"));
 		assertEquals(true,createdLink.contains("Group_Active_test"));
-		assertEquals(true,createdLink.contains("SavingPrd1"));
+		assertEquals(true,createdLink.contains("prd1"));
 	}
 	
 	public void testSavingsAccountLinkWithSelfLink(){
@@ -94,7 +94,7 @@ public class TestTagGenerator extends MifosTestCase{
 		center = TestObjectFactory.createCenter("Center_Active_test", Short.valueOf("13"), "1.1", meeting, new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group_Active_test", Short.valueOf("9"), "1.1.1", center, new Date(System.currentTimeMillis()));
 		SavingsTestHelper helper = new SavingsTestHelper();
-		savingsOffering=helper.createSavingsOffering();
+		savingsOffering=helper.createSavingsOffering("prd1","cdfg");
 		savings = helper.createSavingsAccount("000100000000017",savingsOffering, group,AccountStates.SAVINGS_ACC_APPROVED, userContext);
 	}	
 }

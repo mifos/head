@@ -394,9 +394,9 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		client = TestObjectFactory.createClient("Client", Short.valueOf("3"),
 				"1.1.1.1", group, new Date(System.currentTimeMillis()));
 		account = getLoanAccount(group, meeting);
-		SavingsOfferingBO savingsOffering1 = createSavingsOffering("SavingPrd1");
-		SavingsOfferingBO savingsOffering2 = createSavingsOffering("SavingPrd2");
-		SavingsOfferingBO savingsOffering3 = createSavingsOffering("SavingPrd3");
+		SavingsOfferingBO savingsOffering1 = createSavingsOffering("SavingPrd1","ased");
+		SavingsOfferingBO savingsOffering2 = createSavingsOffering("SavingPrd2","cvdf");
+		SavingsOfferingBO savingsOffering3 = createSavingsOffering("SavingPrd3","zxsd");
 
 		centerSavingsAccount = TestObjectFactory.createSavingsAccount(
 				"43244334", center, Short.valueOf("16"), startDate,
@@ -531,13 +531,13 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		SavingsOfferingBO savingsOffering = TestObjectFactory
-				.createSavingsOffering("SavingPrd1", Short.valueOf("2"),
+				.createSavingsOffering("SavingPrd123c", "ased",Short.valueOf("2"),
 						new Date(System.currentTimeMillis()), Short
 								.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
 						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),
 						meetingIntCalc, meetingIntPost);
 		SavingsOfferingBO savingsOffering1 = TestObjectFactory
-				.createSavingsOffering("SavingPrd1", Short.valueOf("2"),
+				.createSavingsOffering("SavingPrd1we","vbgr", Short.valueOf("2"),
 						new Date(System.currentTimeMillis()), Short
 								.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
 						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),
@@ -764,12 +764,12 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		return dates.get(dates.size() - 1);
 	}
 
-	private SavingsOfferingBO createSavingsOffering(String offeringName) {
+	private SavingsOfferingBO createSavingsOffering(String offeringName,String shortName) {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		return TestObjectFactory.createSavingsOffering(offeringName, Short
+		return TestObjectFactory.createSavingsOffering(offeringName,shortName, Short
 				.valueOf("2"), new Date(System.currentTimeMillis()), Short
 				.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0,
 				Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc,

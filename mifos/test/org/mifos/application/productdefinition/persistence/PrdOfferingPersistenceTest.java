@@ -36,7 +36,7 @@ public class PrdOfferingPersistenceTest extends MifosTestCase {
 	public void testGetMaxPrdOfferingWithProduct()
 			throws NumberFormatException, PersistenceException {
 		SavingsOfferingBO savingsOffering = new SavingsTestHelper()
-				.createSavingsOffering();
+				.createSavingsOffering("fsaf6", "ads6");
 		assertNotNull(new PrdOfferingPersistence().getMaxPrdOffering());
 		TestObjectFactory.removeObject(savingsOffering);
 	}
@@ -48,8 +48,59 @@ public class PrdOfferingPersistenceTest extends MifosTestCase {
 		assertNotNull(prdStatus);
 		assertEquals(ProductType.SAVINGS.getValue(), prdStatus.getPrdType()
 				.getProductTypeID());
-		assertEquals(Short.valueOf("1"), prdStatus.getPrdStateId()
+		assertEquals(Short.valueOf("1"), prdStatus.getPrdState()
 				.getPrdStateId());
 	}
 
+	public void testGetPrdOfferingNameCountWithoutData()
+			throws NumberFormatException, PersistenceException {
+		assertEquals(Integer.valueOf("0"), new PrdOfferingPersistence()
+				.getProductOfferingNameCount("Savings product"));
+	}
+
+	public void testGetPrdOfferingNameCountWithDifferentName()
+			throws NumberFormatException, PersistenceException {
+		SavingsOfferingBO savingsOffering = new SavingsTestHelper()
+				.createSavingsOffering("fsaf6", "ads6");
+		assertEquals(Integer.valueOf("0"), new PrdOfferingPersistence()
+				.getProductOfferingNameCount("Savings product"));
+		TestObjectFactory.removeObject(savingsOffering);
+
+	}
+
+	public void testGetPrdOfferingNameCountWithSameName()
+			throws NumberFormatException, PersistenceException {
+		SavingsOfferingBO savingsOffering = new SavingsTestHelper()
+				.createSavingsOffering("Savings product", "ads6");
+		assertEquals(Integer.valueOf("1"), new PrdOfferingPersistence()
+				.getProductOfferingNameCount("Savings product"));
+		TestObjectFactory.removeObject(savingsOffering);
+
+	}
+
+	public void testGetPrdOfferingShortNameCountWithoutData()
+			throws NumberFormatException, PersistenceException {
+		assertEquals(Integer.valueOf("0"), new PrdOfferingPersistence()
+				.getProductOfferingShortNameCount("SAVP"));
+	}
+
+	public void testGetPrdOfferingShortNameCountWithDifferentName()
+			throws NumberFormatException, PersistenceException {
+		SavingsOfferingBO savingsOffering = new SavingsTestHelper()
+				.createSavingsOffering("fsaf6", "ads6");
+		assertEquals(Integer.valueOf("0"), new PrdOfferingPersistence()
+				.getProductOfferingShortNameCount("SAVP"));
+		TestObjectFactory.removeObject(savingsOffering);
+
+	}
+
+	public void testGetPrdOfferingShortNameCountWithSameName()
+			throws NumberFormatException, PersistenceException {
+		SavingsOfferingBO savingsOffering = new SavingsTestHelper()
+				.createSavingsOffering("Savings product", "SAVP");
+		assertEquals(Integer.valueOf("1"), new PrdOfferingPersistence()
+				.getProductOfferingShortNameCount("SAVP"));
+		TestObjectFactory.removeObject(savingsOffering);
+
+	}
 }

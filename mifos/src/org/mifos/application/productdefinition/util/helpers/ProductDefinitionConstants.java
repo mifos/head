@@ -104,8 +104,6 @@ public interface ProductDefinitionConstants {
 	
 	//Product Configuration(Lateness Definition)
 	public String GETPATHPRDCONF="ProductConfiguration";
-	public Short LOANID=1;
-	public Short SAVINGSID=2;
 	public String PRODUCTTYPELIST="ProductTypeList";
 	public String PRODUCTTYPEID="productTypeID";
 	public String PRODUCTCATEGORYSTATUSID="prdCategoryStatusId";
@@ -143,10 +141,7 @@ public interface ProductDefinitionConstants {
 	public Short DEFAULTLOANGRACEPERIODTYPE =1;
 	public Short LOANFEESINACTIVEID=1;
 	public Short LOANCATEGORYIDVALUE=5;
-	
-	
-	
-	
+
 	//Savings Product
 	public String GETPATHSAVINGSPRODUCT="SavingsProduct";
 	public String SAVINGSPRODUCTCATEGORYLIST="SavingsProductCategoryList";

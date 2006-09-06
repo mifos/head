@@ -71,6 +71,7 @@ import org.mifos.application.office.util.valueobjects.Office;
 import org.mifos.application.penalty.util.valueobjects.Penalty;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.application.productdefinition.util.valueobjects.GracePeriodType;
 import org.mifos.application.productdefinition.util.valueobjects.LoanOffering;
 import org.mifos.application.productdefinition.util.valueobjects.LoanOfferingFund;
@@ -110,7 +111,7 @@ public class LoanProductDAO extends PrdOfferingDAO {
 	 */
 	public List<ProductCategory> getLoanProductCategories()
 			throws ApplicationException, SystemException {
-		return getProductCategories(ProductDefinitionConstants.LOANID,
+		return getProductCategories(ProductType.LOAN.getValue(),
 				ProductDefinitionConstants.ACTIVE);
 	}
 
@@ -127,7 +128,7 @@ public class LoanProductDAO extends PrdOfferingDAO {
 			ProductCategory productCategory) throws ApplicationException,
 			SystemException {
 		List<ProductCategory> productCategoryList = getProductCategories(
-				ProductDefinitionConstants.LOANID,
+				ProductType.LOAN.getValue(),
 				ProductDefinitionConstants.ACTIVE);
 		for (Iterator<ProductCategory> iter = productCategoryList.iterator(); iter
 				.hasNext();) {
@@ -180,7 +181,7 @@ public class LoanProductDAO extends PrdOfferingDAO {
 	 */
 	public SearchResults getPrdStatus(Short localeId)
 			throws ApplicationException, SystemException {
-		return getPrdStatus(ProductDefinitionConstants.LOANID, localeId,
+		return getPrdStatus(ProductType.LOAN.getValue(), localeId,
 				ProductDefinitionConstants.ACTIVE,
 				ProductDefinitionConstants.LOANPRDSTATUSLIST);
 	}

@@ -85,18 +85,18 @@ public class SavingsTestHelper {
 		return TestObjectFactory.createCenter("Center_Active_test", Short.valueOf("13"), "1.1", meeting,new Date(System.currentTimeMillis()));
 	}
 	
-	public SavingsOfferingBO createSavingsOffering(){
-		return createSavingsOffering("SavingPrd1", Short.valueOf("1"),Short.valueOf("2"));
+	public SavingsOfferingBO createSavingsOffering(String offeringName, String shortName){
+		return createSavingsOffering(offeringName,shortName, Short.valueOf("1"),Short.valueOf("2"));
 	}
 	
-	public SavingsOfferingBO createSavingsOffering(Short depGLCode,Short intGLCode){
-		return createSavingsOffering("SavingPrd1", Short.valueOf("1"),Short.valueOf("2"),depGLCode,intGLCode);
+	public SavingsOfferingBO createSavingsOffering(String offeringName, String shortName,Short depGLCode,Short intGLCode){
+		return createSavingsOffering(offeringName,shortName, Short.valueOf("1"),Short.valueOf("2"),depGLCode,intGLCode);
 	}
 	
-	public SavingsOfferingBO createSavingsOffering(String offeringName, Short interestCalcType, Short savingsTypeId,Short depGLCode,Short intGLCode){
+	public SavingsOfferingBO createSavingsOffering(String offeringName, String shortName,Short interestCalcType, Short savingsTypeId,Short depGLCode,Short intGLCode){
 		MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		return TestObjectFactory.createSavingsOffering(offeringName,Short.valueOf("2"),new Date(System.currentTimeMillis()),
+		return TestObjectFactory.createSavingsOffering(offeringName,shortName,Short.valueOf("2"),new Date(System.currentTimeMillis()),
 				Short.valueOf("2"),300.0,Short.valueOf("1"),24.0,200.0,200.0,savingsTypeId, interestCalcType,meetingIntCalc,meetingIntPost,depGLCode,intGLCode);
 	}
 	

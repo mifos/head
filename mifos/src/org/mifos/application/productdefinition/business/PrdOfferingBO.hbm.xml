@@ -87,7 +87,7 @@
 			<many-to-one name="depositGLCode" column="DEPOSIT_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" lazy="true" insert="true" update="false" access="field" />
 			<many-to-one name="interestGLCode" column="INTEREST_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" lazy="true" insert="true" update="false" access="field" />
 
-			<set name="prdOfferingMeetings" cascade="all,delete-orphan" inverse="true" table="PRD_OFFERING_MEETING" lazy="true" access="field" >
+			<set name="prdOfferingMeetings" cascade="all,delete-orphan" inverse="true" table="PRD_OFFERING_MEETING" lazy="true" access="field">
 				<key column="PRD_OFFERING_ID" />
 				<one-to-many class="org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity" />
 			</set>
@@ -100,6 +100,17 @@
 				loanOffering.prdStatus.offeringStatusId = :prdStatus order by loanOffering.prdOfferingName]]>
 	</query>
 	<query name="product.maxprdofferingid">
-		<![CDATA[select max(prd.prdOfferingId) from org.mifos.application.productdefinition.business.PrdOfferingBO prd]]>
+		<![CDATA[select max(prd.prdOfferingId) 
+		from org.mifos.application.productdefinition.business.PrdOfferingBO prd]]>
+	</query>
+	<query name="product.createofferingnamecount">
+		<![CDATA[select count(*) 
+		from org.mifos.application.productdefinition.business.PrdOfferingBO prd
+		where prd.prdOfferingName=:prdOfferingName]]>
+	</query>
+	<query name="product.createofferingshortnamecount">
+		<![CDATA[select count(*) 
+		from org.mifos.application.productdefinition.business.PrdOfferingBO prd
+		where prd.prdOfferingShortName=:prdOfferingShortName]]>
 	</query>
 </hibernate-mapping>

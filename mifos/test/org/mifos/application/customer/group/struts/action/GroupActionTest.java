@@ -547,7 +547,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 				new PositionEntity(Short.valueOf("1")), client, client
 						.getParentCustomer());
 		group.addCustomerPosition(customerPositionEntity);
-		savingsBO = getSavingsAccount();
+		savingsBO = getSavingsAccount("fsaf6","ads6");
 		loanBO = getLoanAccount();
 		group.update();
 		HibernateUtil.commitTransaction();
@@ -918,8 +918,8 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 
 	}
 
-	private SavingsBO getSavingsAccount() {
-		savingsOffering = helper.createSavingsOffering();
+	private SavingsBO getSavingsAccount(String offeringName,String shortName) {
+		savingsOffering = helper.createSavingsOffering(offeringName,shortName);
 		return TestObjectFactory.createSavingsAccount("000100000000017", group,
 				AccountStates.SAVINGS_ACC_APPROVED, new Date(System
 						.currentTimeMillis()), savingsOffering);

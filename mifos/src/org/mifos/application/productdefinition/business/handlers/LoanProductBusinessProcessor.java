@@ -55,6 +55,7 @@ import org.mifos.application.productdefinition.dao.LoanProductDAO;
 import org.mifos.application.productdefinition.exceptions.DuplicateProductInstanceException;
 import org.mifos.application.productdefinition.exceptions.RepmntFeeFreqMisMatchException;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.application.productdefinition.util.valueobjects.GracePeriodType;
 import org.mifos.application.productdefinition.util.valueobjects.LoanOffering;
 import org.mifos.application.productdefinition.util.valueobjects.LoanOfferingFund;
@@ -617,14 +618,14 @@ public class LoanProductBusinessProcessor extends MifosBusinessProcessor {
 		context.addAttribute(searchResultsGracePeriod);
 
 		SearchResults searchResultsInterestTypes =getLoanProductDAO().getInterestTypes(
-				ProductDefinitionConstants.LOANID, localeId);
+				ProductType.LOAN.getValue(), localeId);
 		context.addAttribute(searchResultsInterestTypes);
 
 		SearchResults searchResultsInterestCalcRule = getLoanProductDAO().getInterestCalcRule(localeId);
 		context.addAttribute(searchResultsInterestCalcRule);
 
 		SearchResults searchResultsPenaltyTypes = getLoanProductDAO().getPenaltyTypes(
-				ProductDefinitionConstants.LOANID, localeId);
+				ProductType.LOAN.getValue(), localeId);
 		context.addAttribute(searchResultsPenaltyTypes);
 
 		SearchResults searchResultsPrdStatus = getLoanProductDAO().getPrdStatus(localeId);

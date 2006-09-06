@@ -44,6 +44,7 @@ import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.application.productdefinition.util.valueobjects.LoanOffering;
 import org.mifos.application.productdefinition.util.valueobjects.LoanOfferingFund;
 import org.mifos.application.productdefinition.util.valueobjects.PrdOffering;
@@ -156,7 +157,7 @@ public class LoanDAO extends AccountsDAO {
 		SearchResults applicableLoanPrdOfferings = new SearchResults();
 		HashMap queryParameters = new HashMap();
 		queryParameters.put(LoanConstants.PRDTYPEID,
-				ProductDefinitionConstants.LOANID);
+				ProductType.LOAN.getValue());
 		queryParameters.put(LoanConstants.PRDSTATUS,
 				PrdStatus.LOANACTIVE.getValue());
 

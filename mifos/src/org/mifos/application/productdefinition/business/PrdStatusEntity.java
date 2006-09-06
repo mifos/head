@@ -42,31 +42,26 @@ import org.mifos.framework.business.PersistentObject;
 
 public class PrdStatusEntity extends PersistentObject {
 
-	private Short offeringStatusId;
+	private final Short offeringStatusId;
 
-	private ProductTypeEntity prdType;
+	private final ProductTypeEntity prdType;
 
-	private PrdStateEntity prdStateId;
+	private final PrdStateEntity prdState;
 
 	private Short status;
 
-	public PrdStatusEntity() {
+	protected PrdStatusEntity() {
+		offeringStatusId = null;
+		prdType = null;
+		prdState = null;
 	}
 
 	public Short getOfferingStatusId() {
 		return offeringStatusId;
 	}
 
-	public void setOfferingStatusId(Short offeringStatusId) {
-		this.offeringStatusId = offeringStatusId;
-	}
-
-	public PrdStateEntity getPrdStateId() {
-		return prdStateId;
-	}
-
-	public void setPrdStateId(PrdStateEntity prdStateId) {
-		this.prdStateId = prdStateId;
+	public PrdStateEntity getPrdState() {
+		return prdState;
 	}
 
 	public Short getStatus() {
@@ -81,7 +76,4 @@ public class PrdStatusEntity extends PersistentObject {
 		return prdType;
 	}
 
-	public void setPrdType(ProductTypeEntity prdType) {
-		this.prdType = prdType;
-	}
 }

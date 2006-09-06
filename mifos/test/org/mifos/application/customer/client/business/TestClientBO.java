@@ -435,7 +435,7 @@ public class TestClientBO extends MifosTestCase {
 	
 	public void testUpdateGroupFailure_ClientHasActiveAccounts()throws Exception{
 		createObjectsForTranferToGroup_SameBranch(CustomerStatus.GROUP_ACTIVE);
-		accountBO = createSavingsAccount(client);
+		accountBO = createSavingsAccount(client,"fsaf6","ads6");
 		HibernateUtil.closeSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		client.setUserContext(TestObjectFactory.getUserContext());
@@ -624,8 +624,8 @@ public class TestClientBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 	}
 	
-	private SavingsBO createSavingsAccount(CustomerBO customer) {
-		SavingsOfferingBO savingsOffering = new SavingsTestHelper().createSavingsOffering();
+	private SavingsBO createSavingsAccount(CustomerBO customer,String offeringName,String shortName) {
+		SavingsOfferingBO savingsOffering = new SavingsTestHelper().createSavingsOffering(offeringName,shortName);
 		return TestObjectFactory.createSavingsAccount("000100000000017",
 				customer, AccountStates.SAVINGS_ACC_APPROVED, new Date(System
 						.currentTimeMillis()), savingsOffering);

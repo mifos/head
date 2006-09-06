@@ -211,8 +211,8 @@ public class TestGroupBO extends MifosTestCase {
 				.currentTimeMillis()));
 	}
 	
-	private SavingsBO getSavingsAccount(CustomerBO customerBO) {
-		savingsOffering = helper.createSavingsOffering();
+	private SavingsBO getSavingsAccount(CustomerBO customerBO,String offeringName,String shortName) {
+		savingsOffering = helper.createSavingsOffering(offeringName,shortName);
 		return TestObjectFactory.createSavingsAccount("000100000000017",
 				customerBO, AccountStates.SAVINGS_ACC_APPROVED, new Date(System
 						.currentTimeMillis()), savingsOffering);
@@ -220,10 +220,10 @@ public class TestGroupBO extends MifosTestCase {
 	
 	public void testGetTotalSavingsBalance() throws Exception {
 		createInitialObjects();
-		SavingsBO savings1 = getSavingsAccount(group);
+		SavingsBO savings1 = getSavingsAccount(group,"fsaf6","ads6");
 		savings1.setSavingsBalance(new Money("1000"));
 		savings1.update();
-		SavingsBO savings2 = getSavingsAccount(client);
+		SavingsBO savings2 = getSavingsAccount(client,"fsaf5","ads5");
 		savings2.setSavingsBalance(new Money("2000"));
 		savings1.update();
 		HibernateUtil.commitTransaction();
@@ -299,7 +299,7 @@ public class TestGroupBO extends MifosTestCase {
 	
 	public void testUpdateBranchFailure_GroupHasActiveAccount()throws Exception{
 		group = createGroupUnderBranch(CustomerStatus.GROUP_ACTIVE);
-		account1 = getSavingsAccount(group);
+		account1 = getSavingsAccount(group,"Savings Prod","SAVP");
 		office = createOffice();
 		HibernateUtil.closeSession();
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
@@ -320,7 +320,7 @@ public class TestGroupBO extends MifosTestCase {
 	public void testUpdateBranchFailure_GroupChildrenHasActiveAccount()throws Exception{
 		group = createGroupUnderBranch(CustomerStatus.GROUP_ACTIVE);
 		client = createClient(group, CustomerStatus.CLIENT_ACTIVE);
-		account1 = getSavingsAccount(client);
+		account1 = getSavingsAccount(client,"Savings Prod","SAVP");
 		office = createOffice();
 		HibernateUtil.closeSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());

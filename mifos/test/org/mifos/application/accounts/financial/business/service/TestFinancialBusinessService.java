@@ -316,7 +316,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test", Short.valueOf("13"), "1.1", meeting, new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group_Active_test", Short.valueOf("9"), "1.1.1", center, new Date(System.currentTimeMillis()));
 		SavingsTestHelper helper = new SavingsTestHelper();
-		savingsOffering=helper.createSavingsOffering((short)31,(short)7);
+		savingsOffering=helper.createSavingsOffering("sav 1234","cvf1",(short)31,(short)7);
 		savings = helper.createSavingsAccount("000100000000017",savingsOffering, group,AccountStates.SAVINGS_ACC_APPROVED, userContext);
 	}
 	

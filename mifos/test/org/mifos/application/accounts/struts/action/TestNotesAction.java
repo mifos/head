@@ -89,7 +89,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testLoad_Savings() {
-		savingsBO = getSavingsAccount();
+		savingsBO = getSavingsAccount("fsaf1","ads1");
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("accountId", savingsBO.getAccountId().toString());
@@ -101,7 +101,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testPreview_Savings() {
-		savingsBO = getSavingsAccount();
+		savingsBO = getSavingsAccount("fsaf2","ads2");
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("comment", "Notes created");
@@ -112,7 +112,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testPrevious_Savings() {
-		savingsBO = getSavingsAccount();
+		savingsBO = getSavingsAccount("fsaf3","ads3");
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "previous");
 		actionPerform();
@@ -122,7 +122,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testCancel_Savings() {
-		savingsBO = getSavingsAccount();
+		savingsBO = getSavingsAccount("fsaf4","ads4");
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "cancel");
 		addRequestParameter("accountTypeId", savingsBO.getAccountType().getAccountTypeId().toString());
@@ -133,7 +133,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testCreate_Savings() {
-		savingsBO = getSavingsAccount();
+		savingsBO = getSavingsAccount("fsaf5","ads5");
 		
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "load");
@@ -157,7 +157,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 	}
 	
 	public void testSearch_Savings() throws HibernateSearchException {
-		savingsBO = getSavingsAccount();
+		savingsBO = getSavingsAccount("fsaf6","ads6");
 		Context context = new Context();
 		SessionUtils.setAttribute(Constants.CONTEXT, context,request.getSession());
 		
@@ -302,9 +302,9 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 				.currentTimeMillis()));
 	}
 	
-	private SavingsBO getSavingsAccount() {
+	private SavingsBO getSavingsAccount(String offeringName,String shortName) {
 		createInitialObjects();
-		savingsOffering = helper.createSavingsOffering();
+		savingsOffering = helper.createSavingsOffering(offeringName,shortName);
 		return TestObjectFactory.createSavingsAccount("000100000000017",
 				client, AccountStates.SAVINGS_ACC_APPROVED, new Date(System
 						.currentTimeMillis()), savingsOffering);

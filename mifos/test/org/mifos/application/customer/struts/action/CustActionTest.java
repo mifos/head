@@ -196,24 +196,24 @@ public class CustActionTest extends MifosMockStrutsTestCase {
 
 	}
 
-	private SavingsBO getSavingsAccount(CustomerBO customerBO) {
-		savingsOffering = helper.createSavingsOffering();
+	private SavingsBO getSavingsAccount(CustomerBO customerBO,String offeringName,String shortName) {
+		savingsOffering = helper.createSavingsOffering(offeringName,shortName);
 		return TestObjectFactory.createSavingsAccount("000100000000017", customerBO,
 				AccountState.SAVINGS_ACC_PARTIALAPPLICATION.getValue(), new Date(System
 						.currentTimeMillis()), savingsOffering);
 	}
 	
 	private void createAccounts() throws AccountException  {
-		savings1 = getSavingsAccount(group);
+		savings1 = getSavingsAccount(group,"fsaf6","ads6");
 		savings1.changeStatus(AccountState.SAVINGS_ACC_CANCEL.getValue(),AccountStateFlag.SAVINGS_OTHER.getValue(),"status changed for savings");
 		savings1.update();
 		loan1 = getLoanAccount(group);
 		loan1.update();
 		loan1.changeStatus(AccountState.LOANACC_CANCEL.getValue(),AccountStateFlag.LOAN_OTHER.getValue(),"status changed for loan");
 		HibernateUtil.commitTransaction();
-		savings2 = getSavingsAccount(group);
+		savings2 = getSavingsAccount(group,"fsaf65","ads5");
 		loan2 = getLoanAccount(client);
-		savings3 = getSavingsAccount(center);
+		savings3 = getSavingsAccount(center,"fsaf26","ads2");
 		loan3 = getLoanAccount(client);
 	}
 }

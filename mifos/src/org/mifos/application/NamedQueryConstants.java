@@ -457,9 +457,11 @@ public interface NamedQueryConstants {
 	public String ALL_LOAN_SCHEDULE_DETAILS = "account.getAllInstallmentsForAllLoanAcounts";
 	public String ALL_SAVINGS_SCHEDULE_DETAILS = "account.getAllInstallmentsForAllSavingsAccounts";
 	public String ALL_CUSTOMER_SCHEDULE_DETAILS = "account.getAllInstallmentsForAllCustomerAcounts";
+	public String CUSTOMER_SCHEDULE_DETAILS = "account.getAllInstallmentsForCustomerAcount";
 	
 	public String ALL_LOAN_FEE_SCHEDULE_DETAILS = "account.getAllAccountFeeForAllInstallmentsForAllLoanAcounts";
 	public String ALL_CUSTOMER_FEE_SCHEDULE_DETAILS = "account.getAllAccountFeeForAllInstallmentsForAllCustomerAccounts";
+	public String CUSTOMER_FEE_SCHEDULE_DETAILS = "account.getAllAccountFeeForAllInstallmentsForCustomerAccount";
 	
 	public String APPLICABLE_LOAN_OFFERINGS = "loanOffering.getApplicableProduts";
 
@@ -510,4 +512,6 @@ public interface NamedQueryConstants {
 	public String GET_ALL_CUSTOMERS_FOR_LO ="Customer.getAllCustomersForLO";
 	public String PERSONNEL_BY_SYSTEM_ID ="getPersonBySystemId";
 	public String PRODUCTOFFERING_MAX="product.maxprdofferingid";
+	public String PRODUCTOFFERING_CREATEOFFERINGNAMECOUNT="product.createofferingnamecount";
+	public String PRODUCTOFFERING_CREATEOFFERINGSHORTNAMECOUNT="product.createofferingshortnamecount";
 }

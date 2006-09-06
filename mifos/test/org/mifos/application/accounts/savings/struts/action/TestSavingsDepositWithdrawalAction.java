@@ -86,7 +86,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 	public void testSuccessfullLoad() throws Exception {
 		createCenterAndGroup();
 		createClients();
-		savingsOffering = helper.createSavingsOffering();
+		savingsOffering = helper.createSavingsOffering("asfddsf","213a");
 		savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED, userContext);
 		HibernateUtil.closeSession();
 		
@@ -115,7 +115,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 	
 	public void testSuccessfullReLoad() throws Exception {
 		createCenterAndGroup();
-		savingsOffering = helper.createSavingsOffering();
+		savingsOffering = helper.createSavingsOffering("asfddsf","213a");
 		savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED, userContext);
 		HibernateUtil.closeSession();
 		

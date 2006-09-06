@@ -56,8 +56,8 @@ public class TestSavingsBusinessService extends MifosTestCase {
 
 	public void testGetSavingProducts() throws Exception {
 		createInitialObjects();
-		savingsOffering1 = createSavingsOffering("SavingPrd1");
-		savingsOffering2 = createSavingsOffering("SavingPrd2");
+		savingsOffering1 = createSavingsOffering("SavingPrd1","cadf");
+		savingsOffering2 = createSavingsOffering("SavingPrd2","a1lt");
 		List<PrdOfferingView> products = service.getSavingProducts(null, group
 				.getCustomerLevel(), CustomerConstants.GROUP_LEVEL_ID);
 		assertEquals(Integer.valueOf("2").intValue(), products.size());
@@ -77,7 +77,7 @@ public class TestSavingsBusinessService extends MifosTestCase {
 
 	public void testFindById() throws Exception {
 		createInitialObjects();
-		savingsOffering = createSavingsOffering("SavingPrd1");
+		savingsOffering = createSavingsOffering("SavingPrd1","kh6y");
 		savings = createSavingsAccount("FFFF", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		SavingsBO savings1 = service.findById(savings.getAccountId());
@@ -86,7 +86,7 @@ public class TestSavingsBusinessService extends MifosTestCase {
 
 	public void testFindBySystemId() throws Exception {
 		createInitialObjects();
-		savingsOffering = createSavingsOffering("SavingPrd1");
+		savingsOffering = createSavingsOffering("SavingPrd1","cadf");
 		savings = createSavingsAccount("YYYY", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		SavingsBO savings1 = service.findBySystemId("YYYY");
@@ -105,12 +105,12 @@ public class TestSavingsBusinessService extends MifosTestCase {
 				.currentTimeMillis()));
 	}
 
-	private SavingsOfferingBO createSavingsOffering(String offeringName) {
+	private SavingsOfferingBO createSavingsOffering(String offeringName,String shortName) {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		return TestObjectFactory.createSavingsOffering(offeringName, Short
+		return TestObjectFactory.createSavingsOffering(offeringName,shortName, Short
 				.valueOf("2"), new Date(System.currentTimeMillis()), Short
 				.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0,
 				Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc,

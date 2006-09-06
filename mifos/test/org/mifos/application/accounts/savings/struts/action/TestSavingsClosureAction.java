@@ -164,7 +164,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 
 	public void testSuccessfullCloseAccount() throws Exception {
 		createInitialObjects();
-		savingsOffering = helper.createSavingsOffering();
+		savingsOffering = helper.createSavingsOffering("asfddsf","213a");
 		savings = helper.createSavingsAccount("000X00000000017",  savingsOffering,
 				group, AccountStates.SAVINGS_ACC_APPROVED,userContext);
 		savings.setActivationDate(helper.getDate("20/05/2006"));

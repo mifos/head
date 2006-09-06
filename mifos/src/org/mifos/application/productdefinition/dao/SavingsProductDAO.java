@@ -70,6 +70,7 @@ import org.mifos.application.office.util.valueobjects.Office;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.persistence.service.SavingsPrdPersistenceService;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.application.productdefinition.util.valueobjects.MasterObject;
 import org.mifos.application.productdefinition.util.valueobjects.PrdOfferingMeeting;
 import org.mifos.application.productdefinition.util.valueobjects.PrdStatus;
@@ -110,7 +111,7 @@ public class SavingsProductDAO extends PrdOfferingDAO {
 	 */
 	public List<ProductCategory> getSavingsProductCategories()
 			throws ApplicationException, SystemException {
-		return getProductCategories(ProductDefinitionConstants.SAVINGSID,
+		return getProductCategories(ProductType.SAVINGS.getValue(),
 				ProductDefinitionConstants.ACTIVE);
 	}
 
@@ -127,7 +128,7 @@ public class SavingsProductDAO extends PrdOfferingDAO {
 			ProductCategory productCategory) throws ApplicationException,
 			SystemException {
 		List<ProductCategory> productCategoryList = getProductCategories(
-				ProductDefinitionConstants.SAVINGSID,
+				ProductType.SAVINGS.getValue(),
 				ProductDefinitionConstants.ACTIVE);
 		for (ProductCategory prdCategory : productCategoryList) {
 			if (productCategory.getProductCategoryID().equals(
@@ -180,7 +181,7 @@ public class SavingsProductDAO extends PrdOfferingDAO {
 	 */
 	public SearchResults getPrdStatus(Short localeId)
 			throws ApplicationException, SystemException {
-		return getPrdStatus(ProductDefinitionConstants.SAVINGSID, localeId,
+		return getPrdStatus(ProductType.SAVINGS.getValue(), localeId,
 				ProductDefinitionConstants.ACTIVE,
 				ProductDefinitionConstants.SAVINGSPRDSTATUSLIST);
 	}
