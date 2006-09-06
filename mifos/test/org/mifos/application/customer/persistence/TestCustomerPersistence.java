@@ -893,7 +893,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		assertEquals(newLO.getPersonnelId(), client.getPersonnel().getPersonnelId());
 	}
 	
-	public void testDeleteMeeting(){
+	public void testDeleteMeeting()throws Exception{
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		client = TestObjectFactory.createClient("myClient", meeting, CustomerStatus.CLIENT_PENDING.getValue(), new java.util.Date());

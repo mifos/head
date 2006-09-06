@@ -304,8 +304,13 @@ public class TestObjectFactory {
 		return center;
 	}
 	
+	//TODO: remove extra parameters from references
 	public static CenterBO createCenter(String customerName, Short statusId,
 			String searchId, MeetingBO meeting, Short officeId, Short personnelId, Date startDate) {
+		return createCenter(customerName, meeting, officeId, personnelId);
+	}
+	
+	public static CenterBO createCenter(String customerName, MeetingBO meeting, Short officeId, Short personnelId) {
 		CenterBO center = null;
 		try {
 			if(meeting!=null)

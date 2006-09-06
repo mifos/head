@@ -13,8 +13,6 @@ import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerHierarchyEntity;
-import org.mifos.application.customer.business.CustomerMovementEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -387,12 +385,8 @@ public class ClientBO extends CustomerBO {
 			makeCustomerMovementEntries(newParent.getOffice());
 		
 		CustomerBO oldParent = getParentCustomer();
-		changeGroup(newParent);
+		changeParentCustomer(newParent);
 		
-		CustomerHierarchyEntity currentHierarchy = getActiveCustomerHierarchy();
-		currentHierarchy.makeInActive(userContext.getId());
-		
-		this.addCustomerHierarchy(new CustomerHierarchyEntity(this,newParent));
 		oldParent.resetPositionsAssignedToClient(this.getCustomerId());
 		
 		if(oldParent.getParentCustomer()!=null){
@@ -407,6 +401,20 @@ public class ClientBO extends CustomerBO {
 		this.update();		
 		logger.debug("In ClientBO::transferToGroup(), successfully transfered, customerId :" + getCustomerId());
 	}	
+	
+	public void handleGroupTransfer()throws CustomerException{
+		if(!isSameBranch(getParentCustomer().getOffice())){
+			makeCustomerMovementEntries(getParentCustomer().getOffice());
+			if(isActive())
+				setCustomerStatus(new CustomerStatusEntity(CustomerStatus.CLIENT_HOLD));
+			this.setPersonnel(null);
+		}
+		setSearchId(getParentCustomer().getSearchId()+getSearchId().substring(getSearchId().lastIndexOf(".")));
+		if(getParentCustomer().getParentCustomer()!=null)
+			super.handleParentTransfer();
+		
+		this.update();
+	}
 	
 	public ClientNameDetailEntity getClientName(){
 		for(ClientNameDetailEntity nameDetail : nameDetailSet){
@@ -501,7 +509,7 @@ public class ClientBO extends CustomerBO {
 	private void generateSearchId() throws CustomerException{
 		int count;
 		if (getParentCustomer() != null) {
-			getParentCustomer().incrementMaxChildCount();
+			getParentCustomer().incrementChildCount();
 			this.setSearchId(getParentCustomer().getSearchId()+ "."+ getParentCustomer().getMaxChildCount());
 		}
 		else{
@@ -642,26 +650,4 @@ public class ClientBO extends CustomerBO {
 	private boolean isGroupStatusLower(Short clientStatusId, Short parentStatus){
 		return isGroupStatusLower(CustomerStatus.getStatus(clientStatusId), CustomerStatus.getStatus(parentStatus));			
 	}
-	
-	private void changeGroup(CustomerBO newParent){
-		CustomerBO oldParent = getParentCustomer();
-		setPersonnel(newParent.getPersonnel());
-		setParentCustomer(newParent);
-		if(newParent.getCustomerMeeting()!=null){
-			if(getCustomerMeeting()!=null)
-				getCustomerMeeting().setMeeting(newParent.getCustomerMeeting().getMeeting());
-			else
-				setCustomerMeeting(createCustomerMeeting(newParent.getCustomerMeeting().getMeeting()));
-			getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
-		}
-		else{
-			if(getCustomerMeeting()!=null)
-				new CustomerPersistence().deleteMeeting(this);
-		}
-		
-		oldParent.decrementMaxChildCount();
-		newParent.incrementMaxChildCount();
-		setSearchId(newParent.getSearchId()+ "."+ String.valueOf(newParent.getMaxChildCount()));		
-	}
-
 }

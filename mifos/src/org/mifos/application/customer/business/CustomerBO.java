@@ -142,6 +142,8 @@ public abstract class CustomerBO extends BusinessObject {
 	private Set<CustomerNoteEntity> customerNotes;
 	
 	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CUSTOMERLOGGER);
+	
+	private Set<CustomerBO> children;
 
 	protected CustomerBO() {
 		super();
@@ -311,6 +313,10 @@ public abstract class CustomerBO extends BusinessObject {
 		return parentCustomer;
 	}
 	
+	public Set<CustomerBO> getChildren() {
+		return children;
+	}
+
 	public CustomerAddressDetailEntity getCustomerAddressDetail() {
 		return customerAddressDetail;
 	}
@@ -563,16 +569,6 @@ public abstract class CustomerBO extends BusinessObject {
 		return historicalData;
 	}
 	
-//	public List<CustomerBO> getChildren(CustomerLevel customerLevel)
-//			throws CustomerException {
-//		try{
-//			return new CustomerPersistence().getChildrenOtherThanClosed(getSearchId(),
-//					getOffice().getOfficeId(), customerLevel);
-//		}catch(PersistenceException pe){
-//			throw new CustomerException(pe);
-//		}
-//	}
-
 	public List<CustomerBO> getChildren(CustomerLevel customerLevel, ChildrenStateType stateType)
 	throws CustomerException {
 		try{
@@ -582,19 +578,6 @@ public abstract class CustomerBO extends BusinessObject {
 			throw new CustomerException(pe);
 		}
 	}
-	
-//	public List<CustomerBO> getAllCustomerOtherThanCancelledAndClosed(
-//			CustomerLevel customerLevel) throws CustomerException {
-//		List<CustomerBO> customerListOtherThanCancelledAndClosed = new ArrayList<CustomerBO>();
-//		CustomerStatus cancelStatus = customerLevel
-//				.equals(CustomerLevel.CLIENT) ? CustomerStatus.CLIENT_CANCELLED
-//				: CustomerStatus.GROUP_CANCELLED;
-//		for (CustomerBO customerBO : getChildren(customerLevel.getValue()))
-//			if (!customerBO.getCustomerStatus().getId().equals(
-//					cancelStatus.getValue()))
-//				customerListOtherThanCancelledAndClosed.add(customerBO);
-//		return customerListOtherThanCancelledAndClosed;
-//	}
 
 	public void adjustPmnt(String adjustmentComment)
 			throws ApplicationException, SystemException {
@@ -758,11 +741,11 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 	}
 	
-	public void incrementMaxChildCount(){
+	public void incrementChildCount(){
 		this.maxChildCount = this.getMaxChildCount().intValue()+1;
 	}
 	
-	public void decrementMaxChildCount(){
+	public void decrementChildCount(){
 		this.maxChildCount=this.getMaxChildCount().intValue()-1;
 	}
 	
@@ -857,6 +840,45 @@ public abstract class CustomerBO extends BusinessObject {
 		this.setOffice(officeToTransfer);
 		CustomerMovementEntity newCustomerMovement = new CustomerMovementEntity(this, new Date());
 		this.addCustomerMovement(newCustomerMovement);
+	}
+	
+	protected void changeParentCustomer(CustomerBO newParent)throws CustomerException{
+		CustomerBO oldParent = getParentCustomer();
+		setParentCustomer(newParent);
+		
+		CustomerHierarchyEntity currentHierarchy = getActiveCustomerHierarchy();
+		currentHierarchy.makeInActive(userContext.getId());
+		this.addCustomerHierarchy(new CustomerHierarchyEntity(this,newParent));
+		
+		this.handleParentTransfer();		
+		oldParent.decrementChildCount();
+		newParent.incrementChildCount();
+		setSearchId(newParent.getSearchId()+ "."+ String.valueOf(newParent.getMaxChildCount()));
+		
+		oldParent.setUserContext(getUserContext());
+		oldParent.update();
+		newParent.setUserContext(getUserContext());
+		newParent.update();
+	}
+	
+	protected void handleParentTransfer()throws CustomerException{
+		setPersonnel(getParentCustomer().getPersonnel());
+		if(getParentCustomer().getCustomerMeeting()!=null){
+			if(getCustomerMeeting()!=null)
+				getCustomerMeeting().setMeeting(getParentCustomer().getCustomerMeeting().getMeeting());
+			else
+				setCustomerMeeting(createCustomerMeeting(getParentCustomer().getCustomerMeeting().getMeeting()));
+			getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
+		}
+		else{
+			if(getCustomerMeeting()!=null){
+				try{
+					new CustomerPersistence().deleteMeeting(this);
+				}catch(PersistenceException pe){
+					new CustomerException(pe);
+				}
+			}
+		}
 	}
 	
 	private void createAddress(Address address){

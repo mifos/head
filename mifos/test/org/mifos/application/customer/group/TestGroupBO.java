@@ -13,6 +13,10 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerHierarchyEntity;
+import org.mifos.application.customer.business.CustomerMovementEntity;
+import org.mifos.application.customer.business.CustomerPositionEntity;
+import org.mifos.application.customer.business.PositionEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -22,6 +26,7 @@ import org.mifos.application.customer.group.business.GroupPerformanceHistoryEnti
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
@@ -43,7 +48,7 @@ public class TestGroupBO extends MifosTestCase {
 	protected AccountBO account2 = null;
 
 	protected CenterBO center = null;
-
+	protected CenterBO center1 = null;
 	protected GroupBO group = null;
 	protected GroupBO group1 = null;
 	protected ClientBO client = null;
@@ -78,6 +83,7 @@ public class TestGroupBO extends MifosTestCase {
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(group1);
 		TestObjectFactory.cleanUp(center);
+		TestObjectFactory.cleanUp(center1);
 		TestObjectFactory.cleanUp(office);
 		HibernateUtil.closeSession();
 		super.tearDown();
@@ -199,25 +205,6 @@ public class TestGroupBO extends MifosTestCase {
 		}
 	}
 	
-	private void createInitialObjects() {
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short
-				.valueOf("13"), "1.4", meeting, new Date(System
-				.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE, "1.4.1", center, new Date(System
-				.currentTimeMillis()));
-		client = TestObjectFactory.createClient("Client",ClientConstants.STATUS_ACTIVE,"1.4.1.1",group,new Date(System
-				.currentTimeMillis()));
-	}
-	
-	private SavingsBO getSavingsAccount(CustomerBO customerBO,String offeringName,String shortName) {
-		savingsOffering = helper.createSavingsOffering(offeringName,shortName);
-		return TestObjectFactory.createSavingsAccount("000100000000017",
-				customerBO, AccountStates.SAVINGS_ACC_APPROVED, new Date(System
-						.currentTimeMillis()), savingsOffering);
-	}
-	
 	public void testGetTotalSavingsBalance() throws Exception {
 		createInitialObjects();
 		SavingsBO savings1 = getSavingsAccount(group,"fsaf6","ads6");
@@ -297,49 +284,6 @@ public class TestGroupBO extends MifosTestCase {
 		}
 	}
 	
-	public void testUpdateBranchFailure_GroupHasActiveAccount()throws Exception{
-		group = createGroupUnderBranch(CustomerStatus.GROUP_ACTIVE);
-		account1 = getSavingsAccount(group,"Savings Prod","SAVP");
-		office = createOffice();
-		HibernateUtil.closeSession();
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
-		try{
-			group.transferToBranch(office);
-			assertTrue(false);
-		}catch(CustomerException ce){
-			assertTrue(true);
-			assertEquals(CustomerConstants.ERRORS_HAS_ACTIVE_ACCOUNT,ce.getKey());
-		}
-		HibernateUtil.closeSession();
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
-		account1 = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
-				account1.getAccountId());
-		office = new OfficePersistence().getOffice(office.getOfficeId());
-	}
-	
-	public void testUpdateBranchFailure_GroupChildrenHasActiveAccount()throws Exception{
-		group = createGroupUnderBranch(CustomerStatus.GROUP_ACTIVE);
-		client = createClient(group, CustomerStatus.CLIENT_ACTIVE);
-		account1 = getSavingsAccount(client,"Savings Prod","SAVP");
-		office = createOffice();
-		HibernateUtil.closeSession();
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
-		
-		try{
-			group.transferToBranch(office);
-			assertTrue(false);
-		}catch(CustomerException ce){
-			assertTrue(true);
-			assertEquals(CustomerConstants.ERRORS_CHILDREN_HAS_ACTIVE_ACCOUNT,ce.getKey());
-		}
-		HibernateUtil.closeSession();
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
-		account1 = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
-				account1.getAccountId());
-		office = new OfficePersistence().getOffice(office.getOfficeId());
-	}
-	
 	public void testSuccessfulTransferToBranch()throws Exception{
 		group = createGroupUnderBranch(CustomerStatus.GROUP_ACTIVE);
 		client = createClient(group, CustomerStatus.CLIENT_ACTIVE);
@@ -384,6 +328,176 @@ public class TestGroupBO extends MifosTestCase {
 		assertNull(client2.getPersonnel());	
 	}
 	
+	public void testUpdateCenterFailure_CenterNULL()throws Exception{
+		createInitialObjects();
+		try{
+			group.transferToCenter(null);
+			assertTrue(false);
+		}catch(CustomerException ce){
+			assertTrue(true);
+			assertEquals(CustomerConstants.INVALID_PARENT,ce.getKey());
+		}
+	}
+	
+	public void testUpdateCenterFailure_TransferInSameCenter()throws Exception{
+		createInitialObjects();
+		try{
+			group.transferToCenter((CenterBO)group.getParentCustomer());
+			assertTrue(false);
+		}catch(CustomerException ce){
+			assertTrue(true);
+			assertEquals(CustomerConstants.ERRORS_SAME_PARENT_TRANSFER,ce.getKey());
+		}
+	}
+	
+	public void testUpdateCenterFailure_GroupHasActiveAccount()throws Exception{
+		createInitialObjects();
+		account1 = getSavingsAccount(group,"Savings Prod","SAVP");
+		center1 = createCenter("newCenter");
+		HibernateUtil.closeSession();
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		try{
+			group.transferToCenter(center1);
+			assertTrue(false);
+		}catch(CustomerException ce){
+			assertTrue(true);
+			assertEquals(CustomerConstants.ERRORS_HAS_ACTIVE_ACCOUNT,ce.getKey());
+		}
+		HibernateUtil.closeSession();
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		account1 = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				account1.getAccountId());
+	}
+
+	public void testUpdateCenterFailure_GroupChildrenHasActiveAccount()throws Exception{
+		createInitialObjects();
+		account1 = getSavingsAccount(client,"Savings Prod","SAVP");
+		center1 = createCenter("newCenter");
+		HibernateUtil.closeSession();
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		try{
+			group.transferToCenter(center1);
+			assertTrue(false);
+		}catch(CustomerException ce){
+			assertTrue(true);
+			assertEquals(CustomerConstants.ERRORS_CHILDREN_HAS_ACTIVE_ACCOUNT,ce.getKey());
+		}
+		HibernateUtil.closeSession();
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		account1 = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				account1.getAccountId());
+	}
+	
+	public void testSuccessfulTransferToCenterInSameBranch()throws Exception{
+		createObjectsForTranferToCenterInSameBranch();
+		String newCenterSearchId = center1.getSearchId();
+		HibernateUtil.closeSession();
+		
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		group.setUserContext(center.getUserContext());
+		group.transferToCenter(center1);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
+		center1 = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center1.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		group1 = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group1.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		client1 = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client1.getCustomerId());
+		client2= (ClientBO) TestObjectFactory.getObject(ClientBO.class, client2.getCustomerId());
+		
+		assertEquals(center1.getCustomerId(),group.getParentCustomer().getCustomerId());
+		assertEquals(0, center.getMaxChildCount().intValue());
+		assertEquals(2, center1.getMaxChildCount().intValue());
+		assertEquals(3, group.getMaxChildCount().intValue());
+		
+		assertEquals(newCenterSearchId+".2", group.getSearchId());
+		assertEquals(group.getSearchId()+".1", client.getSearchId());
+		assertEquals(group.getSearchId()+".2", client1.getSearchId());
+		assertEquals(group.getSearchId()+".3", client2.getSearchId());
+		
+		assertNull(group.getActiveCustomerMovement());
+		assertNull(client.getActiveCustomerMovement());
+		assertNull(client1.getActiveCustomerMovement());
+		assertNull(client2.getActiveCustomerMovement());
+		
+		CustomerHierarchyEntity currentHierarchy = group.getActiveCustomerHierarchy();
+		assertEquals(center1.getCustomerId(),currentHierarchy.getParentCustomer().getCustomerId());
+	}
+	
+	public void testSuccessfulTransferToCenterInDifferentBranch()throws Exception{
+		createObjectsForTranferToCenterInDifferentBranch();
+		String newCenterSearchId = center1.getSearchId();
+		HibernateUtil.closeSession();
+		
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		group.setUserContext(center.getUserContext());
+		group.transferToCenter(center1);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
+		center1 = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center1.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		group1 = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group1.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		client1 = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client1.getCustomerId());
+		client2= (ClientBO) TestObjectFactory.getObject(ClientBO.class, client2.getCustomerId());
+		office = new OfficePersistence().getOffice(office.getOfficeId());
+		
+		assertEquals(center1.getCustomerId(),group.getParentCustomer().getCustomerId());
+		assertEquals(0, center.getMaxChildCount().intValue());
+		assertEquals(2, center1.getMaxChildCount().intValue());
+		assertEquals(3, group.getMaxChildCount().intValue());
+		
+		assertEquals(newCenterSearchId+".2", group.getSearchId());
+		assertEquals(group.getSearchId()+".1", client.getSearchId());
+		assertEquals(group.getSearchId()+".2", client1.getSearchId());
+		assertEquals(group.getSearchId()+".3", client2.getSearchId());
+				
+		assertEquals(CustomerStatus.GROUP_HOLD.getValue(),group.getCustomerStatus().getId());
+		assertEquals(CustomerStatus.CLIENT_HOLD.getValue(),client.getCustomerStatus().getId());
+		assertEquals(CustomerStatus.CLIENT_PARTIAL.getValue(),client1.getCustomerStatus().getId());
+		assertEquals(CustomerStatus.CLIENT_CANCELLED.getValue(),client2.getCustomerStatus().getId());
+		
+		CustomerHierarchyEntity currentHierarchy = group.getActiveCustomerHierarchy();
+		assertEquals(center1.getCustomerId(),currentHierarchy.getParentCustomer().getCustomerId());
+		
+		assertNotNull(group.getActiveCustomerMovement());
+		assertNotNull(client.getActiveCustomerMovement());
+		assertNotNull(client1.getActiveCustomerMovement());
+		assertNotNull(client2.getActiveCustomerMovement());
+		
+		CustomerMovementEntity customerMovement = group.getActiveCustomerMovement();
+		assertEquals(office.getOfficeId(),customerMovement.getOffice().getOfficeId());
+		
+		assertEquals(office.getOfficeId(), center1.getOffice().getOfficeId());
+		assertEquals(office.getOfficeId(), group.getOffice().getOfficeId());
+		assertEquals(office.getOfficeId(), client.getOffice().getOfficeId());
+		assertEquals(office.getOfficeId(), client1.getOffice().getOfficeId());
+		assertEquals(office.getOfficeId(), client2.getOffice().getOfficeId());
+	}
+	
+	private void createObjectsForTranferToCenterInSameBranch()throws Exception{
+		createInitialObjects();
+		client1 = createClient(group, CustomerStatus.CLIENT_PARTIAL);
+		client2 = createClient(group, CustomerStatus.CLIENT_CANCELLED);
+		center1 = createCenter("toTransfer");
+		group1 = createGroup("newGroup", center1);
+	}
+	
+	private void createObjectsForTranferToCenterInDifferentBranch()throws Exception{
+		createInitialObjects();
+		client1 = createClient(group, CustomerStatus.CLIENT_PARTIAL);
+		client2 = createClient(group, CustomerStatus.CLIENT_CANCELLED);
+		office = createOffice();
+		center1 = createCenter("toTransfer", office.getOfficeId());
+		group1 = createGroup("newGroup", center1);
+	}
+	
 	private GroupBO createGroupUnderBranch(CustomerStatus groupStatus){
 		return createGroupUnderBranch(groupStatus, officeId);
 	}
@@ -398,7 +512,35 @@ public class TestGroupBO extends MifosTestCase {
 		return TestObjectFactory.createClient("client1", clientStatus.getValue(), group, new Date());
 	}
 	
+	private GroupBO createGroup(String name, CenterBO center){
+		return TestObjectFactory.createGroup(name, GroupConstants.ACTIVE, "1.4.1", center, new Date(System
+				.currentTimeMillis()));
+	}
+	
+	private CenterBO createCenter(String name){
+		return createCenter(name, officeId);
+	}
+	
+	private CenterBO createCenter(String name, Short officeId){
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		return  TestObjectFactory.createCenter(name, meeting, officeId, personnelId);
+	}
+	
 	private OfficeBO createOffice()throws Exception{
 		return TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory.getOffice(Short.valueOf("1")), "customer_office", "cust");
+	}
+	
+	private void createInitialObjects() {
+		center = createCenter("Center");
+		group = createGroup("Group", center);
+		client = createClient(group, CustomerStatus.CLIENT_ACTIVE);
+	}
+	
+	private SavingsBO getSavingsAccount(CustomerBO customerBO,String offeringName,String shortName) {
+		savingsOffering = helper.createSavingsOffering(offeringName,shortName);
+		return TestObjectFactory.createSavingsAccount("000100000000017",
+				customerBO, AccountStates.SAVINGS_ACC_APPROVED, new Date(System
+						.currentTimeMillis()), savingsOffering);
 	}
 }

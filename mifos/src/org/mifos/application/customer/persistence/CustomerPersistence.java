@@ -661,8 +661,12 @@ public class CustomerPersistence extends Persistence {
 		session.createQuery(hql).executeUpate();
 	}
 	
-	public void deleteMeeting(CustomerBO customer){
-		delete(customer.getCustomerMeeting());
-		customer.setCustomerMeeting(null);
+	public void deleteMeeting(CustomerBO customer)throws PersistenceException{
+		try{
+			delete(customer.getCustomerMeeting());
+			customer.setCustomerMeeting(null);
+		}catch (HibernateException he) {
+			throw new PersistenceException(he);
+		}
 	}
 }

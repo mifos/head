@@ -472,7 +472,6 @@ public class TestClientBO extends MifosTestCase {
 		assertEquals(center1.getSearchId()+".1.1", client.getSearchId());
 		CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();
 		assertEquals(group1.getCustomerId(),currentHierarchy.getParentCustomer().getCustomerId());
-		
 	}
 	
 	public void testSuccessfulTransferToGroup_WithMeeting()throws Exception{

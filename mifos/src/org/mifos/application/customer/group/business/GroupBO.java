@@ -46,8 +46,10 @@ import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerHierarchyEntity;
 import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.business.CustomerStatusEntity;
+import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.persistence.GroupPersistence;
@@ -261,13 +263,9 @@ public class GroupBO extends CustomerBO {
 	}
 
 	public void transferToBranch(OfficeBO officeToTransfer)throws CustomerException{
-		validateBranchTransfer(officeToTransfer);
+		validateNewOffice(officeToTransfer);
 		logger.debug("In GroupBO::transferToBranch(), transfering customerId: " + getCustomerId() +  "to branch : "+ officeToTransfer.getOfficeId());
 		validateForDuplicateName(getDisplayName(), officeToTransfer.getOfficeId());
-		
-		List<CustomerBO> clientList = getChildren(CustomerLevel.CLIENT, ChildrenStateType.ALL);
-		
-		validateForActiveAccounts(clientList);
 		
 		if(isActive())
 			setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
@@ -276,11 +274,37 @@ public class GroupBO extends CustomerBO {
 		this.setPersonnel(null);
 		this.setSearchId(generateSearchId());
 		super.update();
-		for(CustomerBO client: clientList){
+		
+		for(CustomerBO client: getChildren()){
 			client.setUserContext(getUserContext());
-			((ClientBO)client).transferToBranch(officeToTransfer);
+			((ClientBO)client).handleGroupTransfer();
 		}
 		logger.debug("In GroupBO::transferToBranch(), successfully transfered, customerId :" + getCustomerId());		
+	}
+	
+	public void transferToCenter(CenterBO newParent)throws CustomerException{
+		validateNewCenter(newParent);
+		logger.debug("In GroupBO::transferToCenter(), transfering customerId: " + getCustomerId() +  "to Center Id : "+ newParent.getCustomerId());
+
+		validateForActiveAccounts();
+		
+		if(!isSameBranch(newParent.getOffice())){
+			makeCustomerMovementEntries(newParent.getOffice());
+			if(isActive())
+				setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
+		}
+		
+		changeParentCustomer(newParent);
+		CustomerHierarchyEntity currentHierarchy = getActiveCustomerHierarchy();
+		currentHierarchy.makeInActive(userContext.getId());
+		
+		this.addCustomerHierarchy(new CustomerHierarchyEntity(this,newParent));		
+		super.update();
+		
+		for(CustomerBO client: getChildren()){
+			client.setUserContext(getUserContext());
+			((ClientBO)client).handleGroupTransfer();
+		}
 	}
 	
 	@Override
@@ -316,15 +340,40 @@ public class GroupBO extends CustomerBO {
 		return false;
 	}
 
-	private void validateForActiveAccounts(List<CustomerBO> clientList)throws CustomerException{
+	protected void validateFieldsForUpdate(String displayName,
+			Short loanOfficerId) throws CustomerException {
+		if (getCustomerStatus().getId().equals(
+				CustomerStatus.GROUP_ACTIVE.getValue())
+				|| getCustomerStatus().getId().equals(
+						CustomerStatus.GROUP_HOLD.getValue())) {
+			validateLO(loanOfficerId);
+		}
+		if (!getDisplayName().equals(displayName))
+			validateForDuplicateName(displayName, getOffice().getOfficeId());
+
+	}
+	
+	private void validateNewCenter(CenterBO toCenter)throws CustomerException{
+		if (toCenter == null)
+			throw new CustomerException(CustomerConstants.INVALID_PARENT);
+		
+		if(isSameCenter(toCenter))
+			throw new CustomerException(CustomerConstants.ERRORS_SAME_PARENT_TRANSFER);		
+	}
+	
+	private boolean isSameCenter(CenterBO center){
+		return getParentCustomer().getCustomerId().equals(center.getCustomerId());
+	}
+	
+	private void validateForActiveAccounts()throws CustomerException{
 		if(this.isAnyLoanAccountOpen() || this.isAnySavingsAccountOpen())
 			throw new CustomerException(CustomerConstants.ERRORS_HAS_ACTIVE_ACCOUNT);
-		for(CustomerBO client: clientList)
+		for(CustomerBO client: getChildren())
 			if(client.isAnyLoanAccountOpen() || client.isAnySavingsAccountOpen())
 				throw new CustomerException(CustomerConstants.ERRORS_CHILDREN_HAS_ACTIVE_ACCOUNT);		
 	}
 	
-	private void validateBranchTransfer(OfficeBO officeToTransfer)throws CustomerException{
+	private void validateNewOffice(OfficeBO officeToTransfer)throws CustomerException{
 		if (officeToTransfer == null)
 			throw new CustomerException(CustomerConstants.INVALID_OFFICE);
 		
@@ -445,7 +494,7 @@ public class GroupBO extends CustomerBO {
 	private String generateSearchId() throws CustomerException {
 		String searchId = null;
 		if (getParentCustomer() != null) {
-			getParentCustomer().incrementMaxChildCount();
+			getParentCustomer().incrementChildCount();
 			searchId = getParentCustomer().getSearchId() + "."
 					+ getParentCustomer().getMaxChildCount();
 		} else {
@@ -511,16 +560,5 @@ public class GroupBO extends CustomerBO {
 			this.setCustomerActivationDate(this.getCreatedDate());
 	}
 
-	protected void validateFieldsForUpdate(String displayName,
-			Short loanOfficerId) throws CustomerException {
-		if (getCustomerStatus().getId().equals(
-				CustomerStatus.GROUP_ACTIVE.getValue())
-				|| getCustomerStatus().getId().equals(
-						CustomerStatus.GROUP_HOLD.getValue())) {
-			validateLO(loanOfficerId);
-		}
-		if (!getDisplayName().equals(displayName))
-			validateForDuplicateName(displayName, getOffice().getOfficeId());
-
-	}
+	
 }

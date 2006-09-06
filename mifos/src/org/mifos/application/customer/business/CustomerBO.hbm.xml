@@ -69,6 +69,12 @@
 			<key column="CUSTOMER_ID" not-null="true" />
 			<one-to-many class="org.mifos.application.customer.business.CustomerFlagDetailEntity" />
 		</set>
+		
+		<set name="children"  inverse="true" access="field" lazy="true">
+			<key column="PARENT_CUSTOMER_ID" />
+			<one-to-many class="org.mifos.application.customer.business.CustomerBO" />
+		</set>
+		
 		<subclass name="org.mifos.application.customer.center.business.CenterBO" discriminator-value="CENTER"></subclass>
 
 		<subclass name="org.mifos.application.customer.group.business.GroupBO" discriminator-value="GROUP">
