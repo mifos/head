@@ -181,4 +181,5 @@ public class PersonnelDetailsEntity extends PersistentObject {
 			setDateOfJoiningBranch(dateOfJoiningBranch);
 		}
 	}
+	
 }

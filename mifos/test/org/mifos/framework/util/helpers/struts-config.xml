@@ -618,11 +618,19 @@
 			input="/PersonAction.do?method=validate" scope="session">
 			<forward name="chooseOffice_success" path="/pages/application/personnel/jsp/choose_office.jsp" />
 			<forward name="load_success" path="/pages/application/personnel/jsp/create_user.jsp" />	
+			<forward name="manage_success" path="/pages/application/personnel/jsp/edit_user.jsp" />
+			<forward name="previewManage_success" path="/pages/application/personnel/jsp/preview_EditUser.jsp" />
+			<forward name="previewManage_failure" path="/pages/application/personnel/jsp/edit_user.jsp" />	
+			<forward name="previousManage_success" path="/pages/application/personnel/jsp/edit_user.jsp" />
+			<forward name="update_success" path="/PersonnelAction.do?method=get" />
+			<forward name="update_failure" path="/pages/application/personnel/jsp/preview_EditUser.jsp" />			
+			<forward name="cancelEdit_success" path="/PersonnelAction.do?method=get" />	
 			<forward name="preview_success" path="/pages/application/personnel/jsp/createuser_preview.jsp" />	
 			<forward name="preview_failure" path="/pages/application/personnel/jsp/create_user.jsp" />	
 			<forward name="previous_success" path="/pages/application/personnel/jsp/create_user.jsp" />	
 			<forward name="create_success" path="/pages/application/personnel/jsp/create_user.jsp" />	
 			<forward name="create_failure" path="/pages/application/personnel/jsp/createuser_preview.jsp" />		
+
 		</action>
 		<!-- Personnel Notes action -->
 		<action path="/PersonnelNotesAction"

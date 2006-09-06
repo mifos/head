@@ -334,6 +334,17 @@ public class ActivityMapper {
 				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
 		activityMap.put("/PersonAction-load",
 				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
+		activityMap.put("/PersonAction-manage",
+				SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
+		activityMap.put("/PersonAction-previewManage",
+				SecurityConstants.VIEW);
+		activityMap.put("/PersonAction-previousManage",
+				SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
+		activityMap.put("/PersonAction-update",
+				SecurityConstants.PERSONNEL_EDIT_PERSONNEL);
+		activityMap.put("/PersonnelAction-prevPersonalInfo",
+				SecurityConstants.VIEW);
+
 		activityMap.put("/PersonAction-preview",
 				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
 		activityMap.put("/PersonAction-previous",

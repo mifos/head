@@ -65,12 +65,16 @@ import org.mifos.framework.util.valueobjects.Context;
 import org.mifos.framework.util.valueobjects.SearchResults;
 
 import org.mifos.application.configuration.util.helpers.PathConstants;
+import org.mifos.application.customer.business.service.CustomerBusinessService;
+import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.util.valueobjects.EntityMaster;
 import org.mifos.application.master.util.valueobjects.LookUpMaster;
 import org.mifos.application.master.util.valueobjects.SupportedLocales;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.office.util.valueobjects.Office;
+import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.personnel.struts.actionforms.PersonnelActionForm;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelHelper;
@@ -343,6 +347,8 @@ public class PersonnelAction extends MifosSearchAction{
 		//store display address in  request
 		String displayAddress = new PersonnelHelper().getDisplayAddress(((Personnel)context.getValueObject()).getPersonnelDetails());
 		request.setAttribute(PersonnelConstants.DISPLAY_ADDRESS,displayAddress);
+		PersonnelBO personnelBO = (PersonnelBO) new PersonnelBusinessService().getPersonnel(((Personnel)context.getValueObject()).getPersonnelId());
+	    SessionUtils.setAttribute(Constants.BUSINESS_KEY, personnelBO, request.getSession());
 		return forward;
 	}
 	

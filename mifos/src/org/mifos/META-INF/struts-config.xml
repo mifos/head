@@ -359,8 +359,14 @@
 			<forward name="previous_success" path="/pages/application/personnel/jsp/create_user.jsp" />	
 			<forward name="create_success" path="/pages/application/personnel/jsp/createuser_confirmation.jsp" />	
 			<forward name="create_failure" path="/pages/application/personnel/jsp/createuser_preview.jsp" />		
-			<forward name="cancel_success" path="/AdminAction.do?method=load" />		
-				
+			<forward name="cancel_success" path="/AdminAction.do?method=load" />
+			<forward name="manage_success" path="/pages/application/personnel/jsp/edit_user.jsp" />
+			<forward name="previewManage_success" path="/pages/application/personnel/jsp/preview_EditUser.jsp" />
+			<forward name="previewManage_failure" path="/pages/application/personnel/jsp/edit_user.jsp" />	
+			<forward name="previousManage_success" path="/pages/application/personnel/jsp/edit_user.jsp" />
+			<forward name="update_success" path="/PersonnelAction.do?method=get" />
+			<forward name="update_failure" path="/pages/application/personnel/jsp/preview_EditUser.jsp" />			
+			<forward name="cancelEdit_success" path="/PersonnelAction.do?method=get" />	
 		</action>
 		
 		

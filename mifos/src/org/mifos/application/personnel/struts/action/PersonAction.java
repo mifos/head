@@ -3,6 +3,8 @@ package org.mifos.application.personnel.struts.action;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,16 +15,23 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerHelper;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.business.PersonnelCustomFieldEntity;
+import org.mifos.application.personnel.business.PersonnelDetailsEntity;
 import org.mifos.application.personnel.business.PersonnelLevelEntity;
+import org.mifos.application.personnel.business.PersonnelRoleEntity;
+import org.mifos.application.personnel.business.PersonnelStatusEntity;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.personnel.struts.actionforms.PersonActionForm;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
+import org.mifos.application.personnel.util.helpers.PersonnelStatus;
 import org.mifos.application.rolesandpermission.util.valueobjects.Role;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.CustomFieldType;
@@ -74,7 +83,7 @@ public class PersonAction extends BaseAction {
 								.getOffice(getShortValue(personActionForm
 										.getOfficeId())), request);
 		personActionForm.clear();
-		loadMasterData(request, personActionForm);
+		loadCreateMasterData(request, personActionForm);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
@@ -101,20 +110,7 @@ public class PersonAction extends BaseAction {
 		personActionForm.setPersonnelRoles(null);
 		return mapping.findForward(ActionForwards.previous_success.toString());
 	}
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward validate(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		String method = (String) request.getAttribute("methodCalled");
-		return mapping.findForward(method + "_failure");
-	}
-	@TransactionDemarcate(validateAndResetToken = true)
-	public ActionForward cancel(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		return mapping.findForward(ActionForwards.cancel_success.toString());
-	}
-
+	
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -156,27 +152,103 @@ public class PersonAction extends BaseAction {
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
-	private void updateRoleLists(HttpServletRequest request,
-			PersonActionForm personActionForm) throws PageExpiredException {
-		if (personActionForm.getPersonnelRoles() != null) {
-			List<Role> selectList = new ArrayList<Role>();
-			List<Role> masterList = (List<Role>) SessionUtils.getAttribute(
-					PersonnelConstants.ROLEMASTERLIST, request);
-			for (Role role : masterList) {
-				for (String roleId : personActionForm.getPersonnelRoles()) {
-					if (role.getId().intValue() == Integer.valueOf(roleId)
-							.intValue()) {
-						selectList.add(role);
-					}
-				}
-			}
-			SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST,
-					selectList, request);
-		} else {
-			SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST,
-					null, request);
-		}
+	
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward manage(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		PersonActionForm actionform = (PersonActionForm) form;
+		actionform.clear();
+		//TODO: remove commented after get is implemented in M2 style
+		PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+		PersonnelBO personnelBO = ((PersonnelBusinessService) getService()).getPersonnel(personnel.getPersonnelId());
+		personnel = null;
+		/*System.out.println("actionform.getPersonnelId() ; "+actionform.getPersonnelId());
+		System.out.println("actionform.getPersonnelId() short value; "+Short.valueOf(actionform.getPersonnelId()));
+		PersonnelBO personnelBO = ((PersonnelBusinessService) getService()).getPersonnel(Short.valueOf(actionform.getPersonnelId()));
+*/		SessionUtils.setAttribute(Constants.BUSINESS_KEY,personnelBO, request);
+		loadUpdateMasterData(request, actionform);
+		setValuesInActionForm(actionform,request);
+		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
+	
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward previewManage(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		PersonActionForm actionForm = (PersonActionForm) form;
+	/*	PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+		actionForm.setAge(new CustomerHelper().calculateAge(DateHelper
+				.getLocaleDate(getUserContext(request).getPereferedLocale(),
+						actionForm.getDob())));
+		personnel=null;*/
+		updateRoleLists(request, (PersonActionForm) form);
+		return mapping.findForward(ActionForwards.previewManage_success.toString());
+	}
+	
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward previousManage(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		PersonActionForm personActionForm = (PersonActionForm) form;
+		personActionForm.setPersonnelRoles(null);
+		return mapping.findForward(ActionForwards.previousManage_success
+				.toString());
+	}
+	
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward update(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		UserContext userContext = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
+		PersonActionForm actionForm = (PersonActionForm) form;
+		PersonnelLevel level = PersonnelLevel
+				.getPersonnelLevel(getShortValue(actionForm.getLevel()));
+		PersonnelStatus personnelStatus = PersonnelStatus.getPersonnelStatus(getShortValue(actionForm.getStatus()));
+		OfficeBusinessService officeService = (OfficeBusinessService)ServiceFactory.getInstance().getBusinessService(
+				BusinessServiceName.Office);
+		OfficeBO office = officeService.getOffice(getShortValue(actionForm.getOfficeId()));
+		Integer title = getIntegerValue(actionForm.getTitle());
+		Short perefferedLocale = getLocaleId(getShortValue(actionForm
+				.getPreferredLocale()));
+		PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+		personnel.update(personnelStatus,level, office, title,
+				perefferedLocale, actionForm.getUserPassword(),
+				actionForm.getEmailId(),
+				getRoles(request, actionForm), actionForm
+						.getCustomFields(), actionForm.getName(),
+						getIntegerValue(actionForm.getMaritalStatus()),
+						getIntegerValue(actionForm.getGender()),
+						actionForm.getAddress(),userContext.getId());
+		request.setAttribute("displayName", personnel.getDisplayName());
+		request.setAttribute("globalPersonnelNum", personnel.getGlobalPersonnelNum());
+		return mapping.findForward(ActionForwards.update_success.toString());
+	}
+		
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward validate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		String method = (String) request.getAttribute("methodCalled");
+		return mapping.findForward(method + "_failure");
+	}
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward cancel(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		String forward=null;
+		PersonActionForm actionForm = (PersonActionForm) form;
+		String fromPage = actionForm.getInput();
+		if (fromPage.equals(PersonnelConstants.MANAGE_USER)){
+			forward=ActionForwards.cancelEdit_success.toString();
+		}
+		else{
+			forward=ActionForwards.cancel_success.toString();
+		}
+		return mapping.findForward(forward.toString());
+	}
+
 
 	private void loadMasterData(HttpServletRequest request,
 			PersonActionForm personActionForm) throws Exception {
@@ -217,13 +289,35 @@ public class PersonAction extends BaseAction {
 
 		List<CustomFieldDefinitionEntity> customFieldDefs = masterPersistence
 				.retrieveCustomFieldsDefinition(EntityType.PERSONNEL);
-
 		SessionUtils.setAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,
 				customFieldDefs, request);
-		loadCreateCustomFields(personActionForm, customFieldDefs, userContext);
-
 	}
-
+	
+	private void loadCreateMasterData(HttpServletRequest request,
+			PersonActionForm personActionForm) throws Exception {
+		UserContext userContext = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
+		loadMasterData(request,personActionForm);
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+		.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		loadCreateCustomFields(personActionForm, customFieldDefs, userContext);
+	}
+	
+	private void loadUpdateMasterData(HttpServletRequest request,
+			PersonActionForm personActionForm) throws Exception{
+		loadMasterData(request,personActionForm);
+		UserContext userContext = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
+		SessionUtils.setAttribute(PersonnelConstants.STATUS_LIST,
+				getMasterEntities(PersonnelStatusEntity.class,
+						getUserContext(request).getLocaleId()), request);
+		OfficeBusinessService officeService = (OfficeBusinessService)ServiceFactory.getInstance().getBusinessService(
+				BusinessServiceName.Office);
+		OfficeBO loggedInOffice = officeService.getOffice(userContext.getBranchId());
+		SessionUtils.setAttribute(PersonnelConstants.OFFICE_LIST,
+				officeService.getChildOffices(loggedInOffice.getSearchId()), request);
+	}
+	
 	private void loadCreateCustomFields(PersonActionForm actionForm,
 			List<CustomFieldDefinitionEntity> customFieldDefs,
 			UserContext userContext) throws SystemException,
@@ -245,8 +339,85 @@ public class PersonAction extends BaseAction {
 		}
 		actionForm.setCustomFields(customFields);
 	}
+	
+	private void setValuesInActionForm(PersonActionForm actionForm,
+			HttpServletRequest request) throws  Exception {
+		PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+		actionForm.setPersonnelId(personnel.getPersonnelId().toString());
+		if (personnel.getOffice() != null) 
+			actionForm.setOfficeId(personnel.getOffice().getOfficeId().toString());
+		if (personnel.getTitle() != null) 
+			actionForm.setTitle(personnel.getTitle().toString());
+		if (personnel.getLevel() != null) 
+			actionForm.setLevel(personnel.getLevel().getId().toString());
+		if (personnel.getStatus() != null)
+				actionForm.setStatus(personnel.getStatus().getId().toString());
+		actionForm.setLoginName(personnel.getUserName());
+		actionForm.setGlobalPersonnelNum(personnel.getGlobalPersonnelNum());
+		actionForm.setCustomFields(createCustomFieldViews(personnel.getCustomFields(), request));
+		
+		if(personnel.getPersonnelDetails()!=null){
+		PersonnelDetailsEntity personnelDetails = personnel.getPersonnelDetails();
+			actionForm.setFirstName(personnelDetails.getName().getFirstName());
+			actionForm.setMiddleName(personnelDetails.getName().getMiddleName());
+			actionForm.setSecondLastName(personnelDetails.getName().getMiddleName());
+			actionForm.setLastName(personnelDetails.getName().getLastName());
+			if(personnelDetails.getGender()!=null)
+				actionForm.setGender(personnelDetails.getGender().toString());
+			if(personnelDetails.getMaritalStatus()!=null)
+				actionForm.setGender(personnelDetails.getMaritalStatus().toString());
+			actionForm.setAddress(personnelDetails.getAddress());
+			if (personnelDetails.getDateOfJoiningMFI() != null){
+				actionForm.setDateOfJoiningMFI(DateHelper.getUserLocaleDate(
+						getUserContext(request).getPereferedLocale(), personnelDetails.getDateOfJoiningMFI().toString()));
+			}
+			if (personnelDetails.getDob() != null){
+				actionForm.setDob(DateHelper.getUserLocaleDate(
+						getUserContext(request).getPereferedLocale(), personnelDetails.getDob().toString()));
+			}
+		}
+		actionForm.setEmailId(personnel.getEmailId());
+		if(personnel.getPreferredLocale()!=null)
+			actionForm.setPreferredLocale(personnel.getPreferredLocale().getLocaleId().toString());
+		List<Role> selectList = new ArrayList<Role>();
+		for(PersonnelRoleEntity personnelRole : personnel.getPersonnelRoles()){
+			selectList.add(personnelRole.getRole());
+		}
+		SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST, selectList, request);
+	}
+	
+	private List<CustomFieldView> createCustomFieldViews(
+			Set<PersonnelCustomFieldEntity> customFieldEntities,
+			HttpServletRequest request)throws ApplicationException {
+		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
 
 
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		Locale locale = getUserContext(request).getPereferedLocale();
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			for (PersonnelCustomFieldEntity customFieldEntity : customFieldEntities) {
+				if (customFieldDef.getFieldId().equals(
+						customFieldEntity.getFieldId())) {
+					if (customFieldDef.getFieldType().equals(
+							CustomFieldType.DATE.getValue())) {
+						customFields.add(new CustomFieldView(customFieldEntity
+								.getFieldId(), DateHelper.getUserLocaleDate(
+								locale, customFieldEntity.getFieldValue()),
+								customFieldDef.getFieldType()));
+					} else {
+						customFields
+								.add(new CustomFieldView(customFieldEntity
+										.getFieldId(), customFieldEntity
+										.getFieldValue(), customFieldDef
+										.getFieldType()));
+					}
+				}
+			}
+		}
+		return customFields;
+	}
+	
 	private List<Role> getRoles(HttpServletRequest request,
 			PersonActionForm personActionForm) throws PageExpiredException {
 		List<Role> selectList = new ArrayList<Role>();
@@ -262,6 +433,28 @@ public class PersonAction extends BaseAction {
 		}
 		return selectList;
 	}
+	
+	private void updateRoleLists(HttpServletRequest request,
+			PersonActionForm personActionForm) throws PageExpiredException {
+		if (personActionForm.getPersonnelRoles() != null) {
+			List<Role> selectList = new ArrayList<Role>();
+			List<Role> masterList = (List<Role>) SessionUtils.getAttribute(
+					PersonnelConstants.ROLEMASTERLIST, request);
+			for (Role role : masterList) {
+				for (String roleId : personActionForm.getPersonnelRoles()) {
+					if (role.getId().intValue() == Integer.valueOf(roleId)
+							.intValue()) {
+						selectList.add(role);
+					}
+				}
+			}
+			SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST,
+					selectList, request);
+		} else {
+			SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST,
+					null, request);
+		}
+	}
 
 	private Short getLocaleId(Short lookUpId) throws ServiceException {
 		if (lookUpId != null)
@@ -275,4 +468,5 @@ public class PersonAction extends BaseAction {
 		return Short.valueOf("1");
 
 	}
+
 }

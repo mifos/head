@@ -317,7 +317,7 @@ public class PersonnelBO extends BusinessObject {
 
 	public void update(PersonnelStatus newStatus, PersonnelLevel newLevel,
 			OfficeBO office, Integer title, Short preferredLocale,
-			String password, String emailId, Set<Role> personnelRoles,
+			String password, String emailId, List<Role> roles,
 			List<CustomFieldView> customFields, Name name,
 			Integer maritalStatus, Integer gender, Address address,
 			Short updatedById) throws PersonnelException {
@@ -346,7 +346,13 @@ public class PersonnelBO extends BusinessObject {
 			this.title = null;
 		} else
 			this.title = title;
-		this.personnelRoles = null;
+		//this.personnelRoles = null;
+		this.personnelRoles = new HashSet();
+		if (roles != null) {
+			for (Role role : roles) {
+				this.personnelRoles.add(new PersonnelRoleEntity(role, this));
+			}
+		}
 		updatePersonnelDetails(name, maritalStatus, gender, address,
 				dateOfJoiningBranch);
 		updateCustomFields(customFields);

@@ -20,6 +20,7 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
@@ -29,6 +30,7 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
+
 
 public class PersonActionForm extends BaseActionForm {
 
@@ -72,6 +74,8 @@ public class PersonActionForm extends BaseActionForm {
 
 	private String dob;
 
+	private int age;
+	
 	private String maritalStatus;
 
 	private String gender;
@@ -79,7 +83,7 @@ public class PersonActionForm extends BaseActionForm {
 	private String dateOfJoiningMFI;
 
 	private String dateOfJoiningBranch;
-
+	
 	private String[] personnelRoles;
 
 	private List<CustomFieldView> customFields;
@@ -236,6 +240,11 @@ public class PersonActionForm extends BaseActionForm {
 	}
 
 
+	
+	public void setAge(int age) {
+		this.age = age;
+		 
+	}
 
 	public void clear() {
 		this.personnelId = null;
@@ -259,7 +268,7 @@ public class PersonActionForm extends BaseActionForm {
 		this.gender = null;
 		this.dateOfJoiningMFI = null;
 		this.dateOfJoiningBranch = null;
-		this.personnelRoles = null;
+		this.personnelRoles = new String[10];;
 		address = new Address();
 		customFields = new ArrayList<CustomFieldView>();
 	}
@@ -337,6 +346,10 @@ public class PersonActionForm extends BaseActionForm {
 			handleCreatePreviewValidations(request);
 			errors.add(super.validate(mapping, request));
 		}
+		if (method.equals(Methods.previewManage.toString())) {
+			handleManagePreviewValidations(errors,request);
+			errors.add(super.validate(mapping, request));
+		}
 		if (null != errors && !errors.isEmpty()) {
 			request.setAttribute(Globals.ERROR_KEY, errors);
 			request.setAttribute("methodCalled", method);
@@ -378,8 +391,6 @@ public class PersonActionForm extends BaseActionForm {
 			
 			//sqlDOB = DateHelper.getLocaleDate(userContext.getPereferedLocale(), dob);
 			Date date = DateHelper.getDate(dob);
-			
-			System.out.println("passed date is "+date);
 			Calendar currentCalendar = new GregorianCalendar();
 			int year = currentCalendar.get(Calendar.YEAR);
 			int month = currentCalendar.get(Calendar.MONTH);
@@ -387,7 +398,6 @@ public class PersonActionForm extends BaseActionForm {
 			currentCalendar = new GregorianCalendar(year, month, day);
 			Date currentDate = new Date(currentCalendar
 					.getTimeInMillis());
-			System.out.println("currentDate" +currentDate);
 			if (currentDate.compareTo(date) < 0) {
 				errors = new ActionErrors();
 				errors.add(PersonnelConstants.INVALID_DOB, new ActionMessage(
@@ -401,6 +411,28 @@ public class PersonActionForm extends BaseActionForm {
 		validateCustomFields(request, errors);
 
 		return checkForPassword(errors);
+	}
+
+	
+	/**
+	 * This is the helper method to check for extra validations e.g. date validations and password validations
+	 * needed at the time of create preview.
+	 * @param request 
+	 */
+	private ActionErrors handleManagePreviewValidations(ActionErrors errors ,HttpServletRequest request){
+		if(errors==null){
+			errors=new ActionErrors();
+		}
+		validateConfigurableMandatoryFields(request , errors , EntityType.PERSONNEL);
+		validateOffice(errors);
+		validateCustomFields(request, errors);
+		return checkForPassword(errors);
+	}
+
+	private void validateOffice(ActionErrors errors) {
+		if (StringUtils.isNullOrEmpty(officeId)){
+			errors.add(PersonnelConstants.OFFICE, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, PersonnelConstants.OFFICE));
+		}
 	}
 
 	protected void validateCustomFields(HttpServletRequest request,
@@ -428,10 +460,16 @@ public class PersonActionForm extends BaseActionForm {
 						isErrorFound = true;
 						break;
 					}
+
 			}
 			if (isErrorFound)
 				break;
 		}
+	}
+
+	
+	private void validateConfigurableMandatoryFields(HttpServletRequest request, ActionErrors errors, EntityType entityType){
+		checkForMandatoryFields(entityType.getValue(), errors, request);
 	}
 
 	public String getInput() {
@@ -457,4 +495,5 @@ public class PersonActionForm extends BaseActionForm {
 	public void setUserPassword(String userPassword) {
 		this.userPassword = userPassword;
 	}
+
 }

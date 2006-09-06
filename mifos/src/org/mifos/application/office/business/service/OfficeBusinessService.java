@@ -46,4 +46,8 @@ public class OfficeBusinessService extends BusinessService {
 		return officePersistence.getBranchOffices();
 	}
 
+	public List<OfficeView> getChildOffices(String searchId) {
+		return officePersistence.getChildOffices(searchId);
+	}
+
 }

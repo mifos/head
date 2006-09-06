@@ -510,8 +510,10 @@ public interface NamedQueryConstants {
 	public String GET_PERSONNEL_WITH_DOB_AND_DISPLAYNAME="getCountByDobAndDisplayName";
 	public String GET_ACTIVE_CUSTOMERS_FOR_LO ="Customer.getActiveCustomersForLO";
 	public String GET_ALL_CUSTOMERS_FOR_LO ="Customer.getAllCustomersForLO";
+	public String GETOFFICE_CHILDREN = "office.getAllChildOffices";
 	public String PERSONNEL_BY_SYSTEM_ID ="getPersonBySystemId";
 	public String PRODUCTOFFERING_MAX="product.maxprdofferingid";
 	public String PRODUCTOFFERING_CREATEOFFERINGNAMECOUNT="product.createofferingnamecount";
 	public String PRODUCTOFFERING_CREATEOFFERINGSHORTNAMECOUNT="product.createofferingshortnamecount";
+
 }

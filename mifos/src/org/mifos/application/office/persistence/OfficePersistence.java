@@ -241,5 +241,18 @@ public class OfficePersistence extends Persistence {
 			return queryResult; 
 		}
 		return null;
-	}	
+	}
+
+	public List<OfficeView> getChildOffices(String searchId) {
+		HashMap<String , Object> queryParameters = new HashMap<String , Object>();
+		queryParameters.put("STATUS_ID",OfficeStatus.ACTIVE.getValue());
+		queryParameters.put("OFFICE_LIKE_SEARCHID",searchId+"%");
+		List<OfficeView> queryResult = executeNamedQuery(NamedQueryConstants.GETOFFICE_CHILDREN,queryParameters);	
+		if(queryResult !=null && queryResult.size()!=0){
+			return queryResult; 
+		}
+		return null;
+	}
+
+	
 }
