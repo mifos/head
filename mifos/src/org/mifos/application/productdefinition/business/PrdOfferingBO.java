@@ -264,9 +264,11 @@ public class PrdOfferingBO extends BusinessObject {
 				|| prdApplicableMaster == null
 				|| startDate == null
 				|| (prdOfferingShortName.length() > 4)
-				|| startDate.compareTo(DateUtils
-						.getCurrentDateWithoutTimeStamp()) < 0
-				|| (endDate != null && startDate.compareTo(endDate) >= 0)) {
+				|| DateUtils.getDateWithoutTimeStamp(startDate.getTime())
+						.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) < 0
+				|| (endDate != null && DateUtils.getDateWithoutTimeStamp(
+						startDate.getTime()).compareTo(
+						DateUtils.getDateWithoutTimeStamp(endDate.getTime())) >= 0)) {
 			throw new ProductDefinitionException("errors.create");
 		}
 		prdLogger.debug("Validation of the fields in Prd Offering done.");

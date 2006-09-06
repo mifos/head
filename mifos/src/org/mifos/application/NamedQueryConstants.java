@@ -517,4 +517,6 @@ public interface NamedQueryConstants {
 	public String PRODUCTOFFERING_CREATEOFFERINGNAMECOUNT="product.createofferingnamecount";
 	public String PRODUCTOFFERING_CREATEOFFERINGSHORTNAMECOUNT="product.createofferingshortnamecount";
 
+	public String PRDAPPLICABLE_CATEGORIES="product.createapplicableproductcat";
+	public String SAVINGS_APPL_RECURRENCETYPES="product.savingsapplicablerecurrencetypes";
 }

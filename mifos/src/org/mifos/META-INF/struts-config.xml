@@ -32,6 +32,7 @@
 		<form-bean name="repayLoanActionForm" type="org.mifos.application.accounts.loan.struts.actionforms.RepayLoanActionForm"></form-bean>
 		<!-- Savings Product -->
 		<form-bean name="savingsprdactionform" type="org.mifos.application.productdefinition.struts.actionforms.SavingsProductActionForm"></form-bean>
+		<form-bean name="savingsproductactionform" type="org.mifos.application.productdefinition.struts.actionforms.SavingsPrdActionForm"></form-bean>
 		<!-- Payment Types -->
 		<form-bean name="mifospmttypesactionform" type="org.mifos.application.productdefinition.struts.actionforms.PmntTypesActionForm"></form-bean>
 		<!-- Process Flow -->
@@ -545,6 +546,14 @@
 			<forward name="update_failure" path="/pages/application/productdefinition/jsp/EditSavingsProductPreview.jsp"></forward>
 			<forward name="search_success" path="/pages/application/productdefinition/jsp/ViewEditSavingsProduct.jsp"></forward>
 			<forward name="search_log_success" path="/pages/application/productdefinition/jsp/viewsavingschangelog.jsp"></forward>
+		</action>
+		<action path="/savingsproductaction" name="savingsproductactionform" type="org.mifos.application.productdefinition.struts.action.SavingsPrdAction" input="/savingsproductaction.do?method=validate" parameter="method" validate="true" scope="session">
+			<forward name="load_success" path="/pages/application/productdefinition/jsp/CreateSavingsProduct.jsp"></forward>
+			<forward name="preview_success" path="/pages/application/productdefinition/jsp/CreateSavingsProductPreview.jsp"></forward>
+			<forward name="preview_failure" path="/pages/application/productdefinition/jsp/CreateSavingsProduct.jsp"></forward>
+			<forward name="create_success" path="/pages/application/productdefinition/jsp/CreateSavingsProductConfirmation.jsp"></forward>
+			<forward name="create_failure" path="/pages/application/productdefinition/jsp/CreateSavingsProductPreview.jsp"></forward>
+			<forward name="cancelCreate_success" path="/AdminAction.do?method=load"></forward>
 		</action>
 		<!-- Payment Types -->
 		<action path="/mifospmttypesaction" name="mifospmttypesactionform" type="org.mifos.application.productdefinition.struts.action.PmtTypesAction" input="/mifospmttypesaction.do?method=validate" parameter="method" validate="true" scope="request">

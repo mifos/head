@@ -113,4 +113,9 @@
 		from org.mifos.application.productdefinition.business.PrdOfferingBO prd
 		where prd.prdOfferingShortName=:prdOfferingShortName]]>
 	</query>
+	<query name="product.savingsapplicablerecurrencetypes">
+		<![CDATA[from org.mifos.application.meeting.business.RecurrenceTypeEntity recType 
+		where recType.recurrenceId=2 or recType.recurrenceId=3 
+		order by recType.recurrenceName]]>
+	</query>
 </hibernate-mapping>

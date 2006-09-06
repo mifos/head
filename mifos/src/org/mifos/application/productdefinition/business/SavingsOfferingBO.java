@@ -46,11 +46,13 @@ import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
+import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 
@@ -101,9 +103,8 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 				interestGLCode);
 	}
 
-	public SavingsOfferingBO(UserContext userContext,
-			String prdOfferingName, String prdOfferingShortName,
-			ProductCategoryBO prdCategory,
+	public SavingsOfferingBO(UserContext userContext, String prdOfferingName,
+			String prdOfferingShortName, ProductCategoryBO prdCategory,
 			PrdApplicableMasterEntity prdApplicableMaster, Date startDate,
 			Date endDate, String description,
 			RecommendedAmntUnitEntity recommendedAmntUnit,
@@ -226,6 +227,18 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 
 	public GLCodeEntity getInterestGLCode() {
 		return interestGLCode;
+	}
+
+	public void save() throws ProductDefinitionException {
+		prdLogger.debug("creating the saving offering ");
+		try {
+			new SavingsPrdPersistence().createOrUpdate(this);
+
+		} catch (PersistenceException e) {
+			throw new ProductDefinitionException(e);
+		}
+		prdLogger.debug("creating the saving offering Done : "
+				+ getPrdOfferingName());
 	}
 
 	private PrdOfferingMeetingEntity getPrdOfferingMeeting(

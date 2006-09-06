@@ -46,6 +46,7 @@ import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -81,8 +82,8 @@ public class SavingsPrdPersistence extends Persistence {
 	public Short retrieveDormancyDays() throws PersistenceException {
 		try {
 			Map<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("productTypeId", 
-					AccountTypes.SAVINGSACCOUNT.getValue());
+			queryParameters.put("productTypeId", AccountTypes.SAVINGSACCOUNT
+					.getValue());
 			List<Short> queryResult = executeNamedQuery(
 					NamedQueryConstants.GET_DORMANCY_DAYS, queryParameters);
 			if (null != queryResult && null != queryResult.get(0))
@@ -91,5 +92,17 @@ public class SavingsPrdPersistence extends Persistence {
 			throw new PersistenceException(he);
 		}
 		return null;
+	}
+
+	public List<RecurrenceTypeEntity> getSavingsApplicableRecurrenceTypes()
+			throws PersistenceException {
+		try {
+			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+			return executeNamedQuery(
+					NamedQueryConstants.SAVINGS_APPL_RECURRENCETYPES,
+					queryParameters);
+		} catch (HibernateException he) {
+			throw new PersistenceException(he);
+		}
 	}
 }

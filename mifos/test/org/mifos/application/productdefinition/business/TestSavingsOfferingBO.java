@@ -438,6 +438,49 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		}
 	}
 
+	public void testCreateSavingsOffering() throws SystemException,
+			ApplicationException {
+		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
+				PrdApplicableMaster.CLIENTS);
+		SavingsTypeEntity savingsType = new SavingsTypeEntity(
+				SavingsType.MANDATORY);
+
+		InterestCalcTypeEntity intCalType = new InterestCalcTypeEntity(
+				InterestCalcType.AVERAGE_BALANCE);
+		MeetingBO intCalcMeeting = getMeeting();
+		MeetingBO intPostMeeting = getMeeting();
+		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
+				.getSessionTL().get(GLCodeEntity.class, (short) 7);
+		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
+				.getSessionTL().get(GLCodeEntity.class, (short) 7);
+		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
+				.getObject(ProductCategoryBO.class, (short) 2);
+		Date startDate = offSetCurrentDate(0);
+		Date endDate = offSetCurrentDate(7);
+		savingsOffering = new SavingsOfferingBO(
+				TestObjectFactory.getUserContext(), "Savings Offering", "Savi",
+				productCategory, prdApplicableMaster, startDate, endDate,
+				"dssf", null, savingsType, intCalType, intCalcMeeting,
+				intPostMeeting, new Money("10"), new Money(), new Money(),
+				10.0, depglCodeEntity, intglCodeEntity);
+		savingsOffering.save();
+		HibernateUtil.commitTransaction();
+
+		savingsOffering = (SavingsOfferingBO) TestObjectFactory.getObject(
+				SavingsOfferingBO.class, savingsOffering.getPrdOfferingId());
+		assertEquals("Savings Offering", savingsOffering.getPrdOfferingName());
+		assertEquals("Savi", savingsOffering.getPrdOfferingShortName());
+		assertNotNull(savingsOffering.getGlobalPrdOfferingNum());
+		assertEquals(PrdStatus.SAVINGSACTIVE.getValue(), savingsOffering
+				.getPrdStatus().getOfferingStatusId());
+		assertEquals(PrdApplicableMaster.CLIENTS.getValue(), savingsOffering
+				.getPrdApplicableMaster().getId());
+		assertEquals(SavingsType.MANDATORY.getValue(), savingsOffering
+				.getSavingsType().getId());
+		assertEquals(InterestCalcType.AVERAGE_BALANCE.getValue(),
+				savingsOffering.getInterestCalcType().getId());
+	}
+
 	private SavingsOfferingBO createSavingsOfferingBO(String prdOfferingName,
 			String shortName) {
 		MeetingBO meetingIntCalc = TestObjectFactory

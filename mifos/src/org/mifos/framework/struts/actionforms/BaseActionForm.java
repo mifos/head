@@ -102,4 +102,9 @@ public class BaseActionForm extends ValidatorActionForm {
 			date = new Date(DateHelper.getLocaleDate(locale, strDate).getTime());
 		return date;
 	}
+	
+	protected UserContext getUserContext(HttpServletRequest request) {
+		return (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
+	}
 }

@@ -552,6 +552,22 @@ public class ActivityMapper {
 				SecurityConstants.EDIT_SAVING_PRODUCT);
 		activityMap.put("/savingsprdaction-update",
 				SecurityConstants.EDIT_SAVING_PRODUCT);
+		
+		
+		activityMap.put("/savingsproductaction-search", SecurityConstants.VIEW);
+		activityMap.put("/savingsproductaction-load",
+				SecurityConstants.DEFINE_NEW_SAVING_PRODUCT_INSTANCE);
+		activityMap.put("/savingsproductaction-preview", SecurityConstants.VIEW);
+		activityMap.put("/savingsproductaction-previous", SecurityConstants.VIEW);
+		activityMap.put("/savingsproductaction-create",
+				SecurityConstants.DEFINE_NEW_SAVING_PRODUCT_INSTANCE);
+		activityMap.put("/savingsproductaction-get", SecurityConstants.VIEW);
+		activityMap.put("/savingsproductaction-cancelCreate", SecurityConstants.VIEW);
+		activityMap.put("/savingsproductaction-manage",
+				SecurityConstants.EDIT_SAVING_PRODUCT);
+		activityMap.put("/savingsproductaction-update",
+				SecurityConstants.EDIT_SAVING_PRODUCT);
+		
 
 		// view lateness mappings
 		activityMap.put("/prdconfigurationaction-search",

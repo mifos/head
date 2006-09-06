@@ -3,6 +3,7 @@ package org.mifos.application.productdefinition.persistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.MifosTestCase;
@@ -102,5 +103,12 @@ public class PrdOfferingPersistenceTest extends MifosTestCase {
 				.getProductOfferingShortNameCount("SAVP"));
 		TestObjectFactory.removeObject(savingsOffering);
 
+	}
+
+	public void testGetApplicableProductCategories()
+			throws NumberFormatException, PersistenceException {
+		assertEquals(1, new PrdOfferingPersistence()
+				.getApplicableProductCategories(ProductType.SAVINGS,
+						PrdCategoryStatus.ACTIVE).size());
 	}
 }

@@ -11,7 +11,6 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
-import org.mifos.application.productdefinition.persistence.service.SavingsPrdPersistenceService;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -55,14 +54,13 @@ public class SavingsPrdPersistenceTest extends MifosTestCase {
 				.retrieveSavingsAccountsForPrd(savingsOffering
 						.getPrdOfferingId());
 		assertEquals(Integer.valueOf("1").intValue(), savingsList.size());
-		savings = new SavingsPersistence().findById(savings
-				.getAccountId());
+		savings = new SavingsPersistence().findById(savings.getAccountId());
 	}
 
 	public void testGetTimePerForIntCalcAndFreqPost()
 			throws PersistenceException, ProductDefinitionException {
 		savingsOffering = createSavingsOfferingBO();
-		savingsOffering = new SavingsPrdPersistenceService()
+		savingsOffering = new SavingsPrdPersistence()
 				.getSavingsProduct(savingsOffering.getPrdOfferingId());
 		assertNotNull("The time period for Int calc should not be null",
 				savingsOffering.getTimePerForInstcalc());
@@ -74,6 +72,11 @@ public class SavingsPrdPersistenceTest extends MifosTestCase {
 	public void testDormancyDays() throws Exception {
 		assertEquals(Short.valueOf("30"), new SavingsPrdPersistence()
 				.retrieveDormancyDays());
+	}
+
+	public void testGetSavingsApplicableRecurrenceTypes() throws Exception {
+		assertEquals(2, new SavingsPrdPersistence()
+				.getSavingsApplicableRecurrenceTypes().size());
 	}
 
 	private void createInitialObjects() {

@@ -48,6 +48,7 @@ public abstract class BaseAction extends DispatchAction {
 
 	protected abstract BusinessService getService() throws ServiceException;
 
+	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -193,7 +194,7 @@ public abstract class BaseAction extends DispatchAction {
 		return object;
 	}
 
-	private Locale getLocale(UserContext userContext) {
+	protected Locale getLocale(UserContext userContext) {
 		Locale locale = null;
 		if (userContext != null)
 			locale = userContext.getPereferedLocale();

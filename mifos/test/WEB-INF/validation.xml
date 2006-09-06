@@ -769,6 +769,140 @@
 				</field>
 			
 		</form>
+		
+		<!-- Savings product-->
+		<form name="/savingsproductaction">
+			<field property="prdOfferingName"
+				depends="required,maxlength">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<msg name="maxlength" key="errors.maximumlength"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.prodinstname" />
+				<arg1 name="maxlength" key="${var:maxlength}"
+					resource="false" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>50</var-value>
+				</var>
+			</field>
+			<field property="prdOfferingShortName"
+				depends="required,maxlength,mask">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<msg name="maxlength" key="errors.maximumlength"
+					bundle="ProductDefUIResources" />
+				<msg name="mask" key="errors.shortnamemask"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.shortname" />
+				<arg1 name="maxlength" key="${var:maxlength}"
+					resource="false" />
+				<var>
+					<var-name>mask</var-name>
+					<var-value>^[^ ]*$</var-value>
+				</var>
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>4</var-value>
+				</var>
+			</field>
+			<field property="description" depends="maxlength">
+				<msg name="maxlength" key="errors.maximumlength"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.categorydesc" />
+				<arg1 name="maxlength" key="${var:maxlength}"
+					resource="false" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>200</var-value>
+				</var>
+			</field>
+			<field property="prdCategory"
+				depends="required">
+				<msg name="required" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.prodcat" />
+			</field>
+			<field property="startDate" depends="required">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.startdate" />
+			</field>
+			<field property="prdApplicableMaster"
+				depends="required">
+				<msg name="required" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.applfor" />
+			</field>
+			<field property="savingsType"
+				depends="required">
+				<msg name="required" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.typeofdep" />
+			</field>
+			<field property="recommendedAmntUnit"
+				depends="validwhen">
+				<msg name="validwhen" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg key="product.recamtappl" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>((*this* !=null) or (prdApplicableMaster!= 2))</var-value>
+				</var>
+			</field>
+			<field property="interestRate" depends="required,double">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<msg name="double" key="errors.double"
+					bundle="ProductDefUIResources" />
+				<arg key="product.intrate" />
+			</field>
+			<field property="interestCalcType"
+				depends="required">
+				<msg name="required" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.balusedforinstcalcrule" />
+			</field>
+			<field property="timeForInterestCacl" depends="required,integer,validwhen">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<msg name="validwhen" key="errors.greaterthanzero"
+					bundle="ProductDefUIResources" />
+				<msg name="integer" key="errors.integer"
+					bundle="ProductDefUIResources" />
+				<arg key="product.timeperinstcalc" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>(*this* > 0)</var-value>
+				</var>
+			</field>
+			<field property="freqOfInterest" depends="required,integer,validwhen">
+				<msg name="required" key="errors.mandatory"
+					bundle="ProductDefUIResources" />
+				<msg name="validwhen" key="errors.greaterthanzero"
+					bundle="ProductDefUIResources" />
+				<msg name="integer" key="errors.integer"
+					bundle="ProductDefUIResources" />
+				<arg key="product.freqinstpostacc" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>(*this* > 0)</var-value>
+				</var>
+			</field>
+			<field property="depositGLCode"
+				depends="required">
+				<msg name="required" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.glcodedep" />
+			</field>
+			<field property="interestGLCode"
+				depends="required">
+				<msg name="required" key="errors.select"
+					bundle="ProductDefUIResources" />
+				<arg0 key="product.glcodeint" />
+			</field>
+		</form>
+		
 		<!--  Center Action form -->
 		<form name="/centerAction">
 

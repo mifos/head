@@ -186,5 +186,9 @@ public interface ProductDefinitionConstants {
 	public String PENALTYGLCODE="penalty";
 	public String DEPOSITGLCODE="deposit";
 	
+	
+	public String SAVINGSPRODUCTACTIONFORM="savingsproductactionform";
+	public String SAVINGSDEPOSITGLCODELIST="depositGLCodes";
+	public String SAVINGSINTERESTGLCODELIST="interestGLCodes";
 }
 

@@ -7,10 +7,12 @@ import org.mifos.application.productdefinition.business.TestPrdCategoryStatusEnt
 import org.mifos.application.productdefinition.business.TestProductCategoryBO;
 import org.mifos.application.productdefinition.business.TestProductCategoryBusinessService;
 import org.mifos.application.productdefinition.business.TestSavingsOfferingBO;
+import org.mifos.application.productdefinition.business.service.SavingsPrdBusinessServiceTest;
+import org.mifos.application.productdefinition.persistence.PrdOfferingPersistenceTest;
 import org.mifos.application.productdefinition.persistence.SavingsPrdPersistenceTest;
 import org.mifos.application.productdefinition.persistence.TestProductCategoryPersistence;
-import org.mifos.application.productdefinition.persistence.PrdOfferingPersistenceTest;
 import org.mifos.application.productdefinition.persistence.service.TestProductDefinitionPersistenceService;
+import org.mifos.application.productdefinition.struts.action.SavingsPrdActionTest;
 import org.mifos.application.productdefinition.struts.action.TestPrdCategoryAction;
 import org.mifos.framework.MifosTestSuite;
 
@@ -31,7 +33,9 @@ public class ProductDefinitionTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(TestProductCategoryPersistence.class);
 		testSuite.addTestSuite(SavingsPrdPersistenceTest.class);
 		testSuite.addTestSuite(TestPrdCategoryAction.class);
+		testSuite.addTestSuite(SavingsPrdBusinessServiceTest.class);
+		testSuite.addTestSuite(SavingsPrdActionTest.class);
 		return testSuite;
 	}
-	
+
 }

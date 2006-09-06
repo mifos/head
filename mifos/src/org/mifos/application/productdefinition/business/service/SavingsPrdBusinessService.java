@@ -37,32 +37,53 @@
  */
 package org.mifos.application.productdefinition.business.service;
 
+import java.util.List;
+
+import org.mifos.application.meeting.business.RecurrenceTypeEntity;
+import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.productdefinition.persistence.service.SavingsPrdPersistenceService;
+import org.mifos.application.productdefinition.persistence.PrdOfferingPersistence;
+import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
+import org.mifos.application.productdefinition.util.helpers.PrdCategoryStatus;
+import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 
-public class SavingsPrdBusinessService extends BusinessService{
-	private SavingsPrdPersistenceService dbService;
-	
+public class SavingsPrdBusinessService extends BusinessService {
+
 	public BusinessObject getBusinessObject(UserContext userContext) {
 		return null;
 	}
-	
-	public SavingsOfferingBO getSavingsProduct(Short prdOfferingId)throws ServiceException,PersistenceException {
-		return getDBService().getSavingsProduct(prdOfferingId);
-    }
-	
-	private SavingsPrdPersistenceService getDBService()throws ServiceException{
-		if(dbService==null){
-			dbService=(SavingsPrdPersistenceService) ServiceFactory.getInstance().getPersistenceService(
-					PersistenceServiceName.SavingsProduct);
+
+	public SavingsOfferingBO getSavingsProduct(Short prdOfferingId)
+			throws ServiceException {
+		try {
+			return new SavingsPrdPersistence().getSavingsProduct(prdOfferingId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
 		}
-		return dbService;
+	}
+
+	public List<ProductCategoryBO> getActiveSavingsProductCategories()
+			throws ServiceException {
+		try {
+			return new PrdOfferingPersistence().getApplicableProductCategories(
+					ProductType.SAVINGS, PrdCategoryStatus.ACTIVE);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public List<RecurrenceTypeEntity> getSavingsApplicableRecurrenceTypes()
+			throws ServiceException {
+		try {
+			return new SavingsPrdPersistence()
+					.getSavingsApplicableRecurrenceTypes();
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
 }

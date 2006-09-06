@@ -11,6 +11,6 @@
 			<generator class="native" />
 		</id>
 
-		<many-to-one name="lookUpValue" column="LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false" unique="true" />
+		<many-to-one name="lookUpValue" column="INTEREST_CALCULATION_LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false" unique="true" />
 	</class>
 </hibernate-mapping>

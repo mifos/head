@@ -1,11 +1,17 @@
 package org.mifos.application.productdefinition.persistence;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
+import org.mifos.application.productdefinition.business.ProductCategoryBO;
+import org.mifos.application.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -67,6 +73,35 @@ public class PrdOfferingPersistence extends Persistence {
 							NamedQueryConstants.PRODUCTOFFERING_CREATEOFFERINGSHORTNAMECOUNT)
 					.setString(ProductDefinitionConstants.PRDOFFERINGSHORTNAME,
 							productOfferingShortName).uniqueResult();
+		} catch (HibernateException he) {
+			throw new PersistenceException(he);
+		}
+	}
+
+	public List<ProductCategoryBO> getApplicableProductCategories(
+			ProductType productType, PrdCategoryStatus prdCategoryStatus)
+			throws PersistenceException {
+		prdLogger.debug("getting the applicable product categories");
+		try {
+			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put(ProductDefinitionConstants.PRODUCTTYPEID,
+					productType.getValue());
+			queryParameters.put(
+					ProductDefinitionConstants.PRODUCTCATEGORYSTATUSID,
+					prdCategoryStatus.getValue());
+			List<ProductCategoryBO> queryResult = executeNamedQuery(
+					NamedQueryConstants.PRDAPPLICABLE_CATEGORIES,
+					queryParameters);
+
+			if (null != queryResult && queryResult.size() > 0) {
+				for (ProductCategoryBO productCategory : queryResult) {
+					productCategory.getProductType();
+				}
+			}
+			prdLogger
+					.debug("getting the applicable product categories Done and : "
+							+ queryResult);
+			return queryResult;
 		} catch (HibernateException he) {
 			throw new PersistenceException(he);
 		}
