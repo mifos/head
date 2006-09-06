@@ -265,7 +265,7 @@
 												<mifos:mifoslabel name="Group.groupname" mandatory="yes" bundle="GroupUIResources"></mifos:mifoslabel>
 											</td>
 											<td width="79%">
-												<mifos:mifosalphanumtext property="displayName" />
+												<mifos:mifosalphanumtext property="displayName" maxlength="200"/>
 											</td>
 										</tr>
 
@@ -337,7 +337,7 @@
 												<table width="95%" border="0" cellspacing="0" cellpadding="0">
 													<tr>
 														<td width="24%">
-															<mifos:mifosalphanumtext keyhm="Group.ExternalId" property="externalId" />
+															<mifos:mifosalphanumtext keyhm="Group.ExternalId" property="externalId" maxlength="50"/>
 														</td>
 														<td width="76%" class="fontnormal8pt">
 															<mifos:mifoslabel keyhm="Group.ExternalId" name="Center.ExternalIdInfo" bundle="CenterUIResources"/>
@@ -360,7 +360,7 @@
 												<mifos:mifoslabel keyhm="Group.Address1" isColonRequired="Yes" name="${ConfigurationConstants.ADDRESS1}" />
 											</td>
 											<td width="79%">
-												<mifos:mifosalphanumtext keyhm="Group.Address1" name="groupCustActionForm" property="address.line1" />
+												<mifos:mifosalphanumtext keyhm="Group.Address1" name="groupCustActionForm" property="address.line1" maxlength="200"/>
 											</td>
 										</tr>
 										<tr class="fontnormal">
@@ -368,7 +368,7 @@
 												<mifos:mifoslabel keyhm="Group.Address2" isColonRequired="Yes" name="${ConfigurationConstants.ADDRESS2}" />
 											</td>
 											<td>
-												<mifos:mifosalphanumtext keyhm="Group.Address2" name="groupCustActionForm" property="address.line2" />
+												<mifos:mifosalphanumtext keyhm="Group.Address2" name="groupCustActionForm" property="address.line2" maxlength="200"/>
 											</td>
 										</tr>
 										<tr class="fontnormal">
@@ -376,7 +376,7 @@
 												<mifos:mifoslabel keyhm="Group.Address3" isColonRequired="Yes" name="${ConfigurationConstants.ADDRESS3}" />
 											</td>
 											<td>
-												<mifos:mifosalphanumtext keyhm="Group.Address3" name="groupCustActionForm" property="address.line3" />
+												<mifos:mifosalphanumtext keyhm="Group.Address3" name="groupCustActionForm" property="address.line3" maxlength="200"/>
 											</td>
 										</tr>
 										<tr class="fontnormal">
@@ -384,7 +384,7 @@
 												<mifos:mifoslabel keyhm="Group.City" isColonRequired="Yes" name="${ConfigurationConstants.CITY}" />
 											</td>
 											<td>
-												<mifos:mifosalphanumtext keyhm="Group.City" name="groupCustActionForm" property="address.city" />
+												<mifos:mifosalphanumtext keyhm="Group.City" name="groupCustActionForm" property="address.city" maxlength="100"/>
 											</td>
 										</tr>
 										<tr class="fontnormal">
@@ -392,7 +392,7 @@
 												<mifos:mifoslabel keyhm="Group.State" isColonRequired="Yes" name="${ConfigurationConstants.STATE}" />
 											</td>
 											<td>
-												<mifos:mifosalphanumtext keyhm="Group.State" name="groupCustActionForm" property="address.state" />
+												<mifos:mifosalphanumtext keyhm="Group.State" name="groupCustActionForm" property="address.state" maxlength="100"/>
 											</td>
 										</tr>
 										<tr class="fontnormal">
@@ -400,7 +400,7 @@
 												<mifos:mifoslabel keyhm="Group.Country" name="Group.country" bundle="GroupUIResources" />
 											</td>
 											<td>
-												<mifos:mifosalphanumtext keyhm="Group.Country" name="groupCustActionForm" property="address.country" />
+												<mifos:mifosalphanumtext keyhm="Group.Country" name="groupCustActionForm" property="address.country" maxlength="100"/>
 											</td>
 										</tr>
 										<tr class="fontnormal">
@@ -408,7 +408,7 @@
 												<mifos:mifoslabel keyhm="Group.PostalCode" isColonRequired="Yes" name="${ConfigurationConstants.POSTAL_CODE}" />
 											</td>
 											<td>
-												<mifos:mifosalphanumtext keyhm="Group.PostalCode" name="groupCustActionForm" property="address.zip" />
+												<mifos:mifosalphanumtext keyhm="Group.PostalCode" name="groupCustActionForm" property="address.zip" maxlength="20"/>
 											</td>
 										</tr>
 										<tr class="fontnormal">
@@ -416,7 +416,7 @@
 												<mifos:mifoslabel keyhm="Group.PhoneNumber" name="Group.telephone" bundle="GroupUIResources" />
 											</td>
 											<td>
-												<mifos:mifosalphanumtext keyhm="Group.PhoneNumber" name="groupCustActionForm" property="address.phoneNumber" />
+												<mifos:mifosalphanumtext keyhm="Group.PhoneNumber" name="groupCustActionForm" property="address.phoneNumber" maxlength="20"/>
 											</td>
 										</tr>
 									</table>

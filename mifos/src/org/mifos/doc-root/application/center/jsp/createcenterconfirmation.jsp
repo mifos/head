@@ -63,7 +63,7 @@
                   <!-- Displays the center system id and name of the center -->
                   <td class="fontnormalbold"> <mifos:mifoslabel name="Center.Confirmation.Note" bundle="CenterUIResources"></mifos:mifoslabel>
                 	<span class="fontnormal"> <c:out value="${sessionScope.centerCustActionForm.displayName}"/> 
-                   <mifos:mifoslabel name="Center.Confirmation.NameSystemID" bundle="CenterUIResources"></mifos:mifoslabel></span> <c:out value="${requestScope.centerVO.globalCustNum}"/> <span class="fontnormal"><br>
+                   <mifos:mifoslabel name="Center.Confirmation.NameSystemID" bundle="CenterUIResources"></mifos:mifoslabel></span> <c:out value="${sessionScope.centerCustActionForm.globalCustNum}"/> <span class="fontnormal"><br>
       				<mifos:mifoslabel name="Center.Confirmation.Information1" bundle="CenterUIResources"/>
       				<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
       				<mifos:mifoslabel name="Center.Confirmation.Information2" bundle="CenterUIResources"/>
