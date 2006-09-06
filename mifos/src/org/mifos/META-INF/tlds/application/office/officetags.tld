@@ -28,7 +28,7 @@
 </tag>
 <tag>
 <name>OfficeListTag</name>
-<tagclass>org.mifos.application.office.struts.tags.OfficeListTag</tagclass>
+<tagclass>org.mifos.application.office.struts.tag.OfficeListTag</tagclass>
 <bodycontent>empty</bodycontent>
 <attribute>
 <name>actionName</name>

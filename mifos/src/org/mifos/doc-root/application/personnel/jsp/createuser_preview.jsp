@@ -230,7 +230,7 @@
 										<c:if test="${personActionForm.preferredLocale == item.id}">
 											${item.name}
 								</c:if>
-									</c:forEach> <c:out value="${requestScope.languageName}" /> </span><br>
+									</c:forEach>  </span><br>
 									</td>
 								</tr>
 
@@ -357,11 +357,15 @@
 									 
 										<c:forEach
 										items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'personnelRolesList')}"
-										var="item">
+										var="item" begin="1" >
 
-										<c:if test="${personActionForm.level == item.id}">
-											${item.name}
-								</c:if>
+										<c:if test="${varStatus == 1}">
+										      ${item.name}
+										</c:if>
+										<c:if test="${varStatus != 1}">
+										      ,${item.name}
+										</c:if>
+										
 									</c:forEach>
 										
 									</span><br>

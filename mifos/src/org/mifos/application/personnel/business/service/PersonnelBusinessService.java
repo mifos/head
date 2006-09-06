@@ -70,5 +70,13 @@ public class PersonnelBusinessService extends BusinessService {
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
-	} 
+	}
+	public PersonnelBO getPersonnelByGlobalPersonnelNum(String globalPersonnelNum)throws ServiceException{
+		try {
+			return new PersonnelPersistence().getPersonnelByGlobalPersonnelNum(globalPersonnelNum);
+		} catch (PersistenceException e) {
+
+			throw new ServiceException(e);
+		}
+	}
 }

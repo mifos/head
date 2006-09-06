@@ -249,6 +249,21 @@ public class PersonAction extends BaseAction {
 		return mapping.findForward(forward.toString());
 	}
 
+	@TransactionDemarcate(saveToken = true)
+	public ActionForward get(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		PersonActionForm personActionForm = (PersonActionForm) form;
+		PersonnelBO personnel = ((PersonnelBusinessService) getService())
+		.getPersonnelByGlobalPersonnelNum(personActionForm
+				.getGlobalPersonnelNum());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,personnel,request);
+		UserContext userContext = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
+		personnel.getStatus().setLocaleId(userContext.getLocaleId());
+		loadCreateMasterData(request,personActionForm);
+		return mapping.findForward(ActionForwards.get_success.toString());
+	}
 
 	private void loadMasterData(HttpServletRequest request,
 			PersonActionForm personActionForm) throws Exception {

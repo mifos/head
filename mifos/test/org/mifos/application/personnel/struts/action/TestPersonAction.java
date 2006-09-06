@@ -131,20 +131,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 				request);
 		assertNotNull(office);
 		assertEquals(1,office.getOfficeId().intValue());
-		assertNotNull(SessionUtils.getAttribute(PersonnelConstants.TITLE_LIST,
-				request));
-		assertNotNull(SessionUtils.getAttribute(
-				PersonnelConstants.PERSONNEL_LEVEL_LIST, request));
-		assertNotNull(SessionUtils.getAttribute(PersonnelConstants.GENDER_LIST,
-				request));
-		assertNotNull(SessionUtils.getAttribute(
-				PersonnelConstants.MARITAL_STATUS_LIST, request));
-		assertNotNull(SessionUtils.getAttribute(
-				PersonnelConstants.LANGUAGE_LIST, request));
-		assertNotNull(SessionUtils.getAttribute(PersonnelConstants.ROLES_LIST,
-				request));
-		assertNotNull(SessionUtils.getAttribute(
-				CustomerConstants.CUSTOM_FIELDS_LIST, request));
+		verifyMasterData();
 		PersonActionForm personActionForm = (PersonActionForm) request
 				.getSession().getAttribute("personActionForm");
 		assertNotNull(personActionForm);
@@ -231,7 +218,34 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		personnelBO=null;
 		
 	}
-	
+	public void testGetSucess()throws Exception{
+		setRequestPathInfo("/PersonAction.do");
+		addRequestParameter("method", Methods.get.toString());
+		addRequestParameter("globalPersonnelNum", "1");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyMasterData();
+		verifyForward(ActionForwards.get_success.toString());
+
+		
+	}
+	private void verifyMasterData()throws Exception{
+		assertNotNull(SessionUtils.getAttribute(PersonnelConstants.TITLE_LIST,
+				request));
+		assertNotNull(SessionUtils.getAttribute(
+				PersonnelConstants.PERSONNEL_LEVEL_LIST, request));
+		assertNotNull(SessionUtils.getAttribute(PersonnelConstants.GENDER_LIST,
+				request));
+		assertNotNull(SessionUtils.getAttribute(
+				PersonnelConstants.MARITAL_STATUS_LIST, request));
+		assertNotNull(SessionUtils.getAttribute(
+				PersonnelConstants.LANGUAGE_LIST, request));
+		assertNotNull(SessionUtils.getAttribute(PersonnelConstants.ROLES_LIST,
+				request));
+		assertNotNull(SessionUtils.getAttribute(
+				CustomerConstants.CUSTOM_FIELDS_LIST, request));
+	}
 	public void testManage() throws Exception{
 		
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);

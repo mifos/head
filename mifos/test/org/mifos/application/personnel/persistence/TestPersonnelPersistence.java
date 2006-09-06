@@ -221,4 +221,8 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		group = TestObjectFactory.createGroupUnderCenter("group", groupStatus, center);
 		client = TestObjectFactory.createClient("client",clientStatus,group,new Date());
 	}
+	
+	public void testGetPersonnelByGlobalPersonnelNum()throws Exception{
+		assertNotNull(persistence.getPersonnelByGlobalPersonnelNum("1"));
+	}
 }

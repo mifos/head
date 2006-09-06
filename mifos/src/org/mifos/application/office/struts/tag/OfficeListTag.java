@@ -1,4 +1,4 @@
-package org.mifos.application.office.struts.tags;
+package org.mifos.application.office.struts.tag;
 
 import java.util.ArrayList;
 import java.util.Collection;

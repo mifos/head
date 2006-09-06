@@ -30,6 +30,7 @@ import org.mifos.framework.exceptions.EncryptionException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.authentication.EncryptionService;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.StringUtils;
 
@@ -137,7 +138,15 @@ public class PersonnelBO extends BusinessObject {
 		this.encriptedPassword = getEncryptedPassword(password);
 		this.status = new PersonnelStatusEntity(PersonnelStatus.ACTIVE);
 	}
-
+	public String getAge() {
+		if (this.personnelDetails != null
+				&& this.personnelDetails.getDob() != null
+				&& !this.personnelDetails.getDob().equals("")) {
+			return String.valueOf(DateHelper.DateDiffInYears(new java.sql.Date(
+					this.personnelDetails.getDob().getTime())));
+		} else
+			return "";
+	}
 	public Set<PersonnelCustomFieldEntity> getCustomFields() {
 		return customFields;
 	}

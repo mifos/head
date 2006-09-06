@@ -36,113 +36,123 @@ public class PersonnelPersistence extends Persistence {
 		return queryResult;
 	}
 
-	public PersonnelBO getPersonnel(Short personnelId)  {
-		
+	public PersonnelBO getPersonnel(Short personnelId) {
+
 		Session session = HibernateUtil.getSessionTL();
 		PersonnelBO personnel = (PersonnelBO) session.get(PersonnelBO.class,
 				personnelId);
 		return personnel;
-		
+
 	}
 
-	public boolean isUserExist(String userName) throws PersistenceException{
-		try{
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("USER_NAME", userName);
-		Integer count = (Integer)execUniqueResultNamedQuery(NamedQueryConstants.GET_PERSONNEL_WITH_NAME,queryParameters);
-		if(count!=null ){
-			return count>0?true:false;
-		}
-		}
-		catch ( HibernateException e ){
+	public boolean isUserExist(String userName) throws PersistenceException {
+		try {
+			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("USER_NAME", userName);
+			Integer count = (Integer) execUniqueResultNamedQuery(
+					NamedQueryConstants.GET_PERSONNEL_WITH_NAME,
+					queryParameters);
+			if (count != null) {
+				return count > 0 ? true : false;
+			}
+		} catch (HibernateException e) {
 			throw new PersistenceException(e);
 		}
-		return false;
-	}
-	public boolean isUserExistWithGovernmentId(String governmentId) throws PersistenceException{
-		try{
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("GOVT_ID", governmentId);
-		Integer count = (Integer)execUniqueResultNamedQuery(NamedQueryConstants.GET_PERSONNEL_WITH_GOVERNMENTID,queryParameters);
-		if(count!=null ){
-			return count>0?true:false;
-		}
-		}
-		catch ( HibernateException e ){
-			throw new PersistenceException(e);
-		}
-		return false;
-	}
-	public boolean isUserExist(String displayName,Date dob) throws PersistenceException{
-		
-		try{
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("DISPLAY_NAME", displayName);
-		queryParameters.put("DOB",dob);
-		Integer count = (Integer)execUniqueResultNamedQuery(NamedQueryConstants.GET_PERSONNEL_WITH_DOB_AND_DISPLAYNAME,queryParameters);
-		if(count!=null ){
-			return count>0?true:false;
-		}
-		}
-		catch ( HibernateException e ){
-			throw new PersistenceException(e);
-		}
-		
 		return false;
 	}
 
-	public boolean getActiveChildrenForLoanOfficer(Short personnelId, Short officeId) throws PersistenceException {
-		try{
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("userId", personnelId);
-		queryParameters.put("officeId",officeId);
-		Integer count = (Integer)execUniqueResultNamedQuery(NamedQueryConstants.GET_ACTIVE_CUSTOMERS_FOR_LO,queryParameters);
-		if(count!=null ){
-			return count>0?true:false;
-		}
-		}
-		catch ( HibernateException e ){
+	public boolean isUserExistWithGovernmentId(String governmentId)
+			throws PersistenceException {
+		try {
+			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("GOVT_ID", governmentId);
+			Integer count = (Integer) execUniqueResultNamedQuery(
+					NamedQueryConstants.GET_PERSONNEL_WITH_GOVERNMENTID,
+					queryParameters);
+			if (count != null) {
+				return count > 0 ? true : false;
+			}
+		} catch (HibernateException e) {
 			throw new PersistenceException(e);
 		}
-		
 		return false;
 	}
-	
+
+	public boolean isUserExist(String displayName, Date dob)
+			throws PersistenceException {
+
+		try {
+			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("DISPLAY_NAME", displayName);
+			queryParameters.put("DOB", dob);
+			Integer count = (Integer) execUniqueResultNamedQuery(
+					NamedQueryConstants.GET_PERSONNEL_WITH_DOB_AND_DISPLAYNAME,
+					queryParameters);
+			if (count != null) {
+				return count > 0 ? true : false;
+			}
+		} catch (HibernateException e) {
+			throw new PersistenceException(e);
+		}
+
+		return false;
+	}
+
+	public boolean getActiveChildrenForLoanOfficer(Short personnelId,
+			Short officeId) throws PersistenceException {
+		try {
+			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("userId", personnelId);
+			queryParameters.put("officeId", officeId);
+			Integer count = (Integer) execUniqueResultNamedQuery(
+					NamedQueryConstants.GET_ACTIVE_CUSTOMERS_FOR_LO,
+					queryParameters);
+			if (count != null) {
+				return count > 0 ? true : false;
+			}
+		} catch (HibernateException e) {
+			throw new PersistenceException(e);
+		}
+
+		return false;
+	}
+
 	public boolean getAllChildrenForLoanOfficer(Short personnelId,
 			Short officeId) throws PersistenceException {
-		
-		try{
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("userId", personnelId);
-		queryParameters.put("officeId",officeId);
-		Integer count = (Integer)execUniqueResultNamedQuery(NamedQueryConstants.GET_ALL_CUSTOMERS_FOR_LO,queryParameters);
-		if(count!=null ){
-			return count>0?true:false;
-		}
-		}
-		catch ( HibernateException e ){
+
+		try {
+			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("userId", personnelId);
+			queryParameters.put("officeId", officeId);
+			Integer count = (Integer) execUniqueResultNamedQuery(
+					NamedQueryConstants.GET_ALL_CUSTOMERS_FOR_LO,
+					queryParameters);
+			if (count != null) {
+				return count > 0 ? true : false;
+			}
+		} catch (HibernateException e) {
 			throw new PersistenceException(e);
 		}
-		
+
 		return false;
 	}
-	
-	public PersonnelBO getPersonnelByGlobalPersonnelNum(String globalPersonnelNum
-			) throws PersistenceException {
-		
-		try{
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("globalPersonnelNum", globalPersonnelNum);
-		
-		PersonnelBO personnelBO = (PersonnelBO)execUniqueResultNamedQuery(NamedQueryConstants.PERSONNEL_BY_SYSTEM_ID,queryParameters);
-		if(personnelBO!=null ){
-			return personnelBO;
-		}
-		}
-		catch ( HibernateException e ){
+
+	public PersonnelBO getPersonnelByGlobalPersonnelNum(
+			String globalPersonnelNum) throws PersistenceException {
+
+		try {
+			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("globalPersonnelNum", globalPersonnelNum);
+
+			PersonnelBO personnelBO = (PersonnelBO) execUniqueResultNamedQuery(
+					NamedQueryConstants.PERSONNEL_BY_SYSTEM_ID, queryParameters);
+			if (personnelBO != null) {
+				return personnelBO;
+			}
+		} catch (HibernateException e) {
 			throw new PersistenceException(e);
 		}
-		
+
 		return null;
 	}
 	

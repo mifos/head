@@ -345,27 +345,28 @@
 							<br>
 							
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
-								<c:if test="${!empty personActionForm.customFields} ">
+							
+							<c:set var="customFieldsList" scope="request" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}"/> 
+								<c:if test="${requestScope.customFieldsList !=null}">
 									<tr>
-										<td colspan="2" class="fontnormalbold"><mifos:mifoslabel
-											name="Personnel.AdditionalInfo"
-											/> <br>
+										<td colspan="2" class="fontnormalbold" >
+										<mifos:mifoslabel	name="Personnel.AdditionalInfo"	/><br>
 										<br>
 										</td>
 									</tr>
 								</c:if>
-								<c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}"
+								<c:forEach var="cf" items="${requestScope.customFieldsList}"
 									varStatus="loopStatus">
 									<bean:define id="ctr">
 										<c:out value="${loopStatus.index}" />
 									</bean:define>
 									<tr class="fontnormal">
-										<td width="21%" align="right"><mifos:mifoslabel
+										<td width="22%" align="right"><mifos:mifoslabel
 											name="${cf.lookUpEntity.entityType}"
 											mandatory="${cf.mandatoryStringValue}"
 											bundle="PersonnelUIResources"></mifos:mifoslabel>: 
 										</td>
-										<td width="79%"><c:if test="${cf.fieldType == 1}">
+										<td width="78%" ><c:if test="${cf.fieldType == 1}">
 											<mifos:mifosnumbertext name="personActionForm"
 												property='customField[${ctr}].fieldValue' maxlength="200" />
 										</c:if> <c:if test="${cf.fieldType == 2}">

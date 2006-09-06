@@ -104,6 +104,8 @@ public class ActivityMapper {
 	private final short GROUP_CREATEPENDING = 58;
 
 	private ActivityMapper() {
+		
+		
 
 		activityMap.put("/AdminAction-load", SecurityConstants.VIEW);
 
@@ -330,6 +332,8 @@ public class ActivityMapper {
 		activityMap.put("/PersonnelAction-unLockUserAccount",
 				SecurityConstants.PERSONNEL_UNLOCK_PERSONNEL);
 			//m2		 personnel related mappings
+		activityMap.put("/PersonAction-get",SecurityConstants.VIEW);
+		
 		activityMap.put("/PersonAction-chooseOffice",
 				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
 		activityMap.put("/PersonAction-load",
@@ -338,6 +342,7 @@ public class ActivityMapper {
 				SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
 		activityMap.put("/PersonAction-previewManage",
 				SecurityConstants.VIEW);
+		
 		activityMap.put("/PersonAction-previousManage",
 				SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
 		activityMap.put("/PersonAction-update",
@@ -351,6 +356,7 @@ public class ActivityMapper {
 				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
 		activityMap.put("/PersonAction-create",
 				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
+		
 		
 		// for your settings link
 		activityMap.put("/PersonnelAction-getDetails", SecurityConstants.VIEW);
@@ -1043,6 +1049,7 @@ public class ActivityMapper {
 	private Map<String, Short> activityMap = new HashMap<String, Short>();
 
 	public Short getActivityId(String key) {
+		
 		return activityMap.get(key);
 	}
 

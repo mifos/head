@@ -630,7 +630,7 @@
 			<forward name="previous_success" path="/pages/application/personnel/jsp/create_user.jsp" />	
 			<forward name="create_success" path="/pages/application/personnel/jsp/create_user.jsp" />	
 			<forward name="create_failure" path="/pages/application/personnel/jsp/createuser_preview.jsp" />		
-
+			<forward name="get_success" path="/pages/application/personnel/jsp/personneldetails.jsp" />			
 		</action>
 		<!-- Personnel Notes action -->
 		<action path="/PersonnelNotesAction"
