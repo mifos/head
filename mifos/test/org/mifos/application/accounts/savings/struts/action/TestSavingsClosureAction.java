@@ -12,7 +12,7 @@ import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountNotesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.persistence.service.SavingsPersistenceService;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -194,7 +194,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		
-		savings = new SavingsPersistenceService().findById(savings.getAccountId());
+		savings = new SavingsPersistence().findById(savings.getAccountId());
 		savings.setUserContext(userContext);
 		Money interestAtClosure = savings.calculateInterestForClosure(new SavingsHelper().getCurrentDate());
 		

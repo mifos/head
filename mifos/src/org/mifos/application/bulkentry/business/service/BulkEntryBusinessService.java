@@ -49,10 +49,10 @@ import org.mifos.application.accounts.business.LoanAccountsProductView;
 import org.mifos.application.accounts.business.SavingsAccountView;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.persistance.service.LoanPersistenceService;
+import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.persistence.service.SavingsPersistenceService;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -85,20 +85,15 @@ public class BulkEntryBusinessService extends BusinessService {
 
 	private CustomerPersistence customerPersistence;
 
-	private LoanPersistenceService loanPersistenceService;
+	private LoanPersistance loanPersistence;
 
-	private SavingsPersistenceService savingsPersistenceService;
+	private SavingsPersistence savingsPersistence;
 
 	public BulkEntryBusinessService() {
 			bulkEntryPersistanceService = new BulkEntryPersistanceService();
 			customerPersistence = new CustomerPersistence();
-			loanPersistenceService = (LoanPersistenceService) ServiceFactory
-					.getInstance().getPersistenceService(
-							PersistenceServiceName.Loan);
-
-			savingsPersistenceService = (SavingsPersistenceService) ServiceFactory
-					.getInstance().getPersistenceService(
-							PersistenceServiceName.Savings);
+			loanPersistence=new LoanPersistance();
+			savingsPersistence = new SavingsPersistence();
 	}
 
 	@Override
@@ -107,34 +102,54 @@ public class BulkEntryBusinessService extends BusinessService {
 	}
 
 	public List<LoanAccountView> retrieveAccountInformationForCustomer(
-			Integer customerId, Date disbursementDate) {
-		return loanPersistenceService.getLoanAccountsForCustomer(customerId,
-				disbursementDate);
+			Integer customerId, Date disbursementDate) throws ServiceException {
+		try {
+			return loanPersistence.getLoanAccountsForCustomer(customerId,
+					disbursementDate);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
 
 	public List<AccountActionDateEntity> retrieveLoanAccountTransactionDetail(
-			Integer accountId, Date transactionDate) {
-		return loanPersistenceService.getTransactionDetailForLoanAccount(
-				accountId, transactionDate);
+			Integer accountId, Date transactionDate) throws ServiceException {
+		try {
+			return loanPersistence.getLoanAccountTransactionDetail(
+					accountId, transactionDate);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
 
 	public List<SavingsAccountView> retrieveSavingsAccountInformationForCustomer(
-			Integer customerId) {
-		return savingsPersistenceService
-				.getSavingsAccountsForCustomer(customerId);
+			Integer customerId) throws ServiceException {
+		try {
+			return savingsPersistence
+					.getSavingsAccountsForCustomer(customerId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
 
 	public List<AccountActionDateEntity> retrieveSavingsAccountTransactionDetail(
 			Integer accountId, Integer customerId, Date transactionDate,
-			boolean isMandatory) {
-		return savingsPersistenceService.getTransactionDetailForSavingsAccount(
-				accountId, customerId, transactionDate, isMandatory);
+			boolean isMandatory) throws ServiceException {
+		try {
+			return savingsPersistence.getSavingsAccountTransactionDetail(
+					accountId, customerId, transactionDate, isMandatory);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
 
 	public Double getFeeAmountAtDisbursement(Integer accountId,
-			Date transactionDate) {
-		return loanPersistenceService.getFeeAmountAtDisbursement(accountId,
-				transactionDate);
+			Date transactionDate) throws ServiceException {
+		try {
+			return loanPersistence.getFeeAmountAtDisbursement(accountId,
+					transactionDate);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
 
 	public CustomerBO retrieveCustomerAccountInfo(Integer customerId) {
@@ -158,9 +173,13 @@ public class BulkEntryBusinessService extends BusinessService {
 	}
 
 	public List<PrdOfferingBO> getLoanOfferingBOForCustomer(
-			String customerSearchId, Date trxnDate) {
-		return loanPersistenceService.getLoanOfferingBOForCustomer(
-				customerSearchId, trxnDate);
+			String customerSearchId, Date trxnDate) throws ServiceException {
+		try {
+			return loanPersistence.getLoanOfferingBOForCustomer(
+					customerSearchId, trxnDate);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
 
 	public void saveLoanAccount(

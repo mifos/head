@@ -60,7 +60,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
@@ -78,7 +77,7 @@ public class LoanAccountAction extends AccountAppAction {
 		return true;
 	}
 
-	public LoanAccountAction() throws ServiceException {
+	public LoanAccountAction() throws Exception {
 		loanBusinessService = (LoanBusinessService) ServiceFactory
 				.getInstance().getBusinessService(BusinessServiceName.Loan);
 	}
@@ -368,7 +367,7 @@ public class LoanAccountAction extends AccountAppAction {
 	}
 
 	private void updateBusinessData(LoanBO loanBO, ActionForm form,
-			HttpServletRequest request) throws AccountException {
+			HttpServletRequest request) throws Exception {
 		LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
 		if (loanAccountActionForm.getIntDedDisbursement().equals("1")) {
 			try {
@@ -420,8 +419,7 @@ public class LoanAccountAction extends AccountAppAction {
 	}
 
 	private void loadLoanDetailPageInfo(LoanBO loanBO,
-			HttpServletRequest request) throws SystemException,
-			ApplicationException {		
+			HttpServletRequest request) throws Exception {		
 		SessionUtils.setAttribute(LoanConstants.RECENTACCOUNTACTIVITIES,
 				loanBusinessService.getRecentActivityView(loanBO
 						.getGlobalAccountNum(), getUserContext(request)
@@ -472,7 +470,7 @@ public class LoanAccountAction extends AccountAppAction {
 	}
 
 	private LoanOfferingBO getLoanOffering(Short loanOfferingId, short localeId)
-			throws ServiceException {
+			throws Exception {
 		return loanBusinessService.getLoanOffering(loanOfferingId, localeId);
 	}
 
@@ -509,7 +507,7 @@ public class LoanAccountAction extends AccountAppAction {
 
 	private void loadFees(LoanAccountActionForm actionForm,
 			LoanOfferingBO loanOffering, HttpServletRequest request)
-			throws FeeException, ServiceException {
+			throws Exception {
 		FeeBusinessService feeService = (FeeBusinessService) ServiceFactory
 				.getInstance().getBusinessService(
 						BusinessServiceName.FeesService);
@@ -529,7 +527,7 @@ public class LoanAccountAction extends AccountAppAction {
 	}
 	
 	private void loadMasterData(HttpServletRequest request)
-			throws ApplicationException, SystemException {
+			throws Exception {
 		SessionUtils.setAttribute(MasterConstants.COLLATERAL_TYPES,
 				getMasterEntities(CollateralTypeEntity.class, getUserContext(
 						request).getLocaleId()), request.getSession());

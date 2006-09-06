@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.persistence.service.SavingsPersistenceService;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
@@ -55,7 +55,7 @@ public class SavingsPrdPersistenceTest extends MifosTestCase {
 				.retrieveSavingsAccountsForPrd(savingsOffering
 						.getPrdOfferingId());
 		assertEquals(Integer.valueOf("1").intValue(), savingsList.size());
-		savings = new SavingsPersistenceService().findById(savings
+		savings = new SavingsPersistence().findById(savings
 				.getAccountId());
 	}
 

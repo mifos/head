@@ -68,132 +68,169 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.SessionUtils;
 
-public class SavingsApplyAdjustmentAction extends BaseAction{
+public class SavingsApplyAdjustmentAction extends BaseAction {
 	private SavingsBusinessService savingsService;
-	private  MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
-	
-	protected BusinessService getService() throws ServiceException{
+
+	private MifosLogger logger = MifosLogManager
+			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+
+	protected BusinessService getService() throws ServiceException {
 		return getSavingsService();
 	}
-	
-	protected boolean skipActionFormToBusinessObjectConversion(String method)  {
+
+	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
 	}
-	
-	public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
+
+	public ActionForward load(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		clearActionForm(form);
 		doCleanUp(request);
-		SavingsApplyAdjustmentActionForm actionForm = (SavingsApplyAdjustmentActionForm)form;
-		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
-		SavingsBO savings =(SavingsBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request.getSession());
-		Integer accountId=savings.getAccountId();
+		SavingsApplyAdjustmentActionForm actionForm = (SavingsApplyAdjustmentActionForm) form;
+		UserContext uc = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
+		SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request.getSession());
+		Integer accountId = savings.getAccountId();
 		request.removeAttribute(Constants.BUSINESS_KEY);
-		savings=getSavingsService().findById(accountId);
+		savings = getSavingsService().findById(accountId);
 		savings.setUserContext(uc);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY,savings,request.getSession());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request
+				.getSession());
 		AccountPaymentEntity lastPayment = savings.getLastPmnt();
-		if(null != lastPayment&& lastPayment.getAmount().getAmountDoubleValue()!=0 && (new SavingsHelper().getPaymentActionType(lastPayment).equals(AccountConstants.ACTION_SAVINGS_DEPOSIT) ||new SavingsHelper().getPaymentActionType(lastPayment).equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL))){
+		if (null != lastPayment
+				&& lastPayment.getAmount().getAmountDoubleValue() != 0
+				&& (new SavingsHelper().getPaymentActionType(lastPayment)
+						.equals(AccountConstants.ACTION_SAVINGS_DEPOSIT) || new SavingsHelper()
+						.getPaymentActionType(lastPayment).equals(
+								AccountConstants.ACTION_SAVINGS_WITHDRAWAL))) {
 			actionForm.setLastPaymentAmount(savings.getLastPmnt().getAmount());
-			AccountActionEntity accountAction = new AccountPersistence().getAccountAction(new SavingsHelper().getPaymentActionType(lastPayment));
+			AccountActionEntity accountAction = new AccountPersistence()
+					.getAccountAction(new SavingsHelper()
+							.getPaymentActionType(lastPayment));
 			accountAction.setLocaleId(uc.getLocaleId());
 			Hibernate.initialize(savings.getLastPmnt().getAccountTrxns());
-			SessionUtils.setAttribute(SavingsConstants.ACCOUNT_ACTION,accountAction,request.getSession());
-			SessionUtils.setAttribute(SavingsConstants.CLIENT_NAME,getClientName(savings,lastPayment),request.getSession());
-			SessionUtils.setAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID,Constants.YES,request.getSession());
-		}
-		else
-			SessionUtils.setAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID,Constants.NO,request.getSession());
-		
-		logger.debug("In SavingsAdjustmentAction::load(), accountId: "+ savings.getAccountId());
+			SessionUtils.setAttribute(SavingsConstants.ACCOUNT_ACTION,
+					accountAction, request.getSession());
+			SessionUtils.setAttribute(SavingsConstants.CLIENT_NAME,
+					getClientName(savings, lastPayment), request.getSession());
+			SessionUtils.setAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID,
+					Constants.YES, request.getSession());
+		} else
+			SessionUtils.setAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID,
+					Constants.NO, request.getSession());
+
+		logger.debug("In SavingsAdjustmentAction::load(), accountId: "
+				+ savings.getAccountId());
 		return mapping.findForward("load_success");
 	}
-	
-	
-	public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
+
+	public ActionForward preview(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		logger.debug("In SavingsAdjustmentAction::preview()");
 		return mapping.findForward("preview_success");
 	}
-	
-	public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
+
+	public ActionForward previous(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		logger.debug("In SavingsAdjustmentAction::previous()");
 		return mapping.findForward("previous_success");
 	}
 
-	public ActionForward adjustLastUserAction(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
+	public ActionForward adjustLastUserAction(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 		logger.debug("In SavingsAdjustmentAction::adjustLastUserPayment()");
-		request.setAttribute("method","adjustLastUserAction");
-		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
-		SavingsBO savings =(SavingsBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request.getSession());
-		Integer accountId=savings.getAccountId();
+		request.setAttribute("method", "adjustLastUserAction");
+		UserContext uc = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
+		SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request.getSession());
+		Integer accountId = savings.getAccountId();
 		request.removeAttribute(Constants.BUSINESS_KEY);
-		savings=getSavingsService().findById(accountId);
+		savings = getSavingsService().findById(accountId);
 		savings.setUserContext(uc);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY,savings,request.getSession());
-		SavingsApplyAdjustmentActionForm actionForm = (SavingsApplyAdjustmentActionForm)form;
-		savings.adjustLastUserAction(actionForm.getLastPaymentAmount(),actionForm.getNote());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request
+				.getSession());
+		SavingsApplyAdjustmentActionForm actionForm = (SavingsApplyAdjustmentActionForm) form;
+		savings.adjustLastUserAction(actionForm.getLastPaymentAmount(),
+				actionForm.getNote());
 		doCleanUp(request);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.getSessionTL().evict(savings);
 		return mapping.findForward("account_detail_page");
 	}
-	
+
 	protected boolean startSession() {
 		return false;
 	}
-	
-	public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
+
+	public ActionForward cancel(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		doCleanUp(request);
 		logger.debug("In SavingsAdjustmentAction::cancel()");
 		return mapping.findForward("account_detail_page");
 	}
-	
-	public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
-		String method = (String)request.getAttribute("methodCalled");
-		logger.debug("In SavingsAdjustmentAction::validate(), method: "+ method);
-		String forward=null;
-		if(method!=null && method.equals("preview"))
-				forward="preview_failure";
-		else if(method!=null && method.equals("SavingsAdjustmentAction")){
-			forward="adjustLastUserAction_failure";
+
+	public ActionForward validate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		String method = (String) request.getAttribute("methodCalled");
+		logger.debug("In SavingsAdjustmentAction::validate(), method: "
+				+ method);
+		String forward = null;
+		if (method != null && method.equals("preview"))
+			forward = "preview_failure";
+		else if (method != null && method.equals("SavingsAdjustmentAction")) {
+			forward = "adjustLastUserAction_failure";
 		}
 		return mapping.findForward(forward);
 	}
 
-	private void clearActionForm(ActionForm form){
-		SavingsApplyAdjustmentActionForm actionForm =(SavingsApplyAdjustmentActionForm)form;
+	private void clearActionForm(ActionForm form) {
+		SavingsApplyAdjustmentActionForm actionForm = (SavingsApplyAdjustmentActionForm) form;
 		actionForm.setLastPaymentAmountOption("1");
 		actionForm.setLastPaymentAmount(new Money());
 		actionForm.setNote(null);
 	}
-	
-	private void doCleanUp(HttpServletRequest request){
+
+	private void doCleanUp(HttpServletRequest request) {
 		request.getSession().removeAttribute(SavingsConstants.ACCOUNT_ACTION);
 		request.getSession().removeAttribute(SavingsConstants.CLIENT_NAME);
 	}
-	
-	private SavingsBusinessService getSavingsService() throws ServiceException{
-		if(savingsService==null)
-			savingsService=(SavingsBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Savings);
+
+	private SavingsBusinessService getSavingsService() throws ServiceException {
+		if (savingsService == null)
+			savingsService = (SavingsBusinessService) ServiceFactory
+					.getInstance().getBusinessService(
+							BusinessServiceName.Savings);
 		return savingsService;
 	}
-	
-	private String getClientName(SavingsBO savings , AccountPaymentEntity lastPayment){
-		if(savings.getCustomer().getCustomerLevel().getId().equals(CustomerConstants.CLIENT_LEVEL_ID))
+
+	private String getClientName(SavingsBO savings,
+			AccountPaymentEntity lastPayment) {
+		if (savings.getCustomer().getCustomerLevel().getId().equals(
+				CustomerConstants.CLIENT_LEVEL_ID))
 			return null;
-		String clientName=null;
+		String clientName = null;
 		CustomerBO customer = null;
-		for(AccountTrxnEntity accountTrxn: lastPayment.getAccountTrxns()){
-			customer = accountTrxn.getCustomer(); 
+		for (AccountTrxnEntity accountTrxn : lastPayment.getAccountTrxns()) {
+			customer = accountTrxn.getCustomer();
 			break;
 		}
-		if(customer!=null && customer.getCustomerLevel().getId().equals(CustomerConstants.CLIENT_LEVEL_ID)){
+		if (customer != null
+				&& customer.getCustomerLevel().getId().equals(
+						CustomerConstants.CLIENT_LEVEL_ID)) {
 			return customer.getDisplayName();
 		}
-			
+
 		return clientName;
 	}
-	
+
 }

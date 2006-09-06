@@ -44,59 +44,82 @@ public class LoanPersistance extends Persistence {
 		super();
 	}
 
-	public AccountActionEntity getAccountActionEntity(Short actionType) {
-		Session session = HibernateUtil.getSessionTL();
-		AccountActionEntity action = (AccountActionEntity) session.get(AccountActionEntity.class,
-				actionType);
+	public AccountActionEntity getAccountActionEntity(Short actionType) throws PersistenceException {
+		AccountActionEntity action = null;
+		try{
+			Session session = HibernateUtil.getSessionTL();
+			action = (AccountActionEntity) session.get(AccountActionEntity.class,
+					actionType);
+		}catch(HibernateException he){
+			throw new PersistenceException(he);
+		}
 		return action;
 	}
 
-	public List<LoanAccountView> getLoanAccountsForCustomer(Integer customerId,Date disbursmentDate) {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("CUSTOMER_ID", customerId);
-		queryParameters.put("DISBURSEMENT_DATE", disbursmentDate);
-		List<LoanAccountView> queryResult = executeNamedQuery(
-				NamedQueryConstants.GET_LISTOFACCOUNTS_FOR_CUSTOMER,
-				queryParameters);
+	public List<LoanAccountView> getLoanAccountsForCustomer(Integer customerId,Date disbursmentDate) throws PersistenceException {
+		List<LoanAccountView> queryResult = null;
+		try{
+			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("CUSTOMER_ID", customerId);
+			queryParameters.put("DISBURSEMENT_DATE", disbursmentDate);
+			queryResult = executeNamedQuery(
+					NamedQueryConstants.GET_LISTOFACCOUNTS_FOR_CUSTOMER,
+					queryParameters);
+		}catch(HibernateException he){
+			throw new PersistenceException(he);
+		}
 		return queryResult;
 	}
 
 	public List<AccountActionDateEntity> getLoanAccountTransactionDetail(
-			Integer accountId, Date transactionDate) {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("ACCOUNT_ID", accountId);
-		queryParameters.put("ACTION_DATE", transactionDate);
-		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
-		List<AccountActionDateEntity> queryResult = executeNamedQuery(
-				NamedQueryConstants.GET_LISTOFACCOUNTSTRXNS_FOR_LOAN,
-				queryParameters);
-		return queryResult;
-	}
-	  public List<PrdOfferingBO> getLoanOfferingBOForCustomer(String customerSearchId,Date disbursmentDate){
-			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		  
-			queryParameters.put("CUSTOMER_SEARCH_ID", customerSearchId);
-			queryParameters.put("DISBURSEMENT_DATE", disbursmentDate);
-			List<PrdOfferingBO> queryResult = executeNamedQuery(
-					NamedQueryConstants.GET_LOANOFFERINGLIST_FOR_LOANS,
-					queryParameters);
-			return queryResult;
-
-	  }
-	  
-		public Double getFeeAmountAtDisbursement(Integer accountId, Date transactionDate) {
+			Integer accountId, Date transactionDate) throws PersistenceException {
+		List<AccountActionDateEntity> queryResult = null;
+		try{
 			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put("ACCOUNT_ID", accountId);
-			//queryParameters.put("ACTION_DATE", transactionDate);
-
-			List<AccountFeesEntity>queryResult = executeNamedQuery(
-					NamedQueryConstants.GET_FEE_AMOUNT_AT_DISBURSEMENT,
+			queryParameters.put("ACTION_DATE", transactionDate);
+			queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
+			queryResult = executeNamedQuery(
+					NamedQueryConstants.GET_LISTOFACCOUNTSTRXNS_FOR_LOAN,
 					queryParameters);
+		}catch(HibernateException he){
+			throw new PersistenceException(he);
+		}
+		return queryResult;
+	}
+	 public List<PrdOfferingBO> getLoanOfferingBOForCustomer(
+			String customerSearchId, Date disbursmentDate) throws PersistenceException {
+		List<PrdOfferingBO> queryResult = null;
+		try {
+			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+
+			queryParameters.put("CUSTOMER_SEARCH_ID", customerSearchId);
+			queryParameters.put("DISBURSEMENT_DATE", disbursmentDate);
+			queryResult = executeNamedQuery(
+					NamedQueryConstants.GET_LOANOFFERINGLIST_FOR_LOANS,
+					queryParameters);
+		} catch (HibernateException he) {
+			throw new PersistenceException(he);
+		}
+		return queryResult;
+	}
+	  
+		public Double getFeeAmountAtDisbursement(Integer accountId, Date transactionDate) throws PersistenceException {
 			Money amount = new Money();
-			for (AccountFeesEntity entity : queryResult) {
-				amount=amount.add(entity.getAccountFeeAmount());
+			try{
+				HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+				queryParameters.put("ACCOUNT_ID", accountId);
+				//queryParameters.put("ACTION_DATE", transactionDate);
+	
+				List<AccountFeesEntity>queryResult = executeNamedQuery(
+						NamedQueryConstants.GET_FEE_AMOUNT_AT_DISBURSEMENT,
+						queryParameters);
+				for (AccountFeesEntity entity : queryResult) {
+					amount=amount.add(entity.getAccountFeeAmount());
+				}
+			}catch(HibernateException he){
+				throw new PersistenceException(he);
 			}
-			
 			return amount.getAmountDoubleValue();
 		}
 		
@@ -157,14 +180,18 @@ public class LoanPersistance extends Persistence {
 					
 		}
 		
-		public LoanBO getAccount(Integer accountId) {
-			return (LoanBO)HibernateUtil.getSessionTL().get(LoanBO.class, accountId);
+		public LoanBO getAccount(Integer accountId) throws PersistenceException {
+			try{
+				return (LoanBO)HibernateUtil.getSessionTL().get(LoanBO.class, accountId);
+			}catch(HibernateException he){
+				throw new PersistenceException(he);
+			}
 		}
 		
-		public Short getLastPaymentAction(Integer accountId) throws SystemException {
+		public Short getLastPaymentAction(Integer accountId) throws PersistenceException  {
 			Session session = null;
 			try {
-				session = HibernateUtil.getSession();
+				session = HibernateUtil.getSessionTL();
 				HashMap queryParameters = new HashMap();
 				queryParameters.put("accountId", accountId);
 				List<AccountPaymentEntity> accountPaymentList = executeNamedQuery(
@@ -179,55 +206,71 @@ public class LoanPersistance extends Persistence {
 					}
 				}
 			} catch (HibernateException he) {
-				throw new SystemException(ExceptionConstants.SYSTEMEXCEPTION, he);
+				throw new PersistenceException(ExceptionConstants.SYSTEMEXCEPTION, he);
 			}
 			return null;
 		}
 		
 		
 	public List<LoanOfferingBO> getApplicablePrdOfferings(
-			CustomerLevelEntity customerLevel) {
-		Map<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put(AccountConstants.PRDSTATUS,
-				PrdStatus.LOANACTIVE.getValue());
-		queryParameters.put(AccountConstants.PRODUCT_APPLICABLE_TO,
-				customerLevel.getProductApplicableType());
-		return executeNamedQuery(NamedQueryConstants.APPLICABLE_LOAN_OFFERINGS,
-				queryParameters);
+			CustomerLevelEntity customerLevel) throws PersistenceException {
+		try{
+			Map<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put(AccountConstants.PRDSTATUS,
+					PrdStatus.LOANACTIVE.getValue());
+			queryParameters.put(AccountConstants.PRODUCT_APPLICABLE_TO,
+					customerLevel.getProductApplicableType());
+			return executeNamedQuery(NamedQueryConstants.APPLICABLE_LOAN_OFFERINGS,
+					queryParameters);
+		}catch(HibernateException he){
+			throw new PersistenceException(he);
+		}
 	}
 	
-	public LoanOfferingBO getLoanOffering(Short loanOfferingId, Short localeId) {
-		Session session = HibernateUtil.getSessionTL();
-		LoanOfferingBO loanOffering = (LoanOfferingBO) session.get(
-				LoanOfferingBO.class, loanOfferingId);
-		if (loanOffering.getLoanOfferingFunds() != null
-				&& loanOffering.getLoanOfferingFunds().size() > 0)
-			for (LoanOfferingFundEntity loanOfferingFund : loanOffering
-					.getLoanOfferingFunds()) {
-				loanOfferingFund.getFund().getFundId();
-				loanOfferingFund.getFund().getFundName();
-			}
-		loanOffering.getInterestTypes().setLocaleId(localeId);
-		loanOffering.getGracePeriodType().setLocaleId(localeId);
-		return loanOffering;
+	public LoanOfferingBO getLoanOffering(Short loanOfferingId, Short localeId) throws PersistenceException {
+		try{
+			Session session = HibernateUtil.getSessionTL();
+			LoanOfferingBO loanOffering = (LoanOfferingBO) session.get(
+					LoanOfferingBO.class, loanOfferingId);
+			if (loanOffering.getLoanOfferingFunds() != null
+					&& loanOffering.getLoanOfferingFunds().size() > 0)
+				for (LoanOfferingFundEntity loanOfferingFund : loanOffering
+						.getLoanOfferingFunds()) {
+					loanOfferingFund.getFund().getFundId();
+					loanOfferingFund.getFund().getFundName();
+				}
+			loanOffering.getInterestTypes().setLocaleId(localeId);
+			loanOffering.getGracePeriodType().setLocaleId(localeId);
+			return loanOffering;
+		}catch(HibernateException he){
+			throw new PersistenceException(he);
+		}
 	}
 	
 	public List<LoanBO> getSearchResults(String officeId,
 			 String personnelId,
 			 String type,
-			 String currentStatus){
-		Map<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("OFFICE_ID",officeId);
-		queryParameters.put("PERSONNEL_ID",personnelId);
-		queryParameters.put("CURRENT_STATUS",currentStatus);
-		return executeNamedQuery(NamedQueryConstants.GET_SEARCH_RESULTS,
-				queryParameters);
+			 String currentStatus) throws PersistenceException{
+		try{
+			Map<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("OFFICE_ID",officeId);
+			queryParameters.put("PERSONNEL_ID",personnelId);
+			queryParameters.put("CURRENT_STATUS",currentStatus);
+			return executeNamedQuery(NamedQueryConstants.GET_SEARCH_RESULTS,
+					queryParameters);
+		}catch(HibernateException he){
+			throw new PersistenceException(he);
+		}
 	}
 	
-	public void deleteInstallments(Set<AccountActionDateEntity> accountActionDates){
-		Session session = HibernateUtil.getSessionTL();
-		for (AccountActionDateEntity entity : accountActionDates) {
-			session.delete(entity);
+	public void deleteInstallments(Set<AccountActionDateEntity> accountActionDates) throws PersistenceException{
+		try{	
+			Session session = HibernateUtil.getSessionTL();
+			for (AccountActionDateEntity entity : accountActionDates) {
+				session.delete(entity);
+			}
+		}catch(HibernateException he){
+			throw new PersistenceException(he);
 		}
 	}
 }

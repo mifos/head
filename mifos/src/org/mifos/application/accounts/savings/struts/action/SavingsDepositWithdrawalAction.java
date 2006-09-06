@@ -210,7 +210,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 
 	private PaymentData createPaymentData(
 			SavingsDepositWithdrawalActionForm actionForm, UserContext uc)
-			throws ServiceException {
+			throws Exception {
 		Date trxnDate = getDateFromString(actionForm.getTrxnDate(), uc
 				.getPereferedLocale());
 		Date receiptDate = getDateFromString(actionForm.getReceiptDate(), uc
@@ -229,7 +229,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 
 	private PaymentData createPaymentDataForDeposit(
 			SavingsDepositWithdrawalActionForm actionForm, UserContext uc,
-			SavingsBO savings) throws ServiceException {
+			SavingsBO savings) throws Exception {
 		PaymentData paymentData = createPaymentData(actionForm, uc);
 		for (AccountActionDateEntity installment : savings
 				.getTotalInstallmentsDue(Integer.valueOf(actionForm

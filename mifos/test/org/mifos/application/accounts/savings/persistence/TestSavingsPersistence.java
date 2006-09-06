@@ -312,7 +312,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 				new Short("14"), new Date(), savingsOffering, userContext);
 	}
 
-	public void testGetSavingsAccountsForCustomer() {
+	public void testGetSavingsAccountsForCustomer() throws Exception {
 		createInitialObjects();
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));

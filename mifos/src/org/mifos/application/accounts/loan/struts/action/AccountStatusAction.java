@@ -120,7 +120,7 @@ public class AccountStatusAction extends BaseAction {
 
     public ActionForward searchResults(ActionMapping mapping, ActionForm form,
         HttpServletRequest request, HttpServletResponse httpservletresponse)
-        throws AccountException {
+        throws Exception {
         AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
 
         List<LoanBO> searchResults;
@@ -196,7 +196,7 @@ public class AccountStatusAction extends BaseAction {
     }
 
     private List<PersonnelView> loadLoanOfficersForBranch(
-        UserContext userContext, Short officeId) throws ServiceException {
+        UserContext userContext, Short officeId) throws Exception {
         masterService = (MasterDataService) ServiceFactory.getInstance()
                                                           .getBusinessService(BusinessServiceName.MasterDataService);
 
@@ -205,7 +205,7 @@ public class AccountStatusAction extends BaseAction {
     }
 
     private List<LoanBO> getSearchResults(String officeId, String personnelId,
-        String type, String currentStatus) throws ServiceException {
+        String type, String currentStatus) throws Exception {
         loanService = (LoanBusinessService) ServiceFactory.getInstance()
                                                           .getBusinessService(BusinessServiceName.Loan);
 
@@ -215,7 +215,7 @@ public class AccountStatusAction extends BaseAction {
 
     private List updateAccountsStatus(List<String> accountList,
         String newStatus, String comments, UserContext userContext)
-        throws NumberFormatException, Exception {
+        throws Exception {
         loanService = (LoanBusinessService) ServiceFactory.getInstance()
                                                           .getBusinessService(BusinessServiceName.Loan);
 

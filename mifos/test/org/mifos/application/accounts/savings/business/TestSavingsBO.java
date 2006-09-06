@@ -28,7 +28,6 @@ import org.mifos.application.accounts.exceptions.IDGenerationException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
-import org.mifos.application.accounts.savings.persistence.service.SavingsPersistenceService;
 import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
@@ -93,7 +92,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	private SavingsTestHelper helper = new SavingsTestHelper();
 
-	private SavingsPersistenceService savingsService = new SavingsPersistenceService();
+	private SavingsPersistence savingsPersistence = new SavingsPersistence();
 
 	private AccountPersistence accountPersistence = new AccountPersistence();
 
@@ -327,7 +326,7 @@ public class TestSavingsBO extends MifosTestCase {
 		assertEquals(TestObjectFactory.getAllMeetingDates(
 				center.getCustomerMeeting().getMeeting()).size(), savings
 				.getAccountActionDates().size());
-		savings = new SavingsPersistenceService().findById(savings
+		savings = new SavingsPersistence().findById(savings
 				.getAccountId());
 		assertEquals(savings.getInterestRate(), savingsOffering
 				.getInterestRate());
@@ -450,7 +449,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.getSavingsOffering().setMinAmntForInt(new Money("0"));
 		double intAmount = savings.calculateInterestForClosure(
 				helper.getDate("30/05/2006")).getAmountDoubleValue();
@@ -485,7 +484,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		double intAmount = savings.calculateInterestForClosure(
 				helper.getDate("30/05/2006")).getAmountDoubleValue();
 		assertEquals(Double.valueOf("0"), intAmount);
@@ -597,7 +596,7 @@ public class TestSavingsBO extends MifosTestCase {
 				ClientConstants.STATUS_ACTIVE, "1.1.1.1", group, new Date(
 						System.currentTimeMillis()));
 		HibernateUtil.closeSession();
-		savings = new SavingsPersistenceService().findById(savings
+		savings = savingsPersistence.findById(savings
 				.getAccountId());
 
 		savings.setUserContext(userContext);
@@ -608,7 +607,7 @@ public class TestSavingsBO extends MifosTestCase {
 				center.getCustomerMeeting().getMeeting()).size();
 		assertEquals(actionDatesSize, savings.getAccountActionDates().size());
 		HibernateUtil.closeSession();
-		savings = new SavingsPersistenceService().findById(savings
+		savings = savingsPersistence.findById(savings
 				.getAccountId());
 		client1 = new CustomerPersistence()
 				.getCustomer(client1.getCustomerId());
@@ -701,7 +700,7 @@ public class TestSavingsBO extends MifosTestCase {
 				savingsOffering, group, AccountStates.SAVINGS_ACC_INACTIVE,
 				userContext);
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		Money enteredAmount = new Money(currency, "100.0");
 		PaymentData paymentData = new PaymentData(enteredAmount, savings
 				.getPersonnel(), Short.valueOf("1"), new Date(System
@@ -714,7 +713,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		assertEquals(AccountStates.SAVINGS_ACC_APPROVED, savings
 				.getAccountState().getId().shortValue());
@@ -1094,7 +1093,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savingsOffering.setMaxAmntWithdrawl(new Money("2500"));
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.getSavingsOffering().setMaxAmntWithdrawl(new Money("2500"));
 		savings.setUserContext(userContext);
 		Money amountAdjustedTo = new Money();
@@ -1142,7 +1141,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
 
 		assertEquals(Integer.valueOf(1).intValue(), payment.getAccountTrxns()
@@ -1154,7 +1153,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		assertEquals(Integer.valueOf(2).intValue(), savings
 				.getAccountPayments().size());
@@ -1206,7 +1205,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
 
 		assertEquals(Integer.valueOf(1).intValue(), payment.getAccountTrxns()
@@ -1218,7 +1217,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		assertEquals(Integer.valueOf(2).intValue(), savings
 				.getAccountPayments().size());
@@ -1255,7 +1254,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
 
 		assertEquals(Integer.valueOf(1).intValue(), payment.getAccountTrxns()
@@ -1267,7 +1266,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		assertEquals(Integer.valueOf(2).intValue(), savings
 				.getAccountPayments().size());
 		assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns()
@@ -1358,7 +1357,7 @@ public class TestSavingsBO extends MifosTestCase {
 			HibernateUtil.getSessionTL().flush();
 			HibernateUtil.closeSession();
 
-			savings = savingsService.findById(savings.getAccountId());
+			savings = savingsPersistence.findById(savings.getAccountId());
 			savings.setUserContext(userContext);
 			payment = savings.getLastPmnt();
 			for (AccountTrxnEntity accountTrxn : payment.getAccountTrxns()) {
@@ -1375,7 +1374,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
-			savings = savingsService.findById(savings.getAccountId());
+			savings = savingsPersistence.findById(savings.getAccountId());
 			AccountPaymentEntity newPayment = savings.getLastPmnt();
 			assertEquals(Integer.valueOf(2).intValue(), savings
 					.getAccountPayments().size());
@@ -1451,7 +1450,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
 		payment = savings.getLastPmnt();
 
@@ -1466,7 +1465,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		AccountPaymentEntity newPayment = savings.getLastPmnt();
 		for (AccountTrxnEntity accountTrxn : newPayment.getAccountTrxns()) {
@@ -1542,7 +1541,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
 		payment = savings.getLastPmnt();
 
@@ -1554,7 +1553,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		for (AccountActionDateEntity action : savings.getAccountActionDates())
 			assertEquals(recommendedAmnt, ((SavingsScheduleEntity) action)
@@ -1623,7 +1622,7 @@ public class TestSavingsBO extends MifosTestCase {
 			HibernateUtil.getSessionTL().flush();
 			HibernateUtil.closeSession();
 
-			savings = savingsService.findById(savings.getAccountId());
+			savings = savingsPersistence.findById(savings.getAccountId());
 			savings.setUserContext(userContext);
 			payment = savings.getLastPmnt();
 
@@ -1636,7 +1635,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
-			savings = savingsService.findById(savings.getAccountId());
+			savings = savingsPersistence.findById(savings.getAccountId());
 
 			AccountPaymentEntity newPayment = savings.getLastPmnt();
 
@@ -1702,7 +1701,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
 		payment = savings.getLastPmnt();
 
@@ -1715,7 +1714,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		AccountPaymentEntity newPayment = savings.getLastPmnt();
 
@@ -1825,7 +1824,7 @@ public class TestSavingsBO extends MifosTestCase {
 			savings.update();
 			HibernateUtil.getSessionTL().flush();
 			HibernateUtil.closeSession();
-			savings = savingsService.findById(savings.getAccountId());
+			savings = savingsPersistence.findById(savings.getAccountId());
 			savings.setUserContext(userContext);
 			assertEquals(1, savings.getRecentAccountActivity(3).size());
 			group = savings.getCustomer();
@@ -2156,7 +2155,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.setActivationDate(helper.getDate("05/03/2006"));
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
 		savings.updateInterestAccrued();
 		assertEquals(0.0, savings.getInterestToBePosted()
@@ -2182,7 +2181,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.updateInterestAccrued();
 		assertEquals(1.2, savings.getInterestToBePosted()
 				.getAmountDoubleValue());
@@ -2201,7 +2200,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.setActivationDate(helper.getDate("05/03/2006"));
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
 		savings.updateInterestAccrued();
 		assertEquals(0.0, savings.getInterestToBePosted()
@@ -2227,7 +2226,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.updateInterestAccrued();
 		assertEquals(1.2, savings.getInterestToBePosted()
 				.getAmountDoubleValue());
@@ -2246,7 +2245,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.setActivationDate(helper.getDate("05/03/2006"));
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
 		savings.updateInterestAccrued();
 		assertEquals(0.0, savings.getInterestToBePosted()
@@ -2281,7 +2280,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.updateInterestAccrued();
 		assertEquals(1.6, savings.getInterestToBePosted()
 				.getAmountDoubleValue());
@@ -2299,7 +2298,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.setActivationDate(helper.getDate("05/03/2006"));
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
 		savings.updateInterestAccrued();
 		assertEquals(0.0, savings.getInterestToBePosted()
@@ -2334,7 +2333,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.updateInterestAccrued();
 		assertEquals(4.6, savings.getInterestToBePosted()
 				.getAmountDoubleValue());
@@ -2401,7 +2400,7 @@ public class TestSavingsBO extends MifosTestCase {
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
 
-			savings = savingsService.findById(savings.getAccountId());
+			savings = savingsPersistence.findById(savings.getAccountId());
 
 			Money oldInterest = savings.calculateInterestForAdjustment(helper
 					.getDate("25/02/2006"), null);
@@ -2411,7 +2410,7 @@ public class TestSavingsBO extends MifosTestCase {
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
 
-			savings = savingsService.findById(savings.getAccountId());
+			savings = savingsPersistence.findById(savings.getAccountId());
 			// Min Bal 25/02 - 01/03 = 2000
 			// Interest 2000*.12*4/365 = 2.6
 			assertEquals(2.6, savings.getInterestToBePosted()
@@ -2423,7 +2422,7 @@ public class TestSavingsBO extends MifosTestCase {
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
 
-			savings = savingsService.findById(savings.getAccountId());
+			savings = savingsPersistence.findById(savings.getAccountId());
 			savings.setUserContext(userContext);
 			Money amountAdjustedTo = new Money();
 
@@ -2435,7 +2434,7 @@ public class TestSavingsBO extends MifosTestCase {
 			}
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
-			savings = savingsService.findById(savings.getAccountId());
+			savings = savingsPersistence.findById(savings.getAccountId());
 			payment = savings.getLastPmnt();
 			assertEquals(Integer.valueOf(2).intValue(), payment
 					.getAccountTrxns().size());
@@ -2487,7 +2486,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		Money oldInterest = savings.calculateInterestForAdjustment(helper
 				.getDate("25/02/2006"), null);
@@ -2497,7 +2496,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		// from 25/02 - 27/02 = 2000*2 + from 27/02 - 01/03 = 7000*2 = 18000
 		// Therefore avg bal 18000/4 = 4500
 		// Interest 4500*.12*4/365 = 5.91
@@ -2510,7 +2509,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
 		Money amountAdjustedTo = new Money();
 
@@ -2521,7 +2520,7 @@ public class TestSavingsBO extends MifosTestCase {
 		}
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		payment = savings.getLastPmnt();
 		assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns()
 				.size());
@@ -2587,7 +2586,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		Money oldInterest = savings.calculateInterestForAdjustment(helper
 				.getDate("25/02/2006"), null);
@@ -2597,7 +2596,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		// Min Bal 20/02 - 01/03 = 2000
 		// Interest 2000*.12*9/365 = 5.9
@@ -2609,7 +2608,7 @@ public class TestSavingsBO extends MifosTestCase {
 		assertEquals(5.9, oldInterest.getAmountDoubleValue());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
 		Money amountAdjustedTo = new Money();
 		try {
@@ -2619,7 +2618,7 @@ public class TestSavingsBO extends MifosTestCase {
 		}
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		// After Adjustmnet minimum balance has not been changed.
 		// Min Bal 20/02 - 01/03 = 2000
 		// Interest 2000*.12*9/365 = 5.9
@@ -2681,7 +2680,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		Money oldInterest = savings.calculateInterestForAdjustment(helper
 				.getDate("25/02/2006"), null);
@@ -2691,7 +2690,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		// from 20/02 - 24/02 = 2000*4 + from 24/02 - 26/02 = 3000*2 + from
 		// 26/02 - 01/03 = 2500*3,
 		// Therefore Avg Bal (8000+6000+7500)/9 = 21500/9
@@ -2704,7 +2703,7 @@ public class TestSavingsBO extends MifosTestCase {
 		assertEquals(7.1, oldInterest.getAmountDoubleValue());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
 		Money amountAdjustedTo = new Money();
 		try {
@@ -2714,7 +2713,7 @@ public class TestSavingsBO extends MifosTestCase {
 		}
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		// from 20/02 - 24/02 = 2000*4 + from 24/02 - 01/03 = 3000*5,
 		// Therefore Avg Bal (8000+15000)/9 = 23000/9
 		// Interest = (23000 * .12 / 365) = 7.56
@@ -2762,7 +2761,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		Money oldInterest = savings.calculateInterestForAdjustment(helper
 				.getDate("25/02/2006"), null);
@@ -2772,7 +2771,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		// MinBal from 20/02 - 01/03 = 1500
 		// Interest 1500*.12*9/365 = 4.4
 		assertEquals(4.4, savings.getInterestToBePosted()
@@ -2783,7 +2782,7 @@ public class TestSavingsBO extends MifosTestCase {
 		assertEquals(4.4, oldInterest.getAmountDoubleValue());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
 		Money amountAdjustedTo = new Money(currency, "1000");
 		savings.getSavingsOffering().setMaxAmntWithdrawl(
@@ -2795,7 +2794,7 @@ public class TestSavingsBO extends MifosTestCase {
 		}
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		// MinBal from 20/02 - 01/03 = 1000
 		// Interest 1000*.12*9/365 = 3.0
 		assertEquals(3.0, savings.getInterestToBePosted()
@@ -2841,7 +2840,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		Money oldInterest = savings.calculateInterestForAdjustment(helper
 				.getDate("27/02/2006"), null);
@@ -2851,7 +2850,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		// from 25/02 - 27/02 = 2000*2 + from 27/02 - 01/03 = 7000*2 = 18000
 		// Therefore avg bal 18000/4 = 4500
 		// Interest 4500*.12*4/365 = 5.91
@@ -2862,7 +2861,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.getDate("27/02/2006"), null);
 		assertEquals(5.9, oldInterest.getAmountDoubleValue());
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
 		Money amountAdjustedTo = new Money(currency, "4000");
 
@@ -2873,7 +2872,7 @@ public class TestSavingsBO extends MifosTestCase {
 		}
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		payment = savings.getLastPmnt();
 		assertEquals(new Money(currency, "6000"), savings.getSavingsBalance());
 		// from 25/02 - 27/02 = 2000*2 + from 27/02 - 01/03 = 6000*2 = 16000
@@ -2922,7 +2921,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		Money oldInterest = savings.calculateInterestForAdjustment(helper
 				.getDate("27/02/2006"), null);
@@ -2932,7 +2931,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		// Min Bal 25/02 - 01/03 = 2000
 		// Interest 2000*.12*4/365 = 2.6
 		assertEquals(2.6, savings.getInterestToBePosted()
@@ -2941,7 +2940,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.updateInterestAccrued();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		// Min Bal 25/02 - 01/03 = 7000
 		// Interest 7000*.12*31/365 = 71.3
@@ -2962,7 +2961,7 @@ public class TestSavingsBO extends MifosTestCase {
 		}
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		payment = savings.getLastPmnt();
 		assertEquals(new Money(currency, "6000"), savings.getSavingsBalance());
 
@@ -3063,7 +3062,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		assertEquals(balanceAmount, savings.getSavingsBalance());
 
 		Money oldInterest = savings.calculateInterestForAdjustment(helper
@@ -3074,7 +3073,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		// from 25/02 - 27/02 = 2000*2 + from 27/02 - 01/03 = 7000*2 = 18000
 		// Therefore avg bal 18000/4 = 4500
 		// Interest 4500*.12*4/365 = 5.91
@@ -3084,7 +3083,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.updateInterestAccrued();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		// principal = (7000* 14(days)+ 8200*17(days))/31 = 7658.1
 		// Interest = 7658.1*.12*31/365 = 78.0
@@ -3105,7 +3104,7 @@ public class TestSavingsBO extends MifosTestCase {
 		}
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		assertEquals(new Money(currency, "9000"), savings.getSavingsBalance());
 		// principal = (7000* 14(days)+ 9000*17(days))/31 = 8096.8
@@ -3205,7 +3204,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		assertEquals(balanceAmount, savings.getSavingsBalance());
 
 		Money oldInterest = savings.calculateInterestForAdjustment(helper
@@ -3216,7 +3215,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		// from 25/02 - 27/02 = 2000*2 + from 27/02 - 01/03 = 7000*2 = 18000
 		// Therefore avg bal 18000/4 = 4500
 		// Interest 4500*.12*4/365 = 5.91
@@ -3226,7 +3225,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.updateInterestAccrued();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		// principal = (7000* 14(days)+ 8200*17(days))/31 = 7658.1
 		// Interest = 7658.1*.12*31/365 = 78.0
@@ -3248,7 +3247,7 @@ public class TestSavingsBO extends MifosTestCase {
 		}
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		assertEquals(new Money(currency, "7000"), savings.getSavingsBalance());
 		// principal = (7000* 31) /31 = 7000
@@ -3348,7 +3347,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		assertEquals(balanceAmount, savings.getSavingsBalance());
 
 		Money oldInterest = savings.calculateInterestForAdjustment(helper
@@ -3359,7 +3358,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		// Min Bal from 25/02 - 01/3 = 2000
 		// Interest 2000*.12*4/365 = 2.6
 		assertEquals(2.6, savings.getInterestToBePosted()
@@ -3368,7 +3367,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.updateInterestAccrued();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		// principal = (7000* 31) /31 = 7000
 		// Interest = 7000*.12*31/365 = 71.3
@@ -3390,7 +3389,7 @@ public class TestSavingsBO extends MifosTestCase {
 		}
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		assertEquals(new Money(currency, "7000"), savings.getSavingsBalance());
 		// principal = (7000* 31) /31 = 7000
@@ -3451,7 +3450,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		Money oldInterest = savings.calculateInterestForAdjustment(helper
 				.getDate("15/03/2006"), null);
@@ -3461,7 +3460,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		// Min Bal from 25/02 - 01/3 = 2000
 		// Interest 2000*.12*4/365 = 2.6
 		assertEquals(2.6, savings.getInterestToBePosted()
@@ -3470,7 +3469,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.updateInterestAccrued();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		// principal = (5000* 31) /31 = 5000
 		// Interest = 5000*.12*31/365 = 51.0
@@ -3492,7 +3491,7 @@ public class TestSavingsBO extends MifosTestCase {
 		}
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		assertEquals(new Money(currency, "7000"), savings.getSavingsBalance());
 		// principal = (7000* 31) /31 = 7000
@@ -3580,7 +3579,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		assertEquals(balanceAmount, savings.getSavingsBalance());
 
 		Money oldInterest = savings.calculateInterestForAdjustment(helper
@@ -3591,7 +3590,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		// from 25/02 - 27/02 = 2000*2 + from 27/02 - 01/03 = 7000*2 = 18000
 		// Therefore avg bal 18000/4 = 4500
 		// Interest 4500*.12*4/365 = 5.91
@@ -3601,7 +3600,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.updateInterestAccrued();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		// principal = (7000* 14(days)+ 8200*17(days))/31 = 7658.1
 		// Interest = 7658.1*.12*31/365 = 78.0
@@ -3622,7 +3621,7 @@ public class TestSavingsBO extends MifosTestCase {
 		}
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 
 		assertEquals(new Money(currency, "9000"), savings.getSavingsBalance());
 		// principal = (7000* 14(days)+ 9000*17(days))/31 = 8096.8
@@ -3779,7 +3778,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testGetTotalPaymentDueForVol() throws Exception {
 		createObjectToCheckForTotalInstallmentDue(Short.valueOf("2"));
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		Money recommendedAmnt = new Money(currency, "500.0");
 		Money paymentDue = savings.getTotalPaymentDue(group.getCustomerId());
 		assertEquals(recommendedAmnt, paymentDue);
@@ -3789,7 +3788,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testGetTotalInstallmentDueForVol() throws Exception {
 		createObjectToCheckForTotalInstallmentDue(Short.valueOf("2"));
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		List<AccountActionDateEntity> dueInstallment = savings
 				.getTotalInstallmentsDue(group.getCustomerId());
 		assertEquals(1, dueInstallment.size());
@@ -3801,7 +3800,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testGetTotalPaymentDueForMan() throws Exception {
 		createObjectToCheckForTotalInstallmentDue(Short.valueOf("1"));
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		Money amount = new Money(currency, "1000.0");
 		Money paymentDue = savings.getTotalPaymentDue(group.getCustomerId());
 		assertEquals(amount, paymentDue);
@@ -3811,7 +3810,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testGetTotalInstallmentDueForMan() throws Exception {
 		createObjectToCheckForTotalInstallmentDue(Short.valueOf("1"));
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		List<AccountActionDateEntity> dueInstallment = savings
 				.getTotalInstallmentsDue(group.getCustomerId());
 		assertEquals(2, dueInstallment.size());
@@ -3887,7 +3886,7 @@ public class TestSavingsBO extends MifosTestCase {
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
 
-			savings = savingsService.findById(savings.getAccountId());
+			savings = savingsPersistence.findById(savings.getAccountId());
 			savings.setUserContext(userContext);
 			Money interestAtClosure = savings
 					.calculateInterestForClosure(new SavingsHelper()
@@ -3900,7 +3899,7 @@ public class TestSavingsBO extends MifosTestCase {
 			savings.closeAccount(payment, notes, group);
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
-			savings = savingsService.findById(savings.getAccountId());
+			savings = savingsPersistence.findById(savings.getAccountId());
 			assertEquals(2, savings.getSavingsActivityDetails().size());
 			for (SavingsActivityEntity activity : savings
 					.getSavingsActivityDetails()) {
@@ -3943,7 +3942,7 @@ public class TestSavingsBO extends MifosTestCase {
 		addNotes("note5");
 		HibernateUtil.closeSession();
 
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		List<AccountNotesEntity> notes = savings.getRecentAccountNotes();
 
 		assertEquals("Size of recent notes is 3", 3, notes.size());

@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanDisbursmentActionForm;
 import org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActionForm;
@@ -103,7 +104,7 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 
 	}
 
-	public void testLoad() {
+	public void testLoad() throws Exception  {
 
 		addRequestParameter("method", "load");
 		actionPerform();

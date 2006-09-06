@@ -453,7 +453,7 @@ public class TestLoanBO extends MifosTestCase {
 			InterruptedException {
 
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 3);
+		accountBO = getLoanAccountWithMiscFeeAndPenalty(Short.valueOf("3"), startDate, 3,new Money("20"),new Money("30"));
 
 		Set<AccountActionDateEntity> intallments = accountBO
 				.getAccountActionDates();
@@ -473,6 +473,12 @@ public class TestLoanBO extends MifosTestCase {
 		((LoanBO) accountBO).disburseLoan("1234", cal.getTime(), Short
 					.valueOf("1"), accountBO.getPersonnel(), startDate, Short
 					.valueOf("1"));
+		for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
+			if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))){
+				assertEquals(new Money("20"),((LoanScheduleEntity)accountActionDateEntity).getMiscFee());
+				assertEquals(new Money("30"),((LoanScheduleEntity)accountActionDateEntity).getMiscPenalty());
+			}
+		}
 		Session session = HibernateUtil.getSessionTL();
 		HibernateUtil.startTransaction();
 		((LoanBO) accountBO).setLoanMeeting(null);
@@ -786,7 +792,7 @@ public class TestLoanBO extends MifosTestCase {
 		}
 	}
 
-	public void testGetAmountTobePaidAtdisburtail() {
+	public void testGetAmountTobePaidAtdisburtail() throws Exception{
 
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 2);

@@ -61,13 +61,16 @@ public class ApplyChargeAction extends BaseAction {
 	}
 
 	public ActionForward update(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) throws SystemException, ApplicationException{
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		ApplyChargeActionForm applyChargeActionForm = (ApplyChargeActionForm) form;
 		Short chargeType = Short.valueOf(applyChargeActionForm.getChargeType());
 		Double chargeAmount = new Double(request.getParameter("charge"));
-		AccountBO accountBO = (AccountBO) getAccountBusinessService().getAccount(Integer.valueOf(applyChargeActionForm.getAccountId()));
+		AccountBO accountBO = (AccountBO) getAccountBusinessService()
+				.getAccount(
+						Integer.valueOf(applyChargeActionForm.getAccountId()));
 		accountBO.setUserContext(userContext);
 		accountBO.applyCharge(chargeType, chargeAmount);
 		accountBO.update();
@@ -77,7 +80,8 @@ public class ApplyChargeAction extends BaseAction {
 
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
-		request.getSession().removeAttribute(AccountConstants.APPLICABLE_CHARGE_LIST);
+		request.getSession().removeAttribute(
+				AccountConstants.APPLICABLE_CHARGE_LIST);
 		AccountBO accountBO = (AccountBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
 		return mapping.findForward(getDetailAccountPage(accountBO));

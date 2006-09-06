@@ -37,9 +37,6 @@
  */
 package org.mifos.application.accounts.savings.struts.action;
 
-
-
-import java.sql.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -64,7 +61,6 @@ import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -78,41 +74,54 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 
 public class SavingsClosureAction extends BaseAction {
 	private SavingsBusinessService savingsService;
+
 	private MasterDataService masterDataService;
-	private  MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
-	
-	public SavingsClosureAction() throws ServiceException{
-		savingsService=(SavingsBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Savings);
-		masterDataService = (MasterDataService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.MasterDataService);
+
+	private MifosLogger logger = MifosLogManager
+			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+
+	public SavingsClosureAction() throws ServiceException {
+		savingsService = (SavingsBusinessService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.Savings);
+		masterDataService = (MasterDataService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.MasterDataService);
 	}
-	
+
 	protected BusinessService getService() {
 		return savingsService;
 	}
-	
-	protected boolean skipActionFormToBusinessObjectConversion(String method)  {
-		if(method.equals("load")||method.equals("preview")||method.equals("previous")|| method.equals("close")|| method.equals("cancel")||method.equals("closeAccount")){
-			logger.debug("In SavingsClosureAction::skipActionFormToBusinessObjectConversion(), Skipping for Method: "+ method);
+
+	protected boolean skipActionFormToBusinessObjectConversion(String method) {
+		if (method.equals("load") || method.equals("preview")
+				|| method.equals("previous") || method.equals("close")
+				|| method.equals("cancel") || method.equals("closeAccount")) {
+			logger
+					.debug("In SavingsClosureAction::skipActionFormToBusinessObjectConversion(), Skipping for Method: "
+							+ method);
 			return true;
 		}
 		return false;
 	}
-	
-	public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
-		clearActionForm(form);
-		
-		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
-		SavingsBO savings =(SavingsBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request.getSession());
-		logger.debug("In SavingsClosureAction::load(), accountId: "+ savings.getAccountId());
-		//retrieve the savings object
 
-		savings=savingsService.findById(savings.getAccountId());
+	public ActionForward load(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		clearActionForm(form);
+
+		UserContext uc = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
+		SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request.getSession());
+		logger.debug("In SavingsClosureAction::load(), accountId: "
+				+ savings.getAccountId());
+		// retrieve the savings object
+
+		savings = savingsService.findById(savings.getAccountId());
 		Hibernate.initialize(savings.getCustomer());
 		Hibernate.initialize(savings.getCustomer().getPersonnel());
 		Hibernate.initialize(savings.getAccountNotes());
@@ -122,34 +131,55 @@ public class SavingsClosureAction extends BaseAction {
 		initialize(savings.getSavingsOffering().getInterestGLCode());
 
 		savings.setUserContext(uc);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY,savings,request.getSession());
-		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,	masterDataService.retrievePaymentTypes(uc.getLocaleId()),request.getSession());
-		//client list will be loaded only if it is center savings account, 
-		//or group savings account with deposit schedule of per client
-		
-		if(savings.getCustomer().getCustomerLevel().getId().shortValue()==CustomerConstants.CENTER_LEVEL_ID || 
-				(savings.getCustomer().getCustomerLevel().getId().shortValue()==CustomerConstants.GROUP_LEVEL_ID &&
-					savings.getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.PERINDIVIDUAL.getValue())))
-			SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST,savings.getCustomer().getChildren(
-					CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED),request.getSession());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request
+				.getSession());
+		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,
+				masterDataService.retrievePaymentTypes(uc.getLocaleId()),
+				request.getSession());
+		// client list will be loaded only if it is center savings account,
+		// or group savings account with deposit schedule of per client
+
+		if (savings.getCustomer().getCustomerLevel().getId().shortValue() == CustomerConstants.CENTER_LEVEL_ID
+				|| (savings.getCustomer().getCustomerLevel().getId()
+						.shortValue() == CustomerConstants.GROUP_LEVEL_ID && savings
+						.getRecommendedAmntUnit().getId().equals(
+								RecommendedAmountUnit.PERINDIVIDUAL.getValue())))
+			SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, savings
+					.getCustomer().getChildren(CustomerLevel.CLIENT,
+							ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED),
+					request.getSession());
 		else
-			SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST,null,request.getSession());
-		
-		Money interestAmount = savings.calculateInterestForClosure(new SavingsHelper().getCurrentDate());
-		logger.debug("In SavingsClosureAction::load(), Interest calculated:  "+ interestAmount.getAmountDoubleValue());
-		AccountPaymentEntity payment = new AccountPaymentEntity(savings,savings.getSavingsBalance().add(interestAmount),null,null,null);
-		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT,payment, request.getSession());
-		((SavingsClosureActionForm)form).setTrxnDate(DateHelper.getCurrentDate(uc.getPereferedLocale()));
+			SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, null,
+					request.getSession());
+
+		Money interestAmount = savings
+				.calculateInterestForClosure(new SavingsHelper()
+						.getCurrentDate());
+		logger.debug("In SavingsClosureAction::load(), Interest calculated:  "
+				+ interestAmount.getAmountDoubleValue());
+		AccountPaymentEntity payment = new AccountPaymentEntity(savings,
+				savings.getSavingsBalance().add(interestAmount), null, null,
+				null);
+		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
+				request.getSession());
+		((SavingsClosureActionForm) form).setTrxnDate(DateHelper
+				.getCurrentDate(uc.getPereferedLocale()));
 		return mapping.findForward("load_success");
 	}
-	
-	public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
+
+	public ActionForward preview(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		logger.debug("In SavingsClosureAction::preview()");
-		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
-		SavingsClosureActionForm actionForm = (SavingsClosureActionForm)form;
-		AccountPaymentEntity payment = (AccountPaymentEntity)SessionUtils.getAttribute(SavingsConstants.ACCOUNT_PAYMENT,request.getSession());
-		AccountPaymentEntity accountPaymentEntity=null;
-		if(actionForm.getReceiptDate()!=null && actionForm.getReceiptDate()!="")
+		UserContext uc = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
+		SavingsClosureActionForm actionForm = (SavingsClosureActionForm) form;
+		AccountPaymentEntity payment = (AccountPaymentEntity) SessionUtils
+				.getAttribute(SavingsConstants.ACCOUNT_PAYMENT, request
+						.getSession());
+		AccountPaymentEntity accountPaymentEntity = null;
+		if (actionForm.getReceiptDate() != null
+				&& actionForm.getReceiptDate() != "")
 			accountPaymentEntity = new AccountPaymentEntity(payment
 					.getAccount(), payment.getAmount(), actionForm
 					.getReceiptId(), new java.util.Date(DateHelper
@@ -160,29 +190,38 @@ public class SavingsClosureAction extends BaseAction {
 		else
 			accountPaymentEntity = new AccountPaymentEntity(payment
 					.getAccount(), payment.getAmount(), actionForm
-					.getReceiptId(),null,
-					new PaymentTypeEntity(Short.valueOf(actionForm
-							.getPaymentTypeId())));
-		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT,accountPaymentEntity, request.getSession());
+					.getReceiptId(), null, new PaymentTypeEntity(Short
+					.valueOf(actionForm.getPaymentTypeId())));
+		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT,
+				accountPaymentEntity, request.getSession());
 		return mapping.findForward("preview_success");
 	}
-	
-	public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
+
+	public ActionForward previous(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		logger.debug("In SavingsClosureAction::previous()");
 		return mapping.findForward("previous_success");
 	}
-	
-	public ActionForward close(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
-		AccountPaymentEntity payment = (AccountPaymentEntity)SessionUtils.getAttribute(SavingsConstants.ACCOUNT_PAYMENT,request.getSession());
-		SavingsBO savings =(SavingsBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request.getSession());
-		logger.debug("In SavingsClosureAction::close(), accountId: "+ savings.getAccountId());
-		SavingsClosureActionForm actionForm = (SavingsClosureActionForm)form;
+
+	public ActionForward close(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		AccountPaymentEntity payment = (AccountPaymentEntity) SessionUtils
+				.getAttribute(SavingsConstants.ACCOUNT_PAYMENT, request
+						.getSession());
+		SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request.getSession());
+		logger.debug("In SavingsClosureAction::close(), accountId: "
+				+ savings.getAccountId());
+		SavingsClosureActionForm actionForm = (SavingsClosureActionForm) form;
 		AccountNotesEntity notes = new AccountNotesEntity();
 		notes.setComment(actionForm.getNotes());
-		CustomerBO customer = searchForCustomer(request,actionForm.getCustomerId());
-		if (customer==null)
+		CustomerBO customer = searchForCustomer(request, actionForm
+				.getCustomerId());
+		if (customer == null)
 			customer = savings.getCustomer();
-		savings.closeAccount(payment,notes,customer);
+		savings.closeAccount(payment, notes, customer);
 		request.getSession().removeAttribute(SavingsConstants.CLIENT_LIST);
 		request.getSession().removeAttribute(SavingsConstants.ACCOUNT_PAYMENT);
 		HibernateUtil.commitTransaction();
@@ -190,46 +229,52 @@ public class SavingsClosureAction extends BaseAction {
 		return mapping.findForward("close_success");
 	}
 
-	private CustomerBO searchForCustomer(HttpServletRequest request, String customerId){
-		Object obj=SessionUtils.getAttribute(SavingsConstants.CLIENT_LIST,request.getSession());
-		if(obj!=null && customerId!=null && customerId!=""){
-			List<CustomerBO> customerList=(List<CustomerBO>)obj;
-			for(CustomerBO customer:customerList){
-				if(customer.getCustomerId().equals(Integer.valueOf(customerId)))
+	private CustomerBO searchForCustomer(HttpServletRequest request,
+			String customerId) {
+		Object obj = SessionUtils.getAttribute(SavingsConstants.CLIENT_LIST,
+				request.getSession());
+		if (obj != null && customerId != null && customerId != "") {
+			List<CustomerBO> customerList = (List<CustomerBO>) obj;
+			for (CustomerBO customer : customerList) {
+				if (customer.getCustomerId()
+						.equals(Integer.valueOf(customerId)))
 					return customer;
 			}
 		}
 		return null;
 	}
-	
-	public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
+
+	public ActionForward cancel(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		logger.debug("In SavingsClosureAction::cancel()");
 		return mapping.findForward("close_success");
 	}
-	
-	public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
-		String method = (String)request.getAttribute("methodCalled");
-		logger.debug("In SavingsClosureAction::validate(), method: "+ method);
-		String forward=null;
-		if(method!=null && method.equals("preview"))
-				forward="preview_faliure";
+
+	public ActionForward validate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		String method = (String) request.getAttribute("methodCalled");
+		logger.debug("In SavingsClosureAction::validate(), method: " + method);
+		String forward = null;
+		if (method != null && method.equals("preview"))
+			forward = "preview_faliure";
 		return mapping.findForward(forward);
 	}
-	
-	private void clearActionForm(ActionForm form){
-		SavingsClosureActionForm actionForm =(SavingsClosureActionForm)form;
+
+	private void clearActionForm(ActionForm form) {
+		SavingsClosureActionForm actionForm = (SavingsClosureActionForm) form;
 		actionForm.setNotes(null);
 		actionForm.setReceiptDate(null);
 		actionForm.setReceiptId(null);
 		actionForm.setPaymentTypeId(null);
 		actionForm.setCustomerId(null);
 	}
-	
-	private void initialize(GLCodeEntity glCode)
-	{
+
+	private void initialize(GLCodeEntity glCode) {
 		Hibernate.initialize(glCode);
 		Hibernate.initialize(glCode.getAssociatedCOA());
-		
+
 		Hibernate.initialize(glCode.getAssociatedCOA().getCOAHead());
 		Hibernate.initialize(glCode.getAssociatedCOA().getAssociatedGlcode());
 		Hibernate.initialize(glCode.getAssociatedCOA().getSubCategory());

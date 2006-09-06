@@ -29,7 +29,7 @@ public class CustomerAction extends AccountAppAction {
 
 	private  MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 	
-	public CustomerAction() throws ServiceException {
+	public CustomerAction() throws Exception {
 		super();
 	}
 	

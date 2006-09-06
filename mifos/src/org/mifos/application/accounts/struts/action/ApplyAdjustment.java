@@ -57,89 +57,107 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 
-
-
 /**
- * This is the action class for applying adjustment.
- * This action is to be merged with AccountAction once an AccountAction for M2 is done.
+ * This is the action class for applying adjustment. This action is to be merged
+ * with AccountAction once an AccountAction for M2 is done.
  */
 public class ApplyAdjustment extends BaseAction {
 
-	
-	protected BusinessService getService()throws ServiceException {
-		AccountBusinessService accntBizService = null ;
-		accntBizService =  (AccountBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Accounts);
+	protected BusinessService getService() throws ServiceException {
+		AccountBusinessService accntBizService = null;
+		accntBizService = (AccountBusinessService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.Accounts);
 		return accntBizService;
 	}
-	
-	public ActionForward loadAdjustment(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
-		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
-		ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm)form;
-		AccountBO accnt = ((AccountBusinessService)getService()).findBySystemId(appAdjustActionForm.getGlobalAccountNum());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY,accnt,request.getSession());
+
+	public ActionForward loadAdjustment(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		UserContext uc = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
+		ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
+		AccountBO accnt = ((AccountBusinessService) getService())
+				.findBySystemId(appAdjustActionForm.getGlobalAccountNum());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, accnt, request
+				.getSession());
 		request.setAttribute("method", "loadAdjustment");
-		if(null == accnt.getLastPmnt() || accnt.getLastPmntAmnt() == 0){
-			
-			throw new ApplicationException(AccountExceptionConstants.ZEROAMNTADJUSTMENT);
+		if (null == accnt.getLastPmnt() || accnt.getLastPmntAmnt() == 0) {
+
+			throw new ApplicationException(
+					AccountExceptionConstants.ZEROAMNTADJUSTMENT);
 		}
 		return mapping.findForward("loadadjustment_success");
-									
+
 	}
-	
-	public ActionForward previewAdjustment(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
+
+	public ActionForward previewAdjustment(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 		request.setAttribute("method", "previewAdjustment");
-		ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm)form;
-		AccountBO accnt = ((AccountBusinessService)getService()).findBySystemId(appAdjustActionForm.getGlobalAccountNum());
-		if(null == accnt.getLastPmnt() || accnt.getLastPmntAmnt() == 0){
+		ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
+		AccountBO accnt = ((AccountBusinessService) getService())
+				.findBySystemId(appAdjustActionForm.getGlobalAccountNum());
+		if (null == accnt.getLastPmnt() || accnt.getLastPmntAmnt() == 0) {
 			request.setAttribute("method", "loadAdjustment");
-			throw new ApplicationException(AccountExceptionConstants.ZEROAMNTADJUSTMENT);
+			throw new ApplicationException(
+					AccountExceptionConstants.ZEROAMNTADJUSTMENT);
 		}
 		return mapping.findForward("previewadj_success");
 	}
-	
-	public ActionForward applyAdjustment(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
+
+	public ActionForward applyAdjustment(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 		request.setAttribute("method", "applyAdjustment");
-		ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm)form;
-		AccountBO accnt = ((AccountBusinessService)getService()).findBySystemId(appAdjustActionForm.getGlobalAccountNum());
-		if(null == accnt.getLastPmnt() || accnt.getLastPmntAmnt() == 0){
+		ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
+		AccountBO accnt = ((AccountBusinessService) getService())
+				.findBySystemId(appAdjustActionForm.getGlobalAccountNum());
+		if (null == accnt.getLastPmnt() || accnt.getLastPmntAmnt() == 0) {
 			request.setAttribute("method", "previewAdjustment");
-			throw new ApplicationException(AccountExceptionConstants.ZEROAMNTADJUSTMENT);
+			throw new ApplicationException(
+					AccountExceptionConstants.ZEROAMNTADJUSTMENT);
 		}
-		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
+		UserContext uc = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
 		accnt.setUserContext(uc);
 		try {
 			accnt.adjustPmnt(appAdjustActionForm.getAdjustmentNote());
-		} catch(ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			request.setAttribute("method", "previewAdjustment");
 			throw ae;
 		}
 		resetActionFormFields(appAdjustActionForm);
 		return mapping.findForward("applyadj_success");
 	}
-	
-	public ActionForward cancelAdjustment(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
-		ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm)form;
+
+	public ActionForward cancelAdjustment(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
 		resetActionFormFields(appAdjustActionForm);
 		return mapping.findForward("canceladj_success");
 	}
-	
-	protected boolean skipActionFormToBusinessObjectConversion(String method)  {
-		
+
+	protected boolean skipActionFormToBusinessObjectConversion(String method) {
+
 		return true;
-		
+
 	}
-	
+
 	/**
-	 * This method resets action form fields after successfully applying payment or on cancel.
+	 * This method resets action form fields after successfully applying payment
+	 * or on cancel.
 	 */
-	private void resetActionFormFields(ApplyAdjustmentActionForm appAdjustActionForm){
+	private void resetActionFormFields(
+			ApplyAdjustmentActionForm appAdjustActionForm) {
 		appAdjustActionForm.setAdjustmentNote(null);
 	}
-	
-	protected boolean isNewBizRequired(HttpServletRequest request) throws ServiceException{
+
+	protected boolean isNewBizRequired(HttpServletRequest request)
+			throws ServiceException {
 		if (request.getSession().getAttribute(Constants.BUSINESS_KEY) != null) {
 			return false;
-		}		
+		}
 		return true;
 	}
 

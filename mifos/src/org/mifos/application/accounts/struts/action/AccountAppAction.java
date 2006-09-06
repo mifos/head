@@ -30,93 +30,123 @@ import org.mifos.framework.util.helpers.SessionUtils;
 
 public class AccountAppAction extends BaseAction {
 
-	AccountBusinessService accountBusinessService=null;
+	AccountBusinessService accountBusinessService = null;
+
 	CustomerBusinessService customerService;
 
-	public AccountAppAction() throws ServiceException{
-		accountBusinessService =(AccountBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Accounts);
-		customerService=(CustomerBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Customer);
-	}	
-	
+	public AccountAppAction() throws Exception {
+		accountBusinessService = (AccountBusinessService) ServiceFactory
+				.getInstance().getBusinessService(BusinessServiceName.Accounts);
+		customerService = (CustomerBusinessService) ServiceFactory
+				.getInstance().getBusinessService(BusinessServiceName.Customer);
+	}
+
 	@Override
 	protected BusinessService getService() {
 		return accountBusinessService;
 	}
-	
-	protected CustomerBO getCustomer(Integer customerId)throws ServiceException{
+
+	protected CustomerBO getCustomer(Integer customerId) throws Exception {
 		return customerService.getCustomer(customerId);
 	}
-	
-	protected BusinessService getCustomerBusinessService(){
+
+	protected BusinessService getCustomerBusinessService() {
 		return customerService;
 	}
-	
+
 	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
-		if(method.equals("removeFees")||method.equals("getTrxnHistory")
-				|| method.equals("waiveChargeDue") || method.equals("waiveChargeOverDue")
-				|| method.equals("forwardWaiveChargeDue") || method.equals("forwardWaiveChargeOverDue")
-				|| method.equals("getAllActivity") || method.equals("getAllClosedAccounts")) 
+		if (method.equals("removeFees") || method.equals("getTrxnHistory")
+				|| method.equals("waiveChargeDue")
+				|| method.equals("waiveChargeOverDue")
+				|| method.equals("forwardWaiveChargeDue")
+				|| method.equals("forwardWaiveChargeOverDue")
+				|| method.equals("getAllActivity")
+				|| method.equals("getAllClosedAccounts"))
 			return true;
 		else
 			return false;
 	}
 
-	public ActionForward removeFees(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws SystemException, ApplicationException{
-		Integer accountId=Integer.valueOf((String)request.getParameter("accountId"));		
-		Short feeId=Short.valueOf((String)request.getParameter("feeId"));		
-		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());		
-		AccountBO accountBO=accountBusinessService.getAccount(accountId);
-		accountBO.removeFees(feeId,uc.getId());
+	public ActionForward removeFees(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		Integer accountId = Integer.valueOf((String) request
+				.getParameter("accountId"));
+		Short feeId = Short.valueOf((String) request.getParameter("feeId"));
+		UserContext uc = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
+		AccountBO accountBO = accountBusinessService.getAccount(accountId);
+		accountBO.removeFees(feeId, uc.getId());
 		String fromPage = request.getParameter(CenterConstants.FROM_PAGE);
 		StringBuilder forward = new StringBuilder();
-		forward = forward.append(AccountConstants.REMOVE+"_"+fromPage +"_"+AccountConstants.CHARGES);		
-		if( fromPage != null ){
+		forward = forward.append(AccountConstants.REMOVE + "_" + fromPage + "_"
+				+ AccountConstants.CHARGES);
+		if (fromPage != null) {
 			return mapping.findForward(forward.toString());
-		}
-		else{
+		} else {
 			return mapping.findForward(AccountConstants.REMOVE_SUCCESS);
 		}
 	}
-	
+
 	public ActionForward getTrxnHistory(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) throws Exception{
-		String globalAccountNum=request.getParameter("globalAccountNum");
-		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
-		AccountBO accountBO = accountBusinessService.findBySystemId(globalAccountNum);
-		SessionUtils.setAttribute(SavingsConstants.TRXN_HISTORY_LIST,accountBusinessService.getTrxnHistory(accountBO,uc),request.getSession());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY,customerService.getBySystemId(accountBO.getCustomer().getGlobalCustNum(),accountBO.getCustomer().getCustomerLevel().getId()),request.getSession());
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		String globalAccountNum = request.getParameter("globalAccountNum");
+		UserContext uc = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
+		AccountBO accountBO = accountBusinessService
+				.findBySystemId(globalAccountNum);
+		SessionUtils.setAttribute(SavingsConstants.TRXN_HISTORY_LIST,
+				accountBusinessService.getTrxnHistory(accountBO, uc), request
+						.getSession());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerService
+				.getBySystemId(accountBO.getCustomer().getGlobalCustNum(),
+						accountBO.getCustomer().getCustomerLevel().getId()),
+				request.getSession());
 		return mapping.findForward("getTransactionHistory_success");
 	}
-	
-	public ActionForward waiveChargeDue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {		
-		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
-		Integer accountId=Integer.valueOf((String)request.getParameter("accountId"));
-		AccountBusinessService accountBusinessService =(AccountBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Accounts);
-		AccountBO account = accountBusinessService.getAccount(accountId);
-		account.setUserContext(uc);		
-		account.waiveAmountDue(getWaiveType(request.getParameter(AccountConstants.WAIVE_TYPE)));		
-		return mapping.findForward("waiveChargesDue_Success");
-	}
-	
-	public ActionForward waiveChargeOverDue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
-		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
-		Integer accountId=Integer.valueOf((String)request.getParameter("accountId"));
-		AccountBusinessService accountBusinessService =(AccountBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Accounts);
+
+	public ActionForward waiveChargeDue(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		UserContext uc = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
+		Integer accountId = Integer.valueOf((String) request
+				.getParameter("accountId"));
+		AccountBusinessService accountBusinessService = (AccountBusinessService) ServiceFactory
+				.getInstance().getBusinessService(BusinessServiceName.Accounts);
 		AccountBO account = accountBusinessService.getAccount(accountId);
 		account.setUserContext(uc);
-		account.waiveAmountOverDue(getWaiveType(request.getParameter(AccountConstants.WAIVE_TYPE)));
+		account.waiveAmountDue(getWaiveType(request
+				.getParameter(AccountConstants.WAIVE_TYPE)));
+		return mapping.findForward("waiveChargesDue_Success");
+	}
+
+	public ActionForward waiveChargeOverDue(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		UserContext uc = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
+		Integer accountId = Integer.valueOf((String) request
+				.getParameter("accountId"));
+		AccountBusinessService accountBusinessService = (AccountBusinessService) ServiceFactory
+				.getInstance().getBusinessService(BusinessServiceName.Accounts);
+		AccountBO account = accountBusinessService.getAccount(accountId);
+		account.setUserContext(uc);
+		account.waiveAmountOverDue(getWaiveType(request
+				.getParameter(AccountConstants.WAIVE_TYPE)));
 		return mapping.findForward("waiveChargesOverDue_Success");
 	}
-	
-	private WaiveEnum getWaiveType(String waiveType){		
-		if(waiveType != null){			
-			if(waiveType.equalsIgnoreCase(WaiveEnum.PENALTY.toString())){
+
+	private WaiveEnum getWaiveType(String waiveType) {
+		if (waiveType != null) {
+			if (waiveType.equalsIgnoreCase(WaiveEnum.PENALTY.toString())) {
 				return WaiveEnum.PENALTY;
 			}
-			if(waiveType.equalsIgnoreCase(WaiveEnum.FEES.toString())){
+			if (waiveType.equalsIgnoreCase(WaiveEnum.FEES.toString())) {
 				return WaiveEnum.FEES;
-			}			
+			}
 		}
 		return WaiveEnum.ALL;
 	}

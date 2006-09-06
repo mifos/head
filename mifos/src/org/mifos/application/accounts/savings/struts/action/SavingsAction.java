@@ -100,7 +100,7 @@ public class SavingsAction extends AccountAppAction {
 	private MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
-	public SavingsAction() throws ServiceException {
+	public SavingsAction() throws Exception {
 		savingsService = (SavingsBusinessService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.Savings);
 		masterDataService = (MasterDataService) ServiceFactory.getInstance()

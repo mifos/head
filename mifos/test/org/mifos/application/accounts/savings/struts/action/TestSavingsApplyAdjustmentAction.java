@@ -9,7 +9,7 @@ import java.util.Set;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.persistence.service.SavingsPersistenceService;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
@@ -279,7 +279,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		savings.update();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
-		savings = new SavingsPersistenceService().findById(savings
+		savings = new SavingsPersistence().findById(savings
 				.getAccountId());
 		assertEquals(Integer.valueOf(1).intValue(), savings.getLastPmnt()
 				.getAccountTrxns().size());
@@ -291,7 +291,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward("account_detail_page");
 		HibernateUtil.closeSession();
-		savings = new SavingsPersistenceService().findById(savings
+		savings = new SavingsPersistence().findById(savings
 				.getAccountId());
 		assertEquals(Integer.valueOf(2).intValue(), savings.getLastPmnt()
 				.getAccountTrxns().size());

@@ -147,28 +147,36 @@ public class SavingsPersistence extends Persistence {
 	}
 
 	public List<SavingsAccountView> getSavingsAccountsForCustomer(
-			Integer customerId) {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("CUSTOMER_ID", customerId);
-		List<SavingsAccountView> queryResult = executeNamedQuery(
-				NamedQueryConstants.BULKENTRYSAVINGSACCOUNTS, queryParameters);
-		return queryResult;
+			Integer customerId) throws PersistenceException {
+		try{
+			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("CUSTOMER_ID", customerId);
+			List<SavingsAccountView> queryResult = executeNamedQuery(
+					NamedQueryConstants.BULKENTRYSAVINGSACCOUNTS, queryParameters);
+			return queryResult;
+		}catch(HibernateException e){
+			throw new PersistenceException(e);
+		}
 	}
 
 	public List<AccountActionDateEntity> getSavingsAccountTransactionDetail(
-			Integer accountId, Integer customerId, Date transactionDate,boolean isMandatory) {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("ACCOUNT_ID", accountId);
-		queryParameters.put("CUSTOMER_ID", customerId);
-		queryParameters.put("ACTION_DATE", transactionDate);
-		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
-		List<AccountActionDateEntity> queryResult = null; 
-		if(isMandatory) {
-			queryResult = executeNamedQuery(NamedQueryConstants.GET_LISTOFACCOUNTSACTIONS_FOR_SAVINGS_MANDATORY,queryParameters);
-		} else {
-			queryResult = executeNamedQuery(NamedQueryConstants.GET_LISTOFACCOUNTSACTIONS_FOR_SAVINGS_VOLUNTORY,queryParameters);
+			Integer accountId, Integer customerId, Date transactionDate,boolean isMandatory) throws PersistenceException {
+		try{
+			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("ACCOUNT_ID", accountId);
+			queryParameters.put("CUSTOMER_ID", customerId);
+			queryParameters.put("ACTION_DATE", transactionDate);
+			queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
+			List<AccountActionDateEntity> queryResult = null; 
+			if(isMandatory) {
+				queryResult = executeNamedQuery(NamedQueryConstants.GET_LISTOFACCOUNTSACTIONS_FOR_SAVINGS_MANDATORY,queryParameters);
+			} else {
+				queryResult = executeNamedQuery(NamedQueryConstants.GET_LISTOFACCOUNTSACTIONS_FOR_SAVINGS_VOLUNTORY,queryParameters);
+			}
+			return queryResult;
+		}catch(HibernateException he){
+			throw new PersistenceException(he);
 		}
-		return queryResult;
 	}
 	
 	public SavingsTrxnDetailEntity retrieveLastTransaction(Integer accountId, Date date)throws PersistenceException{

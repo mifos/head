@@ -57,7 +57,9 @@ public class ClosedAccSearchAction extends MifosSearchAction {
 	public ClosedAccSearchAction() {
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.mifos.framework.struts.action.MifosBaseAction#getPath()
 	 */
 	@Override
@@ -66,80 +68,134 @@ public class ClosedAccSearchAction extends MifosSearchAction {
 	}
 
 	@Override
-	public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ActionForward forward = super.search(mapping,form,request,response);
-		String globalCustNum = request.getParameter(CustomerConstants.GLOBAL_CUST_NUM);
-		CustomerBO customerBO = new CustomerBusinessService().findBySystemId(globalCustNum);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY,customerBO,request.getSession());
-		return forward;		
+	public ActionForward search(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		ActionForward forward = super.search(mapping, form, request, response);
+		String globalCustNum = request
+				.getParameter(CustomerConstants.GLOBAL_CUST_NUM);
+		CustomerBO customerBO = new CustomerBusinessService()
+				.findBySystemId(globalCustNum);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request
+				.getSession());
+		return forward;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.struts.action.MifosBaseAction#search(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.mifos.framework.struts.action.MifosBaseAction#search(org.apache.struts.action.ActionMapping,
+	 *      org.apache.struts.action.ActionForm,
+	 *      javax.servlet.http.HttpServletRequest,
+	 *      javax.servlet.http.HttpServletResponse)
 	 */
-	public ActionForward customSearch(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ClosedAccSearchActionForm closedAccSearchActionForm=(ClosedAccSearchActionForm)form;
-		String input=closedAccSearchActionForm.getInput();
-		if(input != null &&input.equals(ClosedAccSearchConstants.VIEWALLACCACTIVITY)) {
-			return mapping.findForward(ClosedAccSearchConstants.SEARCHCUSTOMERACTIVITYSUCCESS);
+	public ActionForward customSearch(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		ClosedAccSearchActionForm closedAccSearchActionForm = (ClosedAccSearchActionForm) form;
+		String input = closedAccSearchActionForm.getInput();
+		if (input != null
+				&& input.equals(ClosedAccSearchConstants.VIEWALLACCACTIVITY)) {
+			return mapping
+					.findForward(ClosedAccSearchConstants.SEARCHCUSTOMERACTIVITYSUCCESS);
 		}
-		if(input != null &&input.equals(ClosedAccSearchConstants.VIEWCLIENTCHARGES)) {
-			return mapping.findForward(ClosedAccSearchConstants.SEARCHCLIENTCHARGESSUCCESS);
+		if (input != null
+				&& input.equals(ClosedAccSearchConstants.VIEWCLIENTCHARGES)) {
+			return mapping
+					.findForward(ClosedAccSearchConstants.SEARCHCLIENTCHARGESSUCCESS);
 		}
-		if(input != null &&input.equals(ClosedAccSearchConstants.VIEWGROUPCHARGES)) {
-			return mapping.findForward(ClosedAccSearchConstants.SEARCHGROUPCHARGESSUCCESS);
+		if (input != null
+				&& input.equals(ClosedAccSearchConstants.VIEWGROUPCHARGES)) {
+			return mapping
+					.findForward(ClosedAccSearchConstants.SEARCHGROUPCHARGESSUCCESS);
 		}
-		if(input != null &&input.equals(ClosedAccSearchConstants.VIEWCENTERCHARGES)) {
-			return mapping.findForward(ClosedAccSearchConstants.SEARCHCENTERCHARGESSUCCESS);
+		if (input != null
+				&& input.equals(ClosedAccSearchConstants.VIEWCENTERCHARGES)) {
+			return mapping
+					.findForward(ClosedAccSearchConstants.SEARCHCENTERCHARGESSUCCESS);
 		}
-		if(input != null &&input.equals(ClosedAccSearchConstants.VIEWCLIENTCHANGELOG)) {
-			return mapping.findForward(ClosedAccSearchConstants.SEARCHCLIENTLOGSUCCESS);
+		if (input != null
+				&& input.equals(ClosedAccSearchConstants.VIEWCLIENTCHANGELOG)) {
+			return mapping
+					.findForward(ClosedAccSearchConstants.SEARCHCLIENTLOGSUCCESS);
 		}
-		if(input != null &&input.equals(ClosedAccSearchConstants.VIEWGROUPCHANGELOG)) {
-			return mapping.findForward(ClosedAccSearchConstants.SEARCHGROUPCHANGELOGSUCCESS);
+		if (input != null
+				&& input.equals(ClosedAccSearchConstants.VIEWGROUPCHANGELOG)) {
+			return mapping
+					.findForward(ClosedAccSearchConstants.SEARCHGROUPCHANGELOGSUCCESS);
 		}
-		if(input != null &&input.equals(ClosedAccSearchConstants.VIEWCENTERCHANGELOG)) {
-			return mapping.findForward(ClosedAccSearchConstants.SEARCHCENTERCHANGELOGSUCCESS);
+		if (input != null
+				&& input.equals(ClosedAccSearchConstants.VIEWCENTERCHANGELOG)) {
+			return mapping
+					.findForward(ClosedAccSearchConstants.SEARCHCENTERCHANGELOGSUCCESS);
 		}
-		if(input != null &&input.equals(ClosedAccSearchConstants.VIEW_GROUP_CLOSED_ACCOUNTS)) {
-			return mapping.findForward(ClosedAccSearchConstants.SEARCH_GROUP_CLOSED_ACCOUNT_SUCCESS);
+		if (input != null
+				&& input
+						.equals(ClosedAccSearchConstants.VIEW_GROUP_CLOSED_ACCOUNTS)) {
+			return mapping
+					.findForward(ClosedAccSearchConstants.SEARCH_GROUP_CLOSED_ACCOUNT_SUCCESS);
 		}
-		if(input != null &&input.equals(ClosedAccSearchConstants.VIEW_CLIENT_CLOSED_ACCOUNTS)) {
-			return mapping.findForward(ClosedAccSearchConstants.SEARCH_CLIENT_CLOSED_ACCOUNT_SUCCESS);
+		if (input != null
+				&& input
+						.equals(ClosedAccSearchConstants.VIEW_CLIENT_CLOSED_ACCOUNTS)) {
+			return mapping
+					.findForward(ClosedAccSearchConstants.SEARCH_CLIENT_CLOSED_ACCOUNT_SUCCESS);
 		}
-		if(input != null &&input.equals(ClosedAccSearchConstants.VIEW_CENTER_CLOSED_ACCOUNTS)) {
-			return mapping.findForward(ClosedAccSearchConstants.SEARCH_CENTER_CLOSED_ACCOUNT_SUCCESS);
+		if (input != null
+				&& input
+						.equals(ClosedAccSearchConstants.VIEW_CENTER_CLOSED_ACCOUNTS)) {
+			return mapping
+					.findForward(ClosedAccSearchConstants.SEARCH_CENTER_CLOSED_ACCOUNT_SUCCESS);
 		}
-		
+
 		return null;
 	}
-	
-	public ActionForward customCancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ClosedAccSearchActionForm closedAccSearchActionForm=(ClosedAccSearchActionForm)form;
-		String input=closedAccSearchActionForm.getInput();
-		
-		if(input != null &&input.equals(ClosedAccSearchConstants.VIEW_GROUP_CLOSED_ACCOUNTS)) {
-			return mapping.findForward(ClosedAccSearchConstants.GROUP_DETAILS_PAGE);
+
+	public ActionForward customCancel(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		ClosedAccSearchActionForm closedAccSearchActionForm = (ClosedAccSearchActionForm) form;
+		String input = closedAccSearchActionForm.getInput();
+
+		if (input != null
+				&& input
+						.equals(ClosedAccSearchConstants.VIEW_GROUP_CLOSED_ACCOUNTS)) {
+			return mapping
+					.findForward(ClosedAccSearchConstants.GROUP_DETAILS_PAGE);
 		}
-		if(input != null &&input.equals(ClosedAccSearchConstants.VIEW_CLIENT_CLOSED_ACCOUNTS)) {
-			return mapping.findForward(ClosedAccSearchConstants.CLIENT_DETAILS_PAGE);
+		if (input != null
+				&& input
+						.equals(ClosedAccSearchConstants.VIEW_CLIENT_CLOSED_ACCOUNTS)) {
+			return mapping
+					.findForward(ClosedAccSearchConstants.CLIENT_DETAILS_PAGE);
 		}
-		if(input != null &&input.equals(ClosedAccSearchConstants.VIEW_CENTER_CLOSED_ACCOUNTS)) {
-			return mapping.findForward(ClosedAccSearchConstants.CENTER_DETAILS_PAGE);
+		if (input != null
+				&& input
+						.equals(ClosedAccSearchConstants.VIEW_CENTER_CLOSED_ACCOUNTS)) {
+			return mapping
+					.findForward(ClosedAccSearchConstants.CENTER_DETAILS_PAGE);
 		}
-		if(input != null &&input.equals(ClosedAccSearchConstants.VIEWGROUPCHANGELOG)) {
-			return mapping.findForward(ClosedAccSearchConstants.GROUP_DETAILS_PAGE);
+		if (input != null
+				&& input.equals(ClosedAccSearchConstants.VIEWGROUPCHANGELOG)) {
+			return mapping
+					.findForward(ClosedAccSearchConstants.GROUP_DETAILS_PAGE);
 		}
-		if(input != null &&input.equals(ClosedAccSearchConstants.VIEWGROUPCHANGELOG)) {
-			return mapping.findForward(ClosedAccSearchConstants.GROUP_DETAILS_PAGE);
+		if (input != null
+				&& input.equals(ClosedAccSearchConstants.VIEWGROUPCHANGELOG)) {
+			return mapping
+					.findForward(ClosedAccSearchConstants.GROUP_DETAILS_PAGE);
 		}
-		if(input != null &&input.equals(ClosedAccSearchConstants.VIEWCENTERCHANGELOG)) {
-			return mapping.findForward(ClosedAccSearchConstants.CENTER_DETAILS_PAGE);
+		if (input != null
+				&& input.equals(ClosedAccSearchConstants.VIEWCENTERCHANGELOG)) {
+			return mapping
+					.findForward(ClosedAccSearchConstants.CENTER_DETAILS_PAGE);
 		}
-		if(input != null &&input.equals(ClosedAccSearchConstants.VIEWCLIENTCHANGELOG)) {
-			return mapping.findForward(ClosedAccSearchConstants.CLIENT_DETAILS_PAGE);
+		if (input != null
+				&& input.equals(ClosedAccSearchConstants.VIEWCLIENTCHANGELOG)) {
+			return mapping
+					.findForward(ClosedAccSearchConstants.CLIENT_DETAILS_PAGE);
 		}
-		
+
 		return null;
 	}
 }

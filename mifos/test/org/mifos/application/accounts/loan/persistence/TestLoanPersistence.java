@@ -74,7 +74,7 @@ public class TestLoanPersistence extends MifosTestCase {
 	}
 	
 	
-	public void testGetLoanAccountsForCustomer() {
+	public void testGetLoanAccountsForCustomer() throws Exception{
 
 		List<LoanAccountView> loanAccounts = loanPersistence
 				.getLoanAccountsForCustomer(group.getCustomerId(),new Date(System.currentTimeMillis()));
@@ -83,7 +83,7 @@ public class TestLoanPersistence extends MifosTestCase {
 	}
 	
 
-	public void testGetLoanAccountTransactionDetail() {
+	public void testGetLoanAccountTransactionDetail() throws Exception{
 
 		Date transactionDate = new Date(System.currentTimeMillis());
 		List<AccountActionDateEntity> details = loanPersistence
@@ -116,7 +116,7 @@ public class TestLoanPersistence extends MifosTestCase {
 
 	}
 	
-	public void testGetFeeAmountAtDisbursement() throws InterruptedException{
+	public void testGetFeeAmountAtDisbursement() throws Exception{
 		loanAccountForDisbursement=getLoanAccount(group,meeting,Short.valueOf("3"));
 		assertEquals(30.0,loanPersistence.getFeeAmountAtDisbursement(loanAccountForDisbursement.getAccountId(),new Date(System.currentTimeMillis())));
 	}
@@ -178,7 +178,7 @@ public class TestLoanPersistence extends MifosTestCase {
 		assertEquals(loanBO.getAccountId(),loanAccount.getAccountId());				
 	}
 	
-	public void testGetLastPaymentAction() throws NumberFormatException, AccountException, RepaymentScheduleException, FinancialException, SystemException {
+	public void testGetLastPaymentAction() throws Exception{
 		Date startDate = new Date(System.currentTimeMillis());
 		loanAccountForDisbursement = getLoanAccount(AccountState.LOANACC_APPROVED.getValue(),startDate,1);
 		disburseLoan(startDate);

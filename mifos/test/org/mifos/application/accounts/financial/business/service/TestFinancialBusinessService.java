@@ -1,12 +1,9 @@
 package org.mifos.application.accounts.financial.business.service;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
-
-import org.mifos.framework.MifosTestCase;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
@@ -16,14 +13,12 @@ import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.business.LoanTrxnDetailEntity;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
-import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
-import org.mifos.application.accounts.savings.persistence.service.SavingsPersistenceService;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -36,6 +31,7 @@ import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -151,7 +147,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 	public void testSavingsAdjustmentDepositAccountingEntries() throws Exception {
 		createInitialObjectsForSavings();
 		SavingsTestHelper helper = new SavingsTestHelper();
-		SavingsPersistenceService savingsService = new SavingsPersistenceService();
+		SavingsPersistence savingsPersistence = new SavingsPersistence();
 		
 		PersonnelBO createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
 		Money depositAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(),"1000.0");
@@ -166,7 +162,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
 		
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
 		payment = savings.getLastPmnt();
 		balanceAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(),"4000.0");
@@ -180,7 +176,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
 		
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
 		payment = savings.getLastPmnt();
 		assertEquals(Integer.valueOf(2).intValue(),payment.getAccountTrxns().size());
@@ -210,7 +206,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 	public void testSavingsAdjustmentWithdrawalAccountingEntries() throws Exception {
 		createInitialObjectsForSavings();
 		SavingsTestHelper helper = new SavingsTestHelper();
-		SavingsPersistenceService savingsService = new SavingsPersistenceService();
+		SavingsPersistence savingsPersistence = new SavingsPersistence();
 		
 		PersonnelBO createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
 		Money withdrawalAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(),"1000.0");
@@ -225,7 +221,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
 		
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
 		payment = savings.getLastPmnt();
 		balanceAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(),"6000.0");
@@ -239,7 +235,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
 		
-		savings = savingsService.findById(savings.getAccountId());
+		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
 		payment = savings.getLastPmnt();
 		assertEquals(Integer.valueOf(2).intValue(),payment.getAccountTrxns().size());

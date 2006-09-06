@@ -23,6 +23,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -146,7 +147,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		}
 	}
 
-	public void testRetrieveSavingsAccountInformationForCustomer() {
+	public void testRetrieveSavingsAccountInformationForCustomer() throws Exception{
 		createCenter();
 		centerSavingsAccount = TestObjectFactory.createSavingsAccount("432434",
 				center, Short.valueOf("16"), new Date(System
@@ -160,7 +161,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 
 	}
 
-	public void testRetrieveSavingsAccountTransactionDetail() {
+	public void testRetrieveSavingsAccountTransactionDetail() throws Exception{
 		createInitialObjects();
 		centerSavingsAccount = TestObjectFactory.createSavingsAccount(
 				"43244334", center, Short.valueOf("16"), currentDate,
@@ -219,7 +220,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		assertEquals(2, clientSavingsAccount.getSavingsActivityDetails().size());
 	}
 
-	public void testGetFeeAmountAtDisbursement() {
+	public void testGetFeeAmountAtDisbursement() throws Exception {
 		createInitialObjects();
 		account = createLoanAccountForDisb(group, center.getCustomerMeeting()
 				.getMeeting(), Short.valueOf("3"));

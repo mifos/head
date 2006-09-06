@@ -40,18 +40,21 @@ import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.SessionUtils;
 
 public class NotesAction extends SearchAction {
-	
-	AccountBusinessService accountBusinessService=null;
-	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
-	
+
+	AccountBusinessService accountBusinessService = null;
+
+	private MifosLogger logger = MifosLogManager
+			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+
 	public NotesAction() throws ServiceException {
-		accountBusinessService =(AccountBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Accounts);
+		accountBusinessService = (AccountBusinessService) ServiceFactory
+				.getInstance().getBusinessService(BusinessServiceName.Accounts);
 	}
-	
+
 	protected BusinessService getService() {
 		return accountBusinessService;
 	}
-	
+
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		if (method.equals(Methods.previous.toString())
 				|| method.equals(Methods.load.toString())
@@ -63,72 +66,95 @@ public class NotesAction extends SearchAction {
 		} else
 			return false;
 	}
-	
-	public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
+
+	public ActionForward load(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		clearActionForm(form);
-		AccountBO accountBO = accountBusinessService.getAccount(Integer.valueOf(((NotesActionForm) form).getAccountId()));
-		setFormAttributes(form,accountBO);
+		AccountBO accountBO = accountBusinessService.getAccount(Integer
+				.valueOf(((NotesActionForm) form).getAccountId()));
+		setFormAttributes(form, accountBO);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
-	
-	public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
+
+	public ActionForward preview(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		NotesActionForm notesActionForm = (NotesActionForm) form;
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
-		PersonnelBO personnelBO = ((PersonnelPersistenceService) ServiceFactory.getInstance()
-				.getPersistenceService(PersistenceServiceName.Personnel)).getPersonnel(uc.getId());
-		AccountNotesEntity accountNotes = new AccountNotesEntity(new java.sql.Date(System.currentTimeMillis()),notesActionForm.getComment(),personnelBO);
-		SessionUtils.setAttribute(AccountConstants.ACCOUNT_NOTES, accountNotes,	request.getSession());
+		PersonnelBO personnelBO = ((PersonnelPersistenceService) ServiceFactory
+				.getInstance().getPersistenceService(
+						PersistenceServiceName.Personnel)).getPersonnel(uc
+				.getId());
+		AccountNotesEntity accountNotes = new AccountNotesEntity(
+				new java.sql.Date(System.currentTimeMillis()), notesActionForm
+						.getComment(), personnelBO);
+		SessionUtils.setAttribute(AccountConstants.ACCOUNT_NOTES, accountNotes,
+				request.getSession());
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
-	
-	public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
+
+	public ActionForward previous(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		return mapping.findForward(ActionForwards.previous_success.toString());
 	}
-	
-	public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
-		return mapping.findForward(chooseForward(Short.valueOf(((NotesActionForm)form).getAccountTypeId())));
+
+	public ActionForward cancel(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(chooseForward(Short
+				.valueOf(((NotesActionForm) form).getAccountTypeId())));
 	}
-	
-	public ActionForward create(ActionMapping mapping, ActionForm form,	HttpServletRequest request, HttpServletResponse response)throws Exception {
+
+	public ActionForward create(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		ActionForward forward = null;
 		NotesActionForm notesActionForm = (NotesActionForm) form;
-		try{
-			AccountBO accountBO = accountBusinessService.getAccount(Integer.valueOf(notesActionForm.getAccountId()));
-			UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
-			AccountNotesEntity accountNotes = (AccountNotesEntity) SessionUtils.getAttribute(AccountConstants.ACCOUNT_NOTES, request.getSession());
+		try {
+			AccountBO accountBO = accountBusinessService.getAccount(Integer
+					.valueOf(notesActionForm.getAccountId()));
+			UserContext uc = (UserContext) SessionUtils.getAttribute(
+					Constants.USER_CONTEXT_KEY, request.getSession());
+			AccountNotesEntity accountNotes = (AccountNotesEntity) SessionUtils
+					.getAttribute(AccountConstants.ACCOUNT_NOTES, request
+							.getSession());
 			accountBO.addAccountNotes(accountNotes);
 			accountBO.setUserContext(uc);
 			accountBO.update();
 			HibernateUtil.commitTransaction();
-			forward = mapping.findForward(chooseForward(Short.valueOf(notesActionForm.getAccountTypeId())));
-		}catch(Exception e ){
+			forward = mapping.findForward(chooseForward(Short
+					.valueOf(notesActionForm.getAccountTypeId())));
+		} catch (Exception e) {
 			ActionErrors errors = new ActionErrors();
-			errors.add(AccountConstants.UNKNOWN_EXCEPTION,new ActionMessage(AccountConstants.UNKNOWN_EXCEPTION));
+			errors.add(AccountConstants.UNKNOWN_EXCEPTION, new ActionMessage(
+					AccountConstants.UNKNOWN_EXCEPTION));
 			request.setAttribute(Globals.ERROR_KEY, errors);
-			forward = mapping.findForward(ActionForwards.create_failure.toString());
+			forward = mapping.findForward(ActionForwards.create_failure
+					.toString());
 			HibernateUtil.rollbackTransaction();
-		}finally {
+		} finally {
 			HibernateUtil.closeSession();
 		}
 		return forward;
 	}
-	
-	private String chooseForward(Short accountTypeId){
-		String forward=null;
-		if(accountTypeId.equals(
-				AccountTypes.LOANACCOUNT.getValue()))
+
+	private String chooseForward(Short accountTypeId) {
+		String forward = null;
+		if (accountTypeId.equals(AccountTypes.LOANACCOUNT.getValue()))
 			forward = ActionForwards.loan_detail_page.toString();
-		else if(accountTypeId.equals(
-				AccountTypes.SAVINGSACCOUNT.getValue()))
+		else if (accountTypeId.equals(AccountTypes.SAVINGSACCOUNT.getValue()))
 			forward = ActionForwards.savings_details_page.toString();
 		return forward;
 	}
-	
+
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		String method = (String) request.getAttribute(SavingsConstants.METHODCALLED);
+		String method = (String) request
+				.getAttribute(SavingsConstants.METHODCALLED);
 		String forward = null;
 		if (method != null) {
 			if (method.equals(Methods.preview.toString()))
@@ -138,26 +164,31 @@ public class NotesAction extends SearchAction {
 		}
 		return mapping.findForward(forward);
 	}
-	
-	private void clearActionForm(ActionForm form){
-		((NotesActionForm)form).setComment("");
-		((NotesActionForm)form).setSecurityParamInput("");
+
+	private void clearActionForm(ActionForm form) {
+		((NotesActionForm) form).setComment("");
+		((NotesActionForm) form).setSecurityParamInput("");
 	}
 
 	@Override
-	protected QueryResult getSearchResult(ActionForm form)throws Exception {
-		return accountBusinessService.getAllAccountNotes(Integer.valueOf(((NotesActionForm)form).getAccountId()));
+	protected QueryResult getSearchResult(ActionForm form) throws Exception {
+		return accountBusinessService.getAllAccountNotes(Integer
+				.valueOf(((NotesActionForm) form).getAccountId()));
 	}
-	
-	private void setFormAttributes(ActionForm form,AccountBO accountBO) throws ApplicationException, SystemException {
+
+	private void setFormAttributes(ActionForm form, AccountBO accountBO)
+			throws Exception {
 		NotesActionForm notesActionForm = (NotesActionForm) form;
-		notesActionForm.setAccountTypeId(accountBO.getAccountType().getAccountTypeId().toString());
+		notesActionForm.setAccountTypeId(accountBO.getAccountType()
+				.getAccountTypeId().toString());
 		notesActionForm.setGlobalAccountNum(accountBO.getGlobalAccountNum());
-		if(accountBO instanceof LoanBO) {
-			notesActionForm.setPrdOfferingName(((LoanBO)accountBO).getLoanOffering().getPrdOfferingName());
+		if (accountBO instanceof LoanBO) {
+			notesActionForm.setPrdOfferingName(((LoanBO) accountBO)
+					.getLoanOffering().getPrdOfferingName());
 			notesActionForm.setSecurityParamInput("Loan");
-		}else if(accountBO instanceof SavingsBO) {
-			notesActionForm.setPrdOfferingName(((SavingsBO)accountBO).getSavingsOffering().getPrdOfferingName());
+		} else if (accountBO instanceof SavingsBO) {
+			notesActionForm.setPrdOfferingName(((SavingsBO) accountBO)
+					.getSavingsOffering().getPrdOfferingName());
 			notesActionForm.setSecurityParamInput("Savings");
 		}
 	}

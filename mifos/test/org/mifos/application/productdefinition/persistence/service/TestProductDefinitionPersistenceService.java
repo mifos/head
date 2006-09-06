@@ -3,25 +3,17 @@ package org.mifos.application.productdefinition.persistence.service;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.framework.MifosTestCase;
-
-import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.persistence.service.SavingsPersistenceService;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.hibernate.HibernateStartUp;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.authorization.AuthorizationManager;
-import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -59,7 +51,7 @@ public class TestProductDefinitionPersistenceService extends MifosTestCase{
 		HibernateUtil.closeSession();
 		List<SavingsBO> savingsList=dbService.retrieveSavingsAccountsForPrd(savingsOffering.getPrdOfferingId());
 		assertEquals(Integer.valueOf("1").intValue(),savingsList.size());
-		savings=new SavingsPersistenceService().findById(savings.getAccountId());
+		savings=new SavingsPersistence().findById(savings.getAccountId());
 	}
 
 	public void testretrieveLatenessForPrd() throws Exception

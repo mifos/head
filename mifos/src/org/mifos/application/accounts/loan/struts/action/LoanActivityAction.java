@@ -49,7 +49,7 @@ public class LoanActivityAction extends AccountAppAction {
 	private LoanBusinessService loanService;
 //	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 	
-	public LoanActivityAction()throws ServiceException {
+	public LoanActivityAction()throws Exception {
 		loanService = (LoanBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Loan);
 	}
 	
