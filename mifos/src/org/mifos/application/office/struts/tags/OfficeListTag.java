@@ -255,6 +255,7 @@ public class OfficeListTag extends BodyTagSupport {
 						subRegionalLabel = true;
 					}
 
+					
 					subregionalBuffer.append("<tr class=\"fontnormal\">");
 					subregionalBuffer
 							.append("<td width=\"1%\"><img src=\"pages/framework/images/bullet_circle.gif\" width=\"9\" height=\"11\"></td>");
