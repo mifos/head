@@ -185,8 +185,7 @@
 														value="${savings.accountState.name}" /> </span></td>
 												</tr>
 											</table>
-											<span class="fontnormal"><mifos:mifoslabel
-												name="Savings.balance" />: <c:out
+											<span class="fontnormal"><mifos:mifoslabel name="Center.balance" /> <c:out
 												value="${savings.savingsBalance.amountDoubleValue}" /> </span></td>
 										</tr>
 										<tr>
@@ -228,7 +227,7 @@
                                 <mifos:mifoslabel name="Center.Viewdetails" /></html-el:link> </span></td>
 										</tr>
 									</table>
-									<span class="fontnormal"><mifos:mifoslabel name="Center.AmountDue" />: <c:out
+									<span class="fontnormal"><mifos:mifoslabel name="Center.AmountDueColon" /> <c:out
 										value='${sessionScope.BusinessKey.customerAccount.nextDueAmount}' />
 									</span></td>
 								</tr>

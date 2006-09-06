@@ -128,7 +128,7 @@ public class PersonnelBO extends BusinessObject {
 		this.status = new PersonnelStatusEntity(PersonnelStatus.ACTIVE);
 		this.passwordChanged = Constants.NO;
 		this.locked = LockStatus.UNLOCK.getValue();
-		this.noOfTries = 0;
+		this.noOfTries = Short.valueOf("0");
 		this.encriptedPassword = getEncryptedPassword(password);
 		this.status = new PersonnelStatusEntity(PersonnelStatus.ACTIVE);
 	}

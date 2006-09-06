@@ -48,6 +48,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerPositionView;
@@ -324,6 +326,10 @@ public class CenterCustAction extends CustAction {
 	  SessionUtils.setAttribute(CenterConstants.PERFORMANCE_HISTORY,centerPerformanceHistory,request
 				.getSession());
 	  
+	  //set localeId in center saving accounts 
+	  UserContext userContext = getUserContext(request);
+	  setLocaleIdToSavingsStatus(centerBO.getActiveSavingsAccounts(),userContext.getLocaleId());
+	  
 	  //	TODO : get value object 
 	  CenterDAO centerDAO =  new CenterDAO();
 	  Center center = centerDAO.findBySystemId(centerBO.getGlobalCustNum());
@@ -337,7 +343,15 @@ public class CenterCustAction extends CustAction {
 						.getSession());
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
+	private void setLocaleIdToSavingsStatus(List<SavingsBO> accountList,
+			Short localeId) {
+		for (SavingsBO accountBO : accountList)
+			setLocaleForAccount((AccountBO) accountBO, localeId);
+	}
 
+	private void setLocaleForAccount(AccountBO account, Short localeId) {
+		account.getAccountState().setLocaleId(localeId);
+	}
 	private void doCleanUp(CenterCustActionForm actionForm,
 			HttpServletRequest request) {
 		clearActionForm(actionForm);
