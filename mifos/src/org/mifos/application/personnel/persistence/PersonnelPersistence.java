@@ -5,14 +5,18 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
+import org.mifos.framework.exceptions.HibernateProcessException;
+import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.QueryFactory;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.persistence.Persistence;
 
 public class PersonnelPersistence extends Persistence {
@@ -140,5 +144,23 @@ public class PersonnelPersistence extends Persistence {
 		}
 		
 		return null;
+	}
+	
+	public QueryResult getAllPersonnelNotes(Short personnelId) throws PersistenceException {
+		QueryResult notesResult=null;
+		try{
+			Session session=null;
+			 notesResult = QueryFactory.getQueryResult("NotesSearch");
+			 session = notesResult.getSession();
+	 		Query query= session.getNamedQuery(NamedQueryConstants.GETALLPERSONNELNOTES);
+	 		query.setInteger("PERSONNEL_ID",personnelId);
+	 		notesResult.executeQuery(query);
+	 	}
+		catch(HibernateProcessException  hpe) {		
+			throw new PersistenceException(hpe);
+		} catch (HibernateSearchException hse) {
+			throw new PersistenceException(hse);
+		}
+      return notesResult;
 	}
 }

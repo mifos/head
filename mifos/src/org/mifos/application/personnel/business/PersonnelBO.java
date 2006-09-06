@@ -1,5 +1,6 @@
 package org.mifos.application.personnel.business;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -75,6 +76,8 @@ public class PersonnelBO extends BusinessObject {
 	private Set<PersonnelCustomFieldEntity> customFields;
 
 	private Set<PersonnelMovementEntity> personnelMovements;
+	
+	private Set<PersonnelNotesEntity> personnelNotes;
 
 	private MifosLogger logger;
 
@@ -83,6 +86,7 @@ public class PersonnelBO extends BusinessObject {
 		this.personnelDetails = new PersonnelDetailsEntity();
 		this.preferredLocale = new SupportedLocalesEntity();
 		this.customFields = new HashSet<PersonnelCustomFieldEntity>();
+		this.personnelNotes = new HashSet<PersonnelNotesEntity>();
 		this.personnelId = null;
 		this.userName = null;
 
@@ -117,6 +121,7 @@ public class PersonnelBO extends BusinessObject {
 		}
 		this.customFields = new HashSet<PersonnelCustomFieldEntity>();
 		this.personnelMovements = new HashSet<PersonnelMovementEntity>();
+		this.personnelNotes = new HashSet<PersonnelNotesEntity>();
 		this.personnelId = null;
 		this.globalPersonnelNum = "XX";
 		if (customFields != null)
@@ -221,6 +226,10 @@ public class PersonnelBO extends BusinessObject {
 		return personnelMovements;
 	}
 
+	public Set<PersonnelNotesEntity> getPersonnelNotes() {
+		return personnelNotes;
+	}
+
 	private void updateCustomFields(List<CustomFieldView> customfields) {
 		if (this.customFields != null && customfields != null) {
 			for (CustomFieldView fieldView : customfields)
@@ -243,6 +252,10 @@ public class PersonnelBO extends BusinessObject {
 			this.personnelMovements.add(personnelMovement);
 		}
 	}
+	
+	private void addPersonnelNotes(PersonnelNotesEntity personnelNotes) {
+		this.personnelNotes.add(personnelNotes);
+	}
 
 	public void save() throws PersonnelException {
 		try {
@@ -254,6 +267,16 @@ public class PersonnelBO extends BusinessObject {
 		} catch (PersistenceException e) {
 			throw new PersonnelException(e);
 
+		}
+	}
+	
+	public void addNotes(Short userId, PersonnelNotesEntity personnelNotes) throws PersonnelException {
+		setUpdateDetails(userId);
+		addPersonnelNotes(personnelNotes);
+		try {
+			new PersonnelPersistence().createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new PersonnelException(e);
 		}
 	}
 
@@ -372,6 +395,18 @@ public class PersonnelBO extends BusinessObject {
 			getPersonnelDetails().updateDetails(name, maritalStatus, gender,
 					address, dateOfJoiningBranch);
 		}
+	}
+	
+	public List<PersonnelNotesEntity> getRecentPersonnelNotes() {
+		List<PersonnelNotesEntity> notes = new ArrayList<PersonnelNotesEntity>();
+		int count = 0;
+		for (PersonnelNotesEntity personnelNotes : getPersonnelNotes()) {
+			if (count > 2)
+				break;
+			notes.add(personnelNotes);
+			count++;
+		}
+		return notes;
 	}
 
 	private void validateForUpdate(PersonnelStatus newStatus,

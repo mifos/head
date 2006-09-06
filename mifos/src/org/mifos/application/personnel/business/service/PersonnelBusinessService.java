@@ -18,9 +18,11 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 
 public class PersonnelBusinessService extends BusinessService {
+	@Override
 	public BusinessObject getBusinessObject(UserContext userContext) {
 		return null;
 	}
@@ -61,4 +63,12 @@ public class PersonnelBusinessService extends BusinessService {
 	public List<SupportedLocalesEntity> getAllLocales() throws ServiceException {
 		return new ConfigurationPersistence().getSupportedLocale();
 	}
+	
+	public QueryResult getAllPersonnelNotes(Short personnelId) throws ServiceException {
+		try {
+			return new PersonnelPersistence().getAllPersonnelNotes(personnelId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	} 
 }

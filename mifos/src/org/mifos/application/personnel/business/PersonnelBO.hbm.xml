@@ -67,6 +67,13 @@
 			<key column="PERSONNEL_ID" update="false" />
 			<one-to-many class="org.mifos.application.personnel.business.PersonnelMovementEntity"  />
 		</set>
+		<set name="personnelNotes" cascade="all" inverse="true"
+			table="PERSONNEL_NOTES" lazy="true" order-by="COMMENT_ID desc" access="field">
+			<key column="PERSONNEL_ID" />
+			<many-to-many
+				class="org.mifos.application.personnel.business.PersonnelNotesEntity"
+				column="COMMENT_ID" />
+		</set>
 	</class>
 	<!-- This query obtains all the active loan officers under a particular office -->
 	<query name="masterdata.activeloanofficers">

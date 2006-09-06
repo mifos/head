@@ -475,6 +475,7 @@ public interface NamedQueryConstants {
 	public String MASTERDATA_MIFOS_ENTITY_VALUE="masterdata.mifosEntityValue";
 
 	public String FORMEDBY_LOANOFFICERS_LIST = "personnel.formedByLoanOfficers";
+	public String GETALLPERSONNELNOTES = "personnel.getAllPersonnelNotes";
 	//M2 office
 	public String GETMAXOFFICEID="office.getMaxId";
 	public String GETCHILDCOUNT="office.getChlidCount";
