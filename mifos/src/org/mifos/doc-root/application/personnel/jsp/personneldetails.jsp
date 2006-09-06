@@ -20,14 +20,6 @@
 	  personActionForm.action="PersonnelAction.do?method=search&input=UserChangeLog";
 	  personActionForm.submit();
   }
-  function AddNote(){
-	personnelNotesActionForm.action="PersonnelNotesAction.do?method=load";
-	personnelNotesActionForm.submit();
-  }
- function SeeAllNotes(){
-	personnelNotesActionForm.action="PersonnelNotesAction.do?method=get";
-	personnelNotesActionForm.submit();
-  }
 </script>
 		<html-el:form action="PersonAction.do?method=preview">
 
@@ -272,13 +264,13 @@
 					</tr>
 					<tr>
 						<td class="paddingL10"><c:choose>
-							<c:when test="${!empty requestScope.notes}">
-								<c:forEach var="note" items="${requestScope.notes}">
+							<c:when test="${!empty personnelBO.recentPersonnelNotes}">
+								<c:forEach var="note" items="${personnelBO.recentPersonnelNotes}">
 									<span class="fontnormal8ptbold"> <c:out
 										value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,note.commentDate)}" />:
 									</span>
 									<span class="fontnormal8pt"> <c:out value="${note.comment}" />
-									-<em><c:out value="${note.officer.displayName}" /></em><br>
+									-<em><c:out value="${note.personnelName}" /></em><br>
 									<br>
 									</span>
 								</c:forEach>
@@ -293,12 +285,12 @@
 					</tr>
 					<tr>
 						<td align="right" class="paddingleft05"><span
-							class="fontnormal8pt"> <c:if test="${!empty requestScope.notes}">
-							<a href="javascript:SeeAllNotes()"> <mifos:mifoslabel
+							class="fontnormal8pt"> <c:if test="${!empty personnelBO.recentPersonnelNotes}">
+							<a href="personnelNoteAction.do?method=search&personnelId=<c:out value="${personnelBO.personnelId}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&personnelName=<c:out value="${personnelBO.displayName}"/>"> <mifos:mifoslabel
 								name="Personnel.SeeAllNotes" bundle="PersonnelUIResources"></mifos:mifoslabel>
 							</a>
 							<br>
-						</c:if> <a href="javascript:AddNote()"> <mifos:mifoslabel
+						</c:if> <a href="personnelNoteAction.do?method=load&personnelId=<c:out value="${personnelBO.personnelId}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"> <mifos:mifoslabel
 							name="Personnel.AddNote" bundle="PersonnelUIResources"></mifos:mifoslabel>
 						</a> </span></td>
 					</tr>
@@ -309,18 +301,6 @@
 			</table>
 			<br>
 
-		</html-el:form>
-		<html-el:form action="PersonnelNotesAction.do?method=load">
-			<html-el:hidden property="officeName"
-				value="${personnelBO.office.officeName}" />
-			<html-el:hidden property="officeId"
-				value="${personnelBO.office.officeId}" />
-			<html-el:hidden property="personnelId"
-				value="${personnelBO.personnelId}" />
-			<html-el:hidden property="globalPersonnelNum"
-				value="${personnelBO.globalPersonnelNum}" />
-			<html-el:hidden property="personnelName"
-				value="${personnelBO.displayName}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

@@ -3,7 +3,7 @@
 		xmlns="http://www.aditi.com" 
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 		xsi:schemaLocation="http://www.aditi.com tabletag.xsd ">
-<path key="allnotes" forwardkey="search_success" action="PersonnelNotesAction.do"/>
+<path key="allnotes" forwardkey="search_success" action="personnelNoteAction.do"/>
 <pagerequirements numbersrequired="false" bluelinerequired="false" headingrequired="false" valignnumbers="true" blanklinerequired="true" topbluelinerequired="false"/>   
   
 <row>

@@ -92,7 +92,7 @@
 		<form-bean name="personnelNotesActionForm"
 			type="org.mifos.application.personnel.struts.actionforms.PersonnelNotesActionForm">
 		</form-bean>
-
+		<form-bean name="personnelNoteActionForm" type="org.mifos.application.personnel.struts.actionforms.PersonnelNoteActionForm"></form-bean>
 		<!-- Personnel Action Form -->
 		<form-bean name="personnelActionForm"
 			type="org.mifos.application.personnel.struts.actionforms.PersonnelActionForm">
@@ -651,7 +651,20 @@
 			<forward name="UserDetailsPage"
 				path="/PersonnelAction.do?method=get" />
 		</action>
-
+		
+		<!-- M2 Personnel Note action -->
+		<action path="/personnelNoteAction" type="org.mifos.application.personnel.struts.action.PersonnelNoteAction" name="personnelNoteActionForm" parameter="method" validate="true" input="/personnelNoteAction.do?method=validate" scope="session">
+			<forward name="load_success" path="/pages/application/personnel/jsp/addpersonnelnotes.jsp" />
+			<forward name="get_success" path="/personnelNoteAction.do?method=search" />
+			<forward name="search_success" path="/pages/application/personnel/jsp/viewpersonnelnotes.jsp" />
+			<forward name="preview_success" path="/pages/application/personnel/jsp/previewpersonnelnotes.jsp" />
+			<forward name="preview_failure" path="/pages/application/personnel/jsp/addpersonnelnotes.jsp" />
+			<forward name="previous_success" path="/pages/application/personnel/jsp/addpersonnelnotes.jsp" />
+			<forward name="create_success" path="/PersonAction.do?method=get" />
+			<forward name="cancel_success" path="/PersonAction.do?method=get" />
+			<forward name="create_failure" path="/pages/application/personnel/jsp/previewpersonnelnotes.jsp" />
+		</action>
+		
 		<!-- Group action -->
 		<action path="/GroupAction"
 			type="org.mifos.application.customer.group.struts.action.GroupAction"

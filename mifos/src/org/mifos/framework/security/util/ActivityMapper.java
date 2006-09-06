@@ -380,6 +380,14 @@ public class ActivityMapper {
 				SecurityConstants.PERSONNEL_EDIT_PERSONNEL);
 		activityMap.put("/PersonnelNotesAction-search", SecurityConstants.VIEW);
 		activityMap.put("/PersonnelNotesAction-get", SecurityConstants.VIEW);
+		
+		//M2 personnel notes
+		
+		activityMap.put("/personnelNoteAction-load",SecurityConstants.PERSONNEL_EDIT_PERSONNEL);
+		activityMap.put("/personnelNoteAction-preview", SecurityConstants.VIEW);
+		activityMap.put("/personnelNoteAction-previous",SecurityConstants.VIEW);
+		activityMap.put("/personnelNoteAction-create",SecurityConstants.VIEW);
+		activityMap.put("/personnelNoteAction-search", SecurityConstants.VIEW);
 
 		// center ralated mappings
 		activityMap.put("/centerAction-chooseOffice",
