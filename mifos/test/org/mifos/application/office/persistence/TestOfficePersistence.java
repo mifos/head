@@ -10,6 +10,7 @@ import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.authorization.HierarchyManager;
+import org.mifos.framework.util.helpers.TestObjectFactory;
 
 import sun.security.action.GetBooleanAction;
 
@@ -137,5 +138,13 @@ public class TestOfficePersistence extends MifosTestCase {
 		assertEquals(1,officeList.size());
 		assertEquals(1,((OfficeBO)officeList.get(0)).getChildren().size());
 		officeList=null;
+	}
+	
+	public void testGetChildOffices() {
+		OfficeBO headOffice = TestObjectFactory.getOffice(Short.valueOf("1"));
+		List<OfficeView> officeList = officePersistence.getChildOffices(headOffice.getSearchId());
+		assertEquals(3,officeList.size());
+		officeList=null;
+		headOffice = null;
 	}
 }

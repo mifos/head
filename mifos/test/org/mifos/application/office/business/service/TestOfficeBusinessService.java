@@ -2,9 +2,11 @@ package org.mifos.application.office.business.service;
 
 import java.util.List;
 
+import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestOfficeBusinessService extends MifosTestCase {
 	private OfficeBusinessService officeBusinessService = new OfficeBusinessService();
@@ -37,5 +39,13 @@ public class TestOfficeBusinessService extends MifosTestCase {
 	
 	public void testGetOfficesTillBranchOffice() {
 		assertEquals(2,officeBusinessService.getOfficesTillBranchOffice().size());
+	}
+	
+	public void testGetChildOffices() {
+		OfficeBO headOffice = TestObjectFactory.getOffice(Short.valueOf("1"));
+		List<OfficeView> officeList = officeBusinessService.getChildOffices(headOffice.getSearchId());
+		assertEquals(3,officeList.size());
+		officeList=null;
+		headOffice = null;
 	}
 }
