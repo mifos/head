@@ -165,7 +165,7 @@ public class GroupBO extends CustomerBO {
 		List<CustomerBO> clients = new CustomerPersistence()
 				.getAllChildrenForParent(getSearchId(), getOffice()
 						.getOfficeId(), CustomerConstants.GROUP_LEVEL_ID);
-		if (clients != null && !clients.isEmpty()) {
+		if (clients != null) {
 			for (CustomerBO client : clients) {
 				amount = amount.add(client.getBalanceForAccountsAtRisk());
 			}
@@ -187,7 +187,7 @@ public class GroupBO extends CustomerBO {
 		List<CustomerBO> clients = new CustomerPersistence()
 				.getAllChildrenForParent(getSearchId(), getOffice()
 						.getOfficeId(), CustomerConstants.GROUP_LEVEL_ID);
-		if (clients != null && !clients.isEmpty()) {
+		if (clients != null) {
 			for (CustomerBO client : clients) {
 				amount = amount.add(client.getOutstandingLoanAmount());
 			}
@@ -202,7 +202,7 @@ public class GroupBO extends CustomerBO {
 		List<CustomerBO> clients = new CustomerPersistence()
 				.getAllChildrenForParent(getSearchId(), getOffice()
 						.getOfficeId(), CustomerConstants.GROUP_LEVEL_ID);
-		if (clients != null && !clients.isEmpty()) {
+		if (clients != null) {
 			for (CustomerBO client : clients) {
 				amountForActiveAccount = amountForActiveAccount.add(client
 						.getOutstandingLoanAmount());
@@ -222,7 +222,7 @@ public class GroupBO extends CustomerBO {
 		List<CustomerBO> clients = new CustomerPersistence()
 				.getAllChildrenForParent(getSearchId(), getOffice()
 						.getOfficeId(), CustomerConstants.GROUP_LEVEL_ID);
-		if (clients != null && !clients.isEmpty()) {
+		if (clients != null) {
 			for (CustomerBO client : clients) {
 				amount = amount.add(client.getSavingsBalance());
 			}
@@ -235,7 +235,7 @@ public class GroupBO extends CustomerBO {
 		List<CustomerBO> clients = new CustomerPersistence()
 				.getAllChildrenForParent(getSearchId(), getOffice()
 						.getOfficeId(), CustomerConstants.GROUP_LEVEL_ID);
-		if (clients != null && !clients.isEmpty()) {
+		if (clients != null) {
 			return Integer.valueOf(clients.size());
 		}
 		return Integer.valueOf(0);
