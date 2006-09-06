@@ -47,15 +47,19 @@ import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPositionView;
+import org.mifos.application.customer.business.CustomerStatusEntity;
+import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.persistence.GroupPersistence;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
@@ -256,6 +260,29 @@ public class GroupBO extends CustomerBO {
 				customerPositions);
 	}
 
+	public void transferToBranch(OfficeBO officeToTransfer)throws CustomerException{
+		validateBranchTransfer(officeToTransfer);
+		logger.debug("In GroupBO::transferToBranch(), transfering customerId: " + getCustomerId() +  "to branch : "+ officeToTransfer.getOfficeId());
+		validateForDuplicateName(getDisplayName(), officeToTransfer.getOfficeId());
+		
+		List<CustomerBO> clientList = getChildren(CustomerLevel.CLIENT, ChildrenStateType.ALL);
+		
+		validateForActiveAccounts(clientList);
+		
+		if(isActive())
+			setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
+		
+		makeCustomerMovementEntries(officeToTransfer);
+		this.setPersonnel(null);
+		this.setSearchId(generateSearchId());
+		super.update();
+		for(CustomerBO client: clientList){
+			client.setUserContext(getUserContext());
+			((ClientBO)client).transferToBranch(officeToTransfer);
+		}
+		logger.debug("In GroupBO::transferToBranch(), successfully transfered, customerId :" + getCustomerId());		
+	}
+	
 	@Override
 	protected void validateStatusChange(Short newStatusId)
 			throws CustomerException {
@@ -289,6 +316,22 @@ public class GroupBO extends CustomerBO {
 		return false;
 	}
 
+	private void validateForActiveAccounts(List<CustomerBO> clientList)throws CustomerException{
+		if(this.isAnyLoanAccountOpen() || this.isAnySavingsAccountOpen())
+			throw new CustomerException(CustomerConstants.ERRORS_HAS_ACTIVE_ACCOUNT);
+		for(CustomerBO client: clientList)
+			if(client.isAnyLoanAccountOpen() || client.isAnySavingsAccountOpen())
+				throw new CustomerException(CustomerConstants.ERRORS_CHILDREN_HAS_ACTIVE_ACCOUNT);		
+	}
+	
+	private void validateBranchTransfer(OfficeBO officeToTransfer)throws CustomerException{
+		if (officeToTransfer == null)
+			throw new CustomerException(CustomerConstants.INVALID_OFFICE);
+		
+		if(isSameBranch(officeToTransfer))
+			throw new CustomerException(CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER);
+	}
+	
 	private void checkIfGroupCanBeActive(Short groupStatusId)
 			throws CustomerException {
 		if (getParentCustomer() == null
@@ -366,15 +409,13 @@ public class GroupBO extends CustomerBO {
 
 	private void checkIfGroupCanBeCancelled() throws CustomerException {
 		try {
-			if (getAllCustomerOtherThanCancelledAndClosed(CustomerLevel.CLIENT)
+			if (getChildren(CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED)
 					.size() > 0)
 				throw new CustomerException(
 						GroupConstants.GROUP_CLIENTS_ARE_ACTIVE,
 						new Object[] { MifosConfiguration.getInstance()
 								.getLabel(ConfigurationConstants.GROUP,
 										getUserContext().getPereferedLocale()) });
-		} catch (PersistenceException pe) {
-			throw new CustomerException(pe);
 		} catch (ConfigurationException ce) {
 			throw new CustomerException(ce);
 		}
@@ -387,7 +428,7 @@ public class GroupBO extends CustomerBO {
 					CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
 		}
 		try {
-			if (getAllCustomerOtherThanCancelledAndClosed(CustomerLevel.CLIENT)
+			if (getChildren(CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED)
 					.size() > 0)
 				throw new CustomerException(
 						CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
@@ -396,8 +437,6 @@ public class GroupBO extends CustomerBO {
 										ConfigurationConstants.CLIENT,
 										this.getUserContext()
 												.getPereferedLocale()) });
-		} catch (PersistenceException pe) {
-			throw new CustomerException(pe);
 		} catch (ConfigurationException ce) {
 			throw new CustomerException(ce);
 		}
@@ -430,7 +469,8 @@ public class GroupBO extends CustomerBO {
 				|| (!trained && trainedDate != null))
 			throw new CustomerException(
 					CustomerConstants.INVALID_TRAINED_OR_TRAINEDDATE);
-		validateForDuplicateName(displayName);
+		if(getOffice()!=null)
+			validateForDuplicateName(displayName, getOffice().getOfficeId());
 	}
 
 	private void validateFormedBy(Short formedBy) throws CustomerException {
@@ -439,11 +479,9 @@ public class GroupBO extends CustomerBO {
 
 	}
 
-	private void validateForDuplicateName(String displayName)
+	private void validateForDuplicateName(String displayName, Short officeId)
 			throws CustomerException {
-		if (getOffice() != null
-				&& new GroupPersistence().isGroupExists(displayName,
-						getOffice().getOfficeId()))
+		if (new GroupPersistence().isGroupExists(displayName, officeId))
 			throw new CustomerException(
 					CustomerConstants.ERRORS_DUPLICATE_CUSTOMER);
 	}
@@ -482,7 +520,7 @@ public class GroupBO extends CustomerBO {
 			validateLO(loanOfficerId);
 		}
 		if (!getDisplayName().equals(displayName))
-			validateForDuplicateName(displayName);
+			validateForDuplicateName(displayName, getOffice().getOfficeId());
 
 	}
 }

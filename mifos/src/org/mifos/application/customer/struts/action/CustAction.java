@@ -64,6 +64,7 @@ import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.struts.actionforms.CustActionForm;
 import org.mifos.application.customer.struts.actionforms.CustomerActionForm;
+import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.fees.business.FeeBO;
@@ -315,7 +316,7 @@ public class CustAction extends BaseAction {
 			throws ApplicationException {
 		List<CustomerBO> customerList;
 		customerList = customerBO
-				.getAllCustomerOtherThanCancelledAndClosed(CustomerLevel.CLIENT);
+				.getChildren(CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED);
 		SessionUtils.setAttribute(CustomerConstants.CLIENT_LIST, customerList,
 				request);
 	}

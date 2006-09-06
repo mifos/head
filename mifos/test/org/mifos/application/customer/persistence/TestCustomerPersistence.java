@@ -33,6 +33,7 @@ import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -244,7 +245,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		assertEquals(1, productList.size());
 	}
 
-	public void testGetChildernForParent() throws Exception {
+	public void testGetChildernOtherThanClosed() throws Exception {
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 		center = createCenter();
 		group = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE,
@@ -264,8 +265,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 				group, new Date(System.currentTimeMillis()));
 
 		List<CustomerBO> customerList = customerPersistence
-				.getChildrenForParent(center.getSearchId(), center.getOffice()
-						.getOfficeId(), CustomerConstants.CLIENT_LEVEL_ID);
+				.getChildren(center.getSearchId(), center.getOffice()
+						.getOfficeId(), CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CLOSED);
 		assertEquals(new Integer("3").intValue(), customerList.size());
 
 		for (CustomerBO customer : customerList) {
@@ -278,6 +279,72 @@ public class TestCustomerPersistence extends MifosTestCase {
 		TestObjectFactory.cleanUp(client4);
 	}
 
+	public void testGetChildernOtherThanClosedAndCancelled() throws Exception {
+		CustomerPersistence customerPersistence = new CustomerPersistence();
+		center = createCenter();
+		group = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE,
+				center.getSearchId() + ".1", center, new Date(System
+						.currentTimeMillis()));
+		client = TestObjectFactory.createClient("client1",
+				ClientConstants.STATUS_ACTIVE, group.getSearchId() + ".1",
+				group, new Date(System.currentTimeMillis()));
+		ClientBO client2 = TestObjectFactory.createClient("client2",
+				ClientConstants.STATUS_CLOSED, group.getSearchId() + ".2",
+				group, new Date(System.currentTimeMillis()));
+		ClientBO client3 = TestObjectFactory.createClient("client3",
+				ClientConstants.STATUS_CANCELLED, group.getSearchId() + ".3",
+				group, new Date(System.currentTimeMillis()));
+		ClientBO client4 = TestObjectFactory.createClient("client4",
+				ClientConstants.STATUS_PENDING, group.getSearchId() + ".4",
+				group, new Date(System.currentTimeMillis()));
+
+		List<CustomerBO> customerList = customerPersistence
+				.getChildren(center.getSearchId(), center.getOffice()
+						.getOfficeId(), CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED);
+		assertEquals(new Integer("2").intValue(), customerList.size());
+
+		for (CustomerBO customer : customerList) {
+			if (customer.getCustomerId().equals(client4.getCustomerId()))
+				assertTrue(true);
+		}
+		TestObjectFactory.cleanUp(client2);
+		TestObjectFactory.cleanUp(client3);
+		TestObjectFactory.cleanUp(client4);
+	}
+	
+	public void testGetAllChildern() throws Exception {
+		CustomerPersistence customerPersistence = new CustomerPersistence();
+		center = createCenter();
+		group = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE,
+				center.getSearchId() + ".1", center, new Date(System
+						.currentTimeMillis()));
+		client = TestObjectFactory.createClient("client1",
+				ClientConstants.STATUS_ACTIVE, group.getSearchId() + ".1",
+				group, new Date(System.currentTimeMillis()));
+		ClientBO client2 = TestObjectFactory.createClient("client2",
+				ClientConstants.STATUS_CLOSED, group.getSearchId() + ".2",
+				group, new Date(System.currentTimeMillis()));
+		ClientBO client3 = TestObjectFactory.createClient("client3",
+				ClientConstants.STATUS_CANCELLED, group.getSearchId() + ".3",
+				group, new Date(System.currentTimeMillis()));
+		ClientBO client4 = TestObjectFactory.createClient("client4",
+				ClientConstants.STATUS_PENDING, group.getSearchId() + ".4",
+				group, new Date(System.currentTimeMillis()));
+
+		List<CustomerBO> customerList = customerPersistence
+				.getChildren(center.getSearchId(), center.getOffice()
+						.getOfficeId(), CustomerLevel.CLIENT, ChildrenStateType.ALL);
+		assertEquals(new Integer("4").intValue(), customerList.size());
+
+		for (CustomerBO customer : customerList) {
+			if (customer.getCustomerId().equals(client2.getCustomerId()))
+				assertTrue(true);
+		}
+		TestObjectFactory.cleanUp(client2);
+		TestObjectFactory.cleanUp(client3);
+		TestObjectFactory.cleanUp(client4);
+	}
+	
 	public void testRetrieveSavingsAccountForCustomer() throws Exception {
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 		center = createCenter();

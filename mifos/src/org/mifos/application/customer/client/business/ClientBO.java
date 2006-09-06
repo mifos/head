@@ -156,7 +156,7 @@ public class ClientBO extends CustomerBO {
 		
 		if(parentCustomer!=null)
 			checkIfClientStatusIsLower(getStatus().getValue(), parentCustomer.getStatus().getValue());
-		generateSearchId(parentCustomer , officeId);
+		generateSearchId();
 	}
 	
 	public Set<ClientNameDetailEntity> getNameDetailSet() {
@@ -374,7 +374,7 @@ public class ClientBO extends CustomerBO {
 		
 		makeCustomerMovementEntries(officeToTransfer);		
 		this.setPersonnel(null);
-		generateSearchId(null,officeToTransfer.getOfficeId());
+		generateSearchId();
 		super.update();
 		logger.debug("In ClientBO::transferToBranch(), successfully transfered, customerId :" + getCustomerId());  
 	}
@@ -474,19 +474,6 @@ public class ClientBO extends CustomerBO {
 		return getParentCustomer().getCustomerId().equals(group.getCustomerId());
 	}
 	
-	private void makeCustomerMovementEntries(OfficeBO officeToTransfer){
-		CustomerMovementEntity currentCustomerMovement = getActiveCustomerMovement();
-		if(currentCustomerMovement == null){
-			currentCustomerMovement = new CustomerMovementEntity(this, getCreatedDate());
-			this.addCustomerMovement(currentCustomerMovement);
-		}
-		
-		currentCustomerMovement.makeInActive(userContext.getId());
-		this.setOffice(officeToTransfer);
-		CustomerMovementEntity newCustomerMovement = new CustomerMovementEntity(this, new Date());
-		this.addCustomerMovement(newCustomerMovement);
-	}
-	
 	private void validateGroupTransfer(GroupBO toGroup)throws CustomerException{
 		if (toGroup == null)
 			throw new CustomerException(CustomerConstants.INVALID_PARENT);
@@ -511,15 +498,15 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 	
-	private void generateSearchId(CustomerBO parentCustomer , Short officeId) throws CustomerException{
+	private void generateSearchId() throws CustomerException{
 		int count;
-		if (parentCustomer != null) {
-			this.setSearchId(parentCustomer.getSearchId()+ "."+ String.valueOf(parentCustomer.getMaxChildCount() + 1));
-			parentCustomer.incrementMaxChildCount();
+		if (getParentCustomer() != null) {
+			getParentCustomer().incrementMaxChildCount();
+			this.setSearchId(getParentCustomer().getSearchId()+ "."+ getParentCustomer().getMaxChildCount());
 		}
 		else{
 			try { 
-			count = new CustomerPersistence().getCustomerCountForOffice(CustomerLevel.CLIENT, officeId);
+			count = new CustomerPersistence().getCustomerCountForOffice(CustomerLevel.CLIENT, getOffice().getOfficeId());
 			} catch (PersistenceException pe) {
 				throw new CustomerException(pe);
 			} 

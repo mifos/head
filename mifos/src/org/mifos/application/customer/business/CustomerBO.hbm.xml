@@ -134,8 +134,14 @@
 			account.savingsOffering.recommendedAmntUnit.id=1)) 
 			order by account.customer.customerLevel.id,account.savingsOffering.prdOfferingShortName]]>
 	</query>
-	<query name="Customer.getChildren">
+	<query name="Customer.getChildrenOtherThanClosed">
 		<![CDATA[from org.mifos.application.customer.business.CustomerBO as customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerLevel.id = :LEVEL_ID and customer.customerStatus.id not in (6,12) ]]>
+	</query>
+	<query name="Customer.getChildrenOtherThanClosedAndCancelled">
+		<![CDATA[from org.mifos.application.customer.business.CustomerBO as customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerLevel.id = :LEVEL_ID and customer.customerStatus.id not in (5,6,11,12) ]]>
+	</query>
+	<query name="Customer.getAllChildrenForCustomerLevel">
+		<![CDATA[from org.mifos.application.customer.business.CustomerBO as customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerLevel.id = :LEVEL_ID]]>
 	</query>
 	<query name="Customer.getActiveLoanAccounts">
 		<![CDATA[from org.mifos.application.accounts.loan.business.LoanBO as loan where loan.customer.customerId=:CUSTOMER_ID and loan.accountState.id in (1,2,3,4,5,9) ]]>

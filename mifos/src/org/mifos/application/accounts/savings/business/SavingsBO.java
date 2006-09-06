@@ -73,7 +73,10 @@ import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
@@ -929,9 +932,9 @@ public class SavingsBO extends AccountBO {
 				List<CustomerBO> children;
 				try {
 					children = getCustomer().getChildren(
-							CustomerConstants.CLIENT_LEVEL_ID);
-				} catch (PersistenceException e) {
-					throw new AccountException(e);
+							CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CLOSED);
+				} catch (CustomerException ce) {
+					throw new AccountException(ce);
 				}
 				for (CustomerBO customer : children) {
 					generateDepositAccountActions(customer, depositSchedule);
@@ -1994,9 +1997,9 @@ public class SavingsBO extends AccountBO {
 				List<CustomerBO> children;
 				try {
 					children = getCustomer().getChildren(
-							CustomerConstants.CLIENT_LEVEL_ID);
-				} catch (PersistenceException e) {
-					throw new AccountException(e);
+							CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CLOSED);
+				} catch (CustomerException ce) {
+					throw new AccountException(ce);
 				}
 				for (Date date : meetingDates) {
 					Short installmentId = new Short(nextIntallmentId++);
@@ -2113,9 +2116,9 @@ public class SavingsBO extends AccountBO {
 				List<CustomerBO> children;
 				try {
 					children = getCustomer().getChildren(
-							CustomerConstants.CLIENT_LEVEL_ID);
-				} catch (PersistenceException e) {
-					throw new AccountException(e);
+							CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CLOSED);
+				} catch (CustomerException ce) {
+					throw new AccountException(ce);
 				}
 				for (CustomerBO customer : children) {
 

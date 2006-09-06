@@ -62,6 +62,7 @@ import org.mifos.application.customer.group.struts.actionforms.GroupCustActionFo
 import org.mifos.application.customer.group.util.helpers.CenterSearchInput;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.struts.action.CustAction;
+import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.fees.business.FeeView;
@@ -305,7 +306,7 @@ public class GroupCustAction extends CustAction {
 					.setAttribute(
 							GroupConstants.CLIENT_LIST,
 							groupBO
-									.getAllCustomerOtherThanCancelledAndClosed(CustomerLevel.CLIENT),
+									.getChildren(CustomerLevel.CLIENT,ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED),
 							request);
 			loadCustomFieldDefinitions(EntityType.GROUP, request);
 	}

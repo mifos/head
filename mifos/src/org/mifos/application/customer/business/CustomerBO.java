@@ -54,6 +54,7 @@ import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -562,24 +563,38 @@ public abstract class CustomerBO extends BusinessObject {
 		return historicalData;
 	}
 	
-	public List<CustomerBO> getChildren(Short customerLevel)
-			throws PersistenceException {
-		return new CustomerPersistence().getChildrenForParent(getSearchId(),
-				getOffice().getOfficeId(), customerLevel);
-	}
+//	public List<CustomerBO> getChildren(CustomerLevel customerLevel)
+//			throws CustomerException {
+//		try{
+//			return new CustomerPersistence().getChildrenOtherThanClosed(getSearchId(),
+//					getOffice().getOfficeId(), customerLevel);
+//		}catch(PersistenceException pe){
+//			throw new CustomerException(pe);
+//		}
+//	}
 
-	public List<CustomerBO> getAllCustomerOtherThanCancelledAndClosed(
-			CustomerLevel customerLevel) throws PersistenceException {
-		List<CustomerBO> customerListOtherThanCancelledAndClosed = new ArrayList<CustomerBO>();
-		CustomerStatus cancelStatus = customerLevel
-				.equals(CustomerLevel.CLIENT) ? CustomerStatus.CLIENT_CANCELLED
-				: CustomerStatus.GROUP_CANCELLED;
-		for (CustomerBO customerBO : getChildren(customerLevel.getValue()))
-			if (!customerBO.getCustomerStatus().getId().equals(
-					cancelStatus.getValue()))
-				customerListOtherThanCancelledAndClosed.add(customerBO);
-		return customerListOtherThanCancelledAndClosed;
+	public List<CustomerBO> getChildren(CustomerLevel customerLevel, ChildrenStateType stateType)
+	throws CustomerException {
+		try{
+			return new CustomerPersistence().getChildren(getSearchId(),
+					getOffice().getOfficeId(), customerLevel, stateType);
+		}catch(PersistenceException pe){
+			throw new CustomerException(pe);
+		}
 	}
+	
+//	public List<CustomerBO> getAllCustomerOtherThanCancelledAndClosed(
+//			CustomerLevel customerLevel) throws CustomerException {
+//		List<CustomerBO> customerListOtherThanCancelledAndClosed = new ArrayList<CustomerBO>();
+//		CustomerStatus cancelStatus = customerLevel
+//				.equals(CustomerLevel.CLIENT) ? CustomerStatus.CLIENT_CANCELLED
+//				: CustomerStatus.GROUP_CANCELLED;
+//		for (CustomerBO customerBO : getChildren(customerLevel.getValue()))
+//			if (!customerBO.getCustomerStatus().getId().equals(
+//					cancelStatus.getValue()))
+//				customerListOtherThanCancelledAndClosed.add(customerBO);
+//		return customerListOtherThanCancelledAndClosed;
+//	}
 
 	public void adjustPmnt(String adjustmentComment)
 			throws ApplicationException, SystemException {
@@ -829,6 +844,19 @@ public abstract class CustomerBO extends BusinessObject {
 				.getPersonnel(loanOfficerId);
 				new CustomerPersistence().updateLOsForAllChildren(getPersonnel().getPersonnelId(), getSearchId(), getOffice().getOfficeId());
 			}
+	}
+	
+	protected void makeCustomerMovementEntries(OfficeBO officeToTransfer){
+		CustomerMovementEntity currentCustomerMovement = getActiveCustomerMovement();
+		if(currentCustomerMovement == null){
+			currentCustomerMovement = new CustomerMovementEntity(this, getCreatedDate());
+			this.addCustomerMovement(currentCustomerMovement);
+		}
+		
+		currentCustomerMovement.makeInActive(userContext.getId());
+		this.setOffice(officeToTransfer);
+		CustomerMovementEntity newCustomerMovement = new CustomerMovementEntity(this, new Date());
+		this.addCustomerMovement(newCustomerMovement);
 	}
 	
 	private void createAddress(Address address){

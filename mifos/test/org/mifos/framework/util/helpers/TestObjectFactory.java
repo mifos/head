@@ -402,6 +402,8 @@ public class TestObjectFactory {
 			CustomerStatus customerStatus, Short officeId, MeetingBO meeting,
 			Short loanOfficerId){
 		Short formedBy = new Short("1");
+		if(meeting!=null)
+			meeting.setMeetingStartDate(new GregorianCalendar());
 		return createGroupUnderBranch(customerName, customerStatus, null, false, null, null, null, getFees(), formedBy, officeId, meeting, loanOfficerId);
 	}
 	

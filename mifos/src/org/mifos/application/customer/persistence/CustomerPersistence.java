@@ -63,6 +63,7 @@ import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.CustomerPictureEntity;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.LoanCycleCounter;
@@ -291,21 +292,61 @@ public class CustomerPersistence extends Persistence {
 
 	}
 
-	public List<CustomerBO> getChildrenForParent(String searchId,
-			Short officeId, Short customerLevelId) throws PersistenceException {
+	protected List<CustomerBO> getChildrenOtherThanClosed(String parentSearchId,
+			Short parentOfficeId, CustomerLevel childrenLevel) throws PersistenceException {
 		try {
 			Map<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("SEARCH_STRING", searchId + ".%");
-			queryParameters.put("OFFICE_ID", officeId);
-			queryParameters.put("LEVEL_ID", customerLevelId);
+			queryParameters.put("SEARCH_STRING", parentSearchId + ".%");
+			queryParameters.put("OFFICE_ID", parentOfficeId);
+			queryParameters.put("LEVEL_ID", childrenLevel.getValue());
 			List<CustomerBO> queryResult = executeNamedQuery(
-					NamedQueryConstants.GET_CHILDREN, queryParameters);
+					NamedQueryConstants.GET_CHILDREN_OTHER_THAN_CLOSED, queryParameters);
 			return queryResult;
 		} catch (HibernateException he) {
 			throw new PersistenceException(he);
 		}
 	}
 
+	protected List<CustomerBO> getChildrenOtherThanClosedAndCancelled(String parentSearchId,
+			Short parentOfficeId, CustomerLevel childrenLevel) throws PersistenceException {
+		try {
+			Map<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("SEARCH_STRING", parentSearchId + ".%");
+			queryParameters.put("OFFICE_ID", parentOfficeId);
+			queryParameters.put("LEVEL_ID", childrenLevel.getValue());
+			List<CustomerBO> queryResult = executeNamedQuery(
+					NamedQueryConstants.GET_CHILDREN_OTHER_THAN_CLOSED_AND_CANCELLED, queryParameters);
+			return queryResult;
+		} catch (HibernateException he) {
+			throw new PersistenceException(he);
+		}
+	}
+	
+	protected List<CustomerBO> getAllChildren(String parentSearchId,
+			Short parentOfficeId, CustomerLevel childrenLevel) throws PersistenceException {
+		try {
+			Map<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("SEARCH_STRING", parentSearchId + ".%");
+			queryParameters.put("OFFICE_ID", parentOfficeId);
+			queryParameters.put("LEVEL_ID", childrenLevel.getValue());
+			List<CustomerBO> queryResult = executeNamedQuery(
+					NamedQueryConstants.GET_ALL_CHILDREN_FOR_CUSTOMERLEVEL, queryParameters);
+			return queryResult;
+		} catch (HibernateException he) {
+			throw new PersistenceException(he);
+		}
+	}
+	
+	public List<CustomerBO> getChildren(String parentSearchId, Short parentOfficeId, CustomerLevel childrenLevel, ChildrenStateType childrenStateType) throws PersistenceException {
+		if(childrenStateType.equals(ChildrenStateType.OTHER_THAN_CLOSED))
+			return getChildrenOtherThanClosed(parentSearchId, parentOfficeId, childrenLevel);
+		if(childrenStateType.equals(ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED))
+			return getChildrenOtherThanClosedAndCancelled(parentSearchId, parentOfficeId, childrenLevel);
+		if(childrenStateType.equals(ChildrenStateType.ALL))
+			return getAllChildren(parentSearchId, parentOfficeId, childrenLevel);
+		return null;
+	}
+	
 	public List<SavingsBO> retrieveSavingsAccountForCustomer(Integer customerId)
 			throws PersistenceException {
 		try {

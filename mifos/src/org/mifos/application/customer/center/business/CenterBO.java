@@ -17,6 +17,7 @@ import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -87,7 +88,7 @@ public class CenterBO extends CustomerBO {
 						CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
 			}
 			try {
-				if (getAllCustomerOtherThanCancelledAndClosed(CustomerLevel.GROUP).size() > 0) {
+				if (getChildren(CustomerLevel.GROUP, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED).size() > 0) {
 					throw new CustomerException(
 							CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
 							new Object[] { MifosConfiguration.getInstance()
@@ -96,9 +97,7 @@ public class CenterBO extends CustomerBO {
 											this.getUserContext()
 													.getPereferedLocale()) });
 				}
-			} catch (PersistenceException pe) {
-				throw new CustomerException(pe);
-			}  catch (ConfigurationException ce) {
+			} catch (ConfigurationException ce) {
 				throw new CustomerException(ce);
 			}
 		} else if (newStatusId.equals(CustomerStatus.CENTER_ACTIVE.getValue())) {
