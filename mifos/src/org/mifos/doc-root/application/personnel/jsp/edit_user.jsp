@@ -45,6 +45,7 @@
 <%@taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
 <tiles:insert definition=".view">
  <tiles:put name="body" type="string">
 <script language="javascript">
@@ -60,18 +61,17 @@
 	<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 	<html-el:hidden property="input" value="ManageUser"/> 
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
-	<table width="95%" border="0" cellpadding="0" cellspacing="0">
+	 <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td class="bluetablehead05">
-          <span class="fontnormal8pt">
-          <a href="AdminAction.do?method=load">
+          <span class="fontnormal8pt"><a href="AdminAction.do?method=load">
 	           <mifos:mifoslabel name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>             	
            	</a>
 		 / 
 			<a href="PersonnelAction.do?method=loadSearch">
 			<mifos:mifoslabel name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
 			</a> / 
-			<a href="PersonnelAction.do?method=get&globalPersonnelNum=<c:out value="${BusinessKey.globalPersonnelNum}"/>">
+			<a href="PersonAction.do?method=get&globalPersonnelNum=<c:out value="${BusinessKey.globalPersonnelNum}"/>">
 	           <c:out value="${BusinessKey.displayName}"/>            	
            	</a>
           </span></td>
@@ -418,12 +418,12 @@
 										<c:out value="${loopStatus.index}" />
 									</bean:define>
 									<tr class="fontnormal">
-										<td width="21%" align="right"><mifos:mifoslabel
+										<td width="22%" align="right"><mifos:mifoslabel
 											name="${cf.lookUpEntity.entityType}"
 											mandatory="${cf.mandatoryStringValue}"
 											bundle="PersonnelUIResources"></mifos:mifoslabel>: 
 										</td>
-										<td width="79%"><c:if test="${cf.fieldType == 1}">
+										<td width="78%"><c:if test="${cf.fieldType == 1}">
 											<mifos:mifosnumbertext name="personActionForm"
 												property='customField[${ctr}].fieldValue' maxlength="200" />
 										</c:if> <c:if test="${cf.fieldType == 2}">

@@ -159,9 +159,6 @@ public class PersonAction extends BaseAction {
 			throws Exception {
 		PersonActionForm actionform = (PersonActionForm) form;
 		actionform.clear();
-		
-		
-
 		PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 		PersonnelBO personnelBO = ((PersonnelBusinessService) getService()).getPersonnel(personnel.getPersonnelId());
 		personnel = null;
@@ -176,11 +173,6 @@ public class PersonAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		PersonActionForm actionForm = (PersonActionForm) form;
-	/*	PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-		actionForm.setAge(new CustomerHelper().calculateAge(DateHelper
-				.getLocaleDate(getUserContext(request).getPereferedLocale(),
-						actionForm.getDob())));
-		personnel=null;*/
 		updateRoleLists(request, (PersonActionForm) form);
 		return mapping.findForward(ActionForwards.previewManage_success.toString());
 	}
@@ -199,7 +191,6 @@ public class PersonAction extends BaseAction {
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		System.out.println("Inside update"); 
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		PersonActionForm actionForm = (PersonActionForm) form;
@@ -213,7 +204,6 @@ public class PersonAction extends BaseAction {
 		Short perefferedLocale = getLocaleId(getShortValue(actionForm
 				.getPreferredLocale()));
 		PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-		System.out.println("update for bo goign to be called");
 		personnel.update(personnelStatus,level, office, title,
 				perefferedLocale, actionForm.getUserPassword(),
 				actionForm.getEmailId(),
@@ -394,12 +384,8 @@ public class PersonAction extends BaseAction {
 			
 		}
 		actionForm.setEmailId(personnel.getEmailId());
-		//System.out.println("---------personnel.getPreferredLocale(): "+personnel.getPreferredLocale());
 		if(personnel.getPreferredLocale()!=null)
-			//System.out.println("---------personnel.getPreferredLocale()..getLanguage().getLanguageId(): "+personnel.getPreferredLocale().getLanguage().getLanguageId());
-			//actionForm.setPreferredLocale(personnel.getPreferredLocale().getLanguage().getLanguageId().toString());
-		actionForm.setPreferredLocale(personnel.getPreferredLocale().getLocaleId().toString());
-		//	System.out.println("---------actionForm.setPreferredLocale: "+actionForm.getPreferredLocale());
+			actionForm.setPreferredLocale(getStringValue(personnel.getPreferredLocale().getLanguage().getLookUpId()));
 		List<Role> selectList = new ArrayList<Role>();
 		for(PersonnelRoleEntity personnelRole : personnel.getPersonnelRoles()){
 			selectList.add(personnelRole.getRole());

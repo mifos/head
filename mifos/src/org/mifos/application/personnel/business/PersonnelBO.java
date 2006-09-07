@@ -80,7 +80,7 @@ public class PersonnelBO extends BusinessObject {
 
 	private Set<PersonnelNotesEntity> personnelNotes;
 
-	private MifosLogger logger;
+	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.PERSONNEL_LOGGER);
 
 	protected PersonnelBO() {
 		this.level = null;
@@ -358,8 +358,11 @@ public class PersonnelBO extends BusinessObject {
 			List<CustomFieldView> customFields, Name name,
 			Integer maritalStatus, Integer gender, Address address,
 			Short updatedById) throws PersonnelException {
+		logger.debug("update in personnelBO called with values: " +newLevel+office.getOfficeId()+title+" "+preferredLocale  
+				+" "+updatedById);
 		MasterPersistence masterPersistence = new MasterPersistence();
 		validateForUpdate(newStatus, office, newLevel);
+		logger.debug("validation successful for status, office and level: "+newStatus+" "+office+" "+newLevel);
 		Date dateOfJoiningBranch = null;
 		if (!this.office.getOfficeId().equals(office.getOfficeId())) {
 			makePersonalMovementEntries(office, updatedById);
@@ -372,6 +375,8 @@ public class PersonnelBO extends BusinessObject {
 		PersonnelLevelEntity personnelLevel = (PersonnelLevelEntity) masterPersistence
 				.findById(PersonnelLevelEntity.class, newLevel.getValue());
 		this.level = personnelLevel;
+		this.preferredLocale=new SupportedLocalesEntity(preferredLocale);
+		
 		if (StringUtils.isNullAndEmptySafe(password)) {
 			this.encriptedPassword = getEncryptedPassword(password);
 			this.unLock();
@@ -383,23 +388,27 @@ public class PersonnelBO extends BusinessObject {
 			this.title = null;
 		} else
 			this.title = title;
-		// this.personnelRoles = null;
-		this.personnelRoles = new HashSet();
+		updatePersonnelRoles(roles);
+		updatePersonnelDetails(name, maritalStatus, gender, address,dateOfJoiningBranch);
+		updateCustomFields(customFields);
+		try {
+			setUpdateDetails(updatedById);
+			new PersonnelPersistence().createOrUpdate(this);
+			logger.debug("update successful");
+		} catch (PersistenceException e) {
+			throw new PersonnelException(
+					CustomerConstants.UPDATE_FAILED_EXCEPTION, e);
+		}
+	}
+
+	private void updatePersonnelRoles(List<Role> roles) {
+		this.personnelRoles.clear();
 		if (roles != null) {
 			for (Role role : roles) {
 				this.personnelRoles.add(new PersonnelRoleEntity(role, this));
 			}
 		}
-		updatePersonnelDetails(name, maritalStatus, gender, address,
-				dateOfJoiningBranch);
-		updateCustomFields(customFields);
-		try {
-			setUpdateDetails(updatedById);
-			new PersonnelPersistence().createOrUpdate(this);
-		} catch (PersistenceException e) {
-			throw new PersonnelException(
-					CustomerConstants.UPDATE_FAILED_EXCEPTION, e);
-		}
+		
 	}
 
 	public void update(String emailId, Name name, Integer maritalStatus,

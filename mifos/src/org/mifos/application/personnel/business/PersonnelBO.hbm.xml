@@ -21,7 +21,7 @@
 			class="org.mifos.application.office.business.OfficeBO" unique="true"
 			lazy="false" access="field"/>
 		<many-to-one name="preferredLocale" column="PREFERRED_LOCALE"
-			class="org.mifos.application.master.business.SupportedLocalesEntity" access="field" insert="false" cascade="none"/>
+			class="org.mifos.application.master.business.SupportedLocalesEntity" access="field" insert="true" update="true" cascade="none"/>
 		<one-to-one name="personnelDetails"
 			class="org.mifos.application.personnel.business.PersonnelDetailsEntity"
 			cascade="all" lazy="false" />
@@ -51,7 +51,7 @@
 		<property name="locked" column="LOCKED" type="short"
 			access="field" />
 		<property name="noOfTries" column="NO_OF_TRIES" type="short" access="field"/>
-		<set name="personnelRoles" cascade="all" inverse="true"
+		<set name="personnelRoles" cascade="all,delete-orphan" inverse="true"
 			lazy="false">
 			<key column="PERSONNEL_ID" />
 			<one-to-many
