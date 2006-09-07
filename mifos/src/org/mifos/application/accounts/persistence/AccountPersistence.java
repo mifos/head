@@ -1,6 +1,8 @@
 package org.mifos.application.accounts.persistence;
 
 import java.sql.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -36,6 +38,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.util.helpers.DateUtils;
 
 public class AccountPersistence extends Persistence {
 	
@@ -154,20 +157,23 @@ public class AccountPersistence extends Persistence {
 		return queryResult;
 	}
 	
-	public List<Integer> getAccountsWithTodaysInstallment() throws PersistenceException{
+	public List<Integer> getAccountsWithYesterdaysInstallment() throws PersistenceException{
 		List queryResult=null;
 		try{
 			Map<String, Object> queryParameters = new HashMap<String, Object>();
-			Date currentDate = new Date(System.currentTimeMillis());
+			Calendar currentDateCalendar = new GregorianCalendar();
+			int year = currentDateCalendar.get(Calendar.YEAR);
+			int month = currentDateCalendar.get(Calendar.MONTH);
+			int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
+			currentDateCalendar = new GregorianCalendar(year, month, day -1);
 			queryParameters.put("CUSTOMER_TYPE_ID",CustomerConstants.CUSTOMER_TYPE_ID);
 			queryParameters.put("ACTIVE_CENTER_STATE",CustomerConstants.CENTER_ACTIVE_STATE);
 			queryParameters.put("ACTIVE_GROUP_STATE",CustomerConstants.GROUP_ACTIVE_STATE);
 			queryParameters.put("ACTIVE_CLIENT_STATE",CustomerConstants.CLIENT_APPROVED);
 			queryParameters.put("ONHOLD_CLIENT_STATE",CustomerConstants.CLIENT_ONHOLD);
 			queryParameters.put("ONHOLD_GROUP_STATE",GroupConstants.HOLD);
-			queryParameters.put("CURRENT_DATE",currentDate);
-			queryParameters.put("PAYMENT_UNPAID",PaymentStatus.UNPAID.getValue());
-			queryResult=executeNamedQuery(NamedQueryConstants.GET_TODAYS_UNPAID_INSTALLMENT_FOR_ACTIVE_CUSTOMERS,queryParameters);
+			queryParameters.put("CURRENT_DATE",currentDateCalendar.getTime());
+			queryResult=executeNamedQuery(NamedQueryConstants.GET_YESTERDAYS_INSTALLMENT_FOR_ACTIVE_CUSTOMERS,queryParameters);
 		}catch(HibernateException e){
 			throw new PersistenceException(e);
 		}

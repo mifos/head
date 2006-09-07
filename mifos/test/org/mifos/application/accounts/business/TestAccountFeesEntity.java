@@ -69,7 +69,7 @@ public class TestAccountFeesEntity extends MifosTestCase {
 	}
 	
 	
-	public void testIsApplicable() throws ApplicationException, SchedulerException{
+	public void testGetApplicableDatesCount() throws ApplicationException, SchedulerException{
 		accountPersistence = new AccountPersistence();
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1,1,4,2));
         center=TestObjectFactory.createCenter("Center",Short.valueOf("13"),"1.1",meeting,new Date(System.currentTimeMillis()));
@@ -91,9 +91,9 @@ public class TestAccountFeesEntity extends MifosTestCase {
 		assertEquals(1,accountFeeSet.size());
 		for (AccountFeesEntity periodicFees : center.getCustomerAccount().getAccountFees()) {
 			if(periodicFees.getFees().getFeeName().equalsIgnoreCase("Training_Fee"))
-				assertEquals(false,periodicFees.isApplicable(currentDate));
+				assertEquals(Integer.valueOf(0),periodicFees.getApplicableDatesCount(currentDate));
 			else
-				assertEquals(true,periodicFees.isApplicable(currentDate));
+				assertEquals(Integer.valueOf(1),periodicFees.getApplicableDatesCount(currentDate));
 		}
 	}
 

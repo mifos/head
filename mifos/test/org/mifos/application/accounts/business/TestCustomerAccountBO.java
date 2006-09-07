@@ -434,8 +434,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			feeList.add(accountFeesActionDetailEntity
 					.getAccountFeesActionDetailId());
 		}
-		group.getCustomerAccount().applyPeriodicFees(
-				new Date(System.currentTimeMillis()));
+		group.getCustomerAccount().applyPeriodicFees();
 		TestObjectFactory.flushandCloseSession();
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());

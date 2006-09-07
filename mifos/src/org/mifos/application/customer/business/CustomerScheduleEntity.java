@@ -104,13 +104,12 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
 		return getMiscPenaltyDue().add(getTotalFees());
 	}
 
-	public void applyPeriodicFees(Short feeId) {
-
+	public void applyPeriodicFees(Short feeId,Money totalAmount) {
 		AccountFeesEntity accountFeesEntity = account
-				.getPeriodicAccountFees(feeId);
+				.getAccountFees(feeId);
 		AccountFeesActionDetailEntity accountFeesActionDetailEntity = new CustomerFeeScheduleEntity(
 				this, accountFeesEntity.getFees(),
-				accountFeesEntity, accountFeesEntity.getAccountFeeAmount());
+				accountFeesEntity, totalAmount);
 		addAccountFeesAction(accountFeesActionDetailEntity);
 	}
 

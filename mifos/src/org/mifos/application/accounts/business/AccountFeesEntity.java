@@ -163,8 +163,8 @@ public class AccountFeesEntity extends PersistentObject {
 		return getFees().isTimeOfDisbursement();
 	}
 
-	public boolean isApplicable(Date date) throws AccountException  {
-		boolean isApplicable = false;
+	public Integer getApplicableDatesCount(Date date) throws AccountException  {
+		Integer applicableDatesCount = 0 ;
 		SchedulerIntf schedulerIntf;
 		if (getLastAppliedDate() != null) {
 			MeetingBO meetingBO = getAccount().getCustomer()
@@ -197,12 +197,12 @@ public class AccountFeesEntity extends PersistentObject {
 						itr.remove();
 					}
 				}
-				isApplicable = applDates.size() > 0 ? true : false;
+				applicableDatesCount = applDates.size();
 			}
 			meetingBO.setMeetingStartDate(customerMeetingStartDate);
 			meetingBO.getMeetingDetails().setRecurAfter(recurAfter);
 		}
-		return isApplicable;
+		return applicableDatesCount;
 	}
 
 }

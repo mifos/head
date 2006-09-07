@@ -76,8 +76,8 @@ public class TestAccountPersistence extends TestAccount {
 		assertEquals(Integer.valueOf(17).intValue(),accountPersistence.getAccountStates(Short.valueOf("1")).size());
 	}
 	
-	public void testGetAccountsWithTodaysInstallment() throws PersistenceException {				
-		assertEquals(2,accountPersistence.getAccountsWithTodaysInstallment().size());		
+	public void testGetAccountsWithYesterdaysInstallment() throws PersistenceException {				
+		assertEquals(0,accountPersistence.getAccountsWithYesterdaysInstallment().size());		
 	}
 
 	public void testGetCustomerAccountsForFee() throws Exception{

@@ -75,6 +75,11 @@
 			accountAction.account.accountId,accountAction.actionDate
 		]]>
 	</query>
+	
+	
+	<query name="getYesterdaysInstallmentForActiveCustomers">
+		<![CDATA[select accountActionDateEntity.account.accountId from org.mifos.application.customer.business.CustomerScheduleEntity accountActionDateEntity where accountActionDateEntity.account.accountType.accountTypeId=:CUSTOMER_TYPE_ID and accountActionDateEntity.customer.customerStatus.id in (:ACTIVE_CENTER_STATE, :ACTIVE_GROUP_STATE, :ACTIVE_CLIENT_STATE, :ONHOLD_CLIENT_STATE, :ONHOLD_GROUP_STATE) and accountActionDateEntity.actionDate=:CURRENT_DATE ]]>
+	</query>
 
 
 </hibernate-mapping>

@@ -399,9 +399,8 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 	}
 
 	public void applyPeriodicFees(Short feeId) {
-
 		AccountFeesEntity accountFeesEntity = account
-				.getPeriodicAccountFees(feeId);
+				.getAccountFees(feeId);
 		AccountFeesActionDetailEntity accountFeesActionDetailEntity = new LoanFeeScheduleEntity(
 				this, accountFeesEntity.getFees(),
 				accountFeesEntity, accountFeesEntity.getAccountFeeAmount());

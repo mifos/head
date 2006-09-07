@@ -309,34 +309,34 @@ public class CustomerAccountBO extends AccountBO {
 		}
 	}
 
-	public void applyPeriodicFees(Date date) throws AccountException{
-		Set<AccountActionDateEntity> accountActionDateSet = getAccountActionDates();
-		for (AccountActionDateEntity accountActionDate : accountActionDateSet) {
-			if (date.equals(accountActionDate.getActionDate())) {
-				List<AccountFeesEntity> periodicFeeList = getPeriodicFeeList();
-				for (AccountFeesEntity accountFeesEntity : periodicFeeList) {
-					if (accountFeesEntity.isApplicable(date) == true) {
-						Hibernate.initialize(accountFeesEntity.getFees());
-						accountFeesEntity.setLastAppliedDate(date);
-						((CustomerScheduleEntity) accountActionDate)
-								.applyPeriodicFees(accountFeesEntity.getFees()
-										.getFeeId());
-						FeeBO feesBO = getAccountFeesObject(accountFeesEntity
-								.getFees().getFeeId());
-
-						String description = feesBO.getFeeName() + " "
-								+ AccountConstants.FEES_APPLIED;
-
-						updateAccountActivity(((AmountFeeBO) feesBO)
-								.getFeeAmount(), null, description);
-						try {
-							(new AccountPersistence()).createOrUpdate(this);
-						} catch (PersistenceException e) {
-							throw new AccountException(e);
-						}
+	public void applyPeriodicFees() throws AccountException {
+		if (isUpcomingInstallmentUnpaid()) {
+			AccountActionDateEntity accountActionDate = getDetailsOfUpcomigInstallment();
+			List<AccountFeesEntity> periodicFeeList = getPeriodicFeeList();
+			for (AccountFeesEntity accountFeesEntity : periodicFeeList) {
+				Integer applicableDatesCount = accountFeesEntity
+						.getApplicableDatesCount(accountActionDate.getActionDate());
+				if (applicableDatesCount > 0) {
+					Hibernate.initialize(accountFeesEntity.getFees());
+					accountFeesEntity.setLastAppliedDate(accountActionDate.getActionDate());
+					FeeBO feesBO = getAccountFeesObject(accountFeesEntity
+							.getFees().getFeeId());
+					Money totalAmount = ((AmountFeeBO) feesBO).getFeeAmount()
+							.multiply(
+									new Double(Integer
+											.toString(applicableDatesCount)));
+					((CustomerScheduleEntity) accountActionDate)
+							.applyPeriodicFees(accountFeesEntity.getFees()
+									.getFeeId(), totalAmount);
+					String description = feesBO.getFeeName() + " "
+							+ AccountConstants.FEES_APPLIED;
+					updateAccountActivity(totalAmount, null, description);
+					try {
+						(new AccountPersistence()).createOrUpdate(this);
+					} catch (PersistenceException e) {
+						throw new AccountException(e);
 					}
 				}
-				break;
 			}
 		}
 	}

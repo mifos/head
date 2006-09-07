@@ -463,15 +463,6 @@ public class AccountBO extends BusinessObject {
 		return null;
 	}
 
-	public AccountFeesEntity getPeriodicAccountFees(Short feeId) {
-		for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
-			if (feeId.equals(accountFeesEntity.getFees().getFeeId())) {
-				return accountFeesEntity;
-			}
-		}
-		return null;
-	}
-
 	public FeeBO getAccountFeesObject(Short feeId) {
 		AccountFeesEntity accountFees = getAccountFees(feeId);
 		if (accountFees != null)
@@ -776,6 +767,32 @@ public class AccountBO extends BusinessObject {
 		return true;
 	}
 	
+	public boolean isUpcomingInstallmentUnpaid(){
+		AccountActionDateEntity accountActionDateEntity = getDetailsOfUpcomigInstallment();
+		if(accountActionDateEntity!=null){
+			if(!accountActionDateEntity.isPaid())
+				return true;
+		}
+		return false;
+	}
+	
+	public AccountActionDateEntity getDetailsOfUpcomigInstallment() {
+		AccountActionDateEntity nextAccountAction = null;
+		Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
+		if (getAccountActionDates() != null
+				&& getAccountActionDates().size() > 0) {
+			for (AccountActionDateEntity accountAction : getAccountActionDates()) {
+				if (accountAction.getActionDate().compareTo(currentDate) > 0)
+					if (null == nextAccountAction)
+						nextAccountAction = accountAction;
+					else if (nextAccountAction.getInstallmentId() > accountAction
+							.getInstallmentId())
+						nextAccountAction = accountAction;
+			}
+		}
+		return nextAccountAction;
+	}
+	
 	protected final void buildFinancialEntries(
 			Set<AccountTrxnEntity> accountTrxns) throws AccountException {
 		try {
@@ -1035,7 +1052,6 @@ public class AccountBO extends BusinessObject {
 
 	protected List<AccountFeesEntity> getPeriodicFeeList() {
 		List<AccountFeesEntity> periodicFeeList = new ArrayList<AccountFeesEntity>();
-
 		for (AccountFeesEntity accountFee : getAccountFees()) {
 			if (accountFee.getFees().isPeriodic()) {
 				new FeePersistence().getFee(accountFee.getFees().getFeeId());

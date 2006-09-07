@@ -252,7 +252,7 @@ public class TestAccountActionDateEntity extends TestAccount {
 			if (accFeesEntity.getFees().getFeeName().equalsIgnoreCase(
 					"Periodic Fee")) {
 				accountActionDateEntity.applyPeriodicFees(accFeesEntity
-						.getFees().getFeeId());
+						.getFees().getFeeId(),new Money("100"));
 				break;
 			}
 		}
