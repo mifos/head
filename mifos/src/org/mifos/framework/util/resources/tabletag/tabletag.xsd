@@ -52,6 +52,7 @@
 			<xs:attribute name="blanklinerequired" type="xs:boolean" default="false"/>
 			<xs:attribute name="topbluelinerequired" type="xs:boolean" default="true"/>
 			<xs:attribute name="bottombluelinerequired" type="xs:boolean" default="false"/>
+			<xs:attribute name="flowRequired" type="xs:boolean" default="false"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="row">

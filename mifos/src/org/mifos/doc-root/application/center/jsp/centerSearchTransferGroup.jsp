@@ -1,7 +1,7 @@
 <!--
 /**
 
-* centerSearch.jsp    version: 1.0
+* centerSearchTransferGroup.jsp    version: 1.0
 
 
 
@@ -44,26 +44,26 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://struts.apache.org/tags-bean-el" prefix="bean-el"%>
+<%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
+
+<script language="javascript">
+  function goToCancelPage(){
+	groupTransferActionForm.action="groupTransferAction.do?method=cancel";
+	groupTransferActionForm.submit();
+  }
+</script>
 
 <html-el:form method="post" action ="centerAction.do?method=search">
+<c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"/>
 <html-el:hidden property="input" value="CenterSearch_TransferGroup"/> 
+<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 	<table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td class="bluetablehead05">
-          <span class="fontnormal8pt">
-            	<a href="CustomerSearchAction.do?method=getOfficeHomePage&officeId=<c:out value="${sessionScope.linkValues.customerOfficeId}"/>&officeName=<c:out value="${sessionScope.linkValues.customerOfficeName}"/>&loanOfficerId=<c:out value="${requestScope.Context.userContext.id}"/>">
-	            	<c:out value="${sessionScope.linkValues.customerOfficeName}"/></a> 
-			 /
-           	<c:if test="${!empty sessionScope.linkValues.customerParentName}">
-               	<a href="centerAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.customerParentGCNum}"/>">
-			       	<c:out value="${sessionScope.linkValues.customerParentName}"/>
-		       	</a> /  
-		    </c:if>
-          <a href="GroupAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.globalCustNum}"/>">
-          	<c:out value="${sessionScope.linkValues.customerName}"/>
-           </a>
-            </span>
-            
+	          <span class="fontnormal8pt">
+	            	<customtags:headerLink/>
+	          </span>
           </td>
         </tr>
       </table>
@@ -73,7 +73,7 @@
           	<table width="96%" border="0" cellpadding="3" cellspacing="0">
           		 <tr>
                 <td width="62%" class="headingorange"><span class="heading">
-                	<c:out value="${sessionScope.linkValues.customerName}"/>-
+                	<c:out value="${BusinessKey.displayName}"/>-
                  	</span>
                  	<mifos:mifoslabel name="Center.change"  bundle="CenterUIResources"/>
                  	<mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/>
@@ -119,10 +119,7 @@
           </td>
         </tr>
       </table>
-      <br></td>
-  </tr>
-</table>
-
+      <br>
 </html-el:form>
 
 

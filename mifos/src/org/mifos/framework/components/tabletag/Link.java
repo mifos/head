@@ -44,6 +44,7 @@ import java.util.Locale;
 import javax.servlet.jsp.PageContext;
 
 import org.mifos.framework.exceptions.TableTagException;
+import org.mifos.framework.util.helpers.Constants;
 
 /**
  * This class renders the link to the display name.
@@ -60,7 +61,7 @@ public class Link {
 	 * @throws UnsupportedEncodingException 
 	 */
 	public static String getLink(PageContext pageContext ,DisplayName displayname, String action,
-			Parameters param, Object obj,Locale locale ,String styleClass) throws TableTagException {
+			Parameters param, Object obj,Locale locale ,String styleClass, boolean isFlowRequired) throws TableTagException {
 		
 		//Used to get the string array of display name 
 		String[] name = displayname.getDisplayName(pageContext,
@@ -71,14 +72,23 @@ public class Link {
 		
 		// Used to get the string array of parameters 
 		String[] parameters = param.getParameters(pageContext,param.getParam(), obj,locale);
-
-		return createLink(name,parameters,bold,action ,styleClass);
+		
+		//TODO: remove fetching from Param after removal of dependency from M1 code.
+		String flowKey = null;
+		if(isFlowRequired){
+			flowKey = (String)pageContext.getRequest().getAttribute(Constants.CURRENTFLOWKEY);
+			if(flowKey==null)
+				flowKey = pageContext.getRequest().getParameter(Constants.CURRENTFLOWKEY);
+		}
+		Object randomNumber =  pageContext.getSession().getAttribute(Constants.RANDOMNUM);
+		System.out.println("-------------------randomNumbner"+ randomNumber);
+		return createLink(name,parameters,bold,action ,styleClass, flowKey, randomNumber);
 
 	}
 	
 	//Used to create the link 
 	private static String createLink(String[] name,String[] parameters,
-			String bold,String action ,String styleClass) {
+			String bold,String action ,String styleClass, String flowKey, Object randomNumber) {
 		StringBuilder stringbuilder = new StringBuilder();
 		for (int i = 0; i < name.length; i++) {
 			if (name[i] == null || name[i].trim().equals("")
@@ -91,6 +101,9 @@ public class Link {
 				stringbuilder.append("\""+styleClass+"\">");
 				stringbuilder.append("<a href= ");
 				stringbuilder.append("\"" + action + "?" + parameters[i] );
+				if(flowKey!=null)
+					stringbuilder.append("&"+Constants.CURRENTFLOWKEY+"="+flowKey);
+				stringbuilder.append("&"+Constants.RANDOMNUM+"="+randomNumber);
 				stringbuilder.append("\">");
 				stringbuilder.append(" " + name[i] + "</a></span>");
 			}
@@ -99,7 +112,10 @@ public class Link {
 				stringbuilder.append("<span class=");
 				stringbuilder.append("\""+ styleClass +"\">"); 
 				stringbuilder.append("<a href= ");
-				stringbuilder.append("\"" + action + "?" + parameters[i] +"\"" );	
+				stringbuilder.append("\"" + action + "?" + parameters[i] +"\"" );
+				if(flowKey!=null)
+					stringbuilder.append("&"+Constants.CURRENTFLOWKEY+"="+flowKey);
+				stringbuilder.append("&"+Constants.RANDOMNUM+"="+randomNumber);
 				stringbuilder.append("class=\""+styleClass+"\"");
 				stringbuilder.append(">");
 				stringbuilder.append(" " + name[i] + "</a></span>");
@@ -109,6 +125,9 @@ public class Link {
 				stringbuilder.append("<span>");				
 				stringbuilder.append("<a href= ");
 				stringbuilder.append("\"" + action + "?" + parameters[i] );
+				if(flowKey!=null)
+					stringbuilder.append("&"+Constants.CURRENTFLOWKEY+"="+flowKey);
+				stringbuilder.append("&"+Constants.RANDOMNUM+"="+randomNumber);
 				//stringbuilder.append("class=");
 				//stringbuilder.append(bold.equalsIgnoreCase("true")?"\"headingblue\">" :"\"\">");
 				stringbuilder.append("\">");

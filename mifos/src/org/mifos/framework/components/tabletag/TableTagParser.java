@@ -188,6 +188,9 @@ public class TableTagParser {
 			pageRequirements.setBlanklinerequired((pageNodeList.item(0).getAttributes()
 					.getNamedItem(TableTagConstants.BLANKLINEREQUIRED)
 					.getNodeValue()));
+			pageRequirements.setFlowRequired((pageNodeList.item(0).getAttributes()
+					.getNamedItem(TableTagConstants.FLOWREQUIRED)
+					.getNodeValue()));
 		return pageRequirements;
 	}
 

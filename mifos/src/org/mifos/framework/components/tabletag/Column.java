@@ -257,9 +257,9 @@ public class Column {
 	 * @return 		Column string.
 	 * @throws TableTagException 
 	 */
-	public String getColumn(PageContext pageContext ,Object obj,Locale locale) throws TableTagException {
+	public String getColumn(PageContext pageContext ,Object obj,Locale locale, boolean isFlowRequired) throws TableTagException {
 		//Used to get the value of the link and text
-		String displayString = getColumnValue(pageContext,obj,locale);
+		String displayString = getColumnValue(pageContext,obj,locale, isFlowRequired);
 		 
 		//To check whether display string is empty or not.
 		if (displayString.trim().equals("")) {
@@ -298,21 +298,21 @@ public class Column {
 	  * @return
 	  * @throws TableTagException
 	  */
-	private String getColumnValue(PageContext pageContext ,Object obj,Locale locale) throws TableTagException {
+	private String getColumnValue(PageContext pageContext ,Object obj,Locale locale, boolean isFlowRequired) throws TableTagException {
 		String displayString = null;
 		//To check whether type is link or text.
 		if (("link".equalsIgnoreCase(type))) {
 			if("true".equals(isLinkOptional)) {
 				String linkrequired=(String)TableTagUtils.getInstance().helper(pageContext ,checkLinkOptionalRequired,"method",obj,locale);
 				if("true".equals(linkrequired)) {
-					displayString = Link.getLink(pageContext,displayname, action, parameters, obj,locale ,styleClass);
+					displayString = Link.getLink(pageContext,displayname, action, parameters, obj,locale ,styleClass, isFlowRequired);
 				}
 				else {
 					displayString = Text.getText(pageContext,displayname, image, obj,locale);
 				}
 			}
 			else {
-				displayString = Link.getLink(pageContext,displayname, action, parameters, obj,locale ,styleClass);
+				displayString = Link.getLink(pageContext,displayname, action, parameters, obj,locale ,styleClass, isFlowRequired);
 			}
 		} else if ("text".equalsIgnoreCase(type)) {
 			displayString = Text.getText(pageContext,displayname, image, obj,locale);

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -26,5 +25,18 @@ public class CenterPersistence extends  Persistence{
 		CenterBO center = (CenterBO) session.get(CenterBO.class,
 				customerId);
 				return center;
+	}
+	
+	public CenterBO getCenterBySystemId(String globalCustNum){
+		Map<String, String> queryParameters = new HashMap<String, String>();
+		CenterBO center = null;
+		queryParameters.put("globalCustNum", globalCustNum);
+			List<CenterBO> queryResult = executeNamedQuery(
+						NamedQueryConstants.GET_CENTER_BY_SYSTEMID,
+						queryParameters);
+				if (null != queryResult && queryResult.size() > 0) {
+					center = queryResult.get(0);
+				}
+		return center;
 	}
 }

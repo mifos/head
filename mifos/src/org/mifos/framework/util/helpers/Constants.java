@@ -109,4 +109,5 @@ public interface Constants {
 	
 	public static final String CURRENTFLOWKEY="currentFlowKey";
 	public static final String FLOWMANAGER="flowManager";
+	public static final String RANDOMNUM="randomNUm";
 }

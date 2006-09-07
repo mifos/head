@@ -72,7 +72,7 @@
                     <br>
                     </span>
                      <!-- Link to view the center details -->
-                    <a href="centerCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.centerCustActionForm.globalCustNum}"/>&recordOfficeId=${sessionScope.centerCustActionForm.officeId}&recordLoanOfficerId=${sessionScope.centerCustActionForm.loanOfficerId}">
+                    <a href="centerCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.centerCustActionForm.globalCustNum}"/>&recordOfficeId=${sessionScope.centerCustActionForm.officeId}&recordLoanOfficerId=${sessionScope.centerCustActionForm.loanOfficerId}&randomNUm=${sessionScope.randomNUm}">
                     	<mifos:mifoslabel name="Center.View" bundle="CenterUIResources"/>
          				<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
                     	<mifos:mifoslabel name="Center.DetailsNow" bundle="CenterUIResources"/>
@@ -84,14 +84,14 @@
       				</span><span class="fontnormal"> <br>
                     </span><mifos:mifoslabel name="Center.AccountsHeading" bundle="CenterUIResources"/><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /><span class="fontnormal"><br>
 					<!-- Link to create a new savingsa account link -->
-                    <html-el:link href="savingsAction.do?method=getPrdOfferings&customerId=${sessionScope.centerCustActionForm.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+                    <html-el:link href="savingsAction.do?method=getPrdOfferings&customerId=${sessionScope.centerCustActionForm.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
                     <mifos:mifoslabel name="Center.CreateNew" bundle="CenterUIResources"/>
                     <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
                     <mifos:mifoslabel name="Center.account" bundle="CenterUIResources"/>
                     </html-el:link><br>
                     <br>
                     <!-- Link to create a new center -->
-                    <a href="centerCustAction.do?method=chooseOffice&recordOfficeId=0&recordLoanOfficerId=0"/>
+                    <a href="centerCustAction.do?method=chooseOffice&recordOfficeId=0&recordLoanOfficerId=0&randomNUm=${sessionScope.randomNUm}"/>
                     <mifos:mifoslabel name="Center.CreateNew" bundle="CenterUIResources"></mifos:mifoslabel>
                     <mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/>
                     </a>

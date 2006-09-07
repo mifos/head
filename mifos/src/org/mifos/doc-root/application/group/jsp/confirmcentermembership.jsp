@@ -40,6 +40,8 @@
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
+<%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 
 <tiles:insert definition=".withmenu">
@@ -47,27 +49,19 @@
 <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 <script>
   function goToCancelPage(){
-	groupActionForm.action="GroupAction.do?method=cancel";
-	groupActionForm.submit();
+	groupTransfterActionForm.action="groupTransferAction.do?method=cancel";
+	groupTransfterActionForm.submit();
   }
 </script>
-<html-el:form action="/GroupAction.do?method=updateParent" onsubmit="func_disableSubmitBtn('submitBtn')">
+<html-el:form action="/groupTransferAction.do?method=transferToCenter" onsubmit="func_disableSubmitBtn('submitBtn')">
+<c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"/>
      <table width="95%" border="0" cellpadding="0" cellspacing="0">
       <tr>
         <td class="bluetablehead05">
         	<span class="fontnormal8pt">
-       	   <a href="CustomerSearchAction.do?method=getOfficeHomePage&officeId=<c:out value="${sessionScope.linkValues.customerOfficeId}"/>&officeName=<c:out value="${sessionScope.linkValues.customerOfficeName}"/>&loanOfficerId=<c:out value="${requestScope.Context.userContext.id}"/>">
-	           <c:out value="${sessionScope.linkValues.customerOfficeName}"/>            	
-           </a> /
-           	<c:if test="${!empty sessionScope.linkValues.customerParentName}">
-               	<a href="centerAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.customerParentGCNum}"/>">
-			       	<c:out value="${sessionScope.linkValues.customerParentName}"/>
-		       	</a> /  
-		    </c:if>
-          <a href="GroupAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.globalCustNum}"/>">
-          	<c:out value="${sessionScope.linkValues.customerName}"/>
-           </a>
-        	</span></td>
+       	   		<customtags:headerLink/>
+        	</span>
+        </td>
       </tr>
     </table>
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -76,7 +70,7 @@
                 <tr>
                   <td width="62%" class="headingorange">
                   	<span class="heading">
-	                  <c:out value="${sessionScope.linkValues.customerName}"/> - 
+	                  <c:out value="${BusinessKey.displayName}"/> - 
     	            </span> 
         	            <mifos:mifoslabel name="Group.change" bundle="GroupUIResources"></mifos:mifoslabel>
         	            <mifos:mifoslabel name="${ConfigurationConstants.CENTER}" ></mifos:mifoslabel>
@@ -107,7 +101,7 @@
                         <mifos:mifoslabel name="Group.membership" bundle="GroupUIResources"></mifos:mifoslabel>
                         
                     <span class="fontnormal"> 
-	                  <c:out value="${sessionScope.groupActionForm.centerName}"/>
+	                  <c:out value="${sessionScope.groupTransferActionForm.centerName}"/>
              
                       <br>
                      </span></td>
@@ -135,7 +129,6 @@
           </tr>
         </table>        
       <br>
-       <html-el:hidden property="input" value="confirmParentTransfer"/> 
 </html-el:form>
 </tiles:put>
 </tiles:insert>

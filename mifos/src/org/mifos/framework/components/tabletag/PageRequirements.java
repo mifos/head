@@ -17,6 +17,8 @@ public class PageRequirements {
 	private String bottombluelineRequired;
 	private String valignnumbers;
 	private String blanklinerequired;
+	private String flowRequired;
+	
 	/**
 	 * @return Returns the bluelineRequired.
 	 */
@@ -101,6 +103,14 @@ public class PageRequirements {
 	 */
 	public void setBottombluelineRequired(String bottombluelineRequired) {
 		this.bottombluelineRequired = bottombluelineRequired;
+	}
+	
+	public String getFlowRequired() {
+		return flowRequired;
+	}
+	
+	public void setFlowRequired(String flowRequired) {
+		this.flowRequired = flowRequired;
 	}
 	
 }

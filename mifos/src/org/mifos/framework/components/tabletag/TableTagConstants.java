@@ -103,6 +103,7 @@ public interface TableTagConstants {
 	public static final String BOTTOMBLUELINEREQUIRED = "bottombluelinerequired";
 	public static final String VALIGNNUMBERS = "valignnumbers";
 	public static final String BLANKLINEREQUIRED = "blanklinerequired";
+	public static final String FLOWREQUIRED = "flowRequired";
 	public static final String TABLECACHE = "TableCache";
 	
 	public static final String PROPERTIESFILE = "org.mifos.framework.components.tabletag.Resources";

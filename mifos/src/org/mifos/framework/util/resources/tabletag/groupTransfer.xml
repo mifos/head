@@ -4,7 +4,7 @@
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 		xsi:schemaLocation="http://www.aditi.com tabletag.xsd ">
 <path key="centerSearch" forwardkey="search_success" action="/centerCustAction.do"/> 
-<pagerequirements numbersrequired="true" bluelinerequired="true" headingrequired="false" blanklinerequired="false" valignnumbers="true"/>  
+<pagerequirements flowRequired="true" numbersrequired="true" bluelinerequired="true" headingrequired="false" blanklinerequired="false" valignnumbers="true"/>  
   
 <row>
 	<column label="" labeltype="string" boldlabel="false" type="text" >
@@ -12,7 +12,7 @@
 			<fragment-name name="parentOfficeName" type="method"/>
 		</displayname>
 	</column>
-	<column label="/" labeltype="string" boldlabel="true" type="link" action="GroupAction.do" >
+	<column label="/" labeltype="string" boldlabel="true" type="link" action="groupTransferAction.do" >
 		<displayname bold="true">
 			<fragment-name name="centerName" type="method"/>
 		</displayname>
@@ -20,7 +20,7 @@
 			<parameter name="parentOfficeId" value="parentOfficeId" valuetype="method"/>
 			<parameter name="centerSystemId" value="centerSystemId" valuetype="method"/>
 			<parameter name="centerName" value="centerName" valuetype="method"/>
-			<parameter name="method" value="confirmParentTransfer" valuetype="string"/>
+			<parameter name="method" value="previewParentTransfer" valuetype="string"/>
 		</parameters>
 	</column>
 </row>

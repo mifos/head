@@ -41,31 +41,26 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
 <%@ taglib uri="/mifos/officetags" prefix="office"%>
+<%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
+
 <script language="javascript">
   function goToCancelPage(){
-	groupActionForm.action="GroupAction.do?method=cancel";
-	groupActionForm.submit();
+	groupTransferActionForm.action="groupTransferAction.do?method=cancel";
+	groupTransferActionForm.submit();
   }
 </script>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
-<html-el:form action="GroupAction.do?method=get" >
+ 
+<html-el:form action="groupTransferAction.do?method=get" >
+<c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"/>
   <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td class="bluetablehead05">
              <span class="fontnormal8pt">
-		   <a href="CustomerSearchAction.do?method=getOfficeHomePage&officeId=<c:out value="${sessionScope.linkValues.customerOfficeId}"/>&officeName=<c:out value="${sessionScope.linkValues.customerOfficeName}"/>&loanOfficerId=<c:out value="${requestScope.Context.userContext.id}"/>">
-	           <c:out value="${sessionScope.linkValues.customerOfficeName}"/>            	
-           </a> /
-           	<c:if test="${!empty sessionScope.linkValues.customerParentName}">
-               	<a href="centerAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.customerParentGCNum}"/>">
-			       	<c:out value="${sessionScope.linkValues.customerParentName}"/>
-		       	</a> /  
-		    </c:if>
-          <a href="GroupAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.globalCustNum}"/>">
-          	<c:out value="${sessionScope.linkValues.customerName}"/>
-           </a>
+		   		<customtags:headerLink/>
             </span>
 		  </td>
         </tr>
@@ -77,7 +72,7 @@
               <tr>
                 <td width="83%" class="headingorange">
                 <span class="heading">
-                	<c:out value="${sessionScope.linkValues.customerName}"/> 
+                	<c:out value="${BusinessKey.displayName}"/> 
                 -</span> 
                 <mifos:mifoslabel name="Group.editOfficeMembership" bundle="GroupUIResources"/>
                 
@@ -109,7 +104,7 @@
               </tr>
             </table>
             <br>
-	        <office:listOffices methodName="confirmBranchTransfer" actionName="GroupAction.do" onlyBranchOffices="yes"/>
+	        <office:listOffices methodName="previewBranchTransfer" actionName="groupTransferAction.do" onlyBranchOffices="yes"/>
 	        
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
@@ -129,7 +124,6 @@
           </td>
         </tr>
     </table>
-     <html-el:hidden property="input" value="confirmParentTransfer"/> 
 </html-el:form>
 </tiles:put>
 </tiles:insert>

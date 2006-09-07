@@ -16,12 +16,9 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -53,12 +50,7 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 		addRequestParameter("recordOfficeId", "1");
 		ActivityContext ac = new ActivityContext((short) 0, userContext
 				.getBranchId().shortValue(), userContext.getId().shortValue());
-		request.getSession(false).setAttribute("ActivityContext", ac);
-		EntityMasterData.getInstance().init();
-		FieldConfigItf fieldConfigItf=FieldConfigImplementer.getInstance();
-		fieldConfigItf.init();		
-		FieldConfigImplementer.getInstance();
-		getActionServlet().getServletContext().setAttribute(Constants.FIELD_CONFIGURATION,fieldConfigItf.getEntityMandatoryFieldMap());
+		request.getSession(false).setAttribute("ActivityContext", ac);		
 	}
 	
 	@Override
@@ -102,6 +94,7 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 		addRequestParameter("officeId", client.getOffice().getOfficeId().toString());
 		addRequestParameter("officeName", client.getOffice().getOfficeName());
 		actionPerform();
+		verifyActionErrors(new String[]{CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER});
 		verifyForward(ActionForwards.transferToBranch_failure.toString());		
 	}
 	

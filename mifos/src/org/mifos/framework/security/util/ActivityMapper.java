@@ -513,6 +513,13 @@ public class ActivityMapper {
 		activityMap.put("/clientTransferAction-updateParent",	SecurityConstants.CIENT_CHANGE_GROUP_MEMBERSHIP);	
 		activityMap.put("/clientTransferAction-transferToBranch",SecurityConstants.CIENT_TRANSFER_THE_CLIENT);
 
+		activityMap.put("/groupTransferAction-loadParents",SecurityConstants.GROUP_CHANGE_CENTER_MEMBERSHIP);
+		activityMap.put("/groupTransferAction-loadBranches",SecurityConstants.GROUP_TRANSFER_THE_GROUP);
+		activityMap.put("/groupTransferAction-previewBranchTransfer",SecurityConstants.VIEW);
+		activityMap.put("/groupTransferAction-previewParentTransfer",SecurityConstants.VIEW);
+		activityMap.put("/groupTransferAction-transferToCenter",	SecurityConstants.GROUP_CHANGE_CENTER_MEMBERSHIP);	
+		activityMap.put("/groupTransferAction-transferToBranch",SecurityConstants.GROUP_TRANSFER_THE_GROUP);
+		
 		// meeting action
 		activityMap.put("/MeetingAction-load", SecurityConstants.VIEW);
 		activityMap.put("/MeetingAction-loadMeeting-Group",

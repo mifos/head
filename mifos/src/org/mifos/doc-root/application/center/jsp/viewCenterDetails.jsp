@@ -94,7 +94,7 @@
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<c:if test="${statusID != CustomerConstants.CENTER_INACTIVE_STATE}">
 								<span class="fontnormal"> <a
-									href="groupCustAction.do?method=load&centerSystemId=<c:out value="${sessionScope.BusinessKey.globalCustNum}"/>&parentOfficeId=${sessionScope.BusinessKey.office.officeId}&recordOfficeId=${sessionScope.BusinessKey.office.officeId}&recordLoanOfficerId=${sessionScope.BusinessKey.personnel.personnelId}">
+									href="groupCustAction.do?method=load&centerSystemId=<c:out value="${sessionScope.BusinessKey.globalCustNum}"/>&parentOfficeId=${sessionScope.BusinessKey.office.officeId}&recordOfficeId=${sessionScope.BusinessKey.office.officeId}&recordLoanOfficerId=${sessionScope.BusinessKey.personnel.personnelId}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="Center.Add"  />
 								<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></a>
 								</span>

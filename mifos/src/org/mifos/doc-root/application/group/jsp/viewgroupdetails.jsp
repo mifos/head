@@ -110,7 +110,7 @@
 							<c:if
 								test="${BusinessKey.customerStatus.id != CustomerStatus.GROUP_CANCELLED.value and BusinessKey.customerStatus.id != CustomerStatus.GROUP_CLOSED.value}">
 								<span class="fontnormal"> <a
-									href="clientCustAction.do?method=load&groupFlag=1&parentGroupId=${BusinessKey.customerId}&recordOfficeId=${BusinessKey.office.officeId}&recordLoanOfficerId=${BusinessKey.personnel.personnelId}">
+									href="clientCustAction.do?method=load&groupFlag=1&parentGroupId=${BusinessKey.customerId}&recordOfficeId=${BusinessKey.office.officeId}&recordLoanOfficerId=${BusinessKey.personnel.personnelId}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="Group.Add" bundle="GroupUIResources" />
 								<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></a>
 								</span>
@@ -581,11 +581,11 @@
 												value="${BusinessKey.parentCustomer.displayName}" /><br>
 											</span></td>
 											<td width="41%" align="right" valign="top" class="fontnormal">
-											<a href="GroupAction.do?method=loadParentTransfer"> <mifos:mifoslabel
+											<html-el:link href="groupTransferAction.do?method=loadParents&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"> <mifos:mifoslabel
 												name="Group.edit" bundle="GroupUIResources"></mifos:mifoslabel>
 											<mifos:mifoslabel name="${ConfigurationConstants.CENTER}">
 											</mifos:mifoslabel> <mifos:mifoslabel name="Group.membership"
-												bundle="GroupUIResources"></mifos:mifoslabel> </a></td>
+												bundle="GroupUIResources"></mifos:mifoslabel> </html-el:link></td>
 										</tr>
 									</table>
 								</c:when>
@@ -622,7 +622,7 @@
 														<br>
 													</html-el:link>
 												</c:otherwise>
-											</c:choose> <a href="GroupAction.do?method=loadTransfer"> <mifos:mifoslabel
+											</c:choose> <a href="groupTransferAction.do?method=loadBranches&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"> <mifos:mifoslabel
 												name="Group.editOfficeMembership" bundle="GroupUIResources" />
 											</a></td>
 										</tr>

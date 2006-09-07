@@ -16,6 +16,8 @@
 		<form-bean name="clientStatusActionForm" type="org.mifos.application.customer.client.struts.actionforms.EditClientStatusActionForm"></form-bean>
 		<!-- Edit Client Transfer Action form -->
 		<form-bean name="clientTransferActionForm" type="org.mifos.application.customer.client.struts.actionforms.ClientTransferActionForm"></form-bean>
+		<!-- Group Transfer Action form -->
+		<form-bean name="groupTransferActionForm" type="org.mifos.application.customer.group.struts.actionforms.GroupTransferActionForm"></form-bean>
 		<!-- Login Form -->
 		<form-bean name="mifosloginform" type="org.mifos.application.login.struts.actionforms.MifosLoginActionForm"></form-bean>
 		<!-- Logout Form -->
@@ -333,6 +335,23 @@
 			<!-- Cancel Page Forwards -->
 			<forward name="cancel_success" path="/clientCustAction.do?method=get" />
 		</action>
+		<!-- Edit Group Transfer Action -->
+		<action path="/groupTransferAction" type="org.mifos.application.customer.group.struts.action.GroupTransferAction" name="groupTransferActionForm" parameter="method" input="/groupTransferAction.do?method=validate" validate="false"
+			scope="session">
+			<!--  Load forwards -->
+			<forward name="loadParents_success" path="/centerAction.do?method=loadSearch" />
+			<forward name="loadBranches_success" path="/pages/application/group/jsp/choosebranch.jsp" />
+			<!-- Preview Page Forwards -->
+			<forward name="previewParentTransfer_success" path="/pages/application/group/jsp/confirmcentermembership.jsp" />
+			<forward name="previewBranchTransfer_success" path="/pages/application/group/jsp/confirmbranchtransfer.jsp" />
+			<forward name="update_success" path="/groupCustAction.do?method=get" />
+			<!-- Failure Forwards -->
+			<forward name="transferToBranch_failure" path="/pages/application/group/jsp/confirmbranchtransfer.jsp" />
+			<forward name="transferToCenter_failure" path="/pages/application/group/jsp/confirmcentermembership.jsp" />
+			<!-- Cancel Page Forwards -->
+			<forward name="cancel_success" path="/groupCustAction.do?method=get" />
+		</action>
+		
 		<!-- Personnel action -->
 		<action path="/PersonnelAction" type="org.mifos.application.personnel.struts.action.PersonnelAction" name="personnelActionForm" parameter="method" validate="true" input="/PersonnelAction.do?method=validate" scope="session">
 			<forward name="load_success" path="/pages/application/personnel/jsp/createuser.jsp" />

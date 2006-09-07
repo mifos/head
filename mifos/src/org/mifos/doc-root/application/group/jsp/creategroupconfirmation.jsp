@@ -109,13 +109,13 @@
                             	<mifos:mifoslabel name="Group.createaccount" bundle="GroupUIResources"></mifos:mifoslabel>
                             	<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" ></mifos:mifoslabel>
                          <span class="fontnormal"><br>
-                            <html-el:link href="savingsAction.do?method=getPrdOfferings&customerId=${sessionScope.groupCustActionForm.customerId}&recordOfficeId=${branchId}&recordLoanOfficerId=${userId}">
+                            <html-el:link href="savingsAction.do?method=getPrdOfferings&customerId=${sessionScope.groupCustActionForm.customerId}&recordOfficeId=${branchId}&recordLoanOfficerId=${userId}&randomNUm=${sessionScope.randomNUm}">
                             	<mifos:mifoslabel name="Group.createa" bundle="GroupUIResources"></mifos:mifoslabel>
                             	<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="GroupUIResources"></mifos:mifoslabel>
                             	<mifos:mifoslabel name="Group.account" bundle="GroupUIResources"></mifos:mifoslabel>
                              </html-el:link><br>                             
                              <c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isGroupLoanAllowed') == true}">
-	                            <html-el:link href="loanAction.do?method=getPrdOfferings&customer.customerId=${sessionScope.groupCustActionForm.customerId}&recordOfficeId=${branchId}&recordLoanOfficerId=${userId}">
+	                            <html-el:link href="loanAction.do?method=getPrdOfferings&customer.customerId=${sessionScope.groupCustActionForm.customerId}&recordOfficeId=${branchId}&recordLoanOfficerId=${userId}&randomNUm=${sessionScope.randomNUm}">
 	                            	<mifos:mifoslabel name="Group.createa" bundle="GroupUIResources"></mifos:mifoslabel>
 	                            	<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="GroupUIResources"></mifos:mifoslabel>
 	                            	<mifos:mifoslabel name="Group.account" bundle="GroupUIResources"></mifos:mifoslabel>
@@ -125,7 +125,7 @@
                          </span>
                       </c:if>
                       <span class="fontnormal">
-                          <a href="groupCustAction.do?method=hierarchyCheck&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+                          <a href="groupCustAction.do?method=hierarchyCheck&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
                             	<mifos:mifoslabel name="Group.createa" bundle="GroupUIResources"> </mifos:mifoslabel>
                             	<mifos:mifoslabel name="Group.new" bundle="GroupUIResources"></mifos:mifoslabel>
                             	<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" bundle="GroupUIResources"></mifos:mifoslabel>

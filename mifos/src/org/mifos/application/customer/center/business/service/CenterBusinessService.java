@@ -17,5 +17,7 @@ public class CenterBusinessService extends BusinessService {
 		return new CenterPersistence().getCenter(customerId);
 	}
 	
-	
+	public CenterBO getCenterBySystemId(String globalCustNum){
+		return new CenterPersistence().getCenterBySystemId(globalCustNum);
+	}
 }

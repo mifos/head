@@ -109,13 +109,13 @@ public class Table {
 	 * @return string		a complete row.
 	 * @throws TableTagException 
 	 */
-	public String getTable(PageContext pageContext ,Object obj,Locale locale) throws TableTagException {
-
+	public String getTable(PageContext pageContext ,Object obj,Locale locale, boolean isFlowRequired) throws TableTagException {
+		
 		StringBuilder table = new StringBuilder();
 		for (int i = 0; i < row.length; i++) {
 			
 			//Used to store a complete row
-			String foundRow = row[i].getRow(pageContext,obj,locale);
+			String foundRow = row[i].getRow(pageContext,obj,locale, isFlowRequired);
 			table.append(foundRow);
 			if (!((foundRow == null) || (foundRow == ""))) {
 				table.append("<br>");

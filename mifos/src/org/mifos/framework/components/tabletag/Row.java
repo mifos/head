@@ -95,12 +95,12 @@ public class Row {
 	 * @return row string.
 	 * @throws TableTagException
 	 */
-	public String getRow(PageContext pageContext ,Object obj,Locale locale) throws TableTagException {
+	public String getRow(PageContext pageContext ,Object obj,Locale locale, boolean isFlowRequired) throws TableTagException {
 		StringBuilder row = new StringBuilder();
 		StringBuilder columns = new StringBuilder();
 		for (int i = 0; i < column.length; i++) {
 			// Used to get the string for each column in a row 
-			String columnString = (column[i].getColumn(pageContext,obj,locale));
+			String columnString = (column[i].getColumn(pageContext,obj,locale, isFlowRequired));
 			if(! columnString.trim().equals("")) {
 				columns.append(columnString)
 					   .append("	");

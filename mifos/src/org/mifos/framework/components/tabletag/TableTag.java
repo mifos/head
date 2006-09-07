@@ -532,7 +532,8 @@ public class TableTag extends BodyTagSupport {
 
 		JspWriter out = pageContext.getOut();
 		getAction(table);
-		data = table.getTable(pageContext ,object,locale);
+		boolean isFlowRequired = table.getPageRequirements().getFlowRequired().equalsIgnoreCase("true")? true:false;
+		data = table.getTable(pageContext ,object,locale, isFlowRequired);
 		out.write("<tr class=\"fontnormal\"><td width=\"3%\" valign=\"top\">");
 		out.write((number) + ".</td><td width=\"97%\">");
 		out.write(data);
@@ -549,7 +550,8 @@ public class TableTag extends BodyTagSupport {
 		int number = ((current - 1) * pageSize);
 		for (Iterator it = list.iterator(); it.hasNext();) {
 			Object object = it.next();
-			String data  = table.getTable(pageContext ,object,locale);
+			boolean isFlowRequired = table.getPageRequirements().getFlowRequired().equalsIgnoreCase("true")? true:false;
+			String data  = table.getTable(pageContext ,object,locale, isFlowRequired);
 			if (data == null) {
 				throw new JspException("XML.filenotfound");
 			}

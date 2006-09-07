@@ -274,10 +274,11 @@ public class GroupBO extends CustomerBO {
 		this.setPersonnel(null);
 		this.setSearchId(generateSearchId());
 		super.update();
-		
-		for(CustomerBO client: getChildren()){
-			client.setUserContext(getUserContext());
-			((ClientBO)client).handleGroupTransfer();
+		if(getChildren()!=null){
+			for(CustomerBO client: getChildren()){
+				client.setUserContext(getUserContext());
+				((ClientBO)client).handleGroupTransfer();
+			}
 		}
 		logger.debug("In GroupBO::transferToBranch(), successfully transfered, customerId :" + getCustomerId());		
 	}
