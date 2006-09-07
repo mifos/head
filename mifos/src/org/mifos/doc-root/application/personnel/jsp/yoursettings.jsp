@@ -46,7 +46,7 @@
 <tiles:insert definition=".noorangetab">
  <tiles:put name="body" type="string">
 
-<html-el:form action="PersonnelAction.do?method=getDetails">
+<html-el:form action="yourSettings.do?method=get">
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
@@ -82,59 +82,59 @@
                       <td width="51%" class="fontnormal">
                       <span class="fontnormalbold"><mifos:mifoslabel name="Personnel.YourDetails"/></span></td>
                       <td width="49%" align="right" class="fontnormal">
-                      <a href="PersonnelAction.do?method=editPersonalInfo">
+                      <a href="yourSettings.do?method=manage">
                      	 <mifos:mifoslabel name="Personnel.EditInformation"/>
                       </a></td>
                     </tr>
                   </table>                    
 <mifos:mifoslabel name="Personnel.FirstName"/> 
-<span class="fontnormal"><c:out value="${requestScope.PersonnelVO.personnelDetails.firstName}"/></span><br>
+<span class="fontnormal"><c:out value="${sessionScope.BusinessKey.personnelDetails.name.firstName}"/></span><br>
 <mifos:mifoslabel name="Personnel.MiddleName"/> 
-<span class="fontnormal"><c:out value="${requestScope.PersonnelVO.personnelDetails.middleName}"/></span> <br>
+<span class="fontnormal"><c:out value="${sessionScope.BusinessKey.personnelDetails.name.middleName}"/></span> <br>
 <mifos:mifoslabel name="Personnel.SecondLastName"/>
-<span class="fontnormal"><c:out value="${requestScope.PersonnelVO.personnelDetails.secondLastName}"/></span> <br>
+<span class="fontnormal"><c:out value="${sessionScope.BusinessKey.personnelDetails.name.secondLastName}"/></span> <br>
 <mifos:mifoslabel name="Personnel.LastName"/> 
-<span class="fontnormal"><c:out value="${requestScope.PersonnelVO.personnelDetails.lastName}"/></span> <br>
+<span class="fontnormal"><c:out value="${sessionScope.BusinessKey.personnelDetails.name.lastName}"/></span> <br>
 <mifos:mifoslabel name="${ConfigurationConstants.GOVERNMENT_ID}"/>:
-<span class="fontnormal"><c:out value="${requestScope.PersonnelVO.personnelDetails.governmentIdNumber}"/></span> <br>
+<span class="fontnormal"><c:out value="${sessionScope.BusinessKey.personnelDetails.governmentIdNumber}"/></span> <br>
 <mifos:mifoslabel name="Personnel.Email"/> 
-<span class="fontnormal"><c:out value="${requestScope.PersonnelVO.emailId}"/> </span> <br>
+<span class="fontnormal"><c:out value="${sessionScope.BusinessKey.emailId}"/> </span> <br>
 <mifos:mifoslabel name="Personnel.DOB"/>
-<span class="fontnormal"><c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,requestScope.PersonnelVO.personnelDetails.dob)}" /> </span><br>
+<span class="fontnormal"><c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.personnelDetails.dob)}" /> </span><br>
 <mifos:mifoslabel name="Personnel.Age"/>
 <span class="fontnormal"><c:out value="${sessionScope.personnelAge}"/></span><br>
 <mifos:mifoslabel name="Personnel.MaritalStatus"/>
-<span class="fontnormal"> <mifoscustom:lookUpValue id="${requestScope.PersonnelVO.personnelDetails.maritalStatus}" searchResultName="maritalStatusList"></mifoscustom:lookUpValue> </span> <br>
+<span class="fontnormal"> <c:out value="${sessionScope.MaritalStatus}"/> </span> <br>
 <mifos:mifoslabel name="Personnel.Gender"/>
-<span class="fontnormal"><mifoscustom:lookUpValue id="${requestScope.PersonnelVO.personnelDetails.gender}" searchResultName="genderList"></mifoscustom:lookUpValue></span> <br>
+<span class="fontnormal"><c:out value="${sessionScope.Gender}"/></span> <br>
 <mifos:mifoslabel name="Personnel.LanguagePreferred"/>
 <span class="fontnormal">
-		<c:if test="${!empty requestScope.PersonnelVO.preferredLocale}">
-			<c:out value ="${requestScope.PersonnelVO.preferredLocale.language.languageName}"/>  
+		<c:if test="${!empty sessionScope.BusinessKey.preferredLocale}">
+			<c:out value ="${sessionScope.BusinessKey.preferredLocale.language.languageName}"/>  
 		</c:if>
  </span> <br>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="51%" class="fontnormal"><mifos:mifoslabel name="Personnel.UserName"/> <c:out value="${requestScope.PersonnelVO.userName}"/> </td>
+    <td width="51%" class="fontnormal"><mifos:mifoslabel name="Personnel.UserName"/> <c:out value="${sessionScope.BusinessKey.userName}"/> </td>
     <td width="49%" align="right" class="fontnormal">
-    	<a href="PersonnelAction.do?method=loadChangePassword"><mifos:mifoslabel name="Personnel.ChangePassword"/></a>
+    	<a href="yourSettings.do?method=loadChangePassword"><mifos:mifoslabel name="Personnel.ChangePassword"/></a>
     </td>
   </tr>
 </table><br><span class="fontnormalbold"><mifos:mifoslabel name="Personnel.Address"/></span>
 <span class="fontnormal"><br>
 </span>
-<span class="fontnormal"><c:out value="${requestScope.displayAddress}"/><br>
+<span class="fontnormal"><c:out value="${sessionScope.BusinessKey.personnelDetails.address.displayAddress}"/><br>
 </span><mifos:mifoslabel name="${ConfigurationConstants.CITY}"/>:
-<span class="fontnormal"> <c:out value="${requestScope.PersonnelVO.personnelDetails.city}"/> <br>
+<span class="fontnormal"> <c:out value="${sessionScope.BusinessKey.personnelDetails.address.city}"/> <br>
 </span><mifos:mifoslabel name="${ConfigurationConstants.STATE}"/>:
-<span class="fontnormal"> <c:out value="${requestScope.PersonnelVO.personnelDetails.state}"/><br>
+<span class="fontnormal"> <c:out value="${sessionScope.BusinessKey.personnelDetails.address.state}"/><br>
 </span><mifos:mifoslabel name="Personnel.Country"/>
-<span class="fontnormal"> <c:out value="${requestScope.PersonnelVO.personnelDetails.country}"/><br>
+<span class="fontnormal"> <c:out value="${sessionScope.BusinessKey.personnelDetails.address.country}"/><br>
 </span><mifos:mifoslabel name="${ConfigurationConstants.POSTAL_CODE}"/>:
-<span class="fontnormal"><c:out value="${requestScope.PersonnelVO.personnelDetails.postalCode}"/><br>
+<span class="fontnormal"><c:out value="${sessionScope.BusinessKey.personnelDetails.address.zip}"/><br>
 <br>
 </span><mifos:mifoslabel name="Personnel.Telephone"/>
-<span class="fontnormal"><c:out value="${requestScope.PersonnelVO.personnelDetails.telephone}"/> </span></td>
+<span class="fontnormal"><c:out value="${sessionScope.BusinessKey.personnelDetails.address.phoneNumber}"/> </span></td>
                 </tr>
               </table>
               <br>  

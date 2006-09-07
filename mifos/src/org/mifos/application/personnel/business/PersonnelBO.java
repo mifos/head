@@ -77,7 +77,7 @@ public class PersonnelBO extends BusinessObject {
 	private Set<PersonnelCustomFieldEntity> customFields;
 
 	private Set<PersonnelMovementEntity> personnelMovements;
-	
+
 	private Set<PersonnelNotesEntity> personnelNotes;
 
 	private MifosLogger logger;
@@ -138,6 +138,7 @@ public class PersonnelBO extends BusinessObject {
 		this.encriptedPassword = getEncryptedPassword(password);
 		this.status = new PersonnelStatusEntity(PersonnelStatus.ACTIVE);
 	}
+
 	public String getAge() {
 		if (this.personnelDetails != null
 				&& this.personnelDetails.getDob() != null
@@ -147,6 +148,7 @@ public class PersonnelBO extends BusinessObject {
 		} else
 			return "";
 	}
+
 	public Set<PersonnelCustomFieldEntity> getCustomFields() {
 		return customFields;
 	}
@@ -261,7 +263,7 @@ public class PersonnelBO extends BusinessObject {
 			this.personnelMovements.add(personnelMovement);
 		}
 	}
-	
+
 	private void addPersonnelNotes(PersonnelNotesEntity personnelNotes) {
 		this.personnelNotes.add(personnelNotes);
 	}
@@ -278,8 +280,9 @@ public class PersonnelBO extends BusinessObject {
 
 		}
 	}
-	
-	public void addNotes(Short userId, PersonnelNotesEntity personnelNotes) throws PersonnelException {
+
+	public void addNotes(Short userId, PersonnelNotesEntity personnelNotes)
+			throws PersonnelException {
 		setUpdateDetails(userId);
 		addPersonnelNotes(personnelNotes);
 		try {
@@ -323,29 +326,28 @@ public class PersonnelBO extends BusinessObject {
 	private void verifyFields(String userName, String governmentIdNumber,
 			Date dob) throws PersonnelException {
 
-		try{
-		PersonnelPersistence persistence = new PersonnelPersistence();
-		if (StringUtils.isNullOrEmpty(userName))
-			throw new PersonnelException(PersonnelConstants.ERRORMANDATORY);
-		if (persistence.isUserExist(userName)){
-			System.out.println("Duplicate user found");
-			throw new PersonnelException(PersonnelConstants.DUPLICATE_USER,
-					new Object[] { userName });
-			
-		}
-		if (!StringUtils.isNullOrEmpty(governmentIdNumber)) {
-			if (persistence.isUserExistWithGovernmentId(governmentIdNumber))
-				throw new PersonnelException(
-						PersonnelConstants.DUPLICATE_GOVT_ID,
-						new Object[] { governmentIdNumber });
-		} else {
-			if (persistence.isUserExist(displayName, dob))
-				throw new PersonnelException(
-						PersonnelConstants.DUPLICATE_USER_NAME_OR_DOB,
-						new Object[] { displayName });
-		}
-		}
-		catch (PersistenceException e) {
+		try {
+			PersonnelPersistence persistence = new PersonnelPersistence();
+			if (StringUtils.isNullOrEmpty(userName))
+				throw new PersonnelException(PersonnelConstants.ERRORMANDATORY);
+			if (persistence.isUserExist(userName)) {
+				System.out.println("Duplicate user found");
+				throw new PersonnelException(PersonnelConstants.DUPLICATE_USER,
+						new Object[] { userName });
+
+			}
+			if (!StringUtils.isNullOrEmpty(governmentIdNumber)) {
+				if (persistence.isUserExistWithGovernmentId(governmentIdNumber))
+					throw new PersonnelException(
+							PersonnelConstants.DUPLICATE_GOVT_ID,
+							new Object[] { governmentIdNumber });
+			} else {
+				if (persistence.isUserExist(displayName, dob))
+					throw new PersonnelException(
+							PersonnelConstants.DUPLICATE_USER_NAME_OR_DOB,
+							new Object[] { displayName });
+			}
+		} catch (PersistenceException e) {
 			throw new PersonnelException(e);
 		}
 	}
@@ -381,7 +383,7 @@ public class PersonnelBO extends BusinessObject {
 			this.title = null;
 		} else
 			this.title = title;
-		//this.personnelRoles = null;
+		// this.personnelRoles = null;
 		this.personnelRoles = new HashSet();
 		if (roles != null) {
 			for (Role role : roles) {
@@ -400,6 +402,23 @@ public class PersonnelBO extends BusinessObject {
 		}
 	}
 
+	public void update(String emailId, Name name, Integer maritalStatus,
+			Integer gender, Address address, Short preferredLocale)
+			throws PersonnelException {
+
+		this.emailId = emailId;
+		/*
+		 * if(preferredLocale != null && preferredLocale != 0){
+		 * this.preferredLocale = new SupportedLocalesEntity(preferredLocale); }
+		 */
+		updatePersonnelDetails(name, maritalStatus, gender, address, null);
+		try {
+			new PersonnelPersistence().createOrUpdate(this);
+		} catch (PersistenceException pe) {
+			throw new PersonnelException(PersonnelConstants.UPDATE_FAILED, pe);
+		}
+	}
+
 	public void updatePersonnelDetails(Name name, Integer maritalStatus,
 			Integer gender, Address address, Date dateOfJoiningBranch)
 			throws PersonnelException {
@@ -408,7 +427,7 @@ public class PersonnelBO extends BusinessObject {
 					address, dateOfJoiningBranch);
 		}
 	}
-	
+
 	public List<PersonnelNotesEntity> getRecentPersonnelNotes() {
 		List<PersonnelNotesEntity> notes = new ArrayList<PersonnelNotesEntity>();
 		int count = 0;

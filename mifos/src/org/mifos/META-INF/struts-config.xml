@@ -136,7 +136,8 @@
 		<form-bean name="groupCustActionForm" type="org.mifos.application.customer.group.struts.actionforms.GroupCustActionForm"></form-bean>
 		<!-- Customer Action form -->
 		<form-bean name="custActionForm" type="org.mifos.application.customer.struts.actionforms.CustActionForm"></form-bean>
-		
+		<!-- Your Settings Action form -->
+		<form-bean name="personnelSettingsActionForm" type="org.mifos.application.personnel.struts.actionforms.PersonnelSettingsActionForm"></form-bean>
 	</form-beans>
 
 	<global-exceptions>
@@ -152,6 +153,14 @@
 	</global-forwards>
 
 	<action-mappings>
+		<action path="/yourSettings" type="org.mifos.application.personnel.struts.action.PersonnelSettingsAction" name="personnelSettingsActionForm" parameter="method"  validate="true" input="/yourSettings.do?method=validate" scope="session">
+			<forward name="editPersonalInfo_failure" path="/pages/application/personnel/jsp/edityoursettings.jsp"/>
+			<forward name="get_success" path="/pages/application/personnel/jsp/yoursettings.jsp"/>
+			<forward name="editPersonalInfo_success" path="/pages/application/personnel/jsp/edityoursettings.jsp"/>
+			<forward name="loadChangePassword_success" path="/pages/application/personnel/jsp/changePassword.jsp" />
+			<forward name="previewPersonalInfo_success" path="/pages/application/personnel/jsp/previewyoursettings.jsp" />
+			<forward name="updateSettings_success" path="/yourSettings.do?method=get" />
+		</action>
 		<action path="/ChangeAccountStatus"
 				type="org.mifos.application.accounts.loan.struts.action.AccountStatusAction" 
 				name="accountStatusActionForm" 
@@ -489,7 +498,7 @@
 			<forward name="login_failure" path="/pages/application/login/jsp/login.jsp"></forward>
 			<forward name="login_update_failure" path="/pages/application/login/jsp/changePassword.jsp"></forward>
 			<forward name="settings_update_failure" path="/pages/application/personnel/jsp/changePassword.jsp"></forward>
-			<forward name="success_settings" path="/PersonnelAction.do?method=getDetails"></forward>
+			<forward name="success_settings" path="/yourSettings.do?method=get"></forward>
 		</action>
 		<!-- Logout Action -->
 		<action path="/mifoslogout" name="mifoslogoutform" type="org.mifos.application.login.struts.action.MifosLogoutAction" input="/mifoslogout.do?method=validate" parameter="method" validate="true" scope="request">

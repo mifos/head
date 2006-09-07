@@ -1062,6 +1062,19 @@ public class ActivityMapper {
 		activityMap.put("/groupCustAction-previewManage",SecurityConstants.VIEW);
 		activityMap.put("/groupCustAction-previousManage",SecurityConstants.VIEW);
 		activityMap.put("/groupCustAction-update",SecurityConstants.GROUP_EDIT_GROUP);
+		
+//		for your settings new action class
+		activityMap.put("/yourSettings-get", SecurityConstants.VIEW);
+		activityMap.put("/yourSettings-manage",
+				SecurityConstants.PERSONNEL_EDIT_SELF_INFO);	
+		activityMap.put("/yourSettings-preview",
+				SecurityConstants.VIEW);
+		activityMap.put("/yourSettings-update",
+				SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
+		activityMap.put("/yourSettings-loadChangePassword",
+				SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
+		
+		
 	}
 
 	private static ActivityMapper instance = new ActivityMapper();

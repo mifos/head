@@ -130,6 +130,7 @@ public interface PersonnelConstants {
 	public static final String NOTES="notes";
 	public static final String GENDER ="Gender";
 	public static final String MARITAL_STATUS ="Marital Status";
+	public static final String MARITALSTATUS ="MaritalStatus";
 	public static final String LANGUAGE  ="Languages";
 	public static final String USERLEVLELS  ="User Levels";
 	public static final String ROLEMASTERLIST  ="Roles";

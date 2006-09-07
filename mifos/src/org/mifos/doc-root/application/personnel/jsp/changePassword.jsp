@@ -47,7 +47,7 @@
 <script language="javascript">
 <!--
 	function fnCancel(form) {
-		form.action="PersonnelAction.do?method=getDetails";
+		form.action="yourSettings.do?method=get";
 		form.submit();
 	}
 	function fnLogout() {

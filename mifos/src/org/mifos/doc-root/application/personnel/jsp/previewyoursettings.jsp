@@ -48,16 +48,16 @@
  <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 <script language="javascript">
   function goToCancelPage(){
-	personnelActionForm.action="PersonnelAction.do?method=getDetails";
-	personnelActionForm.submit();
+	personnelSettingsActionForm.action="yourSettings.do?method=get";
+	personnelSettingsActionForm.submit();
   }
    function goToEditPage(){
-	personnelActionForm.action="PersonnelAction.do?method=prevPersonalInfo";
-	personnelActionForm.submit();
+	personnelSettingsActionForm.action="yourSettings.do?method=manage";
+	personnelSettingsActionForm.submit();
   }
 </script>
-<html-el:form action="PersonnelAction.do?method=updateSettings" onsubmit="func_disableSubmitBtn('submitBtn')">
-
+<html-el:form action="yourSettings.do?method=update">
+<c:set var="form" value="${sessionScope.form}" />
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td height="350" align="left" valign="top" bgcolor="#FFFFFF"> 
@@ -106,37 +106,37 @@
            	 <td width="100%" class="fontnormalbold">
 	           	 <mifos:mifoslabel name="Personnel.FirstName"/>
 	           	 <span class="fontnormal">
-		           	 <c:out value="${requestScope.PersonnelVO.personnelDetails.firstName}"/>
+		           	 <c:out value="${personnelSettingsActionForm.firstName}"/>
 	           	 </span> <br>
 	           	 
 	           	 <mifos:mifoslabel name="Personnel.MiddleName"/>
 	           	 <span class="fontnormal">
-	           		 <c:out value="${requestScope.PersonnelVO.personnelDetails.middleName}"/>
+	           		 <c:out value="${personnelSettingsActionForm.middleName}"/>
 	           	 </span><br>
 	           	 
 	           	 <mifos:mifoslabel name="Personnel.SecondLastName"/>
 	           	 <span class="fontnormal">
-		           	 <c:out value="${requestScope.PersonnelVO.personnelDetails.secondLastName}"/>
+		           	 <c:out value="${personnelSettingsActionForm.secondLastName}"/>
 	           	 </span><br>
 	           	 
 	           	 <mifos:mifoslabel name="Personnel.LastName"/>
 	           	 <span class="fontnormal">	           	 
-		           	 <c:out value="${requestScope.PersonnelVO.personnelDetails.lastName}"/> 
+		           	 <c:out value="${personnelSettingsActionForm.lastName}"/> 
 	           	 </span><br>
 	           	 
 	           	 <mifos:mifoslabel name="${ConfigurationConstants.GOVERNMENT_ID}" bundle="PersonnelUIResources"></mifos:mifoslabel>: 
 				 <span class="fontnormal">
-					<c:out value="${requestScope.PersonnelVO.personnelDetails.governmentIdNumber}"/> 
+					<c:out value="${personnelSettingsActionForm.governmentIdNumber}"/> 
 				 </span> <br>
 				 
 	           	 <mifos:mifoslabel name="Personnel.Email" />
  	           	 <span class="fontnormal">
-		           	 <c:out value="${requestScope.PersonnelVO.emailId}"/>
+		           	 <c:out value="${personnelSettingsActionForm.emailId}"/>
 	           	 </span><br>
 	           	 
 	           	 <mifos:mifoslabel name="Personnel.DOB" bundle="PersonnelUIResources"></mifos:mifoslabel>
 			    <span class="fontnormal">
-					<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,requestScope.PersonnelVO.dob)}" />
+					<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,personnelSettingsActionForm.dob)}" />
 				</span><br>
 
 			    <mifos:mifoslabel name="Personnel.Age" bundle="PersonnelUIResources"></mifos:mifoslabel>
@@ -146,52 +146,52 @@
 				 
 	           	 <mifos:mifoslabel name="Personnel.MaritalStatus" />
  	           	 <span class="fontnormal">	           	 
-		           	 <mifoscustom:lookUpValue id="${requestScope.PersonnelVO.personnelDetails.maritalStatus}" searchResultName="maritalStatusList"></mifoscustom:lookUpValue> 
+		           	 <c:out value="${sessionScope.MaritalStatus}"/> 
 	           	 </span><br>
 	
 	           	 <mifos:mifoslabel name="Personnel.Gender" />
 				 <span class="fontnormal">	             	 
-		           	 <mifoscustom:lookUpValue id="${requestScope.PersonnelVO.personnelDetails.gender}" searchResultName="genderList"></mifoscustom:lookUpValue>
+		           	 <c:out value="${sessionScope.Gender}"/>
 	           	 </span><br>
 	           	 
 	           	 <mifos:mifoslabel name="Personnel.LanguagePreferred" />
 	           	 <span class="fontnormal">	  
-		           	 <c:out value="${requestScope.languageName}"/>
+		           	 <c:out value="${personnelSettingsActionForm.preferredLocale}"/>
 	           	 </span><br>
 	           	 
 	           	 <mifos:mifoslabel name="Personnel.UserName"  bundle="PersonnelUIResources"></mifos:mifoslabel> 
 				<span class="fontnormal">
-					<c:out value="${requestScope.PersonnelVO.userName}"/> 
+					<c:out value="${personnelSettingsActionForm.userName}"/> 
 				</span><br>
 	           	 <br>
 	           	 <mifos:mifoslabel name="Personnel.Address" /><br>
  				 <span class="fontnormal">	             	 
-		           	 <c:out value="${requestScope.displayAddress}"/> 
+		           	 <c:out value="${personnelSettingsActionForm.addressDetails}"/> 
 	           	 </span><br>
 	           	 
 	           	 <mifos:mifoslabel name="${ConfigurationConstants.CITY}" />:
 	           	 <span class="fontnormal">	 
-		           	 <c:out value="${requestScope.PersonnelVO.personnelDetails.city}"/> 
+		           	 <c:out value="${personnelSettingsActionForm.address.city}"/> 
 	           	 </span><br>
 	           	 
 	           	 <mifos:mifoslabel name="${ConfigurationConstants.STATE}" />:
 	           	 <span class="fontnormal">	 
-		           	 <c:out value="${requestScope.PersonnelVO.personnelDetails.state}"/> 
+		           	 <c:out value="${personnelSettingsActionForm.address.state}"/> 
 	           	 </span><br>
 	           	 
 	           	 <mifos:mifoslabel name="Personnel.Country" />
 	           	 <span class="fontnormal">	 
-	    	       	 <c:out value="${requestScope.PersonnelVO.personnelDetails.country}"/> 
+	    	       	 <c:out value="${personnelSettingsActionForm.address.country}"/> 
 	           	 </span><br>
 	           	 
 	           	 <mifos:mifoslabel name="${ConfigurationConstants.POSTAL_CODE}"/>:
 	           	 <span class="fontnormal">	 
-		           	 <c:out value="${requestScope.PersonnelVO.personnelDetails.postalCode}"/> 
+		           	 <c:out value="${personnelSettingsActionForm.address.zip}"/> 
 	           	 </span><br>
 	           	 
 	           	 <mifos:mifoslabel name="Personnel.Telephone"/>
 	           	 <span class="fontnormal">	 
-		           	 <c:out value="${requestScope.PersonnelVO.personnelDetails.telephone}"/> 
+		           	 <c:out value="${personnelSettingsActionForm.address.phoneNumber}"/> 
 	           	 </span><br>
    			 </td>
             </tr>
@@ -237,5 +237,6 @@
 </table>
 <html-el:hidden property="input" value="EditSettings"/>
 </html-el:form>
+
 </tiles:put>
 </tiles:insert>
