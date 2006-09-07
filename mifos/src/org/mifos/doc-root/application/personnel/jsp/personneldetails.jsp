@@ -44,7 +44,7 @@
 						<td width="50%" height="23" class="headingorange"><c:out
 							value="${personnelBO.displayName}" /></td>
 						<td width="50%" align="right"><a
-							href="PersonnelAction.do?method=manage"> <mifos:mifoslabel
+							href="PersonAction.do?method=manage&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"> <mifos:mifoslabel
 							name="Personnel.EditUserInformation"
 							bundle="PersonnelUIResources"></mifos:mifoslabel> </a></td>
 					</tr>

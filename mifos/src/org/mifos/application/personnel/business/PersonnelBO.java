@@ -327,9 +327,12 @@ public class PersonnelBO extends BusinessObject {
 		PersonnelPersistence persistence = new PersonnelPersistence();
 		if (StringUtils.isNullOrEmpty(userName))
 			throw new PersonnelException(PersonnelConstants.ERRORMANDATORY);
-		if (persistence.isUserExist(userName))
+		if (persistence.isUserExist(userName)){
+			System.out.println("Duplicate user found");
 			throw new PersonnelException(PersonnelConstants.DUPLICATE_USER,
 					new Object[] { userName });
+			
+		}
 		if (!StringUtils.isNullOrEmpty(governmentIdNumber)) {
 			if (persistence.isUserExistWithGovernmentId(governmentIdNumber))
 				throw new PersonnelException(

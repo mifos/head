@@ -159,14 +159,13 @@ public class PersonAction extends BaseAction {
 			throws Exception {
 		PersonActionForm actionform = (PersonActionForm) form;
 		actionform.clear();
-		//TODO: remove commented after get is implemented in M2 style
+		
+		
+
 		PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 		PersonnelBO personnelBO = ((PersonnelBusinessService) getService()).getPersonnel(personnel.getPersonnelId());
 		personnel = null;
-		/*System.out.println("actionform.getPersonnelId() ; "+actionform.getPersonnelId());
-		System.out.println("actionform.getPersonnelId() short value; "+Short.valueOf(actionform.getPersonnelId()));
-		PersonnelBO personnelBO = ((PersonnelBusinessService) getService()).getPersonnel(Short.valueOf(actionform.getPersonnelId()));
-*/		SessionUtils.setAttribute(Constants.BUSINESS_KEY,personnelBO, request);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,personnelBO, request);
 		loadUpdateMasterData(request, actionform);
 		setValuesInActionForm(actionform,request);
 		return mapping.findForward(ActionForwards.manage_success.toString());
@@ -200,6 +199,7 @@ public class PersonAction extends BaseAction {
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		System.out.println("Inside update"); 
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		PersonActionForm actionForm = (PersonActionForm) form;
@@ -213,6 +213,7 @@ public class PersonAction extends BaseAction {
 		Short perefferedLocale = getLocaleId(getShortValue(actionForm
 				.getPreferredLocale()));
 		PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+		System.out.println("update for bo goign to be called");
 		personnel.update(personnelStatus,level, office, title,
 				perefferedLocale, actionForm.getUserPassword(),
 				actionForm.getEmailId(),
@@ -375,12 +376,12 @@ public class PersonAction extends BaseAction {
 		PersonnelDetailsEntity personnelDetails = personnel.getPersonnelDetails();
 			actionForm.setFirstName(personnelDetails.getName().getFirstName());
 			actionForm.setMiddleName(personnelDetails.getName().getMiddleName());
-			actionForm.setSecondLastName(personnelDetails.getName().getMiddleName());
+			actionForm.setSecondLastName(personnelDetails.getName().getSecondLastName());
 			actionForm.setLastName(personnelDetails.getName().getLastName());
 			if(personnelDetails.getGender()!=null)
 				actionForm.setGender(personnelDetails.getGender().toString());
 			if(personnelDetails.getMaritalStatus()!=null)
-				actionForm.setGender(personnelDetails.getMaritalStatus().toString());
+				actionForm.setMaritalStatus(personnelDetails.getMaritalStatus().toString());
 			actionForm.setAddress(personnelDetails.getAddress());
 			if (personnelDetails.getDateOfJoiningMFI() != null){
 				actionForm.setDateOfJoiningMFI(DateHelper.getUserLocaleDate(
@@ -390,10 +391,15 @@ public class PersonAction extends BaseAction {
 				actionForm.setDob(DateHelper.getUserLocaleDate(
 						getUserContext(request).getPereferedLocale(), personnelDetails.getDob().toString()));
 			}
+			
 		}
 		actionForm.setEmailId(personnel.getEmailId());
+		//System.out.println("---------personnel.getPreferredLocale(): "+personnel.getPreferredLocale());
 		if(personnel.getPreferredLocale()!=null)
-			actionForm.setPreferredLocale(personnel.getPreferredLocale().getLocaleId().toString());
+			//System.out.println("---------personnel.getPreferredLocale()..getLanguage().getLanguageId(): "+personnel.getPreferredLocale().getLanguage().getLanguageId());
+			//actionForm.setPreferredLocale(personnel.getPreferredLocale().getLanguage().getLanguageId().toString());
+		actionForm.setPreferredLocale(personnel.getPreferredLocale().getLocaleId().toString());
+		//	System.out.println("---------actionForm.setPreferredLocale: "+actionForm.getPreferredLocale());
 		List<Role> selectList = new ArrayList<Role>();
 		for(PersonnelRoleEntity personnelRole : personnel.getPersonnelRoles()){
 			selectList.add(personnelRole.getRole());
@@ -451,7 +457,7 @@ public class PersonAction extends BaseAction {
 	
 	private void updateRoleLists(HttpServletRequest request,
 			PersonActionForm personActionForm) throws PageExpiredException {
-		if (personActionForm.getPersonnelRoles() != null) {
+		if (personActionForm.getPersonnelRoles() != null && personActionForm.getPersonnelRoles().length > 0) {
 			List<Role> selectList = new ArrayList<Role>();
 			List<Role> masterList = (List<Role>) SessionUtils.getAttribute(
 					PersonnelConstants.ROLEMASTERLIST, request);
@@ -462,7 +468,7 @@ public class PersonAction extends BaseAction {
 						selectList.add(role);
 					}
 				}
-			}
+			}	 
 			SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST,
 					selectList, request);
 		} else {

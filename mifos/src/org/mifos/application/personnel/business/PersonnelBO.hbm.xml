@@ -51,7 +51,7 @@
 		<property name="locked" column="LOCKED" type="short"
 			access="field" />
 		<property name="noOfTries" column="NO_OF_TRIES" type="short" access="field"/>
-		<set name="personnelRoles" cascade="all" inverse="true"
+		<set name="personnelRoles" cascade="all,delete-orphan" inverse="true"
 			lazy="false">
 			<key column="PERSONNEL_ID" />
 			<one-to-many

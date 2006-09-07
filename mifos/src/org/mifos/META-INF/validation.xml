@@ -1635,7 +1635,7 @@
 				</var>
 				<var>
 	         		<var-name>test</var-name>
-          		 	<var-value>((((input == "CreateUser") and ((*this* != null) and (*this*==passwordRepeat))) or((input == "ManageUser") and (*this*==passwordRepeat))) or (input=="updateSettings"))</var-value>
+          		 	<var-value>((((input == "CreateUser") and ((*this* != null) and (*this*==passwordRepeat))) or (input=="updateSettings"))</var-value>
 		        </var>
 			</field>
 			
@@ -1854,8 +1854,8 @@
 			</field>
 			
 			<!-- Password -->
-         	<field property="userPassword" depends="minlength,maxlength,mask,validwhen">
-	         	<msg name="validwhen" key="errors.validpassword"  bundle="PersonnelUIResources"/>
+         	<field property="userPassword" depends="minlength,maxlength,mask">
+	         	<!--  <msg name="validwhen" key="errors.validpassword"  bundle="PersonnelUIResources"/>-->
 	         	<msg name="minlength" key="errors.minlength"  bundle="PersonnelUIResources"/>
 	         	<msg  name="maxlength"  key="errors.maxlength" bundle="PersonnelUIResources"/>
 	         	<msg name="mask" key="errors.spacesmask"	bundle="PersonnelUIResources" />
@@ -1875,10 +1875,10 @@
 					<var-name>mask</var-name>
 					<var-value>^[^ ]*$</var-value>
 				</var>
-				<var>
+				<!-- <var>
 	         		<var-name>test</var-name>
-          		 	<var-value>((((input == "CreateUser") and ((*this* != null) and (*this*==passwordRepeat))) or((input == "ManageUser") and (*this*==passwordRepeat))) or (input=="updateSettings"))</var-value>
-		        </var>
+          		 	<var-value>(((input == "CreateUser") and ((*this* != null) and (*this*==passwordRepeat))) or (input=="updateSettings"))</var-value>
+		        </var> -->
 			</field>
 			
 		</form>

@@ -343,7 +343,7 @@ public class PersonActionForm extends BaseActionForm {
 		ActionErrors errors = new ActionErrors();
 		String method = request.getParameter("method");
 		if (method.equals(Methods.preview.toString())) {
-			handleCreatePreviewValidations(request);
+			handleCreatePreviewValidations(errors,request);
 			errors.add(super.validate(mapping, request));
 		}
 		if (method.equals(Methods.previewManage.toString())) {
@@ -372,6 +372,9 @@ public class PersonActionForm extends BaseActionForm {
 					PersonnelConstants.PASSWORD_MASK,
 					PersonnelConstants.PASSWORD));
 		}
+		if(StringUtils.isNullAndEmptySafe(userPassword) && StringUtils.isNullAndEmptySafe(passwordRepeat) && !(userPassword.trim().equals(passwordRepeat.trim()))){
+			errors.add(PersonnelConstants.PASSWORD ,new ActionMessage(PersonnelConstants.VALID_PASSWORD,PersonnelConstants.PASSWORD));
+		}
 
 		return errors;
 	}
@@ -383,10 +386,12 @@ public class PersonActionForm extends BaseActionForm {
 	 * 
 	 * @param request
 	 */
-	private ActionErrors handleCreatePreviewValidations(
+	private ActionErrors handleCreatePreviewValidations(ActionErrors errors,
 			HttpServletRequest request) {
 		
-		ActionErrors errors = null;
+		if (errors == null) {
+			errors = new ActionErrors();
+		}
 		if (!StringUtils.isNullOrEmpty(dob)) {
 			
 			//sqlDOB = DateHelper.getLocaleDate(userContext.getPereferedLocale(), dob);
@@ -404,10 +409,6 @@ public class PersonActionForm extends BaseActionForm {
 						PersonnelConstants.INVALID_DOB));
 			}
 		}
-		if (errors == null) {
-			errors = new ActionErrors();
-		}
-
 		validateCustomFields(request, errors);
 
 		return checkForPassword(errors);

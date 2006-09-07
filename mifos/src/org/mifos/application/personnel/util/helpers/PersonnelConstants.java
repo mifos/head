@@ -160,6 +160,7 @@ public interface PersonnelConstants {
 	public static final String PERSONNELUIRESOURCESPATH="org/mifos/application/personnel/util/resources/PersonnelUIResources";
 	public static final String ERRORMANDATORY="errors.mandatory";
 	public static final String  USERNAME="Personnel.UserNameLabel";
+	public static final String VALID_PASSWORD = "errors.validpassword";
 	public static final String ERROR_MANDATORY_TEXT_AREA = "errors.mandatorytextarea";
 	public static final short COMMENT_LENGTH = 500;
 	public static final String MAXIMUM_LENGTH="errors.maxlength";
