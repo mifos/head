@@ -49,6 +49,11 @@
 						value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
+					<td class="bluetablehead05"><span class="fontnormal8pt"><customtags:headerLink/> </span>
+				</tr>
+			</table>
+			<table width="95%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
 					<td><font class="fontnormalRedBold"> <html-el:errors
 						bundle="PersonnelUIResources" /> </font></td>
 				</tr>

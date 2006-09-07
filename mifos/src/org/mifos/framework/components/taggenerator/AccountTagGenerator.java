@@ -49,12 +49,12 @@ public class AccountTagGenerator extends TagGenerator {
 		setAssociatedGenerator(new CustomerTagGenerator());
 	}	
 	
-	protected StringBuilder build(BusinessObject obj, boolean selfLinkRequired){
+	protected StringBuilder build(BusinessObject obj, boolean selfLinkRequired, Object randomNum){
 		AccountBO account = (AccountBO)obj;
-		StringBuilder strBuilder = getAssociatedGenerator().build(account.getCustomer());
+		StringBuilder strBuilder = getAssociatedGenerator().build(account.getCustomer(),randomNum);
 		strBuilder.append(" / ");
 		if(selfLinkRequired){
-			createAccountLink(strBuilder, account); //create self link
+			createAccountLink(strBuilder, account, randomNum); //create self link
 		}else{
 			//TODO internationalize this
 			strBuilder.append("<b>"+getAccountName(account)+"</b>"); //get Self Node Value
@@ -62,10 +62,12 @@ public class AccountTagGenerator extends TagGenerator {
 		return strBuilder;
 	}
 	
-	private void createAccountLink(StringBuilder strBuilder, AccountBO account){
+	private void createAccountLink(StringBuilder strBuilder, AccountBO account, Object randomNum){
 		strBuilder.append("<a href=\"");
 		strBuilder.append(getAction(account));
 		strBuilder.append(account.getGlobalAccountNum());
+		strBuilder.append("&randomNum=");
+		strBuilder.append(randomNum);
 		strBuilder.append("\">");
 		//TODO internationalize this
 		strBuilder.append(getAccountName(account));

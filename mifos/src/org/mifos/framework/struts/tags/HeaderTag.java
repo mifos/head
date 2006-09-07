@@ -68,8 +68,10 @@ public class HeaderTag extends TagSupport {
 		this.selfLink = selfLink;
 	}
 	
+	@Override
 	public int doStartTag() throws JspException {
 		BusinessObject obj=null;
+		Object randomNum = pageContext.getSession().getAttribute("randomNUm");
 		try {
 			obj = (BusinessObject)SessionUtils.getAttribute(Constants.BUSINESS_KEY,(HttpServletRequest)pageContext.getRequest());
 		} catch (PageExpiredException pex) {
@@ -78,9 +80,9 @@ public class HeaderTag extends TagSupport {
 			
 		String linkStr;
 		if(selfLink!=null && selfLink!="")
-			linkStr = TagGenerator.createHeaderLinks(obj,Boolean.getBoolean(selfLink));
+			linkStr = TagGenerator.createHeaderLinks(obj,Boolean.getBoolean(selfLink),randomNum);
 		else
-			linkStr = TagGenerator.createHeaderLinks(obj,true);
+			linkStr = TagGenerator.createHeaderLinks(obj,true,randomNum);
 		try {
 			pageContext.getOut().write(linkStr);
 		}catch (IOException e) {

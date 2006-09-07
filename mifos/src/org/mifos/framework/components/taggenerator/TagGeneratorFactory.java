@@ -47,6 +47,7 @@ import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
 
@@ -84,6 +85,9 @@ public class TagGeneratorFactory {
 		generatorNames
 				.put("org.mifos.application.accounts.business.CustomerAccountBO",
 					"org.mifos.framework.components.taggenerator.AccountTagGenerator");
+		generatorNames
+				.put("org.mifos.application.personnel.business.PersonnelBO",
+					"org.mifos.framework.components.taggenerator.PersonnelTagGenerator");
 
 	}
 
@@ -118,6 +122,8 @@ public class TagGeneratorFactory {
 			return "org.mifos.application.accounts.business.CustomerAccountBO";
 		if(bo instanceof OfficeBO)
 			return "org.mifos.application.office.business.OfficeBO";
+		if(bo instanceof PersonnelBO)
+			return "org.mifos.application.personnel.business.PersonnelBO";
 		return null;
 	}
 	

@@ -59,6 +59,11 @@
 		<html-el:form action="personnelNoteAction.do?method=create">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
+					<td class="bluetablehead05"><span class="fontnormal8pt"><customtags:headerLink/> </span>
+				</tr>
+			</table>
+			<table width="95%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
 					<td width="70%" align="left" valign="top" class="paddingL15T15">
 					<table width="95%" border="0" cellpadding="3" cellspacing="0">
 						<tr>

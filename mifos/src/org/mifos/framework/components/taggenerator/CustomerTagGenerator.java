@@ -46,34 +46,38 @@ public class CustomerTagGenerator extends TagGenerator{
 		setAssociatedGenerator(new OfficeTagGenerator());
 	}
 	
-	protected StringBuilder build(BusinessObject obj){
-		return build(obj,true);
+	@Override
+	protected StringBuilder build(BusinessObject obj,Object randomNum){
+		return build(obj,true,randomNum);
 	}
 	
-	protected StringBuilder build(BusinessObject obj, boolean selfLinkRequired){
+	@Override
+	protected StringBuilder build(BusinessObject obj, boolean selfLinkRequired, Object randomNum){
 		CustomerBO customer=(CustomerBO)obj;
 		
-		StringBuilder strBuilder = getAssociatedGenerator().build(customer.getOffice());
+		StringBuilder strBuilder = getAssociatedGenerator().build(customer.getOffice(),randomNum);
 		if(strBuilder==null)
 			strBuilder = new StringBuilder();
 		
-		buildLink(strBuilder,customer,customer,selfLinkRequired);
+		buildLink(strBuilder,customer,customer,selfLinkRequired,randomNum);
 		return strBuilder;
 	}
 	
-	private void buildLink(StringBuilder strBuilder, CustomerBO customer,CustomerBO originalCustomer, boolean selfLinkRequired){
+	private void buildLink(StringBuilder strBuilder, CustomerBO customer,CustomerBO originalCustomer, boolean selfLinkRequired, Object randomNum){
 		if(customer==null)
 			return;
-		buildLink(strBuilder,customer.getParentCustomer(),originalCustomer,selfLinkRequired);
+		buildLink(strBuilder,customer.getParentCustomer(),originalCustomer,selfLinkRequired,randomNum);
 		strBuilder.append(" / ");
-		createCustomerLink(strBuilder,customer,originalCustomer,selfLinkRequired);
+		createCustomerLink(strBuilder,customer,originalCustomer,selfLinkRequired,randomNum);
 	}
 	
-	private void  createCustomerLink(StringBuilder strBuilder, CustomerBO customer,CustomerBO originalCustomer, boolean selfLinkRequired){
+	private void  createCustomerLink(StringBuilder strBuilder, CustomerBO customer,CustomerBO originalCustomer, boolean selfLinkRequired, Object randomNum){
 		if(!customer.equals(originalCustomer)){
 			strBuilder.append("<a href=\"");
 			strBuilder.append(getAction(customer));
 			strBuilder.append(customer.getGlobalCustNum());
+			strBuilder.append("&randomNum=");
+			strBuilder.append(randomNum);
 			strBuilder.append("\">");
 			strBuilder.append(customer.getDisplayName());
 			strBuilder.append("</a>");
@@ -81,6 +85,8 @@ public class CustomerTagGenerator extends TagGenerator{
 			strBuilder.append("<a href=\"");
 			strBuilder.append(getAction(customer));
 			strBuilder.append(customer.getGlobalCustNum());
+			strBuilder.append("&randomNum=");
+			strBuilder.append(randomNum);
 			strBuilder.append("\">");
 			strBuilder.append(customer.getDisplayName());
 			strBuilder.append("</a>");

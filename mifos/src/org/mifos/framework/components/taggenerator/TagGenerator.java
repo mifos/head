@@ -51,14 +51,14 @@ public abstract class TagGenerator {
 		this.associatedGenerator = associatedGenerator;
 	}	
 	
-	public static String createHeaderLinks(BusinessObject bo, boolean selfLinkRequired){
+	public static String createHeaderLinks(BusinessObject bo, boolean selfLinkRequired, Object randomNum){
 		TagGenerator generator= TagGeneratorFactory.getInstance().getGenerator(bo);
-		return generator.build(bo, selfLinkRequired).toString();
+		return generator.build(bo, selfLinkRequired,randomNum).toString();
 	}
 	
-	protected StringBuilder build(BusinessObject obj){
-		return build(obj, false);		
+	protected StringBuilder build(BusinessObject obj, Object randomNum){
+		return build(obj, false,randomNum);		
 	}
 	
-	protected abstract StringBuilder build(BusinessObject obj, boolean selfLinkRequired);
+	protected abstract StringBuilder build(BusinessObject obj, boolean selfLinkRequired, Object randomNum);
 }

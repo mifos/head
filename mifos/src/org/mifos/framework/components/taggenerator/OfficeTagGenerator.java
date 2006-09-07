@@ -45,17 +45,21 @@ public class OfficeTagGenerator extends TagGenerator{
 	public OfficeTagGenerator(){
 	}
 	
-	protected StringBuilder build(BusinessObject obj){
-		return build(obj,false);
+	@Override
+	protected StringBuilder build(BusinessObject obj,Object randomNum){
+		return build(obj,false,randomNum);
 	}
 	
-	protected StringBuilder build(BusinessObject obj, boolean selfLinkRequired ){
+	@Override
+	protected StringBuilder build(BusinessObject obj, boolean selfLinkRequired, Object randomNum){
 		OfficeBO office=(OfficeBO)obj;
 		StringBuilder strBuilder = new StringBuilder();
 		strBuilder.append("<a href=\"CustomerSearchAction.do?method=getOfficeHomePage&officeId=");
 		strBuilder.append(office.getOfficeId());
 		strBuilder.append("&officeName=");
 		strBuilder.append(office.getOfficeName());
+		strBuilder.append("&randomNum=");
+		strBuilder.append(randomNum);
 		strBuilder.append("\">");
 		strBuilder.append(office.getOfficeName());
 		strBuilder.append("</a>");
