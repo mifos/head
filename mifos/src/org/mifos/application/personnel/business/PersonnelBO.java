@@ -48,10 +48,6 @@ public class PersonnelBO extends BusinessObject {
 
 	private String displayName;
 
-	private PersonnelStatusEntity status;
-
-	private SupportedLocalesEntity preferredLocale;
-
 	private String searchId;
 
 	private Integer maxChildCount;
@@ -69,6 +65,10 @@ public class PersonnelBO extends BusinessObject {
 	private Short locked;
 
 	private Short noOfTries;
+
+	private PersonnelStatusEntity status;
+
+	private SupportedLocalesEntity preferredLocale;
 
 	private PersonnelDetailsEntity personnelDetails;
 
@@ -90,7 +90,6 @@ public class PersonnelBO extends BusinessObject {
 		this.personnelNotes = new HashSet<PersonnelNotesEntity>();
 		this.personnelId = null;
 		this.userName = null;
-
 	}
 
 	public PersonnelBO(PersonnelLevel level, OfficeBO office, Integer title,
@@ -239,6 +238,82 @@ public class PersonnelBO extends BusinessObject {
 
 	public Set<PersonnelNotesEntity> getPersonnelNotes() {
 		return personnelNotes;
+	}
+
+	public Short getNoOfTries() {
+		return noOfTries;
+	}
+
+	public void setNoOfTries(Short noOfTries) {
+		this.noOfTries = noOfTries;
+	}
+
+	public Short getPasswordChanged() {
+		return passwordChanged;
+	}
+
+	public void setPasswordChanged(Short passwordChanged) {
+		this.passwordChanged = passwordChanged;
+	}
+
+	public String getSearchId() {
+		return searchId;
+	}
+
+	public void setSearchId(String searchId) {
+		this.searchId = searchId;
+	}
+
+	public byte[] getEncriptedPassword() {
+		return encriptedPassword;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
+
+	public void setGlobalPersonnelNum(String globalPersonnelNum) {
+		this.globalPersonnelNum = globalPersonnelNum;
+	}
+
+	public void setLastLogin(Date lastLogin) {
+		this.lastLogin = lastLogin;
+	}
+
+	public void setLevel(PersonnelLevelEntity level) {
+		this.level = level;
+	}
+
+	public void setMaxChildCount(Integer maxChildCount) {
+		this.maxChildCount = maxChildCount;
+	}
+
+	public void setOffice(OfficeBO office) {
+		this.office = office;
+	}
+	public void setPersonnelMovements(
+			Set<PersonnelMovementEntity> personnelMovements) {
+		this.personnelMovements = personnelMovements;
+	}
+
+	public void setPersonnelNotes(Set<PersonnelNotesEntity> personnelNotes) {
+		this.personnelNotes = personnelNotes;
+	}
+
+	public void setPreferredLocale(SupportedLocalesEntity preferredLocale) {
+		this.preferredLocale = preferredLocale;
+	}
+
+	public void setStatus(PersonnelStatusEntity status) {
+		this.status = status;
+	}
+
+	public void setTitle(Integer title) {
+		this.title = title;
 	}
 
 	private void updateCustomFields(List<CustomFieldView> customfields) {
@@ -577,5 +652,4 @@ public class PersonnelBO extends BusinessObject {
 				this, new Date());
 		this.addPersonnelMovement(newPersonnelMovement);
 	}
-
 }

@@ -427,40 +427,50 @@ public class PersonAction extends BaseAction {
 	
 	private List<Role> getRoles(HttpServletRequest request,
 			PersonActionForm personActionForm) throws PageExpiredException {
+		boolean addFlag = false;
 		List<Role> selectList = new ArrayList<Role>();
 		List<Role> masterList = (List<Role>) SessionUtils.getAttribute(
 				PersonnelConstants.ROLEMASTERLIST, request);
 		for (Role role : masterList) {
 			for (String roleId : personActionForm.getPersonnelRoles()) {
-				if (role.getId().intValue() == Integer.valueOf(roleId)
+				if (roleId != null&&role.getId().intValue() == Integer.valueOf(roleId)
 						.intValue()) {
 					selectList.add(role);
+					addFlag = true;
 				}
 			}
 		}
-		return selectList;
+		if (addFlag)
+			return selectList;
+		else
+			return null;
 	}
-	
+
 	private void updateRoleLists(HttpServletRequest request,
 			PersonActionForm personActionForm) throws PageExpiredException {
-		if (personActionForm.getPersonnelRoles() != null && personActionForm.getPersonnelRoles().length > 0) {
-			List<Role> selectList = new ArrayList<Role>();
+
+		boolean addFlag = false;
+		List<Role> selectList = new ArrayList<Role>();
+		if (personActionForm.getPersonnelRoles() != null) {
 			List<Role> masterList = (List<Role>) SessionUtils.getAttribute(
 					PersonnelConstants.ROLEMASTERLIST, request);
 			for (Role role : masterList) {
 				for (String roleId : personActionForm.getPersonnelRoles()) {
-					if (role.getId().intValue() == Integer.valueOf(roleId)
-							.intValue()) {
+					if (roleId != null
+							&& role.getId().intValue() == Integer.valueOf(
+									roleId).intValue()) {
 						selectList.add(role);
+						addFlag = true;
 					}
 				}
-			}	 
+			}
+		}
+		if (addFlag)
 			SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST,
 					selectList, request);
-		} else {
+		else
 			SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST,
 					null, request);
-		}
 	}
 
 	private Short getLocaleId(Short lookUpId) throws ServiceException {

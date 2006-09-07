@@ -16,27 +16,27 @@
 			unsaved-value="negative" />
 		<many-to-one name="level" column="LEVEL_ID"
 			class="org.mifos.application.personnel.business.PersonnelLevelEntity"
-			unique="true" lazy="false" access="field"/>
+			unique="true" lazy="false"  />
 		<many-to-one name="office" column="OFFICE_ID"
 			class="org.mifos.application.office.business.OfficeBO" unique="true"
-			lazy="false" access="field"/>
+			lazy="false"  />
 		<many-to-one name="preferredLocale" column="PREFERRED_LOCALE"
-			class="org.mifos.application.master.business.SupportedLocalesEntity" access="field" insert="true" update="true" cascade="none"/>
+			class="org.mifos.application.master.business.SupportedLocalesEntity"   insert="true" update="true" cascade="none"/>
 		<one-to-one name="personnelDetails"
 			class="org.mifos.application.personnel.business.PersonnelDetailsEntity"
 			cascade="all" lazy="false" />
 
 		<property name="globalPersonnelNum"
-			column="GLOBAL_PERSONNEL_NUM" type="string" access="field"/>
+			column="GLOBAL_PERSONNEL_NUM" type="string"  />
 		<property name="displayName" column="DISPLAY_NAME"
-			type="string" access="field" />
+			type="string"   />
 		<many-to-one name="status" column="PERSONNEL_STATUS"
-			class="org.mifos.application.personnel.business.PersonnelStatusEntity" access="field"/>
-		<property name="title" column="TITLE" type="integer" access="field"/>
+			class="org.mifos.application.personnel.business.PersonnelStatusEntity"  />
+		<property name="title" column="TITLE" type="integer"  />
 		<property name="searchId" column="SEARCH_ID" type="string"
-			access="field" />
+			  />
 		<property name="maxChildCount" column="MAX_CHILD_COUNT"
-			type="integer" access="field"/>
+			type="integer"  />
 		<property name="encriptedPassword" column="PASSWORD"
 			type="binary" access="field" />
 		<property name="userName" column="LOGIN_NAME" type="string" access="field"/>

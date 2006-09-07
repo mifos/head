@@ -357,12 +357,11 @@
 									 
 										<c:forEach
 										items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'personnelRolesList')}"
-										var="item" begin="1" >
-
-										<c:if test="${varStatus == 1}">
+										var="item"  varStatus="loopStatus">
+										<c:if test="${loopStatus.index == 0}">
 										      ${item.name}
 										</c:if>
-										<c:if test="${varStatus != 1}">
+										<c:if test="${loopStatus.index != 0}">
 										      ,${item.name}
 										</c:if>
 										

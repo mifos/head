@@ -20,6 +20,7 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
+import org.mifos.application.rolesandpermission.util.valueobjects.Role;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.util.Address;
@@ -28,6 +29,7 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.struts.tags.DateHelper;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
@@ -93,6 +95,7 @@ public class PersonActionForm extends BaseActionForm {
 
 		address = new Address();
 		customFields = new ArrayList<CustomFieldView>();
+		personnelRoles=null;
 
 	}
 
@@ -353,11 +356,51 @@ public class PersonActionForm extends BaseActionForm {
 		if (null != errors && !errors.isEmpty()) {
 			request.setAttribute(Globals.ERROR_KEY, errors);
 			request.setAttribute("methodCalled", method);
+			request.setAttribute(Constants.CURRENTFLOWKEY, request
+					.getParameter(Constants.CURRENTFLOWKEY));
+			//update the role list also
+			
+			try{
+			updateRoleLists(request);
+			}
+			catch (PageExpiredException e) {
+				// TODO:  do we need to ingnore it ?
+			}
+			
 		}
 
 		return errors;
 
 	}
+	private void updateRoleLists(HttpServletRequest request
+			) throws PageExpiredException {
+		
+		boolean addFlag = false;
+		List<Role> selectList = new ArrayList<Role>();
+		if (personnelRoles != null) {
+			
+			
+			List<Role> masterList = (List<Role>) SessionUtils.getAttribute(
+					PersonnelConstants.ROLEMASTERLIST, request);
+			
+			for (Role role : masterList) {
+				for (String roleId : personnelRoles) {
+					if (roleId!=null&&role.getId().intValue() == Integer.valueOf(roleId)
+							.intValue()) {
+						selectList.add(role);
+						addFlag=true;
+					}
+				}
+			}
+		}
+		if ( addFlag)SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST,
+				selectList, request);
+		else	SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST,
+					null, request);
+		
+		personnelRoles=null;
+	}
+
 
 	private ActionErrors checkForPassword(ActionErrors errors) {
 
@@ -380,13 +423,7 @@ public class PersonActionForm extends BaseActionForm {
 		return errors;
 	}
 
-	/**
-	 * This is the helper method to check for extra validations e.g. date
-	 * validations and password validations needed at the time of create
-	 * preview.
-	 * 
-	 * @param request
-	 */
+
 	private ActionErrors handleCreatePreviewValidations(ActionErrors errors,
 			HttpServletRequest request) {
 		
@@ -415,12 +452,6 @@ public class PersonActionForm extends BaseActionForm {
 		return checkForPassword(errors);
 	}
 
-	
-	/**
-	 * This is the helper method to check for extra validations e.g. date validations and password validations
-	 * needed at the time of create preview.
-	 * @param request 
-	 */
 	private ActionErrors handleManagePreviewValidations(ActionErrors errors ,HttpServletRequest request){
 		if(errors==null){
 			errors=new ActionErrors();
