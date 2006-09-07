@@ -120,8 +120,7 @@
 								<c:otherwise>
 									<!-- <c:if test="${sessionScope.performanceHistory.numberOfGroups==0}">-->
 									<mifos:mifoslabel name="Center.No" bundle="CenterUIResources" />
-									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
-									<mifos:mifoslabel name="Center.s" bundle="CenterUIResources" />
+									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /><mifos:mifoslabel name="Center.s" bundle="CenterUIResources" />
 									<mifos:mifoslabel name="Center.Available"
 										bundle="CenterUIResources" />
 									<!-- </c:if> -->
