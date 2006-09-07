@@ -121,6 +121,7 @@ public class OffAction extends BaseAction {
 		SessionUtils.setAttribute(OfficeConstants.GET_BRANCHOFFICE, getOffices(
 				userContext, ((OfficeBusinessService) getService())
 						.getBranchOffices()), request.getSession());
+		loadofficeLevels(request);
 		return mapping.findForward(ActionForwards.search_success.toString());
 	}
 	

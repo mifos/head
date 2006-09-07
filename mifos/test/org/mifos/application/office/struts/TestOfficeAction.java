@@ -61,6 +61,7 @@ public class TestOfficeAction extends MifosMockStrutsTestCase {
 		assertNull(SessionUtils.getAttribute(OfficeConstants.GET_SUBREGIONALOFFICE, request.getSession()));
 		assertEquals(1,((List)SessionUtils.getAttribute(OfficeConstants.GET_BRANCHOFFICE, request.getSession())).size());
 		assertEquals(1,((List)SessionUtils.getAttribute(OfficeConstants.GET_AREAOFFICE, request.getSession())).size());
+		assertEquals(4,((List)SessionUtils.getAttribute(OfficeConstants.OFFICELEVELLIST, request.getSession())).size());
 	}
 
 	public void testLoad() {

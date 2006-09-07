@@ -309,20 +309,16 @@
 							<td height="23" colspan="2" class="fontnormalbold"><br>
 							<mifos:mifoslabel name="Center.OfficialTitlesHeading"
 								/><br>
-
-							<c:forEach var="position" items="${requestScope.positions}">
-								<c:forEach var="cp"
-									items="${sessionScope.BusinessKey.customerPositions}">
-									<c:if test="${position.positionId==cp.positionId}">
-										<span class="fontnormal"> <c:if
-											test="${! empty cp.customerId}">
-											<c:out value="${position.positionName}" />:
-							<c:out value="${cp.customerName}" />
-											<br>
-										</c:if> </span>
-									</c:if>
-								</c:forEach>
-							</c:forEach> <br>
+							<c:forEach var="pos"
+								items="${BusinessKey.customerPositions}">
+								<c:if test="${! empty pos.customer.customerId}">
+								<span class="fontnormal">
+									<c:out value="${pos.position.name}" />: <c:out
+										value="${pos.customer.displayName}" />
+										</span>
+									<br>
+								</c:if>
+							</c:forEach>  <br>
 							</td>
 						</tr>
 

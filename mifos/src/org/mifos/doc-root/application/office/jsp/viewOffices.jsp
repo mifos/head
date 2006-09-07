@@ -1,44 +1,3 @@
-<!-- 
-
-/**
-
- * viewOffices.jsp    version: 1.0
-
- 
-
- * Copyright (c) 2005-2006 Grameen Foundation USA
-
- * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
-
- * All rights reserved.
-
- 
-
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
-
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
- *
-
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
-
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
-
- * and how it is applied. 
-
- *
-
- */
-
--->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <%@taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
@@ -119,8 +78,25 @@ function addNewOfficeBlank(){
 									</html-el:link> <br>
 									</span>
 								</c:if>
-							</c:forEach> <c:choose>
-								<c:when test="${empty regionalOfficeList}">
+							</c:forEach> 
+							
+							<c:set var="regionalConfig" scope="request" value="false" ></c:set>
+							<c:set var="subRegionalConfig" scope="request" value="false" ></c:set>
+							<c:set var="areaConfig" scope="request" value="false" ></c:set>
+							<c:forEach var="level" items="${sessionScope.OfficeLevelList}"> 
+							   <c:if test="${OfficeLevel.REGIONALOFFICE.value == level.levelId}">
+							     <c:set var="regionalConfig" scope="request" value="true" ></c:set>
+							   </c:if>
+							   <c:if test="${OfficeLevel.SUBREGIONALOFFICE.value == level.levelId}">
+							     <c:set var="subRegionalConfig" scope="request" value="true" ></c:set>
+							   </c:if>
+							   <c:if test="${OfficeLevel.AREAOFFICE.value == level.levelId}">
+							     <c:set var="areaConfig" scope="request" value="true" ></c:set>
+							   </c:if>
+							</c:forEach>
+							
+							<c:choose>
+								<c:when test="${empty regionalOfficeList && regionalConfig == 'true' }">
 									<br>
 									<table width="95%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
@@ -177,8 +153,12 @@ function addNewOfficeBlank(){
 										<!--  end childern loop for regional office -->
 									</c:forEach>
 								</c:otherwise>
-							</c:choose> <c:choose>
-								<c:when test="${empty divisionalOfficeList}">
+							</c:choose>
+							
+							
+							
+							 <c:choose>
+								<c:when test="${empty divisionalOfficeList && subRegionalConfig == 'true' }">
 									<br>
 									<table width="95%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
@@ -236,7 +216,7 @@ function addNewOfficeBlank(){
 									</c:forEach>
 								</c:otherwise>
 							</c:choose> <c:choose>
-								<c:when test="${empty areaOfficeList}">
+								<c:when test="${empty areaOfficeList && areaConfig == 'true'}">
 									<br>
 									<table width="95%" border="0" cellspacing="0" cellpadding="0">
 										<tr>

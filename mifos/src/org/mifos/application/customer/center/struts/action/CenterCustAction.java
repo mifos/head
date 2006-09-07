@@ -52,6 +52,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
+import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -328,9 +329,12 @@ public class CenterCustAction extends CustAction {
 				.getSession());
 	  
 	  //set localeId in center saving accounts 
+	  
+	  loadCustomFieldDefinitions(request);
+	  
 	  UserContext userContext = getUserContext(request);
 	  setLocaleIdToSavingsStatus(centerBO.getActiveSavingsAccounts(),userContext.getLocaleId());
-	  
+	  initCustomerPosition(centerBO,userContext.getLocaleId());
 	  //	TODO : get value object 
 	  CenterDAO centerDAO =  new CenterDAO();
 	  Center center = centerDAO.findBySystemId(centerBO.getGlobalCustNum());
@@ -343,6 +347,13 @@ public class CenterCustAction extends CustAction {
 	  SessionUtils.setAttribute(CustomerConstants.LINK_VALUES,getLinkValues(center),request
 						.getSession());
 		return mapping.findForward(ActionForwards.get_success.toString());
+	}
+	private void initCustomerPosition(CenterBO centerBO,Short localeId){
+		
+		for (CustomerPositionEntity customerPosition : centerBO.getCustomerPositions()) {
+			
+			customerPosition.getPosition().setLocaleId(localeId);
+		}
 	}
 	private void setLocaleIdToSavingsStatus(List<SavingsBO> accountList,
 			Short localeId) {
