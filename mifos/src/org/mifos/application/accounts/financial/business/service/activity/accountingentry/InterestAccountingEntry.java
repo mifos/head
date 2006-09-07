@@ -46,7 +46,6 @@ import org.mifos.application.accounts.financial.util.helpers.FinancialActionCach
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.framework.util.helpers.Money;
 
 public class InterestAccountingEntry extends BaseAccountingEntry {
 	protected void getSpecificAccountActionEntry() throws FinancialException {
@@ -61,25 +60,8 @@ public class InterestAccountingEntry extends BaseAccountingEntry {
 				getGLcode(finActionInterest.getApplicableDebitCOA()),
 				FinancialConstants.DEBIT);
 
-		addAccountEntryDetails(loanTrxn.getInterestAmount(),
-				finActionInterest, glcodeCredit, FinancialConstants.CREDIT);
-
-		// check if rounding is required
-		Money roundedAmount = Money.round(loanTrxn.getInterestAmount());
-		if (!roundedAmount.equals(loanTrxn.getInterestAmount())) {
-			FinancialActionBO finActionRounding = FinancialActionCache
-					.getFinancialAction(FinancialActionConstants.ROUNDING);
-
-			addAccountEntryDetails(roundedAmount.subtract(
-					loanTrxn.getInterestAmount()).negate(), finActionRounding,
-					getGLcode(finActionInterest.getApplicableCreditCOA()),
-					FinancialConstants.DEBIT);
-
-			addAccountEntryDetails(roundedAmount.subtract(loanTrxn
-					.getInterestAmount()), finActionRounding,
-					getGLcode(finActionRounding.getApplicableCreditCOA()),
-					FinancialConstants.CREDIT);
-		}
+		addAccountEntryDetails(loanTrxn.getInterestAmount(), finActionInterest,
+				glcodeCredit, FinancialConstants.CREDIT);
 
 	}
 

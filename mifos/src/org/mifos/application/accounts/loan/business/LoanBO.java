@@ -2405,7 +2405,8 @@ public class LoanBO extends AccountBO {
 	private void changeLoanStatus(AccountState newAccountState,
 			PersonnelBO personnel) {
 		AccountStateEntity accountState = this.getAccountState();
-		setAccountState(new AccountStateEntity(newAccountState));
+		setAccountState((AccountStateEntity) (new MasterPersistence())
+				.findById(AccountStateEntity.class, newAccountState.getValue()));
 		this
 				.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
 						accountState, this.getAccountState(), personnel));

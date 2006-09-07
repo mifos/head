@@ -122,10 +122,7 @@
 									<mifos:mifoslabel name="loan.acc_summary" />
 								</td>
 								<td width="33%" align="right" class="fontnormal">
-									<html-el:link href="loanAccountAction.do?method=getLoanRepaymentSchedule&input=reviewTransactionPage&accountId=${sessionScope.BusinessKey.accountId}&prdOfferingName=${sessionScope.BusinessKey.loanOffering.prdOfferingName}
-					                  	&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}&accountType=${sessionScope.BusinessKey.accountType.accountTypeId}
-					                  	&accountStateId=${sessionScope.BusinessKey.accountState.id}&recordOfficeId=${sessionScope.BusinessKey.office.officeId}
-					                  	&recordLoanOfficerId=${sessionScope.BusinessKey.personnel.personnelId}&lastPaymentAction=${sessionScope.lastPaymentAction}">
+									<html-el:link href="loanAccountAction.do?method=getLoanRepaymentSchedule&input=reviewTransactionPage&accountId=${sessionScope.BusinessKey.accountId}&prdOfferingName=${sessionScope.BusinessKey.loanOffering.prdOfferingName}&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}&accountType=${sessionScope.BusinessKey.accountType.accountTypeId}&accountStateId=${sessionScope.BusinessKey.accountState.id}&recordOfficeId=${sessionScope.BusinessKey.office.officeId}&recordLoanOfficerId=${sessionScope.BusinessKey.personnel.personnelId}&lastPaymentAction=${sessionScope.lastPaymentAction}">
 										<mifos:mifoslabel name="loan.view_schd" />
 									</html-el:link>
 								</td>
@@ -167,10 +164,7 @@
 				            	<tr>		                
 				                	<td width="42%" align="right" class="fontnormal">
 				                		<span class="fontnormal">
-						                  	<html-el:link href="loanAccountAction.do?method=getInstallmentDetails&accountId=${sessionScope.BusinessKey.accountId}&prdOfferingName=${sessionScope.BusinessKey.loanOffering.prdOfferingName}
-						                  	&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}&accountType=${sessionScope.BusinessKey.accountType.accountTypeId}
-						                  	&accountStateId=${sessionScope.BusinessKey.accountState.id}&recordOfficeId=${sessionScope.BusinessKey.office.officeId}
-						                  	&recordLoanOfficerId=${sessionScope.BusinessKey.personnel.personnelId}&lastPaymentAction=${sessionScope.lastPaymentAction}"> 
+						                  	<html-el:link href="loanAccountAction.do?method=getInstallmentDetails&accountId=${sessionScope.BusinessKey.accountId}&prdOfferingName=${sessionScope.BusinessKey.loanOffering.prdOfferingName}&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}&accountType=${sessionScope.BusinessKey.accountType.accountTypeId}&accountStateId=${sessionScope.BusinessKey.accountState.id}&recordOfficeId=${sessionScope.BusinessKey.office.officeId}&recordLoanOfficerId=${sessionScope.BusinessKey.personnel.personnelId}&lastPaymentAction=${sessionScope.lastPaymentAction}"> 
 												<mifos:mifoslabel name="loan.view_installment_details" />								
 											</html-el:link>
 										</span>
@@ -252,12 +246,7 @@
 								<td width="35%" class="headingorange"><mifos:mifoslabel
 									name="loan.recentActivity" /></td>
 								<td width="65%" align="right" class="fontnormal">&nbsp; <html-el:link
-									href="loanAccountAction.do?method=getAllActivity&
-											accountId=${sessionScope.BusinessKey.accountId}
-											&prdOfferingName=${sessionScope.BusinessKey.loanOffering.prdOfferingName}&
-											accountStateId=${sessionScope.BusinessKey.accountState.id}&
-											globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}&
-											lastPaymentAction=${sessionScope.lastPaymentAction}">
+									href="loanAccountAction.do?method=getAllActivity&accountId=${sessionScope.BusinessKey.accountId}&prdOfferingName=${sessionScope.BusinessKey.loanOffering.prdOfferingName}&accountStateId=${sessionScope.BusinessKey.accountState.id}&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}&lastPaymentAction=${sessionScope.lastPaymentAction}&accountType=${sessionScope.BusinessKey.accountType.accountTypeId}">
 									<mifos:mifoslabel name="loan.view_acc_activity" />
 								</html-el:link></td>
 							</tr>
@@ -391,9 +380,7 @@
 										name="loan.periodicityTypeRate" /> <c:out
 										value="${feesSet.fees.feeFrequency.feeMeetingFrequency.shortMeetingSchedule}" />)
 									<html-el:link
-										href="accountAppAction.do?method=removeFees&feeId=${feesSet.fees.feeId}&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}
-														&accountId=${sessionScope.BusinessKey.accountId}&recordOfficeId=${sessionScope.BusinessKey.office.officeId}
-														&recordLoanOfficerId=${sessionScope.BusinessKey.personnel.personnelId}&createdDate=${sessionScope.BusinessKey.createdDate}"> 
+										href="accountAppAction.do?method=removeFees&feeId=${feesSet.fees.feeId}&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}&accountId=${sessionScope.BusinessKey.accountId}&recordOfficeId=${sessionScope.BusinessKey.office.officeId}&recordLoanOfficerId=${sessionScope.BusinessKey.personnel.personnelId}&createdDate=${sessionScope.BusinessKey.createdDate}"> 
 														<mifos:mifoslabel name="loan.remove" />
 										    </html-el:link> <br>
 									</span>

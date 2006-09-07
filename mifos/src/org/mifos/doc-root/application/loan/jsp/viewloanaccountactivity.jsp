@@ -92,8 +92,7 @@
 									<mifos:mifoslabel name="loan.apply_trans" />
 								</span>&nbsp;&nbsp;&nbsp;&nbsp;	
 								<c:if test="${(param.accountStateId=='5' || param.accountStateId=='9')}">
-									<html-el:link href="applyPaymentAction.do?method=load&input=loan&prdOfferingName=${param.prdOfferingName}&globalAccountNum=${param.globalAccountNum}&accountId=${param.accountId}&accountType=${param.accountTypeId}
-															&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}&accountStateId=${param.accountStateId}">
+									<html-el:link href="applyPaymentAction.do?method=load&input=loan&prdOfferingName=${param.prdOfferingName}&globalAccountNum=${param.globalAccountNum}&accountId=${param.accountId}&accountType=${param.accountType}&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}&accountStateId=${param.accountStateId}">
 										<mifos:mifoslabel name="loan.apply_payment" />
 									</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 								</c:if>							

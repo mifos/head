@@ -45,6 +45,7 @@ import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActionForm;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
@@ -167,6 +168,39 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		assertEquals(new Money(), accountBO.getTotalPaymentDue());
 		assertEquals(0, accountBO.getTotalInstallmentsDue().size());
 		assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, accountBO.getAccountState().getId().shortValue());
+	}
+	
+	public void testApplyPaymentAndRetrievalForLoanWhenStatusIsChanged()throws Exception{
+		accountBO = createLoanAccount();
+		accountBO.setAccountState(new AccountStateEntity(AccountStates.LOANACC_BADSTANDING));
+		request.getSession().setAttribute(Constants.BUSINESS_KEY,accountBO);
+		AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
+		accountApplyPaymentActionForm.setAmount(new Money("212"));
+		request.getSession().setAttribute("applyPaymentActionForm",accountApplyPaymentActionForm);
+		setRequestPathInfo("/applyPaymentAction");
+		addRequestParameter("input","loan");
+		addRequestParameter("method", "applyPayment");
+		addRequestParameter("accountId",accountBO.getAccountId().toString());
+		addRequestParameter("receiptId","101");
+
+		String currentDate = DateHelper.getCurrentDate(userContext.getPereferedLocale());
+		addRequestParameter("receiptDate",currentDate);
+		addRequestParameter("transactionDate",currentDate);
+		addRequestParameter("paymentTypeId","1");
+		actionPerform();
+		verifyForward("loan_detail_page");
+		assertEquals(new Money(), accountBO.getTotalPaymentDue());
+		assertEquals(0, accountBO.getTotalInstallmentsDue().size());
+		assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, accountBO.getAccountState().getId().shortValue());
+		
+		setRequestPathInfo("/loanAccountAction");
+		addRequestParameter("globalAccountNum",accountBO.getGlobalAccountNum());
+		addRequestParameter("method", "get");
+		actionPerform();
+		LoanBO loan =(LoanBO) request.getSession().getAttribute(Constants.BUSINESS_KEY);
+		assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, loan.getAccountState().getId().shortValue());
+		System.out.println(loan.getAccountState().getName()+"-----"+((UserContext)request.getSession().getAttribute(Constants.USER_CONTEXT_KEY)).getLocaleId());
+		assertNotNull(loan.getAccountState().getName());
 	}
 	
 	public void testApplyPaymentForLoanWhenReceiptDateisNull()throws Exception{
