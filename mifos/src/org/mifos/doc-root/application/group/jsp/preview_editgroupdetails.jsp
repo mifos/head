@@ -44,6 +44,7 @@
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
  <tiles:put name="body" type="string">
  <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 <script>
@@ -150,6 +151,7 @@ function meetingpopup(){
 								</c:otherwise>
 						</c:choose> 
 	                    <mifos:mifoslabel name="Group.grouptrainedon" bundle="GroupUIResources" keyhm="Group.TrainedDate" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
+	              		<span class="fontnormal"><c:out value="${sessionScope.groupCustActionForm.trainedDate}" /></span>
 	              <br>      
       			<span class="fontnormal"></span><span class="fontnormal"> </span>
       		</td>

@@ -195,7 +195,7 @@
 											<mifos:mifoslabel keyhm="Group.Trained" name="Group.grouptrained" bundle="GroupUIResources"></mifos:mifoslabel>
 										</td>
 										<td width="75%">
-											<mifos:checkbox keyhm="Group.Trained" name="GroupVO" property="trained" value="1" disabled="true" />
+											<mifos:checkbox keyhm="Group.Trained" property="trained" value="1" disabled="true" />
 											<html-el:hidden property="trained" value="1"/>
 										</td>
 									</tr>
