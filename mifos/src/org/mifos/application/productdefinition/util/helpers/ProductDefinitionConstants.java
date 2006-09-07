@@ -190,5 +190,6 @@ public interface ProductDefinitionConstants {
 	public String SAVINGSPRODUCTACTIONFORM="savingsproductactionform";
 	public String SAVINGSDEPOSITGLCODELIST="depositGLCodes";
 	public String SAVINGSINTERESTGLCODELIST="interestGLCodes";
+	public String SAVINGSPRDGLOBALOFFERINGNUM="savingsprdglobalofferingnum";
 }
 

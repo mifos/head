@@ -149,14 +149,6 @@ public class SavingsPrdActionForm extends BaseActionForm {
 		this.prdCategory = prdCategory;
 	}
 
-	public MifosLogger getPrdDefLogger() {
-		return prdDefLogger;
-	}
-
-	public void setPrdDefLogger(MifosLogger prdDefLogger) {
-		this.prdDefLogger = prdDefLogger;
-	}
-
 	public String getPrdOfferingName() {
 		return prdOfferingName;
 	}
@@ -293,6 +285,8 @@ public class SavingsPrdActionForm extends BaseActionForm {
 
 	@Override
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
+		prdDefLogger
+				.debug("start reset method of Savings Product Action form method ");
 		super.reset(mapping, request);
 		String method = request.getParameter(ProductDefinitionConstants.METHOD);
 		if (method != null && method.equals(Methods.load.toString())) {
@@ -302,7 +296,8 @@ public class SavingsPrdActionForm extends BaseActionForm {
 		if (method != null && method.equals(Methods.preview.toString())) {
 			recommendedAmntUnit = null;
 		}
-
+		prdDefLogger
+				.debug("reset method of Savings Product Action form method called ");
 	}
 
 	@Override
@@ -310,6 +305,9 @@ public class SavingsPrdActionForm extends BaseActionForm {
 			HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();
 		String method = request.getParameter(ProductDefinitionConstants.METHOD);
+		prdDefLogger
+				.debug("validate method of Savings Product Action form method called :"
+						+ method);
 		if (method != null && method.equals(Methods.preview.toString())) {
 			errors.add(super.validate(mapping, request));
 			Date startingDate = getStartDateValue(getUserContext(request)
@@ -341,6 +339,9 @@ public class SavingsPrdActionForm extends BaseActionForm {
 			request.setAttribute(ProductDefinitionConstants.METHODCALLED,
 					method);
 		}
+		prdDefLogger
+				.debug("validate method of Savings Product Action form called and error size:"
+						+ errors.size());
 		return errors;
 	}
 

@@ -333,7 +333,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
-		Date startDate = offSetCurrentDate(-2);
+		Date startDate = offSetCurrentDate(0);
 		try {
 			SavingsOfferingBO savingsOffering = new SavingsOfferingBO(
 					TestObjectFactory.getUserContext(), "Savings Product",
@@ -365,7 +365,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
-		Date startDate = offSetCurrentDate(-2);
+		Date startDate = offSetCurrentDate(0);
 		try {
 			SavingsOfferingBO savingsOffering = new SavingsOfferingBO(
 					TestObjectFactory.getUserContext(), "Savings Product1",

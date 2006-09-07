@@ -47,104 +47,40 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
-		<!-- html:javascript formName="/savingsprdaction"
-			bundle="ProductDefUIResources" /-->
-
 		<script>
 		<!--
-			function showMeetingFrequency(){
-				if (document.savingsprdactionform.freqOfInterest[0].checked == true){
-					document.getElementById("dayDIV").style.display = "block";
-					document.getElementById("weekDIV").style.display = "none";
-					document.getElementById("monthDIV").style.display = "none";
-					}
-				else if (document.savingsprdactionform.freqOfInterest[1].checked == true){
-					document.getElementById("dayDIV").style.display = "none";
-					document.getElementById("weekDIV").style.display = "block";
-					document.getElementById("monthDIV").style.display = "none";
-					}
-				else if (document.savingsprdactionform.freqOfInterest[2].checked == true){
-					document.getElementById("dayDIV").style.display = "none";
-					document.getElementById("weekDIV").style.display = "none";
-					document.getElementById("monthDIV").style.display = "block";
-					if(document.savingsprdactionform.monthType[0].checked == false && 
-						document.savingsprdactionform.monthType[1].checked == false)
-						document.savingsprdactionform.monthType[0].checked = true;
-					}
-				else {
-					document.savingsprdactionform.freqOfInterest[1].checked = true;
-					document.getElementById("dayDIV").style.display = "none";
-					document.getElementById("weekDIV").style.display = "block";
-					document.getElementById("monthDIV").style.display = "none";
-				}
-			}
-			
-			function showMeetingFrequency1(){
-				if (document.savingsprdactionform.timeForInterestCacl[0].checked == true){
-					document.getElementById("dayDIV1").style.display = "block";
-					document.getElementById("weekDIV1").style.display = "none";
-					document.getElementById("monthDIV1").style.display = "none";
-					}
-				else if (document.savingsprdactionform.timeForInterestCacl[1].checked == true){
-					document.getElementById("dayDIV1").style.display = "none";
-					document.getElementById("weekDIV1").style.display = "block";
-					document.getElementById("monthDIV1").style.display = "none";
-					}
-				else if (document.savingsprdactionform.timeForInterestCacl[2].checked == true){
-					document.getElementById("dayDIV1").style.display = "none";
-					document.getElementById("weekDIV1").style.display = "none";
-					document.getElementById("monthDIV1").style.display = "block";
-					if(document.savingsprdactionform.intmonthType[0].checked == false && 
-						document.savingsprdactionform.intmonthType[1].checked == false)
-						document.savingsprdactionform.intmonthType[0].checked = true;
-					}
-				else {
-					document.savingsprdactionform.timeForInterestCacl[1].checked = true;
-					document.getElementById("dayDIV1").style.display = "none";
-					document.getElementById("weekDIV1").style.display = "block";
-					document.getElementById("monthDIV1").style.display = "none";
-				}
-			}
 			function fnCancel(form) {
-				form.method.value="cancel";
-				form.action="savingsprdaction.do";
+				form.method.value="cancelCreate";
+				form.action="savingsproductaction.do";
 				form.submit();
 			}
 			function fnCheckRecMand() {
-				if(document.getElementById("savingsType.savingsTypeId").value==1) {
-					document.getElementById("mandamnt").style.display = "block";
-					document.getElementById("recamnt").style.display = "none";			
+				if(document.getElementsByName("savingsType")[0].value==1) {
+					document.getElementsByName("mandamnt")[0].style.display = "block";
+					document.getElementsByName("recamnt")[0].style.display = "none";			
 				}
 				else {
-					document.getElementById("mandamnt").style.display = "none";
-					document.getElementById("recamnt").style.display = "block";	
+					document.getElementsByName("mandamnt")[0].style.display = "none";
+					document.getElementsByName("recamnt")[0].style.display = "block";	
 				}
 			}
 			
 			function fnCheckAppliesTo() {
-				if(document.getElementById("prdApplicableMaster.prdApplicableMasterId").value==2) {
-					//document.getElementById("appliesto").style.display = "block";
-					document.getElementById("recommendedAmntUnit.recommendedAmntUnitId").disabled=false;
+				if(document.getElementsByName("prdApplicableMaster")[0].value==2) {
+					document.getElementsByName("recommendedAmntUnit")[0].disabled=false;
 				}
 				else {
-					//document.getElementById("appliesto").style.display = "none";
-					document.getElementById("recommendedAmntUnit.recommendedAmntUnitId").selectedIndex=0;
-					document.getElementById("recommendedAmntUnit.recommendedAmntUnitId").disabled=true;
+					document.getElementsByName("recommendedAmntUnit")[0].selectedIndex=0;
+					document.getElementsByName("recommendedAmntUnit")[0].disabled=true;
 				}
 			}
 		//-->
 		</script>
 		<script src="pages/framework/js/date.js"></script>
-		<!--bug id 25520 added validateMyForm() -->
-		<!-- html-el:form action="/savingsprdaction"
-			onsubmit="return (validateSavingsprdactionform(this)&&
-				validateMyForm(startDate,startDateFormat,startDateYY) && 
-				validateMyForm(endDate,endDateFormat,endDateYY))"
-			focus="prdOfferingName"-->
-		<html-el:form action="/savingsprdaction" onsubmit="return (validateMyForm(startDate,startDateFormat,startDateYY) && 
+		<html-el:form action="/savingsproductaction" onsubmit="return (validateMyForm(startDate,startDateFormat,startDateYY) && 
 				validateMyForm(endDate,endDateFormat,endDateYY))" focus="prdOfferingName">
 			<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
 				<tr>
@@ -257,8 +193,10 @@
 									:
 								</td>
 								<td valign="top">
-									<mifos:select property="prdCategory.productCategoryID" style="width:136px;">
-										<html-el:options collection="SavingsProductCategoryList" property="productCategoryID" labelProperty="productCategoryName" />
+									<mifos:select property="prdCategory" style="width:136px;">
+										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsProductCategoryList')}" var="category">
+											<html-el:option value="${category.productCategoryID}">${category.productCategoryName}</html-el:option>
+										</c:forEach>
 									</mifos:select>
 								</td>
 							</tr>
@@ -287,8 +225,10 @@
 									:
 								</td>
 								<td valign="top">
-									<mifos:select property="prdApplicableMaster.prdApplicableMasterId" style="width:136px;" onchange="fnCheckAppliesTo();">
-										<html-el:options collection="SavingsApplForList" property="id" labelProperty="name" />
+									<mifos:select property="prdApplicableMaster" style="width:136px;" onchange="fnCheckAppliesTo();">
+										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsApplForList')}" var="prdAppl">
+											<html-el:option value="${prdAppl.id}">${prdAppl.name}</html-el:option>
+										</c:forEach>
 									</mifos:select>
 								</td>
 							</tr>
@@ -308,8 +248,10 @@
 									:
 								</td>
 								<td width="70%" valign="top">
-									<mifos:select property="savingsType.savingsTypeId" style="width:136px;" onchange="fnCheckRecMand();">
-										<html-el:options collection="SavingsTypesList" property="id" labelProperty="name" />
+									<mifos:select property="savingsType" style="width:136px;" onchange="fnCheckRecMand();">
+										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsTypesList')}" var="type">
+											<html-el:option value="${type.id}">${type.name}</html-el:option>
+										</c:forEach>
 									</mifos:select>
 								</td>
 							</tr>
@@ -335,8 +277,10 @@
 									:
 								</td>
 								<td valign="top">
-									<mifos:select property="recommendedAmntUnit.recommendedAmntUnitId" style="width:136px;">
-										<html-el:options collection="RecAmntUnitList" property="id" labelProperty="name" />
+									<mifos:select property="recommendedAmntUnit" style="width:136px;">
+										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecAmntUnitList')}" var="recAmntUnit">
+											<html-el:option value="${recAmntUnit.id}">${recAmntUnit.name}</html-el:option>
+										</c:forEach>
 									</mifos:select>
 								</td>
 							</tr>
@@ -381,8 +325,10 @@
 											name="product.calc" bundle="ProductDefUIResources" />: 
 								</td>
 								<td valign="top">
-									<mifos:select property="interestCalcType.interestCalculationTypeID" style="width:136px;">
-										<html-el:options collection="IntCalcTypesList" property="id" labelProperty="name" />
+									<mifos:select property="interestCalcType" style="width:136px;">
+										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'IntCalcTypesList')}" var="intCalc">
+											<html-el:option value="${intCalc.id}">${intCalc.name}</html-el:option>
+										</c:forEach>
 									</mifos:select>
 								</td>
 							</tr>
@@ -393,11 +339,12 @@
 									<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" />
 									:
 								</td>
-								<!--bug id 25496  added maxValue -->
 								<td valign="top">
 									<mifos:mifosnumbertext property="timeForInterestCacl" size="3" maxValue="32767" minValue="1" />
 									<html-el:select property="recurTypeFortimeForInterestCacl" style="width:80px;">
-										<html-el:options collection="SavingsRecurrenceTypeList" property="recurrenceId" labelProperty="recurrenceName" />
+										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsRecurrenceTypeList')}" var="recType">
+											<html-el:option value="${recType.recurrenceId}">${recType.recurrenceName}</html-el:option>
+										</c:forEach>
 									</html-el:select>
 								</td>
 							</tr>
@@ -408,7 +355,6 @@
 									<mifos:mifoslabel name="product.postacc" bundle="ProductDefUIResources" />
 									:
 								</td>
-								<!--bug id 25496  added maxValue -->
 								<td valign="top">
 									<mifos:mifosnumbertext property="freqOfInterest" size="3" maxValue="32767" minValue="1" />
 									<mifos:mifoslabel name="product.month" bundle="ProductDefUIResources" />
@@ -441,8 +387,11 @@
 									:
 								</td>
 								<td width="70%" valign="top">
-									<mifos:select property="depositGLCode.glcodeId" style="width:136px;">
-										<html-el:options collection="depositGLCodes" property="glcodeId" labelProperty="glcode" />
+									<mifos:select property="depositGLCode" style="width:136px;">
+										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'depositGLCodes')}" var="glCodes">
+											<html-el:option value="${glCodes.glcodeId}">${glCodes.glcode}</html-el:option>
+										</c:forEach>
+
 									</mifos:select>
 								</td>
 							</tr>
@@ -453,8 +402,10 @@
 									:
 								</td>
 								<td valign="top">
-									<mifos:select property="interestGLCode.glcodeId" style="width:136px;">
-										<html-el:options collection="interestGLCodes" property="glcodeId" labelProperty="glcode" />
+									<mifos:select property="interestGLCode" style="width:136px;">
+										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'interestGLCodes')}" var="glCodes">
+											<html-el:option value="${glCodes.glcodeId}">${glCodes.glcode}</html-el:option>
+										</c:forEach>
 									</mifos:select>
 								</td>
 							</tr>
@@ -467,9 +418,6 @@
 							</tr>
 						</table>
 						<br>
-						<html-el:hidden property="method" value="preview" />
-						<html-el:hidden property="input" value="admin" />
-						<html-el:hidden property="prdStatus.offeringStatusId" value="5" />
 						<table width="93%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td align="center">
@@ -487,6 +435,8 @@
 					</td>
 				</tr>
 			</table>
+			<html-el:hidden property="method" value="preview" />
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

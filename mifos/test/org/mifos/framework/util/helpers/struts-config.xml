@@ -1047,6 +1047,8 @@
 			<forward name="load_success" path="/pages/application/productdefinition/jsp/CreateSavingsProduct.jsp"></forward>
 			<forward name="preview_success" path="/pages/application/productdefinition/jsp/CreateSavingsProductPreview.jsp"></forward>
 			<forward name="preview_failure" path="/pages/application/productdefinition/jsp/CreateSavingsProduct.jsp"></forward>
+			<forward name="previous_success" path="/pages/application/productdefinition/jsp/CreateSavingsProduct.jsp"></forward>
+			<forward name="previous_failure" path="/pages/application/productdefinition/jsp/CreateSavingsProductPreview.jsp"></forward>
 			<forward name="create_success" path="/pages/application/productdefinition/jsp/CreateSavingsProductConfirmation.jsp"></forward>
 			<forward name="create_failure" path="/pages/application/productdefinition/jsp/CreateSavingsProductPreview.jsp"></forward>
 			<forward name="cancelCreate_success" path="/AdminAction.do?method=load"></forward>

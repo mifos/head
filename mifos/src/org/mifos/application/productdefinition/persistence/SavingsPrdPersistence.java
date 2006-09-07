@@ -42,7 +42,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -57,10 +56,8 @@ public class SavingsPrdPersistence extends Persistence {
 	public SavingsOfferingBO getSavingsProduct(Short prdOfferingId)
 			throws PersistenceException {
 		try {
-			Session session = HibernateUtil.getSessionTL();
-			SavingsOfferingBO savingsOffering = (SavingsOfferingBO) session
-					.get(SavingsOfferingBO.class, prdOfferingId);
-			return savingsOffering;
+			return (SavingsOfferingBO) HibernateUtil.getSessionTL().get(
+					SavingsOfferingBO.class, prdOfferingId);
 		} catch (HibernateException he) {
 			throw new PersistenceException(he);
 		}

@@ -324,8 +324,6 @@ public class PrdOfferingBO extends BusinessObject {
 					productOfferingName).equals(Integer.valueOf("0")))
 				throw new ProductDefinitionException(
 						ProductDefinitionConstants.DUPLCATEGORYNAME);
-		} catch (NumberFormatException e) {
-			throw new ProductDefinitionException(e);
 		} catch (PersistenceException e) {
 			throw new ProductDefinitionException(e);
 		}
@@ -339,8 +337,6 @@ public class PrdOfferingBO extends BusinessObject {
 					productOfferingShortName).equals(Integer.valueOf("0")))
 				throw new ProductDefinitionException(
 						ProductDefinitionConstants.DUPLCATEGORYNAME);
-		} catch (NumberFormatException e) {
-			throw new ProductDefinitionException(e);
 		} catch (PersistenceException e) {
 			throw new ProductDefinitionException(e);
 		}

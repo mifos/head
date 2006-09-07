@@ -46,19 +46,19 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
 		<script language="javascript">
 		<!--
 			function fnCancel(form) {
-				form.method.value="cancel";
-				form.action="savingsprdaction.do";
+				form.method.value="cancelCreate";
+				form.action="savingsproductaction.do";
 				form.submit();
 			}
 			function fnEdit(form) {
 				form.method.value="previous";
-				form.action="savingsprdaction.do";
+				form.action="savingsproductaction.do";
 				form.submit();
 			}
 			function func_disableSubmitBtn(){
@@ -66,7 +66,7 @@
 			}
 		//-->
 		</script>
-		<html-el:form action="/savingsprdaction" onsubmit="func_disableSubmitBtn();">
+		<html-el:form action="/savingsproductaction" onsubmit="func_disableSubmitBtn();">
 			<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
 				<tr>
 					<td align="center" class="heading">
@@ -140,82 +140,49 @@
 							<tr>
 								<td height="23" class="fontnormalbold">
 									<mifos:mifoslabel name="product.prodinstname" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:out value="${requestScope.Context.valueObject.prdOfferingName}" /></span>
+									: <span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.prdOfferingName}" /></span>
 									<br>
 									<mifos:mifoslabel name="product.shortname" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"><c:out value="${requestScope.Context.valueObject.prdOfferingShortName}" /></span>
+									: <span class="fontnormal"><c:out value="${sessionScope.savingsproductactionform.prdOfferingShortName}" /></span>
 									<br>
 									<br>
 									<mifos:mifoslabel name="product.desc" bundle="ProductDefUIResources" />
 									<br>
-									<span class="fontnormal"> <c:if test="${!empty requestScope.Context.valueObject.description}">
-											<c:out value="${requestScope.Context.valueObject.description}" />
+									<span class="fontnormal"> <c:if test="${!empty sessionScope.savingsproductactionform.description}">
+											<c:out value="${sessionScope.savingsproductactionform.description}" />
 											<br>
 										</c:if></span>
 									<br>
 									<mifos:mifoslabel name="product.prodcat" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:out value="${requestScope.Context.valueObject.prdCategory.productCategoryName}" /> </span>
-									<br>
-									<mifos:mifoslabel name="product.startdate" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:out value="${sessionScope.savingsprdactionform.startDate}" /> </span>
-									<br>
-									<mifos:mifoslabel name="product.enddate" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:out value="${sessionScope.savingsprdactionform.endDate}" /> </span>
-									<br>
-									<mifos:mifoslabel name="product.applfor" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:choose>
-											<c:when test="${param.applfor==null}">
-												<c:forEach items="${requestScope.SavingsApplForList}" var="ApplForList">
-													<c:if test="${ApplForList.id eq requestScope.Context.valueObject.prdApplicableMaster.prdApplicableMasterId}">
-														<c:out value="${ApplForList.name}" />
-														<html-el:hidden property="applfor" value="${ApplForList.name}" />
+									: <span class="fontnormal"> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsProductCategoryList')}" var="category">
+											<c:if test="${category.productCategoryID eq sessionScope.savingsproductactionform.prdCategory}">
+												<c:out value="${category.productCategoryName}" />
+											</c:if>
+										</c:forEach> <br> <mifos:mifoslabel name="product.startdate" bundle="ProductDefUIResources" /> : <span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.startDate}" /> </span> <br> <mifos:mifoslabel
+											name="product.enddate" bundle="ProductDefUIResources" /> : <span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.endDate}" /> </span> <br> <mifos:mifoslabel name="product.applfor" bundle="ProductDefUIResources" /> :
+										<span class="fontnormal"> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsApplForList')}" var="ApplForList">
+												<c:if test="${ApplForList.id eq sessionScope.savingsproductactionform.prdApplicableMaster}">
+													<c:out value="${ApplForList.name}" />
+												</c:if>
+											</c:forEach> </span> <br> <br>
+										<span class="fontnormalbold"> <mifos:mifoslabel name="product.tardepwidrest" bundle="ProductDefUIResources" /></span> <br> <br> <span class="fontnormalbold"><mifos:mifoslabel name="product.typeofdep" bundle="ProductDefUIResources" />:<span
+											class="fontnormal"> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsTypesList')}" var="DepositType">
+													<c:if test="${DepositType.id eq sessionScope.savingsproductactionform.savingsType}">
+														<c:out value="${DepositType.name}" />
 													</c:if>
-												</c:forEach>
-											</c:when>
-											<c:otherwise>
-												<c:out value="${param.applfor}" />
-												<html-el:hidden property="applfor" value="${param.applfor}" />
-											</c:otherwise>
-										</c:choose> </span>
-									<br>
-									<br>
-									<mifos:mifoslabel name="product.tardepwidrest" bundle="ProductDefUIResources" />
-									<br>
-									<br>
-									<span class="fontnormalbold"><mifos:mifoslabel name="product.typeofdep" bundle="ProductDefUIResources" />:<span class="fontnormal"> <c:choose>
-												<c:when test="${param.deposittype==null}">
-													<c:forEach items="${requestScope.SavingsTypesList}" var="DepositType">
-														<c:if test="${DepositType.id eq requestScope.Context.valueObject.savingsType.savingsTypeId}">
-															<c:out value="${DepositType.name}" />
-															<html-el:hidden property="deposittype" value="${DepositType.name}" />
-														</c:if>
-													</c:forEach>
+												</c:forEach> </span><br> <c:choose>
+												<c:when test="${sessionScope.savingsproductactionform.savingsType eq 1}">
+													<mifos:mifoslabel name="product.mandamntdep" bundle="ProductDefUIResources" />:
 												</c:when>
 												<c:otherwise>
-													<c:out value="${param.deposittype}" />
-													<html-el:hidden property="deposittype" value="${param.deposittype}" />
+													<mifos:mifoslabel name="product.recamtdep" bundle="ProductDefUIResources" />:
 												</c:otherwise>
-											</c:choose> </span><br> <c:choose>
-											<c:when test="${requestScope.Context.valueObject.savingsType.savingsTypeId eq 1}">
-												<mifos:mifoslabel name="product.mandamntdep" bundle="ProductDefUIResources" />:
-								</c:when>
-											<c:otherwise>
-												<mifos:mifoslabel name="product.recamtdep" bundle="ProductDefUIResources" />:
-								</c:otherwise>
-										</c:choose><span class="fontnormal"> <c:out value="${requestScope.Context.valueObject.recommendedAmount}" /></span><br> <mifos:mifoslabel name="product.recamtappl" bundle="ProductDefUIResources" /> :<span class="fontnormal"> <c:choose>
-												<c:when test="${param.recamnt==null}">
-													<c:forEach items="${requestScope.RecAmntUnitList}" var="RecAmnt">
-														<c:if test="${RecAmnt.id eq requestScope.Context.valueObject.recommendedAmntUnit.recommendedAmntUnitId}">
-															<c:out value="${RecAmnt.name}" />
-															<html-el:hidden property="recamnt" value="${RecAmnt.name}" />
-														</c:if>
-													</c:forEach>
-												</c:when>
-												<c:otherwise>
-													<c:out value="${param.recamnt}" />
-													<html-el:hidden property="recamnt" value="${param.recamnt}" />
-												</c:otherwise>
-											</c:choose> </span><br> <mifos:mifoslabel name="product.maxamtwid" bundle="ProductDefUIResources" /> :<span class="fontnormal"> <c:out value="${requestScope.Context.valueObject.maxAmntWithdrawl}" /></span>
+											</c:choose><span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.recommendedAmount}" /></span><br> <mifos:mifoslabel name="product.recamtappl" bundle="ProductDefUIResources" /> :<span class="fontnormal"> <c:forEach
+													items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecAmntUnitList')}" var="RecAmnt">
+													<c:if test="${RecAmnt.id eq sessionScope.savingsproductactionform.recommendedAmntUnit}">
+														<c:out value="${RecAmnt.name}" />
+													</c:if>
+												</c:forEach> </span><br> <mifos:mifoslabel name="product.maxamtwid" bundle="ProductDefUIResources" /> :<span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.maxAmntWithdrawl}" /></span>
 								</td>
 							</tr>
 						</table>
@@ -230,31 +197,23 @@
 								<td height="23" class="fontnormalbold">
 									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:out value="${requestScope.Context.valueObject.interestRate}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /> </span>
+									: <span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.interestRate}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /> </span>
 									<br>
 									<mifos:mifoslabel name="product.balusedfor" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:choose>
-											<c:when test="${param.intcalctype==null}">
-												<c:forEach items="${requestScope.IntCalcTypesList}" var="IntCalcType">
-													<c:if test="${IntCalcType.id eq requestScope.Context.valueObject.interestCalcType.interestCalculationTypeID}">
-														<c:out value="${IntCalcType.name}" />
-														<html-el:hidden property="intcalctype" value="${IntCalcType.name}" />
-													</c:if>
-												</c:forEach>
-											</c:when>
-											<c:otherwise>
-												<c:out value="${param.intcalctype}" />
-												<html-el:hidden property="intcalctype" value="${param.intcalctype}" />
-											</c:otherwise>
-										</c:choose> </span>
+									: <span class="fontnormal"> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'IntCalcTypesList')}" var="IntCalcType">
+											<c:if test="${IntCalcType.id eq sessionScope.savingsproductactionform.interestCalcType}">
+												<c:out value="${IntCalcType.name}" />
+											</c:if>
+										</c:forEach> </span>
 									<br>
 									<mifos:mifoslabel name="product.timeper" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:out value="${sessionScope.savingsprdactionform.timeForInterestCacl}" /> <c:forEach items="${requestScope.SavingsRecurrenceTypeList}" var="recType">
-											<c:if test="${recType.recurrenceId eq sessionScope.savingsprdactionform.recurTypeFortimeForInterestCacl}">
+									: <span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.timeForInterestCacl}" /> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsRecurrenceTypeList')}"
+											var="recType">
+											<c:if test="${recType.recurrenceId eq sessionScope.savingsproductactionform.recurTypeFortimeForInterestCacl}">
 												<c:out value="${recType.recurrenceName}" />
 											</c:if>
 										</c:forEach> </span>
@@ -262,12 +221,12 @@
 									<mifos:mifoslabel name="product.freq" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="product.postacc" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:out value="${sessionScope.savingsprdactionform.freqOfInterest}" /> <mifos:mifoslabel name="product.month" bundle="ProductDefUIResources" /> </span>
+									: <span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.freqOfInterest}" /> <mifos:mifoslabel name="product.month" bundle="ProductDefUIResources" /> </span>
 									<br>
 									<mifos:mifoslabel name="product.minbalreq" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:out value="${requestScope.Context.valueObject.minAmntForInt}" /> </span>
+									: <span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.minAmntForInt}" /> </span>
 									<br>
 								</td>
 							</tr>
@@ -281,16 +240,16 @@
 							<tr>
 								<td height="23" class="fontnormalbold">
 									<mifos:mifoslabel name="product.glcodedep" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:forEach var="glCode" items="${requestScope.depositGLCodes}">
-											<c:if test="${glCode.glcodeId == requestScope.Context.valueObject.depositGLCode.glcodeId}">
+									: <span class="fontnormal"> <c:forEach var="glCode" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'depositGLCodes')}">
+											<c:if test="${glCode.glcodeId == sessionScope.savingsproductactionform.depositGLCode}">
 												<c:out value="${glCode.glcode}" />
 											</c:if>
 										</c:forEach> </span>
 									<br>
 									<mifos:mifoslabel name="product.Glcodefor" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:forEach var="glCode" items="${requestScope.interestGLCodes}">
-											<c:if test="${glCode.glcodeId == requestScope.Context.valueObject.interestGLCode.glcodeId}">
+									: <span class="fontnormal"> <c:forEach var="glCode" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'interestGLCodes')}">
+											<c:if test="${glCode.glcodeId == sessionScope.savingsproductactionform.interestGLCode}">
 												<c:out value="${glCode.glcode}" />
 											</c:if>
 										</c:forEach> </span>
@@ -312,8 +271,6 @@
 							</tr>
 						</table>
 						<br>
-						<html-el:hidden property="method" value="create" />
-						<html-el:hidden property="input" value="admin" />
 						<table width="93%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td align="center">
@@ -331,6 +288,8 @@
 					</td>
 				</tr>
 			</table>
+			<html-el:hidden property="method" value="create" />
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

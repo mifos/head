@@ -75,14 +75,15 @@ public class SavingsPrdAction extends BaseAction {
 		prdDefLogger.debug("start validate method of Savings Product Action");
 		String method = (String) request
 				.getAttribute(ProductDefinitionConstants.METHODCALLED);
-		if (method.equals(Methods.preview.toString())) {
-			return mapping.findForward(ActionForwards.preview_failure
-					.toString());
-		} else if (method.equals(Methods.create.toString())) {
-			return mapping
-					.findForward(ActionForwards.create_failure.toString());
+		if (method != null) {
+			if (method.equals(Methods.preview.toString())) {
+				return mapping.findForward(ActionForwards.preview_failure
+						.toString());
+			} else if (method.equals(Methods.create.toString())) {
+				return mapping.findForward(ActionForwards.create_failure
+						.toString());
+			}
 		}
-
 		prdDefLogger.debug("preview validate of Savings Product Action called");
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
@@ -93,6 +94,14 @@ public class SavingsPrdAction extends BaseAction {
 			throws Exception {
 		prdDefLogger.debug("start preview method of Savings Product Action");
 		return mapping.findForward(ActionForwards.preview_success.toString());
+	}
+
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward previous(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		prdDefLogger.debug("start previous method of Savings Product Action");
+		return mapping.findForward(ActionForwards.previous_success.toString());
 	}
 
 	@TransactionDemarcate(validateAndResetToken = true)
@@ -149,11 +158,13 @@ public class SavingsPrdAction extends BaseAction {
 		savingsOffering.save();
 		request.setAttribute(ProductDefinitionConstants.SAVINGSPRODUCTID,
 				savingsOffering.getPrdOfferingId());
+		request.setAttribute(ProductDefinitionConstants.SAVINGSPRDGLOBALOFFERINGNUM,
+				savingsOffering.getGlobalPrdOfferingNum());
 
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
-	@TransactionDemarcate(joinToken = true)
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward cancelCreate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {

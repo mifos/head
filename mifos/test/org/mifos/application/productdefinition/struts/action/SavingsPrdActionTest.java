@@ -14,6 +14,7 @@ import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -206,6 +207,9 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("depositGLCode", "42");
 		addRequestParameter("interestGLCode", "57");
 		addRequestParameter("recommendedAmount", "0.0");
+		addRequestParameter("description", "Savings");
+		addRequestParameter("maxAmntWithdrawl", "10.0");
+		addRequestParameter("minAmntForInt", "10.0");
 
 		actionPerform();
 		verifyActionErrors(new String[] { ProductDefinitionConstants.ERRORMANDAMOUNT });
@@ -474,6 +478,50 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.cancelCreate_success.toString());
+	}
+
+	public void testPrevious() throws Exception {
+		setRequestPathInfo("/savingsproductaction.do");
+		addRequestParameter("method", "previous");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.previous_success.toString());
+	}
+	
+	public void testValidate() throws Exception {
+		setRequestPathInfo("/savingsproductaction.do");
+		addRequestParameter("method", "validate");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.preview_success.toString());
+	}
+
+
+	public void testValidateForPreview() throws Exception {
+		setRequestPathInfo("/savingsproductaction.do");
+		addRequestParameter("method", "validate");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		request.setAttribute(ProductDefinitionConstants.METHODCALLED,
+				Methods.preview.toString());
+
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.preview_failure.toString());
+	}
+
+	public void testVaildateForCreate() throws Exception {
+		setRequestPathInfo("/savingsproductaction.do");
+		addRequestParameter("method", "validate");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		request.setAttribute(ProductDefinitionConstants.METHODCALLED,
+				Methods.create.toString());
+
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.create_failure.toString());
 	}
 
 	private String offSetCurrentDate(int noOfDays, Locale locale) {

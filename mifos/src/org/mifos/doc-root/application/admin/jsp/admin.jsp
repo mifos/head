@@ -210,12 +210,12 @@
 								height="11"></td>
 							<!-- Bug id 28065  Added a  parameter input in the link of admin page.-->
 							<td width="97%"><html-el:link
-								href="savingsprdaction.do?method=search&input= &searchNode(search_name)=SavingsProducts&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+								href="savingsprdaction.do?method=search&input= &searchNode(search_name)=SavingsProducts&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="admin.View" />
 								<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
 								<mifos:mifoslabel name="admin.products" />
 									</html-el:link> | <html-el:link
-								href="savingsprdaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+								href="savingsproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="admin.definenew" />
 								<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
 								<mifos:mifoslabel name="admin.product" /></html-el:link></td>

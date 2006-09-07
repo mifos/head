@@ -107,7 +107,7 @@
 								<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
 								<mifos:mifoslabel name="product.pro" bundle="ProductDefUIResources" />
 								<mifos:mifoslabel name="product.makechanges" bundle="ProductDefUIResources" />								
-								<html-el:link href="javascript:fnLoad()">
+								<html-el:link href="savingsproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="product.savingsdefnew" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="product.pro" bundle="ProductDefUIResources" />
