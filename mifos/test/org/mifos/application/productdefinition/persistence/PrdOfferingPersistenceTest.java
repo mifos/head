@@ -50,7 +50,7 @@ public class PrdOfferingPersistenceTest extends MifosTestCase {
 		assertEquals(ProductType.SAVINGS.getValue(), prdStatus.getPrdType()
 				.getProductTypeID());
 		assertEquals(Short.valueOf("1"), prdStatus.getPrdState()
-				.getPrdStateId());
+				.getId());
 	}
 
 	public void testGetPrdOfferingNameCountWithoutData()
