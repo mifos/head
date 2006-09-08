@@ -117,7 +117,7 @@
                   	</span><c:out value="${sessionScope.BusinessKey.customer.displayName}" /></td>
               </tr>
             </table>
-              <br>
+              
               <table width="93%" border="0" cellpadding="3" cellspacing="0">
                 <tr>
                   <td width="100%" height="23" class="fontnormalboldorange">
@@ -235,8 +235,8 @@
                     
                     <br>
                     <span class="fontnormal">
-                    <html-el:button property="editButton" styleClass="insidebuttn" 	onclick="fnCreateEdit(this.form)">
-                   		<mifos:mifoslabel name="Savings.Edit"/><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/><mifos:mifoslabel name="Savings.accountInformation"/>
+                    <html-el:button property="editButton" styleClass="insidebuttn" style="width:220px;"	onclick="fnCreateEdit(this.form)">
+                   		<mifos:mifoslabel name="Savings.Edit"/>&nbsp;<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>&nbsp;<mifos:mifoslabel name="Savings.accountInformation"/>
 					</html-el:button> 
      			 </span> </td>
                 </tr>

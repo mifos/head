@@ -57,7 +57,7 @@
       <tr>
         <td class="bluetablehead05">
 	        <span class="fontnormal8pt">
-	          	<customtags:headerLink selfLink="true"/> 
+	          	<customtags:headerLink/> 
 	        </span>
         </td>
       </tr>
@@ -70,19 +70,19 @@
                 <span class="heading"><c:out value="${sessionScope.BusinessKey.savingsOffering.prdOfferingName}"/> # <c:out value="${sessionScope.BusinessKey.globalAccountNum}"/> - </span>
                 <mifos:mifoslabel name="Savings.applyAdjustment"/></td>
                 </tr>
+                <tr>
+		          <td>
+		    	      <font class="fontnormalRedBold"><html-el:errors	bundle="SavingsUIResources" /></font>
+			      </td>
+			  </tr>
               <tr>
-                <td class="fontnormal"><br>
+                <td class="fontnormal">
                 <mifos:mifoslabel name="Savings.msgOnTopLastPaymentModifiedAdjustment"/>
                  </td>
               </tr>
             </table>
             <br>
             <table width="100%" border="0" cellspacing="0" cellpadding="2">
-              <tr>
-		          <td colspan="2">
-		    	      <font class="fontnormalRedBold"><html-el:errors	bundle="SavingsUIResources" /></font>
-			      </td>
-			  </tr>
               <tr>
                 <td width="25%" class="fontnormal">
 				<html-el:radio property="lastPaymentAmountOption" value="1" /><mifos:mifoslabel name="Savings.modifylastPayment"/></td>

@@ -61,7 +61,7 @@
       <tr>
         <td class="bluetablehead05">
 	        <span class="fontnormal8pt">
-	          	<customtags:headerLink selfLink="true"/> 
+	          	<customtags:headerLink/> 
 	        </span>
         </td>
       </tr>
@@ -74,6 +74,11 @@
                 <td width="70%" class="headingorange"><span class="heading"><c:out value="${sessionScope.BusinessKey.savingsOffering.prdOfferingName}"/> # <c:out value="${sessionScope.BusinessKey.globalAccountNum}"/> - </span>
                 <mifos:mifoslabel name="Savings.reviewAdjustment"/></td>
                 </tr>
+                <tr>
+		          <td>
+		    	      <font class="fontnormalRedBold"><html-el:errors	bundle="SavingsUIResources" /></font>
+			      </td>
+			  </tr>
             </table>
             <br>
             <table width="93%" border="0" cellpadding="3" cellspacing="0">
@@ -82,12 +87,7 @@
                 <mifos:mifoslabel name="Savings.confirmationMsgOnReviewAdjustment"/>
                 <br><br>
                 </td>
-              </tr>
-               <tr>
-		          <td colspan="2">
-		    	      <font class="fontnormalRedBold"><html-el:errors	bundle="SavingsUIResources" /></font>
-			      </td>
-			  </tr>
+              </tr>               
               <tr>
                 <td width="19%" align="right" valign="top" class="fontnormalbold">
                 <mifos:mifoslabel name="Savings.modifylastPayment"/>: <br>
