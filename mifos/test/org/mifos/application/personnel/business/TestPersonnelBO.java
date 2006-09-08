@@ -77,7 +77,7 @@ public class TestPersonnelBO extends MifosTestCase {
 		super.tearDown();
 	}
 
-	/*public void testCreateFailureWithNullName() {
+	public void testCreateFailureWithNullName() {
 		try {
 
 			new PersonnelBO(PersonnelLevel.NON_LOAN_OFFICER, office, Integer
@@ -331,7 +331,7 @@ public class TestPersonnelBO extends MifosTestCase {
 					PersonnelConstants.STATUS_CHANGE_EXCEPTION);
 		}
 	}
-*/
+
 	public void testUpdateSucess() throws Exception {
 
 		createdBranchOffice = TestObjectFactory.createOffice(
@@ -352,9 +352,7 @@ public class TestPersonnelBO extends MifosTestCase {
 		assertEquals(PersonnelStatus.ACTIVE.getValue(), personnel.getStatus()
 				.getId());
 		assertEquals(0, personnel.getPersonnelMovements().size());
-		try {
-			System.out.println("New roles size: "+getNewRoles().size());
-			personnel.update(PersonnelStatus.INACTIVE,
+		personnel.update(PersonnelStatus.INACTIVE,
 					PersonnelLevel.LOAN_OFFICER, createdBranchOffice, Integer
 							.valueOf("2"), Short.valueOf("1"), "ABCD",
 					"abc@yahoo.com", getNewRoles(), getCustomFields(),
@@ -362,9 +360,6 @@ public class TestPersonnelBO extends MifosTestCase {
 							.valueOf("2"), getAddress(), Short.valueOf("1"));
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
 				PersonnelBO.class, personnel.getPersonnelId());
 		createdBranchOffice = (OfficeBO) HibernateUtil.getSessionTL().get(
@@ -379,6 +374,7 @@ public class TestPersonnelBO extends MifosTestCase {
 				.getPersonnelDetails().getName().getMiddleName());
 		assertEquals(getPersonnelName().getSecondLastName(), personnel
 				.getPersonnelDetails().getName().getSecondLastName());
+		assertEquals(getPersonnelName().getDisplayName() ,personnel.getDisplayName());
 		assertEquals(2, personnel.getPersonnelDetails().getGender().intValue());
 		assertEquals(2, personnel.getPersonnelDetails().getMaritalStatus()
 				.intValue());
@@ -394,7 +390,7 @@ public class TestPersonnelBO extends MifosTestCase {
 		
 	}
 
-	/*public void testAddNotes() throws Exception {
+	public void testAddNotes() throws Exception {
 		try{
 		createdBranchOffice = TestObjectFactory.createOffice(
 				OfficeLevel.BRANCHOFFICE, office, "Office_BRanch1", "OFB");
@@ -442,7 +438,7 @@ public class TestPersonnelBO extends MifosTestCase {
 	}catch(Exception e) {
 		e.printStackTrace();
 	}
-	}*/
+	}
 
 	private PersonnelNotesEntity createNotes(String comment) {
 		return new PersonnelNotesEntity(comment, new PersonnelPersistence()
@@ -484,7 +480,6 @@ public class TestPersonnelBO extends MifosTestCase {
 		Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd",
 				"abcd", "abcd", "abcd");
 		Date date = new Date();
-		System.out.println("Get roles size: "+getRoles().size() );
 		personnel = new PersonnelBO(personnelLevel, office, Integer
 				.valueOf("1"), Short.valueOf("1"), "ABCD", "XYZ",
 				"xyz@yahoo.com", getRoles(), customFieldView, name, "111111", date,

@@ -450,6 +450,7 @@ public class PersonnelBO extends BusinessObject {
 		PersonnelLevelEntity personnelLevel = (PersonnelLevelEntity) masterPersistence
 				.findById(PersonnelLevelEntity.class, newLevel.getValue());
 		this.level = personnelLevel;
+		this.displayName = name.getDisplayName();
 		this.preferredLocale=new SupportedLocalesEntity(preferredLocale);
 		
 		if (StringUtils.isNullAndEmptySafe(password)) {

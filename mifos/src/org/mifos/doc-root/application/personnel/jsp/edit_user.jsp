@@ -120,7 +120,7 @@
 			<mifos:mifoslabel name="Personnel.FirstName" bundle="PersonnelUIResources" mandatory="yes"></mifos:mifoslabel>
 		</td>
                 <td width="78%">
-                	<mifos:mifosalphanumtext name="personActionForm" property="firstName" />
+                	<mifos:mifosalphanumtext name="personActionForm" property="firstName" maxlength="200" />
                 </td>
               </tr>
               
@@ -129,7 +129,7 @@
 					<mifos:mifoslabel name="Personnel.MiddleName" bundle="PersonnelUIResources" keyhm="Personnel.MiddleName"></mifos:mifoslabel>
 				</td>
                 <td>
-                	<mifos:mifosalphanumtext name="personActionForm" property="middleName" keyhm="Personnel.MiddleName"/>
+                	<mifos:mifosalphanumtext name="personActionForm" property="middleName" keyhm="Personnel.MiddleName" maxlength="200"/>
                 </td>
               </tr>
               <tr class="fontnormal">
@@ -137,7 +137,7 @@
 			<mifos:mifoslabel keyhm="Personnel.SecondLastName" name="Personnel.SecondLastName" bundle="PersonnelUIResources"></mifos:mifoslabel>
 		</td>
                 <td>
-	             	<mifos:mifosalphanumtext keyhm="Personnel.SecondLastName" name="personActionForm" property="secondLastName"/>
+	             	<mifos:mifosalphanumtext keyhm="Personnel.SecondLastName" name="personActionForm" property="secondLastName" maxlength="200"/>
                 </td>
               </tr>
               <tr class="fontnormal">
@@ -145,7 +145,7 @@
 			<mifos:mifoslabel name="Personnel.LastName" mandatory="yes" bundle="PersonnelUIResources"></mifos:mifoslabel>
 		</td>
                 <td>  
-                	<mifos:mifosalphanumtext name="personActionForm" property="lastName" />
+                	<mifos:mifosalphanumtext name="personActionForm" property="lastName" maxlength="200" />
                 </td>
               </tr>
               <tr class="fontnormal">
@@ -243,7 +243,7 @@
 			<mifos:mifoslabel name="${ConfigurationConstants.ADDRESS1}"  bundle="PersonnelUIResources"></mifos:mifoslabel>:
 		</td>
                 <td width="78%">
-	                <mifos:mifosalphanumtext name="personActionForm"  property="address.line1" />
+	                <mifos:mifosalphanumtext name="personActionForm"  property="address.line1" maxlength="200" />
                 </td>
               </tr>
               <tr class="fontnormal">
@@ -251,7 +251,7 @@
 			<mifos:mifoslabel name="${ConfigurationConstants.ADDRESS2}"  bundle="PersonnelUIResources"></mifos:mifoslabel>:
 		</td>
                 <td>
-		            <mifos:mifosalphanumtext name="personActionForm" property="address.line2" />
+		            <mifos:mifosalphanumtext name="personActionForm" property="address.line2" maxlength="200" />
                 </td>
               </tr>
               <tr class="fontnormal">
@@ -259,7 +259,7 @@
 			<mifos:mifoslabel keyhm="Personnel.Address3" isColonRequired="yes" name="${ConfigurationConstants.ADDRESS3}"  bundle="PersonnelUIResources"></mifos:mifoslabel>
 		</td>
                 <td>
-		            <mifos:mifosalphanumtext keyhm="Personnel.Address3" name="personActionForm" property="address.line3" />
+		            <mifos:mifosalphanumtext keyhm="Personnel.Address3" name="personActionForm" property="address.line3" maxlength="200" />
                 </td>
               </tr>
               <tr class="fontnormal">
@@ -267,7 +267,7 @@
 			<mifos:mifoslabel name="${ConfigurationConstants.CITY}"  bundle="PersonnelUIResources"></mifos:mifoslabel>:
 		</td>
                 <td>
-                    <mifos:mifosalphanumtext name="personActionForm" property="address.city" />
+                    <mifos:mifosalphanumtext name="personActionForm" property="address.city" maxlength="100" />
                 </td>
               </tr>
               <tr class="fontnormal">
@@ -275,14 +275,14 @@
 			<mifos:mifoslabel name="${ConfigurationConstants.STATE}"  bundle="PersonnelUIResources" keyhm="Personnel.State" isColonRequired="yes"></mifos:mifoslabel>
 		</td>
                 <td>
-		            <mifos:mifosalphanumtext name="personActionForm" property="address.state"  keyhm="Personnel.State"/>
+		            <mifos:mifosalphanumtext name="personActionForm" property="address.state"  keyhm="Personnel.State" maxlength="100"/>
                 </td>
               </tr>
               <tr class="fontnormal">
                 <td align="right">
 			<mifos:mifoslabel name="Personnel.Country"  bundle="PersonnelUIResources" keyhm="Personnel.Country"></mifos:mifoslabel>		</td>
                 <td>	
-                    <mifos:mifosalphanumtext name="personActionForm" property="address.country" keyhm="Personnel.Country"/>
+                    <mifos:mifosalphanumtext name="personActionForm" property="address.country" keyhm="Personnel.Country" maxlength="100"/>
                 </td>
               </tr>
               <tr class="fontnormal">
@@ -290,7 +290,7 @@
 				<mifos:mifoslabel name="${ConfigurationConstants.POSTAL_CODE}"  bundle="PersonnelUIResources" keyhm="Personnel.PostalCode" isColonRequired="yes"></mifos:mifoslabel>
 				</td>
                 <td>
-		           <mifos:mifosalphanumtext name="personActionForm" property="address.zip" keyhm="Personnel.PostalCode"/>
+		           <mifos:mifosalphanumtext name="personActionForm" property="address.zip" keyhm="Personnel.PostalCode" maxlength="100"/>
                 </td>
               </tr>
               <tr class="fontnormal">
@@ -298,7 +298,7 @@
 					<mifos:mifoslabel keyhm="Personnel.PhoneNumber" name="Personnel.Telephone"  bundle="PersonnelUIResources"></mifos:mifoslabel>
 				</td>
                 <td>
-                  <mifos:mifosalphanumtext keyhm="Personnel.PhoneNumber" name="personActionForm" property="address.phoneNumber" />
+                  <mifos:mifosalphanumtext keyhm="Personnel.PhoneNumber" name="personActionForm" property="address.phoneNumber" maxlength="20" />
                 </td>
               </tr>
            </table>
