@@ -96,7 +96,6 @@ Detailed Instructions
        JBoss 4.0.3SP1
        Apache Ant 1.6.5
        Cobertura 1.7
-       JUnit 3.8.1
 
 Note that Apache Ant 1.6.5 and Cobertura are both available in the SVN 
 in the softwares\ directory.  Note that Java, mySQL, and JBOSS are required for the deployment. 
@@ -189,9 +188,9 @@ Important Note:  If you are changing the passwords for the database access in yo
   under "conf" folder of mifos as per your Mysql environment
 
 
-Note: if you get an error from ant that it cannot create the junit task in the run_test target, you may need to follow this tip.  Use only these targets: 
+If you want to skip running the junit tests, you can do so with:
 
-Ant clean copy_files compile war; 
+ant clean copy_files compile war 
 
 
 7. Deploy Mifos
