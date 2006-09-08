@@ -1138,7 +1138,7 @@ public class LoanBO extends AccountBO {
 							.findById(AccountActionEntity.class,
 									AccountActionTypes.LOAN_REPAYMENT
 											.getValue()), loanPaymentData
-							.getTotalAmountPaid(), "Payment rcvd.");
+							.getAmountPaidWithFeeForInstallment(), "Payment rcvd.");
 			accountPayment.addAcountTrxn(accountTrxnBO);
 
 			loanSummary.updatePaymentDetails(
@@ -1146,7 +1146,7 @@ public class LoanBO extends AccountBO {
 							.getInterestPaid(), loanPaymentData
 							.getPenaltyPaid().add(
 									loanPaymentData.getMiscPenaltyPaid()),
-					loanPaymentData.getTotalFees().add(
+					loanPaymentData.getFeeAmountPaidForInstallment().add(
 							loanPaymentData.getMiscFeePaid()));
 
 			performanceHistory.setNoOfPayments(getPerformanceHistory()
@@ -2337,7 +2337,7 @@ public class LoanBO extends AccountBO {
 						accountActionDate, totalAmount);
 				paymentData.addAccountPaymentData(loanPayment);
 				totalAmount = totalAmount.subtract(loanPayment
-						.getTotalAmountPaid());
+						.getAmountPaidWithFeeForInstallment());
 			}
 		}
 		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
@@ -2373,7 +2373,7 @@ public class LoanBO extends AccountBO {
 			LoanPaymentData loanPayment = new LoanPaymentData(accountActionDate);
 			paymentData.addAccountPaymentData(loanPayment);
 			totalAmount = totalAmount
-					.subtract(loanPayment.getTotalAmountPaid());
+					.subtract(loanPayment.getAmountPaidWithFeeForInstallment());
 		}
 		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
 		if (nextInstallment != null
@@ -2389,7 +2389,7 @@ public class LoanBO extends AccountBO {
 				loanPayment = new LoanPaymentData(nextInstallment, totalAmount);
 			paymentData.addAccountPaymentData(loanPayment);
 			totalAmount = totalAmount
-					.subtract(loanPayment.getTotalAmountPaid());
+					.subtract(loanPayment.getAmountPaidWithFeeForInstallment());
 		}
 		for (AccountActionDateEntity accountActionDate : getApplicableIdsForFutureInstallments()) {
 			if (totalAmount.getAmountDoubleValue() > 0.0) {
@@ -2397,7 +2397,7 @@ public class LoanBO extends AccountBO {
 						accountActionDate, totalAmount);
 				paymentData.addAccountPaymentData(loanPayment);
 				totalAmount = totalAmount.subtract(loanPayment
-						.getTotalAmountPaid());
+						.getAmountPaidWithFeeForInstallment());
 			}
 		}
 	}

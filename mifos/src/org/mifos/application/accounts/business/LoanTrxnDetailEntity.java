@@ -43,18 +43,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 
 public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 
@@ -66,8 +61,6 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 		miscFeeAmount = null;
 		miscPenaltyAmount = null;
 	}
-
-	private LoanPersistance loanPersistance;
 
 	private final Money principalAmount;
 
@@ -118,7 +111,7 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 			Money miscFeeAmount, Money miscPenaltyAmount) {
 		super(accountPayment, accountActionEntity, installmentId, dueDate,
 				personnel, actionDate, amount, comments, relatedTrxn);
-		loanPersistance = new LoanPersistance();
+
 		this.principalAmount = principalAmount;
 		this.interestAmount = interestAmount;
 		this.penaltyAmount = penaltyAmount;
@@ -136,7 +129,6 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 				personnel, new Date(System.currentTimeMillis()),
 				((LoanScheduleEntity) accountActionDateEntity).getPrincipal(),
 				comments);
-		loanPersistance = new LoanPersistance();
 		this.principalAmount = ((LoanScheduleEntity) accountActionDateEntity)
 				.getPrincipal();
 		this.interestAmount = new Money();
@@ -214,7 +206,7 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 		}
 	}
 
-	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment){
+	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment) {
 		MasterPersistenceService masterPersistenceService = new MasterPersistenceService();
 		MifosLogManager
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
@@ -258,7 +250,6 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 				feeAmnt = feeAmnt.add(feesTrxn.getFeeAmount());
 			}
 		}
-
 		return feeAmnt;
 	}
 

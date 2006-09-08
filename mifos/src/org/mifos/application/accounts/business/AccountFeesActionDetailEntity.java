@@ -109,8 +109,8 @@ public class AccountFeesActionDetailEntity extends PersistentObject {
 		return installmentId;
 	}
 
-	public void makePayment(Money feeAmountPaid) {
-		this.feeAmountPaid = feeAmountPaid;
+	public void makePayment(Money feePaid) {
+		this.feeAmountPaid = getFeeAmountPaid().add(feePaid);
 	}
 
 	public Money getFeeDue() {

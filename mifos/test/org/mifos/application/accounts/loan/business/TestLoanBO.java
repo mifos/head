@@ -2806,6 +2806,66 @@ public class TestLoanBO extends MifosTestCase {
 		}
 	}
 	
+	public void testFeeForMultiplePayments() throws Exception {
+		accountBO = getLoanAccount();
+
+		accountBO = saveAndFetch(accountBO);
+		assertEquals(new Money("212.0"), ((LoanBO) accountBO)
+				.getTotalPaymentDue());
+		LoanScheduleEntity nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO)
+				.getDetailsOfNextInstallment();
+		assertEquals(new Money("100.0"), nextInstallment.getTotalFeeDue());
+		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
+				null, new Money("10"), accountBO.getCustomer(), accountBO
+						.getPersonnel(), "432423", (short) 1, new Date(System
+						.currentTimeMillis()), new Date(System
+						.currentTimeMillis())));
+		accountBO = saveAndFetch(accountBO);
+		nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO)
+				.getDetailsOfNextInstallment();
+		assertEquals(new Money("90"), nextInstallment.getTotalFeeDue());
+		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
+				null, new Money("30"), accountBO.getCustomer(), accountBO
+						.getPersonnel(), "432423", (short) 1, new Date(System
+						.currentTimeMillis()), new Date(System
+						.currentTimeMillis())));
+		accountBO = saveAndFetch(accountBO);
+		nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO)
+				.getDetailsOfNextInstallment();
+		assertEquals(new Money("60"), nextInstallment.getTotalFeeDue());
+	}
+	
+	public void testFeeForMultiplePaymentsIncludingCompletePayment() throws Exception  {
+		accountBO = getLoanAccount();
+
+		accountBO = saveAndFetch(accountBO);
+		assertEquals(new Money("212.0"), ((LoanBO) accountBO)
+				.getTotalPaymentDue());
+		LoanScheduleEntity nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO)
+				.getDetailsOfNextInstallment();
+		assertEquals(new Money("100.0"), nextInstallment.getTotalFeeDue());
+		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
+				null, new Money("10"), accountBO.getCustomer(), accountBO
+						.getPersonnel(), "432423", (short) 1, new Date(System
+						.currentTimeMillis()), new Date(System
+						.currentTimeMillis())));
+		accountBO = saveAndFetch(accountBO);
+		nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO)
+				.getDetailsOfNextInstallment();
+		assertEquals(new Money("90"), nextInstallment.getTotalFeeDue());
+		assertEquals(new Money("202.0"), ((LoanBO) accountBO)
+				.getTotalPaymentDue());
+		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
+				null, new Money("202"), accountBO.getCustomer(), accountBO
+						.getPersonnel(), "432423", (short) 1, new Date(System
+						.currentTimeMillis()), new Date(System
+						.currentTimeMillis())));
+		accountBO = saveAndFetch(accountBO);
+		nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO)
+				.getDetailsOfNextInstallment();
+		assertEquals(new Money(), nextInstallment.getTotalFeeDue());
+		
+	}
 	private LoanBO createAndRetrieveLoanAccount(LoanOfferingBO loanOffering,
 			boolean isInterestDedAtDisb, List<FeeView> feeViews,
 			Short noOfinstallments, Double interestRate)
