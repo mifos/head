@@ -1,39 +1,39 @@
 <!--
- 
+
  * savingsaccountdetail.jsp  version: 1.0
- 
- 
- 
+
+
+
  * Copyright (c) 2005-2006 Grameen Foundation USA
- 
+
  * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
- 
+
  * All rights reserved.
- 
- 
- 
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
- 
+
+
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
+
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
- 
+
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
- 
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
- 
- * and how it is applied. 
- 
+ * See the License for the specific language governing permissions and limitations under the
+
+ * License.
  *
- 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
+
+ * and how it is applied.
+
+ *
+
  -->
 <%@ taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
@@ -153,10 +153,10 @@
 									<p>
 										<span class="fontnormal"> <c:choose>
 												<c:when test="${sessionScope.BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
-													<mifos:mifoslabel name="Savings.mandatoryAmountForDeposit" />: 
+													<mifos:mifoslabel name="Savings.mandatoryAmountForDeposit" />:
 	                  </c:when>
 												<c:otherwise>
-													<mifos:mifoslabel name="Savings.recommendedAmountForDeposit" />: 
+													<mifos:mifoslabel name="Savings.recommendedAmountForDeposit" />:
 	                  </c:otherwise>
 											</c:choose> <c:out value="${sessionScope.BusinessKey.recommendedAmount.amountDoubleValue}" /> <c:choose>
 												<c:when test="${sessionScope.BusinessKey.customer.customerLevel.id==CustomerConstants.GROUP_LEVEL_ID}">
@@ -170,8 +170,7 @@
 											</c:choose> <br> <br> <mifos:mifoslabel name="Savings.typeOfDeposits" />: <customtags:lookUpValue id="${sessionScope.BusinessKey.savingsOffering.savingsType.id}" searchResultName="SavingsType" mapToSeperateMasterTable="true">
 											</customtags:lookUpValue> </span>
 										<br>
-										<mifos:mifoslabel name="Savings.maxAmountPerWithdrawl" />
-										:
+										<mifos:mifoslabel name="Savings.maxAmountPerWithdrawl" />:
 										<c:out value="${sessionScope.BusinessKey.savingsOffering.maxAmntWithdrawl}" />
 										<br>
 										<span class="fontnormal"> <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel name="Savings.rate" />: <c:out value="${sessionScope.BusinessKey.savingsOffering.interestRate}" /> <mifos:mifoslabel name="Savings.perc" />
@@ -232,12 +231,12 @@
 							</tr>
 							<tr>
 								<td class="paddingL10">
-									<span class="fontnormal8pt"> 
+									<span class="fontnormal8pt">
 				<c:if test="${sessionScope.BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_APPROVED || sessionScope.BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_INACTIVE}">
 		           <html-el:link  href="savingsDepositWithdrawalAction.do?method=load">
 		          	    <mifos:mifoslabel name="Savings.makeDepositWithdrawl"/>
 		           </html-el:link><br>
-           
+
 					<html-el:link href="savingsApplyAdjustmentAction.do?method=load">
 						<mifos:mifoslabel name="Savings.applyAdjustment" />
 					</html-el:link>
@@ -290,13 +289,13 @@
               <tr>
                 <td class="paddingL10">
                 <span class="fontnormal8pt">
-                <mifos:mifoslabel name="Savings.totalWithdrawls"/>:<c:out value="${sessionScope.BusinessKey.savingsPerformance.totalWithdrawals}" /> </span></td>
+                <mifos:mifoslabel name="Savings.totalWithdrawls"/>: <c:out value="${sessionScope.BusinessKey.savingsPerformance.totalWithdrawals}" /> </span></td>
               </tr>  
                <c:if test="${sessionScope.BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
                    <tr>
 	                <td class="paddingL10">
 	                <span class="fontnormal8pt">
-	                <mifos:mifoslabel name="Savings.missedDeposits"/>:<c:out value="${sessionScope.BusinessKey.savingsPerformance.missedDeposits}" /> </span></td>
+	                <mifos:mifoslabel name="Savings.missedDeposits"/>: <c:out value="${sessionScope.BusinessKey.savingsPerformance.missedDeposits}" /> </span></td>
 	  			  </tr>  
 	  			</c:if>  
 						</table>
@@ -322,7 +321,7 @@
               				<c:when test="${!empty sessionScope.notes}">
 								<c:forEach var="note" items="${sessionScope.notes}">
 									<span class="fontnormal8ptbold"> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,note.commentDate)}"/>:</span>
-									<span class="fontnormal8pt"> 
+									<span class="fontnormal8pt">
 			                				<c:out value="${note.comment}"/>-<em>
 											<c:out value="${note.personnel.displayName}"/></em><br><br>
 			                	     </span>

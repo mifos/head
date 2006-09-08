@@ -1,4 +1,4 @@
-<!-- 
+<!--
 
 /**
 
@@ -91,7 +91,7 @@
 							</html-el:link>
 														<font class="fontnormalRedBold"><html-el:errors
 								bundle="ProductDefUIResources" /> </font>
-							
+							<br> <br>
 							</span> <c:set var="id" /> <c:forEach var="productCategory"
 								items="${sessionScope.ProductCategoryList}">
 								<c:if	test="${empty id}">
