@@ -508,7 +508,7 @@ public class BulkEntryDisplayHelper {
 					totalAmount = Double.valueOf(enteredAmount);
 				}
 			}
-			if (totalAmount.equals(0.0) && !amountToBeShown.equals(0.0)) {
+			if (totalAmount.doubleValue() < amountToBeShown.doubleValue()) {
 				builder.append("<font color=\"#FF0000\">" + enteredAmount
 						+ "</font>");
 			} else {

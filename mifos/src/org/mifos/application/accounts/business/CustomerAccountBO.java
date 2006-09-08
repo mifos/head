@@ -198,11 +198,10 @@ public class CustomerAccountBO extends AccountBO {
 							AccountConstants.ACTION_CUSTOMER_ACCOUNT_REPAYMENT),
 					"Payment rcvd.");
 			accountPayment.addAcountTrxn(accountTrxn);
-			addCustomerActivity(new CustomerActivityEntity(paymentData
-					.getPersonnel(), "Payment rcvd.", paymentData
-					.getTotalAmount()));
-
 		}
+		addCustomerActivity(new CustomerActivityEntity(paymentData
+				.getPersonnel(), "Payment rcvd.", paymentData
+				.getTotalAmount()));
 		return accountPayment;
 	}
 
