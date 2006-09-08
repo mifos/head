@@ -226,11 +226,14 @@
 	</target>
 
 	<target name="dist" 
-		depends="compile,copy_files,compile_test,copy_test_files,run_test,war,deploy" 
+		depends="clean,compile,copy_files,compile_test,copy_test_files,run_test,war,deploy" 
 		description="Compiles, runs test, builds a distributable war and places in the dist directory. Copies to the jboss server in use. Does not rebuild the production database"
 	/>
 
-	<target name="dist_ddl" depends="compile,copy_files,compile_test,copy_test_files,run_test,war,deploy,build_db" description="Compiles, runs test, builds a distributable war and places in the dist directory. Copies to the jboss server in use. Rebuilds the production database"/>
+	<target name="dist_ddl" 
+		depends="clean,compile,copy_files,compile_test,copy_test_files,run_test,war,deploy,build_db" 
+		description="Compiles, runs test, builds a distributable war and places in the dist directory. Copies to the jboss server in use. Rebuilds the production database"
+	/>
 
 	<!--<target name="test_dist" depends="compile" description="Compiles, runs test cass and prepares the final war for distribution">
 	</target>-->
