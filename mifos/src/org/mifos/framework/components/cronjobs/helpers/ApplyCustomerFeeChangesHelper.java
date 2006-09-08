@@ -160,7 +160,7 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 		nextInstallment.addAccountFeesAction(accountFeesaction);
 		String description = fee.getFees().getFeeName() + " "
 				+ AccountConstants.FEES_APPLIED;
-		accountBO.updateAccountActivity(fee.getAccountFeeAmount(), Short
+		accountBO.updateAccountActivity(null,null,fee.getAccountFeeAmount(),null, Short
 				.valueOf("1"), description);
 
 	}

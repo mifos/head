@@ -329,7 +329,8 @@ public class CustomerAccountBO extends AccountBO {
 									.getFeeId(), totalAmount);
 					String description = feesBO.getFeeName() + " "
 							+ AccountConstants.FEES_APPLIED;
-					updateAccountActivity(totalAmount, null, description);
+					addCustomerActivity(buildCustomerActivity(totalAmount,
+							description, null));
 					try {
 						(new AccountPersistence()).createOrUpdate(this);
 					} catch (PersistenceException e) {
@@ -350,10 +351,36 @@ public class CustomerAccountBO extends AccountBO {
 		return new CustomerActivityEntity(personnel, description, amount);
 	}
 
-	public void updateAccountActivity(Money totalAmount, Short personnelId,
-			String description) {
-		this.addCustomerActivity(buildCustomerActivity(totalAmount,
+	@Override
+	public void updateAccountActivity(Money principal, Money interest,
+			Money fee, Money penalty, Short personnelId, String description){
+		addCustomerActivity(buildCustomerActivity(fee,
 				description, personnelId));
+	}
+	
+	@Override
+	public final void removeFees(Short feeId, Short personnelId)
+			throws AccountException {
+		List<Short> installmentIds = getApplicableInstallmentIdsForRemoveFees();
+		Money totalFeeAmount = new Money();
+		if (installmentIds != null && installmentIds.size() != 0
+				&& isFeeActive(feeId)) {
+			totalFeeAmount = updateAccountActionDateEntity(installmentIds,
+					feeId);
+			updateAccountFeesEntity(feeId);
+			updateTotalFeeAmount(totalFeeAmount);
+			FeeBO feesBO = getAccountFeesObject(feeId);
+			String description = feesBO.getFeeName() + " "
+					+ AccountConstants.FEES_REMOVED;
+			updateAccountActivity(null, null, null, null,
+					personnelId, description);
+			try {
+				(new AccountPersistence()).createOrUpdate(this);
+			} catch (PersistenceException e) {
+				throw new AccountException(e);
+			}
+		}
+
 	}
 
 	protected Money getDueAmount(AccountActionDateEntity installment) {

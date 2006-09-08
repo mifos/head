@@ -160,8 +160,11 @@ public class CustomerBusinessService extends BusinessService {
 				.getCreatedDate());
 		customerRecentActivityView.setDescription(customerActivityEntity
 				.getDescription());
-		customerRecentActivityView.setAmount(removeSign(customerActivityEntity
-				.getAmount()));
+		Money amount=removeSign(customerActivityEntity.getAmount());
+		if(amount.getAmountDoubleValue()==0)
+			customerRecentActivityView.setAmount("-");
+		else
+			customerRecentActivityView.setAmount(amount.toString());
 		if (customerActivityEntity.getPersonnel() != null)
 			customerRecentActivityView.setPostedBy(customerActivityEntity
 					.getPersonnel().getDisplayName());

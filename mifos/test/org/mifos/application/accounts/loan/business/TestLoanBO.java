@@ -1,6 +1,7 @@
 package org.mifos.application.accounts.loan.business;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -800,6 +801,121 @@ public class TestLoanBO extends MifosTestCase {
 				.getAmountTobePaidAtdisburtail(startDate));
 
 	}
+	
+	public void testWaivePenaltyChargeDue() throws Exception {
+		accountBO = getLoanAccount();
+		for (AccountActionDateEntity accountAction : ((LoanBO)accountBO)
+				.getAccountActionDates()) {
+			LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
+			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
+					.getAccountFeesActionDetails()) {
+				if (accountActionDateEntity.getInstallmentId().equals(
+						Short.valueOf("1"))) {
+					accountActionDateEntity.setMiscPenalty(new Money("100"));
+				} 
+			}
+		}
+		((LoanBO)accountBO).getLoanSummary().setOriginalPenalty(new Money("100"));
+		TestObjectFactory.updateObject(accountBO);
+		
+		HibernateUtil.closeSession();
+		LoanBO loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+				accountBO.getAccountId());
+		
+		UserContext userContext = TestObjectFactory.getUserContext();
+		loanBO.setUserContext(userContext);
+		loanBO.waiveAmountDue(WaiveEnum.PENALTY);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loanBO
+				.getAccountId());
+		for (AccountActionDateEntity accountAction : loanBO
+				.getAccountActionDates()) {
+			LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
+			if (accountActionDateEntity.getInstallmentId().equals(
+						Short.valueOf("1"))) {
+					assertEquals(new Money(),accountActionDateEntity.getMiscPenalty());
+				} 
+			
+		}
+		
+		Set<LoanActivityEntity> loanActivityDetailsSet = loanBO.getLoanActivityDetails();
+		List<Object> objectList = Arrays.asList(loanActivityDetailsSet.toArray());
+		LoanActivityEntity loanActivityEntity = (LoanActivityEntity) objectList.get(0);
+		assertEquals(new Money("100"),loanActivityEntity.getPenalty());
+		assertEquals(loanBO.getLoanSummary().getOriginalPenalty().subtract(loanBO.getLoanSummary().getPenaltyPaid()),
+				loanActivityEntity.getPenaltyOutstanding());
+	}
+	
+	public void testWaivePenaltyOverDue() throws Exception {
+		accountBO = getLoanAccount();
+		
+		for (AccountActionDateEntity installment : ((LoanBO)accountBO)
+				.getAccountActionDates()) {
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) installment;
+			if (installment.getInstallmentId().intValue() == 1) {
+				loanScheduleEntity.setMiscPenalty(new Money("100"));
+			} else if (installment.getInstallmentId().intValue() == 2) {
+				loanScheduleEntity.setMiscPenalty(new Money("100"));
+			}
+		}
+		
+		((LoanBO)accountBO).getLoanSummary().setOriginalPenalty(new Money("200"));
+		TestObjectFactory.updateObject(accountBO);
+		
+		HibernateUtil.closeSession();
+		LoanBO loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+				accountBO.getAccountId());
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
+		calendar.add(calendar.WEEK_OF_MONTH, -1);
+		java.sql.Date lastWeekDate = new java.sql.Date(calendar
+				.getTimeInMillis());
+
+		Calendar date = new GregorianCalendar();
+		date.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
+		date.add(date.WEEK_OF_MONTH, -2);
+		java.sql.Date twoWeeksBeforeDate = new java.sql.Date(date
+				.getTimeInMillis());
+
+		for (AccountActionDateEntity installment : loanBO
+				.getAccountActionDates()) {
+			if (installment.getInstallmentId().intValue() == 1) {
+				installment.setActionDate(lastWeekDate);
+			} else if (installment.getInstallmentId().intValue() == 2) {
+				installment.setActionDate(twoWeeksBeforeDate);
+			}
+		}
+		TestObjectFactory.updateObject(loanBO);
+		HibernateUtil.closeSession();
+		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loanBO
+				.getAccountId());
+		UserContext userContext = TestObjectFactory.getUserContext();
+		loanBO.setUserContext(userContext);
+		loanBO.waiveAmountOverDue(WaiveEnum.PENALTY);
+		TestObjectFactory.flushandCloseSession();
+		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loanBO
+				.getAccountId());
+		for (AccountActionDateEntity accountAction : loanBO
+				.getAccountActionDates()) {
+			LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
+		}
+
+		for (AccountActionDateEntity accountAction : loanBO
+				.getAccountActionDates()) {
+			LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
+			assertEquals(new Money(), accountActionDateEntity.getMiscPenalty());
+		}
+		
+		Set<LoanActivityEntity> loanActivityDetailsSet = loanBO.getLoanActivityDetails();
+		List<Object> objectList = Arrays.asList(loanActivityDetailsSet.toArray());
+		LoanActivityEntity loanActivityEntity = (LoanActivityEntity) objectList.get(0);
+		assertEquals(new Money("200"),loanActivityEntity.getPenalty());
+		assertEquals(loanBO.getLoanSummary().getOriginalPenalty().subtract(loanBO.getLoanSummary().getPenaltyPaid()),
+				loanActivityEntity.getPenaltyOutstanding());
+	}
+
+
 
 	public void testWaiveFeeChargeDue() throws Exception {
 		accountBO = getLoanAccount();
@@ -830,6 +946,15 @@ public class TestLoanBO extends MifosTestCase {
 				}
 			}
 		}
+		
+		Set<LoanActivityEntity> loanActivityDetailsSet = loanBO.getLoanActivityDetails();
+		List<Object> objectList = Arrays.asList(loanActivityDetailsSet.toArray());
+		LoanActivityEntity loanActivityEntity = (LoanActivityEntity) objectList.get(0);
+		assertEquals(new Money("100"),loanActivityEntity.getFee());
+		assertEquals(loanBO.getLoanSummary().getOriginalFees().subtract(loanBO.getLoanSummary().getFeesPaid()),
+				loanActivityEntity.getFeeOutstanding());
+		
+		
 	}
 
 	public void testWaiveFeeChargeOverDue() throws Exception {
@@ -888,6 +1013,13 @@ public class TestLoanBO extends MifosTestCase {
 							accountFeesActionDetailEntity.getFeeAmount());
 			}
 		}
+		
+		Set<LoanActivityEntity> loanActivityDetailsSet = loanBO.getLoanActivityDetails();
+		List<Object> objectList = Arrays.asList(loanActivityDetailsSet.toArray());
+		LoanActivityEntity loanActivityEntity = (LoanActivityEntity) objectList.get(0);
+		assertEquals(new Money("200"),loanActivityEntity.getFee());
+		assertEquals(loanBO.getLoanSummary().getOriginalFees().subtract(loanBO.getLoanSummary().getFeesPaid()),
+				loanActivityEntity.getFeeOutstanding());
 	}
 
 	public void testRegenerateFutureInstallments() throws AccountException, SchedulerException {

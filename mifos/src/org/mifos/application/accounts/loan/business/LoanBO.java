@@ -396,39 +396,6 @@ public class LoanBO extends AccountBO {
 	}
 
 	@Override
-	public void roundInstallments(List<Short> installmentIdList) {
-		if (!isPricipalAmountZero()) {
-			LoanScheduleEntity lastAccountActionDate = (LoanScheduleEntity) getLastInstallmentAccountAction();
-			Money diffAmount = new Money();
-			int count = 0;
-			for (AccountActionDateEntity accountActionDate : getAccountActionDates()) {
-				LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
-				if (installmentIdList.contains(loanScheduleEntity
-						.getInstallmentId())) {
-					if (isInterestDeductedAtDisbursement()
-							&& loanScheduleEntity.getInstallmentId().equals(
-									Short.valueOf("1")))
-						continue;
-					count++;
-					if (count == installmentIdList.size()) {
-						break;
-					}
-					Money totalAmount = loanScheduleEntity
-							.getTotalDueWithFees();
-					Money roundedTotalAmount = Money.round(totalAmount);
-					loanScheduleEntity.setPrincipal(loanScheduleEntity
-							.getPrincipal().subtract(
-									totalAmount.subtract(roundedTotalAmount)));
-					diffAmount = diffAmount.add(totalAmount
-							.subtract(roundedTotalAmount));
-				}
-			}
-			lastAccountActionDate.setPrincipal(lastAccountActionDate
-					.getPrincipal().add(diffAmount));
-		}
-	}
-
-	@Override
 	public void updateTotalPenaltyAmount(Money totalPenaltyAmount) {
 		LoanSummaryEntity loanSummaryEntity = this.getLoanSummary();
 		loanSummaryEntity.setOriginalPenalty(loanSummaryEntity
@@ -469,18 +436,18 @@ public class LoanBO extends AccountBO {
 	}
 
 	@Override
-	public void updateAccountActivity(Money totalAmount, Short personnelId,
-			String description) {
+	public void updateAccountActivity(Money principal, Money interest,
+			Money fee, Money penalty, Short personnelId, String description) {
 		PersonnelBO personnel = new PersonnelPersistenceService()
 				.getPersonnel(personnelId);
 		LoanActivityEntity loanActivity = new LoanActivityEntity(this,
-				personnel, description, new Money(), loanSummary
+				personnel, description, principal, loanSummary
 						.getOriginalPrincipal().subtract(
-								loanSummary.getPrincipalPaid()), new Money(),
+								loanSummary.getPrincipalPaid()),interest,
 				loanSummary.getOriginalInterest().subtract(
-						loanSummary.getInterestPaid()), totalAmount,
+						loanSummary.getInterestPaid()), fee,
 				loanSummary.getOriginalFees().subtract(
-						loanSummary.getFeesPaid()), new Money(), loanSummary
+						loanSummary.getFeesPaid()), penalty, loanSummary
 						.getOriginalPenalty().subtract(
 								loanSummary.getPenaltyPaid()));
 		this.addLoanActivity(loanActivity);
@@ -513,6 +480,32 @@ public class LoanBO extends AccountBO {
 					.getPrincipal());
 		}
 		return amount;
+	}
+	
+	@Override
+	public final void removeFees(Short feeId, Short personnelId)
+			throws AccountException {
+		List<Short> installmentIds = getApplicableInstallmentIdsForRemoveFees();
+		Money totalFeeAmount = new Money();
+		if (installmentIds != null && installmentIds.size() != 0
+				&& isFeeActive(feeId)) {
+			totalFeeAmount = updateAccountActionDateEntity(installmentIds,
+					feeId);
+			updateAccountFeesEntity(feeId);
+			updateTotalFeeAmount(totalFeeAmount);
+			FeeBO feesBO = getAccountFeesObject(feeId);
+			String description = feesBO.getFeeName() + " "
+					+ AccountConstants.FEES_REMOVED;
+			updateAccountActivity(null, null, totalFeeAmount, null,
+					personnelId, description);
+			roundInstallments(installmentIds);
+			try {
+				(new AccountPersistence()).createOrUpdate(this);
+			} catch (PersistenceException e) {
+				throw new AccountException(e);
+			}
+		}
+
 	}
 
 	@Override
@@ -895,9 +888,9 @@ public class LoanBO extends AccountBO {
 				.get(accountActionDateList.size() - 1);
 		Money chargeWaived = accountActionDateEntity.waiveFeeCharges();
 		if (chargeWaived != null && chargeWaived.getAmountDoubleValue() > 0.0) {
-			updateAccountActivity(chargeWaived, userContext.getId(), "Amnt "
-					+ chargeWaived + " waived");
 			updateTotalFeeAmount(chargeWaived);
+			updateAccountActivity(null,null,chargeWaived,null, userContext.getId(), "Amnt "
+					+ chargeWaived + " waived");
 		}
 		try {
 			new LoanPersistance().createOrUpdate(this);
@@ -912,9 +905,9 @@ public class LoanBO extends AccountBO {
 				.get(accountActionDateList.size() - 1);
 		Money chargeWaived = accountActionDateEntity.waivePenaltyCharges();
 		if (chargeWaived != null && chargeWaived.getAmountDoubleValue() > 0.0) {
-			updateAccountActivity(chargeWaived, userContext.getId(), "Amnt "
-					+ chargeWaived + " waived");
 			updateTotalPenaltyAmount(chargeWaived);
+			updateAccountActivity(null,null,null,chargeWaived, userContext.getId(), "Amnt "
+					+ chargeWaived + " waived");
 		}
 		try {
 			new LoanPersistance().createOrUpdate(this);
@@ -933,9 +926,9 @@ public class LoanBO extends AccountBO {
 							.waiveFeeCharges());
 		}
 		if (chargeWaived != null && chargeWaived.getAmountDoubleValue() > 0.0) {
-			updateAccountActivity(chargeWaived, userContext.getId(), "Amnt "
-					+ chargeWaived + " waived");
 			updateTotalFeeAmount(chargeWaived);
+			updateAccountActivity(null,null,chargeWaived,null, userContext.getId(), "Amnt "
+					+ chargeWaived + " waived");
 		}
 		try {
 			new LoanPersistance().createOrUpdate(this);
@@ -954,9 +947,9 @@ public class LoanBO extends AccountBO {
 							.waivePenaltyCharges());
 		}
 		if (chargeWaived != null && chargeWaived.getAmountDoubleValue() > 0.0) {
-			updateAccountActivity(chargeWaived, userContext.getId(), "Amnt "
-					+ chargeWaived + " waived");
 			updateTotalPenaltyAmount(chargeWaived);
+			updateAccountActivity(null,null,null,chargeWaived, userContext.getId(), "Amnt "
+					+ chargeWaived + " waived");
 		}
 		try {
 			new LoanPersistance().createOrUpdate(this);
@@ -1233,6 +1226,40 @@ public class LoanBO extends AccountBO {
 			}
 		}
 	}
+	
+	
+	protected final void roundInstallments(List<Short> installmentIdList) {
+		if (!isPricipalAmountZero()) {
+			LoanScheduleEntity lastAccountActionDate = (LoanScheduleEntity) getLastInstallmentAccountAction();
+			Money diffAmount = new Money();
+			int count = 0;
+			for (AccountActionDateEntity accountActionDate : getAccountActionDates()) {
+				LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
+				if (installmentIdList.contains(loanScheduleEntity
+						.getInstallmentId())) {
+					if (isInterestDeductedAtDisbursement()
+							&& loanScheduleEntity.getInstallmentId().equals(
+									Short.valueOf("1")))
+						continue;
+					count++;
+					if (count == installmentIdList.size()) {
+						break;
+					}
+					Money totalAmount = loanScheduleEntity
+							.getTotalDueWithFees();
+					Money roundedTotalAmount = Money.round(totalAmount);
+					loanScheduleEntity.setPrincipal(loanScheduleEntity
+							.getPrincipal().subtract(
+									totalAmount.subtract(roundedTotalAmount)));
+					diffAmount = diffAmount.add(totalAmount
+							.subtract(roundedTotalAmount));
+				}
+			}
+			lastAccountActionDate.setPrincipal(lastAccountActionDate
+					.getPrincipal().add(diffAmount));
+		}
+	}
+
 
 	private Money getAccountFeeAmount(AccountFeesEntity accountFees,Money loanInterest) {
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(

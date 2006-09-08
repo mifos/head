@@ -331,30 +331,6 @@ public class AccountBO extends BusinessObject {
 		}
 	}
 
-	public final void removeFees(Short feeId, Short personnelId)
-			throws AccountException {
-		List<Short> installmentIds = getApplicableInstallmentIdsForRemoveFees();
-		Money totalFeeAmount = new Money();
-		if (installmentIds != null && installmentIds.size() != 0
-				&& isFeeActive(feeId)) {
-			totalFeeAmount = updateAccountActionDateEntity(installmentIds,
-					feeId);
-			updateAccountFeesEntity(feeId);
-			updateTotalFeeAmount(totalFeeAmount);
-			FeeBO feesBO = getAccountFeesObject(feeId);
-			String description = feesBO.getFeeName() + " "
-					+ AccountConstants.FEES_REMOVED;
-			updateAccountActivity(totalFeeAmount, personnelId, description);
-			roundInstallments(installmentIds);
-			try {
-				(new AccountPersistence()).createOrUpdate(this);
-			} catch (PersistenceException e) {
-				throw new AccountException(e);
-			}
-		}
-
-	}
-
 	public final void adjustPmnt(String adjustmentComment)
 			throws AccountException {
 		if (isAdjustPossibleOnLastTrxn()) {
@@ -720,8 +696,8 @@ public class AccountBO extends BusinessObject {
 		return AccountState.getStatus(getAccountState().getId());
 	}
 	
-	public void updateAccountActivity(Money totalFeeAmount, Short personnelId,
-			String description) {
+	public void updateAccountActivity(Money principal, Money interest,
+			Money fee, Money penalty, Short personnelId, String description) {
 	}
 
 	public void waiveAmountDue(WaiveEnum waiveType) throws AccountException {
@@ -1186,13 +1162,13 @@ public class AccountBO extends BusinessObject {
 		return false;
 	}
 
-	protected void roundInstallments(List<Short> installmentIdList) {
-	}
+	public void removeFees(Short feeId, Short personnelId)
+			throws AccountException {}
 	
 	protected void activationDateHelper(Short newStatusId)
 	throws AccountException {}
 
-	private List<Short> getApplicableInstallmentIdsForRemoveFees() {
+	protected List<Short> getApplicableInstallmentIdsForRemoveFees() {
 		List<Short> installmentIdList = new ArrayList<Short>();
 		for (AccountActionDateEntity accountActionDateEntity : getApplicableIdsForFutureInstallments()) {
 			installmentIdList.add(accountActionDateEntity.getInstallmentId());

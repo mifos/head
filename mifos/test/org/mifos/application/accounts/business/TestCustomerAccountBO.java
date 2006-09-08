@@ -362,23 +362,27 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			FeeBO feesBO = accountFeesEntity.getFees();
 			customerAccountBO.removeFees(feesBO.getFeeId(), Short.valueOf("1"));
 		}
-		TestObjectFactory.updateObject(customerAccountBO);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
 		group = (CustomerBO) TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		customerAccountBO = group.getCustomerAccount();
 		Set<CustomerActivityEntity> customerActivitySet = customerAccountBO
 				.getCustomerActivitDetails();
+		assertEquals(1, customerActivitySet.size());
 		for (CustomerActivityEntity customerActivityEntity : customerActivitySet) {
 			assertEquals(1, customerActivityEntity.getPersonnel()
 					.getPersonnelId().intValue());
 			assertEquals("Mainatnence Fee removed", customerActivityEntity
 					.getDescription());
+			assertEquals(new Money(), customerActivityEntity.getAmount());
 		}
 		for (AccountFeesEntity accountFeesEntity : group.getCustomerAccount()
 				.getAccountFees()) {
 			assertEquals(2, accountFeesEntity.getFeeStatus().intValue());
 		}
 	}
+
 
 	public void testUpdateAccountActivity() throws NumberFormatException,
 			SystemException, ApplicationException {
@@ -390,7 +394,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			FeeBO feesBO = accountFeesEntity.getFees();
 			feeId = feesBO.getFeeId();
 		}
-		customerAccountBO.updateAccountActivity(new Money("222"), Short
+		customerAccountBO.updateAccountActivity(null,null,new Money("222"), null,Short
 				.valueOf("1"), "Mainatnence Fee removed");
 		TestObjectFactory.updateObject(customerAccountBO);
 		group = (CustomerBO) TestObjectFactory.getObject(GroupBO.class, group

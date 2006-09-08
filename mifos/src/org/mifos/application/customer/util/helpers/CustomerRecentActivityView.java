@@ -9,7 +9,7 @@ import org.mifos.framework.util.helpers.Money;
 
 public class CustomerRecentActivityView extends View {
 
-	public CustomerRecentActivityView(java.util.Date activityDate,String description,Money amount,String postedBy){
+	public CustomerRecentActivityView(java.util.Date activityDate,String description,String amount,String postedBy){
 		this.activityDate = new java.sql.Date(activityDate.getTime());
 		this.description = description;
 		this.amount = amount;
@@ -23,7 +23,7 @@ public class CustomerRecentActivityView extends View {
 	
 	private String description;
 	
-	private Money amount;
+	private String amount="-";
 	
 	private String postedBy="-";
 	
@@ -39,11 +39,11 @@ public class CustomerRecentActivityView extends View {
 		this.activityDate = activityDate;
 	}
 
-	public Money getAmount() {
-		return removeSign(amount);
+	public String getAmount() {
+		return amount;
 	}
 
-	public void setAmount(Money amount) {
+	public void setAmount(String amount) {
 		this.amount = amount;
 	}
 
@@ -76,11 +76,4 @@ public class CustomerRecentActivityView extends View {
 		this.locale = locale;
 	}
 	
-	
-	private Money removeSign(Money amount){
-		if(amount!=null && amount.getAmountDoubleValue()<0)
-			return amount.negate();
-		else
-			return amount;
-	}
 }
