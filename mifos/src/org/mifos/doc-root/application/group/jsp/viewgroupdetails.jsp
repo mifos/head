@@ -321,11 +321,10 @@
 									<td>
 									<table width="100%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
-											<td width="53%"><span class="fontnormal"> <html-el:link
-												href="javascript:ViewDetails()">
-												<mifos:mifoslabel name="Group.viewdetails"
-													bundle="GroupUIResources"></mifos:mifoslabel>
-											</html-el:link> </span></td>
+											<td width="53%"><span class="fontnormal"> <a
+												href="customerAccountAction.do?method=load&globalCustNum=<c:out value="${BusinessKey.globalCustNum}"/>">
+											<mifos:mifoslabel name="Group.viewdetails"
+												bundle="GroupUIResources" /> </a> </span></td>
 										</tr>
 										<tr>
 											<td><span class="fontnormal"><mifos:mifoslabel

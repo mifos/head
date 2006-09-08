@@ -56,38 +56,18 @@
 
 	<script>
 		function fun_cancel(){
-			closedaccsearchactionform.submit();
+			customerAccountActionForm.action="customerAccountAction.do?method=load";
+			customerAccountActionForm.submit();
 		}
 		function ViewDetails(){
 			closedaccsearchactionform.submit();
 	}
 </script>
- <%--   <table width="95%" border="0" cellpadding="0" cellspacing="0">
-          <tr>
-            <td class="bluetablehead05">
-	            <span class="fontnormal8pt">
-	            	<a href="CustomerSearchAction.do?method=getOfficeHomePage&officeId=<c:out value="${sessionScope.linkValues.customerOfficeId}"/>&officeName=<c:out value="${sessionScope.linkValues.customerOfficeName}"/>&loanOfficerId=<c:out value="${requestScope.Context.userContext.id}"/>">
-	            	<c:out value="${sessionScope.linkValues.customerOfficeName}"/></a>   /
-	            </span>
-	            <!-- Name of the client -->
-	            <span class="fontnormal8pt">
-	            <a href="centerAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.globalCustNum}"/>">
-	           				<c:out value="${sessionScope.linkValues.customerName}"/>            	
-           			</a>/
-	            </span>
-	            <!-- Center Charges -->
-	            <span class="fontnormal8ptbold">
-	            
-	            <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>
-					<mifos:mifoslabel name="client.clientcharges" bundle="ClientUIResources"/>
-	            </span>
-	         </td>
-          </tr>
-        </table>--%>
+
         <table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink/> 
-				<html-el:link href="javascript:ViewDetails()">/
+				<html-el:link href="customerAccountAction.do?method=load">/
 	          	  <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>
 	          		<mifos:mifoslabel name="Center.Charges" bundle="CenterUIResources"/>
 	          	</html-el:link></span>
@@ -167,5 +147,8 @@
 			<html-el:hidden property="statusId" value="${param.statusId}"/>
 			<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />
 		</html-el:form>
+		<html:form action="customerAccountAction.do">
+        	<html-el:hidden property="globalCustNum" value="${sessionScope.BusinessKey.globalCustNum}" /> 
+     	</html:form>
 </tiles:put>
 </tiles:insert>      

@@ -1083,7 +1083,9 @@ public class ActivityMapper {
 		activityMap.put("/yourSettings-loadChangePassword",
 				SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
 		
-		
+		//for CustomerAccountAction
+		activityMap.put("/customerAccountAction-load",
+				SecurityConstants.VIEW);
 	}
 
 	private static ActivityMapper instance = new ActivityMapper();

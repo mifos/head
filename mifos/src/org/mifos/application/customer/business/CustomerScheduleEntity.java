@@ -96,12 +96,17 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
 		return totalFees;
 	}
 
+	public Money getTotalFeeDueWithMiscFee() {
+		Money totalFees = new Money();
+		totalFees = totalFees.add(getTotalFeeDue()).add(getMiscFeeDue());
+		return totalFees;
+	}
 	public Money getTotalFees() {
 		return getMiscFee().add(getTotalFeeDue());
 	}
 
 	public Money getTotalDueWithFees() {
-		return getMiscPenaltyDue().add(getTotalFees());
+		return getMiscPenaltyDue().add(getTotalFeeDueWithMiscFee());
 	}
 
 	public void applyPeriodicFees(Short feeId,Money totalAmount) {

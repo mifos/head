@@ -222,11 +222,13 @@
 										<c:set var="accID" scope="request" value="${cp.accountId}"/> 
 										
 									</c:if>
-								</c:forEach> --%> <html-el:link href="javascript:ViewDetails()">
-                                <mifos:mifoslabel name="Center.Viewdetails" /></html-el:link> </span></td>
+								</c:forEach> --%> <a
+										href="customerAccountAction.do?method=load&globalCustNum=<c:out value="${sessionScope.BusinessKey.globalCustNum}"/>">
+										<mifos:mifoslabel name="Center.Viewdetails" bundle="CenterUIResources" />
+									</a> </span></td>
 										</tr>
 									</table>
-									<span class="fontnormal"><mifos:mifoslabel name="Center.AmountDueColon" /> <c:out
+									<span class="fontnormal"><mifos:mifoslabel name="Center.AmountDueColon" bundle="CenterUIResources" /> <c:out
 										value='${sessionScope.BusinessKey.customerAccount.nextDueAmount}' />
 									</span></td>
 								</tr>

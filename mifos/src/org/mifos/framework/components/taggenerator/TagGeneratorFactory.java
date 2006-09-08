@@ -43,9 +43,11 @@ import java.util.Map;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.BusinessObject;
@@ -56,8 +58,6 @@ public class TagGeneratorFactory {
 	private Map<String, String> generatorNames = new HashMap<String, String>();
 
 	private static TagGeneratorFactory instance = new TagGeneratorFactory();
-	
-	
 
 	protected Map<String, String> getGeneratorNames() {
 		return generatorNames;
@@ -77,54 +77,68 @@ public class TagGeneratorFactory {
 				.put("org.mifos.application.office.business.OfficeBO",
 						"org.mifos.framework.components.taggenerator.OfficeTagGenerator");
 		generatorNames
-				.put("org.mifos.application.accounts.savings.business.SavingsBO",
+				.put(
+						"org.mifos.application.accounts.savings.business.SavingsBO",
 						"org.mifos.framework.components.taggenerator.AccountTagGenerator");
 		generatorNames
 				.put("org.mifos.application.accounts.loan.business.LoanBO",
-					"org.mifos.framework.components.taggenerator.AccountTagGenerator");
+						"org.mifos.framework.components.taggenerator.AccountTagGenerator");
 		generatorNames
-				.put("org.mifos.application.accounts.business.CustomerAccountBO",
-					"org.mifos.framework.components.taggenerator.AccountTagGenerator");
+				.put(
+						"org.mifos.application.accounts.business.CustomerAccountBO",
+						"org.mifos.framework.components.taggenerator.AccountTagGenerator");
 		generatorNames
 				.put("org.mifos.application.personnel.business.PersonnelBO",
-					"org.mifos.framework.components.taggenerator.PersonnelTagGenerator");
+						"org.mifos.framework.components.taggenerator.PersonnelTagGenerator");
 
 	}
 
 	public static TagGeneratorFactory getInstance() {
 		return instance;
 	}
-	
-	public TagGenerator getGenerator(BusinessObject bo){
-		try{
-			return (TagGenerator)Class.forName(getGeneratorNames().get(getClassName(bo))).newInstance();
-		}catch(ClassNotFoundException cnfe){
+
+	public TagGenerator getGenerator(BusinessObject bo) {
+		try {
+			return (TagGenerator) Class.forName(
+					getGeneratorNames().get(getClassName(bo))).newInstance();
+		} catch (ClassNotFoundException cnfe) {
 			throw new FrameworkRuntimeException(cnfe);
-		}catch(IllegalAccessException iae){
+		} catch (IllegalAccessException iae) {
 			throw new FrameworkRuntimeException(iae);
-		}catch(InstantiationException ie){
+		} catch (InstantiationException ie) {
 			throw new FrameworkRuntimeException(ie);
 		}
 	}
-	
-	private String getClassName(BusinessObject bo){
-		if(bo instanceof CenterBO)
+
+	private String getClassName(BusinessObject bo) {
+		if (bo instanceof CenterBO)
 			return "org.mifos.application.customer.center.business.CenterBO";
-		if(bo instanceof GroupBO)
+		if (bo instanceof GroupBO)
 			return "org.mifos.application.customer.group.business.GroupBO";
-		if(bo instanceof ClientBO)
+		if (bo instanceof ClientBO)
 			return "org.mifos.application.customer.client.business.ClientBO";
-		if(bo instanceof SavingsBO)
+		if (bo instanceof SavingsBO)
 			return "org.mifos.application.accounts.savings.business.SavingsBO";
-		if(bo instanceof LoanBO)
+		if (bo instanceof LoanBO)
 			return "org.mifos.application.accounts.loan.business.LoanBO";
-		if(bo instanceof CustomerAccountBO)
+		if (bo instanceof CustomerAccountBO)
 			return "org.mifos.application.accounts.business.CustomerAccountBO";
-		if(bo instanceof OfficeBO)
+		if (bo instanceof OfficeBO)
 			return "org.mifos.application.office.business.OfficeBO";
-		if(bo instanceof PersonnelBO)
+		if (bo instanceof PersonnelBO)
 			return "org.mifos.application.personnel.business.PersonnelBO";
+		if (bo instanceof CustomerBO) {
+			if (((CustomerBO) bo).getCustomerLevel().getId().equals(
+					CustomerLevel.CLIENT.getValue()))
+				return "org.mifos.application.customer.client.business.ClientBO";
+			if (((CustomerBO) bo).getCustomerLevel().getId().equals(
+					CustomerLevel.GROUP.getValue()))
+				return "org.mifos.application.customer.group.business.GroupBO";
+			if (((CustomerBO) bo).getCustomerLevel().getId().equals(
+					CustomerLevel.CENTER.getValue()))
+				return "org.mifos.application.customer.center.business.CenterBO";
+		}
 		return null;
 	}
-	
+
 }

@@ -127,7 +127,8 @@
 									</c:when>
 									<c:otherwise>
 										<customtags:headerLink selfLink="false"/>
-										<html-el:link href="javascript:ViewDetails()">
+										<!--  html-el:link href="javascript:ViewDetails() -->
+										<a href="customerAccountAction.do?method=load">
 								          	<c:if test="${param.input == 'ViewCenterCharges'}">
 								          	   <mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/>
 								          	</c:if>
@@ -138,7 +139,8 @@
 								          	  <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>
 								          	</c:if>
 								          	<mifos:mifoslabel name="Center.Charges" bundle="CenterUIResources"/>
-								          </html-el:link>
+								         </a>
+								          <!--  /html-el:link -->
 									</c:otherwise>
 							</c:choose>
 	        			</span>
@@ -229,19 +231,22 @@
 				</tr>
 			</table>
 			<br>
-	<html-el:hidden property="searchNode(search_name)" value="ClientChargesDetails"/>
-	<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}"/> 
-	<html-el:hidden property="globalCustNum" value="${sessionScope.BusinessKey.customer.globalCustNum}"/> 
-	<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}"/> 
-	<!-- Should be removed after complete migration of customer happens-->
-	<html-el:hidden property="input" value="${param.input}"/>
+	<!--<html-el:hidden property="searchNode(search_name)" value="ClientChargesDetails"/>
+	 
+	 
+	<!-- Should be removed after complete migration of customer happens->
+ 	<html-el:hidden property="input" value="${param.input}"/>
 	<html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}"/>
 	<html-el:hidden property="searchInput" value="${param.searchInput}" />	
 	<html-el:hidden property="headingInput" value="${param.headingInput}"/>
 	<html-el:hidden property="statusId" value="${param.statusId}"/>
 	<html-el:hidden property="accountType" value="${sessionScope.BusinessKey.accountType.accountTypeId}"/> 
+	-->
+	<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}"/>
+	<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}"/> 
+	<html-el:hidden property="globalCustNum" value="${sessionScope.BusinessKey.customer.globalCustNum}"/>
 	</html-el:form>
-	<html-el:form  action="closedaccsearchaction.do?method=search">
+	<!--<html-el:form  action="closedaccsearchaction.do?method=search">
 <html-el:hidden property="searchNode(search_name)" value="ClientChargesDetails"/>
 <html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}"/> 
 <html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}"/> 
@@ -250,6 +255,6 @@
 <html-el:hidden property="input" value="${param.input}"/> 
 <html-el:hidden property="statusId" value="${param.statusId}"/>
 <html-el:hidden property="globalCustNum" value="${sessionScope.BusinessKey.customer.globalCustNum}" />
-</html-el:form>
+</html-el:form> -->
 	</tiles:put>
 </tiles:insert>

@@ -162,6 +162,10 @@ public class AccountFeesEntity extends PersistentObject {
 	public boolean isTimeOfDisbursement() {
 		return getFees().isTimeOfDisbursement();
 	}
+	
+	public boolean isPeriodic() {
+		return getFees().isPeriodic();
+	}
 
 	public Integer getApplicableDatesCount(Date date) throws AccountException  {
 		Integer applicableDatesCount = 0 ;

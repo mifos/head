@@ -275,11 +275,10 @@
 									<td>
 									<table width="100%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
-											<td width="53%"><span class="fontnormal"> <html-el:link
-												href="javascript:ViewDetails()">
-												<mifos:mifoslabel name="client.viewdetails"
-													bundle="ClientUIResources" />
-											</html-el:link> </span></td>
+											<td width="53%"><span class="fontnormal"> <a
+												href="customerAccountAction.do?method=load&globalCustNum=<c:out value="${sessionScope.BusinessKey.globalCustNum}"/>">
+											<mifos:mifoslabel name="client.viewdetails"
+												bundle="ClientUIResources" /> </a> </span></td>
 										</tr>
 									</table>
 									<span class="fontnormal"><mifos:mifoslabel name="client.amtdue"

@@ -262,5 +262,7 @@ public interface CustomerConstants {
 	public static final String FORMED_BY_LOANOFFICER = "Formed By Loan officer";
 	public static final String TRAINED_CHECKED = "errors.TrainedCheckbox";
 	public static final String TRAINED_DATE_MANDATORY = "errors.TrainedDateNeeded";	
-
+	//Customer Account 
+	public static final String CUSTOMER_ACCOUNT = "customerAccount";	
+	public static final String RECENT_ACTIVITIES = "recentActivities";
 }

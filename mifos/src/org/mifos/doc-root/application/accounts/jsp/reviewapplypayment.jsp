@@ -48,7 +48,8 @@
 	<tiles:put name="body" type="string">
 		<SCRIPT>
 	function ViewDetails(){
-		closedaccsearchactionform.submit();
+			customerAccountActionForm.action="customerAccountAction.do?method=load";
+		customerAccountActionForm.submit();
 	}
 	function ViewLoanDetails(form){
 		form.action="loanAccountAction.do?method=get";
@@ -66,10 +67,10 @@
 					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink />
 
 					<c:choose>
-						<c:when test="${param.input == 'LoanDetails'}">
+						<c:when test="${param.input == 'loan'}">
 						</c:when>
 						<c:otherwise>
-							<html-el:link href="javascript:ViewDetails()">
+							<html-el:link href="customerAccountAction.do?method=load&globalCustNum=${param.globalCustNum}">
 	          	<c:if test="${param.input == 'ViewCenterCharges'}">
 									<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
 								</c:if>
@@ -91,7 +92,7 @@
 				<tr>
 					<td width="100%" colspan="2" class="headingorange"><span
 						class="heading"><c:out value="${param.prdOfferingName}" /> # <c:out
-						value="${param.globalAccountNum}" /> - </span> <mifos:mifoslabel
+						value="${sessionScope.BusinessKey.globalAccountNum}" /> - </span> <mifos:mifoslabel
 						name="accounts.reviewtransaction" /></td>
 				</tr>
 				<tr>
@@ -190,32 +191,12 @@
 							</c:choose></td>
 				</tr>
 			</table>
-			<html-el:hidden property="statusId" value="${param.statusId}" />
-			<html-el:hidden property="searchNode(search_name)"
-				value="${param.searchInput}" />
-			<html-el:hidden property="prdOfferingName"
-				value="${param.prdOfferingName}" />
-			<html-el:hidden property="globalAccountNum"
-				value="${param.globalAccountNum}" />
-			<html-el:hidden property="accountId" value="${param.accountId}" />
-			<html-el:hidden property="accountType" value="${param.accountType}" />
-			<html-el:hidden property="input" value="${param.input}" />
-			<html-el:hidden property="statusId" value="${param.statusId}" />
-			<html-el:hidden property="searchInput" value="${param.searchInput}" />
-			<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />
-		</html-el:form>
-		<html-el:form action="closedaccsearchaction.do?method=search">
-			<html-el:hidden property="searchNode(search_name)"
-				value="${param.searchInput}" />
-			<html-el:hidden property="prdOfferingName"
-				value="${param.prdOfferingName}" />
-			<html-el:hidden property="globalAccountNum"
-				value="${param.globalAccountNum}" />
-			<html-el:hidden property="accountId" value="${param.accountId}" />
-			<html-el:hidden property="accountType" value="${param.accountType}" />
-			<html-el:hidden property="input" value="${param.input}" />
-			<html-el:hidden property="statusId" value="${param.statusId}" />
-			<html-el:hidden property="searchInput" value="${param.searchInput}" />
+						<html-el:hidden property="input" value="${param.input}" />
+						<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}" />
+						<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />
+						<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}" />
+			</html-el:form>
+		<html-el:form action="customerAccountAction.do?method=load">
 			<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />
 		</html-el:form>
 	</tiles:put>

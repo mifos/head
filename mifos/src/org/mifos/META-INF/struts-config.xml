@@ -140,6 +140,9 @@
 		<form-bean name="custActionForm" type="org.mifos.application.customer.struts.actionforms.CustActionForm"></form-bean>
 		<!-- Your Settings Action form -->
 		<form-bean name="personnelSettingsActionForm" type="org.mifos.application.personnel.struts.actionforms.PersonnelSettingsActionForm"></form-bean>
+		<!-- Customer Account Action form -->
+		<form-bean name="customerAccountActionForm" type="org.mifos.application.customer.struts.actionforms.CustomerAccountActionForm"></form-bean>
+		
 	</form-beans>
 
 	<global-exceptions>
@@ -155,6 +158,15 @@
 	</global-forwards>
 
 	<action-mappings>
+	<action path="/customerAccountAction" 
+				type="org.mifos.application.customer.struts.action.CustomerAccountAction" 
+				name="customerAccountActionForm"
+				parameter="method" 
+				scope="session">
+			<forward name="client_detail_page" path="/pages/application/client/jsp/view_clientchargesdetail.jsp" />
+			<forward name="group_detail_page" path="/pages/application/group/jsp/view_groupchargesdetail.jsp" />
+			<forward name="center_detail_page" path="/pages/application/center/jsp/view_centerchargesdetail.jsp" />
+		</action>
 		<action path="/yourSettings" type="org.mifos.application.personnel.struts.action.PersonnelSettingsAction" name="personnelSettingsActionForm" parameter="method"  validate="true" input="/yourSettings.do?method=validate" scope="session">
 			<forward name="editPersonalInfo_failure" path="/pages/application/personnel/jsp/edityoursettings.jsp"/>
 			<forward name="get_success" path="/pages/application/personnel/jsp/yoursettings.jsp"/>
@@ -912,9 +924,9 @@
 		<!-- Ends-->
 		<!-- New Account Action  -->
 		<action path="/accountAppAction" type="org.mifos.application.accounts.struts.action.AccountAppAction" parameter="method" scope="session" name="accountAppActionForm" validate="true" input="/accountAppAction.do?method=validate">
-			<forward name="remove_group_charges" path="/closedaccsearchaction.do?method=search" />
-			<forward name="remove_center_charges" path="/closedaccsearchaction.do?method=search" />
-			<forward name="remove_client_charges" path="/closedaccsearchaction.do?method=search" />
+			<forward name="remove_group_charges" path="/customerAccountAction.do?method=load" />
+			<forward name="remove_center_charges" path="/customerAccountAction.do?method=load" />
+			<forward name="remove_client_charges" path="/customerAccountAction.do?method=load" />
 			<forward name="remove_success" path="/loanAccountAction.do?method=get" />
 			<forward name="getTransactionHistory_success" path="/pages/application/accounts/jsp/viewtrxnhistory.jsp" />
 		</action>
@@ -1008,19 +1020,19 @@
 			<forward name="previewAdjustment_failure" path="/pages/application/customer/jsp/applyadjustment.jsp" />
 			<forward name="cancelAdjustment_failure" path="/pages/application/customer/jsp/applyadjustment.jsp" />
 			<forward name="applyAdjustment_failure" path="/pages/application/customer/jsp/applyadjustment.jsp" />
-			<forward name="applyAdjustment_client_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewClientCharges&amp;searchNode(search_name)=ClientChargesDetails" />
-			<forward name="applyAdjustment_group_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewGroupCharges&amp;searchNode(search_name)=ClientChargesDetails" />
-			<forward name="applyAdjustment_center_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewCenterCharges&amp;searchNode(search_name)=ClientChargesDetails" />
-			<forward name="canceladj_group_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewGroupCharges&amp;searchNode(search_name)=ClientChargesDetails" />
-			<forward name="canceladj_center_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewCenterCharges&amp;searchNode(search_name)=ClientChargesDetails" />
-			<forward name="canceladj_client_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewClientCharges&amp;searchNode(search_name)=ClientChargesDetails" />
+			<forward name="applyAdjustment_client_success" path="/customerAccountAction.do?method=load" />
+			<forward name="applyAdjustment_group_success" path="/customerAccountAction.do?method=load" />
+			<forward name="applyAdjustment_center_success" path="/customerAccountAction.do?method=load" />
+			<forward name="canceladj_group_success" path="/customerAccountAction.do?method=load" />
+			<forward name="canceladj_center_success" path="/customerAccountAction.do?method=load" />
+			<forward name="canceladj_client_success" path="/customerAccountAction.do?method=load" />
 		</action>
 		<action path="/customerAction" type="org.mifos.application.customer.struts.action.CustomerAction" parameter="method" scope="session">
 			<forward name="waiveChargesDue_Success" path="/customerAction.do?method=forwardWaiveChargeDue"></forward>
 			<forward name="waiveChargesOverDue_Success" path="/customerAction.do?method=forwardWaiveChargeOverDue"></forward>
-			<forward name="waiveClientCharges_Success" path="/closedaccsearchaction.do?method=search&amp;input=ViewClientCharges&amp;searchNode(search_name)=ClientChargesDetails" />
-			<forward name="waiveGroupCharges_Success" path="/closedaccsearchaction.do?method=search&amp;input=ViewGroupCharges&amp;searchNode(search_name)=ClientChargesDetails" />
-			<forward name="waiveCenterCharges_Success" path="/closedaccsearchaction.do?method=search&amp;input=ViewCenterCharges&amp;searchNode(search_name)=ClientChargesDetails" />
+			<forward name="waiveClientCharges_Success" path="/customerAccountAction.do?method=load" />
+			<forward name="waiveGroupCharges_Success" path="/customerAccountAction.do?method=load" />
+			<forward name="waiveCenterCharges_Success" path="/customerAccountAction.do?method=load" />
 			<forward name="viewClientActivity" path="/pages/application/client/jsp/viewClientActivity.jsp" />
 			<forward name="viewGroupActivity" path="/pages/application/group/jsp/viewGroupActivity.jsp" />
 			<forward name="viewCenterActivity" path="/pages/application/center/jsp/viewCenterActivity.jsp" />
@@ -1032,7 +1044,7 @@
 			<forward name="preview_success" path="/pages/application/accounts/jsp/reviewapplypayment.jsp" />
 			<forward name="preview_failure" path="/pages/application/accounts/jsp/applypayment.jsp" />
 			<forward name="previous_success" path="/pages/application/accounts/jsp/applypayment.jsp"/>
-			<forward name="applyPayment_success" path="/closedaccsearchaction.do?method=search"/>
+			<forward name="applyPayment_success" path="/customerAccountAction.do?method=load"/>
 			<forward name="applyPayment_failure" path="/pages/application/accounts/jsp/reviewapplypayment.jsp"/>
 			<forward name="loan_detail_page" path="/loanAccountAction.do?method=get" />
 		</action>
@@ -1106,9 +1118,15 @@
 			<forward name="load_success" path="/pages/application/accounts/jsp/applyCharges.jsp"></forward>
 			<forward name="update_failure" path="/pages/application/accounts/jsp/applyCharges.jsp"></forward>
 			<forward name="loanDetails_success" path="/loanAccountAction.do?method=get"></forward>
+			<!-- 
 			<forward name="clientDetails_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewClientCharges&amp;searchNode(search_name)=ClientChargesDetails" />
 			<forward name="groupDetails_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewGroupCharges&amp;searchNode(search_name)=ClientChargesDetails" />
 			<forward name="centerDetails_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewCenterCharges&amp;searchNode(search_name)=ClientChargesDetails" />
+			-->
+			<forward name="clientDetails_success" path="/customerAccountAction.do?method=load" />
+			<forward name="groupDetails_success" path="/customerAccountAction.do?method=load" />
+			<forward name="centerDetails_success" path="/customerAccountAction.do?method=load" />
+			
 		</action>
 		<!-- CustomerNotes action -->
 		<action path="/customerNotesAction" type="org.mifos.application.customer.struts.action.CustomerNotesAction" 

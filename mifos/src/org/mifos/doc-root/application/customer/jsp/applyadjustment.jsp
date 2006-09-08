@@ -66,7 +66,8 @@
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt">
 					<customtags:headerLink/>
-					<html-el:link href="javascript:ViewDetails()">/
+					<a href="customerAccountAction.do?method=load">
+					<!--  html-el:link href="javascript:ViewDetails()" -->/
 								<c:if test="${param.input == 'ViewCenterCharges'}">
 									<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
 								</c:if>
@@ -78,7 +79,9 @@
 								</c:if>
 								<mifos:mifoslabel name="Center.Charges"
 									bundle="CenterUIResources" />
-							</html-el:link></span></td>
+							<!--  /html-el:link -->
+							</a>
+						</span></td>
 				</tr>
 			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -238,12 +241,9 @@
 			<html-el:hidden property="accountId" value="${param.accountId}" />
 			<html-el:hidden property="accountType" value="${param.accountType}" /> 
 			<html-el:hidden property="securityParamInput" value="${param.securityParamInput}" />
-			<html-el:hidden property="statusId" value="${param.statusId}"/> 
 			<mifos:SecurityParam property="${param.securityParamInput}" />
-			<html-el:hidden property="searchNode(search_name)"
-				value="ClientChargesDetails" />
 		</html-el:form>
-		<html-el:form action="closedaccsearchaction.do?method=search">
+		<%--  html-el:form action="closedaccsearchaction.do?method=search">
 			<html-el:hidden property="searchNode(search_name)"
 				value="ClientChargesDetails" />
 			<html-el:hidden property="prdOfferingName"
@@ -256,7 +256,7 @@
 			<html-el:hidden property="statusId" value="${param.statusId}" />
 			<html-el:hidden property="searchInput" value="${param.searchInput}" />
 			<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />
-		</html-el:form>
+		</html-el:form --%>
 
 	</tiles:put>
 </tiles:insert>
