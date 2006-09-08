@@ -78,7 +78,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		super.tearDown();
 	}
 
-/*	public void testSuccessfulMakePayment() throws Exception {
+	public void testSuccessfulMakePayment() throws Exception {
 		createCenter();
 		CustomerAccountBO customerAccount = center.getCustomerAccount();
 		assertNotNull(customerAccount);
@@ -919,7 +919,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 					((CustomerScheduleEntity) accountActionDateEntity)
 							.getPaymentStatus());
 		}
-	}*/
+	}
 
 	public void testActivityForMultiplePayments() throws Exception {
 		createCenter();

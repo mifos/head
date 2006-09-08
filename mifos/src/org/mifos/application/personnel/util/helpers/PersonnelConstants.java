@@ -165,5 +165,18 @@ public interface PersonnelConstants {
 	public static final String ERROR_MANDATORY_TEXT_AREA = "errors.mandatorytextarea";
 	public static final short COMMENT_LENGTH = 500;
 	public static final String MAXIMUM_LENGTH="errors.maxlength";
+	public static final String MAXIMUMLENGTH="errors.maximumlength";
+	public static final String MANDATORYSELECT="errors.mandatorySelect";
+	public static final String GENDERVALUE ="gender";
+	public static final String FIRSTNAME ="firstName";
+	public static final String LASTNAME ="lastName";
+	public static final String FIRST_NAME ="first name";
+	public static final String LAST_NAME ="last name";
+	public static final String PERSONNELNAMELENGTH ="100";
+	public static final short PERSONNELLENGTH =100;
+	public static final String PERSONNELDISPLAYLENGTH ="200";
+	public static final short PERSONNELDISPLAYNAMELENGTH =200;
+	public static final String DISPLAY_NAME ="display name";
+	public static final String DISPLAYNAME ="displayName";
 	
 }

@@ -239,6 +239,8 @@
 		<form-bean name="groupCustActionForm" type="org.mifos.application.customer.group.struts.actionforms.GroupCustActionForm"></form-bean>
 		<!-- Customer Action form -->
 		<form-bean name="custActionForm" type="org.mifos.application.customer.struts.actionforms.CustActionForm"></form-bean>
+		<!-- Your Settings Action form -->
+		<form-bean name="personnelSettingsActionForm" type="org.mifos.application.personnel.struts.actionforms.PersonnelSettingsActionForm"></form-bean>
 	</form-beans>
 	<global-exceptions>
 		<exception type="org.mifos.framework.exceptions.SystemException"
@@ -256,6 +258,15 @@
 		<forward name="welcome" path="/mifoslogin.do?method=load" />
 	</global-forwards>
 	<action-mappings>
+		<action path="/yourSettings" type="org.mifos.application.personnel.struts.action.PersonnelSettingsAction" name="personnelSettingsActionForm" parameter="method"  validate="true" input="/yourSettings.do?method=validate" scope="session">
+			<forward name="editPersonalInfo_failure" path="/pages/application/personnel/jsp/edityoursettings.jsp"/>
+			<forward name="get_success" path="/pages/application/personnel/jsp/yoursettings.jsp"/>
+			<forward name="manage_success" path="/pages/application/personnel/jsp/edityoursettings.jsp"/>
+			<forward name="loadChangePassword_success" path="/pages/application/personnel/jsp/changePassword.jsp" />
+			<forward name="preview_success" path="/pages/application/personnel/jsp/previewyoursettings.jsp" />
+			<forward name="previous_success" path="/pages/application/personnel/jsp/edityoursettings.jsp"/>
+			<forward name="updateSettings_success" path="/yourSettings.do?method=get" />
+		</action>
 	<!-- Savings Accounts action -->
        <action path="/savingsAction" type="org.mifos.application.accounts.savings.struts.action.SavingsAction" 
       		name="savingsActionForm" 
@@ -860,9 +871,7 @@
 				path="/pages/application/personnel/jsp/changePassword.jsp">
 			</forward>
 
-			<forward name="success_settings"
-				path="/PersonnelAction.do?method=getDetails">
-			</forward>
+			<forward name="success_settings" path="/yourSettings.do?method=get"></forward>
 
 		</action>
 

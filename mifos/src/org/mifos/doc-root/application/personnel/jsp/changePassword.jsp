@@ -40,7 +40,7 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".noorangetab">
  <tiles:put name="body" type="string">
@@ -134,6 +134,7 @@
 	</td>
 	</tr>
 	</table>
+	<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 </html-el:form>
 </tiles:put>
 </tiles:insert>

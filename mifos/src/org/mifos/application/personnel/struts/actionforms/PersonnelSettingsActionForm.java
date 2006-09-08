@@ -1,18 +1,18 @@
 package org.mifos.application.personnel.struts.actionforms;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
-
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.util.helpers.Methods;
-
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
-
 public class PersonnelSettingsActionForm extends BaseActionForm {
+
 	private String firstName;
 
 	private String middleName;
@@ -35,7 +35,13 @@ public class PersonnelSettingsActionForm extends BaseActionForm {
 
 	private String userName;
 
+	private String displayName;
+
 	private Address address;
+
+	public String getDisplayName() {
+		return getName().getDisplayName();
+	}
 
 	public PersonnelSettingsActionForm() {
 		address = new Address();
@@ -150,8 +156,7 @@ public class PersonnelSettingsActionForm extends BaseActionForm {
 	}
 
 	public Name getName() {
-		Name name = new Name(firstName, middleName, secondLastName, lastName);
-		return name;
+		return new Name(firstName, middleName, secondLastName, lastName);
 	}
 
 	public Integer getMaritalStatusValue() {
@@ -162,20 +167,35 @@ public class PersonnelSettingsActionForm extends BaseActionForm {
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();
-		String method = request.getParameter("method");
+		String method = request.getParameter(Methods.method.toString());
 		if (method.equals(Methods.preview.toString())) {
 			if (StringUtils.isNullOrEmpty(getFirstName()))
-				addError(errors, "firstName", "errors.mandatory", "first name");
-			else if (getFirstName().length() > 200)
-				addError(errors, "firstName", "errors.maximumlength",
-						"first name", "200");
+				addError(errors, PersonnelConstants.FIRSTNAME,
+						PersonnelConstants.ERRORMANDATORY,
+						PersonnelConstants.FIRST_NAME);
+			else if (getFirstName().length() > PersonnelConstants.PERSONNELLENGTH)
+				addError(errors, PersonnelConstants.FIRSTNAME,
+						PersonnelConstants.MAXIMUM_LENGTH,
+						PersonnelConstants.FIRST_NAME,
+						PersonnelConstants.PERSONNELNAMELENGTH);
 			if (StringUtils.isNullOrEmpty(getLastName()))
-				addError(errors, "lastName", "errors.mandatory", "last name");
-			else if (getLastName().length() > 200)
-				addError(errors, "lastName", "errors.maximumlength",
-						"last name", "200");
+				addError(errors, PersonnelConstants.LASTNAME,
+						PersonnelConstants.ERRORMANDATORY,
+						PersonnelConstants.LAST_NAME);
+			else if (getLastName().length() > PersonnelConstants.PERSONNELLENGTH)
+				addError(errors, PersonnelConstants.LASTNAME,
+						PersonnelConstants.MAXIMUM_LENGTH,
+						PersonnelConstants.LAST_NAME,
+						PersonnelConstants.PERSONNELNAMELENGTH);
 			if (StringUtils.isNullOrEmpty(getGender()))
-				addError(errors, "gender", "errors.mandatorySelect", "gender");
+				addError(errors, PersonnelConstants.GENDERVALUE,
+						PersonnelConstants.MANDATORYSELECT,
+						PersonnelConstants.GENDERVALUE);
+			if (getDisplayName().length() > PersonnelConstants.PERSONNELDISPLAYNAMELENGTH)
+				addError(errors, PersonnelConstants.DISPLAYNAME,
+						PersonnelConstants.MAXIMUM_LENGTH,
+						PersonnelConstants.DISPLAY_NAME,
+						PersonnelConstants.PERSONNELDISPLAYLENGTH);
 		}
 		if (!method.equals(Methods.validate.toString()))
 			request.setAttribute("methodCalled", method);

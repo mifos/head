@@ -42,6 +42,7 @@
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".noorangetab">
 	<tiles:put name="body" type="string">
@@ -52,7 +53,7 @@
   }
 </script>
 		<html-el:form action="yourSettings.do?method=preview">
-
+			<c:set var="form" value="${sessionScope.personnelSettingsActionForm}" />
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
@@ -100,7 +101,7 @@
 										name="PersonnelSettingsActionForm"
 										property="firstName"
 										
-										value="${sessionScope.personnelSettingsActionForm.firstName}" />
+										value="${form.firstName}" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
@@ -108,7 +109,7 @@
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
 										property="middleName"
               									 
-										value="${sessionScope.personnelSettingsActionForm.middleName}" />
+										value="${form.middleName}" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
@@ -116,7 +117,7 @@
 										name="Personnel.SecondLastName" /></td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
 										property="secondLastName"
-										value="${sessionScope.personnelSettingsActionForm.secondLastName}" />
+										value="${form.secondLastName}" />
 									</td>
 								</tr>
 
@@ -125,7 +126,7 @@
 										mandatory="yes" /></td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
 										property="lastName"
-										value="${sessionScope.personnelSettingsActionForm.lastName}" />
+										value="${form.lastName}" />
 									</td>
 								</tr>
 
@@ -134,20 +135,20 @@
 										name="${ConfigurationConstants.GOVERNMENT_ID}"
 										bundle="PersonnelUIResources"></mifos:mifoslabel>:</td>
 									<td><c:out
-										value="${sessionScope.personnelSettingsActionForm.governmentIdNumber}" />
+										value="${form.governmentIdNumber}" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel name="Personnel.Email" /></td>
 									<td><mifos:mifosalphanumtext property="emailId"
 										name="PersonnelSettingsActionForm"
-										value="${sessionScope.personnelSettingsActionForm.emailId}" /></td>
+										value="${form.emailId}" /></td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel name="Personnel.DOB"
 										bundle="PersonnelUIResources"></mifos:mifoslabel></td>
 									<td><c:out
-										value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.personnelSettingsActionForm.dob)}" />
+										value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,form.dob)}" />
 									</td>
 								</tr>
 
@@ -159,8 +160,8 @@
 									
 								
 								
-									<mifos:select property="maritalStatus" value="${sessionScope.personnelSettingsActionForm.maritalStatus}">
-											<c:forEach items="${sessionScope.maritalStatusList}" 
+									<mifos:select property="maritalStatus" value="${form.maritalStatus}">
+											<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'maritalStatusList')}" 
 											var="maritalStatus">
 											<html-el:option value="${maritalStatus.id}">${maritalStatus.name}</html-el:option>
 											</c:forEach>
@@ -174,8 +175,8 @@
 									
 									<td>
 									
-									<mifos:select property="gender">
-											<c:forEach items="${sessionScope.genderList}" 
+									<mifos:select property="gender" value="${form.gender}">
+											<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'genderList')}" 
 											var="gender">
 											<html-el:option value="${gender.id}">${gender.name}</html-el:option>
 											</c:forEach>
@@ -189,8 +190,8 @@
 										name="Personnel.LanguagePreferred" /></td>
 										
 									<td>
-									<mifos:select property="preferredLocale">
-											<c:forEach items="${sessionScope.languageList}" 
+									<mifos:select property="preferredLocale" value="${form.preferredLocale}">
+											<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'languageList')}" 
 											var="languageList">
 											<html-el:option value="${languageList.id}">${languageList.name}</html-el:option>
 											</c:forEach>
@@ -201,7 +202,7 @@
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel name="Personnel.UserName"
 										bundle="PersonnelUIResources"></mifos:mifoslabel></td>
-									<td><c:out value="${sessionScope.personnelSettingsActionForm.userName}" /></td>
+									<td><c:out value="${form.userName}" /></td>
 								</tr>
 							</table>
 							<br>
@@ -218,7 +219,7 @@
 									<td width="68%"><mifos:mifosalphanumtext
 										name="PersonnelSettingsActionForm"
 										property="address.line1"
-										value="${sessionScope.personnelSettingsActionForm.address.line1}" />
+										value="${form.address.line1}" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
@@ -226,7 +227,7 @@
 										name="${ConfigurationConstants.ADDRESS2}" />:</td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
 										property="address.line2"
-										value="${sessionScope.personnelSettingsActionForm.address.line2}" />
+										value="${form.address.line2}" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
@@ -234,7 +235,7 @@
 										name="${ConfigurationConstants.ADDRESS3}" />:</td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
 										property="address.line3"
-										value="${sessionScope.personnelSettingsActionForm.address.line3}" />
+										value="${form.address.line3}" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
@@ -242,21 +243,21 @@
 										name="${ConfigurationConstants.CITY}" />:</td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
 										property="address.city"
-										value="${sessionScope.personnelSettingsActionForm.address.city}" /></td>
+										value="${form.address.city}" /></td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
 										name="${ConfigurationConstants.STATE}" />:</td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
 										property="address.state"
-										value="${sessionScope.personnelSettingsActionForm.address.state}" />
+										value="${form.address.state}" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel name="Personnel.Country" /></td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
 										property="address.country"
-										value="${sessionScope.personnelSettingsActionForm.address.country}" />
+										value="${form.address.country}" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
@@ -264,14 +265,14 @@
 										name="${ConfigurationConstants.POSTAL_CODE}" />:</td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
 										property="address.zip"
-										value="${sessionScope.personnelSettingsActionForm.address.zip}" />
+										value="${form.address.zip}" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel name="Personnel.Telephone" /></td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
 										property="address.phoneNumber"
-										value="${sessionScope.personnelSettingsActionForm.address.phoneNumber}" />
+										value="${form.address.phoneNumber}" />
 									</td>
 								</tr>
 							</table>
@@ -304,17 +305,7 @@
 					</td>
 				</tr>
 			</table>
-			<%-- html-el:hidden property="input" value="update" />
-			<html-el:hidden property="personnelDetails.governmentIdNumber"
-				value="${sessionScope.Personnel.personnelDetails.governmentIdNumber}" />
-			<html-el:hidden property="userName"
-				value="${sessionScope.Personnel.userName}" />
-			<html-el:hidden property="level.levelId"
-				value="${sessionScope.Personnel.level.levelId}" />
-			<html-el:hidden property="versionNo"
-				value="${sessionScope.Personnel.versionNo}" />
-			<html-el:hidden property="dob"
-				value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.Personnel.personnelDetails.dob)}" --%>
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

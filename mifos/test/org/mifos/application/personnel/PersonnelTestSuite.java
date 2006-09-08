@@ -7,8 +7,9 @@ import org.mifos.application.personnel.business.TestPersonnelBO;
 import org.mifos.application.personnel.business.TestPersonnelStatusEntity;
 import org.mifos.application.personnel.persistence.TestPersonnelPersistence;
 import org.mifos.application.personnel.persistence.service.TestPersonnelPersistenceService;
+import org.mifos.application.personnel.struts.action.PersonnelSettingsActionTest;
 import org.mifos.application.personnel.struts.action.TestPersonAction;
-import org.mifos.application.personnel.struts.action.personnelNoteActionTest;
+import org.mifos.application.personnel.struts.action.PersonnelNoteActionTest;
 import org.mifos.framework.MifosTestSuite;
 
 public class PersonnelTestSuite extends MifosTestSuite {
@@ -23,7 +24,8 @@ public class PersonnelTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(TestPersonnelPersistenceService.class);
 		testSuite.addTestSuite(TestPersonnelBO.class);
 		testSuite.addTestSuite(TestPersonAction.class);
-		testSuite.addTestSuite(personnelNoteActionTest.class);
+		testSuite.addTestSuite(PersonnelNoteActionTest.class);
+		testSuite.addTestSuite(PersonnelSettingsActionTest.class);
 		return testSuite;
 	}
 

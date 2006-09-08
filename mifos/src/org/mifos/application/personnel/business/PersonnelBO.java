@@ -406,7 +406,6 @@ public class PersonnelBO extends BusinessObject {
 			if (StringUtils.isNullOrEmpty(userName))
 				throw new PersonnelException(PersonnelConstants.ERRORMANDATORY);
 			if (persistence.isUserExist(userName)) {
-				System.out.println("Duplicate user found");
 				throw new PersonnelException(PersonnelConstants.DUPLICATE_USER,
 						new Object[] { userName });
 
@@ -488,16 +487,16 @@ public class PersonnelBO extends BusinessObject {
 	}
 
 	public void update(String emailId, Name name, Integer maritalStatus,
-			Integer gender, Address address, Short preferredLocale)
+			Integer gender, Address address, Short preferredLocale, Short updatedById)
 			throws PersonnelException {
 
 		this.emailId = emailId;
-		/*
-		 * if(preferredLocale != null && preferredLocale != 0){
-		 * this.preferredLocale = new SupportedLocalesEntity(preferredLocale); }
-		 */
+		if(preferredLocale != null && preferredLocale != 0){
+			this.preferredLocale = new SupportedLocalesEntity(preferredLocale); }
+		setDisplayName(name.getDisplayName());
 		updatePersonnelDetails(name, maritalStatus, gender, address, null);
 		try {
+			setUpdateDetails(updatedById);
 			new PersonnelPersistence().createOrUpdate(this);
 		} catch (PersistenceException pe) {
 			throw new PersonnelException(PersonnelConstants.UPDATE_FAILED, pe);

@@ -389,6 +389,42 @@ public class TestPersonnelBO extends MifosTestCase {
 		assertEquals(1, personnel.getPersonnelRoles().size());
 		
 	}
+	
+	public void testSuccessUpdateUserSettings() throws Exception {
+		createdBranchOffice = TestObjectFactory.createOffice(
+				OfficeLevel.BRANCHOFFICE, office, "Office_BRanch1", "OFB");
+		HibernateUtil.closeSession();
+		createdBranchOffice = (OfficeBO) HibernateUtil.getSessionTL().get(
+				OfficeBO.class, createdBranchOffice.getOfficeId());
+		createPersonnel(office, PersonnelLevel.NON_LOAN_OFFICER);
+		
+		personnel.update("xyz@aditi.com",getPersonnelName(),2,2,getAddress(),Short.valueOf("1"),Short.valueOf("1"));
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
+				PersonnelBO.class, personnel.getPersonnelId());
+		createdBranchOffice = (OfficeBO) HibernateUtil.getSessionTL().get(
+				OfficeBO.class, createdBranchOffice.getOfficeId());
+		assertEquals(getPersonnelName().getFirstName(), personnel
+				.getPersonnelDetails().getName().getFirstName());
+		assertEquals(getPersonnelName().getLastName(), personnel
+				.getPersonnelDetails().getName().getLastName());
+		assertEquals(getPersonnelName().getMiddleName(), personnel
+				.getPersonnelDetails().getName().getMiddleName());
+		assertEquals(getPersonnelName().getSecondLastName(), personnel
+				.getPersonnelDetails().getName().getSecondLastName());
+		assertEquals("changed", personnel.getPersonnelDetails().getAddress().getCity());
+		assertEquals("changed", personnel.getPersonnelDetails().getAddress().getCountry());
+		assertEquals("changed", personnel.getPersonnelDetails().getAddress().getLine1());
+		assertEquals("changed", personnel.getPersonnelDetails().getAddress().getLine2());
+		assertEquals("changed", personnel.getPersonnelDetails().getAddress().getLine3());
+		assertEquals("changed", personnel.getPersonnelDetails().getAddress().getPhoneNumber());
+		assertEquals("changed", personnel.getPersonnelDetails().getAddress().getState());
+		assertEquals("changed", personnel.getPersonnelDetails().getAddress().getZip());
+		assertEquals(2, personnel.getPersonnelDetails().getMaritalStatus()
+				.intValue());
+		assertEquals("xyz@aditi.com", personnel.getEmailId());
+	}
 
 	public void testAddNotes() throws Exception {
 		try{

@@ -42,6 +42,7 @@
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
 <%@ taglib uri="/mifos/customtags" prefix = "mifoscustom"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".noorangetab">
  <tiles:put name="body" type="string">
@@ -52,12 +53,12 @@
 	personnelSettingsActionForm.submit();
   }
    function goToEditPage(){
-	personnelSettingsActionForm.action="yourSettings.do?method=manage";
+	personnelSettingsActionForm.action="yourSettings.do?method=previous";
 	personnelSettingsActionForm.submit();
   }
 </script>
 <html-el:form action="yourSettings.do?method=update">
-<c:set var="form" value="${sessionScope.form}" />
+<c:set var="form" value="${sessionScope.personnelSettingsActionForm}" />
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td height="350" align="left" valign="top" bgcolor="#FFFFFF"> 
@@ -106,92 +107,92 @@
            	 <td width="100%" class="fontnormalbold">
 	           	 <mifos:mifoslabel name="Personnel.FirstName"/>
 	           	 <span class="fontnormal">
-		           	 <c:out value="${personnelSettingsActionForm.firstName}"/>
+		           	 <c:out value="${form.firstName}"/>
 	           	 </span> <br>
 	           	 
 	           	 <mifos:mifoslabel name="Personnel.MiddleName"/>
 	           	 <span class="fontnormal">
-	           		 <c:out value="${personnelSettingsActionForm.middleName}"/>
+	           		 <c:out value="${form.middleName}"/>
 	           	 </span><br>
 	           	 
 	           	 <mifos:mifoslabel name="Personnel.SecondLastName"/>
 	           	 <span class="fontnormal">
-		           	 <c:out value="${personnelSettingsActionForm.secondLastName}"/>
+		           	 <c:out value="${form.secondLastName}"/>
 	           	 </span><br>
 	           	 
 	           	 <mifos:mifoslabel name="Personnel.LastName"/>
 	           	 <span class="fontnormal">	           	 
-		           	 <c:out value="${personnelSettingsActionForm.lastName}"/> 
+		           	 <c:out value="${form.lastName}"/> 
 	           	 </span><br>
 	           	 
 	           	 <mifos:mifoslabel name="${ConfigurationConstants.GOVERNMENT_ID}" bundle="PersonnelUIResources"></mifos:mifoslabel>: 
 				 <span class="fontnormal">
-					<c:out value="${personnelSettingsActionForm.governmentIdNumber}"/> 
+					<c:out value="${form.governmentIdNumber}"/> 
 				 </span> <br>
 				 
 	           	 <mifos:mifoslabel name="Personnel.Email" />
  	           	 <span class="fontnormal">
-		           	 <c:out value="${personnelSettingsActionForm.emailId}"/>
+		           	 <c:out value="${form.emailId}"/>
 	           	 </span><br>
 	           	 
 	           	 <mifos:mifoslabel name="Personnel.DOB" bundle="PersonnelUIResources"></mifos:mifoslabel>
 			    <span class="fontnormal">
-					<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,personnelSettingsActionForm.dob)}" />
+					<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,form.dob)}" />
 				</span><br>
 
 			    <mifos:mifoslabel name="Personnel.Age" bundle="PersonnelUIResources"></mifos:mifoslabel>
 			     <span class="fontnormal">
-					<c:out value="${sessionScope.personnelAge}"/> 
+					<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'personnelAge')}"/> 
 				 </span><br> 	
 				 
 	           	 <mifos:mifoslabel name="Personnel.MaritalStatus" />
  	           	 <span class="fontnormal">	           	 
-		           	 <c:out value="${sessionScope.MaritalStatus}"/> 
+		           	 <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'MaritalStatus')}"/> 
 	           	 </span><br>
 	
 	           	 <mifos:mifoslabel name="Personnel.Gender" />
 				 <span class="fontnormal">	             	 
-		           	 <c:out value="${sessionScope.Gender}"/>
+		           	 <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'Gender')}"/>
 	           	 </span><br>
 	           	 
 	           	 <mifos:mifoslabel name="Personnel.LanguagePreferred" />
 	           	 <span class="fontnormal">	  
-		           	 <c:out value="${personnelSettingsActionForm.preferredLocale}"/>
+		           	 <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'Language')}"/>
 	           	 </span><br>
 	           	 
 	           	 <mifos:mifoslabel name="Personnel.UserName"  bundle="PersonnelUIResources"></mifos:mifoslabel> 
 				<span class="fontnormal">
-					<c:out value="${personnelSettingsActionForm.userName}"/> 
+					<c:out value="${form.userName}"/> 
 				</span><br>
 	           	 <br>
 	           	 <mifos:mifoslabel name="Personnel.Address" /><br>
  				 <span class="fontnormal">	             	 
-		           	 <c:out value="${personnelSettingsActionForm.addressDetails}"/> 
+		           	 <c:out value="${form.addressDetails}"/> 
 	           	 </span><br>
 	           	 
 	           	 <mifos:mifoslabel name="${ConfigurationConstants.CITY}" />:
 	           	 <span class="fontnormal">	 
-		           	 <c:out value="${personnelSettingsActionForm.address.city}"/> 
+		           	 <c:out value="${form.address.city}"/> 
 	           	 </span><br>
 	           	 
 	           	 <mifos:mifoslabel name="${ConfigurationConstants.STATE}" />:
 	           	 <span class="fontnormal">	 
-		           	 <c:out value="${personnelSettingsActionForm.address.state}"/> 
+		           	 <c:out value="${form.address.state}"/> 
 	           	 </span><br>
 	           	 
 	           	 <mifos:mifoslabel name="Personnel.Country" />
 	           	 <span class="fontnormal">	 
-	    	       	 <c:out value="${personnelSettingsActionForm.address.country}"/> 
+	    	       	 <c:out value="${form.address.country}"/> 
 	           	 </span><br>
 	           	 
 	           	 <mifos:mifoslabel name="${ConfigurationConstants.POSTAL_CODE}"/>:
 	           	 <span class="fontnormal">	 
-		           	 <c:out value="${personnelSettingsActionForm.address.zip}"/> 
+		           	 <c:out value="${form.address.zip}"/> 
 	           	 </span><br>
 	           	 
 	           	 <mifos:mifoslabel name="Personnel.Telephone"/>
 	           	 <span class="fontnormal">	 
-		           	 <c:out value="${personnelSettingsActionForm.address.phoneNumber}"/> 
+		           	 <c:out value="${form.address.phoneNumber}"/> 
 	           	 </span><br>
    			 </td>
             </tr>
@@ -236,6 +237,8 @@
   </tr>
 </table>
 <html-el:hidden property="input" value="EditSettings"/>
+<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+<html-el:hidden property="randomNUm" value="${sessionScope.randomNUm}" />
 </html-el:form>
 
 </tiles:put>

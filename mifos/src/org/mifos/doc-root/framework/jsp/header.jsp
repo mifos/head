@@ -9,7 +9,7 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td width="188" rowspan="2"><img src="pages/framework/images/logo.gif" width="188" height="74"></td>
-    <td align="right" bgcolor="#FFFFFF" class="fontnormal"><a href="yourSettings.do?method=get">Your settings</a>
+    <td align="right" bgcolor="#FFFFFF" class="fontnormal"><a href="yourSettings.do?method=get&randomNUm=${sessionScope.randomNUm}">Your settings</a>
      &nbsp;|&nbsp; <a href="javascript:fnLogout()">Logout</a>&nbsp;|&nbsp; <a href="#">Help</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
   </tr>
   <tr>

@@ -158,9 +158,10 @@
 		<action path="/yourSettings" type="org.mifos.application.personnel.struts.action.PersonnelSettingsAction" name="personnelSettingsActionForm" parameter="method"  validate="true" input="/yourSettings.do?method=validate" scope="session">
 			<forward name="editPersonalInfo_failure" path="/pages/application/personnel/jsp/edityoursettings.jsp"/>
 			<forward name="get_success" path="/pages/application/personnel/jsp/yoursettings.jsp"/>
-			<forward name="editPersonalInfo_success" path="/pages/application/personnel/jsp/edityoursettings.jsp"/>
+			<forward name="manage_success" path="/pages/application/personnel/jsp/edityoursettings.jsp"/>
 			<forward name="loadChangePassword_success" path="/pages/application/personnel/jsp/changePassword.jsp" />
-			<forward name="previewPersonalInfo_success" path="/pages/application/personnel/jsp/previewyoursettings.jsp" />
+			<forward name="preview_success" path="/pages/application/personnel/jsp/previewyoursettings.jsp" />
+			<forward name="previous_success" path="/pages/application/personnel/jsp/edityoursettings.jsp"/>
 			<forward name="updateSettings_success" path="/yourSettings.do?method=get" />
 		</action>
 		<action path="/ChangeAccountStatus"

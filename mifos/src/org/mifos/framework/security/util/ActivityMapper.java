@@ -1076,6 +1076,8 @@ public class ActivityMapper {
 				SecurityConstants.PERSONNEL_EDIT_SELF_INFO);	
 		activityMap.put("/yourSettings-preview",
 				SecurityConstants.VIEW);
+		activityMap.put("/yourSettings-previous",
+				SecurityConstants.VIEW);
 		activityMap.put("/yourSettings-update",
 				SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
 		activityMap.put("/yourSettings-loadChangePassword",
