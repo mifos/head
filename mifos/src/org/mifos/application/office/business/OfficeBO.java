@@ -24,35 +24,34 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.security.util.EventManger;
 import org.mifos.framework.security.util.OfficeSearch;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
-import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.StringUtils;
 
-import com.sun.corba.se.impl.ior.NewObjectKeyTemplateBase;
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 
 public class OfficeBO extends BusinessObject {
 
-	private MifosLogger logger = null;
-
 	private final Short officeId;
 
-	private String globalOfficeNum;
-
-	private OfficeLevelEntity level;
+	private final Short operationMode;
 
 	private final Integer maxChildCount;
 
+	private String officeName;
+
+	private String shortName;
+
+	private String globalOfficeNum;
+
 	private String searchId;
 
-	private final Short operationMode;
+	private OfficeLevelEntity level;
 
 	private OfficeBO parentOffice;
 
@@ -60,13 +59,11 @@ public class OfficeBO extends BusinessObject {
 
 	private Set<OfficeCustomFieldEntity> customFields;
 
-	private String officeName;
-
-	private String shortName;
-
 	private OfficeAddressEntity address;
 
 	private Set<OfficeBO> children;
+
+	private MifosLogger logger = null;
 
 	public OfficeBO() {
 		super();
@@ -179,6 +176,7 @@ public class OfficeBO extends BusinessObject {
 	public String getSearchId() {
 		return searchId;
 	}
+
 	public String getShortName() {
 		return shortName;
 	}
@@ -206,6 +204,38 @@ public class OfficeBO extends BusinessObject {
 
 	public void setAddress(OfficeAddressEntity address) throws OfficeException {
 		this.address = address;
+	}
+
+	public void setChildren(Set<OfficeBO> children) {
+		this.children = children;
+	}
+
+	public void setGlobalOfficeNum(String globalOfficeNum) {
+		this.globalOfficeNum = globalOfficeNum;
+	}
+
+	public void setLevel(OfficeLevelEntity level) {
+		this.level = level;
+	}
+
+	public void setSearchId(String searchId) {
+		this.searchId = searchId;
+	}
+
+	public void setStatus(OfficeStatusEntity status) {
+		this.status = status;
+	}
+
+	public Set<OfficeBO> getChildren() {
+		return children;
+	}
+
+	private void removeChild(OfficeBO office) {
+		children.remove(office);
+	}
+
+	private void addChild(OfficeBO office) {
+		children.add(office);
 	}
 
 	private void verifyFields(String officeName, String shortName,
@@ -331,15 +361,16 @@ public class OfficeBO extends BusinessObject {
 		if (parentOffice.getOfficeStatus().equals(OfficeStatus.INACTIVE))
 			throw new OfficeException(OfficeConstants.KEYPARENTNOTACTIVE);
 	}
-	
+
 	public boolean isActive() {
 
 		return getStatus().getId().equals(OfficeStatus.ACTIVE.getValue());
-			
+
 	}
 
 	public void update(String newName, String newShortName,
-			OfficeStatus newStatus, OfficeLevel newLevel, OfficeBO newParent, Address address, List<CustomFieldView> customFileds)
+			OfficeStatus newStatus, OfficeLevel newLevel, OfficeBO newParent,
+			Address address, List<CustomFieldView> customFileds)
 			throws OfficeException {
 		changeOfficeName(newName);
 		changeOfficeShortName(newShortName);
@@ -396,18 +427,6 @@ public class OfficeBO extends BusinessObject {
 		}
 	}
 
-	public Set<OfficeBO> getChildren() {
-		return children;
-	}
-
-	private void removeChild(OfficeBO office) {
-		children.remove(office);
-	}
-
-	private void addChild(OfficeBO office) {
-		children.add(office);
-	}
-
 	private void updateSearchId(String searchId) {
 
 		this.searchId = searchId;
@@ -450,21 +469,22 @@ public class OfficeBO extends BusinessObject {
 			return true;
 		}
 	}
-	private void updateAddress(Address address){
-		if(this.address!=null&&address!=null)
+
+	private void updateAddress(Address address) {
+		if (this.address != null && address != null)
 			this.address.setAddress(address);
-		else if (this.address==null&&address!=null){
-			this.address = new OfficeAddressEntity(this,address);
+		else if (this.address == null && address != null) {
+			this.address = new OfficeAddressEntity(this, address);
 		}
 	}
-	private void updateCustomFields(List<CustomFieldView> customfields){
-		if(this.customFields !=null&&customfields!=null){
-			for(CustomFieldView fieldView : customfields)
-				for(OfficeCustomFieldEntity fieldEntity: this.customFields)
-					if(fieldView.getFieldId().equals(fieldEntity.getFieldId()))
+
+	private void updateCustomFields(List<CustomFieldView> customfields) {
+		if (this.customFields != null && customfields != null) {
+			for (CustomFieldView fieldView : customfields)
+				for (OfficeCustomFieldEntity fieldEntity : this.customFields)
+					if (fieldView.getFieldId().equals(fieldEntity.getFieldId()))
 						fieldEntity.setFieldValue(fieldView.getFieldValue());
-		}
-		else if (this.customFields ==null&&customfields!=null){
+		} else if (this.customFields == null && customfields != null) {
 			this.customFields = new HashSet<OfficeCustomFieldEntity>();
 			for (CustomFieldView view : customfields) {
 				this.customFields.add(new OfficeCustomFieldEntity(view
@@ -472,4 +492,5 @@ public class OfficeBO extends BusinessObject {
 			}
 		}
 	}
+
 }

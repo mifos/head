@@ -95,9 +95,18 @@ function goToCancelPage(){
 										
 									 </span><br>
 									 <!-- End for showing the correct parent -->
-									<span class="fontnormal"></span><span class="fontnormal"> </span><span
-										class="fontnormal"></span><br>
+									
 										
+									<c:if test="${not empty BusinessKey.address.address}">
+									<mifos:mifoslabel name="office.labelAddress"
+										bundle="OfficeResources"></mifos:mifoslabel>
+										<br>
+										<span
+										class="fontnormal">
+										<c:out value="${BusinessKey.address.address.displayAddress}"></c:out>
+										</span>
+									</c:if>	
+									<%--	
 									<c:if test="${not empty BusinessKey.address.address.phoneNumber ||
 									 not empty BusinessKey.address.address.line1 ||
 									 not empty BusinessKey.address.address.line2 ||
@@ -122,7 +131,7 @@ function goToCancelPage(){
 										test="${not empty BusinessKey.address.address.line3&&not empty BusinessKey.address.address.line2}">, </c:if><c:if
 										test="${not empty BusinessKey.address.address.line3}">${BusinessKey.address.address.line3}</c:if>
 									</span>
-									</c:if>
+									</c:if> --%>
 									
 									<c:if test="${not empty BusinessKey.address.address.city}">
 									<br>
@@ -151,6 +160,7 @@ function goToCancelPage(){
 									<!-- bug 26503  -->
 									<c:if test="${ not empty BusinessKey.address.address.phoneNumber}">
 									<br>
+									<br>
 									<span
 										class="fontnormal">
 									<mifos:mifoslabel name="Office.labelTelephone"
@@ -158,12 +168,9 @@ function goToCancelPage(){
 										class="fontnormal"><c:out
 										value="${BusinessKey.address.address.phoneNumber}"></c:out>
 									</span>
-									</c:if>
-									</c:if>
-									
 									<br>
-									
-									
+									</c:if>
+									<br>
 									
 									<c:if test="${!empty BusinessKey.customFields}">
 										<mifos:mifoslabel name="Office.labelAdditionInformation" />
@@ -173,7 +180,7 @@ function goToCancelPage(){
 										<c:forEach var="cf" items="${sessionScope.customFields}">
 											<c:if test="${cfdef.fieldId==cf.fieldId}">
 											
-												<font class="fontnormalBold"> 
+												<font class="fontnormal"> 
 												
 												<mifos:mifoslabel
 											name="${cf.lookUpEntity.entityType}"

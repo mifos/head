@@ -209,7 +209,7 @@ function getOffice(officeid){
 								name="${ConfigurationConstants.POSTAL_CODE}"
 								bundle="OfficeUIResources" keyhm="Office.PostalCode"
 								isColonRequired="yes"/></td>
-							<td><mifos:mifosalphanumtext property="address.postalCode"
+							<td><mifos:mifosalphanumtext property="address.zip"
 								value="${offActionForm.address.zip}"
 								maxlength="20" keyhm="Office.PostalCode"/>
 							</td>
@@ -218,7 +218,7 @@ function getOffice(officeid){
 							<td align="right"><mifos:mifoslabel name="Office.labelTelephone"
 								/></td>
 
-							<td><mifos:mifosalphanumtext property="address.telephoneNo"
+							<td><mifos:mifosalphanumtext property="address.phoneNumber"
 								value="${offActionForm.address.phoneNumber}"
 								maxlength="20"/></td>
 						</tr>
@@ -241,7 +241,7 @@ function getOffice(officeid){
 								<c:out value="${loopStatus.index}" />
 							</bean:define>
 							<c:forEach var="cf"
-								items="${BusinessKey.customFields}">
+								items="${offActionForm.customFields}">
 								<c:if test="${customFieldDef.fieldId==cf.fieldId}">
 									<tr class="fontnormal">
 										<td width="21%" align="right"><mifos:mifoslabel

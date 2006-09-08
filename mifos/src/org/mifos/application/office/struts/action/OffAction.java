@@ -14,6 +14,7 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.business.OfficeCustomFieldEntity;
 import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.struts.actionforms.OffActionForm;
@@ -65,9 +66,10 @@ public class OffAction extends BaseAction {
 	public ActionForward loadParent(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		OffActionForm offActionForm =(OffActionForm) form ;
-		loadParents(request,offActionForm );
-		if (offActionForm.getInput()!=null&&offActionForm.getInput().equals("edit"))
+		OffActionForm offActionForm = (OffActionForm) form;
+		loadParents(request, offActionForm);
+		if (offActionForm.getInput() != null
+				&& offActionForm.getInput().equals("edit"))
 			return mapping.findForward(ActionForwards.edit_success.toString());
 		else
 			return mapping.findForward(ActionForwards.load_success.toString());
@@ -106,44 +108,147 @@ public class OffAction extends BaseAction {
 				.getSession());
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
-	
+
 	public ActionForward getAllOffices(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		
+
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
-		List<OfficeBO> officeList=getOffices(userContext, ((OfficeBusinessService) getService()).getOfficesTillBranchOffice());
-		SessionUtils.setAttribute(OfficeConstants.GET_HEADOFFICE, getOffice(officeList,OfficeLevel.HEADOFFICE), request.getSession());
-		SessionUtils.setAttribute(OfficeConstants.GET_REGIONALOFFICE, getOffice(officeList,OfficeLevel.REGIONALOFFICE), request.getSession());
-		SessionUtils.setAttribute(OfficeConstants.GET_SUBREGIONALOFFICE, getOffice(officeList,OfficeLevel.SUBREGIONALOFFICE), request.getSession());
-		SessionUtils.setAttribute(OfficeConstants.GET_AREAOFFICE, getOffice(officeList,OfficeLevel.AREAOFFICE), request.getSession());
+		List<OfficeBO> officeList = getOffices(userContext,
+				((OfficeBusinessService) getService())
+						.getOfficesTillBranchOffice());
+		SessionUtils.setAttribute(OfficeConstants.GET_HEADOFFICE, getOffice(
+				officeList, OfficeLevel.HEADOFFICE), request.getSession());
+		SessionUtils.setAttribute(OfficeConstants.GET_REGIONALOFFICE,
+				getOffice(officeList, OfficeLevel.REGIONALOFFICE), request
+						.getSession());
+		SessionUtils.setAttribute(OfficeConstants.GET_SUBREGIONALOFFICE,
+				getOffice(officeList, OfficeLevel.SUBREGIONALOFFICE), request
+						.getSession());
+		SessionUtils.setAttribute(OfficeConstants.GET_AREAOFFICE, getOffice(
+				officeList, OfficeLevel.AREAOFFICE), request.getSession());
 		SessionUtils.setAttribute(OfficeConstants.GET_BRANCHOFFICE, getOffices(
 				userContext, ((OfficeBusinessService) getService())
 						.getBranchOffices()), request.getSession());
 		loadofficeLevels(request);
 		return mapping.findForward(ActionForwards.search_success.toString());
 	}
-	
-	
-	private List<OfficeBO> getOffice(List<OfficeBO> officeList, OfficeLevel officeLevel) throws OfficeException{
-		if(officeList!=null){
-			List<OfficeBO> newOfficeList=new ArrayList<OfficeBO>();
-			for(OfficeBO officeBO : officeList){
-				if(officeBO.getOfficeLevel().equals(officeLevel)){
+
+	public ActionForward validate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		String method = (String) request.getAttribute("methodCalled");
+		return mapping.findForward(method + "_failure");
+	}
+
+	public ActionForward get(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		OffActionForm actionForm = (OffActionForm) form;
+		OfficeBO officeBO = null;
+		if (StringUtils.isNullOrEmpty(actionForm.getOfficeId()))
+			throw new OfficeException(OfficeConstants.KEYGETFAILED);
+		officeBO = ((OfficeBusinessService) getService()).getOffice(Short
+				.valueOf(actionForm.getOfficeId()));
+		actionForm.clear();
+		loadCreateCustomFields(actionForm, request);
+		// loadofficeLevels(request);
+		officeBO.getStatus().setLocaleId(getUserContext(request).getLocaleId());
+		officeBO.getLevel().setLocaleId(getUserContext(request).getLocaleId());
+		actionForm.populate(officeBO);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, officeBO, request
+				.getSession());
+		return mapping.findForward(ActionForwards.get_success.toString());
+	}
+
+	public ActionForward edit(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		OffActionForm offActionForm = (OffActionForm) form;
+		loadofficeLevels(request);
+		loadParents(request, offActionForm);
+		// loadCreateCustomFields(offActionForm, request);
+		loadEditCustomFields(request, offActionForm);
+		loadOfficeStatus(request);
+		return mapping.findForward(ActionForwards.edit_success.toString());
+	}
+
+	public ActionForward editpreview(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(ActionForwards.editpreview_success
+				.toString());
+	}
+
+	public ActionForward editprevious(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(ActionForwards.editprevious_success
+				.toString());
+	}
+
+	public ActionForward update(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		OffActionForm offActionForm = (OffActionForm) form;
+		OfficeBO sessionOffice = (OfficeBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request.getSession());
+		OfficeBO office = ((OfficeBusinessService) getService())
+				.getOffice(Short.valueOf(sessionOffice.getOfficeId()));
+		office.setVersionNo(sessionOffice.getVersionNo());
+		office.setUserContext(getUserContext(request));
+		OfficeStatus newStatus = null;
+		if (getShortValue(offActionForm.getOfficeStatus()) != null)
+			newStatus = OfficeStatus
+					.getOfficeStatus(getShortValue(offActionForm
+							.getOfficeStatus()));
+		OfficeLevel newlevel = OfficeLevel
+				.getOfficeLevel(getShortValue(offActionForm.getOfficeLevel()));
+		OfficeBO parentOffice = null;
+		if (getShortValue(offActionForm.getParentOfficeId()) != null)
+			parentOffice = ((OfficeBusinessService) getService())
+					.getOffice(getShortValue(offActionForm.getParentOfficeId()));
+		office.update(offActionForm.getOfficeName(), offActionForm
+				.getShortName(), newStatus, newlevel, parentOffice,
+				offActionForm.getAddress(), offActionForm.getCustomFields());
+		return mapping.findForward(ActionForwards.update_success.toString());
+	}
+
+	private void loadEditCustomFields(HttpServletRequest request,
+			OffActionForm offActionForm) {
+		// get the office
+		OfficeBO office = (OfficeBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request.getSession());
+		List<CustomFieldView> customfields = new ArrayList<CustomFieldView>();
+		if (office.getCustomFields() != null)
+			for (OfficeCustomFieldEntity customField : office.getCustomFields()) {
+				customfields.add(new CustomFieldView(customField.getFieldId(),
+						customField.getFieldValue(), null));
+			}
+		offActionForm.setCustomFields(customfields);
+	}
+
+	private List<OfficeBO> getOffice(List<OfficeBO> officeList,
+			OfficeLevel officeLevel) throws OfficeException {
+		if (officeList != null) {
+			List<OfficeBO> newOfficeList = new ArrayList<OfficeBO>();
+			for (OfficeBO officeBO : officeList) {
+				if (officeBO.getOfficeLevel().equals(officeLevel)) {
 					newOfficeList.add(officeBO);
 				}
 			}
-			if(newOfficeList.isEmpty())
+			if (newOfficeList.isEmpty())
 				return null;
 			return newOfficeList;
 		}
-		return null;	
+		return null;
 	}
-	
-	private List<OfficeBO> getOffices(UserContext userContext,List<OfficeBO> officeList) throws Exception{
-		if(officeList!=null){
-			for(OfficeBO officeBO : officeList){
+
+	private List<OfficeBO> getOffices(UserContext userContext,
+			List<OfficeBO> officeList) throws Exception {
+		if (officeList != null) {
+			for (OfficeBO officeBO : officeList) {
 				officeBO.getLevel().setLocaleId(userContext.getLocaleId());
 				officeBO.getStatus().setLocaleId(userContext.getLocaleId());
 			}
@@ -166,7 +271,8 @@ public class OffAction extends BaseAction {
 	}
 
 	private void loadCreateCustomFields(OffActionForm actionForm,
-			HttpServletRequest request) throws SystemException, ApplicationException {
+			HttpServletRequest request) throws SystemException,
+			ApplicationException {
 		loadCustomFieldDefinitions(request);
 		// Set Default values for custom fields
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
@@ -201,33 +307,6 @@ public class OffAction extends BaseAction {
 				customFieldDefs, request.getSession());
 	}
 
-	public ActionForward validate(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		String method = (String) request.getAttribute("methodCalled");
-		return mapping.findForward(method + "_failure");
-	}
-
-	public ActionForward get(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		OffActionForm actionForm = (OffActionForm) form;
-		OfficeBO officeBO = null;
-		if (StringUtils.isNullOrEmpty(actionForm.getOfficeId()))
-			throw new OfficeException(OfficeConstants.KEYGETFAILED);
-		officeBO = ((OfficeBusinessService) getService()).getOffice(Short
-				.valueOf(actionForm.getOfficeId()));
-		actionForm.clear();
-		loadCreateCustomFields(actionForm, request);
-		//loadofficeLevels(request);
-		officeBO.getStatus().setLocaleId(getUserContext(request).getLocaleId());
-		officeBO.getLevel().setLocaleId(getUserContext(request).getLocaleId());
-		actionForm.populate(officeBO);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, officeBO, request
-				.getSession());
-		return mapping.findForward(ActionForwards.get_success.toString());
-	}
-
 	private void loadofficeLevels(HttpServletRequest request)
 			throws ServiceException {
 		SessionUtils.setAttribute(OfficeConstants.OFFICELEVELLIST,
@@ -235,54 +314,14 @@ public class OffAction extends BaseAction {
 						.getConfiguredLevels(getUserContext(request)
 								.getLocaleId()), request.getSession());
 	}
+
 	private void loadOfficeStatus(HttpServletRequest request)
-			throws ServiceException{
-		SessionUtils.setAttribute(OfficeConstants.OFFICESTATUSLIST,((OfficeBusinessService)getService()).getStatusList(getUserContext(request).getLocaleId()), request.getSession());
-		
+			throws ServiceException {
+		SessionUtils.setAttribute(OfficeConstants.OFFICESTATUSLIST,
+				((OfficeBusinessService) getService())
+						.getStatusList(getUserContext(request).getLocaleId()),
+				request.getSession());
+
 	}
-	public ActionForward edit(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		OffActionForm offActionForm= (OffActionForm)form;
-		loadofficeLevels(request);
-		loadParents(request,offActionForm);
-		loadCreateCustomFields(offActionForm, request);
-		loadOfficeStatus(request);
-		return mapping.findForward(ActionForwards.edit_success.toString());
-	}
-	public ActionForward editpreview(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		return mapping.findForward(ActionForwards.editpreview_success.toString());
-	}
-	public ActionForward editprevious(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		return mapping.findForward(ActionForwards.editprevious_success.toString());
-	}
-	public ActionForward update(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		OffActionForm offActionForm = (OffActionForm)form;
-		OfficeBO sessionOffice = (OfficeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,request.getSession());
-		
-		HibernateUtil.closeandFlushSession();
-		OfficeBO office = ((OfficeBusinessService) getService()).getOffice(Short
-				.valueOf(sessionOffice.getOfficeId()));
-		office.setVersionNo(sessionOffice.getVersionNo());
-		
-		office.setUserContext(getUserContext(request));
-		
-		OfficeStatus newStatus=OfficeStatus.ACTIVE;
-		if(getShortValue(offActionForm.getOfficeStatus())!=null)
-		 newStatus = OfficeStatus.getOfficeStatus(getShortValue(offActionForm.getOfficeStatus()));
-		OfficeLevel newlevel = OfficeLevel
-		.getOfficeLevel(getShortValue(offActionForm.getOfficeLevel()));
-		OfficeBO parentOffice=null;
-		if(getShortValue(offActionForm.getParentOfficeId())!=null)
-			parentOffice= ((OfficeBusinessService) getService())
-		.getOffice(getShortValue(offActionForm.getParentOfficeId()));
-		office.update(offActionForm.getOfficeName(),offActionForm.getShortName(),newStatus,newlevel,parentOffice,offActionForm.getAddress(),offActionForm.getCustomFields());
-		return mapping.findForward(ActionForwards.update_success.toString());
-	}
+
 }

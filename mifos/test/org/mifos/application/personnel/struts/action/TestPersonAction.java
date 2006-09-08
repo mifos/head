@@ -138,7 +138,28 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		assertEquals(1, personActionForm.getCustomFields().size());
 		verifyForward(ActionForwards.load_success.toString());
 	}
-
+	public void testLoadWithBranchOffice() throws Exception {
+		setRequestPathInfo("/PersonAction.do");
+		addRequestParameter("method", Methods.load.toString());
+		addRequestParameter("officeId", "3");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		OfficeBO office=(OfficeBO)SessionUtils.getAttribute(PersonnelConstants.OFFICE,
+				request);
+		assertNotNull(office);
+		assertEquals(3,office.getOfficeId().intValue());
+		verifyMasterData();
+		PersonActionForm personActionForm = (PersonActionForm) request
+				.getSession().getAttribute("personActionForm");
+		assertNotNull(personActionForm);
+		assertEquals(1, personActionForm.getCustomFields().size());
+		assertNotNull(SessionUtils.getAttribute(
+				PersonnelConstants.PERSONNEL_LEVEL_LIST, request));
+		assertEquals(2,((List)SessionUtils.getAttribute(
+				PersonnelConstants.PERSONNEL_LEVEL_LIST, request)).size());
+		verifyForward(ActionForwards.load_success.toString());
+	}
 	public void testPreviewFailure() throws Exception {
 		setRequestPathInfo("/PersonAction.do");
 		addRequestParameter("method", Methods.preview.toString());

@@ -149,11 +149,14 @@ public class TestOfficeAction extends MifosMockStrutsTestCase {
 		 assertEquals(1,office.getOfficeId().intValue());
 		
 	}
-	public void testEdit(){
+	public void testEdit()throws Exception{
 		setRequestPathInfo("/offAction.do");
 		addRequestParameter("method", Methods.edit.toString());
+		OfficeBO officeBO = createLoadOffice();
 		actionPerform();
 		verifyForward(ActionForwards.edit_success.toString());
+		
+		TestObjectFactory.cleanUp(officeBO);
 		
 	}
 	public void testEditPreview(){
@@ -172,14 +175,8 @@ public class TestOfficeAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/offAction.do");
 		addRequestParameter("method", Methods.update.toString());
 		
-		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
-
-		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE,
-				parent, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
-		officeBO.save();
-		TestObjectFactory.flushandCloseSession();
-		officeBO = TestObjectFactory.getOffice(officeBO.getOfficeId());
-		request.getSession().setAttribute(Constants.BUSINESS_KEY,officeBO);
+		
+		OfficeBO officeBO = createLoadOffice();
 		addRequestParameter("officeName","RAJOFFICE");
 		addRequestParameter("shortName","OFFI");
 		addRequestParameter("officeLevel",officeBO.getOfficeLevel().getValue().toString());
@@ -193,6 +190,15 @@ public class TestOfficeAction extends MifosMockStrutsTestCase {
 		assertEquals("OFFI",officeBO.getShortName());
 		TestObjectFactory.cleanUp(officeBO);
 	}
-
 	
+	private OfficeBO createLoadOffice() throws Exception{
+		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE,
+				parent, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
+		officeBO.save();
+		officeBO = TestObjectFactory.getOffice(officeBO.getOfficeId());
+		request.getSession().setAttribute(Constants.BUSINESS_KEY,officeBO);
+		TestObjectFactory.flushandCloseSession();
+		return officeBO;
+	}
 }

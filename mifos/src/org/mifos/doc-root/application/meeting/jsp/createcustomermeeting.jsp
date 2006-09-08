@@ -62,6 +62,7 @@ function showMeetingFrequency(){
 	else if (document.meetingActionForm.frequency[1].checked == true){
 		document.getElementById("weekDIV").style.display = "none";
 		document.getElementById("monthDIV").style.display = "block";
+		document.getElementsByName("monthType")[1].checked=true;
 		}
 }
 function goToCancelPage(){

@@ -16,11 +16,13 @@ import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerHelper;
+import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.service.OfficeBusinessService;
+import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelCustomFieldEntity;
 import org.mifos.application.personnel.business.PersonnelDetailsEntity;
@@ -77,13 +79,17 @@ public class PersonAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		PersonActionForm personActionForm = (PersonActionForm) form;
+		
+		OfficeBO office = ((PersonnelBusinessService) getService())
+		.getOffice(getShortValue(personActionForm
+				.getOfficeId()));
 		SessionUtils
 				.setAttribute(PersonnelConstants.OFFICE,
-						((PersonnelBusinessService) getService())
-								.getOffice(getShortValue(personActionForm
-										.getOfficeId())), request);
+						office, request);
 		personActionForm.clear();
 		loadCreateMasterData(request, personActionForm);
+		if ( office.getOfficeLevel()!=OfficeLevel.BRANCHOFFICE)
+			updatePersonnelLevelList(request);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
@@ -299,6 +305,17 @@ public class PersonAction extends BaseAction {
 				customFieldDefs, request);
 	}
 	
+	private void updatePersonnelLevelList(HttpServletRequest request) throws PageExpiredException{
+		List<MasterDataEntity>levelList =(List<MasterDataEntity>) SessionUtils.getAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST,request);
+		for (MasterDataEntity level : levelList) {
+			if (level.getId().equals(PersonnelLevel.LOAN_OFFICER.getValue()))
+			{
+				levelList.remove(level);
+				break;
+			}
+		}
+		
+	}
 	private void loadCreateMasterData(HttpServletRequest request,
 			PersonActionForm personActionForm) throws Exception {
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(

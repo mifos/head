@@ -673,7 +673,7 @@
 			<forward name="client_success" path="/clientCustAction.do?method=prevMeeting&amp;input=CreateMeeting" />
 			<forward name="center_success" path="/centerCustAction.do?method=previous&amp;input=CreateMeeting" />
 			<forward name="loadMeeting_success" path="/pages/application/meeting/jsp/createcustomermeeting.jsp" />
-			<forward name="editCenterMeeting_success" path="/centerAction.do?method=get" />
+			<forward name="editCenterMeeting_success" path="/centerCustAction.do?method=get" />
 			<forward name="editClientMeeting_success" path="/clientCreationAction.do?method=get" />
 			<forward name="preview_failure" path="/pages/application/meeting/jsp/createcustomermeeting.jsp" />
 		</action>
