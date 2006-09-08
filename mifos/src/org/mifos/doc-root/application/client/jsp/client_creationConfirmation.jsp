@@ -64,7 +64,7 @@
 						<td class="fontnormalbold"><mifos:mifoslabel
 							name="client.Confirmation.Note" bundle="ClientUIResources"></mifos:mifoslabel>
 						<span class="fontnormal"> <c:out
-							value="${requestScope.clientVO.displayName}" /> <mifos:mifoslabel
+							value="${sessionScope.clientCustActionForm.clientName.displayName}" /> <mifos:mifoslabel
 							name="client.Confirmation.NameSystemID"
 							bundle="ClientUIResources"></mifos:mifoslabel></span> <c:out
 							value="${sessionScope.clientCustActionForm.globalCustNum}" /> <span
