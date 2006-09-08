@@ -49,11 +49,12 @@
 <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 <script>
   function goToCancelPage(){
-	groupTransfterActionForm.action="groupTransferAction.do?method=cancel";
-	groupTransfterActionForm.submit();
+	groupTransferActionForm.action="groupTransferAction.do?method=cancel";
+	groupTransferActionForm.submit();
   }
 </script>
 <html-el:form action="/groupTransferAction.do?method=transferToCenter" onsubmit="func_disableSubmitBtn('submitBtn')">
+<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 <c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"/>
      <table width="95%" border="0" cellpadding="0" cellspacing="0">
       <tr>

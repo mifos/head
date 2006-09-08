@@ -81,7 +81,6 @@ public class Link {
 				flowKey = pageContext.getRequest().getParameter(Constants.CURRENTFLOWKEY);
 		}
 		Object randomNumber =  pageContext.getSession().getAttribute(Constants.RANDOMNUM);
-		System.out.println("-------------------randomNumbner"+ randomNumber);
 		return createLink(name,parameters,bold,action ,styleClass, flowKey, randomNumber);
 
 	}

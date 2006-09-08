@@ -46,7 +46,6 @@
 
 <script language="javascript">
   function goToCancelPage(){
-	groupTransferActionForm.action="groupTransferAction.do?method=cancel";
 	groupTransferActionForm.submit();
   }
 </script>
@@ -54,7 +53,8 @@
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
  
-<html-el:form action="groupTransferAction.do?method=get" >
+<html-el:form action="groupTransferAction.do?method=cancel" >
+<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 <c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"/>
   <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
@@ -103,9 +103,8 @@
                 </span></td>
               </tr>
             </table>
-            <br>
-	        <office:listOffices methodName="previewBranchTransfer" actionName="groupTransferAction.do" onlyBranchOffices="yes"/>
-	        
+           
+            <office:OfficeListTag methodName="previewBranchTransfer" actionName="groupTransferAction.do" onlyBranchOffices="yes" flowKey="${requestScope.currentFlowKey}"/>
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center" class="blueline">&nbsp;</td>
@@ -115,7 +114,7 @@
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center">
-					  <html-el:submit  styleClass="cancelbuttn" style="width:70px" onclick="goToCancelPage()">
+					  <html-el:submit   styleClass="cancelbuttn" style="width:70px">
 						  <mifos:mifoslabel name="button.cancel" bundle="GroupUIResources"></mifos:mifoslabel>
 					  </html-el:submit>
                 </td></tr>

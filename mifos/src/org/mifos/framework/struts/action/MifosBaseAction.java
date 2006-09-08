@@ -680,7 +680,8 @@ public abstract class MifosBaseAction extends LookupDispatchAction {
 			HttpServletResponse response)throws Exception {
 		
 		ActionForward forward = null;
-		
+		request.setAttribute(Constants.CURRENTFLOWKEY, request
+				.getParameter(Constants.CURRENTFLOWKEY));
 		Context context = (Context)request.getAttribute(Constants.CONTEXT);
 		context.setSearchObject(formSearchObject(form,request));
 		context.setBusinessAction("search");

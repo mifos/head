@@ -8,10 +8,12 @@
 
 <script language="javascript">
   function goToCancelPage(){
-	groupTransferActionForm.action="groupTransferAction.do?method=cancel";
 	groupTransferActionForm.submit();
   }
 </script>
+<html-el:form method="post" action ="groupTransferAction.do?method=cancel">
+	<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+</html-el:form>
 
 <html-el:form action="centerAction.do?method=search">
 <c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"/>
@@ -21,7 +23,7 @@
         <tr>
           <td class="bluetablehead05">
 	          <span class="fontnormal8pt">
-	            	<%--<customtags:headerLink/>--%>
+	            	<customtags:headerLink/>
 	          </span>
           </td>
         </tr>

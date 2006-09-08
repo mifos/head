@@ -49,11 +49,12 @@
 
 <script language="javascript">
   function goToCancelPage(){
-	groupTransferActionForm.action="groupTransferAction.do?method=cancel";
 	groupTransferActionForm.submit();
   }
 </script>
-
+<html-el:form method="post" action ="groupTransferAction.do?method=cancel">
+	<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+</html-el:form>
 <html-el:form method="post" action ="centerAction.do?method=search">
 <c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"/>
 <html-el:hidden property="input" value="CenterSearch_TransferGroup"/> 

@@ -289,7 +289,6 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-		actionPerform();
 		addRequestParameter("displayName", "group");		
 		addRequestParameter("status", CustomerStatus.GROUP_PENDING.getValue().toString());
 		addRequestParameter("formedByPersonnel", center.getPersonnel().getPersonnelId().toString());		
@@ -384,7 +383,6 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-		actionPerform();
 		addRequestParameter("displayName", "group");		
 		addRequestParameter("status", CustomerStatus.GROUP_PENDING.getValue().toString());
 		addRequestParameter("formedByPersonnel", center.getPersonnel().getPersonnelId().toString());	
@@ -433,7 +431,6 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-		actionPerform();
 		addRequestParameter("displayName", "group");		
 		addRequestParameter("status", CustomerStatus.GROUP_PENDING.getValue().toString());
 		addRequestParameter("formedByPersonnel", center.getPersonnel().getPersonnelId().toString());
@@ -475,7 +472,6 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-		actionPerform();
 		addRequestParameter("displayName", "group");		
 		addRequestParameter("status", CustomerStatus.GROUP_PENDING.getValue().toString());
 		addRequestParameter("formedByPersonnel", center.getPersonnel().getPersonnelId().toString());
@@ -515,7 +511,6 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-		actionPerform();
 		addRequestParameter("displayName", "group");		
 		addRequestParameter("status", CustomerStatus.GROUP_PENDING.getValue().toString());
 		addRequestParameter("formedByPersonnel", center.getPersonnel().getPersonnelId().toString());		

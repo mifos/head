@@ -50,12 +50,13 @@
 <script language="javascript">
 
   function goToCancelPage(){
-	groupTransfterActionForm.action="groupTransferAction.do?method=cancel";
-	groupTransfterActionForm.submit();
+	groupTransferActionForm.action="groupTransferAction.do?method=cancel";
+	groupTransferActionForm.submit();
   }
 </script>
  <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
-<html-el:form action="/groupTransfterAction.do?method=transferToBranch"  onsubmit="func_disableSubmitBtn('submitBtn')">
+<html-el:form action="/groupTransferAction.do?method=transferToBranch"  onsubmit="func_disableSubmitBtn('submitBtn')">
+<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 <c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"/>
   <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>

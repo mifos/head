@@ -737,6 +737,7 @@ public class CenterActionForm extends  MifosSearchActionForm {
 				}
 
 			else if((CustomerConstants.METHOD_SEARCH).equals(methodCalled)){
+				request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
 				return handleSearchValidations(request);
 			}
 		}
