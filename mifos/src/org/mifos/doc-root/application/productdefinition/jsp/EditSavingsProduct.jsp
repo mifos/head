@@ -175,7 +175,7 @@
 								<mifos:mifoslabel name="product.savingsview" bundle="ProductDefUIResources" />
 								<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
 								<mifos:mifoslabel name="product.products" bundle="ProductDefUIResources" />
-							</html-el:link> / <html-el:link href="javascript:fnGet()">
+							</html-el:link> / <html-el:link href="savingsproductaction.do?method=get&prdOfferingId=${requestScope.Context.valueObject.prdOfferingId}&randomNUm=${sessionScope.randomNUm}">
 								<c:out value="${prdOfferName}" />
 							</html-el:link></span>
 					</td>

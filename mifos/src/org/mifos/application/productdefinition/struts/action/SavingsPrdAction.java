@@ -25,8 +25,10 @@ import org.mifos.application.productdefinition.business.RecommendedAmntUnitEntit
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsTypeEntity;
 import org.mifos.application.productdefinition.business.service.SavingsPrdBusinessService;
+import org.mifos.application.productdefinition.dao.SavingsProductDAO;
 import org.mifos.application.productdefinition.struts.actionforms.SavingsPrdActionForm;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.valueobjects.SavingsOffering;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
@@ -38,8 +40,10 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.framework.util.valueobjects.Context;
 
 public class SavingsPrdAction extends BaseAction {
 
@@ -173,6 +177,38 @@ public class SavingsPrdAction extends BaseAction {
 		return mapping.findForward(ActionForwards.cancelCreate_success
 				.toString());
 	}
+
+@TransactionDemarcate(saveToken = true)
+	public ActionForward get(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		prdDefLogger.debug("start get method of Savings Product Action");
+		UserContext userContext = getUserContext(request);
+		Locale locale = getLocale(userContext);
+		SavingsPrdActionForm savingsprdForm = (SavingsPrdActionForm) form;
+		//TODO: remove this piece of code once edit has been migrated
+		conversionForMI(savingsprdForm , request);
+			
+		
+		SavingsOfferingBO savingsOffering = ((SavingsPrdBusinessService)getService()).getSavingsProduct(getShortValue(savingsprdForm.getPrdOfferingId()));
+		savingsOffering.getPrdStatus().getPrdState().setLocaleId(getUserContext(request).getLocaleId());
+		
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savingsOffering, request);
+		loadMasterData(request);
+		return mapping.findForward(ActionForwards.get_success.toString());
+	}
+
+		//TODO: remove this piece of code once edit has been migrated		
+		private void conversionForMI(SavingsPrdActionForm savingsprdForm , HttpServletRequest request) throws Exception {
+			Context context = new Context();
+			SavingsOffering oldSavingsOffering = new SavingsProductDAO().get(getShortValue(savingsprdForm.getPrdOfferingId()));
+			context.setValueObject(oldSavingsOffering);
+			context.setPath(ProductDefinitionConstants.GETPATHSAVINGSPRODUCT);
+			context.setUserContext(getUserContext(request));
+			SessionUtils.setContext(ProductDefinitionConstants.GETPATHSAVINGSPRODUCT ,context,request.getSession() );
+					
+		}
 
 	private void loadMasterData(HttpServletRequest request) throws Exception {
 		prdDefLogger

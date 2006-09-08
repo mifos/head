@@ -1,6 +1,7 @@
 package org.mifos.application.productdefinition.struts.action;
 
 import java.net.URISyntaxException;
+import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -10,8 +11,10 @@ import java.util.Locale;
 
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
@@ -28,13 +31,17 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 
+	private SavingsOfferingBO savingsOffering;
+	
 	private String flowKey;
 
 	UserContext userContext = null;
 
 	@Override
 	protected void tearDown() throws Exception {
+		TestObjectFactory.removeObject(savingsOffering);
 		super.tearDown();
+		
 	}
 
 	@Override
@@ -523,6 +530,25 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.create_failure.toString());
 	}
+	
+	public void testGet() throws Exception {
+		String prdName ="Savings_Kendra";
+		String prdShortName ="SSK";
+		createSavingsOfferingBO( prdName,prdShortName);
+		setRequestPathInfo("/savingsproductaction.do");
+		addRequestParameter("method", "get");
+		addRequestParameter("prdOfferingId", savingsOffering.getPrdOfferingId().toString());
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.get_success.toString());
+		assertEquals(prdName , savingsOffering.getPrdOfferingName());
+		assertEquals(prdShortName , savingsOffering.getPrdOfferingShortName());
+		assertEquals(prdShortName , savingsOffering.getPrdOfferingShortName());
+		assertEquals(PrdStatus.SAVINGSACTIVE.getValue(), savingsOffering
+				.getPrdStatus().getOfferingStatusId());
+		assertEquals(2, savingsOffering.getSavingsType().getId().shortValue());
+	}
 
 	private String offSetCurrentDate(int noOfDays, Locale locale) {
 		Calendar currentDateCalendar = new GregorianCalendar();
@@ -538,5 +564,18 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 				.convertToCurrentDateFormat(((SimpleDateFormat) sdf)
 						.toPattern());
 		return DateHelper.convertDbToUserFmt(currentDate.toString(), userfmt);
+	}
+	
+	private SavingsOfferingBO createSavingsOfferingBO(String prdOfferingName,
+			String shortName) {
+		MeetingBO meetingIntCalc = TestObjectFactory
+				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		MeetingBO meetingIntPost = TestObjectFactory
+				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		savingsOffering = TestObjectFactory.createSavingsOffering(prdOfferingName,
+				shortName, (short) 1, new Date(System.currentTimeMillis()),
+				(short) 2, 300.0, (short) 1, 1.2, 200.0, 200.0, (short) 2,
+				(short) 1, meetingIntCalc, meetingIntPost);
+		return savingsOffering;
 	}
 }

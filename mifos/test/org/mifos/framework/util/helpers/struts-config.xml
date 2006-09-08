@@ -1072,6 +1072,7 @@
 			<forward name="create_success" path="/pages/application/productdefinition/jsp/CreateSavingsProductConfirmation.jsp"></forward>
 			<forward name="create_failure" path="/pages/application/productdefinition/jsp/CreateSavingsProductPreview.jsp"></forward>
 			<forward name="cancelCreate_success" path="/AdminAction.do?method=load"></forward>
+			<forward name="get_success" path="/pages/application/productdefinition/jsp/Savings_ProductDetails.jsp"/>
 		</action>
 		<!-- Payment Types -->
 		<action path="/mifospmttypesaction"

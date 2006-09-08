@@ -351,10 +351,15 @@ public class GroupCustAction extends CustAction {
 
 	private void loadUpdateMasterData(HttpServletRequest request, GroupBO group)
 			throws ApplicationException, SystemException {
+		boolean isCenterHierarchyExists = Configuration.getInstance().getCustomerConfig(
+				getUserContext(request).getBranchId())
+				.isCenterHierarchyExists();
 		if (!Configuration.getInstance().getCustomerConfig(
 				getUserContext(request).getBranchId())
 				.isCenterHierarchyExists()) {
 			loadLoanOfficers(group.getOffice().getOfficeId(), request);
+			SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST,
+					isCenterHierarchyExists, request);	
 		}
 		loadCustomFieldDefinitions(EntityType.GROUP, request);
 		loadPositions(request);

@@ -585,7 +585,8 @@
 			<forward name="get_success" path="/pages/application/productdefinition/jsp/SavingsProductDetails.jsp"></forward>
 			<forward name="manage_success" path="/pages/application/productdefinition/jsp/EditSavingsProduct.jsp"></forward>
 			<forward name="manage_preview" path="/pages/application/productdefinition/jsp/EditSavingsProductPreview.jsp"></forward>
-			<forward name="update_success" path="/pages/application/productdefinition/jsp/SavingsProductDetails.jsp"></forward>
+			<!--  <forward name="update_success" path="/pages/application/productdefinition/jsp/SavingsProductDetails.jsp"></forward>-->
+			<forward name="update_success" path="/savingsproductaction.do?method=get"></forward>
 			<forward name="update_failure" path="/pages/application/productdefinition/jsp/EditSavingsProductPreview.jsp"></forward>
 			<forward name="search_success" path="/pages/application/productdefinition/jsp/ViewEditSavingsProduct.jsp"></forward>
 			<forward name="search_log_success" path="/pages/application/productdefinition/jsp/viewsavingschangelog.jsp"></forward>
@@ -599,6 +600,7 @@
 			<forward name="create_success" path="/pages/application/productdefinition/jsp/CreateSavingsProductConfirmation.jsp"></forward>
 			<forward name="create_failure" path="/pages/application/productdefinition/jsp/CreateSavingsProductPreview.jsp"></forward>
 			<forward name="cancelCreate_success" path="/AdminAction.do?method=load"></forward>
+			<forward name="get_success" path="/pages/application/productdefinition/jsp/Savings_ProductDetails.jsp"></forward>
 		</action>
 		<!-- Payment Types -->
 		<action path="/mifospmttypesaction" name="mifospmttypesactionform" type="org.mifos.application.productdefinition.struts.action.PmtTypesAction" input="/mifospmttypesaction.do?method=validate" parameter="method" validate="true" scope="request">
@@ -1354,6 +1356,7 @@
 		org.mifos.application.office.util.helpers.OfficeLevel,
 		org.mifos.application.customer.util.helpers.CustomerStatus,
 		org.mifos.application.customer.util.helpers.CustomerLevel,
+		org.mifos.application.productdefinition.util.helpers.PrdStatus,
 		org.mifos.application.accounts.util.helpers.AccountState" />
 	</plug-in>
 

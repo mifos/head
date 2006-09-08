@@ -7,10 +7,10 @@
 <hibernate-mapping>
 
     <class name="org.mifos.application.productdefinition.business.PrdStateEntity" table="PRD_STATE">
-        <id name="prdStateId" column="PRD_STATE_ID" type="short">
+        <id name="id" column="PRD_STATE_ID" type="short">
             <generator class="native"/>
         </id>
-        <many-to-one name="lookUpValue" column="PRD_STATE_LOOKUP_ID" class="org.mifos.application.master.util.valueobjects.LookUpValue" />
+        <many-to-one name="lookUpValue" column="PRD_STATE_LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" />
     </class>
     
 </hibernate-mapping>

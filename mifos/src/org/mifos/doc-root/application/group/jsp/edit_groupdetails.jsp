@@ -139,7 +139,8 @@
 									<mifos:mifosalphanumtext property="displayName" />
 								</td>
 							</tr>
-							<c:if test="${sessionScope.CenterHierarchyExist eq 'No'}">
+							<c:set var ="CenterHierarchy" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CenterHierarchyExist')}" />
+							<c:if test="${CenterHierarchy eq 'No'}">
 								<tr class="fontnormal">
 									<td align="right" class="fontnormal">
 										<mifos:mifoslabel name="Group.loanofficer" bundle="GroupUIResources"></mifos:mifoslabel>

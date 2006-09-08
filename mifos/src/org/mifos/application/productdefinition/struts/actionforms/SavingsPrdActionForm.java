@@ -22,7 +22,9 @@ import org.mifos.framework.util.helpers.Money;
 public class SavingsPrdActionForm extends BaseActionForm {
 	private MifosLogger prdDefLogger = MifosLogManager
 			.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
-
+	
+	private String prdOfferingId;
+	
 	private String prdOfferingName;
 
 	private String prdOfferingShortName;
@@ -60,6 +62,16 @@ public class SavingsPrdActionForm extends BaseActionForm {
 	private String depositGLCode;
 
 	private String interestGLCode;
+
+
+	
+	public String getPrdOfferingId() {
+		return prdOfferingId;
+	}
+
+	public void setPrdOfferingId(String prdOfferingId) {
+		this.prdOfferingId = prdOfferingId;
+	}
 
 	public String getDepositGLCode() {
 		return depositGLCode;

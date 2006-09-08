@@ -69,7 +69,7 @@
 										name="product.savingsassignedto" bundle="ProductDefUIResources" />:</span>
 								<c:out value="${requestScope.savingsprdglobalofferingnum}" />
 								<span class="fontnormal"><br> </span><span class="fontnormal"><br> <br> </span>
-								<html-el:link href="savingsprdaction.do?method=get&prdOfferingId=${requestScope.savingsId}&randomNUm=${sessionScope.randomNUm}">
+								<html-el:link href="savingsproductaction.do?method=get&prdOfferingId=${requestScope.savingsId}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="product.savingsview" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="product.savingprod" bundle="ProductDefUIResources" />

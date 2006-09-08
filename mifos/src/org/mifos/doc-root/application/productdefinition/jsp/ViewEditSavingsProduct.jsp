@@ -61,7 +61,7 @@
 				savingsprdactionform.method.value="get";
 				savingsprdactionform.input.value="admin";
 				savingsprdactionform.prdOfferingId.value=id;
-				savingsprdactionform.action="savingsprdaction.do";
+				savingsprdactionform.action="savingsproductaction.do";
 				savingsprdactionform.submit();
 			}
 			function fnLoad() {

@@ -40,21 +40,23 @@ public class TestCustomerFeeHelper extends MifosTestCase{
 
 	}
 	
-	public void testExecute() throws Exception{
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+public void testExecute() throws Exception{
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, Calendar.DAY_OF_WEEK));
 		center = TestObjectFactory.createCenter("center1_Active_test", Short.valueOf("13"), "1.4", meeting, new Date(System.currentTimeMillis()));
 		
 		for(AccountActionDateEntity  accountActionDateEntity :  center.getCustomerAccount().getAccountActionDates()){
 			accountActionDateEntity.setActionDate(offSetDate(accountActionDateEntity.getActionDate(),1));
 		}
+		
+		
 		meeting = center.getCustomerMeeting().getMeeting();
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(offSetDate(new Date(System.currentTimeMillis()),1));
 		meeting.setMeetingStartDate(calendar);
-		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(new WeekDaysEntity(Short.valueOf(String.valueOf(Calendar.DAY_OF_MONTH-1))));
+		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(new WeekDaysEntity(Short.valueOf(String.valueOf(calendar.get(Calendar.DAY_OF_WEEK)))));
 		
 		Set<AccountFeesEntity> accountFeeSet = center.getCustomerAccount().getAccountFees();
-		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee("Training_Fee", FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY,Short.valueOf("2"));
+		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee("Training_Fee", FeeCategory.ALLCUSTOMERS, "100", MeetingFrequency.WEEKLY,Short.valueOf("2"));
 		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(),trainingFee,((AmountFeeBO)trainingFee).getFeeAmount().getAmountDoubleValue());
 		accountFeeSet.add(accountPeriodicFee);
 		Date lastAppliedFeeDate = offSetDate(new Date(System.currentTimeMillis()),1);
@@ -70,6 +72,7 @@ public class TestCustomerFeeHelper extends MifosTestCase{
 		customerFeeHelper.execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO)TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
+		
 		Set<AccountFeesEntity> periodicFeeSet = center.getCustomerAccount().getAccountFees();
 		for (AccountFeesEntity periodicFees : periodicFeeSet) {
 			if(periodicFees.getFees().getFeeName().equalsIgnoreCase("Training_Fee"))
@@ -83,7 +86,7 @@ public class TestCustomerFeeHelper extends MifosTestCase{
 	
 	
 	public void testExecuteToApplyPeriodicFee() throws Exception{
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 2, 4,Calendar.DAY_OF_MONTH));
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 2, 4,Calendar.DAY_OF_WEEK));
 		center = TestObjectFactory.createCenter("center1_Active_test", Short.valueOf("13"), "1.4", meeting,new Date(System.currentTimeMillis()));
 		for(AccountActionDateEntity  accountActionDateEntity :  center.getCustomerAccount().getAccountActionDates()){
 			accountActionDateEntity.setActionDate(offSetDate(accountActionDateEntity.getActionDate(),1));
@@ -92,7 +95,7 @@ public class TestCustomerFeeHelper extends MifosTestCase{
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(offSetDate(new Date(System.currentTimeMillis()),1));
 		meeting.setMeetingStartDate(calendar);
-		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(new WeekDaysEntity(Short.valueOf(String.valueOf(Calendar.DAY_OF_MONTH-1))));
+		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(new WeekDaysEntity(Short.valueOf(String.valueOf(calendar.get(Calendar.DAY_OF_WEEK)))));
 				
 		Set<AccountFeesEntity> accountFeeSet = center.getCustomerAccount().getAccountFees();
 		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee("Training_Fee", FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY,Short.valueOf("1"));
@@ -131,6 +134,7 @@ public class TestCustomerFeeHelper extends MifosTestCase{
 				assertEquals(lastAppliedFeeDate,DateUtils.getDateWithoutTimeStamp(periodicFees.getLastAppliedDate().getTime()));
 		}
 	}
+	
 	
 	private java.sql.Date offSetDate(Date date, int noOfDays) {
 		Calendar calendar = new GregorianCalendar();

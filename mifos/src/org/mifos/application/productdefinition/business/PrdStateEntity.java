@@ -38,34 +38,25 @@
 
 package org.mifos.application.productdefinition.business;
 
+import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.util.valueobjects.LookUpValue;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 
 /**
  * This class encapsulate the prd state
  */
-public class PrdStateEntity extends PersistentObject {
+public class PrdStateEntity extends MasterDataEntity {
 
-	private Short prdStateId;
-
-	private LookUpValue lookUpValue;
-
-	public PrdStateEntity() {
+	/*
+	 * Adding a default constructor is hibernate's requirement and should not be
+	 * used to create a valid Object.
+	 */
+	protected PrdStateEntity() {
+		super();
 	}
 
-	public Short getPrdStateId() {
-		return prdStateId;
+	PrdStateEntity(PrdStatus prdStatus){
+		super(prdStatus.getValue());
 	}
-
-	public void setPrdStateId(Short prdStateId) {
-		this.prdStateId = prdStateId;
-	}
-
-	public LookUpValue getLookUpValue() {
-		return lookUpValue;
-	}
-
-	public void setLookUpValue(LookUpValue lookUpValue) {
-		this.lookUpValue = lookUpValue;
-	}
+	
 }
