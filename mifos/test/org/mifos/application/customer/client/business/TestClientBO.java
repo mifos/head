@@ -611,10 +611,46 @@ public class TestClientBO extends MifosTestCase {
 	
 	public void testUpdateClientDetails()throws Exception{
 		createObjectsForClient("Client 1");
+		assertEquals(1, client.getCustomerDetail().getEthinicity().intValue());
+		assertEquals(1, client.getCustomerDetail().getCitizenship().intValue());
+		assertEquals(1, client.getCustomerDetail().getHandicapped().intValue());
 		ClientDetailView clientDetailView = new ClientDetailView(2,2,2,2,2,2,Short.valueOf("1"),Short.valueOf("1"));
 		client.updateClientDetails(clientDetailView);
+		assertEquals(2, client.getCustomerDetail().getEthinicity().intValue());
+		assertEquals(2, client.getCustomerDetail().getCitizenship().intValue());
+		assertEquals(2, client.getCustomerDetail().getHandicapped().intValue());
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		office = new OfficePersistence().getOffice(office.getOfficeId());
+	}
+	
+	public void testUpdateFailureIfLoanOffcierNotThereInActiveState()throws Exception{
+		createObjectsForClient("Client 1");
+		try{
+			client.setPersonnel(null);
+			client.updateMfiInfo();
+			assertTrue(false);
+		}catch(CustomerException ce){
+			assertTrue(true);
+			assertEquals(CustomerConstants.INVALID_LOAN_OFFICER,ce.getKey());
+		}
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+	}
+	
+	public void testUpdateFailureIfLoanOffcierNotThereInHoldState()throws Exception{
+		createObjectsForClient("Client 1");
+		try{
+			client.changeStatus(CustomerStatus.CLIENT_HOLD.getValue(),null,"comment");
+			HibernateUtil.commitTransaction();
+			HibernateUtil.closeSession();
+			client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+			client.setPersonnel(null);
+			client.updateMfiInfo();
+			assertTrue(false);
+		}catch(CustomerException ce){
+			assertTrue(true);
+			assertEquals(CustomerConstants.INVALID_LOAN_OFFICER,ce.getKey());
+		}
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 	}
 	
 	private void createObjectsForClientTransfer()throws Exception{

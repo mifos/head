@@ -606,7 +606,7 @@ public class ClientCustAction extends CustAction {
 					client.setPersonnel(null);
 			}
 			client.setUserContext(getUserContext(request));
-			client.update();
+			client.updateMfiInfo();
 		} catch (ApplicationException ae) {
 			ae.printStackTrace();
 			ActionErrors errors = new ActionErrors();

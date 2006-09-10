@@ -239,6 +239,10 @@ public class ClientBO extends CustomerBO {
 	public boolean isActive() {
 		return getCustomerStatus().getId().equals(CustomerStatus.CLIENT_ACTIVE.getValue());
 	}
+	
+	public boolean isOnHold() {
+		return getCustomerStatus().getId().equals(CustomerStatus.CLIENT_HOLD.getValue());
+	}
 
 	public boolean isClientUnderGroup() {
 		return groupFlag.equals(YesNoFlag.YES.getValue());
@@ -329,6 +333,14 @@ public class ClientBO extends CustomerBO {
 
 	public void updatePersonalInfo() throws CustomerException {
 		validateForDuplicateNameOrGovtId(getDisplayName(), this.dateOfBirth ,this.governmentId);
+		super.update();
+	}
+	
+	public void updateMfiInfo() throws CustomerException{
+		
+		if(isActive()|| isOnHold()){
+			validateLO(this.getPersonnel());
+		}
 		super.update();
 	}
 
@@ -650,4 +662,6 @@ public class ClientBO extends CustomerBO {
 	private boolean isGroupStatusLower(Short clientStatusId, Short parentStatus){
 		return isGroupStatusLower(CustomerStatus.getStatus(clientStatusId), CustomerStatus.getStatus(parentStatus));			
 	}
+
+	
 }

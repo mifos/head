@@ -764,6 +764,12 @@ public abstract class CustomerBO extends BusinessObject {
 			throw new CustomerException(CustomerConstants.INVALID_LOAN_OFFICER);
 	}
 
+	protected void validateLO(PersonnelBO loanOfficer) throws CustomerException {
+		if(getPersonnel()==null || getPersonnel().getPersonnelId()==null){
+			throw new CustomerException(CustomerConstants.INVALID_LOAN_OFFICER);
+		}
+	}
+	
 	protected CustomerMeetingEntity createCustomerMeeting(MeetingBO meeting) {
 		return meeting != null ? new CustomerMeetingEntity(this, meeting)
 				: null;

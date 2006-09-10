@@ -95,6 +95,8 @@
 					<br>
 
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
+						<font class="fontnormalRedBold"><html-el:errors
+							bundle="ClientUIResources" /> </font>
 						<tr>
 							<td width="50%" height="23" class="fontnormalboldorange"><mifos:mifoslabel
 								name="client.MfiInformationLabel" bundle="ClientUIResources"></mifos:mifoslabel></td>
