@@ -49,6 +49,8 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActionForm;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -189,6 +191,10 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		addRequestParameter("paymentTypeId","1");
 		actionPerform();
 		verifyForward("loan_detail_page");
+		
+		center =(CenterBO) TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+		group =(GroupBO) TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
 		assertEquals(new Money(), accountBO.getTotalPaymentDue());
 		assertEquals(0, accountBO.getTotalInstallmentsDue().size());
 		assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, accountBO.getAccountState().getId().shortValue());
@@ -199,7 +205,6 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		actionPerform();
 		LoanBO loan =(LoanBO) request.getSession().getAttribute(Constants.BUSINESS_KEY);
 		assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, loan.getAccountState().getId().shortValue());
-		System.out.println(loan.getAccountState().getName()+"-----"+((UserContext)request.getSession().getAttribute(Constants.USER_CONTEXT_KEY)).getLocaleId());
 		assertNotNull(loan.getAccountState().getName());
 	}
 	
