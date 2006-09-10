@@ -37,7 +37,6 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
-import org.mifos.application.fees.exceptions.FeeException;
 import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.master.business.CollateralTypeEntity;
 import org.mifos.application.master.business.MasterDataEntity;
@@ -56,10 +55,8 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleInstallment;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
@@ -73,6 +70,7 @@ public class LoanAccountAction extends AccountAppAction {
 	private MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
+	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
 	}
@@ -82,6 +80,7 @@ public class LoanAccountAction extends AccountAppAction {
 				.getInstance().getBusinessService(BusinessServiceName.Loan);
 	}
 
+	@Override
 	protected BusinessService getService() {
 		return loanBusinessService;
 	}
@@ -107,6 +106,8 @@ public class LoanAccountAction extends AccountAppAction {
 				viewOverDueInstallmentDetails, request.getSession());
 		SessionUtils.setAttribute(LoanConstants.TOTAL_AMOUNT_OVERDUE,
 				totalAmountDue, request.getSession());
+		SessionUtils.setAttribute(LoanConstants.NEXTMEETING_DATE,
+				loanBO.getNextMeetingDate(), request.getSession());
 		loanBO=null;
 		return mapping
 				.findForward(LoanConstants.VIEWINSTALLMENTDETAILS_SUCCESS);
@@ -351,16 +352,14 @@ public class LoanAccountAction extends AccountAppAction {
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		LoanBO loanBO = (LoanBO) SessionUtils.getAttribute(
+		LoanBO loanBOInSession = (LoanBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
-		Integer versionNumber = loanBO.getVersionNo();
-		loanBO = loanBusinessService.findBySystemId(loanBO
-				.getGlobalAccountNum());
-		/*if(! loanBO.getVersionNo().equals(versionNumber))
-			throw new AccountException("error.update");*/
+		LoanBO loanBO = loanBusinessService.findBySystemId(loanBOInSession.getGlobalAccountNum());
+		loanBO.setVersionNo(loanBOInSession.getVersionNo());
 		loanBO.setUserContext(getUserContext(request));
 		updateBusinessData(loanBO, form, request);
 		loanBO.updateLoan();
+		loanBOInSession = null;
 		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request.getSession());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loanBO,request.getSession());
 		return mapping.findForward(ActionForwards.update_success.toString());

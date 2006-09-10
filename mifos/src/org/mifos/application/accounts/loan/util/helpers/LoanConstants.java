@@ -72,6 +72,7 @@ public interface LoanConstants {
 	public final String VIEW_OVERDUE_INSTALLMENT_DETAILS = "viewOverDueInstallmentDetails";
 	public final String TOTAL_AMOUNT_OVERDUE = "totalAmountOverDue";
 	public final String CURRENT_DATE = "currentDate";
+	public final String NEXTMEETING_DATE = "nextMeetingDate";
 	public final String FEEFORMULALIST = "feeFormulaList"; 
 		
 	//account status

@@ -194,7 +194,8 @@
 						<tr>
 							<td class="drawtablerowbold">
 							<mifos:mifoslabel name="loan.totalDueOn" bundle="loanUIResources" />
-								<c:out value="${loanfn:getCurrrentDate(sessionScope.UserContext.pereferedLocale)}" />
+								<c:out
+									value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.nextMeetingDate)}" />
 								</td>
 							<td align="right" class="drawtablerow">&nbsp;
 							<c:out value='${sessionScope.totalAmountOverDue}'/>
