@@ -382,7 +382,9 @@
 										<c:out
 											value="${sessionScope.BusinessKey.customerMeeting.meeting.meetingPlace}" />
 										<br>
-									</c:if> </span></td>
+									</c:if> <c:if test="${sessionScope.BusinessKey.clientUnderGroup}">
+									<c:out
+												value="${BusinessKey.parentCustomer.displayName}" /><br></c:if></span></td>
 									<td width="39%" align="right" valign="top"><!-- Editing group or branch membership based on whether client belongs to group or not -->
 									<c:choose>
 										<c:when test="${sessionScope.BusinessKey.clientUnderGroup}">
