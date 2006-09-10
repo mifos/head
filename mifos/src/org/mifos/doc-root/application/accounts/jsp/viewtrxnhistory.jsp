@@ -67,8 +67,8 @@
 	          	
 	          	<c:choose>
 	          	<c:when test="${param.input == 'LoanDetails'}">
-	          	  <html-el:link action="loanAccountAction.do?globalAccountNum=${sessionScope.BusinessKey.customerAccount.globalAccountNum}&method=get"> /
-	          	    <c:out value="${sessionScope.BusinessKey.displayName}"></c:out>
+	          	  <html-el:link action="loanAccountAction.do?globalAccountNum=${param.globalAccountNum}&method=get"> /
+	          	    <c:out value="${param.prdOfferingName}"></c:out>
 	          	  </html-el:link>
 	          	</c:when>
 	          	<c:otherwise>
@@ -136,19 +136,7 @@
           </td>
         </tr>
       </table>
-<%--  html-el:hidden property="statusId" value="${sessionScope.BusinessKey.customerStatus.id}"/>  
-<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.customerAccount.globalAccountNum}"/>
-<html-el:hidden property="globalCustNum" value="${sessionScope.BusinessKey.globalCustNum}" />
-</html-el:form>
-<html-el:form  action="closedaccsearchaction.do?method=search">
-<html-el:hidden property="searchNode(search_name)" value="ClientChargesDetails"/>
-<html-el:hidden property="prdOfferingName" value="${sessionScope.BusinessKey.displayName}"/> 
-<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.customerAccount.globalAccountNum}"/> 
-<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.customerAccount.accountId}"/> 
-<html-el:hidden property="accountType" value="${sessionScope.BusinessKey.customerAccount.accountType.accountTypeId}"/> 
-<html-el:hidden property="input" value="${param.input}"/> 
-<html-el:hidden property="statusId" value="${sessionScope.BusinessKey.customerStatus.id}"/>
-<html-el:hidden property="globalCustNum" value="${sessionScope.BusinessKey.globalCustNum}" --%>
+<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}"/>
 </html-el:form>
 
 <html-el:form action="customerAccountAction.do">

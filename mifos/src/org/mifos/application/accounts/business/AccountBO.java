@@ -1207,7 +1207,7 @@ public class AccountBO extends BusinessObject {
 				.getAccountPayment().getPaymentId(), accountTrxn
 				.getAccountTrxnId(), String.valueOf(removeSign(accountTrxn
 				.getAmount())), accountTrxn.getCustomer().getDisplayName(),
-				accountTrxn.getCustomer().getPersonnel().getDisplayName());
+				getUserContext().getName());
 	}
 
 	private void initializeMeetings(Fees fees) {
