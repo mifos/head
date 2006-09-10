@@ -489,28 +489,29 @@
 						</tr>
 						<tr id="Client.Ethinicity">
 							<td class="fontnormal">
-							<c:if
-								test="${!empty sessionScope.BusinessKey.customerDetail.ethinicity}">
+							<mifos:mifoslabel name="${ConfigurationConstants.ETHINICITY}" keyhm="Client.Ethinicity" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
+							<c:if test="${!empty sessionScope.BusinessKey.customerDetail.ethinicity}">
 								<c:out value="${sessionScope.ethinicityEntityName}" />
-								<br>
 							</c:if> 
+							<br>
 							</td>
 						</tr>
 						<tr id="Client.EducationLevel">
-							<td class="fontnormal"><c:if
-								test="${!empty sessionScope.BusinessKey.customerDetail.educationLevel}">
+							<td class="fontnormal">
+							<mifos:mifoslabel name="client.EducationLevel" bundle="ClientUIResources" keyhm="Client.EducationLevel" isManadatoryIndicationNotRequired="yes"/>
+							<c:if test="${!empty sessionScope.BusinessKey.customerDetail.educationLevel}">
 								<c:out value="${sessionScope.educationLevelEntityName}" />
-								<br>
 							</c:if> 
+							<br>
 							</td>
 						</tr>
 						<tr id="Client.Citizenship">
-							<td class="fontnormal"><c:if
-								test="${!empty sessionScope.BusinessKey.customerDetail.citizenship}">
-								<mifos:mifoslabel name="${ConfigurationConstants.CITIZENSHIP}" keyhm="Client.Citizenship" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
+							<td class="fontnormal">
+							<mifos:mifoslabel name="${ConfigurationConstants.CITIZENSHIP}" keyhm="Client.Citizenship" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
+							<c:if test="${!empty sessionScope.BusinessKey.customerDetail.citizenship}">
 								<c:out value="${sessionScope.citizenshipEntityName}" />
-								<br>
 							</c:if> 
+							<br>
 							</td>
 						</tr>
 						<tr id="Client.Handicapped">
