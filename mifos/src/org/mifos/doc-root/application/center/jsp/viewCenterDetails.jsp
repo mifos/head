@@ -150,7 +150,7 @@
 					</table>
 
 
-					<c:if test="${!empty sessionScope.BusinessKey.activeSavingsAccounts}">
+					<c:if test="${!empty sessionScope.customerSavingsAccountsInUse}">
 						<table width="96%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
 								<td width="63%" align="left" valign="top"
@@ -166,7 +166,7 @@
 								<table width="95%" border="0" align="center" cellpadding="0"
 									cellspacing="0">
 									<c:forEach
-										items="${sessionScope.BusinessKey.activeSavingsAccounts}"
+										items="${sessionScope.customerSavingsAccountsInUse}"
 										var="savings">
 										<tr>
 											<td>

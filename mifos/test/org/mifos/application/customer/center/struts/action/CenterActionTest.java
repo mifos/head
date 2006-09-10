@@ -6,6 +6,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.PositionEntity;
@@ -13,6 +18,7 @@ import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -24,6 +30,7 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.util.Address;
@@ -46,6 +53,10 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 	private GroupBO group;
 	private ClientBO client;
 	private String flowKey;
+	private SavingsTestHelper helper = new SavingsTestHelper();
+
+	private SavingsOfferingBO savingsOffering;
+	private SavingsBO savingsBO;
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -80,6 +91,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 
 	@Override
 	protected void tearDown() throws Exception {
+		TestObjectFactory.cleanUp(savingsBO);
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
@@ -503,22 +515,20 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 		client = TestObjectFactory.createClient("client",CustomerStatus.CLIENT_ACTIVE.getValue(), group.getSearchId()+".1", group, new Date());
 	}
 	
-	public void testGet(){
-		
-		
+	public void testGet() throws Exception{
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", Short
 				.valueOf("13"), "1.4", meeting, new Date(System
 				.currentTimeMillis()));
-		GroupBO group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE, center.getSearchId()+".1", center, new Date(System
+		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE, center.getSearchId()+".1", center, new Date(System
 				.currentTimeMillis()));
-		
+		savingsBO = getSavingsAccount("fsaf6","ads6",center);
+		HibernateUtil.closeSession();
 		setRequestPathInfo("/centerCustAction.do");
 		addRequestParameter("method", "get");
 		addRequestParameter("globalCustNum", center.getGlobalCustNum());
 		actionPerform();
-		
 		verifyForward(ActionForwards.get_success.toString());
 		CustomerBO centerBO =(CenterBO) request.getSession().getAttribute(Constants.BUSINESS_KEY);
 		assertNotNull(center);
@@ -526,9 +536,17 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 		List children =(List) request.getSession().getAttribute(CenterConstants.GROUP_LIST);
 		assertNotNull(children);
 		assertEquals(1,children.size());
-		
-		
-		TestObjectFactory.cleanUp(group);
-
+		assertEquals("Size of the active accounts should be 1",1,((List<SavingsBO>)SessionUtils.getAttribute(ClientConstants.CUSTOMERSAVINGSACCOUNTSINUSE,request.getSession())).size());
+		HibernateUtil.closeSession();
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		savingsBO = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class,savingsBO.getAccountId());
+	}
+	
+	private SavingsBO getSavingsAccount(String offeringName,String shortName,CustomerBO customer) {
+		savingsOffering = helper.createSavingsOffering(offeringName,shortName);
+		return TestObjectFactory.createSavingsAccount("000100000000017", customer,
+				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, new Date(System
+						.currentTimeMillis()), savingsOffering);
 	}
 }

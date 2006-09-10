@@ -49,6 +49,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
@@ -62,6 +63,8 @@ import org.mifos.application.customer.center.dao.CenterDAO;
 import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.center.util.valueobjects.Center;
+import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.util.helpers.LinkParameters;
 import org.mifos.application.customer.struts.action.CustAction;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
@@ -324,6 +327,7 @@ public class CenterCustAction extends CustAction {
 		centerBO.getCustomerStatus().setLocaleId(getUserContext(request).getLocaleId());
 		SessionUtils.setAttribute(CenterConstants.GROUP_LIST,centerBO.getChildren(CustomerLevel.GROUP, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED),request
 				.getSession());
+		
 	  CenterPerformanceHistory centerPerformanceHistory = 	customerBusinessService.getCenterPerformanceHistory(centerBO.getSearchId(),centerBO.getOffice().getOfficeId());
 	  SessionUtils.setAttribute(CenterConstants.PERFORMANCE_HISTORY,centerPerformanceHistory,request
 				.getSession());
@@ -333,7 +337,8 @@ public class CenterCustAction extends CustAction {
 	  loadCustomFieldDefinitions(request);
 	  
 	  UserContext userContext = getUserContext(request);
-	  setLocaleIdToSavingsStatus(centerBO.getActiveSavingsAccounts(),userContext.getLocaleId());
+	  //setLocaleIdToSavingsStatus(centerBO.getActiveSavingsAccounts(),userContext.getLocaleId());
+	  loadMasterDataForDetailsPage(request,centerBO,getUserContext(request).getLocaleId());
 	  initCustomerPosition(centerBO,userContext.getLocaleId());
 	  //	TODO : get value object 
 	  CenterDAO centerDAO =  new CenterDAO();
@@ -348,6 +353,14 @@ public class CenterCustAction extends CustAction {
 						.getSession());
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
+	
+	private void loadMasterDataForDetailsPage(HttpServletRequest request,CenterBO centerBO,Short localeId) {
+		List<SavingsBO> savingsAccounts = centerBO.getOpenSavingAccounts();
+		setLocaleIdToSavingsStatus(savingsAccounts, localeId);
+		SessionUtils.setAttribute(ClientConstants.CUSTOMERSAVINGSACCOUNTSINUSE,
+				savingsAccounts, request.getSession());
+	}
+	
 	private void initCustomerPosition(CenterBO centerBO,Short localeId){
 		
 		for (CustomerPositionEntity customerPosition : centerBO.getCustomerPositions()) {
