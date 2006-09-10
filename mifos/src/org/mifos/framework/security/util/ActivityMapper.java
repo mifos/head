@@ -1000,8 +1000,8 @@ public class ActivityMapper {
 		activityMap.put("/customerNotesAction-previous", SecurityConstants.VIEW);
 		activityMap.put("/customerNotesAction-create", SecurityConstants.VIEW);
 		activityMap.put("/customerNotesAction-search", SecurityConstants.VIEW);
-		activityMap.put("/customerNotesAction-load-Group", SecurityConstants.VIEW);
-		activityMap.put("/customerNotesAction-load-Client", SecurityConstants.VIEW);
+		activityMap.put("/customerNotesAction-load-Group", SecurityConstants.GROUP_ADD_NOTE_TO_GROUP);
+		activityMap.put("/customerNotesAction-load-Client", SecurityConstants.CLIENT_ADD_NOTE_TO_CLIENT);
 		
 		
 		// client creation action- migration
