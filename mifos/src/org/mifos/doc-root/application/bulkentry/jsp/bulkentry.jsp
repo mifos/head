@@ -225,7 +225,7 @@
 														:
 													</td>
 													<td>
-														<mifos:select property="officeId" style="width:136px;">
+														<mifos:select property="officeId">
 															<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'OfficesBranchOffices')}" var="office">
 																<html-el:option value="${office.officeId}">${office.officeName}</html-el:option>
 															</c:forEach>
@@ -238,7 +238,7 @@
 														:
 													</td>
 													<td>
-														<mifos:select property="loanOfficerId" style="width:136px;">
+														<mifos:select property="loanOfficerId">
 															<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanOfficers')}" var="loanOfficer">
 																<html-el:option value="${loanOfficer.personnelId}">${loanOfficer.displayName}</html-el:option>
 															</c:forEach>
@@ -253,7 +253,7 @@
 														:
 													</td>
 													<td>
-														<mifos:select property="officeId" style="width:136px;" onchange="fnLoadLoanOfficers(this.form)">
+														<mifos:select property="officeId" onchange="fnLoadLoanOfficers(this.form)">
 															<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'OfficesBranchOffices')}" var="office">
 																<html-el:option value="${office.officeId}">${office.officeName}</html-el:option>
 															</c:forEach>
@@ -266,7 +266,7 @@
 														:
 													</td>
 													<td>
-														<mifos:select property="loanOfficerId" style="width:136px;" onchange="fnLoadCustomers(this.form)">
+														<mifos:select property="loanOfficerId" onchange="fnLoadCustomers(this.form)">
 															<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanOfficers')}" var="loanOfficer">
 																<html-el:option value="${loanOfficer.personnelId}">${loanOfficer.displayName}</html-el:option>
 															</c:forEach>
@@ -288,7 +288,7 @@
 												:
 											</td>
 											<td width="73%">
-												<mifos:select property="customerId" style="width:136px;" onchange="getLastMeetingDateForCustomer(this.form)">
+												<mifos:select property="customerId" onchange="getLastMeetingDateForCustomer(this.form)">
 													<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CustomersList')}" var="customer">
 														<html-el:option value="${customer.customerId}">${customer.displayName}</html-el:option>
 													</c:forEach>
@@ -317,7 +317,7 @@
 												:
 											</td>
 											<td>
-												<mifos:select property="paymentId" style="width:136px;">
+												<mifos:select property="paymentId">
 													<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentTypesList')}" var="payment">
 														<html-el:option value="${payment.id}">${payment.lookUpValue}</html-el:option>
 													</c:forEach>
