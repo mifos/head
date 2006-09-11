@@ -20,10 +20,12 @@ public class FieldConfigurationEntity {
 		return fieldConfigId;
 	}
 	
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private void setFieldConfigId(Integer fieldConfigId) {
 		this.fieldConfigId = fieldConfigId;
 	}
 	
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private void setHiddenFlag(Short hiddenFlag) {
 		this.hiddenFlag = hiddenFlag;
 	}
@@ -36,6 +38,7 @@ public class FieldConfigurationEntity {
 		return mandatoryFlag;
 	}
 	
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private void setMandatoryFlag(Short mandatoryFlag) {
 		this.mandatoryFlag = mandatoryFlag;
 	}
@@ -44,6 +47,7 @@ public class FieldConfigurationEntity {
 		return entityMaster;
 	}
 
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private void setEntityMaster(EntityMaster entityMaster) {
 		this.entityMaster = entityMaster;
 	}
@@ -52,6 +56,7 @@ public class FieldConfigurationEntity {
 		return fieldName;
 	}
 
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private void setFieldName(String fieldName) {
 		this.fieldName = fieldName;
 	}
