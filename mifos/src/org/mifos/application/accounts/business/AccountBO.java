@@ -1192,7 +1192,7 @@ public class AccountBO extends BusinessObject {
 		if (financialTrxn.getNotes() != null
 				&& !financialTrxn.getNotes().equals(""))
 			notes = financialTrxn.getNotes();
-		transactionHistory.setFinancialEnteries(financialTrxn.getActionDate(),
+		transactionHistory.setFinancialEnteries(financialTrxn.getTrxnId(),financialTrxn.getActionDate(),
 				financialTrxn.getFinancialAction().getName(
 						userContext.getLocaleId()), financialTrxn.getGlcode()
 						.getGlcode(), debit, credit, financialTrxn
@@ -1204,10 +1204,9 @@ public class AccountBO extends BusinessObject {
 			TransactionHistoryView transactionHistory) {
 
 		transactionHistory.setAccountingEnteries(accountTrxn
-				.getAccountPayment().getPaymentId(), accountTrxn
-				.getAccountTrxnId(), String.valueOf(removeSign(accountTrxn
-				.getAmount())), accountTrxn.getCustomer().getDisplayName(),
-				getUserContext().getName());
+				.getAccountPayment().getPaymentId(), String
+				.valueOf(removeSign(accountTrxn.getAmount())), accountTrxn
+				.getCustomer().getDisplayName(), getUserContext().getName());
 	}
 
 	private void initializeMeetings(Fees fees) {

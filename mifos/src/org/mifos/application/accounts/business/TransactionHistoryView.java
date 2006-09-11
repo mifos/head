@@ -110,21 +110,24 @@ public class TransactionHistoryView extends View{
 		return DateHelper.getUserLocaleDate(getLocale(),getTransactionDate().toString());
 	}
 
-	public void setFinancialEnteries(Date trxnDate,String actionType,String glCode,String debit,String credit,Date postedDate,String notes){
-		this.transactionDate=trxnDate;
-		this.type=actionType;
-		this.glcode=glCode;
-		this.debit=debit;
-		this.credit=credit;
-		this.postedDate=postedDate;
-		this.notes=notes;
+	public void setFinancialEnteries(Integer trxnId, Date trxnDate,
+			String actionType, String glCode, String debit, String credit,
+			Date postedDate, String notes) {
+		this.accountTrxnId = trxnId;
+		this.transactionDate = trxnDate;
+		this.type = actionType;
+		this.glcode = glCode;
+		this.debit = debit;
+		this.credit = credit;
+		this.postedDate = postedDate;
+		this.notes = notes;
 	}
- public void setAccountingEnteries( Integer paymentId,Integer accountTrxnId,String balance,String clientName,String postedBy){
-	 
-	 this.paymentId=paymentId;
-	 this.accountTrxnId=accountTrxnId;
-	 this.balance=balance;
-	 this.clientName=clientName;
-	 this.postedBy=postedBy;
- }
+
+	public void setAccountingEnteries(Integer paymentId, String balance,
+			String clientName, String postedBy) {
+		this.paymentId = paymentId;
+		this.balance = balance;
+		this.clientName = clientName;
+		this.postedBy = postedBy;
+	}
 }

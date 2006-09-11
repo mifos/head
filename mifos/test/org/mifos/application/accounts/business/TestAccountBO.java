@@ -47,6 +47,7 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.mifos.application.accounts.TestAccount;
+import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
@@ -345,6 +346,14 @@ public class TestAccountBO extends TestAccount {
 		TestObjectFactory.flushandCloseSession();
 		loan = (LoanBO) TestObjectFactory.getObject(AccountBO.class, loan
 				.getAccountId());
+		List<Integer> ids=new ArrayList<Integer>();
+		for(AccountPaymentEntity accountPaymentEntity : loan.getAccountPayments()){
+			for(AccountTrxnEntity accountTrxnEntity : accountPaymentEntity.getAccountTrxns()){
+				for(FinancialTransactionBO financialTransactionBO : accountTrxnEntity.getFinancialTransactions()){
+					ids.add(financialTransactionBO.getTrxnId());
+				}
+			}
+		}
 		loan.setUserContext(TestObjectFactory.getUserContext());
 		List<TransactionHistoryView> trxnHistlist = loan
 				.getTransactionHistoryView();
@@ -353,6 +362,12 @@ public class TestAccountBO extends TestAccount {
 		assertTrue(
 				"Account TrxnHistoryView list object Size should be greater than zero",
 				trxnHistlist.size() > 0);
+		assertEquals(ids.size(),trxnHistlist.size());
+		int i = 0;
+		for(TransactionHistoryView transactionHistoryView :  trxnHistlist){
+			assertEquals(ids.get(i),transactionHistoryView.getAccountTrxnId());
+			i++;
+		}
 		TestObjectFactory.flushandCloseSession();
 		accountBO = (LoanBO) TestObjectFactory.getObject(AccountBO.class, loan
 				.getAccountId());

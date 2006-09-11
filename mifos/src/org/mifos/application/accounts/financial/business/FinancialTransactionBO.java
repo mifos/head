@@ -178,7 +178,7 @@ public class FinancialTransactionBO extends BusinessObject {
 		this.postedAmount = postedAmount;
 	}
 
-	private Integer getTrxnId() {
+	public Integer getTrxnId() {
 		return trxnId;
 	}
 
