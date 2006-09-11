@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	Document   : struts-config.xml
+	Created on : August 22, 2005
+	Author     : ashishsmital
+	Description: Purpose of the document follows.
+-->
+
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+"http://jakarta.apache.org/struts/dtdt/struts-config_1_2.dtd">
+
+
+<struts-config>
+	<form-beans>
+		<form-bean name="offActionForm"
+			type="org.mifos.application.office.struts.actionforms.OffActionForm" />
+		<form-bean name="offhierarchyactionform" type="org.mifos.application.office.struts.actionforms.OffHierarchyActionForm"></form-bean>
+	</form-beans>
+	<global-exceptions>
+		<exception type="org.mifos.framework.exceptions.SystemException"
+			handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+			key="exception.framework.SystemException" scope="request"
+			path="/pages/framework/jsp/error.jsp" />
+		<exception
+			type="org.mifos.framework.exceptions.ApplicationException"
+			handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+			key="exception.framework.ApplicationException" scope="request" />
+		<exception type="org.mifos.framework.exceptions.PageExpiredException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.PageExpiredException" scope="request" path="/pages/framework/jsp/pageexpirederror.jsp"/>
+	</global-exceptions>
+
+	<action-mappings>
+		<action path="/offAction" type="org.mifos.application.office.struts.action.OffAction" 
+		name="offActionForm" parameter="method" 
+			input="/offAction.do?method=validate" validate="true">
+			<forward name="load_success" path="/pages/application/office/jsp/CreateNewOffice.jsp" />
+			<forward name="preview_success" path="/pages/application/office/jsp/previewNewOffice.jsp" />
+			<forward name="preview_failure" path="/pages/application/office/jsp/CreateNewOffice.jsp" />
+			<forward name="previous_success" path="/pages/application/office/jsp/CreateNewOffice.jsp" />
+			<forward name="create_success" path="/pages/application/office/jsp/CreateNewOffice.jsp" />
+			<forward name="create_failure" path="/pages/application/office/jsp/CreateNewOffice.jsp" />
+			<forward name="edit_success" path="/pages/application/office/jsp/editOffice.jsp" />
+			<forward name="editpreview_success" path="/pages/application/office/jsp/my.jsp" />
+			<forward name="editpreview_failure" path="/pages/application/office/jsp/editoffice.jsp" />
+			<forward name="editprevious_success" path="/pages/application/office/jsp/editoffice.jsp" />
+			<forward name="update_success" path="/offAction.do?method=get" />
+			<forward name="update_failure" path="/pages/application/office/jsp/my.jsp" />
+			<forward name="search_success" path="/pages/application/office/jsp/viewOffices.jsp" />
+			
+		</action>
+		
+		<action path="/offhierarchyaction" type="org.mifos.application.office.struts.action.OffHierarchyAction" 
+		name="offhierarchyactionform" parameter="method" scope="session"
+			input="/offhierarchyaction.do?method=validate" validate="true">
+			<forward name="load_success" path="/pages/application/office/jsp/offhierarchy.jsp" />
+			<forward name="update_success" path="/AdminAction.do?method=load" />
+			<forward name="cancel_success" path="/AdminAction.do?method=load" />
+		</action>
+		
+	</action-mappings>
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property property="pathnames"
+			value="org/mifos/application/office/validation.xml,org/mifos/application/office/validator-rules.xml" />
+		<set-property property="stopOnFirstError" value="false" />
+	</plug-in>
+</struts-config>

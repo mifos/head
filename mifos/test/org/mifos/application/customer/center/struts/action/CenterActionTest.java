@@ -6,8 +6,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -37,7 +35,6 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.DateHelper;
@@ -64,18 +61,16 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
 					.getPath());
 			setConfigFile(ResourceLoader.getURI(
-					"org/mifos/framework/util/helpers/struts-config.xml")
+					"org/mifos/application/customer/center/struts-config.xml")
 					.getPath());
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
-		UserContext userContext = TestObjectFactory.getUserContext();
+		UserContext userContext = TestObjectFactory.getContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
-		ActivityContext ac = new ActivityContext((short) 0, userContext
-				.getBranchId().shortValue(), userContext.getId().shortValue());
-		request.getSession(false).setAttribute("ActivityContext", ac);
+		request.getSession(false).setAttribute("ActivityContext",TestObjectFactory.getActivityContext());
 		Flow flow = new Flow();
 		flowKey = String.valueOf(System.currentTimeMillis());
 		FlowManager flowManager = new FlowManager();

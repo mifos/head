@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	Document   : struts-config.xml
+	Created on : August 22, 2005
+	Author     : ashishsmital
+	Description: Purpose of the document follows.
+-->
+
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+"http://jakarta.apache.org/struts/dtdt/struts-config_1_2.dtd">
+
+
+<struts-config>
+	<form-beans>
+		<form-bean name="savingsActionForm"
+			type="org.mifos.application.accounts.savings.struts.actionforms.SavingsActionForm" />
+		<form-bean name="savingsApplyAdjustmentActionForm"
+			type="org.mifos.application.accounts.savings.struts.actionforms.SavingsApplyAdjustmentActionForm" />
+		<form-bean name="savingsClosureForm" 
+			type="org.mifos.application.accounts.savings.struts.actionforms.SavingsClosureActionForm"/>		
+		<form-bean name="savingsDepositWithdrawalForm" 
+			type="org.mifos.application.accounts.savings.struts.actionforms.SavingsDepositWithdrawalActionForm" />				
+	</form-beans>
+	<global-exceptions>
+		<exception type="org.mifos.framework.exceptions.SystemException"
+			handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+			key="exception.framework.SystemException" scope="request"
+			path="/pages/framework/jsp/error.jsp" />
+		<exception
+			type="org.mifos.framework.exceptions.ApplicationException"
+			handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+			key="exception.framework.ApplicationException" scope="request" />
+		<exception type="org.mifos.framework.exceptions.PageExpiredException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.PageExpiredException" scope="request" path="/pages/framework/jsp/pageexpirederror.jsp"/>
+	</global-exceptions>
+
+	<action-mappings>	
+		<action path="/savingsAction" type="org.mifos.application.accounts.savings.struts.action.SavingsAction" 
+      		name="savingsActionForm" 
+       		parameter="method"	
+       		validate="true"
+       		input="/savingsAction.do?method=validate"
+       		scope="session">
+       		<forward name="getPrdOfferings_success" path="/pages/application/savings/jsp/createsavingsaccount.jsp"/>
+       		<forward name="load_success" path="/pages/application/savings/jsp/continuecreatesavingsaccount.jsp"/>
+       		<forward name="preview_success" path="/pages/application/savings/jsp/createsavingsaccountpreview.jsp"/>
+       		<forward name="previous_success" path="/pages/application/savings/jsp/continuecreatesavingsaccount.jsp"/>
+       		<forward name="create_success" path="/pages/application/savings/jsp/createsavingsaccountconfirmation.jsp" />
+       		<forward name="get_success" path="/pages/application/savings/jsp/savingsaccountdetail.jsp" />
+       		<forward name="edit_success" path="/pages/application/savings/jsp/editsavingsaccount.jsp" />
+       		<forward name="editPreview_success" path="/pages/application/savings/jsp/previewsavingsaccount.jsp" />
+       		<forward name="editPrevious_success" path="/pages/application/savings/jsp/editsavingsaccount.jsp" />
+       		<forward name="update_success" path="/savingsAction.do?method=get" />       		       		       		       		
+       		<forward name="preview_faliure" path="/pages/application/savings/jsp/continuecreatesavingsaccount.jsp" />       		
+       		<forward name="editPreview_faliure" path="/pages/application/savings/jsp/editsavingsaccount.jsp" />       		       		       		
+       		<forward name="getRecentActivity_success" path="/pages/application/savings/jsp/viewsavingsaccountactivity.jsp" />       		       		       		       		       		
+       		<forward name="getTransactionHistory_success" path="/pages/application/savings/jsp/viewsavingstrxnhistory.jsp" />       		       		       		       		       		
+       		<forward name="depositduedetails_success" path="/pages/application/savings/jsp/savingsaccountdepositduedetails.jsp" />
+       		<forward name="waiveAmount_success" path="/savingsAction.do?method=getDepositDueDetails" />
+       		<forward name="getStatusHistory_success" path="/pages/application/savings/jsp/viewstatuschangehistory.jsp" />
+ 		</action>
+ 		
+ 		<action path="/savingsApplyAdjustmentAction" type="org.mifos.application.accounts.savings.struts.action.SavingsApplyAdjustmentAction" 
+      		name="savingsApplyAdjustmentActionForm" 
+       		parameter="method"	
+       		validate="true"
+       		input="/savingsApplyAdjustmentAction.do?method=validate"
+       		scope="session">
+       		<forward name="load_success" path="/pages/application/savings/jsp/applyadjustment.jsp"/>
+       		<forward name="preview_success" path="/pages/application/savings/jsp/applyadjustmentpreview.jsp"/>
+       		<forward name="previous_success" path="/pages/application/savings/jsp/applyadjustment.jsp"/>
+       		<forward name="account_detail_page" path="/savingsAction.do?method=get" />       		       		       		       		
+       		<forward name="preview_failure" path="/pages/application/savings/jsp/applyadjustment.jsp" />       		
+     		<forward name="adjustLastUserPayment_faliure" path="/pages/application/savings/jsp/applyadjustmentpreview.jsp" />
+ 		</action>
+ 		
+ 		<action path="/savingsClosureAction" type="org.mifos.application.accounts.savings.struts.action.SavingsClosureAction" 
+      		name="savingsClosureForm" 
+       		parameter="method"	
+       		validate="true"
+       		input="/savingsClosureAction.do?method=validate"
+       		scope="session">
+       		<forward name="load_success" path="/pages/application/savings/jsp/closesavingsaccount.jsp"/>
+       		<forward name="preview_success" path="/pages/application/savings/jsp/reviewclosesavings.jsp"/>
+       		<forward name="previous_success" path="/pages/application/savings/jsp/closesavingsaccount.jsp"/>
+       		<forward name="close_success" path="/savingsAction.do?method=get" />       		       		       		       		
+       		<forward name="preview_faliure" path="/pages/application/savings/jsp/closesavingsaccount.jsp" />       		
+ 		</action>
+ 		<action path="/savingsDepositWithdrawalAction" type="org.mifos.application.accounts.savings.struts.action.SavingsDepositWithdrawalAction" name="savingsDepositWithdrawalForm" parameter="method" 
+			input="/savingsDepositWithdrawalAction.do?method=validate" scope="session" validate="true">
+			<forward name="load_success" path="/pages/application/savings/jsp/applypayment_savingsaccount.jsp" />
+			<forward name="preview_success" path="/pages/application/savings/jsp/review_transaction_savings.jsp" />
+			<forward name="preview_failure" path="/pages/application/savings/jsp/applypayment_savingsaccount.jsp" />
+			<forward name="previous_success" path="/pages/application/savings/jsp/applypayment_savingsaccount.jsp"/>
+			<forward name="account_details_page" path="/savingsAction.do?method=get"/>
+			<forward name="makePayment_failure" path="/pages/application/savings/jsp/review_transaction_savings.jsp"/>
+		</action>
+	</action-mappings>	
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property property="pathnames"
+			value="org/mifos/application/accounts/savings/validation.xml,org/mifos/application/accounts/savings/validator-rules.xml" />
+		<set-property property="stopOnFirstError" value="false" />
+	</plug-in>
+</struts-config>

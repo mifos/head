@@ -43,10 +43,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -78,7 +76,6 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.Constants;
@@ -103,28 +100,18 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
 					.getPath());
 			setConfigFile(ResourceLoader.getURI(
-					"org/mifos/framework/util/helpers/struts-config.xml")
+					"org/mifos/application/customer/client/struts-config.xml")
 					.getPath());
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
-		userContext = new UserContext();
-		userContext.setId(new Short("1"));
-		userContext.setLocaleId(new Short("1"));
-		Set<Short> set = new HashSet<Short>();
-		set.add(Short.valueOf("1"));
-		userContext.setRoles(set);
-		userContext.setLevelId(Short.valueOf("2"));
-		userContext.setName("mifos");
-		userContext.setPereferedLocale(new Locale("en", "US"));
-		userContext.setBranchId(new Short("1"));
-		userContext.setBranchGlobalNum("0001");
+		userContext = TestObjectFactory.getContext();
+		userContext.setPereferedLocale(new Locale("en","US"));
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
-		ActivityContext ac = new ActivityContext((short) 0, userContext
-				.getBranchId().shortValue(), userContext.getId().shortValue());
-		request.getSession(false).setAttribute("ActivityContext", ac);
+		
+		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
 		Flow flow = new Flow();
 		flowKey = String.valueOf(System.currentTimeMillis());
 		FlowManager flowManager = new FlowManager();
@@ -858,8 +845,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		actionPerform();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "previewEditMfiInfo");
-		addRequestParameter("trained", "");
-		addRequestParameter("trainedDate", "03/21/2006");
+		addRequestParameter("trained", "0");
+		addRequestParameter("trainedDate", "");
 		addRequestParameter("externalId", "3");
 		actionPerform();
 		setRequestPathInfo("/clientCustAction.do");

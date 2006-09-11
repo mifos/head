@@ -18,7 +18,6 @@ import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FlowManager;
@@ -48,13 +47,11 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
-		UserContext userContext = TestObjectFactory.getUserContext();
+		UserContext userContext = TestObjectFactory.getContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
-		ActivityContext ac = new ActivityContext((short) 0, userContext
-				.getBranchId().shortValue(), userContext.getId().shortValue());
-		request.getSession(false).setAttribute("ActivityContext", ac);
+		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
 		FlowManager flowManager = new FlowManager();
 		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
 				flowManager);		
