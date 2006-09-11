@@ -27,7 +27,7 @@ public class TestOffice extends MockStrutsTestCase{
 		super(testName);
 	}
 
-	//success
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		try {
@@ -53,6 +53,7 @@ public class TestOffice extends MockStrutsTestCase{
 		request.getSession(false).setAttribute(LoginConstants.ACTIVITYCONTEXT,ac);
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}

@@ -38,8 +38,10 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.mifos.application.customer.business.CustomFieldViewTest;
+import org.mifos.application.office.struts.tag.OfficeListTagTest;
 import org.mifos.framework.MifosTestSuite;
 import org.mifos.framework.components.interestcalculator.FlatInterestCalculatorTest;
+import org.mifos.framework.struts.tags.MifosTagUtilsTest;
 import org.mifos.framework.util.helpers.MoneyTest;
 
 /**
@@ -54,6 +56,9 @@ public class FastTests extends MifosTestSuite {
 		suite.addTestSuite(FlatInterestCalculatorTest.class);
 		suite.addTestSuite(MoneyTest.class);
 		suite.addTestSuite(CustomFieldViewTest.class);
+		suite.addTestSuite(MifosTagUtilsTest.class);
+
+		suite.addTestSuite(OfficeListTagTest.class);
 		return suite;
 	}
 

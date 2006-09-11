@@ -134,11 +134,11 @@ public class RawSelect {
                  if (i==0)
                  {
                      results.append("<OPTION value=\""+object+"\"" +
-             		        "selected >" + mifosTagUtils.filter(map.get(object).toString()) );
+             		        "selected >" + MifosTagUtils.xmlEscape(map.get(object).toString()) );
                  }
                  else {
                  results.append("<OPTION value=\""+object+"\"" +
-		        " >" + mifosTagUtils.filter(map.get(object).toString()));
+		        " >" + MifosTagUtils.xmlEscape(map.get(object).toString()));
                  }
              }
          }

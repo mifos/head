@@ -3,12 +3,8 @@ package org.mifos.application.office.persistence;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.net.ssl.SSLEngineResult.Status;
-
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficeView;
@@ -16,16 +12,11 @@ import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
-import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SecurityException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.security.util.OfficeCacheView;
-import org.mifos.framework.security.util.OfficeSearch;
-import org.mifos.framework.security.util.resources.SecurityConstants;
 
 public class OfficePersistence extends Persistence {
 

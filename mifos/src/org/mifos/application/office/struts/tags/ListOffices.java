@@ -113,7 +113,7 @@ public class ListOffices extends BodyTagSupport {
 				for(OfficeLevelMaster officeLevelMaster : levelList){
 					if (officeLevelMaster.getLevelId().shortValue() == OfficeConstants.BRANCHOFFICE) {
 						result.append("<br><span class=\"fontnormalBold\">");
-						String ln = tagUtils.filter(officeLevelMaster.getLevelName());
+						String ln = MifosTagUtils.xmlEscape(officeLevelMaster.getLevelName());
 						result.append(ln);
 						result.append("</span><br>");
 					}
@@ -131,7 +131,7 @@ public class ListOffices extends BodyTagSupport {
 					for(OfficeLevelMaster officeLevelMaster : levelList){
 						if (officeLevelMaster.getLevelId().shortValue() == OfficeConstants.BRANCHOFFICE) {
 							result.append("<br><span class=\"fontnormalBold\">");
-							String ln = tagUtils.filter(officeLevelMaster.getLevelName());
+							String ln = MifosTagUtils.xmlEscape(officeLevelMaster.getLevelName());
 							result.append(ln);
 							levelname=ln;
 							result.append("</span><br>");
@@ -162,7 +162,7 @@ public class ListOffices extends BodyTagSupport {
 						result.append("<br>");
 					}
 					result.append("<span class=\"fontnormal\">");
-					result.append(tagUtils.filter(officeParent.getOfficeName()));
+					result.append(MifosTagUtils.xmlEscape(officeParent.getOfficeName()));
 					result.append("</span>");
 					List<BranchOffice> branchList = officeParent
 							.getBranchOffice();
@@ -176,7 +176,7 @@ public class ListOffices extends BodyTagSupport {
 									.append("<td width=\"1%\"><img src=\"pages/framework/images/bullet_circle.gif\" width=\"9\" height=\"11\"></td>");
 							result.append("<td width=\"99%\">");
 							result.append(getLink(branchOffice.getOfficeId(),
-									tagUtils.filter(branchOffice.getOfficeName()) ));
+									MifosTagUtils.xmlEscape(branchOffice.getOfficeName()) ));
 							result.append("</td>");
 							result.append("</tr>");
 						}
@@ -205,8 +205,8 @@ public class ListOffices extends BodyTagSupport {
 						OfficeLevelChildren olc = (OfficeLevelChildren) olm
 								.get(0);
 						// olc.getOfficeId()
-						result.append(getLink(olc.getOfficeId(),tagUtils.filter( olc
-								.getOfficeName())));
+						result.append(getLink(olc.getOfficeId(),MifosTagUtils.xmlEscape(olc
+						.getOfficeName())));
 
 					}
 					// result.append(getLink(office.getLevelId(),
@@ -225,7 +225,7 @@ public class ListOffices extends BodyTagSupport {
 								.append("<br><table width=\"95%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
 						result.append("<tr>");
 						result.append("<td><span class=\"fontnormalbold\">");
-						result.append(tagUtils.filter(office.getLevelName()));
+						result.append(MifosTagUtils.xmlEscape(office.getLevelName()));
 						result.append("</span></td>");
 						result.append("</table>");
 						result
@@ -238,7 +238,7 @@ public class ListOffices extends BodyTagSupport {
 									.append("<td width=\"1%\"><img src=\"pages/framework/images/bullet_circle.gif\" width=\"9\" height=\"11\"></td>");
 							result.append("<td width=\"99%\">");
 							result.append(getLink(officeChild.getOfficeId(),
-									tagUtils.filter(officeChild.getOfficeName())));
+									MifosTagUtils.xmlEscape(officeChild.getOfficeName())));
 							result.append("</td>");
 							result.append("</tr>");
 						}

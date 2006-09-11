@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import org.hibernate.Hibernate;
@@ -59,6 +58,7 @@ import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.repaymentschedule.MeetingScheduleHelper;
@@ -104,17 +104,7 @@ public class TestSavingsBO extends MifosTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		userContext = new UserContext();
-		userContext.setId(new Short("1"));
-		userContext.setLocaleId(new Short("1"));
-		Set<Short> set = new HashSet<Short>();
-		set.add(Short.valueOf("1"));
-		userContext.setRoles(set);
-		userContext.setLevelId(Short.valueOf("2"));
-		userContext.setName("mifos");
-		userContext.setPereferedLocale(new Locale("en", "US"));
-		userContext.setBranchId(new Short("1"));
-		userContext.setBranchGlobalNum("0001");
+		userContext = TestUtils.makeUser(1);
 		createdBy = new PersonnelPersistence()
 				.getPersonnel(userContext.getId());
 	}
@@ -876,11 +866,7 @@ public class TestSavingsBO extends MifosTestCase {
 				AccountStates.SAVINGS_ACC_PENDINGAPPROVAL, userContext);
 		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
 				AccountTypes.SAVINGSACCOUNT.getValue(), null);
-		AccountStateFlagEntity stateFlag = null;
 		// 6 is blacklisted
-		Session session = HibernateUtil.getSessionTL();
-		stateFlag = (AccountStateFlagEntity) session.get(
-				AccountStateFlagEntity.class, Short.valueOf("6"));
 
 		savings.changeStatus(AccountState.SAVINGS_ACC_CANCEL.getValue(), Short
 				.valueOf("6"), "notes");
@@ -900,9 +886,7 @@ public class TestSavingsBO extends MifosTestCase {
 		try {
 			AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
 					AccountTypes.SAVINGSACCOUNT.getValue(), null);
-			AccountStateFlagEntity stateFlag = null;
 			// 6 is blacklisted
-			Session session = HibernateUtil.getSessionTL();
 
 			savings.changeStatus(AccountState.SAVINGS_ACC_CANCEL.getValue(),
 					Short.valueOf("6"), "notes");
@@ -4045,19 +4029,10 @@ public class TestSavingsBO extends MifosTestCase {
 	}
 
 	private UserContext createUser() {
-		userContext = new UserContext();
-		userContext.setId(new Short("1"));
-		userContext.setLocaleId(new Short("1"));
-		Set<Short> set = new HashSet<Short>();
-		set.add(Short.valueOf("2"));
-		userContext.setRoles(set);
-		userContext.setLevelId(Short.valueOf("2"));
-		userContext.setName("mifos");
-		userContext.setPereferedLocale(new Locale("en", "US"));
-		userContext.setBranchId(new Short("1"));
-		userContext.setBranchGlobalNum("0001");
+		this.userContext = TestUtils.makeUser(2);
 		createdBy = new PersonnelPersistence()
 				.getPersonnel(userContext.getId());
 		return userContext;
 	}
+
 }

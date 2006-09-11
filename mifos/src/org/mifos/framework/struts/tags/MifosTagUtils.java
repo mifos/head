@@ -57,78 +57,23 @@ public class MifosTagUtils {
 		return instance;
 	}
 	
-	/*
-	public String filter(String value) {
-
-        if (value == null) {
-            return (null);
-        }
-
-        char content[] = value.toCharArray();
-        StringBuffer result = null;
-
-        int i = 0;
-        scanLoop: for (; i < content.length; i++) {
-            switch (content[i]) {
-                case '<':
-                case '>':
-                case '&':
-                case '"':
-                case '\'':
-                    result = new StringBuffer(content.length + 50);
-                    result.append(content, 0, i);
-                    break scanLoop;
-                default:
-            }
-        }
-        if (result == null) {
-           // No special characters found so just return the originalstring.
-           return value;
-        }
-
-        for (; i < content.length; i++) {
-            switch (content[i]) {
-                case '<':
-                    result.append("&lt;");
-                    break;
-                case '>':
-                    result.append("&gt;");
-                    break;
-                case '&':
-                    result.append("&amp;");
-                    break;
-                case '"':
-                    result.append("&quot;");
-                    break;
-                case '\'':
-                    result.append("&#39;");
-                    break;
-                default:
-                    result.append(content[i]);
-            }
-        }
-        return result.toString();
-    }
-    */
-	
     /**
      * Filter the specified string for characters that are sensitive to
-     * HTML interpreters, returning the string with these characters replaced
+     * HTML/XML interpreters, returning the string with these characters replaced
      * by the corresponding character entities.
      *
-     * @param value The string to be filtered and returned
+     * @param input The string to be filtered and returned
      */
-    public  String filter(String value) {
-
-        if (value == null || value.length() == 0) {
-            return value;
+	public static String xmlEscape(String input) {
+		if (input == null || input.length() == 0) {
+            return input;
         }
 
         StringBuilder result = null;
         String filtered = null;
-        for (int i = 0; i < value.length(); i++) {
+        for (int i = 0; i < input.length(); i++) {
             filtered = null;
-            switch (value.charAt(i)) {
+            switch (input.charAt(i)) {
                 case '<':
                     filtered = "&lt;";
                     break;
@@ -148,22 +93,22 @@ public class MifosTagUtils {
 
             if (result == null) {
                 if (filtered != null) {
-                    result = new StringBuilder(value.length() + 50);
+                    result = new StringBuilder(input.length() + 50);
                     if (i > 0) {
-                        result.append(value.substring(0, i));
+                        result.append(input.substring(0, i));
                     }
                     result.append(filtered);                       
                 }
             } else {
                 if (filtered == null) {
-                    result.append(value.charAt(i));
+                    result.append(input.charAt(i));
                 } else {
                     result.append(filtered);
                 }
             }
         }
 
-        return result == null ? value : result.toString();
-    }
+        return result == null ? input : result.toString();
+	}
 
 }

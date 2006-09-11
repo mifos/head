@@ -1,7 +1,5 @@
 package org.mifos.application.office.struts.tag;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -10,16 +8,11 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.struts.taglib.TagUtils;
-import org.mifos.application.master.util.valueobjects.OfficeLevelChildren;
-import org.mifos.application.master.util.valueobjects.OfficeLevelMaster;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
-import org.mifos.application.office.util.resources.OfficeConstants;
-import org.mifos.application.office.util.valueobjects.BranchOffice;
-import org.mifos.application.office.util.valueobjects.BranchParentOffice;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.MifosTagUtils;
 import org.mifos.framework.util.helpers.Constants;
@@ -83,18 +76,15 @@ public class OfficeListTag extends BodyTagSupport {
 		String brach = "", regional = "", subregional = "", area = "";
 		for (OfficeView level : levels) {
 			if (level.getLevelId().equals(OfficeLevel.BRANCHOFFICE.getValue()))
-				brach = MifosTagUtils.getInstance()
-						.filter(level.getLevelName());
+				brach = MifosTagUtils.xmlEscape(level.getLevelName());
 			else if (level.getLevelId().equals(OfficeLevel.AREAOFFICE.getValue()))
-				area = MifosTagUtils.getInstance().filter(level.getLevelName());
+				area = MifosTagUtils.xmlEscape(level.getLevelName());
 			else if (level.getLevelId().equals(OfficeLevel.REGIONALOFFICE
 					.getValue()))
-				regional = MifosTagUtils.getInstance().filter(
-						level.getLevelName());
+				regional = MifosTagUtils.xmlEscape(level.getLevelName());
 			else if (level.getLevelId().equals(OfficeLevel.SUBREGIONALOFFICE
 					.getValue()))
-				subregional = MifosTagUtils.getInstance().filter(
-						level.getLevelName());
+				subregional = MifosTagUtils.xmlEscape(level.getLevelName());
 
 		}
 
@@ -117,24 +107,23 @@ public class OfficeListTag extends BodyTagSupport {
 		return result.toString();
 	}
 
-	private void getBranchOffices(StringBuilder result,
+	void getBranchOffices(StringBuilder result,
 			List<OfficeBO> officeList, UserContext userContext,
 			String branchName) {
-		result.append("<br><span class=\"fontnormalBold\">");
-		String ln = MifosTagUtils.getInstance().filter(branchName);
-		result.append(ln);
-		result.append("</span><br>");
+		result.append("<br /><span class=\"fontnormalBold\">");
+		result.append(MifosTagUtils.xmlEscape(branchName));
+		result.append("</span><br />");
 		if (officeList == null) {
 			ResourceBundle resources = ResourceBundle
 					.getBundle(
 							"org.mifos.application.office.util.resources.OfficeUIResources",
 							userContext.getPereferedLocale());
 			result.append("<span class=\"fontnormal\">");
-			result.append(resources.getString("office.labelNo"));
+			result.append(resources.getString("Office.labelNo"));
 			result.append(" ");
 			result.append(branchName.toLowerCase());
 			result.append(" ");
-			result.append(resources.getString("office.labelPresent"));
+			result.append(resources.getString("Office.labelPresent"));
 			result.append("</span>");
 
 		} else {
@@ -144,11 +133,10 @@ public class OfficeListTag extends BodyTagSupport {
 				if (officeParent.getChildren().size() > 0) {
 
 					if (i > 0) {
-						result.append("<br>");
+						result.append("<br />");
 					}
 					result.append("<span class=\"fontnormal\">");
-					result.append(MifosTagUtils.getInstance().filter(
-							officeParent.getOfficeName()));
+					result.append(MifosTagUtils.xmlEscape(officeParent.getOfficeName()));
 					result.append("</span>");
 					Set<OfficeBO> branchList = officeParent.getChildren();
 
@@ -162,8 +150,7 @@ public class OfficeListTag extends BodyTagSupport {
 									.append("<td width=\"1%\"><img src=\"pages/framework/images/bullet_circle.gif\" width=\"9\" height=\"11\"></td>");
 							result.append("<td width=\"99%\">");
 							result.append(getLink(office.getOfficeId(),
-									MifosTagUtils.getInstance().filter(
-											office.getOfficeName())));
+									MifosTagUtils.xmlEscape(office.getOfficeName())));
 							result.append("</td>");
 							result.append("</tr>");
 						}
@@ -201,14 +188,12 @@ public class OfficeListTag extends BodyTagSupport {
 			boolean regionalLabel = false, subRegionalLabel = false, areaLabel = false;
 
 			StringBuffer regionalBuffer = null, subregionalBuffer = null, areaBuffer = null;
-			MifosTagUtils tagUtils = MifosTagUtils.getInstance();
 
 			for (int i = 0; i < officeList.size(); i++) {
 				OfficeBO office = officeList.get(i);
 				if (office.getOfficeLevel() == OfficeLevel.HEADOFFICE) {
 					result.append("<br><span class=\"fontnormalbold\">");
-					result.append(getLink(office.getOfficeId(), tagUtils
-							.filter(office.getOfficeName())));
+					result.append(getLink(office.getOfficeId(), MifosTagUtils.xmlEscape(office.getOfficeName())));
 					result.append("<br></span>");
 					// result.append("<br><table width=\"95%\" border=\"0\"
 					// cellspacing=\"0\" cellpadding=\"0\">");
@@ -222,7 +207,7 @@ public class OfficeListTag extends BodyTagSupport {
 						regionalBuffer.append("<tr>");
 						regionalBuffer
 								.append("<td><span class=\"fontnormalbold\">");
-						regionalBuffer.append(tagUtils.filter(regional));
+						regionalBuffer.append(MifosTagUtils.xmlEscape(regional));
 						regionalBuffer.append("</span></td>");
 						regionalBuffer.append("</table>");
 						regionalBuffer
@@ -235,7 +220,7 @@ public class OfficeListTag extends BodyTagSupport {
 							.append("<td width=\"1%\"><img src=\"pages/framework/images/bullet_circle.gif\" width=\"9\" height=\"11\"></td>");
 					regionalBuffer.append("<td width=\"99%\">");
 					regionalBuffer.append(getLink(office.getOfficeId(),
-							tagUtils.filter(office.getOfficeName())));
+							MifosTagUtils.xmlEscape(office.getOfficeName())));
 					regionalBuffer.append("</td>");
 					regionalBuffer.append("</tr>");
 
@@ -247,7 +232,7 @@ public class OfficeListTag extends BodyTagSupport {
 						subregionalBuffer.append("<tr>");
 						subregionalBuffer
 								.append("<td><span class=\"fontnormalbold\">");
-						subregionalBuffer.append(tagUtils.filter(subregional));
+						subregionalBuffer.append(MifosTagUtils.xmlEscape(subregional));
 						subregionalBuffer.append("</span></td>");
 						subregionalBuffer.append("</table>");
 						subregionalBuffer
@@ -261,7 +246,7 @@ public class OfficeListTag extends BodyTagSupport {
 							.append("<td width=\"1%\"><img src=\"pages/framework/images/bullet_circle.gif\" width=\"9\" height=\"11\"></td>");
 					subregionalBuffer.append("<td width=\"99%\">");
 					subregionalBuffer.append(getLink(office.getOfficeId(),
-							tagUtils.filter(office.getOfficeName())));
+							MifosTagUtils.xmlEscape(office.getOfficeName())));
 					subregionalBuffer.append("</td>");
 					subregionalBuffer.append("</tr>");
 
@@ -273,7 +258,7 @@ public class OfficeListTag extends BodyTagSupport {
 						areaBuffer.append("<tr>");
 						areaBuffer
 								.append("<td><span class=\"fontnormalbold\">");
-						areaBuffer.append(tagUtils.filter(area));
+						areaBuffer.append(MifosTagUtils.xmlEscape(area));
 						areaBuffer.append("</span></td>");
 						areaBuffer.append("</table>");
 						areaBuffer
@@ -285,8 +270,7 @@ public class OfficeListTag extends BodyTagSupport {
 					areaBuffer
 							.append("<td width=\"1%\"><img src=\"pages/framework/images/bullet_circle.gif\" width=\"9\" height=\"11\"></td>");
 					areaBuffer.append("<td width=\"99%\">");
-					areaBuffer.append(getLink(office.getOfficeId(), tagUtils
-							.filter(office.getOfficeName())));
+					areaBuffer.append(getLink(office.getOfficeId(), MifosTagUtils.xmlEscape(office.getOfficeName())));
 					areaBuffer.append("</td>");
 					areaBuffer.append("</tr>");
 
