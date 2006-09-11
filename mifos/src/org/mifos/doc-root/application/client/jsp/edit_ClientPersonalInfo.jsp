@@ -178,7 +178,7 @@
 					
 						<c:choose>
 
-							<c:when test="${sessionScope.BusinessKey.customerStatus.id != CustomerStatus.ACTIVE.value}">
+							<c:when test="${sessionScope.BusinessKey.customerStatus.id != CustomerStatus.CLIENT_ACTIVE.value}">
 								<!-- If status is approved then display government id and date of birth as labels -->
 								<%-- Government Id --%>
 								<tr class="fontnormal">

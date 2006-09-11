@@ -1,6 +1,7 @@
 package org.mifos.application.customer.business;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -26,9 +27,16 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.util.helpers.OfficeLevel;
+import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.util.helpers.PersonnelLevel;
+import org.mifos.application.personnel.util.helpers.PersonnelStatus;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.business.util.Address;
+import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -52,6 +60,10 @@ public class TestCustomerBO extends MifosTestCase {
 
 	private SavingsOfferingBO savingsOffering;
 
+	PersonnelBO loanOfficer;
+	
+	private OfficeBO createdBranchOffice;
+	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -64,6 +76,8 @@ public class TestCustomerBO extends MifosTestCase {
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
+		TestObjectFactory.cleanUp(loanOfficer);
+		TestObjectFactory.cleanUp(createdBranchOffice);
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
@@ -387,6 +401,52 @@ public class TestCustomerBO extends MifosTestCase {
 		accountBO = (LoanBO) HibernateUtil.getSessionTL().get(LoanBO.class,
 				accountBO.getAccountId());
 	}
+	
+	public void testValidateStatusChangeForCustomerWithInactiveLoanofficerAssigned() throws Exception {
+		createPersonnel(PersonnelLevel.LOAN_OFFICER);
+		createCenter(getBranchOffice().getOfficeId(), loanOfficer.getPersonnelId());
+		center.changeStatus(CustomerStatus.CENTER_INACTIVE.getValue(),null,"comment");
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		loanOfficer=(PersonnelBO)HibernateUtil.getSessionTL().get(PersonnelBO.class,loanOfficer.getPersonnelId());
+		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,center.getCustomerId());
+		updatePersonnel(PersonnelLevel.LOAN_OFFICER,PersonnelStatus.INACTIVE, getBranchOffice());
+		try {
+			center.changeStatus(CustomerStatus.CENTER_ACTIVE.getValue(),null,"comment");
+			assertFalse(true);
+		} catch (CustomerException ce) {
+			assertTrue(true);
+			assertEquals(ce.getKey(), CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION);
+		}
+		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,center.getCustomerId());
+		loanOfficer=(PersonnelBO)HibernateUtil.getSessionTL().get(PersonnelBO.class,loanOfficer.getPersonnelId());
+	}
+	
+	public void testValidateStatusChangeForCustomerWithLoanofficerAssignedToDifferentBranch() throws Exception {
+		OfficeBO office = TestObjectFactory.getOffice(Short.valueOf("1"));
+		createdBranchOffice = TestObjectFactory.createOffice(
+				OfficeLevel.BRANCHOFFICE, office, "Office_BRanch1", "OFB");
+		HibernateUtil.closeSession();
+		createdBranchOffice = (OfficeBO) HibernateUtil.getSessionTL().get(
+				OfficeBO.class, createdBranchOffice.getOfficeId());
+		createPersonnel(PersonnelLevel.LOAN_OFFICER);
+		createCenter(getBranchOffice().getOfficeId(), loanOfficer.getPersonnelId());
+		center.changeStatus(CustomerStatus.CENTER_INACTIVE.getValue(),null,"comment");
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		loanOfficer=(PersonnelBO)HibernateUtil.getSessionTL().get(PersonnelBO.class,loanOfficer.getPersonnelId());
+		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,center.getCustomerId());
+		updatePersonnel(PersonnelLevel.LOAN_OFFICER,PersonnelStatus.ACTIVE, createdBranchOffice);
+		try {
+			center.changeStatus(CustomerStatus.CENTER_ACTIVE.getValue(),null,"comment");
+			assertFalse(true);
+		} catch (CustomerException ce) {
+			assertTrue(true);
+			assertEquals(ce.getKey(), CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION);
+		}
+		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,center.getCustomerId());
+		loanOfficer=(PersonnelBO)HibernateUtil.getSessionTL().get(PersonnelBO.class,loanOfficer.getPersonnelId());
+	}
 
 	private void changeFirstInstallmentDate(AccountBO accountBO,
 			int numberOfDays) {
@@ -457,5 +517,53 @@ public class TestCustomerBO extends MifosTestCase {
 		return TestObjectFactory.createLoanAccount("42423142341", customer,
 				Short.valueOf("5"), startDate, loanOffering);
 
+	}
+	
+	private void createPersonnel(PersonnelLevel personnelLevel) throws Exception{
+		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
+		customFieldView.add(new CustomFieldView(Short.valueOf("1"), "123456",
+				Short.valueOf("1")));
+		 Address address = new Address("abcd","abcd","abcd","abcd","abcd","abcd","abcd","abcd");
+		 Name name = new Name("XYZ", null, null, "Last Name");
+		 java.util.Date date =new java.util.Date();
+		 loanOfficer = new PersonnelBO(personnelLevel,
+				 getBranchOffice(), Integer.valueOf("1"), Short.valueOf("1"),
+					"ABCD", "XYZ", "xyz@yahoo.com", null,
+					customFieldView, name, "111111", date, Integer
+							.valueOf("1"), Integer.valueOf("1"), date, date, address, Short.valueOf("1"));
+		loanOfficer.save();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		loanOfficer=(PersonnelBO)HibernateUtil.getSessionTL().get(PersonnelBO.class,loanOfficer.getPersonnelId());
+		
+	}
+	
+	private void updatePersonnel(PersonnelLevel personnelLevel, PersonnelStatus newStatus , OfficeBO office) throws Exception{
+		Address address = new Address("abcd","abcd","abcd","abcd","abcd","abcd","abcd","abcd");
+		 Name name = new Name("XYZ", null, null, "Last Name");
+		loanOfficer.update(newStatus,
+				personnelLevel, office, Integer
+						.valueOf("1"), Short.valueOf("1"), "ABCD",
+				"rajendersaini@yahoo.com", null, null, name,
+				Integer.valueOf("1"), Integer.valueOf("1"), address,
+				Short.valueOf("1"));
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		loanOfficer=(PersonnelBO)HibernateUtil.getSessionTL().get(PersonnelBO.class,loanOfficer.getPersonnelId());
+		
+	}
+	
+	private void createCenter(Short officeId, Short personnelId) {
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("14"),
+				"1.4", meeting, officeId, personnelId, new Date(System
+						.currentTimeMillis()));
+	}
+	
+	public OfficeBO getBranchOffice(){
+		return TestObjectFactory.getOffice(Short.valueOf("3"));
+		
 	}
 }

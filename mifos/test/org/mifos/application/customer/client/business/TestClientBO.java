@@ -602,7 +602,7 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	public void testGetClientAndSpouseName()throws Exception{
-		createObjectsForClient("Client 1");
+		createObjectsForClient("Client 1",CustomerStatus.CLIENT_ACTIVE);
 		assertEquals(client.getClientName().getName().getFirstName() , "Client 1");
 		assertEquals(client.getSpouseName().getName().getFirstName() , "Client 1");
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
@@ -610,7 +610,7 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	public void testUpdateClientDetails()throws Exception{
-		createObjectsForClient("Client 1");
+		createObjectsForClient("Client 1",CustomerStatus.CLIENT_ACTIVE);
 		assertEquals(1, client.getCustomerDetail().getEthinicity().intValue());
 		assertEquals(1, client.getCustomerDetail().getCitizenship().intValue());
 		assertEquals(1, client.getCustomerDetail().getHandicapped().intValue());
@@ -624,7 +624,7 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	public void testUpdateFailureIfLoanOffcierNotThereInActiveState()throws Exception{
-		createObjectsForClient("Client 1");
+		createObjectsForClient("Client 1",CustomerStatus.CLIENT_ACTIVE);
 		try{
 			client.setPersonnel(null);
 			client.updateMfiInfo();
@@ -637,18 +637,18 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	public void testUpdateFailureIfLoanOffcierNotThereInHoldState()throws Exception{
-		createObjectsForClient("Client 1");
-		try{
-			client.changeStatus(CustomerStatus.CLIENT_HOLD.getValue(),null,"comment");
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
-			client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		
+			createObjectsForClient("Client 1",CustomerStatus.CLIENT_HOLD );
+			try{
 			client.setPersonnel(null);
 			client.updateMfiInfo();
 			assertTrue(false);
 		}catch(CustomerException ce){
 			assertTrue(true);
 			assertEquals(CustomerConstants.INVALID_LOAN_OFFICER,ce.getKey());
+		}
+		catch(Exception ce){
+			ce.printStackTrace();
 		}
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 	}
@@ -709,9 +709,9 @@ public class TestClientBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 	}
 	
-	private void createObjectsForClient(String name)throws Exception{
+	private void createObjectsForClient(String name, CustomerStatus status)throws Exception{
 		office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory.getOffice(Short.valueOf("1")), "customer_office", "cust");
-		client = TestObjectFactory.createClient(name,getMeeting(),CustomerStatus.CLIENT_ACTIVE.getValue(), new java.util.Date());
+		client = TestObjectFactory.createClient(name,getMeeting(),status.getValue(), new java.util.Date());
 		HibernateUtil.closeSession();
 	}
 	

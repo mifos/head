@@ -52,6 +52,9 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.configuration.business.MifosConfiguration;
+import org.mifos.application.configuration.exceptions.ConfigurationException;
+import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
@@ -658,11 +661,13 @@ public abstract class CustomerBO extends BusinessObject {
 		return amount;
 	}
 
-	public void changeStatus(Short newStatusId, Short flagId, String comment)
+public void changeStatus(Short newStatusId, Short flagId, String comment)
 	throws	CustomerException{
 		logger.debug("In CustomerBO::changeStatus(), newStatusId: " + newStatusId);
 		Short oldStatusId = getCustomerStatus().getId();
 		validateStatusChange(newStatusId);
+		if(getPersonnel()!=null)
+			validateLoanOfficerAssigned();
 		if(checkStatusChangeCancelToPartial(CustomerStatus.getStatus(oldStatusId),CustomerStatus.getStatus(newStatusId))) {
 			if(!isBlackListed())
 				getCustomerFlags().clear();
@@ -695,6 +700,13 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 		this.update();
 		logger.debug("In CustomerBO::changeStatus(), successfully changed status, newStatusId: " + newStatusId);
+	}
+		
+	private void validateLoanOfficerAssigned() throws CustomerException {
+		logger.debug("In CustomerBO::validateLoanOfficerAssigned()");
+		if(!(personnel.isActive())||!(personnel.getOffice().getOfficeId().equals(office.getOfficeId()) ||!(personnel.isLoanOfficer())))
+				throw new CustomerException(CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION);
+		logger.debug("In CustomerBO::validateLoanOfficerAssigned(), completed");
 	}
 		
 	public List<LoanBO> getOpenLoanAccounts(){

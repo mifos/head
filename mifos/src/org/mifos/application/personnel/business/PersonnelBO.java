@@ -652,4 +652,12 @@ public class PersonnelBO extends BusinessObject {
 				this, new Date());
 		this.addPersonnelMovement(newPersonnelMovement);
 	}
+
+	public boolean isActive() {
+		return getStatus().getId().equals(PersonnelStatus.ACTIVE.getValue());
+	}
+	
+	public boolean isLoanOfficer() {
+		return getLevel().getId().equals(PersonnelLevel.LOAN_OFFICER.getValue());
+	}
 }
