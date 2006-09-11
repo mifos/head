@@ -199,6 +199,9 @@ private CenterBO center;
 		assertEquals(1, center.getMaxChildCount().intValue());
 		assertEquals(center.getPersonnel().getPersonnelId(), group.getPersonnel().getPersonnelId());		
 		assertEquals("1.1.1", group.getSearchId());
+		assertEquals(group.getCustomerId(),group.getPerformanceHistory().getGroup().getCustomerId());
+		client = TestObjectFactory.createClient("new client" ,CustomerStatus.CLIENT_ACTIVE.getValue(), group, new java.util.Date());
+		assertEquals(1,group.getPerformanceHistory().getActiveClientCount().intValue());
 	}
 	
 	public void testSuccessfulCreate_Group_UnderBranch() throws Exception {	

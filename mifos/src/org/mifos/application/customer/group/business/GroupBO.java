@@ -88,6 +88,7 @@ public class GroupBO extends CustomerBO {
 
 	protected GroupBO() {
 		super();
+		this.performanceHistory = null;
 	}
 
 	public GroupBO(UserContext userContext, String displayName,
@@ -101,6 +102,7 @@ public class GroupBO extends CustomerBO {
 				parentCustomer, null, null);
 		validateFieldsForGroupUnderCenter(parentCustomer);
 		setValues(trained, trainedDate);
+		this.performanceHistory = new GroupPerformanceHistoryEntity(this);
 	}
 
 	public GroupBO(UserContext userContext, String displayName,
@@ -114,6 +116,7 @@ public class GroupBO extends CustomerBO {
 				null, meeting, loanOfficerId);
 		validateFieldsForGroupUnderOffice(loanOfficerId, meeting, officeId);
 		setValues(trained, trainedDate);
+		this.performanceHistory = new GroupPerformanceHistoryEntity(this);
 	}
 
 	private GroupBO(UserContext userContext, String displayName,

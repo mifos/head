@@ -1,12 +1,9 @@
 package org.mifos.application.customer.group.business;
 
 import org.mifos.application.customer.business.CustomerPerformanceHistory;
-import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.Money;
-
-import com.sun.org.apache.bcel.internal.generic.GETFIELD;
 
 public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
@@ -25,22 +22,33 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 	private Money portfolioAtRisk;
 
 	private GroupBO group;
-	
-	public GroupPerformanceHistoryEntity(){}
-	
+
+	public GroupPerformanceHistoryEntity() {
+	}
+
+	public GroupPerformanceHistoryEntity(GroupBO group) {
+		super();
+		this.id = null;
+		this.group = group;
+		this.portfolioAtRisk = new Money();
+		this.totalOutstandingPortfolio = new Money();
+		this.totalSavings = new Money();
+		this.avgLoanForMember = new Money();
+		this.lastGroupLoanAmount = new Money();
+		this.clientCount = 0;
+	}
+
 	public GroupPerformanceHistoryEntity(Integer clientCount,
 			Money lastGroupLoanAmount, Money avgLoanForMember,
 			Money totalOutstandingPortfolio, Money totalSavings,
 			Money portfolioAtRisk) {
-		this.portfolioAtRisk=portfolioAtRisk;
-		this.totalOutstandingPortfolio=totalOutstandingPortfolio;
-		this.totalSavings=totalSavings;
-		this.avgLoanForMember=avgLoanForMember;
-		this.lastGroupLoanAmount=lastGroupLoanAmount;
-		this.clientCount=clientCount;
+		this.portfolioAtRisk = portfolioAtRisk;
+		this.totalOutstandingPortfolio = totalOutstandingPortfolio;
+		this.totalSavings = totalSavings;
+		this.avgLoanForMember = avgLoanForMember;
+		this.lastGroupLoanAmount = lastGroupLoanAmount;
+		this.clientCount = clientCount;
 	}
-
-	
 
 	public Integer getId() {
 		return id;
@@ -57,21 +65,23 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 	private void setAvgLoanForMember(Money avgLoanForMember) {
 		this.avgLoanForMember = avgLoanForMember;
 	}
-	
-	public Money getAvgLoanAmountForMember() throws PersistenceException, ServiceException {
-		if(getGroup()!=null)
+
+	public Money getAvgLoanAmountForMember() throws PersistenceException,
+			ServiceException {
+		if (getGroup() != null)
 			return getGroup().getAverageLoanAmount();
 		return new Money();
 	}
 
-
 	public Integer getClientCount() {
 		return clientCount;
 	}
-	public Integer getActiveClientCount() throws PersistenceException, ServiceException {
-		if(getGroup()!=null)
+
+	public Integer getActiveClientCount() throws PersistenceException,
+			ServiceException {
+		if (getGroup() != null)
 			return getGroup().getActiveOnHoldChildrenOfGroup();
-		
+
 		return 0;
 	}
 
@@ -87,16 +97,17 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		this.lastGroupLoanAmount = lastGroupLoanAmount;
 	}
 
-	private Money getTotalOutstandingPortfolio(){
+	private Money getTotalOutstandingPortfolio() {
 		return totalOutstandingPortfolio;
 	}
-	
+
 	private void setTotalOutstandingPortfolio(Money totalOutstandingPortfolio) {
 		this.totalOutstandingPortfolio = totalOutstandingPortfolio;
 	}
-	
-	public Money getTotalOutStandingLoanAmount() throws PersistenceException, ServiceException{
-		if(getGroup()!=null)
+
+	public Money getTotalOutStandingLoanAmount() throws PersistenceException,
+			ServiceException {
+		if (getGroup() != null)
 			return getGroup().getTotalOutStandingLoanAmount();
 		return new Money();
 	}
@@ -112,9 +123,10 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 	private Money getTotalSavings() {
 		return totalSavings;
 	}
-	
-	public Money getTotalSavingsAmount() throws PersistenceException, ServiceException{
-		if(getGroup()!=null)
+
+	public Money getTotalSavingsAmount() throws PersistenceException,
+			ServiceException {
+		if (getGroup() != null)
 			return getGroup().getTotalSavingsBalance();
 		return new Money();
 	}

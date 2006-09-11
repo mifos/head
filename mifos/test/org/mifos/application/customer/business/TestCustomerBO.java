@@ -70,13 +70,13 @@ public class TestCustomerBO extends MifosTestCase {
 
 	public void testGroupPerfObject() throws PersistenceException {
 		createInitialObjects();
-		GroupPerformanceHistoryEntity groupPerformanceHistory = new GroupPerformanceHistoryEntity();
+		GroupPerformanceHistoryEntity groupPerformanceHistory = group
+				.getPerformanceHistory();
 		groupPerformanceHistory.setClientCount(Integer.valueOf("1"));
 		groupPerformanceHistory.setLastGroupLoanAmount(new Money("100"));
 		groupPerformanceHistory.setPortfolioAtRisk(new Money("100"));
-		groupPerformanceHistory.setGroup(group);
-		group.setPerformanceHistory(groupPerformanceHistory);
 		TestObjectFactory.updateObject(group);
+		HibernateUtil.closeSession();
 		group = (GroupBO) customerPersistence.getBySystemId(group
 				.getGlobalCustNum(), group.getCustomerLevel().getId());
 		assertEquals(group.getCustomerId(), group.getPerformanceHistory()
@@ -85,6 +85,13 @@ public class TestCustomerBO extends MifosTestCase {
 				.getClientCount());
 		assertEquals(new Money("100"), group.getPerformanceHistory()
 				.getLastGroupLoanAmount());
+		HibernateUtil.closeSession();
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
 	}
 
 	public void testClientPerfObject() throws PersistenceException {
@@ -215,10 +222,10 @@ public class TestCustomerBO extends MifosTestCase {
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		List<LoanBO> loans = group.getOpenLoanAccounts();
-		assertEquals(1,loans.size());
-		assertEquals(accountBO.getAccountId(),loans.get(0).getAccountId());
+		assertEquals(1, loans.size());
+		assertEquals(accountBO.getAccountId(), loans.get(0).getAccountId());
 		TestObjectFactory.flushandCloseSession();
-		
+
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
@@ -228,17 +235,17 @@ public class TestCustomerBO extends MifosTestCase {
 		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 	}
-	
+
 	public void testGetSavingsAccountInUse() throws PersistenceException {
-		accountBO = getSavingsAccount("fsaf6","ads6");
+		accountBO = getSavingsAccount("fsaf6", "ads6");
 		TestObjectFactory.flushandCloseSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
 		List<SavingsBO> savings = client.getOpenSavingAccounts();
-		assertEquals(1,savings.size());
-		assertEquals(accountBO.getAccountId(),savings.get(0).getAccountId());
+		assertEquals(1, savings.size());
+		assertEquals(accountBO.getAccountId(), savings.get(0).getAccountId());
 		TestObjectFactory.flushandCloseSession();
-		
+
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
@@ -248,7 +255,7 @@ public class TestCustomerBO extends MifosTestCase {
 		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 	}
-	
+
 	public void testHasAnyLoanAccountInUse() throws PersistenceException {
 		createInitialObjects();
 		accountBO = getLoanAccount(group, meeting);
@@ -266,9 +273,9 @@ public class TestCustomerBO extends MifosTestCase {
 		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 	}
-	
+
 	public void testHasAnySavingsAccountInUse() throws PersistenceException {
-		accountBO = getSavingsAccount("fsaf5","ads5");
+		accountBO = getSavingsAccount("fsaf5", "ads5");
 		TestObjectFactory.flushandCloseSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
@@ -283,9 +290,9 @@ public class TestCustomerBO extends MifosTestCase {
 		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 	}
-	
+
 	public void testgetSavingsBalance() throws Exception {
-		SavingsBO savings = getSavingsAccount("fsaf4","ads4");
+		SavingsBO savings = getSavingsAccount("fsaf4", "ads4");
 		savings.setSavingsBalance(new Money("1000"));
 		savings.update();
 		HibernateUtil.commitTransaction();
@@ -308,7 +315,8 @@ public class TestCustomerBO extends MifosTestCase {
 		TestObjectFactory.cleanUp(savings);
 	}
 
-	public void testValidateStatusWithActiveGroups() throws CustomerException, AccountException{
+	public void testValidateStatusWithActiveGroups() throws CustomerException,
+			AccountException {
 		createInitialObjects();
 		Short newStatusId = CustomerStatus.CENTER_INACTIVE.getValue();
 		try {
@@ -419,9 +427,9 @@ public class TestCustomerBO extends MifosTestCase {
 		}
 	}
 
-	private SavingsBO getSavingsAccount(String offeringName,String shortName) {
+	private SavingsBO getSavingsAccount(String offeringName, String shortName) {
 		createInitialObjects();
-		savingsOffering = helper.createSavingsOffering(offeringName,shortName);
+		savingsOffering = helper.createSavingsOffering(offeringName, shortName);
 		return TestObjectFactory.createSavingsAccount("000100000000017",
 				client, AccountStates.SAVINGS_ACC_APPROVED, new Date(System
 						.currentTimeMillis()), savingsOffering);

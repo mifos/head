@@ -50,7 +50,6 @@ import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.GracePeriodTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
@@ -3226,10 +3225,6 @@ public class TestLoanBO extends MifosTestCase {
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), meeting);
-		GroupPerformanceHistoryEntity groupPerformanceHistoryEntity = new GroupPerformanceHistoryEntity(
-				0, new Money(), new Money(), new Money(), new Money(),
-				new Money());
-		((GroupBO) group).setPerformanceHistory(groupPerformanceHistoryEntity);
 		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", group, accountSate, startDate, loanOffering,
 				disbursalType);
