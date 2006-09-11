@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	Document   : struts-config.xml
+	Created on : August 22, 2005
+	Author     : ashishsmital
+	Description: Purpose of the document follows.
+-->
+
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+"http://jakarta.apache.org/struts/dtdt/struts-config_1_2.dtd">
+
+
+<struts-config>
+	<form-beans>
+		<form-bean name="groupTransferActionForm" type="org.mifos.application.customer.group.struts.actionforms.GroupTransferActionForm">
+		</form-bean>
+		<form-bean name="groupCustActionForm" type="org.mifos.application.customer.group.struts.actionforms.GroupCustActionForm">
+		</form-bean>
+	</form-beans>
+	<global-exceptions>
+		<exception type="org.mifos.framework.exceptions.SystemException"
+			handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+			key="exception.framework.SystemException" scope="request"
+			path="/pages/framework/jsp/error.jsp" />
+		<exception
+			type="org.mifos.framework.exceptions.ApplicationException"
+			handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+			key="exception.framework.ApplicationException" scope="request" />
+		<exception type="org.mifos.framework.exceptions.PageExpiredException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.PageExpiredException" scope="request" path="/pages/framework/jsp/pageexpirederror.jsp"/>
+	</global-exceptions>
+
+	<action-mappings>
+	
+
+	<!-- Edit Group Transfer Action -->
+		<action path="/groupTransferAction" type="org.mifos.application.customer.group.struts.action.GroupTransferAction" name="groupTransferActionForm" parameter="method" input="/groupTransferAction.do?method=validate" validate="false"
+			scope="session">
+			<!--  Load forwards -->
+			<forward name="loadParents_success" path="/centerAction.do?method=loadSearch" />
+			<forward name="loadBranches_success" path="/pages/application/group/jsp/choosebranch.jsp" />
+			<!-- Preview Page Forwards -->
+			<forward name="previewParentTransfer_success" path="/pages/application/group/jsp/confirmcentermembership.jsp" />
+			<forward name="previewBranchTransfer_success" path="/pages/application/group/jsp/confirmbranchtransfer.jsp" />
+			<forward name="update_success" path="/groupCustAction.do?method=get" />
+			<!-- Failure Forwards -->
+			<forward name="transferToBranch_failure" path="/pages/application/group/jsp/confirmbranchtransfer.jsp" />
+			<forward name="transferToCenter_failure" path="/pages/application/group/jsp/confirmcentermembership.jsp" />
+			<!-- Cancel Page Forwards -->
+			<forward name="cancel_success" path="/groupCustAction.do?method=get" />
+		</action>
+		
+	<!-- Group action M2 style-->
+		<action path="/groupCustAction"
+			type="org.mifos.application.customer.group.struts.action.GroupCustAction"
+			name="groupCustActionForm" parameter="method" validate="true"
+			input="/groupCustAction.do?method=validate" scope="session">
+			<forward name="loadCreateGroup" path="/groupCustAction.do?method=chooseOffice" />
+			<forward name="loadCenterSearch" path="/centerAction.do?method=loadSearch" />
+			<forward name="chooseOffice_success" path="/pages/application/group/jsp/branchlist.jsp" />
+			<forward name="load_success" path="/pages/application/group/jsp/creategroup.jsp" />
+			<forward name="loadMeeting_success" path="/MeetingAction.do?method=load&amp;input=Group" />			
+			<forward name="preview_success" path="/pages/application/group/jsp/previewgroup.jsp" />
+			<forward name="preview_failure" path="/pages/application/group/jsp/creategroup.jsp" />
+			<forward name="previous_success" path="/pages/application/group/jsp/creategroup.jsp" />
+			<forward name="create_success" path="/pages/application/group/jsp/creategroupconfirmation.jsp" />
+			<forward name="create_failure" path="/pages/application/group/jsp/previewgroup.jsp" />
+			
+			<forward name="get_success" path="/pages/application/group/jsp/viewgroupdetails.jsp" />
+			<forward name="manage_success" path="/pages/application/group/jsp/edit_groupdetails.jsp" />
+			<forward name="previewManage_success" path="/pages/application/group/jsp/preview_editgroupdetails.jsp" />
+			<forward name="previewManage_failure" path="/pages/application/group/jsp/edit_groupdetails.jsp" />
+			<forward name="previousManage_success" path="/pages/application/group/jsp/edit_groupdetails.jsp" />
+			
+			<forward name="update_success" path="/groupCustAction.do?method=get" />
+			<forward name="update_failure" path="/pages/application/group/jsp/preview_editgroupdetails.jsp" />
+			<!--Cancel forwards-->
+			<forward name="cancelCreate_success" path="/CustomerSearchAction.do?method=load" />
+			<forward name="cancelEdit_success" path="/groupCustAction.do?method=get" />
+		</action>
+	</action-mappings>
+	<controller nocache="true" processorClass="org.mifos.framework.struts.action.MifosRequestProcessor"></controller>
+	<plug-in className="org.apache.struts.tiles.TilesPlugin">
+		<set-property property="definitions-config"
+			value="/WEB-INF/tiles-defs.xml" />
+		<set-property property="definitions-debug" value="2" />
+		<set-property property="definitions-parser-details" value="2" />
+		<set-property property="definitions-parser-validate"
+			value="true" />
+	</plug-in>
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property property="pathnames"
+			value="org/mifos/application/customer/group/validation.xml,org/mifos/application/customer/group/validator-rules.xml" />
+		<set-property property="stopOnFirstError" value="false" />
+	</plug-in>
+</struts-config>

@@ -40,10 +40,13 @@ package org.mifos.application.customer.center.struts.actionforms;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
+import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.struts.actionforms.CustomerActionForm;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.SessionUtils;
 
 public class CenterCustActionForm extends CustomerActionForm{
 	
@@ -58,7 +61,9 @@ public class CenterCustActionForm extends CustomerActionForm{
 			validateCustomFields(request,errors);
 			validateFees(request, errors);
 		}else if (method.equals(Methods.editPreview.toString())){
-			validateLO(errors);
+			CenterBO center = (CenterBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request.getSession());
+			if(center.isActive())
+				validateLO(errors);
 			validateConfigurableMandatoryFields(request,errors,EntityType.CENTER);
 			validateCustomFields(request,errors);
 		}

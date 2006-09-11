@@ -49,7 +49,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
@@ -63,7 +62,6 @@ import org.mifos.application.customer.center.dao.CenterDAO;
 import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.center.util.valueobjects.Center;
-import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.util.helpers.LinkParameters;
 import org.mifos.application.customer.struts.action.CustAction;
@@ -71,10 +69,7 @@ import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.valueobjects.Customer;
-import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
-import org.mifos.application.fees.business.service.FeeBusinessService;
-import org.mifos.application.fees.exceptions.FeeException;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -86,7 +81,6 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
@@ -194,8 +188,11 @@ public class CenterCustAction extends CustAction {
 			HttpServletRequest request) throws Exception{ 
 		CenterBO center = (CenterBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
-		actionForm.setLoanOfficerId(center.getPersonnel().getPersonnelId()
-				.toString());
+		if(center.getPersonnel()!=null)
+			actionForm.setLoanOfficerId(center.getPersonnel().getPersonnelId()
+					.toString());
+		else
+			actionForm.setLoanOfficerId(null);
 		actionForm.setCustomerId(center.getCustomerId().toString());
 		actionForm.setGlobalCustNum(center.getGlobalCustNum());
 		actionForm.setExternalId(center.getExternalId());

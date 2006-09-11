@@ -1,7 +1,5 @@
 package org.mifos.application.customer.center.business;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -219,14 +217,50 @@ public class CenterBOTest extends MifosTestCase {
 		assertEquals(personnel, center.getPersonnel().getPersonnelId());
 	}
 	
-	public void testUpdateLOsForAllChildren() throws CustomerException{
+	public void testSuccessfulUpdateWithoutLO_in_InActiveState() throws Exception {
+		createCustomers();
+		client.changeStatus(CustomerStatus.CLIENT_CANCELLED.getValue(),Short.valueOf("1"),"client cancelled");
+		client.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		group.changeStatus(CustomerStatus.GROUP_CANCELLED.getValue(),Short.valueOf("11"),"group cancelled");
+		group.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		center.changeStatus(CustomerStatus.CENTER_INACTIVE.getValue(), null, "Center_Inactive");
+		center.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		
+		
+		center.update(TestObjectFactory.getUserContext(), null, center.getExternalId(), center.getMfiJoiningDate(), center.getAddress(), null, null);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		
+		assertNull(center.getPersonnel());
+		assertNull(group.getPersonnel());
+		assertNull(client.getPersonnel());
+	}
+	
+	public void testUpdateLOsForAllChildren() throws Exception{
 		createCustomers();
 		assertEquals(center.getPersonnel().getPersonnelId(), group.getPersonnel().getPersonnelId());
 		assertEquals(center.getPersonnel().getPersonnelId(), client.getPersonnel().getPersonnelId());
 		PersonnelBO newLO = TestObjectFactory.getPersonnel(Short.valueOf("2"));
 		HibernateUtil.closeSession();
-		center.setPersonnel(newLO);
-		center.update();
+		center.update(TestObjectFactory.getUserContext(),newLO.getPersonnelId(),center.getExternalId(), center.getMfiJoiningDate(), center.getAddress(), null,null);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());

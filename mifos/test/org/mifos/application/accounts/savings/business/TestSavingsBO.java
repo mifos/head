@@ -1115,6 +1115,7 @@ public class TestSavingsBO extends MifosTestCase {
 			assertEquals(new Money(currency, "1000.0"), activity.getAmount());
 			assertEquals(new Money(currency, "1400.0"), activity
 					.getBalanceAmount());
+			assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(activity.getTrxnCreatedDate().getTime()));
 		}
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
@@ -1173,10 +1174,12 @@ public class TestSavingsBO extends MifosTestCase {
 						.getAmount());
 				assertEquals(new Money(currency, "5500.0"), activity
 						.getBalanceAmount());
+				assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(activity.getTrxnCreatedDate().getTime()));
 			} else {
 				assertEquals(new Money(currency, "500.0"), activity.getAmount());
 				assertEquals(new Money(currency, "5000.0"), activity
 						.getBalanceAmount());
+				assertEquals(DateUtils.getDateWithoutTimeStamp(getDate("20/05/2006").getTime()),DateUtils.getDateWithoutTimeStamp(activity.getTrxnCreatedDate().getTime()));
 			}
 		}
 		Hibernate.initialize(savings.getAccountActionDates());
@@ -1283,11 +1286,13 @@ public class TestSavingsBO extends MifosTestCase {
 						.getAmount());
 				assertEquals(new Money(currency, "3500.0"), activity
 						.getBalanceAmount());
+				assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(activity.getTrxnCreatedDate().getTime()));
 			} else {
 				assertEquals(new Money(currency, "2000.0"), activity
 						.getAmount());
 				assertEquals(new Money(currency, "5500.0"), activity
 						.getBalanceAmount());
+				assertEquals(DateUtils.getDateWithoutTimeStamp(getDate("20/05/2006").getTime()),DateUtils.getDateWithoutTimeStamp(activity.getTrxnCreatedDate().getTime()));
 			}
 		}
 		Hibernate.initialize(savings.getAccountActionDates());
@@ -1813,7 +1818,7 @@ public class TestSavingsBO extends MifosTestCase {
 					savings.getPersonnel(), (AccountActionEntity) HibernateUtil
 							.getSessionTL().get(AccountActionEntity.class,
 									Short.valueOf("1")), new Money("100"),
-					new Money("22"));
+					new Money("22"), new Date());
 			savingsActivity.setAccount(savings);
 			savingsActivity.setCreatedBy(Short.valueOf("1"));
 			savingsActivity
@@ -3901,8 +3906,10 @@ public class TestSavingsBO extends MifosTestCase {
 			HibernateUtil.closeSession();
 			savings = savingsPersistence.findById(savings.getAccountId());
 			assertEquals(2, savings.getSavingsActivityDetails().size());
+			
 			for (SavingsActivityEntity activity : savings
 					.getSavingsActivityDetails()) {
+				assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(activity.getTrxnCreatedDate().getTime()));
 				if (activity.getActivity().getId().equals(
 						AccountConstants.ACTION_SAVINGS_WITHDRAWAL)) {
 					assertEquals(balanceAmount.add(interestAtClosure), activity

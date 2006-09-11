@@ -58,7 +58,6 @@ import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
-import org.mifos.application.customer.util.helpers.IdGenerator;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -424,8 +423,7 @@ public abstract class CustomerBO extends BusinessObject {
 	public void save() throws CustomerException {
 		try {
 			new CustomerPersistence().createOrUpdate(this);
-			String gCustNum = IdGenerator.generateSystemIdForCustomer(
-					getOffice().getGlobalOfficeNum(), getCustomerId());
+			String gCustNum = generateSystemId();
 			globalCustNum = (gCustNum);
 			new CustomerPersistence().createOrUpdate(this);
 		} catch (PersistenceException e) {
@@ -825,16 +823,22 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 	
 	protected void updateLoanOfficer(Short loanOfficerId){
-		if(loanOfficerId == null)
-			this.personnel = null;
-		else
-			if(getPersonnel()==null || !loanOfficerId.equals(getPersonnel().getPersonnelId())){
-				this.personnel = new PersonnelPersistence()
-				.getPersonnel(loanOfficerId);
-				new CustomerPersistence().updateLOsForAllChildren(getPersonnel().getPersonnelId(), getSearchId(), getOffice().getOfficeId());
-			}
+		if(isLOChanged(loanOfficerId)){
+			new CustomerPersistence().updateLOsForAllChildren(loanOfficerId, getSearchId(), getOffice().getOfficeId());
+			if(loanOfficerId!=null)
+				this.personnel = new PersonnelPersistence().getPersonnel(loanOfficerId);
+			else
+				this.personnel = null;
+		}
 	}
 	
+	private boolean isLOChanged(Short loanOfficerId){
+		return ((getPersonnel()==null && loanOfficerId!=null) 
+				|| (getPersonnel()!=null && loanOfficerId==null)
+				|| (getPersonnel()!=null && loanOfficerId!=null && !getPersonnel().getPersonnelId().equals(loanOfficerId)));
+		
+	}
+
 	protected void makeCustomerMovementEntries(OfficeBO officeToTransfer){
 		CustomerMovementEntity currentCustomerMovement = getActiveCustomerMovement();
 		if(currentCustomerMovement == null){
@@ -865,6 +869,16 @@ public abstract class CustomerBO extends BusinessObject {
 		oldParent.update();
 		newParent.setUserContext(getUserContext());
 		newParent.update();
+	}
+	
+	protected String generateSystemId(){
+		String systemId="";
+		int numberOfZeros = CustomerConstants.SYSTEM_ID_LENGTH - String.valueOf(getCustomerId()).length();
+		
+		for(int i=0;i<numberOfZeros;i++)
+			systemId = systemId + "0";
+		
+		return getOffice().getGlobalOfficeNum() + "-" + systemId + getCustomerId();
 	}
 	
 	protected void handleParentTransfer()throws CustomerException{

@@ -10,6 +10,7 @@ import org.mifos.framework.components.cronjobs.TaskHelper;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public class SavingsIntPostingHelper extends TaskHelper{
+	@Override
 	public void execute(long timeInMillis) {
 		try{
 			Calendar cal = Calendar.getInstance(Configuration.getInstance().getSystemConfig().getMifosTimeZone());

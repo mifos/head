@@ -110,13 +110,6 @@ public class CenterBO extends CustomerBO {
 		logger.debug("In CenterBO::validateStatusChange(), successfully validated status, customerId: " + getCustomerId());
 	}
 	
-	@Override
-	public void update() throws CustomerException {
-		if(isLOChanged())
-			new CustomerPersistence().updateLOsForAllChildren(getPersonnel().getPersonnelId(), getSearchId(), getOffice().getOfficeId());
-		super.update();
-	}
-	
 	public void update(UserContext userContext, Short loanOfficerId, String externalId, Date mfiJoiningDate, Address address,  List<CustomFieldView> customFields, List<CustomerPositionView> customerPositions) throws CustomerException {
 		validateFieldsForUpdate(loanOfficerId);
 		setMfiJoiningDate(mfiJoiningDate);
@@ -125,7 +118,8 @@ public class CenterBO extends CustomerBO {
 	}
 	
 	protected void validateFieldsForUpdate(Short loanOfficerId)throws CustomerException{
-		validateLO(loanOfficerId);
+		if (isActive())
+			validateLO(loanOfficerId);
 	}
 	
 	@Override
@@ -138,15 +132,4 @@ public class CenterBO extends CustomerBO {
 	public CustomerPerformanceHistory getPerformanceHistory() {
 		return null;
 	}
-	
-	private boolean isLOChanged()throws CustomerException{
-		try{
-			Short oldLO = new CustomerPersistence().getLoanOfficerForCustomer(getCustomerId());
-			return !oldLO.equals(getPersonnel().getPersonnelId());
-		}catch(PersistenceException pe){
-			throw new CustomerException(pe);
-		}
-	}
-	
-	
 }

@@ -212,6 +212,7 @@ public interface CustomerConstants {
 	public static final short GROUP_ONHOLD = 3;
 	
 	//-------------------------------------------constants for M2 Migration
+	public static final int SYSTEM_ID_LENGTH = 9;
 	public static final String DISPLAY_NAME="DISPLAY_NAME";
 	public static final String OFFICE_ID="OFFICE_ID";
 	public static final String NAME="Name";

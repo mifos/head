@@ -43,7 +43,7 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
 					.getPath());
 			setConfigFile(ResourceLoader.getURI(
-					"org/mifos/framework/util/helpers/struts-config.xml")
+					"org/mifos/application/customer/group/struts-config.xml")
 					.getPath());
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
@@ -224,6 +224,18 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 		assertEquals(group.getCustomerId(), customerHierarchy.getCustomer().getCustomerId());
 	}
 	
+	public void testCancel() throws Exception {
+		loadOffices();
+		HibernateUtil.closeSession();
+		setRequestPathInfo("/groupTransferAction.do");
+		addRequestParameter("method", "cancel");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyForward(ActionForwards.cancel_success.toString());
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+	}
+	
 	private void loadParents() throws Exception{
 		center = createCenter("Center", officeId);
 		office = createOffice();
@@ -243,12 +255,6 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 		addRequestParameter("method", "loadBranches");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
-	}
-	
-	private void retrieveGroupUnderCenter() {
-		center = createCenter("center1", officeId);
-		group = createGroup("group", center);
-		startFlowForGroup();
 	}
 	
 	private void startFlowForGroup(){

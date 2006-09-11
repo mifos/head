@@ -1,6 +1,7 @@
 package org.mifos.application.accounts.savings.business;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -29,12 +30,12 @@ public class SavingsActivityEntity extends PersistentObject {
 	}
 
 	public SavingsActivityEntity(PersonnelBO trxnCreatedBy,
-			AccountActionEntity activity, Money amount, Money balanceAmount) {
+			AccountActionEntity activity, Money amount, Money balanceAmount, Date trxnDate) {
 		this.trxnCreatedBy = trxnCreatedBy;
 		this.activity = activity;
 		this.amount = amount;
 		this.balanceAmount = balanceAmount;
-		trxnCreatedDate = new Timestamp(System.currentTimeMillis());
+		this.trxnCreatedDate = new Timestamp(trxnDate.getTime());
 	}
 
 	public AccountBO getAccount() {

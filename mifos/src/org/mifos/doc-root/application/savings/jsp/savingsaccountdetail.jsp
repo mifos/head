@@ -116,6 +116,13 @@
 									</c:if>
 								</td>
 							</tr>
+							<tr>
+								<td class="fontnormal" colspan="2">
+									<mifos:mifoslabel name="Savings.totalamountdue" />
+									<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.nextMeetingDate)}" />:
+									<c:out value="${sessionScope.BusinessKey.totalAmountDue}" />
+								</td>
+							</tr>
 						</table>
 						<table width="50%" border="0" cellspacing="0" cellpadding="0">
 							<tr>

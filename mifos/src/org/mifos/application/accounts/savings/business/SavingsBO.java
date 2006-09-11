@@ -523,6 +523,7 @@ public class SavingsBO extends AccountBO {
 			setSavingsBalance(getSavingsBalance().add(interestPosted));
 			setInterestToBePosted(new Money());
 			setLastIntPostDate(getNextIntPostDate());
+			Date currentIntPostingDate = getNextIntPostDate();
 			try {
 				setNextIntPostDate(helper.getNextScheduleDate(getActivationDate(),
 						getLastIntPostDate(), getMeeting(getSavingsOffering()
@@ -543,7 +544,7 @@ public class SavingsBO extends AccountBO {
 				throw new AccountException(e);
 			}
 			makeEntriesForInterestPosting(interestPosted, paymentType,
-					getCustomer(), null);
+					getCustomer(), currentIntPostingDate, null);
 			getSavingsPerformance().setTotalInterestDetails(interestPosted);
 			try {
 				(new SavingsPersistence()).createOrUpdate(this);
@@ -658,7 +659,7 @@ public class SavingsBO extends AccountBO {
 		if (getInterestToBePosted() != null
 				&& getInterestToBePosted().getAmountDoubleValue() > 0)
 			makeEntriesForInterestPosting(getInterestToBePosted(), payment
-					.getPaymentType(), customer, loggedInUser);
+					.getPaymentType(), customer, payment.getPaymentDate(), loggedInUser);
 		if (payment.getAmount().getAmountDoubleValue() > 0) {
 			payment.addAcountTrxn(helper.createAccountPaymentTrxn(payment,
 					new Money(),
@@ -669,7 +670,7 @@ public class SavingsBO extends AccountBO {
 			payment.setCreatedDate(helper.getCurrentDate());
 			this.addAccountPayment(payment);
 			addSavingsActivityDetails(buildSavingsActivity(payment.getAmount(),
-					new Money(), AccountConstants.ACTION_SAVINGS_WITHDRAWAL,
+					new Money(), AccountConstants.ACTION_SAVINGS_WITHDRAWAL, payment.getPaymentDate(),
 					loggedInUser));
 			getSavingsPerformance().setTotalWithdrawals(
 					getSavingsPerformance().getTotalWithdrawals().add(
@@ -696,7 +697,7 @@ public class SavingsBO extends AccountBO {
 	}
 
 	private void makeEntriesForInterestPosting(Money interestAmt,
-			PaymentTypeEntity paymentType, CustomerBO customer,
+			PaymentTypeEntity paymentType, CustomerBO customer, Date postingDate,
 			PersonnelBO loggedInUser) throws 
 			AccountException {
 		AccountPaymentEntity interestPayment = helper.createAccountPayment(
@@ -712,11 +713,11 @@ public class SavingsBO extends AccountBO {
 		if (userContext == null)
 			addSavingsActivityDetails(buildSavingsActivity(interestAmt,
 					getSavingsBalance().add(interestAmt),
-					AccountConstants.ACTION_SAVINGS_INTEREST_POSTING, null));
+					AccountConstants.ACTION_SAVINGS_INTEREST_POSTING, postingDate, null));
 		else
 			addSavingsActivityDetails(buildSavingsActivity(interestAmt,
 					getSavingsBalance().add(interestAmt),
-					AccountConstants.ACTION_SAVINGS_INTEREST_POSTING,
+					AccountConstants.ACTION_SAVINGS_INTEREST_POSTING, postingDate,
 					loggedInUser));
 		buildFinancialEntries(interestPayment.getAccountTrxns());
 	}
@@ -1035,7 +1036,7 @@ public class SavingsBO extends AccountBO {
 			accountPayment.addAcountTrxn(accountTrxn);
 			addSavingsActivityDetails(buildSavingsActivity(totalAmount,
 					getSavingsBalance(),
-					AccountConstants.ACTION_SAVINGS_DEPOSIT, paymentData
+					AccountConstants.ACTION_SAVINGS_DEPOSIT, transactionDate, paymentData
 							.getPersonnel()));
 			return accountPayment;
 		}
@@ -1091,7 +1092,7 @@ public class SavingsBO extends AccountBO {
 			accountPayment.addAcountTrxn(accountTrxn);
 		}
 		addSavingsActivityDetails(buildSavingsActivity(totalAmount,
-				getSavingsBalance(), AccountConstants.ACTION_SAVINGS_DEPOSIT,
+				getSavingsBalance(), AccountConstants.ACTION_SAVINGS_DEPOSIT,transactionDate,
 				paymentData.getPersonnel()));
 		return accountPayment;
 	}
@@ -1150,7 +1151,7 @@ public class SavingsBO extends AccountBO {
 		addAccountPayment(accountPayment);
 		addSavingsActivityDetails(buildSavingsActivity(totalAmount,
 				getSavingsBalance(),
-				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, accountPaymentData
+				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, accountPaymentData.getTransactionDate(), accountPaymentData
 						.getPersonnel()));
 		buildFinancialEntries(accountPayment.getAccountTrxns());
 		if (this.getAccountState().getId().equals(
@@ -1394,8 +1395,8 @@ public class SavingsBO extends AccountBO {
 				adjustForWithdrawal(accntTrxn);
 		}
 		addSavingsActivityDetails(buildSavingsActivity(lastPayment.getAmount(),
-				getSavingsBalance(),
-				AccountConstants.ACTION_SAVINGS_ADJUSTMENT, personnel));
+				getSavingsBalance(), 
+				AccountConstants.ACTION_SAVINGS_ADJUSTMENT, new Date(), personnel));
 		logger.debug("transaction count before adding reversal transactions: "
 				+ lastPayment.getAccountTrxns().size());
 		List<AccountTrxnEntity> newlyAddedTrxns = lastPayment
@@ -1433,7 +1434,7 @@ public class SavingsBO extends AccountBO {
 
 			addSavingsActivityDetails(buildSavingsActivity(amountAdjustedTo,
 					getSavingsBalance(), helper
-							.getPaymentActionType(lastPayment), personnel));
+							.getPaymentActionType(lastPayment), getTrxnDate(lastPayment), personnel));
 		}
 		return newAccountPayment;
 	}
@@ -1916,12 +1917,13 @@ public class SavingsBO extends AccountBO {
 		return nextInstallment;
 	}
 
+	@Override
 	public void waiveAmountDue(WaiveEnum waiveType) throws 	AccountException {
 		PersonnelBO personnel = (new PersonnelPersistence()).getPersonnel(
 				getUserContext().getId());
 		addSavingsActivityDetails(buildSavingsActivity(
 				getTotalAmountDueForNextInstallment(), getSavingsBalance(),
-				AccountConstants.ACTION_WAIVEOFFDUE, personnel));
+				AccountConstants.ACTION_WAIVEOFFDUE, new Date(), personnel));
 		List<AccountActionDateEntity> nextInstallments = getNextInstallment();
 		for (AccountActionDateEntity accountActionDate : nextInstallments) {
 			((SavingsScheduleEntity) accountActionDate).waiveDepositDue();
@@ -1938,7 +1940,7 @@ public class SavingsBO extends AccountBO {
 				getUserContext().getId());
 		addSavingsActivityDetails(buildSavingsActivity(
 				getTotalAmountInArrears(), getSavingsBalance(),
-				AccountConstants.ACTION_WAIVEOFFOVERDUE, personnel));
+				AccountConstants.ACTION_WAIVEOFFOVERDUE, new Date(), personnel));
 		List<AccountActionDateEntity> installmentsInArrears = getDetailsOfInstallmentsInArrears();
 		for (AccountActionDateEntity accountActionDate : installmentsInArrears) {
 			((SavingsScheduleEntity) accountActionDate).waiveDepositDue();
@@ -1952,12 +1954,12 @@ public class SavingsBO extends AccountBO {
 	}
 
 	private SavingsActivityEntity buildSavingsActivity(Money amount,
-			Money balanceAmount, short acccountActionId, PersonnelBO personnel){
+			Money balanceAmount, short acccountActionId, Date trxnDate, PersonnelBO personnel){
 		MasterPersistence masterPersistence = new MasterPersistence();
 		AccountActionEntity accountAction = (AccountActionEntity) masterPersistence
 				.findById(AccountActionEntity.class, acccountActionId);
 		return new SavingsActivityEntity(personnel, accountAction, amount,
-				balanceAmount);
+				balanceAmount, trxnDate);
 	}
 
 	@Override
