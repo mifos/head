@@ -22,6 +22,7 @@ import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 
@@ -34,6 +35,7 @@ public class MasterDataService extends BusinessService {
 
 	private MasterPersistenceService masterPersistenceService = new MasterPersistenceService();
 
+	@Override
 	public BusinessObject getBusinessObject(UserContext userContext) {
 		return null;
 	}
@@ -51,20 +53,35 @@ public class MasterDataService extends BusinessService {
 	}
 
 	public List<PersonnelView> getListOfActiveLoanOfficers(Short levelId,
-			Short officeId, Short userId, Short userLevelId) {
-		return personnelPersistenceService.getActiveLoanOfficersInBranch(
-				levelId, officeId, userId, userLevelId);
+			Short officeId, Short userId, Short userLevelId)
+			throws ServiceException {
+		try {
+			return personnelPersistenceService.getActiveLoanOfficersInBranch(
+					levelId, officeId, userId, userLevelId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
 
-	public List<OfficeView> getActiveBranches(Short branchId) {
-		return officePersistenceService.getActiveBranches(branchId);
+	public List<OfficeView> getActiveBranches(Short branchId)
+			throws ServiceException {
+		try {
+			return officePersistenceService.getActiveBranches(branchId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 
 	}
 
 	public List<CustomerView> getListOfActiveParentsUnderLoanOfficer(
-			Short personnelId, Short customerLevel, Short officeId) {
-		return customerPersistence.getActiveParentList(personnelId,
-				customerLevel, officeId);
+			Short personnelId, Short customerLevel, Short officeId)
+			throws ServiceException {
+		try {
+			return customerPersistence.getActiveParentList(personnelId,
+					customerLevel, officeId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 
 	}
 
@@ -80,57 +97,75 @@ public class MasterDataService extends BusinessService {
 			SystemException {
 		return masterPersistenceService.retrieveMasterData(entityName,
 				localeId, classPath, column);
-
 	}
 
 	public List<PrdOfferingBO> getLoanProductsAsOfMeetingDate(Date meetingDate,
-			String searchId, Short personnelId) throws SystemException,
-			ApplicationException {
-		return customerPersistence.getLoanProducts(meetingDate, searchId,
-				personnelId);
+			String searchId, Short personnelId) throws ServiceException {
+		try {
+			return customerPersistence.getLoanProducts(meetingDate, searchId,
+					personnelId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
 
 	public List<PrdOfferingBO> getSavingsProductsAsOfMeetingDate(
-			Date meetingDate, String searchId, Short personnelId) {
-		return customerPersistence.getSavingsProducts(meetingDate, searchId,
-				personnelId);
+			Date meetingDate, String searchId, Short personnelId)
+			throws ServiceException {
+		try {
+			return customerPersistence.getSavingsProducts(meetingDate,
+					searchId, personnelId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
 
 	public List<PaymentTypeEntity> retrievePaymentTypes(Short localeId)
-			throws SystemException, ApplicationException {
+			throws ServiceException {
 		try {
 			return masterPersistenceService.retrievePaymentTypes(localeId);
 		} catch (PersistenceException e) {
-			throw new ApplicationException(e);
+			throw new ServiceException(e);
 		}
 	}
 
 	public List<PaymentTypeEntity> getSupportedPaymentModes(Short localeId,
-			Short transactionTypeId) throws SystemException, ApplicationException {
+			Short transactionTypeId) throws ServiceException {
 		try {
 			return masterPersistenceService.getSupportedPaymentModes(localeId,
 					transactionTypeId);
 		} catch (PersistenceException e) {
-			throw new ApplicationException(e);
+			throw new ServiceException(e);
 		}
 	}
 
 	public List<MasterDataEntity> retrieveMasterEntities(Class entityName,
-			Short localeId) throws PersistenceException {
-		return masterPersistenceService.retrieveMasterEntities(entityName,
-				localeId);
-	}
-	
-	public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition(
-			EntityType entityType) throws ApplicationException {
+			Short localeId) throws ServiceException {
 		try {
-			return new MasterPersistence().retrieveCustomFieldsDefinition(entityType);
+			return masterPersistenceService.retrieveMasterEntities(entityName,
+					localeId);
 		} catch (PersistenceException e) {
-			throw new ApplicationException(e);
+			throw new ServiceException(e);
 		}
 	}
-	
-	public String retrieveMasterEntities(Integer entityId, Short localeId) throws PersistenceException {
-		return new MasterPersistence().retrieveMasterEntities(entityId,localeId);
+
+	public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition(
+			EntityType entityType) throws ServiceException {
+		try {
+			return new MasterPersistence()
+					.retrieveCustomFieldsDefinition(entityType);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public String retrieveMasterEntities(Integer entityId, Short localeId)
+			throws ServiceException {
+		try {
+			return new MasterPersistence().retrieveMasterEntities(entityId,
+					localeId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
 }

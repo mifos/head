@@ -66,12 +66,16 @@ public class CenterBO extends CustomerBO {
 
 	private void validateFields(String displayName, MeetingBO meeting,
 			Short personnel, Short officeId) throws CustomerException {
-		if (new CenterPersistence().isCenterExists(displayName)) {
-			Object[] values = new Object[1];
-			values[0] = displayName;
-			throw new CustomerException(
-					CustomerConstants.ERRORS_DUPLICATE_CUSTOMER, values);
-		}
+		try {
+			if (new CenterPersistence().isCenterExists(displayName)) {
+				Object[] values = new Object[1];
+				values[0] = displayName;
+				throw new CustomerException(
+						CustomerConstants.ERRORS_DUPLICATE_CUSTOMER, values);
+			}
+		} catch (PersistenceException e) {
+			throw new CustomerException(e);
+		} 
 		validateMeeting(meeting);
 		validateLO(personnel);
 		validateOffice(officeId);

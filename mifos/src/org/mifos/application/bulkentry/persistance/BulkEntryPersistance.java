@@ -48,13 +48,14 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
 import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
 public class BulkEntryPersistance extends Persistence {
 
 	public List<BulkEntryInstallmentView> getBulkEntryActionView(
 			Date meetingDate, String searchString, Short officeId,
-			AccountTypes accountType) {
+			AccountTypes accountType) throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("MEETING_DATE", meetingDate);
 		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
@@ -82,7 +83,7 @@ public class BulkEntryPersistance extends Persistence {
 
 	public List<BulkEntryAccountFeeActionView> getBulkEntryFeeActionView(
 			Date meetingDate, String searchString, Short officeId,
-			AccountTypes accountType) {
+			AccountTypes accountType) throws PersistenceException {
 		List<BulkEntryAccountFeeActionView> queryResult = null;
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("MEETING_DATE", meetingDate);
@@ -106,7 +107,7 @@ public class BulkEntryPersistance extends Persistence {
 	}
 
 	public List<BulkEntryInstallmentView> getBulkEntryActionViewForCustomerAccountWithSearchId(
-			Date meetingDate, String searchString, Short officeId) {
+			Date meetingDate, String searchString, Short officeId) throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("MEETING_DATE", meetingDate);
 		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
@@ -118,7 +119,7 @@ public class BulkEntryPersistance extends Persistence {
 	}
 
 	public List<BulkEntryAccountFeeActionView> getBulkEntryFeeActionViewForCustomerAccountWithSearchId(
-			Date meetingDate, String searchString, Short officeId) {
+			Date meetingDate, String searchString, Short officeId) throws PersistenceException {
 		List<BulkEntryAccountFeeActionView> queryResult = null;
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("MEETING_DATE", meetingDate);

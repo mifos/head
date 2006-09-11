@@ -73,14 +73,12 @@ import org.mifos.application.office.persistence.service.OfficePersistenceService
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -96,7 +94,7 @@ public class BulkEntryAction extends BaseAction {
 
 	private MasterDataService masterService;
 
-	public BulkEntryAction() throws ServiceException {
+	public BulkEntryAction() {
 		masterService = (MasterDataService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.MasterDataService);
 	}
@@ -198,31 +196,26 @@ public class BulkEntryAction extends BaseAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		BulkEntryActionForm actionForm = (BulkEntryActionForm) form;
-		try {
-			boolean isBackDatedTrxnAllowed = false;
-			if (actionForm.getOfficeId() != null)
-				isBackDatedTrxnAllowed = Configuration.getInstance()
-						.getAccountConfig(
-								Short.valueOf(actionForm.getOfficeId()))
-						.isBackDatedTxnAllowed();
-			Date meetingDate = new BulkEntryBusinessService()
-					.getLastMeetingDateForCustomer(Integer.valueOf(actionForm
-							.getCustomerId()));
-			if (meetingDate != null && isBackDatedTrxnAllowed) {
-				actionForm.setTransactionDate(DateHelper.getUserLocaleDate(
-						getUserLocale(request), meetingDate.toString()));
-			} else {
-				actionForm.setTransactionDate(DateHelper
-						.getCurrentDate(getUserLocale(request)));
-			}
-			SessionUtils.setAttribute("LastMeetingDate", meetingDate, request);
-			SessionUtils.setAttribute(
-					BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
-					isBackDatedTrxnAllowed ? Constants.YES : Constants.NO,
-					request);
-		} catch (SystemException se) {
-		} catch (ApplicationException ae) {
+
+		boolean isBackDatedTrxnAllowed = false;
+		if (actionForm.getOfficeId() != null)
+			isBackDatedTrxnAllowed = Configuration.getInstance()
+					.getAccountConfig(Short.valueOf(actionForm.getOfficeId()))
+					.isBackDatedTxnAllowed();
+		Date meetingDate = new BulkEntryBusinessService()
+				.getLastMeetingDateForCustomer(Integer.valueOf(actionForm
+						.getCustomerId()));
+		if (meetingDate != null && isBackDatedTrxnAllowed) {
+			actionForm.setTransactionDate(DateHelper.getUserLocaleDate(
+					getUserLocale(request), meetingDate.toString()));
+		} else {
+			actionForm.setTransactionDate(DateHelper
+					.getCurrentDate(getUserLocale(request)));
 		}
+		SessionUtils.setAttribute("LastMeetingDate", meetingDate, request);
+		SessionUtils.setAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
+				isBackDatedTrxnAllowed ? Constants.YES : Constants.NO, request);
+
 		return mapping.findForward(BulkEntryConstants.LOADSUCCESS);
 	}
 
@@ -619,7 +612,7 @@ public class BulkEntryAction extends BaseAction {
 	}
 
 	private List<PersonnelView> loadLoanOfficersForBranch(
-			UserContext userContext, Short branchId) {
+			UserContext userContext, Short branchId) throws Exception {
 		return masterService.getListOfActiveLoanOfficers(
 				PersonnelConstants.LOAN_OFFICER, branchId, userContext.getId(),
 				userContext.getLevelId());
@@ -631,10 +624,9 @@ public class BulkEntryAction extends BaseAction {
 	 * then the list of centers under the loan officer is retrieved as the list
 	 * of parent customers, else it is the list of groups.
 	 * 
-	 * @throws SystemException
 	 */
 	private List<CustomerView> loadCustomers(Short personnelId, Short officeId)
-			throws SystemException {
+			throws Exception {
 		Short customerLevel;
 		if (Configuration.getInstance().getCustomerConfig(officeId)
 				.isCenterHierarchyExists())
@@ -651,11 +643,9 @@ public class BulkEntryAction extends BaseAction {
 	 * This method retrieves the loan officer which was selected from the list
 	 * of loan officers
 	 * 
-	 * @throws PageExpiredException
-	 * 
 	 */
 	private PersonnelView getSelectedLO(HttpServletRequest request,
-			ActionForm form) throws PageExpiredException {
+			ActionForm form) throws Exception {
 		BulkEntryActionForm bulkEntryForm = (BulkEntryActionForm) form;
 		Short personnelId = Short.valueOf(bulkEntryForm.getLoanOfficerId());
 		List<PersonnelView> loanOfficerList = (List<PersonnelView>) SessionUtils
@@ -672,12 +662,9 @@ public class BulkEntryAction extends BaseAction {
 	/**
 	 * This method retrieves the branch office which was selected from the list
 	 * of branch offices
-	 * 
-	 * @throws PageExpiredException
-	 * 
 	 */
 	private OfficeView getSelectedBranchOffice(HttpServletRequest request,
-			ActionForm form) throws PageExpiredException {
+			ActionForm form) throws Exception {
 		BulkEntryActionForm bulkEntryForm = (BulkEntryActionForm) form;
 		Short officeId = Short.valueOf(bulkEntryForm.getOfficeId());
 		List<OfficeView> branchList = (List<OfficeView>) SessionUtils
@@ -695,10 +682,9 @@ public class BulkEntryAction extends BaseAction {
 	 * list of customers which belong to a particualr branch and have a
 	 * particular loan officer
 	 * 
-	 * @throws PageExpiredException
 	 */
 	private CustomerView getSelectedCustomer(HttpServletRequest request,
-			ActionForm form) throws PageExpiredException {
+			ActionForm form) throws Exception {
 		int i = 0;
 		BulkEntryActionForm bulkEntryForm = (BulkEntryActionForm) form;
 		Integer customerId = Integer.valueOf(bulkEntryForm.getCustomerId());
@@ -717,10 +703,9 @@ public class BulkEntryAction extends BaseAction {
 	 * This method retrieves the payment type which was selected from the list
 	 * of payement types
 	 * 
-	 * @throws PageExpiredException
 	 */
 	private PaymentTypeView getSelectedPaymentType(HttpServletRequest request,
-			ActionForm form) throws PageExpiredException {
+			ActionForm form) throws Exception {
 		int i = 0;
 		BulkEntryActionForm bulkEntryForm = (BulkEntryActionForm) form;
 		Short paymentTypeId = Short.valueOf(bulkEntryForm.getPaymentId());

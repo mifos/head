@@ -22,7 +22,7 @@ import org.mifos.framework.persistence.Persistence;
 public class PersonnelPersistence extends Persistence {
 
 	public List<PersonnelView> getActiveLoanOfficersInBranch(Short levelId,
-			Short officeId, Short userId, Short userLevelId) {
+			Short officeId, Short userId, Short userLevelId) throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("levelId", levelId);
 		queryParameters.put("userId", userId);

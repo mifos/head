@@ -64,7 +64,6 @@ import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfi
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.dao.DAO;
 import org.mifos.framework.exceptions.AppNotConfiguredException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.EncryptionException;
@@ -76,7 +75,6 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.XMLReaderException;
 import org.mifos.framework.hibernate.HibernateStartUp;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.authentication.Authenticator;
 import org.mifos.framework.security.authentication.EncryptionService;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.authorization.HierarchyManager;
@@ -410,7 +408,7 @@ public class InitializerPlugin implements PlugIn {
 	private void initializeEntityMaster() throws HibernateProcessException{
 		EntityMasterData.getInstance().init();
 	}
-	private void initializeFieldConfiguration(ActionServlet servlet) throws HibernateProcessException{
+	private void initializeFieldConfiguration(ActionServlet servlet) throws HibernateProcessException, ApplicationException{
 		FieldConfigItf fieldConfigItf=FieldConfigImplementer.getInstance();
 		fieldConfigItf.init();
 		//TODO Remove this code after M1 code migration.

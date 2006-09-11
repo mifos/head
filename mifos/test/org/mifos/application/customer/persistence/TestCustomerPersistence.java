@@ -106,7 +106,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 	}
 
-	public void testCustomersUnderLO() {
+	public void testCustomersUnderLO() throws NumberFormatException, PersistenceException {
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));

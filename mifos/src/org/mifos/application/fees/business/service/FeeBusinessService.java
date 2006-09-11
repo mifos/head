@@ -92,6 +92,10 @@ public class FeeBusinessService extends BusinessService {
 	
 	public List<FeeBO> getAllAppllicableFeeForLoanCreation()
 			throws ServiceException {
-		return feePersistence.getAllAppllicableFeeForLoanCreation();
+		try {
+			return feePersistence.getAllAppllicableFeeForLoanCreation();
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
 }

@@ -47,7 +47,6 @@ import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
-import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.application.accounts.savings.struts.actionforms.SavingsApplyAdjustmentActionForm;
@@ -56,6 +55,7 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -76,14 +76,21 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 	private MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
+	@Override
 	protected BusinessService getService() throws ServiceException {
 		return getSavingsService();
 	}
 
+	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
 	}
-
+	
+	@Override
+	protected boolean startSession() {
+		return false;
+	}
+	
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -108,9 +115,10 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 						.getPaymentActionType(lastPayment).equals(
 								AccountConstants.ACTION_SAVINGS_WITHDRAWAL))) {
 			actionForm.setLastPaymentAmount(savings.getLastPmnt().getAmount());
-			AccountActionEntity accountAction = new AccountPersistence()
-					.getAccountAction(new SavingsHelper()
-							.getPaymentActionType(lastPayment));
+			AccountActionEntity accountAction = (AccountActionEntity) new MasterPersistence()
+					.getPersistentObject(AccountActionEntity.class,
+							new SavingsHelper()
+									.getPaymentActionType(lastPayment));
 			accountAction.setLocaleId(uc.getLocaleId());
 			Hibernate.initialize(savings.getLastPmnt().getAccountTrxns());
 			SessionUtils.setAttribute(SavingsConstants.ACCOUNT_ACTION,
@@ -164,10 +172,6 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.getSessionTL().evict(savings);
 		return mapping.findForward("account_detail_page");
-	}
-
-	protected boolean startSession() {
-		return false;
 	}
 
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,

@@ -47,6 +47,7 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.mifos.application.accounts.TestAccount;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -449,7 +450,7 @@ public class TestAccountBO extends TestAccount {
 	}
 
 	public void testDeleteFutureInstallments() throws HibernateException,
-			SystemException {
+			SystemException, AccountException {
 		TestObjectFactory.flushandCloseSession();
 		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.mifos.application.customer.business.service;
 
 import java.util.Calendar;
@@ -38,7 +35,6 @@ import org.mifos.application.customer.util.helpers.CustomerRecentActivityView;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.LoanCycleCounter;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.valueobjects.YesNoMaster;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -58,9 +54,6 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-/**
- * This class hosts the test cases for CustomerBusinessService.
- */
 public class TestCustomerBusinessService extends MifosTestCase {
 	private CustomerBO center;
 
@@ -648,7 +641,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 					currentDateCalendar.getTimeInMillis()));
 			break;
 		}
-		accountPersistence.updateAccount(accountBO);
+		TestObjectFactory.updateObject(accountBO);
 		HibernateUtil.getTransaction().commit();
 	}
 
@@ -666,12 +659,4 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				new Date(System.currentTimeMillis()));
 	}
 	
-	private String getNameForMasterEntity(Integer lookupId,
-			Short localeId) throws PersistenceException, ServiceException {
-		if (lookupId != null)
-			return ((MasterDataService) ServiceFactory.getInstance()
-					.getBusinessService(BusinessServiceName.MasterDataService))
-					.retrieveMasterEntities(lookupId, localeId);
-		return "";
-	}
 }

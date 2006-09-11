@@ -60,12 +60,12 @@ public class FeePersistence extends Persistence {
 		return (FeeBO) session.get(FeeBO.class, feeId);
 	}
 
-	public List<FeeBO> getUpdatedFeesForCustomer() {
+	public List<FeeBO> getUpdatedFeesForCustomer() throws PersistenceException {
 		return executeNamedQuery(
 				NamedQueryConstants.GET_UPDATED_FEES_FOR_CUSTOMERS, null);
 	}
 
-	public ApplicableAccountsTypeEntity getUpdateTypeEntity(Short id) {
+	public ApplicableAccountsTypeEntity getUpdateTypeEntity(Short id) throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("ID", id);
 		return (ApplicableAccountsTypeEntity) executeNamedQuery(
@@ -103,7 +103,7 @@ public class FeePersistence extends Persistence {
 	}
 	
 	public List<FeeBO> getAllAppllicableFeeForLoanCreation()
-			throws ServiceException {
+			throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("active", FeeStatus.ACTIVE.getValue());
 		queryParameters.put("category", FeeCategory.LOAN.getValue());

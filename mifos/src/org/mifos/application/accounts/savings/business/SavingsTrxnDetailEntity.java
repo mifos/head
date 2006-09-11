@@ -3,11 +3,13 @@ package org.mifos.application.accounts.savings.business;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 
 public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
@@ -137,7 +139,9 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 	}
 		
 
-	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment){
+	@Override
+	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment) throws AccountException{
+		try {
 		MasterPersistence masterPersistence = new MasterPersistence();
 		SavingsTrxnDetailEntity reverseAccntTrxn = null;
 		Money balAfterAdjust = null;
@@ -146,7 +150,7 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 			balAfterAdjust = getBalance().subtract(getDepositAmount());
 			reverseAccntTrxn=new SavingsTrxnDetailEntity(
 					getAccountPayment(),(AccountActionEntity) masterPersistence
-					.findById(AccountActionEntity.class,
+					.getPersistentObject(AccountActionEntity.class,
 							AccountConstants.ACTION_SAVINGS_ADJUSTMENT),
 					getDepositAmount().negate(),
 					balAfterAdjust, getPersonnel(),getDueDate(), getActionDate(),adjustmentComment,this);
@@ -155,7 +159,7 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 			balAfterAdjust = getBalance().add(getWithdrawlAmount());
 			reverseAccntTrxn=new SavingsTrxnDetailEntity(
 					getAccountPayment(),(AccountActionEntity) masterPersistence
-					.findById(AccountActionEntity.class,
+					.getPersistentObject(AccountActionEntity.class,
 							AccountConstants.ACTION_SAVINGS_ADJUSTMENT),
 							getWithdrawlAmount().negate(),
 					balAfterAdjust, getPersonnel(),getDueDate(), getActionDate(),adjustmentComment,this);
@@ -163,11 +167,14 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 		}else{
 			reverseAccntTrxn=new SavingsTrxnDetailEntity(
 					getAccountPayment(),(AccountActionEntity) masterPersistence
-					.findById(AccountActionEntity.class,
+					.getPersistentObject(AccountActionEntity.class,
 							AccountConstants.ACTION_SAVINGS_ADJUSTMENT),
 							getAmount().negate(),
 					balAfterAdjust, getPersonnel(),getDueDate(), getActionDate(),adjustmentComment,this);
 		}
 		return reverseAccntTrxn;
+		}catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 }

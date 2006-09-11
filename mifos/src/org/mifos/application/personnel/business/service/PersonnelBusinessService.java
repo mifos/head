@@ -30,9 +30,13 @@ public class PersonnelBusinessService extends BusinessService {
 	public List<PersonnelView> getActiveLoanOfficersInBranch(Short officeId,
 			Short loggedInUserId, Short loggedInUserLevelId)
 			throws ServiceException {
-		return new PersonnelPersistence().getActiveLoanOfficersInBranch(
-				PersonnelLevel.LOAN_OFFICER.getValue(), officeId,
-				loggedInUserId, loggedInUserLevelId);
+		try {
+			return new PersonnelPersistence().getActiveLoanOfficersInBranch(
+					PersonnelLevel.LOAN_OFFICER.getValue(), officeId,
+					loggedInUserId, loggedInUserLevelId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
 
 	public PersonnelBO getPersonnel(Short personnelId) {

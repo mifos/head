@@ -22,11 +22,19 @@ public class OfficeBusinessService extends BusinessService {
 		return null;
 	}
 	
-	public List<OfficeView> getActiveParents(OfficeLevel level,Short localeId){
-		return officePersistence.getActiveParents(level,localeId);
+	public List<OfficeView> getActiveParents(OfficeLevel level,Short localeId) throws ServiceException{
+		try {
+			return officePersistence.getActiveParents(level,localeId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
-	public List <OfficeView> getConfiguredLevels(Short localeId){
-		return officePersistence.getActiveLevels(localeId);
+	public List <OfficeView> getConfiguredLevels(Short localeId) throws ServiceException{
+		try {
+			return officePersistence.getActiveLevels(localeId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 		
 	}
 	public OfficeBO getOffice(Short officeId) throws ServiceException{
@@ -36,18 +44,34 @@ public class OfficeBusinessService extends BusinessService {
 			throw new ServiceException(e);
 		}
 	}
-	public List<OfficeView> getStatusList(Short localeId){
-		return officePersistence.getStatusList(localeId);
+	public List<OfficeView> getStatusList(Short localeId) throws ServiceException{
+		try {
+			return officePersistence.getStatusList(localeId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
-	public List<OfficeBO> getOfficesTillBranchOffice(){
-		return officePersistence.getOfficesTillBranchOffice();
+	public List<OfficeBO> getOfficesTillBranchOffice() throws ServiceException{
+		try {
+			return officePersistence.getOfficesTillBranchOffice();
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
-	public List<OfficeBO> getBranchOffices(){
-		return officePersistence.getBranchOffices();
+	public List<OfficeBO> getBranchOffices() throws ServiceException{
+		try {
+			return officePersistence.getBranchOffices();
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
 
-	public List<OfficeView> getChildOffices(String searchId) {
-		return officePersistence.getChildOffices(searchId);
+	public List<OfficeView> getChildOffices(String searchId) throws ServiceException {
+		try {
+			return officePersistence.getChildOffices(searchId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
 
 }

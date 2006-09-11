@@ -51,8 +51,8 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
@@ -64,7 +64,7 @@ public class ClientPersistence extends Persistence {
 		return client;
 	}
 	
-	public boolean checkForDuplicacyOnGovtId(String governmentId , Integer customerId) {
+	public boolean checkForDuplicacyOnGovtId(String governmentId , Integer customerId) throws PersistenceException {
 			Map<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put("LEVEL_ID", CustomerConstants.CLIENT_LEVEL_ID);
 			queryParameters.put("GOVT_ID",governmentId);
@@ -73,7 +73,7 @@ public class ClientPersistence extends Persistence {
 			return ((Integer)queryResult.get(0)).intValue()>0;
 	}
 	
-	public boolean checkForDuplicacyOnName(String name, Date dob, Integer customerId) {
+	public boolean checkForDuplicacyOnName(String name, Date dob, Integer customerId) throws PersistenceException {
 			Map<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put("clientName",name);
 			queryParameters.put("LEVELID", CustomerConstants.CLIENT_LEVEL_ID);
@@ -84,12 +84,12 @@ public class ClientPersistence extends Persistence {
 			
 	}
 
-	public Blob createBlob(InputStream picture) throws CustomerException{
+	public Blob createBlob(InputStream picture) throws PersistenceException{
 		try{
 			return Hibernate.createBlob(picture);
 		}
 		catch(IOException ioe){
-			throw new CustomerException(ioe);
+			throw new PersistenceException(ioe);
 		}
 	}
 	

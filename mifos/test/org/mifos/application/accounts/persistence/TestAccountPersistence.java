@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.mifos.application.accounts.persistence;
 
 import java.util.Date;
@@ -18,6 +15,7 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
@@ -25,94 +23,110 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestAccountPersistence extends TestAccount {			
-	
-	private AccountPersistence accountPersistence=new AccountPersistence();
-	
-	public void testSuccessGetNextInstallmentList(){
-		List<AccountActionDateEntity> installmentIdList=null;
-		installmentIdList = accountBO.getApplicableIdsForFutureInstallments();
+public class TestAccountPersistence extends TestAccount {
+
+	private AccountPersistence accountPersistence = new AccountPersistence();
+
+	public void testSuccessGetNextInstallmentList() {
+		List<AccountActionDateEntity> installmentIdList = accountBO
+				.getApplicableIdsForFutureInstallments();
 		assertTrue(true);
 	}
-	
-	
-	public void testSuccessLoadBusinessObject(){
-		AccountBO accountObject=null;
+
+	public void testSuccessLoadBusinessObject() {
 		try {
-			accountObject = accountPersistence.loadBusinessObject(accountBO.getAccountId());
+			AccountBO accountObject = accountPersistence.getAccount(accountBO
+					.getAccountId());
 			assertTrue(true);
 		} catch (PersistenceException e) {
 			assertTrue(false);
 		}
-		
 	}
-	
-	
-	public void testFailureLoadBusinessObject(){
+
+	public void testFailureLoadBusinessObject() {
 		try {
-			accountPersistence.loadBusinessObject(null);
+			accountPersistence.getAccount(null);
 			assertTrue(false);
 		} catch (PersistenceException e) {
 			assertTrue(true);
 		}
 	}
-	
-	public void testGetAccountAction()throws Exception{
-		AccountActionEntity accountaction = accountPersistence.getAccountAction(AccountConstants.ACTION_SAVINGS_INTEREST_POSTING);
+
+	public void testGetAccountAction() throws Exception {
+		AccountActionEntity accountaction = (AccountActionEntity) new MasterPersistence()
+				.getPersistentObject(AccountActionEntity.class,
+						AccountConstants.ACTION_SAVINGS_INTEREST_POSTING);
 		assertNotNull(accountaction);
 	}
-	
-	public void testRetrieveCustomerAccountActionDetails()  throws Exception{
+
+	public void testRetrieveCustomerAccountActionDetails() throws Exception {
 		assertNotNull(center.getCustomerAccount());
-		List<AccountActionDateEntity> actionDates = accountPersistence.retrieveCustomerAccountActionDetails(center.getCustomerAccount().getAccountId(),new java.sql.Date(System.currentTimeMillis()));
-		assertEquals("The size of the due insallments is ", actionDates.size(),1);
-	}
-	
-	public void testOptionalAccountStates() throws Exception{
-		assertEquals(Integer.valueOf(1).intValue(),accountPersistence.getAccountStates(Short.valueOf("0")).size());
-	}
-	
-	public void testAccountStatesInUse() throws Exception{
-		assertEquals(Integer.valueOf(17).intValue(),accountPersistence.getAccountStates(Short.valueOf("1")).size());
-	}
-	
-	public void testGetAccountsWithYesterdaysInstallment() throws PersistenceException {				
-		assertEquals(0,accountPersistence.getAccountsWithYesterdaysInstallment().size());		
+		List<AccountActionDateEntity> actionDates = accountPersistence
+				.retrieveCustomerAccountActionDetails(center
+						.getCustomerAccount().getAccountId(),
+						new java.sql.Date(System.currentTimeMillis()));
+		assertEquals("The size of the due insallments is ", actionDates.size(),
+				1);
 	}
 
-	public void testGetCustomerAccountsForFee() throws Exception{
-		
+	public void testOptionalAccountStates() throws Exception {
+		assertEquals(Integer.valueOf(1).intValue(), accountPersistence
+				.getAccountStates(Short.valueOf("0")).size());
+	}
+
+	public void testAccountStatesInUse() throws Exception {
+		assertEquals(Integer.valueOf(17).intValue(), accountPersistence
+				.getAccountStates(Short.valueOf("1")).size());
+	}
+
+	public void testGetAccountsWithYesterdaysInstallment()
+			throws PersistenceException {
+		assertEquals(0, accountPersistence
+				.getAccountsWithYesterdaysInstallment().size());
+	}
+
+	public void testGetCustomerAccountsForFee() throws Exception {
+
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
-				"ClientPeridoicFee", FeeCategory.CENTER, "5", MeetingFrequency.WEEKLY, Short.valueOf("1"));
-		AccountFeesEntity accountFee = new AccountFeesEntity(center.getCustomerAccount(),periodicFee,((AmountFeeBO)periodicFee).getFeeAmount().getAmountDoubleValue());
+				"ClientPeridoicFee", FeeCategory.CENTER, "5",
+				MeetingFrequency.WEEKLY, Short.valueOf("1"));
+		AccountFeesEntity accountFee = new AccountFeesEntity(center
+				.getCustomerAccount(), periodicFee, ((AmountFeeBO) periodicFee)
+				.getFeeAmount().getAmountDoubleValue());
 		CustomerAccountBO customerAccount = center.getCustomerAccount();
 		customerAccount.addAccountFees(accountFee);
-		TestObjectFactory.updateObject( customerAccount);
+		TestObjectFactory.updateObject(customerAccount);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		
-		//check for the account fee 
-		List accountList =accountPersistence.getCustomerAccountsForFee(periodicFee.getFeeId());
+
+		// check for the account fee
+		List accountList = accountPersistence
+				.getCustomerAccountsForFee(periodicFee.getFeeId());
 		assertNotNull(accountList);
-		assertEquals(1,accountList.size());
-		//get all objects again
-		accountBO =(AccountBO) TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
-		
+		assertEquals(1, accountList.size());
+		// get all objects again
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+				group.getCustomerId());
+		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+				center.getCustomerId());
 
 	}
-	
-	public void testGetActiveCustomerAndSavingsAccounts() throws Exception{
-		
-		SavingsBO savingsBO =  TestObjectFactory.createSavingsAccount("12345678910", group,
-				new Short("16"), new Date(), createSavingsOffering("qqqqq"), TestObjectFactory.getUserContext());
-		List<AccountBO> customerAccounts = accountPersistence.getActiveCustomerAndSavingsAccounts();
+
+	public void testGetActiveCustomerAndSavingsAccounts() throws Exception {
+
+		SavingsBO savingsBO = TestObjectFactory.createSavingsAccount(
+				"12345678910", group, new Short("16"), new Date(),
+				createSavingsOffering("qqqqq"), TestObjectFactory
+						.getUserContext());
+		List<AccountBO> customerAccounts = accountPersistence
+				.getActiveCustomerAndSavingsAccounts();
 		assertNotNull(customerAccounts);
-		assertEquals(3,customerAccounts.size());
+		assertEquals(3, customerAccounts.size());
 		TestObjectFactory.cleanUp(savingsBO);
 	}
-	
+
 	private SavingsOfferingBO createSavingsOffering(String offeringName) {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));

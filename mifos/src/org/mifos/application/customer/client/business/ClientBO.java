@@ -454,16 +454,28 @@ public class ClientBO extends CustomerBO {
 	public void updatePicture(InputStream picture) throws CustomerException{
 		ClientPersistence clientPersistence = new ClientPersistence();
 		if(customerPicture != null)
-				customerPicture.setPicture(clientPersistence.createBlob(picture));	
+			try {
+				customerPicture.setPicture(clientPersistence.createBlob(picture));
+			} catch (PersistenceException e) {
+				throw new CustomerException(e);
+			}
 		else
-			this.customerPicture = new CustomerPictureEntity(this,clientPersistence.createBlob(picture));
+			try {
+				this.customerPicture = new CustomerPictureEntity(this,clientPersistence.createBlob(picture));
+			} catch (PersistenceException e) {
+				throw new CustomerException(e);
+			}
 			
 	}
 	
 	private void createPicture(InputStream picture)throws CustomerException{
 		try {
 			if (picture !=null && picture.available() > 0)
-				this.customerPicture = new CustomerPictureEntity(this,new ClientPersistence().createBlob(picture));
+				try {
+					this.customerPicture = new CustomerPictureEntity(this,new ClientPersistence().createBlob(picture));
+				} catch (PersistenceException e) {
+					throw new CustomerException(e);
+				}
 						
 		} catch (IOException e) {
 			throw new CustomerException(e);
@@ -570,14 +582,20 @@ public class ClientBO extends CustomerBO {
 				}
 				catch(ConfigurationException ce){
 					throw new CustomerException();
+				} catch (PersistenceException e) {
+					throw new CustomerException(e);
 				}
 			}
 			else{
-				if(clientPersistence.checkForDuplicacyOnName(name,dob,customerId) == true){
-					Object[] values = new Object[1];
-					values[0] = name;
-					throw new CustomerException(CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION,values);
-				}
+				try {
+					if(clientPersistence.checkForDuplicacyOnName(name,dob,customerId) == true){
+						Object[] values = new Object[1];
+						values[0] = name;
+						throw new CustomerException(CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION,values);
+					}
+				} catch (PersistenceException e) {
+					throw new CustomerException(e);
+				} 
 			}
 		
 	}
@@ -637,10 +655,18 @@ public class ClientBO extends CustomerBO {
 				throw new CustomerException(GroupConstants.MEETING_NOT_ASSIGNED);
 			}
 			if( getPersonnel() !=null){
-				loanOfficerActive =new OfficePersistence().hasActivePeronnel(officeId);
+				try {
+					loanOfficerActive =new OfficePersistence().hasActivePeronnel(officeId);
+				} catch (PersistenceException e) {
+					throw new CustomerException(e);
+				}
 			}
 			 
-			branchInactive = new OfficePersistence().isBranchInactive(officeId);
+			try {
+				branchInactive = new OfficePersistence().isBranchInactive(officeId);
+			} catch (PersistenceException e) {
+				throw new CustomerException(e);
+			}
 			if(loanOfficerActive ==false){
 				try {
 					throw new CustomerException(CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION,new Object[]{MifosConfiguration.getInstance().getLabel(ConfigurationConstants.BRANCHOFFICE,getUserContext().getPereferedLocale())});

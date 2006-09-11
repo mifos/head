@@ -41,65 +41,45 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.HibernateException;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
 public class SavingsPrdPersistence extends Persistence {
 
 	public SavingsOfferingBO getSavingsProduct(Short prdOfferingId)
 			throws PersistenceException {
-		try {
-			return (SavingsOfferingBO) HibernateUtil.getSessionTL().get(
-					SavingsOfferingBO.class, prdOfferingId);
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
+		return (SavingsOfferingBO) getPersistentObject(SavingsOfferingBO.class,
+				prdOfferingId);
 	}
 
 	public List<SavingsBO> retrieveSavingsAccountsForPrd(Short prdOfferingId)
 			throws PersistenceException {
-		try {
-			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("prdOfferingId", prdOfferingId);
-			return executeNamedQuery(
-					NamedQueryConstants.RETRIEVE_SAVINGS_ACCCOUNT,
-					queryParameters);
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put(ProductDefinitionConstants.PRDOFFERINGID,
+				prdOfferingId);
+		return executeNamedQuery(NamedQueryConstants.RETRIEVE_SAVINGS_ACCCOUNT,
+				queryParameters);
 	}
 
 	public Short retrieveDormancyDays() throws PersistenceException {
-		try {
-			Map<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("productTypeId", AccountTypes.SAVINGSACCOUNT
-					.getValue());
-			List<Short> queryResult = executeNamedQuery(
-					NamedQueryConstants.GET_DORMANCY_DAYS, queryParameters);
-			if (null != queryResult && null != queryResult.get(0))
-				return queryResult.get(0);
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
-		return null;
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("productTypeId", ProductType.SAVINGS.getValue());
+		Object obj = execUniqueResultNamedQuery(
+				NamedQueryConstants.GET_DORMANCY_DAYS, queryParameters);
+		return obj != null ? (Short) obj : null;
 	}
 
 	public List<RecurrenceTypeEntity> getSavingsApplicableRecurrenceTypes()
 			throws PersistenceException {
-		try {
-			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-			return executeNamedQuery(
-					NamedQueryConstants.SAVINGS_APPL_RECURRENCETYPES,
-					queryParameters);
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		return executeNamedQuery(
+				NamedQueryConstants.SAVINGS_APPL_RECURRENCETYPES,
+				queryParameters);
 	}
 }

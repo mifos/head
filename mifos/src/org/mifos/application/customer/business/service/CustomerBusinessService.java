@@ -67,6 +67,7 @@ import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -100,8 +101,12 @@ public class CustomerBusinessService extends BusinessService {
 		return new CustomerPersistence().getBySystemId(globalCustNum, levelId);
 	}
 
-	public List<LoanCycleCounter> fetchLoanCycleCounter(Integer customerId){
-		return new CustomerPersistence().fetchLoanCycleCounter(customerId);
+	public List<LoanCycleCounter> fetchLoanCycleCounter(Integer customerId) throws ServiceException{
+		try {
+			return new CustomerPersistence().fetchLoanCycleCounter(customerId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 
 	}
 

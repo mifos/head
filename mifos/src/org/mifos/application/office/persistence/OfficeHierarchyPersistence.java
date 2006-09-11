@@ -41,6 +41,7 @@ import java.util.List;
 
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.office.business.OfficeLevelEntity;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
 public class OfficeHierarchyPersistence extends Persistence {
@@ -49,7 +50,7 @@ public class OfficeHierarchyPersistence extends Persistence {
 		super();
 	}
 
-	public List<OfficeLevelEntity> getOfficeLevels(Short localeId) {
+	public List<OfficeLevelEntity> getOfficeLevels(Short localeId) throws PersistenceException {
 		List<OfficeLevelEntity> officeLevels = executeNamedQuery(
 				NamedQueryConstants.GET_OFFICE_LEVELS, null);
 		for (OfficeLevelEntity officeLevelEntity : officeLevels) {

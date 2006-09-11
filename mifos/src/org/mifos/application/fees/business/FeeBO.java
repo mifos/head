@@ -121,7 +121,11 @@ public abstract class FeeBO extends BusinessObject {
 		
 		this.feeId = null;
 		this.feeLevels = new HashSet<FeeLevelEntity>();
-		this.office = new OfficePersistenceService().getHeadOffice();
+		try {
+			this.office = new OfficePersistenceService().getHeadOffice();
+		} catch (PersistenceException e) {
+			throw new FeeException(e);
+		}
 		this.changeType = (FeeChangeType.NOT_UPDATED.getValue());
 		this.setFeeStatus(retrieveFeeStatusEntity(FeeStatus.ACTIVE));	
 		if(isCustomerDefaultFee)

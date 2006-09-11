@@ -42,15 +42,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Hibernate;
 import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
@@ -89,7 +86,6 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.repaymentschedule.RepaymentSchedule;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleConstansts;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleFactory;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleHelper;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleIfc;
@@ -168,6 +164,7 @@ public class CustomerAccountBO extends AccountBO {
 		customerActivitDetails.add(customerActivityEntity);
 	}
 
+	@Override
 	protected AccountPaymentEntity makePayment(PaymentData paymentData)
 			throws AccountException{
 		MasterPersistenceService masterPersistenceService = new MasterPersistenceService();
@@ -188,15 +185,20 @@ public class CustomerAccountBO extends AccountBO {
 					new java.sql.Date(paymentData.getTransactionDate()
 							.getTime()));
 			customerAccountPaymentData.setAccountActionDate(accountAction);
-			CustomerTrxnDetailEntity accountTrxn = new CustomerTrxnDetailEntity(
-					accountPayment,
-					customerAccountPaymentData,
-					paymentData.getPersonnel(),
-					paymentData.getTransactionDate(),
-					(AccountActionEntity) masterPersistenceService.findById(
-							AccountActionEntity.class,
-							AccountConstants.ACTION_CUSTOMER_ACCOUNT_REPAYMENT),
-					"Payment rcvd.");
+			CustomerTrxnDetailEntity accountTrxn;
+			try {
+				accountTrxn = new CustomerTrxnDetailEntity(
+						accountPayment,
+						customerAccountPaymentData,
+						paymentData.getPersonnel(),
+						paymentData.getTransactionDate(),
+						(AccountActionEntity) masterPersistenceService.findById(
+								AccountActionEntity.class,
+								AccountConstants.ACTION_CUSTOMER_ACCOUNT_REPAYMENT),
+						"Payment rcvd.");
+			} catch (PersistenceException e) {
+				throw new AccountException(e);
+			}
 			accountPayment.addAcountTrxn(accountTrxn);
 		}
 		addCustomerActivity(new CustomerActivityEntity(paymentData
@@ -205,6 +207,7 @@ public class CustomerAccountBO extends AccountBO {
 		return accountPayment;
 	}
 
+	@Override
 	public boolean isAdjustPossibleOnLastTrxn() {
 		if (!(getCustomer().isActive())) {
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
@@ -230,6 +233,7 @@ public class CustomerAccountBO extends AccountBO {
 		return true;
 	}
 
+	@Override
 	protected void updateInstallmentAfterAdjustment(
 			List<AccountTrxnEntity> reversedTrxns) {
 		if (null != reversedTrxns && reversedTrxns.size() > 0) {
@@ -383,6 +387,7 @@ public class CustomerAccountBO extends AccountBO {
 
 	}
 
+	@Override
 	protected Money getDueAmount(AccountActionDateEntity installment) {
 		return ((CustomerScheduleEntity) installment).getTotalDueWithFees();
 	}
@@ -492,6 +497,7 @@ public class CustomerAccountBO extends AccountBO {
 		this.personnel = personnel;
 	}
 
+	@Override
 	public Money updateAccountActionDateEntity(List<Short> intallmentIdList,
 			Short feeId) {
 		Money totalFeeAmount = new Money();
@@ -628,6 +634,7 @@ public class CustomerAccountBO extends AccountBO {
 		return totalFeeAmountApplied;
 	}
 
+	@Override
 	protected void setCustomerInput(RepaymentScheduleInputsIfc inputs,Date feeStartDate){
 		inputs.setRepaymentFrequency(getCustomer().getCustomerMeeting().getMeeting());
 		inputs.setMeetingToConsider(RepaymentScheduleConstansts.MEETING_CUSTOMER);

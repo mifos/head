@@ -43,29 +43,29 @@ import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.framework.components.configuration.business.ConfigEntity;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
-import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.service.PersistenceService;
 
 public class ConfigurationPersistenceService extends PersistenceService {
 	
 	private ConfigurationPersistence serviceImpl = new ConfigurationPersistence();
 	
-	public MifosCurrency getDefaultCurrency(){
+	public MifosCurrency getDefaultCurrency() throws PersistenceException{
 		return serviceImpl.getDefaultCurrency();
 	}
 
-	public SupportedLocalesEntity getSupportedLocale()throws SystemException{
+	public SupportedLocalesEntity getSupportedLocale()throws PersistenceException{
 		return serviceImpl.getSupportedLocale();
 	}
-	public ConfigEntity getSystemConfiguration() throws SystemException {
+	public ConfigEntity getSystemConfiguration() throws PersistenceException {
 		return serviceImpl.getSystemConfiguration();
 	}
 	
-	public List<ConfigEntity> getOfficeConfiguration() throws SystemException {
+	public List<ConfigEntity> getOfficeConfiguration() throws PersistenceException {
 		return serviceImpl.getOfficeConfiguration();
 	}
 	
-	public List<WeekDaysEntity> getWeekDaysList()throws SystemException{
+	public List<WeekDaysEntity> getWeekDaysList()throws PersistenceException{
 		return serviceImpl.getWeekDaysList();
 	}
 }

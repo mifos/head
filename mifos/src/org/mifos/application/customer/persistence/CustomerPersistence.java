@@ -151,7 +151,7 @@ public class CustomerPersistence extends Persistence {
 	}
 
 	public List<CustomerView> getActiveParentList(Short personnelId,
-			Short customerLevelId, Short officeId){
+			Short customerLevelId, Short officeId) throws PersistenceException{
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("personnelId", personnelId);
 		queryParameters.put("customerLevelId", customerLevelId);
@@ -165,7 +165,7 @@ public class CustomerPersistence extends Persistence {
 	}
 
 	public List<PrdOfferingBO> getLoanProducts(Date meetingDate,
-			String searchId, Short personnelId) {
+			String searchId, Short personnelId) throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("meetingDate", meetingDate);
 		queryParameters.put("searchId", searchId + "%");
@@ -177,7 +177,7 @@ public class CustomerPersistence extends Persistence {
 	}
 
 	public List<PrdOfferingBO> getSavingsProducts(Date meetingDate,
-			String searchId, Short personnelId) {
+			String searchId, Short personnelId) throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("meetingDate", meetingDate);
 		queryParameters.put("searchId", searchId + "%");
@@ -187,7 +187,7 @@ public class CustomerPersistence extends Persistence {
 		return queryResult;
 	}
 
-	public Date getLastMeetingDateForCustomer(Integer customerId) {
+	public Date getLastMeetingDateForCustomer(Integer customerId) throws PersistenceException {
 		Date meetingDate = null;
 		Date actionDate = new java.sql.Date(Calendar.getInstance().getTime()
 				.getTime());
@@ -531,7 +531,7 @@ public class CustomerPersistence extends Persistence {
 	}
 	
 
-	public List<LoanCycleCounter> fetchLoanCycleCounter(Integer customerId) {
+	public List<LoanCycleCounter> fetchLoanCycleCounter(Integer customerId) throws PersistenceException {
 		HashMap<String, Integer> queryParameters = new HashMap<String, Integer>();
 		queryParameters.put("customerId", customerId);
 		List queryResult = executeNamedQuery(

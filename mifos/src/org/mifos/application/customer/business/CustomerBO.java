@@ -673,13 +673,22 @@ public void changeStatus(Short newStatusId, Short flagId, String comment)
 				getCustomerFlags().clear();
 		}
 		MasterPersistence masterPersistence = new MasterPersistence();
-		CustomerStatusEntity customerStatus = (CustomerStatusEntity) masterPersistence
-				.findById(CustomerStatusEntity.class, newStatusId);
+		CustomerStatusEntity customerStatus;
+		try {
+			customerStatus = (CustomerStatusEntity) masterPersistence
+					.getPersistentObject(CustomerStatusEntity.class, newStatusId);
+		} catch (PersistenceException e) {
+			throw new CustomerException(e);
+		}
 		customerStatus.setLocaleId(this.getUserContext().getLocaleId());
 		CustomerStatusFlagEntity customerStatusFlagEntity = null;
 		if (flagId != null) {
-			customerStatusFlagEntity = (CustomerStatusFlagEntity) masterPersistence
-					.findById(CustomerStatusFlagEntity.class, flagId);
+			try {
+				customerStatusFlagEntity = (CustomerStatusFlagEntity) masterPersistence
+						.getPersistentObject(CustomerStatusFlagEntity.class, flagId);
+			} catch (PersistenceException e) {
+				throw new CustomerException(e);
+			}
 		}
 		CustomerNoteEntity customerNote = createCustomerNotes(comment);
 		this.setCustomerStatus(customerStatus);

@@ -2368,7 +2368,7 @@ public class TestSavingsBO extends MifosTestCase {
 	}
 
 	private AccountBO saveAndFetch(AccountBO account) throws Exception{
-		accountPersistence.updateAccount(account);
+		TestObjectFactory.updateObject(account);
 		return accountPersistence.getAccount(account.getAccountId());
 	}
 

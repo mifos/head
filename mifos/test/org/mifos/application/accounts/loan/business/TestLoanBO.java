@@ -623,7 +623,8 @@ public class TestLoanBO extends MifosTestCase {
 		currentDateCalendar = new GregorianCalendar(year, month, day - 1);
 		accountActionDateEntity.setActionDate(new java.sql.Date(
 				currentDateCalendar.getTimeInMillis()));
-		accountPersistence.updateAccount(accountBO);
+		TestObjectFactory.updateObject(accountBO);
+		
 		accountBO = accountPersistence.getAccount(accountBO
 				.getAccountId());
 		assertEquals(((LoanBO) accountBO).getNextMeetingDate().toString(),
@@ -898,11 +899,6 @@ public class TestLoanBO extends MifosTestCase {
 		for (AccountActionDateEntity accountAction : loanBO
 				.getAccountActionDates()) {
 			LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
-		}
-
-		for (AccountActionDateEntity accountAction : loanBO
-				.getAccountActionDates()) {
-			LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
 			assertEquals(new Money(), accountActionDateEntity.getMiscPenalty());
 		}
 		
@@ -991,11 +987,6 @@ public class TestLoanBO extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loanBO
 				.getAccountId());
-		for (AccountActionDateEntity accountAction : loanBO
-				.getAccountActionDates()) {
-			LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
-		}
-
 		for (AccountActionDateEntity accountAction : loanBO
 				.getAccountActionDates()) {
 			LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
@@ -3280,7 +3271,7 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	private AccountBO saveAndFetch(AccountBO account) throws Exception {
-		accountPersistence.updateAccount(account);
+		TestObjectFactory.updateObject(account);
 		HibernateUtil.closeSession();
 		return accountPersistence.getAccount(account.getAccountId());
 	}

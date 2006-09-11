@@ -17,6 +17,7 @@ import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.util.helpers.TestConstants;
@@ -26,30 +27,32 @@ public class TestMasterBusinessService extends MifosTestCase {
 
 	MasterDataService masterService;
 
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		masterService = new MasterDataService();
 		HierarchyManager.getInstance().init();
 	}
 
-	public void tearDown() {
+	@Override
+	public void tearDown() throws Exception {
 		HibernateUtil.closeSession();
-
+		super.tearDown();
 	}
 
-	public void testGetListOfActiveLoanOfficers() {
+	public void testGetListOfActiveLoanOfficers() throws NumberFormatException, ServiceException {
 		List loanOfficers = masterService.getListOfActiveLoanOfficers(
 				PersonnelConstants.LOAN_OFFICER, Short.valueOf("3"), Short
 						.valueOf("3"), PersonnelConstants.LOAN_OFFICER);
 		assertEquals(1, loanOfficers.size());
 	}
 
-	public void testGetActiveBranches() {
+	public void testGetActiveBranches() throws NumberFormatException, ServiceException {
 		List branches = masterService.getActiveBranches(Short.valueOf("1"));
 		assertEquals(1, branches.size());
 	}
 
-	public void testGetListOfActiveParentsUnderLoanOfficer() {
+	public void testGetListOfActiveParentsUnderLoanOfficer() throws NumberFormatException, ServiceException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		CustomerBO center = TestObjectFactory.createCenter("Center_Active",
@@ -112,7 +115,7 @@ public class TestMasterBusinessService extends MifosTestCase {
 		assertEquals(TestConstants.PAYMENTTYPES_NUMBER,paymentTypeList.size());
 	}
 	
-	public void testGetMasterEntityName() throws NumberFormatException, PersistenceException {
+	public void testGetMasterEntityName() throws NumberFormatException, PersistenceException, ServiceException {
 		assertEquals("Partial Application",masterService.retrieveMasterEntities(1,Short.valueOf("1")));
 	}
 }

@@ -51,14 +51,14 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
-import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
 public class ConfigurationPersistence extends Persistence{
 	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
 	
-	public MifosCurrency getDefaultCurrency()  {
+	public MifosCurrency getDefaultCurrency() throws PersistenceException  {
 		MifosCurrency defaultCurrency = null;
 		Map<String , Object> queryParameters = new HashMap<String , Object>();
 		queryParameters.put("DEFAULT_CURRENCY",Short.valueOf("1"));
@@ -75,7 +75,7 @@ public class ConfigurationPersistence extends Persistence{
 	}
 
 	
-	public ConfigEntity getSystemConfiguration() throws SystemException{
+	public ConfigEntity getSystemConfiguration() throws PersistenceException{
 		List<ConfigEntity> queryResult = executeNamedQuery(NamedQueryConstants.GET_SYSTEM_CONFIG,null);
 		if (queryResult==null || queryResult.size()==0) {
 			logger.error("No System Configuration Specified");
@@ -84,7 +84,7 @@ public class ConfigurationPersistence extends Persistence{
 		return (ConfigEntity)queryResult.get(0);
 	}
 	
-	public SupportedLocalesEntity getSupportedLocale()throws SystemException{
+	public SupportedLocalesEntity getSupportedLocale()throws PersistenceException{
 		  List<SupportedLocalesEntity> supportedLocaleList = HibernateUtil.getSessionTL().getNamedQuery(NamedQueryConstants.GET_MFI_LOCALE).list();
 		  if (supportedLocaleList==null || supportedLocaleList.size()==0){
 			    logger.error("No Default Locale Specified");
@@ -96,7 +96,7 @@ public class ConfigurationPersistence extends Persistence{
 		  return locale;
 	}
 	
-	public List<ConfigEntity> getOfficeConfiguration()throws SystemException{
+	public List<ConfigEntity> getOfficeConfiguration()throws PersistenceException{
 		List<ConfigEntity> queryResult = executeNamedQuery(NamedQueryConstants.GET_OFFICE_CONFIG, null);
 		if (queryResult==null || queryResult.size()==0){
 			logger.error("Office Configuration Not Specified");
@@ -105,7 +105,7 @@ public class ConfigurationPersistence extends Persistence{
 		return queryResult;
 	}
 
-	public List<WeekDaysEntity> getWeekDaysList()throws SystemException{
+	public List<WeekDaysEntity> getWeekDaysList()throws PersistenceException{
 		List<WeekDaysEntity> queryResult = executeNamedQuery(NamedQueryConstants.GETWEEKDAYS, null);
 		if (queryResult==null || queryResult.size()==0) {
 			logger.error("WeekDays List Not Specified");

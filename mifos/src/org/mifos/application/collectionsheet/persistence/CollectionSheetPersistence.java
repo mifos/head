@@ -47,6 +47,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
@@ -61,8 +62,9 @@ public class CollectionSheetPersistence extends Persistence{
 	 * The query returns all rows where meeting date is the same as passed as parameter to the query
 	 * and the status of the customer is either active or hold. Also 
 	 * they should have atleast one active loan or Savings or Customer account
+	 * @throws PersistenceException 
 	 */
-	public List<AccountActionDateEntity> getCustFromAccountActionsDate(Date date){
+	public List<AccountActionDateEntity> getCustFromAccountActionsDate(Date date) throws PersistenceException{
 		List<AccountActionDateEntity> accountActionDate = null;
 		HashMap queryParameters = new HashMap();
 		queryParameters.put(CollectionSheetConstants.MEETING_DATE, date);
@@ -76,8 +78,9 @@ public class CollectionSheetPersistence extends Persistence{
 	 * It gets list of account objects which are in the state 
 	 * approved or disbursed to loan officer and have disbursal date same as the date passed.
 	 * It retrieves the list using an named HQL query.
+	 * @throws PersistenceException 
 	 */
-	public List<LoanBO> getLnAccntsWithDisbursalDate(Date date) {
+	public List<LoanBO> getLnAccntsWithDisbursalDate(Date date) throws PersistenceException {
 		
 		List<LoanBO> loans = null;
 		HashMap queryParameters = new HashMap();

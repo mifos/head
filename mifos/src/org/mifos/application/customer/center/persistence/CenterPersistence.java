@@ -8,12 +8,13 @@ import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
 public class CenterPersistence extends  Persistence{
 	
-	public boolean isCenterExists(String name){
+	public boolean isCenterExists(String name) throws PersistenceException{
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put(CustomerConstants.DISPLAY_NAME, name);
 		List queryResult = executeNamedQuery(NamedQueryConstants.GET_CENTER_COUNT_BY_NAME, queryParameters);
@@ -27,7 +28,7 @@ public class CenterPersistence extends  Persistence{
 				return center;
 	}
 	
-	public CenterBO getCenterBySystemId(String globalCustNum){
+	public CenterBO getCenterBySystemId(String globalCustNum) throws PersistenceException{
 		Map<String, String> queryParameters = new HashMap<String, String>();
 		CenterBO center = null;
 		queryParameters.put("globalCustNum", globalCustNum);

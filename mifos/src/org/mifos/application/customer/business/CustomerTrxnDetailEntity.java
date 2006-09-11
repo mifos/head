@@ -12,6 +12,7 @@ import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.business.LoanTrxnDetailEntity;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
@@ -23,6 +24,7 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Money;
@@ -126,7 +128,8 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
 	}
 
-	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment){
+	@Override
+	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment) throws AccountException{
 		MasterPersistence masterPersistence = new MasterPersistence();
 		MifosLogManager
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
@@ -138,15 +141,20 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 		else
 			comment=adjustmentComment;
 
-		CustomerTrxnDetailEntity  reverseAccntTrxn=new CustomerTrxnDetailEntity(getAccountPayment(),
-				(AccountActionEntity) masterPersistence
-				.findById(AccountActionEntity.class,
-						AccountConstants.ACTION_CUSTOMER_ADJUSTMENT), 
-						getInstallmentId(),
-						getDueDate(), getPersonnel(),
-						getActionDate(), getAmount().negate(), 
-				 comment, this,
-				getMiscFeeAmount().negate(), getMiscPenaltyAmount().negate()); 
+		CustomerTrxnDetailEntity reverseAccntTrxn;
+		try {
+			reverseAccntTrxn = new CustomerTrxnDetailEntity(getAccountPayment(),
+					(AccountActionEntity) masterPersistence
+					.getPersistentObject(AccountActionEntity.class,
+							AccountConstants.ACTION_CUSTOMER_ADJUSTMENT), 
+							getInstallmentId(),
+							getDueDate(), getPersonnel(),
+							getActionDate(), getAmount().negate(), 
+					 comment, this,
+					getMiscFeeAmount().negate(), getMiscPenaltyAmount().negate());
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 		
 
 		if (null != getFeesTrxnDetails() && getFeesTrxnDetails().size() > 0) {

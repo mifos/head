@@ -28,20 +28,20 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestLoanPersistence extends MifosTestCase {
-		
+
 	LoanPersistance loanPersistence;
 
 	CustomerBO center = null;
 
 	CustomerBO group = null;
-	
-	MeetingBO meeting = null;
-	
-	AccountBO loanAccount = null;
-	
-	AccountBO loanAccountForDisbursement = null;
-	
 
+	MeetingBO meeting = null;
+
+	AccountBO loanAccount = null;
+
+	AccountBO loanAccountForDisbursement = null;
+
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		loanPersistence = new LoanPersistance();
@@ -52,11 +52,12 @@ public class TestLoanPersistence extends MifosTestCase {
 				"1.1", meeting, startDate);
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
 				"1.1.1", center, startDate);
-		
-		loanAccount = getLoanAccount(group, meeting);
-		
-		}
 
+		loanAccount = getLoanAccount(group, meeting);
+
+	}
+
+	@Override
 	public void tearDown() throws Exception {
 
 		TestObjectFactory.cleanUp(loanAccount);
@@ -66,30 +67,147 @@ public class TestLoanPersistence extends MifosTestCase {
 		HibernateUtil.closeSession();
 	}
 
-	public void testFindBySystemId()throws Exception{			
-		LoanPersistance loanPersistance=new LoanPersistance();
-		LoanBO loanBO=loanPersistance.findBySystemId(loanAccount.getGlobalAccountNum());
-		assertEquals(loanBO.getGlobalAccountNum(),loanAccount.getGlobalAccountNum());
-		assertEquals(loanBO.getAccountId(),loanAccount.getAccountId());		
+	public void testFindBySystemId() throws Exception {
+		LoanPersistance loanPersistance = new LoanPersistance();
+		LoanBO loanBO = loanPersistance.findBySystemId(loanAccount
+				.getGlobalAccountNum());
+		assertEquals(loanBO.getGlobalAccountNum(), loanAccount
+				.getGlobalAccountNum());
+		assertEquals(loanBO.getAccountId(), loanAccount.getAccountId());
 	}
-	
-	
-	public void testGetLoanAccountsForCustomer() throws Exception{
+
+	public void testGetLoanAccountsForCustomer() throws Exception {
 
 		List<LoanAccountView> loanAccounts = loanPersistence
-				.getLoanAccountsForCustomer(group.getCustomerId(),new Date(System.currentTimeMillis()));
+				.getLoanAccountsForCustomer(group.getCustomerId(), new Date(
+						System.currentTimeMillis()));
 		assertEquals(1, loanAccounts.size());
 
 	}
-	
 
-	public void testGetLoanAccountTransactionDetail() throws Exception{
+	public void testGetLoanAccountTransactionDetail() throws Exception {
 
 		Date transactionDate = new Date(System.currentTimeMillis());
 		List<AccountActionDateEntity> details = loanPersistence
 				.getLoanAccountTransactionDetail(loanAccount.getAccountId(),
 						transactionDate);
 		assertEquals(1, details.size());
+
+	}
+
+	public void testGetFeeAmountAtDisbursement() throws Exception {
+		loanAccountForDisbursement = getLoanAccount(group, meeting, Short
+				.valueOf("3"));
+		assertEquals(30.0, loanPersistence
+				.getFeeAmountAtDisbursement(loanAccountForDisbursement
+						.getAccountId()));
+	}
+
+	/**
+	 * Test case to check whether the Loan Accounts that are in arrears are
+	 * being returned properly. Requires a Loan Account that has atleat one due
+	 * date of payment past the current system date - lateness days
+	 * 
+	 * @param latenessDays
+	 * @throws PersistenceException
+	 */
+	public void testGetLoanAccountsInArrears() {
+		Short latenessDays = 1;
+		Calendar actionDate = new GregorianCalendar();
+		int year = actionDate.get(Calendar.YEAR);
+		int month = actionDate.get(Calendar.MONTH);
+		int day = actionDate.get(Calendar.DAY_OF_MONTH);
+		actionDate = new GregorianCalendar(year, month, day - latenessDays);
+
+		Date date = new Date(actionDate.getTimeInMillis());
+		List<LoanBO> list;
+		try {
+
+			Calendar checkDate = new GregorianCalendar(year, month, day - 15);
+			Date startDate = new Date(checkDate.getTimeInMillis());
+			for (AccountActionDateEntity accountAction : loanAccount
+					.getAccountActionDates()) {
+				accountAction.setActionDate(startDate);
+			}
+			TestObjectFactory.updateObject(loanAccount);
+			loanAccount = new AccountPersistence().getAccount(loanAccount
+					.getAccountId());
+
+			list = loanPersistence.getLoanAccountsInArrears(latenessDays);
+			assertNotNull(list);
+			LoanBO testBO = (LoanBO) list.get(0);
+
+			assertEquals(Short
+					.valueOf(AccountStates.LOANACC_ACTIVEINGOODSTANDING),
+					testBO.getAccountState().getId());
+
+			// Get the first action date i.e for the first Installment
+			AccountActionDateEntity actionDates = testBO
+					.getAccountActionDate(Short.valueOf("1"));
+
+			// assert that the date comes after the action date
+			assertTrue(date.after(actionDates.getActionDate()));
+
+			// assert that the payment status in 0 - unpaid
+			assertEquals(PaymentStatus.UNPAID.getValue(), actionDates
+					.getPaymentStatus());
+
+		} catch (PersistenceException e) {
+			// TODO Auto-generated catch block
+
+			e.printStackTrace();
+		}
+
+	}
+
+	public void testGetAccount() throws Exception {
+		LoanBO loanBO = loanPersistence.getAccount(loanAccount.getAccountId());
+		assertEquals(loanBO.getAccountId(), loanAccount.getAccountId());
+	}
+
+	public void testGetLastPaymentAction() throws Exception {
+		Date startDate = new Date(System.currentTimeMillis());
+		loanAccountForDisbursement = getLoanAccount(
+				AccountState.LOANACC_APPROVED.getValue(), startDate, 1);
+		disburseLoan(startDate);
+		assertEquals("Last payment action should be 'PAYMENT'",
+				AccountActionTypes.DISBURSAL.getValue(), loanPersistence
+						.getLastPaymentAction(loanAccountForDisbursement
+								.getAccountId()));
+	}
+
+	private void disburseLoan(Date startDate) throws NumberFormatException,
+			AccountException, RepaymentScheduleException, FinancialException,
+			SystemException {
+		((LoanBO) loanAccountForDisbursement).disburseLoan("1234", startDate,
+				Short.valueOf("1"), loanAccountForDisbursement.getPersonnel(),
+				startDate, Short.valueOf("1"));
+		HibernateUtil.commitTransaction();
+	}
+
+	private AccountBO getLoanAccount(Short accountSate, Date startDate,
+			int disbursalType) {
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), meeting);
+		return TestObjectFactory.createLoanAccountWithDisbursement(
+				"99999999999", group, accountSate, startDate, loanOffering,
+				disbursalType);
+	}
+
+	private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting,
+			Short accountSate) {
+		Date startDate = new Date(System.currentTimeMillis());
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), meeting);
+		return TestObjectFactory.createLoanAccountWithDisbursement(
+				"42423142341", customer, accountSate, startDate, loanOffering,
+				1);
 
 	}
 
@@ -104,101 +222,5 @@ public class TestLoanPersistence extends MifosTestCase {
 				Short.valueOf("5"), startDate, loanOffering);
 
 	}
-	private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting,Short accountSate) {
-		Date startDate = new Date(System.currentTimeMillis());
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
-		return TestObjectFactory.createLoanAccountWithDisbursement("42423142341", customer,
-				accountSate, startDate, loanOffering,1);
 
-	}
-	
-	public void testGetFeeAmountAtDisbursement() throws Exception{
-		loanAccountForDisbursement=getLoanAccount(group,meeting,Short.valueOf("3"));
-		assertEquals(30.0,loanPersistence.getFeeAmountAtDisbursement(loanAccountForDisbursement.getAccountId(),new Date(System.currentTimeMillis())));
-	}
-	
-	/**
-	 * Test case to check whether the Loan Accounts that are in arrears are being returned properly.
-	 * Requires a Loan Account that has atleat one due date of payment past the current system date - lateness days
-	 * @param latenessDays
-	 * @throws PersistenceException 
-	 */
-	public void testGetLoanAccountsInArrears()
-	{
-		Short latenessDays = 1;
-		Calendar actionDate = new GregorianCalendar();
-		int year = actionDate.get(Calendar.YEAR);
-		int month = actionDate.get(Calendar.MONTH);
-		int day = actionDate.get(Calendar.DAY_OF_MONTH);
-		actionDate = new GregorianCalendar(year, month, day-latenessDays);
-				
-		Date date = new Date(actionDate.getTimeInMillis());
-		List<LoanBO> list;
-		try {
-			
-			Calendar checkDate = new GregorianCalendar(year, month, day-15);
-			Date startDate = new Date(checkDate.getTimeInMillis());
-			for(AccountActionDateEntity accountAction : loanAccount.getAccountActionDates()) {
-				accountAction.setActionDate(startDate);
-				}
-			new AccountPersistence().updateAccount(loanAccount);
-			loanAccount = new AccountPersistence().getAccount(loanAccount.getAccountId());
-			
-			list = loanPersistence.getLoanAccountsInArrears(latenessDays);
-			assertNotNull(list);
-			LoanBO testBO = (LoanBO) list.get(0);
-			
-			assertEquals(Short.valueOf(AccountStates.LOANACC_ACTIVEINGOODSTANDING),testBO.getAccountState().getId());
-			
-			// Get the first action date i.e for the first Installment
-			AccountActionDateEntity actionDates = testBO.getAccountActionDate(Short.valueOf("1"));
-			
-			// assert that the date comes after the action date
-			assertTrue(date.after(actionDates.getActionDate()));
-			
-			//assert that the payment status in 0 - unpaid
-			assertEquals(PaymentStatus.UNPAID.getValue(),actionDates.getPaymentStatus());
-			
-			
-			
-			} catch (PersistenceException e) {
-			// TODO Auto-generated catch block
-			
-			e.printStackTrace();
-		}
-		
-	}
-	
-	public void testGetAccount() throws Exception{		
-		LoanBO loanBO=loanPersistence.getAccount(loanAccount.getAccountId());
-		assertEquals(loanBO.getAccountId(),loanAccount.getAccountId());				
-	}
-	
-	public void testGetLastPaymentAction() throws Exception{
-		Date startDate = new Date(System.currentTimeMillis());
-		loanAccountForDisbursement = getLoanAccount(AccountState.LOANACC_APPROVED.getValue(),startDate,1);
-		disburseLoan(startDate);
-		assertEquals("Last payment action should be 'PAYMENT'",AccountActionTypes.DISBURSAL.getValue(),loanPersistence.getLastPaymentAction(loanAccountForDisbursement.getAccountId()));
-	}
-	
-	private void disburseLoan(Date startDate) throws NumberFormatException, AccountException, RepaymentScheduleException, FinancialException, SystemException {
-		((LoanBO) loanAccountForDisbursement).disburseLoan("1234", startDate,Short.valueOf("1"), loanAccountForDisbursement.getPersonnel(), startDate, Short.valueOf("1"));
-		HibernateUtil.commitTransaction();
-	}	
-	
-	private AccountBO getLoanAccount(Short accountSate, Date startDate,
-			int disbursalType) {
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
-		return TestObjectFactory.createLoanAccountWithDisbursement(
-				"99999999999", group, accountSate, startDate, loanOffering,
-				disbursalType);
-	}
 }

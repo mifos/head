@@ -8,6 +8,7 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -24,18 +25,19 @@ public class GroupBusinessServiceTest extends MifosTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		groupBusinessService =(GroupBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Group);
+		groupBusinessService = (GroupBusinessService) ServiceFactory
+				.getInstance().getBusinessService(BusinessServiceName.Group);
 	}
 
 	@Override
-	public void tearDown() {
+	public void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		HibernateUtil.closeSession();
-
+		super.tearDown();
 	}
 
-	public void testGetGroupBySystemId(){
+	public void testGetGroupBySystemId() throws ServiceException{
 		center = createCenter();
 		String groupName = "Group_Active_test";
 		group = TestObjectFactory.createGroup(groupName, Short

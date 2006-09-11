@@ -44,11 +44,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Hibernate;
@@ -94,11 +92,8 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.repaymentschedule.MeetingScheduleHelper;
-import org.mifos.framework.components.repaymentschedule.RepaymentSchedule;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleFactory;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleHelper;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleIfc;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleInputsIfc;
 import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
@@ -385,14 +380,23 @@ public class AccountBO extends BusinessObject {
 							.getId());
 		activationDateHelper(newStatusId);
 		MasterPersistence masterPersistence = new MasterPersistence();
-		AccountStateEntity accountStateEntity = (AccountStateEntity) masterPersistence
-				.findById(AccountStateEntity.class, newStatusId);
+		AccountStateEntity accountStateEntity;
+		try {
+			accountStateEntity = (AccountStateEntity) masterPersistence
+					.getPersistentObject(AccountStateEntity.class, newStatusId);
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 		// checkStatusChangeAllowed(accountStateEntity);
 		accountStateEntity.setLocaleId(this.getUserContext().getLocaleId());
 		AccountStateFlagEntity accountStateFlagEntity = null;
 		if (flagId != null) {
-			accountStateFlagEntity = (AccountStateFlagEntity) masterPersistence
-					.findById(AccountStateFlagEntity.class, flagId);
+			try {
+				accountStateFlagEntity = (AccountStateFlagEntity) masterPersistence
+						.getPersistentObject(AccountStateFlagEntity.class, flagId);
+			} catch (PersistenceException e) {
+				throw new AccountException(e);
+			}
 		}
 		PersonnelBO personnel = new PersonnelPersistenceService()
 				.getPersonnel(getUserContext().getId());
@@ -644,9 +648,14 @@ public class AccountBO extends BusinessObject {
 	public boolean isTrxnDateValid(Date trxnDate) throws AccountException {
 			if (Configuration.getInstance().getAccountConfig(
 					getOffice().getOfficeId()).isBackDatedTxnAllowed()) {
-				Date meetingDate = new CustomerPersistence()
-						.getLastMeetingDateForCustomer(getCustomer()
-								.getCustomerId());
+				Date meetingDate =null;
+				try {
+					meetingDate = new CustomerPersistence()
+							.getLastMeetingDateForCustomer(getCustomer()
+									.getCustomerId());
+				} catch (PersistenceException e) {
+					throw new AccountException(e);
+				}
 				Date lastMeetingDate = null;
 				if (meetingDate != null) {
 					lastMeetingDate = DateUtils
@@ -1037,11 +1046,15 @@ public class AccountBO extends BusinessObject {
 		return periodicFeeList;
 	}
 
-	protected void deleteFutureInstallments() {
+	protected void deleteFutureInstallments() throws AccountException {
 		List<AccountActionDateEntity> futureInstllments = getApplicableIdsForFutureInstallments();
 		for (AccountActionDateEntity accountActionDateEntity : futureInstllments) {
 			accountActionDates.remove(accountActionDateEntity);
-			(new AccountPersistence()).delete(accountActionDateEntity);
+			try {
+				(new AccountPersistence()).delete(accountActionDateEntity);
+			} catch (PersistenceException e) {
+				throw new AccountException(e);
+			}
 		}
 	}
 

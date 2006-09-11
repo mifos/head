@@ -57,7 +57,7 @@ public class FeePaymentEntity extends MasterDataEntity {
 	public FeePayment getFeePayment() {
 		FeePayment[] feePayments = FeePayment.values();
 		for (FeePayment feePayment : feePayments) {
-			if (String.valueOf(getId()).equals(feePayment.getValue()))
+			if (getId().equals(feePayment.getValue()))
 				return feePayment;
 		}
 		return null;

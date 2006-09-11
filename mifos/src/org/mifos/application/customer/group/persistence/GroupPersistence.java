@@ -14,7 +14,7 @@ import org.mifos.framework.persistence.Persistence;
 
 public class GroupPersistence extends Persistence {
 
-	public GroupBO getGroupBySystemId(String globalCustNum){
+	public GroupBO getGroupBySystemId(String globalCustNum) throws PersistenceException{
 		Map<String, String> queryParameters = new HashMap<String, String>();
 		GroupBO group = null;
 		queryParameters.put("globalCustNum", globalCustNum);
@@ -36,7 +36,7 @@ public class GroupPersistence extends Persistence {
 		}
 	}
 	
-	public boolean isGroupExists(String name, Short officeId){
+	public boolean isGroupExists(String name, Short officeId) throws PersistenceException{
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put(CustomerConstants.DISPLAY_NAME, name);
 		queryParameters.put(CustomerConstants.OFFICE_ID, officeId);

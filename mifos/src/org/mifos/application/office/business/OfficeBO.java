@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.mifos.application.customer.business.CustomFieldView;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.persistence.OfficePersistence;
@@ -247,14 +248,22 @@ public class OfficeBO extends BusinessObject {
 			throw new OfficeException(
 					OfficeConstants.ERRORMANDATORYFIELD,
 					new Object[] { getLocaleString(OfficeConstants.OFFICE_NAME) });
-		if (officePersistence.isOfficeNameExist(officeName))
-			throw new OfficeException(OfficeConstants.OFFICENAMEEXIST);
+		try {
+			if (officePersistence.isOfficeNameExist(officeName))
+				throw new OfficeException(OfficeConstants.OFFICENAMEEXIST);
+		} catch (PersistenceException e) {
+			throw new OfficeException(e);
+		}
 		if (StringUtils.isNullOrEmpty(shortName))
 			throw new OfficeException(
 					OfficeConstants.ERRORMANDATORYFIELD,
 					new Object[] { getLocaleString(OfficeConstants.OFFICESHORTNAME) });
-		if (officePersistence.isOfficeShortNameExist(shortName))
-			throw new OfficeException(OfficeConstants.OFFICESHORTNAMEEXIST);
+		try {
+			if (officePersistence.isOfficeShortNameExist(shortName))
+				throw new OfficeException(OfficeConstants.OFFICESHORTNAMEEXIST);
+		} catch (PersistenceException e) {
+			throw new OfficeException(e);
+		}
 		if (level == null)
 			throw new OfficeException(
 					OfficeConstants.ERRORMANDATORYFIELD,
@@ -295,13 +304,20 @@ public class OfficeBO extends BusinessObject {
 			return officeGlobelNo = temp.append(officeGlobelNo).toString();
 		} catch (ParseException e) {
 			throw new OfficeException(e);
+		} catch (PersistenceException e) {
+			throw new OfficeException(e);
 		}
 
 	}
 
-	private String generateSearchId() {
-		Integer noOfChildern = new OfficePersistence()
-				.getChildCount(parentOffice.getOfficeId());
+	private String generateSearchId() throws OfficeException {
+		Integer noOfChildern;
+		try {
+			noOfChildern = new OfficePersistence()
+					.getChildCount(parentOffice.getOfficeId());
+		} catch (PersistenceException e) {
+			throw new OfficeException(e);
+		}
 		String parentSearchId = HierarchyManager.getInstance().getSearchId(
 				parentOffice.getOfficeId());
 		parentSearchId += ".";
@@ -337,22 +353,27 @@ public class OfficeBO extends BusinessObject {
 			} else {
 				canActivateOffice();
 			}
-			// still here we can update the status
-			MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-					.getInstance().getPersistenceService(
-							PersistenceServiceName.MasterDataService);
-			this.status = (OfficeStatusEntity) masterPersistenceService
-					.findById(OfficeStatusEntity.class, status.getValue());
+			try {
+				this.status = (OfficeStatusEntity) new MasterPersistence()
+						.getPersistentObject(OfficeStatusEntity.class, status.getValue());
+			} catch (PersistenceException e) {
+				throw new OfficeException(e);
+			}
 		}
 	}
 
 	private void canInactivateOffice() throws OfficeException {
 		OfficePersistence officePersistence = new OfficePersistence();
-		if (officePersistence.hasActiveChildern(this.officeId))
-			throw new OfficeException(OfficeConstants.KEYHASACTIVECHILDREN);
+		try {
+			if (officePersistence.hasActiveChildern(this.officeId))
+				throw new OfficeException(OfficeConstants.KEYHASACTIVECHILDREN);
+		
 		if (officePersistence.hasActivePeronnel(this.officeId)) {
 			throw new OfficeException(OfficeConstants.KEYHASACTIVEPERSONNEL);
 
+		}
+		} catch (PersistenceException e) {
+			throw new OfficeException(e);
 		}
 	}
 
@@ -390,8 +411,12 @@ public class OfficeBO extends BusinessObject {
 	private void changeOfficeName(String newName) throws OfficeException {
 
 		if (!this.officeName.equalsIgnoreCase(newName)) {
-			if (new OfficePersistence().isOfficeNameExist(newName))
-				throw new OfficeException(OfficeConstants.OFFICENAMEEXIST);
+			try {
+				if (new OfficePersistence().isOfficeNameExist(newName))
+					throw new OfficeException(OfficeConstants.OFFICENAMEEXIST);
+			} catch (PersistenceException e) {
+				throw new OfficeException(e);
+			}
 			this.officeName = newName;
 		}
 	}
@@ -400,8 +425,12 @@ public class OfficeBO extends BusinessObject {
 			throws OfficeException {
 
 		if (!this.shortName.equalsIgnoreCase(newShortName)) {
-			if (new OfficePersistence().isOfficeShortNameExist(newShortName))
-				throw new OfficeException(OfficeConstants.OFFICESHORTNAMEEXIST);
+			try {
+				if (new OfficePersistence().isOfficeShortNameExist(newShortName))
+					throw new OfficeException(OfficeConstants.OFFICESHORTNAMEEXIST);
+			} catch (PersistenceException e) {
+				throw new OfficeException(e);
+			}
 			this.shortName = newShortName;
 		}
 	}
@@ -450,11 +479,12 @@ public class OfficeBO extends BusinessObject {
 			// TODO: pass proper key
 			if (!canUpdateLevel(level))
 				throw new OfficeException();
-			MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-					.getInstance().getPersistenceService(
-							PersistenceServiceName.MasterDataService);
-			this.level = (OfficeLevelEntity) masterPersistenceService.findById(
-					OfficeLevelEntity.class, level.getValue());
+			try {
+				this.level = (OfficeLevelEntity) new MasterPersistence().getPersistentObject(
+						OfficeLevelEntity.class, level.getValue());
+			} catch (PersistenceException e) {
+				throw new OfficeException(e);
+			}
 		}
 	}
 

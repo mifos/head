@@ -8,20 +8,26 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeChangeType;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class FeePersistenceTest extends MifosTestCase {
 
 	private FeePersistence feePersistence = new FeePersistence();
+
 	private FeeBO fee1;
+
 	private FeeBO fee2;
+
 	FeeBO periodicFee;
+
 	@Override
 	protected void tearDown() throws Exception {
 		TestObjectFactory.removeObject(fee1);
 		TestObjectFactory.removeObject(fee2);
 		TestObjectFactory.removeObject(periodicFee);
+		super.tearDown();
 	}
 	
 	public void testGetUpdatedFeesForCustomer() throws Exception{
@@ -47,7 +53,7 @@ public class FeePersistenceTest extends MifosTestCase {
 		periodicFee =(FeeBO) TestObjectFactory.getObject(FeeBO.class,periodicFee.getFeeId());
 	}
 	
-	public void testGetUpdateTypeEntity(){
+	public void testGetUpdateTypeEntity() throws NumberFormatException, PersistenceException{
 		
 	  ApplicableAccountsTypeEntity feeUpdateType=	feePersistence.getUpdateTypeEntity(Short.valueOf("1"));
 	  assertNotNull(feeUpdateType);

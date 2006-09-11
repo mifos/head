@@ -7,6 +7,7 @@ import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -25,14 +26,14 @@ public class GroupPersistenceTest extends MifosTestCase {
 	}
 
 	@Override
-	public void tearDown() {
+	public void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		HibernateUtil.closeSession();
-
+		super.tearDown();
 	}
 
-	public void testGetGroupBySystemId(){
+	public void testGetGroupBySystemId() throws PersistenceException{
 		center = createCenter();
 		String groupName = "Group_Active_test";
 		group = TestObjectFactory.createGroup(groupName, Short

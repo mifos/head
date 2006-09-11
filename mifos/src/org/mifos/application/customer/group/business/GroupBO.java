@@ -431,32 +431,40 @@ public class GroupBO extends CustomerBO {
 
 	private void checkGroupCanBeChangedFromCancelToPartialIfOfficeIsActive()
 			throws CustomerException {
-		if (new OfficePersistence().isBranchInactive(getOffice().getOfficeId())) {
-			try {
-				throw new CustomerException(
-						GroupConstants.BRANCH_INACTIVE,
-						new Object[] { MifosConfiguration.getInstance()
-								.getLabel(ConfigurationConstants.GROUP,
-										getUserContext().getPereferedLocale()) });
-			} catch (ConfigurationException ce) {
-				throw new CustomerException(ce);
+		try {
+			if (new OfficePersistence().isBranchInactive(getOffice().getOfficeId())) {
+				try {
+					throw new CustomerException(
+							GroupConstants.BRANCH_INACTIVE,
+							new Object[] { MifosConfiguration.getInstance()
+									.getLabel(ConfigurationConstants.GROUP,
+											getUserContext().getPereferedLocale()) });
+				} catch (ConfigurationException ce) {
+					throw new CustomerException(ce);
+				}
 			}
-		}
+		} catch (PersistenceException e) {
+			throw new CustomerException(e);
+		} 
 	}
 
 	private void checkGroupCanBeChangedFromCancelToPartialIfPersonnelActive()
 			throws CustomerException {
-		if (new OfficePersistence()
-				.hasActivePeronnel(getOffice().getOfficeId())) {
-			try {
-				throw new CustomerException(
-						GroupConstants.LOANOFFICER_INACTIVE,
-						new Object[] { MifosConfiguration.getInstance()
-								.getLabel(ConfigurationConstants.BRANCHOFFICE,
-										getUserContext().getPereferedLocale()) });
-			} catch (ConfigurationException ce) {
-				throw new CustomerException(ce);
+		try {
+			if (new OfficePersistence()
+					.hasActivePeronnel(getOffice().getOfficeId())) {
+				try {
+					throw new CustomerException(
+							GroupConstants.LOANOFFICER_INACTIVE,
+							new Object[] { MifosConfiguration.getInstance()
+									.getLabel(ConfigurationConstants.BRANCHOFFICE,
+											getUserContext().getPereferedLocale()) });
+				} catch (ConfigurationException ce) {
+					throw new CustomerException(ce);
+				}
 			}
+		} catch (PersistenceException e) {
+			throw new CustomerException(e);
 		}
 	}
 
@@ -534,9 +542,13 @@ public class GroupBO extends CustomerBO {
 
 	private void validateForDuplicateName(String displayName, Short officeId)
 			throws CustomerException {
-		if (new GroupPersistence().isGroupExists(displayName, officeId))
-			throw new CustomerException(
-					CustomerConstants.ERRORS_DUPLICATE_CUSTOMER);
+		try {
+			if (new GroupPersistence().isGroupExists(displayName, officeId))
+				throw new CustomerException(
+						CustomerConstants.ERRORS_DUPLICATE_CUSTOMER);
+		} catch (PersistenceException e) {
+			throw new CustomerException(e);
+		}
 	}
 
 	private void validateFieldsForGroupUnderCenter(CustomerBO parentCustomer)

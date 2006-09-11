@@ -13,7 +13,6 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
-import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
@@ -37,20 +36,17 @@ import org.mifos.framework.components.repaymentschedule.MeetingScheduleHelper;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestCustomerAccountBO extends MifosTestCase {
-
-	private BulkEntryBusinessService bulkEntryBusinessService;
-
 	protected CustomerAccountBO customerAccountBO = null;
 
 	private CustomerBO center = null;
@@ -64,9 +60,6 @@ public class TestCustomerAccountBO extends MifosTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		bulkEntryBusinessService = (BulkEntryBusinessService) ServiceFactory
-				.getInstance().getBusinessService(
-						BusinessServiceName.BulkEntryService);
 	}
 
 	@Override
@@ -149,7 +142,6 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				.valueOf("13"), "1.1.1", group, new Date(System
 				.currentTimeMillis()));
 		customerAccountBO = client.getCustomerAccount();
-		Date currentDate = new Date(System.currentTimeMillis());
 		assertFalse("State is not active hence adjustment is not possible",
 				customerAccountBO.isAdjustPossibleOnLastTrxn());
 
@@ -163,7 +155,6 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				.valueOf("3"), "1.1.1", group, new Date(System
 				.currentTimeMillis()));
 		customerAccountBO = client.getCustomerAccount();
-		Date currentDate = new Date(System.currentTimeMillis());
 		assertFalse("Last payment was null hence adjustment is not possible",
 				customerAccountBO.isAdjustPossibleOnLastTrxn());
 
@@ -992,7 +983,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				new Date(System.currentTimeMillis()));
 	}
 
-	private void applyPayment() throws ServiceException, FinancialException {
+	private void applyPayment() throws ServiceException, FinancialException, NumberFormatException, PersistenceException {
 		client = TestObjectFactory.createClient("Client_Active_test", Short
 				.valueOf("3"), "1.1.1", group, new Date(System
 				.currentTimeMillis()));

@@ -42,13 +42,16 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 
 public class LoanTrxnDetailEntity extends AccountTrxnEntity {
@@ -206,8 +209,8 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 		}
 	}
 
-	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment) {
-		MasterPersistenceService masterPersistenceService = new MasterPersistenceService();
+	@Override
+	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment) throws AccountException {
 		MifosLogManager
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 				.debug(
@@ -218,16 +221,21 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 		else
 			comment = adjustmentComment;
 
-		LoanTrxnDetailEntity reverseAccntTrxn = new LoanTrxnDetailEntity(
-				getAccountPayment(),
-				(AccountActionEntity) masterPersistenceService.findById(
-						AccountActionEntity.class,
-						AccountConstants.ACTION_LOAN_ADJUSTMENT),
-				getInstallmentId(), getDueDate(), getPersonnel(),
-				getActionDate(), getAmount().negate(), comment, this,
-				getPrincipalAmount().negate(), getInterestAmount().negate(),
-				getPenaltyAmount().negate(), getMiscFeeAmount().negate(),
-				getMiscPenaltyAmount().negate());
+		LoanTrxnDetailEntity reverseAccntTrxn;
+		try {
+			reverseAccntTrxn = new LoanTrxnDetailEntity(
+					getAccountPayment(),
+					(AccountActionEntity) new MasterPersistence().getPersistentObject(
+							AccountActionEntity.class,
+							AccountConstants.ACTION_LOAN_ADJUSTMENT),
+					getInstallmentId(), getDueDate(), getPersonnel(),
+					getActionDate(), getAmount().negate(), comment, this,
+					getPrincipalAmount().negate(), getInterestAmount().negate(),
+					getPenaltyAmount().negate(), getMiscFeeAmount().negate(),
+					getMiscPenaltyAmount().negate());
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 
 		if (null != getFeesTrxnDetails() && getFeesTrxnDetails().size() > 0) {
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(

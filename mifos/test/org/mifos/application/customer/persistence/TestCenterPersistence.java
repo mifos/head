@@ -8,6 +8,7 @@ import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -27,7 +28,7 @@ public class TestCenterPersistence extends MifosTestCase{
 		assertTrue(new CenterPersistence().isCenterExists(centerName));
 	}
 	
-	public void testIsCenterExists_false(){
+	public void testIsCenterExists_false() throws PersistenceException{
 		String centerName="NewCenter";
 		center = TestObjectFactory.createCenter(centerName,CustomerStatus.CENTER_ACTIVE.getValue(),"",getMeeting(),new Date());
 		HibernateUtil.closeSession();

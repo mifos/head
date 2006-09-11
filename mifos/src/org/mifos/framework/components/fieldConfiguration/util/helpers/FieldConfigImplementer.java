@@ -2,15 +2,13 @@ package org.mifos.framework.components.fieldConfiguration.util.helpers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.mifos.application.accounts.loan.exceptions.LoanExceptionConstants;
-import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.persistence.service.FieldConfigurationPersistenceService;
 import org.mifos.framework.exceptions.HibernateProcessException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.plugin.valueObjects.EntityMaster;
 
@@ -92,7 +90,7 @@ public class FieldConfigImplementer implements FieldConfigItf{
 	
 	
 	/*This method is used to intialize the mandatory and entiyField maps */
-	public void init() throws HibernateProcessException{
+	public void init() throws HibernateProcessException, PersistenceException{
 		List<EntityMaster> entityMasterList=fieldConfigurationPersistenceService.getEntityMasterList();
 		for(EntityMaster entityMaster : entityMasterList){
 			getEntityFieldMap().put(entityMaster.getId(),fieldConfigurationPersistenceService.getListOfFields(entityMaster.getId()));

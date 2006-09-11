@@ -61,8 +61,9 @@ public class CollectionSheetPersistenceService extends PersistenceService{
 	 * The query returns all rows where meeting date is the same as passed as parameter to the query
 	 * and the status of the customer is either active or hold. Also 
 	 * they should have atleast one active loan or Savings or Customer account
+	 * @throws PersistenceException 
 	 */
-	public List<AccountActionDateEntity> getCustFromAccountActionsDate(Date date){
+	public List<AccountActionDateEntity> getCustFromAccountActionsDate(Date date) throws PersistenceException{
 		
 		return collectionSheetPersistence.getCustFromAccountActionsDate(date);
 	}
@@ -70,9 +71,10 @@ public class CollectionSheetPersistenceService extends PersistenceService{
 	/**
 	 * It gets list of account objects which are in the state 
 	 * approved or disbursed to loan officer and have disbursal date same as the date passed.
+	 * @throws PersistenceException 
 	 * 
 	 */
-	public List<LoanBO> getLnAccntsWithDisbursalDate(Date date) {
+	public List<LoanBO> getLnAccntsWithDisbursalDate(Date date) throws PersistenceException {
 		return collectionSheetPersistence.getLnAccntsWithDisbursalDate(date);
 		
 	}

@@ -21,19 +21,19 @@ public class OfficePersistenceService extends PersistenceService {
 			return serviceImpl.getOffice(officeId);
 	
 	}
-	public List<OfficeView> getActiveBranches(Short officeId) {
+	public List<OfficeView> getActiveBranches(Short officeId) throws PersistenceException {
 		return serviceImpl.getActiveOffices(officeId);
 	}
-	public OfficeBO getHeadOffice() {
+	public OfficeBO getHeadOffice() throws PersistenceException {
 		return serviceImpl.getHeadOffice();
 	}
 	public List<OfficeCacheView> getAllOffices()throws PersistenceException{
 		return serviceImpl.getAllOffices();
 	}
-	public Short getMaxOfficeId(){
+	public Short getMaxOfficeId() throws PersistenceException{
 		return serviceImpl.getMaxOfficeId();
 	}
-	public Integer getChildCount(Short officeId){
+	public Integer getChildCount(Short officeId) throws PersistenceException{
 		return serviceImpl.getChildCount(officeId);
 	}
 }

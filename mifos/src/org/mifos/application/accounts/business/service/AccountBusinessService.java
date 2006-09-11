@@ -7,7 +7,6 @@ import java.util.List;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.application.accounts.business.AccountStateFlagEntity;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.business.TransactionHistoryView;
 import org.mifos.application.accounts.exceptions.AccountExceptionConstants;
@@ -28,119 +27,113 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 
-
-
 public class AccountBusinessService extends BusinessService {
-	
-	AccountPersistence accountPersistence=new AccountPersistence();
-	
-	public AccountBusinessService() {
-	}
 
 	@Override
-	public BusinessObject getBusinessObject(UserContext userContext) {		
+	public BusinessObject getBusinessObject(UserContext userContext) {
 		return null;
 	}
-	
-	public AccountBO findBySystemId(String accountGlobalNum) throws ServiceException {
-		AccountBO accountBO = null;
+
+	public AccountBO findBySystemId(String accountGlobalNum)
+			throws ServiceException {
 		try {
-			accountBO =  accountPersistence.findBySystemId(accountGlobalNum);
+			return new AccountPersistence().findBySystemId(accountGlobalNum);
 		} catch (PersistenceException e) {
-			throw new ServiceException(AccountExceptionConstants.FINDBYGLOBALACCNTEXCEPTION,e,new Object[]{accountGlobalNum});
+			throw new ServiceException(
+					AccountExceptionConstants.FINDBYGLOBALACCNTEXCEPTION, e,
+					new Object[] { accountGlobalNum });
 		}
-		return accountBO;
 	}
 
-	public List<TransactionHistoryView> getTrxnHistory(AccountBO accountBO,UserContext uc){
-	  accountBO.setUserContext(uc);
-	  return accountBO.getTransactionHistoryView();
+	public List<TransactionHistoryView> getTrxnHistory(AccountBO accountBO,
+			UserContext uc) {
+		accountBO.setUserContext(uc);
+		return accountBO.getTransactionHistoryView();
 	}
-  
-	public AccountBO getAccount(Integer accountId) throws ServiceException{
+
+	public AccountBO getAccount(Integer accountId) throws ServiceException {
 		try {
-			return  accountPersistence.getAccount(accountId);
+			return new AccountPersistence().getAccount(accountId);
 		} catch (PersistenceException e) {
-			throw new  ServiceException(e);
+			throw new ServiceException(e);
 		}
 	}
-	
-	public AccountActionEntity getAccountAction(Short actionType, Short localeId)throws ServiceException{
+
+	public AccountActionEntity getAccountAction(Short actionType, Short localeId)
+			throws ServiceException {
 		AccountActionEntity accountAction = null;
 		try {
-			accountAction = accountPersistence.getAccountAction(actionType);
+			accountAction = (AccountActionEntity) new MasterPersistence()
+					.getPersistentObject(AccountActionEntity.class, actionType);
 			accountAction.setLocaleId(localeId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
-		} 
+		}
 		return accountAction;
 	}
-	
-	public QueryResult getAllAccountNotes(Integer accountId) throws ServiceException{
+
+	public QueryResult getAllAccountNotes(Integer accountId)
+			throws ServiceException {
 		try {
-			return accountPersistence.getAllAccountNotes(accountId);
+			return new AccountPersistence().getAllAccountNotes(accountId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
 	}
-	
-	public List<AccountStateEntity> retrieveAllAccountStateList(Short prdTypeId) throws ServiceException{
+
+	public List<AccountStateEntity> retrieveAllAccountStateList(Short prdTypeId)
+			throws ServiceException {
 		try {
-			return accountPersistence.retrieveAllAccountStateList(prdTypeId);
+			return new AccountPersistence().retrieveAllAccountStateList(prdTypeId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
 	}
-	
-	public List<CheckListMaster> getStatusChecklist(Short accountStatusId, Short accountTypeId) throws ServiceException{
+
+	public List<CheckListMaster> getStatusChecklist(Short accountStatusId,
+			Short accountTypeId) throws ServiceException {
 		try {
-			return accountPersistence.getStatusChecklist(accountStatusId,accountTypeId);
+			return new AccountPersistence().getStatusChecklist(accountStatusId,
+					accountTypeId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
 	}
-	
-	public AccountStateFlagEntity getAccountStateFlag(Short flagId) throws ServiceException{
-		try {
-			return accountPersistence.getAccountStateFlag(flagId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
-	
+
 	public List<ApplicableCharge> getAppllicableFees(Integer accountId,
 			UserContext userContext) throws ServiceException {
 		List<ApplicableCharge> applicableChargeList = null;
-		try{
-			AccountBO account = accountPersistence.getAccount(accountId);
+		try {
+			AccountBO account = new AccountPersistence().getAccount(accountId);
 			Short categoryType = getCategoryType(account.getCustomer());
-			
+
 			if (account.getAccountType().getAccountTypeId().equals(
 					AccountTypes.LOANACCOUNT.getValue()))
-				applicableChargeList = getLoanApplicableCharges(accountPersistence
-						.getAllAppllicableFees(accountId, FeeCategory.LOAN
-								.getValue()), userContext.getLocaleId(), (LoanBO)account);
+				applicableChargeList = getLoanApplicableCharges(
+						new AccountPersistence().getAllAppllicableFees(accountId,
+								FeeCategory.LOAN.getValue()), userContext
+								.getLocaleId(), (LoanBO) account);
 			else if (account.getAccountType().getAccountTypeId().equals(
 					AccountTypes.CUSTOMERACCOUNT.getValue()))
-				applicableChargeList = getCustomerApplicableCharges(accountPersistence
-						.getAllAppllicableFees(accountId, getCategoryType(account
-								.getCustomer())), userContext.getLocaleId(),
+				applicableChargeList = getCustomerApplicableCharges(
+						new AccountPersistence().getAllAppllicableFees(accountId,
+								getCategoryType(account.getCustomer())),
+						userContext.getLocaleId(),
 						((CustomerAccountBO) account).getCustomer()
 								.getCustomerMeeting().getMeeting()
 								.getMeetingDetails().getRecurrenceType()
 								.getRecurrenceId());
 			addMiscFeeAndPenalty(applicableChargeList);
-		}catch(PersistenceException pe){
+		} catch (PersistenceException pe) {
 			throw new ServiceException(pe);
 		}
 		return applicableChargeList;
@@ -191,7 +184,8 @@ public class AccountBusinessService extends BusinessService {
 			ApplicableCharge applicableCharge = new ApplicableCharge();
 			applicableCharge.setFeeId(fee.getFeeId().toString());
 			applicableCharge.setFeeName(fee.getFeeName());
-			if (fee.getFeeType().getValue().equals(RateAmountFlag.RATE.getValue())) {
+			if (fee.getFeeType().getValue().equals(
+					RateAmountFlag.RATE.getValue())) {
 				applicableCharge.setAmountOrRate(((RateFeeBO) fee).getRate()
 						.toString());
 				applicableCharge.setFormula(((RateFeeBO) fee).getFeeFormula()
@@ -204,8 +198,9 @@ public class AccountBusinessService extends BusinessService {
 			if (meeting != null) {
 				applicableCharge.setPeriodicity(meeting
 						.getSimpleMeetingSchedule());
-			}else{
-				applicableCharge.setPaymentType(fee.getFeeFrequency().getFeePayment().getName(locale));
+			} else {
+				applicableCharge.setPaymentType(fee.getFeeFrequency()
+						.getFeePayment().getName(locale));
 			}
 			applicableChargeList.add(applicableCharge);
 		}
@@ -256,23 +251,26 @@ public class AccountBusinessService extends BusinessService {
 			}
 		}
 	}
-	
-	private void filterTimeOfFirstRepaymentFee(List<FeeBO> feeList, LoanBO loanBO) {
+
+	private void filterTimeOfFirstRepaymentFee(List<FeeBO> feeList,
+			LoanBO loanBO) {
 		for (Iterator<FeeBO> iter = feeList.iterator(); iter.hasNext();) {
 			FeeBO fee = iter.next();
 			FeePaymentEntity feePaymentEntity = fee.getFeeFrequency()
-			.getFeePayment();
-			if(feePaymentEntity!=null){
+					.getFeePayment();
+			if (feePaymentEntity != null) {
 				Short paymentType = feePaymentEntity.getId();
 				if (paymentType.equals(FeePayment.TIME_OF_FIRSTLOANREPAYMENT
-						.getValue()) && loanBO.isCurrentDateGreaterThanFirstInstallment()) 
+						.getValue())
+						&& loanBO.isCurrentDateGreaterThanFirstInstallment())
 					iter.remove();
 			}
-			
+
 		}
 	}
-	
-	private void addMiscFeeAndPenalty(List<ApplicableCharge> applicableChargeList){ 
+
+	private void addMiscFeeAndPenalty(
+			List<ApplicableCharge> applicableChargeList) {
 		ApplicableCharge applicableCharge = new ApplicableCharge();
 		applicableCharge.setFeeId(AccountConstants.MISC_FEES);
 		applicableCharge.setFeeName("Misc Fees");

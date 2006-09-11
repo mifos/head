@@ -43,6 +43,8 @@ import org.mifos.application.office.business.OfficeLevelEntity;
 import org.mifos.application.office.persistence.OfficeHierarchyPersistence;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 
 public class OfficeHierarchyBusinessService extends BusinessService {
@@ -56,8 +58,12 @@ public class OfficeHierarchyBusinessService extends BusinessService {
 		return null;
 	}
 
-	public List<OfficeLevelEntity> getOfficeLevels(Short localeId) {
-		return new OfficeHierarchyPersistence().getOfficeLevels(localeId);
+	public List<OfficeLevelEntity> getOfficeLevels(Short localeId) throws ServiceException {
+		try {
+			return new OfficeHierarchyPersistence().getOfficeLevels(localeId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
 
 }

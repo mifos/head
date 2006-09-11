@@ -21,6 +21,7 @@ import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -45,13 +46,13 @@ public class TestBulkEntryView extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
 		TestObjectFactory.cleanUpWithoutDeletetingProduct(account1);
 		TestObjectFactory.cleanUpWithoutDeletetingProduct(account2);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		TestObjectFactory.removeObject(loanOffering);
 		HibernateUtil.closeSession();
+		super.tearDown();
 	}
 
 	public void testMultipleRepaymentAccountsForSingleProduct()
@@ -211,6 +212,38 @@ public class TestBulkEntryView extends MifosTestCase {
 		account2 = (LoanBO) new AccountPersistence().getAccount(account2
 				.getAccountId());
 	}
+	
+	public void testPopulateForCustomerAccount() throws PersistenceException {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		BulkEntryPersistanceService bulkEntryPersistanceService = new BulkEntryPersistanceService();
+		List<BulkEntryInstallmentView> bulkEntryAccountActionViews = bulkEntryPersistanceService
+				.getBulkEntryActionView(DateUtils
+						.getCurrentDateWithoutTimeStamp(),
+						center.getSearchId(), center.getOffice().getOfficeId(),
+						AccountTypes.CUSTOMERACCOUNT);
+		List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews = bulkEntryPersistanceService
+				.getBulkEntryFeeActionView(DateUtils
+						.getCurrentDateWithoutTimeStamp(),
+						center.getSearchId(), center.getOffice().getOfficeId(),
+						AccountTypes.CUSTOMERACCOUNT);
+		assertNotNull(center.getCustomerAccount());
+		BulkEntryView bulkEntryView = new BulkEntryView(getCusomerView(center));
+		bulkEntryView.populateCustomerAccountInformation(center,
+				bulkEntryAccountActionViews, bulkEntryAccountFeeActionViews);
+		CustomerAccountView customerAccountView = bulkEntryView
+				.getCustomerAccountDetails();
+		assertEquals(
+				"The retrieved accountId of the customer account should be equal to the created",
+				center.getCustomerAccount().getAccountId(), customerAccountView
+						.getAccountId());
+		assertEquals("The size of the due insallments is ", customerAccountView
+				.getAccountActionDates().size(), 1);
+		assertEquals("The amount due is ", customerAccountView
+				.getTotalAmountDue().getAmountDoubleValue(), 100.0);
+	}
 
 	private PersonnelView getPersonnelView(PersonnelBO personnel) {
 		PersonnelView personnelView = new PersonnelView(personnel
@@ -247,36 +280,5 @@ public class TestBulkEntryView extends MifosTestCase {
 		return customerView;
 	}
 
-	public void testPopulateForCustomerAccount() {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
-		BulkEntryPersistanceService bulkEntryPersistanceService = new BulkEntryPersistanceService();
-		List<BulkEntryInstallmentView> bulkEntryAccountActionViews = bulkEntryPersistanceService
-				.getBulkEntryActionView(DateUtils
-						.getCurrentDateWithoutTimeStamp(),
-						center.getSearchId(), center.getOffice().getOfficeId(),
-						AccountTypes.CUSTOMERACCOUNT);
-		List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews = bulkEntryPersistanceService
-				.getBulkEntryFeeActionView(DateUtils
-						.getCurrentDateWithoutTimeStamp(),
-						center.getSearchId(), center.getOffice().getOfficeId(),
-						AccountTypes.CUSTOMERACCOUNT);
-		assertNotNull(center.getCustomerAccount());
-		BulkEntryView bulkEntryView = new BulkEntryView(getCusomerView(center));
-		bulkEntryView.populateCustomerAccountInformation(center,
-				bulkEntryAccountActionViews, bulkEntryAccountFeeActionViews);
-		CustomerAccountView customerAccountView = bulkEntryView
-				.getCustomerAccountDetails();
-		assertEquals(
-				"The retrieved accountId of the customer account should be equal to the created",
-				center.getCustomerAccount().getAccountId(), customerAccountView
-						.getAccountId());
-		assertEquals("The size of the due insallments is ", customerAccountView
-				.getAccountActionDates().size(), 1);
-		assertEquals("The amount due is ", customerAccountView
-				.getTotalAmountDue().getAmountDoubleValue(), 100.0);
-	}
-
+	
 }

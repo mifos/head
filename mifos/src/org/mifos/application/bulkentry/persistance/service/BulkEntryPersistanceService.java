@@ -58,7 +58,6 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.persistence.service.PersistenceService;
 import org.mifos.framework.util.helpers.DateUtils;
 
@@ -67,41 +66,33 @@ public class BulkEntryPersistanceService extends PersistenceService {
 	private BulkEntryCache bulkEntryCache = new BulkEntryCache();
 
 	public List<BulkEntryInstallmentView> getBulkEntryActionView(
-			Date meetingDate, String searchString, Short officeId,AccountTypes accountType) {
+			Date meetingDate, String searchString, Short officeId,
+			AccountTypes accountType) throws PersistenceException {
 		return new BulkEntryPersistance().getBulkEntryActionView(meetingDate,
-				searchString, officeId,accountType);
+				searchString, officeId, accountType);
 
 	}
 
 	public List<BulkEntryAccountFeeActionView> getBulkEntryFeeActionView(
-			Date meetingDate, String searchString, Short officeId,AccountTypes accountType) {
+			Date meetingDate, String searchString, Short officeId,
+			AccountTypes accountType) throws PersistenceException {
 		return new BulkEntryPersistance().getBulkEntryFeeActionView(
-				meetingDate, searchString, officeId,accountType);
+				meetingDate, searchString, officeId, accountType);
 
 	}
 
-	
-
 	public AccountBO getCustomerAccountWithAccountActionsInitialized(
-			Integer accountId) throws ServiceException {
-		try {
-			return new AccountPersistence()
-					.getCustomerAccountWithAccountActionsInitialized(accountId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
+			Integer accountId) throws PersistenceException {
+		return new AccountPersistence()
+				.getCustomerAccountWithAccountActionsInitialized(accountId);
 	}
 
 	public AccountBO getSavingsAccountWithAccountActionsInitialized(
-			Integer accountId) throws ServiceException {
+			Integer accountId) throws PersistenceException {
 		if (!bulkEntryCache.isAccountPresent(accountId)) {
 			AccountBO account;
-			try {
-				account = new AccountPersistence()
-						.getSavingsAccountWithAccountActionsInitialized(accountId);
-			} catch (PersistenceException e) {
-				throw new ServiceException(e);
-			}
+			account = new AccountPersistence()
+					.getSavingsAccountWithAccountActionsInitialized(accountId);
 			bulkEntryCache.addAccount(accountId, account);
 			Set<AccountActionDateEntity> accountActionDates = account
 					.getAccountActionDates();
@@ -123,13 +114,9 @@ public class BulkEntryPersistanceService extends PersistenceService {
 	}
 
 	public AccountBO getLoanAccountWithAccountActionsInitialized(
-			Integer accountId) throws ServiceException {
-		try {
-			return new AccountPersistence()
-					.getLoanAccountWithAccountActionsInitialized(accountId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
+			Integer accountId) throws PersistenceException {
+		return new AccountPersistence()
+				.getLoanAccountWithAccountActionsInitialized(accountId);
 	}
 
 	public CustomerBO getCustomer(Integer customerId) {

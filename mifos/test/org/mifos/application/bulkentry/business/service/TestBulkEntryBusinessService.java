@@ -23,7 +23,6 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -293,8 +292,6 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.1", meeting, currentDate);
-
-		// HibernateUtil.closeSession();
 	}
 
 	private void createLoanAccount() {
@@ -413,6 +410,6 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 			actionDate.setPaymentStatus(PaymentStatus.PAID.getValue());
 		}
 
-		accountPersistence.updateAccount(account);
+		TestObjectFactory.updateObject(account);
 	}
 }

@@ -775,7 +775,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	
 	private AccountBO saveAndFetch(AccountBO account) throws Exception {
 		AccountPersistence accountPersistence = new AccountPersistence();
-		accountPersistence.updateAccount(account);
+		TestObjectFactory.updateObject(account);
 		return accountPersistence.getAccount(account.getAccountId());
 	}
 	

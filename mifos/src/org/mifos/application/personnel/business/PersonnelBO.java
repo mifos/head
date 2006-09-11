@@ -443,12 +443,19 @@ public class PersonnelBO extends BusinessObject {
 			dateOfJoiningBranch = new Date();
 
 		}
+		try {
 		PersonnelStatusEntity personnelStatus = (PersonnelStatusEntity) masterPersistence
-				.findById(PersonnelStatusEntity.class, newStatus.getValue());
+				.getPersistentObject(PersonnelStatusEntity.class, newStatus.getValue());
 		this.status = personnelStatus;
-		PersonnelLevelEntity personnelLevel = (PersonnelLevelEntity) masterPersistence
-				.findById(PersonnelLevelEntity.class, newLevel.getValue());
-		this.level = personnelLevel;
+		 
+		
+		 PersonnelLevelEntity personnelLevel = (PersonnelLevelEntity) masterPersistence
+					.getPersistentObject(PersonnelLevelEntity.class, newLevel.getValue());
+		 this.level = personnelLevel;
+		} catch (PersistenceException e) {
+			throw new PersonnelException(e);
+		}
+		
 		this.displayName = name.getDisplayName();
 		this.preferredLocale=new SupportedLocalesEntity(preferredLocale);
 		
