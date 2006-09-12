@@ -19,6 +19,7 @@
   }
   function goToCancelPage(){
 	personActionForm.action="PersonAction.do";
+	personActionForm.method.value="cancel";
 	personActionForm.submit();
   }
 </script>

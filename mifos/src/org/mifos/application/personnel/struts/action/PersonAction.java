@@ -448,6 +448,7 @@ public class PersonAction extends BaseAction {
 		List<Role> selectList = new ArrayList<Role>();
 		List<Role> masterList = (List<Role>) SessionUtils.getAttribute(
 				PersonnelConstants.ROLEMASTERLIST, request);
+		if (personActionForm.getPersonnelRoles() != null)
 		for (Role role : masterList) {
 			for (String roleId : personActionForm.getPersonnelRoles()) {
 				if (roleId != null&&role.getId().intValue() == Integer.valueOf(roleId)

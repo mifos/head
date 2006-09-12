@@ -32,7 +32,7 @@
 		<span class="fontnormal"><br>    
                             <br>
                             </span>
-			<a href="PersonnelAction.do?method=get&globalPersonnelNum=<c:out value="${requestScope.globalPersonnelNum}"/>">
+			<a href="PersonAction.do?method=get&globalPersonnelNum=<c:out value="${requestScope.globalPersonnelNum}"/>">
 			<mifos:mifoslabel name="Personnel.ViewUserdetailsNow" bundle="PersonnelUIResources"></mifos:mifoslabel>
 			</a>
 			<span class="fontnormal"><br>

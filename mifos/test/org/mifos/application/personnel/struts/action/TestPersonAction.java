@@ -60,7 +60,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
 					.getPath());
 			setConfigFile(ResourceLoader.getURI(
-					"org/mifos/framework/util/helpers/struts-config.xml")
+					"org/mifos/application/personnel/struts-config.xml")
 					.getPath());
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
@@ -169,7 +169,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		assertEquals(1, getErrrorSize("gender"));
 		assertEquals(1, getErrrorSize("level"));
 		assertEquals(1, getErrrorSize("loginName"));
-		assertEquals(1, getErrrorSize("userPassword"));
+		assertEquals(1, getErrrorSize("password"));
 		assertEquals(1, getErrrorSize("dob"));
 		verifyInputForward();
 	}
@@ -192,7 +192,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		addRequestParameter("userPassword", "XXXXXX");
 		addRequestParameter("passwordRepeat", "XXXXXZ");
 		actionPerform();
-		assertEquals(1, getErrrorSize("userPassword"));
+		assertEquals(1, getErrrorSize("password"));
 		verifyInputForward();
 	}
 
@@ -239,6 +239,38 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		personnelBO=null;
 		
 	}
+	public void testCreateSucessWithNoRoles() throws Exception {
+		setRequestPathInfo("/PersonAction.do");
+		addRequestParameter("method", Methods.create.toString());
+		addRequestParameter("firstName", "Jim");
+		addRequestParameter("lastName", "khan");
+		addRequestParameter("gender", "1");
+		addRequestParameter("level", "1");
+		addRequestParameter("title", "1");
+		addRequestParameter("emailId", "1@1.com");
+		addRequestParameter("dob", "20/03/76");
+		addRequestParameter("loginName", "tarzen");
+		//addRequestParameter("personnelRoles", "1");
+		addRequestParameter("preferredLocale","189");
+		addRequestParameter("userPassword", "XXXXXXXX");
+		addRequestParameter("passwordRepeat", "XXXXXXXX");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.create_success.toString());
+		assertNotNull(request.getAttribute("globalPersonnelNum"));
+		assertNotNull(request.getAttribute("displayName"));
+		PersonnelBO personnelBO = new PersonnelPersistence().getPersonnelByGlobalPersonnelNum((String)request.getAttribute("globalPersonnelNum"));
+		assertNotNull(personnelBO);
+		//assert few values 
+		assertEquals("Jim",personnelBO.getPersonnelDetails().getName().getFirstName());
+		assertEquals("khan",personnelBO.getPersonnelDetails().getName().getLastName());
+		assertEquals(1,personnelBO.getPersonnelDetails().getGender().intValue());
+		TestObjectFactory.cleanUp(personnelBO);
+		personnelBO=null;
+		
+	}
+	
 	public void testGetSucess()throws Exception{
 		setRequestPathInfo("/PersonAction.do");
 		addRequestParameter("method", Methods.get.toString());
@@ -325,7 +357,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		assertEquals(1, getErrrorSize("gender"));
 		assertEquals(1, getErrrorSize("level"));
 		assertEquals(1, getErrrorSize("loginName"));
-		assertEquals(1, getErrrorSize("userPassword"));
+		assertEquals(1, getErrrorSize("password"));
 		assertEquals(1, getErrrorSize("dob"));
 		assertEquals(1, getErrrorSize(PersonnelConstants.OFFICE));
 		verifyInputForward();
@@ -349,7 +381,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		addRequestParameter("userPassword", "XXXXXX");
 		addRequestParameter("passwordRepeat", "XXXXXZ");
 		actionPerform();
-		assertEquals(1, getErrrorSize("userPassword"));
+		assertEquals(1, getErrrorSize("password"));
 		verifyInputForward();
 	}
 	
