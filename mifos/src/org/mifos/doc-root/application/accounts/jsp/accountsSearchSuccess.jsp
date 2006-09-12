@@ -96,8 +96,7 @@
 											<td><img src="pages/framework/images/timeline/bigarrow.gif"
 												width="17" height="17"></td>
 											<td class="timelineboldorange"><mifos:mifoslabel
-												name="accounts.Select" /><mifos:mifoslabel
-												name="${ConfigurationConstants.CLIENT}" /></td>
+												name="accounts.SelectCustomer" /></td>
 										</tr>
 									</table>
 									</td>
@@ -136,8 +135,7 @@
 											<td><img src="pages/framework/images/timeline/bigarrow.gif"
 												width="17" height="17"></td>
 											<td class="timelineboldorange"><mifos:mifoslabel
-												name="accounts.Select" /><mifos:mifoslabel
-												name="${ConfigurationConstants.CLIENT}" /></td>
+												name="accounts.SelectCustomer" /></td>
 										</tr>
 									</table>
 									</td>
@@ -206,14 +204,22 @@
 									</c:otherwise>
 									</c:choose>
 									<mifos:mifoslabel
-												name="accounts.Select" /><mifos:mifoslabel
-												name="${ConfigurationConstants.CLIENT}" /></td>
+												name="accounts.SelectACustomer" /></td>
 								</tr>
 								<tr>
 									<td class="fontnormalbold"><span class="fontnormal"><mifos:mifoslabel
 										name="accounts.select_click1" />
 										<mifos:mifoslabel
-												name="${ConfigurationConstants.CLIENT}" /><mifos:mifoslabel
+												name="${ConfigurationConstants.CLIENT}" />
+										<mifos:mifoslabel
+												name="accounts.or" />
+										<mifos:mifoslabel
+												name="${ConfigurationConstants.GROUP}" />
+										<mifos:mifoslabel
+												name="accounts.or" />
+										<mifos:mifoslabel
+												name="${ConfigurationConstants.CENTER}" />
+									    <mifos:mifoslabel
 										name="accounts.select_click2" />
 												</span></td>
 								</tr>
