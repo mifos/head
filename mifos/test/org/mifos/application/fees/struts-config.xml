@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+"http://jakarta.apache.org/struts/dtdt/struts-config_1_2.dtd">
+
+
+<struts-config>
+	<form-beans>
+		<form-bean name="feeactionform" type="org.mifos.application.fees.struts.actionforms.FeeActionForm" />
+	</form-beans>
+	<global-exceptions>
+		<exception type="org.mifos.framework.exceptions.SystemException"
+			handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+			key="exception.framework.SystemException" scope="request"
+			path="/pages/framework/jsp/error.jsp" />
+		<exception
+			type="org.mifos.framework.exceptions.ApplicationException"
+			handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+			key="exception.framework.ApplicationException" scope="request" />
+		<exception type="org.mifos.framework.exceptions.PageExpiredException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.PageExpiredException" scope="request" path="/pages/framework/jsp/pageexpirederror.jsp"/>
+	</global-exceptions>
+
+	<action-mappings>
+	<!-- Fee Action -->
+		<action path="/feeaction" type="org.mifos.application.fees.struts.action.FeeAction" parameter="method" input="/feeaction.do?method=validate" name="feeactionform">
+			<forward name="load_success" path="/pages/application/fees/jsp/feescreate.jsp" />
+			<forward name="preview_failure" path="/pages/application/fees/jsp/feescreate.jsp" />
+			<forward name="preview_success" path="/pages/application/fees/jsp/previewfeescreate.jsp" />
+			<forward name="previous_success" path="/pages/application/fees/jsp/feescreate.jsp" />
+			<forward name="previous_failure" path="/pages/application/fees/jsp/previewfeescreate.jsp" />
+			<forward name="create_success" path="/pages/application/fees/jsp/CreateFeesConfirmation.jsp" />
+			<forward name="create_failure" path="/pages/application/fees/jsp/previewfeescreate.jsp" />
+			<forward name="admin" path="/pages/application/fees/jsp/admin.jsp" />
+			<forward name="manage_success" path="/pages/application/fees/jsp/feesedit.jsp" />
+			<forward name="editpreview_success" path="/pages/application/fees/jsp/previewfeesedit.jsp" />
+			<forward name="editpreview_failure" path="/pages/application/fees/jsp/feesedit.jsp" />
+			<forward name="editprevious_success" path="/pages/application/fees/jsp/feesedit.jsp" />
+			<forward name="editprevious_failure" path="/pages/application/fees/jsp/previewfeesedit.jsp" />
+			<forward name="update_success" path="/feeaction.do?method=get" />
+			<forward name="update_failure" path="/pages/application/fees/jsp/previewfeesedit.jsp" />
+			<forward name="get_success" path="/pages/application/fees/jsp/FeeDetails.jsp" />
+			<forward name="viewAll_success" path="/pages/application/fees/jsp/ViewEditFees.jsp" />
+			<forward name="cancelCreate_success" path="/AdminAction.do?method=load" />
+			<forward name="cancelCreate_failure" path="/pages/application/fees/jsp/previewfeescreate.jsp" />
+			<forward name="cancelEdit_success" path="/feeaction.do?method=get" />
+			<forward name="cancelEdit_failure" path="/pages/application/fees/jsp/previewfeesedit.jsp" />
+		</action>
+	</action-mappings>
+	<!-- fees resources -->
+	<message-resources key="FeesUIResources" parameter="org.mifos.application.fees.util.resources.FeesUIResources" />
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property property="pathnames"
+			value="org/mifos/application/fees/validation.xml,org/mifos/application/fees/validator-rules.xml" />
+		<set-property property="stopOnFirstError" value="false" />
+	</plug-in>
+</struts-config>

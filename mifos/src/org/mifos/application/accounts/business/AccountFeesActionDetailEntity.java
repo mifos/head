@@ -120,9 +120,9 @@ public class AccountFeesActionDetailEntity extends PersistentObject {
 
 	public void makeRepaymentEnteries(String payFullOrPartial) {
 		if (payFullOrPartial.equals(LoanConstants.PAY_FEES_PENALTY_INTEREST)) {
-			setFeeAmountPaid(getFeeAmount());
+			setFeeAmountPaid(getFeeAmountPaid().add(getFeeDue()));
 		} else {
-			setFeeAmount(new Money());
+			setFeeAmount(getFeeAmountPaid());
 		}
 	}
 

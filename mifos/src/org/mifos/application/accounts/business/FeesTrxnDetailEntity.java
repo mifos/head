@@ -51,6 +51,16 @@ public class FeesTrxnDetailEntity extends PersistentObject {
 	private AccountFeesEntity accountFees;
 
 	private Money feeAmount;
+	
+	public FeesTrxnDetailEntity(){
+	}
+	
+	public FeesTrxnDetailEntity(AccountTrxnEntity accountTrxnEntity,
+			AccountFeesEntity accountFeesEntity, Money amount) {
+		accountTrxn = accountTrxnEntity;
+		accountFees = accountFeesEntity;
+		feeAmount = amount;
+	}
 
 	public AccountFeesEntity getAccountFees() {
 		return accountFees;

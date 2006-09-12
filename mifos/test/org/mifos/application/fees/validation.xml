@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE form-validation PUBLIC
+          "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1.3//EN"
+          "http://jakarta.apache.org/commons/dtds/validator_1_1_3.dtd">
+
+<form-validation>
+	<formset>
+<!-- Fee Action Starts -->
+		<form name="/feeaction">
+			<field property="feeName" depends="required,maxlength">
+				<msg name="required" key="errors.mandatory_textbox"  bundle="FeesUIResources"/>
+				<msg name="maxlength" key="errors.maximumlength" bundle="FeesUIResources" />
+				<arg0 key="Fees.mandatory_feename"/>
+				<arg1 name="maxlength" key="${var:maxlength}" resource="false" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>50</var-value>
+				</var>
+			</field>
+			<field property="categoryType" depends="required">
+				<msg name="required" key="errors.mandatory_feescategory"  bundle="FeesUIResources"/>				
+			</field>
+			<field property="feeFrequencyType" depends="required">
+				<msg name="required" key="errors.mandatory_selectbox"  bundle="FeesUIResources"/>
+				<arg key="Fees.mandatory_frequency"/>				
+			</field>
+			<field property="loanCharge" depends="validwhen">
+				<msg name="validwhen"
+					key="error.ontimeandpaymentid"
+					bundle="FeesUIResources" />
+					<var>
+					<var-name>test</var-name>
+					<var-value>(((*this*!=null) or (customerCharge!=null)) or (feeFrequencyType!="2"))</var-value>
+				</var>
+			</field>
+			<field property="feeRecurrenceType" depends="validwhen">
+				<msg name="validwhen"
+					key="error.periodicandfrequency"
+					bundle="FeesUIResources" />
+					<var>
+					<var-name>test</var-name>
+					<var-value>
+					((*this*!=null) or (feeFrequencyType!="1"))
+					</var-value>
+				</var>
+			</field>
+			
+			 
+			 <field property="weekRecurAfter" depends="validwhen">
+				<msg name="validwhen" key="error.reurweek"
+					bundle="FeesUIResources" />
+					<var>
+					<var-name>test</var-name>
+					<var-value>
+						(((feeRecurrenceType != "1") or (*this* != null)) or (feeFrequencyType != "1"))
+					</var-value>
+				</var>
+			</field>
+
+			<field property="monthRecurAfter" depends="validwhen">
+				<msg name="validwhen" key="error.reurmonth"
+					bundle="FeesUIResources" />
+					<var>
+					<var-name>test</var-name>
+					<var-value>
+						(((feeRecurrenceType != "2") or (*this* != null)) or (feeFrequencyType!="1"))
+					</var-value>
+				</var>
+			</field>
+			
+			<field property="rate"
+				depends="decimalFormat">
+				<msg name="decimalFormat" key="errors.rateGreaterThen999"
+					bundle="FeesUIResources" />	
+				<arg0 key="Fees.error.rate" />
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(3,0)</var-value>
+			    </var>
+			</field>
+			
+			<field property="amount"
+				depends="decimalFormat">
+				<msg name="decimalFormat" key="errors.amountGreaterThan"
+					bundle="FeesUIResources" />	
+				<arg0 key="Fees.error.amount" />
+				<var>
+				    <var-name>format</var-name>
+				    <var-value>(13,4)</var-value>
+			    </var>
+			</field>
+			
+			
+			<field property="glCode" depends="required">
+				<msg name="required" key="errors.mandatory_selectbox"  bundle="FeesUIResources"/>
+				<arg key="Fees.mandatory_glCode"/>
+			</field>
+			
+					
+		</form>	
+		<!-- Fee Action Ends -->		
+
+	</formset>
+</form-validation>

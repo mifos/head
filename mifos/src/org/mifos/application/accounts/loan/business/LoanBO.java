@@ -714,7 +714,7 @@ public class LoanBO extends AccountBO {
 
 		for (AccountActionDateEntity accountActionDateEntity : futureInstallmentsList) {
 			amount = amount.add(((LoanScheduleEntity) accountActionDateEntity)
-					.getPrincipal());
+					.getPrincipalDue());
 		}
 		return amount;
 	}
@@ -731,61 +731,11 @@ public class LoanBO extends AccountBO {
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
 				this, totalAmount, receiptNumber, recieptDate,
 				new PaymentTypeEntity(Short.valueOf(paymentTypeId)));
-		this.addAccountPayment(accountPaymentEntity);
-		List<AccountActionDateEntity> dueInstallmentsList = getApplicableIdsForDueInstallments();
-		List<AccountActionDateEntity> futureInstallmentsList = getApplicableIdsForFutureInstallments();
-		for (AccountActionDateEntity accountActionDateEntity : dueInstallmentsList) {
-			LoanScheduleEntity loanSchedule = (LoanScheduleEntity) accountActionDateEntity;
-			Money principal = loanSchedule.getPrincipal();
-			Money interest = loanSchedule.getInterest();
-			Money fees = loanSchedule.getTotalFees();
-			Money penalty = loanSchedule.getTotalPenalty();
-			Money totalAmt = principal.add(interest).add(fees).add(penalty);
-			loanSchedule
-					.makeEarlyRepaymentEnteries(LoanConstants.PAY_FEES_PENALTY_INTEREST);
-
-			LoanPaymentData loanPaymentData = new LoanPaymentData(
-					accountActionDateEntity);
-
-			LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(
-					accountPaymentEntity, loanPaymentData, personnel, new Date(
-							System.currentTimeMillis()),
-					(AccountActionEntity) masterPersistence.getPersistentObject(
-							AccountActionEntity.class,
-							AccountConstants.ACTION_LOAN_REPAYMENT), totalAmt,
-					"Payment rcvd.");
-			accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
-			loanSummary
-					.updatePaymentDetails(principal, interest, penalty, fees);
-		}
-		for (AccountActionDateEntity accountActionDateEntity : futureInstallmentsList) {
-			LoanScheduleEntity loanSchedule = (LoanScheduleEntity) accountActionDateEntity;
-			Money principal = loanSchedule.getPrincipal();
-			Money interest = loanSchedule.getInterest();
-			Money fees = loanSchedule.getTotalFees();
-			Money penalty = loanSchedule.getTotalPenalty();
-
-			loanSchedule
-					.makeEarlyRepaymentEnteries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST);
-
-			LoanPaymentData loanPaymentData = new LoanPaymentData(
-					accountActionDateEntity);
-
-			LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(
-					accountPaymentEntity, loanPaymentData, personnel, new Date(
-							System.currentTimeMillis()),
-					(AccountActionEntity) masterPersistence.getPersistentObject(
-							AccountActionEntity.class,
-							AccountConstants.ACTION_LOAN_REPAYMENT), principal,
-					"Payment rcvd.");
-
-			accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
-
-			loanSummary.decreaseBy(null, interest, penalty, fees);
-			loanSummary.updatePaymentDetails(principal, null, null, null);
-
-		}
-
+		addAccountPayment(accountPaymentEntity);
+		
+		makeEarlyRepaymentForDueInstallments(accountPaymentEntity);
+		makeEarlyRepaymentForFutureInstallments(accountPaymentEntity);
+		
 		if (getPerformanceHistory() != null)
 			getPerformanceHistory().setNoOfPayments(
 					getPerformanceHistory().getNoOfPayments() + 1);
@@ -796,15 +746,13 @@ public class LoanBO extends AccountBO {
 		AccountStateEntity newAccountState = (AccountStateEntity) masterPersistence
 				.getPersistentObject(AccountStateEntity.class,
 						AccountStates.LOANACC_OBLIGATIONSMET);
-		this
-				.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
-						this.getAccountState(), newAccountState,
+		addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
+						getAccountState(), newAccountState,
 						new PersonnelPersistence().getPersonnel(personnelId)));
-		this
-				.setAccountState((AccountStateEntity) masterPersistence
+		setAccountState((AccountStateEntity) masterPersistence
 						.getPersistentObject(AccountStateEntity.class,
 								AccountStates.LOANACC_OBLIGATIONSMET));
-		this.setClosedDate(new Date(System.currentTimeMillis()));
+		setClosedDate(new Date(System.currentTimeMillis()));
 
 		// Client performance entry
 		updateCustomerHistoryOnRepayment(totalAmount);
@@ -815,7 +763,7 @@ public class LoanBO extends AccountBO {
 			throw new AccountException(e);
 		}
 	}
-
+	
 	public void handleArrears() throws AccountException {
 		MasterPersistence masterPersistence = new MasterPersistence();
 		AccountStateEntity stateEntity;
@@ -2481,5 +2429,98 @@ public class LoanBO extends AccountBO {
 	private boolean isAdjustmentForInterestDedAtDisb(Short installmentId) {
 		return installmentId.equals(Short.valueOf("1"))
 				&& isInterestDeductedAtDisbursement();
+	}
+	
+
+	private void makeEarlyRepaymentForDueInstallments(
+			AccountPaymentEntity accountPaymentEntity) throws AccountException {
+		MasterPersistence masterPersistence = new MasterPersistence();
+		List<AccountActionDateEntity> dueInstallmentsList = getApplicableIdsForDueInstallments();
+		for (AccountActionDateEntity accountActionDateEntity : dueInstallmentsList) {
+			LoanScheduleEntity loanSchedule = (LoanScheduleEntity) accountActionDateEntity;
+			Money principal = loanSchedule.getPrincipalDue();
+			Money interest = loanSchedule.getInterestDue();
+			Money fees = loanSchedule.getTotalFeeDueWithMiscFeeDue();
+			Money penalty = loanSchedule.getPenaltyDue();
+			Money totalAmt = principal.add(interest).add(fees).add(penalty);
+
+			LoanTrxnDetailEntity loanTrxnDetailEntity;
+			try {
+				loanTrxnDetailEntity = new LoanTrxnDetailEntity(
+						accountPaymentEntity,
+						(AccountActionEntity) masterPersistence
+								.getPersistentObject(AccountActionEntity.class,
+										AccountConstants.ACTION_LOAN_REPAYMENT),
+						loanSchedule.getInstallmentId(), loanSchedule
+								.getActionDate(), personnel, new Date(System
+								.currentTimeMillis()), totalAmt,
+						"Payment rcvd.", null, principal, interest,
+						loanSchedule.getPenalty().subtract(
+								loanSchedule.getPenaltyPaid()), loanSchedule
+								.getMiscFeeDue(), loanSchedule
+								.getMiscPenaltyDue());
+			} catch (PersistenceException e) {
+				throw new AccountException(e);
+			}
+			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : loanSchedule
+					.getAccountFeesActionDetails()) {
+				if (accountFeesActionDetailEntity.getFeeDue()
+						.getAmountDoubleValue() > 0) {
+					FeesTrxnDetailEntity feesTrxnDetailEntity = new FeesTrxnDetailEntity(
+							loanTrxnDetailEntity, accountFeesActionDetailEntity
+									.getAccountFee(),
+							accountFeesActionDetailEntity.getFeeDue());
+					loanTrxnDetailEntity
+							.addFeesTrxnDetail(feesTrxnDetailEntity);
+				}
+			}
+
+			accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
+
+			loanSchedule
+					.makeEarlyRepaymentEnteries(LoanConstants.PAY_FEES_PENALTY_INTEREST);
+
+			loanSummary
+					.updatePaymentDetails(principal, interest, penalty, fees);
+		}
+	}
+
+	private void makeEarlyRepaymentForFutureInstallments(
+			AccountPaymentEntity accountPaymentEntity) throws AccountException {
+		MasterPersistence masterPersistence = new MasterPersistence();
+		List<AccountActionDateEntity> futureInstallmentsList = getApplicableIdsForFutureInstallments();
+		for (AccountActionDateEntity accountActionDateEntity : futureInstallmentsList) {
+			LoanScheduleEntity loanSchedule = (LoanScheduleEntity) accountActionDateEntity;
+			Money principal = loanSchedule.getPrincipalDue();
+			Money interest = loanSchedule.getInterestDue();
+			Money fees = loanSchedule.getTotalFeeDueWithMiscFeeDue();
+			Money penalty = loanSchedule.getPenaltyDue();
+
+			LoanTrxnDetailEntity loanTrxnDetailEntity;
+			try {
+				loanTrxnDetailEntity = new LoanTrxnDetailEntity(
+						accountPaymentEntity,
+						(AccountActionEntity) masterPersistence
+								.getPersistentObject(AccountActionEntity.class,
+										AccountConstants.ACTION_LOAN_REPAYMENT),
+						loanSchedule.getInstallmentId(), loanSchedule
+								.getActionDate(), personnel, new Date(System
+								.currentTimeMillis()), principal,
+						"Payment rcvd.", null, principal, new Money(),
+						new Money(), new Money(), new Money());
+			} catch (PersistenceException e) {
+				throw new AccountException(e);
+			}
+
+			accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
+
+			loanSchedule
+					.makeEarlyRepaymentEnteries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST);
+
+			loanSummary.decreaseBy(null, interest, penalty, fees);
+			loanSummary.updatePaymentDetails(principal, null, null, null);
+
+		}
+
 	}
 }

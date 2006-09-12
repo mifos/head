@@ -44,7 +44,7 @@ public class TestPrdCategoryAction extends MifosMockStrutsTestCase{
 			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
 					.getPath());
 			setConfigFile(ResourceLoader.getURI(
-					"org/mifos/framework/util/helpers/struts-config.xml")
+					"org/mifos/application/productdefinition/struts-config.xml")
 					.getPath());
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
@@ -175,6 +175,8 @@ public class TestPrdCategoryAction extends MifosMockStrutsTestCase{
 		addRequestParameter("method", "managePreview");
 		addRequestParameter("productCategoryName", "product category 1");
 		addRequestParameter("productCategoryDesc", "created a category 1");
+		addRequestParameter("productType", productCategoryBO.getProductType().getProductTypeID().toString());
+		addRequestParameter("productCategoryStatus", productCategoryBO.getPrdCategoryStatus().getId().toString());
 		actionPerform();
 		verifyForward("editpreview_success");
 		verifyNoActionErrors();

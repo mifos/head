@@ -256,11 +256,11 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 
 	public void makeEarlyRepaymentEnteries(String payFullOrPartial) {
 		if (payFullOrPartial.equals(LoanConstants.PAY_FEES_PENALTY_INTEREST)) {
-			setPrincipalPaid(getPrincipal());
-			setInterestPaid(getInterest());
-			setPenaltyPaid(getPenalty());
-			setMiscFeePaid(getMiscFee());
-			setMiscPenaltyPaid(getMiscPenalty());
+			setPrincipalPaid(getPrincipalPaid().add(getPrincipalDue()));
+			setInterestPaid(getInterestPaid().add(getInterestDue()));
+			setPenaltyPaid(getPenaltyPaid().add(getPenaltyDue()));
+			setMiscFeePaid(getMiscFeePaid().add(getMiscFee()));
+			setMiscPenaltyPaid(getMiscPenaltyPaid().add(getMiscPenalty()));
 			setPaymentStatus(PaymentStatus.PAID.getValue());
 			setPaymentDate(new Date(System.currentTimeMillis()));
 			Set<AccountFeesActionDetailEntity> accountFeesActionDetailSet = this
@@ -270,11 +270,11 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 						.makeRepaymentEnteries(payFullOrPartial);
 			}
 		} else {
-			setPrincipalPaid(getPrincipal());
-			setInterest(new Money());
-			setPenalty(new Money());
-			setMiscFee(new Money());
-			setMiscPenalty(new Money());
+			setPrincipalPaid(getPrincipalPaid().add(getPrincipalDue()));
+			setInterest(getInterestPaid());
+			setPenalty(getPenaltyPaid());
+			setMiscFee(getMiscFeePaid());
+			setMiscPenalty(getMiscPenaltyPaid());
 			setPaymentStatus(PaymentStatus.PAID.getValue());
 			setPaymentDate(new Date(System.currentTimeMillis()));
 			Set<AccountFeesActionDetailEntity> accountFeesActionDetailSet = this
