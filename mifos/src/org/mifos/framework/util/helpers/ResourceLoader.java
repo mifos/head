@@ -49,10 +49,9 @@ import java.net.URL;
 public class ResourceLoader {
 
 	/**
-	 * Returns the URI for the file name specified.It tries to load the file using the class loader and then returns the URI corresponding to the file .
-	 * @param fileName
-	 * @return
-	 * @throws URISyntaxException
+	 * Returns the URI for the file name specified.
+	 * It tries to load the file using the class loader and then 
+	 * returns the URI corresponding to the file.
 	 */
 	public static URI getURI(String fileName) throws URISyntaxException{
 		ClassLoader parent = ResourceLoader.class.getClassLoader().getParent();

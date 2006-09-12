@@ -112,9 +112,9 @@ public class TestOfficeBO extends MifosTestCase {
 	public void testCreateWithNolevel() throws Exception {
 		// check short name
 		try {
-
-			new OfficeBO(userContext, null, TestObjectFactory.getOffice(Short
-					.valueOf("1")), null, "abcd", "abcd", null,
+			new OfficeBO(userContext, null, 
+					TestObjectFactory.getOffice(Short.valueOf("1")), 
+					null, "abcd", "abcd", null,
 					OperationMode.REMOTE_SERVER);
 		} catch (OfficeException e) {
 			assertEquals(OfficeConstants.ERRORMANDATORYFIELD, e.getKey());
@@ -127,8 +127,9 @@ public class TestOfficeBO extends MifosTestCase {
 		// check short name
 		try {
 
-			new OfficeBO(userContext, OfficeLevel.AREAOFFICE, TestObjectFactory
-					.getOffice(Short.valueOf("1")), null, "abcd", "abcd", null,
+			new OfficeBO(userContext, OfficeLevel.AREAOFFICE, 
+					TestObjectFactory.getOffice(Short.valueOf("1")), 
+					null, "abcd", "abcd", null,
 					null);
 		} catch (OfficeException e) {
 			assertEquals(OfficeConstants.ERRORMANDATORYFIELD, e.getKey());

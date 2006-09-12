@@ -40,6 +40,7 @@ package org.mifos.framework.hibernate.configuration;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.net.URI;
 import java.util.Properties;
 
 import org.hibernate.cfg.Configuration;
@@ -65,39 +66,36 @@ public class ConfigureSession
 	{
 		return config;
 	}
+
 	/**
-		 * On System start up this method creates the hibernate configuration object , which is configured with the hibernate configuration files containing the mapping information and
-		 * also the database connection related parameters required for hibernate for database access.
+	 * On System start up this method creates the hibernate configuration object,
+	 * which is configured with the hibernate configuration files containing the
+	 * mapping information and also the database connection related parameters
+	 * required for hibernate for database access.
 	 */
-
-
-    public static void configure(String hibernatePropertiesPath) throws HibernateStartUpException
-    {
-
-
+    public static void configure(String hibernatePropertiesPath)
+			throws HibernateStartUpException {
 		config = new Configuration();
-	 try
-	  {
+		try {
+			config.configure(
+				ResourceLoader.getURI(FilePaths.HIBERNATECFGFILE).toURL()
+			);
+		} catch (Exception e) {
+			throw new HibernateStartUpException(
+					HibernateConstants.CFGFILENOTFOUND, e);
+		}
 
-		 config.configure(ResourceLoader.getURI(FilePaths.HIBERNATECFGFILE).toURL());
-	   }
-	   catch(Exception e)
-	   {
-		    
-		  throw new HibernateStartUpException(HibernateConstants.CFGFILENOTFOUND,e);
-	   }
-	   try
-	   {
-		 Properties hibernateProperties = new Properties();
+		try {
+			Properties hibernateProperties = new Properties();
 
-		 hibernateProperties.load(new FileInputStream(new File(ResourceLoader.getURI(hibernatePropertiesPath))))                                                                                            ;
-		 config.setProperties(hibernateProperties);
-	  }
-	  catch(Exception e)
-	  {
-		  throw new HibernateStartUpException(HibernateConstants.HIBERNATEPROPNOTFOUND,e);
-	  }
-
+			URI uri = ResourceLoader.getURI(hibernatePropertiesPath);
+			File propertiesFile = new File(uri);
+			hibernateProperties.load(new FileInputStream(propertiesFile));
+			config.setProperties(hibernateProperties);
+		} catch (Exception e) {
+			throw new HibernateStartUpException(
+					HibernateConstants.HIBERNATEPROPNOTFOUND, e);
+		}
 	}
 
 

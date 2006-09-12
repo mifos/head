@@ -67,16 +67,15 @@ public class OfficeListTag extends BodyTagSupport {
 		OfficePersistence officePersistence = new OfficePersistence();
 		OfficeBO officeBO = officePersistence.getOffice(userContext
 				.getBranchId());
-		StringBuilder result = new StringBuilder();
 
 		List<OfficeView> levels = officePersistence.getActiveLevels(userContext
 				.getLocaleId());
 
 		// let make all levels name as locle variables
-		String brach = "", regional = "", subregional = "", area = "";
+		String termForBranch = "", regional = "", subregional = "", area = "";
 		for (OfficeView level : levels) {
 			if (level.getLevelId().equals(OfficeLevel.BRANCHOFFICE.getValue()))
-				brach = MifosTagUtils.xmlEscape(level.getLevelName());
+				termForBranch = MifosTagUtils.xmlEscape(level.getLevelName());
 			else if (level.getLevelId().equals(OfficeLevel.AREAOFFICE.getValue()))
 				area = MifosTagUtils.xmlEscape(level.getLevelName());
 			else if (level.getLevelId().equals(OfficeLevel.REGIONALOFFICE
@@ -85,23 +84,19 @@ public class OfficeListTag extends BodyTagSupport {
 			else if (level.getLevelId().equals(OfficeLevel.SUBREGIONALOFFICE
 					.getValue()))
 				subregional = MifosTagUtils.xmlEscape(level.getLevelName());
-
 		}
 
-		if (onlyBranchOffices != null) {
-			getBranchOffices(result, officePersistence
-					.getBranchParents(officeBO.getSearchId()), userContext,
-					brach);
-		} else {
+		List<OfficeBO> branchParents = 
+			officePersistence.getBranchParents(officeBO.getSearchId());
 
+		StringBuilder result = new StringBuilder();
+		if (onlyBranchOffices != null) {
+			getBranchOffices(result, branchParents, userContext, termForBranch);
+		} else {
 			getAboveBranches(result, officePersistence
 					.getOfficesTillBranchOffice(officeBO.getSearchId()),
 					regional, subregional, area);
-			getBranchOffices(result, officePersistence
-					.getBranchParents(officeBO.getSearchId()), userContext,
-					brach);
-
-
+			getBranchOffices(result, branchParents, userContext, termForBranch);
 		}
 
 		return result.toString();
@@ -166,12 +161,12 @@ public class OfficeListTag extends BodyTagSupport {
 
 	private String getLink(Short officeId, String officeName) {
 		String newOfficeName = replaceSpaces(officeName);
-		String str = "<a href=" + actionName + "?method=" + methodName
+		return "<a href=\"" + actionName + "?method=" + methodName
 				+ "&amp;office.officeId=" + officeId
 				+ "&amp;office.officeName=" + newOfficeName + "&amp;officeId="
-				+ officeId + "&amp;officeName=" + newOfficeName+ "&amp;currentFlowKey=" +flowKey  + ">"
+				+ officeId + "&amp;officeName=" + newOfficeName+ 
+				"&amp;currentFlowKey=" +flowKey  + "\">"
 				+ officeName +"</a>";
-		return str;
 	}
 
 	public String replaceSpaces(String officeName) {
@@ -180,7 +175,7 @@ public class OfficeListTag extends BodyTagSupport {
 		return replacedString;
 	}
 
-	private void getAboveBranches(StringBuilder result,
+	void getAboveBranches(StringBuilder result,
 			List<OfficeBO> officeList, String regional, String subregional,
 			String area) throws OfficeException {
 		if (null != officeList) {
@@ -192,9 +187,9 @@ public class OfficeListTag extends BodyTagSupport {
 			for (int i = 0; i < officeList.size(); i++) {
 				OfficeBO office = officeList.get(i);
 				if (office.getOfficeLevel() == OfficeLevel.HEADOFFICE) {
-					result.append("<br><span class=\"fontnormalbold\">");
+					result.append("<br /><span class=\"fontnormalbold\">");
 					result.append(getLink(office.getOfficeId(), MifosTagUtils.xmlEscape(office.getOfficeName())));
-					result.append("<br></span>");
+					result.append("<br /></span>");
 					// result.append("<br><table width=\"95%\" border=\"0\"
 					// cellspacing=\"0\" cellpadding=\"0\">");
 				}
@@ -203,12 +198,13 @@ public class OfficeListTag extends BodyTagSupport {
 					if (regionalLabel == false) {
 						regionalBuffer = new StringBuffer();
 						regionalBuffer
-								.append("<br><table width=\"95%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
+								.append("<br /><table width=\"95%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
 						regionalBuffer.append("<tr>");
 						regionalBuffer
 								.append("<td><span class=\"fontnormalbold\">");
 						regionalBuffer.append(MifosTagUtils.xmlEscape(regional));
 						regionalBuffer.append("</span></td>");
+						regionalBuffer.append("</tr>");
 						regionalBuffer.append("</table>");
 						regionalBuffer
 								.append("<table width=\"90%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
@@ -216,8 +212,10 @@ public class OfficeListTag extends BodyTagSupport {
 					}
 
 					regionalBuffer.append("<tr class=\"fontnormal\">");
-					regionalBuffer
-							.append("<td width=\"1%\"><img src=\"pages/framework/images/bullet_circle.gif\" width=\"9\" height=\"11\"></td>");
+					regionalBuffer.append("<td width=\"1%\">" +
+							"<img src=\"pages/framework/images/bullet_circle.gif\" " +
+							"width=\"9\" height=\"11\" />" +
+							"</td>");
 					regionalBuffer.append("<td width=\"99%\">");
 					regionalBuffer.append(getLink(office.getOfficeId(),
 							MifosTagUtils.xmlEscape(office.getOfficeName())));
@@ -227,13 +225,14 @@ public class OfficeListTag extends BodyTagSupport {
 				} else if (office.getOfficeLevel() == OfficeLevel.SUBREGIONALOFFICE) {
 					if (subRegionalLabel == false) {
 						subregionalBuffer = new StringBuffer();
-						subregionalBuffer
-								.append("<br><table width=\"95%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
+						subregionalBuffer.append("<br />" +
+							"<table width=\"95%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
 						subregionalBuffer.append("<tr>");
 						subregionalBuffer
 								.append("<td><span class=\"fontnormalbold\">");
 						subregionalBuffer.append(MifosTagUtils.xmlEscape(subregional));
 						subregionalBuffer.append("</span></td>");
+						subregionalBuffer.append("</tr>");
 						subregionalBuffer.append("</table>");
 						subregionalBuffer
 								.append("<table width=\"90%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
@@ -242,8 +241,10 @@ public class OfficeListTag extends BodyTagSupport {
 
 					
 					subregionalBuffer.append("<tr class=\"fontnormal\">");
-					subregionalBuffer
-							.append("<td width=\"1%\"><img src=\"pages/framework/images/bullet_circle.gif\" width=\"9\" height=\"11\"></td>");
+					subregionalBuffer.append("<td width=\"1%\">" +
+						"<img src=\"pages/framework/images/bullet_circle.gif\" " +
+						"width=\"9\" height=\"11\" />" +
+						"</td>");
 					subregionalBuffer.append("<td width=\"99%\">");
 					subregionalBuffer.append(getLink(office.getOfficeId(),
 							MifosTagUtils.xmlEscape(office.getOfficeName())));
@@ -254,12 +255,15 @@ public class OfficeListTag extends BodyTagSupport {
 					if (areaLabel == false) {
 						areaBuffer = new StringBuffer();
 						areaBuffer
-								.append("<br><table width=\"95%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
+								.append("<br />" +
+							"<table width=\"95%\" border=\"0\" " +
+							"cellspacing=\"0\" cellpadding=\"0\">");
 						areaBuffer.append("<tr>");
 						areaBuffer
 								.append("<td><span class=\"fontnormalbold\">");
 						areaBuffer.append(MifosTagUtils.xmlEscape(area));
 						areaBuffer.append("</span></td>");
+						areaBuffer.append("</tr>");
 						areaBuffer.append("</table>");
 						areaBuffer
 								.append("<table width=\"90%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
@@ -267,8 +271,10 @@ public class OfficeListTag extends BodyTagSupport {
 					}
 
 					areaBuffer.append("<tr class=\"fontnormal\">");
-					areaBuffer
-							.append("<td width=\"1%\"><img src=\"pages/framework/images/bullet_circle.gif\" width=\"9\" height=\"11\"></td>");
+					areaBuffer.append("<td width=\"1%\">" +
+						"<img src=\"pages/framework/images/bullet_circle.gif\" " +
+						"width=\"9\" height=\"11\" />" +
+						"</td>");
 					areaBuffer.append("<td width=\"99%\">");
 					areaBuffer.append(getLink(office.getOfficeId(), MifosTagUtils.xmlEscape(office.getOfficeName())));
 					areaBuffer.append("</td>");

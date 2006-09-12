@@ -10,7 +10,6 @@ import java.util.Set;
 
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
@@ -18,11 +17,7 @@ import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.office.util.helpers.OperationMode;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.framework.business.BusinessObject;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.security.authorization.HierarchyManager;
@@ -31,7 +26,6 @@ import org.mifos.framework.security.util.OfficeSearch;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.StringUtils;
 
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
@@ -42,6 +36,7 @@ public class OfficeBO extends BusinessObject {
 
 	private final Short operationMode;
 
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private final Integer maxChildCount;
 
 	private String officeName;
@@ -64,8 +59,6 @@ public class OfficeBO extends BusinessObject {
 
 	private Set<OfficeBO> children;
 
-	private MifosLogger logger = null;
-
 	public OfficeBO() {
 		super();
 		maxChildCount = null;
@@ -74,21 +67,31 @@ public class OfficeBO extends BusinessObject {
 		status = new OfficeStatusEntity(OfficeStatus.ACTIVE);
 		address = new OfficeAddressEntity();
 	}
+	
+	/**
+	 * For tests.  Does not require that the names in question
+	 * actually exist in the database.
+	 */
+	public static OfficeBO makeForTest(UserContext userContext, OfficeLevel level,
+		OfficeBO parentOffice, List<CustomFieldView> customFields,
+		String officeName, String shortName, Address address,
+		OperationMode operationMode, OfficeStatus status)
+	throws OfficeException {
+		return new OfficeBO(userContext, level, parentOffice, customFields,
+			officeName, shortName, address, operationMode, status
+		);
+	}
 
-	public OfficeBO(UserContext userContext, OfficeLevel level,
+	/**
+	 * For tests.
+	 */
+	private OfficeBO(UserContext userContext, OfficeLevel level,
 			OfficeBO parentOffice, List<CustomFieldView> customFields,
 			String officeName, String shortName, Address address,
-			OperationMode operationMode) throws OfficeException {
+			OperationMode operationMode, OfficeStatus status)
+	throws OfficeException {
 		super(userContext);
-		// initialize logger
-		logger = MifosLogManager.getLogger(LoggerConstants.OFFICELOGGER);
-		verifyFields(officeName, shortName, level, operationMode, parentOffice);
-		logger.debug(new StringBuilder().append(
-				"Creating office object with data # officeName : ").append(
-				officeName).append(" shortName :").append(shortName).append(
-				" officeLevel :").append(level.getValue()).append(
-				" operationMode : ").append(operationMode.getValue())
-				.toString());
+		verifyFieldsNoDatabase(level, operationMode, parentOffice);
 
 		setCreateDetails();
 
@@ -98,7 +101,7 @@ public class OfficeBO extends BusinessObject {
 		this.searchId = null;
 		this.officeId = null;
 		this.level = new OfficeLevelEntity(level);
-		this.status = new OfficeStatusEntity(OfficeStatus.ACTIVE);
+		this.status = new OfficeStatusEntity(status);
 		this.parentOffice = parentOffice;
 
 		this.officeName = officeName;
@@ -113,6 +116,16 @@ public class OfficeBO extends BusinessObject {
 			}
 	}
 
+	public OfficeBO(UserContext userContext, OfficeLevel level,
+			OfficeBO parentOffice, List<CustomFieldView> customFields,
+			String officeName, String shortName, Address address,
+			OperationMode operationMode) throws OfficeException {
+		this(userContext, level, parentOffice, customFields, officeName,
+				shortName, address, operationMode, OfficeStatus.ACTIVE);
+		verifyFields(officeName, shortName, level, operationMode, parentOffice);
+	}
+
+	@Override
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
@@ -186,6 +199,7 @@ public class OfficeBO extends BusinessObject {
 		this.shortName = shortName;
 	}
 
+	@Override
 	public void setUpdatedDate(Date updatedDate) {
 		this.updatedDate = updatedDate;
 	}
@@ -242,7 +256,6 @@ public class OfficeBO extends BusinessObject {
 	private void verifyFields(String officeName, String shortName,
 			OfficeLevel level, OperationMode operationMode,
 			OfficeBO parentOffice) throws OfficeException {
-
 		OfficePersistence officePersistence = new OfficePersistence();
 		if (StringUtils.isNullOrEmpty(officeName))
 			throw new OfficeException(
@@ -264,6 +277,15 @@ public class OfficeBO extends BusinessObject {
 		} catch (PersistenceException e) {
 			throw new OfficeException(e);
 		}
+		if (parentOffice == null)
+			throw new OfficeException(
+					OfficeConstants.ERRORMANDATORYFIELD,
+					new Object[] { getLocaleString(OfficeConstants.PARENTOFFICE) });
+	}
+
+	private void verifyFieldsNoDatabase(OfficeLevel level, 
+		OperationMode operationMode, OfficeBO parentOffice) 
+	throws OfficeException {
 		if (level == null)
 			throw new OfficeException(
 					OfficeConstants.ERRORMANDATORYFIELD,
@@ -272,20 +294,13 @@ public class OfficeBO extends BusinessObject {
 			throw new OfficeException(
 					OfficeConstants.ERRORMANDATORYFIELD,
 					new Object[] { getLocaleString(OfficeConstants.OFFICEOPERATIONMODE) });
-		if (parentOffice == null)
-			throw new OfficeException(
-					OfficeConstants.ERRORMANDATORYFIELD,
-					new Object[] { getLocaleString(OfficeConstants.PARENTOFFICE) });
-
 	}
 
 	private String getLocaleString(String key) {
-		logger.debug("Getting resource text with key :  " + key);
 		ResourceBundle resourceBundle = ResourceBundle.getBundle(
 				OfficeConstants.OFFICERESOURCEPATH, userContext
 						.getPereferedLocale());
 		return resourceBundle.getString(key);
-
 	}
 
 	private String generateOfficeGlobalNo() throws OfficeException {

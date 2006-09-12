@@ -175,7 +175,9 @@
 	       destfile="${dist.dir}/mifos-x.jar"/>
 	</target>
 
-	<target name="api" depends="compile, copy_files, lib, lib-x" description="Build mifos API support"/>
+	<target name="api" 
+		depends="compile, copy_files, lib, lib-x" 
+		description="Build mifos API support"/>
 
 	<target name="copy_test_files">
 		<copy todir="${test.classes}">
