@@ -1,6 +1,7 @@
 package org.mifos.application.accounts.loan.business;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -54,7 +55,7 @@ public class LoanActivityEntity extends PersistentObject {
 	public LoanActivityEntity(AccountBO account,PersonnelBO personnel, String comments,
 			Money principal, Money principalOutstanding, Money interest,
 			Money interestOutstanding, Money fee, Money feeOutstanding,
-			Money penalty, Money penaltyOutstanding ) {
+			Money penalty, Money penaltyOutstanding, Date trxnCreatedDate) {
 		this.id = null;
 		this.personnel = personnel;
 		this.comments = comments;
@@ -66,7 +67,7 @@ public class LoanActivityEntity extends PersistentObject {
 		this.feeOutstanding = feeOutstanding;
 		this.penalty = penalty;
 		this.penaltyOutstanding = penaltyOutstanding;
-		this.trxnCreatedDate = new Timestamp(System.currentTimeMillis());
+		this.trxnCreatedDate = new Timestamp(trxnCreatedDate.getTime());
 		this.account = account;
 	}
 	

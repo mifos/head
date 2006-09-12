@@ -1,5 +1,6 @@
 package org.mifos.application.accounts.loan.business;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -765,8 +766,7 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	public void testWtiteOff() throws Exception {
-		try {
-		accountBO = getLoanAccount();
+	   accountBO = getLoanAccount();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
@@ -784,13 +784,11 @@ public class TestLoanBO extends MifosTestCase {
 		for (LoanActivityEntity loanActivityEntity : loan
 				.getLoanActivityDetails()) {
 			assertEquals(loanActivityEntity.getComments(), "Loan Written Off");
+			assertEquals( new Timestamp(DateUtils.getCurrentDateWithoutTimeStamp().getTime()), loanActivityEntity.getTrxnCreatedDate());
 			break;
 		}
 		assertEquals(accountBO.getAccountState().getId(), new Short(
 				AccountStates.LOANACC_WRITTENOFF));
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	public void testGetAmountTobePaidAtdisburtail() throws Exception{
@@ -843,6 +841,7 @@ public class TestLoanBO extends MifosTestCase {
 		List<Object> objectList = Arrays.asList(loanActivityDetailsSet.toArray());
 		LoanActivityEntity loanActivityEntity = (LoanActivityEntity) objectList.get(0);
 		assertEquals(new Money("100"),loanActivityEntity.getPenalty());
+		assertEquals( new Timestamp(DateUtils.getCurrentDateWithoutTimeStamp().getTime()), loanActivityEntity.getTrxnCreatedDate());
 		assertEquals(loanBO.getLoanSummary().getOriginalPenalty().subtract(loanBO.getLoanSummary().getPenaltyPaid()),
 				loanActivityEntity.getPenaltyOutstanding());
 	}
@@ -905,6 +904,7 @@ public class TestLoanBO extends MifosTestCase {
 		Set<LoanActivityEntity> loanActivityDetailsSet = loanBO.getLoanActivityDetails();
 		List<Object> objectList = Arrays.asList(loanActivityDetailsSet.toArray());
 		LoanActivityEntity loanActivityEntity = (LoanActivityEntity) objectList.get(0);
+		assertEquals( new Timestamp(DateUtils.getCurrentDateWithoutTimeStamp().getTime()), loanActivityEntity.getTrxnCreatedDate());
 		assertEquals(new Money("200"),loanActivityEntity.getPenalty());
 		assertEquals(loanBO.getLoanSummary().getOriginalPenalty().subtract(loanBO.getLoanSummary().getPenaltyPaid()),
 				loanActivityEntity.getPenaltyOutstanding());
@@ -946,6 +946,7 @@ public class TestLoanBO extends MifosTestCase {
 		List<Object> objectList = Arrays.asList(loanActivityDetailsSet.toArray());
 		LoanActivityEntity loanActivityEntity = (LoanActivityEntity) objectList.get(0);
 		assertEquals(new Money("100"),loanActivityEntity.getFee());
+		assertEquals( new Timestamp(DateUtils.getCurrentDateWithoutTimeStamp().getTime()), loanActivityEntity.getTrxnCreatedDate());
 		assertEquals(loanBO.getLoanSummary().getOriginalFees().subtract(loanBO.getLoanSummary().getFeesPaid()),
 				loanActivityEntity.getFeeOutstanding());
 		
@@ -1008,6 +1009,7 @@ public class TestLoanBO extends MifosTestCase {
 		List<Object> objectList = Arrays.asList(loanActivityDetailsSet.toArray());
 		LoanActivityEntity loanActivityEntity = (LoanActivityEntity) objectList.get(0);
 		assertEquals(new Money("200"),loanActivityEntity.getFee());
+		assertEquals( new Timestamp(DateUtils.getCurrentDateWithoutTimeStamp().getTime()), loanActivityEntity.getTrxnCreatedDate());
 		assertEquals(loanBO.getLoanSummary().getOriginalFees().subtract(loanBO.getLoanSummary().getFeesPaid()),
 				loanActivityEntity.getFeeOutstanding());
 	}
@@ -2988,6 +2990,7 @@ public class TestLoanBO extends MifosTestCase {
 		assertEquals(new Money(), nextInstallment.getTotalFeeDue());
 		
 	}
+	
 	private LoanBO createAndRetrieveLoanAccount(LoanOfferingBO loanOffering,
 			boolean isInterestDedAtDisb, List<FeeView> feeViews,
 			Short noOfinstallments, Double interestRate)

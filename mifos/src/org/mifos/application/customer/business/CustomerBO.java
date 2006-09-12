@@ -49,7 +49,6 @@ import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.configuration.business.MifosConfiguration;
@@ -502,25 +501,6 @@ public abstract class CustomerBO extends BusinessObject {
 				savingsAccounts.add((SavingsBO) account);
 		}
 		return savingsAccounts;
-	}
-	
-	public List<LoanBO> getActiveLoanAccounts() throws CustomerException {
-		List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
-		for (AccountBO account : accounts) {
-			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOANACCOUNT.getValue())) {
-				AccountState accountState;
-				try {
-					accountState = account.getState();
-				} catch (AccountException ae) {
-					throw new CustomerException(ae);
-				}
-			if(accountState.equals(AccountState.LOANACC_ACTIVEINGOODSTANDING) || accountState.equals(AccountState.LOANACC_APPROVED) || 
-					accountState.equals(AccountState.LOANACC_BADSTANDING) || accountState.equals(AccountState.LOANACC_DBTOLOANOFFICER))
-				loanAccounts.add((LoanBO) account);
-			}
-		}
-		return loanAccounts;
 	}
 
 	public List<CustomerNoteEntity> getRecentCustomerNotes() {

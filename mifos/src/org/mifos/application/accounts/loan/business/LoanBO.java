@@ -448,7 +448,7 @@ public class LoanBO extends AccountBO {
 				loanSummary.getOriginalFees().subtract(
 						loanSummary.getFeesPaid()), penalty, loanSummary
 						.getOriginalPenalty().subtract(
-								loanSummary.getPenaltyPaid()));
+								loanSummary.getPenaltyPaid()),DateUtils.getCurrentDateWithoutTimeStamp());
 		this.addLoanActivity(loanActivity);
 	}
 
@@ -626,7 +626,7 @@ public class LoanBO extends AccountBO {
 
 		// if the trxn date is not equal to disbursementDate we need to
 		// regenerate the installments
-		if (!this.disbursementDate.equals(transactionDate)) {
+		if (!DateUtils.getDateWithoutTimeStamp(disbursementDate.getTime()).equals(DateUtils.getDateWithoutTimeStamp(transactionDate.getTime()))) {
 			this.disbursementDate = transactionDate;
 			regeneratePaymentSchedule();
 		}
@@ -686,7 +686,7 @@ public class LoanBO extends AccountBO {
 		loanTrxns.add(loanTrxnDetailEntity);
 
 		addLoanActivity(buildLoanActivity(loanTrxns, personnel,
-				"Loan Disbursal"));
+				"Loan Disbursal", transactionDate));
 		accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
 		this.addAccountPayment(accountPaymentEntity);
 		this.buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
@@ -790,7 +790,7 @@ public class LoanBO extends AccountBO {
 			getPerformanceHistory().setNoOfPayments(
 					getPerformanceHistory().getNoOfPayments() + 1);
 		addLoanActivity(buildLoanActivity(accountPaymentEntity
-				.getAccountTrxns(), personnel, "Loan Repayment"));
+				.getAccountTrxns(), personnel, "Loan Repayment",DateUtils.getCurrentDateWithoutTimeStamp()));
 		buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 
 		AccountStateEntity newAccountState = (AccountStateEntity) masterPersistence
@@ -883,7 +883,7 @@ public class LoanBO extends AccountBO {
 			accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
 		}
 		addLoanActivity(buildLoanActivity(accountPaymentEntity
-				.getAccountTrxns(), personnel, "Loan Written Off"));
+				.getAccountTrxns(), personnel, "Loan Written Off",DateUtils.getCurrentDateWithoutTimeStamp()));
 		buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 		changeStatus(statusId, null, comment);
 
@@ -1166,7 +1166,7 @@ public class LoanBO extends AccountBO {
 					.getNoOfPayments() + 1);
 		}
 		addLoanActivity(buildLoanActivity(accountPayment.getAccountTrxns(),
-				paymentData.getPersonnel(), "Payment rcvd."));
+				paymentData.getPersonnel(), "Payment rcvd.", paymentData.getTransactionDate()));
 		return accountPayment;
 	}
 
@@ -1213,7 +1213,7 @@ public class LoanBO extends AccountBO {
 			PersonnelBO personnel = new PersonnelPersistenceService()
 					.getPersonnel(getUserContext().getId());
 			addLoanActivity(buildLoanActivity(reversedTrxns, personnel,
-					"Loan Adjusted"));
+					"Loan Adjusted",DateUtils.getCurrentDateWithoutTimeStamp()));
 		}
 	}
 
@@ -1334,7 +1334,8 @@ public class LoanBO extends AccountBO {
 
 	private LoanActivityEntity buildLoanActivity(
 			Collection<AccountTrxnEntity> accountTrxnDetails,
-			PersonnelBO personnel, String comments) {
+			PersonnelBO personnel, String comments, Date trxnDate) {
+		Date activityDate = trxnDate;
 		Money principal = new Money();
 		Money interest = new Money();
 		Money penalty = new Money();
@@ -1359,7 +1360,7 @@ public class LoanBO extends AccountBO {
 				loanSummary.getOriginalFees().subtract(
 						loanSummary.getFeesPaid()), penalty, loanSummary
 						.getOriginalPenalty().subtract(
-								loanSummary.getPenaltyPaid()));
+								loanSummary.getPenaltyPaid()), activityDate);
 	}
 
 	private Short getInstallmentSkipToStartRepayment() {
@@ -2346,7 +2347,7 @@ public class LoanBO extends AccountBO {
 		accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
 
 		addLoanActivity(buildLoanActivity(accountPaymentEntity
-				.getAccountTrxns(), personnel, "Payment rcvd."));
+				.getAccountTrxns(), personnel, "Payment rcvd.",recieptDate));
 		return accountPaymentEntity;
 	}
 

@@ -615,8 +615,7 @@ public class ClientBO extends CustomerBO {
 	}
 	
 	private void checkIfClientCanBeClosed()throws CustomerException{
-		if (getActiveLoanAccounts().size() > 0
-				|| getActiveSavingsAccounts().size() > 0) {
+		if (isAnyLoanAccountOpen() || isAnySavingsAccountOpen()) {
 			throw new CustomerException(
 					CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
 		}

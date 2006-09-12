@@ -14,6 +14,7 @@ import org.mifos.application.accounts.loan.business.LoanPerformanceHistoryEntity
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -446,6 +447,36 @@ public class TestCustomerBO extends MifosTestCase {
 		}
 		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,center.getCustomerId());
 		loanOfficer=(PersonnelBO)HibernateUtil.getSessionTL().get(PersonnelBO.class,loanOfficer.getPersonnelId());
+	}
+	
+	public void testValidateStatusForClientSavingsAccountInactive()
+			throws Exception {
+		accountBO = getSavingsAccount("fsaf6", "ads6");
+		accountBO.changeStatus(AccountState.SAVINGS_ACC_INACTIVE.getValue(),
+				null, "changed status");
+		accountBO.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
+				client.getCustomerId());
+		Short newStatusId = CustomerStatus.CLIENT_CLOSED.getValue();
+		try {
+			client.changeStatus(newStatusId, null, "Test");
+			assertFalse(true);
+		} catch (CustomerException sce) {
+			assertTrue(true);
+			assertEquals(sce.getKey(),
+					CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
+		}
+		HibernateUtil.closeSession();
+		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
+				client.getCustomerId());
+		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
+				group.getCustomerId());
+		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,
+				center.getCustomerId());
+		accountBO = (SavingsBO) HibernateUtil.getSessionTL().get(
+				SavingsBO.class, accountBO.getAccountId());
 	}
 
 	private void changeFirstInstallmentDate(AccountBO accountBO,

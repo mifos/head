@@ -8,7 +8,6 @@ import java.util.List;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -16,12 +15,9 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
@@ -65,27 +61,7 @@ public class TestPersonnelNoteAction extends MifosMockStrutsTestCase {
 		flowManager.addFLow(flowKey, flow);
 		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
 				flowManager);
-		EntityMasterData.getInstance().init();
-		FieldConfigItf fieldConfigItf = FieldConfigImplementer.getInstance();
-		fieldConfigItf.init();
-		FieldConfigImplementer.getInstance();
-		getActionServlet().getServletContext().setAttribute(
-				Constants.FIELD_CONFIGURATION,
-				fieldConfigItf.getEntityMandatoryFieldMap());
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		addRequestParameter("input", "CreateUser");
-		PersonnelBusinessService personnelBusinessService = new PersonnelBusinessService();
-		SessionUtils
-				.setAttribute(PersonnelConstants.OFFICE,
-						personnelBusinessService.getOffice(Short.valueOf("1")),
-						request);
-		SessionUtils.setAttribute(PersonnelConstants.ROLES_LIST,
-				personnelBusinessService.getRoles(), request);
-		SessionUtils.setAttribute(PersonnelConstants.ROLEMASTERLIST,
-				personnelBusinessService.getRoles(), request);
-
-		personnelBusinessService = null;
 
 	}
 

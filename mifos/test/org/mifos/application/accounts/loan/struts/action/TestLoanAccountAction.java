@@ -836,7 +836,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", group, accountSate, startDate, loanOffering,
 				disbursalType);
-		LoanActivityEntity loanActivity = new LoanActivityEntity(accountBO,TestObjectFactory.getPersonnel(userContext.getId()),"testing",new Money("100"),new Money("100"),new Money("100"),new Money("100"),new Money("100"),new Money("100"),new Money("100"),new Money("100"));
+		LoanActivityEntity loanActivity = new LoanActivityEntity(accountBO,TestObjectFactory.getPersonnel(userContext.getId()),"testing",new Money("100"),new Money("100"),new Money("100"),new Money("100"),new Money("100"),new Money("100"),new Money("100"),new Money("100"),startDate);
 		((LoanBO) accountBO).addLoanActivity(loanActivity);
 		addNotes();
 		TestObjectFactory.updateObject(accountBO);
@@ -906,7 +906,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 						System.currentTimeMillis()));
 	}
 	
-	private AccountBO getLoanAccount() {
+private AccountBO getLoanAccount() {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),

@@ -29,6 +29,7 @@ public class TestLoanActivityAction extends MifosMockStrutsTestCase {
 
 	protected CustomerBO group = null;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		try {
@@ -60,6 +61,7 @@ public class TestLoanActivityAction extends MifosMockStrutsTestCase {
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(accountBO);
 		TestObjectFactory.cleanUp(group);
@@ -67,6 +69,17 @@ public class TestLoanActivityAction extends MifosMockStrutsTestCase {
 
 		HibernateUtil.closeSession();
 		super.tearDown();
+	}
+
+	public void testGetAllActivity() {
+		Date startDate = new Date(System.currentTimeMillis());
+		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
+		LoanBO loan = (LoanBO) accountBO;
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "getAllActivity");
+		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
+		actionPerform();
+		verifyForward("getAllActivity_success");
 	}
 
 	private AccountBO getLoanAccount(Short accountSate, Date startDate,
@@ -87,20 +100,4 @@ public class TestLoanActivityAction extends MifosMockStrutsTestCase {
 				disbursalType);
 
 	}
-
-	public void testGetAllActivity() {
-		try {
-			Date startDate = new Date(System.currentTimeMillis());
-			accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
-			LoanBO loan = (LoanBO) accountBO;
-			setRequestPathInfo("/loanAccountAction.do");
-			addRequestParameter("method", "getAllActivity");
-			addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
-			actionPerform();
-			verifyForward("getAllActivity_success");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 }
