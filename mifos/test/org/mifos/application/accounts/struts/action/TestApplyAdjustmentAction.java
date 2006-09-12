@@ -45,7 +45,6 @@ import java.util.List;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -91,7 +90,8 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	public void setUp()throws Exception{
 		super.setUp();
 		try {	setServletConfigFile("WEB-INF/web.xml");
-				setConfigFile("org/mifos/framework/util/helpers/struts-config.xml");
+				setConfigFile(
+						"org/mifos/application/accounts/struts-config.xml");
 		} catch (Exception e) {
 
 			e.printStackTrace();

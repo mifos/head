@@ -5,7 +5,7 @@ import junit.framework.TestSuite;
 
 import org.mifos.application.productdefinition.business.TestPrdCategoryStatusEntity;
 import org.mifos.application.productdefinition.business.TestProductCategoryBO;
-import org.mifos.application.productdefinition.business.TestProductCategoryBusinessService;
+import org.mifos.application.productdefinition.business.service.TestProductCategoryBusinessService;
 import org.mifos.application.productdefinition.business.TestSavingsOfferingBO;
 import org.mifos.application.productdefinition.business.service.SavingsPrdBusinessServiceTest;
 import org.mifos.application.productdefinition.persistence.PrdOfferingPersistenceTest;

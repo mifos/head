@@ -1,10 +1,12 @@
-package org.mifos.application.productdefinition.business;
+package org.mifos.application.productdefinition.business.service;
 
 import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.master.business.BusinessActivityEntity;
+import org.mifos.application.productdefinition.business.ProductCategoryBO;
+import org.mifos.application.productdefinition.business.ProductTypeEntity;
 import org.mifos.application.productdefinition.business.service.ProductCategoryBusinessService;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.ApplicationException;

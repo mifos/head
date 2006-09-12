@@ -8,10 +8,8 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.ApplicableCharge;
 import org.mifos.application.customer.business.CustomerBO;
@@ -53,7 +51,7 @@ public class TestApplyChargeAction extends MifosMockStrutsTestCase {
 			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
 					.getPath());
 			setConfigFile(ResourceLoader.getURI(
-					"org/mifos/framework/util/helpers/struts-config.xml")
+					"org/mifos/application/accounts/struts-config.xml")
 					.getPath());
 		} catch (URISyntaxException e) {
 			e.printStackTrace();

@@ -6,11 +6,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanDisbursmentActionForm;
-import org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActionForm;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
@@ -22,7 +19,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -51,7 +47,7 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
 					.getPath());
 			setConfigFile(ResourceLoader.getURI(
-					"org/mifos/framework/util/helpers/struts-config.xml")
+					"org/mifos/application/accounts/struts-config.xml")
 					.getPath());
 		} catch (URISyntaxException e) {
 			e.printStackTrace();

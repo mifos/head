@@ -37,10 +37,6 @@
 			org.apache.struts.action.ActionServlet
 		</servlet-class>
 		<init-param>
-			<param-name>config</param-name>
-			<param-value>/WEB-INF/struts-config.xml</param-value>
-		</init-param>
-		<init-param>
 			<param-name>convertNull</param-name>
 			<param-value>true</param-value>
 		</init-param>

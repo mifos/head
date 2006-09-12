@@ -36,7 +36,7 @@ public class TestLoanActivityAction extends MifosMockStrutsTestCase {
 			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
 					.getPath());
 			setConfigFile(ResourceLoader.getURI(
-					"org/mifos/framework/util/helpers/struts-config.xml")
+					"org/mifos/application/accounts/struts-config.xml")
 					.getPath());
 		} catch (URISyntaxException e) {
 			e.printStackTrace();

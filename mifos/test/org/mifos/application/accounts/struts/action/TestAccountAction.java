@@ -22,6 +22,7 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -29,8 +30,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import org.mifos.framework.MifosMockStrutsTestCase;
 
 public class TestAccountAction extends MifosMockStrutsTestCase {
 
@@ -49,7 +48,7 @@ public class TestAccountAction extends MifosMockStrutsTestCase {
 			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
 					.getPath());
 			setConfigFile(ResourceLoader.getURI(
-					"org/mifos/framework/util/helpers/struts-config.xml")
+					"org/mifos/application/accounts/struts-config.xml")
 					.getPath());
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
@@ -117,7 +116,7 @@ public class TestAccountAction extends MifosMockStrutsTestCase {
 				loanOffering);
 	}
 
-	public void  testGetTrxnHistorySucess()throws Exception{
+	public void testGetTrxnHistorySucess() throws Exception {
 		Date currentDate = new Date(System.currentTimeMillis());
 		setRequestPathInfo("/accountAppAction");
 		addRequestParameter("method", "getTrxnHistory");
@@ -141,8 +140,11 @@ public class TestAccountAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.flushandCloseSession();
 		accountBO = (LoanBO) TestObjectFactory.getObject(AccountBO.class, loan
 				.getAccountId());
-		List<TransactionHistoryView> trxnHistoryList = (List<TransactionHistoryView>)SessionUtils.getAttribute(SavingsConstants.TRXN_HISTORY_LIST,request.getSession());
-		for(TransactionHistoryView transactionHistoryView : trxnHistoryList)
-			assertEquals(accountBO.getUserContext().getName(),transactionHistoryView.getPostedBy());
+		List<TransactionHistoryView> trxnHistoryList = (List<TransactionHistoryView>) SessionUtils
+				.getAttribute(SavingsConstants.TRXN_HISTORY_LIST, request
+						.getSession());
+		for (TransactionHistoryView transactionHistoryView : trxnHistoryList)
+			assertEquals(accountBO.getUserContext().getName(),
+					transactionHistoryView.getPostedBy());
 	}
 }
