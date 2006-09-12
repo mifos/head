@@ -94,6 +94,8 @@
 	<html-el:form action="clientCustAction.do?method=previewEditPersonalInfo"
 			enctype="multipart/form-data" onsubmit="return chkForValidDates()">
 			<html-el:hidden property="input" value="editPersonalInfo" />
+			<html-el:hidden property="status" value="${sessionScope.BusinessKey.customerStatus.id}" />
+			
 			<%-- <td align="left" valign="top" bgcolor="#FFFFFF" class="paddingleftmain"> --%>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -192,7 +194,8 @@
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel name="client.DateOfBirth"
 										mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel></td>
-									<td><date:datetag property="dateOfBirth" /></td>
+									<td>
+									<date:datetag property="dateOfBirth" /></td>
 								</tr>
 							</c:when>
 							<c:otherwise>
