@@ -4,7 +4,6 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
-import org.mifos.application.accounts.savings.business.TestSavingsStateMachine;
 import org.mifos.application.accounts.savings.business.service.TestSavingsBusinessService;
 import org.mifos.application.accounts.savings.persistence.TestSavingsPersistence;
 import org.mifos.application.accounts.savings.struts.action.TestSavingsAction;
@@ -28,7 +27,6 @@ public class SavingsTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(TestSavingsBO.class);
 		testSuite.addTestSuite(TestSavingsClosureAction.class);
 		testSuite.addTestSuite(TestSavingsHelper.class);
-		testSuite.addTestSuite(TestSavingsStateMachine.class);
 		testSuite.addTestSuite(TestSavingsApplyAdjustmentAction.class);
 		testSuite.addTestSuite(TestSavingsDepositWithdrawalAction.class);
 		return testSuite;

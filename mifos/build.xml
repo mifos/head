@@ -283,7 +283,7 @@
 	</target>
 
 	<target name="coverage" depends="instrument" description="Compiles source, test, runs test cases and generates a coverage report">
-		<junit printsummary="on" fork="true" maxmemory="400M" failureproperty="tests.instrument.failure">
+		<junit printsummary="on" fork="true" maxmemory="300M" failureproperty="tests.instrument.failure">
 
 			<sysproperty key="net.sourceforge.cobertura.datafile" file="${dist.dir}/mifos_cobertura.ser" />
 

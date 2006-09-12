@@ -49,4 +49,11 @@ public enum AccountTypes {
 	public Short getValue() {
 		return value;
 	}
+	
+	public static AccountTypes getAccountType(Short value){
+		for(AccountTypes accountTypes : AccountTypes.values())
+			if(accountTypes.getValue().equals(value))
+				return accountTypes;
+		return null;
+	}
 }

@@ -37,47 +37,35 @@
  */
 package org.mifos.framework.exceptions;
 
-public class StatesInitializationException extends SystemException {
 
-	private static final long serialVersionUID = 1345L;
+public class StatesInitializationException extends ApplicationException {
 
-	public StatesInitializationException() {
-		super();
-		// TODO Auto-generated constructor stub
+	public StatesInitializationException(String key) {
+		super(key);
 	}
 
-	/**
-	 * @param cause
-	 */
-	public StatesInitializationException(Throwable cause) {
-		super(cause);
-		// TODO Auto-generated constructor stub
+	public StatesInitializationException(String stateinitialization_exception, Exception e) {
+		super(stateinitialization_exception,e);
 	}
 
-	/**
-	 * @param values
-	 */
-	public StatesInitializationException(Object[] values) {
-		super(values);
-		// TODO Auto-generated constructor stub
+	@Override
+	public String getKey() {
+		return super.getKey();
 	}
 
-	/**
-	 * @param values
-	 * @param cause
-	 */
-	public StatesInitializationException(Object[] values, Throwable cause) {
-		super(values, cause);
-		// TODO Auto-generated constructor stub
+	@Override
+	public Object[] getValues() {
+		return super.getValues();
 	}
 
-	/**
-	 * @param key
-	 * @param cause
-	 */
-	public StatesInitializationException(String key, Throwable cause) {
-		super(key, cause);
-		// TODO Auto-generated constructor stub
+	@Override
+	public void setKey(String key) {
+		super.setKey(key);
 	}
 
+	@Override
+	public void setValues(Object[] values) {
+		super.setValues(values);
+	}
+	
 }

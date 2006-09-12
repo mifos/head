@@ -7,6 +7,7 @@ import java.util.List;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.accounts.business.AccountStateMachines;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.business.TransactionHistoryView;
 import org.mifos.application.accounts.exceptions.AccountExceptionConstants;
@@ -14,6 +15,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.ApplicableCharge;
 import org.mifos.application.checklist.util.valueobjects.CheckListMaster;
@@ -33,6 +35,7 @@ import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 
@@ -90,10 +93,11 @@ public class AccountBusinessService extends BusinessService {
 		}
 	}
 
-	public List<AccountStateEntity> retrieveAllAccountStateList(Short prdTypeId)
-			throws ServiceException {
+	public List<AccountStateEntity> retrieveAllAccountStateList(
+			AccountTypes accountTypes) throws ServiceException {
 		try {
-			return new AccountPersistence().retrieveAllAccountStateList(prdTypeId);
+			return new AccountPersistence()
+					.retrieveAllAccountStateList(accountTypes.getValue());
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
@@ -119,19 +123,19 @@ public class AccountBusinessService extends BusinessService {
 			if (account.getAccountType().getAccountTypeId().equals(
 					AccountTypes.LOANACCOUNT.getValue()))
 				applicableChargeList = getLoanApplicableCharges(
-						new AccountPersistence().getAllAppllicableFees(accountId,
-								FeeCategory.LOAN.getValue()), userContext
-								.getLocaleId(), (LoanBO) account);
+						new AccountPersistence().getAllAppllicableFees(
+								accountId, FeeCategory.LOAN.getValue()),
+						userContext.getLocaleId(), (LoanBO) account);
 			else if (account.getAccountType().getAccountTypeId().equals(
 					AccountTypes.CUSTOMERACCOUNT.getValue()))
 				applicableChargeList = getCustomerApplicableCharges(
-						new AccountPersistence().getAllAppllicableFees(accountId,
-								getCategoryType(account.getCustomer())),
-						userContext.getLocaleId(),
-						((CustomerAccountBO) account).getCustomer()
-								.getCustomerMeeting().getMeeting()
-								.getMeetingDetails().getRecurrenceType()
-								.getRecurrenceId());
+						new AccountPersistence().getAllAppllicableFees(
+								accountId, getCategoryType(account
+										.getCustomer())), userContext
+								.getLocaleId(), ((CustomerAccountBO) account)
+								.getCustomer().getCustomerMeeting()
+								.getMeeting().getMeetingDetails()
+								.getRecurrenceType().getRecurrenceId());
 			addMiscFeeAndPenalty(applicableChargeList);
 		} catch (PersistenceException pe) {
 			throw new ServiceException(pe);
@@ -281,4 +285,39 @@ public class AccountBusinessService extends BusinessService {
 		applicableChargeList.add(applicableCharge);
 	}
 
+	public void initializeStateMachine(Short localeId, Short officeId,
+			AccountTypes accountType, CustomerLevel customerLevel)
+			throws ServiceException {
+		try {
+			AccountStateMachines.getInstance().initialize(localeId, officeId,
+					accountType, customerLevel);
+		} catch (StatesInitializationException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public String getStatusName(Short localeId, AccountState accountState,
+			AccountTypes accountType) {
+		return AccountStateMachines.getInstance().getAccountStatusName(
+				localeId, accountState, accountType);
+	}
+
+	public String getFlagName(Short localeId,
+			AccountStateFlag accountStateFlag, AccountTypes accountType) {
+		return AccountStateMachines.getInstance().getAccountFlagName(localeId,
+				accountStateFlag, accountType);
+	}
+
+	public List<AccountStateEntity> getStatusList(
+			AccountStateEntity accountStateEntity, AccountTypes accountType,
+			Short localeId) {
+		List<AccountStateEntity> statusList = AccountStateMachines
+				.getInstance().getStatusList(accountStateEntity, accountType);
+		if (null != statusList) {
+			for (AccountStateEntity accountState : statusList) {
+				accountState.setLocaleId(localeId);
+			}
+		}
+		return statusList;
+	}
 }

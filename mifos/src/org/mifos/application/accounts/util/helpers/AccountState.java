@@ -37,7 +37,6 @@
  */
 package org.mifos.application.accounts.util.helpers;
 
-import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 public enum AccountState {
 

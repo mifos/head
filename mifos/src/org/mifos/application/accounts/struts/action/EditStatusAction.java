@@ -6,29 +6,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.struts.Globals;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
-import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.struts.actionforms.EditStatusActionForm;
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.AccountStateFlag;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.checklist.util.valueobjects.CheckListMaster;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
@@ -60,14 +55,24 @@ public class EditStatusAction extends BaseAction {
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		AccountBO accountBO = getAccountBusinessService().getAccount(
 				Integer.valueOf(((EditStatusActionForm) form).getAccountId()));
-		accountBO.initializeStateMachine(userContext.getLocaleId());
+		getAccountBusinessService().initializeStateMachine(
+				userContext.getLocaleId(),
+				accountBO.getOffice().getOfficeId(),
+				AccountTypes.getAccountType(accountBO.getAccountType()
+						.getAccountTypeId()), null);
 		accountBO.setUserContext(userContext);
 		accountBO.getAccountState().setLocaleId(userContext.getLocaleId());
 		setFormAttributes(form, accountBO);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request
 				.getSession());
-		SessionUtils.setAttribute(SavingsConstants.STATUS_LIST, accountBO
-				.getStatusList(), request.getSession());
+		SessionUtils.setAttribute(SavingsConstants.STATUS_LIST,
+				getAccountBusinessService()
+						.getStatusList(
+								accountBO.getAccountState(),
+								AccountTypes.getAccountType(accountBO
+										.getAccountType().getAccountTypeId()),
+								userContext.getLocaleId()), request
+						.getSession());
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
@@ -165,8 +170,7 @@ public class EditStatusAction extends BaseAction {
 	}
 
 	private void getMasterData(ActionForm form, AccountBO accountBO,
-			HttpSession session, UserContext userContext)
-			throws Exception {
+			HttpSession session, UserContext userContext) throws Exception {
 		EditStatusActionForm editStatusActionForm = (EditStatusActionForm) form;
 		editStatusActionForm.setCommentDate(DateHelper
 				.getCurrentDate(userContext.getPereferedLocale()));
@@ -180,16 +184,25 @@ public class EditStatusAction extends BaseAction {
 				checklist, session);
 		if (StringUtils.isNullAndEmptySafe(editStatusActionForm
 				.getNewStatusId()))
-			newStatusName = accountBO.getStatusName(userContext.getLocaleId(),
-					Short.valueOf(editStatusActionForm.getNewStatusId()));
+			newStatusName = getAccountBusinessService().getStatusName(
+					userContext.getLocaleId(),
+					AccountState.getStatus(getShortValue(editStatusActionForm
+							.getNewStatusId())),
+					AccountTypes.getAccountType(accountBO.getAccountType()
+							.getAccountTypeId()));
 		SessionUtils.setAttribute(SavingsConstants.NEW_STATUS_NAME,
 				newStatusName, session);
 		if (StringUtils.isNullAndEmptySafe(editStatusActionForm
 				.getNewStatusId())
 				&& isNewStatusIsCancel(Short.valueOf(editStatusActionForm
 						.getNewStatusId())))
-			flagName = accountBO.getFlagName(new Short(editStatusActionForm
-					.getFlagId()));
+			flagName = getAccountBusinessService().getFlagName(
+					userContext.getLocaleId(),
+					AccountStateFlag
+							.getStatusFlag(getShortValue(editStatusActionForm
+									.getFlagId())),
+					AccountTypes.getAccountType(accountBO.getAccountType()
+							.getAccountTypeId()));
 		SessionUtils
 				.setAttribute(SavingsConstants.FLAG_NAME, flagName, session);
 	}

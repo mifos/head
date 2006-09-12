@@ -57,7 +57,6 @@ import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.application.accounts.business.AccountStateMachines;
 import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
@@ -124,7 +123,6 @@ import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
@@ -522,41 +520,6 @@ public class LoanBO extends AccountBO {
 			}
 		}
 		return totalFeeAmount;
-	}
-
-	@Override
-	public void initializeStateMachine(Short localeId) throws AccountException {
-		try {
-			AccountStateMachines.getInstance().initialize(localeId,
-					getOffice().getOfficeId(),
-					AccountTypes.LOANACCOUNT.getValue(), null);
-		} catch (StatesInitializationException e) {
-			throw new AccountException(e);
-		}
-	}
-
-	@Override
-	public List<AccountStateEntity> getStatusList() {
-		List<AccountStateEntity> statusList = AccountStateMachines
-				.getInstance().getStatusList(this.getAccountState(),
-						AccountTypes.LOANACCOUNT.getValue());
-		for (AccountStateEntity accStateObj : statusList) {
-			accStateObj.setLocaleId(userContext.getLocaleId());
-		}
-		return statusList;
-	}
-
-	@Override
-	public String getStatusName(Short localeId, Short accountStateId){
-			return AccountStateMachines.getInstance().getStatusName(localeId,
-					accountStateId, AccountTypes.LOANACCOUNT.getValue());
-	}
-
-	@Override
-	public String getFlagName(Short flagId){
-			return AccountStateMachines.getInstance().getFlagName(flagId,
-					AccountTypes.LOANACCOUNT.getValue());
-
 	}
 
 	@Override

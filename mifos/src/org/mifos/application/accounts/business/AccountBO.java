@@ -715,22 +715,6 @@ public class AccountBO extends BusinessObject {
 	public void waiveAmountOverDue(WaiveEnum waiveType) throws AccountException {
 	}
 
-	public void initializeStateMachine(Short localeId) throws AccountException {
-	}
-
-	public List<AccountStateEntity> getStatusList() {
-		return null;
-	}
-
-	public String getStatusName(Short localeId, Short accountStateId)
-			throws AccountException {
-		return null;
-	}
-
-	public String getFlagName(Short flagId) throws AccountException {
-		return null;
-	}
-
 	public Boolean isCurrentDateGreaterThanFirstInstallment() {
 		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
 			if (DateUtils.getCurrentDateWithoutTimeStamp().compareTo(

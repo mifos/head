@@ -716,46 +716,6 @@ public class TestSavingsBO extends MifosTestCase {
 		return new SavingsPaymentData(bulkEntryAccountActionView);
 	}
 
-	public void testGetStatusName() throws ApplicationException,
-			SystemException {
-		createInitialObjects();
-		savingsOffering = helper.createSavingsOffering("dfasdasd1","sad1");
-		savings = helper.createSavingsAccount("000X00000000013",
-				savingsOffering, group, AccountStates.SAVINGS_ACC_CANCEL,
-				userContext);
-		savings.initializeStateMachine(userContext.getLocaleId());
-		String name = savings.getStatusName(userContext.getLocaleId(), savings
-				.getAccountState().getId());
-		assertEquals("Cancelled", name);
-	}
-
-	public void testGetFlagName() throws NumberFormatException,
-			ApplicationException, SystemException {
-		createInitialObjects();
-		savingsOffering = helper.createSavingsOffering("dfasdasd1","sad1");
-		savings = helper.createSavingsAccount("000X00000000013",
-				savingsOffering, group, AccountStates.SAVINGS_ACC_CANCEL,
-				userContext);
-		savings.initializeStateMachine(userContext.getLocaleId());
-		String name = savings.getFlagName(Short.valueOf("4"));
-		assertEquals("Withdraw", name);
-	}
-
-	public void testRetrieveAccountStateEntityMasterObject()
-			throws NumberFormatException, ApplicationException, SystemException {
-		createInitialObjects();
-		savingsOffering = helper.createSavingsOffering("dfasdasd1","sad1");
-		savings = helper.createSavingsAccount("000X00000000013",
-				savingsOffering, group, AccountStates.SAVINGS_ACC_CANCEL,
-				userContext);
-		savings.initializeStateMachine(userContext.getLocaleId());
-		AccountStateEntity accountStateEntity = savings
-				.retrieveAccountStateEntityMasterObject(savings
-						.getAccountState());
-		assertEquals("Cancelled", accountStateEntity.getName(userContext
-				.getLocaleId()));
-	}
-
 	public void testMaxWithdrawAmount() throws AccountException,
 			Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
@@ -828,7 +788,7 @@ public class TestSavingsBO extends MifosTestCase {
 				savingsOffering, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
 		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
-				AccountTypes.SAVINGSACCOUNT.getValue(), null);
+				AccountTypes.SAVINGSACCOUNT, null);
 		savings.changeStatus(AccountState.SAVINGS_ACC_PENDINGAPPROVAL
 				.getValue(), null, "notes");
 		assertEquals(AccountStates.SAVINGS_ACC_PENDINGAPPROVAL, savings
@@ -846,7 +806,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		try {
 			AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
-					AccountTypes.SAVINGSACCOUNT.getValue(), null);
+					AccountTypes.SAVINGSACCOUNT, null);
 
 			savings.changeStatus(AccountState.SAVINGS_ACC_PENDINGAPPROVAL
 					.getValue(), null, "notes");
@@ -865,7 +825,7 @@ public class TestSavingsBO extends MifosTestCase {
 				savingsOffering, group,
 				AccountStates.SAVINGS_ACC_PENDINGAPPROVAL, userContext);
 		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
-				AccountTypes.SAVINGSACCOUNT.getValue(), null);
+				AccountTypes.SAVINGSACCOUNT, null);
 		// 6 is blacklisted
 
 		savings.changeStatus(AccountState.SAVINGS_ACC_CANCEL.getValue(), Short
@@ -885,7 +845,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		try {
 			AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
-					AccountTypes.SAVINGSACCOUNT.getValue(), null);
+					AccountTypes.SAVINGSACCOUNT, null);
 			// 6 is blacklisted
 
 			savings.changeStatus(AccountState.SAVINGS_ACC_CANCEL.getValue(),

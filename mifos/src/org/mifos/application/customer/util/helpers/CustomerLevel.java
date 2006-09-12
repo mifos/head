@@ -1,6 +1,5 @@
 package org.mifos.application.customer.util.helpers;
 
-import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 public enum CustomerLevel {
 
@@ -16,10 +15,10 @@ public enum CustomerLevel {
 		return value;
 	}
 	
-	public static CustomerLevel getStatus(Short value)throws PropertyNotFoundException{
+	public static CustomerLevel getLevel(Short value){
 		for(CustomerLevel level : CustomerLevel.values())
 			if(level.getValue().equals(value))
 				return level;
-		throw new PropertyNotFoundException("CustomerLevel");
+		return null;
 	}
 }

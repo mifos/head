@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -58,6 +59,7 @@ import org.mifos.application.checklist.util.resources.CheckListConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.business.CustomerStatusEntity;
+import org.mifos.application.customer.business.CustomerStatusFlagEntity;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -583,6 +585,12 @@ public class CustomerPersistence extends Persistence {
 			Map<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put("LEVEL_ID", levelId);
 			List<CustomerStatusEntity> queryResult = executeNamedQuery(NamedQueryConstants.GET_CUSTOMER_STATUS_LIST, queryParameters);
+			for (CustomerStatusEntity customerStatus : queryResult) {
+				for (CustomerStatusFlagEntity customerStatusFlagEntity : customerStatus.getFlagSet()) {
+					Hibernate.initialize(customerStatusFlagEntity);
+					Hibernate.initialize(customerStatusFlagEntity.getNames());
+				}
+			}
 			return queryResult;
 		} catch (HibernateException he) {
 			throw new PersistenceException(he);

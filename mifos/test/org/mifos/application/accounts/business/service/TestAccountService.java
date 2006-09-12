@@ -7,30 +7,35 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
-import org.apache.struts.taglib.tiles.GetAttributeTag;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.accounts.business.AccountStateMachines;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.business.TransactionHistoryView;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanFeeScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.AccountStateFlag;
+import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.ApplicableCharge;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
+import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFormula;
@@ -39,8 +44,14 @@ import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidUserException;
+import org.mifos.framework.exceptions.StatesInitializationException;
+import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Money;
@@ -49,14 +60,19 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 public class TestAccountService extends MifosTestCase {
 	
 	protected AccountBO accountBO=null;
+	protected SavingsBO savingsBO=null;
 	protected CustomerBO center=null;
 	protected CustomerBO group=null;
+	private MeetingBO meeting;
 	protected AccountPersistence accountPersistence;
+	private AccountBusinessService service;
 	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		accountPersistence = new AccountPersistence();
+		service = (AccountBusinessService) ServiceFactory.getInstance()
+		.getBusinessService(BusinessServiceName.Accounts);
 	}
 
 
@@ -64,6 +80,7 @@ public class TestAccountService extends MifosTestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		TestObjectFactory.cleanUp(accountBO);
+		TestObjectFactory.cleanUp(savingsBO);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		accountPersistence = null;
@@ -213,6 +230,85 @@ public class TestAccountService extends MifosTestCase {
 		}
 	}
 	
+	public void testGetStatusName() throws StatesInitializationException, InvalidUserException, SystemException, ApplicationException {
+		getInitialCustomersAndAccounts();
+		
+		AccountStateMachines.getInstance().initialize(
+				TestObjectFactory.getUserContext().getLocaleId(),
+				center.getOffice().getOfficeId(),
+				AccountTypes.SAVINGSACCOUNT,
+				null);
+		String statusNameForSavings = service.getStatusName(TestObjectFactory
+				.getUserContext().getLocaleId(), savingsBO.getState(), AccountTypes.SAVINGSACCOUNT);
+		assertNotNull(statusNameForSavings);
+		
+		AccountStateMachines.getInstance().initialize(
+				TestObjectFactory.getUserContext().getLocaleId(),
+				group.getOffice().getOfficeId(),
+				AccountTypes.LOANACCOUNT,
+				null);
+		String statusNameForLoan = service.getStatusName(TestObjectFactory
+				.getUserContext().getLocaleId(), accountBO.getState(), AccountTypes.LOANACCOUNT);
+		assertNotNull(statusNameForLoan);
+	}
+	
+	public void testGetFlagName() throws StatesInitializationException,
+			InvalidUserException, SystemException, ApplicationException {
+		getInitialCustomersAndAccounts();
+		savingsBO.setUserContext(TestObjectFactory.getUserContext());
+		accountBO.setUserContext(TestObjectFactory.getUserContext());
+		savingsBO.changeStatus(AccountState.SAVINGS_ACC_CANCEL.getValue(),AccountStateFlag.SAVINGS_REJECTED.getValue(),"rejected flag");
+		savingsBO.update();
+		accountBO.changeStatus(AccountState.LOANACC_CANCEL.getValue(),AccountStateFlag.LOAN_REJECTED.getValue(),"rejected flag");
+		accountBO.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		fetchAccounts();
+		
+		AccountStateMachines.getInstance().initialize(
+				TestObjectFactory.getUserContext().getLocaleId(),
+				center.getOffice().getOfficeId(),
+				AccountTypes.SAVINGSACCOUNT,
+				null);
+		String flagNameForSavings = service.getFlagName(TestObjectFactory
+				.getUserContext().getLocaleId(), AccountStateFlag.SAVINGS_REJECTED,AccountTypes.SAVINGSACCOUNT);
+		assertNotNull(flagNameForSavings);
+
+		AccountStateMachines.getInstance().initialize(
+				TestObjectFactory.getUserContext().getLocaleId(),
+				group.getOffice().getOfficeId(),
+				AccountTypes.LOANACCOUNT,
+				null);
+		String flagNameForLoan = service.getFlagName(TestObjectFactory
+				.getUserContext().getLocaleId(), AccountStateFlag.LOAN_REJECTED,AccountTypes.LOANACCOUNT);
+		assertNotNull(flagNameForLoan);
+	}
+
+	public void testGetStatusList() throws StatesInitializationException,
+			InvalidUserException, SystemException, ApplicationException {
+		getInitialCustomersAndAccounts();
+		
+		AccountStateMachines.getInstance().initialize(
+				TestObjectFactory.getUserContext().getLocaleId(),
+				center.getOffice().getOfficeId(),
+				AccountTypes.SAVINGSACCOUNT,
+				null);
+		List<AccountStateEntity> statusListForSavings = service.getStatusList(
+				savingsBO.getAccountState(), AccountTypes.SAVINGSACCOUNT,
+				TestObjectFactory.getUserContext().getLocaleId());
+		assertEquals(2, statusListForSavings.size());
+
+		AccountStateMachines.getInstance().initialize(
+				TestObjectFactory.getUserContext().getLocaleId(),
+				group.getOffice().getOfficeId(),
+				AccountTypes.LOANACCOUNT,
+				null);
+		List<AccountStateEntity> statusListForLoan = service.getStatusList(
+				accountBO.getAccountState(), AccountTypes.LOANACCOUNT,
+				TestObjectFactory.getUserContext().getLocaleId());
+		assertEquals(2, statusListForLoan.size());
+	}
+	
 	private AccountBO getLoanAccount()
 	{ 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1,1,4,2));
@@ -331,5 +427,42 @@ public class TestAccountService extends MifosTestCase {
 				break;
 			}
 		}
+	}
+	
+	private SavingsBO createSavingsAccount(String offeringName,String shortName) {
+		SavingsOfferingBO savingsOffering = new SavingsTestHelper().createSavingsOffering(offeringName,shortName);
+		return TestObjectFactory.createSavingsAccount("000100000000017",
+				center, AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, new Date(System
+						.currentTimeMillis()), savingsOffering);
+	}
+	
+	private void createCustomers() {
+        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1,1,4,2));
+        center=TestObjectFactory.createCenter("Center",Short.valueOf("13"),"1.1",meeting,new Date(System.currentTimeMillis()));
+        group=TestObjectFactory.createGroup("Group",Short.valueOf("9"),"1.1.1",center,new Date(System.currentTimeMillis()));
+	}
+	
+	private AccountBO getLoanAccount(CustomerBO customerBO)
+	{ 
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan",Short.valueOf("2"),
+        		new Date(System.currentTimeMillis()),Short.valueOf("1"),300.0,1.2,Short.valueOf("3"),
+        		Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("1"),
+        		meeting);
+        return TestObjectFactory.createLoanAccount("42423142341",customerBO,AccountState.LOANACC_PARTIALAPPLICATION.getValue(),new Date(System.currentTimeMillis()),loanOffering);
+   }
+	
+	private void getInitialCustomersAndAccounts() {
+		createCustomers();
+		accountBO = getLoanAccount(group);
+		savingsBO = createSavingsAccount("fsaf6","ads6");
+		HibernateUtil.closeSession();
+		fetchAccounts();
+	}
+	
+	private void fetchAccounts() {
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
+		savingsBO = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class,savingsBO.getAccountId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
 	}
 }

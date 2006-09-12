@@ -54,7 +54,6 @@ import org.mifos.application.accounts.business.AccountNotesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStateFlagEntity;
-import org.mifos.application.accounts.business.AccountStateMachines;
 import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
@@ -103,7 +102,6 @@ import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.ActivityContext;
@@ -1193,46 +1191,10 @@ public class SavingsBO extends AccountBO {
 		}
 	}
 
-	public List<AccountStateEntity> getStatusList() {
-		List<AccountStateEntity> statusList = AccountStateMachines
-				.getInstance().getStatusList(this.getAccountState(),
-						AccountTypes.SAVINGSACCOUNT.getValue());
-		if (null != statusList) {
-			for (AccountStateEntity accStateObj : statusList) {
-				accStateObj.setLocaleId(userContext.getLocaleId());
-			}
-		}
-		return statusList;
-	}
-
-	public void initializeStateMachine(Short localeId) throws AccountException {
-		try {
-			AccountStateMachines.getInstance().initialize(localeId,
-					getOffice().getOfficeId(),
-					AccountTypes.SAVINGSACCOUNT.getValue(),null);
-		} catch (StatesInitializationException e) {
-			throw new AccountException(e);
-		}
-	}
-
-	@Override
-	public String getStatusName(Short localeId, Short accountStateId){
-			return AccountStateMachines.getInstance().getStatusName(localeId,
-					accountStateId, AccountTypes.SAVINGSACCOUNT.getValue());
-	}
-
-	@Override
-	public String getFlagName(Short flagId){
-			return AccountStateMachines.getInstance().getFlagName(flagId,
-					AccountTypes.SAVINGSACCOUNT.getValue());
-	}
-
 	private void setValuesForActiveState() throws AccountException{
 		this.setActivationDate(new Date(new java.util.Date().getTime()));
 		this.generateDepositAccountActions();
 		try {
-			System.out.println("---"+getAccountId());
-			System.out.println("---"+getSavingsOffering().getPrdOfferingId());
 			this.setNextIntCalcDate(helper.getNextScheduleDate(getActivationDate(),
 					null, getTimePerForInstcalc()));
 			this.setNextIntPostDate(helper.getNextScheduleDate(getActivationDate(),
@@ -1243,13 +1205,6 @@ public class SavingsBO extends AccountBO {
 		} catch (ProductDefinitionException e) {
 			throw new AccountException(e);
 		}
-	}
-
-	public AccountStateEntity retrieveAccountStateEntityMasterObject(
-			AccountStateEntity accountStateEntity) {
-		return AccountStateMachines.getInstance()
-				.retrieveAccountStateEntityMasterObject(accountStateEntity,
-						AccountTypes.SAVINGSACCOUNT.getValue());
 	}
 
 	@Override

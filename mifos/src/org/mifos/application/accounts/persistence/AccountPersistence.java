@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
@@ -14,6 +15,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.accounts.business.AccountStateFlagEntity;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.checklist.util.valueobjects.CheckListMaster;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
@@ -173,6 +175,12 @@ public class AccountPersistence extends Persistence {
 		queryParameters.put("prdTypeId", prdTypeId);
 		List<AccountStateEntity> queryResult = executeNamedQuery(
 				NamedQueryConstants.RETRIEVEALLACCOUNTSTATES, queryParameters);
+		for(AccountStateEntity accountStateEntity : queryResult) {
+			for(AccountStateFlagEntity accountStateFlagEntity : accountStateEntity.getFlagSet()) {
+				Hibernate.initialize(accountStateFlagEntity);
+				Hibernate.initialize(accountStateFlagEntity.getNames());
+			}
+		}
 		return queryResult;
 	}
 

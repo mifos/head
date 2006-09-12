@@ -1,6 +1,5 @@
 package org.mifos.application.customer.struts.action;
 
-import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.List;
 
@@ -22,12 +21,8 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
@@ -68,35 +63,23 @@ public class CustActionTest extends MifosMockStrutsTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		try {
-			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
+		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
+				.getPath());
+		setConfigFile(ResourceLoader.getURI(
+				"org/mifos/application/customer/struts-config.xml")
 					.getPath());
-			setConfigFile(ResourceLoader.getURI(
-					"org/mifos/framework/util/helpers/struts-config.xml")
-					.getPath());
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		userContext = TestObjectFactory.getUserContext();
+		userContext = TestObjectFactory.getContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
-		ActivityContext ac = new ActivityContext((short) 0, userContext
-				.getBranchId().shortValue(), userContext.getId().shortValue());
-		request.getSession(false).setAttribute("ActivityContext", ac);
+		
+		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
 		Flow flow = new Flow();
 		flowKey = String.valueOf(System.currentTimeMillis());
 		FlowManager flowManager = new FlowManager();
 		flowManager.addFLow(flowKey, flow);
 		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
 				flowManager);
-		EntityMasterData.getInstance().init();
-		FieldConfigItf fieldConfigItf = FieldConfigImplementer.getInstance();
-		fieldConfigItf.init();
-		FieldConfigImplementer.getInstance();
-		getActionServlet().getServletContext().setAttribute(
-				Constants.FIELD_CONFIGURATION,
-				fieldConfigItf.getEntityMandatoryFieldMap());
 	}
 
 	@Override

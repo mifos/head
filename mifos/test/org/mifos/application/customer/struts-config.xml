@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	Document   : struts-config.xml
+	Created on : August 22, 2005
+	Author     : ashishsmital
+	Description: Purpose of the document follows.
+-->
+
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+"http://jakarta.apache.org/struts/dtdt/struts-config_1_2.dtd">
+
+
+<struts-config>
+	<form-beans>
+				<form-bean name="custActionForm" type="org.mifos.application.customer.struts.actionforms.CustActionForm"></form-bean>
+				<form-bean name="editCustomerStatusActionForm" type="org.mifos.application.customer.struts.actionforms.EditCustomerStatusActionForm" />
+				<form-bean name="custHistoricalDataActionForm" type="org.mifos.application.customer.struts.actionforms.CustHistoricalDataActionForm"></form-bean>
+				<form-bean name="customerNotesActionForm" type="org.mifos.application.customer.struts.actionforms.CustomerNotesActionForm" />
+				<form-bean name="custApplyAdjustmentActionForm"	type="org.mifos.application.customer.struts.actionforms.CustomerApplyAdjustmentActionForm" />
+	</form-beans>
+	<global-exceptions>
+		<exception type="org.mifos.framework.exceptions.SystemException"
+			handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+			key="exception.framework.SystemException" scope="request"
+			path="/pages/framework/jsp/error.jsp" />
+		<exception
+			type="org.mifos.framework.exceptions.ApplicationException"
+			handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+			key="exception.framework.ApplicationException" scope="request" />
+		<exception type="org.mifos.framework.exceptions.PageExpiredException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.PageExpiredException" scope="request" path="/pages/framework/jsp/pageexpirederror.jsp"/>
+	</global-exceptions>
+
+	<action-mappings>
+		<action path="/customerAction" type="org.mifos.application.customer.struts.action.CustomerAction" 
+       		parameter="method"	
+       		scope="session">
+       		<forward name="waiveChargesDue_Success" path="/customerAction.do?method=forwardWaiveChargeDue"></forward>
+       		<forward name="waiveChargesOverDue_Success" path="/customerAction.do?method=forwardWaiveChargeOverDue"></forward>
+       		<forward name="waiveClientCharges_Success" 	path="/closedaccsearchaction.do?method=search&amp;input=ViewClientCharges&amp;searchNode(search_name)=ClientChargesDetails"/>
+       		<forward name="waiveGroupCharges_Success" 	path="/closedaccsearchaction.do?method=search&amp;input=ViewGroupCharges&amp;searchNode(search_name)=ClientChargesDetails"/>
+       		<forward name="waiveCenterCharges_Success" 	path="/closedaccsearchaction.do?method=search&amp;input=ViewCenterCharges&amp;searchNode(search_name)=ClientChargesDetails"/>
+       		
+       		<forward name="viewClientActivity" 	path="/pages/application/client/jsp/viewClientActivity.jsp"/>
+       		<forward name="viewGroupActivity" 	path="/pages/application/group/jsp/viewGroupActivity.jsp"/>
+       		<forward name="viewCenterActivity" 	path="/pages/application/center/jsp/viewCenterActivity.jsp"/>
+       		<forward name="viewAllClosedAccounts" path="/pages/application/customer/jsp/viewallclosedaccounts.jsp" />
+  		</action>
+  		<action path="/custApplyAdjustment" type="org.mifos.application.customer.struts.action.CustomerApplyAdjustmentAction" 
+      		name="custApplyAdjustmentActionForm" 
+       		parameter="method"	
+       		validate="true"
+       		input="/pages/application/customer/jsp/applyadjustment.jsp"    
+       		scope="session">
+       		<forward name="loadAdjustment_success" 	path="/pages/application/customer/jsp/applyadjustment.jsp"/>
+       		<forward name="loadAdjustment_failure" 	path="/pages/application/customer/jsp/applyadjustment.jsp"/>
+       		<forward name="previewAdjustment_success" path="/pages/application/customer/jsp/applyadjustment.jsp"/>
+       		<forward name="previewAdjustment_failure" path="/pages/application/customer/jsp/applyadjustment.jsp"/>
+       		<forward name="cancelAdjustment_failure" path="/pages/application/customer/jsp/applyadjustment.jsp"/>
+       		<forward name="applyAdjustment_failure" path="/pages/application/customer/jsp/applyadjustment.jsp" />
+			<forward name="applyAdjustment_client_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewClientCharges&amp;searchNode(search_name)=ClientChargesDetails" />
+       		<forward name="applyAdjustment_group_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewGroupCharges&amp;searchNode(search_name)=ClientChargesDetails" />
+       		<forward name="applyAdjustment_center_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewCenterCharges&amp;searchNode(search_name)=ClientChargesDetails" />
+       		<forward name="canceladj_group_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewGroupCharges&amp;searchNode(search_name)=ClientChargesDetails"/>
+       		<forward name="canceladj_center_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewCenterCharges&amp;searchNode(search_name)=ClientChargesDetails"/>
+       		<forward name="canceladj_client_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewClientCharges&amp;searchNode(search_name)=ClientChargesDetails"/>
+ 		</action>
+ 		<action path="/custAction"
+			type="org.mifos.application.customer.struts.action.CustAction"
+			name="custActionForm" parameter="method" validate="true"
+			input="/custAction.do?method=validate" scope="session">
+			
+			<forward name="getAllClosedAccounts" path="/pages/application/customer/jsp/getallclosedaccounts.jsp" />
+			<forward name="client_detail_page" path="/clientCustAction.do?method=get" />
+			<forward name="group_detail_page" path="/groupCustAction.do?method=get" />
+			<forward name="center_detail_page" path="/centerCustAction.do?method=get" />
+		</action>
+		<action path="/editCustomerStatusAction" 
+			type="org.mifos.application.customer.struts.action.EditCustomerStatusAction" 
+			name="editCustomerStatusActionForm" 
+			parameter="method" 
+			input="/editCustomerStatusAction.do?method=validate" 
+			validate="true" 
+			scope="session">
+			<forward name="load_success" path="/pages/application/customer/jsp/changeStatus.jsp" />
+			<forward name="preview_success" path="/pages/application/customer/jsp/changeStatusPreview.jsp" />
+			<forward name="previous_success" path="/pages/application/customer/jsp/changeStatus.jsp" />
+			<forward name="center_detail_page" path="/centerCustAction.do?method=get" />
+			<forward name="client_detail_page" path="/clientCustAction.do?method=get" />
+			<forward name="update_failure" path="/pages/application/customer/jsp/changeStatusPreview.jsp" />
+			<forward name="preview_failure" path="/pages/application/customer/jsp/changeStatus.jsp" />
+			<forward name="group_detail_page" path="/groupCustAction.do?method=get" />
+			<forward name="loadStatus_success" path="/pages/application/customer/jsp/customerchangeStatus.jsp" />
+			<forward name="previewStatus_success" path="/pages/application/customer/jsp/customerchangeStatusPreview.jsp" />
+			<forward name="previousStatus_success" path="/pages/application/customer/jsp/customerchangeStatus.jsp" />
+			<forward name="update_failure" path="/pages/application/customer/jsp/customerchangeStatusPreview.jsp" />
+			<forward name="previewStatus_failure" path="/pages/application/customer/jsp/customerchangeStatus.jsp" />
+		</action>
+		<action path="/customerNotesAction" type="org.mifos.application.customer.struts.action.CustomerNotesAction" 
+			name="customerNotesActionForm" 
+			parameter="method" 
+			validate="true" 
+			input="/customerNotesAction.do?method=validate" scope="session">
+			<forward name="load_success" path="/pages/application/customer/jsp/addCustomerNotes.jsp" />
+			<forward name="get_success" path="/CustomerNoteAction.do?method=search" />
+			<forward name="search_success" path="/pages/application/customer/jsp/viewCustomerNotes.jsp" />
+			<forward name="preview_success" path="/pages/application/customer/jsp/previewCustomerNotes.jsp" />
+			<forward name="preview_failure" path="/pages/application/customer/jsp/addCustomerNotes.jsp" />
+			<forward name="create_failure" path="/pages/application/customer/jsp/previewCustomerNotes.jsp" />
+			<forward name="previous_success" path="/pages/application/customer/jsp/addCustomerNotes.jsp" />
+			<forward name="group_detail_page" path="/groupCustAction.do?method=get" />
+			<forward name="center_detail_page" path="/centerAction.do?method=get" />
+			<forward name="client_detail_page" path="/clientCreationAction.do?method=get" />
+		</action>
+		<action path="/custHistoricalDataAction" type="org.mifos.application.customer.struts.action.CustHistoricalDataAction" name="custHistoricalDataActionForm" parameter="method" validate="true"
+			input="/custHistoricalDataAction.do?method=validate" scope="session">
+			<forward name="get_success" path="/pages/application/customer/jsp/customer_historicaldata.jsp" />
+			<forward name="load_success" path="/pages/application/customer/jsp/customer_edithistoricaldata.jsp" />
+			<forward name="preview_success" path="/pages/application/customer/jsp/customer_previewhistoricaldata.jsp" />
+			<forward name="previous_success" path="/pages/application/customer/jsp/customer_edithistoricaldata.jsp" />
+			<forward name="update_success" path="/custHistoricalDataAction.do?method=get" />
+			<forward name="group_detail_page" path="/GroupAction.do?method=get" />
+			<forward name="client_detail_page" path="/clientCustAction.do?method=get" />
+			<forward name="getHistoricalData_success" path="/pages/application/customer/jsp/cust_historicaldata.jsp" />
+			<forward name="loadHistoricalData_success" path="/pages/application/customer/jsp/cust_edithistoricaldata.jsp" />
+			<forward name="previewHistoricalData_success" path="/pages/application/customer/jsp/cust_previewhistoricaldata.jsp" />
+			<forward name="previousHistoricalData_success" path="/pages/application/customer/jsp/cust_edithistoricaldata.jsp" />
+			<forward name="updateHistoricalData_success" path="/custHistoricalDataAction.do?method=getHistoricalData" />
+		</action>
+	</action-mappings>
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property property="pathnames"
+			value="org/mifos/application/customer/validation.xml,org/mifos/application/customer/validator-rules.xml" />
+		<set-property property="stopOnFirstError" value="false" />
+	</plug-in>
+</struts-config>

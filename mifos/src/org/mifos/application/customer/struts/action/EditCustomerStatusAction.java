@@ -51,13 +51,10 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
-import org.mifos.application.customer.center.business.CenterBO;
-import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
-import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.struts.actionforms.EditCustomerStatusActionForm;
-import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
@@ -120,7 +117,7 @@ public class EditCustomerStatusAction extends BaseAction {
 
 		SessionUtils.setAttribute(SavingsConstants.STATUS_LIST, customerService
 				.getStatusList(customerBO.getCustomerStatus(),
-						getLevelIdBasedOnCustomer(customerBO), getUserContext(
+						customerBO.getLevel(), getUserContext(
 								request).getLocaleId()), request.getSession());
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
@@ -172,7 +169,7 @@ public class EditCustomerStatusAction extends BaseAction {
 
 		SessionUtils.setAttribute(SavingsConstants.STATUS_LIST, customerService
 				.getStatusList(customerBO.getCustomerStatus(),
-						getLevelIdBasedOnCustomer(customerBO), getUserContext(
+						customerBO.getLevel(), getUserContext(
 								request).getLocaleId()), request);
 		return mapping.findForward(ActionForwards.loadStatus_success.toString());
 	}
@@ -266,8 +263,8 @@ public class EditCustomerStatusAction extends BaseAction {
 	private String getStatusName(CustomerBO customerBO, Short localeId,
 			String statusId, Short statusIdValue){
 		if (StringUtils.isNullAndEmptySafe(statusId)) {
-			return customerService.getStatusName(localeId, statusIdValue,
-					getLevelIdBasedOnCustomer(customerBO));
+			return customerService.getStatusName(localeId, CustomerStatus.getStatus(statusIdValue),
+					customerBO.getLevel());
 		}
 		return null;
 	}
@@ -276,8 +273,8 @@ public class EditCustomerStatusAction extends BaseAction {
 			String statusId, Short statusIdValue, Short flagIdValue){
 		if (StringUtils.isNullAndEmptySafe(statusId)
 				&& isNewStatusCancelledOrClosed(statusIdValue)) {
-			return customerService.getFlagName(localeId, flagIdValue,
-					getLevelIdBasedOnCustomer(customerBO));
+			return customerService.getFlagName(localeId, CustomerStatusFlag.getStatusFlag(flagIdValue),
+					customerBO.getLevel());
 		}
 		return null;
 	}
@@ -327,11 +324,11 @@ public class EditCustomerStatusAction extends BaseAction {
 				.getGlobalCustNum());
 		editCustomerStatusActionForm.setCustomerName(customerBO
 				.getDisplayName());
-		if (customerBO instanceof CenterBO) {
+		if (customerBO.getCustomerLevel().isCenter()) {
 			editCustomerStatusActionForm.setInput("center");
-		} else if (customerBO instanceof GroupBO) {
+		} else if (customerBO.getCustomerLevel().isGroup()) {
 			editCustomerStatusActionForm.setInput("group");
-		} else if (customerBO instanceof ClientBO) {
+		} else if (customerBO.getCustomerLevel().isClient()) {
 			editCustomerStatusActionForm.setInput("client");
 		}
 
@@ -371,24 +368,11 @@ public class EditCustomerStatusAction extends BaseAction {
 							.getOfficeId(), getUserContext(request).getId());
 	}
 
-	private Short getLevelIdBasedOnCustomer(CustomerBO customerBO) {
-		if (customerBO instanceof CenterBO) {
-			return CustomerLevel.CENTER.getValue();
-		} else if (customerBO instanceof GroupBO) {
-			return CustomerLevel.GROUP.getValue();
-		} else if (customerBO instanceof ClientBO) {
-			return CustomerLevel.CLIENT.getValue();
-		}
-		return null;
-	}
-
 	private void loadInitialData(ActionForm form, CustomerBO customerBO,
 			UserContext userContext) throws StatesInitializationException {
 		customerBO.setUserContext(userContext);
 		customerService.initializeStateMachine(userContext.getLocaleId(),
-				customerBO.getOffice().getOfficeId(),
-				AccountTypes.CUSTOMERACCOUNT.getValue(),
-				getLevelIdBasedOnCustomer(customerBO));
+				customerBO.getOffice().getOfficeId(),AccountTypes.CUSTOMERACCOUNT,customerBO.getLevel());
 		setFormAttributes(form, customerBO);
 		customerBO.getCustomerStatus().setLocaleId(userContext.getLocaleId());
 	}
@@ -408,7 +392,7 @@ public class EditCustomerStatusAction extends BaseAction {
 		if (StringUtils.isNullAndEmptySafe(editStatusActionForm
 				.getNewStatusId()))
 			newStatusId = editStatusActionForm.getNewStatusIdValue();
-		if(!(customerBO instanceof CenterBO))
+		if(!(customerBO.getCustomerLevel().isCenter()))
 			checkPermission(customerBO, request, newStatusId, flagId);
 		customerBO.changeStatus(newStatusId, flagId, editStatusActionForm
 				.getNotes());

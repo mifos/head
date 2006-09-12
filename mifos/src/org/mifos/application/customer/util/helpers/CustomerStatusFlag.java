@@ -23,4 +23,11 @@ public enum CustomerStatusFlag {
 	public Short getValue() {
 		return value;
 	}
+	
+	public static CustomerStatusFlag getStatusFlag(Short value){
+		for(CustomerStatusFlag statusFlag : CustomerStatusFlag.values())
+			if(statusFlag.getValue().equals(value))
+				return statusFlag;
+		return null;
+	}
 }

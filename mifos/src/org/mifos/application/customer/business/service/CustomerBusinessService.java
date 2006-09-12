@@ -58,7 +58,10 @@ import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.client.business.CustomerPictureEntity;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerRecentActivityView;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
 import org.mifos.application.customer.util.helpers.LoanCycleCounter;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -308,26 +311,26 @@ public class CustomerBusinessService extends BusinessService {
 		return new CustomerPersistence().retrieveAllCustomerStatusList(levelId);
 	}
 
-	public void initializeStateMachine(Short localeId, Short officeId,Short accountTypeId,
-			Short levelId) throws StatesInitializationException {
-		AccountStateMachines.getInstance().initialize(localeId, officeId,accountTypeId,levelId);
+	public void initializeStateMachine(Short localeId, Short officeId,AccountTypes accountTypes,
+			CustomerLevel customerLevel) throws StatesInitializationException {
+		AccountStateMachines.getInstance().initialize(localeId, officeId,accountTypes,customerLevel);
 	}
 
-	public String getStatusName(Short localeId, Short statusId, Short levelId){
+	public String getStatusName(Short localeId, CustomerStatus customerStatus, CustomerLevel customerLevel){
 		return AccountStateMachines.getInstance().getCustomerStatusName(
-				localeId, statusId, levelId);
+				localeId, customerStatus, customerLevel);
 	}
 
-	public String getFlagName(Short localeId,Short flagId, Short levelId){
-		return AccountStateMachines.getInstance().getCustomerFlagName(localeId,flagId,
-				levelId);
+	public String getFlagName(Short localeId,CustomerStatusFlag customerStatusFlag, CustomerLevel customerLevel){
+		return AccountStateMachines.getInstance().getCustomerFlagName(localeId,customerStatusFlag,
+				customerLevel);
 	}
 
 	public List<CustomerStatusEntity> getStatusList(
-			CustomerStatusEntity customerStatusEntity, Short levelId,
+			CustomerStatusEntity customerStatusEntity, CustomerLevel customerLevel,
 			Short localeId) {
 		List<CustomerStatusEntity> statusList = AccountStateMachines
-				.getInstance().getStatusList(customerStatusEntity, levelId);
+				.getInstance().getStatusList(customerStatusEntity, customerLevel);
 		if (null != statusList) {
 			for (CustomerStatusEntity customerStatusObj : statusList) {
 				customerStatusObj.setLocaleId(localeId);

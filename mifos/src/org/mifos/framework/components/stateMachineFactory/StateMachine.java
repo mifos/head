@@ -37,9 +37,11 @@
  */
 package org.mifos.framework.components.stateMachineFactory;
 
+import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.framework.exceptions.StatesInitializationException;
 
 public interface StateMachine {
 	
-	public void initialize(Short localeId, Short officeId, Short prdTypeId, Short levelId) throws StatesInitializationException;
+	public void initialize(Short localeId, Short officeId, AccountTypes accountTypes, CustomerLevel customerLevel) throws StatesInitializationException;
 }

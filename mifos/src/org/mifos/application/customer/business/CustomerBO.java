@@ -748,6 +748,10 @@ public void changeStatus(Short newStatusId, Short flagId, String comment)
 		this.maxChildCount=this.getMaxChildCount().intValue()-1;
 	}
 	
+	public CustomerLevel getLevel() {
+		return CustomerLevel.getLevel(getCustomerLevel().getId());
+	}
+	
 	protected void validateMeeting(MeetingBO meeting) throws CustomerException {
 		if (meeting == null)
 			throw new CustomerException(CustomerConstants.INVALID_MEETING);
