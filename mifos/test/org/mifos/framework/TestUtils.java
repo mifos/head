@@ -5,9 +5,14 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestUtils {
 
+	/**
+	 * Also see {@link TestObjectFactory#getUserContext()} which should be
+	 * slower (it involves several database accesses).
+	 */
 	public static UserContext makeUser(int role) {
 		UserContext user = new UserContext();
 		user.setId(new Short("1"));

@@ -134,7 +134,6 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OperationMode;
 import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.business.PersonnelRoleEntity;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
@@ -147,17 +146,16 @@ import org.mifos.application.productdefinition.business.RecommendedAmntUnitEntit
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsTypeEntity;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
-import org.mifos.application.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.application.productdefinition.util.helpers.GracePeriodTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
-import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.rolesandpermission.util.valueobjects.Role;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
@@ -1039,8 +1037,6 @@ public class TestObjectFactory {
 						.intValue());
 			} else if (scheduleData.getClass().getName().equals(
 					"org.mifos.framework.components.scheduler.MonthData")) {
-				Short recurrenceId = meeting.getMeetingDetails()
-						.getRecurrenceType().getRecurrenceId();
 				if (meeting.getMeetingDetails().getMeetingRecurrence()
 						.getDayNumber() != null)
 					scheduleData.setDayNumber(meeting.getMeetingDetails()
@@ -1560,7 +1556,12 @@ public class TestObjectFactory {
 		
 	}
 
-	public static UserContext getUserContext() throws SystemException, InvalidUserException, ApplicationException  {
+	/**
+	 * Also see {@link TestUtils#makeUser(int)} which should be
+	 * faster (this method involves several database accesses).
+	 */
+	public static UserContext getUserContext() 
+	throws SystemException, InvalidUserException, ApplicationException  {
 		byte[] password = EncryptionService.getInstance()
 				.createEncryptedPassword("mifos");
 		PersonnelBO personnel = getPersonnel(Short.valueOf("1"));
@@ -1585,10 +1586,10 @@ public class TestObjectFactory {
 
 	}
 
-	public static CustomerCheckListBO createCustomerChecklist(Short customerLevel, Short customerStatus, Short checklistStatus){
+	public static CustomerCheckListBO createCustomerChecklist(
+			Short customerLevel, Short customerStatus, Short checklistStatus){
 		Session session = HibernateUtil.getSessionTL();
-		Transaction tx = null;
-		tx = session.beginTransaction();
+		session.beginTransaction();
 		CustomerCheckListBO customerChecklist = new CustomerCheckListBO();
 		customerChecklist.setChecklistName("productchecklist");
 		customerChecklist.setChecklistStatus(checklistStatus);
@@ -1602,9 +1603,10 @@ public class TestObjectFactory {
 		checkListDetailEntity.setAnswerType(Short.valueOf("1"));
 		checkListDetailEntity.setSupportedLocales(supportedLocales);
 		customerChecklist.addChecklistDetail(checkListDetailEntity);
-		CustomerLevelEntity customerLevelEntity = (CustomerLevelEntity) session.get(
-				CustomerLevelEntity.class, customerLevel);
-		CustomerStatusEntity customerStatusEntity = (CustomerStatusEntity) session.get(CustomerStatusEntity.class, customerStatus);
+		CustomerLevelEntity customerLevelEntity = (CustomerLevelEntity) 
+				session.get(CustomerLevelEntity.class, customerLevel);
+		CustomerStatusEntity customerStatusEntity = (CustomerStatusEntity) 
+				session.get(CustomerStatusEntity.class, customerStatus);
 		customerChecklist.setCustomerLevel(customerLevelEntity); 
 		customerChecklist.setCustomerStatus(customerStatusEntity);
 		customerChecklist.create();
@@ -1886,13 +1888,7 @@ public class TestObjectFactory {
 			session.delete(account);
 
 		}
-		if (account instanceof SavingsBO) {
-
-			SavingsBO savings = (SavingsBO) account;
-			session.delete(account);
-		} else {
-			session.delete(account);
-		}
+		session.delete(account);
 
 		if (newSession) {
 			transaction.commit();
