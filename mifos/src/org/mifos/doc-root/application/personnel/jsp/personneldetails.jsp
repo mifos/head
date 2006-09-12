@@ -235,11 +235,12 @@
 								</c:if>
 							</c:forEach>
 						</c:forEach> <br>
-						<span class="fontnormal"> <html-el:link
+						<%-- <span class="fontnormal"> <html-el:link
 							href="javascript:viewChangeLog()">
 							<mifos:mifoslabel name="Personnel.ViewChangeLog"
 								bundle="PersonnelUIResources"></mifos:mifoslabel>
-						</html-el:link> </span></td>
+						</html-el:link> </span> --%>
+						</td>
 						<td height="23" align="right" valign="top" class="fontnormal"><c:if
 							test="${personnelBO.locked == 'true'}">
 							<a href="PersonnelAction.do?method=loadUnLockUser"> <mifos:mifoslabel
