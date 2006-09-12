@@ -23,6 +23,7 @@ function getOffice(officeid){
 function addNewOffice(officeType){
 	document.offActionForm.method.value="load";
 	document.offActionForm.officeLevel.value=officeType;
+	alert(document.offActionForm.officeLevel.value);
 	offActionForm.submit();
   }  
 function addNewOfficeBlank(){
@@ -357,7 +358,7 @@ function addNewOfficeBlank(){
 			<!-- hidden veriable which will set input veriable -->
 			<html-el:hidden property="input" value="search" />
 			<!-- hidden varible for office type -->
-			<html-el:hidden property="officeLevel" />
+			<html-el:hidden property="officeLevel" value=""/>
 			<html-el:hidden property="officeId" value="" />
 
 		</html-el:form>

@@ -5,6 +5,7 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
@@ -74,9 +75,14 @@ function goToCancelPage(){
 							<br>
 
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
-								<tr class="fontnormalRedBold">
-									<td><font class="fontnormalRedBold"> <html-el:errors
-										bundle="OfficeUIResources" /> </font></td>
+								<tr >
+									
+								<logic:messagesPresent>
+								<td>
+								<font class="fontnormalRedBold"><html-el:errors
+									bundle="OfficeUIResources" /></font>
+									<br></td>
+								</logic:messagesPresent>
 								</tr>
 								<tr>
 									<td width="100%" height="23" class="fontnormalboldorange"><mifos:mifoslabel
