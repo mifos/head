@@ -149,4 +149,11 @@ public class OffHierarchyAction extends BaseAction {
 
 		}
 	}
+	
+	public ActionForward validate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		String method = (String) request.getAttribute("methodCalled");
+		return mapping.findForward(method + "_failure");
+	}
 }

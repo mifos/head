@@ -18,7 +18,9 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
@@ -77,6 +79,8 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.cleanUp(savings3);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
+		if (savingsOffering != null)
+			TestObjectFactory.removeObject(savingsOffering1);
 		if (savingsOffering1 != null)
 			TestObjectFactory.removeObject(savingsOffering1);
 		if (savingsOffering2 != null)
@@ -188,6 +192,44 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.removeObject(savingsOffering);
 	}
 
+	public void testSuccessfulCreateWithCustomFields() {
+		createInitialObjects();
+		savingsOffering = createSavingsOffering("sav prd1","prd1");
+		addRequestParameter("selectedPrdOfferingId", savingsOffering
+				.getPrdOfferingId().toString());
+		savings = new SavingsBO(userContext);
+		savings.setCustomer(group);
+		savings.setSavingsType(savingsOffering.getSavingsType());
+		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
+		setRequestPathInfo("/savingsAction.do");
+		addRequestParameter("method", "load");
+		actionPerform();
+		verifyForward("load_success");
+		addRequestParameter("selectedPrdOfferingId", savingsOffering
+				.getPrdOfferingId().toString());
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(SavingsConstants.CUSTOM_FIELDS, request.getSession());
+		setRequestPathInfo("/savingsAction.do");
+		addRequestParameter("method", "preview");
+		int i = 0;
+		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
+			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
+			addRequestParameter("customField["+ i +"].fieldValue", "11");
+			i++;
+		}
+		actionPerform();
+		verifyForward("preview_success");
+		setRequestPathInfo("/savingsAction.do");
+		addRequestParameter("stateSelected", Short
+				.toString(AccountStates.SAVINGS_ACC_PARTIALAPPLICATION));
+		addRequestParameter("method", "create");
+		actionPerform();
+		verifyForward("create_success");
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		assertEquals(customFieldDefs.size(), savings.getAccountCustomFields().size());
+	}
+
+	
 	public void testSuccessfulSave() {
 
 		createInitialObjects();
@@ -223,6 +265,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		verifyForward("create_success");
 		verifyNoActionErrors();
 		verifyNoActionMessages();
+		
 	}
 
 	public void testSuccessfulSaveInActiveState() {

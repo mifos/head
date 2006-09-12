@@ -1243,6 +1243,7 @@
 			input="/offhierarchyaction.do?method=validate" validate="true">
 			<forward name="load_success" path="/pages/application/office/jsp/offhierarchy.jsp" />
 			<forward name="update_success" path="/AdminAction.do?method=load" />
+			<forward name="update_failure" path="/pages/application/office/jsp/offhierarchy.jsp" />
 			<forward name="cancel_success" path="/AdminAction.do?method=load" />
 		</action>
 	    <!-- off hierarchy Action End-->

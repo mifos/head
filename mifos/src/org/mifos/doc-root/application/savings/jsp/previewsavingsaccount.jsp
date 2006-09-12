@@ -127,7 +127,7 @@
                   <c:forEach var="cfdef" items="${sessionScope.customFields}">
 						<c:forEach var="cf" items="${sessionScope.BusinessKey.accountCustomFields}">
 							<c:if test="${cfdef.fieldId==cf.fieldId}">
-								<mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" bundle="GroupUIResources"></mifos:mifoslabel>: 
+								<span class="fontnormalbold"><mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" bundle="GroupUIResources"></mifos:mifoslabel>:</span> 
 		        		  	 	<span class="fontnormal">
 									<c:out value="${cf.fieldValue}"/>
 								</span><br>

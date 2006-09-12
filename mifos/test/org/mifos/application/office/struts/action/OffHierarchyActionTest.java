@@ -187,14 +187,13 @@ public class OffHierarchyActionTest extends MifosMockStrutsTestCase {
 		verifyForwardPath("/pages/framework/jsp/pageexpirederror.jsp");
 	}
 
-	private void resetData() {
+	private void resetData()throws Exception {
 		HibernateUtil.getSessionTL();
 		HibernateUtil.startTransaction();
 		OfficeLevelEntity officeLevelEntity = (OfficeLevelEntity) HibernateUtil
 				.getSessionTL().get(OfficeLevelEntity.class,
 						OfficeLevel.SUBREGIONALOFFICE.getValue());
-		officeLevelEntity.addConfigured(true);
-		HibernateUtil.getSessionTL().update(officeLevelEntity);
+		officeLevelEntity.update(true);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 

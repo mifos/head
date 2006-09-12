@@ -80,6 +80,12 @@
 									<mifos:mifoslabel name="office.labelMaxMinLevel" bundle="OfficeResources"></mifos:mifoslabel>
 								</td>
 							</tr>
+							<tr>
+								<td colspan="2" class="fontnormal">
+									<font class="fontnormalRedBold"><html-el:errors bundle="OfficeResources" /> </font>
+
+								</td>
+							</tr>
 						</table>
 						<br>
 						<table width="93%" border="0" cellpadding="3" cellspacing="0">
@@ -90,12 +96,6 @@
 									<br>
 									<span class="fontnormalbold"><mifos:mifoslabel name="office.labelNote" bundle="OfficeResources"></mifos:mifoslabel></span>
 									<mifos:mifoslabel name="office.labelNoteInstruction" bundle="OfficeResources"></mifos:mifoslabel>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2" class="fontnormal">
-									<font class="fontnormalRedBold"><html-el:errors bundle="OfficeResources" /> </font>
-
 								</td>
 							</tr>
 							<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'officelevels')}" var="ol">

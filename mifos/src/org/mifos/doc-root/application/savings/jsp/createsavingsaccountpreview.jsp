@@ -222,7 +222,7 @@
                   <span class="fontnormalbold">
                     <mifos:mifoslabel name="Savings.additionalInformation"/><br>
                     <c:forEach var="cfdef" items="${sessionScope.customFields}">
-						<c:forEach var="cf" items="${sessionScope.BusinessKey.accountCustomFields}">
+						<c:forEach var="cf" items="${sessionScope.savingsActionForm.accountCustomFieldSet}">
 							<c:if test="${cfdef.fieldId==cf.fieldId}">
 								<mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" bundle="GroupUIResources"></mifos:mifoslabel>: 
 		        		  	 	<span class="fontnormal">

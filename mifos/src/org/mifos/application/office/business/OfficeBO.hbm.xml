@@ -96,6 +96,9 @@
     </query>
     <query name="office.getAllChildOffices">
        <![CDATA[select new org.mifos.application.office.business.OfficeView(office.officeId, office.officeName,office.level.id,office.versionNo) from org.mifos.application.office.business.OfficeBO office where office.status.id=:STATUS_ID and office.searchId like :OFFICE_LIKE_SEARCHID order by office.level.id, office.officeName]]>
-       																																								 
     </query>
+    <query name="office.getOfficeCountForLevel">
+            <![CDATA[select count(*) from org.mifos.application.office.business.OfficeBO office where office.level.id = :LEVEL_ID ]]>
+    </query>
+    
 </hibernate-mapping>

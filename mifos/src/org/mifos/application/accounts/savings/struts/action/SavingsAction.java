@@ -226,6 +226,7 @@ public class SavingsAction extends AccountAppAction {
 		SavingsBO savings = (SavingsBO) request.getSession().getAttribute(
 				Constants.BUSINESS_KEY);
 		savings.setRecommendedAmount(((SavingsActionForm)form).getRecommendedAmntValue());
+		savings.setAccountCustomFieldSet(((SavingsActionForm)form).getAccountCustomFieldSet());
 		SessionUtils.setAttribute(SavingsConstants.IS_PENDING_APPROVAL,
 				Configuration.getInstance().getAccountConfig(
 						savings.getCustomer().getOffice().getOfficeId())
@@ -340,6 +341,7 @@ public class SavingsAction extends AccountAppAction {
 		SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
 		savings.setRecommendedAmount(((SavingsActionForm)form).getRecommendedAmntValue());
+		savings.setAccountCustomFieldSet(((SavingsActionForm)form).getAccountCustomFieldSet());
 		logger.debug("In SavingsAction::editPreview()");
 		return mapping.findForward("editPreview_success");
 	}

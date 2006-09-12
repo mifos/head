@@ -40,6 +40,7 @@ package org.mifos.application.office.persistence;
 import java.util.List;
 
 import org.mifos.application.office.business.OfficeLevelEntity;
+import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -60,6 +61,14 @@ public class OfficeHierarchyPersistenceTest extends MifosTestCase {
 		for (OfficeLevelEntity officeLevelEntity : officeLevels) {
 			assertTrue(officeLevelEntity.isConfigured());
 		}
+	}
+	
+	public void testIsOfficePresentForLevel() throws Exception {
+		OfficeHierarchyPersistence persistence = new OfficeHierarchyPersistence();
+		assertTrue(persistence.isOfficePresentForLevel(OfficeLevel.HEADOFFICE.getValue()));
+		assertTrue(persistence.isOfficePresentForLevel(OfficeLevel.BRANCHOFFICE.getValue()));
+		assertFalse(persistence.isOfficePresentForLevel(OfficeLevel.REGIONALOFFICE.getValue()));
+		
 	}
 
 }

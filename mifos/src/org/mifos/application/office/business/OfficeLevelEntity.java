@@ -41,6 +41,7 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.persistence.OfficeHierarchyPersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
+import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 
@@ -69,7 +70,7 @@ public class OfficeLevelEntity extends MasterDataEntity {
 		return this.configured > 0;
 	}
 
-	public void addConfigured(boolean configured) {
+	private void addConfigured(boolean configured) {
 		this.configured = (short) (configured ? 1 : 0);
 	}
 
@@ -94,13 +95,18 @@ public class OfficeLevelEntity extends MasterDataEntity {
 	}
 
 	public void update(boolean configured) throws OfficeException {
-		if ((configured && !isConfigured()) || (!configured && isConfigured())) {
-			addConfigured(configured);
-			try {
-				new OfficeHierarchyPersistence().createOrUpdate(this);
-			} catch (PersistenceException e) {
-				throw new OfficeException(e);
+		try {
+			if(!configured && new OfficeHierarchyPersistence().isOfficePresentForLevel(getId())){
+				throw new OfficeException(OfficeConstants.KEYHASACTIVEOFFICEWITHLEVEL);
 			}
+			if ((configured && !isConfigured()) || (!configured && isConfigured())) {
+				addConfigured(configured);
+				new OfficeHierarchyPersistence().createOrUpdate(this);
+			}
+		} 
+		catch (PersistenceException e) {
+				throw new OfficeException(e);
 		}
+		
 	}
 }
