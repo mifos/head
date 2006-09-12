@@ -56,8 +56,8 @@ public class OffAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		OffActionForm actionForm = (OffActionForm) form;
-		loadParents(request, actionForm);
 		actionForm.clear();
+		loadParents(request, actionForm);
 		loadCreateCustomFields(actionForm, request);
 		loadofficeLevels(request);
 		return mapping.findForward(ActionForwards.load_success.toString());

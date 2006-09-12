@@ -5,6 +5,7 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
@@ -75,10 +76,15 @@ function  submitAdminLink()
 					<br>
 
 					<table width="93%" border="0" cellpadding="3" cellspacing="0">
-						<tr>
-							<font class="fontnormalRedBold"><html-el:errors
-								bundle="OfficeUIResources" /> </font>
-						</tr>
+						<tr >
+									
+								<logic:messagesPresent>
+								<td>
+								<font class="fontnormalRedBold"><html-el:errors
+									bundle="OfficeUIResources" /></font>
+									<br></td>
+								</logic:messagesPresent>
+								</tr>
 						<tr>
 							
 							<td height="23" class="fontnormalbold"><mifos:mifoslabel

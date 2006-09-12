@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficeView;
+import org.mifos.application.office.struts.actionforms.OffActionForm;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OperationMode;
 import org.mifos.application.office.util.resources.OfficeConstants;
@@ -73,6 +74,23 @@ public class TestOfficeAction extends MifosMockStrutsTestCase {
 		List<OfficeView> levels = (List<OfficeView>) request.getSession()
 				.getAttribute(OfficeConstants.OFFICELEVELLIST);
 		assertEquals(4, levels.size());
+	}
+	
+	public void testLoadLevel() {
+		setRequestPathInfo("/offAction.do");
+		addRequestParameter("method",Methods.load.toString());
+		addRequestParameter("officeLevel", "5");
+		actionPerform();
+		verifyForward(ActionForwards.load_success.toString());
+		List<OfficeView> parents = (List<OfficeView>) request.getSession()
+				.getAttribute(OfficeConstants.PARENTS);
+		assertEquals(2, parents.size());
+		List<OfficeView> levels = (List<OfficeView>) request.getSession()
+				.getAttribute(OfficeConstants.OFFICELEVELLIST);
+		assertEquals(4, levels.size());
+		OffActionForm offActionForm = (OffActionForm) request.getSession().getAttribute("offActionForm");
+		assertNotNull(offActionForm);
+		assertEquals("5",offActionForm.getOfficeLevel());
 	}
 
 	public void testLoadParent() {
