@@ -160,8 +160,7 @@ function  submitAdminLink()
 									<c:if test="${cfdef.fieldId==cf.fieldId}">
 
 										<font class="fontnormalBold"> <mifos:mifoslabel
-											name="${cf.lookUpEntity.entityType}" bundle="OfficeResources"></mifos:mifoslabel>
-										: </font>
+											name="${cf.lookUpEntity.entityType}" bundle="OfficeResources"></mifos:mifoslabel>:</font>
 										<span class="fontnormal"><c:out value="${cfdef.fieldValue}" /><br>
 										</span>
 									</c:if>

@@ -10,6 +10,7 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.validator.GenericValidator;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -32,7 +33,6 @@ import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
-
 
 public class PersonActionForm extends BaseActionForm {
 
@@ -77,7 +77,7 @@ public class PersonActionForm extends BaseActionForm {
 	private String dob;
 
 	private int age;
-	
+
 	private String maritalStatus;
 
 	private String gender;
@@ -85,7 +85,7 @@ public class PersonActionForm extends BaseActionForm {
 	private String dateOfJoiningMFI;
 
 	private String dateOfJoiningBranch;
-	
+
 	private String[] personnelRoles;
 
 	private List<CustomFieldView> customFields;
@@ -95,7 +95,7 @@ public class PersonActionForm extends BaseActionForm {
 
 		address = new Address();
 		customFields = new ArrayList<CustomFieldView>();
-		personnelRoles=null;
+		personnelRoles = null;
 
 	}
 
@@ -242,11 +242,9 @@ public class PersonActionForm extends BaseActionForm {
 		this.title = title;
 	}
 
-
-	
 	public void setAge(int age) {
 		this.age = age;
-		 
+
 	}
 
 	public void clear() {
@@ -271,7 +269,8 @@ public class PersonActionForm extends BaseActionForm {
 		this.gender = null;
 		this.dateOfJoiningMFI = null;
 		this.dateOfJoiningBranch = null;
-		this.personnelRoles = new String[10];;
+		this.personnelRoles = new String[10];
+		;
 		address = new Address();
 		customFields = new ArrayList<CustomFieldView>();
 	}
@@ -283,7 +282,6 @@ public class PersonActionForm extends BaseActionForm {
 	public void setAddress(Address address) {
 		this.address = address;
 	}
-
 
 	public String getFirstName() {
 		return firstName;
@@ -324,186 +322,6 @@ public class PersonActionForm extends BaseActionForm {
 	public void setPasswordRepeat(String passwordRepeat) {
 		this.passwordRepeat = passwordRepeat;
 	}
-	
-	public String getAge(){
-		if (dob!=null&&!dob.equals("") ){
-			Date date = DateHelper.getDate(dob);
-			Calendar calendar = Calendar.getInstance();
-			return String.valueOf(DateHelper.DateDiffInYears(new java.sql.Date(date.getTime())));
-		}
-		else
-			return "";
-			
-	}
-	
-	public Name getName(){
-		return new Name(firstName,middleName,secondLastName,lastName);
-	}
-
-	@Override
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
-		ActionErrors errors = new ActionErrors();
-		String method = request.getParameter("method");
-		if (method.equals(Methods.preview.toString())) {
-			handleCreatePreviewValidations(errors,request);
-			errors.add(super.validate(mapping, request));
-		}
-		if (method.equals(Methods.previewManage.toString())) {
-			handleManagePreviewValidations(errors,request);
-			errors.add(super.validate(mapping, request));
-		}
-		if (null != errors && !errors.isEmpty()) {
-			request.setAttribute(Globals.ERROR_KEY, errors);
-			request.setAttribute("methodCalled", method);
-			request.setAttribute(Constants.CURRENTFLOWKEY, request
-					.getParameter(Constants.CURRENTFLOWKEY));
-			//update the role list also
-			
-			try{
-			updateRoleLists(request);
-			}
-			catch (PageExpiredException e) {
-				// TODO:  do we need to ingnore it ?
-			}
-			
-		}
-
-		return errors;
-
-	}
-	private void updateRoleLists(HttpServletRequest request
-			) throws PageExpiredException {
-		
-		boolean addFlag = false;
-		List<Role> selectList = new ArrayList<Role>();
-		if (personnelRoles != null) {
-			
-			
-			List<Role> masterList = (List<Role>) SessionUtils.getAttribute(
-					PersonnelConstants.ROLEMASTERLIST, request);
-			
-			for (Role role : masterList) {
-				for (String roleId : personnelRoles) {
-					if (roleId!=null&&role.getId().intValue() == Integer.valueOf(roleId)
-							.intValue()) {
-						selectList.add(role);
-						addFlag=true;
-					}
-				}
-			}
-		}
-		if ( addFlag)SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST,
-				selectList, request);
-		else	SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST,
-					null, request);
-		
-		personnelRoles=null;
-	}
-
-
-	private ActionErrors checkForPassword(ActionErrors errors) {
-
-		// if password and confirm passowrd entries are made of only spaces,
-		// throw an exception
-		if (userPassword != null && passwordRepeat != null
-				&& userPassword.length() == passwordRepeat.length()
-				&& userPassword.length() != 0 && userPassword.trim().equals("")) {
-			if (errors == null)
-				errors = new ActionErrors();
-			errors.add(PersonnelConstants.PASSWORD_MASK, new ActionMessage(
-					PersonnelConstants.PASSWORD_MASK,
-					PersonnelConstants.PASSWORD));
-		}
-		if(StringUtils.isNullAndEmptySafe(userPassword) && StringUtils.isNullAndEmptySafe(passwordRepeat) && !(userPassword.trim().equals(passwordRepeat.trim()))){
-			errors.add(PersonnelConstants.PASSWORD ,new ActionMessage(PersonnelConstants.VALID_PASSWORD,PersonnelConstants.PASSWORD));
-		}
-		if(input.equals(PersonnelConstants.CREATE_USER) && (StringUtils.isNullOrEmpty(userPassword) || StringUtils.isNullOrEmpty(passwordRepeat)))
-			errors.add(PersonnelConstants.PASSWORD ,new ActionMessage(PersonnelConstants.VALID_PASSWORD,PersonnelConstants.PASSWORD));
-		return errors;
-	}
-
-
-	private ActionErrors handleCreatePreviewValidations(ActionErrors errors,
-			HttpServletRequest request) {
-		
-		if (errors == null) {
-			errors = new ActionErrors();
-		}
-		if (!StringUtils.isNullOrEmpty(dob)) {
-			
-			//sqlDOB = DateHelper.getLocaleDate(userContext.getPereferedLocale(), dob);
-			Date date = DateHelper.getDate(dob);
-			Calendar currentCalendar = new GregorianCalendar();
-			int year = currentCalendar.get(Calendar.YEAR);
-			int month = currentCalendar.get(Calendar.MONTH);
-			int day = currentCalendar.get(Calendar.DAY_OF_MONTH);
-			currentCalendar = new GregorianCalendar(year, month, day);
-			Date currentDate = new Date(currentCalendar
-					.getTimeInMillis());
-			if (currentDate.compareTo(date) < 0) {
-				errors = new ActionErrors();
-				errors.add(PersonnelConstants.INVALID_DOB, new ActionMessage(
-						PersonnelConstants.INVALID_DOB));
-			}
-		}
-		validateCustomFields(request, errors);
-
-		return checkForPassword(errors);
-	}
-
-	private ActionErrors handleManagePreviewValidations(ActionErrors errors ,HttpServletRequest request){
-		if(errors==null){
-			errors=new ActionErrors();
-		}
-		validateConfigurableMandatoryFields(request , errors , EntityType.PERSONNEL);
-		validateOffice(errors);
-		validateCustomFields(request, errors);
-		return checkForPassword(errors);
-	}
-
-	private void validateOffice(ActionErrors errors) {
-		if (StringUtils.isNullOrEmpty(officeId)){
-			errors.add(PersonnelConstants.OFFICE, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, PersonnelConstants.OFFICE));
-		}
-	}
-
-	protected void validateCustomFields(HttpServletRequest request,
-			ActionErrors errors) {
-		List<CustomFieldDefinitionEntity> customFieldDefs = null;
-
-		try {
-			customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-					.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
-		} catch (PageExpiredException e) {
-			
-			//ignore it 
-		}
-		if (customFieldDefs!=null)
-		for (CustomFieldView customField : customFields) {
-			boolean isErrorFound = false;
-			for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-				if (customField.getFieldId()
-						.equals(customFieldDef.getFieldId())
-						&& customFieldDef.isMandatory())
-					if (StringUtils.isNullOrEmpty(customField.getFieldValue())) {
-						errors.add(CustomerConstants.CUSTOM_FIELD,
-								new ActionMessage(
-										OfficeConstants.ENTERADDTIONALINFO));
-						isErrorFound = true;
-						break;
-					}
-
-			}
-			if (isErrorFound)
-				break;
-		}
-	}
-
-	
-	private void validateConfigurableMandatoryFields(HttpServletRequest request, ActionErrors errors, EntityType entityType){
-		checkForMandatoryFields(entityType.getValue(), errors, request);
-	}
 
 	public String getInput() {
 		return input;
@@ -527,6 +345,240 @@ public class PersonActionForm extends BaseActionForm {
 
 	public void setUserPassword(String userPassword) {
 		this.userPassword = userPassword;
+	}
+
+	public String getAge() {
+		if (dob != null && !dob.equals("")) {
+			return String.valueOf(DateHelper.DateDiffInYears(new java.sql.Date(
+					DateHelper.getDate(dob).getTime())));
+		} else
+			return "";
+
+	}
+
+	public Name getName() {
+		return new Name(firstName, middleName, secondLastName, lastName);
+	}
+
+	@Override
+	public ActionErrors validate(ActionMapping mapping,
+			HttpServletRequest request) {
+		ActionErrors errors = new ActionErrors();
+		String method = request.getParameter("method");
+		if (method.equals(Methods.preview.toString())) {
+			handleCreatePreviewValidations(errors, request);
+		}
+		if (method.equals(Methods.previewManage.toString())) {
+			handleManagePreviewValidations(errors, request);
+		}
+		if (null != errors && !errors.isEmpty()) {
+			request.setAttribute(Globals.ERROR_KEY, errors);
+			request.setAttribute("methodCalled", method);
+			request.setAttribute(Constants.CURRENTFLOWKEY, request
+					.getParameter(Constants.CURRENTFLOWKEY));
+			// update the role list also
+
+			try {
+				updateRoleLists(request);
+			} catch (PageExpiredException e) {
+				// TODO: do we need to ingnore it ?
+			}
+
+		}
+
+		return errors;
+
+	}
+
+	private void updateRoleLists(HttpServletRequest request)
+			throws PageExpiredException {
+
+		boolean addFlag = false;
+		List<Role> selectList = new ArrayList<Role>();
+		if (personnelRoles != null) {
+
+			List<Role> masterList = (List<Role>) SessionUtils.getAttribute(
+					PersonnelConstants.ROLEMASTERLIST, request);
+
+			for (Role role : masterList) {
+				for (String roleId : personnelRoles) {
+					if (roleId != null
+							&& role.getId().intValue() == Integer.valueOf(
+									roleId).intValue()) {
+						selectList.add(role);
+						addFlag = true;
+					}
+				}
+			}
+		}
+		if (addFlag)
+			SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST,
+					selectList, request);
+		else
+			SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST,
+					null, request);
+
+		personnelRoles = null;
+	}
+
+	private ActionErrors checkForPassword(ActionErrors errors) {
+
+		// if password and confirm passowrd entries are made of only spaces,
+		// throw an exception
+		if (userPassword != null && passwordRepeat != null
+				&& userPassword.length() == passwordRepeat.length()
+				&& userPassword.length() != 0 && userPassword.trim().equals("")) {
+			errors.add(PersonnelConstants.PASSWORD_MASK, new ActionMessage(
+					PersonnelConstants.PASSWORD_MASK,
+					PersonnelConstants.PASSWORD));
+		}
+		if (StringUtils.isNullAndEmptySafe(userPassword)
+				&& StringUtils.isNullAndEmptySafe(passwordRepeat)
+				&& !(userPassword.trim().equals(passwordRepeat.trim()))) {
+			errors.add(PersonnelConstants.PASSWORD, new ActionMessage(
+					PersonnelConstants.VALID_PASSWORD,
+					PersonnelConstants.PASSWORD));
+		}
+		if (input.equals(PersonnelConstants.CREATE_USER)
+				&& (StringUtils.isNullOrEmpty(userPassword) || StringUtils
+						.isNullOrEmpty(passwordRepeat)))
+			errors.add(PersonnelConstants.PASSWORD, new ActionMessage(
+					PersonnelConstants.VALID_PASSWORD,
+					PersonnelConstants.PASSWORD));
+		if (input.equals(PersonnelConstants.CREATE_USER)&& (StringUtils.isNullAndEmptySafe(userPassword))){
+			if( userPassword.length()<6)
+				errors.add(PersonnelConstants.ERROR_PASSWORD_LENGTH, new ActionMessage(
+						PersonnelConstants.ERROR_PASSWORD_LENGTH));
+		}
+		
+		return errors;
+	}
+
+	private void handleCreatePreviewValidations(ActionErrors errors,
+			HttpServletRequest request) {
+			validateNameDetail(errors);
+			validateEmail(errors);
+			validateDob(errors);
+			validateGender(errors);
+			validateUserHirerchy(errors);
+			validateloginName(errors);
+			checkForPassword(errors);
+			validateCustomFields(request, errors);
+			validateConfigurableMandatoryFields(request, errors,EntityType.PERSONNEL);
+			
+	}
+
+	private void validateNameDetail(ActionErrors errors) {
+		if (StringUtils.isNullOrEmpty(firstName)) {
+			errors.add(PersonnelConstants.ERROR_FIRSTNAME, new ActionMessage(
+					PersonnelConstants.ERROR_FIRSTNAME));
+		}
+		if (StringUtils.isNullOrEmpty(lastName)) {
+			errors.add(PersonnelConstants.ERROR_LASTNAME, new ActionMessage(
+					PersonnelConstants.ERROR_LASTNAME));
+		}
+	}
+
+	private void validateDob(ActionErrors errors) {
+		if(StringUtils.isNullOrEmpty(dob))
+		{
+			errors.add(PersonnelConstants.ERROR_DOB, new ActionMessage(
+					PersonnelConstants.ERROR_DOB));
+		}
+		else if (!StringUtils.isNullOrEmpty(dob)) {
+			Date date = DateHelper.getDate(dob);
+			Calendar currentCalendar = new GregorianCalendar();
+			int year = currentCalendar.get(Calendar.YEAR);
+			int month = currentCalendar.get(Calendar.MONTH);
+			int day = currentCalendar.get(Calendar.DAY_OF_MONTH);
+			currentCalendar = new GregorianCalendar(year, month, day);
+			Date currentDate = new Date(currentCalendar.getTimeInMillis());
+			if (currentDate.compareTo(date) < 0) {
+				errors.add(PersonnelConstants.INVALID_DOB, new ActionMessage(
+						PersonnelConstants.INVALID_DOB));
+			}
+		}
+	}
+
+	private void validateGender(ActionErrors errors) {
+		if (StringUtils.isNullOrEmpty(gender)) {
+			errors.add(PersonnelConstants.ERROR_GENDER, new ActionMessage(
+					PersonnelConstants.ERROR_GENDER));
+		}
+	}
+
+	private void validateEmail(ActionErrors errors) {
+		if (!StringUtils.isNullOrEmpty(emailId)&&!GenericValidator.isEmail(emailId)) {
+			errors.add(PersonnelConstants.ERROR_VALID_EMAIL, new ActionMessage(
+					PersonnelConstants.ERROR_VALID_EMAIL));
+		} 
+	}
+	private void validateUserHirerchy(ActionErrors errors) {
+		if (StringUtils.isNullOrEmpty(level)) {
+			errors.add(PersonnelConstants.ERROR_LEVEL, new ActionMessage(
+					PersonnelConstants.ERROR_LEVEL));
+		} 
+	}
+	private void validateloginName(ActionErrors errors){
+		if (StringUtils.isNullOrEmpty(loginName)) {
+			errors.add(PersonnelConstants.ERROR_USER_NAME, new ActionMessage(
+					PersonnelConstants.ERROR_USER_NAME));
+		} 
+	}
+	private void handleManagePreviewValidations(ActionErrors errors,
+			HttpServletRequest request) {
+		validateOffice(errors);
+		handleCreatePreviewValidations(errors,request);
+
+	}
+
+	private void validateOffice(ActionErrors errors) {
+		if (StringUtils.isNullOrEmpty(officeId)) {
+			errors.add(PersonnelConstants.OFFICE, new ActionMessage(
+					CustomerConstants.ERRORS_MANDATORY,
+					PersonnelConstants.OFFICE));
+		}
+	}
+
+	protected void validateCustomFields(HttpServletRequest request,
+			ActionErrors errors) {
+		List<CustomFieldDefinitionEntity> customFieldDefs = null;
+
+		try {
+			customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+					.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		} catch (PageExpiredException e) {
+
+			// ignore it
+		}
+		if (customFieldDefs != null)
+			for (CustomFieldView customField : customFields) {
+				boolean isErrorFound = false;
+				for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+					if (customField.getFieldId().equals(
+							customFieldDef.getFieldId())
+							&& customFieldDef.isMandatory())
+						if (StringUtils.isNullOrEmpty(customField
+								.getFieldValue())) {
+							errors
+									.add(
+											CustomerConstants.CUSTOM_FIELD,
+											new ActionMessage(
+													OfficeConstants.ENTERADDTIONALINFO));
+							isErrorFound = true;
+							break;
+						}
+
+				}
+				if (isErrorFound)
+					break;
+			}
+	}
+
+	private void validateConfigurableMandatoryFields(
+			HttpServletRequest request, ActionErrors errors,
+			EntityType entityType) {
+		checkForMandatoryFields(entityType.getValue(), errors, request);
 	}
 
 }

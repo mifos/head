@@ -179,4 +179,14 @@ public interface PersonnelConstants {
 	public static final String DISPLAY_NAME ="display name";
 	public static final String DISPLAYNAME ="displayName";
 	
+	public static final String ERROR_FIRSTNAME="error.firstName";
+	public static final String ERROR_LASTNAME="error.lastName";
+	public static final String ERROR_GENDER="error.gender";
+	public static final String ERROR_EMAIL="error.email";
+	public static final String ERROR_VALID_EMAIL="error.vaildEmail";
+	public static final String ERROR_LEVEL="error.level";
+	public static final String ERROR_USER_NAME="error.username";
+	public static final String ERROR_DOB="error.dob";
+	public static final String ERROR_PASSWORD_LENGTH="error.passwordLength";
+	
 }

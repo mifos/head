@@ -106,33 +106,6 @@ function goToCancelPage(){
 										<c:out value="${BusinessKey.address.address.displayAddress}"></c:out>
 										</span>
 									</c:if>	
-									<%--	
-									<c:if test="${not empty BusinessKey.address.address.phoneNumber ||
-									 not empty BusinessKey.address.address.line1 ||
-									 not empty BusinessKey.address.address.line2 ||
-									 not empty BusinessKey.address.address.line3 ||
-									 not empty BusinessKey.address.address.city	 ||
-									 not empty BusinessKey.address.address.state	 ||
-									 not empty BusinessKey.address.address.country	 ||
-									 not empty BusinessKey.address.address.zip }">	
-									<mifos:mifoslabel name="office.labelAddress"
-										bundle="OfficeResources"></mifos:mifoslabel>
-									
-									<c:if 	test="${not empty BusinessKey.address.address.line1 ||
-									 not empty BusinessKey.address.address.line2 ||
-									 not empty BusinessKey.address.address.line3 }">
-									 <br>
-									<span
-										class="fontnormal"><c:out
-										value="${BusinessKey.address.address.line1}"></c:out>
-										<c:if
-										test="${not empty BusinessKey.address.address.line1 &&(not empty BusinessKey.address.address.line2||not empty BusinessKey.address.address.line3)}">, </c:if><c:if
-										test="${not empty BusinessKey.address.address.line2}">${BusinessKey.address.address.line2}</c:if><c:if
-										test="${not empty BusinessKey.address.address.line3&&not empty BusinessKey.address.address.line2}">, </c:if><c:if
-										test="${not empty BusinessKey.address.address.line3}">${BusinessKey.address.address.line3}</c:if>
-									</span>
-									</c:if> --%>
-									
 									<c:if test="${not empty BusinessKey.address.address.city}">
 									<br>
 									<span class="fontnormal"><c:out
@@ -179,13 +152,10 @@ function goToCancelPage(){
 										items="${BusinessKey.customFields}">
 										<c:forEach var="cf" items="${sessionScope.customFields}">
 											<c:if test="${cfdef.fieldId==cf.fieldId}">
-											
 												<font class="fontnormal"> 
-												
 												<mifos:mifoslabel
 											name="${cf.lookUpEntity.entityType}"
-											bundle="OfficeResources"></mifos:mifoslabel>
-												:
+											bundle="OfficeResources"></mifos:mifoslabel>:
 												</font>
 												<span class="fontnormal"><c:out value="${cfdef.fieldValue}" /><br>
 												</span>

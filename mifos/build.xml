@@ -200,7 +200,7 @@
 
 	<target name="run_test" depends="compile,copy_files,compile_test,copy_test_files,build_test_db" 
 		description="Run tests. Does not initiate clean build">
-		<junit printsummary="on" fork="true" maxmemory="500M" 
+		<junit printsummary="on" fork="true" maxmemory="300M" 
 			failureproperty="tests.failure">
 			<classpath>
 				<path refid="class.path"/>
