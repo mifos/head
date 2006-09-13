@@ -65,6 +65,7 @@ public class PersonnelDetailsEntity extends PersistentObject {
 
 	private Date dateOfLeavingBranch;
 
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private final Short personnelId;
 
 	private final PersonnelBO personnel;

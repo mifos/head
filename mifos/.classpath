@@ -26,5 +26,8 @@
 	<classpathentry kind="lib" path="lib/mysql-connector-java-3.1.7-bin.jar"/>
 	<classpathentry kind="lib" path="lib/strutstest-2.1.3.jar"/>
 	<classpathentry kind="lib" path="lib/dom4j-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/cglib-full-2.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/jta.jar"/>
+	<classpathentry kind="lib" path="lib/antlr-2.7.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

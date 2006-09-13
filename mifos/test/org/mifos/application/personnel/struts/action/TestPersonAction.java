@@ -6,9 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.customer.business.CustomFieldView;
-import org.mifos.application.customer.center.business.CenterBO;
-import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -16,24 +13,17 @@ import org.mifos.application.personnel.business.service.PersonnelBusinessService
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.struts.actionforms.PersonActionForm;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
-import org.mifos.application.master.util.helpers.MasterConstants;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.office.business.OfficeBO;
-import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
-
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
-
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
@@ -229,16 +219,18 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.create_success.toString());
 		assertNotNull(request.getAttribute("globalPersonnelNum"));
 		assertNotNull(request.getAttribute("displayName"));
-		PersonnelBO personnelBO = new PersonnelPersistence().getPersonnelByGlobalPersonnelNum((String)request.getAttribute("globalPersonnelNum"));
+		PersonnelBO personnelBO = 
+			new PersonnelPersistence().getPersonnelByGlobalPersonnelNum(
+				(String)request.getAttribute("globalPersonnelNum")
+			);
 		assertNotNull(personnelBO);
 		//assert few values 
 		assertEquals("Jim",personnelBO.getPersonnelDetails().getName().getFirstName());
 		assertEquals("khan",personnelBO.getPersonnelDetails().getName().getLastName());
 		assertEquals(1,personnelBO.getPersonnelDetails().getGender().intValue());
 		TestObjectFactory.cleanUp(personnelBO);
-		personnelBO=null;
-		
 	}
+
 	public void testCreateSucessWithNoRoles() throws Exception {
 		setRequestPathInfo("/PersonAction.do");
 		addRequestParameter("method", Methods.create.toString());
@@ -279,9 +271,8 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyMasterData();
 		verifyForward(ActionForwards.get_success.toString());
-
-		
 	}
+
 	private void verifyMasterData()throws Exception{
 		assertNotNull(SessionUtils.getAttribute(PersonnelConstants.TITLE_LIST,
 				request));
@@ -298,8 +289,8 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		assertNotNull(SessionUtils.getAttribute(
 				CustomerConstants.CUSTOM_FIELDS_LIST, request));
 	}
+
 	public void testManage() throws Exception{
-		
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createPersonnelAndSetInSession(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
 		setRequestPathInfo("/PersonAction.do");
@@ -450,11 +441,9 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 	
 	public OfficeBO getBranchOffice(){
 		return TestObjectFactory.getOffice(Short.valueOf("3"));
-		
 	}
 	
 	private void setRequestData() throws PageExpiredException, ServiceException {
-		
 		addRequestParameter("firstName", "Jim");
 		addRequestParameter("lastName", "khan");
 		addRequestParameter("gender", "1");
@@ -465,11 +454,6 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		addRequestParameter("loginName", "tarzen");
 		addRequestParameter("personnelRoles", "1");
 		addRequestParameter("preferredLocale","189");
-
-
-
-		
 	}
-	
 
 }

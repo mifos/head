@@ -37,7 +37,6 @@
  */
 package org.mifos.framework.hibernate.configuration;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.URI;
@@ -50,7 +49,8 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.ResourceLoader;
 
 /**
-  * Configure Session creates the hibernate configuration object from the defined hibernate mapping files
+	Create the hibernate configuration object from the 
+	defined hibernate mapping files
 */
 
 public class ConfigureSession
@@ -59,7 +59,8 @@ public class ConfigureSession
 
 
 	/**
-		* This method returns the hibernate configuration object configured during system start up
+		This method returns the hibernate configuration object configured 
+		during system start up
 	*/
 
 	public static Configuration getConfiguration() throws HibernateStartUpException
@@ -89,7 +90,17 @@ public class ConfigureSession
 			Properties hibernateProperties = new Properties();
 
 			URI uri = ResourceLoader.getURI(hibernatePropertiesPath);
-			File propertiesFile = new File(uri);
+			File propertiesFile;
+			if (uri == null) {
+				// Look for it in the current directory.
+				// This is how we currently find it when running
+				// tests directly from an IDE.
+				propertiesFile = new File(hibernatePropertiesPath);
+			} else {
+				// We found it in the classpath.  The normal case
+				// for when we have run an "ant copy_files" 
+				propertiesFile = new File(uri);
+			}
 			hibernateProperties.load(new FileInputStream(propertiesFile));
 			config.setProperties(hibernateProperties);
 		} catch (Exception e) {

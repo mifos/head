@@ -50,33 +50,25 @@ public class HibernateSessionFactory
 
     private static  SessionFactory sessionFactory;
 
-  /**
-     * The call to setconfiguration , builds the hibernate session factory from the hibernate configuration object
-     * @param config
-     */
-     public static void setConfiguration(Configuration config) throws HibernateStartUpException
-   {
-	   try
-	   {
-	     sessionFactory = config.buildSessionFactory();
-       }
-       catch(Exception e)
-       {
-		   throw new HibernateStartUpException(e);
-	   }
-   }
-
-   /**
-     * The call to getSessionFactory returns the HibernateSessionFactory which is configured with the mapping hibernate configuration files
-     * @return SessionFactory
-     */
-    public static SessionFactory getSessionFactory()
-    {
-
-		return sessionFactory;
-
+    /**
+	 * The call to setconfiguration , builds the hibernate session factory from
+	 * the hibernate configuration object
+	 */
+    public static void setConfiguration(Configuration config)
+	throws HibernateStartUpException {
+		try {
+			sessionFactory = config.buildSessionFactory();
+		} catch (Exception e) {
+			throw new HibernateStartUpException(e);
+		}
 	}
 
-
+    /**
+	 * The call to getSessionFactory returns the HibernateSessionFactory which
+	 * is configured with the mapping hibernate configuration files
+	 */
+	public static SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
 
 }

@@ -51,22 +51,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.security.util.resources.SecurityConstants;
-import org.mifos.framework.struts.action.MifosSearchAction;
-import org.mifos.framework.struts.tags.DateHelper;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.framework.util.valueobjects.Context;
-import org.mifos.framework.util.valueobjects.SearchResults;
-
 import org.mifos.application.configuration.util.helpers.PathConstants;
-import org.mifos.application.customer.business.service.CustomerBusinessService;
-import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.util.valueobjects.EntityMaster;
 import org.mifos.application.master.util.valueobjects.LookUpMaster;
@@ -83,6 +68,17 @@ import org.mifos.application.personnel.util.valueobjects.PersonnelCustomField;
 import org.mifos.application.personnel.util.valueobjects.PersonnelDetails;
 import org.mifos.application.personnel.util.valueobjects.PersonnelLevel;
 import org.mifos.application.rolesandpermission.util.valueobjects.Role;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
+import org.mifos.framework.struts.action.MifosSearchAction;
+import org.mifos.framework.struts.tags.DateHelper;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.framework.util.valueobjects.Context;
+import org.mifos.framework.util.valueobjects.SearchResults;
 
 /**
  * This denotes the action class for the personnel module. It uses the base class functions to create, update. 
@@ -95,17 +91,19 @@ public class PersonnelAction extends MifosSearchAction{
 	 *  Returns the path which uniquely identifies the element in the dependency.xml.
 	 *  This method implementaion is the framework requirement. 
 	 */
+	@Override
 	protected String getPath() {
 		return PathConstants.PERSONNEL_PATH;
 	}
 
 	/**
-	 * Returns a map conatining extra methods apart from the ones provided by the framework.
-	 * These methods would be called for extra functionality required by this specific module.
-	 * e.g. It has an entry for method loadSearch which would be called when the user clicks 
-	 * on view users on the admin page. 
-	 * @see org.mifos.framework.struts.action.MifosBaseAction#appendToMap()
+	 * Returns a map conatining extra methods apart from the ones provided by
+	 * the framework. These methods would be called for extra functionality
+	 * required by this specific module. e.g. It has an entry for method
+	 * loadSearch which would be called when the user clicks on view users on
+	 * the admin page.
 	 */
+	@Override
 	public Map<String,String> appendToMap()
 	{
 		Map<String,String>keyMethodMap = new HashMap<String,String>();
@@ -124,10 +122,13 @@ public class PersonnelAction extends MifosSearchAction{
 	}
 	
 	/**
-	 * This method is called before converting action form to value object on every method call.
-	 * if on a particular method conversion is not required , it returns false, otherwise returns true
+	 * This method is called before converting action form to value object on
+	 * every method call. if on a particular method conversion is not required ,
+	 * it returns false, otherwise returns true
+	 * 
 	 * @return Returns whether the action form should be converted or not
 	 */
+	@Override
 	protected boolean isActionFormToValueObjectConversionReq(String methodName) {
 		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("Before converting action form to value object checking for method name " + methodName);
 		if(null !=methodName && (methodName.equals(PersonnelConstants.METHOD_MANAGE)|| 
@@ -328,18 +329,26 @@ public class PersonnelAction extends MifosSearchAction{
 		request.setAttribute(PersonnelConstants.DISPLAY_ADDRESS,displayAddress);
 		return mapping.findForward(PersonnelConstants.GETDETAILS_SUCCESS);
 	}
-	/** 
-	 * This method is called to retrieve personnel details.
-	 * It calls get of base class that in turn calls get in business processor to get all group all details
-	 * @param mapping indicates action mapping defined in struts-config.xml 
-	 * @param form The form bean associated with this action
-	 * @param request Contains the request parameters
+
+	/**
+	 * This method is called to retrieve personnel details. It calls get of base
+	 * class that in turn calls get in business processor to get all group all
+	 * details
+	 * 
+	 * @param mapping
+	 *            indicates action mapping defined in struts-config.xml
+	 * @param form
+	 *            The form bean associated with this action
+	 * @param request
+	 *            Contains the request parameters
 	 * @param response
 	 * @return The mapping to the next page
-	 * @throws Exception
 	 */
+	@Override
 	@TransactionDemarcate(saveToken = true)
-	public ActionForward get(ActionMapping mapping,ActionForm form,	HttpServletRequest request,	HttpServletResponse response)throws Exception{
+	public ActionForward get(ActionMapping mapping,ActionForm form,	
+		HttpServletRequest request,	HttpServletResponse response)
+	throws Exception {
 		ActionForward forward = super.get(mapping,form,request,response);
 		Context context=(Context)request.getAttribute(Constants.CONTEXT);
 		//set user age
@@ -352,33 +361,46 @@ public class PersonnelAction extends MifosSearchAction{
 		return forward;
 	}
 	
-	/** 
-	 * This method is called to create a new personnel.
-	 * It calls create of base class that in turn calls create in business processor to create new personnel
-	 * @param mapping indicates action mapping defined in struts-config.xml 
-	 * @param form The form bean associated with this action
-	 * @param request Contains the request parameters
+	/**
+	 * This method is called to create a new personnel. It calls create of base
+	 * class that in turn calls create in business processor to create new
+	 * personnel
+	 * 
+	 * @param mapping
+	 *            indicates action mapping defined in struts-config.xml
+	 * @param form
+	 *            The form bean associated with this action
+	 * @param request
+	 *            Contains the request parameters
 	 * @param response
-	 * @throws Exception
 	 */
+	@Override
 	@TransactionDemarcate(validateAndResetToken=true)
-	public ActionForward create(ActionMapping mapping,ActionForm form,	HttpServletRequest request,	HttpServletResponse response)throws Exception{
+	public ActionForward create(ActionMapping mapping,ActionForm form,	
+		HttpServletRequest request,	HttpServletResponse response)
+	throws Exception {
 		ActionForward forward = super.create(mapping,form,request,response);
 		doPersonnelCleanUp(request);
 		return forward;
 	}
 	
-	/** 
-	 * This method is called to updates a new personnel.
-	 * It calls update of base class that in turn calls update in business processor to update personnel
-	 * @param mapping indicates action mapping defined in struts-config.xml 
-	 * @param form The form bean associated with this action
-	 * @param request Contains the request parameters
+	/**
+	 * This method is called to updates a new personnel. It calls update of base
+	 * class that in turn calls update in business processor to update personnel
+	 * 
+	 * @param mapping
+	 *            indicates action mapping defined in struts-config.xml
+	 * @param form
+	 *            The form bean associated with this action
+	 * @param request
+	 *            Contains the request parameters
 	 * @param response
-	 * @throws Exception
 	 */
+	@Override
 	@TransactionDemarcate(validateAndResetToken = true)
-	public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,	HttpServletResponse response)throws Exception{
+	public ActionForward update(ActionMapping mapping, ActionForm form, 
+		HttpServletRequest request,	HttpServletResponse response)
+	throws Exception {
 		ActionForward forward = super.update(mapping,form,request,response);
 		doPersonnelCleanUp(request);
 		return forward;
@@ -643,26 +665,37 @@ public class PersonnelAction extends MifosSearchAction{
 	}
 	
 	/**
-	 * This method is called when the user clicks on create new user.
-	 * It checks for office type under which user is being created.
-	 * If the office type is not branch office it by default selects user hierachy as non loan officer.
-	 * @param mapping indicates action mapping defined in struts-config.xml
-	 * @param form The form bean associated with this action
-	 * @param request Contains the request parameters
+	 * This method is called when the user clicks on create new user. It checks
+	 * for office type under which user is being created. If the office type is
+	 * not branch office it by default selects user hierachy as non loan
+	 * officer.
+	 * 
+	 * @param mapping
+	 *            indicates action mapping defined in struts-config.xml
+	 * @param form
+	 *            The form bean associated with this action
+	 * @param request
+	 *            Contains the request parameters
 	 * @param response
 	 * @return The mapping to the next page
 	 * @throws Exception
 	 */
+	@Override
 	@TransactionDemarcate(saveToken = true)
-	public ActionForward load(ActionMapping mapping, ActionForm form,	HttpServletRequest request,	HttpServletResponse response)throws Exception{
+	public ActionForward load(ActionMapping mapping, ActionForm form,	
+		HttpServletRequest request,	HttpServletResponse response)
+	throws Exception{
 		ActionForward forward = super.load(mapping,form,request,response);
 		Context context=(Context)request.getAttribute(Constants.CONTEXT);
 		PersonnelActionForm actionForm = (PersonnelActionForm)form;
 		Office office = (Office)context.getSearchResultBasedOnName(PersonnelConstants.PERSONNEL_OFFICE).getValue();
 		
 		if(office.getLevel().getLevelId().shortValue()!=OfficeConstants.BRANCHOFFICE){
-			EntityMaster em = (EntityMaster)context.getSearchResultBasedOnName(PersonnelConstants.PERSONNEL_LEVEL_LIST).getValue();
-			List<LookUpMaster> lookUpMaster = em.getLookUpMaster();
+			EntityMaster entityMaster = 
+				(EntityMaster)context.getSearchResultBasedOnName(
+					PersonnelConstants.PERSONNEL_LEVEL_LIST
+				).getValue();
+			List<LookUpMaster> lookUpMaster = entityMaster.getLookUpMaster();
 			if(lookUpMaster!=null){
 				for(int i=0;i<lookUpMaster.size();i++){
 					LookUpMaster master =lookUpMaster.get(i);
@@ -680,17 +713,20 @@ public class PersonnelAction extends MifosSearchAction{
 	 * @param request Contains the request parameters
 	 */
 	private void setPersonnelAge(HttpServletRequest request,Date date){
-		Context context=(Context)request.getAttribute(Constants.CONTEXT);
 		request.getSession().removeAttribute(PersonnelConstants.PERSONNEL_AGE);
 		int age = DateHelper.DateDiffInYears(date);
 		if(age<0)
 			age=0;
-		SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_AGE,age,request.getSession());
+		SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_AGE,age,
+			request.getSession());
 	}
 
-	/** 
-	 * This method is helper method that removes unnecessary things from context, when not needed
-	 * @param request Contains the request parameters
+	/**
+	 * This method is helper method that removes unnecessary things from
+	 * context, when not needed
+	 * 
+	 * @param request
+	 *            Contains the request parameters
 	 */
 	private void doPersonnelCleanUp(HttpServletRequest request){
 		Context context=(Context)request.getAttribute(Constants.CONTEXT);

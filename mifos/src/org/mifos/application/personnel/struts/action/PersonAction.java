@@ -15,7 +15,6 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
-import org.mifos.application.customer.util.helpers.CustomerHelper;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -179,7 +178,7 @@ public class PersonAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		PersonActionForm actionForm = (PersonActionForm) form;
-		updateRoleLists(request, (PersonActionForm) form);
+		updateRoleLists(request, actionForm);
 		return mapping.findForward(ActionForwards.previewManage_success.toString());
 	}
 	
@@ -396,7 +395,8 @@ public class PersonAction extends BaseAction {
 			}
 			if (personnelDetails.getDob() != null){
 				actionForm.setDob(DateHelper.getUserLocaleDate(
-						getUserContext(request).getPereferedLocale(), personnelDetails.getDob().toString()));
+						getUserContext(request).getPereferedLocale(), 
+						personnelDetails.getDob().toString()));
 			}
 			
 		}

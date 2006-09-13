@@ -26,6 +26,7 @@ public abstract class MifosSearchAction extends MifosBaseAction {
 	 * 
 	 * @see org.mifos.framework.struts.action.MifosBaseAction#appendToMap()
 	 */
+	@Override
 	public Map<String, String> appendToMap() {
 		Map<String, String> searchMap = new HashMap<String, String>();
 		searchMap.put(TableTagConstants.SEARCHPREV, "searchPrev");

@@ -5,10 +5,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.validator.GenericValidator;
 import org.apache.struts.Globals;
@@ -18,7 +16,6 @@ import org.apache.struts.action.ActionMessage;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
-import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.rolesandpermission.util.valueobjects.Role;
@@ -27,7 +24,6 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.PageExpiredException;
-import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
@@ -75,7 +71,7 @@ public class PersonActionForm extends BaseActionForm {
 	private String governmentIdNumber;
 
 	private String dob;
-
+	
 	private int age;
 
 	private String maritalStatus;
@@ -244,7 +240,6 @@ public class PersonActionForm extends BaseActionForm {
 
 	public void setAge(int age) {
 		this.age = age;
-
 	}
 
 	public void clear() {
@@ -353,7 +348,6 @@ public class PersonActionForm extends BaseActionForm {
 					DateHelper.getDate(dob).getTime())));
 		} else
 			return "";
-
 	}
 
 	public Name getName() {
@@ -458,7 +452,7 @@ public class PersonActionForm extends BaseActionForm {
 			HttpServletRequest request) {
 			validateNameDetail(errors);
 			validateEmail(errors);
-			validateDob(errors);
+			validateDateOfBirth(errors);
 			validateGender(errors);
 			validateUserHirerchy(errors);
 			validateloginName(errors);
@@ -479,7 +473,7 @@ public class PersonActionForm extends BaseActionForm {
 		}
 	}
 
-	private void validateDob(ActionErrors errors) {
+	private void validateDateOfBirth(ActionErrors errors) {
 		if(StringUtils.isNullOrEmpty(dob))
 		{
 			errors.add(PersonnelConstants.ERROR_DOB, new ActionMessage(

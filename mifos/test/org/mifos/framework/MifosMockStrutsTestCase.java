@@ -96,13 +96,9 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 
 					while(l.size() != 0)
 					{
-						Object o = l.get(0);
 						l.remove(0);
-						o = null;
 					}
 				}
-					obj = null;	
-	
 			}// end-while
 		}// end-if
 		session = null;
@@ -113,13 +109,8 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 		String attributeKey = null;
 		if(null != keys ){
 			while(keys.hasMoreElements()){
-				
 				attributeKey = (String)keys.nextElement();
-				Object obj = request.getAttribute(attributeKey);
-				
 				request.removeAttribute(attributeKey);
-				obj = null;
-	
 			}// end-while
 		}// end-if
 		request = null;

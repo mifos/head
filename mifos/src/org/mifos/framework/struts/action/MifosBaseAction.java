@@ -40,7 +40,6 @@ package org.mifos.framework.struts.action;
 
 
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
@@ -83,7 +82,6 @@ import org.mifos.framework.util.valueobjects.Context;
 import org.mifos.framework.util.valueobjects.MasterType;
 import org.mifos.framework.util.valueobjects.ReturnType;
 import org.mifos.framework.util.valueobjects.ValueObject;
-import org.mifos.framework.components.tabletag.TableTagConstants;
 
 
 
@@ -106,6 +104,7 @@ public abstract class MifosBaseAction extends LookupDispatchAction {
 	 * implement {@link appendToMap} method.
 	 * @see org.apache.struts.actions.LookupDispatchAction#getKeyMethodMap()
 	 */
+	@Override
 	protected final Map getKeyMethodMap() {
 		Map<String,String> methodHashMap = new HashMap<String,String>();
 		//	Map methodHashMap = new HashMap();
@@ -320,15 +319,16 @@ public abstract class MifosBaseAction extends LookupDispatchAction {
 	 * <code>preExecute<br>execute<br>postexecute</code>
 	 * @see org.apache.struts.action.Action#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
-	public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)	throws Exception {
-		
+	@Override
+	public ActionForward execute(ActionMapping mapping,ActionForm form,
+			HttpServletRequest request,HttpServletResponse response)
+	throws Exception {
 		ActionForward forward = null;
 		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("Inside execute method of MifosBaseAction", false, null);
 		preExecute(form, request);
 		forward =  super.execute(mapping, form, request, response);
 		postExecute(request);
 		return forward;
-		
 	}
 	
 	/**
@@ -391,22 +391,16 @@ public abstract class MifosBaseAction extends LookupDispatchAction {
 	protected void cleanUpContext(HttpServletRequest request) {
 		Context context = (Context)SessionUtils.getAttribute(Constants.CONTEXT, request.getSession());
 		context.cleanAttributes();
-		
 	}
 	
-	
-	
 	/**
-	 * This is the method which would be called for any delete operation in the application.
-	 * It delegates the call to the business processor and  passing the {@link Context} object.
-	 * The <code>Context</code> object to be passed is obtained from the request as that is the scope where it was set by the <code>preExecute</code> method.
-	 * Before delegating the call to the <code>BusinessProcessor</code> the <code>businessAction</code> attribute of the <code>Context</code> object is set to "delete".
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
+	 * This is the method which would be called for any delete operation in the
+	 * application. It delegates the call to the business processor and passing
+	 * the {@link Context} object. The <code>Context</code> object to be
+	 * passed is obtained from the request as that is the scope where it was set
+	 * by the <code>preExecute</code> method. Before delegating the call to
+	 * the <code>BusinessProcessor</code> the <code>businessAction</code>
+	 * attribute of the <code>Context</code> object is set to "delete".
 	 */
 	public ActionForward delete(ActionMapping mapping,
 			ActionForm form,

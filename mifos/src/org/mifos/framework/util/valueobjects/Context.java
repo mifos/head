@@ -118,53 +118,34 @@ public class Context implements Serializable {
 		this.userId = userId;
 	}
 
-	/**
-	 * @return Returns the businessResults}.
-	 */
 	public Map<String, Object> getBusinessResults() {
 		return businessResults;
 	}
 
-	/**
-	 * @param businessResults The businessResults to set.
-	 */
 	public void setBusinessResults(Map<String, Object> businessResults) {
 		this.businessResults = businessResults;
 	}
 
-	/**
-	 * @return Returns the results}.
-	 */
 	public List getResults() {
 		return results;
 	}
 
-	/**
-	 * @param results The results to set.
-	 */
 	public void setResults(List results) {
 		this.results = results;
 	}
 
 	public void addBusinessResults(String key , Object value){
 		businessResults.put(key, value);
-
 	}
 
 	public Object getBusinessResults(String key){
 		return businessResults.get(key);
 	}
 
-	/**
-	 * @return Returns the userContext}.
-	 */
 	public UserContext getUserContext() {
 		return userContext;
 	}
 
-	/**
-	 * @param userContext The userContext to set.
-	 */
 	public void setUserContext(UserContext userContext) {
 		this.userContext = userContext;
 	}
@@ -183,16 +164,10 @@ public class Context implements Serializable {
 		return null;
 	}
 
-	/**
-	 * @return Returns the searchResult.
-	 */
 	public QueryResult getSearchResult() {
 		return searchResult;
 	}
 
-	/**
-	 * @param searchResult The searchResult to set.
-	 */
 	public void setSearchResult(QueryResult searchResult) {
 		this.searchResult = searchResult;
 	}
@@ -208,8 +183,10 @@ public class Context implements Serializable {
 	}
 	
 	/**
-	 *This method sets all the attributes to null.It is called from action to clean all master data. 
+	 *This method sets all the attributes to null.
+	 *It is called from action to clean all master data. 
 	 */
+	// TODO: Actually, it does nothing.  What is it intended to do?
 	public void cleanAttributes(){
 		if(null != results){
 			for(Object item:results){
