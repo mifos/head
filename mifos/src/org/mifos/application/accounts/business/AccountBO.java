@@ -59,6 +59,7 @@ import org.mifos.application.accounts.financial.business.service.FinancialBusine
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -1189,6 +1190,8 @@ public class AccountBO extends BusinessObject {
 		if (financialTrxn.getNotes() != null
 				&& !financialTrxn.getNotes().equals(""))
 			notes = financialTrxn.getNotes();
+		if(financialTrxn.getAccountTrxn().getAccountActionEntity().getId().equals(AccountActionTypes.CUSTOMER_ACCOUNT_REPAYMENT.getValue()))
+			notes = "-";
 		transactionHistory.setFinancialEnteries(financialTrxn.getTrxnId(),financialTrxn.getActionDate(),
 				financialTrxn.getFinancialAction().getName(
 						userContext.getLocaleId()), financialTrxn.getGlcode()

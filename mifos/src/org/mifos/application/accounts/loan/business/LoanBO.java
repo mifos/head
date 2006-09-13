@@ -199,7 +199,7 @@ public class LoanBO extends AccountBO {
 		setInterestDeductedAtDisbursement(interestDeductedAtDisbursement);
 		setGracePeriodTypeAndDuration(interestDeductedAtDisbursement,
 				gracePeriodDuration);
-		this.gracePeriodPenalty = 0;
+		this.gracePeriodPenalty = Short.valueOf("0");
 		this.fund = fund;
 		this.loanMeeting = buildLoanMeeting(customer.getCustomerMeeting()
 				.getMeeting(), loanOffering.getPrdOfferingMeeting()
