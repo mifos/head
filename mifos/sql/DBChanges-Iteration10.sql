@@ -1,4 +1,4 @@
-// altered the table to add the below columns to improve search
+# altered the table to add the below columns to improve search
 ALTER TABLE CUSTOMER ADD COLUMN FIRST_NAME VARCHAR(200) NULL;
 ALTER TABLE CUSTOMER ADD COLUMN LAST_NAME VARCHAR(200) NULL;
 ALTER TABLE CUSTOMER ADD COLUMN SECOND_LAST_NAME VARCHAR(200) NULL;
@@ -10,7 +10,7 @@ UPDATE CUSTOMER C,customer_name_detail CN SET C.LAST_NAME =(Select CN.LAST_NAME 
 
 UPDATE CUSTOMER C,customer_name_detail CN SET C.SECOND_LAST_NAME =(Select CN.SECOND_LAST_NAME from customer_name_detail CN where CN.CUSTOMER_ID = C.CUSTOMER_ID and CN.NAME_TYPE = 3) where  C.CUSTOMER_ID = CN.CUSTOMER_ID ;
 
-// altered the column name appropriately
+# altered the column name appropriately
 ALTER TABLE LOAN_ACCOUNT CHANGE COLUMN INTEREST_RATE_AMOUNT INTEREST_RATE DECIMAL(13, 10);
 
 ALTER TABLE LOAN_ACCOUNT DROP FOREIGN KEY loan_account_ibfk_5;
@@ -18,7 +18,7 @@ ALTER TABLE LOAN_ACCOUNT DROP COLUMN INTEREST_RATE_CURRENCY_ID;
 
 ALTER TABLE CUSTOMER_POSITION MODIFY VERSION_NO INTEGER NOT NULL;
 
-// added the following tables to split the schedules into separate tables for loan, //savings,customer
+# added the following tables to split the schedules into separate tables for loan, #savings,customer
 CREATE TABLE CUSTOMER_SCHEDULE(
   ID INTEGER NOT NULL AUTO_INCREMENT,
   ACCOUNT_ID INTEGER NOT NULL,
