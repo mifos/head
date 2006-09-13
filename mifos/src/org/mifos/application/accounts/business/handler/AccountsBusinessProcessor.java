@@ -65,20 +65,13 @@ import org.mifos.framework.util.valueobjects.ValueObject;
 */
 public class AccountsBusinessProcessor extends MifosBusinessProcessor {
 	
-	/**
-	 * 
-	 */
 	public AccountsBusinessProcessor() {
 		super();
-		
 	}
 	
 	/**
 	 * This method is called before getPrdOfferings and is used to get the customer master to be displayed on the UI.
 	 * It adds the customer master retrieved in the context as business results.
-	 * @param context
-	 * @throws SystemException
-	 * @throws ApplicationException
 	 */
 	public void getPrdOfferingsInitial(Context context)throws SystemException,ApplicationException{
 		// gets the customer name to be dispalyed on the UI and sets it in the business results

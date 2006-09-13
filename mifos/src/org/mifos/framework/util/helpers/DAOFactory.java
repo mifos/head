@@ -37,7 +37,6 @@
  */
 package org.mifos.framework.util.helpers;
 
-
 import java.net.URISyntaxException;
 import java.util.HashMap;
 
@@ -45,29 +44,21 @@ import org.mifos.framework.dao.DAO;
 import org.mifos.framework.exceptions.ResourceNotCreatedException;
 import org.mifos.framework.exceptions.XMLReaderException;
 
-
 public class DAOFactory extends ResourceFactory {
-private static DAOFactory instance = new DAOFactory();	
+
+	private static DAOFactory instance = new DAOFactory();	
 	
 	private HashMap<String,DAO> daorepository = new HashMap<String,DAO>();
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.util.helpers.ResourceFactory#getFromCache(java.lang.String)
-	 */
 	
+	@Override
 	protected Object getFromCache(String path) {
-		
 		return daorepository.get(path);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.util.helpers.ResourceFactory#get(java.lang.String)
-	 */
-	
+	@Override
 	public Object get(String path) throws ResourceNotCreatedException {
-		
-		DAO dao = null;
 		try{
-			 dao =(DAO)getObject(path); 
+			 return (DAO)getObject(path); 
 		}catch(ClassNotFoundException cnfe){
 			cnfe.printStackTrace();
 			throw new ResourceNotCreatedException(cnfe);
@@ -85,24 +76,18 @@ private static DAOFactory instance = new DAOFactory();
 			throw new ResourceNotCreatedException(urise);
 		}finally{
 		}
-		
-		return dao;
 	}
 	
 	/**
 	 * Returns the DAOFactory instance.
-	 * @return
 	 */
-	public static DAOFactory getInstance(){
-		
+	public static DAOFactory getInstance() {
 		return instance;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.util.helpers.ResourceFactory#updateDAOCache(java.lang.String, org.mifos.framework.dao.DAO)
-	 */
+	@Override
 	protected void updateDAOCache(String path, DAO daoObj) {
 		daorepository.put(path, daoObj);
-		
 	}
+
 }

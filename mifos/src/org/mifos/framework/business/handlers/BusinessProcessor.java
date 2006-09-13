@@ -42,20 +42,20 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.valueobjects.Context;
 
-/** 
- *  Any BusinessProcessor in the application needs to implement this interface either directly or by extending from some helper class which implements this interface.
- *  BusinessProcessor would be the class which will have all business logic required for the CRUD operations. 
+/**
+ * Any BusinessProcessor in the application needs to implement this interface
+ * either directly or by extending from some helper class which implements this
+ * interface. BusinessProcessor would be the class which will have all business
+ * logic required for the CRUD operations.
  */
 public interface BusinessProcessor {
 
-	
 	/**
-	 * Implementation of this method needs to handle delegation of any calls to this method to other methods which will have the actual implementation.
-	 * This method is called by the <code>Delegator</code> in an attempt to delegate the call from the Action class to the BusinessProcessor. 
-	 * @param context
-	 * @throws SystemException
-	 * @throws ApplicationException
+	 * Implementation of this method needs to handle delegation of any calls to
+	 * this method to other methods which will have the actual implementation.
+	 * This method is called by the <code>Delegator</code> in an attempt to
+	 * delegate the call from the Action class to the BusinessProcessor.
 	 */
-	public void execute(Context context)throws SystemException,ApplicationException;
+	public void execute(Context context) throws SystemException,ApplicationException;
 	
 }

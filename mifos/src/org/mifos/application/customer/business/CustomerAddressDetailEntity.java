@@ -46,8 +46,10 @@ import org.mifos.framework.business.util.Address;
  */
 public class CustomerAddressDetailEntity extends PersistentObject {
 
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private final Integer customerAddressId;
 
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private final CustomerBO customer;
 
 	private Address address;

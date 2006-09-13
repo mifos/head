@@ -86,13 +86,11 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 	 * This gets the product offering related data to be shown in the UI. This
 	 * is a common method which could be used by all account types hence this
 	 * method is in the base class.
-	 * 
-	 * @param prdOfferingId
 	 */
 	private LoanOffering getLoanOffering(Short prdOfferingId)
 			throws SystemException {
-		// gets the loanProductDAO
-		LoanProductDAO loanProductDAO = (LoanProductDAO) getDAO(ProductDefinitionConstants.GETPATHLOANPRODUCT);
+		LoanProductDAO loanProductDAO = (LoanProductDAO) 
+			getDAO(ProductDefinitionConstants.GETPATHLOANPRODUCT);
 		LoanOffering loanOffering = null;
 		Session session = null;
 		try {

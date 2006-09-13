@@ -73,13 +73,16 @@ public class MifosBusinessProcessor implements BusinessProcessor {
 	
 	
 	/**
-	 *This method is called by the delegator and it inturn calls the corresponding methods on the <code>BusinessProcessor</code> passing the Context object to that method.
-	 *The method to called on the BusinessProcessor is identified by the value of <code>businessAction</code> attribute of the Context object.
-	 *These methods on the BusinessProcessor are called by reflection.Before calling the actual method another method is called and the name of that method is formed by suffixing "SearchInitial" to the value returned by <code>getBusinessAction()</code> method of Context object.
-	 *If the first method throws an exception the next method won't be called.
-	 * @see org.mifos.framework.business.handlers.BusinessProcessor#execute(org.mifos.framework.util.valueobjects.Context)
-	 * @throws SystemException
-	 * @throws ApplicationException
+	 * This method is called by the delegator and it inturn calls the
+	 * corresponding methods on the <code>BusinessProcessor</code> passing the
+	 * Context object to that method. The method to called on the
+	 * BusinessProcessor is identified by the value of
+	 * <code>businessAction</code> attribute of the Context object. These
+	 * methods on the BusinessProcessor are called by reflection.Before calling
+	 * the actual method another method is called and the name of that method is
+	 * formed by suffixing "SearchInitial" to the value returned by
+	 * <code>getBusinessAction()</code> method of Context object. If the first
+	 * method throws an exception the next method won't be called.
 	 */
 	public void execute(Context context) throws SystemException,ApplicationException {
 		List <String>businessActionList = getBusinessActionList();
@@ -106,8 +109,8 @@ public class MifosBusinessProcessor implements BusinessProcessor {
 	
 
 	/**
-	 * This method returns a list of business action method names on which we need to call fetchHeader method. 
-	 * @return
+	 * This method returns a list of business action method names on which we
+	 * need to call fetchHeader method.
 	 */
 	protected List<String> getBusinessActionList() {
 		List headerMethodList = new ArrayList();
@@ -116,21 +119,17 @@ public class MifosBusinessProcessor implements BusinessProcessor {
 	}
 	
 	/**
-	 * This is the default implementation added because this method is always added for get and some body has not 
-	 * implemented this method it would throw an Exception (BACKWARD COMPATIBILITY) 
-	 * @param context
-	 * @param businessAction
-	 * @return
+	 * This is the default implementation added because this method is always
+	 * added for get and some body has not implemented this method it would
+	 * throw an Exception (BACKWARD COMPATIBILITY)
 	 */
-	public HeaderObject fetchHeader(Context context,String businessAction)throws SystemException,ApplicationException{
+	public HeaderObject fetchHeader(Context context,String businessAction)
+	throws SystemException,ApplicationException{
 		return null;
 	}
 
 	/**
 	 * It updates the ValueObject instance passed in the Context object in the database.
-	 * @param context
-	 * @throws SystemException
-	 * @throws ApplicationException
 	 */
 	public void update(Context context) throws SystemException,
 	ApplicationException
@@ -142,9 +141,6 @@ public class MifosBusinessProcessor implements BusinessProcessor {
 	
 	/**
 	 * It calls the delete method on the DAO to delete the record from the database.
-	 * @param context
-	 * @throws SystemException
-	 * @throws ApplicationException
 	 */
 	public void delete(Context context) throws SystemException,
 	ApplicationException
@@ -155,10 +151,8 @@ public class MifosBusinessProcessor implements BusinessProcessor {
 	}
 	
 	/**
-	 * It creates the ValueObject instance passed in the Context object in the database.
-	 * @param context
-	 * @throws SystemException
-	 * @throws ApplicationException
+	 * It creates the ValueObject instance passed in the Context object in the
+	 * database.
 	 */
 	public void create(Context context) throws SystemException,
 	ApplicationException
@@ -170,11 +164,8 @@ public class MifosBusinessProcessor implements BusinessProcessor {
 	
 	
 	/**
-	 * It gets the ValueObject instance from the database based on the primary key values which are already set in the ValueObject.
-	 * @param context
-	 * @return
-	 * @throws SystemException
-	 * @throws ApplicationException
+	 * It gets the ValueObject instance from the database based on the primary
+	 * key values which are already set in the ValueObject.
 	 */
 	public void get(Context context) throws SystemException,ApplicationException
 	{
@@ -183,13 +174,12 @@ public class MifosBusinessProcessor implements BusinessProcessor {
 	}
 	
 	/**
-	 * This is the final method which is called whenever the <code>businessAction</code> attribute in the Context object is set to search.
-	 * Thie method in turn calls the relevant search methods on the BusinessProcessor.
-	 * The name of the method to be invoked on the BusinessProcessor is formed by prefixing "get" to the searchName which is obtained from the {@link SearchObject}.
-	 * @param context
-	 * @return
-	 * @throws SystemException
-	 * @throws ApplicationException
+	 * This is the final method which is called whenever the
+	 * <code>businessAction</code> attribute in the Context object is set to
+	 * search. Thie method in turn calls the relevant search methods on the
+	 * BusinessProcessor. The name of the method to be invoked on the
+	 * BusinessProcessor is formed by prefixing "get" to the searchName which is
+	 * obtained from the {@link SearchObject}.
 	 */
 	
 	public final void search(Context context) throws SystemException,
@@ -213,44 +203,31 @@ public class MifosBusinessProcessor implements BusinessProcessor {
 	 * Returns the DAO corresponding to the path passed to it.
 	 * The path should uniquely identify the dependency element in Dependency.xml
 	 * DAO is returned using {@link DAOFactory}.
-	 * @param path
-	 * @return
-	 * @throws ResourceNotCreatedException
 	 */
-	protected DAO getDAO(String path) throws ResourceNotCreatedException{
-		
+	protected DAO getDAO(String path) throws ResourceNotCreatedException {
 		return (DAO)DAOFactory.getInstance().get(path);
 	}
 	
 	/**
-	 * This method is called when initially the page is supposed to be loaded for any further action.
-	 * For e.g. when the user clicks on the link on the left menu to create a client.
-	 * @param context
-	 * @return
-	 * @throws SystemException
-	 * @throws ApplicationException
+	 * This method is called when initially the page is supposed to be loaded
+	 * for any further action. For e.g. when the user clicks on the link on the
+	 * left menu to create a client.
 	 */
 	public void load(Context context) throws SystemException,ApplicationException {
 	}
 	
 	/**
-	 * This method is called when the user clicks cancel on the page which should take you to a common page.
-	 * For e.g. when the user clicks on the link on the left menu to create a client.
-	 * @param context
-	 * @return
-	 * @throws SystemException
-	 * @throws ApplicationException
+	 * This method is called when the user clicks cancel on the page which
+	 * should take you to a common page. For e.g. when the user clicks on the
+	 * link on the left menu to create a client.
 	 */
 	public void cancel(Context context) throws SystemException,ApplicationException {
 	}
 	
 	/**
-	 * This method is called when you want to manage a particular entity.
-	 * For e.g. when the user clicks on the link on the left menu to create a client.
-	 * @param context
-	 * @return
-	 * @throws SystemException
-	 * @throws ApplicationException
+	 * This method is called when you want to manage a particular entity. For
+	 * e.g. when the user clicks on the link on the left menu to create a
+	 * client.
 	 */
 	public void manage(Context context) throws SystemException,ApplicationException {
 	}
