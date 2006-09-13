@@ -23,7 +23,6 @@ function getOffice(officeid){
 function addNewOffice(officeType){
 	document.offActionForm.method.value="load";
 	document.offActionForm.officeLevel.value=officeType;
-	alert(document.offActionForm.officeLevel.value);
 	offActionForm.submit();
   }  
 function addNewOfficeBlank(){

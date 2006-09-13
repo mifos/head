@@ -75,7 +75,7 @@ function  submitAdminLink()
 					</table>
 					<br>
 
-					<table width="93%" border="0" cellpadding="3" cellspacing="0">
+					<table width="93%" border="0" cellpadding="0" cellspacing="0">
 						<tr >
 									
 								<logic:messagesPresent>

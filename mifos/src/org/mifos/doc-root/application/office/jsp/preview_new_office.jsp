@@ -111,25 +111,19 @@ function goToCancelPage(){
 											test="${parent.officeId == offActionForm.parentOfficeId }">
 											<c:out value="${parent.displayName}"></c:out>
 										</c:if>
-									</c:forEach> <!-- End for showing the correct parent --> </span><br>
-									<span class="fontnormal"></span><span class="fontnormal"> </span><span
-										class="fontnormal"></span><br>
+									</c:forEach></span><br>
+									<br>
 									<mifos:mifoslabel name="Office.labelAddress" /><span
-										class="fontnormal"><br>
-									</span> <span class="fontnormal"><c:out
-										value="${offActionForm.address.line1}"></c:out><c:if
-										test="${not empty offActionForm.address.line1 &&(not empty offActionForm.address.line2||not empty offActionForm.address.line3)}">, </c:if><c:if
-										test="${not empty offActionForm.address.line2}">${offActionForm.address.line2}</c:if><c:if
-										test="${not empty offActionForm.address.line3&&not empty offActionForm.address.line2}">, </c:if><c:if
-										test="${not empty offActionForm.address.line3}">${offActionForm.address.line3}</c:if>
-									</span>
+								class="fontnormal"><br> <c:out
+								value="${offActionForm.address.displayAddress}"></c:out> </span>
+								</td>
 								</tr>
 								<tr>
-									<td class="fontnormalbold"><br>
+									<td class="fontnormalbold">
 									<mifos:mifoslabel name="${ConfigurationConstants.CITY}"
 										bundle="OfficeResources"></mifos:mifoslabel>:<span
 										class="fontnormal"> <c:out
-										value="${offActionForm.address.city}"></c:out><br>
+										value="${offActionForm.address.city}"></c:out>
 									</span>
 								</tr>
 								<tr id="Office.State">
@@ -138,7 +132,7 @@ function goToCancelPage(){
 										bundle="OfficeResources" keyhm="Office.State"
 										isColonRequired="yes" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel><span
 										class="fontnormal"> <c:out
-										value="${offActionForm.address.state}"></c:out><br>
+										value="${offActionForm.address.state}"></c:out>
 									</span>
 								</tr>
 								<tr id="Office.Country">
