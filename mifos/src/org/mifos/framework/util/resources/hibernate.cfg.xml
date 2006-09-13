@@ -324,6 +324,15 @@
 	<mapping
 		resource="org/mifos/application/customer/client/business/CustomerPictureEntity.hbm.xml" />
 		
+	<mapping
+		resource="org/mifos/application/rolesandpermission/business/ActivityEntity.hbm.xml" />
+
+	<mapping
+		resource="org/mifos/application/rolesandpermission/business/RoleActivityEntity.hbm.xml" />
+
+	<mapping
+		resource="org/mifos/application/rolesandpermission/business/RoleBO.hbm.xml" />
+		
 		
 </session-factory>
 

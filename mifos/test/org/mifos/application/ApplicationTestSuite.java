@@ -56,6 +56,7 @@ import org.mifos.application.office.OfficeTestSuite;
 import org.mifos.application.personnel.PersonnelTestSuite;
 import org.mifos.application.productdefinition.ProductDefinitionTestSuite;
 import org.mifos.application.reports.ReportsTestSuite;
+import org.mifos.application.rolesandpermission.RolesAndPermissionTestSuite;
 import org.mifos.framework.MifosTestSuite;
 import org.mifos.framework.components.ComponentsTestSuite;
 import org.mifos.framework.components.configuration.ConfigurationTestSuite;
@@ -97,6 +98,7 @@ public class ApplicationTestSuite extends MifosTestSuite {
 		suite.addTest(OfficeTestSuite.suite());
 		suite.addTest(ComponentsTestSuite.suite());
 		suite.addTest(PersonnelTestSuite.suite());
+		suite.addTest(RolesAndPermissionTestSuite.suite());
 		return suite;
 	}
 
