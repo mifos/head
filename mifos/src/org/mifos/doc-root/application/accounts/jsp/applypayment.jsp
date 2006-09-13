@@ -122,7 +122,7 @@
 						</tr>
 						<tr>
 							<td width="24%" align="right" class="fontnormal"><mifos:mifoslabel
-								mandatory="yes" name="accounts.amount" /> <mifos:mifoslabel
+								mandatory="yes" name="accounts.amount" /><mifos:mifoslabel
 								name="accounts.colon" /></td>
 							<td width="76%">
 							<c:choose>
@@ -139,7 +139,7 @@
 						</tr>
 						<tr>
 							<td align="right" class="fontnormal"><mifos:mifoslabel
-								name="accounts.mode_of_payment" mandatory="yes" /> <mifos:mifoslabel
+								name="accounts.mode_of_payment" mandatory="yes" /><mifos:mifoslabel
 								name="accounts.colon" /></td>
 
 							<td class="fontnormal"><mifos:select
@@ -150,14 +150,14 @@
 						</tr>
 						<tr>
 							<td align="right" class="fontnormal"><mifos:mifoslabel
-								name="accounts.receiptid" /> <mifos:mifoslabel
+								name="accounts.receiptid" /><mifos:mifoslabel
 								name="accounts.colon" /></td>
 							<td class="fontnormal"><mifos:mifosalphanumtext
 								property="receiptId" name="applyPaymentActionForm" maxlength="25"/></td>
 						</tr>
 						<tr>
 							<td align="right" class="fontnormal"><mifos:mifoslabel
-								name="accounts.receiptdate" /> <mifos:mifoslabel
+								name="accounts.receiptdate" /><mifos:mifoslabel
 								name="accounts.colon" /></td>
 							<td class="fontnormal"><date:datetag property="receiptDate" /></td>
 						</tr>

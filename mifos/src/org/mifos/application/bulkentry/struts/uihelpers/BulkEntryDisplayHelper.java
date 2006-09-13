@@ -55,7 +55,6 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.valueobjects.LookUpMaster;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -85,7 +84,7 @@ public class BulkEntryDisplayHelper {
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "", false);
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "", false);
 		builder.append("<td align=\"center\" colspan=\"" + totalProductSize
-				+ "\">Issues/Withdrawls</td>");
+				+ "\">Issues/Withdrawals</td>");
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "", false);
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "", false);
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "", false);
