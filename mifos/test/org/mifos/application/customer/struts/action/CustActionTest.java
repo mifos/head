@@ -168,10 +168,10 @@ public class CustActionTest extends MifosMockStrutsTestCase {
 				new Date(System.currentTimeMillis()));
 	}
 
-	private LoanBO getLoanAccount(CustomerBO customerBO) {
+	private LoanBO getLoanAccount(CustomerBO customerBO,String offeringName,String shortName ) {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
+				offeringName,shortName, Short.valueOf("2"), startDate, Short.valueOf("1"),
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), meeting);
@@ -190,13 +190,13 @@ public class CustActionTest extends MifosMockStrutsTestCase {
 		savings1 = getSavingsAccount(group,"fsaf6","ads6");
 		savings1.changeStatus(AccountState.SAVINGS_ACC_CANCEL.getValue(),AccountStateFlag.SAVINGS_OTHER.getValue(),"status changed for savings");
 		savings1.update();
-		loan1 = getLoanAccount(group);
+		loan1 = getLoanAccount(group,"fdsfsdf","2cvs");
 		loan1.update();
 		loan1.changeStatus(AccountState.LOANACC_CANCEL.getValue(),AccountStateFlag.LOAN_OTHER.getValue(),"status changed for loan");
 		HibernateUtil.commitTransaction();
 		savings2 = getSavingsAccount(group,"fsaf65","ads5");
-		loan2 = getLoanAccount(client);
+		loan2 = getLoanAccount(client,"rtwetrtwert","5rre");
 		savings3 = getSavingsAccount(center,"fsaf26","ads2");
-		loan3 = getLoanAccount(client);
+		loan3 = getLoanAccount(client,"fsdsdfqwq234","13er");
 	}
 }

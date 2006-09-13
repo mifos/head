@@ -4,59 +4,66 @@
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
 	<class name="org.mifos.application.productdefinition.business.PrdOfferingBO" table="PRD_OFFERING">
-		<id name="prdOfferingId" column="PRD_OFFERING_ID" type="short">
+		<id name="prdOfferingId" column="PRD_OFFERING_ID" access="field">
 			<generator class="native" />
 		</id>
-		<version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null" />
-		<property name="globalPrdOfferingNum" column="GLOBAL_PRD_OFFERING_NUM" type="string" not-null="true" update="false" />
-		<property name="startDate" column="START_DATE" type="date" not-null="true" />
-		<property name="endDate" column="END_DATE" type="date" />
-		<property name="prdOfferingName" column="PRD_OFFERING_NAME" type="string" />
-		<property name="prdOfferingShortName" column="PRD_OFFERING_SHORT_NAME" type="string" not-null="true" />
-		<property name="description" column="DESCRIPTION" type="string" />
-		<property name="createdDate" column="CREATED_DATE" type="date" update="false" />
+		<version name="versionNo" column="VERSION_NO" unsaved-value="null" />
+		<property name="globalPrdOfferingNum" column="GLOBAL_PRD_OFFERING_NUM" update="false" access="field" />
+		<property name="startDate" column="START_DATE" />
+		<property name="endDate" column="END_DATE" />
+		<property name="prdOfferingName" column="PRD_OFFERING_NAME" />
+		<property name="prdOfferingShortName" column="PRD_OFFERING_SHORT_NAME" />
+		<property name="description" column="DESCRIPTION" />
+		<property name="createdDate" column="CREATED_DATE" update="false" />
 		<property name="createdBy" column="CREATED_BY" update="false" />
-		<property name="updatedDate" column="UPDATED_DATE" type="date" />
+		<property name="updatedDate" column="UPDATED_DATE" />
 		<property name="updatedBy" column="UPDATED_BY" />
 
-		<many-to-one name="office" column="OFFICE_ID" class="org.mifos.application.office.business.OfficeBO" />
+		<many-to-one name="office" column="OFFICE_ID" class="org.mifos.application.office.business.OfficeBO" cascade="none" access="field" />
 		<many-to-one name="prdCategory" column="PRD_CATEGORY_ID" class="org.mifos.application.productdefinition.business.ProductCategoryBO" cascade="none" />
-		<many-to-one name="prdStatus" column="OFFERING_STATUS_ID" class="org.mifos.application.productdefinition.business.PrdStatusEntity" />
-		<many-to-one name="prdType" column="PRD_TYPE_ID" class="org.mifos.application.productdefinition.business.ProductTypeEntity" />
-		<many-to-one name="prdApplicableMaster" column="PRD_APPLICABLE_MASTER_ID" class="org.mifos.application.productdefinition.business.PrdApplicableMasterEntity" not-null="true" />
+		<many-to-one name="prdStatus" column="OFFERING_STATUS_ID" class="org.mifos.application.productdefinition.business.PrdStatusEntity" cascade="none" />
+		<many-to-one name="prdType" column="PRD_TYPE_ID" class="org.mifos.application.productdefinition.business.ProductTypeEntity" access="field" cascade="none" />
+		<many-to-one name="prdApplicableMaster" column="PRD_APPLICABLE_MASTER_ID" class="org.mifos.application.productdefinition.business.PrdApplicableMasterEntity" cascade="none" />
 
 		<joined-subclass name="org.mifos.application.productdefinition.business.LoanOfferingBO" table="LOAN_OFFERING">
 			<key column="PRD_OFFERING_ID" />
-			<property name="minLoanAmount" column="MIN_LOAN_AMOUNT" type="double" not-null="true" />
-			<property name="maxLoanAmount" column="MAX_LOAN_AMNT" type="double" not-null="true" />
-			<property name="defaultLoanAmount" column="DEFAULT_LOAN_AMOUNT" type="double" />
-			<property name="maxInterestRate" column="MAX_INTEREST_RATE" type="double" not-null="true" />
-			<property name="minInterestRate" column="MIN_INTEREST_RATE" type="double" not-null="true" />
-			<property name="defInterestRate" column="DEF_INTEREST_RATE" type="double" not-null="true" />
-			<property name="maxNoInstallments" column="MAX_NO_INSTALLMENTS" type="short" not-null="true" />
-			<property name="minNoInstallments" column="MIN_NO_INSTALLMENTS" type="short" not-null="true" />
-			<property name="defNoInstallments" column="DEF_NO_INSTALLMENTS" type="short" not-null="true" />
-			<property name="penaltyGrace" column="PENALTY_GRACE" type="short" not-null="true" />
-			<property name="intDedDisbursementFlag" column="INT_DED_DISBURSEMENT_FLAG" type="short" />
-			<property name="prinDueLastInstFlag" column="PRIN_DUE_LAST_INST_FLAG" type="short" />
-			<property name="gracePeriodDuration" column="GRACE_PERIOD_DURATION" type="short" />
-			<property name="penaltyRate" column="PENALTY_RATE" type="double" />
+
+			<property name="minLoanAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+				<column name="MIN_LOAN_AMOUNT_CURRENCY_ID" />
+				<column name="MIN_LOAN_AMOUNT" />
+			</property>
+			<property name="maxLoanAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+				<column name="MAX_LOAN_AMNT_CURRENCY_ID" />
+				<column name="MAX_LOAN_AMNT" />
+			</property>
+			<property name="defaultLoanAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+				<column name="DEFAULT_LOAN_AMOUNT_CURRENCY_ID" />
+				<column name="DEFAULT_LOAN_AMOUNT" />
+			</property>
+
+			<property name="maxInterestRate" column="MAX_INTEREST_RATE" />
+			<property name="minInterestRate" column="MIN_INTEREST_RATE" />
+			<property name="defInterestRate" column="DEF_INTEREST_RATE" />
+			<property name="maxNoInstallments" column="MAX_NO_INSTALLMENTS" />
+			<property name="minNoInstallments" column="MIN_NO_INSTALLMENTS" />
+			<property name="defNoInstallments" column="DEF_NO_INSTALLMENTS" />
+			<property name="gracePeriodDuration" column="GRACE_PERIOD_DURATION" />
+			<property name="intDedDisbursement" column="INT_DED_DISBURSEMENT_FLAG" access="field" type="short"/>
+			<property name="prinDueLastInst" column="PRIN_DUE_LAST_INST_FLAG" access="field" type="short"/>
+			<property name="loanCounter" column="LOAN_COUNTER_FLAG" access="field" type="short"/>
+
 			<many-to-one name="gracePeriodType" column="GRACEPERIOD_TYPE_ID" class="org.mifos.application.productdefinition.business.GracePeriodTypeEntity" cascade="none" />
 			<many-to-one name="interestTypes" column="INTEREST_TYPE_ID" class="org.mifos.application.master.business.InterestTypesEntity" not-null="true" />
-			<many-to-one name="penalty" column="PENALTY_ID" class="org.mifos.application.penalty.util.valueobjects.Penalty" />
-			<many-to-one name="interestCalcRule" column="INTEREST_CALC_RULE_ID" class="org.mifos.application.master.util.valueobjects.InterestCalcRule" />
-			<many-to-one name="loanCounter" column="LOAN_COUNTER_FLAG" class="org.mifos.application.master.util.valueobjects.YesNoMaster" />
-			<many-to-one name="principalGLcode" column="PRINCIPAL_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" lazy="true" insert="true" update="false" />
-			<many-to-one name="interestGLcode" column="INTEREST_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" lazy="true" insert="true" update="false" />
-			<many-to-one name="penaltyGLcode" column="PENALTIES_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" lazy="true" insert="true" update="false" />
+			<many-to-one name="principalGLcode" column="PRINCIPAL_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" lazy="true" insert="true" update="false" access="field" />
+			<many-to-one name="interestGLcode" column="INTEREST_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" lazy="true" insert="true" update="false" access="field" />
 
 			<!--Mapping of loan offering to its associated funds-->
-			<set name="loanOfferingFunds" cascade="all,delete-orphan" inverse="true" table="LOAN_OFFERING_FUND">
+			<set name="loanOfferingFunds" cascade="all,delete-orphan" inverse="true" table="LOAN_OFFERING_FUND" access="field">
 				<key column="PRD_OFFERING_ID" />
 				<one-to-many class="org.mifos.application.productdefinition.business.LoanOfferingFundEntity" />
 			</set>
 
-			<set name="prdOfferingFees" cascade="all,delete-orphan" inverse="true" table="PRD_OFFERING_FEES">
+			<set name="prdOfferingFees" cascade="all,delete-orphan" inverse="true" table="PRD_OFFERING_FEES" access="field">
 				<key column="PRD_OFFERING_ID" />
 				<one-to-many class="org.mifos.application.productdefinition.business.PrdOfferingFeesEntity" />
 			</set>

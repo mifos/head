@@ -603,7 +603,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 	public void testUpdateStatusForClientWhenClientHasActiveAccounts()
 			throws CustomerException {
 		createInitialObjects();
-		loanBO = getLoanAccount(client);
+		loanBO = getLoanAccount(client,"dsafdsfds","12ed");
 		client.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -990,7 +990,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 	public void testUpdateStatusFailureWhenGroupHasActiveAccounts()
 			throws CustomerException {
 		createInitialObjects();
-		loanBO = getLoanAccount(group);
+		loanBO = getLoanAccount(group,"dsafdsfsdgfdg","23vf");
 		group.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -1250,9 +1250,9 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		return meeting;
 	}
 
-	private LoanBO getLoanAccount(CustomerBO customerBO) {
+	private LoanBO getLoanAccount(CustomerBO customerBO,String offeringName,String shortName) {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
+				offeringName, shortName,Short.valueOf("2"),
 				new Date(System.currentTimeMillis()), Short.valueOf("1"),
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),

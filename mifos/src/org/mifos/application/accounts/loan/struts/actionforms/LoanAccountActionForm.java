@@ -408,8 +408,8 @@ public class LoanAccountActionForm extends BaseActionForm {
 		LoanOfferingBO loanOffering = (LoanOfferingBO) request.getSession()
 				.getAttribute(LoanConstants.LOANOFFERING);
 		checkForMinMax(errors, getLoanAmount(),
-				loanOffering.getMaxLoanAmount(), loanOffering
-						.getMinLoanAmount(), LoanConstants.LOANAMOUNT);
+				loanOffering.getMaxLoanAmount().getAmountDoubleValue(), loanOffering
+						.getMinLoanAmount().getAmountDoubleValue(), LoanConstants.LOANAMOUNT);
 		checkForMinMax(errors, getInterestRate(), loanOffering
 				.getMaxInterestRate(), loanOffering.getMinInterestRate(),
 				LoanConstants.INTERESTRATE);

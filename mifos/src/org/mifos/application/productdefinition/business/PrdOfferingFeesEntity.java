@@ -38,46 +38,43 @@
 
 package org.mifos.application.productdefinition.business;
 
-import org.mifos.application.fees.util.valueobjects.Fees;
+import org.mifos.application.fees.business.FeeBO;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 
 public class PrdOfferingFeesEntity extends PersistentObject {
 
-	private LoanOfferingBO loanOffering;
+	private final Short prdOfferingFeeId;
 
-	private Fees fees;
+	private final LoanOfferingBO loanOffering;
 
-	private Short prdOfferingFeeId;
+	private final FeeBO fees;
 
-	public PrdOfferingFeesEntity() {
+	protected PrdOfferingFeesEntity() {
+		this.prdOfferingFeeId = null;
+		this.loanOffering = null;
+		this.fees = null;
+	}
+
+	public PrdOfferingFeesEntity(LoanOfferingBO loanOffering, FeeBO fees) {
+		this.prdOfferingFeeId = null;
+		this.loanOffering = loanOffering;
+		this.fees = fees;
 	}
 
 	public LoanOfferingBO getLoanOffering() {
 		return loanOffering;
 	}
 
-	public void setLoanOffering(LoanOfferingBO loanOffering) {
-		this.loanOffering = loanOffering;
-	}
-
-	public Fees getFees() {
+	public FeeBO getFees() {
 		return this.fees;
-	}
-
-	public void setFees(Fees fees) {
-		this.fees = fees;
 	}
 
 	public Short getPrdOfferingFeeId() {
 		return prdOfferingFeeId;
 	}
 
-	public void setPrdOfferingFeeId(Short prdOfferingFeeId) {
-		this.prdOfferingFeeId = prdOfferingFeeId;
-	}
-	
 	public boolean isFeePresent(Short feeId) {
 		return fees.getFeeId().equals(feeId);
 	}
@@ -93,10 +90,8 @@ public class PrdOfferingFeesEntity extends PersistentObject {
 				value = true;
 			}
 		}
-		MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER)
-				.info(
-						"In Equals of loanOffering fund+----------------------"
-								+ value);
+		MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER).info(
+				"In Equals of loanOffering fund:" + value);
 		return value;
 	}
 }

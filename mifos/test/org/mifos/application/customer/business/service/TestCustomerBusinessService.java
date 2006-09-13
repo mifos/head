@@ -107,9 +107,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 
 	public void testFetchLoanCycleCounter() throws Exception {
 		account = getLoanAccount();
-		YesNoMaster yesNo = new YesNoMaster();
-		yesNo.setYesNoMasterID(Short.valueOf("1"));
-		loanOffering.setLoanCounter(yesNo);
+		loanOffering.setLoanCounter(true);
 		TestObjectFactory.updateObject(loanOffering);
 		TestObjectFactory.flushandCloseSession();
 		List<LoanCycleCounter> loanCycleCounters = ((CustomerBusinessService) ServiceFactory
@@ -297,13 +295,13 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		AccountBO account5 = getSavingsAccountWithBalance(group, meeting,"savings prd1235","xyz6");
 		AccountBO account6 = getSavingsAccountWithBalance(center1, meeting,"savings prd1236","xyz7");
 
-		AccountBO account7 = getLoanAccount(client, meeting);
+		AccountBO account7 = getLoanAccount(client, meeting,"fdbdhgsgh","54hg");
 		changeFirstInstallmentDateToPastDate(account7);
-		AccountBO account8 = getLoanAccount(client2, meeting);
+		AccountBO account8 = getLoanAccount(client2, meeting,"dsafasdf","32fs");
 		changeFirstInstallmentDateToPastDate(account8);
-		AccountBO account9 = getLoanAccount(client, meeting);
+		AccountBO account9 = getLoanAccount(client, meeting,"afvasfgfdg","a12w");
 		changeFirstInstallmentDateToPastDate(account9);
-		AccountBO account10 = getLoanAccount(group, meeting);
+		AccountBO account10 = getLoanAccount(group, meeting,"afadsff","23e");
 
 		client2.setCustomerStatus(new CustomerStatusEntity(
 				CustomerStatus.CLIENT_CLOSED));
@@ -569,10 +567,10 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		assertEquals(2, statusListForClient.size());
 	}
 
-	private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
+	private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting,String offeringName,String shortName) {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
+				offeringName,shortName, Short.valueOf("2"), startDate, Short.valueOf("1"),
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), meeting);

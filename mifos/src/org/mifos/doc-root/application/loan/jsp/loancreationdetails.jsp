@@ -314,24 +314,6 @@
 												</c:choose>
 											</td>
 										</tr>
-										<tr class="fontnormal">
-											<td align="right">
-												<mifos:mifoslabel name="loan.penalty_type" />
-												:
-											</td>
-											<td valign="top">
-												<c:out value="${sessionScope.loanOffering.penalty.penaltyType}" />
-											</td>
-										</tr>
-										<tr class="fontnormal">
-											<td align="right">
-												<mifos:mifoslabel name="loan.grace_period_type" />
-												:
-											</td>
-											<td valign="top">
-												<c:out value="${sessionScope.loanOffering.gracePeriodType.name}" />
-											</td>
-										</tr>
 									</table>
 									<br>
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
@@ -607,6 +589,7 @@
 			</table>
 			<html-el:hidden property="method" value="schedulePreview" />
 			<html-el:hidden property="gracePeriodTypeId" value="${sessionScope.loanOffering.gracePeriodType.id}" />
+			<html-el:hidden property="gracePeriodname" value="${sessionScope.loanOffering.gracePeriodType.name}" />
 			<script>intDedAtDisb();</script>
 		</html-el:form>
 	</tiles:put>

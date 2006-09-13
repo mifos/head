@@ -39,15 +39,16 @@
 package org.mifos.application.productdefinition.business;
 
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 
 public class GracePeriodTypeEntity extends MasterDataEntity {
 
-	public GracePeriodTypeEntity() {
+	protected GracePeriodTypeEntity() {
 		super();
 	}
 
-	public GracePeriodTypeEntity(Short id) {
-		super(id);
+	public GracePeriodTypeEntity(GraceTypeConstants graceType) {
+		super(graceType.getValue());
 	}
-	
+
 }

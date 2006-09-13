@@ -96,7 +96,7 @@ public class TestLoanPersistence extends MifosTestCase {
 	}
 
 	public void testGetFeeAmountAtDisbursement() throws Exception {
-		loanAccountForDisbursement = getLoanAccount(group, meeting, Short
+		loanAccountForDisbursement = getLoanAccount("cdfg",group, meeting, Short
 				.valueOf("3"));
 		assertEquals(30.0, loanPersistence
 				.getFeeAmountAtDisbursement(loanAccountForDisbursement
@@ -188,7 +188,7 @@ public class TestLoanPersistence extends MifosTestCase {
 	private AccountBO getLoanAccount(Short accountSate, Date startDate,
 			int disbursalType) {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
+				"Loanvcfg","bhgf", Short.valueOf("2"), startDate, Short.valueOf("1"),
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), meeting);
@@ -197,11 +197,11 @@ public class TestLoanPersistence extends MifosTestCase {
 				disbursalType);
 	}
 
-	private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting,
+	private AccountBO getLoanAccount(String shortName,CustomerBO customer, MeetingBO meeting,
 			Short accountSate) {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
+				"Loan123",shortName, Short.valueOf("2"), startDate, Short.valueOf("1"),
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), meeting);
@@ -214,7 +214,7 @@ public class TestLoanPersistence extends MifosTestCase {
 	private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
+				"Loancfgb","dhsq", Short.valueOf("2"), startDate, Short.valueOf("1"),
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), meeting);

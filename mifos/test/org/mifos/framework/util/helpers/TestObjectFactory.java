@@ -146,8 +146,9 @@ import org.mifos.application.productdefinition.business.RecommendedAmntUnitEntit
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsTypeEntity;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
-import org.mifos.application.productdefinition.util.helpers.GracePeriodTypeConstants;
+import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.application.productdefinition.util.helpers.InterestTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
@@ -506,205 +507,131 @@ public class TestObjectFactory {
 		return client;
 	}
 
-	/**
-	 * @param name -
-	 *            name of the prd offering
-	 * @param applicableTo -
-	 * @param startDate -
-	 *            start date of the product
-	 * @param offeringStatusId -
-	 *            primary key of prd_status table
-	 * @param defLnAmnt -
-	 *            same would be set as min and max amounts
-	 * @param defIntRate -
-	 *            same would be set as min and max amounts
-	 * @param defInstallments-be
-	 *            set as min and max amounts
-	 * @param interestTypeId -
-	 *            primary key of interest types table
-	 * @param penaltyGrace -
-	 *            installments for penalty grace
-	 * @param intDedAtDisb -
-	 *            flag
-	 * @param princDueLastInst -
-	 *            flag
-	 * @param intCalcRuleId -
-	 *            primary key of int calc rule table
-	 * @param meeting -
-	 *            meeting associated with the product offering
-	 */
 	public static LoanOfferingBO createLoanOffering(String name,
 			Short applicableTo, Date startDate, Short offeringStatusId,
 			Double defLnAmnt, Double defIntRate, Short defInstallments,
 			Short interestTypeId, Short penaltyGrace, Short intDedAtDisb,
 			Short princDueLastInst, Short intCalcRuleId, MeetingBO meeting) {
-
-		LoanOfferingBO loanOffering = new LoanOfferingBO();
-
-		OfficeBO office = getOffice(new Short("3"));
-		PrdOfferingMeetingEntity prdOfferingMeeting = new PrdOfferingMeetingEntity(meeting,loanOffering,MeetingType.LOANFREQUENCYOFINSTALLMENTS);
-		InterestTypesEntity interestTypes = new InterestTypesEntity(interestTypeId);
-
-		InterestCalcRule interestCalcRule = new InterestCalcRule();
-		interestCalcRule.setInterestCalcRuleId(intCalcRuleId);
-
-		PersonnelBO personnel = getPersonnel(new Short("1"));
-
-		PrdApplicableMasterEntity prdApplicableMaster =null;
-		try {
-			prdApplicableMaster = new PrdApplicableMasterEntity(PrdApplicableMaster.getPrdApplicableMaster(applicableTo));
-		} catch (PropertyNotFoundException e) {
-			e.printStackTrace();
-		}
-		PrdStatusEntity prdStatus = testObjectPersistence.retrievePrdStatus(offeringStatusId);
-
-		loanOffering.setPrdApplicableMaster(prdApplicableMaster);
-		loanOffering.setPrdCategory(getLoanPrdCategory());
-		
-		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(GracePeriodTypeConstants.GRACEONALLREPAYMENTS);
-		loanOffering.setGracePeriodType(gracePeriodType);
-		
-		loanOffering.setPrdType(prdStatus.getPrdType());
-		loanOffering.setOffice(office);
-		loanOffering.setStartDate(startDate);
-		loanOffering.setPrdOfferingName(name);
-		loanOffering.setGlobalPrdOfferingNum(name);
-		loanOffering.setDescription(name);
-		loanOffering.setPrdOfferingShortName(name);
-		loanOffering.setPrdStatus(prdStatus);
-		loanOffering.setCreatedDate(new Date(System.currentTimeMillis()));
-		loanOffering.setCreatedBy(personnel.getPersonnelId());
-		loanOffering.setMinLoanAmount(defLnAmnt);
-		loanOffering.setDefaultLoanAmount(defLnAmnt);
-		loanOffering.setMaxLoanAmount(defLnAmnt);
-		loanOffering.setMinInterestRate(defIntRate);
-		loanOffering.setDefInterestRate(defIntRate);
-		loanOffering.setMaxInterestRate(defIntRate);
-		loanOffering.setMinNoInstallments(defInstallments);
-		loanOffering.setDefNoInstallments(defInstallments);
-		loanOffering.setMaxNoInstallments(defInstallments);
-		loanOffering.setPenaltyGrace(penaltyGrace);
-		loanOffering.setGracePeriodDuration((short)0);
-		loanOffering.setIntDedDisbursement(intDedAtDisb.intValue() == 0 ? false
-				: true);
-		loanOffering
-				.setPrinDueLastInst(princDueLastInst.intValue() == 0 ? false
-						: true);
-		loanOffering.setInterestTypes(interestTypes);
-		loanOffering.setInterestCalcRule(interestCalcRule);
-		loanOffering.setPrdOfferingMeeting(prdOfferingMeeting);
-
-		GLCodeEntity glCodePrincipal = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, Short.valueOf("11"));
-		loanOffering.setPrincipalGLcode(glCodePrincipal);
-		GLCodeEntity glCodeInterest = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, Short.valueOf("21"));
-		loanOffering.setInterestGLcode(glCodeInterest);
-		loanOffering.setPenaltyGLcode(glCodePrincipal);
-		return (LoanOfferingBO) addObject(testObjectPersistence.persist(loanOffering));
-
+		return createLoanOffering(name, name.substring(0, 1),applicableTo, startDate,
+				offeringStatusId, defLnAmnt, defIntRate, defInstallments,
+				interestTypeId, penaltyGrace, intDedAtDisb, princDueLastInst,
+				intCalcRuleId, meeting, GraceTypeConstants.GRACEONALLREPAYMENTS
+						.getValue());
 	}
 	
-/**
-	 * @param name -
-	 *            name of the prd offering
-	 * @param applicableTo -
-	 * @param startDate -
-	 *            start date of the product
-	 * @param offeringStatusId -
-	 *            primary key of prd_status table
-	 * @param defLnAmnt -
-	 *            same would be set as min and max amounts
-	 * @param defIntRate -
-	 *            same would be set as min and max amounts
-	 * @param defInstallments-be
-	 *            set as min and max amounts
-	 * @param interestTypeId -
-	 *            primary key of interest types table
-	 * @param penaltyGrace -
-	 *            installments for penalty grace
-	 * @param intDedAtDisb -
-	 *            flag
-	 * @param princDueLastInst -
-	 *            flag
-	 * @param intCalcRuleId -
-	 *            primary key of int calc rule table
-	 * @param meeting -
-	 *            meeting associated with the product offering
-	 */
+	public static LoanOfferingBO createLoanOffering(String name,String shortName,
+			Short applicableTo, Date startDate, Short offeringStatusId,
+			Double defLnAmnt, Double defIntRate, Short defInstallments,
+			Short interestTypeId, Short penaltyGrace, Short intDedAtDisb,
+			Short princDueLastInst, Short intCalcRuleId, MeetingBO meeting) {
+		return createLoanOffering(name,shortName,applicableTo, startDate,
+				offeringStatusId, defLnAmnt, defIntRate, defInstallments,
+				interestTypeId, penaltyGrace, intDedAtDisb, princDueLastInst,
+				intCalcRuleId, meeting, GraceTypeConstants.GRACEONALLREPAYMENTS
+						.getValue());
+	}
+	
 	public static LoanOfferingBO createLoanOffering(String name,
 			Short applicableTo, Date startDate, Short offeringStatusId,
 			Double defLnAmnt, Double defIntRate, Short defInstallments,
 			Short interestTypeId, Short penaltyGrace, Short intDedAtDisb,
 			Short princDueLastInst, Short intCalcRuleId, MeetingBO meeting,Short graceType) {
+		return createLoanOffering(name, name.substring(0, 1),applicableTo, startDate,
+				offeringStatusId, defLnAmnt, defIntRate, defInstallments,
+				interestTypeId, penaltyGrace, intDedAtDisb, princDueLastInst,
+				intCalcRuleId, meeting,graceType);
+	}
+	
+/**
+ * @param name -
+ *            name of the prd offering
+ * @param applicableTo -
+ * @param startDate -
+ *            start date of the product
+ * @param offeringStatusId -
+ *            primary key of prd_status table
+ * @param defLnAmnt -
+ *            same would be set as min and max amounts
+ * @param defIntRate -
+ *            same would be set as min and max amounts
+ * @param defInstallments-be
+ *            set as min and max amounts
+ * @param interestTypeId -
+ *            primary key of interest types table
+ * @param penaltyGrace -
+ *            installments for penalty grace
+ * @param intDedAtDisb -
+ *            flag
+ * @param princDueLastInst -
+ *            flag
+ * @param intCalcRuleId -
+ *            primary key of int calc rule table
+ * @param meeting -
+ *            meeting associated with the product offering
+ * @param graceType -
+ *            grace period Type associated with the product offering         
+ */
+	public static LoanOfferingBO createLoanOffering(String name,String shortName,
+			Short applicableTo, Date startDate, Short offeringStatusId,
+			Double defLnAmnt, Double defIntRate, Short defInstallments,
+			Short interestTypeId, Short penaltyGrace, Short intDedAtDisb,
+			Short princDueLastInst, Short intCalcRuleId, MeetingBO meeting,Short graceType) {
 
-		LoanOfferingBO loanOffering = new LoanOfferingBO();
-
-		OfficeBO office = getOffice(new Short("3"));
-		PrdOfferingMeetingEntity prdOfferingMeeting = new PrdOfferingMeetingEntity(meeting,loanOffering,MeetingType.LOANFREQUENCYOFINSTALLMENTS);
-		InterestTypesEntity interestTypes = new InterestTypesEntity(interestTypeId);
-
-		InterestCalcRule interestCalcRule = new InterestCalcRule();
-		interestCalcRule.setInterestCalcRuleId(intCalcRuleId);
-
-		PersonnelBO personnel = getPersonnel(new Short("1"));
-
-		PrdApplicableMasterEntity prdApplicableMaster =null;
+		LoanOfferingBO loanOffering = null;
+		PrdApplicableMasterEntity prdApplicableMaster = null;
 		try {
-			prdApplicableMaster = new PrdApplicableMasterEntity(PrdApplicableMaster.getPrdApplicableMaster(applicableTo));
+			prdApplicableMaster = new PrdApplicableMasterEntity(
+					PrdApplicableMaster.getPrdApplicableMaster(applicableTo));
+		} catch (PropertyNotFoundException e) {
+			e.printStackTrace();
+		}
+		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
+				.getLoanPrdCategory();
+		GracePeriodTypeEntity gracePeriodType = null;
+		try {
+			gracePeriodType = new GracePeriodTypeEntity(GraceTypeConstants
+					.getGraceTypeConstants(graceType));
+		} catch (PropertyNotFoundException e1) {
+			e1.printStackTrace();
+		}
+		InterestTypesEntity interestTypes = null;
+		try {
+			interestTypes = new InterestTypesEntity(InterestTypeConstants
+					.getInterestTypeConstants(interestTypeId));
 		} catch (PropertyNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-
-		PrdStatusEntity prdStatus = testObjectPersistence.retrievePrdStatus(offeringStatusId);
-
-		loanOffering.setPrdApplicableMaster(prdApplicableMaster);
-		loanOffering.setPrdCategory(getLoanPrdCategory());
-		
-		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(graceType);
-		loanOffering.setGracePeriodType(gracePeriodType);
-		
-		loanOffering.setPrdType(prdStatus.getPrdType());
-		loanOffering.setOffice(office);
-		loanOffering.setStartDate(startDate);
-		loanOffering.setPrdOfferingName(name);
-		loanOffering.setGlobalPrdOfferingNum(name);
-		loanOffering.setDescription(name);
-		loanOffering.setPrdOfferingShortName(name);
-		loanOffering.setPrdStatus(prdStatus);
-		loanOffering.setCreatedDate(new Date(System.currentTimeMillis()));
-		loanOffering.setCreatedBy(personnel.getPersonnelId());
-		loanOffering.setMinLoanAmount(defLnAmnt);
-		loanOffering.setDefaultLoanAmount(defLnAmnt);
-		loanOffering.setMaxLoanAmount(defLnAmnt);
-		loanOffering.setMinInterestRate(defIntRate);
-		loanOffering.setDefInterestRate(defIntRate);
-		loanOffering.setMaxInterestRate(defIntRate);
-		loanOffering.setMinNoInstallments(defInstallments);
-		loanOffering.setDefNoInstallments(defInstallments);
-		loanOffering.setMaxNoInstallments(defInstallments);
-		loanOffering.setPenaltyGrace(penaltyGrace);
-		loanOffering.setGracePeriodDuration((short)0);
-		loanOffering.setIntDedDisbursement(intDedAtDisb.intValue() == 0 ? false
-				: true);
-		loanOffering
-				.setPrinDueLastInst(princDueLastInst.intValue() == 0 ? false
-						: true);
-		loanOffering.setInterestTypes(interestTypes);
-		loanOffering.setInterestCalcRule(interestCalcRule);
-		loanOffering.setPrdOfferingMeeting(prdOfferingMeeting);
-
 		GLCodeEntity glCodePrincipal = (GLCodeEntity) HibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, Short.valueOf("11"));
-		loanOffering.setPrincipalGLcode(glCodePrincipal);
+
 		GLCodeEntity glCodeInterest = (GLCodeEntity) HibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, Short.valueOf("21"));
-		loanOffering.setInterestGLcode(glCodeInterest);
-		loanOffering.setPenaltyGLcode(glCodePrincipal);
-		return (LoanOfferingBO) addObject(testObjectPersistence.persist(loanOffering));
+		boolean interestDisAtDisb = intDedAtDisb.equals(YesNoFlag.YES
+				.getValue()) ? true : false;
+		boolean principalDueLastInst = princDueLastInst.equals(YesNoFlag.YES
+				.getValue()) ? true : false;
+		try {
+			loanOffering = new LoanOfferingBO(getContext(), name, shortName,
+					productCategory, prdApplicableMaster, startDate, null,
+					null, gracePeriodType, (short) 0, interestTypes, new Money(
+							defLnAmnt.toString()), new Money(defLnAmnt
+							.toString()), new Money(defLnAmnt.toString()),
+					defIntRate, defIntRate, defIntRate, defInstallments,
+					defInstallments, defInstallments, true, interestDisAtDisb,
+					principalDueLastInst, new ArrayList<Fund>(),
+					new ArrayList<FeeBO>(), meeting, glCodePrincipal,
+					glCodeInterest);
+		} catch (ProductDefinitionException e) {
+			e.printStackTrace();
+		}
 
+		PrdStatusEntity prdStatus = testObjectPersistence
+				.retrievePrdStatus(offeringStatusId);
+
+		loanOffering.setPrdStatus(prdStatus);
+		return (LoanOfferingBO) addObject(testObjectPersistence
+				.persist(loanOffering));
 	}
 
 
@@ -861,10 +788,8 @@ public class TestObjectFactory {
 			e1.printStackTrace();
 		}
 
-		OfficeBO office = getOffice(new Short("3"));
 		PrdStatusEntity prdStatus = testObjectPersistence
 				.retrievePrdStatus(offeringStatusId);
-		savingsOffering.setOffice(office);
 		savingsOffering.setPrdStatus(prdStatus);
 		return (SavingsOfferingBO) addObject(testObjectPersistence
 				.persist(savingsOffering));
@@ -1807,14 +1732,24 @@ public class TestObjectFactory {
 				actionDate.addAccountFeesAction(accountFeesaction);
 			}
 		}
-		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(Short.valueOf("1"));
+		GracePeriodTypeEntity gracePeriodType=null;
+		try {
+			gracePeriodType = new GracePeriodTypeEntity(GraceTypeConstants.getGraceTypeConstants(Short.valueOf("1")));
+		}catch (PropertyNotFoundException e) {
+			e.printStackTrace();
+		}
 		loan.setGracePeriodType(gracePeriodType);
 		loan.setCreatedBy(Short.valueOf("1"));
 		
 		CollateralTypeEntity collateralType = new CollateralTypeEntity(Short.valueOf("1"));
 		loan.setCollateralType(collateralType);
 
-		InterestTypesEntity interestTypes = new InterestTypesEntity(Short.valueOf("1"));
+		InterestTypesEntity interestTypes =null;
+		try {
+			interestTypes = new InterestTypesEntity(InterestTypeConstants.getInterestTypeConstants(Short.valueOf("1")));
+		}catch (PropertyNotFoundException e) {
+			e.printStackTrace();
+		}
 		loan.setInterestType(interestTypes);
 		loan.setInterestRate(10.0);
 		loan.setCreatedDate(new Date(System.currentTimeMillis()));

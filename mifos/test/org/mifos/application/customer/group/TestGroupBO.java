@@ -588,7 +588,7 @@ public class TestGroupBO extends MifosTestCase {
 				ClientConstants.STATUS_ACTIVE, group.getSearchId() + ".1",
 				group, new Date(System.currentTimeMillis()));
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
+				"Loandsdasd","fsad", Short.valueOf("2"),
 				new Date(System.currentTimeMillis()), Short.valueOf("1"),
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
@@ -596,7 +596,7 @@ public class TestGroupBO extends MifosTestCase {
 		account1 = TestObjectFactory.createLoanAccount("42423142341", group,
 				Short.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);
-		loanOffering = TestObjectFactory.createLoanOffering("Loan", Short
+		loanOffering = TestObjectFactory.createLoanOffering("Loandfas", "dsvd",Short
 				.valueOf("1"), new Date(System.currentTimeMillis()), Short
 				.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
 				.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), Short

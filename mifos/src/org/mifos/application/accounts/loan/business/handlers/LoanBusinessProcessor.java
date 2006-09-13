@@ -47,7 +47,7 @@ import org.mifos.application.master.util.valueobjects.Currency;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.office.util.valueobjects.Office;
 import org.mifos.application.productdefinition.dao.LoanProductDAO;
-import org.mifos.application.productdefinition.util.helpers.GracePeriodTypeConstants;
+import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.application.productdefinition.util.valueobjects.LoanOffering;
@@ -290,7 +290,7 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 		// else inherit the grace period type from loan offering.
 		if (null != loan.getIntrestAtDisbursement()
 				&& 1 == loan.getIntrestAtDisbursement()) {
-			loan.setGracePeriodTypeId(GracePeriodTypeConstants.NONE);
+			loan.setGracePeriodTypeId(GraceTypeConstants.NONE.getValue());
 		} else {
 			loan.setGracePeriodTypeId(loan.getLoanOffering()
 					.getGracePeriodType().getGracePeriodTypeId());
@@ -443,7 +443,7 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 			// grace period type is grace on all repayments.
 			if (null != loan.getIntrestAtDisbursement()
 					&& 1 == loan.getIntrestAtDisbursement()) {
-				loan.setGracePeriodTypeId(GracePeriodTypeConstants.NONE);
+				loan.setGracePeriodTypeId(GraceTypeConstants.NONE.getValue());
 			} else {
 				loan.setGracePeriodTypeId(loan.getLoanOffering()
 						.getGracePeriodType().getGracePeriodTypeId());
@@ -459,7 +459,7 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 			// grace period type is grace on all repayments.
 			if (null != loan.getIntrestAtDisbursement()
 					&& 1 == loan.getIntrestAtDisbursement()) {
-				loan.setGracePeriodTypeId(GracePeriodTypeConstants.NONE);
+				loan.setGracePeriodTypeId(GraceTypeConstants.NONE.getValue());
 			} else {
 				loan.setGracePeriodTypeId(loan.getLoanOffering()
 						.getGracePeriodType().getGracePeriodTypeId());
@@ -863,7 +863,7 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 		// grace period type is grace on all repayments.
 		if (null != loan.getIntrestAtDisbursement()
 				&& 1 == loan.getIntrestAtDisbursement()) {
-			loan.setGracePeriodTypeId(GracePeriodTypeConstants.NONE);
+			loan.setGracePeriodTypeId(GraceTypeConstants.NONE.getValue());
 		} else {
 			loan.setGracePeriodTypeId(loan.getLoanOffering()
 					.getGracePeriodType().getGracePeriodTypeId());
@@ -953,7 +953,7 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 		// else inherit the grace period type from loan offering.
 		if (null != loan.getIntrestAtDisbursement()
 				&& 1 == loan.getIntrestAtDisbursement()) {
-			loan.setGracePeriodTypeId(GracePeriodTypeConstants.NONE);
+			loan.setGracePeriodTypeId(GraceTypeConstants.NONE.getValue());
 		} else {
 			loan.setGracePeriodTypeId(loan.getLoanOffering()
 					.getGracePeriodType().getGracePeriodTypeId());

@@ -147,7 +147,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 				"1.1", meeting, startDate);
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
 				"1.1.1", center, startDate);
-		account = getLoanAccount(group, meeting);
+		account = getLoanAccount(group, meeting,"adsfdsfsd","3saf");
 		// Date actionDate = new Date(2006,03,13);
 		Date meetingDate = customerPersistence
 				.getLastMeetingDateForCustomer(center.getCustomerId());
@@ -165,7 +165,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 				"1.1", meeting, startDate);
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
 				"1.1.1", center, startDate);
-		account = getLoanAccount(group, meeting);
+		account = getLoanAccount(group, meeting,"Loan342423","1wed");
 		Date meetingDate = customerPersistence
 				.getLastMeetingDateForCustomer(center.getCustomerId());
 		List<PrdOfferingBO> productList = customerPersistence.getLoanProducts(
@@ -173,10 +173,10 @@ public class TestCustomerPersistence extends MifosTestCase {
 		assertEquals(1, productList.size());
 	}
 
-	private AccountBO getLoanAccount(CustomerBO group, MeetingBO meeting) {
+	private AccountBO getLoanAccount(CustomerBO group, MeetingBO meeting,String offeringName,String shortName) {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
+				offeringName, shortName,Short.valueOf("2"), startDate, Short.valueOf("1"),
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), meeting);
@@ -564,11 +564,11 @@ public class TestCustomerPersistence extends MifosTestCase {
 		ClientBO client3 = TestObjectFactory.createClient("client3",
 				CustomerStatus.CLIENT_ACTIVE.getValue(), group1.getSearchId()
 						+ ".1", group1, new Date(System.currentTimeMillis()));
-		account = getLoanAccount(group, meeting);
-		AccountBO account1 = getLoanAccount(client, meeting);
-		AccountBO account2 = getLoanAccount(client2, meeting);
-		AccountBO account3 = getLoanAccount(client3, meeting);
-		AccountBO account4 = getLoanAccount(group1, meeting);
+		account = getLoanAccount(group, meeting,"cdfggdfs","1qdd");
+		AccountBO account1 = getLoanAccount(client, meeting,"fdbdhgsgh","54hg");
+		AccountBO account2 = getLoanAccount(client2, meeting,"fasdfdsfasdf","1qwe");
+		AccountBO account3 = getLoanAccount(client3, meeting,"fdsgdfgfd","543g");
+		AccountBO account4 = getLoanAccount(group1, meeting,"fasdf23","3fds");
 
 		client2.setCustomerStatus(new CustomerStatusEntity(
 				CustomerStatus.CLIENT_CLOSED));
@@ -918,13 +918,13 @@ public class TestCustomerPersistence extends MifosTestCase {
 		client = TestObjectFactory.createClient("Client", Short.valueOf("3"),
 				"1.1.1.1", group, new Date(System.currentTimeMillis()));
 		LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
+				"Loanwer","43fs", Short.valueOf("2"),
 				new Date(System.currentTimeMillis()), Short.valueOf("1"),
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), meeting);
 		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
+				"Loancd123","vfr" ,Short.valueOf("2"),
 				new Date(System.currentTimeMillis()), Short.valueOf("1"),
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),

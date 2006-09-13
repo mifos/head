@@ -138,7 +138,6 @@ public interface ProductDefinitionConstants {
 	public String LOANPRDACTIONMAXINTERESTRATE="max interest rate";
 	
 	public Short LOANFRQINSTID =1;
-	public Short DEFAULTLOANGRACEPERIODTYPE =1;
 	public Short LOANFEESINACTIVEID=1;
 	public Short LOANCATEGORYIDVALUE=5;
 

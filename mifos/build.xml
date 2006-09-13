@@ -269,6 +269,7 @@
 			<transaction src="./sql/mifosdbcreationscript.sql" />
 			<transaction src="./sql/mifosmasterdata.sql" />
 			<transaction src="./sql/testdbinsertionscript.sql" />
+			<transaction src="./sql/DBChanges-Iteration13.sql" />
 		</sql>
 	</target>
 

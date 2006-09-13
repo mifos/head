@@ -515,7 +515,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), meeting);
 		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
+				"Loan2345","313f", Short.valueOf("2"),
 				new Date(System.currentTimeMillis()), Short.valueOf("1"),
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
@@ -610,13 +610,13 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		client = TestObjectFactory.createClient("Client", Short.valueOf("3"),
 				"1.1.1.1", group, new Date(System.currentTimeMillis()));
 		LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
+				"Loanwdfty","1sw3", Short.valueOf("2"),
 				new Date(System.currentTimeMillis()), Short.valueOf("1"),
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), meeting);
 		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
+				"Loanwerffg","3r4t", Short.valueOf("2"),
 				new Date(System.currentTimeMillis()), Short.valueOf("1"),
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),

@@ -56,17 +56,17 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
-public class PrdOfferingBO extends BusinessObject {
+public abstract class PrdOfferingBO extends BusinessObject {
 
-	private Short prdOfferingId;
+	private final Short prdOfferingId;
 
 	private String prdOfferingName;
 
 	private String prdOfferingShortName;
 
-	private String globalPrdOfferingNum;
+	private final String globalPrdOfferingNum;
 
-	private ProductTypeEntity prdType;
+	private final ProductTypeEntity prdType;
 
 	private ProductCategoryBO prdCategory;
 
@@ -78,7 +78,7 @@ public class PrdOfferingBO extends BusinessObject {
 
 	private Date endDate;
 
-	private OfficeBO office;
+	private final OfficeBO office;
 
 	private String description;
 
@@ -86,15 +86,11 @@ public class PrdOfferingBO extends BusinessObject {
 			.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
 
 	protected PrdOfferingBO() {
-		office = new OfficeBO();
-		prdCategory = new ProductCategoryBO();
-		prdStatus = new PrdStatusEntity();
+		prdOfferingId = null;
+		globalPrdOfferingNum = null;
+		prdType = null;
+		office = null;
 		prdApplicableMaster = null;
-	}
-
-	// TODO to be removed.
-	protected PrdOfferingBO(UserContext userContext) {
-		super(userContext);
 	}
 
 	protected PrdOfferingBO(UserContext userContext, String prdOfferingName,
@@ -115,6 +111,7 @@ public class PrdOfferingBO extends BusinessObject {
 				prdCategory, prdApplicableMaster, startDate, endDate);
 		validateDuplicateProductOfferingName(prdOfferingName);
 		validateDuplicateProductOfferingShortName(prdOfferingShortName);
+		prdOfferingId = null;
 		this.prdOfferingName = prdOfferingName;
 		this.prdOfferingShortName = prdOfferingShortName;
 		this.prdCategory = prdCategory;
@@ -134,28 +131,44 @@ public class PrdOfferingBO extends BusinessObject {
 		prdLogger.debug("creating product offering done");
 	}
 
-	public String getDescription() {
-		return description;
+	public Short getPrdOfferingId() {
+		return prdOfferingId;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public String getPrdOfferingName() {
+		return prdOfferingName;
 	}
 
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
+	public String getPrdOfferingShortName() {
+		return prdOfferingShortName;
 	}
 
 	public String getGlobalPrdOfferingNum() {
 		return globalPrdOfferingNum;
 	}
 
-	public void setGlobalPrdOfferingNum(String globalPrdOfferingNum) {
-		this.globalPrdOfferingNum = globalPrdOfferingNum;
+	public ProductTypeEntity getPrdType() {
+		return prdType;
+	}
+
+	public ProductCategoryBO getPrdCategory() {
+		return prdCategory;
+	}
+
+	public PrdStatusEntity getPrdStatus() {
+		return prdStatus;
+	}
+
+	public PrdApplicableMasterEntity getPrdApplicableMaster() {
+		return prdApplicableMaster;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
 	}
 
 	public OfficeBO getOffice() {
@@ -163,12 +176,24 @@ public class PrdOfferingBO extends BusinessObject {
 		return office;
 	}
 
-	public void setOffice(OfficeBO office) {
-		this.office = office;
+	public String getDescription() {
+		return description;
 	}
 
-	public PrdApplicableMasterEntity getPrdApplicableMaster() {
-		return prdApplicableMaster;
+	public void setPrdOfferingName(String prdOfferingName) {
+		this.prdOfferingName = prdOfferingName;
+	}
+
+	public void setPrdOfferingShortName(String prdOfferingShortName) {
+		this.prdOfferingShortName = prdOfferingShortName;
+	}
+
+	public void setPrdCategory(ProductCategoryBO prdCategory) {
+		this.prdCategory = prdCategory;
+	}
+
+	public void setPrdStatus(PrdStatusEntity prdStatus) {
+		this.prdStatus = prdStatus;
 	}
 
 	public void setPrdApplicableMaster(
@@ -176,60 +201,16 @@ public class PrdOfferingBO extends BusinessObject {
 		this.prdApplicableMaster = prdApplicableMaster;
 	}
 
-	public ProductCategoryBO getPrdCategory() {
-		return prdCategory;
-	}
-
-	public void setPrdCategory(ProductCategoryBO prdCategory) {
-		this.prdCategory = prdCategory;
-	}
-
-	public Short getPrdOfferingId() {
-		return prdOfferingId;
-	}
-
-	public void setPrdOfferingId(Short prdOfferingId) {
-		this.prdOfferingId = prdOfferingId;
-	}
-
-	public String getPrdOfferingName() {
-		return prdOfferingName;
-	}
-
-	public void setPrdOfferingName(String prdOfferingName) {
-		this.prdOfferingName = prdOfferingName;
-	}
-
-	public String getPrdOfferingShortName() {
-		return prdOfferingShortName;
-	}
-
-	public void setPrdOfferingShortName(String prdOfferingShortName) {
-		this.prdOfferingShortName = prdOfferingShortName;
-	}
-
-	public PrdStatusEntity getPrdStatus() {
-		return prdStatus;
-	}
-
-	public void setPrdStatus(PrdStatusEntity prdStatus) {
-		this.prdStatus = prdStatus;
-	}
-
-	public ProductTypeEntity getPrdType() {
-		return prdType;
-	}
-
-	public void setPrdType(ProductTypeEntity prdType) {
-		this.prdType = prdType;
-	}
-
-	public Date getStartDate() {
-		return startDate;
-	}
-
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	private String generatePrdOfferingGlobalNum()
@@ -293,7 +274,6 @@ public class PrdOfferingBO extends BusinessObject {
 		} catch (PersistenceException e) {
 			throw new ProductDefinitionException(e);
 		}
-
 	}
 
 	private PrdStatus getActivePrdStatus(ProductTypeEntity prdType) {
@@ -303,7 +283,6 @@ public class PrdOfferingBO extends BusinessObject {
 			return PrdStatus.LOANACTIVE;
 		else
 			return PrdStatus.SAVINGSACTIVE;
-
 	}
 
 	private PrdStatus getInActivePrdStatus(ProductTypeEntity prdType) {

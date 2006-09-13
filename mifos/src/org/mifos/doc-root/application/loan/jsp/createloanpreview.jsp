@@ -216,8 +216,6 @@
 															<mifos:mifoslabel name="loan.no" />
 														</c:otherwise>
 													</c:choose> <br> </span>
-												<mifos:mifoslabel name="loan.penalty_type" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${sessionScope.loanOffering.penalty.penaltyType}" /> <br> </span>
 												<mifos:mifoslabel name="loan.grace_period_type" />
 												:&nbsp; <span class="fontnormal"> <c:out value="${sessionScope.loanOffering.gracePeriodType.name}" /><br> <br> <br> </span>
 											</td>

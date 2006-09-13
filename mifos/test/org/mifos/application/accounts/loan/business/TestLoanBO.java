@@ -50,7 +50,7 @@ import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.util.helpers.GracePeriodTypeConstants;
+import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -1910,7 +1910,7 @@ public class TestLoanBO extends MifosTestCase {
 				new Fund(), new ArrayList<FeeView>());
 		assertEquals(
 				"For interest ded at disb, grace period type should be none",
-				GracePeriodTypeConstants.NONE, loan.getGracePeriodType()
+				GraceTypeConstants.NONE.getValue(), loan.getGracePeriodType()
 						.getId());
 		assertEquals(0, loan.getGracePeriodDuration().intValue());
 		assertEquals(new java.sql.Date(DateUtils

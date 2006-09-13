@@ -108,7 +108,6 @@ import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.util.helpers.GracePeriodTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.InterestTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
@@ -200,7 +199,7 @@ public class LoanBO extends AccountBO {
 		setInterestDeductedAtDisbursement(interestDeductedAtDisbursement);
 		setGracePeriodTypeAndDuration(interestDeductedAtDisbursement,
 				gracePeriodDuration);
-		this.gracePeriodPenalty = loanOffering.getPenaltyGrace();
+		this.gracePeriodPenalty = 0;
 		this.fund = fund;
 		this.loanMeeting = buildLoanMeeting(customer.getCustomerMeeting()
 				.getMeeting(), loanOffering.getPrdOfferingMeeting()
@@ -981,7 +980,7 @@ public class LoanBO extends AccountBO {
 		inputs
 				.setIsInterestDedecutedAtDisburesement(isInterestDeductedAtDisbursement());
 		inputs.setIsPrincipalInLastPayment(getLoanOffering()
-				.isPrincipalDueInLastInstallment());
+				.isPrinDueLastInst());
 		inputs.setRepaymentFrequency(getLoanMeeting());
 		inputs.setNoOfInstallments(getNoOfInstallments());
 		inputs.setPrincipal(getLoanAmount());
@@ -1551,18 +1550,18 @@ public class LoanBO extends AccountBO {
 	private List<EMIInstallment> generateEMI(Money loanInterest)
 			throws AccountException {
 		if (isInterestDeductedAtDisbursement()
-				&& !getLoanOffering().isPrincipalDueInLastInstallment())
+				&& !getLoanOffering().isPrinDueLastInst())
 			return interestDeductedAtDisbursement(loanInterest);
 
-		if (getLoanOffering().isPrincipalDueInLastInstallment()
+		if (getLoanOffering().isPrinDueLastInst()
 				&& !isInterestDeductedAtDisbursement())
 			return principalInLastPayment(loanInterest);
 
-		if (!getLoanOffering().isPrincipalDueInLastInstallment()
+		if (!getLoanOffering().isPrinDueLastInst()
 				&& !isInterestDeductedAtDisbursement())
 			return allInstallments(loanInterest);
 
-		if (getLoanOffering().isPrincipalDueInLastInstallment()
+		if (getLoanOffering().isPrinDueLastInst()
 				&& isInterestDeductedAtDisbursement())
 			return interestDeductedFirstPrincipalLast(loanInterest);
 
@@ -1979,11 +1978,11 @@ public class LoanBO extends AccountBO {
 			throws AccountException {
 		if (interestDeductedAtDisbursement) {
 			this.gracePeriodType = new GracePeriodTypeEntity(
-					GracePeriodTypeConstants.NONE);
+					GraceTypeConstants.NONE);
 			this.gracePeriodDuration = (short) 0;
 		} else {
 			if (!loanOffering.getGracePeriodType().getId().equals(
-					GracePeriodTypeConstants.NONE))
+					GraceTypeConstants.NONE))
 				if (gracePeriodDuration == null
 						|| gracePeriodDuration >= loanOffering
 								.getMaxNoInstallments())

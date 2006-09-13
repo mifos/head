@@ -54,6 +54,7 @@ import org.mifos.application.penalty.util.valueobjects.Penalty;
 import org.mifos.application.productdefinition.dao.LoanProductDAO;
 import org.mifos.application.productdefinition.exceptions.DuplicateProductInstanceException;
 import org.mifos.application.productdefinition.exceptions.RepmntFeeFreqMisMatchException;
+import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.application.productdefinition.util.valueobjects.GracePeriodType;
@@ -149,7 +150,7 @@ public class LoanProductBusinessProcessor extends MifosBusinessProcessor {
 			if (null != loanOffering.getGracePeriodType()) {
 				if (loanOffering.getGracePeriodType().getGracePeriodTypeId() == null) {
 					GracePeriodType gracePeriodType=new GracePeriodType();
-					gracePeriodType.setGracePeriodTypeId(ProductDefinitionConstants.DEFAULTLOANGRACEPERIODTYPE);
+					gracePeriodType.setGracePeriodTypeId(GraceTypeConstants.NONE.getValue());
 					loanOffering.setGracePeriodType(gracePeriodType);
 				}
 			}
@@ -429,7 +430,7 @@ public class LoanProductBusinessProcessor extends MifosBusinessProcessor {
 			if (null != loanOffering.getGracePeriodType()) {
 				if (loanOffering.getGracePeriodType().getGracePeriodTypeId() == null) {
 					GracePeriodType gracePeriodType=new GracePeriodType();
-					gracePeriodType.setGracePeriodTypeId(ProductDefinitionConstants.DEFAULTLOANGRACEPERIODTYPE);
+					gracePeriodType.setGracePeriodTypeId(GraceTypeConstants.NONE.getValue());
 					loanOffering.setGracePeriodType(gracePeriodType);
 				}
 			}

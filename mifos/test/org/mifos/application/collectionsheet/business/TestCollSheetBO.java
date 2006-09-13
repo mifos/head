@@ -15,7 +15,6 @@ import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanFeeScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -24,10 +23,10 @@ import org.mifos.application.collectionsheet.persistence.service.CollectionSheet
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.InterestTypesEntity;
-import org.mifos.application.master.util.valueobjects.InterestTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.InterestTypeConstants;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -95,8 +94,7 @@ public class TestCollSheetBO extends MifosTestCase {
 		LoanBO loan = (LoanBO) createLoanAccount();
 		loan.setLoanAmount(TestObjectFactory.getMoneyForMFICurrency(100));
 		loan.setNoOfInstallments(Short.valueOf("5"));
-		InterestTypesEntity interestType = new InterestTypesEntity(Short
-				.valueOf(LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT));
+		InterestTypesEntity interestType = new InterestTypesEntity(InterestTypeConstants.FLATINTERST);
 		loan.setInterestType(interestType);
 		List<LoanBO> loanWithDisbursalDate = new ArrayList<LoanBO>();
 		loanWithDisbursalDate.add(loan);
@@ -441,8 +439,9 @@ public class TestCollSheetBO extends MifosTestCase {
 	private List<AccountActionDateEntity> getLnAccntDetails() {
 		List<CustomerBO> customers = getCustomers();
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
+		int i=0;
 		for (CustomerBO customer : customers) {
-			LoanBO loan = createLoanAccount(customer);
+			LoanBO loan = createLoanAccount(customer,"loan"+i++,"LN"+i++);
 			LoanScheduleEntity accntActionDate = new LoanScheduleEntity(loan,
 					customer, (short) 2, new Date(System.currentTimeMillis()),
 					PaymentStatus.UNPAID, new Money(), new Money());
@@ -477,9 +476,9 @@ public class TestCollSheetBO extends MifosTestCase {
 		return accntActionDates;
 	}
 
-	private LoanBO createLoanAccount(CustomerBO customerBO) {
+	private LoanBO createLoanAccount(CustomerBO customerBO,String name,String shortName) {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
+				name,shortName, Short.valueOf("2"),
 				new Date(System.currentTimeMillis()), Short.valueOf("1"),
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),

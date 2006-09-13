@@ -41,45 +41,39 @@ package org.mifos.application.productdefinition.business;
 import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.framework.business.PersistentObject;
 
-/**
- * This class acts as value object for LoanOfferingFund. This denotes the funds
- * for loan offering.
- */
 public class LoanOfferingFundEntity extends PersistentObject {
 
-	private Short loanOfferingFundId;
+	private final Short loanOfferingFundId;
 
-	private Fund fund;
+	private final Fund fund;
 
-	private LoanOfferingBO loanOffering;
+	private final LoanOfferingBO loanOffering;
 
-	public LoanOfferingFundEntity() {
+	protected LoanOfferingFundEntity() {
+		this.loanOfferingFundId = null;
+		this.fund = null;
+		this.loanOffering = null;
+	}
+
+	protected LoanOfferingFundEntity(Fund fund, LoanOfferingBO loanOffering) {
+		this.loanOfferingFundId = null;
+		this.fund = fund;
+		this.loanOffering = loanOffering;
 	}
 
 	public Fund getFund() {
 		return fund;
 	}
 
-	public void setFund(Fund fund) {
-		this.fund = fund;
-	}
-
 	public LoanOfferingBO getLoanOffering() {
 		return loanOffering;
-	}
-
-	public void setLoanOffering(LoanOfferingBO loanOffering) {
-		this.loanOffering = loanOffering;
 	}
 
 	public Short getLoanOfferingFundId() {
 		return loanOfferingFundId;
 	}
 
-	public void setLoanOfferingFundId(Short loanOfferingFundId) {
-		this.loanOfferingFundId = loanOfferingFundId;
-	}
-
+	@Override
 	public boolean equals(Object object) {
 		LoanOfferingFundEntity loanOfferingFund = null;
 		boolean value = false;

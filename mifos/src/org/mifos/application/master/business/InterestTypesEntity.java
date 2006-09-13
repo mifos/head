@@ -1,17 +1,18 @@
 package org.mifos.application.master.business;
 
 import org.mifos.application.productdefinition.business.ProductTypeEntity;
+import org.mifos.application.productdefinition.util.helpers.InterestTypeConstants;
 
 public class InterestTypesEntity extends MasterDataEntity {
 	private java.lang.String descripton;
 	private ProductTypeEntity productType;
 	
-	public InterestTypesEntity() {
+	protected InterestTypesEntity() {
 		super();
 	}
 	
-	public InterestTypesEntity(Short id) {
-		super(id);
+	public InterestTypesEntity(InterestTypeConstants interestType) {
+		super(interestType.getValue());
 	}
 
 	public java.lang.String getDescripton() {

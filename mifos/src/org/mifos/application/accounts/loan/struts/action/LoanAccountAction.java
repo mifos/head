@@ -45,7 +45,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
-import org.mifos.application.productdefinition.util.helpers.GracePeriodTypeConstants;
+import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
@@ -370,7 +370,7 @@ public class LoanAccountAction extends AccountAppAction {
 		LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
 		if (loanAccountActionForm.getIntDedDisbursement().equals("1")) {
 			try {
-				loanBO.setGracePeriodType((GracePeriodTypeEntity)getMasterEntities(GracePeriodTypeConstants.NONE,GracePeriodTypeEntity.class,getUserContext(request).getLocaleId()));
+				loanBO.setGracePeriodType((GracePeriodTypeEntity)getMasterEntities(GraceTypeConstants.NONE.getValue(),GracePeriodTypeEntity.class,getUserContext(request).getLocaleId()));
 			} catch (ServiceException e) {
 				throw new AccountException(e);
 			} catch (PersistenceException e) {

@@ -6,12 +6,12 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.application.productdefinition.business.PrdOfferingFeesEntity" table="PRD_OFFERING_FEES">
-        <id name="prdOfferingFeeId" column="PRD_OFFERING_FEE_ID" >
-            <generator class="native"/>
-        </id>
-        <many-to-one name="loanOffering" column="PRD_OFFERING_ID" class="org.mifos.application.productdefinition.business.LoanOfferingBO" cascade="none" insert="true" update="true" unique="true"/>
-        <many-to-one name="fees" column="FEE_ID" class="org.mifos.application.fees.util.valueobjects.Fees" cascade="none" insert="true" update="true" unique="true"/>
-    </class>
-    
+	<class name="org.mifos.application.productdefinition.business.PrdOfferingFeesEntity" table="PRD_OFFERING_FEES">
+		<id name="prdOfferingFeeId" column="PRD_OFFERING_FEE_ID" access="field">
+			<generator class="native" />
+		</id>
+		<many-to-one name="loanOffering" column="PRD_OFFERING_ID" class="org.mifos.application.productdefinition.business.LoanOfferingBO" cascade="none" insert="true" update="true" unique="true" access="field" />
+		<many-to-one name="fees" column="FEE_ID" class="org.mifos.application.fees.business.FeeBO" cascade="none" insert="true" update="true" unique="true" access="field" />
+	</class>
+
 </hibernate-mapping>
