@@ -54,11 +54,7 @@
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<html-el:form action="/loanAccountAction.do?method=managePreview"
-			onsubmit="if(validateMyForm(disbursementDate,disbursementDateFormat,disbursementDateYY)){
-				return gracePeriodDurationRangeCheck();
-				}else{
-				return false;
-				} ">
+			onsubmit="return (validateMyForm(disbursementDate,disbursementDateFormat,disbursementDateYY));">
 			<td height="200" align="left" valign="top" bgcolor="#FFFFFF"
 				class="paddingleftmain">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -100,8 +96,8 @@
 								name="${ConfigurationConstants.LOAN}" mandatory="yes" /> <mifos:mifoslabel
 								name="loan.amt" />:&nbsp;</td>
 							<td valign="top"><mifos:mifosdecimalinput property="loanAmount"
-								value="${sessionScope.loanAccountActionForm.loanAmount}"/>
-							<mifos:mifoslabel name="loan.allowed_amount" />&nbsp; <c:out
+								value="${sessionScope.loanAccountActionForm.loanAmount}" /> <mifos:mifoslabel
+								name="loan.allowed_amount" />&nbsp; <c:out
 								value="${sessionScope.BusinessKey.loanOffering.minLoanAmount}" />
 							&nbsp; - &nbsp; <c:out
 								value="${sessionScope.BusinessKey.loanOffering.maxLoanAmount}" />)
@@ -114,7 +110,8 @@
 								name="loan.interest_rate" />:&nbsp;</td>
 							<td width="70%" valign="top"><mifos:mifosdecimalinput
 								property="interestRate"
-								value="${sessionScope.loanAccountActionForm.interestRate}" decimalFmt="10.5" /> <mifos:mifoslabel
+								value="${sessionScope.loanAccountActionForm.interestRate}"
+								decimalFmt="10.5" /> <mifos:mifoslabel
 								name="loan.allowed_interest1" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel
 								name="loan.int_rate" />&nbsp; <c:out
@@ -128,9 +125,9 @@
 							<mifos:mifoslabel name="loan.no_of_inst" mandatory="yes" />:&nbsp;
 							</td>
 							<td valign="top"><mifos:mifosnumbertext
-								name="intDedDisbursement" property="noOfInstallments"
-								value="${sessionScope.loanAccountActionForm.noOfInstallments}" /> <mifos:mifoslabel
-								name="loan.allowed_no_of_inst" />&nbsp; <c:out
+								name="loanAccountActionForm" property="noOfInstallments"
+								value="${sessionScope.loanAccountActionForm.noOfInstallments}" />
+							<mifos:mifoslabel name="loan.allowed_no_of_inst" />&nbsp; <c:out
 								value="${sessionScope.BusinessKey.loanOffering.minNoInstallments}" />&nbsp;
 							- &nbsp; <c:out
 								value="${sessionScope.BusinessKey.loanOffering.maxNoInstallments}" />)
@@ -147,67 +144,20 @@
 							<td align="right" class="fontnormal"><mifos:mifoslabel
 								name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel
 								name="loan.interest_disb" />:&nbsp;</td>
-							<td valign="top"><c:choose>
-								<c:when
-									test="${sessionScope.BusinessKey.loanOffering.gracePeriodType.id==1}">
-									<c:choose>
-										<c:when test="${param.method =='manage'}">
-											<!-- the following is when it comes from manage method.-->
-											<html-el:checkbox property="intDedDisbursement" value="1"
-												onclick="fun_setDisbursementdateDis();" />
-											<html-el:hidden property="intDedDisbursement"
-												value="${sessionScope.loanAccountActionForm.intDedDisbursement}" />
-										</c:when>
-										<c:otherwise>
-											<!-- the following is when it comes from previous method. It reads the context.-->
-											<html-el:checkbox property="intDedDisbursement" value="1"
-												onclick="fun_setDisbursementdateDis();" />
-											<html-el:hidden property="intDedDisbursement"
-												value="${sessionScope.loanAccountActionForm.intDedDisbursement}" />
-										</c:otherwise>
-									</c:choose>
-								</c:when>
-								<c:when test="${param.method =='manage'}">
-									<!-- the following is when it comes from manage method.-->
-									<html-el:checkbox property="intDedDisbursement" value="1"
-										onclick="fn_setIntrestAtDisb();" />
-									<html-el:hidden property="intDedDisbursement"
-										value="${sessionScope.loanAccountActionForm.intDedDisbursement}" />
-								</c:when>
-								<c:otherwise>
-									<!-- the following is when it comes from previous method. It reads the context.-->
-									<html-el:checkbox property="intDedDisbursement" value="1"
-										onclick="fn_setIntrestAtDisb();" />
-									<html-el:hidden property="intDedDisbursement"
-										value="${sessionScope.loanAccountActionForm.intDedDisbursement}" />
-								</c:otherwise>
-							</c:choose></td>
+							<td valign="top">
+							<html-el:hidden property="intDedDisbursement" value="${sessionScope.loanAccountActionForm.intDedDisbursement}" />
+							<input type="checkbox" name="intDedDisb" onclick="setGracePeriod()" /></td>
 						</tr>
 						<tr class="fontnormal">
 							<td align="right" class="fontnormal"><span class="mandatorytext"></span>
 							<mifos:mifoslabel name="loan.grace_period" />:&nbsp;</td>
-							<td valign="top"><html-el:hidden property="gracePeriodTypeId"
-								value="${sessionScope.BusinessKey.gracePeriodType.id}" />
-							<c:choose>
-								<c:when test="${sessionScope.BusinessKey.gracePeriodType.id==1}">
-									<mifos:mifosnumbertext property="gracePeriodDuration"
-										value="${sessionScope.loanAccountActionForm.gracePeriodDuration}"
-										disabled="true" />
-									<mifos:mifoslabel name="loan.inst" />
-								</c:when>
-								<c:otherwise>
-									<mifos:mifosnumbertext property="gracePeriodDuration"
-										value="${sessionScope.loanAccountActionForm.gracePeriodDuration}" />
-									<mifos:mifoslabel name="loan.inst" />
-								</c:otherwise>
-							</c:choose></td>
-							<!--This hidden field is used restore the value of grace period duration after unchecking the interest deducted at disbursement flag.-->
-							<html-el:hidden property="inheritedGracePeriodDuration"
-								value="${sessionScope.loanAccountActionForm.gracePeriodDuration}" />
-							<script language="javascript">
-								//fun_onPageSubmit();
-							</script>
+							<td valign="top">
+								<input type="text" name="gracePeriod" onchange="setGracePeriodDurationValue();"/></td>
 						</tr>
+						<html-el:hidden property="inheritedGracePeriodDuration"
+								value="${sessionScope.loanAccountActionForm.gracePeriodDuration}" />
+							<html-el:hidden property="gracePeriodDuration"/>
+						<script>setIntrestAtDisb();</script>
 						<tr class="fontnormal">
 							<td align="right" class="fontnormal"><mifos:mifoslabel
 								keyhm="Loan.PurposeOfLoan" name="Loan.PurposeOfLoan"
@@ -223,9 +173,11 @@
 						</tr>
 						<c:if
 							test="${sessionScope.BusinessKey.accountState.id != 1 || sessionScope.BusinessKey.accountState.id != 2}">
-							<html-el:hidden value="${sessionScope.loanAccountActionForm.loanAmount}"
+							<html-el:hidden
+								value="${sessionScope.loanAccountActionForm.loanAmount}"
 								property="loanAmount" />
-							<html-el:hidden value="${sessionScope.loanAccountActionForm.interestRate}"
+							<html-el:hidden
+								value="${sessionScope.loanAccountActionForm.interestRate}"
 								property="interestRate" />
 							<html-el:hidden
 								value="${sessionScope.loanAccountActionForm.noOfInstallments}"
@@ -234,6 +186,9 @@
 							<html-el:hidden
 								value="${sessionScope.loanAccountActionForm.gracePeriodDuration}"
 								property="gracePeriodDuration" />
+							<html-el:hidden
+								value="${sessionScope.loanAccountActionForm.intDedDisbursement}"
+								property="intDedDisbursement" />
 						</c:if>
 						<tr class="fontnormal">
 							<td align="right" class="fontnormal"><mifos:mifoslabel
@@ -277,33 +232,12 @@
 				</tr>
 			</table>
 			</td>
-			<!-- This hidden field is being used in the customPreview method of the LoanAction class to discriminate the preview method call-->
-			<html-el:hidden property="input" value="editDetails" />
-			<!--The following fields are being added as hidden fields because we need them for value object to action form conversion-->
-			<html-el:hidden property="selectedPrdOfferingId"
-				value="${sessionScope.BusinessKey.loanOffering.prdOfferingId}"/>
 			<html-el:hidden value="${sessionScope.BusinessKey.globalAccountNum}"
 				property="globalAccountNum" />
-			<html-el:hidden property="accountId"
-				value="${sessionScope.BusinessKey.accountId}"/>
-			<html-el:hidden property="officeId"
-				value="${sessionScope.BusinessKey.office.officeId}"/>
-			<html-el:hidden property="personnelId"
-				value="${sessionScope.BusinessKey.personnel.personnelId}"/>
-			<html-el:hidden property="accountStateId"
-				value="${sessionScope.BusinessKey.accountState.id}"/>
-			<html-el:hidden property="minLoanAmount"
-				value="${sessionScope.BusinessKey.loanOffering.minLoanAmount}" />
-			<html-el:hidden property="maxLoanAmount"
-				value="${sessionScope.BusinessKey.loanOffering.maxLoanAmount}" />
-			<html-el:hidden property="minInterestRate"
-				value="${sessionScope.BusinessKey.loanOffering.minInterestRate}" />
-			<html-el:hidden property="maxInterestRate"
-				value="${sessionScope.BusinessKey.loanOffering.maxInterestRate}" />
-			<html-el:hidden property="minNoInstallments"
-				value="${sessionScope.BusinessKey.loanOffering.minNoInstallments}" />
-			<html-el:hidden property="maxNoInstallments"
-				value="${sessionScope.BusinessKey.loanOffering.maxNoInstallments}" />
+			<html-el:hidden value="${sessionScope.BusinessKey.accountState.id}"
+				property="accountStateId" />
+			<html-el:hidden property="gracePeriodTypeId"
+				value="${sessionScope.loanOffering.gracePeriodType.id}" />
 		</html-el:form>
 		</body>
 	</tiles:put>

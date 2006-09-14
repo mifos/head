@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -134,6 +135,7 @@ public class MasterPersistence extends Persistence {
 			List<MasterDataEntity> masterEntities = session.createQuery(
 					"from " + clazz.getName()).list();
 			for (MasterDataEntity masterData : masterEntities) {
+				Hibernate.initialize(masterData.getNames());
 				masterData.setLocaleId(localeId);
 			}
 			return masterEntities;

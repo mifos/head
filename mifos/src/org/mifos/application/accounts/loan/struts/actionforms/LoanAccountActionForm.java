@@ -109,6 +109,16 @@ public class LoanAccountActionForm extends BaseActionForm {
 	private List<FeeView> additionalFees;
 
 	private String stateSelected;
+	
+	private String gracePeriod;
+
+	public String getGracePeriod() {
+		return gracePeriod;
+	}
+
+	public void setGracePeriod(String gracePeriod) {
+		this.gracePeriod = gracePeriod;
+	}
 
 	public String getAccountId() {
 		return accountId;
@@ -364,7 +374,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 				}
 			}
 		}else if (method.equals(Methods.managePreview.toString())) {
-			intDedDisbursement = null;
+			intDedDisbursement = "0";
 		}
 
 	}

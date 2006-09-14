@@ -111,8 +111,7 @@
 								value="${sessionScope.loanAccountActionForm.noOfInstallments}" />
 							</span><br>
 							<mifos:mifoslabel name="loan.proposed_date" />: <span
-								class="fontnormal"> <c:out
-								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.disbursementDate)}" />
+								class="fontnormal"> <c:out value="${sessionScope.loanAccountActionForm.disbursementDate}" />
 							<br>
 							</span> <mifos:mifoslabel name="loan.grace_period" />:&nbsp; <span
 								class="fontnormal"> <c:out
@@ -136,22 +135,13 @@
 								name="loan.business_work_act" keyhm="Loan.PurposeOfLoan"
 								isManadatoryIndicationNotRequired="yes" /><mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}" isColonRequired="yes" />&nbsp;
-							<span class="fontnormal"> <c:forEach
-								items="${sessionScope.BusinessActivities}" var="busId">
-								<c:if
-									test="${busId.id eq sessionScope.BusinessKey.businessActivityId}">
-									<c:out value="${busId.name}" />
-								</c:if>
-							</c:forEach></span></td>
+							<span class="fontnormal"> <c:out value="${sessionScope.BusinessActivitieName}" /></span></td>
 						</tr>
 						<tr id="Loan.CollateralType">
 							<td class="fontnormal"><mifos:mifoslabel
 								name="loan.collateral_type" keyhm="Loan.CollateralType"
 								isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />&nbsp;
-							<span class="fontnormal">
-							<c:if test="${!empty sessionScope.BusinessKey.collateralType}">
-								<c:out value="${sessionScope.BusinessKey.collateralType.name}" />
-							</c:if></span></td>
+							<span class="fontnormal"> <c:out value="${sessionScope.CollateralTypeName}" /></span></td>
 						</tr>
 						<tr id="Loan.CollateralNotes">
 							<td class="fontnormal"><br>

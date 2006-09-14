@@ -40,6 +40,7 @@ import org.mifos.application.fees.business.service.FeeBusinessService;
 import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.master.business.CollateralTypeEntity;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
@@ -326,19 +327,22 @@ public class LoanAccountAction extends AccountAppAction {
 	public ActionForward managePreview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		LoanBO loanBO = (LoanBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
 		LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
-		CollateralTypeEntity collateralTypeEntity = null;
+		SessionUtils.removeAttribute(MasterConstants.COLLATERAL_TYPE_NAME,request.getSession());
+		SessionUtils.removeAttribute(MasterConstants.BUSINESS_ACTIVITIE_NAME,request.getSession());
 		if (loanAccountActionForm.getCollateralTypeIdValue() != null) {
-			collateralTypeEntity = (CollateralTypeEntity) findMasterEntity(
+			CollateralTypeEntity collateralTypeEntity = (CollateralTypeEntity) findMasterEntity(
 					request.getSession(), MasterConstants.COLLATERAL_TYPES,
 					loanAccountActionForm.getCollateralTypeIdValue());
 			collateralTypeEntity.setLocaleId(getUserContext(request)
 					.getLocaleId());
+			SessionUtils.setAttribute(MasterConstants.COLLATERAL_TYPE_NAME,
+					collateralTypeEntity.getName(), request.getSession());
 		}
-		loanBO.setCollateralType(collateralTypeEntity);
-		loanBO.setBusinessActivityId(loanAccountActionForm.getBusinessActivityIdValue());
+		if (loanAccountActionForm.getBusinessActivityIdValue() != null) {
+			SessionUtils.setAttribute(MasterConstants.BUSINESS_ACTIVITIE_NAME,
+					getNameForBusinessActivityEntity(loanAccountActionForm.getBusinessActivityIdValue(), getUserContext(request).getLocaleId()), request.getSession());
+		}
 		return mapping.findForward(ActionForwards.managepreview_success
 				.toString());
 	}
@@ -368,7 +372,7 @@ public class LoanAccountAction extends AccountAppAction {
 	private void updateBusinessData(LoanBO loanBO, ActionForm form,
 			HttpServletRequest request) throws Exception {
 		LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
-		if (loanAccountActionForm.getIntDedDisbursement().equals("1")) {
+				if (loanAccountActionForm.getIntDedDisbursement().equals("1")) {
 			try {
 				loanBO.setGracePeriodType((GracePeriodTypeEntity)getMasterEntities(GraceTypeConstants.NONE.getValue(),GracePeriodTypeEntity.class,getUserContext(request).getLocaleId()));
 			} catch (ServiceException e) {
@@ -534,6 +538,14 @@ public class LoanAccountAction extends AccountAppAction {
 				loanBusinessService.retrieveMasterEntities(
 						MasterConstants.LOAN_PURPOSES, getUserContext(request)
 								.getLocaleId()), request.getSession());
+	}
+	
+	private String getNameForBusinessActivityEntity(Integer entityId, Short localeId) throws Exception {
+		if (entityId != null)
+			return ((MasterDataService) ServiceFactory.getInstance()
+					.getBusinessService(BusinessServiceName.MasterDataService))
+					.retrieveMasterEntities(entityId, localeId);
+		return "";
 	}
 
 	private Fund getFund(HttpSession session, Short fundId) {

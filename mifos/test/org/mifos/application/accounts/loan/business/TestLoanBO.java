@@ -662,19 +662,11 @@ public class TestLoanBO extends MifosTestCase {
 					((LoanBO) accountBO).getAccountState().getId().shortValue());
 		}
 		LoanSummaryEntity loanSummary = ((LoanBO) accountBO).getLoanSummary();
-		int activityNo = 0;
 		for (LoanActivityEntity loanActivityEntity : ((LoanBO) accountBO)
 				.getLoanActivityDetails()) {
-			if (activityNo == 0) {
-				activityNo++;
-				continue;
-			} else {
-				assertEquals(loanSummary.getOriginalPrincipal().subtract(
-						loanSummary.getPrincipalPaid()), loanActivityEntity
-						.getPrincipalOutstanding());
-				assertEquals(loanSummary.getOriginalFees().subtract(
-						loanSummary.getFeesPaid()), loanActivityEntity
-						.getFeeOutstanding());
+			if (loanActivityEntity.getComments().equalsIgnoreCase("Loan Disbursal")) {
+				assertEquals(loanSummary.getOriginalPrincipal(), loanActivityEntity.getPrincipalOutstanding());
+				assertEquals(loanSummary.getOriginalFees(), loanActivityEntity.getFeeOutstanding());
 				break;
 			}
 		}
