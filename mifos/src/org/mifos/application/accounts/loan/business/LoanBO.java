@@ -917,15 +917,26 @@ public class LoanBO extends AccountBO {
 	}
 
 	public Integer getDaysInArrears() {
-		if (!getDetailsOfInstallmentsInArrears().isEmpty()) {
-			AccountActionDateEntity accountActionDateEntity = getDetailsOfInstallmentsInArrears()
-					.get(getDetailsOfInstallmentsInArrears().size() - 1);
-			Calendar actionDate = new GregorianCalendar();
-			actionDate.setTime(accountActionDateEntity.getActionDate());
-			long diffInTermsOfDay = (Calendar.getInstance().getTimeInMillis() - actionDate
-					.getTimeInMillis())
-					/ (24 * 60 * 60 * 1000);
-			return Integer.valueOf(new Long(diffInTermsOfDay).toString());
+		if (getAccountState().getId().equals(
+				AccountStates.LOANACC_ACTIVEINGOODSTANDING)
+				|| getAccountState().getId().equals(
+						AccountStates.LOANACC_OBLIGATIONSMET)
+				|| getAccountState().getId().equals(
+						AccountStates.LOANACC_WRITTENOFF)
+				|| getAccountState().getId().equals(
+						AccountStates.LOANACC_RESCHEDULED)
+				|| getAccountState().getId().equals(
+						AccountStates.LOANACC_BADSTANDING)) {
+			if (!getDetailsOfInstallmentsInArrears().isEmpty()) {
+				AccountActionDateEntity accountActionDateEntity = getDetailsOfInstallmentsInArrears()
+						.get(getDetailsOfInstallmentsInArrears().size() - 1);
+				Calendar actionDate = new GregorianCalendar();
+				actionDate.setTime(accountActionDateEntity.getActionDate());
+				long diffInTermsOfDay = (Calendar.getInstance()
+						.getTimeInMillis() - actionDate.getTimeInMillis())
+						/ (24 * 60 * 60 * 1000);
+				return Integer.valueOf(new Long(diffInTermsOfDay).toString());
+			}
 		}
 		return 0;
 	}
@@ -939,10 +950,22 @@ public class LoanBO extends AccountBO {
 
 	public Integer getMissedPaymentCount() {
 		int noOfMissedPayments = 0;
-		List<AccountActionDateEntity> accountActionDateList = getDetailsOfInstallmentsInArrears();
-		if (!accountActionDateList.isEmpty())
-			noOfMissedPayments = +accountActionDateList.size();
-		noOfMissedPayments = noOfMissedPayments + getNoOfBackDatedPayments();
+		if (getAccountState().getId().equals(
+				AccountStates.LOANACC_ACTIVEINGOODSTANDING)
+				|| getAccountState().getId().equals(
+						AccountStates.LOANACC_OBLIGATIONSMET)
+				|| getAccountState().getId().equals(
+						AccountStates.LOANACC_WRITTENOFF)
+				|| getAccountState().getId().equals(
+						AccountStates.LOANACC_RESCHEDULED)
+				|| getAccountState().getId().equals(
+						AccountStates.LOANACC_BADSTANDING)) {
+			List<AccountActionDateEntity> accountActionDateList = getDetailsOfInstallmentsInArrears();
+			if (!accountActionDateList.isEmpty())
+				noOfMissedPayments = +accountActionDateList.size();
+			noOfMissedPayments = noOfMissedPayments
+					+ getNoOfBackDatedPayments();
+		}
 		return noOfMissedPayments;
 	}
 

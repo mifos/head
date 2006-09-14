@@ -3792,6 +3792,24 @@ public class TestLoanBO extends MifosTestCase {
 				.getDetailsOfNextInstallment();
 		assertEquals(new Money("60"), nextInstallment.getTotalFeeDue());
 	}
+	
+	public void testLoanPerfHistoryForUndisbursedLoans()
+			throws Exception {
+		accountBO = getLoanAccount();
+		LoanBO loan = (LoanBO) accountBO;
+		Date disbursementDate =offSetCurrentDate(28);
+		AccountActionDateEntity accountActionDate1 = loan.getAccountActionDate((short)1);
+		AccountActionDateEntity accountActionDate2 = loan.getAccountActionDate((short)2);
+		loan.setAccountState(new AccountStateEntity(AccountStates.LOANACC_APPROVED));
+		accountActionDate1.setActionDate(offSetCurrentDate(21));
+		accountActionDate2.setActionDate(offSetCurrentDate(14));
+		loan.setDisbursementDate(disbursementDate);
+		accountBO = saveAndFetch(loan);
+		loan = (LoanBO) accountBO;
+		assertEquals(Integer.valueOf("0"),loan.getMissedPaymentCount());
+		assertEquals(Integer.valueOf("0"),loan.getDaysInArrears());
+		assertEquals(Integer.valueOf("0"),loan.getPerformanceHistory().getNoOfPayments());
+	}
 
 	public void testFeeForMultiplePaymentsIncludingCompletePayment()
 			throws Exception {
