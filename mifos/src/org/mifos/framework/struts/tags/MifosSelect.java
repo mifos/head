@@ -277,20 +277,10 @@ public class MifosSelect extends BodyTagSupport {
         this.label = label;
     }
 
-    /**
-     * Function to obtain the label of the select
-     *
-     * @return Returns the label.
-     */
     public String getLabel() {
         return label;
     }
 
-    /**
-     * Function to obtain the label of the select
-     *
-     * @param label
-     */
     public void setLabel(String label) {
         this.label = label;
     }
@@ -300,11 +290,9 @@ public class MifosSelect extends BodyTagSupport {
 
     /**
      * Function to render the tag in jsp
-     * @exception JspException throws  JspException
      */
-
-    public int doEndTag() throws JspException {
-
+    @Override
+	public int doEndTag() throws JspException {
         StringBuffer results = new StringBuffer();
         Collection inColl= (Collection)pageContext.getRequest().getAttribute(this.input);
         Collection outColl= null;
@@ -381,8 +369,6 @@ public class MifosSelect extends BodyTagSupport {
     /**
      * This function Add the javascript to the tag for moving
      * the data between the lists
-     * @param results   StringBuffer object to hold the string representation of the
-     *            tag
      */
     private void JavaScript(StringBuffer results) {
         results
@@ -392,17 +378,16 @@ public class MifosSelect extends BodyTagSupport {
     }
     /**
      * Function to add html style to mifos tag
-     * @param results   StringBuffer object to hold the string representation of the tag
      */
     private void addStyle(StringBuffer results )
     {
         results
         .append(" <STYLE> .ttip {border:1px solid black;font-size:12px;layer-background-color:lightyellow;background-color:lightyellow}  </STYLE> " );
     }
+
     /**
      * Function to Initialize the members of the MifosSelect class
      */
-
     private void init() {
         rawbutton[0].setName("MoveRight");
         rawselect[0].setName("LeftSelect");
