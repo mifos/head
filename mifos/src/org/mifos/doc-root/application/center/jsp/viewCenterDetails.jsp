@@ -184,7 +184,7 @@
 														value="${savings.accountState.name}" /> </span></td>
 												</tr>
 											</table>
-											<span class="fontnormal"><mifos:mifoslabel name="Center.balance" bundle="CenterUIResources"/> <c:out
+											<span class="fontnormal"><mifos:mifoslabel name="Center.balance" bundle="CenterUIResources"/>: <c:out
 												value="${savings.savingsBalance.amountDoubleValue}" /> </span></td>
 										</tr>
 										<tr>

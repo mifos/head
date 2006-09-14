@@ -242,8 +242,7 @@
 														value="${savings.accountState.name}" /> </span></td>
 												</tr>
 											</table>
-											<span class="fontnormal"><mifos:mifoslabel
-												name="Savings.balance" />: <c:out
+											<span class="fontnormal"><mifos:mifoslabel	name="Client.balance" /> <c:out
 												value="${savings.savingsBalance.amountDoubleValue}" /> </span></td>
 										</tr>
 										<tr>

@@ -127,7 +127,7 @@
 						<mifos:mifoslabel name="Personnel.DOJMFI"
 							bundle="PersonnelUIResources"></mifos:mifoslabel> <c:out
 							value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,personnelBO.personnelDetails.dateOfJoiningMFI)}" />
-
+						<br>
 						<mifos:mifoslabel name="Personnel.DOJBranch"
 							bundle="PersonnelUIResources"></mifos:mifoslabel> <c:out
 							value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,personnelBO.personnelDetails.dateOfJoiningBranch)}" />

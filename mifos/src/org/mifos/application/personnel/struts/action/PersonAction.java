@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -15,6 +16,7 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -89,6 +91,7 @@ public class PersonAction extends BaseAction {
 		loadCreateMasterData(request, personActionForm);
 		if ( office.getOfficeLevel()!=OfficeLevel.BRANCHOFFICE)
 			updatePersonnelLevelList(request);
+		personActionForm.setDateOfJoiningMFI(DateHelper.getCurrentDate(getUserLocale(request)));
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
@@ -502,6 +505,22 @@ public class PersonAction extends BaseAction {
 			}
 		return Short.valueOf("1");
 
+	}
+	
+	protected Locale getUserLocale(HttpServletRequest request) {
+		Locale locale = null;
+		HttpSession session = request.getSession();
+		if (session != null) {
+			UserContext userContext = (UserContext) session
+					.getAttribute(LoginConstants.USERCONTEXT);
+			if (null != userContext) {
+				locale = userContext.getPereferedLocale();
+				if (null == locale) {
+					locale = userContext.getMfiLocale();
+				}
+			}
+		}
+		return locale;
 	}
 
 }

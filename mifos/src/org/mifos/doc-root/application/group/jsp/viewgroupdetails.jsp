@@ -287,7 +287,7 @@
 												</tr>
 											</table>
 											<span class="fontnormal"><mifos:mifoslabel
-												name="Savings.balance" />: <c:out
+												name="Group.balance" /> <c:out
 												value="${savings.savingsBalance.amountDoubleValue}" /> </span></td>
 										</tr>
 										<tr>
