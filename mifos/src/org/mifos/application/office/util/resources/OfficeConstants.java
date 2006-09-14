@@ -167,5 +167,6 @@ public interface OfficeConstants {
 	public static final String GET_SUBREGIONALOFFICE ="divisionalOfficeList";
 	public static final String GET_AREAOFFICE ="areaOfficeList";
 	public static final String GET_BRANCHOFFICE ="branchOfficeList";
+	public static final String ERROR_INVALID_LEVEL="error.office.childhasmorelevel";
 	
 }

@@ -104,7 +104,7 @@ public class OfficeListTag extends BodyTagSupport {
 
 	void getBranchOffices(StringBuilder result,
 			List<OfficeBO> officeList, UserContext userContext,
-			String branchName) {
+			String branchName) throws OfficeException {
 		result.append("<br /><span class=\"fontnormalBold\">");
 		result.append(MifosTagUtils.xmlEscape(branchName));
 		result.append("</span><br />");
@@ -125,7 +125,7 @@ public class OfficeListTag extends BodyTagSupport {
 
 			for (int i = 0; i < officeList.size(); i++) {
 				OfficeBO officeParent = officeList.get(i);
-				if (officeParent.getChildren().size() > 0) {
+				if (officeParent.getBranchOnlyChildren().size() > 0) {
 
 					if (i > 0) {
 						result.append("<br />");
@@ -133,7 +133,7 @@ public class OfficeListTag extends BodyTagSupport {
 					result.append("<span class=\"fontnormal\">");
 					result.append(MifosTagUtils.xmlEscape(officeParent.getOfficeName()));
 					result.append("</span>");
-					Set<OfficeBO> branchList = officeParent.getChildren();
+					Set<OfficeBO> branchList = officeParent.getBranchOnlyChildren();
 
 					if (null != branchList) {
 						result

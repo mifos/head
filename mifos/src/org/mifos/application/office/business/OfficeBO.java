@@ -32,11 +32,12 @@ import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 
 public class OfficeBO extends BusinessObject {
 
-	private final Short officeId;
+	private Short officeId;
 
 	private final Short operationMode;
 
-	@SuppressWarnings("unused") // see .hbm.xml file
+	@SuppressWarnings("unused")
+	// see .hbm.xml file
 	private final Integer maxChildCount;
 
 	private String officeName;
@@ -67,19 +68,18 @@ public class OfficeBO extends BusinessObject {
 		status = new OfficeStatusEntity(OfficeStatus.ACTIVE);
 		address = new OfficeAddressEntity();
 	}
-	
+
 	/**
-	 * For tests.  Does not require that the names in question
-	 * actually exist in the database.
+	 * For tests. Does not require that the names in question actually exist in
+	 * the database.
 	 */
-	public static OfficeBO makeForTest(UserContext userContext, OfficeLevel level,
-		OfficeBO parentOffice, List<CustomFieldView> customFields,
-		String officeName, String shortName, Address address,
-		OperationMode operationMode, OfficeStatus status)
-	throws OfficeException {
+	public static OfficeBO makeForTest(UserContext userContext,
+			OfficeLevel level, OfficeBO parentOffice,
+			List<CustomFieldView> customFields, String officeName,
+			String shortName, Address address, OperationMode operationMode,
+			OfficeStatus status) throws OfficeException {
 		return new OfficeBO(userContext, level, parentOffice, customFields,
-			officeName, shortName, address, operationMode, status
-		);
+				officeName, shortName, address, operationMode, status);
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class OfficeBO extends BusinessObject {
 			OfficeBO parentOffice, List<CustomFieldView> customFields,
 			String officeName, String shortName, Address address,
 			OperationMode operationMode, OfficeStatus status)
-	throws OfficeException {
+			throws OfficeException {
 		super(userContext);
 		verifyFieldsNoDatabase(level, operationMode, parentOffice);
 
@@ -246,11 +246,24 @@ public class OfficeBO extends BusinessObject {
 	}
 
 	private void removeChild(OfficeBO office) {
-		children.remove(office);
+		Set<OfficeBO> childerns = null;
+		if (getChildren() != null && getChildren().size() > 0) {
+			childerns = getChildren();
+			childerns.remove(office);
+		}
+		setChildren(childerns);
 	}
 
 	private void addChild(OfficeBO office) {
-		children.add(office);
+		Set<OfficeBO> childerns = null;
+		if (getChildren() == null)
+			childerns = new HashSet<OfficeBO>();
+		else {
+			childerns = getChildren();
+		}
+		office.setParentOffice(this);
+		childerns.add(office);
+		setChildren(childerns);
 	}
 
 	private void verifyFields(String officeName, String shortName,
@@ -283,9 +296,9 @@ public class OfficeBO extends BusinessObject {
 					new Object[] { getLocaleString(OfficeConstants.PARENTOFFICE) });
 	}
 
-	private void verifyFieldsNoDatabase(OfficeLevel level, 
-		OperationMode operationMode, OfficeBO parentOffice) 
-	throws OfficeException {
+	private void verifyFieldsNoDatabase(OfficeLevel level,
+			OperationMode operationMode, OfficeBO parentOffice)
+			throws OfficeException {
 		if (level == null)
 			throw new OfficeException(
 					OfficeConstants.ERRORMANDATORYFIELD,
@@ -328,8 +341,8 @@ public class OfficeBO extends BusinessObject {
 	private String generateSearchId() throws OfficeException {
 		Integer noOfChildern;
 		try {
-			noOfChildern = new OfficePersistence()
-					.getChildCount(parentOffice.getOfficeId());
+			noOfChildern = new OfficePersistence().getChildCount(parentOffice
+					.getOfficeId());
 		} catch (PersistenceException e) {
 			throw new OfficeException(e);
 		}
@@ -370,7 +383,8 @@ public class OfficeBO extends BusinessObject {
 			}
 			try {
 				this.status = (OfficeStatusEntity) new MasterPersistence()
-						.getPersistentObject(OfficeStatusEntity.class, status.getValue());
+						.getPersistentObject(OfficeStatusEntity.class, status
+								.getValue());
 			} catch (PersistenceException e) {
 				throw new OfficeException(e);
 			}
@@ -382,11 +396,11 @@ public class OfficeBO extends BusinessObject {
 		try {
 			if (officePersistence.hasActiveChildern(this.officeId))
 				throw new OfficeException(OfficeConstants.KEYHASACTIVECHILDREN);
-		
-		if (officePersistence.hasActivePeronnel(this.officeId)) {
-			throw new OfficeException(OfficeConstants.KEYHASACTIVEPERSONNEL);
 
-		}
+			if (officePersistence.hasActivePeronnel(this.officeId)) {
+				throw new OfficeException(OfficeConstants.KEYHASACTIVEPERSONNEL);
+
+			}
 		} catch (PersistenceException e) {
 			throw new OfficeException(e);
 		}
@@ -441,8 +455,10 @@ public class OfficeBO extends BusinessObject {
 
 		if (!this.shortName.equalsIgnoreCase(newShortName)) {
 			try {
-				if (new OfficePersistence().isOfficeShortNameExist(newShortName))
-					throw new OfficeException(OfficeConstants.OFFICESHORTNAMEEXIST);
+				if (new OfficePersistence()
+						.isOfficeShortNameExist(newShortName))
+					throw new OfficeException(
+							OfficeConstants.OFFICESHORTNAMEEXIST);
 			} catch (PersistenceException e) {
 				throw new OfficeException(e);
 			}
@@ -450,53 +466,56 @@ public class OfficeBO extends BusinessObject {
 		}
 	}
 
-	private void updateParent(OfficeBO parentOffice) {
+	private void updateParent(OfficeBO newParent) throws OfficeException {
+		if (newParent != null) {
+			if (this.getParentOffice() != null) {
+				if (!this.getParentOffice().getOfficeId().equals(
+						newParent.getOfficeId())) {
+					OfficeBO oldParent = this.getParentOffice();
+					OfficeBO oldParent1 = getIfChildPresent(newParent,
+							oldParent);
+					if (oldParent1 == null)
+						oldParent1 = oldParent;
+					oldParent1.removeChild(this);
+					OfficeBO newParent1 = getIfChildPresent(oldParent,
+							newParent);
+					if (newParent1 == null)
+						newParent1 = newParent;
+					newParent1.addChild(this);
+					newParent1.updateSearchId(newParent1.getSearchId());
+					// this.setParentOffice(newParent1);
+					oldParent1.updateSearchId(oldParent1.getSearchId());
 
-		if (parentOffice != null) {
-			if (this.parentOffice != null) {
-				if (!this.parentOffice.getOfficeId().equals(
-						parentOffice.getOfficeId())) {
-
-					// TODO : check the code of updating searchid's
-					// remove this child from old parent
-					this.parentOffice.removeChild(this);
-					parentOffice.addChild(this);
-					updateSearchId(parentOffice.getSearchId() + "."
-							+ (parentOffice.getChildren().size()));
-					this.parentOffice.updateSearchId(this.parentOffice
-							.getSearchId());
-					this.parentOffice = parentOffice;
 				}
 			}
 		}
 	}
 
 	private void updateSearchId(String searchId) {
-
-		this.searchId = searchId;
+		this.setSearchId(searchId);
 		int i = 1;
-		if (this.children != null) {
-			Iterator iter = this.children.iterator();
+		if (this.getChildren() != null) {
+			Iterator iter = this.getChildren().iterator();
 			while (iter.hasNext()) {
 				OfficeBO element = (OfficeBO) iter.next();
-				element.updateSearchId(this.searchId + "." + i);
+				element.updateSearchId(this.getSearchId() + "." + i);
 				i++;
 
 			}
 
 		}
-
 	}
 
 	private void updateLevel(OfficeLevel level) throws OfficeException {
 
 		if (this.getOfficeLevel() != level) {
-			// TODO: pass proper key
+			
 			if (!canUpdateLevel(level))
-				throw new OfficeException();
+				throw new OfficeException(OfficeConstants.ERROR_INVALID_LEVEL);
 			try {
-				this.level = (OfficeLevelEntity) new MasterPersistence().getPersistentObject(
-						OfficeLevelEntity.class, level.getValue());
+				this.level = (OfficeLevelEntity) new MasterPersistence()
+						.getPersistentObject(OfficeLevelEntity.class, level
+								.getValue());
 			} catch (PersistenceException e) {
 				throw new OfficeException(e);
 			}
@@ -538,4 +557,40 @@ public class OfficeBO extends BusinessObject {
 		}
 	}
 
+	public void setOfficeId(Short officeId) {
+		this.officeId = officeId;
+	}
+
+	public Set<OfficeBO> getBranchOnlyChildren() throws OfficeException {
+		Set<OfficeBO> offices = new HashSet<OfficeBO>();
+		if (children != null)
+			for (OfficeBO office : children) {
+				if (office.getOfficeLevel().equals(OfficeLevel.BRANCHOFFICE))
+					offices.add(office);
+			}
+		return offices;
+	}
+
+	public boolean equals(Object obj) {
+
+		if (this.officeId.equals(((OfficeBO) obj).getOfficeId()))
+			return true;
+
+		return false;
+	}
+
+	public OfficeBO getIfChildPresent(OfficeBO parent, OfficeBO child) {
+		if (parent.getChildren() != null) {
+			for (OfficeBO childl : parent.getChildren()) {
+				if (childl.getOfficeId().equals(child.getOfficeId())) {
+					return childl;
+				} else {
+					return getIfChildPresent(childl, child);
+				}
+
+			}
+
+		}
+		return null;
+	}
 }

@@ -7,31 +7,31 @@
 <hibernate-mapping>
 
 	<class name="org.mifos.application.office.business.OfficeBO" table="OFFICE">
-		<id name="officeId" column="OFFICE_ID" type="short" access="field">
+		<id name="officeId" column="OFFICE_ID" type="short" >
 			<generator class="native" />
 		</id>
 		<version name="versionNo" column="VERSION_NO" type="integer" />
-		<property name="searchId" column="SEARCH_ID" type="string" access="field"/>
+		<property name="searchId" column="SEARCH_ID" type="string" />
 		<property name="officeName" column="DISPLAY_NAME" type="string" />
 		<property name="createdDate" column="CREATED_DATE" type="date" />
 		<property name="updatedDate" column="UPDATED_DATE" type="date" />
-		<property name="globalOfficeNum" column="GLOBAL_OFFICE_NUM"	type="string" access="field" />
+		<property name="globalOfficeNum" column="GLOBAL_OFFICE_NUM"	type="string"  />
 		<property name="maxChildCount" column="MAX_CHILD_COUNT"	type="integer" access="field" />
 		<property name="operationMode" column="LOCAL_REMOTE_FLAG" access="field" />
 		<property name="createdBy" column="CREATED_BY" />
 		<property name="updatedBy" column="UPDATED_BY" />
 		<property name="shortName" column="OFFICE_SHORT_NAME" type="string" />
 		
-		 <many-to-one name="level" class="org.mifos.application.office.business.OfficeLevelEntity" column="OFFICE_LEVEL_ID" unique="true" insert="true" update="true" access="field"/>
-		<many-to-one name="parentOffice" class="org.mifos.application.office.business.OfficeBO"	column="PARENT_OFFICE_ID" unique="true" insert="true" update="true"	lazy="true" cascade="none" />
-		<many-to-one name="status"	class="org.mifos.application.office.business.OfficeStatusEntity" column="STATUS_ID" unique="true" insert="true" update="true"	lazy="true" access="field"/>
+		 <many-to-one name="level" class="org.mifos.application.office.business.OfficeLevelEntity" column="OFFICE_LEVEL_ID" unique="true" insert="true" update="true" />
+		<many-to-one name="parentOffice"  class="org.mifos.application.office.business.OfficeBO"	column="PARENT_OFFICE_ID"  insert="true" update="true"	lazy="true" cascade="none" />
+		<many-to-one name="status"	class="org.mifos.application.office.business.OfficeStatusEntity" column="STATUS_ID" unique="true" insert="true" update="true"	lazy="true" />
 		<set name="customFields" cascade="all" inverse="true"  table="OFFICE_CUSTOM_FIELD">
 			<key column="OFFICE_ID" />
 			<one-to-many class="org.mifos.application.office.business.OfficeCustomFieldEntity" />
 		</set>
-		<set name="children"  inverse="true" access="field" lazy="false">
-			<key column="PARENT_OFFICE_ID" />
-			<one-to-many class="org.mifos.application.office.business.OfficeBO" />
+		<set name="children"  inverse="true"  lazy="true" >
+			<key column="PARENT_OFFICE_ID"  />
+			<one-to-many class="org.mifos.application.office.business.OfficeBO"   />
 		</set>
 
 		<one-to-one name="address"	class="org.mifos.application.office.business.OfficeAddressEntity"	cascade="all" property-ref="office" lazy="true" />
@@ -96,9 +96,9 @@
     </query>
     <query name="office.getAllChildOffices">
        <![CDATA[select new org.mifos.application.office.business.OfficeView(office.officeId, office.officeName,office.level.id,office.versionNo) from org.mifos.application.office.business.OfficeBO office where office.status.id=:STATUS_ID and office.searchId like :OFFICE_LIKE_SEARCHID order by office.level.id, office.officeName]]>
+       																																								 
     </query>
-    <query name="office.getOfficeCountForLevel">
+       <query name="office.getOfficeCountForLevel">
             <![CDATA[select count(*) from org.mifos.application.office.business.OfficeBO office where office.level.id = :LEVEL_ID ]]>
     </query>
-    
 </hibernate-mapping>

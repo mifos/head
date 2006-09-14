@@ -35,6 +35,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -188,6 +189,7 @@ public class OffAction extends BaseAction {
 				.toString());
 	}
 
+	@CloseSession
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -205,10 +207,14 @@ public class OffAction extends BaseAction {
 							.getOfficeStatus()));
 		OfficeLevel newlevel = OfficeLevel
 				.getOfficeLevel(getShortValue(offActionForm.getOfficeLevel()));
+		
+		
 		OfficeBO parentOffice = null;
+		
 		if (getShortValue(offActionForm.getParentOfficeId()) != null)
 			parentOffice = ((OfficeBusinessService) getService())
 					.getOffice(getShortValue(offActionForm.getParentOfficeId()));
+		if (parentOffice==null )parentOffice=office.getParentOffice();
 		office.update(offActionForm.getOfficeName(), offActionForm
 				.getShortName(), newStatus, newlevel, parentOffice,
 				offActionForm.getAddress(), offActionForm.getCustomFields());

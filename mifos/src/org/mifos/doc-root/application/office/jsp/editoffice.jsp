@@ -106,9 +106,8 @@ function getOffice(officeid){
 							<td align="right"><mifos:mifoslabel
 								name="Office.labelParentOffice" mandatory="yes" /></td>
 							<td><c:if test="${not empty Parents}">
-								<mifos:select name="officeActionForm"
-									property="formParentOffice" size="1"
-									value="${offActionForm.parentOfficeId}">
+								<mifos:select name="offActionForm"
+									property="parentOfficeId" size="1"	>
 									<html-el:options collection="Parents" property="officeId"
 										labelProperty="displayName" />
 								</mifos:select>
