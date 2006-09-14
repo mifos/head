@@ -100,8 +100,7 @@
 							</tr>
 							<tr>
 								<td class="fontnormal">
-									<mifos:mifoslabel name="Savings.accountBalance" />
-									:
+									<mifos:mifoslabel name="Savings.accountBalance" />:
 									<c:out value="${sessionScope.BusinessKey.savingsBalance}" />
 									<br>
 								</td>
@@ -118,8 +117,7 @@
 							</tr>
 							<tr>
 								<td class="fontnormal" colspan="2">
-									<mifos:mifoslabel name="Savings.totalamountdue" />
-									<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.nextMeetingDate)}" />:
+									<mifos:mifoslabel name="Savings.totalamountdue" /><c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.nextMeetingDate)}" />:
 									<c:out value="${sessionScope.BusinessKey.totalAmountDue}" />
 								</td>
 							</tr>
