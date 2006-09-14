@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.customer.business.CustomFieldView;
+import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -27,6 +28,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
@@ -127,6 +129,10 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		assertNotNull(personActionForm);
 		assertEquals(1, personActionForm.getCustomFields().size());
 		verifyForward(ActionForwards.load_success.toString());
+		PersonActionForm actionForm = (PersonActionForm)request.getSession().getAttribute("personActionForm");
+		String currentDate = DateHelper.getCurrentDate(TestObjectFactory.getUserContext().getPereferedLocale());
+		assertEquals(currentDate,actionForm.getDateOfJoiningMFI());
+
 	}
 	public void testLoadWithBranchOffice() throws Exception {
 		setRequestPathInfo("/PersonAction.do");
