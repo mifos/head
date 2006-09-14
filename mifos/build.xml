@@ -243,7 +243,7 @@
 
 	<target name="build_db" description="Builds the application database">
 		<sql driver="${db.driver}" url="jdbc:mysql://${db.ip}:${db.port}/" userid="${db.user}" password="${db.pwd}"
-		     classpath="./lib/mysql-connector-java-3.1.7-bin.jar">
+		     classpath="./lib/mysql-connector-java-5.0.3-bin.jar">
 			<transaction>
 				Drop database if exists ${db.name};
 				create database ${db.name};			
@@ -257,7 +257,7 @@
 
 	<target name="build_test_db">
 		<sql driver="${db.driver}" url="jdbc:mysql://${testdb.ip}:${testdb.port}/" userid="${testdb.user}" password="${testdb.pwd}"
-		     classpath="./lib/mysql-connector-java-3.1.7-bin.jar">
+		     classpath="./lib/mysql-connector-java-5.0.3-bin.jar">
 			<!--transaction src="./create.sql"/-->
 			<transaction>
 				Drop database if exists ${testdb.name};
