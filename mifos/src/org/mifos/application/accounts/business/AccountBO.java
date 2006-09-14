@@ -843,10 +843,10 @@ public class AccountBO extends BusinessObject {
 			accountFee = getAccountFees(fee.getFeeId());
 			accountFee.setFeeAmount(charge);
 			accountFee.setFeeStatus(FeeStatus.ACTIVE.getValue());
+			accountFee.setStatusChangeDate(new Date(System.currentTimeMillis()));
 		} else {
 			accountFee = new AccountFeesEntity(this, fee, charge,
-					FeeStatus.ACTIVE.getValue(), new Date(System
-							.currentTimeMillis()), null);
+					FeeStatus.ACTIVE.getValue(), null , null);
 		}
 		return accountFee;
 	}

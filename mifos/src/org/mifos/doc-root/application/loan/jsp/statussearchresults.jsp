@@ -73,19 +73,22 @@
 						class="headingorange"> <mifos:mifoslabel name="accountStatus.in" />
 					</span> <span class="heading"> <c:out value="Pending Approval" />
 					</span> <br>
-					<br></td>
+					</td>
 
 
 				</tr>
 				<!--  here -->
-
+				<tr><td valign="middle">
+					<font class="fontnormalRedBold">
+						<html-el:errors bundle="loanUIResources" />
+					</font>
+				</td></tr>
 				<tr>
 
 					<td align="left" valign="top" class="fontnormal">
 					<table width="95%" border="0" cellpadding="5" cellspacing="0"
 						class="fontnormal">
-						<font class="fontnormalRedBold"> <html-el:errors
-							bundle="loanUIResources" /> </font>
+						
 						<tr class="bglightblue" valign="middle" height="35">
 							<td width="5%" class="drawtablerowboldnolinebg"><input
 								type="checkbox" onclick="selectAll(this)" name="selectAll1" /></td>

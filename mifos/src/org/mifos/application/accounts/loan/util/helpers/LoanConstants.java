@@ -76,6 +76,10 @@ public interface LoanConstants {
 	public final String FEEFORMULALIST = "feeFormulaList"; 
 		
 	//account status
+	
+	public static final String LOAN_OFFICERS="loanOfficers";
+	public static final String ACCOUNTS_LIST="accountsList";
+	public static final String SEARCH_RESULTS="searchResults";
 	public static final String STATUS_LIST="statusList";
 	public static final String FLAG_LIST="flagList";
 	public static final String LOAN_STATUS_VO ="LoanStatusVO";

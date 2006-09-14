@@ -373,6 +373,45 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			assertEquals(2, accountFeesEntity.getFeeStatus().intValue());
 		}
 	}
+	
+	public void testRemoveFeeWithNonActiveCustomer() throws Exception {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active_test",
+				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
+				new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group_Active_test",
+				CustomerStatus.GROUP_PARTIAL.getValue(), "1.1.1", center,
+				new Date(System.currentTimeMillis()));
+		TestObjectFactory.flushandCloseSession();
+		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+				center.getCustomerId());
+		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+				group.getCustomerId());
+		customerAccountBO = group.getCustomerAccount();
+		UserContext uc = TestObjectFactory.getUserContext();
+		customerAccountBO.setUserContext(uc);
+		for (AccountFeesEntity accountFeesEntity : customerAccountBO.getAccountFees()) {
+			FeeBO feesBO = accountFeesEntity.getFees();
+			customerAccountBO.removeFees(feesBO.getFeeId(), Short.valueOf("1"));
+		}
+		HibernateUtil.commitTransaction();
+		Set<CustomerActivityEntity> customerActivitySet = customerAccountBO
+				.getCustomerActivitDetails();
+		assertEquals(1, customerActivitySet.size());
+		for (CustomerActivityEntity customerActivityEntity : customerActivitySet) {
+			assertEquals(1, customerActivityEntity.getPersonnel()
+					.getPersonnelId().intValue());
+			assertEquals("Mainatnence Fee removed", customerActivityEntity
+					.getDescription());
+			assertEquals(null, customerActivityEntity.getAmount());
+		}
+		for (AccountFeesEntity accountFeesEntity : group.getCustomerAccount()
+				.getAccountFees()) {
+			assertEquals(Short.valueOf("2"),accountFeesEntity.getFeeStatus());
+			assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(accountFeesEntity.getStatusChangeDate().getTime()));
+		}
+	}
 
 
 	public void testUpdateAccountActivity() throws NumberFormatException,
@@ -585,6 +624,32 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			assertEquals(amount, customerActivityEntity.getAmount());
 		}
 	}
+	
+	public void testApplyMiscChargeWithNonActiveCustomer() throws Exception {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active_test",
+				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
+				new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group_Active_test",
+				CustomerStatus.GROUP_PARTIAL.getValue(), "1.1.1", center,
+				new Date(System.currentTimeMillis()));
+		TestObjectFactory.flushandCloseSession();
+		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+				center.getCustomerId());
+		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+				group.getCustomerId());
+		customerAccountBO = group.getCustomerAccount();
+		UserContext uc = TestObjectFactory.getUserContext();
+		customerAccountBO.setUserContext(uc);
+		try{
+		customerAccountBO.applyCharge(Short.valueOf("-1"), new Double("33"));
+		assertFalse(false);
+		}catch(AccountException e){
+			assertEquals(AccountConstants.MISC_CHARGE_NOT_APPLICABLE,e.getKey());
+		}
+	}
+
 
 	public void testApplyMiscChargeWithFirstInstallmentPaid() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
@@ -695,7 +760,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 							.getLastAppliedDate().getTime()));
 		}
 	}
-
+	
 	public void testApplyPeriodicFeeToPartialPending() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -716,15 +781,40 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				MeetingFrequency.WEEKLY, Short.valueOf("2"));
 		UserContext uc = TestObjectFactory.getUserContext();
 		customerAccountBO.setUserContext(uc);
+		
 		customerAccountBO.applyCharge(periodicFee.getFeeId(),
 				((AmountFeeBO) periodicFee).getFeeAmount()
 						.getAmountDoubleValue());
 		HibernateUtil.commitTransaction();
 		AccountFeesEntity accountFeesEntity = customerAccountBO
 				.getAccountFees(periodicFee.getFeeId());
-		assertEquals(FeeStatus.INACTIVE.getValue(), accountFeesEntity
-				.getFeeStatus());
+		assertEquals(Short.valueOf("1"),accountFeesEntity.getFeeStatus());
 		assertNull(accountFeesEntity.getLastAppliedDate());
+		assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(accountFeesEntity.getStatusChangeDate().getTime()));
+		assertEquals(1, customerAccountBO.getCustomerActivitDetails().size());
+
+		customerAccountBO.removeFees(periodicFee.getFeeId(),Short.valueOf("1"));
+		HibernateUtil.commitTransaction();
+		assertEquals(2, customerAccountBO.getCustomerActivitDetails().size());
+		assertEquals(2,customerAccountBO.getAccountFees().size());
+		for (AccountFeesEntity accountFees : customerAccountBO
+				.getAccountFees()) {
+			if(accountFees.getFees().getFeeName().equals("Periodic Fee")){
+				assertEquals(Short.valueOf("2"),accountFees.getFeeStatus());
+				assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(accountFees.getStatusChangeDate().getTime()));
+			}
+		}
+		
+		customerAccountBO.applyCharge(periodicFee.getFeeId(),
+				((AmountFeeBO) periodicFee).getFeeAmount()
+						.getAmountDoubleValue());
+		HibernateUtil.commitTransaction();
+		assertEquals(3, customerAccountBO.getCustomerActivitDetails().size());	
+		accountFeesEntity = customerAccountBO
+				.getAccountFees(periodicFee.getFeeId());
+		assertEquals(Short.valueOf("1"),accountFeesEntity.getFeeStatus());
+		assertNull(accountFeesEntity.getLastAppliedDate());
+		assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(accountFeesEntity.getStatusChangeDate().getTime()));
 	}
 
 	public void testApplyUpfrontFee() throws Exception {

@@ -184,11 +184,9 @@
 				input="/ChangeAccountStatus.do?method=validate"
 				scope="session">
 			<forward name="changeAccountStatus_success" path="/pages/application/loan/jsp/changeaccountstatus.jsp" />
-			<forward name="searchResults_failure" path="/pages/application/loan/jsp/changeaccountstatus.jsp" />
 			<forward name="changeAccountStatusSearch_success" path="/pages/application/loan/jsp/statussearchresults.jsp" />
-			<forward name="changeAccountStatusSearch_failure" path="/pages/application/loan/jsp/statussearchresults.jsp" />
 			<forward name="changeAccountStatusConfirmation_success" path="/pages/application/loan/jsp/confirmation.jsp" />
-			<forward name="changeAccountStatusConfirmation_failure" path="/pages/application/loan/jsp/confirmation.jsp" />
+			<forward name="noresultfound" path="/pages/application/loan/jsp/nosearchresult.jsp" />
 		</action>
 		<action path="/client_ClientSearchAction" type="org.mifos.application.client.struts.action.ClientSearchAction" name="clientActionForm" parameter="method" input="/client_ClientSearchAction.do?method=validate" validate="true">
 			<forward name="load_success" path="/WEB-INF/pages/application/client/jsp/clientsearch.jsp" />

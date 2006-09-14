@@ -369,23 +369,21 @@ public class CustomerAccountBO extends AccountBO {
 	public final void removeFees(Short feeId, Short personnelId)
 			throws AccountException {
 		List<Short> installmentIds = getApplicableInstallmentIdsForRemoveFees();
-		Money totalFeeAmount = new Money();
 		if (installmentIds != null && installmentIds.size() != 0
 				&& isFeeActive(feeId)) {
-			totalFeeAmount = updateAccountActionDateEntity(installmentIds,
+			updateAccountActionDateEntity(installmentIds,
 					feeId);
-			updateAccountFeesEntity(feeId);
-			updateTotalFeeAmount(totalFeeAmount);
-			FeeBO feesBO = getAccountFeesObject(feeId);
-			String description = feesBO.getFeeName() + " "
-					+ AccountConstants.FEES_REMOVED;
-			updateAccountActivity(null, null, null, null,
-					personnelId, description);
-			try {
-				(new AccountPersistence()).createOrUpdate(this);
-			} catch (PersistenceException e) {
-				throw new AccountException(e);
-			}
+		}
+		updateAccountFeesEntity(feeId);
+		FeeBO feesBO = getAccountFeesObject(feeId);
+		String description = feesBO.getFeeName() + " "
+				+ AccountConstants.FEES_REMOVED;
+		updateAccountActivity(null, null, null, null,
+				personnelId, description);
+		try {
+			(new AccountPersistence()).createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
 		}
 
 	}
@@ -520,8 +518,16 @@ public class CustomerAccountBO extends AccountBO {
 	@Override
 	public void applyCharge(Short feeId, Double charge)
 			throws AccountException {
-		if(!isCustomerValid())
+		if(!isCustomerValid()){
+			if(feeId.equals(Short.valueOf(AccountConstants.MISC_FEES))	
+					|| feeId.equals(Short
+							.valueOf(AccountConstants.MISC_PENALTY))) {
+				throw new AccountException(AccountConstants.MISC_CHARGE_NOT_APPLICABLE);
+			}
 			addFeeToAccountFee(feeId,charge);
+			FeeBO fee = new FeePersistence().getFee(feeId);
+			updateCustomerActivity(feeId,new Money(charge.toString()),fee.getFeeName()+" applied");
+			}
 		else{
 			Money chargeAmount=new Money(String.valueOf(charge));
 			List<AccountActionDateEntity> dueInstallments =null;
@@ -551,10 +557,14 @@ public class CustomerAccountBO extends AccountBO {
 		AccountFeesEntity accountFee=null;
 		if((fee.isPeriodic() && !isFeeAlreadyApplied(fee)) || !fee.isPeriodic()){
 			accountFee = new AccountFeesEntity(this, fee, charge,
-					FeeStatus.INACTIVE.getValue(), new Date(System
-							.currentTimeMillis()), null);
+					FeeStatus.ACTIVE.getValue(), new Date(System.currentTimeMillis()), null);
+			addAccountFees(accountFee);
+		}else{
+			accountFee=getAccountFees(fee.getFeeId());
+			accountFee.setFeeAmount(charge);
+			accountFee.setFeeStatus(FeeStatus.ACTIVE.getValue());
+			accountFee.setStatusChangeDate(new Date(System.currentTimeMillis()));
 		}
-		addAccountFees(accountFee);	
 	}
 	
 	private void applyPeriodicFee(FeeBO fee, Money charge,List<AccountActionDateEntity> dueInstallments)

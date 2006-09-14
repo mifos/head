@@ -48,15 +48,14 @@
         		            <td width="100%" colspan="2" class="bglightblue">
         		            <span class="heading"><mifos:mifoslabel name="accountStatus.search"/></span></td>
                 		  </tr>
-						 
-		                </table>				
-
-				<tr>
-				  <td>
-					 <font class="fontnormalRedBold"> <html-el:errors bundle="loanUIResources" /> </font>   
-				  </td>
-				</tr>
-           		
+                </table>				
+						
+						
+                  		<font class="fontnormalRedBold"> <html-el:errors bundle="loanUIResources" /> </font>
+                  
+                  
+				
+				
 				<tr class="bluetablehead" >
 				
 					<td align="left" valign="top" class="fontnormal">
@@ -116,6 +115,17 @@
 									<mifos:mifoslabel name="accountStatus.search" />
 								</html-el:button>
 							</td>
+						</tr>
+						<tr>
+							<table width="96%" border="0" cellpadding="0" cellspacing="0">
+								<tr class="fontnormal">
+									<td colspan="2" valign="top" ><br>
+										<span class="headingorange">
+											<mifos:mifoslabel name="accountStatus.noresultfound" />
+										</span>
+									</td>
+								</tr>
+							</table>
 						</tr>
 
 					</table>

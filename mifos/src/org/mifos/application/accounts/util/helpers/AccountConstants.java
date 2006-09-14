@@ -139,6 +139,7 @@ public interface AccountConstants {
 	public final String KEYNOMEETING="errors.nomeeting";
 	public final String UNEXPECTEDERROR="errors.unexpected";
 	public final String NOMOREINSTALLMENTS="errors.nomoreinstallments";
+	public final String MISC_CHARGE_NOT_APPLICABLE="error.miscchargenotapplicable";
 	//Misc Fees and Penalty
 	public final String MISC_FEES="-1";
 	public final String MISC_PENALTY="-2";

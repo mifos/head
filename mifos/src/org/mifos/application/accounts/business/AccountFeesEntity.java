@@ -46,11 +46,10 @@ import java.util.List;
 
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.components.repaymentschedule.MeetingScheduleHelper;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
-import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -165,6 +164,12 @@ public class AccountFeesEntity extends PersistentObject {
 	
 	public boolean isPeriodic() {
 		return getFees().isPeriodic();
+	}
+	
+	public boolean isActive() {
+		if(feeStatus==null || feeStatus.equals(FeeStatus.ACTIVE.getValue()))
+			return true;
+		return false;
 	}
 
 	public Integer getApplicableDatesCount(Date date) throws AccountException  {

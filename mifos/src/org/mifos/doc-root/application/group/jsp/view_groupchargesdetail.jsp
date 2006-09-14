@@ -248,7 +248,7 @@
 				</table>
 				<table width="96%" border="0" cellpadding="3" cellspacing="0">
 					<c:forEach items="${custAccount.accountFees}" var="recurrenceFees">
-						<c:if test="${recurrenceFees.periodic}">
+						<c:if test="${recurrenceFees.periodic && recurrenceFees.active}">
 							<tr class="fontnormal">
 								<td width="15%"><c:out value="${recurrenceFees.fees.feeName}" />:</td>
 
@@ -279,22 +279,7 @@
 				</td>
 			</tr>
 		</table>
-		<%--  html-el:hidden property="searchNode(search_name)"
-			value="ClientChargesDetails" />
-		<html-el:hidden property="globalAccountNum"
-			value="${sessionScope.BusinessKey.customerAccount.globalAccountNum}" />
-		<html-el:hidden property="accountId"
-			value="${sessionScope.BusinessKey.customerAccount.accountId}" />
-		<html-el:hidden property="accountType"
-			value="${sessionScope.BusinessKey.customerAccount.accountType.accountTypeId}" />
-		<html-el:hidden property="prdOfferingName"
-			value="${sessionScope.BusinessKey.displayName}" />
-		<html-el:hidden property="headingInput" value="ViewGroupCharges" />
-		<mifos:SecurityParam property="Group" />
-		<html-el:hidden property="statusId"
-			value="${sessionScope.BusinessKey.customerStatus.id}" />
-		<html-el:hidden property="globalCustNum"
-			value="${sessionScope.BusinessKey.globalCustNum}" --%>
+
 
 		<mifos:SecurityParam property="Group" />
 	</tiles:put>
