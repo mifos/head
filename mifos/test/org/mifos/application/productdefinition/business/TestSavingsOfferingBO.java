@@ -47,6 +47,7 @@ import org.mifos.application.productdefinition.exceptions.ProductDefinitionExcep
 import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -341,8 +342,9 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 					savingsType, intCalType, intCalcMeeting, intPostMeeting,
 					new Money("10"), 10.0, depglCodeEntity, intglCodeEntity);
 			assertTrue(false);
-		} catch (ProductDefinitionException e) {
+		} catch (ProductDefinitionException pde) {
 			assertTrue(true);
+			assertEquals(ProductDefinitionConstants.DUPLPRDINSTNAME , pde.getKey());
 		}
 	}
 
@@ -373,8 +375,9 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 					savingsType, intCalType, intCalcMeeting, intPostMeeting,
 					new Money("10"), 10.0, depglCodeEntity, intglCodeEntity);
 			assertTrue(false);
-		} catch (ProductDefinitionException e) {
+		} catch (ProductDefinitionException pde) {
 			assertTrue(true);
+			assertEquals(ProductDefinitionConstants.DUPLPRDINSTSHORTNAME , pde.getKey());
 		}
 	}
 

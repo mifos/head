@@ -302,7 +302,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
 			if (!new PrdOfferingPersistence().getProductOfferingNameCount(
 					productOfferingName).equals(Integer.valueOf("0")))
 				throw new ProductDefinitionException(
-						ProductDefinitionConstants.DUPLCATEGORYNAME);
+						ProductDefinitionConstants.DUPLPRDINSTNAME);
 		} catch (PersistenceException e) {
 			throw new ProductDefinitionException(e);
 		}
@@ -315,7 +315,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
 			if (!new PrdOfferingPersistence().getProductOfferingShortNameCount(
 					productOfferingShortName).equals(Integer.valueOf("0")))
 				throw new ProductDefinitionException(
-						ProductDefinitionConstants.DUPLCATEGORYNAME);
+						ProductDefinitionConstants.DUPLPRDINSTSHORTNAME);
 		} catch (PersistenceException e) {
 			throw new ProductDefinitionException(e);
 		}
