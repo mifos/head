@@ -541,7 +541,7 @@
 													<mifos:mifoslabel name="loan.amount" />
 												</td>
 												<td width="50%" class="fontnormal">
-													<mifos:mifosdecimalinput property='selectedFee[${ctr2}].amount' />
+													<mifos:mifosdecimalinput property='selectedFee[${ctr2}].amount' decimalFmt="10.5"/>
 													<SPAN id="feeFormulaSpan${loopStatus2.index}" class="fontnormal"></SPAN>
 
 												</td>

@@ -79,7 +79,7 @@ public class TestLoanBO extends MifosTestCase {
 
 	private CustomerBO client = null;
 
-	private AccountPersistence accountPersistence=null;
+	private AccountPersistence accountPersistence = null;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -89,15 +89,15 @@ public class TestLoanBO extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		if(accountBO != null)
+		if (accountBO != null)
 			accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
-				AccountBO.class, accountBO.getAccountId());
-		if(group != null)
-			group = (CustomerBO) HibernateUtil.getSessionTL().get(CustomerBO.class,
-				group.getCustomerId());
-		if(center != null)
+					AccountBO.class, accountBO.getAccountId());
+		if (group != null)
+			group = (CustomerBO) HibernateUtil.getSessionTL().get(
+					CustomerBO.class, group.getCustomerId());
+		if (center != null)
 			center = (CustomerBO) HibernateUtil.getSessionTL().get(
-				CustomerBO.class, center.getCustomerId());
+					CustomerBO.class, center.getCustomerId());
 		TestObjectFactory.cleanUp(accountBO);
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
@@ -106,7 +106,7 @@ public class TestLoanBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
-	
+
 	public void testGetTotalRepayAmountForCurrentDateBeforeFirstInstallment() {
 		accountBO = getLoanAccount();
 		HibernateUtil.getSessionTL().flush();
@@ -206,40 +206,61 @@ public class TestLoanBO extends MifosTestCase {
 				.add(loanSummaryEntity.getFeesPaid()).add(
 						loanSummaryEntity.getInterestPaid()).add(
 						loanSummaryEntity.getPenaltyPaid()));
-		assertEquals(1,accountBO.getAccountPayments().size());
-		for(AccountPaymentEntity accountPaymentEntity : accountBO.getAccountPayments()){
-			assertEquals(6,accountPaymentEntity.getAccountTrxns().size());
-			for(AccountTrxnEntity accountTrxnEntity :  accountPaymentEntity.getAccountTrxns()){
-				if(accountTrxnEntity.getInstallmentId().equals(Short.valueOf("1"))
-						|| accountTrxnEntity.getInstallmentId().equals(Short.valueOf("2"))){
-					assertEquals(new Money("212.0"),accountTrxnEntity.getAmount());
-					LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity)accountTrxnEntity;
-					assertEquals(new Money("100.0"),loanTrxnDetailEntity.getPrincipalAmount());
-					assertEquals(new Money("12.0"),loanTrxnDetailEntity.getInterestAmount());
-					assertEquals(new Money(),loanTrxnDetailEntity.getMiscFeeAmount());
-					assertEquals(new Money(),loanTrxnDetailEntity.getMiscPenaltyAmount());
-					assertEquals(new Money(),loanTrxnDetailEntity.getPenaltyAmount());
-					assertEquals(6,accountTrxnEntity.getFinancialTransactions().size());
-					assertEquals(1,loanTrxnDetailEntity.getFeesTrxnDetails().size());
-					for(FeesTrxnDetailEntity feesTrxnDetailEntity : loanTrxnDetailEntity.getFeesTrxnDetails()){
-						assertEquals(new Money("100.0"),feesTrxnDetailEntity.getFeeAmount());
+		assertEquals(1, accountBO.getAccountPayments().size());
+		for (AccountPaymentEntity accountPaymentEntity : accountBO
+				.getAccountPayments()) {
+			assertEquals(6, accountPaymentEntity.getAccountTrxns().size());
+			for (AccountTrxnEntity accountTrxnEntity : accountPaymentEntity
+					.getAccountTrxns()) {
+				if (accountTrxnEntity.getInstallmentId().equals(
+						Short.valueOf("1"))
+						|| accountTrxnEntity.getInstallmentId().equals(
+								Short.valueOf("2"))) {
+					assertEquals(new Money("212.0"), accountTrxnEntity
+							.getAmount());
+					LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
+					assertEquals(new Money("100.0"), loanTrxnDetailEntity
+							.getPrincipalAmount());
+					assertEquals(new Money("12.0"), loanTrxnDetailEntity
+							.getInterestAmount());
+					assertEquals(new Money(), loanTrxnDetailEntity
+							.getMiscFeeAmount());
+					assertEquals(new Money(), loanTrxnDetailEntity
+							.getMiscPenaltyAmount());
+					assertEquals(new Money(), loanTrxnDetailEntity
+							.getPenaltyAmount());
+					assertEquals(6, accountTrxnEntity
+							.getFinancialTransactions().size());
+					assertEquals(1, loanTrxnDetailEntity.getFeesTrxnDetails()
+							.size());
+					for (FeesTrxnDetailEntity feesTrxnDetailEntity : loanTrxnDetailEntity
+							.getFeesTrxnDetails()) {
+						assertEquals(new Money("100.0"), feesTrxnDetailEntity
+								.getFeeAmount());
 					}
-				}else{
-					LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity)accountTrxnEntity;
-					assertEquals(new Money("100.0"),accountTrxnEntity.getAmount());
-					assertEquals(new Money(),loanTrxnDetailEntity.getInterestAmount());
-					assertEquals(new Money(),loanTrxnDetailEntity.getMiscFeeAmount());
-					assertEquals(new Money(),loanTrxnDetailEntity.getMiscPenaltyAmount());
-					assertEquals(new Money(),loanTrxnDetailEntity.getPenaltyAmount());
-					assertEquals(2,accountTrxnEntity.getFinancialTransactions().size());
-					assertEquals(0,loanTrxnDetailEntity.getFeesTrxnDetails().size());
+				} else {
+					LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
+					assertEquals(new Money("100.0"), accountTrxnEntity
+							.getAmount());
+					assertEquals(new Money(), loanTrxnDetailEntity
+							.getInterestAmount());
+					assertEquals(new Money(), loanTrxnDetailEntity
+							.getMiscFeeAmount());
+					assertEquals(new Money(), loanTrxnDetailEntity
+							.getMiscPenaltyAmount());
+					assertEquals(new Money(), loanTrxnDetailEntity
+							.getPenaltyAmount());
+					assertEquals(2, accountTrxnEntity
+							.getFinancialTransactions().size());
+					assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails()
+							.size());
 				}
 			}
 		}
 	}
 
-	public void testMakeEarlyRepaymentForCurrentDateSameAsInstallmentDate() 
-		throws Exception {
+	public void testMakeEarlyRepaymentForCurrentDateSameAsInstallmentDate()
+			throws Exception {
 		accountBO = getLoanAccount();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
@@ -263,38 +284,57 @@ public class TestLoanBO extends MifosTestCase {
 				.add(loanSummaryEntity.getFeesPaid()).add(
 						loanSummaryEntity.getInterestPaid()).add(
 						loanSummaryEntity.getPenaltyPaid()));
-		assertEquals(1,accountBO.getAccountPayments().size());
-		for(AccountPaymentEntity accountPaymentEntity : accountBO.getAccountPayments()){
-			assertEquals(6,accountPaymentEntity.getAccountTrxns().size());
-			for(AccountTrxnEntity accountTrxnEntity :  accountPaymentEntity.getAccountTrxns()){
-				if(accountTrxnEntity.getInstallmentId().equals(Short.valueOf("1"))){
-					assertEquals(new Money("212.0"),accountTrxnEntity.getAmount());
-					LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity)accountTrxnEntity;
-					assertEquals(new Money("100.0"),loanTrxnDetailEntity.getPrincipalAmount());
-					assertEquals(new Money("12.0"),loanTrxnDetailEntity.getInterestAmount());
-					assertEquals(new Money(),loanTrxnDetailEntity.getMiscFeeAmount());
-					assertEquals(new Money(),loanTrxnDetailEntity.getMiscPenaltyAmount());
-					assertEquals(new Money(),loanTrxnDetailEntity.getPenaltyAmount());
-					assertEquals(6,accountTrxnEntity.getFinancialTransactions().size());
-					assertEquals(1,loanTrxnDetailEntity.getFeesTrxnDetails().size());
-					for(FeesTrxnDetailEntity feesTrxnDetailEntity : loanTrxnDetailEntity.getFeesTrxnDetails()){
-						assertEquals(new Money("100.0"),feesTrxnDetailEntity.getFeeAmount());
+		assertEquals(1, accountBO.getAccountPayments().size());
+		for (AccountPaymentEntity accountPaymentEntity : accountBO
+				.getAccountPayments()) {
+			assertEquals(6, accountPaymentEntity.getAccountTrxns().size());
+			for (AccountTrxnEntity accountTrxnEntity : accountPaymentEntity
+					.getAccountTrxns()) {
+				if (accountTrxnEntity.getInstallmentId().equals(
+						Short.valueOf("1"))) {
+					assertEquals(new Money("212.0"), accountTrxnEntity
+							.getAmount());
+					LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
+					assertEquals(new Money("100.0"), loanTrxnDetailEntity
+							.getPrincipalAmount());
+					assertEquals(new Money("12.0"), loanTrxnDetailEntity
+							.getInterestAmount());
+					assertEquals(new Money(), loanTrxnDetailEntity
+							.getMiscFeeAmount());
+					assertEquals(new Money(), loanTrxnDetailEntity
+							.getMiscPenaltyAmount());
+					assertEquals(new Money(), loanTrxnDetailEntity
+							.getPenaltyAmount());
+					assertEquals(6, accountTrxnEntity
+							.getFinancialTransactions().size());
+					assertEquals(1, loanTrxnDetailEntity.getFeesTrxnDetails()
+							.size());
+					for (FeesTrxnDetailEntity feesTrxnDetailEntity : loanTrxnDetailEntity
+							.getFeesTrxnDetails()) {
+						assertEquals(new Money("100.0"), feesTrxnDetailEntity
+								.getFeeAmount());
 					}
-				}else{
-					LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity)accountTrxnEntity;
-					assertEquals(new Money("100.0"),accountTrxnEntity.getAmount());
-					assertEquals(new Money(),loanTrxnDetailEntity.getInterestAmount());
-					assertEquals(new Money(),loanTrxnDetailEntity.getMiscFeeAmount());
-					assertEquals(new Money(),loanTrxnDetailEntity.getMiscPenaltyAmount());
-					assertEquals(new Money(),loanTrxnDetailEntity.getPenaltyAmount());
-					assertEquals(2,accountTrxnEntity.getFinancialTransactions().size());
-					assertEquals(0,loanTrxnDetailEntity.getFeesTrxnDetails().size());
+				} else {
+					LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
+					assertEquals(new Money("100.0"), accountTrxnEntity
+							.getAmount());
+					assertEquals(new Money(), loanTrxnDetailEntity
+							.getInterestAmount());
+					assertEquals(new Money(), loanTrxnDetailEntity
+							.getMiscFeeAmount());
+					assertEquals(new Money(), loanTrxnDetailEntity
+							.getMiscPenaltyAmount());
+					assertEquals(new Money(), loanTrxnDetailEntity
+							.getPenaltyAmount());
+					assertEquals(2, accountTrxnEntity
+							.getFinancialTransactions().size());
+					assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails()
+							.size());
 				}
 			}
 		}
 	}
-	
-	
+
 	public void testMakeEarlyRepaymentOnPartiallyPaidAccount() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 2, 4, 1));
@@ -308,26 +348,27 @@ public class TestLoanBO extends MifosTestCase {
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"),
 				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
-		
-		List<FeeView> feeViewList=new ArrayList<FeeView>();
-		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
-				FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY, Short
-						.valueOf("1"));
+
+		List<FeeView> feeViewList = new ArrayList<FeeView>();
+		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
+				"Periodic Fee", FeeCategory.LOAN, "100",
+				MeetingFrequency.WEEKLY, Short.valueOf("1"));
 		feeViewList.add(new FeeView(periodicFee));
-		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee",
-				FeeCategory.LOAN, Double.valueOf("20"),FeeFormula.AMOUNT, FeePayment.UPFRONT);
+		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
+				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
+				FeeFormula.AMOUNT, FeePayment.UPFRONT);
 		feeViewList.add(new FeeView(upfrontFee));
-		
-		
-	   accountBO=new LoanBO(TestObjectFactory.getUserContext(), loanOffering, group,
-				AccountState.getStatus(Short.valueOf("5")),	new Money("300.0"),
-				Short.valueOf("6"),new Date(System.currentTimeMillis()),false,1.2,(short) 0,
-				new Fund(),feeViewList);
-	   new TestObjectPersistence().persist(accountBO);
-	   assertEquals(6,accountBO.getAccountActionDates().size());
-		
+
+		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
+				loanOffering, group,
+				AccountState.getStatus(Short.valueOf("5")), new Money("300.0"),
+				Short.valueOf("6"), new Date(System.currentTimeMillis()),
+				false, 1.2, (short) 0, new Fund(), feeViewList);
+		new TestObjectPersistence().persist(accountBO);
+		assertEquals(6, accountBO.getAccountActionDates().size());
+
 		HibernateUtil.closeSession();
-		
+
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
 		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
@@ -340,11 +381,11 @@ public class TestLoanBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
-		assertEquals(new Money(),((LoanBO) accountBO).getTotalPaymentDue());
+		assertEquals(new Money(), ((LoanBO) accountBO).getTotalPaymentDue());
 		LoanBO loanBO = (LoanBO) accountBO;
 		UserContext uc = TestObjectFactory.getUserContext();
 		Money totalRepaymentAmount = loanBO.getTotalEarlyRepayAmount();
-		assertEquals(new Money("300.1"),totalRepaymentAmount);
+		assertEquals(new Money("300.1"), totalRepaymentAmount);
 		loanBO.makeEarlyRepayment(loanBO.getTotalEarlyRepayAmount(), null,
 				null, "1", uc.getId());
 
@@ -356,52 +397,68 @@ public class TestLoanBO extends MifosTestCase {
 		assertEquals(accountBO.getAccountState().getId(), new Short(
 				AccountStates.LOANACC_OBLIGATIONSMET));
 		LoanSummaryEntity loanSummaryEntity = loanBO.getLoanSummary();
-		assertEquals(new Money(), loanSummaryEntity.getPrincipalDue()
-				.add(loanSummaryEntity.getFeesDue()).add(
-						loanSummaryEntity.getInterestDue()).add(
-						loanSummaryEntity.getPenaltyDue()));
-		assertEquals(2,accountBO.getAccountPayments().size());
-		AccountPaymentEntity accountPaymentEntity =(AccountPaymentEntity) Arrays.asList(accountBO.getAccountPayments().toArray()).get(0);
+		assertEquals(new Money(), loanSummaryEntity.getPrincipalDue().add(
+				loanSummaryEntity.getFeesDue()).add(
+				loanSummaryEntity.getInterestDue()).add(
+				loanSummaryEntity.getPenaltyDue()));
+		assertEquals(2, accountBO.getAccountPayments().size());
+		AccountPaymentEntity accountPaymentEntity = (AccountPaymentEntity) Arrays
+				.asList(accountBO.getAccountPayments().toArray()).get(0);
 		assertEquals(6, accountPaymentEntity.getAccountTrxns().size());
 		for (AccountTrxnEntity accountTrxnEntity : accountPaymentEntity
 				.getAccountTrxns()) {
-			if(accountTrxnEntity.getInstallmentId().equals(Short.valueOf("6"))){
+			if (accountTrxnEntity.getInstallmentId().equals(Short.valueOf("6"))) {
 				LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
 				assertEquals(new Money("45.5"), accountTrxnEntity.getAmount());
-				assertEquals(new Money(), loanTrxnDetailEntity.getInterestAmount());
-				assertEquals(new Money(), loanTrxnDetailEntity.getMiscFeeAmount());
+				assertEquals(new Money(), loanTrxnDetailEntity
+						.getInterestAmount());
+				assertEquals(new Money(), loanTrxnDetailEntity
+						.getMiscFeeAmount());
 				assertEquals(new Money(), loanTrxnDetailEntity
 						.getMiscPenaltyAmount());
-				assertEquals(new Money(), loanTrxnDetailEntity.getPenaltyAmount());
-				assertEquals(4, accountTrxnEntity.getFinancialTransactions().size());
-				assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails().size());
-			} else if(accountTrxnEntity.getInstallmentId().equals(Short.valueOf("1"))){
+				assertEquals(new Money(), loanTrxnDetailEntity
+						.getPenaltyAmount());
+				assertEquals(4, accountTrxnEntity.getFinancialTransactions()
+						.size());
+				assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails()
+						.size());
+			} else if (accountTrxnEntity.getInstallmentId().equals(
+					Short.valueOf("1"))) {
 				LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
 				assertEquals(new Money("51.0"), accountTrxnEntity.getAmount());
-				assertEquals(new Money("0.1"), loanTrxnDetailEntity.getInterestAmount());
-				assertEquals(new Money(), loanTrxnDetailEntity.getMiscFeeAmount());
+				assertEquals(new Money("0.1"), loanTrxnDetailEntity
+						.getInterestAmount());
+				assertEquals(new Money(), loanTrxnDetailEntity
+						.getMiscFeeAmount());
 				assertEquals(new Money(), loanTrxnDetailEntity
 						.getMiscPenaltyAmount());
-				assertEquals(new Money(), loanTrxnDetailEntity.getPenaltyAmount());
-				assertEquals(4, accountTrxnEntity.getFinancialTransactions().size());
-				assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails().size());
-			}else{
+				assertEquals(new Money(), loanTrxnDetailEntity
+						.getPenaltyAmount());
+				assertEquals(4, accountTrxnEntity.getFinancialTransactions()
+						.size());
+				assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails()
+						.size());
+			} else {
 				LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
 				assertEquals(new Money("50.9"), accountTrxnEntity.getAmount());
-				assertEquals(new Money(), loanTrxnDetailEntity.getInterestAmount());
-				assertEquals(new Money(), loanTrxnDetailEntity.getMiscFeeAmount());
+				assertEquals(new Money(), loanTrxnDetailEntity
+						.getInterestAmount());
+				assertEquals(new Money(), loanTrxnDetailEntity
+						.getMiscFeeAmount());
 				assertEquals(new Money(), loanTrxnDetailEntity
 						.getMiscPenaltyAmount());
-				assertEquals(new Money(), loanTrxnDetailEntity.getPenaltyAmount());
-				assertEquals(2, accountTrxnEntity.getFinancialTransactions().size());
-				assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails().size());
+				assertEquals(new Money(), loanTrxnDetailEntity
+						.getPenaltyAmount());
+				assertEquals(2, accountTrxnEntity.getFinancialTransactions()
+						.size());
+				assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails()
+						.size());
 			}
 		}
 	}
-	
-	
-	
-	public void testMakeEarlyRepaymentOnPartiallyPaidPricipal() throws Exception {
+
+	public void testMakeEarlyRepaymentOnPartiallyPaidPricipal()
+			throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 2, 4, 1));
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
@@ -414,26 +471,27 @@ public class TestLoanBO extends MifosTestCase {
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"),
 				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
-		
-		List<FeeView> feeViewList=new ArrayList<FeeView>();
-		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
-				FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY, Short
-						.valueOf("1"));
+
+		List<FeeView> feeViewList = new ArrayList<FeeView>();
+		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
+				"Periodic Fee", FeeCategory.LOAN, "100",
+				MeetingFrequency.WEEKLY, Short.valueOf("1"));
 		feeViewList.add(new FeeView(periodicFee));
-		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee",
-				FeeCategory.LOAN, Double.valueOf("20"),FeeFormula.AMOUNT, FeePayment.UPFRONT);
+		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
+				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
+				FeeFormula.AMOUNT, FeePayment.UPFRONT);
 		feeViewList.add(new FeeView(upfrontFee));
-		
-		
-	   accountBO=new LoanBO(TestObjectFactory.getUserContext(), loanOffering, group,
-				AccountState.getStatus(Short.valueOf("5")),	new Money("300.0"),
-				Short.valueOf("6"),new Date(System.currentTimeMillis()),false,1.2,(short) 0,
-				new Fund(),feeViewList);
-	   new TestObjectPersistence().persist(accountBO);
-	   assertEquals(6,accountBO.getAccountActionDates().size());
-		
+
+		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
+				loanOffering, group,
+				AccountState.getStatus(Short.valueOf("5")), new Money("300.0"),
+				Short.valueOf("6"), new Date(System.currentTimeMillis()),
+				false, 1.2, (short) 0, new Fund(), feeViewList);
+		new TestObjectPersistence().persist(accountBO);
+		assertEquals(6, accountBO.getAccountActionDates().size());
+
 		HibernateUtil.closeSession();
-		
+
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
 		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
@@ -446,11 +504,11 @@ public class TestLoanBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
-		assertEquals(new Money(),((LoanBO) accountBO).getTotalPaymentDue());
+		assertEquals(new Money(), ((LoanBO) accountBO).getTotalPaymentDue());
 		LoanBO loanBO = (LoanBO) accountBO;
 		UserContext uc = TestObjectFactory.getUserContext();
 		Money totalRepaymentAmount = loanBO.getTotalEarlyRepayAmount();
-		assertEquals(new Money("280.0"),totalRepaymentAmount);
+		assertEquals(new Money("280.0"), totalRepaymentAmount);
 		loanBO.makeEarlyRepayment(loanBO.getTotalEarlyRepayAmount(), null,
 				null, "1", uc.getId());
 
@@ -462,55 +520,66 @@ public class TestLoanBO extends MifosTestCase {
 		assertEquals(accountBO.getAccountState().getId(), new Short(
 				AccountStates.LOANACC_OBLIGATIONSMET));
 		LoanSummaryEntity loanSummaryEntity = loanBO.getLoanSummary();
-		assertEquals(new Money(), loanSummaryEntity.getPrincipalDue()
-				.add(loanSummaryEntity.getFeesDue()).add(
-						loanSummaryEntity.getInterestDue()).add(
-						loanSummaryEntity.getPenaltyDue()));
-		assertEquals(2,accountBO.getAccountPayments().size());
-		AccountPaymentEntity accountPaymentEntity =(AccountPaymentEntity) Arrays.asList(accountBO.getAccountPayments().toArray()).get(0);
+		assertEquals(new Money(), loanSummaryEntity.getPrincipalDue().add(
+				loanSummaryEntity.getFeesDue()).add(
+				loanSummaryEntity.getInterestDue()).add(
+				loanSummaryEntity.getPenaltyDue()));
+		assertEquals(2, accountBO.getAccountPayments().size());
+		AccountPaymentEntity accountPaymentEntity = (AccountPaymentEntity) Arrays
+				.asList(accountBO.getAccountPayments().toArray()).get(0);
 		assertEquals(6, accountPaymentEntity.getAccountTrxns().size());
 		for (AccountTrxnEntity accountTrxnEntity : accountPaymentEntity
 				.getAccountTrxns()) {
-			if(accountTrxnEntity.getInstallmentId().equals(Short.valueOf("6"))){
+			if (accountTrxnEntity.getInstallmentId().equals(Short.valueOf("6"))) {
 				LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
 				assertEquals(new Money("45.5"), accountTrxnEntity.getAmount());
-				assertEquals(new Money(), loanTrxnDetailEntity.getInterestAmount());
-				assertEquals(new Money(), loanTrxnDetailEntity.getMiscFeeAmount());
+				assertEquals(new Money(), loanTrxnDetailEntity
+						.getInterestAmount());
+				assertEquals(new Money(), loanTrxnDetailEntity
+						.getMiscFeeAmount());
 				assertEquals(new Money(), loanTrxnDetailEntity
 						.getMiscPenaltyAmount());
-				assertEquals(new Money(), loanTrxnDetailEntity.getPenaltyAmount());
-				assertEquals(4, accountTrxnEntity.getFinancialTransactions().size());
-				assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails().size());
-			} else if(accountTrxnEntity.getInstallmentId().equals(Short.valueOf("1"))){
+				assertEquals(new Money(), loanTrxnDetailEntity
+						.getPenaltyAmount());
+				assertEquals(4, accountTrxnEntity.getFinancialTransactions()
+						.size());
+				assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails()
+						.size());
+			} else if (accountTrxnEntity.getInstallmentId().equals(
+					Short.valueOf("1"))) {
 				LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
 				assertEquals(new Money("30.9"), accountTrxnEntity.getAmount());
-				assertEquals(new Money(), loanTrxnDetailEntity.getInterestAmount());
-				assertEquals(new Money(), loanTrxnDetailEntity.getMiscFeeAmount());
+				assertEquals(new Money(), loanTrxnDetailEntity
+						.getInterestAmount());
+				assertEquals(new Money(), loanTrxnDetailEntity
+						.getMiscFeeAmount());
 				assertEquals(new Money(), loanTrxnDetailEntity
 						.getMiscPenaltyAmount());
-				assertEquals(new Money(), loanTrxnDetailEntity.getPenaltyAmount());
-				assertEquals(2, accountTrxnEntity.getFinancialTransactions().size());
-				assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails().size());
-			}else{
+				assertEquals(new Money(), loanTrxnDetailEntity
+						.getPenaltyAmount());
+				assertEquals(2, accountTrxnEntity.getFinancialTransactions()
+						.size());
+				assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails()
+						.size());
+			} else {
 				LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
 				assertEquals(new Money("50.9"), accountTrxnEntity.getAmount());
-				assertEquals(new Money(), loanTrxnDetailEntity.getInterestAmount());
-				assertEquals(new Money(), loanTrxnDetailEntity.getMiscFeeAmount());
+				assertEquals(new Money(), loanTrxnDetailEntity
+						.getInterestAmount());
+				assertEquals(new Money(), loanTrxnDetailEntity
+						.getMiscFeeAmount());
 				assertEquals(new Money(), loanTrxnDetailEntity
 						.getMiscPenaltyAmount());
-				assertEquals(new Money(), loanTrxnDetailEntity.getPenaltyAmount());
-				assertEquals(2, accountTrxnEntity.getFinancialTransactions().size());
-				assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails().size());
+				assertEquals(new Money(), loanTrxnDetailEntity
+						.getPenaltyAmount());
+				assertEquals(2, accountTrxnEntity.getFinancialTransactions()
+						.size());
+				assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails()
+						.size());
 			}
 		}
 	}
-	
-	
-		
 
-
-	
-	
 	public void testUpdateTotalFeeAmount() {
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
@@ -522,8 +591,7 @@ public class TestLoanBO extends MifosTestCase {
 				.subtract(new Money("20"))));
 	}
 
-	public void testDisburseLoanWithFeeAtDisbursement()
-			throws Exception{
+	public void testDisburseLoanWithFeeAtDisbursement() throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
 		Money miscFee = new Money("20");
 		Money miscPenalty = new Money("50");
@@ -592,6 +660,23 @@ public class TestLoanBO extends MifosTestCase {
 			// check new account state
 			assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING,
 					((LoanBO) accountBO).getAccountState().getId().shortValue());
+		}
+		LoanSummaryEntity loanSummary = ((LoanBO) accountBO).getLoanSummary();
+		int activityNo = 0;
+		for (LoanActivityEntity loanActivityEntity : ((LoanBO) accountBO)
+				.getLoanActivityDetails()) {
+			if (activityNo == 0) {
+				activityNo++;
+				continue;
+			} else {
+				assertEquals(loanSummary.getOriginalPrincipal().subtract(
+						loanSummary.getPrincipalPaid()), loanActivityEntity
+						.getPrincipalOutstanding());
+				assertEquals(loanSummary.getOriginalFees().subtract(
+						loanSummary.getFeesPaid()), loanActivityEntity
+						.getFeeOutstanding());
+				break;
+			}
 		}
 		accountBO = (AccountBO) TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
@@ -729,7 +814,8 @@ public class TestLoanBO extends MifosTestCase {
 			InterruptedException {
 
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccountWithMiscFeeAndPenalty(Short.valueOf("3"), startDate, 3,new Money("20"),new Money("30"));
+		accountBO = getLoanAccountWithMiscFeeAndPenalty(Short.valueOf("3"),
+				startDate, 3, new Money("20"), new Money("30"));
 
 		Set<AccountActionDateEntity> intallments = accountBO
 				.getAccountActionDates();
@@ -747,12 +833,18 @@ public class TestLoanBO extends MifosTestCase {
 				disbursalDate.get(Calendar.MONTH), disbursalDate
 						.get(Calendar.DATE), 0, 0);
 		((LoanBO) accountBO).disburseLoan("1234", cal.getTime(), Short
-					.valueOf("1"), accountBO.getPersonnel(), startDate, Short
-					.valueOf("1"));
-		for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
-			if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))){
-				assertEquals(new Money("20"),((LoanScheduleEntity)accountActionDateEntity).getMiscFee());
-				assertEquals(new Money("30"),((LoanScheduleEntity)accountActionDateEntity).getMiscPenalty());
+				.valueOf("1"), accountBO.getPersonnel(), startDate, Short
+				.valueOf("1"));
+		for (AccountActionDateEntity accountActionDateEntity : accountBO
+				.getAccountActionDates()) {
+			if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("1"))) {
+				assertEquals(new Money("20"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getMiscFee());
+				assertEquals(new Money("30"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getMiscPenalty());
 			}
 		}
 		Session session = HibernateUtil.getSessionTL();
@@ -867,14 +959,13 @@ public class TestLoanBO extends MifosTestCase {
 		int month = currentDateCalendar.get(Calendar.MONTH);
 		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
 		currentDateCalendar = new GregorianCalendar(year, month, day);
-		accountBO = accountPersistence.getAccount(accountBO
-				.getAccountId());
+		accountBO = accountPersistence.getAccount(accountBO.getAccountId());
 		assertEquals(((LoanBO) accountBO).getNextMeetingDate().toString(),
 				new java.sql.Date(currentDateCalendar.getTimeInMillis())
 						.toString());
 	}
 
-	public void testGetNextMeetingDateAsFutureDate() throws Exception{
+	public void testGetNextMeetingDateAsFutureDate() throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -900,9 +991,8 @@ public class TestLoanBO extends MifosTestCase {
 		accountActionDateEntity.setActionDate(new java.sql.Date(
 				currentDateCalendar.getTimeInMillis()));
 		TestObjectFactory.updateObject(accountBO);
-		
-		accountBO = accountPersistence.getAccount(accountBO
-				.getAccountId());
+
+		accountBO = accountPersistence.getAccount(accountBO.getAccountId());
 		assertEquals(((LoanBO) accountBO).getNextMeetingDate().toString(),
 				accountBO.getAccountActionDate(Short.valueOf("2"))
 						.getActionDate().toString());
@@ -914,7 +1004,8 @@ public class TestLoanBO extends MifosTestCase {
 				.getAmountDoubleValue(), 0.0);
 	}
 
-	public void testGetTotalAmountInArrearsForSingleInstallmentDue() throws Exception {
+	public void testGetTotalAmountInArrearsForSingleInstallmentDue()
+			throws Exception {
 		accountBO = getLoanAccount();
 		AccountActionDateEntity accountActionDateEntity = accountBO
 				.getAccountActionDate((short) 1);
@@ -967,8 +1058,7 @@ public class TestLoanBO extends MifosTestCase {
 				.getAmountDoubleValue(), 424.0);
 	}
 
-	public void testChangedStatusForLastInstallmentPaid()
-			throws Exception {
+	public void testChangedStatusForLastInstallmentPaid() throws Exception {
 		accountBO = getLoanAccount();
 		Date startDate = new Date(System.currentTimeMillis());
 		java.sql.Date offSetDate = offSetCurrentDate(1);
@@ -1007,8 +1097,8 @@ public class TestLoanBO extends MifosTestCase {
 		((LoanBO) accountBO).handleArrears();
 		assertEquals(Short.valueOf(AccountStates.LOANACC_BADSTANDING),
 				accountBO.getAccountState().getId());
-		assertEquals(statusChangeHistorySize + 1,
-				accountBO.getAccountStatusChangeHistory().size());
+		assertEquals(statusChangeHistorySize + 1, accountBO
+				.getAccountStatusChangeHistory().size());
 	}
 
 	public void testChangedStatusOnPayment() throws AccountException,
@@ -1034,14 +1124,13 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = getLoanAccount();
 		LoanBO loan = (LoanBO) accountBO;
 		assertEquals(true, loan.isInterestDeductedAtDisbursement());
-		loan
-				.setInterestDeductedAtDisbursement(false);
+		loan.setInterestDeductedAtDisbursement(false);
 		assertEquals(false, loan.isInterestDeductedAtDisbursement());
 
 	}
 
 	public void testWtiteOff() throws Exception {
-	   accountBO = getLoanAccount();
+		accountBO = getLoanAccount();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
@@ -1059,14 +1148,16 @@ public class TestLoanBO extends MifosTestCase {
 		for (LoanActivityEntity loanActivityEntity : loan
 				.getLoanActivityDetails()) {
 			assertEquals(loanActivityEntity.getComments(), "Loan Written Off");
-			assertEquals( new Timestamp(DateUtils.getCurrentDateWithoutTimeStamp().getTime()), loanActivityEntity.getTrxnCreatedDate());
+			assertEquals(new Timestamp(DateUtils
+					.getCurrentDateWithoutTimeStamp().getTime()),
+					loanActivityEntity.getTrxnCreatedDate());
 			break;
 		}
 		assertEquals(accountBO.getAccountState().getId(), new Short(
 				AccountStates.LOANACC_WRITTENOFF));
 	}
 
-	public void testGetAmountTobePaidAtdisburtail() throws Exception{
+	public void testGetAmountTobePaidAtdisburtail() throws Exception {
 
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 2);
@@ -1074,10 +1165,10 @@ public class TestLoanBO extends MifosTestCase {
 				.getAmountTobePaidAtdisburtail(startDate));
 
 	}
-	
+
 	public void testWaivePenaltyChargeDue() throws Exception {
 		accountBO = getLoanAccount();
-		for (AccountActionDateEntity accountAction : ((LoanBO)accountBO)
+		for (AccountActionDateEntity accountAction : ((LoanBO) accountBO)
 				.getAccountActionDates()) {
 			LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
 			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
@@ -1085,16 +1176,17 @@ public class TestLoanBO extends MifosTestCase {
 				if (accountActionDateEntity.getInstallmentId().equals(
 						Short.valueOf("1"))) {
 					accountActionDateEntity.setMiscPenalty(new Money("100"));
-				} 
+				}
 			}
 		}
-		((LoanBO)accountBO).getLoanSummary().setOriginalPenalty(new Money("100"));
+		((LoanBO) accountBO).getLoanSummary().setOriginalPenalty(
+				new Money("100"));
 		TestObjectFactory.updateObject(accountBO);
-		
+
 		HibernateUtil.closeSession();
 		LoanBO loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
-		
+
 		UserContext userContext = TestObjectFactory.getUserContext();
 		loanBO.setUserContext(userContext);
 		loanBO.waiveAmountDue(WaiveEnum.PENALTY);
@@ -1106,25 +1198,31 @@ public class TestLoanBO extends MifosTestCase {
 				.getAccountActionDates()) {
 			LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
 			if (accountActionDateEntity.getInstallmentId().equals(
-						Short.valueOf("1"))) {
-					assertEquals(new Money(),accountActionDateEntity.getMiscPenalty());
-				} 
-			
+					Short.valueOf("1"))) {
+				assertEquals(new Money(), accountActionDateEntity
+						.getMiscPenalty());
+			}
+
 		}
-		
-		Set<LoanActivityEntity> loanActivityDetailsSet = loanBO.getLoanActivityDetails();
-		List<Object> objectList = Arrays.asList(loanActivityDetailsSet.toArray());
-		LoanActivityEntity loanActivityEntity = (LoanActivityEntity) objectList.get(0);
-		assertEquals(new Money("100"),loanActivityEntity.getPenalty());
-		assertEquals( new Timestamp(DateUtils.getCurrentDateWithoutTimeStamp().getTime()), loanActivityEntity.getTrxnCreatedDate());
-		assertEquals(loanBO.getLoanSummary().getOriginalPenalty().subtract(loanBO.getLoanSummary().getPenaltyPaid()),
-				loanActivityEntity.getPenaltyOutstanding());
+
+		Set<LoanActivityEntity> loanActivityDetailsSet = loanBO
+				.getLoanActivityDetails();
+		List<Object> objectList = Arrays.asList(loanActivityDetailsSet
+				.toArray());
+		LoanActivityEntity loanActivityEntity = (LoanActivityEntity) objectList
+				.get(0);
+		assertEquals(new Money("100"), loanActivityEntity.getPenalty());
+		assertEquals(new Timestamp(DateUtils.getCurrentDateWithoutTimeStamp()
+				.getTime()), loanActivityEntity.getTrxnCreatedDate());
+		assertEquals(loanBO.getLoanSummary().getOriginalPenalty().subtract(
+				loanBO.getLoanSummary().getPenaltyPaid()), loanActivityEntity
+				.getPenaltyOutstanding());
 	}
-	
+
 	public void testWaivePenaltyOverDue() throws Exception {
 		accountBO = getLoanAccount();
-		
-		for (AccountActionDateEntity installment : ((LoanBO)accountBO)
+
+		for (AccountActionDateEntity installment : ((LoanBO) accountBO)
 				.getAccountActionDates()) {
 			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) installment;
 			if (installment.getInstallmentId().intValue() == 1) {
@@ -1133,10 +1231,11 @@ public class TestLoanBO extends MifosTestCase {
 				loanScheduleEntity.setMiscPenalty(new Money("100"));
 			}
 		}
-		
-		((LoanBO)accountBO).getLoanSummary().setOriginalPenalty(new Money("200"));
+
+		((LoanBO) accountBO).getLoanSummary().setOriginalPenalty(
+				new Money("200"));
 		TestObjectFactory.updateObject(accountBO);
-		
+
 		HibernateUtil.closeSession();
 		LoanBO loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
@@ -1175,17 +1274,20 @@ public class TestLoanBO extends MifosTestCase {
 			LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
 			assertEquals(new Money(), accountActionDateEntity.getMiscPenalty());
 		}
-		
-		Set<LoanActivityEntity> loanActivityDetailsSet = loanBO.getLoanActivityDetails();
-		List<Object> objectList = Arrays.asList(loanActivityDetailsSet.toArray());
-		LoanActivityEntity loanActivityEntity = (LoanActivityEntity) objectList.get(0);
-		assertEquals( new Timestamp(DateUtils.getCurrentDateWithoutTimeStamp().getTime()), loanActivityEntity.getTrxnCreatedDate());
-		assertEquals(new Money("200"),loanActivityEntity.getPenalty());
-		assertEquals(loanBO.getLoanSummary().getOriginalPenalty().subtract(loanBO.getLoanSummary().getPenaltyPaid()),
-				loanActivityEntity.getPenaltyOutstanding());
+
+		Set<LoanActivityEntity> loanActivityDetailsSet = loanBO
+				.getLoanActivityDetails();
+		List<Object> objectList = Arrays.asList(loanActivityDetailsSet
+				.toArray());
+		LoanActivityEntity loanActivityEntity = (LoanActivityEntity) objectList
+				.get(0);
+		assertEquals(new Timestamp(DateUtils.getCurrentDateWithoutTimeStamp()
+				.getTime()), loanActivityEntity.getTrxnCreatedDate());
+		assertEquals(new Money("200"), loanActivityEntity.getPenalty());
+		assertEquals(loanBO.getLoanSummary().getOriginalPenalty().subtract(
+				loanBO.getLoanSummary().getPenaltyPaid()), loanActivityEntity
+				.getPenaltyOutstanding());
 	}
-
-
 
 	public void testWaiveFeeChargeDue() throws Exception {
 		accountBO = getLoanAccount();
@@ -1204,7 +1306,7 @@ public class TestLoanBO extends MifosTestCase {
 			LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
 			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
 					.getAccountFeesActionDetails()) {
-				
+
 				if (accountActionDateEntity.getInstallmentId().equals(
 						Short.valueOf("1"))) {
 					assertEquals(new Money(), accountFeesActionDetailEntity
@@ -1212,20 +1314,24 @@ public class TestLoanBO extends MifosTestCase {
 				} else {
 					assertEquals(new Money("100"),
 							accountFeesActionDetailEntity.getFeeAmount());
-					
+
 				}
 			}
 		}
-		
-		Set<LoanActivityEntity> loanActivityDetailsSet = loanBO.getLoanActivityDetails();
-		List<Object> objectList = Arrays.asList(loanActivityDetailsSet.toArray());
-		LoanActivityEntity loanActivityEntity = (LoanActivityEntity) objectList.get(0);
-		assertEquals(new Money("100"),loanActivityEntity.getFee());
-		assertEquals( new Timestamp(DateUtils.getCurrentDateWithoutTimeStamp().getTime()), loanActivityEntity.getTrxnCreatedDate());
-		assertEquals(loanBO.getLoanSummary().getOriginalFees().subtract(loanBO.getLoanSummary().getFeesPaid()),
-				loanActivityEntity.getFeeOutstanding());
-		
-		
+
+		Set<LoanActivityEntity> loanActivityDetailsSet = loanBO
+				.getLoanActivityDetails();
+		List<Object> objectList = Arrays.asList(loanActivityDetailsSet
+				.toArray());
+		LoanActivityEntity loanActivityEntity = (LoanActivityEntity) objectList
+				.get(0);
+		assertEquals(new Money("100"), loanActivityEntity.getFee());
+		assertEquals(new Timestamp(DateUtils.getCurrentDateWithoutTimeStamp()
+				.getTime()), loanActivityEntity.getTrxnCreatedDate());
+		assertEquals(loanBO.getLoanSummary().getOriginalFees().subtract(
+				loanBO.getLoanSummary().getFeesPaid()), loanActivityEntity
+				.getFeeOutstanding());
+
 	}
 
 	public void testWaiveFeeChargeOverDue() throws Exception {
@@ -1279,17 +1385,23 @@ public class TestLoanBO extends MifosTestCase {
 							accountFeesActionDetailEntity.getFeeAmount());
 			}
 		}
-		
-		Set<LoanActivityEntity> loanActivityDetailsSet = loanBO.getLoanActivityDetails();
-		List<Object> objectList = Arrays.asList(loanActivityDetailsSet.toArray());
-		LoanActivityEntity loanActivityEntity = (LoanActivityEntity) objectList.get(0);
-		assertEquals(new Money("200"),loanActivityEntity.getFee());
-		assertEquals( new Timestamp(DateUtils.getCurrentDateWithoutTimeStamp().getTime()), loanActivityEntity.getTrxnCreatedDate());
-		assertEquals(loanBO.getLoanSummary().getOriginalFees().subtract(loanBO.getLoanSummary().getFeesPaid()),
-				loanActivityEntity.getFeeOutstanding());
+
+		Set<LoanActivityEntity> loanActivityDetailsSet = loanBO
+				.getLoanActivityDetails();
+		List<Object> objectList = Arrays.asList(loanActivityDetailsSet
+				.toArray());
+		LoanActivityEntity loanActivityEntity = (LoanActivityEntity) objectList
+				.get(0);
+		assertEquals(new Money("200"), loanActivityEntity.getFee());
+		assertEquals(new Timestamp(DateUtils.getCurrentDateWithoutTimeStamp()
+				.getTime()), loanActivityEntity.getTrxnCreatedDate());
+		assertEquals(loanBO.getLoanSummary().getOriginalFees().subtract(
+				loanBO.getLoanSummary().getFeesPaid()), loanActivityEntity
+				.getFeeOutstanding());
 	}
 
-	public void testRegenerateFutureInstallments() throws AccountException, SchedulerException {
+	public void testRegenerateFutureInstallments() throws AccountException,
+			SchedulerException {
 		accountBO = getLoanAccount();
 		TestObjectFactory.flushandCloseSession();
 		accountBO = (AccountBO) TestObjectFactory.getObject(LoanBO.class,
@@ -1397,8 +1509,8 @@ public class TestLoanBO extends MifosTestCase {
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
 		accntActionDates.addAll(loan.getAccountActionDates());
 		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
-				accntActionDates, TestObjectFactory
-						.getMoneyForMFICurrency(700), null, accountBO
+				accntActionDates,
+				TestObjectFactory.getMoneyForMFICurrency(700), null, accountBO
 						.getPersonnel(), "receiptNum", Short.valueOf("1"),
 				currentDate, currentDate);
 		loan.applyPayment(paymentData);
@@ -1487,7 +1599,6 @@ public class TestLoanBO extends MifosTestCase {
 				.getMissedPaymentCount());
 	}
 
-
 	public void testGetTotalRepayAmountForCustomerPerfHistory()
 			throws Exception {
 		accountBO = getLoanAccountWithPerformanceHistory();
@@ -1503,8 +1614,7 @@ public class TestLoanBO extends MifosTestCase {
 		UserContext uc = TestObjectFactory.getUserContext();
 		Money totalRepaymentAmount = loanBO.getTotalEarlyRepayAmount();
 		Integer noOfActiveLoans = ((ClientPerformanceHistoryEntity) ((LoanBO) accountBO)
-				.getCustomer().getPerformanceHistory())
-				.getNoOfActiveLoans();
+				.getCustomer().getPerformanceHistory()).getNoOfActiveLoans();
 		LoanPerformanceHistoryEntity loanPerfHistory = ((LoanBO) accountBO)
 				.getPerformanceHistory();
 		Integer noOfPayments = loanPerfHistory.getNoOfPayments();
@@ -1697,7 +1807,7 @@ public class TestLoanBO extends MifosTestCase {
 		((LoanBO) accountBO).roundInstallments(installmentIdList);
 		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();
-		
+
 		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		for (AccountActionDateEntity accountAction : accountBO
@@ -1728,20 +1838,25 @@ public class TestLoanBO extends MifosTestCase {
 					true);
 		}
 	}
-	
-	public void testBuildForInactiveLoanOffering() throws NumberFormatException, InvalidUserException, SystemException, ApplicationException {
+
+	public void testBuildForInactiveLoanOffering()
+			throws NumberFormatException, InvalidUserException,
+			SystemException, ApplicationException {
 		createInitialCustomers();
-		LoanOfferingBO loanOffering = createLoanOffering(false,PrdStatus.LOANINACTIVE.getValue());
+		LoanOfferingBO loanOffering = createLoanOffering(false,
+				PrdStatus.LOANINACTIVE.getValue());
 		try {
-			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(), loanOffering,
-					group, AccountState.LOANACC_APPROVED, new Money("300.0"),
-					Short.valueOf("6"), new Date(System.currentTimeMillis()),
-					false, 10.0, (short) 0, new Fund(),
-					new ArrayList<FeeView>());
-			assertFalse("The Loan object is created for inactive loan offering",
+			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+					loanOffering, group, AccountState.LOANACC_APPROVED,
+					new Money("300.0"), Short.valueOf("6"), new Date(System
+							.currentTimeMillis()), false, 10.0, (short) 0,
+					new Fund(), new ArrayList<FeeView>());
+			assertFalse(
+					"The Loan object is created for inactive loan offering",
 					true);
 		} catch (AccountException ae) {
-			assertTrue("The Loan object is not created for inactive loan offering",
+			assertTrue(
+					"The Loan object is not created for inactive loan offering",
 					true);
 		}
 		TestObjectFactory.removeObject(loanOffering);
@@ -1763,13 +1878,16 @@ public class TestLoanBO extends MifosTestCase {
 		}
 		TestObjectFactory.removeObject(loanOffering);
 	}
-	
-	public void testBuildForInactiveCustomer() throws NumberFormatException, InvalidUserException, SystemException, ApplicationException {
+
+	public void testBuildForInactiveCustomer() throws NumberFormatException,
+			InvalidUserException, SystemException, ApplicationException {
 		createInitialCustomers();
-		group.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_CLOSED));
+		group.setCustomerStatus(new CustomerStatusEntity(
+				CustomerStatus.GROUP_CLOSED));
 		TestObjectFactory.updateObject(group);
-		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+
 		LoanOfferingBO loanOffering = createLoanOffering(false);
 		try {
 			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
@@ -1777,14 +1895,16 @@ public class TestLoanBO extends MifosTestCase {
 					new Money("300.0"), Short.valueOf("6"), new Date(System
 							.currentTimeMillis()), false, 10.0, (short) 0,
 					new Fund(), new ArrayList<FeeView>());
-			assertFalse("The Loan object is created for inactive customer", true);
+			assertFalse("The Loan object is created for inactive customer",
+					true);
 		} catch (AccountException ae) {
-			assertTrue("The Loan object is not created for inactive customer", true);
+			assertTrue("The Loan object is not created for inactive customer",
+					true);
 		}
 		TestObjectFactory.removeObject(loanOffering);
-		
+
 	}
-	
+
 	public void testMeetingNotMatchingForCustomerAndLoanOffering()
 			throws NumberFormatException, InvalidUserException,
 			SystemException, ApplicationException {
@@ -1793,11 +1913,10 @@ public class TestLoanBO extends MifosTestCase {
 				.getMeetingHelper(2, 1, 4, 2));
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()),
-				PrdStatus.LOANACTIVE.getValue(), 300.0, 1.2, Short
-						.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), Short.valueOf("0"), Short.valueOf("1"),
-				meeting);
+				new Date(System.currentTimeMillis()), PrdStatus.LOANACTIVE
+						.getValue(), 300.0, 1.2, Short.valueOf("3"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("0"), Short.valueOf("1"), meeting);
 		try {
 			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
 					loanOffering, null, AccountState.LOANACC_APPROVED,
@@ -1814,7 +1933,7 @@ public class TestLoanBO extends MifosTestCase {
 		}
 		TestObjectFactory.removeObject(loanOffering);
 	}
-	
+
 	public void testMeetingRecurrenceOfLoanOfferingInMultipleOfCustomer()
 			throws NumberFormatException, InvalidUserException,
 			SystemException, ApplicationException {
@@ -1823,11 +1942,10 @@ public class TestLoanBO extends MifosTestCase {
 				.getMeetingHelper(1, 2, 4, 2));
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()),
-				PrdStatus.LOANACTIVE.getValue(), 300.0, 1.2, Short
-						.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), Short.valueOf("0"), Short.valueOf("1"),
-				meeting);
+				new Date(System.currentTimeMillis()), PrdStatus.LOANACTIVE
+						.getValue(), 300.0, 1.2, Short.valueOf("3"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("0"), Short.valueOf("1"), meeting);
 		LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group, AccountState.LOANACC_APPROVED, new Money(
 						"300.0"), Short.valueOf("6"), new Date(System
@@ -1838,7 +1956,7 @@ public class TestLoanBO extends MifosTestCase {
 				true);
 		TestObjectFactory.removeObject(loanOffering);
 	}
-	
+
 	public void testBuildLoanWithoutLoanAmount() throws NumberFormatException,
 			AccountException, Exception {
 		createInitialCustomers();
@@ -1855,7 +1973,7 @@ public class TestLoanBO extends MifosTestCase {
 		}
 		TestObjectFactory.removeObject(loanOffering);
 	}
-	
+
 	public void testGracePeriodGraterThanMaxNoOfInst()
 			throws NumberFormatException, InvalidUserException,
 			SystemException, ApplicationException {
@@ -1877,7 +1995,7 @@ public class TestLoanBO extends MifosTestCase {
 		}
 		TestObjectFactory.removeObject(loanOffering);
 	}
-	
+
 	public void testGracePeriodForInterestNotDedAtDisb()
 			throws NumberFormatException, AccountException, Exception {
 		createInitialCustomers();
@@ -1919,9 +2037,9 @@ public class TestLoanBO extends MifosTestCase {
 
 		TestObjectFactory.removeObject(loanOffering);
 	}
-	
-	public void testBuildLoanWithValidDisbDate()
-			throws NumberFormatException, AccountException, Exception {
+
+	public void testBuildLoanWithValidDisbDate() throws NumberFormatException,
+			AccountException, Exception {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false);
 		Date disbursementDate = new Date(System.currentTimeMillis());
@@ -1965,7 +2083,7 @@ public class TestLoanBO extends MifosTestCase {
 		}
 		TestObjectFactory.removeObject(loanOffering);
 	}
-	
+
 	public void testBuildLoanWithDisbDateOlderThanCurrentDate()
 			throws NumberFormatException, AccountException, Exception {
 		createInitialCustomers();
@@ -2140,7 +2258,7 @@ public class TestLoanBO extends MifosTestCase {
 		assertEquals(Short.valueOf("6"), loan.getNoOfInstallments());
 		assertEquals(6, loan.getAccountActionDates().size());
 	}
-	
+
 	public void testCreateLoanForPrincipalAtLastInst()
 			throws NumberFormatException, AccountException, Exception {
 		createInitialCustomers();
@@ -2231,7 +2349,7 @@ public class TestLoanBO extends MifosTestCase {
 		assertEquals(6, loan.getAccountActionDates().size());
 
 	}
-	
+
 	public void testAmountRoundedWhileCreate() throws NumberFormatException,
 			AccountException, Exception {
 		createInitialCustomers();
@@ -2256,7 +2374,7 @@ public class TestLoanBO extends MifosTestCase {
 			}
 		}
 	}
-	
+
 	public void testAmountNotRoundedWhileCreate() throws NumberFormatException,
 			AccountException, Exception {
 		createInitialCustomers();
@@ -2265,7 +2383,7 @@ public class TestLoanBO extends MifosTestCase {
 		Short noOfinstallments = (short) 6;
 
 		LoanBO loan = createAndRetrieveLoanAccount(loanOffering,
-				isInterestDedAtDisb, null, noOfinstallments,0.0);
+				isInterestDedAtDisb, null, noOfinstallments, 0.0);
 
 		for (AccountActionDateEntity accountActionDate : loan
 				.getAccountActionDates()) {
@@ -2281,161 +2399,240 @@ public class TestLoanBO extends MifosTestCase {
 			}
 		}
 	}
-	
-	public void testApplyMiscCharge() throws Exception{
+
+	public void testApplyMiscCharge() throws Exception {
 		accountBO = getLoanAccount();
-		Money intialTotalFeeAmount=((LoanBO)accountBO).getLoanSummary().getOriginalFees();
+		Money intialTotalFeeAmount = ((LoanBO) accountBO).getLoanSummary()
+				.getOriginalFees();
 		TestObjectFactory.flushandCloseSession();
-		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
 		UserContext uc = TestObjectFactory.getUserContext();
 		accountBO.setUserContext(uc);
-		accountBO.applyCharge(Short.valueOf("-1"),new Double("33"));
-		for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
-			LoanScheduleEntity loanScheduleEntity=(LoanScheduleEntity)accountActionDateEntity;
-			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("1")))
-				assertEquals(new Money("33.0"),loanScheduleEntity.getMiscFee());
+		accountBO.applyCharge(Short.valueOf("-1"), new Double("33"));
+		for (AccountActionDateEntity accountActionDateEntity : accountBO
+				.getAccountActionDates()) {
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
+			if (loanScheduleEntity.getInstallmentId()
+					.equals(Short.valueOf("1")))
+				assertEquals(new Money("33.0"), loanScheduleEntity.getMiscFee());
 		}
-		assertEquals(intialTotalFeeAmount.add(new Money("33.0")),((LoanBO)accountBO).getLoanSummary().getOriginalFees());
-		LoanActivityEntity loanActivityEntity=((LoanActivityEntity)(((LoanBO)accountBO).getLoanActivityDetails().toArray())[0]);
-		assertEquals(AccountConstants.MISC_FEES_APPLIED,loanActivityEntity.getComments());
-		assertEquals(((LoanBO)accountBO).getLoanSummary().getOriginalFees(),loanActivityEntity.getFeeOutstanding());
+		assertEquals(intialTotalFeeAmount.add(new Money("33.0")),
+				((LoanBO) accountBO).getLoanSummary().getOriginalFees());
+		LoanActivityEntity loanActivityEntity = ((LoanActivityEntity) (((LoanBO) accountBO)
+				.getLoanActivityDetails().toArray())[0]);
+		assertEquals(AccountConstants.MISC_FEES_APPLIED, loanActivityEntity
+				.getComments());
+		assertEquals(((LoanBO) accountBO).getLoanSummary().getOriginalFees(),
+				loanActivityEntity.getFeeOutstanding());
 	}
-	
-	public void testApplyMiscChargeWithFirstInstallmentPaid() throws Exception{
+
+	public void testApplyMiscChargeWithFirstInstallmentPaid() throws Exception {
 		accountBO = getLoanAccount();
-		Money intialTotalFeeAmount=((LoanBO)accountBO).getLoanSummary().getOriginalFees();
+		Money intialTotalFeeAmount = ((LoanBO) accountBO).getLoanSummary()
+				.getOriginalFees();
 		TestObjectFactory.flushandCloseSession();
-		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
-		for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
-			LoanScheduleEntity loanScheduleEntity=(LoanScheduleEntity)accountActionDateEntity;
-			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("1")))
-				loanScheduleEntity.setPaymentStatus(PaymentStatus.PAID.getValue());
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+		for (AccountActionDateEntity accountActionDateEntity : accountBO
+				.getAccountActionDates()) {
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
+			if (loanScheduleEntity.getInstallmentId()
+					.equals(Short.valueOf("1")))
+				loanScheduleEntity.setPaymentStatus(PaymentStatus.PAID
+						.getValue());
 		}
 		UserContext uc = TestObjectFactory.getUserContext();
 		accountBO.setUserContext(uc);
-		accountBO.applyCharge(Short.valueOf("-1"),new Double("33"));
-		for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
-			LoanScheduleEntity loanScheduleEntity=(LoanScheduleEntity)accountActionDateEntity;
-			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("2")))
-				assertEquals(new Money("33.0"),loanScheduleEntity.getMiscFee());
+		accountBO.applyCharge(Short.valueOf("-1"), new Double("33"));
+		for (AccountActionDateEntity accountActionDateEntity : accountBO
+				.getAccountActionDates()) {
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
+			if (loanScheduleEntity.getInstallmentId()
+					.equals(Short.valueOf("2")))
+				assertEquals(new Money("33.0"), loanScheduleEntity.getMiscFee());
 		}
-		assertEquals(intialTotalFeeAmount.add(new Money("33.0")),((LoanBO)accountBO).getLoanSummary().getOriginalFees());
-		LoanActivityEntity loanActivityEntity=((LoanActivityEntity)(((LoanBO)accountBO).getLoanActivityDetails().toArray())[0]);
-		assertEquals(AccountConstants.MISC_FEES_APPLIED,loanActivityEntity.getComments());
-		assertEquals(((LoanBO)accountBO).getLoanSummary().getOriginalFees(),loanActivityEntity.getFeeOutstanding());
+		assertEquals(intialTotalFeeAmount.add(new Money("33.0")),
+				((LoanBO) accountBO).getLoanSummary().getOriginalFees());
+		LoanActivityEntity loanActivityEntity = ((LoanActivityEntity) (((LoanBO) accountBO)
+				.getLoanActivityDetails().toArray())[0]);
+		assertEquals(AccountConstants.MISC_FEES_APPLIED, loanActivityEntity
+				.getComments());
+		assertEquals(((LoanBO) accountBO).getLoanSummary().getOriginalFees(),
+				loanActivityEntity.getFeeOutstanding());
 	}
-	
-	
-	public void testApplyPeriodicFee() throws Exception{
+
+	public void testApplyPeriodicFee() throws Exception {
 		accountBO = getLoanAccount();
-		Money intialTotalFeeAmount=((LoanBO)accountBO).getLoanSummary().getOriginalFees();
+		Money intialTotalFeeAmount = ((LoanBO) accountBO).getLoanSummary()
+				.getOriginalFees();
 		TestObjectFactory.flushandCloseSession();
-		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
-				FeeCategory.LOAN, "200", MeetingFrequency.WEEKLY, Short
-						.valueOf("2"));
-		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
+		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
+				"Periodic Fee", FeeCategory.LOAN, "200",
+				MeetingFrequency.WEEKLY, Short.valueOf("2"));
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
 		UserContext uc = TestObjectFactory.getUserContext();
 		accountBO.setUserContext(uc);
-		accountBO.applyCharge(periodicFee.getFeeId(),((AmountFeeBO)periodicFee).getFeeAmount().getAmountDoubleValue());
+		accountBO.applyCharge(periodicFee.getFeeId(),
+				((AmountFeeBO) periodicFee).getFeeAmount()
+						.getAmountDoubleValue());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
-		Date lastAppliedDate=null;
-		for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
-			LoanScheduleEntity loanScheduleEntity=(LoanScheduleEntity)accountActionDateEntity;
-			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("2"))){
-				assertEquals(2,loanScheduleEntity.getAccountFeesActionDetails().size());
-				for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : loanScheduleEntity.getAccountFeesActionDetails()){
-					if(accountFeesActionDetailEntity.getFee().getFeeName().equals("Periodic Fee"))
-						assertEquals(new Double("200"),accountFeesActionDetailEntity.getFeeAmount().getAmountDoubleValue());
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+		Date lastAppliedDate = null;
+		for (AccountActionDateEntity accountActionDateEntity : accountBO
+				.getAccountActionDates()) {
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
+			if (loanScheduleEntity.getInstallmentId()
+					.equals(Short.valueOf("2"))) {
+				assertEquals(2, loanScheduleEntity
+						.getAccountFeesActionDetails().size());
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : loanScheduleEntity
+						.getAccountFeesActionDetails()) {
+					if (accountFeesActionDetailEntity.getFee().getFeeName()
+							.equals("Periodic Fee"))
+						assertEquals(new Double("200"),
+								accountFeesActionDetailEntity.getFeeAmount()
+										.getAmountDoubleValue());
 				}
 			}
-			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("4"))){
-				assertEquals(2,loanScheduleEntity.getAccountFeesActionDetails().size());
-				for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : loanScheduleEntity.getAccountFeesActionDetails()){
-					if(accountFeesActionDetailEntity.getFee().getFeeName().equals("Periodic Fee"))
-						assertEquals(new Double("200"),accountFeesActionDetailEntity.getFeeAmount().getAmountDoubleValue());
+			if (loanScheduleEntity.getInstallmentId()
+					.equals(Short.valueOf("4"))) {
+				assertEquals(2, loanScheduleEntity
+						.getAccountFeesActionDetails().size());
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : loanScheduleEntity
+						.getAccountFeesActionDetails()) {
+					if (accountFeesActionDetailEntity.getFee().getFeeName()
+							.equals("Periodic Fee"))
+						assertEquals(new Double("200"),
+								accountFeesActionDetailEntity.getFeeAmount()
+										.getAmountDoubleValue());
 				}
 			}
-			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("6"))){
-				assertEquals(2,loanScheduleEntity.getAccountFeesActionDetails().size());
-				lastAppliedDate=loanScheduleEntity.getActionDate();
-				for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : loanScheduleEntity.getAccountFeesActionDetails()){
-					if(accountFeesActionDetailEntity.getFee().getFeeName().equals("Periodic Fee"))
-						assertEquals(new Double("200"),accountFeesActionDetailEntity.getFeeAmount().getAmountDoubleValue());
+			if (loanScheduleEntity.getInstallmentId()
+					.equals(Short.valueOf("6"))) {
+				assertEquals(2, loanScheduleEntity
+						.getAccountFeesActionDetails().size());
+				lastAppliedDate = loanScheduleEntity.getActionDate();
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : loanScheduleEntity
+						.getAccountFeesActionDetails()) {
+					if (accountFeesActionDetailEntity.getFee().getFeeName()
+							.equals("Periodic Fee"))
+						assertEquals(new Double("200"),
+								accountFeesActionDetailEntity.getFeeAmount()
+										.getAmountDoubleValue());
 				}
 			}
 		}
-		assertEquals(intialTotalFeeAmount.add(new Money("600.0")),((LoanBO)accountBO).getLoanSummary().getOriginalFees());
-		LoanActivityEntity loanActivityEntity=((LoanActivityEntity)(((LoanBO)accountBO).getLoanActivityDetails().toArray())[0]);
-		assertEquals(periodicFee.getFeeName()+" applied",loanActivityEntity.getComments());
-		assertEquals(((LoanBO)accountBO).getLoanSummary().getOriginalFees(),loanActivityEntity.getFeeOutstanding());
-		AccountFeesEntity accountFeesEntity=accountBO.getAccountFees(periodicFee.getFeeId());
-		assertEquals(FeeStatus.ACTIVE.getValue(),accountFeesEntity.getFeeStatus());
-		assertEquals(DateUtils.getDateWithoutTimeStamp(lastAppliedDate.getTime()),DateUtils.getDateWithoutTimeStamp(accountFeesEntity.getLastAppliedDate().getTime()));
+		assertEquals(intialTotalFeeAmount.add(new Money("600.0")),
+				((LoanBO) accountBO).getLoanSummary().getOriginalFees());
+		LoanActivityEntity loanActivityEntity = ((LoanActivityEntity) (((LoanBO) accountBO)
+				.getLoanActivityDetails().toArray())[0]);
+		assertEquals(periodicFee.getFeeName() + " applied", loanActivityEntity
+				.getComments());
+		assertEquals(((LoanBO) accountBO).getLoanSummary().getOriginalFees(),
+				loanActivityEntity.getFeeOutstanding());
+		AccountFeesEntity accountFeesEntity = accountBO
+				.getAccountFees(periodicFee.getFeeId());
+		assertEquals(FeeStatus.ACTIVE.getValue(), accountFeesEntity
+				.getFeeStatus());
+		assertEquals(DateUtils.getDateWithoutTimeStamp(lastAppliedDate
+				.getTime()), DateUtils
+				.getDateWithoutTimeStamp(accountFeesEntity.getLastAppliedDate()
+						.getTime()));
 	}
-	
-	public void testApplyUpfrontFee() throws Exception{
+
+	public void testApplyUpfrontFee() throws Exception {
 		accountBO = getLoanAccount();
-		Money intialTotalFeeAmount=((LoanBO)accountBO).getLoanSummary().getOriginalFees();
+		Money intialTotalFeeAmount = ((LoanBO) accountBO).getLoanSummary()
+				.getOriginalFees();
 		TestObjectFactory.flushandCloseSession();
-		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee",
-				FeeCategory.LOAN, Double.valueOf("20"),FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
+		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
+				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
+				FeeFormula.AMOUNT, FeePayment.UPFRONT);
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
 		UserContext uc = TestObjectFactory.getUserContext();
 		accountBO.setUserContext(uc);
-		accountBO.applyCharge(upfrontFee.getFeeId(),((RateFeeBO)upfrontFee).getRate());
+		accountBO.applyCharge(upfrontFee.getFeeId(), ((RateFeeBO) upfrontFee)
+				.getRate());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
-		Date lastAppliedDate=null;
-		Money feeAmountApplied=new Money();
-		for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
-			LoanScheduleEntity loanScheduleEntity=(LoanScheduleEntity)accountActionDateEntity;
-			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("2"))){
-				assertEquals(2,loanScheduleEntity.getAccountFeesActionDetails().size());
-				lastAppliedDate=loanScheduleEntity.getActionDate();
-				for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : loanScheduleEntity.getAccountFeesActionDetails()){
-					if(accountFeesActionDetailEntity.getFee().getFeeName().equalsIgnoreCase("Upfront Fee")){
-						feeAmountApplied=accountFeesActionDetailEntity.getFeeAmount();
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+		Date lastAppliedDate = null;
+		Money feeAmountApplied = new Money();
+		for (AccountActionDateEntity accountActionDateEntity : accountBO
+				.getAccountActionDates()) {
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
+			if (loanScheduleEntity.getInstallmentId()
+					.equals(Short.valueOf("2"))) {
+				assertEquals(2, loanScheduleEntity
+						.getAccountFeesActionDetails().size());
+				lastAppliedDate = loanScheduleEntity.getActionDate();
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : loanScheduleEntity
+						.getAccountFeesActionDetails()) {
+					if (accountFeesActionDetailEntity.getFee().getFeeName()
+							.equalsIgnoreCase("Upfront Fee")) {
+						feeAmountApplied = accountFeesActionDetailEntity
+								.getFeeAmount();
 					}
 				}
 			}
 		}
-		assertEquals(intialTotalFeeAmount.add(feeAmountApplied),((LoanBO)accountBO).getLoanSummary().getOriginalFees());
-		LoanActivityEntity loanActivityEntity=((LoanActivityEntity)(((LoanBO)accountBO).getLoanActivityDetails().toArray())[0]);
-		assertEquals(upfrontFee.getFeeName()+" applied",loanActivityEntity.getComments());
-		assertEquals(((LoanBO)accountBO).getLoanSummary().getOriginalFees(),loanActivityEntity.getFeeOutstanding());
-		AccountFeesEntity accountFeesEntity=accountBO.getAccountFees(upfrontFee.getFeeId());
-		assertEquals(FeeStatus.ACTIVE.getValue(),accountFeesEntity.getFeeStatus());
-		assertEquals(DateUtils.getDateWithoutTimeStamp(lastAppliedDate.getTime()),DateUtils.getDateWithoutTimeStamp(accountFeesEntity.getLastAppliedDate().getTime()));
+		assertEquals(intialTotalFeeAmount.add(feeAmountApplied),
+				((LoanBO) accountBO).getLoanSummary().getOriginalFees());
+		LoanActivityEntity loanActivityEntity = ((LoanActivityEntity) (((LoanBO) accountBO)
+				.getLoanActivityDetails().toArray())[0]);
+		assertEquals(upfrontFee.getFeeName() + " applied", loanActivityEntity
+				.getComments());
+		assertEquals(((LoanBO) accountBO).getLoanSummary().getOriginalFees(),
+				loanActivityEntity.getFeeOutstanding());
+		AccountFeesEntity accountFeesEntity = accountBO
+				.getAccountFees(upfrontFee.getFeeId());
+		assertEquals(FeeStatus.ACTIVE.getValue(), accountFeesEntity
+				.getFeeStatus());
+		assertEquals(DateUtils.getDateWithoutTimeStamp(lastAppliedDate
+				.getTime()), DateUtils
+				.getDateWithoutTimeStamp(accountFeesEntity.getLastAppliedDate()
+						.getTime()));
 	}
-	
-	public void testUpdateLoanSuccessWithRegeneratingNewRepaymentSchedule() throws ApplicationException, SystemException {
+
+	public void testUpdateLoanSuccessWithRegeneratingNewRepaymentSchedule()
+			throws ApplicationException, SystemException {
 		Date startDate = new Date(System.currentTimeMillis());
 		Date newDate = incrementCurrentDate(14);
 		accountBO = getLoanAccount();
-		accountBO.setAccountState(new AccountStateEntity(AccountState.LOANACC_APPROVED.getValue()));
-		((LoanBO)accountBO).setDisbursementDate(newDate);
-		((LoanBO)accountBO).updateLoan();
+		accountBO.setAccountState(new AccountStateEntity(
+				AccountState.LOANACC_APPROVED.getValue()));
+		((LoanBO) accountBO).setDisbursementDate(newDate);
+		((LoanBO) accountBO).updateLoan();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
-		Date newActionDate = DateUtils.getDateWithoutTimeStamp(accountBO.getAccountActionDate(Short.valueOf("1")).getActionDate().getTime());
-		assertEquals("New repayment schedule generated, so first installment date should be same as newDate",newDate,newActionDate);
+		Date newActionDate = DateUtils.getDateWithoutTimeStamp(accountBO
+				.getAccountActionDate(Short.valueOf("1")).getActionDate()
+				.getTime());
+		assertEquals(
+				"New repayment schedule generated, so first installment date should be same as newDate",
+				newDate, newActionDate);
 	}
-	
-	
-	public void testUpdateLoanWithoutRegeneratingNewRepaymentSchedule() throws ApplicationException, SystemException {
+
+	public void testUpdateLoanWithoutRegeneratingNewRepaymentSchedule()
+			throws ApplicationException, SystemException {
 		Date startDate = new Date(System.currentTimeMillis());
 		Date newDate = incrementCurrentDate(14);
 		accountBO = getLoanAccount();
-		Date oldActionDate = DateUtils.getDateWithoutTimeStamp(accountBO.getAccountActionDate(Short.valueOf("1")).getActionDate().getTime());
-		((LoanBO)accountBO).setDisbursementDate(newDate);
-		((LoanBO)accountBO).updateLoan();
+		Date oldActionDate = DateUtils.getDateWithoutTimeStamp(accountBO
+				.getAccountActionDate(Short.valueOf("1")).getActionDate()
+				.getTime());
+		((LoanBO) accountBO).setDisbursementDate(newDate);
+		((LoanBO) accountBO).updateLoan();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
@@ -2443,561 +2640,756 @@ public class TestLoanBO extends MifosTestCase {
 				group.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
-		Date newActionDate = DateUtils.getDateWithoutTimeStamp(accountBO.getAccountActionDate(Short.valueOf("1")).getActionDate().getTime());
-		assertEquals("Didn't generate new repayment schedule, so first installment date should be same as before ",oldActionDate,newActionDate);
-	}
-	
-	public void testCreateLoanAccountWithPrincipalDueInLastPayment() throws NumberFormatException, InvalidUserException, PropertyNotFoundException, SystemException, ApplicationException {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 2, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
-		
-		List<FeeView> feeViewList=new ArrayList<FeeView>();
-		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
-				FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY, Short
-						.valueOf("3"));
-		feeViewList.add(new FeeView(periodicFee));
-		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee",
-				FeeCategory.LOAN, Double.valueOf("20"),FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		feeViewList.add(new FeeView(upfrontFee));
-		FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee("Disbursment Fee",
-				FeeCategory.LOAN,"30", FeePayment.TIME_OF_DISBURSMENT);
-		feeViewList.add(new FeeView(disbursementFee));
-		
-	   accountBO=new LoanBO(TestObjectFactory.getUserContext(), loanOffering, group,
-				AccountState.getStatus(Short.valueOf("5")),	new Money("300.0"),
-				Short.valueOf("6"),new Date(System.currentTimeMillis()),false,1.2,(short) 0,
-				new Fund(),feeViewList);
-	   new TestObjectPersistence().persist(accountBO);
-	   assertEquals(6,accountBO.getAccountActionDates().size());
-	   for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
-		   if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("6"))){
-			   assertEquals(DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(14*6).getTime()),DateUtils.getDateWithoutTimeStamp(((LoanScheduleEntity)accountActionDateEntity).getActionDate().getTime()));
-			   assertEquals(((LoanBO)accountBO).getLoanSummary().getOriginalPrincipal(),((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
-			   assertEquals(1,((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
-			   for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails()){
-				   assertEquals("Periodic Fee",accountFeesActionDetailEntity.getFee().getFeeName());
-				   assertEquals(new Money("100.0"),accountFeesActionDetailEntity.getFeeAmount());
-			   }
-		   }
-		   else if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("2"))
-				   ||accountActionDateEntity.getInstallmentId().equals(Short.valueOf("5"))){
-			   assertEquals(new Money("0.0"),((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
-			   assertEquals(0,((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
-		   }else  if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))){
-			   assertEquals(new Money("0.0"),((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
-			   assertEquals(2,((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
-			   for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails()){
-				   if(accountFeesActionDetailEntity.getFee().getFeeName().equalsIgnoreCase("Periodic Fee"))
-					   assertEquals(new Money("100.0"),accountFeesActionDetailEntity.getFeeAmount());
-				   else
-					   assertEquals(new Money("60.0"),accountFeesActionDetailEntity.getFeeAmount());
-			   }
-		   }else{
-			   assertEquals(new Money("0.0"),((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
-			   assertEquals(1,((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
-			   for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails()){
-				   assertEquals("Periodic Fee",accountFeesActionDetailEntity.getFee().getFeeName());
-				   assertEquals(new Money("100.0"),accountFeesActionDetailEntity.getFeeAmount());
-			   }
-		   }
-		   assertEquals(new Money("0.1"),((LoanScheduleEntity)accountActionDateEntity).getInterest());
-		}
-	   assertEquals(3,accountBO.getAccountFees().size());
-	   for(AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()){
-		   if(accountFeesEntity.getFees().getFeeName().equals("Upfront Fee")){
-			   assertEquals(new Money("60.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Double("20.0"),accountFeesEntity.getFeeAmount());
-		   }else if(accountFeesEntity.getFees().getFeeName().equals("Disbursment Fee")){
-			   assertEquals(new Money("30.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Double("30.0"),accountFeesEntity.getFeeAmount());
-		   }else{
-			   assertEquals(new Money("100.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Double("100.0"),accountFeesEntity.getFeeAmount());
-		   }
-	   }
-	   LoanSummaryEntity loanSummaryEntity =  ((LoanBO)accountBO).getLoanSummary();
-	   assertEquals(new Money("300.0"),loanSummaryEntity.getOriginalPrincipal());
-	   assertEquals(new Money("0.6"),loanSummaryEntity.getOriginalInterest());
-	   assertEquals(new Money("490.0"),loanSummaryEntity.getOriginalFees());
-	   assertEquals(new Money("0.0"),loanSummaryEntity.getOriginalPenalty());
-	}
-	
-	public void testCreateLoanAccountWithInterestDeductedAtDisbursment() throws NumberFormatException, InvalidUserException, PropertyNotFoundException, SystemException, ApplicationException {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 2, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"),
-				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
-		
-		List<FeeView> feeViewList=new ArrayList<FeeView>();
-		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
-				FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY, Short
-						.valueOf("3"));
-		feeViewList.add(new FeeView(periodicFee));
-		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee",
-				FeeCategory.LOAN, Double.valueOf("20"),FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		feeViewList.add(new FeeView(upfrontFee));
-		FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee("Disbursment Fee",
-				FeeCategory.LOAN,"30", FeePayment.TIME_OF_DISBURSMENT);
-		feeViewList.add(new FeeView(disbursementFee));
-		
-	   accountBO=new LoanBO(TestObjectFactory.getUserContext(), loanOffering, group,
-				AccountState.getStatus(Short.valueOf("5")),	new Money("300.0"),
-				Short.valueOf("6"),new Date(System.currentTimeMillis()),true,1.2,(short) 0,
-				new Fund(),feeViewList);
-	   new TestObjectPersistence().persist(accountBO);
-	   assertEquals(6,accountBO.getAccountActionDates().size());
-	   for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
-		   if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))){
-			   assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(((LoanScheduleEntity)accountActionDateEntity).getActionDate().getTime()));
-			   assertEquals(new Money("0.0"),((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
-			   assertEquals(new Money("0.6"),((LoanScheduleEntity)accountActionDateEntity).getInterest());
-			   assertEquals(3,((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
-			   for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails()){
-				   if(accountFeesActionDetailEntity.getFee().getFeeName().equalsIgnoreCase("Periodic Fee"))
-					   assertEquals(new Money("100.0"),accountFeesActionDetailEntity.getFeeAmount());
-				   else if(accountFeesActionDetailEntity.getFee().getFeeName().equalsIgnoreCase("Disbursment Fee"))
-					   assertEquals(new Money("30.0"),accountFeesActionDetailEntity.getFeeAmount());
-				   else
-					   assertEquals(new Money("60.0"),accountFeesActionDetailEntity.getFeeAmount());
-			   }
-		   }
-		   else if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("2"))
-				   || accountActionDateEntity.getInstallmentId().equals(Short.valueOf("5"))){
-			   assertEquals(new Money("0.0"),((LoanScheduleEntity)accountActionDateEntity).getInterest());
-			   assertEquals(new Money("60.0"),((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
-			   assertEquals(0,((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
-		   }else if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("6"))){
-			   assertEquals(DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(14*5).getTime()),DateUtils.getDateWithoutTimeStamp(((LoanScheduleEntity)accountActionDateEntity).getActionDate().getTime()));
-			   assertEquals(new Money("0.0"),((LoanScheduleEntity)accountActionDateEntity).getInterest());
-			   assertEquals(new Money("60.0"),((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
-			   assertEquals(1,((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
-			   for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails()){
-				   assertEquals("Periodic Fee",accountFeesActionDetailEntity.getFee().getFeeName());
-				   assertEquals(new Money("100.0"),accountFeesActionDetailEntity.getFeeAmount());
-			   }
-		   }else{
-			   assertEquals(new Money("0.0"),((LoanScheduleEntity)accountActionDateEntity).getInterest());
-			   assertEquals(new Money("60.0"),((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
-			   assertEquals(1,((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
-			   for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails()){
-				   assertEquals("Periodic Fee",accountFeesActionDetailEntity.getFee().getFeeName());
-				   assertEquals(new Money("100.0"),accountFeesActionDetailEntity.getFeeAmount());
-			   }
-		   }
-		}
-	   assertEquals(3,accountBO.getAccountFees().size());
-	   for(AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()){
-		   if(accountFeesEntity.getFees().getFeeName().equals("Upfront Fee")){
-			   assertEquals(new Money("60.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Double("20.0"),accountFeesEntity.getFeeAmount());
-		   }else if(accountFeesEntity.getFees().getFeeName().equals("Disbursment Fee")){
-			   assertEquals(new Money("30.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Double("30.0"),accountFeesEntity.getFeeAmount());
-		   }else{
-			   assertEquals(new Money("100.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Double("100.0"),accountFeesEntity.getFeeAmount());
-		   }
-	   }
-	   LoanSummaryEntity loanSummaryEntity =  ((LoanBO)accountBO).getLoanSummary();
-	   assertEquals(new Money("300.0"),loanSummaryEntity.getOriginalPrincipal());
-	   assertEquals(new Money("0.6"),loanSummaryEntity.getOriginalInterest());
-	   assertEquals(new Money("490.0"),loanSummaryEntity.getOriginalFees());
-	   assertEquals(new Money("0.0"),loanSummaryEntity.getOriginalPenalty());
-	}
-	
-	public void testCreateLoanAccountWithIDADAndPDILI() throws NumberFormatException, InvalidUserException, PropertyNotFoundException, SystemException, ApplicationException {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 2, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
-		
-		List<FeeView> feeViewList=new ArrayList<FeeView>();
-		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
-				FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY, Short
-						.valueOf("3"));
-		feeViewList.add(new FeeView(periodicFee));
-		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee",
-				FeeCategory.LOAN, Double.valueOf("20"),FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		feeViewList.add(new FeeView(upfrontFee));
-		FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee("Disbursment Fee",
-				FeeCategory.LOAN,"30", FeePayment.TIME_OF_DISBURSMENT);
-		feeViewList.add(new FeeView(disbursementFee));
-		
-	   accountBO=new LoanBO(TestObjectFactory.getUserContext(), loanOffering, group,
-				AccountState.getStatus(Short.valueOf("5")),	new Money("300.0"),
-				Short.valueOf("6"),new Date(System.currentTimeMillis()),true,1.2,(short) 0,
-				new Fund(),feeViewList);
-	   new TestObjectPersistence().persist(accountBO);
-	   assertEquals(6,accountBO.getAccountActionDates().size());
-	   for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
-		   if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))){
-			   assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(((LoanScheduleEntity)accountActionDateEntity).getActionDate().getTime()));
-			   assertEquals(new Money("0.0"),((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
-			   assertEquals(new Money("0.6"),((LoanScheduleEntity)accountActionDateEntity).getInterest());
-			   assertEquals(3,((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
-			   for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails()){
-				   if(accountFeesActionDetailEntity.getFee().getFeeName().equalsIgnoreCase("Periodic Fee"))
-					   assertEquals(new Money("100.0"),accountFeesActionDetailEntity.getFeeAmount());
-				   else if(accountFeesActionDetailEntity.getFee().getFeeName().equalsIgnoreCase("Disbursment Fee"))
-					   assertEquals(new Money("30.0"),accountFeesActionDetailEntity.getFeeAmount());
-				   else
-					   assertEquals(new Money("60.0"),accountFeesActionDetailEntity.getFeeAmount());
-			   }
-		   }
-		   else if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("2"))
-				   || accountActionDateEntity.getInstallmentId().equals(Short.valueOf("5"))){
-			   assertEquals(new Money("0.0"),((LoanScheduleEntity)accountActionDateEntity).getInterest());
-			   assertEquals(new Money("0.0"),((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
-			   assertEquals(0,((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
-		   }else if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("6"))){
-			   assertEquals(DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(14*5).getTime()),DateUtils.getDateWithoutTimeStamp(((LoanScheduleEntity)accountActionDateEntity).getActionDate().getTime()));
-			   assertEquals(new Money("0.0"),((LoanScheduleEntity)accountActionDateEntity).getInterest());
-			   assertEquals(new Money("300.0"),((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
-			   assertEquals(1,((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
-			   for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails()){
-				   assertEquals("Periodic Fee",accountFeesActionDetailEntity.getFee().getFeeName());
-				   assertEquals(new Money("100.0"),accountFeesActionDetailEntity.getFeeAmount());
-			   }
-		   }else{
-			   assertEquals(new Money("0.0"),((LoanScheduleEntity)accountActionDateEntity).getInterest());
-			   assertEquals(new Money("0.0"),((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
-			   assertEquals(1,((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
-			   for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails()){
-				   assertEquals("Periodic Fee",accountFeesActionDetailEntity.getFee().getFeeName());
-				   assertEquals(new Money("100.0"),accountFeesActionDetailEntity.getFeeAmount());
-			   }
-		   }
-		}
-	   assertEquals(3,accountBO.getAccountFees().size());
-	   for(AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()){
-		   if(accountFeesEntity.getFees().getFeeName().equals("Upfront Fee")){
-			   assertEquals(new Money("60.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Double("20.0"),accountFeesEntity.getFeeAmount());
-		   }else if(accountFeesEntity.getFees().getFeeName().equals("Disbursment Fee")){
-			   assertEquals(new Money("30.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Double("30.0"),accountFeesEntity.getFeeAmount());
-		   }else{
-			   assertEquals(new Money("100.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Double("100.0"),accountFeesEntity.getFeeAmount());
-		   }
-	   }
-	   LoanSummaryEntity loanSummaryEntity =  ((LoanBO)accountBO).getLoanSummary();
-	   assertEquals(new Money("300.0"),loanSummaryEntity.getOriginalPrincipal());
-	   assertEquals(new Money("0.6"),loanSummaryEntity.getOriginalInterest());
-	   assertEquals(new Money("490.0"),loanSummaryEntity.getOriginalFees());
-	   assertEquals(new Money("0.0"),loanSummaryEntity.getOriginalPenalty());
-	}
-	
-	
-	public void testCreateNormalLoanAccount() throws NumberFormatException, InvalidUserException, PropertyNotFoundException, SystemException, ApplicationException {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 2, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"),
-				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
-		
-		List<FeeView> feeViewList=new ArrayList<FeeView>();
-		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
-				FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY, Short
-						.valueOf("3"));
-		feeViewList.add(new FeeView(periodicFee));
-		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee",
-				FeeCategory.LOAN, Double.valueOf("20"),FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		feeViewList.add(new FeeView(upfrontFee));
-		FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee("Disbursment Fee",
-				FeeCategory.LOAN,"30", FeePayment.TIME_OF_DISBURSMENT);
-		feeViewList.add(new FeeView(disbursementFee));
-		
-	   accountBO=new LoanBO(TestObjectFactory.getUserContext(), loanOffering, group,
-				AccountState.getStatus(Short.valueOf("5")),	new Money("300.0"),
-				Short.valueOf("6"),new Date(System.currentTimeMillis()),false,1.2,(short) 0,
-				new Fund(),feeViewList);
-	   new TestObjectPersistence().persist(accountBO);
-	   assertEquals(6,accountBO.getAccountActionDates().size());
-	   for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
-		   if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))){
-			   assertEquals(DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(14).getTime()),DateUtils.getDateWithoutTimeStamp(((LoanScheduleEntity)accountActionDateEntity).getActionDate().getTime()));
-			   assertEquals(new Money("50.9"),((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
-			   assertEquals(new Money("0.1"),((LoanScheduleEntity)accountActionDateEntity).getInterest());
-			   assertEquals(2,((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
-			   for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails()){
-				   if(accountFeesActionDetailEntity.getFee().getFeeName().equalsIgnoreCase("Periodic Fee"))
-					   assertEquals(new Money("100.0"),accountFeesActionDetailEntity.getFeeAmount());
-				   else
-					   assertEquals(new Money("60.0"),accountFeesActionDetailEntity.getFeeAmount());
-			   }
-		   }
-		   else if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("2"))
-				   || accountActionDateEntity.getInstallmentId().equals(Short.valueOf("5"))){
-			   assertEquals(new Money("0.1"),((LoanScheduleEntity)accountActionDateEntity).getInterest());
-			   assertEquals(new Money("50.9"),((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
-			   assertEquals(0,((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
-		   }else if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("3"))
-				   || accountActionDateEntity.getInstallmentId().equals(Short.valueOf("4"))){
-			   assertEquals(new Money("0.1"),((LoanScheduleEntity)accountActionDateEntity).getInterest());
-			   assertEquals(new Money("50.9"),((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
-			   assertEquals(1,((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
-			   for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails()){
-				   assertEquals("Periodic Fee",accountFeesActionDetailEntity.getFee().getFeeName());
-				   assertEquals(new Money("100.0"),accountFeesActionDetailEntity.getFeeAmount());
-			   }
-		   }else if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("6"))){ 
-			   assertEquals(DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(14*6).getTime()),DateUtils.getDateWithoutTimeStamp(((LoanScheduleEntity)accountActionDateEntity).getActionDate().getTime()));
-			   assertEquals(new Money("0.1"),((LoanScheduleEntity)accountActionDateEntity).getInterest());
-			   assertEquals(new Money("45.5"),((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
-			   assertEquals(1,((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
-			   for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails()){
-				   assertEquals("Periodic Fee",accountFeesActionDetailEntity.getFee().getFeeName());
-				   assertEquals(new Money("100.0"),accountFeesActionDetailEntity.getFeeAmount());
-			   }
-		   }
-		}
-	   assertEquals(3,accountBO.getAccountFees().size());
-	   for(AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()){
-		   if(accountFeesEntity.getFees().getFeeName().equals("Upfront Fee")){
-			   assertEquals(new Money("60.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Double("20.0"),accountFeesEntity.getFeeAmount());
-		   }else if(accountFeesEntity.getFees().getFeeName().equals("Disbursment Fee")){
-			   assertEquals(new Money("30.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Double("30.0"),accountFeesEntity.getFeeAmount());
-		   }else{
-			   assertEquals(new Money("100.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Double("100.0"),accountFeesEntity.getFeeAmount());
-		   }
-	   }
-	   LoanSummaryEntity loanSummaryEntity =  ((LoanBO)accountBO).getLoanSummary();
-	   assertEquals(new Money("300.0"),loanSummaryEntity.getOriginalPrincipal());
-	   assertEquals(new Money("0.6"),loanSummaryEntity.getOriginalInterest());
-	   assertEquals(new Money("490.0"),loanSummaryEntity.getOriginalFees());
-	   assertEquals(new Money("0.0"),loanSummaryEntity.getOriginalPenalty());
-	}
-	
-	public void testCreateNormalLoanAccountWithPricipalOnlyGrace() throws NumberFormatException, InvalidUserException, PropertyNotFoundException, SystemException, ApplicationException {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 2, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("3"), Short.valueOf("1"), Short.valueOf("0"),
-				Short.valueOf("1"), center.getCustomerMeeting().getMeeting(), Short.valueOf("3"));
-		
-		List<FeeView> feeViewList=new ArrayList<FeeView>();
-		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
-				FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY, Short
-						.valueOf("3"));
-		feeViewList.add(new FeeView(periodicFee));
-		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee",
-				FeeCategory.LOAN, Double.valueOf("20"),FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		feeViewList.add(new FeeView(upfrontFee));
-		FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee("Disbursment Fee",
-				FeeCategory.LOAN,"30", FeePayment.TIME_OF_DISBURSMENT);
-		feeViewList.add(new FeeView(disbursementFee));
-		
-	   accountBO=new LoanBO(TestObjectFactory.getUserContext(), loanOffering, group,
-				AccountState.getStatus(Short.valueOf("5")),	new Money("300.0"),
-				Short.valueOf("6"),new Date(System.currentTimeMillis()),false,1.2,(short) 1,
-				new Fund(),feeViewList);
-	   new TestObjectPersistence().persist(accountBO);
-	   assertEquals(6,accountBO.getAccountActionDates().size());
-	   for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
-		   if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))){
-			   assertEquals(DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(14*2).getTime()),DateUtils.getDateWithoutTimeStamp(((LoanScheduleEntity)accountActionDateEntity).getActionDate().getTime()));
-			   assertEquals(new Money("0.0"),((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
-			   assertEquals(new Money("0.1"),((LoanScheduleEntity)accountActionDateEntity).getInterest());
-			   assertEquals(2,((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
-			   for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails()){
-				   if(accountFeesActionDetailEntity.getFee().getFeeName().equalsIgnoreCase("Periodic Fee"))
-					   assertEquals(new Money("100.0"),accountFeesActionDetailEntity.getFeeAmount());
-				   else
-					   assertEquals(new Money("60.0"),accountFeesActionDetailEntity.getFeeAmount());
-			   }
-		   }
-		   else if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("2"))
-				   || accountActionDateEntity.getInstallmentId().equals(Short.valueOf("5"))){
-			   assertEquals(new Money("0.1"),((LoanScheduleEntity)accountActionDateEntity).getInterest());
-			   assertEquals(new Money("60.0"),((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
-			   assertEquals(0,((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
-		   }else if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("3"))
-				   || accountActionDateEntity.getInstallmentId().equals(Short.valueOf("4"))){
-			   assertEquals(new Money("0.1"),((LoanScheduleEntity)accountActionDateEntity).getInterest());
-			   assertEquals(new Money("60.0"),((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
-			   assertEquals(1,((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
-			   for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails()){
-				   assertEquals("Periodic Fee",accountFeesActionDetailEntity.getFee().getFeeName());
-				   assertEquals(new Money("100.0"),accountFeesActionDetailEntity.getFeeAmount());
-			   }
-		   }else if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("6"))){ 
-			   assertEquals(DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(14*7).getTime()),DateUtils.getDateWithoutTimeStamp(((LoanScheduleEntity)accountActionDateEntity).getActionDate().getTime()));
-			   assertEquals(new Money("0.1"),((LoanScheduleEntity)accountActionDateEntity).getInterest());
-			   assertEquals(new Money("60.0"),((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
-			   assertEquals(1,((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
-			   for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails()){
-				   assertEquals("Periodic Fee",accountFeesActionDetailEntity.getFee().getFeeName());
-				   assertEquals(new Money("100.0"),accountFeesActionDetailEntity.getFeeAmount());
-			   }
-		   }
-		}
-	   assertEquals(3,accountBO.getAccountFees().size());
-	   for(AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()){
-		   if(accountFeesEntity.getFees().getFeeName().equals("Upfront Fee")){
-			   assertEquals(new Money("60.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Double("20.0"),accountFeesEntity.getFeeAmount());
-		   }else if(accountFeesEntity.getFees().getFeeName().equals("Disbursment Fee")){
-			   assertEquals(new Money("30.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Double("30.0"),accountFeesEntity.getFeeAmount());
-		   }else{
-			   assertEquals(new Money("100.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Double("100.0"),accountFeesEntity.getFeeAmount());
-		   }
-	   }
-	   LoanSummaryEntity loanSummaryEntity =  ((LoanBO)accountBO).getLoanSummary();
-	   assertEquals(new Money("300.0"),loanSummaryEntity.getOriginalPrincipal());
-	   assertEquals(new Money("0.6"),loanSummaryEntity.getOriginalInterest());
-	   assertEquals(new Money("490.0"),loanSummaryEntity.getOriginalFees());
-	   assertEquals(new Money("0.0"),loanSummaryEntity.getOriginalPenalty());
-	}
-	
-	public void testCreateNormalLoanAccountWithMonthlyInstallments() throws NumberFormatException, InvalidUserException, PropertyNotFoundException, SystemException, ApplicationException {
-		Short dayOfMonth = (short)1;
-		MeetingBO meeting = TestObjectFactory.getMeetingHelper(2,2,4);
-		meeting.setMeetingStartDate(Calendar.getInstance());
-		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(dayOfMonth);
-		TestObjectFactory.createMeeting(meeting);
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("3"), Short.valueOf("1"), Short.valueOf("0"),
-				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
-		
-		Calendar disbursementDate = new GregorianCalendar();
-		int year = disbursementDate.get(Calendar.YEAR);
-		int month = disbursementDate.get(Calendar.MONTH);
-		int day = disbursementDate.get(0);
-		if(disbursementDate.get(Calendar.DAY_OF_MONTH) == dayOfMonth.intValue())
-			disbursementDate = new GregorianCalendar(year, month,day);
-		else
-			disbursementDate = new GregorianCalendar(year, month+1,day);
-	
-		List<FeeView> feeViewList=new ArrayList<FeeView>();
-		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee",
-				FeeCategory.LOAN, Double.valueOf("20"),FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		feeViewList.add(new FeeView(upfrontFee));
-		FeeBO disbursementFee = TestObjectFactory.createOneTimeRateFee("Disbursment Fee",
-				FeeCategory.LOAN,Double.valueOf("30"), FeeFormula.AMOUNT_AND_INTEREST,FeePayment.TIME_OF_DISBURSMENT);
-		feeViewList.add(new FeeView(disbursementFee));
-		FeeBO firstRepaymentFee = TestObjectFactory.createOneTimeRateFee("First Repayment Fee",
-				FeeCategory.LOAN,Double.valueOf("40"),FeeFormula.INTEREST, FeePayment.TIME_OF_FIRSTLOANREPAYMENT);
-		feeViewList.add(new FeeView(firstRepaymentFee));
-		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
-				FeeCategory.LOAN, "100", MeetingFrequency.MONTHLY, Short
-						.valueOf("1"));
-		feeViewList.add(new FeeView(periodicFee));
-	   accountBO=new LoanBO(TestObjectFactory.getUserContext(), loanOffering, group,
-				AccountState.getStatus(Short.valueOf("5")),	new Money("300.0"),
-				Short.valueOf("6"),disbursementDate.getTime(),false,1.2,(short) 0,
-				new Fund(),feeViewList);
-	   new TestObjectPersistence().persist(accountBO);
-	   assertEquals(6,accountBO.getAccountActionDates().size());
-	   for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
-		   if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))){
-			   assertEquals(new Money("50.0"),((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
-			   assertEquals(new Money("0.6"),((LoanScheduleEntity)accountActionDateEntity).getInterest());
-			   assertEquals(3,((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
-			   for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails()){
-				   if(accountFeesActionDetailEntity.getFee().getFeeName().equalsIgnoreCase("Upfront Fee"))
-					   assertEquals(new Money("60.0"),accountFeesActionDetailEntity.getFeeAmount());
-				   else if(accountFeesActionDetailEntity.getFee().getFeeName().equalsIgnoreCase("First Repayment Fee"))
-					   assertEquals(new Money("1.4"),accountFeesActionDetailEntity.getFeeAmount());
-				   else
-					   assertEquals(new Money("100.0"),accountFeesActionDetailEntity.getFeeAmount());
-			   }
-		   }else if(accountActionDateEntity.getInstallmentId().equals(Short.valueOf("6"))){ 
-			   assertEquals(new Money("0.6"),((LoanScheduleEntity)accountActionDateEntity).getInterest());
-			   assertEquals(new Money("48.4"),((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
-			   assertEquals(1,((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
-			   for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails()){
-				   assertEquals(new Money("200.0"),accountFeesActionDetailEntity.getFeeAmount());
-			   }
-		    }else { 
-				   assertEquals(new Money("0.6"),((LoanScheduleEntity)accountActionDateEntity).getInterest());
-				   assertEquals(new Money("50.4"),((LoanScheduleEntity)accountActionDateEntity).getPrincipal());
-				   assertEquals(1,((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails().size());
-				   for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails()){
-					   assertEquals(new Money("200.0"),accountFeesActionDetailEntity.getFeeAmount());
-				   }
-			}
-		}
-	   assertEquals(4,accountBO.getAccountFees().size());
-	   for(AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()){
-		  if(accountFeesEntity.getFees().getFeeName().equals("Upfront Fee")){
-			   assertEquals(new Money("60.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Double("20.0"),accountFeesEntity.getFeeAmount());
-		   }else if(accountFeesEntity.getFees().getFeeName().equals("Disbursment Fee")){
-			   assertEquals(new Money("91.1"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Double("30.0"),accountFeesEntity.getFeeAmount());
-		   }else if(accountFeesEntity.getFees().getFeeName().equals("First Repayment Fee")){
-			   assertEquals(new Money("1.4"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Double("40.0"),accountFeesEntity.getFeeAmount());
-		   }else{
-			   assertEquals(new Money("100.0"),accountFeesEntity.getAccountFeeAmount());
-			   assertEquals(new Double("100.0"),accountFeesEntity.getFeeAmount());
-		   }
-	   }
-	   LoanSummaryEntity loanSummaryEntity =  ((LoanBO)accountBO).getLoanSummary();
-	   assertEquals(new Money("300.0"),loanSummaryEntity.getOriginalPrincipal());
-	   assertEquals(new Money("3.6"),loanSummaryEntity.getOriginalInterest());
-	   assertEquals(new Money("1252.5"),loanSummaryEntity.getOriginalFees());
-	   assertEquals(new Money("0.0"),loanSummaryEntity.getOriginalPenalty());
+		Date newActionDate = DateUtils.getDateWithoutTimeStamp(accountBO
+				.getAccountActionDate(Short.valueOf("1")).getActionDate()
+				.getTime());
+		assertEquals(
+				"Didn't generate new repayment schedule, so first installment date should be same as before ",
+				oldActionDate, newActionDate);
 	}
 
-	public void testDisburseLoanWithAllTypeOfFees() throws NumberFormatException, InvalidUserException, PropertyNotFoundException, SystemException, ApplicationException {
-		Short dayOfMonth = (short)1;
-		MeetingBO meeting = TestObjectFactory.getMeetingHelper(2,2,4);
+	public void testCreateLoanAccountWithPrincipalDueInLastPayment()
+			throws NumberFormatException, InvalidUserException,
+			PropertyNotFoundException, SystemException, ApplicationException {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 2, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"),
+				new Date(System.currentTimeMillis()), Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
+
+		List<FeeView> feeViewList = new ArrayList<FeeView>();
+		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
+				"Periodic Fee", FeeCategory.LOAN, "100",
+				MeetingFrequency.WEEKLY, Short.valueOf("3"));
+		feeViewList.add(new FeeView(periodicFee));
+		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
+				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
+				FeeFormula.AMOUNT, FeePayment.UPFRONT);
+		feeViewList.add(new FeeView(upfrontFee));
+		FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee(
+				"Disbursment Fee", FeeCategory.LOAN, "30",
+				FeePayment.TIME_OF_DISBURSMENT);
+		feeViewList.add(new FeeView(disbursementFee));
+
+		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
+				loanOffering, group,
+				AccountState.getStatus(Short.valueOf("5")), new Money("300.0"),
+				Short.valueOf("6"), new Date(System.currentTimeMillis()),
+				false, 1.2, (short) 0, new Fund(), feeViewList);
+		new TestObjectPersistence().persist(accountBO);
+		assertEquals(6, accountBO.getAccountActionDates().size());
+		for (AccountActionDateEntity accountActionDateEntity : accountBO
+				.getAccountActionDates()) {
+			if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("6"))) {
+				assertEquals(
+						DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(
+								14 * 6).getTime()),
+						DateUtils
+								.getDateWithoutTimeStamp(((LoanScheduleEntity) accountActionDateEntity)
+										.getActionDate().getTime()));
+				assertEquals(((LoanBO) accountBO).getLoanSummary()
+						.getOriginalPrincipal(),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getPrincipal());
+				assertEquals(1, ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails().size());
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails()) {
+					assertEquals("Periodic Fee", accountFeesActionDetailEntity
+							.getFee().getFeeName());
+					assertEquals(new Money("100.0"),
+							accountFeesActionDetailEntity.getFeeAmount());
+				}
+			} else if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("2"))
+					|| accountActionDateEntity.getInstallmentId().equals(
+							Short.valueOf("5"))) {
+				assertEquals(new Money("0.0"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getPrincipal());
+				assertEquals(0, ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails().size());
+			} else if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("1"))) {
+				assertEquals(new Money("0.0"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getPrincipal());
+				assertEquals(2, ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails().size());
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails()) {
+					if (accountFeesActionDetailEntity.getFee().getFeeName()
+							.equalsIgnoreCase("Periodic Fee"))
+						assertEquals(new Money("100.0"),
+								accountFeesActionDetailEntity.getFeeAmount());
+					else
+						assertEquals(new Money("60.0"),
+								accountFeesActionDetailEntity.getFeeAmount());
+				}
+			} else {
+				assertEquals(new Money("0.0"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getPrincipal());
+				assertEquals(1, ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails().size());
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails()) {
+					assertEquals("Periodic Fee", accountFeesActionDetailEntity
+							.getFee().getFeeName());
+					assertEquals(new Money("100.0"),
+							accountFeesActionDetailEntity.getFeeAmount());
+				}
+			}
+			assertEquals(new Money("0.1"),
+					((LoanScheduleEntity) accountActionDateEntity)
+							.getInterest());
+		}
+		assertEquals(3, accountBO.getAccountFees().size());
+		for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
+			if (accountFeesEntity.getFees().getFeeName().equals("Upfront Fee")) {
+				assertEquals(new Money("60.0"), accountFeesEntity
+						.getAccountFeeAmount());
+				assertEquals(new Double("20.0"), accountFeesEntity
+						.getFeeAmount());
+			} else if (accountFeesEntity.getFees().getFeeName().equals(
+					"Disbursment Fee")) {
+				assertEquals(new Money("30.0"), accountFeesEntity
+						.getAccountFeeAmount());
+				assertEquals(new Double("30.0"), accountFeesEntity
+						.getFeeAmount());
+			} else {
+				assertEquals(new Money("100.0"), accountFeesEntity
+						.getAccountFeeAmount());
+				assertEquals(new Double("100.0"), accountFeesEntity
+						.getFeeAmount());
+			}
+		}
+		LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
+				.getLoanSummary();
+		assertEquals(new Money("300.0"), loanSummaryEntity
+				.getOriginalPrincipal());
+		assertEquals(new Money("0.6"), loanSummaryEntity.getOriginalInterest());
+		assertEquals(new Money("490.0"), loanSummaryEntity.getOriginalFees());
+		assertEquals(new Money("0.0"), loanSummaryEntity.getOriginalPenalty());
+	}
+
+	public void testCreateLoanAccountWithInterestDeductedAtDisbursment()
+			throws NumberFormatException, InvalidUserException,
+			PropertyNotFoundException, SystemException, ApplicationException {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 2, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"),
+				new Date(System.currentTimeMillis()), Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"),
+				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
+
+		List<FeeView> feeViewList = new ArrayList<FeeView>();
+		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
+				"Periodic Fee", FeeCategory.LOAN, "100",
+				MeetingFrequency.WEEKLY, Short.valueOf("3"));
+		feeViewList.add(new FeeView(periodicFee));
+		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
+				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
+				FeeFormula.AMOUNT, FeePayment.UPFRONT);
+		feeViewList.add(new FeeView(upfrontFee));
+		FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee(
+				"Disbursment Fee", FeeCategory.LOAN, "30",
+				FeePayment.TIME_OF_DISBURSMENT);
+		feeViewList.add(new FeeView(disbursementFee));
+
+		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
+				loanOffering, group,
+				AccountState.getStatus(Short.valueOf("5")), new Money("300.0"),
+				Short.valueOf("6"), new Date(System.currentTimeMillis()), true,
+				1.2, (short) 0, new Fund(), feeViewList);
+		new TestObjectPersistence().persist(accountBO);
+		assertEquals(6, accountBO.getAccountActionDates().size());
+		for (AccountActionDateEntity accountActionDateEntity : accountBO
+				.getAccountActionDates()) {
+			if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("1"))) {
+				assertEquals(
+						DateUtils.getCurrentDateWithoutTimeStamp(),
+						DateUtils
+								.getDateWithoutTimeStamp(((LoanScheduleEntity) accountActionDateEntity)
+										.getActionDate().getTime()));
+				assertEquals(new Money("0.0"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getPrincipal());
+				assertEquals(new Money("0.6"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getInterest());
+				assertEquals(3, ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails().size());
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails()) {
+					if (accountFeesActionDetailEntity.getFee().getFeeName()
+							.equalsIgnoreCase("Periodic Fee"))
+						assertEquals(new Money("100.0"),
+								accountFeesActionDetailEntity.getFeeAmount());
+					else if (accountFeesActionDetailEntity.getFee()
+							.getFeeName().equalsIgnoreCase("Disbursment Fee"))
+						assertEquals(new Money("30.0"),
+								accountFeesActionDetailEntity.getFeeAmount());
+					else
+						assertEquals(new Money("60.0"),
+								accountFeesActionDetailEntity.getFeeAmount());
+				}
+			} else if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("2"))
+					|| accountActionDateEntity.getInstallmentId().equals(
+							Short.valueOf("5"))) {
+				assertEquals(new Money("0.0"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getInterest());
+				assertEquals(new Money("60.0"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getPrincipal());
+				assertEquals(0, ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails().size());
+			} else if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("6"))) {
+				assertEquals(
+						DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(
+								14 * 5).getTime()),
+						DateUtils
+								.getDateWithoutTimeStamp(((LoanScheduleEntity) accountActionDateEntity)
+										.getActionDate().getTime()));
+				assertEquals(new Money("0.0"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getInterest());
+				assertEquals(new Money("60.0"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getPrincipal());
+				assertEquals(1, ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails().size());
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails()) {
+					assertEquals("Periodic Fee", accountFeesActionDetailEntity
+							.getFee().getFeeName());
+					assertEquals(new Money("100.0"),
+							accountFeesActionDetailEntity.getFeeAmount());
+				}
+			} else {
+				assertEquals(new Money("0.0"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getInterest());
+				assertEquals(new Money("60.0"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getPrincipal());
+				assertEquals(1, ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails().size());
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails()) {
+					assertEquals("Periodic Fee", accountFeesActionDetailEntity
+							.getFee().getFeeName());
+					assertEquals(new Money("100.0"),
+							accountFeesActionDetailEntity.getFeeAmount());
+				}
+			}
+		}
+		assertEquals(3, accountBO.getAccountFees().size());
+		for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
+			if (accountFeesEntity.getFees().getFeeName().equals("Upfront Fee")) {
+				assertEquals(new Money("60.0"), accountFeesEntity
+						.getAccountFeeAmount());
+				assertEquals(new Double("20.0"), accountFeesEntity
+						.getFeeAmount());
+			} else if (accountFeesEntity.getFees().getFeeName().equals(
+					"Disbursment Fee")) {
+				assertEquals(new Money("30.0"), accountFeesEntity
+						.getAccountFeeAmount());
+				assertEquals(new Double("30.0"), accountFeesEntity
+						.getFeeAmount());
+			} else {
+				assertEquals(new Money("100.0"), accountFeesEntity
+						.getAccountFeeAmount());
+				assertEquals(new Double("100.0"), accountFeesEntity
+						.getFeeAmount());
+			}
+		}
+		LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
+				.getLoanSummary();
+		assertEquals(new Money("300.0"), loanSummaryEntity
+				.getOriginalPrincipal());
+		assertEquals(new Money("0.6"), loanSummaryEntity.getOriginalInterest());
+		assertEquals(new Money("490.0"), loanSummaryEntity.getOriginalFees());
+		assertEquals(new Money("0.0"), loanSummaryEntity.getOriginalPenalty());
+	}
+
+	public void testCreateLoanAccountWithIDADAndPDILI()
+			throws NumberFormatException, InvalidUserException,
+			PropertyNotFoundException, SystemException, ApplicationException {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 2, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"),
+				new Date(System.currentTimeMillis()), Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
+
+		List<FeeView> feeViewList = new ArrayList<FeeView>();
+		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
+				"Periodic Fee", FeeCategory.LOAN, "100",
+				MeetingFrequency.WEEKLY, Short.valueOf("3"));
+		feeViewList.add(new FeeView(periodicFee));
+		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
+				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
+				FeeFormula.AMOUNT, FeePayment.UPFRONT);
+		feeViewList.add(new FeeView(upfrontFee));
+		FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee(
+				"Disbursment Fee", FeeCategory.LOAN, "30",
+				FeePayment.TIME_OF_DISBURSMENT);
+		feeViewList.add(new FeeView(disbursementFee));
+
+		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
+				loanOffering, group,
+				AccountState.getStatus(Short.valueOf("5")), new Money("300.0"),
+				Short.valueOf("6"), new Date(System.currentTimeMillis()), true,
+				1.2, (short) 0, new Fund(), feeViewList);
+		new TestObjectPersistence().persist(accountBO);
+		assertEquals(6, accountBO.getAccountActionDates().size());
+		for (AccountActionDateEntity accountActionDateEntity : accountBO
+				.getAccountActionDates()) {
+			if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("1"))) {
+				assertEquals(
+						DateUtils.getCurrentDateWithoutTimeStamp(),
+						DateUtils
+								.getDateWithoutTimeStamp(((LoanScheduleEntity) accountActionDateEntity)
+										.getActionDate().getTime()));
+				assertEquals(new Money("0.0"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getPrincipal());
+				assertEquals(new Money("0.6"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getInterest());
+				assertEquals(3, ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails().size());
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails()) {
+					if (accountFeesActionDetailEntity.getFee().getFeeName()
+							.equalsIgnoreCase("Periodic Fee"))
+						assertEquals(new Money("100.0"),
+								accountFeesActionDetailEntity.getFeeAmount());
+					else if (accountFeesActionDetailEntity.getFee()
+							.getFeeName().equalsIgnoreCase("Disbursment Fee"))
+						assertEquals(new Money("30.0"),
+								accountFeesActionDetailEntity.getFeeAmount());
+					else
+						assertEquals(new Money("60.0"),
+								accountFeesActionDetailEntity.getFeeAmount());
+				}
+			} else if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("2"))
+					|| accountActionDateEntity.getInstallmentId().equals(
+							Short.valueOf("5"))) {
+				assertEquals(new Money("0.0"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getInterest());
+				assertEquals(new Money("0.0"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getPrincipal());
+				assertEquals(0, ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails().size());
+			} else if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("6"))) {
+				assertEquals(
+						DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(
+								14 * 5).getTime()),
+						DateUtils
+								.getDateWithoutTimeStamp(((LoanScheduleEntity) accountActionDateEntity)
+										.getActionDate().getTime()));
+				assertEquals(new Money("0.0"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getInterest());
+				assertEquals(new Money("300.0"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getPrincipal());
+				assertEquals(1, ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails().size());
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails()) {
+					assertEquals("Periodic Fee", accountFeesActionDetailEntity
+							.getFee().getFeeName());
+					assertEquals(new Money("100.0"),
+							accountFeesActionDetailEntity.getFeeAmount());
+				}
+			} else {
+				assertEquals(new Money("0.0"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getInterest());
+				assertEquals(new Money("0.0"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getPrincipal());
+				assertEquals(1, ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails().size());
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails()) {
+					assertEquals("Periodic Fee", accountFeesActionDetailEntity
+							.getFee().getFeeName());
+					assertEquals(new Money("100.0"),
+							accountFeesActionDetailEntity.getFeeAmount());
+				}
+			}
+		}
+		assertEquals(3, accountBO.getAccountFees().size());
+		for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
+			if (accountFeesEntity.getFees().getFeeName().equals("Upfront Fee")) {
+				assertEquals(new Money("60.0"), accountFeesEntity
+						.getAccountFeeAmount());
+				assertEquals(new Double("20.0"), accountFeesEntity
+						.getFeeAmount());
+			} else if (accountFeesEntity.getFees().getFeeName().equals(
+					"Disbursment Fee")) {
+				assertEquals(new Money("30.0"), accountFeesEntity
+						.getAccountFeeAmount());
+				assertEquals(new Double("30.0"), accountFeesEntity
+						.getFeeAmount());
+			} else {
+				assertEquals(new Money("100.0"), accountFeesEntity
+						.getAccountFeeAmount());
+				assertEquals(new Double("100.0"), accountFeesEntity
+						.getFeeAmount());
+			}
+		}
+		LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
+				.getLoanSummary();
+		assertEquals(new Money("300.0"), loanSummaryEntity
+				.getOriginalPrincipal());
+		assertEquals(new Money("0.6"), loanSummaryEntity.getOriginalInterest());
+		assertEquals(new Money("490.0"), loanSummaryEntity.getOriginalFees());
+		assertEquals(new Money("0.0"), loanSummaryEntity.getOriginalPenalty());
+	}
+
+	public void testCreateNormalLoanAccount() throws NumberFormatException,
+			InvalidUserException, PropertyNotFoundException, SystemException,
+			ApplicationException {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 2, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"),
+				new Date(System.currentTimeMillis()), Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"),
+				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
+
+		List<FeeView> feeViewList = new ArrayList<FeeView>();
+		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
+				"Periodic Fee", FeeCategory.LOAN, "100",
+				MeetingFrequency.WEEKLY, Short.valueOf("3"));
+		feeViewList.add(new FeeView(periodicFee));
+		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
+				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
+				FeeFormula.AMOUNT, FeePayment.UPFRONT);
+		feeViewList.add(new FeeView(upfrontFee));
+		FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee(
+				"Disbursment Fee", FeeCategory.LOAN, "30",
+				FeePayment.TIME_OF_DISBURSMENT);
+		feeViewList.add(new FeeView(disbursementFee));
+
+		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
+				loanOffering, group,
+				AccountState.getStatus(Short.valueOf("5")), new Money("300.0"),
+				Short.valueOf("6"), new Date(System.currentTimeMillis()),
+				false, 1.2, (short) 0, new Fund(), feeViewList);
+		new TestObjectPersistence().persist(accountBO);
+		assertEquals(6, accountBO.getAccountActionDates().size());
+		for (AccountActionDateEntity accountActionDateEntity : accountBO
+				.getAccountActionDates()) {
+			if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("1"))) {
+				assertEquals(
+						DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(
+								14).getTime()),
+						DateUtils
+								.getDateWithoutTimeStamp(((LoanScheduleEntity) accountActionDateEntity)
+										.getActionDate().getTime()));
+				assertEquals(new Money("50.9"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getPrincipal());
+				assertEquals(new Money("0.1"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getInterest());
+				assertEquals(2, ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails().size());
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails()) {
+					if (accountFeesActionDetailEntity.getFee().getFeeName()
+							.equalsIgnoreCase("Periodic Fee"))
+						assertEquals(new Money("100.0"),
+								accountFeesActionDetailEntity.getFeeAmount());
+					else
+						assertEquals(new Money("60.0"),
+								accountFeesActionDetailEntity.getFeeAmount());
+				}
+			} else if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("2"))
+					|| accountActionDateEntity.getInstallmentId().equals(
+							Short.valueOf("5"))) {
+				assertEquals(new Money("0.1"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getInterest());
+				assertEquals(new Money("50.9"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getPrincipal());
+				assertEquals(0, ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails().size());
+			} else if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("3"))
+					|| accountActionDateEntity.getInstallmentId().equals(
+							Short.valueOf("4"))) {
+				assertEquals(new Money("0.1"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getInterest());
+				assertEquals(new Money("50.9"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getPrincipal());
+				assertEquals(1, ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails().size());
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails()) {
+					assertEquals("Periodic Fee", accountFeesActionDetailEntity
+							.getFee().getFeeName());
+					assertEquals(new Money("100.0"),
+							accountFeesActionDetailEntity.getFeeAmount());
+				}
+			} else if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("6"))) {
+				assertEquals(
+						DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(
+								14 * 6).getTime()),
+						DateUtils
+								.getDateWithoutTimeStamp(((LoanScheduleEntity) accountActionDateEntity)
+										.getActionDate().getTime()));
+				assertEquals(new Money("0.1"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getInterest());
+				assertEquals(new Money("45.5"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getPrincipal());
+				assertEquals(1, ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails().size());
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails()) {
+					assertEquals("Periodic Fee", accountFeesActionDetailEntity
+							.getFee().getFeeName());
+					assertEquals(new Money("100.0"),
+							accountFeesActionDetailEntity.getFeeAmount());
+				}
+			}
+		}
+		assertEquals(3, accountBO.getAccountFees().size());
+		for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
+			if (accountFeesEntity.getFees().getFeeName().equals("Upfront Fee")) {
+				assertEquals(new Money("60.0"), accountFeesEntity
+						.getAccountFeeAmount());
+				assertEquals(new Double("20.0"), accountFeesEntity
+						.getFeeAmount());
+			} else if (accountFeesEntity.getFees().getFeeName().equals(
+					"Disbursment Fee")) {
+				assertEquals(new Money("30.0"), accountFeesEntity
+						.getAccountFeeAmount());
+				assertEquals(new Double("30.0"), accountFeesEntity
+						.getFeeAmount());
+			} else {
+				assertEquals(new Money("100.0"), accountFeesEntity
+						.getAccountFeeAmount());
+				assertEquals(new Double("100.0"), accountFeesEntity
+						.getFeeAmount());
+			}
+		}
+		LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
+				.getLoanSummary();
+		assertEquals(new Money("300.0"), loanSummaryEntity
+				.getOriginalPrincipal());
+		assertEquals(new Money("0.6"), loanSummaryEntity.getOriginalInterest());
+		assertEquals(new Money("490.0"), loanSummaryEntity.getOriginalFees());
+		assertEquals(new Money("0.0"), loanSummaryEntity.getOriginalPenalty());
+	}
+
+	public void testCreateNormalLoanAccountWithPricipalOnlyGrace()
+			throws NumberFormatException, InvalidUserException,
+			PropertyNotFoundException, SystemException, ApplicationException {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 2, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"),
+				new Date(System.currentTimeMillis()), Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("3"), Short.valueOf("1"), Short.valueOf("0"),
+				Short.valueOf("1"), center.getCustomerMeeting().getMeeting(),
+				Short.valueOf("3"));
+
+		List<FeeView> feeViewList = new ArrayList<FeeView>();
+		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
+				"Periodic Fee", FeeCategory.LOAN, "100",
+				MeetingFrequency.WEEKLY, Short.valueOf("3"));
+		feeViewList.add(new FeeView(periodicFee));
+		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
+				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
+				FeeFormula.AMOUNT, FeePayment.UPFRONT);
+		feeViewList.add(new FeeView(upfrontFee));
+		FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee(
+				"Disbursment Fee", FeeCategory.LOAN, "30",
+				FeePayment.TIME_OF_DISBURSMENT);
+		feeViewList.add(new FeeView(disbursementFee));
+
+		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
+				loanOffering, group,
+				AccountState.getStatus(Short.valueOf("5")), new Money("300.0"),
+				Short.valueOf("6"), new Date(System.currentTimeMillis()),
+				false, 1.2, (short) 1, new Fund(), feeViewList);
+		new TestObjectPersistence().persist(accountBO);
+		assertEquals(6, accountBO.getAccountActionDates().size());
+		for (AccountActionDateEntity accountActionDateEntity : accountBO
+				.getAccountActionDates()) {
+			if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("1"))) {
+				assertEquals(
+						DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(
+								14 * 2).getTime()),
+						DateUtils
+								.getDateWithoutTimeStamp(((LoanScheduleEntity) accountActionDateEntity)
+										.getActionDate().getTime()));
+				assertEquals(new Money("0.0"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getPrincipal());
+				assertEquals(new Money("0.1"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getInterest());
+				assertEquals(2, ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails().size());
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails()) {
+					if (accountFeesActionDetailEntity.getFee().getFeeName()
+							.equalsIgnoreCase("Periodic Fee"))
+						assertEquals(new Money("100.0"),
+								accountFeesActionDetailEntity.getFeeAmount());
+					else
+						assertEquals(new Money("60.0"),
+								accountFeesActionDetailEntity.getFeeAmount());
+				}
+			} else if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("2"))
+					|| accountActionDateEntity.getInstallmentId().equals(
+							Short.valueOf("5"))) {
+				assertEquals(new Money("0.1"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getInterest());
+				assertEquals(new Money("60.0"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getPrincipal());
+				assertEquals(0, ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails().size());
+			} else if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("3"))
+					|| accountActionDateEntity.getInstallmentId().equals(
+							Short.valueOf("4"))) {
+				assertEquals(new Money("0.1"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getInterest());
+				assertEquals(new Money("60.0"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getPrincipal());
+				assertEquals(1, ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails().size());
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails()) {
+					assertEquals("Periodic Fee", accountFeesActionDetailEntity
+							.getFee().getFeeName());
+					assertEquals(new Money("100.0"),
+							accountFeesActionDetailEntity.getFeeAmount());
+				}
+			} else if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("6"))) {
+				assertEquals(
+						DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(
+								14 * 7).getTime()),
+						DateUtils
+								.getDateWithoutTimeStamp(((LoanScheduleEntity) accountActionDateEntity)
+										.getActionDate().getTime()));
+				assertEquals(new Money("0.1"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getInterest());
+				assertEquals(new Money("60.0"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getPrincipal());
+				assertEquals(1, ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails().size());
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails()) {
+					assertEquals("Periodic Fee", accountFeesActionDetailEntity
+							.getFee().getFeeName());
+					assertEquals(new Money("100.0"),
+							accountFeesActionDetailEntity.getFeeAmount());
+				}
+			}
+		}
+		assertEquals(3, accountBO.getAccountFees().size());
+		for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
+			if (accountFeesEntity.getFees().getFeeName().equals("Upfront Fee")) {
+				assertEquals(new Money("60.0"), accountFeesEntity
+						.getAccountFeeAmount());
+				assertEquals(new Double("20.0"), accountFeesEntity
+						.getFeeAmount());
+			} else if (accountFeesEntity.getFees().getFeeName().equals(
+					"Disbursment Fee")) {
+				assertEquals(new Money("30.0"), accountFeesEntity
+						.getAccountFeeAmount());
+				assertEquals(new Double("30.0"), accountFeesEntity
+						.getFeeAmount());
+			} else {
+				assertEquals(new Money("100.0"), accountFeesEntity
+						.getAccountFeeAmount());
+				assertEquals(new Double("100.0"), accountFeesEntity
+						.getFeeAmount());
+			}
+		}
+		LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
+				.getLoanSummary();
+		assertEquals(new Money("300.0"), loanSummaryEntity
+				.getOriginalPrincipal());
+		assertEquals(new Money("0.6"), loanSummaryEntity.getOriginalInterest());
+		assertEquals(new Money("490.0"), loanSummaryEntity.getOriginalFees());
+		assertEquals(new Money("0.0"), loanSummaryEntity.getOriginalPenalty());
+	}
+
+	public void testCreateNormalLoanAccountWithMonthlyInstallments()
+			throws NumberFormatException, InvalidUserException,
+			PropertyNotFoundException, SystemException, ApplicationException {
+		Short dayOfMonth = (short) 1;
+		MeetingBO meeting = TestObjectFactory.getMeetingHelper(2, 2, 4);
 		meeting.setMeetingStartDate(Calendar.getInstance());
-		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(dayOfMonth);
+		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(
+				dayOfMonth);
 		TestObjectFactory.createMeeting(meeting);
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
@@ -3009,59 +3401,213 @@ public class TestLoanBO extends MifosTestCase {
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("3"), Short.valueOf("1"), Short.valueOf("0"),
 				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
-		
+
 		Calendar disbursementDate = new GregorianCalendar();
 		int year = disbursementDate.get(Calendar.YEAR);
 		int month = disbursementDate.get(Calendar.MONTH);
 		int day = disbursementDate.get(0);
-		if(disbursementDate.get(Calendar.DAY_OF_MONTH) == dayOfMonth.intValue())
-			disbursementDate = new GregorianCalendar(year, month,day);
+		if (disbursementDate.get(Calendar.DAY_OF_MONTH) == dayOfMonth
+				.intValue())
+			disbursementDate = new GregorianCalendar(year, month, day);
 		else
-			disbursementDate = new GregorianCalendar(year, month+1,day);
-	
-		List<FeeView> feeViewList=new ArrayList<FeeView>();
-		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee",
-				FeeCategory.LOAN, Double.valueOf("20"),FeeFormula.AMOUNT, FeePayment.UPFRONT);
+			disbursementDate = new GregorianCalendar(year, month + 1, day);
+
+		List<FeeView> feeViewList = new ArrayList<FeeView>();
+		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
+				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
+				FeeFormula.AMOUNT, FeePayment.UPFRONT);
 		feeViewList.add(new FeeView(upfrontFee));
-		FeeBO disbursementFee = TestObjectFactory.createOneTimeRateFee("Disbursment Fee",
-				FeeCategory.LOAN,Double.valueOf("30"), FeeFormula.AMOUNT_AND_INTEREST,FeePayment.TIME_OF_DISBURSMENT);
+		FeeBO disbursementFee = TestObjectFactory.createOneTimeRateFee(
+				"Disbursment Fee", FeeCategory.LOAN, Double.valueOf("30"),
+				FeeFormula.AMOUNT_AND_INTEREST, FeePayment.TIME_OF_DISBURSMENT);
 		feeViewList.add(new FeeView(disbursementFee));
-		FeeBO firstRepaymentFee = TestObjectFactory.createOneTimeRateFee("First Repayment Fee",
-				FeeCategory.LOAN,Double.valueOf("40"),FeeFormula.INTEREST, FeePayment.TIME_OF_FIRSTLOANREPAYMENT);
+		FeeBO firstRepaymentFee = TestObjectFactory.createOneTimeRateFee(
+				"First Repayment Fee", FeeCategory.LOAN, Double.valueOf("40"),
+				FeeFormula.INTEREST, FeePayment.TIME_OF_FIRSTLOANREPAYMENT);
 		feeViewList.add(new FeeView(firstRepaymentFee));
-		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
-				FeeCategory.LOAN, "100", MeetingFrequency.MONTHLY, Short
-						.valueOf("1"));
+		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
+				"Periodic Fee", FeeCategory.LOAN, "100",
+				MeetingFrequency.MONTHLY, Short.valueOf("1"));
 		feeViewList.add(new FeeView(periodicFee));
-	    accountBO=new LoanBO(TestObjectFactory.getUserContext(), loanOffering, group,
-				AccountState.getStatus(Short.valueOf("5")),	new Money("300.0"),
-				Short.valueOf("6"),disbursementDate.getTime(),false,1.2,(short) 0,
-				new Fund(),feeViewList);
-	    new TestObjectPersistence().persist(accountBO);
-	    
-	    disbursementDate = new GregorianCalendar();
+		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
+				loanOffering, group,
+				AccountState.getStatus(Short.valueOf("5")), new Money("300.0"),
+				Short.valueOf("6"), disbursementDate.getTime(), false, 1.2,
+				(short) 0, new Fund(), feeViewList);
+		new TestObjectPersistence().persist(accountBO);
+		assertEquals(6, accountBO.getAccountActionDates().size());
+		for (AccountActionDateEntity accountActionDateEntity : accountBO
+				.getAccountActionDates()) {
+			if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("1"))) {
+				assertEquals(new Money("50.0"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getPrincipal());
+				assertEquals(new Money("0.6"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getInterest());
+				assertEquals(3, ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails().size());
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails()) {
+					if (accountFeesActionDetailEntity.getFee().getFeeName()
+							.equalsIgnoreCase("Upfront Fee"))
+						assertEquals(new Money("60.0"),
+								accountFeesActionDetailEntity.getFeeAmount());
+					else if (accountFeesActionDetailEntity.getFee()
+							.getFeeName().equalsIgnoreCase(
+									"First Repayment Fee"))
+						assertEquals(new Money("1.4"),
+								accountFeesActionDetailEntity.getFeeAmount());
+					else
+						assertEquals(new Money("100.0"),
+								accountFeesActionDetailEntity.getFeeAmount());
+				}
+			} else if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("6"))) {
+				assertEquals(new Money("0.6"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getInterest());
+				assertEquals(new Money("48.4"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getPrincipal());
+				assertEquals(1, ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails().size());
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails()) {
+					assertEquals(new Money("200.0"),
+							accountFeesActionDetailEntity.getFeeAmount());
+				}
+			} else {
+				assertEquals(new Money("0.6"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getInterest());
+				assertEquals(new Money("50.4"),
+						((LoanScheduleEntity) accountActionDateEntity)
+								.getPrincipal());
+				assertEquals(1, ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails().size());
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
+						.getAccountFeesActionDetails()) {
+					assertEquals(new Money("200.0"),
+							accountFeesActionDetailEntity.getFeeAmount());
+				}
+			}
+		}
+		assertEquals(4, accountBO.getAccountFees().size());
+		for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
+			if (accountFeesEntity.getFees().getFeeName().equals("Upfront Fee")) {
+				assertEquals(new Money("60.0"), accountFeesEntity
+						.getAccountFeeAmount());
+				assertEquals(new Double("20.0"), accountFeesEntity
+						.getFeeAmount());
+			} else if (accountFeesEntity.getFees().getFeeName().equals(
+					"Disbursment Fee")) {
+				assertEquals(new Money("91.1"), accountFeesEntity
+						.getAccountFeeAmount());
+				assertEquals(new Double("30.0"), accountFeesEntity
+						.getFeeAmount());
+			} else if (accountFeesEntity.getFees().getFeeName().equals(
+					"First Repayment Fee")) {
+				assertEquals(new Money("1.4"), accountFeesEntity
+						.getAccountFeeAmount());
+				assertEquals(new Double("40.0"), accountFeesEntity
+						.getFeeAmount());
+			} else {
+				assertEquals(new Money("100.0"), accountFeesEntity
+						.getAccountFeeAmount());
+				assertEquals(new Double("100.0"), accountFeesEntity
+						.getFeeAmount());
+			}
+		}
+		LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
+				.getLoanSummary();
+		assertEquals(new Money("300.0"), loanSummaryEntity
+				.getOriginalPrincipal());
+		assertEquals(new Money("3.6"), loanSummaryEntity.getOriginalInterest());
+		assertEquals(new Money("1252.5"), loanSummaryEntity.getOriginalFees());
+		assertEquals(new Money("0.0"), loanSummaryEntity.getOriginalPenalty());
+	}
+
+	public void testDisburseLoanWithAllTypeOfFees()
+			throws NumberFormatException, InvalidUserException,
+			PropertyNotFoundException, SystemException, ApplicationException {
+		Short dayOfMonth = (short) 1;
+		MeetingBO meeting = TestObjectFactory.getMeetingHelper(2, 2, 4);
+		meeting.setMeetingStartDate(Calendar.getInstance());
+		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(
+				dayOfMonth);
+		TestObjectFactory.createMeeting(meeting);
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"),
+				new Date(System.currentTimeMillis()), Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("3"), Short.valueOf("1"), Short.valueOf("0"),
+				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
+
+		Calendar disbursementDate = new GregorianCalendar();
+		int year = disbursementDate.get(Calendar.YEAR);
+		int month = disbursementDate.get(Calendar.MONTH);
+		int day = disbursementDate.get(0);
+		if (disbursementDate.get(Calendar.DAY_OF_MONTH) == dayOfMonth
+				.intValue())
+			disbursementDate = new GregorianCalendar(year, month, day);
+		else
+			disbursementDate = new GregorianCalendar(year, month + 1, day);
+
+		List<FeeView> feeViewList = new ArrayList<FeeView>();
+		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
+				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
+				FeeFormula.AMOUNT, FeePayment.UPFRONT);
+		feeViewList.add(new FeeView(upfrontFee));
+		FeeBO disbursementFee = TestObjectFactory.createOneTimeRateFee(
+				"Disbursment Fee", FeeCategory.LOAN, Double.valueOf("30"),
+				FeeFormula.AMOUNT_AND_INTEREST, FeePayment.TIME_OF_DISBURSMENT);
+		feeViewList.add(new FeeView(disbursementFee));
+		FeeBO firstRepaymentFee = TestObjectFactory.createOneTimeRateFee(
+				"First Repayment Fee", FeeCategory.LOAN, Double.valueOf("40"),
+				FeeFormula.INTEREST, FeePayment.TIME_OF_FIRSTLOANREPAYMENT);
+		feeViewList.add(new FeeView(firstRepaymentFee));
+		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
+				"Periodic Fee", FeeCategory.LOAN, "100",
+				MeetingFrequency.MONTHLY, Short.valueOf("1"));
+		feeViewList.add(new FeeView(periodicFee));
+		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
+				loanOffering, group,
+				AccountState.getStatus(Short.valueOf("5")), new Money("300.0"),
+				Short.valueOf("6"), disbursementDate.getTime(), false, 1.2,
+				(short) 0, new Fund(), feeViewList);
+		new TestObjectPersistence().persist(accountBO);
+
+		disbursementDate = new GregorianCalendar();
 		year = disbursementDate.get(Calendar.YEAR);
 		month = disbursementDate.get(Calendar.MONTH);
 		day = disbursementDate.get(0);
-		if(disbursementDate.get(Calendar.DAY_OF_MONTH) == dayOfMonth.intValue())
-			disbursementDate = new GregorianCalendar(year, month+2,day);
+		if (disbursementDate.get(Calendar.DAY_OF_MONTH) == dayOfMonth
+				.intValue())
+			disbursementDate = new GregorianCalendar(year, month + 2, day);
 		else
-			disbursementDate = new GregorianCalendar(year, month+3,day);
-	    ((LoanBO) accountBO).disburseLoan("1234", disbursementDate.getTime(),
-				Short.valueOf("1"), accountBO.getPersonnel(), disbursementDate.getTime(), Short
-						.valueOf("1"));
+			disbursementDate = new GregorianCalendar(year, month + 3, day);
+		((LoanBO) accountBO).disburseLoan("1234", disbursementDate.getTime(),
+				Short.valueOf("1"), accountBO.getPersonnel(), disbursementDate
+						.getTime(), Short.valueOf("1"));
 		Session session = HibernateUtil.getSessionTL();
 		HibernateUtil.startTransaction();
 		session.save(accountBO);
 		HibernateUtil.getTransaction().commit();
 	}
-	
+
 	public void testUpdateLoanFailure() {
-		accountBO = getLoanAccount();	
-		accountBO.setAccountState(new AccountStateEntity(AccountState.LOANACC_PENDINGAPPROVAL));
-		((LoanBO)accountBO).setDisbursementDate(offSetCurrentDate(15));
-		try{
-			((LoanBO)accountBO).updateLoan();
+		accountBO = getLoanAccount();
+		accountBO.setAccountState(new AccountStateEntity(
+				AccountState.LOANACC_PENDINGAPPROVAL));
+		((LoanBO) accountBO).setDisbursementDate(offSetCurrentDate(15));
+		try {
+			((LoanBO) accountBO).updateLoan();
 			assertFalse(
 					"The Loan object is created for invalid disbursement date",
 					true);
@@ -3071,12 +3617,12 @@ public class TestLoanBO extends MifosTestCase {
 					true);
 		}
 	}
-	
+
 	public void testUpdateLoanSuccess() {
 		accountBO = getLoanAccount();
-		((LoanBO)accountBO).setCollateralNote("Loan account updated");
-		try{
-			((LoanBO)accountBO).updateLoan();
+		((LoanBO) accountBO).setCollateralNote("Loan account updated");
+		try {
+			((LoanBO) accountBO).updateLoan();
 			assertTrue(
 					"The Loan object is created for valid disbursement date",
 					true);
@@ -3085,64 +3631,82 @@ public class TestLoanBO extends MifosTestCase {
 					"The Loan object is created for valid disbursement date",
 					true);
 		}
-	}	
+	}
 
-	public void testApplyTimeOfFirstRepaymentFee() throws Exception{
+	public void testApplyTimeOfFirstRepaymentFee() throws Exception {
 		accountBO = getLoanAccount();
-		Money intialTotalFeeAmount=((LoanBO)accountBO).getLoanSummary().getOriginalFees();
+		Money intialTotalFeeAmount = ((LoanBO) accountBO).getLoanSummary()
+				.getOriginalFees();
 		TestObjectFactory.flushandCloseSession();
-		FeeBO oneTimeFee = TestObjectFactory.createOneTimeRateFee("Onetime Fee",
-				FeeCategory.LOAN, new Double("0.09"),FeeFormula.AMOUNT,FeePayment.TIME_OF_FIRSTLOANREPAYMENT);
-		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
+		FeeBO oneTimeFee = TestObjectFactory.createOneTimeRateFee(
+				"Onetime Fee", FeeCategory.LOAN, new Double("0.09"),
+				FeeFormula.AMOUNT, FeePayment.TIME_OF_FIRSTLOANREPAYMENT);
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
 		UserContext uc = TestObjectFactory.getUserContext();
 		accountBO.setUserContext(uc);
-		accountBO.applyCharge(oneTimeFee.getFeeId(),((RateFeeBO)oneTimeFee).getRate());
+		accountBO.applyCharge(oneTimeFee.getFeeId(), ((RateFeeBO) oneTimeFee)
+				.getRate());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
-		for(AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()){
-			LoanScheduleEntity loanScheduleEntity=(LoanScheduleEntity)accountActionDateEntity;
-			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("2"))){
-				assertEquals(2,loanScheduleEntity.getAccountFeesActionDetails().size());
-				for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : loanScheduleEntity.getAccountFeesActionDetails()){
-					if(accountFeesActionDetailEntity.getFee().getFeeName().equals("Onetime Fee"))
-						assertEquals(new Money("0.3"),accountFeesActionDetailEntity.getFeeAmount());
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+		for (AccountActionDateEntity accountActionDateEntity : accountBO
+				.getAccountActionDates()) {
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
+			if (loanScheduleEntity.getInstallmentId()
+					.equals(Short.valueOf("2"))) {
+				assertEquals(2, loanScheduleEntity
+						.getAccountFeesActionDetails().size());
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : loanScheduleEntity
+						.getAccountFeesActionDetails()) {
+					if (accountFeesActionDetailEntity.getFee().getFeeName()
+							.equals("Onetime Fee"))
+						assertEquals(new Money("0.3"),
+								accountFeesActionDetailEntity.getFeeAmount());
 				}
 			}
 		}
-		assertEquals(intialTotalFeeAmount.add(new Money("0.3")),((LoanBO)accountBO).getLoanSummary().getOriginalFees());
-		LoanActivityEntity loanActivityEntity=((LoanActivityEntity)(((LoanBO)accountBO).getLoanActivityDetails().toArray())[0]);
-		assertEquals(oneTimeFee.getFeeName()+" applied",loanActivityEntity.getComments());
-		assertEquals(((LoanBO)accountBO).getLoanSummary().getOriginalFees(),loanActivityEntity.getFeeOutstanding());
-		AccountFeesEntity accountFeesEntity=accountBO.getAccountFees(oneTimeFee.getFeeId());
-		assertEquals(FeeStatus.ACTIVE.getValue(),accountFeesEntity.getFeeStatus());
+		assertEquals(intialTotalFeeAmount.add(new Money("0.3")),
+				((LoanBO) accountBO).getLoanSummary().getOriginalFees());
+		LoanActivityEntity loanActivityEntity = ((LoanActivityEntity) (((LoanBO) accountBO)
+				.getLoanActivityDetails().toArray())[0]);
+		assertEquals(oneTimeFee.getFeeName() + " applied", loanActivityEntity
+				.getComments());
+		assertEquals(((LoanBO) accountBO).getLoanSummary().getOriginalFees(),
+				loanActivityEntity.getFeeOutstanding());
+		AccountFeesEntity accountFeesEntity = accountBO
+				.getAccountFees(oneTimeFee.getFeeId());
+		assertEquals(FeeStatus.ACTIVE.getValue(), accountFeesEntity
+				.getFeeStatus());
 	}
-	
+
 	public void testApplyPaymentForFullPayment() throws Exception {
 		accountBO = getLoanAccount();
-		assertEquals(new Money("212.0"),((LoanBO) accountBO).getTotalPaymentDue());
+		assertEquals(new Money("212.0"), ((LoanBO) accountBO)
+				.getTotalPaymentDue());
 		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
 				null, new Money("212"), accountBO.getCustomer(), accountBO
 						.getPersonnel(), "432423", (short) 1, new Date(System
 						.currentTimeMillis()), new Date(System
 						.currentTimeMillis())));
 		accountBO = saveAndFetch(accountBO);
-		assertEquals(new Money(),((LoanBO) accountBO).getTotalPaymentDue());
+		assertEquals(new Money(), ((LoanBO) accountBO).getTotalPaymentDue());
 	}
-	
+
 	public void testApplyPaymentForPartialPayment() throws Exception {
 		accountBO = getLoanAccount();
-		assertEquals(new Money("212.0"),((LoanBO) accountBO).getTotalPaymentDue());
+		assertEquals(new Money("212.0"), ((LoanBO) accountBO)
+				.getTotalPaymentDue());
 		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
 				null, new Money("200"), accountBO.getCustomer(), accountBO
 						.getPersonnel(), "432423", (short) 1, new Date(System
 						.currentTimeMillis()), new Date(System
 						.currentTimeMillis())));
 		accountBO = saveAndFetch(accountBO);
-		assertEquals(new Money("12"),((LoanBO) accountBO).getTotalPaymentDue());
+		assertEquals(new Money("12"), ((LoanBO) accountBO).getTotalPaymentDue());
 	}
-	
-	
+
 	public void testApplyPaymentForFuturePayment() throws Exception {
 		accountBO = getLoanAccount();
 
@@ -3159,10 +3723,11 @@ public class TestLoanBO extends MifosTestCase {
 						.currentTimeMillis())));
 		accountBO = saveAndFetch(accountBO);
 		assertEquals(new Money(), ((LoanBO) accountBO).getTotalPaymentDue());
-		nextInstallment =(LoanScheduleEntity) accountBO.getAccountActionDate(nextInstallment.getInstallmentId());
+		nextInstallment = (LoanScheduleEntity) accountBO
+				.getAccountActionDate(nextInstallment.getInstallmentId());
 		assertEquals(new Money("112.0"), nextInstallment.getTotalDueWithFees());
 	}
-	
+
 	public void testApplyPaymentForCompletePayment() throws Exception {
 		accountBO = getLoanAccount();
 
@@ -3179,12 +3744,14 @@ public class TestLoanBO extends MifosTestCase {
 						.currentTimeMillis())));
 		accountBO = saveAndFetch(accountBO);
 		assertEquals(new Money(), ((LoanBO) accountBO).getTotalPaymentDue());
-		nextInstallment =(LoanScheduleEntity) accountBO.getAccountActionDate(nextInstallment.getInstallmentId());
+		nextInstallment = (LoanScheduleEntity) accountBO
+				.getAccountActionDate(nextInstallment.getInstallmentId());
 		assertEquals(new Money(), nextInstallment.getTotalDueWithFees());
-		assertEquals(AccountState.LOANACC_OBLIGATIONSMET,accountBO.getState());
+		assertEquals(AccountState.LOANACC_OBLIGATIONSMET, accountBO.getState());
 	}
-	
-	public void testApplyPaymentForPaymentGretaterThanTotalDue() throws Exception  {
+
+	public void testApplyPaymentForPaymentGretaterThanTotalDue()
+			throws Exception {
 		accountBO = getLoanAccount();
 
 		accountBO = saveAndFetch(accountBO);
@@ -3196,15 +3763,15 @@ public class TestLoanBO extends MifosTestCase {
 		try {
 			accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
 					null, new Money("1300"), accountBO.getCustomer(), accountBO
-							.getPersonnel(), "432423", (short) 1, new Date(System
-							.currentTimeMillis()), new Date(System
+							.getPersonnel(), "432423", (short) 1, new Date(
+							System.currentTimeMillis()), new Date(System
 							.currentTimeMillis())));
 			assertFalse(true);
 		} catch (AccountException e) {
 			assertTrue(true);
 		}
 	}
-	
+
 	public void testFeeForMultiplePayments() throws Exception {
 		accountBO = getLoanAccount();
 
@@ -3233,8 +3800,9 @@ public class TestLoanBO extends MifosTestCase {
 				.getDetailsOfNextInstallment();
 		assertEquals(new Money("60"), nextInstallment.getTotalFeeDue());
 	}
-	
-	public void testFeeForMultiplePaymentsIncludingCompletePayment() throws Exception  {
+
+	public void testFeeForMultiplePaymentsIncludingCompletePayment()
+			throws Exception {
 		accountBO = getLoanAccount();
 
 		accountBO = saveAndFetch(accountBO);
@@ -3263,9 +3831,9 @@ public class TestLoanBO extends MifosTestCase {
 		nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO)
 				.getDetailsOfNextInstallment();
 		assertEquals(new Money(), nextInstallment.getTotalFeeDue());
-		
+
 	}
-	
+
 	private LoanBO createAndRetrieveLoanAccount(LoanOfferingBO loanOffering,
 			boolean isInterestDedAtDisb, List<FeeView> feeViews,
 			Short noOfinstallments, Double interestRate)
@@ -3284,7 +3852,7 @@ public class TestLoanBO extends MifosTestCase {
 				loan.getAccountId());
 		return (LoanBO) accountBO;
 	}
-	
+
 	private LoanBO createAndRetrieveLoanAccount(LoanOfferingBO loanOffering,
 			boolean isInterestDedAtDisb, List<FeeView> feeViews,
 			Short noOfinstallments) throws NumberFormatException,
@@ -3295,19 +3863,21 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	private LoanOfferingBO createLoanOffering(boolean isPrincipalAtLastInst) {
-		return createLoanOffering(isPrincipalAtLastInst,PrdStatus.LOANACTIVE.getValue());
+		return createLoanOffering(isPrincipalAtLastInst, PrdStatus.LOANACTIVE
+				.getValue());
 	}
-	
-	private LoanOfferingBO createLoanOffering(boolean isPrincipalAtLastInst,Short statusId) {
+
+	private LoanOfferingBO createLoanOffering(boolean isPrincipalAtLastInst,
+			Short statusId) {
 		Short principalAtLastInst = isPrincipalAtLastInst ? (short) 1
 				: (short) 0;
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		return TestObjectFactory.createLoanOffering("Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), statusId,
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), principalAtLastInst,
-				Short.valueOf("1"), meeting);
+				new Date(System.currentTimeMillis()), statusId, 300.0, 1.2,
+				Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), principalAtLastInst, Short.valueOf("1"),
+				meeting);
 	}
 
 	private List<FeeView> getFeeViews() {
@@ -3333,6 +3903,7 @@ public class TestLoanBO extends MifosTestCase {
 		}
 
 	}
+
 	private AccountBO getLoanAccount() {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
@@ -3345,7 +3916,7 @@ public class TestLoanBO extends MifosTestCase {
 				.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);
 	}
-	
+
 	private void createInitialCustomers() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -3354,7 +3925,7 @@ public class TestLoanBO extends MifosTestCase {
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
 	}
-	
+
 	private void changeFirstInstallmentDateToNextDate(AccountBO accountBO) {
 		Calendar currentDateCalendar = new GregorianCalendar();
 		int year = currentDateCalendar.get(Calendar.YEAR);
@@ -3368,7 +3939,7 @@ public class TestLoanBO extends MifosTestCase {
 			break;
 		}
 	}
-	
+
 	private AccountBO applyPaymentandRetrieveAccount() throws AccountException,
 			SystemException {
 		Date startDate = new Date(System.currentTimeMillis());
@@ -3377,7 +3948,7 @@ public class TestLoanBO extends MifosTestCase {
 				accountBO.getPersonnel(), Short.valueOf("1"), startDate);
 		paymentData.setRecieptDate(startDate);
 		paymentData.setRecieptNum("5435345");
-	
+
 		accountBO.applyPayment(paymentData);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.getSessionTL().flush();
@@ -3442,7 +4013,7 @@ public class TestLoanBO extends MifosTestCase {
 		client = TestObjectFactory.createClient("Client",
 				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
 						System.currentTimeMillis()));
-		((ClientBO)client).getPerformanceHistory().setLoanCycleNumber(1);
+		((ClientBO) client).getPerformanceHistory().setLoanCycleNumber(1);
 		TestObjectFactory.updateObject(client);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),
@@ -3473,7 +4044,7 @@ public class TestLoanBO extends MifosTestCase {
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), meeting);
-		((ClientBO)client).getPerformanceHistory().setLoanCycleNumber(1);
+		((ClientBO) client).getPerformanceHistory().setLoanCycleNumber(1);
 		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", client, accountSate, startDate, loanOffering,
 				disbursalType);
@@ -3517,7 +4088,7 @@ public class TestLoanBO extends MifosTestCase {
 		}
 		return nextAccountAction;
 	}
-	
+
 	private void changeFirstInstallmentDate(AccountBO accountBO,
 			int numberOfDays) {
 		Calendar currentDateCalendar = new GregorianCalendar();
@@ -3533,7 +4104,7 @@ public class TestLoanBO extends MifosTestCase {
 			break;
 		}
 	}
-	
+
 	private void changeFirstInstallmentDate(AccountBO accountBO) {
 		Calendar currentDateCalendar = new GregorianCalendar();
 		int year = currentDateCalendar.get(Calendar.YEAR);
@@ -3581,14 +4152,15 @@ public class TestLoanBO extends MifosTestCase {
 				disbursalType);
 
 	}
-	
+
 	private Date incrementCurrentDate(int noOfDays) {
 		Calendar currentDateCalendar = new GregorianCalendar();
 		int year = currentDateCalendar.get(Calendar.YEAR);
 		int month = currentDateCalendar.get(Calendar.MONTH);
 		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
 		currentDateCalendar = new GregorianCalendar(year, month, day + noOfDays);
-		return DateUtils.getDateWithoutTimeStamp(currentDateCalendar.getTimeInMillis());
+		return DateUtils.getDateWithoutTimeStamp(currentDateCalendar
+				.getTimeInMillis());
 	}
 
 }

@@ -585,6 +585,8 @@ public class LoanBO extends AccountBO {
 			Short paymentTypeId, PersonnelBO personnel, Date receiptDate,
 			Short rcvdPaymentTypeId) throws AccountException {
 		AccountPaymentEntity accountPaymentEntity = null;
+		addLoanActivity(buildLoanActivity(this.loanAmount, personnel,
+				"Loan Disbursal", transactionDate));
 
 		// if the trxn date is not equal to disbursementDate we need to
 		// regenerate the installments
@@ -631,7 +633,6 @@ public class LoanBO extends AccountBO {
 		}
 
 		// create trxn entry for disbursal
-		// create trxn entry for disbursal
 		LoanTrxnDetailEntity loanTrxnDetailEntity=null;
 		try {
 			loanTrxnDetailEntity = new LoanTrxnDetailEntity(
@@ -646,9 +647,7 @@ public class LoanBO extends AccountBO {
 
 		List<AccountTrxnEntity> loanTrxns = new ArrayList<AccountTrxnEntity>();
 		loanTrxns.add(loanTrxnDetailEntity);
-
-		addLoanActivity(buildLoanActivity(loanTrxns, personnel,
-				"Loan Disbursal", transactionDate));
+		
 		accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
 		this.addAccountPayment(accountPaymentEntity);
 		this.buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
@@ -1271,7 +1270,25 @@ public class LoanBO extends AccountBO {
 						loanSummary.getFeesPaid()), penalty, loanSummary
 						.getOriginalPenalty().subtract(
 								loanSummary.getPenaltyPaid()), activityDate);
-	}
+	}	
+
+	private LoanActivityEntity buildLoanActivity(Money totalPrincipal,
+			PersonnelBO personnel, String comments, Date trxnDate) {
+		Date activityDate = trxnDate;
+		Money principal = totalPrincipal;
+		Money interest = new Money();
+		Money penalty = new Money();
+		Money fees = new Money();
+		return new LoanActivityEntity(this, personnel, comments, principal,
+				loanSummary.getOriginalPrincipal().subtract(
+						loanSummary.getPrincipalPaid()), interest, loanSummary
+						.getOriginalInterest().subtract(
+								loanSummary.getInterestPaid()), fees,
+				loanSummary.getOriginalFees().subtract(
+						loanSummary.getFeesPaid()), penalty, loanSummary
+						.getOriginalPenalty().subtract(
+								loanSummary.getPenaltyPaid()), activityDate);
+	}				
 
 	private Short getInstallmentSkipToStartRepayment() {
 		if (isInterestDeductedAtDisbursement())

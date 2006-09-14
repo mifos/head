@@ -153,15 +153,15 @@ public class LoanRepaymentTag extends BodyTagSupport {
 					boolean toContinue = true;
 					LoanScheduleEntity installment = (LoanScheduleEntity) list
 							.get(index);
+					System.out.println("****************************list.size()="+list.size());
 					while (index <= list.size() - 1
 							&& toContinue
 							&& installment.getTotalDueWithFees()
 									.getAmountDoubleValue() != installment
 									.getTotalScheduleAmountWithFees()
 									.getAmountDoubleValue()) {
-
-						if (index != list.size())
-							builder1.append(createInstallmentRow(installment,
+						
+						builder1.append(createInstallmentRow(installment,
 									true));
 						builder2.append(createRunningBalanceRow(installment,
 								totalPrincipal, totalInterest, totalFees));
@@ -171,7 +171,8 @@ public class LoanRepaymentTag extends BodyTagSupport {
 								.getInterestPaid());
 						totalFees = totalFees.subtract(installment
 								.getTotalFeeAmountPaidWithMiscFee());
-						if (index != list.size()
+						System.out.println("****************************index="+index);
+						if (index != list.size()-1
 								&& installment.getPaymentStatus().equals(
 										PaymentStatus.PAID.getValue())) {
 							index++;
@@ -225,7 +226,8 @@ public class LoanRepaymentTag extends BodyTagSupport {
 						}
 					}
 					// append the last transaction
-					builder1.append(createInstallmentRow(installment, false));
+					if(installment.getPaymentStatus().equals(PaymentStatus.UNPAID.getValue()))
+						builder1.append(createInstallmentRow(installment, false));
 
 					if (twoTables) {
 						// add a tr with 2 td for each of the 2 tables
