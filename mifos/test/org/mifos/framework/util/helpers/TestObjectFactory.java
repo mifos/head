@@ -700,8 +700,13 @@ public class TestObjectFactory {
 		LoanSummaryEntity loanSummary = loan.getLoanSummary();
 		loanSummary.setOriginalPrincipal(new Money(currency, "300.0"));
 		loanSummary.setOriginalInterest(new Money(currency, "36.0"));
-
-		return (LoanBO)addObject(testObjectPersistence.persist(loan));
+		try {
+			loan.save();
+		} catch (AccountException e) {
+			e.printStackTrace();
+		}
+		HibernateUtil.commitTransaction();
+		return (LoanBO) addObject(getObject(LoanBO.class, loan.getAccountId()));
 	}
 
 	public static SavingsOfferingBO createSavingsOffering(String name,
@@ -1758,7 +1763,13 @@ public class TestObjectFactory {
 		loanSummary.setOriginalPrincipal(new Money(currency, "300.0"));
 		loanSummary.setOriginalInterest(new Money(currency, "36.0"));
 		
-		return (LoanBO) addObject(testObjectPersistence.persist(loan));
+		try {
+			loan.save();
+		} catch (AccountException e) {
+			e.printStackTrace();
+		}
+		HibernateUtil.commitTransaction();
+		return (LoanBO) addObject(getObject(LoanBO.class, loan.getAccountId()));
 	}
 
 	private static void deleteAccountWithoutDeletetingProduct(

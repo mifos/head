@@ -95,6 +95,16 @@
 				if(document.getElementsByName("customerId")[0].selectedIndex==0) {
 					return;
 				}
+				if(document.getElementsByName("officeId")[0].selectedIndex==0) {
+					form.method.value="load";
+					form.action="bulkentryaction.do";
+					form.submit();
+				}
+				else if(document.getElementsByName("loanOfficerId")[0].selectedIndex==0) {
+					form.method.value="load";
+					form.action="bulkentryaction.do";
+					form.submit();
+				}
 				else {
 					form.method.value="getLastMeetingDateForCustomer";
 					form.action="bulkentryaction.do";

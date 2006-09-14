@@ -168,7 +168,7 @@ public class AccountBO extends BusinessObject {
 			throws AccountException {
 		super(userContext);
 		validate(userContext, customer, accountType, accountState);
-		try {
+		
 			accountFees = new HashSet<AccountFeesEntity>();
 			accountPayments = new HashSet<AccountPaymentEntity>();
 			accountActionDates = new HashSet<AccountActionDateEntity>();
@@ -177,16 +177,13 @@ public class AccountBO extends BusinessObject {
 			accountStatusChangeHistory = new HashSet<AccountStatusChangeHistoryEntity>();
 			accountFlags = new HashSet<AccountFlagMapping>();
 			this.accountId = null;
-			this.globalAccountNum = generateId(userContext.getBranchGlobalNum());
 			this.customer = customer;
 			this.accountType = new AccountType(accountType.getValue());
 			this.office = customer.getOffice();
 			this.personnel = customer.getPersonnel();
 			this.setAccountState(new AccountStateEntity(accountState));
 			setCreateDetails();
-		} catch (IDGenerationException idge) {
-			throw new AccountException(idge);
-		}
+		
 	}
 
 	public Integer getAccountId() {
@@ -785,12 +782,12 @@ public class AccountBO extends BusinessObject {
 				"After appending the officeGlobalNum to loanAccountSysID  it becomes"
 						+ systemId.toString());
 		try {
-			systemId.append(StringUtils.lpad((new AccountPersistence())
-					.getAccountRunningNumber().toString(), '0', 11));
+			systemId.append(StringUtils
+					.lpad(getAccountId().toString(), '0', 11));
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 					"After appending the running number to loanAccountSysID  it becomes"
 							+ systemId.toString());
-		} catch (PersistenceException se) {
+		} catch (Exception se) {
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).error(
 					"There was some error retieving the running number", true,
 					null, se);

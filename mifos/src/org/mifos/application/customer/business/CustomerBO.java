@@ -426,6 +426,8 @@ public abstract class CustomerBO extends BusinessObject {
 		try {
 			new CustomerPersistence().createOrUpdate(this);
 			String gCustNum = generateSystemId();
+			getCustomerAccount().generateCustomerAccountSystemId(
+					userContext.getBranchGlobalNum());
 			globalCustNum = (gCustNum);
 			new CustomerPersistence().createOrUpdate(this);
 		} catch (PersistenceException e) {
@@ -962,4 +964,6 @@ public void changeStatus(Short newStatusId, Short flagId, String comment)
 	private CustomerBO getCustomer(Integer customerId){
 		return customerId!=null ? new CustomerPersistence().getCustomer(customerId) : null;
 	}
+	
+	
 }

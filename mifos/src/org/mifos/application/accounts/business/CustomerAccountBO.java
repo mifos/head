@@ -48,6 +48,8 @@ import java.util.Set;
 
 import org.hibernate.Hibernate;
 import org.mifos.application.accounts.exceptions.AccountException;
+import org.mifos.application.accounts.exceptions.AccountExceptionConstants;
+import org.mifos.application.accounts.exceptions.IDGenerationException;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
@@ -65,6 +67,7 @@ import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -680,6 +683,22 @@ public class CustomerAccountBO extends AccountBO {
 			return getDueAmount(accountAction);
 		else
 			return new Money("0.0");
+	}
+	
+
+	public void generateCustomerAccountSystemId(String officeGlobalNum)
+			throws CustomerException {
+		try {
+			if (getGlobalAccountNum() == null)
+				this.setGlobalAccountNum(generateId(userContext
+						.getBranchGlobalNum()));
+			else {
+				throw new CustomerException(
+						AccountExceptionConstants.IDGenerationException);
+			}
+		} catch (IDGenerationException e) {
+			throw new CustomerException(e);
+		}
 	}
 	
 	@Override

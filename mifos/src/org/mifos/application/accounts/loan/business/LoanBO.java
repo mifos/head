@@ -63,6 +63,7 @@ import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.business.LoanTrxnDetailEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.exceptions.AccountExceptionConstants;
+import org.mifos.application.accounts.exceptions.IDGenerationException;
 import org.mifos.application.accounts.loan.exceptions.LoanExceptionConstants;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.loan.util.helpers.EMIInstallment;
@@ -972,9 +973,15 @@ public class LoanBO extends AccountBO {
 	public void save() throws AccountException {
 		try {
 			new LoanPersistance().createOrUpdate(this);
+			this.globalAccountNum = generateId(userContext.getBranchGlobalNum());
+			new LoanPersistance().createOrUpdate(this);
 		} catch (PersistenceException e) {
 			throw new AccountException(
 					AccountExceptionConstants.CREATEEXCEPTION, e);
+		} catch (IDGenerationException e) {
+			throw new AccountException(
+					AccountExceptionConstants.CREATEEXCEPTION, e);
+
 		}
 	}
 
@@ -2022,7 +2029,7 @@ public class LoanBO extends AccountBO {
 			this.gracePeriodDuration = (short) 0;
 		} else {
 			if (!loanOffering.getGracePeriodType().getId().equals(
-					GraceTypeConstants.NONE))
+					GraceTypeConstants.NONE.getValue()))
 				if (gracePeriodDuration == null
 						|| gracePeriodDuration >= loanOffering
 								.getMaxNoInstallments())

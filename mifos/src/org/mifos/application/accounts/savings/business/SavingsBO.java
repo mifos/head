@@ -419,11 +419,7 @@ public class SavingsBO extends AccountBO {
 	public void save() throws AccountException{
 		logger.info("In SavingsBO::save(), Before Saving , accountId: "
 				+ getAccountId());
-		try {
-			this.setGlobalAccountNum(generateId(userContext.getBranchGlobalNum()));
-		} catch (IDGenerationException e) {
-			throw new AccountException(e);
-		}
+		
 		logger.info("In SavingsBO::save(), Generated globalAccountNum: "
 				+ getGlobalAccountNum());
 		setOffice(getCustomer().getOffice());
@@ -450,6 +446,12 @@ public class SavingsBO extends AccountBO {
 						(new PersonnelPersistence()).getPersonnel(
 								userContext.getId())));
 		try {
+			(new SavingsPersistence()).createOrUpdate(this);
+			try {
+				this.setGlobalAccountNum(generateId(userContext.getBranchGlobalNum()));
+			} catch (IDGenerationException e) {
+				throw new AccountException(e);
+			}
 			(new SavingsPersistence()).createOrUpdate(this);
 		} catch (PersistenceException e) {
 			throw new AccountException(e);
