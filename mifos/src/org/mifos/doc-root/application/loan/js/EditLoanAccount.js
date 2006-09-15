@@ -68,15 +68,27 @@
 			 }	
 			 
 		 	function setIntrestAtDisb() {
-				if(document.getElementsByName("intDedDisbursement")[0].value==1){
-					document.getElementsByName("intDedDisb")[0].checked=true;
+		 		if(document.getElementsByName("gracePeriodTypeId")[0].value!="1") {
+					if(document.getElementsByName("intDedDisbursement")[0].value==1){
+						document.getElementsByName("intDedDisb")[0].checked=true;
+						document.getElementsByName("gracePeriod")[0].disabled=true;
+					}	
+					else{
+						document.getElementsByName("intDedDisb")[0].checked=false;
+						document.getElementsByName("gracePeriod")[0].disabled=false;
+					}	
+					document.getElementsByName("gracePeriod")[0].value=document.getElementsByName("gracePeriodDuration")[0].value;
+				}else {
+					document.getElementsByName("gracePeriodDuration")[0].value=0;
+					document.getElementsByName("gracePeriod")[0].value=0;
 					document.getElementsByName("gracePeriod")[0].disabled=true;
-				}	
-				else{
-					document.getElementsByName("intDedDisb")[0].checked=false;
-					document.getElementsByName("gracePeriod")[0].disabled=false;
-				}	
-				document.getElementsByName("gracePeriod")[0].value=document.getElementsByName("gracePeriodDuration")[0].value;
+					if(document.getElementsByName("intDedDisbursement")[0].value==1){
+						document.getElementsByName("intDedDisb")[0].checked=true;
+					}	
+					else{
+						document.getElementsByName("intDedDisb")[0].checked=false;
+					}
+				}
 			}
 			
 			function setGracePeriod() {

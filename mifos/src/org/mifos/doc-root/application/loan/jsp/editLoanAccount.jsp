@@ -157,6 +157,7 @@
 						<html-el:hidden property="inheritedGracePeriodDuration"
 								value="${sessionScope.loanAccountActionForm.gracePeriodDuration}" />
 							<html-el:hidden property="gracePeriodDuration"/>
+							<html-el:hidden property="gracePeriodTypeId" value="${sessionScope.BusinessKey.gracePeriodType.id}" />
 						<script>setIntrestAtDisb();</script>
 						<tr class="fontnormal">
 							<td align="right" class="fontnormal"><mifos:mifoslabel
@@ -236,8 +237,7 @@
 				property="globalAccountNum" />
 			<html-el:hidden value="${sessionScope.BusinessKey.accountState.id}"
 				property="accountStateId" />
-			<html-el:hidden property="gracePeriodTypeId"
-				value="${sessionScope.loanOffering.gracePeriodType.id}" />
+			
 		</html-el:form>
 		</body>
 	</tiles:put>
