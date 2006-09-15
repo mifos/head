@@ -137,6 +137,10 @@ public class ClientCustAction extends CustAction {
 		if (actionForm.getGroupFlagValue().equals(YesNoFlag.YES.getValue())) {
 			actionForm.setParentGroup(getCustomerBusinessService().getCustomer(Integer
 					.valueOf(actionForm.getParentGroupId())));
+			if(actionForm.getParentGroup().getCustomerMeeting()!=null){
+				actionForm.getParentGroup().getCustomerMeeting().getMeeting().isMonthly();
+				actionForm.getParentGroup().getCustomerMeeting().getMeeting().isWeekly();
+			}
 			actionForm.setOfficeId(actionForm.getParentGroup().getOffice()
 					.getOfficeId().toString());
 			actionForm.setFormedByPersonnel(actionForm.getParentGroup()

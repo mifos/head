@@ -41,7 +41,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.struts.actionforms.CustomerActionForm;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -68,5 +70,10 @@ public class CenterCustActionForm extends CustomerActionForm{
 			validateCustomFields(request,errors);
 		}
 		return errors;
+	}
+	
+	@Override
+	protected MeetingBO getCustomerMeeting(HttpServletRequest request){
+		 return (MeetingBO)request.getSession().getAttribute(CenterConstants.CENTER_MEETING);		
 	}
 }

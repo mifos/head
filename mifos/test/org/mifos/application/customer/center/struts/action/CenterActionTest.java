@@ -191,7 +191,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 	}
 	
 	public void testFailurePreview_WithDuplicateFee() throws Exception{
-		List<FeeView> feesToRemove = getFees();
+		List<FeeView> feesToRemove = getFees(MeetingFrequency.MONTHLY);
 		setRequestPathInfo("/centerCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -210,7 +210,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 	}
 	
 	public void testFailurePreview_WithFee_WithoutFeeAmount() throws Exception{
-		List<FeeView> feesToRemove = getFees();
+		List<FeeView> feesToRemove = getFees(MeetingFrequency.MONTHLY);
 		setRequestPathInfo("/centerCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -226,8 +226,26 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 		removeFees(feesToRemove);
 	}
 	
+	public void testFailurePreview_FeeFrequencyMismatch() throws Exception{
+		List<FeeView> feesToRemove = getFees(MeetingFrequency.WEEKLY);
+		setRequestPathInfo("/centerCustAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("officeId", "3");
+		actionPerform();
+		List<FeeView> feeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request.getSession());
+		FeeView fee = feeList.get(0);
+		SessionUtils.setAttribute(CenterConstants.CENTER_MEETING, getMeeting(), request.getSession());
+		setRequestPathInfo("/centerCustAction.do");
+		addRequestParameter("method", "preview");		
+		addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
+		addRequestParameter("selectedFee[0].amount", "200");
+		actionPerform();
+		assertEquals("Fee", 1, getErrrorSize(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH));
+		removeFees(feesToRemove);
+	}
+	
 	public void testSuccessfulPreview() throws Exception {
-		List<FeeView> feesToRemove = getFees();
+		List<FeeView> feesToRemove = getFees(MeetingFrequency.MONTHLY);
 		setRequestPathInfo("/centerCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -268,7 +286,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 	}
 	
 	public void testSuccessfulCreate() throws Exception {
-		getFees();
+		getFees(MeetingFrequency.MONTHLY);
 		setRequestPathInfo("/centerCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -487,11 +505,11 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 		return meeting;
 	}
 	
-	private List<FeeView> getFees() {
+	private List<FeeView> getFees(MeetingFrequency frequency) {
 		List<FeeView> fees = new ArrayList<FeeView>();
 		AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory
 				.createPeriodicAmountFee("PeriodicAmountFee",
-						FeeCategory.CENTER, "200", MeetingFrequency.WEEKLY,
+						FeeCategory.CENTER, "200", frequency,
 						Short.valueOf("2"));
 		fees.add(new FeeView(fee1));
 		HibernateUtil.commitTransaction();

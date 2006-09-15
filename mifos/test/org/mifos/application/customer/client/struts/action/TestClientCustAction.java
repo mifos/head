@@ -135,6 +135,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		super.tearDown();
 	}
 
+
 	public void testLoad() throws Exception {
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
@@ -344,7 +345,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		
 	}
 	public void testFailurePreview_WithDuplicateFee() throws Exception{
-		List<FeeView> feesToRemove = getFees();
+		List<FeeView> feesToRemove = getFees(MeetingFrequency.WEEKLY);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -377,8 +378,49 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		removeFees(feesToRemove);
 	}
 	
+	public void testPreviewFaillure_FeesWithoutMeeting() throws Exception {
+		List<FeeView> feesToRemove = getFees(MeetingFrequency.WEEKLY);
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("officeId", "3");
+		addRequestParameter("groupFlag", "0");
+		actionPerform();
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request.getSession());
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "next");
+		addRequestParameter("officeId", "3");
+		addRequestParameter("clientName.salutation", "1");
+		addRequestParameter("clientName.firstName", "Client");
+		addRequestParameter("clientName.lastName", "LastName");
+		addRequestParameter("spouseName.firstName", "Spouse");
+		addRequestParameter("spouseName.lastName", "LastName");
+		addRequestParameter("spouseName.nameType", "1");
+		addRequestParameter("dateOfBirth", "03/20/2006");
+		addRequestParameter("clientDetailView.gender", "1");
+		addRequestParameter("input", "personalInfo");
+		int i = 0;
+		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
+			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
+			addRequestParameter("customField["+ i +"].fieldValue", "Req");
+			i++;
+		}
+		actionPerform();
+		List<FeeView> feeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request.getSession());
+		FeeView fee = feeList.get(0);
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "preview");	
+		addRequestParameter("input", "mfiInfo");
+		addRequestParameter("formedByPersonnel", "1");
+		addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
+		addRequestParameter("selectedFee[0].amount", fee.getAmount());
+		//SessionUtils.setAttribute(ClientConstants.CLIENT_MEETING,new MeetingBO(MeetingFrequency.MONTHLY, Short.valueOf("2"),MeetingType.CUSTOMERMEETING), request.getSession());
+		actionPerform();
+		assertEquals("Fee", 1, getErrrorSize(CustomerConstants.MEETING_REQUIRED_EXCEPTION));
+		removeFees(feesToRemove);
+	}
+	
 	public void testFailurePreview_WithFee_WithoutFeeAmount() throws Exception{
-		List<FeeView> feesToRemove = getFees();
+		List<FeeView> feesToRemove = getFees(MeetingFrequency.WEEKLY);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -410,7 +452,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 	}
 	
 	public void testPreviewSuccess() throws Exception {
-		List<FeeView> feesToRemove = getFees();
+		List<FeeView> feesToRemove = getFees(MeetingFrequency.MONTHLY);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -437,6 +479,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		}
 		actionPerform();
 		List<FeeView> feeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request.getSession());
+		System.out.println("------feeList: "+ feeList.size());
 		FeeView fee = feeList.get(0);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "preview");	
@@ -471,7 +514,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 	}
 	
 	public void testCreateSuccessWithoutGroup() throws Exception {
-		List<FeeView> feesToRemove = getFees();
+		List<FeeView> feesToRemove = getFees(MeetingFrequency.WEEKLY);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -597,57 +640,6 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,center.getCustomerId());
 		client = (ClientBO)HibernateUtil.getSessionTL().get(ClientBO.class,client.getCustomerId());
 		accountBO = (LoanBO) HibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());
-	}
-	private List<FeeView> getFees() {
-		List<FeeView> fees = new ArrayList<FeeView>();
-		AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory
-				.createPeriodicAmountFee("PeriodicAmountFee",
-						FeeCategory.CLIENT, "200", MeetingFrequency.WEEKLY,
-						Short.valueOf("2"));
-		fees.add(new FeeView(fee1));
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		return fees;
-	}
-	
-	private void removeFees(List<FeeView> feesToRemove){
-		for(FeeView fee :feesToRemove){
-			TestObjectFactory.cleanUp(new FeePersistence().getFee(fee.getFeeIdValue()));
-		}
-	}
-	
-	private void createInitialCustomers(){
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"), "1.4", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("group", CustomerStatus.GROUP_ACTIVE.getValue(), center.getSearchId()+".1", center, new Date());
-		client = TestObjectFactory.createClient("client",CustomerStatus.CLIENT_ACTIVE.getValue(), group.getSearchId()+".1", group, new Date());
-	}
-	
-	private void createParentCustomer(){
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"), "1.4", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("group", CustomerStatus.GROUP_ACTIVE.getValue(), center.getSearchId()+".1", center, new Date());
-	}
-	
-	private java.sql.Date offSetCurrentDate(int noOfyears) {
-		Calendar currentDateCalendar = new GregorianCalendar();
-		int year = currentDateCalendar.get(Calendar.YEAR);
-		int month = currentDateCalendar.get(Calendar.MONTH);
-		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-		currentDateCalendar = new GregorianCalendar(year-noOfyears, month, day);
-		return new java.sql.Date(currentDateCalendar.getTimeInMillis());
-	}
-	
-	private LoanBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
-		Date startDate = new Date(System.currentTimeMillis());
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short
-						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), Short.valueOf("1"), meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", customer, Short
-				.valueOf("5"), startDate, loanOffering);
-
 	}
 	
 	public void testEditPersonalInfo() throws Exception {		
@@ -908,6 +900,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());				
 	}
 
+	
 	private void createAndSetClientInSession() throws Exception{
 		String name = "Client 1";
 		Short officeId = 1;
@@ -952,5 +945,55 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		return meeting;
 	}
 	
+	private void createInitialCustomers(){
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"), "1.4", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("group", CustomerStatus.GROUP_ACTIVE.getValue(), center.getSearchId()+".1", center, new Date());
+		client = TestObjectFactory.createClient("client",CustomerStatus.CLIENT_ACTIVE.getValue(), group.getSearchId()+".1", group, new Date());
+	}
 	
+	private void createParentCustomer(){
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"), "1.4", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("group", CustomerStatus.GROUP_ACTIVE.getValue(), center.getSearchId()+".1", center, new Date());
+	}
+	
+	private java.sql.Date offSetCurrentDate(int noOfyears) {
+		Calendar currentDateCalendar = new GregorianCalendar();
+		int year = currentDateCalendar.get(Calendar.YEAR);
+		int month = currentDateCalendar.get(Calendar.MONTH);
+		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
+		currentDateCalendar = new GregorianCalendar(year-noOfyears, month, day);
+		return new java.sql.Date(currentDateCalendar.getTimeInMillis());
+	}
+	
+	private LoanBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
+		Date startDate = new Date(System.currentTimeMillis());
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"), startDate, Short
+						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), Short.valueOf("1"), meeting);
+		return TestObjectFactory.createLoanAccount("42423142341", customer, Short
+				.valueOf("5"), startDate, loanOffering);
+
+	}
+	private void removeFees(List<FeeView> feesToRemove){
+		for(FeeView fee :feesToRemove){
+			TestObjectFactory.cleanUp(new FeePersistence().getFee(fee.getFeeIdValue()));
+		}
+	}
+	
+	private List<FeeView> getFees(MeetingFrequency frequency) {
+		List<FeeView> fees = new ArrayList<FeeView>();
+		AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory
+				.createPeriodicAmountFee("PeriodicAmountFee",
+						FeeCategory.CLIENT, "200", frequency,
+						Short.valueOf("2"));
+		fees.add(new FeeView(fee1));
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		return fees;
+	}
+
 }

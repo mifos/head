@@ -311,7 +311,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 	}
 	
 	public void testFailurePreview_WithDuplicateFee() throws Exception{
-		List<FeeView> feesToRemove = getFees();
+		List<FeeView> feesToRemove = getFees(MeetingFrequency.WEEKLY);
 		createParentCustomer();
 		HibernateUtil.closeSession();
 		
@@ -338,7 +338,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 	}
 	
 	public void testFailurePreview_WithFee_WithoutFeeAmount() throws Exception{
-		List<FeeView> feesToRemove = getFees();
+		List<FeeView> feesToRemove = getFees(MeetingFrequency.WEEKLY);
 		createParentCustomer();
 		HibernateUtil.closeSession();
 		
@@ -362,8 +362,35 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		oldCenter =  null;
 	}
 
+	public void testFailurePreview_FeeFrequencyMismatch() throws Exception{
+		List<FeeView> feesToRemove = getFees(MeetingFrequency.MONTHLY);
+		createParentCustomer();		
+		HibernateUtil.closeSession();
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("centerSystemId", center.getGlobalCustNum());
+		actionPerform();
+		List<FeeView> feeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
+		FeeView fee = null;
+		for(FeeView feeView: feeList)
+			if(feeView.getFeeId().equals(feesToRemove.get(0).getFeeId()))
+				fee = feeView;
+		
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "preview");		
+		addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
+		addRequestParameter("selectedFee[0].amount", "200");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		assertEquals("Fee", 1, getErrrorSize(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH));
+		removeFees(feesToRemove);
+		CenterBO oldCenter = center;
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
+		oldCenter =  null;
+	}
+	
 	public void testSuccessfulPreview() throws Exception{
-		List<FeeView> feesToRemove = getFees();
+		List<FeeView> feesToRemove = getFees(MeetingFrequency.WEEKLY);
 		createParentCustomer();		
 		HibernateUtil.closeSession();
 		
@@ -855,7 +882,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.cancelCreate_success.toString());		
 	}	
-
+	
 	private void createGroupWithCenterAndSetInSession() throws Exception {
 		createGroupWithCenter();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,
@@ -917,11 +944,11 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 						.currentTimeMillis()), savingsOffering);
 	}
 	
-	private List<FeeView> getFees() {
+	private List<FeeView> getFees(MeetingFrequency frequency) {
 		List<FeeView> fees = new ArrayList<FeeView>();
 		AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory
 				.createPeriodicAmountFee("PeriodicAmountFee",
-						FeeCategory.GROUP, "200", MeetingFrequency.WEEKLY,
+						FeeCategory.GROUP, "200", frequency,
 						Short.valueOf("2"));
 		fees.add(new FeeView(fee1));
 		HibernateUtil.commitTransaction();

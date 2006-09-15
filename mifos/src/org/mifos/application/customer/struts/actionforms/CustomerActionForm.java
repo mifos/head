@@ -59,6 +59,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
@@ -405,9 +406,50 @@ public abstract class CustomerActionForm extends BaseActionForm{
 		}
 	}
 	
+	protected abstract MeetingBO getCustomerMeeting(HttpServletRequest request);
+	
 	protected  void validateFees(HttpServletRequest request, ActionErrors errors)throws ApplicationException{
+		validateForFeeAssignedWithoutMeeting(request, errors);
+		validateForFeeRecurrence(request, errors);
 		validateForFeeAmount(errors);
 		validateForDuplicatePeriodicFee(request, errors);
+	}
+	
+	protected void validateForFeeRecurrence(HttpServletRequest request, ActionErrors errors)throws ApplicationException{
+		MeetingBO meeting = getCustomerMeeting(request);
+
+		if(meeting!=null){
+			List<FeeView> feeList = getDefaultFees();
+			for(FeeView fee: feeList){
+				if(!fee.isRemoved() && fee.isPeriodic() && !isFrequencyMatches(fee, meeting)){
+					errors.add(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH,new ActionMessage(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH));
+					return;
+				}
+			}
+			List<FeeView> additionalFeeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
+			for(FeeView selectedFee: getAdditionalFees()){
+				for(FeeView fee: additionalFeeList){
+					if(selectedFee.getFeeIdValue()!=null && selectedFee.getFeeId().equals(fee.getFeeId())){
+						if(fee.isPeriodic() && !isFrequencyMatches(fee, meeting)){
+							errors.add(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH,new ActionMessage(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH));
+							return;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	private boolean isFrequencyMatches(FeeView fee, MeetingBO meeting){
+		return (fee.getFrequencyType().equals(MeetingFrequency.MONTHLY) && meeting.isMonthly()) ||
+					(fee.getFrequencyType().equals(MeetingFrequency.WEEKLY) && meeting.isWeekly());
+
+	}
+	private void validateForFeeAssignedWithoutMeeting(HttpServletRequest request , ActionErrors errors){
+		MeetingBO meeting = getCustomerMeeting(request);
+		if(meeting==null && getFeesToApply().size() > 0){
+			errors.add(CustomerConstants.MEETING_REQUIRED_EXCEPTION,new ActionMessage(CustomerConstants.MEETING_REQUIRED_EXCEPTION));
+		}
 	}
 	
 	protected void validateForFeeAmount(ActionErrors errors){

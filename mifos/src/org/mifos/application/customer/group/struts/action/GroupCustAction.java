@@ -135,6 +135,8 @@ public class GroupCustAction extends CustAction {
 				.isCenterHierarchyExists();
 		if(isCenterHierarchyExists){
 			actionForm.setParentCustomer(getCustomerBusinessService().findBySystemId(actionForm.getCenterSystemId()));
+			actionForm.getParentCustomer().getCustomerMeeting().getMeeting().isMonthly();
+			actionForm.getParentCustomer().getCustomerMeeting().getMeeting().isWeekly();
 			actionForm.setOfficeId(actionForm.getParentCustomer().getOffice().getOfficeId().toString());
 			actionForm.setFormedByPersonnel(actionForm.getParentCustomer().getPersonnel().getPersonnelId().toString());
 		}

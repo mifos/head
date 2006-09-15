@@ -55,27 +55,21 @@ import org.mifos.application.customer.center.util.helpers.ValidateMethods;
 import org.mifos.application.customer.client.business.ClientDetailView;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
-import org.mifos.application.customer.group.util.valueobjects.Group;
 import org.mifos.application.customer.struts.actionforms.CustomerActionForm;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerHelper;
-import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationHelper;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
-import org.mifos.framework.util.valueobjects.Context;
 
 public class ClientCustActionForm extends CustomerActionForm {
 
@@ -229,8 +223,6 @@ public class ClientCustActionForm extends CustomerActionForm {
 			validateConfigurableMandatoryFields(request,errors,EntityType.CLIENT);
 			validateTrained(request, errors);
 			validateFees(request, errors);
-			validateForFeeAssignedWithoutMeeting(request,errors);
-			
 		}
 		
 		if(method.equals(Methods.previewEditMfiInfo.toString()) ){
@@ -325,22 +317,12 @@ public class ClientCustActionForm extends CustomerActionForm {
 		}
 	}
 	
-	private void validateForFeeAssignedWithoutMeeting(HttpServletRequest request , ActionErrors errors){
-		for(int i=0; i < getDefaultFees().size();i++){
-			//if an already checked fee is unchecked then the value set to 0
-			if(request.getParameter("defaultFee["+i+"].feeRemoved")==null){
-				getDefaultFees().get(i).setFeeRemoved(YesNoFlag.NO.getValue());
-			}
-		}
-		MeetingBO meeting = null;
+	
+	@Override
+	protected MeetingBO getCustomerMeeting(HttpServletRequest request){
 		if(groupFlag.equals(ClientConstants.YES))
-			 meeting = parentGroup.getCustomerMeeting().getMeeting();
-		else{
-			 meeting = (MeetingBO)request.getSession().getAttribute(ClientConstants.CLIENT_MEETING);
-		}
-		if(meeting==null && getFeesToApply().size() > 0){
-			errors.add(CustomerConstants.MEETING_REQUIRED_EXCEPTION,new ActionMessage(CustomerConstants.MEETING_REQUIRED_EXCEPTION));
-		}
-		
+			 return parentGroup.getCustomerMeeting().getMeeting();
+		else
+			 return (MeetingBO)request.getSession().getAttribute(ClientConstants.CLIENT_MEETING);		
 	}
 }

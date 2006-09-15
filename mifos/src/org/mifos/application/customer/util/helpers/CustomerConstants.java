@@ -246,6 +246,7 @@ public interface CustomerConstants {
 	public static final String ERRORS_SPECIFY_CUSTOM_FIELD_VALUE="errors.Customer.specifyCustomFieldValue";
 	public static final String ERRORS_DUPLICATE_PERIODIC_FEE="errors.Customer.duplicatePeriodicFee";
 	public static final String ERRORS_SPECIFY_FEE_AMOUNT="errors.Customer.specifyFeeAmount";
+	public static final String ERRORS_FEE_FREQUENCY_MISMATCH="errors.Customer.feeFrequencyMismatch";
 	public static final String ERRORS_SAME_BRANCH_TRANSFER="errors.Customer.sameBranchTransfer";
 	public static final String ERRORS_SAME_PARENT_TRANSFER="errors.Customer.sameParentTransferException";
 	public static final String ERRORS_HAS_ACTIVE_ACCOUNT="errors.Customer.hasActiveAccount";
