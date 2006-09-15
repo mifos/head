@@ -34,6 +34,7 @@ import org.mifos.application.accounts.struts.action.AccountAppAction;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
@@ -52,6 +53,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
+import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -275,6 +277,8 @@ public class LoanAccountAction extends AccountAppAction {
 				.getSession());
 		SessionUtils.setAttribute(LoanConstants.REPAYMENTSCHEDULEINSTALLMENTS,
 				getLoanSchedule(loan), request.getSession());
+		boolean isPendingApprovalDefined = Configuration.getInstance().getAccountConfig(getUserContext(request).getBranchId()).isPendingApprovalStateDefinedForLoan();
+		SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, isPendingApprovalDefined, request.getSession());
 		return mapping.findForward(ActionForwards.schedulePreview_success
 				.toString());
 	}

@@ -143,6 +143,13 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		for (CustomerActivityEntity customerActivityEntity : customerActivityDetails) {
 			assertEquals(new Money("100"), customerActivityEntity.getAmount());
 		}
+		List<CustomerRecentActivityView> customerActivityView = service.getAllActivityView(center.getGlobalCustNum());
+		assertEquals(1,  customerActivityView.size());
+		for(CustomerRecentActivityView view : customerActivityView) {
+			assertEquals(new Money("100").toString(),view.getAmount());
+			assertEquals("Amnt waived",view.getDescription());
+			assertEquals(TestObjectFactory.getContext().getName(),view.getPostedBy());
+		}
 	}
 
 	public void testGetRecentActivityView() throws Exception {
@@ -227,6 +234,13 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		assertEquals(3, customerActivityDetails.size());
 		for (CustomerActivityEntity customerActivityEntity : customerActivityDetails) {
 			assertEquals(new Money("100"), customerActivityEntity.getAmount());
+		}
+		
+		List<CustomerRecentActivityView> customerActivityView = service.getRecentActivityView(center.getCustomerId());
+		assertEquals(3,  customerActivityView.size());
+		for(CustomerRecentActivityView view : customerActivityView) {
+			assertEquals(new Money("100").toString(),view.getAmount());
+			assertEquals(TestObjectFactory.getContext().getName(),view.getPostedBy());
 		}
 	}
 

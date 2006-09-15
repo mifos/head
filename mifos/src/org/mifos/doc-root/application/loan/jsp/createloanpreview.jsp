@@ -392,7 +392,7 @@
 												&nbsp;
 
 												<c:choose>
-													<c:when test='${sessionScope.loanAccounts_Context.businessResults["isPendingApproval"] == "true"}'>
+													<c:when test='${sessionScope.pendingApprovalDefined == true}'>
 														<html-el:button property="submitForApprovalButton" styleClass="buttn" style="width:130px;" onclick="javascript:fun_submitForApproval(this.form)">
 															<mifos:mifoslabel name="loan.submitForApproval" />
 														</html-el:button>
