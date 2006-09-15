@@ -39,18 +39,22 @@
 package org.mifos.framework.exceptions;
 
 /** 
- *  This class extends from java.lang.Exception Class These are the exceptions which arise out of some malfunctioning in the system , say the database is down or  not able to find some services like the TransactionManager which  might be need.
+ * These are the exceptions which arise out of some malfunctioning in the system, 
+ * say the database is down or not able to find some services like the 
+ * TransactionManager which might be needed.
  */
 public class SystemException extends Exception {
-	
 
 	/** 
-	 *  This is a  string which points to the actual message in the resource bundle .So the exception message to be shown to the user would be taken from the resource bundle and hence could be localized.
+	 * This is a  string which points to the actual message in the resource bundle.
+	 * So the exception message to be shown to the user would be taken 
+	 * from the resource bundle and hence could be localized.
 	 */
 	protected String key = null;
 
 	/** 
-	 *  This is an array of object which might be needed to pass certain parameters to the string in the resource bundle. 
+	 * This is an array of object which might be needed to pass certain 
+	 * parameters to the string in the resource bundle. 
 	 */
 	protected Object[] values = null;
 
@@ -78,11 +82,11 @@ public class SystemException extends Exception {
 	public SystemException(String key) {
 		this.key = key;
 	}
+
 	/**
 	 * Returns the key which maps to an entry in ExceptionResources file.
 	 * The message corresponding to this key is used for logging purposes
 	 * as well as for displaying message to the user 
-	 * @return
 	 */
 	public String getKey() {
 		return "exception.framework.SystemException";

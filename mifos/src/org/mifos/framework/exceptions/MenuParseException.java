@@ -59,6 +59,7 @@ public class MenuParseException extends SystemException {
 		// TODO Auto-generated constructor stub
 	}
 	
+	@Override
 	public String getKey(){
 		return "exception.framework.SystemException.MenuParseException";
 	}

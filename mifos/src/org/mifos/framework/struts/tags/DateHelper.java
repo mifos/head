@@ -39,7 +39,7 @@ public class DateHelper {
 		String returnVal = null;
 		try{
 			SimpleDateFormat dbSdf = new SimpleDateFormat(DateHelper.dbFormat);
-			Date date = dbSdf.parse(dbDate); //util date not sql
+			java.util.Date date = dbSdf.parse(dbDate); //util date not sql
 			SimpleDateFormat userSdf = new SimpleDateFormat(userPattern);
 			return userSdf.format(date);
 
@@ -312,15 +312,16 @@ public class DateHelper {
 
 	public static String getDBtoUserFormatString(Date dbDate, Locale userLocale){
 		String ret = null;
-		SimpleDateFormat sdf = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.MEDIUM, userLocale);
+		SimpleDateFormat sdf = (SimpleDateFormat)DateFormat.getDateInstance(
+			DateFormat.MEDIUM, userLocale);
 		ret = sdf.format(dbDate);
 		return ret;
 	}
 	
 	public static String getDBtoUserFormatShortString(Date dbDate, Locale userLocale){
 		String ret = null;
-		SimpleDateFormat sdf = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.SHORT, userLocale);
-		String userfmt = convertToCurrentDateFormat(((SimpleDateFormat) sdf).toPattern());
+		SimpleDateFormat sdf = (SimpleDateFormat)DateFormat.getDateInstance(
+			DateFormat.SHORT, userLocale);
 		ret = sdf.format(dbDate);
 		return ret;
 	}

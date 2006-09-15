@@ -788,7 +788,6 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	public void testUpdateSuccessWithoutRegeneratingNewRepaymentSchedule()
 			throws NumberFormatException, InvalidUserException,
 			SystemException, ApplicationException {
-		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount();
 		LoanBO loan = (LoanBO) accountBO;
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request

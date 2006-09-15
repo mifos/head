@@ -84,7 +84,7 @@ public class LabelTagUtils {
 	 * the Locale.
 	 * 
 	 * @param key--
-	 *            The key used to obatin the Label
+	 *            The key used to obtain the Label
 	 * @return Label associated with key of the Locale
 	 */
 	public String getLabel(PageContext pageContext, String bundle,
