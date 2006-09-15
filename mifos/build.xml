@@ -45,7 +45,6 @@
         <echo>ant.java.version = ${ant.java.version} </echo> 
         <echo>java.version = ${java.version}</echo> 
         <echo>env.JAVA_HOME = ${env.JAVA_HOME}</echo> 
-        <echo>env.JBOSS_HOME = ${env.JBOSS_HOME}</echo> 
         <echo>env.COBERTURA_HOME = ${env.COBERTURA_HOME}</echo> 
         <echo>env.ANT_HOME = ${env.ANT_HOME}</echo> 
         <echo>env.CLASSPATH = ${env.CLASSPATH}</echo>  
@@ -60,7 +59,6 @@
 
 	<target name="check_config">
 		<fail message="JAVA_HOME not set. Please set JAVA_HOME" unless="env.JAVA_HOME"/>
-		<fail message="JBOSS_HOME not set. Please set JBOSS_HOME" unless="env.JBOSS_HOME"/>
 		<fail message="COBERTURA_HOME not set. Please set COBERTURA_HOME" unless="env.COBERTURA_HOME"/>
 		<!--check the jre version-->
 	</target>
@@ -229,12 +227,12 @@
 
 	<target name="dist" 
 		depends="clean,compile,copy_files,compile_test,copy_test_files,run_test,war,deploy" 
-		description="Compiles, runs test, builds a distributable war and places in the dist directory. Copies to the jboss server in use. Does not rebuild the production database"
+		description="Compiles, runs test, builds a distributable war and places in the dist directory. Copies to the web server in use. Does not rebuild the production database"
 	/>
 
 	<target name="dist_ddl" 
 		depends="clean,compile,copy_files,compile_test,copy_test_files,run_test,war,deploy,build_db" 
-		description="Compiles, runs test, builds a distributable war and places in the dist directory. Copies to the jboss server in use. Rebuilds the production database"
+		description="Compiles, runs test, builds a distributable war and places in the dist directory. Copies to the web server in use. Rebuilds the production database"
 	/>
 
 	<!--<target name="test_dist" depends="compile" description="Compiles, runs test cass and prepares the final war for distribution">
@@ -314,13 +312,16 @@
 	</target>
 
 	<target name="deploy">
-		<echo message="Deploying application ${webapplication.name}.war to JBoss server ${jboss.server.name}"/>
+		<echo message="Deploying application ${webapplication.name}.war to ${deploy.destination}"/>
 		<copy file="${dist.dir}/${webapplication.name}.war" 
-			todir="${env.JBOSS_HOME}/server/${jboss.server.name}/deploy/"
+			todir="${deploy.destination}"
 		/>
 	</target>
 
-	<target name="all" depends="clean_all,coverage,war,deploy,build_db,javadoc,email" description="Cleans the directory structure, gets latest, compiles, makes war, runs coverage test, builds db and sends an email of status"/>
+	<target name="all" 
+		depends="clean_all,coverage,war,deploy,build_db,javadoc,email" 
+		description="Cleans the directory structure, gets latest, compiles, makes war, runs coverage test, builds db and sends an email of status"
+	/>
 
 	<target name="email">
 		<mail mailhost="${mail.server}" mailport="${mail.port}" subject="CVS Build successful on ${BUILD_ID}" encoding="plain">
