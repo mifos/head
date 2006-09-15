@@ -5,6 +5,15 @@
 	<property name="build.compiler" value="modern"/>
 	<property name="java.home" value="${env.JAVA_HOME}"/>
 	<property name="conf.dir" value="${basedir}/conf"/>
+
+	<!-- my.build.properties is your way to override
+		properties which are not supposed to be
+		checked in.  If it doesn't exist, ant
+		will just skip it.  Properties defined
+		there override those defined in build.properties
+		or in this file -->
+	<property file="${conf.dir}/my.build.properties"/>
+
 	<property file="${conf.dir}/build.properties"/>
 	<property name="lib.dir" value="${basedir}/lib"/>
 	<property name="src.dir" value="${basedir}/src"/>
