@@ -125,10 +125,6 @@
 		</taglib-location>
 	</taglib>
 	<taglib>
-		<taglib-uri>/mifos/mifostabletag</taglib-uri>
-		<taglib-location>/WEB-INF/tlds/tabletag.tld</taglib-location>
-	</taglib>
-	<taglib>
 		<taglib-uri>/mifos/officetags</taglib-uri>
 		<taglib-location>
 			/WEB-INF/tlds/application/office/officetags.tld
