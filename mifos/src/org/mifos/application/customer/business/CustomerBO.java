@@ -933,9 +933,13 @@ public void changeStatus(Short newStatusId, Short flagId, String comment)
 						.getFieldId(), customField.getFieldValue(), this));
 	}
 	
-	private void inheritDetailsFromParent(CustomerBO parentCustomer){
+	private void inheritDetailsFromParent(CustomerBO parentCustomer) throws CustomerException{
 		this.personnel = parentCustomer.getPersonnel();
-		this.office = parentCustomer.getOffice();
+		try{
+			this.office = new OfficePersistence().getOffice(parentCustomer.getOffice().getOfficeId());
+		}catch(PersistenceException pe){
+			throw new CustomerException(pe);
+		}
 		if(parentCustomer.getCustomerMeeting()!=null)
 			this.customerMeeting = createCustomerMeeting(parentCustomer
 					.getCustomerMeeting().getMeeting());
