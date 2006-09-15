@@ -126,8 +126,9 @@
 
 	<target name="copy_files">
 		<copy todir="${build.web-inf}/lib">
-			<fileset dir="lib">
-				<exclude name="javax.servlet.jar, jsp-api.jar, strutstest-2.1.3.jar, junit.jar, cobertura.jar"/>
+			<fileset dir="lib" 
+				excludes="javax.servlet.jar, jsp-api.jar, strutstest-2.1.3.jar, junit.jar, cobertura.jar">
+				<exclude name="*.tld"/>
 			</fileset>
 		</copy>
 		<copy todir="${build.web-inf}">
