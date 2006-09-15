@@ -132,9 +132,9 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 				if (actionForm.getCustomerId() != null
 						&& actionForm.getCustomerId() != "")
 					actionForm.setAmount(savings.getTotalPaymentDue(Integer
-							.valueOf(actionForm.getCustomerId())));
+							.valueOf(actionForm.getCustomerId())).toString());
 			} else {
-				actionForm.setAmount(new Money());
+				actionForm.setAmount(new Money().toString());
 				SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,
 						getMasterDataService().getSupportedPaymentModes(
 								uc.getLocaleId(),
@@ -205,7 +205,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 		actionForm.setPaymentTypeId(null);
 		actionForm.setTrxnTypeId(null);
 		actionForm.setCustomerId(null);
-		actionForm.setAmount(new Money());
+		actionForm.setAmount("");
 	}
 
 	private PaymentData createPaymentData(
@@ -215,7 +215,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 				.getPereferedLocale());
 		Date receiptDate = getDateFromString(actionForm.getReceiptDate(), uc
 				.getPereferedLocale());
-		PaymentData paymentData = new PaymentData(actionForm.getAmount(),
+		PaymentData paymentData = new PaymentData(actionForm.getAmountValue(),
 				new PersonnelPersistenceService().getPersonnel(uc.getId()),
 				Short.valueOf(actionForm.getPaymentTypeId()), trxnDate);
 		paymentData.setRecieptDate(receiptDate);

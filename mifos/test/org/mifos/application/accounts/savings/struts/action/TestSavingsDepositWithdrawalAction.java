@@ -113,6 +113,25 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		assertNotNull(request.getSession().getAttribute(MasterConstants.PAYMENT_TYPE));
 	}
 	
+	public void testFailurePreview() throws Exception {
+		createCenterAndGroup();
+		savingsOffering = helper.createSavingsOffering("asfddsf","213a");
+		savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED, userContext);
+		HibernateUtil.closeSession();
+		savings = new SavingsPersistence().findById(savings.getAccountId());
+		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
+		setRequestPathInfo("/savingsDepositWithdrawalAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("amount", "");
+		addRequestParameter("customerId", "");
+		addRequestParameter("trxnDate", "");
+		addRequestParameter("paymentTypeId", "1");
+		addRequestParameter("trxnTypeId", String.valueOf(AccountConstants.ACTION_SAVINGS_DEPOSIT));
+		actionPerform();
+		assertEquals(3,getErrrorSize());
+		assertEquals(3,getErrrorSize(AccountConstants.ERROR_MANDATORY));
+	}
+	
 	public void testSuccessfullPrevious() throws Exception {
 		setRequestPathInfo("/savingsDepositWithdrawalAction.do");
 		addRequestParameter("method", "previous");

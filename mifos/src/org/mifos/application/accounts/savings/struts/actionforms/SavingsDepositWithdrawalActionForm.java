@@ -14,31 +14,33 @@ import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.StringUtils;
 
-public class SavingsDepositWithdrawalActionForm  extends ValidatorActionForm{
+public class SavingsDepositWithdrawalActionForm  extends BaseActionForm{
 	String trxnTypeId;
 	String paymentTypeId;
 	String trxnDate;
 	String receiptDate;
 	String receiptId;
 	String customerId;
-	Money amount;
+	String amount;
 	
 	public SavingsDepositWithdrawalActionForm(){
-		amount = new Money();
 	}
-	public Money getAmount() {
+	
+	public String getAmount() {
 		return amount;
 	}
-	
-	public void setAmount(Money amount) {
+
+	public void setAmount(String amount) {
 		this.amount = amount;
 	}
-	
+
 	public String getCustomerId() {
 		return customerId;
 	}
@@ -87,6 +89,10 @@ public class SavingsDepositWithdrawalActionForm  extends ValidatorActionForm{
 		this.trxnTypeId = trxnTypeId;
 	}
 	
+	public Money getAmountValue() {
+		return getMoney(amount);
+	}
+	
 	@Override
 	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
 		String method = request.getParameter("method");
@@ -102,7 +108,7 @@ public class SavingsDepositWithdrawalActionForm  extends ValidatorActionForm{
 				errors.add(AccountConstants.ERROR_MANDATORY,new ActionMessage(AccountConstants.ERROR_MANDATORY,resources.getString("Savings.paymentType")));
 			}
 			
-			if(amount==null || amount.getAmountDoubleValue()<=0.0)
+			if(amount==null || getAmountValue().getAmountDoubleValue()<=0.0)
 				errors.add(AccountConstants.ERROR_MANDATORY,new ActionMessage(AccountConstants.ERROR_MANDATORY,resources.getString("Savings.amount")));
 			
 			if( this.paymentTypeId==null||this.paymentTypeId.equals("")){
@@ -118,8 +124,7 @@ public class SavingsDepositWithdrawalActionForm  extends ValidatorActionForm{
 				if( dateError!=null &&!dateError.isEmpty())
 					errors.add(dateError);
 			}
-			
-			if( this.customerId==null){
+			if(StringUtils.isNullOrEmpty(this.customerId)){
 				errors.add(AccountConstants.ERROR_MANDATORY,new ActionMessage(AccountConstants.ERROR_MANDATORY, resources.getString("Savings.ClientName")));
 			}
 		}
