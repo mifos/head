@@ -37,8 +37,24 @@
  */
 package org.mifos.application.meeting.persistence;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.meeting.business.WeekDaysEntity;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
 public class MeetingPersistence extends Persistence{
-
+	
+	public List<WeekDaysEntity> getWorkingDays(Short localeId)throws PersistenceException{
+		List<WeekDaysEntity> workingDays = new ArrayList<WeekDaysEntity>(); 
+		List<MasterDataEntity> weekDaysList = new MasterPersistence().retrieveMasterEntities(WeekDaysEntity.class, localeId);
+		for(MasterDataEntity weekDay: weekDaysList){
+			if(((WeekDaysEntity)weekDay).isWorkingDay())
+				workingDays.add((WeekDaysEntity)weekDay);			
+		}
+		return workingDays;
+	}
 }
