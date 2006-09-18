@@ -69,7 +69,7 @@ import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.valueobjects.LookUpMaster;
 import org.mifos.application.office.business.OfficeView;
-import org.mifos.application.office.persistence.service.OfficePersistenceService;
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
@@ -78,9 +78,6 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
@@ -134,7 +131,7 @@ public class BulkEntryAction extends BaseAction {
 					activeBranches, request);
 			boolean isCenterHeirarchyExists = Configuration.getInstance()
 					.getCustomerConfig(
-							new OfficePersistenceService().getHeadOffice()
+							new OfficePersistence().getHeadOffice()
 									.getOfficeId()).isCenterHierarchyExists();
 			SessionUtils.setAttribute(
 					BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
@@ -316,7 +313,7 @@ public class BulkEntryAction extends BaseAction {
 			throws Exception {
 		return mapping.findForward(BulkEntryConstants.PREVIUOSSUCCESS);
 	}
-	
+
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -503,7 +500,10 @@ public class BulkEntryAction extends BaseAction {
 										.equals(CustomerConstants.GROUP_LEVEL_ID) && accountView
 										.getSavingsOffering()
 										.getRecommendedAmntUnit()
-										.getId().equals(RecommendedAmountUnit.PERINDIVIDUAL.getValue()))) {
+										.getId()
+										.equals(
+												RecommendedAmountUnit.PERINDIVIDUAL
+														.getValue()))) {
 							isCenterGroupIndvAccount = true;
 						}
 						bulkEntryBusinessService.saveSavingsDepositAccount(

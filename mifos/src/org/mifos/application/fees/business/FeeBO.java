@@ -47,20 +47,19 @@ import org.mifos.application.fees.exceptions.FeeException;
 import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeChangeType;
+import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.helpers.FeeLevel;
 import org.mifos.application.fees.util.helpers.FeeStatus;
-import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
-import org.mifos.application.office.persistence.service.OfficePersistenceService;
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public abstract class FeeBO extends BusinessObject {
@@ -82,15 +81,16 @@ public abstract class FeeBO extends BusinessObject {
 	private FeeStatusEntity feeStatus;
 
 	private Short changeType;
-	
+
 	@Deprecated
 	protected Double rateOrAmount;
-	
+
 	@Deprecated
 	protected Short rateAmountFlag;
-	
+
 	/**
-	 * Addding a default constructor is hibernate's requirement and should not be used to create a valid Fee object.   
+	 * Addding a default constructor is hibernate's requirement and should not
+	 * be used to create a valid Fee object.
 	 */
 	protected FeeBO() {
 		this.feeId = null;
@@ -101,38 +101,40 @@ public abstract class FeeBO extends BusinessObject {
 		this.glCode = null;
 		this.feeLevels = null;
 	}
-		
+
 	/**
-	 * Constructor to create a valid Fee Object 
+	 * Constructor to create a valid Fee Object
 	 */
-	protected FeeBO(UserContext userContext, String feeName, CategoryTypeEntity categoryType,
-			FeeFrequencyTypeEntity feeFrequencyType, GLCodeEntity glCodeEntity,boolean isCustomerDefaultFee,
-			FeePaymentEntity feePayment, MeetingBO feeMeeting) throws FeeException{
-		
+	protected FeeBO(UserContext userContext, String feeName,
+			CategoryTypeEntity categoryType,
+			FeeFrequencyTypeEntity feeFrequencyType, GLCodeEntity glCodeEntity,
+			boolean isCustomerDefaultFee, FeePaymentEntity feePayment,
+			MeetingBO feeMeeting) throws FeeException {
+
 		validateFields(feeName, categoryType, glCodeEntity);
-		this.feeFrequency = new FeeFrequencyEntity(feeFrequencyType, this, feePayment, feeMeeting);
-		
+		this.feeFrequency = new FeeFrequencyEntity(feeFrequencyType, this,
+				feePayment, feeMeeting);
+
 		setUserContext(userContext);
 		setCreateDetails();
-		
+
 		this.feeName = feeName;
-		this.categoryType = categoryType;		
+		this.categoryType = categoryType;
 		this.glCode = glCodeEntity;
-		
+
 		this.feeId = null;
 		this.feeLevels = new HashSet<FeeLevelEntity>();
 		try {
-			this.office = new OfficePersistenceService().getHeadOffice();
+			this.office = new OfficePersistence().getHeadOffice();
 		} catch (PersistenceException e) {
 			throw new FeeException(e);
 		}
 		this.changeType = (FeeChangeType.NOT_UPDATED.getValue());
-		this.setFeeStatus(retrieveFeeStatusEntity(FeeStatus.ACTIVE));	
-		if(isCustomerDefaultFee)
+		this.setFeeStatus(retrieveFeeStatusEntity(FeeStatus.ACTIVE));
+		if (isCustomerDefaultFee)
 			makeFeeDefaultToCustomer();
 	}
-	
-		
+
 	public Short getFeeId() {
 		return feeId;
 	}
@@ -165,25 +167,24 @@ public abstract class FeeBO extends BusinessObject {
 		return glCode;
 	}
 
-	public FeeChangeType getFeeChangeType() throws PropertyNotFoundException{
+	public FeeChangeType getFeeChangeType() throws PropertyNotFoundException {
 		return FeeChangeType.getFeeChangeType(this.changeType);
 	}
 
-	public void updateFeeChangeType(FeeChangeType updateFlag){
+	public void updateFeeChangeType(FeeChangeType updateFlag) {
 		this.changeType = updateFlag.getValue();
 	}
-	
+
 	private void setFeeStatus(FeeStatusEntity feeStatus) {
 		this.feeStatus = feeStatus;
-	}	
+	}
 
-	
-	public void updateStatus(FeeStatus status) throws FeeException{
-		if(!this.feeStatus.getId().equals(status.getValue()))
+	public void updateStatus(FeeStatus status) throws FeeException {
+		if (!this.feeStatus.getId().equals(status.getValue()))
 			setFeeStatus(retrieveFeeStatusEntity(status));
 	}
-	
-	public void update() throws FeeException{
+
+	public void update() throws FeeException {
 		try {
 			setUpdateDetails();
 			new FeePersistence().createOrUpdate(this);
@@ -191,21 +192,21 @@ public abstract class FeeBO extends BusinessObject {
 			throw new FeeException(FeeConstants.FEE_UPDATE_ERROR, e);
 		}
 	}
-		
+
 	public abstract RateAmountFlag getFeeType();
-	
+
 	public void save() throws ApplicationException, FeeException {
 		try {
 			new FeePersistence().createOrUpdate(this);
 		} catch (HibernateException he) {
 			throw new FeeException(FeeConstants.FEE_CREATE_ERROR, he);
 		}
-	}	
+	}
 
 	public boolean isActive() {
 		return getFeeStatus().isActive();
 	}
-	
+
 	public boolean isPeriodic() {
 		return getFeeFrequency().isPeriodic();
 	}
@@ -217,69 +218,74 @@ public abstract class FeeBO extends BusinessObject {
 	public boolean isTimeOfDisbursement() {
 		return getFeeFrequency().isTimeOfDisbursement();
 	}
-	
+
 	public boolean isCustomerDefaultFee() {
-		return  getFeeLevels().size() > 0;
+		return getFeeLevels().size() > 0;
 	}
-		
-	
-	protected void validateFields(String feeName, CategoryTypeEntity categoryType, GLCodeEntity glCode)throws FeeException{
+
+	protected void validateFields(String feeName,
+			CategoryTypeEntity categoryType, GLCodeEntity glCode)
+			throws FeeException {
 		validateFeeName(feeName);
 		validateFeeCateogry(categoryType);
 		validateGLCode(glCode);
 	}
-	
 
 	private void makeFeeDefaultToCustomer() throws FeeException {
-		try{
-			
+		try {
+
 			if (getCategoryType().getFeeCategory().equals(FeeCategory.CLIENT))
 				addFeeLevel(createFeeLevel(FeeLevel.CLIENTLEVEL));
-			else if (getCategoryType().getFeeCategory().equals(FeeCategory.GROUP))
+			else if (getCategoryType().getFeeCategory().equals(
+					FeeCategory.GROUP))
 				addFeeLevel(createFeeLevel(FeeLevel.GROUPLEVEL));
-			else if (getCategoryType().getFeeCategory().equals(FeeCategory.CENTER))
+			else if (getCategoryType().getFeeCategory().equals(
+					FeeCategory.CENTER))
 				addFeeLevel(createFeeLevel(FeeLevel.CENTERLEVEL));
-			else if (getCategoryType().getFeeCategory().equals(FeeCategory.ALLCUSTOMERS)) {
+			else if (getCategoryType().getFeeCategory().equals(
+					FeeCategory.ALLCUSTOMERS)) {
 				addFeeLevel(createFeeLevel(FeeLevel.CLIENTLEVEL));
 				addFeeLevel(createFeeLevel(FeeLevel.GROUPLEVEL));
 				addFeeLevel(createFeeLevel(FeeLevel.CENTERLEVEL));
 			}
-		}catch(PropertyNotFoundException pnfe){
+		} catch (PropertyNotFoundException pnfe) {
 			throw new FeeException(pnfe);
 		}
 	}
-	
+
 	private FeeLevelEntity createFeeLevel(FeeLevel feeLevel) {
-		return new FeeLevelEntity(this,feeLevel);
+		return new FeeLevelEntity(this, feeLevel);
 	}
-	
+
 	private void addFeeLevel(FeeLevelEntity feeLevel) {
 		feeLevels.add(feeLevel);
-	}	
-	
-	private void validateFeeName(String feeName)throws FeeException{
+	}
+
+	private void validateFeeName(String feeName) throws FeeException {
 		if (StringUtils.isNullOrEmpty(feeName))
 			throw new FeeException(FeeConstants.INVALID_FEE_NAME);
 	}
-	
-	private void validateGLCode(GLCodeEntity glCode)throws FeeException{
-		if(glCode==null)
+
+	private void validateGLCode(GLCodeEntity glCode) throws FeeException {
+		if (glCode == null)
 			throw new FeeException(FeeConstants.INVALID_GLCODE);
 	}
-	
-	private void validateFeeCateogry(CategoryTypeEntity categoryType)throws FeeException{
-		if(categoryType==null)
+
+	private void validateFeeCateogry(CategoryTypeEntity categoryType)
+			throws FeeException {
+		if (categoryType == null)
 			throw new FeeException(FeeConstants.INVALID_FEE_CATEGORY);
 	}
-	
-	private FeeStatusEntity retrieveFeeStatusEntity(FeeStatus status)throws FeeException{
-		try{
-			return (FeeStatusEntity)new MasterPersistence().retrieveMasterEntity(status.getValue(), FeeStatusEntity.class, userContext.getLocaleId());
-		}catch(PersistenceException pe){
+
+	private FeeStatusEntity retrieveFeeStatusEntity(FeeStatus status)
+			throws FeeException {
+		try {
+			return (FeeStatusEntity) new MasterPersistence()
+					.retrieveMasterEntity(status.getValue(),
+							FeeStatusEntity.class, userContext.getLocaleId());
+		} catch (PersistenceException pe) {
 			throw new FeeException(pe);
 		}
 	}
 
-	
- 
 }

@@ -13,7 +13,7 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.master.util.valueobjects.EntityMaster;
 import org.mifos.application.office.business.OfficeView;
-import org.mifos.application.office.persistence.service.OfficePersistenceService;
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
@@ -29,7 +29,7 @@ import org.mifos.framework.security.util.UserContext;
 public class MasterDataService extends BusinessService {
 	private PersonnelPersistenceService personnelPersistenceService = new PersonnelPersistenceService();
 
-	private OfficePersistenceService officePersistenceService = new OfficePersistenceService();
+	private OfficePersistence officePersistence = new OfficePersistence();
 
 	private CustomerPersistence customerPersistence = new CustomerPersistence();
 
@@ -66,7 +66,7 @@ public class MasterDataService extends BusinessService {
 	public List<OfficeView> getActiveBranches(Short branchId)
 			throws ServiceException {
 		try {
-			return officePersistenceService.getActiveBranches(branchId);
+			return officePersistence.getActiveOffices(branchId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}

@@ -38,13 +38,7 @@ public class OfficePersistence extends Persistence {
 	}
 	
 	public List<OfficeCacheView> getAllOffices()throws PersistenceException{
-		List<OfficeCacheView> officeList = null;
-		try {
-			officeList = executeNamedQuery(NamedQueryConstants.GET_ALL_OFFICES,null);
-		}catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
-		return officeList;
+			return  executeNamedQuery(NamedQueryConstants.GET_ALL_OFFICES,null);
 	}
 	
 	public String getSearchId(Short officeId) throws PersistenceException {
@@ -61,15 +55,7 @@ public class OfficePersistence extends Persistence {
 	}
 	
 	public OfficeBO getOffice(Short officeId) throws PersistenceException {
-		
-		try{
-		Session session = HibernateUtil.getSessionTL();
-		return (OfficeBO)session.get(OfficeBO.class,officeId);
-		}
-		catch (HibernateException e) {
-			throw new PersistenceException(e);
-		}
-		
+		 return  (OfficeBO)getPersistentObject(OfficeBO.class,officeId );
 	}
 	
 	public OfficeBO getHeadOffice() throws PersistenceException {

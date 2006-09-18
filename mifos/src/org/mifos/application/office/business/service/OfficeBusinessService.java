@@ -8,57 +8,64 @@ import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 
 public class OfficeBusinessService extends BusinessService {
 
-	private OfficePersistence officePersistence  = new OfficePersistence();
+	private OfficePersistence officePersistence = new OfficePersistence();
+
 	@Override
 	public BusinessObject getBusinessObject(UserContext userContext) {
 		return null;
 	}
-	
-	public List<OfficeView> getActiveParents(OfficeLevel level,Short localeId) throws ServiceException{
+
+	public List<OfficeView> getActiveParents(OfficeLevel level, Short localeId)
+			throws ServiceException {
 		try {
-			return officePersistence.getActiveParents(level,localeId);
+			return officePersistence.getActiveParents(level, localeId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
 	}
-	public List <OfficeView> getConfiguredLevels(Short localeId) throws ServiceException{
+
+	public List<OfficeView> getConfiguredLevels(Short localeId)
+			throws ServiceException {
 		try {
 			return officePersistence.getActiveLevels(localeId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
-		
+
 	}
-	public OfficeBO getOffice(Short officeId) throws ServiceException{
+
+	public OfficeBO getOffice(Short officeId) throws ServiceException {
 		try {
 			return officePersistence.getOffice(officeId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
 	}
-	public List<OfficeView> getStatusList(Short localeId) throws ServiceException{
+
+	public List<OfficeView> getStatusList(Short localeId)
+			throws ServiceException {
 		try {
 			return officePersistence.getStatusList(localeId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
 	}
-	public List<OfficeBO> getOfficesTillBranchOffice() throws ServiceException{
+
+	public List<OfficeBO> getOfficesTillBranchOffice() throws ServiceException {
 		try {
 			return officePersistence.getOfficesTillBranchOffice();
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
 	}
-	public List<OfficeBO> getBranchOffices() throws ServiceException{
+
+	public List<OfficeBO> getBranchOffices() throws ServiceException {
 		try {
 			return officePersistence.getBranchOffices();
 		} catch (PersistenceException e) {
@@ -66,7 +73,8 @@ public class OfficeBusinessService extends BusinessService {
 		}
 	}
 
-	public List<OfficeView> getChildOffices(String searchId) throws ServiceException {
+	public List<OfficeView> getChildOffices(String searchId)
+			throws ServiceException {
 		try {
 			return officePersistence.getChildOffices(searchId);
 		} catch (PersistenceException e) {
