@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -20,7 +21,7 @@ import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.personnel.util.helpers.PersonnelStatus;
-import org.mifos.application.rolesandpermission.util.valueobjects.Role;
+import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
@@ -607,15 +608,15 @@ public class TestPersonnelBO extends MifosTestCase {
 	private Name getPersonnelName() {
 		return new Name("first", "middle", "secondLast", "last");
 	}
-	public List<Role> getRoles() throws Exception{
+	public List<RoleBO> getRoles() throws Exception{
 		return ((PersonnelBusinessService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.Personnel))
 				.getRoles();
 	}
 	
-	public List<Role> getNewRoles() throws Exception{
-		List<Role> roles = new ArrayList<Role>();
-		roles.add((Role)TestObjectFactory.getObject(Role.class, Short.valueOf("1")));
+	public List<RoleBO> getNewRoles() throws Exception{
+		List<RoleBO> roles = new ArrayList<RoleBO>();
+		roles.add((RoleBO)TestObjectFactory.getObject(RoleBO.class, Short.valueOf("1")));
 		return roles;
 	}
 	

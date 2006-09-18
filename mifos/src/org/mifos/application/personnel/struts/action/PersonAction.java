@@ -35,7 +35,7 @@ import org.mifos.application.personnel.struts.actionforms.PersonActionForm;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.personnel.util.helpers.PersonnelStatus;
-import org.mifos.application.rolesandpermission.util.valueobjects.Role;
+import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
@@ -406,7 +406,7 @@ public class PersonAction extends BaseAction {
 		actionForm.setEmailId(personnel.getEmailId());
 		if(personnel.getPreferredLocale()!=null)
 			actionForm.setPreferredLocale(getStringValue(personnel.getPreferredLocale().getLanguage().getLookUpId()));
-		List<Role> selectList = new ArrayList<Role>();
+		List<RoleBO> selectList = new ArrayList<RoleBO>();
 		for(PersonnelRoleEntity personnelRole : personnel.getPersonnelRoles()){
 			selectList.add(personnelRole.getRole());
 		}
@@ -445,14 +445,14 @@ public class PersonAction extends BaseAction {
 		return customFields;
 	}
 	
-	private List<Role> getRoles(HttpServletRequest request,
+	private List<RoleBO> getRoles(HttpServletRequest request,
 			PersonActionForm personActionForm) throws PageExpiredException {
 		boolean addFlag = false;
-		List<Role> selectList = new ArrayList<Role>();
-		List<Role> masterList = (List<Role>) SessionUtils.getAttribute(
+		List<RoleBO> selectList = new ArrayList<RoleBO>();
+		List<RoleBO> masterList = (List<RoleBO>) SessionUtils.getAttribute(
 				PersonnelConstants.ROLEMASTERLIST, request);
 		if (personActionForm.getPersonnelRoles() != null)
-		for (Role role : masterList) {
+		for (RoleBO role : masterList) {
 			for (String roleId : personActionForm.getPersonnelRoles()) {
 				if (roleId != null&&role.getId().intValue() == Integer.valueOf(roleId)
 						.intValue()) {
@@ -471,11 +471,11 @@ public class PersonAction extends BaseAction {
 			PersonActionForm personActionForm) throws PageExpiredException {
 
 		boolean addFlag = false;
-		List<Role> selectList = new ArrayList<Role>();
+		List<RoleBO> selectList = new ArrayList<RoleBO>();
 		if (personActionForm.getPersonnelRoles() != null) {
-			List<Role> masterList = (List<Role>) SessionUtils.getAttribute(
+			List<RoleBO> masterList = (List<RoleBO>) SessionUtils.getAttribute(
 					PersonnelConstants.ROLEMASTERLIST, request);
-			for (Role role : masterList) {
+			for (RoleBO role : masterList) {
 				for (String roleId : personActionForm.getPersonnelRoles()) {
 					if (roleId != null
 							&& role.getId().intValue() == Integer.valueOf(

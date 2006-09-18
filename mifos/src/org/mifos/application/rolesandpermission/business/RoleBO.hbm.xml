@@ -23,5 +23,14 @@
 				class="org.mifos.application.rolesandpermission.business.RoleActivityEntity" />
 		</set>
 	</class>
+	
+	<query name="getRoleForGivenName">
+            <![CDATA[FROM RoleBO role WHERE role.name =:RoleName]]>
+    </query>
+    
+    <query name="getAllRoles">
+            <![CDATA[ from RoleBO role order by role.name]]>
+    </query>
+    
 </hibernate-mapping>
 

@@ -178,6 +178,17 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		assertEquals(1,persistence.getAllPersonnelNotes(personnel.getPersonnelId()).getSize());
 	}
 	
+	public void testGetPersonnelByGlobalPersonnelNum()throws Exception{
+		assertNotNull(persistence.getPersonnelByGlobalPersonnelNum("1"));
+	}
+	
+	public void testGetPersonnelRoleCount() throws Exception{
+		Integer count = persistence.getPersonnelRoleCount((short)2);
+		assertEquals(0,(int)count);
+		count = persistence.getPersonnelRoleCount((short)1);
+		assertEquals(3,(int)count);
+	}
+	
 	private void createInitialObjects(Short officeId, Short personnelId) {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -222,7 +233,5 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		client = TestObjectFactory.createClient("client",clientStatus,group,new Date());
 	}
 	
-	public void testGetPersonnelByGlobalPersonnelNum()throws Exception{
-		assertNotNull(persistence.getPersonnelByGlobalPersonnelNum("1"));
-	}
+	
 }

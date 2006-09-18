@@ -18,7 +18,7 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
-import org.mifos.application.rolesandpermission.util.valueobjects.Role;
+import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.util.Address;
@@ -388,13 +388,13 @@ public class PersonActionForm extends BaseActionForm {
 			throws PageExpiredException {
 
 		boolean addFlag = false;
-		List<Role> selectList = new ArrayList<Role>();
+		List<RoleBO> selectList = new ArrayList<RoleBO>();
 		if (personnelRoles != null) {
 
-			List<Role> masterList = (List<Role>) SessionUtils.getAttribute(
+			List<RoleBO> masterList = (List<RoleBO>) SessionUtils.getAttribute(
 					PersonnelConstants.ROLEMASTERLIST, request);
 
-			for (Role role : masterList) {
+			for (RoleBO role : masterList) {
 				for (String roleId : personnelRoles) {
 					if (roleId != null
 							&& role.getId().intValue() == Integer.valueOf(

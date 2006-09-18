@@ -763,7 +763,7 @@ public class MeetingBOTest extends MifosTestCase{
 	
 	public void testFailureCreateDailyMeeting_recurAfterInvalid(){
 		try{
-			recurAfer = -1;
+			recurAfer = (short)-1;
 			meeting = createDailyMeeting(recurAfer,new Date());
 			assertNull(meeting);
 		}catch(MeetingException me){
@@ -774,7 +774,7 @@ public class MeetingBOTest extends MifosTestCase{
 	
 	public void testFailureCreateDailyMeeting_startDateIsNull(){
 		try{
-			recurAfer = 1;
+			recurAfer = (short)1;
 			meeting = createDailyMeeting(recurAfer,null);
 			assertNull(meeting);
 		}catch(MeetingException me){
@@ -839,7 +839,7 @@ public class MeetingBOTest extends MifosTestCase{
 	}
 	
 	public void testSuccessfulCreateWeeklyMeeting() throws MeetingException{
-		recurAfer = 2;
+		recurAfer = (short)2;
 		meeting = createWeeklyMeeting(WeekDay.MONDAY,recurAfer, new Date());
 		meeting.save();
 		HibernateUtil.commitTransaction();

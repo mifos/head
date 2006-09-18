@@ -18,6 +18,7 @@ import org.mifos.application.personnel.util.helpers.LockStatus;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.personnel.util.helpers.PersonnelStatus;
+import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.application.rolesandpermission.util.valueobjects.Role;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.BusinessObject;
@@ -94,7 +95,7 @@ public class PersonnelBO extends BusinessObject {
 
 	public PersonnelBO(PersonnelLevel level, OfficeBO office, Integer title,
 			Short preferredLocale, String password, String userName,
-			String emailId, List<Role> roles,
+			String emailId, List<RoleBO> roles,
 			List<CustomFieldView> customFields, Name name,
 			String governmentIdNumber, Date dob, Integer maritalStatus,
 			Integer gender, Date dateOfJoiningMFI, Date dateOfJoiningBranch,
@@ -113,9 +114,9 @@ public class PersonnelBO extends BusinessObject {
 		this.personnelDetails = new PersonnelDetailsEntity(name,
 				governmentIdNumber, dob, maritalStatus, gender,
 				dateOfJoiningMFI, dateOfJoiningBranch, this, address);
-		this.personnelRoles = new HashSet();
+		this.personnelRoles = new HashSet<PersonnelRoleEntity>();
 		if (roles != null) {
-			for (Role role : roles) {
+			for (RoleBO role : roles) {
 				this.personnelRoles.add(new PersonnelRoleEntity(role, this));
 			}
 		}
@@ -428,7 +429,7 @@ public class PersonnelBO extends BusinessObject {
 
 	public void update(PersonnelStatus newStatus, PersonnelLevel newLevel,
 			OfficeBO office, Integer title, Short preferredLocale,
-			String password, String emailId, List<Role> roles,
+			String password, String emailId, List<RoleBO> roles,
 			List<CustomFieldView> customFields, Name name,
 			Integer maritalStatus, Integer gender, Address address,
 			Short updatedById) throws PersonnelException {
@@ -483,10 +484,10 @@ public class PersonnelBO extends BusinessObject {
 		}
 	}
 
-	private void updatePersonnelRoles(List<Role> roles) {
+	private void updatePersonnelRoles(List<RoleBO> roles) {
 		this.personnelRoles.clear();
 		if (roles != null) {
-			for (Role role : roles) {
+			for (RoleBO role : roles) {
 				this.personnelRoles.add(new PersonnelRoleEntity(role, this));
 			}
 		}

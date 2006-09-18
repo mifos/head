@@ -11,7 +11,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
-import org.mifos.application.rolesandpermission.util.valueobjects.Role;
+import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -453,7 +453,7 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 		return personnel;
 	}
 
-	public List<Role> getRoles() throws Exception {
+	public List<RoleBO> getRoles() throws Exception {
 		return ((PersonnelBusinessService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.Personnel)).getRoles();
 	}

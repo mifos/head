@@ -2,14 +2,14 @@
 
 package org.mifos.application.personnel.business;
 
-import org.mifos.application.rolesandpermission.util.valueobjects.Role;
+import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.framework.business.PersistentObject;
 
 public class PersonnelRoleEntity extends PersistentObject {
 
 	private final Integer personnelRoleId;
 
-	private final Role role;
+	private final RoleBO role;
 
 	private final PersonnelBO personnel;
 
@@ -20,7 +20,7 @@ public class PersonnelRoleEntity extends PersistentObject {
 		this.role=null;
 
 	}
-	public PersonnelRoleEntity(Role role, PersonnelBO personnel) {
+	public PersonnelRoleEntity(RoleBO role, PersonnelBO personnel) {
 		super();
 		this.role = role;
 		this.personnel = personnel;
@@ -29,7 +29,7 @@ public class PersonnelRoleEntity extends PersistentObject {
 	public Integer getPersonnelRoleId() {
 		return personnelRoleId;
 	}
-	public Role getRole() {
+	public RoleBO getRole() {
 		return role;
 	}
 	public PersonnelBO getPersonnel() {

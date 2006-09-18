@@ -22,5 +22,9 @@
 			class="org.mifos.application.master.business.LookUpValueEntity"
 			cascade="none" update="false" insert="false" />
 	</class>
+	
+	<query name="getAllActivities">
+            <![CDATA[ from ActivityEntity ae order by ae.id]]>
+    </query>
 </hibernate-mapping>
 

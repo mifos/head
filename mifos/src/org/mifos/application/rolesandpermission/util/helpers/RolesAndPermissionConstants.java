@@ -28,5 +28,6 @@ public interface RolesAndPermissionConstants {
 	public final static String ROLESUBOBJECT="RoleSubObject";
 	public final static String KEYROLEASSIGNEDTOPERSONNEL="roleandpermission.error.roleassigned";
 	public final static String KEYROLEDELETEDBYOTHERUSER="roleandpermission.error.roledeleted";
+	public final static String KEYROLENAMENOTSPECIFIED="roleandpermission.rolename.required";
 	
 }

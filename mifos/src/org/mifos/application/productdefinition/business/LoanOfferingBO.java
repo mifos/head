@@ -416,11 +416,11 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		if (intDedDisbursement) {
 			this.gracePeriodType = new GracePeriodTypeEntity(
 					GraceTypeConstants.NONE);
-			this.gracePeriodDuration = 0;
+			this.gracePeriodDuration = (short)0;
 		} else if (gracePeriodType.getId().equals(
 				GraceTypeConstants.NONE.getValue())) {
 			this.gracePeriodType = gracePeriodType;
-			this.gracePeriodDuration = 0;
+			this.gracePeriodDuration = (short)0;
 		} else {
 			this.gracePeriodType = gracePeriodType;
 			this.gracePeriodDuration = gracePeriodDuration;

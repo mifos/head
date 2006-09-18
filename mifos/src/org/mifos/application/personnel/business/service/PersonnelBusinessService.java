@@ -10,14 +10,12 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
-import org.mifos.application.rolesandpermission.dao.RolesandPermissionDAO;
-import org.mifos.application.rolesandpermission.util.valueobjects.Role;
+import org.mifos.application.rolesandpermission.business.RoleBO;
+import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 
@@ -59,13 +57,11 @@ public class PersonnelBusinessService extends BusinessService {
 	}
 
 	// TODO: modify this function once roles and permission migrated to m2
-	public List<Role> getRoles() throws ServiceException {
+	public List<RoleBO> getRoles() throws ServiceException {
 		try {
-			return new RolesandPermissionDAO().getRoles();
-		} catch (SystemException e) {
-			throw new ServiceException();
-		} catch (ApplicationException e) {
-			throw new ServiceException();
+			return new RolesPermissionsPersistence().getRoles();
+		} catch(PersistenceException e){
+			throw new ServiceException(e);
 		}
 	}
 

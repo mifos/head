@@ -151,6 +151,7 @@ import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUni
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
+import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.application.rolesandpermission.util.valueobjects.Role;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.TestUtils;
@@ -2103,7 +2104,7 @@ public class TestObjectFactory {
 	public static PersonnelBO createPersonnel(PersonnelLevel level,
 			OfficeBO office, Integer title, Short preferredLocale,
 			String password, String userName, String emailId,
-			List<Role> personnelRoles,
+			List<RoleBO> personnelRoles,
 			List<CustomFieldView> customFields, Name name,
 			String governmentIdNumber, Date dob, Integer maritalStatus,
 			Integer gender, Date dateOfJoiningMFI, Date dateOfJoiningBranch,

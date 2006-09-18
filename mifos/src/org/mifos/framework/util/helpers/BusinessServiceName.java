@@ -18,7 +18,9 @@ public enum BusinessServiceName {
 	Office("org.mifos.application.office.business.service.OfficeBusinessService"),
 	LoanProduct("org.mifos.application.productdefinition.business.service.LoanPrdBusinessService"),
 	OfficeHierarchy("org.mifos.application.office.business.service.OfficeHierarchyBusinessService"),
-	Meeting("org.mifos.application.meeting.business.service.MeetingBusinessService");
+	Meeting("org.mifos.application.meeting.business.service.MeetingBusinessService"),
+	RolesPermissions("org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService");
+	
 	String name;
 
 	BusinessServiceName(String name) {

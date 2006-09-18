@@ -3,6 +3,7 @@ package org.mifos.application.personnel.persistence;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -140,5 +141,14 @@ public class PersonnelPersistence extends Persistence {
 			throw new PersistenceException(hse);
 		}
 		return notesResult;
+	}
+	
+	public Integer getPersonnelRoleCount(Short roleId) throws PersistenceException{
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("roleId", roleId);
+		Integer count = (Integer) execUniqueResultNamedQuery(
+				NamedQueryConstants.GET_PERSONNEL_ROLE_COUNT,
+				queryParameters);
+		return count;
 	}
 }

@@ -520,4 +520,9 @@ public interface NamedQueryConstants {
 
 	public String PRDAPPLICABLE_CATEGORIES="product.createapplicableproductcat";
 	public String SAVINGS_APPL_RECURRENCETYPES="product.savingsapplicablerecurrencetypes";
+	
+	public String GET_ROLE_FOR_GIVEN_NAME="getRoleForGivenName";
+	public String GET_ALL_ACTIVITIES="getAllActivities";
+	public String GET_ALL_ROLES="getAllRoles";
+	public String GET_PERSONNEL_ROLE_COUNT="getPersonnelRoleCount";
 }
