@@ -437,6 +437,7 @@ class ClientCreateEdit<TestClass
       @@button_continue=@@clientprop['button.continue']
       @@button_preview=@@clientprop['button.preview']
       @@button_submit=@@clientprop['button.submit']
+      @@return_to_details_page=@@clientprop['client.butbachdetpage']
       @@edit_group_client=string_replace_message(@@clientprop['client.EditGroupMembershipLink'],"group",@@lookup_name_group)
       $ie.button(:value,@@button_continue).click
       $ie.wait
@@ -456,7 +457,7 @@ class ClientCreateEdit<TestClass
   end
   def check_all_mandatory_when_salutation_selected()
     begin
-      $ie.select_list(:name,"customerNameDetail[0].salutation").select_value("47")
+      $ie.select_list(:name,"clientName.salutation").select_value("47")
       $ie.button(:value,@@button_continue).click
       $ie.wait
       assert($ie.contains_text(@@client_fname_msg))and \
@@ -476,8 +477,8 @@ class ClientCreateEdit<TestClass
   
   def check_all_mandatory_when_salutation_fname_entered()
     begin
-      $ie.select_list(:name,"customerNameDetail[0].salutation").select_value("47")
-      $ie.text_field(:name,"customerNameDetail[0].firstName").set("aaa")
+      $ie.select_list(:name,"clientName.salutation").select_value("47")
+      $ie.text_field(:name,"clientName.firstName").set("aaa")
       $ie.button(:value,@@button_continue).click
       assert($ie.contains_text(@@client_lname_msg))and \
       assert($ie.contains_text(@@client_dob_msg))and \
@@ -496,9 +497,9 @@ class ClientCreateEdit<TestClass
   
   def check_all_mandatory_when_salutation_fname_lname_entered()
     begin
-      $ie.select_list(:name,"customerNameDetail[0].salutation").select_value("47")
-      $ie.text_field(:name,"customerNameDetail[0].firstName").set("aaa")
-      $ie.text_field(:name,"customerNameDetail[0].lastName").set("aaa")
+      $ie.select_list(:name,"clientName.salutation").select_value("47")
+      $ie.text_field(:name,"clientName.firstName").set("aaa")
+      $ie.text_field(:name,"clientName.lastName").set("aaa")
       $ie.button(:value,@@button_continue).click
       assert($ie.contains_text(@@client_dob_msg))and \
       assert($ie.contains_text(@@client_gender_msg))and \
@@ -516,9 +517,9 @@ class ClientCreateEdit<TestClass
   
   def check_all_mandatory_when_salutation_fname_lname_dob_entered()
     begin
-      $ie.select_list(:name,"customerNameDetail[0].salutation").select_value("47")
-      $ie.text_field(:name,"customerNameDetail[0].firstName").set("aaa")
-      $ie.text_field(:name,"customerNameDetail[0].lastName").set("aaa")
+      $ie.select_list(:name,"clientName.salutation").select_value("47")
+      $ie.text_field(:name,"clientName.firstName").set("aaa")
+      $ie.text_field(:name,"clientName.lastName").set("aaa")
       $ie.text_field(:name,"dateOfBirthDD").set("09")
       $ie.text_field(:name,"dateOfBirthMM").set("10")
       $ie.text_field(:name,"dateOfBirthYY").set("1981")
@@ -539,13 +540,13 @@ class ClientCreateEdit<TestClass
   
   def check_all_mandatory_when_salutation_fname_lname_dob_gender_entered()
     begin
-      $ie.select_list(:name,"customerNameDetail[0].salutation").select_value("47")
-      $ie.text_field(:name,"customerNameDetail[0].firstName").set("aaa")
-      $ie.text_field(:name,"customerNameDetail[0].lastName").set("aaa")
+      $ie.select_list(:name,"clientName.salutation").select_value("47")
+      $ie.text_field(:name,"clientName.firstName").set("aaa")
+      $ie.text_field(:name,"clientName.lastName").set("aaa")
       $ie.text_field(:name,"dateOfBirthDD").set("09")
       $ie.text_field(:name,"dateOfBirthMM").set("10")
       $ie.text_field(:name,"dateOfBirthYY").set("1981")
-      $ie.select_list(:name,"customerDetail.gender").select_value("49")
+      $ie.select_list(:name,"clientDetailView.gender").select_value("49")
       $ie.button(:value,@@button_continue).click
       assert($ie.contains_text(@@client_spo_or_father_type_msg))and \
       assert($ie.contains_text(@@client_spo_or_father_fname_msg))and \
@@ -562,14 +563,14 @@ class ClientCreateEdit<TestClass
   
   def check_all_mandatory_when_salutation_fname_lname_dob_gender_SpouseFatherType_entered()
     begin
-      $ie.select_list(:name,"customerNameDetail[0].salutation").select_value("47")
-      $ie.text_field(:name,"customerNameDetail[0].firstName").set("aaa")
-      $ie.text_field(:name,"customerNameDetail[0].lastName").set("aaa")
+      $ie.select_list(:name,"clientName.salutation").select_value("47")
+      $ie.text_field(:name,"clientName.firstName").set("aaa")
+      $ie.text_field(:name,"clientName.lastName").set("aaa")
       $ie.text_field(:name,"dateOfBirthDD").set("09")
       $ie.text_field(:name,"dateOfBirthMM").set("10")
       $ie.text_field(:name,"dateOfBirthYY").set("1981")
-      $ie.select_list(:name,"customerDetail.gender").select_value("49")
-      $ie.select_list(:name,"customerNameDetail[1].nameType").select_value("1")
+      $ie.select_list(:name,"clientDetailView.gender").select_value("49")
+      $ie.select_list(:name,"spouseName.nameType").select_value("1")
       $ie.button(:value,@@button_continue).click
       assert($ie.contains_text(@@client_spo_or_father_fname_msg))and \
       assert($ie.contains_text(@@client_spo_or_father_lname_msg))and \
@@ -585,15 +586,15 @@ class ClientCreateEdit<TestClass
   
   def check_mandatory_when_SpouseorFatherLastName_AdditionalInformation_not_entered()
     begin
-      $ie.select_list(:name,"customerNameDetail[0].salutation").select_value("47")
-      $ie.text_field(:name,"customerNameDetail[0].firstName").set("aaa")
-      $ie.text_field(:name,"customerNameDetail[0].lastName").set("aaa")
+      $ie.select_list(:name,"clientName.salutation").select_value("47")
+      $ie.text_field(:name,"clientName.firstName").set("aaa")
+      $ie.text_field(:name,"clientName.lastName").set("aaa")
       $ie.text_field(:name,"dateOfBirthDD").set("09")
       $ie.text_field(:name,"dateOfBirthMM").set("10")
       $ie.text_field(:name,"dateOfBirthYY").set("1981")
-      $ie.select_list(:name,"customerDetail.gender").select_value("49")
-      $ie.select_list(:name,"customerNameDetail[1].nameType").select_value("1")
-      $ie.text_field(:name,"customerNameDetail[1].firstName").set("AAA")
+      $ie.select_list(:name,"clientDetailView.gender").select_value("49")
+      $ie.select_list(:name,"spouseName.nameType").select_value("1")
+      $ie.text_field(:name,"spouseName.firstName").set("AAA")
       $ie.button(:value,@@button_continue).click
       assert($ie.contains_text(@@client_spo_or_father_lname_msg))and \
       assert($ie.contains_text(@@client_custom_msg))
@@ -608,16 +609,16 @@ class ClientCreateEdit<TestClass
   
   def check_mandatory_when_AdditionalInformation_not_entered()
     begin
-      $ie.select_list(:name,"customerNameDetail[0].salutation").select_value("47")
-      $ie.text_field(:name,"customerNameDetail[0].firstName").set("aaa")
-      $ie.text_field(:name,"customerNameDetail[0].lastName").set("aaa")
+      $ie.select_list(:name,"clientName.salutation").select_value("47")
+      $ie.text_field(:name,"clientName.firstName").set("aaa")
+      $ie.text_field(:name,"clientName.lastName").set("aaa")
       $ie.text_field(:name,"dateOfBirthDD").set("09")
       $ie.text_field(:name,"dateOfBirthMM").set("10")
       $ie.text_field(:name,"dateOfBirthYY").set("1981")
-      $ie.select_list(:name,"customerDetail.gender").select_value("49")
-      $ie.select_list(:name,"customerNameDetail[1].nameType").select_value("1")
-      $ie.text_field(:name,"customerNameDetail[1].firstName").set("AAA")
-      $ie.text_field(:name,"customerNameDetail[1].lastName").set("AAA")
+      $ie.select_list(:name,"clientDetailView.gender").select_value("49")
+      $ie.select_list(:name,"spouseName.nameType").select_value("1")
+      $ie.text_field(:name,"spouseName.firstName").set("AAA")
+      $ie.text_field(:name,"spouseName.lastName").set("AAA")
       $ie.button(:value,@@button_continue).click
       assert($ie.contains_text(@@client_custom_msg))
       $logger.log_results("all mandatory check with out salutation, firstname, lastname, religion,Education level, DOB, spouce or father type, spouce or father first name,spouce or father last name and Gender ","NA","NA","passed")
@@ -632,18 +633,18 @@ class ClientCreateEdit<TestClass
      begin
       select_group()
       @@client_mfi_page_msg=(@@createclient+" "+@@clientprop['client.CreateMfiInformationTitle']).squeeze(" ")
-      $ie.select_list(:name,"customerNameDetail[0].salutation").select_value(nsalutation)
-      $ie.text_field(:name,"customerNameDetail[0].firstName").set(nfname)
-      $ie.text_field(:name,"customerNameDetail[0].lastName").set(nlname)
+      $ie.select_list(:name,"clientName.salutation").select_value(nsalutation)
+      $ie.text_field(:name,"clientName.firstName").set(nfname)
+      $ie.text_field(:name,"clientName.lastName").set(nlname)
       $ie.text_field(:name,"dateOfBirthDD").set(ndate)
       $ie.text_field(:name,"dateOfBirthMM").set(nmonth)
       $ie.text_field(:name,"dateOfBirthYY").set(nyear)
-      $ie.select_list(:name,"customerDetail.gender").select_value(ngender)
-      $ie.select_list(:name,"customerDetail.citizenship").select_value(nreligion)
-      $ie.select_list(:name,"customerDetail.educationLevel").select_value("135")
-      $ie.select_list(:name,"customerNameDetail[1].nameType").select_value(nsorftype)
-      $ie.text_field(:name,"customerNameDetail[1].firstName").set(nsorffname)
-      $ie.text_field(:name,"customerNameDetail[1].lastName").set(nsorflname)
+      $ie.select_list(:name,"clientDetailView.gender").select_value(ngender)
+      $ie.select_list(:name,"clientDetailView.citizenship").select_value(nreligion)
+      $ie.select_list(:name,"clientDetailView.educationLevel").select_value("135")
+      $ie.select_list(:name,"spouseName.nameType").select_value(nsorftype)
+      $ie.text_field(:name,"spouseName.firstName").set(nsorffname)
+      $ie.text_field(:name,"spouseName.lastName").set(nsorflname)
       custom_fields(ncustom)
       $ie.button(:value,@@button_continue).click
       @@c_name=String(nfname)+" "+String(nlname)
@@ -685,7 +686,7 @@ class ClientCreateEdit<TestClass
   
   def check_create_client_mfi_mandatory()
     begin
-      $ie.select_list(:name,"customerFormedById").select_value("")
+      $ie.select_list(:name,"formedByPersonnel").select_value("")
       $ie.button(:value,@@button_preview).click
       assert($ie.contains_text(@@client_formedby_msg))
       $logger.log_results("Checked Mandatory_MFI Information","N/A","N/A","Passed")
@@ -708,7 +709,7 @@ class ClientCreateEdit<TestClass
       @@loan_officer=dbresult[1]
      end
      @@client_review=@@createclient+" "+@@clientprop['client.CreatePreviewReviewSubmitTitle'].squeeze(" ")
-     $ie.select_list(:name,"customerFormedById").select_value(@@personnel_id)
+     $ie.select_list(:name,"formedByPersonnel").select_value(@@personnel_id)
      $ie.button(:value,@@button_preview).click
      assert($ie.contains_text(@@client_review)) 
      $logger.log_results("Create client Review&Submit page displaying proper data","N/A","N/A","Passed")
@@ -737,7 +738,6 @@ class ClientCreateEdit<TestClass
     begin
       @@view_client_details=@@clientprop['client.ViewClientDetailsLink1']+" "+@@lookup_name_client+" "+@@clientprop['client.ViewClientDetailsLink2']
       @@edit_client_status=@@clientprop['client.EditLink']+" "+@@lookup_name_client+" "+@@clientprop['client.StatusLink']
-      puts @@edit_client_status
       $ie.link(:text,@@view_client_details).click
       assert($ie.contains_text(@@edit_client_status))
       $logger.log_results("Opened Edit client details page","N/A","N/A","passed")
@@ -766,15 +766,15 @@ class ClientCreateEdit<TestClass
   def change_status_pending()
     begin
       $ie.link(:text,@@edit_client_status).click
-      $ie.radio(:name,"statusId","2").set
-      $ie.text_field(:name,"customerNote.comment").set("AAAAA")
+      $ie.radio(:name,"newStatusId","2").set
+      $ie.text_field(:name,"notes").set("AAAAA")
       $ie.button(:value,@@button_preview).click
       $ie.button(:value,@@button_submit).click
       dbquery("SELECT lookup_value FROM lookup_value_locale where lookup_id=2 and locale_id=1")
       @@application_pending_approval=dbresult[0]
       assert($ie.contains_text(@@clientprop['client.PerformanceHistoryHeading']))and assert($ie.contains_text(@@application_pending_approval)) 
       $logger.log_results("Status changed to Pending","NA","NA","passed") 
-      view_change_log_pending()
+      #view_change_log_pending()
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Status changed to Pending","NA","NA","failed") 
     end
@@ -786,15 +786,15 @@ class ClientCreateEdit<TestClass
   def change_status_active()
     begin
       $ie.link(:text,@@edit_client_status).click
-      $ie.radio(:name,"statusId","3").set
-      $ie.text_field(:name,"customerNote.comment").set("AAAAA")
+      $ie.radio(:name,"newStatusId","3").set
+      $ie.text_field(:name,"notes").set("AAAAA")
       $ie.button(:value,@@button_preview).click
       $ie.button(:value,@@button_submit).click
       dbquery("SELECT lookup_value FROM lookup_value_locale where lookup_id=3 and locale_id=1")
       @@active=dbresult[0]
       assert($ie.contains_text(@@clientprop['client.PerformanceHistoryHeading']))and assert($ie.contains_text(@@active))
       $logger.log_results("Status changed to Active","NA","NA","passed") 
-      view_change_log_active()
+      #view_change_log_active()
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Status changed to Active","NA","NA","failed") 
     end
@@ -807,7 +807,7 @@ class ClientCreateEdit<TestClass
     begin
       @@change_log=@@clientprop['client.ChangeLogLink']
       @@status_label=@@clientprop['client.Status']
-      @@return_to_details_page=@@clientprop['client.butbachdetpage']
+      
       $ie.link(:text,@@change_log).click
       dbquery("SELECT lookup_value FROM lookup_value_locale where lookup_id=1 and locale_id=1")
       @@partial_application=dbresult[0]
@@ -865,35 +865,36 @@ class ClientCreateEdit<TestClass
  #method for create client with all data in enter personal information page
   
   def client_create_with_all_data(nsalutation,nfname,nmname,nsname,nlname,ngovtid,ndate,nmonth,nyear,ngender,nmstatus,nnoofchildren,nreligion,neducation,nsorftype,nsorffname,nsorfmname,nsorfsname,nsorflname,naddress1,naddress2,naddress3,ncity,nstate,ncountry,npcode,nphone,ncustom)
-    $ie.select_list(:name,"customerNameDetail[0].salutation").select_value(nsalutation)
-    $ie.text_field(:name,"customerNameDetail[0].firstName").set(nfname)
-    $ie.text_field(:name,"customerNameDetail[0].middleName").set(nmname)
-    $ie.text_field(:name,"customerNameDetail[0].secondLastName").set(nsname)
-    $ie.text_field(:name,"customerNameDetail[0].lastName").set(nlname)
-    $ie.text_field(:name,"governmentId").set(ngovtid)
+    $ie.select_list(:name,"clientName.salutation").select_value(nsalutation)
+    $ie.text_field(:name,"clientName.firstName").set(nfname)
+    #$ie.text_field(:name,"clientName.middleName").set(nmname)
+    #$ie.text_field(:name,"clientName.secondLastName").set(nsname)
+    $ie.text_field(:name,"clientName.lastName").set(nlname)
+    #$ie.text_field(:name,"governmentId").set(ngovtid)
     $ie.text_field(:name,"dateOfBirthDD").set(ndate)
     $ie.text_field(:name,"dateOfBirthMM").set(nmonth)
     $ie.text_field(:name,"dateOfBirthYY").set(nyear)
-    $ie.select_list(:name,"customerDetail.gender").select_value(ngender)
-    $ie.select_list(:name,"customerDetail.maritalStatus").select_value(nmstatus)
-    $ie.text_field(:name,"customerDetail.numChildren").set(nnoofchildren)    
-    $ie.select_list(:name,"customerDetail.citizenship").select_value(nreligion)
-    $ie.select_list(:name,"customerDetail.educationLevel").select_value(neducation)
-    $ie.select_list(:name,"customerNameDetail[1].nameType").select_value(nsorftype)
-    $ie.text_field(:name,"customerNameDetail[1].firstName").set(nsorffname)
-    $ie.text_field(:name,"customerNameDetail[1].middleName").set(nsorfmname)
-    $ie.text_field(:name,"customerNameDetail[1].secondLastName").set(nsorfsname)
-    $ie.text_field(:name,"customerNameDetail[1].lastName").set(nsorflname)
-    $ie.text_field(:name,"customerAddressDetail.line1").set(naddress1)
-    $ie.text_field(:name,"customerAddressDetail.line2").set(naddress2)
-    $ie.text_field(:name,"customerAddressDetail.line3").set(naddress3)
-    $ie.text_field(:name,"customerAddressDetail.city").set(ncity)
-    $ie.text_field(:name,"customerAddressDetail.state").set(nstate)
-    $ie.text_field(:name,"customerAddressDetail.country").set(ncountry)
-    $ie.text_field(:name,"customerAddressDetail.zip").set(npcode)
-    $ie.text_field(:name,"customerAddressDetail.phoneNumber").set(nphone)
+    $ie.select_list(:name,"clientDetailView.gender").select_value(ngender)
+    $ie.select_list(:name,"clientDetailView.maritalStatus").select_value(nmstatus)
+    $ie.text_field(:name,"clientDetailView.numChildren").set(nnoofchildren)    
+    $ie.select_list(:name,"clientDetailView.citizenship").select_value(nreligion)
+    $ie.select_list(:name,"clientDetailView.educationLevel").select_value(neducation)
+    $ie.select_list(:name,"spouseName.nameType").select_value(nsorftype)
+    $ie.text_field(:name,"spouseName.firstName").set(nsorffname)
+    $ie.text_field(:name,"spouseName.middleName").set(nsorfmname)
+    $ie.text_field(:name,"spouseName.secondLastName").set(nsorfsname)
+    $ie.text_field(:name,"spouseName.lastName").set(nsorflname)
+    #$ie.text_field(:name,"customerAddressDetail.line1").set(naddress1)
+    #$ie.text_field(:name,"customerAddressDetail.line2").set(naddress2)
+    #$ie.text_field(:name,"customerAddressDetail.line3").set(naddress3)
+    #$ie.text_field(:name,"customerAddressDetail.city").set(ncity)
+    #$ie.text_field(:name,"customerAddressDetail.state").set(nstate)
+    #$ie.text_field(:name,"customerAddressDetail.country").set(ncountry)
+    #$ie.text_field(:name,"customerAddressDetail.zip").set(npcode)
+    #$ie.text_field(:name,"customerAddressDetail.phoneNumber").set(nphone)
     custom_fields(ncustom)
-    @@c_name=String(nfname)+" "+String(nmname)+" "+String(nsname)+" "+String(nlname)
+    #@@c_name=String(nfname)+" "+String(nmname)+" "+String(nsname)+" "+String(nlname)
+    @@c_name=String(nfname)+" "+String(nlname)
   end
  
   #method for click on continue button 
@@ -911,7 +912,7 @@ class ClientCreateEdit<TestClass
   #method for create client with all MFI information in Enter MFI information page
   
   def client_create_enter_all_data_mfi(nexternalid,ntdate,ntmonth,ntyear)
-      $ie.select_list(:name,"customerFormedById").select_value(@@personnel_id)
+      $ie.select_list(:name,"formedByPersonnel").select_value(@@personnel_id)
       $ie.text_field(:name,"externalId").set(nexternalid)
       $ie.checkbox(:name,"trained","1").set
       $ie.text_field(:name,"trainedDateDD").set(ntdate)
@@ -970,6 +971,9 @@ class ClientCreateEdit<TestClass
       click_preview()
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Page redirected to Manage client-edit personnel information","N/A","N/A","Failed")
+       client_create_with_all_data(nsalutation,nfname,nmname,nsname,nlname,ngovtid,ndate,nmonth,nyear,ngender,nmstatus,nnoofchildren,nreligion,neducation,nsorftype,nsorffname,nsorfmname,nsorfsname,nsorflname,naddress1,naddress2,naddress3,ncity,nstate,ncountry,npcode,nphone,ncustom)
+      click_preview()
+       
     end
   end
   
@@ -985,6 +989,8 @@ class ClientCreateEdit<TestClass
       click_preview()
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Page redirected to Manage client-edit MFI information","N/A","N/A","Failed")
+      client_create_enter_all_data_mfi(nexternalid,ntdate,ntmonth,ntyear)
+      click_preview()
     end
   end
   
@@ -1026,29 +1032,29 @@ class ClientCreateEdit<TestClass
     begin
       @@edit_personnel=@@clientprop['client.EditPersonalInformationLink']
       $ie.link(:text,@@edit_personnel).click
-      $ie.select_list(:name,"customerNameDetail[0].salutation").select_value(nsalutation)
-      $ie.text_field(:name,"customerNameDetail[0].firstName").set(nfname)
-      $ie.text_field(:name,"customerNameDetail[0].middleName").set(nmname)
-      $ie.text_field(:name,"customerNameDetail[0].secondLastName").set(nsname)
-      $ie.text_field(:name,"customerNameDetail[0].lastName").set(nlname)
-      $ie.select_list(:name,"customerDetail.gender").select_value(ngender)
-      $ie.select_list(:name,"customerDetail.maritalStatus").select_value(nmstatus)
-      $ie.text_field(:name,"customerDetail.numChildren").set(nnoofchildren)    
-      $ie.select_list(:name,"customerDetail.citizenship").select_value(nreligion)
-      $ie.select_list(:name,"customerDetail.educationLevel").select_value(neducation)
-      $ie.select_list(:name,"customerNameDetail[1].nameType").select_value(nsorftype)
-      $ie.text_field(:name,"customerNameDetail[1].firstName").set(nsorffname)
-      $ie.text_field(:name,"customerNameDetail[1].middleName").set(nsorfmname)
-      $ie.text_field(:name,"customerNameDetail[1].secondLastName").set(nsorfsname)
-      $ie.text_field(:name,"customerNameDetail[1].lastName").set(nsorflname)
-      $ie.text_field(:name,"customerAddressDetail.line1").set(naddress1)
-      $ie.text_field(:name,"customerAddressDetail.line2").set(naddress2)
-      $ie.text_field(:name,"customerAddressDetail.line3").set(naddress3)
-      $ie.text_field(:name,"customerAddressDetail.city").set(ncity)
-      $ie.text_field(:name,"customerAddressDetail.state").set(nstate)
-      $ie.text_field(:name,"customerAddressDetail.country").set(ncountry)
-      $ie.text_field(:name,"customerAddressDetail.zip").set(npcode)
-      $ie.text_field(:name,"customerAddressDetail.phoneNumber").set(nphone)
+      $ie.select_list(:name,"clientName.salutation").select_value(nsalutation)
+      $ie.text_field(:name,"clientName.firstName").set(nfname)
+      #$ie.text_field(:name,"clientName.middleName").set(nmname)
+      #$ie.text_field(:name,"clientName.secondLastName").set(nsname)
+      $ie.text_field(:name,"clientName.lastName").set(nlname)
+      $ie.select_list(:name,"clientDetailView.gender").select_value(ngender)
+      $ie.select_list(:name,"clientDetailView.maritalStatus").select_value(nmstatus)
+      $ie.text_field(:name,"clientDetailView.numChildren").set(nnoofchildren)    
+      $ie.select_list(:name,"clientDetailView.citizenship").select_value(nreligion)
+      $ie.select_list(:name,"clientDetailView.educationLevel").select_value(neducation)
+      $ie.select_list(:name,"spouseName.nameType").select_value(nsorftype)
+      $ie.text_field(:name,"spouseName.firstName").set(nsorffname)
+      $ie.text_field(:name,"spouseName.middleName").set(nsorfmname)
+      $ie.text_field(:name,"spouseName.secondLastName").set(nsorfsname)
+      $ie.text_field(:name,"spouseName.lastName").set(nsorflname)
+      #$ie.text_field(:name,"customerAddressDetail.line1").set(naddress1)
+      #$ie.text_field(:name,"customerAddressDetail.line2").set(naddress2)
+      #$ie.text_field(:name,"customerAddressDetail.line3").set(naddress3)
+      #$ie.text_field(:name,"customerAddressDetail.city").set(ncity)
+      #$ie.text_field(:name,"customerAddressDetail.state").set(nstate)
+      #$ie.text_field(:name,"customerAddressDetail.country").set(ncountry)
+      #$ie.text_field(:name,"customerAddressDetail.zip").set(npcode)
+      #$ie.text_field(:name,"customerAddressDetail.phoneNumber").set(nphone)
       custom_fields(ncustom)
       $ie.button(:value,@@button_preview).click
       assert($ie.contains_text(@@clientprop['client.EditPreviewPersonalReviewTitle']))
@@ -1131,7 +1137,6 @@ class ClientCreateEdit<TestClass
   def check_view_summarized_historical_Data_link_exist()
     begin
       @@historical_data_link=@@clientprop['client.HistoricalDataLink']
-      puts @@historical_data_link
       $ie.wait
       assret($ie.contains_text(@@historical_data_link))
       $logger.log_results("View Summarized Historical Data","Should exist","Existed","Passed")
@@ -1145,7 +1150,6 @@ class ClientCreateEdit<TestClass
       @@historical_data_link=@@clientprop['client.HistoricalDataLink']
       $ie.link(:text,@@historical_data_link).click
       text_to_check=@@c_name+" - Historical data"
-      puts text_to_check
       assret($ie.contains_link("Add/Edit historical Data"))
       $logger.log_results("View Summarized Historical Data","Should work","Working","Passed")
       $ie.button(:value,@@return_to_details_page).click
@@ -1236,6 +1240,7 @@ class ClientCreateEdit<TestClass
     $ie.button(:value,@@button_submit).click
    rescue=>e
     $logger.log_results("Page not Redirected to Preview page","N/A","N/A","Failed")
+    $ie.button(:value,@@button_submit).click
    end
  end
  
@@ -1568,11 +1573,11 @@ class ClientTest
                                             clientobject.Education,clientobject.Sorftype,clientobject.Sorffname,clientobject.Sorfmname,clientobject.Sorfsname,clientobject.Sorflname,\
                                             clientobject.Address1,clientobject.Address2,clientobject.Address3,clientobject.City,clientobject.State,clientobject.Country,clientobject.Pcode,\
                                             clientobject.Phone,clientobject.Custom,clientobject.Externalid,clientobject.Tdate,clientobject.Tmonth,clientobject.Tyear)
-     clientobject.select_loan_officer 
+    clientobject.select_loan_officer 
      clientobject.create_meeting(clientobject.Frequncymeeting,clientobject.Monthtype,clientobject.Reccurweek,clientobject.Weekweekday,clientobject.Monthday,clientobject.Monthmonth,\
                                 clientobject.Monthrank,clientobject.Monthweek,clientobject.Monthmonthrank,clientobject.Meetingplace)                                           
      clientobject.click_preview 
-     #clientobject.client_create_remove_admin_fee_from_review_page()
+     clientobject.client_create_remove_admin_fee_from_review_page()
      clientobject.submit_data(clientobject.Statusname)
      
  #Check for edit branch membership link
