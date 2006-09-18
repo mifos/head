@@ -57,11 +57,12 @@ import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
-import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
@@ -170,9 +171,10 @@ public class AccountApplyPaymentAction extends BaseAction {
 
 	private PaymentData createPaymentData(Money amount, Date trxnDate,
 			String receiptId, Date receiptDate, Short paymentTypeId,
-			Short userId, AccountBO account) {
+			Short userId, AccountBO account) throws AccountException{
+		try{
 		PaymentData paymentData = new PaymentData(amount,
-				new PersonnelPersistenceService().getPersonnel(userId),
+				new PersonnelPersistence().getPersonnel(userId),
 				paymentTypeId, trxnDate);
 		paymentData.setRecieptDate(receiptDate);
 		paymentData.setRecieptNum(receiptId);
@@ -184,6 +186,9 @@ public class AccountApplyPaymentAction extends BaseAction {
 			
 		}
 		return paymentData;
+		}catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 
 	private void clearActionForm(AccountApplyPaymentActionForm actionForm) {

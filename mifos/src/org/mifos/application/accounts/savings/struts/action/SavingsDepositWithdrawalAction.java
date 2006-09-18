@@ -29,7 +29,7 @@ import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
-import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.TrxnTypes;
@@ -216,7 +216,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 		Date receiptDate = getDateFromString(actionForm.getReceiptDate(), uc
 				.getPereferedLocale());
 		PaymentData paymentData = new PaymentData(actionForm.getAmountValue(),
-				new PersonnelPersistenceService().getPersonnel(uc.getId()),
+				new PersonnelPersistence().getPersonnel(uc.getId()),
 				Short.valueOf(actionForm.getPaymentTypeId()), trxnDate);
 		paymentData.setRecieptDate(receiptDate);
 		paymentData.setRecieptNum(actionForm.getReceiptId());

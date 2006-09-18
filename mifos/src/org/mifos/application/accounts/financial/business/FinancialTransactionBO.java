@@ -44,7 +44,7 @@ import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -217,8 +217,7 @@ public class FinancialTransactionBO extends BusinessObject {
 		financialTrxn.setGlcode(getGlcode());
 		financialTrxn.setActionDate(getActionDate());
 		financialTrxn.setPostedDate(DateHelper.getSQLDate(DateHelper.getCurrentDate(getUserContext().getMfiLocale())));
-		PersonnelPersistenceService persistenceService = (PersonnelPersistenceService)ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.Personnel);
-		PersonnelBO personnel = persistenceService.getPersonnel(getAccountTrxn().getAccount().getUserContext().getId());
+		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(getAccountTrxn().getAccount().getUserContext().getId());
 		financialTrxn.setPostedBy(personnel);
 		//TODO replace this with a constant.
 		financialTrxn.setAccountingUpdated(Short.valueOf("1"));

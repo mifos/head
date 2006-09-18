@@ -39,9 +39,14 @@ public class PersonnelBusinessService extends BusinessService {
 		}
 	}
 
-	public PersonnelBO getPersonnel(Short personnelId) {
+	public PersonnelBO getPersonnel(Short personnelId) throws ServiceException {
 
-		return new PersonnelPersistence().getPersonnel(personnelId);
+		try {
+			return new PersonnelPersistence().getPersonnel(personnelId);
+		} catch (PersistenceException e) {
+
+			throw new ServiceException(e);
+		}
 	}
 
 	public OfficeBO getOffice(Short officeId) throws ServiceException {

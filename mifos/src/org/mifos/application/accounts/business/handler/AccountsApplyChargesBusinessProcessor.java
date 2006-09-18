@@ -80,7 +80,7 @@ import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.office.util.valueobjects.Office;
-import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.business.handlers.MifosBusinessProcessor;
 import org.mifos.framework.business.util.helpers.HeaderObject;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -258,7 +258,7 @@ public class AccountsApplyChargesBusinessProcessor extends
 					if (account instanceof CustomerAccount) {
 						if (feeId.equals(AccountConstants.MISC_PENALTY)) {
 							customerActivityEntity = new CustomerActivityEntity(
-									new PersonnelPersistenceService()
+									new PersonnelPersistence()
 											.getPersonnel(context
 													.getUserContext().getId()),
 									AccountConstants.MISC_PENALTY_APPLIED,
@@ -269,7 +269,7 @@ public class AccountsApplyChargesBusinessProcessor extends
 											.getAccount(accountId));
 						} else {
 							customerActivityEntity = new CustomerActivityEntity(
-									new PersonnelPersistenceService()
+									new PersonnelPersistence()
 											.getPersonnel(context
 													.getUserContext().getId()),
 									AccountConstants.MISC_FEES_APPLIED,
@@ -740,7 +740,7 @@ public class AccountsApplyChargesBusinessProcessor extends
 					state.equals(GroupConstants.HOLD) || 
 					state.equals(CustomerConstants.CLIENT_APPROVED) || 
 					state.equals(CustomerConstants.CLIENT_ONHOLD)){
-				customerActivityEntity=new CustomerActivityEntity(new PersonnelPersistenceService().getPersonnel(personnelId),
+				customerActivityEntity=new CustomerActivityEntity(new PersonnelPersistence().getPersonnel(personnelId),
 						fee.getFeeName()+" "+AccountConstants.FEES_APPLIED,
 						new Money(String.valueOf(amount)));
 				customerActivityEntity.setCustomerAccount((CustomerAccountBO)new AccountPersistence().getAccount(account.getAccountId()));

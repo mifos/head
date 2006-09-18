@@ -6,7 +6,6 @@ import junit.framework.TestSuite;
 import org.mifos.application.personnel.business.TestPersonnelBO;
 import org.mifos.application.personnel.business.TestPersonnelStatusEntity;
 import org.mifos.application.personnel.persistence.TestPersonnelPersistence;
-import org.mifos.application.personnel.persistence.service.TestPersonnelPersistenceService;
 import org.mifos.application.personnel.struts.action.PersonnelSettingsActionTest;
 import org.mifos.application.personnel.struts.action.TestPersonAction;
 import org.mifos.application.personnel.struts.action.TestPersonnelNoteAction;
@@ -21,7 +20,6 @@ public class PersonnelTestSuite extends MifosTestSuite {
 		TestSuite testSuite = new PersonnelTestSuite();
 		testSuite.addTestSuite(TestPersonnelStatusEntity.class);
 		testSuite.addTestSuite(TestPersonnelPersistence.class);
-		testSuite.addTestSuite(TestPersonnelPersistenceService.class);
 		testSuite.addTestSuite(TestPersonnelBO.class);
 		testSuite.addTestSuite(TestPersonAction.class);
 		testSuite.addTestSuite(TestPersonnelNoteAction.class);

@@ -15,7 +15,7 @@ import org.mifos.application.master.util.valueobjects.EntityMaster;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelView;
-import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.BusinessObject;
@@ -27,7 +27,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 
 public class MasterDataService extends BusinessService {
-	private PersonnelPersistenceService personnelPersistenceService = new PersonnelPersistenceService();
+	private PersonnelPersistence personnelPersistence = new PersonnelPersistence();
 
 	private OfficePersistence officePersistence = new OfficePersistence();
 
@@ -56,8 +56,8 @@ public class MasterDataService extends BusinessService {
 			Short officeId, Short userId, Short userLevelId)
 			throws ServiceException {
 		try {
-			return personnelPersistenceService.getActiveLoanOfficersInBranch(
-					levelId, officeId, userId, userLevelId);
+			return personnelPersistence.getActiveLoanOfficersInBranch(levelId,
+					officeId, userId, userLevelId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}

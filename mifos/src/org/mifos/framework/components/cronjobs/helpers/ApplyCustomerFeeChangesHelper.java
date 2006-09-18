@@ -8,6 +8,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
@@ -150,7 +151,7 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 
 	}
 
-	private void AddTonextInstallment(AccountBO accountBO, AccountFeesEntity fee) {
+	private void AddTonextInstallment(AccountBO accountBO, AccountFeesEntity fee) throws  AccountException {
 		CustomerScheduleEntity nextInstallment = (CustomerScheduleEntity) accountBO
 				.getDetailsOfNextInstallment();
 		AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(

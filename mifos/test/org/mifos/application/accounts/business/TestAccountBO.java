@@ -64,7 +64,7 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
@@ -500,10 +500,7 @@ public class TestAccountBO extends TestAccount {
 
 		java.sql.Date currentDate = new java.sql.Date(System
 				.currentTimeMillis());
-		PersonnelBO personnelBO = ((PersonnelPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.Personnel))
-				.getPersonnel(TestObjectFactory.getUserContext().getId());
+		PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(TestObjectFactory.getUserContext().getId());
 		AccountNotesEntity accountNotesEntity = new AccountNotesEntity(
 				currentDate, "account updated", personnelBO);
 		accountBO.addAccountNotes(accountNotesEntity);

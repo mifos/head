@@ -28,7 +28,6 @@ import org.mifos.application.master.persistence.service.MasterPersistenceService
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
-import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
@@ -326,7 +325,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loan,TestObjectFactory.getMoneyForMFICurrency(630), null, null, new PaymentTypeEntity(Short.valueOf("1")));
 		FinancialBusinessService financialBusinessService = (FinancialBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Financial);
 		AccountActionDateEntity accountActionDateEntity = loan.getAccountActionDate(Short.valueOf("1"));
-		PersonnelBO personnel = new PersonnelPersistenceService()
+		PersonnelBO personnel = new PersonnelPersistence()
 		.getPersonnel(loan.getUserContext().getId());
 		LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity,
 		(AccountActionEntity) masterPersistenceService

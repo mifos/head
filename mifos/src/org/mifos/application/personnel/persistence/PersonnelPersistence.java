@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
@@ -14,7 +13,6 @@ import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.persistence.Persistence;
@@ -22,7 +20,8 @@ import org.mifos.framework.persistence.Persistence;
 public class PersonnelPersistence extends Persistence {
 
 	public List<PersonnelView> getActiveLoanOfficersInBranch(Short levelId,
-			Short officeId, Short userId, Short userLevelId) throws PersistenceException {
+			Short officeId, Short userId, Short userLevelId)
+			throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("levelId", levelId);
 		queryParameters.put("userId", userId);
@@ -36,17 +35,13 @@ public class PersonnelPersistence extends Persistence {
 		return queryResult;
 	}
 
-	public PersonnelBO getPersonnel(Short personnelId) {
-
-		Session session = HibernateUtil.getSessionTL();
-		PersonnelBO personnel = (PersonnelBO) session.get(PersonnelBO.class,
-				personnelId);
-		return personnel;
-
+	public PersonnelBO getPersonnel(Short personnelId)
+			throws PersistenceException {
+		return (PersonnelBO) getPersistentObject(PersonnelBO.class, personnelId);
 	}
 
 	public boolean isUserExist(String userName) throws PersistenceException {
-		try {
+		
 			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put("USER_NAME", userName);
 			Integer count = (Integer) execUniqueResultNamedQuery(
@@ -55,15 +50,13 @@ public class PersonnelPersistence extends Persistence {
 			if (count != null) {
 				return count > 0 ? true : false;
 			}
-		} catch (HibernateException e) {
-			throw new PersistenceException(e);
-		}
+		
 		return false;
 	}
 
 	public boolean isUserExistWithGovernmentId(String governmentId)
 			throws PersistenceException {
-		try {
+		
 			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put("GOVT_ID", governmentId);
 			Integer count = (Integer) execUniqueResultNamedQuery(
@@ -72,16 +65,11 @@ public class PersonnelPersistence extends Persistence {
 			if (count != null) {
 				return count > 0 ? true : false;
 			}
-		} catch (HibernateException e) {
-			throw new PersistenceException(e);
-		}
 		return false;
 	}
 
 	public boolean isUserExist(String displayName, Date dob)
 			throws PersistenceException {
-
-		try {
 			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put("DISPLAY_NAME", displayName);
 			queryParameters.put("DOB", dob);
@@ -91,16 +79,11 @@ public class PersonnelPersistence extends Persistence {
 			if (count != null) {
 				return count > 0 ? true : false;
 			}
-		} catch (HibernateException e) {
-			throw new PersistenceException(e);
-		}
-
 		return false;
 	}
 
 	public boolean getActiveChildrenForLoanOfficer(Short personnelId,
 			Short officeId) throws PersistenceException {
-		try {
 			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put("userId", personnelId);
 			queryParameters.put("officeId", officeId);
@@ -110,17 +93,11 @@ public class PersonnelPersistence extends Persistence {
 			if (count != null) {
 				return count > 0 ? true : false;
 			}
-		} catch (HibernateException e) {
-			throw new PersistenceException(e);
-		}
-
 		return false;
 	}
 
 	public boolean getAllChildrenForLoanOfficer(Short personnelId,
 			Short officeId) throws PersistenceException {
-
-		try {
 			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put("userId", personnelId);
 			queryParameters.put("officeId", officeId);
@@ -130,17 +107,11 @@ public class PersonnelPersistence extends Persistence {
 			if (count != null) {
 				return count > 0 ? true : false;
 			}
-		} catch (HibernateException e) {
-			throw new PersistenceException(e);
-		}
-
 		return false;
 	}
 
 	public PersonnelBO getPersonnelByGlobalPersonnelNum(
 			String globalPersonnelNum) throws PersistenceException {
-
-		try {
 			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put("globalPersonnelNum", globalPersonnelNum);
 
@@ -149,28 +120,25 @@ public class PersonnelPersistence extends Persistence {
 			if (personnelBO != null) {
 				return personnelBO;
 			}
-		} catch (HibernateException e) {
-			throw new PersistenceException(e);
-		}
-
 		return null;
 	}
-	
-	public QueryResult getAllPersonnelNotes(Short personnelId) throws PersistenceException {
-		QueryResult notesResult=null;
-		try{
-			Session session=null;
-			 notesResult = QueryFactory.getQueryResult("NotesSearch");
-			 session = notesResult.getSession();
-	 		Query query= session.getNamedQuery(NamedQueryConstants.GETALLPERSONNELNOTES);
-	 		query.setInteger("PERSONNEL_ID",personnelId);
-	 		notesResult.executeQuery(query);
-	 	}
-		catch(HibernateProcessException  hpe) {		
+
+	public QueryResult getAllPersonnelNotes(Short personnelId)
+			throws PersistenceException {
+		QueryResult notesResult = null;
+		try {
+			Session session = null;
+			notesResult = QueryFactory.getQueryResult("NotesSearch");
+			session = notesResult.getSession();
+			Query query = session
+					.getNamedQuery(NamedQueryConstants.GETALLPERSONNELNOTES);
+			query.setInteger("PERSONNEL_ID", personnelId);
+			notesResult.executeQuery(query);
+		} catch (HibernateProcessException hpe) {
 			throw new PersistenceException(hpe);
 		} catch (HibernateSearchException hse) {
 			throw new PersistenceException(hse);
 		}
-      return notesResult;
+		return notesResult;
 	}
 }

@@ -18,7 +18,7 @@ import org.mifos.application.accounts.loan.struts.actionforms.LoanDisbursmentAct
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -93,7 +93,7 @@ public class LoanDisbursmentAction extends BaseAction {
 				.getPereferedLocale());
 		Date receiptDate = getDateFromString(actionForm.getReceiptDate(), uc
 				.getPereferedLocale());
-		PersonnelBO personnel = new PersonnelPersistenceService()
+		PersonnelBO personnel = new PersonnelPersistence()
 				.getPersonnel(uc.getId());
 		if (!loan.isTrxnDateValid(trxnDate))
 			throw new AccountException("errors.invalidTxndate");

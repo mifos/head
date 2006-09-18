@@ -19,7 +19,7 @@ import org.mifos.application.accounts.struts.actionforms.NotesActionForm;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
@@ -83,9 +83,7 @@ public class NotesAction extends SearchAction {
 		NotesActionForm notesActionForm = (NotesActionForm) form;
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
-		PersonnelBO personnelBO = ((PersonnelPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.Personnel)).getPersonnel(uc
+		PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(uc
 				.getId());
 		AccountNotesEntity accountNotes = new AccountNotesEntity(
 				new java.sql.Date(System.currentTimeMillis()), notesActionForm

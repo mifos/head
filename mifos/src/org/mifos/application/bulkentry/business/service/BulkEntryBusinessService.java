@@ -184,7 +184,7 @@ public class BulkEntryBusinessService extends BusinessService {
 	public void saveLoanAccount(
 			LoanAccountsProductView loanAccountsProductView, Short personnelId,
 			String recieptId, Short paymentId, Date receiptDate,
-			Date transactionDate) throws BulkEntryAccountUpdateException {
+			Date transactionDate) throws BulkEntryAccountUpdateException, ServiceException {
 		for (LoanAccountView accountView : loanAccountsProductView
 				.getLoanAccountViews()) {
 			Integer accountId = accountView.getAccountId();
@@ -204,7 +204,7 @@ public class BulkEntryBusinessService extends BusinessService {
 			Short personnelId, String recieptId, Short paymentId,
 			Date receiptDate, Date transactionDate,
 			boolean isCenterGroupIndvAccount, Integer customerId)
-			throws BulkEntryAccountUpdateException {
+			throws BulkEntryAccountUpdateException, ServiceException {
 		Integer accountId = accountView.getAccountId();
 		PaymentData accountPaymentDataView = getSavingsAccountPaymentData(
 				accountView, customerId, personnelId, recieptId, paymentId,
@@ -215,7 +215,7 @@ public class BulkEntryBusinessService extends BusinessService {
 	public void saveSavingsWithdrawalAccount(SavingsAccountView accountView,
 			Short personnelId, String recieptId, Short paymentId,
 			Date receiptDate, Date transactionDate, Integer customerId)
-			throws BulkEntryAccountUpdateException {
+			throws BulkEntryAccountUpdateException, ServiceException {
 		if (null != accountView) {
 			Integer accountId = accountView.getAccountId();
 			if (null != accountId) {
@@ -230,7 +230,7 @@ public class BulkEntryBusinessService extends BusinessService {
 	public void saveCustomerAccountCollections(
 			CustomerAccountView customerAccountView, Short personnelId,
 			String recieptId, Short paymentId, Date receiptDate,
-			Date transactionDate) throws BulkEntryAccountUpdateException {
+			Date transactionDate) throws BulkEntryAccountUpdateException, ServiceException {
 		Integer accountId = customerAccountView.getAccountId();
 		PaymentData accountPaymentDataView = getCustomerAccountPaymentDataView(
 				customerAccountView.getAccountActionDates(),
@@ -287,7 +287,7 @@ public class BulkEntryBusinessService extends BusinessService {
 		return bulkEntryPersistanceService.getCustomer(customerId);
 	}
 
-	private PersonnelBO getPersonnel(Short personnelId) {
+	private PersonnelBO getPersonnel(Short personnelId) throws ServiceException {
 		return bulkEntryPersistanceService.getPersonnel(personnelId);
 	}
 
@@ -317,7 +317,7 @@ public class BulkEntryBusinessService extends BusinessService {
 			Date transactionDate,
 			LoanAccountsProductView loanAccountsProductView,
 			LoanAccountView loanAccountView)
-			throws BulkEntryAccountUpdateException {
+			throws BulkEntryAccountUpdateException, ServiceException {
 		Double amount = Double.valueOf(loanAccountsProductView
 				.getEnteredAmount());
 		if (amount > 0.0) {
@@ -350,7 +350,7 @@ public class BulkEntryBusinessService extends BusinessService {
 	private PaymentData getLoanAccountPaymentData(
 			List<BulkEntryInstallmentView> accountActions, Money totalAmount,
 			Short personnelId, String recieptNum, Short paymentId,
-			Date receiptDate, Date transactionDate) {
+			Date receiptDate, Date transactionDate) throws ServiceException {
 		PaymentData paymentData = new PaymentData(totalAmount,
 				getPersonnel(personnelId), paymentId, transactionDate);
 		paymentData.setRecieptDate(receiptDate);
@@ -378,7 +378,7 @@ public class BulkEntryBusinessService extends BusinessService {
 			SavingsAccountView savingsAccountView, Integer customerId,
 			Short personnelId, String recieptNum, Short paymentId,
 			Date receiptDate, Date transactionDate,
-			boolean isCenterGroupIndvAccount) {
+			boolean isCenterGroupIndvAccount) throws ServiceException {
 		Money enteredAmount = new Money(Configuration.getInstance()
 				.getSystemConfig().getCurrency(), savingsAccountView
 				.getDepositAmountEntered());
@@ -424,7 +424,7 @@ public class BulkEntryBusinessService extends BusinessService {
 	private PaymentData getWithdrawalSavingsPaymentDataView(
 			SavingsAccountView savingsAccountView, Integer customerId,
 			Short personnelId, String recieptNum, Short paymentId,
-			Date receiptDate, Date transactionDate) {
+			Date receiptDate, Date transactionDate) throws ServiceException {
 		Money enteredAmount = new Money(Configuration.getInstance()
 				.getSystemConfig().getCurrency(), savingsAccountView
 				.getWithDrawalAmountEntered());
@@ -439,7 +439,7 @@ public class BulkEntryBusinessService extends BusinessService {
 	private PaymentData getCustomerAccountPaymentDataView(
 			List<BulkEntryInstallmentView> accountActions, Money totalAmount,
 			Short personnelId, String recieptNum, Short paymentId,
-			Date receiptDate, Date transactionDate) {
+			Date receiptDate, Date transactionDate) throws ServiceException {
 		PaymentData paymentData = new PaymentData(totalAmount,
 				getPersonnel(personnelId), paymentId, transactionDate);
 		paymentData.setRecieptDate(receiptDate);

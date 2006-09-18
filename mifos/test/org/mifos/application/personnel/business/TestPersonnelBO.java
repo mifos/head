@@ -136,6 +136,69 @@ public class TestPersonnelBO extends MifosTestCase {
 		}
 	}
 
+	public void testGetDateSucess()throws Exception {
+		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
+		customFieldView.add(new CustomFieldView(Short.valueOf("1"), "123456",
+				Short.valueOf("1")));
+		Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd",
+				"abcd", "abcd", "abcd");
+		Date date = new Date();
+		PersonnelBO personnel = new PersonnelBO(
+				PersonnelLevel.NON_LOAN_OFFICER, office, Integer.valueOf("1"),
+				Short.valueOf("1"), "ABCD", "RAJ", "rajendersaini@yahoo.com",
+				((PersonnelBusinessService) ServiceFactory.getInstance()
+						.getBusinessService(BusinessServiceName.Personnel))
+						.getRoles(), customFieldView, name, "111111", date,
+				Integer.valueOf("1"), Integer.valueOf("1"), date, date,
+				address, userContext.getId());
+		assertEquals("0" ,personnel.getAge());
+
+	}
+	
+	public void testGetDateFailure()throws Exception {
+		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
+		customFieldView.add(new CustomFieldView(Short.valueOf("1"), "123456",
+				Short.valueOf("1")));
+		Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd",
+				"abcd", "abcd", "abcd");
+		Date date = new Date();
+		PersonnelBO personnel = new PersonnelBO(
+				PersonnelLevel.NON_LOAN_OFFICER, office, Integer.valueOf("1"),
+				Short.valueOf("1"), "ABCD", "RAJ", "rajendersaini@yahoo.com",
+				((PersonnelBusinessService) ServiceFactory.getInstance()
+						.getBusinessService(BusinessServiceName.Personnel))
+						.getRoles(), customFieldView, name, "111111", null,
+				Integer.valueOf("1"), Integer.valueOf("1"), date, date,
+				address, userContext.getId());
+		assertEquals("" ,personnel.getAge());
+
+	}
+
+	public void testSaveFailure() throws Exception {
+		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
+		customFieldView.add(new CustomFieldView(Short.valueOf("1"), "123456",
+				Short.valueOf("1")));
+		Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd",
+				"abcd", "abcd", "abcd");
+		Date date = new Date();
+		
+		PersonnelBO personnel = new PersonnelBO(
+				PersonnelLevel.NON_LOAN_OFFICER, office, Integer.valueOf("1"),
+				Short.valueOf("1"), "ABCD", "RAJ", "rajendersaini@yahoo.com",
+				((PersonnelBusinessService) ServiceFactory.getInstance()
+						.getBusinessService(BusinessServiceName.Personnel))
+						.getRoles(), customFieldView, name, "111111", date,
+				Integer.valueOf("1"), Integer.valueOf("1"), date, date,
+				address, userContext.getId());
+		HibernateUtil.getSessionTL().close();
+		try{
+				personnel.save();
+				assertEquals(true,false);
+		}
+		catch (PersonnelException e) {
+			assertEquals(true,true);
+		}
+	}
 	public void testCreateSucess() throws Exception {
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
 		customFieldView.add(new CustomFieldView(Short.valueOf("1"), "123456",
@@ -476,7 +539,7 @@ public class TestPersonnelBO extends MifosTestCase {
 	}
 	}
 
-	private PersonnelNotesEntity createNotes(String comment) {
+	private PersonnelNotesEntity createNotes(String comment) throws Exception{
 		return new PersonnelNotesEntity(comment, new PersonnelPersistence()
 				.getPersonnel(userContext.getId()), personnel);
 	}

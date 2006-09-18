@@ -49,7 +49,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
-import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.application.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
@@ -3905,13 +3904,10 @@ public class TestSavingsBO extends MifosTestCase {
 
 	}
 
-	private void addNotes(String comment) throws SystemException,
-			AccountException {
+	private void addNotes(String comment) throws Exception {
 		java.sql.Date currentDate = new java.sql.Date(System
 				.currentTimeMillis());
-		PersonnelBO personnelBO = ((PersonnelPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.Personnel))
+		PersonnelBO personnelBO = new PersonnelPersistence()
 				.getPersonnel(userContext.getId());
 		AccountNotesEntity accountNotesEntity = new AccountNotesEntity(
 				currentDate, comment, personnelBO);
@@ -3988,7 +3984,7 @@ public class TestSavingsBO extends MifosTestCase {
 		TestObjectFactory.cleanUp(savingsBO);
 	}
 
-	private UserContext createUser() {
+	private UserContext createUser() throws Exception{
 		this.userContext = TestUtils.makeUser(2);
 		createdBy = new PersonnelPersistence()
 				.getPersonnel(userContext.getId());

@@ -415,7 +415,7 @@ public class SavingsBO extends AccountBO {
 		// saved in approved state
 		if (isActive())
 			setValuesForActiveState();
-
+		try {
 		// security check befor saving
 		checkPermissionForSave(this.getAccountState(), userContext, null);
 		this
@@ -423,7 +423,7 @@ public class SavingsBO extends AccountBO {
 						this.getAccountState(), this.getAccountState(),
 						(new PersonnelPersistence()).getPersonnel(
 								userContext.getId())));
-		try {
+		
 			(new SavingsPersistence()).createOrUpdate(this);
 			try {
 				this.setGlobalAccountNum(generateId(userContext.getBranchGlobalNum()));
@@ -622,32 +622,31 @@ public class SavingsBO extends AccountBO {
 			throws AccountException {
 		logger.debug("In SavingsBO::closeAccount(), accountId: "
 				+ getAccountId());
+		try {
 		PersonnelBO loggedInUser = (new PersonnelPersistence()).getPersonnel(
 				userContext.getId());
 		AccountStateEntity accountState = this.getAccountState();
-		try {
+		
 			this.setAccountState((new SavingsPersistence()).getAccountStatusObject(
 					AccountStates.SAVINGS_ACC_CLOSED));
-		} catch (PersistenceException e) {
-			throw new AccountException(e);
-		}
+		
 		setInterestToBePosted(payment.getAmount().subtract(getSavingsBalance()));
 		MasterPersistence masterPersistence=new MasterPersistence();
 		if (getInterestToBePosted() != null
 				&& getInterestToBePosted().getAmountDoubleValue() > 0)
 			makeEntriesForInterestPosting(getInterestToBePosted(), payment
 					.getPaymentType(), customer, payment.getPaymentDate(), loggedInUser);
+		
+		
 		if (payment.getAmount().getAmountDoubleValue() > 0) {
-			try {
+			
 				payment.addAcountTrxn(helper.createAccountPaymentTrxn(payment,
 						new Money(),
 						(AccountActionEntity) masterPersistence.getPersistentObject(
 								AccountActionEntity.class,
 								AccountConstants.ACTION_SAVINGS_WITHDRAWAL),
 						customer, loggedInUser));
-			} catch (PersistenceException e) {
-				throw new AccountException(e);
-			}
+			
 			payment.setCreatedDate(helper.getCurrentDate());
 			this.addAccountPayment(payment);
 			addSavingsActivityDetails(buildSavingsActivity(payment.getAmount(),
@@ -675,6 +674,10 @@ public class SavingsBO extends AccountBO {
 		logger
 				.debug("In SavingsBO::close(), account closed successfully ; accountId: "
 						+ getAccountId());
+		
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 
 	private void makeEntriesForInterestPosting(Money interestAmt,
@@ -1344,6 +1347,7 @@ public class SavingsBO extends AccountBO {
 			String adjustmentComment) throws AccountException {
 		AccountPaymentEntity lastPayment = getLastPmnt();
 		Short actionType = helper.getPaymentActionType(lastPayment);
+		try{
 		PersonnelBO personnel = (new PersonnelPersistence()).getPersonnel(
 				userContext.getId());
 		for (AccountTrxnEntity accntTrxn : lastPayment.getAccountTrxns()) {
@@ -1367,11 +1371,15 @@ public class SavingsBO extends AccountBO {
 		 * accountTrxn.setPersonnel(personnel); }
 		 */
 		buildFinancialEntries(new HashSet<AccountTrxnEntity>(newlyAddedTrxns));
+		}catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 
 	protected AccountPaymentEntity createAdjustmentPayment(
 			Money amountAdjustedTo, String adjustmentComment)
 			throws AccountException {
+		try{
 		AccountPaymentEntity lastPayment = getLastPmnt();
 		AccountPaymentEntity newAccountPayment = null;
 		PersonnelBO personnel = (new PersonnelPersistence()).getPersonnel(
@@ -1396,6 +1404,9 @@ public class SavingsBO extends AccountBO {
 							.getPaymentActionType(lastPayment), getTrxnDate(lastPayment), personnel));
 		}
 		return newAccountPayment;
+		}catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 
 	private List<AccountActionDateEntity> getAccountActions(Date dueDate,
@@ -1759,12 +1770,16 @@ public class SavingsBO extends AccountBO {
 		return true;
 	}
 
-	public AccountNotesEntity createAccountNotes(String comment){
+	public AccountNotesEntity createAccountNotes(String comment) throws AccountException{
 		AccountNotesEntity accountNotes = new AccountNotesEntity();
 		accountNotes.setCommentDate(new java.sql.Date(System
 				.currentTimeMillis()));
-		accountNotes.setPersonnel((new PersonnelPersistence()).getPersonnel(
-				userContext.getId()));
+		try {
+			accountNotes.setPersonnel((new PersonnelPersistence()).getPersonnel(
+					userContext.getId()));
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 		accountNotes.setComment(comment);
 		return accountNotes;
 	}
@@ -1908,6 +1923,7 @@ public class SavingsBO extends AccountBO {
 
 	@Override
 	public void waiveAmountDue(WaiveEnum waiveType) throws 	AccountException {
+		try {
 		PersonnelBO personnel = (new PersonnelPersistence()).getPersonnel(
 				getUserContext().getId());
 		addSavingsActivityDetails(buildSavingsActivity(
@@ -1917,7 +1933,7 @@ public class SavingsBO extends AccountBO {
 		for (AccountActionDateEntity accountActionDate : nextInstallments) {
 			((SavingsScheduleEntity) accountActionDate).waiveDepositDue();
 		}
-		try {
+		
 			(new SavingsPersistence()).createOrUpdate(this);
 		} catch (PersistenceException e) {
 			throw new AccountException(e);
@@ -1925,6 +1941,7 @@ public class SavingsBO extends AccountBO {
 	}
 
 	public void waiveAmountOverDue() throws AccountException {
+		try {
 		PersonnelBO personnel = (new PersonnelPersistence()).getPersonnel(
 				getUserContext().getId());
 		addSavingsActivityDetails(buildSavingsActivity(
@@ -1934,7 +1951,7 @@ public class SavingsBO extends AccountBO {
 		for (AccountActionDateEntity accountActionDate : installmentsInArrears) {
 			((SavingsScheduleEntity) accountActionDate).waiveDepositDue();
 		}
-		try {
+		
 			(new SavingsPersistence()).createOrUpdate(this);
 		} catch (PersistenceException e) {
 			throw new AccountException(e);

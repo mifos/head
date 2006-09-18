@@ -374,7 +374,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 	}
 
 	private void createSavingsAccountWithBal(String amount,String OfferingName,String shortName)
-			throws NumberFormatException, BulkEntryAccountUpdateException {
+			throws Exception {
 		createInitialObjects();
 		clientSavingsAccount = TestObjectFactory.createSavingsAccount(
 				"43245434", client, Short.valueOf("16"), currentDate,

@@ -829,13 +829,19 @@ public void changeStatus(Short newStatusId, Short flagId, String comment)
 		}
 	}
 	
-	protected void updateLoanOfficer(Short loanOfficerId){
+	protected void updateLoanOfficer(Short loanOfficerId) throws CustomerException{
+		
+		try{
 		if(isLOChanged(loanOfficerId)){
 			new CustomerPersistence().updateLOsForAllChildren(loanOfficerId, getSearchId(), getOffice().getOfficeId());
 			if(loanOfficerId!=null)
 				this.personnel = new PersonnelPersistence().getPersonnel(loanOfficerId);
 			else
 				this.personnel = null;
+		}
+		}catch (PersistenceException e) {
+
+			throw new CustomerException(e);
 		}
 	}
 	
@@ -946,10 +952,15 @@ public void changeStatus(Short newStatusId, Short flagId, String comment)
 		this.addCustomerHierarchy(new CustomerHierarchyEntity(this, parentCustomer));
 	}	
 	
-	private CustomerNoteEntity createCustomerNotes(String comment){
+	private CustomerNoteEntity createCustomerNotes(String comment) throws CustomerException{
+		try {
 		CustomerNoteEntity customerNote = new CustomerNoteEntity(comment,
 				new java.sql.Date(System.currentTimeMillis()), new PersonnelPersistence().getPersonnel(getUserContext().getId()), this);
 		return customerNote;
+		}
+		catch (PersistenceException ae) {
+			throw new CustomerException(ae);
+		}
 	}
 	
 	private void addCustomerAccount(CustomerAccountBO customerAccount) {

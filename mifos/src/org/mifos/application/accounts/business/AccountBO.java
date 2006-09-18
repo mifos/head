@@ -86,7 +86,7 @@ import org.mifos.application.meeting.util.valueobjects.MeetingType;
 import org.mifos.application.meeting.util.valueobjects.RecurrenceType;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -365,6 +365,7 @@ public class AccountBO extends BusinessObject {
 
 	public final void changeStatus(Short newStatusId, Short flagId,
 			String comment) throws AccountException {
+		try{
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"In the change status method of AccountBO:: new StatusId= "
 						+ newStatusId);
@@ -379,24 +380,16 @@ public class AccountBO extends BusinessObject {
 		activationDateHelper(newStatusId);
 		MasterPersistence masterPersistence = new MasterPersistence();
 		AccountStateEntity accountStateEntity;
-		try {
 			accountStateEntity = (AccountStateEntity) masterPersistence
 					.getPersistentObject(AccountStateEntity.class, newStatusId);
-		} catch (PersistenceException e) {
-			throw new AccountException(e);
-		}
 		// checkStatusChangeAllowed(accountStateEntity);
 		accountStateEntity.setLocaleId(this.getUserContext().getLocaleId());
 		AccountStateFlagEntity accountStateFlagEntity = null;
 		if (flagId != null) {
-			try {
 				accountStateFlagEntity = (AccountStateFlagEntity) masterPersistence
 						.getPersistentObject(AccountStateFlagEntity.class, flagId);
-			} catch (PersistenceException e) {
-				throw new AccountException(e);
-			}
 		}
-		PersonnelBO personnel = new PersonnelPersistenceService()
+		PersonnelBO personnel = new PersonnelPersistence()
 				.getPersonnel(getUserContext().getId());
 		AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(
 				this.getAccountState(), accountStateEntity, personnel);
@@ -421,6 +414,10 @@ public class AccountBO extends BusinessObject {
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 				.debug(
 						"Coming out successfully from the change status method of AccountBO");
+		}
+		catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 
 	public void updateAccountFeesEntity(Short feeId) {
@@ -704,7 +701,7 @@ public class AccountBO extends BusinessObject {
 	}
 	
 	public void updateAccountActivity(Money principal, Money interest,
-			Money fee, Money penalty, Short personnelId, String description) {
+			Money fee, Money penalty, Short personnelId, String description) throws AccountException{
 	}
 
 	public void waiveAmountDue(WaiveEnum waiveType) throws AccountException {
@@ -1104,7 +1101,7 @@ public class AccountBO extends BusinessObject {
 	}
 
 	protected void updateInstallmentAfterAdjustment(
-			List<AccountTrxnEntity> reversedTrxns) {
+			List<AccountTrxnEntity> reversedTrxns) throws AccountException{
 	}
 
 	protected Money getDueAmount(AccountActionDateEntity installment) {

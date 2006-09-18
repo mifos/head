@@ -84,7 +84,6 @@ import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
-import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.repaymentschedule.RepaymentSchedule;
@@ -238,7 +237,7 @@ public class CustomerAccountBO extends AccountBO {
 
 	@Override
 	protected void updateInstallmentAfterAdjustment(
-			List<AccountTrxnEntity> reversedTrxns) {
+			List<AccountTrxnEntity> reversedTrxns) throws AccountException {
 		if (null != reversedTrxns && reversedTrxns.size() > 0) {
 			Money totalAmountAdj = new Money();
 			for (AccountTrxnEntity accntTrxn : reversedTrxns) {
@@ -349,18 +348,23 @@ public class CustomerAccountBO extends AccountBO {
 	}
 
 	private CustomerActivityEntity buildCustomerActivity(Money amount,
-			String description, Short personnelId) {
+			String description, Short personnelId) throws AccountException {
+		try{
 		PersonnelBO personnel = null;
 		if (personnelId != null) {
-			personnel = new PersonnelPersistenceService()
+			personnel = new PersonnelPersistence()
 					.getPersonnel(personnelId);
 		}
 		return new CustomerActivityEntity(personnel, description, amount);
+		}
+		catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 
 	@Override
 	public void updateAccountActivity(Money principal, Money interest,
-			Money fee, Money penalty, Short personnelId, String description){
+			Money fee, Money penalty, Short personnelId, String description) throws AccountException{
 		addCustomerActivity(buildCustomerActivity(fee,
 				description, personnelId));
 	}
@@ -597,13 +601,14 @@ public class CustomerAccountBO extends AccountBO {
 	}
 	
 	private void applyMiscCharge(Short chargeType, Money charge,
-			AccountActionDateEntity accountActionDateEntity) {
+			AccountActionDateEntity accountActionDateEntity) throws AccountException{
 		CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDateEntity;
 		customerScheduleEntity.applyMiscCharge(chargeType, charge);
 		updateCustomerActivity(chargeType,charge,"");
 	}
 
-	private void updateCustomerActivity(Short chargeType, Money charge,String comments) {
+	private void updateCustomerActivity(Short chargeType, Money charge,String comments) throws AccountException {
+		try{
 		PersonnelBO personnel = new PersonnelPersistence()
 				.getPersonnel(getUserContext().getId());
 		CustomerActivityEntity customerActivityEntity = null;
@@ -620,6 +625,10 @@ public class CustomerAccountBO extends AccountBO {
 			customerActivityEntity = new CustomerActivityEntity(this, personnel,
 					charge,  comments);
 		addCustomerActivity(customerActivityEntity);
+		}
+		catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 
 	private Money applyFeeToInstallments(List<FeeInstallment> feeInstallmentList,
