@@ -1,6 +1,6 @@
 /**
 
- * Meeting.java    version: 1.0
+ * MeetingBO.java    version: 1.0
 
  
 
@@ -37,78 +37,78 @@
  */
 package org.mifos.application.meeting.business;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
-import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.framework.business.BusinessObject;
-import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
+import org.mifos.framework.util.helpers.DateUtils;
 
 /**
  * This class encapsulate the meeting
  */
 public class MeetingBO extends BusinessObject {
 	
-	private Integer meetingId;
+	private final Integer meetingId;
 
-	private MeetingDetailsEntity meetingDetails;
+	private final MeetingDetailsEntity meetingDetails;
 
+	//TODO: make it final while migrating create meeting
 	private MeetingTypeEntity meetingType;
 
+	private Date meetingStartDate;
+
 	private String meetingPlace;
-
-	private Calendar meetingStartDate;
-
-	private Calendar meetingEndDate;
-
-	private Calendar meetingStartTime;
-
-	private Calendar meetingEndTime;
-
-	public MeetingBO() {
-		meetingDetails = new MeetingDetailsEntity();
-		meetingType = new MeetingTypeEntity();
+	
+	private GregorianCalendar gc = new GregorianCalendar();
+	
+	protected MeetingBO() {
+		this.meetingId = null;
+		this.meetingDetails = null;
+		this.meetingType = null;
+		this.meetingStartDate = null;
 	}
 
-	public MeetingBO(MeetingFrequency meetingRecurrence, Short recurAfter, MeetingType meetingType){
-		RecurrenceTypeEntity recurrenceType = new RecurrenceTypeEntity(meetingRecurrence);
-		this.meetingDetails =  new MeetingDetailsEntity(recurrenceType, recurAfter, this);
-		this.meetingType = new MeetingTypeEntity(meetingType);
+	public MeetingBO(RecurrenceType recurrenceType, Short recurAfter, Date startDate, MeetingType meetingType){
+		this(recurrenceType, Short.valueOf("1"), WeekDay.MONDAY, null, recurAfter, startDate, meetingType);
 	}
 	
-	public MeetingBO(MeetingFrequency meetingRecurrence, Short recurAfter, MeetingType meetingType, Short weekDay, Short dayRank){
-		RecurrenceTypeEntity recurrenceType = new RecurrenceTypeEntity(meetingRecurrence);
-		this.meetingDetails =  new MeetingDetailsEntity(recurrenceType, recurAfter, weekDay, dayRank, this);
-		this.meetingType = new MeetingTypeEntity(meetingType);
+	public MeetingBO(WeekDay weekDay, RankType rank, Short recurAfter, Date startDate, MeetingType meetingType){
+		this(RecurrenceType.MONTHLY, null, weekDay, rank, recurAfter, startDate, meetingType);
 	}
+	
+	public MeetingBO(Short dayNumber, Short recurAfter, Date startDate, MeetingType meetingType){
+		this(RecurrenceType.MONTHLY, dayNumber, null, null, recurAfter, startDate, meetingType);
+	}
+	
+	public MeetingBO(WeekDay weekDay, Short recurAfter, Date startDate, MeetingType meetingType){
+		this(RecurrenceType.WEEKLY, null, weekDay, null, recurAfter, startDate, meetingType);
+	}
+	
+	private MeetingBO(RecurrenceType recurrenceType, Short dayNumber, WeekDay weekDay, RankType rank, Short recurAfter, Date startDate, MeetingType meetingType){
+		this.meetingDetails =  new MeetingDetailsEntity(new RecurrenceTypeEntity(recurrenceType), dayNumber, weekDay, rank, recurAfter, this);
+		//TODO: remove this check after meeting create is migrated.
+		if(meetingType!=null)
+			this.meetingType = new MeetingTypeEntity(meetingType);
+		this.meetingId = null;
+		this.meetingStartDate = DateUtils.getDateWithoutTimeStamp(startDate.getTime());		
+	}
+	
 	
 	public MeetingDetailsEntity getMeetingDetails() {
 		return meetingDetails;
 	}
 
-	public void setMeetingDetails(MeetingDetailsEntity meetingDetails) {
-
-		if (null != meetingDetails) {
-			meetingDetails.setMeeting(this);
-		}
-		this.meetingDetails = meetingDetails;
-	}
-
-	public Calendar getMeetingEndDate() {
-		return meetingEndDate;
-	}
-
-	public void setMeetingEndDate(Calendar meetingEndDate) {
-		this.meetingEndDate = meetingEndDate;
-	}
-
 	public Integer getMeetingId() {
 		return meetingId;
-	}
-
-	public void setMeetingId(Integer meetingId) {
-		this.meetingId = meetingId;
 	}
 
 	public String getMeetingPlace() {
@@ -119,20 +119,20 @@ public class MeetingBO extends BusinessObject {
 		this.meetingPlace = meetingPlace;
 	}
 
+	//	TODO: change return type to date
 	public Calendar getMeetingStartDate() {
-		return meetingStartDate;
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(meetingStartDate);
+		return cal;
 	}
 
+	//TODO: change parameter to date
 	public void setMeetingStartDate(Calendar meetingStartDate) {
-		this.meetingStartDate = meetingStartDate;
+		this.meetingStartDate = DateUtils.getDateWithoutTimeStamp(meetingStartDate.getTimeInMillis());
 	}
 
-	public Calendar getMeetingStartTime() {
-		return meetingStartTime;
-	}
-
-	public void setMeetingStartTime(Calendar meetingStartTime) {
-		this.meetingStartTime = meetingStartTime;
+	public Date getStartDate() {
+		return meetingStartDate;
 	}
 
 	public MeetingTypeEntity getMeetingType() {
@@ -143,14 +143,17 @@ public class MeetingBO extends BusinessObject {
 		this.meetingType = meetingType;
 	}
 
-	public Calendar getMeetingEndTime() {
-		return meetingEndTime;
+	public boolean isMonthlyOnDate(){
+		return getMeetingDetails().isMonthlyOnDate();
+	}
+	
+	public boolean isWeekly(){
+		return getMeetingDetails().isWeekly();
 	}
 
-	public void setMeetingEndTime(Calendar meetingEndTime) {
-		this.meetingEndTime = meetingEndTime;
+	public boolean isMonthly(){
+		return getMeetingDetails().isMonthly();
 	}
-
 	/**
 	 * This function returns the meeting schedule based on the values set in the
 	 * meeting object
@@ -169,8 +172,7 @@ public class MeetingBO extends BusinessObject {
 							+ this.meetingDetails.getRecurAfter()
 							+ " Week(s) "
 							+ " on "
-							+ getDayString(this.meetingDetails
-									.getMeetingRecurrence().getWeekDay().getWeekDayId());
+							+ getDayString(this.meetingDetails.getWeekDay().getValue());
 
 				} else if (null != rt.getRecurrenceId()
 						&& rt.getRecurrenceId().shortValue() == MeetingConstants.MONTH) {
@@ -179,10 +181,10 @@ public class MeetingBO extends BusinessObject {
 					Short dayNumber = mr.getDayNumber();
 					Short day = null;
 					Short rank = null;
-					if(mr.getWeekDay()!=null)
-						day = mr.getWeekDay().getWeekDayId();
+					if(mr.getWeekDayValue()!=null)
+						day = mr.getWeekDayValue().getValue();
 					if(mr.getRankOfDays()!=null)
-						rank = mr.getRankOfDays().getRankOfDayId();
+						rank = mr.getRankOfDays().getId();
 
 					if (null != dayNumber) {
 						meeetingInfo = "Recur on day " + dayNumber.shortValue()
@@ -325,15 +327,232 @@ public class MeetingBO extends BusinessObject {
 		return rankString;
 
 	}
-
-
 	
-	public boolean isWeekly(){
-		return getMeetingDetails().isWeekly();
+	public boolean isValidMeetingDate(Date meetingDate, Date endDate)throws MeetingException{
+		validateMeetingDate(meetingDate);
+		validateEndDate(endDate);
+		Date currentScheduleDate=getFirstDate(getStartDate());
+		
+		Date meetingDateWOTimeStamp = DateUtils.getDateWithoutTimeStamp(meetingDate.getTime());
+		Date endDateWOTimeStamp = DateUtils.getDateWithoutTimeStamp(endDate.getTime());
+		
+		if(meetingDateWOTimeStamp.compareTo(endDateWOTimeStamp)>0)
+			return false;
+
+		while(currentScheduleDate.compareTo(meetingDateWOTimeStamp)<0 && currentScheduleDate.compareTo(endDateWOTimeStamp)<0)
+			currentScheduleDate=getNextDate(currentScheduleDate);
+		return (currentScheduleDate.compareTo(endDateWOTimeStamp)<=0 && currentScheduleDate.compareTo(meetingDateWOTimeStamp)==0);
+	}
+	
+	public boolean isValidMeetingDate(Date meetingDate, int occurrences)throws MeetingException{
+		validateMeetingDate(meetingDate);
+		validateOccurences(occurrences);
+		Date currentScheduleDate=getFirstDate(getStartDate());
+		Date meetingDateWOTimeStamp = DateUtils.getDateWithoutTimeStamp(meetingDate.getTime());
+		
+		for(int currentNumber=1; (currentScheduleDate.compareTo(meetingDateWOTimeStamp)<0) && currentNumber<occurrences; currentNumber++)
+			currentScheduleDate=getNextDate(currentScheduleDate);
+		return (currentScheduleDate.compareTo(meetingDateWOTimeStamp)==0);
+	}
+	
+	public Date getNextScheduleDateAfterRecurrence(Date meetingDate)throws MeetingException{
+		validateMeetingDate(meetingDate);
+		Date currentScheduleDate=getNextDate(getStartDate());
+		for(; currentScheduleDate.compareTo(meetingDate)<=0;
+			currentScheduleDate=getNextDate(currentScheduleDate));
+		
+		return currentScheduleDate;
+	}
+	
+	public Date getPrevScheduleDateAfterRecurrence(Date meetingDate)throws MeetingException{
+		validateMeetingDate(meetingDate);
+		Date prevScheduleDate=null;
+		for(Date currentScheduleDate=getNextDate(getStartDate()); 
+			(currentScheduleDate.compareTo(meetingDate)<0);
+			prevScheduleDate = currentScheduleDate,currentScheduleDate = getNextDate(currentScheduleDate));
+		return prevScheduleDate;
+	}
+	
+	
+	public List<Date> getAllDates(Date endDate)throws MeetingException{
+		validateEndDate(endDate);
+		List meetingDates= new ArrayList();
+		for(Date meetingDate = getFirstDate(getStartDate()); meetingDate.compareTo(endDate)<=0; meetingDate = getNextDate(meetingDate))
+			meetingDates.add(meetingDate);
+			
+		return meetingDates;
+	}
+	
+	public List<Date> getAllDates(int occurrences)throws MeetingException{
+		validateOccurences(occurrences);
+		List meetingDates=new ArrayList();
+		Date meetingDate = getFirstDate(getStartDate());
+		
+		for(int dateCount=0;dateCount<occurrences ;dateCount++){
+			meetingDates.add(meetingDate);
+			meetingDate = getNextDate(meetingDate);
+		}
+		return meetingDates;
 	}
 
-	public boolean isMonthly(){
-		return getMeetingDetails().isMonthly();
+	private void validateMeetingDate(Date meetingDate)throws MeetingException{
+		if (meetingDate==null)
+			throw new MeetingException(MeetingConstants.INVALID_MEETINGDATE);
 	}
+	
+	private void validateOccurences(int occurrences)throws MeetingException{
+		if (occurrences<=0)
+			throw new MeetingException(MeetingConstants.INVALID_OCCURENCES);
+	}
+	
+	private void validateEndDate(Date endDate)throws MeetingException{
+		if(endDate == null || endDate.compareTo(getStartDate())<=0)
+			throw new MeetingException(MeetingConstants.INVALID_ENDDATE);
+	}
+	
+	private Date getFirstDate(Date startDate){
+		if(isWeekly())
+			return getFirstDateForWeek(startDate);
+		else if(isMonthly())
+			return getFirstDateForMonth(startDate);
+		else
+			return getFirstDateForDay(startDate);
+	}
+	
+	private Date getNextDate(Date startDate){
+		if(isWeekly())
+			return getNextDateForWeek(startDate);
+		else if(isMonthly())
+			return getNextDateForMonth(startDate);
+		else
+			return getNextDateForDay(startDate);
+	}
+	
+	
+	private Date getFirstDateForDay(Date startDate){
+		return getNextDateForDay(startDate);
+	}
+	
+	private Date getNextDateForDay(Date startDate){
+		gc.setTime(startDate);
+		gc.add(Calendar.DAY_OF_WEEK, getMeetingDetails().getRecurAfter());
+		return gc.getTime();		
+	}
+	
+	private Date getFirstDateForWeek(Date startDate){
+		gc.setTime(startDate);
+		if (gc.get(Calendar.DAY_OF_WEEK)> getMeetingDetails().getWeekDay().getValue()){
+			gc.add(Calendar.WEEK_OF_MONTH,1);
+		}
+		gc.set(Calendar.DAY_OF_WEEK, getMeetingDetails().getWeekDay().getValue());
+		return gc.getTime();
+	}
+	
+	private Date getNextDateForWeek(Date startDate){
+		gc.setTime(startDate);
+		gc.add(Calendar.WEEK_OF_MONTH,getMeetingDetails().getRecurAfter());
+		return gc.getTime();
+	}
+	
+	private Date getFirstDateForMonth(Date startDate){
+		Date scheduleDate=null;
+		gc.setTime(startDate);
+
+		if (isMonthlyOnDate()){
+			int dt = gc.get(GregorianCalendar.DATE);
+			//if date passed in, is after the date on which schedule has to lie, move to next month 
+			if(dt> getMeetingDetails().getDayNumber())
+				gc.add(GregorianCalendar.MONTH,1);
+			//set the date on which schedule has to lie
+			int M1 = gc.get(GregorianCalendar.MONTH);
+			gc.set(GregorianCalendar.DATE,getMeetingDetails().getDayNumber());
+			int M2 = gc.get(GregorianCalendar.MONTH);
+			int daynum=getMeetingDetails().getDayNumber();
+			while(M1!=M2){
+				gc.set(GregorianCalendar.MONTH,gc.get(GregorianCalendar.MONTH)-1);
+				gc.set(GregorianCalendar.DATE,daynum-1);
+				M2 = gc.get(GregorianCalendar.MONTH);
+				daynum--;
+			}
+			scheduleDate=gc.getTime();
+			
+		}else{
+			//if current weekday is after the weekday on which schedule has to lie, move to next week
+			if (gc.get(Calendar.DAY_OF_WEEK)>getMeetingDetails().getWeekDay().getValue())
+				gc.add(Calendar.WEEK_OF_MONTH,1);
+			//set the weekday on which schedule has to lie
+			gc.set(Calendar.DAY_OF_WEEK,getMeetingDetails().getWeekDay().getValue());
+			//if week rank is First, Second, Third or Fourth, Set the respective week.
+			//if current week rank is after the weekrank on which schedule has to lie, move to next month
+			if(!getMeetingDetails().getWeekRank().equals(RankType.LAST)){
+				if(gc.get(Calendar.DAY_OF_WEEK_IN_MONTH)>getMeetingDetails().getWeekRank().getValue()){
+					gc.add(GregorianCalendar.MONTH,1);
+					gc.set(GregorianCalendar.DATE,1);
+				}
+				//set the weekrank on which schedule has to lie
+				gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,getMeetingDetails().getWeekRank().getValue());
+				scheduleDate=gc.getTime();
+			}
+			else {//scheduleData.getWeekRank()=Last
+				int M1 = gc.get(GregorianCalendar.MONTH);
+				//assumption: there are 5 weekdays in the month
+				gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,5);
+				int M2 = gc.get(GregorianCalendar.MONTH);
+				//if assumption fails, it means there exists 4 weekdays in a month, return last weekday date
+				//if M1==M2, means there exists 5 weekdays otherwise 4 weekdays in a month
+				if (M1!=M2){
+					gc.set(GregorianCalendar.MONTH,gc.get(GregorianCalendar.MONTH)-1);
+					gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,4);
+				}
+				scheduleDate=gc.getTime();
+			}
+		}
+		return scheduleDate;
+	}
+	
+	private Date getNextDateForMonth(Date startDate){
+		Date scheduleDate=null;
+		gc.setTime(startDate);
+		if(isMonthlyOnDate()){
+			//move to next month and return date.
+			gc.add(GregorianCalendar.MONTH,getMeetingDetails().getRecurAfter());
+			int M1 = gc.get(GregorianCalendar.MONTH);
+			gc.set(GregorianCalendar.DATE,getMeetingDetails().getDayNumber());
+			int M2 = gc.get(GregorianCalendar.MONTH);
+			int daynum=getMeetingDetails().getDayNumber();
+			while(M1!=M2){
+				gc.set(GregorianCalendar.MONTH,gc.get(GregorianCalendar.MONTH)-1);
+				gc.set(GregorianCalendar.DATE,daynum-1);
+				M2 = gc.get(GregorianCalendar.MONTH);
+				daynum--;
+			}
+			scheduleDate=gc.getTime();
+		}else{
+			if(!getMeetingDetails().getWeekRank().equals(RankType.LAST))
+			{
+				//apply month recurrence
+				gc.add(GregorianCalendar.MONTH,getMeetingDetails().getRecurAfter());
+				gc.set(Calendar.DAY_OF_WEEK,getMeetingDetails().getWeekDay().getValue());
+				gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,getMeetingDetails().getWeekRank().getValue());
+				scheduleDate=gc.getTime();
+			}else{//weekCount=-1
+				gc.set(GregorianCalendar.DATE,15);
+				gc.add(GregorianCalendar.MONTH,getMeetingDetails().getRecurAfter());
+				gc.set(Calendar.DAY_OF_WEEK,getMeetingDetails().getWeekDay().getValue());
+				int M1 = gc.get(GregorianCalendar.MONTH);
+				//assumption: there are 5 weekdays in the month
+				gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,5);
+				int M2 = gc.get(GregorianCalendar.MONTH);
+				//if assumption fails, it means there exists 4 weekdays in a month, return last weekday date
+				//if M1==M2, means there exists 5 weekdays otherwise 4 weekdays	in a month			
+				if (M1!=M2){
+					gc.set(GregorianCalendar.MONTH,gc.get(GregorianCalendar.MONTH)-1);
+					gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,4);
+				}
+				scheduleDate=gc.getTime();
+			}
+		}
+		return scheduleDate;
+	}	
 
 }

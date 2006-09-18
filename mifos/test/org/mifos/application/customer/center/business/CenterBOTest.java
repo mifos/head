@@ -18,7 +18,7 @@ import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.framework.MifosTestCase;
@@ -66,6 +66,7 @@ public class CenterBOTest extends MifosTestCase {
 		}
 		TestObjectFactory.removeObject(meeting);
 	}
+
 
 	public void testCreateWithoutLO() throws Exception {
 		try {
@@ -285,7 +286,6 @@ public class CenterBOTest extends MifosTestCase {
 	private MeetingBO getMeeting() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		meeting.setMeetingStartDate(new GregorianCalendar());
 		return meeting;
 	}
 
@@ -302,7 +302,7 @@ public class CenterBOTest extends MifosTestCase {
 		List<FeeView> fees = new ArrayList<FeeView>();
 		AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory
 				.createPeriodicAmountFee("PeriodicAmountFee",
-						FeeCategory.CENTER, "200", MeetingFrequency.WEEKLY,
+						FeeCategory.CENTER, "200", RecurrenceType.WEEKLY,
 						Short.valueOf("2"));
 		AmountFeeBO fee2 = (AmountFeeBO) TestObjectFactory
 				.createOneTimeAmountFee("OneTimeAmountFee",

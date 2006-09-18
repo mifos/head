@@ -150,14 +150,10 @@ public class ConfigurationInitializer {
 		return new OfficeCache(officeConfigMap);
 	}
 
-	private void setFiscalStartOfWeek(Map<Key, Object> officeConfigMap,
-			List<WeekDaysEntity> weekDaysList) throws SystemException,
-			ApplicationException {
-		for (WeekDaysEntity weekDaysEntity : weekDaysList) {
-			if (weekDaysEntity.isStartOfFiscalWeek()) {
-				officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),
-						ConfigConstants.FISCAL_START_OF_WEEK), weekDaysEntity
-						.getWeekDayId());
+	private void setFiscalStartOfWeek(Map<Key,Object> officeConfigMap,List<WeekDaysEntity> weekDaysList)throws SystemException,ApplicationException{
+		for(WeekDaysEntity weekDaysEntity : weekDaysList){
+			if(weekDaysEntity.isStartOfFiscalWeek()){
+				officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),ConfigConstants.FISCAL_START_OF_WEEK),weekDaysEntity.getId());
 				break;
 			}
 		}
@@ -171,7 +167,7 @@ public class ConfigurationInitializer {
 			if (!weekDaysEntity.isWorkingDay()) {
 				if (weekOffList == null)
 					weekOffList = new ArrayList<Short>();
-				weekOffList.add(weekDaysEntity.getWeekDayId());
+				weekOffList.add(weekDaysEntity.getId());
 			}
 		}
 		if (weekOffList != null)

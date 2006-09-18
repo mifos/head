@@ -881,13 +881,11 @@ public class AccountBO extends BusinessObject {
 		MeetingRecurrence meetingRecToReturn = new MeetingRecurrence();
 		meetingRecToReturn.setDayNumber(meeting.getMeetingDetails()
 				.getMeetingRecurrence().getDayNumber());
-		if (meeting.getMeetingDetails().getMeetingRecurrence().getRankOfDays() != null) {
-			meetingRecToReturn.setRankOfDays(meeting.getMeetingDetails()
-					.getMeetingRecurrence().getRankOfDays().getRankOfDayId());
+		if (meeting.getMeetingDetails().getWeekRank() != null) {
+			meetingRecToReturn.setRankOfDays(meeting.getMeetingDetails().getWeekRank().getValue());
 		}
-		if (meeting.getMeetingDetails().getMeetingRecurrence().getWeekDay() != null) {
-			meetingRecToReturn.setWeekDay(meeting.getMeetingDetails()
-					.getMeetingRecurrence().getWeekDay().getWeekDayId());
+		if (meeting.getMeetingDetails().getWeekDay() != null) {
+			meetingRecToReturn.setWeekDay(meeting.getMeetingDetails().getWeekDay().getValue());
 		}
 
 		MeetingDetails meetingDetailsToReturn = new MeetingDetails();

@@ -5,19 +5,14 @@
 
 
 <hibernate-mapping>
-
     <class name="org.mifos.application.meeting.business.MeetingBO" table="MEETING">
-        <id name="meetingId" column="MEETING_ID" type="integer" unsaved-value="null">
+        <id name="meetingId" column="MEETING_ID" type="integer" unsaved-value="null" access="field">
             <generator class="native"/>
         </id>
-	<version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null"/>
- 	<one-to-one name="MeetingDetails"  class="org.mifos.application.meeting.business.MeetingDetailsEntity"   lazy="false" cascade="all" property-ref="meeting" />
- 	<many-to-one name="MeetingType" column="MEETING_TYPE_ID"  class="org.mifos.application.meeting.business.MeetingTypeEntity"  insert="true" update="true"  unique="true" lazy="false" cascade="none"/>
+		<version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null"/>
+	 	<one-to-one name="meetingDetails"  class="org.mifos.application.meeting.business.MeetingDetailsEntity"   lazy="false" cascade="all" property-ref="meeting" access="field"/>
+	 	<many-to-one name="meetingType" column="MEETING_TYPE_ID"  class="org.mifos.application.meeting.business.MeetingTypeEntity"  insert="true" update="true"  unique="true" lazy="false" cascade="none" access="field"/>
         <property name="meetingPlace" column="MEETING_PLACE" type="string" />
-        <property name="meetingStartDate" column="START_DATE" type="calendar" />  
-        <property name="meetingEndDate" column="END_DATE" type="calendar" />        
-        <property name="meetingStartTime" column="START_TIME" type="calendar" />        
-        <property name="meetingEndTime" column="END_TIME" type="calendar" />        
-              
+        <property name="meetingStartDate" column="START_DATE" type="date" access="field"/>  
     </class>
 </hibernate-mapping>

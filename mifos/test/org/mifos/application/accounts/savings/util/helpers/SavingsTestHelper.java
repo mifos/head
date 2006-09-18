@@ -21,6 +21,8 @@ import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -168,12 +170,12 @@ public class SavingsTestHelper {
 		return actionDate;
 	}
 	
-	public SchedulerIntf getScheduler(MeetingBO meeting, int dayNumber)throws Exception{		
-		Short recurrenceId = meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId();
-		ScheduleDataIntf scheduleData=SchedulerFactory.getScheduleData(recurrenceId);
-		scheduleData.setDayNumber(dayNumber);
-		return SchedulerHelper.getScheduler(scheduleData , meeting);
-	}
+//	public SchedulerIntf getScheduler(MeetingBO meeting, int dayNumber)throws Exception{		
+//		Short recurrenceId = meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId();
+//		ScheduleDataIntf scheduleData=SchedulerFactory.getScheduleData(recurrenceId);
+//		scheduleData.setDayNumber(dayNumber);
+//		return SchedulerHelper.getScheduler(scheduleData , meeting);
+//	}
 
 	public MeetingBO getMeeting(String frequency, Short recurAfter, Short meetingTypeId)throws Exception{
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -181,6 +183,21 @@ public class SavingsTestHelper {
 		Calendar cal = Calendar.getInstance(Configuration.getInstance().getSystemConfig().getMifosTimeZone());
 		cal.setTime(df.parse("01/01/2006"));
 		meeting.setMeetingStartDate(cal);		
+		return meeting;
+	}
+	
+	public SchedulerIntf getScheduler(MeetingBO meeting)throws Exception{		
+		Short recurrenceId = meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId();
+		ScheduleDataIntf scheduleData=SchedulerFactory.getScheduleData(recurrenceId);
+		return SchedulerHelper.getScheduler(scheduleData , meeting);
+	}
+
+	public MeetingBO getMeeting(RecurrenceType recurrenceType, Short dayNumber, Short weekDay, Short dayRank, Short recurAfter, MeetingType meetingType)throws Exception{
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		MeetingBO meeting =  TestObjectFactory.getMeeting(recurrenceType,dayNumber, weekDay, dayRank, recurAfter, meetingType);
+		Calendar cal = Calendar.getInstance(Configuration.getInstance().getSystemConfig().getMifosTimeZone());
+		cal.setTime(df.parse("01/01/2006"));
+		meeting.setMeetingStartDate(cal);	
 		return meeting;
 	}
 }

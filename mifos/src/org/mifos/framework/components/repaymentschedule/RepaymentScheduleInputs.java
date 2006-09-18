@@ -283,12 +283,12 @@ public class RepaymentScheduleInputs implements RepaymentScheduleInputsIfc {
 		if(M2meeting.getMeetingDetails()
 				.getMeetingRecurrence().getRankOfDays()!=null){
 			meetingRecToReturn.setRankOfDays(M2meeting.getMeetingDetails()
-					.getMeetingRecurrence().getRankOfDays().getRankOfDayId());
+					.getMeetingRecurrence().getRankOfDays().getId());
 		}
 		if(M2meeting.getMeetingDetails()
-				.getMeetingRecurrence().getWeekDay()!=null){
+				.getMeetingRecurrence().getWeekDayValue()!=null){
 			meetingRecToReturn.setWeekDay(M2meeting.getMeetingDetails()
-					.getMeetingRecurrence().getWeekDay().getWeekDayId());
+					.getMeetingRecurrence().getWeekDayValue().getValue());
 		}
 
 		MeetingDetails meetingDetailsToReturn = new MeetingDetails();

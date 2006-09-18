@@ -41,7 +41,6 @@ package org.mifos.application.customer.group.struts.action;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -65,7 +64,7 @@ import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -311,7 +310,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 	}
 	
 	public void testFailurePreview_WithDuplicateFee() throws Exception{
-		List<FeeView> feesToRemove = getFees(MeetingFrequency.WEEKLY);
+		List<FeeView> feesToRemove = getFees(RecurrenceType.WEEKLY);
 		createParentCustomer();
 		HibernateUtil.closeSession();
 		
@@ -338,7 +337,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 	}
 	
 	public void testFailurePreview_WithFee_WithoutFeeAmount() throws Exception{
-		List<FeeView> feesToRemove = getFees(MeetingFrequency.WEEKLY);
+		List<FeeView> feesToRemove = getFees(RecurrenceType.WEEKLY);
 		createParentCustomer();
 		HibernateUtil.closeSession();
 		
@@ -363,7 +362,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 	}
 
 	public void testFailurePreview_FeeFrequencyMismatch() throws Exception{
-		List<FeeView> feesToRemove = getFees(MeetingFrequency.MONTHLY);
+		List<FeeView> feesToRemove = getFees(RecurrenceType.MONTHLY);
 		createParentCustomer();		
 		HibernateUtil.closeSession();
 		setRequestPathInfo("/groupCustAction.do");
@@ -390,7 +389,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 	}
 	
 	public void testSuccessfulPreview() throws Exception{
-		List<FeeView> feesToRemove = getFees(MeetingFrequency.WEEKLY);
+		List<FeeView> feesToRemove = getFees(RecurrenceType.WEEKLY);
 		createParentCustomer();		
 		HibernateUtil.closeSession();
 		
@@ -910,7 +909,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 	private MeetingBO getMeeting() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		meeting.setMeetingStartDate(new GregorianCalendar());
+		//meeting.setMeetingStartDate(new GregorianCalendar());
 		return meeting;
 	}
 
@@ -944,12 +943,11 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 						.currentTimeMillis()), savingsOffering);
 	}
 	
-	private List<FeeView> getFees(MeetingFrequency frequency) {
+	private List<FeeView> getFees(RecurrenceType frequency) {
 		List<FeeView> fees = new ArrayList<FeeView>();
 		AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory
 				.createPeriodicAmountFee("PeriodicAmountFee",
-						FeeCategory.GROUP, "200", frequency,
-						Short.valueOf("2"));
+						FeeCategory.GROUP, "200", frequency, Short.valueOf("2"));
 		fees.add(new FeeView(fee1));
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

@@ -42,7 +42,7 @@ import org.mifos.application.fees.util.helpers.FeeFormula;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
@@ -365,7 +365,7 @@ public class TestAccountService extends MifosTestCase {
 		
 		accountBO=(AccountBO)TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
-				FeeCategory.LOAN, "200", MeetingFrequency.WEEKLY, Short
+				FeeCategory.LOAN, "200", RecurrenceType.WEEKLY, Short
 						.valueOf("1"));
 		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(accountBO,periodicFee,new Double("200.0"),
 				FeeStatus.INACTIVE.getValue(), null,null);
@@ -396,7 +396,7 @@ public class TestAccountService extends MifosTestCase {
 		
         customerAccountBO =center.getCustomerAccount();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
-				FeeCategory.ALLCUSTOMERS, "200", MeetingFrequency.WEEKLY, Short
+				FeeCategory.ALLCUSTOMERS, "200", RecurrenceType.WEEKLY, Short
 						.valueOf("1"));
 		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(customerAccountBO,periodicFee,new Double("200.0"),
 				FeeStatus.INACTIVE.getValue(), null,null);

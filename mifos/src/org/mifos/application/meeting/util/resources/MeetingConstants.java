@@ -130,5 +130,13 @@ public interface MeetingConstants {
 	public final String CUSTOMER = "Customer";
 	
 	public final String KEYINVALIDRECURAFTER="meeting.error.invalidRecurAfter";
-
+	public final String INVALID_ENDDATE="errors.Meeting.invalidEndDate";
+	public final String INVALID_OCCURENCES="errors.Meeting.invalidOccurences";
+	public final String INVALID_MEETINGDATE="errors.Meeting.invalidMeetingDate";
+	public final String INVALID_STARTDATE="errors.Meeting.invalidStartDate";
+	public final String INVALID_MEETINGTYPE="errors.Meeting.invalidMeetingType";
+	public final String INVALID_RECURRENCETYPE="errors.Meeting.invalidRecurrenceType";
+	public final String INVALID_RECURAFTER="errors.Meeting.invalidRecurAfter";
+	public final String INVALID_WEEKDAY="errors.Meeting.invalidWeekDay";
+	public final String INVALID_WEEKRANK="errors.Meeting.invalidWeekRank";
 }

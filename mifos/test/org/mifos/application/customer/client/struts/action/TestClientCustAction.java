@@ -65,7 +65,7 @@ import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -345,7 +345,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		
 	}
 	public void testFailurePreview_WithDuplicateFee() throws Exception{
-		List<FeeView> feesToRemove = getFees(MeetingFrequency.WEEKLY);
+		List<FeeView> feesToRemove = getFees(RecurrenceType.WEEKLY);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -379,7 +379,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 	}
 	
 	public void testPreviewFaillure_FeesWithoutMeeting() throws Exception {
-		List<FeeView> feesToRemove = getFees(MeetingFrequency.WEEKLY);
+		List<FeeView> feesToRemove = getFees(RecurrenceType.WEEKLY);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -420,7 +420,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 	}
 	
 	public void testFailurePreview_WithFee_WithoutFeeAmount() throws Exception{
-		List<FeeView> feesToRemove = getFees(MeetingFrequency.WEEKLY);
+		List<FeeView> feesToRemove = getFees(RecurrenceType.WEEKLY);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -452,7 +452,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 	}
 	
 	public void testPreviewSuccess() throws Exception {
-		List<FeeView> feesToRemove = getFees(MeetingFrequency.MONTHLY);
+		List<FeeView> feesToRemove = getFees(RecurrenceType.MONTHLY);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -479,7 +479,6 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		}
 		actionPerform();
 		List<FeeView> feeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request.getSession());
-		System.out.println("------feeList: "+ feeList.size());
 		FeeView fee = feeList.get(0);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "preview");	
@@ -487,7 +486,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		addRequestParameter("formedByPersonnel", "1");
 		addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
 		addRequestParameter("selectedFee[0].amount", fee.getAmount());
-		SessionUtils.setAttribute(ClientConstants.CLIENT_MEETING,new MeetingBO(MeetingFrequency.MONTHLY, Short.valueOf("2"),MeetingType.CUSTOMERMEETING), request.getSession());
+		SessionUtils.setAttribute(ClientConstants.CLIENT_MEETING,new MeetingBO(RecurrenceType.MONTHLY, Short.valueOf("2"), new Date(), MeetingType.CUSTOMERMEETING), request.getSession());
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -514,7 +513,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 	}
 	
 	public void testCreateSuccessWithoutGroup() throws Exception {
-		List<FeeView> feesToRemove = getFees(MeetingFrequency.WEEKLY);
+		List<FeeView> feesToRemove = getFees(RecurrenceType.WEEKLY);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -941,7 +940,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 	private MeetingBO getMeeting() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		meeting.setMeetingStartDate(new GregorianCalendar());
+		//meeting.setMeetingStartDate(new GregorianCalendar());
 		return meeting;
 	}
 	
@@ -984,7 +983,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		}
 	}
 	
-	private List<FeeView> getFees(MeetingFrequency frequency) {
+	private List<FeeView> getFees(RecurrenceType frequency) {
 		List<FeeView> fees = new ArrayList<FeeView>();
 		AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory
 				.createPeriodicAmountFee("PeriodicAmountFee",

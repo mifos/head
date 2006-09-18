@@ -30,7 +30,7 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
@@ -202,7 +202,7 @@ public class TestClientBO extends MifosTestCase {
 	private MeetingBO getMeeting() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		meeting.setMeetingStartDate(new GregorianCalendar());
+	//	meeting.setMeetingStartDate(new GregorianCalendar());
 		return meeting;
 	}
 	
@@ -719,7 +719,7 @@ public class TestClientBO extends MifosTestCase {
 		List<FeeView> fees = new ArrayList<FeeView>();
 		AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory
 				.createPeriodicAmountFee("PeriodicAmountFee",
-						FeeCategory.CENTER, "200", MeetingFrequency.WEEKLY,
+						FeeCategory.CENTER, "200", RecurrenceType.WEEKLY,
 						Short.valueOf("2"));
 		AmountFeeBO fee2 = (AmountFeeBO) TestObjectFactory
 				.createOneTimeAmountFee("OneTimeAmountFee",

@@ -37,6 +37,7 @@
  */
 package org.mifos.application.fees.business;
 
+import java.util.Date;
 import java.util.Set;
 
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
@@ -48,7 +49,7 @@ import org.mifos.application.fees.util.helpers.FeeLevel;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -164,7 +165,7 @@ public class FeeBOTest extends MifosTestCase {
 	}
 	
 	public void testCreatePeriodicAmountFee() throws Exception {
-		MeetingBO feefrequency = new MeetingBO(MeetingFrequency.WEEKLY, Short.valueOf("2"), MeetingType.FEEMEETING);
+		MeetingBO feefrequency = new MeetingBO(RecurrenceType.WEEKLY, Short.valueOf("2"), new Date(), MeetingType.FEEMEETING);
 		fee = createPeriodicAmountFee("Customer_Periodic_AmountFee", FeeCategory.CENTER, "100", false, feefrequency);
 		fee.save();
 		HibernateUtil.commitTransaction();
@@ -176,7 +177,7 @@ public class FeeBOTest extends MifosTestCase {
 	}
 	
 	public void testCreatePeriodicRateFee() throws Exception {
-		MeetingBO feefrequency = new MeetingBO(MeetingFrequency.WEEKLY, Short.valueOf("2"), MeetingType.FEEMEETING);
+		MeetingBO feefrequency = new MeetingBO(RecurrenceType.WEEKLY, Short.valueOf("2"), new Date(), MeetingType.FEEMEETING);
 		fee = createPeriodicRateFee ("Customer_Periodic_RateFee",FeeCategory.CENTER, 100.0, FeeFormula.AMOUNT, false, feefrequency);
 		fee.save();
 		HibernateUtil.commitTransaction();
@@ -202,7 +203,7 @@ public class FeeBOTest extends MifosTestCase {
 	
 	
 	public void testCreatePeriodicDefaultFee()throws Exception{
-		MeetingBO feefrequency = new MeetingBO(MeetingFrequency.WEEKLY, Short.valueOf("2"), MeetingType.FEEMEETING);
+		MeetingBO feefrequency = new MeetingBO(RecurrenceType.WEEKLY, Short.valueOf("2"), new Date(), MeetingType.FEEMEETING);
 		fee = createPeriodicRateFee ("Customer_Periodic_DefaultFee",FeeCategory.ALLCUSTOMERS, 100.0, FeeFormula.AMOUNT, true, feefrequency);
 		fee.save();
 		HibernateUtil.commitTransaction();

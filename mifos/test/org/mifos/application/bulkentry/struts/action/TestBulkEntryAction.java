@@ -753,7 +753,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 					.setStartDate(meeting.getMeetingStartDate().getTime());
 			scheduleData.setRecurAfter(1);
 			scheduleData.setWeekDay(meeting.getMeetingDetails()
-					.getMeetingRecurrence().getWeekDay().getWeekDayId());
+					.getMeetingRecurrence().getWeekDayValue().getValue());
 			scheduleInputs.setScheduleData(scheduleData);
 			scheduler.setScheduleInputs(scheduleInputs);
 			dates = scheduler.getAllDates(new java.util.Date(System

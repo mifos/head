@@ -48,7 +48,7 @@ import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
@@ -352,7 +352,7 @@ public class TestLoanBO extends MifosTestCase {
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100",
-				MeetingFrequency.WEEKLY, Short.valueOf("1"));
+				RecurrenceType.WEEKLY, Short.valueOf("1"));
 		feeViewList.add(new FeeView(periodicFee));
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
 				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
@@ -475,7 +475,7 @@ public class TestLoanBO extends MifosTestCase {
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100",
-				MeetingFrequency.WEEKLY, Short.valueOf("1"));
+				RecurrenceType.WEEKLY, Short.valueOf("1"));
 		feeViewList.add(new FeeView(periodicFee));
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
 				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
@@ -2461,7 +2461,7 @@ public class TestLoanBO extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "200",
-				MeetingFrequency.WEEKLY, Short.valueOf("2"));
+				RecurrenceType.WEEKLY, Short.valueOf("2"));
 		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		UserContext uc = TestObjectFactory.getUserContext();
@@ -2659,7 +2659,7 @@ public class TestLoanBO extends MifosTestCase {
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100",
-				MeetingFrequency.WEEKLY, Short.valueOf("3"));
+				RecurrenceType.WEEKLY, Short.valueOf("3"));
 		feeViewList.add(new FeeView(periodicFee));
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
 				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
@@ -2792,7 +2792,7 @@ public class TestLoanBO extends MifosTestCase {
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100",
-				MeetingFrequency.WEEKLY, Short.valueOf("3"));
+				RecurrenceType.WEEKLY, Short.valueOf("3"));
 		feeViewList.add(new FeeView(periodicFee));
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
 				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
@@ -2942,7 +2942,7 @@ public class TestLoanBO extends MifosTestCase {
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100",
-				MeetingFrequency.WEEKLY, Short.valueOf("3"));
+				RecurrenceType.WEEKLY, Short.valueOf("3"));
 		feeViewList.add(new FeeView(periodicFee));
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
 				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
@@ -3092,7 +3092,7 @@ public class TestLoanBO extends MifosTestCase {
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100",
-				MeetingFrequency.WEEKLY, Short.valueOf("3"));
+				RecurrenceType.WEEKLY, Short.valueOf("3"));
 		feeViewList.add(new FeeView(periodicFee));
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
 				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
@@ -3243,7 +3243,7 @@ public class TestLoanBO extends MifosTestCase {
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100",
-				MeetingFrequency.WEEKLY, Short.valueOf("3"));
+				RecurrenceType.WEEKLY, Short.valueOf("3"));
 		feeViewList.add(new FeeView(periodicFee));
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
 				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
@@ -3419,7 +3419,7 @@ public class TestLoanBO extends MifosTestCase {
 		feeViewList.add(new FeeView(firstRepaymentFee));
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100",
-				MeetingFrequency.MONTHLY, Short.valueOf("1"));
+				RecurrenceType.MONTHLY, Short.valueOf("1"));
 		feeViewList.add(new FeeView(periodicFee));
 		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group,
@@ -3566,7 +3566,7 @@ public class TestLoanBO extends MifosTestCase {
 		feeViewList.add(new FeeView(firstRepaymentFee));
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100",
-				MeetingFrequency.MONTHLY, Short.valueOf("1"));
+				RecurrenceType.MONTHLY, Short.valueOf("1"));
 		feeViewList.add(new FeeView(periodicFee));
 		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group,
@@ -3895,7 +3895,7 @@ public class TestLoanBO extends MifosTestCase {
 				"One Time Amount Fee", FeeCategory.LOAN, "120.0",
 				FeePayment.TIME_OF_DISBURSMENT);
 		FeeBO fee3 = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
-				FeeCategory.LOAN, "10.0", MeetingFrequency.WEEKLY, (short) 1);
+				FeeCategory.LOAN, "10.0", RecurrenceType.WEEKLY, (short) 1);
 		List<FeeView> feeViews = new ArrayList<FeeView>();
 		FeeView feeView1 = new FeeView(fee1);
 		FeeView feeView2 = new FeeView(fee3);

@@ -13,7 +13,7 @@ public class SchedulerExceptionFactory {
 	 * @param argKey is an argument to be substituted in error msgs.
 	 * @return an instance of SchedulerException
 	 */
-	static SchedulerException getSchedulerException(String patternKey, String argKey){
+	public static SchedulerException getSchedulerException(String patternKey, String argKey){
 		ResourceBundle resourceBundle = ResourceBundle.getBundle(Constants.Resources);
 		String []a= new String[1];
 		String pattern = resourceBundle.getString(patternKey);

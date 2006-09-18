@@ -72,13 +72,8 @@ public class PrdOfferingMeetingEntity extends PersistentObject {
 		return prdOfferingMeetingId;
 	}
 
-	public MeetingType getprdOfferingMeetingType()
-			throws ProductDefinitionException {
-		try {
-			return MeetingType.getMeetingType(meetingType);
-		} catch (PropertyNotFoundException e) {
-			throw new ProductDefinitionException(e);
-		}
+	public MeetingType getprdOfferingMeetingType(){
+			return MeetingType.getMeetingType(meetingType);	
 	}
 
 	public PrdOfferingBO getPrdOffering() {

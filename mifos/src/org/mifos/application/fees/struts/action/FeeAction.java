@@ -38,6 +38,7 @@
 package org.mifos.application.fees.struts.action;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,8 +66,8 @@ import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
@@ -314,11 +315,11 @@ public class FeeAction extends BaseAction {
 			throws ApplicationException {
 		UserContext userContext = getUserContext(request);
 		MeetingBO feeFrequency = actionForm.getFeeRecurrenceTypeValue().equals(
-				MeetingFrequency.MONTHLY) ? new MeetingBO(actionForm
+				RecurrenceType.MONTHLY) ? new MeetingBO(actionForm
 				.getFeeRecurrenceTypeValue(), actionForm
-				.getMonthRecurAfterValue(), MeetingType.FEEMEETING)
+				.getMonthRecurAfterValue(), new Date(), MeetingType.FEEMEETING)
 				: new MeetingBO(actionForm.getFeeRecurrenceTypeValue(),
-						actionForm.getWeekRecurAfterValue(),
+						actionForm.getWeekRecurAfterValue(), new Date(),
 						MeetingType.FEEMEETING);
 		if (actionForm.isRateFee()) {
 			FeeFormulaEntity feeFormula = (FeeFormulaEntity) findMasterEntity(

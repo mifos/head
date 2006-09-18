@@ -249,6 +249,10 @@ public class SavingsAction extends AccountAppAction {
 				+ ((SavingsActionForm) form).getStateSelected());
 		SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
+		SavingsOfferingBO oldOffering = savings.getSavingsOffering();
+		loadAndSetSavingsOffering(oldOffering.getPrdOfferingId(),savings);
+		savings.getSavingsOffering().setVersionNo(oldOffering.getVersionNo());
+		oldOffering = null;
 		savings.setAccountState(new AccountStateEntity(new Short(
 				((SavingsActionForm) form).getStateSelected())));
 		savings.save();

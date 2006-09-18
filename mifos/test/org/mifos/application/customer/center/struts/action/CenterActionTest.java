@@ -2,7 +2,6 @@ package org.mifos.application.customer.center.struts.action;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -26,8 +25,8 @@ import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -147,7 +146,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 	}
 	
 	public void testFailurePreviewWithMeetingNotNull() throws Exception{
-		SessionUtils.setAttribute(CenterConstants.CENTER_MEETING,new MeetingBO(MeetingFrequency.MONTHLY, Short.valueOf("2"),MeetingType.CUSTOMERMEETING), request.getSession());
+		SessionUtils.setAttribute(CenterConstants.CENTER_MEETING,new MeetingBO(RecurrenceType.MONTHLY, Short.valueOf("2"), new Date(), MeetingType.CUSTOMERMEETING), request.getSession());
 		setRequestPathInfo("/centerCustAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("officeId", "3");
@@ -191,7 +190,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 	}
 	
 	public void testFailurePreview_WithDuplicateFee() throws Exception{
-		List<FeeView> feesToRemove = getFees(MeetingFrequency.MONTHLY);
+		List<FeeView> feesToRemove = getFees(RecurrenceType.MONTHLY);
 		setRequestPathInfo("/centerCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -210,7 +209,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 	}
 	
 	public void testFailurePreview_WithFee_WithoutFeeAmount() throws Exception{
-		List<FeeView> feesToRemove = getFees(MeetingFrequency.MONTHLY);
+		List<FeeView> feesToRemove = getFees(RecurrenceType.MONTHLY);
 		setRequestPathInfo("/centerCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -227,7 +226,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 	}
 	
 	public void testFailurePreview_FeeFrequencyMismatch() throws Exception{
-		List<FeeView> feesToRemove = getFees(MeetingFrequency.WEEKLY);
+		List<FeeView> feesToRemove = getFees(RecurrenceType.WEEKLY);
 		setRequestPathInfo("/centerCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -245,12 +244,12 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 	}
 	
 	public void testSuccessfulPreview() throws Exception {
-		List<FeeView> feesToRemove = getFees(MeetingFrequency.MONTHLY);
+		List<FeeView> feesToRemove = getFees(RecurrenceType.MONTHLY);
 		setRequestPathInfo("/centerCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
 		actionPerform();
-		SessionUtils.setAttribute(CenterConstants.CENTER_MEETING,new MeetingBO(MeetingFrequency.MONTHLY, Short.valueOf("2"),MeetingType.CUSTOMERMEETING), request.getSession());
+		SessionUtils.setAttribute(CenterConstants.CENTER_MEETING,new MeetingBO(RecurrenceType.MONTHLY, Short.valueOf("2"), new Date(), MeetingType.CUSTOMERMEETING), request.getSession());
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request.getSession());
 		List<FeeView> feeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request.getSession());
 		FeeView fee = feeList.get(0);
@@ -286,7 +285,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 	}
 	
 	public void testSuccessfulCreate() throws Exception {
-		getFees(MeetingFrequency.MONTHLY);
+		getFees(RecurrenceType.MONTHLY);
 		setRequestPathInfo("/centerCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -500,17 +499,15 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 	}
 	
 	private MeetingBO getMeeting(){
-		MeetingBO meeting = new MeetingBO(MeetingFrequency.MONTHLY, Short.valueOf("2"),MeetingType.CUSTOMERMEETING, Short.valueOf("2"), Short.valueOf("2"));
-		meeting.setMeetingStartDate(Calendar.getInstance());
+		MeetingBO meeting = new MeetingBO(Short.valueOf("2"),  Short.valueOf("2"), new Date(), MeetingType.CUSTOMERMEETING);
 		return meeting;
 	}
 	
-	private List<FeeView> getFees(MeetingFrequency frequency) {
+	private List<FeeView> getFees(RecurrenceType frequency) {
 		List<FeeView> fees = new ArrayList<FeeView>();
 		AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory
 				.createPeriodicAmountFee("PeriodicAmountFee",
-						FeeCategory.CENTER, "200", frequency,
-						Short.valueOf("2"));
+						FeeCategory.CENTER, "200", frequency,Short.valueOf("2"));
 		fees.add(new FeeView(fee1));
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

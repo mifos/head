@@ -37,14 +37,13 @@
  */
 package org.mifos.application.meeting.util.helpers;
 
-import org.mifos.framework.exceptions.PropertyNotFoundException;
 
-public enum MeetingFrequency {
+public enum RecurrenceType {
 	WEEKLY((short) 1), MONTHLY((short) 2), DAILY((short) 3);
 
 	Short value;
 
-	MeetingFrequency(Short value) {
+	RecurrenceType(Short value) {
 		this.value = value;
 	}
 
@@ -52,10 +51,10 @@ public enum MeetingFrequency {
 		return value;
 	}
 	
-	public static MeetingFrequency getMeetingFrequency(Short value)throws PropertyNotFoundException{
-		for (MeetingFrequency frequency : MeetingFrequency.values()) 
+	public static RecurrenceType getRecurrenceType(Short value){
+		for (RecurrenceType frequency : RecurrenceType.values()) 
 			if (frequency.getValue().equals(value))
 				return frequency;
-		throw new PropertyNotFoundException("MeetingFrequency");
+		return null;
 	}
 }

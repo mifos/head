@@ -354,7 +354,7 @@ public class MeetingScheduleHelper
 					.debug(
 							"MeetingSchedulerHelper:getScheduler  returning week object ");
 			scheduleData.setWeekDay(meeting.getMeetingDetails()
-					.getMeetingRecurrence().getWeekDay().getWeekDayId()
+					.getMeetingRecurrence().getWeekDayValue().getValue()
 					.intValue());
 		} else if (scheduleData.getClass().getName().equals(
 				"org.mifos.framework.components.scheduler.MonthData")) {
@@ -370,11 +370,11 @@ public class MeetingScheduleHelper
 						.getMeetingRecurrence().getDayNumber().intValue());
 			else {
 				scheduleData.setWeekDay(meeting.getMeetingDetails()
-						.getMeetingRecurrence().getWeekDay().getWeekDayId()
+						.getMeetingRecurrence().getWeekDayValue().getValue()
 						.intValue());
 				scheduleData.setWeekRank(meeting.getMeetingDetails()
 						.getMeetingRecurrence().getRankOfDays()
-						.getRankOfDayId().intValue());
+						.getId().intValue());
 			}
 		} else
 			throw new RepaymentScheduleException(

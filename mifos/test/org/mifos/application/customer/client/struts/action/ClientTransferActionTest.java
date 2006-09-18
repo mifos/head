@@ -208,7 +208,7 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 	private MeetingBO getMeeting() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		meeting.setMeetingStartDate(new GregorianCalendar());
+		//meeting.setMeetingStartDate(new GregorianCalendar());
 		return meeting;
 	}
 }

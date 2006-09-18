@@ -1,6 +1,6 @@
 /**
 
- * RankOfDays.java    version: 1.0
+ * RankOfDaysEntity.java    version: 1.0
 
  
 
@@ -37,52 +37,18 @@
  */
 package org.mifos.application.meeting.business;
 
-import java.util.Set;
-
-import org.mifos.application.master.util.valueobjects.LookUpValueLocale;
-import org.mifos.framework.business.PersistentObject;
-import org.mifos.framework.util.valueobjects.ValueObject;
+import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.meeting.util.helpers.RankType;
 
 /**
  * This class would encapsulate the rank for a given day
  */
-public class RankOfDaysEntity extends PersistentObject {
+public class RankOfDaysEntity extends MasterDataEntity {
 
-	private Short rankOfDayId;
-
-	private Short lookUpId;
-
-	private Set<LookUpValueLocale> lookUpValueLocale;
-
-	public RankOfDaysEntity() {
+	protected RankOfDaysEntity() {
 	}
 
-	public RankOfDaysEntity(Short dayRank) {
-		this.rankOfDayId = dayRank;
+	public RankOfDaysEntity(RankType rank) {
+		super(rank.getValue());
 	}
-	
-	public Short getLookUpId() {
-		return lookUpId;
-	}
-
-	public void setLookUpId(Short lookUpId) {
-		this.lookUpId = lookUpId;
-	}
-
-	public Set<LookUpValueLocale> getLookUpValueLocale() {
-		return lookUpValueLocale;
-	}
-
-	public void setLookUpValueLocale(Set<LookUpValueLocale> lookUpValueLocale) {
-		this.lookUpValueLocale = lookUpValueLocale;
-	}
-
-	public Short getRankOfDayId() {
-		return rankOfDayId;
-	}
-
-	public void setRankOfDayId(Short rankOfDayId) {
-		this.rankOfDayId = rankOfDayId;
-	}
-
 }

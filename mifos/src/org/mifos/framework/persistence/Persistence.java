@@ -80,6 +80,7 @@ public abstract class Persistence {
 			}
 			return returnList;
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new PersistenceException(e);
 		}
 	}

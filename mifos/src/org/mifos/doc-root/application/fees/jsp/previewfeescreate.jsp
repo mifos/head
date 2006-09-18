@@ -169,11 +169,11 @@
 													<c:when test="${sessionScope.feeactionform.feeFrequencyType==FeeFrequencyType.PERIODIC.value}">
 														<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.timeToCharge" /></span>
 														<mifos:mifoslabel name="Fees.labelRecurEvery" />
-														<c:if test="${sessionScope.feeactionform.feeRecurrenceType==MeetingFrequency.WEEKLY.value}">
+														<c:if test="${sessionScope.feeactionform.feeRecurrenceType==RecurrenceType.WEEKLY.value}">
 															<c:out value="${sessionScope.feeactionform.weekRecurAfter}" />
 															<mifos:mifoslabel name="Fees.labelWeeks" />
 														</c:if>
-														<c:if test="${sessionScope.feeactionform.feeRecurrenceType==MeetingFrequency.MONTHLY.value}">
+														<c:if test="${sessionScope.feeactionform.feeRecurrenceType==RecurrenceType.MONTHLY.value}">
 															<c:out value="${sessionScope.feeactionform.monthRecurAfter}" />
 															<mifos:mifoslabel name="Fees.labelMonths" />
 														</c:if>

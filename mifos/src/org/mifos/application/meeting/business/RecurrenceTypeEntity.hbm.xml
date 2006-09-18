@@ -7,11 +7,11 @@
 <hibernate-mapping>
 
     <class name="org.mifos.application.meeting.business.RecurrenceTypeEntity" table="RECURRENCE_TYPE">
-        <id name="recurrenceId" column="RECURRENCE_ID" type="short">
+        <id name="recurrenceId" column="RECURRENCE_ID" type="short" access="field">
             <generator class="native"/>
         </id>
-         <property name="recurrenceName" column="RECURRENCE_NAME" type="string" />
-         <property name="description" column="DESCRIPTION" type="string" />
+         <property name="recurrenceName" column="RECURRENCE_NAME" type="string" access="field"/>
+         <property name="description" column="DESCRIPTION" type="string" access="field"/>
  
     </class>
 </hibernate-mapping>

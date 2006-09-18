@@ -18,7 +18,8 @@ import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.WeekDaysEntity;
-import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.cronjobs.helpers.ApplyCustomerFeeHelper;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -30,10 +31,12 @@ public class TestCustomerFeeHelper extends MifosTestCase{
 	
 	private CustomerBO center;	
 	
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 	}
 
+	@Override
 	public void tearDown() {		
 		TestObjectFactory.cleanUp(center);
 		HibernateUtil.closeSession();
@@ -53,10 +56,10 @@ public void testExecute() throws Exception{
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(offSetDate(new Date(System.currentTimeMillis()),1));
 		meeting.setMeetingStartDate(calendar);
-		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(new WeekDaysEntity(Short.valueOf(String.valueOf(calendar.get(Calendar.DAY_OF_WEEK)))));
+		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(new WeekDaysEntity(WeekDay.getWeekDay(Short.valueOf(String.valueOf(calendar.get(Calendar.DAY_OF_WEEK))))));
 		
 		Set<AccountFeesEntity> accountFeeSet = center.getCustomerAccount().getAccountFees();
-		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee("Training_Fee", FeeCategory.ALLCUSTOMERS, "100", MeetingFrequency.WEEKLY,Short.valueOf("2"));
+		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee("Training_Fee", FeeCategory.ALLCUSTOMERS, "100", RecurrenceType.WEEKLY,Short.valueOf("2"));
 		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(),trainingFee,((AmountFeeBO)trainingFee).getFeeAmount().getAmountDoubleValue());
 		accountFeeSet.add(accountPeriodicFee);
 		Date lastAppliedFeeDate = offSetDate(new Date(System.currentTimeMillis()),1);
@@ -95,10 +98,10 @@ public void testExecute() throws Exception{
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(offSetDate(new Date(System.currentTimeMillis()),1));
 		meeting.setMeetingStartDate(calendar);
-		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(new WeekDaysEntity(Short.valueOf(String.valueOf(calendar.get(Calendar.DAY_OF_WEEK)))));
+		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(new WeekDaysEntity(WeekDay.getWeekDay(Short.valueOf(String.valueOf(calendar.get(Calendar.DAY_OF_WEEK))))));
 				
 		Set<AccountFeesEntity> accountFeeSet = center.getCustomerAccount().getAccountFees();
-		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee("Training_Fee", FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY,Short.valueOf("1"));
+		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee("Training_Fee", FeeCategory.LOAN, "100", RecurrenceType.WEEKLY,Short.valueOf("1"));
 		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(),trainingFee,((AmountFeeBO)trainingFee).getFeeAmount().getAmountDoubleValue());
 		accountPeriodicFee.setLastAppliedDate(offSetDate(new Date(System.currentTimeMillis()),1));
 		accountFeeSet.add(accountPeriodicFee);

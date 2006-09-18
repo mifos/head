@@ -102,8 +102,8 @@ import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.business.MeetingDetailsEntity;
-import org.mifos.application.meeting.business.MeetingRecurrenceEntity;
+import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.persistence.service.PersonnelPersistenceService;
@@ -1778,6 +1778,7 @@ public class LoanBO extends AccountBO {
 							.getMeeting()), true);
 			isValid = scheduler.isValidScheduleDate(disbursementDate);
 		} catch (ApplicationException e) {
+			e.printStackTrace();
 			throw new AccountException(e);
 		}
 		return isValid;
@@ -1928,27 +1929,25 @@ public class LoanBO extends AccountBO {
 						.getRecurAfter(), customerMeeting.getMeetingDetails()
 						.getRecurAfter())) {
 
-			MeetingBO meetingToReturn = new MeetingBO();
-			Calendar calendar = new GregorianCalendar();
-			calendar.setTime(disbursementDate);
-			meetingToReturn.setMeetingStartDate(calendar);
-			meetingToReturn.setMeetingType(customerMeeting.getMeetingType());
-
-			MeetingRecurrenceEntity meetingRecToReturn = new MeetingRecurrenceEntity();
-			meetingRecToReturn.setDayNumber(customerMeeting.getMeetingDetails()
-					.getMeetingRecurrence().getDayNumber());
-			meetingRecToReturn
-					.setRankOfDays(customerMeeting.getMeetingDetails()
-							.getMeetingRecurrence().getRankOfDays());
-			meetingRecToReturn.setWeekDay(customerMeeting.getMeetingDetails()
-					.getMeetingRecurrence().getWeekDay());
-			MeetingDetailsEntity meetingDetailsToReturn = new MeetingDetailsEntity();
-			meetingDetailsToReturn.setMeetingRecurrence(meetingRecToReturn);
-			meetingDetailsToReturn.setRecurAfter(loanOfferingMeeting
-					.getMeetingDetails().getRecurAfter());
-			meetingDetailsToReturn.setRecurrenceType(customerMeeting
-					.getMeetingDetails().getRecurrenceType());
-			meetingToReturn.setMeetingDetails(meetingDetailsToReturn);
+			RecurrenceType meetingFrequency = RecurrenceType.getRecurrenceType(customerMeeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
+			MeetingType meetingType =  MeetingType.getMeetingType(customerMeeting.getMeetingType().getMeetingTypeId());
+			Short recurAfter = loanOfferingMeeting.getMeetingDetails().getRecurAfter();
+			MeetingBO meetingToReturn = null;
+			
+			if(meetingFrequency.equals(RecurrenceType.MONTHLY)){
+				if(customerMeeting.isMonthlyOnDate())
+					meetingToReturn = new MeetingBO(customerMeeting.getMeetingDetails().getDayNumber(),
+							recurAfter, disbursementDate, meetingType);
+				else
+					meetingToReturn = new MeetingBO(customerMeeting.getMeetingDetails().getWeekDay() ,customerMeeting.getMeetingDetails().getWeekRank(),
+							recurAfter, disbursementDate, meetingType);
+			}				
+			else if(meetingFrequency.equals(RecurrenceType.WEEKLY))
+				meetingToReturn = new MeetingBO(customerMeeting.getMeetingDetails()
+						.getMeetingRecurrence().getWeekDayValue(), recurAfter, disbursementDate, meetingType );
+			else
+				meetingToReturn = new MeetingBO(meetingFrequency, recurAfter, disbursementDate, meetingType); 
+						
 			return meetingToReturn;
 		} else {
 			throw new AccountException(

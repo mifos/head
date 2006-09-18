@@ -121,15 +121,11 @@ import org.mifos.application.master.business.CollateralTypeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.SupportedLocalesEntity;
-import org.mifos.application.master.util.valueobjects.InterestCalcRule;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.business.MeetingDetailsEntity;
-import org.mifos.application.meeting.business.MeetingRecurrenceEntity;
-import org.mifos.application.meeting.business.MeetingTypeEntity;
-import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.application.meeting.business.WeekDaysEntity;
-import org.mifos.application.meeting.util.helpers.MeetingFrequency;
 import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OperationMode;
@@ -289,8 +285,8 @@ public class TestObjectFactory {
 		try {
 			Short officeId = new Short("3");
 			Short personnel = new Short("1");		
-			if(meeting!=null)
-				meeting.setMeetingStartDate(new GregorianCalendar());
+//			if(meeting!=null)
+//				meeting.setMeetingStartDate(new GregorianCalendar());
 			center = new CenterBO(getUserContext(), customerName, null, null, getFees(),  null, null, officeId, meeting, personnel);
 			//center.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), center, startDate));
 			center.save();
@@ -312,8 +308,8 @@ public class TestObjectFactory {
 	public static CenterBO createCenter(String customerName, MeetingBO meeting, Short officeId, Short personnelId) {
 		CenterBO center = null;
 		try {
-			if(meeting!=null)
-				meeting.setMeetingStartDate(new GregorianCalendar());
+//			if(meeting!=null)
+//				meeting.setMeetingStartDate(new GregorianCalendar());
 			center = new CenterBO(getUserContext(), customerName, null, null, getFees(),  null, null, officeId, meeting, personnelId);
 			//center.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), center, startDate));
 			center.save();
@@ -332,8 +328,8 @@ public class TestObjectFactory {
 		try {
 			Short officeId = new Short("3");
 			Short personnel = new Short("1");		
-			if(meeting!=null)
-				meeting.setMeetingStartDate(new GregorianCalendar());
+//			if(meeting!=null)
+//				meeting.setMeetingStartDate(new GregorianCalendar());
 			center = new CenterBO(getUserContext(), customerName, null, null, fees,  null, null, officeId, meeting, personnel);
 			center.save();
 			HibernateUtil.commitTransaction();
@@ -347,7 +343,7 @@ public class TestObjectFactory {
 		
 	private static List<FeeView> getFees(){
 		List<FeeView> fees = new ArrayList<FeeView>();		
-		AmountFeeBO maintanenceFee = (AmountFeeBO)createPeriodicAmountFee("Mainatnence Fee", FeeCategory.ALLCUSTOMERS, "100",MeetingFrequency.WEEKLY,
+		AmountFeeBO maintanenceFee = (AmountFeeBO)createPeriodicAmountFee("Mainatnence Fee", FeeCategory.ALLCUSTOMERS, "100",RecurrenceType.WEEKLY,
 				Short.valueOf("1"));
 		FeeView fee = new FeeView(maintanenceFee);
 		fees.add(fee);
@@ -390,9 +386,9 @@ public class TestObjectFactory {
 			Short formedById, CustomerBO parentCustomer){
 		GroupBO group = null;
 		try {
-			if(parentCustomer!=null && parentCustomer.getCustomerMeeting()!=null 
-					&& parentCustomer.getCustomerMeeting().getMeeting()!=null)
-				parentCustomer.getCustomerMeeting().getMeeting().setMeetingStartDate(new GregorianCalendar());
+//			if(parentCustomer!=null && parentCustomer.getCustomerMeeting()!=null 
+//					&& parentCustomer.getCustomerMeeting().getMeeting()!=null)
+//				parentCustomer.getCustomerMeeting().getMeeting().setMeetingStartDate(new GregorianCalendar());
 			group = new GroupBO(getUserContext(), customerName, customerStatus, externalId, trained, trainedDate, address, customFields, fees, formedById, parentCustomer);
 			group.save();
 			HibernateUtil.commitTransaction();
@@ -408,8 +404,8 @@ public class TestObjectFactory {
 			CustomerStatus customerStatus, Short officeId, MeetingBO meeting,
 			Short loanOfficerId){
 		Short formedBy = new Short("1");
-		if(meeting!=null)
-			meeting.setMeetingStartDate(new GregorianCalendar());
+//		if(meeting!=null)
+//			meeting.setMeetingStartDate(new GregorianCalendar());
 		return createGroupUnderBranch(customerName, customerStatus, null, false, null, null, null, getFees(), formedBy, officeId, meeting, loanOfficerId);
 	}
 	
@@ -438,9 +434,9 @@ public class TestObjectFactory {
 		try {
 			Short office = new Short("3");
 			Short personnel = new Short("1");	
-			if(parentCustomer!=null && parentCustomer.getCustomerMeeting()!=null 
-					&& parentCustomer.getCustomerMeeting().getMeeting()!=null)
-				parentCustomer.getCustomerMeeting().getMeeting().setMeetingStartDate(new GregorianCalendar());
+//			if(parentCustomer!=null && parentCustomer.getCustomerMeeting()!=null 
+//					&& parentCustomer.getCustomerMeeting().getMeeting()!=null)
+//				parentCustomer.getCustomerMeeting().getMeeting().setMeetingStartDate(new GregorianCalendar());
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder("testClientName"),customerName,"middle",customerName,"secondLast");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),customerName,"middle",customerName,"secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"));
@@ -488,9 +484,9 @@ public class TestObjectFactory {
 		ClientBO client = null;
 		Short personnel = new Short("1");	
 		try {
-			if(parentCustomer!=null && parentCustomer.getCustomerMeeting()!=null 
-					&& parentCustomer.getCustomerMeeting().getMeeting()!=null)
-				parentCustomer.getCustomerMeeting().getMeeting().setMeetingStartDate(new GregorianCalendar());
+//			if(parentCustomer!=null && parentCustomer.getCustomerMeeting()!=null 
+//					&& parentCustomer.getCustomerMeeting().getMeeting()!=null)
+//				parentCustomer.getCustomerMeeting().getMeeting().setMeetingStartDate(new GregorianCalendar());
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(customerName+customerName),customerName,"",customerName,"");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),customerName,"middle",customerName,"secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"));
@@ -651,8 +647,8 @@ public class TestObjectFactory {
 			LoanOfferingBO loanOfering) {
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(startDate);
-		customer.getCustomerMeeting().getMeeting()
-				.setMeetingStartDate(calendar);
+//		customer.getCustomerMeeting().getMeeting()
+//				.setMeetingStartDate(calendar);
 		MeetingBO meeting = createLoanMeeting(customer.getCustomerMeeting()
 				.getMeeting());
 		List<Date> meetingDates = getMeetingDates(meeting, 6);
@@ -674,7 +670,7 @@ public class TestObjectFactory {
 		} catch (ApplicationException e) {
 		}
 		FeeBO maintanenceFee = createPeriodicAmountFee("Mainatnence Fee",
-				FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY, Short
+				FeeCategory.LOAN, "100", RecurrenceType.WEEKLY, Short
 						.valueOf("1"));
 		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(loan,maintanenceFee,((AmountFeeBO)maintanenceFee).getFeeAmount().getAmountDoubleValue());	
 		loan.addAccountFees(accountPeriodicFee);
@@ -819,10 +815,10 @@ public class TestObjectFactory {
 		MifosCurrency currency = testObjectPersistence.getCurrency();
 		savings.setRecommendedAmount(new Money(currency, "300.0"));
 
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTime(startDate);
-		customer.getCustomerMeeting().getMeeting()
-				.setMeetingStartDate(calendar);
+//		Calendar calendar = new GregorianCalendar();
+//		calendar.setTime(startDate);
+//		customer.getCustomerMeeting().getMeeting()
+//				.setMeetingStartDate(calendar);
 		MeetingBO meeting = createLoanMeeting(customer.getCustomerMeeting()
 				.getMeeting());
 
@@ -884,27 +880,48 @@ public class TestObjectFactory {
 	}
 
 	public static MeetingBO createLoanMeeting(MeetingBO customerMeeting) {
-		MeetingBO meetingToReturn = new MeetingBO();
-		meetingToReturn.setMeetingStartDate(customerMeeting
-				.getMeetingStartDate());
-		meetingToReturn.setMeetingPlace("");
-		meetingToReturn.setMeetingType(customerMeeting.getMeetingType());
-		MeetingRecurrenceEntity meetingRecToReturn = new MeetingRecurrenceEntity();
-		meetingRecToReturn.setDayNumber(customerMeeting.getMeetingDetails()
-				.getMeetingRecurrence().getDayNumber());
-		meetingRecToReturn.setRankOfDays(customerMeeting.getMeetingDetails()
-				.getMeetingRecurrence().getRankOfDays());
-		meetingRecToReturn.setWeekDay(customerMeeting.getMeetingDetails()
-				.getMeetingRecurrence().getWeekDay());
-		MeetingDetailsEntity meetingDetailsToReturn = new MeetingDetailsEntity();
-		meetingDetailsToReturn.setMeetingRecurrence(meetingRecToReturn);
-		meetingDetailsToReturn.setRecurAfter(customerMeeting
-				.getMeetingDetails().getRecurAfter());
-		meetingDetailsToReturn.setRecurrenceType(customerMeeting
-				.getMeetingDetails().getRecurrenceType());
-		meetingToReturn.setMeetingDetails(meetingDetailsToReturn);
+//		MeetingBO meetingToReturn = new MeetingBO();
+//		meetingToReturn.setMeetingStartDate(customerMeeting
+//				.getMeetingStartDate());
+//		meetingToReturn.setMeetingPlace("");
+//		meetingToReturn.setMeetingType(customerMeeting.getMeetingType());
+//		MeetingRecurrenceEntity meetingRecToReturn = new MeetingRecurrenceEntity();
+//		meetingRecToReturn.setDayNumber(customerMeeting.getMeetingDetails()
+//				.getMeetingRecurrence().getDayNumber());
+//		meetingRecToReturn.setRankOfDays(customerMeeting.getMeetingDetails()
+//				.getMeetingRecurrence().getRankOfDays());
+//		meetingRecToReturn.setWeekDay(customerMeeting.getMeetingDetails()
+//				.getMeetingRecurrence().getWeekDay());
+//		MeetingDetailsEntity meetingDetailsToReturn = new MeetingDetailsEntity();
+//		meetingDetailsToReturn.setMeetingRecurrence(meetingRecToReturn);
+//		meetingDetailsToReturn.setRecurAfter(customerMeeting
+//				.getMeetingDetails().getRecurAfter());
+//		meetingDetailsToReturn.setRecurrenceType(customerMeeting
+//				.getMeetingDetails().getRecurrenceType());
+//		meetingToReturn.setMeetingDetails(meetingDetailsToReturn);
+//		return meetingToReturn;
+		
+		MeetingBO meetingToReturn = null;
+		RecurrenceType recurrenceType = RecurrenceType.getRecurrenceType(customerMeeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
+		MeetingType meetingType =  MeetingType.getMeetingType(customerMeeting.getMeetingType().getMeetingTypeId());
+		Short recurAfter = customerMeeting.getMeetingDetails().getRecurAfter();
+		
+		if(recurrenceType.equals(RecurrenceType.MONTHLY)){
+			if(customerMeeting.isMonthlyOnDate())
+				meetingToReturn = new MeetingBO(customerMeeting.getMeetingDetails().getMeetingRecurrence().getDayNumber(),
+						recurAfter, customerMeeting.getMeetingStartDate().getTime(), meetingType);
+			else
+				meetingToReturn = new MeetingBO(customerMeeting.getMeetingDetails().getWeekDay(),customerMeeting.getMeetingDetails().getWeekRank(),
+						recurAfter, customerMeeting.getMeetingStartDate().getTime(), meetingType);
+		}				
+		else if(recurrenceType.equals(RecurrenceType.WEEKLY))
+			meetingToReturn = new MeetingBO(WeekDay.getWeekDay(customerMeeting.getMeetingDetails()
+					.getMeetingRecurrence().getWeekDayValue().getValue()), recurAfter, customerMeeting.getMeetingStartDate().getTime(), meetingType );
+		else
+			meetingToReturn = new MeetingBO(recurrenceType, recurAfter, customerMeeting.getMeetingStartDate().getTime(), meetingType);
+		
+		meetingToReturn.setMeetingPlace(customerMeeting.getMeetingPlace());
 		return meetingToReturn;
-
 	}
 
 	private static List<Date> getMeetingDates(MeetingBO meeting, int occurrences) {
@@ -963,7 +980,7 @@ public class TestObjectFactory {
 			if (scheduleData.getClass().getName().equals(
 					"org.mifos.framework.components.scheduler.WeekData")) {
 				scheduleData.setWeekDay(meeting.getMeetingDetails()
-						.getMeetingRecurrence().getWeekDay().getWeekDayId()
+						.getMeetingRecurrence().getWeekDayValue().getValue()
 						.intValue());
 			} else if (scheduleData.getClass().getName().equals(
 					"org.mifos.framework.components.scheduler.MonthData")) {
@@ -973,12 +990,12 @@ public class TestObjectFactory {
 							.getMeetingRecurrence().getDayNumber().intValue());
 				else {
 					scheduleData.setWeekDay(meeting.getMeetingDetails()
-							.getMeetingRecurrence().getWeekDay().getWeekDayId()
+							.getMeetingRecurrence().getWeekDayValue().getValue()
 							.intValue());
 
 					scheduleData.setWeekRank(meeting.getMeetingDetails()
 							.getMeetingRecurrence().getRankOfDays()
-							.getRankOfDayId().intValue());
+							.getId().intValue());
 				}
 			}
 			scheduleInputs.setScheduleData(scheduleData);
@@ -991,10 +1008,10 @@ public class TestObjectFactory {
 
 	public static FeeBO createPeriodicAmountFee(String feeName,
 			FeeCategory feeCategory, String feeAmnt,
-			MeetingFrequency meetingFrequency, Short recurAfter) {
+			RecurrenceType meetingFrequency, Short recurAfter) {
 		GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(
 				GLCodeEntity.class, Short.valueOf("24"));
-		MeetingBO meeting = new MeetingBO(meetingFrequency, recurAfter,
+		MeetingBO meeting = new MeetingBO(meetingFrequency, recurAfter, new Date(),
 				MeetingType.FEEMEETING);
 		FeeBO fee = null;
 		// TODO: throw exception
@@ -1083,10 +1100,12 @@ public class TestObjectFactory {
 			int meetingTypeId, int dayOfWeek) {
 		MeetingBO meeting = getMeetingHelper(frequency, recurAfter,
 				meetingTypeId);
-		WeekDaysEntity weekDays = new WeekDaysEntity();
 		Calendar cal = new GregorianCalendar();
-		weekDays.setWeekDayId(Short.valueOf(Integer.toString(cal
-				.get(Calendar.DAY_OF_WEEK))));
+		WeekDaysEntity weekDays = new WeekDaysEntity(WeekDay.getWeekDay(Short.valueOf(Integer.toString(cal
+				.get(Calendar.DAY_OF_WEEK)))));		
+		
+//		weekDays.setId(Short.valueOf(Integer.toString(cal
+//				.get(Calendar.DAY_OF_WEEK))));
 		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(weekDays);
 		return meeting;
 	}
@@ -1101,33 +1120,49 @@ public class TestObjectFactory {
 	public static MeetingBO getMeeting(String frequency, String recurAfter,
 			Short meetingTypeId) {
 
-		MeetingBO meeting = new MeetingBO();
-
-		MeetingTypeEntity meetingType = new MeetingTypeEntity();
-		meetingType.setMeetingTypeId(meetingTypeId);
-		meeting.setMeetingType(meetingType);
-
-		MeetingDetailsEntity meetingDetails = new MeetingDetailsEntity();
-		Short frequencyId = null;
-		if (null != frequency) {
-			frequencyId = Short.valueOf(frequency);
-		}
-		if (null != recurAfter) {
-			meetingDetails.setRecurAfter(Short.valueOf(recurAfter));
-		}
-
-		RecurrenceTypeEntity recurrenceType = new RecurrenceTypeEntity();
-		recurrenceType.setRecurrenceId(frequencyId);
-
-		meetingDetails.setRecurrenceType(recurrenceType);
-		meetingDetails.setMeetingRecurrence(new MeetingRecurrenceEntity());
-
-		meeting.setMeetingDetails(meetingDetails);
+//		MeetingBO meeting = new MeetingBO();
+//
+//		MeetingTypeEntity meetingType = new MeetingTypeEntity();
+//		meetingType.setMeetingTypeId(meetingTypeId);
+//		meeting.setMeetingType(meetingType);
+//
+//		MeetingDetailsEntity meetingDetails = new MeetingDetailsEntity();
+//		Short frequencyId = null;
+//		if (null != frequency) {
+//			frequencyId = Short.valueOf(frequency);
+//		}
+//		if (null != recurAfter) {
+//			meetingDetails.setRecurAfter(Short.valueOf(recurAfter));
+//		}
+//
+//		RecurrenceTypeEntity recurrenceType = new RecurrenceTypeEntity();
+//		recurrenceType.setRecurrenceId(frequencyId);
+//
+//		meetingDetails.setRecurrenceType(recurrenceType);
+//		meetingDetails.setMeetingRecurrence(new MeetingRecurrenceEntity());
+//
+//		meeting.setMeetingDetails(meetingDetails);
+//		meeting.setMeetingPlace("Loan Meeting Place");
+		MeetingBO meeting  = new MeetingBO(RecurrenceType.getRecurrenceType(Short.valueOf(frequency)), 
+				Short.valueOf(recurAfter), new Date(), MeetingType.getMeetingType(meetingTypeId));
 		meeting.setMeetingPlace("Loan Meeting Place");
-
 		return meeting;
 	}
 
+	public static MeetingBO getMeeting(RecurrenceType recurrenceType, Short dayNumber, Short weekDay, Short dayRank, Short recurAfter,	MeetingType meetingType) {//
+		MeetingBO meeting = null;
+		if(recurrenceType.equals(RecurrenceType.WEEKLY))
+		  meeting =  new MeetingBO(WeekDay.getWeekDay(weekDay), recurAfter, new Date(), meetingType);
+		else
+			if(recurrenceType.equals(RecurrenceType.MONTHLY) && dayNumber!=null)
+				meeting =  new MeetingBO(dayNumber, recurAfter, new Date(), meetingType);
+			else
+				meeting = new MeetingBO(recurrenceType, recurAfter, new Date(), meetingType);
+		
+		meeting.setMeetingPlace("Loan Meeting Place");
+		return meeting;
+	}
+	
 	public static void cleanUp(CustomerBO customer) {
 		
 		if (null != customer) {
@@ -1604,8 +1639,8 @@ public class TestObjectFactory {
 			LoanOfferingBO loanOfering, int disbursalType) {
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(startDate);
-		customer.getCustomerMeeting().getMeeting()
-				.setMeetingStartDate(calendar);
+//		customer.getCustomerMeeting().getMeeting()
+//				.setMeetingStartDate(calendar);
 		MeetingBO meeting = createLoanMeeting(customer.getCustomerMeeting()
 				.getMeeting());
 		List<Date> meetingDates = getMeetingDates(meeting, 6);
@@ -1625,7 +1660,7 @@ public class TestObjectFactory {
 			} catch (ApplicationException e) {
 			}
 		FeeBO maintanenceFee = createPeriodicAmountFee("Mainatnence Fee",
-				FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY, Short
+				FeeCategory.LOAN, "100", RecurrenceType.WEEKLY, Short
 						.valueOf("1"));
 		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(loan,maintanenceFee,new Double("10.0"));
 		loan.addAccountFees(accountPeriodicFee);
@@ -2122,5 +2157,9 @@ public class TestObjectFactory {
 		personnelBO.save();
 		HibernateUtil.commitTransaction();
 		return personnelBO;
+	}
+	
+	public static void simulateInvalidConnection() {
+		HibernateUtil.getSessionTL().close();
 	}
 }

@@ -20,7 +20,7 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
-import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.util.helpers.Money;
@@ -224,7 +224,7 @@ public class TestAccountActionDateEntity extends TestAccount {
 	public void testApplyPeriodicFees() {
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100",
-				MeetingFrequency.WEEKLY, Short.valueOf("1"));
+				RecurrenceType.WEEKLY, Short.valueOf("1"));
 
 		AccountFeesEntity accountFeesEntity = new AccountFeesEntity(group.getCustomerAccount(),periodicFee,((AmountFeeBO) periodicFee)
 				.getFeeAmount().getAmountDoubleValue(),null,null,new Date(System

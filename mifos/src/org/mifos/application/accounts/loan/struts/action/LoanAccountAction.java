@@ -203,6 +203,7 @@ public class LoanAccountAction extends AccountAppAction {
 
 		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
 		CustomerBO customer = getCustomer(loanActionForm.getCustomerIdValue());
+
 		doCleanUp(request.getSession());
 		List<LoanOfferingBO> loanOfferings = loanBusinessService
 				.getApplicablePrdOfferings(customer.getCustomerLevel());
@@ -245,11 +246,14 @@ public class LoanAccountAction extends AccountAppAction {
 						.getAttribute(LoanConstants.LOANOFFERING))
 						.getPrdOfferingId(), getUserContext(request)
 						.getLocaleId());
+		CustomerBO oldCustomer = (CustomerBO) session.getAttribute(LoanConstants.LOANACCOUNTOWNER);
+		CustomerBO customer = getCustomer(oldCustomer.getCustomerId());
+		customer.setVersionNo(oldCustomer.getVersionNo());
+		oldCustomer = null;
 		LoanBO loan = null;
 		try {
 			loan = new LoanBO(getUserContext(request), loanOffering,
-					(CustomerBO) session
-							.getAttribute(LoanConstants.LOANACCOUNTOWNER),
+					customer,
 					AccountState.LOANACC_PARTIALAPPLICATION, loanActionForm
 							.loanAmountValue(), loanActionForm
 							.getNoOfInstallmentsValue(), loanActionForm

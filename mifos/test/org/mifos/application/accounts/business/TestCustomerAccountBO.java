@@ -29,7 +29,7 @@ import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.repaymentschedule.MeetingScheduleHelper;
@@ -299,7 +299,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			SystemException {
 		createInitialObjects();
 		FeeBO fee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
-				FeeCategory.LOAN, "100", MeetingFrequency.WEEKLY, Short
+				FeeCategory.LOAN, "100", RecurrenceType.WEEKLY, Short
 						.valueOf("1"));
 		AccountFeesEntity accountFeesEntity = new AccountFeesEntity(group
 				.getCustomerAccount(), fee, ((AmountFeeBO) fee).getFeeAmount()
@@ -716,7 +716,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		customerAccountBO = group.getCustomerAccount();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.ALLCUSTOMERS, "200",
-				MeetingFrequency.WEEKLY, Short.valueOf("2"));
+				RecurrenceType.WEEKLY, Short.valueOf("2"));
 		UserContext uc = TestObjectFactory.getUserContext();
 		customerAccountBO.setUserContext(uc);
 		customerAccountBO.applyCharge(periodicFee.getFeeId(),
@@ -778,7 +778,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		customerAccountBO = group.getCustomerAccount();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.ALLCUSTOMERS, "200",
-				MeetingFrequency.WEEKLY, Short.valueOf("2"));
+				RecurrenceType.WEEKLY, Short.valueOf("2"));
 		UserContext uc = TestObjectFactory.getUserContext();
 		customerAccountBO.setUserContext(uc);
 		
@@ -889,7 +889,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		List<FeeView> feeView = new ArrayList<FeeView>();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.ALLCUSTOMERS, "100",
-				MeetingFrequency.WEEKLY, Short.valueOf("1"));
+				RecurrenceType.WEEKLY, Short.valueOf("1"));
 		feeView.add(new FeeView(periodicFee));
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeAmountFee(
 				"Upfront Fee", FeeCategory.ALLCUSTOMERS, "30",
@@ -951,7 +951,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		List<FeeView> feeView = new ArrayList<FeeView>();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.ALLCUSTOMERS, "100",
-				MeetingFrequency.WEEKLY, Short.valueOf("1"));
+				RecurrenceType.WEEKLY, Short.valueOf("1"));
 		feeView.add(new FeeView(periodicFee));
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeAmountFee(
 				"Upfront Fee", FeeCategory.ALLCUSTOMERS, "30",

@@ -54,7 +54,7 @@ import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.fees.util.valueobjects.FeeFrequency;
 import org.mifos.application.fees.util.valueobjects.FeeLevel;
-import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
@@ -520,13 +520,13 @@ public class FeesActionForm extends MifosActionForm {
 	public Meeting getMeeting() {
 
 		Meeting meeting = null;
-		if (Short.valueOf(frequency).equals(MeetingFrequency.WEEKLY.getValue())) {
+		if (Short.valueOf(frequency).equals(RecurrenceType.WEEKLY.getValue())) {
 			meeting = MeetingHelper.geMeeting(frequency, recurWeekDay,
 					MeetingType.FEEMEETING.getValue());
 			meeting.setMeetingPlace("");
 			recurMonthDay = "";
 		} else if (Short.valueOf(frequency).equals(
-				MeetingFrequency.MONTHLY.getValue())) {
+				RecurrenceType.MONTHLY.getValue())) {
 			meeting = MeetingHelper.geMeeting(frequency, recurMonthDay,
 					MeetingType.FEEMEETING.getValue());
 			meeting.setMeetingPlace("");

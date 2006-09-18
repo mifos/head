@@ -205,13 +205,13 @@
 																	<tr class="fontnormal">
 
 																		<td width="49%">
-																			<html-el:radio property="feeRecurrenceType" value="${MeetingFrequency.WEEKLY.value}" onclick="onPageLoad();">
+																			<html-el:radio property="feeRecurrenceType" value="${RecurrenceType.WEEKLY.value}" onclick="onPageLoad();">
 																				<mifos:mifoslabel name="Fees.weekly" />
 																			</html-el:radio>
 																		</td>
 
 																		<td width="49%">
-																			<html-el:radio property="feeRecurrenceType" value="${MeetingFrequency.MONTHLY.value}" onclick="onPageLoad();">
+																			<html-el:radio property="feeRecurrenceType" value="${RecurrenceType.MONTHLY.value}" onclick="onPageLoad();">
 																				<mifos:mifoslabel name="Fees.monthly" />
 																			</html-el:radio>
 																		</td>

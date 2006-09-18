@@ -59,7 +59,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
@@ -441,8 +441,8 @@ public abstract class CustomerActionForm extends BaseActionForm{
 	}
 	
 	private boolean isFrequencyMatches(FeeView fee, MeetingBO meeting){
-		return (fee.getFrequencyType().equals(MeetingFrequency.MONTHLY) && meeting.isMonthly()) ||
-					(fee.getFrequencyType().equals(MeetingFrequency.WEEKLY) && meeting.isWeekly());
+		return (fee.getFrequencyType().equals(RecurrenceType.MONTHLY) && meeting.isMonthly()) ||
+					(fee.getFrequencyType().equals(RecurrenceType.WEEKLY) && meeting.isWeekly());
 
 	}
 	private void validateForFeeAssignedWithoutMeeting(HttpServletRequest request , ActionErrors errors){

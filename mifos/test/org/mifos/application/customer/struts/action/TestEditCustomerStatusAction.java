@@ -39,7 +39,6 @@
 package org.mifos.application.customer.struts.action;
 
 import java.sql.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.mifos.application.accounts.business.AccountStateEntity;
@@ -1246,7 +1245,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 	private MeetingBO getMeeting() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		meeting.setMeetingStartDate(new GregorianCalendar());
+		//meeting.setMeetingStartDate(new GregorianCalendar());
 		return meeting;
 	}
 

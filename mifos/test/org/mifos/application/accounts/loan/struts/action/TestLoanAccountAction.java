@@ -37,7 +37,7 @@ import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -936,7 +936,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				"One Time Amount Fee", FeeCategory.LOAN, "120.0",
 				FeePayment.TIME_OF_DISBURSMENT);
 		FeeBO fee3 = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
-				FeeCategory.LOAN, "10.0", MeetingFrequency.WEEKLY, (short) 1);
+				FeeCategory.LOAN, "10.0", RecurrenceType.WEEKLY, (short) 1);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		fees.add(fee1);

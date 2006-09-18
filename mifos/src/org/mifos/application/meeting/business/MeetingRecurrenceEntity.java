@@ -37,15 +37,16 @@
  */
 package org.mifos.application.meeting.business;
 
+import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.business.PersistentObject;
-import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class encapsulate the MeetingRecurrence details
  */
 public class MeetingRecurrenceEntity extends PersistentObject {
 
-	private Integer detailsId;
+	private final Integer detailsId;
 
 	private WeekDaysEntity weekDay;
 
@@ -53,9 +54,11 @@ public class MeetingRecurrenceEntity extends PersistentObject {
 
 	private Short dayNumber;
 
-	private MeetingDetailsEntity meetingDetails;
+	private final MeetingDetailsEntity meetingDetails;
 
-	public MeetingRecurrenceEntity() {
+	protected MeetingRecurrenceEntity() {
+		detailsId = null;
+		meetingDetails = null;
 	}
 
 	public MeetingRecurrenceEntity(MeetingDetailsEntity meetingDetails) {
@@ -63,13 +66,24 @@ public class MeetingRecurrenceEntity extends PersistentObject {
 		this.weekDay = null;
 		this.rankOfDays = null;
 		this.dayNumber = null;
+		this.detailsId = null;
 	}
 	
-	public MeetingRecurrenceEntity(Short weekDay, Short dayRank, MeetingDetailsEntity meetingDetails) {
+	public MeetingRecurrenceEntity(Short dayNumber, WeekDay weekDay, RankType rank, MeetingDetailsEntity meetingDetails) {
+		if(dayNumber!=null)
+			this.dayNumber = dayNumber;
+		else{
+			this.weekDay = new WeekDaysEntity(weekDay);
+			this.rankOfDays = new RankOfDaysEntity(rank);	
+		}
 		this.meetingDetails = meetingDetails;
+		this.detailsId = null;
+	}
+	
+	public MeetingRecurrenceEntity(WeekDay weekDay, MeetingDetailsEntity meetingDetails) {
 		this.weekDay = new WeekDaysEntity(weekDay);
-		this.rankOfDays = new RankOfDaysEntity(dayRank);
-		this.dayNumber = null;
+		this.meetingDetails = meetingDetails;
+		this.detailsId = null;
 	}
 	
 	public Short getDayNumber() {
@@ -83,17 +97,9 @@ public class MeetingRecurrenceEntity extends PersistentObject {
 	public Integer getDetailsId() {
 		return detailsId;
 	}
-
-	public void setDetailsId(Integer detailsId) {
-		this.detailsId = detailsId;
-	}
-
+	
 	public MeetingDetailsEntity getMeetingDetails() {
 		return meetingDetails;
-	}
-
-	public void setMeetingDetails(MeetingDetailsEntity meetingDetails) {
-		this.meetingDetails = meetingDetails;
 	}
 
 	public RankOfDaysEntity getRankOfDays() {
@@ -107,8 +113,21 @@ public class MeetingRecurrenceEntity extends PersistentObject {
 	public WeekDaysEntity getWeekDay() {
 		return weekDay;
 	}
-
+	
 	public void setWeekDay(WeekDaysEntity weekDay) {
 		this.weekDay = weekDay;
+	}
+	
+	public boolean isOnDate(){
+		return getDayNumber()!=null;
+	}
+	
+	public WeekDay getWeekDayValue() {
+		return weekDay!=null ? WeekDay.getWeekDay(weekDay.getId()) : null;
+	}
+	
+		
+	public RankType getWeekRank() {
+		return rankOfDays!=null ? RankType.getRankType(rankOfDays.getId()) : null;
 	}
 }

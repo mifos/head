@@ -23,14 +23,11 @@ import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.checklist.util.resources.CheckListConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
-import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.CustomerView;
-import org.mifos.application.customer.business.PositionEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
-import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
@@ -51,7 +48,6 @@ import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerFactory;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -210,7 +206,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 			scheduleData.setRecurAfter(1);
 
 			scheduleData.setWeekDay(meeting.getMeetingDetails()
-					.getMeetingRecurrence().getWeekDay().getWeekDayId());
+					.getMeetingRecurrence().getWeekDayValue().getValue());
 			scheduleInputs.setScheduleData(scheduleData);
 			scheduler.setScheduleInputs(scheduleInputs);
 			dates = scheduler.getAllDates(new java.util.Date(System

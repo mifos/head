@@ -1,6 +1,6 @@
 /**
 
- * WeekDays.java    version: 1.0
+ * WeekDaysEntity.java    version: 1.0
 
  
 
@@ -37,80 +37,33 @@
  */
 package org.mifos.application.meeting.business;
 
-import java.util.Set;
-
-import org.mifos.application.master.util.valueobjects.LookUpValueLocale;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.valueobjects.ValueObject;
 
 /**
  * This class encapsulate the weekDay
  */
-public class WeekDaysEntity extends PersistentObject {
+public class WeekDaysEntity extends MasterDataEntity {
+
+	private Short workDay;
 	
-	private Short weekDayId;
-
-	private Short lookUpId;
-
-	private Set<LookUpValueLocale> lookUpValueLocale;
-
-	private Short workingDay;
-	
-	private Short startOfFiscalWeek;
+	private Short startOfWeek;
 	
 	public WeekDaysEntity() {
 	}
 
-	public WeekDaysEntity(Short weekDay) {
-		this.weekDayId = weekDay;
-	}
-	
-	public Short getLookUpId() {
-		return lookUpId;
-	}
-
-	public void setLookUpId(Short lookUpId) {
-		this.lookUpId = lookUpId;
-	}
-
-	public Set<LookUpValueLocale> getLookUpValueLocale() {
-		return lookUpValueLocale;
-	}
-
-	public void setLookUpValueLocale(Set<LookUpValueLocale> lookUpValueLocale) {
-		this.lookUpValueLocale = lookUpValueLocale;
-	}
-
-	public Short getWeekDayId() {
-		return weekDayId;
-	}
-
-	public void setWeekDayId(Short weekDayId) {
-		this.weekDayId = weekDayId;
-	}
-
-	public Short getStartOfFiscalWeek() {
-		return startOfFiscalWeek;
-	}
-
-	public void setStartOfFiscalWeek(Short startOfFiscalWeek) {
-		this.startOfFiscalWeek = startOfFiscalWeek;
-	}
-
-	public Short getWorkingDay() {
-		return workingDay;
-	}
-
-	public void setWorkingDay(Short workingDay) {
-		this.workingDay = workingDay;
+	public WeekDaysEntity(WeekDay weekDay) {
+		super(weekDay.getValue());
+		this.workDay = null;
 	}
 	
 	public boolean isWorkingDay(){
-		return (workingDay!=null&& workingDay.equals(Constants.NO)) ? false : true;
+		return (workDay!=null&& workDay.equals(YesNoFlag.NO.getValue())) ? false : true;
 	}
 	
 	public boolean isStartOfFiscalWeek(){
-		return (startOfFiscalWeek!=null&& startOfFiscalWeek.equals(Constants.YES)) ? true : false;
+		return (startOfWeek!=null&& startOfWeek.equals(Constants.YES));
 	}
 }

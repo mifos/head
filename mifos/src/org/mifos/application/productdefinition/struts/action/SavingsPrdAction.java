@@ -1,6 +1,7 @@
 package org.mifos.application.productdefinition.struts.action;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -16,7 +17,7 @@ import org.mifos.application.accounts.financial.util.helpers.FinancialActionCons
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
@@ -142,13 +143,13 @@ public class SavingsPrdAction extends BaseAction {
 				(InterestCalcTypeEntity) findMasterEntity(request,
 						ProductDefinitionConstants.INTCALCTYPESLIST,
 						savingsprdForm.getInterestCalcTypeValue()),
-				new MeetingBO(MeetingFrequency
-						.getMeetingFrequency(savingsprdForm
+				new MeetingBO(RecurrenceType
+						.getRecurrenceType(savingsprdForm
 								.getRecurTypeFortimeForInterestCaclValue()),
 						savingsprdForm.getTimeForInterestCalcValue(),
-						MeetingType.SAVINGSTIMEPERFORINTCALC), new MeetingBO(
-						MeetingFrequency.MONTHLY, savingsprdForm
-								.getFreqOfInterestValue(),
+						new Date(), MeetingType.SAVINGSTIMEPERFORINTCALC), new MeetingBO(
+						RecurrenceType.MONTHLY, savingsprdForm
+								.getFreqOfInterestValue(), new Date(),
 						MeetingType.SAVINGSFRQINTPOSTACC), savingsprdForm
 						.getRecommendedAmountValue(), savingsprdForm
 						.getMaxAmntWithdrawlValue(), savingsprdForm

@@ -79,8 +79,8 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.business.MeetingDetailsEntity;
-import org.mifos.application.meeting.business.MeetingRecurrenceEntity;
+import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
@@ -349,32 +349,10 @@ public class SavingsBO extends AccountBO {
 	}
 
 	private MeetingBO getMeeting(MeetingBO offeringMeeting) {
-		MeetingBO meeting = new MeetingBO();
-		meeting.setMeetingStartDate(offeringMeeting.getMeetingStartDate());
-		meeting.setMeetingStartTime(offeringMeeting.getMeetingStartTime());
-		meeting.setMeetingEndDate(offeringMeeting.getMeetingEndDate());
-		meeting.setMeetingEndTime(offeringMeeting.getMeetingEndTime());
-		meeting.setMeetingPlace(offeringMeeting.getMeetingPlace());
-		meeting.setMeetingType(offeringMeeting.getMeetingType());
-
-		MeetingDetailsEntity meetingDetails = new MeetingDetailsEntity();
-		meetingDetails.setRecurAfter(offeringMeeting.getMeetingDetails()
-				.getRecurAfter());
-		meetingDetails.setRecurrenceType(offeringMeeting.getMeetingDetails()
-				.getRecurrenceType());
-
-		MeetingRecurrenceEntity meetingRecurrence = new MeetingRecurrenceEntity();
-		meetingRecurrence.setWeekDay(offeringMeeting.getMeetingDetails()
-				.getMeetingRecurrence().getWeekDay());
-		meetingRecurrence.setRankOfDays(offeringMeeting.getMeetingDetails()
-				.getMeetingRecurrence().getRankOfDays());
-		meetingRecurrence.setDayNumber(offeringMeeting.getMeetingDetails()
-				.getMeetingRecurrence().getDayNumber());
-
-		meetingDetails.setMeetingRecurrence(meetingRecurrence);
-		meeting.setMeetingDetails(meetingDetails);
-
-		return meeting;
+		RecurrenceType recurrenceType = RecurrenceType.getRecurrenceType(offeringMeeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
+		MeetingType meetingType =  MeetingType.getMeetingType(offeringMeeting.getMeetingType().getMeetingTypeId());
+		return new MeetingBO(recurrenceType, offeringMeeting.getMeetingDetails().getRecurAfter(),
+				helper.getFiscalStartDate(), meetingType);
 	}
 
 	private void setSavingsPerformance(
@@ -973,13 +951,12 @@ public class SavingsBO extends AccountBO {
 	}
 
 	private void generateDepositAccountActions(CustomerBO customer,
-			MeetingBO meeting, Short installmentId) throws AccountException {
+			MeetingBO meeting, Short installmentId, Date endDate) throws AccountException {
 		SchedulerIntf scheduler;
 		List<Date> depositDates;
 		try {
 			scheduler = SchedulerHelper.getScheduler(meeting);
-			depositDates = scheduler.getAllDates(new Date(meeting
-					.getMeetingEndDate().getTimeInMillis()));
+			depositDates = scheduler.getAllDates(endDate);
 		} catch (SchedulerException e) {
 			throw new AccountException(e);
 		}
@@ -2120,15 +2097,16 @@ public class SavingsBO extends AccountBO {
 			calendar.setTimeInMillis(installment.getActionDate().getTime());
 			depositSchedule.setMeetingStartDate(calendar);
 
-			depositSchedule.setMeetingEndDate(DateUtils
-					.getLastDayOfNextYear(Calendar.getInstance()));
+//			depositSchedule.setMeetingEndDate(DateUtils
+//					.getLastDayOfNextYear(Calendar.getInstance()));
+			Date endDate = DateUtils.getLastDayOfNextYear(Calendar.getInstance()).getTime();
 			if (customerBO.getCustomerLevel().getId().equals(
 					CustomerConstants.CLIENT_LEVEL_ID)
 					|| (customerBO.getCustomerLevel().getId().equals(
 							CustomerConstants.GROUP_LEVEL_ID) && getRecommendedAmntUnit()
 							.getId().equals(RecommendedAmountUnit.COMPLETEGROUP.getValue()))) {
 				generateDepositAccountActions(customerBO, depositSchedule,
-						(short) (installment.getInstallmentId() + 1));
+						(short) (installment.getInstallmentId() + 1),endDate);
 			} else {
 				List<CustomerBO> children;
 				try {
@@ -2140,7 +2118,7 @@ public class SavingsBO extends AccountBO {
 				for (CustomerBO customer : children) {
 
 					generateDepositAccountActions(customer, depositSchedule,
-							installment.getInstallmentId());
+							installment.getInstallmentId(),endDate);
 				}
 			}
 		}

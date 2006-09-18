@@ -37,6 +37,8 @@
  */
 package org.mifos.application.meeting.business;
 
+import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.business.PersistentObject;
 
 /**
@@ -44,63 +46,37 @@ import org.mifos.framework.business.PersistentObject;
  */
 public class MeetingDetailsEntity extends PersistentObject {
 
-	private Integer detailsId;
+	private final Integer detailsId;
 
-	private RecurrenceTypeEntity recurrenceType;
+	private final RecurrenceTypeEntity recurrenceType;
 
 	private Short recurAfter;
 
-	private MeetingRecurrenceEntity meetingRecurrence;
+	private final MeetingRecurrenceEntity meetingRecurrence;
 
-	private MeetingBO meeting;
+	private final MeetingBO meeting;
 
-	public MeetingDetailsEntity() {
-		meetingRecurrence = new MeetingRecurrenceEntity();
-		recurrenceType = new RecurrenceTypeEntity();
+	protected MeetingDetailsEntity() {
+		detailsId = null;
+		recurrenceType = null;
+		meetingRecurrence = null;
+		meeting = null;
 	}
 	
-	public MeetingDetailsEntity(RecurrenceTypeEntity recurrenceType, Short recurAfter, MeetingBO meeting) {
+	public MeetingDetailsEntity(RecurrenceTypeEntity recurrenceType, Short dayNumber, WeekDay weekDay, RankType rank, Short recurAfter, MeetingBO meeting) {
 		this.recurrenceType = recurrenceType;
 		this.recurAfter = recurAfter;
 		this.meeting = meeting;
-		this.meetingRecurrence = new MeetingRecurrenceEntity(this);
+		if(recurrenceType.isWeekly())
+			this.meetingRecurrence = new MeetingRecurrenceEntity(weekDay, this);
+		else if(recurrenceType.isMonthly())
+			this.meetingRecurrence = new MeetingRecurrenceEntity(dayNumber, weekDay, rank, this);			
+		else
+			this.meetingRecurrence = new MeetingRecurrenceEntity(this);
+			
+		detailsId = null;
 	}
 	
-	public MeetingDetailsEntity(RecurrenceTypeEntity recurrenceType, Short recurAfter, Short weekDay, Short dayRank, MeetingBO meeting) {
-		this.recurrenceType = recurrenceType;
-		this.recurAfter = recurAfter;
-		this.meeting = meeting;
-		this.meetingRecurrence = new MeetingRecurrenceEntity(weekDay, dayRank, this);
-	}
-	
-	public MeetingBO getMeeting() {
-		return meeting;
-	}
-
-	public void setMeeting(MeetingBO meeting) {
-		this.meeting = meeting;
-	}
-
-	public Integer getDetailsId() {
-		return detailsId;
-	}
-
-	public void setDetailsId(Integer detailsId) {
-		this.detailsId = detailsId;
-	}
-
-	public MeetingRecurrenceEntity getMeetingRecurrence() {
-		return meetingRecurrence;
-	}
-
-	public void setMeetingRecurrence(MeetingRecurrenceEntity meetingRecurrence) {
-		if (null != meetingRecurrence) {
-			meetingRecurrence.setMeetingDetails(this);
-		}
-
-		this.meetingRecurrence = meetingRecurrence;
-	}
-
 	public Short getRecurAfter() {
 		return recurAfter;
 	}
@@ -108,13 +84,17 @@ public class MeetingDetailsEntity extends PersistentObject {
 	public void setRecurAfter(Short recurAfter) {
 		this.recurAfter = recurAfter;
 	}
+	
+	public MeetingBO getMeeting() {
+		return meeting;
+	}
+
+	public MeetingRecurrenceEntity getMeetingRecurrence() {
+		return meetingRecurrence;
+	}
 
 	public RecurrenceTypeEntity getRecurrenceType() {
 		return recurrenceType;
-	}
-
-	public void setRecurrenceType(RecurrenceTypeEntity recurrenceType) {
-		this.recurrenceType = recurrenceType;
 	}
 
 	public boolean isWeekly(){
@@ -123,5 +103,21 @@ public class MeetingDetailsEntity extends PersistentObject {
 
 	public boolean isMonthly(){
 		return getRecurrenceType().isMonthly();
+	}
+	
+	public boolean isMonthlyOnDate(){
+		return isMonthly() && getMeetingRecurrence().isOnDate();
+	}
+	
+	public WeekDay getWeekDay(){
+		return getMeetingRecurrence().getWeekDayValue();
+	}
+	
+	public RankType getWeekRank(){
+		return getMeetingRecurrence().getWeekRank();
+	}
+	
+	public Short getDayNumber(){
+		return getMeetingRecurrence().getDayNumber();
 	}
 }

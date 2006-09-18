@@ -53,7 +53,7 @@ import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -227,7 +227,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 				.toString());
 		addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC
 				.getValue().toString());
-		addRequestParameter("feeRecurrenceType", MeetingFrequency.MONTHLY
+		addRequestParameter("feeRecurrenceType", RecurrenceType.MONTHLY
 				.getValue().toString());
 		addRequestParameter("monthRecurAfter", "2");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -248,7 +248,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 				.toString());
 		addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC
 				.getValue().toString());
-		addRequestParameter("feeRecurrenceType", MeetingFrequency.WEEKLY
+		addRequestParameter("feeRecurrenceType", RecurrenceType.WEEKLY
 				.getValue().toString());
 		addRequestParameter("weekRecurAfter", "2");
 		addRequestParameter("rate", "10");
@@ -270,7 +270,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 				.toString());
 		addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC
 				.getValue().toString());
-		addRequestParameter("feeRecurrenceType", MeetingFrequency.WEEKLY
+		addRequestParameter("feeRecurrenceType", RecurrenceType.WEEKLY
 				.getValue().toString());
 		addRequestParameter("weekRecurAfter", "2");
 		addRequestParameter("amount", "200");
@@ -292,7 +292,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 				.toString());
 		addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC
 				.getValue().toString());
-		addRequestParameter("feeRecurrenceType", MeetingFrequency.MONTHLY
+		addRequestParameter("feeRecurrenceType", RecurrenceType.MONTHLY
 				.getValue().toString());
 		addRequestParameter("monthRecurAfter", "2");
 		addRequestParameter("amount", "200");
@@ -316,7 +316,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 				.toString());
 		addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC
 				.getValue().toString());
-		addRequestParameter("feeRecurrenceType", MeetingFrequency.WEEKLY
+		addRequestParameter("feeRecurrenceType", RecurrenceType.WEEKLY
 				.getValue().toString());
 		addRequestParameter("weekRecurAfter", "2");
 		addRequestParameter("rate", "10");
@@ -431,7 +431,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("feeName", "Customer Periodic Fee");
 		addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC
 				.getValue().toString());
-		addRequestParameter("feeRecurrenceType", MeetingFrequency.WEEKLY
+		addRequestParameter("feeRecurrenceType", RecurrenceType.WEEKLY
 				.getValue().toString());
 		addRequestParameter("weekRecurAfter", "2");
 		addRequestParameter("glCode", GLOCDE_ID);
@@ -482,7 +482,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("customerDefaultFee", "0");
 		addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC
 				.getValue().toString());
-		addRequestParameter("feeRecurrenceType", MeetingFrequency.WEEKLY
+		addRequestParameter("feeRecurrenceType", RecurrenceType.WEEKLY
 				.getValue().toString());
 		addRequestParameter("weekRecurAfter", "2");
 		addRequestParameter("glCode", GLOCDE_ID);

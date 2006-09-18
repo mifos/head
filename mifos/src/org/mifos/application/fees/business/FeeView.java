@@ -2,7 +2,7 @@ package org.mifos.application.fees.business;
 
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.View;
 import org.mifos.framework.util.helpers.Money;
@@ -17,7 +17,7 @@ public class FeeView extends View{
 	private Short feeRemoved;
 	private String feeFormula;
 	private Short localeId;
-	private MeetingFrequency frequencyType;
+	private RecurrenceType frequencyType;
 	
 	public FeeView(){}
 	
@@ -37,11 +37,11 @@ public class FeeView extends View{
 			MeetingBO feeMeeting = fee.getFeeFrequency().getFeeMeetingFrequency(); 
 			this.feeSchedule = feeMeeting.getShortMeetingSchedule();
 			if(feeMeeting.isMonthly())
-				this.frequencyType = MeetingFrequency.MONTHLY;
+				this.frequencyType = RecurrenceType.MONTHLY;
 			else if(feeMeeting.isWeekly())
-				this.frequencyType = MeetingFrequency.WEEKLY;
+				this.frequencyType = RecurrenceType.WEEKLY;
 			else
-				this.frequencyType = MeetingFrequency.DAILY;
+				this.frequencyType = RecurrenceType.DAILY;
 		}
 		this.feeRemoved = YesNoFlag.NO.getValue();
 	}
@@ -123,11 +123,11 @@ public class FeeView extends View{
 		return localeId;
 	}
 
-	public MeetingFrequency getFrequencyType() {
+	public RecurrenceType getFrequencyType() {
 		return frequencyType;
 	}
 
-	public void setFrequencyType(MeetingFrequency frequencyType) {
+	public void setFrequencyType(RecurrenceType frequencyType) {
 		this.frequencyType = frequencyType;
 	}
 

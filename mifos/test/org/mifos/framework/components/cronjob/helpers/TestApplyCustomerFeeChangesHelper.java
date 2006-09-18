@@ -19,7 +19,7 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeChangeType;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.cronjobs.helpers.ApplyCustomerFeeChangesHelper;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -58,7 +58,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
 		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee(
 				"Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
-				MeetingFrequency.WEEKLY, Short.valueOf("2"));
+				RecurrenceType.WEEKLY, Short.valueOf("2"));
 		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(),trainingFee,new Double("10.0"));
 		accountFeeSet.add(accountPeriodicFee);
 		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) customerAccount
@@ -103,7 +103,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
 		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee(
 				"Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
-				MeetingFrequency.WEEKLY, Short.valueOf("2"));
+				RecurrenceType.WEEKLY, Short.valueOf("2"));
 		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(),trainingFee,new Double("10.0"));
 		accountFeeSet.add(accountPeriodicFee);
 		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) customerAccount
@@ -143,7 +143,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
 		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee(
 				"Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
-				MeetingFrequency.WEEKLY, Short.valueOf("2"));
+				RecurrenceType.WEEKLY, Short.valueOf("2"));
 		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(),trainingFee,((AmountFeeBO)trainingFee).getFeeAmount().getAmountDoubleValue());
 		accountFeeSet.add(accountPeriodicFee);
 		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) customerAccount
@@ -192,7 +192,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
 		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee(
 				"Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
-				MeetingFrequency.WEEKLY, Short.valueOf("2"));
+				RecurrenceType.WEEKLY, Short.valueOf("2"));
 		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(),trainingFee,((AmountFeeBO)trainingFee).getFeeAmount().getAmountDoubleValue());
 		accountPeriodicFee.setFeeStatus(Short.valueOf("2"));
 		accountFeeSet.add(accountPeriodicFee);
@@ -230,7 +230,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
 		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee(
 				"Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
-				MeetingFrequency.WEEKLY, Short.valueOf("2"));
+				RecurrenceType.WEEKLY, Short.valueOf("2"));
 		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(),trainingFee,((AmountFeeBO)trainingFee).getFeeAmount().getAmountDoubleValue());
 		accountPeriodicFee.setFeeStatus(Short.valueOf("2"));
 		accountFeeSet.add(accountPeriodicFee);
@@ -279,7 +279,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		
 		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee(
 				"Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
-				MeetingFrequency.WEEKLY, Short.valueOf("2"));
+				RecurrenceType.WEEKLY, Short.valueOf("2"));
 
 		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(),trainingFee,((AmountFeeBO)trainingFee).getFeeAmount().getAmountDoubleValue());
 

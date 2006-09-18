@@ -23,16 +23,16 @@ public class SchedulerHelper {
 		scheduleData.setRecurAfter(meeting.getMeetingDetails().getRecurAfter().intValue());
 
 		if(scheduleData.getClass().getName().equals("org.mifos.framework.components.scheduler.WeekData")){
-			scheduleData.setWeekDay(meeting.getMeetingDetails().getMeetingRecurrence().getWeekDay().getWeekDayId());
+			scheduleData.setWeekDay(meeting.getMeetingDetails().getMeetingRecurrence().getWeekDayValue().getValue());
 		}
 		else if(scheduleData.getClass().getName().equals("org.mifos.framework.components.scheduler.MonthData")){
 			if(meeting.getMeetingDetails().getMeetingRecurrence().getDayNumber() != null)
 				scheduleData.setDayNumber(meeting.getMeetingDetails().getMeetingRecurrence().getDayNumber().intValue());
 			else{
-				if(meeting.getMeetingDetails().getMeetingRecurrence().getWeekDay()!=null)
-					scheduleData.setWeekDay(meeting.getMeetingDetails().getMeetingRecurrence().getWeekDay().getWeekDayId());
+				if(meeting.getMeetingDetails().getMeetingRecurrence().getWeekDayValue()!=null)
+					scheduleData.setWeekDay(meeting.getMeetingDetails().getMeetingRecurrence().getWeekDayValue().getValue());
 				if(meeting.getMeetingDetails().getMeetingRecurrence().getRankOfDays()!=null)
-					scheduleData.setWeekRank(meeting.getMeetingDetails().getMeetingRecurrence().getRankOfDays().getRankOfDayId());
+					scheduleData.setWeekRank(meeting.getMeetingDetails().getMeetingRecurrence().getRankOfDays().getId());
 			}
 		}
 		scheduleInputs.setScheduleData(scheduleData);

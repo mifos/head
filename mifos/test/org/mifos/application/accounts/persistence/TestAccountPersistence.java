@@ -17,7 +17,7 @@ import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -89,7 +89,7 @@ public class TestAccountPersistence extends TestAccount {
 
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"ClientPeridoicFee", FeeCategory.CENTER, "5",
-				MeetingFrequency.WEEKLY, Short.valueOf("1"));
+				RecurrenceType.WEEKLY, Short.valueOf("1"));
 		AccountFeesEntity accountFee = new AccountFeesEntity(center
 				.getCustomerAccount(), periodicFee, ((AmountFeeBO) periodicFee)
 				.getFeeAmount().getAmountDoubleValue());

@@ -64,14 +64,13 @@ import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerFactory;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Money;
 
 public class SavingsHelper {
 	private Calendar cal;
 
 	// TODO: pick from configuration
-	private Date getFiscalStartDate() {
+	public Date getFiscalStartDate() {
 		try {
 			SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 			return df.parse("01/01/2006");
@@ -134,6 +133,7 @@ public class SavingsHelper {
 				.getRecurrenceId();
 		ScheduleDataIntf scheduleData;
 		scheduleData = SchedulerFactory.getScheduleData(recurrenceId);
+		SchedulerIntf scheduler = SchedulerHelper.getScheduler(scheduleData, meeting);
 		if (scheduleData instanceof MonthData) {
 			if (meeting.getMeetingType().getMeetingTypeId().equals(
 					MeetingConstants.INTEREST_POST_FREQ))
@@ -142,7 +142,7 @@ public class SavingsHelper {
 					MeetingConstants.INTEREST_CALC_FREQ))
 				scheduleData.setDayNumber(getFiscalStartDayNumber());
 		}
-		return SchedulerHelper.getScheduler(scheduleData, meeting);
+		return scheduler;
 	}
 
 	public int calculateDays(Date fromDate, Date toDate) {

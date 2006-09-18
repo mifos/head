@@ -49,7 +49,7 @@ import org.mifos.application.fees.util.helpers.FeeFormula;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.FeeStatus;
-import org.mifos.application.meeting.util.helpers.MeetingFrequency;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
@@ -194,10 +194,10 @@ public class FeeActionForm extends BaseActionForm {
 		this.feeRecurrenceType = feeRecurrenceType;
 	}
 
-	public MeetingFrequency getFeeRecurrenceTypeValue()
+	public RecurrenceType getFeeRecurrenceTypeValue()
 			throws PropertyNotFoundException {
-		return StringUtils.isNullAndEmptySafe(feeRecurrenceType) ? MeetingFrequency
-				.getMeetingFrequency(Short.valueOf(feeRecurrenceType))
+		return StringUtils.isNullAndEmptySafe(feeRecurrenceType) ? RecurrenceType
+				.getRecurrenceType(Short.valueOf(feeRecurrenceType))
 				: null;
 	}
 

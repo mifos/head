@@ -1,6 +1,6 @@
 /**
 
- * MeetingType.java    version: 1.0
+ * MeetingTypeEntity.java    version: 1.0
 
  
 
@@ -51,9 +51,7 @@ public class MeetingTypeEntity extends PersistentObject {
 
 	private String description;
 
-	public MeetingTypeEntity() {
-
-	}
+	protected MeetingTypeEntity() {}
 
 	public MeetingTypeEntity(MeetingType meetingType) {
 		this.meetingTypeId = meetingType.getValue();
@@ -63,24 +61,11 @@ public class MeetingTypeEntity extends PersistentObject {
 		return description;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
 	public String getMeetingPurpose() {
 		return meetingPurpose;
 	}
 
-	public void setMeetingPurpose(String meetingPurpose) {
-		this.meetingPurpose = meetingPurpose;
-	}
-
 	public Short getMeetingTypeId() {
 		return meetingTypeId;
-	}
-
-	public void setMeetingTypeId(Short meetingTypeId) {
-		this.meetingTypeId = meetingTypeId;
-	}
-
+	}	
 }
