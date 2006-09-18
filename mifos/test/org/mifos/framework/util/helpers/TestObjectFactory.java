@@ -624,8 +624,8 @@ public class TestObjectFactory {
 
 		PrdStatusEntity prdStatus = testObjectPersistence
 				.retrievePrdStatus(offeringStatusId);
-
 		loanOffering.setPrdStatus(prdStatus);
+		loanOffering.setGracePeriodType(gracePeriodType);
 		return (LoanOfferingBO) addObject(testObjectPersistence
 				.persist(loanOffering));
 	}

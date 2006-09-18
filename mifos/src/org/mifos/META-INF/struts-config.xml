@@ -28,6 +28,7 @@
 		<form-bean name="prdconfigurationactionform" type="org.mifos.application.productdefinition.struts.actionforms.PrdConfigurationActionForm"></form-bean>
 		<!-- Loan Product -->
 		<form-bean name="loanprdactionform" type="org.mifos.application.productdefinition.struts.actionforms.LoanProductActionForm"></form-bean>
+		<form-bean name="loanproductactionform" type="org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionForm"></form-bean>
 		<!-- Disburse loan-->
 		<form-bean name="loanDisbursmentActionForm" type="org.mifos.application.accounts.loan.struts.actionforms.LoanDisbursmentActionForm"></form-bean>
 		<!-- Repay Loan -->
@@ -581,6 +582,17 @@
 			<forward name="update_failure" path="/pages/application/productdefinition/jsp/EditLoanProductPreview.jsp"></forward>
 			<forward name="search_success" path="/pages/application/productdefinition/jsp/ViewEditLoanProduct.jsp"></forward>
 			<forward name="search_log_success" path="/pages/application/productdefinition/jsp/viewloanchangelog.jsp"></forward>
+		</action>
+		<action path="/loanproductaction" name="loanproductactionform" type="org.mifos.application.productdefinition.struts.action.LoanPrdAction" input="/loanproductaction.do?method=validate" parameter="method" validate="true" scope="session">
+			<forward name="load_success" path="/pages/application/productdefinition/jsp/CreateLoanProduct.jsp"></forward>
+			<forward name="preview_success" path="/pages/application/productdefinition/jsp/CreateLoanProductPreview.jsp"></forward>
+			<forward name="preview_failure" path="/pages/application/productdefinition/jsp/CreateLoanProduct.jsp"></forward>
+			<forward name="previous_success" path="/pages/application/productdefinition/jsp/CreateLoanProduct.jsp"></forward>
+			<forward name="previous_failure" path="/pages/application/productdefinition/jsp/CreateLoanProductPreview.jsp"></forward>
+			<forward name="create_success" path="/pages/application/productdefinition/jsp/CreateLoanProductConfirmation.jsp"></forward>
+			<forward name="create_failure" path="/pages/application/productdefinition/jsp/CreateLoanProductPreview.jsp"></forward>
+			<forward name="cancelCreate_success" path="/AdminAction.do?method=load"></forward>
+			<forward name="get_success" path="/pages/application/productdefinition/jsp/LoanProductDetails.jsp"></forward>
 		</action>
 		<!-- Savings Product -->
 		<action path="/savingsprdaction" name="savingsprdactionform" type="org.mifos.application.productdefinition.struts.action.SavingsProductAction" input="/savingsprdaction.do?method=validate" parameter="method" validate="true" scope="session">

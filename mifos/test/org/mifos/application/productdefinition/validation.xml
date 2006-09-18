@@ -6,73 +6,54 @@
 
 <form-validation>
 	<formset>
-	<!-- product definition-->
+		<!-- product definition-->
 		<form name="/productCategoryAction">
-			<field property="productType"
-				depends="required">
-				<msg name="required" key="errors.select"
-					bundle="ProductDefUIResources" />
+			<field property="productType" depends="required">
+				<msg name="required" key="errors.select" bundle="ProductDefUIResources" />
 				<arg key="product.producttype" />
 			</field>
-			<field property="productCategoryName"
-				depends="required,maxlength">
-				<msg name="required" key="errors.mandatory"
-					bundle="ProductDefUIResources" />
-				<msg name="maxlength" key="errors.maximumlength"
-					bundle="ProductDefUIResources" />
+			<field property="productCategoryName" depends="required,maxlength">
+				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
+				<msg name="maxlength" key="errors.maximumlength" bundle="ProductDefUIResources" />
 				<arg0 key="product.categoryname" />
-				<arg1 name="maxlength" key="${var:maxlength}"
-					resource="false" />
+				<arg1 name="maxlength" key="${var:maxlength}" resource="false" />
 				<var>
 					<var-name>maxlength</var-name>
 					<var-value>100</var-value>
 				</var>
 			</field>
 			<field property="productCategoryDesc" depends="maxlength">
-				<msg name="maxlength" key="errors.maximumlength"
-					bundle="ProductDefUIResources" />
+				<msg name="maxlength" key="errors.maximumlength" bundle="ProductDefUIResources" />
 				<arg0 key="product.categorydesc" />
-				<arg1 name="maxlength" key="${var:maxlength}"
-					resource="false" />
+				<arg1 name="maxlength" key="${var:maxlength}" resource="false" />
 				<var>
 					<var-name>maxlength</var-name>
 					<var-value>500</var-value>
 				</var>
 			</field>
-			<field property="productCategoryStatus"
-				depends="required">
-				<msg name="required" key="errors.select"
-					bundle="ProductDefUIResources" />
+			<field property="productCategoryStatus" depends="required">
+				<msg name="required" key="errors.select" bundle="ProductDefUIResources" />
 				<arg0 key="product.status" />
 			</field>
-		</form>	
+		</form>
 		<!-- Savings product-->
 		<form name="/savingsproductaction">
-			<field property="prdOfferingName"
-				depends="required,maxlength">
-				<msg name="required" key="errors.mandatory"
-					bundle="ProductDefUIResources" />
-				<msg name="maxlength" key="errors.maximumlength"
-					bundle="ProductDefUIResources" />
+			<field property="prdOfferingName" depends="required,maxlength">
+				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
+				<msg name="maxlength" key="errors.maximumlength" bundle="ProductDefUIResources" />
 				<arg0 key="product.prodinstname" />
-				<arg1 name="maxlength" key="${var:maxlength}"
-					resource="false" />
+				<arg1 name="maxlength" key="${var:maxlength}" resource="false" />
 				<var>
 					<var-name>maxlength</var-name>
 					<var-value>50</var-value>
 				</var>
 			</field>
-			<field property="prdOfferingShortName"
-				depends="required,maxlength,mask">
-				<msg name="required" key="errors.mandatory"
-					bundle="ProductDefUIResources" />
-				<msg name="maxlength" key="errors.maximumlength"
-					bundle="ProductDefUIResources" />
-				<msg name="mask" key="errors.shortnamemask"
-					bundle="ProductDefUIResources" />
+			<field property="prdOfferingShortName" depends="required,maxlength,mask">
+				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
+				<msg name="maxlength" key="errors.maximumlength" bundle="ProductDefUIResources" />
+				<msg name="mask" key="errors.shortnamemask" bundle="ProductDefUIResources" />
 				<arg0 key="product.shortname" />
-				<arg1 name="maxlength" key="${var:maxlength}"
-					resource="false" />
+				<arg1 name="maxlength" key="${var:maxlength}" resource="false" />
 				<var>
 					<var-name>mask</var-name>
 					<var-value>^[^ ]*$</var-value>
@@ -83,43 +64,32 @@
 				</var>
 			</field>
 			<field property="description" depends="maxlength">
-				<msg name="maxlength" key="errors.maximumlength"
-					bundle="ProductDefUIResources" />
+				<msg name="maxlength" key="errors.maximumlength" bundle="ProductDefUIResources" />
 				<arg0 key="product.categorydesc" />
-				<arg1 name="maxlength" key="${var:maxlength}"
-					resource="false" />
+				<arg1 name="maxlength" key="${var:maxlength}" resource="false" />
 				<var>
 					<var-name>maxlength</var-name>
 					<var-value>200</var-value>
 				</var>
 			</field>
-			<field property="prdCategory"
-				depends="required">
-				<msg name="required" key="errors.select"
-					bundle="ProductDefUIResources" />
+			<field property="prdCategory" depends="required">
+				<msg name="required" key="errors.select" bundle="ProductDefUIResources" />
 				<arg0 key="product.prodcat" />
 			</field>
 			<field property="startDate" depends="required">
-				<msg name="required" key="errors.mandatory"
-					bundle="ProductDefUIResources" />
+				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
 				<arg0 key="product.startdate" />
 			</field>
-			<field property="prdApplicableMaster"
-				depends="required">
-				<msg name="required" key="errors.select"
-					bundle="ProductDefUIResources" />
+			<field property="prdApplicableMaster" depends="required">
+				<msg name="required" key="errors.select" bundle="ProductDefUIResources" />
 				<arg0 key="product.applfor" />
 			</field>
-			<field property="savingsType"
-				depends="required">
-				<msg name="required" key="errors.select"
-					bundle="ProductDefUIResources" />
+			<field property="savingsType" depends="required">
+				<msg name="required" key="errors.select" bundle="ProductDefUIResources" />
 				<arg0 key="product.typeofdep" />
 			</field>
-			<field property="recommendedAmntUnit"
-				depends="validwhen">
-				<msg name="validwhen" key="errors.select"
-					bundle="ProductDefUIResources" />
+			<field property="recommendedAmntUnit" depends="validwhen">
+				<msg name="validwhen" key="errors.select" bundle="ProductDefUIResources" />
 				<arg key="product.recamtappl" />
 				<var>
 					<var-name>test</var-name>
@@ -127,25 +97,18 @@
 				</var>
 			</field>
 			<field property="interestRate" depends="required,double">
-				<msg name="required" key="errors.mandatory"
-					bundle="ProductDefUIResources" />
-				<msg name="double" key="errors.double"
-					bundle="ProductDefUIResources" />
+				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
+				<msg name="double" key="errors.double" bundle="ProductDefUIResources" />
 				<arg key="product.intrate" />
 			</field>
-			<field property="interestCalcType"
-				depends="required">
-				<msg name="required" key="errors.select"
-					bundle="ProductDefUIResources" />
+			<field property="interestCalcType" depends="required">
+				<msg name="required" key="errors.select" bundle="ProductDefUIResources" />
 				<arg0 key="product.balusedforinstcalcrule" />
 			</field>
 			<field property="timeForInterestCacl" depends="required,integer,validwhen">
-				<msg name="required" key="errors.mandatory"
-					bundle="ProductDefUIResources" />
-				<msg name="validwhen" key="errors.greaterthanzero"
-					bundle="ProductDefUIResources" />
-				<msg name="integer" key="errors.integer"
-					bundle="ProductDefUIResources" />
+				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
+				<msg name="validwhen" key="errors.greaterthanzero" bundle="ProductDefUIResources" />
+				<msg name="integer" key="errors.integer" bundle="ProductDefUIResources" />
 				<arg key="product.timeperinstcalc" />
 				<var>
 					<var-name>test</var-name>
@@ -153,32 +116,239 @@
 				</var>
 			</field>
 			<field property="freqOfInterest" depends="required,integer,validwhen">
-				<msg name="required" key="errors.mandatory"
-					bundle="ProductDefUIResources" />
-				<msg name="validwhen" key="errors.greaterthanzero"
-					bundle="ProductDefUIResources" />
-				<msg name="integer" key="errors.integer"
-					bundle="ProductDefUIResources" />
+				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
+				<msg name="validwhen" key="errors.greaterthanzero" bundle="ProductDefUIResources" />
+				<msg name="integer" key="errors.integer" bundle="ProductDefUIResources" />
 				<arg key="product.freqinstpostacc" />
 				<var>
 					<var-name>test</var-name>
 					<var-value>(*this* > 0)</var-value>
 				</var>
 			</field>
-			<field property="depositGLCode"
-				depends="required">
-				<msg name="required" key="errors.select"
-					bundle="ProductDefUIResources" />
+			<field property="depositGLCode" depends="required">
+				<msg name="required" key="errors.select" bundle="ProductDefUIResources" />
 				<arg0 key="product.glcodedep" />
 			</field>
-			<field property="interestGLCode"
-				depends="required">
-				<msg name="required" key="errors.select"
-					bundle="ProductDefUIResources" />
+			<field property="interestGLCode" depends="required">
+				<msg name="required" key="errors.select" bundle="ProductDefUIResources" />
 				<arg0 key="product.glcodeint" />
 			</field>
 		</form>
-		
 
+		<form name="/loanproductaction">
+			<field property="prdOfferingName" depends="required,maxlength">
+				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
+				<msg name="maxlength" key="errors.maximumlength" bundle="ProductDefUIResources" />
+				<arg0 key="product.prodinstname" />
+				<arg1 name="maxlength" key="${var:maxlength}" resource="false" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>50</var-value>
+				</var>
+			</field>
+			<field property="prdOfferingShortName" depends="required,maxlength,mask">
+				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
+				<msg name="maxlength" key="errors.maximumlength" bundle="ProductDefUIResources" />
+				<msg name="mask" key="errors.shortnamemask" bundle="ProductDefUIResources" />
+				<arg0 key="product.shortname" />
+				<arg1 name="maxlength" key="${var:maxlength}" resource="false" />
+				<var>
+					<var-name>mask</var-name>
+					<var-value>^[^ ]*$</var-value>
+				</var>
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>4</var-value>
+				</var>
+			</field>
+			<field property="description" depends="maxlength">
+				<msg name="maxlength" key="errors.maximumlength" bundle="ProductDefUIResources" />
+				<arg0 key="product.categorydesc" />
+				<arg1 name="maxlength" key="${var:maxlength}" resource="false" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>200</var-value>
+				</var>
+			</field>
+			<field property="prdCategory" depends="required">
+				<msg name="required" key="errors.select" bundle="ProductDefUIResources" />
+				<arg0 key="product.prodcat" />
+			</field>
+			<field property="startDate" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
+				<arg0 key="product.startdate" />
+			</field>
+			<field property="prdApplicableMaster" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
+				<arg0 key="product.applfor" />
+			</field>
+			<field property="minLoanAmount" depends="required,double,decimalFormat">
+				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
+				<msg name="double" key="errors.double" bundle="ProductDefUIResources" />
+				<msg name="decimalFormat" key="errors.decimalFormat" bundle="ProductDefUIResources" />
+				<arg key="product.minloanamt" />
+				<var>
+					<var-name>format</var-name>
+					<var-value>(10,3)</var-value>
+				</var>
+			</field>
+			<field property="maxLoanAmount" depends="required,double,decimalFormat,validwhen">
+				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
+				<msg name="validwhen" key="errors.maxMin" bundle="ProductDefUIResources" />
+				<msg name="double" key="errors.double" bundle="ProductDefUIResources" />
+				<msg name="decimalFormat" key="errors.decimalFormat" bundle="ProductDefUIResources" />
+				<arg0 key="product.maxloanamt" />
+				<arg1 key="product.minloanamt" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>(*this* >=minLoanAmount)</var-value>
+				</var>
+				<var>
+					<var-name>format</var-name>
+					<var-value>(10,3)</var-value>
+				</var>
+			</field>
+			<field property="defaultLoanAmount" depends="double,decimalFormat,validwhen">
+				<msg name="validwhen" key="errors.defMinMax" bundle="ProductDefUIResources" />
+				<msg name="double" key="errors.double" bundle="ProductDefUIResources" />
+				<msg name="decimalFormat" key="errors.decimalFormat" bundle="ProductDefUIResources" />
+				<arg0 key="product.defamt" />
+				<arg1 key="product.minloanamt" />
+				<arg2 key="product.maxloanamt" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>((*this* ==null) or ((*this* >= minLoanAmount) and (maxLoanAmount >=*this* )))</var-value>
+				</var>
+				<var>
+					<var-name>format</var-name>
+					<var-value>(10,3)</var-value>
+				</var>
+			</field>
+			<field property="interestTypes" depends="required">
+				<msg name="required" key="errors.select" bundle="ProductDefUIResources" />
+				<arg0 key="product.intratetype" />
+			</field>
+			<field property="maxInterestRate" depends="required,double,decimalFormat,validwhen">
+				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
+				<msg name="validwhen" key="errors.maxMin" bundle="ProductDefUIResources" />
+				<msg name="double" key="errors.double" bundle="ProductDefUIResources" />
+				<msg name="decimalFormat" key="errors.decimalFormat" bundle="ProductDefUIResources" />
+				<arg0 key="product.maxintrate" />
+				<arg1 key="product.minintrate" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>(*this* >=minInterestRate)</var-value>
+				</var>
+				<var>
+					<var-name>format</var-name>
+					<var-value>(3,0)</var-value>
+				</var>
+			</field>
+			<field property="minInterestRate" depends="required,double,decimalFormat">
+				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
+				<msg name="double" key="errors.double" bundle="ProductDefUIResources" />
+				<msg name="decimalFormat" key="errors.decimalFormat" bundle="ProductDefUIResources" />
+				<arg key="product.minintrate" />
+				<var>
+					<var-name>format</var-name>
+					<var-value>(3,0)</var-value>
+				</var>
+			</field>
+			<field property="defInterestRate" depends="required,double,decimalFormat,validwhen">
+				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
+				<msg name="validwhen" key="errors.defMinMax" bundle="ProductDefUIResources" />
+				<msg name="double" key="errors.double" bundle="ProductDefUIResources" />
+				<msg name="decimalFormat" key="errors.decimalFormat" bundle="ProductDefUIResources" />
+				<arg0 key="product.defintrate" />
+				<arg1 key="product.minintrate" />
+				<arg2 key="product.maxintrate" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>((*this* >= minInterestRate) and (maxInterestRate >=*this* ))</var-value>
+				</var>
+				<var>
+					<var-name>format</var-name>
+					<var-value>(3,0)</var-value>
+				</var>
+			</field>
+			<field property="freqOfInstallments" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
+				<arg key="product.freqofinst" />
+			</field>
+			<field property="recurAfter" depends="required,validwhen">
+				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
+				<msg name="validwhen" key="errors.greaterthanzero" bundle="ProductDefUIResources" />
+				<arg key="product.recur" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>(*this* > 0)</var-value>
+				</var>
+			</field>
+			<field property="maxNoInstallments" depends="required,validwhen,integer,decimalFormat">
+				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
+				<msg name="validwhen" key="errors.maxMin" bundle="ProductDefUIResources" />
+				<msg name="integer" key="errors.integer" bundle="ProductDefUIResources" />
+				<msg name="decimalFormat" key="errors.decimalFormat" bundle="ProductDefUIResources" />
+				<arg0 key="product.maxinst" />
+				<arg1 key="product.mininst" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>(*this* >=minNoInstallments)</var-value>
+				</var>
+				<var>
+					<var-name>format</var-name>
+					<var-value>(4,0)</var-value>
+				</var>
+			</field>
+			<field property="minNoInstallments" depends="required,validwhen,integer,decimalFormat">
+				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
+				<msg name="validwhen" key="errors.greaterthanzero" bundle="ProductDefUIResources" />
+				<msg name="integer" key="errors.integer" bundle="ProductDefUIResources" />
+				<msg name="decimalFormat" key="errors.decimalFormat" bundle="ProductDefUIResources" />
+				<arg key="product.mininst" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>(*this* > 0)</var-value>
+				</var>
+				<var>
+					<var-name>format</var-name>
+					<var-value>(4,0)</var-value>
+				</var>
+			</field>
+			<field property="defNoInstallments" depends="required,validwhen,integer,decimalFormat">
+				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
+				<msg name="validwhen" key="errors.defMinMax" bundle="ProductDefUIResources" />
+				<msg name="integer" key="errors.integer" bundle="ProductDefUIResources" />
+				<msg name="decimalFormat" key="errors.decimalFormat" bundle="ProductDefUIResources" />
+				<arg0 key="product.definst" />
+				<arg1 key="product.mininst" />
+				<arg2 key="product.maxinst" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>((*this* >= minNoInstallments) and (maxNoInstallments >=*this* ))</var-value>
+				</var>
+				<var>
+					<var-name>format</var-name>
+					<var-value>(4,0)</var-value>
+				</var>
+			</field>
+			<field property="gracePeriodDuration" depends="validwhen,integer">
+				<msg name="validwhen" key="errors.graceperioddur" bundle="ProductDefUIResources" />
+				<msg name="integer" key="errors.integer" bundle="ProductDefUIResources" />
+				<arg0 key="product.graceperdur" />
+				<var>
+					<var-name>test</var-name>
+					<var-value>(((gracePeriodType == null) or (gracePeriodType==1)) or ((*this* !=null) and (maxNoInstallments >=*this* )))</var-value>
+				</var>
+			</field>
+			<field property="interestGLCode" depends="required">
+				<msg name="required" key="errors.select" bundle="ProductDefUIResources" />
+				<arg0 key="product.GlcodeInterest" />
+			</field>
+			<field property="principalGLCode" depends="required">
+				<msg name="required" key="errors.select" bundle="ProductDefUIResources" />
+				<arg0 key="product.GlcodePrincipal" />
+			</field>
+		</form>
 	</formset>
 </form-validation>

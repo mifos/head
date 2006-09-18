@@ -40,28 +40,28 @@ package org.mifos.application.productdefinition.persistence;
 import java.util.HashMap;
 import java.util.List;
 
-import org.hibernate.HibernateException;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
 public class LoansPrdPersistence extends Persistence {
 
-	public Short retrieveLatenessForPrd()throws PersistenceException{
-		try {
-			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("productTypeId",
-					AccountTypes.LOANACCOUNT.getValue());
-			List<Short> queryResult = executeNamedQuery(NamedQueryConstants.GET_LATENESS_FOR_LOANS,queryParameters);
-			
-			 if (null != queryResult && null != queryResult.get(0)) {
-				return queryResult.get(0);
-			}
-			 
-			return Short.valueOf("10");
-		}catch (HibernateException he) {
-			throw new PersistenceException(he);
-		} 
+	public Short retrieveLatenessForPrd() throws PersistenceException {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("productTypeId", AccountTypes.LOANACCOUNT
+				.getValue());
+		List<Short> queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_LATENESS_FOR_LOANS, queryParameters);
+
+		if (null != queryResult && null != queryResult.get(0)) {
+			return queryResult.get(0);
+		}
+		return Short.valueOf("10");
+	}
+
+	public List<Fund> getSourcesOfFund() throws PersistenceException {
+		return executeNamedQuery(NamedQueryConstants.PRDSRCFUNDS, null);
 	}
 }

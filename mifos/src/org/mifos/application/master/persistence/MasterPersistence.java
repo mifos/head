@@ -110,9 +110,8 @@ public class MasterPersistence extends Persistence {
 			}
 			return paymentTypes;
 		} catch (HibernateException he) {
-			new PersistenceException();
+			throw new PersistenceException(he);
 		}
-		return null;
 	}
 
 	public List<PaymentTypeEntity> getSupportedPaymentModes(Short localeId,
@@ -139,10 +138,9 @@ public class MasterPersistence extends Persistence {
 				masterData.setLocaleId(localeId);
 			}
 			return masterEntities;
-		} catch (HibernateException he) {
-			new PersistenceException(he);
+		} catch (Exception e) {
+			throw new PersistenceException(e);
 		}
-		return null;
 	}
 
 	public MasterDataEntity retrieveMasterEntity(Short entityId, Class clazz,
@@ -156,10 +154,9 @@ public class MasterPersistence extends Persistence {
 			if (masterEntity != null && masterEntity.size() > 0)
 				return masterEntity.get(0);
 			throw new PersistenceException("errors.entityNotFound");
-		} catch (HibernateException he) {
-			new PersistenceException(he);
+		} catch (Exception he) {
+			throw new PersistenceException(he);
 		}
-		return null;
 	}
 
 	public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition(
@@ -185,7 +182,7 @@ public class MasterPersistence extends Persistence {
 			queryResult = executeNamedQuery(
 					NamedQueryConstants.MASTERDATA_MIFOS_ENTITY_VALUE,
 					queryParameters);
-		} catch (HibernateException he) {
+		} catch (Exception he) {
 			throw new PersistenceException(he);
 		}
 		return queryResult;
@@ -206,4 +203,6 @@ public class MasterPersistence extends Persistence {
 		}
 		return (String) queryResult.get(0);
 	}
+	
+	
 }

@@ -8,6 +8,7 @@
 	<form-beans>
 			<form-bean name="savingsproductactionform" type="org.mifos.application.productdefinition.struts.actionforms.SavingsPrdActionForm"></form-bean>
 			<form-bean name="productCategoryActionForm" type="org.mifos.application.productdefinition.struts.actionforms.PrdCategoryActionForm"></form-bean>
+			<form-bean name="loanproductactionform" type="org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionForm"></form-bean>
 	</form-beans>
 	<global-exceptions>
 		<exception type="org.mifos.framework.exceptions.SystemException"
@@ -49,6 +50,17 @@
 			<forward name="managepreview_failure" path="/pages/application/productdefinition/jsp/ManageProductCategory.jsp"></forward>
 			<forward name="update_failure" path="/pages/application/productdefinition/jsp/ManageProductCategoryPreview.jsp"></forward>
 			<forward name="search_success" path="/pages/application/productdefinition/jsp/ViewProductCategories.jsp"></forward>
+		</action>
+		<action path="/loanproductaction" name="loanproductactionform" type="org.mifos.application.productdefinition.struts.action.LoanPrdAction" input="/loanproductaction.do?method=validate" parameter="method" validate="true" scope="session">
+			<forward name="load_success" path="/pages/application/productdefinition/jsp/CreateLoanProduct.jsp"></forward>
+			<forward name="preview_success" path="/pages/application/productdefinition/jsp/CreateLoanProductPreview.jsp"></forward>
+			<forward name="preview_failure" path="/pages/application/productdefinition/jsp/CreateLoanProduct.jsp"></forward>
+			<forward name="previous_success" path="/pages/application/productdefinition/jsp/CreateLoanProduct.jsp"></forward>
+			<forward name="previous_failure" path="/pages/application/productdefinition/jsp/CreateLoanProductPreview.jsp"></forward>
+			<forward name="create_success" path="/pages/application/productdefinition/jsp/CreateLoanProductConfirmation.jsp"></forward>
+			<forward name="create_failure" path="/pages/application/productdefinition/jsp/CreateLoanProductPreview.jsp"></forward>
+			<forward name="cancelCreate_success" path="/AdminAction.do?method=load"></forward>
+			<forward name="get_success" path="/pages/application/productdefinition/jsp/LoanProductDetails.jsp"></forward>
 		</action>
 	</action-mappings>
 	<message-resources key="ProductDefUIResources" parameter="org.mifos.application.productdefinition.util.resources.ProductDefinitionResources" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />
