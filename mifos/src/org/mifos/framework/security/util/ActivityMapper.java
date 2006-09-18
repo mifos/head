@@ -1049,7 +1049,7 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		
 		
-		activityMap.put("/ChangeAccountStatus-load", SecurityConstants.VIEW);
+		activityMap.put("/ChangeAccountStatus-load", SecurityConstants.CAN_APPROVE_LOANS_IN_BULK);
 		activityMap.put("/ChangeAccountStatus-searchResults", SecurityConstants.VIEW);
 		activityMap.put("/ChangeAccountStatus-update", SecurityConstants.VIEW);
 		activityMap.put("/ChangeAccountStatus-getLoanOfficers", SecurityConstants.VIEW);

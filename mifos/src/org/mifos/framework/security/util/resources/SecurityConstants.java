@@ -383,4 +383,6 @@ public interface SecurityConstants {
 	public final short SAVINGS_CAN_MAKE_DEPOSIT_WITHDRAWAL = 190;
 	
 	public final short SAVINGS_CAN_ADD_NOTES_TO_SAVINGS = 191;
+	
+	public final short CAN_APPROVE_LOANS_IN_BULK = 192;
 }

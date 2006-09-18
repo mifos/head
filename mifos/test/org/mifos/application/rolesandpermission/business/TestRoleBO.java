@@ -11,7 +11,7 @@ public class TestRoleBO extends MifosTestCase {
 		roleBO=getRole((short)1);
 		assertNotNull(roleBO);
 		assertEquals("Admin",roleBO.getName());
-		assertEquals(154,roleBO.getActivities().size());
+		assertEquals(155,roleBO.getActivities().size());
 	}
 	
 	private RoleBO getRole(Short id){
