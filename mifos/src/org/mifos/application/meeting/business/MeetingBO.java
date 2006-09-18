@@ -44,13 +44,16 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.StringUtils;
 
 /**
  * This class encapsulate the meeting
@@ -77,23 +80,24 @@ public class MeetingBO extends BusinessObject {
 		this.meetingStartDate = null;
 	}
 
-	public MeetingBO(RecurrenceType recurrenceType, Short recurAfter, Date startDate, MeetingType meetingType){
-		this(recurrenceType, Short.valueOf("1"), WeekDay.MONDAY, null, recurAfter, startDate, meetingType);
+	public MeetingBO(RecurrenceType recurrenceType, Short recurAfter, Date startDate, MeetingType meetingType)throws MeetingException{
+		this(recurrenceType, Short.valueOf("1"), WeekDay.MONDAY, null, recurAfter, startDate, meetingType, "meetingPlace");
 	}
 	
-	public MeetingBO(WeekDay weekDay, RankType rank, Short recurAfter, Date startDate, MeetingType meetingType){
-		this(RecurrenceType.MONTHLY, null, weekDay, rank, recurAfter, startDate, meetingType);
+	public MeetingBO(WeekDay weekDay, RankType rank, Short recurAfter, Date startDate, MeetingType meetingType, String meetingPlace)throws MeetingException{
+		this(RecurrenceType.MONTHLY, null, weekDay, rank, recurAfter, startDate, meetingType,meetingPlace);
 	}
 	
-	public MeetingBO(Short dayNumber, Short recurAfter, Date startDate, MeetingType meetingType){
-		this(RecurrenceType.MONTHLY, dayNumber, null, null, recurAfter, startDate, meetingType);
+	public MeetingBO(Short dayNumber, Short recurAfter, Date startDate, MeetingType meetingType, String meetingPlace)throws MeetingException{
+		this(RecurrenceType.MONTHLY, dayNumber, null, null, recurAfter, startDate, meetingType, meetingPlace);
 	}
 	
-	public MeetingBO(WeekDay weekDay, Short recurAfter, Date startDate, MeetingType meetingType){
-		this(RecurrenceType.WEEKLY, null, weekDay, null, recurAfter, startDate, meetingType);
+	public MeetingBO(WeekDay weekDay, Short recurAfter, Date startDate, MeetingType meetingType, String meetingPlace)throws MeetingException{
+		this(RecurrenceType.WEEKLY, null, weekDay, null, recurAfter, startDate, meetingType, meetingPlace);
 	}
 	
-	private MeetingBO(RecurrenceType recurrenceType, Short dayNumber, WeekDay weekDay, RankType rank, Short recurAfter, Date startDate, MeetingType meetingType){
+	private MeetingBO(RecurrenceType recurrenceType, Short dayNumber, WeekDay weekDay, RankType rank, Short recurAfter, Date startDate, MeetingType meetingType, String meetingPlace)throws MeetingException{
+		this.validateFields(recurrenceType,startDate,meetingType,meetingPlace);
 		this.meetingDetails =  new MeetingDetailsEntity(new RecurrenceTypeEntity(recurrenceType), dayNumber, weekDay, rank, recurAfter, this);
 		//TODO: remove this check after meeting create is migrated.
 		if(meetingType!=null)
@@ -153,6 +157,25 @@ public class MeetingBO extends BusinessObject {
 
 	public boolean isMonthly(){
 		return getMeetingDetails().isMonthly();
+	}
+	
+	public void save() throws MeetingException{
+		try{
+			new MeetingPersistence().createOrUpdate(this);
+		}catch(PersistenceException pe){
+			throw new MeetingException(pe);
+		}
+	}
+	
+	private void validateFields(RecurrenceType recurrenceType, Date startDate, MeetingType meetingType, String meetingPlace)throws MeetingException{
+		if(recurrenceType == null)
+			throw new MeetingException(MeetingConstants.INVALID_RECURRENCETYPE);
+		if(startDate == null)
+			throw new MeetingException(MeetingConstants.INVALID_STARTDATE);
+		if(meetingType == null)
+			throw new MeetingException(MeetingConstants.INVALID_MEETINGTYPE);
+		if(StringUtils.isNullOrEmpty(meetingPlace))
+			throw new MeetingException(MeetingConstants.INVALID_MEETINGPLACE);
 	}
 	/**
 	 * This function returns the meeting schedule based on the values set in the

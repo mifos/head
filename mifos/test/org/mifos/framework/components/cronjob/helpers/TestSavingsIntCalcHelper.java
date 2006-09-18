@@ -181,7 +181,7 @@ public class TestSavingsIntCalcHelper extends MifosTestCase{
 		savings4 = helper.createSavingsAccount(savingsOffering4, group, AccountStates.SAVINGS_ACC_APPROVED, userContext);
 	}
 	
-	private SavingsOfferingBO createSavingsOffering(String offeringName,String shortName, Short interestCalcType){
+	private SavingsOfferingBO createSavingsOffering(String offeringName,String shortName, Short interestCalcType)throws Exception{
 		MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getMeeting("2","1",Short.valueOf("2")));
 		MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getMeeting("2","1",Short.valueOf("3")));
 		return TestObjectFactory.createSavingsOffering(offeringName,shortName,Short.valueOf("2"),new Date(System.currentTimeMillis()),

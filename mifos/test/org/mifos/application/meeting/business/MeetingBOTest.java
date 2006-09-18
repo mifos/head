@@ -49,6 +49,7 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public class MeetingBOTest extends MifosTestCase{
 	private Short recurAfer;
@@ -60,7 +61,7 @@ public class MeetingBOTest extends MifosTestCase{
 
 	public void testFailureGetAllDates_EndDateIsNull()throws Exception{
 		try{
-			recurAfer = 10;
+			recurAfer = Short.valueOf("10");
 			startDate = getDate("18/08/2005");
 			endDate = getDate("02/10/2005");
 			meeting = createDailyMeeting(recurAfer, startDate);
@@ -74,7 +75,7 @@ public class MeetingBOTest extends MifosTestCase{
 	
 	public void testFailureGetAllDates_EndDateBeforeStartDate()throws Exception{
 		try{
-			recurAfer = 10;
+			recurAfer = Short.valueOf("10");
 			startDate = getDate("18/08/2006");
 			endDate = getDate("17/08/2006");
 			meeting = createDailyMeeting(recurAfer, startDate);
@@ -89,7 +90,7 @@ public class MeetingBOTest extends MifosTestCase{
 	public void testSuccessfulGetAllDates_Day()throws Exception{
 		List list=null;
 		List expectedList=null;		
-		recurAfer = 10;
+		recurAfer = Short.valueOf("10");
 		startDate = getDate("18/08/2005");
 		endDate = getDate("02/10/2005");
 		meeting = createDailyMeeting(recurAfer, startDate);
@@ -103,7 +104,7 @@ public class MeetingBOTest extends MifosTestCase{
 	public void testSuccessfulGetAllDates_30Day()throws Exception{
 		List list=null;
 		List expectedList=null;		
-		recurAfer = 1;
+		recurAfer = Short.valueOf("1");
 		startDate = getDate("28/09/2006");
 		endDate = getDate("02/10/2006");
 		meeting = createDailyMeeting(recurAfer, startDate);
@@ -117,7 +118,7 @@ public class MeetingBOTest extends MifosTestCase{
 	public void testSuccessfulGetAllDates_31Day()throws Exception{
 		List list=null;
 		List expectedList=null;		
-		recurAfer = 1;
+		recurAfer = Short.valueOf("1");
 		startDate = getDate("28/08/2006");
 		endDate = getDate("02/09/2006");
 		meeting = createDailyMeeting(recurAfer, startDate);
@@ -131,7 +132,7 @@ public class MeetingBOTest extends MifosTestCase{
 	public void testSuccessfulGetAllDates_28Day()throws Exception{
 		List list=null;
 		List expectedList=null;		
-		recurAfer = 1;
+		recurAfer = Short.valueOf("1");
 		startDate = getDate("25/02/2006");
 		endDate = getDate("02/03/2006");
 		meeting = createDailyMeeting(recurAfer, startDate);
@@ -145,7 +146,7 @@ public class MeetingBOTest extends MifosTestCase{
 	public void testSuccessfulGetAllDates_29Day()throws Exception{
 		List list=null;
 		List expectedList=null;		
-		recurAfer = 1;
+		recurAfer = Short.valueOf("1");
 		startDate = getDate("26/02/2004");
 		endDate = getDate("02/03/2004");
 		meeting = createDailyMeeting(recurAfer, startDate);
@@ -161,7 +162,7 @@ public class MeetingBOTest extends MifosTestCase{
 		List expectedList=null;
 		startDate=getDate("15/11/2005");
 		endDate=getDate("01/03/2006");
-		recurAfer = 1;
+		recurAfer = Short.valueOf("1");
 		meeting = createWeeklyMeeting(WeekDay.THURSDAY, recurAfer, startDate);
 		list = meeting.getAllDates(endDate);
 		expectedList = createExpectedList("17/11/2005,24/11/2005,1/12/2005,08/12/2005,15/12/2005,22/12/2005,29/12/2005,05/01/2006,12/01/2006,19/01/2006,26/01/2006,02/02/2006,09/02/2006,16/02/2006,23/02/2006");
@@ -175,7 +176,7 @@ public class MeetingBOTest extends MifosTestCase{
 		List expectedList=null;
 		startDate=getDate("15/11/2005");
 		endDate=getDate("01/03/2006");
-		recurAfer = 3;
+		recurAfer = Short.valueOf("3");
 		meeting = createWeeklyMeeting(WeekDay.FRIDAY, recurAfer, startDate);
 		list = meeting.getAllDates(endDate);
 		expectedList = createExpectedList("18/11/2005,09/12/2005,30/12/2005,20/01/2006,10/02/2006");
@@ -189,7 +190,7 @@ public class MeetingBOTest extends MifosTestCase{
 		List expectedList=null;
 		startDate=getDate("15/11/2005");
 		endDate=getDate("01/03/2006");
-		recurAfer = 6;
+		recurAfer = Short.valueOf("6");
 		meeting = createWeeklyMeeting(WeekDay.TUESDAY, recurAfer, startDate);
 		list = meeting.getAllDates(endDate);
 		expectedList = createExpectedList("15/11/2005,27/12/2005,07/02/2006");
@@ -204,7 +205,7 @@ public class MeetingBOTest extends MifosTestCase{
 		List expectedList=null;
 		startDate=getDate("15/11/2005");
 		endDate=getDate("15/10/2006");
-		recurAfer = 1;
+		recurAfer = Short.valueOf("1");
 		meeting = createMonthlyMeetingOnWeekDay(WeekDay.MONDAY, RankType.SECOND, recurAfer, startDate);
 		list = meeting.getAllDates(endDate);
 		expectedList = createExpectedList("12/12/2005,09/01/2006,13/02/2006,13/03/2006,10/04/2006,08/05/2006,12/06/2006,10/07/2006,14/08/2006,11/09/2006,09/10/2006");
@@ -219,7 +220,7 @@ public class MeetingBOTest extends MifosTestCase{
 		List expectedList=null;
 		startDate=getDate("15/11/2005");
 		endDate=getDate("15/10/2006");
-		recurAfer = 2;
+		recurAfer = Short.valueOf("2");
 		meeting = createMonthlyMeetingOnWeekDay(WeekDay.FRIDAY, RankType.LAST, recurAfer, startDate);
 		list = meeting.getAllDates(endDate);
 		expectedList = createExpectedList("25/11/2005,27/01/2006,31/03/2006,26/05/2006,28/07/2006,29/09/2006");
@@ -234,8 +235,8 @@ public class MeetingBOTest extends MifosTestCase{
 		List expectedList=null;
 		startDate=getDate("15/11/2005");
 		endDate=getDate("15/10/2006");
-		recurAfer = 3;
-		dayNumber = 5;
+		recurAfer = Short.valueOf("3");
+		dayNumber = Short.valueOf("5");
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, startDate);
 		list = meeting.getAllDates(endDate);
 		expectedList = createExpectedList("05/12/2005,05/03/2006,05/06/2006,05/09/2006");
@@ -250,8 +251,8 @@ public class MeetingBOTest extends MifosTestCase{
 		List expectedList=null;
 		startDate=getDate("15/11/2005");
 		endDate=getDate("15/04/2006");
-		recurAfer = 1;
-		dayNumber = 30;
+		recurAfer = Short.valueOf("1");
+		dayNumber = Short.valueOf("30");
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, startDate);
 		list = meeting.getAllDates(endDate);
 		expectedList = createExpectedList("30/11/2005,30/12/2005,30/01/2006,28/02/2006,30/03/2006");
@@ -266,8 +267,8 @@ public class MeetingBOTest extends MifosTestCase{
 		List expectedList=null;
 		startDate=getDate("15/11/2005");
 		endDate=getDate("15/05/2006");
-		recurAfer = 1;
-		dayNumber = 31;
+		recurAfer = Short.valueOf("1");
+		dayNumber = Short.valueOf("31");
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, startDate);
 		list = meeting.getAllDates(endDate);
 		expectedList = createExpectedList("30/11/2005,31/12/2005,31/01/2006,28/02/2006,31/03/2006,30/04/2006");
@@ -282,8 +283,8 @@ public class MeetingBOTest extends MifosTestCase{
 		List expectedList=null;
 		startDate=getDate("15/11/2003");
 		endDate=getDate("15/04/2004");
-		recurAfer = 1;
-		dayNumber = 28;
+		recurAfer = Short.valueOf("1");
+		dayNumber = Short.valueOf("28");
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, startDate);
 		list = meeting.getAllDates(endDate);
 		expectedList = createExpectedList("28/11/2003,28/12/2003,28/01/2004,28/02/2004,28/03/2004");
@@ -298,8 +299,8 @@ public class MeetingBOTest extends MifosTestCase{
 		List expectedList=null;
 		startDate=getDate("15/11/2003");
 		endDate=getDate("29/03/2004");
-		recurAfer = 1;
-		dayNumber = 29;
+		recurAfer = Short.valueOf("1");
+		dayNumber = Short.valueOf("29");
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, startDate);
 		list = meeting.getAllDates(endDate);
 		expectedList = createExpectedList("29/11/2003,29/12/2003,29/01/2004,29/02/2004,29/03/2004");
@@ -310,7 +311,7 @@ public class MeetingBOTest extends MifosTestCase{
 	
 	public void testFailureGetAllDates_ZeroOccurences()throws Exception{
 		try{
-			recurAfer = 10;
+			recurAfer = Short.valueOf("10");
 			startDate = getDate("18/08/2006");
 			occurrences = 0;
 			meeting = createDailyMeeting(recurAfer, startDate);
@@ -324,7 +325,7 @@ public class MeetingBOTest extends MifosTestCase{
 	public void testSuccessfulGetAllDates_Day_3Occurences()throws Exception{
 		List list=null;
 		List expectedList=null;		
-		recurAfer = 10;
+		recurAfer = Short.valueOf("10");
 		startDate = getDate("18/08/2005");
 		occurrences = 3;
 		meeting = createDailyMeeting(recurAfer, startDate);
@@ -338,7 +339,7 @@ public class MeetingBOTest extends MifosTestCase{
 	public void testSuccessfulGetAllDates_30Day_4Occurences()throws Exception{
 		List list=null;
 		List expectedList=null;		
-		recurAfer = 1;
+		recurAfer = Short.valueOf("1");
 		startDate = getDate("28/09/2006");
 		occurrences = 4;
 		meeting = createDailyMeeting(recurAfer, startDate);
@@ -352,7 +353,7 @@ public class MeetingBOTest extends MifosTestCase{
 	public void testSuccessfulGetAllDates_5Occurences()throws Exception{
 		List list=null;
 		List expectedList=null;		
-		recurAfer = 1;
+		recurAfer = Short.valueOf("1");
 		startDate = getDate("28/08/2006");
 		occurrences = 5;
 		meeting = createDailyMeeting(recurAfer, startDate);
@@ -366,7 +367,7 @@ public class MeetingBOTest extends MifosTestCase{
 	public void testSuccessfulGetAllDates_28Day_5Occurences()throws Exception{
 		List list=null;
 		List expectedList=null;		
-		recurAfer = 1;
+		recurAfer = Short.valueOf("1");
 		startDate = getDate("25/02/2006");
 		occurrences = 5;
 		meeting = createDailyMeeting(recurAfer, startDate);
@@ -380,7 +381,7 @@ public class MeetingBOTest extends MifosTestCase{
 	public void testSuccessfulGetAllDates_29Day_6Occurences()throws Exception{
 		List list=null;
 		List expectedList=null;		
-		recurAfer = 1;
+		recurAfer = Short.valueOf("1");
 		startDate = getDate("26/02/2004");
 		occurrences = 6;
 		meeting = createDailyMeeting(recurAfer, startDate);
@@ -396,7 +397,7 @@ public class MeetingBOTest extends MifosTestCase{
 		List expectedList=null;
 		startDate=getDate("15/11/2005");
 		occurrences = 15;
-		recurAfer = 1;
+		recurAfer = Short.valueOf("1");
 		meeting = createWeeklyMeeting(WeekDay.THURSDAY, recurAfer, startDate);
 		list = meeting.getAllDates(occurrences);
 		expectedList = createExpectedList("17/11/2005,24/11/2005,1/12/2005,08/12/2005,15/12/2005,22/12/2005,29/12/2005,05/01/2006,12/01/2006,19/01/2006,26/01/2006,02/02/2006,09/02/2006,16/02/2006,23/02/2006");
@@ -410,7 +411,7 @@ public class MeetingBOTest extends MifosTestCase{
 		List expectedList=null;
 		startDate=getDate("15/11/2005");
 		occurrences = 5;
-		recurAfer = 3;
+		recurAfer = Short.valueOf("3");
 		meeting = createWeeklyMeeting(WeekDay.FRIDAY, recurAfer, startDate);
 		list = meeting.getAllDates(occurrences);
 		expectedList = createExpectedList("18/11/2005,09/12/2005,30/12/2005,20/01/2006,10/02/2006");
@@ -424,7 +425,7 @@ public class MeetingBOTest extends MifosTestCase{
 		List expectedList=null;
 		startDate=getDate("15/11/2005");
 		occurrences = 3;
-		recurAfer = 6;
+		recurAfer = Short.valueOf("6");
 		meeting = createWeeklyMeeting(WeekDay.TUESDAY, recurAfer, startDate);
 		list = meeting.getAllDates(occurrences);
 		expectedList = createExpectedList("15/11/2005,27/12/2005,07/02/2006");
@@ -439,7 +440,7 @@ public class MeetingBOTest extends MifosTestCase{
 		List expectedList=null;
 		startDate=getDate("15/11/2005");
 		occurrences = 11;
-		recurAfer = 1;
+		recurAfer = Short.valueOf("1");
 		meeting = createMonthlyMeetingOnWeekDay(WeekDay.MONDAY, RankType.SECOND, recurAfer, startDate);
 		list = meeting.getAllDates(occurrences);
 		expectedList = createExpectedList("12/12/2005,09/01/2006,13/02/2006,13/03/2006,10/04/2006,08/05/2006,12/06/2006,10/07/2006,14/08/2006,11/09/2006,09/10/2006");
@@ -454,7 +455,7 @@ public class MeetingBOTest extends MifosTestCase{
 		List expectedList=null;
 		startDate=getDate("15/11/2005");
 		occurrences = 6;
-		recurAfer = 2;
+		recurAfer = Short.valueOf("2");
 		meeting = createMonthlyMeetingOnWeekDay(WeekDay.FRIDAY, RankType.LAST, recurAfer, startDate);
 		list = meeting.getAllDates(occurrences);
 		expectedList = createExpectedList("25/11/2005,27/01/2006,31/03/2006,26/05/2006,28/07/2006,29/09/2006");
@@ -469,8 +470,8 @@ public class MeetingBOTest extends MifosTestCase{
 		List expectedList=null;
 		startDate=getDate("15/11/2005");
 		occurrences = 4;
-		recurAfer = 3;
-		dayNumber = 5;
+		recurAfer = Short.valueOf("3");
+		dayNumber = Short.valueOf("5");
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, startDate);
 		list = meeting.getAllDates(occurrences);
 		expectedList = createExpectedList("05/12/2005,05/03/2006,05/06/2006,05/09/2006");
@@ -485,8 +486,8 @@ public class MeetingBOTest extends MifosTestCase{
 		List expectedList=null;
 		startDate=getDate("15/11/2005");
 		occurrences = 5;
-		recurAfer = 1;
-		dayNumber = 30;
+		recurAfer = Short.valueOf("1");
+		dayNumber = Short.valueOf("30");
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, startDate);
 		list = meeting.getAllDates(occurrences);
 		expectedList = createExpectedList("30/11/2005,30/12/2005,30/01/2006,28/02/2006,30/03/2006");
@@ -501,8 +502,8 @@ public class MeetingBOTest extends MifosTestCase{
 		List expectedList=null;
 		startDate=getDate("15/11/2005");
 		occurrences = 6;
-		recurAfer = 1;
-		dayNumber = 31;
+		recurAfer = Short.valueOf("1");
+		dayNumber = Short.valueOf("31");
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, startDate);
 		list = meeting.getAllDates(occurrences);
 		expectedList = createExpectedList("30/11/2005,31/12/2005,31/01/2006,28/02/2006,31/03/2006,30/04/2006");
@@ -517,8 +518,8 @@ public class MeetingBOTest extends MifosTestCase{
 		List expectedList=null;
 		startDate=getDate("15/11/2003");
 		occurrences = 5;
-		recurAfer = 1;
-		dayNumber = 28;
+		recurAfer = Short.valueOf("1");
+		dayNumber = Short.valueOf("28");
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, startDate);
 		list = meeting.getAllDates(occurrences);
 		expectedList = createExpectedList("28/11/2003,28/12/2003,28/01/2004,28/02/2004,28/03/2004");
@@ -533,8 +534,8 @@ public class MeetingBOTest extends MifosTestCase{
 		List expectedList=null;
 		startDate=getDate("15/11/2003");
 		occurrences = 5;
-		recurAfer = 1;
-		dayNumber = 29;
+		recurAfer = Short.valueOf("1");
+		dayNumber = Short.valueOf("29");
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, startDate);
 		list = meeting.getAllDates(occurrences);
 		expectedList = createExpectedList("29/11/2003,29/12/2003,29/01/2004,29/02/2004,29/03/2004");
@@ -546,8 +547,8 @@ public class MeetingBOTest extends MifosTestCase{
 	public void testFailureIsValidScheduleDate_MeetingDateNull()throws Exception{
 		startDate=getDate("15/11/2003");
 		occurrences = 5;
-		recurAfer = 1;
-		dayNumber = 29;
+		recurAfer = Short.valueOf("1");
+		dayNumber = Short.valueOf("29");
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, startDate);
 		try{
 			meeting.isValidMeetingDate(null,occurrences);
@@ -560,8 +561,8 @@ public class MeetingBOTest extends MifosTestCase{
 	public void testFailureIsValidScheduleDate_OccurencesNull()throws Exception{
 		startDate=getDate("15/11/2003");
 		occurrences = 5;
-		recurAfer = 1;
-		dayNumber = 29;
+		recurAfer = Short.valueOf("1");
+		dayNumber = Short.valueOf("29");
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, startDate);
 		try{
 			meeting.isValidMeetingDate(getDate("29/02/2004"),0);
@@ -575,8 +576,8 @@ public class MeetingBOTest extends MifosTestCase{
 	public void testIsValidScheduleDate_MonthlyOnDate_5Occurences()throws Exception{
 		startDate=getDate("15/11/2003");
 		occurrences = 5;
-		recurAfer = 1;
-		dayNumber = 29;
+		recurAfer = Short.valueOf("1");
+		dayNumber = Short.valueOf("29");
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, startDate);		
 		assertTrue(meeting.isValidMeetingDate(getDate("29/02/2004"),occurrences));
 		assertFalse(meeting.isValidMeetingDate(getDate("28/02/2004"),occurrences));		
@@ -587,7 +588,7 @@ public class MeetingBOTest extends MifosTestCase{
 		//dates that lies on last friday of every  two months
 		startDate=getDate("15/11/2005");
 		occurrences = 6;
-		recurAfer = 2;
+		recurAfer = Short.valueOf("2");
 		meeting = createMonthlyMeetingOnWeekDay(WeekDay.FRIDAY, RankType.LAST, recurAfer, startDate);
 		assertTrue(meeting.isValidMeetingDate(getDate("31/03/2006"),occurrences));
 		assertFalse(meeting.isValidMeetingDate(getDate("27/10/2006"),occurrences));	
@@ -597,7 +598,7 @@ public class MeetingBOTest extends MifosTestCase{
 	public void testIsValidScheduleDate_EverySixWeek_3Occurences()throws Exception{
 		startDate=getDate("15/11/2005");
 		occurrences = 3;
-		recurAfer = 6;
+		recurAfer = Short.valueOf("6");
 		meeting = createWeeklyMeeting(WeekDay.TUESDAY, recurAfer, startDate);
 		
 		assertTrue(meeting.isValidMeetingDate(getDate("27/12/2005"),occurrences));
@@ -606,7 +607,7 @@ public class MeetingBOTest extends MifosTestCase{
 	
 	//ExpectedList("28/08/2005,07/09/2005,17/09/2005");
 	public void testIsValidScheduleDate_Day_3Occurences()throws Exception{
-		recurAfer = 10;
+		recurAfer = Short.valueOf("10");
 		startDate = getDate("18/08/2005");
 		occurrences = 3;
 		meeting = createDailyMeeting(recurAfer, startDate);
@@ -617,8 +618,8 @@ public class MeetingBOTest extends MifosTestCase{
 	public void testFailureIsValidScheduleDate_WhenMeetingDateNull()throws Exception{
 		startDate=getDate("15/11/2003");
 		endDate=getDate("15/10/2006");
-		recurAfer = 1;
-		dayNumber = 29;
+		recurAfer = Short.valueOf("1");
+		dayNumber = Short.valueOf("29");
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, startDate);
 		try{
 			meeting.isValidMeetingDate(null,endDate);
@@ -631,8 +632,8 @@ public class MeetingBOTest extends MifosTestCase{
 	public void testFailureIsValidScheduleDate_EndDateNull()throws Exception{
 		startDate=getDate("15/11/2003");
 		endDate=getDate("15/10/2006");
-		recurAfer = 1;
-		dayNumber = 29;
+		recurAfer = Short.valueOf("1");
+		dayNumber = Short.valueOf("29");
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, startDate);
 		try{
 			meeting.isValidMeetingDate(getDate("29/02/2004"),null);
@@ -647,8 +648,8 @@ public class MeetingBOTest extends MifosTestCase{
 		//5th day of every three months
 		startDate=getDate("15/11/2005");
 		endDate=getDate("15/10/2006");
-		recurAfer = 3;
-		dayNumber = 5;
+		recurAfer = Short.valueOf("3");
+		dayNumber = Short.valueOf("5");
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, startDate);
 
 		assertTrue(meeting.isValidMeetingDate(getDate("05/09/2006"),endDate));
@@ -657,7 +658,7 @@ public class MeetingBOTest extends MifosTestCase{
 	
 	//ExpectedList("29/08/2006,30/08/2006,31/08/2006,01/09/2006,02/09/2006");	
 	public void testIsValidScheduleDate_31Day()throws Exception{
-		recurAfer = 1;
+		recurAfer = Short.valueOf("1");
 		startDate = getDate("28/08/2006");
 		endDate = getDate("02/09/2006");
 		meeting = createDailyMeeting(recurAfer, startDate);
@@ -670,7 +671,7 @@ public class MeetingBOTest extends MifosTestCase{
 		//dates that lies on second monday of every month
 		startDate=getDate("15/11/2005");
 		endDate=getDate("15/10/2006");
-		recurAfer = 1;
+		recurAfer = Short.valueOf("1");
 		meeting = createMonthlyMeetingOnWeekDay(WeekDay.MONDAY, RankType.SECOND, recurAfer, startDate);
 		assertTrue(meeting.isValidMeetingDate(getDate("13/03/2006"),endDate));
 		assertFalse(meeting.isValidMeetingDate(getDate("15/10/2006"),endDate));
@@ -680,7 +681,7 @@ public class MeetingBOTest extends MifosTestCase{
 	public void testIsValidScheduleDate_EveryThreeWeek()throws Exception{
 		startDate=getDate("15/11/2005");
 		endDate=getDate("01/03/2006");
-		recurAfer = 3;
+		recurAfer = Short.valueOf("3");
 		meeting = createWeeklyMeeting(WeekDay.FRIDAY, recurAfer, startDate);		
 		assertTrue(meeting.isValidMeetingDate(getDate("18/11/2005"),endDate));
 		assertFalse(meeting.isValidMeetingDate(getDate("03/03/2006"),endDate));
@@ -689,8 +690,8 @@ public class MeetingBOTest extends MifosTestCase{
 		
 	public void testGetFailureNextScheduleDate()throws Exception{
 		startDate = getDate("01/01/2006");
-		dayNumber = 1;
-		recurAfer = 2;
+		dayNumber = Short.valueOf("1");
+		recurAfer = Short.valueOf("2");
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, startDate);
 		try{
 			meeting.getNextScheduleDateAfterRecurrence(null);
@@ -702,8 +703,8 @@ public class MeetingBOTest extends MifosTestCase{
 	
 	public void testGetNextScheduleDateAfterRecurrenceOnStartofMonth()throws Exception{
 		startDate = getDate("01/01/2006");
-		dayNumber = 1;
-		recurAfer = 2;
+		dayNumber = Short.valueOf("1");
+		recurAfer = Short.valueOf("2");
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, startDate);
 		Date resultDate = meeting.getNextScheduleDateAfterRecurrence(getDate("01/01/2006"));
 		assertEquals(getDate("01/03/2006"),resultDate);
@@ -711,8 +712,8 @@ public class MeetingBOTest extends MifosTestCase{
 	
 	public void testGetNextScheduleDateAfterRecurrenceOnEndofMonth()throws Exception{
 		startDate = getDate("01/01/2006");
-		dayNumber = 31;
-		recurAfer = 2;
+		dayNumber = Short.valueOf("31");
+		recurAfer = Short.valueOf("2");
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, startDate);
 		Date resultDate = meeting.getNextScheduleDateAfterRecurrence(getDate("01/01/2006"));
 		assertEquals(getDate("31/03/2006"),resultDate);
@@ -720,8 +721,8 @@ public class MeetingBOTest extends MifosTestCase{
 	
 	public void testGetFailurePrevScheduleDate()throws Exception{
 		startDate = getDate("01/01/2006");
-		dayNumber = 31;
-		recurAfer = 2;
+		dayNumber = Short.valueOf("31");
+		recurAfer = Short.valueOf("2");
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, startDate);
 		try{
 			meeting.getNextScheduleDateAfterRecurrence(getDate("01/01/2006"));
@@ -733,8 +734,8 @@ public class MeetingBOTest extends MifosTestCase{
 	
 	public void testGetPrevScheduleDateAfterRecurrenceOnStartofMonth()throws Exception{
 		startDate = getDate("01/01/2006");
-		dayNumber = 1;
-		recurAfer = 2;
+		dayNumber = Short.valueOf("1");
+		recurAfer = Short.valueOf("2");
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, startDate);
 		Date resultDate = meeting.getPrevScheduleDateAfterRecurrence(getDate("01/05/2006"));
 		assertEquals(getDate("01/03/2006"),resultDate);
@@ -742,28 +743,248 @@ public class MeetingBOTest extends MifosTestCase{
 	
 	public void testGetPrevScheduleDateAfterRecurrenceOnEndofMonth()throws Exception{
 		startDate = getDate("01/01/2006");
-		dayNumber = 31;
-		recurAfer = 2;
+		dayNumber = Short.valueOf("31");
+		recurAfer = Short.valueOf("2");
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, startDate);
 		Date resultDate = meeting.getPrevScheduleDateAfterRecurrence(getDate("31/05/2006"));
 		assertEquals(getDate("31/03/2006"),resultDate);
 	}
 	
 	
-	private MeetingBO createDailyMeeting(Short recurAfer, Date startDate){
+	public void testFailureCreateDailyMeeting_recurAfterIsNull(){
+		try{
+			meeting = createDailyMeeting(null,new Date());
+			assertNull(meeting);
+		}catch(MeetingException me){
+			assertTrue(true);
+			assertEquals(MeetingConstants.INVALID_RECURAFTER,me.getKey());
+		}
+	}
+	
+	public void testFailureCreateDailyMeeting_recurAfterInvalid(){
+		try{
+			recurAfer = -1;
+			meeting = createDailyMeeting(recurAfer,new Date());
+			assertNull(meeting);
+		}catch(MeetingException me){
+			assertTrue(true);
+			assertEquals(MeetingConstants.INVALID_RECURAFTER, me.getKey());
+		}
+	}
+	
+	public void testFailureCreateDailyMeeting_startDateIsNull(){
+		try{
+			recurAfer = 1;
+			meeting = createDailyMeeting(recurAfer,null);
+			assertNull(meeting);
+		}catch(MeetingException me){
+			assertTrue(true);
+			assertEquals(MeetingConstants.INVALID_STARTDATE,me.getKey());
+		}
+	}
+	
+	public void testSuccessfulCreateDailyMeeting() throws MeetingException{
+		recurAfer = Short.valueOf("1");
+		meeting = createDailyMeeting(recurAfer,new Date());
+		meeting.save();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		meeting = (MeetingBO)HibernateUtil.getSessionTL().get(MeetingBO.class,meeting.getMeetingId());
+		assertNotNull(meeting);
+		assertEquals(recurAfer,meeting.getMeetingDetails().getRecurAfter());
+		assertEquals(RecurrenceType.DAILY.getValue(), meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());		
+	}
+	
+	public void testFailureCreateWeeklyMeeting_weekDayIsNull(){
+		try{
+			recurAfer = Short.valueOf("1");
+			meeting = createWeeklyMeeting(null, recurAfer, new Date());
+			assertNull(meeting);
+		}catch(MeetingException me){
+			assertTrue(true);
+			assertEquals(MeetingConstants.INVALID_WEEKDAY, me.getKey());
+		}
+	}
+	
+	public void testFailureCreateWeeklyMeeting_recurAfterIsNull(){
+		try{
+			meeting = createWeeklyMeeting(WeekDay.MONDAY, null, new Date());
+			assertNull(meeting);
+		}catch(MeetingException me){
+			assertTrue(true);
+			assertEquals(MeetingConstants.INVALID_RECURAFTER, me.getKey());
+		}
+	}
+	
+	public void testFailureCreateWeeklyMeeting_startDateIsNull(){
+		try{
+			recurAfer = Short.valueOf("1");
+			meeting = createWeeklyMeeting(WeekDay.MONDAY, recurAfer, null);
+			assertNull(meeting);
+		}catch(MeetingException me){
+			assertTrue(true);
+			assertEquals(MeetingConstants.INVALID_STARTDATE,me.getKey());
+		}
+	}
+	
+	public void testFailureCreateWeeklyMeeting_meetingPlaceIsNull(){
+		try{
+			recurAfer = Short.valueOf("1");
+			meeting = new MeetingBO(WeekDay.MONDAY, recurAfer, new Date(), MeetingType.CUSTOMERMEETING, "");
+			assertNull(meeting);
+		}catch(MeetingException me){
+			assertTrue(true);
+			assertEquals(MeetingConstants.INVALID_MEETINGPLACE,me.getKey());
+		}
+	}
+	
+	public void testSuccessfulCreateWeeklyMeeting() throws MeetingException{
+		recurAfer = 2;
+		meeting = createWeeklyMeeting(WeekDay.MONDAY,recurAfer, new Date());
+		meeting.save();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		meeting = (MeetingBO)HibernateUtil.getSessionTL().get(MeetingBO.class,meeting.getMeetingId());
+		assertNotNull(meeting);
+		assertEquals(recurAfer,meeting.getMeetingDetails().getRecurAfter());
+		assertTrue(meeting.isWeekly());
+		assertEquals(WeekDay.MONDAY, meeting.getMeetingDetails().getWeekDay());
+	}
+	
+	public void testFailureCreateMonthlyMeetingOnDate_dayNumberIsNull(){
+		try{
+			recurAfer = Short.valueOf("1");
+			meeting = createMonthlyMeetingOnDate(null, recurAfer, new Date());
+			assertNull(meeting);
+		}catch(MeetingException me){
+			assertTrue(true);
+			assertEquals(MeetingConstants.INVALID_DAYNUMBER_OR_WEEK, me.getKey());
+		}
+	}
+	
+	public void testFailureCreateMonthlyMeetingOnDate_dayNumberIsNInvalid(){
+		try{
+			recurAfer = Short.valueOf("1");
+			dayNumber = Short.valueOf("32");
+			meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, new Date());
+			assertNull(meeting);
+		}catch(MeetingException me){
+			assertTrue(true);
+			assertEquals(MeetingConstants.INVALID_DAYNUMBER, me.getKey());
+		}
+	}
+	
+	public void testFailureCreateMonthlyMeetingOnDate_recurAfterIsNull(){
+		try{
+			dayNumber = Short.valueOf("5");
+			meeting = createMonthlyMeetingOnDate(dayNumber, null, new Date());
+			assertNull(meeting);
+		}catch(MeetingException me){
+			assertTrue(true);
+			assertEquals(MeetingConstants.INVALID_RECURAFTER, me.getKey());
+		}
+	}
+	
+	public void testFailureCreateMonthlyMeetingOnDate_startDateIsNull(){
+		try{
+			recurAfer = Short.valueOf("1");
+			dayNumber = Short.valueOf("5");
+			meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, null);
+			assertNull(meeting);
+		}catch(MeetingException me){
+			assertTrue(true);
+			assertEquals(MeetingConstants.INVALID_STARTDATE, me.getKey());
+		}
+	}
+	
+	public void testSuccessfulCreateMonthlyMeetingOnDate() throws MeetingException{
+		recurAfer = Short.valueOf("1");
+		dayNumber = Short.valueOf("5");
+		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfer, new Date());
+		meeting.save();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		meeting = (MeetingBO)HibernateUtil.getSessionTL().get(MeetingBO.class,meeting.getMeetingId());
+		assertNotNull(meeting);
+		assertEquals(recurAfer,meeting.getMeetingDetails().getRecurAfter());
+		assertTrue(meeting.isMonthlyOnDate());
+		assertEquals(dayNumber, meeting.getMeetingDetails().getDayNumber());
+	}
+	
+	public void testFailureCreateMonthlyMeetingOnWeekDay_weekDayIsNull(){
+		try{
+			recurAfer = Short.valueOf("1");
+			meeting = createMonthlyMeetingOnWeekDay(null,RankType.FIRST,recurAfer, new Date());
+			assertNull(meeting);
+		}catch(MeetingException me){
+			assertTrue(true);
+			assertEquals(MeetingConstants.INVALID_WEEKDAY_OR_WEEKRANK, me.getKey());
+		}
+	}
+	
+	public void testFailureCreateMonthlyMeetingOnWeekDay_weekRankIsNull(){
+		try{
+			recurAfer = Short.valueOf("1");
+			meeting = createMonthlyMeetingOnWeekDay(WeekDay.MONDAY, null, recurAfer, new Date());
+			assertNull(meeting);
+		}catch(MeetingException me){
+			assertTrue(true);
+			assertEquals(MeetingConstants.INVALID_WEEKDAY_OR_WEEKRANK, me.getKey());
+		}
+	}
+	
+	public void testFailureCreateMonthlyMeetingOnWeekDay_recurAfterIsNull(){
+		try{
+			recurAfer = Short.valueOf("1");
+			meeting = createMonthlyMeetingOnWeekDay(WeekDay.MONDAY, RankType.FIRST, null, new Date());
+			assertNull(meeting);
+		}catch(MeetingException me){
+			assertTrue(true);
+			assertEquals(MeetingConstants.INVALID_RECURAFTER, me.getKey());
+		}
+	}
+	
+	public void testFailureCreateMonthlyMeetingOnWeekDay_startDateIsNull(){
+		try{
+			recurAfer = Short.valueOf("1");
+			dayNumber = Short.valueOf("5");
+			meeting = createMonthlyMeetingOnWeekDay(WeekDay.MONDAY,RankType.FIRST,recurAfer, null);
+			assertNull(meeting);
+		}catch(MeetingException me){
+			assertTrue(true);
+			assertEquals(MeetingConstants.INVALID_STARTDATE, me.getKey());
+		}
+	}
+	
+	public void testSuccessfulCreateMonthlyMeetingOnWeekDay() throws MeetingException{
+		recurAfer = Short.valueOf("1");
+		meeting = createMonthlyMeetingOnWeekDay(WeekDay.MONDAY,RankType.FIRST,recurAfer, new Date());
+		meeting.save();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		meeting = (MeetingBO)HibernateUtil.getSessionTL().get(MeetingBO.class,meeting.getMeetingId());
+		assertNotNull(meeting);
+		assertEquals(recurAfer,meeting.getMeetingDetails().getRecurAfter());
+		assertTrue(meeting.isMonthly());
+		assertFalse(meeting.isMonthlyOnDate());
+		assertEquals(WeekDay.MONDAY, meeting.getMeetingDetails().getWeekDay());
+		assertEquals(RankType.FIRST, meeting.getMeetingDetails().getWeekRank());
+	}
+	
+	private MeetingBO createDailyMeeting(Short recurAfer, Date startDate) throws MeetingException{
 		return new MeetingBO(RecurrenceType.DAILY, recurAfer, startDate, MeetingType.CUSTOMERMEETING);
 	}
 	
-	private MeetingBO createWeeklyMeeting(WeekDay weekDay, Short recurAfer, Date startDate){
-		return new MeetingBO(weekDay, recurAfer, startDate, MeetingType.CUSTOMERMEETING);
+	private MeetingBO createWeeklyMeeting(WeekDay weekDay, Short recurAfer, Date startDate) throws MeetingException{
+		return new MeetingBO(weekDay, recurAfer, startDate, MeetingType.CUSTOMERMEETING, "MeetingPlace");
 	}
 	
-	private MeetingBO createMonthlyMeetingOnDate(Short dayNumber, Short recurAfer, Date startDate){
-		return new MeetingBO(dayNumber, recurAfer, startDate, MeetingType.CUSTOMERMEETING);	
+	private MeetingBO createMonthlyMeetingOnDate(Short dayNumber, Short recurAfer, Date startDate) throws MeetingException{
+		return new MeetingBO(dayNumber, recurAfer, startDate, MeetingType.CUSTOMERMEETING,"MeetingPlace");	
 	}
 	
-	private MeetingBO createMonthlyMeetingOnWeekDay(WeekDay weekDay, RankType rank, Short recurAfer, Date startDate){
-		return new MeetingBO(weekDay, rank, recurAfer, startDate, MeetingType.CUSTOMERMEETING);
+	private MeetingBO createMonthlyMeetingOnWeekDay(WeekDay weekDay, RankType rank, Short recurAfer, Date startDate) throws MeetingException{
+		return new MeetingBO(weekDay, rank, recurAfer, startDate, MeetingType.CUSTOMERMEETING, "MeetingPlace");
 	}
 	
 	private List createExpectedList(String dates)throws Exception{

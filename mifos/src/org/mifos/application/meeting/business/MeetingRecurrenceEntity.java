@@ -37,8 +37,10 @@
  */
 package org.mifos.application.meeting.business;
 
+import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.framework.business.PersistentObject;
 
 /**
@@ -69,7 +71,8 @@ public class MeetingRecurrenceEntity extends PersistentObject {
 		this.detailsId = null;
 	}
 	
-	public MeetingRecurrenceEntity(Short dayNumber, WeekDay weekDay, RankType rank, MeetingDetailsEntity meetingDetails) {
+	public MeetingRecurrenceEntity(Short dayNumber, WeekDay weekDay, RankType rank, MeetingDetailsEntity meetingDetails) throws MeetingException {
+		validateFields(dayNumber, weekDay, rank);
 		if(dayNumber!=null)
 			this.dayNumber = dayNumber;
 		else{
@@ -80,7 +83,8 @@ public class MeetingRecurrenceEntity extends PersistentObject {
 		this.detailsId = null;
 	}
 	
-	public MeetingRecurrenceEntity(WeekDay weekDay, MeetingDetailsEntity meetingDetails) {
+	public MeetingRecurrenceEntity(WeekDay weekDay, MeetingDetailsEntity meetingDetails)throws MeetingException {
+		validateWeekDay(weekDay);
 		this.weekDay = new WeekDaysEntity(weekDay);
 		this.meetingDetails = meetingDetails;
 		this.detailsId = null;
@@ -129,5 +133,21 @@ public class MeetingRecurrenceEntity extends PersistentObject {
 		
 	public RankType getWeekRank() {
 		return rankOfDays!=null ? RankType.getRankType(rankOfDays.getId()) : null;
+	}
+	
+	private void validateWeekDay(WeekDay weekDay) throws MeetingException{
+		if(weekDay == null)
+			throw new MeetingException(MeetingConstants.INVALID_WEEKDAY);
+	}
+	
+	private void validateFields(Short dayNumber, WeekDay weekDay, RankType rank) throws MeetingException{
+		if(dayNumber!=null && (dayNumber<1 || dayNumber>31))
+			throw new MeetingException(MeetingConstants.INVALID_DAYNUMBER);
+		
+		if(dayNumber==null && weekDay==null && rank==null)
+			throw new MeetingException(MeetingConstants.INVALID_DAYNUMBER_OR_WEEK);
+
+		if(dayNumber==null && (weekDay==null || rank==null))
+			throw new MeetingException(MeetingConstants.INVALID_WEEKDAY_OR_WEEKRANK);
 	}
 }

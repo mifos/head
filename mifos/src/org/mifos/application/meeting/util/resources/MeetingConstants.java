@@ -135,8 +135,11 @@ public interface MeetingConstants {
 	public final String INVALID_MEETINGDATE="errors.Meeting.invalidMeetingDate";
 	public final String INVALID_STARTDATE="errors.Meeting.invalidStartDate";
 	public final String INVALID_MEETINGTYPE="errors.Meeting.invalidMeetingType";
+	public final String INVALID_MEETINGPLACE="errors.Meeting.invalidMeetingPlace";
 	public final String INVALID_RECURRENCETYPE="errors.Meeting.invalidRecurrenceType";
 	public final String INVALID_RECURAFTER="errors.Meeting.invalidRecurAfter";
+	public final String INVALID_DAYNUMBER="errors.Meeting.invalidDayNumber";
 	public final String INVALID_WEEKDAY="errors.Meeting.invalidWeekDay";
-	public final String INVALID_WEEKRANK="errors.Meeting.invalidWeekRank";
+	public final String INVALID_WEEKDAY_OR_WEEKRANK="errors.Meeting.invalidWeekDayOrWeekRank";
+	public final String INVALID_DAYNUMBER_OR_WEEK="errors.Meeting.invalidDayNumberOrWeek";
 }

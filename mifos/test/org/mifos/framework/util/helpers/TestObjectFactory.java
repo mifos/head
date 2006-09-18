@@ -123,6 +123,7 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.WeekDaysEntity;
+import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
@@ -880,47 +881,28 @@ public class TestObjectFactory {
 	}
 
 	public static MeetingBO createLoanMeeting(MeetingBO customerMeeting) {
-//		MeetingBO meetingToReturn = new MeetingBO();
-//		meetingToReturn.setMeetingStartDate(customerMeeting
-//				.getMeetingStartDate());
-//		meetingToReturn.setMeetingPlace("");
-//		meetingToReturn.setMeetingType(customerMeeting.getMeetingType());
-//		MeetingRecurrenceEntity meetingRecToReturn = new MeetingRecurrenceEntity();
-//		meetingRecToReturn.setDayNumber(customerMeeting.getMeetingDetails()
-//				.getMeetingRecurrence().getDayNumber());
-//		meetingRecToReturn.setRankOfDays(customerMeeting.getMeetingDetails()
-//				.getMeetingRecurrence().getRankOfDays());
-//		meetingRecToReturn.setWeekDay(customerMeeting.getMeetingDetails()
-//				.getMeetingRecurrence().getWeekDay());
-//		MeetingDetailsEntity meetingDetailsToReturn = new MeetingDetailsEntity();
-//		meetingDetailsToReturn.setMeetingRecurrence(meetingRecToReturn);
-//		meetingDetailsToReturn.setRecurAfter(customerMeeting
-//				.getMeetingDetails().getRecurAfter());
-//		meetingDetailsToReturn.setRecurrenceType(customerMeeting
-//				.getMeetingDetails().getRecurrenceType());
-//		meetingToReturn.setMeetingDetails(meetingDetailsToReturn);
-//		return meetingToReturn;
-		
 		MeetingBO meetingToReturn = null;
-		RecurrenceType recurrenceType = RecurrenceType.getRecurrenceType(customerMeeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
-		MeetingType meetingType =  MeetingType.getMeetingType(customerMeeting.getMeetingType().getMeetingTypeId());
-		Short recurAfter = customerMeeting.getMeetingDetails().getRecurAfter();
-		
-		if(recurrenceType.equals(RecurrenceType.MONTHLY)){
-			if(customerMeeting.isMonthlyOnDate())
-				meetingToReturn = new MeetingBO(customerMeeting.getMeetingDetails().getMeetingRecurrence().getDayNumber(),
-						recurAfter, customerMeeting.getMeetingStartDate().getTime(), meetingType);
+		try{			
+			RecurrenceType recurrenceType = RecurrenceType.getRecurrenceType(customerMeeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
+			MeetingType meetingType =  MeetingType.getMeetingType(customerMeeting.getMeetingType().getMeetingTypeId());
+			Short recurAfter = customerMeeting.getMeetingDetails().getRecurAfter();
+			
+			if(recurrenceType.equals(RecurrenceType.MONTHLY)){
+				if(customerMeeting.isMonthlyOnDate())
+					meetingToReturn = new MeetingBO(customerMeeting.getMeetingDetails().getMeetingRecurrence().getDayNumber(),
+							recurAfter, customerMeeting.getMeetingStartDate().getTime(), meetingType,"meetingPlace");
+				else
+					meetingToReturn = new MeetingBO(customerMeeting.getMeetingDetails().getWeekDay(),customerMeeting.getMeetingDetails().getWeekRank(),
+							recurAfter, customerMeeting.getMeetingStartDate().getTime(), meetingType,"meetingPlace");
+			}				
+			else if(recurrenceType.equals(RecurrenceType.WEEKLY))
+				meetingToReturn = new MeetingBO(WeekDay.getWeekDay(customerMeeting.getMeetingDetails()
+						.getMeetingRecurrence().getWeekDayValue().getValue()), recurAfter, customerMeeting.getMeetingStartDate().getTime(), meetingType ,"meetingPlace");
 			else
-				meetingToReturn = new MeetingBO(customerMeeting.getMeetingDetails().getWeekDay(),customerMeeting.getMeetingDetails().getWeekRank(),
-						recurAfter, customerMeeting.getMeetingStartDate().getTime(), meetingType);
-		}				
-		else if(recurrenceType.equals(RecurrenceType.WEEKLY))
-			meetingToReturn = new MeetingBO(WeekDay.getWeekDay(customerMeeting.getMeetingDetails()
-					.getMeetingRecurrence().getWeekDayValue().getValue()), recurAfter, customerMeeting.getMeetingStartDate().getTime(), meetingType );
-		else
-			meetingToReturn = new MeetingBO(recurrenceType, recurAfter, customerMeeting.getMeetingStartDate().getTime(), meetingType);
-		
-		meetingToReturn.setMeetingPlace(customerMeeting.getMeetingPlace());
+				meetingToReturn = new MeetingBO(recurrenceType, recurAfter, customerMeeting.getMeetingStartDate().getTime(), meetingType);
+			
+			meetingToReturn.setMeetingPlace(customerMeeting.getMeetingPlace());
+		}catch(MeetingException me){}
 		return meetingToReturn;
 	}
 
@@ -1011,8 +993,10 @@ public class TestObjectFactory {
 			RecurrenceType meetingFrequency, Short recurAfter) {
 		GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(
 				GLCodeEntity.class, Short.valueOf("24"));
-		MeetingBO meeting = new MeetingBO(meetingFrequency, recurAfter, new Date(),
-				MeetingType.FEEMEETING);
+		MeetingBO meeting = null;
+		try{
+			meeting = new MeetingBO(meetingFrequency, recurAfter, new Date(),MeetingType.FEEMEETING);
+		}catch(MeetingException me){}
 		FeeBO fee = null;
 		// TODO: throw exception
 		try {
@@ -1077,8 +1061,11 @@ public class TestObjectFactory {
 	 */
 	public static MeetingBO getMeetingHelper(int frequency, int recurAfter,
 			int meetingTypeId) {
-		MeetingBO meeting = getMeeting(Integer.toString(frequency), Integer
+		MeetingBO meeting = null;
+		try{
+		 meeting = getMeeting(Integer.toString(frequency), Integer
 				.toString(recurAfter), new Integer(meetingTypeId).shortValue());
+		}catch(Exception e){}
 		return meeting;
 	}
 
@@ -1118,44 +1105,20 @@ public class TestObjectFactory {
 	 * This is a helper method to return MeetingBO object.
 	 */
 	public static MeetingBO getMeeting(String frequency, String recurAfter,
-			Short meetingTypeId) {
-
-//		MeetingBO meeting = new MeetingBO();
-//
-//		MeetingTypeEntity meetingType = new MeetingTypeEntity();
-//		meetingType.setMeetingTypeId(meetingTypeId);
-//		meeting.setMeetingType(meetingType);
-//
-//		MeetingDetailsEntity meetingDetails = new MeetingDetailsEntity();
-//		Short frequencyId = null;
-//		if (null != frequency) {
-//			frequencyId = Short.valueOf(frequency);
-//		}
-//		if (null != recurAfter) {
-//			meetingDetails.setRecurAfter(Short.valueOf(recurAfter));
-//		}
-//
-//		RecurrenceTypeEntity recurrenceType = new RecurrenceTypeEntity();
-//		recurrenceType.setRecurrenceId(frequencyId);
-//
-//		meetingDetails.setRecurrenceType(recurrenceType);
-//		meetingDetails.setMeetingRecurrence(new MeetingRecurrenceEntity());
-//
-//		meeting.setMeetingDetails(meetingDetails);
-//		meeting.setMeetingPlace("Loan Meeting Place");
+			Short meetingTypeId) throws Exception{
 		MeetingBO meeting  = new MeetingBO(RecurrenceType.getRecurrenceType(Short.valueOf(frequency)), 
 				Short.valueOf(recurAfter), new Date(), MeetingType.getMeetingType(meetingTypeId));
 		meeting.setMeetingPlace("Loan Meeting Place");
 		return meeting;
 	}
 
-	public static MeetingBO getMeeting(RecurrenceType recurrenceType, Short dayNumber, Short weekDay, Short dayRank, Short recurAfter,	MeetingType meetingType) {//
+	public static MeetingBO getMeeting(RecurrenceType recurrenceType, Short dayNumber, Short weekDay, Short dayRank, Short recurAfter,	MeetingType meetingType)throws Exception {
 		MeetingBO meeting = null;
 		if(recurrenceType.equals(RecurrenceType.WEEKLY))
-		  meeting =  new MeetingBO(WeekDay.getWeekDay(weekDay), recurAfter, new Date(), meetingType);
+		  meeting =  new MeetingBO(WeekDay.getWeekDay(weekDay), recurAfter, new Date(), meetingType, "meetingPlace");
 		else
 			if(recurrenceType.equals(RecurrenceType.MONTHLY) && dayNumber!=null)
-				meeting =  new MeetingBO(dayNumber, recurAfter, new Date(), meetingType);
+				meeting =  new MeetingBO(dayNumber, recurAfter, new Date(), meetingType, "meetingPlace");
 			else
 				meeting = new MeetingBO(recurrenceType, recurAfter, new Date(), meetingType);
 		

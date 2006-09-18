@@ -79,6 +79,7 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.office.business.OfficeBO;
@@ -344,11 +345,13 @@ public class SavingsBO extends AccountBO {
 					.getTimePerForInstcalc().getMeeting()));
 		} catch (ProductDefinitionException e) {
 			throw new AccountException(e);
+		}catch(MeetingException me){
+			throw new AccountException(me);
 		}
 		// setFreqOfPostIntcalc(getMeeting(getSavingsOffering().getFreqOfPostIntcalc().getMeeting()));
 	}
 
-	private MeetingBO getMeeting(MeetingBO offeringMeeting) {
+	private MeetingBO getMeeting(MeetingBO offeringMeeting) throws MeetingException{
 		RecurrenceType recurrenceType = RecurrenceType.getRecurrenceType(offeringMeeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
 		MeetingType meetingType =  MeetingType.getMeetingType(offeringMeeting.getMeetingType().getMeetingTypeId());
 		return new MeetingBO(recurrenceType, offeringMeeting.getMeetingDetails().getRecurAfter(),
@@ -509,6 +512,8 @@ public class SavingsBO extends AccountBO {
 				throw new AccountException(e);
 			} catch (ProductDefinitionException e) {
 				throw new AccountException(e);
+			}catch(MeetingException me){
+				throw new AccountException(me);
 			}
 			PaymentTypeEntity paymentType=null;
 			try {
@@ -1186,6 +1191,8 @@ public class SavingsBO extends AccountBO {
 			throw new AccountException(e);
 		} catch (ProductDefinitionException e) {
 			throw new AccountException(e);
+		}catch(MeetingException me){
+			throw new AccountException(me);
 		}
 	}
 

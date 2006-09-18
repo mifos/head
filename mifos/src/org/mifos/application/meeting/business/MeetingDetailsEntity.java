@@ -37,8 +37,10 @@
  */
 package org.mifos.application.meeting.business;
 
+import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.framework.business.PersistentObject;
 
 /**
@@ -63,7 +65,8 @@ public class MeetingDetailsEntity extends PersistentObject {
 		meeting = null;
 	}
 	
-	public MeetingDetailsEntity(RecurrenceTypeEntity recurrenceType, Short dayNumber, WeekDay weekDay, RankType rank, Short recurAfter, MeetingBO meeting) {
+	public MeetingDetailsEntity(RecurrenceTypeEntity recurrenceType, Short dayNumber, WeekDay weekDay, RankType rank, Short recurAfter, MeetingBO meeting)throws MeetingException {
+		this.validateFields(recurAfter);
 		this.recurrenceType = recurrenceType;
 		this.recurAfter = recurAfter;
 		this.meeting = meeting;
@@ -120,4 +123,10 @@ public class MeetingDetailsEntity extends PersistentObject {
 	public Short getDayNumber(){
 		return getMeetingRecurrence().getDayNumber();
 	}
+	
+	private void validateFields(Short recurAfter)throws MeetingException{
+		if(recurAfter == null || recurAfter<1)
+			throw new MeetingException(MeetingConstants.INVALID_RECURAFTER);
+	}
+		
 }

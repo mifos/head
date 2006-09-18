@@ -475,7 +475,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 	}
 	
 	
-	private void createAndSetCenterInSession(){
+	private void createAndSetCenterInSession()throws Exception{
 		String name = "manage_center";
 		center = TestObjectFactory.createCenter(
 			name, CustomerStatus.CENTER_ACTIVE.getValue(), "", getMeeting(), 
@@ -498,8 +498,8 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 		verifyNoActionMessages();
 	}
 	
-	private MeetingBO getMeeting(){
-		MeetingBO meeting = new MeetingBO(Short.valueOf("2"),  Short.valueOf("2"), new Date(), MeetingType.CUSTOMERMEETING);
+	private MeetingBO getMeeting()throws Exception{
+		MeetingBO meeting = new MeetingBO(Short.valueOf("2"),  Short.valueOf("2"), new Date(), MeetingType.CUSTOMERMEETING, "MeetingPlace");
 		return meeting;
 	}
 	
