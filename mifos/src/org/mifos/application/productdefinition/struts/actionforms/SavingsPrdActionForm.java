@@ -62,7 +62,10 @@ public class SavingsPrdActionForm extends BaseActionForm {
 	private String depositGLCode;
 
 	private String interestGLCode;
+	
+	private String status;
 
+	private String input;
 
 	
 	public String getPrdOfferingId() {
@@ -225,6 +228,14 @@ public class SavingsPrdActionForm extends BaseActionForm {
 	public void setTimeForInterestCacl(String timeForInterestCacl) {
 		this.timeForInterestCacl = timeForInterestCacl;
 	}
+	
+	public String getInput() {
+		return input;
+	}
+
+	public void setInput(String input) {
+		this.input = input;
+	}
 
 	public SavingsType getSavingsTypeValue() {
 		try {
@@ -294,6 +305,14 @@ public class SavingsPrdActionForm extends BaseActionForm {
 	public Short getInterestGLCodeValue() {
 		return getShortValue(getInterestGLCode());
 	}
+	
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 	@Override
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
@@ -320,7 +339,7 @@ public class SavingsPrdActionForm extends BaseActionForm {
 		prdDefLogger
 				.debug("validate method of Savings Product Action form method called :"
 						+ method);
-		if (method != null && method.equals(Methods.preview.toString())) {
+		if (method != null && (method.equals(Methods.preview.toString()) || method.equals(Methods.previewManage.toString()))) {
 			errors.add(super.validate(mapping, request));
 			Date startingDate = getStartDateValue(getUserContext(request)
 					.getPereferedLocale());
@@ -355,6 +374,31 @@ public class SavingsPrdActionForm extends BaseActionForm {
 				.debug("validate method of Savings Product Action form called and error size:"
 						+ errors.size());
 		return errors;
+	}
+
+	public void clear() {
+		this.prdOfferingId =null;
+		this.prdOfferingName =null;
+		this.prdOfferingShortName =null;
+		this.description =null;
+		this.prdCategory =null;
+		this.startDate =null;
+		this.endDate =null;
+		this.prdApplicableMaster =null;
+		this.savingsType =null;
+		this.recommendedAmount =null;
+		this.recommendedAmntUnit =null;
+		this.maxAmntWithdrawl =null;
+		this.interestRate =null;
+		this.interestCalcType =null;
+		this.timeForInterestCacl =null;
+		this.recurTypeFortimeForInterestCacl =null;
+		this.freqOfInterest =null;
+		this.minAmntForInt =null;
+		this.depositGLCode =null;
+		this.interestGLCode =null;
+		this.status =null;
+		
 	}
 
 }

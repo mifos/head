@@ -33,6 +33,13 @@
 			<forward name="create_failure" path="/pages/application/productdefinition/jsp/CreateSavingsProductPreview.jsp"></forward>
 			<forward name="cancelCreate_success" path="/AdminAction.do?method=load"></forward>
 			<forward name="get_success" path="/pages/application/productdefinition/jsp/Savings_ProductDetails.jsp"></forward>
+			<forward name="manage_success" path="/pages/application/productdefinition/jsp/Edit_SavingsProductPreview.jsp"/>
+			<forward name="previewManage_success" path="/pages/application/productdefinition/jsp/Preview_EditSavingsProduct.jsp"/>
+			<forward name="previewManage_failure" path="/pages/application/productdefinition/jsp/Edit_SavingsProductPreview.jsp"/>
+			<forward name="previousManage_success" path="/pages/application/productdefinition/jsp/Edit_SavingsProductPreview.jsp"/>
+			<forward name="update_success" path="/pages/application/productdefinition/jsp/Savings_ProductDetails.jsp"/>
+			<forward name="update_failure" path="/pages/application/productdefinition/jsp/Preview_EditSavingsProduct.jsp"/>
+		
 		</action>
 	    <!-- M2 Product Category -->
 		<action path="/productCategoryAction" name="productCategoryActionForm" type="org.mifos.application.productdefinition.struts.action.PrdCategoryAction" input="/productCategoryAction.do?method=validate" parameter="method" validate="true" scope="session">

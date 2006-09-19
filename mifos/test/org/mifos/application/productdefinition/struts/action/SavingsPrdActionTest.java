@@ -12,6 +12,7 @@ import java.util.Locale;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
@@ -19,10 +20,12 @@ import org.mifos.application.productdefinition.util.helpers.ProductDefinitionCon
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ResourceLoader;
@@ -32,7 +35,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 
 	private SavingsOfferingBO savingsOffering;
-	
+
 	private String flowKey;
 
 	UserContext userContext = null;
@@ -41,7 +44,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 	protected void tearDown() throws Exception {
 		TestObjectFactory.removeObject(savingsOffering);
 		super.tearDown();
-		
+
 	}
 
 	@Override
@@ -50,8 +53,9 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		try {
 			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
 					.getPath());
-			setConfigFile(ResourceLoader.getURI(
-					"org/mifos/application/productdefinition/struts-config.xml")
+			setConfigFile(ResourceLoader
+					.getURI(
+							"org/mifos/application/productdefinition/struts-config.xml")
 					.getPath());
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
@@ -496,16 +500,15 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.previous_success.toString());
 	}
-	
+
 	public void testValidate() throws Exception {
 		setRequestPathInfo("/savingsproductaction.do");
 		addRequestParameter("method", "validate");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
-		verifyForward(ActionForwards.preview_success.toString());
+		verifyForward(null);
 	}
-
 
 	public void testValidateForPreview() throws Exception {
 		setRequestPathInfo("/savingsproductaction.do");
@@ -530,24 +533,328 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.create_failure.toString());
 	}
-	
+
 	public void testGet() throws Exception {
-		String prdName ="Savings_Kendra";
-		String prdShortName ="SSK";
-		createSavingsOfferingBO( prdName,prdShortName);
+		String prdName = "Savings_Kendra";
+		String prdShortName = "SSK";
+		createSavingsOfferingBO(prdName, prdShortName);
 		setRequestPathInfo("/savingsproductaction.do");
 		addRequestParameter("method", "get");
-		addRequestParameter("prdOfferingId", savingsOffering.getPrdOfferingId().toString());
+		addRequestParameter("prdOfferingId", savingsOffering.getPrdOfferingId()
+				.toString());
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.get_success.toString());
-		assertEquals(prdName , savingsOffering.getPrdOfferingName());
-		assertEquals(prdShortName , savingsOffering.getPrdOfferingShortName());
-		assertEquals(prdShortName , savingsOffering.getPrdOfferingShortName());
+		assertEquals(prdName, savingsOffering.getPrdOfferingName());
+		assertEquals(prdShortName, savingsOffering.getPrdOfferingShortName());
+		assertEquals(prdShortName, savingsOffering.getPrdOfferingShortName());
 		assertEquals(PrdStatus.SAVINGSACTIVE.getValue(), savingsOffering
 				.getPrdStatus().getOfferingStatusId());
 		assertEquals(2, savingsOffering.getSavingsType().getId().shortValue());
+	}
+
+	public void testManage() throws Exception {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		createSavingsOfferingAndPutInSession();
+		setRequestPathInfo("/savingsproductaction.do");
+		addRequestParameter("method", "manage");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.manage_success.toString());
+		List<ProductCategoryBO> productCategories = (List<ProductCategoryBO>) SessionUtils
+				.getAttribute(
+						ProductDefinitionConstants.SAVINGSPRODUCTCATEGORYLIST,
+						request);
+		assertEquals("The size of master data for categories", 1,
+				productCategories.size());
+		for (ProductCategoryBO productCategory : productCategories) {
+			assertNotNull(productCategory.getProductType());
+		}
+		assertEquals(
+				"The size of applicable list",
+				3,
+				((List<MasterDataEntity>) SessionUtils.getAttribute(
+						ProductDefinitionConstants.SAVINGSAPPLFORLIST, request))
+						.size());
+		assertEquals("The size of savings type list", 2,
+				((List<MasterDataEntity>) SessionUtils.getAttribute(
+						ProductDefinitionConstants.SAVINGSTYPELIST, request))
+						.size());
+		assertEquals("The size of reco amount unit list", 2,
+				((List<MasterDataEntity>) SessionUtils.getAttribute(
+						ProductDefinitionConstants.RECAMNTUNITLIST, request))
+						.size());
+		assertEquals("The size of interest calculation types list", 2,
+				((List<MasterDataEntity>) SessionUtils.getAttribute(
+						ProductDefinitionConstants.INTCALCTYPESLIST, request))
+						.size());
+		assertEquals("The size of recurrence type list", 2,
+				((List<MasterDataEntity>) SessionUtils.getAttribute(
+						ProductDefinitionConstants.SAVINGSRECURRENCETYPELIST,
+						request)).size());
+		assertEquals("The size of applicable list", 6,
+				((List<GLCodeEntity>) SessionUtils.getAttribute(
+						ProductDefinitionConstants.SAVINGSDEPOSITGLCODELIST,
+						request)).size());
+		assertEquals("The size of gl codes list", 2,
+				((List<GLCodeEntity>) SessionUtils.getAttribute(
+						ProductDefinitionConstants.SAVINGSINTERESTGLCODELIST,
+						request)).size());
+		assertEquals("The size of status list", 2,
+				((List<GLCodeEntity>) SessionUtils.getAttribute(
+						ProductDefinitionConstants.PRDCATEGORYSTATUSLIST,
+						request)).size());
+
+	}
+	
+	public void testPreviewManageWithOutData() throws Exception {
+		setRequestPathInfo("/savingsproductaction.do");
+		addRequestParameter("method", "previewManage");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		assertEquals("error size" , 12, getErrrorSize());
+		assertEquals("prdOfferingName" , 1, getErrrorSize("prdOfferingName"));
+		assertEquals("prdOfferingShortName" , 1, getErrrorSize("prdOfferingShortName"));
+		assertEquals("prdCategory" , 1, getErrrorSize("prdCategory"));
+		assertEquals("startDate" , 1, getErrrorSize("startDate"));
+		assertEquals("prdApplicableMaster" , 1, getErrrorSize("prdApplicableMaster"));
+		assertEquals("savingsType" , 1, getErrrorSize("savingsType"));
+		assertEquals("interestRate" , 1, getErrrorSize("interestRate"));
+		assertEquals("interestCalcType" , 1, getErrrorSize("interestCalcType"));
+		assertEquals("timeForInterestCacl" , 1, getErrrorSize("freqOfInterest"));
+		assertEquals("freqOfInterest" , 1, getErrrorSize("freqOfInterest"));
+		assertEquals("depositGLCode" , 1, getErrrorSize("depositGLCode"));
+		assertEquals("interestGLCode" , 1, getErrrorSize("interestGLCode"));
+		verifyInputForward();
+	}
+
+	public void testPreviewManageWithPrdApplToGroupAndAppliesToNotEntered()
+			throws Exception {
+		setRequestPathInfo("/savingsproductaction.do");
+		addRequestParameter("method", "previewManage");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter("prdOfferingName", "Savings Offering");
+		addRequestParameter("prdOfferingShortName", "SAVP");
+		addRequestParameter("prdCategory", "2");
+		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
+				.getPereferedLocale()));
+		addRequestParameter("prdApplicableMaster", "2");
+		addRequestParameter("savingsType", "2");
+		addRequestParameter("interestRate", "1");
+		addRequestParameter("interestCalcType", "1");
+		addRequestParameter("timeForInterestCacl", "1");
+		addRequestParameter("recurTypeFortimeForInterestCacl", "2");
+		addRequestParameter("freqOfInterest", "1");
+		addRequestParameter("depositGLCode", "42");
+		addRequestParameter("interestGLCode", "57");
+
+		actionPerform();
+		assertEquals("recommendedAmntUnit" , 1, getErrrorSize("recommendedAmntUnit"));
+		verifyInputForward();
+	}
+
+	public void testPreviewManageWithMandPrdAndAmountNotEntered() throws Exception {
+		setRequestPathInfo("/savingsproductaction.do");
+		addRequestParameter("method", "previewManage");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+		addRequestParameter("prdOfferingName", "Savings Offering");
+		addRequestParameter("prdOfferingShortName", "SAVP");
+		addRequestParameter("prdCategory", "2");
+		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext.getPereferedLocale()));
+		addRequestParameter("prdApplicableMaster", "1");
+		addRequestParameter("savingsType", "1");
+		addRequestParameter("interestRate", "1");
+		addRequestParameter("interestCalcType", "1");
+		addRequestParameter("timeForInterestCacl", "1");
+		addRequestParameter("recurTypeFortimeForInterestCacl", "2");
+		addRequestParameter("freqOfInterest", "1");
+		addRequestParameter("depositGLCode", "42");
+		addRequestParameter("interestGLCode", "57");
+
+		actionPerform();
+		assertEquals("Manadatory amount", 1, getErrrorSize("recommendedAmount"));
+		verifyInputForward();
+	}
+
+	public void testPreviewManageWithMandPrdAndZeroAmountEntered() throws Exception {
+		setRequestPathInfo("/savingsproductaction.do");
+		addRequestParameter("method", "previewManage");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+		addRequestParameter("prdOfferingName", "Savings Offering");
+		addRequestParameter("prdOfferingShortName", "SAVP");
+		addRequestParameter("prdCategory", "2");
+		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
+				.getPereferedLocale()));
+		addRequestParameter("prdApplicableMaster", "1");
+		addRequestParameter("savingsType", "1");
+		addRequestParameter("interestRate", "1");
+		addRequestParameter("interestCalcType", "1");
+		addRequestParameter("timeForInterestCacl", "1");
+		addRequestParameter("recurTypeFortimeForInterestCacl", "2");
+		addRequestParameter("freqOfInterest", "1");
+		addRequestParameter("depositGLCode", "42");
+		addRequestParameter("interestGLCode", "57");
+		addRequestParameter("recommendedAmount", "0.0");
+		addRequestParameter("description", "Savings");
+		addRequestParameter("maxAmntWithdrawl", "10.0");
+		addRequestParameter("minAmntForInt", "10.0");
+
+		actionPerform();
+		assertEquals("Manadatory amount is 0", 1, getErrrorSize("recommendedAmount"));
+		verifyInputForward();
+	}
+
+	public void testPreviewManageWithInterestRateGreaterThanHundred()
+			throws Exception {
+		setRequestPathInfo("/savingsproductaction.do");
+		addRequestParameter("method", "previewManage");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+		addRequestParameter("prdOfferingName", "Savings Offering");
+		addRequestParameter("prdOfferingShortName", "SAVP");
+		addRequestParameter("prdCategory", "2");
+		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
+				.getPereferedLocale()));
+		addRequestParameter("prdApplicableMaster", "1");
+		addRequestParameter("savingsType", "1");
+		addRequestParameter("interestRate", "100.1");
+		addRequestParameter("interestCalcType", "1");
+		addRequestParameter("timeForInterestCacl", "1");
+		addRequestParameter("recurTypeFortimeForInterestCacl", "2");
+		addRequestParameter("freqOfInterest", "1");
+		addRequestParameter("depositGLCode", "42");
+		addRequestParameter("interestGLCode", "57");
+		addRequestParameter("recommendedAmount", "120.0");
+
+		actionPerform();
+		assertEquals("interestRate >100", 1, getErrrorSize("interestRate"));
+		verifyInputForward();
+	}
+
+	public void testPreviewManageWithStartDateLessThanCurrentDate() throws Exception {
+		setRequestPathInfo("/savingsproductaction.do");
+		addRequestParameter("method", "previewManage");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+		addRequestParameter("prdOfferingName", "Savings Offering");
+		addRequestParameter("prdOfferingShortName", "SAVP");
+		addRequestParameter("prdCategory", "2");
+		addRequestParameter("startDate", offSetCurrentDate(-1, userContext
+				.getPereferedLocale()));
+		addRequestParameter("prdApplicableMaster", "1");
+		addRequestParameter("savingsType", "1");
+		addRequestParameter("interestRate", "100.0");
+		addRequestParameter("interestCalcType", "1");
+		addRequestParameter("timeForInterestCacl", "1");
+		addRequestParameter("recurTypeFortimeForInterestCacl", "2");
+		addRequestParameter("freqOfInterest", "1");
+		addRequestParameter("depositGLCode", "42");
+		addRequestParameter("interestGLCode", "57");
+		addRequestParameter("recommendedAmount", "120.0");
+
+		actionPerform();
+		assertEquals("start date", 1, getErrrorSize("startDate"));
+		verifyInputForward();
+	}
+
+	public void testPreviewManageWithEndDateLessThanStartDate() throws Exception {
+		setRequestPathInfo("/savingsproductaction.do");
+		addRequestParameter("method", "previewManage");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+		addRequestParameter("prdOfferingName", "Savings Offering");
+		addRequestParameter("prdOfferingShortName", "SAVP");
+		addRequestParameter("prdCategory", "2");
+		addRequestParameter("startDate", offSetCurrentDate(0, userContext
+				.getPereferedLocale()));
+		addRequestParameter("endDate", offSetCurrentDate(-1, userContext
+				.getPereferedLocale()));
+		addRequestParameter("prdApplicableMaster", "1");
+		addRequestParameter("savingsType", "1");
+		addRequestParameter("interestRate", "100.0");
+		addRequestParameter("interestCalcType", "1");
+		addRequestParameter("timeForInterestCacl", "1");
+		addRequestParameter("recurTypeFortimeForInterestCacl", "2");
+		addRequestParameter("freqOfInterest", "1");
+		addRequestParameter("depositGLCode", "42");
+		addRequestParameter("interestGLCode", "57");
+		addRequestParameter("recommendedAmount", "120.0");
+
+		actionPerform();
+		assertEquals("endDate", 1, getErrrorSize("endDate"));
+		verifyInputForward();
+	}
+
+	public void testPreviewManage() throws Exception {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		createSavingsOfferingAndPutInSession();
+		setRequestPathInfo("/savingsproductaction.do");
+		addRequestParameter("method", "manage");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.manage_success.toString());
+		setRequestPathInfo("/savingsproductaction.do");
+		addRequestParameter("method", "previewManage");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter("prdOfferingName", "Savings Offering");
+		addRequestParameter("prdOfferingShortName", "SAVP");
+		addRequestParameter("prdCategory", "2");
+		addRequestParameter("startDate", offSetCurrentDate(0, userContext
+				.getPereferedLocale()));
+		addRequestParameter("endDate", offSetCurrentDate(+1, userContext
+				.getPereferedLocale()));
+		addRequestParameter("prdApplicableMaster", "1");
+		addRequestParameter("savingsType", "1");
+		addRequestParameter("interestRate", "100.0");
+		addRequestParameter("interestCalcType", "1");
+		addRequestParameter("timeForInterestCacl", "1");
+		addRequestParameter("recurTypeFortimeForInterestCacl", "2");
+		addRequestParameter("freqOfInterest", "1");
+		addRequestParameter("depositGLCode", "42");
+		addRequestParameter("interestGLCode", "57");
+		addRequestParameter("recommendedAmount", "120.0");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.previewManage_success.toString());
+	}
+	
+	public void testPreviewManageFlowFailure() throws Exception {
+		try{
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		createSavingsOfferingAndPutInSession();
+		setRequestPathInfo("/savingsproductaction.do");
+		addRequestParameter("method", "previewManage");
+		addRequestParameter("prdOfferingName", "Savings Offering");
+		addRequestParameter("prdOfferingShortName", "SAVP");
+		addRequestParameter("prdCategory", "2");
+		addRequestParameter("startDate", offSetCurrentDate(0, userContext
+				.getPereferedLocale()));
+		addRequestParameter("endDate", offSetCurrentDate(+1, userContext
+				.getPereferedLocale()));
+		addRequestParameter("prdApplicableMaster", "1");
+		addRequestParameter("savingsType", "1");
+		addRequestParameter("interestRate", "100.0");
+		addRequestParameter("interestCalcType", "1");
+		addRequestParameter("timeForInterestCacl", "1");
+		addRequestParameter("recurTypeFortimeForInterestCacl", "2");
+		addRequestParameter("freqOfInterest", "1");
+		addRequestParameter("depositGLCode", "42");
+		addRequestParameter("interestGLCode", "57");
+		addRequestParameter("recommendedAmount", "120.0");
+		actionPerform();
+		}
+		catch(PageExpiredException pe){
+			assertTrue(true);
+			assertEquals(ExceptionConstants.PAGEEXPIREDEXCEPTION, pe.getKey());
+		}
 	}
 
 	private String offSetCurrentDate(int noOfDays, Locale locale) {
@@ -565,17 +872,26 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 						.toPattern());
 		return DateHelper.convertDbToUserFmt(currentDate.toString(), userfmt);
 	}
-	
+
 	private SavingsOfferingBO createSavingsOfferingBO(String prdOfferingName,
 			String shortName) {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		savingsOffering = TestObjectFactory.createSavingsOffering(prdOfferingName,
-				shortName, (short) 1, new Date(System.currentTimeMillis()),
-				(short) 2, 300.0, (short) 1, 1.2, 200.0, 200.0, (short) 2,
-				(short) 1, meetingIntCalc, meetingIntPost);
+		savingsOffering = TestObjectFactory.createSavingsOffering(
+				prdOfferingName, shortName, (short) 1, new Date(System
+						.currentTimeMillis()), (short) 2, 300.0, (short) 1,
+				1.2, 200.0, 200.0, (short) 2, (short) 1, meetingIntCalc,
+				meetingIntPost);
 		return savingsOffering;
+	}
+
+	private void createSavingsOfferingAndPutInSession() throws Exception {
+		String prdName = "Savings_Kendra";
+		String prdShortName = "SSK";
+		createSavingsOfferingBO(prdName, prdShortName);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savingsOffering,
+				request);
 	}
 }

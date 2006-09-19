@@ -19,8 +19,17 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.business.service.OfficeBusinessService;
+import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.business.PersonnelStatusEntity;
+import org.mifos.application.personnel.business.service.PersonnelBusinessService;
+import org.mifos.application.personnel.struts.actionforms.PersonActionForm;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
+import org.mifos.application.productdefinition.business.PrdStateEntity;
+import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
@@ -29,6 +38,7 @@ import org.mifos.application.productdefinition.business.service.SavingsPrdBusine
 import org.mifos.application.productdefinition.dao.SavingsProductDAO;
 import org.mifos.application.productdefinition.struts.actionforms.SavingsPrdActionForm;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.valueobjects.PrdState;
 import org.mifos.application.productdefinition.util.valueobjects.SavingsOffering;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
@@ -40,6 +50,7 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -78,19 +89,11 @@ public class SavingsPrdAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		prdDefLogger.debug("start validate method of Savings Product Action");
-		String method = (String) request
-				.getAttribute(ProductDefinitionConstants.METHODCALLED);
-		if (method != null) {
-			if (method.equals(Methods.preview.toString())) {
-				return mapping.findForward(ActionForwards.preview_failure
-						.toString());
-			} else if (method.equals(Methods.create.toString())) {
-				return mapping.findForward(ActionForwards.create_failure
-						.toString());
-			}
-		}
-		prdDefLogger.debug("preview validate of Savings Product Action called");
-		return mapping.findForward(ActionForwards.preview_success.toString());
+		String forward=null;
+		String method = (String) request.getAttribute("methodCalled");
+		if(method!=null)
+			forward = method + "_failure";
+		return mapping.findForward(forward);
 	}
 
 	@TransactionDemarcate(joinToken = true)
@@ -179,7 +182,7 @@ public class SavingsPrdAction extends BaseAction {
 				.toString());
 	}
 
-@TransactionDemarcate(saveToken = true)
+	@TransactionDemarcate(saveToken = true)
 	public ActionForward get(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -210,6 +213,81 @@ public class SavingsPrdAction extends BaseAction {
 			SessionUtils.setContext(ProductDefinitionConstants.GETPATHSAVINGSPRODUCT ,context,request.getSession() );
 					
 		}
+		
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward manage(ActionMapping mapping, ActionForm form,
+				HttpServletRequest request, HttpServletResponse response)
+				throws Exception {
+			SavingsPrdActionForm actionform = (SavingsPrdActionForm) form;
+			actionform.clear();
+			SavingsOfferingBO savingsOff = (SavingsOfferingBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+			SavingsOfferingBO savingsOffering = ((SavingsPrdBusinessService)getService()).getSavingsProduct(savingsOff.getPrdOfferingId());
+			savingsOff = null;
+			savingsOffering.getPrdStatus().getPrdState().setLocaleId(getUserContext(request).getLocaleId());
+			SessionUtils.setAttribute(Constants.BUSINESS_KEY,savingsOffering, request);
+			loadUpdateMasterData(request);
+			setValuesInActionForm(actionform,request);
+			return mapping.findForward(ActionForwards.manage_success.toString());
+	}
+	
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward previewManage(ActionMapping mapping, ActionForm form,
+				HttpServletRequest request, HttpServletResponse response)
+				throws Exception {
+		return mapping.findForward(ActionForwards.previewManage_success.toString());
+	}
+	
+	private void setValuesInActionForm(SavingsPrdActionForm actionForm, HttpServletRequest request) throws Exception{
+		SavingsOfferingBO savingsOffering = (SavingsOfferingBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+		actionForm.setPrdOfferingId(savingsOffering.getPrdOfferingId().toString());
+		actionForm.setPrdOfferingName(savingsOffering.getPrdOfferingName());
+		actionForm.setPrdOfferingShortName(savingsOffering.getPrdOfferingShortName());
+		actionForm.setDescription(savingsOffering.getDescription());
+		if(savingsOffering.getPrdCategory()!=null)
+			actionForm.setPrdCategory(savingsOffering.getPrdCategory().getProductCategoryID().toString());
+		if (savingsOffering.getStartDate() != null)
+			actionForm.setStartDate(DateHelper.getUserLocaleDate(getUserContext(request).getPereferedLocale(),savingsOffering.getStartDate().toString()));
+		if (savingsOffering.getEndDate() != null)
+			actionForm.setEndDate(DateHelper.getUserLocaleDate(	getUserContext(request).getPereferedLocale(),savingsOffering.getEndDate().toString()));
+		if(savingsOffering.getPrdApplicableMaster()!=null)
+			actionForm.setPrdApplicableMaster(savingsOffering.getPrdApplicableMaster().getId().toString());
+		if(savingsOffering.getSavingsType()!=null)
+			actionForm.setSavingsType(savingsOffering.getSavingsType().getId().toString());
+		if(savingsOffering.getRecommendedAmount()!=null)
+			actionForm.setRecommendedAmount(savingsOffering.getRecommendedAmount().toString()); 
+		if(savingsOffering.getRecommendedAmntUnit()!=null)
+			actionForm.setRecommendedAmntUnit(savingsOffering.getRecommendedAmntUnit().getId().toString());
+		if(savingsOffering.getMaxAmntWithdrawl()!=null)
+			actionForm.setMaxAmntWithdrawl(savingsOffering.getMaxAmntWithdrawl().toString()); 
+		if(savingsOffering.getPrdStatus()!=null)
+			actionForm.setStatus(savingsOffering.getPrdStatus().getPrdState().getId().toString()); 
+		if(savingsOffering.getInterestRate()!=null)
+			actionForm.setInterestRate(savingsOffering.getInterestRate().toString());
+		if(savingsOffering.getInterestCalcType()!=null)
+			actionForm.setInterestCalcType(savingsOffering.getInterestCalcType().getId().toString());
+		if(savingsOffering.getTimePerForInstcalc()!=null && savingsOffering.getTimePerForInstcalc().getMeeting()!=null && savingsOffering.getTimePerForInstcalc().getMeeting().getMeetingDetails()!=null){
+			actionForm.setTimeForInterestCacl(savingsOffering.getTimePerForInstcalc().getMeeting().getMeetingDetails().getRecurAfter().toString());
+			actionForm.setRecurTypeFortimeForInterestCacl(savingsOffering.getTimePerForInstcalc().getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId().toString());
+		}
+		if(savingsOffering.getFreqOfPostIntcalc()!=null && savingsOffering.getFreqOfPostIntcalc().getMeeting()!=null && savingsOffering.getFreqOfPostIntcalc().getMeeting().getMeetingDetails()!=null){
+			actionForm.setFreqOfInterest(savingsOffering.getFreqOfPostIntcalc().getMeeting().getMeetingDetails().getRecurAfter().toString());
+		}
+		if(savingsOffering.getMinAmntForInt()!=null)
+			actionForm.setMinAmntForInt(savingsOffering.getMinAmntForInt().toString()); 
+		if(savingsOffering.getDepositGLCode()!=null)
+			actionForm.setDepositGLCode(savingsOffering.getDepositGLCode().getGlcodeId().toString()); 
+		if(savingsOffering.getInterestGLCode()!=null)
+			actionForm.setInterestGLCode(savingsOffering.getInterestGLCode().getGlcodeId().toString()); 
+	}
+
+	private void loadUpdateMasterData(HttpServletRequest request) throws Exception{
+		loadMasterData(request);
+		SessionUtils.setAttribute(ProductDefinitionConstants.PRDCATEGORYSTATUSLIST,
+				getMasterEntities(PrdStateEntity.class,
+						getUserContext(request).getLocaleId()), request);
+	}
+	
+	
 
 	private void loadMasterData(HttpServletRequest request) throws Exception {
 		prdDefLogger

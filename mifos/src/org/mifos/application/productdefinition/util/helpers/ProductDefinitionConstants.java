@@ -197,6 +197,7 @@ public interface ProductDefinitionConstants {
 	public String LOANINTERESTGLCODELIST="interestGLCodes";
 	public String LOANPRODUCTACTIONFORM="loanproductactionform";
 	public String LOANPRDGLOBALOFFERINGNUM="loanprdglobalofferingnum";
-
+	public String ERROR_MANDATORY = "errors.mandatory";
+	public String ERROR_SELECT = "errors.select";
 }
 
