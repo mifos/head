@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.validator.ValidatorActionForm;
+import org.mifos.application.configuration.business.MifosConfiguration;
+import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
@@ -106,5 +108,14 @@ public class BaseActionForm extends ValidatorActionForm {
 	protected UserContext getUserContext(HttpServletRequest request) {
 		return (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
+	}
+	
+	protected String getLabel(String key, HttpServletRequest request) {
+		try {
+			return MifosConfiguration.getInstance().getLabel(key,
+					getUserContext(request).getPereferedLocale());
+		} catch (ConfigurationException e) {
+			return null;
+		}
 	}
 }

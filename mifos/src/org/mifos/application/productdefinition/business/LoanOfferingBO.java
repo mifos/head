@@ -52,6 +52,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
+import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -401,11 +402,12 @@ public class LoanOfferingBO extends PrdOfferingBO {
 				|| (defInterestRate < minInterestRate || defInterestRate > maxInterestRate)
 				|| (minNoInstallments > maxNoInstallments)
 				|| (defNoInstallments < minNoInstallments || defNoInstallments > maxNoInstallments)
-				|| (!intDedDisbursement && gracePeriodType == null)
 				|| (!intDedDisbursement
+						&& gracePeriodType != null
 						&& !gracePeriodType.getId().equals(
-								GraceTypeConstants.NONE.getValue()) && gracePeriodDuration == null))
+								GraceTypeConstants.NONE.getValue()) && gracePeriodDuration == null)) {
 			throw new ProductDefinitionException("errors.create");
+		}
 	}
 
 	private void setGracePeriodTypeAndDuration(boolean intDedDisbursement,
@@ -413,14 +415,13 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		prdLogger
 				.debug("Loan offering setGracePeriodTypeAndDuration called - intDedDisbursement:"
 						+ intDedDisbursement);
-		if (intDedDisbursement) {
+		if (intDedDisbursement
+				|| gracePeriodType == null
+				|| gracePeriodType.getId().equals(
+						GraceTypeConstants.NONE.getValue())) {
 			this.gracePeriodType = new GracePeriodTypeEntity(
 					GraceTypeConstants.NONE);
-			this.gracePeriodDuration = (short)0;
-		} else if (gracePeriodType.getId().equals(
-				GraceTypeConstants.NONE.getValue())) {
-			this.gracePeriodType = gracePeriodType;
-			this.gracePeriodDuration = (short)0;
+			this.gracePeriodDuration = (short) 0;
 		} else {
 			this.gracePeriodType = gracePeriodType;
 			this.gracePeriodDuration = gracePeriodDuration;
@@ -446,7 +447,8 @@ public class LoanOfferingBO extends PrdOfferingBO {
 								.getRecurrenceId()))
 			return true;
 		else
-			throw new ProductDefinitionException("errors.addfee");
+			throw new ProductDefinitionException(
+					ProductDefinitionConstants.ERRORFEEFREQUENCY);
 
 	}
 }

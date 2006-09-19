@@ -323,8 +323,10 @@ public class MifosSelect extends BodyTagSupport {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-        Map inputCopy = new HashMap(inMap);
+		
+		Map inputCopy = new HashMap();
+		if(inMap != null)
+			inputCopy = new HashMap(inMap);
         if(outMap != null) {
         	Set input = inMap.keySet();
         	Set output = outMap.keySet();
@@ -390,7 +392,11 @@ public class MifosSelect extends BodyTagSupport {
      */
     private void init() {
         rawbutton[0].setName("MoveRight");
-        rawselect[0].setName("LeftSelect");
+        if(getProperty1() != null)
+        	rawselect[0].setName(getProperty1());
+        else {
+        	rawselect[0].setName("LeftSelect");
+        }
         rawselect[0].setStyle(getSelectStyle());
         rawselect[1].setStyle(getSelectStyle());
         rawselect[1].setName(getProperty());

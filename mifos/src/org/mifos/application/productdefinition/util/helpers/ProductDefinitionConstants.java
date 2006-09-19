@@ -199,5 +199,21 @@ public interface ProductDefinitionConstants {
 	public String LOANPRDGLOBALOFFERINGNUM="loanprdglobalofferingnum";
 	public String ERROR_MANDATORY = "errors.mandatory";
 	public String ERROR_SELECT = "errors.select";
+	
+	public String LOANPRDFEESELECTEDLIST="loanprdfeeselectedlist";
+	public String LOANPRDFUNDSELECTEDLIST="loanprdfundselectedlist";
+	public String LOANPRDFEE="loanprdfee";
+	
+	public String RATETYPE="rate type";
+	public String RATE="rate";
+	public String MAX="Max";
+	public String MIN="Min";
+	public String DEFAULT="Default ";
+
+	public String ERRORSSELECTCONFIG="errors.selectconfig";
+	public String ERRORSENTERCONFIG="errors.mandatoryconfig";
+	public String ERRORSDEFMINMAXCONFIG="errors.defMinMaxconfig";
+	public String ERRORSMINMAXINTCONFIG="errors.maxminIntRateconfig";
+	public String ERRORSDEFINTCONFIG="errors.defIntRateconfig";
 }
 

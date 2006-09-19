@@ -53,6 +53,7 @@ import org.mifos.application.accounts.financial.util.helpers.FinancialActionCons
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
 import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.master.business.InterestTypesEntity;
@@ -201,7 +202,7 @@ public class LoanPrdAction extends BaseAction {
 								request), loanPrdActionForm
 								.getLoanOfferingFunds()),
 				getFeeList((List<FeeBO>) SessionUtils.getAttribute(
-						ProductDefinitionConstants.LOANFEESLIST, request),
+						ProductDefinitionConstants.LOANPRDFEE, request),
 						loanPrdActionForm.getPrdOfferinFees()), new MeetingBO(
 						RecurrenceType.getRecurrenceType(loanPrdActionForm
 								.getFreqOfInstallmentsValue()),
@@ -233,6 +234,7 @@ public class LoanPrdAction extends BaseAction {
 		FeeBusinessService feeService = (FeeBusinessService) ServiceFactory
 				.getInstance().getBusinessService(
 						BusinessServiceName.FeesService);
+		List<FeeBO> fees = feeService.getAllAppllicableFeeForLoanCreation();
 		Short localeId = getUserContext(request).getLocaleId();
 		SessionUtils.setAttribute(
 				ProductDefinitionConstants.LOANPRODUCTCATEGORYLIST, service
@@ -253,7 +255,7 @@ public class LoanPrdAction extends BaseAction {
 		SessionUtils.setAttribute(ProductDefinitionConstants.SRCFUNDSLIST,
 				service.getSourcesOfFund(), request);
 		SessionUtils.setAttribute(ProductDefinitionConstants.LOANFEESLIST,
-				feeService.getAllAppllicableFeeForLoanCreation(), request);
+				getFeeViewList(fees), request);
 		SessionUtils.setAttribute(
 				ProductDefinitionConstants.LOANPRICIPALGLCODELIST, getGLCodes(
 						FinancialActionConstants.PRINCIPALPOSTING,
@@ -262,6 +264,14 @@ public class LoanPrdAction extends BaseAction {
 				ProductDefinitionConstants.LOANINTERESTGLCODELIST, getGLCodes(
 						FinancialActionConstants.INTERESTPOSTING,
 						FinancialConstants.CREDIT), request);
+		SessionUtils.setAttribute(ProductDefinitionConstants.LOANPRDFEE, fees,
+				request);
+		SessionUtils.setAttribute(
+				ProductDefinitionConstants.LOANPRDFEESELECTEDLIST,
+				new ArrayList<FeeView>(), request);
+		SessionUtils.setAttribute(
+				ProductDefinitionConstants.LOANPRDFUNDSELECTEDLIST,
+				new ArrayList<Fund>(), request);
 		prdDefLogger
 				.debug("Load master data method of Loan Product Action called");
 	}
@@ -323,6 +333,16 @@ public class LoanPrdAction extends BaseAction {
 			if (fund.getFundId().equals(getShortValue(fundSelected)))
 				return fund;
 		return null;
+	}
+
+	private List<FeeView> getFeeViewList(List<FeeBO> fees) {
+		List<FeeView> feeViews = new ArrayList<FeeView>();
+		if (fees != null && fees.size() > 0) {
+			for (FeeBO fee : fees) {
+				feeViews.add(new FeeView(fee));
+			}
+		}
+		return feeViews;
 	}
 
 	private List<FeeBO> getFeeList(List<FeeBO> fees, String[] feesSelected) {

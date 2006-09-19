@@ -605,6 +605,20 @@ public class ActivityMapper {
 				SecurityConstants.EDIT_LOAN_PRODUCT);
 		activityMap.put("/loanprdaction-update",
 				SecurityConstants.EDIT_LOAN_PRODUCT);
+		
+		activityMap.put("/loanproductaction-load",SecurityConstants.DEFINE_NEW_LOAN_PRODUCT_INSTANCE);
+		activityMap.put("/loanproductaction-preview", SecurityConstants.VIEW);
+		activityMap.put("/loanproductaction-previous", SecurityConstants.VIEW);
+		activityMap.put("/loanproductaction-cancelCreate", SecurityConstants.VIEW);
+		activityMap.put("/loanproductaction-validate", SecurityConstants.VIEW);
+		activityMap.put("/loanproductaction-create",SecurityConstants.DEFINE_NEW_LOAN_PRODUCT_INSTANCE);
+		
+		activityMap.put("/loanproductaction-get", SecurityConstants.VIEW);
+		activityMap.put("/loanproductaction-editPreview", SecurityConstants.VIEW);
+		activityMap.put("/loanproductaction-editPrevious", SecurityConstants.VIEW);
+		activityMap.put("/loanproductaction-cancelEdit", SecurityConstants.VIEW);
+		activityMap.put("/loanproductaction-manage",SecurityConstants.EDIT_LOAN_PRODUCT);
+		activityMap.put("/loanproductaction-update",SecurityConstants.EDIT_LOAN_PRODUCT);
 
 		// Fee mapping
 		activityMap.put("/feesAction-search", SecurityConstants.VIEW);

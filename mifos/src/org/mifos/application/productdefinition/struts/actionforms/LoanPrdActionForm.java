@@ -38,21 +38,31 @@
 package org.mifos.application.productdefinition.struts.actionforms;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.business.FeeView;
+import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.struts.tags.DateHelper;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class LoanPrdActionForm extends BaseActionForm {
 	private MifosLogger prdDefLogger = MifosLogManager
@@ -379,71 +389,72 @@ public class LoanPrdActionForm extends BaseActionForm {
 	public Short getPrdApplicableMasterValue() {
 		return getShortValue(getPrdApplicableMaster());
 	}
-	
+
 	public Short getGracePeriodTypeValue() {
 		return getShortValue(getGracePeriodType());
 	}
-	
+
 	public Short getGracePeriodDurationValue() {
 		return getShortValue(getGracePeriodDuration());
 	}
-	
+
 	public Short getInterestTypesValue() {
 		return getShortValue(getInterestTypes());
 	}
-	
+
 	public Money getMaxLoanAmountValue() {
 		return getMoney(getMaxLoanAmount());
 	}
-	
+
 	public Money getMinLoanAmountValue() {
 		return getMoney(getMinLoanAmount());
 	}
-	
+
 	public Money getDefaultLoanAmountValue() {
-		return getMoney(getDefaultLoanAmount());
+		return (StringUtils.isNullAndEmptySafe(getDefaultLoanAmount()) && !getDefaultLoanAmount()
+				.trim().equals(".")) ? new Money(getDefaultLoanAmount()) : null;
 	}
-	
+
 	public Double getMaxInterestRateValue() {
 		return getDoubleValue(getMaxInterestRate());
 	}
-	
+
 	public Double getMinInterestRateValue() {
 		return getDoubleValue(getMinInterestRate());
 	}
-	
+
 	public Double getDefInterestRateValue() {
 		return getDoubleValue(getDefInterestRate());
 	}
-	
+
 	public Short getMaxNoInstallmentsValue() {
 		return getShortValue(getMaxNoInstallments());
 	}
-	
+
 	public Short getMinNoInstallmentsValue() {
 		return getShortValue(getMinNoInstallments());
 	}
-	
+
 	public Short getDefNoInstallmentsValue() {
 		return getShortValue(getDefNoInstallments());
 	}
-	
+
 	public boolean isLoanCounterValue() {
 		return getBooleanValue(getLoanCounter());
 	}
-	
+
 	public boolean isIntDedAtDisbValue() {
 		return getBooleanValue(getIntDedDisbursementFlag());
 	}
-	
+
 	public boolean isPrinDueLastInstValue() {
 		return getBooleanValue(getPrinDueLastInstFlag());
 	}
-	
+
 	public Short getRecurAfterValue() {
 		return getShortValue(getRecurAfter());
 	}
-	
+
 	public Short getFreqOfInstallmentsValue() {
 		return getShortValue(getFreqOfInstallments());
 	}
@@ -457,11 +468,17 @@ public class LoanPrdActionForm extends BaseActionForm {
 		if (method != null && method.equals(Methods.load.toString())) {
 			startDate = DateHelper.getCurrentDate(getUserContext(request)
 					.getPereferedLocale());
+			recurAfter = "1";
+			minNoInstallments = "1";
 		}
 		if (method != null && method.equals(Methods.preview.toString())) {
 			intDedDisbursementFlag = null;
 			prinDueLastInstFlag = null;
 			loanCounter = null;
+			prdOfferinFees = null;
+			loanOfferingFunds = null;
+			gracePeriodType = null;
+			gracePeriodDuration = null;
 		}
 		prdDefLogger
 				.debug("reset method of Savings Product Action form method called ");
@@ -482,16 +499,27 @@ public class LoanPrdActionForm extends BaseActionForm {
 			Date endingDate = getEndDateValue(getUserContext(request)
 					.getPereferedLocale());
 			if (startingDate != null
-					&& DateUtils
+					&& ((DateUtils.getDateWithoutTimeStamp(
+							startingDate.getTime()).compareTo(
+							DateUtils.getCurrentDateWithoutTimeStamp()) < 0) || (DateUtils
 							.getDateWithoutTimeStamp(startingDate.getTime())
 							.compareTo(
-									DateUtils.getCurrentDateWithoutTimeStamp()) < 0)
+									DateUtils
+											.getCurrentDateOfNextYearWithOutTimeStamp()) > 0)))
 				addError(errors, "startDate",
 						ProductDefinitionConstants.INVALIDSTARTDATE);
 			if (startingDate != null && endingDate != null
 					&& startingDate.compareTo(endingDate) >= 0)
 				addError(errors, "endDate",
 						ProductDefinitionConstants.INVALIDENDDATE);
+			if (StringUtils.isNullOrEmpty(getInterestTypes()))
+				addError(errors, "interestTypes",
+						ProductDefinitionConstants.ERRORSSELECTCONFIG,
+						getLabel(ConfigurationConstants.INTEREST, request),
+						ProductDefinitionConstants.RATETYPE);
+			validateMinMaxDefInterestRates(errors, request);
+			setSelectedFeesAndFundsAndValidateForFrequency(request, errors);
+
 		}
 		if (method != null && !method.equals(Methods.validate.toString())) {
 			request.setAttribute(ProductDefinitionConstants.METHODCALLED,
@@ -504,4 +532,173 @@ public class LoanPrdActionForm extends BaseActionForm {
 
 	}
 
+	private void setSelectedFeesAndFundsAndValidateForFrequency(
+			HttpServletRequest request, ActionErrors errors) {
+		request.setAttribute(Constants.CURRENTFLOWKEY, request
+				.getParameter(Constants.CURRENTFLOWKEY));
+		List<FeeView> feeViews = new ArrayList<FeeView>();
+		try {
+			if (getPrdOfferinFees() != null && getPrdOfferinFees().length > 0) {
+
+				List<FeeBO> fees = (List<FeeBO>) SessionUtils.getAttribute(
+						ProductDefinitionConstants.LOANPRDFEE, request);
+				for (String selectedFee : getPrdOfferinFees()) {
+					FeeBO fee = getFeeFromList(fees, selectedFee);
+					if (fee != null) {
+						isFrequencyMatchingOfferingFrequency(fee, errors);
+						feeViews.add(new FeeView(fee));
+
+					}
+				}
+			}
+			SessionUtils.setAttribute(
+					ProductDefinitionConstants.LOANPRDFEESELECTEDLIST,
+					feeViews, request);
+		} catch (PageExpiredException e) {
+		}
+		List<Fund> selectedFunds = new ArrayList<Fund>();
+		try {
+			if (getLoanOfferingFunds() != null
+					&& getLoanOfferingFunds().length > 0) {
+
+				List<Fund> funds = (List<Fund>) SessionUtils.getAttribute(
+						ProductDefinitionConstants.SRCFUNDSLIST, request);
+				for (String selectedFund : getLoanOfferingFunds()) {
+					Fund fund = getFundFromList(funds, selectedFund);
+					if (fund != null)
+						selectedFunds.add(fund);
+				}
+			}
+			SessionUtils.setAttribute(
+					ProductDefinitionConstants.LOANPRDFUNDSELECTEDLIST,
+					selectedFunds, request);
+		} catch (PageExpiredException e) {
+		}
+	}
+
+	private FeeBO getFeeFromList(List<FeeBO> fees, String feeSelected) {
+		for (FeeBO fee : fees)
+			if (fee.getFeeId().equals(getShortValue(feeSelected)))
+				return fee;
+		return null;
+	}
+
+	private Fund getFundFromList(List<Fund> funds, String fundSelected) {
+		for (Fund fund : funds)
+			if (fund.getFundId().equals(getShortValue(fundSelected)))
+				return fund;
+		return null;
+	}
+
+	private void isFrequencyMatchingOfferingFrequency(FeeBO fee,
+			ActionErrors errors) {
+		prdDefLogger
+				.debug("Loan offering isFrequencyMatchingOfferingFrequency called - fee:"
+						+ fee);
+		if (getFreqOfInstallmentsValue() != null
+				&& fee.isPeriodic()
+				&& !(fee.getFeeFrequency().getFeeMeetingFrequency()
+						.getMeetingDetails().getRecurrenceType()
+						.getRecurrenceId().equals(getFreqOfInstallmentsValue())))
+			addError(errors, "Fee",
+					ProductDefinitionConstants.ERRORFEEFREQUENCY, fee
+							.getFeeName());
+
+	}
+
+	private void validateMinMaxDefInterestRates(ActionErrors errors,
+			HttpServletRequest request) {
+		validateForMand(getMaxInterestRate(), errors, "maxInterestRate",
+				ProductDefinitionConstants.ERRORSENTERCONFIG,
+				ProductDefinitionConstants.MAX, getLabel(
+						ConfigurationConstants.INTEREST, request),
+				ProductDefinitionConstants.RATE);
+		validateForMand(getMinInterestRate(), errors, "minInterestRate",
+				ProductDefinitionConstants.ERRORSENTERCONFIG,
+				ProductDefinitionConstants.MIN, getLabel(
+						ConfigurationConstants.INTEREST, request),
+				ProductDefinitionConstants.RATE);
+		validateForMand(getDefInterestRate(), errors, "defInterestRate",
+				ProductDefinitionConstants.ERRORSENTERCONFIG,
+				ProductDefinitionConstants.DEFAULT, getLabel(
+						ConfigurationConstants.INTEREST, request),
+				ProductDefinitionConstants.RATE);
+		validateForRange(getMaxInterestRate(), 0, 999, errors,
+				"maxInterestRate",
+				ProductDefinitionConstants.ERRORSDEFMINMAXCONFIG,
+				ProductDefinitionConstants.MAX, getLabel(
+						ConfigurationConstants.INTEREST, request),
+				ProductDefinitionConstants.RATE, "0", "999");
+		validateForRange(getMinInterestRate(), 0, 999, errors,
+				"minInterestRate",
+				ProductDefinitionConstants.ERRORSDEFMINMAXCONFIG,
+				ProductDefinitionConstants.MIN, getLabel(
+						ConfigurationConstants.INTEREST, request),
+				ProductDefinitionConstants.RATE, "0", "999");
+		validateForRange(getDefInterestRate(), 0, 999, errors,
+				"defInterestRate",
+				ProductDefinitionConstants.ERRORSDEFMINMAXCONFIG,
+				ProductDefinitionConstants.DEFAULT, getLabel(
+						ConfigurationConstants.INTEREST, request),
+				ProductDefinitionConstants.RATE, "0", "999");
+		vaildateMinMaxInterestRate(errors, request);
+		vaildateDefMinMaxInterestRate(errors, request);
+	}
+
+	private void validateForMand(String value, ActionErrors errors,
+			String property, String key, String... arg) {
+		if (StringUtils.isNullOrEmpty(value))
+			addError(errors, property, key, arg);
+	}
+
+	private void validateForRange(String value, double min, double max,
+			ActionErrors errors, String property, String key, String... arg) {
+		if (StringUtils.isNullAndEmptySafe(value)) {
+			double valueToBeChecked = Double.valueOf(value);
+			if (valueToBeChecked < min || valueToBeChecked > max) {
+				addError(errors, property, key, arg);
+			}
+		}
+	}
+
+	private void vaildateMinMaxInterestRate(ActionErrors errors,
+			HttpServletRequest request) {
+		if (StringUtils.isNullAndEmptySafe(getMaxInterestRate())
+				&& StringUtils.isNullAndEmptySafe(getMinInterestRate())) {
+			double maximumInterestRate = Double.valueOf(getMaxInterestRate());
+			double minimumInterestRate = Double.valueOf(getMinInterestRate());
+			if (maximumInterestRate < 999.0 && minimumInterestRate < 999.0
+					&& maximumInterestRate < minimumInterestRate)
+				addError(errors, "MinMaxInterestRate",
+						ProductDefinitionConstants.ERRORSMINMAXINTCONFIG,
+						ProductDefinitionConstants.MAX, getLabel(
+								ConfigurationConstants.INTEREST, request),
+						ProductDefinitionConstants.RATE,
+						ProductDefinitionConstants.MIN);
+		}
+	}
+
+	private void vaildateDefMinMaxInterestRate(ActionErrors errors,
+			HttpServletRequest request) {
+		if (StringUtils.isNullAndEmptySafe(getMaxInterestRate())
+				&& StringUtils.isNullAndEmptySafe(getMinInterestRate())
+				&& StringUtils.isNullAndEmptySafe(getDefInterestRate())) {
+			double maximumInterestRate = Double.valueOf(getMaxInterestRate());
+			double minimumInterestRate = Double.valueOf(getMinInterestRate());
+			double defaultInterestRate = Double.valueOf(getDefInterestRate());
+			if (maximumInterestRate < 999.0 && minimumInterestRate < 999.0
+					&& defaultInterestRate < 999.0) {
+				if (defaultInterestRate < minimumInterestRate
+						|| defaultInterestRate > maximumInterestRate)
+					addError(errors, "DefInterestRate",
+							ProductDefinitionConstants.ERRORSDEFINTCONFIG,
+							ProductDefinitionConstants.DEFAULT, getLabel(
+									ConfigurationConstants.INTEREST, request),
+							ProductDefinitionConstants.RATE,
+							ProductDefinitionConstants.MIN,
+							ProductDefinitionConstants.MAX);
+			}
+
+		}
+	}
 }

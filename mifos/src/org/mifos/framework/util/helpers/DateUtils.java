@@ -97,4 +97,13 @@ public class DateUtils {
 		cal1.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DATE),0,0,0);
 		return cal1;
 	}
+	
+	public static Date getCurrentDateOfNextYearWithOutTimeStamp(){
+		Calendar currentDateCalendar = new GregorianCalendar();
+		int year = currentDateCalendar.get(Calendar.YEAR);
+		int month = currentDateCalendar.get(Calendar.MONTH);
+		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
+		currentDateCalendar = new GregorianCalendar(year+1, month, day);
+		return new Date(currentDateCalendar.getTimeInMillis());
+	}
 }

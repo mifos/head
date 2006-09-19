@@ -47,8 +47,10 @@ import java.util.Locale;
 
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
@@ -157,24 +159,22 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 
 		actionPerform();
 		verifyActionErrors(new String[] {
-				"Please specify the Product instance name.",
-				"Please specify the Short name.",
-				"Please select the Product category.",
-				"Please specify the Start date.",
-				"Please specify the Applicable for.",
-				"Please specify the Min loan amount.",
-				"Please specify the Max loan amount.",
-				"Please select the Interest rate type.",
-				"Please specify the Max interest rate.",
-				"Please specify the Min interest rate.",
-				"Please specify the Default interest rate.",
-				"Please specify the Frequency of installments.",
-				"Please specify the Recur every.",
-				"Please specify the Max # of installments.",
-				"Please specify the Min # of installments.",
-				"Please specify the Default # of installments.",
 				"Please select the GL code for interest.",
-				"Please select the GL code for principal." });
+				"Please select the GL code for principal.",
+				"Please select the Product category.",
+				"Please specify the Applicable for.",
+				"Please specify the Default # of installments.",
+				"Please specify the Frequency of installments.",
+				"Please specify the Max # of installments.",
+				"Please specify the Max loan amount.",
+				"Please specify the Min # of installments.",
+				"Please specify the Min loan amount.",
+				"Please specify the Product instance name.",
+				"Please specify the Recur every.",
+				"Please specify the Short name.",
+				"Please specify the Start date.", "errors.mandatoryconfig",
+				"errors.mandatoryconfig", "errors.mandatoryconfig",
+				"errors.selectconfig" });
 		verifyInputForward();
 	}
 
@@ -183,8 +183,8 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "preview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 
-		addRequestParameter("prdOfferingName", "Savings Offering");
-		addRequestParameter("prdOfferingShortName", "SAVP");
+		addRequestParameter("prdOfferingName", "Loan Offering");
+		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
 				.getPereferedLocale()));
@@ -219,8 +219,8 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "preview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 
-		addRequestParameter("prdOfferingName", "Savings Offering");
-		addRequestParameter("prdOfferingShortName", "SAVP");
+		addRequestParameter("prdOfferingName", "Loan Offering");
+		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
 				.getPereferedLocale()));
@@ -242,9 +242,8 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("interestGLCode", "7");
 
 		actionPerform();
-		verifyActionErrors(new String[] {
-				"Please specify a valid Max interest rate. Max interest rate should be greater than or equal to Min interest rate.",
-				"Please specify valid values for Default interest rate. Default interest rate should be a value between Min interest rate and Max interest rate, inclusive." });
+		verifyActionErrors(new String[] { "errors.defIntRateconfig",
+				"errors.maxminIntRateconfig" });
 		verifyInputForward();
 	}
 
@@ -253,8 +252,8 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "preview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 
-		addRequestParameter("prdOfferingName", "Savings Offering");
-		addRequestParameter("prdOfferingShortName", "SAVP");
+		addRequestParameter("prdOfferingName", "Loan Offering");
+		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
 				.getPereferedLocale()));
@@ -289,12 +288,12 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "preview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 
-		addRequestParameter("prdOfferingName", "Savings Offering");
-		addRequestParameter("prdOfferingShortName", "SAVP");
+		addRequestParameter("prdOfferingName", "Loan Offering");
+		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
 				.getPereferedLocale()));
-		addRequestParameter("endDate", offSetCurrentDate(+1, userContext
+		addRequestParameter("endDate", offSetCurrentDate(1, userContext
 				.getPereferedLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
@@ -324,8 +323,8 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "preview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 
-		addRequestParameter("prdOfferingName", "Savings Offering");
-		addRequestParameter("prdOfferingShortName", "SAVP");
+		addRequestParameter("prdOfferingName", "Loan Offering");
+		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", offSetCurrentDate(-1, userContext
 				.getPereferedLocale()));
@@ -357,8 +356,8 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "preview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 
-		addRequestParameter("prdOfferingName", "Savings Offering");
-		addRequestParameter("prdOfferingShortName", "SAVP");
+		addRequestParameter("prdOfferingName", "Loan Offering");
+		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
 				.getPereferedLocale()));
@@ -387,17 +386,67 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		verifyInputForward();
 	}
 
+	public void testPreviewWithFeeNotMatchingFeeFrequency() throws Exception {
+		FeeBO fee = TestObjectFactory.createPeriodicAmountFee("Loan Periodic",
+				FeeCategory.LOAN, "100.0", RecurrenceType.MONTHLY, (short) 1);
+		setRequestPathInfo("/loanproductaction.do");
+		addRequestParameter("method", "load");
+		actionPerform();
+
+		flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
+
+		setRequestPathInfo("/loanproductaction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+		addRequestParameter("prdOfferingName", "Loan Offering");
+		addRequestParameter("prdOfferingShortName", "LOAN");
+		addRequestParameter("prdCategory", "1");
+		addRequestParameter("startDate", offSetCurrentDate(0, userContext
+				.getPereferedLocale()));
+		addRequestParameter("endDate", offSetCurrentDate(1, userContext
+				.getPereferedLocale()));
+		addRequestParameter("prdApplicableMaster", "1");
+		addRequestParameter("minLoanAmount", "2000");
+		addRequestParameter("maxLoanAmount", "11000");
+		addRequestParameter("defaultLoanAmount", "5000");
+		addRequestParameter("interestTypes", "1");
+		addRequestParameter("maxInterestRate", "12");
+		addRequestParameter("minInterestRate", "1");
+		addRequestParameter("defInterestRate", "4");
+		addRequestParameter("freqOfInstallments", "1");
+		addRequestParameter("prdOfferinFees", new String[] { fee.getFeeId()
+				.toString() });
+		addRequestParameter("loanOfferingFunds", new String[] { "1" });
+		addRequestParameter("description", "Loan Product");
+		addRequestParameter("gracePeriodDuration", "0");
+		addRequestParameter("loanCounter", "1");
+		addRequestParameter("prinDueLastInstFlag", "1");
+		addRequestParameter("recurAfter", "1");
+		addRequestParameter("maxNoInstallments", "14");
+		addRequestParameter("minNoInstallments", "2");
+		addRequestParameter("defNoInstallments", "11");
+		addRequestParameter("intDedDisbursementFlag", "1");
+		addRequestParameter("principalGLCode", "7");
+		addRequestParameter("interestGLCode", "7");
+
+		actionPerform();
+		verifyActionErrors(new String[] { ProductDefinitionConstants.ERRORFEEFREQUENCY });
+		verifyInputForward();
+		TestObjectFactory.cleanUp(fee);
+	}
+
 	public void testPreview() throws Exception {
 		setRequestPathInfo("/loanproductaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 
-		addRequestParameter("prdOfferingName", "Savings Offering");
-		addRequestParameter("prdOfferingShortName", "SAVP");
+		addRequestParameter("prdOfferingName", "Loan Offering");
+		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
 				.getPereferedLocale()));
-		addRequestParameter("endDate", offSetCurrentDate(+1, userContext
+		addRequestParameter("endDate", offSetCurrentDate(1, userContext
 				.getPereferedLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
@@ -425,12 +474,12 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 	public void testPreviewForPageExpiration() throws Exception {
 		setRequestPathInfo("/loanproductaction.do");
 		addRequestParameter("method", "preview");
-		addRequestParameter("prdOfferingName", "Savings Offering");
-		addRequestParameter("prdOfferingShortName", "SAVP");
+		addRequestParameter("prdOfferingName", "Loan Offering");
+		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
 				.getPereferedLocale()));
-		addRequestParameter("endDate", offSetCurrentDate(+1, userContext
+		addRequestParameter("endDate", offSetCurrentDate(1, userContext
 				.getPereferedLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
@@ -508,6 +557,8 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 	}
 
 	public void testCreate() throws Exception {
+		FeeBO fee = TestObjectFactory.createPeriodicAmountFee("Loan Periodic",
+				FeeCategory.LOAN, "100.0", RecurrenceType.MONTHLY, (short) 1);
 		setRequestPathInfo("/loanproductaction.do");
 		addRequestParameter("method", "load");
 		actionPerform();
@@ -518,12 +569,12 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "preview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 
-		addRequestParameter("prdOfferingName", "Savings Offering");
-		addRequestParameter("prdOfferingShortName", "SAVP");
+		addRequestParameter("prdOfferingName", "Loan Offering");
+		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
 				.getPereferedLocale()));
-		addRequestParameter("endDate", offSetCurrentDate(+1, userContext
+		addRequestParameter("endDate", offSetCurrentDate(1, userContext
 				.getPereferedLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
@@ -534,7 +585,9 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("minInterestRate", "1");
 		addRequestParameter("defInterestRate", "4");
 		addRequestParameter("freqOfInstallments", "2");
-
+		addRequestParameter("prdOfferinFees", new String[] { fee.getFeeId()
+				.toString() });
+		addRequestParameter("loanOfferingFunds", new String[] { "1" });
 		addRequestParameter("recurAfter", "1");
 		addRequestParameter("maxNoInstallments", "14");
 		addRequestParameter("minNoInstallments", "2");
@@ -559,6 +612,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 								LoanOfferingBO.class,
 								(Short) request
 										.getAttribute(ProductDefinitionConstants.LOANPRODUCTID)));
+		TestObjectFactory.cleanUp(fee);
 	}
 
 	private String offSetCurrentDate(int noOfDays, Locale locale) {

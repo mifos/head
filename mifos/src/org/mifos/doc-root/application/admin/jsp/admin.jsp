@@ -189,7 +189,7 @@
 								<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 								<mifos:mifoslabel name="admin.products" />
 								</html-el:link> | <html-el:link
-								href="loanprdaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+								href="loanproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="admin.definenew" />
 								<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 								<mifos:mifoslabel name="admin.product" />

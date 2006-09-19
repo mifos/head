@@ -50,65 +50,44 @@
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 
-		<script language="javascript">
-		<!--
-			function fnGet() {
-				loanprdactionform.action="loanprdaction.do";
-				loanprdactionform.submit();
-			}
-			function fnLoad() {
-				loanprdactionform.method.value="load";
-				loanprdactionform.action="loanprdaction.do";
-				loanprdactionform.submit();
-			}
-		//-->
-		</script>
-		<html-el:form action="/loanprdaction">
-			<table width="95%" border="0" cellpadding="0" cellspacing="0">
-				<tr>
-					<td width="70%" align="left" valign="top" class="paddingL15T15">
+		<table width="95%" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td width="70%" align="left" valign="top" class="paddingL15T15">
 					<table width="98%" border="0" cellspacing="0" cellpadding="3">
 						<tr>
 							<td class="headingorange">
-							<mifos:mifoslabel name="product.marginmoneysuccess" bundle="ProductDefUIResources" />
-							<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
-							<mifos:mifoslabel name="product.pro" bundle="ProductDefUIResources" /><br>
-							<br>
+								<mifos:mifoslabel name="product.marginmoneysuccess" bundle="ProductDefUIResources" />
+								<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
+								<mifos:mifoslabel name="product.pro" bundle="ProductDefUIResources" />
+								<br>
+								<br>
 							</td>
 						</tr>
 						<tr>
-							<td class="fontnormalbold"><mifos:mifoslabel
-								name="product.plsnote" bundle="ProductDefUIResources" />:<span
-								class="fontnormal"> 
-								<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
-								<mifos:mifoslabel name="product.product" bundle="ProductDefUIResources" />
-								<mifos:mifoslabel name="product.savingsassignedto" bundle="ProductDefUIResources" />:</span> <c:out
-								value="${requestScope.Context.valueObject.globalPrdOfferingNum}" />
-							<span class="fontnormal"><br>
-							</span><span class="fontnormal"><br>
-							<br>
-							</span><html-el:link href="javascript:fnGet()">
-								<mifos:mifoslabel name="product.savingsview" bundle="ProductDefUIResources" />
-							<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
-							<mifos:mifoslabel name="product.savingprod" bundle="ProductDefUIResources" />
-							</html-el:link><span class="fontnormal"><br>
-							<br>
-							</span><span class="fontnormal"> <html-el:link
-								href="javascript:fnLoad()">
-								<mifos:mifoslabel name="product.savingsdefinenew" bundle="ProductDefUIResources" />
-								<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
-								<mifos:mifoslabel name="product.pro" bundle="ProductDefUIResources" />
-							</html-el:link></span></td>
+							<td class="fontnormalbold">
+								<mifos:mifoslabel name="product.plsnote" bundle="ProductDefUIResources" />
+								:<span class="fontnormal"> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.product" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.savingsassignedto"
+										bundle="ProductDefUIResources" />:</span>
+								<c:out value="${requestScope.Context.valueObject.globalPrdOfferingNum}" />
+								<span class="fontnormal"><br> </span><span class="fontnormal"><br> <br> </span>
+								<html-el:link href="loanprdaction.do?method=get&prdOfferingId=${requestScope.loanId}&randomNUm=${sessionScope.randomNUm}">
+									<mifos:mifoslabel name="product.savingsview" bundle="ProductDefUIResources" />
+									<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
+									<mifos:mifoslabel name="product.savingprod" bundle="ProductDefUIResources" />
+								</html-el:link>
+								<span class="fontnormal"><br> <br> </span><span class="fontnormal"> <html-el:link href="loanproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+										<mifos:mifoslabel name="product.savingsdefinenew" bundle="ProductDefUIResources" />
+										<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
+										<mifos:mifoslabel name="product.pro" bundle="ProductDefUIResources" />
+									</html-el:link></span>
+							</td>
 						</tr>
 					</table>
 					<br>
-					</td>
-				</tr>
-				<html-el:hidden property="method" value="get" />
-				<html-el:hidden property="prdOfferingId"
-					value="${requestScope.Context.valueObject.prdOfferingId}" />
-			</table>
-			<br>
-		</html-el:form>
+				</td>
+			</tr>
+		</table>
+		<br>
+
 	</tiles:put>
 </tiles:insert>

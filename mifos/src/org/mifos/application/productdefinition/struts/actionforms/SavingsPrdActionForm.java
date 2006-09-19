@@ -346,10 +346,13 @@ public class SavingsPrdActionForm extends BaseActionForm {
 			Date endingDate = getEndDateValue(getUserContext(request)
 					.getPereferedLocale());
 			if (startingDate != null
-					&& DateUtils
+					&& ((DateUtils.getDateWithoutTimeStamp(
+							startingDate.getTime()).compareTo(
+							DateUtils.getCurrentDateWithoutTimeStamp()) < 0) || (DateUtils
 							.getDateWithoutTimeStamp(startingDate.getTime())
 							.compareTo(
-									DateUtils.getCurrentDateWithoutTimeStamp()) < 0)
+									DateUtils
+											.getCurrentDateOfNextYearWithOutTimeStamp()) > 0)))
 				addError(errors, "startDate",
 						ProductDefinitionConstants.INVALIDSTARTDATE);
 			if (startingDate != null && endingDate != null
