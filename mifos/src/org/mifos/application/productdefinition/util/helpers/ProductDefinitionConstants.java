@@ -190,9 +190,13 @@ public interface ProductDefinitionConstants {
 	public String SAVINGSDEPOSITGLCODELIST="depositGLCodes";
 	public String SAVINGSINTERESTGLCODELIST="interestGLCodes";
 	public String SAVINGSPRDGLOBALOFFERINGNUM="savingsprdglobalofferingnum";
+
+	public String ERROR_CREATE = "errors.create";
+
 	public String LOANPRICIPALGLCODELIST="principalGLCodes";
 	public String LOANINTERESTGLCODELIST="interestGLCodes";
 	public String LOANPRODUCTACTIONFORM="loanproductactionform";
 	public String LOANPRDGLOBALOFFERINGNUM="loanprdglobalofferingnum";
+
 }
 

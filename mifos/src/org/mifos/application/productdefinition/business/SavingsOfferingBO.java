@@ -48,6 +48,7 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -240,6 +241,44 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 		prdLogger.debug("creating the saving offering Done : "
 				+ getPrdOfferingName());
 	}
+	
+	public void update(Short userId, String prdOfferingName,
+			String prdOfferingShortName, ProductCategoryBO prdCategory,
+			PrdApplicableMasterEntity prdApplicableMaster, Date startDate,
+			Date endDate, String description,PrdStatus prdStatus,
+			RecommendedAmntUnitEntity recommendedAmntUnit,
+			SavingsTypeEntity savingsType,
+			InterestCalcTypeEntity interestCalcType,
+			MeetingBO timePerForInstcalc, MeetingBO freqOfPostIntcalc,
+			Money recommendedAmount, Money maxAmntWithdrawl,
+			Money minAmntForInt, Double interestRate)
+			throws ProductDefinitionException {
+		super.update(userId, prdOfferingName, prdOfferingShortName, prdCategory,
+				prdApplicableMaster, startDate, endDate, description,prdStatus);
+		validate(savingsType, interestCalcType, recommendedAmntUnit,
+				timePerForInstcalc, freqOfPostIntcalc, recommendedAmount,
+				interestRate, depositGLCode, interestGLCode);
+		setUpdateDetails(userId);
+		this.savingsType = savingsType;
+		this.interestCalcType = interestCalcType;
+		this.recommendedAmntUnit = recommendedAmntUnit;
+		setTimePerForInstcalc(new PrdOfferingMeetingEntity(timePerForInstcalc,
+				this, MeetingType.SAVINGSTIMEPERFORINTCALC));
+		setFreqOfPostIntcalc(new PrdOfferingMeetingEntity(freqOfPostIntcalc,
+				this, MeetingType.SAVINGSFRQINTPOSTACC));
+		this.recommendedAmount = recommendedAmount;
+		this.interestRate = interestRate;
+		this.maxAmntWithdrawl = maxAmntWithdrawl;
+		this.minAmntForInt = minAmntForInt;
+		try {
+			new SavingsPrdPersistence().createOrUpdate(this);
+
+		} catch (PersistenceException e) {
+			throw new ProductDefinitionException(e);
+		}
+		prdLogger.debug("updated savings product offering done :"+ getGlobalPrdOfferingNum());
+	}
+
 
 	private PrdOfferingMeetingEntity getPrdOfferingMeeting(
 			MeetingType meetingType) throws ProductDefinitionException {
