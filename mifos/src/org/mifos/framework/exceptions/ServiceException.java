@@ -56,4 +56,7 @@ public class ServiceException extends ApplicationException {
 		super(key,cause,values);
 	}
 
+	public ServiceException(String key) {
+		super(key);
+	}
 }

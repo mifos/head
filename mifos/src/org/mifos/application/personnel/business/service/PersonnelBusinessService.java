@@ -3,6 +3,7 @@ package org.mifos.application.personnel.business.service;
 import java.util.List;
 
 import org.mifos.application.configuration.persistence.ConfigurationPersistence;
+import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
@@ -83,5 +84,17 @@ public class PersonnelBusinessService extends BusinessService {
 
 			throw new ServiceException(e);
 		}
+	}
+	
+	public PersonnelBO getPersonnel(String personnelName) throws ServiceException {
+		PersonnelBO personnel = null;
+		try {
+			personnel = new PersonnelPersistence().getPersonnel(personnelName);
+			if(personnel == null)
+				throw new ServiceException(LoginConstants.KEYINVALIDUSER);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+		return personnel;
 	}
 }

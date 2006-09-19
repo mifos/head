@@ -12,6 +12,7 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.util.helpers.OfficeLevel;
@@ -26,6 +27,7 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
@@ -491,7 +493,6 @@ public class TestPersonnelBO extends MifosTestCase {
 	}
 
 	public void testAddNotes() throws Exception {
-		try{
 		createdBranchOffice = TestObjectFactory.createOffice(
 				OfficeLevel.BRANCHOFFICE, office, "Office_BRanch1", "OFB");
 		HibernateUtil.closeSession();
@@ -535,9 +536,135 @@ public class TestPersonnelBO extends MifosTestCase {
 					"5.Personnel notes created", notes.getComment());
 			break;
 		}
-	}catch(Exception e) {
-		e.printStackTrace();
 	}
+	
+	public void testSuccessfullLogin() throws Exception {
+		personnel = createPersonnel();
+		String password = "ABCD";
+		userContext = personnel.login(password);
+		assertTrue(true);
+		assertFalse(personnel.isLocked());
+
+		assertEquals(personnel.getPersonnelId(), userContext.getId());
+		assertEquals(personnel.getDisplayName(), userContext.getName());
+		assertEquals(personnel.getLevel().getId(), userContext.getLevelId());
+		assertEquals(personnel.getLastLogin(), userContext.getLastLogin());
+		assertEquals(personnel.getPasswordChanged(), userContext
+				.getPasswordChanged());
+		assertEquals(personnel.getPreferredLocale().getLocaleId(), userContext
+				.getLocaleId());
+		assertEquals(Configuration.getInstance().getSystemConfig()
+				.getMFILocaleId(), userContext.getMfiLocaleId());
+		assertEquals(personnel.getPreferredLocale().getLanguage()
+				.getLanguageName(), userContext.getPereferedLocale()
+				.getDisplayLanguage());
+		assertEquals(personnel.getPreferredLocale().getCountry()
+				.getCountryName(), userContext.getPereferedLocale()
+				.getDisplayCountry());
+		assertEquals(personnel.getOffice().getOfficeId(), userContext
+				.getBranchId());
+		assertEquals(personnel.getOffice().getGlobalOfficeNum(), userContext
+				.getBranchGlobalNum());
+		assertEquals(0, personnel.getNoOfTries().intValue());
+	}
+
+	public void testFailureValidatePersonnelForInvalidPassword()
+			throws Exception {
+		personnel = createPersonnel();
+		String password = "WRONG_PASSWORD";
+		try {
+			userContext = personnel.login(password);
+			assertFalse(true);
+		} catch (PersonnelException le) {
+			assertTrue(true);
+			assertEquals(1, personnel.getNoOfTries().intValue());
+			assertFalse(personnel.isLocked());
+			assertEquals(LoginConstants.INVALIDOLDPASSWORD, le.getKey());
+		}
+	}
+
+	public void testFailureValidatePersonnelForInactivePersonnel()
+			throws Exception {
+		personnel = createPersonnel();
+		personnel.update(PersonnelStatus.INACTIVE, PersonnelLevel
+				.getPersonnelLevel(personnel.getLevel().getId()), personnel
+				.getOffice(), personnel.getTitle(), personnel
+				.getPreferredLocale().getLocaleId(), "PASSWORD", personnel
+				.getEmailId(), null, null, personnel.getPersonnelDetails()
+				.getName(), personnel.getPersonnelDetails().getMaritalStatus(),
+				personnel.getPersonnelDetails().getGender(), personnel
+						.getPersonnelDetails().getAddress(), personnel
+						.getUpdatedBy());
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
+				PersonnelBO.class, personnel.getPersonnelId());
+		String password = "ABCD";
+		try {
+			userContext = personnel.login(password);
+			HibernateUtil.commitTransaction();
+			assertFalse(true);
+		} catch (PersonnelException le) {
+			assertTrue(true);
+			assertEquals(1, personnel.getNoOfTries().intValue());
+			assertFalse(personnel.isLocked());
+			assertEquals(LoginConstants.KEYUSERINACTIVE, le.getKey());
+		}
+	}
+
+	public void testFailureValidatePersonnelFourConsecutiveWrongPasswordEntered()
+			throws Exception {
+		personnel = createPersonnel();
+		String password = "WRONG_PASSWORD";
+		try {
+			login(password);
+			login(password);
+			login(password);
+			login(password);
+			HibernateUtil.commitTransaction();
+			HibernateUtil.closeSession();
+			personnel = TestObjectFactory.getPersonnel(personnel
+					.getPersonnelId());
+			userContext = personnel.login(password);
+			HibernateUtil.commitTransaction();
+			HibernateUtil.closeSession();
+			personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
+					PersonnelBO.class, personnel.getPersonnelId());
+			assertFalse(true);
+		} catch (PersonnelException le) {
+			assertTrue(true);
+			assertEquals(5, personnel.getNoOfTries().intValue());
+			assertTrue(personnel.isLocked());
+			assertEquals(LoginConstants.INVALIDOLDPASSWORD, le.getKey());
+		}
+	}
+
+	public void testFailureValidatePersonnelForLockedPersonnel()
+			throws Exception {
+		personnel = createPersonnel();
+		String password = "WRONG_PASSWORD";
+		try {
+			login(password);
+			login(password);
+			login(password);
+			login(password);
+			login(password);
+			HibernateUtil.commitTransaction();
+			HibernateUtil.closeSession();
+			personnel = TestObjectFactory.getPersonnel(personnel
+					.getPersonnelId());
+			userContext = personnel.login(password);
+			HibernateUtil.commitTransaction();
+			HibernateUtil.closeSession();
+			personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
+					PersonnelBO.class, personnel.getPersonnelId());
+			assertFalse(true);
+		} catch (PersonnelException le) {
+			assertTrue(true);
+			assertEquals(5, personnel.getNoOfTries().intValue());
+			assertTrue(personnel.isLocked());
+			assertEquals(LoginConstants.KEYUSERLOCKED, le.getKey());
+		}
 	}
 
 	private PersonnelNotesEntity createNotes(String comment) throws Exception{
@@ -608,16 +735,33 @@ public class TestPersonnelBO extends MifosTestCase {
 	private Name getPersonnelName() {
 		return new Name("first", "middle", "secondLast", "last");
 	}
-	public List<RoleBO> getRoles() throws Exception{
+	private List<RoleBO> getRoles() throws Exception{
 		return ((PersonnelBusinessService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.Personnel))
 				.getRoles();
 	}
 	
-	public List<RoleBO> getNewRoles() throws Exception{
+	private List<RoleBO> getNewRoles() throws Exception{
 		List<RoleBO> roles = new ArrayList<RoleBO>();
 		roles.add((RoleBO)TestObjectFactory.getObject(RoleBO.class, Short.valueOf("1")));
 		return roles;
+	}
+	
+	private PersonnelBO createPersonnel() throws Exception {
+		createdBranchOffice = TestObjectFactory.createOffice(
+				OfficeLevel.BRANCHOFFICE, office, "Office_BRanch1", "OFB");
+		HibernateUtil.closeSession();
+		createdBranchOffice = (OfficeBO) HibernateUtil.getSessionTL().get(
+				OfficeBO.class, createdBranchOffice.getOfficeId());
+		createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
+		return new PersonnelPersistence().getPersonnel(personnel.getUserName());
+	}
+
+	private void login(String password) {
+		try {
+			personnel.login(password);
+		} catch (PersonnelException e) {
+		}
 	}
 	
 }

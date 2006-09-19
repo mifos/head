@@ -178,6 +178,14 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		assertEquals(1,persistence.getAllPersonnelNotes(personnel.getPersonnelId()).getSize());
 	}
 	
+	public void testSuccessfullGetPersonnel() throws Exception {
+		branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
+		personnel = createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
+		String oldUserName = personnel.getUserName();
+		personnel = persistence.getPersonnel(personnel.getUserName());
+		assertEquals(oldUserName,personnel.getUserName());
+	}
+	
 	public void testGetPersonnelByGlobalPersonnelNum()throws Exception{
 		assertNotNull(persistence.getPersonnelByGlobalPersonnelNum("1"));
 	}

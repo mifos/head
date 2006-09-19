@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.application.master.business.CountryEntity;
+import org.mifos.application.master.business.LanguageEntity;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.office.business.OfficeBO;
@@ -24,13 +28,17 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.EncryptionException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.authentication.EncryptionService;
+import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -245,7 +253,7 @@ public class PersonnelBO extends BusinessObject {
 		return noOfTries;
 	}
 
-	public void setNoOfTries(Short noOfTries) {
+	private void setNoOfTries(Short noOfTries) {
 		this.noOfTries = noOfTries;
 	}
 
@@ -667,5 +675,89 @@ public class PersonnelBO extends BusinessObject {
 	
 	public boolean isLoanOfficer() {
 		return getLevel().getId().equals(PersonnelLevel.LOAN_OFFICER.getValue());
+	}
+	
+	public UserContext login(String password) throws PersonnelException {
+		if(!isActive()) {
+			updateNoOfTries();
+			throw new PersonnelException(LoginConstants.KEYUSERINACTIVE);
+		}
+		if(isLocked())
+			throw new PersonnelException(LoginConstants.KEYUSERLOCKED);
+		if(!isPasswordValid(password)) {
+			updateNoOfTries();
+			throw new PersonnelException(LoginConstants.INVALIDOLDPASSWORD);
+		}
+		resetNoOfTries();
+		return setUserContext();
+	}
+	
+	private void updateNoOfTries() throws PersonnelException {
+		if(!isLocked()) {
+			Short newNoOfTries = (short)(getNoOfTries()+1);
+			try {
+				if(newNoOfTries.equals(LoginConstants.MAXTRIES))
+					lock();
+				this.noOfTries = newNoOfTries;
+				new PersonnelPersistence().createOrUpdate(this);
+			} catch (PersistenceException pe) {
+				throw new PersonnelException(PersonnelConstants.UPDATE_FAILED, pe);
+			}
+		}
+	}
+	
+	private void resetNoOfTries() {
+		unLock();
+	}
+	
+	private boolean isPasswordValid(String password) throws PersonnelException {
+		try {
+			return EncryptionService.getInstance().verifyPassword(password,getEncriptedPassword());
+		} catch (EncryptionException ee) {
+			throw new PersonnelException(ee);
+		} catch (SystemException se) {
+			throw new PersonnelException(se);
+		}
+	}
+	
+	private void updateLastPersonnelLoggedin() throws PersonnelException {
+		try{
+			this.lastLogin = new Date();
+			new PersonnelPersistence().createOrUpdate(this);
+		} catch (PersistenceException pe) {
+			throw new PersonnelException(PersonnelConstants.UPDATE_FAILED, pe);
+		}
+	}
+	
+	private UserContext setUserContext() throws PersonnelException {
+		UserContext userContext = new UserContext();
+		userContext.setId(getPersonnelId());
+		userContext.setName(getDisplayName());
+		userContext.setLevelId(getLevel().getId());
+		//userContext.setRoles(new HashSet(getRoles()));
+		userContext.setLastLogin(getLastLogin());
+		userContext.setPasswordChanged(getPasswordChanged());
+		if (LoginConstants.PASSWORDCHANGEDFLAG.equals(getPasswordChanged())) {
+			updateLastPersonnelLoggedin();
+		}
+		SupportedLocalesEntity supportedLocales = getPreferredLocale();
+		if (null != supportedLocales) {
+			userContext.setLocaleId(supportedLocales.getLocaleId());
+			LanguageEntity lang = supportedLocales.getLanguage();
+			CountryEntity country = supportedLocales.getCountry();
+			if (null != lang && null != country) {
+				userContext.setPereferedLocale(new Locale(lang
+						.getLanguageShortName(), country
+						.getCountryShortName()));
+			} else {
+				throw new PersonnelException(SecurityConstants.GENERALERROR);
+			}
+		}
+		userContext.setBranchId(getOffice().getOfficeId());
+		userContext.setBranchGlobalNum(getOffice().getGlobalOfficeNum());
+		userContext.setOfficeLevelId(getOffice().getLevel().getId());
+		userContext.setMfiLocaleId(Configuration.getInstance().getSystemConfig().getMFILocaleId());
+		userContext.setMfiLocale(Configuration.getInstance().getSystemConfig().getMFILocale());
+		return userContext;
 	}
 }

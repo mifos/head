@@ -22,6 +22,7 @@ public interface LoginConstants {
 	public String LOGINPAGEURI="/mifoslogin.do?method=load";
 	public Short FIRSTTIMEUSER=0;
 	public Short PASSWORDCHANGEDFLAG=1;
+	public final Short MAXTRIES = 5;
 	
 	public static final String LOGIN_PASSWORD_UPDATE_FAILURE="login_update_failure";
 	public static final String SETTINGS_PASSWORD_UPDATE_FAILURE="settings_update_failure";

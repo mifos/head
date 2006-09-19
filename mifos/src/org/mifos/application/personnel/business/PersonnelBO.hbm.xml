@@ -88,6 +88,9 @@
 	<query name="getCountByName">
 		<![CDATA[select count(*)  from org.mifos.application.personnel.business.PersonnelBO as personnel where  personnel.userName = :USER_NAME]]>
 	</query>
+	<query name="getPersonnelByName">
+		<![CDATA[from org.mifos.application.personnel.business.PersonnelBO as personnel where  personnel.userName = :USER_NAME]]>
+	</query>
 	<query name="getCountByGovernmentId">
 		<![CDATA[select count(*)  from org.mifos.application.personnel.business.PersonnelBO as personnel where  personnel.personnelDetails.governmentIdNumber = :GOVT_ID]]>
 	</query>
@@ -98,5 +101,5 @@
 	<query name="getPersonBySystemId">
 		<![CDATA[from org.mifos.application.personnel.business.PersonnelBO as personnel where personnel.globalPersonnelNum =:globalPersonnelNum]]>
 	</query>
-
+	
 </hibernate-mapping>
