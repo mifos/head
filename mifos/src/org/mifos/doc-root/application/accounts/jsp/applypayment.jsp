@@ -122,8 +122,7 @@
 						</tr>
 						<tr>
 							<td width="24%" align="right" class="fontnormal"><mifos:mifoslabel
-								mandatory="yes" name="accounts.amount" /><mifos:mifoslabel
-								name="accounts.colon" /></td>
+								mandatory="yes" name="accounts.amount" isColonRequired="Yes" /></td>
 							<td width="76%">
 							<c:choose>
 								<c:when test="${sessionScope.BusinessKey.accountType.accountTypeId==1}">
@@ -139,8 +138,7 @@
 						</tr>
 						<tr>
 							<td align="right" class="fontnormal"><mifos:mifoslabel
-								name="accounts.mode_of_payment" mandatory="yes" /><mifos:mifoslabel
-								name="accounts.colon" /></td>
+								name="accounts.mode_of_payment" mandatory="yes" isColonRequired="Yes" /></td>
 
 							<td class="fontnormal"><mifos:select
 								name="applyPaymentActionForm" property="paymentTypeId">
@@ -150,15 +148,13 @@
 						</tr>
 						<tr>
 							<td align="right" class="fontnormal"><mifos:mifoslabel
-								name="accounts.receiptid" /><mifos:mifoslabel
-								name="accounts.colon" /></td>
+								name="accounts.receiptid" isColonRequired="Yes" /></td>
 							<td class="fontnormal"><mifos:mifosalphanumtext
 								property="receiptId" name="applyPaymentActionForm" maxlength="25"/></td>
 						</tr>
 						<tr>
 							<td align="right" class="fontnormal"><mifos:mifoslabel
-								name="accounts.receiptdate" /><mifos:mifoslabel
-								name="accounts.colon" /></td>
+								name="accounts.receiptdate" isColonRequired="Yes" /></td>
 							<td class="fontnormal"><date:datetag property="receiptDate" /></td>
 						</tr>
 					</table>

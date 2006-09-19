@@ -113,21 +113,19 @@
 			<table width="96%" border="0" cellspacing="0" cellpadding="1">
 				<tr>
 					<td align="right" class="fontnormalbold"><mifos:mifoslabel
-						name="accounts.date_of_trxn" /><mifos:mifoslabel
-						name="accounts.colon" /></td>
+						name="accounts.date_of_trxn" isColonRequired="Yes" /></td>
 					<td class="fontnormal"><c:out
 						value="${applyPaymentActionForm.transactionDate}" /></td>
 				</tr>
 				<tr>
 					<td width="22%" align="right" class="fontnormalbold"><mifos:mifoslabel
-						name="accounts.amount" /> <mifos:mifoslabel name="accounts.colon" /></td>
+						name="accounts.amount" isColonRequired="Yes" /></td>
 					<td width="78%" class="fontnormal"><c:out
 						value="${applyPaymentActionForm.amount}" /></td>
 				</tr>
 				<tr>
 					<td align="right" class="fontnormalbold"><mifos:mifoslabel
-						name="accounts.mode_of_payment"  /> <mifos:mifoslabel
-						name="accounts.colon" /></td>
+						name="accounts.mode_of_payment" isColonRequired="Yes"  /></td>
 					<td class="fontnormal"><c:forEach var="payment"
 						items="${sessionScope.PaymentType}">
 						<c:if
@@ -138,15 +136,13 @@
 				</tr>
 				<tr>
 					<td align="right" class="fontnormalbold"><mifos:mifoslabel
-						name="accounts.receiptid" /> <mifos:mifoslabel
-						name="accounts.colon" /></td>
+						name="accounts.receiptid" isColonRequired="Yes" /></td>
 					<td class="fontnormal"><c:out
 						value="${applyPaymentActionForm.receiptId}" /></td>
 				</tr>
 				<tr>
 					<td align="right" class="fontnormalbold"><mifos:mifoslabel
-						name="accounts.receiptdate" /> <mifos:mifoslabel
-						name="accounts.colon" /></td>
+						name="accounts.receiptdate" isColonRequired="Yes" /></td>
 					<td class="fontnormal"><c:out
 						value="${applyPaymentActionForm.receiptDate}" /></td>
 				</tr>
