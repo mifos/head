@@ -10,75 +10,70 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.FrameworkRuntimeException;
 
 public class DateHelper {
 
 	private final static String dbFormat = "yyyy-MM-dd";
-	public static String convertUserToDbFmt(String userDate, String userPattern){
-		String returnVal = null;
-		try{
-			SimpleDateFormat userSdf = new SimpleDateFormat(userPattern);
-			Date date = userSdf.parse(userDate); //util date not sql
-			SimpleDateFormat dbSdf = new SimpleDateFormat(DateHelper.dbFormat);
-			return dbSdf.format(date);
 
-		}catch(ParseException parsee){
-			parsee.printStackTrace();
-			//TODO log and throw exception up
+	public static String convertUserToDbFmt(String userDate, String userPattern) {
+		try {
+			SimpleDateFormat userFormat = new SimpleDateFormat(userPattern);
+			java.util.Date date = userFormat.parse(userDate);
+			return toDatabaseFormat(date);
+		} catch (ParseException e) {
+			throw new FrameworkRuntimeException(e);
 		}
-		return returnVal;
 	}
 
-	public static String convertDbToUserFmt(String dbDate, String userPattern){
-		String returnVal = null;
-		try{
-			SimpleDateFormat dbSdf = new SimpleDateFormat(DateHelper.dbFormat);
-			java.util.Date date = dbSdf.parse(dbDate); //util date not sql
-			SimpleDateFormat userSdf = new SimpleDateFormat(userPattern);
-			return userSdf.format(date);
-
-		}catch(ParseException parsee){
-			parsee.printStackTrace();
-			//TODO log and throw exception up
+	public static String convertDbToUserFmt(String dbDate, String userPattern) {
+		try {
+			SimpleDateFormat databaseFormat = new SimpleDateFormat(dbFormat);
+			java.util.Date date = databaseFormat.parse(dbDate);
+			SimpleDateFormat userFormat = new SimpleDateFormat(userPattern);
+			return userFormat.format(date);
+		} catch (ParseException e) {
+			throw new FrameworkRuntimeException(e);
 		}
-		return returnVal;
 	}
 
-	public static String getUserLocaleDate(Locale locale,String value) {
-		String returnDate="";
-		if(locale!=null && value!=null && !value.equals("")){
-			try{
-
-				SimpleDateFormat sdf = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.SHORT, locale);
-				String userfmt = convertToCurrentDateFormat(((SimpleDateFormat) sdf).toPattern());
-				returnDate= convertDbToUserFmt((String)value,userfmt);
-			}catch(Exception parsee){
-				//TODO Exception handling and remove print stack trace
-				parsee.printStackTrace();
+	public static String getUserLocaleDate(Locale locale, String databaseDate) {
+		if (locale != null && databaseDate != null && !databaseDate.equals("")) {
+			try {
+				SimpleDateFormat shortFormat = (SimpleDateFormat)
+					DateFormat.getDateInstance(DateFormat.SHORT, locale);
+				String userfmt = convertToCurrentDateFormat(
+					shortFormat.toPattern()
+				);
+				return convertDbToUserFmt(databaseDate, userfmt);
+			} catch (FrameworkRuntimeException e) {
+				throw e;
+			} catch (Exception e) {
+				throw new FrameworkRuntimeException(e);
 			}
+		} else {
+			return "";
 		}
-		return returnDate;
 	}
-	public static Date getDate(String value) {
-		Date date=null;
+
+	public static java.util.Date getDate(String value) {
 		if( value!=null && !value.equals("")){
-			try{
-
-				SimpleDateFormat dbSdf = new SimpleDateFormat("dd/MM/yyyy");
-				date = dbSdf.parse(value); //util date not sql
-			}catch(Exception parsee){
-				//TODO Exception handling and remove print stack trace
-				parsee.printStackTrace();
+			try {
+				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+				return format.parse(value);
+			} catch (Exception e) {
+				throw new FrameworkRuntimeException(e);
 			}
+		} else {
+			return null;
 		}
-		return date;
 	}
+
 	//Bug id 26765. Added the method convertToCurrentDateFormat and called it from this method
 	public static String getCurrentDate(Locale locale) {
 		Calendar currentCalendar = new GregorianCalendar();
@@ -86,9 +81,11 @@ public class DateHelper {
 		int month=currentCalendar.get(Calendar.MONTH);
 		int day=currentCalendar.get(Calendar.DAY_OF_MONTH);
 		currentCalendar = new GregorianCalendar(year,month,day);
-		java.sql.Date currentDate=new java.sql.Date(currentCalendar.getTimeInMillis());
-		SimpleDateFormat sdf = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.SHORT, locale);
-		String userfmt = convertToCurrentDateFormat(((SimpleDateFormat) sdf).toPattern());
+		java.sql.Date currentDate = new java.sql.Date(
+			currentCalendar.getTimeInMillis());
+		SimpleDateFormat format = (SimpleDateFormat)
+			DateFormat.getDateInstance(DateFormat.SHORT, locale);
+		String userfmt = convertToCurrentDateFormat(format.toPattern());
 		return convertDbToUserFmt(currentDate.toString(),userfmt);
 	}
 
@@ -116,6 +113,7 @@ public class DateHelper {
 		}
 		return fmt.substring(0,fmt.length()-1);
 	}
+
 	public static String convertToMFIFormat(String date, String format){
 		String MFIString;
 		String MFIfmt=getMFIFormat();
@@ -126,18 +124,20 @@ public class DateHelper {
 		MFIfmt=convertToDateTagFormat(MFIfmt);
 		StringTokenizer stfmt = new StringTokenizer(format,"/");
 		StringTokenizer stdt = new StringTokenizer(date,"/");
-		while(stfmt.hasMoreTokens()&& stdt.hasMoreTokens()){
+		while (stfmt.hasMoreTokens()&& stdt.hasMoreTokens()){
 			token= stfmt.nextToken();
 			if (token.equalsIgnoreCase("D")){
 				day=stdt.nextToken();
-			}else if (token.equalsIgnoreCase("M")){
+			} else if (token.equalsIgnoreCase("M")){
 				month=stdt.nextToken();
-			}else
+			} else {
 				year=stdt.nextToken();
+			}
 		}
 		MFIString=createDateString(day,month,year,MFIfmt);
-		return  MFIString;
+		return MFIString;
 	}
+
 	public static String[] getDayMonthYear(String date, String format){
 		String day="";
 		String month="";
@@ -175,22 +175,22 @@ public class DateHelper {
 		}
 		return new String[]{day,month,year};
 	}
+
 	public static java.sql.Date getLocaleDate(Locale locale,String value) {
-		java.sql.Date date = null;
-		if(locale!=null && value!=null && !value.equals("")){
+		if (locale!=null && value!=null && !value.equals("")) {
 			try{
 
-				SimpleDateFormat sdf = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.SHORT, locale);
-				String userfmt = ((SimpleDateFormat) sdf).toPattern();
-				String dbDate=convertUserToDbFmt((String)value,userfmt);
-				date=java.sql.Date.valueOf(dbDate);
-
-			}catch(Exception parsee){
-				//TODO Exception handling and remove print stack trace
-				parsee.printStackTrace();
+				SimpleDateFormat shortFormat = (SimpleDateFormat)
+					DateFormat.getDateInstance(DateFormat.SHORT, locale);
+				String userPattern = shortFormat.toPattern();
+				String dbDate = convertUserToDbFmt(value, userPattern);
+				return java.sql.Date.valueOf(dbDate);
+			} catch (Exception e) {
+				throw new FrameworkRuntimeException(e);
 			}
+		} else {
+			return null;
 		}
-		return date;
 	}
 
 	public static String[] getDayMonthYearDbFrmt(String date, String format){
@@ -198,26 +198,30 @@ public class DateHelper {
 		String month="";
 		String year="";
 		String token;
-		StringTokenizer stfmt = new StringTokenizer(format,"-");
-		StringTokenizer stdt = new StringTokenizer(date,"-");
-		while(stfmt.hasMoreTokens()&& stdt.hasMoreTokens()){
-			token= stfmt.nextToken();
-			if (token.equalsIgnoreCase("D")){
-				day=stdt.nextToken();
-			}else if (token.equalsIgnoreCase("M")){
-				month=stdt.nextToken();
-			}else
-				year=stdt.nextToken();
+		StringTokenizer formatTokenizer = new StringTokenizer(format,"-");
+		StringTokenizer dateTokenizer = new StringTokenizer(date,"-");
+		while (formatTokenizer.hasMoreTokens()&& dateTokenizer.hasMoreTokens()) {
+			token= formatTokenizer.nextToken();
+			if (token.equalsIgnoreCase("D")) {
+				day = dateTokenizer.nextToken();
+			} else if (token.equalsIgnoreCase("M")) {
+				month = dateTokenizer.nextToken();
+			} else {
+				year = dateTokenizer.nextToken();
+			}
 		}
 		return new String[]{day,month,year};
 	}
+
 	public static String getMFIFormat(){
 		//TODO change this to pick from app config
 		return "dd/mm/yy";
 	}
+
 	public static String getMFIShortFormat(){
 		return convertToDateTagFormat("dd/mm/yy");
 	}
+
 	public static String convertToDateTagFormat(String pattern){
 		char chArray[]=pattern.toCharArray();
 		StringBuilder fmt = new StringBuilder();
@@ -267,7 +271,7 @@ public class DateHelper {
 		return dt.deleteCharAt((dt.length()-1)).toString();
 	}
 
-	public static java.sql.Date getSQLDate(String date) throws ApplicationException  {
+	public static java.sql.Date getSQLDate(String date) throws ApplicationException {
 		//TODO change this
 		String format="yyyy/MM/dd";
 		try {
@@ -277,16 +281,16 @@ public class DateHelper {
 				calendar.setTime(sdf.parse(date));
 				// System.out.println("Date in Helper"+new java.sql.Date(calendar.getTime().getTime()));
 				return new java.sql.Date(calendar.getTime().getTime());
+			} else {
+				return null;
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
 			throw new ApplicationException(e);
 		}
-		return null;
 	}
 
-	public static int DateDiffInYears(java.sql.Date fromDate){
-
+	public static int DateDiffInYears(java.sql.Date fromDate) {
 		Calendar fromDateCal = new GregorianCalendar();
 
 	    fromDateCal.setTime(fromDate);
@@ -302,27 +306,37 @@ public class DateHelper {
 	    if ( monthDiff < 0) {
 	        age--;
 	    }
-	    else if ( monthDiff ==0 ){
-	    	if(dayDiff < 0) {
-	        age--;
+	    else if (monthDiff == 0){
+	    	if (dayDiff < 0) {
+	    		age--;
 	    	}
 	    }
 	    return age;
 	}
 
-	public static String getDBtoUserFormatString(Date dbDate, Locale userLocale){
-		String ret = null;
-		SimpleDateFormat sdf = (SimpleDateFormat)DateFormat.getDateInstance(
+	public static String getDBtoUserFormatString(
+		java.util.Date dbDate, Locale userLocale) {
+		SimpleDateFormat format = (SimpleDateFormat)DateFormat.getDateInstance(
 			DateFormat.MEDIUM, userLocale);
-		ret = sdf.format(dbDate);
-		return ret;
+		return format.format(dbDate);
 	}
 	
-	public static String getDBtoUserFormatShortString(Date dbDate, Locale userLocale){
-		String ret = null;
-		SimpleDateFormat sdf = (SimpleDateFormat)DateFormat.getDateInstance(
+	public static String getDBtoUserFormatShortString(
+		java.util.Date dbDate, Locale userLocale) {
+		SimpleDateFormat format = (SimpleDateFormat)DateFormat.getDateInstance(
 			DateFormat.SHORT, userLocale);
-		ret = sdf.format(dbDate);
-		return ret;
+		return format.format(dbDate);
 	}
+
+	/**
+	 * This method is based on the system's time zone, not, say,
+	 * the time zone where the user is.  That might be
+	 * dubious.
+	 */
+	public static String toDatabaseFormat(java.util.Date date) {
+		DateFormat format = new SimpleDateFormat(dbFormat);
+//		format.setTimeZone(TimeZone.getTimeZone("GMT+0530"));
+		return format.format(date);
+	}
+
 }

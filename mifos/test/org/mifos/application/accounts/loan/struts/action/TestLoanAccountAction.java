@@ -26,7 +26,6 @@ import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
@@ -42,7 +41,6 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidUserException;
@@ -101,7 +99,6 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.getBranchId().shortValue(), userContext.getId().shortValue());
 		request.getSession(false).setAttribute("ActivityContext", ac);
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-
 	}
 
 	@Override
@@ -856,18 +853,6 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.updateObject(accountBO);
 		accountBO.addAccountNotes(createAccountNotes("Notes5"));
 		TestObjectFactory.updateObject(accountBO);
-	}
-
-	private void applyPaymentandRetrieveAccount() throws AccountException,
-			SystemException {
-		Date startDate = new Date(System.currentTimeMillis());
-		PaymentData paymentData = new PaymentData(new Money(Configuration
-				.getInstance().getSystemConfig().getCurrency(), "100.0"),
-				accountBO.getPersonnel(), Short.valueOf("1"), startDate);
-		paymentData.setRecieptDate(startDate);
-		paymentData.setRecieptNum("5435345");
-		accountBO.applyPayment(paymentData);
-		HibernateUtil.commitTransaction();
 	}
 
 	private void disburseLoan(Date startDate) throws NumberFormatException,

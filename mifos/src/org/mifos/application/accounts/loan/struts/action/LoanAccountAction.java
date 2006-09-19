@@ -3,6 +3,7 @@ package org.mifos.application.accounts.loan.struts.action;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -607,10 +608,14 @@ public class LoanAccountAction extends AccountAppAction {
 		LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
 		loanAccountActionForm
 				.setLoanAmount(getStringValue(loan.getLoanAmount()));
-		loanAccountActionForm.setDisbursementDate(DateHelper.getUserLocaleDate(
-				getUserContext(request).getPereferedLocale(), request
-						.getSession().getAttribute(
-								LoanConstants.PROPOSEDDISBDATE).toString()));
+		java.util.Date proposedDisbursement = (Date)
+			request.getSession().getAttribute(LoanConstants.PROPOSEDDISBDATE);
+		loanAccountActionForm.setDisbursementDate(
+			DateHelper.getUserLocaleDate(
+				getUserContext(request).getPereferedLocale(), 
+				DateHelper.toDatabaseFormat(proposedDisbursement)
+			)
+		);
 		loanAccountActionForm.setIntDedDisbursement(loan
 				.isInterestDeductedAtDisbursement() ? "1" : "0");
 		loanAccountActionForm.setBusinessActivityId(getStringValue(loan
