@@ -46,9 +46,9 @@ package org.mifos.framework.exceptions;
 public class SystemException extends Exception {
 
 	/** 
-	 * This is a  string which points to the actual message in the resource bundle.
-	 * So the exception message to be shown to the user would be taken 
-	 * from the resource bundle and hence could be localized.
+	 * This is a string which points to the actual message in the resource bundle.
+	 * The exception message to be shown to the user is taken 
+	 * from the resource bundle and hence can be localized.
 	 */
 	protected String key = null;
 

@@ -101,12 +101,12 @@ public class TagGeneratorFactory {
 		try {
 			return (TagGenerator) Class.forName(
 					getGeneratorNames().get(getClassName(bo))).newInstance();
-		} catch (ClassNotFoundException cnfe) {
-			throw new FrameworkRuntimeException(cnfe);
-		} catch (IllegalAccessException iae) {
-			throw new FrameworkRuntimeException(iae);
-		} catch (InstantiationException ie) {
-			throw new FrameworkRuntimeException(ie);
+		} catch (ClassNotFoundException e) {
+			throw new FrameworkRuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new FrameworkRuntimeException(e);
+		} catch (InstantiationException e) {
+			throw new FrameworkRuntimeException(e);
 		}
 	}
 

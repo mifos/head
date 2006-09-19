@@ -45,43 +45,50 @@ package org.mifos.framework.exceptions;
 public class ApplicationException extends Exception {
 	
 	/** 
-	 *  This is a  string which points to the actual message in the resource bundle .So the exception message to be shown to the user would be taken from the resource bundle and hence could be localized.
+	 * This is a string which points to the actual message in the resource bundle.
+	 * So the exception message to be shown to the user would be taken from 
+	 * the resource bundle and hence could be localized.
 	 */
-	protected String key = null;
+	protected final String key;
 	
 	/** 
-	 *  This is an array of object which might be needed to pass certain parameters to the string in the resource bundle. 
+	 * This is an array of object which might be needed to pass certain 
+	 * parameters to the string in the resource bundle. 
 	 */
-	protected Object[] values = null;
+	protected final Object[] values;
 	
 	public ApplicationException() {
+		this((String)null, (Object[])null);
 	}
 	
+	/**
+	    Pass arguments, but no key.  I don't think this is ever being
+	    called (and I don't see how it would make sense).
+	*/
 	public ApplicationException(Object[] values) {
-		this.values = values;
+		this(null, values);
 	}
 	
 	public ApplicationException(Throwable cause) {
-		super.initCause(cause);
+		this(null, cause, null);
 	}
 	
 	public ApplicationException(String key ) {
-		this.key = key;
+		this(key, (Object[])null);
 	}
 	
-	public ApplicationException(String key ,Object[] values) {
+	public ApplicationException(String key, Object[] values) {
 		this.key = key;
 		this.values = values;
 	}
 	
-	public ApplicationException(String key ,Throwable cause) {
-		this.key = key;
-		super.initCause(cause);
+	public ApplicationException(String key, Throwable cause) {
+		this(key, cause, null);
 	}
 	
-	public ApplicationException(String key ,Throwable cause,Object[] values) {
+	public ApplicationException(String key, Throwable cause, Object[] values) {
+		super(cause);
 		this.key = key;
-		super.initCause(cause);
 		this.values = values;
 	}
 	
@@ -89,37 +96,17 @@ public class ApplicationException extends Exception {
 	 * Returns the key which maps to an entry in ExceptionResources file.
 	 * The message corresponding to this key is used for logging purposes
 	 * as well as for displaying message to the user 
-	 * @return
 	 */
 	public String getKey() {
-		if(null == key){
+		if (null == key) {
 			return "exception.framework.ApplicationException";
-		}else{
+		} else {
 			return this.key;
 		}
-		
 	}
 	
-	/**
-	 * @return Returns the values}.
-	 */
 	public Object[] getValues() {
 		return values;
 	}
-	
-	/**
-	 * @param values The values to set.
-	 */
-	public void setValues(Object[] values) {
-		this.values = values;
-	}
-	
-	/**
-	 * @param key The key to set.
-	 */
-	public void setKey(String key) {
-		this.key = key;
-	}
-	
 	
 }

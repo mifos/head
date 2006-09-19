@@ -47,9 +47,7 @@ public class BulkEntryAccountUpdateException extends ApplicationException {
 	}
 
 	public BulkEntryAccountUpdateException(String key, Throwable cause, Object[] values) {
-		super(cause);
-		this.key = key;
-		this.values = values;
+		super(key, cause, values);
 	}
 
 }

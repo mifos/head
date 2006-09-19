@@ -53,11 +53,6 @@ public class InterestCalculationException extends ApplicationException
 		super(cause);
 	}
 
-	public InterestCalculationException(Object[] values)
-	{
-		super(values);
-	}
-
 	public InterestCalculationException(String key ,Throwable cause) 
 	{
 		super(key,cause);

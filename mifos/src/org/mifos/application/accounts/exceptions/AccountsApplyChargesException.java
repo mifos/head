@@ -42,54 +42,28 @@ import org.mifos.framework.exceptions.ApplicationException;
 public class AccountsApplyChargesException extends ApplicationException {
 	private static final long serialVersionUID=999999l;
 
-	/**
-	 * 
-	 */
 	public AccountsApplyChargesException() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @param values
-	 */
 	public AccountsApplyChargesException(Object[] values) {
 		super(values);
-		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @param cause
-	 */
 	public AccountsApplyChargesException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @param key
-	 */
 	public AccountsApplyChargesException(String key) {
 		super(key);
-		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @param key
-	 * @param values
-	 */
 	public AccountsApplyChargesException(String key, Object[] values) {
 		super(key, values);
-		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @param key
-	 * @param cause
-	 */
 	public AccountsApplyChargesException(String key, Throwable cause) {
 		super(key, cause);
-		// TODO Auto-generated constructor stub
 	}
 
 }

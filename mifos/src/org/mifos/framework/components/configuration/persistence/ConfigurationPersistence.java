@@ -66,9 +66,9 @@ public class ConfigurationPersistence extends Persistence{
 		if (null != queryResult && queryResult.size() > 0) {
 			defaultCurrency = (MifosCurrency) queryResult.get(0);
 		}
-		else{
+		else {
 			logger.error("No Default Currency Specified");
-			throw new FrameworkRuntimeException();
+			throw new FrameworkRuntimeException(null, "No Default Currency Specified");
 		}
 		
 		return defaultCurrency;
@@ -79,7 +79,7 @@ public class ConfigurationPersistence extends Persistence{
 		List<ConfigEntity> queryResult = executeNamedQuery(NamedQueryConstants.GET_SYSTEM_CONFIG,null);
 		if (queryResult==null || queryResult.size()==0) {
 			logger.error("No System Configuration Specified");
-			throw new FrameworkRuntimeException();
+			throw new FrameworkRuntimeException(null, "No System Configuration Specified");
 		}
 		return (ConfigEntity)queryResult.get(0);
 	}
@@ -88,7 +88,7 @@ public class ConfigurationPersistence extends Persistence{
 		  List<SupportedLocalesEntity> supportedLocaleList = HibernateUtil.getSessionTL().getNamedQuery(NamedQueryConstants.GET_MFI_LOCALE).list();
 		  if (supportedLocaleList==null || supportedLocaleList.size()==0){
 			    logger.error("No Default Locale Specified");
-				throw new FrameworkRuntimeException();
+				throw new FrameworkRuntimeException(null, "No Default Locale Specified");
 		  }
 		  SupportedLocalesEntity locale = supportedLocaleList.get(0);
 		  Hibernate.initialize(locale.getCountry());
@@ -100,7 +100,7 @@ public class ConfigurationPersistence extends Persistence{
 		List<ConfigEntity> queryResult = executeNamedQuery(NamedQueryConstants.GET_OFFICE_CONFIG, null);
 		if (queryResult==null || queryResult.size()==0){
 			logger.error("Office Configuration Not Specified");
-			throw new FrameworkRuntimeException();
+			throw new FrameworkRuntimeException(null, "Office Configuration Not Specified");
 		}
 		return queryResult;
 	}
@@ -109,7 +109,7 @@ public class ConfigurationPersistence extends Persistence{
 		List<WeekDaysEntity> queryResult = executeNamedQuery(NamedQueryConstants.GETWEEKDAYS, null);
 		if (queryResult==null || queryResult.size()==0) {
 			logger.error("WeekDays List Not Specified");
-			throw new FrameworkRuntimeException();
+			throw new FrameworkRuntimeException(null, "WeekDays List Not Specified");
 		}
 		return queryResult;
 	}

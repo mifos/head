@@ -236,9 +236,8 @@ public class TableTag extends BodyTagSupport {
 
 	/**
 	 * Function to render the tag
-	 *
-	 * @throws JspException
 	 */
+	@Override
 	public int doStartTag() throws JspException {
 		// Used to set the value of the list which we are getting from the Cache
 		List list = null;

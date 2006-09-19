@@ -25,7 +25,7 @@ public class RolesPermissionException extends ApplicationException {
 	}
 
 	public RolesPermissionException(String key) {
-		super.setKey(key);
+		super(key);
 	}
 
 }

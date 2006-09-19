@@ -31,6 +31,10 @@ public class OfficeListTag extends BodyTagSupport {
 		try {
 			TagUtils.getInstance().write(pageContext, getOfficeList());
 		} catch (Exception e) {
+			/**
+			    This turns into a (rather ugly) error 500.
+			    TODO: make it more reasonable.
+			 */
 			throw new JspException(e);
 		}
 		return EVAL_PAGE;

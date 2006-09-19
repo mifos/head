@@ -44,28 +44,9 @@ public class StatesInitializationException extends ApplicationException {
 		super(key);
 	}
 
-	public StatesInitializationException(String stateinitialization_exception, Exception e) {
+	public StatesInitializationException(String stateinitialization_exception, 
+		Exception e) {
 		super(stateinitialization_exception,e);
 	}
 
-	@Override
-	public String getKey() {
-		return super.getKey();
-	}
-
-	@Override
-	public Object[] getValues() {
-		return super.getValues();
-	}
-
-	@Override
-	public void setKey(String key) {
-		super.setKey(key);
-	}
-
-	@Override
-	public void setValues(Object[] values) {
-		super.setValues(values);
-	}
-	
 }

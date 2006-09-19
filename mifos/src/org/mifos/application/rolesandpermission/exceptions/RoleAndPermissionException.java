@@ -44,31 +44,26 @@ public class RoleAndPermissionException extends ApplicationException {
 
 	public RoleAndPermissionException() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public RoleAndPermissionException(Object[] values) {
 		super(values);
-		// TODO Auto-generated constructor stub
 	}
 
 	public RoleAndPermissionException(String key, Object[] values) {
 		super(key, values);
-		// TODO Auto-generated constructor stub
 	}
 
 	public RoleAndPermissionException(String key, Throwable cause) {
 		super(key, cause);
-		// TODO Auto-generated constructor stub
 	}
 
 	public RoleAndPermissionException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
 	}
 
 	public RoleAndPermissionException(String key) {
-		super.setKey(key);
+		super(key);
 	}
 
 }

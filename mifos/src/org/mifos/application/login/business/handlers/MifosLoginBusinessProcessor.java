@@ -105,11 +105,8 @@ public class MifosLoginBusinessProcessor extends MifosBusinessProcessor {
 	 * checked with the password in database. If passwords are equal, the password is
 	 * changed to the new password and the password change flag is set to 1 and 
 	 * the LastLogin time is null, then it is set to current time.
-	 * 
-	 * @param Context
-	 * @throws SystemException
-	 * @throws ApplicationException
 	 */
+	@Override
 	public void update(Context context) throws SystemException,
 			ApplicationException {
 		loginLogger.debug("In Update of Login Business Processor");
@@ -160,13 +157,9 @@ public class MifosLoginBusinessProcessor extends MifosBusinessProcessor {
 
 	/**
 	 * This method checks with the Authenticator for the validity of the User
-	 * Name and Password entered by the User. If the User is Authenticated an UserContext is
+	 * Name and Password entered by the User. 
+	 * If the User is Authenticated an UserContext is
 	 * returned. If the Authentication fails, an Exception is thrown.
-	 * 
-	 * @param valueObject
-	 * @return UserContext--If Authentication is successful
-	 * @throws ApplicationException
-	 * @throws SystemException
 	 */
 	private UserContext getUserContext(MifosLoginValueObject valueObject)
 			throws ApplicationException, SystemException {
@@ -180,10 +173,7 @@ public class MifosLoginBusinessProcessor extends MifosBusinessProcessor {
 	/**
 	 * This method is used to get the Person object associated with the UserId.
 	 * 
-	 * @param userId
 	 * @return PersonRoles object associated with the UserId
-	 * @throws ApplicationException
-	 * @throws SystemException
 	 */
 	private PersonRoles getPerson(String userId) throws ApplicationException,
 			SystemException {
@@ -194,9 +184,9 @@ public class MifosLoginBusinessProcessor extends MifosBusinessProcessor {
 		} catch (NumberFormatException e) {
 			throw new ApplicationException(LoginConstants.SESSIONTIMEOUT);
 		} catch (HibernateProcessException e) {
-			throw new SystemException();
+			throw new SystemException(e);
 		} catch(ApplicationException ae) {
-			throw new ApplicationException(ae.getKey());
+			throw ae;
 		} catch(SystemException se) {
 			throw new SystemException(se);
 		} catch(Exception e) {

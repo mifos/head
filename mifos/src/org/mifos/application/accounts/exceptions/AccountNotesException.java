@@ -39,47 +39,24 @@
 package org.mifos.application.accounts.exceptions;
 
 import org.mifos.framework.exceptions.ApplicationException;
+
 /**
  * This is general exception for the account notes
  */
 public class AccountNotesException extends ApplicationException{
 	
-	/** Simple Constructor for AccountNotesException*/
-	public AccountNotesException() {
-		super();
-	}
-	/** Constructor for CustomerException
-	 * @param key
-	 */
 	public AccountNotesException(String key) {
 		super(key);
 	}
 	
-	/** Constructor for AccountNotesException
-	 * @param key
-	 * @param values
-	 */
 	public AccountNotesException(String key,Object[] values) {
 		super(key, values);
 	}
 
-	/** Constructor for AccountNotesException
-	 * @param cause
-	 */
 	public AccountNotesException(Throwable cause) {
 		super(cause);
 	}
 	
-	/** Constructor for AccountNotesException
-	 * @param values
-	 */
-	public AccountNotesException(Object[] values) {
-		super(values);
-	}
-	
-	/** Constructor for AccountNotesException
-	 * @param cause
-	 */
 	public AccountNotesException(String key ,Throwable cause) {
 		super(key , cause);
 	}

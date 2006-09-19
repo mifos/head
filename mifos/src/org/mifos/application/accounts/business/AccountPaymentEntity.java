@@ -165,11 +165,11 @@ public class AccountPaymentEntity extends PersistentObject {
 	}
 
 	/**
-	 *Create reverse entries of all the transactions associated with this payment
-	 *and adds them to the set of transactions associated. 
-	 * @throws SystemException 
+	 * Create reverse entries of all the transactions associated with this payment
+	 * and adds them to the set of transactions associated. 
 	 */
-	public List<AccountTrxnEntity> reversalAdjustment(String adjustmentComment)throws AccountException {
+	public List<AccountTrxnEntity> reversalAdjustment(String adjustmentComment)
+	throws AccountException {
 		List<AccountTrxnEntity> newlyAddedTrxns = null;
 		this.setAmount(getAmount().subtract(getAmount()));
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("The amount in account payment is " + getAmount().getAmountDoubleValue());

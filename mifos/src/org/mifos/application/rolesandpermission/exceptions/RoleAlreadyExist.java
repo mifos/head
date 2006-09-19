@@ -44,7 +44,7 @@ package org.mifos.application.rolesandpermission.exceptions;
 import org.mifos.framework.exceptions.ApplicationException;
 
 /**
- * This class represent RoleAlreadyExist exception ,which is thrown if the user 
+ * This class represent RoleAlreadyExist exception, which is thrown if the user 
  * is creating new role in the system and that role already exist in the system.
  * This exception is also thrown if the user is trying to modufy the role and he
  * Changes the name of the role and the changed name already exist in the system
@@ -62,7 +62,6 @@ public class RoleAlreadyExist extends ApplicationException {
 
 	/**
 	 * Constructor taking values as arguments to show in message
-	 * @param values
 	 */
 	public RoleAlreadyExist(Object[] values) {
 		super(values);
@@ -70,7 +69,6 @@ public class RoleAlreadyExist extends ApplicationException {
 
 	/**
 	 * Constructor with Throwable as argument
-	 * @param cause
 	 */
 	public RoleAlreadyExist(Throwable cause) {
 		super(cause);
@@ -78,7 +76,6 @@ public class RoleAlreadyExist extends ApplicationException {
 
 	/**
 	 * Constructor taking the key in resource bundle to show the message 
-	 * @param key
 	 */
 	public RoleAlreadyExist(String key) {
 		super(key);
@@ -86,21 +83,10 @@ public class RoleAlreadyExist extends ApplicationException {
 
 	/**
 	 * Constructor taking key and argument to show in message
-	 * @param key
-	 * @param values
 	 */
 	public RoleAlreadyExist(String key, Object[] values) {
 		super(key, values);
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.exceptions.ApplicationException#setKey(java.lang.String)
-	 */
-	@Override
-	public void setKey(String key) {
-		super.setKey(key);
-	}
-
-	
 }

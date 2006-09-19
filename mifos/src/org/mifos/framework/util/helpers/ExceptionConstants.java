@@ -46,7 +46,8 @@ public interface ExceptionConstants {
 	public static String DOUBLESUBMITEXCEPTION = "exception.framework.DoubleSubmitException" ;
 	public static String SERVICEEXCEPTION = "exception.framework.ServiceException" ;
 	public static String ILLEGALMONEYOPERATION = "The desired operation on money class is not possible because the two money objects are of different currencies." ;
-	public static String FRAMEWORKRUNTIMEEXCEPTION = "exception.framework.FrameworkRuntimeException";
+	public static String FRAMEWORKRUNTIMEEXCEPTION = 
+		"exception.framework.FrameworkRuntimeException";
 	public static String CONSTANTSNOTLOADEDEXCEPTION = "exception.framework.ConstantsNotLoadedException";
 	public static String STARTUP_EXCEPTION = "exception.framework.StartUpException";
 	public static String ENUMSNOTLOADEDEXCEPTION = "exception.framework.EnumsNotLoadedException";
