@@ -613,6 +613,481 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		assertNotNull(loanOffering.getInterestGLcode());
 	}
 
+	public void testUpdateloanOfferingWithoutDataForMandatoryFields() {
+		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		try {
+			loanOffering.update(null, null, null, null, null, null, null, null,
+					null, null, null, null, null, null, null, null, null, null,
+					null, null, null, false, false, false, null, null, null,
+					null);
+			assertTrue(false);
+		} catch (ProductDefinitionException e) {
+			assertTrue(true);
+		}
+	}
+
+	public void testUpdateloanOfferingWithoutName()
+			throws InvalidUserException, SystemException, ApplicationException {
+		createIntitalObjects();
+		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		try {
+			loanOffering.update((short) 1, null, "S", productCategory,
+					prdApplicableMaster, new Date(System.currentTimeMillis()),
+					null, "Loan Product updated", PrdStatus.LOANACTIVE, null,
+					interestTypes, (short) 0, new Money("3000"), new Money(
+							"1000"), new Money("2000"), 12.0, 2.0, 3.0,
+					(short) 20, (short) 1, (short) 12, false, false, false,
+					null, null, (short) 2, RecurrenceType.WEEKLY);
+			assertTrue(false);
+		} catch (ProductDefinitionException e) {
+			assertTrue(true);
+		}
+	}
+
+	public void testUpdateloanOfferingWithShortNameGreaterThanFourDig()
+			throws InvalidUserException, SystemException, ApplicationException {
+		createIntitalObjects();
+		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		try {
+			loanOffering.update((short) 1, "Loan Product", "LOANS",
+					productCategory, prdApplicableMaster, new Date(System
+							.currentTimeMillis()), null,
+					"Loan Product updated", PrdStatus.LOANACTIVE, null,
+					interestTypes, (short) 0, new Money("3000"), new Money(
+							"1000"), new Money("2000"), 12.0, 2.0, 3.0,
+					(short) 20, (short) 1, (short) 12, false, false, false,
+					null, null, (short) 2, RecurrenceType.WEEKLY);
+			assertTrue(false);
+		} catch (ProductDefinitionException e) {
+			assertTrue(true);
+		}
+	}
+
+	public void testupdateloanOfferingWithStartDateLessThanCurrentDate()
+			throws InvalidUserException, SystemException, ApplicationException {
+		createIntitalObjects();
+		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		Date startDate = offSetCurrentDate(-2);
+		try {
+			loanOffering.update((short) 1, "Loan Product", "LOAN",
+					productCategory, prdApplicableMaster, startDate, null,
+					"Loan Product updated", PrdStatus.LOANACTIVE, null,
+					interestTypes, (short) 0, new Money("3000"), new Money(
+							"1000"), new Money("2000"), 12.0, 2.0, 3.0,
+					(short) 20, (short) 1, (short) 12, false, false, false,
+					null, null, (short) 2, RecurrenceType.WEEKLY);
+			assertTrue(false);
+		} catch (ProductDefinitionException e) {
+			assertTrue(true);
+		}
+	}
+
+	public void testUpdateloanOfferingWithStartDateEqualToCurrentDate()
+			throws InvalidUserException, SystemException, ApplicationException {
+		createIntitalObjects();
+		Date startDate = offSetCurrentDate(0);
+		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		loanOffering.update((short) 1, "Loan Product", "LOAN", productCategory,
+				prdApplicableMaster, startDate, null, "Loan Product updated",
+				PrdStatus.LOANACTIVE, null, interestTypes, (short) 0,
+				new Money("3000"), new Money("1000"), new Money("2000"), 12.0,
+				2.0, 3.0, (short) 20, (short) 1, (short) 12, false, false,
+				false, null, null, (short) 2, RecurrenceType.WEEKLY);
+		HibernateUtil.commitTransaction();
+		loanOffering = (LoanOfferingBO) TestObjectFactory.getObject(
+				LoanOfferingBO.class, loanOffering.getPrdOfferingId());
+		assertEquals(PrdStatus.LOANACTIVE.getValue(), loanOffering
+				.getPrdStatus().getOfferingStatusId());
+
+	}
+
+	public void testUpdateloanOfferingWithStartDateGreaterThanCurrentDate()
+			throws InvalidUserException, SystemException, ApplicationException {
+		createIntitalObjects();
+		Date startDate = offSetCurrentDate(2);
+		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		try {
+			loanOffering.update((short) 1, "Loan Product", "LOAN",
+					productCategory, prdApplicableMaster, startDate, null,
+					"Loan Product updated", PrdStatus.LOANACTIVE, null,
+					interestTypes, (short) 0, new Money("3000"), new Money(
+							"1000"), new Money("2000"), 12.0, 2.0, 3.0,
+					(short) 20, (short) 1, (short) 12, false, false, false,
+					null, null, (short) 2, RecurrenceType.WEEKLY);
+			assertTrue(false);
+		} catch (ProductDefinitionException e) {
+			assertTrue(true);
+		}
+
+	}
+
+	public void testUpdateloanOfferingWithDuplicatePrdOfferingName()
+			throws InvalidUserException, SystemException, ApplicationException {
+		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		LoanOfferingBO loanOffering1 = createLoanOfferingBO("Loan Product1",
+				"LOA1");
+		createIntitalObjects();
+		Date startDate = offSetCurrentDate(0);
+		try {
+			loanOffering1.update((short) 1, "Loan Product", "LOAN",
+					productCategory, prdApplicableMaster, startDate, null,
+					"Loan Product updated", PrdStatus.LOANACTIVE, null,
+					interestTypes, (short) 0, new Money("3000"), new Money(
+							"1000"), new Money("2000"), 12.0, 2.0, 3.0,
+					(short) 20, (short) 1, (short) 12, false, false, false,
+					null, null, (short) 2, RecurrenceType.WEEKLY);
+			assertTrue(false);
+		} catch (ProductDefinitionException e) {
+			assertTrue(true);
+		}
+		TestObjectFactory.removeObject(loanOffering1);
+	}
+
+	public void testUpdateloanOfferingWithDuplicatePrdOfferingShortName()
+			throws InvalidUserException, SystemException, ApplicationException {
+		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		LoanOfferingBO loanOffering1 = createLoanOfferingBO("Loan Product1",
+				"LOA1");
+		createIntitalObjects();
+		Date startDate = offSetCurrentDate(0);
+		try {
+			loanOffering1.update((short) 1, "Loan Product1", "LOAP",
+					productCategory, prdApplicableMaster, startDate, null,
+					"Loan Product updated", PrdStatus.LOANACTIVE, null,
+					interestTypes, (short) 0, new Money("3000"), new Money(
+							"1000"), new Money("2000"), 12.0, 2.0, 3.0,
+					(short) 20, (short) 1, (short) 12, false, false, false,
+					null, null, (short) 2, RecurrenceType.WEEKLY);
+			assertTrue(false);
+		} catch (ProductDefinitionException e) {
+			assertTrue(true);
+		}
+		TestObjectFactory.removeObject(loanOffering1);
+	}
+
+	public void testUpdateloanOfferingWithEndDateLessThanStartDate()
+			throws InvalidUserException, SystemException, ApplicationException {
+		createIntitalObjects();
+		Date startDate = offSetCurrentDate(0);
+		Date endDate = offSetCurrentDate(-2);
+		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		try {
+			loanOffering.update((short) 1, "Loan Product", "LOAN",
+					productCategory, prdApplicableMaster, startDate, endDate,
+					"Loan Product updated", PrdStatus.LOANACTIVE, null,
+					interestTypes, (short) 0, new Money("3000"), new Money(
+							"1000"), new Money("2000"), 12.0, 2.0, 3.0,
+					(short) 20, (short) 1, (short) 12, false, false, false,
+					null, null, (short) 2, RecurrenceType.WEEKLY);
+			assertTrue(false);
+		} catch (ProductDefinitionException e) {
+			assertTrue(true);
+		}
+	}
+
+	public void testUpdateloanOfferingWithNoInterestTypes()
+			throws InvalidUserException, SystemException, ApplicationException {
+		createIntitalObjects();
+		Date startDate = offSetCurrentDate(0);
+		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		try {
+			loanOffering.update((short) 1, "Loan Product", "LOAN",
+					productCategory, prdApplicableMaster, startDate, null,
+					"Loan Product updated", PrdStatus.LOANACTIVE, null, null,
+					(short) 0, new Money("3000"), new Money("1000"), new Money(
+							"2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1,
+					(short) 12, false, false, false, null, null, (short) 2,
+					RecurrenceType.WEEKLY);
+			assertTrue(false);
+		} catch (ProductDefinitionException e) {
+			assertTrue(true);
+		}
+	}
+
+	public void testupdateloanOfferingWithNoMaxAmount()
+			throws InvalidUserException, SystemException, ApplicationException {
+		createIntitalObjects();
+		Date startDate = offSetCurrentDate(0);
+		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		try {
+			loanOffering.update((short) 1, "Loan Product", "LOAN",
+					productCategory, prdApplicableMaster, startDate, null,
+					"Loan Product updated", PrdStatus.LOANACTIVE, null,
+					interestTypes, (short) 0, null, new Money("1000"),
+					new Money("2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1,
+					(short) 12, false, false, false, null, null, (short) 2,
+					RecurrenceType.WEEKLY);
+			assertTrue(false);
+		} catch (ProductDefinitionException e) {
+			assertTrue(true);
+		}
+	}
+
+	public void testUpdateDefAmountNotBetweenMinMaxAmounts() {
+		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
+				PrdApplicableMaster.CLIENTS);
+		createIntitalObjects();
+		Date startDate = offSetCurrentDate(0);
+		Date endDate = offSetCurrentDate(2);
+		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		try {
+			loanOffering.update((short) 1, "Loan Product", "LOAN",
+					productCategory, prdApplicableMaster, startDate, endDate,
+					"Loan Product updated", PrdStatus.LOANACTIVE, null,
+					interestTypes, (short) 0, new Money("1000"), new Money(
+							"3000"), new Money("2000"), 12.0, 2.0, 3.0,
+					(short) 20, (short) 1, (short) 12, false, false, false,
+					null, null, (short) 2, RecurrenceType.WEEKLY);
+			assertTrue(false);
+		} catch (ProductDefinitionException e) {
+			assertTrue(true);
+		}
+	}
+
+	public void testUpdateMinAmountGreaterThanMaxAmount() {
+		createIntitalObjects();
+		Date startDate = offSetCurrentDate(0);
+		Date endDate = offSetCurrentDate(2);
+		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		try {
+			loanOffering.update((short) 1, "Loan Product", "LOAN",
+					productCategory, prdApplicableMaster, startDate, endDate,
+					"Loan Product updated", PrdStatus.LOANACTIVE, null,
+					interestTypes, (short) 0, new Money("1000"), new Money(
+							"3000"), new Money("1000"), 12.0, 2.0, 3.0,
+					(short) 20, (short) 1, (short) 12, false, false, false,
+					null, null, (short) 2, RecurrenceType.WEEKLY);
+			assertTrue(false);
+		} catch (ProductDefinitionException e) {
+			assertTrue(true);
+		}
+	}
+
+	public void testUpdateDefInterestRateNotBetweenMinMaxRates() {
+		createIntitalObjects();
+		Date startDate = offSetCurrentDate(0);
+		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		try {
+			loanOffering.update((short) 1, "Loan Product", "LOAN",
+					productCategory, prdApplicableMaster, startDate, null,
+					"Loan Product updated", PrdStatus.LOANACTIVE, null,
+					interestTypes, (short) 0, new Money("3000"), new Money(
+							"1000"), new Money("1000"), 12.0, 2.0, 13.0,
+					(short) 20, (short) 1, (short) 12, false, false, false,
+					null, null, (short) 2, RecurrenceType.WEEKLY);
+			assertTrue(false);
+		} catch (ProductDefinitionException e) {
+			assertTrue(true);
+		}
+	}
+
+	public void testUpdateMinInterestRateGretaterThanMaxRate() {
+		createIntitalObjects();
+		Date startDate = offSetCurrentDate(0);
+		Date endDate = offSetCurrentDate(2);
+		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		try {
+			loanOffering.update((short) 1, "Loan Product", "LOAN",
+					productCategory, prdApplicableMaster, startDate, endDate,
+					"Loan Product updated", PrdStatus.LOANACTIVE, null,
+					interestTypes, (short) 0, new Money("3000"), new Money(
+							"1000"), new Money("1000"), 12.0, 22.0, 12.0,
+					(short) 20, (short) 1, (short) 12, false, false, false,
+					null, null, (short) 2, RecurrenceType.WEEKLY);
+			assertTrue(false);
+		} catch (ProductDefinitionException e) {
+			assertTrue(true);
+		}
+	}
+
+	public void testUpdateMinInstallmentsGreaterThanMaxInstallments() {
+		createIntitalObjects();
+		Date startDate = offSetCurrentDate(0);
+		Date endDate = offSetCurrentDate(2);
+		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		try {
+			loanOffering.update((short) 1, "Loan Product", "LOAN",
+					productCategory, prdApplicableMaster, startDate, endDate,
+					"Loan Product updated", PrdStatus.LOANACTIVE, null,
+					interestTypes, (short) 0, new Money("3000"), new Money(
+							"1000"), new Money("1000"), 12.0, 2.0, 12.0,
+					(short) 2, (short) 12, (short) 2, false, false, false,
+					null, null, (short) 2, RecurrenceType.WEEKLY);
+			assertTrue(false);
+		} catch (ProductDefinitionException e) {
+			assertTrue(true);
+		}
+	}
+
+	public void testUpdateDefInstallmentsNotBetweenMinMaxInstallments() {
+		createIntitalObjects();
+		Date startDate = offSetCurrentDate(0);
+		Date endDate = offSetCurrentDate(2);
+		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		try {
+			loanOffering.update((short) 1, "Loan Product", "LOAN",
+					productCategory, prdApplicableMaster, startDate, endDate,
+					"Loan Product updated", PrdStatus.LOANACTIVE, null,
+					interestTypes, (short) 0, new Money("3000"), new Money(
+							"1000"), new Money("1000"), 12.0, 2.0, 12.0,
+					(short) 12, (short) 1, (short) 22, false, false, false,
+					null, null, (short) 2, RecurrenceType.WEEKLY);
+			assertTrue(false);
+		} catch (ProductDefinitionException e) {
+			assertTrue(true);
+		}
+	}
+
+	public void testUpdateGracePeriodForIntDedAtDisb()
+			throws ProductDefinitionException {
+		createIntitalObjects();
+		Date startDate = offSetCurrentDate(0);
+		Date endDate = offSetCurrentDate(2);
+		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		loanOffering.update((short) 1, "Loan Product", "LOAN", productCategory,
+				prdApplicableMaster, startDate, endDate,
+				"Loan Product updated", PrdStatus.LOANACTIVE, null,
+				interestTypes, (short) 0, new Money("3000"), new Money("1000"),
+				new Money("1000"), 12.0, 2.0, 12.0, (short) 12, (short) 1,
+				(short) 2, false, true, false, null, null, (short) 2,
+				RecurrenceType.WEEKLY);
+		HibernateUtil.commitTransaction();
+		loanOffering = (LoanOfferingBO) TestObjectFactory.getObject(
+				LoanOfferingBO.class, loanOffering.getPrdOfferingId());
+
+		assertNotNull(loanOffering.getGracePeriodType());
+		assertNotNull(loanOffering.getGracePeriodDuration());
+		assertEquals(GraceTypeConstants.NONE.getValue(), loanOffering
+				.getGracePeriodType().getId());
+		assertEquals(Short.valueOf("0"), loanOffering.getGracePeriodDuration());
+	}
+
+	public void testUpdateFeeNotMatchingFrequencyOfLoanOffering()
+			throws ProductDefinitionException, FeeException {
+		createIntitalObjects();
+		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(
+				GraceTypeConstants.NONE);
+		Date startDate = offSetCurrentDate(0);
+		Date endDate = offSetCurrentDate(2);
+		FeeBO fee = new AmountFeeBO(TestObjectFactory.getContext(),
+				"Loan Periodic", new CategoryTypeEntity(FeeCategory.LOAN),
+				new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC),
+				intglCodeEntity, new Money("100"), false, TestObjectFactory
+						.createMeeting(TestObjectFactory.getMeetingHelper(2, 1,
+								4, 2)));
+		List<FeeBO> fees = new ArrayList<FeeBO>();
+		fees.add(fee);
+		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		try {
+			loanOffering.update((short) 1, "Loan Product", "LOAN",
+					productCategory, prdApplicableMaster, startDate, endDate,
+					"Loan Product updated", PrdStatus.LOANACTIVE,
+					gracePeriodType, interestTypes, (short) 0,
+					new Money("3000"), new Money("1000"), new Money("1000"),
+					12.0, 2.0, 12.0, (short) 12, (short) 1, (short) 2, false,
+					true, false, null, fees, (short) 2, RecurrenceType.WEEKLY);
+			assertTrue(false);
+		} catch (ProductDefinitionException e) {
+			assertTrue(true);
+		}
+	}
+
+	public void testUpdateWithFundsAndOneTimeFee()
+			throws ProductDefinitionException, FeeException {
+		createIntitalObjects();
+		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(
+				GraceTypeConstants.GRACEONALLREPAYMENTS);
+		Date startDate = offSetCurrentDate(0);
+		Date endDate = offSetCurrentDate(2);
+		FeeBO fee = new AmountFeeBO(TestObjectFactory.getContext(),
+				"Loan Periodic", new CategoryTypeEntity(FeeCategory.LOAN),
+				new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC),
+				intglCodeEntity, new Money("100"), false, TestObjectFactory
+						.createMeeting(TestObjectFactory.getMeetingHelper(1, 1,
+								4, 2)));
+		FeeBO fee1 = new AmountFeeBO(TestObjectFactory.getContext(),
+				"Loan Periodic", new CategoryTypeEntity(FeeCategory.LOAN),
+				new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
+				intglCodeEntity, new Money("100"), false, new FeePaymentEntity(
+						FeePayment.UPFRONT));
+		List<FeeBO> fees = new ArrayList<FeeBO>();
+		fees.add(fee);
+		fees.add(fee1);
+		List<Fund> funds = new ArrayList<Fund>();
+		funds.add(new Fund());
+		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		loanOffering.update((short) 1, "Loan Product", "LOAN", productCategory,
+				prdApplicableMaster, startDate, endDate,
+				"Loan Product updated", PrdStatus.LOANACTIVE, gracePeriodType,
+				interestTypes, (short) 0, new Money("3000"), new Money("1000"),
+				new Money("1000"), 12.0, 2.0, 12.0, (short) 12, (short) 1,
+				(short) 2, false, true, false, funds, fees, (short) 2,
+				RecurrenceType.WEEKLY);
+		assertEquals(2, loanOffering.getPrdOfferingFees().size());
+		assertEquals(1, loanOffering.getLoanOfferingFunds().size());
+	}
+
+	public void testUpdateLoanOffering() throws ProductDefinitionException,
+			FeeException {
+		createIntitalObjects();
+		Date startDate = offSetCurrentDate(0);
+		Date endDate = offSetCurrentDate(2);
+		periodicFee = TestObjectFactory.createPeriodicAmountFee(
+				"Loan Periodic", FeeCategory.LOAN, "100",
+				RecurrenceType.MONTHLY, (short) 1);
+		oneTimeFee = TestObjectFactory.createOneTimeAmountFee("Loan One time",
+				FeeCategory.LOAN, "100", FeePayment.UPFRONT);
+		List<FeeBO> fees = new ArrayList<FeeBO>();
+		fees.add(periodicFee);
+		fees.add(oneTimeFee);
+		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		loanOffering.update((short) 1, "Loan Product", "LOAN", productCategory,
+				prdApplicableMaster, startDate, endDate,
+				"Loan Product updated", PrdStatus.LOANACTIVE, null,
+				interestTypes, (short) 0, new Money("3000"), new Money("1000"),
+				new Money("1000"), 12.0, 2.0, 12.0, (short) 12, (short) 1,
+				(short) 2, false, true, false, null, fees, (short) 2,
+				RecurrenceType.MONTHLY);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		loanOffering = (LoanOfferingBO) TestObjectFactory.getObject(
+				LoanOfferingBO.class, loanOffering.getPrdOfferingId());
+
+		assertEquals("Loan Product", loanOffering.getPrdOfferingName());
+		assertEquals("LOAN", loanOffering.getPrdOfferingShortName());
+		assertEquals(Short.valueOf("1"), loanOffering.getPrdCategory()
+				.getProductCategoryID());
+		assertEquals(PrdApplicableMaster.CLIENTS.getValue(), loanOffering
+				.getPrdApplicableMaster().getId());
+		assertEquals(startDate, loanOffering.getStartDate());
+		assertEquals(endDate, loanOffering.getEndDate());
+		assertEquals("Loan Product updated", loanOffering.getDescription());
+		assertEquals(GraceTypeConstants.NONE.getValue(), loanOffering
+				.getGracePeriodType().getId());
+		assertEquals(Short.valueOf("0"), loanOffering.getGracePeriodDuration());
+		assertEquals(InterestTypeConstants.FLATINTERST.getValue(), loanOffering
+				.getInterestTypes().getId());
+		assertEquals(new Money("1000"), loanOffering.getMinLoanAmount());
+		assertEquals(new Money("3000"), loanOffering.getMaxLoanAmount());
+		assertEquals(new Money("1000"), loanOffering.getDefaultLoanAmount());
+		assertEquals(2.0, loanOffering.getMinInterestRate());
+		assertEquals(12.0, loanOffering.getMaxInterestRate());
+		assertEquals(12.0, loanOffering.getDefInterestRate());
+		assertEquals(Short.valueOf("1"), loanOffering.getMinNoInstallments());
+		assertEquals(Short.valueOf("12"), loanOffering.getMaxNoInstallments());
+		assertEquals(Short.valueOf("2"), loanOffering.getDefNoInstallments());
+		assertFalse(loanOffering.isIncludeInLoanCounter());
+		assertTrue(loanOffering.isIntDedDisbursement());
+		assertFalse(loanOffering.isPrinDueLastInst());
+		assertEquals(2, loanOffering.getPrdOfferingFees().size());
+		assertNotNull(loanOffering.getPrdOfferingMeeting());
+		assertEquals(RecurrenceType.MONTHLY.getValue(), loanOffering
+				.getPrdOfferingMeeting().getMeeting().getMeetingDetails()
+				.getRecurrenceType().getRecurrenceId());
+		assertNotNull(loanOffering.getPrincipalGLcode());
+		assertNotNull(loanOffering.getInterestGLcode());
+	}
+
 	private MeetingBO getMeeting() {
 		return TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -630,7 +1105,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	private LoanOfferingBO createLoanOfferingBO(String prdOfferingName,
 			String shortName) {
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingHelper(1, 1, 1, 2));
 		return TestObjectFactory.createLoanOffering(prdOfferingName, shortName,
 				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
 						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short

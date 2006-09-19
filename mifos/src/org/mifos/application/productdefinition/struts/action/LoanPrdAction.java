@@ -70,7 +70,6 @@ import org.mifos.application.productdefinition.business.service.LoanPrdBusinessS
 import org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionForm;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -138,20 +137,14 @@ public class LoanPrdAction extends BaseAction {
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		prdDefLogger.debug("start validate method of Loan Product Action");
 		String method = (String) request
 				.getAttribute(ProductDefinitionConstants.METHODCALLED);
+		prdDefLogger.debug("start validate method of Loan Product Action"
+				+ method);
 		if (method != null) {
-			if (method.equals(Methods.preview.toString())) {
-				return mapping.findForward(ActionForwards.preview_failure
-						.toString());
-			} else if (method.equals(Methods.create.toString())) {
-				return mapping.findForward(ActionForwards.create_failure
-						.toString());
-			}
+			return mapping.findForward(method + "_failure");
 		}
-		prdDefLogger.debug("preview validate of Loan Product Action called");
-		return mapping.findForward(ActionForwards.preview_success.toString());
+		return mapping.findForward(ActionForwards.preview_failure.toString());
 	}
 
 	@TransactionDemarcate(validateAndResetToken = true)

@@ -43,6 +43,7 @@ import java.util.List;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.fund.util.valueobjects.Fund;
+import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
@@ -63,5 +64,11 @@ public class LoansPrdPersistence extends Persistence {
 
 	public List<Fund> getSourcesOfFund() throws PersistenceException {
 		return executeNamedQuery(NamedQueryConstants.PRDSRCFUNDS, null);
+	}
+
+	public LoanOfferingBO getLoanOffering(Short prdofferingId)
+			throws PersistenceException {
+		return (LoanOfferingBO) getPersistentObject(LoanOfferingBO.class,
+				prdofferingId);
 	}
 }

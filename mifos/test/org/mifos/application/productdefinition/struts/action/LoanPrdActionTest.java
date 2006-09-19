@@ -38,6 +38,7 @@
 package org.mifos.application.productdefinition.struts.action;
 
 import java.net.URISyntaxException;
+import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -50,6 +51,7 @@ import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
@@ -529,7 +531,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
-		verifyForward(ActionForwards.preview_success.toString());
+		verifyForward(ActionForwards.preview_failure.toString());
 	}
 
 	public void testValidateForPreview() throws Exception {
@@ -606,6 +608,10 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 
 		assertNotNull(request
 				.getAttribute(ProductDefinitionConstants.LOANPRODUCTID));
+		assertNotNull(request
+				.getAttribute(ProductDefinitionConstants.LOANPRDGLOBALOFFERINGNUM));
+		assertNull(((FlowManager) request.getSession().getAttribute(
+				Constants.FLOWMANAGER)).getFlow(flowKey));
 		TestObjectFactory
 				.removeObject((LoanOfferingBO) TestObjectFactory
 						.getObject(
@@ -629,5 +635,16 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 				.convertToCurrentDateFormat(((SimpleDateFormat) sdf)
 						.toPattern());
 		return DateHelper.convertDbToUserFmt(currentDate.toString(), userfmt);
+	}
+
+	private LoanOfferingBO createLoanOfferingBO(String prdOfferingName,
+			String shortName) {
+		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		return TestObjectFactory.createLoanOffering(prdOfferingName, shortName,
+				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
+						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("0"), Short.valueOf("1"), frequency);
 	}
 }

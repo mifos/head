@@ -6,6 +6,7 @@ import java.util.List;
 import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.persistence.LoansPrdPersistence;
@@ -60,6 +61,15 @@ public class LoanPrdBusinessService extends BusinessService {
 	public List<Fund> getSourcesOfFund() throws ServiceException {
 		try {
 			return new LoansPrdPersistence().getSourcesOfFund();
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public LoanOfferingBO getLoanOffering(Short prdofferingId)
+			throws ServiceException {
+		try {
+			return new LoansPrdPersistence().getLoanOffering(prdofferingId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}

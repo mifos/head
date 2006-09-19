@@ -49,9 +49,13 @@ import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
+import org.mifos.application.productdefinition.persistence.LoansPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -368,6 +372,87 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		}
 	}
 
+	public void update(Short userId, String prdOfferingName,
+			String prdOfferingShortName, ProductCategoryBO prdCategory,
+			PrdApplicableMasterEntity prdApplicableMaster, Date startDate,
+			Date endDate, String description, PrdStatus status,
+			GracePeriodTypeEntity gracePeriodType,
+			InterestTypesEntity interestTypes, Short gracePeriodDuration,
+			Money maxLoanAmount, Money minLoanAmount, Money defaultLoanAmount,
+			Double maxInterestRate, Double minInterestRate,
+			Double defInterestRate, Short maxNoInstallments,
+			Short minNoInstallments, Short defNoInstallments,
+			boolean loanCounter, boolean intDedDisbursement,
+			boolean prinDueLastInst, List<Fund> funds, List<FeeBO> fees,
+			Short recurAfter, RecurrenceType recurrenceType)
+			throws ProductDefinitionException {
+		prdLogger.debug("Updating loan Offering :" + prdOfferingName);
+		super.update(userId, prdOfferingName, prdOfferingShortName,
+				prdCategory, prdApplicableMaster, startDate, endDate,
+				description, status);
+		validateForUpdate(gracePeriodType, gracePeriodDuration, interestTypes,
+				minLoanAmount, maxLoanAmount, defaultLoanAmount,
+				maxInterestRate, minInterestRate, defInterestRate,
+				maxNoInstallments, minNoInstallments, defNoInstallments,
+				loanCounter, intDedDisbursement, prinDueLastInst, funds, fees,
+				recurAfter);
+		setUpdateDetails(userId);
+		setGracePeriodTypeAndDuration(intDedDisbursement, gracePeriodType,
+				gracePeriodDuration);
+		this.interestTypes = interestTypes;
+		this.maxLoanAmount = maxLoanAmount;
+		this.minLoanAmount = minLoanAmount;
+		this.defaultLoanAmount = defaultLoanAmount;
+		this.maxInterestRate = maxInterestRate;
+		this.minInterestRate = minInterestRate;
+		this.defInterestRate = defInterestRate;
+		this.maxNoInstallments = maxNoInstallments;
+		this.minNoInstallments = minNoInstallments;
+		this.defNoInstallments = defNoInstallments;
+		setLoanCounter(loanCounter);
+		setIntDedDisbursement(intDedDisbursement);
+		setPrinDueLastInst(prinDueLastInst);
+		if (this.prdOfferingMeeting.getMeeting().getMeetingDetails()
+				.getRecurrenceType().getRecurrenceId().equals(
+						recurrenceType.getValue())) {
+			this.prdOfferingMeeting.getMeeting().getMeetingDetails()
+					.setRecurAfter(recurAfter);
+		} else {
+			try {
+				this.prdOfferingMeeting.setMeeting(new MeetingBO(
+						recurrenceType, recurAfter, startDate,
+						MeetingType.LOANFREQUENCYOFINSTALLMENTS));
+			} catch (MeetingException e) {
+				throw new ProductDefinitionException(e);
+			}
+		}
+
+		if (this.loanOfferingFunds != null) {
+			this.loanOfferingFunds.clear();
+			if (funds != null && funds.size() > 0) {
+				for (Fund fund : funds) {
+					addLoanOfferingFund(new LoanOfferingFundEntity(fund, this));
+				}
+			}
+		}
+		if (this.prdOfferingFees != null) {
+			this.prdOfferingFees.clear();
+			if (fees != null && fees.size() > 0) {
+				for (FeeBO fee : fees) {
+					if (isFrequencyMatchingOfferingFrequency(fee,
+							this.prdOfferingMeeting.getMeeting()))
+						addPrdOfferingFee(new PrdOfferingFeesEntity(this, fee));
+				}
+			}
+		}
+		try {
+			new LoansPrdPersistence().createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new ProductDefinitionException(e);
+		}
+		prdLogger.debug("Loan Offering updated:" + prdOfferingName);
+	}
+
 	private void validate(GracePeriodTypeEntity gracePeriodType,
 			Short gracePeriodDuration, InterestTypesEntity interestTypes,
 			Money minLoanAmount, Money maxLoanAmount, Money defaultLoanAmount,
@@ -451,4 +536,44 @@ public class LoanOfferingBO extends PrdOfferingBO {
 					ProductDefinitionConstants.ERRORFEEFREQUENCY);
 
 	}
+
+	private void validateForUpdate(GracePeriodTypeEntity gracePeriodType,
+			Short gracePeriodDuration, InterestTypesEntity interestTypes,
+			Money minLoanAmount, Money maxLoanAmount, Money defaultLoanAmount,
+			Double maxInterestRate, Double minInterestRate,
+			Double defInterestRate, Short maxNoInstallments,
+			Short minNoInstallments, Short defNoInstallments,
+			boolean loanCounter, boolean intDedDisbursement,
+			boolean prinDueLastInst, List<Fund> funds, List<FeeBO> fees,
+			Short recurAfter) throws ProductDefinitionException {
+		prdLogger.debug("validating fields in Loan offering for update");
+		if (interestTypes == null
+				|| minLoanAmount == null
+				|| maxLoanAmount == null
+				|| maxInterestRate == null
+				|| minInterestRate == null
+				|| defInterestRate == null
+				|| maxNoInstallments == null
+				|| minNoInstallments == null
+				|| defNoInstallments == null
+				|| recurAfter == null
+				|| (minLoanAmount.getAmountDoubleValue() > maxLoanAmount
+						.getAmountDoubleValue())
+				|| (defaultLoanAmount != null && (defaultLoanAmount
+						.getAmountDoubleValue() < minLoanAmount
+						.getAmountDoubleValue() || defaultLoanAmount
+						.getAmountDoubleValue() > maxLoanAmount
+						.getAmountDoubleValue()))
+				|| (minInterestRate > maxInterestRate)
+				|| (defInterestRate < minInterestRate || defInterestRate > maxInterestRate)
+				|| (minNoInstallments > maxNoInstallments)
+				|| (defNoInstallments < minNoInstallments || defNoInstallments > maxNoInstallments)
+				|| (!intDedDisbursement
+						&& gracePeriodType != null
+						&& !gracePeriodType.getId().equals(
+								GraceTypeConstants.NONE.getValue()) && gracePeriodDuration == null)) {
+			throw new ProductDefinitionException("errors.update");
+		}
+	}
+
 }
