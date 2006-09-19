@@ -57,10 +57,9 @@
 		form.action="savingsproductaction.do";
 		form.submit();
 	}
-	function fnEdit(form) {
-		form.method.value="previousManage";
-		form.action="savingsproductaction.do";
-		form.submit();
+	function fnEdit() {
+		savingsproductactionform.action="savingsproductaction.do?method=previousManage";
+		savingsproductactionform.submit();
 	}
 	function fnSearch(form) {
 		form.method.value="search";
@@ -88,7 +87,6 @@
 			<html-el:hidden property="input" value="details" />  
 			<html-el:hidden	property="searchNode(search_name)" value="SavingsProducts" />
 			<c:set	value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
-			<c:set var="prdOfferName" value="${BusinessKey.prdOfferingName}" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -99,7 +97,7 @@
 								<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
 								<mifos:mifoslabel name="product.products" bundle="ProductDefUIResources" />
 							</html-el:link> / <html-el:link href="savingsproductaction.do?method=get&prdOfferingId=${BusinessKey.prdOfferingId}&randomNUm=${sessionScope.randomNUm}">
-								<c:out value="${.prdOfferName}" />
+								<c:out value="${BusinessKey.prdOfferingName}" />
 							</html-el:link></span>
 					</td>
 				</tr>
@@ -110,7 +108,7 @@
 						<table width="93%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
 								<td class="headingorange">
-									<span class="heading"><c:out value="${prdOfferName}" /> - </span>
+									<span class="heading"><c:out value="${BusinessKey.prdOfferingName}" /> - </span>
 									<mifos:mifoslabel name="product.preview" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="product.productinfo" bundle="ProductDefUIResources" />
@@ -247,7 +245,7 @@
 											<c:if test="${IntCalcType.id eq sessionScope.savingsproductactionform.interestCalcType}">
 												<c:out value="${IntCalcType.name}" />
 											</c:if>
-										</c:forEach> </span>
+										</c:forEach> </span><br>
 									<mifos:mifoslabel name="product.timeper" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" />
@@ -257,7 +255,7 @@
 											<c:if test="${recType.recurrenceId eq sessionScope.savingsproductactionform.recurTypeFortimeForInterestCacl}">
 												<c:out value="${recType.recurrenceName}" />
 											</c:if>
-										</c:forEach>span>
+										</c:forEach></span>
 									<br>
 									<mifos:mifoslabel name="product.freq" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
@@ -305,7 +303,7 @@
 						<table width="93%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td class="blueline">
-									<span class="fontnormal"> <html-el:button property="edit" styleClass="insidebuttn" onclick="fnEdit(this.form)">
+									<span class="fontnormal"> <html-el:button property="edit" styleClass="insidebuttn" onclick="fnEdit()">
 											<mifos:mifoslabel name="product.prdedit" bundle="ProductDefUIResources" />&nbsp;<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />&nbsp;<mifos:mifoslabel name="product.info"
 												bundle="ProductDefUIResources" />
 										</html-el:button> <br> <br> </span>

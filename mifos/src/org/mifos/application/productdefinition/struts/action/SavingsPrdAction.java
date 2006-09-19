@@ -37,6 +37,7 @@ import org.mifos.application.productdefinition.business.SavingsTypeEntity;
 import org.mifos.application.productdefinition.business.service.SavingsPrdBusinessService;
 import org.mifos.application.productdefinition.dao.SavingsProductDAO;
 import org.mifos.application.productdefinition.struts.actionforms.SavingsPrdActionForm;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.valueobjects.PrdState;
 import org.mifos.application.productdefinition.util.valueobjects.SavingsOffering;
@@ -235,6 +236,62 @@ public class SavingsPrdAction extends BaseAction {
 				HttpServletRequest request, HttpServletResponse response)
 				throws Exception {
 		return mapping.findForward(ActionForwards.previewManage_success.toString());
+	}
+	
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward previousManage(ActionMapping mapping, ActionForm form,
+				HttpServletRequest request, HttpServletResponse response)
+				throws Exception {
+		return mapping.findForward(ActionForwards.previousManage_success.toString());
+	}
+	
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward update(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		prdDefLogger.debug("start create method of Savings Product Action");
+		SavingsPrdActionForm savingsprdForm = (SavingsPrdActionForm) form;
+		UserContext userContext = getUserContext(request);
+		Locale locale = getLocale(userContext);
+		MasterDataEntity recommendedAmountUnit = findMasterEntity(request,
+				ProductDefinitionConstants.RECAMNTUNITLIST, savingsprdForm
+						.getRecommendedAmntUnitValue());
+		SavingsOfferingBO savingsOffering = (SavingsOfferingBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+		savingsOffering.update(	userContext.getId(),
+				savingsprdForm.getPrdOfferingName(),
+				savingsprdForm.getPrdOfferingShortName(),
+				getProductCategory(
+						((List<ProductCategoryBO>) SessionUtils
+								.getAttribute(
+										ProductDefinitionConstants.SAVINGSPRODUCTCATEGORYLIST,
+										request)), savingsprdForm
+								.getPrdCategoryValue()),
+				(PrdApplicableMasterEntity) findMasterEntity(request,
+						ProductDefinitionConstants.SAVINGSAPPLFORLIST,
+						savingsprdForm.getPrdApplicableMasterValue()),
+				savingsprdForm.getStartDateValue(locale), savingsprdForm
+						.getEndDateValue(locale), savingsprdForm
+						.getDescription(),PrdStatus.SAVINGSACTIVE, recommendedAmountUnit == null ? null
+						: (RecommendedAmntUnitEntity) recommendedAmountUnit,
+				(SavingsTypeEntity) findMasterEntity(request,
+						ProductDefinitionConstants.SAVINGSTYPELIST,
+						savingsprdForm.getSavingsTypeValue().getValue()),
+				(InterestCalcTypeEntity) findMasterEntity(request,
+						ProductDefinitionConstants.INTCALCTYPESLIST,
+						savingsprdForm.getInterestCalcTypeValue()),
+				new MeetingBO(RecurrenceType
+						.getRecurrenceType(savingsprdForm
+								.getRecurTypeFortimeForInterestCaclValue()),
+						savingsprdForm.getTimeForInterestCalcValue(),
+						new Date(), MeetingType.SAVINGSTIMEPERFORINTCALC), new MeetingBO(
+						RecurrenceType.MONTHLY, savingsprdForm
+								.getFreqOfInterestValue(), new Date(),
+						MeetingType.SAVINGSFRQINTPOSTACC), savingsprdForm
+						.getRecommendedAmountValue(), savingsprdForm
+						.getMaxAmntWithdrawlValue(), savingsprdForm
+						.getMinAmntForIntValue(), savingsprdForm
+						.getInterestRateValue());
+		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 	
 	private void setValuesInActionForm(SavingsPrdActionForm actionForm, HttpServletRequest request) throws Exception{

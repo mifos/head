@@ -107,7 +107,8 @@ public abstract class PrdOfferingBO extends BusinessObject {
 			Date endDate, String description) throws ProductDefinitionException {
 		super(userContext);
 		prdLogger.debug("creating product offering");
-		vaildate(userContext, prdOfferingName, prdOfferingShortName,
+		validateUserContext(userContext);
+		vaildate(prdOfferingName, prdOfferingShortName,
 				prdCategory, prdApplicableMaster,startDate);
 		validateStartDateAgainstCurrentDate(startDate);
 		validateEndDateAgainstCurrentDate(startDate , endDate);
@@ -235,17 +236,23 @@ public abstract class PrdOfferingBO extends BusinessObject {
 		return globalPrdOfferingNum.toString();
 	}
 
-	private void vaildate(UserContext userContext, String prdOfferingName,
+	private void vaildate( String prdOfferingName,
 			String prdOfferingShortName, ProductCategoryBO prdCategory,
 			PrdApplicableMasterEntity prdApplicableMaster,Date startDate) throws ProductDefinitionException {
 		prdLogger.debug("Validating the fields in Prd Offering");
-		if (userContext == null
-				|| prdOfferingName == null
+		if ( prdOfferingName == null
 				|| prdOfferingShortName == null
 				|| prdCategory == null
 				|| prdApplicableMaster == null
 				|| (prdOfferingShortName.length() > 4)
 				|| startDate == null ) {
+			throw new ProductDefinitionException(ProductDefinitionConstants.ERROR_CREATE);
+		}
+		prdLogger.debug("Validation of the fields in Prd Offering done.");
+	}
+	private void validateUserContext(UserContext userContext) throws ProductDefinitionException {
+		prdLogger.debug("Validating the usercontext in Prd Offering");
+		if (userContext == null	) {
 			throw new ProductDefinitionException(ProductDefinitionConstants.ERROR_CREATE);
 		}
 		prdLogger.debug("Validation of the fields in Prd Offering done.");
@@ -334,7 +341,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
 
 	public void update(Short userId, String prdOfferingName, String prdOfferingShortName, ProductCategoryBO prdCategory, PrdApplicableMasterEntity prdApplicableMaster, Date startDate, Date endDate, String description,PrdStatus status) 
 		throws ProductDefinitionException {
-		vaildate(userContext, prdOfferingName, prdOfferingShortName,
+		vaildate(prdOfferingName, prdOfferingShortName,
 				prdCategory, prdApplicableMaster,startDate);	
 		validateStartDateForUpdate(startDate);
 		validateEndDateAgainstCurrentDate(startDate , endDate);

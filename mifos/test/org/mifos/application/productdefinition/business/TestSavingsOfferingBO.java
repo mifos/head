@@ -765,7 +765,8 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		assertEquals(savingsType.getId(), savingsOffering.getSavingsType().getId());
 		assertEquals(intCalType.getId(), savingsOffering.getInterestCalcType().getId());
 		assertEquals(intCalcMeeting.getMeetingDetails().getRecurAfter(), savingsOffering.getTimePerForInstcalc().getMeeting().getMeetingDetails().getRecurAfter());
-		assertEquals(intCalcMeeting.getMeetingDetails().getRecurAfter(), savingsOffering.getTimePerForInstcalc().getMeeting().getMeetingDetails().getRecurAfter());
+		assertEquals(intCalcMeeting.getMeetingDetails().getRecurrenceType().getRecurrenceId().shortValue(), savingsOffering.getTimePerForInstcalc().getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId().shortValue());
+		assertEquals(intPostMeeting.getMeetingDetails().getRecurAfter(), savingsOffering.getFreqOfPostIntcalc().getMeeting().getMeetingDetails().getRecurAfter());
 		assertEquals("Recommended Amount" ,new Money("10"), savingsOffering.getRecommendedAmount());
 		assertEquals(10.0, savingsOffering.getInterestRate());
 		assertEquals("Max Amount Withdrawl Amount" ,new Money("100"), savingsOffering.getMaxAmntWithdrawl());

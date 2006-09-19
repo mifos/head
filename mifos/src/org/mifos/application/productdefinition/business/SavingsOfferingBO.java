@@ -262,10 +262,10 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 		this.savingsType = savingsType;
 		this.interestCalcType = interestCalcType;
 		this.recommendedAmntUnit = recommendedAmntUnit;
-		setTimePerForInstcalc(new PrdOfferingMeetingEntity(timePerForInstcalc,
-				this, MeetingType.SAVINGSTIMEPERFORINTCALC));
-		setFreqOfPostIntcalc(new PrdOfferingMeetingEntity(freqOfPostIntcalc,
-				this, MeetingType.SAVINGSFRQINTPOSTACC));
+		//updateProductOfferingMeetings(timePerForInstcalc, freqOfPostIntcalc);
+		this.prdOfferingMeetings.clear();
+		setTimePerForInstcalc(new PrdOfferingMeetingEntity(timePerForInstcalc,this, MeetingType.SAVINGSTIMEPERFORINTCALC));
+		setFreqOfPostIntcalc(new PrdOfferingMeetingEntity(freqOfPostIntcalc,this, MeetingType.SAVINGSFRQINTPOSTACC));
 		this.recommendedAmount = recommendedAmount;
 		this.interestRate = interestRate;
 		this.maxAmntWithdrawl = maxAmntWithdrawl;
@@ -279,6 +279,17 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 		prdLogger.debug("updated savings product offering done :"+ getGlobalPrdOfferingNum());
 	}
 
+
+	/*private void updateProductOfferingMeetings(MeetingBO timePerForInstcalc, MeetingBO freqOfPostIntcalc) throws ProductDefinitionException {
+		updateTimeForIntCalc(timePerForInstcalc);
+		updateTimeForIntCalc(freqOfPostIntcalc);
+		
+	}
+
+	private void updateTimeForIntCalc(MeetingBO timePerForInstCalc) throws ProductDefinitionException {
+		MeetingBO timeForIntCalculation = getTimePerForInstcalc().getMeeting();
+				
+	}*/
 
 	private PrdOfferingMeetingEntity getPrdOfferingMeeting(
 			MeetingType meetingType) throws ProductDefinitionException {
