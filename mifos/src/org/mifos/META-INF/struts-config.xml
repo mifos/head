@@ -19,8 +19,7 @@
 		<!-- Group Transfer Action form -->
 		<form-bean name="groupTransferActionForm" type="org.mifos.application.customer.group.struts.actionforms.GroupTransferActionForm"></form-bean>
 		<!-- Login Form -->
-		<form-bean name="mifosloginform" type="org.mifos.application.login.struts.actionforms.MifosLoginActionForm"></form-bean>
-		<!-- Logout Form -->
+		<form-bean name="loginActionForm" type="org.mifos.application.login.struts.actionforms.LoginActionForm"></form-bean>
 		<form-bean name="mifoslogoutform" type="org.mifos.application.login.struts.actionforms.MifosLogoutActionForm"></form-bean>
 		<!-- Product Category -->
 		<form-bean name="mifosproddefactionform" type="org.mifos.application.productdefinition.struts.actionforms.ProductCategoryActionForm"></form-bean>
@@ -155,7 +154,7 @@
 	</global-exceptions>
 
 	<global-forwards>
-		<forward name="welcome" path="/mifoslogin.do?method=load" />
+		<forward name="welcome" path="/loginAction.do?method=load" />
 	</global-forwards>
 
 	<action-mappings>
@@ -172,7 +171,7 @@
 			<forward name="editPersonalInfo_failure" path="/pages/application/personnel/jsp/edityoursettings.jsp"/>
 			<forward name="get_success" path="/pages/application/personnel/jsp/yoursettings.jsp"/>
 			<forward name="manage_success" path="/pages/application/personnel/jsp/edityoursettings.jsp"/>
-			<forward name="loadChangePassword_success" path="/pages/application/personnel/jsp/changePassword.jsp" />
+			<forward name="loadChangePassword_success" path="/pages/application/login/jsp/changePassword.jsp" />
 			<forward name="preview_success" path="/pages/application/personnel/jsp/previewyoursettings.jsp" />
 			<forward name="previous_success" path="/pages/application/personnel/jsp/edityoursettings.jsp"/>
 			<forward name="updateSettings_success" path="/yourSettings.do?method=get" />
@@ -376,7 +375,7 @@
 			<forward name="editPersonalInfo_success" path="/pages/application/personnel/jsp/edityoursettings.jsp" />
 			<forward name="previewPersonalInfo_success" path="/pages/application/personnel/jsp/previewyoursettings.jsp" />
 			<forward name="previewPersonalInfo_failure" path="/pages/application/personnel/jsp/edityoursettings.jsp" />
-			<forward name="loadChangePassword_success" path="/pages/application/personnel/jsp/changePassword.jsp" />
+			<forward name="loadChangePassword_success" path="/pages/application/login/jsp/changePassword.jsp" />
 			<forward name="search_success" path="/pages/application/personnel/jsp/viewusers.jsp" />
 			<forward name="loadSearch_success" path="/pages/application/personnel/jsp/viewusers.jsp" />
 			<forward name="loadUnLockUser_success" path="/pages/application/personnel/jsp/unlockuser.jsp" />
@@ -522,19 +521,17 @@
 			<forward name="previousHistoricalData_success" path="/pages/application/customer/jsp/cust_edithistoricaldata.jsp" />
 			<forward name="updateHistoricalData_success" path="/custHistoricalDataAction.do?method=getHistoricalData" />
 		</action>
-		<!-- Login Action -->
-		<action path="/mifoslogin" name="mifosloginform" type="org.mifos.application.login.struts.action.MifosLoginAction" input="/mifoslogin.do?method=validate" parameter="method" validate="true" scope="request">
-			<forward name="login_success_first" path="/pages/application/login/jsp/changePassword.jsp"></forward>
-			<forward name="login_success_regular" path="/CustomerSearchAction.do?method=getHomePage" redirect="true"></forward>
+		<!--M2 Login Action -->
+		<action path="/loginAction" name="loginActionForm" type="org.mifos.application.login.struts.action.LoginAction" input="/loginAction.do?method=validate" parameter="method" validate="true" scope="session">
+			<forward name="loadChangePassword_success" path="/pages/application/login/jsp/changePassword.jsp"></forward>
+			<forward name="login_success" path="/CustomerSearchAction.do?method=getHomePage" redirect="true"></forward>
 			<forward name="login_failure" path="/pages/application/login/jsp/login.jsp"></forward>
-			<forward name="login_update_failure" path="/pages/application/login/jsp/changePassword.jsp"></forward>
-			<forward name="settings_update_failure" path="/pages/application/personnel/jsp/changePassword.jsp"></forward>
-			<forward name="success_settings" path="/yourSettings.do?method=get"></forward>
-		</action>
-		<!-- Logout Action -->
-		<action path="/mifoslogout" name="mifoslogoutform" type="org.mifos.application.login.struts.action.MifosLogoutAction" input="/mifoslogout.do?method=validate" parameter="method" validate="true" scope="request">
-			<forward name="login_failure" path="/pages/application/login/jsp/login.jsp"></forward>
-			<forward name="logout_failure" path="/pages/application/login/jsp/login.jsp"></forward>
+			<forward name="load_success" path="/pages/application/login/jsp/login.jsp"></forward>
+			<forward name="logout_success" path="/loginAction.do?method=load"></forward>
+			<forward name="cancel_success" path="/loginAction.do?method=logout"></forward>
+			<forward name="updatePassword_success" path="/CustomerSearchAction.do?method=getHomePage" redirect="true"></forward>
+			<forward name="updatePassword_failure" path="/pages/application/login/jsp/changePassword.jsp"></forward>
+			<forward name="updateSettings_success" path="/yourSettings.do?method=get"></forward>
 		</action>
 		<!-- Product Category -->
 		<action path="/mifosproddefaction" name="mifosproddefactionform" type="org.mifos.application.productdefinition.struts.action.ProductCategoryAction" input="/mifosproddefaction.do?method=validate" parameter="method" validate="true" scope="session">
@@ -592,18 +589,7 @@
 			<forward name="create_success" path="/pages/application/productdefinition/jsp/CreateLoanProductConfirmation.jsp"></forward>
 			<forward name="create_failure" path="/pages/application/productdefinition/jsp/CreateLoanProductPreview.jsp"></forward>
 			<forward name="cancelCreate_success" path="/AdminAction.do?method=load"></forward>
-			<forward name="cancelCreate_failure" path="/AdminAction.do?method=load"></forward>
 			<forward name="get_success" path="/pages/application/productdefinition/jsp/LoanProductDetails.jsp"></forward>
-			<forward name="manage_failure" path="/pages/application/productdefinition/jsp/LoanProductDetails.jsp"></forward>
-			<forward name="manage_success" path="/pages/application/productdefinition/jsp/EditLoanProduct.jsp"></forward>
-			<forward name="editPreview_success" path="/pages/application/productdefinition/jsp/EditLoanProductPreview.jsp"></forward>
-			<forward name="editPreview_failure" path="/pages/application/productdefinition/jsp/EditLoanProduct.jsp"></forward>
-			<forward name="editPrevious_failure" path="/pages/application/productdefinition/jsp/EditLoanProductPreview.jsp"></forward>
-			<forward name="editPrevious_success" path="/pages/application/productdefinition/jsp/EditLoanProduct.jsp"></forward>
-			<forward name="editcancel_success" path="/loanprdaction?method=get"></forward>
-			<forward name="cancelCreate_failure" path="/loanprdaction?method=get"></forward>
-			<forward name="update_success" path="/loanprdaction?method=get"></forward>
-			<forward name="update_failure" path="/pages/application/productdefinition/jsp/EditLoanProductPreview.jsp"></forward>
 		</action>
 		<!-- Savings Product -->
 		<action path="/savingsprdaction" name="savingsprdactionform" type="org.mifos.application.productdefinition.struts.action.SavingsProductAction" input="/savingsprdaction.do?method=validate" parameter="method" validate="true" scope="session">
@@ -640,8 +626,6 @@
 			<forward name="previewManage_failure" path="/pages/application/productdefinition/jsp/Edit_SavingsProduct.jsp"></forward>
 			<forward name="previousManage_success" path="/pages/application/productdefinition/jsp/Edit_SavingsProduct.jsp"></forward>
 			<forward name="update_success" path="/savingsproductaction.do?method=get"></forward>
-			<forward name="update_failure" path="/pages/application/productdefinition/jsp/Preview_EditSavingsProduct.jsp"></forward>
-			<forward name="search_success" path="/pages/application/productdefinition/jsp/View_AllSavingsProduct.jsp"></forward>
 			<forward name="failure" path="/pages/application/productdefinition/jsp/Preview_EditSavingsProduct.jsp"></forward>
 		</action>
 		<!-- Payment Types -->

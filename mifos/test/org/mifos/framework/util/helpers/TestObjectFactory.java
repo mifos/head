@@ -1496,8 +1496,7 @@ public class TestObjectFactory {
 		PersonnelBO personnel = getPersonnel(Short.valueOf("1"));
 		personnel.setEncriptedPassword(password);
 		updateObject(personnel);
-		return org.mifos.framework.security.authentication.Authenticator
-				.getInstance().validateUser("mifos", "mifos");
+		return personnel.login("mifos");
 
 	}
 

@@ -9,15 +9,15 @@ public class PersonnelLevelEntity extends MasterDataEntity {
 
 	private final PersonnelLevelEntity parent;
 
+	public PersonnelLevelEntity(PersonnelLevel level) {
+		super(level.getValue());
+		this.parent = null;
+	}
+
 	protected PersonnelLevelEntity() {
 		super();
 		this.parent = null;
 
-	}
-
-	public PersonnelLevelEntity(PersonnelLevel level) {
-		super(level.getValue());
-		this.parent = null;
 	}
 
 	public boolean isInteractionFlag() {

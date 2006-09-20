@@ -122,11 +122,9 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/CustomerSearchAction-loadAllBranches",
 				SecurityConstants.VIEW);
-
-		activityMap.put("/mifoslogout-logout", SecurityConstants.VIEW);
-
-		// Change password related
-		activityMap.put("/mifoslogin-update", SecurityConstants.VIEW);
+		
+		activityMap.put("/loginAction-logout", SecurityConstants.VIEW);
+		activityMap.put("/loginAction-updatePassword", SecurityConstants.VIEW);
 
 		// Office related mapping
 		activityMap.put("/OfficeAction-loadall", SecurityConstants.VIEW);

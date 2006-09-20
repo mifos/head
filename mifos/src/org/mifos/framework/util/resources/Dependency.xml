@@ -77,20 +77,6 @@
 		<businessprocessor></businessprocessor>
 		<dao>org.mifos.application.configuration.dao.ConfigurationDAO</dao>
 	</dependency>
-	
-	<!--Login-->
-	<dependency type="MifosLogin">
-		<valueobject>org.mifos.application.login.util.valueobjects.MifosLoginValueObject</valueobject>
-		<businessprocessor>org.mifos.application.login.business.handlers.MifosLoginBusinessProcessor</businessprocessor>
-		<dao></dao>
-	</dependency>
-	
-	<!--Logout-->	
-	<dependency type="MifosLogout">
-		<valueobject></valueobject>
-		<businessprocessor></businessprocessor>
-		<dao></dao>
-	</dependency>
 	<!-- Roles -->
 	<dependency type="ManageRolesAndPermission" >
 		<valueobject>org.mifos.application.rolesandpermission.util.valueobjects.Role</valueobject>

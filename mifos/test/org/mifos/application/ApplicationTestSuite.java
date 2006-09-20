@@ -51,6 +51,7 @@ import org.mifos.application.collectionsheet.CollectionSheetTestSuite;
 import org.mifos.application.configuration.LabelConfigurationTestSuite;
 import org.mifos.application.customer.CustomerTestSuite;
 import org.mifos.application.fees.FeeTestSuite;
+import org.mifos.application.login.LoginTestSuite;
 import org.mifos.application.master.MasterTestSuite;
 import org.mifos.application.meeting.MeetingTestSuite;
 import org.mifos.application.office.OfficeTestSuite;
@@ -101,6 +102,7 @@ public class ApplicationTestSuite extends MifosTestSuite {
 		suite.addTest(PersonnelTestSuite.suite());
 		suite.addTest(RolesAndPermissionTestSuite.suite());
 		suite.addTest(MeetingTestSuite.suite());
+		suite.addTest(LoginTestSuite.suite());
 		return suite;
 	}
 

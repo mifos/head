@@ -16,6 +16,16 @@ public class PersonnelNotesEntity extends PersistentObject {
 
 	private final PersonnelBO personnel;
 
+	public PersonnelNotesEntity(String comment, PersonnelBO officer,
+			PersonnelBO personnel) {
+		super();
+		this.comment = comment;
+		this.officer = officer;
+		this.personnel = personnel;
+		this.commentId = null;
+		this.commentDate = new Date(System.currentTimeMillis());
+	}
+
 	protected PersonnelNotesEntity() {
 		super();
 		this.commentId = null;
@@ -31,16 +41,6 @@ public class PersonnelNotesEntity extends PersistentObject {
 
 	public Date getCommentDate() {
 		return this.commentDate;
-	}
-
-	public PersonnelNotesEntity(String comment, PersonnelBO officer,
-			PersonnelBO personnel) {
-		super();
-		this.comment = comment;
-		this.officer = officer;
-		this.personnel = personnel;
-		this.commentId = null;
-		this.commentDate = new Date(System.currentTimeMillis());
 	}
 
 	public String getComment() {

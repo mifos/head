@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	Document   : struts-config.xml
+	Created on : August 22, 2005
+	Author     : ashishsmital
+	Description: Purpose of the document follows.
+-->
+
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+"http://jakarta.apache.org/struts/dtdt/struts-config_1_2.dtd">
+
+
+<struts-config>
+	<form-beans>
+		<form-bean name="loginActionForm" type="org.mifos.application.login.struts.actionforms.LoginActionForm"></form-bean>
+	</form-beans>
+	<global-exceptions>
+		<exception type="org.mifos.framework.exceptions.SystemException"
+			handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+			key="exception.framework.SystemException" scope="request"
+			path="/pages/framework/jsp/error.jsp" />
+		<exception
+			type="org.mifos.framework.exceptions.ApplicationException"
+			handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+			key="exception.framework.ApplicationException" scope="request" />
+		<exception type="org.mifos.framework.exceptions.PageExpiredException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.PageExpiredException" scope="request" path="/pages/framework/jsp/pageexpirederror.jsp"/>
+	</global-exceptions>
+	<global-forwards>
+		<forward name="welcome" path="/loginAction.do?method=load" />
+	</global-forwards>
+	<action-mappings>
+		<action path="/loginAction" name="loginActionForm" type="org.mifos.application.login.struts.action.LoginAction" input="/loginAction.do?method=validate" parameter="method" validate="true" scope="session">
+			<forward name="loadChangePassword_success" path="/pages/application/login/jsp/changePassword.jsp"></forward>
+			<forward name="login_success" path="/CustomerSearchAction.do?method=getHomePage" redirect="true"></forward>
+			<forward name="login_failure" path="/pages/application/login/jsp/login.jsp"></forward>
+			<forward name="load_success" path="/pages/application/login/jsp/login.jsp"></forward>
+			<forward name="logout_success" path="/loginAction.do?method=load"></forward>
+			<forward name="cancel_success" path="/loginAction.do?method=logout"></forward>
+			<forward name="updatePassword_success" path="/CustomerSearchAction.do?method=getHomePage" redirect="true"></forward>
+			<forward name="updatePassword_failure" path="/pages/application/login/jsp/changePassword.jsp"></forward>
+			<forward name="updateSettings_success" path="/yourSettings.do?method=get"></forward>
+		</action>
+	</action-mappings>
+	<message-resources key="LoginUIResources" parameter="org.mifos.application.login.util.resources.LoginUIResources" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property property="pathnames"
+			value="org/mifos/application/login/validation.xml,org/mifos/application/login/validator-rules.xml" />
+		<set-property property="stopOnFirstError" value="false" />
+	</plug-in>
+</struts-config>

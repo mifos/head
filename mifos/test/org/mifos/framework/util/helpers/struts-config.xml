@@ -43,14 +43,6 @@
 		<!-- Group Transfer Action form -->
 		<form-bean name="groupTransferActionForm" type="org.mifos.application.customer.group.struts.actionforms.GroupTransferActionForm">
 		</form-bean>
-		<!-- Login Form -->
-		<form-bean name="mifosloginform"
-			type="org.mifos.application.login.struts.actionforms.MifosLoginActionForm">
-		</form-bean>
-		<!-- Logout Form -->
-		<form-bean name="mifoslogoutform"
-			type="org.mifos.application.login.struts.actionforms.MifosLogoutActionForm">
-		</form-bean>
 		<!-- Product Category -->
 		<form-bean name="mifosproddefactionform"
 			type="org.mifos.application.productdefinition.struts.actionforms.ProductCategoryActionForm">
@@ -255,7 +247,7 @@
 	</global-exceptions>
 
 	<global-forwards>
-		<forward name="welcome" path="/mifoslogin.do?method=load" />
+		<forward name="welcome" path="/loginAction.do?method=load" />
 	</global-forwards>
 	<action-mappings>
 		<action path="/yourSettings" type="org.mifos.application.personnel.struts.action.PersonnelSettingsAction" name="personnelSettingsActionForm" parameter="method"  validate="true" input="/yourSettings.do?method=validate" scope="session">
@@ -848,44 +840,6 @@
 			<forward name="previewHistoricalData_success" path="/pages/application/customer/jsp/cust_previewhistoricaldata.jsp" />
 			<forward name="previousHistoricalData_success" path="/pages/application/customer/jsp/cust_edithistoricaldata.jsp" />
 			<forward name="updateHistoricalData_success" path="/custHistoricalDataAction.do?method=getHistoricalData" />
-		</action>
-		<!-- Login Action -->
-		<action path="/mifoslogin" name="mifosloginform"
-			type="org.mifos.application.login.struts.action.MifosLoginAction"
-			input="/mifoslogin.do?method=validate" parameter="method"
-			validate="true" scope="request">
-			<forward name="login_success_first"
-				path="/pages/application/login/jsp/changePassword.jsp">
-			</forward>
-			<forward name="login_success_regular"
-				path="/CustomerSearchAction.do?method=getHomePage"
-				redirect="true">
-			</forward>
-			<forward name="login_failure"
-				path="/pages/application/login/jsp/login.jsp">
-			</forward>
-			<forward name="login_update_failure"
-				path="/pages/application/login/jsp/changePassword.jsp">
-			</forward>
-			<forward name="settings_update_failure"
-				path="/pages/application/personnel/jsp/changePassword.jsp">
-			</forward>
-
-			<forward name="success_settings" path="/yourSettings.do?method=get"></forward>
-
-		</action>
-
-		<!-- Logout Action -->
-		<action path="/mifoslogout" name="mifoslogoutform"
-			type="org.mifos.application.login.struts.action.MifosLogoutAction"
-			input="/mifoslogout.do?method=validate" parameter="method"
-			validate="true" scope="request">
-			<forward name="login_failure"
-				path="/pages/application/login/jsp/login.jsp">
-			</forward>
-			<forward name="logout_failure"
-				path="/pages/application/login/jsp/login.jsp">
-			</forward>
 		</action>
 		<!-- Product Category -->
 		<action path="/mifosproddefaction" name="mifosproddefactionform"

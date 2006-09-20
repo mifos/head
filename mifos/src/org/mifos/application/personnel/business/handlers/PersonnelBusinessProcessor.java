@@ -1064,12 +1064,6 @@ public class PersonnelBusinessProcessor extends MifosBusinessProcessor {
      * @throws SystemException
      */  
   	private OfficeDAO getOfficeDAO()throws SystemException{
-  		OfficeDAO officeDAO=null;
-  		try{
-  			officeDAO = (OfficeDAO)getDAO(PathConstants.OFFICE_PATH);
-  		}catch(ResourceNotCreatedException rnce){
-  			throw rnce;
-  		}
-  		return officeDAO;
+  		return new OfficeDAO();
   	}
 }

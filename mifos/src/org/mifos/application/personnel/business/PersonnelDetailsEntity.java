@@ -65,19 +65,13 @@ public class PersonnelDetailsEntity extends PersistentObject {
 
 	private Date dateOfLeavingBranch;
 
-	@SuppressWarnings("unused") // see .hbm.xml file
+	@SuppressWarnings("unused")
+	// see .hbm.xml file
 	private final Short personnelId;
 
 	private final PersonnelBO personnel;
 
 	private Address address;
-
-	protected PersonnelDetailsEntity() {
-		super();
-		this.dob = null;
-		this.personnelId = null;
-		this.personnel = null;
-	}
 
 	public PersonnelDetailsEntity(Name name, String governmentIdNumber,
 			Date dob, Integer maritalStatus, Integer gender,
@@ -94,6 +88,13 @@ public class PersonnelDetailsEntity extends PersistentObject {
 		this.personnelId = personnel.getPersonnelId();
 		this.personnel = personnel;
 		this.address = address;
+	}
+
+	protected PersonnelDetailsEntity() {
+		super();
+		this.dob = null;
+		this.personnelId = null;
+		this.personnel = null;
 	}
 
 	public Address getAddress() {
@@ -182,5 +183,5 @@ public class PersonnelDetailsEntity extends PersistentObject {
 			setDateOfJoiningBranch(dateOfJoiningBranch);
 		}
 	}
-	
+
 }

@@ -4,7 +4,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -566,9 +568,11 @@ public class TestPersonnelBO extends MifosTestCase {
 		assertEquals(personnel.getOffice().getGlobalOfficeNum(), userContext
 				.getBranchGlobalNum());
 		assertEquals(0, personnel.getNoOfTries().intValue());
+		assertFalse(personnel.isPasswordChanged());
+		assertEquals(getRoles(personnel).size(),userContext.getRoles().size());
 	}
 
-	public void testFailureValidatePersonnelForInvalidPassword()
+	public void testLoginForInvalidPassword()
 			throws Exception {
 		personnel = createPersonnel();
 		String password = "WRONG_PASSWORD";
@@ -577,13 +581,13 @@ public class TestPersonnelBO extends MifosTestCase {
 			assertFalse(true);
 		} catch (PersonnelException le) {
 			assertTrue(true);
-			assertEquals(1, personnel.getNoOfTries().intValue());
+			assertEquals(1,personnel.getNoOfTries().intValue());
 			assertFalse(personnel.isLocked());
 			assertEquals(LoginConstants.INVALIDOLDPASSWORD, le.getKey());
 		}
 	}
 
-	public void testFailureValidatePersonnelForInactivePersonnel()
+	public void testLoginForInactivePersonnel()
 			throws Exception {
 		personnel = createPersonnel();
 		personnel.update(PersonnelStatus.INACTIVE, PersonnelLevel
@@ -606,13 +610,13 @@ public class TestPersonnelBO extends MifosTestCase {
 			assertFalse(true);
 		} catch (PersonnelException le) {
 			assertTrue(true);
-			assertEquals(1, personnel.getNoOfTries().intValue());
+			assertEquals(0, personnel.getNoOfTries().intValue());
 			assertFalse(personnel.isLocked());
 			assertEquals(LoginConstants.KEYUSERINACTIVE, le.getKey());
 		}
 	}
 
-	public void testFailureValidatePersonnelFourConsecutiveWrongPasswordEntered()
+	public void testLoginFourConsecutiveWrongPasswordEntered()
 			throws Exception {
 		personnel = createPersonnel();
 		String password = "WRONG_PASSWORD";
@@ -638,8 +642,30 @@ public class TestPersonnelBO extends MifosTestCase {
 			assertEquals(LoginConstants.INVALIDOLDPASSWORD, le.getKey());
 		}
 	}
+	
+	public void testLoginFourConsecutiveWrongPasswordEnteredFifthOneCorrect()
+			throws Exception {
+		personnel = createPersonnel();
+		String password = "WRONG_PASSWORD";
+		login(password);
+		login(password);
+		login(password);
+		login(password);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		personnel = TestObjectFactory.getPersonnel(personnel
+				.getPersonnelId());
+		userContext = personnel.login("ABCD");
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
+				PersonnelBO.class, personnel.getPersonnelId());
+		assertTrue(true);
+		assertFalse(personnel.isLocked());
+		assertEquals("No of tries should be reseted to 0",0, personnel.getNoOfTries().intValue());
+	}
 
-	public void testFailureValidatePersonnelForLockedPersonnel()
+	public void testLoginForLockedPersonnel()
 			throws Exception {
 		personnel = createPersonnel();
 		String password = "WRONG_PASSWORD";
@@ -664,6 +690,31 @@ public class TestPersonnelBO extends MifosTestCase {
 			assertEquals(5, personnel.getNoOfTries().intValue());
 			assertTrue(personnel.isLocked());
 			assertEquals(LoginConstants.KEYUSERLOCKED, le.getKey());
+		}
+	}
+	
+	public void testUpdatePassword() throws Exception{
+		personnel = createPersonnel();
+		assertNull(personnel.getLastLogin());
+		personnel.updatePassword("ABCD","NEW_PASSWORD");
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
+				PersonnelBO.class, personnel.getPersonnelId());
+		assertTrue(personnel.isPasswordChanged());
+		assertNotNull(personnel.getLastLogin());
+	}
+	
+	public void testUpdatePasswordWithWrongOldPassword() throws Exception{
+		personnel = createPersonnel();
+		assertNull(personnel.getLastLogin());
+		try {
+			personnel.updatePassword("WRONGOLD_PASSWORD","NEW_PASSWORD");
+			assertFalse(true);
+		} catch (PersonnelException le) {
+			assertTrue(true);
+			assertEquals(LoginConstants.INVALIDOLDPASSWORD, le.getKey());
+			assertFalse(personnel.isPasswordChanged());
 		}
 	}
 
@@ -764,4 +815,11 @@ public class TestPersonnelBO extends MifosTestCase {
 		}
 	}
 	
+	private Set<Short> getRoles(PersonnelBO personnelBO) {
+		Set<Short> roles = new HashSet<Short>();
+		for(PersonnelRoleEntity personnelRole : personnelBO.getPersonnelRoles()){
+			roles.add(personnelRole.getRole().getId());
+		}
+		return roles;
+	}
 }

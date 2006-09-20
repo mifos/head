@@ -7,13 +7,12 @@
 <title>Mifos</title>
 <script language="javascript">
 <!--
-	function fnCancel(form) {
-		form.method.value="logout";
-		form.action="mifoslogout.do";
-		form.submit();
+	function fnCancel() {
+		loginActionForm.action="loginAction.do?method=cancel";
+		loginActionForm.submit();
 	}
 	function fnLogout() {
-		location.href="mifoslogout.do?method=logout";
+		location.href="loginAction.do?method=logout";
 	}
 //-->
 </script>
@@ -22,7 +21,7 @@
 </head>
 
 <body>
-<html-el:form action="/mifoslogin.do" focus="oldPassword">
+<html-el:form action="/loginAction.do" focus="oldPassword">
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		<tr>
 			<td width="188" rowspan="2"><img src="pages/framework/images/logo.gif" width="188"
@@ -90,11 +89,11 @@
 			<td><html-el:password property="confirmPassword" style="width:136px;"
 				redisplay="false" /></td>
 		</tr>
-		<html-el:hidden property="method" value="update" />
 		<html-el:hidden property="input" value="LoginChangePW" />
+		<html-el:hidden property="method" value="updatePassword" />
 		<html-el:hidden property="userId"
 			value="${sessionScope.UserContext.id}" />
-		<html-el:hidden property="userName" value="${sessionScope.UserContext.name}"/>
+		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 	</table>
 	<table width="93%" border="0" cellpadding="0" cellspacing="0">
 		<tr>
@@ -109,7 +108,7 @@
 				<mifos:mifoslabel name="login.submit" bundle="LoginUIResources"/>
 			</html-el:submit>&nbsp; <html-el:button property="cancel"
 				styleClass="cancelbuttn" style="width:70px"
-				onclick="fnCancel(mifosloginform)">
+				onclick="fnCancel()">
 				<mifos:mifoslabel name="login.cancel" bundle="LoginUIResources"/>
 			</html-el:button></td>
 		</tr>

@@ -118,7 +118,7 @@
   <tr>
     <td width="51%" class="fontnormal"><mifos:mifoslabel name="Personnel.UserName"/> <c:out value="${Personnel.userName}"/> </td>
     <td width="49%" align="right" class="fontnormal">
-    	<a href="yourSettings.do?method=loadChangePassword&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}"><mifos:mifoslabel name="Personnel.ChangePassword"/></a>
+    	<a href="yourSettings.do?method=loadChangePassword&userName=${Personnel.userName}randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}"><mifos:mifoslabel name="Personnel.ChangePassword"/></a>
     </td>
   </tr>
 </table><br><span class="fontnormalbold"><mifos:mifoslabel name="Personnel.Address"/></span>

@@ -9,8 +9,7 @@
 	<formset>
 
 		<!-- Login  form -->
-		<form name="/mifoslogin">
-		<!-- bug id 23818 changed from validwhen to required-->
+		<form name="/loginAction">
 			<field property="userName" depends="required">
 				<msg name="required" key="errors.mandatory"
 					bundle="LoginUIResources" />
@@ -36,11 +35,8 @@
 					<var-value>((input == null) or (*this* != null))</var-value>
 				</var>
 			</field>
-			<!-- bug id 27222 added required attribute-->
 			<field property="newPassword"
-				depends="required,minlength,maxlength,mask,validwhen">
-				<msg name="required" key="errors.mandatory"
-					bundle="LoginUIResources" />
+				depends="validwhen,minlength,maxlength,mask">
 				<msg name="validwhen" key="errors.newconfpassword"
 					bundle="LoginUIResources" />
 				<msg name="maxlength" key="errors.maximumlength"

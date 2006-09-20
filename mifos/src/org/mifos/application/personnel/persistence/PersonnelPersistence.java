@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
@@ -14,6 +15,7 @@ import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.persistence.Persistence;
@@ -158,5 +160,16 @@ public class PersonnelPersistence extends Persistence {
 		personnelBO = (PersonnelBO) execUniqueResultNamedQuery(
 				NamedQueryConstants.GETPERSONNELBYNAME, queryParameters);
 		return personnelBO;
+	}
+	
+	public void updateWithCommit(PersonnelBO personnelBO) throws PersistenceException {
+		super.createOrUpdate(personnelBO);
+		try{
+			HibernateUtil.commitTransaction();
+		} catch(HibernateException e){
+			HibernateUtil.rollbackTransaction();
+			throw new PersistenceException(e);
+		}
+		
 	}
 }

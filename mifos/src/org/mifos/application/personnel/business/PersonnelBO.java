@@ -23,7 +23,6 @@ import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.personnel.util.helpers.PersonnelStatus;
 import org.mifos.application.rolesandpermission.business.RoleBO;
-import org.mifos.application.rolesandpermission.util.valueobjects.Role;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.util.Address;
@@ -34,7 +33,6 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.EncryptionException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.authentication.EncryptionService;
 import org.mifos.framework.security.util.UserContext;
@@ -91,16 +89,6 @@ public class PersonnelBO extends BusinessObject {
 
 	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.PERSONNEL_LOGGER);
 
-	protected PersonnelBO() {
-		this.level = null;
-		this.personnelDetails = new PersonnelDetailsEntity();
-		this.preferredLocale = new SupportedLocalesEntity();
-		this.customFields = new HashSet<PersonnelCustomFieldEntity>();
-		this.personnelNotes = new HashSet<PersonnelNotesEntity>();
-		this.personnelId = null;
-		this.userName = null;
-	}
-
 	public PersonnelBO(PersonnelLevel level, OfficeBO office, Integer title,
 			Short preferredLocale, String password, String userName,
 			String emailId, List<RoleBO> roles,
@@ -145,6 +133,16 @@ public class PersonnelBO extends BusinessObject {
 		this.noOfTries = Short.valueOf("0");
 		this.encriptedPassword = getEncryptedPassword(password);
 		this.status = new PersonnelStatusEntity(PersonnelStatus.ACTIVE);
+	}
+	
+	protected PersonnelBO() {
+		this.level = null;
+		this.personnelDetails = new PersonnelDetailsEntity();
+		this.preferredLocale = new SupportedLocalesEntity();
+		this.customFields = new HashSet<PersonnelCustomFieldEntity>();
+		this.personnelNotes = new HashSet<PersonnelNotesEntity>();
+		this.personnelId = null;
+		this.userName = null;
 	}
 
 	public String getAge() {
@@ -678,8 +676,9 @@ public class PersonnelBO extends BusinessObject {
 	}
 	
 	public UserContext login(String password) throws PersonnelException {
+		logger.info("Trying to login");
+		UserContext userContext = null;
 		if(!isActive()) {
-			updateNoOfTries();
 			throw new PersonnelException(LoginConstants.KEYUSERINACTIVE);
 		}
 		if(isLocked())
@@ -689,28 +688,56 @@ public class PersonnelBO extends BusinessObject {
 			throw new PersonnelException(LoginConstants.INVALIDOLDPASSWORD);
 		}
 		resetNoOfTries();
-		return setUserContext();
+		userContext = setUserContext();
+		logger.info("Login successfull");
+		return userContext;
+	}
+	
+	public void updatePassword(String oldPassword,	String newPassword) throws PersonnelException {
+		logger.info("Trying to updatePassword");
+		byte[] encryptedPassword = getEncryptedPassword(oldPassword,newPassword);
+		this.setEncriptedPassword(encryptedPassword);
+		this.setPasswordChanged(LoginConstants.PASSWORDCHANGEDFLAG);
+		if (this.getLastLogin() == null) {
+			this.setLastLogin(new Date());
+		}
+		try {
+			new PersonnelPersistence().createOrUpdate(this);
+			logger.info("Password updated successfully");
+		} catch (PersistenceException pe) {
+			throw new PersonnelException(PersonnelConstants.UPDATE_FAILED, pe);
+		}
 	}
 	
 	private void updateNoOfTries() throws PersonnelException {
+		logger.info("Trying to update  no of tries");
 		if(!isLocked()) {
 			Short newNoOfTries = (short)(getNoOfTries()+1);
 			try {
 				if(newNoOfTries.equals(LoginConstants.MAXTRIES))
 					lock();
 				this.noOfTries = newNoOfTries;
-				new PersonnelPersistence().createOrUpdate(this);
+				new PersonnelPersistence().updateWithCommit(this);
+				logger.info("No of tries updated successfully");
 			} catch (PersistenceException pe) {
 				throw new PersonnelException(PersonnelConstants.UPDATE_FAILED, pe);
 			}
 		}
 	}
 	
-	private void resetNoOfTries() {
-		unLock();
+	private void resetNoOfTries() throws PersonnelException {
+		logger.info("Reseting  no of tries");
+		this.noOfTries = Short.valueOf("0");
+		try {
+			new PersonnelPersistence().createOrUpdate(this);
+		} catch (PersistenceException pe) {
+			throw new PersonnelException(PersonnelConstants.UPDATE_FAILED, pe);
+		}
+		logger.info("No of tries reseted successfully");
 	}
 	
 	private boolean isPasswordValid(String password) throws PersonnelException {
+		logger.info("Checking password valid or not");
 		try {
 			return EncryptionService.getInstance().verifyPassword(password,getEncriptedPassword());
 		} catch (EncryptionException ee) {
@@ -721,6 +748,7 @@ public class PersonnelBO extends BusinessObject {
 	}
 	
 	private void updateLastPersonnelLoggedin() throws PersonnelException {
+		logger.info("Updating lastLogin");
 		try{
 			this.lastLogin = new Date();
 			new PersonnelPersistence().createOrUpdate(this);
@@ -730,11 +758,12 @@ public class PersonnelBO extends BusinessObject {
 	}
 	
 	private UserContext setUserContext() throws PersonnelException {
+		logger.info("Setting  usercontext");
 		UserContext userContext = new UserContext();
 		userContext.setId(getPersonnelId());
 		userContext.setName(getDisplayName());
 		userContext.setLevelId(getLevel().getId());
-		//userContext.setRoles(new HashSet(getRoles()));
+		userContext.setRoles(getRoles());
 		userContext.setLastLogin(getLastLogin());
 		userContext.setPasswordChanged(getPasswordChanged());
 		if (LoginConstants.PASSWORDCHANGEDFLAG.equals(getPasswordChanged())) {
@@ -758,6 +787,27 @@ public class PersonnelBO extends BusinessObject {
 		userContext.setOfficeLevelId(getOffice().getLevel().getId());
 		userContext.setMfiLocaleId(Configuration.getInstance().getSystemConfig().getMFILocaleId());
 		userContext.setMfiLocale(Configuration.getInstance().getSystemConfig().getMFILocale());
+		logger.info("got usercontext");
 		return userContext;
+	}
+	
+	private Set<Short> getRoles() {
+		Set<Short> roles = new HashSet<Short>();
+		for(PersonnelRoleEntity personnelRole : getPersonnelRoles()){
+			roles.add(personnelRole.getRole().getId());
+		}
+		return roles;
+	}
+	
+	private byte[] getEncryptedPassword(String oldPassword,	String newPassword) throws PersonnelException{
+		logger.info("Matching oldpassword with entered password.");
+		byte[] newEncryptedPassword = null;
+		if(isPasswordValid(oldPassword)) {
+			newEncryptedPassword = getEncryptedPassword(newPassword);
+		} else {
+			throw new PersonnelException(LoginConstants.INVALIDOLDPASSWORD);
+		}
+		logger.info("New encripted password returned.");
+		return newEncryptedPassword;
 	}
 }

@@ -57,6 +57,7 @@ import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.util.helpers.Constants;
 
 /**
  * LoginFitter class fiter's all the request other then login page if user is
@@ -111,7 +112,7 @@ public class LoginFilter implements Filter {
 					}
 				UserContext userContext = (UserContext) ((HttpServletRequest) req)
 						.getSession(false).getAttribute(
-								LoginConstants.USERCONTEXT);
+								Constants.USERCONTEXT);
 				if (null == userContext || null == userContext.getId()
 						|| "".equals(userContext.getId())) {
 					// send back to login page with error message

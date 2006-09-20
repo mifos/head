@@ -11,7 +11,7 @@
 <link href="pages/framework/css/cssstyle.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<html-el:form action="/mifoslogin.do" focus="userName">
+<html-el:form action="/loginAction.do" focus="userName">
 
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		<tr>
@@ -54,7 +54,7 @@
 						name="login.login" bundle="LoginUIResources"/></span></td>
 				</tr>
 				<tr>
-					<td width="49%" align="left" valign="top"
+					<td width="45%" align="left" valign="top"
 						style="BORDER-RIGHT: #d7deee 1px solid; PADDING-RIGHT: 10px; PADDING-LEFT: 10px; 
 					PADDING-BOTTOM: 10px; PADDING-TOP: 10px"><span
 						class="fontnormal"><mifos:mifoslabel name="login.welcome" bundle="LoginUIResources"/> <br>
@@ -62,7 +62,7 @@
 					<A href="#">Help</a></span><br>
 					</td>
 
-					<td width="51%" align="left" valign="top"
+					<td width="55%" align="left" valign="top"
 						style="PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; PADDING-TOP: 10px">
 					<table width="100%" border="0" cellpadding="3" cellspacing="0">
 					   <tr><td colspan="2">
@@ -80,8 +80,6 @@
 
 							<td><html-el:password property="password" redisplay="false" /></td>
 						</tr>
-						<html-el:hidden property="method" value="login" />
-						<html-el:hidden property="newPassword" value="mifoss" />
 						<tr class="fontnormal">
 							<td align="right"></td>
 
@@ -89,6 +87,7 @@
 							<html-el:submit style="WIDTH: 60px" styleClass="buttn">
 								<mifos:mifoslabel name="login.login" bundle="LoginUIResources"/>
 							</html-el:submit>
+							<html-el:hidden property="method" value="login" />
 						</tr>
 					</table>
 					<br>

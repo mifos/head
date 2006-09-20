@@ -1,6 +1,6 @@
 <script language="javascript">
 	function fnLogout() {
-		location.href="mifoslogout.do?method=logout";
+		location.href="loginAction.do?method=logout";
 	}
     function fnYourSetting() {
 		location.href="PersonnelAction.do?method=getDetails";

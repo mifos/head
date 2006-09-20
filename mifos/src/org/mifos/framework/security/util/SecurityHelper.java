@@ -39,7 +39,6 @@
 package org.mifos.framework.security.util;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -47,17 +46,12 @@ import java.util.Set;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.StaleObjectStateException;
 import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.login.util.helpers.LoginConstants;
-import org.mifos.application.personnel.util.valueobjects.Personnel;
 import org.mifos.application.rolesandpermission.dao.RolesandPermissionDAO;
 import org.mifos.application.rolesandpermission.util.valueobjects.Activity;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.ConcurrencyException;
 import org.mifos.framework.exceptions.HibernateProcessException;
-import org.mifos.framework.exceptions.InvalidUserException;
 import org.mifos.framework.exceptions.SecurityException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -159,92 +153,6 @@ public class SecurityHelper {
 	}
 
 	/**
-	 * Thsi function returns the PersonRoles object which contains the person
-	 * information and the set of all the roles related to that user
-	 * 
-	 * @param user
-	 *            name of the user
-	 * @return PersonRoles
-	 * @throws HibernateProcessException
-	 */
-
-	public static PersonRoles getUser(String user) throws SystemException,
-			ApplicationException {
-		PersonRoles pr = null;
-		Session session = null;
-		Transaction transaction = null;
-		Query person = null;
-		try {
-			// Session ss= sf.openSession();
-			session = HibernateUtil.getSession();
-			transaction = session.beginTransaction();
-			// TODO modify this code
-
-			person = session.getNamedQuery(NamedQueryConstants.GETPERSON);
-			person.setString("NAME", user);
-			List<PersonRoles> lst = person.list();
-			if (lst != null && lst.size() == 0) {
-				throw new InvalidUserException(LoginConstants.KEYINVALIDUSER);
-			}
-			pr = lst.get(0);
-			transaction.commit();
-
-		} catch (HibernateProcessException hbe) {
-			transaction.rollback();
-			throw new SystemException(hbe);
-		} catch (HibernateException he) {
-			transaction.rollback();
-			throw new SecurityException(SecurityConstants.GENERALERROR);
-		} finally {
-			HibernateUtil.closeSession(session);
-		}
-		return pr;
-
-	}
-
-	/**
-	 * This function is used to update the no of tries user has made if
-	 * unsuccessful or if he is successful then it gets resetted to zero
-	 * 
-	 * @param pr
-	 *            PersonRoles object which we want to modify
-	 * @param newValue
-	 *            the new value of no of tries
-	 */
-	public static void updateNoOfTries(PersonRoles pr, short newValue)
-			throws SystemException, ApplicationException {
-
-		Session session = null;
-		Transaction transaction = null;
-
-		try {
-			session = HibernateUtil.getSession();
-			transaction = session.beginTransaction();
-			if (newValue >= SecurityConstants.MAXTRIES) {
-				pr.setLocked(Short.valueOf(SecurityConstants.ONE));
-			}
-
-			pr.setNoOfTries(newValue);
-			session.update(pr);
-			transaction.commit();
-		} catch (HibernateProcessException e) {
-			transaction.rollback();
-			throw new SystemException(e);
-		} catch ( StaleObjectStateException e)
-		{
-			throw new ConcurrencyException(e);
-		}
-		
-		catch (HibernateException he) {
-			transaction.rollback();
-			throw new SecurityException(SecurityConstants.GENERALERROR);
-		} finally {
-			HibernateUtil.closeSession(session);
-		}
-
-	}
-
-	/**
 	 * This function is used to get the list of the offices under the given
 	 * personnel office under any user at any time
 	 * 
@@ -320,104 +228,6 @@ public class SecurityHelper {
 		}
 
 		return lst;
-	}
-
-	/**
-	 * UpdateLastLogin function updates the last login time of the user if he
-	 * successfully logs into the system with the current date and time
-	 * 
-	 * @param pr
-	 * @throws HibernateProcessException
-	 */
-	public static void UpdateLastLogin(PersonRoles pr) throws SystemException,
-			ApplicationException {
-		Date currentDate = new Date();
-		Session session = null;
-		Transaction transaction = null;
-
-		try {
-			session = HibernateUtil.getSession();
-			transaction = session.beginTransaction();
-
-			pr.setLastLogin(currentDate);
-			session.update(pr);
-			transaction.commit();
-		} catch (HibernateProcessException e) {
-			transaction.rollback();
-			throw new SystemException(e);
-		} 
-		catch ( StaleObjectStateException e)
-		{
-			throw new ConcurrencyException(e);
-		}
-		catch (HibernateException he) {
-			transaction.rollback();
-			throw new SecurityException(SecurityConstants.GENERALERROR);
-		} finally {
-			HibernateUtil.closeSession(session);
-		}
-	}
-
-	/**
-	 * GetUserWithId returns the PersonRoles object with the specified id
-	 * 
-	 * @param userId
-	 *            user id
-	 * @return PersonRoles object
-	 * @throws HibernateProcessException
-	 */
-	public static PersonRoles getUserWithId(Short userId)
-			throws SystemException, ApplicationException {
-		PersonRoles pr = null;
-		Session session = null;
-		Transaction transaction = null;
-
-		try {
-			session = HibernateUtil.getSession();
-			transaction = session.beginTransaction();
-			pr = (PersonRoles) session.get(PersonRoles.class, userId);
-			transaction.commit();
-		} catch (HibernateProcessException e) {
-			transaction.rollback();
-			throw new SystemException(e);
-		} catch (HibernateException he) {
-			transaction.rollback();
-			throw new SecurityException(SecurityConstants.GENERALERROR);
-		} finally {
-			HibernateUtil.closeSession(session);
-		}
-		return pr;
-	}
-
-	/**
-	 * updatePassWord updates the user password if user wants to change his
-	 * password this is done using this function
-	 * 
-	 * @param pr
-	 *            PersonRoles object initialize with appropriate values
-	 * @throws HibernateProcessException
-	 */
-	public static void updatePassWord(PersonRoles pr) throws SystemException,
-			ApplicationException {
-		Session session = null;
-		Transaction transaction = null;
-
-		try {
-			session = HibernateUtil.getSession();
-			transaction = session.beginTransaction();
-			session.update(pr);
-			transaction.commit();
-
-		} catch (HibernateProcessException e) {
-			transaction.rollback();
-			throw new SystemException(e);
-		} catch (HibernateException he) {
-			transaction.rollback();
-			throw new SecurityException(SecurityConstants.GENERALERROR);
-		} finally {
-			HibernateUtil.closeSession(session);
-		}
-
 	}
 
 	/**
@@ -547,40 +357,5 @@ public class SecurityHelper {
 	 */
 	private static short getIndex(Short id) {
 		return indexMap.get(id);
-	}
-
-	public static Personnel getPersonnel(Short id) throws SystemException,
-			ApplicationException {
-		Session session = null;
-		Transaction transaction = null;
-		Personnel personnel = null;
-		try {
-			session = HibernateUtil.getSession();
-			transaction = session.beginTransaction();
-			personnel = (Personnel) session.createQuery(
-					"from Personnel p where p.personnelId=:id").setShort("id",
-					id).uniqueResult();
-			
-			
-			personnel.getPreferredLocale();
-			personnel.getPreferredLocale().getCountry();
-			personnel.getPreferredLocale().getCountry().getCountryShortName();
-			personnel.getPreferredLocale().getLanguage();
-			personnel.getPreferredLocale().getLanguage().getLanguageShortName();
-			personnel.getOffice();
-			personnel.getOffice().getOfficeId();
-			personnel.getOffice().getGlobalOfficeNum();
-			transaction.commit();
-
-		} catch (HibernateProcessException e) {
-			transaction.rollback();
-			throw new SystemException(e);
-		} catch (HibernateException he) {
-			transaction.rollback();
-			throw new SecurityException(SecurityConstants.GENERALERROR);
-		} finally {
-			HibernateUtil.closeSession(session);
-		}
-		return personnel;
 	}
 }

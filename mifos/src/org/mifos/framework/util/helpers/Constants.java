@@ -103,6 +103,7 @@ public interface Constants {
 	public static final short YES = 1;
 //	--------------------added for new framework
 	public static final String USER_CONTEXT_KEY="UserContext";
+	public String ACTIVITYCONTEXT="ActivityContext";
 	public static final String BUSINESS_KEY="BusinessKey";
 	
 	public static final String FIELD_CONFIGURATION="FieldConfiguration";
