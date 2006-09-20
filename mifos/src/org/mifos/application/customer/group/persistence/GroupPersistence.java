@@ -4,12 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.HibernateException;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
 public class GroupPersistence extends Persistence {
@@ -28,12 +26,7 @@ public class GroupPersistence extends Persistence {
 	}
 
 	public GroupBO geGroup(Integer customerId) throws PersistenceException{
-		try{
-			return (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class, customerId);
-					
-		}catch(HibernateException he){
-			throw new PersistenceException(he);
-		}
+		return (GroupBO) getPersistentObject(GroupBO.class, customerId);
 	}
 	
 	public boolean isGroupExists(String name, Short officeId) throws PersistenceException{

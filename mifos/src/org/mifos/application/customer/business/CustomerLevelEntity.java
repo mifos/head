@@ -40,7 +40,6 @@ package org.mifos.application.customer.business;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 
 /**
  * This class represents customer level e.g client,center etc
@@ -49,6 +48,10 @@ public class CustomerLevelEntity extends MasterDataEntity {
 
 	private CustomerLevelEntity parentCustomerLevel;
 
+	public CustomerLevelEntity(CustomerLevel customerLevel) {
+		super(customerLevel.getValue());
+	}
+
 	/*
 	 * Adding a default constructor is hibernate's requirement and should not be
 	 * used to create a valid Object.
@@ -56,11 +59,7 @@ public class CustomerLevelEntity extends MasterDataEntity {
 	protected CustomerLevelEntity() {
 		super();
 	}
-
-	public CustomerLevelEntity(CustomerLevel customerLevel) {
-		super(customerLevel.getValue());
-	}
-
+	
 	public CustomerLevelEntity getParentCustomerLevel() {
 		return parentCustomerLevel;
 	}

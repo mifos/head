@@ -72,7 +72,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 	}
 
 	public void testSuccessfulSaveAttendance() throws NumberFormatException,
-			BulkEntryAccountUpdateException {
+			Exception {
 		createInitialObjects();
 
 		bulkEntryBusinessService.saveAttendance(client.getCustomerId(),

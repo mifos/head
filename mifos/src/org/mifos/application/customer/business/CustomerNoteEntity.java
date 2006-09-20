@@ -55,6 +55,15 @@ public class CustomerNoteEntity extends PersistentObject {
 
 	private final PersonnelBO personnel;
 
+	public CustomerNoteEntity(String comment, Date commentDate,
+			PersonnelBO personnel, CustomerBO customer) {
+		this.comment = comment;
+		this.commentDate = commentDate;
+		this.personnel = personnel;
+		this.customer = customer;
+		this.commentId = null;
+	}
+
 	/*
 	 * Adding a default constructor is hibernate's requirement and should not be
 	 * used to create a valid Object.
@@ -66,16 +75,7 @@ public class CustomerNoteEntity extends PersistentObject {
 		this.personnel = null;
 		this.customer = null;
 	}
-
-	public CustomerNoteEntity(String comment, Date commentDate,
-			PersonnelBO personnel, CustomerBO customer) {
-		this.comment = comment;
-		this.commentDate = commentDate;
-		this.personnel = personnel;
-		this.customer = customer;
-		this.commentId = null;
-	}
-
+	
 	public String getCommentDateStr() {
 		return (commentDate != null) ? this.commentDate.toString() : "";
 	}

@@ -9,14 +9,13 @@ import org.mifos.framework.util.helpers.Money;
 public class CustomerFeeScheduleEntity extends
 		AccountFeesActionDetailEntity {
 
-	protected CustomerFeeScheduleEntity() {
-		super(null, null, null, null);
-	}
-
 	public CustomerFeeScheduleEntity(
 			AccountActionDateEntity accountActionDate,
 			FeeBO fee, AccountFeesEntity accountFee, Money feeAmount) {
 		super(accountActionDate, fee, accountFee, feeAmount);
 	}
 
+	protected CustomerFeeScheduleEntity() {
+		super(null, null, null, null);
+	}
 }

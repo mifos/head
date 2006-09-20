@@ -81,17 +81,19 @@ import org.mifos.framework.util.helpers.Money;
 
 public class CustomerBusinessService extends BusinessService {
 
-	public CustomerBusinessService() {
-
-	}
+	public CustomerBusinessService() {}
 
 	@Override
 	public BusinessObject getBusinessObject(UserContext userContext) {
 		return null;
 	}
 
-	public CustomerBO getCustomer(Integer customerId){
-		return new CustomerPersistence().getCustomer(customerId);
+	public CustomerBO getCustomer(Integer customerId)throws ServiceException{
+		try {
+			return new CustomerPersistence().getCustomer(customerId);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
 	}
 
 	public CustomerBO findBySystemId(String globalCustNum)

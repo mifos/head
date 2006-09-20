@@ -48,20 +48,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Hibernate;
-import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
 public class ClientPersistence extends Persistence {
 
-	public ClientBO getClient(Integer customerId) {
-		Session session = HibernateUtil.getSessionTL();
-		ClientBO client = (ClientBO) session.get(ClientBO.class,customerId);
-		return client;
+	public ClientBO getClient(Integer customerId) throws PersistenceException{
+		return (ClientBO) getPersistentObject(ClientBO.class,customerId);
 	}
 	
 	public boolean checkForDuplicacyOnGovtId(String governmentId , Integer customerId) throws PersistenceException {

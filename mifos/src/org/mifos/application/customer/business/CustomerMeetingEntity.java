@@ -56,6 +56,14 @@ public class CustomerMeetingEntity extends PersistentObject {
 	
 	private Short updatedFlag;
 
+	public CustomerMeetingEntity(CustomerBO customer, MeetingBO meeting){
+		meeting.setMeetingType(new MeetingTypeEntity(MeetingType.CUSTOMERMEETING));
+		this.customer = customer;
+		this.meeting = meeting;
+		this.custMeetingId = null;
+		this.updatedFlag  = YesNoFlag.NO.getValue();
+	}
+	
 	/*
 	 * Adding a default constructor is hibernate's requirement and should not be
 	 * used to create a valid Object.
@@ -63,14 +71,6 @@ public class CustomerMeetingEntity extends PersistentObject {
 	protected CustomerMeetingEntity(){
 		this.custMeetingId = null;
 		this.customer = null;
-	}
-	
-	public CustomerMeetingEntity(CustomerBO customer, MeetingBO meeting){
-		meeting.setMeetingType(new MeetingTypeEntity(MeetingType.CUSTOMERMEETING));
-		this.customer = customer;
-		this.meeting = meeting;
-		this.custMeetingId = null;
-		this.updatedFlag  = YesNoFlag.NO.getValue();
 	}
 	
 	public CustomerBO getCustomer() {

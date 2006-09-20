@@ -55,17 +55,17 @@ public class CustomerPositionEntity extends PersistentObject {
 	
 	private final CustomerBO parentCustomer;
 	
-	protected CustomerPositionEntity() {
-		this.customerPositionId = null;
-		this.position = null;
-		this.parentCustomer = null;
-	}
-
 	public CustomerPositionEntity(PositionEntity position, CustomerBO customer, CustomerBO parentCustomer) {
 		this.position = position;
 		this.customer = customer;
 		this.parentCustomer = parentCustomer;
 		this.customerPositionId = null;
+	}
+
+	protected CustomerPositionEntity() {
+		this.customerPositionId = null;
+		this.position = null;
+		this.parentCustomer = null;
 	}
 
 	public CustomerBO getCustomer() {

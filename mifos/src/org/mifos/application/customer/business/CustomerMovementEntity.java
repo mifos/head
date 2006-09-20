@@ -58,6 +58,14 @@ public class CustomerMovementEntity extends PersistentObject {
 
 	private final OfficeBO office;
 
+	public CustomerMovementEntity(CustomerBO customer, Date startDate){
+		this.customer = customer;
+		this.office = customer.getOffice();
+		this.startDate = startDate;
+		this.status = Status.ACTIVE.getValue();
+		this.customerMovementId = null;
+	}
+	
 	/*
 	 * Adding a default constructor is hibernate's requirement and should not be
 	 * used to create a valid Object.
@@ -67,14 +75,6 @@ public class CustomerMovementEntity extends PersistentObject {
 		this.customer = null;
 		this.office = null;
 		this.startDate = null;
-	}
-	
-	public CustomerMovementEntity(CustomerBO customer, Date startDate){
-		this.customer = customer;
-		this.office = customer.getOffice();
-		this.startDate = startDate;
-		this.status = Status.ACTIVE.getValue();
-		this.customerMovementId = null;
 	}
 	
 	public Date getStartDate() {

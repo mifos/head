@@ -13,6 +13,8 @@ public class CenterPerformanceHistory {
 
 	private Money portfolioAtRisk;
 
+	public CenterPerformanceHistory(){	}
+	
 	public Integer getNumberOfClients() {
 		return numberOfClients;
 	}

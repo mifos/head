@@ -15,15 +15,20 @@ public class CenterBusinessService extends BusinessService {
 		return null;
 	}
 
-	public CenterBO getCenter(Integer customerId) {
-		return new CenterPersistence().getCenter(customerId);
+	public CenterBO getCenter(Integer customerId) throws ServiceException {
+		try {
+			return new CenterPersistence().getCenter(customerId);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
 	}
-	
-	public CenterBO getCenterBySystemId(String globalCustNum) throws ServiceException{
+
+	public CenterBO getCenterBySystemId(String globalCustNum)
+			throws ServiceException {
 		try {
 			return new CenterPersistence().getCenterBySystemId(globalCustNum);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
 		}
 	}
 }

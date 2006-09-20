@@ -64,13 +64,6 @@ public class ClientBO extends CustomerBO {
 	
 	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER);
 	
-	protected ClientBO() {
-		super();
-		this.nameDetailSet = new HashSet<ClientNameDetailEntity>();
-		clientAttendances = new HashSet<ClientAttendanceBO>();
-		this.performanceHistory = null;
-	}
-
 	public ClientBO(UserContext userContext, String displayName,
 			CustomerStatus customerStatus, String externalId,
 			Date mfiJoiningDate, Address address,
@@ -109,6 +102,13 @@ public class ClientBO extends CustomerBO {
 				picture);
 	}
 
+	protected ClientBO() {
+		super();
+		this.nameDetailSet = new HashSet<ClientNameDetailEntity>();
+		clientAttendances = new HashSet<ClientAttendanceBO>();
+		this.performanceHistory = null;
+	}
+	
 	private ClientBO(UserContext userContext, String displayName,
 			CustomerStatus customerStatus, String externalId,
 			Date mfiJoiningDate, Address address,
@@ -352,38 +352,6 @@ public class ClientBO extends CustomerBO {
 		}
 		super.update();
 	}
-
-	/*public boolean isDuplicacyCheckNeeded()throws CustomerException{
-		
-		String oldDisplayName = (String)context.getSearchResultBasedOnName(CustomerConstants.CURRENT_CLIENT_NAME).getValue();
-		Date oldDOB = (Date)context.getSearchResultBasedOnName(CustomerConstants.CURRENT_DOB).getValue();
-		String oldGovernmentId = (String)context.getSearchResultBasedOnName(CustomerConstants.CURRENT_GOVT_ID).getValue();
-		String name= getDisplayName();
-		Date dateOfBirth = getDateOfBirth();
-		String govtId = getGovernmentId();
-		boolean returnValue = false;
-		//if both values of govt id is null then check if either name or DOB has changed. If so retrun true
-		if(ValidateMethods.isNullOrBlank(oldGovernmentId) && ValidateMethods.isNullOrBlank(govtId)){
-			if(!oldDisplayName.equals(name) || !oldDOB.equals(dateOfBirth)){
-				returnValue = true;
-			}
-		}
-		//if old value of govt id is null and a value is now entered for govt id or if the values of govt id are not the same return true
-		else if(
-				( ValidateMethods.isNullOrBlank(oldGovernmentId) && !ValidateMethods.isNullOrBlank(govtId))
-				||(!ValidateMethods.isNullOrBlank(govtId) && !ValidateMethods.isNullOrBlank(oldGovernmentId)&& !oldGovernmentId.equals(govtId))	
-				||(!ValidateMethods.isNullOrBlank(oldGovernmentId) && ValidateMethods.isNullOrBlank(govtId)))
-		{
-				returnValue =  true;
-		}
-		//if the values are the same return false
-		else if( !ValidateMethods.isNullOrBlank(govtId) && !ValidateMethods.isNullOrBlank(oldGovernmentId)&& oldGovernmentId.equals(govtId))	
-		{
-			returnValue =  false;
-		}
-		return returnValue ;
-	}*/
-
 
 	public void transferToBranch(OfficeBO officeToTransfer)throws CustomerException{
 		validateBranchTransfer(officeToTransfer);

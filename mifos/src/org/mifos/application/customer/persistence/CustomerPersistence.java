@@ -47,7 +47,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Hibernate;
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
@@ -92,68 +91,50 @@ public class CustomerPersistence extends Persistence {
 
 	public List<CustomerView> getChildrenForParent(Integer customerId,
 			String searchId, Short officeId) throws PersistenceException {
-		try{
-			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("SEARCH_STRING", searchId + ".%");
-			queryParameters.put("OFFICE_ID", officeId);
-			List<CustomerView> queryResult = executeNamedQuery(
-					NamedQueryConstants.GET_ACTIVE_CHILDREN_FORPARENT,
-					queryParameters);
-			return queryResult;
-		}catch(HibernateException he){
-			throw new PersistenceException(he);
-		}
-
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("SEARCH_STRING", searchId + ".%");
+		queryParameters.put("OFFICE_ID", officeId);
+		List<CustomerView> queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_ACTIVE_CHILDREN_FORPARENT,
+				queryParameters);
+		return queryResult;
 	}
-	
-	public CustomerBO getCustomerWithSearchId(String searchId,
-			Short officeId) throws PersistenceException {
-		try{
-			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("SEARCH_STRING", searchId);
-			queryParameters.put("OFFICE_ID", officeId);
-			List<CustomerBO> queryResult = executeNamedQuery(
-					NamedQueryConstants.ACTIVE_CUSTOMERS_WITH_SEARCH_ID,
-					queryParameters);
-			return queryResult.get(0);
-		}catch(HibernateException he){
-			throw new PersistenceException(he);
-		}
+
+	public CustomerBO getCustomerWithSearchId(String searchId, Short officeId)
+			throws PersistenceException {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("SEARCH_STRING", searchId);
+		queryParameters.put("OFFICE_ID", officeId);
+		List<CustomerBO> queryResult = executeNamedQuery(
+				NamedQueryConstants.ACTIVE_CUSTOMERS_WITH_SEARCH_ID,
+				queryParameters);
+		return queryResult.get(0);
 	}
 
 	public List<CustomerBO> getCustomersUnderParent(String searchId,
 			Short officeId) throws PersistenceException {
-		try{
-			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("SEARCH_STRING", searchId + ".%");
-			queryParameters.put("OFFICE_ID", officeId);
-			List<CustomerBO> queryResult = executeNamedQuery(
-					NamedQueryConstants.ACTIVE_CUSTOMERS_UNDER_PARENT,
-					queryParameters);
-			queryResult.add(getCustomerWithSearchId(searchId,officeId));
-			return queryResult;
-		}catch(HibernateException he){
-			throw new PersistenceException(he);
-		}
-
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("SEARCH_STRING", searchId + ".%");
+		queryParameters.put("OFFICE_ID", officeId);
+		List<CustomerBO> queryResult = executeNamedQuery(
+				NamedQueryConstants.ACTIVE_CUSTOMERS_UNDER_PARENT,
+				queryParameters);
+		queryResult.add(getCustomerWithSearchId(searchId, officeId));
+		return queryResult;
 	}
 
 	public List<Integer> getChildrenForParent(String searchId, Short officeId)
-			throws  PersistenceException {
-		try{
-			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("SEARCH_STRING", searchId + ".%");
-			queryParameters.put("OFFICE_ID", officeId);
-			List<Integer> queryResult = executeNamedQuery(
-					NamedQueryConstants.GET_CHILDREN_FOR_PARENT, queryParameters);
-			return queryResult;
-		}catch(HibernateException he){
-			throw new PersistenceException(he);
-		}
+			throws PersistenceException {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("SEARCH_STRING", searchId + ".%");
+		queryParameters.put("OFFICE_ID", officeId);
+		List<Integer> queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_CHILDREN_FOR_PARENT, queryParameters);
+		return queryResult;
 	}
 
 	public List<CustomerView> getActiveParentList(Short personnelId,
-			Short customerLevelId, Short officeId) throws PersistenceException{
+			Short customerLevelId, Short officeId) throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("personnelId", personnelId);
 		queryParameters.put("customerLevelId", customerLevelId);
@@ -189,7 +170,8 @@ public class CustomerPersistence extends Persistence {
 		return queryResult;
 	}
 
-	public Date getLastMeetingDateForCustomer(Integer customerId) throws PersistenceException {
+	public Date getLastMeetingDateForCustomer(Integer customerId)
+			throws PersistenceException {
 		Date meetingDate = null;
 		Date actionDate = new java.sql.Date(Calendar.getInstance().getTime()
 				.getTime());
@@ -205,11 +187,9 @@ public class CustomerPersistence extends Persistence {
 
 	}
 
-	public CustomerBO getCustomer(Integer customerId) {
-		Session session = HibernateUtil.getSessionTL();
-		CustomerBO customer = (CustomerBO) session.get(CustomerBO.class,
-				customerId);
-		return customer;
+	public CustomerBO getCustomer(Integer customerId)
+			throws PersistenceException {
+		return (CustomerBO) getPersistentObject(CustomerBO.class, customerId);
 	}
 
 	public CustomerBO findBySystemId(String globalCustNum)
@@ -217,17 +197,12 @@ public class CustomerPersistence extends Persistence {
 		Map<String, String> queryParameters = new HashMap<String, String>();
 		CustomerBO customer = null;
 		queryParameters.put("globalCustNum", globalCustNum);
-		try {
-			List<CustomerBO> queryResult = executeNamedQuery(
-					NamedQueryConstants.CUSTOMER_FIND_ACCOUNT_BY_SYSTEM_ID,
-					queryParameters);
-			if (null != queryResult && queryResult.size() > 0) {
-				customer = queryResult.get(0);
-			}
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
+		List<CustomerBO> queryResult = executeNamedQuery(
+				NamedQueryConstants.CUSTOMER_FIND_ACCOUNT_BY_SYSTEM_ID,
+				queryParameters);
+		if (null != queryResult && queryResult.size() > 0) {
+			customer = queryResult.get(0);
 		}
-
 		return customer;
 	}
 
@@ -236,39 +211,29 @@ public class CustomerPersistence extends Persistence {
 		Map<String, String> queryParameters = new HashMap<String, String>();
 		CustomerBO customer = null;
 		queryParameters.put("globalCustNum", globalCustNum);
-		try {
-
-			if (levelId.shortValue() == CustomerConstants.CENTER_LEVEL_ID) {
-				List<CenterBO> queryResult = executeNamedQuery(
-						NamedQueryConstants.GET_CENTER_BY_SYSTEMID,
-						queryParameters);
-				if (null != queryResult && queryResult.size() > 0) {
-					customer = queryResult.get(0);
-					initializeCustomer(customer);
-				}
-			} else if (levelId.shortValue() == CustomerConstants.GROUP_LEVEL_ID) {
-				List<GroupBO> queryResult = executeNamedQuery(
-						NamedQueryConstants.GET_GROUP_BY_SYSTEMID,
-						queryParameters);
-				if (null != queryResult && queryResult.size() > 0) {
-					customer = queryResult.get(0);
-					initializeCustomer(customer);
-				}
-
-			} else if (levelId.shortValue() == CustomerConstants.CLIENT_LEVEL_ID) {
-				List<ClientBO> queryResult = executeNamedQuery(
-						NamedQueryConstants.GET_CLIENT_BY_SYSTEMID,
-						queryParameters);
-				if (null != queryResult && queryResult.size() > 0) {
-					customer = queryResult.get(0);
-					initializeCustomer(customer);
-				}
-
+		if (levelId.shortValue() == CustomerConstants.CENTER_LEVEL_ID) {
+			List<CenterBO> queryResult = executeNamedQuery(
+					NamedQueryConstants.GET_CENTER_BY_SYSTEMID, queryParameters);
+			if (null != queryResult && queryResult.size() > 0) {
+				customer = queryResult.get(0);
+				initializeCustomer(customer);
 			}
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
+		} else if (levelId.shortValue() == CustomerConstants.GROUP_LEVEL_ID) {
+			List<GroupBO> queryResult = executeNamedQuery(
+					NamedQueryConstants.GET_GROUP_BY_SYSTEMID, queryParameters);
+			if (null != queryResult && queryResult.size() > 0) {
+				customer = queryResult.get(0);
+				initializeCustomer(customer);
+			}
 
+		} else if (levelId.shortValue() == CustomerConstants.CLIENT_LEVEL_ID) {
+			List<ClientBO> queryResult = executeNamedQuery(
+					NamedQueryConstants.GET_CLIENT_BY_SYSTEMID, queryParameters);
+			if (null != queryResult && queryResult.size() > 0) {
+				customer = queryResult.get(0);
+				initializeCustomer(customer);
+			}
+		}
 		return customer;
 	}
 
@@ -291,152 +256,129 @@ public class CustomerPersistence extends Persistence {
 						.getCustomerLevel().getId();
 			}
 		}
-
 	}
 
-	protected List<CustomerBO> getChildrenOtherThanClosed(String parentSearchId,
-			Short parentOfficeId, CustomerLevel childrenLevel) throws PersistenceException {
-		try {
-			Map<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("SEARCH_STRING", parentSearchId + ".%");
-			queryParameters.put("OFFICE_ID", parentOfficeId);
-			queryParameters.put("LEVEL_ID", childrenLevel.getValue());
-			List<CustomerBO> queryResult = executeNamedQuery(
-					NamedQueryConstants.GET_CHILDREN_OTHER_THAN_CLOSED, queryParameters);
-			return queryResult;
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
+	protected List<CustomerBO> getChildrenOtherThanClosed(
+			String parentSearchId, Short parentOfficeId,
+			CustomerLevel childrenLevel) throws PersistenceException {
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("SEARCH_STRING", parentSearchId + ".%");
+		queryParameters.put("OFFICE_ID", parentOfficeId);
+		queryParameters.put("LEVEL_ID", childrenLevel.getValue());
+		List<CustomerBO> queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_CHILDREN_OTHER_THAN_CLOSED,
+				queryParameters);
+		return queryResult;
 	}
 
-	protected List<CustomerBO> getChildrenOtherThanClosedAndCancelled(String parentSearchId,
-			Short parentOfficeId, CustomerLevel childrenLevel) throws PersistenceException {
-		try {
-			Map<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("SEARCH_STRING", parentSearchId + ".%");
-			queryParameters.put("OFFICE_ID", parentOfficeId);
-			queryParameters.put("LEVEL_ID", childrenLevel.getValue());
-			List<CustomerBO> queryResult = executeNamedQuery(
-					NamedQueryConstants.GET_CHILDREN_OTHER_THAN_CLOSED_AND_CANCELLED, queryParameters);
-			return queryResult;
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
+	protected List<CustomerBO> getChildrenOtherThanClosedAndCancelled(
+			String parentSearchId, Short parentOfficeId,
+			CustomerLevel childrenLevel) throws PersistenceException {
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("SEARCH_STRING", parentSearchId + ".%");
+		queryParameters.put("OFFICE_ID", parentOfficeId);
+		queryParameters.put("LEVEL_ID", childrenLevel.getValue());
+		List<CustomerBO> queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_CHILDREN_OTHER_THAN_CLOSED_AND_CANCELLED,
+				queryParameters);
+		return queryResult;
 	}
-	
+
 	protected List<CustomerBO> getAllChildren(String parentSearchId,
-			Short parentOfficeId, CustomerLevel childrenLevel) throws PersistenceException {
-		try {
-			Map<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("SEARCH_STRING", parentSearchId + ".%");
-			queryParameters.put("OFFICE_ID", parentOfficeId);
-			queryParameters.put("LEVEL_ID", childrenLevel.getValue());
-			List<CustomerBO> queryResult = executeNamedQuery(
-					NamedQueryConstants.GET_ALL_CHILDREN_FOR_CUSTOMERLEVEL, queryParameters);
-			return queryResult;
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
+			Short parentOfficeId, CustomerLevel childrenLevel)
+			throws PersistenceException {
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("SEARCH_STRING", parentSearchId + ".%");
+		queryParameters.put("OFFICE_ID", parentOfficeId);
+		queryParameters.put("LEVEL_ID", childrenLevel.getValue());
+		List<CustomerBO> queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_ALL_CHILDREN_FOR_CUSTOMERLEVEL,
+				queryParameters);
+		return queryResult;
 	}
-	
-	public List<CustomerBO> getChildren(String parentSearchId, Short parentOfficeId, CustomerLevel childrenLevel, ChildrenStateType childrenStateType) throws PersistenceException {
-		if(childrenStateType.equals(ChildrenStateType.OTHER_THAN_CLOSED))
-			return getChildrenOtherThanClosed(parentSearchId, parentOfficeId, childrenLevel);
-		if(childrenStateType.equals(ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED))
-			return getChildrenOtherThanClosedAndCancelled(parentSearchId, parentOfficeId, childrenLevel);
-		if(childrenStateType.equals(ChildrenStateType.ALL))
+
+	public List<CustomerBO> getChildren(String parentSearchId,
+			Short parentOfficeId, CustomerLevel childrenLevel,
+			ChildrenStateType childrenStateType) throws PersistenceException {
+		if (childrenStateType.equals(ChildrenStateType.OTHER_THAN_CLOSED))
+			return getChildrenOtherThanClosed(parentSearchId, parentOfficeId,
+					childrenLevel);
+		if (childrenStateType
+				.equals(ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED))
+			return getChildrenOtherThanClosedAndCancelled(parentSearchId,
+					parentOfficeId, childrenLevel);
+		if (childrenStateType.equals(ChildrenStateType.ALL))
 			return getAllChildren(parentSearchId, parentOfficeId, childrenLevel);
 		return null;
 	}
-	
+
 	public List<SavingsBO> retrieveSavingsAccountForCustomer(Integer customerId)
 			throws PersistenceException {
-		try {
-			Map<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("customerId", customerId);
-			return (List<SavingsBO>) executeNamedQuery(
-					NamedQueryConstants.RETRIEVE_SAVINGS_ACCCOUNT_FOR_CUSTOMER,
-					queryParameters);
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
+
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("customerId", customerId);
+		return (List<SavingsBO>) executeNamedQuery(
+				NamedQueryConstants.RETRIEVE_SAVINGS_ACCCOUNT_FOR_CUSTOMER,
+				queryParameters);
 	}
 
 	public CustomerPerformanceHistoryView numberOfMeetings(boolean isPresent,
-			Integer customerId) throws  PersistenceException {
+			Integer customerId) throws PersistenceException {
 		Session session = null;
 		Query query = null;
 		CustomerPerformanceHistoryView customerPerformanceHistoryView = new CustomerPerformanceHistoryView();
-		try {
-			session = HibernateUtil.getSessionTL();
-			String systemDate = DateHelper.getCurrentDate(Configuration
-					.getInstance().getSystemConfig().getMFILocale());
-			Date localDate = DateHelper
-					.getLocaleDate(Configuration.getInstance()
-							.getSystemConfig().getMFILocale(), systemDate);
-			Calendar currentDate = new GregorianCalendar();
-			currentDate.setTime(localDate);
-			currentDate.add(currentDate.YEAR, -1);
-			Date dateOneYearBefore = new Date(currentDate.getTimeInMillis());
-			if (isPresent) {
-				query = session
-						.getNamedQuery(NamedQueryConstants.NUMBEROFMEETINGSATTENDED);
-				query.setInteger("CUSTOMERID", customerId);
-				query.setDate("DATEONEYEARBEFORE", dateOneYearBefore);
-				customerPerformanceHistoryView
-						.setMeetingsAttended((Integer) query.uniqueResult());
-			} else {
-				query = session
-						.getNamedQuery(NamedQueryConstants.NUMBEROFMEETINGSMISSED);
-				query.setInteger("CUSTOMERID", customerId);
-				query.setDate("DATEONEYEARBEFORE", dateOneYearBefore);
-				customerPerformanceHistoryView
-						.setMeetingsMissed((Integer) query.uniqueResult());
-			}
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
+		session = HibernateUtil.getSessionTL();
+		String systemDate = DateHelper.getCurrentDate(Configuration
+				.getInstance().getSystemConfig().getMFILocale());
+		Date localDate = DateHelper.getLocaleDate(Configuration.getInstance()
+				.getSystemConfig().getMFILocale(), systemDate);
+		Calendar currentDate = new GregorianCalendar();
+		currentDate.setTime(localDate);
+		currentDate.add(currentDate.YEAR, -1);
+		Date dateOneYearBefore = new Date(currentDate.getTimeInMillis());
+		if (isPresent) {
+			query = session
+					.getNamedQuery(NamedQueryConstants.NUMBEROFMEETINGSATTENDED);
+			query.setInteger("CUSTOMERID", customerId);
+			query.setDate("DATEONEYEARBEFORE", dateOneYearBefore);
+			customerPerformanceHistoryView.setMeetingsAttended((Integer) query
+					.uniqueResult());
+		} else {
+			query = session
+					.getNamedQuery(NamedQueryConstants.NUMBEROFMEETINGSMISSED);
+			query.setInteger("CUSTOMERID", customerId);
+			query.setDate("DATEONEYEARBEFORE", dateOneYearBefore);
+			customerPerformanceHistoryView.setMeetingsMissed((Integer) query
+					.uniqueResult());
 		}
-
 		return customerPerformanceHistoryView;
 	}
 
 	public CustomerPerformanceHistoryView getLastLoanAmount(Integer customerId)
 			throws PersistenceException {
-		try {
-			Query query = null;
-			Session session = HibernateUtil.getSessionTL();
-			CustomerPerformanceHistoryView customerPerformanceHistoryView = null;
-			if (null != session) {
-				query = session
-						.getNamedQuery(NamedQueryConstants.GETLASTLOANAMOUNT);
-			}
-			query.setInteger("CUSTOMERID", customerId);
-			Object obj = query.uniqueResult();
-			if (obj != null) {
-				customerPerformanceHistoryView = new CustomerPerformanceHistoryView();
-				customerPerformanceHistoryView.setLastLoanAmount(query
-						.uniqueResult().toString());
-			}
-
-			return customerPerformanceHistoryView;
-
-		} catch (HibernateException he) {
-			he.printStackTrace();
-			throw new PersistenceException(he);
+		Query query = null;
+		Session session = HibernateUtil.getSessionTL();
+		CustomerPerformanceHistoryView customerPerformanceHistoryView = null;
+		if (null != session) {
+			query = session
+					.getNamedQuery(NamedQueryConstants.GETLASTLOANAMOUNT);
 		}
+		query.setInteger("CUSTOMERID", customerId);
+		Object obj = query.uniqueResult();
+		if (obj != null) {
+			customerPerformanceHistoryView = new CustomerPerformanceHistoryView();
+			customerPerformanceHistoryView.setLastLoanAmount(query
+					.uniqueResult().toString());
+		}
+		return customerPerformanceHistoryView;
 	}
 
 	public List<CustomerStatusEntity> getCustomerStates(Short optionalFlag)
 			throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("OPTIONAL_FLAG", optionalFlag);
-		List<CustomerStatusEntity> queryResult = null;
-		try {
-			queryResult = executeNamedQuery(
-					NamedQueryConstants.GET_CUSTOMER_STATES, queryParameters);
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
+		List<CustomerStatusEntity> queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_CUSTOMER_STATES, queryParameters);
 		return queryResult;
 	}
 
@@ -444,96 +386,76 @@ public class CustomerPersistence extends Persistence {
 			throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("updated", YesNoFlag.YES.getValue());
-		List<Integer> queryResult = null;
-		try {
-			queryResult = executeNamedQuery(
-					NamedQueryConstants.GET_UPDATED_CUSTOMER_MEETINGS,
-					queryParameters);
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
+		List<Integer> queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_UPDATED_CUSTOMER_MEETINGS,
+				queryParameters);
 		return queryResult;
 	}
 
 	public List<AccountBO> retrieveAccountsUnderCustomer(String searchId,
 			Short officeId, Short accountTypeId) throws PersistenceException {
-		try {
-			Map<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("SEARCH_STRING1", searchId);
-			queryParameters.put("SEARCH_STRING2", searchId + ".%");
-			queryParameters.put("OFFICE_ID", officeId);
-			queryParameters.put("ACCOUNT_TYPE_ID", accountTypeId);
-			return (List<AccountBO>) executeNamedQuery(
-					NamedQueryConstants.RETRIEVE_ACCCOUNTS_FOR_CUSTOMER,
-					queryParameters);
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
+
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("SEARCH_STRING1", searchId);
+		queryParameters.put("SEARCH_STRING2", searchId + ".%");
+		queryParameters.put("OFFICE_ID", officeId);
+		queryParameters.put("ACCOUNT_TYPE_ID", accountTypeId);
+		return (List<AccountBO>) executeNamedQuery(
+				NamedQueryConstants.RETRIEVE_ACCCOUNTS_FOR_CUSTOMER,
+				queryParameters);
 	}
 
 	public List<CustomerBO> getAllChildrenForParent(String searchId,
 			Short officeId, Short customerLevelId) throws PersistenceException {
-		try {
-			Map<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("SEARCH_STRING", searchId + ".%");
-			queryParameters.put("OFFICE_ID", officeId);
-			queryParameters.put("LEVEL_ID", customerLevelId);
-			List<CustomerBO> queryResult = executeNamedQuery(
-					NamedQueryConstants.GET_ALL_CHILDREN, queryParameters);
-			return queryResult;
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
+
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("SEARCH_STRING", searchId + ".%");
+		queryParameters.put("OFFICE_ID", officeId);
+		queryParameters.put("LEVEL_ID", customerLevelId);
+		List<CustomerBO> queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_ALL_CHILDREN, queryParameters);
+		return queryResult;
 	}
 
 	public List<Integer> getCustomers(Short customerLevelId)
 			throws PersistenceException {
-		try {
-			Map<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("LEVEL_ID", customerLevelId);
-			List<Integer> queryResult = executeNamedQuery(
-					NamedQueryConstants.GET_ALL_CUSTOMERS, queryParameters);
-			return queryResult;
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("LEVEL_ID", customerLevelId);
+		List<Integer> queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_ALL_CUSTOMERS, queryParameters);
+		return queryResult;
 	}
 
-
-	public List<CustomerCheckListBO> getStatusChecklist(Short statusId, Short customerLevelId) throws PersistenceException {
-		try {
-			Map<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("CHECKLIST_STATUS", CheckListConstants.STATUS_ACTIVE);	
-			queryParameters.put("STATUS_ID", statusId);
-			queryParameters.put("LEVEL_ID", customerLevelId);
-			List<CustomerCheckListBO> queryResult = executeNamedQuery(NamedQueryConstants.GET_CUSTOMER_STATE_CHECKLIST, queryParameters);
-			return queryResult;
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
+	public List<CustomerCheckListBO> getStatusChecklist(Short statusId,
+			Short customerLevelId) throws PersistenceException {
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("CHECKLIST_STATUS",
+				CheckListConstants.STATUS_ACTIVE);
+		queryParameters.put("STATUS_ID", statusId);
+		queryParameters.put("LEVEL_ID", customerLevelId);
+		List<CustomerCheckListBO> queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_CUSTOMER_STATE_CHECKLIST,
+				queryParameters);
+		return queryResult;
 	}
 
-	
-	public int getCustomerCountForOffice(CustomerLevel customerLevel, Short officeId)
+	public int getCustomerCountForOffice(CustomerLevel customerLevel,
+			Short officeId) throws PersistenceException {
+		int count = 0;
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("LEVEL_ID", customerLevel.getValue());
+		queryParameters.put("OFFICE_ID", officeId);
+		List queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_CUSTOMER_COUNT_FOR_OFFICE,
+				queryParameters);
+		if (queryResult.size() > 0 && queryResult.get(0) != null)
+			count = (Integer) queryResult.get(0);
+
+		return count;
+	}
+
+	public List<LoanCycleCounter> fetchLoanCycleCounter(Integer customerId)
 			throws PersistenceException {
-		try {
-			int count = 0;
-			Map<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("LEVEL_ID", customerLevel.getValue());
-			queryParameters.put("OFFICE_ID", officeId);
-			List queryResult = executeNamedQuery(NamedQueryConstants.GET_CUSTOMER_COUNT_FOR_OFFICE, queryParameters);
-			if(queryResult.size()>0 && queryResult.get(0)!=null)
-				count = (Integer)queryResult.get(0);
-			
-			return count;
-		} catch (HibernateException he) {
-			he.printStackTrace();
-			throw new PersistenceException(he);
-		}
-	}
-	
-
-	public List<LoanCycleCounter> fetchLoanCycleCounter(Integer customerId) throws PersistenceException {
 		HashMap<String, Integer> queryParameters = new HashMap<String, Integer>();
 		queryParameters.put("customerId", customerId);
 		List queryResult = executeNamedQuery(
@@ -580,101 +502,94 @@ public class CustomerPersistence extends Persistence {
 		return null;
 	}
 
-	public List<CustomerStatusEntity> retrieveAllCustomerStatusList(Short levelId) throws PersistenceException {
-		try {
-			Map<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("LEVEL_ID", levelId);
-			List<CustomerStatusEntity> queryResult = executeNamedQuery(NamedQueryConstants.GET_CUSTOMER_STATUS_LIST, queryParameters);
-			for (CustomerStatusEntity customerStatus : queryResult) {
-				for (CustomerStatusFlagEntity customerStatusFlagEntity : customerStatus.getFlagSet()) {
-					Hibernate.initialize(customerStatusFlagEntity);
-					Hibernate.initialize(customerStatusFlagEntity.getNames());
-				}
+	public List<CustomerStatusEntity> retrieveAllCustomerStatusList(
+			Short levelId) throws PersistenceException {
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("LEVEL_ID", levelId);
+		List<CustomerStatusEntity> queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_CUSTOMER_STATUS_LIST, queryParameters);
+		for (CustomerStatusEntity customerStatus : queryResult) {
+			for (CustomerStatusFlagEntity customerStatusFlagEntity : customerStatus
+					.getFlagSet()) {
+				Hibernate.initialize(customerStatusFlagEntity);
+				Hibernate.initialize(customerStatusFlagEntity.getNames());
 			}
-			return queryResult;
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
 		}
+		return queryResult;
 	}
-	
-	public QueryResult getAllCustomerNotes(Integer customerId) throws PersistenceException {
-		QueryResult notesResult=null;
-		try{
-			Session session=null;
-			 notesResult = QueryFactory.getQueryResult("NotesSearch");
-			 session = notesResult.getSession();
-	 		Query query= session.getNamedQuery(NamedQueryConstants.GETALLCUSTOMERNOTES);
-	 		query.setInteger("CUSTOMER_ID",customerId);
-	 		notesResult.executeQuery(query);
-	 	}
-		catch(HibernateProcessException  hpe) {		
+
+	public QueryResult getAllCustomerNotes(Integer customerId)
+			throws PersistenceException {
+		QueryResult notesResult = null;
+		try {
+			Session session = null;
+			notesResult = QueryFactory.getQueryResult("NotesSearch");
+			session = notesResult.getSession();
+			Query query = session
+					.getNamedQuery(NamedQueryConstants.GETALLCUSTOMERNOTES);
+			query.setInteger("CUSTOMER_ID", customerId);
+			notesResult.executeQuery(query);
+		} catch (HibernateProcessException hpe) {
 			throw new PersistenceException(hpe);
 		} catch (HibernateSearchException hse) {
 			throw new PersistenceException(hse);
 		}
-      return notesResult;
+		return notesResult;
 	}
 
-	public List<PersonnelView> getFormedByPersonnel(Short levelId, Short officeId) throws PersistenceException {
-		try {
-			Map<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("levelId", levelId);
-			queryParameters.put("officeId", officeId);
-			queryParameters.put("statusId", PersonnelConstants.ACTIVE);
-			List<PersonnelView> queryResult = executeNamedQuery(NamedQueryConstants.FORMEDBY_LOANOFFICERS_LIST, queryParameters);
-			return queryResult;
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
-	}
-	
-	public CustomerPictureEntity retrievePicture(Integer customerId)throws PersistenceException {
+	public List<PersonnelView> getFormedByPersonnel(Short levelId,
+			Short officeId) throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("customerId",customerId);
-		List queryResult=null;
-		try{
-			queryResult = executeNamedQuery(NamedQueryConstants.GET_CUSTOMER_PICTURE, queryParameters);
-		}catch(HibernateException he){
-			throw new PersistenceException(he);
-		}
-		return (CustomerPictureEntity)queryResult.get(0);
+		queryParameters.put("levelId", levelId);
+		queryParameters.put("officeId", officeId);
+		queryParameters.put("statusId", PersonnelConstants.ACTIVE);
+		List<PersonnelView> queryResult = executeNamedQuery(
+				NamedQueryConstants.FORMEDBY_LOANOFFICERS_LIST, queryParameters);
+		return queryResult;
 	}
-	
-	public List<AccountBO> getAllClosedAccount(Integer customerId, Short accountTypeId) throws PersistenceException{
-		try {
-			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("customerId", customerId);
-			queryParameters.put("accountTypeId", accountTypeId);
-			List queryResult = executeNamedQuery(NamedQueryConstants.VIEWALLCLOSEDACCOUNTS, queryParameters);
-			return queryResult;
-		}catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
+
+	public CustomerPictureEntity retrievePicture(Integer customerId)
+			throws PersistenceException {
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("customerId", customerId);
+		List queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_CUSTOMER_PICTURE, queryParameters);
+
+		return (CustomerPictureEntity) queryResult.get(0);
 	}
-	
-	public Short getLoanOfficerForCustomer(Integer customerId)throws PersistenceException{
-		try{
-			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("CUSTOMER_ID", customerId);
-			List queryResult = executeNamedQuery(NamedQueryConstants.GET_LO_FOR_CUSTOMER,queryParameters);
-			return (Short)queryResult.get(0);
-		}catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
+
+	public List<AccountBO> getAllClosedAccount(Integer customerId,
+			Short accountTypeId) throws PersistenceException {
+
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("customerId", customerId);
+		queryParameters.put("accountTypeId", accountTypeId);
+		List queryResult = executeNamedQuery(
+				NamedQueryConstants.VIEWALLCLOSEDACCOUNTS, queryParameters);
+		return queryResult;
+
 	}
-	
-	public void updateLOsForAllChildren(Short parentLO, String parentSearchId, Short parentOfficeId){
-		String hql="update Customer customer set customer.personnelId="+parentLO+" where customer.searchId like '"+parentSearchId+".%' and customer.office.officeId="+parentOfficeId;
+
+	public Short getLoanOfficerForCustomer(Integer customerId)
+			throws PersistenceException {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("CUSTOMER_ID", customerId);
+		List queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_LO_FOR_CUSTOMER, queryParameters);
+		return (Short) queryResult.get(0);
+	}
+
+	public void updateLOsForAllChildren(Short parentLO, String parentSearchId,
+			Short parentOfficeId) {
+		String hql = "update Customer customer set customer.personnelId="
+				+ parentLO + " where customer.searchId like '" + parentSearchId
+				+ ".%' and customer.office.officeId=" + parentOfficeId;
 		Session session = HibernateUtil.getSessionTL();
 		session.createQuery(hql).executeUpate();
 	}
-	
-	public void deleteMeeting(CustomerBO customer)throws PersistenceException{
-		try{
-			delete(customer.getCustomerMeeting());
-			customer.setCustomerMeeting(null);
-		}catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
+
+	public void deleteMeeting(CustomerBO customer) throws PersistenceException {
+		delete(customer.getCustomerMeeting());
+		customer.setCustomerMeeting(null);
 	}
 }

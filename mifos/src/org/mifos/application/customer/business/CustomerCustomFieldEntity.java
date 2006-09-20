@@ -53,6 +53,14 @@ public class CustomerCustomFieldEntity extends PersistentObject {
 
 	private final CustomerBO customer;
 
+	public CustomerCustomFieldEntity(Short fieldId, String fieldValue,
+			CustomerBO customer) {
+		this.fieldId = fieldId;
+		this.fieldValue = fieldValue;
+		this.customer = customer;
+		this.customFieldId = null;
+	}
+
 	/*
 	 * Adding a default constructor is hibernate's requirement and should not be
 	 * used to create a valid Object.
@@ -63,15 +71,7 @@ public class CustomerCustomFieldEntity extends PersistentObject {
 		this.fieldId = null;
 		this.customer = null;
 	}
-
-	public CustomerCustomFieldEntity(Short fieldId, String fieldValue,
-			CustomerBO customer) {
-		this.fieldId = fieldId;
-		this.fieldValue = fieldValue;
-		this.customer = customer;
-		this.customFieldId = null;
-	}
-
+	
 	public Short getFieldId() {
 		return fieldId;
 	}

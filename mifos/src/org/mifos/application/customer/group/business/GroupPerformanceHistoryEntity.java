@@ -23,7 +23,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
 	private GroupBO group;
 
-	public GroupPerformanceHistoryEntity() {
+	protected GroupPerformanceHistoryEntity() {
 	}
 
 	public GroupPerformanceHistoryEntity(GroupBO group) {

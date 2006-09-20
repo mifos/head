@@ -77,7 +77,7 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
 		this.defaultValue = null;
 		this.mandatoryFlag = null;
 	}
-
+	
 	public Short getFieldId() {
 		return fieldId;
 	}

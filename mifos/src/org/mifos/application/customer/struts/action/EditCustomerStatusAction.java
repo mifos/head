@@ -141,7 +141,7 @@ public class EditCustomerStatusAction extends BaseAction {
 
 	@CloseSession
 	public ActionForward update(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) throws CustomerException{
+			HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("In EditCustomerStatusAction:update()");
 		updateStatus(form, request);
 		return mapping.findForward(getDetailAccountPage(form));
@@ -197,7 +197,7 @@ public class EditCustomerStatusAction extends BaseAction {
 	@CloseSession
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward updateStatus(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) throws CustomerException {
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("In EditCustomerStatusAction:update()");
 		updateStatus(form, request);
 		return mapping.findForward(getDetailAccountPage(form));
@@ -378,7 +378,7 @@ public class EditCustomerStatusAction extends BaseAction {
 	}
 
 	private void updateStatus(ActionForm form, HttpServletRequest request)
-			throws CustomerException {
+			throws Exception {
 		EditCustomerStatusActionForm editStatusActionForm = (EditCustomerStatusActionForm) form;
 		CustomerBO customerBO = customerService
 				.getCustomer(editStatusActionForm.getCustomerIdValue());

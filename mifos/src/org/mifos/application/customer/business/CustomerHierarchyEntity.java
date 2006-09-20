@@ -56,17 +56,7 @@ public class CustomerHierarchyEntity extends PersistentObject {
 
 	private Short status;
 
-	private Date endDate;
-
-	/*
-	 * Adding a default constructor is hibernate's requirement and should not be
-	 * used to create a valid Object.
-	 */
-	protected CustomerHierarchyEntity() {
-		this.hierarchyId = null;
-		this.parentCustomer = null;
-		this.customer = null;
-	}
+	private Date endDate;	
 
 	public CustomerHierarchyEntity(CustomerBO customer,
 			CustomerBO parentCustomer) {
@@ -77,6 +67,16 @@ public class CustomerHierarchyEntity extends PersistentObject {
 		this.createdDate = new Date();
 	}
 
+	/*
+	 * Adding a default constructor is hibernate's requirement and should not be
+	 * used to create a valid Object.
+	 */
+	protected CustomerHierarchyEntity() {
+		this.hierarchyId = null;
+		this.parentCustomer = null;
+		this.customer = null;
+	}
+	
 	public CustomerBO getCustomer() {
 		return customer;
 	}

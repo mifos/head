@@ -87,11 +87,7 @@ public class GroupBO extends CustomerBO {
 	private MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.GROUP_LOGGER);
 
-	protected GroupBO() {
-		super();
-		this.performanceHistory = null;
-	}
-
+	
 	public GroupBO(UserContext userContext, String displayName,
 			CustomerStatus customerStatus, String externalId, boolean trained,
 			Date trainedDate, Address address,
@@ -120,6 +116,11 @@ public class GroupBO extends CustomerBO {
 		this.performanceHistory = new GroupPerformanceHistoryEntity(this);
 	}
 
+	protected GroupBO() {
+		super();
+		this.performanceHistory = null;
+	}
+	
 	private GroupBO(UserContext userContext, String displayName,
 			CustomerStatus customerStatus, String externalId, boolean trained,
 			Date trainedDate, Address address,

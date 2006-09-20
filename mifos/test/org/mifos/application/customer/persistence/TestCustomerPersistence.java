@@ -372,8 +372,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 	}
 
 	public void testNumberOfMeetingsAttended()
-			throws PersistenceException, NumberFormatException,
-			BulkEntryAccountUpdateException {
+			throws Exception {
 
 		BulkEntryBusinessService bulkEntryBusinessService = new BulkEntryBusinessService();
 
@@ -410,8 +409,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 				client.getCustomerId());
 	}
 
-	public void testNumberOfMeetingsMissed() throws PersistenceException,
-			NumberFormatException, BulkEntryAccountUpdateException {
+	public void testNumberOfMeetingsMissed() throws Exception {
 		BulkEntryBusinessService bulkEntryBusinessService = new BulkEntryBusinessService();
 
 		center = createCenter();

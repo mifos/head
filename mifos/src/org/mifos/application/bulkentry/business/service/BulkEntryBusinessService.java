@@ -146,8 +146,12 @@ public class BulkEntryBusinessService extends BusinessService {
 		}
 	}
 
-	public CustomerBO retrieveCustomerAccountInfo(Integer customerId) {
-		return customerPersistence.getCustomer(customerId);
+	public CustomerBO retrieveCustomerAccountInfo(Integer customerId) throws ServiceException{
+		try {
+			return customerPersistence.getCustomer(customerId);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
 	}
 
 	public List<AccountActionDateEntity> retrieveCustomerAccountActionDetails(
@@ -250,7 +254,7 @@ public class BulkEntryBusinessService extends BusinessService {
 	}
 
 	public void saveAttendance(Integer customerId, Date meetingDate,
-			Short attendance) throws BulkEntryAccountUpdateException {
+			Short attendance) throws BulkEntryAccountUpdateException, ServiceException {
 		ClientBO client = (ClientBO) getCustomer(customerId);
 		try {
 			client.handleAttendance(meetingDate, attendance);
@@ -283,8 +287,12 @@ public class BulkEntryBusinessService extends BusinessService {
 		}
 	}
 
-	private CustomerBO getCustomer(Integer customerId) {
-		return bulkEntryPersistanceService.getCustomer(customerId);
+	private CustomerBO getCustomer(Integer customerId) throws ServiceException{
+		try {
+			return bulkEntryPersistanceService.getCustomer(customerId);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
 	}
 
 	private PersonnelBO getPersonnel(Short personnelId) throws ServiceException {

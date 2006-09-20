@@ -4,12 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
 public class CenterPersistence extends  Persistence{
@@ -21,11 +19,8 @@ public class CenterPersistence extends  Persistence{
 		return ((Integer)queryResult.get(0)).intValue()>0;
 	}
 
-	public CenterBO getCenter(Integer customerId) {
-		Session session = HibernateUtil.getSessionTL();
-		CenterBO center = (CenterBO) session.get(CenterBO.class,
-				customerId);
-				return center;
+	public CenterBO getCenter(Integer customerId) throws PersistenceException{
+		return (CenterBO) getPersistentObject(CenterBO.class,customerId);
 	}
 	
 	public CenterBO getCenterBySystemId(String globalCustNum) throws PersistenceException{

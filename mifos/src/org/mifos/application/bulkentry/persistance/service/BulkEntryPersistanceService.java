@@ -120,7 +120,7 @@ public class BulkEntryPersistanceService extends PersistenceService {
 				.getLoanAccountWithAccountActionsInitialized(accountId);
 	}
 
-	public CustomerBO getCustomer(Integer customerId) {
+	public CustomerBO getCustomer(Integer customerId) throws PersistenceException{
 		if (!bulkEntryCache.isCustomerPresent(customerId)) {
 			CustomerBO customer = new CustomerPersistence()
 					.getCustomer(customerId);

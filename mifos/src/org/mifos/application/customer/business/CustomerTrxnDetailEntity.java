@@ -1,43 +1,25 @@
 package org.mifos.application.customer.business;
 
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
-import org.mifos.application.accounts.business.LoanTrxnDetailEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
-import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 
 public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
-	protected CustomerTrxnDetailEntity() {
-		totalAmount=null;
-		miscPenaltyAmount=null;
-		miscFeeAmount=null;
-		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
-	}
-
 	private final Set<FeesTrxnDetailEntity> feesTrxnDetails;
 
 	private final Money totalAmount;
@@ -46,27 +28,6 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 
 	private final Money miscFeeAmount;
 
-	public Money getTotalAmount() {
-		return totalAmount;
-	}
-
-	public Money getMiscFeeAmount() {
-		return miscFeeAmount;
-	}
-
-	public Money getMiscPenaltyAmount() {
-		return miscPenaltyAmount;
-	}
-
-	public Set<FeesTrxnDetailEntity> getFeesTrxnDetails() {
-		return feesTrxnDetails;
-	}
-	
-	public void addFeesTrxnDetail(FeesTrxnDetailEntity feesTrxn) {
-		feesTrxn.setAccountTrxn(this);
-		feesTrxnDetails.add(feesTrxn);
-	}
-	
 	public CustomerTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity,
 			CustomerAccountPaymentData customerAccountPaymentDataView, PersonnelBO personnel,
 			java.util.Date transactionDate,
@@ -97,8 +58,34 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 		}
 	}
 	
-
+	protected CustomerTrxnDetailEntity() {
+		totalAmount=null;
+		miscPenaltyAmount=null;
+		miscFeeAmount=null;
+		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
+	}	
 	
+	public Money getTotalAmount() {
+		return totalAmount;
+	}
+
+	public Money getMiscFeeAmount() {
+		return miscFeeAmount;
+	}
+
+	public Money getMiscPenaltyAmount() {
+		return miscPenaltyAmount;
+	}
+
+	public Set<FeesTrxnDetailEntity> getFeesTrxnDetails() {
+		return feesTrxnDetails;
+	}
+	
+	public void addFeesTrxnDetail(FeesTrxnDetailEntity feesTrxn) {
+		feesTrxn.setAccountTrxn(this);
+		feesTrxnDetails.add(feesTrxn);
+	}
+		
 	public FeesTrxnDetailEntity getFeesTrxn(Integer accountFeeId) {
 
 		if (null != getFeesTrxnDetails() && feesTrxnDetails.size() > 0) {

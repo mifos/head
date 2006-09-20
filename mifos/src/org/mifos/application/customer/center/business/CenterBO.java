@@ -34,10 +34,6 @@ public class CenterBO extends CustomerBO {
 
 	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CENTERLOGGER);
 	
-	protected CenterBO() {
-		super();
-	}
-	
 	public CenterBO(UserContext userContext, String displayName,
 			Address address, List<CustomFieldView> customFields,
 			List<FeeView> fees, String externalId, Date mfiJoiningDate,
@@ -59,6 +55,10 @@ public class CenterBO extends CustomerBO {
 		this.setCustomerActivationDate(this.getCreatedDate());
 	}
 
+	protected CenterBO() {
+		super();
+	}
+	
 	@Override
 	public boolean isActive() {
 		return getCustomerStatus().getId().equals(CustomerStatus.CENTER_ACTIVE.getValue());
