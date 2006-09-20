@@ -459,19 +459,30 @@ public class LoanPrdActionForm extends BaseActionForm {
 		return getShortValue(getFreqOfInstallments());
 	}
 
+	public Short getPrdStatusValue() {
+		return getShortValue(getPrdStatus());
+	}
+
+	public Short getPrdOfferingIdValue() {
+		return getShortValue(getPrdOfferingId());
+	}
+
 	@Override
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		prdDefLogger
-				.debug("start reset method of Savings Product Action form method ");
 		super.reset(mapping, request);
 		String method = request.getParameter(ProductDefinitionConstants.METHOD);
+		prdDefLogger
+				.debug("start reset method of Savings Product Action form method :"
+						+ method);
 		if (method != null && method.equals(Methods.load.toString())) {
 			startDate = DateHelper.getCurrentDate(getUserContext(request)
 					.getPereferedLocale());
 			recurAfter = "1";
 			minNoInstallments = "1";
 		}
-		if (method != null && method.equals(Methods.preview.toString())) {
+		if (method != null
+				&& (method.equals(Methods.preview.toString()) || method
+						.equals(Methods.editPreview.toString()))) {
 			intDedDisbursementFlag = null;
 			prinDueLastInstFlag = null;
 			loanCounter = null;
@@ -494,32 +505,11 @@ public class LoanPrdActionForm extends BaseActionForm {
 						+ method);
 		if (method != null && method.equals(Methods.preview.toString())) {
 			errors.add(super.validate(mapping, request));
-			Date startingDate = getStartDateValue(getUserContext(request)
-					.getPereferedLocale());
-			Date endingDate = getEndDateValue(getUserContext(request)
-					.getPereferedLocale());
-			if (startingDate != null
-					&& ((DateUtils.getDateWithoutTimeStamp(
-							startingDate.getTime()).compareTo(
-							DateUtils.getCurrentDateWithoutTimeStamp()) < 0) || (DateUtils
-							.getDateWithoutTimeStamp(startingDate.getTime())
-							.compareTo(
-									DateUtils
-											.getCurrentDateOfNextYearWithOutTimeStamp()) > 0)))
-				addError(errors, "startDate",
-						ProductDefinitionConstants.INVALIDSTARTDATE);
-			if (startingDate != null && endingDate != null
-					&& startingDate.compareTo(endingDate) >= 0)
-				addError(errors, "endDate",
-						ProductDefinitionConstants.INVALIDENDDATE);
-			if (StringUtils.isNullOrEmpty(getInterestTypes()))
-				addError(errors, "interestTypes",
-						ProductDefinitionConstants.ERRORSSELECTCONFIG,
-						getLabel(ConfigurationConstants.INTEREST, request),
-						ProductDefinitionConstants.RATETYPE);
-			validateMinMaxDefInterestRates(errors, request);
-			setSelectedFeesAndFundsAndValidateForFrequency(request, errors);
-
+			validateForPreview(request, errors);
+		}
+		if (method != null && method.equals(Methods.editPreview.toString())) {
+			errors.add(super.validate(mapping, request));
+			validateForEditPreview(request, errors);
 		}
 		if (method != null && !method.equals(Methods.validate.toString())) {
 			request.setAttribute(ProductDefinitionConstants.METHODCALLED,
@@ -529,11 +519,132 @@ public class LoanPrdActionForm extends BaseActionForm {
 				.debug("validate method of Savings Product Action form called and error size:"
 						+ errors.size());
 		return errors;
+	}
 
+	public void clear() {
+		prdDefLogger
+				.debug("start clear method of Loan Product Action form method :"
+						+ prdOfferingId);
+		this.prdOfferingId = null;
+		this.prdOfferingName = null;
+		this.prdOfferingShortName = null;
+		this.description = null;
+		this.prdCategory = null;
+		this.startDate = null;
+		this.endDate = null;
+		this.prdApplicableMaster = null;
+		this.loanCounter = null;
+		this.minLoanAmount = null;
+		this.maxLoanAmount = null;
+		this.defaultLoanAmount = null;
+		this.interestTypes = null;
+		this.maxInterestRate = null;
+		this.minInterestRate = null;
+		this.defInterestRate = null;
+		this.freqOfInstallments = null;
+		this.recurAfter = null;
+		this.maxNoInstallments = null;
+		this.minNoInstallments = null;
+		this.defNoInstallments = null;
+		this.intDedDisbursementFlag = null;
+		this.prinDueLastInstFlag = null;
+		this.gracePeriodType = null;
+		this.gracePeriodDuration = null;
+		this.prdOfferinFees = null;
+		this.loanOfferingFunds = null;
+		this.principalGLCode = null;
+		this.interestGLCode = null;
+		this.prdStatus = null;
+		prdDefLogger
+				.debug("clear method of Loan Product Action form method called :"
+						+ prdOfferingId);
+	}
+
+	private void validateForPreview(HttpServletRequest request,
+			ActionErrors errors) {
+		prdDefLogger
+				.debug("start validateForPreview method of Loan Product Action form method :"
+						+ prdOfferingName);
+		validateStartDate(request, errors);
+		validateEndDate(request, errors);
+		if (StringUtils.isNullOrEmpty(getInterestTypes()))
+			addError(errors, "interestTypes",
+					ProductDefinitionConstants.ERRORSSELECTCONFIG, getLabel(
+							ConfigurationConstants.INTEREST, request),
+					ProductDefinitionConstants.RATETYPE);
+		validateMinMaxDefInterestRates(errors, request);
+		setSelectedFeesAndFundsAndValidateForFrequency(request, errors);
+		prdDefLogger
+				.debug("validateForPreview method of Loan Product Action form method called :"
+						+ prdOfferingName);
+	}
+
+	private void validateForEditPreview(HttpServletRequest request,
+			ActionErrors errors) {
+		prdDefLogger
+				.debug("start validateForEditPreview method of Loan Product Action form method :"
+						+ prdOfferingName);
+		validateStartDate(request, errors);
+		validateEndDate(request, errors);
+		if (StringUtils.isNullOrEmpty(getInterestTypes()))
+			addError(errors, "interestTypes",
+					ProductDefinitionConstants.ERRORSSELECTCONFIG, getLabel(
+							ConfigurationConstants.INTEREST, request),
+					ProductDefinitionConstants.RATETYPE);
+		if (StringUtils.isNullOrEmpty(getPrdStatus()))
+			addError(errors, "prdStatus",
+					ProductDefinitionConstants.ERROR_SELECT,
+					ProductDefinitionConstants.STATUS);
+		validateMinMaxDefInterestRates(errors, request);
+		setSelectedFeesAndFundsAndValidateForFrequency(request, errors);
+		prdDefLogger
+				.debug("validateForEditPreview method of Loan Product Action form method called :"
+						+ prdOfferingName);
+	}
+
+	private void validateStartDate(HttpServletRequest request,
+			ActionErrors errors) {
+		prdDefLogger
+				.debug("start validateStartDate method of Loan Product Action form method :"
+						+ startDate);
+		Date startingDate = getStartDateValue(getUserContext(request)
+				.getPereferedLocale());
+		if (startingDate != null
+				&& ((DateUtils.getDateWithoutTimeStamp(startingDate.getTime())
+						.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) < 0) || (DateUtils
+						.getDateWithoutTimeStamp(startingDate.getTime())
+						.compareTo(
+								DateUtils
+										.getCurrentDateOfNextYearWithOutTimeStamp()) > 0)))
+			addError(errors, "startDate",
+					ProductDefinitionConstants.INVALIDSTARTDATE);
+		prdDefLogger
+				.debug("validateStartDate method of Loan Product Action form method called :"
+						+ startDate);
+	}
+
+	private void validateEndDate(HttpServletRequest request, ActionErrors errors) {
+		prdDefLogger
+				.debug("start validateEndDate method of Loan Product Action form method :"
+						+ startDate + "---" + endDate);
+		Date startingDate = getStartDateValue(getUserContext(request)
+				.getPereferedLocale());
+		Date endingDate = getEndDateValue(getUserContext(request)
+				.getPereferedLocale());
+		if (startingDate != null && endingDate != null
+				&& startingDate.compareTo(endingDate) >= 0)
+			addError(errors, "endDate",
+					ProductDefinitionConstants.INVALIDENDDATE);
+		prdDefLogger
+				.debug("validateEndDate method of Loan Product Action form method called :"
+						+ startDate + "---" + endDate);
 	}
 
 	private void setSelectedFeesAndFundsAndValidateForFrequency(
 			HttpServletRequest request, ActionErrors errors) {
+		prdDefLogger
+				.debug("start setSelectedFeesAndFundsAndValidateForFrequency method "
+						+ "of Loan Product Action form method :");
 		request.setAttribute(Constants.CURRENTFLOWKEY, request
 				.getParameter(Constants.CURRENTFLOWKEY));
 		List<FeeView> feeViews = new ArrayList<FeeView>();
@@ -574,9 +685,15 @@ public class LoanPrdActionForm extends BaseActionForm {
 					selectedFunds, request);
 		} catch (PageExpiredException e) {
 		}
+		prdDefLogger
+				.debug("setSelectedFeesAndFundsAndValidateForFrequency method "
+						+ "of Loan Product Action form method called :");
 	}
 
 	private FeeBO getFeeFromList(List<FeeBO> fees, String feeSelected) {
+		prdDefLogger
+				.debug("getFeeFromList method of Loan Product Action form method called :"
+						+ feeSelected);
 		for (FeeBO fee : fees)
 			if (fee.getFeeId().equals(getShortValue(feeSelected)))
 				return fee;
@@ -584,6 +701,9 @@ public class LoanPrdActionForm extends BaseActionForm {
 	}
 
 	private Fund getFundFromList(List<Fund> funds, String fundSelected) {
+		prdDefLogger
+				.debug("getFundFromList method of Loan Product Action form method called :"
+						+ fundSelected);
 		for (Fund fund : funds)
 			if (fund.getFundId().equals(getShortValue(fundSelected)))
 				return fund;
@@ -593,7 +713,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 	private void isFrequencyMatchingOfferingFrequency(FeeBO fee,
 			ActionErrors errors) {
 		prdDefLogger
-				.debug("Loan offering isFrequencyMatchingOfferingFrequency called - fee:"
+				.debug("start Loan prd Action Form isFrequencyMatchingOfferingFrequency - fee:"
 						+ fee);
 		if (getFreqOfInstallmentsValue() != null
 				&& fee.isPeriodic()
@@ -603,11 +723,20 @@ public class LoanPrdActionForm extends BaseActionForm {
 			addError(errors, "Fee",
 					ProductDefinitionConstants.ERRORFEEFREQUENCY, fee
 							.getFeeName());
-
+		prdDefLogger
+				.debug("Loan prd Action Form isFrequencyMatchingOfferingFrequency called - fee:"
+						+ fee);
 	}
 
 	private void validateMinMaxDefInterestRates(ActionErrors errors,
 			HttpServletRequest request) {
+		prdDefLogger
+				.debug("start Loan prd Action Form validateMinMaxDefInterestRates :"
+						+ maxInterestRate
+						+ "---"
+						+ minInterestRate
+						+ "---"
+						+ defInterestRate);
 		validateForMand(getMaxInterestRate(), errors, "maxInterestRate",
 				ProductDefinitionConstants.ERRORSENTERCONFIG,
 				ProductDefinitionConstants.MAX, getLabel(
@@ -643,26 +772,44 @@ public class LoanPrdActionForm extends BaseActionForm {
 				ProductDefinitionConstants.RATE, "0", "999");
 		vaildateMinMaxInterestRate(errors, request);
 		vaildateDefMinMaxInterestRate(errors, request);
+		prdDefLogger
+				.debug("Loan prd Action Form validateMinMaxDefInterestRates called:"
+						+ maxInterestRate
+						+ "---"
+						+ minInterestRate
+						+ "---"
+						+ defInterestRate);
 	}
 
 	private void validateForMand(String value, ActionErrors errors,
 			String property, String key, String... arg) {
+		prdDefLogger.debug("Start Loan prd Action Form validateForMand :"
+				+ value);
 		if (StringUtils.isNullOrEmpty(value))
 			addError(errors, property, key, arg);
+		prdDefLogger.debug("Loan prd Action Form validateForMand called:"
+				+ value);
 	}
 
 	private void validateForRange(String value, double min, double max,
 			ActionErrors errors, String property, String key, String... arg) {
+		prdDefLogger.debug("start Loan prd Action Form validateForRange :"
+				+ value);
 		if (StringUtils.isNullAndEmptySafe(value)) {
 			double valueToBeChecked = Double.valueOf(value);
 			if (valueToBeChecked < min || valueToBeChecked > max) {
 				addError(errors, property, key, arg);
 			}
 		}
+		prdDefLogger.debug("Loan prd Action Form validateForRange called:"
+				+ value);
 	}
 
 	private void vaildateMinMaxInterestRate(ActionErrors errors,
 			HttpServletRequest request) {
+		prdDefLogger
+				.debug("start Loan prd Action Form vaildateMinMaxInterestRate :"
+						+ maxInterestRate + "---" + minInterestRate);
 		if (StringUtils.isNullAndEmptySafe(getMaxInterestRate())
 				&& StringUtils.isNullAndEmptySafe(getMinInterestRate())) {
 			double maximumInterestRate = Double.valueOf(getMaxInterestRate());
@@ -676,10 +823,20 @@ public class LoanPrdActionForm extends BaseActionForm {
 						ProductDefinitionConstants.RATE,
 						ProductDefinitionConstants.MIN);
 		}
+		prdDefLogger
+				.debug("Loan prd Action Form vaildateMinMaxInterestRate called:"
+						+ maxInterestRate + "---" + minInterestRate);
 	}
 
 	private void vaildateDefMinMaxInterestRate(ActionErrors errors,
 			HttpServletRequest request) {
+		prdDefLogger
+				.debug("start Loan prd Action Form vaildateDefMinMaxInterestRate :"
+						+ maxInterestRate
+						+ "---"
+						+ minInterestRate
+						+ "---"
+						+ defInterestRate);
 		if (StringUtils.isNullAndEmptySafe(getMaxInterestRate())
 				&& StringUtils.isNullAndEmptySafe(getMinInterestRate())
 				&& StringUtils.isNullAndEmptySafe(getDefInterestRate())) {
@@ -700,5 +857,13 @@ public class LoanPrdActionForm extends BaseActionForm {
 			}
 
 		}
+		prdDefLogger
+				.debug("Loan prd Action Form vaildateDefMinMaxInterestRate called :"
+						+ maxInterestRate
+						+ "---"
+						+ minInterestRate
+						+ "---"
+						+ defInterestRate);
 	}
+
 }

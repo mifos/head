@@ -66,7 +66,7 @@
 			}
 			function fnLoad() {
 				loanprdactionform.method.value="load";
-				loanprdactionform.action="loanprdaction.do";
+				loanprdactionform.action="loanproductaction.do";
 				loanprdactionform.submit();
 			}
 		//-->

@@ -68,7 +68,7 @@
 								<mifos:mifoslabel name="product.plsnote" bundle="ProductDefUIResources" />
 								:<span class="fontnormal"> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.product" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.savingsassignedto"
 										bundle="ProductDefUIResources" />:</span>
-								<c:out value="${requestScope.Context.valueObject.globalPrdOfferingNum}" />
+								<c:out value="${requestScope.loanprdglobalofferingnum}" />
 								<span class="fontnormal"><br> </span><span class="fontnormal"><br> <br> </span>
 								<html-el:link href="loanprdaction.do?method=get&prdOfferingId=${requestScope.loanId}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="product.savingsview" bundle="ProductDefUIResources" />

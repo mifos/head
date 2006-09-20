@@ -8,6 +8,7 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
+import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.persistence.LoansPrdPersistence;
 import org.mifos.application.productdefinition.persistence.PrdOfferingPersistence;
@@ -70,6 +71,16 @@ public class LoanPrdBusinessService extends BusinessService {
 			throws ServiceException {
 		try {
 			return new LoansPrdPersistence().getLoanOffering(prdofferingId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public List<PrdStatusEntity> getApplicablePrdStatus(Short localeId)
+			throws ServiceException {
+		try {
+			return new PrdOfferingPersistence().getApplicablePrdStatus(
+					ProductType.LOAN, localeId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}

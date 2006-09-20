@@ -1,5 +1,7 @@
 package org.mifos.application.productdefinition.persistence;
 
+import java.util.List;
+
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
@@ -8,6 +10,7 @@ import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class PrdOfferingPersistenceTest extends MifosTestCase {
@@ -30,37 +33,34 @@ public class PrdOfferingPersistenceTest extends MifosTestCase {
 	}
 
 	public void testGetMaxPrdOfferingWithouProduct()
-			throws NumberFormatException, PersistenceException {
+			throws PersistenceException {
 		assertNull(new PrdOfferingPersistence().getMaxPrdOffering());
 	}
 
-	public void testGetMaxPrdOfferingWithProduct()
-			throws NumberFormatException, PersistenceException {
+	public void testGetMaxPrdOfferingWithProduct() throws PersistenceException {
 		SavingsOfferingBO savingsOffering = new SavingsTestHelper()
 				.createSavingsOffering("fsaf6", "ads6");
 		assertNotNull(new PrdOfferingPersistence().getMaxPrdOffering());
 		TestObjectFactory.removeObject(savingsOffering);
 	}
 
-	public void testGetPrdStatus() throws NumberFormatException,
-			PersistenceException {
+	public void testGetPrdStatus() throws PersistenceException {
 		PrdStatusEntity prdStatus = new PrdOfferingPersistence()
 				.getPrdStatus(PrdStatus.SAVINGSACTIVE);
 		assertNotNull(prdStatus);
 		assertEquals(ProductType.SAVINGS.getValue(), prdStatus.getPrdType()
 				.getProductTypeID());
-		assertEquals(Short.valueOf("1"), prdStatus.getPrdState()
-				.getId());
+		assertEquals(Short.valueOf("1"), prdStatus.getPrdState().getId());
 	}
 
 	public void testGetPrdOfferingNameCountWithoutData()
-			throws NumberFormatException, PersistenceException {
+			throws PersistenceException {
 		assertEquals(Integer.valueOf("0"), new PrdOfferingPersistence()
 				.getProductOfferingNameCount("Savings product"));
 	}
 
 	public void testGetPrdOfferingNameCountWithDifferentName()
-			throws NumberFormatException, PersistenceException {
+			throws PersistenceException {
 		SavingsOfferingBO savingsOffering = new SavingsTestHelper()
 				.createSavingsOffering("fsaf6", "ads6");
 		assertEquals(Integer.valueOf("0"), new PrdOfferingPersistence()
@@ -70,7 +70,7 @@ public class PrdOfferingPersistenceTest extends MifosTestCase {
 	}
 
 	public void testGetPrdOfferingNameCountWithSameName()
-			throws NumberFormatException, PersistenceException {
+			throws PersistenceException {
 		SavingsOfferingBO savingsOffering = new SavingsTestHelper()
 				.createSavingsOffering("Savings product", "ads6");
 		assertEquals(Integer.valueOf("1"), new PrdOfferingPersistence()
@@ -80,13 +80,13 @@ public class PrdOfferingPersistenceTest extends MifosTestCase {
 	}
 
 	public void testGetPrdOfferingShortNameCountWithoutData()
-			throws NumberFormatException, PersistenceException {
+			throws PersistenceException {
 		assertEquals(Integer.valueOf("0"), new PrdOfferingPersistence()
 				.getProductOfferingShortNameCount("SAVP"));
 	}
 
 	public void testGetPrdOfferingShortNameCountWithDifferentName()
-			throws NumberFormatException, PersistenceException {
+			throws PersistenceException {
 		SavingsOfferingBO savingsOffering = new SavingsTestHelper()
 				.createSavingsOffering("fsaf6", "ads6");
 		assertEquals(Integer.valueOf("0"), new PrdOfferingPersistence()
@@ -96,7 +96,7 @@ public class PrdOfferingPersistenceTest extends MifosTestCase {
 	}
 
 	public void testGetPrdOfferingShortNameCountWithSameName()
-			throws NumberFormatException, PersistenceException {
+			throws PersistenceException {
 		SavingsOfferingBO savingsOffering = new SavingsTestHelper()
 				.createSavingsOffering("Savings product", "SAVP");
 		assertEquals(Integer.valueOf("1"), new PrdOfferingPersistence()
@@ -106,9 +106,22 @@ public class PrdOfferingPersistenceTest extends MifosTestCase {
 	}
 
 	public void testGetApplicableProductCategories()
-			throws NumberFormatException, PersistenceException {
+			throws PersistenceException {
 		assertEquals(1, new PrdOfferingPersistence()
 				.getApplicableProductCategories(ProductType.SAVINGS,
 						PrdCategoryStatus.ACTIVE).size());
+	}
+
+	public void testGetApplicablePrdStatus() throws PersistenceException {
+		List<PrdStatusEntity> prdStatusList = new PrdOfferingPersistence()
+				.getApplicablePrdStatus(ProductType.LOAN, (short) 1);
+		HibernateUtil.closeSession();
+		assertEquals(2, prdStatusList.size());
+		for (PrdStatusEntity prdStatus : prdStatusList) {
+			if (prdStatus.getPrdState().equals("1"))
+				assertEquals("Active", prdStatus.getPrdState().getName());
+			if (prdStatus.getPrdState().equals("2"))
+				assertEquals("InActive", prdStatus.getPrdState().getName());
+		}
 	}
 }

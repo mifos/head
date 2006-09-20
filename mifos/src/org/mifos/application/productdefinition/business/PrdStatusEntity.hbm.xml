@@ -15,4 +15,8 @@
 		<many-to-one name="prdType" column="PRD_TYPE_ID" class="org.mifos.application.productdefinition.business.ProductTypeEntity" not-null="true" access="field" />
 		<many-to-one name="prdState" column="PRD_STATE_ID" class="org.mifos.application.productdefinition.business.PrdStateEntity" not-null="true" access="field" />
 	</class>
+	<query name="product.status">
+		<![CDATA[from org.mifos.application.productdefinition.business.PrdStatusEntity prStatus
+		where prStatus.prdType.productTypeID=:productTypeID]]>
+	</query>
 </hibernate-mapping>

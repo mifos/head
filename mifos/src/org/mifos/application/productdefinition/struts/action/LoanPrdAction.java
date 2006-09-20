@@ -64,10 +64,13 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
+import org.mifos.application.productdefinition.business.PrdOfferingFeesEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionForm;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
@@ -78,6 +81,7 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -104,6 +108,8 @@ public class LoanPrdAction extends BaseAction {
 		request.getSession().setAttribute(
 				ProductDefinitionConstants.LOANPRODUCTACTIONFORM, null);
 		loadMasterData(request);
+		loadSelectedFeesAndFunds(new ArrayList<FeeView>(),
+				new ArrayList<Fund>(), request);
 		prdDefLogger.debug("Load method of loan Product Action called");
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
@@ -151,7 +157,7 @@ public class LoanPrdAction extends BaseAction {
 	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		prdDefLogger.debug("start create method of Savings Product Action");
+		prdDefLogger.debug("start create method of Loan Product Action");
 		LoanPrdActionForm loanPrdActionForm = (LoanPrdActionForm) form;
 		UserContext userContext = getUserContext(request);
 		Locale locale = getLocale(userContext);
@@ -218,6 +224,126 @@ public class LoanPrdAction extends BaseAction {
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
+	@TransactionDemarcate(saveToken = true)
+	public ActionForward manage(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		LoanPrdActionForm loanPrdActionForm = (LoanPrdActionForm) form;
+		prdDefLogger.debug("start manage of Loan Product Action "
+				+ loanPrdActionForm.getPrdOfferingId());
+		Short prdOfferingId = loanPrdActionForm.getPrdOfferingIdValue();
+		loanPrdActionForm.clear();
+		LoanOfferingBO loanOffering = ((LoanPrdBusinessService) ServiceFactory
+				.getInstance().getBusinessService(
+						BusinessServiceName.LoanProduct))
+				.getLoanOffering(prdOfferingId);
+		loadMasterData(request);
+		List<Fund> fundsSelected = new ArrayList<Fund>();
+		for (LoanOfferingFundEntity loanOfferingFund : loanOffering
+				.getLoanOfferingFunds()) {
+			fundsSelected.add(loanOfferingFund.getFund());
+		}
+		List<FeeView> feeSelected = new ArrayList<FeeView>();
+		for (PrdOfferingFeesEntity prdOfferingFees : loanOffering
+				.getPrdOfferingFees()) {
+			feeSelected.add(new FeeView(prdOfferingFees.getFees()));
+		}
+		loadSelectedFeesAndFunds(feeSelected, fundsSelected, request);
+		loadStatusList(request);
+		setDataIntoActionForm(loanOffering, loanPrdActionForm, request);
+
+		prdDefLogger.debug("manage of Loan Product Action called"
+				+ prdOfferingId);
+		return mapping.findForward(ActionForwards.manage_success.toString());
+	}
+
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward editPreview(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		prdDefLogger.debug("start editPreview of Loan Product Action ");
+		return mapping.findForward(ActionForwards.editPreview_success
+				.toString());
+	}
+
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward editPrevious(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		prdDefLogger.debug("start editPrevious of Loan Product Action ");
+		return mapping.findForward(ActionForwards.editPrevious_success
+				.toString());
+	}
+
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward editCancel(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		prdDefLogger.debug("start cancelCreate method of loan Product Action");
+		return mapping
+				.findForward(ActionForwards.editcancel_success.toString());
+	}
+
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward update(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		LoanPrdActionForm loanPrdActionForm = (LoanPrdActionForm) form;
+		prdDefLogger.debug("start update method of Loan Product Action"
+				+ loanPrdActionForm.getPrdOfferingId());
+		UserContext userContext = getUserContext(request);
+		Locale locale = getLocale(userContext);
+		LoanOfferingBO loanOffering = ((LoanPrdBusinessService) ServiceFactory
+				.getInstance().getBusinessService(
+						BusinessServiceName.LoanProduct))
+				.getLoanOffering(loanPrdActionForm.getPrdOfferingIdValue());
+		loanOffering.update(userContext.getId(), loanPrdActionForm
+				.getPrdOfferingName(), loanPrdActionForm
+				.getPrdOfferingShortName(), getProductCategory(
+				((List<ProductCategoryBO>) SessionUtils.getAttribute(
+						ProductDefinitionConstants.LOANPRODUCTCATEGORYLIST,
+						request)), loanPrdActionForm.getPrdCategoryValue()),
+				(PrdApplicableMasterEntity) findMasterEntity(request,
+						ProductDefinitionConstants.LOANAPPLFORLIST,
+						loanPrdActionForm.getPrdApplicableMasterValue()),
+				loanPrdActionForm.getStartDateValue(locale), loanPrdActionForm
+						.getEndDateValue(locale), loanPrdActionForm
+						.getDescription(), PrdStatus
+						.getPrdStatus(loanPrdActionForm.getPrdStatusValue()),
+				(GracePeriodTypeEntity) findMasterEntity(request,
+						ProductDefinitionConstants.LOANGRACEPERIODTYPELIST,
+						loanPrdActionForm.getGracePeriodTypeValue()),
+				(InterestTypesEntity) findMasterEntity(request,
+						ProductDefinitionConstants.INTERESTTYPESLIST,
+						loanPrdActionForm.getInterestTypesValue()),
+				loanPrdActionForm.getGracePeriodDurationValue(),
+				loanPrdActionForm.getMaxLoanAmountValue(), loanPrdActionForm
+						.getMinLoanAmountValue(), loanPrdActionForm
+						.getDefaultLoanAmountValue(), loanPrdActionForm
+						.getMaxInterestRateValue(), loanPrdActionForm
+						.getMinInterestRateValue(), loanPrdActionForm
+						.getDefInterestRateValue(), loanPrdActionForm
+						.getMaxNoInstallmentsValue(), loanPrdActionForm
+						.getMinNoInstallmentsValue(), loanPrdActionForm
+						.getDefNoInstallmentsValue(), loanPrdActionForm
+						.isLoanCounterValue(), loanPrdActionForm
+						.isIntDedAtDisbValue(), loanPrdActionForm
+						.isPrinDueLastInstValue(), getFundsFromList(
+						(List<Fund>) SessionUtils.getAttribute(
+								ProductDefinitionConstants.SRCFUNDSLIST,
+								request), loanPrdActionForm
+								.getLoanOfferingFunds()),
+				getFeeList((List<FeeBO>) SessionUtils.getAttribute(
+						ProductDefinitionConstants.LOANPRDFEE, request),
+						loanPrdActionForm.getPrdOfferinFees()),
+				loanPrdActionForm.getRecurAfterValue(), RecurrenceType
+						.getRecurrenceType(loanPrdActionForm
+								.getFreqOfInstallmentsValue()));
+		prdDefLogger.debug("update method of Loan Product Action called"
+				+ loanPrdActionForm.getPrdOfferingId());
+		return mapping.findForward(ActionForwards.update_success.toString());
+	}
+
 	private void loadMasterData(HttpServletRequest request) throws Exception {
 		prdDefLogger
 				.debug("start Load master data method of Loan Product Action ");
@@ -259,14 +385,36 @@ public class LoanPrdAction extends BaseAction {
 						FinancialConstants.CREDIT), request);
 		SessionUtils.setAttribute(ProductDefinitionConstants.LOANPRDFEE, fees,
 				request);
-		SessionUtils.setAttribute(
-				ProductDefinitionConstants.LOANPRDFEESELECTEDLIST,
-				new ArrayList<FeeView>(), request);
-		SessionUtils.setAttribute(
-				ProductDefinitionConstants.LOANPRDFUNDSELECTEDLIST,
-				new ArrayList<Fund>(), request);
 		prdDefLogger
 				.debug("Load master data method of Loan Product Action called");
+	}
+
+	private void loadSelectedFeesAndFunds(List<FeeView> feesSelected,
+			List<Fund> fundsSelected, HttpServletRequest request)
+			throws Exception {
+		prdDefLogger
+				.debug("start loadSelectedFeesAndFunds method of Loan Product Action ");
+		SessionUtils.setAttribute(
+				ProductDefinitionConstants.LOANPRDFEESELECTEDLIST,
+				feesSelected, request);
+		SessionUtils.setAttribute(
+				ProductDefinitionConstants.LOANPRDFUNDSELECTEDLIST,
+				fundsSelected, request);
+		prdDefLogger
+				.debug("loadSelectedFeesAndFunds method of Loan Product Action called ");
+	}
+
+	private void loadStatusList(HttpServletRequest request) throws Exception {
+		prdDefLogger
+				.debug("start Load Status list method of Loan Product Action ");
+		LoanPrdBusinessService service = (LoanPrdBusinessService) ServiceFactory
+				.getInstance().getBusinessService(
+						BusinessServiceName.LoanProduct);
+		Short localeId = getUserContext(request).getLocaleId();
+		SessionUtils.setAttribute(ProductDefinitionConstants.LOANPRDSTATUSLIST,
+				service.getApplicablePrdStatus(localeId), request);
+		prdDefLogger
+				.debug("Load Status list method of Loan Product Action called");
 	}
 
 	private List<GLCodeEntity> getGLCodes(short financialAction,
@@ -278,6 +426,8 @@ public class LoanPrdAction extends BaseAction {
 
 	private MasterDataEntity findMasterEntity(HttpServletRequest request,
 			String collectionName, Short value) throws Exception {
+		prdDefLogger
+				.debug("start findMasterEntity method of Loan Product Action ");
 		if (value != null) {
 			List<MasterDataEntity> entities = (List<MasterDataEntity>) SessionUtils
 					.getAttribute(collectionName, request);
@@ -290,6 +440,8 @@ public class LoanPrdAction extends BaseAction {
 
 	private GLCodeEntity findGLCodeEntity(HttpServletRequest request,
 			String collectionName, String value) throws PageExpiredException {
+		prdDefLogger
+				.debug("start findGLCodeEntity method of Loan Product Action ");
 		List<GLCodeEntity> glCodeList = (List<GLCodeEntity>) SessionUtils
 				.getAttribute(collectionName, request);
 		for (GLCodeEntity glCode : glCodeList)
@@ -300,6 +452,8 @@ public class LoanPrdAction extends BaseAction {
 
 	private ProductCategoryBO getProductCategory(
 			List<ProductCategoryBO> productCategories, Short productCategoryId) {
+		prdDefLogger
+				.debug("start getProductCategory method of Loan Product Action ");
 		for (ProductCategoryBO productCategory : productCategories) {
 			if (productCategory.getProductCategoryID()
 					.equals(productCategoryId))
@@ -309,6 +463,8 @@ public class LoanPrdAction extends BaseAction {
 	}
 
 	private List<Fund> getFundsFromList(List<Fund> funds, String[] fundsSelected) {
+		prdDefLogger
+				.debug("start getFundsFromList method of Loan Product Action ");
 		List<Fund> fundList = new ArrayList<Fund>();
 		if (fundsSelected != null && fundsSelected.length > 0 && funds != null
 				&& funds.size() > 0) {
@@ -318,10 +474,14 @@ public class LoanPrdAction extends BaseAction {
 					fundList.add(fund);
 			}
 		}
+		prdDefLogger
+				.debug("getFundsFromList method of Loan Product Action called");
 		return fundList;
 	}
 
 	private Fund getFundFromList(List<Fund> funds, String fundSelected) {
+		prdDefLogger
+				.debug("start getFundFromList method of Loan Product Action ");
 		for (Fund fund : funds)
 			if (fund.getFundId().equals(getShortValue(fundSelected)))
 				return fund;
@@ -329,16 +489,21 @@ public class LoanPrdAction extends BaseAction {
 	}
 
 	private List<FeeView> getFeeViewList(List<FeeBO> fees) {
+		prdDefLogger
+				.debug("start getFeeViewList method of Loan Product Action ");
 		List<FeeView> feeViews = new ArrayList<FeeView>();
 		if (fees != null && fees.size() > 0) {
 			for (FeeBO fee : fees) {
 				feeViews.add(new FeeView(fee));
 			}
 		}
+		prdDefLogger
+				.debug("getFeeViewList method of Loan Product Action called");
 		return feeViews;
 	}
 
 	private List<FeeBO> getFeeList(List<FeeBO> fees, String[] feesSelected) {
+		prdDefLogger.debug("start getFeeList method of Loan Product Action ");
 		List<FeeBO> feeList = new ArrayList<FeeBO>();
 		if (feesSelected != null && feesSelected.length > 0 && fees != null
 				&& fees.size() > 0) {
@@ -348,13 +513,87 @@ public class LoanPrdAction extends BaseAction {
 					feeList.add(fee);
 			}
 		}
+		prdDefLogger.debug("getFeeList method of Loan Product Action called");
 		return feeList;
 	}
 
 	private FeeBO getFeeFromList(List<FeeBO> fees, String feeSelected) {
+		prdDefLogger
+				.debug("start getFeeFromList method of Loan Product Action ");
 		for (FeeBO fee : fees)
 			if (fee.getFeeId().equals(getShortValue(feeSelected)))
 				return fee;
 		return null;
+	}
+
+	private void setDataIntoActionForm(LoanOfferingBO loanOffering,
+			LoanPrdActionForm loanPrdActionForm, HttpServletRequest request)
+			throws Exception {
+		prdDefLogger
+				.debug("start setDataIntoActionForm method of Loan Product Action ");
+		loanPrdActionForm.setPrdOfferingId(getStringValue(loanOffering
+				.getPrdOfferingId()));
+		loanPrdActionForm.setPrdOfferingName(loanOffering.getPrdOfferingName());
+		loanPrdActionForm.setPrdOfferingShortName(loanOffering
+				.getPrdOfferingShortName());
+		loanPrdActionForm.setPrdCategory(getStringValue(loanOffering
+				.getPrdCategory().getProductCategoryID()));
+		loanPrdActionForm.setPrdStatus(getStringValue(loanOffering
+				.getPrdStatus().getOfferingStatusId()));
+		loanPrdActionForm.setPrdApplicableMaster(getStringValue(loanOffering
+				.getPrdApplicableMaster().getId()));
+		loanPrdActionForm.setStartDate(DateHelper.getUserLocaleDate(
+				getUserContext(request).getPereferedLocale(), DateHelper
+						.toDatabaseFormat(loanOffering.getStartDate())));
+		loanPrdActionForm
+				.setEndDate(loanOffering.getEndDate() != null ? DateHelper
+						.getUserLocaleDate(getUserContext(request)
+								.getPereferedLocale(), DateHelper
+								.toDatabaseFormat(loanOffering.getEndDate()))
+						: null);
+		loanPrdActionForm.setDescription(loanOffering.getDescription());
+		loanPrdActionForm.setGracePeriodType(getStringValue(loanOffering
+				.getGracePeriodType().getId()));
+		loanPrdActionForm.setGracePeriodDuration(getStringValue(loanOffering
+				.getGracePeriodDuration()));
+		loanPrdActionForm.setInterestTypes(getStringValue(loanOffering
+				.getInterestTypes().getId()));
+		loanPrdActionForm.setMaxLoanAmount(getStringValue(loanOffering
+				.getMaxLoanAmount()));
+		loanPrdActionForm.setMinLoanAmount(getStringValue(loanOffering
+				.getMinLoanAmount()));
+		loanPrdActionForm.setDefaultLoanAmount(getStringValue(loanOffering
+				.getDefaultLoanAmount()));
+		loanPrdActionForm.setMaxInterestRate(getStringValue(loanOffering
+				.getMaxInterestRate()));
+		loanPrdActionForm.setMinInterestRate(getStringValue(loanOffering
+				.getMinInterestRate()));
+		loanPrdActionForm.setDefInterestRate(getStringValue(loanOffering
+				.getDefInterestRate()));
+		loanPrdActionForm.setMaxNoInstallments(getStringValue(loanOffering
+				.getMaxNoInstallments()));
+		loanPrdActionForm.setMinNoInstallments(getStringValue(loanOffering
+				.getMinNoInstallments()));
+		loanPrdActionForm.setDefNoInstallments(getStringValue(loanOffering
+				.getDefNoInstallments()));
+
+		loanPrdActionForm.setIntDedDisbursementFlag(getStringValue(loanOffering
+				.isIntDedDisbursement()));
+		loanPrdActionForm.setPrinDueLastInstFlag(getStringValue(loanOffering
+				.isPrinDueLastInst()));
+		loanPrdActionForm.setLoanCounter(getStringValue(loanOffering
+				.isIncludeInLoanCounter()));
+		loanPrdActionForm.setRecurAfter(getStringValue(loanOffering
+				.getPrdOfferingMeeting().getMeeting().getMeetingDetails()
+				.getRecurAfter()));
+		loanPrdActionForm.setFreqOfInstallments(getStringValue(loanOffering
+				.getPrdOfferingMeeting().getMeeting().getMeetingDetails()
+				.getRecurrenceType().getRecurrenceId()));
+		loanPrdActionForm.setPrincipalGLCode(getStringValue(loanOffering
+				.getPrincipalGLcode().getGlcodeId()));
+		loanPrdActionForm.setInterestGLCode(getStringValue(loanOffering
+				.getInterestGLcode().getGlcodeId()));
+		prdDefLogger
+				.debug("setDataIntoActionForm method of Loan Product Action called");
 	}
 }

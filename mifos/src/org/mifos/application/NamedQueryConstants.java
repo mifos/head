@@ -527,4 +527,6 @@ public interface NamedQueryConstants {
 	public String GET_ALL_ACTIVITIES="getAllActivities";
 	public String GET_ALL_ROLES="getAllRoles";
 	public String GET_PERSONNEL_ROLE_COUNT="getPersonnelRoleCount";
+	
+	public String PRODUCT_STATUS="product.status";
 }

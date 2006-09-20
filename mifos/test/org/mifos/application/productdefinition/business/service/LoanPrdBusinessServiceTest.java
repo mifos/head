@@ -6,6 +6,7 @@ import java.util.List;
 import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -103,6 +104,30 @@ public class LoanPrdBusinessServiceTest extends MifosTestCase {
 			assertTrue(true);
 		}
 		HibernateUtil.closeSession();
+	}
+
+	public void testGetApplicablePrdStatus() throws ServiceException {
+		List<PrdStatusEntity> prdStatusList = new LoanPrdBusinessService()
+				.getApplicablePrdStatus((short) 1);
+		HibernateUtil.closeSession();
+		assertEquals(2, prdStatusList.size());
+		for (PrdStatusEntity prdStatus : prdStatusList) {
+			if (prdStatus.getPrdState().equals("1"))
+				assertEquals("Active", prdStatus.getPrdState().getName());
+			if (prdStatus.getPrdState().equals("2"))
+				assertEquals("InActive", prdStatus.getPrdState().getName());
+		}
+	}
+
+	public void testGetApplicablePrdStatusForInvalidConnection() {
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			List<PrdStatusEntity> prdStatusList = new LoanPrdBusinessService()
+					.getApplicablePrdStatus((short) 1);
+			assertTrue(false);
+		} catch (ServiceException e) {
+			assertTrue(true);
+		}
 	}
 
 	private LoanOfferingBO createLoanOfferingBO(String prdOfferingName,
