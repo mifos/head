@@ -135,19 +135,40 @@ public class MeetingRecurrenceEntity extends PersistentObject {
 		return rankOfDays!=null ? RankType.getRankType(rankOfDays.getId()) : null;
 	}
 	
+	public void updateDayNumber(Short dayNumber)throws MeetingException {
+		validateDayNumber(dayNumber);
+		this.dayNumber = dayNumber;
+	}
+	
+	public void updateWeekDay(WeekDay weekDay)throws MeetingException {
+		validateWeekDay(weekDay);
+		this.weekDay = new WeekDaysEntity(weekDay);
+	}
+	
+	public void update(WeekDay weekDay, RankType rank)throws MeetingException {
+		if(weekDay==null || rank==null)
+			throw new MeetingException(MeetingConstants.INVALID_WEEKDAY_OR_WEEKRANK);
+		this.weekDay = new WeekDaysEntity(weekDay);
+		this.rankOfDays = new RankOfDaysEntity(rank);
+	}
+	
 	private void validateWeekDay(WeekDay weekDay) throws MeetingException{
 		if(weekDay == null)
 			throw new MeetingException(MeetingConstants.INVALID_WEEKDAY);
 	}
 	
 	private void validateFields(Short dayNumber, WeekDay weekDay, RankType rank) throws MeetingException{
-		if(dayNumber!=null && (dayNumber<1 || dayNumber>31))
-			throw new MeetingException(MeetingConstants.INVALID_DAYNUMBER);
+		validateDayNumber(dayNumber);
 		
 		if(dayNumber==null && weekDay==null && rank==null)
 			throw new MeetingException(MeetingConstants.INVALID_DAYNUMBER_OR_WEEK);
 
 		if(dayNumber==null && (weekDay==null || rank==null))
 			throw new MeetingException(MeetingConstants.INVALID_WEEKDAY_OR_WEEKRANK);
+	}
+	
+	private void validateDayNumber(Short dayNumber)throws MeetingException{
+		if(dayNumber!=null && (dayNumber<1 || dayNumber>31))
+			throw new MeetingException(MeetingConstants.INVALID_DAYNUMBER);
 	}
 }

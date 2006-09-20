@@ -40,6 +40,7 @@ package org.mifos.application.customer.group.business;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
@@ -308,6 +309,25 @@ public class GroupBO extends CustomerBO {
 		for(CustomerBO client: getChildren()){
 			client.setUserContext(getUserContext());
 			((ClientBO)client).handleGroupTransfer();
+		}
+	}
+	
+	@Override
+	public void updateMeeting(MeetingBO meeting) throws CustomerException{
+		if(getParentCustomer()==null){
+			if(getCustomerMeeting()==null)
+				this.setCustomerMeeting(createCustomerMeeting(meeting));
+			else
+				super.updateMeeting(getCustomerMeeting().getMeeting(), meeting);
+			this.update();
+			Set<CustomerBO> clients = getChildren();
+			
+			if(clients!=null){
+				for(CustomerBO client : clients){
+					client.setUserContext(getUserContext());
+					client.updateMeeting(meeting);
+				}
+			}
 		}
 	}
 	

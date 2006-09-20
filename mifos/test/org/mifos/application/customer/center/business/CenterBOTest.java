@@ -18,7 +18,9 @@ import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.framework.MifosTestCase;
@@ -270,6 +272,25 @@ public class CenterBOTest extends MifosTestCase {
 		assertEquals(newLO.getPersonnelId(), center.getPersonnel().getPersonnelId());
 		assertEquals(newLO.getPersonnelId(), group.getPersonnel().getPersonnelId());
 		assertEquals(newLO.getPersonnelId(), client.getPersonnel().getPersonnelId());
+	}
+	
+	public void testUpdateMeeting()throws Exception{
+		createCustomers();
+		MeetingBO centerMeeting = center.getCustomerMeeting().getMeeting();
+		String meetingPlace = "Bangalore";
+		MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, centerMeeting.getMeetingDetails().getRecurAfter(), centerMeeting.getStartDate(), MeetingType.CUSTOMERMEETING, meetingPlace);
+		center.updateMeeting(newMeeting);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		assertEquals(WeekDay.THURSDAY, center.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(WeekDay.THURSDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(WeekDay.THURSDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(meetingPlace, center.getCustomerMeeting().getMeeting().getMeetingPlace());
+		assertEquals(meetingPlace, group.getCustomerMeeting().getMeeting().getMeetingPlace());
+		assertEquals(meetingPlace, client.getCustomerMeeting().getMeeting().getMeetingPlace());
 	}
 	
 	private void createCustomers() {

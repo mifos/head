@@ -42,6 +42,7 @@ import java.util.List;
 
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
@@ -56,5 +57,9 @@ public class MeetingPersistence extends Persistence{
 				workingDays.add((WeekDaysEntity)weekDay);			
 		}
 		return workingDays;
+	}
+	
+	public MeetingBO getMeeting(Integer meetingId)throws PersistenceException{
+		return (MeetingBO) getPersistentObject(MeetingBO.class, meetingId);
 	}
 }

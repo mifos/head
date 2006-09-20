@@ -51,9 +51,6 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.configuration.business.MifosConfiguration;
-import org.mifos.application.configuration.exceptions.ConfigurationException;
-import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
@@ -63,6 +60,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -692,7 +690,22 @@ public void changeStatus(Short newStatusId, Short flagId, String comment)
 		this.update();
 		logger.debug("In CustomerBO::changeStatus(), successfully changed status, newStatusId: " + newStatusId);
 	}
-		
+
+	public abstract void updateMeeting(MeetingBO meeting)throws CustomerException;
+
+	protected void updateMeeting(MeetingBO oldMeeting, MeetingBO meeting)throws CustomerException{
+		try{
+			if(oldMeeting.isWeekly())
+				oldMeeting.update(meeting.getMeetingDetails().getWeekDay(),meeting.getMeetingPlace());
+			else if(oldMeeting.isMonthlyOnDate())
+				oldMeeting.update(meeting.getMeetingDetails().getDayNumber(), meeting.getMeetingPlace());
+			else if(oldMeeting.isMonthly())
+				oldMeeting.update(meeting.getMeetingDetails().getWeekDay(), meeting.getMeetingDetails().getWeekRank(), meeting.getMeetingPlace());
+		}catch(MeetingException me){
+			throw new CustomerException(me);
+		}
+	}	
+	
 	private void validateLoanOfficerAssigned() throws CustomerException {
 		logger.debug("In CustomerBO::validateLoanOfficerAssigned()");
 		if(!(personnel.isActive())||!(personnel.getOffice().getOfficeId().equals(office.getOfficeId()) ||!(personnel.isLoanOfficer())))

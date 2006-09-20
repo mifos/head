@@ -2,6 +2,7 @@ package org.mifos.application.meeting.business.service;
 
 import java.util.List;
 
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.framework.business.BusinessObject;
@@ -24,4 +25,11 @@ public class MeetingBusinessService extends BusinessService{
 		}	
 	}
 	
+	public MeetingBO getMeeting(Integer meetingId)throws ServiceException{
+		try {
+			return new MeetingPersistence().getMeeting(meetingId);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
+	}
 }

@@ -64,6 +64,12 @@ public class CenterBO extends CustomerBO {
 		return getCustomerStatus().getId().equals(CustomerStatus.CENTER_ACTIVE.getValue());
 	}
 
+	@Override
+	public void updateMeeting(MeetingBO meeting) throws CustomerException{
+		super.updateMeeting(getCustomerMeeting().getMeeting(), meeting);
+		this.update();
+	}
+	
 	private void validateFields(String displayName, MeetingBO meeting,
 			Short personnel, Short officeId) throws CustomerException {
 		try {

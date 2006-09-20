@@ -30,7 +30,9 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
@@ -651,6 +653,35 @@ public class TestClientBO extends MifosTestCase {
 			ce.printStackTrace();
 		}
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+	}
+	
+	public void testUpdateMeeting()throws Exception{
+		client = TestObjectFactory.createClient("clientname",getMeeting(),CustomerStatus.CLIENT_PENDING.getValue(), new java.util.Date());
+		MeetingBO clientMeeting = client.getCustomerMeeting().getMeeting();
+		String meetingPlace = "Bangalore";
+		MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, clientMeeting.getMeetingDetails().getRecurAfter(), clientMeeting.getStartDate(), MeetingType.CUSTOMERMEETING, meetingPlace);
+		client.updateMeeting(newMeeting);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		assertEquals(WeekDay.THURSDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(meetingPlace, client.getCustomerMeeting().getMeeting().getMeetingPlace());
+	}
+	
+	public void testCreateMeeting()throws Exception{
+		client = TestObjectFactory.createClient("clientname",null,CustomerStatus.CLIENT_PENDING.getValue(), new java.util.Date());
+		String meetingPlace = "newPlace";
+		Short recurAfter = Short.valueOf("4");
+		MeetingBO newMeeting = new MeetingBO(WeekDay.FRIDAY, recurAfter, new java.util.Date(), MeetingType.CUSTOMERMEETING, meetingPlace);
+		client.updateMeeting(newMeeting);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		
+		assertEquals(WeekDay.FRIDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(meetingPlace, client.getCustomerMeeting().getMeeting().getMeetingPlace());
+		assertEquals(recurAfter, client.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
 	}
 	
 	private void createObjectsForClientTransfer()throws Exception{

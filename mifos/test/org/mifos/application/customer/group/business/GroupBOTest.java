@@ -30,7 +30,9 @@ import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
@@ -825,6 +827,67 @@ public class GroupBOTest extends MifosTestCase {
 		assertEquals(officeBO.getOfficeId(), client2.getOffice().getOfficeId());
 	}
 
+	public void testUpdateMeeting()throws Exception{
+		group = createGroupUnderBranch(CustomerStatus.GROUP_PENDING);
+		client1 = createClient(group, CustomerStatus.CLIENT_PARTIAL);
+		client2 = createClient(group, CustomerStatus.CLIENT_PENDING);
+		
+		MeetingBO groupMeeting = group.getCustomerMeeting().getMeeting();
+		String meetingPlace = "Bangalore";
+		MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, groupMeeting.getMeetingDetails().getRecurAfter(), groupMeeting.getStartDate(), MeetingType.CUSTOMERMEETING, meetingPlace);
+		group.updateMeeting(newMeeting);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		client1 = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client1.getCustomerId());
+		client2 = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client2.getCustomerId());
+		
+		assertEquals(WeekDay.THURSDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(WeekDay.THURSDAY, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(WeekDay.THURSDAY, client2.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+		
+		assertEquals(meetingPlace, group.getCustomerMeeting().getMeeting().getMeetingPlace());
+		assertEquals(meetingPlace, client1.getCustomerMeeting().getMeeting().getMeetingPlace());
+		assertEquals(meetingPlace, client2.getCustomerMeeting().getMeeting().getMeetingPlace());
+	}
+	
+	public void testCreateMeeting()throws Exception{
+		group = createGroupUnderBranchWithoutMeeting("MyGroup");
+		client1 = createClient(group, CustomerStatus.CLIENT_PARTIAL);
+		client2 = createClient(group, CustomerStatus.CLIENT_PENDING);
+		HibernateUtil.closeSession();
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		group.setUserContext(TestObjectFactory.getContext());
+		String meetingPlace = "newPlace";
+		Short recurAfter = Short.valueOf("4");
+		MeetingBO newMeeting = new MeetingBO(WeekDay.FRIDAY, recurAfter, new Date(), MeetingType.CUSTOMERMEETING, meetingPlace);
+		group.updateMeeting(newMeeting);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		client1 = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client1.getCustomerId());
+		client2 = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client2.getCustomerId());
+		
+		assertEquals(WeekDay.FRIDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(WeekDay.FRIDAY, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(WeekDay.FRIDAY, client2.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+		
+		assertEquals(meetingPlace, group.getCustomerMeeting().getMeeting().getMeetingPlace());
+		assertEquals(meetingPlace, client1.getCustomerMeeting().getMeeting().getMeetingPlace());
+		assertEquals(meetingPlace, client2.getCustomerMeeting().getMeeting().getMeetingPlace());
+		
+		assertEquals(recurAfter, group.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
+		assertEquals(recurAfter, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
+		assertEquals(recurAfter, client2.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
+	}
+	
+	private GroupBO createGroupUnderBranchWithoutMeeting(String name) {
+		return TestObjectFactory.createGroupUnderBranch(name, CustomerStatus.GROUP_PENDING,
+				office, null, personnel);
+	}
+	
 	private void createCenter() {
 		meeting = getMeeting();
 		center = TestObjectFactory.createCenter("Center",

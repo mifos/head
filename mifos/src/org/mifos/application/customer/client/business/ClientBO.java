@@ -292,6 +292,15 @@ public class ClientBO extends CustomerBO {
 	}
 
 	@Override
+	public void updateMeeting(MeetingBO meeting) throws CustomerException {
+		if(getCustomerMeeting()==null)
+			this.setCustomerMeeting(createCustomerMeeting(meeting));
+		else
+			super.updateMeeting(getCustomerMeeting().getMeeting(), meeting);
+		this.update();
+	}
+	
+	@Override
 	protected void validateStatusChange(Short newStatusId) throws CustomerException{
 		logger.debug("In ClientBO::validateStatusChange(), customerId: " + getCustomerId());
 		if(getParentCustomer()!=null)

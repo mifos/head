@@ -103,7 +103,8 @@ public class MeetingBO extends BusinessObject {
 		if(meetingType!=null)
 			this.meetingType = new MeetingTypeEntity(meetingType);
 		this.meetingId = null;
-		this.meetingStartDate = DateUtils.getDateWithoutTimeStamp(startDate.getTime());		
+		this.meetingStartDate = DateUtils.getDateWithoutTimeStamp(startDate.getTime());
+		this.meetingPlace = meetingPlace;
 	}
 	
 	
@@ -167,6 +168,24 @@ public class MeetingBO extends BusinessObject {
 		}
 	}
 	
+	public void update(WeekDay weekDay, String meetingPlace)throws MeetingException{
+		validateMeetingPlace(meetingPlace);
+		getMeetingDetails().getMeetingRecurrence().updateWeekDay(weekDay);
+		this.meetingPlace=meetingPlace;
+	}
+	
+	public void update(WeekDay weekDay, RankType rank, String meetingPlace)throws MeetingException{
+		validateMeetingPlace(meetingPlace);
+		getMeetingDetails().getMeetingRecurrence().update(weekDay, rank);
+		this.meetingPlace=meetingPlace;
+	}
+
+	public void update(Short dayNumber, String meetingPlace)throws MeetingException{
+		validateMeetingPlace(meetingPlace);
+		getMeetingDetails().getMeetingRecurrence().updateDayNumber(dayNumber);
+		this.meetingPlace=meetingPlace;
+	}
+	
 	private void validateFields(RecurrenceType recurrenceType, Date startDate, MeetingType meetingType, String meetingPlace)throws MeetingException{
 		if(recurrenceType == null)
 			throw new MeetingException(MeetingConstants.INVALID_RECURRENCETYPE);
@@ -174,9 +193,14 @@ public class MeetingBO extends BusinessObject {
 			throw new MeetingException(MeetingConstants.INVALID_STARTDATE);
 		if(meetingType == null)
 			throw new MeetingException(MeetingConstants.INVALID_MEETINGTYPE);
+		validateMeetingPlace(meetingPlace);
+	}
+	
+	private void validateMeetingPlace(String meetingPlace)throws MeetingException{
 		if(StringUtils.isNullOrEmpty(meetingPlace))
 			throw new MeetingException(MeetingConstants.INVALID_MEETINGPLACE);
 	}
+	
 	/**
 	 * This function returns the meeting schedule based on the values set in the
 	 * meeting object
