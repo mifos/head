@@ -78,6 +78,13 @@ public class SavingsPrdPersistenceTest extends MifosTestCase {
 		assertEquals(2, new SavingsPrdPersistence()
 				.getSavingsApplicableRecurrenceTypes().size());
 	}
+	
+	public void testGetAllSavingsProducts() throws Exception {
+		savingsOffering = createSavingsOfferingBO();
+		assertEquals(1, new SavingsPrdPersistence()
+				.getAllSavingsProducts().size());
+		TestObjectFactory.removeObject(savingsOffering);
+	}
 
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
@@ -89,6 +96,8 @@ public class SavingsPrdPersistenceTest extends MifosTestCase {
 				.valueOf("9"), "1.1.1", center, new Date(System
 				.currentTimeMillis()));
 	}
+	
+	
 
 	private SavingsOfferingBO createSavingsOfferingBO() {
 		MeetingBO meetingIntCalc = TestObjectFactory

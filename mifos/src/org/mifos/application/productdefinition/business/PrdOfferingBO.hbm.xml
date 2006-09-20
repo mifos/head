@@ -125,4 +125,8 @@
 		where recType.recurrenceId=2 or recType.recurrenceId=3 
 		order by recType.recurrenceName]]>
 	</query>
+	
+	<query name="productOffering.getAllSavingsProducts">
+		<![CDATA[from org.mifos.application.productdefinition.business.SavingsOfferingBO savingsOffering order by savingsOffering.prdOfferingName]]>
+	</query>
 </hibernate-mapping>

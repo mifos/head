@@ -75,6 +75,7 @@ public interface NamedQueryConstants {
 	public String COUNT_ACTIVE_CUSTOMERS_FOR_PARENT="countActiveCustomersForParent";
 	public String FIND_CUSTOMER_BY_SYSTEM_ID="findCustomerBySystemId";
 	public String GET_CUSTOMER_MASTER_BY_SEARCH_ID="getCustomerMasterBySearchId";
+	public String GET_ALLSAVINGS_PRODUCTS = "productOffering.getAllSavingsProducts";
 	
 	public String IS_CENTER_ACTIVE="isCenterActive";
 	//for group transfer
