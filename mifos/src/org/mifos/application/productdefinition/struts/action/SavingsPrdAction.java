@@ -294,6 +294,20 @@ public class SavingsPrdAction extends BaseAction {
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 	
+	@TransactionDemarcate(saveToken = true)
+	public ActionForward search(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		SavingsPrdBusinessService service = (SavingsPrdBusinessService) ServiceFactory
+		.getInstance().getBusinessService(
+				BusinessServiceName.SavingsProduct);
+		prdDefLogger.debug("start Load method of Savings Product Action");
+		SessionUtils.setAttribute(ProductDefinitionConstants.SAVINGSPRODUCTLIST, service
+				.getAllSavingsProducts(), request);
+		prdDefLogger.debug("Load method of Savings Product Action called");
+		return mapping.findForward(ActionForwards.search_success.toString());
+	}
+	
 	private void setValuesInActionForm(SavingsPrdActionForm actionForm, HttpServletRequest request) throws Exception{
 		SavingsOfferingBO savingsOffering = (SavingsOfferingBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 		actionForm.setPrdOfferingId(savingsOffering.getPrdOfferingId().toString());

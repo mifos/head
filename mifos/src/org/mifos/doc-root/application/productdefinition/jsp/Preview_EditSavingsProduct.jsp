@@ -61,19 +61,8 @@
 		savingsproductactionform.action="savingsproductaction.do?method=previousManage";
 		savingsproductactionform.submit();
 	}
-	function fnSearch(form) {
-		form.method.value="search";
-		form.action="savingsprdaction.do";
-		form.submit();
-	}
 	function fnGet() {
 		savingsproductactionform.method.value="get";
-		savingsproductactionform.action="savingsproductaction.do";
-		savingsproductactionform.submit();
-	}
-	function fnCancel() {
-		savingsproductactionform.method.value="cancel";
-		savingsproductactionform.input.value="admin";
 		savingsproductactionform.action="savingsproductaction.do";
 		savingsproductactionform.submit();
 	}
@@ -90,9 +79,9 @@
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
-						<span class="fontnormal8pt"> <html-el:link href="javascript:fnCancel()">
+						<span class="fontnormal8pt"> <html-el:link href="AdminAction.do?method=load">
 								<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
-							</html-el:link> / <html-el:link href="savingsprdaction.do?method=search">
+							</html-el:link> / <html-el:link href="savingsproductaction.do?method=search">
 								<mifos:mifoslabel name="product.savingsview" bundle="ProductDefUIResources" />
 								<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
 								<mifos:mifoslabel name="product.products" bundle="ProductDefUIResources" />
@@ -144,7 +133,7 @@
 									<br>
 									<mifos:mifoslabel name="product.desc" bundle="ProductDefUIResources" />
 									<br>
-									<span class="fontnormal"> <c:if test="${!empty requestScope.Context.valueObject.description}">
+									<span class="fontnormal"> <c:if test="${!empty BusinessKey.description}">
 											<c:out value="${sessionScope.savingsproductactionform.description}" />
 											<br>
 										</c:if> </span>

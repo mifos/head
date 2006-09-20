@@ -629,6 +629,8 @@
 			<forward name="previewManage_failure" path="/pages/application/productdefinition/jsp/Edit_SavingsProduct.jsp"></forward>
 			<forward name="previousManage_success" path="/pages/application/productdefinition/jsp/Edit_SavingsProduct.jsp"></forward>
 			<forward name="update_success" path="/savingsproductaction.do?method=get"></forward>
+			<forward name="update_failure" path="/pages/application/productdefinition/jsp/Preview_EditSavingsProduct.jsp"></forward>
+			<forward name="search_success" path="/pages/application/productdefinition/jsp/View_AllSavingsProduct.jsp"></forward>
 			<forward name="failure" path="/pages/application/productdefinition/jsp/Preview_EditSavingsProduct.jsp"></forward>
 		</action>
 		<!-- Payment Types -->

@@ -106,19 +106,12 @@
 				}
 			}
 			function fnCancel(form) {
-					form.method.value="cancel";
-					form.action="savingsproductaction.do";
+					form.action="savingsproductaction.do?method=cancel";
 					form.submit();
 			}
 			
 			function fnGet() {
 				savingsproductactionform.method.value="get";
-				savingsproductactionform.action="savingsproductaction.do";
-				savingsproductactionform.submit();
-			}
-			function fnCancel() {
-				savingsproductactionform.method.value="cancel";
-				savingsproductactionform.input.value="admin";
 				savingsproductactionform.action="savingsproductaction.do";
 				savingsproductactionform.submit();
 			}
@@ -152,9 +145,9 @@
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
-						<span class="fontnormal8pt"> <html-el:link href="javascript:fnCancel()">
+						<span class="fontnormal8pt"> <html-el:link href="AdminAction.do?method=load">
 								<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
-							</html-el:link> / <html-el:link href="savingsprdaction.do?method=search">
+							</html-el:link> / <html-el:link href="savingsproductaction.do?method=search">
 								<mifos:mifoslabel name="product.savingsview" bundle="ProductDefUIResources" />
 								<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
 								<mifos:mifoslabel name="product.products" bundle="ProductDefUIResources" />

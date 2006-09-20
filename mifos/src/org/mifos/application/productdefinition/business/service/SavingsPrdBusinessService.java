@@ -86,4 +86,13 @@ public class SavingsPrdBusinessService extends BusinessService {
 			throw new ServiceException(e);
 		}
 	}
+
+	public List<SavingsOfferingBO> getAllSavingsProducts() throws ServiceException {
+		try {
+			return new SavingsPrdPersistence()
+					.getAllSavingsProducts();
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
 }

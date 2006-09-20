@@ -935,6 +935,22 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.previousManage_success.toString());
 	}
+	
+	public void testSearch() throws Exception {
+		createSavingsOfferingBO("prdOfferingName","SN");
+		setRequestPathInfo("/savingsproductaction.do");
+		addRequestParameter("method", "search");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.search_success.toString());
+		List<SavingsOfferingBO> savingsProducts = (List<SavingsOfferingBO>) SessionUtils
+				.getAttribute(
+						ProductDefinitionConstants.SAVINGSPRODUCTLIST,
+						request);
+		assertEquals("The size of savigns products", 1,
+				savingsProducts.size());
+	}
 
 	private String offSetCurrentDate(int noOfDays, Locale locale) {
 		Calendar currentDateCalendar = new GregorianCalendar();
