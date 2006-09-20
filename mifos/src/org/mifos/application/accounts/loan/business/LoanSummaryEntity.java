@@ -43,9 +43,11 @@ import org.mifos.framework.util.helpers.Money;
 
 public class LoanSummaryEntity extends PersistentObject {
 
-	private final Integer accountId;
+	@SuppressWarnings("unused") // see .hbm.xml file
+	private Integer accountId;
 
-	private final LoanBO loan;
+	@SuppressWarnings("unused") // see .hbm.xml file
+	private LoanBO loan;
 
 	private Money originalPrincipal;
 

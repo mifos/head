@@ -1258,7 +1258,7 @@ public class LoanBO extends AccountBO {
 							+ feeAmount);
 		} else if (accountFees.getFees().getFeeType().equals(
 				RateAmountFlag.RATE)) {
-			RateFeeBO rateFeeBO = (RateFeeBO) new FeePersistence()
+			RateFeeBO rateFeeBO = new FeePersistence()
 					.getRateFee(accountFees.getFees().getFeeId());
 			accountFeeAmount = new Money(getRateBasedOnFormula(feeAmount,
 					rateFeeBO.getFeeFormula(), loanInterest));

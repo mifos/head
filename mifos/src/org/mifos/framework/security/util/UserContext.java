@@ -43,7 +43,10 @@ import java.util.Locale;
 import java.util.Set;
 import java.io.Serializable;
 
-public class UserContext implements Serializable{
+/**
+ * Information about a user, including ID's of their roles.
+ */
+public class UserContext implements Serializable {
 
 	/**
 	 * This would hold the name of the user who has loged in
@@ -114,253 +117,117 @@ public class UserContext implements Serializable{
 	 * This would hold the levelId of the loggen in user 
 	 */
 	private Short officeLevelId;
-	/**
-	 * This function returns the officeLevelId
-	 * @return Returns the officeLevelId.
-	 */
 	
 	public Short getOfficeLevelId() {
 		return officeLevelId;
 	}
 
-	/**
-	 * This function sets the officeLevelId
-	 * @param officeLevelId the officeLevelId to set.
-	 */
-	
 	public void setOfficeLevelId(Short officeLevelId) {
 		this.officeLevelId = officeLevelId;
 	}
 
-	/**
-	 * @return Returns the passwordChanged.
-	 */
 	public Short getPasswordChanged() {
 		return passwordChanged;
 	}
 
-	/**
-	 * @param passwordChanged
-	 *            The passwordChanged to set.
-	 */
 	public void setPasswordChanged(Short passwordChanged) {
 		this.passwordChanged = passwordChanged;
 	}
 
-	/**
-	 * This Function returns the lastLogin
-	 * 
-	 * @return Returns the lastLogin.
-	 */
 	public Date getLastLogin() {
 		return lastLogin;
 	}
 
-	/**
-	 * This function set the lastLogin
-	 * 
-	 * @param lastLogin
-	 *            The lastLogin to set.
-	 */
 	public void setLastLogin(Date lastLogin) {
 		this.lastLogin = lastLogin;
 	}
 
-	/**
-	 * This Function returns the levelId
-	 * 
-	 * @return Returns the levelId.
-	 */
 	public Short getLevelId() {
 		return levelId;
 	}
 
-	/**
-	 * This function set the levelId
-	 * 
-	 * @param levelId
-	 *            The levelId to set.
-	 */
 	public void setLevelId(Short levelId) {
 		this.levelId = levelId;
 	}
 
-	/**
-	 * This Function returns the branchId
-	 * 
-	 * @return Returns the branchId.
-	 */
 	public Short getBranchId() {
 		return branchId;
 	}
 
-	/**
-	 * This function set the branchId
-	 * 
-	 * @param branchId
-	 *            The branchId to set.
-	 */
 	public void setBranchId(Short branchId) {
 		this.branchId = branchId;
 	}
 
-	/**
-	 * @return This method returns the id.
-	 */
 	public Short getId() {
 		return id;
 	}
 
-	/**
-	 * @param id
-	 *            This method set the id .
-	 */
 	public void setId(Short id) {
 		this.id = id;
 	}
 
-	/**
-	 * @return This method returns the name.
-	 */
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * @param name
-	 *            This method set the name .
-	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	/**
-	 * @return This method returns the roles.
-	 */
 	public Set getRoles() {
 		return roles;
 	}
 
-	/**
-	 * @param roles
-	 *            This method set the roles .
-	 */
 	public void setRoles(Set roles) {
 		this.roles = roles;
 	}
 
-	/**
-	 * This function returns the branchGlobalNum
-	 * 
-	 * @return Returns the branchGlobalNum.
-	 */
 	public String getBranchGlobalNum() {
 		return branchGlobalNum;
 	}
 
-	/**
-	 * This function sets the branchGlobalNum
-	 * 
-	 * @param branchGlobalNum
-	 *            The branchGlobalNum to set.
-	 */
 	public void setBranchGlobalNum(String branchGlobalNum) {
 		this.branchGlobalNum = branchGlobalNum;
 	}
 
-	/**
-	 * This function returns the localeId
-	 * 
-	 * @return Returns the localeId.
-	 */
 	public Short getLocaleId() {
 		return localeId;
 	}
 
-	/**
-	 * This function sets the localeId
-	 * 
-	 * @param localeId
-	 *            The localeId to set.
-	 */
 	public void setLocaleId(Short localeId) {
 		this.localeId = localeId;
 	}
 
-	/**
-	 * This function returns the pereferedLocale
-	 * 
-	 * @return Returns the pereferedLocale.
-	 */
 	public Locale getPereferedLocale() {
 		return pereferedLocale;
 	}
 
-	/**
-	 * This function sets the pereferedLocale
-	 * 
-	 * @param pereferedLocale
-	 *            The pereferedLocale to set.
-	 */
 	public void setPereferedLocale(Locale pereferedLocale) {
 		this.pereferedLocale = pereferedLocale;
 	}
 
-	/**
-	 * This function returns the userGlobalNo
-	 * 
-	 * @return Returns the userGlobalNo.
-	 */
 	public String getUserGlobalNo() {
 		return userGlobalNo;
 	}
 
-	/**
-	 * This function sets the userGlobalNo
-	 * 
-	 * @param userGlobalNo
-	 *            The userGlobalNo to set.
-	 */
 	public void setUserGlobalNo(String userGlobalNo) {
 		this.userGlobalNo = userGlobalNo;
 	}
-
-	/**
-	 * This function returns the mfiLocaleId
-	 * 
-	 * @return Returns the mfiLocaleId.
-	 */
 
 	public Short getMfiLocaleId() {
 		return mfiLocaleId;
 	}
 
-	/**
-	 * This function sets the mfiLocaleId
-	 * 
-	 * @param mfiLocaleId
-	 *            the mfiLocaleId to set.
-	 */
-
 	public void setMfiLocaleId(Short mfiLocaleId) {
 		this.mfiLocaleId = mfiLocaleId;
 	}
 
-	/**
-	 * This function returns the mfiLocale
-	 * @return Returns the mfiLocale.
-	 */
-	
 	public Locale getMfiLocale() {
 		return mfiLocale;
 	}
 
-	/**
-	 * This function sets the mfiLocale
-	 * @param mfiLocale the mfiLocale to set.
-	 */
-	
 	public void setMfiLocale(Locale mfiLocale) {
 		this.mfiLocale = mfiLocale;
 	}
+
 }

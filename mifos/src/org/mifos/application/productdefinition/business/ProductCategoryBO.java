@@ -58,7 +58,8 @@ public class ProductCategoryBO extends BusinessObject {
 
 	private final ProductTypeEntity productType;
 
-	private final OfficeBO office;
+	@SuppressWarnings("unused") // see .hbm.xml file
+	private OfficeBO office;
 
 	private final String globalPrdCategoryNum;
 
@@ -81,22 +82,22 @@ public class ProductCategoryBO extends BusinessObject {
 			ProductTypeEntity productType, String productCategoryName,
 			String productCategoryDesc) throws ProductDefinitionException {
 		super(userContext);
-		try{
-		prdLoanLogger.debug("Creating product category");
-		validateDuplicateProductCategoryName(productCategoryName);
-		this.productCategoryID = null;
-		this.productType = productType;
-		this.office = new OfficePersistence().getOffice(userContext
-				.getBranchId());
-		this.globalPrdCategoryNum = generatePrdCategoryNum();
-		this.productCategoryName = productCategoryName;
-		this.productCategoryDesc = productCategoryDesc;
-		this.prdCategoryStatus = new PrdCategoryStatusEntity(PrdCategoryStatus.ACTIVE);
-		setCreateDetails();
-		prdLoanLogger.debug("Creation of product category done");
+		try {
+			prdLoanLogger.debug("Creating product category");
+			validateDuplicateProductCategoryName(productCategoryName);
+			this.productCategoryID = null;
+			this.productType = productType;
+			this.office = new OfficePersistence().getOffice(userContext
+					.getBranchId());
+			this.globalPrdCategoryNum = generatePrdCategoryNum();
+			this.productCategoryName = productCategoryName;
+			this.productCategoryDesc = productCategoryDesc;
+			this.prdCategoryStatus = new PrdCategoryStatusEntity(
+				PrdCategoryStatus.ACTIVE);
+			setCreateDetails();
+			prdLoanLogger.debug("Creation of product category done");
 		}
 		catch (PersistenceException e) {
-
 			throw new ProductDefinitionException(e);
 		}
 	}

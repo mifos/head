@@ -140,13 +140,14 @@ public class LoanPersistance extends Persistence {
 		List<AccountPaymentEntity> accountPaymentList = executeNamedQuery(
 				NamedQueryConstants.RETRIEVE_MAX_ACCPAYMENT, queryParameters);
 		if (accountPaymentList != null && accountPaymentList.size() > 0) {
-			AccountPaymentEntity accountPayment = (AccountPaymentEntity) accountPaymentList
-					.get(0);
+			AccountPaymentEntity accountPayment = accountPaymentList.get(0);
 			Set<AccountTrxnEntity> accountTrxnSet = accountPayment
 					.getAccountTrxns();
 			for (AccountTrxnEntity accountTrxn : accountTrxnSet) {
-				if (accountTrxn.getAccountActionEntity().getId().shortValue() == AccountConstants.ACTION_DISBURSAL)
+				if (accountTrxn.getAccountActionEntity().getId().shortValue() == 
+					AccountConstants.ACTION_DISBURSAL) {
 					return accountTrxn.getAccountActionEntity().getId();
+				}
 			}
 		}
 		return null;
