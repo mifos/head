@@ -3,7 +3,7 @@
 * Getting started on the project 
 * Mifos Build and Install
 * Developer Notes 
-
+* Automation Scripts Info
 
 ------------------------------
 Getting Started on the project 
@@ -502,3 +502,15 @@ rmp
 The test directory under root contains the unit test casses written in M2, 
 it follows the directory structure like src.
 
+--------------------------
+Automation Scripts Info
+--------------------------
+
+1. Prerequisites to run Automation scripts
+
+Automation scripts require WATIR (web application testing in ruby) to be installed .You will need the 
+following versions of software  to run the scripts
+Ruby 1.8.2
+Watir 1.4.1
+
+Note: First install ruby followed by watir
