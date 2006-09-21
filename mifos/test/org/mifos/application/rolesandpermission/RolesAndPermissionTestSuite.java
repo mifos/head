@@ -6,11 +6,14 @@ import junit.framework.TestSuite;
 import org.mifos.application.rolesandpermission.business.TestActivityEntity;
 import org.mifos.application.rolesandpermission.business.TestRoleActivityEntity;
 import org.mifos.application.rolesandpermission.business.TestRoleBO;
+import org.mifos.application.rolesandpermission.business.service.TestRolesPermissionsBusinessService;
+import org.mifos.application.rolesandpermission.persistence.TestRolesAndPermissionPersistence;
+import org.mifos.application.rolesandpermission.struts.TestRolesPermissionsAction;
 import org.mifos.framework.MifosTestSuite;
 
 public class RolesAndPermissionTestSuite extends MifosTestSuite {
 
-	
+
 	public RolesAndPermissionTestSuite() throws Exception {
 		super();
 	}
@@ -20,6 +23,9 @@ public class RolesAndPermissionTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(TestActivityEntity.class);
 		testSuite.addTestSuite(TestRoleActivityEntity.class);
 		testSuite.addTestSuite(TestRoleBO.class);
+		testSuite.addTestSuite(TestRolesPermissionsBusinessService.class);
+		testSuite.addTestSuite(TestRolesAndPermissionPersistence.class);
+		testSuite.addTestSuite(TestRolesPermissionsAction.class);
 		return testSuite;
 	}
 }

@@ -147,9 +147,9 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 				activityId = activityMapper.getActivityId(key);
 				request.setAttribute(Globals.ERROR_KEY, null);
 				String activityKey = null;
-				
+
 				// if it is null Check for report actions
-				
+
 				if (null == activityId) {
 					activityKey = path + "-" + request.getParameter("viewPath");
 					activityId = activityMapper.getActivityId(activityKey);
@@ -164,8 +164,8 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 				}
 				if (null == activityId)
 					return false;
-				else
-					if( activityId.shortValue()==0) return true;
+				else if (activityId.shortValue() == 0)
+					return true;
 			}
 			returnValue = AuthorizationManager.getInstance().isActivityAllowed(
 					(UserContext) session.getAttribute("UserContext"),
@@ -181,7 +181,7 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 	 * create an object which will store the values of previous request in case
 	 * the request is successful and if there is an exception it reads values
 	 * from that object and context and dups all in the request.
-	 * 
+	 *
 	 * @see org.apache.struts.action.RequestProcessor#processActionPerform(javax.servlet.http.HttpServletRequest,
 	 *      javax.servlet.http.HttpServletResponse,
 	 *      org.apache.struts.action.Action,
@@ -206,7 +206,8 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 		}
 
 		// getting the activity context from the session
-		activityContext = (ActivityContext)session.getAttribute("ActivityContext");
+		activityContext = (ActivityContext) session
+				.getAttribute("ActivityContext");
 
 		// check if the action desired is permissible or not.
 		// if allowed invoke the execute method of the action class
@@ -219,8 +220,8 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 			}
 
 			// set the last forward in the activity context
-			if(activityContext!=null)
-			activityContext.setLastForward(forward);
+			if (activityContext != null)
+				activityContext.setLastForward(forward);
 
 			// read the request and add the values to the
 			// PreviousRequestValues object.
@@ -229,7 +230,8 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 			Enumeration requestAttributes = request.getAttributeNames();
 			while (requestAttributes.hasMoreElements()) {
 				String nextName = (String) requestAttributes.nextElement();
-				if (nextName.startsWith(Constants.STORE_ATTRIBUTE)) {
+				if (nextName.startsWith(Constants.STORE_ATTRIBUTE)
+						|| nextName.equalsIgnoreCase(Constants.CURRENTFLOWKEY)) {
 					MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER)
 							.debug(
 									"The attribute name is  " + nextName
@@ -246,13 +248,11 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 			e.printStackTrace();
 			forward = (processException(request, response, e, form, mapping));
 			// set the last forward in the activity context
-			if(activityContext!=null)
-			activityContext.setLastForward(forward);
+			if (activityContext != null)
+				activityContext.setLastForward(forward);
 			populateTheRequestFromPreviousValues(request, previousRequestValues);
 
-		}
-		finally
-		{
+		} finally {
 			session.removeAttribute(SecurityConstants.SECURITY_PARAM);
 			return forward;
 		}
@@ -262,57 +262,6 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 	private void populateTheRequestFromPreviousValues(
 			HttpServletRequest request,
 			PreviousRequestValues previousRequestValues) {
-
-		HttpSession session = request.getSession();
-		Context context = null;
-
-		// if there is an exception read the context and put the values
-		// in the request.
-		String path = (String) SessionUtils.getAttribute(Constants.PATH,
-				session);
-
-		context = (Context) SessionUtils.getAttribute(path, session);
-
-		if (null != context) {
-			// put the context also into the request but it should be not be
-			// accessed form the
-			// request .It should not be accessed from the request
-			request.setAttribute(Constants.CONTEXT, context);
-
-			String resultName = null;
-			ValueObject valueObject = context.getValueObject();
-
-			if (null != valueObject) {
-				resultName = valueObject.getResultName();
-			}
-			if (null != resultName) {
-				request.setAttribute(resultName, context.getValueObject());
-				MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER)
-						.info(
-								"Setting valueobject in request after reading from context by name "
-										+ resultName);
-			}
-
-			// reads the list of attributes and sets it in the request
-			List returnValues = context.getAttributes();
-			if (null != returnValues) {
-				for (Object obj : returnValues) {
-					resultName = ((ReturnType) obj).getResultName();
-					if (null != resultName) {
-						if (obj instanceof MasterType) {
-							request.setAttribute(resultName, ((MasterType) obj)
-									.getValue());
-							MifosLogManager.getLogger(
-									LoggerConstants.FRAMEWORKLOGGER).info(
-									"Setting objects in request after reading from context by name "
-											+ resultName);
-						}
-
-					}
-
-				}// end -for
-			}
-		}
 		// also read the previous request values map and put things in
 		// request.
 		Set<String> keySet = previousRequestValues.getPreviousRequestValueMap()

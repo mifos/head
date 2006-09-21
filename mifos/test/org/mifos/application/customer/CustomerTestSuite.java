@@ -47,7 +47,7 @@ public class CustomerTestSuite extends MifosTestSuite {
 	public static Test suite()throws Exception
 	{
 		CustomerTestSuite testSuite = new CustomerTestSuite();
-		/*testSuite.addTestSuite(TestCenterPersistence.class);
+		testSuite.addTestSuite(TestCenterPersistence.class);
 		testSuite.addTestSuite(TestCustomerPersistence.class);
 		testSuite.addTestSuite(TestCustomerBusinessService.class);
 		testSuite.addTestSuite(TestCustomerTrxnDetailEntity.class);
@@ -60,7 +60,7 @@ public class CustomerTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(CenterBOTest.class);
 		testSuite.addTestSuite(TestCenterBusinessService.class);
 		testSuite.addTestSuite(CenterActionTest.class);
-		testSuite.addTestSuite(TestClientCustAction.class);
+		//testSuite.addTestSuite(TestClientCustAction.class);
 		testSuite.addTestSuite(ClientTransferActionTest.class);
 		testSuite.addTestSuite(CustHistoricalDataActionTest.class);
 		testSuite.addTestSuite(GroupBusinessServiceTest.class);
@@ -68,8 +68,7 @@ public class CustomerTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(GroupActionTest.class);
 		testSuite.addTestSuite(GroupBOTest.class);
 		testSuite.addTestSuite(CustActionTest.class);
-		testSuite.addTestSuite(GroupTransferActionTest.class);*/
-		testSuite.addTestSuite(CenterActionTest.class);
+		testSuite.addTestSuite(GroupTransferActionTest.class);
 		return testSuite;
 
 	}
