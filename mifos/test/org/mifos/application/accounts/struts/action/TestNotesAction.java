@@ -28,23 +28,23 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.framework.util.valueobjects.Context;
 
 public class TestNotesAction extends MifosMockStrutsTestCase {
-	
+
 	private SavingsBO savingsBO;
-	
+
 	private LoanBO loanBO;
 
 	private UserContext userContext;
-	
+
 	private CustomerBO client;
 
 	private CustomerBO group;
 
 	private CustomerBO center;
-	
+
 	private MeetingBO meeting;
-	
+
 	private SavingsTestHelper helper = new SavingsTestHelper();
-	
+
 	private SavingsOfferingBO savingsOffering;
 
 	protected void setUp() throws Exception {
@@ -88,8 +88,8 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		super.tearDown();
 	}
 
-	public void testLoad_Savings() {
-		savingsBO = getSavingsAccount("fsaf1","ads1");
+	public void testLoad_Savings() throws Exception {
+		savingsBO = getSavingsAccount("fsaf1", "ads1");
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("accountId", savingsBO.getAccountId().toString());
@@ -100,8 +100,8 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 	}
 
-	public void testPreview_Savings() {
-		savingsBO = getSavingsAccount("fsaf2","ads2");
+	public void testPreview_Savings() throws Exception {
+		savingsBO = getSavingsAccount("fsaf2", "ads2");
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("comment", "Notes created");
@@ -111,8 +111,8 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 	}
 
-	public void testPrevious_Savings() {
-		savingsBO = getSavingsAccount("fsaf3","ads3");
+	public void testPrevious_Savings() throws Exception {
+		savingsBO = getSavingsAccount("fsaf3", "ads3");
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "previous");
 		actionPerform();
@@ -121,31 +121,32 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 	}
 
-	public void testCancel_Savings() {
-		savingsBO = getSavingsAccount("fsaf4","ads4");
+	public void testCancel_Savings() throws Exception {
+		savingsBO = getSavingsAccount("fsaf4", "ads4");
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "cancel");
-		addRequestParameter("accountTypeId", savingsBO.getAccountType().getAccountTypeId().toString());
+		addRequestParameter("accountTypeId", savingsBO.getAccountType()
+				.getAccountTypeId().toString());
 		actionPerform();
 		verifyForward("savings_details_page");
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 	}
 
-	public void testCreate_Savings() {
-		savingsBO = getSavingsAccount("fsaf5","ads5");
-		
+	public void testCreate_Savings() throws Exception {
+		savingsBO = getSavingsAccount("fsaf5", "ads5");
+
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("accountId", savingsBO.getAccountId().toString());
 		getRequest().getSession().setAttribute("security_param", "Savings");
 		actionPerform();
-		
+
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("comment", "Notes created");
 		actionPerform();
-		
+
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "create");
 		addRequestParameter("comment", "Notes created");
@@ -155,40 +156,43 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 	}
-	
-	public void testSearch_Savings() throws HibernateSearchException {
-		savingsBO = getSavingsAccount("fsaf6","ads6");
+
+	public void testSearch_Savings() throws Exception {
+		savingsBO = getSavingsAccount("fsaf6", "ads6");
 		Context context = new Context();
-		SessionUtils.setAttribute(Constants.CONTEXT, context,request.getSession());
-		
+		SessionUtils.setAttribute(Constants.CONTEXT, context, request
+				.getSession());
+
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("accountId", savingsBO.getAccountId().toString());
 		getRequest().getSession().setAttribute("security_param", "Savings");
 		actionPerform();
-		
+
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("comment", "Notes created");
 		actionPerform();
-		
+
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "create");
 		getRequest().getSession().setAttribute("security_param", "Savings");
 		addRequestParameter("comment", "Notes created");
 		actionPerform();
-		
+
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "search");
 		actionPerform();
 		verifyForward("search_success");
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		
-		context = (Context)SessionUtils.getAttribute(Constants.CONTEXT, request.getSession());
-		assertEquals("Size of the search result should be 1",1,context.getSearchResult().getSize());
+
+		context = (Context) SessionUtils.getAttribute(Constants.CONTEXT,
+				request.getSession());
+		assertEquals("Size of the search result should be 1", 1, context
+				.getSearchResult().getSize());
 	}
-	
+
 	public void testLoad_Loan() {
 		loanBO = getLoanAccount();
 		setRequestPathInfo("/notesAction.do");
@@ -226,7 +230,8 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		loanBO = getLoanAccount();
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "cancel");
-		addRequestParameter("accountTypeId", loanBO.getAccountType().getAccountTypeId().toString());
+		addRequestParameter("accountTypeId", loanBO.getAccountType()
+				.getAccountTypeId().toString());
 		actionPerform();
 		verifyForward("loan_detail_page");
 		verifyNoActionErrors();
@@ -235,18 +240,18 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 
 	public void testCreate_Loan() {
 		loanBO = getLoanAccount();
-		
+
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("accountId", loanBO.getAccountId().toString());
 		getRequest().getSession().setAttribute("security_param", "Loan");
 		actionPerform();
-		
+
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("comment", "Notes created");
 		actionPerform();
-		
+
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "create");
 		addRequestParameter("comment", "Notes created");
@@ -256,68 +261,72 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 	}
-	
+
 	public void testSearch_Loan() throws HibernateSearchException {
 		loanBO = getLoanAccount();
 		Context context = new Context();
-		SessionUtils.setAttribute(Constants.CONTEXT, context,request.getSession());
-		
+		SessionUtils.setAttribute(Constants.CONTEXT, context, request
+				.getSession());
+
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("accountId", loanBO.getAccountId().toString());
 		getRequest().getSession().setAttribute("security_param", "Loan");
 		actionPerform();
-		
+
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("comment", "Notes created");
 		actionPerform();
-		
+
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "create");
 		getRequest().getSession().setAttribute("security_param", "Loan");
 		addRequestParameter("comment", "Notes created");
 		actionPerform();
-		
+
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "search");
 		actionPerform();
 		verifyForward("search_success");
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		
-		context = (Context)SessionUtils.getAttribute(Constants.CONTEXT, request.getSession());
-		assertEquals("Size of the search result should be 1",1,context.getSearchResult().getSize());
+
+		context = (Context) SessionUtils.getAttribute(Constants.CONTEXT,
+				request.getSession());
+		assertEquals("Size of the search result should be 1", 1, context
+				.getSearchResult().getSize());
 	}
-	
+
 	private void createInitialObjects() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short
-				.valueOf("13"), "1.4", meeting, new Date(System
-				.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE, "1.4.1", center, new Date(System
-				.currentTimeMillis()));
-		client = TestObjectFactory.createClient("Client",ClientConstants.STATUS_ACTIVE,"1.4.1.1",group,new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.4", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
+				"1.4.1", center, new Date(System.currentTimeMillis()));
+		client = TestObjectFactory.createClient("Client",
+				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
+						System.currentTimeMillis()));
 	}
-	
-	private SavingsBO getSavingsAccount(String offeringName,String shortName) {
+
+	private SavingsBO getSavingsAccount(String offeringName, String shortName)
+			throws Exception {
 		createInitialObjects();
-		savingsOffering = helper.createSavingsOffering(offeringName,shortName);
+		savingsOffering = helper.createSavingsOffering(offeringName, shortName);
 		return TestObjectFactory.createSavingsAccount("000100000000017",
 				client, AccountStates.SAVINGS_ACC_APPROVED, new Date(System
 						.currentTimeMillis()), savingsOffering);
 	}
-	
+
 	private LoanBO getLoanAccount() {
 		createInitialObjects();
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short
-						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
+				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), Short.valueOf("1"), meeting);
+				Short.valueOf("1"), meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", client, Short
 				.valueOf("5"), startDate, loanOffering);
 

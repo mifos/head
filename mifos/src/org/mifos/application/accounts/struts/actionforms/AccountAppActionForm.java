@@ -11,20 +11,26 @@ import java.util.Set;
 import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.accounts.business.AccountCustomFieldEntity;
 
-public class AccountAppActionForm extends ValidatorActionForm{
+public class AccountAppActionForm extends ValidatorActionForm {
 	private String accountId;
+
 	private String customerId;
+
 	private String selectedPrdOfferingId;
+
 	private String stateSelected;
+
 	private String globalAccountNum;
+
 	private String input;
-	
+
 	private List<AccountCustomFieldEntity> accountCustomFieldSet;
-	
-	
-	//values for moving back
+
+	// values for moving back
 	private String searchInput;
+
 	private String prdOfferingName;
+
 	private String headingInput;
 
 	public String getHeadingInput() {
@@ -51,50 +57,51 @@ public class AccountAppActionForm extends ValidatorActionForm{
 		this.searchInput = searchInput;
 	}
 
-	public AccountAppActionForm(){
-		accountCustomFieldSet= new ArrayList<AccountCustomFieldEntity>();
+	public AccountAppActionForm() {
+		accountCustomFieldSet = new ArrayList<AccountCustomFieldEntity>();
 	}
-	
+
 	public String getStateSelected() {
 		return stateSelected;
 	}
-	
+
 	public void setStateSelected(String stateSelected) {
 		this.stateSelected = stateSelected;
 	}
-	
+
 	public String getSelectedPrdOfferingId() {
 		return selectedPrdOfferingId;
 	}
-	
+
 	public void setSelectedPrdOfferingId(String selectedPrdOfferingId) {
 		this.selectedPrdOfferingId = selectedPrdOfferingId;
 	}
-	
+
 	public String getCustomerId() {
 		return customerId;
 	}
-	
+
 	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
 	}
-		
-	public Set<AccountCustomFieldEntity> getAccountCustomFieldSet(){
+
+	public Set<AccountCustomFieldEntity> getAccountCustomFieldSet() {
 		return new HashSet<AccountCustomFieldEntity>(this.accountCustomFieldSet);
 	}
-	
-	private void setAccountCustomFieldSet(List<AccountCustomFieldEntity> accountCustomFieldSet) {
+
+	public void setAccountCustomFieldSet(
+			List<AccountCustomFieldEntity> accountCustomFieldSet) {
 		this.accountCustomFieldSet = accountCustomFieldSet;
 	}
-	
+
 	public String getGlobalAccountNum() {
 		return globalAccountNum;
 	}
-	
+
 	public void setGlobalAccountNum(String globalAccountNumber) {
 		this.globalAccountNum = globalAccountNumber;
 	}
-	
+
 	public String getInput() {
 		return input;
 	}
@@ -102,23 +109,24 @@ public class AccountAppActionForm extends ValidatorActionForm{
 	public void setInput(String input) {
 		this.input = input;
 	}
-	
+
 	public String getAccountId() {
 		return accountId;
 	}
 
 	public void setAccountId(String accountId) {
 		this.accountId = accountId;
-	}	
-	
+	}
+
 	/**
- 	* Return the value of the one of the custom field at index i in accountCustomFields List.
- 	*/
-	public AccountCustomFieldEntity getCustomField(int i){
-		while(i>=accountCustomFieldSet.size()){
-			accountCustomFieldSet.add(new AccountCustomFieldEntity ());
+	 * Return the value of the one of the custom field at index i in
+	 * accountCustomFields List.
+	 */
+	public AccountCustomFieldEntity getCustomField(int i) {
+		while (i >= accountCustomFieldSet.size()) {
+			accountCustomFieldSet.add(new AccountCustomFieldEntity());
 		}
-		return (AccountCustomFieldEntity)(accountCustomFieldSet.get(i));
+		return (AccountCustomFieldEntity) (accountCustomFieldSet.get(i));
 	}
 
 }

@@ -520,7 +520,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 	}
 
-	private AccountBO getSavingsAccount(CustomerBO customer, MeetingBO meeting,String prdOfferingname,String shortName) {
+	private AccountBO getSavingsAccount(CustomerBO customer, MeetingBO meeting,String prdOfferingname,String shortName) throws  Exception {
 		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
@@ -599,7 +599,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 	}
 
 	public void testRetrieveAllSavingsAccountUnderCustomer()
-			throws PersistenceException {
+			throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = createCenter("new_center");
@@ -840,8 +840,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 				center.getOffice().getOfficeId()).size());
 	}
 
-	public void testGetAllClosedAccounts() throws AccountException,
-			PersistenceException {
+	public void testGetAllClosedAccounts() throws Exception {
 		getCustomer();
 		groupAccount.changeStatus(AccountState.LOANACC_CANCEL.getValue(),
 				AccountStateFlag.LOAN_WITHDRAW.getValue(),
@@ -902,7 +901,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		assertNull(client.getCustomerMeeting());	
 	}
 	
-	private void getCustomer() {
+	private void getCustomer() throws  Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),

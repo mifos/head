@@ -179,14 +179,14 @@ public class CustActionTest extends MifosMockStrutsTestCase {
 
 	}
 
-	private SavingsBO getSavingsAccount(CustomerBO customerBO,String offeringName,String shortName) {
+	private SavingsBO getSavingsAccount(CustomerBO customerBO,String offeringName,String shortName) throws Exception {
 		savingsOffering = helper.createSavingsOffering(offeringName,shortName);
 		return TestObjectFactory.createSavingsAccount("000100000000017", customerBO,
 				AccountState.SAVINGS_ACC_PARTIALAPPLICATION.getValue(), new Date(System
 						.currentTimeMillis()), savingsOffering);
 	}
 	
-	private void createAccounts() throws AccountException  {
+	private void createAccounts() throws Exception  {
 		savings1 = getSavingsAccount(group,"fsaf6","ads6");
 		savings1.changeStatus(AccountState.SAVINGS_ACC_CANCEL.getValue(),AccountStateFlag.SAVINGS_OTHER.getValue(),"status changed for savings");
 		savings1.update();

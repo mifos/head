@@ -44,7 +44,7 @@
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<html-el:form method="post" action="/savingsAction.do">
@@ -56,6 +56,7 @@
 					</td>
 				</tr>
 			</table>
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" scope="session" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td width="70%" align="left" valign="top" class="paddingL15T15">
@@ -115,12 +116,14 @@
 									</c:if>
 								</td>
 							</tr>
+							
 							<tr>
+							
 								<td class="fontnormal" colspan="2">
 									<mifos:mifoslabel name="Savings.totalamountdue" /><c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.nextMeetingDate)}" />:
 									<c:out value="${sessionScope.BusinessKey.totalAmountDue}" />
 								</td>
-							</tr>
+								</tr>
 						</table>
 						<table width="50%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
@@ -184,7 +187,7 @@
 										<br>
 										<span class="fontnormalbold"> <mifos:mifoslabel name="Savings.additionalInformation" /> </span>
 										<br>
-										<c:forEach var="cfdef" items="${sessionScope.customFields}">
+										<c:forEach var="cfdef" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 											<c:forEach var="cf" items="${sessionScope.BusinessKey.accountCustomFields}">
 												<c:if test="${cfdef.fieldId==cf.fieldId}">
 													<span class="fontnormal"> <mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}"></mifos:mifoslabel>: <c:out value="${cf.fieldValue}" /> </span>
@@ -197,7 +200,7 @@
 								</td>
 								<td align="right" valign="top" class="fontnormal">
 									<c:if test="${sessionScope.BusinessKey.accountState.id != AccountStates.SAVINGS_ACC_CANCEL && sessionScope.BusinessKey.accountState.id != AccountStates.SAVINGS_ACC_CLOSED}">
-										<html-el:link action="savingsAction.do?method=edit">
+										<html-el:link action="savingsAction.do?method=edit&currentFlowKey=${requestScope.currentFlowKey}">
 											<mifos:mifoslabel name="Savings.EditAccountInformation" />
 										</html-el:link>
 									</c:if>
@@ -323,8 +326,8 @@
               <tr>
                   <td class="paddingL10">
                   		<c:choose>
-              				<c:when test="${!empty sessionScope.notes}">
-								<c:forEach var="note" items="${sessionScope.notes}">
+              				<c:when test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'notes')}">
+								<c:forEach var="note" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'notes')}">
 									<span class="fontnormal8ptbold"> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,note.commentDate)}"/>:</span>
 									<span class="fontnormal8pt">
 			                				<c:out value="${note.comment}"/>-<em>
@@ -343,7 +346,7 @@
 				<tr> 
                 	<td align="right" class="paddingleft05">
 						<span class="fontnormal8pt">
-							<c:if test="${!empty sessionScope.notes}">
+							<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'notes')}">
 								<html-el:link href="notesAction.do?method=search&accountId=${sessionScope.BusinessKey.accountId}&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}&prdOfferingName=${sessionScope.BusinessKey.savingsOffering.prdOfferingName}&securityParamInput=Savings&accountTypeId=${sessionScope.BusinessKey.accountType.accountTypeId}">
 									<mifos:mifoslabel name="Savings.seeAllNotes" />
 								</html-el:link>
@@ -364,6 +367,7 @@
 			<mifos:SecurityParam property="Savings" />
 			<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}" />
 			<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}" />
+			 <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

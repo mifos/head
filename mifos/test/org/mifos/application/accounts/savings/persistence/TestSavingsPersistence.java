@@ -20,6 +20,7 @@ import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.checklist.business.AccountCheckListBO;
@@ -102,10 +103,8 @@ public class TestSavingsPersistence extends MifosTestCase {
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		TestObjectFactory.cleanUp(accountCheckList);
-		if (savingsOffering1 != null)
-			TestObjectFactory.removeObject(savingsOffering1);
-		if (savingsOffering2 != null)
-			TestObjectFactory.removeObject(savingsOffering2);
+		TestObjectFactory.removeObject(savingsOffering1);
+		TestObjectFactory.removeObject(savingsOffering2);
 		super.tearDown();
 		HibernateUtil.closeSession();
 	}
@@ -187,7 +186,9 @@ public class TestSavingsPersistence extends MifosTestCase {
 			PersonnelBO createdBy = new PersonnelPersistence()
 					.getPersonnel(userContext.getId());
 			savingsOffering = helper.createSavingsOffering("effwe", "231");
-			savings = new SavingsBO(userContext);
+			savings = new SavingsBO(userContext,savingsOffering,group,AccountState.SAVINGS_ACC_APPROVED,savingsOffering
+					.getRecommendedAmount(),null);
+	
 			AccountPaymentEntity payment = helper
 					.createAccountPaymentToPersist(savings, new Money(
 							Configuration.getInstance().getSystemConfig()
@@ -198,14 +199,6 @@ public class TestSavingsPersistence extends MifosTestCase {
 							AccountConstants.ACTION_SAVINGS_DEPOSIT, savings,
 							createdBy, group);
 			savings.addAccountPayment(payment);
-			savings.setSavingsOffering(savingsOffering);
-			savings.setCustomer(group);
-			savings.setAccountState(new AccountStateEntity(
-					AccountStates.SAVINGS_ACC_APPROVED));
-			savings
-					.setRecommendedAmount(savingsOffering
-							.getRecommendedAmount());
-			savings.setOffice(group.getOffice());
 			savings.save();
 			HibernateUtil.getSessionTL().flush();
 			HibernateUtil.closeSession();
@@ -305,8 +298,9 @@ public class TestSavingsPersistence extends MifosTestCase {
 		savingsOffering1 = createSavingsOffering("prd2", "q14f");
 		savingsOffering2 = createSavingsOffering("prd3", "z1as");
 		savings = helper.createSavingsAccount("000100000000021",
-				savingsOffering, group, AccountStates.SAVINGS_ACC_INACTIVE,
+				savingsOffering, group, AccountStates.SAVINGS_ACC_PARTIALAPPLICATION,
 				userContext);
+		savings.setAccountState(new AccountStateEntity(AccountStates.SAVINGS_ACC_INACTIVE));
 		savings1 = helper.createSavingsAccount("000100000000022",
 				savingsOffering1, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
@@ -342,8 +336,9 @@ public class TestSavingsPersistence extends MifosTestCase {
 		savingsOffering1 = createSavingsOffering("prd2", "tj81");
 		savingsOffering2 = createSavingsOffering("prd3", "nvr4");
 		savings = helper.createSavingsAccount("000100000000021",
-				savingsOffering, group, AccountStates.SAVINGS_ACC_INACTIVE,
+				savingsOffering, group, AccountStates.SAVINGS_ACC_PARTIALAPPLICATION,
 				userContext);
+		savings.setAccountState(new AccountStateEntity(AccountStates.SAVINGS_ACC_INACTIVE));
 		savings1 = helper.createSavingsAccount("000100000000022",
 				savingsOffering1, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
@@ -469,7 +464,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 	}
 
 	private SavingsBO createSavingsAccount(String globalAccountNum,
-			SavingsOfferingBO savingsOffering) {
+			SavingsOfferingBO savingsOffering) throws NumberFormatException, Exception {
 		UserContext userContext = new UserContext();
 		userContext.setId(new Short("1"));
 		userContext.setBranchGlobalNum("1001");

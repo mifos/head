@@ -936,7 +936,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 
 	}
 
-	private SavingsBO getSavingsAccount(String offeringName,String shortName) {
+	private SavingsBO getSavingsAccount(String offeringName,String shortName) throws Exception {
 		savingsOffering = helper.createSavingsOffering(offeringName,shortName);
 		return TestObjectFactory.createSavingsAccount("000100000000017", group,
 				AccountStates.SAVINGS_ACC_APPROVED, new Date(System

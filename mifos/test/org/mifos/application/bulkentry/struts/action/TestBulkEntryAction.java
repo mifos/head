@@ -176,7 +176,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 	}
 
-	public void testSuccessfulCreate() throws PageExpiredException {
+	public void testSuccessfulCreate() throws Exception {
 		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
@@ -227,7 +227,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		verifyActionErrors(new String[] { "errors.update" });
 	}
 
-	public void testSuccessfulPreview() throws PageExpiredException {
+	public void testSuccessfulPreview() throws Exception {
 		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
@@ -251,7 +251,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 	}
 
-	public void testFailurePreview() throws PageExpiredException {
+	public void testFailurePreview() throws Exception {
 		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
@@ -451,7 +451,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 	
 
-	public void testFailureGet() throws PageExpiredException {
+	public void testFailureGet() throws Exception {
 		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
@@ -467,7 +467,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				"errors.mandatoryselect", "errors.mandatoryselect" });
 	}
 	
-	public void testFailurePreviewForEmptyAmount() throws PageExpiredException {
+	public void testFailurePreviewForEmptyAmount() throws Exception {
 		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
@@ -482,7 +482,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				"errors.invalidamount" });
 	}
 
-	public void testFailurePreviewForCharAmount() throws PageExpiredException {
+	public void testFailurePreviewForCharAmount() throws Exception {
 		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
@@ -498,7 +498,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	}
 
 
-	private BulkEntryBO getSuccessfulBulkEntry() {
+	private BulkEntryBO getSuccessfulBulkEntry() throws Exception {
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));

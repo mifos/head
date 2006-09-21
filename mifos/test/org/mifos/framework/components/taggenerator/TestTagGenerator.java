@@ -64,7 +64,7 @@ public class TestTagGenerator extends MifosTestCase{
 		super.tearDown();
 	}
 	
-	public void testSavingsAccountLinkWithoutSelfLink(){
+	public void testSavingsAccountLinkWithoutSelfLink() throws Exception{
 		createInitialObjectsForSavings();
 		String createdLink = TagGenerator.createHeaderLinks(savings,false,randomNum);
 		assertEquals(true,createdLink.contains("CustomerSearchAction"));
@@ -76,7 +76,7 @@ public class TestTagGenerator extends MifosTestCase{
 		assertEquals(true,createdLink.contains("prd1"));
 	}
 	
-	public void testSavingsAccountLinkWithSelfLink(){
+	public void testSavingsAccountLinkWithSelfLink() throws Exception{
 		createInitialObjectsForSavings();
 		String createdLink = TagGenerator.createHeaderLinks(savings,true,randomNum);
 		assertEquals(true,createdLink.contains("CustomerSearchAction"));
@@ -104,7 +104,7 @@ public class TestTagGenerator extends MifosTestCase{
 		assertEquals(true,createdLink.contains("TestBranchOffice"));
 	}
 
-	public void testTagGeneratorFactory(){
+	public void testTagGeneratorFactory() throws Exception{
 		createInitialObjectsForSavings();
 		TagGenerator tagGenerator = TagGeneratorFactory.getInstance().getGenerator(center);
 		if(tagGenerator instanceof CustomerTagGenerator)
@@ -129,7 +129,7 @@ public class TestTagGenerator extends MifosTestCase{
 			assertTrue(true);
 	}
 	
-	private void createInitialObjectsForSavings(){
+	private void createInitialObjectsForSavings() throws Exception{
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test", Short.valueOf("13"), "1.1", meeting, new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group_Active_test", Short.valueOf("9"), "1.1.1", center, new Date(System.currentTimeMillis()));

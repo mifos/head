@@ -251,7 +251,7 @@ public class TestCustomerBO extends MifosTestCase {
 				accountBO.getAccountId());
 	}
 
-	public void testGetSavingsAccountInUse() throws PersistenceException {
+	public void testGetSavingsAccountInUse() throws Exception {
 		accountBO = getSavingsAccount("fsaf6", "ads6");
 		TestObjectFactory.flushandCloseSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
@@ -289,7 +289,7 @@ public class TestCustomerBO extends MifosTestCase {
 				accountBO.getAccountId());
 	}
 
-	public void testHasAnySavingsAccountInUse() throws PersistenceException {
+	public void testHasAnySavingsAccountInUse() throws Exception {
 		accountBO = getSavingsAccount("fsaf5", "ads5");
 		TestObjectFactory.flushandCloseSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
@@ -518,7 +518,7 @@ public class TestCustomerBO extends MifosTestCase {
 		}
 	}
 
-	private SavingsBO getSavingsAccount(String offeringName, String shortName) {
+	private SavingsBO getSavingsAccount(String offeringName, String shortName) throws Exception {
 		createInitialObjects();
 		savingsOffering = helper.createSavingsOffering(offeringName, shortName);
 		return TestObjectFactory.createSavingsAccount("000100000000017",

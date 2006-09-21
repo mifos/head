@@ -46,10 +46,8 @@ public class TestSavingsBusinessService extends MifosTestCase {
 		TestObjectFactory.cleanUp(savings);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		if (savingsOffering1 != null)
-			TestObjectFactory.removeObject(savingsOffering1);
-		if (savingsOffering2 != null)
-			TestObjectFactory.removeObject(savingsOffering2);
+		TestObjectFactory.removeObject(savingsOffering1);
+		TestObjectFactory.removeObject(savingsOffering2);
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
@@ -118,7 +116,7 @@ public class TestSavingsBusinessService extends MifosTestCase {
 	}
 
 	private SavingsBO createSavingsAccount(String globalAccountNum,
-			SavingsOfferingBO savingsOffering, short accountStateId) {
+			SavingsOfferingBO savingsOffering, short accountStateId) throws Exception {
 		UserContext userContext = new UserContext();
 		userContext.setId(new Short("1"));
 		userContext.setBranchGlobalNum("1001");

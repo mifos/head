@@ -15,6 +15,7 @@ import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.exceptions.IDGenerationException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -317,23 +318,10 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		savingsOffering =  TestObjectFactory.createSavingsOffering("SavingPrd1",Short.valueOf("2"),new Date(System.currentTimeMillis()),
 				Short.valueOf("1"),300.0,Short.valueOf("1"),24.0,200.0,200.0,Short.valueOf("2"),Short.valueOf("1"),meetingIntCalc,meetingIntPost);
-		SavingsBO savings = new SavingsBO(userContext);
-		savings.setSavingsOffering(savingsOffering);
-		savings.setCustomer(group);
-		savings.setAccountState(new AccountStateEntity(
-				AccountStates.SAVINGS_ACC_APPROVED));
-		savings.setRecommendedAmount(savingsOffering.getRecommendedAmount());
-
-		Set<AccountCustomFieldEntity> customFields = new HashSet<AccountCustomFieldEntity>();
-		AccountCustomFieldEntity field = new AccountCustomFieldEntity();
-		field.setFieldId(new Short("1"));
-		field.setFieldValue("13");
-		customFields.add(field);
-		savings.setAccountCustomFieldSet(customFields);
-
+		SavingsBO savings = new SavingsBO(userContext,savingsOffering,group,AccountState.SAVINGS_ACC_APPROVED,savingsOffering.getRecommendedAmount(),
+				TestObjectFactory.getCustomFields());
 		savings.save();
 		HibernateUtil.getTransaction().commit();
-
 		return savings;
 	}
 	

@@ -1014,7 +1014,7 @@ public class GroupBOTest extends MifosTestCase {
 	}
 
 	private SavingsBO getSavingsAccount(CustomerBO customerBO,
-			String offeringName, String shortName) {
+			String offeringName, String shortName) throws Exception {
 		savingsOffering = helper.createSavingsOffering(offeringName, shortName);
 		return TestObjectFactory.createSavingsAccount("000100000000017",
 				customerBO, AccountStates.SAVINGS_ACC_APPROVED, new Date(System

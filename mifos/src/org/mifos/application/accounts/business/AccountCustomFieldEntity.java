@@ -40,9 +40,8 @@ package org.mifos.application.accounts.business;
 
 import org.mifos.framework.business.PersistentObject;
 
-
 public class AccountCustomFieldEntity extends PersistentObject {
-	
+
 	private Integer accountCustomFieldId;
 
 	private AccountBO account;
@@ -50,11 +49,20 @@ public class AccountCustomFieldEntity extends PersistentObject {
 	private Short fieldId;
 
 	private String fieldValue;
-	
+
+	public AccountCustomFieldEntity(AccountBO account, Short fieldId,
+			String fieldValue) {
+		super();
+		this.account = account;
+		this.fieldId = fieldId;
+		this.fieldValue = fieldValue;
+
+	}
+
 	public AccountCustomFieldEntity() {
 		super();
 	}
-	
+
 	public Integer getAccountCustomFieldId() {
 		return accountCustomFieldId;
 	}
@@ -86,5 +94,5 @@ public class AccountCustomFieldEntity extends PersistentObject {
 	public void setFieldValue(String fieldValue) {
 		this.fieldValue = fieldValue;
 	}
-	
+
 }

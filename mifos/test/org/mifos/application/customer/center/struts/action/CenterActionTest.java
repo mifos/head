@@ -588,7 +588,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase{
 		savingsBO = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class,savingsBO.getAccountId());
 	}
 
-	private SavingsBO getSavingsAccount(String offeringName,String shortName,CustomerBO customer) {
+	private SavingsBO getSavingsAccount(String offeringName,String shortName,CustomerBO customer) throws Exception {
 		savingsOffering = helper.createSavingsOffering(offeringName,shortName);
 		return TestObjectFactory.createSavingsAccount("000100000000017", customer,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, new Date(System

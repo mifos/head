@@ -67,14 +67,14 @@
             	<mifos:mifoslabel name="Savings.ANew"/>
             	<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
             	<mifos:mifoslabel name="Savings.account"/>
-            	<mifos:mifoslabel name="Savings.for"/> <c:out value="${sessionScope.BusinessKey.customer.displayName}" />
-            	<mifos:mifoslabel name="Savings.accountAssigned"/> <c:out value="${sessionScope.BusinessKey.globalAccountNum}"/>.
+            	<mifos:mifoslabel name="Savings.for"/> <c:out value="${requestScope.clientName}" />
+            	<mifos:mifoslabel name="Savings.accountAssigned"/> <c:out value="${requestScope.globalAccountNum}"/>.
             	<mifos:mifoslabel name="Savings.searchBoxMsg"/>
             	<br>
                 <br>
                         <br>
                </span>
-                    <html-el:link href="savingsAction.do?method=get&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}&recordOfficeId=${sessionScope.BusinessKey.office.officeId}&recordLoanOfficerId=${sessionScope.UserContext.id}">
+                    <html-el:link href="savingsAction.do?method=get&globalAccountNum=${requestScope.globalAccountNum}&recordOfficeId=${requestScope.recordOfficeId}&recordLoanOfficerId=${sessionScope.UserContext.id}">
 	                    <mifos:mifoslabel name="Savings.View"/>
 		            	<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
 		            	<mifos:mifoslabel name="Savings.account"/>
@@ -96,8 +96,8 @@
 			            	<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
 			            	<mifos:mifoslabel name="Savings.account"/> 
                         </html-el:link><br>
-                    <c:if test="${sessionScope.BusinessKey.customer.customerLevel.id != CustomerConstants.CENTER_LEVEL_ID}">
-                        <html-el:link href="loanAction.do?method=getPrdOfferings&customer.customerId=${sessionScope.BusinessKey.customer.customerId}">
+                    <c:if test="${requestScope.clientLevel != CustomerConstants.CENTER_LEVEL_ID}">
+                        <html-el:link href="loanAction.do?method=getPrdOfferings&customer.customerId=${requestScope.clientId}">
                             <mifos:mifoslabel name="Savings.openANew"/>
 			            	<mifos:mifoslabel name="${ConfigurationConstants.LOAN}"/>
 			            	<mifos:mifoslabel name="Savings.account"/> 

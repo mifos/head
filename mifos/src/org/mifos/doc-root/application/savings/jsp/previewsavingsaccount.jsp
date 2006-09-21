@@ -43,7 +43,7 @@
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<SCRIPT SRC="pages/application/savings/js/CreateSavingsAccount.js"></SCRIPT>
@@ -61,6 +61,7 @@
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td align="left" valign="top" class="paddingL15T15" >
+          <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" scope="session" />
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td width="83%" class="headingorange">
@@ -107,7 +108,8 @@
 	                  </c:otherwise>
 	                </c:choose>
                 </span> 
-                <c:out value="${sessionScope.BusinessKey.recommendedAmount.amountDoubleValue}"/>
+                <c:set var="RecommendedAmtUnit" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecommendedAmtUnit')}" scope="session"></c:set>
+                <c:out value="${savingsActionForm.recommendedAmount}"/>
                     <c:choose>
 	                    <c:when test="${sessionScope.BusinessKey.customer.customerLevel.id==CustomerConstants.GROUP_LEVEL_ID}">
 	                    (<customtags:lookUpValue	id="${sessionScope.BusinessKey.savingsOffering.recommendedAmntUnit.id}"
@@ -124,8 +126,8 @@
                 
                 <span class="fontnormalbold"><mifos:mifoslabel name="Savings.additionalInformation"/></span>
                <br>
-                  <c:forEach var="cfdef" items="${sessionScope.customFields}">
-						<c:forEach var="cf" items="${sessionScope.BusinessKey.accountCustomFields}">
+                  <c:forEach var="cfdef" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
+						<c:forEach var="cf" items="${savingsActionForm.accountCustomFieldSet}">
 							<c:if test="${cfdef.fieldId==cf.fieldId}">
 								<span class="fontnormalbold"><mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" bundle="GroupUIResources"></mifos:mifoslabel>:</span> 
 		        		  	 	<span class="fontnormal">
@@ -171,6 +173,7 @@
           </td>
         </tr>
       </table>
+      <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 </html-el:form>
 </tiles:put>
 </tiles:insert>

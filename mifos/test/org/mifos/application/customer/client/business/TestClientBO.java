@@ -690,7 +690,7 @@ public class TestClientBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 	}
 	
-	private SavingsBO createSavingsAccount(CustomerBO customer,String offeringName,String shortName) {
+	private SavingsBO createSavingsAccount(CustomerBO customer,String offeringName,String shortName) throws Exception {
 		SavingsOfferingBO savingsOffering = new SavingsTestHelper().createSavingsOffering(offeringName,shortName);
 		return TestObjectFactory.createSavingsAccount("000100000000017",
 				customer, AccountStates.SAVINGS_ACC_APPROVED, new Date(System

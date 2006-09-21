@@ -44,7 +44,7 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/loan/loanfunctions" prefix="loanfn"%>
 <%@ taglib uri="/tags/date" prefix="date"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 	<SCRIPT SRC="pages/application/savings/js/CreateSavingsAccount.js"></SCRIPT>
@@ -121,8 +121,9 @@
 	                <font class="fontnormalRedBold"><html-el:errors	bundle="SavingsUIResources" /></font>
                 <br>
                   <span class="fontnormalbold">
+                  <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'client')}" var="client" />
                   <mifos:mifoslabel name="Savings.accountOwner"/>: 
-                  </span><c:out value="${sessionScope.BusinessKey.customer.displayName}" />
+                  </span><c:out value="${client.displayName}" />
                 </td>
               </tr>
             </table>
@@ -134,8 +135,13 @@
                   <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
                   <mifos:mifoslabel name="Savings.instanceName"/>:</td>
                   <td width="70%">
+                 
              		<mifos:select name="savingsActionForm" property="selectedPrdOfferingId" style="width:136px;">
-						<html-el:options collection="savingsPrdOfferings" property="prdOfferingId" labelProperty="prdOfferingName" />
+             		
+             		<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'savingsPrdOfferings')}" 
+											var="savingsPrdOfferings">
+											<html-el:option value="${savingsPrdOfferings.prdOfferingId}">${savingsPrdOfferings.prdOfferingName}</html-el:option>
+					</c:forEach>
 					</mifos:select>
                   </td>
                 </tr>
@@ -164,6 +170,7 @@
         </tr>
       </table>
      <html-el:hidden property="input" value="getPrdOfferings"/>
+     <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 </html-el:form>
 </tiles:put>
 </tiles:insert>

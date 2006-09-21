@@ -43,6 +43,7 @@
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
@@ -117,11 +118,13 @@
                 <td class="fontnormal">
                 <br>
                   <span class="fontnormalbold">
+                  <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'client')}" var="client" />
                   <mifos:mifoslabel name="Savings.accountOwner"/>: </span>
-                  <c:out value="${sessionScope.BusinessKey.customer.displayName}" />
+                  <c:out value="${client.displayName}" />
                  </td>
               </tr>
             </table>
+            
               <br>
               <table width="93%" border="0" cellpadding="3" cellspacing="0">
                 <tr class="fontnormal">
@@ -130,12 +133,17 @@
                   <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
                   <mifos:mifoslabel name="Savings.instanceName"/>:</td>
                   <td width="65%">
+                  <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'prd')}" var="savingsOffering" />
                   	<mifos:select name="savingsActionForm" property="selectedPrdOfferingId" onchange="javascript:fun_refresh(this.form)" style="width:136px;">
-						<html-el:options collection="savingsPrdOfferings" property="prdOfferingId" labelProperty="prdOfferingName" />
+						<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'savingsPrdOfferings')}" 
+											var="savingsPrdOfferings">
+											<html-el:option value="${savingsPrdOfferings.prdOfferingId}">${savingsPrdOfferings.prdOfferingName}</html-el:option>
+					</c:forEach>
 					</mifos:select>
                   </td>
                 </tr>
               </table>
+              
               <table width="93%" border="0" cellpadding="3" cellspacing="0">
                 <tr class="fontnormal">
                   <td colspan="2" valign="top" class="fontnormalbold">
@@ -147,14 +155,17 @@
                   <td align="right" valign="top">
                   	<mifos:mifoslabel name="Savings.description"/>:
                   </td>
+                  
                   <td valign="top">
-                  	<c:out value="${sessionScope.BusinessKey.savingsOffering.description}" />
+                  	<c:out value="${savingsOffering.description}" />
                   </td>
                 </tr>
                 <tr class="fontnormal">
                   <td align="right"><mifos:mifoslabel name="Savings.typeOfDeposits"/>:</td>
                   <td valign="top">
-                  	  <customtags:lookUpValue	id="${sessionScope.BusinessKey.savingsOffering.savingsType.id}"
+                  
+                  <c:set var="SavingsType" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsType')}" scope="session"></c:set>
+                  	  <customtags:lookUpValue	id="${savingsOffering.savingsType.id}"
 						searchResultName="SavingsType" mapToSeperateMasterTable="true">
 					  </customtags:lookUpValue>
                   </td>
@@ -162,7 +173,7 @@
                 <tr class="fontnormal">
                   <td width="35%" align="right"><mifos:mifoslabel name="Savings.maxAmountPerWithdrawl"/>:<br></td>
                   <td width="65%" valign="top">
-	                  <c:out value="${sessionScope.BusinessKey.savingsOffering.maxAmntWithdrawl}" />
+	                  <c:out value="${savingsOffering.maxAmntWithdrawl}" />
                   </td>
                 </tr>
                 <tr class="fontnormal">
@@ -171,7 +182,8 @@
                   <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}"/>
                   <mifos:mifoslabel name="Savings.rateCalculation"/>:                  </td>
                   <td valign="top">
-	                  <customtags:lookUpValue	id="${sessionScope.BusinessKey.savingsOffering.interestCalcType.id}"
+                  <c:set var="IntCalTypes" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'IntCalTypes')}" scope="session"></c:set>
+	                  <customtags:lookUpValue	id="${savingsOffering.interestCalcType.id}"
 						searchResultName="IntCalTypes" mapToSeperateMasterTable="true">
 					  </customtags:lookUpValue>
 				  </td>
@@ -183,11 +195,11 @@
                   <mifos:mifoslabel name="Savings.rateCalculation"/>:
                   </td>
                   <td valign="top">
-                        <c:out value="${sessionScope.BusinessKey.savingsOffering.timePerForInstcalc.meeting.meetingDetails.recurAfter}"/>
-                  	  	<c:if test="${sessionScope.BusinessKey.savingsOffering.timePerForInstcalc.meeting.meetingDetails.recurrenceType.recurrenceId == 2}">
+                        <c:out value="${savingsOffering.timePerForInstcalc.meeting.meetingDetails.recurAfter}"/>
+                  	  	<c:if test="${savingsOffering.timePerForInstcalc.meeting.meetingDetails.recurrenceType.recurrenceId == 2}">
                   	  		<mifos:mifoslabel name="meeting.labelMonths" bundle="MeetingResources"/>
                   	  	</c:if>
-                  	  	<c:if test="${sessionScope.BusinessKey.savingsOffering.timePerForInstcalc.meeting.meetingDetails.recurrenceType.recurrenceId == 3}">
+                  	  	<c:if test="${savingsOffering.timePerForInstcalc.meeting.meetingDetails.recurrenceType.recurrenceId == 3}">
 	                  	  	<mifos:mifoslabel name="meeting.labelDays" bundle="MeetingResources"/>
                   	  	</c:if>
                   </td>
@@ -199,8 +211,8 @@
                   <mifos:mifoslabel name="Savings.postingToAccounts"/>:
                   </td>
                   <td valign="top">
-	                  <c:out value="${sessionScope.BusinessKey.savingsOffering.freqOfPostIntcalc.meeting.meetingDetails.recurAfter}"/>
-                  	    <c:if test="${sessionScope.BusinessKey.savingsOffering.freqOfPostIntcalc.meeting.meetingDetails.recurrenceType.recurrenceId == 2}">
+	                  <c:out value="${savingsOffering.freqOfPostIntcalc.meeting.meetingDetails.recurAfter}"/>
+                  	    <c:if test="${savingsOffering.freqOfPostIntcalc.meeting.meetingDetails.recurrenceType.recurrenceId == 2}">
                   	  		<mifos:mifoslabel name="meeting.labelMonths" bundle="MeetingResources"/>
 						</c:if>
                   </td>
@@ -212,7 +224,7 @@
                   <mifos:mifoslabel name="Savings.rateCalculation"/>: 
                   </td>
                   <td valign="top">
-	                  <c:out value="${sessionScope.BusinessKey.savingsOffering.minAmntForInt}" />
+	                  <c:out value="${savingsOffering.minAmntForInt}" />
                   </td>
                 </tr>
                 <tr class="fontnormal">
@@ -221,10 +233,11 @@
                   <mifos:mifoslabel name="Savings.rate"/>: 
                   </td>
                   <td valign="top">
-                  	<c:out value="${sessionScope.BusinessKey.savingsOffering.interestRate}" /> <mifos:mifoslabel name="Savings.perc"/>
+                  	<c:out value="${savingsOffering.interestRate}" /> <mifos:mifoslabel name="Savings.perc"/>
                   </td>
                 </tr>
               </table>
+              
               <br>    
                <table width="93%" border="0" cellpadding="3" cellspacing="0">
                 <tr>
@@ -237,7 +250,7 @@
                 <tr class="fontnormal">
                   <td width="35%" align="right" class="fontnormal">
 	                <c:choose>
-	                  <c:when test="${sessionScope.BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
+	                  <c:when test="${savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
 	                  	<mifos:mifoslabel name="Savings.mandatoryAmountForDeposit" mandatory="yes"/>: 
 	                  </c:when>
 	                  <c:otherwise>
@@ -247,15 +260,17 @@
                   </td>
                   <td width="65%" valign="top">                  
                   	<mifos:mifosdecimalinput name="savingsActionForm" property="recommendedAmount"	
-		                  value="${sessionScope.BusinessKey.recommendedAmount.amountDoubleValue}"/>
+		                  />
+		                   <c:set var="RecommendedAmtUnit" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecommendedAmtUnit')}" scope="session"></c:set>
 	                  <c:choose>
-	                    <c:when test="${sessionScope.BusinessKey.customer.customerLevel.id==CustomerConstants.GROUP_LEVEL_ID}">
-	                    (<customtags:lookUpValue	id="${sessionScope.BusinessKey.savingsOffering.recommendedAmntUnit.id}"
+	                    <c:when test="${client.customerLevel.id==CustomerConstants.GROUP_LEVEL_ID}">
+	                    
+	                    (<customtags:lookUpValue	id="${savingsOffering.recommendedAmntUnit.id}"
 							searchResultName="RecommendedAmtUnit" mapToSeperateMasterTable="true">
 						  </customtags:lookUpValue>)
 	                    </c:when>
 	                    <c:otherwise>
-	                      <customtags:lookUpValue	id="${sessionScope.BusinessKey.savingsOffering.recommendedAmntUnit.id}"
+	                      <customtags:lookUpValue	id="${savingsOffering.recommendedAmntUnit.id}"
 							searchResultName="RecommendedAmtUnit" mapToSeperateMasterTable="true">
 						  </customtags:lookUpValue>
 	                    </c:otherwise>
@@ -264,12 +279,12 @@
                 </tr>
               </table>
               <br>
-              <table width="93%" border="0" cellpadding="3" cellspacing="0">
+                            <table width="93%" border="0" cellpadding="3" cellspacing="0">
                 <tr>
                   <td colspan="2" class="fontnormalbold">
                   <mifos:mifoslabel name="Savings.additionalInformation"/></td>
                 </tr>
-                <c:forEach var="cf" items="${sessionScope.customFields}" varStatus="loopStatus">
+                <c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}" varStatus="loopStatus">
               	 <bean:define id="ctr">
                 	<c:out value="${loopStatus.index}"/>
                 </bean:define>
@@ -292,12 +307,6 @@
                 </td>
            </tr>
          </c:forEach>
-                <%--
-                <tr class="fontnormal">
-                  <td width="35%" align="right">Custom Field 1:</td>
-                  <td width="65%"><input name="textfield242222" type="text" value="xyz">
-                  </td>
-                </tr>--%>
               </table>
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
@@ -323,6 +332,7 @@
         </tr>
       </table>
       <html-el:hidden property="input" value="preview"/>
+           <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
  </html-el:form>
 </tiles:put>
 </tiles:insert>

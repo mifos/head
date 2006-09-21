@@ -80,7 +80,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 	}
 
 	public void testForMandatoryAccountWithNoPreviousPayments()
-			throws SystemException, ApplicationException {
+			throws Exception {
 
 		savings = createSavingsAccount(SavingsConstants.SAVINGS_MANDATORY);
 		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
@@ -119,7 +119,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 	}
 
 	public void testForMandatoryAccountWithPartialPayment()
-			throws SystemException, ApplicationException {
+			throws Exception {
 
 		savings = createSavingsAccount(SavingsConstants.SAVINGS_MANDATORY);
 		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
@@ -140,7 +140,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 	}
 
 	public void testForMandatoryAccountWithFullPayment()
-			throws SystemException, ApplicationException {
+			throws Exception {
 
 		savings = createSavingsAccount(SavingsConstants.SAVINGS_MANDATORY);
 		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
@@ -162,7 +162,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 	}
 
 	public void testForVoluntaryAccountWithPartialPayment()
-			throws SystemException, ApplicationException {
+			throws Exception {
 
 		savings = createSavingsAccount(SavingsConstants.SAVINGS_VOLUNTARY);
 		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
@@ -183,7 +183,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 	}
 
 	public void testForVoluntaryAccountWithFullPayment()
-			throws SystemException, ApplicationException {
+			throws Exception {
 
 		savings = createSavingsAccount(SavingsConstants.SAVINGS_VOLUNTARY);
 		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
@@ -205,7 +205,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 	}
 
 	public void testTotalSavingsAmountDueForVoluntaryAccount()
-			throws SystemException, ApplicationException {
+			throws Exception {
 
 		savings = createSavingsAccount(SavingsConstants.SAVINGS_VOLUNTARY);
 		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
@@ -220,7 +220,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 	}
 
 	public void testTotalSavingsAmountDueForMandatoryAccount()
-			throws SystemException, ApplicationException {
+			throws Exception {
 
 		savings = createSavingsAccount(SavingsConstants.SAVINGS_MANDATORY);
 		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
@@ -234,7 +234,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 				.getAmountDoubleValue());
 	}
 
-	private SavingsBO createSavingsAccount(short savingsType) {
+	private SavingsBO createSavingsAccount(short savingsType) throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		MeetingBO meetingIntCalc = TestObjectFactory

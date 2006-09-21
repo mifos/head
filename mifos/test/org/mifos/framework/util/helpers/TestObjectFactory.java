@@ -800,35 +800,14 @@ public class TestObjectFactory {
 
 	public static SavingsBO createSavingsAccount(String globalNum,
 			CustomerBO customer, Short accountStateId, Date startDate,
-			SavingsOfferingBO savingsOffering) {
+			SavingsOfferingBO savingsOffering) throws Exception {
 		UserContext userContext = null;
-		try {
 			userContext = getUserContext();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		SavingsBO savings = new SavingsBO(userContext);
-		savings.setCustomer(customer);
-		savings.setPersonnel(customer.getPersonnel());
-		savings.setAccountState(new AccountStateEntity(accountStateId));
-		savings.setSavingsOffering(savingsOffering);
-		savings.setAccountState(new AccountStateEntity(
-				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION));
 		MifosCurrency currency = testObjectPersistence.getCurrency();
-		savings.setRecommendedAmount(new Money(currency, "300.0"));
-
-//		Calendar calendar = new GregorianCalendar();
-//		calendar.setTime(startDate);
-//		customer.getCustomerMeeting().getMeeting()
-//				.setMeetingStartDate(calendar);
 		MeetingBO meeting = createLoanMeeting(customer.getCustomerMeeting()
 				.getMeeting());
-
-		try {
-			savings.save();
-		}catch (ApplicationException e) {
-			e.printStackTrace();
-		}
+		SavingsBO savings = new SavingsBO(userContext,savingsOffering,customer,AccountState.SAVINGS_ACC_PARTIALAPPLICATION,new Money(currency, "300.0"),null);
+		savings.save();
 		savings.setAccountState(new AccountStateEntity(accountStateId));
 		savings.setGlobalAccountNum(globalNum);
 		savings.setActivationDate(new Date(System.currentTimeMillis()));
@@ -843,41 +822,21 @@ public class TestObjectFactory {
 		HibernateUtil.commitTransaction();
 		return (SavingsBO) addObject(getObject(SavingsBO.class, savings.getAccountId()));
 	}
+	private static List<CustomFieldView> getCustomFieldView(){
+		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+		customFields.add(new CustomFieldView(new Short("1"),"custom field value",null));
+		return customFields;
 
+	}
 	public static SavingsBO createSavingsAccount(String globalNum,
 			CustomerBO customer, Short accountStateId, Date startDate,
-			SavingsOfferingBO savingsOffering, UserContext userContext) {
-		try {
+			SavingsOfferingBO savingsOffering, UserContext userContext) throws Exception{
 			userContext = getUserContext();
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-		SavingsBO savings = new SavingsBO(userContext);
-
-		savings.setCustomer(customer);
-		savings.setAccountState(new AccountStateEntity(
-				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION));
-		savings.setPersonnel(customer.getPersonnel());
-		savings.setRecommendedAmount(savingsOffering.getRecommendedAmount());
-		savings.setSavingsOffering(savingsOffering);
-
-		Set<AccountCustomFieldEntity> customFields = new HashSet<AccountCustomFieldEntity>();
-		AccountCustomFieldEntity custField1 = new AccountCustomFieldEntity();
-		custField1.setFieldId(new Short("1"));
-		custField1.setFieldValue("custom field value");
-		custField1.setAccount(savings);
-		customFields.add(custField1);
-		savings.setAccountCustomFields(customFields);
-
-		try {
+			SavingsBO savings = new SavingsBO(userContext,savingsOffering,customer,AccountState.getStatus(accountStateId),savingsOffering.getRecommendedAmount(),getCustomFieldView());
 			savings.save();
-			savings.setAccountState(new AccountStateEntity(accountStateId));
 			savings.setGlobalAccountNum(globalNum);
 			savings.setActivationDate(new Date(System.currentTimeMillis()));
 			HibernateUtil.commitTransaction();
-		} catch (ApplicationException e) {
-			e.printStackTrace();
-		}
 		return (SavingsBO) addObject(getObject(SavingsBO.class, savings.getAccountId()));
 	}
 

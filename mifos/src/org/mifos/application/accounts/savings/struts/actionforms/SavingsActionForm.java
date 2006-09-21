@@ -44,21 +44,24 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.business.AccountCustomFieldEntity;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.struts.actionforms.AccountAppActionForm;
+import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.SavingsType;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
-public class SavingsActionForm extends AccountAppActionForm{
+public class SavingsActionForm extends AccountAppActionForm {
 	private String recommendedAmount;
 
-	public SavingsActionForm(){
+	public SavingsActionForm() {
 		super();
 	}
-	
+
 	public String getRecommendedAmount() {
 		return recommendedAmount;
 	}
@@ -67,45 +70,65 @@ public class SavingsActionForm extends AccountAppActionForm{
 		this.recommendedAmount = recommendedAmount;
 	}
 
-	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+	public ActionErrors validate(ActionMapping mapping,
+			HttpServletRequest request) {
 		String method = request.getParameter("method");
 		ActionErrors errors = null;
-		if(method!=null && method.equals("getPrdOfferings")||
-						method.equals("create")||
-						method.equals("edit")||
-						method.equals("update")||
-						method.equals("get")||
-						method.equals("validate")){
-		}else{
+		request.setAttribute(Constants.CURRENTFLOWKEY, request
+				.getParameter(Constants.CURRENTFLOWKEY));
+
+		if (method != null && method.equals("getPrdOfferings")
+				|| method.equals("create") || method.equals("edit")
+				|| method.equals("update") || method.equals("get")
+				|| method.equals("validate")) {
+		} else {
 			errors = new ActionErrors();
-			errors.add(super.validate(mapping,request));
-			if(method.equals("preview")||method.equals("editPreview")){
-				SavingsBO savings = (SavingsBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request.getSession());
-				if(savings.isMandatory() && getRecommendedAmntValue().equals(new Money())){
-					//check for mandatory amount
-					errors.add(SavingsConstants.MANDATORY,new ActionMessage(SavingsConstants.MANDATORY,SavingsConstants.MANDATORY_AMOUNT));
+			errors.add(super.validate(mapping, request));
+			if (method.equals("preview") || method.equals("editPreview")) {
+				try {
+					SavingsOfferingBO savingsOffering = (SavingsOfferingBO) SessionUtils
+							.getAttribute(SavingsConstants.PRDOFFCERING,
+									request);
+					if (savingsOffering.getSavingsType().getId().equals(
+							SavingsType.MANDATORY.getValue())
+							&& getRecommendedAmntValue().equals(new Money())) {
+						// check for mandatory amount
+						errors.add(SavingsConstants.MANDATORY,
+								new ActionMessage(SavingsConstants.MANDATORY,
+										SavingsConstants.MANDATORY_AMOUNT));
+					}
+				} catch (PageExpiredException e) {
+					errors.add(SavingsConstants.MANDATORY, new ActionMessage(
+							SavingsConstants.MANDATORY,
+							SavingsConstants.MANDATORY_AMOUNT));
 				}
 			}
 		}
-		
+
 		if (null != errors && !errors.isEmpty()) {
 			request.setAttribute(Globals.ERROR_KEY, errors);
 			request.setAttribute("methodCalled", method);
 		}
 		return errors;
 	}
-	
-	public double getRecommendedAmntDoubleValue(){
+
+	public double getRecommendedAmntDoubleValue() {
 		return getRecommendedAmntValue().getAmountDoubleValue();
 	}
-	
+
 	public Money getRecommendedAmntValue() {
 		return getMoney(recommendedAmount);
 	}
-	
+
 	private Money getMoney(String str) {
 		return (StringUtils.isNullAndEmptySafe(str) && !str.trim().equals(".")) ? new Money(
 				str)
 				: new Money();
+	}
+
+	public void clear() {
+		this.setAccountId(null);
+		this.setSelectedPrdOfferingId(null);
+		this.setAccountCustomFieldSet(null);
 	}
 }

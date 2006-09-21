@@ -1,44 +1,8 @@
-/**
-
- * SavingsBusinessService.java    version: 1.0
-
- 
-
- * Copyright (c) 2005-2006 Grameen Foundation USA
-
- * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
-
- * All rights reserved.
-
- 
-
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
-
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
- *
-
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
-
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
-
- * and how it is applied.  
-
- *
-
- */
 package org.mifos.application.accounts.savings.business.service;
 
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
@@ -62,12 +26,12 @@ public class SavingsBusinessService extends BusinessService {
 			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
 	public BusinessObject getBusinessObject(UserContext userContext) {
-		return new SavingsBO(userContext);
+		return null;
 	}
 
 	public List<PrdOfferingView> getSavingProducts(OfficeBO branch,
 			CustomerLevelEntity customerLevel, short accountType)
-			throws ServiceException{
+			throws ServiceException {
 		logger.debug("In SavingsBusinessService::getSavingProducts()");
 		try {
 			return savingsPersistence.getSavingsProducts(branch, customerLevel,
@@ -78,12 +42,14 @@ public class SavingsBusinessService extends BusinessService {
 	}
 
 	public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition()
-			throws ServiceException{
+			throws ServiceException {
 		logger
 				.debug("In SavingsBusinessService::retrieveCustomFieldsDefinition()");
 		try {
-			return savingsPersistence.retrieveCustomFieldsDefinition(
-					SavingsConstants.SAVINGS_CUSTOM_FIELD_ENTITY_TYPE);
+			List<CustomFieldDefinitionEntity> customFields = savingsPersistence
+					.retrieveCustomFieldsDefinition(SavingsConstants.SAVINGS_CUSTOM_FIELD_ENTITY_TYPE);
+			Hibernate.initialize(customFields);
+			return customFields;
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
@@ -100,7 +66,7 @@ public class SavingsBusinessService extends BusinessService {
 	}
 
 	public SavingsBO findBySystemId(String globalAccountNumber)
-			throws ServiceException{
+			throws ServiceException {
 		logger
 				.debug("In SavingsBusinessService::findBySystemId(), globalAccountNumber: "
 						+ globalAccountNumber);
@@ -112,7 +78,7 @@ public class SavingsBusinessService extends BusinessService {
 	}
 
 	public List<SavingsBO> getAllClosedAccounts(Integer customerId)
-			throws ServiceException{
+			throws ServiceException {
 		try {
 			return savingsPersistence.getAllClosedAccount(customerId);
 		} catch (PersistenceException e) {

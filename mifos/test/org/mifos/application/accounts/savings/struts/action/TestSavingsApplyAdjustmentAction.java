@@ -55,8 +55,10 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		userContext.setPereferedLocale(new Locale("en", "US"));
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
-		request.getSession().setAttribute(Constants.USER_CONTEXT_KEY,userContext);
-		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
+		request.getSession().setAttribute(Constants.USER_CONTEXT_KEY,
+				userContext);
+		request.getSession(false).setAttribute("ActivityContext",
+				TestObjectFactory.getActivityContext());
 	}
 
 	@Override
@@ -81,8 +83,9 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				.getPersonnel(userContext.getId());
 		Money depositAmount = new Money(Configuration.getInstance()
 				.getSystemConfig().getCurrency(), "1000");
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
-				depositAmount, depositAmount, helper.getDate("20/05/2006"),
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+				savings, depositAmount, depositAmount, helper
+						.getDate("20/05/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
 		savings.addAccountPayment(payment);
@@ -124,8 +127,9 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				.getSystemConfig().getCurrency(), "1000.0");
 		Money balance = new Money(Configuration.getInstance().getSystemConfig()
 				.getCurrency(), "2000.0");
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
-				withdrawalAmount, balance, helper.getDate("20/05/2006"),
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+				savings, withdrawalAmount, balance, helper
+						.getDate("20/05/2006"),
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings, createdBy,
 				group);
 		savings.addAccountPayment(payment);
@@ -189,11 +193,12 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		HibernateUtil.closeSession();
 		PersonnelBO createdBy = new PersonnelPersistence()
 				.getPersonnel(userContext.getId());
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
-				new Money(Configuration.getInstance().getSystemConfig()
-						.getCurrency(), "1000.0"), new Money(Configuration
-						.getInstance().getSystemConfig().getCurrency(),
-						"1000.0"), helper.getDate("20/05/2006"),
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+				savings, new Money(Configuration.getInstance()
+						.getSystemConfig().getCurrency(), "1000.0"), new Money(
+						Configuration.getInstance().getSystemConfig()
+								.getCurrency(), "1000.0"), helper
+						.getDate("20/05/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
 		savings.addAccountPayment(payment);
@@ -213,7 +218,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		center = group.getParentCustomer();
 	}
 
-	public void testSuccessfullPreviewFailure_NoLastPayment() {
+	public void testSuccessfullPreviewFailure_NoLastPayment() throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOffering();
 		savings = createSavingsAccount("000X00000000017", savingsOffering,
@@ -254,8 +259,9 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				.getPersonnel(userContext.getId());
 		Money depositAmount = new Money(Configuration.getInstance()
 				.getSystemConfig().getCurrency(), "1000.0");
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings,
-				depositAmount, depositAmount, helper.getDate("20/05/2006"),
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+				savings, depositAmount, depositAmount, helper
+						.getDate("20/05/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
 		savings.addAccountPayment(payment);
@@ -263,8 +269,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		savings.update();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
-		savings = new SavingsPersistence().findById(savings
-				.getAccountId());
+		savings = new SavingsPersistence().findById(savings.getAccountId());
 		assertEquals(Integer.valueOf(1).intValue(), savings.getLastPmnt()
 				.getAccountTrxns().size());
 		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
@@ -275,8 +280,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward("account_detail_page");
 		HibernateUtil.closeSession();
-		savings = new SavingsPersistence().findById(savings
-				.getAccountId());
+		savings = new SavingsPersistence().findById(savings.getAccountId());
 		assertEquals(Integer.valueOf(2).intValue(), savings.getLastPmnt()
 				.getAccountTrxns().size());
 		group = savings.getCustomer();
@@ -308,7 +312,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 
 	private SavingsBO createSavingsAccount(String globalAccountNum,
 			SavingsOfferingBO savingsOffering, CustomerBO group,
-			short accountStateId) {
+			short accountStateId) throws Exception {
 		return TestObjectFactory.createSavingsAccount(globalAccountNum, group,
 				accountStateId, new Date(), savingsOffering, userContext);
 	}

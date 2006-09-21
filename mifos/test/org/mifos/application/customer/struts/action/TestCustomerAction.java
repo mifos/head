@@ -117,7 +117,7 @@ public class TestCustomerAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 	}
 
-	public void testGetAllClosedAccounts() throws AccountException {
+	public void testGetAllClosedAccounts() throws Exception {
 		getCustomer();
 		groupAccount.changeStatus(AccountState.LOANACC_CANCEL.getValue(),
 				AccountStateFlag.LOAN_WITHDRAW.getValue(),
@@ -149,7 +149,7 @@ public class TestCustomerAction extends MifosMockStrutsTestCase {
 						request.getSession())).size());
 	}
 	
-	public void testGetAllClosedAccountsOfCenter() throws AccountException {
+	public void testGetAllClosedAccountsOfCenter() throws Exception {
 		getCustomer();
 		centerSavingsAccount.changeStatus(AccountState.SAVINGS_ACC_CANCEL
 				.getValue(), AccountStateFlag.SAVINGS_REJECTED.getValue(),
@@ -169,7 +169,7 @@ public class TestCustomerAction extends MifosMockStrutsTestCase {
 						request.getSession())).size());
 	}
 
-	private void getCustomer() {
+	private void getCustomer() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),

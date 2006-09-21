@@ -567,7 +567,7 @@ public class TestCollSheetBO extends MifosTestCase {
 		}
 	}
 
-	private SavingsBO createSavingsAccount(short savingsType) {
+	private SavingsBO createSavingsAccount(short savingsType) throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		MeetingBO meetingIntCalc = TestObjectFactory

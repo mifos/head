@@ -43,7 +43,7 @@
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<SCRIPT SRC="pages/application/savings/js/CreateSavingsAccount.js"></SCRIPT>
@@ -61,6 +61,7 @@
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td align="left" valign="top" class="paddingL15T15" >
+          <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" scope="session" />
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td width="83%" class="headingorange">
@@ -110,8 +111,8 @@
 	                </c:choose>
                  </td>
                 <td width="70%" valign="top">
-                <mifos:mifosdecimalinput name="savingsActionForm" property="recommendedAmount"	
-		                  value="${sessionScope.BusinessKey.recommendedAmount.amountDoubleValue}"/>
+                <c:set var="RecommendedAmtUnit" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecommendedAmtUnit')}" scope="session"></c:set>
+                <mifos:mifosdecimalinput name="savingsActionForm" property="recommendedAmount"	/>
 	                  <c:choose>
 	                    <c:when test="${sessionScope.BusinessKey.customer.customerLevel.id==CustomerConstants.GROUP_LEVEL_ID}">
 	                    (<customtags:lookUpValue	id="${sessionScope.BusinessKey.savingsOffering.recommendedAmntUnit.id}"
@@ -133,11 +134,11 @@
                 	<mifos:mifoslabel name="Savings.additionalInformation"/>
                 </td>
               </tr>
-              <c:forEach var="cfdef" items="${sessionScope.customFields}" varStatus="loopStatus">
+              <c:forEach var="cfdef" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}" varStatus="loopStatus">
               	 <bean:define id="ctr">
                 	<c:out value="${loopStatus.index}"/>
                 </bean:define>
-                <c:forEach var="cf" items="${sessionScope.BusinessKey.accountCustomFields}" varStatus="loopStatus">
+                <c:forEach var="cf" items="${savingsActionForm.accountCustomFieldSet}" varStatus="loopStatus">
                  <c:if test="${cfdef.fieldId==cf.fieldId}">
               	  <tr class="fontnormal">
 	               <td width="30%" align="right">
@@ -186,7 +187,7 @@
       </table>
       <html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}"/>
       <html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}"/>
-      <html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}"/>
+      <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 </html-el:form>
 </tiles:put>
 </tiles:insert>        
