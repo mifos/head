@@ -38,6 +38,9 @@
 
 package org.mifos.application.accounts.savings.struts.actionforms;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.Globals;
@@ -129,6 +132,6 @@ public class SavingsActionForm extends AccountAppActionForm {
 	public void clear() {
 		this.setAccountId(null);
 		this.setSelectedPrdOfferingId(null);
-		this.setAccountCustomFieldSet(null);
+		this.setAccountCustomFieldSet(new ArrayList<AccountCustomFieldEntity>());
 	}
 }

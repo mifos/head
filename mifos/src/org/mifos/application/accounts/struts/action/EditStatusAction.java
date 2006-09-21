@@ -28,6 +28,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -99,7 +100,7 @@ public class EditStatusAction extends BaseAction {
 			throws Exception {
 		return mapping.findForward(getDetailAccountPage(form));
 	}
-
+	@CloseSession
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -125,7 +126,7 @@ public class EditStatusAction extends BaseAction {
 						.getSession()), request.getSession());
 		return mapping.findForward(getDetailAccountPage(form));
 	}
-
+	
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {

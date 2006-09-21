@@ -335,6 +335,7 @@ public class SavingsAction extends AccountAppAction {
 		actionForm.setRecommendedAmount(savings.getSavingsOffering()
 				.getRecommendedAmount().toString());
 
+		actionForm.clear();
 		actionForm.setAccountCustomFieldSet(new ArrayList(savings
 				.getAccountCustomFields()));
 		SessionUtils.setAttribute(
