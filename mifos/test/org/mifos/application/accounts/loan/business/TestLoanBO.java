@@ -3697,6 +3697,7 @@ public class TestLoanBO extends MifosTestCase {
 						.currentTimeMillis())));
 		accountBO = saveAndFetch(accountBO);
 		assertEquals(new Money("12"), ((LoanBO) accountBO).getTotalPaymentDue());
+		assertEquals(Integer.valueOf(0), ((LoanBO) accountBO).getPerformanceHistory().getNoOfPayments());
 	}
 
 	public void testApplyPaymentForFuturePayment() throws Exception {

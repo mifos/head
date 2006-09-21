@@ -340,7 +340,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		for (AccountFeesActionDetailEntity obj : accountFeesActionDetails) {
 			totalFees = totalFees.add(obj.getFeeAmountPaid());
 		}
-		totalFees.add(getMiscFeePaid());
+		totalFees =totalFees.add(getMiscFeePaid());
 		return totalFees;
 	}
 	
@@ -349,7 +349,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		for (AccountFeesActionDetailEntity obj : accountFeesActionDetails) {
 			totalFees = totalFees.add(obj.getFeeAmount());
 		}
-		totalFees.add(getMiscFee());
+		totalFees = totalFees.add(getMiscFee());
 		return totalFees;
 	}
 

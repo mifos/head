@@ -11,9 +11,12 @@ import java.util.Set;
 
 import org.mifos.application.accounts.TestAccount;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.LoanFeeScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.util.helpers.OverDueAmounts;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
@@ -223,12 +226,13 @@ public class TestAccountActionDateEntity extends TestAccount {
 
 	public void testApplyPeriodicFees() {
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
-				"Periodic Fee", FeeCategory.LOAN, "100",
-				RecurrenceType.WEEKLY, Short.valueOf("1"));
+				"Periodic Fee", FeeCategory.LOAN, "100", RecurrenceType.WEEKLY,
+				Short.valueOf("1"));
 
-		AccountFeesEntity accountFeesEntity = new AccountFeesEntity(group.getCustomerAccount(),periodicFee,((AmountFeeBO) periodicFee)
-				.getFeeAmount().getAmountDoubleValue(),null,null,new Date(System
-						.currentTimeMillis()));
+		AccountFeesEntity accountFeesEntity = new AccountFeesEntity(group
+				.getCustomerAccount(), periodicFee, ((AmountFeeBO) periodicFee)
+				.getFeeAmount().getAmountDoubleValue(), null, null, new Date(
+				System.currentTimeMillis()));
 		group.getCustomerAccount().addAccountFees(accountFeesEntity);
 		TestObjectFactory.updateObject(group);
 
@@ -252,7 +256,7 @@ public class TestAccountActionDateEntity extends TestAccount {
 			if (accFeesEntity.getFees().getFeeName().equalsIgnoreCase(
 					"Periodic Fee")) {
 				accountActionDateEntity.applyPeriodicFees(accFeesEntity
-						.getFees().getFeeId(),new Money("100"));
+						.getFees().getFeeId(), new Money("100"));
 				break;
 			}
 		}
@@ -277,5 +281,33 @@ public class TestAccountActionDateEntity extends TestAccount {
 				accountBO.getAccountId());
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
+	}
+
+	public void testGetTotalScheduleAmountWithFees() {
+		LoanScheduleEntity accountActionDate = new LoanScheduleEntity(
+				accountBO, accountBO.getCustomer(), Short.valueOf("1"),
+				new java.sql.Date(System.currentTimeMillis()),
+				PaymentStatus.UNPAID, new Money("100"), new Money("10"));
+		accountActionDate.setPenalty(new Money("10.0"));
+		accountActionDate.setMiscPenalty(new Money("10.0"));
+		accountActionDate.setMiscFee(new Money("20.0"));
+
+		accountActionDate.setPrincipalPaid(new Money());
+		accountActionDate.setInterestPaid(new Money());
+		accountActionDate.setPenaltyPaid(new Money());
+		accountActionDate.setMiscPenaltyPaid(new Money());
+		accountActionDate.setMiscFeePaid(new Money());
+
+		LoanFeeScheduleEntity loanFeeSchedule = new LoanFeeScheduleEntity(
+				accountActionDate, null, null, new Money("10"));
+		loanFeeSchedule.setFeeAmountPaid(new Money());
+		LoanFeeScheduleEntity loanFeeSchedule1 = new LoanFeeScheduleEntity(
+				accountActionDate, null, null, new Money("10"));
+		loanFeeSchedule1.setFeeAmountPaid(new Money());
+		accountActionDate.addAccountFeesAction(loanFeeSchedule);
+		accountActionDate.addAccountFeesAction(loanFeeSchedule1);
+
+		assertEquals(new Money("170"), accountActionDate
+				.getTotalScheduleAmountWithFees());
 	}
 }

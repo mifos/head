@@ -153,7 +153,6 @@ public class LoanRepaymentTag extends BodyTagSupport {
 					boolean toContinue = true;
 					LoanScheduleEntity installment = (LoanScheduleEntity) list
 							.get(index);
-					System.out.println("****************************list.size()="+list.size());
 					while (index <= list.size() - 1
 							&& toContinue
 							&& installment.getTotalDueWithFees()
@@ -171,7 +170,6 @@ public class LoanRepaymentTag extends BodyTagSupport {
 								.getInterestPaid());
 						totalFees = totalFees.subtract(installment
 								.getTotalFeeAmountPaidWithMiscFee());
-						System.out.println("****************************index="+index);
 						if (index != list.size()-1
 								&& installment.getPaymentStatus().equals(
 										PaymentStatus.PAID.getValue())) {

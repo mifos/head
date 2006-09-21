@@ -574,7 +574,7 @@ public class TestAccountBO extends TestAccount {
 				.getCustomerId());
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		assertEquals(1, ((LoanBO) accountBO).getPerformanceHistory()
+		assertEquals(0, ((LoanBO) accountBO).getPerformanceHistory()
 				.getNoOfPayments().intValue());
 
 	}

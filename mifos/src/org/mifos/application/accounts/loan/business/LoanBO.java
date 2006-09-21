@@ -1114,9 +1114,9 @@ public class LoanBO extends AccountBO {
 									loanPaymentData.getMiscPenaltyPaid()),
 					loanPaymentData.getFeeAmountPaidForInstallment().add(
 							loanPaymentData.getMiscFeePaid()));
-
-			performanceHistory.setNoOfPayments(getPerformanceHistory()
-					.getNoOfPayments() + 1);
+			if (loanPaymentData.isPaid())
+				performanceHistory.setNoOfPayments(getPerformanceHistory()
+						.getNoOfPayments() + 1);
 		}
 		addLoanActivity(buildLoanActivity(accountPayment.getAccountTrxns(),
 				paymentData.getPersonnel(), "Payment rcvd.", paymentData
