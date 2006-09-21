@@ -584,7 +584,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 		prdDefLogger
 				.debug("start validateForEditPreview method of Loan Product Action form method :"
 						+ prdOfferingName);
-		validateStartDate(request, errors);
+		validateStartDateForEditPreview(request, errors);
 		validateEndDate(request, errors);
 		if (StringUtils.isNullOrEmpty(getInterestTypes()))
 			addError(errors, "interestTypes",
@@ -600,6 +600,45 @@ public class LoanPrdActionForm extends BaseActionForm {
 		prdDefLogger
 				.debug("validateForEditPreview method of Loan Product Action form method called :"
 						+ prdOfferingName);
+	}
+
+	private void validateStartDateForEditPreview(HttpServletRequest request,
+			ActionErrors errors) {
+		prdDefLogger
+				.debug("start validateStartDateForEditPreview method of Loan Product Action form method :"
+						+ startDate);
+		request.setAttribute(Constants.CURRENTFLOWKEY, request
+				.getParameter(Constants.CURRENTFLOWKEY));
+		java.util.Date oldStartDate = null;
+		try {
+			oldStartDate = (java.util.Date) SessionUtils.getAttribute(
+					ProductDefinitionConstants.LOANPRDSTARTDATE, request);
+		} catch (PageExpiredException e) {
+		}
+		Date changedStartDate = getStartDateValue(getUserContext(request)
+				.getPereferedLocale());
+		if (oldStartDate != null && changedStartDate != null) {
+			if (DateUtils.getDateWithoutTimeStamp(oldStartDate.getTime())
+					.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) <= 0
+					&& (changedStartDate != null && DateUtils
+							.getDateWithoutTimeStamp(oldStartDate.getTime())
+							.compareTo(
+									DateUtils
+											.getDateWithoutTimeStamp(changedStartDate
+													.getTime())) != 0)) {
+				addError(errors, "startDate",
+						ProductDefinitionConstants.STARTDATEUPDATEEXCEPTION);
+			}
+		} else if (changedStartDate != null
+				&& DateUtils
+						.getDateWithoutTimeStamp(changedStartDate.getTime())
+						.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) > 0) {
+			validateStartDate(request, errors);
+
+		}
+		prdDefLogger
+				.debug("validateStartDateForEditPreview method of Loan Product Action form method called :"
+						+ startDate + "---" + oldStartDate);
 	}
 
 	private void validateStartDate(HttpServletRequest request,

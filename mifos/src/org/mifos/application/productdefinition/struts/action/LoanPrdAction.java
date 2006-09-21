@@ -83,6 +83,8 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.CloseSession;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
@@ -224,7 +226,7 @@ public class LoanPrdAction extends BaseAction {
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
-	@TransactionDemarcate(saveToken = true)
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward manage(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -275,6 +277,7 @@ public class LoanPrdAction extends BaseAction {
 				.toString());
 	}
 
+	@CloseSession
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward editCancel(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -284,6 +287,7 @@ public class LoanPrdAction extends BaseAction {
 				.findForward(ActionForwards.editcancel_success.toString());
 	}
 
+	@CloseSession
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -342,6 +346,42 @@ public class LoanPrdAction extends BaseAction {
 		prdDefLogger.debug("update method of Loan Product Action called"
 				+ loanPrdActionForm.getPrdOfferingId());
 		return mapping.findForward(ActionForwards.update_success.toString());
+	}
+
+	@TransactionDemarcate(saveToken = true)
+	public ActionForward get(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		LoanPrdActionForm loanPrdActionForm = (LoanPrdActionForm) form;
+		prdDefLogger.debug("start get method of Loan Product Action"
+				+ loanPrdActionForm.getPrdOfferingId());
+		LoanOfferingBO loanOffering = ((LoanPrdBusinessService) ServiceFactory
+				.getInstance().getBusinessService(
+						BusinessServiceName.LoanProduct)).getLoanOffering(
+				loanPrdActionForm.getPrdOfferingIdValue(), getUserContext(
+						request).getLocaleId());
+		request.setAttribute(Constants.BUSINESS_KEY, loanOffering);
+		loanPrdActionForm.clear();
+		loanPrdActionForm.setPrdOfferingId(getStringValue(loanOffering
+				.getPrdOfferingId()));
+		prdDefLogger.debug("get method of Loan Product Action called"
+				+ loanOffering.getPrdOfferingId());
+		return mapping.findForward(ActionForwards.get_success.toString());
+	}
+
+	@TransactionDemarcate(saveToken = true)
+	public ActionForward viewAllLoanProducts(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		prdDefLogger
+				.debug("start viewAllLoanProducts method of Loan Product Action");
+		request.setAttribute(ProductDefinitionConstants.LOANPRODUCTLIST,
+				((LoanPrdBusinessService) ServiceFactory.getInstance()
+						.getBusinessService(BusinessServiceName.LoanProduct))
+						.getAllLoanOfferings(getUserContext(request)
+								.getLocaleId()));
+		return mapping.findForward(ActionForwards.viewAllLoanProducts_success
+				.toString());
 	}
 
 	private void loadMasterData(HttpServletRequest request) throws Exception {
@@ -562,8 +602,10 @@ public class LoanPrdAction extends BaseAction {
 				.getMaxLoanAmount()));
 		loanPrdActionForm.setMinLoanAmount(getStringValue(loanOffering
 				.getMinLoanAmount()));
-		loanPrdActionForm.setDefaultLoanAmount(getStringValue(loanOffering
-				.getDefaultLoanAmount()));
+		if (!(loanOffering.getDefaultLoanAmount().getAmountDoubleValue() == 0.0 && loanOffering
+				.getMinLoanAmount().getAmountDoubleValue() != 0.0))
+			loanPrdActionForm.setDefaultLoanAmount(getStringValue(loanOffering
+					.getDefaultLoanAmount()));
 		loanPrdActionForm.setMaxInterestRate(getStringValue(loanOffering
 				.getMaxInterestRate()));
 		loanPrdActionForm.setMinInterestRate(getStringValue(loanOffering
@@ -593,6 +635,8 @@ public class LoanPrdAction extends BaseAction {
 				.getPrincipalGLcode().getGlcodeId()));
 		loanPrdActionForm.setInterestGLCode(getStringValue(loanOffering
 				.getInterestGLcode().getGlcodeId()));
+		SessionUtils.setAttribute(ProductDefinitionConstants.LOANPRDSTARTDATE,
+				loanOffering.getStartDate(), request);
 		prdDefLogger
 				.debug("setDataIntoActionForm method of Loan Product Action called");
 	}

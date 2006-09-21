@@ -209,6 +209,7 @@ public interface ProductDefinitionConstants {
 	public String MAX="Max";
 	public String MIN="Min";
 	public String DEFAULT="Default ";
+	public String LOANPRDSTARTDATE="LoanPrdstartDate";
 
 	public String ERRORSSELECTCONFIG="errors.selectconfig";
 	public String ERRORSENTERCONFIG="errors.mandatoryconfig";

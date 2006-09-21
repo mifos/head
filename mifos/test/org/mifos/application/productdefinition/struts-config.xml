@@ -67,17 +67,21 @@
 			<forward name="create_success" path="/pages/application/productdefinition/jsp/CreateLoanProductConfirmation.jsp"></forward>
 			<forward name="create_failure" path="/pages/application/productdefinition/jsp/CreateLoanProductPreview.jsp"></forward>
 			<forward name="cancelCreate_success" path="/AdminAction.do?method=load"></forward>
+			<forward name="cancelCreate_failure" path="/AdminAction.do?method=load"></forward>
 			<forward name="get_success" path="/pages/application/productdefinition/jsp/LoanProductDetails.jsp"></forward>
+			<forward name="get_failure" path="/AdminAction.do?method=load"></forward>
 			<forward name="manage_failure" path="/pages/application/productdefinition/jsp/LoanProductDetails.jsp"></forward>
 			<forward name="manage_success" path="/pages/application/productdefinition/jsp/EditLoanProduct.jsp"></forward>
 			<forward name="editPreview_success" path="/pages/application/productdefinition/jsp/EditLoanProductPreview.jsp"></forward>
 			<forward name="editPreview_failure" path="/pages/application/productdefinition/jsp/EditLoanProduct.jsp"></forward>
 			<forward name="editPrevious_failure" path="/pages/application/productdefinition/jsp/EditLoanProductPreview.jsp"></forward>
 			<forward name="editPrevious_success" path="/pages/application/productdefinition/jsp/EditLoanProduct.jsp"></forward>
-			<forward name="editcancel_success" path="/loanprdaction?method=get"></forward>
-			<forward name="cancelCreate_failure" path="/loanprdaction?method=get"></forward>
-			<forward name="update_success" path="/loanprdaction?method=get"></forward>
+			<forward name="editcancel_success" path="/loanproductaction.do?method=get"></forward>
+			<forward name="editCancel_failure" path="/loanproductaction.do?method=get"></forward>
+			<forward name="update_success" path="/loanproductaction.do?method=get"></forward>
 			<forward name="update_failure" path="/pages/application/productdefinition/jsp/EditLoanProductPreview.jsp"></forward>
+			<forward name="viewAllLoanProducts_success" path="/pages/application/productdefinition/jsp/ViewEditLoanProduct.jsp"></forward>
+			<forward name="viewAllLoanProducts_failure" path="/AdminAction.do?method=load"></forward>
 		</action>
 	</action-mappings>
 	<message-resources key="ProductDefUIResources" parameter="org.mifos.application.productdefinition.util.resources.ProductDefinitionResources" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />

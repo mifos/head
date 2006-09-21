@@ -40,10 +40,13 @@ package org.mifos.application.productdefinition.persistence;
 import java.util.HashMap;
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
+import org.mifos.application.productdefinition.business.PrdOfferingFeesEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
@@ -70,5 +73,43 @@ public class LoansPrdPersistence extends Persistence {
 			throws PersistenceException {
 		return (LoanOfferingBO) getPersistentObject(LoanOfferingBO.class,
 				prdofferingId);
+	}
+
+	public LoanOfferingBO getLoanOffering(Short loanOfferingId, Short localeId)
+			throws PersistenceException {
+		LoanOfferingBO loanOffering = (LoanOfferingBO) getPersistentObject(
+				LoanOfferingBO.class, loanOfferingId);
+		Hibernate.initialize(loanOffering);
+		loanOffering.getPrdCategory().getProductCategoryName();
+		loanOffering.getPrdApplicableMaster().setLocaleId(localeId);
+		loanOffering.getPrdStatus().getPrdState().setLocaleId(localeId);
+		loanOffering.getInterestTypes().setLocaleId(localeId);
+		loanOffering.getGracePeriodType().setLocaleId(localeId);
+		loanOffering.getPrincipalGLcode().getGlcode();
+		loanOffering.getInterestGLcode().getGlcode();
+		if (loanOffering.getLoanOfferingFunds() != null
+				&& loanOffering.getLoanOfferingFunds().size() > 0)
+			for (LoanOfferingFundEntity loanOfferingFund : loanOffering
+					.getLoanOfferingFunds())
+				loanOfferingFund.getFund().getFundName();
+		if (loanOffering.getPrdOfferingFees() != null
+				&& loanOffering.getPrdOfferingFees().size() > 0)
+			for (PrdOfferingFeesEntity prdOfferingFees : loanOffering
+					.getPrdOfferingFees())
+				prdOfferingFees.getFees().getFeeName();
+
+		return loanOffering;
+	}
+
+	public List<LoanOfferingBO> getAllLoanOfferings(Short localeId)
+			throws PersistenceException {
+		List<LoanOfferingBO> loanOfferings = executeNamedQuery(
+				NamedQueryConstants.PRODUCT_ALL_LOAN_PRODUCTS, null);
+		if (null != loanOfferings && loanOfferings.size() > 0) {
+			for (LoanOfferingBO loanOffering : loanOfferings) {
+				loanOffering.getPrdStatus().getPrdState().setLocaleId(localeId);
+			}
+		}
+		return loanOfferings;
 	}
 }

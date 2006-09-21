@@ -648,7 +648,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "manage");
 		addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId()
 				.toString());
-
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -782,10 +782,13 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 	}
 
 	public void testEditPreviewWithOutData() throws Exception {
+		loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
 		setRequestPathInfo("/loanproductaction.do");
 		addRequestParameter("method", "editPreview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(ProductDefinitionConstants.LOANPRDSTARTDATE,
+				loanOffering.getStartDate(), request);
 		actionPerform();
 		verifyActionErrors(new String[] {
 				"Please specify the Product instance name.",
@@ -809,9 +812,13 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 	}
 
 	public void testEditPreviewWithoutStatus() throws Exception {
+		loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
 		setRequestPathInfo("/loanproductaction.do");
 		addRequestParameter("method", "editPreview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(ProductDefinitionConstants.LOANPRDSTARTDATE,
+				loanOffering.getStartDate(), request);
 
 		addRequestParameter("prdOfferingName", "Loan Offering");
 		addRequestParameter("prdOfferingShortName", "LOAN");
@@ -844,9 +851,13 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 	}
 
 	public void testEditPreview() throws Exception {
+		loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
 		setRequestPathInfo("/loanproductaction.do");
 		addRequestParameter("method", "editPreview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(ProductDefinitionConstants.LOANPRDSTARTDATE,
+				loanOffering.getStartDate(), request);
 
 		addRequestParameter("prdOfferingName", "Loan Offering");
 		addRequestParameter("prdOfferingShortName", "LOAN");
@@ -910,7 +921,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "manage");
 		addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId()
 				.toString());
-
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
 
@@ -973,6 +984,78 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 				Constants.FLOWMANAGER)).getFlow(flowKey));
 		TestObjectFactory.removeObject(loanOffering);
 		TestObjectFactory.cleanUp(fee);
+	}
+
+	public void testGet() {
+		loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
+		HibernateUtil.closeSession();
+		setRequestPathInfo("/loanproductaction.do");
+		addRequestParameter("method", "get");
+		addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId()
+				.toString());
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.get_success.toString());
+
+		LoanOfferingBO loanOffering1 = (LoanOfferingBO) request
+				.getAttribute(Constants.BUSINESS_KEY);
+		assertNotNull(loanOffering1.getPrdOfferingId());
+		assertNotNull(loanOffering1.getPrdOfferingName());
+		assertNotNull(loanOffering1.getPrdOfferingShortName());
+		assertNotNull(loanOffering1.getPrdCategory().getProductCategoryName());
+		assertNotNull(loanOffering1.getPrdStatus().getPrdState().getName());
+		assertNotNull(loanOffering1.getPrdApplicableMaster().getName());
+		assertNotNull(loanOffering1.getStartDate());
+		assertNotNull(loanOffering1.getGracePeriodType().getName());
+		assertNotNull(loanOffering1.getGracePeriodDuration());
+		assertNotNull(loanOffering1.getInterestTypes().getName());
+		assertNotNull(loanOffering1.getMaxLoanAmount());
+		assertNotNull(loanOffering1.getMinLoanAmount());
+		assertNotNull(loanOffering1.getMaxInterestRate());
+		assertNotNull(loanOffering1.getMinInterestRate());
+		assertNotNull(loanOffering1.getDefInterestRate());
+		assertNotNull(loanOffering1.getMaxNoInstallments());
+		assertNotNull(loanOffering1.getMinNoInstallments());
+		assertNotNull(loanOffering1.getDefNoInstallments());
+		assertNotNull(loanOffering1.isIntDedDisbursement());
+		assertNotNull(loanOffering1.isPrinDueLastInst());
+		assertNotNull(loanOffering1.isIncludeInLoanCounter());
+		assertNotNull(loanOffering1.getPrdOfferingMeeting().getMeeting()
+				.getMeetingDetails().getRecurAfter());
+		assertNotNull(loanOffering1.getPrdOfferingMeeting().getMeeting()
+				.getMeetingDetails().getRecurrenceType().getRecurrenceId());
+		assertNotNull(loanOffering1.getPrincipalGLcode().getGlcode());
+		assertNotNull(loanOffering1.getInterestGLcode().getGlcode());
+		assertNotNull(loanOffering1.getPrdOfferingFees());
+		assertNotNull(loanOffering1.getLoanOfferingFunds());
+		HibernateUtil.closeSession();
+	}
+
+	public void testViewAllLoanProducts() {
+		loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
+		LoanOfferingBO loanOffering1 = createLoanOfferingBO("Loan Offering1",
+				"LOA1");
+		HibernateUtil.closeSession();
+		setRequestPathInfo("/loanproductaction.do");
+		addRequestParameter("method", "viewAllLoanProducts");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.viewAllLoanProducts_success.toString());
+
+		List<LoanOfferingBO> loanOfferings = (List<LoanOfferingBO>) request
+				.getAttribute(ProductDefinitionConstants.LOANPRODUCTLIST);
+		assertNotNull(loanOfferings);
+		assertEquals(2, loanOfferings.size());
+		for (LoanOfferingBO loanOfferingBO : loanOfferings) {
+			assertNotNull(loanOfferingBO.getPrdOfferingName());
+			assertNotNull(loanOfferingBO.getPrdOfferingId());
+			assertNotNull(loanOfferingBO.getPrdStatus().getPrdState().getName());
+		}
+		HibernateUtil.closeSession();
+		TestObjectFactory.removeObject(loanOffering1);
+
 	}
 
 	private String offSetCurrentDate(int noOfDays, Locale locale) {

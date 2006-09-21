@@ -86,4 +86,23 @@ public class LoanPrdBusinessService extends BusinessService {
 		}
 	}
 
+	public LoanOfferingBO getLoanOffering(Short loanOfferingId, Short localeId)
+			throws ServiceException {
+		try {
+			return new LoansPrdPersistence().getLoanOffering(loanOfferingId,
+					localeId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public List<LoanOfferingBO> getAllLoanOfferings(Short localeId)
+			throws ServiceException {
+		try {
+			return new LoansPrdPersistence().getAllLoanOfferings(localeId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
 }

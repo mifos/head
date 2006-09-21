@@ -129,4 +129,8 @@
 	<query name="productOffering.getAllSavingsProducts">
 		<![CDATA[from org.mifos.application.productdefinition.business.SavingsOfferingBO savingsOffering order by savingsOffering.prdOfferingName]]>
 	</query>
+	
+	<query name="product.getAllLoanProducts">
+		<![CDATA[from org.mifos.application.productdefinition.business.LoanOfferingBO loanOffering order by loanOffering.prdOfferingName]]>
+	</query>
 </hibernate-mapping>

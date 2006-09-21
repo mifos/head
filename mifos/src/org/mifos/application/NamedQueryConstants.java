@@ -529,4 +529,5 @@ public interface NamedQueryConstants {
 	public String GET_PERSONNEL_ROLE_COUNT="getPersonnelRoleCount";
 	
 	public String PRODUCT_STATUS="product.status";
+	public String PRODUCT_ALL_LOAN_PRODUCTS="product.getAllLoanProducts";
 }
