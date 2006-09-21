@@ -39,10 +39,7 @@
 package org.mifos.application.personnel.business.handlers;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.mifos.application.accounts.dao.ClosedAccSearchDAO;
 import org.mifos.application.configuration.util.helpers.PathConstants;
@@ -68,9 +65,6 @@ import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelHelper;
 import org.mifos.application.personnel.util.valueobjects.Personnel;
 import org.mifos.application.personnel.util.valueobjects.PersonnelDetails;
-import org.mifos.application.personnel.util.valueobjects.PersonnelRole;
-import org.mifos.application.rolesandpermission.dao.RolesandPermissionDAO;
-import org.mifos.application.rolesandpermission.util.valueobjects.Role;
 import org.mifos.framework.business.handlers.MifosBusinessProcessor;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -103,7 +97,7 @@ public class PersonnelBusinessProcessor extends MifosBusinessProcessor {
 	 * @throws ApplicationException
 	 * @throws SystemException
 	 */
-	public void loadInitial(Context context) throws ApplicationException,SystemException{
+	/*public void loadInitial(Context context) throws ApplicationException,SystemException{
 		try{
 			logger.debug("in method loadInitial() of Personnel Module");
 			//load master data for personnel page
@@ -137,7 +131,7 @@ public class PersonnelBusinessProcessor extends MifosBusinessProcessor {
 		}catch(Exception e ){
 			throw new PersonnelException(PersonnelConstants.UNKNOWN_EXCEPTION,e);
 		}
-	}
+	}*/
 	
 	/**
 	 * Retrieves master data using the MasterDataRetriever by passing the entity name, locale and the result name.
@@ -247,7 +241,7 @@ public class PersonnelBusinessProcessor extends MifosBusinessProcessor {
 	 * @throws ApplicationException
 	 * @throws SystemException
 	 */
-	public void manageInitial(Context context) throws ApplicationException,SystemException{
+	/*public void manageInitial(Context context) throws ApplicationException,SystemException{
 		try{
 			logger.debug("in method manageInitial() of Personnel Module");
 			Personnel personnel = (Personnel)context.getValueObject();
@@ -278,7 +272,7 @@ public class PersonnelBusinessProcessor extends MifosBusinessProcessor {
 			throw new PersonnelException(PersonnelConstants.UNKNOWN_EXCEPTION,e);
 		}
 		
-	}
+	}*/
 	
 	/**
 	 * This method loads the the list of offices to which current personnel can be transferred.
@@ -332,7 +326,7 @@ public class PersonnelBusinessProcessor extends MifosBusinessProcessor {
 	 * @throws ApplicationException
 	 * @throws SystemException
 	 */
-	public void previewInitial(Context context) throws ApplicationException,SystemException{
+	/*public void previewInitial(Context context) throws ApplicationException,SystemException{
 		try{
 			logger.debug("in method previewInitial() of Personnel Module");
 			String fromPage=(String)context.getBusinessResults().get(PersonnelConstants.INPUT_PAGE);
@@ -355,7 +349,7 @@ public class PersonnelBusinessProcessor extends MifosBusinessProcessor {
 		}catch(Exception e ){
 			throw new PersonnelException(PersonnelConstants.UNKNOWN_EXCEPTION,e);
 		}
-	}
+	}*/
 	
 	/**
 	 * This is called just before the create method in the business processor.
@@ -583,7 +577,7 @@ public class PersonnelBusinessProcessor extends MifosBusinessProcessor {
 	 * @throws SystemException
 	 * @throws ApplicationException
 	 */
-	public void get(Context context)throws SystemException,ApplicationException {
+	/*public void get(Context context)throws SystemException,ApplicationException {
 		try{
 			String systemId =((Personnel)context.getValueObject()).getGlobalPersonnelNum();
 			logger.info("retrieving Personnel details with system id: "+systemId);
@@ -613,7 +607,7 @@ public class PersonnelBusinessProcessor extends MifosBusinessProcessor {
 		}catch(Exception e ){
 			throw new PersonnelException(PersonnelConstants.UNKNOWN_EXCEPTION,e);
 		}
-	}
+	}*/
 	
 	/**
 	 * This will set the language name as per locale in the personnel value object stored in the context
@@ -675,13 +669,13 @@ public class PersonnelBusinessProcessor extends MifosBusinessProcessor {
 	 * @throws ApplicationException
 	 * @throws SystemException
 	 */
-	public void updateInitial(Context context)throws ApplicationException,SystemException{
+	/*public void updateInitial(Context context)throws ApplicationException,SystemException{
 		logger.debug("in method updateInitial() of Personnel Module");
 		Personnel oldPersonnel = getPersonnelDAO().getUser(((Personnel)context.getValueObject()).getPersonnelId());
 		validateForUpdate(oldPersonnel, context);
 		fillDataForUpdate(oldPersonnel, context);
 		setNewRolesSet(oldPersonnel,context);
-	}
+	}*/
 	
 	/**
 	 * This method is called when logged in user wants to update his Settings.
@@ -799,7 +793,7 @@ public class PersonnelBusinessProcessor extends MifosBusinessProcessor {
 	 * @param oldPersonnel personnel object before updating
  	 * @param context instance of Context
 	 */
-	private void setNewRolesSet(Personnel oldPersonnel,Context context){
+	/*private void setNewRolesSet(Personnel oldPersonnel,Context context){
 		logger.debug("in method setNewRolesSet() of Personnel Module");
 		Personnel personnel=(Personnel)context.getValueObject();
 		List<PersonnelRole> rolesToDelete=null;
@@ -830,7 +824,7 @@ public class PersonnelBusinessProcessor extends MifosBusinessProcessor {
 				rolesToDelete=new ArrayList<PersonnelRole>(oldPersonnel.getPersonnelRolesSet());
 		}
 		context.addBusinessResults(PersonnelConstants.ROLES_TO_DELETE,rolesToDelete);
-	}
+	}*/
 	
 	/**
 	 * This is called to check whehter personnel can be updated or not.

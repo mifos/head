@@ -2,6 +2,7 @@ package org.mifos.application.rolesandpermission.business.service;
 
 import java.util.List;
 
+import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.framework.business.BusinessObject;
@@ -27,5 +28,23 @@ public class RolesPermissionsBusinessService extends BusinessService {
 			throw new ServiceException(e);
 		}
 	}
+	
+	public List<ActivityEntity> getActivities() throws ServiceException{
+		try {
+			return rolesPermissionsPersistence.getActivities();
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	public RoleBO getRole(Short roleId) throws ServiceException{
+		try {
+			return rolesPermissionsPersistence.getRole(roleId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	
 
 }

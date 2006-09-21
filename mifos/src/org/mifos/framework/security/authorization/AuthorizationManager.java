@@ -45,16 +45,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.application.rolesandpermission.util.valueobjects.Role;
-import org.mifos.application.rolesandpermission.util.valueobjects.RoleActivitiesKey;
-import org.mifos.application.rolesandpermission.util.valueobjects.RoleActivity;
+import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SecurityException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.ActivityRoles;
 import org.mifos.framework.security.util.Observer;
-import org.mifos.framework.security.util.RoleChangeEvent;
 import org.mifos.framework.security.util.SecurityEvent;
 import org.mifos.framework.security.util.SecurityHelper;
 import org.mifos.framework.security.util.UserContext;
@@ -103,7 +100,7 @@ public class AuthorizationManager implements Observer {
 	 * @see org.mifos.framework.security.Util.Observer#update(org.mifos.framework.security.Util.Subject)
 	 */
 	public void handleEvent(SecurityEvent e) {
-		if (e instanceof RoleChangeEvent) {
+		/*if (e instanceof RoleChangeEvent) {
 
 			// we need to convert it to a list of id's
 			Role role = (Role) e.getObject();
@@ -128,85 +125,10 @@ public class AuthorizationManager implements Observer {
 				
 			}
 
-		}
+		}*/
 	}
 
 	
-	
-	public void createRole(List activitySet , Role role){
-		Set<Short> keys = activityToRolesCacheMap.keySet();
-
-		/*
-		 * iterate the cache based on the activities and whatever
-		 * activities role has update that
-		 */
-		for (Iterator iter = keys.iterator(); iter.hasNext();) {
-			Short cacheActivity = (Short) iter.next();
-
-			/*
-			 * see if for this activity role activitySet has anything in
-			 * it If there is any add it to the cache
-			 */
-			if (activitySet.contains(cacheActivity)) {
-				Set roleSet = activityToRolesCacheMap
-						.get(cacheActivity);
-				roleSet.add(role.getId());
-			}
-
-		}
-	}
-	public void updateRole(List activitySet , Role role){
-		// During update we may have to remove some role_id's and add
-		// other role_id's
-		Set<Short> keys = activityToRolesCacheMap.keySet();
-		synchronized (activityToRolesCacheMap) {
-			for (Iterator iter = keys.iterator(); iter.hasNext();) {
-				Short cacheActivity = (Short) iter.next();
-
-				/*
-				 * see if for this activity role activitySet has anything in
-				 * it If there is not any remove it from the cache
-				 */
-				
-					Set roleSet = activityToRolesCacheMap.get(cacheActivity);
-					if (activitySet.contains(cacheActivity)) {
-	
-						roleSet.add(role.getId());
-	
-					} else {
-						roleSet.remove(role.getId());
-					}
-			}
-			
-		}
-	}
-	public void deleteRole(List activitySet , Role role){
-		Set<Short> keys = activityToRolesCacheMap.keySet();
-
-		/*
-		 * iterate the cache based on the activities and whatever
-		 * activities role has update that
-		 */
-		synchronized (activityToRolesCacheMap) {
-			for (Iterator iter = keys.iterator(); iter.hasNext();) {
-				Short cacheActivity = (Short) iter.next();
-
-				/*
-				 * see if for this activity role activitySet has anything in
-				 * it If there is any remove it from the cache
-				 */
-				if (activitySet.contains(cacheActivity)) {
-					
-						Set roleSet = activityToRolesCacheMap
-								.get(cacheActivity);
-						roleSet.remove(role.getId());
-				}
-			}
-
-		}
-
-	}
-
 	/**
 	 * This function initialize the cache from the database.It takes the help of
 	 * getActivities() and list of all the ActivityRoles objects in the system
@@ -339,7 +261,7 @@ public class AuthorizationManager implements Observer {
 		}
 		}catch(Exception e) {
 			// System.out.println("exception in Auth Man-------");
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return false;
 
@@ -370,4 +292,54 @@ public class AuthorizationManager implements Observer {
 		}
 		return al;
 	}
+	
+	public void addRole(RoleBO role){
+		List<Short> activityIds = role.getActivityIds();
+		Set<Short> keys = activityToRolesCacheMap.keySet();
+		for (Iterator<Short> iter = keys.iterator(); iter.hasNext();) {
+			Short activityId = iter.next();
+			// see if for role has this activityId assingned. If it is, add it to the cache
+			if (activityIds.contains(activityId)) {
+				Set<Short> roleSet = activityToRolesCacheMap
+						.get(activityId);
+				roleSet.add(role.getId());
+			}
+		}
+	}
+	
+	public void updateRole(RoleBO role){
+		List<Short> activityIds = role.getActivityIds();
+		Set<Short> keys = activityToRolesCacheMap.keySet();
+		synchronized (activityToRolesCacheMap) {
+			for (Iterator<Short> iter = keys.iterator(); iter.hasNext();) {
+				Short activityId =  iter.next();
+				//see if for this activity role activitySet has anything in
+				// it If there is not any remove it from the cache
+				Set<Short> roleSet = activityToRolesCacheMap.get(activityId);
+				if (activityIds.contains(activityId)) {
+					roleSet.add(role.getId());
+				} else {
+					roleSet.remove(role.getId());
+				}
+			}
+		}
+	}
+	
+	public void deleteRole(RoleBO role){
+		List<Short> activityIds = role.getActivityIds();
+		Set<Short> keys = activityToRolesCacheMap.keySet();
+		synchronized (activityToRolesCacheMap) {
+			for (Iterator<Short> iter = keys.iterator(); iter.hasNext();) {
+				Short activityId = iter.next();
+				//see if for this activity role activitySet has anything in
+				//it If there is any remove it from the cache
+				if (activityIds.contains(activityId)) {
+					Set<Short> roleSet = activityToRolesCacheMap
+								.get(activityId);
+						roleSet.remove(role.getId());
+				}
+			}
+		}
+	}
+	
 }

@@ -38,14 +38,6 @@
 
 package org.mifos.application.personnel.struts.uihelpers;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import org.mifos.application.personnel.util.valueobjects.PersonnelRole;
-import org.mifos.application.rolesandpermission.util.valueobjects.Role;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
 
 /**
  * This class has got helper functions which could be called from jsp 
@@ -65,7 +57,7 @@ public class PersonnelUIHelperFn {
 	 * @param object
 	 * @return String
 	 */
-	public static String getRoleNamesFromSet(Object object) {
+	/*public static String getRoleNamesFromSet(Object object) {
 		MifosLogManager.getLogger(LoggerConstants.PERSONNEL_LOGGER).debug("Inside UI helper function getCommaSeparatedRoles");
 		StringBuilder stringBuilder=new StringBuilder();
 		if(object !=null) {
@@ -82,14 +74,14 @@ public class PersonnelUIHelperFn {
 			}
 		}
 		return stringBuilder.toString();
-	}
+	}*/
 	
 	/**
 	 * It returns a comma seperated string of role names from the list of roles received as parameter.  
 	 * @param object
 	 * @return String
 	 */
-	public static String getRoleNamesFromList(Object object) {
+	/*public static String getRoleNamesFromList(Object object) {
 		MifosLogManager.getLogger(LoggerConstants.PERSONNEL_LOGGER).debug("Inside UI helper function getCommaSeparatedRoles");
 		StringBuilder stringBuilder=new StringBuilder();
 		if(object !=null) {
@@ -106,5 +98,5 @@ public class PersonnelUIHelperFn {
 			}
 		}
 		return stringBuilder.toString();
-	}
+	}*/
 }

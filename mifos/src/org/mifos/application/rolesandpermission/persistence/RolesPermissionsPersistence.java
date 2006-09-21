@@ -25,4 +25,8 @@ public class RolesPermissionsPersistence extends Persistence {
 	public List<RoleBO> getRoles() throws PersistenceException{
 		return (List<RoleBO>)executeNamedQuery(NamedQueryConstants.GET_ALL_ROLES,null);
 	}
+	
+	public RoleBO getRole(Short roleId) throws PersistenceException{
+		return (RoleBO)getPersistentObject(RoleBO.class,roleId);
+	}
 }

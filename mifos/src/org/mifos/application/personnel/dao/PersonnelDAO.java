@@ -40,16 +40,13 @@ package org.mifos.application.personnel.dao;
 
 import java.sql.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.StaleObjectStateException;
 import org.hibernate.Transaction;
-
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
@@ -59,13 +56,10 @@ import org.mifos.application.master.util.valueobjects.SupportedLocales;
 import org.mifos.application.office.dao.OfficeDAO;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.exceptions.PersonnelException;
-import org.mifos.application.personnel.util.helpers.IDGenerator;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelHelper;
 import org.mifos.application.personnel.util.valueobjects.Personnel;
 import org.mifos.application.personnel.util.valueobjects.PersonnelMovement;
-import org.mifos.application.personnel.util.valueobjects.PersonnelRole;
-
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.audit.util.helpers.LogInfo;
 import org.mifos.framework.components.audit.util.helpers.LogValueMap;
@@ -75,7 +69,6 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.dao.DAO;
 import org.mifos.framework.dao.helpers.MasterDataRetriever;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.ConcurrencyException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSystemException;
 import org.mifos.framework.exceptions.SystemException;
@@ -101,7 +94,7 @@ public class PersonnelDAO extends DAO {
 	 * @throws ApplicationException
 	 * @throws SystemException
 	 */
-	public void create(Context context)throws ApplicationException,SystemException {
+	/*public void create(Context context)throws ApplicationException,SystemException {
 	  Personnel personnel = (Personnel)context.getValueObject();
 	  
 	  //initialize personnel associations before creating
@@ -127,14 +120,14 @@ public class PersonnelDAO extends DAO {
 		 finally {
 			HibernateUtil.closeSession(session);
 		}
-  }
+  }*/
 	
  	/**
 	 * This method is the helper method that initializes the associations related to personnel before 
 	 * saving in the database.
 	 * @param personnel instance of personnel to be created/updated
 	 */
-	private void  initializePersonnel(Personnel personnel){
+	/*private void  initializePersonnel(Personnel personnel){
 		logger.debug("in method initializePersonnel of personnel with personnelId: "+personnel.getPersonnelId());
 		//set personnel and personnel roles association
 		Set personnelRoles = personnel.getPersonnelRolesSet();
@@ -152,7 +145,7 @@ public class PersonnelDAO extends DAO {
 		//set personnel and personnel details association
 		logger.debug("In initializePersonnel personnel.getPersonnelDetails().getPersonnelId(): "+ personnel.getPersonnelDetails().getPersonnelId());
 		personnel.getPersonnelDetails().setPersonnel(personnel);
-  }
+  }*/
 
 	/**
 	 * This method is called to update personnel/user to unlocking his account. 
@@ -204,7 +197,7 @@ public class PersonnelDAO extends DAO {
 	 * @throws ApplicationException
 	 * @throws SystemException
 	 */
-	public void update(Context context)throws ApplicationException,SystemException {
+	/*public void update(Context context)throws ApplicationException,SystemException {
 		  Personnel personnel = (Personnel)context.getValueObject(); 
 		  logger.info("Updating personnel with id: "+ personnel.getPersonnelId());
 		  //initialize personnel associations before creating
@@ -255,7 +248,7 @@ public class PersonnelDAO extends DAO {
 			 finally {
 				HibernateUtil.closeSession(session);
 			}
-  }
+  }*/
 	
 	/**
 	 * This method deleted roles for personnel, if they are removed in this update.
@@ -264,13 +257,13 @@ public class PersonnelDAO extends DAO {
 	 * @throws ApplicationException
 	 * @throws SystemException
 	 */
-	private void deleteExistingRoles(Session session,List<PersonnelRole> rolesToDelete)throws ApplicationException,SystemException {
+	/*private void deleteExistingRoles(Session session,List<PersonnelRole> rolesToDelete)throws ApplicationException,SystemException {
 		  if(rolesToDelete!=null){
 			  logger.info("Deleting "+rolesToDelete.size()+" for personnel, while updating personnel");
 			  for(int i=0;i<rolesToDelete.size();i++)
 				  session.delete(rolesToDelete.get(i));
 		  }
-	}
+	}*/
   
 	/**
 	 * This method handles work related to transfers, if user is to be transferred across branch.
@@ -336,7 +329,7 @@ public class PersonnelDAO extends DAO {
     * @throws ApplicationException
     * @throws SystemException
     */
-	public Personnel getUser(String systemId) throws ApplicationException,SystemException {
+	/*public Personnel getUser(String systemId) throws ApplicationException,SystemException {
 	   Personnel personnel = null;
 		Session session = null;
 		try{
@@ -379,7 +372,7 @@ public class PersonnelDAO extends DAO {
 				HibernateUtil.closeSession(session);
 			}
 			return personnel;
-	   }
+	   }*/
 
    /**
     * This method finds user based on user id (auto-generated running number).

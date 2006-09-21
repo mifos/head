@@ -47,7 +47,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.application.rolesandpermission.util.valueobjects.Activity;
+import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 
@@ -81,7 +81,7 @@ public class RoleTempleteBuilder {
 	 * This would hold the childern associated with the given activity
 	 */
 
-	private HashMap<Short, List<Activity>> childMap = new HashMap<Short, List<Activity>>();
+	private HashMap<Short, List<ActivityEntity>> childMap = new HashMap<Short, List<ActivityEntity>>();
 
 	/**
 	 * Helper varibale used to give name to the checkboxes in the ui
@@ -133,13 +133,13 @@ public class RoleTempleteBuilder {
 	 *            activity id whose childern we are finding
 	 * @return List of childern associated with the current activity
 	 */
-	private List<Activity> getChildren(List<Activity> activities, Short id) {
-		List<Activity> l = new ArrayList<Activity>();
+	private List<ActivityEntity> getChildren(List<ActivityEntity> activities, Short id) {
+		List<ActivityEntity> l = new ArrayList<ActivityEntity>();
 
 		for (int i = 0; i < activities.size(); i++) {
 
 			// if id=0 then we are looking for top level activities
-			Short parent = activities.get(i).getParent();
+			ActivityEntity parent = activities.get(i).getParent();
 			if (id.shortValue() == 0) {
 
 				if (null == parent) {
@@ -149,7 +149,7 @@ public class RoleTempleteBuilder {
 			} else {
 
 				if (null != parent) {
-					if (parent.shortValue() == id.shortValue()) {
+					if (parent.getId().shortValue() == id.shortValue()) {
 						l.add(activities.get(i));
 					}
 				}
@@ -175,9 +175,9 @@ public class RoleTempleteBuilder {
 	 *            name to be given to control
 	 */
 
-	private void makeTable(List<Activity> l, Short aid, StringBuilder buff,
+	private void makeTable(List<ActivityEntity> l, Short aid, StringBuilder buff,
 			int level, String name) {
-		List<Activity> lst = childMap.get(aid);
+		List<ActivityEntity> lst = childMap.get(aid);
 		if (lst.size() > 0) {
 
 			for (int i = 0; i < lst.size(); i++) {
@@ -197,7 +197,7 @@ public class RoleTempleteBuilder {
 								+ "  id=\"" + name1 + "\" type=\"checkbox\" ");
 				// check whether it is leaf
 
-				List<Activity> li = childMap.get(lst.get(i).getId());
+				List<ActivityEntity> li = childMap.get(lst.get(i).getId());
 				Short index = getIndex(lst.get(i).getId());
 				if (li.size() == 0) {
 					buff.append("value=\"" + lst.get(i).getId().shortValue()
@@ -222,17 +222,17 @@ public class RoleTempleteBuilder {
 				buff
 						.append("bgcolor=\"#FFFFFF\" class=\"paddingleft05BottomBorder\"  ><span class=\"fontnormal\">");
 
-				buff.append(l.get(index).getName(localeId));
+				buff.append(l.get(index).getActivityName());
 				buff.append("</span></td>");
 				buff
 						.append("<td width=\"50%\" bgcolor=\"#FFFFFF\" class=\"paddingleft05BottomLeftBorder\"  >"
 								+ "<span class=\"fontnormal\">");
 
-				if (null == l.get(index).getDescription(localeId)) {
+				if (null == l.get(index).getDescription()) {
 					buff.append(" &nbsp; ");
 				} else {
 
-					buff.append(l.get(index).getDescription(localeId));
+					buff.append(l.get(index).getDescription());
 				}
 
 				buff.append("</span></td></tr>");
@@ -250,7 +250,7 @@ public class RoleTempleteBuilder {
 	 *            List if all the activities in the system
 	 * @return stringbuffer representatiuon of the tree
 	 */
-	public StringBuilder getRolesTemplete(List<Activity> l) {
+	public StringBuilder getRolesTemplete(List<ActivityEntity> l) {
 		nameHelper = 0;
 		// StringBuffer buff = new StringBuffer();
 		StringBuilder buff = new StringBuilder();
@@ -265,7 +265,7 @@ public class RoleTempleteBuilder {
 		buildCheckedItems(l);
 		// by this time child map has been built
 		short start = 0;
-		List<Activity> li = childMap.get(new Short(start));
+		List<ActivityEntity> li = childMap.get(new Short(start));
 		
 		buff
 		.append("<script language=\"javascript\" src=\"pages/application/rolesandpermission/js/checkBoxLogic.js\"  type=\"text/javascript\">   </script>");
@@ -292,7 +292,7 @@ public class RoleTempleteBuilder {
 			buff.append(maxDepth + 2 + "\"  >");
 			buff.append("<span class=\"fontnormalbold\">");
 
-			buff.append(l.get(index).getName(localeId));
+			buff.append(l.get(index).getActivityName());
 			buff.append("</span></td></tr>");
 			makeTable(l, li.get(i).getId(), buff, 1, name);
 			buff.append("</table><br>");
@@ -320,12 +320,12 @@ public class RoleTempleteBuilder {
 	 *            List of activities in the system
 	 */
 
-	private void buildCheckedItems(List<Activity> l) {
+	private void buildCheckedItems(List<ActivityEntity> l) {
 
 		MifosLogManager.getLogger(LoggerConstants.ROLEANDPERMISSIONLOGGER)
 				.debug("size of list is" + l.size());
 
-		List<Activity> li = getChildren(l, Short.valueOf("0"));
+		List<ActivityEntity> li = getChildren(l, Short.valueOf("0"));
 		MifosLogManager.getLogger(LoggerConstants.ROLEANDPERMISSIONLOGGER)
 				.debug("child list size " + li.size());
 
@@ -351,17 +351,17 @@ public class RoleTempleteBuilder {
 	 *            Activity id
 	 * @return whether checked or not
 	 */
-	private boolean makeCheckTable(List<Activity> l, Short id,
+	private boolean makeCheckTable(List<ActivityEntity> l, Short id,
 			int[] currentDepth) {
 		// increment current depth by one
 		currentDepth[0]++;
 		boolean checked = true;
-		List<Activity> lst = getChildren(l, id);
+		List<ActivityEntity> lst = getChildren(l, id);
 		childMap.put(id, lst);
 		for (int i = 0; i < lst.size(); i++) {
 			// check whether it is leaf
 
-			List<Activity> li = getChildren(l, lst.get(i).getId());
+			List<ActivityEntity> li = getChildren(l, lst.get(i).getId());
 			Short index = getIndex(lst.get(i).getId());
 			if (li.size() == 0) {
 				// check whether checked or not

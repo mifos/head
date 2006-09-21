@@ -15,9 +15,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.security.util.EventManger;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class RoleBO extends BusinessObject {
@@ -67,6 +65,15 @@ public class RoleBO extends BusinessObject {
 			activityList.add(roleActivityEntity.getActivity());
 		}
 		return activityList;
+	}
+	
+	public List<Short> getActivityIds() {
+		List<Short> ids = new ArrayList<Short>();
+		List<ActivityEntity> activityList = new ArrayList<ActivityEntity>();
+		for (RoleActivityEntity roleActivityEntity : activities) {
+			ids.add(roleActivityEntity.getActivity().getId());
+		}
+		return ids;
 	}
 
 	public void save() throws RolesPermissionException {

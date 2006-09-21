@@ -84,7 +84,7 @@
 							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
 							<td><html-el:link
-								action="/manageRolesAndPermission?method=manage&name=aa&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+								action="/rolesPermission.do?method=viewRoles&name=aa&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 								<mifos:mifoslabel name="admin.manageroles&per" /></html-el:link></td>
 						</tr>
 					</table>

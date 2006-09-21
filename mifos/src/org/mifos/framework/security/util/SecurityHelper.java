@@ -48,8 +48,8 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.rolesandpermission.dao.RolesandPermissionDAO;
-import org.mifos.application.rolesandpermission.util.valueobjects.Activity;
+import org.mifos.application.rolesandpermission.business.ActivityEntity;
+import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.SecurityException;
@@ -243,9 +243,9 @@ public class SecurityHelper {
 		// 
 		Session session = null;
 		Transaction transaction = null;
-		RolesandPermissionDAO dao = new RolesandPermissionDAO();
+		RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
 
-		List<Activity> activityList = dao.getActivities();
+		List<ActivityEntity> activityList = rolesPermissionsPersistence.getActivities();
 		List<Short> leafs = new ArrayList<Short>();
 		buildLeafItems(activityList, leafs);
 		return leafs;
@@ -260,13 +260,13 @@ public class SecurityHelper {
 	 * @param leafs
 	 *            list of leafs id's
 	 */
-	private static void buildLeafItems(List<Activity> l, List<Short> leafs) {
+	private static void buildLeafItems(List<ActivityEntity> l, List<Short> leafs) {
 		for (short k = 0; k < l.size(); k++) {
 
 			indexMap.put(l.get(k).getId(), k);
 		}
 
-		List<Activity> li = getChildren(l, Short.valueOf("0"));
+		List<ActivityEntity> li = getChildren(l, Short.valueOf("0"));
 
 		for (int i = 0; i < li.size(); i++) {
 			makeLeafItems(l, li.get(i).getId(), leafs);
@@ -285,9 +285,9 @@ public class SecurityHelper {
 	 *            right now
 	 * @return
 	 */
-	private static List<Activity> getChildren(List<Activity> activities,
+	private static List<ActivityEntity> getChildren(List<ActivityEntity> activities,
 			Short id) {
-		List<Activity> l = new ArrayList<Activity>();
+		List<ActivityEntity> l = new ArrayList<ActivityEntity>();
 
 		/*
 		 * for (int i = 0; i < activities.size(); i++) { if
@@ -296,7 +296,7 @@ public class SecurityHelper {
 		 */
 		// if id=0 then we are looking for top level activities
 		for (int i = 0; i < activities.size(); i++) {
-			Short parent = activities.get(i).getParent();
+			ActivityEntity parent = activities.get(i).getParent();
 			if (id.shortValue() == 0) {
 
 				if (null == parent) {
@@ -306,7 +306,7 @@ public class SecurityHelper {
 			} else {
 
 				if (null != parent) {
-					if (parent.shortValue() == id.shortValue()) {
+					if (parent.getId().shortValue() == id.shortValue()) {
 						l.add(activities.get(i));
 					}
 				}
@@ -330,12 +330,12 @@ public class SecurityHelper {
 	 *            list of all the leafs activity in the system this ia a out
 	 *            parameter
 	 */
-	private static void makeLeafItems(List<Activity> l, Short id,
+	private static void makeLeafItems(List<ActivityEntity> l, Short id,
 			List<Short> leafs) {
-		List<Activity> lst = getChildren(l, id);
+		List<ActivityEntity> lst = getChildren(l, id);
 		for (int i = 0; i < lst.size(); i++) {
 			// check whether it is leaf
-			List<Activity> li = getChildren(l, lst.get(i).getId());
+			List<ActivityEntity> li = getChildren(l, lst.get(i).getId());
 			Short index = getIndex(lst.get(i).getId());
 			if (li.size() == 0) {
 				leafs.add(lst.get(i).getId());

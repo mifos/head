@@ -71,7 +71,7 @@ public class ActivityEntity extends PersistentObject {
 		return name;
 	}
 
-	public String getActivtyName(){
+	public String getActivityName(){
 		if(localeId==null)
 			return null;
 		String name=null;

@@ -50,5 +50,6 @@ public enum ActionForwards {
 	previewStatus_failure,updateStatus_failure,loadStatus_success,previewStatus_success,previousStatus_success,getHistoricalData_success,loadHistoricalData_success,previousHistoricalData_success,previewHistoricalData_success,updateHistoricalData_success,
 	loadChangePassword_success,updateSettings_success, noresultfound,
 	viewRoles_success,editPreview_success,editPreview_failure,editPrevious_success,editPrevious_failure,
-	login_success,login_failure,updatePassword_success,updatePassword_failure,logout_success;
+	login_success,login_failure,updatePassword_success,updatePassword_failure,logout_success,
+	delete_success;
 }

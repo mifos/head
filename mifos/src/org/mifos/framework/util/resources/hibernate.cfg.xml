@@ -36,7 +36,6 @@
 
 	<mapping resource="org/mifos/application/personnel/util/valueobjects/Personnel.hbm.xml" />
 	<mapping resource="org/mifos/application/personnel/util/valueobjects/PersonnelLevel.hbm.xml" />
-	<mapping resource="org/mifos/application/personnel/util/valueobjects/PersonnelRole.hbm.xml" />
 	<mapping resource="org/mifos/application/personnel/util/valueobjects/PersonnelDetails.hbm.xml" />
 	<mapping resource="org/mifos/application/personnel/util/valueobjects/PersonnelNotes.hbm.xml" />
 	<mapping resource="org/mifos/application/personnel/util/valueobjects/PersonnelStatus.hbm.xml" />
@@ -107,16 +106,13 @@
 	<mapping resource="org/mifos/application/program/util/valueobjects/Program.hbm.xml" />
 	<mapping resource="org/mifos/framework/security/util/ActivityRoles.hbm.xml" />
 	<mapping resource="org/mifos/framework/security/util/officeSearch.hbm.xml" />
-	<mapping resource="org/mifos/framework/security/util/PersonalRoles.hbm.xml" />
+<mapping resource="org/mifos/framework/security/util/PersonalRoles.hbm.xml" />
 	<mapping resource="org/mifos/application/office/util/valueobjects/OfficeHierarchy.hbm.xml" />
 	<mapping resource="org/mifos/application/office/util/valueobjects/OfficeStatus.hbm.xml" />
 	<mapping resource="org/mifos/application/office/util/valueobjects/Office.hbm.xml" />
 	<mapping resource="org/mifos/application/office/util/valueobjects/OfficeCode.hbm.xml" />
 	<mapping resource="org/mifos/application/office/util/valueobjects/OfficeLevel.hbm.xml" />
 	<mapping resource="org/mifos/application/office/util/valueobjects/OfficeAddress.hbm.xml" />
-	<mapping resource="org/mifos/application/rolesandpermission/util/valueobjects/Activity.hbm.xml" />
-	<mapping resource="org/mifos/application/rolesandpermission/util/valueobjects/Role.hbm.xml" />
-	<mapping resource="org/mifos/application/rolesandpermission/util/valueobjects/RoleActivities.hbm.xml" />
 
 	<!-- Product Definition -->
 	<mapping resource="org/mifos/application/productdefinition/business/PrdCategoryStatusEntity.hbm.xml" />
@@ -324,16 +320,10 @@
 	<mapping
 		resource="org/mifos/application/customer/client/business/CustomerPictureEntity.hbm.xml" />
 		
-	<mapping
-		resource="org/mifos/application/rolesandpermission/business/ActivityEntity.hbm.xml" />
+	<mapping resource="org/mifos/application/rolesandpermission/business/ActivityEntity.hbm.xml" />
+	<mapping resource="org/mifos/application/rolesandpermission/business/RoleActivityEntity.hbm.xml" />
+ 	<mapping resource="org/mifos/application/rolesandpermission/business/RoleBO.hbm.xml" />
 
-	<mapping
-		resource="org/mifos/application/rolesandpermission/business/RoleActivityEntity.hbm.xml" />
-
-	<mapping
-		resource="org/mifos/application/rolesandpermission/business/RoleBO.hbm.xml" />
-		
-		
 </session-factory>
 
 </hibernate-configuration>  

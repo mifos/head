@@ -67,7 +67,6 @@ import org.mifos.application.personnel.util.valueobjects.Personnel;
 import org.mifos.application.personnel.util.valueobjects.PersonnelCustomField;
 import org.mifos.application.personnel.util.valueobjects.PersonnelDetails;
 import org.mifos.application.personnel.util.valueobjects.PersonnelLevel;
-import org.mifos.application.rolesandpermission.util.valueobjects.Role;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.security.util.UserContext;
@@ -449,7 +448,7 @@ public class PersonnelAction extends MifosSearchAction{
 	  * @param response
 	  * @return The mapping to the next page
 	  */
-	public ActionForward customValidate(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) {
+	/*public ActionForward customValidate(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) {
 		String forward = null;	
 		String methodCalled= (String)request.getAttribute("methodCalled");
 		PersonnelActionForm personnelActionForm = (PersonnelActionForm)form;
@@ -469,7 +468,7 @@ public class PersonnelAction extends MifosSearchAction{
 			}
 		}
 		return mapping.findForward(forward); 
-	}
+	}*/
 	
 	/** 
 	 * This method is called before every preview method
@@ -481,7 +480,7 @@ public class PersonnelAction extends MifosSearchAction{
 	 * @param response
 	 * @throws Exception
 	 */
-	public ActionForward customPreview(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws Exception{
+	/*public ActionForward customPreview(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws Exception{
 		// choose preview page to be shown	
 		PersonnelActionForm personnelActionForm=(PersonnelActionForm)form;
 		
@@ -508,7 +507,7 @@ public class PersonnelAction extends MifosSearchAction{
 			setPersonnelAge(request,((Personnel)context.getValueObject()).getDob());
 		
 		return mapping.findForward(this.ChoosePreviewForward(fromPage));
-	}
+	}*/
 
 	/** 
 	 * This method is helper method that removes roles from the action form if user has not 
@@ -530,14 +529,14 @@ public class PersonnelAction extends MifosSearchAction{
 	 * @param request Contains the request parameters
 	 * @param personnelActionForm The form bean associated with this action
 	 */	
-	private void loadNamesForSelectedMasterData(HttpServletRequest request,PersonnelActionForm personnelActionForm){
+	/*private void loadNamesForSelectedMasterData(HttpServletRequest request,PersonnelActionForm personnelActionForm){
 		Context context = (Context)request.getAttribute(Constants.CONTEXT);
 		
 		//load language name
 		setLanguageNameinRequest(request,personnelActionForm);
 		//load role names
 		setSelectedRoles(context,personnelActionForm);
-	}
+	}*/
 	
 	/** 
 	 * This method is helper method that sets the language name of selected locale in request.
@@ -585,13 +584,13 @@ public class PersonnelAction extends MifosSearchAction{
 	 * @param request Contains the request parameters
 	 * @param personnelActionForm The form bean associated with this action
 	 */
-	private void setSelectedRoles(Context context,PersonnelActionForm personnelActionForm){
+	/*private void setSelectedRoles(Context context,PersonnelActionForm personnelActionForm){
 		SearchResults sr = context.getSearchResultBasedOnName(PersonnelConstants.ROLES_LIST);
 		if(sr!=null){
 			List<Role> roleNames = new PersonnelHelper().getSelectedRoles((List)sr.getValue(),personnelActionForm.getPersonnelRoles());
 			context.addAttribute(new PersonnelHelper().getResultObject(PersonnelConstants.PERSONNEL_ROLES_LIST,roleNames));
 		}
-	}
+	}*/
 	
 	/** 
 	 * This method is helper method that chooses forwards for preview method based on input page 
@@ -634,7 +633,7 @@ public class PersonnelAction extends MifosSearchAction{
 	 * @return - Actionforward which decides page to forward to next as the same method is called from different jsp pages.
 	 * @throws Exception
 	 */
-	public ActionForward customPrevious(ActionMapping mapping, ActionForm form,	HttpServletRequest request,	HttpServletResponse response) throws Exception{
+	/*public ActionForward customPrevious(ActionMapping mapping, ActionForm form,	HttpServletRequest request,	HttpServletResponse response) throws Exception{
 		Context context = (Context)request.getAttribute(Constants.CONTEXT);
 		PersonnelHelper personnelHelper = new PersonnelHelper();
 		SearchResults searchResults = context.getSearchResultBasedOnName(PersonnelConstants.ROLES_LIST);
@@ -646,7 +645,7 @@ public class PersonnelAction extends MifosSearchAction{
 		PersonnelActionForm personnelActionForm = (PersonnelActionForm)form;
 		String fromPage =personnelActionForm.getInput();
 		return mapping.findForward(this.ChoosePreviousForward(fromPage));
-	}
+	}*/
 	
 	/**
 	 * This method is called on previous method

@@ -40,10 +40,10 @@
 				<property name="fieldValue" column="FIELD_VALUE" />
 			</composite-element>
 		</set>    
-		<set name="personnelRolesSet"  cascade="all" inverse="true" 	lazy="false">
+		<!-- <set name="personnelRolesSet"  cascade="all" inverse="true" 	lazy="false">
 			  <key column="PERSONNEL_ID"   />
 		  	<one-to-many   class="org.mifos.application.personnel.util.valueobjects.PersonnelRole" />
-        </set>
+        </set>-->
     </class>
     
    <!-- This query obtains all the active loan officers under a particular office -->

@@ -54,14 +54,14 @@ public class EventManger {
 	{
 		SecurityEvent se = EventFactory.getEventFactory().createEvent(EventName,obj,type);
 		
-		if ( EventName.equalsIgnoreCase(Constants.ROLECHANGEEVENT))
+		/*if ( EventName.equalsIgnoreCase(Constants.ROLECHANGEEVENT))
 		{
 			AuthorizationManager am = AuthorizationManager.getInstance();
 			am.handleEvent(se);
 
-		}
+		}*/
 
-		else if (EventName.equalsIgnoreCase(SecurityConstants.OFFICECHANGEEVENT))
+		if (EventName.equalsIgnoreCase(SecurityConstants.OFFICECHANGEEVENT))
 		{
 			HierarchyManager hm = HierarchyManager.getInstance();
 			hm.handleEvent(se);

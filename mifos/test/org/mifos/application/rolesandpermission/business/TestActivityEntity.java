@@ -9,10 +9,10 @@ public class TestActivityEntity extends MifosTestCase {
 
 	public void testGetActivity(){
 		activityEntity=getActivityEntity(Short.valueOf("1"));
-		assertNull(activityEntity.getActivtyName());
+		assertNull(activityEntity.getActivityName());
 		assertNull(activityEntity.getDescription());
 		activityEntity.setLocaleId(Short.valueOf("1"));
-		assertEquals("Organization Management",activityEntity.getActivtyName());
+		assertEquals("Organization Management",activityEntity.getActivityName());
 		assertEquals("Organization Management",activityEntity.getDescription());
 	}
 

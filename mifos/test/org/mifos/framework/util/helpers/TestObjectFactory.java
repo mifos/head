@@ -151,8 +151,8 @@ import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUni
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
+import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.business.RoleBO;
-import org.mifos.application.rolesandpermission.util.valueobjects.Role;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.PersistentObject;
@@ -2124,5 +2124,23 @@ public class TestObjectFactory {
 	
 	public static void simulateInvalidConnection() {
 		HibernateUtil.getSessionTL().close();
+	}
+	
+	public static void cleanUp(RoleBO roleBO){
+		if(roleBO!=null){
+			Session session= HibernateUtil.getSessionTL();
+			Transaction transaction = HibernateUtil.startTransaction();
+			session.lock(roleBO, LockMode.NONE);
+			session.delete(roleBO);
+			transaction.commit();
+		}
+	}
+	
+	public static RoleBO createRole(UserContext context, String roleName,
+			List<ActivityEntity> activities) throws Exception {
+		RoleBO roleBO = new RoleBO(context, roleName, activities);
+		roleBO.save();
+		HibernateUtil.commitTransaction();
+		return roleBO;
 	}
 }

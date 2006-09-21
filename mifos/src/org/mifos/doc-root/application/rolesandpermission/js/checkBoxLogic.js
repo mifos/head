@@ -193,23 +193,23 @@ var index=0;
 
 }
 
-function goToCancelPage(){
-	document.rolesandPermissionActionForm.method.value="cancel";
-	document.rolesandPermissionActionForm.action="manageRolesAndPermission.do";	
-	document.rolesandPermissionActionForm.submit();
+  function goToCancelPage(){
+	document.rolesPermissionsActionForm.method.value="viewRoles";
+	document.rolesPermissionsActionForm.action="rolesPermission.do";	
+	document.rolesPermissionsActionForm.submit();
   }
   
     function  submitAdminLink()
 	{
-		document.rolesandPermissionActionForm.method.value="load";
-		document.rolesandPermissionActionForm.action="AdminAction.do";
-		document.rolesandPermissionActionForm.submit();
+		document.rolesPermissionsActionForm.method.value="cancel";
+		document.rolesPermissionsActionForm.action="rolesPermission.do";
+		document.rolesPermissionsActionForm.submit();
 	}  
      function  submitRolesAndPermissionLink()
 	{
-		document.rolesandPermissionActionForm.method.value="manage";
-		document.rolesandPermissionActionForm.action="manageRolesAndPermission.do";
-		document.rolesandPermissionActionForm.submit();
+		document.rolesPermissionsActionForm.method.value="viewRoles";
+		document.rolesPermissionsActionForm.action="rolesPermission.do";
+		document.rolesPermissionsActionForm.submit();
 	}
 
 
@@ -223,9 +223,9 @@ function submitMe()
 				if ( arrElements[i].checked)
 					{
 					
-						document.rolesandPermissionActionForm.method.value="update";
-						document.rolesandPermissionActionForm.action="manageRolesAndPermission.do";
-						document.rolesandPermissionActionForm.submit();
+						document.rolesPermissionsActionForm.method.value="update";
+						document.rolesPermissionsActionForm.action="rolesPermission.do";
+						document.rolesPermissionsActionForm.submit();
              			return true;
              			
 					}
@@ -242,9 +242,9 @@ function submitCreate()
 				if ( arrElements[i].checked)
 					{
 					
-						document.rolesandPermissionActionForm.method.value="create";
-						document.rolesandPermissionActionForm.action="manageRolesAndPermission.do";
-						document.rolesandPermissionActionForm.submit();
+						document.rolesPermissionsActionForm.method.value="create";
+						document.rolesPermissionsActionForm.action="rolesPermission.do";
+						document.rolesPermissionsActionForm.submit();
 						return true;
              			
 					}

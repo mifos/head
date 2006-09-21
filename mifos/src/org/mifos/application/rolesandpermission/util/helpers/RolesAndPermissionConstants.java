@@ -25,6 +25,7 @@ public interface RolesAndPermissionConstants {
 	public final static String KEYROLELOADINGFAILED="roleandpermission.error.noRoleInSystem";
 	public final static String KEYROLENOTEXIST="roleandpermission.errorroleNotExist";
 	public final static String ACTIVITYLIST="ActivityList";
+	public final static String SELECTED_ACTIVITIES="SelectedActivities";
 	public final static String ROLESUBOBJECT="RoleSubObject";
 	public final static String KEYROLEASSIGNEDTOPERSONNEL="roleandpermission.error.roleassigned";
 	public final static String KEYROLEDELETEDBYOTHERUSER="roleandpermission.error.roledeleted";

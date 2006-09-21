@@ -38,23 +38,16 @@
 package org.mifos.application.personnel.util.helpers;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.util.valueobjects.SearchResults;
 
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.master.util.valueobjects.StatusMaster;
 import org.mifos.application.personnel.dao.PersonnelDAO;
 import org.mifos.application.personnel.struts.actionforms.PersonnelActionForm;
 import org.mifos.application.personnel.util.valueobjects.PersonnelDetails;
-import org.mifos.application.personnel.util.valueobjects.PersonnelRole;
-import org.mifos.application.rolesandpermission.util.valueobjects.Role;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.util.valueobjects.SearchResults;
 
 
 /**
@@ -128,7 +121,7 @@ public class PersonnelHelper {
 	 * @param personnelRoles array of roles ids respective to which role list is to be returned
 	 * @return List of Roles that user has selected
 	 */	
-	public List<Role> getSelectedRoles(List<Role> rolesList, String[] personnelRoles){
+	/*public List<Role> getSelectedRoles(List<Role> rolesList, String[] personnelRoles){
 		List<Role> newRoleList = null;
 		if(personnelRoles!=null){
 			newRoleList=new ArrayList<Role>();
@@ -144,7 +137,7 @@ public class PersonnelHelper {
 			}
 		}
 		return newRoleList;
-	}
+	}*/
 	
 	/**
 	 * This method prepares a list of PersonnelRoles from the array of roleIds that user has selected 
@@ -152,7 +145,7 @@ public class PersonnelHelper {
 	 * @param personnelRoles array of roles ids respective to which role list is to be returned
 	 * @return List of PersonnelRoles instances
 	 */	
-	public Set<PersonnelRole> getPersonnelRoles(List<Role> rolesList, String[] personnelRoles){
+	/*public Set<PersonnelRole> getPersonnelRoles(List<Role> rolesList, String[] personnelRoles){
 		Set<PersonnelRole> newRoleList = null;
 		if(personnelRoles!=null){
 			newRoleList=new HashSet<PersonnelRole>();
@@ -170,7 +163,7 @@ public class PersonnelHelper {
 			}
 		}
 		return newRoleList;
-	}
+	}*/
 	
 	/**
 	 * This method prepares a list of Role from the array of roleIds that user has selected 
@@ -178,7 +171,7 @@ public class PersonnelHelper {
 	 * @param personnelRoles is set of personnelRoles instance that are presently assigned to user
 	 * @return List of Roles
 	 */	
-	public List<Role> getPersonnelRolesList(List<Role> rolesList, Set<PersonnelRole> personnelRoles){
+	/*public List<Role> getPersonnelRolesList(List<Role> rolesList, Set<PersonnelRole> personnelRoles){
 		List<Role> newRoleList = null;
 		if(personnelRoles!=null){
 			Iterator personnelRolesIterator = personnelRoles.iterator();
@@ -193,7 +186,7 @@ public class PersonnelHelper {
 			}
 		}
 		return newRoleList;
-	}
+	}*/
 	
 	/**
 	 * This method returns the name of status configured for statusId in the given locale

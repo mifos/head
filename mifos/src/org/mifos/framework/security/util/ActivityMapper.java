@@ -1099,6 +1099,24 @@ public class ActivityMapper {
 		//for CustomerAccountAction
 		activityMap.put("/customerAccountAction-load",
 				SecurityConstants.VIEW);
+		
+		//roles permissions
+		activityMap.put("/rolesPermission-viewRoles",
+				SecurityConstants.VIEW);
+		activityMap.put("/rolesPermission-load",
+				SecurityConstants.ROLES_CREATE_ROLES);
+		activityMap.put("/rolesPermission-create",
+				SecurityConstants.ROLES_CREATE_ROLES);
+		activityMap
+				.put("/rolesPermission-manage", SecurityConstants.VIEW);
+		activityMap.put("/rolesPermission-update",
+				SecurityConstants.ROLES_EDIT_ROLES);
+		activityMap.put("/rolesPermission-cancel",
+				SecurityConstants.VIEW);
+		activityMap.put("/rolesPermission-preview",
+				SecurityConstants.ROLES_DELETE_ROLES);
+		activityMap.put("/rolesPermission-delete",
+				SecurityConstants.ROLES_DELETE_ROLES);
 	}
 
 	private static ActivityMapper instance = new ActivityMapper();
