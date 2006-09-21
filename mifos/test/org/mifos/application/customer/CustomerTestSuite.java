@@ -60,7 +60,7 @@ public class CustomerTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(CenterBOTest.class);
 		testSuite.addTestSuite(TestCenterBusinessService.class);
 		testSuite.addTestSuite(CenterActionTest.class);
-		//testSuite.addTestSuite(TestClientCustAction.class);
+		testSuite.addTestSuite(TestClientCustAction.class);
 		testSuite.addTestSuite(ClientTransferActionTest.class);
 		testSuite.addTestSuite(CustHistoricalDataActionTest.class);
 		testSuite.addTestSuite(GroupBusinessServiceTest.class);

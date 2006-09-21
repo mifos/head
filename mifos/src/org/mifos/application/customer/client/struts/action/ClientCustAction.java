@@ -47,7 +47,6 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
@@ -59,6 +58,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomFieldView;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerCustomFieldEntity;
 import org.mifos.application.customer.business.CustomerFlagDetailEntity;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
@@ -101,15 +101,16 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class ClientCustAction extends CustAction {
 
 	@Override
-	protected BusinessService getService(){
+	protected BusinessService getService() {
 		return getClientBusinessService();
 	}
 
-	private ClientBusinessService getClientBusinessService(){
+	private ClientBusinessService getClientBusinessService() {
 		return (ClientBusinessService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.Client);
 	}
@@ -119,6 +120,7 @@ public class ClientCustAction extends CustAction {
 		return true;
 	}
 
+	@TransactionDemarcate(saveToken = true)
 	public ActionForward chooseOffice(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -128,6 +130,7 @@ public class ClientCustAction extends CustAction {
 				.toString());
 	}
 
+	@TransactionDemarcate(saveToken = true)
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -135,11 +138,13 @@ public class ClientCustAction extends CustAction {
 		doCleanUp(actionForm, request);
 		request.getSession().removeAttribute(ClientConstants.CLIENT_MEETING);
 		if (actionForm.getGroupFlagValue().equals(YesNoFlag.YES.getValue())) {
-			actionForm.setParentGroup(getCustomerBusinessService().getCustomer(Integer
-					.valueOf(actionForm.getParentGroupId())));
-			if(actionForm.getParentGroup().getCustomerMeeting()!=null){
-				actionForm.getParentGroup().getCustomerMeeting().getMeeting().isMonthly();
-				actionForm.getParentGroup().getCustomerMeeting().getMeeting().isWeekly();
+			actionForm.setParentGroup(getCustomerBusinessService().getCustomer(
+					Integer.valueOf(actionForm.getParentGroupId())));
+			if (actionForm.getParentGroup().getCustomerMeeting() != null) {
+				actionForm.getParentGroup().getCustomerMeeting().getMeeting()
+						.isMonthly();
+				actionForm.getParentGroup().getCustomerMeeting().getMeeting()
+						.isWeekly();
 			}
 			actionForm.setOfficeId(actionForm.getParentGroup().getOffice()
 					.getOfficeId().toString());
@@ -150,32 +155,43 @@ public class ClientCustAction extends CustAction {
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward next(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return mapping.findForward(ActionForwards.next_success.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
-		HttpSession session = request.getSession();
+		if (actionForm.getParentGroupId() != null) {
+			CustomerBO parent = getCustomerBusinessService().getCustomer(
+					Integer.valueOf(actionForm.getParentGroupId()));
+			if (null != parent)
+				parent.getParentCustomer().getDisplayName();
+			actionForm.setParentGroup(parent);
+		}
 		if (Configuration.getInstance().getCustomerConfig(
 				getUserContext(request).getBranchId())
 				.isPendingApprovalStateDefinedForClient() == true) {
-			session.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED,
-					CustomerConstants.YES);
+			SessionUtils.setAttribute(
+					CustomerConstants.PENDING_APPROVAL_DEFINED,
+					CustomerConstants.YES, request);
 
 		} else
-			session.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED,
-					CustomerConstants.NO);
+			SessionUtils.setAttribute(
+					CustomerConstants.PENDING_APPROVAL_DEFINED,
+					CustomerConstants.NO, request);
 		actionForm.setAge(new CustomerHelper().calculateAge(DateHelper
 				.getLocaleDate(getUserContext(request).getPereferedLocale(),
 						actionForm.getDateOfBirth())));
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -212,43 +228,42 @@ public class ClientCustAction extends CustAction {
 			SystemException {
 		SessionUtils.setAttribute(ClientConstants.SALUTATION_ENTITY,
 				getCustomerBusinessService().retrieveMasterEntities(
-						MasterConstants.SALUTATION, getUserContext(request)
-								.getLocaleId()), request.getSession());
+						MasterConstants.SALUTATION,
+						getUserContext(request).getLocaleId()), request);
 		SessionUtils.setAttribute(ClientConstants.MARITAL_STATUS_ENTITY,
 				getCustomerBusinessService().retrieveMasterEntities(
-						MasterConstants.MARITAL_STATUS, getUserContext(request)
-								.getLocaleId()), request.getSession());
+						MasterConstants.MARITAL_STATUS,
+						getUserContext(request).getLocaleId()), request);
 		SessionUtils.setAttribute(ClientConstants.CITIZENSHIP_ENTITY,
 				getCustomerBusinessService().retrieveMasterEntities(
-						MasterConstants.CITIZENSHIP, getUserContext(request)
-								.getLocaleId()), request.getSession());
+						MasterConstants.CITIZENSHIP,
+						getUserContext(request).getLocaleId()), request);
 		SessionUtils.setAttribute(ClientConstants.BUSINESS_ACTIVITIES_ENTITY,
 				getCustomerBusinessService().retrieveMasterEntities(
-						MasterConstants.BUSINESS_ACTIVITIES, getUserContext(
-								request).getLocaleId()), request.getSession());
+						MasterConstants.BUSINESS_ACTIVITIES,
+						getUserContext(request).getLocaleId()), request);
 		SessionUtils.setAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY,
 				getCustomerBusinessService().retrieveMasterEntities(
 						MasterConstants.EDUCATION_LEVEL,
-						getUserContext(request).getLocaleId()), request
-						.getSession());
+						getUserContext(request).getLocaleId()), request);
 		SessionUtils.setAttribute(ClientConstants.GENDER_ENTITY,
-				getCustomerBusinessService().retrieveMasterEntities(MasterConstants.GENDER,
-						getUserContext(request).getLocaleId()), request
-						.getSession());
+				getCustomerBusinessService().retrieveMasterEntities(
+						MasterConstants.GENDER,
+						getUserContext(request).getLocaleId()), request);
 		SessionUtils.setAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
 				getMasterEntities(SpouseFatherLookupEntity.class,
-						getUserContext(request).getLocaleId()), request
-						.getSession());
+						getUserContext(request).getLocaleId()), request);
 		SessionUtils.setAttribute(ClientConstants.HANDICAPPED_ENTITY,
 				getCustomerBusinessService().retrieveMasterEntities(
-						MasterConstants.HANDICAPPED, getUserContext(request)
-								.getLocaleId()), request.getSession());
+						MasterConstants.HANDICAPPED,
+						getUserContext(request).getLocaleId()), request);
 		SessionUtils.setAttribute(ClientConstants.ETHINICITY_ENTITY,
 				getCustomerBusinessService().retrieveMasterEntities(
-						MasterConstants.ETHINICITY, getUserContext(request)
-								.getLocaleId()), request.getSession());
+						MasterConstants.ETHINICITY,
+						getUserContext(request).getLocaleId()), request);
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward retrievePictureOnPreview(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -271,6 +286,7 @@ public class ClientCustAction extends CustAction {
 		return mapping.findForward(forward);
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward previewPersonalInfo(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse httpservletresponse) throws Exception {
@@ -283,6 +299,7 @@ public class ClientCustAction extends CustAction {
 
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward prevPersonalInfo(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse httpservletresponse) throws Exception {
@@ -290,6 +307,7 @@ public class ClientCustAction extends CustAction {
 				.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward prevMFIInfo(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse httpservletresponse)
 			throws Exception {
@@ -297,6 +315,7 @@ public class ClientCustAction extends CustAction {
 				.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward prevMeeting(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -304,6 +323,7 @@ public class ClientCustAction extends CustAction {
 		return mapping.findForward(ActionForwards.next_success.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward loadMeeting(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -311,6 +331,7 @@ public class ClientCustAction extends CustAction {
 				.toString());
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws ApplicationException, IOException {
@@ -342,10 +363,10 @@ public class ClientCustAction extends CustAction {
 		try {
 			if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
 				client = new ClientBO(userContext, actionForm.getClientName()
-						.getDisplayName(), actionForm
-						.getStatusValue(), actionForm.getExternalId(),
-						getDateFromString(actionForm.getMfiJoiningDate(),
-								userContext.getPereferedLocale()), actionForm
+						.getDisplayName(), actionForm.getStatusValue(),
+						actionForm.getExternalId(), getDateFromString(
+								actionForm.getMfiJoiningDate(), userContext
+										.getPereferedLocale()), actionForm
 								.getAddress(), customFields, actionForm
 								.getFeesToApply(), actionForm
 								.getFormedByPersonnelValue(), actionForm
@@ -363,10 +384,10 @@ public class ClientCustAction extends CustAction {
 								.getCustomerPicture());
 			} else {
 				client = new ClientBO(userContext, actionForm.getClientName()
-						.getDisplayName(), actionForm
-						.getStatusValue(), actionForm.getExternalId(),
-						getDateFromString(actionForm.getMfiJoiningDate(),
-								userContext.getPereferedLocale()), actionForm
+						.getDisplayName(), actionForm.getStatusValue(),
+						actionForm.getExternalId(), getDateFromString(
+								actionForm.getMfiJoiningDate(), userContext
+										.getPereferedLocale()), actionForm
 								.getAddress(), customFields, actionForm
 								.getFeesToApply(), actionForm
 								.getFormedByPersonnelValue(), actionForm
@@ -429,6 +450,7 @@ public class ClientCustAction extends CustAction {
 		actionForm.setNextOrPreview("next");
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -436,37 +458,40 @@ public class ClientCustAction extends CustAction {
 		return mapping.findForward(method + "_failure");
 	}
 
+	@TransactionDemarcate(saveToken = true)
 	public ActionForward get(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
-		ClientBO clientBO = (ClientBO) getCustomerBusinessService().getBySystemId(actionForm
-				.getGlobalCustNum(), CustomerLevel.CLIENT.getValue());
+		ClientBO clientBO = (ClientBO) getCustomerBusinessService()
+				.getBySystemId(actionForm.getGlobalCustNum(),
+						CustomerLevel.CLIENT.getValue());
 		clientBO.setUserContext(getUserContext(request));
 		clientBO.getCustomerStatus().setLocaleId(
 				getUserContext(request).getLocaleId());
-		for(CustomerFlagDetailEntity custFlag : clientBO.getCustomerFlags())
-			custFlag.getStatusFlag().setLocaleId(getUserContext(request).getLocaleId());
-		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request.getSession());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request
-				.getSession());
-		request.getSession().removeAttribute(ClientConstants.AGE);
+		for (CustomerFlagDetailEntity custFlag : clientBO.getCustomerFlags())
+			custFlag.getStatusFlag().setLocaleId(
+					getUserContext(request).getLocaleId());
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request);
+		request.removeAttribute(ClientConstants.AGE);
 		loadMasterDataForDetailsPage(request, clientBO);
 		setSpouseOrFatherName(request, clientBO);
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward editPersonalInfo(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
 		clearActionForm(actionForm);
 		ClientBO client = (ClientBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
-		ClientBO clientBO = (ClientBO) getCustomerBusinessService().getBySystemId(client
-				.getGlobalCustNum(), CustomerLevel.CLIENT.getValue());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request
-				.getSession());
+				Constants.BUSINESS_KEY, request);
+		ClientBO clientBO = (ClientBO) getCustomerBusinessService()
+				.getBySystemId(client.getGlobalCustNum(),
+						CustomerLevel.CLIENT.getValue());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request);
 		client = null;
 		loadUpdateMasterData(actionForm, request);
 		setValuesInActionForm(actionForm, request);
@@ -474,6 +499,7 @@ public class ClientCustAction extends CustAction {
 				.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward previewEditPersonalInfo(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse httpservletresponse) throws Exception {
@@ -486,6 +512,7 @@ public class ClientCustAction extends CustAction {
 						.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward prevEditPersonalInfo(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse httpservletresponse) throws Exception {
@@ -498,12 +525,13 @@ public class ClientCustAction extends CustAction {
 	}
 
 	@CloseSession
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward updatePersonalInfo(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws ApplicationException {
 		try {
 			ClientBO client = (ClientBO) SessionUtils.getAttribute(
-					Constants.BUSINESS_KEY, request.getSession());
+					Constants.BUSINESS_KEY, request);
 			ClientCustActionForm actionForm = (ClientCustActionForm) form;
 			client.updateAddress(actionForm.getAddress());
 			convertCustomFieldDateToUniformPattern(
@@ -550,18 +578,19 @@ public class ClientCustAction extends CustAction {
 				.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward editMfiInfo(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
 		clearActionForm(actionForm);
 		ClientBO client = (ClientBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
-		ClientBO clientBO = (ClientBO) getCustomerBusinessService().getBySystemId(client
-				.getGlobalCustNum(), CustomerLevel.CLIENT.getValue());
+				Constants.BUSINESS_KEY, request);
+		ClientBO clientBO = (ClientBO) getCustomerBusinessService()
+				.getBySystemId(client.getGlobalCustNum(),
+						CustomerLevel.CLIENT.getValue());
 		client = null;
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request
-				.getSession());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request);
 		if (!clientBO.isClientUnderGroup())
 			loadUpdateMfiMasterData(clientBO.getOffice().getOfficeId(), request);
 		setValuesForMfiEditInActionForm(actionForm, request);
@@ -569,6 +598,7 @@ public class ClientCustAction extends CustAction {
 				.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward previewEditMfiInfo(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse httpservletresponse) throws Exception {
@@ -576,6 +606,7 @@ public class ClientCustAction extends CustAction {
 				.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward prevEditMfiInfo(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse httpservletresponse) throws Exception {
@@ -584,12 +615,13 @@ public class ClientCustAction extends CustAction {
 	}
 
 	@CloseSession
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward updateMfiInfo(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		try {
 			ClientBO client = (ClientBO) SessionUtils.getAttribute(
-					Constants.BUSINESS_KEY, request.getSession());
+					Constants.BUSINESS_KEY, request);
 			ClientCustActionForm actionForm = (ClientCustActionForm) form;
 			client.setExternalId(actionForm.getExternalId());
 			if (actionForm.getTrainedValue() != null
@@ -598,7 +630,7 @@ public class ClientCustAction extends CustAction {
 				client.setTrained(true);
 			else
 				client.setTrained(false);
-			
+
 			client.setTrainedDate(getDateFromString(
 					actionForm.getTrainedDate(), getUserContext(request)
 							.getPereferedLocale()));
@@ -625,9 +657,9 @@ public class ClientCustAction extends CustAction {
 	}
 
 	private void setValuesInActionForm(ClientCustActionForm actionForm,
-			HttpServletRequest request) throws  Exception {
+			HttpServletRequest request) throws Exception {
 		ClientBO client = (ClientBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
+				Constants.BUSINESS_KEY, request);
 		if (client.getPersonnel() != null) {
 			actionForm.setLoanOfficerId(client.getPersonnel().getPersonnelId()
 					.toString());
@@ -656,9 +688,10 @@ public class ClientCustAction extends CustAction {
 	}
 
 	private void setValuesForMfiEditInActionForm(
-			ClientCustActionForm actionForm, HttpServletRequest request) {
+			ClientCustActionForm actionForm, HttpServletRequest request)
+			throws Exception {
 		ClientBO client = (ClientBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
+				Constants.BUSINESS_KEY, request);
 		if (client.getPersonnel() != null) {
 			actionForm.setLoanOfficerId(client.getPersonnel().getPersonnelId()
 					.toString());
@@ -729,58 +762,68 @@ public class ClientCustAction extends CustAction {
 	}
 
 	private void loadMasterDataForDetailsPage(HttpServletRequest request,
-			ClientBO clientBO) throws  ApplicationException {
+			ClientBO clientBO) throws ApplicationException {
 		try {
-		Short localeId = getUserContext(request).getLocaleId();
-		SessionUtils.setAttribute(ClientConstants.AGE, new CustomerHelper()
-				.calculateAge(new java.sql.Date((clientBO.getDateOfBirth())
-						.getTime())), request.getSession());
-		
-			SessionUtils.setAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
-					getMasterEntities(SpouseFatherLookupEntity.class, localeId),
-					request.getSession());
-		SessionUtils.setAttribute(CustomerConstants.CUSTOMERPERFORMANCE,
-				getCustomerBusinessService()
-						.numberOfMeetings(true, clientBO.getCustomerId()),
-				request.getSession());
-		SessionUtils.setAttribute(CustomerConstants.CUSTOMERPERFORMANCEHISTORY,
-				getCustomerBusinessService().numberOfMeetings(false, clientBO
-						.getCustomerId()), request.getSession());
-		SessionUtils
-				.setAttribute(ClientConstants.LOANCYCLECOUNTER, getCustomerBusinessService()
-						.fetchLoanCycleCounter(clientBO.getCustomerId()),
-						request.getSession());
-		List<LoanBO> loanAccounts = clientBO.getOpenLoanAccounts();
-		List<SavingsBO> savingsAccounts = clientBO.getOpenSavingAccounts();
-		setLocaleIdToLoanStatus(loanAccounts, localeId);
-		setLocaleIdToSavingsStatus(savingsAccounts, localeId);
-		SessionUtils.setAttribute(ClientConstants.CUSTOMERLOANACCOUNTSINUSE,
-				loanAccounts, request.getSession());
-		SessionUtils.setAttribute(ClientConstants.CUSTOMERSAVINGSACCOUNTSINUSE,
-				savingsAccounts, request.getSession());
-		SessionUtils.setAttribute(
-				ClientConstants.BUSINESS_ACTIVITIES_ENTITY_NAME,
-				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
-						.getBusinessActivities(), localeId), request
-						.getSession());
-		SessionUtils.setAttribute(ClientConstants.HANDICAPPED_ENTITY_NAME,
-				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
-						.getHandicapped(), localeId), request.getSession());
-		SessionUtils.setAttribute(ClientConstants.MARITAL_STATUS_ENTITY_NAME,
-				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
-						.getMaritalStatus(), localeId), request.getSession());
-		SessionUtils.setAttribute(ClientConstants.CITIZENSHIP_ENTITY_NAME,
-				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
-						.getCitizenship(), localeId), request.getSession());
-		SessionUtils.setAttribute(ClientConstants.ETHINICITY_ENTITY_NAME,
-				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
-						.getEthinicity(), localeId), request.getSession());
-		SessionUtils.setAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY_NAME,
-				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
-						.getEducationLevel(), localeId), request.getSession());
-		SessionUtils.setAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
-				getMasterEntities(SpouseFatherLookupEntity.class, localeId),
-				request.getSession());
+			Short localeId = getUserContext(request).getLocaleId();
+			SessionUtils.setAttribute(ClientConstants.AGE, new CustomerHelper()
+					.calculateAge(new java.sql.Date((clientBO.getDateOfBirth())
+							.getTime())), request);
+
+			SessionUtils
+					.setAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
+							getMasterEntities(SpouseFatherLookupEntity.class,
+									localeId), request);
+			SessionUtils.setAttribute(CustomerConstants.CUSTOMERPERFORMANCE,
+					getCustomerBusinessService().numberOfMeetings(true,
+							clientBO.getCustomerId()), request);
+			SessionUtils.setAttribute(
+					CustomerConstants.CUSTOMERPERFORMANCEHISTORY,
+					getCustomerBusinessService().numberOfMeetings(false,
+							clientBO.getCustomerId()), request);
+			SessionUtils.setAttribute(ClientConstants.LOANCYCLECOUNTER,
+					getCustomerBusinessService().fetchLoanCycleCounter(
+							clientBO.getCustomerId()), request);
+			List<LoanBO> loanAccounts = clientBO.getOpenLoanAccounts();
+			List<SavingsBO> savingsAccounts = clientBO.getOpenSavingAccounts();
+			setLocaleIdToLoanStatus(loanAccounts, localeId);
+			setLocaleIdToSavingsStatus(savingsAccounts, localeId);
+			SessionUtils.setAttribute(
+					ClientConstants.CUSTOMERLOANACCOUNTSINUSE, loanAccounts,
+					request);
+			SessionUtils.setAttribute(
+					ClientConstants.CUSTOMERSAVINGSACCOUNTSINUSE,
+					savingsAccounts, request);
+			SessionUtils.setAttribute(
+					ClientConstants.BUSINESS_ACTIVITIES_ENTITY_NAME,
+					getNameForBusinessActivityEntity(clientBO
+							.getCustomerDetail().getBusinessActivities(),
+							localeId), request);
+			SessionUtils.setAttribute(ClientConstants.HANDICAPPED_ENTITY_NAME,
+					getNameForBusinessActivityEntity(clientBO
+							.getCustomerDetail().getHandicapped(), localeId),
+					request);
+			SessionUtils.setAttribute(
+					ClientConstants.MARITAL_STATUS_ENTITY_NAME,
+					getNameForBusinessActivityEntity(clientBO
+							.getCustomerDetail().getMaritalStatus(), localeId),
+					request);
+			SessionUtils.setAttribute(ClientConstants.CITIZENSHIP_ENTITY_NAME,
+					getNameForBusinessActivityEntity(clientBO
+							.getCustomerDetail().getCitizenship(), localeId),
+					request);
+			SessionUtils.setAttribute(ClientConstants.ETHINICITY_ENTITY_NAME,
+					getNameForBusinessActivityEntity(clientBO
+							.getCustomerDetail().getEthinicity(), localeId),
+					request);
+			SessionUtils
+					.setAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY_NAME,
+							getNameForBusinessActivityEntity(clientBO
+									.getCustomerDetail().getEducationLevel(),
+									localeId), request);
+			SessionUtils
+					.setAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
+							getMasterEntities(SpouseFatherLookupEntity.class,
+									localeId), request);
 		} catch (PersistenceException e) {
 			throw new CustomerException(e);
 		}
@@ -812,30 +855,28 @@ public class ClientCustAction extends CustAction {
 	}
 
 	private void setSpouseOrFatherName(HttpServletRequest request,
-			ClientBO clientBO) throws NumberFormatException,
-			PersistenceException, ServiceException {
+			ClientBO clientBO) throws Exception {
 		for (ClientNameDetailEntity clientNameDetailEntity : clientBO
 				.getNameDetailSet()) {
 			if (clientNameDetailEntity.getNameType().shortValue() != ClientConstants.CLIENT_NAME_TYPE) {
 				SessionUtils.setAttribute(
 						ClientConstants.SPOUSE_FATHER_NAME_VALUE,
-						clientNameDetailEntity.getDisplayName(), request
-								.getSession());
+						clientNameDetailEntity.getDisplayName(), request);
 				SessionUtils
 						.setAttribute(ClientConstants.SPOUSE_FATHER_VALUE,
-								findMasterEntity(request.getSession(),
+								findMasterEntity(request,
 										ClientConstants.SPOUSE_FATHER_ENTITY,
 										clientNameDetailEntity.getNameType())
-										.getName(), request.getSession());
+										.getName(), request);
 				break;
 			}
 		}
 	}
 
-	private MasterDataEntity findMasterEntity(HttpSession session,
-			String collectionName, Short value) {
+	private MasterDataEntity findMasterEntity(HttpServletRequest request,
+			String collectionName, Short value) throws Exception {
 		List<MasterDataEntity> entities = (List<MasterDataEntity>) SessionUtils
-				.getAttribute(collectionName, session);
+				.getAttribute(collectionName, request);
 		for (MasterDataEntity entity : entities)
 			if (entity.getId().equals(value))
 				return entity;

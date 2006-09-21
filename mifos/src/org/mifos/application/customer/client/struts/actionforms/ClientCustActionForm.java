@@ -66,6 +66,7 @@ import org.mifos.framework.components.fieldConfiguration.business.FieldConfigura
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationHelper;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -85,15 +86,15 @@ public class ClientCustActionForm extends CustomerActionForm {
 	private FormFile picture;
 	private InputStream customerPicture;
 	private int age;
-	
+
 	public String getGroupFlag() {
 		return groupFlag;
 	}
-	
+
 	public Short getGroupFlagValue() {
 		return getShortValue(groupFlag);
 	}
-	
+
 	public void setGroupFlag(String groupFlag) {
 		this.groupFlag = groupFlag;
 	}
@@ -106,7 +107,7 @@ public class ClientCustActionForm extends CustomerActionForm {
 		this.parentGroup = parentGroup;
 	}
 
-	
+
 	public ClientDetailView getClientDetailView() {
 		return clientDetailView;
 	}
@@ -189,25 +190,25 @@ public class ClientCustActionForm extends CustomerActionForm {
 
 		}
 	}
-	
-	
+
+
 	public InputStream getCustomerPicture() {
 		return customerPicture;
 	}
 
 	public int getAge() {
 		return age;
-		 
+
 	}
-	
+
 	public void setAge(int age) {
 		this.age = age;
-		 
+
 	}
 
 	@Override
 	protected ActionErrors validateFields(HttpServletRequest request, String method) throws ApplicationException{
-		
+
 		ActionErrors errors = new ActionErrors();
 		if(  (method.equals(Methods.previewPersonalInfo.toString()) || method.equals(Methods.next.toString()) || method.equals(Methods.previewEditPersonalInfo.toString()))&& ( ClientConstants.INPUT_PERSONAL_INFO.equals(input) || ClientConstants.INPUT_EDIT_PERSONAL_INFO.equals(input) )){
 			validateClientNames(errors);
@@ -224,7 +225,7 @@ public class ClientCustActionForm extends CustomerActionForm {
 			validateTrained(request, errors);
 			validateFees(request, errors);
 		}
-		
+
 		if(method.equals(Methods.previewEditMfiInfo.toString()) ){
 			validateConfigurableMandatoryFields(request,errors,EntityType.CLIENT);
 			validateTrained(request, errors);
@@ -232,7 +233,7 @@ public class ClientCustActionForm extends CustomerActionForm {
 		return errors;
 	}
 
-	private void validatePicture(HttpServletRequest request , ActionErrors errors) {
+	private void validatePicture(HttpServletRequest request , ActionErrors errors) throws PageExpiredException {
 		if(picture !=null){
 			String fileName = picture.getFileName();
 			if(picture.getFileSize() > ClientConstants.PICTURE_ALLOWED_SIZE){
@@ -246,32 +247,32 @@ public class ClientCustActionForm extends CustomerActionForm {
 			}
 			if(picture.getFileSize() == 0||picture.getFileSize() < 0){
 
-				SessionUtils.setAttribute("noPicture" , "Yes" ,request.getSession());
+				SessionUtils.setAttribute("noPicture" , "Yes" ,request);
 			}
 			else{
-				SessionUtils.setAttribute("noPicture" , "No" ,request.getSession());
+				SessionUtils.setAttribute("noPicture" , "No" ,request);
 			}
 		}
 	}
 
 	private void validateGender(ActionErrors errors) {
 		if (clientDetailView.getGender() == null)
-			errors.add(CustomerConstants.GENDER, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, CustomerConstants.GENDER));		
+			errors.add(CustomerConstants.GENDER, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, CustomerConstants.GENDER));
 	}
-	
+
 	private void validateClientNames(ActionErrors errors) {
 		if (clientName.getSalutation() == null)
-			errors.add(CustomerConstants.SALUTATION, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, CustomerConstants.SALUTATION));		
+			errors.add(CustomerConstants.SALUTATION, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, CustomerConstants.SALUTATION));
 		if (StringUtils.isNullOrEmpty(clientName.getFirstName()))
 			errors.add(CustomerConstants.FIRST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, CustomerConstants.FIRST_NAME));
 		if (StringUtils.isNullOrEmpty(clientName.getLastName()))
 			errors.add(CustomerConstants.LAST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, CustomerConstants.LAST_NAME));
-		
+
 	}
 
 	private void validateSpouseNames(ActionErrors errors) {
 		if (spouseName.getNameType() == null)
-			errors.add(CustomerConstants.SPOUSE_TYPE, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, CustomerConstants.SPOUSE_TYPE));		
+			errors.add(CustomerConstants.SPOUSE_TYPE, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, CustomerConstants.SPOUSE_TYPE));
 		if (StringUtils.isNullOrEmpty(spouseName.getFirstName()))
 					errors.add(CustomerConstants.SPOUSE_FIRST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, CustomerConstants.SPOUSE_FIRST_NAME));
 		if (StringUtils.isNullOrEmpty(spouseName.getLastName()))
@@ -285,9 +286,9 @@ public class ClientCustActionForm extends CustomerActionForm {
 		if(( new CustomerHelper().isValidDOB(dateOfBirth , getUserLocale(request)) ) == false ){
 			errors.add(ClientConstants.INVALID_DOB_EXCEPTION,new ActionMessage(ClientConstants.INVALID_DOB_EXCEPTION));
 		}
-		
+
 	}
-	
+
 	@Override
 	public void checkForMandatoryFields(Short entityId, ActionErrors errors, HttpServletRequest request) {
 		Map<Short,List<FieldConfigurationEntity>> entityMandatoryFieldMap=(Map<Short,List<FieldConfigurationEntity>>)request.getSession().getServletContext().getAttribute(Constants.FIELD_CONFIGURATION);
@@ -307,7 +308,7 @@ public class ClientCustActionForm extends CustomerActionForm {
 							errors.add(fieldConfigurationEntity.getLabel(),
 									new ActionMessage(FieldConfigurationConstant.EXCEPTION_MANDATORY,
 											FieldConfigurationHelper.getLocalSpecificFieldNames(fieldConfigurationEntity.getLabel(),locale)));
-						
+
 						}
 						getCustomerPicture().reset();
 					} catch (IOException e) {
@@ -316,13 +317,13 @@ public class ClientCustActionForm extends CustomerActionForm {
 			}
 		}
 	}
-	
-	
+
+
 	@Override
 	protected MeetingBO getCustomerMeeting(HttpServletRequest request){
 		if(groupFlag.equals(ClientConstants.YES))
 			 return parentGroup.getCustomerMeeting().getMeeting();
 		else
-			 return (MeetingBO)request.getSession().getAttribute(ClientConstants.CLIENT_MEETING);		
+			 return (MeetingBO)request.getSession().getAttribute(ClientConstants.CLIENT_MEETING);
 	}
 }

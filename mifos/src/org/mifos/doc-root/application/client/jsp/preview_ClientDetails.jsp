@@ -43,20 +43,20 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script language="javascript">
-  
+
   function setClientStatus(status){
 	disableButtons();
 	document.getElementsByName("status")[0].value=status;
 	clientCustActionForm.action="clientCustAction.do?method=create";
 	clientCustActionForm.submit();
-	
+
   }
   function disableButtons(){
 	func_disableSubmitBtn('submitButton');
@@ -74,7 +74,7 @@
 	clientCustActionForm.action="clientCustAction.do?method=prevPersonalInfo";
 	clientCustActionForm.submit();
   }
-  
+
 </script>
 		<html-el:form action="clientCustAction.do?method=create">
 			<html-el:hidden property="input" value="create" />
@@ -202,21 +202,21 @@
 								<%-- Personal Information --%>
 								<tr>
 									<td class="fontnormalbold">
-									 <c:if test="${sessionScope.noPicture eq 'No'}">
+									 <c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'noPicture') eq 'No'}">
 									 	 <img src="/Mifos/clientCustAction.do?method=retrievePictureOnPreview"
 											height="100" width="150" />
 										<br>
 									</c:if></td></tr>
 									<tr><td class="fontnormalbold"><mifos:mifoslabel name="client.Name"
 										bundle="ClientUIResources"></mifos:mifoslabel> <span
-										class="fontnormal"> 
-										<c:forEach var="salutation" items="${sessionScope.salutationEntity}">
+										class="fontnormal">
+										<c:forEach var="salutation" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'salutationEntity')}">
 											<c:if test = "${salutation.id == sessionScope.clientCustActionForm.clientName.salutation}">
 												<c:out value="${salutation.name}"/>
 											</c:if>
-										</c:forEach> 
+										</c:forEach>
 										<c:out	value="${sessionScope.clientCustActionForm.clientName.displayName}" /> <br>
-									</span></td></tr> 
+									</span></td></tr>
 									<tr id="Client.GovernmentId"><td class="fontnormalbold"><mifos:mifoslabel
 										name="${ConfigurationConstants.GOVERNMENT_ID}" keyhm="Client.GovernmentId" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
 									<span class="fontnormal"><c:out
@@ -236,7 +236,7 @@
 									<tr><td class="fontnormalbold"> <mifos:mifoslabel name="client.Gender"
 										bundle="ClientUIResources"></mifos:mifoslabel> <span
 										class="fontnormal">
-										<c:forEach var="gender" items="${sessionScope.genderEntity}">
+										<c:forEach var="gender" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'genderEntity')}">
 											<c:if test = "${gender.id == sessionScope.clientCustActionForm.clientDetailView.gender}">
 												<c:out value="${gender.name}"/>
 											</c:if>
@@ -245,7 +245,7 @@
 									<tr><td class="fontnormalbold"><mifos:mifoslabel name="client.MaritalStatus"
 										bundle="ClientUIResources"></mifos:mifoslabel> <span
 										class="fontnormal">
-										<c:forEach var="maritalStatus" items="${sessionScope.maritalStatusEntity}">
+										<c:forEach var="maritalStatus" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'maritalStatusEntity')}">
 											<c:if test = "${maritalStatus.id == sessionScope.clientCustActionForm.clientDetailView.maritalStatus}">
 												<c:out value="${maritalStatus.name}"/>
 											</c:if>
@@ -274,7 +274,7 @@
 									<tr id="Client.Citizenship"><td class="fontnormalbold"><mifos:mifoslabel
 										name="${ConfigurationConstants.CITIZENSHIP}" keyhm="Client.Citizenship" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/> <span
 										class="fontnormal">
-										 <c:forEach var="citizenship" items="${sessionScope.citizenshipEntity}">
+										 <c:forEach var="citizenship" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'citizenshipEntity')}">
 											<c:if test = "${citizenship.id == sessionScope.clientCustActionForm.clientDetailView.citizenship}">
 												<c:out value="${citizenship.name}"/>
 											</c:if>
@@ -282,8 +282,8 @@
 									</span> <%-- Ethinicity --%></td></tr>
 									<tr id="Client.Ethinicity"><td class="fontnormalbold"><mifos:mifoslabel
 										name="${ConfigurationConstants.ETHINICITY}" keyhm="Client.Ethinicity" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/> <span
-										class="fontnormal"> 
-										<c:forEach var="ethinicity" items="${sessionScope.ethinicityEntity}">
+										class="fontnormal">
+										<c:forEach var="ethinicity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ethinicityEntity')}">
 											<c:if test = "${ethinicity.id == sessionScope.clientCustActionForm.clientDetailView.ethinicity}">
 												<c:out value="${ethinicity.name}"/>
 											</c:if>
@@ -291,8 +291,8 @@
 									</span></td></tr>
 									<tr id="Client.EducationLevel"><td class="fontnormalbold">
 									<mifos:mifoslabel name="client.EducationLevel" bundle="ClientUIResources" keyhm="Client.EducationLevel" isManadatoryIndicationNotRequired="yes"/> <span
-										class="fontnormal"> 
-										<c:forEach var="educationLevel" items="${sessionScope.educationLevelEntity}">
+										class="fontnormal">
+										<c:forEach var="educationLevel" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'educationLevelEntity')}">
 											<c:if test = "${educationLevel.id == sessionScope.clientCustActionForm.clientDetailView.educationLevel}">
 												<c:out value="${educationLevel.name}"/>
 											</c:if>
@@ -300,8 +300,8 @@
 									</span></td></tr>
 									<tr id="Client.BusinessActivities"><td class="fontnormalbold"><mifos:mifoslabel name="client.BusinessActivities"
 										bundle="ClientUIResources" keyhm="Client.BusinessActivities" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <span
-										class="fontnormal"> 
-										<c:forEach var="businessActivities" items="${sessionScope.businessActivitiesEntity}">
+										class="fontnormal">
+										<c:forEach var="businessActivities" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'businessActivitiesEntity')}">
 											<c:if test = "${businessActivities.id == sessionScope.clientCustActionForm.clientDetailView.businessActivities}">
 												<c:out value="${businessActivities.name}"/>
 											</c:if>
@@ -309,8 +309,8 @@
 									</span></td></tr>
 									<tr id="Client.Handicapped"><td class="fontnormalbold"><mifos:mifoslabel
 										name="${ConfigurationConstants.HANDICAPPED}" keyhm="Client.Handicapped" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/> <span
-										class="fontnormal"> 
-										<c:forEach var="handicapped" items="${sessionScope.handicappedEntity}">
+										class="fontnormal">
+										<c:forEach var="handicapped" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'handicappedEntity')}">
 											<c:if test = "${handicapped.id == sessionScope.clientCustActionForm.clientDetailView.handicapped}">
 												<c:out value="${handicapped.name}"/>
 											</c:if>
@@ -357,15 +357,15 @@
 										name="client.AdditionalInformationHeading"
 										bundle="ClientUIResources"></mifos:mifoslabel><span></span> <span
 										class="fontnormal"><br>
-									</span> 
-									<c:forEach var="cf" items="${sessionScope.customFields}">
+									</span>
+									<c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 										 <c:forEach var="customField" items="${sessionScope.clientCustActionForm.customFields}">
 											<c:if test="${cf.fieldId==customField.fieldId}">
-												<mifos:mifoslabel name="${cf.lookUpEntity.entityType}" bundle="CenterUIResources"></mifos:mifoslabel>: 
+												<mifos:mifoslabel name="${cf.lookUpEntity.entityType}" bundle="CenterUIResources"></mifos:mifoslabel>:
 									         	<span class="fontnormal"><c:out value="${customField.fieldValue}"/></span><br>
 											</c:if>
 										</c:forEach>
-			    				  	</c:forEach> 
+			    				  	</c:forEach>
 								 <br>
 									<!-- Edit Button --> <html-el:button
 										onclick="goToPersonalPage()" property="editButton"
@@ -389,7 +389,7 @@
 									<span class="fontnormalbold"> <mifos:mifoslabel
 										name="client.LoanOfficer" bundle="ClientUIResources"></mifos:mifoslabel>
 									</span>
-									<c:forEach var="LO" items="${sessionScope.loanOfficers}">
+									<c:forEach var="LO" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanOfficers')}">
 										<c:if test = "${LO.personnelId == sessionScope.clientCustActionForm.loanOfficerId}">
 												<span class="fontnormal"><c:out value="${LO.displayName}"/></span>
 										</c:if>
@@ -401,12 +401,12 @@
 										<span class="fontnormal">
 											<c:out value="${sessionScope.clientCustActionForm.parentGroup.personnel.displayName}" /><br>
 										</span>
-																
+
 										<span class="fontnormalbold"> <mifos:mifoslabel
 											name="${ConfigurationConstants.CENTER}" /> <mifos:mifoslabel
 											name="client.Centers" bundle="ClientUIResources"></mifos:mifoslabel></span>
 										<span class="fontnormal"><c:out
-											value="${sessionScope.clientCustActionForm.parentGroup.parentCustomer.displayName}" /><br>
+											value="${sessionScope.clientCustActionForm.parentGroup.parentCustomer.displayName}" /> <br>
 										</span>
 										<span class="fontnormalbold"><mifos:mifoslabel
 											name="${ConfigurationConstants.GROUP}" /> <mifos:mifoslabel
@@ -419,7 +419,7 @@
 									</c:if> <span class="fontnormalbold"><mifos:mifoslabel
 										name="client.FormedBy" bundle="ClientUIResources"></mifos:mifoslabel></span>
 									<span class="fontnormal">
-									<c:forEach var="formedByLO" items="${sessionScope.formedByLoanOfficers}">
+									<c:forEach var="formedByLO" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'formedByLoanOfficers')}">
 										<c:if test = "${formedByLO.personnelId == sessionScope.clientCustActionForm.formedByPersonnel}">
 											<c:out value="${formedByLO.displayName}"/><br>
 										</c:if>
@@ -457,7 +457,7 @@
 									<mifos:mifoslabel name="${ConfigurationConstants.EXTERNALID}" keyhm="Client.ExternalId" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
 									<span class="fontnormal"> <c:out
 										value="${sessionScope.clientCustActionForm.externalId}" /><br>
-									</span></td></tr> 
+									</span></td></tr>
 									<tr id="Client.Trained"><td class="fontnormalbold"><mifos:mifoslabel name="client.Trained"
 										bundle="ClientUIResources" keyhm="Client.Trained" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <c:choose>
 										<c:when test="${sessionScope.clientCustActionForm.trained eq '1'}">
@@ -470,23 +470,23 @@
 												name="client.NoLabel" bundle="ClientUIResources"></mifos:mifoslabel><br>
 											</span>
 										</c:otherwise>
-									</c:choose></td></tr> 
+									</c:choose></td></tr>
 									<tr id="Client.TrainedDate"><td class="fontnormalbold"> <mifos:mifoslabel name="client.TrainedOnDate"
 										bundle="ClientUIResources" keyhm="Client.TrainedDate" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <span
 										class="fontnormal"> <c:out
 										value="${sessionScope.clientCustActionForm.trainedDate}" />
 									<br>
-									</span><br></td></tr> 
+									</span><br></td></tr>
 									<tr><td class="fontnormalbold">
 									<mifos:mifoslabel name="client.ChargesApplied"
 										bundle="ClientUIResources"></mifos:mifoslabel> <span
 										class="fontnormal"><br>
-									</span> 
+									</span>
 									 <c:forEach var="adminFee" items="${sessionScope.clientCustActionForm.defaultFees}">
 										<c:if test="${adminFee.removed == false}">
 									  		 <c:out value="${adminFee.feeName}"/>:
 									   		<span class="fontnormal">
-									   			<c:out value="${adminFee.amount}"/> 
+									   			<c:out value="${adminFee.amount}"/>
 									   			<mifos:mifoslabel name="Center.Periodicity" bundle="CenterUIResources"/>
 										   		<c:choose>
 													<c:when test="${adminFee.periodic}">
@@ -497,14 +497,14 @@
 													</c:otherwise>
 												</c:choose>
 											</span><br>
-										</c:if> 
+										</c:if>
 									</c:forEach>
-									<c:forEach var="fee" items="${sessionScope.additionalFeeList}" >
+									<c:forEach var="fee" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'additionalFeeList')}" >
 										<c:forEach var="selectedFee" items="${sessionScope.clientCustActionForm.additionalFees}" >
 											<c:if test="${fee.feeId == selectedFee.feeId}">
 							           	  		<c:out value="${fee.feeName}"/>:
 												<span class="fontnormal"><span class="fontnormal">
-												<c:out value="${selectedFee.amount}"/> 
+												<c:out value="${selectedFee.amount}"/>
 												<mifos:mifoslabel name="Center.Periodicity" bundle="CenterUIResources"/>
 												<c:choose>
 													<c:when test="${fee.periodic == true}">
@@ -514,7 +514,7 @@
 														<mifos:mifoslabel name="Fees.onetime"/>
 													</c:otherwise>
 												</c:choose></span><br></span>
-											</c:if>	
+											</c:if>
 										</c:forEach>
 									</c:forEach>
 									<br>
@@ -541,9 +541,9 @@
 										onclick="setClientStatus('1');" style="width:130px">
 										<mifos:mifoslabel name="button.SaveForLater"
 											bundle="ClientUIResources"></mifos:mifoslabel>
-									</html-el:button> &nbsp; &nbsp; 
+									</html-el:button> &nbsp; &nbsp;
 									<c:choose>
-										<c:when test="${sessionScope.pendingApprovalDefined eq 'Yes'}">
+										<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'pendingApprovalDefined') eq 'Yes'}">
 											<html-el:button property="submitButton" styleClass="buttn"
 												onclick="setClientStatus('2');" style="width:130px">
 												<mifos:mifoslabel name="button.SubmitForApproval"
@@ -566,6 +566,7 @@
 								</tr>
 							</table>
 							<!-- Submit and cancel buttons end --> <br>
+							<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 							</td>
 						</tr>
 					</table>

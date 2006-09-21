@@ -1,40 +1,40 @@
 /**
 
-* TestClientCustAction.java version: 1.0
+ * TestClientCustAction.java version: 1.0
 
 
 
-* Copyright (c) 2005-2006 Grameen Foundation USA
+ * Copyright (c) 2005-2006 Grameen Foundation USA
 
-* 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+ * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
 
-* All rights reserved.
+ * All rights reserved.
 
 
 
-* Apache License
-* Copyright (c) 2005-2006 Grameen Foundation USA
-*
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
 
-* Licensed under the Apache License, Version 2.0 (the "License"); you may
-* not use this file except in compliance with the License. You may obtain
-* a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
-*
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
 
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and limitations under the
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the
 
-* License.
-*
-* See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
+ * License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
 
-* and how it is applied.
+ * and how it is applied.
 
-*
+ *
 
-*/
+ */
 
 package org.mifos.application.customer.client.struts.action;
 
@@ -65,8 +65,8 @@ import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.CustomFieldType;
@@ -85,14 +85,21 @@ import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestClientCustAction extends MifosMockStrutsTestCase{
+public class TestClientCustAction extends MifosMockStrutsTestCase {
 	private UserContext userContext;
+
 	private CenterBO center;
+
 	private GroupBO group;
+
 	private ClientBO client;
+
 	private MeetingBO meeting;
+
 	private AccountBO accountBO;
+
 	private String flowKey;
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -106,23 +113,27 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 			e.printStackTrace();
 		}
 		userContext = TestObjectFactory.getContext();
-		userContext.setPereferedLocale(new Locale("en","US"));
+		userContext.setPereferedLocale(new Locale("en", "US"));
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
-		
-		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
+
+		request.getSession(false).setAttribute("ActivityContext",
+				TestObjectFactory.getActivityContext());
 		Flow flow = new Flow();
 		flowKey = String.valueOf(System.currentTimeMillis());
 		FlowManager flowManager = new FlowManager();
 		flowManager.addFLow(flowKey, flow);
 		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
 				flowManager);
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);		EntityMasterData.getInstance().init();
-		FieldConfigItf fieldConfigItf=FieldConfigImplementer.getInstance();
-		fieldConfigItf.init();		
+		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+		EntityMasterData.getInstance().init();
+		FieldConfigItf fieldConfigItf = FieldConfigImplementer.getInstance();
+		fieldConfigItf.init();
 		FieldConfigImplementer.getInstance();
-		getActionServlet().getServletContext().setAttribute(Constants.FIELD_CONFIGURATION,fieldConfigItf.getEntityMandatoryFieldMap());
+		getActionServlet().getServletContext().setAttribute(
+				Constants.FIELD_CONFIGURATION,
+				fieldConfigItf.getEntityMandatoryFieldMap());
 	}
 
 	@Override
@@ -135,50 +146,65 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		super.tearDown();
 	}
 
-
 	public void testLoad() throws Exception {
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
 		addRequestParameter("groupFlag", "0");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.load_success.toString());
-		assertNotNull(SessionUtils.getAttribute(ClientConstants.SALUTATION_ENTITY, request.getSession()));
-		assertNotNull(SessionUtils.getAttribute(ClientConstants.MARITAL_STATUS_ENTITY, request.getSession()));
-		assertNotNull(SessionUtils.getAttribute(ClientConstants.CITIZENSHIP_ENTITY, request.getSession()));
-		assertNotNull(SessionUtils.getAttribute(ClientConstants.BUSINESS_ACTIVITIES_ENTITY, request.getSession()));
-		assertNotNull(SessionUtils.getAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY, request.getSession()));
-		assertNotNull(SessionUtils.getAttribute(ClientConstants.GENDER_ENTITY, request.getSession()));
-		assertNotNull(SessionUtils.getAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, request.getSession()));
-		assertNotNull(SessionUtils.getAttribute(ClientConstants.HANDICAPPED_ENTITY, request.getSession()));
-		assertNotNull(SessionUtils.getAttribute(ClientConstants.ETHINICITY_ENTITY, request.getSession()));
-		assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,request.getSession()));
-		assertNotNull(SessionUtils.getAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST,request.getSession()));
-			
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.SALUTATION_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.MARITAL_STATUS_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.CITIZENSHIP_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.BUSINESS_ACTIVITIES_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.EDUCATION_LEVEL_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(ClientConstants.GENDER_ENTITY,
+				request));
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.SPOUSE_FATHER_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.HANDICAPPED_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.ETHINICITY_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(
+				CustomerConstants.CUSTOM_FIELDS_LIST, request));
+		assertNotNull(SessionUtils.getAttribute(
+				CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST, request));
+
 	}
-	
+
 	public void testLoadClientUnderGroup() throws Exception {
-			createParentCustomer();
-			setRequestPathInfo("/clientCustAction.do");
-			addRequestParameter("method", "load");
-			addRequestParameter("parentGroupId", group.getCustomerId().toString());
-			addRequestParameter("groupFlag", "1");
-			actionPerform();
-			verifyNoActionErrors();
-			verifyNoActionMessages();
-			verifyForward(ActionForwards.load_success.toString());
-						ClientCustActionForm actionForm = (ClientCustActionForm)request.getSession().getAttribute("clientCustActionForm");
-			assertEquals(actionForm.getFormedByPersonnelValue() , group.getCustomerFormedByPersonnel().getPersonnelId());
-		
+		createParentCustomer();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("parentGroupId", group.getCustomerId().toString());
+		addRequestParameter("groupFlag", "1");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.load_success.toString());
+		ClientCustActionForm actionForm = (ClientCustActionForm) request
+				.getSession().getAttribute("clientCustActionForm");
+		assertEquals(actionForm.getFormedByPersonnelValue(), group
+				.getCustomerFormedByPersonnel().getPersonnelId());
+
 	}
-	
+
 	public void testFailureNextWithAllValuesNull() throws Exception {
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
 		addRequestParameter("groupFlag", "0");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -187,28 +213,37 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		addRequestParameter("officeId", "3");
 		addRequestParameter("input", "personalInfo");
 		actionPerform();
-		assertEquals("Client salutation", 1, getErrrorSize(CustomerConstants.SALUTATION));				
-		assertEquals("Client first Name", 1, getErrrorSize(CustomerConstants.FIRST_NAME));				
-		assertEquals("Client last Name", 1, getErrrorSize(CustomerConstants.LAST_NAME));
-		assertEquals("spouse first Name", 1, getErrrorSize(CustomerConstants.SPOUSE_FIRST_NAME));
-		assertEquals("spouse last Name", 1, getErrrorSize(CustomerConstants.SPOUSE_LAST_NAME));
-		assertEquals("spouse type", 1, getErrrorSize(CustomerConstants.SPOUSE_TYPE));
+		assertEquals("Client salutation", 1,
+				getErrrorSize(CustomerConstants.SALUTATION));
+		assertEquals("Client first Name", 1,
+				getErrrorSize(CustomerConstants.FIRST_NAME));
+		assertEquals("Client last Name", 1,
+				getErrrorSize(CustomerConstants.LAST_NAME));
+		assertEquals("spouse first Name", 1,
+				getErrrorSize(CustomerConstants.SPOUSE_FIRST_NAME));
+		assertEquals("spouse last Name", 1,
+				getErrrorSize(CustomerConstants.SPOUSE_LAST_NAME));
+		assertEquals("spouse type", 1,
+				getErrrorSize(CustomerConstants.SPOUSE_TYPE));
 		assertEquals("Gender", 1, getErrrorSize(CustomerConstants.GENDER));
 		assertEquals("DOB", 1, getErrrorSize(CustomerConstants.DOB));
 		verifyInputForward();
 	}
-	
-	public void testFailureNext_WithoutMandatoryCustomField_IfAny() throws Exception{
+
+	public void testFailureNext_WithoutMandatoryCustomField_IfAny()
+			throws Exception {
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
 		addRequestParameter("groupFlag", "0");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		
-		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request.getSession());
+
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
 		boolean isCustomFieldMandatory = false;
-		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
-			if(customFieldDef.isMandatory()){
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			if (customFieldDef.isMandatory()) {
 				isCustomFieldMandatory = true;
 				break;
 			}
@@ -225,30 +260,36 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		addRequestParameter("dateOfBirth", "03/20/2006");
 		addRequestParameter("gender", "1");
 		addRequestParameter("input", "personalInfo");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		int i = 0;
-		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
-			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
-			addRequestParameter("customField["+ i +"].fieldValue", "");
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			addRequestParameter("customField[" + i + "].fieldId",
+					customFieldDef.getFieldId().toString());
+			addRequestParameter("customField[" + i + "].fieldValue", "");
 			i++;
 		}
 		actionPerform();
-		
-		if(isCustomFieldMandatory)
-			assertEquals("CustomField", 1, getErrrorSize(CustomerConstants.CUSTOM_FIELD));	
+
+		if (isCustomFieldMandatory)
+			assertEquals("CustomField", 1,
+					getErrrorSize(CustomerConstants.CUSTOM_FIELD));
 		else
-			assertEquals("CustomField", 0, getErrrorSize(CustomerConstants.CUSTOM_FIELD));	
-	
+			assertEquals("CustomField", 0,
+					getErrrorSize(CustomerConstants.CUSTOM_FIELD));
+
 	}
-	
-	public void testNextSuccess() throws Exception{
-		
+
+	public void testNextSuccess() throws Exception {
+
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
 		addRequestParameter("groupFlag", "0");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		
-		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request.getSession());
+
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "next");
 		addRequestParameter("officeId", "3");
@@ -261,10 +302,12 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		addRequestParameter("dateOfBirth", "03/20/2006");
 		addRequestParameter("clientDetailView.gender", "1");
 		addRequestParameter("input", "personalInfo");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		int i = 0;
-		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
-			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
-			addRequestParameter("customField["+ i +"].fieldValue", "Req");
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			addRequestParameter("customField[" + i + "].fieldId",
+					customFieldDef.getFieldId().toString());
+			addRequestParameter("customField[" + i + "].fieldValue", "Req");
 			i++;
 		}
 		actionPerform();
@@ -272,14 +315,16 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.next_success.toString());
 	}
-	
+
 	public void testPreviewFailureForTrainedDate() throws Exception {
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
 		addRequestParameter("groupFlag", "0");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request.getSession());
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "next");
 		addRequestParameter("officeId", "3");
@@ -292,10 +337,12 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		addRequestParameter("dateOfBirth", "03/20/2006");
 		addRequestParameter("clientDetailView.gender", "1");
 		addRequestParameter("input", "personalInfo");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		int i = 0;
-		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
-			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
-			addRequestParameter("customField["+ i +"].fieldValue", "Req");
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			addRequestParameter("customField[" + i + "].fieldId",
+					customFieldDef.getFieldId().toString());
+			addRequestParameter("customField[" + i + "].fieldValue", "Req");
 			i++;
 		}
 		actionPerform();
@@ -306,17 +353,21 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		addRequestParameter("input", "mfiInfo");
 		actionPerform();
 		assertEquals(1, getErrrorSize());
-		assertEquals("Client Trained date not present", 1, getErrrorSize(CustomerConstants.TRAINED_DATE_MANDATORY  ));
-		
+		assertEquals("Client Trained date not present", 1,
+				getErrrorSize(CustomerConstants.TRAINED_DATE_MANDATORY));
+
 	}
-	
-	public void testPreviewFailureFormedByPersonnelNotPresent() throws Exception {
+
+	public void testPreviewFailureFormedByPersonnelNotPresent()
+			throws Exception {
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
 		addRequestParameter("groupFlag", "0");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request.getSession());
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "next");
 		addRequestParameter("officeId", "3");
@@ -330,26 +381,32 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		addRequestParameter("clientDetailView.gender", "1");
 		addRequestParameter("input", "personalInfo");
 		int i = 0;
-		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
-			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
-			addRequestParameter("customField["+ i +"].fieldValue", "Req");
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			addRequestParameter("customField[" + i + "].fieldId",
+					customFieldDef.getFieldId().toString());
+			addRequestParameter("customField[" + i + "].fieldValue", "Req");
 			i++;
 		}
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("input", "mfiInfo");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		assertEquals(1, getErrrorSize());
-		assertEquals("Client formed by not present", 1, getErrrorSize(CustomerConstants.FORMED_BY_LOANOFFICER  ));
-		
+		assertEquals("Client formed by not present", 1,
+				getErrrorSize(CustomerConstants.FORMED_BY_LOANOFFICER));
+
 	}
-	public void testFailurePreview_WithDuplicateFee() throws Exception{
+
+	public void testFailurePreview_WithDuplicateFee() throws Exception {
 		List<FeeView> feesToRemove = getFees(RecurrenceType.WEEKLY);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
 		addRequestParameter("groupFlag", "0");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "next");
@@ -363,29 +420,35 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		addRequestParameter("dateOfBirth", "03/20/2006");
 		addRequestParameter("gender", "1");
 		addRequestParameter("input", "personalInfo");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		List<FeeView> feeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request.getSession());
+		List<FeeView> feeList = (List<FeeView>) SessionUtils.getAttribute(
+				CustomerConstants.ADDITIONAL_FEES_LIST, request);
 		FeeView fee = feeList.get(0);
 		setRequestPathInfo("/clientCustAction.do");
-		addRequestParameter("method", "preview");	
+		addRequestParameter("method", "preview");
 		addRequestParameter("input", "mfiInfo");
 		addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
 		addRequestParameter("selectedFee[0].amount", "100");
 		addRequestParameter("selectedFee[1].feeId", fee.getFeeId());
 		addRequestParameter("selectedFee[1].amount", "150");
-		actionPerform();		
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
 		assertEquals("Fee", 1, getErrrorSize(CustomerConstants.FEE));
 		removeFees(feesToRemove);
 	}
-	
+
 	public void testPreviewFaillure_FeesWithoutMeeting() throws Exception {
 		List<FeeView> feesToRemove = getFees(RecurrenceType.WEEKLY);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
 		addRequestParameter("groupFlag", "0");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request.getSession());
+		flowKey =(String) request.getAttribute(Constants.CURRENTFLOWKEY);
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "next");
 		addRequestParameter("officeId", "3");
@@ -399,32 +462,40 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		addRequestParameter("clientDetailView.gender", "1");
 		addRequestParameter("input", "personalInfo");
 		int i = 0;
-		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
-			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
-			addRequestParameter("customField["+ i +"].fieldValue", "Req");
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			addRequestParameter("customField[" + i + "].fieldId",
+					customFieldDef.getFieldId().toString());
+			addRequestParameter("customField[" + i + "].fieldValue", "Req");
 			i++;
 		}
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		List<FeeView> feeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request.getSession());
+		List<FeeView> feeList = (List<FeeView>) SessionUtils.getAttribute(
+				CustomerConstants.ADDITIONAL_FEES_LIST, request);
 		FeeView fee = feeList.get(0);
 		setRequestPathInfo("/clientCustAction.do");
-		addRequestParameter("method", "preview");	
+		addRequestParameter("method", "preview");
 		addRequestParameter("input", "mfiInfo");
 		addRequestParameter("formedByPersonnel", "1");
 		addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
 		addRequestParameter("selectedFee[0].amount", fee.getAmount());
-		//SessionUtils.setAttribute(ClientConstants.CLIENT_MEETING,new MeetingBO(MeetingFrequency.MONTHLY, Short.valueOf("2"),MeetingType.CUSTOMERMEETING), request.getSession());
+		// SessionUtils.setAttribute(ClientConstants.CLIENT_MEETING,new
+		// MeetingBO(MeetingFrequency.MONTHLY,
+		// Short.valueOf("2"),MeetingType.CUSTOMERMEETING), request);
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals("Fee", 1, getErrrorSize(CustomerConstants.MEETING_REQUIRED_EXCEPTION));
+		assertEquals("Fee", 1,
+				getErrrorSize(CustomerConstants.MEETING_REQUIRED_EXCEPTION));
 		removeFees(feesToRemove);
 	}
-	
-	public void testFailurePreview_WithFee_WithoutFeeAmount() throws Exception{
+
+	public void testFailurePreview_WithFee_WithoutFeeAmount() throws Exception {
 		List<FeeView> feesToRemove = getFees(RecurrenceType.WEEKLY);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
 		addRequestParameter("groupFlag", "0");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "next");
@@ -438,27 +509,33 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		addRequestParameter("dateOfBirth", "03/20/2006");
 		addRequestParameter("gender", "1");
 		addRequestParameter("input", "personalInfo");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		List<FeeView> feeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request.getSession());
+		List<FeeView> feeList = (List<FeeView>) SessionUtils.getAttribute(
+				CustomerConstants.ADDITIONAL_FEES_LIST, request);
 		FeeView fee = feeList.get(0);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("input", "mfiInfo");
-		addRequestParameter("method", "preview");		
+		addRequestParameter("method", "preview");
 		addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
 		addRequestParameter("selectedFee[0].amount", "");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		assertEquals("Fee", 1, getErrrorSize(CustomerConstants.FEE));
 		removeFees(feesToRemove);
 	}
-	
+
 	public void testPreviewSuccess() throws Exception {
 		List<FeeView> feesToRemove = getFees(RecurrenceType.MONTHLY);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
 		addRequestParameter("groupFlag", "0");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request.getSession());
+		flowKey =(String) request.getAttribute(Constants.CURRENTFLOWKEY);
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "next");
 		addRequestParameter("officeId", "3");
@@ -472,54 +549,67 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		addRequestParameter("clientDetailView.gender", "1");
 		addRequestParameter("input", "personalInfo");
 		int i = 0;
-		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
-			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
-			addRequestParameter("customField["+ i +"].fieldValue", "Req");
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			addRequestParameter("customField[" + i + "].fieldId",
+					customFieldDef.getFieldId().toString());
+			addRequestParameter("customField[" + i + "].fieldValue", "Req");
 			i++;
 		}
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		List<FeeView> feeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request.getSession());
+		List<FeeView> feeList = (List<FeeView>) SessionUtils.getAttribute(
+				CustomerConstants.ADDITIONAL_FEES_LIST, request);
 		FeeView fee = feeList.get(0);
 		setRequestPathInfo("/clientCustAction.do");
-		addRequestParameter("method", "preview");	
+		addRequestParameter("method", "preview");
 		addRequestParameter("input", "mfiInfo");
 		addRequestParameter("formedByPersonnel", "1");
 		addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
 		addRequestParameter("selectedFee[0].amount", fee.getAmount());
-		SessionUtils.setAttribute(ClientConstants.CLIENT_MEETING,new MeetingBO(RecurrenceType.MONTHLY, Short.valueOf("2"), new Date(), MeetingType.CUSTOMERMEETING), request.getSession());
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(ClientConstants.CLIENT_MEETING,
+				new MeetingBO(RecurrenceType.MONTHLY, Short.valueOf("2"),
+						new Date(), MeetingType.CUSTOMERMEETING), request
+						.getSession());
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.preview_success.toString());
 		removeFees(feesToRemove);
 	}
-		
+
 	public void testSuccessfulPrevPersonalInfo() throws Exception {
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "prevPersonalInfo");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.prevPersonalInfo_success.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 	}
-	
+
 	public void testSuccessfulPrevMfiInfo() throws Exception {
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "prevMFIInfo");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.prevMFIInfo_success.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 	}
-	
+
 	public void testCreateSuccessWithoutGroup() throws Exception {
 		List<FeeView> feesToRemove = getFees(RecurrenceType.WEEKLY);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
 		addRequestParameter("groupFlag", "0");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request.getSession());
+		flowKey =(String) request.getAttribute(Constants.CURRENTFLOWKEY);
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "next");
 		addRequestParameter("officeId", "3");
@@ -533,47 +623,55 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		addRequestParameter("clientDetailView.gender", "1");
 		addRequestParameter("input", "personalInfo");
 		int i = 0;
-		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
-			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
-			addRequestParameter("customField["+ i +"].fieldValue", "Req");
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			addRequestParameter("customField[" + i + "].fieldId",
+					customFieldDef.getFieldId().toString());
+			addRequestParameter("customField[" + i + "].fieldValue", "Req");
 			i++;
 		}
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		setRequestPathInfo("/clientCustAction.do");
-		addRequestParameter("method", "preview");	
+		addRequestParameter("method", "preview");
 		addRequestParameter("input", "mfiInfo");
 		addRequestParameter("loanOfficerId", "1");
 		addRequestParameter("formedByPersonnel", "1");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.preview_success.toString());
 		setRequestPathInfo("/clientCustAction.do");
-		addRequestParameter("method", "create");	
+		addRequestParameter("method", "create");
 		addRequestParameter("input", "create");
 		addRequestParameter("status", "1");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.create_success.toString());
-		ClientCustActionForm actionForm = (ClientCustActionForm)request.getSession().getAttribute("clientCustActionForm");
-		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class, new Integer(actionForm.getCustomerId()).intValue());
+		ClientCustActionForm actionForm = (ClientCustActionForm) request
+				.getSession().getAttribute("clientCustActionForm");
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
+				new Integer(actionForm.getCustomerId()).intValue());
 		removeFees(feesToRemove);
 	}
-	
-	
+
 	public void testCreateSuccessUnderGroup() throws Exception {
-		try{
+		try {
 			createParentCustomer();
 			setRequestPathInfo("/clientCustAction.do");
 			addRequestParameter("method", "load");
-			addRequestParameter("parentGroupId", group.getCustomerId().toString());
+			addRequestParameter("parentGroupId", group.getCustomerId()
+					.toString());
 			addRequestParameter("groupFlag", "1");
+			addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 			actionPerform();
 			verifyNoActionErrors();
 			verifyNoActionMessages();
 			verifyForward(ActionForwards.load_success.toString());
-			List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request.getSession());
+			List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+					.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
 			setRequestPathInfo("/clientCustAction.do");
 			addRequestParameter("method", "next");
 			addRequestParameter("officeId", "3");
@@ -587,90 +685,115 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 			addRequestParameter("clientDetailView.gender", "1");
 			addRequestParameter("input", "personalInfo");
 			int i = 0;
-			for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
-				addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
-				addRequestParameter("customField["+ i +"].fieldValue", "Req");
+			for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+				addRequestParameter("customField[" + i + "].fieldId",
+						customFieldDef.getFieldId().toString());
+				addRequestParameter("customField[" + i + "].fieldValue", "Req");
 				i++;
 			}
+			addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 			actionPerform();
 			verifyNoActionErrors();
 			verifyNoActionMessages();
 			verifyForward(ActionForwards.next_success.toString());
 
 			setRequestPathInfo("/clientCustAction.do");
-			addRequestParameter("method", "preview");	
+			addRequestParameter("method", "preview");
 			addRequestParameter("input", "mfiInfo");
 			addRequestParameter("formedByPersonnel", "1");
+			addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 			actionPerform();
 			verifyNoActionErrors();
 			verifyNoActionMessages();
 			verifyForward(ActionForwards.preview_success.toString());
 			setRequestPathInfo("/clientCustAction.do");
-			addRequestParameter("method", "create");	
+			addRequestParameter("method", "create");
 			addRequestParameter("input", "create");
 			addRequestParameter("status", "1");
+			addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 			actionPerform();
 			verifyNoActionErrors();
 			verifyNoActionMessages();
 			verifyForward(ActionForwards.create_success.toString());
-			ClientCustActionForm actionForm = (ClientCustActionForm)request.getSession().getAttribute("clientCustActionForm");
-			client = (ClientBO)TestObjectFactory.getObject(ClientBO.class, new Integer(actionForm.getCustomerId()).intValue());
-		}
-		catch(Exception e ){
+			ClientCustActionForm actionForm = (ClientCustActionForm) request
+					.getSession().getAttribute("clientCustActionForm");
+			client = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
+					new Integer(actionForm.getCustomerId()).intValue());
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void testGet(){	
+
+	public void testGet() throws Exception {
 		createInitialCustomers();
-		accountBO = getLoanAccount(client,meeting);
+		accountBO = getLoanAccount(client, meeting);
 		client.setDateOfBirth(offSetCurrentDate(50));
-		TestObjectFactory.updateObject(client);	
+		TestObjectFactory.updateObject(client);
 		HibernateUtil.closeSession();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "get");
 		addRequestParameter("globalCustNum", client.getGlobalCustNum());
-		actionPerform();	
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
 		verifyForward(ActionForwards.get_success.toString());
-		assertEquals("Age of customer should be 50 years",50,SessionUtils.getAttribute(ClientConstants.AGE,request.getSession()));
-		//assertEquals("No of active loan accounts should be 1",1,((List<LoanBO>)SessionUtils.getAttribute(ClientConstants.CUSTOMERACTIVELOANACCOUNTS,request.getSession())).size());
+		assertEquals("Age of customer should be 50 years", 50, SessionUtils
+				.getAttribute(ClientConstants.AGE, request));
+		// assertEquals("No of active loan accounts should be
+		// 1",1,((List<LoanBO>)SessionUtils.getAttribute(ClientConstants.CUSTOMERACTIVELOANACCOUNTS,request)).size());
 		HibernateUtil.closeSession();
-		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,group.getCustomerId());
-		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,center.getCustomerId());
-		client = (ClientBO)HibernateUtil.getSessionTL().get(ClientBO.class,client.getCustomerId());
-		accountBO = (LoanBO) HibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());
+		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
+				group.getCustomerId());
+		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,
+				center.getCustomerId());
+		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
+				client.getCustomerId());
+		accountBO = (LoanBO) HibernateUtil.getSessionTL().get(LoanBO.class,
+				accountBO.getAccountId());
 	}
-	
-	public void testEditPersonalInfo() throws Exception {		
-		
+
+	public void testEditPersonalInfo() throws Exception {
+
 		createAndSetClientInSession();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "editPersonalInfo");
 		addRequestParameter("officeId", "3");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.editPersonalInfo_success.toString());
-		assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,request.getSession()));
-		assertNotNull(SessionUtils.getAttribute(ClientConstants.SALUTATION_ENTITY, request.getSession()));
-		assertNotNull(SessionUtils.getAttribute(ClientConstants.MARITAL_STATUS_ENTITY, request.getSession()));
-		assertNotNull(SessionUtils.getAttribute(ClientConstants.CITIZENSHIP_ENTITY, request.getSession()));
-		assertNotNull(SessionUtils.getAttribute(ClientConstants.BUSINESS_ACTIVITIES_ENTITY, request.getSession()));
-		assertNotNull(SessionUtils.getAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY, request.getSession()));
-		assertNotNull(SessionUtils.getAttribute(ClientConstants.GENDER_ENTITY, request.getSession()));
-		assertNotNull(SessionUtils.getAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, request.getSession()));
-		assertNotNull(SessionUtils.getAttribute(ClientConstants.HANDICAPPED_ENTITY, request.getSession()));
-		assertNotNull(SessionUtils.getAttribute(ClientConstants.ETHINICITY_ENTITY, request.getSession()));
-		assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,request.getSession()));
-			
+		assertNotNull(SessionUtils.getAttribute(
+				CustomerConstants.CUSTOM_FIELDS_LIST, request));
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.SALUTATION_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.MARITAL_STATUS_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.CITIZENSHIP_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.BUSINESS_ACTIVITIES_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.EDUCATION_LEVEL_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(ClientConstants.GENDER_ENTITY,
+				request));
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.SPOUSE_FATHER_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.HANDICAPPED_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.ETHINICITY_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(
+				CustomerConstants.CUSTOM_FIELDS_LIST, request));
+
 	}
-	
-	public void testEditPersonalInfoPreviewFailure() throws Exception {		
-		
+
+	public void testEditPersonalInfoPreviewFailure() throws Exception {
+
 		createAndSetClientInSession();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "editPersonalInfo");
 		addRequestParameter("officeId", "3");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -687,198 +810,235 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		addRequestParameter("spouseName.nameType", "");
 		addRequestParameter("dateOfBirth", "");
 		addRequestParameter("clientDetailView.gender", "");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals("Client salutation", 1, getErrrorSize(CustomerConstants.SALUTATION));				
-		assertEquals("Client first Name", 1, getErrrorSize(CustomerConstants.FIRST_NAME));				
-		assertEquals("Client last Name", 1, getErrrorSize(CustomerConstants.LAST_NAME));
-		assertEquals("spouse first Name", 1, getErrrorSize(CustomerConstants.SPOUSE_FIRST_NAME));
-		assertEquals("spouse last Name", 1, getErrrorSize(CustomerConstants.SPOUSE_LAST_NAME));
-		assertEquals("spouse type", 1, getErrrorSize(CustomerConstants.SPOUSE_TYPE));
+		assertEquals("Client salutation", 1,
+				getErrrorSize(CustomerConstants.SALUTATION));
+		assertEquals("Client first Name", 1,
+				getErrrorSize(CustomerConstants.FIRST_NAME));
+		assertEquals("Client last Name", 1,
+				getErrrorSize(CustomerConstants.LAST_NAME));
+		assertEquals("spouse first Name", 1,
+				getErrrorSize(CustomerConstants.SPOUSE_FIRST_NAME));
+		assertEquals("spouse last Name", 1,
+				getErrrorSize(CustomerConstants.SPOUSE_LAST_NAME));
+		assertEquals("spouse type", 1,
+				getErrrorSize(CustomerConstants.SPOUSE_TYPE));
 		assertEquals("Gender", 1, getErrrorSize(CustomerConstants.GENDER));
 		assertEquals("DOB", 1, getErrrorSize(CustomerConstants.DOB));
 		verifyInputForward();
-			
+
 	}
-	
+
 	public void testSuccessfulEditPreview() throws Exception {
 		createAndSetClientInSession();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "editPersonalInfo");
 		addRequestParameter("officeId", "3");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request.getSession());
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
 		setRequestPathInfo("/clientCustAction.do");
-		addRequestParameter("method", "previewEditPersonalInfo");	
+		addRequestParameter("method", "previewEditPersonalInfo");
 		addRequestParameter("clientName.firstName", "Client2");
 		int i = 0;
-		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
-			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
-			addRequestParameter("customField["+ i +"].fieldValue", "11");
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			addRequestParameter("customField[" + i + "].fieldId",
+					customFieldDef.getFieldId().toString());
+			addRequestParameter("customField[" + i + "].fieldValue", "11");
 			i++;
 		}
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		assertEquals(0, getErrrorSize());
 		verifyForward(ActionForwards.previewEditPersonalInfo_success.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 	}
-	
+
 	public void testSuccessfulUpdatePersonalInfo() throws Exception {
-		createAndSetClientInSession();		
+		createAndSetClientInSession();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "editPersonalInfo");
 		addRequestParameter("officeId", "3");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request.getSession());
-		
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+
 		setRequestPathInfo("/clientCustAction.do");
-		addRequestParameter("method", "previewEditPersonalInfo");	
+		addRequestParameter("method", "previewEditPersonalInfo");
 		addRequestParameter("clientDetailView.ethinicity", "1");
 		int i = 0;
-		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
-			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
-			addRequestParameter("customField["+ i +"].fieldValue", "11");
-			addRequestParameter("customField["+ i +"].fieldType", "1");
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			addRequestParameter("customField[" + i + "].fieldId",
+					customFieldDef.getFieldId().toString());
+			addRequestParameter("customField[" + i + "].fieldValue", "11");
+			addRequestParameter("customField[" + i + "].fieldType", "1");
 			i++;
 		}
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		assertEquals(0, getErrrorSize());
 		verifyForward(ActionForwards.previewEditPersonalInfo_success.toString());
-		
+
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "updatePersonalInfo");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.updatePersonalInfo_success.toString());
 		assertEquals(1, client.getCustomerDetail().getEthinicity().shortValue());
-		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
-		
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+
 	}
-	
-	public void testEditMfiInfoForClientInBranch() throws Exception {		
-		
+
+	public void testEditMfiInfoForClientInBranch() throws Exception {
+
 		createAndSetClientInSession();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "editMfiInfo");
 		addRequestParameter("officeId", "3");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.editMfiInfo_success.toString());
-		assertNotNull(SessionUtils.getAttribute(CustomerConstants.LOAN_OFFICER_LIST ,request.getSession()));
-				
+		assertNotNull(SessionUtils.getAttribute(
+				CustomerConstants.LOAN_OFFICER_LIST, request));
+
 	}
-	
-	public void testEditMfiInfoForClientUnderGroup() throws Exception {		
-		
+
+	public void testEditMfiInfoForClientUnderGroup() throws Exception {
+
 		createClientWithGroupAndSetInSession();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "editMfiInfo");
 		addRequestParameter("officeId", "3");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.editMfiInfo_success.toString());
-		assertNull(SessionUtils.getAttribute(CustomerConstants.LOAN_OFFICER_LIST ,request.getSession()));
-				
+		assertNull(SessionUtils.getAttribute(
+				CustomerConstants.LOAN_OFFICER_LIST, request));
+
 	}
-	
-	public void testPreviewEditMfiInfo() throws Exception {		
-		
+
+	public void testPreviewEditMfiInfo() throws Exception {
+
 		createClientWithGroupAndSetInSession();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "previewEditMfiInfo");
 		addRequestParameter("officeId", "3");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.previewEditMfiInfo_success.toString());
-						
+
 	}
-	
-	public void testPrevEditMfiInfo() throws Exception {		
-		
+
+	public void testPrevEditMfiInfo() throws Exception {
+
 		createClientWithGroupAndSetInSession();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "prevEditMfiInfo");
 		addRequestParameter("officeId", "3");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.prevEditMfiInfo_success.toString());
-						
+
 	}
-	
-	public void testUpdateMfiInfo() throws Exception {		
-		
+
+	public void testUpdateMfiInfo() throws Exception {
+
 		createClientWithGroupAndSetInSession();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "editMfiInfo");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "previewEditMfiInfo");
 		addRequestParameter("trained", "0");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "updateMfiInfo");
 		addRequestParameter("externalId", "3");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.updateMfiInfo_success.toString());
 		assertEquals("3", client.getExternalId());
-		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());				
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
 	}
-	
-	public void testUpdateMfiInfoWithoutTrained_ClientInBranch() throws Exception {			
+
+	public void testUpdateMfiInfoWithoutTrained_ClientInBranch()
+			throws Exception {
 		createAndSetClientInSession();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "editMfiInfo");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "previewEditMfiInfo");
 		addRequestParameter("trained", "0");
 		addRequestParameter("trainedDate", "");
 		addRequestParameter("externalId", "3");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "updateMfiInfo");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.updateMfiInfo_success.toString());
 		assertEquals("3", client.getExternalId());
 		assertFalse(client.isTrained());
-		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());				
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
 	}
 
-	public void testUpdateMfiInfoWithTrained() throws Exception {		
-		
+	public void testUpdateMfiInfoWithTrained() throws Exception {
+
 		createClientWithGroupAndSetInSession();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "editMfiInfo");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "previewEditMfiInfo");
 		addRequestParameter("trained", "1");
 		addRequestParameter("trainedDate", "03/21/2006");
 		addRequestParameter("externalId", "3");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "updateMfiInfo");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.updateMfiInfo_success.toString());
 		assertEquals("3", client.getExternalId());
 		assertTrue(client.isTrained());
-		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());				
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
 	}
-	
-	public void testUpdateMfiInfoWithLoanOfficer() throws Exception {		
-		
+
+	public void testUpdateMfiInfoWithLoanOfficer() throws Exception {
+
 		createAndSetClientInSession();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "editMfiInfo");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "previewEditMfiInfo");
@@ -886,109 +1046,141 @@ public class TestClientCustAction extends MifosMockStrutsTestCase{
 		addRequestParameter("trainedDate", "03/21/2006");
 		addRequestParameter("externalId", "3");
 		addRequestParameter("loanOfficerId", "3");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "updateMfiInfo");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.updateMfiInfo_success.toString());
 		assertEquals("3", client.getExternalId());
 		assertTrue(client.isTrained());
-		assertEquals(3 , client.getPersonnel().getPersonnelId().shortValue());
-		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());				
+		assertEquals(3, client.getPersonnel().getPersonnelId().shortValue());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
 	}
 
-	
-	private void createAndSetClientInSession() throws Exception{
+	private void createAndSetClientInSession() throws Exception {
 		String name = "Client 1";
 		Short officeId = 1;
 		Short personnel = 3;
 		meeting = getMeeting();
-		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("3"),1,new StringBuilder(name),"Client","","1","");
-		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
-		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"));
-		client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(new Short("1")), null, null, new Address(), getCustomFields(), null, personnel, officeId, meeting,personnel, new java.util.Date(),
-				null,null,null,YesNoFlag.NO.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
+		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
+				Short.valueOf("3"), 1, new StringBuilder(name), "Client", "",
+				"1", "");
+		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(
+				Short.valueOf("2"), 1, new StringBuilder("testSpouseName"),
+				"first", "middle", "last", "secondLast");
+		ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1,
+				1, Short.valueOf("1"), Short.valueOf("1"));
+		client = new ClientBO(TestObjectFactory.getUserContext(),
+				clientNameDetailView.getDisplayName(), CustomerStatus
+						.getStatus(new Short("1")), null, null, new Address(),
+				getCustomFields(), null, personnel, officeId, meeting,
+				personnel, new java.util.Date(), null, null, null, YesNoFlag.NO
+						.getValue(), clientNameDetailView,
+				spouseNameDetailView, clientDetailView, null);
 		client.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class, new Integer(client.getCustomerId()).intValue());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request.getSession());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
+				new Integer(client.getCustomerId()).intValue());
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
 	}
-	
-	private void createClientWithGroupAndSetInSession() throws Exception{
+
+	private void createClientWithGroupAndSetInSession() throws Exception {
 		String name = "Client 1";
 		createParentCustomer();
-		client = TestObjectFactory.createClient(name,CustomerStatus.CLIENT_ACTIVE.getValue(),group,new Date());
+		client = TestObjectFactory.createClient(name,
+				CustomerStatus.CLIENT_ACTIVE.getValue(), group, new Date());
 		HibernateUtil.closeSession();
-		center = (CenterBO)TestObjectFactory.getObject(CenterBO.class, new Integer(center.getCustomerId()).intValue());
-		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class, new Integer(group.getCustomerId()).intValue());
-		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class, new Integer(client.getCustomerId()).intValue());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request.getSession());
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,
+				new Integer(center.getCustomerId()).intValue());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class,
+				new Integer(group.getCustomerId()).intValue());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
+				new Integer(client.getCustomerId()).intValue());
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
 	}
-	
+
 	private List<CustomFieldView> getCustomFields() {
 		List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
-		fields.add(new CustomFieldView(Short.valueOf("5"), 
-			"value1", CustomFieldType.ALPHA_NUMERIC.getValue()));
-		fields.add(new CustomFieldView(Short.valueOf("6"), 
-			"value2", CustomFieldType.ALPHA_NUMERIC.getValue()));
+		fields.add(new CustomFieldView(Short.valueOf("5"), "value1",
+				CustomFieldType.ALPHA_NUMERIC.getValue()));
+		fields.add(new CustomFieldView(Short.valueOf("6"), "value2",
+				CustomFieldType.ALPHA_NUMERIC.getValue()));
 		return fields;
 	}
-	
+
 	private MeetingBO getMeeting() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		//meeting.setMeetingStartDate(new GregorianCalendar());
+		// meeting.setMeetingStartDate(new GregorianCalendar());
 		return meeting;
 	}
-	
-	private void createInitialCustomers(){
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"), "1.4", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("group", CustomerStatus.GROUP_ACTIVE.getValue(), center.getSearchId()+".1", center, new Date());
-		client = TestObjectFactory.createClient("client",CustomerStatus.CLIENT_ACTIVE.getValue(), group.getSearchId()+".1", group, new Date());
+
+	private void createInitialCustomers() {
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.4", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("group",
+				CustomerStatus.GROUP_ACTIVE.getValue(), center.getSearchId()
+						+ ".1", center, new Date());
+		client = TestObjectFactory.createClient("client",
+				CustomerStatus.CLIENT_ACTIVE.getValue(), group.getSearchId()
+						+ ".1", group, new Date());
 	}
-	
-	private void createParentCustomer(){
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"), "1.4", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("group", CustomerStatus.GROUP_ACTIVE.getValue(), center.getSearchId()+".1", center, new Date());
+
+	private void createParentCustomer() {
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.4", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("group",
+				CustomerStatus.GROUP_ACTIVE.getValue(), center.getSearchId()
+						+ ".1", center, new Date());
 	}
-	
+
 	private java.sql.Date offSetCurrentDate(int noOfyears) {
 		Calendar currentDateCalendar = new GregorianCalendar();
 		int year = currentDateCalendar.get(Calendar.YEAR);
 		int month = currentDateCalendar.get(Calendar.MONTH);
 		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-		currentDateCalendar = new GregorianCalendar(year-noOfyears, month, day);
+		currentDateCalendar = new GregorianCalendar(year - noOfyears, month,
+				day);
 		return new java.sql.Date(currentDateCalendar.getTimeInMillis());
 	}
-	
+
 	private LoanBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short
-						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
+				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), Short.valueOf("1"), meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", customer, Short
-				.valueOf("5"), startDate, loanOffering);
+				Short.valueOf("1"), meeting);
+		return TestObjectFactory.createLoanAccount("42423142341", customer,
+				Short.valueOf("5"), startDate, loanOffering);
 
 	}
-	private void removeFees(List<FeeView> feesToRemove){
-		for(FeeView fee :feesToRemove){
-			TestObjectFactory.cleanUp(new FeePersistence().getFee(fee.getFeeIdValue()));
+
+	private void removeFees(List<FeeView> feesToRemove) {
+		for (FeeView fee : feesToRemove) {
+			TestObjectFactory.cleanUp(new FeePersistence().getFee(fee
+					.getFeeIdValue()));
 		}
 	}
-	
+
 	private List<FeeView> getFees(RecurrenceType frequency) {
 		List<FeeView> fees = new ArrayList<FeeView>();
 		AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory
 				.createPeriodicAmountFee("PeriodicAmountFee",
-						FeeCategory.CLIENT, "200", frequency,
-						Short.valueOf("2"));
+						FeeCategory.CLIENT, "200", frequency, Short
+								.valueOf("2"));
 		fees.add(new FeeView(fee1));
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

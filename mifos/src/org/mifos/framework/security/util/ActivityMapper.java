@@ -1003,7 +1003,7 @@ public class ActivityMapper {
 		activityMap.put("/editCustomerStatusAction-preview", SecurityConstants.VIEW);
 		activityMap.put("/editCustomerStatusAction-previous", SecurityConstants.VIEW);
 		activityMap.put("/editCustomerStatusAction-update", SecurityConstants.VIEW);
-		activityMap.put("/editCustomerStatusAction-load-Client", SecurityConstants.VIEW);
+		activityMap.put("/editCustomerStatusAction-loadStatus-Client", SecurityConstants.VIEW);
 		activityMap.put("/editCustomerStatusAction-loadStatus-Group", SecurityConstants.VIEW);
 		activityMap.put("/editCustomerStatusAction-previewStatus", SecurityConstants.VIEW);
 		activityMap.put("/editCustomerStatusAction-previousStatus", SecurityConstants.VIEW);

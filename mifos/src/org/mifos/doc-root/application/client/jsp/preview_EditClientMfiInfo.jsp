@@ -43,13 +43,14 @@
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script language="javascript">
-  
+
   function goToMfiPage(){
 	clientCustActionForm.action="clientCustAction.do?method=prevEditMfiInfo";
 	clientCustActionForm.submit();
@@ -61,6 +62,8 @@
 </script>
 		<html-el:form action="clientCustAction.do?method=updateMfiInfo"
 			onsubmit="func_disableSubmitBtn('submitButton');">
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
+				   var="BusinessKey" />
 			<html-el:hidden property="input" value="editMfiInfo" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -73,7 +76,7 @@
 					<table width="95%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td class="headingorange"><span class="heading"> <c:out
-								value="${sessionScope.BusinessKey.displayName}" /> - </span> <mifos:mifoslabel
+								value="${BusinessKey.displayName}" /> - </span> <mifos:mifoslabel
 								name="client.PreviewMFIInformation" bundle="ClientUIResources"></mifos:mifoslabel>
 
 							</td>
@@ -105,7 +108,7 @@
 							<td height="23" class="fontnormalbold">
 							<c:if test="${sessionScope.clientCustActionForm.groupFlag eq '0'}">
 								<mifos:mifoslabel name="client.LoanOfficer" bundle="ClientUIResources"></mifos:mifoslabel>
-									<c:forEach var="LO" items="${sessionScope.loanOfficers}">
+									<c:forEach var="LO" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanOfficers')}">
 										<c:if test = "${LO.personnelId == sessionScope.clientCustActionForm.loanOfficerId}">
 											<span class="fontnormal"><c:out value="${LO.displayName}"/><br></span>
 										</c:if>
@@ -114,17 +117,17 @@
 							<c:if test="${sessionScope.clientCustActionForm.groupFlag eq '1'}">
 								<span class="fontnormalbold"> <mifos:mifoslabel	name="client.LoanOfficer" bundle="ClientUIResources"></mifos:mifoslabel></span>
 								<span class="fontnormal">
-									<c:if test="${!empty sessionScope.BusinessKey.personnel}">
-										<c:out value="${sessionScope.BusinessKey.personnel.displayName}" />
+									<c:if test="${!empty BusinessKey.personnel}">
+										<c:out value="${BusinessKey.personnel.displayName}" />
 									</c:if>
 									<br>
 								</span>
-								<span class="fontnormalbold"> 
-									<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /> 
+								<span class="fontnormalbold">
+									<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
 									<mifos:mifoslabel name="client.Centers" bundle="ClientUIResources"></mifos:mifoslabel></span>
 									<span class="fontnormal"><c:out	value="${sessionScope.clientCustActionForm.parentGroup.parentCustomer.displayName}" /><br></span>
 									<span class="fontnormalbold">
-									  <mifos:mifoslabel	name="${ConfigurationConstants.GROUP}" /> 
+									  <mifos:mifoslabel	name="${ConfigurationConstants.GROUP}" />
 									  <mifos:mifoslabel	name="client.Centers" bundle="ClientUIResources"></mifos:mifoslabel></span>
 									  <span class="fontnormal"><c:out value="${sessionScope.clientCustActionForm.parentGroup.displayName}" /></span>
 									  <span class="fontnormal"><br></span>
@@ -135,15 +138,15 @@
 							<mifos:mifoslabel name="client.FormedBy"
 								bundle="ClientUIResources"></mifos:mifoslabel> <span
 								class="fontnormal"><c:out
-								value="${sessionScope.BusinessKey.customerFormedByPersonnel.displayName}" /><br>
-							</span> 
+								value="${BusinessKey.customerFormedByPersonnel.displayName}" /><br>
+							</span>
 						</tr>
 						<tr id="Client.ExternalId">
 							<td class="fontnormalbold"><mifos:mifoslabel
 								name="${ConfigurationConstants.EXTERNALID}" keyhm="Client.ExternalId" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
 							<span class="fontnormal"> <c:out
 								value="${sessionScope.clientCustActionForm.externalId}" /><br>
-							</span> 
+							</span>
 						</tr>
 						<tr id="Client.Trained">
 							<td class="fontnormalbold"><mifos:mifoslabel name="client.Trained"
@@ -158,7 +161,7 @@
 										name="client.NoLabel" bundle="ClientUIResources"></mifos:mifoslabel><br>
 									</span>
 								</c:otherwise>
-							</c:choose> 
+							</c:choose>
 						</tr>
 						<tr id="Client.TrainedDate">
 							<td class="fontnormalbold"><mifos:mifoslabel name="client.TrainedOnDate"
@@ -166,7 +169,7 @@
 								class="fontnormal"> <c:out
 								value="${sessionScope.clientCustActionForm.trainedDate}" />
 							<br>
-							</span> 
+							</span>
 	   	 				</tr>
 						<tr>
 							<td class="fontnormalbold">
@@ -204,6 +207,7 @@
 					<!-- Submit and cancel buttons end --></td>
 				</tr>
 			</table>
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 
 	</tiles:put>

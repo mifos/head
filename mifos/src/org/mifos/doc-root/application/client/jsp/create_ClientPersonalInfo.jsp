@@ -45,7 +45,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <!-- Tile  definitions -->
 <tiles:insert definition=".withoutmenu">
@@ -54,12 +54,12 @@
 		<script language="javascript" SRC="pages/framework/js/conversion.js"></script>
 		<script language="javascript">
 
-	
+
   function goToCancelPage(){
 	clientCustActionForm.action="clientCustAction.do?method=cancel";
 	clientCustActionForm.submit();
   }
-  
+
   function goToPreviewPage(){
 	document.getElementById("nextOrPreview").value='preview';
 	clientCustActionForm.action="clientCustAction.do?method=previewPersonalInfo";
@@ -69,18 +69,18 @@
 
   }
   function chkForValidDates(){
-			var dateOfBirth = document.getElementById("dateOfBirth");	  
-	  	 	var dateOfBirthFormat = document.getElementById("dateOfBirthFormat");	  
-	  	 	var dateOfBirthYY = document.getElementById("dateOfBirthYY");	  
+			var dateOfBirth = document.getElementById("dateOfBirth");
+	  	 	var dateOfBirthFormat = document.getElementById("dateOfBirthFormat");
+	  	 	var dateOfBirthYY = document.getElementById("dateOfBirthYY");
 			if(! (validateMyForm(dateOfBirth,dateOfBirthFormat,dateOfBirthYY)))
 				return false;
-			if (clientCustActionForm.fieldTypeList.length!= undefined && clientCustActionForm.fieldTypeList.length!= null){ 	
+			if (clientCustActionForm.fieldTypeList.length!= undefined && clientCustActionForm.fieldTypeList.length!= null){
 				for(var i=0; i <=clientCustActionForm.fieldTypeList.length;i++){
 					if (clientCustActionForm.fieldTypeList[i]!= undefined){
 						if(clientCustActionForm.fieldTypeList[i].value == "3"){
 							var customFieldDate = document.getElementById("customField["+i+"].fieldValue");
-							var customFieldDateFormat = document.getElementById("customField["+i+"].fieldValueFormat");	  
-						 	var customFieldDateYY = document.getElementById("customField["+i+"].fieldValueYY");	  
+							var customFieldDateFormat = document.getElementById("customField["+i+"].fieldValueFormat");
+						 	var customFieldDateYY = document.getElementById("customField["+i+"].fieldValueYY");
 							var dateValue = customFieldDate.value;
 							if(!(validateMyForm(customFieldDate,customFieldDateFormat,customFieldDateYY)))
 								return false;
@@ -95,7 +95,7 @@
 <script language="javascript">
 
 	/***<!-- NLO : Date: 15/07/2006  -->
-	<!-- 
+	<!--
 	     These functions check to see if the Father/Spouse Select is equal to Spouse
 	     If Father/Spouse is equal to Spouse and the Marital Status has not already been selected
 	     Then Marital Status is set to Married automatically
@@ -200,7 +200,7 @@
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
 									<td class="headingorange">
-										<span class="heading"> <mifos:mifoslabel name="client.CreateTitle" bundle="ClientUIResources"></mifos:mifoslabel> 
+										<span class="heading"> <mifos:mifoslabel name="client.CreateTitle" bundle="ClientUIResources"></mifos:mifoslabel>
 											<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /> </span>
 											<mifos:mifoslabel name="client.CreatePersonalInformationTitle"
 												bundle="ClientUIResources"></mifos:mifoslabel>
@@ -227,7 +227,7 @@
 												bundle="ClientUIResources"></mifos:mifoslabel>
 											<mifos:mifoslabel name="client.CreatePageCancelInstruction1"
 												bundle="ClientUIResources"></mifos:mifoslabel>
-											
+
 											<br>
 											<span class="mandatorytext"><font color="#FF0000">*</font></span>
 											<mifos:mifoslabel name="client.FieldInstruction"
@@ -237,7 +237,7 @@
 								</tr>
 							</table>
 							<br>
-							<%-- Group information if client belongs to group --%> 
+							<%-- Group information if client belongs to group --%>
 							<c:choose>
 								<c:when	test="${sessionScope.clientCustActionForm.groupFlag eq '1'}">
 									<logic:messagesPresent>
@@ -267,7 +267,7 @@
 												value="${sessionScope.clientCustActionForm.parentGroup.personnel.personnelId}" />
 											</td></tr>
 											<c:choose>
-												<c:when test="${sessionScope.isCenterHeirarchyExists==Constants.YES}">
+												<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
 												<tr>
 											<td>
 													<span class="fontnormalbold">
@@ -299,7 +299,7 @@
 												</c:otherwise>
 											</c:choose>
 											<tr>
-											<td class="fontnormal">	
+											<td class="fontnormal">
 											<span class="fontnormalbold"><mifos:mifoslabel
 												name="client.MeetingSchedule" bundle="ClientUIResources"></mifos:mifoslabel></span>
 											<span class="fontnormal"> <c:out
@@ -351,8 +351,9 @@
 										bundle="ClientUIResources"></mifos:mifoslabel></td>
 									<td width="83%">
 									 <mifos:select	name="clientCustActionForm"	property="clientName.salutation" size="1">
-										<html-el:options collection="salutationEntity"
-											property="id" labelProperty="name" />
+										<c:forEach var="salutationEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'salutationEntity')}" >
+											<html-el:option value="${salutationEntityList.id}">${salutationEntityList.name}</html-el:option>
+										</c:forEach>
 									</mifos:select></td>
 								</tr>
 								<%-- First Name --%>
@@ -404,8 +405,9 @@
 										mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel></td>
 
 									<td><mifos:select name="clientCustActionForm" property="clientDetailView.gender" size="1">
-										<html-el:options collection="genderEntity" property="id"
-											labelProperty="name" />
+										<c:forEach var="genderEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'genderEntity')}" >
+											<html-el:option value="${genderEntityList.id}">${genderEntityList.name}</html-el:option>
+										</c:forEach>
 									</mifos:select></td>
 								</tr>
 								<%-- Marital Status --%>
@@ -415,8 +417,9 @@
 
 									<td><mifos:select name="clientCustActionForm" onchange="MaritalStatusSelected()"
 										property="clientDetailView.maritalStatus" size="1">
-										<html-el:options collection="maritalStatusEntity"
-											property="id" labelProperty="name" />
+										<c:forEach var="maritalStatusEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'maritalStatusEntity')}" >
+											<html-el:option value="${maritalStatusEntityList.id}">${maritalStatusEntityList.name}</html-el:option>
+										</c:forEach>
 									</mifos:select></td>
 								</tr>
 								<%-- Number Of Children--%>
@@ -433,8 +436,9 @@
 									<td> <mifos:select keyhm="Client.Citizenship"
 										name="clientCustActionForm"
 										property="clientDetailView.citizenship" size="1">
-										<html-el:options collection="citizenshipEntity"
-											property="id" labelProperty="name" />
+										<c:forEach var="citizenshipEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'citizenshipEntity')}" >
+											<html-el:option value="${citizenshipEntityList.id}">${citizenshipEntityList.name}</html-el:option>
+										</c:forEach>
 									</mifos:select></td>
 
 								</tr>
@@ -445,8 +449,9 @@
 									<td><mifos:select keyhm="Client.Ethinicity"
 										name="clientCustActionForm"
 										property="clientDetailView.ethinicity" size="1">
-										<html-el:options collection="ethinicityEntity"
-											property="id" labelProperty="name" />
+										<c:forEach var="ethinicityEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ethinicityEntity')}" >
+											<html-el:option value="${ethinicityEntityList.id}">${ethinicityEntityList.name}</html-el:option>
+										</c:forEach>
 									</mifos:select></td>
 
 								</tr>
@@ -458,18 +463,20 @@
 									<td><mifos:select keyhm="Client.EducationLevel"
 										name="clientCustActionForm"
 										property="clientDetailView.educationLevel" size="1">
-										<html-el:options collection="educationLevelEntity"
-											property="id" labelProperty="name" />
+										<c:forEach var="educationLevelEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'educationLevelEntity')}" >
+											<html-el:option value="${educationLevelEntityList.id}">${educationLevelEntityList.name}</html-el:option>
+										</c:forEach>
 									</mifos:select></td>
 								</tr>
 								<%-- Business Activities --%>
 								<tr class="fontnormal">
-									<td align="right"><mifos:mifoslabel keyhm="Client.BusinessActivities" 
+									<td align="right"><mifos:mifoslabel keyhm="Client.BusinessActivities"
 										name="client.BusinessActivities" bundle="ClientUIResources"></mifos:mifoslabel></td>
 									<td><mifos:select name="clientCustActionForm" keyhm="Client.BusinessActivities"
 										property="clientDetailView.businessActivities" size="1">
-										<html-el:options collection="businessActivitiesEntity"
-											property="id" labelProperty="name" />
+										<c:forEach var="businessActivitiesEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'businessActivitiesEntity')}" >
+											<html-el:option value="${businessActivitiesEntityList.id}">${businessActivitiesEntityList.name}</html-el:option>
+										</c:forEach>
 									</mifos:select></td>
 								</tr>
 								<%-- Handicapped --%>
@@ -479,8 +486,9 @@
 									<td> <mifos:select keyhm="Client.Handicapped"
 										name="clientCustActionForm"
 										property="clientDetailView.handicapped" size="1">
-										<html-el:options collection="handicappedEntity"
-											property="id" labelProperty="name" />
+										<c:forEach var="handicappedEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'handicappedEntity')}" >
+											<html-el:option value="${handicappedEntityList.id}">${handicappedEntityList.name}</html-el:option>
+										</c:forEach>
 									</mifos:select></td>
 								</tr>
 
@@ -500,29 +508,30 @@
 									<table width="100%" border="0" cellspacing="0" cellpadding="0">
 										<tr class="fontnormal">
 											<td width="14%"><mifos:mifoslabel name="client.Relationship"
-												bundle="ClientUIResources"></mifos:mifoslabel> 
+												bundle="ClientUIResources"></mifos:mifoslabel>
 												<mifos:select	style="width:80px;" onchange="CheckMaritalStatus()" name="clientCustActionForm"
 												property="spouseName.nameType" size="1">
-												<html-el:options collection="spouseEntity" property="id"
-													labelProperty="name" />
+												<c:forEach var="spouseEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'spouseEntity')}" >
+													<html-el:option value="${spouseEntityList.id}">${spouseEntityList.name}</html-el:option>
+												</c:forEach>
 											</mifos:select></td>
 											<td class="paddingL10">
 												<table border="0" cellspacing="0" cellpadding="0">
 													<tr class="fontnormal">
 														<td class="paddingL10">
-															<mifos:mifoslabel	name="client.SpouseFirstName" mandatory="yes" 
+															<mifos:mifoslabel	name="client.SpouseFirstName" mandatory="yes"
 															   bundle="ClientUIResources">
 															   </mifos:mifoslabel>
 														</td>
 													</tr>
 													<tr class="fontnormal">
 														<td class="paddingL10">
-															<mifos:mifosalphanumtext property="spouseName.firstName" 
+															<mifos:mifosalphanumtext property="spouseName.firstName"
 															   maxlength="200"	style="width:100px;" />
 														</td>
 													</tr>
 												</table>
-											</td>			
+											</td>
 											<td class="paddingL10">
 												<table border="0" cellspacing="0" cellpadding="0">
 													<tr class="fontnormal">
@@ -539,7 +548,7 @@
 														</td>
 													</tr>
 												</table>
-											</td>		
+											</td>
 											<td class="paddingL10">
 												<table border="0" cellspacing="0" cellpadding="0">
 													<tr class="fontnormal">
@@ -551,13 +560,13 @@
 													</tr>
 													<tr class="fontnormal">
 														<td class="paddingL10">
-															<mifos:mifosalphanumtext keyhm="Client.SpouseFatherSecondLastName" 
-																property="spouseName.secondLastName" 
+															<mifos:mifosalphanumtext keyhm="Client.SpouseFatherSecondLastName"
+																property="spouseName.secondLastName"
 																	maxlength="200" style="width:100px;" />
 														</td>
 													</tr>
 												</table>
-											</td>			
+											</td>
 											<td class="paddingL10">
 												<table border="0" cellspacing="0" cellpadding="0">
 													<tr class="fontnormal">
@@ -585,7 +594,7 @@
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
 									<td colspan="2" class="fontnormalbold"><mifos:mifoslabel keyhm="Client.Address" isManadatoryIndicationNotRequired="yes"
-										name="client.AddressHeading" bundle="ClientUIResources"></mifos:mifoslabel>									
+										name="client.AddressHeading" bundle="ClientUIResources"></mifos:mifoslabel>
 									</td>
 								</tr>
 								<!-- Line 1 of address -->
@@ -639,7 +648,7 @@
 									<td align="right" class="fontnormal">
 									<mifos:mifoslabel keyhm="Client.Country"
 										name="client.Country" bundle="ClientUIResources"></mifos:mifoslabel></td>
-									<td><mifos:mifosalphanumtext keyhm="Client.Country" name="clientCustActionForm" 
+									<td><mifos:mifosalphanumtext keyhm="Client.Country" name="clientCustActionForm"
 										property="address.country" maxlength="100" /></td>
 								</tr>
 								<!-- Postal Code of address -->
@@ -669,9 +678,9 @@
 									<br>
 									</td>
 								</tr>
-																						
+
 								<!-- For each custom field definition in the list custom field entity is passed as key to mifos label -->
-								<c:forEach var="cf" items="${sessionScope.customFields}"
+								<c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}"
 									varStatus="loopStatus">
 									<bean:define id="ctr">
 										<c:out value="${loopStatus.index}" />
@@ -684,7 +693,7 @@
 										<td width="83%">
 										<html-el:hidden property='customField[${ctr}].fieldId' value="${cf.fieldId}"></html-el:hidden>
 										<html-el:hidden property='fieldTypeList' value='${cf.fieldType}' />
-													
+
 										<c:if test="${cf.fieldType == 1}">
 											<mifos:mifosnumbertext name="clientCustActionForm"
 												property='customField[${ctr}].fieldValue' maxlength="200" />
@@ -693,7 +702,7 @@
 												property='customField[${ctr}].fieldValue' maxlength="200" />
 										</c:if> <c:if test="${cf.fieldType == 3}">
 											<date:datetag property="customField[${ctr}].fieldValue" />
-										</c:if> 
+										</c:if>
 										</td>
 									</tr>
 								</c:forEach>
@@ -736,6 +745,7 @@
 									</html-el:button></td>
 								</tr>
 							</table>
+							<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 							<!-- Button end --> <br>
 							<!-- before main closing --></td>
 						</tr>
@@ -747,4 +757,3 @@
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>
- 	

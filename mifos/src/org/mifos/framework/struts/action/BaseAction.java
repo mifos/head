@@ -12,6 +12,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.apache.struts.upload.MultipartRequestWrapper;
 import org.hibernate.HibernateException;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.service.MasterDataService;
@@ -62,8 +63,11 @@ public abstract class BaseAction extends DispatchAction {
 	protected void preExecute(ActionForm actionForm,
 			HttpServletRequest request, TransactionDemarcate annotation)
 			throws SystemException, ApplicationException {
-		request.setAttribute(Constants.CURRENTFLOWKEY, request
+		if (null != request.getParameter(Constants.CURRENTFLOWKEY)) {
+			request.setAttribute(Constants.CURRENTFLOWKEY, request
 				.getParameter(Constants.CURRENTFLOWKEY));
+		}
+
 		preHandleTransaction(request, annotation);
 		UserContext userContext = (UserContext) request.getSession()
 				.getAttribute(Constants.USER_CONTEXT_KEY);
@@ -108,7 +112,7 @@ public abstract class BaseAction extends DispatchAction {
 		}
 		return isAnnotationPresent;
 	}
-	
+
 	protected void preHandleTransaction(HttpServletRequest request,
 			TransactionDemarcate annotation) throws PageExpiredException {
 		if (null != annotation && annotation.saveToken()) {
@@ -160,7 +164,7 @@ public abstract class BaseAction extends DispatchAction {
 		} else {
 			postHandleTransaction(request, annotation);
 		}
-		
+
 		if(closeSession)
 			HibernateUtil.closeSession();
 	}
@@ -229,12 +233,12 @@ public abstract class BaseAction extends DispatchAction {
 						BusinessServiceName.MasterDataService);
 		return masterDataService.retrieveMasterEntities(clazz, localeId);
 	}
-	
+
 	protected MasterDataEntity getMasterEntities(Short entityId,Class clazz,
 			Short localeId) throws ServiceException, PersistenceException {
 		return new MasterPersistence().retrieveMasterEntity(entityId,clazz, localeId);
 	}
-	
+
 	protected Short getShortValue(String str) {
 		return StringUtils.isNullAndEmptySafe(str) ? Short.valueOf(str) : null;
 	}
@@ -242,40 +246,40 @@ public abstract class BaseAction extends DispatchAction {
 	protected Integer getIntegerValue(String str) {
 		return StringUtils.isNullAndEmptySafe(str) ? Integer.valueOf(str) : null;
 	}
-	
+
 	protected Double getDoubleValue(String str) {
 		return StringUtils.isNullAndEmptySafe(str) ? Double.valueOf(str) : null;
 	}
-	
+
 	protected Money getMoney(String str) {
 		return (StringUtils.isNullAndEmptySafe(str) && !str.trim().equals(".")) ? new Money(
 				str)
 				: new Money();
 	}
-	
+
 	protected String getStringValue(Double value) {
 		return value != null ? String.valueOf(value) : null;
 	}
-	
+
 	protected String getStringValue(Integer value) {
 		return value != null ? String.valueOf(value) : null;
 	}
-	
+
 	protected String getStringValue(Short value) {
 		return value != null ? String.valueOf(value) : null;
 	}
-	
+
 	protected String getStringValue(Money value) {
 		return value != null ? String.valueOf(value) : null;
 	}
-	
+
 	protected String getStringValue(boolean value) {
 		if (value)
 			return "1";
 		return "0";
 
 	}
-	
+
 	protected Date getDateFromString(String strDate, Locale locale) {
 		Date date = null;
 		if (StringUtils.isNullAndEmptySafe(strDate))

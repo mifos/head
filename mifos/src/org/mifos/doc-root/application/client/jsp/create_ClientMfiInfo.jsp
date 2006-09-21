@@ -44,7 +44,7 @@
 <%@taglib uri="http://struts.apache.org/tags-bean-el" prefix="bean-el"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <!-- Tile  definitions -->
 <tiles:insert definition=".withoutmenu">
@@ -52,17 +52,17 @@
 		<script language="javascript" SRC="pages/framework/js/date.js"></script>
 		<script language="javascript">
 
-	
+
   function goToCancelPage(){
 	clientCustActionForm.action="clientCustAction.do?method=cancel";
 	clientCustActionForm.submit();
   }
-  
+
   function populateDefaultFormedBy(selectBox)
   {
   		document.forms["clientCustActionForm"].elements["formedByPersonnel"].value=document.forms["clientCustActionForm"].elements["loanOfficerId"].value;
   }
-  
+
   //Function to display the fee amount in the text box on the selection of a particualar fee from the combo box
 	function displayAmount(listBox, textBox ){
 		//The fee combo box
@@ -83,7 +83,7 @@
 			else{
 				amountField.value=clientCustActionForm.selectedFeeAmntList.value;
 			}
-			
+
 		}
 	}
 	function loadMeeting(){
@@ -227,8 +227,10 @@
 											name="client.LoanOfficer" bundle="ClientUIResources"></mifos:mifoslabel></td>
 										<td><mifos:select property="loanOfficerId"
 											style="width:136px;" onchange="populateDefaultFormedBy(this)">
-												<html-el:options collection="loanOfficers" property="personnelId" labelProperty="displayName" />
-											</mifos:select></td>
+											<c:forEach var="loanOfficersList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanOfficers')}" >
+												<html-el:option value="${loanOfficersList.personnelId}">${loanOfficersList.displayName}</html-el:option>
+											</c:forEach>
+										</mifos:select></td>
 									</tr>
 									<%-- Meeting schedule --%>
 									<tr class="fontnormal">
@@ -247,7 +249,7 @@
 									<td><mifos:select property="formedByPersonnel"
 										style="width:136px;">
 										<c:forEach var="customerFormedBy"
-											items="${sessionScope.formedByLoanOfficers}">
+											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'formedByLoanOfficers')}">
 											<html-el:option value="${customerFormedBy.personnelId}">
 												<c:out value="${customerFormedBy.displayName}" />
 											</html-el:option>
@@ -303,7 +305,7 @@
 														<c:choose>
 															<c:when test="${adminFees.periodic == true}">
 																<td width="20%"><c:out value="${adminFees.amount}" /></td>
-															</c:when>	
+															</c:when>
 															<c:otherwise>
 																<c:choose>
 																	<c:when test="${param.method eq 'next'}">
@@ -333,8 +335,8 @@
 												</table>
 											 </td>
 									 	</tr>
-									</c:forEach> 
-							
+									</c:forEach>
+
 							</table>
 							<br>
 							<!-- Administrative Set Fees End--> <!-- Fee Type -->
@@ -356,7 +358,9 @@
 											</td>
 											<td width="11%" class="fontnormal">
 												<mifos:select name="clientCustActionForm" property='selectedFee[${ctr2}].feeId' onchange="displayAmount('selectedFee[${ctr2}].feeId', 'selectedFee[${ctr2}].amount' )">
-													<html-el:options collection="additionalFeeList" property="feeId" labelProperty="feeName"></html-el:options>
+													<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'additionalFeeList')}" var="additionalFee">
+														<html-el:option value="${additionalFee.feeId}">${additionalFee.feeName}</html-el:option>
+													</c:forEach>
 												</mifos:select>
 											</td>
 											<td width="14%" align="right" class="fontnormal">
@@ -366,7 +370,7 @@
 												<mifos:mifosdecimalinput property='selectedFee[${ctr2}].amount' />
 											</td>
 											<c:if test="${ctr2 == 0}">
-												<c:forEach var="fee" items="${sessionScope.additionalFeeList}" varStatus="loopStatus3">
+												<c:forEach var="fee" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'additionalFeeList')}" varStatus="loopStatus3">
 													<bean:define id="ctr3" toScope="request">
 														<c:out value="${loopStatus3.index}" />
 													</bean:define>
@@ -375,7 +379,7 @@
 											</c:if>
 											</tr>
 										</c:forEach>
-										
+
 							</table>
 
 
@@ -404,6 +408,7 @@
 									</html-el:button></td>
 								</tr>
 							</table>
+							<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 							<!-- Button end --> <br>
 							<!-- before main closing --></td>
 						</tr>

@@ -42,6 +42,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <!-- Inserting tile defintion for header and menu -->
 <tiles:insert definition=".clientsacclayoutsearchmenu">
@@ -78,7 +79,7 @@
 							name="client.Confirmation.Information3"
 							bundle="ClientUIResources"></mifos:mifoslabel> <br>
 						<br>
-						</span> <!-- Link to view the center details --> 
+						</span> <!-- Link to view the center details -->
 						<c:choose>
 						<c:when test="${sessionScope.clientCustActionForm.groupFlag eq '1'}">
 						<a href="clientCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.clientCustActionForm.globalCustNum}"/>&recordOfficeId=${sessionScope.clientCustActionForm.parentGroup.office.officeId}&recordLoanOfficerId=${sessionScope.clientCustActionForm.parentGroup.personnel.personnelId}">
@@ -87,7 +88,7 @@
 						<a href="clientCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.clientCustActionForm.globalCustNum}"/>&recordOfficeId=${sessionScope.clientCustActionForm.officeId}&recordLoanOfficerId=${sessionScope.clientCustActionForm.loanOfficerId}">
 						</c:otherwise>
 						</c:choose>
-						
+
 						<mifos:mifoslabel name="client.ViewClientDetailsLink1"
 							bundle="ClientUIResources"></mifos:mifoslabel> <mifos:mifoslabel
 							name="${ConfigurationConstants.CLIENT}" /> <mifos:mifoslabel
@@ -107,7 +108,7 @@
 						</c:if> <span class="fontnormal"> <!-- Link to create a new savings  account link -->
 						<c:if test="${requestScope.clientVO.statusId == 3}">
 							<html-el:link
-								href="savingsAction.do?method=getPrdOfferings&customerId=${sessionScope.clientCustActionForm.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+								href="savingsAction.do?method=getPrdOfferings&customerId=${sessionScope.clientCustActionForm.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="client.CreateNewClientLink"
 									bundle="ClientUIResources" />
 								<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
@@ -119,7 +120,7 @@
 						</c:if> <!-- Link to create a new loan  account link --> <!-- bug id 29352. Added if condition to show link to open accounts if only client is active-->
 						<c:if test="${requestScope.clientVO.statusId == 3}">
 							<html-el:link
-								href="loanAction.do?method=getPrdOfferings&customer.customerId=${sessionScope.clientCustActionForm.customerId}">
+								href="loanAction.do?method=getPrdOfferings&customer.customerId=${sessionScope.clientCustActionForm.customerId}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="client.CreateNewClientLink"
 									bundle="ClientUIResources" />
 								<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
@@ -127,16 +128,16 @@
 									bundle="ClientUIResources" />
 							</html-el:link>
 							<br>
-						</c:if> <!-- Link to create a new group --> 
+						</c:if> <!-- Link to create a new group -->
 						<c:choose>
 						<c:when test="${sessionScope.clientCustActionForm.groupFlag eq '1'}">
-						<a	href="GroupAction.do?method=hierarchyCheck&office.officeId=<c:out value="${sessionScope.clientCustActionForm.parentGroup.office.officeId}"/>">
+						<a	href="GroupAction.do?method=hierarchyCheck&randomNUm=${sessionScope.randomNUm}&office.officeId=<c:out value="${sessionScope.clientCustActionForm.parentGroup.office.officeId}"/>">
 						</c:when>
 						<c:otherwise>
-						<a	href="GroupAction.do?method=hierarchyCheck&office.officeId=<c:out value="${sessionScope.clientCustActionForm.officeId}"/>">
+						<a	href="GroupAction.do?method=hierarchyCheck&randomNUm=${sessionScope.randomNUm}&office.officeId=<c:out value="${sessionScope.clientCustActionForm.officeId}"/>">
 						</c:otherwise>
 						</c:choose>
-						
+
 						<mifos:mifoslabel name="client.CreateNewClientLink"
 							bundle="ClientUIResources" /> <mifos:mifoslabel
 							name="${ConfigurationConstants.GROUP}" /> </a> <br>
@@ -156,7 +157,7 @@
 		<td></td>
 		<tr></tr>
 		<table></table>
-
+		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		<body></body>
 		<html></html>
 	</tiles:put>
