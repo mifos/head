@@ -62,6 +62,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 public class TestSavingsOfferingBO extends MifosTestCase {
 
 	private SavingsOfferingBO savingsOffering;
+
 	private SavingsOfferingBO savingsOffering1;
 
 	@Override
@@ -348,7 +349,8 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 			assertTrue(false);
 		} catch (ProductDefinitionException pde) {
 			assertTrue(true);
-			assertEquals(ProductDefinitionConstants.DUPLPRDINSTNAME , pde.getKey());
+			assertEquals(ProductDefinitionConstants.DUPLPRDINSTNAME, pde
+					.getKey());
 		}
 	}
 
@@ -381,7 +383,8 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 			assertTrue(false);
 		} catch (ProductDefinitionException pde) {
 			assertTrue(true);
-			assertEquals(ProductDefinitionConstants.DUPLPRDINSTSHORTNAME , pde.getKey());
+			assertEquals(ProductDefinitionConstants.DUPLPRDINSTSHORTNAME, pde
+					.getKey());
 		}
 	}
 
@@ -464,12 +467,12 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				.getObject(ProductCategoryBO.class, (short) 2);
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(7);
-		savingsOffering = new SavingsOfferingBO(
-				TestObjectFactory.getUserContext(), "Savings Offering", "Savi",
-				productCategory, prdApplicableMaster, startDate, endDate,
-				"dssf", null, savingsType, intCalType, intCalcMeeting,
-				intPostMeeting, new Money("10"), new Money(), new Money(),
-				10.0, depglCodeEntity, intglCodeEntity);
+		savingsOffering = new SavingsOfferingBO(TestObjectFactory
+				.getUserContext(), "Savings Offering", "Savi", productCategory,
+				prdApplicableMaster, startDate, endDate, "dssf", null,
+				savingsType, intCalType, intCalcMeeting, intPostMeeting,
+				new Money("10"), new Money(), new Money(), 10.0,
+				depglCodeEntity, intglCodeEntity);
 		savingsOffering.save();
 		HibernateUtil.commitTransaction();
 
@@ -487,31 +490,32 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		assertEquals(InterestCalcType.AVERAGE_BALANCE.getValue(),
 				savingsOffering.getInterestCalcType().getId());
 	}
-	
-	public void testUpdateSavingsOfferingWithoutName()throws Exception {
-		savingsOffering = createSavingsOfferingBO("Savings_offering","S");
-		try {	
-			savingsOffering.update(Short.valueOf("1"),null,null,null,null,null,null,null,null);
+
+	public void testUpdateSavingsOfferingWithoutName() throws Exception {
+		savingsOffering = createSavingsOfferingBO("Savings_offering", "S");
+		try {
+			savingsOffering.update(Short.valueOf("1"), null, null, null, null,
+					null, null, null, null);
 			assertTrue(false);
 		} catch (ProductDefinitionException pde) {
 			assertTrue(true);
-			assertEquals(ProductDefinitionConstants.ERROR_CREATE,pde.getKey());
+			assertEquals(ProductDefinitionConstants.ERROR_CREATE, pde.getKey());
 		}
 	}
-	
-	public void testUpdateSavingsOfferingWithoutShortName()throws Exception {
-		savingsOffering = createSavingsOfferingBO("Savings_offering","S");
-		try {	
-			savingsOffering.update(Short.valueOf("1"),"Savings_Changed",null,null,null,null,null,null,null);
+
+	public void testUpdateSavingsOfferingWithoutShortName() throws Exception {
+		savingsOffering = createSavingsOfferingBO("Savings_offering", "S");
+		try {
+			savingsOffering.update(Short.valueOf("1"), "Savings_Changed", null,
+					null, null, null, null, null, null);
 			assertTrue(false);
 		} catch (ProductDefinitionException pde) {
 			assertTrue(true);
-			assertEquals(ProductDefinitionConstants.ERROR_CREATE,pde.getKey());
+			assertEquals(ProductDefinitionConstants.ERROR_CREATE, pde.getKey());
 		}
 	}
-	
-	
-	public void testUpdateSavingsOfferingWithDuplicateName()throws Exception {
+
+	public void testUpdateSavingsOfferingWithDuplicateName() throws Exception {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
 				PrdApplicableMaster.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
@@ -521,57 +525,61 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				InterestCalcType.AVERAGE_BALANCE);
 		MeetingBO intCalcMeeting = getMeeting();
 		MeetingBO intPostMeeting = getMeeting();
-		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, (short) 7);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(7);
-		savingsOffering = createSavingsOfferingBO("Savings_offering","S");
-		savingsOffering1 = createSavingsOfferingBO("Savings_offering1","S1");
-		try {	
-			savingsOffering.update(Short.valueOf("1"),"Savings_offering1","S",productCategory,prdApplicableMaster,startDate,endDate,"Desc",PrdStatus.SAVINGSACTIVE);
+		savingsOffering = createSavingsOfferingBO("Savings_offering", "S");
+		savingsOffering1 = createSavingsOfferingBO("Savings_offering1", "S1");
+		try {
+			savingsOffering.update(Short.valueOf("1"), "Savings_offering1",
+					"S", productCategory, prdApplicableMaster, startDate,
+					endDate, "Desc", PrdStatus.SAVINGSACTIVE, null,
+					savingsType, intCalType, intCalcMeeting, intPostMeeting,
+					new Money("10"), new Money("100"), new Money("1"), 10.0);
 			assertTrue(false);
 		} catch (ProductDefinitionException pde) {
 			assertTrue(true);
-			assertEquals(ProductDefinitionConstants.DUPLPRDINSTNAME,pde.getKey());
+			assertEquals(ProductDefinitionConstants.DUPLPRDINSTNAME, pde
+					.getKey());
 		}
 	}
-	
-	public void testUpdateSavingsOfferingWithDuplicateShortName()throws Exception {
+
+	public void testUpdateSavingsOfferingWithDuplicateShortName()
+			throws Exception {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
 				PrdApplicableMaster.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
-		PrdStatusEntity prdStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.SAVINGSACTIVE);
 		InterestCalcTypeEntity intCalType = new InterestCalcTypeEntity(
 				InterestCalcType.AVERAGE_BALANCE);
 		MeetingBO intCalcMeeting = getMeeting();
 		MeetingBO intPostMeeting = getMeeting();
-		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, (short) 7);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(7);
-		savingsOffering = createSavingsOfferingBO("Savings_offering","S");
-		savingsOffering1 = createSavingsOfferingBO("Savings_offering1","S1");
-		try {	
-			savingsOffering.update(Short.valueOf("1"),"Savings_offeringChanged","S1",productCategory,prdApplicableMaster,startDate,endDate,"Desc",PrdStatus.SAVINGSACTIVE);
+		savingsOffering = createSavingsOfferingBO("Savings_offering", "S");
+		savingsOffering1 = createSavingsOfferingBO("Savings_offering1", "S1");
+		try {
+			savingsOffering.update(Short.valueOf("1"),
+					"Savings_offeringChanged", "S1", productCategory,
+					prdApplicableMaster, startDate, endDate, "Desc",
+					PrdStatus.SAVINGSACTIVE, null, savingsType, intCalType,
+					intCalcMeeting, intPostMeeting, new Money("10"), new Money(
+							"100"), new Money("1"), 10.0);
 			assertTrue(false);
 		} catch (ProductDefinitionException pde) {
 			assertTrue(true);
-			assertEquals(ProductDefinitionConstants.DUPLPRDINSTSHORTNAME,pde.getKey());
+			assertEquals(ProductDefinitionConstants.DUPLPRDINSTSHORTNAME, pde
+					.getKey());
 		}
 	}
-	
-	public void testUpdateSavingsOfferingWithStartDateNotChanged()throws Exception {
-		String name ="Savings_offering";
-		String newName ="Savings_offeringChanged";
+
+	public void testUpdateSavingsOfferingWithStartDateNotChanged()
+			throws Exception {
+		String name = "Savings_offering";
+		String newName = "Savings_offeringChanged";
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
 				PrdApplicableMaster.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
@@ -581,159 +589,177 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				InterestCalcType.AVERAGE_BALANCE);
 		MeetingBO intCalcMeeting = getMeeting();
 		MeetingBO intPostMeeting = getMeeting();
-		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, (short) 7);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(7);
-		savingsOffering = createSavingsOfferingBO(name,"S",PrdApplicableMaster.CLIENTS,startDate,PrdStatus.SAVINGSINACTIVE,SavingsType.VOLUNTARY,InterestCalcType.AVERAGE_BALANCE);
+		savingsOffering = createSavingsOfferingBO(name, "S",
+				PrdApplicableMaster.CLIENTS, startDate,
+				PrdStatus.SAVINGSINACTIVE, SavingsType.VOLUNTARY,
+				InterestCalcType.AVERAGE_BALANCE);
 		savingsOffering.setStartDate(reduceCurrentDate(1));
-		savingsOffering.update(Short.valueOf("1"),newName,"S1",productCategory,prdApplicableMaster,savingsOffering.getStartDate(),endDate,"Desc",PrdStatus.SAVINGSACTIVE);
+		savingsOffering.update(Short.valueOf("1"), newName, "S1",
+				productCategory, prdApplicableMaster, savingsOffering
+						.getStartDate(), endDate, "Desc",
+				PrdStatus.SAVINGSINACTIVE, null, savingsType, intCalType,
+				intCalcMeeting, intPostMeeting, new Money("10"), new Money(
+						"100"), new Money("1"), 10.0);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savingsOffering = (SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class, savingsOffering.getPrdOfferingId());
-		assertEquals(reduceCurrentDate(1),savingsOffering.getStartDate());
+		savingsOffering = (SavingsOfferingBO) TestObjectFactory.getObject(
+				SavingsOfferingBO.class, savingsOffering.getPrdOfferingId());
+		assertEquals(reduceCurrentDate(1), savingsOffering.getStartDate());
 	}
-	
-	public void testUpdateSavingsOfferingFailureWithStartDateInFuture()throws Exception {
-		String name ="Savings_offering";
-		String newName ="Savings_offeringChanged";
+
+	public void testUpdateSavingsOfferingFailureWithStartDateInFuture()
+			throws Exception {
+		String name = "Savings_offering";
+		String newName = "Savings_offeringChanged";
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
 				PrdApplicableMaster.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 
-		InterestCalcTypeEntity intCalType = new InterestCalcTypeEntity( 
+		InterestCalcTypeEntity intCalType = new InterestCalcTypeEntity(
 				InterestCalcType.AVERAGE_BALANCE);
 		MeetingBO intCalcMeeting = getMeeting();
 		MeetingBO intPostMeeting = getMeeting();
-		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, (short) 7);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(10);
-		savingsOffering = createSavingsOfferingBO(name,"S",PrdApplicableMaster.CLIENTS,startDate,PrdStatus.SAVINGSINACTIVE,SavingsType.VOLUNTARY,InterestCalcType.AVERAGE_BALANCE);
+		savingsOffering = createSavingsOfferingBO(name, "S",
+				PrdApplicableMaster.CLIENTS, startDate,
+				PrdStatus.SAVINGSINACTIVE, SavingsType.VOLUNTARY,
+				InterestCalcType.AVERAGE_BALANCE);
 		savingsOffering.setStartDate(reduceCurrentDate(1));
 		Date newStartDate = offSetCurrentDate(1);
-		try{
-			savingsOffering.update(Short.valueOf("1"),newName,"S1",productCategory,prdApplicableMaster,newStartDate,endDate,"Desc",PrdStatus.SAVINGSACTIVE);
+		try {
+			savingsOffering.update(Short.valueOf("1"), newName, "S1",
+					productCategory, prdApplicableMaster, newStartDate,
+					endDate, "Desc", PrdStatus.SAVINGSINACTIVE, null,
+					savingsType, intCalType, intCalcMeeting, intPostMeeting,
+					new Money("10"), new Money("100"), new Money("1"), 10.0);
 			assertTrue(false);
-		}
-		catch(ProductDefinitionException pde){
+		} catch (ProductDefinitionException pde) {
 			assertTrue(true);
-			assertEquals(ProductDefinitionConstants.STARTDATEUPDATEEXCEPTION,pde.getKey());
+			assertEquals(ProductDefinitionConstants.STARTDATEUPDATEEXCEPTION,
+					pde.getKey());
 		}
-		
-		
+
 	}
-	
-	public void testUpdateFailureWithInitialStartDateInFuture()throws Exception {
-		String name ="Savings_offering";
-		String newName ="Savings_offeringChanged";
+
+	public void testUpdateFailureWithInitialStartDateInFuture()
+			throws Exception {
+		String name = "Savings_offering";
+		String newName = "Savings_offeringChanged";
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
 				PrdApplicableMaster.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 
-		InterestCalcTypeEntity intCalType = new InterestCalcTypeEntity( 
+		InterestCalcTypeEntity intCalType = new InterestCalcTypeEntity(
 				InterestCalcType.AVERAGE_BALANCE);
 		MeetingBO intCalcMeeting = getMeeting();
 		MeetingBO intPostMeeting = getMeeting();
-		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, (short) 7);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
 		Date startDate = offSetCurrentDate(5);
 		Date endDate = offSetCurrentDate(15);
-		savingsOffering = createSavingsOfferingBO(name,"S",PrdApplicableMaster.CLIENTS,startDate,PrdStatus.SAVINGSINACTIVE,SavingsType.VOLUNTARY,InterestCalcType.AVERAGE_BALANCE);
+		savingsOffering = createSavingsOfferingBO(name, "S",
+				PrdApplicableMaster.CLIENTS, startDate,
+				PrdStatus.SAVINGSINACTIVE, SavingsType.VOLUNTARY,
+				InterestCalcType.AVERAGE_BALANCE);
 		Date newStartDate = reduceCurrentDate(1);
-		try{
-			savingsOffering.update(Short.valueOf("1"),newName,"S1",productCategory,prdApplicableMaster,newStartDate,endDate,"Desc",PrdStatus.SAVINGSACTIVE);
+		try {
+			savingsOffering.update(Short.valueOf("1"), newName, "S1",
+					productCategory, prdApplicableMaster, newStartDate,
+					endDate, "Desc", PrdStatus.SAVINGSINACTIVE, null,
+					savingsType, intCalType, intCalcMeeting, intPostMeeting,
+					new Money("10"), new Money("100"), new Money("1"), 10.0);
 			assertTrue(false);
-		}
-		catch(ProductDefinitionException pde){
+		} catch (ProductDefinitionException pde) {
 			assertTrue(true);
-			assertEquals(ProductDefinitionConstants.INVALIDSTARTDATE,pde.getKey());
+			assertEquals(ProductDefinitionConstants.INVALIDSTARTDATE, pde
+					.getKey());
 		}
-		
-		
+
 	}
-	public void testUpdateFailureWithEndDateLessThanStartDate()throws Exception {
-		String name ="Savings_offering";
-		String newName ="Savings_offeringChanged";
+
+	public void testUpdateFailureWithEndDateLessThanStartDate()
+			throws Exception {
+		String name = "Savings_offering";
+		String newName = "Savings_offeringChanged";
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
 				PrdApplicableMaster.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 
-		InterestCalcTypeEntity intCalType = new InterestCalcTypeEntity( 
+		InterestCalcTypeEntity intCalType = new InterestCalcTypeEntity(
 				InterestCalcType.AVERAGE_BALANCE);
 		MeetingBO intCalcMeeting = getMeeting();
 		MeetingBO intPostMeeting = getMeeting();
-		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, (short) 7);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
 		Date startDate = offSetCurrentDate(5);
 		Date endDate = offSetCurrentDate(3);
-		savingsOffering = createSavingsOfferingBO(name,"S",PrdApplicableMaster.CLIENTS,startDate,PrdStatus.SAVINGSINACTIVE,SavingsType.VOLUNTARY,InterestCalcType.AVERAGE_BALANCE);
-		try{
-			savingsOffering.update(Short.valueOf("1"),newName,"S1",productCategory,prdApplicableMaster,startDate,endDate,"Desc",PrdStatus.SAVINGSACTIVE);
+		savingsOffering = createSavingsOfferingBO(name, "S",
+				PrdApplicableMaster.CLIENTS, startDate,
+				PrdStatus.SAVINGSINACTIVE, SavingsType.VOLUNTARY,
+				InterestCalcType.AVERAGE_BALANCE);
+		try {
+			savingsOffering.update(Short.valueOf("1"), newName, "S1",
+					productCategory, prdApplicableMaster, startDate, endDate,
+					"Desc", PrdStatus.SAVINGSACTIVE, null, savingsType,
+					intCalType, intCalcMeeting, intPostMeeting,
+					new Money("10"), new Money("100"), new Money("1"), 10.0);
 			assertTrue(false);
-		}
-		catch(ProductDefinitionException pde){
+		} catch (ProductDefinitionException pde) {
 			assertTrue(true);
-			assertEquals(ProductDefinitionConstants.INVALIDENDDATE,pde.getKey());
+			assertEquals(ProductDefinitionConstants.INVALIDENDDATE, pde
+					.getKey());
 		}
-		
-		
+
 	}
 
-	public void testUpdateWithInitialStartDateInFuture()throws Exception {
-		String name ="Savings_offering";
-		String newName ="Savings_offeringChanged";
+	public void testUpdateWithInitialStartDateInFuture() throws Exception {
+		String name = "Savings_offering";
+		String newName = "Savings_offeringChanged";
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
 				PrdApplicableMaster.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
-		PrdStatusEntity prdStatus = new PrdOfferingPersistence().getPrdStatus(PrdStatus.SAVINGSACTIVE);
-		InterestCalcTypeEntity intCalType = new InterestCalcTypeEntity( 
+		InterestCalcTypeEntity intCalType = new InterestCalcTypeEntity(
 				InterestCalcType.AVERAGE_BALANCE);
 		MeetingBO intCalcMeeting = getMeeting();
 		MeetingBO intPostMeeting = getMeeting();
-		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, (short) 7);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
 		Date startDate = offSetCurrentDate(5);
 		Date endDate = offSetCurrentDate(15);
-		savingsOffering = createSavingsOfferingBO(name,"S",PrdApplicableMaster.CLIENTS,startDate,PrdStatus.SAVINGSINACTIVE,SavingsType.VOLUNTARY,InterestCalcType.AVERAGE_BALANCE);
+		savingsOffering = createSavingsOfferingBO(name, "S",
+				PrdApplicableMaster.CLIENTS, startDate,
+				PrdStatus.SAVINGSINACTIVE, SavingsType.VOLUNTARY,
+				InterestCalcType.AVERAGE_BALANCE);
 		Date newStartDate = offSetCurrentDate(6);
-		savingsOffering.update(Short.valueOf("1"),newName,"S1",productCategory,prdApplicableMaster,newStartDate,endDate,"Desc",PrdStatus.SAVINGSACTIVE);
+		savingsOffering.update(Short.valueOf("1"), newName, "S1",
+				productCategory, prdApplicableMaster, newStartDate, endDate,
+				"Desc", PrdStatus.SAVINGSACTIVE, null, savingsType, intCalType,
+				intCalcMeeting, intPostMeeting, new Money("10"), new Money(
+						"100"), new Money("1"), 10.0);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savingsOffering = (SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class, savingsOffering.getPrdOfferingId());
-		assertEquals(newStartDate , savingsOffering.getStartDate()); 	
+		savingsOffering = (SavingsOfferingBO) TestObjectFactory.getObject(
+				SavingsOfferingBO.class, savingsOffering.getPrdOfferingId());
+		assertEquals(newStartDate, savingsOffering.getStartDate());
 	}
-	
-	public void testUpdateSavingsOffering()throws Exception {
-		String name ="Savings_offering";
-		String newName ="Savings_offeringChanged";
-		String shortName ="S";
-		String newShortName ="S1";
-		String desc ="Desc";
+
+	public void testUpdateSavingsOffering() throws Exception {
+		String name = "Savings_offering";
+		String newName = "Savings_offeringChanged";
+		String shortName = "S";
+		String newShortName = "S1";
+		String desc = "Desc";
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
 				PrdApplicableMaster.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
@@ -747,30 +773,52 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				.getObject(ProductCategoryBO.class, (short) 2);
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(7);
-		savingsOffering = createSavingsOfferingBO(name,shortName, PrdApplicableMaster.CLIENTS, startDate, PrdStatus.SAVINGSACTIVE, SavingsType.VOLUNTARY,InterestCalcType.MINIMUM_BALANCE);
-		savingsOffering.update(Short.valueOf("1"),newName,newShortName ,productCategory,prdApplicableMaster,startDate,endDate,"Desc",PrdStatus.SAVINGSACTIVE,null,savingsType,intCalType, intCalcMeeting,
-				intPostMeeting, new Money("10"), new Money("100"), new Money("1"),
-				10.0);
+		savingsOffering = createSavingsOfferingBO(name, shortName,
+				PrdApplicableMaster.CLIENTS, startDate,
+				PrdStatus.SAVINGSACTIVE, SavingsType.VOLUNTARY,
+				InterestCalcType.MINIMUM_BALANCE);
+		savingsOffering.update(Short.valueOf("1"), newName, newShortName,
+				productCategory, prdApplicableMaster, startDate, endDate,
+				"Desc", PrdStatus.SAVINGSINACTIVE, null, savingsType,
+				intCalType, intCalcMeeting, intPostMeeting, new Money("10"),
+				new Money("100"), new Money("1"), 10.0);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savingsOffering = (SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class, savingsOffering.getPrdOfferingId());
-		assertEquals(newName , savingsOffering.getPrdOfferingName());
-		assertEquals(newShortName , savingsOffering.getPrdOfferingShortName());
-		assertEquals(desc , savingsOffering.getDescription());
-		assertEquals(startDate , savingsOffering.getStartDate());
-		assertEquals(endDate , savingsOffering.getEndDate());
-		assertEquals(productCategory.getProductCategoryID().intValue() , savingsOffering.getPrdCategory().getProductCategoryID().intValue());
-		assertEquals(PrdStatus.SAVINGSACTIVE.getValue() , savingsOffering.getPrdStatus().getOfferingStatusId());
-		assertEquals(ProductType.SAVINGS.getValue() , savingsOffering.getPrdStatus().getPrdType().getProductTypeID());
-		assertEquals(savingsType.getId(), savingsOffering.getSavingsType().getId());
-		assertEquals(intCalType.getId(), savingsOffering.getInterestCalcType().getId());
-		assertEquals(intCalcMeeting.getMeetingDetails().getRecurAfter(), savingsOffering.getTimePerForInstcalc().getMeeting().getMeetingDetails().getRecurAfter());
-		assertEquals(intCalcMeeting.getMeetingDetails().getRecurrenceType().getRecurrenceId().shortValue(), savingsOffering.getTimePerForInstcalc().getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId().shortValue());
-		assertEquals(intPostMeeting.getMeetingDetails().getRecurAfter(), savingsOffering.getFreqOfPostIntcalc().getMeeting().getMeetingDetails().getRecurAfter());
-		assertEquals("Recommended Amount" ,new Money("10"), savingsOffering.getRecommendedAmount());
+		savingsOffering = (SavingsOfferingBO) TestObjectFactory.getObject(
+				SavingsOfferingBO.class, savingsOffering.getPrdOfferingId());
+		assertEquals(newName, savingsOffering.getPrdOfferingName());
+		assertEquals(newShortName, savingsOffering.getPrdOfferingShortName());
+		assertEquals(desc, savingsOffering.getDescription());
+		assertEquals(startDate, savingsOffering.getStartDate());
+		assertEquals(endDate, savingsOffering.getEndDate());
+		assertEquals(productCategory.getProductCategoryID().intValue(),
+				savingsOffering.getPrdCategory().getProductCategoryID()
+						.intValue());
+		assertEquals(PrdStatus.SAVINGSINACTIVE.getValue(), savingsOffering
+				.getPrdStatus().getOfferingStatusId());
+		assertEquals(ProductType.SAVINGS.getValue(), savingsOffering
+				.getPrdStatus().getPrdType().getProductTypeID());
+		assertEquals(savingsType.getId(), savingsOffering.getSavingsType()
+				.getId());
+		assertEquals(intCalType.getId(), savingsOffering.getInterestCalcType()
+				.getId());
+		assertEquals(intCalcMeeting.getMeetingDetails().getRecurAfter(),
+				savingsOffering.getTimePerForInstcalc().getMeeting()
+						.getMeetingDetails().getRecurAfter());
+		assertEquals(intCalcMeeting.getMeetingDetails().getRecurrenceType()
+				.getRecurrenceId().shortValue(), savingsOffering
+				.getTimePerForInstcalc().getMeeting().getMeetingDetails()
+				.getRecurrenceType().getRecurrenceId().shortValue());
+		assertEquals(intPostMeeting.getMeetingDetails().getRecurAfter(),
+				savingsOffering.getFreqOfPostIntcalc().getMeeting()
+						.getMeetingDetails().getRecurAfter());
+		assertEquals("Recommended Amount", new Money("10"), savingsOffering
+				.getRecommendedAmount());
 		assertEquals(10.0, savingsOffering.getInterestRate());
-		assertEquals("Max Amount Withdrawl Amount" ,new Money("100"), savingsOffering.getMaxAmntWithdrawl());
-		assertEquals("Min Amount Withdrawl Amount" ,new Money("1"), savingsOffering.getMinAmntForInt());
+		assertEquals("Max Amount Withdrawl Amount", new Money("100"),
+				savingsOffering.getMaxAmntWithdrawl());
+		assertEquals("Min Amount Withdrawl Amount", new Money("1"),
+				savingsOffering.getMinAmntForInt());
 	}
 
 	private SavingsOfferingBO createSavingsOfferingBO(String prdOfferingName,
@@ -798,7 +846,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		currentDateCalendar = new GregorianCalendar(year, month, day + noOfDays);
 		return new java.sql.Date(currentDateCalendar.getTimeInMillis());
 	}
-	
+
 	private java.sql.Date reduceCurrentDate(int noOfDays) {
 		Calendar currentDateCalendar = new GregorianCalendar();
 		int year = currentDateCalendar.get(Calendar.YEAR);
@@ -807,18 +855,21 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		currentDateCalendar = new GregorianCalendar(year, month, day - noOfDays);
 		return new java.sql.Date(currentDateCalendar.getTimeInMillis());
 	}
-	
+
 	private SavingsOfferingBO createSavingsOfferingBO(String prdOfferingName,
-			String shortName,PrdApplicableMaster applicableTo, Date startDate, PrdStatus offeringStatus, SavingsType savingType,InterestCalcType interestCalcType) {
-		
+			String shortName, PrdApplicableMaster applicableTo, Date startDate,
+			PrdStatus offeringStatus, SavingsType savingType,
+			InterestCalcType interestCalcType) {
+
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		return TestObjectFactory.createSavingsOffering(prdOfferingName,
-				shortName, applicableTo.getValue(), startDate,
-				offeringStatus.getValue(), 300.0, (short) 1, 1.2, 200.0, 200.0, savingType.getValue(),
-				interestCalcType.getValue(), meetingIntCalc, meetingIntPost);
+				shortName, applicableTo.getValue(), startDate, offeringStatus
+						.getValue(), 300.0, (short) 1, 1.2, 200.0, 200.0,
+				savingType.getValue(), interestCalcType.getValue(),
+				meetingIntCalc, meetingIntPost);
 	}
 
 }

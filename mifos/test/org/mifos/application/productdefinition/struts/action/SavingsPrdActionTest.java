@@ -22,6 +22,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
@@ -45,6 +46,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		TestObjectFactory.removeObject(savingsOffering);
+		HibernateUtil.closeSession();
 		super.tearDown();
 
 	}
@@ -62,12 +64,11 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
-		userContext = TestObjectFactory.getUserContext();
+		userContext = TestObjectFactory.getContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
-		ActivityContext ac = new ActivityContext((short) 0, userContext
-				.getBranchId().shortValue(), userContext.getId().shortValue());
+		ActivityContext ac = TestObjectFactory.getActivityContext();
 		request.getSession(false).setAttribute("ActivityContext", ac);
 		Flow flow = new Flow();
 		flowKey = String.valueOf(System.currentTimeMillis());
@@ -493,6 +494,16 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.cancelCreate_success.toString());
 	}
 
+	public void testCancelEdit() throws Exception {
+		setRequestPathInfo("/savingsproductaction.do");
+		addRequestParameter("method", "cancelEdit");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.cancelEdit_success.toString());
+	}
+
 	public void testPrevious() throws Exception {
 		setRequestPathInfo("/savingsproductaction.do");
 		addRequestParameter("method", "previous");
@@ -612,7 +623,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 						request)).size());
 
 	}
-	
+
 	public void testPreviewManageWithOutData() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createSavingsOfferingAndPutInSession();
@@ -620,19 +631,21 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "previewManage");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals("error size" , 12, getErrrorSize());
-		assertEquals("prdOfferingName" , 1, getErrrorSize("prdOfferingName"));
-		assertEquals("prdOfferingShortName" , 1, getErrrorSize("prdOfferingShortName"));
-		assertEquals("prdCategory" , 1, getErrrorSize("prdCategory"));
-		assertEquals("startDate" , 1, getErrrorSize("startDate"));
-		assertEquals("prdApplicableMaster" , 1, getErrrorSize("prdApplicableMaster"));
-		assertEquals("savingsType" , 1, getErrrorSize("savingsType"));
-		assertEquals("interestRate" , 1, getErrrorSize("interestRate"));
-		assertEquals("interestCalcType" , 1, getErrrorSize("interestCalcType"));
-		assertEquals("timeForInterestCacl" , 1, getErrrorSize("freqOfInterest"));
-		assertEquals("freqOfInterest" , 1, getErrrorSize("freqOfInterest"));
-		assertEquals("depositGLCode" , 1, getErrrorSize("depositGLCode"));
-		assertEquals("interestGLCode" , 1, getErrrorSize("interestGLCode"));
+		assertEquals("error size", 12, getErrrorSize());
+		assertEquals("prdOfferingName", 1, getErrrorSize("prdOfferingName"));
+		assertEquals("prdOfferingShortName", 1,
+				getErrrorSize("prdOfferingShortName"));
+		assertEquals("prdCategory", 1, getErrrorSize("prdCategory"));
+		assertEquals("startDate", 1, getErrrorSize("startDate"));
+		assertEquals("prdApplicableMaster", 1,
+				getErrrorSize("prdApplicableMaster"));
+		assertEquals("savingsType", 1, getErrrorSize("savingsType"));
+		assertEquals("interestRate", 1, getErrrorSize("interestRate"));
+		assertEquals("interestCalcType", 1, getErrrorSize("interestCalcType"));
+		assertEquals("timeForInterestCacl", 1, getErrrorSize("freqOfInterest"));
+		assertEquals("freqOfInterest", 1, getErrrorSize("freqOfInterest"));
+		assertEquals("depositGLCode", 1, getErrrorSize("depositGLCode"));
+		assertEquals("interestGLCode", 1, getErrrorSize("interestGLCode"));
 		verifyInputForward();
 	}
 
@@ -659,11 +672,13 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("interestGLCode", "57");
 
 		actionPerform();
-		assertEquals("recommendedAmntUnit" , 1, getErrrorSize("recommendedAmntUnit"));
+		assertEquals("recommendedAmntUnit", 1,
+				getErrrorSize("recommendedAmntUnit"));
 		verifyInputForward();
 	}
 
-	public void testPreviewManageWithMandPrdAndAmountNotEntered() throws Exception {
+	public void testPreviewManageWithMandPrdAndAmountNotEntered()
+			throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createSavingsOfferingAndPutInSession();
 		setRequestPathInfo("/savingsproductaction.do");
@@ -673,7 +688,8 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingName", "Savings Offering");
 		addRequestParameter("prdOfferingShortName", "SAVP");
 		addRequestParameter("prdCategory", "2");
-		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext.getPereferedLocale()));
+		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
+				.getPereferedLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("savingsType", "1");
 		addRequestParameter("interestRate", "1");
@@ -689,7 +705,8 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		verifyInputForward();
 	}
 
-	public void testPreviewManageWithMandPrdAndZeroAmountEntered() throws Exception {
+	public void testPreviewManageWithMandPrdAndZeroAmountEntered()
+			throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createSavingsOfferingAndPutInSession();
 		setRequestPathInfo("/savingsproductaction.do");
@@ -716,7 +733,8 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("minAmntForInt", "10.0");
 
 		actionPerform();
-		assertEquals("Manadatory amount is 0", 1, getErrrorSize("recommendedAmount"));
+		assertEquals("Manadatory amount is 0", 1,
+				getErrrorSize("recommendedAmount"));
 		verifyInputForward();
 	}
 
@@ -749,7 +767,8 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		verifyInputForward();
 	}
 
-	public void testPreviewManageWithStartDateLessThanCurrentDate() throws Exception {
+	public void testPreviewManageWithStartDateLessThanCurrentDate()
+			throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createSavingsOfferingAndPutInSession();
 		setRequestPathInfo("/savingsproductaction.do");
@@ -777,7 +796,8 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		verifyInputForward();
 	}
 
-	public void testPreviewManageWithEndDateLessThanStartDate() throws Exception {
+	public void testPreviewManageWithEndDateLessThanStartDate()
+			throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createSavingsOfferingAndPutInSession();
 		setRequestPathInfo("/savingsproductaction.do");
@@ -812,7 +832,8 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		createSavingsOfferingAndPutInSession();
 		setRequestPathInfo("/savingsproductaction.do");
 		addRequestParameter("method", "manage");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -839,44 +860,44 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.previewManage_success.toString());
 	}
-	
+
 	public void testPreviewManageFlowFailure() throws Exception {
-		try{
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		createSavingsOfferingAndPutInSession();
-		setRequestPathInfo("/savingsproductaction.do");
-		addRequestParameter("method", "previewManage");
-		addRequestParameter("prdOfferingName", "Savings Offering");
-		addRequestParameter("prdOfferingShortName", "SAVP");
-		addRequestParameter("prdCategory", "2");
-		addRequestParameter("startDate", offSetCurrentDate(0, userContext
-				.getPereferedLocale()));
-		addRequestParameter("endDate", offSetCurrentDate(+1, userContext
-				.getPereferedLocale()));
-		addRequestParameter("prdApplicableMaster", "1");
-		addRequestParameter("savingsType", "1");
-		addRequestParameter("interestRate", "100.0");
-		addRequestParameter("interestCalcType", "1");
-		addRequestParameter("timeForInterestCacl", "1");
-		addRequestParameter("recurTypeFortimeForInterestCacl", "2");
-		addRequestParameter("freqOfInterest", "1");
-		addRequestParameter("depositGLCode", "42");
-		addRequestParameter("interestGLCode", "57");
-		addRequestParameter("recommendedAmount", "120.0");
-		actionPerform();
-		}
-		catch(PageExpiredException pe){
+		try {
+			request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+			createSavingsOfferingAndPutInSession();
+			setRequestPathInfo("/savingsproductaction.do");
+			addRequestParameter("method", "previewManage");
+			addRequestParameter("prdOfferingName", "Savings Offering");
+			addRequestParameter("prdOfferingShortName", "SAVP");
+			addRequestParameter("prdCategory", "2");
+			addRequestParameter("startDate", offSetCurrentDate(0, userContext
+					.getPereferedLocale()));
+			addRequestParameter("endDate", offSetCurrentDate(+1, userContext
+					.getPereferedLocale()));
+			addRequestParameter("prdApplicableMaster", "1");
+			addRequestParameter("savingsType", "1");
+			addRequestParameter("interestRate", "100.0");
+			addRequestParameter("interestCalcType", "1");
+			addRequestParameter("timeForInterestCacl", "1");
+			addRequestParameter("recurTypeFortimeForInterestCacl", "2");
+			addRequestParameter("freqOfInterest", "1");
+			addRequestParameter("depositGLCode", "42");
+			addRequestParameter("interestGLCode", "57");
+			addRequestParameter("recommendedAmount", "120.0");
+			actionPerform();
+		} catch (PageExpiredException pe) {
 			assertTrue(true);
 			assertEquals(ExceptionConstants.PAGEEXPIREDEXCEPTION, pe.getKey());
 		}
 	}
-	
+
 	public void testUpdate() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createSavingsOfferingAndPutInSession();
 		setRequestPathInfo("/savingsproductaction.do");
 		addRequestParameter("method", "manage");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -899,45 +920,59 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("recurTypeFortimeForInterestCacl", "2");
 		addRequestParameter("freqOfInterest", "1");
 		addRequestParameter("recommendedAmount", "120.0");
+		addRequestParameter("status", "5");
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.previewManage_success.toString());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 		setRequestPathInfo("/savingsproductaction.do");
 		addRequestParameter("method", "update");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
-		assertEquals("Savings Offering" , savingsOffering.getPrdOfferingName());
-		assertEquals("SAVP" , savingsOffering.getPrdOfferingShortName());
-		assertEquals(2 , savingsOffering.getPrdCategory().getProductCategoryID().intValue());
+		assertEquals("Savings Offering", savingsOffering.getPrdOfferingName());
+		assertEquals("SAVP", savingsOffering.getPrdOfferingShortName());
+		assertEquals(2, savingsOffering.getPrdCategory().getProductCategoryID()
+				.intValue());
+		assertEquals(PrdStatus.SAVINGSINACTIVE.getValue().shortValue(),
+				savingsOffering.getPrdStatus().getOfferingStatusId()
+						.shortValue());
 		assertEquals(1, savingsOffering.getSavingsType().getId().intValue());
-		assertEquals(1, savingsOffering.getInterestCalcType().getId().intValue());
-		assertEquals(1, savingsOffering.getTimePerForInstcalc().getMeeting().getMeetingDetails().getRecurAfter().intValue());
-		assertEquals(2, savingsOffering.getTimePerForInstcalc().getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId().shortValue());
-		assertEquals(1, savingsOffering.getFreqOfPostIntcalc().getMeeting().getMeetingDetails().getRecurAfter().intValue());
-		assertEquals("Recommended Amount" ,new Money("120"), savingsOffering.getRecommendedAmount());
+		assertEquals(1, savingsOffering.getInterestCalcType().getId()
+				.intValue());
+		assertEquals(1, savingsOffering.getTimePerForInstcalc().getMeeting()
+				.getMeetingDetails().getRecurAfter().intValue());
+		assertEquals(2, savingsOffering.getTimePerForInstcalc().getMeeting()
+				.getMeetingDetails().getRecurrenceType().getRecurrenceId()
+				.shortValue());
+		assertEquals(1, savingsOffering.getFreqOfPostIntcalc().getMeeting()
+				.getMeetingDetails().getRecurAfter().intValue());
+		assertEquals("Recommended Amount", new Money("120"), savingsOffering
+				.getRecommendedAmount());
 		assertEquals(9.0, savingsOffering.getInterestRate());
 		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-		savingsOffering = (SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class, savingsOffering.getPrdOfferingId());
+		savingsOffering = (SavingsOfferingBO) TestObjectFactory.getObject(
+				SavingsOfferingBO.class, savingsOffering.getPrdOfferingId());
 	}
-	
+
 	public void testPreviousManage() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createSavingsOfferingAndPutInSession();
 		setRequestPathInfo("/savingsproductaction.do");
 		addRequestParameter("method", "previousManage");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.previousManage_success.toString());
 	}
-	
+
 	public void testSearch() throws Exception {
-		createSavingsOfferingBO("prdOfferingName","SN");
+		createSavingsOfferingBO("prdOfferingName", "SN");
 		setRequestPathInfo("/savingsproductaction.do");
 		addRequestParameter("method", "search");
 		actionPerform();
@@ -945,11 +980,9 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.search_success.toString());
 		List<SavingsOfferingBO> savingsProducts = (List<SavingsOfferingBO>) SessionUtils
-				.getAttribute(
-						ProductDefinitionConstants.SAVINGSPRODUCTLIST,
+				.getAttribute(ProductDefinitionConstants.SAVINGSPRODUCTLIST,
 						request);
-		assertEquals("The size of savigns products", 1,
-				savingsProducts.size());
+		assertEquals("The size of savigns products", 1, savingsProducts.size());
 	}
 
 	private String offSetCurrentDate(int noOfDays, Locale locale) {

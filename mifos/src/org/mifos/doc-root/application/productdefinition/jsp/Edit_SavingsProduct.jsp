@@ -105,16 +105,11 @@
 					document.getElementById("monthDIV1").style.display = "none";
 				}
 			}
-			function fnCancel(form) {
-					form.action="savingsproductaction.do?method=cancel";
-					form.submit();
-			}
-			
-			function fnGet() {
-				savingsproductactionform.method.value="get";
-				savingsproductactionform.action="savingsproductaction.do";
+			function fnCancel() {
+				savingsproductactionform.action="savingsproductaction.do?method=cancelEdit";
 				savingsproductactionform.submit();
 			}
+			
 			function fnCheckRecMand() {
 				if(document.getElementsByName("savingsType")[0].value==1) {
 					document.getElementsByName("mandamnt")[0].style.display = "block";
@@ -348,7 +343,7 @@
 								<td width="70%">
 									 <mifos:select property="status" style="width:136px;">
 										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PrdCategoryStatusList')}" var="statusValue">
-											<html-el:option value="${statusValue.id}">${statusValue.name}</html-el:option>
+											<html-el:option value="${statusValue.offeringStatusId}">${statusValue.prdState.name}</html-el:option>
 										</c:forEach>
 									</mifos:select> 
 								</td>
@@ -485,7 +480,7 @@
 										<mifos:mifoslabel name="product.preview" bundle="ProductDefUIResources" />
 									</html-el:submit>
 									&nbsp;
-									<html-el:button property="cancel" styleClass="cancelbuttn" style="width:70px" onclick="javascript:fnGet()">
+									<html-el:button property="cancel" styleClass="cancelbuttn" style="width:70px" onclick="javascript:fnCancel()">
 										<mifos:mifoslabel name="product.cancel" bundle="ProductDefUIResources" />
 									</html-el:button>
 								</td>

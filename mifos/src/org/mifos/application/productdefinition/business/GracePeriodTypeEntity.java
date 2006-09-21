@@ -43,12 +43,12 @@ import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 
 public class GracePeriodTypeEntity extends MasterDataEntity {
 
-	protected GracePeriodTypeEntity() {
-		super();
-	}
-
 	public GracePeriodTypeEntity(GraceTypeConstants graceType) {
 		super(graceType.getValue());
+	}
+
+	protected GracePeriodTypeEntity() {
+		super();
 	}
 
 }

@@ -581,7 +581,9 @@ public class ActivityMapper {
 		activityMap.put("/savingsproductaction-previewManage",	SecurityConstants.VIEW);
 		activityMap.put("/savingsproductaction-previousManage",	SecurityConstants.VIEW);
 		activityMap.put("/savingsproductaction-update",	SecurityConstants.EDIT_SAVING_PRODUCT);
-
+		activityMap.put("/savingsproductaction-cancelEdit",
+				SecurityConstants.VIEW);
+		
 
 		// view lateness mappings
 		activityMap.put("/prdconfigurationaction-search",

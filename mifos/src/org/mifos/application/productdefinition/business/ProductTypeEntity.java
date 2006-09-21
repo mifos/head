@@ -44,7 +44,6 @@ import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.framework.business.BusinessObject;
 
-
 public class ProductTypeEntity extends BusinessObject {
 
 	private Short productTypeID;
@@ -55,15 +54,15 @@ public class ProductTypeEntity extends BusinessObject {
 
 	private Short dormancyDays;
 
-	protected ProductTypeEntity() {
-		super();
-	}
-	
 	public ProductTypeEntity(Short prdTypeId) {
 		super();
 		this.productTypeID = prdTypeId;
 	}
-	
+
+	protected ProductTypeEntity() {
+		super();
+	}
+
 	public LookUpValueEntity getLookUpValue() {
 		return lookUpValue;
 	}
@@ -95,13 +94,14 @@ public class ProductTypeEntity extends BusinessObject {
 	public void setLatenessDays(Short latenessDays) {
 		this.latenessDays = latenessDays;
 	}
-	
+
 	public String getName() {
-		String name=null;
-		Set<LookUpValueLocaleEntity> lookupSet = getLookUpValue().getLookUpValueLocales();
-		for(LookUpValueLocaleEntity entity : lookupSet){
-			if(entity.getLocaleId().equals(userContext.getLocaleId())){
-				name=entity.getLookUpValue();
+		String name = null;
+		Set<LookUpValueLocaleEntity> lookupSet = getLookUpValue()
+				.getLookUpValueLocales();
+		for (LookUpValueLocaleEntity entity : lookupSet) {
+			if (entity.getLocaleId().equals(userContext.getLocaleId())) {
+				name = entity.getLookUpValue();
 			}
 		}
 		return name;

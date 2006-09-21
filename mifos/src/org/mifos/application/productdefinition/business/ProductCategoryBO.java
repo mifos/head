@@ -71,13 +71,6 @@ public class ProductCategoryBO extends BusinessObject {
 	
 	private MifosLogger prdLoanLogger=MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
 
-	protected ProductCategoryBO() {
-		productCategoryID = null;
-		productType = null;
-		office = null;
-		globalPrdCategoryNum = null;
-	}
-
 	public ProductCategoryBO(UserContext userContext,
 			ProductTypeEntity productType, String productCategoryName,
 			String productCategoryDesc) throws ProductDefinitionException {
@@ -100,6 +93,13 @@ public class ProductCategoryBO extends BusinessObject {
 		catch (PersistenceException e) {
 			throw new ProductDefinitionException(e);
 		}
+	}
+	
+	protected ProductCategoryBO() {
+		productCategoryID = null;
+		productType = null;
+		office = null;
+		globalPrdCategoryNum = null;
 	}
 
 	public ProductTypeEntity getProductType() {

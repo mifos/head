@@ -30,9 +30,9 @@ import org.mifos.framework.util.helpers.SessionUtils;
 public class SavingsPrdActionForm extends BaseActionForm {
 	private MifosLogger prdDefLogger = MifosLogManager
 			.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
-	
+
 	private String prdOfferingId;
-	
+
 	private String prdOfferingName;
 
 	private String prdOfferingShortName;
@@ -70,12 +70,11 @@ public class SavingsPrdActionForm extends BaseActionForm {
 	private String depositGLCode;
 
 	private String interestGLCode;
-	
+
 	private String status;
 
 	private String input;
 
-	
 	public String getPrdOfferingId() {
 		return prdOfferingId;
 	}
@@ -236,7 +235,7 @@ public class SavingsPrdActionForm extends BaseActionForm {
 	public void setTimeForInterestCacl(String timeForInterestCacl) {
 		this.timeForInterestCacl = timeForInterestCacl;
 	}
-	
+
 	public String getInput() {
 		return input;
 	}
@@ -313,9 +312,13 @@ public class SavingsPrdActionForm extends BaseActionForm {
 	public Short getInterestGLCodeValue() {
 		return getShortValue(getInterestGLCode());
 	}
-	
+
 	public String getStatus() {
 		return status;
+	}
+
+	public Short getStatusValue() {
+		return getShortValue(getStatus());
 	}
 
 	public void setStatus(String status) {
@@ -343,25 +346,25 @@ public class SavingsPrdActionForm extends BaseActionForm {
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();
-		request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+		request.setAttribute(Constants.CURRENTFLOWKEY, request
+				.getParameter(Constants.CURRENTFLOWKEY));
 		String method = request.getParameter(ProductDefinitionConstants.METHOD);
 		prdDefLogger
 				.debug("validate method of Savings Product Action form method called :"
 						+ method);
-		try{
-			if (method != null ){
-				
-				if (method.equals(Methods.preview.toString())){
+		try {
+			if (method != null) {
+
+				if (method.equals(Methods.preview.toString())) {
 					errors.add(super.validate(mapping, request));
-					Date startingDate = getStartDateValue(getUserContext(request)
-							.getPereferedLocale());
+					Date startingDate = getStartDateValue(getUserContext(
+							request).getPereferedLocale());
 					Date endingDate = getEndDateValue(getUserContext(request)
 							.getPereferedLocale());
 					if (startingDate != null
-							&& DateUtils
-									.getDateWithoutTimeStamp(startingDate.getTime())
-									.compareTo(
-											DateUtils.getCurrentDateWithoutTimeStamp()) < 0)
+							&& DateUtils.getDateWithoutTimeStamp(
+									startingDate.getTime()).compareTo(
+									DateUtils.getCurrentDateWithoutTimeStamp()) < 0)
 						addError(errors, "startDate",
 								ProductDefinitionConstants.INVALIDSTARTDATE);
 					if (startingDate != null && endingDate != null
@@ -369,28 +372,33 @@ public class SavingsPrdActionForm extends BaseActionForm {
 						addError(errors, "endDate",
 								ProductDefinitionConstants.INVALIDENDDATE);
 					if (getSavingsTypeValue() != null
-							&& getSavingsTypeValue().equals(SavingsType.MANDATORY)
-							&& getRecommendedAmountValue().getAmountDoubleValue() <= 0.0)
+							&& getSavingsTypeValue().equals(
+									SavingsType.MANDATORY)
+							&& getRecommendedAmountValue()
+									.getAmountDoubleValue() <= 0.0)
 						addError(errors, "recommendedAmount",
 								ProductDefinitionConstants.ERRORMANDAMOUNT);
 					Double intRate = getInterestRateValue();
 					if (intRate != null && intRate > 100)
 						addError(errors, "interestRate",
 								ProductDefinitionConstants.ERRORINTRATE);
-				}
-				else if(method.equals(Methods.previewManage.toString())) {
+				} else if (method.equals(Methods.previewManage.toString())) {
 					errors.add(super.validate(mapping, request));
 					validateMandatoryAmount(errors);
 					validateInterestRate(errors);
-					Date startingDate = getStartDateValue(getUserContext(request).getPereferedLocale());
-					Date endingDate = getEndDateValue(getUserContext(request).getPereferedLocale());
-					SavingsOfferingBO savingsOffering = (SavingsOfferingBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-					validateStartDate( errors , savingsOffering.getStartDate(), startingDate);
-					validateEndDateAgainstCurrentDate(errors, startingDate, endingDate); 
+					Date startingDate = getStartDateValue(getUserContext(
+							request).getPereferedLocale());
+					Date endingDate = getEndDateValue(getUserContext(request)
+							.getPereferedLocale());
+					SavingsOfferingBO savingsOffering = (SavingsOfferingBO) SessionUtils
+							.getAttribute(Constants.BUSINESS_KEY, request);
+					validateStartDate(errors, savingsOffering.getStartDate(),
+							startingDate);
+					validateEndDateAgainstCurrentDate(errors, startingDate,
+							savingsOffering.getEndDate(), endingDate);
 				}
 			}
-		}	
-		catch(ApplicationException ae){
+		} catch (ApplicationException ae) {
 			errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae
 					.getValues()));
 		}
@@ -410,7 +418,7 @@ public class SavingsPrdActionForm extends BaseActionForm {
 		if (intRate != null && intRate > 100)
 			addError(errors, "interestRate",
 					ProductDefinitionConstants.ERRORINTRATE);
-		
+
 	}
 
 	private void validateMandatoryAmount(ActionErrors errors) {
@@ -419,78 +427,105 @@ public class SavingsPrdActionForm extends BaseActionForm {
 				&& getRecommendedAmountValue().getAmountDoubleValue() <= 0.0)
 			addError(errors, "recommendedAmount",
 					ProductDefinitionConstants.ERRORMANDAMOUNT);
-		
+
 	}
-	
-	private void validateStartDate(ActionErrors errors , java.util.Date oldStartDate, Date changedStartDate) throws ProductDefinitionException{
-		
-		if(DateUtils.getDateWithoutTimeStamp(oldStartDate.getTime())
-					.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) <= 0 &&
-					(changedStartDate != null && DateUtils.getDateWithoutTimeStamp(oldStartDate.getTime())
-							.compareTo(DateUtils.getDateWithoutTimeStamp(changedStartDate.getTime())) != 0)){
-				addError(errors, "startDate", ProductDefinitionConstants.STARTDATEUPDATEEXCEPTION);
-				
+
+	private void validateStartDate(ActionErrors errors,
+			java.util.Date oldStartDate, Date changedStartDate)
+			throws ProductDefinitionException {
+
+		if (DateUtils.getDateWithoutTimeStamp(oldStartDate.getTime())
+				.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) <= 0
+				&& (changedStartDate != null && DateUtils
+						.getDateWithoutTimeStamp(oldStartDate.getTime())
+						.compareTo(
+								DateUtils
+										.getDateWithoutTimeStamp(changedStartDate
+												.getTime())) != 0)) {
+			addError(errors, "startDate",
+					ProductDefinitionConstants.STARTDATEUPDATEEXCEPTION);
+
+		} else if (changedStartDate != null
+				&& DateUtils.getDateWithoutTimeStamp(oldStartDate.getTime())
+						.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) > 0) {
+			validateStartDateAgainstCurrentDate(errors, changedStartDate);
+			validateStartDateAgainstNextYearDate(errors, changedStartDate);
 		}
-		else if(changedStartDate != null && DateUtils.getDateWithoutTimeStamp(changedStartDate.getTime())
-					.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) > 0){
-				validateStartDateAgainstCurrentDate(errors, changedStartDate);
-				validateStartDateAgainstNextYearDate(errors, changedStartDate);
-		}
-		
+
 	}
-	
-	private void validateStartDateAgainstNextYearDate(ActionErrors errors , Date changedStartDate) {
+
+	private void validateStartDateAgainstNextYearDate(ActionErrors errors,
+			Date changedStartDate) {
 		Calendar currentDateCalendar = new GregorianCalendar();
 		int year = currentDateCalendar.get(Calendar.YEAR);
 		int month = currentDateCalendar.get(Calendar.MONTH);
 		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-		Calendar nextCalendar = new GregorianCalendar(year + 1, month,day);
-		Date nextYearDate =  new Date(nextCalendar.getTimeInMillis());
-		if(DateUtils.getDateWithoutTimeStamp(changedStartDate.getTime())
-				.compareTo(nextYearDate) > 0){
-				addError(errors, "startDate", ProductDefinitionConstants.INVALIDSTARTDATE);
+		Calendar nextCalendar = new GregorianCalendar(year + 1, month, day);
+		Date nextYearDate = new Date(nextCalendar.getTimeInMillis());
+		if (DateUtils.getDateWithoutTimeStamp(changedStartDate.getTime())
+				.compareTo(nextYearDate) > 0) {
+			addError(errors, "startDate",
+					ProductDefinitionConstants.INVALIDSTARTDATE);
 		}
-		
+
 	}
 
-	private void validateStartDateAgainstCurrentDate(ActionErrors errors , Date startDate) throws ProductDefinitionException{
-		if(DateUtils.getDateWithoutTimeStamp(startDate.getTime())
-		.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) < 0){
-			addError(errors, "startDate", ProductDefinitionConstants.INVALIDSTARTDATE);
+	private void validateStartDateAgainstCurrentDate(ActionErrors errors,
+			Date startDate) throws ProductDefinitionException {
+		if (DateUtils.getDateWithoutTimeStamp(startDate.getTime()).compareTo(
+				DateUtils.getCurrentDateWithoutTimeStamp()) < 0) {
+			addError(errors, "startDate",
+					ProductDefinitionConstants.INVALIDSTARTDATE);
 		}
 	}
-	
-	private void validateEndDateAgainstCurrentDate(ActionErrors errors ,Date startDate , Date endDate) throws ProductDefinitionException{
-		if(endDate != null && DateUtils.getDateWithoutTimeStamp(
-				startDate.getTime()).compareTo(
-				DateUtils.getDateWithoutTimeStamp(endDate.getTime())) >= 0) {
-			addError(errors, "endDate",	ProductDefinitionConstants.INVALIDENDDATE);		
+
+	private void validateEndDateAgainstCurrentDate(ActionErrors errors,
+			Date startDate, java.util.Date oldEndDate, Date endDate)
+			throws ProductDefinitionException {
+		if ((oldEndDate==null && endDate!=null )||(oldEndDate != null
+				&& endDate != null
+				&& DateUtils.getDateWithoutTimeStamp(oldEndDate.getTime())
+						.compareTo(
+								DateUtils.getDateWithoutTimeStamp(endDate
+										.getTime())) != 0)) {
+			if (endDate != null
+					&& (DateUtils.getDateWithoutTimeStamp(endDate.getTime())
+							.compareTo(
+									DateUtils.getCurrentDateWithoutTimeStamp()) < 0 || DateUtils
+							.getDateWithoutTimeStamp(startDate.getTime())
+							.compareTo(
+									DateUtils.getDateWithoutTimeStamp(endDate
+											.getTime())) >= 0)) {
+				addError(errors, "endDate",
+						ProductDefinitionConstants.INVALIDENDDATE);
+			}
 		}
+
 	}
 
 	public void clear() {
-		this.prdOfferingId =null;
-		this.prdOfferingName =null;
-		this.prdOfferingShortName =null;
-		this.description =null;
-		this.prdCategory =null;
-		this.startDate =null;
-		this.endDate =null;
-		this.prdApplicableMaster =null;
-		this.savingsType =null;
-		this.recommendedAmount =null;
-		this.recommendedAmntUnit =null;
-		this.maxAmntWithdrawl =null;
-		this.interestRate =null;
-		this.interestCalcType =null;
-		this.timeForInterestCacl =null;
-		this.recurTypeFortimeForInterestCacl =null;
-		this.freqOfInterest =null;
-		this.minAmntForInt =null;
-		this.depositGLCode =null;
-		this.interestGLCode =null;
-		this.status =null;
-		
+		this.prdOfferingId = null;
+		this.prdOfferingName = null;
+		this.prdOfferingShortName = null;
+		this.description = null;
+		this.prdCategory = null;
+		this.startDate = null;
+		this.endDate = null;
+		this.prdApplicableMaster = null;
+		this.savingsType = null;
+		this.recommendedAmount = null;
+		this.recommendedAmntUnit = null;
+		this.maxAmntWithdrawl = null;
+		this.interestRate = null;
+		this.interestCalcType = null;
+		this.timeForInterestCacl = null;
+		this.recurTypeFortimeForInterestCacl = null;
+		this.freqOfInterest = null;
+		this.minAmntForInt = null;
+		this.depositGLCode = null;
+		this.interestGLCode = null;
+		this.status = null;
+
 	}
 
 }

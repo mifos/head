@@ -5,13 +5,13 @@ import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 
 public class InterestCalcTypeEntity extends MasterDataEntity {
 
-	protected InterestCalcTypeEntity() {
-		super();
-	}
-
 	public InterestCalcTypeEntity(InterestCalcType interestCalcType) {
 		super(interestCalcType.getValue());
 
+	}
+
+	protected InterestCalcTypeEntity() {
+		super();
 	}
 
 }

@@ -1,12 +1,16 @@
 package org.mifos.application.productdefinition.business.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
+import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class SavingsPrdBusinessServiceTest extends MifosTestCase {
@@ -18,6 +22,7 @@ public class SavingsPrdBusinessServiceTest extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
+		HibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -30,13 +35,37 @@ public class SavingsPrdBusinessServiceTest extends MifosTestCase {
 		assertEquals(2, new SavingsPrdBusinessService()
 				.getSavingsApplicableRecurrenceTypes().size());
 	}
+
 	public void testGetAllSavingsProducts() throws Exception {
 		SavingsOfferingBO savingsOffering = createSavingsOfferingBO();
-		assertEquals(1, new SavingsPrdBusinessService()
-				.getAllSavingsProducts().size());
+		assertEquals(1, new SavingsPrdBusinessService().getAllSavingsProducts()
+				.size());
 		TestObjectFactory.removeObject(savingsOffering);
 	}
-	
+
+	public void testGetApplicablePrdStatus() throws ServiceException {
+		List<PrdStatusEntity> prdStatusList = new SavingsPrdBusinessService()
+				.getApplicablePrdStatus((short) 1);
+		HibernateUtil.closeSession();
+		assertEquals(2, prdStatusList.size());
+		for (PrdStatusEntity prdStatus : prdStatusList) {
+			if (prdStatus.getPrdState().equals("1"))
+				assertEquals("Active", prdStatus.getPrdState().getName());
+			if (prdStatus.getPrdState().equals("2"))
+				assertEquals("InActive", prdStatus.getPrdState().getName());
+		}
+	}
+
+	public void testGetApplicablePrdStatusForInvalidConnection() {
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			new SavingsPrdBusinessService().getApplicablePrdStatus((short) 1);
+			assertTrue(false);
+		} catch (ServiceException e) {
+			assertTrue(true);
+		}
+	}
+
 	private SavingsOfferingBO createSavingsOfferingBO() {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));

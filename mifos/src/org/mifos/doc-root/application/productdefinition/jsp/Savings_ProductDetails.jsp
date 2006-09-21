@@ -53,44 +53,35 @@
 
 		<script language="javascript">
 <!--
-	function fnSearch(form) {
-		form.method.value="search";
-		form.action="savingsprdaction.do";
-		form.submit();
-	}
 	function fnManage(form) {
 		form.method.value="manage";
-		form.action="savingsprdaction.do";
+		form.action="savingsproductaction.do";
 		form.submit();
 	}
-	function fnCancel() {
-		savingsprdactionform.method.value="cancel";
-		savingsprdactionform.input.value="admin";
-		savingsprdactionform.action="savingsprdaction.do";
-		savingsprdactionform.submit();
-	}
+	/*
 	function changelog(form) {
 		form.method.value="search";
 		form.input.value="ChangeLog";
 		document.getElementById("SavingsProduct.SearchName").value="ChangeLogDetails";
 		form.action="savingsprdaction.do?searchNode(search_name)=ChangeLogDetails";
 		form.submit();
-	}
+	}*/
 //-->
 </script>
-		<html-el:form action="/savingsprdaction">
+		<html-el:form action="/savingsproductaction.do">
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<c:set	value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
-						<span class="fontnormal8pt"> <html-el:link href="javascript:fnCancel()">
+						<span class="fontnormal8pt"> <html-el:link href="AdminAction.do?method=load">
 								<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
-							</html-el:link> / <html-el:link href="javascript:fnSearch(savingsprdactionform)">
+							</html-el:link> / 
+							<a	href="savingsproductaction.do?method=search">
 								<mifos:mifoslabel name="product.savingsview" bundle="ProductDefUIResources" />
 								<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
 								<mifos:mifoslabel name="product.products" bundle="ProductDefUIResources" />
-							</html-el:link> / </span><span class="fontnormal8ptbold"><c:out value="${BusinessKey.prdOfferingName}" /></span>
+							</a> / </span><span class="fontnormal8ptbold"><c:out value="${BusinessKey.prdOfferingName}" /></span>
 					</td>
 				</tr>
 			</table>
@@ -103,13 +94,13 @@
 									<c:out value="${BusinessKey.prdOfferingName}" />
 								</td>
 								<td width="32%" align="right">
-									<html-el:link href="javascript:fnManage(savingsprdactionform)">
+									<a	href="savingsproductaction.do?method=manage&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 
 										<mifos:mifoslabel name="product.prdedit" bundle="ProductDefUIResources" />
 										<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
 										<mifos:mifoslabel name="product.info" bundle="ProductDefUIResources" />
 
-									</html-el:link>
+									</a>
 								</td>
 							</tr>
 							<tr>
@@ -284,18 +275,7 @@
 						<br>
 					</td>
 				</tr>
-				<html-el:hidden property="method" value="manage" />
-				<html-el:hidden property="input" />
-				<html-el:hidden property="prdCategory.productCategoryID" value="${requestScope.Context.valueObject.prdCategory.productCategoryID}" />
-				<html-el:hidden property="searchNode(search_name)" styleId="SavingsProduct.SearchName" value="SavingsProducts" />
-				<html-el:hidden property="prdOfferingName" value="${BusinessKey.prdOfferingName}" />
-				<html-el:hidden property="prdOfferingId" value="${BusinessKey.prdOfferingId}" />
-				<html-el:hidden property="timeForInterestCacl" value="${BusinessKey.timePerForInstcalc.meeting.meetingDetails.recurAfter}" />
-				<html-el:hidden property="recurTypeFortimeForInterestCacl" value="${BusinessKey.timePerForInstcalc.meeting.meetingDetails.recurrenceType.recurrenceId}" />
-				<html-el:hidden property="timePerForInstcalc.prdOfferingMeetingId" value="${sessionScope.Context.valueObject.timePerForInstcalc.prdOfferingMeetingId}" />
-				<html-el:hidden property="freqOfInterest" value="${BusinessKey.freqOfPostIntcalc.meeting.meetingDetails.recurAfter}" />
-				<html-el:hidden property="freqOfPostIntcalc.prdOfferingMeetingId" value="${sessionScope.Context.valueObject.freqOfPostIntcalc.prdOfferingMeetingId}" />
-				
+								
 			</table>
 		</html-el:form>
 	</tiles:put>

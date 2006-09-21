@@ -5,11 +5,11 @@ import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUni
 
 public class RecommendedAmntUnitEntity extends MasterDataEntity {
 
-	protected RecommendedAmntUnitEntity() {
-		super();
-	}
-
 	public RecommendedAmntUnitEntity(RecommendedAmountUnit recommendedAmountUnit) {
 		super(recommendedAmountUnit.getValue());
+	}
+
+	protected RecommendedAmntUnitEntity() {
+		super();
 	}
 }

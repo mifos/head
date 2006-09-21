@@ -40,6 +40,7 @@ package org.mifos.application.productdefinition.business.service;
 import java.util.List;
 
 import org.mifos.application.meeting.business.RecurrenceTypeEntity;
+import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.persistence.PrdOfferingPersistence;
@@ -87,12 +88,23 @@ public class SavingsPrdBusinessService extends BusinessService {
 		}
 	}
 
-	public List<SavingsOfferingBO> getAllSavingsProducts() throws ServiceException {
+	public List<SavingsOfferingBO> getAllSavingsProducts()
+			throws ServiceException {
 		try {
-			return new SavingsPrdPersistence()
-					.getAllSavingsProducts();
+			return new SavingsPrdPersistence().getAllSavingsProducts();
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
+	}
+
+	public List<PrdStatusEntity> getApplicablePrdStatus(Short localeId)
+			throws ServiceException {
+		try {
+			return new PrdOfferingPersistence().getApplicablePrdStatus(
+					ProductType.SAVINGS, localeId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+
 	}
 }

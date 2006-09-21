@@ -52,22 +52,16 @@
 
 		<script language="javascript">
 <!--
-	function fnCancel(form) {
-		form.method.value="cancel";
-		form.action="savingsproductaction.do";
-		form.submit();
-	}
 	function fnEdit() {
 		savingsproductactionform.action="savingsproductaction.do?method=previousManage";
 		savingsproductactionform.submit();
 	}
-	function fnGet() {
-		savingsproductactionform.method.value="get";
-		savingsproductactionform.action="savingsproductaction.do";
-		savingsproductactionform.submit();
-	}
 	function func_disableSubmitBtn(){
 		document.getElementById("submitBut").disabled=true;
+	}
+	function fnCancel() {
+		savingsproductactionform.action="savingsproductaction.do?method=cancelEdit";
+		savingsproductactionform.submit();
 	}
 //-->
 </script>
@@ -206,8 +200,8 @@
 									<mifos:mifoslabel name="product.status" bundle="ProductDefUIResources" />
 									: <span class="fontnormal"> 
 										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PrdCategoryStatusList')}" var="statusValue">
-											<c:if test="${statusValue.id eq sessionScope.savingsproductactionform.status}">
-												<c:out value="${statusValue.name}" />
+											<c:if test="${statusValue.offeringStatusId eq sessionScope.savingsproductactionform.status}">
+												<c:out value="${statusValue.prdState.name}" />
 											</c:if>
 										</c:forEach></span>
 								</td>
@@ -308,7 +302,7 @@
 										<mifos:mifoslabel name="product.butsubmit" bundle="ProductDefUIResources" />
 									</html-el:submit>
 									&nbsp;
-									<html-el:button property="cancel" styleClass="cancelbuttn" style="width:70px" onclick="javascript:fnGet()">
+									<html-el:button property="cancel" styleClass="cancelbuttn" style="width:70px" onclick="javascript:fnCancel()">
 										<mifos:mifoslabel name="product.cancel" bundle="ProductDefUIResources" />
 									</html-el:button>
 								</td>

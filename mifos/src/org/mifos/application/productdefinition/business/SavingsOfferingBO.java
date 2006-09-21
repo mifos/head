@@ -82,12 +82,6 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 	private MifosLogger prdLogger = MifosLogManager
 			.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
 
-	protected SavingsOfferingBO() {
-		depositGLCode = null;
-		interestGLCode = null;
-		prdOfferingMeetings = new HashSet<PrdOfferingMeetingEntity>();
-	}
-
 	public SavingsOfferingBO(UserContext userContext, String prdOfferingName,
 			String prdOfferingShortName, ProductCategoryBO prdCategory,
 			PrdApplicableMasterEntity prdApplicableMaster, Date startDate,
@@ -140,6 +134,12 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 		this.interestGLCode = interestGLCode;
 		prdLogger.debug("creating savings product offering done :"
 				+ getGlobalPrdOfferingNum());
+	}
+
+	protected SavingsOfferingBO() {
+		depositGLCode = null;
+		interestGLCode = null;
+		prdOfferingMeetings = new HashSet<PrdOfferingMeetingEntity>();
 	}
 
 	private Set<PrdOfferingMeetingEntity> getPrdOfferingMeetings() {
@@ -241,11 +241,11 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 		prdLogger.debug("creating the saving offering Done : "
 				+ getPrdOfferingName());
 	}
-	
+
 	public void update(Short userId, String prdOfferingName,
 			String prdOfferingShortName, ProductCategoryBO prdCategory,
 			PrdApplicableMasterEntity prdApplicableMaster, Date startDate,
-			Date endDate, String description,PrdStatus prdStatus,
+			Date endDate, String description, PrdStatus prdStatus,
 			RecommendedAmntUnitEntity recommendedAmntUnit,
 			SavingsTypeEntity savingsType,
 			InterestCalcTypeEntity interestCalcType,
@@ -253,8 +253,9 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 			Money recommendedAmount, Money maxAmntWithdrawl,
 			Money minAmntForInt, Double interestRate)
 			throws ProductDefinitionException {
-		super.update(userId, prdOfferingName, prdOfferingShortName, prdCategory,
-				prdApplicableMaster, startDate, endDate, description,prdStatus);
+		super.update(userId, prdOfferingName, prdOfferingShortName,
+				prdCategory, prdApplicableMaster, startDate, endDate,
+				description, prdStatus);
 		validate(savingsType, interestCalcType, recommendedAmntUnit,
 				timePerForInstcalc, freqOfPostIntcalc, recommendedAmount,
 				interestRate, depositGLCode, interestGLCode);
@@ -262,10 +263,11 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 		this.savingsType = savingsType;
 		this.interestCalcType = interestCalcType;
 		this.recommendedAmntUnit = recommendedAmntUnit;
-		//updateProductOfferingMeetings(timePerForInstcalc, freqOfPostIntcalc);
 		this.prdOfferingMeetings.clear();
-		setTimePerForInstcalc(new PrdOfferingMeetingEntity(timePerForInstcalc,this, MeetingType.SAVINGSTIMEPERFORINTCALC));
-		setFreqOfPostIntcalc(new PrdOfferingMeetingEntity(freqOfPostIntcalc,this, MeetingType.SAVINGSFRQINTPOSTACC));
+		setTimePerForInstcalc(new PrdOfferingMeetingEntity(timePerForInstcalc,
+				this, MeetingType.SAVINGSTIMEPERFORINTCALC));
+		setFreqOfPostIntcalc(new PrdOfferingMeetingEntity(freqOfPostIntcalc,
+				this, MeetingType.SAVINGSFRQINTPOSTACC));
 		this.recommendedAmount = recommendedAmount;
 		this.interestRate = interestRate;
 		this.maxAmntWithdrawl = maxAmntWithdrawl;
@@ -276,20 +278,9 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 		} catch (PersistenceException e) {
 			throw new ProductDefinitionException(e);
 		}
-		prdLogger.debug("updated savings product offering done :"+ getGlobalPrdOfferingNum());
+		prdLogger.debug("updated savings product offering done :"
+				+ getGlobalPrdOfferingNum());
 	}
-
-
-	/*private void updateProductOfferingMeetings(MeetingBO timePerForInstcalc, MeetingBO freqOfPostIntcalc) throws ProductDefinitionException {
-		updateTimeForIntCalc(timePerForInstcalc);
-		updateTimeForIntCalc(freqOfPostIntcalc);
-		
-	}
-
-	private void updateTimeForIntCalc(MeetingBO timePerForInstCalc) throws ProductDefinitionException {
-		MeetingBO timeForIntCalculation = getTimePerForInstcalc().getMeeting();
-				
-	}*/
 
 	private PrdOfferingMeetingEntity getPrdOfferingMeeting(
 			MeetingType meetingType) throws ProductDefinitionException {
