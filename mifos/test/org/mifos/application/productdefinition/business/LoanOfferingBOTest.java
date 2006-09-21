@@ -106,24 +106,22 @@ public class LoanOfferingBOTest extends MifosTestCase {
 
 	public void testBuildloanOfferingWithoutDataForMandatoryFields() {
 		try {
-			LoanOfferingBO loanOffering = new LoanOfferingBO(null, null, null,
+			new LoanOfferingBO(null, null, null,
 					null, null, null, null, null, null, null, null, null, null,
 					null, null, false, false, false, null, null, null);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
 	public void testBuildloanOfferingWithoutDataForAllFields() {
 		try {
-			LoanOfferingBO loanOffering = new LoanOfferingBO(null, null, null,
+			new LoanOfferingBO(null, null, null,
 					null, null, null, null, null, null, null, null, null, null,
 					null, null, null, null, null, null, null, false, false,
 					false, null, null, null, null, null);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -131,15 +129,14 @@ public class LoanOfferingBOTest extends MifosTestCase {
 			SystemException, ApplicationException {
 		createIntitalObjects();
 		try {
-			LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+			new LoanOfferingBO(TestObjectFactory
 					.getContext(), null, "S", productCategory,
 					prdApplicableMaster, new Date(System.currentTimeMillis()),
 					interestTypes, new Money("1000"), new Money("3000"), 12.0,
 					2.0, 3.0, (short) 20, (short) 1, (short) 12, false, false,
 					false, frequency, principalglCodeEntity, intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -147,15 +144,14 @@ public class LoanOfferingBOTest extends MifosTestCase {
 			throws InvalidUserException, SystemException, ApplicationException {
 		createIntitalObjects();
 		try {
-			LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+			new LoanOfferingBO(TestObjectFactory
 					.getContext(), "Loan Offering", "LOANOFF", productCategory,
 					prdApplicableMaster, new Date(System.currentTimeMillis()),
 					interestTypes, new Money("1000"), new Money("3000"), 12.0,
 					2.0, 3.0, (short) 20, (short) 1, (short) 12, false, false,
 					false, frequency, principalglCodeEntity, intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -164,15 +160,14 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(-2);
 		try {
-			LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+			new LoanOfferingBO(TestObjectFactory
 					.getContext(), "Loan Offering", "LOAN", productCategory,
 					prdApplicableMaster, startDate, interestTypes, new Money(
 							"1000"), new Money("3000"), 12.0, 2.0, 3.0,
 					(short) 20, (short) 1, (short) 12, false, false, false,
 					frequency, principalglCodeEntity, intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -214,15 +209,14 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		try {
-			LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+			new LoanOfferingBO(TestObjectFactory
 					.getContext(), "Loan Product", "LOAN", productCategory,
 					prdApplicableMaster, startDate, interestTypes, new Money(
 							"1000"), new Money("3000"), 12.0, 2.0, 3.0,
 					(short) 20, (short) 1, (short) 12, false, false, false,
 					frequency, principalglCodeEntity, intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -232,15 +226,14 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		try {
-			LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+			new LoanOfferingBO(TestObjectFactory
 					.getContext(), "Loan Offering", "LOAP", productCategory,
 					prdApplicableMaster, startDate, interestTypes, new Money(
 							"1000"), new Money("3000"), 12.0, 2.0, 3.0,
 					(short) 20, (short) 1, (short) 12, false, false, false,
 					frequency, principalglCodeEntity, intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -250,16 +243,15 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(-2);
 		try {
-			LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+			new LoanOfferingBO(TestObjectFactory
 					.getContext(), "Loan Offering", "LOAP", productCategory,
 					prdApplicableMaster, startDate, endDate, null, null, null,
 					interestTypes, new Money("1000"), new Money("3000"), null,
 					12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false,
 					false, false, null, null, frequency, principalglCodeEntity,
 					intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -268,15 +260,14 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		try {
-			LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+			new LoanOfferingBO(TestObjectFactory
 					.getContext(), "Loan Product", "LOAN", productCategory,
 					prdApplicableMaster, startDate, null, new Money("1000"),
 					new Money("3000"), 12.0, 2.0, 3.0, (short) 20, (short) 1,
 					(short) 12, false, false, false, frequency,
 					principalglCodeEntity, intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -285,15 +276,14 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		try {
-			LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+			new LoanOfferingBO(TestObjectFactory
 					.getContext(), "Loan Offering", "LOAP", productCategory,
 					prdApplicableMaster, startDate, interestTypes, new Money(
 							"1000.0"), null, 12.0, 2.0, 3.0, (short) 20,
 					(short) 1, (short) 12, false, false, false, frequency,
 					principalglCodeEntity, intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -302,15 +292,14 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		try {
-			LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+			new LoanOfferingBO(TestObjectFactory
 					.getContext(), "Loan Offering", "LOAP", productCategory,
 					prdApplicableMaster, startDate, interestTypes, new Money(
 							"1000.0"), new Money("3000"), 12.0, 2.0, 3.0,
 					(short) 20, (short) 1, (short) 12, false, false, false,
 					frequency, null, null);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -321,16 +310,15 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(2);
 		try {
-			LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+			new LoanOfferingBO(TestObjectFactory
 					.getContext(), "Loan Offering", "LOAP", productCategory,
 					prdApplicableMaster, startDate, endDate, null, null, null,
 					interestTypes, new Money("1000"), new Money("3000"),
 					new Money("200.0"), 12.0, 2.0, 3.0, (short) 20, (short) 1,
 					(short) 12, false, false, false, null, null, frequency,
 					principalglCodeEntity, intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -339,16 +327,15 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(2);
 		try {
-			LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+			new LoanOfferingBO(TestObjectFactory
 					.getContext(), "Loan Offering", "LOAP", productCategory,
 					prdApplicableMaster, startDate, endDate, null, null, null,
 					interestTypes, new Money("10000"), new Money("3000"), null,
 					12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false,
 					false, false, null, null, frequency, principalglCodeEntity,
 					intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -357,16 +344,15 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(2);
 		try {
-			LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+			new LoanOfferingBO(TestObjectFactory
 					.getContext(), "Loan Offering", "LOAP", productCategory,
 					prdApplicableMaster, startDate, endDate, null, null, null,
 					interestTypes, new Money("1000"), new Money("3000"),
 					new Money("2000.0"), 12.0, 2.0, 13.0, (short) 20,
 					(short) 1, (short) 12, false, false, false, null, null,
 					frequency, principalglCodeEntity, intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -375,16 +361,15 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(2);
 		try {
-			LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+			new LoanOfferingBO(TestObjectFactory
 					.getContext(), "Loan Offering", "LOAP", productCategory,
 					prdApplicableMaster, startDate, endDate, null, null, null,
 					interestTypes, new Money("1000"), new Money("3000"),
 					new Money("2000.0"), 12.0, 20.0, 13.0, (short) 20,
 					(short) 1, (short) 12, false, false, false, null, null,
 					frequency, principalglCodeEntity, intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -393,16 +378,15 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(2);
 		try {
-			LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+			new LoanOfferingBO(TestObjectFactory
 					.getContext(), "Loan Offering", "LOAP", productCategory,
 					prdApplicableMaster, startDate, endDate, null, null, null,
 					interestTypes, new Money("1000"), new Money("3000"),
 					new Money("2000.0"), 12.0, 2.0, 3.0, (short) 20,
 					(short) 31, (short) 21, false, false, false, null, null,
 					frequency, principalglCodeEntity, intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -411,16 +395,15 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(2);
 		try {
-			LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+			new LoanOfferingBO(TestObjectFactory
 					.getContext(), "Loan Offering", "LOAP", productCategory,
 					prdApplicableMaster, startDate, endDate, null, null, null,
 					interestTypes, new Money("1000"), new Money("3000"),
 					new Money("2000.0"), 12.0, 2.0, 3.0, (short) 20,
 					(short) 11, (short) 7, false, false, false, null, null,
 					frequency, principalglCodeEntity, intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -451,7 +434,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(2);
 		try {
-			LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+			new LoanOfferingBO(TestObjectFactory
 					.getContext(), "Loan Offering", "LOAP", productCategory,
 					prdApplicableMaster, startDate, endDate, null,
 					gracePeriodType, null, interestTypes, new Money("1000"),
@@ -459,9 +442,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 					(short) 20, (short) 11, (short) 17, false, false, false,
 					null, null, frequency, principalglCodeEntity,
 					intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -501,7 +483,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		List<FeeBO> fees = new ArrayList<FeeBO>();
 		fees.add(fee);
 		try {
-			LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+			new LoanOfferingBO(TestObjectFactory
 					.getContext(), "Loan Offering", "LOAP", productCategory,
 					prdApplicableMaster, startDate, endDate, null,
 					gracePeriodType, null, interestTypes, new Money("1000"),
@@ -509,9 +491,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 					(short) 20, (short) 11, (short) 17, false, false, false,
 					null, fees, frequency, principalglCodeEntity,
 					intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -620,9 +601,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 					null, null, null, null, null, null, null, null, null, null,
 					null, null, null, false, false, false, null, null, null,
 					null);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -638,9 +618,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 							"1000"), new Money("2000"), 12.0, 2.0, 3.0,
 					(short) 20, (short) 1, (short) 12, false, false, false,
 					null, null, (short) 2, RecurrenceType.WEEKLY);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -657,9 +636,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 							"1000"), new Money("2000"), 12.0, 2.0, 3.0,
 					(short) 20, (short) 1, (short) 12, false, false, false,
 					null, null, (short) 2, RecurrenceType.WEEKLY);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -676,9 +654,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 							"1000"), new Money("2000"), 12.0, 2.0, 3.0,
 					(short) 20, (short) 1, (short) 12, false, false, false,
 					null, null, (short) 2, RecurrenceType.WEEKLY);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -714,9 +691,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 							"1000"), new Money("2000"), 12.0, 2.0, 3.0,
 					(short) 20, (short) 1, (short) 12, false, false, false,
 					null, null, (short) 2, RecurrenceType.WEEKLY);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 
 	}
@@ -736,9 +712,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 							"1000"), new Money("2000"), 12.0, 2.0, 3.0,
 					(short) 20, (short) 1, (short) 12, false, false, false,
 					null, null, (short) 2, RecurrenceType.WEEKLY);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 		TestObjectFactory.removeObject(loanOffering1);
 	}
@@ -758,9 +733,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 							"1000"), new Money("2000"), 12.0, 2.0, 3.0,
 					(short) 20, (short) 1, (short) 12, false, false, false,
 					null, null, (short) 2, RecurrenceType.WEEKLY);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 		TestObjectFactory.removeObject(loanOffering1);
 	}
@@ -779,9 +753,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 							"1000"), new Money("2000"), 12.0, 2.0, 3.0,
 					(short) 20, (short) 1, (short) 12, false, false, false,
 					null, null, (short) 2, RecurrenceType.WEEKLY);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -798,9 +771,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 							"2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1,
 					(short) 12, false, false, false, null, null, (short) 2,
 					RecurrenceType.WEEKLY);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -817,9 +789,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 					new Money("2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1,
 					(short) 12, false, false, false, null, null, (short) 2,
 					RecurrenceType.WEEKLY);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -838,9 +809,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 							"3000"), new Money("2000"), 12.0, 2.0, 3.0,
 					(short) 20, (short) 1, (short) 12, false, false, false,
 					null, null, (short) 2, RecurrenceType.WEEKLY);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -857,9 +827,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 							"3000"), new Money("1000"), 12.0, 2.0, 3.0,
 					(short) 20, (short) 1, (short) 12, false, false, false,
 					null, null, (short) 2, RecurrenceType.WEEKLY);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -875,9 +844,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 							"1000"), new Money("1000"), 12.0, 2.0, 13.0,
 					(short) 20, (short) 1, (short) 12, false, false, false,
 					null, null, (short) 2, RecurrenceType.WEEKLY);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -894,9 +862,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 							"1000"), new Money("1000"), 12.0, 22.0, 12.0,
 					(short) 20, (short) 1, (short) 12, false, false, false,
 					null, null, (short) 2, RecurrenceType.WEEKLY);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -913,9 +880,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 							"1000"), new Money("1000"), 12.0, 2.0, 12.0,
 					(short) 2, (short) 12, (short) 2, false, false, false,
 					null, null, (short) 2, RecurrenceType.WEEKLY);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -932,9 +898,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 							"1000"), new Money("1000"), 12.0, 2.0, 12.0,
 					(short) 12, (short) 1, (short) 22, false, false, false,
 					null, null, (short) 2, RecurrenceType.WEEKLY);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -986,9 +951,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 					new Money("3000"), new Money("1000"), new Money("1000"),
 					12.0, 2.0, 12.0, (short) 12, (short) 1, (short) 2, false,
 					true, false, null, fees, (short) 2, RecurrenceType.WEEKLY);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -1121,8 +1085,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 				.get(GLCodeEntity.class, (short) 7);
 		intglCodeEntity = (GLCodeEntity) HibernateUtil.getSessionTL().get(
 				GLCodeEntity.class, (short) 7);
-		productCategory = (ProductCategoryBO) TestObjectFactory
-				.getLoanPrdCategory();
+		productCategory = TestObjectFactory.getLoanPrdCategory();
 		interestTypes = new InterestTypesEntity(
 				InterestTypeConstants.FLATINTERST);
 	}

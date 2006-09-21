@@ -59,10 +59,6 @@ public class ProductDefinitionException extends ApplicationException {
 		super(key, values);
 	}
 
-	/**
-	 * @param key
-	 * @param cause
-	 */
 	public ProductDefinitionException(String key, Throwable cause) {
 		super(key, cause);
 	}
