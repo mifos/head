@@ -41,7 +41,7 @@ package org.mifos.application.util.helpers;
 public enum ActionForwards {
 	load_success, load_failure, preview_success, preview_failure, editpreview_success, editpreview_failure, previous_success, previous_failure, create_success, create_failure, manage_success, manage_failure, editprevious_success, editprevious_failure, update_success, update_failure,
 	loan_detail_page, account_details_page, savings_details_page, get_success, search_success, viewAll_success, cancel_success, getLoanRepaymentSchedule, viewStatusHistory,getHistoricalData,
-	loadCenterSearch, loadCreateGroup,
+	loadCenterSearch, loadCreateGroup, loadCreateClient, loadCreateCenter, createMeeting_success,createMeeting_failure,
 	chooseOffice_success, loadMeeting_success,center_detail_page,getPrdOfferigs_success,schedulePreview_success, group_detail_page, client_detail_page, editcancel_success,manageprevious_success, manageprevious_failure,
 	loadBranches_success, loadParents_success, previewBranchTransfer_success, previewParentTransfer_success, transferToBranch_failure, updateParent_failure, transferToCenter_failure,
 	managepreview_success, managepreview_failure, next_success, prevPersonalInfo_success, prevMFIInfo_success, cancelCreate_success, cancelEdit_success, getPicture_success, previewPersonalInfo_success, viewAllClosedAccounts,getAllClosedAccounts,edit_success, editPersonalInfo_success, editPersonalInfo_failure, previewEditPersonalInfo_success, prevEditPersonalInfo_success, updatePersonalInfo_failure, updatePersonalInfo_success,

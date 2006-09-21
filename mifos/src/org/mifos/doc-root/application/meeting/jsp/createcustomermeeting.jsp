@@ -47,8 +47,10 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 
-<tiles:insert definition=".withoutmenu">
+<tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 
 <script src="pages/application/meeting/js/meeting.js" >
@@ -62,63 +64,42 @@ function showMeetingFrequency(){
 	else if (document.meetingActionForm.frequency[1].checked == true){
 		document.getElementById("weekDIV").style.display = "none";
 		document.getElementById("monthDIV").style.display = "block";
-		document.getElementsByName("monthType")[1].checked=true;
+		document.getElementsByName("monthType")[0].checked=true;
 		}
 }
 function goToCancelPage(){
-	document.meetingActionForm.method.value="cancel";
+	meetingActionForm.action="meetingAction.do?method=cancelUpdate";
 	meetingActionForm.submit();
-	
-	
   }
 </script>
 
-		<%-- <html-el:form action="/MeetingAction.do" onsubmit="return validateMeetingActionForm(this);">
-		<html-el:javascript formName="/MeetingAction" bundle="MeetingResources"/> --%>
-		<html-el:form action="/MeetingAction.do" >
-		
-			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
-					<table width="90%" border="0" align="center" cellpadding="0"
-						cellspacing="0">
-						<tr>
-							<td align="center" class="heading"><!-- People need to pass this information to me in rqquest parameter -->
-							<mifos:mifoslabel
-								name="meeting.labelMeetingScheduleFor" 
-								bundle="MeetingResources" /> 								<c:choose>
-								  <c:when test="${meetingActionForm.input == 'Client'}">
-								  	<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"></mifos:mifoslabel>
-								  </c:when>
-								  
-								  <c:when test="${meetingActionForm.input == 'Group'}">
-								  	<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>								  
-								  </c:when>
-								  
-								  <c:when test="${meetingActionForm.input == 'Center'}">
-								  	<mifos:mifoslabel name="${ConfigurationConstants.CENTER}"></mifos:mifoslabel>								  
-								  </c:when>
-								</c:choose>
- <!-- END People need to pass this information to me in rqquest parameter -->
+<html-el:form action="/meetingAction.do?method=update" >
+		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+	<table width="95%" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink/> </span>
+		</tr>
+	</table>
 
-
-
-							</td>
-						</tr>
-						<tr>
-							<td class="blueline"><img src="pages/framework/images/trans.gif"
-								width="10" height="10"></td>
-						</tr>
-					</table>
-
-					<table width="90%" border="0" align="center" cellpadding="0"
-						cellspacing="0" class="bluetableborder">
-						<tr align="center">
-						<td align="left" valign="top" class="paddingL15T15">
-							<font class="fontnormalRedBold"><html-el:errors
-								bundle="MeetingResources" /> </font>
-						</td>
-						</tr>
+	<table width="90%" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td align="left" valign="top" class="paddingL15T15"><span
+				class="heading">
+				<c:out value="${BusinessKey.displayName}" /> - </span>
+				<span class="headingorange">
+					<mifos:mifoslabel name="meeting.labelMeetingSchedule" bundle="MeetingResources" />
+				</span>
+			</td>
+		</tr>
+	</table>
+		<table width="90%" border="0" cellpadding="0" cellspacing="0">
+			<tr align="center">
+				<td align="left" valign="top" class="paddingL15T15">
+					<font class="fontnormalRedBold"><html-el:errors
+						bundle="MeetingResources" /> </font>
+				</td>
+			</tr>
 						<tr>
 							<td align="left" valign="top" class="paddingL15T15"><span
 								class="fontnormal"> <mifos:mifoslabel
@@ -164,48 +145,48 @@ function goToCancelPage(){
 
 
 											<mifos:mifosnumbertext property="recurWeek" size="3" maxlength="3"/> <mifos:mifoslabel
-												name="meeting.labelWeeks" bundle="MeetingResources" /> <c:set
-												var="weekDaysList" scope="request"
-												value="${requestScope.WeekDayList.lookUpMaster}" /> <mifos:select
-												property="weekDay">
-												<html-el:options collection="weekDaysList"
-													property="id" labelProperty="lookUpValue" />
-											</mifos:select></td>
-										</tr>
-									</table>
-									</div>
-									<div id="monthDIV" style="height:60px; width:380px; "><mifos:mifoslabel
-										name="meeting.labelRecurMonths" bundle="MeetingResources" />
-									<br>
-									<table border="0" cellspacing="0" cellpadding="2">
-										<tr class="fontnormal">
-											<td><html-el:radio property="monthType" value="1" /></td>
-											<td><mifos:mifoslabel name="meeting.labelDay"
-												bundle="MeetingResources" /> <mifos:mifosnumbertext
-												property="monthDay" size="3" onfocus="checkMonthType1()" maxlength="2"/> <!-- <html-el:text
-												property="monthDay" size="3" />
-												--> <mifos:mifoslabel name="meeting.labelOfEvery"
-												bundle="MeetingResources" /> <mifos:mifosnumbertext
-												property="monthMonth" size="3" onfocus="checkMonthType1()" maxlength="3"/> <mifos:mifoslabel
-												name="meeting.labelMonths" bundle="MeetingResources" /></td>
-										</tr>
-										<tr class="fontnormal">
-											<td><html-el:radio property="monthType" value="2" /></td>
-											<td><mifos:mifoslabel name="meeting.labelThe"
-												bundle="MeetingResources" /> <c:set var="weekrankList"
-												scope="request"
-												value="${requestScope.WeekRankList.lookUpMaster}" /> <mifos:select
-												property="monthRank" onfocus="checkMonthType2()">
+												name="meeting.labelWeeks" bundle="MeetingResources" /> 
+												<mifos:select property="weekDay">
+													<c:forEach var="weekDay" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekDayList')}" >
+										<html-el:option value="${weekDay.id}">${weekDay.name}</html-el:option>
+								</c:forEach>
+							</mifos:select>												
+					</td>
+					</tr>
+				</table>
+				</div>
+				<div id="monthDIV" style="height:60px; width:380px; "><mifos:mifoslabel
+					name="meeting.labelRecurMonths" bundle="MeetingResources" />
+				<br>
+				<table border="0" cellspacing="0" cellpadding="2">
+					<tr class="fontnormal">
+						<td><html-el:radio property="monthType" value="1" /></td>
+						<td><mifos:mifoslabel name="meeting.labelDay"
+							bundle="MeetingResources" /> <mifos:mifosnumbertext
+							property="monthDay" size="3" onfocus="checkMonthType1()" maxlength="2"/> 
+							--> <mifos:mifoslabel name="meeting.labelOfEvery"
+							bundle="MeetingResources" /> <mifos:mifosnumbertext
+							property="dayRecurMonth" size="3" onfocus="checkMonthType1()" maxlength="3"/> <mifos:mifoslabel
+							name="meeting.labelMonths" bundle="MeetingResources" /></td>
+					</tr>
+					<tr class="fontnormal">
+						<td><html-el:radio property="monthType" value="2" /></td>
+						<td><mifos:mifoslabel name="meeting.labelThe"
+							bundle="MeetingResources" /> 
+							<mifos:select	property="monthRank" onfocus="checkMonthType2()">
+								<c:forEach var="weekRank" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekRankList')}" >
+										<html-el:option value="${weekRank.id}">${weekRank.name}</html-el:option>
+													</c:forEach>
+												</mifos:select>
 
-												<html-el:options collection="weekrankList"
-													property="id" labelProperty="lookUpValue" />
-
-											</mifos:select> <mifos:select property="monthWeek" onfocus="checkMonthType2()">
-												<html-el:options collection="weekDaysList"
-													property="id" labelProperty="lookUpValue" />
-											</mifos:select> <mifos:mifoslabel name="meeting.labelOfEvery"
+												<mifos:select property="monthWeek">
+													<c:forEach var="weekDay" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekDayList')}" >
+										<html-el:option value="${weekDay.id}">${weekDay.name}</html-el:option>
+													</c:forEach>
+												</mifos:select>
+												 <mifos:mifoslabel name="meeting.labelOfEvery"
 												bundle="MeetingResources" /> <mifos:mifosnumbertext
-												property="monthMonthRank" size="3" onfocus="checkMonthType2()" maxlength="3"/> <mifos:mifoslabel
+												property="recurMonth" size="3" onfocus="checkMonthType2()" maxlength="3"/> <mifos:mifoslabel
 												name="meeting.labelMonths" bundle="MeetingResources" /></td>
 										</tr>
 									</table>
@@ -231,9 +212,9 @@ function goToCancelPage(){
 								</tr>
 							</table>
 							<SCRIPT> showMeetingFrequency();</SCRIPT> <br>
-							<table width="93%" border="0" cellpadding="0" cellspacing="0">
-								<tr>
-									<!-- Next are submit and cancel button -->
+		<table width="93%" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<!-- Next are submit and cancel button -->
 									<td align="center"><html-el:submit styleClass="buttn"
 										style="width:70px;">
 										<mifos:mifoslabel name="meeting.button.save"
@@ -251,15 +232,6 @@ function goToCancelPage(){
 							
 						</tr>
 					</table>
-					<br>
-					</td>
-				</tr>
-			</table>
-			<html-el:hidden property="method" value="preview" />
-			<!-- hidden veriable which will set input veriable -->
-			<html-el:hidden property="input"  />
-			<html-el:hidden property="customerId"  />
-
 		</html-el:form>
 	</tiles:put>
 

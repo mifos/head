@@ -519,7 +519,7 @@ public class ActivityMapper {
 		activityMap.put("/groupTransferAction-transferToBranch",SecurityConstants.GROUP_TRANSFER_THE_GROUP);
 
 		// meeting action
-		activityMap.put("/MeetingAction-load", SecurityConstants.VIEW);
+		/*activityMap.put("/MeetingAction-load", SecurityConstants.VIEW);
 		activityMap.put("/MeetingAction-loadMeeting-Group",
 				SecurityConstants.MEETING_UPDATE_GROUP_MEETING);
 		activityMap.put("/MeetingAction-loadMeeting-Client",
@@ -533,8 +533,16 @@ public class ActivityMapper {
 				SecurityConstants.MEETING_UPDATE_CENTER_MEETING);
 		activityMap.put("/MeetingAction-update", SecurityConstants.VIEW);
 		activityMap.put("/MeetingAction-preview", SecurityConstants.VIEW);
-		activityMap.put("/MeetingAction-previous", SecurityConstants.VIEW);
+		activityMap.put("/MeetingAction-previous", SecurityConstants.VIEW);*/
 
+		activityMap.put("/meetingAction-load", SecurityConstants.VIEW);
+		activityMap.put("/meetingAction-create", SecurityConstants.VIEW);
+		activityMap.put("/meetingAction-update", SecurityConstants.VIEW);
+		activityMap.put("/meetingAction-edit-Group", SecurityConstants.MEETING_UPDATE_GROUP_MEETING);
+		activityMap.put("/meetingAction-edit-Center", SecurityConstants.MEETING_UPDATE_CENTER_MEETING);
+		activityMap.put("/meetingAction-edit-Client", SecurityConstants.MEETING_UPDATE_CLIENT_MEETING);
+		activityMap.put("/meetingAction-cancelCreate", SecurityConstants.VIEW);
+		activityMap.put("/meetingAction-cancelUpdate", SecurityConstants.VIEW);
 		// product categories mapping
 
 		activityMap.put("/productCategoryAction-load",

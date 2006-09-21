@@ -43,12 +43,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.struts.actionforms.CustomerActionForm;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.util.helpers.SessionUtils;
 
 public class GroupCustActionForm extends CustomerActionForm {
 
@@ -102,9 +103,9 @@ public class GroupCustActionForm extends CustomerActionForm {
 	}
 	
 	@Override
-	protected MeetingBO getCustomerMeeting(HttpServletRequest request){		
+	protected MeetingBO getCustomerMeeting(HttpServletRequest request)throws ApplicationException{		
 		if(parentCustomer!=null)
 			return parentCustomer.getCustomerMeeting().getMeeting();
-		 return (MeetingBO)request.getSession().getAttribute(GroupConstants.GROUP_MEETING);		
+		 return (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING,request);		
 	}
 }

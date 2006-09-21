@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	Document   : struts-config.xml
+	Created on : August 22, 2005
+	Author     : ashishsmital
+	Description: Purpose of the document follows.
+-->
+
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+"http://jakarta.apache.org/struts/dtdt/struts-config_1_2.dtd">
+
+
+<struts-config>
+	<form-beans>
+		<form-bean name="meetingActionForm" type="org.mifos.application.meeting.struts.actionforms.MeetingActionForm" />
+		<form-bean name="centerCustActionForm" type="org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm"/>
+		<form-bean name="clientCustActionForm" type="org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm"/>
+		<form-bean name="groupCustActionForm" type="org.mifos.application.customer.group.struts.actionforms.GroupCustActionForm"/>
+	</form-beans>
+	<global-exceptions>
+		<exception type="org.mifos.framework.exceptions.SystemException"
+			handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+			key="exception.framework.SystemException" scope="request"
+			path="/pages/framework/jsp/error.jsp" />
+		<exception
+			type="org.mifos.framework.exceptions.ApplicationException"
+			handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+			key="exception.framework.ApplicationException" scope="request" />
+		<exception type="org.mifos.framework.exceptions.PageExpiredException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.PageExpiredException" scope="request" path="/pages/framework/jsp/pageexpirederror.jsp"/>
+	</global-exceptions>
+
+	<action-mappings>
+		<action path="/meetingAction" type="org.mifos.application.meeting.struts.action.MeetingAction" name="meetingActionForm" parameter="method" input="/meetingAction.do?method=validate" validate="true">
+			<forward name="load_success" path="/pages/application/meeting/jsp/createmeeting.jsp" />
+			<forward name="loadCreateCenter" path="/centerCustAction.do?method=previous&amp;input=CreateMeeting" />
+			<forward name="loadCreateGroup" path="/groupCustAction.do?method=previous&amp;input=CreateMeeting" />
+			<forward name="loadCreateClient" path="/clientCustAction.do?method=prevMeeting&amp;input=CreateMeeting" />						
+			<forward name="edit_success" path="/pages/application/meeting/jsp/updatemeeting.jsp" />
+			<forward name="center_detail_page" path="/centerCustAction.do?method=get" />
+			<forward name="group_detail_page" path="/groupCustAction.do?method=get" />
+			<forward name="client_detail_page" path="/clientCustAction.do?method=get" />
+			<forward name="create_failure" path="/pages/application/meeting/jsp/createmeeting.jsp" />
+			<forward name="update_failure" path="/pages/application/meeting/jsp/updatemeeting.jsp" />
+		</action>  		
+		
+		<action path="/centerCustAction" type="org.mifos.application.customer.center.struts.action.CenterCustAction" name="centerCustActionForm" parameter="method" 
+			input="/centerCustAction.do?method=validate" validate="true" scope="session">
+			<forward name="load_success" path="/pages/application/center/jsp/createnewcenter.jsp" />
+			<forward name="get_success" path="/pages/application/center/jsp/center_details.jsp" />
+		</action>
+		<action path="/groupCustAction"
+			type="org.mifos.application.customer.group.struts.action.GroupCustAction"
+			name="groupCustActionForm" parameter="method" validate="true"
+			input="/groupCustAction.do?method=validate" scope="session">
+			<forward name="get_success" path="/pages/application/group/jsp/viewgroupdetails.jsp" />
+		</action>
+		<action path="/clientCustAction" type="org.mifos.application.customer.client.struts.action.ClientCustAction" 
+			name="clientCustActionForm" parameter="method" 
+			input="/clientCustAction.do?method=validate" validate="true"
+			scope="session">			
+			<forward name="get_success" path="/pages/application/client/jsp/viewClientDetails.jsp" />			
+		</action>
+	</action-mappings>
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property property="pathnames"
+			value="org/mifos/application/meeting/validation.xml,org/mifos/application/meeting/validator-rules.xml" />
+		<set-property property="stopOnFirstError" value="false" />
+	</plug-in>
+</struts-config>

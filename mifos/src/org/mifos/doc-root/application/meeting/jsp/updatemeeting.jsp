@@ -47,6 +47,8 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
@@ -77,8 +79,8 @@ function showMeetingFrequency(){
 				document.getElementsByName("monthType")[1].disabled=true;
 				document.getElementsByName("monthRank")[0].disabled=true;
 				document.getElementsByName("monthWeek")[0].disabled=true;
-				document.getElementsByName("monthMonthRank")[0].disabled=true;
-				document.getElementsByName("monthMonth")[0].disabled=true;
+				document.getElementsByName("recurMonth")[0].disabled=true;
+				document.getElementsByName("dayRecurMonth")[0].disabled=true;
 				document.getElementById("labelThe").style.color="gray";
 				document.getElementById("labelOfEvery_1").style.color="gray";
 				document.getElementById("labelMonths_2").style.color="gray";
@@ -87,10 +89,10 @@ function showMeetingFrequency(){
 			}
 			else if ( document.getElementsByName("monthType")[1].checked == true)
 			{
-				document.getElementsByName("monthMonthRank")[0].disabled=true;
+				document.getElementsByName("recurMonth")[0].disabled=true;
 				document.getElementsByName("monthType")[0].disabled=true;		
 				document.getElementsByName("monthDay")[0].disabled=true;		
-				document.getElementsByName("monthMonth")[0].disabled=true;
+				document.getElementsByName("dayRecurMonth")[0].disabled=true;
 				document.getElementById("labelDay").style.color="gray";
 				document.getElementById("labelOfEvery").style.color="gray";
 				document.getElementById("labelMonths_1").style.color="gray";
@@ -102,107 +104,36 @@ function showMeetingFrequency(){
 		}
 }
 function goToCancelPage(){
-	document.meetingActionForm.method.value="cancel";
-	meetingActionForm.submit();
-	
-	
-  }
+	meetingActionForm.action="meetingAction.do?method=cancelUpdate";
+	meetingActionForm.submit();	
+ }
+
 </script>
-
-		<%-- <html-el:form action="/MeetingAction.do" onsubmit="return validateMeetingActionForm(this);">
-		<html-el:javascript formName="/MeetingAction" bundle="MeetingResources"/> --%>
-		<html-el:form action="/MeetingAction.do">
-
-
-
-
-			<c:choose>
-			  	<c:when test="${sessionScope.meetingActionForm.input eq 'ClientDetails'}">
-	  <table width="95%" border="0" cellpadding="0" cellspacing="0">
-          <tr>
-            <td class="bluetablehead05">
-	            <span class="fontnormal8pt">
-	            	<a href="CustomerSearchAction.do?method=getOfficeHomePage&officeId=<c:out value="${sessionScope.linkValues.customerOfficeId}"/>&officeName=<c:out value="${sessionScope.linkValues.customerOfficeName}"/>&loanOfficerId=<c:out value="${requestScope.Context.userContext.id}"/>">
-	            	<c:out value="${sessionScope.linkValues.customerOfficeName}"/></a> 
-					 /
-	            </span>
-	            <c:if test="${!empty sessionScope.linkValues.customerCenterName}">
-	               <span class="fontnormal8pt">
-	               	<a href="centerCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.customerCenterGCNum}"/>">
-				       	<c:out value="${sessionScope.linkValues.customerCenterName}"/>
-			       	</a>  /  </span>
-		    	</c:if>
-	           <c:if test="${!empty sessionScope.linkValues.customerParentName}">
-	               <span class="fontnormal8pt">
-	               	<a href="groupCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.customerParentGCNum}"/>">
-				       	<c:out value="${sessionScope.linkValues.customerParentName}"/>
-			       	</a>  /  </span>
-		    	</c:if>
-	            <!-- Name of the client -->
-	            <span class="fontnormal8pt">
-	            	<a href="clientCreationAction.do?method=get&customerId=<c:out value="${sessionScope.linkValues.customerId}"/>">
-	            	<c:out value="${sessionScope.linkValues.customerName}"/>
-	            	</a>
-	            </span>
-            </td>
-          </tr>
-        </table>
-	  </c:when>
-				<c:when
-					test="${sessionScope.meetingActionForm.input eq 'CenterDetails'}">
-					<table width="95%" border="0" cellpadding="0" cellspacing="0">
-						<tr>
-							<td class="bluetablehead05"><span class="fontnormal8pt"> <a href="CustomerSearchAction.do?method=getOfficeHomePage&officeId=<c:out value="${sessionScope.linkValues.customerOfficeId}"/>&officeName=<c:out value="${sessionScope.linkValues.customerOfficeName}"/>&loanOfficerId=<c:out value="${requestScope.Context.userContext.id}"/>">
-	            			<c:out value="${sessionScope.linkValues.customerOfficeName}"/></a> / 
-	            	</span> <span class="fontnormal8pt"> <a
-								href="centerCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.globalCustNum}"/>">
-							<c:out value="${sessionScope.linkValues.customerName}" /> </a> </span>
-							</td>
-						</tr>
-					</table>
-				</c:when>
-				<c:otherwise>
-					<table width="95%" border="0" cellpadding="0" cellspacing="0">
-						<tr>
-							<td class="bluetablehead05"><span class="fontnormal8pt"> <a href="CustomerSearchAction.do?method=getOfficeHomePage&officeId=<c:out value="${sessionScope.linkValues.customerOfficeId}"/>&officeName=<c:out value="${sessionScope.linkValues.customerOfficeName}"/>&loanOfficerId=<c:out value="${requestScope.Context.userContext.id}"/>">
-	            			<c:out value="${sessionScope.linkValues.customerOfficeName}"/></a>
-							/ <c:if
-								test="${!empty sessionScope.linkValues.customerParentName}">
-								<a
-									href="centerCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.customerParentGCNum}"/>">
-								<c:out value="${sessionScope.linkValues.customerParentName}" />
-								</a> /  
-		    </c:if> <a
-								href="groupCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.linkValues.globalCustNum}"/>">
-							<c:out value="${sessionScope.linkValues.customerName}" /> </a> </span></td>
-						</tr>
-					</table>
-				</c:otherwise>
-			</c:choose>
-				<!-- 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<html-el:form action="meetingAction.do?method=update">
+		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td height="350"  valign="top" bgcolor="#FFFFFF"> -->
+					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink/> </span>
+				</tr>
+			</table>			
 			<table width="90%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td align="left" valign="top" class="paddingL15T15"><span
-						class="heading"><c:out
-						value="${sessionScope.linkValues.customerName}" /> - </span><span
-						class="headingorange"><mifos:mifoslabel
-						name="meeting.labelMeetingSchedule" bundle="MeetingResources" />
-					</span><!-- END People need to pass this information to me in rqquest parameter -->
+						class="heading">
+						<c:out value="${BusinessKey.displayName}" /> - </span>
+						<span class="headingorange">
+							<mifos:mifoslabel name="meeting.labelMeetingSchedule" bundle="MeetingResources" />
+						</span>
 					</td>
 				</tr>
-				<!-- 					<tr>
-							<td class="blueline"><img src="pages/framework/images/trans.gif"
-								width="10" height="10"></td>
-						</tr> -->
 			</table>
 
 			<table width="90%" border="0" cellpadding="0" cellspacing="0">
 				<tr align="center">
 					<td align="left" valign="top" class="paddingL15T15"><font
-						class="fontnormalRedBold"><html-el:errors
-						bundle="MeetingResources" /> </font></td>
+						class="fontnormalRedBold">
+						<html-el:errors bundle="MeetingResources" /> </font></td>
 				</tr>
 				<tr>
 					<td align="left" valign="top" class="paddingL15T15"><span
@@ -221,14 +152,6 @@ function goToCancelPage(){
 								style="border-top: 1px solid #CECECE; border-left: 1px solid #CECECE; border-right: 1px solid #CECECE;">
 							<table width="98%" border="0" cellspacing="0" cellpadding="2">
 								<tr valign="top" class="fontnormal">
-									<!-- 
-											<td width="21%"><html-el:radio property="frequency" value="1"
-												onclick="showMeetingFrequency();" /> <mifos:mifoslabel
-												name="meeting.labelDays" bundle="MeetingResources" /></td>
-												-->
-
-
-
 									<td width="24%"><html-el:radio property="frequency" value="1"
 										onclick="showMeetingFrequency();" /> <SPAN id="weeks"> <mifos:mifoslabel
 										name="meeting.labelWeeks" bundle="MeetingResources" /> </SPAN>
@@ -256,13 +179,13 @@ function goToCancelPage(){
 									<td colspan="4"><mifos:mifoslabel
 										name="meeting.labelRecurEvery" bundle="MeetingResources" /> <mifos:mifosnumbertext
 										property="recurWeek" size="3" maxlength="3" /> <mifos:mifoslabel
-										name="meeting.labelWeeks" bundle="MeetingResources" /> <c:set
-										var="weekDaysList" scope="request"
-										value="${requestScope.WeekDayList.lookUpMaster}" /> <mifos:select
-										property="weekDay">
-										<html-el:options collection="weekDaysList" property="id"
-											labelProperty="lookUpValue" />
-									</mifos:select></td>
+										name="meeting.labelWeeks" bundle="MeetingResources" /> 
+										<mifos:select property="weekDay">
+											<c:forEach var="weekDay" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekDayList')}" >
+													<html-el:option value="${weekDay.id}">${weekDay.name}</html-el:option>
+											</c:forEach>
+										</mifos:select>
+									</td>
 								</tr>
 							</table>
 							</div>
@@ -278,7 +201,7 @@ function goToCancelPage(){
 										maxlength="2" /> <span id="labelOfEvery"> <mifos:mifoslabel
 										name="meeting.labelOfEvery" bundle="MeetingResources" /> </span>
 
-									<mifos:mifosnumbertext property="monthMonth" size="3"
+									<mifos:mifosnumbertext property="dayRecurMonth" size="3"
 										maxlength="3" /> <span id="labelMonths_1"> <mifos:mifoslabel
 										name="meeting.labelMonths" bundle="MeetingResources" /> </span>
 
@@ -290,24 +213,22 @@ function goToCancelPage(){
 										name="meeting.labelThe" bundle="MeetingResources" /> </span>
 
 
-									<c:set var="weekrankList" scope="request"
-										value="${requestScope.WeekRankList.lookUpMaster}" /> <mifos:select
-										property="monthRank">
-
-										<html-el:options collection="weekrankList" property="id"
-											labelProperty="lookUpValue" />
-
-									</mifos:select> <mifos:select property="monthWeek">
-										<html-el:options collection="weekDaysList" property="id"
-											labelProperty="lookUpValue" />
-									</mifos:select> <span id="labelOfEvery_1"> <mifos:mifoslabel
+									<mifos:select	property="monthRank" onfocus="checkMonthType2()">
+										<c:forEach var="weekRank" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekRankList')}" >
+												<html-el:option value="${weekRank.id}">${weekRank.name}</html-el:option>
+										</c:forEach>
+									</mifos:select>
+									<mifos:select property="monthWeek">
+										<c:forEach var="weekDay" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekDayList')}" >
+												<html-el:option value="${weekDay.id}">${weekDay.name}</html-el:option>
+										</c:forEach>
+									</mifos:select>
+									 <span id="labelOfEvery_1"> <mifos:mifoslabel
 										name="meeting.labelOfEvery" bundle="MeetingResources" /> </span>
 
-									<mifos:mifosnumbertext property="monthMonthRank" size="3"
+									<mifos:mifosnumbertext property="recurMonth" size="3"
 										maxlength="3" /> <span id="labelMonths_2"> <mifos:mifoslabel
 										name="meeting.labelMonths" bundle="MeetingResources" /> </span>
-
-
 									</td>
 								</tr>
 							</table>
@@ -323,7 +244,7 @@ function goToCancelPage(){
 							<td align="right"><mifos:mifoslabel
 								name="meeting.labelPlaceOfMeeting" bundle="MeetingResources"
 								mandatory="yes" /></td>
-							<td><html-el:text property="meetingPlace" /></td>
+							<td><html-el:text property="meetingPlace" maxlength="200"/></td>
 						</tr>
 
 					</table>
@@ -336,33 +257,22 @@ function goToCancelPage(){
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<!-- Next are submit and cancel button -->
-							<td align="center"><html-el:submit styleClass="buttn"
-								style="width:70px;">
-								<mifos:mifoslabel name="meeting.button.save"
-									bundle="MeetingResources"></mifos:mifoslabel>
-							</html-el:submit> &nbsp; <html-el:button
-								onclick="goToCancelPage();" property="cancelButton"
+							<td align="center">
+							<html-el:submit styleClass="buttn"  style="width:70px;">
+								<mifos:mifoslabel name="meeting.button.save" bundle="MeetingResources"/>
+							</html-el:submit> &nbsp; 
+							<html-el:button	onclick="goToCancelPage();" property="cancelButton"
 								value="Cancel" styleClass="cancelbuttn" style="width:70px">
-								<mifos:mifoslabel name="office.button.cancel"
-									bundle="OfficeResources"></mifos:mifoslabel>
-							</html-el:button></td>
+								<mifos:mifoslabel name="office.button.cancel" bundle="OfficeResources"/>
+							</html-el:button>
+							</td>
 
 						</tr>
 					</table>
 					<br>
 				</tr>
 			</table>
-			<!--  <br>
-					</td>
-				</tr>
-			</table> -->
-			<html-el:hidden property="method" value="update" />
-			<!-- hidden veriable which will set input veriable -->
-			<html-el:hidden property="meetingId"
-				value="${requestScope.Context.valueObject.meetingId}" />
-			<html-el:hidden property="versionNo"
-				value="${requestScope.Context.valueObject.versionNo}" />
-
+			
 		</html-el:form>
 	</tiles:put>
 

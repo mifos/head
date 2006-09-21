@@ -61,9 +61,7 @@ function goToEditPage(){
   }
 </script>
 <html-el:form action="centerCustAction.do?method=create" onsubmit="func_disableSubmitBtn('submitButton');">
-<c:set value="${sessionScope.centerMeeting}"
-	   var="centerMeeting" />
-
+<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customerMeeting')}"  var="centerMeeting" />
 <html-el:hidden property="input" value="create"/>
 <!-- Body begins -->
 <table width="100%" border="0" cellspacing="0" cellpadding="0">

@@ -52,7 +52,6 @@ import org.apache.struts.action.ActionMessage;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerPositionView;
-import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.center.util.helpers.ValidateMethods;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -382,9 +381,9 @@ public abstract class CustomerActionForm extends BaseActionForm{
 			errors.add(CustomerConstants.FORMED_BY_LOANOFFICER, new ActionMessage(CustomerConstants.FORMEDBY_LOANOFFICER_BLANK_EXCEPTION));
 	}
 
-	protected void validateMeeting(HttpServletRequest request, ActionErrors errors) {
-		Object meeting = SessionUtils.getAttribute(CenterConstants.CENTER_MEETING, request.getSession());
-		if(meeting == null || !(meeting instanceof MeetingBO))
+	protected void validateMeeting(HttpServletRequest request, ActionErrors errors) throws ApplicationException{
+		MeetingBO meeting = getCustomerMeeting(request);
+		if(meeting == null)
 			errors.add(CustomerConstants.MEETING, new ActionMessage(CustomerConstants.ERRORS_SPECIFY_MEETING));
 	}
 
@@ -415,7 +414,7 @@ public abstract class CustomerActionForm extends BaseActionForm{
 		}
 	}
 
-	protected abstract MeetingBO getCustomerMeeting(HttpServletRequest request);
+	protected abstract MeetingBO getCustomerMeeting(HttpServletRequest request) throws ApplicationException;
 
 	protected  void validateFees(HttpServletRequest request, ActionErrors errors)throws ApplicationException{
 		validateForFeeAssignedWithoutMeeting(request, errors);
@@ -454,7 +453,7 @@ public abstract class CustomerActionForm extends BaseActionForm{
 					(fee.getFrequencyType().equals(RecurrenceType.WEEKLY) && meeting.isWeekly());
 
 	}
-	private void validateForFeeAssignedWithoutMeeting(HttpServletRequest request , ActionErrors errors){
+	private void validateForFeeAssignedWithoutMeeting(HttpServletRequest request , ActionErrors errors)throws ApplicationException{
 		MeetingBO meeting = getCustomerMeeting(request);
 		if(meeting==null && getFeesToApply().size() > 0){
 			errors.add(CustomerConstants.MEETING_REQUIRED_EXCEPTION,new ActionMessage(CustomerConstants.MEETING_REQUIRED_EXCEPTION));

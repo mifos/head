@@ -73,13 +73,6 @@ public class MeetingBO extends BusinessObject {
 	
 	private GregorianCalendar gc = new GregorianCalendar();
 	
-	protected MeetingBO() {
-		this.meetingId = null;
-		this.meetingDetails = null;
-		this.meetingType = null;
-		this.meetingStartDate = null;
-	}
-
 	public MeetingBO(RecurrenceType recurrenceType, Short recurAfter, Date startDate, MeetingType meetingType)throws MeetingException{
 		this(recurrenceType, Short.valueOf("1"), WeekDay.MONDAY, null, recurAfter, startDate, meetingType, "meetingPlace");
 	}
@@ -94,6 +87,13 @@ public class MeetingBO extends BusinessObject {
 	
 	public MeetingBO(WeekDay weekDay, Short recurAfter, Date startDate, MeetingType meetingType, String meetingPlace)throws MeetingException{
 		this(RecurrenceType.WEEKLY, null, weekDay, null, recurAfter, startDate, meetingType, meetingPlace);
+	}
+	
+	protected MeetingBO() {
+		this.meetingId = null;
+		this.meetingDetails = null;
+		this.meetingType = null;
+		this.meetingStartDate = null;
 	}
 	
 	private MeetingBO(RecurrenceType recurrenceType, Short dayNumber, WeekDay weekDay, RankType rank, Short recurAfter, Date startDate, MeetingType meetingType, String meetingPlace)throws MeetingException{
@@ -127,7 +127,8 @@ public class MeetingBO extends BusinessObject {
 	//	TODO: change return type to date
 	public Calendar getMeetingStartDate() {
 		Calendar cal = new GregorianCalendar();
-		cal.setTime(meetingStartDate);
+		if(meetingStartDate!=null)
+			cal.setTime(meetingStartDate);
 		return cal;
 	}
 

@@ -602,26 +602,15 @@
 												value="${BusinessKey.customerMeeting.meeting.meetingPlace}" />
 											</span></td>
 											<td width="41%" align="right" valign="top" class="fontnormal"><br>
-											<c:choose>
-												<c:when test="${ empty BusinessKey.customerMeeting.meeting}">
-													<%-- Meeting for group has not been created yet, therefore create new meeting--%>
-													<html-el:link
-														action="MeetingAction.do?method=loadMeeting&input=GroupDetails&customerId=${BusinessKey.customerId}">
-														<mifos:mifoslabel name="Group.editmeetingchedule"
-															bundle="GroupUIResources" />
-														<br>
-													</html-el:link>
-												</c:when>
-												<c:otherwise>
-													<%-- Meeting for group is already  created , therefore edit existing meeting--%>
-													<html-el:link
-														action="MeetingAction.do?method=get&input=GroupDetails&meetingId=${BusinessKey.customerMeeting.meeting.meetingId}">
-														<mifos:mifoslabel name="Group.editmeetingchedule"
-															bundle="GroupUIResources" />
-														<br>
-													</html-el:link>
-												</c:otherwise>
-											</c:choose> <a href="groupTransferAction.do?method=loadBranches&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"> <mifos:mifoslabel
+											
+											<html-el:link
+												action="meetingAction.do?method=edit&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&customerLevel=${BusinessKey.customerLevel.id}">
+												<mifos:mifoslabel name="Group.editmeetingchedule"
+													bundle="GroupUIResources" />
+												<br>
+											</html-el:link>
+											
+											<a href="groupTransferAction.do?method=loadBranches&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"> <mifos:mifoslabel
 												name="Group.editOfficeMembership" bundle="GroupUIResources" />
 											</a></td>
 										</tr>

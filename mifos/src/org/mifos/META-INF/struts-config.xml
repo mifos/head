@@ -259,7 +259,7 @@
 			<forward name="previous_success" path="/pages/application/center/jsp/createnewcenter.jsp" />
 			<forward name="create_success" path="/pages/application/center/jsp/createcenterconfirmation.jsp" />
 			<forward name="create_failure" path="/pages/application/center/jsp/previewcenter.jsp" />
-			<forward name="loadMeeting_success" path="/MeetingAction.do?method=load&amp;input=Center" />
+			<forward name="loadMeeting_success" path="/meetingAction.do?method=load&amp;customerLevel=3" />
 			<forward name="manage_success" path="/pages/application/center/jsp/editcenter.jsp" />
 			<forward name="editpreview_success" path="/pages/application/center/jsp/previeweditcenter.jsp" />
 			<forward name="editPreview_failure" path="/pages/application/center/jsp/editcenter.jsp" />			
@@ -706,23 +706,21 @@
 			<forward name="update_failure" path="/pages/application/office/jsp/OfficeHierarchy.jsp" />
 		</action>
 		<!-- meeting action -->
-		<action path="/MeetingAction" type="org.mifos.application.meeting.struts.action.MeetingAction" name="meetingActionForm" parameter="method" input="/MeetingAction.do?method=validate" validate="true">
+		<action path="/meetingAction" type="org.mifos.application.meeting.struts.action.MeetingAction" name="meetingActionForm" parameter="method" input="/meetingAction.do?method=validate" validate="true">
 			<forward name="load_success" path="/pages/application/meeting/jsp/createmeeting.jsp" />
-			<forward name="create_success" path="/pages/application/meeting/jsp/createmeeting.jsp" />
+			<forward name="createMeeting_success" path="/pages/application/meeting/jsp/createcustomermeeting.jsp" />			
+			<forward name="createMeeting_failure" path="/pages/application/meeting/jsp/createcustomermeeting.jsp" />						
+			<forward name="loadCreateCenter" path="/centerCustAction.do?method=previous&amp;input=CreateMeeting" />
+			<forward name="loadCreateGroup" path="/groupCustAction.do?method=previous&amp;input=CreateMeeting" />
+			<forward name="loadCreateClient" path="/clientCustAction.do?method=prevMeeting&amp;input=CreateMeeting" />						
 			<forward name="create_failure" path="/pages/application/meeting/jsp/createmeeting.jsp" />
-			<forward name="cancel_success" path="/AdminAction.do?method=load" />
-			<forward name="get_success" path="/pages/application/meeting/jsp/updatemeeting.jsp" />
+			<forward name="center_detail_page" path="/centerCustAction.do?method=get" />
+			<forward name="group_detail_page" path="/groupCustAction.do?method=get" />
+			<forward name="client_detail_page" path="/clientCustAction.do?method=get" />
+			<forward name="edit_success" path="/pages/application/meeting/jsp/updatemeeting.jsp" />
 			<forward name="update_success" path="/pages/application/meeting/jsp/updatemeeting.jsp" />
 			<forward name="update_failure" path="/pages/application/meeting/jsp/updatemeeting.jsp" />
-			<forward name="group_success" path="/groupCustAction.do?method=previous&amp;input=CreateMeeting" />
-			<forward name="group_details_page" path="/GroupAction.do?method=get" />
-			<forward name="client_success" path="/clientCustAction.do?method=prevMeeting&amp;input=CreateMeeting" />
-			<forward name="center_success" path="/centerCustAction.do?method=previous&amp;input=CreateMeeting" />
-			<forward name="loadMeeting_success" path="/pages/application/meeting/jsp/createcustomermeeting.jsp" />
-			<forward name="editCenterMeeting_success" path="/centerCustAction.do?method=get" />
-			<forward name="editClientMeeting_success" path="/clientCreationAction.do?method=get" />
-			<forward name="preview_failure" path="/pages/application/meeting/jsp/createcustomermeeting.jsp" />
-		</action>
+		</action>  
 		<action path="/AccountsSearchAction" type="org.mifos.application.accounts.struts.action.AccountsSearchAction" name="accountsSearchActionForm" parameter="method" input="/AccountsSearchAction.do?method=validate" validate="true">
 			<forward name="load_success" path="/pages/application/accounts/jsp/accountsAccountSearch.jsp" />
 			<forward name="cancel_success" path="/AdminAction.do?method=load" />
@@ -1220,7 +1218,7 @@
 			<forward name="loadTransfer_success" path="/clientTransferAction.do?method=loadGroupTransfer" />
 			<forward name="loadBranchTransfer_success" path="/clientTransferAction.do?method=loadTransfer" />
 			<forward name="loadHistoricalData_success" path="/CustomerHistoricalDataAction.do?method=get&amp;input=Client" />
-			<forward name="loadMeeting_success" path="/MeetingAction.do?method=load&amp;input=Client" />
+			<forward name="loadMeeting_success" path="/meetingAction.do?method=load&amp;input=create&amp;customerLevel=1" />
 			<forward name="loadEditMeeting_success" path="/MeetingAction.do?method=load&amp;input=ClientDetails" />
 			<forward name="updateMeeting_success" path="/clientCreationAction.do?method=get" />
 			<forward name="retrievePicture_success" path="/pages/application/client/jsp/customerPicture.jsp" />
@@ -1290,7 +1288,7 @@
 			<forward name="loadCenterSearch" path="/centerAction.do?method=loadSearch" />
 			<forward name="chooseOffice_success" path="/pages/application/group/jsp/branchlist.jsp" />
 			<forward name="load_success" path="/pages/application/group/jsp/creategroup.jsp" />
-			<forward name="loadMeeting_success" path="/MeetingAction.do?method=load&amp;input=Group" />			
+			<forward name="loadMeeting_success" path="/meetingAction.do?method=load&amp;customerLevel=2" />			
 			<forward name="preview_success" path="/pages/application/group/jsp/previewgroup.jsp" />
 			<forward name="preview_failure" path="/pages/application/group/jsp/creategroup.jsp" />
 			<forward name="previous_success" path="/pages/application/group/jsp/creategroup.jsp" />

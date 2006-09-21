@@ -252,17 +252,19 @@
 					</c:forEach>
 					<br>
                   </span>
+                  <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customerMeeting')}" var="customerMeeting" />
                   <span class="fontnormalbold">
                     	<mifos:mifoslabel name="Group.locationofthemeeting" bundle="GroupUIResources"></mifos:mifoslabel>
                    </span>
+                   
                    <span class="fontnormal">
-                    	<c:out value="${sessionScope.groupMeeting.meetingPlace}"/><br>
+                    	<c:out value="${customerMeeting.meetingPlace}"/><br>
                    </span>
                    <span class="fontnormalbold">
 	                    <mifos:mifoslabel name="Group.meetingschedule" bundle="GroupUIResources"></mifos:mifoslabel>
                    </span>
                    <span class="fontnormal">
-						<c:out value="${sessionScope.groupMeeting.meetingSchedule}"/><br> 
+						<c:out value="${customerMeeting.meetingSchedule}"/><br> 
 					</span>
               </c:if>
               	</td>

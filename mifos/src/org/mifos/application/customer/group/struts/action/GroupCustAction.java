@@ -398,7 +398,7 @@ public class GroupCustAction extends CustAction {
 	private void doCleanUp(GroupCustActionForm actionForm,
 			HttpServletRequest request) {
 		clearActionForm(actionForm);
-		SessionUtils.removeAttribute(GroupConstants.GROUP_MEETING, request.getSession());
+		SessionUtils.removeAttribute(CustomerConstants.CUSTOMER_MEETING, request.getSession());
 	}
 	
 	private void clearActionForm(GroupCustActionForm actionForm) {
@@ -433,7 +433,7 @@ public class GroupCustAction extends CustAction {
 		List<CustomFieldView> customFields = actionForm.getCustomFields();
 		convertCustomFieldDateToUniformPattern(customFields, userContext.getPereferedLocale());
 		MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(
-				GroupConstants.GROUP_MEETING, request.getSession());
+				CustomerConstants.CUSTOMER_MEETING, request);
 		GroupBO group = new GroupBO(userContext, actionForm.getDisplayName(), actionForm.getStatusValue(),
 				actionForm.getExternalId(), actionForm.isCustomerTrained(), actionForm.getTrainedDateValue(userContext.getPereferedLocale()),
 				actionForm.getAddress(), customFields, actionForm.getFeesToApply(), actionForm.getFormedByPersonnelValue(), 

@@ -118,7 +118,4 @@ public interface CenterConstants {
 	String CENTER_SEARCH_TRANSFER_CANCEL_PAGE = "cancelTransfer_success";
 	String OLD_PERSONNEL = "oldPersonnel";
 	
-	//FOR M2
-	String CENTER_MEETING = "centerMeeting";
-
 }

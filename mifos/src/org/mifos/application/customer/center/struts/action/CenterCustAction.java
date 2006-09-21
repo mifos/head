@@ -58,7 +58,6 @@ import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.business.CenterPerformanceHistory;
 import org.mifos.application.customer.center.business.service.CenterBusinessService;
-import org.mifos.application.customer.center.dao.CenterDAO;
 import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.center.util.valueobjects.Center;
@@ -119,7 +118,7 @@ public class CenterCustAction extends CustAction {
 			throws Exception {
 		CenterCustActionForm actionForm = (CenterCustActionForm) form;
 		doCleanUp(actionForm, request);
-		request.getSession().removeAttribute(CenterConstants.CENTER_MEETING);
+		SessionUtils.removeAttribute(CustomerConstants.CUSTOMER_MEETING, request);
 		loadCreateMasterData(actionForm, request);
 		actionForm.setMfiJoiningDate(DateHelper.getCurrentDate(getUserContext(request).getPereferedLocale()));
 		return mapping.findForward(ActionForwards.load_success.toString());
@@ -153,7 +152,8 @@ public class CenterCustAction extends CustAction {
 			throws Exception {
 		CenterCustActionForm actionForm = (CenterCustActionForm) form;
 		MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(
-				CenterConstants.CENTER_MEETING, request.getSession());
+				CustomerConstants.CUSTOMER_MEETING, request);
+		System.out.println("---------------meeting: "+ meeting);
 		List<CustomFieldView> customFields = actionForm.getCustomFields();
 		UserContext userContext = getUserContext(request);
 		convertCustomFieldDateToUniformPattern(customFields, userContext.getPereferedLocale());
@@ -339,19 +339,10 @@ public class CenterCustAction extends CustAction {
 	  loadCustomFieldDefinitions(request);
 
 	  UserContext userContext = getUserContext(request);
-	  //setLocaleIdToSavingsStatus(centerBO.getActiveSavingsAccounts(),userContext.getLocaleId());
+	  
 	  loadMasterDataForDetailsPage(request,centerBO,getUserContext(request).getLocaleId());
 	  initCustomerPosition(centerBO,userContext.getLocaleId());
-	  //	TODO : get value object
-	  CenterDAO centerDAO =  new CenterDAO();
-	  Center center = centerDAO.findBySystemId(centerBO.getGlobalCustNum());
-
-
-	  SessionUtils.setAttribute("CustomerVO",center
-				, request);
-
-	  SessionUtils.setAttribute(CustomerConstants.LINK_VALUES,getLinkValues(center),request);
-		return mapping.findForward(ActionForwards.get_success.toString());
+	  return mapping.findForward(ActionForwards.get_success.toString());
 	}
 
 	private void loadMasterDataForDetailsPage(HttpServletRequest request,CenterBO centerBO,Short localeId)
@@ -381,7 +372,6 @@ public class CenterCustAction extends CustAction {
 	private void doCleanUp(CenterCustActionForm actionForm,
 			HttpServletRequest request) throws Exception {
 		clearActionForm(actionForm);
-		SessionUtils.setAttribute(CenterConstants.CENTER_MEETING, null, request.getSession());
 	}
 
 	private void clearActionForm(CenterCustActionForm actionForm) {

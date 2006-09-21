@@ -39,317 +39,259 @@ package org.mifos.application.meeting.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.meeting.util.resources.MeetingConstants;
-import org.mifos.application.meeting.util.valueobjects.MeetingDetails;
-import org.mifos.application.meeting.util.valueobjects.MeetingRecurrence;
-import org.mifos.application.meeting.util.valueobjects.RecurrenceType;
+import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.struts.actionforms.MifosActionForm;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.StringUtils;
 
-public class MeetingActionForm extends MifosActionForm {
+public class MeetingActionForm extends BaseActionForm {
 	private static final long serialVersionUID = 44l;
 
 	 MifosLogger meetingLogger = MifosLogManager.getLogger(LoggerConstants.MEETINGLOGGER);
 
-	/**
-	 * This would hold the meetingId
-	 */
 	private String meetingId;
-	/**
-	 * This would the meeting frequency for the meeting
-	 */
+
 	private String frequency;
 
-	/**
-	 * This would hold the recur week if week is being selected
-	 */
 	private String recurWeek;
-
-	/**
-	 * This would hold the day of week if weekly meeting is selected
-	 */
+	
 	private String weekDay;
 
-	/**
-	 * This would hold the mothtype checkbox if month is selected
-	 */
 	private String monthType;
-
-	/**
-	 * This would hold the month day passed by user if he selects the month
-	 */
+	
 	private String monthDay;
-
-	/**
-	 * This would hold the month's month if month is selected
-	 */
-	private String monthMonth;
-
-	/**
-	 * This would hold the month rank if month is selected
-	 */
-
+	
+	private String dayRecurMonth;
+	
 	private String monthRank;
-
-	/**
-	 * This would hold the month weekday if month is selected
-	 */
+	
 	private String monthWeek;
 
-	/**
-	 * This would hold the month if second checkbox in month is selected
-	 */
-	private String monthMonthRank;
-
-	/**
-	 * This would hold the palace of the meeting
-	 */
+	private String recurMonth;
+	
 	private String meetingPlace;
 	
-	/**
-	 * This would hold where we need to go
-	 */
 	private String  customerId;
+
+	private String customerLevel;
 	
-	/**
-	 * This would hold the version no
-	 */
-	private String versionNo;
-
-	/**
-	 * This function returns the versionNo
-	 * @return Returns the versionNo.
-	 */
+	private String input;
 	
-	public String getVersionNo() {
-		return versionNo;
+	public String getInput() {
+		return input;
 	}
 
-	/**
-	 * This function sets the versionNo
-	 * @param versionNo the versionNo to set.
-	 */
-	
-	public void setVersionNo(String versionNo) {
-		this.versionNo = versionNo;
+	public void setInput(String input) {
+		this.input = input;
 	}
 
-
-
-	/**
-	 * This function returns the meetingPlace
-	 * @return Returns the meetingPlace.
-	 */
-	
-	public String getMeetingPlace() {
-		return meetingPlace;
+	public String getDayRecurMonth() {
+		return dayRecurMonth;
 	}
 
-	/**
-	 * This function sets the meetingPlace
-	 * @param meetingPlace the meetingPlace to set.
-	 */
-	
-	public void setMeetingPlace(String meetingPlace) {
-		this.meetingPlace = meetingPlace;
+	public void setDayRecurMonth(String dayRecurMonth) {
+		this.dayRecurMonth = dayRecurMonth;
 	}
-
-	/**
-	 * This function returns the monthRank
-	 * 
-	 * @return Returns the monthRank.
-	 */
-
-	public String getMonthRank() {
-		return monthRank;
-	}
-
-	/**
-	 * This function sets the monthRank
-	 * 
-	 * @param monthRank
-	 *            the monthRank to set.
-	 */
-
-	public void setMonthRank(String monthRank) {
-		this.monthRank = monthRank;
-	}
-
-	/**
-	 * This function returns the monthWeek
-	 * 
-	 * @return Returns the monthWeek.
-	 */
-
-	public String getMonthWeek() {
-		return monthWeek;
-	}
-
-	/**
-	 * This function sets the monthWeek
-	 * 
-	 * @param monthWeek
-	 *            the monthWeek to set.
-	 */
-
-	public void setMonthWeek(String monthWeek) {
-		this.monthWeek = monthWeek;
-	}
-
-	/**
-	 * This function returns the weekDay
-	 * 
-	 * @return Returns the weekDay.
-	 */
-
-	public String getWeekDay() {
-		return weekDay;
-	}
-
-	/**
-	 * This function sets the weekDay
-	 * 
-	 * @param weekDay
-	 *            the weekDay to set.
-	 */
-
-	public void setWeekDay(String weekDay) {
-		this.weekDay = weekDay;
-	}
-
-	/**
-	 * This function returns the monthMonth
-	 * 
-	 * @return Returns the monthMonth.
-	 */
-
-	public String getMonthMonth() {
-		return monthMonth;
-	}
-
-	/**
-	 * This function sets the monthMonth
-	 * 
-	 * @param monthMonth
-	 *            the monthMonth to set.
-	 */
-
-	public void setMonthMonth(String monthMonth) {
-		this.monthMonth = monthMonth;
-	}
-
-	/**
-	 * This function returns the monthDay
-	 * 
-	 * @return Returns the monthDay.
-	 */
-
-	public String getMonthDay() {
-		return monthDay;
-	}
-
-	/**
-	 * This function sets the monthDay
-	 * 
-	 * @param monthDay
-	 *            the monthDay to set.
-	 */
-
-	public void setMonthDay(String monthDay) {
-		this.monthDay = monthDay;
-	}
-
-	/**
-	 * This function returns the monthType
-	 * 
-	 * @return Returns the monthType.
-	 */
-
-	public String getMonthType() {
-		return monthType;
-	}
-
-	/**
-	 * This function sets the monthType
-	 * 
-	 * @param monthType
-	 *            the monthType to set.
-	 */
-
-	public void setMonthType(String monthType) {
-		this.monthType = monthType;
-	}
-
-	/**
-	 * This function returns the recurWeek
-	 * 
-	 * @return Returns the recurWeek.
-	 */
-
-	public String getRecurWeek() {
-		return recurWeek;
-	}
-
-	/**
-	 * This function sets the recurWeek
-	 * 
-	 * @param recurWeek
-	 *            the recurWeek to set.
-	 */
-
-	public void setRecurWeek(String recurWeek) {
-		this.recurWeek = recurWeek;
-	}
-
-	/**
-	 * This function returns the frequency
-	 * 
-	 * @return Returns the frequency.
-	 */
 
 	public String getFrequency() {
 		return frequency;
 	}
 
-	/**
-	 * This function sets the frequency
-	 * 
-	 * @param frequency
-	 *            the frequency to set.
-	 */
-
 	public void setFrequency(String frequency) {
 		this.frequency = frequency;
 	}
 
-	/**
-	 * This function returns the monthMonthRank
-	 * 
-	 * @return Returns the monthMonthRank.
-	 */
-
-	public String getMonthMonthRank() {
-		return monthMonthRank;
+	public MifosLogger getMeetingLogger() {
+		return meetingLogger;
 	}
 
-	/**
-	 * This function sets the monthMonthRank
-	 * 
-	 * @param monthMonthRank
-	 *            the monthMonthRank to set.
-	 */
-
-	public void setMonthMonthRank(String monthMonthRank) {
-		this.monthMonthRank = monthMonthRank;
+	public void setMeetingLogger(MifosLogger meetingLogger) {
+		this.meetingLogger = meetingLogger;
 	}
 
+	public String getMeetingPlace() {
+		return meetingPlace;
+	}
+
+	public void setMeetingPlace(String meetingPlace) {
+		this.meetingPlace = meetingPlace;
+	}
+
+	public String getMonthDay() {
+		return monthDay;
+	}
+
+	public void setMonthDay(String monthDay) {
+		this.monthDay = monthDay;
+	}
+
+	public String getMonthRank() {
+		return monthRank;
+	}
+
+	public void setMonthRank(String monthRank) {
+		this.monthRank = monthRank;
+	}
+
+	public String getMonthType() {
+		return monthType;
+	}
+
+	public void setMonthType(String monthType) {
+		this.monthType = monthType;
+	}
+
+	public String getMonthWeek() {
+		return monthWeek;
+	}
+
+	public void setMonthWeek(String monthWeek) {
+		this.monthWeek = monthWeek;
+	}
+
+	public String getRecurMonth() {
+		return recurMonth;
+	}
+
+	public void setRecurMonth(String recurMonth) {
+		this.recurMonth = recurMonth;
+	}
+
+	public String getRecurWeek() {
+		return recurWeek;
+	}
+
+	public void setRecurWeek(String recurWeek) {
+		this.recurWeek = recurWeek;
+	}
+
+	public String getWeekDay() {
+		return weekDay;
+	}
+
+	public void setWeekDay(String weekDay) {
+		this.weekDay = weekDay;
+	}
+
+	public String getCustomerLevel() {
+		return customerLevel;
+	}
+
+	public void setCustomerLevel(String customerLevel) {
+		this.customerLevel = customerLevel;
+	}
+
+	public CustomerLevel getCustomerLevelValue() {
+		return CustomerLevel.getLevel(Short.valueOf(customerLevel));
+	}
+	
+	public WeekDay getWeekDayValue() {
+		return StringUtils.isNullAndEmptySafe(weekDay)?WeekDay.getWeekDay(Short.valueOf(weekDay)):null;
+	}
+	
+	public RecurrenceType getRecurrenceType() {
+		return StringUtils.isNullAndEmptySafe(frequency)?RecurrenceType.getRecurrenceType(Short.valueOf(frequency)):null;
+	}
+	
+	public boolean isMonthlyOnDate() {
+		return getRecurrenceType().equals(RecurrenceType.MONTHLY) && monthType.equals(MeetingConstants.MONTHLY_ON_DATE); 
+	}
+	
+	public Short getRecurWeekValue() {
+		return getShortValue(recurWeek);
+	}
+	
+	public Short getRecurMonthValue() {
+		return getShortValue(recurMonth);
+	}
+	
+	public Short getDayRecurMonthValue() {
+		return getShortValue(dayRecurMonth);
+	}
+	
+	public Short getMonthDayValue() {
+		return getShortValue(monthDay);
+	}
+	
+	public RankType getMonthRankValue() {
+		return StringUtils.isNullAndEmptySafe(monthRank)?RankType.getRankType(Short.valueOf(monthRank)):null;
+	}
+	
+	public WeekDay getMonthWeekValue() {
+		return StringUtils.isNullAndEmptySafe(monthWeek)?WeekDay.getWeekDay(Short.valueOf(monthWeek)):null;
+	}
+	
+	public Integer getMeetingIdValue() {
+		return getIntegerValue(meetingId);
+	}
+	
+	@Override
+	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request){
+		String method = request.getParameter("method");
+		request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+		ActionErrors errors = null;
+		try{
+			errors = validateFields(request, method);
+		}
+		catch(ApplicationException ae){
+			errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae
+					.getValues()));
+		}
+		if (null != errors && !errors.isEmpty()) {
+			request.setAttribute(Globals.ERROR_KEY, errors);
+			request.setAttribute("methodCalled", method);
+			
+		}
+		return errors;
+	}
+	
+	private ActionErrors validateFields(HttpServletRequest request, String method)throws ApplicationException{
+		ActionErrors errors = null;
+		if(Methods.create.toString().equals(method) || Methods.update.toString().equals(method))
+			errors = validateMeeting();
+		return errors;
+	}
+	
+	private ActionErrors validateMeeting(){
+		ActionErrors errors = new ActionErrors();
+		if(getRecurrenceType()==null)
+			errors.add(MeetingConstants.INVALID_RECURRENCETYPE, new ActionMessage(MeetingConstants.INVALID_RECURRENCETYPE));
+		else if(getRecurrenceType().equals(RecurrenceType.WEEKLY))
+			validateWeeklyMeeting(errors);
+		else if(getRecurrenceType().equals(RecurrenceType.MONTHLY))
+			validateMonthlyMeeting(errors);
+		
+		if(StringUtils.isNullOrEmpty(getMeetingPlace()))
+			errors.add(MeetingConstants.INVALID_MEETINGPLACE, new ActionMessage(MeetingConstants.INVALID_MEETINGPLACE));
+		return errors;
+	}
+	
+	private void validateWeeklyMeeting(ActionErrors errors){
+		if(getWeekDayValue()==null || getRecurWeekValue()==null)
+			errors.add(MeetingConstants.ERRORS_SPECIFY_WEEKDAY_AND_RECURAFTER, new ActionMessage(MeetingConstants.ERRORS_SPECIFY_WEEKDAY_AND_RECURAFTER));
+	}
+	
+	private void validateMonthlyMeeting(ActionErrors errors){
+		if(StringUtils.isNullAndEmptySafe(monthType) && monthType.equals(MeetingConstants.MONTHLY_ON_DATE)){
+			if(getMonthDayValue()==null || getDayRecurMonthValue()==null)
+				errors.add(MeetingConstants.ERRORS_SPECIFY_DAYNUM_AND_RECURAFTER, new ActionMessage(MeetingConstants.ERRORS_SPECIFY_DAYNUM_AND_RECURAFTER));
+		}else if(getMonthRankValue()==null || getMonthWeekValue() ==null || getRecurMonthValue()==null)
+				errors.add(MeetingConstants.ERRORS_SPECIFY_MONTHLY_MEETING_ON_WEEKDAY, new ActionMessage(MeetingConstants.ERRORS_SPECIFY_MONTHLY_MEETING_ON_WEEKDAY));
+	}
+	
 	public ActionErrors customValidate(ActionMapping mapping,
 			HttpServletRequest request) {
 		String methodCalled = request.getParameter("method");
@@ -369,7 +311,7 @@ public class MeetingActionForm extends MifosActionForm {
 				meetingLogger.info("Selected meeting recurrence type is "+ frequency);
 				if (null!= frequency && frequency.equals(MeetingConstants.MONTHLY))
 				{
-					if(null!= monthType&& monthType.equals(MeetingConstants.MONTH_WITHOUT_RANK))
+					if(null!= monthType&& monthType.equals(MeetingConstants.MONTHLY_ON_DATE))
 					{
 						//validate the value for month day
 						
@@ -391,7 +333,7 @@ public class MeetingActionForm extends MifosActionForm {
 								  inValid =true;
 									errors.add(MeetingConstants.KEYINVALIDMONTH,new ActionMessage(MeetingConstants.KEYINVALIDMONTH));
 							  }
-							short recurAfter = Short.valueOf(this.monthMonth).shortValue();
+							short recurAfter = Short.valueOf(this.dayRecurMonth).shortValue();
 							  if ( recurAfter <1)
 							  {
 								  inValid =true;
@@ -401,10 +343,10 @@ public class MeetingActionForm extends MifosActionForm {
 							
 						}
 					}
-					else if(null!= monthType&& monthType.equals(MeetingConstants.MONTH_WITH_RANK))
+					else if(null!= monthType&& monthType.equals(MeetingConstants.MONTHLY_ON_WEEK_DAY))
 					{
 						  ActionErrors errors=new ActionErrors();  
-							short recurAfter = Short.valueOf(this.monthMonthRank).shortValue();
+							short recurAfter = Short.valueOf(this.recurMonth).shortValue();
 
 							  if ( recurAfter <1)
 							  {
@@ -446,7 +388,7 @@ public class MeetingActionForm extends MifosActionForm {
 	/**
 	 * This function will returns the meeting details
 	 */
-	public MeetingDetails getMeetingDetails() {
+	/*public MeetingDetails getMeetingDetails() {
 		MeetingDetails meetingDetails = new MeetingDetails();
 
 		RecurrenceType recurrenceType = new RecurrenceType();
@@ -492,10 +434,10 @@ public class MeetingActionForm extends MifosActionForm {
 						
 						Short mt = Short.valueOf(this.monthType);
 						if ( mt.shortValue()== MeetingConstants.MONTHRECURDAY) {
-							if(null!=monthMonth)
+							if(null!=dayRecurMonth)
 							{
 							meetingDetails.setRecurAfter(Short
-									.parseShort(this.monthMonth));
+									.parseShort(this.dayRecurMonth));
 							}
 							else
 							{
@@ -512,10 +454,10 @@ public class MeetingActionForm extends MifosActionForm {
 							}
 
 						} else if (mt.shortValue() == MeetingConstants.MONTHRECURRANK) {
-							if(null!=this.monthMonthRank)
+							if(null!=this.recurMonth)
 							{
 							meetingDetails.setRecurAfter(Short
-									.parseShort(this.monthMonthRank));
+									.parseShort(this.recurMonth));
 							}
 							else
 							{
@@ -560,7 +502,7 @@ public class MeetingActionForm extends MifosActionForm {
 		meetingDetails.setMeetingRecurrence(meetingRecurrence);
 
 		return meetingDetails;
-	}
+	}*/
 
 	/**
 	 * This function returns the meetingId
@@ -605,13 +547,10 @@ public class MeetingActionForm extends MifosActionForm {
 	   this.meetingId="";
 	   this.meetingPlace="";
 	   this.monthDay="";
-	   this.monthMonth="";
-	   this.monthMonthRank="";
 	   this.monthRank="";
 	   this.monthType="";
 	   this.monthWeek="";
 	   this.recurWeek="";
-	   this.versionNo="";
 	   this.weekDay="";
    }
 }

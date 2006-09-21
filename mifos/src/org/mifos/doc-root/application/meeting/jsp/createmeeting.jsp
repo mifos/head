@@ -47,7 +47,7 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 
@@ -63,21 +63,20 @@ function showMeetingFrequency(){
 	else if (document.meetingActionForm.frequency[1].checked == true){
 		document.getElementById("weekDIV").style.display = "none";
 		document.getElementById("monthDIV").style.display = "block";
-		document.getElementsByName("monthType")[1].checked=true;
-		}
+		if(document.meetingActionForm.monthType[0].checked == false && document.meetingActionForm.monthType[1].checked == false)
+			document.getElementsByName("monthType")[0].checked=true;
+	}
 }
+
 function goToCancelPage(){
-	document.meetingActionForm.method.value="cancel";
+	document.meetingActionForm.method.value="cancelCreate";
 	meetingActionForm.submit();
 	
 	
   }
 </script>
 
-		<%-- <html-el:form action="/MeetingAction.do" onsubmit="return validateMeetingActionForm(this);">
-		<html-el:javascript formName="/MeetingAction" bundle="MeetingResources"/> --%>
-		<html-el:form action="/MeetingAction.do">
-		
+		<html-el:form action="/meetingAction.do">		
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
@@ -90,15 +89,15 @@ function goToCancelPage(){
 								bundle="MeetingResources" />
 								
 								<c:choose>
-								  <c:when test="${meetingActionForm.input == 'Client'}">
+								  <c:when test="${meetingActionForm.customerLevel == CustomerLevel.CLIENT.value}">
 								  	<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"></mifos:mifoslabel>
 								  </c:when>
 								  
-								  <c:when test="${meetingActionForm.input == 'Group'}">
+								  <c:when test="${meetingActionForm.customerLevel == CustomerLevel.GROUP.value}">
 								  	<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>								  
 								  </c:when>
 								  
-								  <c:when test="${meetingActionForm.input == 'Center'}">
+								  <c:when test="${meetingActionForm.customerLevel == CustomerLevel.CENTER.value}">
 								  	<mifos:mifoslabel name="${ConfigurationConstants.CENTER}"></mifos:mifoslabel>								  
 								  </c:when>
 								</c:choose>
@@ -167,13 +166,12 @@ function goToCancelPage(){
 
 
 											<mifos:mifosnumbertext property="recurWeek" size="3"  maxlength="3"/> <mifos:mifoslabel
-												name="meeting.labelWeeks" bundle="MeetingResources" /> <c:set
-												var="weekDaysList" scope="request"
-												value="${requestScope.WeekDayList.lookUpMaster}" /> <mifos:select
-												property="weekDay">
-												<html-el:options collection="weekDaysList"
-													property="id" labelProperty="lookUpValue" />
-											</mifos:select></td>
+												name="meeting.labelWeeks" bundle="MeetingResources" /> 
+												<mifos:select property="weekDay">
+													<c:forEach var="weekDay" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekDayList')}" >
+															<html-el:option value="${weekDay.id}">${weekDay.name}</html-el:option>
+													</c:forEach>
+												</mifos:select></td>
 										</tr>
 									</table>
 									</div>
@@ -188,26 +186,25 @@ function goToCancelPage(){
 												property="monthDay" size="3" onfocus="checkMonthType1()" maxlength="2"/> 
 												 <mifos:mifoslabel name="meeting.labelOfEvery"
 												bundle="MeetingResources" /> <mifos:mifosnumbertext
-												property="monthMonth" size="3" onfocus="checkMonthType1()" maxlength="3"/> <mifos:mifoslabel
+												property="dayRecurMonth" size="3" onfocus="checkMonthType1()" maxlength="3"/> <mifos:mifoslabel
 												name="meeting.labelMonths" bundle="MeetingResources" /></td>
 										</tr>
 										<tr class="fontnormal">
 											<td><html-el:radio property="monthType" value="2" /></td>
 											<td><mifos:mifoslabel name="meeting.labelThe"
-												bundle="MeetingResources" /> <c:set var="weekrankList"
-												scope="request"
-												value="${requestScope.WeekRankList.lookUpMaster}" /> <mifos:select
-												property="monthRank" onfocus="checkMonthType2()">
-
-												<html-el:options collection="weekrankList"
-													property="id" labelProperty="lookUpValue" />
-
-											</mifos:select> <mifos:select property="monthWeek" onfocus="checkMonthType2()">
-												<html-el:options collection="weekDaysList"
-													property="id" labelProperty="lookUpValue" />
+												bundle="MeetingResources" /> 
+												<mifos:select	property="monthRank" onfocus="checkMonthType2()">
+													<c:forEach var="weekRank" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekRankList')}" >
+															<html-el:option value="${weekRank.id}">${weekRank.name}</html-el:option>
+													</c:forEach>
+											</mifos:select>
+											<mifos:select property="monthWeek" onfocus="checkMonthType2()">
+												<c:forEach var="weekDay" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekDayList')}" >
+															<html-el:option value="${weekDay.id}">${weekDay.name}</html-el:option>
+												</c:forEach>
 											</mifos:select> <mifos:mifoslabel name="meeting.labelOfEvery"
 												bundle="MeetingResources" /> <mifos:mifosnumbertext
-												property="monthMonthRank" size="3" onfocus="checkMonthType2()" maxlength="3"/> <mifos:mifoslabel
+												property="recurMonth" size="3" onfocus="checkMonthType2()" maxlength="3"/> <mifos:mifoslabel
 												name="meeting.labelMonths" bundle="MeetingResources" /></td>
 										</tr>
 									</table>
@@ -223,7 +220,7 @@ function goToCancelPage(){
 									<td align="right"><mifos:mifoslabel
 										name="meeting.labelPlaceOfMeeting" bundle="MeetingResources"
 										mandatory="yes" /></td>
-									<td><html-el:text property="meetingPlace" /></td>
+									<td><html-el:text property="meetingPlace" maxlength="200"/></td>
 								</tr>
 
 							</table>
@@ -259,7 +256,6 @@ function goToCancelPage(){
 			</table>
 			<html-el:hidden property="method" value="create" />
 			<!-- hidden veriable which will set input veriable -->
-			<html-el:hidden property="input"  />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>

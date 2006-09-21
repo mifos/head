@@ -84,7 +84,8 @@
 								<span class="fontnormal"><img
 									src="pages/framework/images/status_closedblack.gif" width="8"
 									height="9">
-							</c:if> <c:out value="${BusinessKey.customerStatus.name}" /></span><br>
+								</span>
+							</c:if> <c:out value="${BusinessKey.customerStatus.name}" /><br>
 							<!-- System Id of the center --> <span class="fontnormal"><mifos:mifoslabel
 								name="Center.SystemId" />:</span> <span class="fontnormal"><c:out
 								value="${BusinessKey.globalCustNum}" /><br>
@@ -337,8 +338,8 @@
 									<td class="fontnormalbold"><mifos:mifoslabel
 										name="Center.MeetingsHeading" />
 									</td>
-									<td align="right"><html-el:link
-										action="MeetingAction.do?method=get&input=CenterDetails&meetingId=${BusinessKey.customerMeeting.meeting.meetingId}">
+									<td align="right">
+									<html-el:link	action="meetingAction.do?method=edit&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&customerLevel=${BusinessKey.customerLevel.id}">
 										<mifos:mifoslabel name="Center.MeetingsLink"
 											/>
 									</html-el:link></td>
@@ -578,11 +579,6 @@
 					</td>
 				</tr>
 			</table>
-			<br>
-			</td>
-			</tr>
-			</table>
-			<br>
 			<mifos:SecurityParam property="Center" />
 		</html-el:form>
 		<html-el:form action="closedaccsearchaction.do?method=search">

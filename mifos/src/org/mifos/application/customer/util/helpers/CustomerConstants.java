@@ -182,6 +182,7 @@ public interface CustomerConstants {
 	
 	//meetings
 	public static final short CUSTOMER_MEETING_TYPE = 4;
+	public static final String CUSTOMER_MEETING= "customerMeeting";
 	public static final String TOTAL_FEE_DUE = "totalFeeDue";
 	
 	//get to the home page

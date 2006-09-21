@@ -37,622 +37,242 @@
  */
 package org.mifos.application.meeting.struts.action;
 
-import java.util.Calendar;
-import java.util.Enumeration;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.customer.center.util.helpers.CenterConstants;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
-import org.mifos.application.customer.group.util.helpers.GroupConstants;
-import org.mifos.application.customer.util.helpers.PathConstants;
-import org.mifos.application.customer.util.valueobjects.Customer;
+import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.business.RankOfDaysEntity;
+import org.mifos.application.meeting.business.service.MeetingBusinessService;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.struts.actionforms.MeetingActionForm;
-import org.mifos.application.meeting.util.helpers.MeetingHelper;
+import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.resources.MeetingConstants;
-import org.mifos.application.meeting.util.valueobjects.Meeting;
-import org.mifos.application.meeting.util.valueobjects.MeetingDetails;
-import org.mifos.application.meeting.util.valueobjects.MeetingRecurrence;
-import org.mifos.application.meeting.util.valueobjects.RecurrenceType;
-import org.mifos.application.office.util.helpers.OfficeHelper;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.struts.action.MifosBaseAction;
+import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.framework.business.service.BusinessService;
+import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.valueobjects.Context;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
-public class MeetingAction extends MifosBaseAction {
+public class MeetingAction extends BaseAction {
 
-	// get the logger for logging
-	MifosLogger meetingLogger = MifosLogManager
-			.getLogger(LoggerConstants.MEETINGLOGGER);
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.mifos.framework.struts.action.MifosBaseAction#appendToMap()
-	 */
 	@Override
-	public Map<String, String> appendToMap() {
-		Map<String, String> methodHashMap = new HashMap<String, String>();
-
-		methodHashMap.put(MeetingConstants.LOADMEETING,
-				MeetingConstants.LOADMEETING);
-
-		return methodHashMap;
+	protected BusinessService getService() throws ServiceException {
+		return getMeetingBusinessService();
 	}
 
-	protected boolean performCleanUp() {
-
-		meetingLogger.info("performCleanUp returning the value as false");
-		return false;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.mifos.framework.struts.action.MifosBaseAction#getPath()
-	 */
 	@Override
-	protected String getPath() {
-
-		return MeetingConstants.MEETINGDEPENDENCY;
+	protected boolean skipActionFormToBusinessObjectConversion(String method) {
+		return true;
 	}
 
-	/**
-	 * This method select the proper forward if user select the cancel button
-	 * 
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	public ActionForward customCancel(ActionMapping mapping, ActionForm form,
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		MeetingActionForm maf = (MeetingActionForm) form;
-		String forward = forwardHelper(maf);
-		meetingLogger.info("Forwarding the action to =" + forward);
-		return mapping.findForward(forward);
+		populateActionForm(request, (MeetingActionForm) form);
+		loadMasterData(request);
+		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
-	/**
-	 * This function is called to set the defaults before loading the create
-	 * page
-	 * 
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	public ActionForward customLoad(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-
-		
-		MeetingActionForm maf = (MeetingActionForm) form;
-		maf.clearForm();
-		Meeting meeting =getMeetingFromContext(request,form);
-		Object obj =null;
-		//Code added for M2 Center.
-		if(meeting == null){
-			if (maf.input.equalsIgnoreCase(MeetingConstants.CLIENT)) {
-				obj = SessionUtils.getAttribute(ClientConstants.CLIENT_MEETING, request.getSession());
-			}
-			else if (maf.input.equalsIgnoreCase(MeetingConstants.CENTER)) {
-				obj = SessionUtils.getAttribute(CenterConstants.CENTER_MEETING, request.getSession());
-			}else if (maf.input.equalsIgnoreCase(MeetingConstants.GROUP)) {
-				obj = SessionUtils.getAttribute(GroupConstants.GROUP_MEETING, request.getSession());
-			}
-			if(obj!=null)
-				meeting = MeetingHelper.convertMeetingM2toM1((MeetingBO)obj);
-		}
-		// Code for M2 center ends
-		
-		if (null !=meeting ) {
-			
-			initActionForm(meeting,form);
-		} else {
-
-			meetingLogger.info("Setting the frequency to ="
-					+ MeetingConstants.WEEKLY);
-
-			maf.setFrequency(MeetingConstants.WEEKLY);
-		}
-		return null;
-	}
-
-	/**
-	 * This function is called to set the proper value for frequency if
-	 * validation fails
-	 * 
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	public ActionForward customValidate(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-
-		MeetingActionForm maf = (MeetingActionForm) form;
-		String frequency = maf.getFrequency();
-		if (frequency != null) {
-			meetingLogger.info("Setting the frequency to =" + frequency);
-
-			maf.setFrequency(frequency);
-		} else {
-			meetingLogger.info("Setting the frequency to ="
-					+ MeetingConstants.WEEKLY);
-
-			maf.setFrequency(MeetingConstants.WEEKLY);
-		}
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.mifos.framework.struts.action.MifosBaseAction#get(org.apache.struts.action.ActionMapping,
-	 *      org.apache.struts.action.ActionForm,
-	 *      javax.servlet.http.HttpServletRequest,
-	 *      javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	public ActionForward get(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-
-		ActionForward af = super.get(mapping, form, request, response);
-		 Context ctx = (Context) request.getAttribute(Constants.CONTEXT);
-		Meeting meeting = (Meeting) ctx.getValueObject();
-		if (null != meeting) {
-			meetingLogger.info("Initializing the meetingActionForm ...");
-			initActionForm(meeting, form);
-		} else {
-			throw new MeetingException(MeetingConstants.KEYLOADFAILED);
-		}
-
-		return af;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.mifos.framework.struts.action.MifosBaseAction#create(org.apache.struts.action.ActionMapping,
-	 *      org.apache.struts.action.ActionForm,
-	 *      javax.servlet.http.HttpServletRequest,
-	 *      javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		String forward = null;
-		MeetingActionForm maf = (MeetingActionForm) form;
-		Context ctx = (Context) request.getAttribute(Constants.CONTEXT);
-		Meeting meeting = (Meeting) ctx.getValueObject();
-
-		// set the dates
-		Calendar calender = new GregorianCalendar();
-		calender.setTimeInMillis(System.currentTimeMillis());
-		meeting.setMeetingStartDate(calender);
-		meeting.setMeetingStartTime(calender);
-
-		if (null != maf.input) {
-
-			meetingLogger.info("We are coming from " + maf.input);
-
-			if (maf.input.equalsIgnoreCase(MeetingConstants.GROUP)) {
-				setInContext(GroupConstants.GROUP_ACTION, request.getSession(),
-						meeting);
-				forward = MeetingConstants.FORWARD_GROUP_SUCESS;
-			} else if (maf.input.equalsIgnoreCase(MeetingConstants.CLIENT)) {
-				setInContext(PathConstants.CLIENT_CREATION, request
-						.getSession(), meeting);
-				//forward = "clientCreate_success";
-				forward = MeetingConstants.FORWARD_CLIENT_SUCESS;
-			} else if (maf.input.equalsIgnoreCase(MeetingConstants.CENTER)) {
-				setInContext(
-						org.mifos.application.customer.center.util.helpers.PathConstants.CENTER,
-						request.getSession(), meeting);
-				forward = MeetingConstants.FORWARD_CENTER_SUCESS;
-			} else if (maf.input
-					.equalsIgnoreCase(MeetingConstants.CENTER_DETAILS)) {
-				setInContext(
-						org.mifos.application.customer.center.util.helpers.PathConstants.CENTER,
-						request.getSession(), meeting);
-				forward = MeetingConstants.FORWARD_EDIT_CENTER_MEETING_SUCESS;
-			} else if (maf.input
-					.equalsIgnoreCase(MeetingConstants.CLIENT_DETAILS)) {
-				setInContext(PathConstants.CLIENT_CREATION, request
-						.getSession(), meeting);
-				forward = MeetingConstants.FORWARD_EDIT_CLIENT_MEETING_SUCESS;
-			}
-		}
-		
-		if (maf.input.equalsIgnoreCase(MeetingConstants.CLIENT)) {
-			//Meeting is being stored in session for client create
-			SessionUtils.setAttribute(ClientConstants.CLIENT_MEETING, MeetingHelper.convertMeetingM1oM2(meeting), request.getSession());
-		}
-		else if (maf.input.equalsIgnoreCase(MeetingConstants.GROUP)) {
-			SessionUtils.setAttribute(GroupConstants.GROUP_MEETING, MeetingHelper.convertMeetingM1oM2(meeting), request.getSession());
-		}else{
-			//Meeting is being stored in session for center create
-			SessionUtils.setAttribute(CenterConstants.CENTER_MEETING, MeetingHelper.convertMeetingM1oM2(meeting), request.getSession());
-		}
-		meetingLogger.info("We are forwarding to " + forward);
-		return mapping.findForward(forward);
-
+		MeetingActionForm actionForm = (MeetingActionForm) form;
+		MeetingBO meeting = createMeeting(actionForm);
+		SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING, meeting,
+				request);
+		return mapping.findForward(forwardForCreate(
+				actionForm.getCustomerLevelValue()).toString());
 	}
 
-	private void setInContext(String actionPath, HttpSession session,
-			Meeting meeting) {
-		Enumeration keys = session.getAttributeNames();
-		String attributeKey = null;
-		if (null != keys) {
-			while (keys.hasMoreElements()) {
-				attributeKey = (String) keys.nextElement();
-				if (attributeKey.equals(actionPath + "_" + Constants.CONTEXT)) {
-					Context gpContext = (Context) session
-							.getAttribute(attributeKey);
-					gpContext.addBusinessResults(MeetingConstants.MEETING,
-							meeting);
-				}
-			}// end-while
-		}// end-if
-	}
-
-	/**
-	 * This function initialize the action form based on the meeting value
-	 * object
-	 * 
-	 * @param meeting
-	 * @param form
-	 */
-	private void initActionForm(Meeting meeting, ActionForm form) {
-		MeetingActionForm maf = (MeetingActionForm) form;
-
-		MeetingDetails meetingDetails = meeting.getMeetingDetails();
-		Short recurrenceId = null;
-		if (null != meetingDetails) {
-			RecurrenceType rt = meetingDetails.getRecurrenceType();
-			if (null != rt) {
-				recurrenceId = rt.getRecurrenceId();
-				// Set the type of meeting in action form
-				if (null != recurrenceId) {
-
-					meetingLogger.info("Setting the recuranceId ="
-							+ recurrenceId);
-
-					maf.setFrequency(String.valueOf(recurrenceId));
-
-				}
-
-			}
-
-		}
-
-		// Get the meetingRecurrence
-		MeetingRecurrence meetingRecurrence = meetingDetails
-				.getMeetingRecurrence();
-		// set the recur after
-		Short recurAfter = meetingDetails.getRecurAfter();
-
-		// set the location of meeting
-		String meetingLocation = meeting.getMeetingPlace();
-		if (null != meetingLocation) {
-			meetingLogger.info("Setting the meetingLocation ="
-					+ meetingLocation);
-
-			maf.setMeetingPlace(meetingLocation);
-		}
-
-		// all other values we have to set based on the recurance type
-		if (null != recurrenceId
-				&& recurrenceId.shortValue() == MeetingConstants.WEEK)
-
-		{
-
-			if (null != recurAfter) {
-				meetingLogger.info("Setting the recurAfter =" + recurAfter);
-
-				maf.setRecurWeek(String.valueOf(recurAfter));
-			}
-			if (null != meetingRecurrence) {
-				Short day = meetingRecurrence.getWeekDay();
-				if (null != day) {
-					meetingLogger.info("Setting the WeekDay =" + day);
-
-					maf.setWeekDay(String.valueOf(day));
-				}
-			}
-			// set all other fields as blank
-			maf.setMonthDay("");
-			maf.setMonthMonth("");
-			maf.setMonthType("");
-			maf.setMonthRank("");
-			maf.setMonthMonthRank("");
-			maf.setMonthWeek("");
-		} else if (null != recurrenceId
-				&& recurrenceId.shortValue() == MeetingConstants.MONTH)
-
-		{
-
-			// set week related data as null
-			maf.setWeekDay("");
-			maf.setRecurWeek("");
-			Short day = meetingRecurrence.getWeekDay();
-			Short rank = meetingRecurrence.getRankOfDays();
-			Short dayNumber = meetingRecurrence.getDayNumber();
-			if (null != dayNumber)
-
-			{
-				if (null != recurAfter)
-
-				{
-					meetingLogger.info("Setting the recurAfter =" + recurAfter);
-
-					maf.setMonthMonth(String.valueOf(recurAfter));
-				}
-
-				maf.setMonthDay(String.valueOf(dayNumber));
-				maf
-						.setMonthType(String
-								.valueOf(MeetingConstants.MONTHRECURDAY));
-
-				maf.setMonthRank("");
-				maf.setMonthMonthRank("");
-				maf.setMonthWeek("");
-
-			}
-
-			else
-
-			{
-				maf.setMonthType(String
-						.valueOf(MeetingConstants.MONTHRECURRANK));
-
-				if (null != day) {
-					maf.setMonthWeek(String.valueOf(day));
-
-				}
-				if (null != rank) {
-					maf.setMonthRank(String.valueOf(rank));
-
-				}
-				if (null != recurAfter)
-
-				{
-					maf.setMonthMonthRank(String.valueOf(recurAfter));
-				}
-
-				maf.setMonthDay("");
-				maf.setMonthMonth("");
-
-			}
-
-		}
-
-	}
-
-	// Do'nt go by name this function will actully help create customer meeting
-	/**
-	 * This function is customized to validate the creation of the customer
-	 * meeting
-	 */
-	public ActionForward customPreview(ActionMapping mapping, ActionForm form,
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward edit(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-
-		MeetingActionForm maf = (MeetingActionForm) form;
-		String forward = forwardHelper(maf);
-
-		// get the context from the request
-		Context context = (Context) request.getAttribute(Constants.CONTEXT);
-		if (null != context) {
-
-			Customer cust = getCustomerFromTheContext(request, form);
-			if (null != cust) {
-				OfficeHelper.saveInContext(MeetingConstants.CUSTOMER, cust,
-						context);
-			} else {
-				throw new MeetingException(MeetingConstants.KEYCREATEFAILED);
-			}
+		MeetingActionForm actionForm = (MeetingActionForm) form;
+		clearActionForm(actionForm);
+		CustomerBO customer = (CustomerBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request);
+		ActionForward forward = null;
+		loadMasterData(request);
+		if (customer.getCustomerMeeting() != null) {
+			loadMasterData(request);
+			MeetingBO meeting = getMeetingBusinessService().getMeeting(
+					customer.getCustomerMeeting().getMeeting().getMeetingId());
+			setValuesInActionForm(actionForm, meeting);
+			forward = mapping.findForward(ActionForwards.edit_success
+					.toString());
+			actionForm.setInput(MeetingConstants.INPUT_EDIT);
+		} else{
+			actionForm.setInput(MeetingConstants.INPUT_CREATE);
+			forward = mapping.findForward(ActionForwards.createMeeting_success
+					.toString());
 		}
-		meetingLogger.info("Forwarding the action to  =" + forward);
-		return mapping.findForward(forward);
-
-	}
-
-	/**
-	 * This function set the correct forward based on the input
-	 * 
-	 * @param maf
-	 * @return
-	 */
-	private String forwardHelper(MeetingActionForm maf) {
-		String forward = null;
-		if (null != maf.input) {
-			if (maf.input.equalsIgnoreCase(MeetingConstants.GROUP)) {
-				forward = MeetingConstants.FORWARD_GROUP_SUCESS;
-			} else if (maf.input.equalsIgnoreCase(MeetingConstants.CLIENT)) {
-				forward = MeetingConstants.FORWARD_CLIENT_SUCESS;
-			} else if (maf.input.equalsIgnoreCase(MeetingConstants.CENTER)) {
-				forward = MeetingConstants.FORWARD_CENTER_SUCESS;
-			} else if (maf.input
-					.equalsIgnoreCase(MeetingConstants.CENTER_DETAILS)) {
-				forward = MeetingConstants.FORWARD_EDIT_CENTER_MEETING_SUCESS;
-			} else if (maf.input
-					.equalsIgnoreCase(MeetingConstants.CLIENT_DETAILS)) {
-				forward = MeetingConstants.FORWARD_EDIT_CLIENT_MEETING_SUCESS;
-			} else if (maf.input
-					.equalsIgnoreCase(MeetingConstants.GROUP_DETAILS)) {
-				forward = MeetingConstants.FORWARD_GROUP_DETAILS_PAGE;
-			}
-		}
-
 		return forward;
 	}
 
-	/**
-	 * This function set the correct forward based on the input
-	 * 
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	public ActionForward customUpdate(ActionMapping mapping, ActionForm form,
+	@TransactionDemarcate(validateAndResetToken = true)
+	@CloseSession
+	public ActionForward update(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		MeetingActionForm actionForm = (MeetingActionForm) form;
+		MeetingBO meeting = createMeeting(actionForm);
+		CustomerBO customer = (CustomerBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request);
+		customer.setUserContext(getUserContext(request));
+		customer.updateMeeting(meeting);
+		ActionForwards forward = forwardForUpdate(actionForm
+				.getCustomerLevelValue());
+		return mapping.findForward(forward.toString());
+	}
+
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward cancelCreate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		MeetingActionForm maf = (MeetingActionForm) form;
-		String forward = forwardHelper(maf);
-		meetingLogger.info("Forwarding the action to  =" + forward);
-		Context context = (Context) request.getAttribute(Constants.CONTEXT);
-		Customer customer = getCustomerFromTheContext(request,form);
-		if ( customer!=null)
-		context.addBusinessResults("Customer",customer);
+		return	mapping.findForward(forwardForCreate(maf.getCustomerLevelValue()).toString());
+	}
+
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward cancelUpdate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		ActionForwards forward = forwardForUpdate(((MeetingActionForm) form)
+				.getCustomerLevelValue());
+		return mapping.findForward(forward.toString());
+	}
+
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward validate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		String method = (String) request.getAttribute("methodCalled");
+		MeetingActionForm maf = (MeetingActionForm) form;
+		if(maf.getInput()==null || maf.getInput().equals(MeetingConstants.INPUT_EDIT))
+			return mapping.findForward(method + "_failure");
 		else
-		{
-			 Object object= request.getSession().getAttribute("CustomerVO");
-			 context.addBusinessResults("Customer",object);
-
-		}
-		return mapping.findForward(forward);
+			return mapping.findForward(ActionForwards.createMeeting_failure.toString());
+			
 	}
 
-	/**
-	 * This function is called before we show the customermeeting create page to
-	 * the user
-	 * 
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	public ActionForward loadMeeting(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-
-		// get the context from the request
-		Context context = (Context) request.getAttribute(Constants.CONTEXT);
-		MeetingActionForm maf = (MeetingActionForm) form;
-		maf.clearForm();
-		meetingLogger
-				.info("Setting the frequency  =" + MeetingConstants.WEEKLY);
-
-		maf.setFrequency(MeetingConstants.WEEKLY);
-		if (null != context) {
-			context.setBusinessAction(MeetingConstants.LOADMEETING);
-			delegate(context, request);
-		}
-
-		return mapping
-				.findForward(MeetingConstants.FORWARD_LOAD_MEETING_SUCESS);
+	private void populateActionForm(HttpServletRequest request,
+			MeetingActionForm form) throws PageExpiredException {
+		MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(
+				CustomerConstants.CUSTOMER_MEETING, request);
+		clearActionForm(form);
+		if (meeting != null)
+			setValuesInActionForm(form, meeting);
 	}
 
-	/**
-	 * This method is user to retrive the customer form the context while
-	 * creating the customer meeting
-	 * 
-	 * @param request
-	 * @param form
-	 * @return
-	 */
-	private Customer getCustomerFromTheContext(HttpServletRequest request,
-			ActionForm form) {
-		MeetingActionForm maf = (MeetingActionForm) form;
-		String actionPath = getActionPath(maf);
-		
-		HttpSession session = request.getSession();
-		Enumeration keys = session.getAttributeNames();
-		String attributeKey = null;
-		if (null != keys) {
-			while (keys.hasMoreElements()) {
-				attributeKey = (String) keys.nextElement();
-				if (attributeKey.equals(actionPath + "_" + Constants.CONTEXT)) {
-					Context gpContext = (Context) session
-							.getAttribute(attributeKey);
-					return (Customer) gpContext.getValueObject();
-				}
-			}// end-while
-		}// end-if
-		return null;
-	}
-	
-	private String getActionPath(MeetingActionForm maf)
-	{
-		String actionPath=null;
-		if (null != maf.input) {
-			if (maf.input.equalsIgnoreCase(MeetingConstants.GROUP)) {
-				actionPath = GroupConstants.GROUP_ACTION;
-
-			} else if (maf.input.equalsIgnoreCase(MeetingConstants.CLIENT)) {
-				actionPath = PathConstants.CLIENT_CREATION;
-
-			} else if (maf.input.equalsIgnoreCase(MeetingConstants.CENTER)) {
-				actionPath = org.mifos.application.customer.center.util.helpers.PathConstants.CENTER;
-
-			} else if (maf.input
-					.equalsIgnoreCase(MeetingConstants.CENTER_DETAILS)) {
-				actionPath = org.mifos.application.customer.center.util.helpers.PathConstants.CENTER;
-
-			} else if (maf.input
-					.equalsIgnoreCase(MeetingConstants.CLIENT_DETAILS)) {
-				actionPath = PathConstants.CLIENT_CREATION;
-			} else if (maf.input
-					.equalsIgnoreCase(MeetingConstants.GROUP_DETAILS)) {
-				actionPath = GroupConstants.GROUP_ACTION;
+	private void setValuesInActionForm(MeetingActionForm form, MeetingBO meeting) {
+		if (meeting.isWeekly()) {
+			form.setFrequency(RecurrenceType.WEEKLY.getValue().toString());
+			form.setWeekDay(meeting.getMeetingDetails().getWeekDay().getValue()
+					.toString());
+			form.setRecurWeek(meeting.getMeetingDetails().getRecurAfter()
+					.toString());
+		} else if (meeting.isMonthly()) {
+			form.setFrequency(RecurrenceType.MONTHLY.getValue().toString());
+			if (meeting.isMonthlyOnDate()) {
+				form.setMonthType("1");
+				form.setDayRecurMonth(meeting.getMeetingDetails()
+						.getRecurAfter().toString());
+				form.setMonthDay(meeting.getMeetingDetails().getDayNumber()
+						.toString());
+			} else {
+				form.setMonthType("2");
+				form.setRecurMonth(meeting.getMeetingDetails().getRecurAfter()
+						.toString());
+				form.setMonthWeek(meeting.getMeetingDetails().getWeekDay()
+						.getValue().toString());
+				form.setMonthRank(meeting.getMeetingDetails().getWeekRank()
+						.getValue().toString());
 			}
 		}
-		return actionPath;
+		form.setMeetingPlace(meeting.getMeetingPlace());
 	}
-	
-	private Meeting getMeetingFromContext(HttpServletRequest request,
-			ActionForm form )
-	{
-		MeetingActionForm maf = (MeetingActionForm) form;
-		String actionPath = getActionPath(maf);
-		
-		HttpSession session = request.getSession();
-		Enumeration keys = session.getAttributeNames();
-		String attributeKey = null;
-		if (null != keys) {
-			while (keys.hasMoreElements()) {
-				attributeKey = (String) keys.nextElement();
-				if (attributeKey.equals(actionPath + "_" + Constants.CONTEXT)) {
-					Context gpContext = (Context) session
-							.getAttribute(attributeKey);
-					return (Meeting) gpContext.getBusinessResults(MeetingConstants.MEETING);
-				}
-			}// end-while
-		}// end-if
-		return null;
-		
+
+	private MeetingBO createMeeting(MeetingActionForm form)
+			throws MeetingException {
+		MeetingBO meeting = null;
+		Date startDate = new Date();
+		if (form.getRecurrenceType().equals(RecurrenceType.WEEKLY)) {
+			meeting = new MeetingBO(form.getWeekDayValue(), form
+					.getRecurWeekValue(), startDate,
+					MeetingType.CUSTOMERMEETING, form.getMeetingPlace());
+		} else if (form.isMonthlyOnDate()) {
+			meeting = new MeetingBO(form.getMonthDayValue(), form
+					.getDayRecurMonthValue(), startDate,
+					MeetingType.CUSTOMERMEETING, form.getMeetingPlace());
+		} else {
+			meeting = new MeetingBO(form.getMonthWeekValue(), form
+					.getMonthRankValue(), form.getRecurMonthValue(), startDate,
+					MeetingType.CUSTOMERMEETING, form.getMeetingPlace());
+		}
+		return meeting;
 	}
-	
-	
+
+	private ActionForwards forwardForCreate(CustomerLevel customerLevel) {
+		if (customerLevel.equals(CustomerLevel.CENTER))
+			return ActionForwards.loadCreateCenter;
+		else if (customerLevel.equals(CustomerLevel.GROUP))
+			return ActionForwards.loadCreateGroup;
+		else
+			return ActionForwards.loadCreateClient;
+	}
+
+	private ActionForwards forwardForUpdate(CustomerLevel customerLevel) {
+		if (customerLevel.equals(CustomerLevel.CENTER))
+			return ActionForwards.center_detail_page;
+		else if (customerLevel.equals(CustomerLevel.GROUP))
+			return ActionForwards.group_detail_page;
+		else
+			return ActionForwards.client_detail_page;
+	}
+
+	private MeetingBusinessService getMeetingBusinessService()
+			throws ServiceException {
+		return (MeetingBusinessService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.Meeting);
+	}
+
+	private void loadMasterData(HttpServletRequest request) throws Exception {
+		Short localeId = getUserContext(request).getLocaleId();
+		SessionUtils.setAttribute(MeetingConstants.WEEKDAYSLIST,
+				getMeetingBusinessService().getWorkingDays(localeId), request);
+		SessionUtils.setAttribute(MeetingConstants.WEEKRANKLIST,
+				getMasterEntities(RankOfDaysEntity.class, localeId), request);
+	}
+
+	private void clearActionForm(MeetingActionForm form) {
+		form.setFrequency(RecurrenceType.WEEKLY.getValue().toString());
+		form.setMonthType(null);
+		form.setWeekDay(null);
+		form.setRecurWeek(null);
+		form.setMonthDay(null);
+		form.setDayRecurMonth(null);
+		form.setMonthWeek(null);
+		form.setMonthRank(null);
+		form.setRecurMonth(null);
+		form.setMeetingPlace(null);
+		form.setInput(null);
+	}
 }

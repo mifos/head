@@ -79,10 +79,12 @@ public interface MeetingConstants {
 
 	public final short MONTHRECURRANK = 2;
 	
-	public final String MONTH_WITHOUT_RANK ="1";
+	public final String MONTHLY_ON_DATE ="1";
 	
-	public final String MONTH_WITH_RANK ="2";
+	public final String MONTHLY_ON_WEEK_DAY ="2";
 	
+	public final String INPUT_CREATE = "create";
+	public final String INPUT_EDIT = "edit";
 	//MeetingTypes
 	public final Short INTEREST_CALC_FREQ = 2;
 	public final Short INTEREST_POST_FREQ = 3;
@@ -142,4 +144,7 @@ public interface MeetingConstants {
 	public final String INVALID_WEEKDAY="errors.Meeting.invalidWeekDay";
 	public final String INVALID_WEEKDAY_OR_WEEKRANK="errors.Meeting.invalidWeekDayOrWeekRank";
 	public final String INVALID_DAYNUMBER_OR_WEEK="errors.Meeting.invalidDayNumberOrWeek";
+	public final String ERRORS_SPECIFY_WEEKDAY_AND_RECURAFTER="errors.Meeting.specifyWeekDayAndRecurAfter";
+	public final String ERRORS_SPECIFY_DAYNUM_AND_RECURAFTER="errors.Meeting.specifyDayNumAndRecurAfter";
+	public final String ERRORS_SPECIFY_MONTHLY_MEETING_ON_WEEKDAY="errors.Meeting.specifyMonthlyMeetingOnWeekDay";
 }
