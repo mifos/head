@@ -7,11 +7,12 @@ require 'win32ole'
 require 'modules/common/TestClass'
 require 'modules/logger/example_logger1'
 require 'mysql'
-require 'test/unit/ui/console/testrunner'
+#require 'test/unit/ui/console/testrunner'
 require 'test/unit/assertions'
 class CenterCreateEdit < TestClass
   #connecting to database
   def database_connection()
+    start()
     db_connect()
     dbquery("select o.search_id from office o,personnel p where o.office_id=p.office_id and p.login_name='"+$validname+"'")
     @@search_id=dbresult[0]
@@ -616,9 +617,9 @@ class CenterCreateEdit < TestClass
   begin
     $ie.wait(10)
     assert($ie.contains_text(@@centerprop['center.SeeAllNotesLink ']))
-    $logger.log_results(@@centerprop['center.SeeAllNotesLink '],"Link should Exist","Existed","Passed")
+    $logger.log_results(@@centerprop['center.SeeAllNotesLink'],"Link should Exist","Existed","Passed")
   rescue=>e
-    $logger.log_results(@@centerprop['center.SeeAllNotesLink '],"Link should Exist","Not Existed","Failed")
+    $logger.log_results(@@centerprop['center.SeeAllNotesLink'],"Link should Exist","Not Existed","Failed")
   end
  end
 
