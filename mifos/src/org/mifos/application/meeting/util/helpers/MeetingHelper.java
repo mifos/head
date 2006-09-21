@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.mifos.application.meeting.util.helpers;
 
@@ -19,7 +19,7 @@ public class MeetingHelper {
 
 	/**
 	 * This function returns the meeting object based on the passed values
-	 * 
+	 *
 	 * @param frequency
 	 * @param recurAfter
 	 * @param meetingTypeId
@@ -62,7 +62,7 @@ public class MeetingHelper {
 		Meeting meetingToReturn = new Meeting();
 		meetingToReturn.setMeetingStartDate(M2meeting.getMeetingStartDate());
 		meetingToReturn.setMeetingPlace(M2meeting.getMeetingPlace());
-		
+
 		if(M2meeting.getMeetingType()!=null){
 			MeetingType meetingType = new MeetingType();
 			meetingType.setMeetingTypeId(M2meeting.getMeetingType()
@@ -100,11 +100,12 @@ public class MeetingHelper {
 		return meetingToReturn;
 
 	}
-	
+
 	//TODO: remove following method when integrating meeting with modules
 	public static MeetingBO convertMeetingM1oM2(Meeting meeting){
 		MeetingBO meetingToReturn = null;
-		org.mifos.application.meeting.util.helpers.MeetingType meetingType = org.mifos.application.meeting.util.helpers.MeetingType.getMeetingType(meeting.getMeetingType().getMeetingTypeId());
+		//org.mifos.application.meeting.util.helpers.MeetingType meetingType = org.mifos.application.meeting.util.helpers.MeetingType.getMeetingType(meeting.getMeetingType().getMeetingTypeId());
+		org.mifos.application.meeting.util.helpers.MeetingType meetingType = org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMERMEETING;
 		org.mifos.application.meeting.util.helpers.RecurrenceType recurrenceType = org.mifos.application.meeting.util.helpers.RecurrenceType.getRecurrenceType(meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
 		Short recurAfter = meeting.getMeetingDetails().getRecurAfter();
 		try{
@@ -115,7 +116,7 @@ public class MeetingHelper {
 				else
 					meetingToReturn = new MeetingBO(WeekDay.getWeekDay(meeting.getMeetingDetails().getMeetingRecurrence().getWeekDay()),RankType.getRankType(meeting.getMeetingDetails().getMeetingRecurrence().getRankOfDays()),
 							recurAfter, meeting.getMeetingStartDate().getTime(), meetingType, meeting.getMeetingPlace());
-			}				
+			}
 			else if(recurrenceType.equals(org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY))
 				meetingToReturn = new MeetingBO(WeekDay.getWeekDay(meeting.getMeetingDetails()
 						.getMeetingRecurrence().getWeekDay()), recurAfter, meeting.getMeetingStartDate().getTime(), meetingType, meeting.getMeetingPlace() );

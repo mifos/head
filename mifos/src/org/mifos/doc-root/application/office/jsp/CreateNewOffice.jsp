@@ -5,31 +5,33 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
+
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
 
 		<script language="javascript">
 /*
- * This function is called when user press the cancel button 
+ * This function is called when user press the cancel button
  */
 function goToCancelPage(){
 	document.offActionForm.method.value="load";
 	document.offActionForm.action="AdminAction.do";
 	offActionForm.submit();
-	
-	
+
+
   }
 /*
  * This function is called when user press the officeType in office Type
  * select box
  */
-  
+
   function papulateParent(selectBox)
   {
   		if(selectBox.selectedIndex > 0)
   		{
 		  document.offActionForm.method.value="loadParent";
-		  offActionForm.submit();		
+		  offActionForm.submit();
 		}
 		else
 		{
@@ -124,9 +126,9 @@ function goToCancelPage(){
 										/></td>
 									<td><mifos:select property="officeLevel"
 										onchange="return papulateParent(this)" >
-										<html-el:options collection="OfficeLevelList"
-											property="levelId" labelProperty="levelName" />
-
+										<c:forEach var="levelList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'OfficeLevelList')}" >
+											<html-el:option value="${levelList.levelId}">${levelList.levelName}</html-el:option>
+										</c:forEach>
 									</mifos:select></td>
 								</tr>
 								<tr class="fontnormal">
@@ -134,10 +136,10 @@ function goToCancelPage(){
 										name="Office.labelParentOffice" mandatory="yes"
 										/></td>
 									<td><mifos:select property="parentOfficeId">
-										<c:if test="${not empty sessionScope.Parents}">
-											<html-el:options collection="Parents" property="officeId"
-												labelProperty="displayName" />
-
+										<c:if test="${not empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'Parents')}">
+										<c:forEach var="parentList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'Parents')}" >
+											<html-el:option value="${parentList.officeId}">${parentList.displayName}</html-el:option>
+										</c:forEach>
 										</c:if>
 
 									</mifos:select></td>
@@ -213,7 +215,7 @@ function goToCancelPage(){
 							</table>
 							<br>
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
-								<c:if test="${!empty customFields}">
+								<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 									<tr>
 										<td colspan="2" class="fontnormalbold"><mifos:mifoslabel
 											name="Office.labelAdditionInformation"
@@ -222,7 +224,7 @@ function goToCancelPage(){
 										</td>
 									</tr>
 								</c:if>
-								<c:forEach var="cf" items="${customFields}"
+								<c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}"
 									varStatus="loopStatus">
 									<bean:define id="ctr">
 										<c:out value="${loopStatus.index}" />
@@ -231,7 +233,7 @@ function goToCancelPage(){
 										<td width="21%" align="right"><mifos:mifoslabel
 											name="${cf.lookUpEntity.entityType}"
 											mandatory="${cf.mandatoryStringValue}"
-											bundle="OfficeResources"></mifos:mifoslabel>: 
+											bundle="OfficeResources"></mifos:mifoslabel>:
 										</td>
 										<td width="79%"><c:if test="${cf.fieldType == 1}">
 											<mifos:mifosnumbertext name="offActionForm"
@@ -284,6 +286,7 @@ function goToCancelPage(){
 			<html-el:hidden property="method" value="preview" />
 			<!-- hidden veriable which will set input veriable -->
 			<html-el:hidden property="input" value="create" />
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<br>
 			<br>
 

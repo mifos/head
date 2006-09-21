@@ -51,7 +51,6 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
-import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.struts.actionforms.EditCustomerStatusActionForm;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
@@ -62,12 +61,7 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PageExpiredException;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.StatesInitializationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
@@ -101,6 +95,7 @@ public class EditCustomerStatusAction extends BaseAction {
 
 	}
 
+	@TransactionDemarcate (saveToken = true)
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -110,28 +105,28 @@ public class EditCustomerStatusAction extends BaseAction {
 				.getCustomer(((EditCustomerStatusActionForm) form)
 						.getCustomerIdValue());
 		loadInitialData(form, customerBO, getUserContext(request));
-		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request
-				.getSession());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request
-				.getSession());
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request);
 
 		SessionUtils.setAttribute(SavingsConstants.STATUS_LIST, customerService
 				.getStatusList(customerBO.getCustomerStatus(),
 						customerBO.getLevel(), getUserContext(
-								request).getLocaleId()), request.getSession());
+								request).getLocaleId()), request);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
+	@TransactionDemarcate (joinToken = true)
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-			throws Exception, NumberFormatException {
+			throws Exception {
 		logger.debug("In EditCustomerStatusAction:preview()");
 		CustomerBO customerBO = (CustomerBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
+				Constants.BUSINESS_KEY, request);
 		setStatusDetails(form, customerBO, request, getUserContext(request));
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 
+	@TransactionDemarcate (joinToken = true)
 	public ActionForward previous(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -140,6 +135,7 @@ public class EditCustomerStatusAction extends BaseAction {
 	}
 
 	@CloseSession
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("In EditCustomerStatusAction:update()");
@@ -147,6 +143,7 @@ public class EditCustomerStatusAction extends BaseAction {
 		return mapping.findForward(getDetailAccountPage(form));
 	}
 
+	@TransactionDemarcate (validateAndResetToken = true)
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -211,6 +208,7 @@ public class EditCustomerStatusAction extends BaseAction {
 		return mapping.findForward(getDetailAccountPage(form));
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response){
 		logger.debug("In EditCustomerStatusAction:validate()");
@@ -235,7 +233,7 @@ public class EditCustomerStatusAction extends BaseAction {
 	}
 
 	private void setStatusDetails(ActionForm form, CustomerBO customerBO,
-			HttpServletRequest request, UserContext userContext) throws ApplicationException, SystemException{
+			HttpServletRequest request, UserContext userContext) throws Exception {
 		EditCustomerStatusActionForm statusActionForm = (EditCustomerStatusActionForm) form;
 		statusActionForm.setCommentDate(DateHelper.getCurrentDate(userContext
 				.getPereferedLocale()));
@@ -245,7 +243,7 @@ public class EditCustomerStatusAction extends BaseAction {
 				.getStatusChecklist(statusActionForm.getNewStatusIdValue(),
 						statusActionForm.getLevelIdValue());
 		SessionUtils.setAttribute(SavingsConstants.STATUS_CHECK_LIST,
-				checklist, request.getSession());
+				checklist, request);
 		newStatusName = getStatusName(customerBO, userContext.getLocaleId(),
 				statusActionForm.getNewStatusId(), statusActionForm
 						.getNewStatusIdValue());
@@ -254,9 +252,8 @@ public class EditCustomerStatusAction extends BaseAction {
 						.getNewStatusIdValue(), statusActionForm
 						.getFlagIdValue());
 		SessionUtils.setAttribute(SavingsConstants.NEW_STATUS_NAME,
-				newStatusName, request.getSession());
-		SessionUtils.setAttribute(SavingsConstants.FLAG_NAME, flagName, request
-				.getSession());
+				newStatusName, request);
+		SessionUtils.setAttribute(SavingsConstants.FLAG_NAME, flagName, request);
 
 	}
 
@@ -281,7 +278,7 @@ public class EditCustomerStatusAction extends BaseAction {
 
 	private void setCustomerStatusDetails(ActionForm form,
 			CustomerBO customerBO, HttpServletRequest request,
-			UserContext userContext) throws PageExpiredException, PersistenceException{
+			UserContext userContext) throws Exception {
 		EditCustomerStatusActionForm statusActionForm = (EditCustomerStatusActionForm) form;
 		statusActionForm.setCommentDate(DateHelper.getCurrentDate(userContext
 				.getPereferedLocale()));
@@ -369,7 +366,7 @@ public class EditCustomerStatusAction extends BaseAction {
 	}
 
 	private void loadInitialData(ActionForm form, CustomerBO customerBO,
-			UserContext userContext) throws StatesInitializationException {
+			UserContext userContext) throws Exception {
 		customerBO.setUserContext(userContext);
 		customerService.initializeStateMachine(userContext.getLocaleId(),
 				customerBO.getOffice().getOfficeId(),AccountTypes.CUSTOMERACCOUNT,customerBO.getLevel());

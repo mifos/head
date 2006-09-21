@@ -31,23 +31,23 @@ public class CustomerTestSuite extends MifosTestSuite {
 
 	public CustomerTestSuite() throws Exception {
 		super();
-		
+
 	}
 	public static void main(String[] args){
 		try{
 			Test testSuite = suite();
-			TestRunner.run (testSuite);	
+			TestRunner.run (testSuite);
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	public static Test suite()throws Exception
 	{
 		CustomerTestSuite testSuite = new CustomerTestSuite();
-		testSuite.addTestSuite(TestCenterPersistence.class);
+		/*testSuite.addTestSuite(TestCenterPersistence.class);
 		testSuite.addTestSuite(TestCustomerPersistence.class);
 		testSuite.addTestSuite(TestCustomerBusinessService.class);
 		testSuite.addTestSuite(TestCustomerTrxnDetailEntity.class);
@@ -68,8 +68,9 @@ public class CustomerTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(GroupActionTest.class);
 		testSuite.addTestSuite(GroupBOTest.class);
 		testSuite.addTestSuite(CustActionTest.class);
-		testSuite.addTestSuite(GroupTransferActionTest.class);
+		testSuite.addTestSuite(GroupTransferActionTest.class);*/
+		testSuite.addTestSuite(CenterActionTest.class);
 		return testSuite;
-		
+
 	}
 }

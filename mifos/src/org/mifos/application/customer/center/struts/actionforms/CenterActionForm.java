@@ -68,9 +68,11 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.actionforms.MifosSearchActionForm;
 import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.valueobjects.Context;
 
@@ -80,23 +82,6 @@ import org.mifos.framework.util.valueobjects.Context;
 
 public class CenterActionForm extends  MifosSearchActionForm {
 
-
-	/***
-	 * Constructor: All the composition objects are intialized within the contructor
-	 *
-	 */
-	public CenterActionForm(){
-		customerAddressDetail = new CustomerAddressDetail();
-		customFieldSet =new ArrayList<CustomerCustomField>();
-		customerAccount = new CustomerAccount();
-		customerMeeting = new CustomerMeeting();
-		office = new Office();
-		customerNote = new CustomerNote();
-		customerPositions = new ArrayList<CustomerPosition>();
-		selectedItems = new String[10];
-		selectedFeeAmntList = new String[10];
-		logger = MifosLogManager.getLogger(LoggerConstants.CENTERLOGGER);
-	}
 
 	private Office office;
 
@@ -166,12 +151,29 @@ public class CenterActionForm extends  MifosSearchActionForm {
 	/**Denotes the amounts for the list of additional fees. These will be set as hidden variables*/
 	private String[] selectedFeeAmntList ;
 
+	/***
+	 * Constructor: All the composition objects are intialized within the contructor
+	 *
+	 */
+	public CenterActionForm(){
+		customerAddressDetail = new CustomerAddressDetail();
+		customFieldSet =new ArrayList<CustomerCustomField>();
+		customerAccount = new CustomerAccount();
+		customerMeeting = new CustomerMeeting();
+		office = new Office();
+		customerNote = new CustomerNote();
+		customerPositions = new ArrayList<CustomerPosition>();
+		selectedItems = new String[10];
+		selectedFeeAmntList = new String[10];
+		logger = MifosLogManager.getLogger(LoggerConstants.CENTERLOGGER);
+	}
+
 	/**An instance of the logger which is used to log statements */
 	private MifosLogger logger;
 	 private int listSize;
 	 private String initialSearch;
 	 private String[] fieldTypeList;
-	
+
 
 	/**
 	 * Method which returns the listSize
@@ -253,7 +255,7 @@ public class CenterActionForm extends  MifosSearchActionForm {
 	public void setLoanOfficerId(String loanOfficerId) {
 		this.loanOfficerId = loanOfficerId;
 	}
-	
+
 	public void setCustomField(int index , short fieldId)
 	{
 
@@ -684,7 +686,7 @@ public class CenterActionForm extends  MifosSearchActionForm {
 						errors = new ActionErrors();
 						errors.add(CustomerConstants.INCOMPLETE_CHECKLIST_EXCEPTION,new ActionMessage(CustomerConstants.INCOMPLETE_CHECKLIST_EXCEPTION));
 					}
-				
+
 				}
 
 				request.setAttribute(Constants.SKIPVALIDATION,Boolean.valueOf(true));
@@ -713,11 +715,11 @@ public class CenterActionForm extends  MifosSearchActionForm {
 
 					}
 					//checking for duplicacy in the list of selected additional fees
-					
+
 					checkForDuplicatePeriodicFeeExist(request,errors);
 					//validating mandatory custom fields
 					errors = validateCustomFields(request ,errors);
-					
+
 					return errors;
 			}
 			else if(CustomerConstants.METHOD_PREVIEW.equals(methodCalled) && CenterConstants.INPUT_MANAGE.equals(input)){
@@ -726,9 +728,9 @@ public class CenterActionForm extends  MifosSearchActionForm {
 					if( statusId != CustomerConstants.INACTIVE_STATE){
 						logger.debug("inside preview and manage and active status");
 						if(ValidateMethods.isNullOrBlank(loanOfficerId)){
-							
+
 							errors.add(CustomerConstants.LOAN_OFFICER_BLANK_EXCEPTION,new ActionMessage(CustomerConstants.LOAN_OFFICER_BLANK_EXCEPTION));
-							
+
 						}
 					}
 					//validating mandatory custom fields
@@ -744,58 +746,72 @@ public class CenterActionForm extends  MifosSearchActionForm {
 
 		return null;
 	}
-	
+
 	private ActionErrors checkForDuplicatePeriodicFeeExist(HttpServletRequest request, ActionErrors errors) {
-		Context context=(Context)SessionUtils.getAttribute(Constants.CONTEXT , request.getSession());
-		List<FeeMaster> selectedFeeMaster=((List)context.getSearchResultBasedOnName(CenterConstants.FEES_LIST).getValue());
-		   for(FeeMaster selectedFee : selectedFeeList){
-			   List<FeeMaster> duplicateselectedFeeList = selectedFeeList;
-			   int i=0;
-			   for(FeeMaster duplicateFees : duplicateselectedFeeList){
-				   if(selectedFee.getFeeId() != null && selectedFee.getFeeId().equals(duplicateFees.getFeeId())){
-					   Short feeFrequencyType=null;
-					   for(FeeMaster feeMaster : selectedFeeMaster){
-						   if(selectedFee.getFeeId().equals(feeMaster.getFeeId()))
-						   {
-							   feeFrequencyType=feeMaster.getFeeFrequencyTypeId();
-							   break;
+		try {
+			Context context=(Context)SessionUtils.getAttribute(Constants.CONTEXT , request);
+			List<FeeMaster> selectedFeeMaster=((List)context.getSearchResultBasedOnName(CenterConstants.FEES_LIST).getValue());
+			   for(FeeMaster selectedFee : selectedFeeList){
+				   List<FeeMaster> duplicateselectedFeeList = selectedFeeList;
+				   int i=0;
+				   for(FeeMaster duplicateFees : duplicateselectedFeeList){
+					   if(selectedFee.getFeeId() != null && selectedFee.getFeeId().equals(duplicateFees.getFeeId())){
+						   Short feeFrequencyType=null;
+						   for(FeeMaster feeMaster : selectedFeeMaster){
+							   if(selectedFee.getFeeId().equals(feeMaster.getFeeId()))
+							   {
+								   feeFrequencyType=feeMaster.getFeeFrequencyTypeId();
+								   break;
+							   }
 						   }
-					   }
-					   if(feeFrequencyType!=null  && feeFrequencyType.equals(FeeFrequencyType.PERIODIC.getValue())){
-						   i++;
-						   if(i>=2) {
-							   errors.add(CustomerConstants.DUPLICATE_FEE_EXCEPTION,new ActionMessage(CustomerConstants.DUPLICATE_FEE_EXCEPTION));
-						   	   return errors;
+						   if(feeFrequencyType!=null  && feeFrequencyType.equals(FeeFrequencyType.PERIODIC.getValue())){
+							   i++;
+							   if(i>=2) {
+								   errors.add(CustomerConstants.DUPLICATE_FEE_EXCEPTION,new ActionMessage(CustomerConstants.DUPLICATE_FEE_EXCEPTION));
+							   	   return errors;
+							   }
 						   }
 					   }
 				   }
 			   }
-		   }
-		
-		return errors;
-	}
-	
-	private ActionErrors validateCustomFields(HttpServletRequest request, ActionErrors errors) {
-		Context context=(Context)SessionUtils.getAttribute(Constants.CONTEXT , request.getSession());
-		List<CustomFieldDefinition> customFields = (List)context.getSearchResultBasedOnName(CustomerConstants.CUSTOM_FIELDS_LIST).getValue();
-		for(int i=0;i<customFieldSet.size();i++){
-			for(int j=0;j<customFields.size();j++){
-				if(customFieldSet.get(i).getFieldId().shortValue() == customFields.get(j).getFieldId().shortValue() 
-					&& customFields.get(j).isMandatory()){
-					if(ValidateMethods.isNullOrBlank(customFieldSet.get(i).getFieldValue())){
-						if(errors==null){
-							errors =new ActionErrors();
-						}
-						errors.add(CustomerConstants.ERROR_CUSTOMFIELD_REQUIRED,new ActionMessage(CustomerConstants.ERROR_CUSTOMFIELD_REQUIRED));
-						
-					}
-					break;
-				}
-				
-			}
-		
+
+			return errors;
+		} catch (PageExpiredException pee) {
+			errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
+					new ActionMessage(
+							ExceptionConstants.PAGEEXPIREDEXCEPTION));
+			return errors;
 		}
-		return errors;
+	}
+
+	private ActionErrors validateCustomFields(HttpServletRequest request, ActionErrors errors) {
+		try {
+			Context context=(Context)SessionUtils.getAttribute(Constants.CONTEXT , request);
+			List<CustomFieldDefinition> customFields = (List)context.getSearchResultBasedOnName(CustomerConstants.CUSTOM_FIELDS_LIST).getValue();
+			for(int i=0;i<customFieldSet.size();i++){
+				for(int j=0;j<customFields.size();j++){
+					if(customFieldSet.get(i).getFieldId().shortValue() == customFields.get(j).getFieldId().shortValue()
+						&& customFields.get(j).isMandatory()){
+						if(ValidateMethods.isNullOrBlank(customFieldSet.get(i).getFieldValue())){
+							if(errors==null){
+								errors =new ActionErrors();
+							}
+							errors.add(CustomerConstants.ERROR_CUSTOMFIELD_REQUIRED,new ActionMessage(CustomerConstants.ERROR_CUSTOMFIELD_REQUIRED));
+
+						}
+						break;
+					}
+
+				}
+
+			}
+			return errors;
+		} catch (PageExpiredException pee) {
+			errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
+					new ActionMessage(
+							ExceptionConstants.PAGEEXPIREDEXCEPTION));
+			return errors;
+		}
 	}
 
 	/**

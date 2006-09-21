@@ -5,6 +5,7 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
@@ -16,20 +17,20 @@ function goToCancelPage(){
   }
 function getOffice(officeid){
 	document.offActionForm.method.value="get";
-	document.offActionForm.officeId.value=officeid;	
-	document.offActionForm.action="offAction.do";	
+	document.offActionForm.officeId.value=officeid;
+	document.offActionForm.action="offAction.do";
 	offActionForm.submit();
   }
 function addNewOffice(officeType){
 	document.offActionForm.method.value="load";
 	document.offActionForm.officeLevel.value=officeType;
 	offActionForm.submit();
-  }  
+  }
 function addNewOfficeBlank(){
 	document.offActionForm.method.value="load";
 	document.offActionForm.officeLevel.value="";
 	offActionForm.submit();
-  }  
+  }
    function  submitAdminLink()
 {
 		document.offActionForm.method.value="load";
@@ -69,7 +70,7 @@ function addNewOfficeBlank(){
 								bundle="OfficeResources" /></font> </span> <c:set
 								var="regional" /> <c:set var="divisional" /> <c:set var="area" />
 							<!-- start main loop from here --> <c:forEach var="office"
-								items="${headOfficeList}">
+								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'headOfficeList')}">
 								<!-- for head office -->
 								<c:if test="${office.level.id == OfficeLevel.HEADOFFICE.value }">
 									<span class="fontnormalbold"> <html-el:link
@@ -78,12 +79,12 @@ function addNewOfficeBlank(){
 									</html-el:link> <br>
 									</span>
 								</c:if>
-							</c:forEach> 
-							
+							</c:forEach>
+
 							<c:set var="regionalConfig" scope="request" value="false" ></c:set>
 							<c:set var="subRegionalConfig" scope="request" value="false" ></c:set>
 							<c:set var="areaConfig" scope="request" value="false" ></c:set>
-							<c:forEach var="level" items="${sessionScope.OfficeLevelList}"> 
+							<c:forEach var="level" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'OfficeLevelList')}">
 							   <c:if test="${OfficeLevel.REGIONALOFFICE.value == level.levelId}">
 							     <c:set var="regionalConfig" scope="request" value="true" ></c:set>
 							   </c:if>
@@ -94,9 +95,10 @@ function addNewOfficeBlank(){
 							     <c:set var="areaConfig" scope="request" value="true" ></c:set>
 							   </c:if>
 							</c:forEach>
-							
+
 							<c:choose>
-								<c:when test="${empty regionalOfficeList && regionalConfig == 'true' }">
+								<c:when test="${empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'regionalOfficeList')
+									&& regionalConfig == 'true' }">
 									<br>
 									<table width="95%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
@@ -114,7 +116,7 @@ function addNewOfficeBlank(){
 									</table>
 								</c:when>
 								<c:otherwise>
-									<c:forEach var="office" items="${regionalOfficeList}">
+									<c:forEach var="office" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'regionalOfficeList')}">
 										<!-- for regional  office -->
 										<c:if
 											test="${office.level.id == OfficeLevel.REGIONALOFFICE.value && empty regional}">
@@ -154,11 +156,11 @@ function addNewOfficeBlank(){
 									</c:forEach>
 								</c:otherwise>
 							</c:choose>
-							
-							
-							
+
+
+
 							 <c:choose>
-								<c:when test="${empty divisionalOfficeList && subRegionalConfig == 'true' }">
+								<c:when test="${empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'divisionalOfficeList') && subRegionalConfig == 'true' }">
 									<br>
 									<table width="95%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
@@ -176,7 +178,7 @@ function addNewOfficeBlank(){
 									</table>
 								</c:when>
 								<c:otherwise>
-									<c:forEach var="office" items="${divisionalOfficeList}">
+									<c:forEach var="office" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'divisionalOfficeList')}">
 										<!-- for regional  office -->
 										<c:if
 											test="${office.level.id == OfficeLevel.SUBREGIONALOFFICE.value &&  empty divisional}">
@@ -216,7 +218,7 @@ function addNewOfficeBlank(){
 									</c:forEach>
 								</c:otherwise>
 							</c:choose> <c:choose>
-								<c:when test="${empty areaOfficeList && areaConfig == 'true'}">
+								<c:when test="${empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areaOfficeList') && areaConfig == 'true'}">
 									<br>
 									<table width="95%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
@@ -234,7 +236,7 @@ function addNewOfficeBlank(){
 									</table>
 								</c:when>
 								<c:otherwise>
-									<c:forEach var="office" items="${areaOfficeList}">
+									<c:forEach var="office" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areaOfficeList')}">
 										<!-- for regional  office -->
 										<c:if
 											test="${office.level.id == OfficeLevel.AREAOFFICE.value && empty area }">
@@ -275,7 +277,7 @@ function addNewOfficeBlank(){
 								</c:otherwise>
 							</c:choose> <c:set var="parentOffice" /> <c:set var="branch" />
 							<c:choose>
-								<c:when test="${empty branchOfficeList}">
+								<c:when test="${empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'branchOfficeList')}">
 									<c:set var="branch" value="level" />
 									<br>
 									<table width="95%" border="0" cellspacing="0" cellpadding="0">
@@ -294,7 +296,7 @@ function addNewOfficeBlank(){
 									</table>
 								</c:when>
 								<c:otherwise>
-									<c:forEach var="office" items="${branchOfficeList}"
+									<c:forEach var="office" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'branchOfficeList')}"
 										varStatus="counter">
 										<c:if
 											test="${office.level.id == OfficeLevel.BRANCHOFFICE.value && empty branch}">
@@ -359,7 +361,7 @@ function addNewOfficeBlank(){
 			<!-- hidden varible for office type -->
 			<html-el:hidden property="officeLevel" value=""/>
 			<html-el:hidden property="officeId" value="" />
-
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 
 	</tiles:put>

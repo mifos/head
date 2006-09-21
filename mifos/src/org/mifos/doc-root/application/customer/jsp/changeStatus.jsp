@@ -6,6 +6,7 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
@@ -32,6 +33,8 @@
  			 }
 		</script>
 		<html-el:form action="editCustomerStatusAction.do?method=preview">
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
+			   var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -54,7 +57,7 @@
 							<td class="headingorange"><span class="fontnormalbold"> <mifos:mifoslabel
 								name="accounts.currentstatus" />:<mifoscustom:MifosImage
 								id="${sessionScope.editCustomerStatusActionForm.currentStatusId}"
-								moduleName="customer" /></span> <span class="fontnormal"><c:out value="${sessionScope.BusinessKey.customerStatus.name}" />
+								moduleName="customer" /></span> <span class="fontnormal"><c:out value="${BusinessKey.customerStatus.name}" />
 								</span></td>
 						</tr>
 						<tr><logic:messagesPresent>
@@ -63,7 +66,7 @@
 						</tr>
 						<tr>
 							<td class="fontnormal"><br>
-							<mifos:mifoslabel name="Customer.SelectStatus"></mifos:mifoslabel> 
+							<mifos:mifoslabel name="Customer.SelectStatus"></mifos:mifoslabel>
 							<mifos:mifoslabel name="Customer.ClickContinue" ></mifos:mifoslabel>
 							<mifos:mifoslabel name="Customer.ClickCancel1"></mifos:mifoslabel>
 								<c:if test="${sessionScope.editCustomerStatusActionForm.levelId == CustomerLevel.CENTER.value}">
@@ -76,7 +79,7 @@
 									<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
 								</c:if>
 							<mifos:mifoslabel name="Customer.ClickCancel2"></mifos:mifoslabel>
-								
+
 								</td>
 						</tr>
 						<tr>
@@ -92,7 +95,7 @@
 							</td>
 							<td align="left" valign="top">
 							<table width="95%" border="0" cellpadding="0" cellspacing="0">
-								<c:forEach var="status" items="${sessionScope.statusList}"	varStatus="loopStatus">
+								<c:forEach var="status" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'statusList')}" varStatus="loopStatus">
 										<bean:define id="ctr">
 										<c:out value="${loopStatus.index}" />
 									</bean:define>
@@ -103,7 +106,7 @@
 										<td width="98%"><c:out value="${status.name}" /></td>
 									</tr>
 								</c:forEach>
-								<c:forEach var="status" items="${sessionScope.statusList}">
+								<c:forEach var="status" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'statusList')}">
 									<c:if test="${status.id == CustomerStatus.CLIENT_CANCELLED.value || status.id == CustomerStatus.CLIENT_CLOSED.value ||status.id == CustomerStatus.GROUP_CANCELLED.value || status.id == CustomerStatus.GROUP_CLOSED.value}">
 										<tr class="fontnormal">
 											<td align="center">&nbsp;</td>
@@ -113,7 +116,7 @@
 												</c:if>
 												<c:if test="${sessionScope.editCustomerStatusActionForm.levelId == CustomerLevel.GROUP.value}">
 													<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
-												</c:if>											
+												</c:if>
 												<mifos:mifoslabel name="Customer.SelectExplaination2" />
 												</td>
 										</tr>
@@ -122,8 +125,9 @@
 											<td><c:set var="flags" scope="request"
 												value="${status.flagSet}" /> <mifos:select
 												name="editCustomerStatusActionForm" property="flagId" size="1" disabled="true">
-												<html-el:options collection="flags" property="id"
-													labelProperty="flagDescription" />
+												<c:forEach var="flagsList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'flags')}" >
+													<html-el:option value="${flagsList.id}">${flagsList.flagDescription}</html-el:option>
+												</c:forEach>
 											</mifos:select></td>
 										</tr>
 									</c:if>
@@ -166,12 +170,13 @@
 					<br>
 					</td>
 				</tr>
-				
+
 			</table>
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 		<script language="javascript">
 				if(editCustomerStatusActionForm.newStatusId.length != undefined){
-					for(j=0;j<editCustomerStatusActionForm.newStatusId.length;j++){ 
+					for(j=0;j<editCustomerStatusActionForm.newStatusId.length;j++){
 						if (editCustomerStatusActionForm.newStatusId[j].checked) {
 							manageFlag(editCustomerStatusActionForm.newStatusId[j].value);
 						}

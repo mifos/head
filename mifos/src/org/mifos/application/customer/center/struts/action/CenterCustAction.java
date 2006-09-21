@@ -2,7 +2,7 @@
 
  * CenterCustomerAction.java    version: 1.0
 
- 
+
 
  * Copyright (c) 2005-2006 Grameen Foundation USA
 
@@ -10,27 +10,27 @@
 
  * All rights reserved.
 
- 
 
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
+ * See the License for the specific language governing permissions and limitations under the
 
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
+ * License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
 
- * and how it is applied. 
+ * and how it is applied.
 
  *
 
@@ -80,8 +80,6 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
@@ -89,6 +87,7 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class CenterCustAction extends CustAction {
 	@Override
@@ -106,6 +105,7 @@ public class CenterCustAction extends CustAction {
 				.getBusinessService(BusinessServiceName.Center);
 	}
 
+	@TransactionDemarcate(saveToken = true)
 	public ActionForward chooseOffice(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -113,6 +113,7 @@ public class CenterCustAction extends CustAction {
 				.toString());
 	}
 
+	@TransactionDemarcate(saveToken = true)
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -124,6 +125,7 @@ public class CenterCustAction extends CustAction {
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward loadMeeting(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -131,18 +133,21 @@ public class CenterCustAction extends CustAction {
 				.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward previous(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return mapping.findForward(ActionForwards.previous_success.toString());
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -152,7 +157,7 @@ public class CenterCustAction extends CustAction {
 		List<CustomFieldView> customFields = actionForm.getCustomFields();
 		UserContext userContext = getUserContext(request);
 		convertCustomFieldDateToUniformPattern(customFields, userContext.getPereferedLocale());
-		
+
 		CenterBO center = new CenterBO(userContext,
 				actionForm.getDisplayName(), actionForm.getAddress(),
 				customFields, actionForm.getFeesToApply(), actionForm
@@ -167,27 +172,27 @@ public class CenterCustAction extends CustAction {
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward manage(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		clearActionForm((CenterCustActionForm) form);
 		CenterBO center = (CenterBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
+				Constants.BUSINESS_KEY, request);
 		CenterBO centerBO = getCenterBusinessService().getCenter(center.getCustomerId());
 		center = null;
-		
+
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,centerBO
-				, request
-						.getSession());
+				, request);
 		loadUpdateMasterData(request , centerBO);
-		setValuesInActionForm((CenterCustActionForm) form, request);		
+		setValuesInActionForm((CenterCustActionForm) form, request);
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
 
 	private void setValuesInActionForm(CenterCustActionForm actionForm,
-			HttpServletRequest request) throws Exception{ 
+			HttpServletRequest request) throws Exception{
 		CenterBO center = (CenterBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
+				Constants.BUSINESS_KEY, request);
 		if(center.getPersonnel()!=null)
 			actionForm.setLoanOfficerId(center.getPersonnel().getPersonnelId()
 					.toString());
@@ -209,6 +214,7 @@ public class CenterCustAction extends CustAction {
 				.getCustomFields(), request));
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward editPreview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -216,28 +222,31 @@ public class CenterCustAction extends CustAction {
 				.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward editPrevious(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return mapping.findForward(ActionForwards.editprevious_success
 				.toString());
 	}
-	
+
 	@CloseSession
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		CenterBO center = (CenterBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
+				Constants.BUSINESS_KEY, request);
 		CenterCustActionForm actionForm = (CenterCustActionForm) form;
-		Date mfiJoiningDate = null; 
+		Date mfiJoiningDate = null;
 		if(actionForm.getMfiJoiningDate()!=null)
 			mfiJoiningDate = getDateFromString(actionForm.getMfiJoiningDate(), getUserContext(request)
 				.getPereferedLocale());
 		center.update(getUserContext(request), actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(), mfiJoiningDate, actionForm.getAddress(), actionForm.getCustomFields(), actionForm.getCustomerPositions());
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
-	
+
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -245,6 +254,7 @@ public class CenterCustAction extends CustAction {
 		return mapping.findForward(method + "_failure");
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
 		CenterCustActionForm actionForm = (CenterCustActionForm) form;
@@ -257,15 +267,14 @@ public class CenterCustAction extends CustAction {
 	}
 
 	private void loadCreateMasterData(CenterCustActionForm actionForm,
-			HttpServletRequest request) throws ApplicationException,
-			SystemException {
+			HttpServletRequest request) throws Exception {
 		loadLoanOfficers(actionForm.getOfficeIdValue(), request);
 		loadCreateCustomFields(actionForm, request);
 		loadFees(actionForm, request, FeeCategory.CENTER);
 	}
 
 	private void loadUpdateMasterData(HttpServletRequest request ,CenterBO center)
-			throws ApplicationException, SystemException {
+			throws Exception {
 		loadLoanOfficers(center.getOffice().getOfficeId(), request);
 		loadCustomFieldDefinitions(request);
 		loadPositions(request);
@@ -273,13 +282,12 @@ public class CenterCustAction extends CustAction {
 	}
 
 	private void loadCreateCustomFields(CenterCustActionForm actionForm,
-			HttpServletRequest request) throws SystemException, ApplicationException {
+			HttpServletRequest request) throws Exception {
 		loadCustomFieldDefinitions(request);
 		// Set Default values for custom fields
-		List<CustomFieldDefinitionEntity> customFieldDefs = 
+		List<CustomFieldDefinitionEntity> customFieldDefs =
 			(List<CustomFieldDefinitionEntity>) SessionUtils
-				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request
-						.getSession());
+				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
 		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
 
 		for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
@@ -299,69 +307,65 @@ public class CenterCustAction extends CustAction {
 	}
 
 	private void loadCustomFieldDefinitions(HttpServletRequest request)
-			throws SystemException, ApplicationException {
+			throws Exception {
 		MasterDataService masterDataService = (MasterDataService) ServiceFactory
 				.getInstance().getBusinessService(
 						BusinessServiceName.MasterDataService);
 		List<CustomFieldDefinitionEntity> customFieldDefs = masterDataService
 				.retrieveCustomFieldsDefinition(EntityType.CENTER);
 		SessionUtils.setAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,
-				customFieldDefs, request.getSession());
+				customFieldDefs, request);
 	}
 
+	@TransactionDemarcate (saveToken = true)
 	public ActionForward get(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		CenterCustActionForm actionForm = (CenterCustActionForm) form;
-		
-		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request.getSession());
+
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
 		CustomerBusinessService customerBusinessService = ((CustomerBusinessService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.Customer));
 		CenterBO centerBO =(CenterBO) customerBusinessService.getBySystemId(actionForm.getGlobalCustNum(),CustomerLevel.CENTER.getValue());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY,centerBO
-				, request
-						.getSession());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, centerBO, request);
 		centerBO.getCustomerStatus().setLocaleId(getUserContext(request).getLocaleId());
-		SessionUtils.setAttribute(CenterConstants.GROUP_LIST,centerBO.getChildren(CustomerLevel.GROUP, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED),request
-				.getSession());
-		
+		SessionUtils.setAttribute(CenterConstants.GROUP_LIST,centerBO.getChildren(CustomerLevel.GROUP, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED),request);
+
 	  CenterPerformanceHistory centerPerformanceHistory = 	customerBusinessService.getCenterPerformanceHistory(centerBO.getSearchId(),centerBO.getOffice().getOfficeId());
-	  SessionUtils.setAttribute(CenterConstants.PERFORMANCE_HISTORY,centerPerformanceHistory,request
-				.getSession());
-	  
-	  //set localeId in center saving accounts 
-	  
+	  SessionUtils.setAttribute(CenterConstants.PERFORMANCE_HISTORY,centerPerformanceHistory,request);
+
+	  //set localeId in center saving accounts
+
 	  loadCustomFieldDefinitions(request);
-	  
+
 	  UserContext userContext = getUserContext(request);
 	  //setLocaleIdToSavingsStatus(centerBO.getActiveSavingsAccounts(),userContext.getLocaleId());
 	  loadMasterDataForDetailsPage(request,centerBO,getUserContext(request).getLocaleId());
 	  initCustomerPosition(centerBO,userContext.getLocaleId());
-	  //	TODO : get value object 
+	  //	TODO : get value object
 	  CenterDAO centerDAO =  new CenterDAO();
 	  Center center = centerDAO.findBySystemId(centerBO.getGlobalCustNum());
-	  
-	  
+
+
 	  SessionUtils.setAttribute("CustomerVO",center
-				, request
-						.getSession());  
-	  
-	  SessionUtils.setAttribute(CustomerConstants.LINK_VALUES,getLinkValues(center),request
-						.getSession());
+				, request);
+
+	  SessionUtils.setAttribute(CustomerConstants.LINK_VALUES,getLinkValues(center),request);
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
-	
-	private void loadMasterDataForDetailsPage(HttpServletRequest request,CenterBO centerBO,Short localeId) {
+
+	private void loadMasterDataForDetailsPage(HttpServletRequest request,CenterBO centerBO,Short localeId)
+	throws Exception {
 		List<SavingsBO> savingsAccounts = centerBO.getOpenSavingAccounts();
 		setLocaleIdToSavingsStatus(savingsAccounts, localeId);
 		SessionUtils.setAttribute(ClientConstants.CUSTOMERSAVINGSACCOUNTSINUSE,
-				savingsAccounts, request.getSession());
+				savingsAccounts, request);
 	}
-	
+
 	private void initCustomerPosition(CenterBO centerBO,Short localeId){
-		
+
 		for (CustomerPositionEntity customerPosition : centerBO.getCustomerPositions()) {
-			
+
 			customerPosition.getPosition().setLocaleId(localeId);
 		}
 	}
@@ -375,10 +379,9 @@ public class CenterCustAction extends CustAction {
 		account.getAccountState().setLocaleId(localeId);
 	}
 	private void doCleanUp(CenterCustActionForm actionForm,
-			HttpServletRequest request) {
+			HttpServletRequest request) throws Exception {
 		clearActionForm(actionForm);
-		SessionUtils.setAttribute(CenterConstants.CENTER_MEETING, null, request
-				.getSession());
+		SessionUtils.setAttribute(CenterConstants.CENTER_MEETING, null, request.getSession());
 	}
 
 	private void clearActionForm(CenterCustActionForm actionForm) {
@@ -394,8 +397,8 @@ public class CenterCustAction extends CustAction {
 		actionForm.setExternalId(null);
 		actionForm.setLoanOfficerId(null);
 	}
-	
-	//TODO: remove this function after complete migration 
+
+	//TODO: remove this function after complete migration
 	LinkParameters getLinkValues(Center center){
 		LinkParameters linkParams = new LinkParameters();
 		linkParams.setCustomerId(center.getCustomerId());

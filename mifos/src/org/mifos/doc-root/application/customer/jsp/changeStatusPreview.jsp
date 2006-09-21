@@ -7,6 +7,7 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
@@ -29,7 +30,7 @@
 						</span>
 					</td>
 				</tr>
-			</table> 
+			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td align="left" valign="top" class="paddingL15T15">
@@ -45,9 +46,9 @@
 							</span> <span class="fontnormal"> <mifoscustom:MifosImage
 								id="${sessionScope.editCustomerStatusActionForm.newStatusId}"
 								moduleName="customer" /><c:out
-								value="${sessionScope.newStatusName}" /> <c:if
-								test="${!empty sessionScope.flagName}">
-                     	- <c:out value="${sessionScope.flagName}" />
+								value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'newStatusName')}" /> <c:if
+								test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'flagName')}">
+                     	- <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'flagName')}" />
 							</c:if></span></td>
 						</tr>
 						<tr><logic:messagesPresent>
@@ -59,12 +60,12 @@
 							<span class="fontnormalbold"> <c:out
 								value="${sessionScope.editCustomerStatusActionForm.commentDate}" />
 							</span> <span class="fontnormal"><br>
-							<c:out value="${sessionScope.editCustomerStatusActionForm.notes}"/>&nbsp;-</span> 
+							<c:out value="${sessionScope.editCustomerStatusActionForm.notes}"/>&nbsp;-</span>
 							<em><c:out
 								value="${sessionScope.UserContext.name}" /></em>
 							</td>
 						</tr>
-						<c:if test="${!empty sessionScope.checklist}">
+						<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checklist')}">
 							<tr>
 								<td class="blueline"><img src="pages/framework/images/trans.gif"
 									width="10" height="12"></td>
@@ -92,10 +93,10 @@
 						</c:if>
 					</table>
 					<br>
-					 <c:if test="${!empty sessionScope.checklist}">
+					 <c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checklist')}">
 						<table width="95%" border="0" cellpadding="3" cellspacing="0">
-							<c:forEach var="chklist" items="${sessionScope.checklist}">
-								<c:forEach var="chklistDetail" items="${chklist.checklistDetailSet}"> 
+							<c:forEach var="chklist" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checklist')}">
+								<c:forEach var="chklistDetail" items="${chklist.checklistDetailSet}">
 									<bean:size collection="${chklist.checklistDetailSet}" id="listSize" />
 									<html-el:hidden property="chklistSize"	value="${pageScope.listSize}" />
 								<tr class="fontnormal">
@@ -104,13 +105,13 @@
 										<td width="2%" valign="top"><c:out
 											value="${chklistDetail.detailId}" /></td>
 									</html-el:multibox>
-									<c:out value="${chklistDetail.detailText}" /> 
+									<c:out value="${chklistDetail.detailText}" />
 								</tr>
 								</c:forEach>
 							</c:forEach>
 						</table>
-					</c:if>  
-					
+					</c:if>
+
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td style="padding-top:5px;"><html-el:button property="editInfo"
@@ -138,9 +139,9 @@
 					</table>
 					<br>
 					</td>
-					
+
 			</table>
-			
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

@@ -6,9 +6,14 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
+
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 		<script language="javascript">
+function goToPreviewPage() {
+	document.offActionForm.method.value="editpreview";
+}
 function goToCancelPage(){
 	document.offActionForm.method.value="get";
 	offActionForm.submit();
@@ -16,23 +21,23 @@ function goToCancelPage(){
 	}
   function papulateParent()
   {
-		
+
 		document.offActionForm.method.value="loadParent";
 		document.offActionForm.method.value="edit";
-		offActionForm.submit();		
-  }	
+		offActionForm.submit();
+  }
    function submitViewOfficesLink(){
 	document.offActionForm.method.value="getAllOffices";
-	document.offActionForm.action="offAction.do";	
-		
+	document.offActionForm.action="offAction.do";
+
 	offActionForm.submit();
   }
 function getOffice(officeid){
 	document.offActionForm.method.value="get";
-	document.offActionForm.officeId.value=officeid;	
+	document.offActionForm.officeId.value=officeid;
 	document.offActionForm.action="offAction.do";
 	offActionForm.submit();
-  }  
+  }
    function  submitAdminLink()
 {
 		document.offActionForm.method.value="load";
@@ -98,20 +103,25 @@ function getOffice(officeid){
 								mandatory="yes" /></td>
 							<td><mifos:select name="offActionForm" property="officeLevel"
 								size="1" onchange="papulateParent()">
-								<html-el:options collection="OfficeLevelList" property="levelId"
-									labelProperty="levelName" />
+								<c:forEach var="levelList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'OfficeLevelList')}" >
+									<html-el:option value="${levelList.levelId}">${levelList.levelName}</html-el:option>
+								</c:forEach>
 							</mifos:select></td>
 						</tr>
 						<tr class="fontnormal">
 							<td align="right"><mifos:mifoslabel
 								name="Office.labelParentOffice" mandatory="yes" /></td>
-							<td><c:if test="${not empty Parents}">
-								<mifos:select name="offActionForm"
-									property="parentOfficeId" size="1"	>
-									<html-el:options collection="Parents" property="officeId"
-										labelProperty="displayName" />
+							<td>
+							<c:if test="${not empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'Parents')}">
+								<mifos:select name="officeActionForm"
+									property="formParentOffice" size="1"
+									value="${offActionForm.parentOfficeId}">
+									<c:forEach var="parentList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'Parents')}" >
+										<html-el:option value="${parentList.officeId}">${parentList.displayName}</html-el:option>
+									</c:forEach>
 								</mifos:select>
-							</c:if></td>
+							</c:if>
+							</td>
 						</tr>
 					</table>
 					<br>
@@ -131,16 +141,19 @@ function getOffice(officeid){
 									<html-el:select name="offActionForm" disabled="true"
 										property="officeStatus" size="1"
 										value="${offActionForm.officeStatus}">
-										<html-el:options collection="OfficeStatusList"
-											property="levelId" labelProperty="levelName" />
+										<c:forEach var="statusList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'OfficeStatusList')}" >
+											<html-el:option value="${statusList.levelId}">${statusList.levelName}</html-el:option>
+										</c:forEach>
 									</html-el:select>
 
 								</c:when>
 								<c:otherwise>
 									<html-el:select name="officeActionForm" property="officeStatus"
 										size="1" value="${offActionForm.officeStatus}">
-										<html-el:options collection="OfficeStatusList"
-											property="levelId" labelProperty="levelName" />
+										<c:forEach var="statusList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'OfficeStatusList')}" >
+											<html-el:option value="${statusList.levelId}">${statusList.levelName}</html-el:option>
+										</c:forEach>
+
 									</html-el:select>
 								</c:otherwise>
 							</c:choose></td>
@@ -235,7 +248,7 @@ function getOffice(officeid){
 						</c:if>
 						<!-- For each custom field definition in the list custom field entity is passed as key to mifos label -->
 						<c:forEach var="customFieldDef"
-							items="${customFields}" varStatus="loopStatus">
+							items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}" varStatus="loopStatus">
 							<bean:define id="ctr">
 								<c:out value="${loopStatus.index}" />
 							</bean:define>
@@ -246,7 +259,7 @@ function getOffice(officeid){
 										<td width="21%" align="right"><mifos:mifoslabel
 											name="${customFieldDef.lookUpEntity.entityType}"
 											mandatory="${customFieldDef.mandatoryStringValue}"
-											bundle="OfficeUIResources"></mifos:mifoslabel>: 
+											bundle="OfficeUIResources"></mifos:mifoslabel>:
 										</td>
 										<td width="79%"><c:if test="${customFieldDef.fieldType == 1}">
 											<mifos:mifosnumbertext name="offActionForm"
@@ -297,6 +310,7 @@ function getOffice(officeid){
 			<br>
 			<html-el:hidden property="method" value="editpreview" />
 			<html-el:hidden property="officeId" value="${BusinessKey.officeId}" />
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 
 	</tiles:put>

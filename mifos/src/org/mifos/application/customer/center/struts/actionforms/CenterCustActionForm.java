@@ -51,7 +51,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 
 public class CenterCustActionForm extends CustomerActionForm{
-	
+
 	@Override
 	protected ActionErrors validateFields(HttpServletRequest request, String method) throws ApplicationException{
 		ActionErrors errors = new ActionErrors();
@@ -63,7 +63,7 @@ public class CenterCustActionForm extends CustomerActionForm{
 			validateCustomFields(request,errors);
 			validateFees(request, errors);
 		}else if (method.equals(Methods.editPreview.toString())){
-			CenterBO center = (CenterBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request.getSession());
+			CenterBO center = (CenterBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request);
 			if(center.isActive())
 				validateLO(errors);
 			validateConfigurableMandatoryFields(request,errors,EntityType.CENTER);
@@ -71,9 +71,9 @@ public class CenterCustActionForm extends CustomerActionForm{
 		}
 		return errors;
 	}
-	
+		
 	@Override
 	protected MeetingBO getCustomerMeeting(HttpServletRequest request){
 		 return (MeetingBO)request.getSession().getAttribute(CenterConstants.CENTER_MEETING);		
-	}
+	}	
 }

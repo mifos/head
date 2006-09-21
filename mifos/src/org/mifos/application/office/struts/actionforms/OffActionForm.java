@@ -19,16 +19,20 @@ import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.util.Address;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class OffActionForm extends BaseActionForm {
-	
+
+	private String globalOfficeNum;
+
 	private String input;
-	
+
 	private ResourceBundle resourceBundle = null;
 
 	private String officeId;
@@ -181,25 +185,30 @@ public class OffActionForm extends BaseActionForm {
 
 	protected void validateCustomFields(HttpServletRequest request,
 			ActionErrors errors) {
-		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request
-						.getSession());
-		for (CustomFieldView customField : customFields) {
-			boolean isErrorFound = false;
-			for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-				if (customField.getFieldId()
-						.equals(customFieldDef.getFieldId())
-						&& customFieldDef.isMandatory()) 
-					if (StringUtils.isNullOrEmpty(customField.getFieldValue())){
-						errors.add(CustomerConstants.CUSTOM_FIELD,
-								new ActionMessage(
-										OfficeConstants.ENTERADDTIONALINFO));
-						isErrorFound = true;
-						break;
-					}
+		try {
+			List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+					.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+			for (CustomFieldView customField : customFields) {
+				boolean isErrorFound = false;
+				for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+					if (customField.getFieldId()
+							.equals(customFieldDef.getFieldId())
+							&& customFieldDef.isMandatory())
+						if (StringUtils.isNullOrEmpty(customField.getFieldValue())){
+							errors.add(CustomerConstants.CUSTOM_FIELD,
+									new ActionMessage(
+											OfficeConstants.ENTERADDTIONALINFO));
+							isErrorFound = true;
+							break;
+						}
+				}
+				if(isErrorFound)
+					break;
 			}
-			if(isErrorFound)
-				break;
+		} catch (PageExpiredException pee) {
+			errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
+					new ActionMessage(
+							ExceptionConstants.PAGEEXPIREDEXCEPTION));
 		}
 	}
 
@@ -208,6 +217,10 @@ public class OffActionForm extends BaseActionForm {
 			HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();
 		String method = request.getParameter("method");
+
+		if (null != request.getParameter(Constants.CURRENTFLOWKEY) && null == request.getAttribute(Constants.CURRENTFLOWKEY))
+			request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+
 		if (method.equals(Methods.preview.toString()) ||method.equals(Methods.editpreview.toString())) {
 			verifyFields(errors, getUserContext(request));
 			validateCustomFields(request, errors);
@@ -253,7 +266,7 @@ public class OffActionForm extends BaseActionForm {
 					.toString();
 		else
 			this.parentOfficeId = null;
-		
+
 
 	}
 
@@ -263,5 +276,13 @@ public class OffActionForm extends BaseActionForm {
 
 	public void setInput(String input) {
 		this.input = input;
+	}
+
+	public String getGlobalOfficeNum() {
+		return globalOfficeNum;
+	}
+
+	public void setGlobalOfficeNum(String globalOfficeNum) {
+		this.globalOfficeNum = globalOfficeNum;
 	}
 }

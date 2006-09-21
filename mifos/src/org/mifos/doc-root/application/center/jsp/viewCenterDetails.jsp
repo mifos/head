@@ -8,6 +8,7 @@
 
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <!-- Tils definition for the header and menu -->
 <tiles:insert definition=".clientsacclayoutsearchmenu">
@@ -16,7 +17,7 @@
 	function ViewDetails(){
 		closedaccsearchactionform.submit();
 	}
-	
+
   function GoToEditPage(){
 	centerActionForm.action="centerAction.do?method=manage";
 	centerActionForm.submit();
@@ -25,18 +26,22 @@
 </script>
 
 		<html-el:form action="centerCustAction.do">
+  		   <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
+				   var="BusinessKey" />
+  		   <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'performanceHistory')}"
+				   var="performanceHistory" />
 			<html-el:hidden property="input" value="CenterDetails}" />
 			<!-- Hidden properties set for customer id, version, system id and version number -->
 			<html-el:hidden property="customerId"
-				value="${sessionScope.BusinessKey.customerId}" />
+				value="${BusinessKey.customerId}" />
 			<html-el:hidden property="globalCustNum"
-				value="${sessionScope.BusinessKey.globalCustNum}" />
+				value="${BusinessKey.globalCustNum}" />
 			<html-el:hidden property="versionNo"
-				value="${sessionScope.BusinessKey.versionNo}" />
+				value="${BusinessKey.versionNo}" />
 			<html-el:hidden property="statusId"
-				value="${sessionScope.BusinessKey.customerStatus.id}" />
+				value="${BusinessKey.customerStatus.id}" />
 			<html-el:hidden property="office.officeId"
-				value="${sessionScope.BusinessKey.office.officeId}" />
+				value="${BusinessKey.office.officeId}" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 				<td class="bluetablehead05">
@@ -53,10 +58,10 @@
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td class="headingorange"><c:out
-								value="${sessionScope.BusinessKey.displayName}" /></td>
+								value="${BusinessKey.displayName}" /></td>
 							<td rowspan="2" align="right" valign="top" class="headingorange">
 							<span class="fontnormal"> <!-- Edit center status link --> <a
-								href="editCustomerStatusAction.do?method=load&customerId=<c:out value="${sessionScope.BusinessKey.customerId}"/>&securityParamInput=Center&input=center">
+								href="editCustomerStatusAction.do?method=load&customerId=<c:out value="${BusinessKey.customerId}"/>&securityParamInput=Center&input=center">
 							<mifos:mifoslabel name="Center.Edit" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.CENTER}" /> <mifos:mifoslabel
 								name="Center.Status1" /> </a><br>
@@ -68,7 +73,7 @@
 						</tr>
 						<tr>
 							<td class="fontnormalbold"><c:set var="statusID" scope="request"
-								value="${sessionScope.BusinessKey.customerStatus.id}" /> <!-- Status of the center. Depending on the status id active or inactive is displayed -->
+								value="${BusinessKey.customerStatus.id}" /> <!-- Status of the center. Depending on the status id active or inactive is displayed -->
 
 
 							<c:if test="${statusID == CustomerConstants.CENTER_ACTIVE_STATE}">
@@ -79,13 +84,13 @@
 								<span class="fontnormal"><img
 									src="pages/framework/images/status_closedblack.gif" width="8"
 									height="9">
-							</c:if> <c:out value="${sessionScope.BusinessKey.customerStatus.name}" /></span><br>
+							</c:if> <c:out value="${BusinessKey.customerStatus.name}" /></span><br>
 							<!-- System Id of the center --> <span class="fontnormal"><mifos:mifoslabel
 								name="Center.SystemId" />:</span> <span class="fontnormal"><c:out
-								value="${sessionScope.BusinessKey.globalCustNum}" /><br>
+								value="${BusinessKey.globalCustNum}" /><br>
 							<!-- Loan Officer of the center --> <mifos:mifoslabel
 								name="Center.LoanOff" ></mifos:mifoslabel>
-							<c:out value="${sessionScope.BusinessKey.personnel.displayName}" /></span><br>
+							<c:out value="${BusinessKey.personnel.displayName}" /></span><br>
 							<br>
 							<!-- List of groups under the center --> <mifos:mifoslabel
 								name="${ConfigurationConstants.GROUP}" /><mifos:mifoslabel
@@ -94,7 +99,7 @@
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<c:if test="${statusID != CustomerConstants.CENTER_INACTIVE_STATE}">
 								<span class="fontnormal"> <a
-									href="groupCustAction.do?method=load&centerSystemId=<c:out value="${sessionScope.BusinessKey.globalCustNum}"/>&parentOfficeId=${sessionScope.BusinessKey.office.officeId}&recordOfficeId=${sessionScope.BusinessKey.office.officeId}&recordLoanOfficerId=${sessionScope.BusinessKey.personnel.personnelId}&randomNUm=${sessionScope.randomNUm}">
+									href="groupCustAction.do?method=load&centerSystemId=<c:out value="${BusinessKey.globalCustNum}"/>&parentOfficeId=${BusinessKey.office.officeId}&recordOfficeId=${BusinessKey.office.officeId}&recordLoanOfficerId=${BusinessKey.personnel.personnelId}&randomNUm=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'randomNUm')}">
 								<mifos:mifoslabel name="Center.Add"  />
 								<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></a>
 								</span>
@@ -109,16 +114,16 @@
 							<div id="Layer2"
 								style="border: 1px solid #CECECE; height:100px; width:250px; overflow: auto; padding:6px; margin-top:5px;">
 							<span class="fontnormal"> <c:choose>
-								<c:when test="${!empty sessionScope.groups}">
-									<c:forEach var="group" items="${sessionScope.groups}">
+								<c:when test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'groups')}">
+									<c:forEach var="group" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'groups')}">
 										<span class="fontnormal"> <a
-											href="groupCustAction.do?method=get&globalCustNum=<c:out value="${group.globalCustNum}"/>&recordOfficeId=${sessionScope.BusinessKey.office.officeId}&recordLoanOfficerId=${sessionScope.BusinessKey.personnel.personnelId}">
+											href="groupCustAction.do?method=get&globalCustNum=<c:out value="${group.globalCustNum}"/>&recordOfficeId=${BusinessKey.office.officeId}&recordLoanOfficerId=${BusinessKey.personnel.personnelId}">
 										<c:out value="${group.displayName}" /></a><br>
 										</span>
 									</c:forEach>
 								</c:when>
 								<c:otherwise>
-									<!-- <c:if test="${sessionScope.performanceHistory.numberOfGroups==0}">-->
+									<!-- <c:if test="${performanceHistory.numberOfGroups==0}">-->
 									<mifos:mifoslabel name="Center.No" bundle="CenterUIResources" />
 									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /><mifos:mifoslabel name="Center.s" bundle="CenterUIResources" />
 									<mifos:mifoslabel name="Center.Available"
@@ -141,16 +146,16 @@
 							<td class="headingorange"><span class="fontnormal"> <c:if
 								test="${statusID == CustomerConstants.CENTER_ACTIVE_STATE}">
 								<mifos:mifoslabel name="Center.AccountsLink"
-									/>&nbsp;  
+									/>&nbsp;
 		               <html-el:link
-									href="savingsAction.do?method=getPrdOfferings&customerId=${sessionScope.BusinessKey.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+									href="savingsAction.do?method=getPrdOfferings&customerId=${BusinessKey.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 									<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
 								</html-el:link></span> </c:if></td>
 						</tr>
 					</table>
 
 
-					<c:if test="${!empty sessionScope.customerSavingsAccountsInUse}">
+					<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customerSavingsAccountsInUse')}">
 						<table width="96%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
 								<td width="63%" align="left" valign="top"
@@ -166,7 +171,7 @@
 								<table width="95%" border="0" align="center" cellpadding="0"
 									cellspacing="0">
 									<c:forEach
-										items="${sessionScope.customerSavingsAccountsInUse}"
+										items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customerSavingsAccountsInUse')}"
 										var="savings">
 										<tr>
 											<td>
@@ -184,7 +189,7 @@
 														value="${savings.accountState.name}" /> </span></td>
 												</tr>
 											</table>
-											<span class="fontnormal"><mifos:mifoslabel name="Center.balance" bundle="CenterUIResources"/>: <c:out
+											<span class="fontnormal"><mifos:mifoslabel name="Center.balance" bundle="CenterUIResources"/> <c:out
 												value="${savings.savingsBalance.amountDoubleValue}" /> </span></td>
 										</tr>
 										<tr>
@@ -217,19 +222,19 @@
 									<td>
 									<table width="100%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
-											<td width="53%"><span class="fontnormal"> <%-- <c:forEach var="cp" items="${sessionScope.BusinessKey.customerAccounts}">
+											<td width="53%"><span class="fontnormal"> <%-- <c:forEach var="cp" items="${BusinessKey.customerAccounts}">
 									<c:if test="${cp.accountId==3}">
-										<c:set var="accID" scope="request" value="${cp.accountId}"/> 
-										
+										<c:set var="accID" scope="request" value="${cp.accountId}"/>
+
 									</c:if>
 								</c:forEach> --%> <a
-										href="customerAccountAction.do?method=load&globalCustNum=<c:out value="${sessionScope.BusinessKey.globalCustNum}"/>">
+										href="customerAccountAction.do?method=load&globalCustNum=<c:out value="${BusinessKey.globalCustNum}"/>">
 										<mifos:mifoslabel name="Center.Viewdetails" bundle="CenterUIResources" />
 									</a> </span></td>
 										</tr>
 									</table>
 									<span class="fontnormal"><mifos:mifoslabel name="Center.AmountDueColon" bundle="CenterUIResources" /> <c:out
-										value='${sessionScope.BusinessKey.customerAccount.nextDueAmount}' />
+										value='${BusinessKey.customerAccount.nextDueAmount}' />
 									</span></td>
 								</tr>
 								<tr>
@@ -252,7 +257,7 @@
 						<tr>
 							<td width="38%" align="right" class="fontnormal"><span
 								class="fontnormal"> <a
-								href="customerAction.do?method=getAllClosedAccounts&customerId=<c:out value="${sessionScope.BusinessKey.customerId}"/>&type=center">
+								href="customerAction.do?method=getAllClosedAccounts&customerId=<c:out value="${BusinessKey.customerId}"/>&type=center">
 								<mifos:mifoslabel name="Group.viewallclosedaccounts"
 									bundle="GroupUIResources"></mifos:mifoslabel>
 							</a> </span></td>
@@ -272,7 +277,7 @@
 								name="${ConfigurationConstants.CENTER}" /><c:out value=" " /><mifos:mifoslabel
 								name="Center.Information" bundle="CenterUIResources" /></td>
 							<td width="50%" align="right" class="fontnormal"><html-el:link
-								action="centerCustAction.do?method=manage">
+								action="centerCustAction.do?method=manage&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="Center.Edit" bundle="CenterUIResources" />
 								<c:out value=" " />
 								<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
@@ -287,12 +292,12 @@
 								class="fontnormal"> <!-- MFI Joining date --> <mifos:mifoslabel
 								name="Center.MfiJoiningDate" />:
 							<c:out
-								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.mfiJoiningDate)}" />
+								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.mfiJoiningDate)}" />
 							<br>
 							<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /> <mifos:mifoslabel
 								name="Center.CenterStartDate" />:
 							<c:out
-								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.createdDate)}" /></td>
+								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.createdDate)}" /></td>
 						</tr>
 
 						<!-- External Id -->
@@ -302,7 +307,7 @@
 								name="${ConfigurationConstants.EXTERNALID}"
 								bundle="CenterUIResources" keyhm="Center.ExternalId"
 								isManadatoryIndicationNotRequired="yes" isColonRequired="yes"></mifos:mifoslabel>
-							<c:out value="${sessionScope.BusinessKey.externalId}" /><br>
+							<c:out value="${BusinessKey.externalId}" /><br>
 							</span></td>
 						</tr>
 
@@ -333,7 +338,7 @@
 										name="Center.MeetingsHeading" />
 									</td>
 									<td align="right"><html-el:link
-										action="MeetingAction.do?method=get&input=CenterDetails&meetingId=${sessionScope.BusinessKey.customerMeeting.meeting.meetingId}">
+										action="MeetingAction.do?method=get&input=CenterDetails&meetingId=${BusinessKey.customerMeeting.meeting.meetingId}">
 										<mifos:mifoslabel name="Center.MeetingsLink"
 											/>
 									</html-el:link></td>
@@ -342,61 +347,61 @@
 							<span class="fontnormalRed"> <mifos:mifoslabel
 								name="Center.MeetingsSubHeading" />:&nbsp;
 							<c:out
-								value="${sessionScope.BusinessKey.customerMeeting.meeting.meetingSchedule}" /></span><span
+								value="${BusinessKey.customerMeeting.meeting.meetingSchedule}" /></span><span
 								class="fontnormal"><br>
 							<span class="fontnormal"><c:out
-								value="${sessionScope.BusinessKey.customerMeeting.meeting.meetingPlace}" /></span>
+								value="${BusinessKey.customerMeeting.meeting.meetingPlace}" /></span>
 							</span><span class="fontnormal"><br>
 							</span><br>
 							<span class="fontnormal"> </span><span class="fontnormal"> </span>
 							<!-- Address Fields --></td>
 						</tr>
-						
-						
-						
+
+
+
 
 						<tr id="Center.Address">
 							<td height="23" colspan="2" class="fontnormalbold"><c:if
-								test="${not empty sessionScope.BusinessKey.customerAddressDetail.address.phoneNumber ||
-					    not empty sessionScope.BusinessKey.customerAddressDetail.address.line1 ||
-						not empty sessionScope.BusinessKey.customerAddressDetail.address.line2 ||
-						not empty sessionScope.BusinessKey.customerAddressDetail.address.line3 ||
-						not empty sessionScope.BusinessKey.customerAddressDetail.address.city	 ||
-						not empty sessionScope.BusinessKey.customerAddressDetail.address.state	 ||
-						not empty sessionScope.BusinessKey.customerAddressDetail.address.country	 ||
-						not empty sessionScope.BusinessKey.customerAddressDetail.address.zip }">
+								test="${not empty BusinessKey.customerAddressDetail.address.phoneNumber ||
+					    not empty BusinessKey.customerAddressDetail.address.line1 ||
+						not empty BusinessKey.customerAddressDetail.address.line2 ||
+						not empty BusinessKey.customerAddressDetail.address.line3 ||
+						not empty BusinessKey.customerAddressDetail.address.city	 ||
+						not empty BusinessKey.customerAddressDetail.address.state	 ||
+						not empty BusinessKey.customerAddressDetail.address.country	 ||
+						not empty BusinessKey.customerAddressDetail.address.zip }">
 								<mifos:mifoslabel name="Center.Address"
 									bundle="CenterUIResources" keyhm="Center.Address"
 									isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
 								<span class="fontnormal"><br>
 								</span>
-								<c:if test="${!empty sessionScope.BusinessKey.customerAddressDetail.address.displayAddress}">
+								<c:if test="${!empty BusinessKey.customerAddressDetail.address.displayAddress}">
 									<span class="fontnormal"> <c:out
-										value="${sessionScope.BusinessKey.customerAddressDetail.address.displayAddress}" /><br>
+										value="${BusinessKey.customerAddressDetail.address.displayAddress}" /><br>
 									</span>
 								</c:if>
 								<c:if
-									test="${!empty sessionScope.BusinessKey.customerAddressDetail.address.city}">
+									test="${!empty BusinessKey.customerAddressDetail.address.city}">
 									<span class="fontnormal"> <c:out
-										value="${sessionScope.BusinessKey.customerAddressDetail.address.city}" /><br>
+										value="${BusinessKey.customerAddressDetail.address.city}" /><br>
 									</span>
 								</c:if>
 								<c:if
-									test="${!empty sessionScope.BusinessKey.customerAddressDetail.address.state}">
+									test="${!empty BusinessKey.customerAddressDetail.address.state}">
 									<span class="fontnormal"> <c:out
-										value="${sessionScope.BusinessKey.customerAddressDetail.address.state}" /><br>
+										value="${BusinessKey.customerAddressDetail.address.state}" /><br>
 									</span>
 								</c:if>
 								<c:if
-									test="${!empty sessionScope.BusinessKey.customerAddressDetail.address.country}">
+									test="${!empty BusinessKey.customerAddressDetail.address.country}">
 									<span class="fontnormal"><c:out
-										value="${sessionScope.BusinessKey.customerAddressDetail.address.country}" /><br>
+										value="${BusinessKey.customerAddressDetail.address.country}" /><br>
 									</span>
 								</c:if>
 								<c:if
-									test="${!empty sessionScope.BusinessKey.customerAddressDetail.address.zip}">
+									test="${!empty BusinessKey.customerAddressDetail.address.zip}">
 									<span class="fontnormal"><c:out
-										value="${sessionScope.BusinessKey.customerAddressDetail.address.zip}" />
+										value="${BusinessKey.customerAddressDetail.address.zip}" />
 									<br>
 									</span>
 								</c:if>
@@ -407,41 +412,41 @@
 							<td height="23" colspan="2" class="fontnormalbold"><span
 								class="fontnormal"> <!-- Telephone Number --> <span
 								class="fontnormal"> <c:set var="phoneNumber"
-								value="${sessionScope.BusinessKey.customerAddressDetail.address.phoneNumber}" />
+								value="${BusinessKey.customerAddressDetail.address.phoneNumber}" />
 							<c:if test="${!empty phoneNumber}">
 								<br>
 								<mifos:mifoslabel name="Center.Telephone"
 									bundle="CenterUIResources" keyhm="Center.PhoneNumber"
 									isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
 								<c:out
-									value="${sessionScope.BusinessKey.customerAddressDetail.address.phoneNumber}" />
+									value="${BusinessKey.customerAddressDetail.address.phoneNumber}" />
 								<br></span> </c:if> <br></td>
 						</tr>
 
 						<tr>
 							<td height="23" colspan="2" class="fontnormalbold"><span
 								class="fontnormal"> <!-- Additional Information --> </c:if> <c:if
-								test="${!empty sessionScope.BusinessKey.customFields}">
+								test="${!empty BusinessKey.customFields}">
 								<span class="fontnormalbold"> <mifos:mifoslabel
 									name="Center.AdditionalInformationHeading"
 									/> <br>
 								</span>
 							</c:if> <span class="fontnormal"> <c:forEach var="cf"
-								items="${sessionScope.customFields}">
+								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 								<c:forEach var="customField"
-									items="${sessionScope.BusinessKey.customFields}">
+									items="${BusinessKey.customFields}">
 									<c:if test="${cf.fieldId==customField.fieldId}">
 										<c:choose>
 											<c:when test="${cf.fieldType == 3}">
 												<mifos:mifoslabel name="${cf.lookUpEntity.entityType}"
-													/>: 
+													/>:
 					         		<span class="fontnormal"><c:out
 													value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,customField.fieldValue)}" /><br>
 												</span>
 											</c:when>
 											<c:otherwise>
 												<mifos:mifoslabel name="${cf.lookUpEntity.entityType}"
-													/>: 
+													/>:
 					         		<span class="fontnormal"><c:out
 													value="${customField.fieldValue}" /><br>
 												</span>
@@ -450,26 +455,26 @@
 									</c:if>
 								</c:forEach>
 							</c:forEach> <br>
-							<%-- 
+							<%--
 							<html-el:link
-								href="closedaccsearchaction.do?method=search&searchNode(search_name)=ChangeLogDetails&input=ViewCenterChangelog&customerId=${sessionScope.BusinessKey.customerId}&entityTypeId=20&createdDate=${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.createdDate)}">
+								href="closedaccsearchaction.do?method=search&searchNode(search_name)=ChangeLogDetails&input=ViewCenterChangelog&customerId=${BusinessKey.customerId}&entityTypeId=20&createdDate=${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.createdDate)}">
 								<mifos:mifoslabel name="center.ChangeLogLink"
 									bundle="CenterUIResources"></mifos:mifoslabel>
 							</html-el:link> </span></td>
 							--%>
-							
+
 						</tr>
 					</table>
 
 					</td>
-					
-					
-					
+
+
+
 				<!-- Performance History -->
 					<td width="30%" align="left" valign="top" class="paddingleft1">
 					<table width="100%" border="0" cellpadding="2" cellspacing="0"
 						class="bluetableborder">
-						
+
 						<tr>
 							<td class="bluetablehead05"><span class="fontnormalbold"> <mifos:mifoslabel
 								name="Center.PerformanceHistoryHeading"
@@ -484,14 +489,14 @@
 								name="Group.hashof" bundle="GroupUIResources" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.CLIENT}" /><mifos:mifoslabel
 								name="Center.s" bundle="CenterUIResources" isColonRequired="yes" />
-							<c:out value="${sessionScope.performanceHistory.numberOfClients}" /></span></td>
+							<c:out value="${performanceHistory.numberOfClients}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
 								name="Group.hashof" bundle="GroupUIResources" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.GROUP}" /><mifos:mifoslabel
 								name="Center.s" bundle="CenterUIResources" isColonRequired="yes" />
-							<c:out value="${sessionScope.performanceHistory.numberOfGroups}" /></span></td>
+							<c:out value="${performanceHistory.numberOfGroups}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
@@ -499,27 +504,27 @@
 								name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
 								name="Center.portfolio" bundle="CenterUIResources"
 								isColonRequired="yes" /> <c:out
-								value="${sessionScope.performanceHistory.totalOutstandingPortfolio}" /></span></td>
+								value="${performanceHistory.totalOutstandingPortfolio}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
 								name="Center.PortfolioAtRisk" bundle="CenterUIResources"
 								isColonRequired="yes" /> <c:out
-								value="${sessionScope.performanceHistory.portfolioAtRisk}" /></span></td>
+								value="${performanceHistory.portfolioAtRisk}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
 								name="Center.Total" bundle="CenterUIResources" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.SAVINGS}" isColonRequired="yes" />
-							<c:out value="${sessionScope.performanceHistory.totalSavings}" /></span></td>
+							<c:out value="${performanceHistory.totalSavings}" /></span></td>
 						</tr>
 
 					</table>
-					
-					
+
+
 					<!-- Performance History  end -->
-					
-					
+
+
 					<table width="95%" border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td><img src="pages/framework/images/trans.gif" width="7"
@@ -538,8 +543,8 @@
 						</tr>
 						<tr>
 							<td class="paddingL10"><c:choose>
-								<c:when test="${!empty sessionScope.BusinessKey.recentCustomerNotes}">
-									<c:forEach var="note" items="${sessionScope.BusinessKey.recentCustomerNotes}">
+								<c:when test="${!empty BusinessKey.recentCustomerNotes}">
+									<c:forEach var="note" items="${BusinessKey.recentCustomerNotes}">
 										<span class="fontnormal8ptbold"> <c:out
 											value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,note.commentDate)}" />
 										</span>
@@ -557,15 +562,15 @@
 						</tr>
 						<tr>
 							<td align="right" class="paddingleft05"><span
-								class="fontnormal8pt"> <c:if test="${!empty sessionScope.BusinessKey.customerNotes}">
+								class="fontnormal8pt"> <c:if test="${!empty BusinessKey.customerNotes}">
 								<html-el:link
-									href="customerNotesAction.do?method=search&customerId=${sessionScope.BusinessKey.customerId}&globalAccountNum=${sessionScope.BusinessKey.globalCustNum}&customerName=${sessionScope.BusinessKey.displayName}&securityParamInput=Center&levelId=${sessionScope.BusinessKey.customerLevel.id}&randomNUm=${sessionScope.randomNUm}">
+									href="customerNotesAction.do?method=search&customerId=${BusinessKey.customerId}&globalAccountNum=${BusinessKey.globalCustNum}&customerName=${BusinessKey.displayName}&securityParamInput=Center&levelId=${BusinessKey.customerLevel.id}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="center.SeeAllNotesLink"
 										bundle="CenterUIResources"></mifos:mifoslabel>
 								</html-el:link>
 								<br>
 							</c:if> <a
-								href="customerNotesAction.do?method=load&customerId=<c:out value="${sessionScope.BusinessKey.customerId}"/>&randomNUm=${sessionScope.randomNUm}">
+								href="customerNotesAction.do?method=load&customerId=<c:out value="${BusinessKey.customerId}"/>&randomNUm=${sessionScope.randomNUm}">
 							<mifos:mifoslabel name="Center.NotesLink"
 								/> </a> </span></td>
 						</tr>
@@ -584,18 +589,19 @@
 			<html-el:hidden property="searchNode(search_name)"
 				value="ClientChargesDetails" />
 			<html-el:hidden property="prdOfferingName"
-				value="${sessionScope.BusinessKey.displayName}" />
+				value="${BusinessKey.displayName}" />
 			<html-el:hidden property="globalAccountNum"
-				value="${sessionScope.BusinessKey.customerAccount.globalAccountNum}" />
+				value="${BusinessKey.customerAccount.globalAccountNum}" />
 			<html-el:hidden property="accountId"
-				value="${sessionScope.BusinessKey.customerAccount.accountId}" />
+				value="${BusinessKey.customerAccount.accountId}" />
 			<html-el:hidden property="accountType"
-				value="${sessionScope.BusinessKey.customerAccount.accountType.accountTypeId}" />
+				value="${BusinessKey.customerAccount.accountType.accountTypeId}" />
 			<html-el:hidden property="input" value="ViewCenterCharges" />
 			<html-el:hidden property="customerId"
-				value="${sessionScope.BusinessKey.customerId}" />
+				value="${BusinessKey.customerId}" />
 			<html-el:hidden property="statusId" value="${statusID}" />
-			<html-el:hidden property="globalCustNum" value="${sessionScope.BusinessKey.globalCustNum}" />
+			<html-el:hidden property="globalCustNum" value="${BusinessKey.globalCustNum}" />
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

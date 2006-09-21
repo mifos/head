@@ -45,11 +45,11 @@
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://struts.apache.org/tags-bean-el" prefix="bean-el"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".withoutmenu">
 <tiles:put name="body" type="string">
-<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT> 
+<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 <script language="javascript" >
 function goToEditPage(){
 	centerCustActionForm.action="centerCustAction.do?method=previous";
@@ -61,16 +61,19 @@ function goToEditPage(){
   }
 </script>
 <html-el:form action="centerCustAction.do?method=create" onsubmit="func_disableSubmitBtn('submitButton');">
-<html-el:hidden property="input" value="create"/> 
+<c:set value="${sessionScope.centerMeeting}"
+	   var="centerMeeting" />
+
+<html-el:hidden property="input" value="create"/>
 <!-- Body begins -->
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td height="350" align="left" valign="top" bgcolor="#FFFFFF">      
+    <td height="350" align="left" valign="top" bgcolor="#FFFFFF">
       <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
         <tr>
            <td align="center" class="heading">&nbsp;</td>
         </tr>
-      </table>              
+      </table>
       <!-- Pipeline Information -->
       <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
         <tr>
@@ -91,7 +94,7 @@ function goToEditPage(){
 	                  <tr>
 	                    <td><img src="pages/framework/images/timeline/tick.gif" width="17" height="17"></td>
 	                     <td class="timelineboldgray"><mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/> <mifos:mifoslabel name="Center.Information" bundle="CenterUIResources"/></td>
-	                     
+
 	                  </tr>
 	                </table>
 	              </td>
@@ -113,16 +116,16 @@ function goToEditPage(){
       <!-- Preview information begins -->
       <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="bluetableborder">
           <tr>
-            <td align="left" valign="top" class="paddingleftCreates">              
+            <td align="left" valign="top" class="paddingleftCreates">
               <!-- Preview page instruction -->
               <table width="93%" border="0" cellpadding="3" cellspacing="0">
                 <tr>
-                         
+
                   <td class="headingorange">
                   <span class="heading">                  	<mifos:mifoslabel name="Center.CreateNew" bundle="CenterUIResources"/>
                   	<mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/>
                   	<c:out value=" "/>
-                  	<mifos:mifoslabel name="Center.dash" bundle="CenterUIResources"/>                  	                  	
+                  	<mifos:mifoslabel name="Center.dash" bundle="CenterUIResources"/>
 
                   </span>
                   <mifos:mifoslabel name="Center.ReviewSubmit" bundle="CenterUIResources"></mifos:mifoslabel></td>
@@ -134,7 +137,7 @@ function goToEditPage(){
                 </tr>
               </table>
                <!-- Preview page instruction ends-->
-               
+
               <!-- Center information entered on the create page -->
               <table width="93%" border="0" cellspacing="0" cellpadding="3">
               <font class="fontnormalRedBold"><html-el:errors bundle="CenterUIResources" /> </font>
@@ -146,28 +149,28 @@ function goToEditPage(){
                   	 <c:out value="${sessionScope.centerCustActionForm.officeName}"/></td>
                 </tr>
               </table>
-                             
+
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                  <tr>
                   <td width="100%" height="23" class="fontnormalboldorange">
                   	<mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/><c:out value=" "/><mifos:mifoslabel name="Center.Information" bundle="CenterUIResources"/>
                   </td>
                 </tr>
-                
-                <tr>                
+
+                <tr>
                   <td class="fontnormal">
                   	<span class="fontnormalbold">
-                  	<mifos:mifoslabel name="Center.Name" bundle="CenterUIResources" ></mifos:mifoslabel>                  	
+                  	<mifos:mifoslabel name="Center.Name" bundle="CenterUIResources" ></mifos:mifoslabel>
                   	<span class="fontnormal"><c:out value="${sessionScope.centerCustActionForm.displayName}"/> <br></span>
                   <td>
                 </tr>
-                 
+
                 <tr>
-                <td class="fontnormal"> 
-                <span class="fontnormalbold">            	
+                <td class="fontnormal">
+                <span class="fontnormalbold">
                     <mifos:mifoslabel name="Center.LoanOfficer" bundle="CenterUIResources"></mifos:mifoslabel>
-					<span class="fontnormal"> 
-					<c:forEach var="LO" items="${sessionScope.loanOfficers}">
+					<span class="fontnormal">
+					<c:forEach var="LO" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanOfficers')}">
 						<c:if test = "${LO.personnelId == sessionScope.centerCustActionForm.loanOfficerId}">
 							<c:out value="${LO.displayName}"/><br>
 						</c:if>
@@ -175,55 +178,55 @@ function goToEditPage(){
 					</span>
 				</td>
 				</tr>
-				
+
 				<tr>
-                <td class="fontnormal"> 
-                <span class="fontnormalbold"> 					 
+                <td class="fontnormal">
+                <span class="fontnormalbold">
 					<mifos:mifoslabel name="Center.MeetingSchedule" bundle="CenterUIResources"></mifos:mifoslabel>
-                    <span class="fontnormal"><c:out value="${sessionScope.centerMeeting.meetingSchedule}"/><br></span>
+                    <span class="fontnormal"><c:out value="${centerMeeting.meetingSchedule}"/><br></span>
                  </td>
                  </tr>
-                 
+
                 <tr>
-                <td class="fontnormal"> 
+                <td class="fontnormal">
                 <span class="fontnormalbold">
                 <mifos:mifoslabel name="Center.LocationOfMeeting" bundle="CenterUIResources"></mifos:mifoslabel>
-                    <span class="fontnormal"> <c:out value="${sessionScope.centerMeeting.meetingPlace}"/> <br></span> 
+                    <span class="fontnormal"> <c:out value="${centerMeeting.meetingPlace}"/> <br></span>
                  </td>
                  </tr>
-                 
+
                 <tr id="Center.ExternalId">
-                <td class="fontnormal"> 
+                <td class="fontnormal">
                 <span class="fontnormalbold">
                  	<mifos:mifoslabel name="${ConfigurationConstants.EXTERNALID}" keyhm="Center.ExternalId" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
 					<span class="fontnormal"> <c:out value="${sessionScope.centerCustActionForm.externalId}"/> <br></span>
 				</td>
 				</tr>
-				
+
 				<tr>
-                <td class="fontnormal"> 
+                <td class="fontnormal">
                 <span class="fontnormalbold">
 					<mifos:mifoslabel name="Center.MfiJoiningDate" bundle="CenterUIResources"></mifos:mifoslabel>:
 					<span class="fontnormal"> <c:out value="${sessionScope.centerCustActionForm.mfiJoiningDate}"/>
 					<br></span><br></span>
 				</td>
 				</tr>
-				
+
 				<tr id="Center.Address">
                 <td class="fontnormal">
-					<span class="fontnormalbold"> 
-					<mifos:mifoslabel name="Center.Address" bundle="CenterUIResources" keyhm="Center.Address" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>					
+					<span class="fontnormalbold">
+					<mifos:mifoslabel name="Center.Address" bundle="CenterUIResources" keyhm="Center.Address" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
 					<span class="fontnormal"><br></span>
 				</td>
 				</tr>
-				
+
 				<tr id="Center.Address">
                 <td class="fontnormal">
                 <span class="fontnormalbold">
 					<span class="fontnormal"><c:out value="${sessionScope.centerCustActionForm.address.displayAddress}"/><br></span>
 				</td>
 				</tr>
-				
+
 				<tr id="Center.City">
                 <td class="fontnormal">
                 <span class="fontnormalbold">
@@ -231,23 +234,23 @@ function goToEditPage(){
 					<span class="fontnormal"> <c:out value="${sessionScope.centerCustActionForm.address.city}"/> <br></span>
 				</td>
 				</tr>
-				
+
 				<tr id="Center.State">
                 <td class="fontnormal">
-                <span class="fontnormalbold">	
-					<mifos:mifoslabel name="${ConfigurationConstants.STATE}" keyhm="Center.State" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>					
+                <span class="fontnormalbold">
+					<mifos:mifoslabel name="${ConfigurationConstants.STATE}" keyhm="Center.State" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
 					<span class="fontnormal"> <c:out value="${sessionScope.centerCustActionForm.address.state}"/> <br></span>
 				</td>
 				</tr>
-					
+
 				<tr id="Center.Country">
                 <td class="fontnormal">
-                <span class="fontnormalbold">	
+                <span class="fontnormalbold">
 					<mifos:mifoslabel name="Center.Country" keyhm="Center.Country" bundle="CenterUIResources" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
 					<span class="fontnormal"> <c:out value="${sessionScope.centerCustActionForm.address.country}"/><br></span>
 				</td>
 				</tr>
-				
+
 				<tr id="Center.PostalCode">
                 <td class="fontnormal">
                 <span class="fontnormalbold">
@@ -256,38 +259,38 @@ function goToEditPage(){
 					<br>
                 </td>
 				</tr>
-				
+
 				<tr id="Center.PhoneNumber">
                 <td class="fontnormal">
-                <span class="fontnormalbold"><br>                
-					<mifos:mifoslabel name="Center.Telephone" bundle="CenterUIResources" keyhm="Center.PhoneNumber" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> 
-					<span class="fontnormal"><c:out value="${sessionScope.centerCustActionForm.address.phoneNumber}"/> </span>					
+                <span class="fontnormalbold"><br>
+					<mifos:mifoslabel name="Center.Telephone" bundle="CenterUIResources" keyhm="Center.PhoneNumber" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
+					<span class="fontnormal"><c:out value="${sessionScope.centerCustActionForm.address.phoneNumber}"/> </span>
 					</span><br>
 				</td>
 				</tr>
-				
+
 				<!--CustomField addition -->
 				<tr>
-                <td class="fontnormal">					
+                <td class="fontnormal">
 					<span class="fontnormalbold">
 					<br>
-					<mifos:mifoslabel name="Center.AdditionalInformationHeading" bundle="CenterUIResources"></mifos:mifoslabel> 
+					<mifos:mifoslabel name="Center.AdditionalInformationHeading" bundle="CenterUIResources"></mifos:mifoslabel>
 					<br>
-					 <c:forEach var="cf" items="${sessionScope.customFields}">
+					 <c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 						 <c:forEach var="customField" items="${sessionScope.centerCustActionForm.customFields}">
 							<c:if test="${cf.fieldId==customField.fieldId}">
-								<mifos:mifoslabel name="${cf.lookUpEntity.entityType}" bundle="CenterUIResources"></mifos:mifoslabel>: 
+								<mifos:mifoslabel name="${cf.lookUpEntity.entityType}" bundle="CenterUIResources"></mifos:mifoslabel>:
 					         	<span class="fontnormal"><c:out value="${customField.fieldValue}"/></span><br>
 							</c:if>
 						</c:forEach>
-    				  </c:forEach> 
+    				  </c:forEach>
 					</span>
 				</td>
 				</tr>
-				
+
 				<!-- Fee addition -->
 				<tr>
-                <td class="fontnormal">					
+                <td class="fontnormal">
 					<span class="fontnormalbold">
 					 <br>
 		             <span class="fontnormalbold"><mifos:mifoslabel name="Center.AdministrativeFeesHeading" bundle="CenterUIResources"/><br>
@@ -295,7 +298,7 @@ function goToEditPage(){
 							<c:if test="${adminFee.removed == false}">
 						  		 <c:out value="${adminFee.feeName}"/>:
 						   		<span class="fontnormal">
-						   			<c:out value="${adminFee.amount}"/> 
+						   			<c:out value="${adminFee.amount}"/>
 						   			<mifos:mifoslabel name="Center.Periodicity" bundle="CenterUIResources"/>
 							   		<c:choose>
 										<c:when test="${adminFee.periodic}">
@@ -306,26 +309,26 @@ function goToEditPage(){
 										</c:otherwise>
 									</c:choose>
 								</span><br>
-							</c:if> 
+							</c:if>
 						</c:forEach>
-					</span>					
+					</span>
 					</td>
-					</tr>				
+					</tr>
 
 
 					<!-- Administrative fees end -->
 					<!-- Fee Types --->
 					<tr>
-                <td class="fontnormal">					
+                <td class="fontnormal">
 					<span class="fontnormalbold">
 					<br>
 					<span class="fontnormalbold"><mifos:mifoslabel name="Center.AdditionalFees" bundle="CenterUIResources" /><br>
-					<c:forEach var="fee" items="${sessionScope.additionalFeeList}" >
+					<c:forEach var="fee" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'additionalFeeList')}" >
 						<c:forEach var="selectedFee" items="${sessionScope.centerCustActionForm.additionalFees}" >
 							<c:if test="${fee.feeId == selectedFee.feeId}">
 			           	  		<c:out value="${fee.feeName}"/>:
 								<span class="fontnormal"><span class="fontnormal">
-								<c:out value="${selectedFee.amount}"/> 
+								<c:out value="${selectedFee.amount}"/>
 								<mifos:mifoslabel name="Center.Periodicity" bundle="CenterUIResources"/>
 								<c:choose>
 									<c:when test="${fee.periodic == true}">
@@ -335,30 +338,30 @@ function goToEditPage(){
 										<mifos:mifoslabel name="Fees.onetime"/>
 									</c:otherwise>
 								</c:choose></span><br></span>
-							</c:if>	
+							</c:if>
 						</c:forEach>
 					</c:forEach>
-                          
+
                           <br>
 					<!-- Fee Type end -->
 					</span>
-					</td>				
-					
-				  </tr>   
+					</td>
+
+				  </tr>
 				  <tr>
 				  <td>
 					<!-- FEe end -->
 					<!-- Edit Button -->
 					<html-el:button onclick="goToEditPage()" property = "editButton" styleClass="insidebuttn" >
 					<mifos:mifoslabel name="Center.Edit" bundle="CenterUIResources"/><c:out value=" "/><mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/><c:out value=" "/><mifos:mifoslabel name="Center.Information" bundle="CenterUIResources"/>
-					
+
 					</html-el:button>
                   </td>
-                </tr>           
+                </tr>
 
               </table>
-             
-              
+
+
               <!-- Submit and cancel buttons -->
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
@@ -367,17 +370,18 @@ function goToEditPage(){
               </table>              <br>
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
-                  <td align="center">&nbsp;                   
+                  <td align="center">&nbsp;
                   <html-el:submit styleClass="buttn" property = "submitButton" style="width:70px"><mifos:mifoslabel name="button.submit" bundle="CenterUIResources"></mifos:mifoslabel></html-el:submit>
                   &nbsp;
 				  &nbsp;
 				  <html-el:button onclick="goToCancelPage();" property = "cancelButton" styleClass="cancelbuttn" style="width:70px"><mifos:mifoslabel name="button.cancel" bundle="CenterUIResources"></mifos:mifoslabel></html-el:button>
-                  
+
                  </td>
                  </tr>
             </table>
             <!-- Submit and cancel buttons end -->
             <br></td>
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
           </tr>
         </table>
       <br></td>

@@ -15,7 +15,7 @@
   function create(){
 	document.offActionForm.method.value="load";
 	offActionForm.submit();
-  }  
+  }
 </script>
 
 		<html-el:form action="/offAction.do" >
@@ -34,23 +34,23 @@
 								<tr>
 									<td class="fontnormalbold"><mifos:mifoslabel
 										name="Office.labelPleaseNote" />
-									<span class="fontnormal"><c:out	value="${BusinessKey.officeName}"></c:out> <mifos:mifoslabel
+									<span class="fontnormal"><c:out	value="${sessionScope.offActionForm.officeName}"></c:out> <mifos:mifoslabel
 										name="Office.labelOfficeAssignedNumber"
 										/> </span> <c:out
-										value="${BusinessKey.globalOfficeNum}"></c:out> <br>
+										value="${sessionScope.offActionForm.globalOfficeNum}"></c:out> <br>
 									<br>
 
-									 
-									
-									<html-el:link action="/offAction.do?method=get&officeId=${BusinessKey.officeId}">
+
+
+									<html-el:link action="/offAction.do?method=get&officeId=${sessionScope.offActionForm.officeId}">
 									 <mifos:mifoslabel
 										name="Office.labelViewOfficeDetails" />
 									</html-el:link>
 									<span class="fontnormal"><br>
 									<br>
-									</span><span class="fontnormal"> 
+									</span><span class="fontnormal">
 									<html-el:link action="/offAction.do?method=load" >
-									
+
 									 <mifos:mifoslabel
 										name="Office.labelAddNewOfficeNow" /></html-el:link> </span></td>
 								</tr>
@@ -67,6 +67,7 @@
 			<!-- hidden veriable which will set input veriable -->
 			<html-el:hidden property="method" value="get" />
 			<html-el:hidden property="officeId"  />
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 
 	</tiles:put>

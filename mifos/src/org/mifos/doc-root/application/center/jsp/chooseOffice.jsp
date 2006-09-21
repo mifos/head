@@ -15,14 +15,14 @@
 	centerCustActionForm.action="centerCustAction.do?method=cancel";
 	centerCustActionForm.submit();
   }
- 
+
 </script>
 <html-el:form action="centerCustAction.do">
     <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
       <tr>
         <td align="center" class="heading">&nbsp;</td>
         </tr>
-    </table>              
+    </table>
       <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
           <tr>
             <td class="bluetablehead">  <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -33,7 +33,7 @@
                         <td><img src="pages/framework/images/timeline/bigarrow.gif" width="17" height="17"></td>
                         <td class="timelineboldorange">
                         <mifos:mifoslabel name="Center.Choose" bundle="CenterUIResources"/>
-                        <mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}"/>                        
+                        <mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}"/>
                         </td>
                       </tr>
                     </table>
@@ -58,14 +58,14 @@
         </table>
         <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="bluetableborder">
           <tr>
-            <td align="left" valign="top" class="paddingleftCreates">   
+            <td align="left" valign="top" class="paddingleftCreates">
                <table width="93%" border="0" cellpadding="3" cellspacing="0">
                 <tr>
                 	<td class="headingorange"><span class="heading">
                   	<mifos:mifoslabel name="Center.CreateNew" bundle="CenterUIResources"/>
                   	<mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/>
                   	<c:out value=" "/>
-                  	<mifos:mifoslabel name="Center.dash" bundle="CenterUIResources"/>                  	                  	
+                  	<mifos:mifoslabel name="Center.dash" bundle="CenterUIResources"/>
                     <%-- <mifos:mifoslabel name="client.ClientLabel" bundle="CenterUIResources"></mifos:mifoslabel> --%>
 
                       </span>
@@ -104,7 +104,8 @@
           </tr>
         </table>
       <br>
-<html-el:hidden property="input" value="create"/> 
+<html-el:hidden property="input" value="create"/>
+<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 </html-el:form>
 </tiles:put>
 </tiles:insert>

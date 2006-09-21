@@ -45,7 +45,7 @@
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://struts.apache.org/tags-bean-el" prefix="bean-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <!-- Tile  definitions -->
 <tiles:insert definition=".withoutmenu">
@@ -53,20 +53,20 @@
 		<script language="javascript" SRC="pages/framework/js/date.js"></script>
 		<script language="javascript">
 
-	
+
   function goToCancelPage(){
 	centerCustActionForm.action="centerCustAction.do?method=cancel";
 	centerCustActionForm.submit();
   }
-  
+
   //Function to display the fee amount in the text box on the selection of a particualar fee from the combo box
 	function displayAmount(listBox, textBox ){
-		//The fee combo box		
+		//The fee combo box
 		var comboBox = document.getElementsByName(listBox)[0];
-				
+
 		//The amount text box
-		var amountField = document.getElementsByName(textBox)[0];		
-		
+		var amountField = document.getElementsByName(textBox)[0];
+
 		//If no fee is selected then the amount field displays nothing
 		if(comboBox.selectedIndex==0)
 			amountField.value = "";
@@ -78,26 +78,26 @@
 				//assigning the value of the fee amount to the text box
 				amountField.value = amount;
 			}
-			else{			
+			else{
 				amountField.value=centerCustActionForm.selectedFeeAmntList.value;
 			}
-			
+
 		}
 	}
 	function chkForValidDates(){
-		
-	  		var mfiJoiningDate = document.getElementById("mfiJoiningDate");	  
-	  	 	var mfiJoiningDateFormat = document.getElementById("mfiJoiningDateFormat");	  
-	  		var mfiJoiningDateYY = document.getElementById("mfiJoiningDateYY");	  
+
+	  		var mfiJoiningDate = document.getElementById("mfiJoiningDate");
+	  	 	var mfiJoiningDateFormat = document.getElementById("mfiJoiningDateFormat");
+	  		var mfiJoiningDateYY = document.getElementById("mfiJoiningDateYY");
 			if(! (validateMyForm(mfiJoiningDate,mfiJoiningDateFormat,mfiJoiningDateYY)))
 				return false;
-	 		if (centerCustActionForm.fieldTypeList.length!= undefined && centerCustActionForm.fieldTypeList.length!= null){ 	
+	 		if (centerCustActionForm.fieldTypeList.length!= undefined && centerCustActionForm.fieldTypeList.length!= null){
 				for(var i=0; i <=centerCustActionForm.fieldTypeList.length;i++){
 					if (centerCustActionForm.fieldTypeList[i]!= undefined){
 						if(centerCustActionForm.fieldTypeList[i].value == "3"){
 							var customFieldDate = document.getElementById("customField["+i+"].fieldValue");
-							var customFieldDateFormat = document.getElementById("customField["+i+"].fieldValueFormat");	  
-					  	 	var customFieldDateYY = document.getElementById("customField["+i+"].fieldValueYY");	  
+							var customFieldDateFormat = document.getElementById("customField["+i+"].fieldValueFormat");
+					  	 	var customFieldDateYY = document.getElementById("customField["+i+"].fieldValueYY");
 							var dateValue = customFieldDate.value;
 							if(!(validateMyForm(customFieldDate,customFieldDateFormat,customFieldDateYY)))
 								return false;
@@ -216,8 +216,8 @@
 										<tr>
 											<td colspan="2" class="fontnormal">
 												<br>
-												<span class="fontnormalbold"> 
-												<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /><c:out value=" " /> <mifos:mifoslabel name="Center.Selected" bundle="CenterUIResources" isColonRequired="yes"/> 
+												<span class="fontnormalbold">
+												<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /><c:out value=" " /> <mifos:mifoslabel name="Center.Selected" bundle="CenterUIResources" isColonRequired="yes"/>
 												</span>
 												<c:out value="${sessionScope.centerCustActionForm.officeName}" />
 												<br>
@@ -250,7 +250,9 @@
 											</td>
 											<td>
 												<mifos:select property="loanOfficerId" size="1">
-													<html-el:options collection="loanOfficers" property="personnelId" labelProperty="displayName" />
+													<c:forEach var="loanOfficersList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanOfficers')}" >
+														<html-el:option value="${loanOfficersList.personnelId}">${loanOfficersList.displayName}</html-el:option>
+													</c:forEach>
 												</mifos:select>
 											</td>
 										</tr>
@@ -394,7 +396,7 @@
 										</tr>
 
 										<!-- For each custom field definition in the list custom field entity is passed as key to mifos label -->
-										<c:forEach var="cf" items="${sessionScope.customFields}" varStatus="loopStatus">
+										<c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}" varStatus="loopStatus">
 											<bean:define id="ctr">
 												<c:out value="${loopStatus.index}" />
 											</bean:define>
@@ -447,7 +449,7 @@
 																<c:choose>
 																	<c:when test="${adminFees.periodic == true}">
 																		<c:out value="${adminFees.amount}" />
-																	</c:when>	
+																	</c:when>
 																	<c:otherwise>
 																		<mifos:mifosdecimalinput property="defaultFee[${ctr1}].amount" value="${adminFees.amount}" style="width:135px;" />
 																	</c:otherwise>
@@ -496,7 +498,9 @@
 											</td>
 											<td width="17%" class="fontnormal">
 												<mifos:select name="centerCustActionForm" property='selectedFee[${ctr2}].feeId' onchange="displayAmount('selectedFee[${ctr2}].feeId', 'selectedFee[${ctr2}].amount' )">
-													<html-el:options collection="additionalFeeList" property="feeId" labelProperty="feeName"></html-el:options>
+													<c:forEach var="feeList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'additionalFeeList')}" >
+														<html-el:option value="${feeList.feeId}">${feeList.feeName}</html-el:option>
+													</c:forEach>
 												</mifos:select>
 											</td>
 											<td width="12%" align="right" class="fontnormal">
@@ -506,7 +510,7 @@
 												<mifos:mifosdecimalinput property='selectedFee[${ctr2}].amount' />
 											</td>
 											<c:if test="${ctr2 == 0}">
-												<c:forEach var="fee" items="${sessionScope.additionalFeeList}" varStatus="loopStatus3">
+												<c:forEach var="fee" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'additionalFeeList')}" varStatus="loopStatus3">
 													<bean:define id="ctr3" toScope="request">
 														<c:out value="${loopStatus3.index}" />
 													</bean:define>
@@ -515,7 +519,7 @@
 											</c:if>
 											</tr>
 										</c:forEach>
-									</table> 
+									</table>
 									<!-- Fees End -->
 									<br>
 									<!-- Buttons -->
@@ -550,6 +554,7 @@
 					</td>
 				</tr>
 			</table>
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<mifos:SecurityParam property="CenterCreate"></mifos:SecurityParam>
 		</html-el:form>
 	</tiles:put>

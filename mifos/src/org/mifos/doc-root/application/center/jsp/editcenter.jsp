@@ -45,6 +45,7 @@
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://struts.apache.org/tags-bean-el" prefix="bean-el"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".detailsCustomer">
 	<tiles:put name="body" type="string">
@@ -56,22 +57,22 @@
 	function goToCancelPage(){
 	centerCustActionForm.action="centerCustAction.do?method=cancel";
 	centerCustActionForm.submit();
-  }	
+  }
   function chkForValidDates(){
-		
-	  		var mfiJoiningDate = document.getElementById("mfiJoiningDate");	  
-	  	 	var mfiJoiningDateFormat = document.getElementById("mfiJoiningDateFormat");	  
-	  		var mfiJoiningDateYY = document.getElementById("mfiJoiningDateYY");	  
+
+	  		var mfiJoiningDate = document.getElementById("mfiJoiningDate");
+	  	 	var mfiJoiningDateFormat = document.getElementById("mfiJoiningDateFormat");
+	  		var mfiJoiningDateYY = document.getElementById("mfiJoiningDateYY");
 			if(! (validateMyForm(mfiJoiningDate,mfiJoiningDateFormat,mfiJoiningDateYY)))
 				return false;
-	 		 	  	
-		<%--if (centerCustActionForm.fieldTypeList.length!= undefined && centerCustActionForm.fieldTypeList.length!= null){ 	
+
+		<%--if (centerCustActionForm.fieldTypeList.length!= undefined && centerCustActionForm.fieldTypeList.length!= null){
 				for(var i=0; i <=centerCustActionForm.fieldTypeList.length;i++){
 					if (centerCustActionForm.fieldTypeList[i]!= undefined){
 						if(centerCustActionForm.fieldTypeList[i].value == "3"){
 							var customFieldDate = document.getElementById("customField["+i+"].fieldValue");
-							var customFieldDateFormat = document.getElementById("customField["+i+"].fieldValueFormat");	  
-					  	 	var customFieldDateYY = document.getElementById("customField["+i+"].fieldValueYY");	  
+							var customFieldDateFormat = document.getElementById("customField["+i+"].fieldValueFormat");
+					  	 	var customFieldDateYY = document.getElementById("customField["+i+"].fieldValueYY");
 							var dateValue = customFieldDate.value;
 							if(!(validateMyForm(customFieldDate,customFieldDateFormat,customFieldDateYY)))
 								return false;
@@ -82,26 +83,29 @@
 		 	for(var i=0; i <=centerCustActionForm.customFields.length;i++){
 		 		if(centerCustActionForm.customField[i].fieldType == 3){
 			 		var customFieldDate = document.getElementById("customField["+i+"].fieldValue");
-					var customFieldDateFormat = document.getElementById("customField["+i+"].fieldValueFormat");	  
-			  	 	var customFieldDateYY = document.getElementById("customField["+i+"].fieldValueYY");	  
+					var customFieldDateFormat = document.getElementById("customField["+i+"].fieldValueFormat");
+			  	 	var customFieldDateYY = document.getElementById("customField["+i+"].fieldValueYY");
 					var dateValue = customFieldDate.value;
 					if(!(validateMyForm(customFieldDate,customFieldDateFormat,customFieldDateYY)))
 						return false;
 		 		}
 		 	} --%>
-		 	
+
 	  }
 	</script>
 
 		<html-el:form action="centerCustAction.do?method=editPreview" onsubmit="return chkForValidDates()">
+		<c:set
+		value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
+		var="BusinessKey" />
 		<html-el:hidden property="input" value="manage" />
 				<table width="95%" border="0" cellpadding="0" cellspacing="0">
 					<tr>
 						<td class="bluetablehead05">
-							<span class="fontnormal8pt"> 
-							<customtags:headerLink/> 
+							<span class="fontnormal8pt">
+							<customtags:headerLink/>
 						</span>
-						
+
 						</td>
 					</tr>
 				</table>
@@ -111,7 +115,7 @@
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
 									<td class="headingorange">
-										<span class="heading"><c:out value="${sessionScope.BusinessKey.displayName}" /> - </span>
+										<span class="heading"><c:out value="${BusinessKey.displayName}" /> - </span>
 										<mifos:mifoslabel name="Center.Edit" bundle="CenterUIResources" />
 										<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
 										<mifos:mifoslabel name="Center.Information" bundle="CenterUIResources" />
@@ -129,12 +133,12 @@
 								</tr>
 							</table>
 							<br>
-							
-							
-							
-							
-							
-							
+
+
+
+
+
+
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 								<font class="fontnormalRedBold"><html-el:errors bundle="CenterUIResources" /> </font>
 								<tr>
@@ -146,23 +150,23 @@
 										<br>
 									</td>
 								</tr>
-								
+
 								<tr class="fontnormal">
 									<td width="26%" align="right">
 										<mifos:mifoslabel name="Center.Name" bundle="CenterUIResources"></mifos:mifoslabel>
 									</td>
 									<td width="74%">
-										<c:out value="${sessionScope.BusinessKey.displayName}" />
+										<c:out value="${BusinessKey.displayName}" />
 									</td>
 								</tr>
-								
+
 								<tr class="fontnormal">
 									<td align="right">
 										<mifos:mifoslabel name="Center.LoanOfficer" mandatory="yes" bundle="CenterUIResources"></mifos:mifoslabel>
 									</td>
 									<td>
 										<mifos:select property="loanOfficerId" size="1">
-											<c:forEach var="loanOfficer" items="${sessionScope.loanOfficers}">
+											<c:forEach var="loanOfficer" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanOfficers')}">
 												<html-el:option value="${loanOfficer.personnelId}">
 													<c:out value="${loanOfficer.displayName}" />
 												</html-el:option>
@@ -170,8 +174,8 @@
 										</mifos:select>
 									</td>
 								</tr>
-								
-								
+
+
 								<tr class="fontnormal" id="Center.ExternalId">
 									<td align="right" class="fontnormal">
 										<mifos:mifoslabel keyhm="Center.ExternalId" isColonRequired="Yes" name="${ConfigurationConstants.EXTERNALID}" />
@@ -189,8 +193,8 @@
 										</table>
 									</td>
 								</tr>
-								
-								
+
+
 								<!-- MFI Joining Date -->
 								<tr class="fontnormal">
 									<td align="right">
@@ -208,7 +212,7 @@
 									</td>
 									<td>
 										<table width="80%" border="0" cellspacing="0" cellpadding="3">
-											<c:forEach var="pos" items="${sessionScope.positions}" varStatus="loopStatus">
+											<c:forEach var="pos" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'positions')}" varStatus="loopStatus">
 												<bean:define id="ctr">
 													<c:out value="${loopStatus.index}" />
 												</bean:define>
@@ -218,9 +222,11 @@
 														:
 													</td>
 													<td width="83%">
-														<c:set var="clientcol" scope="request" value="${sessionScope.clients}" />
+														<c:set var="clientcol" scope="request" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clients')}" />
 														<mifos:select name="centerCustActionForm" property='customerPosition[${ctr}].customerId' size="1">
-															<html-el:options collection="clientcol" property="customerId" labelProperty="displayName" />
+															<c:forEach var="clientColList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientcol')}" >
+																<html-el:option value="${clientColList.customerId}">${clientColList.displayName}</html-el:option>
+															</c:forEach>
 														</mifos:select>
 														<html-el:hidden property='customerPosition[${ctr}].positionId' value="${pos.id}"></html-el:hidden>
 													</td>
@@ -230,14 +236,14 @@
 									</td>
 								</tr>
 							</table>
-							
-							
-							
-							
-							
-							
-							
-							
+
+
+
+
+
+
+
+
 							<br>
 							<!-- Address Fields -->
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
@@ -325,7 +331,7 @@
 								</tr>
 
 								<!-- For each custom field definition in the list custom field entity is passed as key to mifos label -->
-								<c:forEach var="customFieldDef" items="${sessionScope.customFields}" varStatus="loopStatus">
+								<c:forEach var="customFieldDef" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}" varStatus="loopStatus">
 									<bean:define id="ctr">
 										<c:out value="${loopStatus.index}" />
 									</bean:define>
@@ -388,6 +394,7 @@
 			<%--</td>
 			</tr>
 			</table>--%>
+		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

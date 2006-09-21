@@ -64,18 +64,22 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public abstract class CustomerActionForm extends BaseActionForm{
 
+	protected String input;
+
 	private String customerId;
-	
+
 	private String globalCustNum;
-	
+
 	private String displayName;
 
 	private Address address;
@@ -91,25 +95,23 @@ public abstract class CustomerActionForm extends BaseActionForm{
 	private String status;
 
 	private String mfiJoiningDate;
-	
-	protected String input;
-	
+
 	private String formedByPersonnel;
-	
+
 	private String trained;
-	
+
 	private String trainedDate;
-	
+
 	private List<FeeView> defaultFees;
 
 	private List<FeeView> additionalFees;
 
 	private String selectedFeeAmntList;
-	
+
 	private List<CustomFieldView> customFields;
-	
+
 	private List<CustomerPositionView> customerPositions;
-	
+
 	public CustomerActionForm() {
 		address = new Address();
 		defaultFees = new ArrayList<FeeView>();
@@ -228,7 +230,7 @@ public abstract class CustomerActionForm extends BaseActionForm{
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+
 	public String getSelectedFeeAmntList() {
 		return selectedFeeAmntList;
 	}
@@ -240,23 +242,23 @@ public abstract class CustomerActionForm extends BaseActionForm{
 	public Short getOfficeIdValue() {
 		return getShortValue(officeId);
 	}
-	
+
 	public Short getLoanOfficerIdValue() {
 		return getShortValue(loanOfficerId);
 	}
-	
+
 	public CustomerStatus getStatusValue() {
 			return StringUtils.isNullAndEmptySafe(status)? CustomerStatus.getStatus(Short.valueOf(status)):null;
 	}
-	
+
 	public Short getFormedByPersonnelValue() {
 		return getShortValue(formedByPersonnel);
 	}
-	
+
 	public String getTrained() {
 		return trained;
 	}
-	
+
 	public Short getTrainedValue() {
 		return getShortValue(trained);
 	}
@@ -272,14 +274,14 @@ public abstract class CustomerActionForm extends BaseActionForm{
 	public void setTrainedDate(String trainedDate) {
 		this.trainedDate = trainedDate;
 	}
-	
+
 	public CustomFieldView getCustomField(int i){
 		while(i>=customFields.size()){
 			customFields.add(new CustomFieldView());
 		}
 		return (CustomFieldView)(customFields.get(i));
 	}
-	
+
 	public String getFormedByPersonnel() {
 		return formedByPersonnel;
 	}
@@ -294,7 +296,7 @@ public abstract class CustomerActionForm extends BaseActionForm{
 		}
 		return (FeeView)(defaultFees.get(i));
 	}
-	
+
 	public List<FeeView> getFeesToApply(){
 		List<FeeView> feesToApply = new ArrayList<FeeView>();
 		for(FeeView fee: getAdditionalFees())
@@ -305,13 +307,13 @@ public abstract class CustomerActionForm extends BaseActionForm{
 				feesToApply.add(fee);
 		return feesToApply;
 	}
-	
+
 	public FeeView getSelectedFee(int index){
 		while(index>=additionalFees.size())
 			additionalFees.add(new FeeView());
 		return (FeeView)additionalFees.get(index);
 	}
-	
+
 	@Override
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		if (request.getParameter("displayName")!=null ){
@@ -324,7 +326,7 @@ public abstract class CustomerActionForm extends BaseActionForm{
 		}
 		super.reset(mapping, request);
 	}
-	
+
 	public List<CustomerPositionView> getCustomerPositions() {
 		return customerPositions;
 	}
@@ -333,88 +335,95 @@ public abstract class CustomerActionForm extends BaseActionForm{
 		this.customerPositions = customerPositions;
 	}
 
-	public CustomerPositionView getCustomerPosition(int index) {		
+	public CustomerPositionView getCustomerPosition(int index) {
 		while(index>=customerPositions.size()){
 			customerPositions.add(new CustomerPositionView());
 		}
 		return (CustomerPositionView)customerPositions.get(index);
 	}
-	
+
 	@Override
 	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request){
 		String method = request.getParameter("method");
-		request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+		if (null == request.getAttribute(Constants.CURRENTFLOWKEY))
+			request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
 		ActionErrors errors = null;
 		try{
 			errors = validateFields(request, method);
 		}
 		catch(ApplicationException ae){
+			errors = new ActionErrors();
 			errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae
 					.getValues()));
 		}
 		if (null != errors && !errors.isEmpty()) {
 			request.setAttribute(Globals.ERROR_KEY, errors);
 			request.setAttribute("methodCalled", method);
-			
+
 		}
 		errors.add(super.validate(mapping,request));
 		return errors;
 	}
-	
+
 	protected abstract ActionErrors validateFields(HttpServletRequest request, String method)throws ApplicationException;
-	
+
 	protected void validateName(ActionErrors errors){
 		if (StringUtils.isNullOrEmpty(getDisplayName()))
 			errors.add(CustomerConstants.NAME, new ActionMessage(CustomerConstants.ERRORS_SPECIFY_NAME));
 	}
-	
+
 	protected void validateLO(ActionErrors errors){
 		if (StringUtils.isNullOrEmpty(getLoanOfficerId()))
 			errors.add(CustomerConstants.LOAN_OFFICER, new ActionMessage(CustomerConstants.ERRORS_SELECT_LOAN_OFFICER));
 	}
-	
+
 	protected void validateFormedByPersonnel(ActionErrors errors){
 		if (StringUtils.isNullOrEmpty(getFormedByPersonnel()))
 			errors.add(CustomerConstants.FORMED_BY_LOANOFFICER, new ActionMessage(CustomerConstants.FORMEDBY_LOANOFFICER_BLANK_EXCEPTION));
 	}
-	
-	protected void validateMeeting(HttpServletRequest request, ActionErrors errors){
+
+	protected void validateMeeting(HttpServletRequest request, ActionErrors errors) {
 		Object meeting = SessionUtils.getAttribute(CenterConstants.CENTER_MEETING, request.getSession());
 		if(meeting == null || !(meeting instanceof MeetingBO))
 			errors.add(CustomerConstants.MEETING, new ActionMessage(CustomerConstants.ERRORS_SPECIFY_MEETING));
 	}
-	
+
 	protected void validateConfigurableMandatoryFields(HttpServletRequest request, ActionErrors errors, EntityType entityType){
 		checkForMandatoryFields(entityType.getValue(), errors, request);
 	}
-	
-	protected  void validateCustomFields(HttpServletRequest request, ActionErrors errors)throws ApplicationException{
-		List<CustomFieldDefinitionEntity> customFieldDefs =(List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
-		for(CustomFieldView customField : customFields){
-			boolean isErrorFound = false;
-			for(CustomFieldDefinitionEntity customFieldDef : customFieldDefs){
-				if(customField.getFieldId().equals(customFieldDef.getFieldId())&& customFieldDef.isMandatory()){
-					if(StringUtils.isNullOrEmpty(customField.getFieldValue())){
-						errors.add(CustomerConstants.CUSTOM_FIELD, new ActionMessage(CustomerConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE));
-						isErrorFound = true;
-						break;
+
+	protected  void validateCustomFields(HttpServletRequest request, ActionErrors errors) {
+		try {
+			List<CustomFieldDefinitionEntity> customFieldDefs =(List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+			for(CustomFieldView customField : customFields){
+				boolean isErrorFound = false;
+				for(CustomFieldDefinitionEntity customFieldDef : customFieldDefs){
+					if(customField.getFieldId().equals(customFieldDef.getFieldId())&& customFieldDef.isMandatory()){
+						if(StringUtils.isNullOrEmpty(customField.getFieldValue())){
+							errors.add(CustomerConstants.CUSTOM_FIELD, new ActionMessage(CustomerConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE));
+							isErrorFound = true;
+							break;
+						}
 					}
 				}
+				if(isErrorFound)
+					break;
 			}
-			if(isErrorFound)
-				break;
+		} catch (PageExpiredException pee) {
+			errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
+					new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
 		}
 	}
-	
+
 	protected abstract MeetingBO getCustomerMeeting(HttpServletRequest request);
-	
+
 	protected  void validateFees(HttpServletRequest request, ActionErrors errors)throws ApplicationException{
 		validateForFeeAssignedWithoutMeeting(request, errors);
 		validateForFeeRecurrence(request, errors);
 		validateForFeeAmount(errors);
 		validateForDuplicatePeriodicFee(request, errors);
 	}
-	
+
 	protected void validateForFeeRecurrence(HttpServletRequest request, ActionErrors errors)throws ApplicationException{
 		MeetingBO meeting = getCustomerMeeting(request);
 
@@ -439,7 +448,7 @@ public abstract class CustomerActionForm extends BaseActionForm{
 			}
 		}
 	}
-	
+
 	private boolean isFrequencyMatches(FeeView fee, MeetingBO meeting){
 		return (fee.getFrequencyType().equals(RecurrenceType.MONTHLY) && meeting.isMonthly()) ||
 					(fee.getFrequencyType().equals(RecurrenceType.WEEKLY) && meeting.isWeekly());
@@ -451,7 +460,7 @@ public abstract class CustomerActionForm extends BaseActionForm{
 			errors.add(CustomerConstants.MEETING_REQUIRED_EXCEPTION,new ActionMessage(CustomerConstants.MEETING_REQUIRED_EXCEPTION));
 		}
 	}
-	
+
 	protected void validateForFeeAmount(ActionErrors errors){
 		List<FeeView> feeList = getFeesToApply();
 		for(FeeView fee: feeList){
@@ -459,7 +468,7 @@ public abstract class CustomerActionForm extends BaseActionForm{
 				errors.add(CustomerConstants.FEE,new ActionMessage(CustomerConstants.ERRORS_SPECIFY_FEE_AMOUNT));
 		}
 	}
-	
+
 	protected void validateForDuplicatePeriodicFee(HttpServletRequest request, ActionErrors errors) throws ApplicationException{
 		List<FeeView> additionalFeeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
 		for(FeeView selectedFee: getAdditionalFees()){
@@ -476,7 +485,7 @@ public abstract class CustomerActionForm extends BaseActionForm{
 			}
 		}
 	}
-	
+
 	protected void validateTrained(HttpServletRequest request ,ActionErrors errors) {
 		if(request.getParameter("trained")==null) {
 			trained=null;
@@ -488,7 +497,7 @@ public abstract class CustomerActionForm extends BaseActionForm{
 				}
 				errors.add(CustomerConstants.TRAINED_DATE_MANDATORY,new ActionMessage(CustomerConstants.TRAINED_DATE_MANDATORY));
 			}
-	
+
 		}
 		//if training date is entered and trained is not selected, throw an error
 		if(!ValidateMethods.isNullOrBlank(trainedDate)&&ValidateMethods.isNullOrBlank(trained)){
@@ -497,24 +506,24 @@ public abstract class CustomerActionForm extends BaseActionForm{
 			}
 			errors.add(CustomerConstants.TRAINED_CHECKED,new ActionMessage(CustomerConstants.TRAINED_CHECKED));
 		}
-		
+
 	}
-	
+
 	private boolean isSelectedFeePeriodic(FeeView selectedFee, List<FeeView> additionalFeeList){
 		for(FeeView fee: additionalFeeList)
 			if(fee.getFeeId().equals(selectedFee.getFeeId()))
 					return fee.isPeriodic();
 		return false;
 	}
-	
+
 	public boolean isCustomerTrained() {
 		return StringUtils.isNullAndEmptySafe(trained) && Short.valueOf(trained).equals(YesNoFlag.YES.getValue());
 	}
-	
+
 	public Date getTrainedDateValue(Locale locale) {
 		return getDateFromString(trainedDate, locale);
 	}
-	
+
 	protected Locale getUserLocale(HttpServletRequest request) {
 		Locale locale=null;
 		HttpSession session= request.getSession();

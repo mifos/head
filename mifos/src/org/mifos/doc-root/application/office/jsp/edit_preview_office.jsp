@@ -6,11 +6,15 @@
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 		<!-- Next is code for setting the hidden veriable to cancel -->
 		<script language="javascript" type="text/javascript">
+function goToUpdatePage(){
+	document.offActionForm.method.value="update";
+}
 function goToCancelPage(id){
 	document.offActionForm.method.value="get";
 	document.offActionForm.officeId.value=id;
@@ -20,7 +24,7 @@ function goToCancelPage(id){
   {
 	document.offActionForm.method.value="editprevious";
 	offActionForm.submit();
-  
+
   }
      function submitViewOfficesLink(){
 	document.offActionForm.method.value="getAllOffices";
@@ -29,9 +33,9 @@ function goToCancelPage(id){
   }
 function getOffice(officeid){
 	document.offActionForm.method.value="get";
-	document.offActionForm.officeId.value=officeid;	
+	document.offActionForm.officeId.value=officeid;
 	offActionForm.submit();
-  }  
+  }
 function  submitAdminLink()
 {
 		document.offActionForm.method.value="load";
@@ -77,7 +81,7 @@ function  submitAdminLink()
 
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
 						<tr >
-									
+
 								<logic:messagesPresent>
 								<td>
 								<font class="fontnormalRedBold"><html-el:errors
@@ -86,7 +90,7 @@ function  submitAdminLink()
 								</logic:messagesPresent>
 								</tr>
 						<tr>
-							
+
 							<td height="23" class="fontnormalbold"><mifos:mifoslabel
 								name="Office.labelOfficeName" /> <span class="fontnormal"> <c:out
 								value="${offActionForm.officeName}"></c:out> <br>
@@ -107,7 +111,7 @@ function  submitAdminLink()
 							</c:forEach> </span><br>
 							<mifos:mifoslabel name="Office.labelStatus" />:<span
 								class="fontnormal"> <c:forEach var="status"
-								items="${sessionScope.OfficeStatusList}">
+								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'OfficeStatusList')}">
 								<c:if test="${status.levelId  ==offActionForm.officeStatus}">
 									<c:out value="${status.levelName}"></c:out>
 								</c:if>
@@ -156,7 +160,7 @@ function  submitAdminLink()
 								<mifos:mifoslabel name="Office.labelAdditionInformation" />
 							</c:if> <span class="fontnormal"><br>
 							<c:forEach var="cfdef" items="${offActionForm.customFields}">
-								<c:forEach var="cf" items="${sessionScope.customFields}">
+								<c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 									<c:if test="${cfdef.fieldId==cf.fieldId}">
 
 										<font class="fontnormalBold"> <mifos:mifoslabel
@@ -205,7 +209,8 @@ function  submitAdminLink()
 			</table>
 			<!-- hidden veriable which will be set to method -->
 			<html-el:hidden property="method" value="update" />
-			<html-el:hidden property="officeId" value="${BusinessKey.officeId}" />
+			<html-el:hidden property="officeId" value="${offActionForm.officeId}" />
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

@@ -6,11 +6,15 @@
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
 		<!-- Next is code for setting the hidden veriable to cancel -->
 		<script language="javascript" type="text/javascript">
+function goToCreatePage() {
+	document.offActionForm.method.value="create";
+}
 function goToCancelPage(){
 	document.offActionForm.method.value="load";
 	document.offActionForm.action="AdminAction.do";
@@ -20,7 +24,7 @@ function goToCancelPage(){
   {
 	document.offActionForm.method.value="previous";
 	offActionForm.submit();
-  
+
   }
 </script>
 		<html-el:form action="/offAction.do">
@@ -76,7 +80,7 @@ function goToCancelPage(){
 
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr >
-									
+
 								<logic:messagesPresent>
 								<td>
 								<font class="fontnormalRedBold"><html-el:errors
@@ -162,9 +166,9 @@ function goToCancelPage(){
 									</c:if> <span class="fontnormal"><br>
 									 <c:forEach var="cfdef"
 										items="${offActionForm.customFields}">
-										<c:forEach var="cf" items="${sessionScope.customFields}">
+										<c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 											<c:if test="${cfdef.fieldId==cf.fieldId}">
-												<font class="fontnormalBold"> 
+												<font class="fontnormalBold">
 												<mifos:mifoslabel
 											name="${cf.lookUpEntity.entityType}"
 											bundle="OfficeResources"></mifos:mifoslabel>:
@@ -193,7 +197,7 @@ function goToCancelPage(){
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<td align="center">&nbsp; <html-el:submit styleClass="buttn"
-										style="width:70px;"></html-el:submit> &nbsp; <html-el:button
+										style="width:70px;" onclick="goToCreatePage()"></html-el:submit> &nbsp; <html-el:button
 										onclick="goToCancelPage();" property="cancelButton"
 										styleClass="cancelbuttn" style="width:70px">
 										<mifos:mifoslabel name="Office.cancel" />
@@ -219,6 +223,7 @@ function goToCancelPage(){
 			<html-el:hidden property="method" value="create" />
 			<!-- hidden veriable which will set input veriable -->
 			<html-el:hidden property="input" value="create" />
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>
 
