@@ -111,5 +111,5 @@ public interface FeeConstants {
 	public static final String ERRORS_SPECIFY_VALUE = "errors.enter";
 	public static final String ERRORS_SPECIFY_AMOUNT_OR_RATE = "errors.amountOrRate";
 	public static final String ERRORS_SPECIFY_RATE_AND_FORMULA = "errors.rateAndFormulaId";
-	public static final String ERRORS_SELECT_STATUS = "errors.select";
+	public static final String ERRORS_SELECT_STATUS = "errors.selectStatus";
 }
