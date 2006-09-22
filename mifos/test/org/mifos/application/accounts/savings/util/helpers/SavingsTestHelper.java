@@ -86,7 +86,7 @@ public class SavingsTestHelper {
 		SavingsTrxnDetailEntity trxn = new SavingsTrxnDetailEntity(
 				paymentEntity, (AccountActionEntity) new MasterPersistence()
 						.getPersistentObject(AccountActionEntity.class,
-								accountAction), amount, balance, createdBy,
+								accountAction), amount, balance, createdBy, customer,
 				dueDate, trxnDate, comments, relatedTrxn);
 		return trxn;
 	}

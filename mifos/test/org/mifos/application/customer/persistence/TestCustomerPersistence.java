@@ -9,7 +9,6 @@ import java.util.List;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
-import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -17,7 +16,6 @@ import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
-import org.mifos.application.bulkentry.exceptions.BulkEntryAccountUpdateException;
 import org.mifos.application.checklist.business.CheckListBO;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.checklist.util.resources.CheckListConstants;
@@ -267,6 +265,43 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 		for (CustomerBO customer : customerList) {
 			if (customer.getCustomerId().intValue() == client3.getCustomerId()
+					.intValue())
+				assertTrue(true);
+		}
+		TestObjectFactory.cleanUp(client2);
+		TestObjectFactory.cleanUp(client3);
+		TestObjectFactory.cleanUp(client4);
+	}
+
+	public void testGetChildernActiveAndHold() throws Exception {
+		CustomerPersistence customerPersistence = new CustomerPersistence();
+		center = createCenter();
+		group = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE,
+				center.getSearchId() + ".1", center, new Date(System
+						.currentTimeMillis()));
+		client = TestObjectFactory.createClient("client1",
+				CustomerStatus.CLIENT_ACTIVE.getValue(), group.getSearchId() + ".1",
+				group, new Date(System.currentTimeMillis()));
+		ClientBO client2 = TestObjectFactory.createClient("client2",
+				CustomerStatus.CLIENT_PARTIAL.getValue(), group.getSearchId() + ".2",
+				group, new Date(System.currentTimeMillis()));
+		ClientBO client3 = TestObjectFactory.createClient("client3",
+				CustomerStatus.CLIENT_PENDING.getValue(), group.getSearchId() + ".3",
+				group, new Date(System.currentTimeMillis()));
+		ClientBO client4 = TestObjectFactory.createClient("client4",
+				CustomerStatus.CLIENT_HOLD.getValue(), group.getSearchId() + ".4",
+				group, new Date(System.currentTimeMillis()));
+
+		List<CustomerBO> customerList = customerPersistence
+				.getChildren(center.getSearchId(), center.getOffice()
+						.getOfficeId(), CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD);
+		assertEquals(new Integer("2").intValue(), customerList.size());
+
+		for (CustomerBO customer : customerList) {
+			if (customer.getCustomerId().intValue() == client.getCustomerId()
+					.intValue())
+				assertTrue(true);
+			if (customer.getCustomerId().intValue() == client4.getCustomerId()
 					.intValue())
 				assertTrue(true);
 		}

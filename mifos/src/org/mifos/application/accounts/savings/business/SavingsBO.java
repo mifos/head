@@ -1060,7 +1060,7 @@ public class SavingsBO extends AccountBO {
 				try {
 					accountTrxn = new SavingsTrxnDetailEntity(
 							accountPayment,
-							paymentData.getPersonnel(),
+							paymentData.getPersonnel(), customer,
 							paymentData.getTransactionDate(),
 							(AccountActionEntity) masterPersistence
 									.getPersistentObject(
@@ -1075,6 +1075,7 @@ public class SavingsBO extends AccountBO {
 				accountPayment.addAcountTrxn(accountTrxn);
 			}
 		}
+		
 		if (enteredAmount.getAmountDoubleValue() > 0.0) {
 			SavingsTrxnDetailEntity accountTrxn = buildUnscheduledDeposit(
 					accountPayment, enteredAmount, paymentData.getPersonnel(),
@@ -1093,9 +1094,11 @@ public class SavingsBO extends AccountBO {
 			throws AccountException {
 		MasterPersistence masterPersistence = new MasterPersistence();
 		SavingsTrxnDetailEntity accountTrxn;
+		savingsBalance = savingsBalance.add(depositAmount);
+		savingsPerformance.setPaymentDetails(depositAmount);
 		try {
 			accountTrxn = new SavingsTrxnDetailEntity(accountPayment,
-					personnel, transactionDate,
+					personnel, customer, transactionDate,
 					(AccountActionEntity) masterPersistence
 							.getPersistentObject(AccountActionEntity.class,
 									AccountConstants.ACTION_SAVINGS_DEPOSIT),
@@ -1103,8 +1106,6 @@ public class SavingsBO extends AccountBO {
 		} catch (PersistenceException e) {
 			throw new AccountException(e);
 		}
-		savingsBalance = savingsBalance.add(depositAmount);
-		savingsPerformance.setPaymentDetails(depositAmount);
 		return accountTrxn;
 	}
 
@@ -1139,7 +1140,7 @@ public class SavingsBO extends AccountBO {
 		try {
 			accountTrxnBO = new SavingsTrxnDetailEntity(
 					accountPayment,
-					accountPaymentData.getPersonnel(),
+					accountPaymentData.getPersonnel(), customer,
 					accountPaymentData.getTransactionDate(),
 					(AccountActionEntity) masterPersistence
 							.getPersistentObject(AccountActionEntity.class,
@@ -1366,13 +1367,7 @@ public class SavingsBO extends AccountBO {
 							+ lastPayment.getAccountTrxns().size());
 			List<AccountTrxnEntity> newlyAddedTrxns = lastPayment
 					.reversalAdjustment(adjustmentComment);
-			// TODO Please validate the code commented below. Why is personnel
-			// being
-			// changed.
-			/*
-			 * for (AccountTrxnEntity accountTrxn : newlyAddedTrxns) {
-			 * accountTrxn.setPersonnel(personnel); }
-			 */
+			
 			buildFinancialEntries(new HashSet<AccountTrxnEntity>(
 					newlyAddedTrxns));
 		} catch (PersistenceException e) {

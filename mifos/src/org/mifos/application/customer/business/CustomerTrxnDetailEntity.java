@@ -107,7 +107,7 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 			String comments, AccountTrxnEntity relatedTrxn,
 			Money miscFeeAmount, Money miscPenaltyAmount) {
 		super(accountPayment, accountActionEntity, installmentId, dueDate, 
-				personnel, actionDate, amount, comments,
+				personnel, null, actionDate, amount, comments,
 				relatedTrxn);
 		this.miscFeeAmount = miscFeeAmount;
 		this.miscPenaltyAmount = miscPenaltyAmount;

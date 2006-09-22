@@ -297,6 +297,19 @@ public class CustomerPersistence extends Persistence {
 		return queryResult;
 	}
 
+	protected List<CustomerBO> getActiveAndOnHoldChildren(String parentSearchId,
+			Short parentOfficeId, CustomerLevel childrenLevel)
+			throws PersistenceException {
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("SEARCH_STRING", parentSearchId + ".%");
+		queryParameters.put("OFFICE_ID", parentOfficeId);
+		queryParameters.put("LEVEL_ID", childrenLevel.getValue());
+		List<CustomerBO> queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_ACTIVE_AND_ONHOLD_CHILDREN,
+				queryParameters);
+		return queryResult;
+	}
+	
 	public List<CustomerBO> getChildren(String parentSearchId,
 			Short parentOfficeId, CustomerLevel childrenLevel,
 			ChildrenStateType childrenStateType) throws PersistenceException {
@@ -309,6 +322,8 @@ public class CustomerPersistence extends Persistence {
 					parentOfficeId, childrenLevel);
 		if (childrenStateType.equals(ChildrenStateType.ALL))
 			return getAllChildren(parentSearchId, parentOfficeId, childrenLevel);
+		if (childrenStateType.equals(ChildrenStateType.ACTIVE_AND_ONHOLD))
+			return getActiveAndOnHoldChildren(parentSearchId,parentOfficeId, childrenLevel);
 		return null;
 	}
 

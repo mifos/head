@@ -324,6 +324,7 @@ public interface NamedQueryConstants {
 	public String GET_CHILDREN_OTHER_THAN_CLOSED_AND_CANCELLED="Customer.getChildrenOtherThanClosedAndCancelled";
 	public String GET_ALL_CHILDREN="Customer.getAllChildren";
 	public String GET_ALL_CHILDREN_FOR_CUSTOMERLEVEL="Customer.getAllChildrenForCustomerLevel";
+	public String GET_ACTIVE_AND_ONHOLD_CHILDREN="Customer.getActiveAndOnHoldChildren";
 	public String GET_CHILDREN_FOR_PARENT="Customer.getChildrenForParent";
 	public String GET_ALL_CUSTOMERS="Customer.getAllCustomers";
 	public String GET_CUSTOMER_COUNT_FOR_OFFICE="Customer.getCustomerCountForOffice";

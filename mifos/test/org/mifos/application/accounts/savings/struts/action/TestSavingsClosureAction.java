@@ -2,6 +2,7 @@ package org.mifos.application.accounts.savings.struts.action;
 
 import java.net.URISyntaxException;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.hibernate.Hibernate;
@@ -17,8 +18,8 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -53,6 +54,10 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 
 	private CustomerBO client2;
 
+	private CustomerBO client3;
+
+	private CustomerBO client4;
+
 	private SavingsTestHelper helper = new SavingsTestHelper();
 
 	@Override
@@ -80,17 +85,13 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 	@Override
 	public void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(savings);
-		savings = null;
 		TestObjectFactory.cleanUp(newSavings);
-		newSavings = null;
 		TestObjectFactory.cleanUp(client1);
-		client1 = null;
 		TestObjectFactory.cleanUp(client2);
-		client2 = null;
+		TestObjectFactory.cleanUp(client3);
+		TestObjectFactory.cleanUp(client4);
 		TestObjectFactory.cleanUp(group);
-		group = null;
 		TestObjectFactory.cleanUp(center);
-		center = null;
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
@@ -114,14 +115,20 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		Hibernate.initialize(savings.getAccountActionDates());
 		assertNotNull(request.getSession().getAttribute(
 				MasterConstants.PAYMENT_TYPE));
-		assertNotNull(request.getSession().getAttribute(
-				SavingsConstants.CLIENT_LIST));
+		List<CustomerBO> clientList = (List<CustomerBO>)request.getSession().getAttribute(SavingsConstants.CLIENT_LIST);
+		assertNotNull(clientList);
+		assertEquals(2, clientList.size());
+		
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
 		client1 = new CustomerPersistence()
 				.getCustomer(client1.getCustomerId());
 		client2 = new CustomerPersistence()
 				.getCustomer(client2.getCustomerId());
+		client3 = new CustomerPersistence()
+				.getCustomer(client3.getCustomerId());
+		client4 = new CustomerPersistence()
+				.getCustomer(client4.getCustomerId());
 	}
 
 	public void testSuccessfullPreview() {
@@ -242,11 +249,17 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 
 	private void createClients() {
 		client1 = TestObjectFactory.createClient("client1",
-				ClientConstants.STATUS_CLOSED, "1.1.1.1", group, new Date(
-						System.currentTimeMillis()));
+				CustomerStatus.CLIENT_CLOSED.getValue(), "1.1.1.1", group,
+				new Date(System.currentTimeMillis()));
 		client2 = TestObjectFactory.createClient("client2",
-				ClientConstants.STATUS_ACTIVE, "1.1.1.2", group, new Date(
-						System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE.getValue(), "1.1.1.2", group,
+				new Date(System.currentTimeMillis()));
+		client3 = TestObjectFactory.createClient("client2",
+				CustomerStatus.CLIENT_PARTIAL.getValue(), "1.1.1.2", group,
+				new Date(System.currentTimeMillis()));
+		client4 = TestObjectFactory.createClient("client2",
+				CustomerStatus.CLIENT_HOLD.getValue(), "1.1.1.2", group,
+				new Date(System.currentTimeMillis()));
 	}
 
 	private SavingsOfferingBO createSavingsOffering() {

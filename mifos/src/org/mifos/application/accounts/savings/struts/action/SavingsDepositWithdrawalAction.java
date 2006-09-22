@@ -40,11 +40,11 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -93,7 +93,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 						.getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.PERINDIVIDUAL.getValue())))
 			SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, savings
 					.getCustomer().getChildren(
-							CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED), request
+							CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD), request
 					.getSession());
 		else
 			SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, null,
@@ -165,6 +165,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 				.toString());
 	}
 
+	@CloseSession
 	public ActionForward makePayment(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -193,8 +194,6 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 				.equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL))
 			savings.withdraw(createPaymentData(actionForm, uc));
 
-		HibernateUtil.commitTransaction();
-		HibernateUtil.getSessionTL().evict(savings);
 		return mapping.findForward(ActionForwards.account_details_page
 				.toString());
 	}

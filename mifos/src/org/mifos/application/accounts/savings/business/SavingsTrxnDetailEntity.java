@@ -54,11 +54,11 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 	
 	
 	public SavingsTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity,
-			PersonnelBO personnel,
+			PersonnelBO personnel, CustomerBO customer,
 			java.util.Date transactionDate,
 			AccountActionEntity accountActionEntity, Money depositAmount ,
 			Short installmentId, java.util.Date actionDate) {
-		super(accountPaymentEntity, accountActionEntity, installmentId, 
+		super(accountPaymentEntity, customer, accountActionEntity, installmentId, 
 				 actionDate,personnel, transactionDate, depositAmount, "");
 		this.balance = ((SavingsBO) getAccount()).getSavingsBalance();
 		this.depositAmount = depositAmount;
@@ -67,16 +67,15 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 	}
 	
 	public SavingsTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity,
-			PersonnelBO personnel,
+			PersonnelBO personnel, CustomerBO customer,
 			java.util.Date transactionDate,
 			AccountActionEntity accountActionEntity, Money withdrawAmount) {
-		super(accountPaymentEntity, accountActionEntity, null, 
+		super(accountPaymentEntity, customer, accountActionEntity, null, 
 				transactionDate,personnel, transactionDate, withdrawAmount, "");
 		this.balance = ((SavingsBO) getAccount()).getSavingsBalance();
 		this.depositAmount = new Money();
 		this.withdrawlAmount=withdrawAmount;
-		this.interestAmount=new Money();
-	
+		this.interestAmount=new Money();		
 	}
 	
 	public SavingsTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity,CustomerBO customer,
@@ -111,10 +110,10 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 	
 	public SavingsTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity,
 			AccountActionEntity accountActionEntity, Money amount, Money balance,
-			PersonnelBO createdBy,java.util.Date dueDate,
+			PersonnelBO createdBy, CustomerBO customer, java.util.Date dueDate,
 			java.util.Date transactionDate,String comments,AccountTrxnEntity relatedTrxn) {
 		super(accountPaymentEntity,accountActionEntity , null, dueDate,
-				createdBy, transactionDate, amount,comments,relatedTrxn);
+				createdBy, customer, transactionDate, amount,comments,relatedTrxn);
 		this.balance = balance;
 		Short lastAccountAction=new SavingsHelper().getPaymentActionType(accountPaymentEntity);
 		if (lastAccountAction.equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL)){
@@ -149,11 +148,11 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 				AccountConstants.ACTION_SAVINGS_DEPOSIT)) {
 			balAfterAdjust = getBalance().subtract(getDepositAmount());
 			reverseAccntTrxn=new SavingsTrxnDetailEntity(
-					getAccountPayment(),(AccountActionEntity) masterPersistence
+					getAccountPayment(), (AccountActionEntity) masterPersistence
 					.getPersistentObject(AccountActionEntity.class,
 							AccountConstants.ACTION_SAVINGS_ADJUSTMENT),
 					getDepositAmount().negate(),
-					balAfterAdjust, getPersonnel(),getDueDate(), getActionDate(),adjustmentComment,this);
+					balAfterAdjust, getPersonnel(),getCustomer(), getDueDate(), getActionDate(),adjustmentComment,this);
 		} else if (getAccountActionEntity().getId().equals(
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL)) {
 			balAfterAdjust = getBalance().add(getWithdrawlAmount());
@@ -162,7 +161,7 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 					.getPersistentObject(AccountActionEntity.class,
 							AccountConstants.ACTION_SAVINGS_ADJUSTMENT),
 							getWithdrawlAmount().negate(),
-					balAfterAdjust, getPersonnel(),getDueDate(), getActionDate(),adjustmentComment,this);
+					balAfterAdjust, getPersonnel(),getCustomer(), getDueDate(), getActionDate(),adjustmentComment,this);
 			
 		}else{
 			reverseAccntTrxn=new SavingsTrxnDetailEntity(
@@ -170,7 +169,7 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 					.getPersistentObject(AccountActionEntity.class,
 							AccountConstants.ACTION_SAVINGS_ADJUSTMENT),
 							getAmount().negate(),
-					balAfterAdjust, getPersonnel(),getDueDate(), getActionDate(),adjustmentComment,this);
+					balAfterAdjust, getPersonnel(), getCustomer(), getDueDate(), getActionDate(),adjustmentComment,this);
 		}
 		return reverseAccntTrxn;
 		}catch (PersistenceException e) {

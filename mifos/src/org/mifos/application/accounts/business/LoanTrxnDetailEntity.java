@@ -113,7 +113,7 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 			Money principalAmount, Money interestAmount, Money penaltyAmount,
 			Money miscFeeAmount, Money miscPenaltyAmount) {
 		super(accountPayment, accountActionEntity, installmentId, dueDate,
-				personnel, actionDate, amount, comments, relatedTrxn);
+				personnel, null, actionDate, amount, comments, relatedTrxn);
 
 		this.principalAmount = principalAmount;
 		this.interestAmount = interestAmount;
