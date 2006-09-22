@@ -1426,7 +1426,8 @@
 		org.mifos.application.customer.util.helpers.CustomerStatus,
 		org.mifos.application.customer.util.helpers.CustomerLevel,
 		org.mifos.application.productdefinition.util.helpers.PrdStatus,
-		org.mifos.application.accounts.util.helpers.AccountState" />
+		org.mifos.application.accounts.util.helpers.AccountState,
+		org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit" />
 	</plug-in>
 
 </struts-config>

@@ -92,32 +92,35 @@
 		          <td colspan="2">
 		    	      <font class="fontnormalRedBold"><html-el:errors	bundle="SavingsUIResources" /></font>
 			      </td>
-			  </tr>
-		<c:choose>
-			<c:when test="${!empty clientList}">
-              <tr>
-                <td align="right" class="fontnormal"><span class="fontnormalRed">*</span>
-                <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
-				<mifos:mifoslabel name="Savings.clientName" isColonRequired="yes"/>
-				</td>
-                <td>
-	               	 <mifos:select name="savingsDepositWithdrawalForm" property="customerId" onchange="javascript:reLoad(this.form)">
-						<c:forEach var="client" items="${sessionScope.clientList}">
-							<html-el:option value="${client.customerId}">
-								<c:out value="${client.displayName}" />
-							</html-el:option>
-						</c:forEach>
-						<html-el:option value="${sessionScope.BusinessKey.customer.customerId}">
-							<mifos:mifoslabel name="Savings.nonSpecified" />
-						</html-el:option>
-					</mifos:select>
-                </td>
-              </tr>
-            </c:when>
-			<c:otherwise>
-					<html-el:hidden property="customerId" value="${sessionScope.BusinessKey.customer.customerId}" />
-			</c:otherwise>
-		</c:choose>
+			  </tr>			  
+                	<c:set var="customerLevel" value="${sessionScope.BusinessKey.customer.customerLevel.id}" />
+			  		<c:choose>
+				  		<c:when test="${customerLevel==CustomerLevel.CENTER.value or 
+				  				(customerLevel==CustomerLevel.GROUP.value and 
+				  				sessionScope.BusinessKey.recommendedAmntUnit.id==RecommendedAmountUnit.PERINDIVIDUAL.value)}">
+						<tr>
+			                <td align="right" class="fontnormal"><span class="fontnormalRed">*</span>
+	            				<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
+								<mifos:mifoslabel name="Savings.clientName" isColonRequired="yes"/>
+							</td>
+			                <td>				  				
+					  			<mifos:select name="savingsDepositWithdrawalForm" property="customerId" onchange="javascript:reLoad(this.form)">
+									<c:forEach var="client" items="${sessionScope.clientList}">
+										<html-el:option value="${client.customerId}">
+											<c:out value="${client.displayName}" />
+										</html-el:option>
+									</c:forEach>
+									<html-el:option value="${sessionScope.BusinessKey.customer.customerId}">
+										<mifos:mifoslabel name="Savings.nonSpecified" />
+									</html-el:option>
+								</mifos:select>
+							</td>
+						</tr>
+				  		</c:when>
+				  		<c:otherwise>
+					  		<html-el:hidden property="customerId" value="${sessionScope.BusinessKey.customer.customerId}" />
+				  		</c:otherwise>
+			  		</c:choose>
 			 <tr>
                 <td align="right" class="fontnormal">
                 	<mifos:mifoslabel name="Savings.dateOfTrxn" mandatory="Yes" isColonRequired="Yes"/>
