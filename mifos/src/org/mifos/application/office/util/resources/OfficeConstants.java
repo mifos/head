@@ -126,15 +126,15 @@ public interface OfficeConstants {
 	public final String KEYUPDATEFAILED="office.error.updationFailed";
 	public final String KEYGETFAILED="office.error.getFailed";
 	public final String KEYLOADFAILED="office.error.loadFailed";
-	public final String KEYHASACTIVECHILDREN="office.error.hasActiveChildern";	
-	public final String KEYHASACTIVEPERSONNEL="office.error.hasActivePersonnel";
-	public final String KEYHASACTIVEOFFICEWITHLEVEL="office.error.hasActiveOfficeWithThisLevel";
-	public final String KEYLOADINOFFICEHIERARCHYMASTERFAILED="office.error.errorInLoadingMasterData";
-	public final String KEYOFFICEHIERARCHYUPDATEFAILED="office.error.updationHierarchyFailed";
-	public final String KEYSELECTOFFICETYPE="office.formOfficeType.pleaseLelect";
+	public final String KEYHASACTIVECHILDREN="Office.error.hasActiveChildern";	
+	public final String KEYHASACTIVEPERSONNEL="Office.error.hasActivePersonnel";
+	public final String KEYHASACTIVEOFFICEWITHLEVEL="Office.error.hasActiveOfficeWithThisLevel";
+	public final String KEYLOADINOFFICEHIERARCHYMASTERFAILED="Office.error.errorInLoadingMasterData";
+	public final String KEYOFFICEHIERARCHYUPDATEFAILED="Office.error.updationHierarchyFailed";
+	public final String KEYSELECTOFFICETYPE="Office.formOfficeType.pleaseLelect";
 	
-	public final String KEYNAMEEXIST="office.formOfficeType.nameExist";
-	public final String KEYSHORTNAMEEXIST="office.formOfficeType.shortNameExist";	
+	public final String KEYNAMEEXIST="Office.formOfficeType.nameExist";
+	public final String KEYSHORTNAMEEXIST="Office.formOfficeType.shortNameExist";	
 	public final String KEYHIERARCHYUPDATIONFAILED="errors.office.updationhierarchyfailed";
 	public final String KEYOFFICELEVELNOTCONFIGURED="errors.office.officelevelnotconfigured";
 	public final String KEYPARENTNOTACTIVE="errors.office.parentnotactive";

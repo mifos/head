@@ -483,7 +483,6 @@ public class OfficeBO extends BusinessObject {
 						newParent1 = newParent;
 					newParent1.addChild(this);
 					newParent1.updateSearchId(newParent1.getSearchId());
-					// this.setParentOffice(newParent1);
 					oldParent1.updateSearchId(oldParent1.getSearchId());
 
 				}
@@ -509,7 +508,7 @@ public class OfficeBO extends BusinessObject {
 	private void updateLevel(OfficeLevel level) throws OfficeException {
 
 		if (this.getOfficeLevel() != level) {
-			
+
 			if (!canUpdateLevel(level))
 				throw new OfficeException(OfficeConstants.ERROR_INVALID_LEVEL);
 			try {
@@ -575,7 +574,6 @@ public class OfficeBO extends BusinessObject {
 
 		if (this.officeId.equals(((OfficeBO) obj).getOfficeId()))
 			return true;
-
 		return false;
 	}
 

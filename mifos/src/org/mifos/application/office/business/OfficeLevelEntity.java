@@ -55,13 +55,13 @@ public class OfficeLevelEntity extends MasterDataEntity {
 
 	private Short interactionFlag;
 
-	protected OfficeLevelEntity() {
+	public OfficeLevelEntity(OfficeLevel level) {
+		super(level.getValue());
 		parent = null;
 		child = null;
 	}
 
-	public OfficeLevelEntity(OfficeLevel level) {
-		super(level.getValue());
+	protected OfficeLevelEntity() {
 		parent = null;
 		child = null;
 	}
@@ -96,17 +96,20 @@ public class OfficeLevelEntity extends MasterDataEntity {
 
 	public void update(boolean configured) throws OfficeException {
 		try {
-			if(!configured && new OfficeHierarchyPersistence().isOfficePresentForLevel(getId())){
-				throw new OfficeException(OfficeConstants.KEYHASACTIVEOFFICEWITHLEVEL);
+			if (!configured
+					&& new OfficeHierarchyPersistence()
+							.isOfficePresentForLevel(getId())) {
+				throw new OfficeException(
+						OfficeConstants.KEYHASACTIVEOFFICEWITHLEVEL);
 			}
-			if ((configured && !isConfigured()) || (!configured && isConfigured())) {
+			if ((configured && !isConfigured())
+					|| (!configured && isConfigured())) {
 				addConfigured(configured);
 				new OfficeHierarchyPersistence().createOrUpdate(this);
 			}
-		} 
-		catch (PersistenceException e) {
-				throw new OfficeException(e);
+		} catch (PersistenceException e) {
+			throw new OfficeException(e);
 		}
-		
+
 	}
 }

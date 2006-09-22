@@ -47,6 +47,7 @@ function getOffice(officeid){
 </script>
 		<html-el:form action="/offAction.do">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
+			<c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"></c:set>
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"><html-el:link
 						href="javascript:submitAdminLink()">

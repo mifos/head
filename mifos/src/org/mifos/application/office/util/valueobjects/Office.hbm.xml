@@ -113,9 +113,6 @@
     <query name="isOfficeActive">
             <![CDATA[select count(*) from org.mifos.application.office.util.valueobjects.Office o where o.officeId=:officeId and o.status.statusId=:statusId]]>
     </query>
-     <query name="getOfficeSubObject">
-            <![CDATA[select new org.mifos.application.office.util.helpers.OfficeSubObject(office.status.statusId,office.level.levelId) from org.mifos.application.office.util.valueobjects.Office office where office.officeId=:officeId ]]>
-    </query>
 	<query name="getMaxId">
             <![CDATA[select max(office.officeId) from org.mifos.application.office.util.valueobjects.Office office]]>
     </query>

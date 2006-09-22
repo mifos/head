@@ -53,7 +53,6 @@ import org.mifos.application.master.util.valueobjects.OfficeLevelChildren;
 import org.mifos.application.master.util.valueobjects.OfficeLevelMaster;
 import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.util.helpers.OfficeHelper;
-import org.mifos.application.office.util.helpers.OfficeSubObject;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.office.util.valueobjects.BranchOffice;
 import org.mifos.application.office.util.valueobjects.BranchParentOffice;
@@ -333,9 +332,6 @@ public class OfficeDAO extends DAO {
 			// is made out of the
 			// this office object initially
 
-			OfficeSubObject oso = (OfficeSubObject) ((SearchResults) context
-					.getSearchResultBasedOnName(OfficeConstants.OFFICESUBOBJECT))
-					.getValue();
 
 			session = HibernateUtil.getSession();
 			tx = session.beginTransaction();
@@ -367,7 +363,7 @@ public class OfficeDAO extends DAO {
 				// 1) see if the parent has been updated the we have to update
 				// previous hierarchy record and insert new hierarchy record
 				
-				Short oldParent = oso.getParentId();
+				Short oldParent = null;
 				Office newParent = office.getParentOffice();
 				if (null != oldParent&& null != newParent)
 				{
@@ -1301,36 +1297,7 @@ public class OfficeDAO extends DAO {
 
 	}
 
-	/**
-	 * This fuction retrive the few fieds of the office object based on the passed 
-	 * officeid
-	 * @param id officeid
-	 * @return
-	 * @throws SystemException
-	 * @throws ApplicationException
-	 */
-	public OfficeSubObject getOfficeSubObject(Short id) throws SystemException,
-			ApplicationException {
-		Session session = null;
-		OfficeSubObject oso = null;
-		try {
-			session = HibernateUtil.getSession();
-			oso = (OfficeSubObject) session.getNamedQuery(
-					NamedQueryConstants.GETOFFICESUBOBJECT).setShort(
-					OfficeConstants.OFFICEID, id).uniqueResult();
-
-		} catch (HibernateProcessException e) {
-
-			throw new SystemException(e);
-
-		} catch (HibernateException he) {
-
-			throw new ApplicationException(he);
-		} finally {
-			HibernateUtil.closeSession(session);
-		}
-		return oso;
-	}
+	
 
 	/**
 	 * This function returns all the office type present in the system

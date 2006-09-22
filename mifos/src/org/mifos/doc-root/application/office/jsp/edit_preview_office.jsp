@@ -44,7 +44,7 @@ function  submitAdminLink()
 }
 </script>
 		<html-el:form action="/offAction.do" method="POST">
-
+			<c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"></c:set>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"><html-el:link
@@ -86,7 +86,7 @@ function  submitAdminLink()
 								<td>
 								<font class="fontnormalRedBold"><html-el:errors
 									bundle="OfficeUIResources" /></font>
-									<br></td>
+									<br><br></td>
 								</logic:messagesPresent>
 								</tr>
 						<tr>

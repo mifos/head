@@ -42,9 +42,6 @@ import java.util.Date;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.framework.business.BusinessObject;
 
-/**
- * This class is value object for the officeHierarchy
- */
 public class OfficeHierarchyEntity extends BusinessObject {
 
 	private final Integer hierarchyId;
@@ -57,18 +54,25 @@ public class OfficeHierarchyEntity extends BusinessObject {
 
 	private Short status;
 
+	public OfficeHierarchyEntity(OfficeBO office, OfficeBO parentOffice) {
+		super();
+		this.hierarchyId = null;
+		this.office = office;
+		this.parentOffice = parentOffice;
+		this.status = OfficeConstants.ACTIVE;
+		this.createdDate = new Date(System.currentTimeMillis());
+
+	}
+
+	protected OfficeHierarchyEntity() {
+		super();
+		this.hierarchyId = null;
+	}
+
 	public Date getEndDate() {
 		return endDate;
 	}
-	public OfficeHierarchyEntity(OfficeBO office,OfficeBO parentOffice){
-		super();
-		this.hierarchyId = null;
-		this.office=office;
-		this.parentOffice=parentOffice;
-		this.status=OfficeConstants.ACTIVE;
-		this.createdDate=new Date(System.currentTimeMillis());
-		
-    }
+
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
@@ -97,13 +101,8 @@ public class OfficeHierarchyEntity extends BusinessObject {
 		this.status = status;
 	}
 
-	protected  OfficeHierarchyEntity() {
-		super();
-		this.hierarchyId = null;
-	}
 	public Integer getHierarchyId() {
 		return hierarchyId;
 	}
-
 
 }
