@@ -277,7 +277,8 @@ class Feeclass<TestClass
 		  $ie.text_field(:name,"rate").set(amount)
 		  $ie.select_list(:name,"feeFormula").select_value(formula)
 		end
-		$ie.select_list(:name,"glCode").select(glcode)
+		#$ie.select_list(:name,"glCode").select(glcode)
+		$ie.select_list(:name,"glCode").select_value(glcode)
 		$ie.button(:value,'Preview').click
 	end
 	#clicking on submit button
