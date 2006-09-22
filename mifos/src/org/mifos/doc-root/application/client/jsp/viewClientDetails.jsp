@@ -374,8 +374,14 @@
 							<td height="23" colspan="2" class="fontnormalbold">
 							<table width="100%" border="0" cellspacing="0" cellpadding="0">
 								<tr>
-									<td width="61%" class="fontnormalbold"><mifos:mifoslabel
-										name="${ConfigurationConstants.GROUP}" /> <mifos:mifoslabel
+									<td width="61%" class="fontnormalbold">
+									<c:choose>
+										<c:when test="${BusinessKey.clientUnderGroup}">
+											<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
+										</c:when>
+										<c:otherwise>
+											<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" />
+										</c:otherwise></c:choose> <mifos:mifoslabel
 										name="client.GroupMembershipDetails"
 										bundle="ClientUIResources"></mifos:mifoslabel><br>
 									<span class="fontnormalRed"> <mifos:mifoslabel
@@ -388,9 +394,10 @@
 										<c:out
 											value="${BusinessKey.customerMeeting.meeting.meetingPlace}" />
 										<br>
-									</c:if> <c:if test="${BusinessKey.clientUnderGroup}">
-									<c:out
-												value="${BusinessKey.parentCustomer.displayName}" /><br></c:if></span></td>
+									</c:if> <c:choose>
+										<c:when test="${BusinessKey.clientUnderGroup}">
+									<c:out value="${BusinessKey.parentCustomer.displayName}" /><br></c:when>
+										<c:otherwise><c:out value="${BusinessKey.office.officeName}" /><br></c:otherwise></c:choose></span></td>
 									<td width="39%" align="right" valign="top"><!-- Editing group or branch membership based on whether client belongs to group or not -->
 									<c:choose>
 										<c:when test="${BusinessKey.clientUnderGroup}">

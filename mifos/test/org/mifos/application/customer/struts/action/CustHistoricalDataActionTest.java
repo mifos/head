@@ -87,13 +87,15 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 	public void testGetWhenCustHistoricalDataIsNotNull()
 			throws Exception {
 		createInitialObjects();
+		Integer oldLoanCycleNo = client.getPerformanceHistory().getLoanCycleNumber();
 		CustomerHistoricalDataEntity customerHistoricalDataEntity = new CustomerHistoricalDataEntity(
 				client);
 		customerHistoricalDataEntity.setMfiJoiningDate(offSetCurrentDate(10));
 		Date mfiDate = new Date(customerHistoricalDataEntity.getMfiJoiningDate().getTime());
-		client.updateHistoricalData(customerHistoricalDataEntity);
+		client.updateHistoricalData(customerHistoricalDataEntity,0);
 		client.update();
 		HibernateUtil.commitTransaction();
+		assertEquals(oldLoanCycleNo,client.getPerformanceHistory().getLoanCycleNumber());
 		assertEquals(mfiDate,new Date(client.getMfiJoiningDate().getTime()));
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request
 				.getSession());
@@ -202,11 +204,15 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 	public void testUpdateWhenCustHistoricalDataIsNotNull()
 			throws Exception {
 		createInitialObjects();
+		Integer oldLoanCycleNo = client.getPerformanceHistory().getLoanCycleNumber();
 		CustomerHistoricalDataEntity customerHistoricalDataEntity = new CustomerHistoricalDataEntity(
 				client);
-		client.updateHistoricalData(customerHistoricalDataEntity);
+		Integer oldHistoricalLoanCycleNo = customerHistoricalDataEntity.getLoanCycleNumber();
+		customerHistoricalDataEntity.setLoanCycleNumber(5);
+		client.updateHistoricalData(customerHistoricalDataEntity,oldHistoricalLoanCycleNo);
 		client.update();
 		HibernateUtil.commitTransaction();
+		assertEquals(oldLoanCycleNo+5,client.getPerformanceHistory().getLoanCycleNumber().intValue());
 
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request
 				.getSession());
@@ -269,7 +275,7 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 				group);
 		customerHistoricalDataEntity.setMfiJoiningDate(offSetCurrentDate(10));
 		Date mfiDate = new Date(customerHistoricalDataEntity.getMfiJoiningDate().getTime());
-		group.updateHistoricalData(customerHistoricalDataEntity);
+		group.updateHistoricalData(customerHistoricalDataEntity,0);
 		group.update();
 		HibernateUtil.commitTransaction();
 		assertEquals(mfiDate,new Date(group.getMfiJoiningDate().getTime()));
@@ -387,7 +393,7 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 		createInitialObjects();
 		CustomerHistoricalDataEntity customerHistoricalDataEntity = new CustomerHistoricalDataEntity(
 				group);
-		group.updateHistoricalData(customerHistoricalDataEntity);
+		group.updateHistoricalData(customerHistoricalDataEntity,0);
 		group.update();
 		HibernateUtil.commitTransaction();
 

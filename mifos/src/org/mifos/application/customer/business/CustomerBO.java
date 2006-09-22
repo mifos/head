@@ -543,7 +543,7 @@ public abstract class CustomerBO extends BusinessObject {
 		return movement;
 	}
 
-	public void updateHistoricalData(CustomerHistoricalDataEntity historicalData) {
+	public void updateHistoricalData(CustomerHistoricalDataEntity historicalData, Integer oldLoanCycleNo) {
 		if (historicalData != null)
 			mfiJoiningDate = historicalData.getMfiJoiningDate();
 		this.historicalData = historicalData;

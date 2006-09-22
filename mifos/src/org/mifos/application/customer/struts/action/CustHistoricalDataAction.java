@@ -108,6 +108,7 @@ public class CustHistoricalDataAction extends BaseAction {
 				Constants.BUSINESS_KEY, request.getSession());
 		CustomerHistoricalDataEntity customerHistoricalDataEntity = customerBO
 				.getHistoricalData();
+		Integer oldLoanCycleNo = 0;
 		if (customerHistoricalDataEntity == null) {
 			customerHistoricalDataEntity = new CustomerHistoricalDataEntity(
 					customerBO);
@@ -115,13 +116,14 @@ public class CustHistoricalDataAction extends BaseAction {
 					.getUserContext().getId());
 			customerHistoricalDataEntity.setCreatedDate(new java.util.Date());
 		} else {
+			oldLoanCycleNo = customerHistoricalDataEntity.getLoanCycleNumber();
 			customerHistoricalDataEntity.setUpdatedDate(new java.util.Date());
 			customerHistoricalDataEntity.setUpdatedBy(customerBO
 					.getUserContext().getId());
 		}
 		setCustomerHistoricalDataEntity(customerBO, historicalActionForm,
 				customerHistoricalDataEntity);
-		customerBO.updateHistoricalData(customerHistoricalDataEntity);
+		customerBO.updateHistoricalData(customerHistoricalDataEntity,oldLoanCycleNo);
 		customerBO.update();
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
@@ -208,6 +210,7 @@ public class CustHistoricalDataAction extends BaseAction {
 				Constants.BUSINESS_KEY, request);
 		CustomerHistoricalDataEntity customerHistoricalDataEntity = customerBO
 				.getHistoricalData();
+		Integer oldLoanCycleNo = 0;
 		if (customerHistoricalDataEntity == null) {
 			customerHistoricalDataEntity = new CustomerHistoricalDataEntity(
 					customerBO);
@@ -215,13 +218,14 @@ public class CustHistoricalDataAction extends BaseAction {
 					.getUserContext().getId());
 			customerHistoricalDataEntity.setCreatedDate(new java.util.Date());
 		} else {
+			oldLoanCycleNo = customerHistoricalDataEntity.getLoanCycleNumber();
 			customerHistoricalDataEntity.setUpdatedDate(new java.util.Date());
 			customerHistoricalDataEntity.setUpdatedBy(customerBO
 					.getUserContext().getId());
 		}
 		setCustomerHistoricalDataEntity(customerBO, historicalActionForm,
 				customerHistoricalDataEntity);
-		customerBO.updateHistoricalData(customerHistoricalDataEntity);
+		customerBO.updateHistoricalData(customerHistoricalDataEntity,oldLoanCycleNo);
 		customerBO.update();
 		return mapping.findForward(ActionForwards.updateHistoricalData_success
 				.toString());
