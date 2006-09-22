@@ -41,6 +41,7 @@ package org.mifos.application.accounts.business;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
@@ -137,8 +138,14 @@ public class CustomerAccountBO extends AccountBO {
 						.getCustomerLevel().isCenter()
 						&& customer.getCustomerStatus().getId().equals(
 								CustomerStatus.CENTER_ACTIVE.getValue()))) {
+			Calendar meetingStartDate = customer.getCustomerMeeting().getMeeting().getMeetingStartDate();
+			if(customer.getParentCustomer()!=null){
+				Calendar nextMeetingDate = new GregorianCalendar();
+				nextMeetingDate.setTime(customer.getParentCustomer().getCustomerAccount().getNextMeetingDate());
+				customer.getCustomerMeeting().getMeeting().setMeetingStartDate(nextMeetingDate);
+			}
 			generateMeetingSchedule();
-
+			customer.getCustomerMeeting().getMeeting().setMeetingStartDate(meetingStartDate);
 		}
 	}
 	

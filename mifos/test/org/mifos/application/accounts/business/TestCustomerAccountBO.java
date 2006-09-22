@@ -1037,6 +1037,69 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 	}
 	
+	public void testGenerateMeetingScheduleWhenFirstTwoMeeingDatesOfCenterIsPassed()
+			throws ApplicationException, SystemException {
+		MeetingBO meetingBO = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active_test",
+				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meetingBO,
+				new Date(System.currentTimeMillis()));
+		changeAllInstallmentDateToPreviousDate(center.getCustomerAccount(),14);
+		center.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		group = TestObjectFactory.createGroup("Group_Active_test",
+				CustomerStatus.GROUP_ACTIVE.getValue(), "1.1.1", center,
+				new Date(System.currentTimeMillis()));
+		HibernateUtil.closeSession();
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		java.util.Date nextMeetingDate = center.getCustomerAccount().getNextMeetingDate();
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		for (AccountActionDateEntity actionDateEntity : group
+				.getCustomerAccount().getAccountActionDates()) {
+			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("1")))
+				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity
+						.getActionDate().getTime()), DateUtils
+						.getDateWithoutTimeStamp(nextMeetingDate.getTime()));
+		}
+	}
+	
+	public void testGenerateMeetingScheduleForGroupWhenMeeingDatesOfCenterIsPassed()
+			throws ApplicationException, SystemException {
+		MeetingBO meetingBO = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active_test",
+				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meetingBO,
+				new Date(System.currentTimeMillis()));
+		changeFirstInstallmentDateToPreviousDate(center.getCustomerAccount());
+		center.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		group = TestObjectFactory.createGroup("Group_Active_test",
+				CustomerStatus.GROUP_ACTIVE.getValue(), "1.1.1", center,
+				new Date(System.currentTimeMillis()));
+		HibernateUtil.closeSession();
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		java.util.Date nextMeetingDate = center.getCustomerAccount()
+				.getNextMeetingDate();
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		for (AccountActionDateEntity actionDateEntity : group
+				.getCustomerAccount().getAccountActionDates()) {
+			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("1")))
+				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity
+						.getActionDate().getTime()), DateUtils
+						.getDateWithoutTimeStamp(nextMeetingDate.getTime()));
+		}
+	}
+	
 	private void createCenter() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -1137,4 +1200,16 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		return new Date(currentDateCalendar.getTimeInMillis());
 	}
 
+	private void changeAllInstallmentDateToPreviousDate(CustomerAccountBO customerAccountBO, int noOfDays) {
+		Calendar currentDateCalendar = new GregorianCalendar();
+		int year = currentDateCalendar.get(Calendar.YEAR);
+		int month = currentDateCalendar.get(Calendar.MONTH);
+		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
+		currentDateCalendar = new GregorianCalendar(year, month, day - noOfDays);
+		for (AccountActionDateEntity accountActionDateEntity : customerAccountBO
+				.getAccountActionDates()) {
+				accountActionDateEntity.setActionDate(new java.sql.Date(
+						currentDateCalendar.getTimeInMillis()));
+		}
+	}
 }
