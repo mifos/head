@@ -116,7 +116,10 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.interestcalculator.InterestCalculatorConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.repaymentschedule.GraceException;
+import org.mifos.framework.components.repaymentschedule.GraceInputs;
 import org.mifos.framework.components.repaymentschedule.MeetingScheduleHelper;
+import org.mifos.framework.components.repaymentschedule.RepaymentScheduleConstansts;
 import org.mifos.framework.components.repaymentschedule.RepaymentScheduleInputsIfc;
 import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
@@ -1341,8 +1344,29 @@ public class LoanBO extends AccountBO {
 		if (isInterestDeductedAtDisbursement())
 			return (short) 0;
 		else
-			return (short) (getGracePeriodDuration() + 1);
+			return (short) (getGracePeriod() + 1);
 	}
+	
+	private Short getGracePeriod() {
+		Short graceType = getGracePeriodType().getId();
+		Short gracePeriod = getGracePeriodDuration();
+
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+				"getGracePeriod graceType " + graceType);
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+				"getGracePeriod gracePeriod " + gracePeriod);
+
+		if (graceType.equals(GraceTypeConstants.NONE.getValue()))
+			return (short) 0;
+		else if (graceType.equals(GraceTypeConstants.GRACEONALLREPAYMENTS
+				.getValue()))
+			return gracePeriod;
+		else if (graceType.equals(GraceTypeConstants.PRINCIPALONLYGRACE
+				.getValue()))
+			return (short) 0;
+		return null;
+	}
+
 
 	private String getRateBasedOnFormula(Double rate, FeeFormulaEntity formula,
 			Money loanInterest) {
@@ -2573,4 +2597,26 @@ public class LoanBO extends AccountBO {
 		}
 
 	}
+	
+	public int getGracePeriod(GraceInputs graceInputs) throws GraceException
+	{
+		int graceType = graceInputs.getGraceType();
+		int gracePeriod = graceInputs.getGracePeriod();
+
+		MifosLogManager.getLogger(LoggerConstants.REPAYMENTSCHEDULAR).debug("GracePeriodHandler:getGracePeriod graceType "+graceType);
+		MifosLogManager.getLogger(LoggerConstants.REPAYMENTSCHEDULAR).debug("GracePeriodHandler:getGracePeriod gracePeriod "+gracePeriod);
+
+		if(graceType == RepaymentScheduleConstansts.GRACE_NONE)
+			return 0;
+
+		if(graceType == RepaymentScheduleConstansts.GRACE_ALLREPAYMENTS )
+				return gracePeriod;
+
+	    if(graceType == RepaymentScheduleConstansts.GRACE_PRINCIPAL)
+	    		return 0;
+
+	    throw new GraceException(RepaymentScheduleConstansts.NOT_SUPPORTED_GRACE_TYPE);
+
+	}
+
 }

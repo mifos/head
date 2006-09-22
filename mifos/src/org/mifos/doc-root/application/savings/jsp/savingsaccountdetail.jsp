@@ -145,6 +145,8 @@
 								</td>
 							</tr>
 						</table>
+						<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'recentActivityForDetailPage')}" var="recentActivityForDetailPage" scope="session" />
+						
 						<mifoscustom:mifostabletag source="recentActivityForDetailPage" scope="session" xmlFileName="SavingsAccountRecentActivity.xml" moduleName="accounts\\savings" passLocale="true" />
 						<br>
 						<table width="96%" border="0" cellpadding="3" cellspacing="0">

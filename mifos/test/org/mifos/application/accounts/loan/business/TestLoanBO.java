@@ -3271,7 +3271,7 @@ public class TestLoanBO extends MifosTestCase {
 					Short.valueOf("1"))) {
 				assertEquals(
 						DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(
-								14 * 2).getTime()),
+								14).getTime()),
 						DateUtils
 								.getDateWithoutTimeStamp(((LoanScheduleEntity) accountActionDateEntity)
 										.getActionDate().getTime()));
@@ -3328,7 +3328,7 @@ public class TestLoanBO extends MifosTestCase {
 					Short.valueOf("6"))) {
 				assertEquals(
 						DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(
-								14 * 7).getTime()),
+								14 * 6).getTime()),
 						DateUtils
 								.getDateWithoutTimeStamp(((LoanScheduleEntity) accountActionDateEntity)
 										.getActionDate().getTime()));

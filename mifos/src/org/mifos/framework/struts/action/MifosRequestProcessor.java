@@ -250,8 +250,6 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 			try {
 				session.removeAttribute(SecurityConstants.SECURITY_PARAM);
 			} catch (Exception e) {
-				// in case session is invalidated (its a patch, need to be
-				// changed)
 			}
 			return forward;
 		}
