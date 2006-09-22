@@ -243,7 +243,8 @@
 						</td>
 						<td height="23" align="right" valign="top" class="fontnormal"><c:if
 							test="${personnelBO.locked == 'true'}">
-							<a href="PersonnelAction.do?method=loadUnLockUser"> <mifos:mifoslabel
+							<a href="PersonAction.do?method=loadUnLockUser&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+							 <mifos:mifoslabel
 								name="Personnel.UnlockUser" bundle="PersonnelUIResources"></mifos:mifoslabel>
 							</a>
 						</c:if></td>

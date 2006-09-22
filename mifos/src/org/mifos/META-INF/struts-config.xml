@@ -410,7 +410,9 @@
 			<forward name="update_success" path="/PersonAction.do?method=get" />
 			<forward name="update_failure" path="/pages/application/personnel/jsp/preview_EditUser.jsp" />			
 			<forward name="cancelEdit_success" path="/PersonAction.do?method=get" />	
-			<forward name="get_success" path="/pages/application/personnel/jsp/personneldetails.jsp" />			
+			<forward name="get_success" path="/pages/application/personnel/jsp/personneldetails.jsp" />	
+			<forward name="unLockUserAccount_success" path="/PersonAction.do?method=get" />	
+			<forward name="loadUnLockUser_success" path="/pages/application/personnel/jsp/unlockuser.jsp" />		
 		</action>
 		
 		

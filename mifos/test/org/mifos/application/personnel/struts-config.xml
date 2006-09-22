@@ -48,7 +48,9 @@
 			<forward name="previous_success" path="/pages/application/personnel/jsp/create_user.jsp" />	
 			<forward name="create_success" path="/pages/application/personnel/jsp/create_user.jsp" />	
 			<forward name="create_failure" path="/pages/application/personnel/jsp/createuser_preview.jsp" />		
-			<forward name="get_success" path="/pages/application/personnel/jsp/personneldetails.jsp" />			
+			<forward name="get_success" path="/pages/application/personnel/jsp/personneldetails.jsp" />		
+			<forward name="unLockUserAccount_success" path="/PersonAction.do?method=get" />	
+			<forward name="loadUnLockUser_success" path="/pages/application/personnel/jsp/unlockuser.jsp" />	
 		</action>
 	</action-mappings>
 	<message-resources key="PersonnelUIResources" parameter="org.mifos.application.personnel.util.resources.PersonnelUIResources" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />

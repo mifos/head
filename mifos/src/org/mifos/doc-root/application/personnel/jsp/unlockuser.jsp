@@ -40,34 +40,29 @@
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <script language="javascript">
-  function goToCancelPage(){
-	personnelActionForm.action="PersonnelAction.do?method=cancel";
-	personnelActionForm.submit();
+    function goToCancelPage(){
+	personActionForm.action="PersonAction.do?method=cancel";
+	personActionForm.submit();
   }
 </script>
 <tiles:insert definition=".view">
  <tiles:put name="body" type="string">
- <SCRIPT SRC="pages/framework/js/CommonUtilities.js" ></SCRIPT>
-<html-el:form action="PersonnelAction.do?method=unLockUserAccount" onsubmit="func_disableSubmitBtn('submitBtn')">
+<html-el:form action="PersonAction.do?method=unLockUserAccount">
 
    <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
-          <td class="bluetablehead05">
-          	<span class="fontnormal8pt">
-          	<a href="AdminAction.do?method=load">
-	           <mifos:mifoslabel name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>             	
-           	</a>
-			 / 
-			<a href="PersonnelAction.do?method=loadSearch">
-					<mifos:mifoslabel name="Personnel.ViewEditUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
-			</a> /
-          	 <a href="OfficeAction.do?method=get&officeId=<c:out value="${requestScope.PersonnelVO.office.officeId}"/>">
-	           <c:out value="${requestScope.PersonnelVO.office.officeName}"/>            	
-           	</a>/
-           	<a href="PersonnelAction.do?method=get&globalPersonnelNum=<c:out value="${sessionScope.personnelNotesActionForm.globalPersonnelNum}"/>">
-           		<c:out value="${requestScope.PersonnelVO.displayName}"/>
+          <td class="bluetablehead05"><span class="fontnormal8pt"> <a
+						href="AdminAction.do?method=load"> <mifos:mifoslabel
+						name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>
+					</a> / <a href="PersonnelAction.do?method=loadSearch"> <mifos:mifoslabel
+						name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
+					</a> / <c:set var="personnelBO" scope="request"
+						value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
+						<a href="PersonAction.do?method=get&globalPersonnelNum=<c:out value="${personnelBO.globalPersonnelNum}"/>">
+           		<c:out value="${personnelBO.displayName}"/>
            	</a>
             </span>
          </td>
@@ -80,7 +75,7 @@
               <tr>
                 <td width="83%" class="headingorange">
                 	<span class="heading">
-	                	<c:out value="${requestScope.PersonnelVO.displayName}"/>
+	                	<c:out value="${personnelBO.displayName}"/>
                 	 - </span><mifos:mifoslabel name="Personnel.UnlockUserConfirmations" bundle="PersonnelUIResources"></mifos:mifoslabel></td>
               </tr>
             </table>
@@ -89,7 +84,7 @@
               <tr class="fontnormal">
                 <td width="94%"><span class="fontnormal">
                 	<mifos:mifoslabel name="Personnel.UserRecordLocked" bundle="PersonnelUIResources"></mifos:mifoslabel>
-                	<c:out value="${requestScope.loginAttemptsCount}"/>
+                	<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loginAttemptsCount')}"/>
                 	<mifos:mifoslabel name="Personnel.LoginAttempts" bundle="PersonnelUIResources"></mifos:mifoslabel>
                     <br>
                     <br>
@@ -120,8 +115,10 @@
             <br>
           </td>
         </tr>
-      </table>
-<html-el:hidden property="input" value="UnLockUser"/>       
+      </table>      
+      <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+      <html-el:hidden property="input" value="UnLockUser" />
+      <html-el:hidden property="globalPersonnelNum" value="${personnelBO.globalPersonnelNum}" />
 </html-el:form>
 </tiles:put>
 </tiles:insert>

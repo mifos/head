@@ -544,7 +544,6 @@ public class TestPersonnelBO extends MifosTestCase {
 		personnel = createPersonnel();
 		String password = "ABCD";
 		userContext = personnel.login(password);
-		assertTrue(true);
 		assertFalse(personnel.isLocked());
 
 		assertEquals(personnel.getPersonnelId(), userContext.getId());
@@ -696,11 +695,10 @@ public class TestPersonnelBO extends MifosTestCase {
 	public void testUpdatePassword() throws Exception{
 		personnel = createPersonnel();
 		assertNull(personnel.getLastLogin());
-		personnel.updatePassword("ABCD","NEW_PASSWORD");
+		personnel.updatePassword("ABCD","NEW_PASSWORD", Short.valueOf("1"));
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
-				PersonnelBO.class, personnel.getPersonnelId());
+		personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
 		assertTrue(personnel.isPasswordChanged());
 		assertNotNull(personnel.getLastLogin());
 	}
@@ -709,13 +707,58 @@ public class TestPersonnelBO extends MifosTestCase {
 		personnel = createPersonnel();
 		assertNull(personnel.getLastLogin());
 		try {
-			personnel.updatePassword("WRONGOLD_PASSWORD","NEW_PASSWORD");
+			personnel.updatePassword("WRONGOLD_PASSWORD","NEW_PASSWORD", Short.valueOf("1"));
 			assertFalse(true);
 		} catch (PersonnelException le) {
 			assertTrue(true);
 			assertEquals(LoginConstants.INVALIDOLDPASSWORD, le.getKey());
 			assertFalse(personnel.isPasswordChanged());
 		}
+	}
+	
+	public void testUnlockPersonnel() throws Exception {
+		personnel = createPersonnel();
+		String password = "WRONG_PASSWORD";
+		login(password);
+		login(password);
+		login(password);
+		login(password);
+		login(password);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
+		assertTrue(personnel.isLocked());
+		personnel.unlockPersonnel(Short.valueOf("1"));
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
+		assertFalse(personnel.isLocked());
+		assertEquals(0,personnel.getNoOfTries().intValue());
+	}
+	
+	public void testReLoginAfterUnlock() throws Exception {
+		personnel = createPersonnel();
+		String password = "WRONG_PASSWORD";
+		login(password);
+		login(password);
+		login(password);
+		login(password);
+		login(password);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
+		assertTrue(personnel.isLocked());
+		personnel.unlockPersonnel(Short.valueOf("1"));
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
+		assertFalse(personnel.isLocked());
+		assertEquals(0,personnel.getNoOfTries().intValue());
+		
+		personnel.login("ABCD");
+		assertEquals(0,personnel.getNoOfTries().intValue());
 	}
 
 	private PersonnelNotesEntity createNotes(String comment) throws Exception{

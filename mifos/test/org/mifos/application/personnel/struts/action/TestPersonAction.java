@@ -1,13 +1,12 @@
 package org.mifos.application.personnel.struts.action;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.customer.business.CustomFieldView;
-import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
@@ -48,15 +47,11 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		try {
-			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
-					.getPath());
-			setConfigFile(ResourceLoader.getURI(
+		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
+				.getPath());
+		setConfigFile(ResourceLoader.getURI(
 					"org/mifos/application/personnel/struts-config.xml")
 					.getPath());
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
 		userContext = TestObjectFactory.getUserContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
@@ -424,7 +419,30 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		assertEquals(2, personnel.getPersonnelDetails().getGender().intValue());
 		personnel = (PersonnelBO)TestObjectFactory.getObject(PersonnelBO.class,personnel.getPersonnelId());	
 	}
-
+	
+	public void testLoadUnLockUser() throws Exception {
+		setRequestPathInfo("/PersonAction.do");
+		addRequestParameter("method", Methods.loadUnLockUser.toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.loadUnLockUser_success.toString());
+		assertEquals(LoginConstants.MAXTRIES,SessionUtils.getAttribute(PersonnelConstants.LOGIN_ATTEMPTS_COUNT,request));
+	}
+	
+	public void testUnLockUser() throws Exception {
+		createPersonnelAndSetInSession(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
+		setRequestPathInfo("/PersonAction.do");
+		addRequestParameter("method", Methods.unLockUserAccount.toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.unLockUserAccount_success.toString());
+		assertFalse(personnel.isLocked());
+		assertEquals(0,personnel.getNoOfTries().intValue());
+	}
 	
 	private void createPersonnelAndSetInSession(OfficeBO office, PersonnelLevel personnelLevel) throws Exception{
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();

@@ -15,8 +15,10 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoginActionTest extends MifosMockStrutsTestCase {
@@ -110,7 +112,8 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.loadChangePassword_success.toString());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-
+		UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+		userContext.setId(Short.valueOf("1"));
 		setRequestPathInfo("/loginAction.do");
 		addRequestParameter("method", Methods.updatePassword.toString());
 		addRequestParameter("userName", personnel.getUserName());
@@ -202,7 +205,8 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.loadChangePassword_success.toString());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-
+		UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+		userContext.setId(Short.valueOf("1"));
 		setRequestPathInfo("/loginAction.do");
 		addRequestParameter("method", Methods.updatePassword.toString());
 		addRequestParameter("userName", personnel.getUserName());

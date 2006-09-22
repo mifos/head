@@ -28,6 +28,7 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FlowManager;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class LoginAction extends BaseAction {
@@ -60,11 +61,14 @@ public class LoginAction extends BaseAction {
 		UserContext userContext = personnelBO.login(password);
 		setAttributes(userContext, request);
 		setFlow(userContext.getPasswordChanged(),request);
+		personnelBO = null;
 		return mapping.findForward(getLoginForward(userContext.getPasswordChanged()));
 	}
 	
 	public ActionForward logout(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		loginLogger.info("Inside logout of LoginAction");
+		UserContext userContext =(UserContext) request.getSession().getAttribute(Constants.USERCONTEXT);
+		userContext = null;
 		request.getSession(false).invalidate();
 		ActionErrors error = new ActionErrors();
 		error.add(LoginConstants.LOGOUTOUT,new ActionMessage(LoginConstants.LOGOUTOUT));
@@ -83,7 +87,9 @@ public class LoginAction extends BaseAction {
 		String oldPassword = loginActionForm.getOldPassword();
 		String newpassword = loginActionForm.getNewPassword();
 		PersonnelBO personnelBO = getPersonnelBizService().getPersonnel(userName);
-		personnelBO.updatePassword(oldPassword,newpassword);
+		UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+		personnelBO.updatePassword(oldPassword,newpassword, userContext.getId());
+		personnelBO = null;
 		return mapping.findForward(ActionForwards.updatePassword_success.toString());
 	}
 	

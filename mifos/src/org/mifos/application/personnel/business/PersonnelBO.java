@@ -693,7 +693,7 @@ public class PersonnelBO extends BusinessObject {
 		return userContext;
 	}
 	
-	public void updatePassword(String oldPassword,	String newPassword) throws PersonnelException {
+	public void updatePassword(String oldPassword,	String newPassword, Short updatedById) throws PersonnelException {
 		logger.info("Trying to updatePassword");
 		byte[] encryptedPassword = getEncryptedPassword(oldPassword,newPassword);
 		this.setEncriptedPassword(encryptedPassword);
@@ -702,11 +702,29 @@ public class PersonnelBO extends BusinessObject {
 			this.setLastLogin(new Date());
 		}
 		try {
+			setUpdateDetails(updatedById);
 			new PersonnelPersistence().createOrUpdate(this);
 			logger.info("Password updated successfully");
 		} catch (PersistenceException pe) {
 			throw new PersonnelException(PersonnelConstants.UPDATE_FAILED, pe);
 		}
+	}
+	
+	public void unlockPersonnel(Short updatedById) throws PersonnelException {
+		logger.info("Trying to unlock Personnel");
+		if(isLocked()){
+			this.unLock();
+			this.noOfTries = YesNoFlag.NO.getValue();
+			try {
+				setUpdateDetails(updatedById);
+				new PersonnelPersistence().createOrUpdate(this);
+				logger.debug("update successful");
+			} catch (PersistenceException e) {
+				throw new PersonnelException(
+						CustomerConstants.UPDATE_FAILED_EXCEPTION, e);
+			}
+		}
+		logger.info("Personnel with id: "+ getPersonnelId()+" successfully unlocked");
 	}
 	
 	private void updateNoOfTries() throws PersonnelException {
@@ -727,11 +745,13 @@ public class PersonnelBO extends BusinessObject {
 	
 	private void resetNoOfTries() throws PersonnelException {
 		logger.info("Reseting  no of tries");
-		this.noOfTries = Short.valueOf("0");
-		try {
-			new PersonnelPersistence().createOrUpdate(this);
-		} catch (PersistenceException pe) {
-			throw new PersonnelException(PersonnelConstants.UPDATE_FAILED, pe);
+		if(noOfTries.intValue()>0) {
+			this.noOfTries = YesNoFlag.NO.getValue();
+			try {
+				new PersonnelPersistence().createOrUpdate(this);
+			} catch (PersistenceException pe) {
+				throw new PersonnelException(PersonnelConstants.UPDATE_FAILED, pe);
+			}
 		}
 		logger.info("No of tries reseted successfully");
 	}

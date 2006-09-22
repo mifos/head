@@ -53,6 +53,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.framework.util.valueobjects.Context;
 
 public class PersonAction extends BaseAction {
 
@@ -239,10 +240,10 @@ public class PersonAction extends BaseAction {
 		String forward=null;
 		PersonActionForm actionForm = (PersonActionForm) form;
 		String fromPage = actionForm.getInput();
-		if (fromPage.equals(PersonnelConstants.MANAGE_USER)){
+		if (fromPage.equals(PersonnelConstants.MANAGE_USER) || 
+				fromPage.equals(PersonnelConstants.UNLOCK_USER)){
 			forward=ActionForwards.cancelEdit_success.toString();
-		}
-		else{
+		} else{
 			forward=ActionForwards.cancel_success.toString();
 		}
 		return mapping.findForward(forward.toString());
@@ -262,6 +263,26 @@ public class PersonAction extends BaseAction {
 		personnel.getStatus().setLocaleId(userContext.getLocaleId());
 		loadCreateMasterData(request,personActionForm);
 		return mapping.findForward(ActionForwards.get_success.toString());
+	}
+	
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward loadUnLockUser(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		SessionUtils.setAttribute(PersonnelConstants.LOGIN_ATTEMPTS_COUNT,
+				LoginConstants.MAXTRIES, request);
+		return mapping.findForward(ActionForwards.loadUnLockUser_success
+				.toString());
+	}
+
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward unLockUserAccount(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+		UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+		personnel.unlockPersonnel(userContext.getId());
+		return mapping.findForward(ActionForwards.unLockUserAccount_success.toString());
 	}
 
 	private void loadMasterData(HttpServletRequest request,

@@ -354,6 +354,10 @@ public class ActivityMapper {
 				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
 		activityMap.put("/PersonAction-create",
 				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
+		activityMap.put("/PersonAction-loadUnLockUser",
+				SecurityConstants.PERSONNEL_UNLOCK_PERSONNEL);
+		activityMap.put("/PersonAction-unLockUserAccount",
+				SecurityConstants.PERSONNEL_UNLOCK_PERSONNEL);
 
 
 		// for your settings link
