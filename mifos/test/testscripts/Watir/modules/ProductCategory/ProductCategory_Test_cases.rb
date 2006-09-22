@@ -138,7 +138,7 @@ class ProductCategory_Test_Cases < TestClass
   # Check for validation messages while creating new ProductCategory with product_type
   def  Man_New_ProductCategory_with_ProductType(product_type)
     begin
-      set_value_selectlist("productType.productTypeID", product_type)
+      set_value_selectlist("productType", product_type)
       $ie.button(:value,@preview_button).click
       assert(!$ie.contains_text(@prdcat_type_msg)) and \
       assert($ie.contains_text(@prdcat_def_text+" - "+@prdcat_info_text)) and \
@@ -156,7 +156,7 @@ class ProductCategory_Test_Cases < TestClass
   # Check for validation messages while creating new ProductCategory with product_type, category_name
   def     Man_New_ProductCategory_with_CategoryName(category_name)
     begin
-      #set_value_selectlist("productType.productTypeID", product_type)
+      #set_value_selectlist("productType", product_type)
       set_value_txtfield("productCategoryName", category_name)
       $ie.button(:value,@preview_button).click
       max_field_len(category_name,100,@prdcat_max_len_msg)
@@ -296,7 +296,7 @@ class ProductCategory_Test_Cases < TestClass
         $logger.log_results("ProductCategory- Create new ProductCategory page", "Click on admin 'Define a new ProductCategory' link","Access to the new ProductCategory page","Failed")
       end
       
-      set_value_selectlist("productType.productTypeID", product_type)
+      set_value_selectlist("productType", product_type)
       set_value_txtfield("productCategoryName", category_name)
       set_value_txtfield("productCategoryDesc", description)
     end
