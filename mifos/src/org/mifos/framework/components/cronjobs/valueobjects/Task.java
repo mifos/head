@@ -42,44 +42,66 @@ import java.sql.Timestamp;
 
 import org.mifos.framework.util.valueobjects.ValueObject;
 
-public class Task extends ValueObject{
-	
+public class Task extends ValueObject {
+
 	private Integer id;
+
 	private String task;
-	private Timestamp time;
+
+	private Timestamp startTime;
+
+	private Timestamp endTime;
+
+	private short status;
+
 	private String description;
-	
+
 	public String getDescription() {
 		return description;
 	}
-	
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	public String getTask() {
 		return task;
 	}
-	
+
 	public void setTask(String task) {
 		this.task = task;
 	}
-	
-	public Timestamp getTime() {
-		return time;
+
+	public Timestamp getStartTime() {
+		return startTime;
 	}
-	
-	public void setTime(Timestamp time) {
-		this.time = time;
+
+	public void setStartTime(Timestamp startTime) {
+		this.startTime = startTime;
 	}
-	
+
+	public Timestamp getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Timestamp endTime) {
+		this.endTime = endTime;
+	}
+
 	public Integer getId() {
 		return id;
 	}
-	
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
+
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
+	}
 
 }

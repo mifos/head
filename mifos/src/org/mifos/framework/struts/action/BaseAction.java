@@ -8,20 +8,25 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.Globals;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 import org.apache.struts.actions.DispatchAction;
-import org.apache.struts.upload.MultipartRequestWrapper;
 import org.hibernate.HibernateException;
+import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.components.cronjobs.MifosTask;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.IllegalStateException;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -53,6 +58,9 @@ public abstract class BaseAction extends DispatchAction {
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		if(MifosTask.isCronJobRunning()){
+			return logout(mapping, request);
+		}
 		TransactionDemarcate annotation = getTransaction(form, request);
 		preExecute(form, request, annotation);
 		ActionForward forward = super.execute(mapping, form, request, response);
@@ -286,4 +294,12 @@ public abstract class BaseAction extends DispatchAction {
 			date = new Date(DateHelper.getLocaleDate(locale, strDate).getTime());
 		return date;
 	}
-}// :~
+	
+	private ActionForward logout(ActionMapping mapping, HttpServletRequest request) throws ApplicationException {
+		request.getSession(false).invalidate();
+		ActionErrors error = new ActionErrors();
+		error.add(LoginConstants.CRON_JOB_RUNNING,new ActionMessage(LoginConstants.CRON_JOB_RUNNING));
+		request.setAttribute(Globals.ERROR_KEY, error);
+		return mapping.findForward(ActionForwards.load_main_page.toString());
+	}
+}

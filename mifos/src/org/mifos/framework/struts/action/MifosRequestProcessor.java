@@ -40,7 +40,6 @@ package org.mifos.framework.struts.action;
 
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -66,11 +65,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.PreviousRequestValues;
-import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.valueobjects.Context;
-import org.mifos.framework.util.valueobjects.MasterType;
-import org.mifos.framework.util.valueobjects.ReturnType;
-import org.mifos.framework.util.valueobjects.ValueObject;
 
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 
@@ -253,7 +247,12 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 			populateTheRequestFromPreviousValues(request, previousRequestValues);
 
 		} finally {
-			session.removeAttribute(SecurityConstants.SECURITY_PARAM);
+			try {
+				session.removeAttribute(SecurityConstants.SECURITY_PARAM);
+			} catch (Exception e) {
+				// in case session is invalidated (its a patch, need to be
+				// changed)
+			}
 			return forward;
 		}
 

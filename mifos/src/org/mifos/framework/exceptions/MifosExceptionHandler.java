@@ -150,7 +150,7 @@ public class MifosExceptionHandler extends ExceptionHandler {
 			}
 			
 			parameter = request.getParameter("method");
-			System.out.println("**************method :  " + parameter);
+			
 
 			// jsp to which the user should be returned is identified by
 			// methodname_failure
@@ -167,7 +167,7 @@ public class MifosExceptionHandler extends ExceptionHandler {
 				parameter = parameter + "_" + input;
 			}
 
-			System.out.println("**************method 1 :  " + parameter);
+			
 			
 			forwardToBeReturned = mapping.findForward(parameter + "_failure");
 

@@ -18,6 +18,7 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.components.cronjobs.MifosTask;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -422,6 +423,33 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.loadChangePassword_success.toString());
 	}
 
+	public void testGet_cronJobNotRunning() throws Exception {
+		assertEquals(false, MifosTask.isCronJobRunning());
+		createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
+		setRequestPathInfo("/yourSettings.do");
+		addRequestParameter("method", Methods.get.toString());
+		addRequestParameter("globalPersonnelNum", personnel
+				.getGlobalPersonnelNum());
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyMasterData();
+		verifyForward(ActionForwards.get_success.toString());
+	}
+
+	public void testGet_cronJobRunning() throws Exception {
+		MifosTask.cronJobStarted();
+		assertEquals(true, MifosTask.isCronJobRunning());
+		createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
+		setRequestPathInfo("/yourSettings.do");
+		addRequestParameter("method", Methods.get.toString());
+		addRequestParameter("globalPersonnelNum", personnel
+				.getGlobalPersonnelNum());
+		actionPerform();
+		verifyForward(ActionForwards.load_main_page.toString());
+		MifosTask.cronJobFinished();
+	}
+	
 	private void verifyMasterData() throws Exception {
 		assertNotNull(SessionUtils.getAttribute(PersonnelConstants.GENDER_LIST,
 				request));

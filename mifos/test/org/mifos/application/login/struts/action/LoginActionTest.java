@@ -14,6 +14,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.components.cronjobs.MifosTask;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -329,6 +330,38 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
+	public void testLogin_cronJobNotRunning() throws Exception {
+		loadLoginPage();
+		assertEquals(false, MifosTask.isCronJobRunning());
+		assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
+		personnel = createPersonnel();
+		setRequestPathInfo("/loginAction.do");
+		addRequestParameter("method", Methods.login.toString());
+		addRequestParameter("userName", personnel.getUserName());
+		addRequestParameter("password", "PASSWORD");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.loadChangePassword_success.toString());
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+	}
+
+	public void testLogin_cronJobRunning() throws Exception {
+		loadLoginPage();
+		MifosTask.cronJobStarted();
+		assertEquals(true, MifosTask.isCronJobRunning());
+		assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
+		personnel = createPersonnel();
+		setRequestPathInfo("/loginAction.do");
+		addRequestParameter("method", Methods.login.toString());
+		addRequestParameter("userName", personnel.getUserName());
+		addRequestParameter("password", "PASSWORD");
+		actionPerform();
+		verifyForward(ActionForwards.load_main_page.toString());
+		MifosTask.cronJobFinished();
+		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+	}
+	
 	private PersonnelBO createPersonnel() throws Exception {
 		office = TestObjectFactory.getOffice(Short.valueOf("1"));
 		Name name = new Name("XYZ", null, null, null);

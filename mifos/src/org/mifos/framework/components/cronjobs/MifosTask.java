@@ -42,6 +42,8 @@ import java.util.TimerTask;
 
 public class MifosTask extends TimerTask {
 
+	public static boolean cronJobRunning = false;
+
 	public TaskHelper helper;
 
 	/**
@@ -50,21 +52,17 @@ public class MifosTask extends TimerTask {
 	public String name;
 
 	/**
-	 * Attribute which determines if the job is a
-	 * regular DB update job to be run daily and hence
-	 * registereed in the database or a user requested
-	 * job. [ if true : job should run daily false :
-	 * user requested job ]
+	 * Attribute which determines if the job is a regular DB update job to be
+	 * run daily and hence registereed in the database or a user requested job. [
+	 * if true : job should run daily false : user requested job ]
 	 */
 	public boolean normal;
 
 	/**
-	 * An alternate set of parameters which could be set
-	 * while the task is created.This constitutes input
-	 * to the MifosTask while executing.
+	 * An alternate set of parameters which could be set while the task is
+	 * created.This constitutes input to the MifosTask while executing.
 	 */
 	public Object params;
-
 
 	public MifosTask() {
 	}
@@ -76,4 +74,15 @@ public class MifosTask extends TimerTask {
 		return true;
 	}
 
+	public static boolean isCronJobRunning() {
+		return cronJobRunning;
+	}
+
+	public static void cronJobStarted() {
+		cronJobRunning = true;
+	}
+	
+	public static void cronJobFinished() {
+		cronJobRunning = false;
+	}
 }

@@ -11,7 +11,9 @@
             <generator class="native"/>
         </id> 
         <property name="task" column="TASKNAME" type="string" />
-        <property name="time" column="TIME" type="timestamp" />
+        <property name="startTime" column="STARTTIME" type="timestamp" />
+        <property name="endTime" column="ENDTIME" type="timestamp" />
+        <property name="status" column="STATUS" type="short" />
         <property name="description" column="DESCRIPTION" type="string" />
      </class>
     

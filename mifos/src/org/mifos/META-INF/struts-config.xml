@@ -157,6 +157,7 @@
 
 	<global-forwards>
 		<forward name="welcome" path="/loginAction.do?method=load" />
+		<forward name="load_main_page" path="/pages/application/login/jsp/login.jsp"></forward>
 	</global-forwards>
 
 	<action-mappings>

@@ -34,6 +34,7 @@ public interface LoginConstants {
 	public static final String SESSIONTIMEOUT="errors.sessiontimeout";
 	public static final String INVALIDOLDPASSWORD="errors.invalidoldpassword";
 	public static final String LOGOUTOUT="errors.logoutout";
+	public static final String CRON_JOB_RUNNING="errors.cronjobrunning";
 	public String METHODCALLED="methodCalled";
 }
 

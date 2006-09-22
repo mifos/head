@@ -44,6 +44,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.mifos.framework.components.cronjobs.helpers.TaskStatus;
 import org.mifos.framework.components.cronjobs.valueobjects.Task;
 import org.mifos.framework.dao.DAO;
 import org.mifos.framework.exceptions.HibernateProcessException;
@@ -52,6 +53,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 public abstract class TaskHelper extends DAO {
 
 	public MifosTask mifosTask;
+	private Task task;
 	long timeInMillis=0;
 
 	public TaskHelper() {
@@ -66,15 +68,17 @@ public abstract class TaskHelper extends DAO {
 
 		Session session=null;
 	    try{
-			session = HibernateUtil.getSession();
+	    	MifosTask.cronJobStarted();
+	    	session = HibernateUtil.getSession();
 			Transaction txn=session.beginTransaction();
-			Task task=new Task();
+			task = new Task();
 			task.setDescription(SchedulerConstants.START);
 			task.setTask(mifosTask.name);
+			task.setStatus(TaskStatus.INCOMPLETE.getValue());
 			if(timeInMillis==0){
-				task.setTime(new Timestamp(System.currentTimeMillis()));
+				task.setStartTime(new Timestamp(System.currentTimeMillis()));
 			}else{
-				task.setTime(new Timestamp(timeInMillis));
+				task.setStartTime(new Timestamp(timeInMillis));
 			}
 			session.save(task);
 			txn.commit();
@@ -101,15 +105,14 @@ public abstract class TaskHelper extends DAO {
 	    try{
 			session = HibernateUtil.getSession();
 			Transaction txn=session.beginTransaction();
-			Task task=new Task();
 			task.setDescription(SchedulerConstants.FINISHEDSUCCESSFULLY);
-			task.setTask(mifosTask.name);
+			task.setStatus(TaskStatus.COMPLETE.getValue());
 			if(timeInMillis==0){
-				task.setTime(new Timestamp(System.currentTimeMillis()));
+				task.setEndTime(new Timestamp(System.currentTimeMillis()));
 			}else{
-				task.setTime(new Timestamp(timeInMillis));
+				task.setEndTime(new Timestamp(timeInMillis));
 			}
-			session.save(task);
+			session.update(task);
 			txn.commit();
 		}catch(HibernateProcessException e){
 			e.printStackTrace();
@@ -117,6 +120,7 @@ public abstract class TaskHelper extends DAO {
 		finally
 		{
 			try{
+				MifosTask.cronJobFinished();
 			    HibernateUtil.closeSession(session);
 			}catch(Exception e){
 				e.printStackTrace();
@@ -134,18 +138,13 @@ public abstract class TaskHelper extends DAO {
 		this.mifosTask=mifosTask;
 		if (!isTaskAllowedToRun()){
 			while((System.currentTimeMillis()-timeInMillis)/(1000*60*60*24)!=1){
-				timeInMillis=timeInMillis+(1000*60*60*24);
-				registerStartup(timeInMillis);
-				execute(timeInMillis);
-				registerCompletion(timeInMillis);
+				perform(timeInMillis+(1000*60*60*24));
 			}
 		}else{
 			if(timeInMillis==0){
 				timeInMillis=System.currentTimeMillis();
 			}
-			registerStartup(timeInMillis);
-			execute(timeInMillis);
-			registerCompletion(timeInMillis);
+			perform(timeInMillis);
 		}
 	}
 
@@ -171,10 +170,10 @@ public abstract class TaskHelper extends DAO {
 		try{
 			session = HibernateUtil.getSession();
 			txn=session.beginTransaction();
-			hqlSelect = "select max(t.time) from Task t where t.task=:taskName and t.description=:finishedSuccessfully";
+			hqlSelect = "select max(t.startTime) from Task t where t.task=:taskName and t.description=:finishedSuccessfully";
 			query= session.createQuery(hqlSelect);
 			query.setString("taskName",mifosTask.name);
-			query.setString("finishedSuccessfully","Finished Successfully");
+			query.setString("finishedSuccessfully",SchedulerConstants.FINISHEDSUCCESSFULLY);
 			if(query.uniqueResult()==null){//When schedular starts for the first time
 				timeInMillis=System.currentTimeMillis();
 			    return true;
@@ -207,6 +206,16 @@ public abstract class TaskHelper extends DAO {
 			}
 		}
 		return false;
+	}
+	
+	private void perform(long timeInMillis) {
+		try {
+			registerStartup(timeInMillis);
+			execute(timeInMillis);
+		} catch (Exception e) {
+		} finally {
+			registerCompletion(timeInMillis);
+		}
 	}
 
 }
