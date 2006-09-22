@@ -281,7 +281,7 @@ public class EditCustomerStatusAction extends BaseAction {
 
 	private void setCustomerStatusDetails(ActionForm form,
 			CustomerBO customerBO, HttpServletRequest request,
-			UserContext userContext) throws PageExpiredException, PersistenceException{
+			UserContext userContext) throws Exception{
 		EditCustomerStatusActionForm statusActionForm = (EditCustomerStatusActionForm) form;
 		statusActionForm.setCommentDate(DateHelper.getCurrentDate(userContext
 				.getPereferedLocale()));
@@ -356,7 +356,7 @@ public class EditCustomerStatusAction extends BaseAction {
 	}
 
 	private void checkPermission(CustomerBO customerBO,
-			HttpServletRequest request, Short newStatusId, Short flagId) {
+			HttpServletRequest request, Short newStatusId, Short flagId) throws Exception{
 		if (null != customerBO.getPersonnel())
 			customerService.checkPermissionForStatusChange(newStatusId,
 					getUserContext(request), flagId, customerBO.getOffice()
@@ -369,7 +369,7 @@ public class EditCustomerStatusAction extends BaseAction {
 	}
 
 	private void loadInitialData(ActionForm form, CustomerBO customerBO,
-			UserContext userContext) throws StatesInitializationException {
+			UserContext userContext) throws Exception {
 		customerBO.setUserContext(userContext);
 		customerService.initializeStateMachine(userContext.getLocaleId(),
 				customerBO.getOffice().getOfficeId(),AccountTypes.CUSTOMERACCOUNT,customerBO.getLevel());

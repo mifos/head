@@ -2,7 +2,6 @@ package org.mifos.application.customer.center.business;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.mifos.application.accounts.util.helpers.AccountState;

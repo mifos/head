@@ -51,12 +51,12 @@ public class WeekDaysEntity extends MasterDataEntity {
 	
 	private Short startOfWeek;
 	
-	public WeekDaysEntity() {
-	}
-
 	public WeekDaysEntity(WeekDay weekDay) {
 		super(weekDay.getValue());
 		this.workDay = null;
+	}
+	
+	public WeekDaysEntity() {
 	}
 	
 	public boolean isWorkingDay(){

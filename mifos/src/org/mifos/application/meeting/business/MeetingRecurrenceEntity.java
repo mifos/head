@@ -58,11 +58,6 @@ public class MeetingRecurrenceEntity extends PersistentObject {
 
 	private final MeetingDetailsEntity meetingDetails;
 
-	protected MeetingRecurrenceEntity() {
-		detailsId = null;
-		meetingDetails = null;
-	}
-
 	public MeetingRecurrenceEntity(MeetingDetailsEntity meetingDetails) {
 		this.meetingDetails = meetingDetails;
 		this.weekDay = null;
@@ -88,6 +83,11 @@ public class MeetingRecurrenceEntity extends PersistentObject {
 		this.weekDay = new WeekDaysEntity(weekDay);
 		this.meetingDetails = meetingDetails;
 		this.detailsId = null;
+	}
+	
+	protected MeetingRecurrenceEntity() {
+		detailsId = null;
+		meetingDetails = null;
 	}
 	
 	public Short getDayNumber() {

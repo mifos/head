@@ -19,17 +19,6 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
 	private final ClientBO client;
 
-	protected ClientPerformanceHistoryEntity() {
-		super();
-		this.id = null;
-		this.client = null;
-		this.loanCycleNumber = 0;
-		this.noOfActiveLoans = 0;
-		this.lastLoanAmount = null;
-		this.delinquentPortfolio = null;
-		this.totalSavings = null;
-	}
-	
 	public ClientPerformanceHistoryEntity(ClientBO client) {
 		super();
 		this.id = null;
@@ -41,6 +30,17 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		this.totalSavings = new Money();
 	}
 
+	protected ClientPerformanceHistoryEntity() {
+		super();
+		this.id = null;
+		this.client = null;
+		this.loanCycleNumber = 0;
+		this.noOfActiveLoans = 0;
+		this.lastLoanAmount = null;
+		this.delinquentPortfolio = null;
+		this.totalSavings = null;
+	}
+	
 	public Integer getId() {
 		return id;
 	}

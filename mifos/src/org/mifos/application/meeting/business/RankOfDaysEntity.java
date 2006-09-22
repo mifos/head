@@ -45,10 +45,10 @@ import org.mifos.application.meeting.util.helpers.RankType;
  */
 public class RankOfDaysEntity extends MasterDataEntity {
 
-	protected RankOfDaysEntity() {
-	}
-
 	public RankOfDaysEntity(RankType rank) {
 		super(rank.getValue());
+	}
+	
+	protected RankOfDaysEntity() {
 	}
 }

@@ -51,11 +51,11 @@ public class RecurrenceTypeEntity extends PersistentObject {
 
 	private String description;
 
-	public RecurrenceTypeEntity() {
-	}
-
 	public RecurrenceTypeEntity(RecurrenceType recurrence){
 		this.recurrenceId = recurrence.getValue();
+	}
+	
+	public RecurrenceTypeEntity() {
 	}
 	
 	public String getDescription() {

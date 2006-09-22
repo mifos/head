@@ -40,18 +40,47 @@ public class GroupBusinessServiceTest extends MifosTestCase {
 	public void testGetGroupBySystemId() throws ServiceException{
 		center = createCenter();
 		String groupName = "Group_Active_test";
-		group = TestObjectFactory.createGroup(groupName, Short
-				.valueOf("9"), "1.1.1", center, new Date(System
-				.currentTimeMillis()));
+		group = createGroup(groupName);
 		HibernateUtil.closeSession();
-		group = (GroupBO) groupBusinessService.getGroupBySystemId(group.getGlobalCustNum());
+		group = groupBusinessService.getGroupBySystemId(group.getGlobalCustNum());
 		assertEquals(groupName, group.getDisplayName());
 	}
 
+	public void testSuccessfulGet() throws Exception {
+		center = createCenter();
+		String groupName = "Group_Active_test";
+		group = createGroup(groupName);
+		HibernateUtil.closeSession();
+		group = groupBusinessService.getGroup(group.getCustomerId());
+		assertNotNull(group);
+		assertEquals(groupName, group.getDisplayName());
+	}
+
+	public void testFailureGet() throws Exception {
+		center = createCenter();
+		String groupName = "Group_Active_test";
+		group = createGroup(groupName);
+		HibernateUtil.closeSession();
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			groupBusinessService.getGroup(group.getCustomerId());
+			assertTrue(false);
+		} catch (ServiceException e) {
+			assertTrue(true);
+		}
+		HibernateUtil.closeSession();
+	}
+	
 	private CenterBO createCenter() {
 		return createCenter("Center_Active_test");
 	}
-
+	
+	private GroupBO createGroup(String groupName){
+		return TestObjectFactory.createGroup(groupName, Short
+				.valueOf("9"), "1.1.1", center, new Date(System
+				.currentTimeMillis()));
+	}
+	
 	private CenterBO createCenter(String name) {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));

@@ -69,22 +69,6 @@ public class ClientDetailEntity extends PersistentObject {
 
 	private String handicappedDetails;
 
-	protected ClientDetailEntity() {
-		super();
-		this.customerId = null;
-		this.client = null;
-		this.ethinicity = null;
-		this.citizenship = null;
-		this.handicapped = null;
-		this.businessActivities = null;
-		this.maritalStatus = null;
-		this.educationLevel = null;
-		this.numChildren = null;
-		this.gender = null;
-		this.dateStarted = null;
-		this.handicappedDetails = null;
-	}
-
 	public ClientDetailEntity(ClientBO client, ClientDetailView view) {
 		super();
 		this.customerId = null;
@@ -101,6 +85,22 @@ public class ClientDetailEntity extends PersistentObject {
 		this.handicappedDetails = null;
 	}
 
+	protected ClientDetailEntity() {
+		super();
+		this.customerId = null;
+		this.client = null;
+		this.ethinicity = null;
+		this.citizenship = null;
+		this.handicapped = null;
+		this.businessActivities = null;
+		this.maritalStatus = null;
+		this.educationLevel = null;
+		this.numChildren = null;
+		this.gender = null;
+		this.dateStarted = null;
+		this.handicappedDetails = null;
+	}
+	
 	public Integer getEthinicity() {
 		return this.ethinicity;
 	}

@@ -38,8 +38,6 @@
 
 package org.mifos.application.customer.client.business;
 
-import java.sql.Date;
-
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.framework.business.BusinessObject;
 

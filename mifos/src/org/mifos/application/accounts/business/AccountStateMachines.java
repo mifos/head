@@ -336,7 +336,7 @@ public class AccountStateMachines implements StateMachine {
 		try {
 			return customerBusinessService
 					.retrieveAllCustomerStatusList(customerLevel.getValue());
-		} catch (PersistenceException pe) {
+		} catch (ServiceException pe) {
 			throw new StatesInitializationException(
 					SavingsConstants.STATEINITIALIZATION_EXCEPTION, pe);
 		}

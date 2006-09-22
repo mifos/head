@@ -58,17 +58,6 @@ public class ClientNameDetailEntity extends PersistentObject {
 
 	private Name name;
 
-	protected ClientNameDetailEntity() {
-		super();
-		this.customerNameId = null;
-		this.client = null;
-		this.nameType = null;
-		this.salutation = null;
-		this.secondMiddleName = null;
-		this.displayName = null;
-		this.name = null;
-	}
-
 	public ClientNameDetailEntity(ClientBO client, String secondMiddleName, ClientNameDetailView view) {
 		super();
 		this.customerNameId = null;
@@ -80,6 +69,17 @@ public class ClientNameDetailEntity extends PersistentObject {
 		this.name = new Name(view.getFirstName(),view.getMiddleName(),view.getSecondLastName(),view.getLastName());
 	}
 
+	protected ClientNameDetailEntity() {
+		super();
+		this.customerNameId = null;
+		this.client = null;
+		this.nameType = null;
+		this.salutation = null;
+		this.secondMiddleName = null;
+		this.displayName = null;
+		this.name = null;
+	}
+	
 	public String getDisplayName() {
 		return displayName;
 	}

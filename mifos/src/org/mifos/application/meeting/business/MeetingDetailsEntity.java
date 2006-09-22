@@ -58,13 +58,6 @@ public class MeetingDetailsEntity extends PersistentObject {
 
 	private final MeetingBO meeting;
 
-	protected MeetingDetailsEntity() {
-		detailsId = null;
-		recurrenceType = null;
-		meetingRecurrence = null;
-		meeting = null;
-	}
-	
 	public MeetingDetailsEntity(RecurrenceTypeEntity recurrenceType, Short dayNumber, WeekDay weekDay, RankType rank, Short recurAfter, MeetingBO meeting)throws MeetingException {
 		this.validateFields(recurAfter);
 		this.recurrenceType = recurrenceType;
@@ -78,6 +71,13 @@ public class MeetingDetailsEntity extends PersistentObject {
 			this.meetingRecurrence = new MeetingRecurrenceEntity(this);
 			
 		detailsId = null;
+	}
+	
+	protected MeetingDetailsEntity() {
+		detailsId = null;
+		recurrenceType = null;
+		meetingRecurrence = null;
+		meeting = null;
 	}
 	
 	public Short getRecurAfter() {

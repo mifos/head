@@ -68,11 +68,9 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
@@ -81,14 +79,15 @@ import org.mifos.framework.util.helpers.Money;
 
 public class CustomerBusinessService extends BusinessService {
 
-	public CustomerBusinessService() {}
+	public CustomerBusinessService() {
+	}
 
 	@Override
 	public BusinessObject getBusinessObject(UserContext userContext) {
 		return null;
 	}
 
-	public CustomerBO getCustomer(Integer customerId)throws ServiceException{
+	public CustomerBO getCustomer(Integer customerId) throws ServiceException {
 		try {
 			return new CustomerPersistence().getCustomer(customerId);
 		} catch (PersistenceException pe) {
@@ -97,16 +96,26 @@ public class CustomerBusinessService extends BusinessService {
 	}
 
 	public CustomerBO findBySystemId(String globalCustNum)
-			throws PersistenceException {
-		return new CustomerPersistence().findBySystemId(globalCustNum);
+			throws ServiceException {
+		try {
+			return new CustomerPersistence().findBySystemId(globalCustNum);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
 	}
 
 	public CustomerBO getBySystemId(String globalCustNum, Short levelId)
-			throws PersistenceException {
-		return new CustomerPersistence().getBySystemId(globalCustNum, levelId);
+			throws ServiceException {
+		try {
+			return new CustomerPersistence().getBySystemId(globalCustNum,
+					levelId);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
 	}
 
-	public List<LoanCycleCounter> fetchLoanCycleCounter(Integer customerId) throws ServiceException{
+	public List<LoanCycleCounter> fetchLoanCycleCounter(Integer customerId)
+			throws ServiceException {
 		try {
 			return new CustomerPersistence().fetchLoanCycleCounter(customerId);
 		} catch (PersistenceException e) {
@@ -116,26 +125,37 @@ public class CustomerBusinessService extends BusinessService {
 	}
 
 	public CustomerPerformanceHistoryView getLastLoanAmount(Integer customerId)
-			throws PersistenceException {
-		return new CustomerPersistence().getLastLoanAmount(customerId);
+			throws ServiceException {
+		try {
+			return new CustomerPersistence().getLastLoanAmount(customerId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
 
 	public CustomerPerformanceHistoryView numberOfMeetings(boolean isPresent,
-			Integer customerId) throws PersistenceException {
-		return new CustomerPersistence()
-				.numberOfMeetings(isPresent, customerId);
+			Integer customerId) throws ServiceException {
+		try {
+			return new CustomerPersistence().numberOfMeetings(isPresent,
+					customerId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
 
-	public double getLastTrxnAmnt(String globalCustNum)
-			throws PersistenceException{
+	public double getLastTrxnAmnt(String globalCustNum) throws ServiceException {
 		return findBySystemId(globalCustNum).getCustomerAccount()
 				.getLastPmntAmnt();
 	}
 
 	public List<CustomerRecentActivityView> getRecentActivityView(
-			Integer customerId) throws SystemException, ApplicationException {
-		CustomerBO customerBO = new CustomerPersistence()
-				.getCustomer(customerId);
+			Integer customerId) throws ServiceException {
+		CustomerBO customerBO;
+		try {
+			customerBO = new CustomerPersistence().getCustomer(customerId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 		Set<CustomerActivityEntity> customerAtivityDetails = customerBO
 				.getCustomerAccount().getCustomerActivitDetails();
 		List<CustomerRecentActivityView> customerActivityViewList = new ArrayList<CustomerRecentActivityView>();
@@ -151,7 +171,7 @@ public class CustomerBusinessService extends BusinessService {
 	}
 
 	public List<CustomerRecentActivityView> getAllActivityView(
-			String globalCustNum) throws SystemException, ApplicationException {
+			String globalCustNum) throws ServiceException {
 		CustomerBO customerBO = findBySystemId(globalCustNum);
 		Set<CustomerActivityEntity> customerAtivityDetails = customerBO
 				.getCustomerAccount().getCustomerActivitDetails();
@@ -170,8 +190,8 @@ public class CustomerBusinessService extends BusinessService {
 				.getCreatedDate());
 		customerRecentActivityView.setDescription(customerActivityEntity
 				.getDescription());
-		Money amount=removeSign(customerActivityEntity.getAmount());
-		if(amount.getAmountDoubleValue()==0)
+		Money amount = removeSign(customerActivityEntity.getAmount());
+		if (amount.getAmountDoubleValue() == 0)
 			customerRecentActivityView.setAmount("-");
 		else
 			customerRecentActivityView.setAmount(amount.toString());
@@ -189,13 +209,17 @@ public class CustomerBusinessService extends BusinessService {
 	}
 
 	private List<AccountBO> getAccountsForCustomer(String searchId,
-			Short officeId, Short accountTypeId) throws PersistenceException{
-		return new CustomerPersistence().retrieveAccountsUnderCustomer(
-				searchId, officeId, accountTypeId);
+			Short officeId, Short accountTypeId) throws ServiceException {
+		try {
+			return new CustomerPersistence().retrieveAccountsUnderCustomer(
+					searchId, officeId, accountTypeId);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
 	}
 
 	private Money getTotalOutstandingLoan(List<AccountBO> accountList)
-			throws PersistenceException {
+			throws ServiceException {
 		Money total = new Money();
 		for (AccountBO accountBO : accountList) {
 			LoanBO loanBO = (LoanBO) accountBO;
@@ -212,7 +236,7 @@ public class CustomerBusinessService extends BusinessService {
 	}
 
 	private Money getPortfolioAtRisk(List<AccountBO> accountList)
-			throws PersistenceException {
+			throws ServiceException {
 		Money amount = new Money();
 		for (AccountBO account : accountList) {
 			if (account.getAccountType().getAccountTypeId().equals(
@@ -229,7 +253,7 @@ public class CustomerBusinessService extends BusinessService {
 	}
 
 	private Money getBalanceForPortfolioAtRisk(List<AccountBO> accountList)
-			throws PersistenceException {
+			throws ServiceException {
 		Money amount = new Money();
 		for (AccountBO account : accountList) {
 			if (account.getAccountType().getAccountTypeId().equals(
@@ -243,7 +267,7 @@ public class CustomerBusinessService extends BusinessService {
 	}
 
 	private Money getTotalSavings(List<AccountBO> accountList)
-			throws PersistenceException {
+			throws ServiceException {
 		Money total = new Money();
 		for (AccountBO accountBO : accountList) {
 			SavingsBO savingsBO = (SavingsBO) accountBO;
@@ -253,9 +277,13 @@ public class CustomerBusinessService extends BusinessService {
 	}
 
 	private List<CustomerBO> getCustomer(String searchId, Short officeId,
-			Short customerLevelId) throws PersistenceException {
-		return new CustomerPersistence().getAllChildrenForParent(searchId,
-				officeId, customerLevelId);
+			Short customerLevelId) throws ServiceException {
+		try {
+			return new CustomerPersistence().getAllChildrenForParent(searchId,
+					officeId, customerLevelId);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
 	}
 
 	private List<CustomerBO> getChildList(List<CustomerBO> centerChildren,
@@ -270,7 +298,8 @@ public class CustomerBusinessService extends BusinessService {
 	}
 
 	public CenterPerformanceHistory getCenterPerformanceHistory(
-			String searchId, Short officeId) throws PersistenceException {
+			String searchId, Short officeId) throws ServiceException {
+
 		List<CustomerBO> centerChildren = getCustomer(searchId, officeId,
 				CustomerConstants.CENTER_LEVEL_ID);
 		List<CustomerBO> groups = getChildList(centerChildren,
@@ -300,39 +329,58 @@ public class CustomerBusinessService extends BusinessService {
 				.setPerformanceHistoryDetails(groupSize, clientSize,
 						totalOutstandingLoan, totalSavings, portfolioAtRisk);
 		return centerPerformanceHistory;
+
 	}
 
 	public List<CustomerCheckListBO> getStatusChecklist(Short statusId,
-			Short customerLevelId) throws PersistenceException{
-		return new CustomerPersistence().getStatusChecklist(statusId,
-				customerLevelId);
+			Short customerLevelId) throws ServiceException {
+		try {
+			return new CustomerPersistence().getStatusChecklist(statusId,
+					customerLevelId);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
 	}
 
 	public List<CustomerStatusEntity> retrieveAllCustomerStatusList(
-			Short levelId) throws PersistenceException {
-		return new CustomerPersistence().retrieveAllCustomerStatusList(levelId);
+			Short levelId) throws ServiceException {
+		try {
+			return new CustomerPersistence()
+					.retrieveAllCustomerStatusList(levelId);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
 	}
 
-	public void initializeStateMachine(Short localeId, Short officeId,AccountTypes accountTypes,
-			CustomerLevel customerLevel) throws StatesInitializationException {
-		AccountStateMachines.getInstance().initialize(localeId, officeId,accountTypes,customerLevel);
+	public void initializeStateMachine(Short localeId, Short officeId,
+			AccountTypes accountTypes, CustomerLevel customerLevel)
+			throws ServiceException {
+		try {
+			AccountStateMachines.getInstance().initialize(localeId, officeId,
+					accountTypes, customerLevel);
+		} catch (StatesInitializationException sie) {
+			throw new ServiceException(sie);
+		}
 	}
 
-	public String getStatusName(Short localeId, CustomerStatus customerStatus, CustomerLevel customerLevel){
+	public String getStatusName(Short localeId, CustomerStatus customerStatus,
+			CustomerLevel customerLevel) {
 		return AccountStateMachines.getInstance().getCustomerStatusName(
 				localeId, customerStatus, customerLevel);
 	}
 
-	public String getFlagName(Short localeId,CustomerStatusFlag customerStatusFlag, CustomerLevel customerLevel){
-		return AccountStateMachines.getInstance().getCustomerFlagName(localeId,customerStatusFlag,
-				customerLevel);
+	public String getFlagName(Short localeId,
+			CustomerStatusFlag customerStatusFlag, CustomerLevel customerLevel) {
+		return AccountStateMachines.getInstance().getCustomerFlagName(localeId,
+				customerStatusFlag, customerLevel);
 	}
 
 	public List<CustomerStatusEntity> getStatusList(
-			CustomerStatusEntity customerStatusEntity, CustomerLevel customerLevel,
-			Short localeId) {
+			CustomerStatusEntity customerStatusEntity,
+			CustomerLevel customerLevel, Short localeId) {
 		List<CustomerStatusEntity> statusList = AccountStateMachines
-				.getInstance().getStatusList(customerStatusEntity, customerLevel);
+				.getInstance().getStatusList(customerStatusEntity,
+						customerLevel);
 		if (null != statusList) {
 			for (CustomerStatusEntity customerStatusObj : statusList) {
 				customerStatusObj.setLocaleId(localeId);
@@ -342,30 +390,46 @@ public class CustomerBusinessService extends BusinessService {
 	}
 
 	public QueryResult getAllCustomerNotes(Integer customerId)
-			throws ApplicationException{
-		return new CustomerPersistence().getAllCustomerNotes(customerId);
+			throws ServiceException {
+		try {
+			return new CustomerPersistence().getAllCustomerNotes(customerId);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
 	}
 
 	public List<BusinessActivityEntity> retrieveMasterEntities(
-			String entityName, Short localeId) throws PersistenceException {
-		return new MasterPersistence().retrieveMasterEntities(entityName,
-				localeId);
+			String entityName, Short localeId) throws ServiceException {
+		try {
+			return new MasterPersistence().retrieveMasterEntities(entityName,
+					localeId);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
 	}
 
 	public List<PersonnelView> getFormedByPersonnel(Short levelId,
-			Short officeId) throws PersistenceException {
-		return new CustomerPersistence()
-				.getFormedByPersonnel(levelId, officeId);
+			Short officeId) throws ServiceException {
+		try {
+			return new CustomerPersistence().getFormedByPersonnel(levelId,
+					officeId);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
 	}
 
 	public CustomerPictureEntity retrievePicture(Integer customerId)
-			throws PersistenceException {
-		return new CustomerPersistence().retrievePicture(customerId);
+			throws ServiceException {
+		try {
+			return new CustomerPersistence().retrievePicture(customerId);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
 	}
 
 	public void checkPermissionForStatusChange(Short newState,
 			UserContext userContext, Short flagSelected, Short recordOfficeId,
-			Short recordLoanOfficerId) throws SecurityException {
+			Short recordLoanOfficerId) throws ServiceException {
 		if (!isPermissionAllowed(newState, userContext, flagSelected,
 				recordOfficeId, recordLoanOfficerId))
 			throw new SecurityException(
@@ -379,8 +443,14 @@ public class CustomerBusinessService extends BusinessService {
 				null != flagSelected ? flagSelected.shortValue() : 0,
 				userContext, recordOfficeId, recordLoanOfficerId);
 	}
-	
-	public List<AccountBO> getAllClosedAccount(Integer customerId, Short accountTypeId) throws PersistenceException {
-		return new CustomerPersistence().getAllClosedAccount(customerId,accountTypeId);
+
+	public List<AccountBO> getAllClosedAccount(Integer customerId,
+			Short accountTypeId) throws ServiceException {
+		try {
+			return new CustomerPersistence().getAllClosedAccount(customerId,
+					accountTypeId);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
 	}
 }

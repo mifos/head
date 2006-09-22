@@ -51,13 +51,6 @@ public class CustomerPictureEntity extends PersistentObject {
 
 	private Blob picture;
 
-	protected CustomerPictureEntity() {
-		super();
-		this.pictureId = null;
-		this.customer = null;
-		this.picture = null;
-	}
-
 	public CustomerPictureEntity(CustomerBO customer, Blob picture) {
 		super();
 		this.pictureId = null;
@@ -65,6 +58,13 @@ public class CustomerPictureEntity extends PersistentObject {
 		this.picture = picture;
 	}
 
+	protected CustomerPictureEntity() {
+		super();
+		this.pictureId = null;
+		this.customer = null;
+		this.picture = null;
+	}
+	
 	public CustomerBO getCustomer() {
 		return customer;
 	}

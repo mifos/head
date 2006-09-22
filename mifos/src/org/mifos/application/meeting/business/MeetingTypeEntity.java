@@ -51,12 +51,12 @@ public class MeetingTypeEntity extends PersistentObject {
 
 	private String description;
 
-	protected MeetingTypeEntity() {}
-
 	public MeetingTypeEntity(MeetingType meetingType) {
 		this.meetingTypeId = meetingType.getValue();
 	}
 
+	protected MeetingTypeEntity() {}
+	
 	public String getDescription() {
 		return description;
 	}
