@@ -1796,7 +1796,7 @@ public class TestLoanBO extends MifosTestCase {
 					Short.valueOf("1")))
 				accountActionDateEntity.setMiscFee(new Money("20.3"));
 		}
-		((LoanBO) accountBO).roundInstallments(installmentIdList);
+		((LoanBO) accountBO).applyRounding();
 		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();
 
@@ -1806,13 +1806,17 @@ public class TestLoanBO extends MifosTestCase {
 				.getAccountActionDates()) {
 			LoanScheduleEntity accountActionDate = (LoanScheduleEntity) accountAction;
 			if (accountActionDate.getInstallmentId().equals(Short.valueOf("1")))
-				assertEquals(new Money("132.3"), accountActionDate
-						.getTotalDue());
+				assertEquals(new Money("233.0"), accountActionDate
+						.getTotalDueWithFees());
+			else if(accountActionDate.getInstallmentId().equals(Short.valueOf("6")))
+				assertEquals(new Money("211.3"), accountActionDate
+						.getTotalDueWithFees());
 			else
-				assertEquals(new Money("112.0"), accountActionDate
-						.getTotalDue());
+				assertEquals(new Money("212.0"), accountActionDate
+						.getTotalDueWithFees());
 		}
 	}
+	
 
 	public void testBuildLoanWithoutLoanOffering()
 			throws NumberFormatException, AccountException, Exception {

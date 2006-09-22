@@ -413,5 +413,9 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		else if(chargeType.equals(Short.valueOf(AccountConstants.MISC_PENALTY)))
 			setMiscPenalty(getMiscPenalty().add(charge));
 	}
+	
+	public boolean isPrincipalZero(){
+		return principal.getAmountDoubleValue() == 0.0 ;
+	}
 
 }

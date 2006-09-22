@@ -138,18 +138,18 @@ public class PrdCategoryAction extends BaseAction {
 								.getProductCategoryStatus())));
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
-	
-	public ActionForward getAllCategories(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+
+	public ActionForward getAllCategories(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		SessionUtils.setAttribute(
-				ProductDefinitionConstants.PRODUCTCATEGORYLIST,getAllCategories(userContext),request
-						.getSession());
+				ProductDefinitionConstants.PRODUCTCATEGORYLIST,
+				getAllCategories(userContext), request.getSession());
 		return mapping.findForward(ActionForwards.search_success.toString());
 	}
-	
+
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -179,7 +179,7 @@ public class PrdCategoryAction extends BaseAction {
 	}
 
 	private List<ProductTypeEntity> getProductTypes(UserContext userContext)
-			throws PersistenceException {
+			throws ServiceException {
 		List<ProductTypeEntity> productCategoryList = getBusinessService()
 				.getProductTypes();
 		for (ProductTypeEntity productTypeEntity : productCategoryList)
@@ -188,7 +188,7 @@ public class PrdCategoryAction extends BaseAction {
 	}
 
 	private List<PrdCategoryStatusEntity> getProductCategoryStatusList(
-			UserContext userContext) throws PersistenceException {
+			UserContext userContext) throws ServiceException {
 		List<PrdCategoryStatusEntity> productCategoryStatusList = getBusinessService()
 				.getProductCategoryStatusList();
 		for (PrdCategoryStatusEntity prdCategoryStatusEntity : productCategoryStatusList)
@@ -204,12 +204,15 @@ public class PrdCategoryAction extends BaseAction {
 				return productTypeEntity;
 		return null;
 	}
-	
-	private List<ProductCategoryBO> getAllCategories(UserContext userContext) throws PersistenceException{
-		List<ProductCategoryBO> productCategoryList=getBusinessService().getAllCategories();
-		if(productCategoryList!=null){
-			for(ProductCategoryBO productCategoryBO : productCategoryList){
-				productCategoryBO.getPrdCategoryStatus().setLocaleId(userContext.getLocaleId());
+
+	private List<ProductCategoryBO> getAllCategories(UserContext userContext)
+			throws ServiceException {
+		List<ProductCategoryBO> productCategoryList = getBusinessService()
+				.getAllCategories();
+		if (productCategoryList != null) {
+			for (ProductCategoryBO productCategoryBO : productCategoryList) {
+				productCategoryBO.getPrdCategoryStatus().setLocaleId(
+						userContext.getLocaleId());
 				productCategoryBO.getProductType().setUserContext(userContext);
 			}
 		}

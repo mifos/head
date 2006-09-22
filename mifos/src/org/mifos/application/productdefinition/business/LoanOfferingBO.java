@@ -110,13 +110,6 @@ public class LoanOfferingBO extends PrdOfferingBO {
 	private MifosLogger prdLogger = MifosLogManager
 			.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
 
-	protected LoanOfferingBO() {
-		principalGLcode = null;
-		interestGLcode = null;
-		loanOfferingFunds = new HashSet<LoanOfferingFundEntity>();
-		prdOfferingFees = new HashSet<PrdOfferingFeesEntity>();
-	}
-
 	public LoanOfferingBO(UserContext userContext, String prdOfferingName,
 			String prdOfferingShortName, ProductCategoryBO prdCategory,
 			PrdApplicableMasterEntity prdApplicableMaster, Date startDate,
@@ -194,6 +187,13 @@ public class LoanOfferingBO extends PrdOfferingBO {
 			}
 		}
 		prdLogger.debug("Loan offering build :" + getGlobalPrdOfferingNum());
+	}
+
+	protected LoanOfferingBO() {
+		principalGLcode = null;
+		interestGLcode = null;
+		loanOfferingFunds = new HashSet<LoanOfferingFundEntity>();
+		prdOfferingFees = new HashSet<PrdOfferingFeesEntity>();
 	}
 
 	public GracePeriodTypeEntity getGracePeriodType() {

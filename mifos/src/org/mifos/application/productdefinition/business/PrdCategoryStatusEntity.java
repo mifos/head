@@ -5,11 +5,11 @@ import org.mifos.application.productdefinition.util.helpers.PrdCategoryStatus;
 
 public class PrdCategoryStatusEntity extends MasterDataEntity {
 
-	PrdCategoryStatusEntity(){
+	PrdCategoryStatusEntity() {
 		super();
 	}
-	
-	PrdCategoryStatusEntity(PrdCategoryStatus prdCategoryStatus){
+
+	PrdCategoryStatusEntity(PrdCategoryStatus prdCategoryStatus) {
 		super(prdCategoryStatus.getValue());
 	}
 }

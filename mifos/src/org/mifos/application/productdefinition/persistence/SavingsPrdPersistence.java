@@ -82,10 +82,11 @@ public class SavingsPrdPersistence extends Persistence {
 				NamedQueryConstants.SAVINGS_APPL_RECURRENCETYPES,
 				queryParameters);
 	}
-	
+
 	public List<SavingsOfferingBO> getAllSavingsProducts()
-	throws PersistenceException {
-	HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-	return executeNamedQuery(NamedQueryConstants.GET_ALLSAVINGS_PRODUCTS,queryParameters);
-}
+			throws PersistenceException {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		return executeNamedQuery(NamedQueryConstants.GET_ALLSAVINGS_PRODUCTS,
+				queryParameters);
+	}
 }

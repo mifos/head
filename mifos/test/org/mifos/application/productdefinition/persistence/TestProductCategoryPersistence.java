@@ -37,11 +37,11 @@ public class TestProductCategoryPersistence extends MifosTestCase {
 		userContext=null;
 	}
 	
-	public void testGetMaxPrdCategoryId(){
+	public void testGetMaxPrdCategoryId() throws Exception{
 		assertEquals(Short.valueOf("2"),productCategoryPersistence.getMaxPrdCategoryId());
 	}
 	
-	public void testGetProductCategory() {
+	public void testGetProductCategory() throws Exception{
 		assertEquals(Integer.valueOf("0"),productCategoryPersistence.getProductCategory("product"));
 	}
 	
@@ -71,7 +71,7 @@ public class TestProductCategoryPersistence extends MifosTestCase {
 		deleteProductCategory(productCategoryBO);
 	}
 	
-	public void testGetProductCategoryStatusList(){
+	public void testGetProductCategoryStatusList()throws Exception{
 		assertEquals(2,productCategoryPersistence.getProductCategoryStatusList().size());
 	}
 	

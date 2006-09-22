@@ -108,10 +108,10 @@ public abstract class PrdOfferingBO extends BusinessObject {
 		super(userContext);
 		prdLogger.debug("creating product offering");
 		validateUserContext(userContext);
-		vaildate(prdOfferingName, prdOfferingShortName,
-				prdCategory, prdApplicableMaster,startDate);
+		vaildate(prdOfferingName, prdOfferingShortName, prdCategory,
+				prdApplicableMaster, startDate);
 		validateStartDateAgainstCurrentDate(startDate);
-		validateEndDateAgainstCurrentDate(startDate , endDate);
+		validateEndDateAgainstCurrentDate(startDate, endDate);
 		validateDuplicateProductOfferingName(prdOfferingName);
 		validateDuplicateProductOfferingShortName(prdOfferingShortName);
 		prdOfferingId = null;
@@ -236,40 +236,48 @@ public abstract class PrdOfferingBO extends BusinessObject {
 		return globalPrdOfferingNum.toString();
 	}
 
-	private void vaildate( String prdOfferingName,
-			String prdOfferingShortName, ProductCategoryBO prdCategory,
-			PrdApplicableMasterEntity prdApplicableMaster,Date startDate) throws ProductDefinitionException {
+	private void vaildate(String prdOfferingName, String prdOfferingShortName,
+			ProductCategoryBO prdCategory,
+			PrdApplicableMasterEntity prdApplicableMaster, Date startDate)
+			throws ProductDefinitionException {
 		prdLogger.debug("Validating the fields in Prd Offering");
-		if ( prdOfferingName == null
-				|| prdOfferingShortName == null
-				|| prdCategory == null
-				|| prdApplicableMaster == null
-				|| (prdOfferingShortName.length() > 4)
-				|| startDate == null ) {
-			throw new ProductDefinitionException(ProductDefinitionConstants.ERROR_CREATE);
+		if (prdOfferingName == null || prdOfferingShortName == null
+				|| prdCategory == null || prdApplicableMaster == null
+				|| (prdOfferingShortName.length() > 4) || startDate == null) {
+			throw new ProductDefinitionException(
+					ProductDefinitionConstants.ERROR_CREATE);
 		}
 		prdLogger.debug("Validation of the fields in Prd Offering done.");
 	}
-	private void validateUserContext(UserContext userContext) throws ProductDefinitionException {
+
+	private void validateUserContext(UserContext userContext)
+			throws ProductDefinitionException {
 		prdLogger.debug("Validating the usercontext in Prd Offering");
-		if (userContext == null	) {
-			throw new ProductDefinitionException(ProductDefinitionConstants.ERROR_CREATE);
+		if (userContext == null) {
+			throw new ProductDefinitionException(
+					ProductDefinitionConstants.ERROR_CREATE);
 		}
 		prdLogger.debug("Validation of the fields in Prd Offering done.");
 	}
-	
-	private void validateStartDateAgainstCurrentDate(Date startDate) throws ProductDefinitionException{
-		if(DateUtils.getDateWithoutTimeStamp(startDate.getTime())
-		.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) < 0){
-			throw new ProductDefinitionException(ProductDefinitionConstants.INVALIDSTARTDATE);
+
+	private void validateStartDateAgainstCurrentDate(Date startDate)
+			throws ProductDefinitionException {
+		if (DateUtils.getDateWithoutTimeStamp(startDate.getTime()).compareTo(
+				DateUtils.getCurrentDateWithoutTimeStamp()) < 0) {
+			throw new ProductDefinitionException(
+					ProductDefinitionConstants.INVALIDSTARTDATE);
 		}
 	}
-	
-	private void validateEndDateAgainstCurrentDate(Date startDate , Date endDate) throws ProductDefinitionException{
-		if(endDate != null && DateUtils.getDateWithoutTimeStamp(
-				startDate.getTime()).compareTo(
-				DateUtils.getDateWithoutTimeStamp(endDate.getTime())) >= 0) {
-					throw new ProductDefinitionException(ProductDefinitionConstants.INVALIDENDDATE);		
+
+	private void validateEndDateAgainstCurrentDate(Date startDate, Date endDate)
+			throws ProductDefinitionException {
+		if (endDate != null
+				&& DateUtils.getDateWithoutTimeStamp(startDate.getTime())
+						.compareTo(
+								DateUtils.getDateWithoutTimeStamp(endDate
+										.getTime())) >= 0) {
+			throw new ProductDefinitionException(
+					ProductDefinitionConstants.INVALIDENDDATE);
 		}
 	}
 
@@ -339,15 +347,18 @@ public abstract class PrdOfferingBO extends BusinessObject {
 		}
 	}
 
-	public void update(Short userId, String prdOfferingName, String prdOfferingShortName, ProductCategoryBO prdCategory, PrdApplicableMasterEntity prdApplicableMaster, Date startDate, Date endDate, String description,PrdStatus status) 
-		throws ProductDefinitionException {
-		vaildate(prdOfferingName, prdOfferingShortName,
-				prdCategory, prdApplicableMaster,startDate);	
+	public void update(Short userId, String prdOfferingName,
+			String prdOfferingShortName, ProductCategoryBO prdCategory,
+			PrdApplicableMasterEntity prdApplicableMaster, Date startDate,
+			Date endDate, String description, PrdStatus status)
+			throws ProductDefinitionException {
+		vaildate(prdOfferingName, prdOfferingShortName, prdCategory,
+				prdApplicableMaster, startDate);
 		validateStartDateForUpdate(startDate);
-		validateEndDateAgainstCurrentDate(startDate , endDate);
-		if(!prdOfferingName.equals(this.prdOfferingName))
+		validateEndDateAgainstCurrentDate(startDate, endDate);
+		if (!prdOfferingName.equals(this.prdOfferingName))
 			validateDuplicateProductOfferingName(prdOfferingName);
-		if(!prdOfferingShortName.equals(this.prdOfferingShortName))
+		if (!prdOfferingShortName.equals(this.prdOfferingShortName))
 			validateDuplicateProductOfferingShortName(prdOfferingShortName);
 		this.prdOfferingName = prdOfferingName;
 		this.prdOfferingShortName = prdOfferingShortName;
@@ -356,27 +367,30 @@ public abstract class PrdOfferingBO extends BusinessObject {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.description = description;
-		try{
+		try {
 			this.prdStatus = new PrdOfferingPersistence().getPrdStatus(status);
-		}
-		catch(PersistenceException pe){
+		} catch (PersistenceException pe) {
 			throw new ProductDefinitionException(pe);
 		}
 		prdLogger.debug("creating product offering done");
-	
+
 	}
 
-	private void validateStartDateForUpdate(Date startDate) throws ProductDefinitionException{
-		if(DateUtils.getDateWithoutTimeStamp(this.startDate.getTime())
-				.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) <= 0 &&
-				DateUtils.getDateWithoutTimeStamp(startDate.getTime())
-		.compareTo(DateUtils.getDateWithoutTimeStamp(this.startDate.getTime())) != 0){
-			throw new ProductDefinitionException(ProductDefinitionConstants.STARTDATEUPDATEEXCEPTION);
-		}
-		else if(DateUtils.getDateWithoutTimeStamp(this.startDate.getTime())
-				.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) > 0){
+	private void validateStartDateForUpdate(Date startDate)
+			throws ProductDefinitionException {
+		if (DateUtils.getDateWithoutTimeStamp(this.startDate.getTime())
+				.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) <= 0
+				&& DateUtils.getDateWithoutTimeStamp(startDate.getTime())
+						.compareTo(
+								DateUtils
+										.getDateWithoutTimeStamp(this.startDate
+												.getTime())) != 0) {
+			throw new ProductDefinitionException(
+					ProductDefinitionConstants.STARTDATEUPDATEEXCEPTION);
+		} else if (DateUtils.getDateWithoutTimeStamp(this.startDate.getTime())
+				.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) > 0) {
 			validateStartDateAgainstCurrentDate(startDate);
 		}
-		
+
 	}
 }

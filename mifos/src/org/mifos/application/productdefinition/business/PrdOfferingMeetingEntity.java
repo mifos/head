@@ -52,12 +52,6 @@ public class PrdOfferingMeetingEntity extends PersistentObject {
 
 	private final Short meetingType;
 
-	protected PrdOfferingMeetingEntity() {
-		prdOfferingMeetingId = null;
-		prdOffering = null;
-		meetingType = null;
-	}
-
 	public PrdOfferingMeetingEntity(MeetingBO meeting,
 			PrdOfferingBO prdOffering, MeetingType meetingType) {
 		prdOfferingMeetingId = null;
@@ -66,12 +60,18 @@ public class PrdOfferingMeetingEntity extends PersistentObject {
 		this.meetingType = meetingType.getValue();
 	}
 
+	protected PrdOfferingMeetingEntity() {
+		prdOfferingMeetingId = null;
+		prdOffering = null;
+		meetingType = null;
+	}
+
 	private Short getPrdOfferingMeetingId() {
 		return prdOfferingMeetingId;
 	}
 
-	public MeetingType getprdOfferingMeetingType(){
-			return MeetingType.getMeetingType(meetingType);	
+	public MeetingType getprdOfferingMeetingType() {
+		return MeetingType.getMeetingType(meetingType);
 	}
 
 	public PrdOfferingBO getPrdOffering() {

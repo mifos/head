@@ -822,14 +822,6 @@ public class AccountBO extends BusinessObject {
 		return dueInstallmentList;
 	}
 
-	protected final List<Short> getIdList(
-			List<AccountActionDateEntity> dueInstallments) {
-		List<Short> ids = new ArrayList<Short>();
-		for (AccountActionDateEntity accountActionDateEntity : dueInstallments)
-			ids.add(accountActionDateEntity.getInstallmentId());
-		return ids;
-	}
-
 	protected final Boolean isFeeAlreadyApplied(FeeBO fee) {
 		return getAccountFees(fee.getFeeId()) != null;
 	}

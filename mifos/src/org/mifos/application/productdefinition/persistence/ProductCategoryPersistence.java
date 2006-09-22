@@ -1,60 +1,74 @@
 package org.mifos.application.productdefinition.persistence;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.productdefinition.business.PrdCategoryStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.business.ProductTypeEntity;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
-
-
 
 public class ProductCategoryPersistence extends Persistence {
 
-	public Short getMaxPrdCategoryId() {
-		return (Short) HibernateUtil.getSessionTL().getNamedQuery(
-				NamedQueryConstants.PRODUCTCATEGORIES_MAX).uniqueResult();
+	public Short getMaxPrdCategoryId() throws PersistenceException {
+		return (Short) execUniqueResultNamedQuery(
+				NamedQueryConstants.PRODUCTCATEGORIES_MAX, null);
 	}
 
-	public Integer getProductCategory(String productCategoryName) {
-		return (Integer) HibernateUtil.getSessionTL().getNamedQuery(
-				NamedQueryConstants.PRODUCTCATEGORIES_COUNT_CREATE).setString(
-				ProductDefinitionConstants.PRODUCTCATEGORYNAME,
-				productCategoryName).uniqueResult();
+	public Integer getProductCategory(String productCategoryName)
+			throws PersistenceException {
+		Map<Object, Object> queryParameters = new HashMap<Object, Object>();
+		queryParameters.put(ProductDefinitionConstants.PRODUCTCATEGORYNAME,
+				productCategoryName);
+		return (Integer) execUniqueResultNamedQuery(
+				NamedQueryConstants.PRODUCTCATEGORIES_COUNT_CREATE,
+				queryParameters);
+
 	}
-	
+
 	public Integer getProductCategory(String productCategoryName,
-			Short productCategoryId) {
-		return (Integer) HibernateUtil.getSessionTL().getNamedQuery(
-				NamedQueryConstants.PRODUCTCATEGORIES_COUNT_UPDATE).setString(
-				ProductDefinitionConstants.PRODUCTCATEGORYNAME,
-				productCategoryName)
-				.setShort(ProductDefinitionConstants.PRODUCTCATEGORYID,
-						productCategoryId).uniqueResult();
+			Short productCategoryId) throws PersistenceException {
+		Map<Object, Object> queryParameters = new HashMap<Object, Object>();
+		queryParameters.put(ProductDefinitionConstants.PRODUCTCATEGORYNAME,
+				productCategoryName);
+		queryParameters.put(ProductDefinitionConstants.PRODUCTCATEGORYID,
+				productCategoryId);
+		return (Integer) execUniqueResultNamedQuery(
+				NamedQueryConstants.PRODUCTCATEGORIES_COUNT_UPDATE,
+				queryParameters);
 	}
-	
-	public List<ProductTypeEntity> getProductTypes(){
-		return (List<ProductTypeEntity>) HibernateUtil.getSessionTL().getNamedQuery(
-				NamedQueryConstants.GET_PRD_TYPES).list();
+
+	public List<ProductTypeEntity> getProductTypes()
+			throws PersistenceException {
+		return (List<ProductTypeEntity>) executeNamedQuery(
+				NamedQueryConstants.GET_PRD_TYPES, null);
 	}
-	
-	public ProductCategoryBO findByGlobalNum(String globalNum) {
-		return (ProductCategoryBO) HibernateUtil.getSessionTL().getNamedQuery(
-				NamedQueryConstants.GET_PRODUCTCATEGORY).setString("globalNum",
-				globalNum).uniqueResult();
+
+	public ProductCategoryBO findByGlobalNum(String globalNum)
+			throws PersistenceException {
+		Map<Object, Object> queryParameters = new HashMap<Object, Object>();
+		queryParameters.put("globalNum", globalNum);
+		return (ProductCategoryBO) execUniqueResultNamedQuery(
+				NamedQueryConstants.GET_PRODUCTCATEGORY, queryParameters);
+
 	}
-	
-	public List<PrdCategoryStatusEntity> getProductCategoryStatusList(){
-		return (List<PrdCategoryStatusEntity>) HibernateUtil.getSessionTL().getNamedQuery(
-				NamedQueryConstants.GET_PRDCATEGORYSTATUS).list(); 
+
+	public List<PrdCategoryStatusEntity> getProductCategoryStatusList()
+			throws PersistenceException {
+		return (List<PrdCategoryStatusEntity>) executeNamedQuery(
+				NamedQueryConstants.GET_PRDCATEGORYSTATUS, null);
+
 	}
-	
-	public List<ProductCategoryBO> getAllCategories(){
-		return (List<ProductCategoryBO>) HibernateUtil.getSessionTL().getNamedQuery(
-				NamedQueryConstants.PRODUCTCATEGORIES_SEARCH).list(); 
+
+	public List<ProductCategoryBO> getAllCategories()
+			throws PersistenceException {
+		return (List<ProductCategoryBO>) executeNamedQuery(
+				NamedQueryConstants.PRODUCTCATEGORIES_SEARCH, null);
+
 	}
-	
+
 }

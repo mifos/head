@@ -12,6 +12,7 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidUserException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
@@ -34,6 +35,7 @@ public class TestProductCategoryBusinessService extends MifosTestCase {
 		super.tearDown();
 		productCategoryBusinessService=null;
 		userContext=null;
+		HibernateUtil.closeSession();
 	}
 
 	public void testGetProductTypes() throws NumberFormatException, InvalidUserException, SystemException, ApplicationException{
@@ -48,21 +50,66 @@ public class TestProductCategoryBusinessService extends MifosTestCase {
 		}
 	}
 	
+	public void testGetProductTypesFailure() throws Exception{
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			productCategoryBusinessService.getProductTypes();
+			assertTrue(false);
+		} catch (ServiceException e) {
+			assertTrue(true);
+		}
+	}
+
+	
 	public void testFindByGlobalNum() throws Exception {
 		ProductCategoryBO productCategoryBO = createProductCategory();
 		assertNotNull(productCategoryBusinessService.findByGlobalNum(productCategoryBO.getGlobalPrdCategoryNum()));
 		deleteProductCategory(productCategoryBO);
 	}
 	
-	public void testGetProductCategoryStatusList() throws PersistenceException{
+	public void testFindByGlobalNumFailure() throws Exception{
+		ProductCategoryBO productCategoryBO = createProductCategory();
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			productCategoryBusinessService.findByGlobalNum(productCategoryBO.getGlobalPrdCategoryNum());
+			assertTrue(false);
+		} catch (ServiceException e) {
+			assertTrue(true);
+			HibernateUtil.closeSession();
+			deleteProductCategory(productCategoryBO);
+		}
+	}
+	
+	public void testGetProductCategoryStatusList() throws Exception{
 		assertEquals(2,productCategoryBusinessService.getProductCategoryStatusList().size());
 	}
+	
+	public void testGetProductCategoryStatusListFailure() throws Exception{
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			productCategoryBusinessService.getProductCategoryStatusList();
+			assertTrue(false);
+		} catch (ServiceException e) {
+			assertTrue(true);
+		}
+	}
+
 	
 	public void testGetAllCategories() throws Exception{
 		assertEquals(2,productCategoryBusinessService.getAllCategories().size());
 		ProductCategoryBO productCategoryBO = createProductCategory();
 		assertEquals(3,productCategoryBusinessService.getAllCategories().size());
 		deleteProductCategory(productCategoryBO);
+	}
+	
+	public void testGetAllCategoriesFailure() throws Exception{
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			productCategoryBusinessService.getAllCategories();
+			assertTrue(false);
+		} catch (ServiceException e) {
+			assertTrue(true);
+		}
 	}
 	
 	

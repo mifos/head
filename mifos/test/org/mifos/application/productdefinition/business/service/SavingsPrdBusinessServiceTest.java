@@ -66,6 +66,41 @@ public class SavingsPrdBusinessServiceTest extends MifosTestCase {
 		}
 	}
 
+	public void testGetAllSavingsProductsFailure() throws Exception {
+		SavingsOfferingBO savingsOffering = createSavingsOfferingBO();
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			new SavingsPrdBusinessService().getAllSavingsProducts();
+			assertTrue(false);
+		} catch (ServiceException e) {
+			assertTrue(true);
+			HibernateUtil.closeSession();
+			TestObjectFactory.removeObject(savingsOffering);
+		}
+	}
+
+	public void testGetSavingsApplicableRecurrenceTypesFailure()
+			throws Exception {
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			new SavingsPrdBusinessService()
+					.getSavingsApplicableRecurrenceTypes();
+			assertTrue(false);
+		} catch (ServiceException e) {
+			assertTrue(true);
+		}
+	}
+
+	public void testGetActiveSavingsProductCategoriesFailure() throws Exception {
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			new SavingsPrdBusinessService().getActiveSavingsProductCategories();
+			assertTrue(false);
+		} catch (ServiceException e) {
+			assertTrue(true);
+		}
+	}
+
 	private SavingsOfferingBO createSavingsOfferingBO() {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));

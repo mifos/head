@@ -51,16 +51,16 @@ public class PrdOfferingFeesEntity extends PersistentObject {
 
 	private final FeeBO fees;
 
-	protected PrdOfferingFeesEntity() {
-		this.prdOfferingFeeId = null;
-		this.loanOffering = null;
-		this.fees = null;
-	}
-
 	public PrdOfferingFeesEntity(LoanOfferingBO loanOffering, FeeBO fees) {
 		this.prdOfferingFeeId = null;
 		this.loanOffering = loanOffering;
 		this.fees = fees;
+	}
+
+	protected PrdOfferingFeesEntity() {
+		this.prdOfferingFeeId = null;
+		this.loanOffering = null;
+		this.fees = null;
 	}
 
 	public LoanOfferingBO getLoanOffering() {

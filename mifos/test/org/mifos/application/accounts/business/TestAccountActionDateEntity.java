@@ -16,7 +16,6 @@ import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
@@ -309,5 +308,17 @@ public class TestAccountActionDateEntity extends TestAccount {
 
 		assertEquals(new Money("170"), accountActionDate
 				.getTotalScheduleAmountWithFees());
+	}
+	
+	public void testIsPricipalZero(){
+		for (AccountActionDateEntity accountAction : accountBO
+				.getAccountActionDates()) {
+			LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
+			if(accountActionDateEntity.getInstallmentId() == 1){
+				accountActionDateEntity.setPrincipal(new Money());
+				assertTrue(accountActionDateEntity.isPrincipalZero());
+			}else
+				assertFalse(accountActionDateEntity.isPrincipalZero());
+		}
 	}
 }
