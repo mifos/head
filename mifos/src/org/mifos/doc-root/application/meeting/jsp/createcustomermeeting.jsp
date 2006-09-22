@@ -164,7 +164,7 @@ function goToCancelPage(){
 						<td><mifos:mifoslabel name="meeting.labelDay"
 							bundle="MeetingResources" /> <mifos:mifosnumbertext
 							property="monthDay" size="3" onfocus="checkMonthType1()" maxlength="2"/> 
-							--> <mifos:mifoslabel name="meeting.labelOfEvery"
+							 <mifos:mifoslabel name="meeting.labelOfEvery"
 							bundle="MeetingResources" /> <mifos:mifosnumbertext
 							property="dayRecurMonth" size="3" onfocus="checkMonthType1()" maxlength="3"/> <mifos:mifoslabel
 							name="meeting.labelMonths" bundle="MeetingResources" /></td>

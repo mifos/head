@@ -235,5 +235,4 @@ public interface GroupConstants {
 	public static final String GROUPLOANACCOUNTSINUSE = "groupLoanAccountsInUse";
 	public static final String GROUPSAVINGSACCOUNTSINUSE = "groupSavingsAccountsInUse";
 	
-	public static final String GROUP_MEETING = "groupMeeting";
 }

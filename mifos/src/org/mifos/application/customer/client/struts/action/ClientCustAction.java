@@ -136,7 +136,7 @@ public class ClientCustAction extends CustAction {
 			throws Exception {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
 		doCleanUp(actionForm, request);
-		request.getSession().removeAttribute(ClientConstants.CLIENT_MEETING);
+		SessionUtils.removeAttribute(CustomerConstants.CUSTOMER_MEETING, request);
 		if (actionForm.getGroupFlagValue().equals(YesNoFlag.YES.getValue())) {
 			actionForm.setParentGroup(getCustomerBusinessService().getCustomer(
 					Integer.valueOf(actionForm.getParentGroupId())));
@@ -338,7 +338,7 @@ public class ClientCustAction extends CustAction {
 		ClientBO client = null;
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
 		MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(
-				ClientConstants.CLIENT_MEETING, request.getSession());
+				CustomerConstants.CUSTOMER_MEETING, request);
 		List<CustomFieldView> customFields = actionForm.getCustomFields();
 		UserContext userContext = getUserContext(request);
 		convertCustomFieldDateToUniformPattern(customFields, userContext
@@ -423,8 +423,6 @@ public class ClientCustAction extends CustAction {
 	private void doCleanUp(ClientCustActionForm actionForm,
 			HttpServletRequest request) {
 		clearActionForm(actionForm);
-		SessionUtils.setAttribute(ClientConstants.CLIENT_MEETING, null, request
-				.getSession());
 	}
 
 	private void clearActionForm(ClientCustActionForm actionForm) {

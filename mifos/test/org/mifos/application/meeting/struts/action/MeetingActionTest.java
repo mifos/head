@@ -729,6 +729,88 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		assertNotNull(center.getCustomerMeeting().getMeeting());
 	}
 
+	public void testSuccessfulCreateMeetingFromClientDetail()throws Exception{
+		client1 = createClient(null);
+		HibernateUtil.closeSession();
+		
+		assertNull(client1.getCustomerMeeting());
+		
+		String meetingPlace = "Delhi";
+		Short recurAfter = Short.valueOf("4");
+		
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "get");
+		addRequestParameter("globalCustNum", client1.getGlobalCustNum());
+		actionPerform();
+		
+		setRequestPathInfo("/meetingAction.do");
+		addRequestParameter("method", "edit");
+		addRequestParameter("customerLevel", CustomerLevel.CLIENT.getValue().toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String)request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		
+		setRequestPathInfo("/meetingAction.do");
+		addRequestParameter("method", "update");
+		addRequestParameter("frequency", RecurrenceType.WEEKLY.getValue().toString());
+		addRequestParameter("weekDay", WeekDay.MONDAY.getValue().toString());
+		addRequestParameter("recurWeek", recurAfter.toString());
+		addRequestParameter("meetingPlace", meetingPlace);
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String)request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.client_detail_page.toString());
+		HibernateUtil.closeSession();
+		
+		client1 = (ClientBO)TestObjectFactory.getObject(ClientBO.class, client1.getCustomerId());
+		
+		assertNotNull(client1.getCustomerMeeting());
+		assertTrue(client1.getCustomerMeeting().getMeeting().isWeekly());
+		assertEquals(WeekDay.MONDAY, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(meetingPlace, client1.getCustomerMeeting().getMeeting().getMeetingPlace());
+		assertEquals(recurAfter, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
+	}
+	
+	public void testSuccessfulUpdateMeetingForClient()throws Exception{
+		MeetingBO meeting = createWeeklyMeeting(WeekDay.WEDNESDAY, Short.valueOf("5"), new  Date());
+		client1 = createClient(meeting);
+		HibernateUtil.closeSession();
+		String meetingPlace = "Delhi";
+	
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "get");
+		addRequestParameter("globalCustNum", client1.getGlobalCustNum());
+		actionPerform();
+		
+		setRequestPathInfo("/meetingAction.do");
+		addRequestParameter("method", "edit");
+		addRequestParameter("meetingId", client1.getCustomerMeeting().getMeeting().getMeetingId().toString());
+		addRequestParameter("customerLevel", CustomerLevel.CLIENT.getValue().toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String)request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		
+		setRequestPathInfo("/meetingAction.do");
+		addRequestParameter("method", "update");
+		addRequestParameter("frequency", meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId().toString());
+		addRequestParameter("weekDay", WeekDay.FRIDAY.getValue().toString());
+		addRequestParameter("recurWeek", meeting.getMeetingDetails().getRecurAfter().toString());
+		addRequestParameter("meetingPlace", meetingPlace);
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String)request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.client_detail_page.toString());
+		HibernateUtil.closeSession();
+		
+		client1 = (ClientBO)TestObjectFactory.getObject(ClientBO.class, client1.getCustomerId());
+		
+		MeetingBO updatedMeeting = client1.getCustomerMeeting().getMeeting();
+		assertTrue(updatedMeeting.isWeekly());
+		assertEquals(meetingPlace, updatedMeeting.getMeetingPlace());
+		assertEquals(meeting.getMeetingDetails().getRecurAfter(), updatedMeeting.getMeetingDetails().getRecurAfter());
+		assertEquals(WeekDay.FRIDAY,updatedMeeting.getMeetingDetails().getWeekDay());
+	}
+	
 	private CenterBO createCenter(MeetingBO meeting)throws Exception{
 		return TestObjectFactory.createCenter("Center1", meeting, Short.valueOf("3"), Short.valueOf("1"));
 	}

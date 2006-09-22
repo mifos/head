@@ -440,14 +440,15 @@
 											</span>
 										</c:when>
 										<c:otherwise>
+										<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customerMeeting')}" var="clientMeeting" />
 											<span class="fontnormal"><c:out
-												value="${sessionScope.clientMeeting.meetingSchedule}" />
+												value="${clientMeeting.meetingSchedule}" />
 											</span>
 											<br>
 											<span class="fontnormalbold"><mifos:mifoslabel
 												name="client.LocationOfMeeting" bundle="ClientUIResources"></mifos:mifoslabel></span><span
 												class="fontnormal"> <c:out
-												value="${sessionScope.clientMeeting.meetingPlace}" /><br>
+												value="${clientMeeting.meetingPlace}" /><br>
 											</span>
 										</c:otherwise>
 									</c:choose>

@@ -417,24 +417,10 @@
 												</html-el:link>
 											<%--</c:if>--%>
 											<br>
-
-											<c:choose>
-												<c:when
-													test="${ empty BusinessKey.customerMeeting.meeting}">
-													<html-el:link
-														action="MeetingAction.do?method=loadMeeting&input=ClientDetails&customerId=${BusinessKey.customerId}&randomNUm=${sessionScope.randomNUm}">
-														<mifos:mifoslabel name="client.EditMeetingLink"
-															bundle="ClientUIResources"></mifos:mifoslabel>
-													</html-el:link>
-												</c:when>
-												<c:otherwise>
-													<html-el:link
-														action="MeetingAction.do?method=get&input=ClientDetails&meetingId=${BusinessKey.customerMeeting.meeting.meetingId}&randomNUm=${sessionScope.randomNUm}">
-														<mifos:mifoslabel name="client.EditMeetingLink"
-															bundle="ClientUIResources"></mifos:mifoslabel>
-													</html-el:link>
-												</c:otherwise>
-											</c:choose>
+											<html-el:link
+												action="meetingAction.do?method=edit&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&customerLevel=${BusinessKey.customerLevel.id}">
+												<mifos:mifoslabel name="client.EditMeetingLink" bundle="ClientUIResources"/>
+											</html-el:link>
 											<br>
 										</c:otherwise>
 									</c:choose></td>

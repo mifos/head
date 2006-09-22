@@ -567,10 +567,9 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
 		addRequestParameter("selectedFee[0].amount", fee.getAmount());
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(ClientConstants.CLIENT_MEETING,
+		SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING,
 				new MeetingBO(RecurrenceType.MONTHLY, Short.valueOf("2"),
-						new Date(), MeetingType.CUSTOMERMEETING), request
-						.getSession());
+						new Date(), MeetingType.CUSTOMERMEETING), request);
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();

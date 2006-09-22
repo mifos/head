@@ -102,9 +102,6 @@ public interface ClientConstants {
 	public static final String INPUT_GROUP_TRANSFER  = "groupTransfer";
 	public static final String CLIENT_TRANSFER = "clientTransfer";
 	public static final String INPUT_BRANCH_TRANSFER  = "branchTransfer";
-	public static final String CLIENT_MEETING = "clientMeeting";
-	
-	
 	
 	/**Forward constants*/
 	public static final String CLIENT_CREATE_PREVIEW_PAGE = "previewCreate_success" ;

@@ -320,10 +320,10 @@ public class ClientCustActionForm extends CustomerActionForm {
 
 
 	@Override
-	protected MeetingBO getCustomerMeeting(HttpServletRequest request){
+	protected MeetingBO getCustomerMeeting(HttpServletRequest request)throws ApplicationException{
 		if(groupFlag.equals(ClientConstants.YES))
 			 return parentGroup.getCustomerMeeting().getMeeting();
 		else
-			 return (MeetingBO)request.getSession().getAttribute(ClientConstants.CLIENT_MEETING);
+			return (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING,request);
 	}
 }

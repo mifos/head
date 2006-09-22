@@ -153,7 +153,6 @@ public class CenterCustAction extends CustAction {
 		CenterCustActionForm actionForm = (CenterCustActionForm) form;
 		MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(
 				CustomerConstants.CUSTOMER_MEETING, request);
-		System.out.println("---------------meeting: "+ meeting);
 		List<CustomFieldView> customFields = actionForm.getCustomFields();
 		UserContext userContext = getUserContext(request);
 		convertCustomFieldDateToUniformPattern(customFields, userContext.getPereferedLocale());
