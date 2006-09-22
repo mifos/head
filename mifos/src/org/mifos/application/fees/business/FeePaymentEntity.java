@@ -43,17 +43,17 @@ import org.mifos.application.master.business.MasterDataEntity;
 
 public class FeePaymentEntity extends MasterDataEntity {
 
+	public FeePaymentEntity(FeePayment feePayment) {
+		super(feePayment.getValue());
+	}
+
 	protected FeePaymentEntity() {
 	}
 
-	public FeePaymentEntity(FeePayment feePayment){
-		super(feePayment.getValue());
-	}
-	
 	public boolean isTimeOfDisbursement() {
 		return getId().equals(FeePayment.TIME_OF_DISBURSMENT.getValue());
 	}
-	
+
 	public FeePayment getFeePayment() {
 		FeePayment[] feePayments = FeePayment.values();
 		for (FeePayment feePayment : feePayments) {

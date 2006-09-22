@@ -44,14 +44,14 @@ import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 public class CategoryTypeEntity extends MasterDataEntity {
 
-	protected CategoryTypeEntity() {
-	}
-	
 	public CategoryTypeEntity(FeeCategory feeCategory) {
 		super(feeCategory.getValue());
 	}
-	
-	public FeeCategory getFeeCategory()throws PropertyNotFoundException{
+
+	protected CategoryTypeEntity() {
+	}
+
+	public FeeCategory getFeeCategory() throws PropertyNotFoundException {
 		return FeeCategory.getFeeCategory(getId());
 	}
 }

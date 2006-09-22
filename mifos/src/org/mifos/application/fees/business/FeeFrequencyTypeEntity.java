@@ -5,18 +5,18 @@ import org.mifos.application.master.business.MasterDataEntity;
 
 public class FeeFrequencyTypeEntity extends MasterDataEntity {
 
-	protected FeeFrequencyTypeEntity() {
-	}
-	
 	public FeeFrequencyTypeEntity(FeeFrequencyType feeFrequency) {
 		super(feeFrequency.getValue());
 	}
-	
-	public boolean isPeriodic(){
+
+	protected FeeFrequencyTypeEntity() {
+	}
+
+	public boolean isPeriodic() {
 		return getId().equals(FeeFrequencyType.PERIODIC.getValue());
 	}
-	
-	public boolean isOneTime(){
+
+	public boolean isOneTime() {
 		return getId().equals(FeeFrequencyType.ONETIME.getValue());
 	}
 }

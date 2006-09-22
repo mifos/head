@@ -64,6 +64,12 @@ import org.mifos.framework.util.helpers.StringUtils;
 
 public abstract class FeeBO extends BusinessObject {
 
+	@Deprecated
+	protected Double rateOrAmount;
+
+	@Deprecated
+	protected Short rateAmountFlag;
+
 	private final Short feeId;
 
 	private final OfficeBO office;
@@ -81,26 +87,6 @@ public abstract class FeeBO extends BusinessObject {
 	private FeeStatusEntity feeStatus;
 
 	private Short changeType;
-
-	@Deprecated
-	protected Double rateOrAmount;
-
-	@Deprecated
-	protected Short rateAmountFlag;
-
-	/**
-	 * Addding a default constructor is hibernate's requirement and should not
-	 * be used to create a valid Fee object.
-	 */
-	protected FeeBO() {
-		this.feeId = null;
-		this.office = null;
-		this.feeName = null;
-		this.categoryType = null;
-		this.feeFrequency = null;
-		this.glCode = null;
-		this.feeLevels = null;
-	}
 
 	/**
 	 * Constructor to create a valid Fee Object
@@ -133,6 +119,20 @@ public abstract class FeeBO extends BusinessObject {
 		this.setFeeStatus(retrieveFeeStatusEntity(FeeStatus.ACTIVE));
 		if (isCustomerDefaultFee)
 			makeFeeDefaultToCustomer();
+	}
+
+	/**
+	 * Addding a default constructor is hibernate's requirement and should not
+	 * be used to create a valid Fee object.
+	 */
+	protected FeeBO() {
+		this.feeId = null;
+		this.office = null;
+		this.feeName = null;
+		this.categoryType = null;
+		this.feeFrequency = null;
+		this.glCode = null;
+		this.feeLevels = null;
 	}
 
 	public Short getFeeId() {

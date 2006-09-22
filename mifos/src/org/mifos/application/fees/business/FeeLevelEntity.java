@@ -43,22 +43,22 @@ import org.mifos.framework.business.PersistentObject;
 public class FeeLevelEntity extends PersistentObject {
 
 	private final Short feeLevelId;
-	
+
 	private final FeeBO fee;
 
 	private Short levelId;
+
+	public FeeLevelEntity(FeeBO fee, FeeLevel feeLevel) {
+		this.feeLevelId = null;
+		this.fee = fee;
+		this.levelId = feeLevel.getValue();
+	}
 
 	protected FeeLevelEntity() {
 		fee = null;
 		feeLevelId = null;
 	}
 
-	public FeeLevelEntity(FeeBO fee, FeeLevel feeLevel){
-		this.feeLevelId=null;
-		this.fee=fee;
-		this.levelId = feeLevel.getValue();
-	}
-	
 	public Short getLevelId() {
 		return levelId;
 	}
@@ -66,5 +66,5 @@ public class FeeLevelEntity extends PersistentObject {
 	private void setLevelId(Short levelId) {
 		this.levelId = levelId;
 	}
-	
+
 }

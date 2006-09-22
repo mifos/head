@@ -66,27 +66,27 @@ public class FeeBusinessService extends BusinessService {
 		return feePersistence.getFee(feeId);
 	}
 
-	public List<FeeBO> retrieveCustomerFees() throws FeeException {
+	public List<FeeBO> retrieveCustomerFees() throws ServiceException {
 		try {
 			return feePersistence.retrieveCustomerFees();
 		} catch (PersistenceException pe) {
-			throw new FeeException(pe);
+			throw new ServiceException(pe);
 		}
 	}
 
-	public List<FeeBO> retrieveProductFees() throws FeeException {
+	public List<FeeBO> retrieveProductFees() throws ServiceException {
 		try {
 			return feePersistence.retrieveProductFees();
 		} catch (PersistenceException pe) {
-			throw new FeeException(pe);
+			throw new ServiceException(pe);
 		}
 	}
 	
-	public List<FeeBO> retrieveCustomerFeesByCategaroyType(FeeCategory feeCategory) throws FeeException {
+	public List<FeeBO> retrieveCustomerFeesByCategaroyType(FeeCategory feeCategory) throws ServiceException {
 		try {
 			return feePersistence.retrieveCustomerFeesByCategaroyType(feeCategory);
 		} catch (PersistenceException pe) {
-			throw new FeeException(pe);
+			throw new ServiceException(pe);
 		}
 	}
 	

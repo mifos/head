@@ -43,14 +43,14 @@ import org.mifos.application.master.business.MasterDataEntity;
 
 public class FeeFormulaEntity extends MasterDataEntity {
 
-	protected FeeFormulaEntity() {
-	}
-	
 	public FeeFormulaEntity(FeeFormula feeFormula) {
 		super(feeFormula.getValue());
 	}
-	
-	public String getFormulaString(Short locale){
-		return "Formula: % "+getName(locale);
+
+	protected FeeFormulaEntity() {
+	}
+
+	public String getFormulaString(Short locale) {
+		return "Formula: % " + getName(locale);
 	}
 }

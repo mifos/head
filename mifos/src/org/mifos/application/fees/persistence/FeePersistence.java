@@ -72,33 +72,27 @@ public class FeePersistence extends Persistence {
 	}
 
 	public List<FeeBO> retrieveCustomerFees() throws PersistenceException {
-		try {
+		
 			return executeNamedQuery(
 					NamedQueryConstants.RETRIEVE_CUSTOMER_FEES, null);
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
+		
 	}
 
 	public List<FeeBO> retrieveProductFees() throws PersistenceException {
-		try {
+		
 			return executeNamedQuery(NamedQueryConstants.RETRIEVE_PRODUCT_FEES,
 					null);
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
+		
 	}
 	
 	public List<FeeBO> retrieveCustomerFeesByCategaroyType(FeeCategory feeCategory) throws PersistenceException {
-		try {
+		
 			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put(FeeCategory.ALLCUSTOMERS.toString(), FeeCategory.ALLCUSTOMERS.getValue());
 			queryParameters.put("CUSTOMER_CATEGAORY", feeCategory.getValue());
 			return executeNamedQuery(
 					NamedQueryConstants.RETRIEVE_CUSTOMER_FEES_BY_CATEGORY_TYPE, queryParameters);
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
+		
 	}
 	
 	public List<FeeBO> getAllAppllicableFeeForLoanCreation()

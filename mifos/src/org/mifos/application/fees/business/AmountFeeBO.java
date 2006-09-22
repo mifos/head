@@ -50,50 +50,53 @@ public class AmountFeeBO extends FeeBO {
 	private Money feeAmount;
 
 	/**
-	 * Addding a default constructor is hibernate's requiremnt and should not be used to create a valid AmountFee object.   
+	 * Constructor to create one time Amount Fee. Fee Payment tells the time
+	 * when fee should be charged. (upfront/time of disbursment etc.)
+	 */
+	public AmountFeeBO(UserContext userContext, String feeName,
+			CategoryTypeEntity categoryType,
+			FeeFrequencyTypeEntity feeFrequencyType, GLCodeEntity glCodeEntity,
+			Money amount, boolean isCustomerDefaultFee,
+			FeePaymentEntity feePayment) throws FeeException {
+		this(userContext, feeName, categoryType, feeFrequencyType,
+				glCodeEntity, amount, isCustomerDefaultFee, feePayment, null);
+	}
+
+	/**
+	 * Constructor to create Periodic Amount Fee. Meeting tells the periodicity
+	 * of fee.
+	 */
+	public AmountFeeBO(UserContext userContext, String feeName,
+			CategoryTypeEntity categoryType,
+			FeeFrequencyTypeEntity feeFrequencyType, GLCodeEntity glCodeEntity,
+			Money amount, boolean isCustomerDefaultFee, MeetingBO meeting)
+			throws FeeException {
+		this(userContext, feeName, categoryType, feeFrequencyType,
+				glCodeEntity, amount, isCustomerDefaultFee, null, meeting);
+	}
+
+	/**
+	 * Addding a default constructor is hibernate's requiremnt and should not be
+	 * used to create a valid AmountFee object.
 	 */
 	protected AmountFeeBO() {
 		super();
 	}
 
-	/**
-	 * Constructor to create one time Amount Fee.
-	 * Fee Payment tells the time when fee should be charged. (upfront/time of disbursment etc.)
-	 */
-	public AmountFeeBO(UserContext userContext, String feeName,
+	private AmountFeeBO(UserContext userContext, String feeName,
 			CategoryTypeEntity categoryType,
-			FeeFrequencyTypeEntity feeFrequencyType,
-			 GLCodeEntity glCodeEntity,
+			FeeFrequencyTypeEntity feeFrequencyType, GLCodeEntity glCodeEntity,
 			Money amount, boolean isCustomerDefaultFee,
-			FeePaymentEntity feePayment)throws FeeException {
-		this(userContext, feeName, categoryType, feeFrequencyType, 
-				glCodeEntity, amount, isCustomerDefaultFee, feePayment, null);
-	}
-	
-	/**
-	 * Constructor to create Periodic Amount Fee.
-	 * Meeting tells the periodicity of fee. 
-	 */	
-	public AmountFeeBO(UserContext userContext, String feeName,	CategoryTypeEntity categoryType, 
-			FeeFrequencyTypeEntity feeFrequencyType, GLCodeEntity glCodeEntity, Money amount, 
-			boolean isCustomerDefaultFee, MeetingBO meeting)throws FeeException {
-		this(userContext, feeName, categoryType, feeFrequencyType, 
-				glCodeEntity,amount, isCustomerDefaultFee, null, meeting);		
-	}
-	
-	private  AmountFeeBO(UserContext userContext, String feeName,
-			CategoryTypeEntity categoryType,FeeFrequencyTypeEntity feeFrequencyType, GLCodeEntity glCodeEntity,
-			Money amount, boolean isCustomerDefaultFee,  
-			FeePaymentEntity feePayment, MeetingBO meeting)throws FeeException{
-		super(userContext, feeName, categoryType, feeFrequencyType, glCodeEntity,isCustomerDefaultFee,
-				feePayment, meeting);
+			FeePaymentEntity feePayment, MeetingBO meeting) throws FeeException {
+		super(userContext, feeName, categoryType, feeFrequencyType,
+				glCodeEntity, isCustomerDefaultFee, feePayment, meeting);
 		validateFeeAmount(amount);
 		this.feeAmount = amount;
-		
+
 		this.rateOrAmount = feeAmount.getAmountDoubleValue();
 		this.rateAmountFlag = RateAmountFlag.AMOUNT.getValue();
 	}
-	
+
 	public Money getFeeAmount() {
 		return feeAmount;
 	}
@@ -102,13 +105,13 @@ public class AmountFeeBO extends FeeBO {
 		this.feeAmount = feeAmount;
 		this.rateOrAmount = feeAmount.getAmountDoubleValue();
 	}
-	
-	public RateAmountFlag getFeeType(){
+
+	public RateAmountFlag getFeeType() {
 		return RateAmountFlag.AMOUNT;
 	}
-	
-	private void validateFeeAmount(Money amount)throws FeeException{
-		if(amount==null || amount.getAmountDoubleValue()<=0.0)
+
+	private void validateFeeAmount(Money amount) throws FeeException {
+		if (amount == null || amount.getAmountDoubleValue() <= 0.0)
 			throw new FeeException(FeeConstants.INVALID_FEE_AMOUNT);
 	}
 }

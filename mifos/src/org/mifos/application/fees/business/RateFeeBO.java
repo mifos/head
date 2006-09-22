@@ -52,57 +52,66 @@ public class RateFeeBO extends FeeBO {
 	private final FeeFormulaEntity feeFormula;
 
 	/**
-	 * Addding a default constructor is hibernate's requiremnt and should not be used to create a valid RateFee object.   
+	 * Constructor to create one time Rate Fee. Fee Payment tells the time when
+	 * fee should be charged. (upfront/time of disbursment etc.)
+	 */
+	public RateFeeBO(UserContext userContext, String feeName,
+			CategoryTypeEntity categoryType,
+			FeeFrequencyTypeEntity feeFrequencyType, GLCodeEntity glCodeEntity,
+			Double rate, FeeFormulaEntity feeFormula,
+			boolean isCustomerDefaultFee, FeePaymentEntity feePayment)
+			throws FeeException {
+		this(userContext, feeName, categoryType, feeFrequencyType,
+				glCodeEntity, rate, feeFormula, isCustomerDefaultFee,
+				feePayment, null);
+	}
+
+	/**
+	 * Constructor to create Periodic Rate Fee. Meeting tells the periodicity of
+	 * fee.
+	 */
+	public RateFeeBO(UserContext userContext, String feeName,
+			CategoryTypeEntity categoryType,
+			FeeFrequencyTypeEntity feeFrequencyType, GLCodeEntity glCodeEntity,
+			Double rate, FeeFormulaEntity feeFormula,
+			boolean isCustomerDefaultFee, MeetingBO feeMeeting)
+			throws FeeException {
+
+		this(userContext, feeName, categoryType, feeFrequencyType,
+				glCodeEntity, rate, feeFormula, isCustomerDefaultFee, null,
+				feeMeeting);
+	}
+
+	/**
+	 * Addding a default constructor is hibernate's requiremnt and should not be
+	 * used to create a valid RateFee object.
 	 */
 	protected RateFeeBO() {
 		super();
 		this.feeFormula = null;
 	}
 
-	/**
-	 * Constructor to create one time Rate Fee.
-	 * Fee Payment tells the time when fee should be charged. (upfront/time of disbursment etc.)
-	 */
-	public RateFeeBO(UserContext userContext, String feeName, CategoryTypeEntity categoryType, 
-			FeeFrequencyTypeEntity feeFrequencyType, GLCodeEntity glCodeEntity,
-			Double rate, FeeFormulaEntity feeFormula, boolean isCustomerDefaultFee, 
-			FeePaymentEntity feePayment) throws FeeException{
-		this(userContext, feeName, categoryType, feeFrequencyType, glCodeEntity, rate, feeFormula, 
-				isCustomerDefaultFee, feePayment,null );
-	}
-
-	/**
-	 * Constructor to create Periodic Rate Fee.
-	 * Meeting tells the periodicity of fee. 
-	 */
-	public RateFeeBO(UserContext userContext, String feeName, CategoryTypeEntity categoryType,
-			FeeFrequencyTypeEntity feeFrequencyType,
-			GLCodeEntity glCodeEntity,	Double rate, 
-			FeeFormulaEntity feeFormula, boolean isCustomerDefaultFee, 
-			MeetingBO feeMeeting)throws FeeException {
-		
-		this(userContext, feeName, categoryType, feeFrequencyType, glCodeEntity, rate, feeFormula, 
-				isCustomerDefaultFee, null, feeMeeting);
-	}
-	
 	private RateFeeBO(UserContext userContext, String feeName,
-			CategoryTypeEntity categoryType,FeeFrequencyTypeEntity feeFrequencyType,
-			GLCodeEntity glCodeEntity, Double rate, FeeFormulaEntity feeFormula, boolean isCustomerDefaultFee,
-			FeePaymentEntity feePayment,MeetingBO feeMeeting ) throws FeeException{
-		super(userContext, feeName, categoryType, feeFrequencyType, glCodeEntity, isCustomerDefaultFee, 
-				feePayment, feeMeeting);
+			CategoryTypeEntity categoryType,
+			FeeFrequencyTypeEntity feeFrequencyType, GLCodeEntity glCodeEntity,
+			Double rate, FeeFormulaEntity feeFormula,
+			boolean isCustomerDefaultFee, FeePaymentEntity feePayment,
+			MeetingBO feeMeeting) throws FeeException {
+		super(userContext, feeName, categoryType, feeFrequencyType,
+				glCodeEntity, isCustomerDefaultFee, feePayment, feeMeeting);
 		validateFields(rate, feeFormula);
 		this.feeFormula = feeFormula;
 		this.rate = rate;
 		this.rateOrAmount = rate;
 		this.rateAmountFlag = RateAmountFlag.RATE.getValue();
 	}
-	
-	private void validateFields(Double rate, FeeFormulaEntity feeFormula)throws FeeException{
-		if(rate==null || rate.doubleValue()<=0.0 || feeFormula==null)
+
+	private void validateFields(Double rate, FeeFormulaEntity feeFormula)
+			throws FeeException {
+		if (rate == null || rate.doubleValue() <= 0.0 || feeFormula == null)
 			throw new FeeException(FeeConstants.INVALID_FEE_RATE_OR_FORMULA);
 	}
-	
+
 	public FeeFormulaEntity getFeeFormula() {
 		return feeFormula;
 	}
@@ -114,8 +123,8 @@ public class RateFeeBO extends FeeBO {
 	public void setRate(Double rate) {
 		this.rate = rate;
 	}
-	
-	public RateAmountFlag getFeeType(){
+
+	public RateAmountFlag getFeeType() {
 		return RateAmountFlag.RATE;
 	}
 

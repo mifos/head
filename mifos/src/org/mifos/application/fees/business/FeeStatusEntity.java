@@ -41,11 +41,12 @@ import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.master.business.MasterDataEntity;
 
 public class FeeStatusEntity extends MasterDataEntity {
-	protected FeeStatusEntity() {
-	}
 
 	public FeeStatusEntity(FeeStatus feeStatus) {
 		super(feeStatus.getValue());
+	}
+
+	protected FeeStatusEntity() {
 	}
 
 	public boolean isActive() {
