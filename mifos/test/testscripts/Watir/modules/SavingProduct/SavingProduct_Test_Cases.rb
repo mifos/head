@@ -928,6 +928,7 @@ class SavingProduct_Test_Cases < TestClass
       set_value_selectlist("prdApplicableMaster", appl_for)
       if appl_for==@savingprd_properties['product.groups']
         set_value_selectlist("recommendedAmntUnit", appliesto_amount)
+    	
       end
       set_value_selectlist("savingsType", deposit_type)
       set_value_txtfield("recommendedAmount", deposit_amount)
@@ -1162,16 +1163,17 @@ class SavingProduct_Test_Cases < TestClass
   end 
   
   # Check for the status change from active to inactive and then inactive to active
+  #commented change log link as it is removed for the time being
   def check_status(prd_inst_name)
     rowcount=2
     edit_savingproduct_status(prd_inst_name, "Inactive")
-    change_log(prd_inst_name,"2","5",rowcount) #change log shows 2 for active and 5 for inactive
+    #change_log(prd_inst_name,"2","5",rowcount) #change log shows 2 for active and 5 for inactive
     rowcount+=1
-    $ie.button(:value,@savingprd_properties['product.back']).click
+    #$ie.button(:value,@savingprd_properties['product.back']).click
     edit_savingproduct_status(prd_inst_name, "Active")  
-    change_log(prd_inst_name,"5","2",rowcount)
+    #change_log(prd_inst_name,"5","2",rowcount)
     rowcount+=1
-    $ie.button(:value,@savingprd_properties['product.back']).click
+    #$ie.button(:value,@savingprd_properties['product.back']).click   
     $ie.link(:text,@savingprd_properties['product.admin']).click
   end
   

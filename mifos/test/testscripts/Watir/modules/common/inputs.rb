@@ -287,3 +287,4 @@ $funds_GLCode_msg = "Please select GL code."
 
 #labels 
 $loan="loan"
+$savings="savings"

@@ -340,4 +340,9 @@ class TestClass
     message_to_remove["</li>"]=""
   end
   
+  def quit_on_error(e)
+      $logger.log_results("Quitting current test .Error description in Status column","NA","NA",e.backtrace.join("\n").to_s)
+      mifos_logout
+  
+  end
 end
