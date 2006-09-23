@@ -8,6 +8,7 @@ require 'modules/logger/example_logger1'
 require 'mysql'
 require 'test/unit/ui/console/testrunner'
 require 'test/unit/assertions'
+
 class LoanAccountCreateEdit<TestClass
   def database_connection()
         db_connect()
@@ -31,7 +32,7 @@ class LoanAccountCreateEdit<TestClass
     begin
     $ie.link(:text,"Create Loan Account").click
     assert($ie.contains_text($loan_select_client))
-    $logger.log_results("Link Click Create Loan Account","Should work","working","Passed")
+        $logger.log_results("Link Click Create Loan Account","Should work","working","Passed")
     rescue=>e
     $logger.log_results("Link Click Create Loan Account","Should work","not working","Failed")
     end
@@ -45,20 +46,40 @@ class LoanAccountCreateEdit<TestClass
           @@office_id=dbresult[0]
           display_name=dbresult[1]
      end     
+
      if typeid=="1" then
      dbquery("select customer_id,display_name,global_cust_num from customer where customer_level_id=2 and status_id=9 and branch_id="+@@office_id+" order by display_name")
+     @@customer_id=dbresult[0]
      @@display_name=dbresult[1]   
      @@global_account_num=dbresult[2]
-     dbquery("select prd_offering_id from prd_offering where prd_applicable_master_id=2 and prd_category_id=1 and offering_status_id=1")
-     @@product_id=dbresult[0]
+#     dbquery("select prd_offering_id from prd_offering where prd_applicable_master_id= and prd_category_id=1 and offering_status_id=1")
+
+#first find the recurrence of the customer
+     dbquery("select a.recurrence_id ,a.recur_after from recurrence_detail a,customer_meeting b where b.meeting_id=a.meeting_id and b.customer_id="+@@customer_id+"")
+     @@customerRecurr_ID=dbresult[0]
+     @@customerRecurr_after=dbresult[1]
+
+# find the prdoffering id for the corresponding group matching the meeting schedule
+     dbquery("select e.recurrence_id,e.recur_after ,f.prd_offering_id from recurrence_detail e , (select a.prd_offering_id,b.prd_meeting_id from prd_offering a,prd_offering_meeting b  where a.prd_offering_id=b.prd_offering_id and a.prd_applicable_master_id=2 and a.offering_status_id=1 and a.prd_type_id=1) f where e.meeting_id=f.prd_meeting_id and e.recurrence_id="+@@customerRecurr_ID+" and (select mod(e.recur_after,"+@@customerRecurr_after+")=0)")
+     @@product_id=dbresult[2]
+
      elsif typeid=="2" then
      dbquery("select customer_id,display_name,global_cust_num from customer where customer_level_id=1 and status_id=3 and branch_id="+@@office_id+" order by display_name")
+     @@customer_id=dbresult[0]
      @@display_name=dbresult[1]
      @@global_account_num=dbresult[2]
-     dbquery("select prd_offering_id from prd_offering where prd_applicable_master_id="+typeid+" and prd_category_id=1 and offering_status_id=1")
-     @@product_id=dbresult[0]
+
+     dbquery("select a.recurrence_id ,a.recur_after from recurrence_detail a,customer_meeting b where b.meeting_id=a.meeting_id and b.customer_id="+@@customer_id+"")
+     @@customerRecurr_ID=dbresult[0]
+     @@customerRecurr_after=dbresult[1]
+     
+     #dbquery("select prd_offering_id from prd_offering where prd_applicable_master_id="+typeid+" and prd_category_id=1 and offering_status_id=1")
+     dbquery("select e.recurrence_id,e.recur_after ,f.prd_offering_id from recurrence_detail e , (select a.prd_offering_id,b.prd_meeting_id from prd_offering a,prd_offering_meeting b  where a.prd_offering_id=b.prd_offering_id and a.prd_applicable_master_id=1 and a.offering_status_id=1 and a.prd_type_id=1) f where e.meeting_id=f.prd_meeting_id and e.recurrence_id="+@@customerRecurr_ID+" and (select mod(e.recur_after,"+@@customerRecurr_after+")=0)")
+     @@product_id=dbresult[2]
+     
      end   
    end
+
    def search_client_cancel() 
     begin
       $ie.button(:value,"Cancel").click
@@ -102,7 +123,7 @@ class LoanAccountCreateEdit<TestClass
     begin
       search_client()
       select_client()
-      $ie.select_list(:name,"selectedPrdOfferingId").select_value(@@product_id)
+      $ie.select_list(:name,"prdOfferingId").select_value(@@product_id)
       $ie.button(:value,"Continue").click
       assert($ie.contains_text($loan_enter_loan_data))
       $logger.log_results("Page redirected to Enter Loan Data page","N/A","N/A","Passed")
@@ -129,7 +150,7 @@ class LoanAccountCreateEdit<TestClass
    
    def check_all_mandatory()
     begin
-      $ie.select_list(:name,"selectedPrdOfferingId").select_value("")
+      $ie.select_list(:name,"prdOfferingId").select_value("")
       $ie.text_field(:name,"loanAmount").set("")
       $ie.text_field(:name,"interestRateAmount").set("")
       $ie.text_field(:name,"noOfInstallments").set("")
@@ -147,7 +168,7 @@ class LoanAccountCreateEdit<TestClass
    end
    def mandatory_with_prodname()
     begin
-    $ie.select_list(:name,"selectedPrdOfferingId").select_value(@@product_id)
+    $ie.select_list(:name,"prdOfferingId").select_value(@@product_id)
     $ie.text_field(:name,"loanAmount").set("")
     $ie.text_field(:name,"interestRateAmount").set("")
     $ie.text_field(:name,"noOfInstallments").set("")
@@ -169,7 +190,7 @@ class LoanAccountCreateEdit<TestClass
     @@max_loan_amount=dbresult[0]
     @@default_interest_rate=dbresult[1]
     @@default_no_installments=dbresult[2]
-    $ie.select_list(:name,"selectedPrdOfferingId").select_value(@@product_id)
+    $ie.select_list(:name,"prdOfferingId").select_value(@@product_id)
     $ie.text_field(:name,"noOfInstallments").set(@@default_no_installments)
     $ie.button(:value,"Continue").click
     assert($ie.contains_text($loan_interest_rate)) and assert($ie.contains_text($loan_grace_priod_duration))and//
@@ -181,7 +202,7 @@ class LoanAccountCreateEdit<TestClass
    end
    def mandatory_with_prodname_no_of_installments_interest_rate()
     begin
-    $ie.select_list(:name,"selectedPrdOfferingId").select_value(@@product_id)
+    $ie.select_list(:name,"prdOfferingId").select_value(@@product_id)
     $ie.text_field(:name,"noOfInstallments").set(@@default_no_installments)
     $ie.text_field(:name,"interestRateAmount").set(@@default_interest_rate)
     $ie.button(:value,"Continue").click
@@ -193,8 +214,8 @@ class LoanAccountCreateEdit<TestClass
    end
    def mandatory_excxept_disbursaldate()
     begin
-    $ie.select_list(:name,"selectedPrdOfferingId").select_value("")
-    $ie.select_list(:name,"selectedPrdOfferingId").select_value(@@product_id)
+    $ie.select_list(:name,"prdOfferingId").select_value("")
+    $ie.select_list(:name,"prdOfferingId").select_value(@@product_id)
     $ie.text_field(:name,"noOfInstallments").set(@@default_no_installments)
     $ie.text_field(:name,"interestRateAmount").set(@@default_interest_rate)
     $ie.text_field(:name,"loanAmount").set(@@max_loan_amount)
@@ -210,8 +231,8 @@ class LoanAccountCreateEdit<TestClass
    end
    def validate_no_of_installments_greater()
       begin
-      $ie.select_list(:name,"selectedPrdOfferingId").select_value("")
-      $ie.select_list(:name,"selectedPrdOfferingId").select_value(@@product_id)
+      $ie.select_list(:name,"prdOfferingId").select_value("")
+      $ie.select_list(:name,"prdOfferingId").select_value(@@product_id)
       dbquery("select max_no_installments from loan_offering where prd_offering_id="+@@product_id)
       max_no_installments=dbresult[0]
       #puts "@@Max of installments " + max_no_installments.to_s
@@ -240,8 +261,8 @@ class LoanAccountCreateEdit<TestClass
    end
    def validate_ammount_greater()
       begin
-      $ie.select_list(:name,"selectedPrdOfferingId").select_value("")
-      $ie.select_list(:name,"selectedPrdOfferingId").select_value(@@product_id)
+      $ie.select_list(:name,"prdOfferingId").select_value("")
+      $ie.select_list(:name,"prdOfferingId").select_value(@@product_id)
       dbquery("select max_loan_amnt from loan_offering where prd_offering_id="+@@product_id)
       max_loan_amnt=dbresult[0]
       #puts "@@Max Loan ammount " + max_loan_amnt.to_s
@@ -267,7 +288,7 @@ class LoanAccountCreateEdit<TestClass
    end
    def validate_ammount_decimal()
     begin
-    $ie.select_list(:name,"selectedPrdOfferingId").select_value(@@product_id)
+    $ie.select_list(:name,"prdOfferingId").select_value(@@product_id)
     dbquery("select min_loan_amount from loan_offering where prd_offering_id="+@@product_id)
     min_loan_amnt=dbresult[0]
     amount=Float(min_loan_amt)+Float(0.222)
@@ -285,8 +306,8 @@ class LoanAccountCreateEdit<TestClass
   end
     def validate_ammount_lesser()
       begin
-      $ie.select_list(:name,"selectedPrdOfferingId").select_value("")
-      $ie.select_list(:name,"selectedPrdOfferingId").select_value(@@product_id)
+      $ie.select_list(:name,"prdOfferingId").select_value("")
+      $ie.select_list(:name,"prdOfferingId").select_value(@@product_id)
       dbquery("select min_loan_amount from loan_offering where prd_offering_id="+@@product_id)
       min_loan_amnt=dbresult[0]
       #puts "@@min loan ammount" + min_loan_amnt.to_s
@@ -327,8 +348,8 @@ class LoanAccountCreateEdit<TestClass
       end
    end
   def fee_select_one_by_one()
-  $ie.select_list(:name,"selectedPrdOfferingId").select_value("")
-  $ie.select_list(:name,"selectedPrdOfferingId").select_value(@@product_id)
+ # $ie.select_list(:name,"prdOfferingId").select_value("")
+  $ie.select_list(:name,"prdOfferingId").select_value(@@product_id)
   search_res=$dbh.real_query("SELECT fee_id FROM fees where category_id=5 and status=1 and fee_id not in(select fee_id from prd_offering_fees where prd_offering_id="+@@product_id+" )")
   dbresult1=search_res.fetch_row.to_a
   row1=search_res.num_rows()
@@ -346,7 +367,7 @@ class LoanAccountCreateEdit<TestClass
   else
     while(rowf < number)
     fee_id=dbresult1[0]
-    $ie.select_list(:name,"accountFees["+String(rowf)+"].fees.feeId").select_value(fee_id)
+    $ie.select_list(:name,"selectedFee["+String(rowf)+"].feeId").select_value(fee_id)
     dbresult1=search_res.fetch_row.to_a
     rowf+=1
    end
