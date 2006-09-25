@@ -289,9 +289,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for loanproduct links"+@view_loanproduct_link+" and "+@new_loanproduct_link+" on admin page", "Click on admin link","Links should be present","Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for loanproduct links"+@view_loanproduct_link+" and "+@new_loanproduct_link+" on admin page", "Click on admin link","The links should be there","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout      
+    rescue =>excp
+      quit_on_error(excp)     
     end
   end
   
@@ -311,9 +310,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for Define a new LoanProduct link on admin page", "Click on 'Define a new LoanProduct' link","Access to the Define a new LoanProduct page","Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for Define a new LoanProduct link on admin page", "Click on 'Define a new LoanProduct' link","Access to the Define a new LoanProduct page","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout       
+    rescue =>excp
+      quit_on_error(excp)        
     end      
   end
   
@@ -362,7 +360,7 @@ class LoanProduct_Test_Cases < TestClass
       
       Man_New_LoanProduct_with_PrincipalGlcode(principal_glcode)    
       
-      Man_New_LoanProduct_with_PenalitiesGlcode(penalities_glcode)
+      #Man_New_LoanProduct_with_PenalitiesGlcode(penalities_glcode) commented as penalties gl code is removed for the time being
       
       if $ie.contains_text(@add_loanproduct_msg+" - "+@review_submit)
         
@@ -389,9 +387,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "nothing ","All validation error message","Passed")     
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "nothing ","All validation error message","Failed")       
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout       
+    rescue =>excp
+      quit_on_error(excp)          
     end    
   end
   
@@ -414,9 +411,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "product instance name ","All validation error message","Passed")     
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "product instance name ","All validation error message","Failed")       
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout        
+    rescue =>excp
+      quit_on_error(excp)           
     end    
   end
   
@@ -439,9 +435,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "short name ","All validation error message","Passed")     
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "short name","All validation error message","Failed")       
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout       
+    rescue =>excp
+      quit_on_error(excp)       
     end    
   end
   # enters data into field description and clicks on preview button
@@ -457,7 +452,7 @@ class LoanProduct_Test_Cases < TestClass
     begin
       # set_value_txtfield("prdOfferingName", prd_inst_name)
       # set_value_txtfield("prdOfferingShortName", short_name)
-      set_value_selectlist("prdCategory.productCategoryID", prd_category)
+      set_value_selectlist("prdCategory", prd_category)
       
       $ie.button(:value,@preview_button).click
       
@@ -471,9 +466,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "product category ","All validation error message","Passed")     
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "product category","All validation error message","Failed")       
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout        
+    rescue =>excp
+      quit_on_error(excp)       
     end    
   end
   
@@ -482,7 +476,7 @@ class LoanProduct_Test_Cases < TestClass
   def    Man_New_LoanProduct_with_ApplFor(appl_for)
     begin
       
-      set_value_selectlist("prdApplicableMaster.prdApplicableMasterId", appl_for)
+      set_value_selectlist("prdApplicableMaster", appl_for)
       $ie.button(:value,@preview_button).click
       
       assert(!$ie.contains_text(@applicable_for_msg)) and assert($ie.contains_text(@add_loanproduct_msg+" - "+@enter_loanproduct_msg)) and \
@@ -495,17 +489,20 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", " applicable for","All validation error message","Passed")     
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", " applicable for","All validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout  
+    rescue =>excp
+      quit_on_error(excp)   
     end    
   end
   
   #check for error mesage when a value greater than max value is entered
-  def check_error_message_max_loan_amount(max_ammount) 
-    set_value_txtfield("maxLoanAmount",max_ammount)
-    $ie.button(:value,@preview_button).click
-    max_error_message_number(max_ammount,9999999.9,@max_loanamount_maxlength_msg,"max loan amount")    
+  def check_error_message_max_loan_amount(max_ammount)
+    begin
+      set_value_txtfield("maxLoanAmount",max_ammount)
+      $ie.button(:value,@preview_button).click
+      max_error_message_number(max_ammount,9999999.9,@max_loanamount_maxlength_msg,"max loan amount")    
+    rescue =>excp
+      quit_on_error(excp)   
+    end
   end
   
   #check for error mesage when a value greater than max value is entered
@@ -518,16 +515,20 @@ class LoanProduct_Test_Cases < TestClass
   #check for error mesage when a value greater than max value is entered
   
   def check_error_message_default_loan_amount(default_ammount)
-    set_value_txtfield("defaultLoanAmount",default_ammount)
-    $ie.button(:value,@preview_button).click
-    max_error_message_number(default_ammount,9999999.9,@def_loanamount_maxlength_msg,"default loan amount")    
+    begin
+      set_value_txtfield("defaultLoanAmount",default_ammount)
+      $ie.button(:value,@preview_button).click
+      max_error_message_number(default_ammount,9999999.9,@def_loanamount_maxlength_msg,"default loan amount")    
+    rescue =>excp
+      quit_on_error(excp)   
+    end
   end
   # Check for validation messages while creating new LoanProduct with prd_inst_name, short_name, prd_category,
   #  appl_for, interestrate_type
   def     Man_New_LoanProduct_with_InterestRateType(interestrate_type)
     begin
       
-      set_value_selectlist("interestTypes.interestTypeId", interestrate_type)
+      set_value_selectlist("interestTypes", interestrate_type)
       $ie.button(:value,@preview_button).click
       
       assert(!$ie.contains_text(@interst_ratetype_msg)) and assert($ie.contains_text(@add_loanproduct_msg+" - "+@enter_loanproduct_msg)) and \
@@ -539,9 +540,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "Interest type ","All validation error message","Passed")     
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "Interest type ","All validation error message","Failed")       
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout  
+    rescue =>excp
+      quit_on_error(excp)   
     end    
   end
   
@@ -562,9 +562,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "Max interest rate ","All validation error message","Passed")     
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "Max interest rate ","All validation error message","Failed")       
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout  
+    rescue =>excp
+      quit_on_error(excp)    
     end    
   end
   
@@ -584,9 +583,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "Min interest rate","All validation error message","Passed")     
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "Min interest rate ","All validation error message","Failed")       
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout  
+    rescue =>excp
+      quit_on_error(excp)     
     end    
   end
   
@@ -606,9 +604,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "Default interest rate","All validation error message","Passed")     
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "Default interest rate ","All validation error message","Failed")       
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout  
+    rescue =>excp
+      quit_on_error(excp)     
     end    
   end
   
@@ -623,12 +620,12 @@ class LoanProduct_Test_Cases < TestClass
         if "weeks" == freqOfInstallments[0].to_s
           
           $ie.radio(:name, "freqOfInstallments", "1").click              
-          set_value_txtfield("recurWeekDay", freqOfInstallments[1].to_i.to_s)
+          set_value_txtfield("recurAfter", freqOfInstallments[1].to_i.to_s)
         else
           if "months" == freqOfInstallments[0].to_s
             
             $ie.radio(:name, "freqOfInstallments", "2").click                        
-            set_value_txtfield("recurMonthDay", freqOfInstallments[1].to_i.to_s)              
+            set_value_txtfield("recurAfter", freqOfInstallments[1].to_i.to_s)              
           end 
         end
       end      
@@ -643,9 +640,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "Frequency of installment ", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "Frequency of installment ","All validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout       
+    rescue =>excp
+      quit_on_error(excp)          
     end
   end
   
@@ -665,9 +661,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "Max Installments ", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "Max Installments ","All validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout  
+    rescue =>excp
+      quit_on_error(excp)    
     end
   end
   
@@ -688,9 +683,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "Min Installments ", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "Min Installments ","All validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout  
+    rescue =>excp
+      quit_on_error(excp)   
     end
   end
   
@@ -710,9 +704,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "Default Installments  ", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "Default Installments  ","All validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout  
+    rescue =>excp
+      quit_on_error(excp)   
     end
   end
   
@@ -723,7 +716,7 @@ class LoanProduct_Test_Cases < TestClass
     begin
       #puts "in  Man_New_LoanProduct_with_InterestGlcode\n "
       
-      set_value_selectlist("interestGLCode.glcodeId", interest_glcode)      
+      set_value_selectlist("interestGLCode", interest_glcode)      
       $ie.button(:value,@preview_button).click
       
       assert(!$ie.contains_text(@glcode_interest_msg)) and assert($ie.contains_text(@add_loanproduct_msg+" - "+@enter_loanproduct_msg)) and \
@@ -732,9 +725,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "Interest Glcode ", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "Interest Glcode ","All validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout  
+    rescue =>excp
+      quit_on_error(excp)    
     end
   end
   
@@ -744,7 +736,7 @@ class LoanProduct_Test_Cases < TestClass
   def  Man_New_LoanProduct_with_PrincipalGlcode(principal_glcode)
     begin
       # puts "in  Man_New_LoanProduct_with_PrincipalGlcode\n "
-      set_value_selectlist("principalGLCode.glcodeId", principal_glcode)
+      set_value_selectlist("principalGLCode", principal_glcode)
       
       $ie.button(:value,@preview_button).click
       assert(!$ie.contains_text(@glcode_principal_msg)) and assert($ie.contains_text(@add_loanproduct_msg+" - "+@enter_loanproduct_msg)) and \
@@ -752,9 +744,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "Principal Glcode ", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "Principal Glcode ","All validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout   
+    rescue =>excp
+      quit_on_error(excp)    
     end
   end
   
@@ -764,16 +755,15 @@ class LoanProduct_Test_Cases < TestClass
   def Man_New_LoanProduct_with_PenalitiesGlcode(penalities_glcode) 
     begin
       #puts "in Man_New_LoanProduct_with_PenalitiesGlcode\n"
-      set_value_selectlist("penaltyGLCode.glcodeId", penalities_glcode)      
+      set_value_selectlist("penaltyGLCode", penalities_glcode)      
       $ie.button(:value,@preview_button).click
       
       assert(!$ie.contains_text(@glcode_penalty_msg))      
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "Penalty Glcode ", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "Penalty Glcode ","All validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout  
+    rescue =>excp
+      quit_on_error(excp)   
     end
   end
   
@@ -811,7 +801,8 @@ class LoanProduct_Test_Cases < TestClass
       
       #     verify_InstallmentFrequency_weeks()
       verify_InstallmentFrequency_months()
-      
+    rescue =>excp
+      quit_on_error(excp)        
     end    
   end
   
@@ -825,9 +816,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "prd_inst_name", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "prd_inst_name","All validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout  
+    rescue =>excp
+      quit_on_error(excp)     
     end
   end
   
@@ -842,9 +832,8 @@ class LoanProduct_Test_Cases < TestClass
         $logger.log_results("SavingProduct- Error message appears when short_name contains space", short_name, @errormessage_space, "Passed")
       rescue Test::Unit::AssertionFailedError=>e
         $logger.log_results("SavingProduct- Error message did not appear when short_name contains space", short_name,@errormessage_space,"Failed")
-      rescue Watir::Exception::UnknownObjectException=>bang
-        $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-        mifos_logout         
+      rescue =>excp
+        quit_on_error(excp)          
       end
     else
       begin
@@ -852,9 +841,8 @@ class LoanProduct_Test_Cases < TestClass
         $logger.log_results("SavingProduct- Error message does not appear when short_name does not contain space",short_name,"No error message","passed")
       rescue Test::Unit::AssertionFailedError=>e
         $logger.log_results("SavingProduct- Error message appears when short_name does not contain space",short_name,"No error message","failed")
-      rescue Watir::Exception::UnknownObjectException=>bang
-        $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-        mifos_logout       
+      rescue =>excp
+        quit_on_error(excp)         
       end 
     end
   end 
@@ -867,9 +855,8 @@ class LoanProduct_Test_Cases < TestClass
         $logger.log_results("Error message appears when interest rate specified is greater than max value", max_interestrate.to_s,@max_interest_rate_msg , "Passed")
       rescue Test::Unit::AssertionFailedError=>e
         $logger.log_results("Error message does not appear when interest rate specified is greater than max value", max_interestrate.to_s,@max_interest_rate_msg , "failed")
-      rescue Watir::Exception::UnknownObjectException=>bang
-        $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-        mifos_logout        
+      rescue =>excp
+        quit_on_error(excp)         
       end
     else
       begin
@@ -877,9 +864,8 @@ class LoanProduct_Test_Cases < TestClass
         $logger.log_results("No Error message appears when interest rate specified is less than max value", max_interestrate.to_s,"No error message", "Passed")
       rescue Test::Unit::AssertionFailedError=>e
         $logger.log_results("Error message appears when interest rate specified is less than max value", max_interestrate.to_s,"No error message", "failed")    
-      rescue Watir::Exception::UnknownObjectException=>bang
-        $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-        mifos_logout         
+      rescue =>excp
+        quit_on_error(excp)           
       end
     end
   end
@@ -894,9 +880,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "def_interestrate ", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "def_interestrate ","All validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout       
+    rescue =>excp
+      quit_on_error(excp)          
     end
   end
   
@@ -911,16 +896,15 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "min_interestrate ", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "min_interestrate ","All validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout       
+    rescue =>excp
+      quit_on_error(excp)          
     end
   end
   
   # Check for validation messages while creating new LoanProduct with max_interestrate, min_interestrate
   def verify_valid_MaxInterestRate(max_interestrate, min_interestrate) 
     begin
-      set_value_selectlist("interestTypes.interestTypeId", "Flat")
+      set_value_selectlist("interestTypes", "Flat")
       set_value_txtfield("maxInterestRate", max_interestrate.to_i.to_s)
       set_value_txtfield("minInterestRate", min_interestrate.to_i.to_s)
       set_value_txtfield("defInterestRate", min_interestrate.to_i.to_s)
@@ -931,16 +915,15 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "max_interestrate, min_interestrate", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "max_interestrate, min_interestrate","All validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout       
+    rescue =>excp
+      quit_on_error(excp)          
     end
   end
   
   # Check for validation messages while creating new LoanProduct with max_interestrate, min_interestrate
   def verify_valid_DefInterestRate(def_interestrate, min_interestrate) 
     begin
-      set_value_selectlist("interestTypes.interestTypeId", "Flat")
+      set_value_selectlist("interestTypes", "Flat")
       set_value_txtfield("maxInterestRate", min_interestrate.to_i.to_s)
       set_value_txtfield("minInterestRate", min_interestrate.to_i.to_s)
       set_value_txtfield("defInterestRate", def_interestrate.to_i.to_s)      
@@ -950,9 +933,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "def_interestrate, min_interestrate", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "def_interestrate, min_interestrate","All validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout       
+    rescue =>excp
+      quit_on_error(excp)        
     end
   end
   
@@ -967,9 +949,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "max_ammount", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "max_ammount","All validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout       
+    rescue =>excp
+      quit_on_error(excp)          
     end
   end
   
@@ -983,9 +964,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "min_ammount", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "min_ammount","All validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout      
+    rescue =>excp
+      quit_on_error(excp)         
     end
   end
   
@@ -1000,9 +980,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "def_ammount ", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "def_ammount ","All validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout       
+    rescue =>excp
+      quit_on_error(excp)          
     end
   end
   
@@ -1019,9 +998,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "max_ammount, min_ammount", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "max_ammount, min_ammount","All validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout       
+    rescue =>excp
+      quit_on_error(excp)          
     end
   end
   
@@ -1037,9 +1015,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "def_ammount, min_ammount", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "def_ammount, min_ammount","All validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout       
+    rescue =>excp
+      quit_on_error(excp)          
     end
   end
   
@@ -1054,9 +1031,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "max_installments", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "max_installments","All validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout       
+    rescue =>excp
+      quit_on_error(excp)         
     end
   end
   
@@ -1070,9 +1046,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "min_installments", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "min_installments","All validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout       
+    rescue =>excp
+      quit_on_error(excp)         
     end
   end
   
@@ -1086,9 +1061,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "def_installments ", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "def_installments ","All validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout       
+    rescue =>excp
+      quit_on_error(excp)         
     end
   end
   
@@ -1104,9 +1078,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "max_installments, min_installments", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "max_installments, min_installments","All validation error message", "Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout       
+    rescue =>excp
+      quit_on_error(excp)         
     end
   end
   
@@ -1123,9 +1096,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "def_installments, min_installments", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "def_installments, min_installments","All validation error message", "Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout      
+    rescue =>excp
+      quit_on_error(excp)       
     end
   end
   
@@ -1134,17 +1106,16 @@ class LoanProduct_Test_Cases < TestClass
     begin  
       set_value_txtfield("defInterestRate", "1")
       $ie.radio(:name, "freqOfInstallments", "2").click 
-      set_value_txtfield("recurMonthDay", "")
+      set_value_txtfield("recurAfter", "")
       $ie.radio(:name, "freqOfInstallments", "1").click             
-      set_value_txtfield("recurWeekDay", "")
+      set_value_txtfield("recurAfter", "")
       $ie.button(:value,@preview_button).click                  
       assert($ie.contains_text(@valid_weeks_msg))      
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "freqOfInstallments-weeks", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "freqOfInstallments-weeks","All validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout       
+    rescue =>excp
+      quit_on_error(excp)         
     end
   end
   
@@ -1152,16 +1123,15 @@ class LoanProduct_Test_Cases < TestClass
     begin
       set_value_txtfield("defInterestRate", "1")
       $ie.radio(:name, "freqOfInstallments", "2").click                        
-      set_value_txtfield("recurMonthDay", "")              
+      set_value_txtfield("recurAfter", "")              
       
       $ie.button(:value,@preview_button).click                  
       assert($ie.contains_text(@valid_months_msg))      
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "freqOfInstallments- months", "All validation error message", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Check for validation error while creating new LoanProduct", "freqOfInstallments- months","All validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout      
+    rescue =>excp
+      quit_on_error(excp)         
     end
   end
   
@@ -1180,9 +1150,8 @@ class LoanProduct_Test_Cases < TestClass
         $logger.log_results("Error message appears for duplicate product instance short name",short_name.to_s,@duplicate_shortname_msg,"passed")
       rescue Test::Unit::AssertionFailedError=>e
         $logger.log_results("Error message does not appear when both instance name and short name already exist",prd_inst_name.to_s," , "+short_name.to_s,@duplicate_instance_name_msg+" and "+@duplicate_shortname_msg,"failed")      
-      rescue Watir::Exception::UnknownObjectException=>bang
-        $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-        mifos_logout        
+      rescue =>excp
+        quit_on_error(excp)           
       end
     elsif (number_of_products.to_i > 0) and (number_of_shortname.to_i == 0) 
       $ie.button(:value,@submit_button).click
@@ -1191,9 +1160,8 @@ class LoanProduct_Test_Cases < TestClass
         $logger.log_results("Error message appears for duplicate product instance name",prd_inst_name.to_s,@duplicate_instance_name_msg,"passed")
       rescue Test::Unit::AssertionFailedError=>e
         $logger.log_results("Error message does not appear for duplicate product instance name",prd_inst_name.to_s,@duplicate_instance_name_msg,"failed") 
-      rescue Watir::Exception::UnknownObjectException=>bang
-        $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-        mifos_logout 
+      rescue =>excp
+        quit_on_error(excp)    
       end
     elsif (number_of_products.to_i == 0) and (number_of_shortname.to_i > 0)
       $ie.button(:value,@submit_button).click
@@ -1202,12 +1170,15 @@ class LoanProduct_Test_Cases < TestClass
         $logger.log_results("Error message appears for duplicate product instance short name",short_name.to_s,@duplicate_shortname_msg,"passed")
       rescue Test::Unit::AssertionFailedError=>e
         $logger.log_results("Error message does not appear for duplicate product instance short name",short_name.to_s,@duplicate_shortname_msg,"failed")      
-      rescue Watir::Exception::UnknownObjectException=>bang
-        $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-        mifos_logout        
+      rescue =>excp
+        quit_on_error(excp)           
       end
     else
-      $ie.button(:value,@submit_button).click
+      begin
+        $ie.button(:value,@submit_button).click
+      rescue =>excp
+        quit_on_error(excp)
+      end   
     end
   end
   
@@ -1236,9 +1207,8 @@ class LoanProduct_Test_Cases < TestClass
                                     max_installments, min_installments, def_installments, interest_glcode, principal_glcode, penalities_glcode)
       LoanProduct_Creation_Conformation()
       
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout       
+    rescue =>excp
+      quit_on_error(excp)          
     end
   end
   
@@ -1246,33 +1216,33 @@ class LoanProduct_Test_Cases < TestClass
   def check_editdata_onpreview(prd_inst_name, short_name, prd_category, start_date, appl_for, min_ammount,
                                max_ammount, def_ammount,interestrate_type, max_interestrate, min_interestrate, def_interestrate, installments_frequency,
                                max_installments, min_installments, def_installments, interest_glcode, principal_glcode, penalities_glcode)
-    
-    set_LoanProduct_data(prd_inst_name, short_name, prd_category, start_date, appl_for, min_ammount,
+    begin
+      set_LoanProduct_data(prd_inst_name, short_name, prd_category, start_date, appl_for, min_ammount,
                          max_ammount,  def_ammount,interestrate_type, max_interestrate, min_interestrate, def_interestrate, installments_frequency,
                          max_installments, min_installments, def_installments, interest_glcode, principal_glcode, penalities_glcode)
                          
-    $ie.button(:value,@preview_button).click  
+      $ie.button(:value,@preview_button).click  
     
-    validate_LoanProduct_preview_page(prd_inst_name, short_name, prd_category, start_date, appl_for, min_ammount,
+      validate_LoanProduct_preview_page(prd_inst_name, short_name, prd_category, start_date, appl_for, min_ammount,
                                       max_ammount,  def_ammount,interestrate_type, max_interestrate, min_interestrate, def_interestrate, installments_frequency,
                                       max_installments, min_installments, def_installments, interest_glcode, principal_glcode, penalities_glcode)
-    $ie.button(:name, "edit").click
+      $ie.button(:name, "edit").click
     
-    assert($ie.contains_text(@add_loanproduct_msg+" - "+@enter_loanproduct_msg))
-    $logger.log_results("LoanProduct- Check for Define a new LoanProduct link on admin page", "Click on 'Define a new LoanProduct' link","Access to the Define a new LoanProduct page","Passed")
-    $ie.button(:value,@preview_button).click
+      assert($ie.contains_text(@add_loanproduct_msg+" - "+@enter_loanproduct_msg))
+      $logger.log_results("LoanProduct- Check for Define a new LoanProduct link on admin page", "Click on 'Define a new LoanProduct' link","Access to the Define a new LoanProduct page","Passed")
+      $ie.button(:value,@preview_button).click
     
-    validate_LoanProduct_preview_page(prd_inst_name, short_name, prd_category, start_date, appl_for, min_ammount,
+      validate_LoanProduct_preview_page(prd_inst_name, short_name, prd_category, start_date, appl_for, min_ammount,
                                       max_ammount,  def_ammount,interestrate_type, max_interestrate, min_interestrate, def_interestrate, installments_frequency,
                                       max_installments, min_installments, def_installments, interest_glcode, principal_glcode, penalities_glcode)
                                       
-    $ie.button(:value,@cancel_button).click 
-    verify_admin_page()         
-  rescue Test::Unit::AssertionFailedError=>e
-    $logger.log_results("LoanProduct- Check for Define a new LoanProduct link on admin page", "Click on admin 'Define a new LoanProduct' link","Access to the Define a new LoanProduct page","Failed")    
-  rescue Watir::Exception::UnknownObjectException=>bang
-    $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-    mifos_logout 
+      $ie.button(:value,@cancel_button).click 
+      verify_admin_page()         
+    rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results("LoanProduct- Check for Define a new LoanProduct link on admin page", "Click on admin 'Define a new LoanProduct' link","Access to the Define a new LoanProduct page","Failed")    
+    rescue =>excp
+      quit_on_error(excp)
+    end    
   end
   
   
@@ -1293,8 +1263,8 @@ class LoanProduct_Test_Cases < TestClass
       # Set the LoanProduct Details 
       set_value_txtfield("prdOfferingName", prd_inst_name)
       set_value_txtfield("prdOfferingShortName", short_name)
-      set_value_selectlist("prdCategory.productCategoryID", prd_category)
-      set_value_selectlist("prdApplicableMaster.prdApplicableMasterId", appl_for)
+      set_value_selectlist("prdCategory", prd_category)
+      set_value_selectlist("prdApplicableMaster", appl_for)
       
       # Set the LoanProduct ammount Details
       set_value_txtfield("minLoanAmount", min_ammount.to_i.to_s)
@@ -1304,7 +1274,7 @@ class LoanProduct_Test_Cases < TestClass
       
       
       # Set the LoanProduct Interest Rate Details 
-      set_value_selectlist("interestTypes.interestTypeId", interestrate_type)
+      set_value_selectlist("interestTypes", interestrate_type)
       set_value_txtfield("maxInterestRate", max_interestrate)
       set_value_txtfield("minInterestRate", min_interestrate)
       set_value_txtfield("defInterestRate", def_interestrate)
@@ -1315,11 +1285,11 @@ class LoanProduct_Test_Cases < TestClass
         if "weeks" == freqOfInstallments[0].to_s
           
           $ie.radio(:name, "freqOfInstallments", "1").click              
-          set_value_txtfield("recurWeekDay", freqOfInstallments[1].to_i.to_s)
+          set_value_txtfield("recurAfter", freqOfInstallments[1].to_i.to_s)
         else
           if "months" == freqOfInstallments[0].to_s            
             $ie.radio(:name, "freqOfInstallments", "2").click                        
-            set_value_txtfield("recurMonthDay", freqOfInstallments[1].to_i.to_s)              
+            set_value_txtfield("recurAfter", freqOfInstallments[1].to_i.to_s)              
           end
         end
       end
@@ -1329,13 +1299,12 @@ class LoanProduct_Test_Cases < TestClass
       set_value_txtfield("defNoInstallments", def_installments)
       
       # Set the LoanProduct glcode
-      set_value_selectlist("interestGLCode.glcodeId", interest_glcode)
-      set_value_selectlist("principalGLCode.glcodeId", principal_glcode)
-      set_value_selectlist("penaltyGLCode.glcodeId", penalities_glcode)  
+      set_value_selectlist("interestGLCode", interest_glcode)
+      set_value_selectlist("principalGLCode", principal_glcode)
+      #set_value_selectlist("penaltyGLCode", penalities_glcode)  commented as this is currently not there
       
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout  
+    rescue =>excp
+      quit_on_error(excp)     
     end 
   end
   
@@ -1388,28 +1357,27 @@ class LoanProduct_Test_Cases < TestClass
       #     $logger.log_results("LoanProduct- validating the preview page", "Click on preview button","Valid preview page content", "Failed")
       #   end     
       #puts "###################### IN preview ########################"
-      assert_on_page(@loanprd_properties['product.prodinstname']+": " + prd_inst_name.to_s)
-      assert_on_page(@loanprd_properties['product.shortname']+": " + short_name.to_s)
-      assert_on_page(@loanprd_properties['product.prodcat']+": " + prd_category.to_s)
-      assert_on_page(@loanprd_properties['product.startdate']+": " + @@current_date.to_s)
-      assert_on_page(@loanprd_properties['product.applfor']+": " + appl_for.to_s)
+      assert_on_page(@loanprd_properties['product.prodinstname']+" : " + prd_inst_name.to_s)
+      assert_on_page(@loanprd_properties['product.shortname']+" : " + short_name.to_s)
+      assert_on_page(@loanprd_properties['product.prodcat']+" : " + prd_category.to_s)
+      assert_on_page(@loanprd_properties['product.startdate']+" : " + @@current_date.to_s)
+      assert_on_page(@loanprd_properties['product.applfor']+" : " + appl_for.to_s)
       assert_on_page(@min_loan_amount_label+" : " + min_ammount.to_f.to_s)
-      assert_on_page(@max_loan_amount_label+": " + max_ammount.to_f.to_s)
+      assert_on_page(@max_loan_amount_label+" : " + max_ammount.to_f.to_s)
       assert_on_page(@def_loan_amount_label+" : " + def_ammount.to_f.to_s)
-      assert_on_page(@service_charge_ratetype+": " + interestrate_type.to_s)
-      assert_on_page(@max_service_charge+": " + max_interestrate.to_f.to_s + " %")
-      assert_on_page(@min_service_charge+": " + min_interestrate.to_f.to_s + " %")
-      assert_on_page(@def_service_charge+": " + def_interestrate.to_f.to_s + " %")
-      assert_on_page(@loanprd_properties['product.freqofinst']+": " + frequencyOfInstallments[1].to_s + " " + periods.to_s + "(s)") 
-      assert_on_page(@loanprd_properties['product.maxinst']+": " + max_installments.to_i.to_s)      
-      assert_on_page(@loanprd_properties['product.mininst']+": " + min_installments.to_i.to_s)
-      assert_on_page(@loanprd_properties['product.definst']+": " + def_installments.to_i.to_s)
-      assert_on_page(@loanprd_properties['product.principal']+": " + principal_glcode.to_s)
-      assert_on_page(@loanprd_properties['product.penalties']+": " + penalities_glcode.to_s) 
+      assert_on_page(@service_charge_ratetype+" : " + interestrate_type.to_s)
+      assert_on_page(@max_service_charge+" : " + max_interestrate.to_f.to_s + " %")
+      assert_on_page(@min_service_charge+" : " + min_interestrate.to_f.to_s + " %")
+      assert_on_page(@def_service_charge+" : " + def_interestrate.to_f.to_s + " %")
+      assert_on_page(@loanprd_properties['product.freqofinst']+" : " + frequencyOfInstallments[1].to_s + " " + periods.to_s + "(s)") 
+      assert_on_page(@loanprd_properties['product.maxinst']+" : " + max_installments.to_i.to_s)      
+      assert_on_page(@loanprd_properties['product.mininst']+" : " + min_installments.to_i.to_s)
+      assert_on_page(@loanprd_properties['product.definst']+" : " + def_installments.to_i.to_s)
+      assert_on_page(@loanprd_properties['product.principal']+" : " + principal_glcode.to_s)
+      assert_on_page(@loanprd_properties['product.penalties']+" : " + penalities_glcode.to_s) 
       #  puts "############## Preview Exit ###############"
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout    
+    rescue =>excp
+      quit_on_error(excp)       
     end 
   end  
   
@@ -1464,8 +1432,8 @@ class LoanProduct_Test_Cases < TestClass
       dbquery("select GLCODE_VALUE from gl_code where GLCODE_ID =" + db_principal_glcode_id.to_s )
       db_principal_glcode = dbresult[0]
       
-      dbquery("select GLCODE_VALUE from gl_code where GLCODE_ID =" + db_penalities_glcode_id.to_s )
-      db_penalities_glcode = dbresult[0]
+      #dbquery("select GLCODE_VALUE from gl_code where GLCODE_ID =" + db_penalities_glcode_id.to_s )
+      #db_penalities_glcode = dbresult[0].to_s
       
       
       #  if(db_prd_inst_name.to_s ==  prd_inst_name.to_s\
@@ -1509,11 +1477,10 @@ class LoanProduct_Test_Cases < TestClass
       dbcheck("Default installments",def_installments.to_i,db_def_installments.to_i) 
       dbcheck("Interest glcode",interest_glcode.to_s,db_interest_glcode.to_s) 
       dbcheck("principal glcode",principal_glcode.to_s,db_principal_glcode.to_s) 
-      dbcheck("Penalities glcode",penalities_glcode.to_s,db_penalities_glcode.to_s) 
+      #dbcheck("Penalities glcode",penalities_glcode.to_s,db_penalities_glcode.to_s) 
       
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout  
+    rescue =>excp
+      quit_on_error(excp)    
       
     end 
   end  
@@ -1528,9 +1495,8 @@ class LoanProduct_Test_Cases < TestClass
       Check_New_LoanProduct()
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- LoanProduct created", "LoanProduct created","The page should redirect to LoanProductCreation-Conformation page","Failed")     
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout 
+    rescue =>excp
+      quit_on_error(excp)   
     end
   end      
   
@@ -1575,28 +1541,27 @@ class LoanProduct_Test_Cases < TestClass
       #       $logger.log_results("LoanProduct- validating the preview page for new LoanProduct", "Click view LoanProduct link","Valid preview page content", "Failed")
       #   end   
       # puts "########## In view prod ####################"
-      assert_on_page(@loanprd_properties['product.prodinstname']+": " + prd_inst_name.to_s)
-      assert_on_page(@loanprd_properties['product.shortname']+": " + short_name.to_s)
-      assert_on_page(@loanprd_properties['product.prodcat']+": " + prd_category.to_s)
-      assert_on_page(@loanprd_properties['product.startdate']+": " + @@current_date.to_s)
-      assert_on_page(@loanprd_properties['product.applfor']+": " + appl_for.to_s)
-      assert_on_page(@min_loan_amount_label+": " + min_ammount.to_f.to_s)
-      assert_on_page(@max_loan_amount_label+": " + max_ammount.to_f.to_s)
-      assert_on_page(@loanprd_properties['product.defamt']+": " + def_ammount.to_f.to_s)
-      assert_on_page(@service_charge_ratetype+": " + interestrate_type.to_s)
-      assert_on_page(@max_service_charge+": " + max_interestrate.to_f.to_s + " %")
-      assert_on_page(@min_service_charge+": " + min_interestrate.to_f.to_s + " %")
-      assert_on_page(@def_service_charge+": " + def_interestrate.to_f.to_s + " %")
-      assert_on_page(@loanprd_properties['product.freqofinst']+": " + frequencyOfInstallments[1].to_s + " " + periods.to_s + "(s)") 
-      assert_on_page(@loanprd_properties['product.maxinst']+": " + max_installments.to_i.to_s)      
-      assert_on_page(@loanprd_properties['product.mininst']+": " + min_installments.to_i.to_s)
-      assert_on_page(@loanprd_properties['product.definst']+": " + def_installments.to_i.to_s)
-      assert_on_page(@loanprd_properties['product.principal']+": " + principal_glcode.to_s)
-      assert_on_page(@loanprd_properties['product.penalties']+": " + penalities_glcode.to_s) 
+      assert_on_page(@loanprd_properties['product.prodinstname']+" : " + prd_inst_name.to_s)
+      assert_on_page(@loanprd_properties['product.shortname']+" : " + short_name.to_s)
+      assert_on_page(@loanprd_properties['product.prodcat']+" : " + prd_category.to_s)
+      assert_on_page(@loanprd_properties['product.startdate']+" : " + @@current_date.to_s)
+      assert_on_page(@loanprd_properties['product.applfor']+" : " + appl_for.to_s)
+      assert_on_page(@min_loan_amount_label+" : " + min_ammount.to_f.to_s)
+      assert_on_page(@max_loan_amount_label+" : " + max_ammount.to_f.to_s)
+      assert_on_page(@loanprd_properties['product.defamt']+" : " + def_ammount.to_f.to_s)
+      assert_on_page(@service_charge_ratetype+" : " + interestrate_type.to_s)
+      assert_on_page(@max_service_charge+" : " + max_interestrate.to_f.to_s + " %")
+      assert_on_page(@min_service_charge+" : " + min_interestrate.to_f.to_s + " %")
+      assert_on_page(@def_service_charge+" : " + def_interestrate.to_f.to_s + " %")
+      assert_on_page(@loanprd_properties['product.freqofinst']+" : " + frequencyOfInstallments[1].to_s + " " + periods.to_s + "(s)") 
+      assert_on_page(@loanprd_properties['product.maxinst']+" : " + max_installments.to_i.to_s)      
+      assert_on_page(@loanprd_properties['product.mininst']+" : " + min_installments.to_i.to_s)
+      assert_on_page(@loanprd_properties['product.definst']+" : " + def_installments.to_i.to_s)
+      assert_on_page(@loanprd_properties['product.principal']+" : " + principal_glcode.to_s)
+      assert_on_page(@loanprd_properties['product.penalties']+" : " + penalities_glcode.to_s) 
       #  puts "########### LEave prod ##############"
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout      
+    rescue =>excp
+      quit_on_error(excp)        
       
     end 
   end 
@@ -1609,17 +1574,17 @@ class LoanProduct_Test_Cases < TestClass
       rowcount=2
       #puts "in check status"
       edit_loanproduct_status(prd_inst_name, "Inactive")
-      change_log(prd_inst_name,"1","4",rowcount)
-      $ie.button(:value,@back_ro_details_page_button).click
+      #commented as change log link has been removed currently
+      #change_log(prd_inst_name,"1","4",rowcount)
+      #$ie.button(:value,@back_ro_details_page_button).click 
       rowcount+=1
       edit_loanproduct_status(prd_inst_name, "Active")  
-      change_log(prd_inst_name,"4","1",rowcount)
+      #change_log(prd_inst_name,"4","1",rowcount)
       rowcount+=1
-      $ie.button(:value,@back_ro_details_page_button).click
+      #$ie.button(:value,@back_ro_details_page_button).click
       $ie.link(:text,@admin_link).click
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout  
+    rescue =>excp
+      quit_on_error(excp)     
     end  
   end
   
@@ -1630,9 +1595,9 @@ class LoanProduct_Test_Cases < TestClass
       #puts "in check status: " + status.to_s
       assert($ie.contains_text(prd_inst_name.to_s + " - "+@edit_loanproduct_link))
       $logger.log_results("LoanProduct- Edit user information", "click on Edit user information","Edit page should be opened","Passed")
-      $ie.select_list(:name,"prdStatus.offeringStatusId").select(status)
+      $ie.select_list(:name,"prdStatus").select(status)
       $ie.button(:value,@preview_button).click              
-      if($ie.contains_text(@status+": " + status.to_s))
+      if($ie.contains_text(@status+" : " + status.to_s))
         $logger.log_results("LoanProduct- Edit LoanProduct information", "status change","Preview page with changed status","Passed")        
       else
         $logger.log_results("LoanProduct- Edit LoanProduct information", "status change","Preview page with changed status","Failed")
@@ -1641,9 +1606,8 @@ class LoanProduct_Test_Cases < TestClass
       verify_status_change(prd_inst_name, status)    
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Edit LoanProduct information", "click on Edit LoanProduct information","Edit page should be opened","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout      
+    rescue =>excp
+      quit_on_error(excp)         
     end      
   end 
   
@@ -1654,9 +1618,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("navigated to change log page of "+prd_inst_name,"NA","NA","passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("could not navigate to change log page of "+prd_inst_name,"NA","NA","failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout     
+    rescue =>excp
+      quit_on_error(excp)       
     end
     table_obj=$ie.table(:index,11)
     begin
@@ -1664,18 +1627,16 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("value in change log for old value are same ",old_status.to_s,table_obj[rowcount][3].text,"passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("value in change log for old value are different",old_status.to_s,table_obj[rowcount][3].text,"failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout       
+    rescue =>excp
+      quit_on_error(excp)         
     end
     begin
       assert_equal(table_obj[rowcount][4].text,new_status)
       $logger.log_results("value in change log for new value are same ",new_status.to_s,table_obj[rowcount][4].text,"passed")    
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("value in change log for new value are different",new_status.to_s,table_obj[rowcount][4].text,"failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout 
+    rescue =>excp
+      quit_on_error(excp)    
     end
   end
   
@@ -1686,9 +1647,8 @@ class LoanProduct_Test_Cases < TestClass
       $logger.log_results("LoanProduct- Edit LoanProduct information", "status change","Preview page with changed status","Passed")       
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("LoanProduct- Edit LoanProduct information", "status change","Preview page with changed status","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout  
+    rescue =>excp
+      quit_on_error(excp)    
     end   
   end 
   
@@ -1711,7 +1671,7 @@ class LoanProduct_Main
   #Check for mandatory field validation messages  
   #This section deals with the all validation message and error handling 
   loan_obj.open(filename, 2)
-  #count = 0
+  count = 0
   rowid = -1    
   while(rowid < $maxrow * $maxcol - 1)
     loan_obj.read_product_values(rowid)
