@@ -560,7 +560,7 @@ public class AccountBO extends BusinessObject {
 		AccountActionDateEntity nextAccountAction = getDetailsOfNextInstallment();
 		Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
 		return nextAccountAction != null ? nextAccountAction.getActionDate()
-				: currentDate;
+				: new java.sql.Date(currentDate.getTime());
 	}
 
 	public List<AccountActionDateEntity> getDetailsOfInstallmentsInArrears() {

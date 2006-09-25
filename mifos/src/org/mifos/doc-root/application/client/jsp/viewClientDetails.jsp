@@ -306,7 +306,7 @@
 						<tr>
 							<td width="69%" align="right" class="fontnormal"><span
 								class="fontnormal"> <a
-								href="customerAction.do?method=getAllClosedAccounts&customerId=<c:out value="${BusinessKey.customerId}"/>&type=client">
+								href="custAction.do?method=getClosedAccounts&customerId=<c:out value="${BusinessKey.customerId}"/>&input=client&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
                   <mifos:mifoslabel name="client.ClosedAccountsLink" bundle="ClientUIResources" /></a> </span></td>
 						</tr>
 					</table>
