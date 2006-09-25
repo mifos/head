@@ -206,7 +206,9 @@
 							</tr>
 							<tr>
 								<td height="23" class="fontnormalbold">
-									<mifos:mifoslabel name="product.intratetype" bundle="ProductDefUIResources" />
+									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
+									<mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" />
+									<mifos:mifoslabel name="product.type" bundle="ProductDefUIResources" />
 									: <span class="fontnormal"> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'InterestTypesList')}" var="InterestTypes">
 											<c:if test="${InterestTypes.id eq sessionScope.loanproductactionform.interestTypes}">
 												<c:out value="${InterestTypes.name}" />
@@ -332,18 +334,12 @@
 										</c:forEach></span>
 									<br>
 									<mifos:mifoslabel name="product.principal" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:forEach var="glCode" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'interestGLCodes')}">
-											<c:if test="${glCode.glcodeId == sessionScope.loanproductactionform.interestGLCode}">
-												<c:out value="${glCode.glcode}" />
-											</c:if>
-										</c:forEach></span>
-									<br>
-									<mifos:mifoslabel name="product.penalties" bundle="ProductDefUIResources" />
 									: <span class="fontnormal"> <c:forEach var="glCode" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'principalGLCodes')}">
 											<c:if test="${glCode.glcodeId == sessionScope.loanproductactionform.principalGLCode}">
 												<c:out value="${glCode.glcode}" />
 											</c:if>
 										</c:forEach></span>
+									<br>
 								</td>
 							</tr>
 						</table>

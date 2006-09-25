@@ -767,7 +767,7 @@
 				    <var-value>(10,3)</var-value>
 			    </var>
 			</field>
-			<field  property="maxLoanAmount" depends="required,double,decimalFormat,validwhen">
+			<field  property="maxLoanAmount" depends="required,double,decimalFormat">
 				<msg name="required" key="errors.mandatory"
 					bundle="ProductDefUIResources" />
 				<msg name="validwhen" key="errors.maxMin"
@@ -788,7 +788,7 @@
 			    </var>
 			</field>
 			<field property="defaultLoanAmount"
-				depends="double,decimalFormat,validwhen">
+				depends="double,decimalFormat">
 				<msg name="validwhen" key="errors.defMinMax"
 					bundle="ProductDefUIResources" />
 				<msg name="double" key="errors.double"

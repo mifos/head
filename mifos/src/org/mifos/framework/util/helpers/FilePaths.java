@@ -53,4 +53,5 @@ public interface FilePaths {
 	public String HIBERNATEPROPERTIES = "org/mifos/framework/util/resources/hibernate.properties";
 	public String HIBERNATECFGFILE = "org/mifos/framework/util/resources/hibernate.cfg.xml";
 	public String CUSTOMTABLETAGXSD = "org/mifos/framework/util/resources/customTableTag/tabletag.xsd";	
+	public String CONFIGURABLEMIFOSDBPROPERTIESFILE = "deploymifosDB.properties";
 }

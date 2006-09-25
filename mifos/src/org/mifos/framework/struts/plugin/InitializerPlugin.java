@@ -164,14 +164,20 @@ public class InitializerPlugin implements PlugIn {
 	 * 
 	 * @throws AppNotConfiguredException
 	 */
-	private void initializeHibernate(String hibernatePropertiesPath) throws AppNotConfiguredException {
+	private void initializeHibernate(String hibernatePropertiesPath)
+			throws AppNotConfiguredException {
 		try {
+			try {
+				if (ResourceLoader
+						.getURI(FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE) != null)
+					hibernatePropertiesPath = FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE;
+			} catch (URISyntaxException e) {
+			}
 			HibernateStartUp.initialize(hibernatePropertiesPath);
 		} catch (HibernateStartUpException hsue) {
 			hsue.printStackTrace();
 			throw new AppNotConfiguredException(hsue);
 		}
-
 	}
 
 	/**

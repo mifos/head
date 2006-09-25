@@ -228,9 +228,8 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("interestGLCode", "7");
 
 		actionPerform();
-		verifyActionErrors(new String[] {
-				"Please specify a valid Max loan amount. Max loan amount should be greater than or equal to Min loan amount.",
-				"Please specify valid values for Default amount. Default amount should be a value between Min loan amount and Max loan amount, inclusive." });
+		verifyActionErrors(new String[] { "errors.defLoanAmount",
+				"errors.maxminLoanAmount" });
 		verifyInputForward();
 	}
 

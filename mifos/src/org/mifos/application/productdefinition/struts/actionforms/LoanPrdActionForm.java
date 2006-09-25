@@ -567,6 +567,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 						+ prdOfferingName);
 		validateStartDate(request, errors);
 		validateEndDate(request, errors);
+		validateMinMaxDefLoanAmounts(errors);
 		if (StringUtils.isNullOrEmpty(getInterestTypes()))
 			addError(errors, "interestTypes",
 					ProductDefinitionConstants.ERRORSSELECTCONFIG, getLabel(
@@ -586,6 +587,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 						+ prdOfferingName);
 		validateStartDateForEditPreview(request, errors);
 		validateEndDate(request, errors);
+		validateMinMaxDefLoanAmounts(errors);
 		if (StringUtils.isNullOrEmpty(getInterestTypes()))
 			addError(errors, "interestTypes",
 					ProductDefinitionConstants.ERRORSSELECTCONFIG, getLabel(
@@ -905,4 +907,28 @@ public class LoanPrdActionForm extends BaseActionForm {
 						+ defInterestRate);
 	}
 
+	private void validateMinMaxDefLoanAmounts(ActionErrors errors) {
+		try {
+			if (StringUtils.isNullAndEmptySafe(getMaxLoanAmount())
+					&& StringUtils.isNullAndEmptySafe(getMinLoanAmount())) {
+				double maxLoanAmnt = Double.valueOf(getMaxLoanAmount());
+				double minLoanAmnt = Double.valueOf(getMinLoanAmount());
+				if (minLoanAmnt > maxLoanAmnt)
+					addError(errors,
+							ProductDefinitionConstants.ERRORMAXMINLOANAMOUNT,
+							ProductDefinitionConstants.ERRORMAXMINLOANAMOUNT);
+				if (StringUtils.isNullAndEmptySafe(getDefaultLoanAmount())) {
+					double defLoanAmnt = Double
+							.parseDouble(getDefaultLoanAmount());
+
+					if (defLoanAmnt < minLoanAmnt || defLoanAmnt > maxLoanAmnt) {
+						addError(errors,
+								ProductDefinitionConstants.ERRORDEFLOANAMOUNT,
+								ProductDefinitionConstants.ERRORDEFLOANAMOUNT);
+					}
+				}
+			}
+		} catch (Exception ne) {
+		}
+	}
 }
