@@ -274,7 +274,7 @@
 			</transaction>
 			<transaction src="./sql/mifosdroptables.sql" />
 			<transaction src="./sql/mifosdbcreationscript.sql" />
-			<transaction src="./sql/DBChanges-Iteration13.sql" />
+			<transaction src="./sql/Iteration13-DBScripts25092006.sql" />
 			<transaction src="./sql/mifosmasterdata.sql" />
 			<transaction src="./sql/testdbinsertionscript.sql" />
 			
