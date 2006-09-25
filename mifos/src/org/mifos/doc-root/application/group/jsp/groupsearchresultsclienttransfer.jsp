@@ -41,8 +41,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
+
 
 <html-el:form action="GroupAction.do?method=search">
+<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+<c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"/>
      <table width="95%" border="0" cellpadding="0" cellspacing="0">
       <tr>
 	        <td class="bluetablehead05">
@@ -58,7 +62,7 @@
                 <tr>
                   <td width="62%" class="headingorange">
                   <span class="heading">
-                  <c:out value="${sessionScope.BusinessKey.displayName}"/>
+                  <c:out value="${BusinessKey.displayName}"/>
                   </span> - <mifos:mifoslabel name="Group.change"/> 
                   <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/>
                   <mifos:mifoslabel name="Group.membership"/></td>

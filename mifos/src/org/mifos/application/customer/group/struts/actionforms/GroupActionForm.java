@@ -737,6 +737,7 @@ public class GroupActionForm extends MifosSearchActionForm{
 			}else if(CustomerConstants.METHOD_CREATE.equals(methodCalled)){
 				return handleCreateValidations();
 			}else if((CustomerConstants.METHOD_SEARCH).equals(methodCalled)){
+				request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
 			    return handleSearchValidations(request);
 			}else if((CustomerConstants.METHOD_UPDATE_STATUS).equals(methodCalled)){
 			    return handleUpdateStatus(request);

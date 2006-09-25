@@ -44,6 +44,7 @@
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".detailsCustomer">
 	<tiles:put name="body" type="string">
@@ -58,7 +59,8 @@
 </script>
 		<html-el:form action="clientTransferAction.do?method=updateParent"
 			onsubmit="func_disableSubmitBtn('submitButton');">
-
+<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+<c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"/>
 
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -75,7 +77,7 @@
 					<table width="95%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td class="headingorange"><span class="heading"> <c:out
-								value="${sessionScope.BusinessKey.displayName}" /> - </span> <mifos:mifoslabel
+								value="${BusinessKey.displayName}" /> - </span> <mifos:mifoslabel
 								name="client.EditLink" bundle="ClientUIResources"></mifos:mifoslabel>
 							<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>
 							<mifos:mifoslabel name="client.MembershipLink"

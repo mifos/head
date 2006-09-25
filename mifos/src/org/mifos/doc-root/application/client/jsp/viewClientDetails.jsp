@@ -402,7 +402,7 @@
 									<c:choose>
 										<c:when test="${BusinessKey.clientUnderGroup}">
 											<html-el:link
-												action="clientTransferAction.do?method=loadParents&randomNUm=${sessionScope.randomNUm}">
+												action="clientTransferAction.do?method=loadParents&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 												<mifos:mifoslabel name="client.EditLink"
 													bundle="ClientUIResources" />
 												<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
@@ -414,7 +414,7 @@
 										<c:otherwise>
 											<%--<c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'configurationLSM')} eq 'No'}">--%>
 												<html-el:link
-													action="clientTransferAction.do?method=loadBranches&randomNUm=${sessionScope.randomNUm}">
+													action="clientTransferAction.do?method=loadBranches&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 													<mifos:mifoslabel name="client.EditLink"
 														bundle="ClientUIResources" />
 													<mifos:mifoslabel

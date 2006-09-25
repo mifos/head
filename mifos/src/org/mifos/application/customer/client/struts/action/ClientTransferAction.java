@@ -43,7 +43,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.hibernate.LockMode;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.struts.actionforms.ClientTransferActionForm;
@@ -57,12 +56,12 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class ClientTransferAction extends BaseAction {
 
@@ -76,6 +75,7 @@ public class ClientTransferAction extends BaseAction {
 		return true;
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward loadBranches(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -83,6 +83,7 @@ public class ClientTransferAction extends BaseAction {
 				.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward previewBranchTransfer(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -90,6 +91,7 @@ public class ClientTransferAction extends BaseAction {
 				.toString());
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
 	@CloseSession
 	public ActionForward transferToBranch(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
@@ -97,19 +99,26 @@ public class ClientTransferAction extends BaseAction {
 		ClientTransferActionForm actionForm = (ClientTransferActionForm) form;
 		OfficeBO officeToTransfer = getOfficelBusinessService().getOffice(
 				actionForm.getOfficeIdValue());
-		ClientBO client = (ClientBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
-		HibernateUtil.getSessionTL().lock(client, LockMode.NONE);
+		
+		ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+		ClientBO client = (ClientBO)getCustomerBusinessService().getCustomer(clientInSession.getCustomerId());
+		client.setVersionNo(clientInSession.getVersionNo());
+		client.setUserContext(getUserContext(request));
 		client.transferToBranch(officeToTransfer);
+		clientInSession = null;
+		officeToTransfer = null;
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return mapping.findForward(ActionForwards.cancel_success.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward loadParents(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -123,6 +132,7 @@ public class ClientTransferAction extends BaseAction {
 				.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward previewParentTransfer(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -131,6 +141,7 @@ public class ClientTransferAction extends BaseAction {
 	}
 
 	@CloseSession
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward updateParent(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -138,13 +149,14 @@ public class ClientTransferAction extends BaseAction {
 		GroupBO transferToGroup = (GroupBO) getCustomerBusinessService().getCustomer(actionForm.getParentGroupIdValue());
 		transferToGroup.setUserContext(getUserContext(request));
 		ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
+				Constants.BUSINESS_KEY, request);
 		ClientBO client = (ClientBO)getCustomerBusinessService().getCustomer(clientInSession.getCustomerId());
 		client.setVersionNo(clientInSession.getVersionNo());
 		client.setUserContext(getUserContext(request));
 		client.transferToGroup(transferToGroup);
-		client = null;
+		clientInSession = null;
 		transferToGroup = null;
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 

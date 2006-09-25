@@ -4,7 +4,7 @@
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 		xsi:schemaLocation="http://www.aditi.com tabletag.xsd ">
 <path key="GroupList" forwardkey="search_success" action="GroupAction.do"/> 
-<pagerequirements numbersrequired="true" bluelinerequired="true" headingrequired="false" valignnumbers="false" blanklinerequired="false"/>  
+<pagerequirements flowRequired="true" numbersrequired="true" bluelinerequired="true" headingrequired="false" valignnumbers="false" blanklinerequired="false"/>  
 <row>
 	<column label="" labeltype="string" boldlabel="false" type="text" >
 		<displayname>

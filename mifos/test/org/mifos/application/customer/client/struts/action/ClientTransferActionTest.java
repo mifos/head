@@ -2,7 +2,6 @@ package org.mifos.application.customer.client.struts.action;
 
 import java.net.URISyntaxException;
 import java.sql.Date;
-import java.util.GregorianCalendar;
 
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -19,6 +18,8 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Flow;
+import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -30,6 +31,7 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 	private GroupBO group1;
 	private ClientBO client;
 	private OfficeBO office;
+	private String flowKey;
 	
 	@Override
 	protected void setUp() throws Exception {
@@ -48,6 +50,12 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
 		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());		
+		Flow flow = new Flow();
+		flowKey = String.valueOf(System.currentTimeMillis());
+		FlowManager flowManager = new FlowManager();
+		flowManager.addFLow(flowKey, flow);
+		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
+				flowManager);
 	}
 	
 	@Override
@@ -65,6 +73,7 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 	public void testLoad_transferToBranch() throws Exception {
 		setRequestPathInfo("/clientTransferAction.do");
 		addRequestParameter("method", "loadBranches");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.loadBranches_success.toString());
 		verifyNoActionErrors();
@@ -77,6 +86,7 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 		addRequestParameter("method", "previewBranchTransfer");
 		addRequestParameter("officeId", client.getOffice().getOfficeId().toString());
 		addRequestParameter("officeName", client.getOffice().getOfficeName());
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.previewBranchTransfer_success.toString());
 		verifyNoActionErrors();
@@ -84,24 +94,30 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 	}
 	
 	public void testFailure_transferToBranch() throws Exception {
-		createObjectsForClientTransfer();		
-		request.getSession().setAttribute(Constants.BUSINESS_KEY, client);
+		createObjectsForClientTransfer();	
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client,request);
 		setRequestPathInfo("/clientTransferAction.do");
 		addRequestParameter("method", "transferToBranch");
 		addRequestParameter("officeId", client.getOffice().getOfficeId().toString());
 		addRequestParameter("officeName", client.getOffice().getOfficeName());
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyActionErrors(new String[]{CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER});
 		verifyForward(ActionForwards.transferToBranch_failure.toString());		
+		HibernateUtil.closeSession();
+		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
 	}
 	
 	public void testSuccessful_transferToBranch() throws Exception {
 		createObjectsForClientTransfer();
-		request.getSession().setAttribute(Constants.BUSINESS_KEY, client);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client,request);
 		setRequestPathInfo("/clientTransferAction.do");
 		addRequestParameter("method", "transferToBranch");
 		addRequestParameter("officeId", office.getOfficeId().toString());
 		addRequestParameter("officeName", office.getOfficeName());
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.update_success.toString());
 		verifyNoActionErrors();
@@ -115,6 +131,7 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 	public void testCancel() throws Exception {
 		setRequestPathInfo("/clientTransferAction.do");
 		addRequestParameter("method", "cancel");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.cancel_success.toString());
 		verifyNoActionErrors();
@@ -124,6 +141,7 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 	public void testLoad_updateParent() throws Exception {
 		setRequestPathInfo("/clientTransferAction.do");
 		addRequestParameter("method", "loadParents");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.loadParents_success.toString());
 		verifyNoActionErrors();
@@ -139,6 +157,7 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 		addRequestParameter("method", "previewParentTransfer");
 		addRequestParameter("parentGroupId", client.getParentCustomer().getCustomerId().toString());
 		addRequestParameter("parentGroupName", client.getParentCustomer().getDisplayName());
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.previewParentTransfer_success.toString());
 		verifyNoActionErrors();
@@ -148,11 +167,13 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 	public void testFailure_transferToParent() throws Exception {
 	
 		createObjectsForTransferringClientInGroup();
-		request.getSession().setAttribute(Constants.BUSINESS_KEY, client);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client,request);
 		setRequestPathInfo("/clientTransferAction.do");
 		addRequestParameter("method", "updateParent");
 		addRequestParameter("parentGroupId", client.getParentCustomer().getCustomerId().toString());
 		addRequestParameter("parentGroupName", client.getParentCustomer().getDisplayName());
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.updateParent_failure.toString());
 		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
@@ -162,11 +183,13 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 	
 	public void testSuccessful_transferToParent() throws Exception {
 		createObjectsForTransferringClientInGroup();
-		request.getSession().setAttribute(Constants.BUSINESS_KEY, client);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client,request);
 		setRequestPathInfo("/clientTransferAction.do");
 		addRequestParameter("method", "updateParent");
 		addRequestParameter("parentGroupId", group1.getCustomerId().toString());
 		addRequestParameter("parentGroupName", group1.getDisplayName());
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.update_success.toString());
 		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
