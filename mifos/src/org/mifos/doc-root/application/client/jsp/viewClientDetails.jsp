@@ -746,13 +746,13 @@
 							<td align="right" class="paddingleft05"><span
 								class="fontnormal8pt"> <c:if test="${!empty BusinessKey.customerNotes}">
 								<html-el:link
-									href="customerNotesAction.do?method=search&customerId=${BusinessKey.customerId}&globalAccountNum=${BusinessKey.globalCustNum}&customerName=${BusinessKey.displayName}&securityParamInput=Client&levelId=${BusinessKey.customerLevel.id}&randomNUm=${sessionScope.randomNUm}">
+									href="customerNotesAction.do?method=search&customerId=${BusinessKey.customerId}&globalAccountNum=${BusinessKey.globalCustNum}&customerName=${BusinessKey.displayName}&securityParamInput=Client&levelId=${BusinessKey.customerLevel.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel
 									name="client.SeeAllNotesLink" bundle="ClientUIResources"></mifos:mifoslabel>
 								</html-el:link>
 								<br>
 							</c:if> <a
-								href="customerNotesAction.do?method=load&customerId=<c:out value="${BusinessKey.customerId}"/>&randomNUm=${sessionScope.randomNUm}">
+								href="customerNotesAction.do?method=load&customerId=<c:out value="${BusinessKey.customerId}"/>&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="client.NotesLink"
 								bundle="ClientUIResources"></mifos:mifoslabel> </a> </span></td>
 						</tr>

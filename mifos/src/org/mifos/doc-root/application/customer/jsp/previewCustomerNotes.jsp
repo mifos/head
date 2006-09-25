@@ -6,7 +6,7 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
  <script language="javascript">
@@ -21,7 +21,7 @@
   }
   </script>
 <html-el:form action="customerNotesAction.do?method=create">
-
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>

@@ -6,10 +6,11 @@
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
 <html-el:form action="notesAction.do">
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           	<td class="bluetablehead05">
