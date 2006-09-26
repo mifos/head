@@ -62,7 +62,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.personnel.struts.actionforms.PersonnelActionForm;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
-import org.mifos.application.personnel.util.helpers.PersonnelHelper;
+
 import org.mifos.application.personnel.util.valueobjects.Personnel;
 import org.mifos.application.personnel.util.valueobjects.PersonnelCustomField;
 import org.mifos.application.personnel.util.valueobjects.PersonnelDetails;
@@ -248,29 +248,7 @@ public class PersonnelAction extends MifosSearchAction{
 		return mapping.findForward(PersonnelConstants.EDIT_PERSONAL_INFO_SUCCESS);
 	}
 	
-	/**
-	 * This method is called to perview personnel information of logged in user
-	 * @param mapping indicates action mapping defined in struts-config.xml
-	 * @param form The form bean associated with this action
-	 * @param request Contains the request parameters
-	 * @param response
-	 * @return -- action forward
-	 * @throws Exception
-	 */
-	public ActionForward previewPersonalInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,HttpServletResponse response)throws Exception{
-		PersonnelActionForm personnelActionForm = (PersonnelActionForm)form;
-		//set language name in request
-		setLanguageNameinRequest(request,personnelActionForm);
-		Context context=(Context)request.getAttribute(Constants.CONTEXT);
-		
-		//store display address in  request
-		String displayAddress = new PersonnelHelper().getDisplayAddress(personnelActionForm.getPersonnelDetails());
-		request.setAttribute(PersonnelConstants.DISPLAY_ADDRESS,displayAddress);
-		
-		//store age
-		setPersonnelAge(request,((Personnel)context.getValueObject()).getDob());
-		return mapping.findForward(PersonnelConstants.PREVIEW_PERSONAL_INFO_SUCCESS);
-	}
+
 	
 	/**
 	 * This method is called whenever from preview edit personnel info is called
@@ -306,59 +284,9 @@ public class PersonnelAction extends MifosSearchAction{
 		return null;
 	}
 	
-	/**
-	 * This is called when one your settings link.
-	 * It retrieves the logged in user details.
-	 * @param mapping indicates action mapping defined in struts-config.xml
-	 * @param form The form bean associated with this action
-	 * @param request Contains the request parameters
-	 * @param response
-	 * @return The mapping to the next page
-	 * @throws Exception
-	 */
-	@TransactionDemarcate(saveToken = true)
-	public ActionForward getDetails(ActionMapping mapping, ActionForm form, HttpServletRequest request,HttpServletResponse response)throws Exception{
-		Context context=(Context)request.getAttribute(Constants.CONTEXT);
-		context.setBusinessAction(PersonnelConstants.METHOD_GET_DETAILS);
-		delegate(context,request);
-		//set user age
-		setPersonnelAge(request,((Personnel)context.getValueObject()).getPersonnelDetails().getDob());
-		//store display address in  request
-		String displayAddress = new PersonnelHelper().getDisplayAddress(((Personnel)context.getValueObject()).getPersonnelDetails());
-		request.setAttribute(PersonnelConstants.DISPLAY_ADDRESS,displayAddress);
-		return mapping.findForward(PersonnelConstants.GETDETAILS_SUCCESS);
-	}
+	
 
-	/**
-	 * This method is called to retrieve personnel details. It calls get of base
-	 * class that in turn calls get in business processor to get all group all
-	 * details
-	 * 
-	 * @param mapping
-	 *            indicates action mapping defined in struts-config.xml
-	 * @param form
-	 *            The form bean associated with this action
-	 * @param request
-	 *            Contains the request parameters
-	 * @param response
-	 * @return The mapping to the next page
-	 */
-	@Override
-	@TransactionDemarcate(saveToken = true)
-	public ActionForward get(ActionMapping mapping,ActionForm form,	
-		HttpServletRequest request,	HttpServletResponse response)
-	throws Exception {
-		ActionForward forward = super.get(mapping,form,request,response);
-		Context context=(Context)request.getAttribute(Constants.CONTEXT);
-		//set user age
-		setPersonnelAge(request,((Personnel)context.getValueObject()).getPersonnelDetails().getDob());
-		//store display address in  request
-		String displayAddress = new PersonnelHelper().getDisplayAddress(((Personnel)context.getValueObject()).getPersonnelDetails());
-		request.setAttribute(PersonnelConstants.DISPLAY_ADDRESS,displayAddress);
-		PersonnelBO personnelBO = (PersonnelBO) new PersonnelBusinessService().getPersonnel(((Personnel)context.getValueObject()).getPersonnelId());
-	    SessionUtils.setAttribute(Constants.BUSINESS_KEY, personnelBO, request.getSession());
-		return forward;
-	}
+	
 	
 	/**
 	 * This method is called to create a new personnel. It calls create of base

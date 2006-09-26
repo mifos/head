@@ -52,7 +52,6 @@ import org.mifos.application.customer.util.valueobjects.CustomFieldDefinition;
 import org.mifos.application.master.util.valueobjects.OfficeLevelChildren;
 import org.mifos.application.master.util.valueobjects.OfficeLevelMaster;
 import org.mifos.application.office.exceptions.OfficeException;
-import org.mifos.application.office.util.helpers.OfficeHelper;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.office.util.valueobjects.BranchOffice;
 import org.mifos.application.office.util.valueobjects.BranchParentOffice;
@@ -60,8 +59,6 @@ import org.mifos.application.office.util.valueobjects.Office;
 import org.mifos.application.office.util.valueobjects.OfficeHierarchy;
 import org.mifos.application.office.util.valueobjects.OfficeHirerchyList;
 import org.mifos.application.office.util.valueobjects.OfficeLevel;
-import org.mifos.application.office.util.valueobjects.OfficeLevelView;
-import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -75,7 +72,6 @@ import org.mifos.framework.exceptions.MasterDataRetrieverException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.OfficeSearch;
-import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.valueobjects.Context;
 import org.mifos.framework.util.valueobjects.SearchResults;
 
@@ -88,57 +84,7 @@ public class OfficeDAO extends DAO {
 	MifosLogger officeLogger = MifosLogManager
 			.getLogger(LoggerConstants.OFFICELOGGER);
 
-	/**
-	 * This function is helper function which is used to get the no of childern
-	 * a given office has
-	 * 
-	 * @param officeId
-	 *            id of the office whose children we are intersted
-	 * @return no of children this office has
-	 * @throws ApplicationException
-	 * @throws SystemException
-	 */
-	public int getParentChildern(Short officeId) throws ApplicationException,
-			SystemException {
-		Session session = null;
-		Transaction transaction = null;
-		Integer noOfChilderen = null;
-		Query getChildren = null;
-
-		try {
-			session = HibernateUtil.getSession();
-			transaction = session.beginTransaction();
-
-			// get the named query and set the officeId
-
-			officeLogger.info("Executing named query "
-					+ NamedQueryConstants.GETNOOFCHILDREN
-					+ " with parameter as officeId=" + officeId);
-
-			getChildren = session.getNamedQuery(
-					NamedQueryConstants.GETNOOFCHILDREN).setShort(
-					OfficeConstants.OFFICEID, officeId);
-			noOfChilderen = (Integer) getChildren.uniqueResult();
-			officeLogger.info("No of childern for office with id=" + officeId
-					+ " is =" + noOfChilderen);
-
-			transaction.commit();
-
-		} catch (HibernateProcessException e) {
-			transaction.rollback();
-			throw new SystemException(e);
-
-		} catch (HibernateException he) {
-			transaction.rollback();
-			throw new ApplicationException(he);
-		} finally {
-			HibernateUtil.closeSession(session);
-		}
-		return (null != noOfChilderen && noOfChilderen.intValue() > 0) ? noOfChilderen
-				.intValue()
-				: 0;
-
-	}
+	
 
 	/**
 	 * This function is called to create the given office set into the context
@@ -170,16 +116,14 @@ public class OfficeDAO extends DAO {
 			officeLogger.info("officeId is" + office.getOfficeId());
 			// we are creating thye office so officId should be null
 			office.setOfficeId(null);
-			
-			
-			//bug 28984  check before creating whether hierarchy still exist or not
-			if ( !isLevelConfigured(office.getLevel().getLevelId()))
-			{
-				
-				throw new OfficeException(
-						OfficeConstants.KEYLEVELNOTCONFIGURED); 
+
+			// bug 28984 check before creating whether hierarchy still exist or
+			// not
+			if (!isLevelConfigured(office.getLevel().getLevelId())) {
+
+				throw new OfficeException(OfficeConstants.KEYLEVELNOTCONFIGURED);
 			}
-			
+
 			session.save(office);
 
 			// save the office hierachy
@@ -310,230 +254,16 @@ public class OfficeDAO extends DAO {
 				: false;
 	}
 
-	/**
-	 * This function updates the specified office record with new values .if the
-	 * parent is changed then this function will update the office hierarchy for
-	 * audit reason it willl make old record as not configured and will insert
-	 * new office hierarchy according to new details
-	 */
-
-	@Override
-	public void update(Context context) throws ApplicationException,
-			SystemException {
-
-		Session session = null;
-		Transaction tx = null;
-		Query oldHierarchy = null;
-		try {
-			Office office = (Office) context.getValueObject();
-			Short officeId = office.getOfficeId();
-			// when we were coming to this page we had saved OfficeSubObject
-			// which
-			// is made out of the
-			// this office object initially
-
-
-			session = HibernateUtil.getSession();
-			tx = session.beginTransaction();
-
-			Short personnelId = ((UserContext) context.getUserContext())
-					.getId();
-
-			// if the office level is head office then we want to set the parent
-			// as null
-			Office parent = null;
-			officeLogger.info("parent office is " + office.getParentOffice());
-			if (OfficeConstants.HEADOFFICE == office.getLevel().getLevelId()
-					.shortValue()) {
-
-				office.setParentOffice(null);
-			} else {
-
-				Office parentOffice = office.getParentOffice();
-
-				Short parentOfficeId = parentOffice.getOfficeId();
-				parent = getOffice(parentOfficeId);
-
-				if (null == parent)
-					throw new OfficeException(OfficeConstants.KEYUPDATEFAILED);
-
-				office.setParentOffice(parent);
-
-				officeLogger.info("parent office id is " + parentOfficeId);
-				// 1) see if the parent has been updated the we have to update
-				// previous hierarchy record and insert new hierarchy record
-				
-				Short oldParent = null;
-				Office newParent = office.getParentOffice();
-				if (null != oldParent&& null != newParent)
-				{
-					short oldParentId = oldParent.shortValue();
-					short newParentId = newParent.getOfficeId().shortValue();
-					if (oldParentId != newParentId) {
-
-						// we need to update the search id if we have updated
-						// the
-						// parent
-						// TODO big funtionality miss not implemented yet
-						List updateList = updateSearchIds(session, office.getOfficeId(),office.getSearchId(),oldParentId,newParentId);
-						updateParentForCurrentOffice(updateList,office);
-						if (updateList.size()>0 )
-						{
-							OfficeHelper.saveInContext(OfficeConstants.SEARCHIDLIST,updateList,context);
-							//we need to update the search id of this office object also
-							for (Iterator iter = updateList.iterator(); iter.hasNext();) {
-								OfficeSearch element = (OfficeSearch) iter.next();
-								if ( element.getOfficeId().shortValue()==office.getOfficeId().shortValue())
-								{
-									office.setSearchId(element.getSearchId());
-								}
-								
-							}
-
-						}
-						
-
-						//if ( true)
-						//throw new OfficeException();
-						// get the previous hierarchy record for this office
-						// make
-						// that as inactive and insert new record
-						oldHierarchy = session.getNamedQuery(
-								NamedQueryConstants.GETOLDOFFICEHIERARCHY)
-								.setShort(OfficeConstants.OFFICEID, officeId)
-								.setShort(OfficeConstants.STATUSID,
-										Short.valueOf(OfficeConstants.ACTIVE));
-						officeLogger.info("Executing the named query "
-								+ NamedQueryConstants.GETOLDOFFICEHIERARCHY
-								+ " with parameter officeId=" + officeId
-								+ " and statusId =" + OfficeConstants.ACTIVE);
-
-						OfficeHierarchy oh = (OfficeHierarchy) oldHierarchy
-								.uniqueResult();
-						if (null == oh) {
-
-							throw new OfficeException(
-									OfficeConstants.KEYHIERARCHYUPDATIONFAILED);
-
-						} else {
-
-							oh.setStatus(OfficeConstants.INACTIVE);
-							oh.setEndDate(new java.sql.Date(
-									new java.util.Date().getTime()));
-							oh.setUpdatedDate(new java.sql.Date(
-									new java.util.Date().getTime()));
-							oh.setUpdatedBy(personnelId);
-							session.update(oh);
-
-						}
-
-						// insert new record
-						OfficeHierarchy h = new OfficeHierarchy();
-						h.setStartDate(new java.sql.Date(new java.util.Date()
-								.getTime()));
-						h.setOffice(office);
-						h.setParentOffice(office.getParentOffice());
-						h.setStatus(OfficeConstants.ACTIVE);
-						session.save(h);
-					}
-				}
-			}
-			office.setUpdatedBy(personnelId);
-			office.setUpdatedDate(new java.sql.Date(new java.util.Date()
-					.getTime()));
-			officeLogger.info("parent office is " + office.getParentOffice());
-
-			session.update(office);
-			tx.commit();
-
-		} catch (HibernateProcessException e) {
-
-			tx.rollback();
-			throw new ApplicationException(e);
-
-		} catch (StaleObjectStateException e) {
-			tx.rollback();
-			throw new ConcurrencyException(e);
-		}
-
-		finally {
-			HibernateUtil.closeSession(session);
-		}
-
-	}
-
-	private void updateParentForCurrentOffice(List<OfficeSearch> officeList, Office office){
-		for(int i=0; i<officeList.size();i++){
+	private void updateParentForCurrentOffice(List<OfficeSearch> officeList,
+			Office office) {
+		for (int i = 0; i < officeList.size(); i++) {
 			OfficeSearch element = officeList.get(i);
-			if(element.getOfficeId().equals(office.getOfficeId())){
-				element.setParentOfficeId(office.getParentOffice().getOfficeId());
+			if (element.getOfficeId().equals(office.getOfficeId())) {
+				element.setParentOfficeId(office.getParentOffice()
+						.getOfficeId());
 				break;
 			}
 		}
-	}
-	
-	private List<OfficeSearch> updateSearchIds(Session session, Short officeId,String searchId,Short oldParent,Short newParent)
-	
-	throws ApplicationException{
-		
-		List<OfficeSearch> officeSearchIdList = null;
-		List<OfficeSearch> backUp = null;
-		Query queryOfficeSearchList = null;
-	    List <OfficeSearch> changedList = new ArrayList <OfficeSearch>();
-		//get the list of all the offices
-		queryOfficeSearchList = session
-		.getNamedQuery(NamedQueryConstants.GETOFFICESEARCHLIST);
-		officeSearchIdList = queryOfficeSearchList.list();
-		backUp = new ArrayList();
-		for (Iterator iter = officeSearchIdList.iterator(); iter.hasNext();) {
-			OfficeSearch element = (OfficeSearch) iter.next();
-			backUp.add(new OfficeSearch(element.getOfficeId(),element.getSearchId()));
-		}
-		
-		OfficeHelper.updateSearchIds(officeId,searchId,oldParent,newParent,officeSearchIdList);
-		
-		for (int i = 0; i < officeSearchIdList.size(); i++) {
-			OfficeSearch newElement = officeSearchIdList.get(i);
-			OfficeSearch oldElement = backUp.get(i);
-			if (!newElement.getSearchId().equals(oldElement.getSearchId()))
-			{
-				
-				session.update(newElement);
-				changedList.add(newElement);
-				
-			}
-
-		}
-		return changedList;
-
-	}
-
-	/**
-	 * This function will load all the office master data to the context like
-	 * officecodes,office types,officeparents and office status
-	 * 
-	 * @param context
-	 *            context object
-	 * @throws SystemException
-	 * @throws ApplicationException
-	 */
-	public void loadOfficeMaster(Context context, boolean active)
-			throws SystemException, ApplicationException {
-
-		// Loading the master data
-
-		officeLogger.info("Loading the master data...");
-		context.addAttribute(getOfficeCodeMaster());
-		context.addAttribute(getOfficeLevelMaster());
-		context.addAttribute(getCustomFieldDefnMaster());
-
-		if (active)
-			context.addAttribute(getParentMasterActive());
-		else
-			context.addAttribute(getParentMaster());
-
-		context.addAttribute(getOfficeStatusMaster());
-
 	}
 
 	/**
@@ -595,32 +325,37 @@ public class OfficeDAO extends DAO {
 	 * @throws MasterDataRetrieverException
 	 */
 	private SearchResults getCustomFieldDefnMaster() throws SystemException {
-		 Session session = null;
-		  List queryResult = null;
-		   try{
-			  session = HibernateUtil.getSession();
-			  HashMap queryParameters = new HashMap();
-			  queryParameters.put("entityType",OfficeConstants.OFFICE_CUSTOM_FIELD_ENTITY_TYPE);
-			  queryResult = executeNamedQuery(NamedQueryConstants.MASTERDATA_CUSTOMFIELDDEFINITION,queryParameters,session);
-			  if(null!=queryResult && queryResult.size()>0){
-				  for(int i=0;i<queryResult.size();i++){
-					 ((CustomFieldDefinition)queryResult.get(i)).getLookUpEntity().getEntityType();
-				  }
-			  }
-				officeLogger
-				.info("Calling the masterDataRetriever.retrieve() with parameters namedquery ="
-						+ NamedQueryConstants.MASTERDATA_CUSTOMFIELDDEFINITION
-						+ " and entityType = " + OfficeConstants.OFFICE_CUSTOM_FIELD_ENTITY_TYPE);
-
-		   }catch(HibernateException he){
-				throw new HibernateSystemException(he);
-			}finally{
-				HibernateUtil.closeSession(session);
+		Session session = null;
+		List queryResult = null;
+		try {
+			session = HibernateUtil.getSession();
+			HashMap queryParameters = new HashMap();
+			queryParameters.put("entityType",
+					OfficeConstants.OFFICE_CUSTOM_FIELD_ENTITY_TYPE);
+			queryResult = executeNamedQuery(
+					NamedQueryConstants.MASTERDATA_CUSTOMFIELDDEFINITION,
+					queryParameters, session);
+			if (null != queryResult && queryResult.size() > 0) {
+				for (int i = 0; i < queryResult.size(); i++) {
+					((CustomFieldDefinition) queryResult.get(i))
+							.getLookUpEntity().getEntityType();
+				}
 			}
-			SearchResults searchResults = new SearchResults();
-	 		searchResults.setResultName(OfficeConstants.CUSTOM_FIELDS);
-	 		searchResults.setValue(queryResult);
-	 		return searchResults;
+			officeLogger
+					.info("Calling the masterDataRetriever.retrieve() with parameters namedquery ="
+							+ NamedQueryConstants.MASTERDATA_CUSTOMFIELDDEFINITION
+							+ " and entityType = "
+							+ OfficeConstants.OFFICE_CUSTOM_FIELD_ENTITY_TYPE);
+
+		} catch (HibernateException he) {
+			throw new HibernateSystemException(he);
+		} finally {
+			HibernateUtil.closeSession(session);
+		}
+		SearchResults searchResults = new SearchResults();
+		searchResults.setResultName(OfficeConstants.CUSTOM_FIELDS);
+		searchResults.setValue(queryResult);
+		return searchResults;
 	}
 
 	/**
@@ -708,95 +443,6 @@ public class OfficeDAO extends DAO {
 						+ " and localeId  = " + OfficeConstants.LOCALEENGLISH);
 
 		return masterDataRetriever.retrieve();
-	}
-
-	/**
-	 * This function is used to retrive the master data for showing the office
-	 * parents
-	 * 
-	 * @return SearchResults object with loaded master data
-	 * @throws SystemException
-	 * @throws MasterDataRetrieverException
-	 */
-	private SearchResults getParentMaster() throws SystemException {
-
-		Session session = null;
-		Query queryOfficeLevel = null;
-		OfficeLevelView levelView = new OfficeLevelView();
-		try {
-			session = HibernateUtil.getSession();
-			queryOfficeLevel = session
-					.getNamedQuery(NamedQueryConstants.OFFICELEVELMASTER);
-			queryOfficeLevel.setShort(OfficeConstants.LOCALEID,
-					OfficeConstants.LOCALEENGLISH);
-			List<OfficeLevelMaster> levelList = queryOfficeLevel.list();
-
-			for (int i = 0; i < levelList.size(); i++) {
-				OfficeLevelMaster levelMaster = levelList.get(i);
-				Query queryParentOffice = session
-						.getNamedQuery(NamedQueryConstants.OFFICEPARENTMASTER);
-				queryParentOffice.setShort(OfficeConstants.LEVELID, levelMaster
-						.getLevelId());
-				queryParentOffice.setShort(OfficeConstants.LOCALEID,
-						OfficeConstants.LOCALEENGLISH);
-
-				levelView.setLevelInfo(levelMaster.getLevelId(),
-						queryParentOffice.list());
-
-			}
-		} catch (HibernateProcessException e) {
-
-			throw new SystemException();
-		} finally {
-			HibernateUtil.closeSession(session);
-		}
-
-		return OfficeHelper.getSearchResutls(OfficeConstants.PARENTOFFICESMAP,
-				levelView);
-
-	}
-
-	/*
-	 * This function is called to load the active parent list for the given office
-	 */
-	private SearchResults getParentMasterActive() throws SystemException {
-
-		Session session = null;
-		Query queryOfficeLevel = null;
-		OfficeLevelView levelView = new OfficeLevelView();
-		try {
-			session = HibernateUtil.getSession();
-			queryOfficeLevel = session
-					.getNamedQuery(NamedQueryConstants.OFFICELEVELMASTER);
-			queryOfficeLevel.setShort(OfficeConstants.LOCALEID,
-					OfficeConstants.LOCALEENGLISH);
-			List<OfficeLevelMaster> levelList = queryOfficeLevel.list();
-
-			for (int i = 0; i < levelList.size(); i++) {
-				OfficeLevelMaster levelMaster = levelList.get(i);
-				Query queryParentOffice = session
-						.getNamedQuery(NamedQueryConstants.GETPARENTOFFICEACTIVE);
-				queryParentOffice.setShort(OfficeConstants.LEVELID, levelMaster
-						.getLevelId());
-				queryParentOffice.setShort(OfficeConstants.LOCALEID,
-						OfficeConstants.LOCALEENGLISH);
-				queryParentOffice.setShort(OfficeConstants.STATUSID,
-						OfficeConstants.ACTIVE);
-
-				levelView.setLevelInfo(levelMaster.getLevelId(),
-						queryParentOffice.list());
-
-			}
-		} catch (HibernateProcessException e) {
-
-			throw new SystemException();
-		} finally {
-			HibernateUtil.closeSession(session);
-		}
-
-		return OfficeHelper.getSearchResutls(OfficeConstants.PARENTOFFICESMAP,
-				levelView);
-
 	}
 
 	/**
@@ -1297,10 +943,9 @@ public class OfficeDAO extends DAO {
 
 	}
 
-	
-
 	/**
 	 * This function returns all the office type present in the system
+	 * 
 	 * @return
 	 * @throws SystemException
 	 * @throws MasterDataRetrieverException
@@ -1322,8 +967,9 @@ public class OfficeDAO extends DAO {
 	}
 
 	/**
-	 * This function is called to check that whether a perticular office type is configured in the 
-	 * system or not
+	 * This function is called to check that whether a perticular office type is
+	 * configured in the system or not
+	 * 
 	 * @param context
 	 * @return
 	 * @throws SystemException
@@ -1341,11 +987,11 @@ public class OfficeDAO extends DAO {
 
 			// get the name query
 
-					checkUniqueNess = session.getNamedQuery(
-							NamedQueryConstants.ISLEVELCONFIGURED).setShort(
-							OfficeConstants.LEVELID,LevelId);
-					count = (Integer) checkUniqueNess.uniqueResult();
-					transaction.commit();
+			checkUniqueNess = session.getNamedQuery(
+					NamedQueryConstants.ISLEVELCONFIGURED).setShort(
+					OfficeConstants.LEVELID, LevelId);
+			count = (Integer) checkUniqueNess.uniqueResult();
+			transaction.commit();
 		} catch (HibernateProcessException e) {
 			transaction.rollback();
 			throw new SystemException(e);
@@ -1363,6 +1009,7 @@ public class OfficeDAO extends DAO {
 
 	/**
 	 * This function is called to check whether a given office is active or not
+	 * 
 	 * @param officeId
 	 * @return
 	 * @throws SystemException
@@ -1408,10 +1055,11 @@ public class OfficeDAO extends DAO {
 	 * @throws SystemException
 	 * @throws ApplicationException
 	 */
-	public List<OfficeLevelMaster> getTillBranchOfficeActive(String userOfficeSearchId,Short loggedInUserOfficeLevel)
+	public List<OfficeLevelMaster> getTillBranchOfficeActive(
+			String userOfficeSearchId, Short loggedInUserOfficeLevel)
 			throws SystemException, ApplicationException {
 		Session session = null;
-		userOfficeSearchId=userOfficeSearchId+"%";
+		userOfficeSearchId = userOfficeSearchId + "%";
 		List<OfficeLevelMaster> applicableLevel = new ArrayList<OfficeLevelMaster>();
 		try {
 			session = HibernateUtil.getSession();
@@ -1433,8 +1081,9 @@ public class OfficeDAO extends DAO {
 			}
 			List<Short> newApplicableLevelId = new ArrayList<Short>();
 			for (int i = 0; i < applicableLevelId.size(); i++) {
-				if(applicableLevelId.get(i).shortValue()==loggedInUserOfficeLevel.shortValue()){
-					for(;i<applicableLevelId.size();i++)
+				if (applicableLevelId.get(i).shortValue() == loggedInUserOfficeLevel
+						.shortValue()) {
+					for (; i < applicableLevelId.size(); i++)
 						newApplicableLevelId.add(applicableLevelId.get(i));
 					break;
 				}
@@ -1454,8 +1103,9 @@ public class OfficeDAO extends DAO {
 				queryChildren.setShort(OfficeConstants.LEVELID, levelId);
 				queryChildren.setShort(OfficeConstants.STATUSID,
 						OfficeConstants.ACTIVE);
-				officeLogger.debug("------------ user office search id: "+ userOfficeSearchId);
-				queryChildren.setString("searchId",userOfficeSearchId);
+				officeLogger.debug("------------ user office search id: "
+						+ userOfficeSearchId);
+				queryChildren.setString("searchId", userOfficeSearchId);
 
 				List<OfficeLevelChildren> listChildren = queryChildren.list();
 				levelMaster.setOfficeLevelChildren(listChildren);
@@ -1493,31 +1143,35 @@ public class OfficeDAO extends DAO {
 	}
 
 	/**
-	 * This function returns the list of all the office active till the branch office
+	 * This function returns the list of all the office active till the branch
+	 * office
+	 * 
 	 * @return
 	 * @throws SystemException
 	 * @throws ApplicationException
 	 */
-	public List<BranchParentOffice> getBranchOfficeActive(String userOfficeSearchId)
-			throws SystemException, ApplicationException {
+	public List<BranchParentOffice> getBranchOfficeActive(
+			String userOfficeSearchId) throws SystemException,
+			ApplicationException {
 		Session session = null;
 
 		List<BranchParentOffice> branchList = null;
-		String userOffSearchId=userOfficeSearchId+".%";
+		String userOffSearchId = userOfficeSearchId + ".%";
 		try {
 			session = HibernateUtil.getSession();
 
 			Query queryParentOffice = session
 					.getNamedQuery(NamedQueryConstants.MASTERDATA_BRANCH_PARENTS_ACTIVE);
 			queryParentOffice.setShort(OfficeConstants.STATUSID,
-					OfficeConstants.ACTIVE).setString("sid",userOffSearchId).setString("searchId",userOfficeSearchId);
-			
+					OfficeConstants.ACTIVE).setString("sid", userOffSearchId)
+					.setString("searchId", userOfficeSearchId);
 
 			Query queryBranchOffice = session
 					.getNamedQuery(NamedQueryConstants.MASTERDATA_BRANCH_OFFICES_ACTIVE);
 
 			queryBranchOffice.setShort(OfficeConstants.STATUSID,
-					OfficeConstants.ACTIVE).setString("sid",userOffSearchId).setString("searchId",userOfficeSearchId);
+					OfficeConstants.ACTIVE).setString("sid", userOffSearchId)
+					.setString("searchId", userOfficeSearchId);
 
 			branchList = new ArrayList<BranchParentOffice>();
 			List<BranchParentOffice> branchParents = queryParentOffice.list();
@@ -1567,8 +1221,7 @@ public class OfficeDAO extends DAO {
 
 		try {
 			session = HibernateUtil.getSession();
-			Query query = session
-					.getNamedQuery(NamedQueryConstants.GETMAXID);
+			Query query = session.getNamedQuery(NamedQueryConstants.GETMAXID);
 			count = (Short) query.uniqueResult();
 
 		} catch (HibernateProcessException e) {

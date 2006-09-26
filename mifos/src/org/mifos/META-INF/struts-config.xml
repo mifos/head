@@ -31,7 +31,7 @@
 		<!-- Savings Product -->
 		<form-bean name="savingsproductactionform" type="org.mifos.application.productdefinition.struts.actionforms.SavingsPrdActionForm"></form-bean>
 		<!-- Personnel Notes Action Form -->
-		<form-bean name="personnelNotesActionForm" type="org.mifos.application.personnel.struts.actionforms.PersonnelNotesActionForm"></form-bean>
+		
 		<form-bean name="personnelNoteActionForm" type="org.mifos.application.personnel.struts.actionforms.PersonnelNoteActionForm"></form-bean>
 		<!-- Personnel Action Form -->
 		<form-bean name="personnelActionForm" type="org.mifos.application.personnel.struts.actionforms.PersonnelActionForm"></form-bean>
@@ -55,10 +55,7 @@
 		<!-- roles and permission -->
 		<form-bean name="rolesPermissionsActionForm" type="org.mifos.application.rolesandpermission.struts.actionforms.RolesPermissionsActionForm" />
 		<!-- office form beans -->
-		<form-bean name="officeActionForm" type="org.mifos.application.office.struts.actionforms.OfficeActionForm" />
-		<form-bean name="officeHierarchyActionForm" type="org.mifos.application.office.struts.actionforms.OfficeHierarchyActionForm" />
 		<form-bean name="offActionForm"	type="org.mifos.application.office.struts.actionforms.OffActionForm" />
-		
 		<!-- meeting form -->
 		<form-bean name="meetingActionForm" type="org.mifos.application.meeting.struts.actionforms.MeetingActionForm" />
 		<!-- AccountSearchActionForm form -->
@@ -348,12 +345,6 @@
 		
 		<!-- Personnel action -->
 		<action path="/PersonnelAction" type="org.mifos.application.personnel.struts.action.PersonnelAction" name="personnelActionForm" parameter="method" validate="true" input="/PersonnelAction.do?method=validate" scope="session">
-			<forward name="load_success" path="/pages/application/personnel/jsp/createuser.jsp" />
-			<forward name="manage_success" path="/pages/application/personnel/jsp/edituser.jsp" />
-			<forward name="update_success" path="/PersonnelAction.do?method=get" />
-			<forward name="updateSettings_success" path="/PersonnelAction.do?method=getDetails" />
-			<forward name="updateSettings_failure" path="/pages/application/personnel/jsp/previewyoursettings.jsp" />
-			<forward name="get_success" path="/pages/application/personnel/jsp/userdetails.jsp" />
 			<forward name="getDetails_success" path="/pages/application/personnel/jsp/yoursettings.jsp" />
 			<forward name="editPersonalInfo_success" path="/pages/application/personnel/jsp/edityoursettings.jsp" />
 			<forward name="previewPersonalInfo_success" path="/pages/application/personnel/jsp/previewyoursettings.jsp" />
@@ -394,18 +385,6 @@
 			<forward name="get_success" path="/pages/application/personnel/jsp/personneldetails.jsp" />	
 			<forward name="unLockUserAccount_success" path="/PersonAction.do?method=get" />	
 			<forward name="loadUnLockUser_success" path="/pages/application/personnel/jsp/unlockuser.jsp" />		
-		</action>
-		
-		
-		
-		<!-- Personnel Notes action -->
-		<action path="/PersonnelNotesAction" type="org.mifos.application.personnel.struts.action.PersonnelNotesAction" name="personnelNotesActionForm" parameter="method" validate="true" input="/PersonnelNotesAction.do?method=validate" scope="session">
-			<forward name="load_success" path="/pages/application/personnel/jsp/addusernotes.jsp" />
-			<forward name="get_success" path="/PersonnelNotesAction.do?method=search" />
-			<forward name="search_success" path="/pages/application/personnel/jsp/usernotes.jsp" />
-			<forward name="preview_success" path="/pages/application/personnel/jsp/previewusernotes.jsp" />
-			<forward name="previous_success" path="/pages/application/personnel/jsp/addusernotes.jsp" />
-			<forward name="UserDetailsPage" path="/PersonnelAction.do?method=get" />
 		</action>
 		
 		<!-- M2 Personnel Note action -->
@@ -595,32 +574,6 @@
 			<forward name="update_failure" path="/pages/application/rolesandpermission/jsp/editrole.jsp" />
 		</action>
 		<!-- role action -->
-		<!-- officeAction -->
-		<action path="/OfficeAction" type="org.mifos.application.office.struts.action.OfficeAction" name="officeActionForm" parameter="method" input="/OfficeAction.do?method=validate" validate="true">
-			<forward name="load_success" path="/pages/application/office/jsp/loadoffice.jsp" />
-			<forward name="preview_success" path="/pages/application/office/jsp/previewoffice.jsp" />
-			<forward name="preview_failure" path="/pages/application/office/jsp/createeditoffice.jsp" />
-			<forward name="cancelCreate_success" path="/AdminAction.do?method=load" />
-			<forward name="create_success" path="/pages/application/office/jsp/createofficeSuccessful.jsp" />
-			<forward name="create_failure" path="/pages/application/office/jsp/previewoffice.jsp" />
-			<forward name="loadall_success" path="/pages/application/office/jsp/searchoffice.jsp" />
-			<forward name="loadParent_success" path="/pages/application/office/jsp/createeditoffice.jsp" />
-			<forward name="previous_success" path="/pages/application/office/jsp/createeditoffice.jsp" />
-			<forward name="get_success" path="/pages/application/office/jsp/mangeoffice.jsp" />
-			<forward name="managePreview_success" path="/pages/application/office/jsp/managepreviewoffice.jsp" />
-			<forward name="managePreview_failure" path="/pages/application/office/jsp/vieweditoffice.jsp" />
-			<forward name="manageGet_success" path="/pages/application/office/jsp/vieweditoffice.jsp" />
-			<forward name="managePrevious_success" path="/pages/application/office/jsp/vieweditoffice.jsp" />
-			<forward name="update_success" path="/OfficeAction.do?method=get" />
-			<forward name="update_failure" path="/pages/application/office/jsp/managepreviewoffice.jsp" />
-			<forward name="manage_success" path="/pages/application/office/jsp/vieweditoffice.jsp" />
-		</action>
-		<action path="/OfficeHierarchyAction" type="org.mifos.application.office.struts.action.OfficeHierarchyAction" name="officeHierarchyActionForm" parameter="method" input="/OfficeHierarchyAction.do?method=validate" validate="true">
-			<forward name="load_success" path="/pages/application/office/jsp/OfficeHierarchy.jsp" />
-			<forward name="cancel_success" path="/AdminAction.do?method=load" />
-			<forward name="update_success" path="/AdminAction.do?method=load" />
-			<forward name="update_failure" path="/pages/application/office/jsp/OfficeHierarchy.jsp" />
-		</action>
 		<!-- meeting action -->
 		<action path="/meetingAction" type="org.mifos.application.meeting.struts.action.MeetingAction" name="meetingActionForm" parameter="method" input="/meetingAction.do?method=validate" validate="true">
 			<forward name="load_success" path="/pages/application/meeting/jsp/createmeeting.jsp" />
