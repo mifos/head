@@ -57,7 +57,7 @@
 	</query>
 	
 	<query name="retrieveCustomerFeesByCategoryType">
-		<![CDATA[from FeeBO fee where fee.categoryType.id=:ALLCUSTOMERS or fee.categoryType.id=:CUSTOMER_CATEGAORY order by fee.feeName]]>
+		<![CDATA[from FeeBO fee where fee.feeStatus=1 and (fee.categoryType.id=:ALLCUSTOMERS or fee.categoryType.id=:CUSTOMER_CATEGAORY) order by fee.feeName]]>
 	</query>	
 	<query name="getAllApplicableFeesForCustomer">
 		<![CDATA[from FeeBO as fees where fees.feeStatus.id=:active and fees.categoryType.id in (:category1,:category2) 
