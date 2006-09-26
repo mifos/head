@@ -198,7 +198,7 @@ class GroupCreateEdit < TestClass
 		$ie.link(:text,"Clients & Accounts").click
 		assert($ie.contains_text(@@creategrouplabel))
 		$logger.log_results("Link Check",@@creategrouplabel,"Create New Group","passed")
-		rescue =>e
+		rescue Test::Unit::AssertionFailedError=>e
 		$logger.log_results("Link Check",@@creategrouplabel,"exists","failed")
 		end
   end
@@ -210,7 +210,7 @@ class GroupCreateEdit < TestClass
     $ie.link(:text,@@creategrouplabel).click
     assert($ie.contains_text(@@selectcentertext))
     $logger.log_results("link Create new group","working","N/A","passed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("link Create new group","working","N/A","failed")
     end
   end
@@ -221,7 +221,7 @@ class GroupCreateEdit < TestClass
     $ie.button(:value,@@button_search).click
     assert($ie.contains_text(@@mandatory_search_client))
     $logger.log_results("Mandatory Check When no data in search",@@mandatory_search_client,"Displaying","Passed")
-   rescue=>e
+   rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Mandatory Check When no data in search",@@mandatory_search_client,"Not Displaying","Failed") 
    end
   end
@@ -234,7 +234,7 @@ class GroupCreateEdit < TestClass
       $ie.button(:value,@@button_search).click
       assert($ie.contains_text("No results found"))
       $logger.log_results("Displaying No results when there is no Center Names in database","N/A","N/A","Passed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Displaying results when there is no Center Names in database","N/A","N/A","Failed")
     end
   end
@@ -259,7 +259,7 @@ class GroupCreateEdit < TestClass
       assert($ie.contains_text("Next"))
       $logger.log_results("Next link existed when there is more than 10 centers in Db","N/A","N/A","Passed")
       click_next_link_in_search_page()
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Next link existed when there is more than 10 centers in Db","N/A","N/A","Failed")
     end
   end
@@ -272,7 +272,7 @@ class GroupCreateEdit < TestClass
       assert($ie.contains_text("Results 11"))
       $logger.log_results("Next Button","Should Work","Working","Passed")
       click_previous_link_in_search_page()
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Next Button","Should Work","Working","Failed")
     end
   end
@@ -282,7 +282,7 @@ class GroupCreateEdit < TestClass
       $ie.link(:text,"Previous").click
       assert($ie.contains_text("Results 1"))
       $logger.log_results("Previous Button","Should Work","Working","Passed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Previous Button","Should Work","Working","Failed")
     end
   end
@@ -296,7 +296,7 @@ class GroupCreateEdit < TestClass
       assert($ie.contains_text(@@creategrouplabel)) and \
       assert($ie.contains_text(@@createclientlabel))
       $logger.log_results("Cancel button","working properly","N/A","Passed")
-      rescue=>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Cancel button","working properly","N/A","Passed")
     end
   end
@@ -323,7 +323,7 @@ class GroupCreateEdit < TestClass
       $ie.wait
       assert($ie.contains_text(@@group_select_group))
       $logger.log_results("Page Enter Group Information","Should appear","appeared","passed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Page Enter Group Information","Should appear","not appeared","failed")
     end      
   end
@@ -331,11 +331,11 @@ class GroupCreateEdit < TestClass
   #checking the all mandatory fields
     def mandatory_all()
     begin
-    $ie.select_list(:name,"customerFormedById").select_value("")
+    $ie.select_list(:name,"formedByPersonnel").select_value("")
     $ie.button(:value,@@button_preview).click
     assert($ie.contains_text(@@group_name_msg)) and  assert(@@ie.contains_text(@@group_LO_msg))and assert(@@ie.contains_text(@@group_custom_msg))
     $logger.log_results("all mandatory check ","NA","NA","passed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("all mandatory check ","NA","NA","failed")
     end
   end
@@ -343,11 +343,11 @@ class GroupCreateEdit < TestClass
   def mandatory_with_groupname()
     begin
     $ie.text_field(:name,"displayName").set("aaa")
-    $ie.select_list(:name,"customerFormedById").select_value("")
+    $ie.select_list(:name,"formedByPersonnel").select_value("")
     $ie.button(:value,@@button_preview).click
     assert($ie.contains_text(@@group_LO_msg))and assert($ie.contains_text(@@group_custom_msg))
     $logger.log_results("mandatory checks when Group name entered ","NA","NA","passed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("mandatory checks when Group name entered ","NA","NA","failed")
     end
   end
@@ -356,11 +356,11 @@ class GroupCreateEdit < TestClass
     begin
      $ie.text_field(:name,"displayName").set("aaa")
      $ie.text_field(:name,"customField[0].fieldValue").set("111")
-     $ie.select_list(:name,"customerFormedById").select_value("")
+     $ie.select_list(:name,"formedByPersonnel").select_value("")
      $ie.button(:value,@@button_preview).click 
      assert($ie.contains_text(@@group_LO_msg)) 
      $logger.log_results("mandatory checks when group name,additional information entered","NA","NA","passed")
-     rescue=>e
+     rescue Test::Unit::AssertionFailedError=>e
      $logger.log_results("mandatory checks when group name,additional information entered","NA","NA","failed")
     end
   end
@@ -382,11 +382,11 @@ class GroupCreateEdit < TestClass
      $ie.text_field(:name,"displayName").set(gname)
      custom_config(customfield)
      #$ie.text_field(:name,"customField[0].fieldValue").set(customfield)
-     #$ie.select_list(:name,"customerFormedById").select_value(@@personnel_id)
+     #$ie.select_list(:name,"formedByPersonnel").select_value(@@personnel_id)
      $ie.button(:value,@@button_preview).click 
      assert($ie.contains_text(@@group_review)) 
      $logger.log_results("mandatory checks when group name,Formed by,additional information entered","NA","NA","passed")
-     rescue=>e
+     rescue Test::Unit::AssertionFailedError=>e
      $logger.log_results("mandatory checks when group name,Formed by,additional information entered","NA","NA","failed")
     end
   end
@@ -414,7 +414,7 @@ class GroupCreateEdit < TestClass
       assert($ie.contains_text(@@creategrouplabel)) and \
       assert($ie.contains_text(@@createclientlabel))
       $logger.log_results("Cancel Funcationality from Review&submit","working properly","N/A","passed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Cancel Funcationality from Review&submit","working properly","N/A","failed")
     end
   end
@@ -425,7 +425,7 @@ class GroupCreateEdit < TestClass
     assert($ie.contains_text(@@group_success))
     $logger.log_results("Group created successfully","N/A","N/A","Passed")
     go_to_detailspage(gname)
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Group created successfully","N/A","N/A","Failed")
     end
   end
@@ -435,7 +435,7 @@ class GroupCreateEdit < TestClass
     assert($ie.contains_text(@@edit_group_status))
     $logger.log_results("Opened Edit group details page","N/A","N/A","passed")
     change_status(gname)
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Opened Edit group details page","N/A","N/A","passed")
   end
   end
@@ -455,14 +455,14 @@ class GroupCreateEdit < TestClass
     dbquery("SELECT lookup_value FROM lookup_value_locale where lookup_id=8")
     @@status_pending_name=dbresult[0]
     $ie.link(:text,@@edit_group_status).click
-    $ie.radio(:name,"statusId","8").set
-    $ie.text_field(:name,"customerNote.comment").set("AAAAA")
+    $ie.radio(:name,"newStatusId","8").set
+    $ie.text_field(:name,"notes").set("AAAAA")
     $ie.button(:value,@@button_preview).click
     $ie.button(:value,@@button_submit).click
     assert($ie.contains_text(@@performance_history))and assert($ie.contains_text(@@status_pending_name)) 
     $logger.log_results("Status changed to Pending","NA","NA","passed") 
-    view_change_log_pending()
-    rescue=>e
+    #view_change_log_pending()
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Status changed to Pending","NA","NA","failed") 
     end
   end    
@@ -474,14 +474,14 @@ class GroupCreateEdit < TestClass
     dbquery("SELECT lookup_value FROM lookup_value_locale where lookup_id=8")
     @@status_pending_name=dbresult[0]
     $ie.link(:text,@@edit_group_status).click
-    $ie.radio(:name,"statusId","9").set
-    $ie.text_field(:name,"customerNote.comment").set("AAAAA")
+    $ie.radio(:name,"newStatusId","9").set
+    $ie.text_field(:name,"notes").set("AAAAA")
     $ie.button(:value,@@button_preview).click
     $ie.button(:value,@@button_submit).click
     assert($ie.contains_text(@@performance_history))and assert($ie.contains_text(@@status_active_name))
     $logger.log_results("Status changed to Active","NA","NA","passed") 
-    view_change_log_active()
-    rescue=>e
+   # view_change_log_active()
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Status changed to Active","NA","NA","failed") 
     end
   end    
@@ -515,7 +515,7 @@ class GroupCreateEdit < TestClass
   and assert($ie.contains_text(state)) and assert($ie.contains_text(country)) and assert($ie.contains_text(pcode)) and //
   assert($ie.contains_text(phone)) and assert($ie.contains_text(custom1))
   $logger.log_results("Create Group Revie&submit page diaplayed","N/A","N/A","Passed")
-  rescue=>e
+  rescue Test::Unit::AssertionFailedError=>e
   $logger.log_results("Create Group Revie&submit page diaplayed","N/A","N/A","Failed")
   end
  end
@@ -526,7 +526,7 @@ class GroupCreateEdit < TestClass
       assert($ie.contains_text(@@group_review)) and assert($ie.contains_text(gname))
       $logger.log_results("Group Creation","Review&submit page","opened","passed")
       group_submit(gname,status)
-      rescue =>e
+      rescue  Test::Unit::AssertionFailedError=>e
       $logger.log_results("Group Creation","Review&submit page","opened","failed")
     end
  end
@@ -536,7 +536,7 @@ class GroupCreateEdit < TestClass
     assert($ie.contains_text(@@group_success)) and assert($ie.contains_text(@@name_group))
     $logger.log_results("Group Creation","successfull page","opened","passed")
     go_to_detailspage(gname)
-    rescue =>e
+    rescue  Test::Unit::AssertionFailedError=>e
     $logger.log_results("Group Creation","successfull page","opened","failed")
     end
   end
@@ -560,7 +560,7 @@ class GroupCreateEdit < TestClass
     $ie.link(:text,search_name).click
     assert($ie.contains_text(@@performance_history))
     $logger.log_results("Group Details page","Open","opened","passed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Group Details page","Open","not opened","failed")
     end
   end
@@ -570,7 +570,7 @@ class GroupCreateEdit < TestClass
     label_to_check=gname+" - "+@@edit_group_information
     assert($ie.contains_text(label_to_check))
     $logger.log_results("Edit Group Details Page","Open","Opened","Passed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Edit Group Details Page","Open","Not Opened","Failed")
     end
   end
@@ -623,7 +623,7 @@ class GroupCreateEdit < TestClass
     assert($ie.contains_text(phone)) and assert($ie.contains_text(custom1))
     $logger.log_results("Edit Group Revie&submit page diaplayed","N/A","N/A","Passed")
     $ie.button(:value,@@button_submit).click
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Edit Group Revie&submit page diaplayed","N/A","N/A","Failed")
     end
   end
@@ -632,7 +632,7 @@ class GroupCreateEdit < TestClass
     $ie.link(:text,@@change_log).click
     assert($ie.contains_text(@@status_pending_name)) and assert($ie.contains_text(@@status_partial_name))
     $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Passed")    
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Failed")        
   end
   end
@@ -641,7 +641,7 @@ class GroupCreateEdit < TestClass
     $ie.link(:text,@@change_log).click
     assert($ie.contains_text(@@status_pending_name)) and assert($ie.contains_text(@@status_active_name))
     $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Passed")    
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Failed")        
   end
   end
@@ -651,7 +651,7 @@ class GroupCreateEdit < TestClass
     center_membership_select_center=gname+"- "+@@change_center_member
     assert($ie.contains_text(center_membership_select_center))
     $logger.log_results("Change Center Membership details page","N/A","N/A","Passed")    
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Change Center Membership details page","N/A","N/A","Failed")    
     end
   end
@@ -665,7 +665,7 @@ class GroupCreateEdit < TestClass
       $ie.button(:value,@@button_submit).click
       assert($ie.contains_text(@@change_log))
       $logger.log_results("Center Mebership","Should Change Successfully","Changed","Passed")
-      rescue=>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Center Mebership","Should Change Successfully","Changed","Failed")
       end
   end
@@ -677,67 +677,112 @@ class GroupCreateEdit < TestClass
     $ie.button(:value,"Return to details page").click
     assert($ie.contains_text(@@performance_history))
     $logger.log_results("View all closed accounts link working","NA","NA","passed")
-    rescue =>e
+    rescue  Test::Unit::AssertionFailedError=>e
     $logger.log_results("View all closed accounts link working","NA","NA","failed")   
-    rescue =>e
+    rescue=>e
     $logger.log_results("View all closed accounts link existed","NA","NA","failed")    
     end
   end
+  
+  def Activate_Group()
+      dbquery("select office_id,display_name from office where status_id=1 and office_level_id=5 and  search_id like '"+@@search_id+"%'")
+      @@office_id=dbresult[0]
+      display_name=dbresult[1]
+      if (@@office_id=="1") then
+          get_next_data
+          @@office_id=dbresult[0]
+          display_name=dbresult[1]
+      end      
+    @@edit_group_status=@@groupprop['Group.edit']+" "+@@lookup_name_group+" "+@@groupprop['Group.status1']
+    @@button_preview=@@groupprop['button.preview']
+    @@button_submit=@@groupprop['button.submit']
+    @@performance_history=@@groupprop['Group.performancehistory']
+  
+    dbquery("select customer_id,global_cust_num,display_name,status_id from customer where customer_level_id=2 and status_id in (7,8) and branch_id="+@@office_id+"")
+    groupid=dbresult[0]    
+    global_acct_num=dbresult[1]   
+    groupname=dbresult[2]  
+    groupstatus= dbresult[3]  
+
+    $ie.link(:text,"Clients & Accounts").click
+    $ie.text_field(:name,"searchNode(searchString)").set(global_acct_num)
+    $ie.button(:value,"Search").click
+    search_name=groupname+": ID "+global_acct_num
+    $ie.link(:text,search_name).click
+  
+    i=0
+    while (i<2) do
+ 
+    if(groupstatus.to_i==7)
+        change_status_pending()
+        change_status_active()
+    elsif(groupstatus.to_i==8)
+      change_status_active()
+    end  
+
+    i+=1
+    end
+   
+    
+  end
+  
 end
 
 class GroupTest
 groupobject=GroupCreateEdit.new
-groupobject.group_login
-groupobject.database_connection
-groupobject.properties_load
-groupobject.geting_lables_from_proprtis
-groupobject.check_group
-groupobject.check_for_create_new_group_link
-groupobject.check_mandatory_in_search_center_page
-groupobject.check_center_not_existed_in_db
-groupobject.check_for_no_of_centers
-groupobject.select_center_cancel
-groupobject.select_center
-groupobject.mandatory_all
-groupobject.mandatory_with_groupname
-groupobject.mandatory_with_gname_addInformation
-filename=File.join(File.dirname($PROGRAM_NAME),"data/testdata.xls")
-groupobject.open(filename,1)
-rowid=-1
-while(rowid<$maxrow*$maxcol-1)
-groupobject.read_group_values(rowid,1)
-groupobject.review_group_with_mandatory(groupobject.Groupname,groupobject.Customfield,groupobject.Statusname)
-groupobject.review_cancel
-groupobject.create_group_with_mandatory(groupobject.Groupname,groupobject.Customfield,groupobject.Statusname)
-groupobject.db_check(groupobject.Groupname)
-rowid+=$maxcol
-end
-groupobject.open(filename,2)
-rowid=-1
-while(rowid<$maxrow*$maxcol-1)
-  groupobject.read_group_values(rowid,2)
-  groupobject.select_center 
-  groupobject.create_group_all_data(groupobject.Groupname,groupobject.Gdate,groupobject.Gmonth,\
-                                    groupobject.Gyear,groupobject.Externalid,groupobject.Address1,\
-                                    groupobject.Address2,groupobject.Address3,groupobject.City,\
-                                    groupobject.State,groupobject.Country,groupobject.Pcode,groupobject.Phone,\
-                                    groupobject.Customfield,groupobject.Statusname) 
-  groupobject.edit_group_preview(groupobject.Groupname,groupobject.Gdate,groupobject.Gmonth,\
-                                    groupobject.Gyear,groupobject.Externalid,groupobject.Address1,\
-                                    groupobject.Address2,groupobject.Address3,groupobject.City,\
-                                    groupobject.State,groupobject.Country,groupobject.Pcode,groupobject.Phone,\
-                                    groupobject.Customfield,groupobject.Statusname)
+
+  groupobject.group_login
+  groupobject.database_connection
+  groupobject.properties_load
+ # groupobject.Activate_Group
+  groupobject.geting_lables_from_proprtis
+  groupobject.check_group
+  groupobject.check_for_create_new_group_link
+  groupobject.check_mandatory_in_search_center_page
+  groupobject.check_center_not_existed_in_db
+  groupobject.check_for_no_of_centers
+  groupobject.select_center_cancel
+  groupobject.select_center
+  groupobject.mandatory_all
+  groupobject.mandatory_with_groupname
+  groupobject.mandatory_with_gname_addInformation
+  filename=File.join(File.dirname($PROGRAM_NAME),"data/testdata.xls")
+  groupobject.open(filename,1)
+  rowid=-1
+  while(rowid<$maxrow*$maxcol-1)
+  groupobject.read_group_values(rowid,1)
+  groupobject.review_group_with_mandatory(groupobject.Groupname,groupobject.Customfield,groupobject.Statusname)
+  groupobject.review_cancel
+  groupobject.create_group_with_mandatory(groupobject.Groupname,groupobject.Customfield,groupobject.Statusname)
   groupobject.db_check(groupobject.Groupname)
-  groupobject.edit_group_data(groupobject.Groupname)
-  groupobject.edit_group_from_details_link(groupobject.Groupname)
-  groupobject.edit_group_from_details(groupobject.Edit_gname,groupobject.Edit_externalid,groupobject.Edit_address1,\
-                                      groupobject.Edit_address2,groupobject.Edit_address3,groupobject.Edit_city,\
-                                      groupobject.Edit_state,groupobject.Edit_country,groupobject.Edit_pcode,groupobject.Edit_phone,\
-                                      groupobject.Edit_customfield)  
-  groupobject.view_all_closed_accounts
-   groupobject.edit_center_membership(groupobject.Edit_gname)
-  groupobject.edit_center_membership_select_center(groupobject.Edit_gname)
   rowid+=$maxcol
   end
-   groupobject.mifos_logout()
+  groupobject.open(filename,2)
+  rowid=-1
+  while(rowid<$maxrow*$maxcol-1)
+    groupobject.read_group_values(rowid,2)
+    groupobject.select_center 
+    groupobject.create_group_all_data(groupobject.Groupname,groupobject.Gdate,groupobject.Gmonth,\
+                                      groupobject.Gyear,groupobject.Externalid,groupobject.Address1,\
+                                      groupobject.Address2,groupobject.Address3,groupobject.City,\
+                                      groupobject.State,groupobject.Country,groupobject.Pcode,groupobject.Phone,\
+                                      groupobject.Customfield,groupobject.Statusname) 
+    groupobject.edit_group_preview(groupobject.Groupname,groupobject.Gdate,groupobject.Gmonth,\
+                                      groupobject.Gyear,groupobject.Externalid,groupobject.Address1,\
+                                      groupobject.Address2,groupobject.Address3,groupobject.City,\
+                                      groupobject.State,groupobject.Country,groupobject.Pcode,groupobject.Phone,\
+                                      groupobject.Customfield,groupobject.Statusname)
+    groupobject.db_check(groupobject.Groupname)
+    groupobject.edit_group_data(groupobject.Groupname)
+    groupobject.edit_group_from_details_link(groupobject.Groupname)
+    groupobject.edit_group_from_details(groupobject.Edit_gname,groupobject.Edit_externalid,groupobject.Edit_address1,\
+                                        groupobject.Edit_address2,groupobject.Edit_address3,groupobject.Edit_city,\
+                                        groupobject.Edit_state,groupobject.Edit_country,groupobject.Edit_pcode,groupobject.Edit_phone,\
+                                        groupobject.Edit_customfield)  
+    groupobject.view_all_closed_accounts
+     groupobject.edit_center_membership(groupobject.Edit_gname)
+    groupobject.edit_center_membership_select_center(groupobject.Edit_gname)
+    rowid+=$maxcol
+    end
+#   groupobject.mifos_logout()
 end

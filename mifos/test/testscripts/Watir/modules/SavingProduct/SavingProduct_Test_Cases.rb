@@ -1184,7 +1184,7 @@ class SavingProduct_Test_Cases < TestClass
       
       assert($ie.contains_text(prd_inst_name.to_s + " - Edit Margin Money Product information"))
       $logger.log_results("SavingProduct- Edit Margin Money Product information ", "click on Edit Margin Money Product information","Edit page should be opened","Passed")
-      $ie.select_list(:name,"prdStatus.offeringStatusId").select(status)
+      $ie.select_list(:name,"status").select(status)
       $ie.button(:value,@preview_button).click              
       if($ie.contains_text( @status+" : " + status.to_s))
         $logger.log_results("SavingProduct- Edit Margin Money Product information ", "status change","Preview page with changed status","Passed")        

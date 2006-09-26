@@ -403,7 +403,7 @@ class CenterCreateEdit < TestClass
       if monthtype=="1" then
       $ie.radio(:name,"monthType","1").set
       $ie.text_field(:name,"monthDay").set(monthday)
-      $ie.text_field(:name,"monthMonth").set(monthmonth)
+      $ie.text_field(:name,"dayRecurMonth").set(monthmonth)
       $ie.text_field(:name,"meetingPlace").set(meetingplace)
       $ie.button(:value,@@button_save).click
       elsif monthtype=="2" then
@@ -416,7 +416,7 @@ class CenterCreateEdit < TestClass
     end
     assert($ie.contains_text(@@center_center_information))
     $logger.log_results("Meeting creation","NA","NA","passed");
-    rescue=>e
+     rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Meeting creation","NA","NA","failed");
     end
     
@@ -524,7 +524,7 @@ class CenterCreateEdit < TestClass
     assert($ie.contains_text(@@account_information_label))
     $logger.log_results("Cancel Button in Edit Center Details Page","Should Work","Working","Passed")
     enter_data_edit_page(external_id,mfi_date,mfi_month,mfi_year,address1,address2,address3,city,state,country,postal_code,telephone, custom1)
-    rescue=>e
+     rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Cancel Button in Edit Center Details Page","Should Work","Working","Failed")
     end
    end
@@ -550,7 +550,7 @@ class CenterCreateEdit < TestClass
     assert($ie.contains_text(external_id))and assert($ie.contains_text(address1))and assert($ie.contains_text(address2)) and  assert($ie.contains_text(city))and assert($ie.contains_text(state))
     $logger.log_results("Edit Kendra","Review&submit page","opened","passed")
     $ie.button(:value,@@button_submit).click
-    rescue=>e
+     rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Edit Kendra","Review&submit page","opened","failed")
     end
   end 
@@ -560,7 +560,7 @@ class CenterCreateEdit < TestClass
       @@notes=@@centerprop['Center.NotesLink'].squeeze(" ")
       assert($ie.contains_text(@@notes))
       $logger.log_results("Link "+@@centerprop['Center.NotesLink'],"Should Exist","Existed","passed")
-    rescue=>e
+     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Link "+@@centerprop['Center.NotesLink'],"Should Exist","Not Existed","Failed")
     end
   end
@@ -571,7 +571,7 @@ class CenterCreateEdit < TestClass
       $ie.link(:text,@@notes).click
       assert($ie.contains_text(@@name_center+" - Add note"))
       $logger.log_results("Link "+@@centerprop['Center.NotesLink'],"Should Work","Working","passed")
-    rescue=>e
+     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Link "+@@centerprop['Center.NotesLink'],"Should Work","Not Working","Failed")
     end
   end
@@ -582,7 +582,7 @@ class CenterCreateEdit < TestClass
       $ie.button(:value,@@button_preview).click
       assert($ie.contains_text("Please enter some notes before continuing"))
       $logger.log_results("Mandatory Check when you don't enter any note","N/A","N/A","Passed")
-    rescue=>e
+     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Mandatory Check when you don't enter any note","N/A","N/A","Failed")
     end
   end
@@ -595,7 +595,7 @@ class CenterCreateEdit < TestClass
     @@center_note_error_message="The maximum length for Note field is"+" 500"
     assert($ie.contains_text(@@center_note_error_message))
     $logger.log_results("Bundaory Check for Notes ","Should display Proper Error Message","Displaying","Passed")
-    rescue=>e
+     rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Bundaory Check for Notes ","Should display Proper Error Message","Not Displaying","Failed")    
   end
  end
@@ -607,7 +607,7 @@ class CenterCreateEdit < TestClass
     assert($ie.contains_text(@@name_center+" - Preview Note"))
     $logger.log_results("Page Redirected to Preview page","N/A","N/A","Passed")
     $ie.button(:value,@@button_submit).click
-   rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Page not Redirected to Preview page","N/A","N/A","Failed")
    end
  end
@@ -616,9 +616,9 @@ class CenterCreateEdit < TestClass
  def check_for_see_all_notes_link
   begin
     $ie.wait(10)
-    assert($ie.contains_text(@@centerprop['center.SeeAllNotesLink ']))
+    assert($ie.contains_text(@@centerprop['center.SeeAllNotesLink']))
     $logger.log_results(@@centerprop['center.SeeAllNotesLink'],"Link should Exist","Existed","Passed")
-  rescue=>e
+   rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results(@@centerprop['center.SeeAllNotesLink'],"Link should Exist","Not Existed","Failed")
   end
  end
@@ -626,11 +626,11 @@ class CenterCreateEdit < TestClass
 #Click on see all notes link and check the functionality
   def click_see_all_notes_link()
     begin 
-      $ie.link(:text,@@centerprop['center.SeeAllNotesLink ']).click
+      $ie.link(:text,@@centerprop['center.SeeAllNotesLink']).click
       assert($ie.contains_text(@@name_center+" - Notes "))
       $logger.log_results(@@centerprop['center.SeeAllNotesLink'],"Link should Work","Working","Passed")
       $ie.link(:text,@@name_center).click
-    rescue=>e
+     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results(@@centerprop['center.SeeAllNotesLink'],"Link should Work","Not Working","Failed")
     end
   end
