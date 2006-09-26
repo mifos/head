@@ -407,7 +407,7 @@ class ProductCategory_Test_Cases < TestClass
       $ie.link(:text, @edit_category_button).click
       assert($ie.contains_text(category_name.to_s + " - Edit category information"))
       $logger.log_results("ProductCategory- Edit Product category information ", "click on Edit Product category information ","Edit page should be opened","Passed")
-      $ie.select_list(:name,"prdCategoryStatus.prdCategoryStatusId").select(status)
+      $ie.select_list(:name,"productCategoryStatus").select(status)
       $ie.button(:value,@preview_button).click             
       if($ie.contains_text(@prdcat_properties['product.status']+": " + status.to_s))
         $logger.log_results("ProductCategory- Edit ProductCategory information", "status change","Preview page with changed status","Passed")        

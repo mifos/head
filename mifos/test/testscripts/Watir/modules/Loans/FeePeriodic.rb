@@ -92,7 +92,7 @@ class FeePeriodic < TestClass
 	  dbquery("select account_fee_amnt from account_fees where fee_id="+@@fee_id)
 	  @@fee_amnt=dbresult[0]
 	 # puts @@feesname+": "+@@fee_amnt.to_f.to_s+" ( Recur every "+@@recur_after+" "+recur_type+"" )"
-	  assert($ie.contains_text(@@feesname+": "+@@fee_amnt.to_f.to_s+" ( Recur every "+@@recur_after+" "+@@recur_type+" )"))
+	  assert($ie.contains_text(@@feesname+": "+@@fee_amnt.to_f.to_s+" ( Recur every "+@@recur_after+" "+@@recur_type+")"))
 	  $logger.log_results("Fees "+@@feesname.to_s+" appears under recurring account fees","NA","NA","passed")
 	  rescue Test::Unit::AssertionFailedError=>e
 	  $logger.log_results("Fees "+@@feesname.to_s+" does not appear under recurring account fees","NA","NA","failed")
@@ -132,7 +132,7 @@ class FeePeriodic < TestClass
 	  $ie.link(:text, @@loan_account).click
 	  #$ie.goto($test_site + "/accountAppAction.do?method=removeFees&feeId=" + @@fee_id + "&accountId=" + @@account_id + "&recordOfficeId=" + @@office_id +"&recordLoanOfficerId=" +@@personnel_id +"&createdDate="+ @@created_date+"%2000:00:00.0")        
       $ie.link(:text,"Remove").click
-      assert(!$ie.contains_text(@@feesname+": "+@@fee_amnt+" ( Recur every "+@@recur_after+" "+@@recur_type+" )"))
+      assert(!$ie.contains_text(@@feesname+": "+@@fee_amnt+" ( Recur every "+@@recur_after+" "+@@recur_type+")"))
  	  $logger.log_results("Fees "+@@feesname.to_s+" does not appears under recurring account fees","NA","NA","passed")
 	  rescue Test::Unit::AssertionFailedError=>e
 	  $logger.log_results("Fees "+@@feesname.to_s+" appears under recurring account fees","NA","NA","failed")     

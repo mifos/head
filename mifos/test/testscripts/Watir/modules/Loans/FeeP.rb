@@ -10,5 +10,6 @@ loansobject=FeePeriodic.new
 loansobject.loans_login
 loansobject.loan_account_add_fee
 loansobject.loan_account_remove_fee
-$ie.link(:text,"Logout").click
+#$ie.link(:text,"Logout").click
+loansobject.mifos_logout
 end

@@ -492,7 +492,7 @@ class User_Test_Cases < TestClass
          roles_array = roles.split(",").to_a
          count = 0 
         while count < roles_array.length
-         set_value_selectlist("LeftSelect", roles_array[count])
+         set_value_selectlist("id", roles_array[count])
          $ie.button(:value,"Add >>").click                
          count += 1
         end
